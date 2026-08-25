@@ -1,3 +1,12 @@
+supralinux-desktop (0.1.0~dev3) UNRELEASED; urgency=medium
+
+  * Add xdg-desktop-portal-gtk as the GTK/Settings fallback alongside the KDE
+    portal backend. KDE remains the intended primary Plasma portal backend.
+  * Require clean Wayland tests to verify portal routing before this dependency
+    is considered release-frozen.
+
+ -- SupraLINUX Project <noreply@supralinux.com>  Tue, 25 Aug 2026 20:55:00 -0300
+
 supralinux-desktop (0.1.0~dev2) UNRELEASED; urgency=medium
 
   * Expand the Aurora candidate baseline with screen-locker and SDDM KCMs.
