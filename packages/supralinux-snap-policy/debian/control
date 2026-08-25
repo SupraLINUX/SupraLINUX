@@ -1,0 +1,19 @@
+Source: supralinux-snap-policy
+Section: admin
+Priority: optional
+Maintainer: SupraLINUX Project <noreply@supralinux.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Homepage: https://supralinux.com
+
+Package: supralinux-snap-policy
+Architecture: all
+Depends:
+ ${misc:Depends}
+Description: SupraLINUX default policy that blocks Snap installation through APT
+ This package installs the reversible APT preferences used by SupraLINUX to
+ prevent snapd and Plasma's Snap software-store backend from being installed
+ automatically.
+ .
+ Removing this package removes the policy only. It does not install snapd.
