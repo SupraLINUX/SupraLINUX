@@ -27,6 +27,7 @@ Depends:
  udisks2,
  upower,
  powerdevil,
+ power-profiles-daemon,
  kscreen,
  kde-config-screenlocker,
  kinfocenter,
@@ -39,6 +40,10 @@ Depends:
  network-manager,
  network-manager-openvpn,
  network-manager-openconnect,
+ modemmanager,
+ rfkill,
+ iio-sensor-proxy,
+ switcheroo-control,
  xdg-desktop-portal,
  xdg-desktop-portal-kde,
  xdg-desktop-portal-gtk,
@@ -61,7 +66,11 @@ Depends:
  at-spi2-core,
  orca,
  speech-dispatcher,
- plasma-disks
+ plasma-disks,
+ plasma-keyboard,
+ drkonqi,
+ ksshaskpass,
+ pinentry-qt
 Recommends:
  krdc
 Description: SupraLINUX KDE Plasma desktop integration metapackage
