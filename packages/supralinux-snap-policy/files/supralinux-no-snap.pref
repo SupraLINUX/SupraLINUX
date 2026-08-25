@@ -1,0 +1,12 @@
+# Managed by SupraLINUX.
+#
+# SupraLINUX blocks Snap through APT by default. Removing the
+# supralinux-snap-policy package removes this policy; it does not install Snap.
+
+Package: snapd
+Pin: release a=*
+Pin-Priority: -10
+
+Package: plasma-discover-backend-snap
+Pin: release a=*
+Pin-Priority: -10
