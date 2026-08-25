@@ -17,7 +17,10 @@ Depends:
  systemsettings,
  sddm,
  sddm-theme-breeze,
+ kde-config-sddm,
  breeze,
+ breeze-gtk-theme,
+ kde-config-gtk-style,
  frameworkintegration6,
  plasma-integration,
  polkit-kde-agent-1,
@@ -25,12 +28,17 @@ Depends:
  upower,
  powerdevil,
  kscreen,
+ kde-config-screenlocker,
+ kinfocenter,
+ ksystemstats,
  plasma-pa,
  pipewire-audio,
  bluedevil,
  bluez,
  plasma-nm,
  network-manager,
+ network-manager-openvpn,
+ network-manager-openconnect,
  xdg-desktop-portal,
  xdg-desktop-portal-kde,
  xdg-user-dirs,
@@ -38,13 +46,23 @@ Depends:
  qt6-translations-l10n,
  kio6,
  kio-fuse,
+ kio-extras,
  libpam-kwallet5,
  flatpak,
  kde-config-flatpak,
- krdp
+ krdp,
+ print-manager,
+ cups,
+ cups-client,
+ cups-filters,
+ kdenetwork-filesharing,
+ samba,
+ at-spi2-core,
+ orca,
+ speech-dispatcher,
+ plasma-disks
 Recommends:
- krdc,
- kio-extras
+ krdc
 Description: SupraLINUX KDE Plasma desktop integration metapackage
  Development metapackage for the SupraLINUX Aurora desktop baseline.
  .
