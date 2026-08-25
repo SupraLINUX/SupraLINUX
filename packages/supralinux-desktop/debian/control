@@ -1,0 +1,54 @@
+Source: supralinux-desktop
+Section: metapackages
+Priority: optional
+Maintainer: SupraLINUX Project <noreply@supralinux.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Homepage: https://supralinux.com
+
+Package: supralinux-desktop
+Architecture: all
+Depends:
+ ${misc:Depends},
+ plasma-desktop,
+ plasma-workspace,
+ plasma-session-wayland,
+ systemsettings,
+ sddm,
+ sddm-theme-breeze,
+ breeze,
+ frameworkintegration6,
+ plasma-integration,
+ polkit-kde-agent-1,
+ udisks2,
+ upower,
+ powerdevil,
+ kscreen,
+ plasma-pa,
+ pipewire-audio,
+ bluedevil,
+ bluez,
+ plasma-nm,
+ network-manager,
+ xdg-desktop-portal,
+ xdg-desktop-portal-kde,
+ xdg-user-dirs,
+ xkb-data,
+ qt6-translations-l10n,
+ kio6,
+ kio-fuse,
+ libpam-kwallet5,
+ flatpak,
+ kde-config-flatpak,
+ krdp
+Recommends:
+ krdc,
+ kio-extras
+Description: SupraLINUX KDE Plasma desktop integration metapackage
+ Development metapackage for the SupraLINUX Aurora desktop baseline.
+ .
+ It intentionally does not depend on kubuntu-desktop. The dependency set is
+ built from Plasma-visible capabilities and their required integration layers.
+ .
+ This package is still under audit and is not a release-frozen dependency list.
