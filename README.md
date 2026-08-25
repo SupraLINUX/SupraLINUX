@@ -1,5 +1,9 @@
 # SupraLINUX
 
+**Current generation:** SupraLINUX 1.x - Aurora  
+**Initial release target:** SupraLINUX 1.0.0 - Aurora  
+**Base:** Ubuntu 26.04 LTS
+
 SupraLINUX is a Linux distribution derived from Ubuntu LTS with a KDE Plasma desktop focused first on integration completeness, reliability, and a polished out-of-box experience.
 
 > Current status: private early development. No public release or supported ISO exists yet.
@@ -13,6 +17,7 @@ The first milestone is intentionally not a visual redesign. SupraLINUX-specific 
 ## Core choices
 
 - Base: Ubuntu 26.04 LTS
+- Generation codename: Aurora
 - Architecture: amd64 initially
 - Desktop: KDE Plasma
 - Session: Wayland
