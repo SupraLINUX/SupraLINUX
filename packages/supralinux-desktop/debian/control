@@ -41,6 +41,7 @@ Depends:
  network-manager-openconnect,
  xdg-desktop-portal,
  xdg-desktop-portal-kde,
+ xdg-desktop-portal-gtk,
  xdg-user-dirs,
  xkb-data,
  qt6-translations-l10n,
