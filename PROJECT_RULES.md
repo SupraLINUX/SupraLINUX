@@ -1,6 +1,6 @@
 # SupraLINUX — Project Rules and Product Contract
 
-This file is the authoritative, living set of rules for SupraLINUX. Any architectural, product, UX, packaging, security, repository, recovery, compatibility, or quality decision that becomes a project rule MUST be recorded here in the same change that implements or adopts it.
+This file is the authoritative, living set of rules for SupraLINUX. Any architectural, product, UX, packaging, security, repository, recovery, compatibility, localization, or quality decision that becomes a project rule MUST be recorded here in the same change that implements or adopts it.
 
 Status labels used below:
 - **ACCEPTED**: current project rule.
@@ -14,7 +14,7 @@ Status labels used below:
 - **ACCEPTED** Package prefix: `supralinux-*`.
 - **ACCEPTED** GitHub organization: `SupraLINUX`.
 - **ACCEPTED** Primary project domain: `supralinux.com`.
-- **ACCEPTED** Primary brand color: `#51A2DAFF`.
+- **ACCEPTED** Primary brand color: RGB `#51A2DA`; RGBA `#51A2DAFF`.
 - **ACCEPTED** Do not alternate technical naming with `Supra Linux`, `SupraLinux`, `Supralinux`, `SLinux`, or other spellings.
 
 ## 2. Base system
@@ -89,10 +89,16 @@ Rules:
 - **ACCEPTED** Do not give every package from the SupraLINUX origin a blanket priority that accidentally overrides Ubuntu. Intentional overrides must be explicit through package versions and/or scoped APT pinning.
 - **PROVISIONAL** Public repository endpoint: `repo.supralinux.com`, hosted on SupraLINUX infrastructure and served as signed static APT repository content.
 
-## 8. Installer and filesystems
+## 8. Installer, locale, and filesystems
 
 - **ACCEPTED** Installer: Calamares with SupraLINUX configuration and branding.
 - **ACCEPTED** First installer scope: language, keyboard, timezone, partitioning, user, bootloader, installation.
+- **ACCEPTED** The language/locale selected in the installer must be fully established before the user's first graphical session starts.
+- **ACCEPTED** Locale generation, Plasma/Qt translations, language support packages, and XDG user-directory localization are part of installation completeness, not optional post-install repair work.
+- **ACCEPTED** `xdg-user-dirs` must be present and functional. On first login, standard directories such as Desktop, Documents, Downloads, Music, Pictures, Videos, Templates, and Public Share must be created/configured according to the user's selected locale when translations exist.
+- **ACCEPTED** SupraLINUX must test that a clean install in each officially supported installation language produces correctly localized XDG user directories and a consistent `$LANG`/locale state before first use.
+- **ACCEPTED** Do not blindly run `xdg-user-dirs-update --force` on every login. Directory creation/migration must preserve user data and user choices.
+- **FUTURE** If the user changes language after installation, SupraLINUX should provide a safe, explicit migration path for localized XDG user-directory names rather than silently renaming populated folders.
 - **ACCEPTED** Default filesystem for the first release: ext4.
 - **FUTURE** Btrfs, snapshots, subvolumes, rollback, and advanced recovery can be added only after the complete design and failure modes are understood.
 
@@ -155,15 +161,17 @@ Before public release the project MUST have:
 - **ACCEPTED** The project must maintain explicit test coverage/checklists for desktop integration areas before public release.
 - **ACCEPTED** Prefer root-cause integration fixes and package dependencies over user-facing instructions that say “install package X manually” for functionality SupraLINUX claims to ship.
 - **ACCEPTED** Do not hide missing dependencies behind first-run setup chores. Features intended as part of the base experience should already work after installation.
+- **ACCEPTED** Localization is part of quality. A release is not considered correctly integrated if the installer says one language while the first session, user directories, formats, or core Plasma/Qt UI are left partially in another language because required locale/translation setup was missing or ran in the wrong order.
 
-## 16. Versioning — proposal pending final approval
+## 16. Versioning
 
-- **PROVISIONAL** Use three-part technical versions: `MAJOR.MINOR.PATCH`.
-- **PROVISIONAL** Patch releases (`1.0.1`, `1.0.2`, ...) are bug/security/integration fixes within a release line.
-- **PROVISIONAL** Minor releases (`1.1.0`, `1.2.0`, ...; public UI may show `1.1`, `1.2`) are meaningful feature/integration releases that remain on the same Ubuntu LTS base when practical.
-- **PROVISIONAL** Major releases (`2.0.0`, `3.0.0`, ...) normally correspond to a new Ubuntu LTS base or another compatibility/architecture boundary significant enough to justify a new generation.
-- **PROVISIONAL** A marketing codename may identify each major/base generation. The codename must not replace the numeric version used by packaging/update logic.
-- **NOTE** Version numbers do not “run out”: `1.9` can be followed by `1.10`, `1.11`, etc.
+- **ACCEPTED** Use three-part technical versions: `MAJOR.MINOR.PATCH`.
+- **ACCEPTED** Patch releases (`1.0.1`, `1.0.2`, ...) are bug/security/integration fixes within a release line.
+- **ACCEPTED** Minor releases (`1.1.0`, `1.2.0`, ...; public UI may show `1.1`, `1.2`) are meaningful feature/integration releases that remain on the same Ubuntu LTS base when practical.
+- **ACCEPTED** Major releases (`2.0.0`, `3.0.0`, ...) normally correspond to a new Ubuntu LTS base or another compatibility/architecture boundary significant enough to justify a new generation.
+- **ACCEPTED** A marketing codename identifies a major/base generation. The codename does not replace the numeric version used by packaging/update logic.
+- **ACCEPTED** Public branding may emphasize `SupraLINUX <major.minor> <codename>` while diagnostics, package metadata, support tools, and release metadata retain the full technical version.
+- **ACCEPTED** Version numbers do not “run out”: `1.9` may be followed by `1.10`, `1.11`, etc.
 
 ## 17. Scope discipline
 
