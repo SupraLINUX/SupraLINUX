@@ -1,0 +1,25 @@
+Source: supralinux-base
+Section: metapackages
+Priority: optional
+Maintainer: SupraLINUX Project <noreply@supralinux.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Homepage: https://supralinux.com
+
+Package: supralinux-base
+Architecture: amd64
+Depends:
+ ${misc:Depends},
+ ubuntu-minimal,
+ ubuntu-standard,
+ linux-generic,
+ linux-firmware,
+ firmware-sof-signed,
+ wireless-regdb
+Description: SupraLINUX Aurora Ubuntu LTS base metapackage
+ Development metapackage defining the non-desktop platform baseline for
+ SupraLINUX Aurora on Ubuntu 26.04 LTS.
+ .
+ It intentionally contains no Ubuntu Desktop, GNOME, Kubuntu desktop, Snap,
+ or SupraLINUX visual/application layer.
