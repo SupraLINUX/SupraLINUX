@@ -1,0 +1,8 @@
+supralinux-base (0.1.0~dev1) UNRELEASED; urgency=medium
+
+  * Define the first Ubuntu 26.04 LTS platform baseline for Aurora.
+  * Use ubuntu-minimal and ubuntu-standard without Ubuntu Desktop or Kubuntu.
+  * Follow Ubuntu's linux-generic kernel track with the full firmware metapackage.
+  * Make Intel SOF firmware and wireless regulatory data explicit baseline items.
+
+ -- SupraLINUX Project <noreply@supralinux.com>  Tue, 25 Aug 2026 21:08:00 -0300
