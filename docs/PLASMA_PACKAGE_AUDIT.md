@@ -178,3 +178,20 @@ Before freezing `debian/control` for `supralinux-desktop`:
 - then install the candidate dependency set in a clean Ubuntu 26.04 base VM and record every missing/broken surface.
 
 Only after the clean-VM pass should `supralinux-desktop` move from a candidate dependency list to a release-controlled metapackage.
+
+## 9. Dependency-chain confirmations from Ubuntu 26.04 metadata
+
+The first candidate `supralinux-desktop` control file has now been created for development testing. These details reduce unnecessary explicit dependencies and clarify what the Ubuntu packages already guarantee:
+
+- `plasma-session-wayland` directly depends on `kwin-wayland` and the matching `plasma-workspace`, so the metapackage can express the session at the right abstraction layer and let Ubuntu maintain the exact KWin version relationship.
+- `kwin-wayland` itself depends on `xwayland`, so X11 application compatibility under the Wayland session is already part of the KWin package dependency chain; SupraLINUX should not duplicate that dependency unless a later policy requires it explicitly.
+- `pipewire-audio` is the Ubuntu metapackage for a standard desktop PipeWire audio setup. It pulls in `pipewire-alsa`, `pipewire-pulse`, `wireplumber`, and `libspa-0.2-bluetooth`; therefore it is preferable to manually listing those pieces unless SupraLINUX needs to replace that composition.
+- Ubuntu 26.04 still names the Plasma 6 KWallet PAM package `libpam-kwallet5`. The name is historical; the package is built from the 6.6.x `kwallet-pam` source and is the correct PAM integration candidate for the Aurora baseline.
+- `sddm-theme-breeze` is built from the Plasma 6.6 desktop source and depends on the Plasma theme/workspace pieces, with SDDM recommended. SupraLINUX currently declares both `sddm` and `sddm-theme-breeze` explicitly because the login manager is part of the intended baseline, not an optional recommendation.
+- `kio-extras` brings substantial protocol/device support beyond core KIO, including SMB client integration through `libsmbclient`, DNSSD-related support, MTP-related support and additional KIO workers. It is currently a recommendation while we separate “desktop integration” from “broad everyday protocol support”.
+
+### Current candidate metapackage policy
+
+The development control file deliberately uses `Depends` for components that are currently considered part of the baseline contract, and `Recommends` only for items that still need product classification. This is not yet the release policy: after the first clean-VM pass, any capability SupraLINUX promises out of the box must be promoted to a hard dependency or otherwise guaranteed by the image composition.
+
+The package version is intentionally `0.1.0~dev1`, not `1.0.0`. `SupraLINUX 1.0.0 - Aurora` remains the first public release identity; development package revisions must not imply that the distribution has reached that milestone.
