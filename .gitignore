@@ -1,0 +1,58 @@
+# Debian package build artifacts
+*.deb
+*.ddeb
+*.changes
+*.build
+*.buildinfo
+*.dsc
+*.tar.*
+*.udeb
+*.substvars
+*.debhelper.log
+*.symbols
+*.shlibs
+*.list
+*.md5sums
+obj-*/
+debian/.debhelper/
+debian/files
+
+# ISO / disk / filesystem images
+*.iso
+*.img
+*.raw
+*.qcow2
+*.vdi
+*.vmdk
+*.squashfs
+
+# Checksums/signatures generated for releases
+*.sha256
+*.sha512
+*.sig
+*.asc
+
+# Build outputs
+build/
+dist/
+out/
+artifacts/
+.cache/
+
+# Local development
+.env
+.env.*
+!.env.example
+*.log
+*.tmp
+*~
+.DS_Store
+.idea/
+.vscode/
+
+# Signing material must never be committed
+*.gpg
+*.key
+*.pem
+secrets/
+keys/private/
