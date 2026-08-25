@@ -46,8 +46,6 @@ for package in snapd plasma-discover-backend-snap; do
     echo "PASS: $package has no installable candidate while policy is active."
 done
 
-# Test default APT behavior, including Recommends. This is simulation-only: no
-# package is installed and root privileges are not required.
 simulation="$(apt-get "${apt_opts[@]}" -s install plasma-discover 2>&1)" || {
     printf '%s\n' "$simulation" >&2
     echo "FAIL: plasma-discover could not be resolved under the Supra Snap policy." >&2
@@ -62,8 +60,6 @@ fi
 
 echo "PASS: plasma-discover resolves without snapd or the Snap backend."
 
-# Reversibility check: with the Supra preference removed, Ubuntu must expose a
-# normal snapd candidate. This does not install it.
 normal_candidate="$(apt-cache policy snapd | awk '/Candidate:/ {print $2; exit}')"
 if [[ -z "$normal_candidate" || "$normal_candidate" == "(none)" ]]; then
     echo "FAIL: snapd has no normal Ubuntu candidate after ignoring the Supra policy." >&2
