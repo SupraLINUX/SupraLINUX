@@ -1,76 +1,153 @@
 # Plasma Integration Matrix — Ubuntu 26.04 LTS
 
-Status: **initial research; not yet validated in a clean SupraLINUX VM**.
+Status: **research-backed candidate matrix; clean Ubuntu 26.04 validation pending**.
 
-This document maps Plasma-visible capabilities to the Ubuntu 26.04 packages/backends SupraLINUX must evaluate. Package existence is not enough: each row eventually needs a real clean-install test.
+This is the acceptance map for Aurora's first goal: an upstream-like Plasma desktop where every shipped capability has its backend, permissions and integration present.
 
-## Baseline composition
+A package being installed is not a pass. A row passes only when its real user workflow works.
 
-Ubuntu 26.04 provides `kde-plasma-desktop` as a minimal KDE Plasma metapackage. It depends on `kde-baseapps`, `plasma-desktop`, a Plasma session, `plasma-workspace`, `udisks2`, and `upower`. SupraLINUX will use this as a reference only; it will define its own composition rather than simply depending on Kubuntu's desktop metapackage.
+## Test status vocabulary
 
-Ubuntu 26.04 currently provides Plasma 6.6 packages, with updates in `resolute-updates`.
+- `RESEARCHED`: package/backend path identified from Ubuntu/KDE metadata.
+- `PENDING-VM`: can be tested in the first clean VM/system.
+- `PENDING-HW`: credible validation needs representative hardware.
+- `PASS`: acceptance flow completed successfully.
+- `FAIL`: defect discovered; must be tracked/fixed.
 
-## Initial matrix
+## Core/session
 
-| Area | Ubuntu 26.04 package(s) / backend candidates | SupraLINUX intent | Validation |
-|---|---|---|---|
-| Core desktop | `plasma-desktop`, `plasma-workspace` | Required | pending clean VM |
-| Session | `plasma-session-wayland` | Wayland is the primary session | pending clean VM |
-| Display manager | `sddm`, Breeze SDDM theme/integration | Required | pending audit |
-| Storage/removable media | `udisks2`, KDE Solid integration | Required | pending clean VM |
-| Power backend | `upower`, `powerdevil` | All exposed power controls must work | pending clean VM |
-| Network UI | `plasma-nm` + NetworkManager | Wi-Fi/Ethernet/VPN UI must have working backends | pending clean VM |
-| Audio | Plasma audio integration + PipeWire stack | Volume/devices/routing must work | pending package audit |
-| Bluetooth | `bluedevil` + BlueZ stack | Plasma Bluetooth UI must be complete | pending clean VM |
-| Polkit | `polkit-kde-agent-1` | Required authentication agent | pending clean VM |
-| Portals | `xdg-desktop-portal-kde` | Required for Wayland/sandbox integrations | pending clean VM |
-| Flatpak permissions | `flatpak`, `kde-config-flatpak` | Settings KCM must work, not just appear | pending clean VM |
-| Flatpak software backend | `plasma-discover-backend-flatpak` while Discover is retained | Temporary baseline until Supra Store exists | pending clean VM |
-| Remote desktop server | `krdp` | If the Plasma RDP settings UI ships, KRDP must work end-to-end | pending clean VM |
-| Remote desktop client | `krdc` | Candidate default KDE remote-desktop client | pending clean VM |
-| Network/KIO local bridging | `kio-fuse` | Candidate for non-KIO-aware app interoperability | pending clean VM |
-| Printing | Plasma print manager + CUPS stack | Printing UI must have complete backend | pending package audit |
-| Network shares | KIO/Samba stack | Browse/connect/share workflows must be explicit tests | pending package audit |
-| Localization | locale packages, Plasma/Qt translations, `xdg-user-dirs` | Must be correct before first graphical login | pending installer test |
-| Screen capture | Spectacle/KWin/PipeWire/portal path | Wayland capture must work | pending package audit |
-| Screen sharing | KWin/PipeWire/portal path | Wayland sharing must work in supported apps | pending package audit |
-| Wallet | KWallet + PAM/session integration | No broken/missing wallet prompts from incomplete integration | pending package audit |
+| ID | Capability | Candidate packages/backends | Acceptance | Status |
+|---|---|---|---|---|
+| AUR-CORE-001 | Plasma desktop starts | `plasma-desktop`, `plasma-workspace` | Login reaches a usable Plasma desktop without missing-shell errors | PENDING-VM |
+| AUR-CORE-002 | Wayland primary session | `plasma-session-wayland`, KWin Wayland | Session reports Wayland; normal apps/window management work | PENDING-VM |
+| AUR-CORE-003 | X11 app compatibility under Wayland | `xwayland` via KWin dependency | Representative X11 app starts and behaves normally | PENDING-VM |
+| AUR-CORE-004 | SDDM login | `sddm`, `sddm-theme-breeze` | Login/logout/switch-user path works reliably | PENDING-VM |
+| AUR-CORE-005 | Privileged desktop actions | `polkit-kde-agent-1` | Privileged System Settings actions show KDE auth dialog and succeed | PENDING-VM |
+| AUR-CORE-006 | KWallet login integration | `libpam-kwallet5` | Normal password login unlocks wallet without redundant password prompt | PENDING-VM |
 
-## Verified package availability from Ubuntu 26.04 repository research
+## Display, input and KWin
 
-The following package names have already been confirmed to exist in Ubuntu 26.04 (`resolute`):
+| ID | Capability | Candidate packages/backends | Acceptance | Status |
+|---|---|---|---|---|
+| AUR-KWIN-001 | Display configuration | `kscreen`, KWin | Change resolution/scaling/orientation and persist | PENDING-VM |
+| AUR-KWIN-002 | Global animation speed | `kcm_animations`, KWin | Setting visibly changes timing and persists | PENDING-VM |
+| AUR-KWIN-003 | Desktop effects | `kcm_kwin_effects`, KWin effects | Enable/disable/configure representative effects | PENDING-VM |
+| AUR-KWIN-004 | Virtual desktops | `kcm_kwin_virtualdesktops` | Add/remove/reorder/switch and persist | PENDING-VM |
+| AUR-KWIN-005 | Window decorations | `kcm_kwindecoration`, Breeze/KWin | Change supported decoration options and apply live | PENDING-VM |
+| AUR-KWIN-006 | Window rules | `kcm_kwinrules` | Create a rule and verify matching on Wayland | PENDING-VM |
+| AUR-KWIN-007 | Xwayland controls | `kcm_kwinxwayland` | Policy changes apply without breaking normal Xwayland apps | PENDING-VM |
+| AUR-KWIN-008 | Window behavior | `kcm_kwinoptions` | Focus/placement/action settings persist and work | PENDING-VM |
+| AUR-KWIN-009 | Screen edges | `kcm_kwinscreenedges` | Configured edge action triggers reliably | PENDING-VM |
+| AUR-KWIN-010 | Task switcher | `kcm_kwintabbox` | Alt-Tab and selected layout/behavior work | PENDING-VM |
+| AUR-INPUT-001 | Keyboard layouts/options | Plasma keyboard KCM + `xkb-data` | Add/switch layout; compose/options work under Wayland | PENDING-VM |
+| AUR-INPUT-002 | Mouse settings | Plasma/KWin input stack | Common pointer settings apply under Wayland | PENDING-VM |
+| AUR-INPUT-003 | Touchpad | Plasma/KWin/libinput path | Tap/scroll/speed controls work on real touchpad | PENDING-HW |
+| AUR-INPUT-004 | Touchscreen/tablet | Plasma/KWin input path | Device detected and relevant settings work | PENDING-HW |
 
-- `plasma-desktop`
-- `kde-plasma-desktop`
-- `plasma-nm`
-- `powerdevil`
-- `bluedevil`
-- `krdp`
-- `krdc`
-- `kde-config-flatpak`
-- `plasma-discover-backend-flatpak`
-- `xdg-desktop-portal-kde`
-- `polkit-kde-agent-1`
-- `kio-fuse`
+## Storage, power and hardware
 
-Do not interpret this list as the final `supralinux-desktop` dependency list.
+| ID | Capability | Candidate packages/backends | Acceptance | Status |
+|---|---|---|---|---|
+| AUR-HW-001 | Removable media | `udisks2`, Solid | Insert/mount/eject removable storage from Plasma/Dolphin | PENDING-VM |
+| AUR-HW-002 | Device automount settings | Plasma automounter + UDisks | Change policy and verify device behavior | PENDING-VM |
+| AUR-HW-003 | Power management | `powerdevil`, `upower` | Profiles/idle/suspend controls are actionable and persist | PENDING-VM |
+| AUR-HW-004 | Battery/brightness | PowerDevil hardware path | Battery and brightness controls work on laptop hardware | PENDING-HW |
+| AUR-HW-005 | SMART disk health | `plasma-disks` | SMART-capable drive status is visible and meaningful | PENDING-HW |
+| AUR-HW-006 | Bluetooth | `bluedevil`, `bluez`, PipeWire Bluetooth | Pair device; reconnect; audio profile when applicable | PENDING-HW |
 
-## Important discovery
+## Audio and media plumbing
 
-`krdp` in Ubuntu 26.04 ships both `krdpserver` and a Plasma System Settings KCM. This is exactly the kind of package that can make a Plasma setting appear/disappear depending on distro composition; SupraLINUX must deliberately include and test such feature packages rather than leaving official Plasma capabilities half-present.
+| ID | Capability | Candidate packages/backends | Acceptance | Status |
+|---|---|---|---|---|
+| AUR-AUDIO-001 | Desktop audio | `plasma-pa`, `pipewire-audio` | Playback works; volume/mute/device selection work | PENDING-VM |
+| AUR-AUDIO-002 | Audio routing | PipeWire/WirePlumber | Move stream between available sinks/sources | PENDING-VM |
+| AUR-AUDIO-003 | Bluetooth audio | BlueZ + PipeWire Bluetooth | Pair headset and use expected output/input profiles | PENDING-HW |
 
-Likewise, `kde-config-flatpak` supplies the Flatpak permissions KCM. If SupraLINUX supports Flatpak as a first-class application layer, omitting this KCM would violate the project's integration-completeness rule.
+## Networking and sharing
 
-## Next audit
+| ID | Capability | Candidate packages/backends | Acceptance | Status |
+|---|---|---|---|---|
+| AUR-NET-001 | Ethernet | `plasma-nm`, NetworkManager | Connect/disconnect/status/change connection | PENDING-VM |
+| AUR-NET-002 | Wi-Fi | `plasma-nm`, NetworkManager | Scan/connect/forget/reconnect secured Wi-Fi | PENDING-HW |
+| AUR-NET-003 | OpenVPN | `network-manager-openvpn` | Import/create profile and establish tunnel from Plasma-NM | PENDING-VM |
+| AUR-NET-004 | OpenConnect | `network-manager-openconnect` | Create/connect supported OpenConnect profile | PENDING-VM |
+| AUR-NET-005 | Browse SMB share | KIO/`kio-extras`, Samba client libs | Browse and open remote SMB share in Dolphin | PENDING-VM |
+| AUR-NET-006 | Create SMB share | `kdenetwork-filesharing`, `samba` | Share folder from Dolphin and access from another client | PENDING-VM |
+| AUR-NET-007 | KIO access from non-KIO apps | `kio-fuse` | Open supported remote KIO resource in conventional local-path app | PENDING-VM |
 
-Before creating the first `supralinux-desktop` control file, expand this matrix by inspecting:
+## Printing
 
-1. `plasma-desktop` dependencies/recommends
-2. `plasma-workspace` dependencies/recommends
-3. `kde-plasma-desktop` dependency closure as a reference
-4. `kubuntu-desktop` dependency closure only as a comparison/reference
-5. all Plasma System Settings KCMs exposed on a clean Ubuntu-base + Plasma install
-6. backend packages required by each KCM
-7. which packages are hard dependencies vs SupraLINUX policy choices
+| ID | Capability | Candidate packages/backends | Acceptance | Status |
+|---|---|---|---|---|
+| AUR-PRINT-001 | Printer configuration | `print-manager`, CUPS | Add/remove/configure printer through Plasma UI | PENDING-VM |
+| AUR-PRINT-002 | Driverless discovery | CUPS/OpenPrinting stack | Discover compatible network/virtual target | PENDING-VM |
+| AUR-PRINT-003 | Job lifecycle | CUPS + Print Manager | Submit, view, cancel job; useful error state on failure | PENDING-VM |
 
-Only after that audit should the first real metapackage dependency list be frozen.
+## Flatpak, portals and Wayland capture
+
+| ID | Capability | Candidate packages/backends | Acceptance | Status |
+|---|---|---|---|---|
+| AUR-FLAT-001 | Flatpak runtime | `flatpak` | Install/run/remove a test Flatpak | PENDING-VM |
+| AUR-FLAT-002 | Flatpak permission KCM | `kde-config-flatpak` | App permissions shown and edits affect app behavior | PENDING-VM |
+| AUR-PORTAL-001 | KDE file chooser portal | `xdg-desktop-portal`, `xdg-desktop-portal-kde` | Sandboxed app receives working KDE file chooser | PENDING-VM |
+| AUR-PORTAL-002 | Screen capture | KWin screenshot/screencast + PipeWire + KDE portal | Representative Wayland capture workflow succeeds | PENDING-VM |
+| AUR-PORTAL-003 | Screen sharing | KWin + PipeWire + KDE portal + client | Select screen/window and stream it in supported client | PENDING-VM |
+| AUR-PORTAL-004 | GTK/portal fallback | KDE portal; possible GTK fallback | Representative GTK/Flatpak apps behave correctly; determine if GTK backend is needed | PENDING-VM |
+
+## Remote desktop
+
+| ID | Capability | Candidate packages/backends | Acceptance | Status |
+|---|---|---|---|---|
+| AUR-RDP-001 | KRDP settings KCM | `krdp` | KCM loads, persists config and reports actionable state | PENDING-VM |
+| AUR-RDP-002 | KRDP physical-session path | KRDP + KWin/PipeWire/Wayland | Connect from external RDP client and obtain usable session | PENDING-VM |
+| AUR-RDP-003 | KRDP virtual-session path | KRDP virtual-monitor/session support | External client gets requested virtual desktop and clean lifecycle | PENDING-VM |
+| AUR-RDP-004 | KDE RDP client | `krdc` | Connect to known-good RDP server | PENDING-VM |
+
+## Localization
+
+| ID | Capability | Candidate packages/backends | Acceptance | Status |
+|---|---|---|---|---|
+| AUR-L10N-001 | Installer-selected locale before first login | locale stack + installer | `$LANG`/locale correct before first graphical session | PENDING-VM |
+| AUR-L10N-002 | Plasma/Qt translation | Plasma language packages + Qt translations | Core desktop and Qt UI use selected supported language | PENDING-VM |
+| AUR-L10N-003 | XDG user directories | `xdg-user-dirs` | Desktop/Documents/etc. created in selected locale where translation exists | PENDING-VM |
+| AUR-L10N-004 | Language-change migration | future Supra workflow | Existing populated directories are never silently renamed/lost | FUTURE |
+
+## Accessibility
+
+| ID | Capability | Candidate packages/backends | Acceptance | Status |
+|---|---|---|---|---|
+| AUR-A11Y-001 | AT-SPI runtime | `at-spi2-core` | Accessibility bus/runtime available in Plasma session | PENDING-VM |
+| AUR-A11Y-002 | Screen reader | `orca`, `speech-dispatcher` | User can start reader and navigate representative Plasma/Qt UI | PENDING-VM |
+| AUR-A11Y-003 | Visual accessibility effects | Plasma/KWin | Zoom/invert/color-related exposed controls work as documented | PENDING-VM |
+
+## Software management and Snap policy
+
+| ID | Capability | Candidate packages/backends | Acceptance | Status |
+|---|---|---|---|---|
+| AUR-SW-001 | Snap blocked by default | planned Supra policy package | `snapd` cannot be silently installed while policy is active | DESIGN |
+| AUR-SW-002 | Snap unblock is reversible | planned Supra policy package | Disable/remove policy; `snapd` can then be installed normally | DESIGN |
+| AUR-SW-003 | Temporary Discover without Snap | `plasma-discover` + PackageKit/Flatpak/fwupd | Install Discover without Snap backend or snapd under Supra policy | BLOCKED by policy implementation |
+
+## Explicitly unresolved / not claimed yet
+
+The following are not considered supported merely because packages exist:
+
+- firewall KCM/backend
+- Thunderbolt authorization
+- Plasma Vaults
+- fingerprint authentication
+- KDE Connect as a default app
+- browser integration
+- Supra Store / custom updater
+- recovery and backup
+
+They move into this matrix when SupraLINUX explicitly chooses to ship/claim them.
+
+## First clean-system gate
+
+The first `supralinux-desktop` VM/system pass is not allowed to end with “desktop boots, good enough”. Every `PENDING-VM` item above must become either:
+
+- `PASS`, or
+- `FAIL` with a reproducible defect and planned fix.
+
+Hardware-only items remain pending until representative hardware is tested.
