@@ -1,3 +1,17 @@
+supralinux-desktop (0.1.0~dev2) UNRELEASED; urgency=medium
+
+  * Expand the Aurora candidate baseline with screen-locker and SDDM KCMs.
+  * Add GTK/Breeze integration for non-Qt desktop applications.
+  * Add printing with Print Manager and the CUPS stack.
+  * Add Samba sharing integration and KIO extras.
+  * Add OpenVPN and OpenConnect NetworkManager backends.
+  * Add accessibility runtime pieces (AT-SPI, Orca, Speech Dispatcher).
+  * Add Plasma SMART disk-health integration.
+  * Keep Discover out of the hard dependency set until Snap recommendations are
+    neutralized by the SupraLINUX Snap policy package.
+
+ -- SupraLINUX Project <noreply@supralinux.com>  Tue, 25 Aug 2026 20:18:00 -0300
+
 supralinux-desktop (0.1.0~dev1) UNRELEASED; urgency=medium
 
   * Initial development metapackage for the SupraLINUX Aurora Plasma baseline.
