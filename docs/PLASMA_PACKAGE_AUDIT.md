@@ -8,30 +8,24 @@ This is not a copy of `kubuntu-desktop`. Kubuntu is used as a reference because 
 
 ## Source references
 
-Primary research sources for this phase are Ubuntu 26.04 (`resolute`) package metadata:
+Primary research sources for this phase are Ubuntu 26.04 (`resolute`) and `resolute-updates` package metadata. Metadata must be rechecked before freezing a release because updates can change versions and dependency relationships.
 
-- https://packages.ubuntu.com/resolute/kde-plasma-desktop
-- https://packages.ubuntu.com/resolute/kubuntu-desktop
-- https://packages.ubuntu.com/resolute/plasma-desktop
-- https://packages.ubuntu.com/resolute/plasma-workspace
-- https://packages.ubuntu.com/resolute/kwin-common
-- https://packages.ubuntu.com/resolute/xdg-desktop-portal-kde
-- https://packages.ubuntu.com/resolute/plasma-firewall
+Key package families inspected so far include:
 
-Package metadata must be rechecked before freezing a release because `resolute-updates` can change versions/dependencies.
+- `kde-plasma-desktop`, `plasma-desktop`, `plasma-workspace`
+- `kwin-common`, `kwin-wayland`
+- `plasma-nm`, NetworkManager VPN plugins
+- `xdg-desktop-portal-kde`
+- `print-manager`, CUPS/OpenPrinting
+- `kdenetwork-filesharing`, Samba
+- `kde-config-sddm`, `kde-config-gtk-style`
+- `plasma-disks`
+- accessibility stack (`at-spi2-core`, `orca`, `speech-dispatcher`)
+- `plasma-discover` and its optional backends
 
 ## 1. Minimal Plasma reference
 
-Ubuntu's `kde-plasma-desktop` metapackage is intentionally minimal. It currently depends on:
-
-- `kde-baseapps`
-- `plasma-desktop`
-- `plasma-session-wayland` or `plasma-session-x11`
-- `plasma-workspace`
-- `udisks2`
-- `upower`
-
-For SupraLINUX this is useful as a lower-bound reference, not as our final desktop definition. It does not by itself express the complete feature set we intend to ship.
+Ubuntu's `kde-plasma-desktop` metapackage is intentionally minimal. It currently depends on a small desktop/application core including Plasma, a session, storage and power components. For SupraLINUX this is useful as a lower-bound reference, not as our final desktop definition. It does not by itself express the complete feature set we intend to ship.
 
 ## 2. Core desktop — candidate REQUIRED set
 
@@ -40,158 +34,199 @@ These packages/areas are strong candidates for the first `supralinux-desktop` de
 | Area | Candidate package(s) | Reason | Status |
 |---|---|---|---|
 | Plasma shell/workspace | `plasma-desktop`, `plasma-workspace` | Core desktop | research confirmed; VM pending |
-| Wayland session | `plasma-session-wayland`, `kwin-wayland` | Primary SupraLINUX session | research confirmed; VM pending |
+| Wayland session | `plasma-session-wayland` | Primary session; pulls matching KWin Wayland | research confirmed; VM pending |
 | System Settings | `systemsettings` | Main configuration UI during vanilla phase | research confirmed; VM pending |
 | Default visual integration | `breeze`, `frameworkintegration6`, `plasma-integration` | Upstream-like Qt/Plasma integration | research confirmed; VM pending |
+| GTK visual integration | `breeze-gtk-theme`, `kde-config-gtk-style` | Cross-toolkit coherence | promoted to candidate baseline |
 | Authentication UI | `polkit-kde-agent-1` | Required for privileged desktop actions | research confirmed; VM pending |
+| Display manager | `sddm`, `sddm-theme-breeze`, `kde-config-sddm` | Login and its official KCM must be functional | promoted to candidate baseline |
 | Storage/removable media | `udisks2` | Backend for storage/removable-device integration | research confirmed; VM pending |
 | Power | `upower`, `powerdevil` | Power/battery controls must work | research confirmed; VM pending |
 | Displays | `kscreen` | Monitor hotplug/display settings | research confirmed; VM pending |
-| Screen locking | `kde-config-screenlocker` | Screen-locking KCM | research confirmed; VM pending |
-| System information | `kinfocenter` | Plasma/KDE system information surface | research confirmed; VM pending |
-| System monitoring backend | `ksystemstats` | Backend for Plasma system-monitoring surfaces | research confirmed; VM pending |
+| Screen locking | `kde-config-screenlocker` | Screen-locking KCM | promoted to candidate baseline |
+| System information | `kinfocenter` | Plasma/KDE system information surface | promoted to candidate baseline |
+| System monitoring backend | `ksystemstats` | Backend for Plasma monitoring surfaces | promoted to candidate baseline |
 | Audio UI | `plasma-pa` | Plasma volume/device UI | research confirmed; VM pending |
-| Audio stack | `pipewire`, `pipewire-audio`, `wireplumber` | Standard desktop audio/session stack | research confirmed; VM pending |
-| Bluetooth UI | `bluedevil` | KDE Bluetooth stack | research confirmed; VM pending |
-| Bluetooth backend | `bluez`, `libspa-0.2-bluetooth` | Backend + PipeWire Bluetooth audio | research confirmed; VM pending |
-| Networking UI | `plasma-nm` | Plasma network UI | research confirmed; VM pending |
-| Networking backend | `network-manager`, Wi-Fi backend packages | Actual network management | research confirmed; VM pending |
+| Audio stack | `pipewire-audio` | Ubuntu desktop PipeWire composition | research confirmed; VM pending |
+| Bluetooth UI/backend | `bluedevil`, `bluez` | Complete Plasma Bluetooth path | research confirmed; VM pending |
+| Networking UI/backend | `plasma-nm`, `network-manager` | Wi-Fi/Ethernet connection management | research confirmed; VM pending |
+| Common VPN backends | `network-manager-openvpn`, `network-manager-openconnect` | Useful Plasma-NM VPN workflows | promoted to candidate baseline |
 | Portals | `xdg-desktop-portal`, `xdg-desktop-portal-kde` | Wayland/sandbox/file-picker/screen-sharing integration | research confirmed; VM pending |
-| XDG user dirs | `xdg-user-dirs` | Correct localized standard home directories | research confirmed; installer test pending |
+| XDG user dirs | `xdg-user-dirs` | Correct localized standard home directories | installer test pending |
 | Keyboard data | `xkb-data` | Keyboard layout configuration | research confirmed; VM pending |
-| Qt translations | `qt6-translations-l10n` | Core Qt localization | research confirmed; locale matrix pending |
-| File/network abstraction | `kio6`, `kio-fuse` | KDE file/network access and non-KIO app interoperability | research confirmed; VM pending |
+| Qt translations | `qt6-translations-l10n` | Core Qt localization | locale matrix pending |
+| File/network abstraction | `kio6`, `kio-fuse`, `kio-extras` | KDE protocol/device support and non-KIO app interoperability | promoted to candidate baseline |
+| KWallet login integration | `libpam-kwallet5` | Avoid unnecessary wallet password prompts | research confirmed; PAM test pending |
 
-This table is deliberately conservative: a package is not promoted to final REQUIRED simply because Kubuntu depends on it.
+## 3. KWin and Plasma KCM surface
 
-## 3. Plasma-owned KCM surface already identified
+The detailed KCM inventory lives in `docs/KCM_AUDIT.md`. Important package-level conclusions:
 
-The Ubuntu `plasma-desktop` file list shows that the package itself provides System Settings modules for, among other areas:
+- `plasma-desktop` installs a large set of KCMs directly, including accessibility, activities, file search, input, shortcuts, session, automount, spell checking and desktop paths.
+- `kwin-common` installs the KWin KCMs for animation speed, effects, scripts, virtual desktops, decorations, rules, Xwayland, virtual keyboard, window behavior, screen edges, task switching and touchscreen edges.
+- KWin also ships the screenshot and screencast plugins used in the Wayland capture/sharing path.
 
-- accessibility
-- activities
-- Baloo file search
-- desktop paths
-- game controllers
-- KDE background services
-- keyboard
-- shortcuts
-- mouse
-- Plasma search
-- session behavior
-- splash screen
-- tablets/touchpad/touchscreen
-- workspace behavior
-- clock/date-related UI
-- device automount
-- spell checking
+Therefore “Plasma launches” is not a meaningful completeness test. Every visible surface requires an acceptance test.
 
-`kwin-common` provides additional KWin/System Settings modules including:
+## 4. Feature-completeness decisions promoted into the current candidate
 
-- animation speed
-- desktop effects
-- KWin scripts
-- virtual desktops
-- window decorations
-- window rules
-- Xwayland controls
-- virtual keyboard
-- window behavior/options
-- screen edges
-- task/window switcher
-- touchscreen edges
+### Flatpak
 
-Every visible module in the installed baseline must eventually have a test entry in `PLASMA_INTEGRATION_MATRIX.md`.
+Candidate hard baseline:
 
-## 4. Feature-completeness candidates
+- `flatpak`
+- `kde-config-flatpak`
 
-These packages are not necessarily part of the immutable core, but they correspond to capabilities that fit SupraLINUX's “everything exposed works” goal and should be audited for inclusion.
+Reason: Flatpak is a first-class SupraLINUX application layer, so its Plasma permissions KCM should not be missing.
 
-| Capability | Candidate package(s) | Notes |
+### Remote Desktop
+
+Candidate hard baseline:
+
+- `krdp`
+
+`krdc` remains a recommendation for now because the server KCM is part of the desktop integration contract while the client application is a user-facing application choice. This classification can change after clean-VM testing.
+
+### Printing
+
+Candidate hard baseline:
+
+- `print-manager`
+- `cups`
+- `cups-client`
+- `cups-filters`
+
+`cups-filters` in Ubuntu 26.04 includes the OpenPrinting filter stack and driverless-printing support through its dependencies. The clean-system test must cover discovery, adding/removing printers, queues and an actual job path.
+
+### Network sharing
+
+Candidate hard baseline:
+
+- `kdenetwork-filesharing`
+- `samba`
+- `kio-extras`
+
+`kdenetwork-filesharing` depends on Samba common tooling, but the Samba server itself is only suggested upstream. SupraLINUX explicitly wants folder sharing to work rather than merely show an action, so the current candidate includes `samba` until testing proves a better split.
+
+### VPN
+
+Candidate hard baseline:
+
+- `network-manager-openvpn`
+- `network-manager-openconnect`
+
+These are core NetworkManager plugins, not the GNOME editor packages. Plasma-NM provides the desktop UI. Additional protocols remain optional until there is a concrete product/support decision.
+
+### Accessibility
+
+Candidate hard baseline:
+
+- `at-spi2-core`
+- `orca`
+- `speech-dispatcher`
+
+This is intentionally broader than a minimal Plasma install. The accessibility KCM exposes screen-reader-related behavior; shipping the UI while omitting the usable runtime would violate SupraLINUX's completeness rule. The exact startup/toggle integration still requires a real session test.
+
+### SMART disk health
+
+Candidate hard baseline:
+
+- `plasma-disks`
+
+It is an official Plasma integration for SMART-capable devices. It remains subject to hardware/VM validation and can be demoted if it proves inappropriate for the base image.
+
+### GTK application coherence
+
+Candidate hard baseline:
+
+- `breeze-gtk-theme`
+- `kde-config-gtk-style`
+
+SupraLINUX will use non-Qt applications where they are the right application. A vanilla Plasma baseline should therefore make GTK applications visually coherent and expose the supported Plasma GTK configuration surface.
+
+## 5. Discover / PackageKit / Snap interaction — important open issue
+
+Ubuntu 26.04's `plasma-discover` package contains the PackageKit backend and depends on `packagekit`, so it can serve APT software without a separate PackageKit backend package.
+
+However, Ubuntu's `plasma-discover` also **recommends `plasma-discover-backend-snap`**. APT installs recommendations by default. Blindly adding Discover to `supralinux-desktop` could therefore pull in the Snap backend and undermine SupraLINUX's accepted “Snap blocked by default” rule.
+
+Current decision:
+
+- do **not** add `plasma-discover` to the hard `supralinux-desktop` dependency set yet;
+- design and implement the SupraLINUX Snap policy first;
+- after the policy can safely block `snapd`/the Snap backend while remaining reversible, re-evaluate a temporary Discover baseline with:
+  - PackageKit/APT
+  - Flatpak backend
+  - fwupd backend
+  - update notifier
+  - **no Snap backend**
+
+Discover is temporary product infrastructure anyway; SupraLINUX intends to replace it later with Supra Store. That future plan is not a reason to ship a broken or policy-violating store during Aurora development.
+
+## 6. Portal backend question — OPEN
+
+Kubuntu installs both `xdg-desktop-portal-kde` and `xdg-desktop-portal-gtk`. SupraLINUX will not copy this blindly.
+
+Before freeze:
+
+1. enumerate interfaces implemented by the KDE portal backend shipped in Ubuntu 26.04;
+2. identify interfaces for which a fallback backend is actually required;
+3. test representative Qt, GTK and Flatpak applications under Plasma Wayland;
+4. include `xdg-desktop-portal-gtk` only if it provides necessary compatibility without stealing interfaces that KDE should own.
+
+## 7. Deliberately unresolved capabilities
+
+These remain outside the hard candidate until policy/testing is adequate:
+
+| Capability | Package(s) | Reason not yet hard baseline |
 |---|---|---|
-| Flatpak | `flatpak`, `kde-config-flatpak` | First-class SupraLINUX application layer; permissions KCM should be present |
-| Remote desktop server | `krdp` | Supplies KRDP server and Plasma KCM; end-to-end Wayland test required |
-| Remote desktop client | `krdc` | KDE client; useful baseline candidate |
-| Printing | `print-manager`, `cups`, `cups-client`, `cups-filters` | UI without CUPS backend is not acceptable |
-| Network sharing | `kdenetwork-filesharing`, Samba/KIO backend packages | Must support real share creation/browsing, not just a visible action |
-| VPN | NetworkManager plugins such as OpenVPN/OpenConnect where appropriate | Plasma NM should not advertise unusable workflows |
-| SDDM configuration | `kde-config-sddm`, `sddm`, `sddm-theme-breeze` | Audit what is appropriate to expose in the vanilla phase |
-| GTK appearance integration | `kde-config-gtk-style`, `breeze-gtk-theme` | Helps non-Qt apps fit the desktop |
-| Firmware updates | `fwupd`, signed integration where applicable | Candidate for complete hardware maintenance UX |
-| SMART disk health | `plasma-disks` | Plasma-visible disk-health integration |
-| Thunderbolt | `plasma-thunderbolt` plus its backend | Include only if the full authorization workflow works |
-| Plasma Vaults | `plasma-vault` and encryption backends | Include only after complete create/open/close/recovery tests |
-| Firewall KCM | `plasma-firewall` plus exactly one supported firewall backend | The KCM recommends UFW or firewalld; SupraLINUX must pick/test a policy before shipping this surface |
-| KDE Connect | `kdeconnect` | Strong desktop-integration candidate; not required merely because KDE provides it |
-| Browser integration | `plasma-browser-integration` plus browser extension path | Audit after browser policy is finalized |
-| Fingerprint | `libpam-fprintd`/`fprintd` integration | Hardware-dependent test track required before claiming support |
-| Accessibility | `at-spi2-core`, screen reader stack where applicable | Accessibility KCM must not expose dead controls |
+| Firewall KCM | `plasma-firewall` + UFW or firewalld | Must choose a firewall policy/backend before exposing it |
+| Thunderbolt | `plasma-thunderbolt` + backend | Requires physical-device authorization testing |
+| Plasma Vaults | `plasma-vault` + crypto backends | Requires complete create/open/close/recovery test design |
+| Fingerprint | `libpam-fprintd` / `fprintd` | Changes auth stack; hardware validation required |
+| KDE Connect | `kdeconnect` | Strong product candidate, but not a hidden transitive requirement |
+| Browser integration | `plasma-browser-integration` | Wait for browser/default-app policy |
+| Firmware UI | `fwupd` + UI integration | Backend is useful, but user-facing update surface is coupled to store/updater decision |
 
-## 5. Portal backend question — OPEN
+## 8. Explicit non-inheritance from Kubuntu
 
-Kubuntu 26.04 depends on both `xdg-desktop-portal-kde` and `xdg-desktop-portal-gtk`. SupraLINUX will not copy this blindly.
-
-Action before freeze:
-
-1. enumerate portal interfaces implemented by the KDE backend shipped in Ubuntu 26.04;
-2. identify any interfaces for which a fallback backend is required;
-3. test GTK and Flatpak applications under Plasma Wayland;
-4. include `xdg-desktop-portal-gtk` only if it provides necessary fallback behavior or compatibility.
-
-## 6. Explicit non-inheritance from Kubuntu
-
-The following categories found in `kubuntu-desktop` are NOT automatically inherited by SupraLINUX:
+The following are NOT automatically inherited:
 
 - `kubuntu-settings-desktop`
 - Kubuntu wallpapers/branding/Plymouth themes
-- `plasma-distro-release-notifier` as a Kubuntu/Ubuntu release policy component
+- `plasma-distro-release-notifier`
 - `plasma-discover-backend-snap`
 - `snapd`
 - Firefox's Ubuntu Snap transition package
 - games and discretionary applications
 - Ubuntu/Kubuntu-specific helpers that do not serve SupraLINUX's architecture
-- duplicate remote-desktop clients simply because Kubuntu recommends them
+- duplicate applications merely because Kubuntu recommends them
 
-Any such package requires its own SupraLINUX justification.
+Every inherited-looking package needs a SupraLINUX reason.
 
-## 7. Important first conclusions
+## 9. Dependency-chain confirmations
 
-1. Installing only a minimal Plasma metapackage is insufficient for SupraLINUX's product contract.
-2. Kubuntu's dependency list is useful as a discovery map because it exposes integration packages that are easy to miss, but it contains many policy/application choices SupraLINUX does not want.
-3. The correct approach is to build our own dependency set from Plasma-visible capabilities outward: UI -> backend -> permissions -> session integration -> test.
-4. `supralinux-desktop` should contain desktop/integration capability dependencies; discretionary end-user applications should remain separable in `supralinux-default-apps` where practical.
-5. Snap-related dependencies must be explicitly excluded from the default composition.
+- `plasma-session-wayland` pulls the matching KWin Wayland/session relationship; SupraLINUX should express the session rather than hard-code unnecessary internal version relationships.
+- `kwin-wayland` depends on `xwayland`, so X11 application compatibility under the Wayland session is already included by the Ubuntu package chain.
+- `pipewire-audio` pulls the normal desktop PipeWire/Pulse compatibility, WirePlumber and Bluetooth-audio pieces. Prefer this abstraction unless SupraLINUX later needs a different composition.
+- Ubuntu 26.04 retains the historical package name `libpam-kwallet5` for the current KWallet PAM integration.
+- `kio-extras` materially expands KIO protocol/device support, including SMB-related client support; it has been promoted from `Recommends` to the candidate hard baseline because SupraLINUX intends common network/file protocols to work out of the box.
 
-## 8. Next audit steps
+## 10. Current metapackage state
 
-Before freezing `debian/control` for `supralinux-desktop`:
+The development package is now `0.1.0~dev2`. It remains explicitly UNRELEASED and experimental.
 
-- enumerate every System Settings module installed by candidate packages;
-- map each external KCM to its backend;
-- audit network/VPN packages;
-- audit printing and Samba sharing end-to-end dependencies;
-- audit PipeWire, screen capture, screen sharing and KRDP paths on Wayland;
-- audit KWallet/PAM/session integration;
-- audit accessibility dependencies;
-- decide the portal fallback policy;
-- distinguish desktop capability packages from default application packages;
-- then install the candidate dependency set in a clean Ubuntu 26.04 base VM and record every missing/broken surface.
+The current candidate is intentionally broader than a minimal KDE install because its purpose is to create a **complete test surface**. After the first clean Ubuntu 26.04 installation we can remove packages that are redundant, inappropriate or already guaranteed transitively—but only after proving that removal does not make a promised capability incomplete.
 
-Only after the clean-VM pass should `supralinux-desktop` move from a candidate dependency list to a release-controlled metapackage.
+`SupraLINUX 1.0.0 - Aurora` remains the first public distribution identity. Development package versions must not imply release readiness.
 
-## 9. Dependency-chain confirmations from Ubuntu 26.04 metadata
+## 11. Next audit steps
 
-The first candidate `supralinux-desktop` control file has now been created for development testing. These details reduce unnecessary explicit dependencies and clarify what the Ubuntu packages already guarantee:
-
-- `plasma-session-wayland` directly depends on `kwin-wayland` and the matching `plasma-workspace`, so the metapackage can express the session at the right abstraction layer and let Ubuntu maintain the exact KWin version relationship.
-- `kwin-wayland` itself depends on `xwayland`, so X11 application compatibility under the Wayland session is already part of the KWin package dependency chain; SupraLINUX should not duplicate that dependency unless a later policy requires it explicitly.
-- `pipewire-audio` is the Ubuntu metapackage for a standard desktop PipeWire audio setup. It pulls in `pipewire-alsa`, `pipewire-pulse`, `wireplumber`, and `libspa-0.2-bluetooth`; therefore it is preferable to manually listing those pieces unless SupraLINUX needs to replace that composition.
-- Ubuntu 26.04 still names the Plasma 6 KWallet PAM package `libpam-kwallet5`. The name is historical; the package is built from the 6.6.x `kwallet-pam` source and is the correct PAM integration candidate for the Aurora baseline.
-- `sddm-theme-breeze` is built from the Plasma 6.6 desktop source and depends on the Plasma theme/workspace pieces, with SDDM recommended. SupraLINUX currently declares both `sddm` and `sddm-theme-breeze` explicitly because the login manager is part of the intended baseline, not an optional recommendation.
-- `kio-extras` brings substantial protocol/device support beyond core KIO, including SMB client integration through `libsmbclient`, DNSSD-related support, MTP-related support and additional KIO workers. It is currently a recommendation while we separate “desktop integration” from “broad everyday protocol support”.
-
-### Current candidate metapackage policy
-
-The development control file deliberately uses `Depends` for components that are currently considered part of the baseline contract, and `Recommends` only for items that still need product classification. This is not yet the release policy: after the first clean-VM pass, any capability SupraLINUX promises out of the box must be promoted to a hard dependency or otherwise guaranteed by the image composition.
-
-The package version is intentionally `0.1.0~dev1`, not `1.0.0`. `SupraLINUX 1.0.0 - Aurora` remains the first public release identity; development package revisions must not imply that the distribution has reached that milestone.
+- assign test IDs to every KCM and major desktop capability;
+- audit Wayland capture/screen-sharing end-to-end;
+- audit KRDP physical and virtual session behavior;
+- audit the KDE portal interface set and GTK fallback question;
+- design the reversible Snap blocking package/policy;
+- build `supralinux-desktop` in a clean Ubuntu 26.04 build environment;
+- install it on a clean Ubuntu base and turn every missing/failed feature into a tracked defect;
+- only then begin reducing/refining the candidate dependency set.
