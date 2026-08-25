@@ -1,0 +1,7 @@
+supralinux-desktop (0.1.0~dev1) UNRELEASED; urgency=medium
+
+  * Initial development metapackage for the SupraLINUX Aurora Plasma baseline.
+  * Start from Ubuntu 26.04 LTS packages without depending on kubuntu-desktop.
+  * Declare the first audited core/integration dependency set for clean-VM testing.
+
+ -- SupraLINUX Project <noreply@supralinux.com>  Tue, 25 Aug 2026 19:55:00 -0300
