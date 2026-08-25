@@ -1,0 +1,6 @@
+supralinux-snap-policy (0.1.0~dev1) UNRELEASED; urgency=medium
+
+  * Add the first reversible SupraLINUX APT policy for blocking Snap by default.
+  * Block both snapd and Plasma Discover's Snap backend while the policy is active.
+
+ -- SupraLINUX Project <noreply@supralinux.com>  Tue, 25 Aug 2026 20:27:00 -0300
