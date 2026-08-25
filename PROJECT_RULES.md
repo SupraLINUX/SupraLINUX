@@ -170,7 +170,10 @@ Before public release the project MUST have:
 - **ACCEPTED** Minor releases (`1.1.0`, `1.2.0`, ...; public UI may show `1.1`, `1.2`) are meaningful feature/integration releases that remain on the same Ubuntu LTS base when practical.
 - **ACCEPTED** Major releases (`2.0.0`, `3.0.0`, ...) normally correspond to a new Ubuntu LTS base or another compatibility/architecture boundary significant enough to justify a new generation.
 - **ACCEPTED** A marketing codename identifies a major/base generation. The codename does not replace the numeric version used by packaging/update logic.
-- **ACCEPTED** Public branding may emphasize `SupraLINUX <major.minor> <codename>` while diagnostics, package metadata, support tools, and release metadata retain the full technical version.
+- **ACCEPTED** Generation 1 codename: `Aurora`.
+- **ACCEPTED** Generation 1 base: Ubuntu 26.04 LTS.
+- **ACCEPTED** Initial release identity: `SupraLINUX 1.0.0 - Aurora`.
+- **ACCEPTED** Public branding may emphasize `SupraLINUX <major.minor> - <codename>` while diagnostics, package metadata, support tools, and release metadata retain the full technical version.
 - **ACCEPTED** Version numbers do not “run out”: `1.9` may be followed by `1.10`, `1.11`, etc.
 
 ## 17. Scope discipline
