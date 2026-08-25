@@ -51,6 +51,8 @@ Status labels used below:
 
 - **ACCEPTED** Flatpak is supported and integrated into the desktop.
 - **ACCEPTED** Snap is blocked by default and is not installed by default.
+- **ACCEPTED** The default Snap block is owned by the reversible `supralinux-snap-policy` package rather than by ISO-only shell edits.
+- **ACCEPTED** While the policy is active it must prevent both `snapd` and Plasma Discover's Snap backend from being installed automatically through APT.
 - **ACCEPTED** SupraLINUX may later expose a user-facing control that removes the Snap block. Removing the block must not itself install Snap.
 - **ACCEPTED** Once the user explicitly removes the block, normal APT behavior may install `snapd` if the user chooses packages/actions that require it.
 - **ACCEPTED** The Snap policy must be implemented transparently and reversibly, not through brittle ad-hoc scripts.
@@ -66,6 +68,7 @@ Initial package split:
 - `supralinux-artwork`
 - `supralinux-default-apps`
 - `supralinux-flatpak`
+- `supralinux-snap-policy`
 - `supralinux-installer`
 - `supralinux-welcome`
 - `supralinux-meta`
@@ -76,6 +79,7 @@ Rules:
 - **ACCEPTED** `supralinux-settings` owns SupraLINUX defaults, not one-off shell modifications.
 - **ACCEPTED** `supralinux-release` owns system identity/version metadata such as `/etc/os-release` and related release information.
 - **ACCEPTED** `supralinux-artwork` owns wallpapers, logo assets, SDDM, Plymouth, GRUB, splash, avatars, installer branding, and related visual assets.
+- **ACCEPTED** `supralinux-snap-policy` owns the default reversible APT policy that blocks Snap without patching APT and without installing Snap when the policy is removed.
 - **ACCEPTED** Any setting or package selection that must survive rebuilds belongs in Git and/or a DEB package.
 
 ## 7. Ubuntu and SupraLINUX repositories
