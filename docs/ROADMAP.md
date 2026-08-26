@@ -44,7 +44,7 @@ Goal: a clean Ubuntu 26.04 base can become the SupraLINUX baseline through packa
 - [x] Build repeatable development DEB package prototypes
 - [x] Add Ubuntu 26.04 package-build/APT-resolution CI gate
 - [x] Add isolated clean Ubuntu 26.04 rootfs installation gate
-- [ ] Pass/freeze the clean-rootfs gate and record its resulting package set
+- [x] Pass the clean-rootfs gate and record its resulting package set
 - [ ] Build the first bootable VM validation harness
 
 **Exit criterion:** Plasma looks close to upstream and every feature SupraLINUX exposes in the baseline works without requiring the user to discover missing packages.
