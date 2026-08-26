@@ -2,11 +2,14 @@
 #
 # SupraLINUX blocks Snap through APT by default. Removing the
 # supralinux-snap-policy package removes this policy; it does not install Snap.
+#
+# Pin by version rather than archive/origin so third-party APT repositories
+# cannot accidentally bypass the default block.
 
 Package: snapd
-Pin: release a=*
+Pin: version *
 Pin-Priority: -10
 
 Package: plasma-discover-backend-snap
-Pin: release a=*
+Pin: version *
 Pin-Priority: -10
