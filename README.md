@@ -1,12 +1,14 @@
 # SupraLINUX
 
+> **PRE-ALPHA DEVELOPMENT** — This repository is public for transparent development and CI. There is currently **no supported SupraLINUX release or ISO for end users**.
+
 **Current generation:** SupraLINUX 1.x - Aurora  
 **Initial release target:** SupraLINUX 1.0.0 - Aurora  
 **Base:** Ubuntu 26.04 LTS
 
 SupraLINUX is a Linux distribution derived from Ubuntu LTS with a KDE Plasma desktop focused first on integration completeness, reliability, and a polished out-of-box experience.
 
-> Current status: private early development. No public release or supported ISO exists yet.
+The public repository does not indicate release readiness. Development packages, dependency lists, build logic and documentation may change until the project reaches its release gates.
 
 ## First objective
 
