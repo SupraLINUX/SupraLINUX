@@ -1,3 +1,10 @@
+supralinux-base (0.1.0~dev2) UNRELEASED; urgency=medium
+
+  * Make supralinux-snap-policy part of the Aurora base dependency contract so
+    Snap is blocked by default on systems built from the SupraLINUX base layer.
+
+ -- SupraLINUX Project <noreply@supralinux.com>  Tue, 25 Aug 2026 21:12:00 -0300
+
 supralinux-base (0.1.0~dev1) UNRELEASED; urgency=medium
 
   * Define the first Ubuntu 26.04 LTS platform baseline for Aurora.
