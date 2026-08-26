@@ -116,8 +116,9 @@ Rules:
 
 ## 10. Git and development model
 
-- **ACCEPTED** Initial development is private.
-- **ACCEPTED** Code may become open source when the project is mature enough for public development/release.
+- **ACCEPTED** The source repository is public during pre-alpha development to support transparent development and public CI.
+- **ACCEPTED** Public repository visibility does not mean SupraLINUX has a supported release, supported ISO, stable APT repository, or release-ready software.
+- **ACCEPTED** Public visibility without an explicit software license does not itself grant an open-source license; project licensing must be deliberately selected before public release.
 - **ACCEPTED** Initial repository model: monorepo.
 - **ACCEPTED** Primary branches: `main` for known-good state and `development` for active integration; feature branches may be used for larger work.
 - **ACCEPTED** Do not split into many repositories until a component has a real independent lifecycle.
@@ -166,6 +167,7 @@ Before public release the project MUST have:
 - **ACCEPTED** Prefer root-cause integration fixes and package dependencies over user-facing instructions that say “install package X manually” for functionality SupraLINUX claims to ship.
 - **ACCEPTED** Do not hide missing dependencies behind first-run setup chores. Features intended as part of the base experience should already work after installation.
 - **ACCEPTED** Localization is part of quality. A release is not considered correctly integrated if the installer says one language while the first session, user directories, formats, or core Plasma/Qt UI are left partially in another language because required locale/translation setup was missing or ran in the wrong order.
+- **ACCEPTED** CI that performs real package installation must use an isolated disposable environment/rootfs rather than mutating the hosted runner into something that could hide missing base dependencies.
 
 ## 16. Versioning
 
