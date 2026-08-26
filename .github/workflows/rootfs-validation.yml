@@ -1,0 +1,57 @@
+name: Aurora clean rootfs validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - development
+    paths:
+      - 'packages/**'
+      - 'scripts/ci/build-packages.sh'
+      - 'scripts/ci/validate-clean-rootfs.sh'
+      - '.github/workflows/rootfs-validation.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aurora-rootfs-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  clean-rootfs:
+    name: Install Aurora into clean Ubuntu 26.04 rootfs
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out SupraLINUX
+        uses: actions/checkout@v4
+
+      - name: Verify runner base
+        shell: bash
+        run: |
+          set -euo pipefail
+          . /etc/os-release
+          echo "Runner: ${PRETTY_NAME}"
+          test "${VERSION_CODENAME}" = "resolute"
+          test "$(dpkg --print-architecture)" = "amd64"
+
+      - name: Install build and rootfs tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential \
+            debhelper \
+            devscripts \
+            debootstrap
+
+      - name: Build SupraLINUX development packages
+        shell: bash
+        run: bash scripts/ci/build-packages.sh
+
+      - name: Build and validate clean Aurora rootfs
+        shell: bash
+        run: sudo bash scripts/ci/validate-clean-rootfs.sh
