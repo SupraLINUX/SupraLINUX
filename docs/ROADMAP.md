@@ -6,7 +6,7 @@ This roadmap prioritizes integration correctness before branding or custom appli
 
 Status: **complete**
 
-- [x] Create private GitHub organization/repository
+- [x] Create GitHub organization/repository
 - [x] Establish `PROJECT_RULES.md`
 - [x] Define Ubuntu 26.04 LTS base
 - [x] Define KDE Plasma + Wayland baseline
@@ -17,12 +17,13 @@ Status: **complete**
 - [x] Finalize first generation codename: Aurora
 - [x] Add initial packaging skeleton
 - [x] Add initial test matrix
+- [x] Mark repository as public pre-alpha development with no supported release/ISO
 
 ## Phase 1 — Minimal Ubuntu → complete vanilla Plasma
 
 Goal: a clean Ubuntu 26.04 base can become the SupraLINUX baseline through packages/configuration only.
 
-- [x] Define the first candidate Ubuntu 26.04 base composition (`supralinux-base`); clean validation still pending
+- [x] Define the first candidate Ubuntu 26.04 base composition (`supralinux-base`)
 - [x] Inventory the first Plasma 6 package/KCM surface available in Ubuntu 26.04; audit remains iterative
 - [ ] Freeze the exact `supralinux-desktop` dependency set after clean-system evidence
 - [ ] Ensure Wayland session boots reliably
@@ -42,7 +43,9 @@ Goal: a clean Ubuntu 26.04 base can become the SupraLINUX baseline through packa
 - [ ] Validate Flatpak desktop integration
 - [x] Build repeatable development DEB package prototypes
 - [x] Add Ubuntu 26.04 package-build/APT-resolution CI gate
-- [ ] Build the first clean-system VM validation harness
+- [x] Add isolated clean Ubuntu 26.04 rootfs installation gate
+- [ ] Pass/freeze the clean-rootfs gate and record its resulting package set
+- [ ] Build the first bootable VM validation harness
 
 **Exit criterion:** Plasma looks close to upstream and every feature SupraLINUX exposes in the baseline works without requiring the user to discover missing packages.
 
