@@ -10,6 +10,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 DEB_DIR="${ROOT_DIR}/build/debs"
 ROOTFS="${ROOT_DIR}/build/rootfs"
 MIRROR="${AURORA_UBUNTU_MIRROR:-http://archive.ubuntu.com/ubuntu}"
+SECURITY_MIRROR="${AURORA_UBUNTU_SECURITY_MIRROR:-http://security.ubuntu.com/ubuntu}"
 
 required_tools=(debootstrap chroot dpkg-query apt-get apt-cache)
 for tool in "${required_tools[@]}"; do
@@ -29,6 +30,10 @@ if [[ ${#snap_policy_debs[@]} -ne 1 || ${#base_debs[@]} -ne 1 || ${#desktop_debs
   exit 1
 fi
 
+snap_policy_name="$(basename "${snap_policy_debs[0]}")"
+base_name="$(basename "${base_debs[0]}")"
+desktop_name="$(basename "${desktop_debs[0]}")"
+
 rm -rf "${ROOTFS}"
 mkdir -p "${ROOTFS}"
 
@@ -39,10 +44,10 @@ if ! debootstrap --variant=minbase --arch=amd64 resolute "${ROOTFS}" "${MIRROR}"
   exit 1
 fi
 
-cat >"${ROOTFS}/etc/apt/sources.list" <<'EOF'
-deb http://archive.ubuntu.com/ubuntu resolute main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu resolute-updates main restricted universe multiverse
-deb http://security.ubuntu.com/ubuntu resolute-security main restricted universe multiverse
+cat >"${ROOTFS}/etc/apt/sources.list" <<EOF
+deb ${MIRROR} resolute main restricted universe multiverse
+deb ${MIRROR} resolute-updates main restricted universe multiverse
+deb ${SECURITY_MIRROR} resolute-security main restricted universe multiverse
 EOF
 
 rm -f "${ROOTFS}/etc/resolv.conf"
@@ -66,28 +71,15 @@ run_in_rootfs() {
     "$@"
 }
 
-echo "==> Updating clean rootfs package metadata"
-run_in_rootfs apt-get update
-
-echo "==> Installing SupraLINUX Snap policy before the rest of the system"
-run_in_rootfs apt-get install -y /tmp/supralinux/supralinux-snap-policy_*.deb
-
-echo "==> Verifying Snap is blocked before installing Aurora layers"
-snap_policy="$(run_in_rootfs apt-cache policy snapd)"
-printf '%s\n' "${snap_policy}"
-grep -Fq 'Candidate: (none)' <<<"${snap_policy}"
-
-echo "==> Installing supralinux-base + supralinux-desktop into the clean rootfs"
-run_in_rootfs apt-get install -y \
-  /tmp/supralinux/supralinux-base_*.deb \
-  /tmp/supralinux/supralinux-desktop_*.deb
-
-run_in_rootfs apt-get check
+package_status() {
+  local package="$1"
+  run_in_rootfs dpkg-query -W -f='${db:Status-Abbrev}' "${package}" 2>/dev/null || true
+}
 
 assert_installed() {
   local package="$1"
   local status
-  status="$(run_in_rootfs dpkg-query -W -f='${db:Status-Abbrev}' "${package}" 2>/dev/null || true)"
+  status="$(package_status "${package}")"
   if [[ "${status}" != "ii " ]]; then
     echo "Expected installed package '${package}', got status '${status:-missing}'." >&2
     exit 1
@@ -101,6 +93,30 @@ assert_absent() {
     exit 1
   fi
 }
+
+echo "==> Updating clean rootfs package metadata"
+run_in_rootfs apt-get update
+
+echo "==> Installing SupraLINUX Snap policy before the rest of the system"
+run_in_rootfs apt-get install -y "/tmp/supralinux/${snap_policy_name}"
+assert_installed supralinux-snap-policy
+
+if [[ ! -f "${ROOTFS}/etc/apt/preferences.d/supralinux-no-snap.pref" ]]; then
+  echo "SupraLINUX Snap APT preference was not installed by supralinux-snap-policy." >&2
+  exit 1
+fi
+
+echo "==> Verifying Snap is blocked before installing Aurora layers"
+snap_policy="$(run_in_rootfs apt-cache policy snapd)"
+printf '%s\n' "${snap_policy}"
+grep -Fq 'Candidate: (none)' <<<"${snap_policy}"
+
+echo "==> Installing supralinux-base + supralinux-desktop into the clean rootfs"
+run_in_rootfs apt-get install -y \
+  "/tmp/supralinux/${base_name}" \
+  "/tmp/supralinux/${desktop_name}"
+
+run_in_rootfs apt-get check
 
 required_packages=(
   supralinux-snap-policy
