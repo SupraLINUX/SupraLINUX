@@ -11,6 +11,7 @@ Package: supralinux-base
 Architecture: amd64
 Depends:
  ${misc:Depends},
+ supralinux-snap-policy,
  ubuntu-minimal,
  ubuntu-standard,
  linux-generic,
@@ -22,4 +23,5 @@ Description: SupraLINUX Aurora Ubuntu LTS base metapackage
  SupraLINUX Aurora on Ubuntu 26.04 LTS.
  .
  It intentionally contains no Ubuntu Desktop, GNOME, Kubuntu desktop, Snap,
- or SupraLINUX visual/application layer.
+ or SupraLINUX visual/application layer. The reversible SupraLINUX Snap policy
+ is part of the base contract so Snap is blocked by default on Aurora systems.
