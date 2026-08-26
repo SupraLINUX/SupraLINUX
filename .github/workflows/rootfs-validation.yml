@@ -22,7 +22,9 @@ jobs:
   clean-rootfs:
     name: Install Aurora into clean Ubuntu 26.04 rootfs
     runs-on: ubuntu-26.04
-    timeout-minutes: 45
+    timeout-minutes: 90
+    env:
+      AURORA_UBUNTU_MIRROR: http://azure.archive.ubuntu.com/ubuntu
 
     steps:
       - name: Check out SupraLINUX
@@ -54,4 +56,4 @@ jobs:
 
       - name: Build and validate clean Aurora rootfs
         shell: bash
-        run: sudo bash scripts/ci/validate-clean-rootfs.sh
+        run: sudo -E bash scripts/ci/validate-clean-rootfs.sh
