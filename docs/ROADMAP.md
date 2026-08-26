@@ -4,7 +4,7 @@ This roadmap prioritizes integration correctness before branding or custom appli
 
 ## Phase 0 — Foundation
 
-Status: **in progress**
+Status: **complete**
 
 - [x] Create private GitHub organization/repository
 - [x] Establish `PROJECT_RULES.md`
@@ -14,17 +14,17 @@ Status: **in progress**
 - [x] Define Snap-blocked-by-default policy
 - [x] Define monorepo and branch model
 - [x] Define versioning model
-- [ ] Finalize first generation codename
-- [ ] Add initial packaging skeleton
-- [ ] Add initial test matrix
+- [x] Finalize first generation codename: Aurora
+- [x] Add initial packaging skeleton
+- [x] Add initial test matrix
 
 ## Phase 1 — Minimal Ubuntu → complete vanilla Plasma
 
 Goal: a clean Ubuntu 26.04 base can become the SupraLINUX baseline through packages/configuration only.
 
-- [ ] Identify the smallest correct Ubuntu 26.04 base/rootfs path
-- [ ] Inventory Plasma 6 packages available in Ubuntu 26.04
-- [ ] Define the exact `supralinux-desktop` dependency set
+- [x] Define the first candidate Ubuntu 26.04 base composition (`supralinux-base`); clean validation still pending
+- [x] Inventory the first Plasma 6 package/KCM surface available in Ubuntu 26.04; audit remains iterative
+- [ ] Freeze the exact `supralinux-desktop` dependency set after clean-system evidence
 - [ ] Ensure Wayland session boots reliably
 - [ ] Ensure SDDM integration is correct
 - [ ] Validate Polkit integration
@@ -40,11 +40,15 @@ Goal: a clean Ubuntu 26.04 base can become the SupraLINUX baseline through packa
 - [ ] Validate language/locale/XDG directory behavior
 - [ ] Validate power management and suspend/resume
 - [ ] Validate Flatpak desktop integration
-- [ ] Build repeatable installation script/package prototype
+- [x] Build repeatable development DEB package prototypes
+- [x] Add Ubuntu 26.04 package-build/APT-resolution CI gate
+- [ ] Build the first clean-system VM validation harness
 
 **Exit criterion:** Plasma looks close to upstream and every feature SupraLINUX exposes in the baseline works without requiring the user to discover missing packages.
 
 ## Phase 2 — SupraLINUX packaging
+
+Development prototypes already exist for `supralinux-base`, `supralinux-desktop`, and `supralinux-snap-policy`; the checkboxes below mean release-ready/frozen packages, not merely that a development directory exists.
 
 - [ ] `supralinux-base`
 - [ ] `supralinux-desktop`
@@ -56,6 +60,7 @@ Goal: a clean Ubuntu 26.04 base can become the SupraLINUX baseline through packa
 - [ ] `supralinux-installer`
 - [ ] `supralinux-welcome`
 - [ ] `supralinux-meta`
+- [ ] `supralinux-snap-policy`
 
 **Exit criterion:** installing SupraLINUX packages on a clean compatible Ubuntu base reproducibly produces the intended system.
 
