@@ -6,13 +6,26 @@ if [[ "${EUID}" -ne 0 ]]; then
   exit 1
 fi
 
+# Keep chroot mounts isolated from the runner's mount namespace. The package
+# installation needs /proc, /sys and /dev to behave like a real Ubuntu system,
+# but those mounts must never leak back into the CI host.
+if [[ "${AURORA_ROOTFS_MOUNT_NAMESPACE:-0}" != "1" ]]; then
+  command -v unshare >/dev/null 2>&1 || {
+    echo "Missing required tool: unshare" >&2
+    exit 1
+  }
+  exec unshare --mount --propagation private /usr/bin/env \
+    AURORA_ROOTFS_MOUNT_NAMESPACE=1 \
+    bash "$0" "$@"
+fi
+
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 DEB_DIR="${ROOT_DIR}/build/debs"
 ROOTFS="${ROOT_DIR}/build/rootfs"
 MIRROR="${AURORA_UBUNTU_MIRROR:-http://archive.ubuntu.com/ubuntu}"
 SECURITY_MIRROR="${AURORA_UBUNTU_SECURITY_MIRROR:-http://security.ubuntu.com/ubuntu}"
 
-required_tools=(debootstrap chroot dpkg-query apt-get apt-cache)
+required_tools=(debootstrap chroot dpkg-query apt-get apt-cache mount umount mountpoint)
 for tool in "${required_tools[@]}"; do
   command -v "${tool}" >/dev/null 2>&1 || {
     echo "Missing required tool: ${tool}" >&2
@@ -43,6 +56,29 @@ if ! debootstrap --variant=minbase --arch=amd64 resolute "${ROOTFS}" "${MIRROR}"
   cat "${deBootstrapLog}" >&2
   exit 1
 fi
+
+cleanup_rootfs_mounts() {
+  set +e
+  if mountpoint -q "${ROOTFS}/dev"; then
+    umount -R "${ROOTFS}/dev" >/dev/null 2>&1 || umount -l "${ROOTFS}/dev" >/dev/null 2>&1 || true
+  fi
+  if mountpoint -q "${ROOTFS}/sys"; then
+    umount "${ROOTFS}/sys" >/dev/null 2>&1 || umount -l "${ROOTFS}/sys" >/dev/null 2>&1 || true
+  fi
+  if mountpoint -q "${ROOTFS}/proc"; then
+    umount "${ROOTFS}/proc" >/dev/null 2>&1 || umount -l "${ROOTFS}/proc" >/dev/null 2>&1 || true
+  fi
+}
+trap cleanup_rootfs_mounts EXIT
+
+# Maintainer scripts, systemd-tmpfiles and dracut expect these pseudo
+# filesystems. /proc and /sys are intentionally read-only so package scripts
+# cannot alter the CI runner's kernel state while running inside the chroot.
+mkdir -p "${ROOTFS}/proc" "${ROOTFS}/sys" "${ROOTFS}/dev"
+mount -t proc -o ro,nosuid,nodev,noexec proc "${ROOTFS}/proc"
+mount -t sysfs -o ro,nosuid,nodev,noexec sysfs "${ROOTFS}/sys"
+mount --rbind /dev "${ROOTFS}/dev"
+mount --make-rslave "${ROOTFS}/dev"
 
 cat >"${ROOTFS}/etc/apt/sources.list" <<EOF
 deb ${MIRROR} resolute main restricted universe multiverse
@@ -88,10 +124,19 @@ assert_installed() {
 
 assert_absent() {
   local package="$1"
-  if run_in_rootfs dpkg-query -W -f='${db:Status-Abbrev}' "${package}" >/dev/null 2>&1; then
-    echo "Forbidden package '${package}' is present in the clean Aurora rootfs." >&2
-    exit 1
+  local status
+  status="$(package_status "${package}")"
+
+  # dpkg-query may return success for packages known to dpkg even when their
+  # status is "not-installed" (for example "un "). Treat every dpkg state
+  # whose status character is 'n' as absent; reject installed, unpacked,
+  # half-configured and config-files-only states.
+  if [[ -z "${status}" || "${status:1:1}" == "n" ]]; then
+    return 0
   fi
+
+  echo "Forbidden package '${package}' has dpkg status '${status}' in the clean Aurora rootfs." >&2
+  exit 1
 }
 
 echo "==> Updating clean rootfs package metadata"
