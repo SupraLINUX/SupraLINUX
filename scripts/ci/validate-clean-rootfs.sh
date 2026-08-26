@@ -21,7 +21,7 @@ fi
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 DEB_DIR="${ROOT_DIR}/build/debs"
-ROOTFS="${ROOT_DIR}/build/rootfs"
+ROOTFS="${AURORA_ROOTFS_DIR:-${ROOT_DIR}/build/rootfs}"
 MIRROR="${AURORA_UBUNTU_MIRROR:-http://archive.ubuntu.com/ubuntu}"
 SECURITY_MIRROR="${AURORA_UBUNTU_SECURITY_MIRROR:-http://security.ubuntu.com/ubuntu}"
 
@@ -47,8 +47,16 @@ snap_policy_name="$(basename "${snap_policy_debs[0]}")"
 base_name="$(basename "${base_debs[0]}")"
 desktop_name="$(basename "${desktop_debs[0]}")"
 
-rm -rf "${ROOTFS}"
-mkdir -p "${ROOTFS}"
+# A boot-validation caller may provide ROOTFS as an already-mounted empty ext4
+# filesystem. Do not attempt to remove the mountpoint itself in that case;
+# clear only its contents. The normal rootfs gate continues to use a plain
+# directory and gets the previous rm/mkdir behavior.
+if mountpoint -q "${ROOTFS}"; then
+  find "${ROOTFS}" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
+else
+  rm -rf "${ROOTFS}"
+  mkdir -p "${ROOTFS}"
+fi
 
 echo "==> Creating clean Ubuntu 26.04 minbase rootfs"
 deBootstrapLog="${ROOT_DIR}/build/debootstrap.log"
