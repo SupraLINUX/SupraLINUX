@@ -1,0 +1,71 @@
+name: Aurora package validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - development
+    paths:
+      - 'packages/**'
+      - 'scripts/ci/**'
+      - '.github/workflows/package-validation.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'packages/**'
+      - 'scripts/ci/**'
+      - '.github/workflows/package-validation.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aurora-package-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-resolve:
+    name: Build and resolve on Ubuntu 26.04
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out SupraLINUX
+        uses: actions/checkout@v4
+
+      - name: Verify runner base
+        shell: bash
+        run: |
+          set -euo pipefail
+          . /etc/os-release
+          echo "Runner: ${PRETTY_NAME}"
+          test "${VERSION_CODENAME}" = "resolute"
+          test "$(dpkg --print-architecture)" = "amd64"
+
+      - name: Install package build tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential \
+            debhelper \
+            devscripts
+
+      - name: Build SupraLINUX development packages
+        shell: bash
+        run: bash scripts/ci/build-packages.sh
+
+      - name: Validate APT dependency resolution and Snap policy
+        shell: bash
+        run: bash scripts/ci/validate-apt-resolution.sh
+
+      - name: Show resulting package metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          for package in build/debs/*.deb; do
+            echo "===== ${package} ====="
+            dpkg-deb --field "${package}" Package Version Architecture Depends Recommends
+          done
