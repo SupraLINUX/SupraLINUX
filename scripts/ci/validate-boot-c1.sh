@@ -38,15 +38,9 @@ truncate -s "${IMAGE_SIZE}" "${IMAGE}"
 mkfs.ext4 -F -L AURORA_C1 "${IMAGE}" >/dev/null
 mount -o loop "${IMAGE}" "${ROOTFS}"
 
-# Reuse the already-proven package/rootfs composition, but build directly into
-# the mounted disk image so CI does not need a second multi-gigabyte copy.
 echo "==> Installing Aurora into the boot disk"
-AURORA_ROOTFS_DIR="${ROOTFS}" \
-  bash "${ROOT_DIR}/scripts/ci/validate-clean-rootfs.sh"
+AURORA_ROOTFS_DIR="${ROOTFS}" bash "${ROOT_DIR}/scripts/ci/validate-clean-rootfs.sh"
 
-# policy-rc.d exists only to keep package maintainer scripts from trying to
-# start services while composing the chroot. It is not part of the booted
-# product state.
 rm -f "${ROOTFS}/usr/sbin/policy-rc.d"
 rm -rf "${ROOTFS}/tmp/supralinux"
 
@@ -66,9 +60,6 @@ cat >"${ROOTFS}/etc/fstab" <<EOF
 UUID=${root_uuid} / ext4 defaults 0 1
 EOF
 
-# CI-only boot probe. None of these files belongs in SupraLINUX product
-# packages. A timer triggers the probe after boot; the service itself is ordered
-# after multi-user.target so the marker cannot be emitted before C1 is reached.
 mkdir -p "${ROOTFS}/usr/local/libexec" "${ROOTFS}/etc/systemd/system/timers.target.wants"
 cat >"${ROOTFS}/usr/local/libexec/aurora-ci-c1-check" <<'EOF'
 #!/usr/bin/env bash
@@ -94,7 +85,8 @@ if systemctl is-active --quiet rescue.target; then
 fi
 
 root_opts="$(findmnt -n -o OPTIONS /)"
-tr ',' '\n' <<<"${root_opts}" | grep -Fxq rw || fail "root filesystem is not read/write (${root_opts})"
+root_opts_lines="$(tr ',' '\n' <<<"${root_opts}")"
+grep -Fxq rw <<<"${root_opts_lines}" || fail "root filesystem is not read/write (${root_opts})"
 
 apt-get check >/dev/null || fail "apt-get check failed after boot"
 
@@ -108,7 +100,8 @@ for package in snapd plasma-discover-backend-snap; do
   if [[ -n "${status}" && "${status:1:1}" != "n" ]]; then
     fail "forbidden package ${package} has dpkg status ${status}"
   fi
-  apt-cache policy "${package}" | grep -Fq 'Candidate: (none)' || fail "${package} has an APT candidate"
+  policy="$(apt-cache policy "${package}")"
+  grep -Fq 'Candidate: (none)' <<<"${policy}" || fail "${package} has an APT candidate"
 done
 
 [[ -L /etc/systemd/system/display-manager.service ]] || fail "display-manager.service is not configured"
