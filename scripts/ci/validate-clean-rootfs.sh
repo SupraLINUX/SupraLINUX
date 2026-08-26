@@ -241,7 +241,7 @@ if grep -Eq '^Inst (snapd|plasma-discover-backend-snap)( |$)' "${discover_log}";
 fi
 
 installed_count="$(run_in_rootfs dpkg-query -W -f='${db:Status-Abbrev}\n' | grep -c '^ii ' || true)"
-rootfs_size="$(du -sh "${ROOTFS}" | awk '{print $1}')"
+rootfs_size="$(du -shx "${ROOTFS}" | awk '{print $1}')"
 
 echo "Aurora clean-rootfs validation passed."
 echo "Installed packages: ${installed_count}"
