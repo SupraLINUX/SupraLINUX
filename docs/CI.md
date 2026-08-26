@@ -1,47 +1,59 @@
-# SupraLINUX CI — Aurora package validation
+# SupraLINUX CI — Aurora validation
 
-The first CI gate validates packaging and APT dependency resolution on the same Ubuntu generation used by Aurora.
+SupraLINUX CI validates packaging and installation against the same Ubuntu generation used by Aurora.
 
 ## Runner
 
-The workflow uses GitHub's `ubuntu-26.04` x64 runner. As of August 2026 this runner image is in public preview, so the workflow explicitly verifies `VERSION_CODENAME=resolute` before doing any project work.
+The workflows use GitHub's `ubuntu-26.04` x64 runner. As of August 2026 this runner image is still in public preview, so each workflow explicitly verifies `VERSION_CODENAME=resolute` and amd64 before doing project work.
 
-## Current workflow
+The source repository is public pre-alpha development. Public repository visibility does not imply release readiness and there is no supported ISO/release yet.
 
-`.github/workflows/package-validation.yml`
+## Gate 1 — package build and APT resolution
 
-It currently runs only:
+Workflow: `.github/workflows/package-validation.yml`
 
-- manually through `workflow_dispatch`; or
-- on a pull request targeting `main` when packaging/CI files changed.
+It runs:
 
-It does **not** run on every development commit. This is deliberate while the repository is private so CI minutes are not consumed by every small audit/edit.
+- manually through `workflow_dispatch`;
+- on relevant pushes to `development`; and
+- on pull requests targeting `main` when packaging/CI files change.
 
-## What it proves
+It proves:
 
 1. the package sources build into DEB packages on Ubuntu 26.04;
 2. the runner is actually amd64 Resolute;
-3. `supralinux-snap-policy`, `supralinux-base` and `supralinux-desktop` can be presented to APT together without unresolved package names/dependencies;
+3. `supralinux-snap-policy`, `supralinux-base` and `supralinux-desktop` resolve through APT without unresolved dependency names;
 4. the SupraLINUX Snap policy removes installable APT candidates for `snapd` and `plasma-discover-backend-snap` in a fresh APT state;
-5. resolving Plasma Discover under the policy must not pull the Snap backend.
+5. Plasma Discover can resolve under the policy without pulling the Snap backend.
 
-## What it does NOT prove
+## Gate 2 — clean rootfs installation
 
-This gate is intentionally not called a desktop test. It does not prove:
+Workflow: `.github/workflows/rootfs-validation.yml`
 
-- Plasma boots;
-- SDDM works;
-- a Wayland session starts;
-- audio/network/Bluetooth work;
-- KRDP works;
+This gate goes beyond resolver simulation. It builds a disposable Ubuntu 26.04 `debootstrap --variant=minbase` rootfs, enables the official Ubuntu main/restricted/universe/multiverse repositories, then installs the SupraLINUX DEBs for real inside that isolated filesystem.
+
+The Snap policy is installed first, then `supralinux-base` and `supralinux-desktop` are installed using normal APT behavior. The gate then runs `apt-get check` and verifies a representative set of required packages including Plasma Wayland, SDDM, Polkit, PipeWire, NetworkManager, Bluetooth, KDE portal integration, Flatpak integration, KRDP, printing, Samba sharing, KWallet, power management and display management.
+
+The rootfs gate also fails if it finds `snapd`, Plasma Discover's Snap backend, Ubuntu Desktop, Kubuntu Desktop or GNOME Shell. It checks that the SupraLINUX APT preference file exists in the installed rootfs and that Snap remains non-installable afterward.
+
+## What these gates still do NOT prove
+
+Neither gate is a graphical desktop test. They do not yet prove:
+
+- the rootfs boots;
+- SDDM reaches a graphical greeter;
+- a Plasma Wayland session starts;
+- audio/network/Bluetooth hardware actually works;
+- KRDP establishes a working session;
+- portals and screen sharing function end-to-end;
 - locale/XDG first-login behavior is correct;
 - suspend/resume works;
 - hardware-specific integrations work.
 
-Those require the next clean-system/VM validation layer.
+Those require the next VM/boot/session validation layer.
 
 ## Storage policy
 
-The workflow does not upload GitHub Actions artifacts. DEBs exist only inside the ephemeral runner for the duration of the validation job. This avoids using artifact storage for routine development validation.
+Routine validation does not upload GitHub Actions artifacts. DEBs and rootfs data exist only inside the ephemeral runner for the duration of each job.
 
-When release/test packages need persistent distribution, they belong in the SupraLINUX APT repository rather than GitHub Actions artifact storage.
+Persistent test/release packages belong in the future SupraLINUX APT repository rather than GitHub Actions artifact storage.
