@@ -1,3 +1,19 @@
+supralinux-desktop (0.1.0~dev4) UNRELEASED; urgency=medium
+
+  * Add power-profiles-daemon so Plasma power-profile controls have a backend.
+  * Add ModemManager for Plasma-NM mobile-broadband support.
+  * Add rfkill and IIO sensor proxy hardware integration.
+  * Add switcheroo-control as the dual-GPU D-Bus integration candidate.
+  * Add Plasma's on-screen keyboard so the exposed virtual-keyboard path has a
+    real backend to validate.
+  * Add DrKonqi/systemd-coredump integration for KDE crash handling.
+  * Add KDE SSH askpass and Qt pinentry helpers for coherent desktop credential
+    prompts.
+  * Keep all newly added integrations subject to clean-system and hardware tests;
+    Kubuntu inclusion alone is never sufficient justification.
+
+ -- SupraLINUX Project <noreply@supralinux.com>  Tue, 25 Aug 2026 21:18:00 -0300
+
 supralinux-desktop (0.1.0~dev3) UNRELEASED; urgency=medium
 
   * Add xdg-desktop-portal-gtk as the GTK/Settings fallback alongside the KDE
