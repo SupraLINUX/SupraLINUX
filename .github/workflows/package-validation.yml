@@ -2,6 +2,13 @@ name: Aurora package validation
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - development
+    paths:
+      - 'packages/**'
+      - 'scripts/ci/**'
+      - '.github/workflows/package-validation.yml'
   pull_request:
     branches:
       - main
