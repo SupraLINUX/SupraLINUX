@@ -70,7 +70,12 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p build
-          sudo -E bash scripts/ci/validate-boot-c3.sh 2>&1 | tee build/c3-validation.log
+          echo "AURORA_C3_REQUESTED_MIRROR=${AURORA_UBUNTU_MIRROR}"
+          echo "AURORA_C3_REQUESTED_BOOT_TIMEOUT=${AURORA_C3_BOOT_TIMEOUT}"
+          sudo env \
+            AURORA_UBUNTU_MIRROR="${AURORA_UBUNTU_MIRROR}" \
+            AURORA_C3_BOOT_TIMEOUT="${AURORA_C3_BOOT_TIMEOUT}" \
+            bash scripts/ci/validate-boot-c3.sh 2>&1 | tee build/c3-validation.log
 
       - name: Surface Aurora C3 diagnostics in job log
         if: always()
