@@ -60,22 +60,31 @@ Goal: launch an actual disposable user session and prove that the SupraLINUX bas
 
 The test user and any automatic login configuration used by CI are test-only and must never become product defaults.
 
+C3 treats desktop startup as an asynchronous readiness sequence rather than assuming that every user-session component is ready as soon as SDDM reports a login. The probe must wait for each required condition for a bounded period and fail with the last completed stage if readiness is not reached.
+
 Required evidence from inside the session:
 
-- `XDG_SESSION_TYPE=wayland`;
+- the disposable user obtains an active local login session;
+- the login session reports `Type=wayland`;
+- the user's D-Bus session becomes usable;
+- `graphical-session.target` becomes active through the normal Plasma/systemd user-session path;
+- the probe must **not** start `graphical-session.target` itself to manufacture readiness;
 - KWin Wayland is running;
 - Plasma shell is running;
-- a user D-Bus session is available;
-- KDE portal backend is available;
-- PipeWire user services can start;
+- the Plasma Wayland/workspace targets and `plasma-plasmashell.service` become active;
+- `XDG_SESSION_TYPE=wayland`, `WAYLAND_DISPLAY`, the Wayland socket and `DISPLAY` are valid in the real Plasma session environment;
+- KDE portal broker/backend can be activated through the user D-Bus and register their expected bus names;
+- PipeWire and WirePlumber user services can start and become active;
 - KWallet/PAM integration does not prevent login;
-- Polkit KDE agent can start;
-- no immediate Plasma/KWin crash loop;
-- XWayland is available and a small disposable X11 client can start inside the Wayland session.
+- the Plasma Polkit agent can start and become active;
+- no immediate Plasma/KWin crash or restart loop occurs;
+- XWayland is available and the already-installed `systemsettings` application can remain running when explicitly forced to the Qt XCB platform inside the Wayland session.
 
-The XWayland check is a compatibility test, not an alternative desktop-session mode. Aurora does not remove X11 compatibility libraries or components merely to satisfy a superficial "Wayland-only" label.
+The XWayland check is a compatibility test, not an alternative desktop-session mode. Aurora does not remove X11 compatibility libraries or components merely to satisfy a superficial "Wayland-only" label. C3 must use software already present in the Aurora desktop rather than adding a synthetic X11 test application solely for CI.
 
-The guest should emit a machine-readable success/failure marker to the serial console or another deterministic CI channel. Merely seeing `sddm.service` active is not enough.
+The guest emits deterministic serial markers for the readiness sequence, including `AURORA_C3_STAGE=<stage>`, `AURORA_C3_XWAYLAND_SUCCESS`, exactly one final `AURORA_C3_SUCCESS`, and an `AURORA_C3_FAILURE:` marker on explicit or unexpected probe failure. A green workflow without the guest success marker is not sufficient evidence.
+
+Failure diagnostics must be useful even if GitHub artifact upload is unavailable. The serial channel therefore includes the last C3 stage, login/session state, relevant user processes, user-systemd failed units and session targets, user D-Bus names, SDDM state/journal, and the XWayland smoke-test log where available.
 
 ## Stage C4 — Feature integration smoke tests
 
@@ -127,6 +136,8 @@ This stage precedes ISO work. The VM should still be produced from the package-d
 - Keep VM images disposable and out of Git.
 - Keep CI-only users, passwords, autologin and diagnostic services outside product packages.
 - Preserve serial logs and targeted diagnostics on failure.
+- A probe supervisor timeout must remain finite but must exceed the sum of its bounded readiness waits plus reasonable CI/QEMU overhead, so the harness can report the failing stage instead of being killed first.
+- Avoid shell constructs that can create harness-only false negatives under `set -o pipefail`; capture command output before early-exit filtering where appropriate.
 - Do not hide warnings merely to make CI green; classify them as expected VM/chroot limitations or actionable defects.
 - Do not remove X11 compatibility components merely to make the package set look more Wayland-pure; feature completeness has priority.
 
@@ -145,7 +156,9 @@ systemd
         ↓
 graphical.target / SDDM on KWin Wayland
         ↓
-Plasma Wayland test session + XWayland compatibility
+Plasma Wayland test session + graphical-session.target
+        ↓
+portals / audio / policy integration + XWayland compatibility
 ```
 
 Only after this works repeatedly should the candidate `supralinux-desktop` dependency set be considered ready to freeze for the Phase 1 baseline.

@@ -65,9 +65,34 @@ C2 validates the display-manager greeter only. It does **not** prove that a norm
 
 ## Next gate — C3 Plasma Wayland user session
 
-C3 must create a disposable CI-only user and prove a real Plasma session, including `XDG_SESSION_TYPE=wayland`, KWin Wayland, Plasma shell, user D-Bus, portals, PipeWire, Polkit/KWallet integration and lack of an immediate crash loop.
+Workflow: `.github/workflows/boot-c3-validation.yml`
 
-Because Aurora prioritizes a complete desktop rather than protocol purity, C3 must also perform an XWayland compatibility smoke test by launching a small disposable X11 client inside the Wayland session. XWayland support is part of the intended user experience; it is not an alternative Plasma X11 desktop session.
+C3 creates a disposable CI-only user and uses SDDM autologin only inside the generated VM. The harness dynamically discovers the installed Plasma Wayland session instead of adding a product user or hard-coding a Plasma X11 fallback.
+
+The guest validates desktop readiness in bounded stages. A successful run must observe, in order where dependencies require it:
+
+- an active local login for the disposable user;
+- a Wayland login session;
+- a usable user D-Bus;
+- `graphical-session.target` becoming active naturally through the Plasma user session;
+- KWin Wayland and Plasma shell;
+- Plasma Wayland/workspace systemd user targets;
+- session environment and Wayland/XWayland display sockets;
+- PipeWire and WirePlumber capability;
+- Plasma Polkit agent capability;
+- XDG desktop portal and KDE portal backend registration;
+- a real Qt/XCB compatibility smoke test using the already-installed `systemsettings` through XWayland;
+- stable KWin/Plasma PIDs through the end of the probe.
+
+C3 does not start `graphical-session.target` itself. Doing so would manufacture the condition that the test is intended to validate. Services that are legitimately D-Bus/socket/systemd activated may be exercised through their supported activation path.
+
+The serial console is the primary deterministic evidence channel. The guest emits `AURORA_C3_STAGE=<stage>` markers as it advances, `AURORA_C3_XWAYLAND_SUCCESS` after the compatibility smoke test, exactly one `AURORA_C3_SUCCESS` only after all checks complete, and `AURORA_C3_FAILURE:` with the failing stage on explicit or unexpected probe failure.
+
+Artifact upload is useful but is not allowed to be the only source of failure evidence. The C3 serial diagnostics include the last stage, login state, process list, user-systemd state, user D-Bus names, SDDM journal and XWayland smoke-test output so a failed guest remains diagnosable if the artifact service itself fails.
+
+Because Aurora prioritizes a complete desktop rather than protocol purity, XWayland support is part of the intended user experience; it is not an alternative Plasma X11 desktop session.
+
+C3 remains pending until the workflow is reproducibly green **and** the guest markers are explicitly verified. A green GitHub job alone does not promote the gate.
 
 ## Storage policy
 

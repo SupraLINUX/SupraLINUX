@@ -83,17 +83,17 @@ fi
 plasma_wayland_session="$(basename "${plasma_wayland_sessions[0]}")"
 echo "==> C3 autologin session: ${plasma_wayland_session}"
 
-cat >"${ROOTFS}/etc/sddm.conf.d/99-aurora-ci-c3-autologin.conf" <<EOF
+cat >"${ROOTFS}/etc/sddm.conf.d/99-aurora-ci-c3-autologin.conf" <<EOF_AUTLOGIN
 [Autologin]
 User=${CI_USER}
 Session=${plasma_wayland_session}
 Relogin=false
-EOF
+EOF_AUTLOGIN
 
 mkdir -p "${ROOTFS}/usr/local/libexec" "${ROOTFS}/etc/systemd/system/timers.target.wants"
 cat >"${ROOTFS}/usr/local/libexec/aurora-ci-c3-check" <<'GUEST'
 #!/usr/bin/env bash
-set -euo pipefail
+set -Eeuo pipefail
 exec >/dev/ttyS0 2>&1
 
 CI_USER="auroraci"
@@ -102,6 +102,12 @@ session_id=""
 ci_uid=""
 ci_home=""
 runtime_dir=""
+current_stage="INIT"
+
+stage() {
+  current_stage="$1"
+  echo "AURORA_C3_STAGE=${current_stage}"
+}
 
 run_user() {
   runuser -u "${CI_USER}" -- env \
@@ -113,8 +119,40 @@ run_user() {
     "$@"
 }
 
+first_user_pid() {
+  local process_name="$1"
+  pgrep -o -u "${ci_uid}" -x "${process_name}" 2>/dev/null || true
+}
+
+wait_for_user_process() {
+  local process_name="$1"
+  local timeout_seconds="$2"
+  local i
+  for ((i = 0; i < timeout_seconds; i++)); do
+    if pgrep -u "${ci_uid}" -x "${process_name}" >/dev/null 2>&1; then
+      return 0
+    fi
+    sleep 1
+  done
+  return 1
+}
+
+wait_for_user_unit() {
+  local unit="$1"
+  local timeout_seconds="$2"
+  local i
+  for ((i = 0; i < timeout_seconds; i++)); do
+    if run_user systemctl --user is-active --quiet "${unit}"; then
+      return 0
+    fi
+    sleep 1
+  done
+  return 1
+}
+
 dump_diagnostics() {
   echo "AURORA_C3_DIAGNOSTICS_START"
+  echo "AURORA_C3_LAST_STAGE=${current_stage}"
   systemctl --failed --no-pager --plain || true
   systemctl status sddm.service --no-pager --full || true
   systemctl status systemd-logind.service --no-pager --full || true
@@ -130,8 +168,16 @@ dump_diagnostics() {
   echo "--- graphical/Xwayland processes ---"
   pgrep -a -f 'kwin_wayland|plasmashell|Xwayland|systemsettings|xdg-desktop-portal|polkit-kde|pipewire|wireplumber' || true
   if [[ -n "${runtime_dir}" && -S "${runtime_dir}/bus" ]]; then
+    echo "--- user environment ---"
+    run_user systemctl --user show-environment || true
     echo "--- user systemd failed units ---"
     run_user systemctl --user --failed --no-pager --plain || true
+    echo "--- graphical session target ---"
+    run_user systemctl --user status graphical-session.target --no-pager --full || true
+    echo "--- Plasma session targets/services ---"
+    run_user systemctl --user status plasma-workspace-wayland.target plasma-workspace.target plasma-plasmashell.service --no-pager --full || true
+    echo "--- desktop integration services ---"
+    run_user systemctl --user status xdg-desktop-portal.service xdg-desktop-portal-kde.service pipewire.service wireplumber.service plasma-polkit-agent.service --no-pager --full || true
     echo "--- user systemd Plasma units ---"
     run_user systemctl --user list-units 'plasma*' --no-pager --plain || true
     echo "--- user bus names ---"
@@ -141,18 +187,36 @@ dump_diagnostics() {
   journalctl -b -u sddm.service --no-pager -n 300 || true
   echo "--- disposable user Wayland session log ---"
   cat "/home/${CI_USER}/.local/share/sddm/wayland-session.log" 2>/dev/null || true
+  echo "--- XWayland smoke-test client log ---"
+  cat /tmp/aurora-c3-x11-client.log 2>/dev/null || true
   echo "AURORA_C3_DIAGNOSTICS_END"
 }
 
 fail() {
-  echo "AURORA_C3_FAILURE: $*"
+  local message="$*"
+  trap - ERR
+  set +e
+  echo "AURORA_C3_FAILURE: ${current_stage}: ${message}"
   dump_diagnostics
   systemctl poweroff --no-block || true
   exit 1
 }
 
+unexpected_error() {
+  local status=$?
+  local line="${BASH_LINENO[0]:-unknown}"
+  trap - ERR
+  set +e
+  echo "AURORA_C3_FAILURE: ${current_stage}: unexpected shell error status ${status} at line ${line}"
+  dump_diagnostics
+  systemctl poweroff --no-block || true
+  exit "${status}"
+}
+trap unexpected_error ERR
+
 echo "AURORA_C3_CHECK_START"
 
+stage SYSTEM
 [[ "$(cat /proc/1/comm)" == "systemd" ]] || fail "PID 1 is not systemd"
 systemctl is-active --quiet graphical.target || fail "graphical.target is not active"
 systemctl is-active --quiet multi-user.target || fail "multi-user.target is not active"
@@ -184,43 +248,61 @@ done
 
 [[ ! -e /usr/share/xsessions/plasmax11.desktop ]] || fail "Plasma X11 session desktop entry is present"
 [[ ! -e /usr/bin/startplasma-x11 ]] || fail "startplasma-x11 is present"
-
 command -v runuser >/dev/null 2>&1 || fail "runuser is unavailable"
 
 ci_uid="$(id -u "${CI_USER}" 2>/dev/null || true)"
-ci_home="$(getent passwd "${CI_USER}" | cut -d: -f6)"
+passwd_entry="$(getent passwd "${CI_USER}" 2>/dev/null || true)"
+ci_home="$(awk -F: '{print $6}' <<<"${passwd_entry}")"
 [[ -n "${ci_uid}" && -n "${ci_home}" ]] || fail "disposable C3 user is missing"
 runtime_dir="/run/user/${ci_uid}"
 
+stage LOGIN
 session_ready=0
-for _ in $(seq 1 120); do
-  session_id="$(
-    loginctl list-sessions --no-legend 2>/dev/null \
-      | awk -v uid="${ci_uid}" '$2 == uid { print $1; exit }'
-  )"
+for ((i = 0; i < 120; i++)); do
+  sessions="$(loginctl list-sessions --no-legend 2>/dev/null || true)"
+  session_id="$(awk -v uid="${ci_uid}" '$2 == uid { print $1; exit }' <<<"${sessions}")"
   if [[ -n "${session_id}" ]] \
-    && [[ "$(loginctl show-session "${session_id}" -p Type --value 2>/dev/null || true)" == "wayland" ]] \
-    && [[ "$(loginctl show-session "${session_id}" -p Active --value 2>/dev/null || true)" == "yes" ]] \
-    && pgrep -u "${ci_uid}" -x kwin_wayland >/dev/null 2>&1 \
-    && pgrep -u "${ci_uid}" -x plasmashell >/dev/null 2>&1 \
-    && [[ -S "${runtime_dir}/bus" ]]; then
+    && [[ "$(loginctl show-session "${session_id}" -p Active --value 2>/dev/null || true)" == "yes" ]]; then
     session_ready=1
     break
   fi
   sleep 1
 done
-[[ "${session_ready}" -eq 1 ]] || fail "Plasma Wayland user session did not become ready"
+[[ "${session_ready}" -eq 1 ]] || fail "disposable user did not obtain an active login session"
+session_name="$(loginctl show-session "${session_id}" -p Name --value 2>/dev/null || true)"
+session_remote="$(loginctl show-session "${session_id}" -p Remote --value 2>/dev/null || true)"
+[[ "${session_name}" == "${CI_USER}" ]] || fail "login session belongs to unexpected user (${session_name:-unknown})"
+[[ "${session_remote}" == "no" ]] || fail "C3 login unexpectedly reports a remote session (${session_remote:-unknown})"
 
-[[ "$(loginctl show-session "${session_id}" -p Name --value)" == "${CI_USER}" ]] || fail "login session belongs to unexpected user"
-[[ "$(loginctl show-session "${session_id}" -p Type --value)" == "wayland" ]] || fail "login session is not Wayland"
-[[ "$(loginctl show-session "${session_id}" -p Remote --value)" == "no" ]] || fail "C3 login unexpectedly reports a remote session"
-[[ -S "${runtime_dir}/bus" ]] || fail "user D-Bus socket is missing"
+stage WAYLAND
+session_type="$(loginctl show-session "${session_id}" -p Type --value 2>/dev/null || true)"
+[[ "${session_type}" == "wayland" ]] || fail "login session is not Wayland (${session_type:-unknown})"
 
-kwin_pid="$(pgrep -u "${ci_uid}" -x kwin_wayland | head -n1)"
-plasma_pid="$(pgrep -u "${ci_uid}" -x plasmashell | head -n1)"
-[[ -n "${kwin_pid}" && -n "${plasma_pid}" ]] || fail "KWin Wayland or plasmashell process is missing"
+stage USER_DBUS
+user_bus_ready=0
+for ((i = 0; i < 30; i++)); do
+  if [[ -S "${runtime_dir}/bus" ]] && run_user busctl --user --no-pager list >/dev/null 2>&1; then
+    user_bus_ready=1
+    break
+  fi
+  sleep 1
+done
+[[ "${user_bus_ready}" -eq 1 ]] || fail "user D-Bus session did not become usable"
 
-plasma_env="$(tr '\0' '\n' <"/proc/${plasma_pid}/environ")"
+stage GRAPHICAL_SESSION
+wait_for_user_unit graphical-session.target 60 || fail "graphical-session.target did not become active"
+
+stage KWIN
+wait_for_user_process kwin_wayland 30 || fail "KWin Wayland did not become ready"
+kwin_pid="$(first_user_pid kwin_wayland)"
+[[ -n "${kwin_pid}" ]] || fail "KWin Wayland process is missing"
+
+stage PLASMASHELL
+wait_for_user_process plasmashell 30 || fail "plasmashell did not become ready"
+plasma_pid="$(first_user_pid plasmashell)"
+[[ -n "${plasma_pid}" ]] || fail "plasmashell process is missing"
+
+plasma_env="$(tr '\0' '\n' <"/proc/${plasma_pid}/environ" 2>/dev/null || true)"
 grep -Fxq 'XDG_SESSION_TYPE=wayland' <<<"${plasma_env}" || fail "plasmashell environment is not Wayland"
 wayland_display="$(awk -F= '$1=="WAYLAND_DISPLAY" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasma_env}")"
 display="$(awk -F= '$1=="DISPLAY" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasma_env}")"
@@ -228,18 +310,24 @@ display="$(awk -F= '$1=="DISPLAY" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasm
 [[ -S "${runtime_dir}/${wayland_display}" ]] || fail "Wayland display socket ${runtime_dir}/${wayland_display} is missing"
 [[ -n "${display}" ]] || fail "DISPLAY is missing; XWayland compatibility is unavailable"
 
-run_user busctl --user --no-pager list >/dev/null || fail "user D-Bus session is not usable"
-run_user systemctl --user is-active --quiet plasma-workspace-wayland.target || fail "plasma-workspace-wayland.target is not active"
-run_user systemctl --user is-active --quiet plasma-workspace.target || fail "plasma-workspace.target is not active"
-run_user systemctl --user is-active --quiet plasma-plasmashell.service || fail "plasma-plasmashell.service is not active"
+stage PLASMA_TARGETS
+wait_for_user_unit plasma-workspace-wayland.target 30 || fail "plasma-workspace-wayland.target did not become active"
+wait_for_user_unit plasma-workspace.target 30 || fail "plasma-workspace.target did not become active"
+wait_for_user_unit plasma-plasmashell.service 30 || fail "plasma-plasmashell.service did not become active"
 
-run_user systemctl --user start pipewire.service wireplumber.service || fail "PipeWire/WirePlumber user services could not start"
-run_user systemctl --user is-active --quiet pipewire.service || fail "pipewire.service is not active"
-run_user systemctl --user is-active --quiet wireplumber.service || fail "wireplumber.service is not active"
+stage PIPEWIRE
+run_user systemctl --user start pipewire.service || fail "pipewire.service could not start"
+wait_for_user_unit pipewire.service 20 || fail "pipewire.service did not become active"
 
+stage WIREPLUMBER
+run_user systemctl --user start wireplumber.service || fail "wireplumber.service could not start"
+wait_for_user_unit wireplumber.service 20 || fail "wireplumber.service did not become active"
+
+stage POLKIT
 run_user systemctl --user start plasma-polkit-agent.service || fail "Plasma Polkit agent service could not start"
-run_user systemctl --user is-active --quiet plasma-polkit-agent.service || fail "plasma-polkit-agent.service is not active"
+wait_for_user_unit plasma-polkit-agent.service 20 || fail "plasma-polkit-agent.service did not become active"
 
+stage PORTAL
 run_user busctl --user call \
   org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus \
   StartServiceByName su org.freedesktop.portal.Desktop 0 >/dev/null \
@@ -250,7 +338,7 @@ run_user busctl --user call \
   || fail "KDE portal backend could not be D-Bus activated"
 
 portal_ready=0
-for _ in $(seq 1 20); do
+for ((i = 0; i < 30; i++)); do
   bus_names="$(run_user busctl --user --no-pager list 2>/dev/null || true)"
   if grep -Fq 'org.freedesktop.portal.Desktop' <<<"${bus_names}" \
     && grep -Fq 'org.freedesktop.impl.portal.desktop.kde' <<<"${bus_names}"; then
@@ -261,6 +349,7 @@ for _ in $(seq 1 20); do
 done
 [[ "${portal_ready}" -eq 1 ]] || fail "desktop portal or KDE portal backend did not register on the user bus"
 
+stage XWAYLAND
 echo "AURORA_C3_XWAYLAND_TEST_START"
 set +e
 runuser -u "${CI_USER}" -- env \
@@ -276,12 +365,15 @@ runuser -u "${CI_USER}" -- env \
   QT_QUICK_BACKEND=software \
   LIBGL_ALWAYS_SOFTWARE=1 \
   systemsettings >/tmp/aurora-c3-x11-client.log 2>&1 &
-x11_client_pid=$!
+x11_launcher_pid=$!
 set -e
 
+x11_client_pid=""
 x11_client_ready=0
-for _ in $(seq 1 30); do
-  if kill -0 "${x11_client_pid}" >/dev/null 2>&1 \
+for ((i = 0; i < 30; i++)); do
+  x11_client_pid="$(pgrep -n -u "${ci_uid}" -x systemsettings 2>/dev/null || true)"
+  if [[ -n "${x11_client_pid}" ]] \
+    && kill -0 "${x11_client_pid}" >/dev/null 2>&1 \
     && pgrep -u "${ci_uid}" -f 'Xwayland' >/dev/null 2>&1; then
     x11_client_ready=1
     break
@@ -289,7 +381,6 @@ for _ in $(seq 1 30); do
   sleep 1
 done
 if [[ "${x11_client_ready}" -ne 1 ]]; then
-  cat /tmp/aurora-c3-x11-client.log || true
   fail "Qt X11 client did not stay running through XWayland"
 fi
 
@@ -298,14 +389,17 @@ grep -Fxq 'QT_QPA_PLATFORM=xcb' <<<"${x11_env}" || fail "X11 smoke-test client w
 echo "AURORA_C3_XWAYLAND_SUCCESS"
 
 kill "${x11_client_pid}" >/dev/null 2>&1 || true
-wait "${x11_client_pid}" 2>/dev/null || true
+kill "${x11_launcher_pid}" >/dev/null 2>&1 || true
+wait "${x11_launcher_pid}" 2>/dev/null || true
 
+stage STABILITY
 sleep 10
 kill -0 "${kwin_pid}" >/dev/null 2>&1 || fail "KWin Wayland did not remain stable through the C3 probe"
 kill -0 "${plasma_pid}" >/dev/null 2>&1 || fail "plasmashell did not remain stable through the C3 probe"
-[[ "$(pgrep -u "${ci_uid}" -x kwin_wayland | head -n1)" == "${kwin_pid}" ]] || fail "KWin Wayland restarted during the C3 probe"
-[[ "$(pgrep -u "${ci_uid}" -x plasmashell | head -n1)" == "${plasma_pid}" ]] || fail "plasmashell restarted during the C3 probe"
+[[ "$(first_user_pid kwin_wayland)" == "${kwin_pid}" ]] || fail "KWin Wayland restarted during the C3 probe"
+[[ "$(first_user_pid plasmashell)" == "${plasma_pid}" ]] || fail "plasmashell restarted during the C3 probe"
 
+stage COMPLETE
 echo "AURORA_C3_SUCCESS"
 sync
 systemctl poweroff --no-block
@@ -320,7 +414,7 @@ After=graphical.target sddm.service systemd-logind.service
 [Service]
 Type=oneshot
 ExecStart=/usr/local/libexec/aurora-ci-c3-check
-TimeoutStartSec=240
+TimeoutStartSec=540
 SERVICE
 
 cat >"${ROOTFS}/etc/systemd/system/aurora-ci-c3-check.timer" <<'TIMER'
@@ -337,11 +431,15 @@ WantedBy=timers.target
 TIMER
 ln -s ../aurora-ci-c3-check.timer "${ROOTFS}/etc/systemd/system/timers.target.wants/aurora-ci-c3-check.timer"
 
-kernel_path="$(find "${ROOTFS}/boot" -maxdepth 1 -type f -name 'vmlinuz-*' -printf '%f\n' | sort -V | tail -n1)"
-if [[ -z "${kernel_path}" ]]; then
+mapfile -t kernel_candidates < <(
+  find "${ROOTFS}/boot" -maxdepth 1 -type f -name 'vmlinuz-*' -printf '%f\n'
+)
+if [[ "${#kernel_candidates[@]}" -eq 0 ]]; then
   echo "No installed Ubuntu kernel found in the Aurora rootfs." >&2
   exit 1
 fi
+mapfile -t sorted_kernels < <(printf '%s\n' "${kernel_candidates[@]}" | sort -V)
+kernel_path="${sorted_kernels[${#sorted_kernels[@]}-1]}"
 kernel_version="${kernel_path#vmlinuz-}"
 initrd_path="initrd.img-${kernel_version}"
 if [[ ! -f "${ROOTFS}/boot/${initrd_path}" ]]; then
@@ -417,5 +515,13 @@ if [[ "${xwayland_success_count}" -ne 1 ]]; then
   echo "Expected exactly one Aurora C3 XWayland success marker, observed ${xwayland_success_count}." >&2
   exit 1
 fi
+
+for required_stage in SYSTEM LOGIN WAYLAND USER_DBUS GRAPHICAL_SESSION KWIN PLASMASHELL PLASMA_TARGETS PIPEWIRE WIREPLUMBER POLKIT PORTAL XWAYLAND STABILITY COMPLETE; do
+  stage_count="$(grep -Fc "AURORA_C3_STAGE=${required_stage}" "${SERIAL_LOG}" || true)"
+  if [[ "${stage_count}" -ne 1 ]]; then
+    echo "Expected exactly one Aurora C3 ${required_stage} stage marker, observed ${stage_count}." >&2
+    exit 1
+  fi
+done
 
 echo "Aurora C3 Plasma Wayland session validation passed."
