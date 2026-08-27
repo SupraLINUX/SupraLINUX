@@ -10,6 +10,7 @@ on:
       - 'scripts/ci/build-packages.sh'
       - 'scripts/ci/validate-clean-rootfs.sh'
       - 'scripts/ci/validate-c4-0-surface.sh'
+      - 'scripts/ci/extract-c4-0-surface-inventory.sh'
       - 'tests/c4/**'
       - '.github/workflows/c4-0-surface-validation.yml'
 
@@ -53,6 +54,7 @@ jobs:
         run: |
           set -euo pipefail
           bash -n scripts/ci/validate-c4-0-surface.sh
+          bash -n scripts/ci/extract-c4-0-surface-inventory.sh
           test -s tests/c4/c4.0-kcm-coverage.tsv
           test -s tests/c4/c4.0-dependency-coverage.tsv
           test -s tests/c4/c4.0-portal-coverage.tsv
@@ -87,6 +89,14 @@ jobs:
             AURORA_C4_0_BOOT_TIMEOUT="${AURORA_C4_0_BOOT_TIMEOUT}" \
             bash scripts/ci/validate-c4-0-surface.sh 2>&1 | tee build/c4-0-validation.log
 
+      - name: Extract extended C4.0 surface ownership inventory
+        if: always()
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build
+          sudo bash scripts/ci/extract-c4-0-surface-inventory.sh 2>&1 | tee build/c4-0-extended-inventory.log
+
       - name: Surface Aurora C4.0 diagnostics in job log
         if: always()
         shell: bash
@@ -95,6 +105,7 @@ jobs:
           echo "AURORA_C4_0_WORKFLOW_DIAGNOSTICS_START"
           for file in \
             build/c4-0-validation.log \
+            build/c4-0-extended-inventory.log \
             build/aurora-c4-0-serial.log \
             build/aurora-c4-0-wayland-session.log \
             build/debootstrap.log \
@@ -135,6 +146,7 @@ jobs:
           retention-days: 7
           path: |
             build/c4-0-validation.log
+            build/c4-0-extended-inventory.log
             build/aurora-c4-0-serial.log
             build/aurora-c4-0-wayland-session.log
             build/c4-0-inventory/**
