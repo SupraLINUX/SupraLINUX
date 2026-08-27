@@ -1,3 +1,15 @@
+supralinux-desktop (0.1.0~dev6) UNRELEASED; urgency=medium
+
+  * Formalize the Aurora desktop-session policy as Wayland-only.
+  * Keep xserver-xorg solely for the current SDDM greeter path; it does not
+    provide or imply a Plasma X11 desktop session.
+  * Keep XWayland available for legacy X11 applications inside the Plasma
+    Wayland session.
+  * Extend clean-rootfs and boot CI so plasma-session-x11 and its session
+    launcher files are rejected from the default Aurora baseline.
+
+ -- SupraLINUX Project <noreply@supralinux.com>  Thu, 27 Aug 2026 00:42:00 -0300
+
 supralinux-desktop (0.1.0~dev5) UNRELEASED; urgency=medium
 
   * Add xserver-xorg for the default SDDM greeter. Ubuntu's SDDM package does

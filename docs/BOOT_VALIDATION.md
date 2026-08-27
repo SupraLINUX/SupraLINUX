@@ -6,6 +6,18 @@ The clean-rootfs gate proves that SupraLINUX packages can be installed coherentl
 
 Boot validation therefore advances in explicit stages. A later stage must not be treated as passed because an earlier one succeeded.
 
+## Wayland-only desktop-session policy
+
+Aurora ships Plasma desktop sessions as Wayland-only. The default system must contain `plasma-session-wayland` and must not contain `plasma-session-x11`, `/usr/bin/startplasma-x11`, or `/usr/share/xsessions/plasmax11.desktop`.
+
+This policy does **not** mean that every X11-related component is forbidden:
+
+- `xserver-xorg` is currently present to support the SDDM greeter path proven by C2;
+- XWayland remains available so legacy X11 applications can run inside a Plasma Wayland session;
+- neither case creates or exposes a Plasma X11 desktop-session option.
+
+The clean-rootfs gate enforces the absence of the Plasma X11 session package and launcher files before any boot stage is allowed to proceed.
+
 ## Stage C1 — Kernel + systemd boot
 
 Goal: boot the installed Aurora filesystem in a disposable VM and prove that a real Linux boot reaches userspace correctly.
@@ -28,6 +40,7 @@ Required evidence:
 - `apt-get check` succeeds after boot;
 - SupraLINUX packages remain installed;
 - Snap remains blocked/absent;
+- the clean-rootfs Wayland-only session policy has passed;
 - required system services are installed and loadable;
 - SDDM is enabled for graphical boot.
 
@@ -43,9 +56,12 @@ Required evidence:
 - SDDM starts without a fatal configuration error;
 - an appropriate virtual graphics device is detected;
 - required seat/logind integration exists;
+- the clean-rootfs Wayland-only session policy has passed;
 - the system does not fall back to a text-only boot because of missing desktop dependencies.
 
 CI may use software rendering and virtual hardware. Passing here does not imply real-hardware graphics support.
+
+The current Aurora package set includes `xserver-xorg` because Ubuntu's SDDM package does not itself pull an external X server while the default greeter path needs one. This is display-manager infrastructure only; C2 does not introduce or validate a Plasma X11 user session.
 
 ## Stage C3 — Plasma Wayland session
 
@@ -58,12 +74,15 @@ Required evidence from inside the session:
 - `XDG_SESSION_TYPE=wayland`;
 - KWin Wayland is running;
 - Plasma shell is running;
+- `plasma-session-x11` and its session launchers remain absent;
 - a user D-Bus session is available;
 - KDE portal backend is available;
 - PipeWire user services can start;
 - KWallet/PAM integration does not prevent login;
 - Polkit KDE agent can start;
 - no immediate Plasma/KWin crash loop.
+
+XWayland may run for compatibility with X11 applications; its presence does not satisfy or weaken the `XDG_SESSION_TYPE=wayland` requirement.
 
 The guest should emit a machine-readable success/failure marker to the serial console or another deterministic CI channel. Merely seeing `sddm.service` active is not enough.
 

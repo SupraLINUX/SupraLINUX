@@ -80,4 +80,9 @@ Description: SupraLINUX KDE Plasma desktop integration metapackage
  It intentionally does not depend on kubuntu-desktop. The dependency set is
  built from Plasma-visible capabilities and their required integration layers.
  .
+ SupraLINUX ships Plasma desktop sessions as Wayland-only. The xserver-xorg
+ dependency exists for the current SDDM greeter path and must not be interpreted
+ as providing or supporting a Plasma X11 desktop session. XWayland remains part
+ of the Wayland compatibility path for legacy X11 applications.
+ .
  This package is still under audit and is not a release-frozen dependency list.

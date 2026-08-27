@@ -184,6 +184,7 @@ required_packages=(
   kwin-wayland
   systemsettings
   sddm
+  xserver-xorg
   polkit-kde-agent-1
   pipewire-audio
   network-manager
@@ -210,6 +211,7 @@ done
 forbidden_packages=(
   snapd
   plasma-discover-backend-snap
+  plasma-session-x11
   ubuntu-desktop
   ubuntu-desktop-minimal
   kubuntu-desktop
@@ -220,6 +222,11 @@ forbidden_packages=(
 for package in "${forbidden_packages[@]}"; do
   assert_absent "${package}"
 done
+
+if [[ -e "${ROOTFS}/usr/share/xsessions/plasmax11.desktop" || -e "${ROOTFS}/usr/bin/startplasma-x11" ]]; then
+  echo "Plasma X11 session launcher files are present in the clean Aurora rootfs." >&2
+  exit 1
+fi
 
 if [[ ! -f "${ROOTFS}/etc/apt/preferences.d/supralinux-no-snap.pref" ]]; then
   echo "SupraLINUX Snap APT preference is missing from the installed rootfs." >&2
