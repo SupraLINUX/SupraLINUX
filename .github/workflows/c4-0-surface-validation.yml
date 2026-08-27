@@ -1,0 +1,142 @@
+name: Aurora C4.0 surface coverage validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - development
+    paths:
+      - 'packages/**'
+      - 'scripts/ci/build-packages.sh'
+      - 'scripts/ci/validate-clean-rootfs.sh'
+      - 'scripts/ci/validate-c4-0-surface.sh'
+      - 'tests/c4/**'
+      - '.github/workflows/c4-0-surface-validation.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aurora-c4-0-surface-coverage-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  c4-0-surface:
+    name: Inventory and reconcile the Aurora Plasma surface
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    env:
+      AURORA_UBUNTU_MIRROR: http://azure.archive.ubuntu.com/ubuntu
+      AURORA_C4_0_BOOT_TIMEOUT: '900'
+
+    steps:
+      - name: Check out SupraLINUX
+        uses: actions/checkout@v4
+
+      - name: Verify runner base
+        shell: bash
+        run: |
+          set -euo pipefail
+          . /etc/os-release
+          echo "Runner: ${PRETTY_NAME}"
+          test "${VERSION_CODENAME}" = "resolute"
+          test "$(dpkg --print-architecture)" = "amd64"
+          df -h /
+          if [[ -c /dev/kvm ]]; then
+            echo "/dev/kvm is available"
+          else
+            echo "/dev/kvm is not available; the harness will fall back to QEMU TCG"
+          fi
+
+      - name: Validate C4.0 harness syntax and manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n scripts/ci/validate-c4-0-surface.sh
+          test -s tests/c4/c4.0-kcm-coverage.tsv
+          test -s tests/c4/c4.0-dependency-coverage.tsv
+          test -s tests/c4/c4.0-portal-coverage.tsv
+
+      - name: Install package, rootfs and QEMU tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential \
+            debhelper \
+            devscripts \
+            debootstrap \
+            e2fsprogs \
+            qemu-system-x86 \
+            util-linux
+
+      - name: Build SupraLINUX development packages
+        shell: bash
+        run: bash scripts/ci/build-packages.sh
+
+      - name: Compose and boot Aurora C4.0 VM
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build
+          echo "AURORA_C4_0_REQUESTED_MIRROR=${AURORA_UBUNTU_MIRROR}"
+          echo "AURORA_C4_0_REQUESTED_BOOT_TIMEOUT=${AURORA_C4_0_BOOT_TIMEOUT}"
+          sudo env \
+            AURORA_UBUNTU_MIRROR="${AURORA_UBUNTU_MIRROR}" \
+            AURORA_C4_0_BOOT_TIMEOUT="${AURORA_C4_0_BOOT_TIMEOUT}" \
+            bash scripts/ci/validate-c4-0-surface.sh 2>&1 | tee build/c4-0-validation.log
+
+      - name: Surface Aurora C4.0 diagnostics in job log
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          echo "AURORA_C4_0_WORKFLOW_DIAGNOSTICS_START"
+          for file in \
+            build/c4-0-validation.log \
+            build/aurora-c4-0-serial.log \
+            build/aurora-c4-0-wayland-session.log \
+            build/debootstrap.log \
+            build/rootfs-discover-simulation.log; do
+            echo "::group::${file}"
+            if [[ -f "${file}" ]]; then
+              echo "AURORA_C4_0_DIAGNOSTIC_FILE=${file}"
+              cat "${file}"
+              cat_status=$?
+              if [[ ${cat_status} -ne 0 ]]; then
+                echo "AURORA_C4_0_DIAGNOSTIC_READ_FAILURE=${file}:status=${cat_status}"
+              fi
+            else
+              echo "AURORA_C4_0_DIAGNOSTIC_MISSING=${file}"
+            fi
+            echo "::endgroup::"
+          done
+
+          if [[ -d build/c4-0-inventory ]]; then
+            while IFS= read -r file; do
+              echo "::group::${file}"
+              echo "AURORA_C4_0_INVENTORY_FILE=${file}"
+              cat "${file}" || echo "AURORA_C4_0_INVENTORY_READ_FAILURE=${file}"
+              echo "::endgroup::"
+            done < <(find build/c4-0-inventory -type f -print | sort)
+          else
+            echo "AURORA_C4_0_INVENTORY_MISSING=build/c4-0-inventory"
+          fi
+          echo "AURORA_C4_0_WORKFLOW_DIAGNOSTICS_END"
+          exit 0
+
+      - name: Upload Aurora C4.0 diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-c4-0-surface-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: warn
+          retention-days: 7
+          path: |
+            build/c4-0-validation.log
+            build/aurora-c4-0-serial.log
+            build/aurora-c4-0-wayland-session.log
+            build/c4-0-inventory/**
+            build/debootstrap.log
+            build/rootfs-discover-simulation.log
