@@ -11,12 +11,12 @@ Package: supralinux-desktop
 Architecture: all
 Depends:
  ${misc:Depends},
+ supralinux-settings (>= 0.1.0~dev1),
  plasma-desktop,
  plasma-workspace,
  plasma-session-wayland,
  systemsettings,
  sddm,
- xserver-xorg,
  sddm-theme-breeze,
  kde-config-sddm,
  breeze,
@@ -80,9 +80,13 @@ Description: SupraLINUX KDE Plasma desktop integration metapackage
  It intentionally does not depend on kubuntu-desktop. The dependency set is
  built from Plasma-visible capabilities and their required integration layers.
  .
- SupraLINUX ships Plasma desktop sessions as Wayland-only. The xserver-xorg
- dependency exists for the current SDDM greeter path and must not be interpreted
- as providing or supporting a Plasma X11 desktop session. XWayland remains part
- of the Wayland compatibility path for legacy X11 applications.
+ SupraLINUX offers the Plasma desktop session on Wayland. XWayland remains part
+ of the baseline so legacy X11 applications continue to work inside the Wayland
+ session. X11 libraries or compatibility components are not removed merely for
+ architectural purity.
+ .
+ SDDM defaults are owned by supralinux-settings; Aurora configures the greeter
+ to run on KWin Wayland rather than requiring a full Xorg server solely for the
+ display manager.
  .
  This package is still under audit and is not a release-frozen dependency list.

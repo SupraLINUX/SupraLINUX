@@ -31,10 +31,11 @@ Status labels used below:
 ## 3. KDE Plasma baseline
 
 - **ACCEPTED** Desktop environment: KDE Plasma.
-- **ACCEPTED** Desktop-session policy: Wayland only. SupraLINUX does not ship or expose a Plasma X11 desktop session in the default system.
+- **ACCEPTED** User desktop-session policy: SupraLINUX ships and exposes Plasma on Wayland as the supported desktop session; a selectable Plasma X11 desktop session is not part of the default Aurora baseline.
 - **ACCEPTED** `plasma-session-x11`, `startplasma-x11`, and the Plasma X11 session desktop entry must be absent from the default Aurora baseline.
-- **ACCEPTED** Xorg components may be installed when required by non-user-session infrastructure such as the current SDDM greeter. Their presence does not make an X11 desktop session supported or selectable.
-- **ACCEPTED** XWayland may be present so legacy X11 applications can run inside the Plasma Wayland session. XWayland compatibility is not an X11 desktop-session mode.
+- **ACCEPTED — X11 compatibility rule:** the Wayland desktop-session policy is not a policy to purge X11 technology. XWayland, X11 libraries, protocols, utilities, and other compatibility components required by applications or Plasma features must remain available when they are needed for a complete and comfortable desktop. Do not remove working functionality merely for architectural purity.
+- **ACCEPTED** XWayland is part of the intended Aurora baseline so legacy X11 applications can run inside the Plasma Wayland session.
+- **ACCEPTED** Aurora's current SDDM greeter baseline uses KWin Wayland and is configured by `supralinux-settings`; the greeter path must be validated independently from the user Plasma session.
 - **ACCEPTED** Initial goal: the most vanilla Plasma experience practical, while making every selected and exposed Plasma feature work end-to-end.
 - **ACCEPTED** The first milestone is integration and completeness, not visual differentiation.
 - **ACCEPTED** Do not modify/fork Plasma merely to make SupraLINUX look different. SupraLINUX should develop on top of Plasma using supported extension and integration mechanisms.

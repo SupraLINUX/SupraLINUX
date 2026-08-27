@@ -10,6 +10,7 @@ mkdir -p "${BUILD_DIR}"
 packages=(
   "supralinux-snap-policy"
   "supralinux-base"
+  "supralinux-settings"
   "supralinux-desktop"
 )
 
@@ -20,7 +21,6 @@ for package in "${packages[@]}"; do
     cd "${package_dir}"
     dpkg-buildpackage --build=binary --no-sign
   )
-
 done
 
 find "${ROOT_DIR}/packages" -maxdepth 1 -type f -name '*.deb' -print -exec cp -v '{}' "${BUILD_DIR}/" ';'

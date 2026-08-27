@@ -1,0 +1,10 @@
+supralinux-settings (0.1.0~dev1) UNRELEASED; urgency=medium
+
+  * Initial development package for persistent SupraLINUX defaults.
+  * Configure the SDDM greeter to run on KWin Wayland using KDE's Plasma
+    Wayland greeter integration.
+  * Keep XWayland available through the Plasma Wayland stack for legacy X11
+    application compatibility; this package does not disable X11 libraries or
+    compatibility components.
+
+ -- SupraLINUX Project <noreply@supralinux.com>  Thu, 27 Aug 2026 01:20:00 -0300

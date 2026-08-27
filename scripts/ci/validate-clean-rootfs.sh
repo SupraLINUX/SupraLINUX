@@ -36,15 +36,17 @@ done
 shopt -s nullglob
 snap_policy_debs=("${DEB_DIR}"/supralinux-snap-policy_*.deb)
 base_debs=("${DEB_DIR}"/supralinux-base_*.deb)
+settings_debs=("${DEB_DIR}"/supralinux-settings_*.deb)
 desktop_debs=("${DEB_DIR}"/supralinux-desktop_*.deb)
 
-if [[ ${#snap_policy_debs[@]} -ne 1 || ${#base_debs[@]} -ne 1 || ${#desktop_debs[@]} -ne 1 ]]; then
-  echo "Expected exactly one built .deb for snap-policy, base and desktop." >&2
+if [[ ${#snap_policy_debs[@]} -ne 1 || ${#base_debs[@]} -ne 1 || ${#settings_debs[@]} -ne 1 || ${#desktop_debs[@]} -ne 1 ]]; then
+  echo "Expected exactly one built .deb for snap-policy, base, settings and desktop." >&2
   exit 1
 fi
 
 snap_policy_name="$(basename "${snap_policy_debs[0]}")"
 base_name="$(basename "${base_debs[0]}")"
+settings_name="$(basename "${settings_debs[0]}")"
 desktop_name="$(basename "${desktop_debs[0]}")"
 
 # A boot-validation caller may provide ROOTFS as an already-mounted empty ext4
@@ -104,7 +106,7 @@ EOF
 chmod 0755 "${ROOTFS}/usr/sbin/policy-rc.d"
 
 mkdir -p "${ROOTFS}/tmp/supralinux"
-cp "${snap_policy_debs[0]}" "${base_debs[0]}" "${desktop_debs[0]}" "${ROOTFS}/tmp/supralinux/"
+cp "${snap_policy_debs[0]}" "${base_debs[0]}" "${settings_debs[0]}" "${desktop_debs[0]}" "${ROOTFS}/tmp/supralinux/"
 
 run_in_rootfs() {
   chroot "${ROOTFS}" /usr/bin/env \
@@ -164,9 +166,10 @@ snap_policy="$(run_in_rootfs apt-cache policy snapd)"
 printf '%s\n' "${snap_policy}"
 grep -Fq 'Candidate: (none)' <<<"${snap_policy}"
 
-echo "==> Installing supralinux-base + supralinux-desktop into the clean rootfs"
+echo "==> Installing SupraLINUX base, settings and desktop into the clean rootfs"
 run_in_rootfs apt-get install -y \
   "/tmp/supralinux/${base_name}" \
+  "/tmp/supralinux/${settings_name}" \
   "/tmp/supralinux/${desktop_name}"
 
 run_in_rootfs apt-get check
@@ -174,6 +177,7 @@ run_in_rootfs apt-get check
 required_packages=(
   supralinux-snap-policy
   supralinux-base
+  supralinux-settings
   supralinux-desktop
   ubuntu-minimal
   ubuntu-standard
@@ -182,9 +186,10 @@ required_packages=(
   plasma-workspace
   plasma-session-wayland
   kwin-wayland
+  xwayland
+  layer-shell-qt
   systemsettings
   sddm
-  xserver-xorg
   polkit-kde-agent-1
   pipewire-audio
   network-manager
@@ -227,6 +232,20 @@ if [[ -e "${ROOTFS}/usr/share/xsessions/plasmax11.desktop" || -e "${ROOTFS}/usr/
   echo "Plasma X11 session launcher files are present in the clean Aurora rootfs." >&2
   exit 1
 fi
+
+sddm_wayland_conf="${ROOTFS}/etc/sddm.conf.d/10-supralinux-wayland.conf"
+if [[ ! -f "${sddm_wayland_conf}" ]]; then
+  echo "SupraLINUX SDDM Wayland configuration is missing from the clean Aurora rootfs." >&2
+  exit 1
+fi
+grep -Fxq 'DisplayServer=wayland' "${sddm_wayland_conf}" || {
+  echo "SupraLINUX SDDM configuration does not select the Wayland greeter." >&2
+  exit 1
+}
+grep -Fq 'CompositorCommand=kwin_wayland ' "${sddm_wayland_conf}" || {
+  echo "SupraLINUX SDDM configuration does not use KWin Wayland for the greeter." >&2
+  exit 1
+}
 
 if [[ ! -f "${ROOTFS}/etc/apt/preferences.d/supralinux-no-snap.pref" ]]; then
   echo "SupraLINUX Snap APT preference is missing from the installed rootfs." >&2

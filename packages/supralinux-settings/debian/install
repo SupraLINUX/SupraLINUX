@@ -1,0 +1,1 @@
+config/sddm/10-supralinux-wayland.conf etc/sddm.conf.d/

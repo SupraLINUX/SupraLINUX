@@ -1,3 +1,16 @@
+supralinux-desktop (0.1.0~dev7) UNRELEASED; urgency=medium
+
+  * Move persistent SDDM defaults into the new supralinux-settings package.
+  * Remove the xserver-xorg dependency that was added only for the previous
+    SDDM X11 greeter path.
+  * Configure the SDDM greeter for KWin Wayland instead.
+  * Keep XWayland in the validated Aurora baseline so legacy X11 applications
+    remain supported inside the Plasma Wayland session.
+  * Do not interpret the Wayland desktop-session policy as a ban on X11
+    compatibility libraries or components needed by applications/features.
+
+ -- SupraLINUX Project <noreply@supralinux.com>  Thu, 27 Aug 2026 01:20:00 -0300
+
 supralinux-desktop (0.1.0~dev6) UNRELEASED; urgency=medium
 
   * Formalize the Aurora desktop-session policy as Wayland-only.

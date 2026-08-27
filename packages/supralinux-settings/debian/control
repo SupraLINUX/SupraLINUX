@@ -1,0 +1,23 @@
+Source: supralinux-settings
+Section: admin
+Priority: optional
+Maintainer: SupraLINUX Project <noreply@supralinux.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Homepage: https://supralinux.com
+
+Package: supralinux-settings
+Architecture: all
+Depends:
+ ${misc:Depends},
+ sddm,
+ kwin-wayland,
+ layer-shell-qt,
+ plasma-keyboard
+Description: SupraLINUX system and desktop defaults
+ Development settings package for the SupraLINUX Aurora baseline.
+ .
+ It owns persistent SupraLINUX defaults that must survive rebuilds. The initial
+ implementation configures the SDDM greeter to run on KWin Wayland using KDE's
+ supported Plasma integration path.

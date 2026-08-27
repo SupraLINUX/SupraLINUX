@@ -78,8 +78,10 @@ dump_diagnostics() {
   if id sddm >/dev/null 2>&1; then
     pgrep -a -u "$(id -u sddm)" || true
   fi
+  echo "--- display-server processes ---"
+  pgrep -a -f 'kwin_wayland|sddm-greeter|Xorg|Xwayland' || true
   echo "--- sddm journal ---"
-  journalctl -b -u sddm.service --no-pager -n 200 || true
+  journalctl -b -u sddm.service --no-pager -n 250 || true
   echo "AURORA_C2_DIAGNOSTICS_END"
 }
 
@@ -109,19 +111,29 @@ grep -Fxq rw <<<"${root_opts_lines}" || fail "root filesystem is not read/write 
 
 apt-get check >/dev/null || fail "apt-get check failed after graphical boot"
 
-for package in supralinux-snap-policy supralinux-base supralinux-desktop plasma-desktop plasma-workspace plasma-session-wayland kwin-wayland sddm; do
+for package in supralinux-snap-policy supralinux-base supralinux-settings supralinux-desktop plasma-desktop plasma-workspace plasma-session-wayland kwin-wayland xwayland layer-shell-qt sddm; do
   status="$(dpkg-query -W -f='${db:Status-Abbrev}' "${package}" 2>/dev/null || true)"
   [[ "${status}" == "ii " ]] || fail "required package ${package} has status ${status:-missing}"
 done
 
-for package in snapd plasma-discover-backend-snap; do
+for package in snapd plasma-discover-backend-snap plasma-session-x11; do
   status="$(dpkg-query -W -f='${db:Status-Abbrev}' "${package}" 2>/dev/null || true)"
   if [[ -n "${status}" && "${status:1:1}" != "n" ]]; then
     fail "forbidden package ${package} has dpkg status ${status}"
   fi
-  policy="$(apt-cache policy "${package}")"
-  grep -Fq 'Candidate: (none)' <<<"${policy}" || fail "${package} has an APT candidate"
+  if [[ "${package}" != "plasma-session-x11" ]]; then
+    policy="$(apt-cache policy "${package}")"
+    grep -Fq 'Candidate: (none)' <<<"${policy}" || fail "${package} has an APT candidate"
+  fi
 done
+
+[[ ! -e /usr/share/xsessions/plasmax11.desktop ]] || fail "Plasma X11 session desktop entry is present"
+[[ ! -e /usr/bin/startplasma-x11 ]] || fail "startplasma-x11 is present"
+
+sddm_wayland_conf=/etc/sddm.conf.d/10-supralinux-wayland.conf
+[[ -f "${sddm_wayland_conf}" ]] || fail "SupraLINUX SDDM Wayland configuration is missing"
+grep -Fxq 'DisplayServer=wayland' "${sddm_wayland_conf}" || fail "SDDM greeter is not configured for Wayland"
+grep -Fq 'CompositorCommand=kwin_wayland ' "${sddm_wayland_conf}" || fail "SDDM greeter is not configured to use KWin Wayland"
 
 [[ -L /etc/systemd/system/display-manager.service ]] || fail "display-manager.service is not configured"
 [[ "$(basename "$(readlink -f /etc/systemd/system/display-manager.service)")" == "sddm.service" ]] || fail "SDDM is not the configured display manager"
@@ -136,14 +148,16 @@ sddm_uid="$(id -u sddm 2>/dev/null || true)"
 [[ -n "${sddm_uid}" ]] || fail "SDDM system user is missing"
 
 sddm_ready=0
-for _ in $(seq 1 30); do
-  if systemctl is-active --quiet sddm.service && pgrep -u "${sddm_uid}" >/dev/null 2>&1; then
+for _ in $(seq 1 45); do
+  if systemctl is-active --quiet sddm.service \
+    && pgrep -u "${sddm_uid}" -f 'kwin_wayland' >/dev/null 2>&1 \
+    && pgrep -u "${sddm_uid}" -f 'sddm-greeter' >/dev/null 2>&1; then
     sddm_ready=1
     break
   fi
   sleep 1
 done
-[[ "${sddm_ready}" -eq 1 ]] || fail "SDDM did not reach an active greeter state"
+[[ "${sddm_ready}" -eq 1 ]] || fail "SDDM did not reach a KWin Wayland greeter state"
 
 if systemctl is-failed --quiet sddm.service; then
   fail "sddm.service is failed"
@@ -163,7 +177,7 @@ After=graphical.target sddm.service systemd-logind.service
 [Service]
 Type=oneshot
 ExecStart=/usr/local/libexec/aurora-ci-c2-check
-TimeoutStartSec=90
+TimeoutStartSec=120
 SERVICE
 
 cat >"${ROOTFS}/etc/systemd/system/aurora-ci-c2-check.timer" <<'TIMER'

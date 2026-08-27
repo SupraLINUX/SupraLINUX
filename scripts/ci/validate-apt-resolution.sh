@@ -7,15 +7,17 @@ DEB_DIR="${ROOT_DIR}/build/debs"
 shopt -s nullglob
 snap_policy_debs=("${DEB_DIR}"/supralinux-snap-policy_*.deb)
 base_debs=("${DEB_DIR}"/supralinux-base_*.deb)
+settings_debs=("${DEB_DIR}"/supralinux-settings_*.deb)
 desktop_debs=("${DEB_DIR}"/supralinux-desktop_*.deb)
 
-if [[ ${#snap_policy_debs[@]} -ne 1 || ${#base_debs[@]} -ne 1 || ${#desktop_debs[@]} -ne 1 ]]; then
-  echo "Expected exactly one built .deb for snap-policy, base and desktop." >&2
+if [[ ${#snap_policy_debs[@]} -ne 1 || ${#base_debs[@]} -ne 1 || ${#settings_debs[@]} -ne 1 || ${#desktop_debs[@]} -ne 1 ]]; then
+  echo "Expected exactly one built .deb for snap-policy, base, settings and desktop." >&2
   exit 1
 fi
 
 snap_policy_deb="${snap_policy_debs[0]}"
 base_deb="${base_debs[0]}"
+settings_deb="${settings_debs[0]}"
 desktop_deb="${desktop_debs[0]}"
 
 tmpdir="$(mktemp -d)"
@@ -46,7 +48,7 @@ done
 echo "==> Resolving the complete local SupraLINUX package set without installing it"
 resolver_log="${tmpdir}/resolver.log"
 if ! apt-get "${apt_opts[@]}" --simulate --no-remove install \
-  "${snap_policy_deb}" "${base_deb}" "${desktop_deb}" >"${resolver_log}" 2>&1; then
+  "${snap_policy_deb}" "${base_deb}" "${settings_deb}" "${desktop_deb}" >"${resolver_log}" 2>&1; then
   cat "${resolver_log}" >&2
   echo "Aurora package dependency resolution failed." >&2
   exit 1
@@ -55,6 +57,12 @@ fi
 if grep -Eq '^Inst (snapd|plasma-discover-backend-snap)( |$)' "${resolver_log}"; then
   cat "${resolver_log}" >&2
   echo "APT attempted to install a Snap component while the SupraLINUX policy was active." >&2
+  exit 1
+fi
+
+if grep -Eq '^Inst plasma-session-x11( |$)' "${resolver_log}"; then
+  cat "${resolver_log}" >&2
+  echo "APT attempted to install the Plasma X11 session in the default Aurora baseline." >&2
   exit 1
 fi
 
