@@ -23,38 +23,62 @@ Status: **complete**
 
 Goal: a clean Ubuntu 26.04 base can become the SupraLINUX baseline through packages/configuration only.
 
+### Composition/session foundations
+
 - [x] Define the first candidate Ubuntu 26.04 base composition (`supralinux-base`)
 - [x] Inventory the first Plasma 6 package/KCM surface available in Ubuntu 26.04; audit remains iterative
-- [ ] Freeze the exact `supralinux-desktop` dependency set after clean-system evidence
-- [x] Ensure the normal Plasma Wayland user session boots reliably (C3)
-- [x] Ensure SDDM reaches a working KWin Wayland greeter in the VM (C2)
+- [ ] Freeze the exact `supralinux-desktop` dependency set after C4 evidence
 - [x] Keep XWayland present for legacy X11 application compatibility in the Wayland desktop baseline
+- [x] Add Ubuntu 26.04 package-build/APT-resolution CI gate
+- [x] Add isolated clean Ubuntu 26.04 rootfs installation gate
+- [x] Pass the clean-rootfs gate and record its resulting package set
+- [x] Build and pass the first real bootable VM validation harness (C1)
+- [x] Ensure SDDM reaches a working KWin Wayland greeter in the VM (C2)
+- [x] Ensure the normal Plasma Wayland user session boots reliably (C3)
 - [x] Validate XWayland application compatibility from inside the real Plasma Wayland session (C3)
+
+### C4 — Feature integration certification
+
+- [x] Define the executable C4 certification contract and subgate boundaries
+- [ ] C4.0 — Runtime surface/contract inventory and 100% coverage reconciliation
+- [ ] C4.1 — System Settings / KWin / software-only desktop behavior
+- [ ] C4.2 — Polkit / KWallet / privileged actions
+- [ ] C4.3 — NetworkManager / Plasma-NM / VPN
+- [ ] C4.4 — PipeWire / WirePlumber / Plasma audio
+- [ ] C4.5 — Bluetooth / BlueDevil software path + hardware classification
+- [ ] C4.6 — Flatpak / portal routing
+- [ ] C4.7 — Screenshot / screencast / repeated screen sharing
+- [ ] C4.8 — KRDP / RDP integration
+- [ ] C4.9 — Printing / CUPS / virtual IPP job lifecycle
+- [ ] C4.10 — UDisks / Solid / removable media
+- [ ] C4.11 — Samba / KIO / KIO-FUSE
+- [ ] C4.12 — PowerDevil / power/platform integration
+- [ ] C4.13 — Locale / Plasma+Qt translations / XDG directories
+- [ ] C4.14 — Accessibility
+- [ ] C4.15 — Auxiliary integration / direct-dependency closure
+
+The historical feature checkboxes below remain as product-level outcomes. They close only when their owning C4 subgate has provided the required evidence:
+
 - [ ] Validate Polkit integration
 - [ ] Validate NetworkManager integration
 - [ ] Validate PipeWire/audio integration
 - [ ] Validate portals and screen sharing
 - [ ] Validate KRDP/KRDC integration where shipped
 - [ ] Validate Bluetooth
-- [ ] Validate printing/scanning baseline
+- [ ] Validate printing baseline
+- [ ] Classify scanning correctly according to whether Aurora exposes a scanner workflow
 - [ ] Validate removable-media handling
 - [ ] Validate Samba/network-share UX
-- [ ] Validate archive/file-format support
+- [ ] Classify archive/file-format support against the current exposed baseline; final everyday archive app capability remains Phase 5
 - [ ] Validate language/locale/XDG directory behavior
-- [ ] Validate power management and suspend/resume
+- [ ] Validate power management and suspend/resume within C4 VM scope
 - [ ] Validate Flatpak desktop integration
-- [x] Build repeatable development DEB package prototypes
-- [x] Add Ubuntu 26.04 package-build/APT-resolution CI gate
-- [x] Add isolated clean Ubuntu 26.04 rootfs installation gate
-- [x] Pass the clean-rootfs gate and record its resulting package set
-- [x] Build and pass the first real bootable VM validation harness (C1)
-- [x] Build and pass the graphical SDDM/KWin Wayland VM gate (C2)
 
-**Exit criterion:** Plasma looks close to upstream and every feature SupraLINUX exposes in the baseline works without requiring the user to discover missing packages.
+**Phase 1 exit criterion:** Plasma remains close to upstream and every feature SupraLINUX exposes in the baseline works without requiring the user to discover missing packages. Hardware-only claims remain explicitly separated until representative hardware testing.
 
 ## Phase 2 — SupraLINUX packaging
 
-Development prototypes now exist for `supralinux-base`, `supralinux-desktop`, `supralinux-settings`, and `supralinux-snap-policy`; the checkboxes below mean release-ready/frozen packages, not merely that a development directory exists.
+Development prototypes exist for `supralinux-base`, `supralinux-desktop`, `supralinux-settings`, and `supralinux-snap-policy`; the checkboxes below mean release-ready/frozen packages, not merely that a development directory exists.
 
 - [ ] `supralinux-base`
 - [ ] `supralinux-desktop`
@@ -106,6 +130,7 @@ Only after the Plasma baseline is complete:
 - [ ] Audio/video player
 - [ ] Torrent client
 - [ ] Network sharing baseline
+- [ ] Scanner application/workflow decision if desired as an out-of-box capability
 - [ ] Other everyday desktop capabilities
 
 ## Phase 6 — Quality and hardware validation
@@ -115,11 +140,14 @@ Only after the Plasma baseline is complete:
 - [ ] NVIDIA graphics
 - [ ] laptops
 - [ ] Wi-Fi
-- [ ] Bluetooth
-- [ ] audio
-- [ ] suspend/resume
+- [ ] Bluetooth peripherals/audio
+- [ ] audio hardware
+- [ ] suspend/resume on representative systems
 - [ ] multi-monitor
 - [ ] HiDPI
+- [ ] touchpad/touchscreen/tablet/controller where supported
+- [ ] SMART-capable storage
+- [ ] hybrid-GPU/sensor/platform integration where claimed
 - [ ] UEFI
 - [ ] Secure Boot strategy validation
 - [ ] dual boot

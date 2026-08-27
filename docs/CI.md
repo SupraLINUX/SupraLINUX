@@ -1,23 +1,25 @@
 # SupraLINUX CI — Aurora validation
 
-SupraLINUX CI validates packaging, clean-system composition and real VM boot behavior against Ubuntu 26.04 LTS, the base generation used by Aurora.
+SupraLINUX CI validates packaging, clean-system composition and real VM behavior against Ubuntu 26.04 LTS (`resolute`), the base generation used by Aurora.
 
 ## Runner
 
-The workflows use GitHub's `ubuntu-26.04` x64 runner. As of August 2026 this runner image is still in public preview, so each workflow explicitly verifies `VERSION_CODENAME=resolute` and amd64 before doing project work.
+Workflows use GitHub's `ubuntu-26.04` x64 runner. While that runner image remains subject to GitHub image changes, each workflow must explicitly verify `VERSION_CODENAME=resolute` and amd64 before doing project work.
 
-The source repository is public pre-alpha development. Public repository visibility does not imply release readiness and there is no supported ISO/release yet.
+The repository is public pre-alpha development. Public visibility does not imply release readiness and there is no supported ISO/release yet.
 
 ## Gate 1 — package build and APT resolution
 
 Workflow: `.github/workflows/package-validation.yml`
 
+Status: **GREEN**
+
 It proves:
 
-1. the development package sources build into DEB packages on Ubuntu 26.04;
-2. the runner is actually amd64 Resolute;
+1. development package sources build into DEBs on Ubuntu 26.04;
+2. the runner is amd64 Resolute;
 3. `supralinux-snap-policy`, `supralinux-base`, `supralinux-settings` and `supralinux-desktop` resolve together through APT;
-4. the SupraLINUX Snap policy removes installable APT candidates for `snapd` and `plasma-discover-backend-snap` in a fresh APT state;
+4. the Snap policy removes installable APT candidates for `snapd` and `plasma-discover-backend-snap` in a fresh APT state;
 5. the default package composition does not pull `plasma-session-x11`;
 6. Plasma Discover resolves under the policy without pulling the Snap backend.
 
@@ -25,77 +27,121 @@ It proves:
 
 Workflow: `.github/workflows/rootfs-validation.yml`
 
-This gate builds a disposable Ubuntu 26.04 `debootstrap --variant=minbase` rootfs, enables the official Ubuntu main/restricted/universe/multiverse repositories, then installs the SupraLINUX DEBs for real inside that isolated filesystem.
+Status: **GREEN**
 
-The Snap policy is installed first. The base, settings and desktop packages are then installed using normal APT behavior. The gate runs `apt-get check` and verifies representative required integrations including Plasma Wayland, XWayland compatibility, SDDM, KWin Wayland, Polkit, PipeWire, NetworkManager, Bluetooth, KDE portals, Flatpak integration, KRDP, printing, Samba sharing, KWallet, power management and display management.
+This gate builds a disposable Ubuntu 26.04 `debootstrap --variant=minbase` rootfs, enables official Ubuntu repositories, then installs the SupraLINUX DEBs for real inside that isolated filesystem.
 
-The rootfs gate also verifies Aurora's SDDM Wayland configuration from `supralinux-settings`: `DisplayServer=wayland` and a KWin Wayland compositor command must be present. It rejects `plasma-session-x11` and its standard launcher files from the default baseline.
+The Snap policy is installed first. Base/settings/desktop packages are then installed using normal APT behavior. The gate runs `apt-get check` and verifies representative required integration packages including Plasma Wayland, XWayland compatibility, SDDM/KWin Wayland, Polkit, PipeWire, NetworkManager, Bluetooth, KDE portals, Flatpak integration, KRDP, printing, Samba sharing, KWallet, power management and display management.
 
-It additionally fails if it finds Snap components, Ubuntu Desktop, Kubuntu Desktop or GNOME Shell, and verifies the SupraLINUX APT preference that keeps Snap non-installable by default.
+It also verifies Aurora's SDDM Wayland configuration and rejects Plasma X11 session launchers, Snap components, Ubuntu Desktop, Kubuntu Desktop and GNOME Shell.
+
+This gate proves clean composition, not runtime feature completeness.
 
 ## Gate 3 — C1 kernel + systemd boot
 
 Workflow: `.github/workflows/boot-c1-validation.yml`
 
-C1 converts the clean Aurora composition into a disposable ext4 VM disk, boots the actual Ubuntu kernel/initramfs in QEMU and requires the guest to reach a healthy `multi-user.target` state.
+Status: **CERTIFIED**
 
-The guest must emit exactly one `AURORA_C1_SUCCESS` marker and no `AURORA_C1_FAILURE` marker. C1 checks PID 1/systemd, writable root, package consistency, SupraLINUX package presence, Snap policy and the configured SDDM display-manager link.
+C1 converts the clean Aurora composition into a disposable ext4 VM disk, boots the Ubuntu kernel/initramfs in QEMU and requires the guest to reach a healthy `multi-user.target` state.
+
+The guest must emit exactly one `AURORA_C1_SUCCESS` marker and no `AURORA_C1_FAILURE` marker.
+
+Canonical evidence: `docs/validation/AURORA_C1_ACCEPTANCE.md`.
 
 ## Gate 4 — C2 graphical target + SDDM Wayland greeter
 
 Workflow: `.github/workflows/boot-c2-validation.yml`
 
-C2 boots the same package-defined Aurora system to `graphical.target` with a virtual DRM device. It does not accept a merely installed or enabled SDDM service.
+Status: **CERTIFIED**
 
-The guest requires:
+C2 boots the same package-defined Aurora system to `graphical.target` with a virtual DRM device and observes a live SDDM greeter running on KWin Wayland. It does not accept merely installed/enabled configuration.
 
-- `graphical.target` and `multi-user.target` active;
-- SDDM and systemd-logind healthy;
-- a graphical `seat0` and `/dev/dri/card0`;
-- Aurora's `DisplayServer=wayland` SDDM configuration;
-- `kwin_wayland` running for the SDDM user;
-- `sddm-greeter` running for the SDDM user;
-- `xwayland` installed for application compatibility;
-- no default Plasma X11 desktop session;
-- package and Snap-policy sanity after graphical boot.
+Canonical evidence: `docs/validation/AURORA_C2_ACCEPTANCE.md`.
 
-The guest must emit exactly one `AURORA_C2_SUCCESS` and no `AURORA_C2_FAILURE` marker. Serial logs and installation diagnostics are uploaded as evidence.
-
-C2 validates the display-manager greeter only. It does **not** prove that a normal user can log into a Plasma Wayland desktop; that is C3.
-
-## Next gate — C3 Plasma Wayland user session
+## Gate 5 — C3 Plasma Wayland user session
 
 Workflow: `.github/workflows/boot-c3-validation.yml`
 
-C3 creates a disposable CI-only user and uses SDDM autologin only inside the generated VM. The harness dynamically discovers the installed Plasma Wayland session instead of adding a product user or hard-coding a Plasma X11 fallback.
+Status: **CERTIFIED**
 
-The guest validates desktop readiness in bounded stages. A successful run must observe, in order where dependencies require it:
+C3 creates a disposable CI-only user and uses SDDM autologin only inside the generated VM. It validates desktop readiness in bounded stages and requires deterministic guest markers.
 
-- an active local login for the disposable user;
-- a Wayland login session;
-- a usable user D-Bus;
-- `graphical-session.target` becoming active naturally through the Plasma user session;
+Accepted scope includes:
+
+- active local disposable-user session;
+- `Type=wayland`;
+- usable user D-Bus;
+- natural `graphical-session.target` readiness;
 - KWin Wayland and Plasma shell;
-- Plasma Wayland/workspace systemd user targets;
-- session environment and Wayland/XWayland display sockets;
-- PipeWire and WirePlumber capability;
+- Plasma user-session targets;
+- session environment and Wayland/XWayland sockets;
+- first-login Look-and-Feel defaults state;
+- Xresources/XWayland state;
+- PipeWire/WirePlumber capability;
 - Plasma Polkit agent capability;
-- XDG desktop portal and KDE portal backend registration;
-- a real Qt/XCB compatibility smoke test using the already-installed `systemsettings` through XWayland;
-- stable KWin/Plasma PIDs through the end of the probe.
+- XDG portal/KDE backend registration;
+- real Qt/XCB smoke test through XWayland;
+- stable KWin/Plasma processes through probe completion.
 
-C3 does not start `graphical-session.target` itself. Doing so would manufacture the condition that the test is intended to validate. Services that are legitimately D-Bus/socket/systemd activated may be exercised through their supported activation path.
+These are readiness/plumbing assertions. They do not substitute for C4 feature workflows such as real privileged actions, real audio streams, Flatpak permission behavior or screen-sharing lifecycle.
 
-The serial console is the primary deterministic evidence channel. The guest emits `AURORA_C3_STAGE=<stage>` markers as it advances, `AURORA_C3_XWAYLAND_SUCCESS` after the compatibility smoke test, exactly one `AURORA_C3_SUCCESS` only after all checks complete, and `AURORA_C3_FAILURE:` with the failing stage on explicit or unexpected probe failure.
+Canonical evidence: `docs/validation/AURORA_C3_ACCEPTANCE.md`.
 
-Artifact upload is useful but is not allowed to be the only source of failure evidence. The C3 serial diagnostics include the last stage, login state, process list, user-systemd state, user D-Bus names, SDDM journal and XWayland smoke-test output so a failed guest remains diagnosable if the artifact service itself fails.
+## Next executable stage — C4 feature integration certification
 
-Because Aurora prioritizes a complete desktop rather than protocol purity, XWayland support is part of the intended user experience; it is not an alternative Plasma X11 desktop session.
+Status: **CONTRACT DEFINED; HARNESS IMPLEMENTATION PENDING**
 
-C3 remains pending until the workflow is reproducibly green **and** the guest markers are explicitly verified. A green GitHub job alone does not promote the gate.
+C4 is split into manageable subgates defined by `docs/C4_CERTIFICATION.md` and backed by the canonical capability inventory in `docs/PLASMA_INTEGRATION_MATRIX.md`.
+
+The first implementation target is:
+
+**C4.0 — Surface and contract inventory**
+
+C4.0 must inventory the runtime-exposed Plasma/KWin/integration surface and prove that every in-scope visible surface and every direct `supralinux-desktop` dependency has a matrix/policy owner. Unknown exposed surfaces are failures.
+
+No package dependency changes should be made for C4 feature defects before C4.0 establishes complete coverage.
+
+Later subgates cover:
+
+- C4.1 System Settings/KWin software behavior;
+- C4.2 Polkit/KWallet/privileged actions;
+- C4.3 NetworkManager/Plasma-NM/VPN;
+- C4.4 PipeWire/WirePlumber/audio;
+- C4.5 Bluetooth/BlueDevil;
+- C4.6 Flatpak/portal routing;
+- C4.7 capture/screen sharing;
+- C4.8 KRDP/RDP;
+- C4.9 printing/CUPS;
+- C4.10 UDisks/Solid/removable media;
+- C4.11 Samba/KIO/KIO-FUSE;
+- C4.12 power/platform integration;
+- C4.13 locale/translations/XDG dirs;
+- C4.14 accessibility;
+- C4.15 auxiliary/direct-dependency closure.
+
+A KCM/process/service merely existing never produces a C4 PASS. Each capability must execute and observe a real backend action according to the C4 contract.
+
+## Regression policy
+
+C1-C3 stay closed unless a later product change can plausibly affect their accepted scope.
+
+Examples:
+
+- documentation-only C4 changes: no regression run;
+- C4 harness/fixture-only additions that do not alter the product image: no automatic C1-C3 rerun;
+- Plasma/KWin/session/XWayland package or configuration changes: C3 regression, plus C2 if greeter infrastructure overlaps;
+- SDDM/KWin greeter changes: C2 and normally C3;
+- kernel/base/systemd/initramfs changes: C1 plus affected later gates.
+
+The triggering change should record the regression reason.
+
+## Evidence model
+
+Serial guest markers remain the primary deterministic evidence channel for VM gates. A green workflow or QEMU exit code alone is insufficient.
+
+For C4, evidence additionally includes a machine-readable capability result manifest, product/fixture package manifests and targeted backend/service logs. Product dependencies and CI-only fixture dependencies must be reported separately.
 
 ## Storage policy
 
-Large VM/rootfs images remain ephemeral and out of Git. Boot-validation workflows preserve compact serial and targeted diagnostic artifacts so accepted runtime milestones can be audited.
-
-Persistent release packages belong in the future SupraLINUX APT repository rather than GitHub Actions artifact storage.
+Large VM/rootfs images remain ephemeral and out of Git. Validation preserves compact serial logs and targeted diagnostics. Persistent release packages belong in the future SupraLINUX APT repository rather than Actions artifact storage.

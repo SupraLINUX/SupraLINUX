@@ -1,38 +1,77 @@
 # Aurora XDG Portal Policy
 
-Status: **candidate integration policy; clean Plasma Wayland validation pending**.
+Status: **candidate routing policy selected; C4.6/C4.7 runtime certification pending**.
 
 Aurora currently installs both:
 
 - `xdg-desktop-portal-kde`
 - `xdg-desktop-portal-gtk`
 
-This does **not** mean SupraLINUX is mixing KDE and GNOME desktop shells. XDG Desktop Portal is a broker: multiple backend implementations can coexist and the desktop selects which implementation handles each portal interface.
+This does **not** mean SupraLINUX mixes KDE and GNOME desktop shells. XDG Desktop Portal is a broker and multiple backend implementations may coexist. Runtime routing determines which backend serves each interface.
 
 ## Intended routing
 
-For Plasma, the KDE backend is the primary implementation. It should own the Plasma-native user-facing paths such as file selection and screen/screencast integration wherever KDE implements them.
+For Plasma, the KDE backend is primary. It should own Plasma-native user-facing paths such as file selection and Wayland screen/screencast integration wherever KDE implements them.
 
-The GTK backend is installed as a compatibility/fallback implementation, particularly for portal interfaces/settings where the Plasma portal configuration may deliberately fall back to GTK.
+The GTK backend is currently installed as a compatibility/fallback candidate for interfaces/settings where the effective Plasma portal configuration deliberately falls back to GTK.
 
-Aurora must not rely on package installation order to choose a backend.
+Aurora must never rely on package installation order to select a portal backend.
 
-## Why the GTK backend is in the candidate baseline
+## Why the GTK backend is currently in the candidate baseline
 
-Ubuntu 26.04's Kubuntu desktop installs both the KDE and GTK portal backends as hard dependencies. More importantly, Plasma's portal-routing design has used the GTK backend as a fallback for selected interfaces such as desktop Settings. This can matter for GTK applications running inside a Plasma session (theme/font/settings coherence).
+The package was promoted into the broad development candidate because Plasma portal routing may use a fallback backend for selected interfaces/settings and because GTK/Flatpak applications must behave coherently in the Plasma session.
 
-SupraLINUX therefore treats `xdg-desktop-portal-gtk` as an integration candidate with a concrete reason, not as something copied blindly from Kubuntu.
+This remains a **candidate dependency**, not a frozen requirement.
 
-## Acceptance tests
+C4.6 is explicitly responsible for answering two questions with runtime evidence:
+
+1. Does Aurora's actual Ubuntu 26.04 Plasma routing require the GTK backend for a compatibility path we intend to support?
+2. If installed, does GTK remain confined to justified fallback interfaces rather than stealing Plasma/KDE-specific ones?
+
+If the answer to the first question is no, the GTK backend should be considered for removal after C4 evidence. If yes, its exact routing becomes part of the product contract.
+
+## C4.6 acceptance tests
 
 Before the dependency is release-frozen:
 
 1. confirm `XDG_CURRENT_DESKTOP` identifies Plasma correctly;
-2. inspect the effective Plasma portal routing configuration installed by current Ubuntu 26.04 KDE packages;
-3. verify a Flatpak/Qt app opens the KDE file chooser;
-4. verify a representative GTK/Flatpak app gets correct fonts/theme/settings;
-5. verify screen sharing routes through the KDE/KWin/PipeWire path;
-6. verify installing the GTK backend does not steal KDE-specific interfaces unexpectedly;
-7. repeat screen-sharing start/stop cycles according to `docs/UPSTREAM_BLOCKERS.md` because Ubuntu 26.04 currently has an external regression report in this area.
+2. inventory installed portal backend descriptors/configuration;
+3. record the effective portal routing used by current Ubuntu 26.04 packages;
+4. activate relevant portal interfaces and record the serving backend where observable;
+5. use a locally built Flatpak test application rather than relying on Flathub availability;
+6. verify a sandboxed Qt/representative app receives the intended KDE file chooser path;
+7. verify a representative GTK/sandbox path receives correct compatibility settings where GTK fallback is actually used;
+8. verify GTK does not unexpectedly own KDE-specific screen-cast or chooser interfaces;
+9. verify Flatpak permission changes actually alter sandbox behavior;
+10. restore all test state and leave portal services healthy.
 
-If the GTK backend provides no required compatibility in the tested Aurora environment, it can be removed. If it is required, the routing behavior becomes part of the release contract.
+A portal process merely running or owning a D-Bus name is not sufficient.
+
+## C4.7 screen-sharing acceptance
+
+Screen capture/sharing is separated from generic portal routing because it involves KWin, PipeWire, portal session lifecycle and an external/representative client.
+
+The test must exercise the real Wayland path and prove:
+
+- session creation;
+- source selection;
+- stream start;
+- real PipeWire frame flow;
+- clean session close;
+- recording/share indicator cleanup;
+- no leaked PipeWire/portal session resources;
+- stable Plasma/KWin after completion.
+
+`docs/UPSTREAM_BLOCKERS.md` tracks an external Ubuntu 26.04 regression candidate involving repeated screen-sharing cycles. Therefore a one-shot success is insufficient. The current acceptance contract requires at least 30 consecutive start/share/stop cycles for each selected representative client path where practical.
+
+## Failure policy
+
+If C4 reproduces a portal/screen-sharing defect:
+
+1. capture package versions and effective routing first;
+2. identify whether the fault belongs to `xdg-desktop-portal`, KDE backend, GTK fallback, KWin, PipeWire or the client interaction;
+3. check current Ubuntu/upstream fixes;
+4. prefer an upstream/Ubuntu fix;
+5. only then consider a scoped SupraLINUX override with documented removal condition.
+
+Do not remove GTK, downgrade portals or pin versions merely to make C4 green before the failing component is isolated.

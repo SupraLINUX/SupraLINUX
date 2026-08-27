@@ -1,24 +1,29 @@
-# Aurora Boot Validation
+# Aurora Boot and Feature Validation
 
 This document defines the validation layers after the clean-rootfs gate.
 
-The clean-rootfs gate proves that SupraLINUX packages can be installed coherently on a clean Ubuntu 26.04 base. It does **not** by itself prove that the resulting system boots, that systemd reaches a healthy state, that SDDM works, or that Plasma actually starts as a Wayland session.
+The clean-rootfs gate proves that SupraLINUX packages can be installed coherently on a clean Ubuntu 26.04 base. It does **not** by itself prove boot, graphical login, user-session health or feature integration. Validation therefore advances in explicit stages. A later stage must not be treated as passed because an earlier one succeeded.
 
-Boot validation therefore advances in explicit stages. A later stage must not be treated as passed because an earlier one succeeded.
+Current canonical gate state:
+
+```text
+clean-rootfs — GREEN
+C1 — GREEN / CERTIFIED
+C2 — GREEN / CERTIFIED
+C3 — GREEN / CERTIFIED
+C4 — DESIGN COMPLETE / EXECUTION PENDING
+C5 — LOCKED UNTIL C4
+```
+
+C1-C3 acceptance records under `docs/validation/` are authoritative. Do not reopen those gates without a real regression trigger.
 
 ## Stage C1 — Kernel + systemd boot
 
+Status: **CERTIFIED**
+
 Goal: boot the installed Aurora filesystem in a disposable VM and prove that a real Linux boot reaches userspace correctly.
 
-CI approach:
-
-1. Reuse the same package build and clean Ubuntu 26.04 composition used by the rootfs gate.
-2. Convert the resulting rootfs into a disposable ext4 disk image.
-3. Boot the Ubuntu kernel and initramfs from that rootfs in QEMU.
-4. Capture the serial console as a CI artifact.
-5. Require systemd to reach a defined target without entering emergency mode.
-
-Required evidence:
+Required evidence includes:
 
 - kernel boots successfully;
 - root filesystem mounts read/write;
@@ -31,86 +36,148 @@ Required evidence:
 - required system services are installed and loadable;
 - SDDM is enabled for graphical boot.
 
-This stage is intentionally not a Plasma test.
+C1 is intentionally not a Plasma test.
+
+Canonical evidence: `docs/validation/AURORA_C1_ACCEPTANCE.md`.
 
 ## Stage C2 — Graphical target + SDDM Wayland greeter
 
-Goal: prove that the same disposable VM can reach the graphical boot path and that Aurora's configured SDDM greeter actually runs on KWin Wayland.
+Status: **CERTIFIED**
 
-Required evidence:
+Goal: prove that the disposable VM reaches graphical boot and Aurora's configured SDDM greeter actually runs on KWin Wayland.
 
-- `graphical.target` is reached;
-- SDDM starts without a fatal configuration error;
-- `supralinux-settings` installs Aurora's SDDM Wayland configuration;
-- the SDDM configuration selects `DisplayServer=wayland` and `kwin_wayland` as the greeter compositor;
-- an appropriate virtual graphics device is detected;
-- required seat/logind integration exists;
-- a `kwin_wayland` process and `sddm-greeter` process are running for the SDDM user;
-- `xwayland` remains installed as part of the Plasma Wayland compatibility path;
-- the Plasma X11 desktop session is not part of the default Aurora composition;
-- the system does not fall back to a text-only boot because of missing desktop dependencies.
+Required evidence includes:
 
-The SDDM Wayland path is not accepted merely because a configuration file exists. C2 must observe a live KWin Wayland greeter in the VM. If that path has a blocking regression, the validation must fail rather than silently falling back to an untested display-server mode.
+- `graphical.target` reached;
+- SDDM starts without fatal configuration error;
+- `supralinux-settings` provides Aurora's SDDM Wayland configuration;
+- `DisplayServer=wayland` and KWin Wayland compositor command are active;
+- graphical seat/logind integration exists;
+- appropriate virtual graphics device exists;
+- `kwin_wayland` and `sddm-greeter` run for the SDDM user;
+- XWayland remains installed for application compatibility;
+- Plasma X11 desktop session is absent from the default Aurora composition.
 
-CI may use software rendering and virtual hardware. Passing here does not imply real-hardware graphics support.
+C2 does not certify a normal Plasma user session.
 
-## Stage C3 — Plasma Wayland session
+Canonical evidence: `docs/validation/AURORA_C2_ACCEPTANCE.md`.
 
-Goal: launch an actual disposable user session and prove that the SupraLINUX baseline runs as Plasma on Wayland while retaining application compatibility expected from a complete Plasma desktop.
+## Stage C3 — Plasma Wayland user session
 
-The test user and any automatic login configuration used by CI are test-only and must never become product defaults.
+Status: **CERTIFIED**
 
-C3 treats desktop startup as an asynchronous readiness sequence rather than assuming that every user-session component is ready as soon as SDDM reports a login. The probe must wait for each required condition for a bounded period and fail with the last completed stage if readiness is not reached.
+Goal: launch an actual disposable user session and prove the SupraLINUX baseline runs as Plasma on Wayland while retaining intended XWayland application compatibility.
 
-Required evidence from inside the session:
+The test user and CI autologin remain test-only and are not product defaults.
 
-- the disposable user obtains an active local login session;
-- the login session reports `Type=wayland`;
-- the user's D-Bus session becomes usable;
-- `graphical-session.target` becomes active through the normal Plasma/systemd user-session path;
-- the probe must **not** start `graphical-session.target` itself to manufacture readiness;
-- KWin Wayland is running;
-- Plasma shell is running;
-- the Plasma Wayland/workspace targets and `plasma-plasmashell.service` become active;
-- `XDG_SESSION_TYPE=wayland`, `WAYLAND_DISPLAY`, the Wayland socket and `DISPLAY` are valid in the real Plasma session environment;
-- KDE portal broker/backend can be activated through the user D-Bus and register their expected bus names;
-- PipeWire and WirePlumber user services can start and become active;
-- KWallet/PAM integration does not prevent login;
-- the Plasma Polkit agent can start and become active;
-- no immediate Plasma/KWin crash or restart loop occurs;
-- XWayland is available and the already-installed `systemsettings` application can remain running when explicitly forced to the Qt XCB platform inside the Wayland session.
+C3 acceptance includes:
 
-The XWayland check is a compatibility test, not an alternative desktop-session mode. Aurora does not remove X11 compatibility libraries or components merely to satisfy a superficial "Wayland-only" label. C3 must use software already present in the Aurora desktop rather than adding a synthetic X11 test application solely for CI.
+- active local disposable-user login;
+- `Type=wayland`;
+- usable user D-Bus;
+- `graphical-session.target` becoming active through normal Plasma startup rather than being manufactured by the probe;
+- KWin Wayland and Plasma shell;
+- Plasma Wayland/workspace targets;
+- real session environment and Wayland/XWayland display sockets;
+- first-login Look-and-Feel defaults persistence;
+- Xresources/XWayland state;
+- PipeWire/WirePlumber capability;
+- Plasma Polkit agent capability;
+- XDG portal broker/KDE backend registration;
+- a real Qt/XCB compatibility smoke test through XWayland using installed `systemsettings`;
+- stable KWin/Plasma PIDs through the end of the probe.
 
-The guest emits deterministic serial markers for the readiness sequence, including `AURORA_C3_STAGE=<stage>`, `AURORA_C3_XWAYLAND_SUCCESS`, exactly one final `AURORA_C3_SUCCESS`, and an `AURORA_C3_FAILURE:` marker on explicit or unexpected probe failure. A green workflow without the guest success marker is not sufficient evidence.
+These C3 checks prove session readiness and selected plumbing only. They do not certify the full product workflows for Polkit, KWallet, audio, portals or other C4 features.
 
-Failure diagnostics must be useful even if GitHub artifact upload is unavailable. The serial channel therefore includes the last C3 stage, login/session state, relevant user processes, user-systemd failed units and session targets, user D-Bus names, SDDM state/journal, and the XWayland smoke-test log where available.
+Canonical evidence: `docs/validation/AURORA_C3_ACCEPTANCE.md`.
 
-## Stage C4 — Feature integration smoke tests
+## Stage C4 — Feature integration certification
 
-Only after a real Wayland session is reproducibly available do we start testing the feature matrix.
+Status: **EXECUTABLE CONTRACT DEFINED; IMPLEMENTATION PENDING**
 
-Initial groups:
+C4 starts only after the real Wayland user session is reproducibly available. Its purpose is to certify the feature matrix end-to-end.
 
-- System Settings/KCM availability;
-- NetworkManager + Plasma NM;
-- PipeWire/audio plumbing;
-- Bluetooth backend;
-- Flatpak permissions KCM;
-- KDE portals;
-- screen capture/screen sharing plumbing;
-- KRDP/KRDC integration where applicable;
-- printing/CUPS;
-- Samba/KIO network sharing;
-- removable media;
-- power management;
-- locale/language/XDG user directories.
+Canonical documents:
 
-A KCM merely opening does not count as feature completeness. Tests must verify the backend or service path that makes the control functional.
+- capability inventory: `docs/PLASMA_INTEGRATION_MATRIX.md`;
+- execution/acceptance contract: `docs/C4_CERTIFICATION.md`;
+- package/KCM research inputs: `docs/KCM_AUDIT.md` and `docs/PLASMA_PACKAGE_AUDIT.md`;
+- portal policy: `docs/PORTAL_POLICY.md`;
+- reproduced/external blockers: `docs/UPSTREAM_BLOCKERS.md`.
+
+A KCM merely opening never counts as feature completeness.
+
+### C4.0 — Surface and contract inventory
+
+Inventory the runtime-exposed Plasma/KWin/integration surface and compare it to a versioned coverage manifest. C4.0 fails on any unknown in-scope visible feature or direct product dependency with no capability/policy owner.
+
+C4.0 must pass before package selection is changed in response to later C4 findings.
+
+### C4.1 — System Settings / KWin / software-only desktop behavior
+
+Activities, Baloo/search, keyboard/shortcuts, workspace/session behavior, KWin effects/scripts/virtual desktops/decorations/rules/XWayland policy/window behavior/screen edges/task switcher and other software-only mapped KCMs.
+
+### C4.2 — Polkit + KWallet + privileged actions
+
+Exercise real privileged operations and a password-based KWallet/PAM login flow. Service/process presence alone is insufficient.
+
+### C4.3 — NetworkManager + Plasma-NM + VPN
+
+Exercise a dedicated virtual NIC plus controlled OpenVPN/OpenConnect endpoints. Wi-Fi/real modem claims remain hardware-scoped unless a faithful fixture is explicitly documented.
+
+### C4.4 — PipeWire + WirePlumber + Plasma audio
+
+Exercise real streams against virtual audio endpoints and prove volume/mute/routing state changes through the actual backend.
+
+### C4.5 — Bluetooth + BlueDevil
+
+A CI-only virtual HCI fixture may prove BlueZ/BlueDevil software integration. Physical peripheral pairing and Bluetooth audio remain hardware follow-up.
+
+### C4.6 — Flatpak + portal routing
+
+Use a local test Flatpak. Record effective portal routing and prove real sandbox/permission behavior. Resolve the KDE-primary/GTK-fallback policy with runtime evidence.
+
+### C4.7 — Screenshot / screencast / screen sharing
+
+Exercise the real Wayland KWin → portal → PipeWire path. Repeated screen-sharing lifecycle tests are required because of the tracked upstream regression candidate.
+
+### C4.8 — KRDP / RDP
+
+Use an external RDP client role and exercise actual server/session lifecycle. KRDC is only certified if it becomes a shipped baseline application rather than remaining merely recommended.
+
+### C4.9 — Printing / CUPS
+
+Use a controlled virtual IPP target. Submit a real job, inspect queue lifecycle, cancellation and a failure path.
+
+### C4.10 — UDisks / Solid / removable media
+
+Use hot-pluggable virtual removable storage and exercise mount/read-write/unmount/eject plus automount policy.
+
+### C4.11 — Samba / KIO / KIO-FUSE
+
+Test both remote SMB consumption and local KDE/Samba sharing from an external client.
+
+### C4.12 — Power management
+
+Exercise PowerDevil according to capabilities exposed by the VM, including suspend/resume where credible. Hardware battery/brightness/lid/profile claims remain separate.
+
+### C4.13 — Locale / translations / XDG user directories
+
+Test clean pre-first-login locale establishment for at least `en_US.UTF-8` and `es_AR.UTF-8`. Installer-selected locale is not claimed until Phase 4 because Calamares is not yet implemented.
+
+### C4.14 — Accessibility
+
+Exercise AT-SPI, Orca/Speech Dispatcher and representative exposed KWin accessibility behavior.
+
+### C4.15 — Auxiliary integration / direct-dependency closure
+
+Every direct `supralinux-desktop` dependency must finish C4 as tested/justified, hardware-dependent/justified, or demoted/removed. No dependency remains merely because it was part of an early broad candidate.
 
 ## Stage C5 — Interactive/manual VM QA
 
-Some behavior is unsuitable for a fully headless CI assertion. Once C1-C4 are stable, an interactive VM becomes the first human-visible Aurora desktop test.
+Status: **LOCKED UNTIL C4 IS COMPLETE**
+
+Some behavior is unsuitable for fully headless certification. After C4 is stable, an interactive VM becomes the first human-visible Aurora desktop QA stage.
 
 Examples:
 
@@ -122,43 +189,62 @@ Examples:
 - printer dialogs;
 - Bluetooth pairing UI;
 - portal chooser behavior;
-- screen sharing prompts;
+- screen-sharing prompts;
 - localization consistency;
 - XWayland application behavior;
 - general desktop regressions.
 
-This stage precedes ISO work. The VM should still be produced from the package-defined system rather than from manual distro-remastering steps.
+C5 precedes ISO work and must still use the package-defined system rather than manual remastering.
 
 ## CI constraints
 
-- Prefer hardware virtualization when the runner exposes it, but do not require it for correctness; a software-emulated fallback may be used for C1 if practical.
-- Do not claim GPU/hardware compatibility from a QEMU virtual-GPU test.
+- Prefer hardware virtualization when available, but never infer physical hardware support from QEMU.
 - Keep VM images disposable and out of Git.
-- Keep CI-only users, passwords, autologin and diagnostic services outside product packages.
+- Keep CI-only users, passwords, autologin, fixture packages and diagnostics outside product packages.
+- Separate product dependencies from CI fixture dependencies in logs/manifests.
 - Preserve serial logs and targeted diagnostics on failure.
-- A probe supervisor timeout must remain finite but must exceed the sum of its bounded readiness waits plus reasonable CI/QEMU overhead, so the harness can report the failing stage instead of being killed first.
-- Avoid shell constructs that can create harness-only false negatives under `set -o pipefail`; capture command output before early-exit filtering where appropriate.
-- Do not hide warnings merely to make CI green; classify them as expected VM/chroot limitations or actionable defects.
-- Do not remove X11 compatibility components merely to make the package set look more Wayland-pure; feature completeness has priority.
+- A guest success marker is required; a green workflow or QEMU exit code alone is insufficient.
+- Keep supervisor timeouts finite but longer than the sum of bounded readiness waits and expected QEMU overhead.
+- Avoid shell constructs that create harness-only false negatives under `pipefail`.
+- Do not hide warnings merely to make CI green; classify them.
+- Do not remove X11 compatibility components merely for protocol purity.
+- Do not change multiple product variables at once when a failure can first be isolated.
 
-## Phase 1 boot milestone
+## Regression policy
 
-The executable path is:
+C1-C3 are not rerun automatically for every C4 documentation/harness change.
+
+Re-run only the certified scopes plausibly affected by a product change. Examples:
+
+- kernel/base/systemd/initramfs changes → C1 plus affected later gates;
+- SDDM/KWin greeter changes → C2 and normally C3;
+- Plasma/KWin/session/XWayland composition changes → C3, and C2 when shared greeter infrastructure is affected;
+- documentation-only C4 changes → no C1-C3 regression run.
+
+The change that triggers regression must record why the older gate is in scope.
+
+## Phase 1 milestone
+
+The executable path is now:
 
 ```text
 Ubuntu 26.04 clean base
         ↓
 SupraLINUX packages + settings
         ↓
-bootable disposable VM
+clean-rootfs ✅
         ↓
-systemd
+C1 kernel/systemd ✅
         ↓
-graphical.target / SDDM on KWin Wayland
+C2 SDDM + KWin Wayland greeter ✅
         ↓
-Plasma Wayland test session + graphical-session.target
+C3 real Plasma Wayland user session + XWayland ✅
         ↓
-portals / audio / policy integration + XWayland compatibility
+C4 feature-by-feature integration certification ← current work
+        ↓
+re-evaluate/freeze candidate desktop dependencies
+        ↓
+C5 manual VM QA
 ```
 
-Only after this works repeatedly should the candidate `supralinux-desktop` dependency set be considered ready to freeze for the Phase 1 baseline.
+Only after C4 evidence closes the selected feature surface should the exact `supralinux-desktop` dependency set be considered ready to freeze.

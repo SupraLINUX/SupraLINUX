@@ -1,146 +1,159 @@
 # Plasma System Settings KCM Audit — Aurora
 
-Status: **package-surface inventory in progress; backend/test mapping still requires clean-system validation**.
+Status: **initial package-surface inventory established; C4.0 runtime coverage reconciliation pending**.
 
-Purpose: enumerate System Settings modules that become visible through the selected Plasma packages so SupraLINUX can apply its quality rule: a visible setting is not considered complete until its backend, permissions, integration, and tests are known.
+Purpose: enumerate System Settings modules that become visible through the selected Plasma packages so SupraLINUX can enforce its quality rule: a visible setting is not complete until its backend, permissions, integration and test owner are known.
+
+This document is a research/input inventory. The canonical executable capability IDs and statuses live in `docs/PLASMA_INTEGRATION_MATRIX.md`; the execution contract lives in `docs/C4_CERTIFICATION.md`.
 
 ## 1. KCMs shipped directly by `plasma-desktop` in Ubuntu 26.04
 
-The Ubuntu 26.04 `plasma-desktop` package currently installs these System Settings modules/plugins:
+The audited Ubuntu 26.04 package surface includes these System Settings modules/plugins:
 
-| KCM/plugin | Functional area | SupraLINUX audit target |
+| KCM/plugin | Functional area | C4 acceptance focus |
 |---|---|---|
-| `kcm_access` | Accessibility | Verify AT-SPI and screen-reader path, not only the visual KCM |
-| `kcm_activities` | Plasma Activities | Create/switch/remove activity; persistence across login |
-| `kcm_baloofile` | File Search / Baloo | Verify Baloo backend, indexing controls and status |
-| `kcm_desktoppaths` | User paths | Verify XDG directories and localization consistency |
-| `kcm_gamecontroller` | Game controllers | Detect supported controller; avoid dead UI on normal systems |
-| `kcm_kded` | Background services | Verify listed services match installed KDED components |
-| `kcm_keyboard` | Keyboard | Layouts, compose, model/options and Wayland behavior |
-| `kcm_keys` | Shortcuts | Global shortcuts must persist and reach KGlobalAccel/KWin |
-| `kcm_landingpage` | System Settings landing page | Basic module discovery/navigation |
-| `kcm_mouse` | Mouse | Pointer/input settings through supported Wayland path |
+| `kcm_access` | Accessibility | AT-SPI/screen-reader/visual accessibility paths, with hardware split where needed |
+| `kcm_activities` | Plasma Activities | Create/switch/remove and persistence |
+| `kcm_baloofile` | File Search / Baloo | Backend state, indexing controls and status |
+| `kcm_desktoppaths` | User paths | XDG directories and localization consistency |
+| `kcm_gamecontroller` | Game controllers | Surface ownership in C4; representative physical controller later |
+| `kcm_kded` | Background services | Listed services correspond to installed/actionable backends |
+| `kcm_keyboard` | Keyboard | Layouts/options and Wayland behavior |
+| `kcm_keys` | Shortcuts | Global shortcut persistence and actual trigger path |
+| `kcm_landingpage` | System Settings landing page | Module discovery/navigation and no broken entries |
+| `kcm_mouse` | Mouse | Supported settings reach KWin/libinput path |
 | `kcm_plasmasearch` | Plasma Search | KRunner/search plugin enable/disable behavior |
-| `kcm_smserver` | Session | Login/logout/session-restore behavior |
-| `kcm_splashscreen` | Plasma splash | Upstream baseline works; later Supra artwork can replace it |
-| `kcm_tablet` | Drawing tablet | Hardware-dependent validation track |
-| `kcm_touchpad` | Touchpad | Hardware-dependent validation; Wayland behavior |
-| `kcm_touchscreen` | Touchscreen | Hardware-dependent validation track |
-| `kcm_workspace` | Workspace behavior | Verify settings are actually consumed by Plasma/KWin |
-| `kcm_clock` | Date/time | Verify timezone/time backend and privileged helper path |
-| `kcm_device_automounter` | Removable media automount | UDisks/Solid path and per-device behavior |
-| `kcm_qtquicksettings` | Qt Quick settings | Validate expected runtime effect |
-| `kcm_recentFiles` | Recent files | Privacy/history behavior and persistence |
-| `kcm_solid_actions` | Device actions | Solid integration and action dispatch |
-| `kcmspellchecking` | Spell checking | Verify dictionaries/providers are available for supported locales |
-| `kcm_krunnersettings` | KRunner settings | Plugin list and configuration behavior |
+| `kcm_smserver` | Session | Representative login/logout/session-setting behavior |
+| `kcm_splashscreen` | Plasma splash | Upstream baseline configuration lifecycle |
+| `kcm_tablet` | Drawing tablet | Runtime surface inventory; representative hardware later |
+| `kcm_touchpad` | Touchpad | Runtime surface inventory; representative hardware later |
+| `kcm_touchscreen` | Touchscreen | Runtime surface inventory; representative hardware later |
+| `kcm_workspace` | Workspace behavior | Settings actually consumed by Plasma/KWin |
+| `kcm_clock` | Date/time | Timezone/time backend and privileged helper/Polkit path |
+| `kcm_device_automounter` | Removable-media automount | UDisks/Solid behavior with hot-plug fixture |
+| `kcm_qtquicksettings` | Qt Quick settings | Expected runtime effect |
+| `kcm_recentFiles` | Recent files | Privacy/history behavior and cleanup |
+| `kcm_solid_actions` | Device actions | Solid integration/action dispatch |
+| `kcmspellchecking` | Spell checking | Dictionaries/providers for supported C4 locales |
+| `kcm_krunnersettings` | KRunner settings | Plugin list/configuration lifecycle |
 
-The same package also installs accessibility configuration schemas for bell, color-blindness correction, invert, keyboard, mouse, screen reader, shake cursor and zoom/magnifier behavior. These must be audited as actual capabilities rather than assuming that the KCM file alone guarantees a working backend.
+The same package exposes accessibility schemas for bell, color-blindness correction, invert, keyboard, mouse, screen reader, shake cursor and zoom/magnifier behavior. C4.0 must reconcile the installed runtime surface rather than assuming this static list remains complete after Ubuntu/KDE updates.
 
 ## 2. KWin KCM surface from `kwin-common`
 
-Ubuntu 26.04's `kwin-common` file list confirms these System Settings modules. They are part of the Wayland desktop surface and therefore each requires an Aurora acceptance test.
+The audited Ubuntu 26.04 KWin surface includes:
 
-| KCM/plugin | Functional area | Acceptance focus |
+| KCM/plugin | Functional area | C4 acceptance focus |
 |---|---|---|
-| `kcm_animations` | Global animation speed | Setting changes KWin animation timing and persists |
-| `kcm_kwin_effects` | Desktop Effects | Enable/disable/configure supported effects without stale entries |
-| `kcm_kwin_scripts` | KWin scripts | Discovery, enable/disable and configuration lifecycle |
-| `kcm_kwin_virtualdesktops` | Virtual desktops | Add/remove/reorder/switch and persistence |
-| `kcm_kwindecoration` | Window decorations | Breeze baseline, decoration settings and live application |
-| `kcm_kwinrules` | Window rules | Create/edit/delete rules and verify Wayland application matching |
-| `kcm_kwinxwayland` | Xwayland controls | Changes affect Xwayland policy without breaking compatibility |
-| `kcm_virtualkeyboard` | Virtual keyboard | Backend selection and on-screen keyboard path when enabled |
-| `kcm_kwinoptions` | Window management behavior | Focus, placement, titlebar/window actions and persistence |
-| `kcm_kwinscreenedges` | Screen edges | Trigger actions reliably and preserve configuration |
-| `kcm_kwintabbox` | Task/window switcher | Layout/behavior selection and Alt-Tab operation |
-| `kcm_kwintouchscreen` | Touchscreen edges | Hardware-assisted touch edge validation |
+| `kcm_animations` | Global animation speed | Change/persistence and KWin health |
+| `kcm_kwin_effects` | Desktop Effects | Representative effect lifecycle |
+| `kcm_kwin_scripts` | KWin scripts | Discovery/enable/disable/configuration lifecycle |
+| `kcm_kwin_virtualdesktops` | Virtual desktops | Add/remove/switch/persistence |
+| `kcm_kwindecoration` | Window decorations | Supported setting applies live/persists |
+| `kcm_kwinrules` | Window rules | Wayland application matching |
+| `kcm_kwinxwayland` | XWayland controls | Policy changes without breaking intended compatibility |
+| `kcm_virtualkeyboard` | Virtual keyboard | KWin input-method path with `plasma-keyboard` |
+| `kcm_kwinoptions` | Window management behavior | Representative focus/placement/action settings |
+| `kcm_kwinscreenedges` | Screen edges | Trigger and persistence |
+| `kcm_kwintabbox` | Task/window switcher | Layout/behavior and Alt-Tab operation |
+| `kcm_kwintouchscreen` | Touchscreen edges | Surface inventory plus later hardware validation |
 
-The same package ships KWin screencast and screenshot plugins plus effect configuration plugins. This matters because Wayland capture/sharing is not just a portal package problem: KWin, PipeWire and the portal backend all participate in the path.
+KWin also ships screenshot/screencast plugins. C4 therefore treats Wayland capture/sharing as a KWin + PipeWire + portal/client path, not merely a portal-package check.
 
-## 3. External KCM/integration surfaces selected for the current candidate baseline
+## 3. External KCM/integration surfaces in the current candidate
 
-| Package(s) | Visible/related surface | Current candidate policy |
+| Package(s) | Visible/related surface | Current C4 treatment |
 |---|---|---|
-| `kscreen` | Displays / HDR calibration / display OSD | Hard dependency candidate |
-| `powerdevil` | Power management, battery, brightness | Hard dependency candidate |
-| `kde-config-screenlocker` | Screen locking | Hard dependency candidate |
-| `kde-config-sddm` + `sddm` | Login screen configuration | Hard dependency candidate; privileged write path must be tested |
-| `kde-config-flatpak` + `flatpak` | Flatpak permissions | Hard dependency candidate because Flatpak is first-class |
-| `krdp` | Remote Desktop settings/server | Hard dependency candidate; full Wayland RDP test required |
-| `plasma-nm` + NetworkManager | Network connections | Hard dependency candidate |
-| `bluedevil` + BlueZ | Bluetooth | Hard dependency candidate |
-| `print-manager` + CUPS | Printers | Hard dependency candidate; real print/discovery path required |
-| `kdenetwork-filesharing` + Samba | Dolphin folder sharing | Hard dependency candidate; share creation and remote access required |
-| `kde-config-gtk-style` + Breeze GTK | GTK application appearance | Hard dependency candidate for cross-toolkit coherence |
-| `plasma-disks` | SMART disk health | Hard dependency candidate; requires SMART-capable hardware/virtual disk tests |
-| `polkit-kde-agent-1` | Authentication dialogs | Integration dependency rather than conventional KCM |
-| `xdg-desktop-portal-kde` | Portals | File picker, open/save, screen sharing and sandbox integration |
-| `libpam-kwallet5` | Wallet unlock at login | PAM/session integration; no duplicate password prompt in normal flow |
-| `at-spi2-core`, `orca`, `speech-dispatcher` | Accessibility / screen reader | Candidate baseline so accessibility controls do not point to a missing runtime |
+| `kscreen` | Displays / HDR/display OSD | C4.1 virtual-output test; physical multi-monitor/HDR later |
+| `powerdevil` | Power/battery/brightness | C4.12; hardware capability split |
+| `kde-config-screenlocker` | Screen locking | inventory plus applicable software/session behavior |
+| `kde-config-sddm` + `sddm` | Login screen configuration | privileged write path in C4.2; preserve C2 greeter baseline |
+| `kde-config-flatpak` + `flatpak` | Flatpak permissions | C4.6 real sandbox behavior |
+| `krdp` | Remote Desktop settings/server | C4.8 end-to-end external-client tests |
+| `plasma-nm` + NetworkManager | Network connections | C4.3 |
+| `bluedevil` + BlueZ | Bluetooth | C4.5 virtual HCI software path + physical follow-up |
+| `print-manager` + CUPS | Printers | C4.9 virtual IPP job lifecycle |
+| `kdenetwork-filesharing` + Samba | Dolphin folder sharing | C4.11 external SMB client |
+| `kde-config-gtk-style` + Breeze GTK | GTK appearance | C4.15 |
+| `plasma-disks` | SMART disk health | C4.10/C4.15 justification + hardware follow-up |
+| `polkit-kde-agent-1` | Authentication dialogs | C4.2 real privileged action |
+| `xdg-desktop-portal-kde` | Portals | C4.6/C4.7 |
+| `xdg-desktop-portal-gtk` | Portal compatibility fallback | C4.6 routing evidence; keep/remove decision after test |
+| `libpam-kwallet5` | Wallet unlock at login | C4.2 password-login flow |
+| `at-spi2-core`, `orca`, `speech-dispatcher` | Accessibility / screen reader | C4.14 |
 
-## 4. Network/VPN integration decision for the first candidate
+## 4. Network/VPN integration
 
-`plasma-nm` exposes VPN creation/import workflows when matching NetworkManager plugins exist. The first Aurora candidate now includes:
+The current candidate includes:
 
 - `network-manager-openvpn`
 - `network-manager-openconnect`
 
-These cover two widely used VPN families without installing GNOME-specific editor packages. Additional protocols (L2TP, WireGuard-specific UI paths, VPNC, SSTP, strongSwan, etc.) remain an audit item. The rule is not “install every VPN plugin”; it is “do not present a workflow as supported unless its backend is present and tested”.
+These remain candidates because Plasma-NM exposes corresponding workflows. C4.3 must prove real controlled tunnels and traffic; plugin presence alone is insufficient.
+
+Additional VPN protocols are not automatically claimed. The rule remains: do not present a workflow as supported unless its backend is present and tested.
 
 ## 5. Printing and network-sharing completeness
 
-The first candidate now treats these as baseline desktop capabilities rather than optional cleanup after installation:
-
 ### Printing
+
+Current product candidates:
 
 - `print-manager`
 - `cups`
 - `cups-client`
 - `cups-filters`
 
-Acceptance must cover at least driverless/local discovery, add/remove printer, queue visibility, test-page/job path, cancellation and useful failure reporting.
+C4.9 must exercise a real virtual IPP job path, queue state, cancellation and failure behavior.
 
 ### Samba sharing
+
+Current product candidates:
 
 - `kdenetwork-filesharing`
 - `samba`
 - `kio-extras`
+- `kio-fuse`
 
-`kdenetwork-filesharing` itself depends on Samba common tools, but a real share server requires the Samba server stack. Aurora therefore tests both directions separately:
+C4.11 tests both remote SMB consumption and creation of a local share through the shipped KDE integration, with an external client verifying access.
 
-1. browse/open SMB shares from Dolphin;
-2. create a local folder share from Dolphin and access it from another machine/client.
+## 6. C4 test classes
 
-## 6. First KCM quality classes
+Each surface receives one or more classes:
 
-Each module receives one or more test classifications:
+- **Software-only** — fully automatable in a real Plasma VM session.
+- **Virtualizable** — requires a VM device/service fixture but can be automated credibly.
+- **Hardware-assisted** — requires representative physical hardware for the hardware claim.
+- **Privileged/system** — explicitly tests Polkit/PAM/system service behavior.
+- **External-client** — requires another process/guest/client role outside the tested server/session.
 
-- **Software-only:** can be fully exercised in a VM (workspace, splash, search, activities, many KWin options).
-- **Virtualizable:** needs a VM device/service but is automatable (removable storage, networking, audio, printing to a virtual target).
-- **Hardware-assisted:** needs representative physical hardware for a credible claim (touchpad, touchscreen, tablet, fingerprint, Bluetooth peripherals, SMART, Thunderbolt).
-- **Privileged/system:** explicitly tests Polkit/PAM/system service behavior (clock, SDDM, networking, power helpers, sharing).
-- **External-client:** requires another application/device/client (KRDP, Samba sharing, printing, KDE Connect).
+Hardware status is separate from C4 execution status. A virtualized software stack may be `PASS-C4` while physical validation remains `PENDING-HW`.
 
-A module is not “done” because System Settings opens without crashing.
+## 7. Deliberately unresolved / not currently claimed
 
-## 7. Deliberately unresolved surfaces
+These remain outside the hard baseline until policy and complete backend paths are chosen:
 
-These remain outside the current hard baseline until their policy and complete backend path are decided:
+- `plasma-firewall` — no supported firewall backend policy selected;
+- `plasma-thunderbolt` — physical authorization testing required;
+- `plasma-vault` — crypto backend and lifecycle/recovery design required;
+- fingerprint/PAM — auth-stack and hardware testing required;
+- KDE Connect — product/default-app decision;
+- browser integration — waits for browser/default-app policy;
+- scanner workflow — no scanner UI/app is currently exposed by the baseline;
+- archive/RAR workflow — Phase 5 application capability unless C4.0 discovers a current exposed surface.
 
-- `plasma-firewall`: requires choosing and supporting a firewall backend; do not ship a dead KCM.
-- `plasma-thunderbolt`: requires backend and physical-device validation.
-- `plasma-vault`: requires encryption backend selection plus create/open/close/recovery tests.
-- fingerprint/PAM: `libpam-fprintd` exists, but auth-stack changes require hardware testing before becoming default.
-- KDE Connect: strong candidate, but should be accepted as a product/default-app choice rather than accidentally inherited.
-- browser integration: wait for the browser/default-app policy.
-- Discover: temporary use is attractive, but its Ubuntu package recommends the Snap backend; it cannot enter the hard baseline until the SupraLINUX Snap-block policy safely neutralizes that recommendation.
+Discover is resolver-safe under the implemented Snap policy, but remains outside the hard `supralinux-desktop` baseline until its product role is deliberately chosen.
 
-## 8. Immediate next pass
+## 8. Immediate C4 work
 
-1. assign stable test IDs to every visible Plasma/KWin/external KCM;
-2. audit the complete Wayland screen capture/share path (KWin -> PipeWire -> portal -> client);
-3. audit KRDP end-to-end and distinguish physical-session vs virtual-session behavior;
-4. audit portal interfaces and whether `xdg-desktop-portal-gtk` is actually needed as fallback;
-5. build `supralinux-desktop` on a clean Ubuntu 26.04 environment;
-6. install it into a clean base system and use the integration matrix as the defect list.
+The old “first clean-system pass” is complete and must not be repeated as if it were pending. The next sequence is now:
+
+1. implement C4.0 runtime surface discovery;
+2. generate a versioned coverage manifest from the known matrix IDs;
+3. compare runtime-discovered KCM/KWin/integration surfaces against that manifest;
+4. fail on any unknown in-scope exposed surface;
+5. only after C4.0 is green, implement C4.1;
+6. let later C4 failures drive package/configuration changes one isolated defect at a time;
+7. after all C4 subgates close, re-evaluate and freeze the exact dependency set.
+
+Do not add or remove product packages merely to make this static audit list look tidy before C4.0 establishes the actual runtime surface.

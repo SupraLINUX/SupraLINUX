@@ -1,12 +1,12 @@
 # Aurora Base System — Ubuntu 26.04 LTS
 
-Status: **first declarative candidate; clean build/install validation pending**.
+Status: **declarative candidate validated through clean-rootfs and C1-C3; release freeze still pending C4/Phase 1 completion**.
 
 SupraLINUX does not start from Ubuntu Desktop and then remove GNOME. Aurora starts from Ubuntu's base system and adds the SupraLINUX desktop layer deliberately.
 
 ## Candidate composition
 
-The first `supralinux-base` candidate is:
+The current `supralinux-base` candidate is:
 
 ```text
 ubuntu-minimal
@@ -35,7 +35,7 @@ For SupraLINUX this is preferable to artificial minimalism: a desktop OS should 
 
 ## Why `linux-generic`
 
-Aurora follows Ubuntu's generic kernel track. `linux-generic` is the supported metapackage for the complete generic kernel **and headers**.
+Aurora follows Ubuntu's generic kernel track. `linux-generic` is the supported metapackage for the complete generic kernel and headers.
 
 Keeping headers in the standard base is intentional for the first generation because:
 
@@ -43,13 +43,13 @@ Keeping headers in the standard base is intentional for the first generation bec
 - proprietary-driver workflows may need them;
 - they keep the installed kernel/header pair aligned through normal Ubuntu updates.
 
-SupraLINUX must not pin a specific `7.0.0-N` package. The metapackage owns the moving supported kernel version.
+SupraLINUX must not pin a specific `N.N.N-N` kernel package. The metapackage owns the moving supported kernel version.
 
 ## Firmware policy
 
 Ubuntu 26.04 split `linux-firmware` into a metapackage over vendor-specific firmware packages. SupraLINUX uses the full `linux-firmware` metapackage rather than `linux-firmware-minimal` because Aurora targets a general-purpose desktop across diverse hardware.
 
-`firmware-sof-signed` is made explicit even though `linux-firmware` recommends it, because Intel SOF audio firmware is part of the hardware baseline we intend to support rather than an optional image-size optimization.
+`firmware-sof-signed` is explicit even though `linux-firmware` recommends it, because Intel SOF audio firmware is part of the hardware baseline we intend to support rather than an optional image-size optimization.
 
 `wireless-regdb` is explicit because correct wireless regulatory data is part of a complete Wi-Fi platform.
 
@@ -59,7 +59,7 @@ Ubuntu 26.04 split `linux-firmware` into a metapackage over vendor-specific firm
 - `kubuntu-desktop`
 - Plasma/KDE
 - `snapd`
-- server stacks just because Ubuntu Server includes them
+- server stacks merely because Ubuntu Server includes them
 - Docker/container tooling
 - developer toolchains
 - arbitrary applications
@@ -89,16 +89,27 @@ supralinux-desktop
 settings / apps / artwork / installer
 ```
 
-## Validation gates
+## Validation state
 
-Before the base composition is release-frozen, a clean Ubuntu 26.04 build must prove:
+The candidate has already demonstrated:
 
-1. every dependency resolves from the official Ubuntu 26.04 repositories;
-2. `snapd` is absent when `supralinux-snap-policy` is active;
-3. the generic kernel boots in BIOS/UEFI test environments as applicable;
-4. kernel headers match the installed kernel meta track;
-5. firmware packages are present without replacing the full set with `linux-firmware-minimal`;
-6. the base can receive normal Ubuntu security/updates without SupraLINUX pinning kernel internals;
-7. installing `supralinux-desktop` on top does not require Ubuntu Desktop or Kubuntu metapackages.
+1. dependencies resolve from official Ubuntu 26.04 repositories;
+2. `snapd` is absent while `supralinux-snap-policy` is active;
+3. the package-defined system installs coherently in an isolated clean rootfs;
+4. the Ubuntu generic kernel/initramfs boots the composed Aurora filesystem in C1;
+5. the system reaches SDDM/KWin Wayland graphical boot in C2;
+6. a real Plasma Wayland user session reaches stable runtime in C3;
+7. adding `supralinux-desktop` does not require Ubuntu Desktop or Kubuntu Desktop metapackages.
 
-This candidate may be reduced or expanded after clean-system evidence, but not for cosmetic package-count goals.
+These results validate the current development candidate; they do not release-freeze `supralinux-base` or prove broad physical-hardware compatibility.
+
+## Remaining freeze conditions
+
+Before the base is release-frozen:
+
+- C4 must complete the desktop feature/integration audit and expose any base/desktop layer-boundary defect;
+- later hardware validation must cover representative kernel/firmware paths;
+- normal Ubuntu security/update behavior must continue without SupraLINUX pinning kernel internals;
+- the final release/ISO composition must retain the documented layer boundary.
+
+This candidate may still be reduced or expanded from evidence, but never for cosmetic package-count goals.
