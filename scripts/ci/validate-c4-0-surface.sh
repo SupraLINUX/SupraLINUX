@@ -132,6 +132,13 @@ ci_home=""
 runtime_dir=""
 kwin_pid=""
 plasma_pid=""
+wayland_display=""
+display=""
+xauthority=""
+session_lang=""
+xdg_current_desktop=""
+xdg_config_dirs=""
+xdg_data_dirs=""
 
 mkdir -p "${OUT}"
 
@@ -151,6 +158,26 @@ run_user() {
     LOGNAME="${CI_USER}" \
     XDG_RUNTIME_DIR="${runtime_dir}" \
     DBUS_SESSION_BUS_ADDRESS="unix:path=${runtime_dir}/bus" \
+    "$@"
+}
+
+run_user_session() {
+  runuser -u "${CI_USER}" -- env \
+    HOME="${ci_home}" \
+    USER="${CI_USER}" \
+    LOGNAME="${CI_USER}" \
+    LANG="${session_lang}" \
+    LC_ALL="${session_lang}" \
+    XDG_RUNTIME_DIR="${runtime_dir}" \
+    DBUS_SESSION_BUS_ADDRESS="unix:path=${runtime_dir}/bus" \
+    XDG_SESSION_TYPE=wayland \
+    XDG_CURRENT_DESKTOP="${xdg_current_desktop}" \
+    XDG_CONFIG_DIRS="${xdg_config_dirs}" \
+    XDG_DATA_DIRS="${xdg_data_dirs}" \
+    WAYLAND_DISPLAY="${wayland_display}" \
+    DISPLAY="${display}" \
+    XAUTHORITY="${xauthority}" \
+    QT_QPA_PLATFORM=wayland \
     "$@"
 }
 
@@ -278,12 +305,26 @@ plasma_pid="$(first_user_pid plasmashell)"
 plasma_env="$(tr '\0' '\n' <"/proc/${plasma_pid}/environ" 2>/dev/null || true)"
 printf '%s\n' "${plasma_env}" | sort >"${OUT}/plasma-environment.txt"
 xdg_current_desktop="$(awk -F= '$1=="XDG_CURRENT_DESKTOP" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasma_env}")"
+wayland_display="$(awk -F= '$1=="WAYLAND_DISPLAY" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasma_env}")"
+display="$(awk -F= '$1=="DISPLAY" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasma_env}")"
+xauthority="$(awk -F= '$1=="XAUTHORITY" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasma_env}")"
+session_lang="$(awk -F= '$1=="LANG" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasma_env}")"
+xdg_config_dirs="$(awk -F= '$1=="XDG_CONFIG_DIRS" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasma_env}")"
+xdg_data_dirs="$(awk -F= '$1=="XDG_DATA_DIRS" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasma_env}")"
 echo "${xdg_current_desktop}" >"${OUT}/xdg-current-desktop.txt"
 grep -Eq '(^|:)KDE(:|$)' <<<"${xdg_current_desktop}" || fail "XDG_CURRENT_DESKTOP does not identify KDE (${xdg_current_desktop:-missing})"
+[[ -n "${wayland_display}" ]] || fail "WAYLAND_DISPLAY is missing from the live Plasma session"
+[[ -S "${runtime_dir}/${wayland_display}" ]] || fail "Wayland display socket ${runtime_dir}/${wayland_display} is missing"
+[[ -n "${display}" ]] || fail "DISPLAY is missing from the live Plasma session"
+[[ -n "${xauthority}" ]] || fail "XAUTHORITY is missing from the live Plasma session"
+runuser -u "${CI_USER}" -- test -r "${xauthority}" || fail "Xauthority file ${xauthority} is not readable by the Plasma user"
+[[ -n "${session_lang}" ]] || fail "LANG is missing from the live Plasma session"
+[[ -n "${xdg_config_dirs}" ]] || xdg_config_dirs="/etc/xdg"
+[[ -n "${xdg_data_dirs}" ]] || xdg_data_dirs="/usr/local/share:/usr/share"
 
 stage KCMS
-run_user env LC_ALL=C kcmshell6 --list >"${OUT}/kcmshell6-list.txt" 2>&1 \
-  || fail "kcmshell6 --list failed"
+run_user_session kcmshell6 --list >"${OUT}/kcmshell6-list.txt" 2>&1 \
+  || fail "kcmshell6 --list failed inside the live Plasma session environment"
 awk '
   /^[[:space:]]*[[:alnum:]_.-]+[[:space:]]+-[[:space:]]+/ {
     line=$0
