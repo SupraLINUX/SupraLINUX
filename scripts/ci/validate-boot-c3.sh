@@ -306,9 +306,12 @@ plasma_env="$(tr '\0' '\n' <"/proc/${plasma_pid}/environ" 2>/dev/null || true)"
 grep -Fxq 'XDG_SESSION_TYPE=wayland' <<<"${plasma_env}" || fail "plasmashell environment is not Wayland"
 wayland_display="$(awk -F= '$1=="WAYLAND_DISPLAY" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasma_env}")"
 display="$(awk -F= '$1=="DISPLAY" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasma_env}")"
+xauthority="$(awk -F= '$1=="XAUTHORITY" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasma_env}")"
 [[ -n "${wayland_display}" ]] || fail "WAYLAND_DISPLAY is missing from the Plasma session"
 [[ -S "${runtime_dir}/${wayland_display}" ]] || fail "Wayland display socket ${runtime_dir}/${wayland_display} is missing"
 [[ -n "${display}" ]] || fail "DISPLAY is missing; XWayland compatibility is unavailable"
+[[ -n "${xauthority}" ]] || fail "XAUTHORITY is missing from the Plasma session"
+runuser -u "${CI_USER}" -- test -r "${xauthority}" || fail "Xauthority file ${xauthority} is not readable by the Plasma user"
 
 stage PLASMA_TARGETS
 wait_for_user_unit plasma-workspace-wayland.target 30 || fail "plasma-workspace-wayland.target did not become active"
@@ -361,6 +364,7 @@ runuser -u "${CI_USER}" -- env \
   XDG_SESSION_TYPE=wayland \
   WAYLAND_DISPLAY="${wayland_display}" \
   DISPLAY="${display}" \
+  XAUTHORITY="${xauthority}" \
   QT_QPA_PLATFORM=xcb \
   QT_QUICK_BACKEND=software \
   LIBGL_ALWAYS_SOFTWARE=1 \
@@ -386,6 +390,7 @@ fi
 
 x11_env="$(tr '\0' '\n' <"/proc/${x11_client_pid}/environ" 2>/dev/null || true)"
 grep -Fxq 'QT_QPA_PLATFORM=xcb' <<<"${x11_env}" || fail "X11 smoke-test client was not forced onto the Qt XCB platform"
+grep -Fxq "XAUTHORITY=${xauthority}" <<<"${x11_env}" || fail "X11 smoke-test client did not inherit the Plasma Xauthority file"
 echo "AURORA_C3_XWAYLAND_SUCCESS"
 
 kill "${x11_client_pid}" >/dev/null 2>&1 || true
@@ -491,6 +496,7 @@ else
   : >"${SESSION_LOG}"
 fi
 umount "${ROOTFS}"
+chmod 0644 "${SERIAL_LOG}" "${SESSION_LOG}"
 
 if [[ ${qemu_status} -eq 124 ]]; then
   echo "Aurora C3 VM timed out after ${BOOT_TIMEOUT} seconds." >&2
