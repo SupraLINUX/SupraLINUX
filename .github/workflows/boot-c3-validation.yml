@@ -1,0 +1,87 @@
+name: Aurora C3 Plasma Wayland session validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - development
+    paths:
+      - 'packages/**'
+      - 'scripts/ci/build-packages.sh'
+      - 'scripts/ci/validate-clean-rootfs.sh'
+      - 'scripts/ci/validate-boot-c3.sh'
+      - '.github/workflows/boot-c3-validation.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aurora-c3-plasma-wayland-session-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  boot-c3:
+    name: Boot a real Plasma Wayland user session
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    env:
+      AURORA_UBUNTU_MIRROR: http://azure.archive.ubuntu.com/ubuntu
+      AURORA_C3_BOOT_TIMEOUT: '900'
+
+    steps:
+      - name: Check out SupraLINUX
+        uses: actions/checkout@v4
+
+      - name: Verify runner base
+        shell: bash
+        run: |
+          set -euo pipefail
+          . /etc/os-release
+          echo "Runner: ${PRETTY_NAME}"
+          test "${VERSION_CODENAME}" = "resolute"
+          test "$(dpkg --print-architecture)" = "amd64"
+          df -h /
+          if [[ -c /dev/kvm ]]; then
+            echo "/dev/kvm is available"
+          else
+            echo "/dev/kvm is not available; the harness will fall back to QEMU TCG"
+          fi
+
+      - name: Install package, rootfs and QEMU tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential \
+            debhelper \
+            devscripts \
+            debootstrap \
+            e2fsprogs \
+            qemu-system-x86 \
+            util-linux
+
+      - name: Build SupraLINUX development packages
+        shell: bash
+        run: bash scripts/ci/build-packages.sh
+
+      - name: Compose and boot Aurora C3 VM
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build
+          sudo -E bash scripts/ci/validate-boot-c3.sh 2>&1 | tee build/c3-validation.log
+
+      - name: Upload Aurora C3 diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aurora-c3-session-diagnostics
+          if-no-files-found: warn
+          retention-days: 7
+          path: |
+            build/c3-validation.log
+            build/aurora-c3-serial.log
+            build/aurora-c3-wayland-session.log
+            build/debootstrap.log
+            build/rootfs-discover-simulation.log
