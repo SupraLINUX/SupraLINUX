@@ -1,28 +1,16 @@
 # Aurora Boot Validation
 
-This document defines the next validation layer after the clean-rootfs gate.
+This document defines the validation layers after the clean-rootfs gate.
 
-The clean-rootfs gate proves that SupraLINUX packages can be installed coherently on a clean Ubuntu 26.04 base. It does **not** prove that the resulting system boots, that systemd reaches a healthy state, that SDDM works, or that Plasma actually starts as a Wayland session.
+The clean-rootfs gate proves that SupraLINUX packages can be installed coherently on a clean Ubuntu 26.04 base. It does **not** by itself prove that the resulting system boots, that systemd reaches a healthy state, that SDDM works, or that Plasma actually starts as a Wayland session.
 
 Boot validation therefore advances in explicit stages. A later stage must not be treated as passed because an earlier one succeeded.
-
-## Wayland-only desktop-session policy
-
-Aurora ships Plasma desktop sessions as Wayland-only. The default system must contain `plasma-session-wayland` and must not contain `plasma-session-x11`, `/usr/bin/startplasma-x11`, or `/usr/share/xsessions/plasmax11.desktop`.
-
-This policy does **not** mean that every X11-related component is forbidden:
-
-- `xserver-xorg` is currently present to support the SDDM greeter path proven by C2;
-- XWayland remains available so legacy X11 applications can run inside a Plasma Wayland session;
-- neither case creates or exposes a Plasma X11 desktop-session option.
-
-The clean-rootfs gate enforces the absence of the Plasma X11 session package and launcher files before any boot stage is allowed to proceed.
 
 ## Stage C1 — Kernel + systemd boot
 
 Goal: boot the installed Aurora filesystem in a disposable VM and prove that a real Linux boot reaches userspace correctly.
 
-Initial CI approach:
+CI approach:
 
 1. Reuse the same package build and clean Ubuntu 26.04 composition used by the rootfs gate.
 2. Convert the resulting rootfs into a disposable ext4 disk image.
@@ -40,32 +28,35 @@ Required evidence:
 - `apt-get check` succeeds after boot;
 - SupraLINUX packages remain installed;
 - Snap remains blocked/absent;
-- the clean-rootfs Wayland-only session policy has passed;
 - required system services are installed and loadable;
 - SDDM is enabled for graphical boot.
 
 This stage is intentionally not a Plasma test.
 
-## Stage C2 — Graphical target + SDDM
+## Stage C2 — Graphical target + SDDM Wayland greeter
 
-Goal: prove that the same disposable VM can reach the graphical boot path.
+Goal: prove that the same disposable VM can reach the graphical boot path and that Aurora's configured SDDM greeter actually runs on KWin Wayland.
 
 Required evidence:
 
 - `graphical.target` is reached;
 - SDDM starts without a fatal configuration error;
+- `supralinux-settings` installs Aurora's SDDM Wayland configuration;
+- the SDDM configuration selects `DisplayServer=wayland` and `kwin_wayland` as the greeter compositor;
 - an appropriate virtual graphics device is detected;
 - required seat/logind integration exists;
-- the clean-rootfs Wayland-only session policy has passed;
+- a `kwin_wayland` process and `sddm-greeter` process are running for the SDDM user;
+- `xwayland` remains installed as part of the Plasma Wayland compatibility path;
+- the Plasma X11 desktop session is not part of the default Aurora composition;
 - the system does not fall back to a text-only boot because of missing desktop dependencies.
+
+The SDDM Wayland path is not accepted merely because a configuration file exists. C2 must observe a live KWin Wayland greeter in the VM. If that path has a blocking regression, the validation must fail rather than silently falling back to an untested display-server mode.
 
 CI may use software rendering and virtual hardware. Passing here does not imply real-hardware graphics support.
 
-The current Aurora package set includes `xserver-xorg` because Ubuntu's SDDM package does not itself pull an external X server while the default greeter path needs one. This is display-manager infrastructure only; C2 does not introduce or validate a Plasma X11 user session.
-
 ## Stage C3 — Plasma Wayland session
 
-Goal: launch an actual disposable user session and prove that the SupraLINUX baseline runs as Plasma on Wayland.
+Goal: launch an actual disposable user session and prove that the SupraLINUX baseline runs as Plasma on Wayland while retaining application compatibility expected from a complete Plasma desktop.
 
 The test user and any automatic login configuration used by CI are test-only and must never become product defaults.
 
@@ -74,15 +65,15 @@ Required evidence from inside the session:
 - `XDG_SESSION_TYPE=wayland`;
 - KWin Wayland is running;
 - Plasma shell is running;
-- `plasma-session-x11` and its session launchers remain absent;
 - a user D-Bus session is available;
 - KDE portal backend is available;
 - PipeWire user services can start;
 - KWallet/PAM integration does not prevent login;
 - Polkit KDE agent can start;
-- no immediate Plasma/KWin crash loop.
+- no immediate Plasma/KWin crash loop;
+- XWayland is available and a small disposable X11 client can start inside the Wayland session.
 
-XWayland may run for compatibility with X11 applications; its presence does not satisfy or weaken the `XDG_SESSION_TYPE=wayland` requirement.
+The XWayland check is a compatibility test, not an alternative desktop-session mode. Aurora does not remove X11 compatibility libraries or components merely to satisfy a superficial "Wayland-only" label.
 
 The guest should emit a machine-readable success/failure marker to the serial console or another deterministic CI channel. Merely seeing `sddm.service` active is not enough.
 
@@ -124,6 +115,7 @@ Examples:
 - portal chooser behavior;
 - screen sharing prompts;
 - localization consistency;
+- XWayland application behavior;
 - general desktop regressions.
 
 This stage precedes ISO work. The VM should still be produced from the package-defined system rather than from manual distro-remastering steps.
@@ -136,23 +128,24 @@ This stage precedes ISO work. The VM should still be produced from the package-d
 - Keep CI-only users, passwords, autologin and diagnostic services outside product packages.
 - Preserve serial logs and targeted diagnostics on failure.
 - Do not hide warnings merely to make CI green; classify them as expected VM/chroot limitations or actionable defects.
+- Do not remove X11 compatibility components merely to make the package set look more Wayland-pure; feature completeness has priority.
 
 ## Phase 1 boot milestone
 
-The first executable target after the clean-rootfs gate is therefore:
+The executable path is:
 
 ```text
 Ubuntu 26.04 clean base
         ↓
-SupraLINUX packages
+SupraLINUX packages + settings
         ↓
 bootable disposable VM
         ↓
 systemd
         ↓
-graphical.target / SDDM
+graphical.target / SDDM on KWin Wayland
         ↓
-Plasma Wayland test session
+Plasma Wayland test session + XWayland compatibility
 ```
 
 Only after this works repeatedly should the candidate `supralinux-desktop` dependency set be considered ready to freeze for the Phase 1 baseline.

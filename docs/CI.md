@@ -1,6 +1,6 @@
 # SupraLINUX CI — Aurora validation
 
-SupraLINUX CI validates packaging and installation against the same Ubuntu generation used by Aurora.
+SupraLINUX CI validates packaging, clean-system composition and real VM boot behavior against Ubuntu 26.04 LTS, the base generation used by Aurora.
 
 ## Runner
 
@@ -12,48 +12,65 @@ The source repository is public pre-alpha development. Public repository visibil
 
 Workflow: `.github/workflows/package-validation.yml`
 
-It runs:
-
-- manually through `workflow_dispatch`;
-- on relevant pushes to `development`; and
-- on pull requests targeting `main` when packaging/CI files change.
-
 It proves:
 
-1. the package sources build into DEB packages on Ubuntu 26.04;
+1. the development package sources build into DEB packages on Ubuntu 26.04;
 2. the runner is actually amd64 Resolute;
-3. `supralinux-snap-policy`, `supralinux-base` and `supralinux-desktop` resolve through APT without unresolved dependency names;
+3. `supralinux-snap-policy`, `supralinux-base`, `supralinux-settings` and `supralinux-desktop` resolve together through APT;
 4. the SupraLINUX Snap policy removes installable APT candidates for `snapd` and `plasma-discover-backend-snap` in a fresh APT state;
-5. Plasma Discover can resolve under the policy without pulling the Snap backend.
+5. the default package composition does not pull `plasma-session-x11`;
+6. Plasma Discover resolves under the policy without pulling the Snap backend.
 
 ## Gate 2 — clean rootfs installation
 
 Workflow: `.github/workflows/rootfs-validation.yml`
 
-This gate goes beyond resolver simulation. It builds a disposable Ubuntu 26.04 `debootstrap --variant=minbase` rootfs, enables the official Ubuntu main/restricted/universe/multiverse repositories, then installs the SupraLINUX DEBs for real inside that isolated filesystem.
+This gate builds a disposable Ubuntu 26.04 `debootstrap --variant=minbase` rootfs, enables the official Ubuntu main/restricted/universe/multiverse repositories, then installs the SupraLINUX DEBs for real inside that isolated filesystem.
 
-The Snap policy is installed first, then `supralinux-base` and `supralinux-desktop` are installed using normal APT behavior. The gate then runs `apt-get check` and verifies a representative set of required packages including Plasma Wayland, SDDM, Polkit, PipeWire, NetworkManager, Bluetooth, KDE portal integration, Flatpak integration, KRDP, printing, Samba sharing, KWallet, power management and display management.
+The Snap policy is installed first. The base, settings and desktop packages are then installed using normal APT behavior. The gate runs `apt-get check` and verifies representative required integrations including Plasma Wayland, XWayland compatibility, SDDM, KWin Wayland, Polkit, PipeWire, NetworkManager, Bluetooth, KDE portals, Flatpak integration, KRDP, printing, Samba sharing, KWallet, power management and display management.
 
-The rootfs gate also fails if it finds `snapd`, Plasma Discover's Snap backend, Ubuntu Desktop, Kubuntu Desktop or GNOME Shell. It checks that the SupraLINUX APT preference file exists in the installed rootfs and that Snap remains non-installable afterward.
+The rootfs gate also verifies Aurora's SDDM Wayland configuration from `supralinux-settings`: `DisplayServer=wayland` and a KWin Wayland compositor command must be present. It rejects `plasma-session-x11` and its standard launcher files from the default baseline.
 
-## What these gates still do NOT prove
+It additionally fails if it finds Snap components, Ubuntu Desktop, Kubuntu Desktop or GNOME Shell, and verifies the SupraLINUX APT preference that keeps Snap non-installable by default.
 
-Neither gate is a graphical desktop test. They do not yet prove:
+## Gate 3 — C1 kernel + systemd boot
 
-- the rootfs boots;
-- SDDM reaches a graphical greeter;
-- a Plasma Wayland session starts;
-- audio/network/Bluetooth hardware actually works;
-- KRDP establishes a working session;
-- portals and screen sharing function end-to-end;
-- locale/XDG first-login behavior is correct;
-- suspend/resume works;
-- hardware-specific integrations work.
+Workflow: `.github/workflows/boot-c1-validation.yml`
 
-Those require the next VM/boot/session validation layer.
+C1 converts the clean Aurora composition into a disposable ext4 VM disk, boots the actual Ubuntu kernel/initramfs in QEMU and requires the guest to reach a healthy `multi-user.target` state.
+
+The guest must emit exactly one `AURORA_C1_SUCCESS` marker and no `AURORA_C1_FAILURE` marker. C1 checks PID 1/systemd, writable root, package consistency, SupraLINUX package presence, Snap policy and the configured SDDM display-manager link.
+
+## Gate 4 — C2 graphical target + SDDM Wayland greeter
+
+Workflow: `.github/workflows/boot-c2-validation.yml`
+
+C2 boots the same package-defined Aurora system to `graphical.target` with a virtual DRM device. It does not accept a merely installed or enabled SDDM service.
+
+The guest requires:
+
+- `graphical.target` and `multi-user.target` active;
+- SDDM and systemd-logind healthy;
+- a graphical `seat0` and `/dev/dri/card0`;
+- Aurora's `DisplayServer=wayland` SDDM configuration;
+- `kwin_wayland` running for the SDDM user;
+- `sddm-greeter` running for the SDDM user;
+- `xwayland` installed for application compatibility;
+- no default Plasma X11 desktop session;
+- package and Snap-policy sanity after graphical boot.
+
+The guest must emit exactly one `AURORA_C2_SUCCESS` and no `AURORA_C2_FAILURE` marker. Serial logs and installation diagnostics are uploaded as evidence.
+
+C2 validates the display-manager greeter only. It does **not** prove that a normal user can log into a Plasma Wayland desktop; that is C3.
+
+## Next gate — C3 Plasma Wayland user session
+
+C3 must create a disposable CI-only user and prove a real Plasma session, including `XDG_SESSION_TYPE=wayland`, KWin Wayland, Plasma shell, user D-Bus, portals, PipeWire, Polkit/KWallet integration and lack of an immediate crash loop.
+
+Because Aurora prioritizes a complete desktop rather than protocol purity, C3 must also perform an XWayland compatibility smoke test by launching a small disposable X11 client inside the Wayland session. XWayland support is part of the intended user experience; it is not an alternative Plasma X11 desktop session.
 
 ## Storage policy
 
-Routine validation does not upload GitHub Actions artifacts. DEBs and rootfs data exist only inside the ephemeral runner for the duration of each job.
+Large VM/rootfs images remain ephemeral and out of Git. Boot-validation workflows preserve compact serial and targeted diagnostic artifacts so accepted runtime milestones can be audited.
 
-Persistent test/release packages belong in the future SupraLINUX APT repository rather than GitHub Actions artifact storage.
+Persistent release packages belong in the future SupraLINUX APT repository rather than GitHub Actions artifact storage.

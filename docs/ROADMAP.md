@@ -26,8 +26,10 @@ Goal: a clean Ubuntu 26.04 base can become the SupraLINUX baseline through packa
 - [x] Define the first candidate Ubuntu 26.04 base composition (`supralinux-base`)
 - [x] Inventory the first Plasma 6 package/KCM surface available in Ubuntu 26.04; audit remains iterative
 - [ ] Freeze the exact `supralinux-desktop` dependency set after clean-system evidence
-- [ ] Ensure Wayland session boots reliably
-- [ ] Ensure SDDM integration is correct
+- [ ] Ensure the normal Plasma Wayland user session boots reliably (C3)
+- [x] Ensure SDDM reaches a working KWin Wayland greeter in the VM (C2)
+- [x] Keep XWayland present for legacy X11 application compatibility in the Wayland desktop baseline
+- [ ] Validate XWayland application compatibility from inside the real Plasma Wayland session (C3)
 - [ ] Validate Polkit integration
 - [ ] Validate NetworkManager integration
 - [ ] Validate PipeWire/audio integration
@@ -45,13 +47,14 @@ Goal: a clean Ubuntu 26.04 base can become the SupraLINUX baseline through packa
 - [x] Add Ubuntu 26.04 package-build/APT-resolution CI gate
 - [x] Add isolated clean Ubuntu 26.04 rootfs installation gate
 - [x] Pass the clean-rootfs gate and record its resulting package set
-- [ ] Build the first bootable VM validation harness
+- [x] Build and pass the first real bootable VM validation harness (C1)
+- [x] Build and pass the graphical SDDM/KWin Wayland VM gate (C2)
 
 **Exit criterion:** Plasma looks close to upstream and every feature SupraLINUX exposes in the baseline works without requiring the user to discover missing packages.
 
 ## Phase 2 — SupraLINUX packaging
 
-Development prototypes already exist for `supralinux-base`, `supralinux-desktop`, and `supralinux-snap-policy`; the checkboxes below mean release-ready/frozen packages, not merely that a development directory exists.
+Development prototypes now exist for `supralinux-base`, `supralinux-desktop`, `supralinux-settings`, and `supralinux-snap-policy`; the checkboxes below mean release-ready/frozen packages, not merely that a development directory exists.
 
 - [ ] `supralinux-base`
 - [ ] `supralinux-desktop`
