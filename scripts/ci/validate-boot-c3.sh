@@ -47,6 +47,13 @@ AURORA_ROOTFS_DIR="${ROOTFS}" bash "${ROOT_DIR}/scripts/ci/validate-clean-rootfs
 rm -f "${ROOTFS}/usr/sbin/policy-rc.d"
 rm -rf "${ROOTFS}/tmp/supralinux"
 
+echo "==> Configuring C3 guest locale"
+if [[ ! -x "${ROOTFS}/usr/sbin/update-locale" ]]; then
+  echo "update-locale is unavailable in the Aurora rootfs." >&2
+  exit 1
+fi
+chroot "${ROOTFS}" /usr/sbin/update-locale LANG=C.UTF-8
+
 echo aurora-c3 >"${ROOTFS}/etc/hostname"
 cat >"${ROOTFS}/etc/hosts" <<'HOSTS'
 127.0.0.1 localhost
@@ -187,6 +194,8 @@ dump_diagnostics() {
   journalctl -b -u sddm.service --no-pager -n 300 || true
   echo "--- disposable user Wayland session log ---"
   cat "/home/${CI_USER}/.local/share/sddm/wayland-session.log" 2>/dev/null || true
+  echo "--- Xresources query log ---"
+  cat /tmp/aurora-c3-xrdb-query.log 2>/dev/null || true
   echo "--- XWayland smoke-test client log ---"
   cat /tmp/aurora-c3-x11-client.log 2>/dev/null || true
   echo "AURORA_C3_DIAGNOSTICS_END"
@@ -304,6 +313,7 @@ plasma_pid="$(first_user_pid plasmashell)"
 
 plasma_env="$(tr '\0' '\n' <"/proc/${plasma_pid}/environ" 2>/dev/null || true)"
 grep -Fxq 'XDG_SESSION_TYPE=wayland' <<<"${plasma_env}" || fail "plasmashell environment is not Wayland"
+grep -Fxq 'LANG=C.UTF-8' <<<"${plasma_env}" || fail "plasmashell did not inherit LANG=C.UTF-8"
 wayland_display="$(awk -F= '$1=="WAYLAND_DISPLAY" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasma_env}")"
 display="$(awk -F= '$1=="DISPLAY" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasma_env}")"
 xauthority="$(awk -F= '$1=="XAUTHORITY" {sub(/^[^=]*=/, ""); print; exit}' <<<"${plasma_env}")"
@@ -317,6 +327,26 @@ stage PLASMA_TARGETS
 wait_for_user_unit plasma-workspace-wayland.target 30 || fail "plasma-workspace-wayland.target did not become active"
 wait_for_user_unit plasma-workspace.target 30 || fail "plasma-workspace.target did not become active"
 wait_for_user_unit plasma-plasmashell.service 30 || fail "plasma-plasmashell.service did not become active"
+
+stage XRESOURCES
+set +e
+runuser -u "${CI_USER}" -- env \
+  HOME="${ci_home}" \
+  USER="${CI_USER}" \
+  LOGNAME="${CI_USER}" \
+  XDG_RUNTIME_DIR="${runtime_dir}" \
+  DBUS_SESSION_BUS_ADDRESS="unix:path=${runtime_dir}/bus" \
+  XDG_SESSION_TYPE=wayland \
+  WAYLAND_DISPLAY="${wayland_display}" \
+  DISPLAY="${display}" \
+  XAUTHORITY="${xauthority}" \
+  xrdb -query >/tmp/aurora-c3-xrdb-query.log 2>&1
+xrdb_status=$?
+set -e
+[[ "${xrdb_status}" -eq 0 ]] || fail "xrdb could not query the live XWayland resource database"
+grep -Eq '^Xft\.dpi:[[:space:]]*[0-9]+([.][0-9]+)?[[:space:]]*$' /tmp/aurora-c3-xrdb-query.log \
+  || fail "Xft.dpi is missing from the live XWayland resource database"
+echo "AURORA_C3_XRESOURCES_SUCCESS"
 
 stage PIPEWIRE
 run_user systemctl --user start pipewire.service || fail "pipewire.service could not start"
@@ -516,13 +546,18 @@ if grep -Fq 'AURORA_C3_FAILURE:' "${SERIAL_LOG}"; then
   echo "Aurora C3 guest probe reported failure." >&2
   exit 1
 fi
+xresources_success_count="$(grep -Fc 'AURORA_C3_XRESOURCES_SUCCESS' "${SERIAL_LOG}" || true)"
+if [[ "${xresources_success_count}" -ne 1 ]]; then
+  echo "Expected exactly one Aurora C3 Xresources success marker, observed ${xresources_success_count}." >&2
+  exit 1
+fi
 xwayland_success_count="$(grep -Fc 'AURORA_C3_XWAYLAND_SUCCESS' "${SERIAL_LOG}" || true)"
 if [[ "${xwayland_success_count}" -ne 1 ]]; then
   echo "Expected exactly one Aurora C3 XWayland success marker, observed ${xwayland_success_count}." >&2
   exit 1
 fi
 
-for required_stage in SYSTEM LOGIN WAYLAND USER_DBUS GRAPHICAL_SESSION KWIN PLASMASHELL PLASMA_TARGETS PIPEWIRE WIREPLUMBER POLKIT PORTAL XWAYLAND STABILITY COMPLETE; do
+for required_stage in SYSTEM LOGIN WAYLAND USER_DBUS GRAPHICAL_SESSION KWIN PLASMASHELL PLASMA_TARGETS XRESOURCES PIPEWIRE WIREPLUMBER POLKIT PORTAL XWAYLAND STABILITY COMPLETE; do
   stage_count="$(grep -Fc "AURORA_C3_STAGE=${required_stage}" "${SERIAL_LOG}" || true)"
   if [[ "${stage_count}" -ne 1 ]]; then
     echo "Expected exactly one Aurora C3 ${required_stage} stage marker, observed ${stage_count}." >&2
