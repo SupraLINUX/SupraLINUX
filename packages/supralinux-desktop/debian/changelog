@@ -1,3 +1,14 @@
+supralinux-desktop (0.1.0~dev5) UNRELEASED; urgency=medium
+
+  * Add xserver-xorg for the default SDDM greeter. Ubuntu's SDDM package does
+    not depend on an external X server, so a clean Aurora rootfs otherwise
+    reaches graphical.target with SDDM running but cannot start its display
+    server.
+  * Keep Plasma user-session validation Wayland-only; this X server dependency
+    supports the display-manager greeter and does not add a Plasma X11 session.
+
+ -- SupraLINUX Project <noreply@supralinux.com>  Thu, 27 Aug 2026 00:30:00 -0300
+
 supralinux-desktop (0.1.0~dev4) UNRELEASED; urgency=medium
 
   * Add power-profiles-daemon so Plasma power-profile controls have a backend.

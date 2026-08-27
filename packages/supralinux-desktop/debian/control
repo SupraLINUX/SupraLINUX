@@ -16,6 +16,7 @@ Depends:
  plasma-session-wayland,
  systemsettings,
  sddm,
+ xserver-xorg,
  sddm-theme-breeze,
  kde-config-sddm,
  breeze,
