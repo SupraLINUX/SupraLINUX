@@ -74,9 +74,9 @@ jobs:
 
       - name: Upload Aurora C3 diagnostics
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: aurora-c3-session-diagnostics
+          name: aurora-c3-session-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
           if-no-files-found: warn
           retention-days: 7
           path: |
