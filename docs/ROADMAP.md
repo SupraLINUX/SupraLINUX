@@ -26,10 +26,10 @@ Goal: a clean Ubuntu 26.04 base can become the SupraLINUX baseline through packa
 - [x] Define the first candidate Ubuntu 26.04 base composition (`supralinux-base`)
 - [x] Inventory the first Plasma 6 package/KCM surface available in Ubuntu 26.04; audit remains iterative
 - [ ] Freeze the exact `supralinux-desktop` dependency set after clean-system evidence
-- [ ] Ensure the normal Plasma Wayland user session boots reliably (C3)
+- [x] Ensure the normal Plasma Wayland user session boots reliably (C3)
 - [x] Ensure SDDM reaches a working KWin Wayland greeter in the VM (C2)
 - [x] Keep XWayland present for legacy X11 application compatibility in the Wayland desktop baseline
-- [ ] Validate XWayland application compatibility from inside the real Plasma Wayland session (C3)
+- [x] Validate XWayland application compatibility from inside the real Plasma Wayland session (C3)
 - [ ] Validate Polkit integration
 - [ ] Validate NetworkManager integration
 - [ ] Validate PipeWire/audio integration
