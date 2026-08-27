@@ -72,6 +72,36 @@ jobs:
           mkdir -p build
           sudo -E bash scripts/ci/validate-boot-c3.sh 2>&1 | tee build/c3-validation.log
 
+      - name: Surface Aurora C3 diagnostics in job log
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          diagnostics=(
+            build/c3-validation.log
+            build/aurora-c3-serial.log
+            build/aurora-c3-wayland-session.log
+            build/debootstrap.log
+            build/rootfs-discover-simulation.log
+          )
+          echo "AURORA_C3_WORKFLOW_DIAGNOSTICS_START"
+          for file in "${diagnostics[@]}"; do
+            echo "::group::${file}"
+            if [[ -f "${file}" ]]; then
+              echo "AURORA_C3_DIAGNOSTIC_FILE=${file}"
+              cat "${file}"
+              cat_status=$?
+              if [[ ${cat_status} -ne 0 ]]; then
+                echo "AURORA_C3_DIAGNOSTIC_READ_FAILURE=${file}:status=${cat_status}"
+              fi
+            else
+              echo "AURORA_C3_DIAGNOSTIC_MISSING=${file}"
+            fi
+            echo "::endgroup::"
+          done
+          echo "AURORA_C3_WORKFLOW_DIAGNOSTICS_END"
+          exit 0
+
       - name: Upload Aurora C3 diagnostics
         if: always()
         uses: actions/upload-artifact@v7
