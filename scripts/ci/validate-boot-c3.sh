@@ -328,6 +328,27 @@ wait_for_user_unit plasma-workspace-wayland.target 30 || fail "plasma-workspace-
 wait_for_user_unit plasma-workspace.target 30 || fail "plasma-workspace.target did not become active"
 wait_for_user_unit plasma-plasmashell.service 30 || fail "plasma-plasmashell.service did not become active"
 
+stage LOOKANDFEEL_DEFAULTS
+look_and_feel_package="$(run_user kreadconfig6 --file kdeglobals --group KDE --key LookAndFeelPackage 2>/dev/null || true)"
+if [[ -z "${look_and_feel_package}" ]]; then
+  look_and_feel_package="org.kde.breeze.desktop"
+fi
+look_and_feel_state="${ci_home}/.config/kdedefaults/package"
+look_and_feel_state_ready=0
+for ((i = 0; i < 20; i++)); do
+  if runuser -u "${CI_USER}" -- test -r "${look_and_feel_state}"; then
+    look_and_feel_state_value="$(runuser -u "${CI_USER}" -- cat "${look_and_feel_state}" 2>/dev/null || true)"
+    if [[ "${look_and_feel_state_value}" == "${look_and_feel_package}" ]]; then
+      look_and_feel_state_ready=1
+      break
+    fi
+  fi
+  sleep 1
+done
+[[ "${look_and_feel_state_ready}" -eq 1 ]] \
+  || fail "Plasma did not persist kdedefaults/package for configured LookAndFeelPackage ${look_and_feel_package}"
+echo "AURORA_C3_LOOKANDFEEL_DEFAULTS_SUCCESS"
+
 stage XRESOURCES
 set +e
 runuser -u "${CI_USER}" -- env \
@@ -546,6 +567,11 @@ if grep -Fq 'AURORA_C3_FAILURE:' "${SERIAL_LOG}"; then
   echo "Aurora C3 guest probe reported failure." >&2
   exit 1
 fi
+lookandfeel_success_count="$(grep -Fc 'AURORA_C3_LOOKANDFEEL_DEFAULTS_SUCCESS' "${SERIAL_LOG}" || true)"
+if [[ "${lookandfeel_success_count}" -ne 1 ]]; then
+  echo "Expected exactly one Aurora C3 Look-and-Feel defaults success marker, observed ${lookandfeel_success_count}." >&2
+  exit 1
+fi
 xresources_success_count="$(grep -Fc 'AURORA_C3_XRESOURCES_SUCCESS' "${SERIAL_LOG}" || true)"
 if [[ "${xresources_success_count}" -ne 1 ]]; then
   echo "Expected exactly one Aurora C3 Xresources success marker, observed ${xresources_success_count}." >&2
@@ -557,7 +583,7 @@ if [[ "${xwayland_success_count}" -ne 1 ]]; then
   exit 1
 fi
 
-for required_stage in SYSTEM LOGIN WAYLAND USER_DBUS GRAPHICAL_SESSION KWIN PLASMASHELL PLASMA_TARGETS XRESOURCES PIPEWIRE WIREPLUMBER POLKIT PORTAL XWAYLAND STABILITY COMPLETE; do
+for required_stage in SYSTEM LOGIN WAYLAND USER_DBUS GRAPHICAL_SESSION KWIN PLASMASHELL PLASMA_TARGETS LOOKANDFEEL_DEFAULTS XRESOURCES PIPEWIRE WIREPLUMBER POLKIT PORTAL XWAYLAND STABILITY COMPLETE; do
   stage_count="$(grep -Fc "AURORA_C3_STAGE=${required_stage}" "${SERIAL_LOG}" || true)"
   if [[ "${stage_count}" -ne 1 ]]; then
     echo "Expected exactly one Aurora C3 ${required_stage} stage marker, observed ${stage_count}." >&2
