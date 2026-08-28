@@ -1,3 +1,11 @@
+supralinux-desktop (0.1.0~dev8) UNRELEASED; urgency=medium
+
+  * Add baloo6 so Plasma File Search has its file-indexing daemon,
+    kde-baloo.service, D-Bus backend and command-line/search runtime installed
+    as part of the Aurora desktop rather than exposing a KCM with no backend.
+
+ -- SupraLINUX Project <noreply@supralinux.com>  Fri, 28 Aug 2026 16:54:00 -0300
+
 supralinux-desktop (0.1.0~dev7) UNRELEASED; urgency=medium
 
   * Move persistent SDDM defaults into the new supralinux-settings package.
