@@ -1,6 +1,6 @@
 # Aurora C4 — Feature Integration Certification
 
-Status: **implementation active; C4.0 accepted / GREEN; C4.1 OPEN / ACTIVE; C4.1a accepted / GREEN (`AUR-KCM-002`, `AUR-KWIN-004`)**
+Status: **implementation active; C4.0 accepted / GREEN / CLOSED; C4.1 OPEN / ACTIVE; C4.1a accepted / GREEN (`AUR-KCM-002`, `AUR-KWIN-004`)**
 
 C1, C2 and C3 are certified prerequisites. C4 must not reopen them unless a later product change creates a real regression risk.
 
@@ -81,7 +81,7 @@ CI fixtures must never be silently promoted into product dependencies.
 
 ### C4.0 — Surface and contract inventory
 
-Status: **ACCEPTED / GREEN**
+Status: **ACCEPTED / GREEN / CLOSED**
 
 Canonical evidence: `docs/validation/AURORA_C4_0_ACCEPTANCE.md`.
 
@@ -116,11 +116,11 @@ PASS requires:
 - portal routing configuration present;
 - live Plasma session stability through the inventory.
 
-The accepted C4.0 run met all of these conditions. It reconciled 100 KCM IDs, 61 direct desktop dependencies, 3 portal descriptors, 29 KWin surfaces, 119 Plasma/KDED/KIO integration surfaces and 36 `plasma-desktop` feature recommendations with zero unknown, missing or unresolved-owner results.
+The current accepted C4.0 composition was revalidated after the evidence-driven addition of `baloo6` for `AUR-KCM-003`. Run `33211234383` at HEAD `57b296054efc391ec986ed57a57a9a028601de76` reconciled **100 KCM IDs, 62 direct desktop dependencies, 3 portal descriptors, 29 KWin surfaces, 123 Plasma/KDED/KIO integration surfaces and 36 `plasma-desktop` feature recommendations** with zero unknown, missing or unresolved-owner results. Its artifact is `aurora-c4-0-surface-diagnostics-33211234383-1`, ID `9701846713`, digest `sha256:6f10d1643f72e852d89ab5566d193942ce36957c445d916e73148beb0c26aab1`.
 
-C4.0 does **not** prove the functionality of those surfaces. It proves that none can escape later certification.
+The post-Baloo surface delta is fully mapped to `AUR-KCM-003 / C4.1`: direct dependency `baloo6`, KDED plugin `baloosearchmodule`, and KIO workers `baloosearch`, `tags` and `timeline`. C4.0 establishes only their presence, ownership and traceability; it does **not** make File Search `PASS-C4`.
 
-C4.0 is now closed. Re-run it only when a later change can alter the effective shipped/discovered surface or dependency graph. C4.1 is unblocked.
+C4.0 is closed again. Re-run it only when a later change can alter the effective shipped/discovered surface or dependency graph. C4.1 remains unblocked.
 
 ### C4.1 — System Settings / KWin / Plasma shell behavior
 

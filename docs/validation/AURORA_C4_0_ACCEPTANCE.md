@@ -1,188 +1,161 @@
 # Aurora C4.0 Acceptance Record
 
-Status: **ACCEPTED / GREEN**
+Status: **ACCEPTED / GREEN / CLOSED**
 
-This record permanently captures the evidence used to accept the Aurora C4.0 surface-and-contract inventory gate. C4.0 certifies coverage, ownership and traceability of the currently shipped Plasma surface; it does **not** certify the end-to-end behavior of the later feature gates.
+C4.0 certifies coverage, ownership and traceability of the currently shipped Aurora Plasma surface. It does **not** certify end-to-end feature behavior; those claims belong to C4.1 through C4.15.
 
-## Accepted source state
+## Current accepted source state
 
 - Repository: `SupraLINUX/SupraLINUX`
-- Branch under test: `development`
-- Technical source commit: `091024257ba346e2c3dac1b462ab2b207111a515`
-- Commit message: `test: cover complete Plasma desktop recommends set`
-- C4.0 workflow: `.github/workflows/c4-0-surface-validation.yml`
-- Workflow run: `33139069857`
-- Run number: `7`
-- Run attempt: `1`
-- Accepted job: `98745608607` (`Inventory and reconcile the Aurora Plasma surface`)
+- Branch: `development`
+- Current accepted technical source commit: `57b296054efc391ec986ed57a57a9a028601de76`
+- Commit message: `c4: map Baloo runtime integration surfaces`
+- Workflow: `.github/workflows/c4-0-surface-validation.yml`
+- Workflow run: `33211234383`
+- Run number: `14`
+- Accepted job: `98984662738` (`Inventory and reconcile the Aurora Plasma surface`)
 - Workflow/job conclusion: `success`
 
-C1, C2 and C3 remained closed. The accepted C4.0 source change set did not alter Aurora product packages after the previously certified session baseline; C4.0 exercised the package-defined system only to establish the complete certification surface.
+This run is an intentional C4.0 regression revalidation. C4.0 had already been accepted and closed; it was reopened only because the evidence-driven addition of `baloo6` to `supralinux-desktop` for `AUR-KCM-003` changed both the direct dependency graph and the shipped KDED/KIO surface.
 
-## Persistent runtime evidence
+C1, C2 and C3 remained closed. The Baloo correction does not alter the certified boot/session policy or core Plasma/KWin session packages.
+
+## Current persistent evidence
 
 GitHub Actions artifact:
 
-- Name: `aurora-c4-0-surface-diagnostics-33139069857-1`
-- Artifact ID: `9673344706`
-- Artifact size reported by GitHub: `191005` bytes
-- Artifact digest reported by GitHub: `sha256:f843fc2d82226e49faa6534de4bb0c0d2a1d0f7d334b4a5524db568459e97f76`
-- Artifact created: `2026-08-28T03:38:48Z`
+- Name: `aurora-c4-0-surface-diagnostics-33211234383-1`
+- Artifact ID: `9701846713`
+- Artifact digest reported by GitHub: `sha256:6f10d1643f72e852d89ab5566d193942ce36957c445d916e73148beb0c26aab1`
+- Downloaded ZIP SHA-256: `6f10d1643f72e852d89ab5566d193942ce36957c445d916e73148beb0c26aab1`
+- Artifact files: **68**
+- Extracted bytes: **1,157,703**
+- Strict UTF-8 decode failures: **0**
+- Files containing NUL bytes: **0**
+- Files containing Unicode replacement characters: **0**
 
-The downloaded ZIP independently hashed to the exact same SHA-256 value.
+The artifact digest is the integrity anchor for the complete accepted evidence set.
 
-The artifact contained **68 files**, totaling **1,157,203 bytes** after extraction. Every file was read with strict UTF-8 decoding before acceptance. No file contained NUL bytes or Unicode replacement characters.
+## Why C4.0 was re-run
 
-Representative evidence hashes:
+C4.1b File Search/Baloo preflight run `33205267606` proved a real SupraLINUX dependency omission:
 
-| File | Bytes | Lines | SHA-256 |
-| --- | ---: | ---: | --- |
-| `aurora-c4-0-serial.log` | 84,096 | 1,069 | `bcf0dbaa1cc691fff6a826bef4f14d4917c78e969d771b12aefcf67dc84b1177` |
-| `aurora-c4-0-wayland-session.log` | 297 | 5 | `6110a2028088853d49af92da96d75aad7bd20fd65aac8bc1d05a7d2fbf5c22e7` |
-| `c4-0-validation.log` | 754,110 | 10,288 | `617c87f27fd31bd6b2e84c461d647d6132d2b67107f1f5338de97db056eb3b30` |
-| `c4-0-extended-inventory.log` | 442 | 8 | `30f894daea5a035618a79d22d0ccee2dfd7c0e6da10da304398346e165b3648e` |
-| `c4-0-reconcile.log` | 505 | 12 | `04bc74921720f949844a6c96d717c2b57e323fc86cb9fe12949aed78c58a6352` |
-| `debootstrap.log` | 15,037 | 442 | `6c1eef7ef6fb226f4f07b02bb4de8c85af27a3400801aa846f657f8f6b421145` |
-| `rootfs-discover-simulation.log` | 278 | 7 | `25be157344b48fdd0d93e635c15c42aed7ffcb073d43f82360306692c56558e5` |
+- `kcm_baloofile` was exposed and owned by `plasma-desktop`;
+- File Search configuration was enabled;
+- `libkf6baloo6` was present;
+- `baloo6` was absent;
+- `balooctl6`, `baloosearch6`, `baloo_file`, `kde-baloo.service` and `org.kde.baloo` were unavailable;
+- attempting to start `kde-baloo.service` returned `Unit kde-baloo.service not found`.
 
-The artifact ZIP digest above is the durable integrity anchor for the complete 68-file evidence set.
+The product fix added only `baloo6` as an explicit `supralinux-desktop` dependency. C4.0 then correctly detected the resulting contract delta before it was accepted:
 
-## Deterministic guest evidence
+- direct dependency: `baloo6`;
+- KDED plugin: `baloosearchmodule`;
+- KIO worker: `baloosearch`;
+- KIO worker: `tags`;
+- KIO worker: `timeline`.
 
-The serial console contains exactly one authoritative guest sequence:
+Ownership inventory resolved all five to `baloo6 6.24.0-0ubuntu1`. The versioned manifests map them to `AUR-KCM-003 / C4.1`.
 
-- `AURORA_C4_0_CHECK_START`
-- `AURORA_C4_0_STAGE=SESSION`
-- `AURORA_C4_0_STAGE=KCMS`
-- `AURORA_C4_0_STAGE=DEPENDENCIES`
-- `AURORA_C4_0_STAGE=PORTALS`
-- `AURORA_C4_0_STAGE=AUXILIARY`
-- `AURORA_C4_0_STAGE=COVERAGE`
-- `AURORA_C4_0_CAPABILITY_PASS=AUR-COVER-001`
-- `AURORA_C4_0_CAPABILITY_PASS=AUR-COVER-002`
-- `AURORA_C4_0_CAPABILITY_PASS=AUR-COVER-003`
-- `AURORA_C4_0_CAPABILITY_PASS=AUR-COVER-004`
-- `AURORA_C4_0_CAPABILITY_PASS=AUR-COVER-005`
-- `AURORA_C4_0_STAGE=STABILITY`
-- `AURORA_C4_0_STAGE=COMPLETE`
-- `AURORA_C4_0_SUCCESS`
+## Current coverage reconciliation
 
-There is no `AURORA_C4_0_FAILURE` marker in the accepted serial evidence.
-
-The host-side extended inventory and reconciliation add the remaining coverage assertion:
-
-- `AURORA_C4_0_EXTENDED_INVENTORY_SUCCESS`
-- `AURORA_C4_0_RECONCILE_MATCH=kwin-surfaces`
-- `AURORA_C4_0_RECONCILE_MATCH=integration-surfaces`
-- `AURORA_C4_0_RECONCILE_MATCH=plasma-recommends`
-- `AURORA_C4_0_HOST_CAPABILITY_PASS=AUR-COVER-002`
-- `AURORA_C4_0_HOST_CAPABILITY_PASS=AUR-COVER-003`
-- `AURORA_C4_0_HOST_CAPABILITY_PASS=AUR-COVER-006`
-- `AURORA_C4_0_RECONCILE_SUCCESS`
-
-## Coverage reconciliation proven
-
-The accepted artifact proves exact equality between runtime discovery and the version-controlled C4.0 contracts for all six required coverage classes:
+The post-Baloo accepted artifact proves exact equality between runtime discovery and the version-controlled C4.0 contracts:
 
 | Coverage class | Runtime entries | Result |
 | --- | ---: | --- |
 | Plasma KCM IDs | 100 | actual = expected |
-| Direct `supralinux-desktop` dependencies | 61 | actual = expected |
+| Direct `supralinux-desktop` dependencies | 62 | actual = expected |
 | Installed portal descriptors | 3 | actual = expected |
 | KWin surfaces | 29 | actual = expected |
-| Plasma/KDED/KIO integration surfaces | 119 | actual = expected |
+| Plasma/KDED/KIO integration surfaces | 123 | actual = expected |
 | `plasma-desktop` feature `Recommends` | 36 | actual = expected |
 
-For every class above, both `unknown-*` and `missing-*` result files are empty.
+All current `unknown-*` and `missing-*` result files are empty.
 
-The following ownership result files are also empty, proving that no discovered in-scope surface lacked a package owner:
+All ownership result files are empty:
 
-- `unresolved-kcm-owners.txt`
-- `unresolved-portal-owners.txt`
-- `unresolved-kwin-surface-owners.txt`
-- `unresolved-plasma-applet-plugin-owners.txt`
-- `unresolved-plasma-surface-owners.txt`
-- `unresolved-kded-plugin-owners.txt`
-- `unresolved-kio-surface-owners.txt`
+- `unresolved-kcm-owners.txt`;
+- `unresolved-portal-owners.txt`;
+- `unresolved-kwin-surface-owners.txt`;
+- `unresolved-plasma-applet-plugin-owners.txt`;
+- `unresolved-plasma-surface-owners.txt`;
+- `unresolved-kded-plugin-owners.txt`;
+- `unresolved-kio-surface-owners.txt`.
 
-`manifest-capability-ids-missing-from-matrix.txt` is empty, proving that every capability ID referenced by the C4.0 manifests exists in the canonical integration matrix.
+`manifest-capability-ids-missing-from-matrix.txt` is also empty.
 
-## Portal/session evidence
+The host-side evidence contains:
 
-The live Plasma environment reports `XDG_CURRENT_DESKTOP=KDE`.
+- `AURORA_C4_0_EXTENDED_INVENTORY_SUCCESS`;
+- `AURORA_C4_0_RECONCILE_MATCH=kwin-surfaces`;
+- `AURORA_C4_0_RECONCILE_MATCH=integration-surfaces`;
+- `AURORA_C4_0_RECONCILE_MATCH=plasma-recommends`;
+- `AURORA_C4_0_HOST_CAPABILITY_PASS=AUR-COVER-002`;
+- `AURORA_C4_0_HOST_CAPABILITY_PASS=AUR-COVER-003`;
+- `AURORA_C4_0_HOST_CAPABILITY_PASS=AUR-COVER-006`;
+- `AURORA_C4_0_RECONCILE_SUCCESS`.
 
-The installed portal routing evidence is:
+## Deterministic guest evidence
 
-```ini
-[preferred]
-default=kde
-org.freedesktop.impl.portal.Settings=kde;gtk;
-org.freedesktop.impl.portal.Secret=kwallet
-```
+The accepted serial evidence contains the complete guest path:
 
-C4.0 accepts this only as inventory/routing evidence. Functional FileChooser, Flatpak permission, Secret/KWallet, screenshot and screen-sharing behavior remains owned by C4.6 and C4.7.
+- `AURORA_C4_0_CHECK_START`;
+- `AURORA_C4_0_STAGE=SESSION`;
+- `AURORA_C4_0_STAGE=KCMS`;
+- `AURORA_C4_0_STAGE=DEPENDENCIES`;
+- `AURORA_C4_0_STAGE=PORTALS`;
+- `AURORA_C4_0_STAGE=AUXILIARY`;
+- `AURORA_C4_0_STAGE=COVERAGE`;
+- `AURORA_C4_0_CAPABILITY_PASS=AUR-COVER-001` through `AUR-COVER-005`;
+- `AURORA_C4_0_STAGE=STABILITY`;
+- `AURORA_C4_0_STAGE=COMPLETE`;
+- `AURORA_C4_0_SUCCESS`.
 
-## Full-log warning classification
+There is no `AURORA_C4_0_FAILURE` marker.
 
-The full accepted logs were reviewed for failures, errors, warnings, crashes, panic/OOM indicators, emergency/rescue state, missing files and timeout indicators.
+At `STABILITY`, the harness verifies that the original KWin Wayland and plasmashell PIDs remain alive and unchanged. The accepted run passed these assertions. The accepted Wayland session log contains no crash/failure event, and the artifact contains no unexplained runtime coredump, segfault, OOM, emergency/rescue activation, unknown surface, missing expected surface or unresolved owner.
 
-### Rootfs composition messages
+## Baloo-specific C4.0 evidence
 
-The large `c4-0-validation.log` contains the same expected chroot-composition class already understood from earlier certified gates:
+The accepted inventory records:
 
-- `invoke-rc.d` cannot determine a runlevel and `policy-rc.d` intentionally denies service starts/reloads while composing the rootfs;
-- NetworkManager cannot create an `NMClient` or reload connections because the composition chroot has no running system bus;
-- one PackageKit/system-bus operation cannot connect for the same reason;
-- one command reports that systemd is not PID 1 inside the chroot;
-- Plymouth's compatibility `update-rc.d` warnings;
-- Chrony's `dpkg-statoverride` warning before its runtime log directory exists;
-- rescue/emergency symlink creation by `grub-initrd-fallback`, not activation of those targets.
+- `baloo6 6.24.0-0ubuntu1` installed as a direct dependency owned by `AUR-KCM-003 / C4.1`;
+- `KDED_PLUGIN baloosearchmodule` owned by `baloo6`;
+- `KIO_WORKER baloosearch` owned by `baloo6`;
+- `KIO_WORKER tags` owned by `baloo6`;
+- `KIO_WORKER timeline` owned by `baloo6`;
+- `plasma-baloorunner.service` present in the relevant user-unit inventory;
+- activatable user-bus name `org.kde.runners.baloo` present.
 
-The composition completes, the real guest boots and the authoritative C4.0 runtime markers pass.
+These facts prove that the newly shipped Baloo surfaces are fully accounted for. They do **not** prove that indexing or searching works. `AUR-KCM-003` therefore remains `PENDING-C4` until its dedicated behavioral contract passes.
 
-### First-login Plasma session diagnostics
+## Portal/session scope
 
-`aurora-c4-0-wayland-session.log` contains the same five asynchronous first-login startup diagnostics already classified under C3:
+The live Plasma environment identifies KDE and the existing portal routing remains inventoried. C4.0 accepts portal descriptors/routing only as surface evidence. Functional FileChooser, Flatpak permissions, Secret/KWallet, screenshot and screen-sharing behavior remains owned by C4.6/C4.7.
 
-- an early read of `~/.config/kdedefaults/package` before the file exists;
-- `/usr/bin/xrdb: Can't open display ''`;
-- `xcb_connect() failed`;
-- two `QPixmap: QGuiApplication must be created before calling defaultDepth()` lines.
+## Historical initial acceptance
 
-C4.0 subsequently obtains the live Plasma session environment, Wayland/X11 session plumbing and complete inventory, reaches `STABILITY`, and emits success. These messages therefore do not represent a C4.0 coverage failure.
+The original C4.0 acceptance remains valid historical evidence for the pre-Baloo composition:
 
-### VM/kernel and shutdown observations
+- source commit: `091024257ba346e2c3dac1b462ab2b207111a515`;
+- run: `33139069857` (#7);
+- job: `98745608607`;
+- artifact: `aurora-c4-0-surface-diagnostics-33139069857-1`;
+- artifact ID: `9673344706`;
+- artifact digest: `sha256:f843fc2d82226e49faa6534de4bb0c0d2a1d0f7d334b4a5524db568459e97f76`;
+- inventory: 100 KCMs, 61 direct dependencies, 3 portals, 29 KWin surfaces, 119 integration surfaces and 36 Plasma feature `Recommends`;
+- result: zero unknown/missing/unresolved owners and stable live Plasma Wayland session.
 
-The virtual CPU reports the same speculative-execution warning class seen in earlier VM gates. It is a host/virtual-CPU exposure, not a missing Aurora desktop component.
-
-After `AURORA_C4_0_SUCCESS`, the deliberate shutdown transaction logs an `rfkill` device job that cannot be enqueued because shutdown is already in progress. It occurs after the accepted success marker and does not affect the running-state evidence.
-
-No C4.0 runtime crash, OOM, emergency/rescue activation, unresolved surface owner, unknown surface, missing expected surface or reconciliation failure was found.
-
-## Scope of acceptance
-
-C4.0 proves that, for the accepted Ubuntu 26.04 / Plasma package-defined Aurora composition:
-
-- the currently exposed KCM surface is completely enumerated against the versioned contract;
-- the current KWin plugin/configuration surface is completely mapped;
-- the current Plasma applet/plasmoid, KDED and KIO integration surface is completely mapped;
-- every current direct `supralinux-desktop` dependency has a capability/policy owner;
-- installed portal descriptors and routing are inventoried;
-- every current `plasma-desktop` feature recommendation is explicitly owned by the Aurora certification model;
-- discovered surfaces have resolvable package ownership;
-- every manifest capability ID resolves to the canonical matrix;
-- the live Plasma Wayland session remains stable through the inventory probe.
-
-C4.0 does **not** prove that the mapped features work end-to-end. Those claims remain pending in C4.1 through C4.15 and must not be marked passed from C4.0 evidence alone.
+The post-Baloo run `33211234383` supersedes those inventory counts as the current accepted Aurora composition while preserving the original run as provenance.
 
 ## Regression rule
 
-C4.0 is now closed and must not be reopened casually. Re-run C4.0 when a later change can alter the shipped or discovered surface, including relevant Plasma/KWin/KIO/KDED/portal package changes, `supralinux-desktop` dependency changes, or Ubuntu SRUs that change the effective installed feature graph.
+C4.0 is closed again. Re-run it only when a later change can alter the effective shipped/discovered surface or dependency graph, including relevant Plasma/KWin/KIO/KDED/portal package changes, `supralinux-desktop` dependency changes or Ubuntu SRUs that alter the installed feature graph.
 
-Documentation-only acceptance/status changes do not invalidate this record.
+Documentation-only acceptance/status changes do not invalidate C4.0 and do not reopen C1-C3.
 
 ## Verdict
 
-Aurora C4.0 is formally accepted as **GREEN** for the defined surface-and-contract coverage scope.
+Aurora C4.0 is formally **ACCEPTED / GREEN / CLOSED** for HEAD `57b296054efc391ec986ed57a57a9a028601de76` and the post-Baloo composition described above.
 
-C4.1 is now unblocked. Product package/dependency changes remain evidence-driven and must follow the C4 regression rules.
+C4.1 remains **OPEN / ACTIVE**. `AUR-KCM-003` is not certified by this record; only its surface, ownership and product dependency closure are established here.
