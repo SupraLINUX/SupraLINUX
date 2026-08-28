@@ -573,6 +573,11 @@ if [[ -c /dev/kvm && -r /dev/kvm && -w /dev/kvm ]]; then
   qemu_accel=(-enable-kvm -cpu host)
 fi
 
+count_serial_marker() {
+  local marker="$1"
+  awk -v marker="${marker}" '{ sub(/\r$/, ""); if ($0 == marker) count++ } END { print count + 0 }' "${SERIAL_LOG}"
+}
+
 : >"${SERIAL_LOG}"
 host_failure=""
 completed_phases=0
@@ -615,7 +620,7 @@ for boot_phase in 1 2; do
 
   completed_phases=${boot_phase}
   if [[ ${boot_phase} -eq 1 ]]; then
-    phase1_count="$(grep -Fxc 'AURORA_C4_1A_PHASE1_SUCCESS' "${SERIAL_LOG}" || true)"
+    phase1_count="$(count_serial_marker 'AURORA_C4_1A_PHASE1_SUCCESS')"
     if [[ "${phase1_count}" -ne 1 ]]; then
       host_failure="expected exactly one C4.1a phase-1 success marker, observed ${phase1_count}"
       break
@@ -646,7 +651,7 @@ fi
   exit 1
 }
 
-success_count="$(grep -Fxc 'AURORA_C4_1A_SUCCESS' "${SERIAL_LOG}" || true)"
+success_count="$(count_serial_marker 'AURORA_C4_1A_SUCCESS')"
 [[ "${success_count}" -eq 1 ]] || {
   echo "Expected exactly one C4.1a success marker, observed ${success_count}." >&2
   exit 1
@@ -659,7 +664,7 @@ fi
 for required_stage in \
   SESSION BASELINE ACTIVITIES VIRTUAL_DESKTOPS PERSISTENCE_WRITE PHASE1_COMPLETE \
   SESSION_RELOAD PERSISTENCE_READ CLEANUP STABILITY COMPLETE; do
-  stage_count="$(grep -Fxc "AURORA_C4_1A_STAGE=${required_stage}" "${SERIAL_LOG}" || true)"
+  stage_count="$(count_serial_marker "AURORA_C4_1A_STAGE=${required_stage}")"
   [[ "${stage_count}" -eq 1 ]] || {
     echo "Expected exactly one C4.1a ${required_stage} stage marker, observed ${stage_count}." >&2
     exit 1
@@ -667,7 +672,7 @@ for required_stage in \
 done
 
 for capability in AUR-KCM-002 AUR-KWIN-004; do
-  pass_count="$(grep -Fxc "AURORA_C4_1A_CAPABILITY_PASS=${capability}" "${SERIAL_LOG}" || true)"
+  pass_count="$(count_serial_marker "AURORA_C4_1A_CAPABILITY_PASS=${capability}")"
   [[ "${pass_count}" -eq 1 ]] || {
     echo "Expected exactly one C4.1a pass marker for ${capability}, observed ${pass_count}." >&2
     exit 1
