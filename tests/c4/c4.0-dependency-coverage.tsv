@@ -12,6 +12,7 @@ breeze-gtk-theme	AUR-AUX-003	C4.15
 kde-config-gtk-style	AUR-AUX-003	C4.15
 frameworkintegration6	AUR-CORE-001	PREREQUISITE/C4.1
 plasma-integration	AUR-CORE-001	PREREQUISITE/C4.1
+baloo6	AUR-KCM-003	C4.1
 polkit-kde-agent-1	AUR-CORE-005	C4.2
 udisks2	AUR-HW-001	C4.10
 upower	AUR-HW-003	C4.12
