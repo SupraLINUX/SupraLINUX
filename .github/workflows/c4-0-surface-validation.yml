@@ -101,9 +101,15 @@ jobs:
         if: always()
         shell: bash
         run: |
+          set +e
           set -o pipefail
           mkdir -p build
           sudo bash scripts/ci/extract-c4-0-surface-inventory.sh 2>&1 | tee build/c4-0-extended-inventory.log
+          extract_status=${PIPESTATUS[0]}
+          if [[ -d build/c4-0-inventory ]]; then
+            sudo chown -R "$(id -u):$(id -g)" build/c4-0-inventory
+          fi
+          exit "${extract_status}"
 
       - name: Reconcile complete C4.0 surface contract
         if: always()
