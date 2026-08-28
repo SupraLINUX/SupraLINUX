@@ -1,4 +1,27 @@
 # PACKAGE	CAPABILITY_ID	CLASSIFICATION
+bluedevil	AUR-HW-006	C4.5
+breeze-gtk-theme	AUR-AUX-003	C4.15
+fonts-hack	AUR-APPEAR-001	C4.1
+fonts-noto-cjk	AUR-APPEAR-001	C4.1
+fonts-noto-hinted	AUR-APPEAR-001	C4.1
+fonts-noto-mono	AUR-APPEAR-001	C4.1
+fonts-noto-unhinted	AUR-APPEAR-001	C4.1
+ibus-data	AUR-KWIN-012	C4.1
+kde-config-gtk-style	AUR-AUX-003	C4.15
+kde-config-screenlocker	AUR-SEC-001	C4.1
+kde-config-sddm	AUR-PRIV-002	C4.2
+kde-style-oxygen-qt6	AUR-APPEAR-001	C4.1
+kgamma	AUR-APPEAR-003	C4.1
+khelpcenter	AUR-KIO-001	C4.11/C4.15
+kinfocenter	AUR-AUX-001	C4.15
+kio-extras	AUR-KIO-001	C4.11
+kmenuedit	AUR-DESKTOP-002	C4.1
+kscreen	AUR-KWIN-001	C4.1
+ksshaskpass	AUR-AUX-005	C4.15
+kwin-wayland	AUR-CORE-002	PREREQUISITE/C4.1
+kwrited	AUR-PLASMA-001	C4.1
+libkf6kcmutils-bin	AUR-COVER-001	C4.0/C4.1
+libpam-kwallet5	AUR-CORE-006	C4.2
 plasma-browser-integration	AUR-BROWSER-001	C4.15
 plasma-discover	AUR-SW-004	C4.15
 plasma-disks	AUR-HW-005	C4.10
