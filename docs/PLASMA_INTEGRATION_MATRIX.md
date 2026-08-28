@@ -1,6 +1,6 @@
 # Plasma Integration Matrix — Ubuntu 26.04 LTS / Aurora C4
 
-Status: **C4 executable contract active; C4.0 accepted / GREEN; C4.1 next**.
+Status: **C4 executable contract active; C4.0 accepted / GREEN; C4.1 OPEN / ACTIVE; C4.1a accepted / GREEN**.
 
 This is the canonical capability inventory for Aurora's first integration milestone. `docs/C4_CERTIFICATION.md` defines how these rows are executed, evidenced and certified.
 
@@ -53,11 +53,13 @@ Canonical evidence: `docs/validation/AURORA_C4_0_ACCEPTANCE.md`.
 
 ## C4.1 — System Settings / KWin / desktop software behavior
 
+Accepted incremental evidence: `docs/validation/AURORA_C4_1A_ACCEPTANCE.md` (`AUR-KCM-002`, `AUR-KWIN-004`). C4.1 remains open; no other row inherits PASS from this increment.
+
 | ID | User surface / claim | Backend / authoritative state | Test class | PASS criterion | Status | HW |
 |---|---|---|---|---|---|---|
 | AUR-PLASMA-001 | Built-in Plasma shell widgets/services are usable | plasmashell/KDED/KConfig/KActivities as applicable | software | every inventoried built-in surface instantiates cleanly; representative actions/configuration work and persist | PENDING-C4 | NOT-REQUIRED |
 | AUR-KCM-001 | Accessibility settings surface is mapped | Plasma/KWin accessibility config | software + HW split | every exposed control maps to C4.14 or HW follow-up | PENDING-C4 | PENDING-HW |
-| AUR-KCM-002 | Activities create/switch/remove and persist | Plasma Activities service | software | real lifecycle works and returns to baseline | PENDING-C4 | NOT-REQUIRED |
+| AUR-KCM-002 | Activities create/switch/remove and persist | Plasma Activities service | software | real lifecycle works and returns to baseline | PASS-C4 | NOT-REQUIRED |
 | AUR-KCM-003 | File Search/Baloo controls affect indexing state | Baloo config/service | software | enable/disable/config change reflected by backend | PENDING-C4 | NOT-REQUIRED |
 | AUR-KCM-004 | Desktop paths reflect XDG user dirs | `user-dirs.dirs` + KCM | software | KCM and XDG state agree | PENDING-C4 | NOT-REQUIRED |
 | AUR-KCM-005 | Game controller/button-remap surface is functional where hardware exists | KWin/input/game-controller stack | virtualized + HW | virtual/software path works where possible; representative controller remains HW follow-up | PENDING-C4 | PENDING-HW |
@@ -87,7 +89,7 @@ Canonical evidence: `docs/validation/AURORA_C4_0_ACCEPTANCE.md`.
 | AUR-KWIN-001 | Display configuration | KScreen/KWin | virtualized | virtual output resolution/scaling change applies and persists | PENDING-C4 | VIRTUALIZED-ONLY |
 | AUR-KWIN-002 | Global animation speed | KWin | software | setting changes authoritative KWin config and persists | PENDING-C4 | NOT-REQUIRED |
 | AUR-KWIN-003 | Desktop effects/effect configuration | KWin effects/plugins | software | every inventoried configurable effect plugin loads; representative enable/disable/config works | PENDING-C4 | NOT-REQUIRED |
-| AUR-KWIN-004 | Virtual desktops | KWin virtual desktop API/config | software | add/switch/remove/persist; KWin stays stable | PENDING-C4 | NOT-REQUIRED |
+| AUR-KWIN-004 | Virtual desktops | KWin virtual desktop API/config | software | add/switch/remove/persist; KWin stays stable | PASS-C4 | NOT-REQUIRED |
 | AUR-KWIN-005 | Window decorations | KWin decoration plugin/config | software | shipped decorations apply live and persist | PENDING-C4 | NOT-REQUIRED |
 | AUR-KWIN-006 | Window rules | KWin rules | software | rule matches representative Wayland window and is removable | PENDING-C4 | NOT-REQUIRED |
 | AUR-KWIN-007 | XWayland controls | KWin XWayland policy | software | policy change is reflected without breaking C3 compatibility | PENDING-C4 | NOT-REQUIRED |
