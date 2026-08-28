@@ -11,6 +11,7 @@ Package: supralinux-settings
 Architecture: all
 Depends:
  ${misc:Depends},
+ baloo6,
  sddm,
  kwin-wayland,
  layer-shell-qt,
@@ -18,6 +19,7 @@ Depends:
 Description: SupraLINUX system and desktop defaults
  Development settings package for the SupraLINUX Aurora baseline.
  .
- It owns persistent SupraLINUX defaults that must survive rebuilds. The initial
- implementation configures the SDDM greeter to run on KWin Wayland using KDE's
- supported Plasma integration path.
+ It owns persistent SupraLINUX defaults and small integration shims that must
+ survive rebuilds. The initial implementation configures the SDDM greeter to
+ run on KWin Wayland using KDE's supported Plasma integration path and keeps
+ Plasma-visible integration behavior functional on the Ubuntu 26.04 base.

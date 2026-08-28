@@ -1,3 +1,12 @@
+supralinux-desktop (0.1.0~dev9) UNRELEASED; urgency=medium
+
+  * Require supralinux-settings 0.1.0~dev2 so Plasma File Search can launch
+    baloo_file immediately after being re-enabled from the KCM on Ubuntu 26.04.
+  * Keep the fix local to the missing executable lookup path instead of adding
+    KDE private libexec directories to the global Plasma session PATH.
+
+ -- SupraLINUX Project <noreply@supralinux.com>  Fri, 28 Aug 2026 20:45:00 -0300
+
 supralinux-desktop (0.1.0~dev8) UNRELEASED; urgency=medium
 
   * Add baloo6 so Plasma File Search has its file-indexing daemon,

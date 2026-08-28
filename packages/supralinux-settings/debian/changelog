@@ -1,3 +1,15 @@
+supralinux-settings (0.1.0~dev2) UNRELEASED; urgency=medium
+
+  * Add a baloo_file compatibility launcher for Plasma File Search on the
+    Ubuntu 26.04 base. Plasma 6.6.6 resolves baloo_file through PATH when the
+    KCM enables indexing, while Ubuntu's baloo6 package installs the daemon in
+    KDE's multiarch libexec directory.
+  * Resolve the real baloo6-owned daemon from the dpkg manifest at runtime and
+    exec it directly, without adding private libexec directories to session
+    PATH or hard-coding an architecture triplet.
+
+ -- SupraLINUX Project <noreply@supralinux.com>  Fri, 28 Aug 2026 20:45:00 -0300
+
 supralinux-settings (0.1.0~dev1) UNRELEASED; urgency=medium
 
   * Initial development package for persistent SupraLINUX defaults.

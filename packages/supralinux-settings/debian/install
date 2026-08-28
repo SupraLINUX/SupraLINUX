@@ -1,1 +1,2 @@
 config/sddm/10-supralinux-wayland.conf etc/sddm.conf.d/
+compat/baloo_file usr/bin/

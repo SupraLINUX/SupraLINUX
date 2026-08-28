@@ -11,7 +11,7 @@ Package: supralinux-desktop
 Architecture: all
 Depends:
  ${misc:Depends},
- supralinux-settings (>= 0.1.0~dev1),
+ supralinux-settings (>= 0.1.0~dev2),
  plasma-desktop,
  plasma-workspace,
  plasma-session-wayland,

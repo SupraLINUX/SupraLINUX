@@ -1,0 +1,17 @@
+#!/bin/sh
+set -eu
+
+# Plasma 6.6.6's File Search KCM starts baloo_file through
+# QStandardPaths::findExecutable("baloo_file"). Ubuntu's baloo6 package keeps
+# the daemon in KDE's multiarch libexec directory instead of a PATH directory.
+# Resolve the executable from the package manifest so this stays independent of
+# the host multiarch triplet and exec the real backend without changing Plasma's
+# process semantics.
+baloo_file_path="$(dpkg-query -L baloo6 2>/dev/null | sed -n '\|/libexec/kf6/baloo_file$|{p;q;}')"
+
+if [ -z "${baloo_file_path}" ] || [ ! -x "${baloo_file_path}" ]; then
+    echo "SupraLINUX: unable to locate the baloo6 baloo_file backend." >&2
+    exit 127
+fi
+
+exec "${baloo_file_path}" "$@"
