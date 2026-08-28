@@ -1,6 +1,6 @@
 # Plasma Integration Matrix — Ubuntu 26.04 LTS / Aurora C4
 
-Status: **C4 executable contract active; C4.0 reconciliation in progress**.
+Status: **C4 executable contract active; C4.0 accepted / GREEN; C4.1 next**.
 
 This is the canonical capability inventory for Aurora's first integration milestone. `docs/C4_CERTIFICATION.md` defines how these rows are executed, evidenced and certified.
 
@@ -40,14 +40,16 @@ These rows are not reopened by C4 unless a later product change creates a docume
 
 ## C4.0 — Surface and contract inventory
 
+Canonical evidence: `docs/validation/AURORA_C4_0_ACCEPTANCE.md`.
+
 | ID | User surface / claim | Backend / authoritative state | Test class | PASS criterion | Status | HW |
 |---|---|---|---|---|---|---|
-| AUR-COVER-001 | Every shipped/discoverable Plasma KCM has an owner/test row | `kcmshell6 --list`, plugin metadata, dpkg ownership | software | zero unknown/missing KCMs and zero unresolved owners | PENDING-C4 | NOT-REQUIRED |
-| AUR-COVER-002 | Every shipped KWin configurable/plugin surface is mapped | installed KWin plugin/metadata inventory + dpkg | software | zero unknown/missing KWin surfaces and zero unresolved owners | PENDING-C4 | NOT-REQUIRED |
-| AUR-COVER-003 | Plasma applets/plasmoids, KDED and Dolphin/KIO integrations are mapped | installed plugin/action inventory + dpkg ownership | software | zero unknown/missing integration surfaces and zero unresolved owners | PENDING-C4 | NOT-REQUIRED |
-| AUR-COVER-004 | Direct `supralinux-desktop` dependencies are justified | dpkg/DEB metadata + matrix mapping | software | every direct dependency maps to a capability/policy | PENDING-C4 | NOT-REQUIRED |
-| AUR-COVER-005 | Portal backends/routing are inventoried | `.portal` descriptors, `*-portals.conf`, D-Bus | software | installed portal backends are mapped and routing config is present | PENDING-C4 | NOT-REQUIRED |
-| AUR-COVER-006 | Plasma feature `Recommends` are explicitly owned by Aurora | `apt-cache depends plasma-desktop` + versioned manifest | software | zero unknown/missing recommended feature packages | PENDING-C4 | NOT-REQUIRED |
+| AUR-COVER-001 | Every shipped/discoverable Plasma KCM has an owner/test row | `kcmshell6 --list`, plugin metadata, dpkg ownership | software | zero unknown/missing KCMs and zero unresolved owners | PASS-C4 | NOT-REQUIRED |
+| AUR-COVER-002 | Every shipped KWin configurable/plugin surface is mapped | installed KWin plugin/metadata inventory + dpkg | software | zero unknown/missing KWin surfaces and zero unresolved owners | PASS-C4 | NOT-REQUIRED |
+| AUR-COVER-003 | Plasma applets/plasmoids, KDED and Dolphin/KIO integrations are mapped | installed plugin/action inventory + dpkg ownership | software | zero unknown/missing integration surfaces and zero unresolved owners | PASS-C4 | NOT-REQUIRED |
+| AUR-COVER-004 | Direct `supralinux-desktop` dependencies are justified | dpkg/DEB metadata + matrix mapping | software | every direct dependency maps to a capability/policy | PASS-C4 | NOT-REQUIRED |
+| AUR-COVER-005 | Portal backends/routing are inventoried | `.portal` descriptors, `*-portals.conf`, D-Bus | software | installed portal backends are mapped and routing config is present | PASS-C4 | NOT-REQUIRED |
+| AUR-COVER-006 | Plasma feature `Recommends` are explicitly owned by Aurora | `apt-cache depends plasma-desktop` + versioned manifest | software | zero unknown/missing recommended feature packages | PASS-C4 | NOT-REQUIRED |
 
 ## C4.1 — System Settings / KWin / desktop software behavior
 
@@ -266,6 +268,6 @@ Archive handling is different from an arbitrary app decision because the install
 
 ## Matrix execution rule
 
-C4.0 is the guard against silent coverage gaps. Before feature subgates are accepted, the runtime inventory must prove that every currently exposed Plasma/KWin/integration surface and every current `plasma-desktop` feature recommendation maps to this matrix.
+C4.0 is the guard against silent coverage gaps. Its accepted runtime inventory proves that every currently exposed Plasma/KWin/integration surface and every current `plasma-desktop` feature recommendation maps to this matrix for the accepted C4.0 source state. Re-run C4.0 whenever a later change can alter that surface.
 
 After C4 is complete, this matrix becomes evidence for making the required product dependencies explicit in `supralinux-desktop`. Reliance on Ubuntu `Recommends` alone is not considered sufficient for a feature that Aurora promises.
