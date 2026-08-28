@@ -16,6 +16,7 @@ Depends:
  plasma-workspace,
  plasma-session-wayland,
  systemsettings,
+ baloo6,
  sddm,
  sddm-theme-breeze,
  kde-config-sddm,
