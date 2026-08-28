@@ -11,11 +11,12 @@ clean-rootfs — GREEN
 C1 — GREEN / CERTIFIED
 C2 — GREEN / CERTIFIED
 C3 — GREEN / CERTIFIED
-C4 — DESIGN COMPLETE / EXECUTION PENDING
+C4.0 — GREEN / CERTIFIED
+C4.1 — CURRENT IMPLEMENTATION TARGET
 C5 — LOCKED UNTIL C4
 ```
 
-C1-C3 acceptance records under `docs/validation/` are authoritative. Do not reopen those gates without a real regression trigger.
+Acceptance records under `docs/validation/` are authoritative. Do not reopen C1-C3 or C4.0 without a real regression trigger.
 
 ## Stage C1 — Kernel + systemd boot
 
@@ -93,7 +94,7 @@ Canonical evidence: `docs/validation/AURORA_C3_ACCEPTANCE.md`.
 
 ## Stage C4 — Feature integration certification
 
-Status: **EXECUTABLE CONTRACT DEFINED; IMPLEMENTATION PENDING**
+Status: **ACTIVE; C4.0 CERTIFIED; C4.1 CURRENT**
 
 C4 starts only after the real Wayland user session is reproducibly available. Its purpose is to certify the feature matrix end-to-end.
 
@@ -109,13 +110,32 @@ A KCM merely opening never counts as feature completeness.
 
 ### C4.0 — Surface and contract inventory
 
-Inventory the runtime-exposed Plasma/KWin/integration surface and compare it to a versioned coverage manifest. C4.0 fails on any unknown in-scope visible feature or direct product dependency with no capability/policy owner.
+Status: **CERTIFIED**
 
-C4.0 must pass before package selection is changed in response to later C4 findings.
+The accepted runtime inventory reconciles the package-defined Aurora surface against version-controlled contracts and records package ownership/version evidence.
+
+Accepted counts:
+
+- 100 Plasma KCM IDs;
+- 61 direct `supralinux-desktop` dependencies;
+- 3 installed portal descriptors;
+- 29 KWin surfaces;
+- 119 Plasma/KDED/KIO integration surfaces;
+- 36 direct `plasma-desktop` feature `Recommends`.
+
+All unknown/missing sets and all unresolved-owner sets were empty.
+
+Canonical evidence: `docs/validation/AURORA_C4_0_ACCEPTANCE.md`.
+
+C4.0 is now closed. Re-run it when a later package/dependency/SRU change can alter the effective shipped/discovered surface. A documentation-only status update does not invalidate C4.0.
 
 ### C4.1 — System Settings / KWin / software-only desktop behavior
 
+Status: **CURRENT IMPLEMENTATION TARGET**
+
 Activities, Baloo/search, keyboard/shortcuts, workspace/session behavior, KWin effects/scripts/virtual desktops/decorations/rules/XWayland policy/window behavior/screen edges/task switcher and other software-only mapped KCMs.
+
+Each capability requires an observable state/action result, persistence/cleanup where relevant and session stability. Mere plugin/KCM discovery is already covered by C4.0 and is not sufficient here.
 
 ### C4.2 — Polkit + KWallet + privileged actions
 
@@ -212,14 +232,15 @@ C5 precedes ISO work and must still use the package-defined system rather than m
 
 ## Regression policy
 
-C1-C3 are not rerun automatically for every C4 documentation/harness change.
+C1-C3 are not rerun automatically for every C4 documentation/harness change. C4.0 is likewise not rerun solely because its acceptance/status documentation changes.
 
 Re-run only the certified scopes plausibly affected by a product change. Examples:
 
 - kernel/base/systemd/initramfs changes → C1 plus affected later gates;
 - SDDM/KWin greeter changes → C2 and normally C3;
 - Plasma/KWin/session/XWayland composition changes → C3, and C2 when shared greeter infrastructure is affected;
-- documentation-only C4 changes → no C1-C3 regression run.
+- relevant Plasma/KWin/KIO/KDED/portal package-graph or `supralinux-desktop` dependency changes → C4.0;
+- documentation-only C4 changes → no C1-C3 regression and no C4.0 invalidation.
 
 The change that triggers regression must record why the older gate is in scope.
 
@@ -240,7 +261,11 @@ C2 SDDM + KWin Wayland greeter ✅
         ↓
 C3 real Plasma Wayland user session + XWayland ✅
         ↓
-C4 feature-by-feature integration certification ← current work
+C4.0 complete surface/contract inventory ✅
+        ↓
+C4.1 feature behavior certification ← current work
+        ↓
+C4.2-C4.15 remaining feature subgates
         ↓
 re-evaluate/freeze candidate desktop dependencies
         ↓
