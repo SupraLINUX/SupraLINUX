@@ -1,0 +1,146 @@
+name: Aurora C4.1 runtime contract discovery
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - development
+    paths:
+      - 'packages/**'
+      - 'scripts/ci/build-packages.sh'
+      - 'scripts/ci/validate-clean-rootfs.sh'
+      - 'scripts/ci/validate-c4-0-surface.sh'
+      - 'scripts/ci/extract-c4-0-surface-inventory.sh'
+      - 'scripts/ci/reconcile-c4-0-surface-inventory.sh'
+      - 'scripts/ci/discover-c4-1-runtime.sh'
+      - 'tests/c4/**'
+      - '.github/workflows/c4-1-runtime-discovery.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aurora-c4-1-runtime-discovery-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  c4-1-discovery:
+    name: Discover live C4.1 control surfaces and APIs
+    runs-on: ubuntu-26.04
+    timeout-minutes: 120
+    env:
+      AURORA_UBUNTU_MIRROR: http://azure.archive.ubuntu.com/ubuntu
+      AURORA_C4_0_BOOT_TIMEOUT: '900'
+      AURORA_C4_1_BOOT_TIMEOUT: '600'
+
+    steps:
+      - name: Check out SupraLINUX
+        uses: actions/checkout@v4
+
+      - name: Verify runner base
+        shell: bash
+        run: |
+          set -euo pipefail
+          . /etc/os-release
+          echo "Runner: ${PRETTY_NAME}"
+          test "${VERSION_CODENAME}" = "resolute"
+          test "$(dpkg --print-architecture)" = "amd64"
+          df -h /
+
+      - name: Validate discovery harness syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n scripts/ci/validate-c4-0-surface.sh
+          bash -n scripts/ci/extract-c4-0-surface-inventory.sh
+          bash -n scripts/ci/reconcile-c4-0-surface-inventory.sh
+          bash -n scripts/ci/discover-c4-1-runtime.sh
+
+      - name: Install package, rootfs and QEMU tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential \
+            debhelper \
+            devscripts \
+            debootstrap \
+            e2fsprogs \
+            qemu-system-x86 \
+            util-linux
+
+      - name: Build SupraLINUX development packages
+        shell: bash
+        run: bash scripts/ci/build-packages.sh
+
+      - name: Establish accepted C4.0 prerequisite surface
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build
+          sudo env \
+            AURORA_UBUNTU_MIRROR="${AURORA_UBUNTU_MIRROR}" \
+            AURORA_C4_0_BOOT_TIMEOUT="${AURORA_C4_0_BOOT_TIMEOUT}" \
+            bash scripts/ci/validate-c4-0-surface.sh 2>&1 | tee build/c4-1-prerequisite-c4-0.log
+          sudo bash scripts/ci/extract-c4-0-surface-inventory.sh 2>&1 | tee build/c4-1-prerequisite-c4-0-extended.log
+          bash scripts/ci/reconcile-c4-0-surface-inventory.sh 2>&1 | tee build/c4-1-prerequisite-c4-0-reconcile.log
+
+      - name: Discover live C4.1 runtime contract
+        shell: bash
+        run: |
+          set -o pipefail
+          sudo env \
+            AURORA_C4_1_BOOT_TIMEOUT="${AURORA_C4_1_BOOT_TIMEOUT}" \
+            bash scripts/ci/discover-c4-1-runtime.sh 2>&1 | tee build/c4-1-discovery.log
+
+      - name: Surface C4.1 discovery diagnostics
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          echo "AURORA_C4_1_WORKFLOW_DIAGNOSTICS_START"
+          for file in \
+            build/c4-1-prerequisite-c4-0.log \
+            build/c4-1-prerequisite-c4-0-extended.log \
+            build/c4-1-prerequisite-c4-0-reconcile.log \
+            build/c4-1-discovery.log \
+            build/aurora-c4-1-discovery-serial.log \
+            build/aurora-c4-1-discovery-wayland-session.log; do
+            echo "::group::${file}"
+            if [[ -f "${file}" ]]; then
+              cat "${file}"
+            else
+              echo "AURORA_C4_1_DIAGNOSTIC_MISSING=${file}"
+            fi
+            echo "::endgroup::"
+          done
+
+          if [[ -d build/c4-1-discovery ]]; then
+            while IFS= read -r file; do
+              echo "::group::${file}"
+              cat "${file}" || echo "AURORA_C4_1_DIAGNOSTIC_READ_FAILURE=${file}"
+              echo "::endgroup::"
+            done < <(find build/c4-1-discovery -type f -print | sort)
+          fi
+          echo "AURORA_C4_1_WORKFLOW_DIAGNOSTICS_END"
+          exit 0
+
+      - name: Upload C4.1 runtime discovery evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-c4-1-runtime-discovery-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: warn
+          retention-days: 7
+          path: |
+            build/c4-1-prerequisite-c4-0.log
+            build/c4-1-prerequisite-c4-0-extended.log
+            build/c4-1-prerequisite-c4-0-reconcile.log
+            build/c4-1-discovery.log
+            build/aurora-c4-1-discovery-serial.log
+            build/aurora-c4-1-discovery-wayland-session.log
+            build/c4-1-discovery/**
+            build/c4-0-inventory/**
+            build/debootstrap.log
+            build/rootfs-discover-simulation.log
