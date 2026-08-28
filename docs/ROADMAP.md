@@ -40,7 +40,7 @@ Goal: a clean Ubuntu 26.04 base can become the SupraLINUX baseline through packa
 ### C4 — Feature integration certification
 
 - [x] Define the executable C4 certification contract and subgate boundaries
-- [ ] C4.0 — Runtime surface/contract inventory and 100% coverage reconciliation
+- [x] C4.0 — Runtime surface/contract inventory and 100% coverage reconciliation
 - [ ] C4.1 — System Settings / KWin / software-only desktop behavior
 - [ ] C4.2 — Polkit / KWallet / privileged actions
 - [ ] C4.3 — NetworkManager / Plasma-NM / VPN
