@@ -1,0 +1,14 @@
+# PACKAGE	CAPABILITY_ID	CLASSIFICATION
+plasma-browser-integration	AUR-BROWSER-001	C4.15
+plasma-discover	AUR-SW-004	C4.15
+plasma-disks	AUR-HW-005	C4.10
+plasma-firewall	AUR-SEC-002	C4.15
+plasma-nm	AUR-NET-001	C4.3
+plasma-pa	AUR-AUDIO-001	C4.4
+plasma-systemmonitor	AUR-AUX-002	C4.15
+plasma-thunderbolt	AUR-THUNDERBOLT-001	C4.15-PENDING-HW
+plasma-vault	AUR-VAULT-001	C4.15
+powerdevil	AUR-HW-003	C4.12
+systemsettings	AUR-COVER-001	C4.0/C4.1
+xdg-desktop-portal-gtk	AUR-PORTAL-004	C4.6
+xdg-desktop-portal-kde	AUR-PORTAL-001	C4.6/C4.7

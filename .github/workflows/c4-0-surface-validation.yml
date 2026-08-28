@@ -11,7 +11,10 @@ on:
       - 'scripts/ci/validate-clean-rootfs.sh'
       - 'scripts/ci/validate-c4-0-surface.sh'
       - 'scripts/ci/extract-c4-0-surface-inventory.sh'
+      - 'scripts/ci/reconcile-c4-0-surface-inventory.sh'
       - 'tests/c4/**'
+      - 'docs/C4_CERTIFICATION.md'
+      - 'docs/PLASMA_INTEGRATION_MATRIX.md'
       - '.github/workflows/c4-0-surface-validation.yml'
 
 permissions:
@@ -55,9 +58,14 @@ jobs:
           set -euo pipefail
           bash -n scripts/ci/validate-c4-0-surface.sh
           bash -n scripts/ci/extract-c4-0-surface-inventory.sh
+          bash -n scripts/ci/reconcile-c4-0-surface-inventory.sh
           test -s tests/c4/c4.0-kcm-coverage.tsv
           test -s tests/c4/c4.0-dependency-coverage.tsv
           test -s tests/c4/c4.0-portal-coverage.tsv
+          test -s tests/c4/c4.0-kwin-coverage.tsv
+          test -s tests/c4/c4.0-integration-coverage.tsv
+          test -s tests/c4/c4.0-plasma-recommends-coverage.tsv
+          test -s docs/PLASMA_INTEGRATION_MATRIX.md
 
       - name: Install package, rootfs and QEMU tools
         shell: bash
@@ -97,6 +105,14 @@ jobs:
           mkdir -p build
           sudo bash scripts/ci/extract-c4-0-surface-inventory.sh 2>&1 | tee build/c4-0-extended-inventory.log
 
+      - name: Reconcile complete C4.0 surface contract
+        if: always()
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build
+          bash scripts/ci/reconcile-c4-0-surface-inventory.sh 2>&1 | tee build/c4-0-reconcile.log
+
       - name: Surface Aurora C4.0 diagnostics in job log
         if: always()
         shell: bash
@@ -106,6 +122,7 @@ jobs:
           for file in \
             build/c4-0-validation.log \
             build/c4-0-extended-inventory.log \
+            build/c4-0-reconcile.log \
             build/aurora-c4-0-serial.log \
             build/aurora-c4-0-wayland-session.log \
             build/debootstrap.log \
@@ -147,6 +164,7 @@ jobs:
           path: |
             build/c4-0-validation.log
             build/c4-0-extended-inventory.log
+            build/c4-0-reconcile.log
             build/aurora-c4-0-serial.log
             build/aurora-c4-0-wayland-session.log
             build/c4-0-inventory/**

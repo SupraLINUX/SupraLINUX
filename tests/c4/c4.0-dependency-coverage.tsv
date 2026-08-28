@@ -18,7 +18,7 @@ upower	AUR-HW-003	C4.12
 powerdevil	AUR-HW-003	C4.12
 power-profiles-daemon	AUR-POWER-005	C4.12
 kscreen	AUR-KWIN-001	C4.1
-kde-config-screenlocker	AUR-CORE-004	C4.1
+kde-config-screenlocker	AUR-SEC-001	C4.1
 kinfocenter	AUR-AUX-001	C4.15
 ksystemstats	AUR-AUX-002	C4.15
 plasma-pa	AUR-AUDIO-001	C4.4
@@ -39,9 +39,9 @@ xdg-desktop-portal-gtk	AUR-PORTAL-004	C4.6
 xdg-user-dirs	AUR-L10N-003	C4.13
 xkb-data	AUR-INPUT-001	C4.1
 qt6-translations-l10n	AUR-L10N-002	C4.13
-kio6	AUR-NET-005	C4.11
+kio6	AUR-KIO-001	C4.11
 kio-fuse	AUR-NET-007	C4.11
-kio-extras	AUR-NET-005	C4.11
+kio-extras	AUR-KIO-001	C4.11
 libpam-kwallet5	AUR-CORE-006	C4.2
 flatpak	AUR-FLAT-001	C4.6
 kde-config-flatpak	AUR-FLAT-002	C4.6
