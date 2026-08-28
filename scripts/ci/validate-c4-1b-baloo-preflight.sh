@@ -12,6 +12,8 @@ IMAGE="${BUILD_DIR}/aurora-c4-0-rootfs.img"
 KERNEL="${BUILD_DIR}/aurora-c4-0-vmlinuz"
 INITRD="${BUILD_DIR}/aurora-c4-0-initrd.img"
 C4_0_KCM_INVENTORY="${BUILD_DIR}/c4-0-inventory/actual-kcms.txt"
+C4_0_KCM_OWNERS="${BUILD_DIR}/c4-0-inventory/kcm-package-owners.tsv"
+C4_0_KCM_MANIFEST="${ROOT_DIR}/tests/c4/c4.0-kcm-coverage.tsv"
 MOUNT_DIR="${BUILD_DIR}/aurora-c4-1b-preflight-rootfs"
 SERIAL_LOG="${BUILD_DIR}/aurora-c4-1b-preflight-serial.log"
 SESSION_LOG="${BUILD_DIR}/aurora-c4-1b-preflight-wayland-session.log"
@@ -19,7 +21,7 @@ OUT_DIR="${BUILD_DIR}/c4-1b-preflight-evidence"
 BOOT_TIMEOUT="${AURORA_C4_1B_BOOT_TIMEOUT:-600}"
 CI_USER="auroraci"
 
-for file in "${IMAGE}" "${KERNEL}" "${INITRD}" "${C4_0_KCM_INVENTORY}"; do
+for file in "${IMAGE}" "${KERNEL}" "${INITRD}" "${C4_0_KCM_INVENTORY}" "${C4_0_KCM_OWNERS}" "${C4_0_KCM_MANIFEST}"; do
   [[ -f "${file}" ]] || { echo "Missing C4.1b prerequisite file: ${file}" >&2; exit 1; }
 done
 for tool in mount umount mountpoint qemu-system-x86_64 timeout; do
@@ -31,12 +33,25 @@ rm -rf "${OUT_DIR}"
 mkdir -p "${OUT_DIR}"
 rm -f "${SERIAL_LOG}" "${SESSION_LOG}"
 
-surface_row="$(awk -F '\t' '$1 == "baloofile" && $4 == "AUR-KCM-003" { print; exit }' "${C4_0_KCM_INVENTORY}")"
-[[ -n "${surface_row}" ]] || {
-  echo "Accepted C4.0 runtime inventory does not expose baloofile as AUR-KCM-003." >&2
+grep -Fxq 'kcm_baloofile' "${C4_0_KCM_INVENTORY}" || {
+  echo "Accepted C4.0 runtime inventory does not expose kcm_baloofile." >&2
   exit 1
 }
-printf '%s\n' "${surface_row}" >"${OUT_DIR}/c4-0-baloofile-surface.txt"
+owner_row="$(awk -F '\t' '$1 == "KCM" && $2 == "kcm_baloofile" && $3 == "plasma-desktop" && $5 ~ /kcm_baloofile\.so$/ { print; exit }' "${C4_0_KCM_OWNERS}")"
+[[ -n "${owner_row}" ]] || {
+  echo "Accepted C4.0 ownership inventory does not map kcm_baloofile.so to plasma-desktop." >&2
+  exit 1
+}
+mapping_row="$(awk -F '\t' '$1 == "kcm_baloofile" && $2 == "AUR-KCM-003" && $3 == "C4.1" { print; exit }' "${C4_0_KCM_MANIFEST}")"
+[[ -n "${mapping_row}" ]] || {
+  echo "Versioned C4.0 KCM manifest does not map kcm_baloofile to AUR-KCM-003." >&2
+  exit 1
+}
+{
+  echo 'surface_id=kcm_baloofile'
+  printf 'owner=%s\n' "${owner_row}"
+  printf 'mapping=%s\n' "${mapping_row}"
+} >"${OUT_DIR}/c4-0-baloofile-surface.txt"
 
 cleanup() {
   set +e
@@ -64,7 +79,7 @@ rm -f "${MOUNT_DIR}/usr/local/libexec/aurora-ci-c4-1b-preflight"
 rm -rf "${MOUNT_DIR}/var/lib/aurora-ci-c4-1b-preflight"
 
 mkdir -p "${MOUNT_DIR}/usr/local/libexec" "${MOUNT_DIR}/etc/systemd/system/timers.target.wants" "${MOUNT_DIR}/var/lib/aurora-ci-c4-1b-preflight"
-printf '%s\n' "${surface_row}" >"${MOUNT_DIR}/var/lib/aurora-ci-c4-1b-preflight/c4-0-baloofile-surface.txt"
+cp "${OUT_DIR}/c4-0-baloofile-surface.txt" "${MOUNT_DIR}/var/lib/aurora-ci-c4-1b-preflight/c4-0-baloofile-surface.txt"
 cat >"${MOUNT_DIR}/usr/local/libexec/aurora-ci-c4-1b-preflight" <<'GUEST'
 #!/usr/bin/env bash
 set -Eeuo pipefail
@@ -181,7 +196,9 @@ ci_home="$(getent passwd "${CI_USER}" | awk -F: '{print $6}')"
 bind_live_session || fail "Plasma Wayland session did not become ready"
 
 stage SURFACE
-awk -F '\t' '$1 == "baloofile" && $4 == "AUR-KCM-003" { found=1 } END { exit !found }' "${OUT}/c4-0-baloofile-surface.txt" || fail "accepted C4.0 inventory no longer proves the File Search surface"
+grep -Fxq 'surface_id=kcm_baloofile' "${OUT}/c4-0-baloofile-surface.txt" || fail "accepted C4.0 inventory no longer proves the File Search surface"
+grep -Fq $'owner=KCM\tkcm_baloofile\tplasma-desktop\t' "${OUT}/c4-0-baloofile-surface.txt" || fail "accepted C4.0 ownership evidence no longer proves the File Search KCM owner"
+grep -Fq $'mapping=kcm_baloofile\tAUR-KCM-003\tC4.1' "${OUT}/c4-0-baloofile-surface.txt" || fail "versioned C4.0 manifest no longer maps File Search to AUR-KCM-003"
 dpkg-query -S '*kcm_baloofile.so' >"${OUT}/kcm-owner.txt" 2>&1 || fail "File Search KCM package owner is unresolved"
 grep -Fq 'plasma-desktop:' "${OUT}/kcm-owner.txt" || fail "File Search KCM is not owned by the expected Plasma package"
 
