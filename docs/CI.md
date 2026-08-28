@@ -88,23 +88,41 @@ These are readiness/plumbing assertions. They do not substitute for C4 feature w
 
 Canonical evidence: `docs/validation/AURORA_C3_ACCEPTANCE.md`.
 
-## Next executable stage — C4 feature integration certification
+## C4 feature integration certification
 
-Status: **CONTRACT DEFINED; HARNESS IMPLEMENTATION PENDING**
+Status: **C4.0 CERTIFIED; C4.1 NEXT**
 
 C4 is split into manageable subgates defined by `docs/C4_CERTIFICATION.md` and backed by the canonical capability inventory in `docs/PLASMA_INTEGRATION_MATRIX.md`.
 
-The first implementation target is:
+### C4.0 — Surface and contract inventory
 
-**C4.0 — Surface and contract inventory**
+Workflow: `.github/workflows/c4-0-surface-validation.yml`
 
-C4.0 must inventory the runtime-exposed Plasma/KWin/integration surface and prove that every in-scope visible surface and every direct `supralinux-desktop` dependency has a matrix/policy owner. Unknown exposed surfaces are failures.
+Status: **CERTIFIED**
 
-No package dependency changes should be made for C4 feature defects before C4.0 establishes complete coverage.
+C4.0 boots the package-defined Aurora desktop, inventories the runtime-exposed Plasma/KWin/KDED/KIO/portal surface, records package ownership and versions, compares the result with version-controlled manifests, and rejects unknown/missing surfaces or unowned capability IDs.
+
+Accepted C4.0 coverage includes exact reconciliation of:
+
+- 100 Plasma KCM IDs;
+- 61 direct `supralinux-desktop` dependencies;
+- 3 installed portal descriptors;
+- 29 KWin surfaces;
+- 119 Plasma/KDED/KIO integration surfaces;
+- 36 direct `plasma-desktop` feature `Recommends`.
+
+All unknown, missing and unresolved-owner result sets were empty in the accepted run.
+
+Canonical evidence: `docs/validation/AURORA_C4_0_ACCEPTANCE.md`.
+
+C4.0 is a coverage gate, not a feature-functionality gate. Its PASS must not be propagated to C4.1-C4.15 capabilities.
+
+### Current implementation target — C4.1
+
+C4.1 owns System Settings, KWin and software-only/virtualizable Plasma shell behavior defined by the canonical matrix. It must perform real state/action assertions rather than treating a KCM or plugin load as success.
 
 Later subgates cover:
 
-- C4.1 System Settings/KWin software behavior;
 - C4.2 Polkit/KWallet/privileged actions;
 - C4.3 NetworkManager/Plasma-NM/VPN;
 - C4.4 PipeWire/WirePlumber/audio;
@@ -120,19 +138,20 @@ Later subgates cover:
 - C4.14 accessibility;
 - C4.15 auxiliary/direct-dependency closure.
 
-A KCM/process/service merely existing never produces a C4 PASS. Each capability must execute and observe a real backend action according to the C4 contract.
+A KCM/process/service merely existing never produces a feature-level C4 PASS. Each capability must execute and observe a real backend action according to the C4 contract.
 
 ## Regression policy
 
-C1-C3 stay closed unless a later product change can plausibly affect their accepted scope.
+C1-C3 stay closed unless a later product change can plausibly affect their accepted scope. C4.0 likewise stays closed unless a later change can alter the effective shipped/discovered Plasma surface or dependency graph.
 
 Examples:
 
-- documentation-only C4 changes: no regression run;
+- documentation-only C4 changes: no C1-C3 regression run and no C4.0 invalidation;
 - C4 harness/fixture-only additions that do not alter the product image: no automatic C1-C3 rerun;
-- Plasma/KWin/session/XWayland package or configuration changes: C3 regression, plus C2 if greeter infrastructure overlaps;
+- Plasma/KWin/session/XWayland package or configuration changes: C3 regression, plus C2 if greeter infrastructure overlaps, and C4.0 if the effective surface can change;
 - SDDM/KWin greeter changes: C2 and normally C3;
-- kernel/base/systemd/initramfs changes: C1 plus affected later gates.
+- kernel/base/systemd/initramfs changes: C1 plus affected later gates;
+- `supralinux-desktop` dependency or relevant Plasma/KWin/KIO/KDED/portal package-graph changes: C4.0 regression.
 
 The triggering change should record the regression reason.
 
@@ -140,7 +159,7 @@ The triggering change should record the regression reason.
 
 Serial guest markers remain the primary deterministic evidence channel for VM gates. A green workflow or QEMU exit code alone is insufficient.
 
-For C4, evidence additionally includes a machine-readable capability result manifest, product/fixture package manifests and targeted backend/service logs. Product dependencies and CI-only fixture dependencies must be reported separately.
+For C4, evidence additionally includes capability manifests, product/fixture package manifests, ownership/version inventories and targeted backend/service logs. Product dependencies and CI-only fixture dependencies must be reported separately.
 
 ## Storage policy
 
