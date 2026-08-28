@@ -186,7 +186,7 @@ bind_live_session() {
   session_id=""
   for ((i = 0; i < 120; i++)); do
     sessions="$(loginctl list-sessions --no-legend 2>/dev/null || true)"
-    candidate="$(awk -v uid="${ci_uid}" -v old="${previous_session}" '$2 == uid && $1 != old { print $1; exit }' <<<"${sessions}")"
+    candidate="$(awk -v uid="${ci_uid}" -v old="${previous_session}" '$2 == uid && $1 != old && $6 == "user" { print $1; exit }' <<<"${sessions}")"
     if [[ -n "${candidate}" ]] \
       && [[ "$(loginctl show-session "${candidate}" -p Active --value 2>/dev/null || true)" == "yes" ]] \
       && [[ "$(loginctl show-session "${candidate}" -p Type --value 2>/dev/null || true)" == "wayland" ]]; then
