@@ -84,6 +84,9 @@ jobs:
             AURORA_C4_0_BOOT_TIMEOUT="${AURORA_C4_0_BOOT_TIMEOUT}" \
             bash scripts/ci/validate-c4-0-surface.sh 2>&1 | tee build/c4-1-prerequisite-c4-0.log
           sudo bash scripts/ci/extract-c4-0-surface-inventory.sh 2>&1 | tee build/c4-1-prerequisite-c4-0-extended.log
+          if [[ -d build/c4-0-inventory ]]; then
+            sudo chown -R "$(id -u):$(id -g)" build/c4-0-inventory
+          fi
           bash scripts/ci/reconcile-c4-0-surface-inventory.sh 2>&1 | tee build/c4-1-prerequisite-c4-0-reconcile.log
 
       - name: Discover live C4.1 runtime contract
