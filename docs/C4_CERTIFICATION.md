@@ -1,6 +1,6 @@
 # Aurora C4 — Feature Integration Certification
 
-Status: **implementation active; C4.0 surface reconciliation in progress**
+Status: **implementation active; C4.0 accepted / GREEN; C4.1 next**
 
 C1, C2 and C3 are certified prerequisites. C4 must not reopen them unless a later product change creates a real regression risk.
 
@@ -81,6 +81,10 @@ CI fixtures must never be silently promoted into product dependencies.
 
 ### C4.0 — Surface and contract inventory
 
+Status: **ACCEPTED / GREEN**
+
+Canonical evidence: `docs/validation/AURORA_C4_0_ACCEPTANCE.md`.
+
 Goal: prove that the certification matrix covers the complete currently shipped Aurora Plasma surface before feature testing or package correction begins.
 
 The runtime/post-boot inventory must collect at least:
@@ -112,9 +116,11 @@ PASS requires:
 - portal routing configuration present;
 - live Plasma session stability through the inventory.
 
+The accepted C4.0 run met all of these conditions. It reconciled 100 KCM IDs, 61 direct desktop dependencies, 3 portal descriptors, 29 KWin surfaces, 119 Plasma/KDED/KIO integration surfaces and 36 `plasma-desktop` feature recommendations with zero unknown, missing or unresolved-owner results.
+
 C4.0 does **not** prove the functionality of those surfaces. It proves that none can escape later certification.
 
-C4.0 must pass before product dependency changes are made for C4 defects.
+C4.0 is now closed. Re-run it only when a later change can alter the effective shipped/discovered surface or dependency graph. C4.1 is unblocked.
 
 ### C4.1 — System Settings / KWin / Plasma shell behavior
 
@@ -306,4 +312,4 @@ Recheck before implementing each subgate because Ubuntu 26.04 updates can move p
 - UDisks2: `https://storaged.org/doc/udisks2-api/latest/`
 - xdg-user-dirs: `https://www.freedesktop.org/wiki/Software/xdg-user-dirs/`
 
-The repository acceptance records remain authoritative for C1-C3.
+The repository acceptance records under `docs/validation/` are authoritative for C1, C2, C3 and C4.0.
