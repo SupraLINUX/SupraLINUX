@@ -11,6 +11,7 @@ BUILD_DIR="${ROOT_DIR}/build"
 IMAGE="${BUILD_DIR}/aurora-c4-0-rootfs.img"
 KERNEL="${BUILD_DIR}/aurora-c4-0-vmlinuz"
 INITRD="${BUILD_DIR}/aurora-c4-0-initrd.img"
+C4_0_KCM_INVENTORY="${BUILD_DIR}/c4-0-inventory/actual-kcms.txt"
 MOUNT_DIR="${BUILD_DIR}/aurora-c4-1b-preflight-rootfs"
 SERIAL_LOG="${BUILD_DIR}/aurora-c4-1b-preflight-serial.log"
 SESSION_LOG="${BUILD_DIR}/aurora-c4-1b-preflight-wayland-session.log"
@@ -18,7 +19,7 @@ OUT_DIR="${BUILD_DIR}/c4-1b-preflight-evidence"
 BOOT_TIMEOUT="${AURORA_C4_1B_BOOT_TIMEOUT:-600}"
 CI_USER="auroraci"
 
-for file in "${IMAGE}" "${KERNEL}" "${INITRD}"; do
+for file in "${IMAGE}" "${KERNEL}" "${INITRD}" "${C4_0_KCM_INVENTORY}"; do
   [[ -f "${file}" ]] || { echo "Missing C4.1b prerequisite file: ${file}" >&2; exit 1; }
 done
 for tool in mount umount mountpoint qemu-system-x86_64 timeout; do
@@ -29,6 +30,13 @@ mkdir -p "${BUILD_DIR}" "${MOUNT_DIR}"
 rm -rf "${OUT_DIR}"
 mkdir -p "${OUT_DIR}"
 rm -f "${SERIAL_LOG}" "${SESSION_LOG}"
+
+surface_row="$(awk -F '\t' '$1 == "baloofile" && $4 == "AUR-KCM-003" { print; exit }' "${C4_0_KCM_INVENTORY}")"
+[[ -n "${surface_row}" ]] || {
+  echo "Accepted C4.0 runtime inventory does not expose baloofile as AUR-KCM-003." >&2
+  exit 1
+}
+printf '%s\n' "${surface_row}" >"${OUT_DIR}/c4-0-baloofile-surface.txt"
 
 cleanup() {
   set +e
@@ -55,7 +63,8 @@ rm -f "${MOUNT_DIR}/etc/systemd/system/aurora-ci-c4-1b-preflight.service"
 rm -f "${MOUNT_DIR}/usr/local/libexec/aurora-ci-c4-1b-preflight"
 rm -rf "${MOUNT_DIR}/var/lib/aurora-ci-c4-1b-preflight"
 
-mkdir -p "${MOUNT_DIR}/usr/local/libexec" "${MOUNT_DIR}/etc/systemd/system/timers.target.wants"
+mkdir -p "${MOUNT_DIR}/usr/local/libexec" "${MOUNT_DIR}/etc/systemd/system/timers.target.wants" "${MOUNT_DIR}/var/lib/aurora-ci-c4-1b-preflight"
+printf '%s\n' "${surface_row}" >"${MOUNT_DIR}/var/lib/aurora-ci-c4-1b-preflight/c4-0-baloofile-surface.txt"
 cat >"${MOUNT_DIR}/usr/local/libexec/aurora-ci-c4-1b-preflight" <<'GUEST'
 #!/usr/bin/env bash
 set -Eeuo pipefail
@@ -172,9 +181,9 @@ ci_home="$(getent passwd "${CI_USER}" | awk -F: '{print $6}')"
 bind_live_session || fail "Plasma Wayland session did not become ready"
 
 stage SURFACE
-run_user kcmshell6 --list >"${OUT}/kcmshell6-list.txt" 2>&1
-grep -Fq 'kcm_baloofile' "${OUT}/kcmshell6-list.txt" || fail "File Search KCM is not exposed"
+awk -F '\t' '$1 == "baloofile" && $4 == "AUR-KCM-003" { found=1 } END { exit !found }' "${OUT}/c4-0-baloofile-surface.txt" || fail "accepted C4.0 inventory no longer proves the File Search surface"
 dpkg-query -S '*kcm_baloofile.so' >"${OUT}/kcm-owner.txt" 2>&1 || fail "File Search KCM package owner is unresolved"
+grep -Fq 'plasma-desktop:' "${OUT}/kcm-owner.txt" || fail "File Search KCM is not owned by the expected Plasma package"
 
 stage BASELINE
 original_indexing="$(run_user kreadconfig6 --file baloofilerc --group "Basic Settings" --key "Indexing-Enabled" --default true)"
