@@ -1,6 +1,6 @@
 # Aurora C4 — Feature Integration Certification
 
-Status: **implementation active; C4.0 accepted / GREEN; C4.1 next**
+Status: **implementation active; C4.0 accepted / GREEN; C4.1 OPEN / ACTIVE; C4.1a accepted / GREEN (`AUR-KCM-002`, `AUR-KWIN-004`)**
 
 C1, C2 and C3 are certified prerequisites. C4 must not reopen them unless a later product change creates a real regression risk.
 
@@ -123,6 +123,16 @@ C4.0 does **not** prove the functionality of those surfaces. It proves that none
 C4.0 is now closed. Re-run it only when a later change can alter the effective shipped/discovered surface or dependency graph. C4.1 is unblocked.
 
 ### C4.1 — System Settings / KWin / Plasma shell behavior
+
+Status: **OPEN / ACTIVE**
+
+Accepted incremental evidence:
+
+- `docs/validation/AURORA_C4_1A_ACCEPTANCE.md` — **ACCEPTED / GREEN**;
+- `AUR-KCM-002` Activities — **PASS-C4**;
+- `AUR-KWIN-004` Virtual Desktops — **PASS-C4**.
+
+No other C4.1 capability inherits PASS from C4.1a. All remaining C4.1 rows stay pending until their own applicable contract is executed and accepted.
 
 Covers software-only or virtualizable Plasma/KWin settings, built-in shell widgets and desktop services: activities, Baloo/search, autostart, defaults/file associations, notifications, appearance, keyboard layouts, global shortcuts, workspace/session behavior, recent files, KWin animations/effects/scripts, virtual desktops, decorations, rules, XWayland policy, window behavior, screen edges, task switching and screen locking.
 
@@ -312,4 +322,4 @@ Recheck before implementing each subgate because Ubuntu 26.04 updates can move p
 - UDisks2: `https://storaged.org/doc/udisks2-api/latest/`
 - xdg-user-dirs: `https://www.freedesktop.org/wiki/Software/xdg-user-dirs/`
 
-The repository acceptance records under `docs/validation/` are authoritative for C1, C2, C3 and C4.0.
+The repository acceptance records under `docs/validation/` are authoritative for C1, C2, C3, C4.0 and accepted incremental C4 slices such as C4.1a.
