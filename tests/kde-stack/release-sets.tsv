@@ -1,0 +1,3 @@
+set	version	expected_modules	info_url	download_base	release_signing_fingerprint
+plasma	6.7.4	75	https://kde.org/info/plasma-6.7.4/	https://download.kde.org/stable/plasma/6.7.4	0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D
+frameworks	6.29.0	74	https://kde.org/info/kde-frameworks-6.29.0/	https://download.kde.org/stable/frameworks/6.29	90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1
