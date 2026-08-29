@@ -5,17 +5,24 @@ import argparse
 import csv
 import email.utils
 import re
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import NoReturn
 
 ROOT = Path(__file__).resolve().parents[2]
 TESTS = ROOT / "tests/kde-stack"
+ADAPTATIONS = TESTS / "ksq-1-packaging-adaptations.tsv"
 DEFAULT_SUFFIX = "~supra26.04.1"
 
+KWALLET_ADAPTATION = "kwallet-pam-compat13-relationship-substvars"
+SYNTAX_ADAPTATION = "kf6-syntax-highlighting-deterministic-jinja-order"
+SYNTAX_PATCH = ROOT / "packaging/ksq-1/patches/kf6-syntax-highlighting/supralinux-deterministic-jinja-order.patch"
 
-def fail(message: str) -> "NoReturn":
+
+def fail(message: str) -> NoReturn:
     print(f"AURORA_KSQ_1_SOURCE_PREP_FAILURE: {message}", file=sys.stderr)
     raise SystemExit(1)
 
@@ -49,6 +56,30 @@ def read_overrides() -> list[dict[str, str]]:
         return list(reader)
 
 
+def read_adaptations() -> list[dict[str, str]]:
+    with ADAPTATIONS.open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        expected = [
+            "source_package",
+            "source_version",
+            "adaptation_id",
+            "kind",
+            "implementation_ref",
+            "reason",
+        ]
+        if reader.fieldnames != expected:
+            fail(f"unexpected packaging adaptation header: {reader.fieldnames}")
+        rows = list(reader)
+
+    seen: set[str] = set()
+    for row in rows:
+        adaptation_id = row["adaptation_id"]
+        if not adaptation_id or adaptation_id in seen:
+            fail(f"duplicate or empty packaging adaptation id: {adaptation_id!r}")
+        seen.add(adaptation_id)
+    return rows
+
+
 def parse_changelog_header(line: str) -> tuple[str, str, str, str]:
     match = re.fullmatch(r"(\S+) \(([^)]+)\) (\S+); urgency=(\S+)", line.strip())
     if not match:
@@ -72,10 +103,7 @@ def apply_override(source_tree: Path, row: dict[str, str]) -> None:
     control.write_text(text.replace(before, after, 1), encoding="utf-8")
 
 
-def restore_kwallet_compat13_substvars(source_tree: Path, source: str, version: str) -> int:
-    if source != "kwallet-pam" or version != "4:6.7.4-0ubuntu3":
-        return 0
-
+def restore_kwallet_compat13_substvars(source_tree: Path) -> int:
     control = source_tree / "debian/control"
     text = control.read_text(encoding="utf-8")
 
@@ -130,6 +158,62 @@ Depends: ${misc:Depends},
     return 3
 
 
+def apply_syntax_highlighting_repro_patch(source_tree: Path) -> None:
+    source_format = source_tree / "debian/source/format"
+    if source_format.read_text(encoding="utf-8").strip() != "3.0 (quilt)":
+        fail("kf6-syntax-highlighting packaging is no longer 3.0 (quilt)")
+    if not SYNTAX_PATCH.is_file():
+        fail(f"declared syntax-highlighting patch missing: {SYNTAX_PATCH}")
+
+    target = source_tree / "data/generators/generate_jinja.py"
+    text = target.read_text(encoding="utf-8")
+    old = "        lang = to_do.pop()\n"
+    new = "        lang = min(to_do)\n        to_do.remove(lang)\n"
+    if text.count(old) != 1:
+        fail(f"kf6-syntax-highlighting generator drift: expected one set.pop() traversal, found {text.count(old)}")
+    if new in text:
+        fail("kf6-syntax-highlighting deterministic traversal is already present; reassess whether override can be removed")
+
+    patch_dir = source_tree / "debian/patches"
+    series = patch_dir / "series"
+    patch_dir.mkdir(parents=True, exist_ok=True)
+    if series.exists() and series.read_text(encoding="utf-8").strip():
+        fail("kf6-syntax-highlighting certified packaging base unexpectedly has a non-empty patch series")
+
+    patch_dest = patch_dir / SYNTAX_PATCH.name
+    if patch_dest.exists():
+        fail(f"kf6-syntax-highlighting patch destination already exists: {patch_dest}")
+    shutil.copyfile(SYNTAX_PATCH, patch_dest)
+    series.write_text(SYNTAX_PATCH.name + "\n", encoding="utf-8")
+    target.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+    patched = target.read_text(encoding="utf-8")
+    if patched.count(new) != 1 or old in patched:
+        fail("kf6-syntax-highlighting deterministic traversal was not materialized exactly once")
+
+
+def apply_packaging_adaptation(source_tree: Path, row: dict[str, str]) -> int:
+    adaptation_id = row["adaptation_id"]
+    if adaptation_id == KWALLET_ADAPTATION:
+        if row["kind"] != "control-relationship-restoration":
+            fail(f"{adaptation_id}: unexpected kind {row['kind']!r}")
+        expected_ref = "scripts/ci/prepare-ksq-1-source.py#restore_kwallet_compat13_substvars"
+        if row["implementation_ref"] != expected_ref:
+            fail(f"{adaptation_id}: unexpected implementation ref {row['implementation_ref']!r}")
+        return restore_kwallet_compat13_substvars(source_tree)
+
+    if adaptation_id == SYNTAX_ADAPTATION:
+        if row["kind"] != "quilt-source-patch":
+            fail(f"{adaptation_id}: unexpected kind {row['kind']!r}")
+        expected_ref = str(SYNTAX_PATCH.relative_to(ROOT))
+        if row["implementation_ref"] != expected_ref:
+            fail(f"{adaptation_id}: unexpected implementation ref {row['implementation_ref']!r}")
+        apply_syntax_highlighting_repro_patch(source_tree)
+        return 0
+
+    fail(f"unsupported packaging adaptation id: {adaptation_id}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source-tree", required=True, type=Path)
@@ -157,23 +241,36 @@ def main() -> int:
         fail(f"Supra version must sort below packaging base: {new_version} !< {version}")
 
     snapshot = snapshot_id()
-    applied: list[dict[str, str]] = []
+    applied_overrides: list[dict[str, str]] = []
     for row in read_overrides():
         if row["source_package"] == source and row["source_version"] == version:
             apply_override(tree, row)
-            applied.append(row)
+            applied_overrides.append(row)
 
-    restored_substvars = restore_kwallet_compat13_substvars(tree, source, version)
+    matching_adaptations = [
+        row
+        for row in read_adaptations()
+        if row["source_package"] == source and row["source_version"] == version
+    ]
+    restored_substvars = 0
+    applied_adaptation_ids: list[str] = []
+    for row in matching_adaptations:
+        restored_substvars += apply_packaging_adaptation(tree, row)
+        applied_adaptation_ids.append(row["adaptation_id"])
+
+    adaptation_ids_value = ",".join(sorted(applied_adaptation_ids)) if applied_adaptation_ids else "-"
+
+    extra_lines: list[str] = []
+    if restored_substvars:
+        extra_lines.append("  * Restore relationship substvars required by debhelper compat 13.")
+    if SYNTAX_ADAPTATION in applied_adaptation_ids:
+        extra_lines.append("  * Make Jinja syntax generation order deterministic for reproducible binary output.")
 
     stanza = (
         f"{source} ({new_version}) resolute; urgency=medium\n\n"
         f"  * SupraLINUX Aurora KSQ-1 rebuild from certified packaging base {version}.\n"
-        "  * Apply only packaging adaptations explicitly certified by KSQ-0.\n"
-        + (
-            "  * Restore relationship substvars required by debhelper compat 13.\n"
-            if restored_substvars
-            else ""
-        )
+        "  * Apply only packaging/source adaptations explicitly recorded by KDE Stack Qualification.\n"
+        + ("\n".join(extra_lines) + "\n" if extra_lines else "")
         + "\n"
         f" -- SupraLINUX Build System <build@supralinux.invalid>  {snapshot_rfc2822(snapshot)}\n\n"
     )
@@ -197,7 +294,9 @@ def main() -> int:
                 f"AURORA_KSQ_1_VERSION={new_version}",
                 f"AURORA_KSQ_1_VERSION_SUFFIX={args.suffix}",
                 f"AURORA_KSQ_1_APT_SNAPSHOT={snapshot}",
-                f"AURORA_KSQ_1_OVERRIDES_APPLIED={len(applied)}",
+                f"AURORA_KSQ_1_OVERRIDES_APPLIED={len(applied_overrides)}",
+                f"AURORA_KSQ_1_PACKAGING_ADAPTATIONS_APPLIED={len(applied_adaptation_ids)}",
+                f"AURORA_KSQ_1_PACKAGING_ADAPTATION_IDS={adaptation_ids_value}",
                 f"AURORA_KSQ_1_COMPAT13_SUBSTVARS_RESTORED={restored_substvars}",
             ]
         )
@@ -208,7 +307,9 @@ def main() -> int:
     print(f"AURORA_KSQ_1_SOURCE={source}")
     print(f"AURORA_KSQ_1_PACKAGING_BASE={version}")
     print(f"AURORA_KSQ_1_VERSION={new_version}")
-    print(f"AURORA_KSQ_1_OVERRIDES_APPLIED={len(applied)}")
+    print(f"AURORA_KSQ_1_OVERRIDES_APPLIED={len(applied_overrides)}")
+    print(f"AURORA_KSQ_1_PACKAGING_ADAPTATIONS_APPLIED={len(applied_adaptation_ids)}")
+    print(f"AURORA_KSQ_1_PACKAGING_ADAPTATION_IDS={adaptation_ids_value}")
     print(f"AURORA_KSQ_1_COMPAT13_SUBSTVARS_RESTORED={restored_substvars}")
     print("AURORA_KSQ_1_SOURCE_PREP_SUCCESS")
     return 0

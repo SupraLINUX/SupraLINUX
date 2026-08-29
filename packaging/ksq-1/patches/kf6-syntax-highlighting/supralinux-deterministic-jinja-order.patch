@@ -1,0 +1,21 @@
+Description: Make Jinja syntax generation order deterministic
+ The generator uses set.pop() to choose the next grammar. Python hash
+ randomization changes that order between builds, and CMake consumes
+ the dry-run output order when constructing the embedded syntax QRC.
+ Select the lexicographically smallest pending grammar instead.
+Author: SupraLINUX Build System <build@supralinux.invalid>
+Origin: vendor
+Forwarded: no
+Last-Update: 2026-08-29
+--- a/data/generators/generate_jinja.py
++++ b/data/generators/generate_jinja.py
+@@ -264,7 +264,8 @@ def main():
+         sys.exit(2)
+ 
+     while to_do:
+-        lang = to_do.pop()
++        lang = min(to_do)
++        to_do.remove(lang)
+         out_file = os.path.join(args.output_dir,
+                                 args.prefix + os.path.basename(xmls[lang]))
+         infuse_header(grammars[lang], jinja.getroot(), args.xtra_ext)
