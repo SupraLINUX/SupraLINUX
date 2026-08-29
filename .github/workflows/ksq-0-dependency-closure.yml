@@ -1,0 +1,74 @@
+name: Aurora KSQ-0 dependency closure discovery
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - 'tests/kde-stack/**'
+      - 'scripts/ci/prepare-kde-stack-apt-metadata.sh'
+      - 'scripts/ci/generate-kde-build-closure.py'
+      - 'packages/supralinux-desktop/debian/control'
+      - '.github/workflows/ksq-0-dependency-closure.yml'
+  pull_request:
+    paths:
+      - 'tests/kde-stack/**'
+      - 'scripts/ci/prepare-kde-stack-apt-metadata.sh'
+      - 'scripts/ci/generate-kde-build-closure.py'
+      - 'packages/supralinux-desktop/debian/control'
+      - '.github/workflows/ksq-0-dependency-closure.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-closure:
+    name: Discover source Build-Depends closure
+    runs-on: ubuntu-26.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Verify pinned source inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ci/validate-kde-stack-source-manifests.sh
+          python3 scripts/ci/validate-kde-stack-roots.py
+      - name: Prepare isolated pinned APT metadata
+        shell: bash
+        run: bash scripts/ci/prepare-kde-stack-apt-metadata.sh
+      - name: Generate transitive Build-Depends closure
+        shell: bash
+        run: python3 scripts/ci/generate-kde-build-closure.py --allow-unresolved
+      - name: Show dependency-closure state
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -f build/ksq-0/closure-status.env ]]; then cat build/ksq-0/closure-status.env; else echo 'closure-status.env was not generated'; fi
+          if [[ -f build/ksq-0/unresolved.tsv ]]; then echo '--- unresolved (first 100 rows) ---'; head -n 101 build/ksq-0/unresolved.tsv; fi
+          if [[ -f build/ksq-0/source-decision-candidates.tsv ]]; then echo '--- source decisions required ---'; cat build/ksq-0/source-decision-candidates.tsv; fi
+      - name: Preserve KSQ-0 dependency evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aurora-ksq-0-dependency-closure
+          path: |
+            tests/kde-stack/apt-metadata-snapshot.env
+            tests/kde-stack/ksq-0-source-overrides.tsv
+            build/ksq-0/apt/*.sources
+            build/ksq-0/apt-*-indextargets.txt
+            build/ksq-0/apt-metadata.sha256
+            build/ksq-0/root-source-owners.tsv
+            build/ksq-0/source-closure.tsv
+            build/ksq-0/build-dependency-edges.tsv
+            build/ksq-0/ubuntu-satisfied-build-deps.tsv
+            build/ksq-0/source-decision-candidates.tsv
+            build/ksq-0/unresolved.tsv
+            build/ksq-0/build-order.tsv
+            build/ksq-0/selected-source-records.txt
+            build/ksq-0/closure-status.env
+          if-no-files-found: warn
+          retention-days: 30
