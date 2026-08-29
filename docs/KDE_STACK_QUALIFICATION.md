@@ -48,6 +48,7 @@ Qualified source/dependency target as of 2026-08-29:
 | `qtkeychain` | SupraLINUX backport candidate 0.17.0-1 |
 | `wayland-protocols` | SupraLINUX compatibility backport candidate 1.48-1 |
 | `kwallet-pam` | 4:6.7.4-0ubuntu3 with build-only debhelper compat 14→13 adaptation and compat-13 relationship substvar restoration |
+| `kf6-syntax-highlighting` | 6.29.0-0ubuntu1 plus one SupraLINUX build-time deterministic Jinja traversal patch; no intended runtime/API/content semantic change |
 | KDE Gear | separate stable-version review; not adopted by KSQ-0 |
 
 KDE upstream's current stable releases at the time of this certification are Plasma 6.7.4, Frameworks 6.29.0 and KDE Gear 26.08. Gear is intentionally evaluated independently and is not implicitly inherited from the Plasma qualification.
@@ -90,7 +91,9 @@ The three explicit source selections are:
 
 The obsolete direct dependency/root `plasma-session-wayland` was removed because current Plasma 6.7.4 packages the Wayland session through `plasma-workspace` itself.
 
-See `docs/validation/AURORA_KSQ_0_ACCEPTANCE.md` for artifact IDs/digests and `docs/KDE_STACK_OVERRIDES.md` for maintenance/security ownership and removal conditions.
+The later KSQ-1 Syntax Highlighting reproducibility patch does not change the 101-source dependency closure, package-selection set, or Ubuntu platform boundary. This was explicitly regression-tested after materialization: KSQ-0 closure run `33281492212` is PASS, artifact `9723122890`, digest `sha256:8a305b70965c98702122d2afc30da08474234a04e8422bd09da391f8f22396ff`. Source-inventory regression run `33281492218` is also PASS, artifact `9723114366`, digest `sha256:e380ae378d9cb2161b66557d9eaafb9ae7f8b253691b8324a9506cc19c8d75a1`. These regressions confirm that KSQ-0 remains closed rather than redefining its accepted architecture.
+
+See `docs/validation/AURORA_KSQ_0_ACCEPTANCE.md` for canonical KSQ-0 artifact IDs/digests and `docs/KDE_STACK_OVERRIDES.md` for maintenance/security ownership and removal conditions.
 
 ## 4. Research and provenance basis
 
@@ -117,6 +120,7 @@ Before implementing or updating any package, current official KDE, Ubuntu and De
 8. Build dependencies used only in CI/builders must not leak into product dependencies.
 9. The source-package graph, not a hand-maintained list of executable names, determines what must be rebuilt.
 10. Every override/backport must remain documented in `docs/KDE_STACK_OVERRIDES.md` with origin, reason, security ownership, update procedure and removal condition.
+11. Build/reproducibility evidence may be reused only when source-package identity, dependency inputs, snapshot and relevant builder semantics are proven equivalent. Matching package names or versions alone are insufficient.
 
 ## 6. Platform-boundary rule
 
@@ -167,8 +171,10 @@ PASS requires:
 - build logs and resulting source/binary package manifests retained;
 - package versions make the intended upgrade relationships explicit;
 - the `kwallet-pam` compat-13 adaptation is materialized reproducibly without changing its certified PAM functional files;
+- the only KSQ-1 packaging/source adaptations are the exact IDs declared by `tests/kde-stack/ksq-1-packaging-adaptations.tsv` and every built source records its applied adaptation metadata;
 - built packages that can receive meaningful package-level installation smoke tests do so before KSQ-1 closes;
-- reproducibility is demonstrated by independent rebuild comparison, not inferred from one successful clean build.
+- reproducibility is demonstrated by independent rebuild comparison, not inferred from one successful clean build;
+- final acceptance evidence is relocatable and self-verifying rather than depending on temporary runner paths or unrecorded sibling artifacts.
 
 The build system consumes only the KSQ-0 certified closure/selections and the pinned Ubuntu snapshot `20260829T022000Z`. Candidate package versions append `~supra26.04.1` to the certified packaging base so they sort above the older Resolute KDE baseline while remaining below an equivalent official packaging revision.
 
@@ -180,11 +186,42 @@ The first full-DAG run `33250886255` on `964561767fb1d0c45883d3de6754958e4263eeb
 
 A dedicated diagnostic run `33263391639` reproduced node 40 against the same certified 1–20 binary checkpoint and proved the actual cause: the source declares `libpostproc-dev | hello`, while sbuild's APT resolver considered only the first alternative because the builder had not enabled alternative dependency resolution. The failure was therefore a builder-policy defect, not a missing KDE dependency or justification to widen the Ubuntu platform boundary.
 
-Corrective run `33263576164` changed only the relevant sbuild resolver behavior by adding `--resolve-alternatives` (plus the APT uninstallable-dependency explainer). It successfully built node 40, selected the valid `hello` alternative, and produced six candidate DEBs. Artifact `9718028796` has digest `sha256:1808c2e3150c5ee8447a0e0242706bdb89f00e613c617b9a6b983479806caac0`.
+Corrective run `33263576164` changed only the relevant sbuild resolver behavior by adding `--resolve-alternatives` plus the APT uninstallable-dependency explainer. It successfully built node 40, selected the valid `hello` alternative, and produced six candidate DEBs. Artifact `9718028796` has digest `sha256:1808c2e3150c5ee8447a0e0242706bdb89f00e613c617b9a6b983479806caac0`.
 
-Global builder commit `fe12df912217d44465a7a613d79ba3f523d4e700` applies the proven alternative-resolver behavior to the complete DAG and also preserves `.build`, `.buildinfo`, `.changes`, partial DEBs, hashes and explicit FAIL state before aborting any future failed source. Full regression run `33264059201` is the active candidate run for this builder. Earlier 1–39 PASS results remain useful diagnostic evidence but are not propagated as certification after the global builder semantics changed.
+Global builder commit `fe12df912217d44465a7a613d79ba3f523d4e700` applies the proven alternative-resolver behavior to the complete DAG and also preserves `.build`, `.buildinfo`, `.changes`, partial DEBs, hashes and explicit FAIL state before aborting any future failed source. Full regression run `33264059201` has since built nodes 1–80 successfully and remains useful as an independent reference build for sources whose exact prepared input identity is unchanged. It is not itself sufficient to certify the current patched candidate.
 
-The reproducibility subgate will use Debian/Ubuntu reproducible-build tooling to require byte-for-byte identical binary results from repeated builds under controlled variations and retain diagnostics for any divergence. This subgate is not yet PASS and KSQ-1 must not close until it does.
+##### Syntax Highlighting reproducibility root cause
+
+Independent builds of nodes 21–60 first showed 171/172 repeated DEBs byte-identical. The sole divergence was `libkf6syntaxhighlighting6`. Investigation proved this was not the timestamp defect already fixed by KDE MR !806: Frameworks 6.29.0 already contains KDE commit `fb41b0e8848ac054d6eda97d65fc63e8880c8360`, which removes `time.time()` from the generated grammar version.
+
+The remaining cause is `data/generators/generate_jinja.py` choosing the next pending grammar with Python `set.pop()`. Hash randomization changes that traversal order, while `data/CMakeLists.txt` consumes the generator dry-run order directly as the generated syntax-resource list. The XML contents stay identical but their QRC/resource ordering changes the resulting library bytes.
+
+Root-cause run `33279585912` on `05df555bd0b023fb9ef42a164f1f6cad30918155` tested the exact `kf6-syntax-highlighting 6.29.0-0ubuntu1` source under `PYTHONHASHSEED=1,2,3,4`: the original generator produced four distinct orders with identical XML content; deterministic lexicographic selection produced one order across all seeds. Artifact `9722594384` has digest `sha256:5891bd63bcf6615c34646c94b45c7efb5383629e118580382aac2ec350e22204`.
+
+Patched package run `33279750116` then rebuilt node 29 twice against only certified nodes 1–28 with independent hash seeds. All six DEBs and three DDEBs passed byte-for-byte `cmp`; the workflow conclusion was red only because a later evidence-copy command attempted to copy multiple `.build` files to one filename after all binary comparisons had already passed. Artifact `9722758709` has digest `sha256:105962964acbfc8f2b13ec0d19675d758a2e5f117e5e8b202ff59943aabaeeaa`.
+
+Formal post-build validator run `33280301683` independently revalidated that exact artifact and is PASS. Artifact `9722778323` has digest `sha256:bc8b272c945cb7124ad67af3b0dd575882eb166faf0bee6d603112ee036b9506`.
+
+The proven fix was materialized as a declared quilt patch in commit `c362bd853bdebbf81d9ee49977a202b6bfd2de4f`. Follow-up commits `3ff7f1f0a00d94ea297c1448ea5ec78a1351e291` and `90fd5d3119ebfaab42f721d3bdd977a3472da498` removed unrelated changelog deltas so all unaffected sources retain their previous prepared-source identity and node 29 uses the same patch/source delta proven by the dedicated experiment. The authoritative full-DAG rebuild for that exact source-preparation state is run `33281736655` on `90fd5d3119ebfaab42f721d3bdd977a3472da498`.
+
+The materialized adaptation boundary is machine-readable in `tests/kde-stack/ksq-1-packaging-adaptations.tsv` and is currently exactly two IDs:
+
+- `kwallet-pam-compat13-relationship-substvars`;
+- `kf6-syntax-highlighting-deterministic-jinja-order`.
+
+The final full-build validator fails if another adaptation appears implicitly or if any source reports adaptation metadata inconsistent with that manifest.
+
+##### Reproducibility acceptance plan
+
+The reproducibility criterion is fixed before examining the final hashes. The candidate must account for all 101 source nodes and every produced binary DEB.
+
+For the 95 nodes unaffected by the Syntax Highlighting source delta, `scripts/ci/validate-ksq-1-reproducibility.py` may use an independent earlier full-DAG build only after first proving prepared-source identity (`.dsc`, generated Debian source delta, `debian/control` and `debian/changelog`) and binary package shape are exact. It then requires byte-identical DEBs. A matching version string without matching prepared source is rejected.
+
+The patch invalidates node 29 plus exactly five descendants in the certified source DAG: node 68 `drkonqi`, node 81 `kf6-ktexteditor`, node 99 `plasma-workspace`, node 100 `plasma-desktop`, and node 101 `powerdevil`. These six nodes require dedicated independent rebuild evidence against the patched candidate inputs and cannot inherit pre-patch hashes. Their proof hashes must match the authoritative full-DAG candidate byte-for-byte.
+
+This 95+6 split does not weaken the gate: it avoids rebuilding sources whose complete inputs are independently proven unchanged, while refusing to reuse evidence for any source whose dependency ancestry changed. `reprotest`/`diffoscope` remain diagnostic tools for controlled variation and divergence analysis; the KSQ-1 exit contract requires complete independent byte-identity coverage of the shipping candidate.
+
+KSQ-1 is **not certified** until the authoritative 101-source build, KWallet package gate, 101-source final validator, complete reproducibility comparison and consolidated self-contained artifact all pass.
 
 ### KSQ-2 — APT repository and dependency closure
 
