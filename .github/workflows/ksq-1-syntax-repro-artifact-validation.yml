@@ -1,0 +1,94 @@
+name: Aurora KSQ-1 syntax reproducibility artifact validation
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-1-syntax-repro-artifact-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validate-artifact:
+    name: Validate patched node 29 byte identity evidence
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Restore exact patched-build artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-syntax-repro-patched-build
+          path: build/ksq-1/syntax-repro-artifact
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33279750116
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate source patch and byte-identical binaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/ksq-1/syntax-repro-artifact"
+          EVIDENCE="${ROOT}/evidence"
+          OUT="${ROOT}/validated"
+          mkdir -p "${OUT}"
+
+          [[ -f "${EVIDENCE}/supralinux-deterministic-jinja-order.patch" ]]
+          [[ -f "${EVIDENCE}/patch-series" ]]
+          grep -Fqx 'supralinux-deterministic-jinja-order.patch' "${EVIDENCE}/patch-series"
+          grep -Fq '+        lang = min(to_do)' "${EVIDENCE}/supralinux-deterministic-jinja-order.patch"
+          grep -Fq '+        to_do.remove(lang)' "${EVIDENCE}/supralinux-deterministic-jinja-order.patch"
+
+          for seed in 1 2; do
+            [[ -d "${ROOT}/seed-${seed}" ]]
+            (
+              cd "${ROOT}/seed-${seed}"
+              find . -maxdepth 1 -type f \( -name '*.deb' -o -name '*.ddeb' \) -printf '%f\0' \
+                | sort -z \
+                | xargs -0 sha256sum
+            ) > "${OUT}/seed-${seed}-binaries.sha256"
+          done
+
+          cmp "${OUT}/seed-1-binaries.sha256" "${EVIDENCE}/seed-1-binaries.sha256"
+          cmp "${OUT}/seed-2-binaries.sha256" "${EVIDENCE}/seed-2-binaries.sha256"
+          cmp "${OUT}/seed-1-binaries.sha256" "${OUT}/seed-2-binaries.sha256"
+
+          sed 's/^[0-9a-f]\{64\}  //' "${OUT}/seed-1-binaries.sha256" > "${OUT}/binary-names.txt"
+          [[ "$(grep -c '\.deb$' "${OUT}/binary-names.txt")" -eq 6 ]]
+          [[ "$(grep -c '\.ddeb$' "${OUT}/binary-names.txt")" -eq 3 ]]
+          [[ "$(wc -l < "${OUT}/binary-names.txt")" -eq 9 ]]
+
+          while IFS= read -r filename; do
+            cmp "${ROOT}/seed-1/${filename}" "${ROOT}/seed-2/${filename}"
+          done < "${OUT}/binary-names.txt"
+
+          {
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_ARTIFACT_STATUS=PASS'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_SOURCE=kf6-syntax-highlighting'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_NODE=29'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_INPUT_RUN=33279750116'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_INPUT_ARTIFACT=9722758709'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_INPUT_ARTIFACT_DIGEST=sha256:105962964acbfc8f2b13ec0d19675d758a2e5f117e5e8b202ff59943aabaeeaa'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_HASH_SEEDS=1,2'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_DEBS=6'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_DDEBS=3'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_BYTE_IDENTICAL=yes'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_PRODUCT_ADAPTATION_COMMITTED=no'
+            echo 'AURORA_KSQ_1_FULL_CERTIFIED=no'
+          } > "${OUT}/status.env"
+          cat "${OUT}/status.env"
+
+      - name: Preserve validated evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-syntax-repro-validated
+          path: build/ksq-1/syntax-repro-artifact/validated/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
