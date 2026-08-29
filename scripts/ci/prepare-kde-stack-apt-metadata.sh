@@ -26,6 +26,7 @@ if [[ ! "${AURORA_KSQ_0_APT_SNAPSHOT:-}" =~ ^[0-9]{8}T[0-9]{6}Z$ ]]; then
   exit 1
 fi
 SNAPSHOT_ID="${AURORA_KSQ_0_APT_SNAPSHOT}"
+SNAPSHOT_URI="https://snapshot.ubuntu.com/ubuntu/${SNAPSHOT_ID}/"
 
 rm -rf "${APT_ROOT}"
 mkdir -p \
@@ -33,33 +34,25 @@ mkdir -p \
   "${APT_ROOT}/stonking-lists/partial" \
   "${APT_ROOT}/resolute-cache/archives/partial" \
   "${APT_ROOT}/stonking-cache/archives/partial"
+chmod 0755 "${APT_ROOT}" "${APT_ROOT}"/*-lists "${APT_ROOT}"/*-lists/partial "${APT_ROOT}"/*-cache "${APT_ROOT}"/*-cache/archives "${APT_ROOT}"/*-cache/archives/partial
 : > "${APT_ROOT}/empty-status"
+chmod 0644 "${APT_ROOT}/empty-status"
 
 cat > "${APT_ROOT}/resolute.sources" <<EOF_RESOLUTE
 Types: deb deb-src
-URIs: http://archive.ubuntu.com/ubuntu/
-Suites: resolute resolute-updates resolute-backports
+URIs: ${SNAPSHOT_URI}
+Suites: resolute resolute-updates resolute-backports resolute-security
 Components: main restricted universe multiverse
 Architectures: amd64
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-Snapshot: ${SNAPSHOT_ID}
-
-Types: deb deb-src
-URIs: http://security.ubuntu.com/ubuntu/
-Suites: resolute-security
-Components: main restricted universe multiverse
-Architectures: amd64
-Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-Snapshot: ${SNAPSHOT_ID}
 EOF_RESOLUTE
 
 cat > "${APT_ROOT}/stonking.sources" <<EOF_STONKING
 Types: deb-src
-URIs: http://archive.ubuntu.com/ubuntu/
+URIs: ${SNAPSHOT_URI}
 Suites: stonking
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-Snapshot: ${SNAPSHOT_ID}
 EOF_STONKING
 
 apt_opts() {
@@ -90,6 +83,16 @@ for profile in resolute stonking; do
   apt-get "${opts[@]}" indextargets > "${OUT}/apt-${profile}-indextargets.txt"
 done
 
+for evidence in "${OUT}/apt-resolute-indextargets.txt" "${OUT}/apt-stonking-indextargets.txt"; do
+  if grep -Eq '^Repo-URI: https?://(archive|security)\.ubuntu\.com/' "${evidence}"; then
+    echo "AURORA_KSQ_0_APT_FAILURE: live Ubuntu archive leaked into pinned metadata" >&2
+    exit 1
+  fi
+  if ! grep -Fq "Repo-URI: ${SNAPSHOT_URI}" "${evidence}"; then
+    echo "AURORA_KSQ_0_APT_FAILURE: pinned snapshot URI absent from metadata evidence" >&2
+    exit 1
+  fi
+done
 if grep -Eq '(^|[[:space:]])stonking([/[:space:]]|$)' "${OUT}/apt-resolute-indextargets.txt"; then
   echo "AURORA_KSQ_0_APT_FAILURE: Stonking leaked into Resolute APT metadata" >&2
   exit 1
@@ -103,14 +106,15 @@ if ! grep -q '^Identifier: Sources$' "${OUT}/apt-stonking-indextargets.txt"; the
   exit 1
 fi
 
-{
-  find "${APT_ROOT}/resolute-lists" "${APT_ROOT}/stonking-lists" -maxdepth 1 -type f -print0 \
-    | sort -z \
-    | xargs -0 sha256sum
-} > "${OUT}/apt-metadata.sha256"
+find "${APT_ROOT}/resolute-lists" "${APT_ROOT}/stonking-lists" \
+  -maxdepth 1 -type f ! -name lock -print0 \
+  | sort -z \
+  | xargs -0 sha256sum > "${OUT}/apt-metadata.sha256"
 
 printf 'AURORA_KSQ_0_APT_SNAPSHOT=%s\n' "${SNAPSHOT_ID}"
+printf 'AURORA_KSQ_0_APT_SNAPSHOT_URI=%s\n' "${SNAPSHOT_URI}"
 printf 'AURORA_KSQ_0_APT_BINARY_SUITE=resolute\n'
 printf 'AURORA_KSQ_0_APT_SOURCE_SUITES=resolute+stonking\n'
+printf 'AURORA_KSQ_0_APT_LIVE_INDEXES=0\n'
 printf 'AURORA_KSQ_0_APT_STONKING_BINARY_INDEXES=0\n'
 printf 'AURORA_KSQ_0_APT_METADATA_SUCCESS\n'
