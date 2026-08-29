@@ -1,0 +1,114 @@
+name: Aurora KSQ-1 bootstrap source builds
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - 'tests/kde-stack/**'
+      - 'scripts/ci/prepare-kde-stack-apt-metadata.sh'
+      - 'scripts/ci/generate-kde-build-closure.py'
+      - 'scripts/ci/audit-kde-stack-source-selections.sh'
+      - 'scripts/ci/prepare-ksq-1-source.py'
+      - 'scripts/ci/fetch-prepare-ksq-1-source.sh'
+      - 'scripts/ci/prepare-ksq-1-build-environment.sh'
+      - 'scripts/ci/build-ksq-1-bootstrap.sh'
+      - '.github/workflows/ksq-1-bootstrap-builds.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bootstrap-builds:
+    name: Build first four certified DAG sources
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Verify Resolute amd64 runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          . /etc/os-release
+          [[ "${VERSION_CODENAME:-}" == "resolute" ]]
+          [[ "$(dpkg --print-architecture)" == "amd64" ]]
+
+      - name: Install clean-build tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils ca-certificates ubuntu-keyring
+          build_user="$(id -un)"
+          if ! grep -q "^${build_user}:" /etc/subuid; then
+            sudo usermod --add-subuids 100000-165535 --add-subgids 100000-165535 "${build_user}"
+          fi
+          sbuild --version
+          mmdebstrap --version
+          dpkg-query -W -f='${Package}\t${Version}\n' \
+            sbuild mmdebstrap uidmap dpkg-dev apt-utils ubuntu-keyring \
+            | sort | tee build-tool-versions.tsv
+
+      - name: Revalidate certified KSQ-0 closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ci/validate-kde-stack-source-manifests.sh
+          python3 scripts/ci/validate-kde-stack-roots.py
+          bash scripts/ci/prepare-kde-stack-apt-metadata.sh
+          python3 scripts/ci/generate-kde-build-closure.py
+          . build/ksq-0/closure-status.env
+          [[ "${AURORA_KSQ_0_CLOSURE_STATUS}" == "COMPLETE" ]]
+          [[ "${AURORA_KSQ_0_CLOSURE_UNRESOLVED}" == "0" ]]
+          [[ "${AURORA_KSQ_0_CLOSURE_SOURCES}" == "101" ]]
+          [[ "${AURORA_KSQ_0_CLOSURE_BUILD_ORDERED}" == "101" ]]
+          bash scripts/ci/audit-kde-stack-source-selections.sh
+
+      - name: Prepare pinned clean Resolute build environment
+        shell: bash
+        run: bash scripts/ci/prepare-ksq-1-build-environment.sh
+
+      - name: Build KSQ-1 bootstrap sources
+        shell: bash
+        env:
+          AURORA_KSQ_1_BOOTSTRAP_COUNT: '4'
+        run: bash scripts/ci/build-ksq-1-bootstrap.sh
+
+      - name: Show bootstrap state
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -f build/ksq-1/bootstrap/build-manifest.tsv ]]; then cat build/ksq-1/bootstrap/build-manifest.tsv; fi
+          if [[ -f build/ksq-1/bootstrap/bootstrap-status.env ]]; then cat build/ksq-1/bootstrap/bootstrap-status.env; fi
+          if [[ -f build/ksq-1/environment/build-environment.env ]]; then cat build/ksq-1/environment/build-environment.env; fi
+
+      - name: Preserve KSQ-1 bootstrap evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aurora-ksq-1-bootstrap-builds
+          path: |
+            build-tool-versions.tsv
+            build/ksq-0/closure-status.env
+            build/ksq-0/build-order.tsv
+            build/ksq-0/source-selections-applied.tsv
+            build/ksq-0/build-dep-overrides-applied.tsv
+            build/ksq-1/environment/*.env
+            build/ksq-1/environment/*.sources
+            build/ksq-1/environment/*.sha256
+            build/ksq-1/bootstrap/build-manifest.tsv
+            build/ksq-1/bootstrap/bootstrap-status.env
+            build/ksq-1/bootstrap/bootstrap-debs.sha256
+            build/ksq-1/bootstrap/work/*/*.dsc
+            build/ksq-1/bootstrap/work/*/*.tar.*
+            build/ksq-1/bootstrap/work/*/*.asc
+            build/ksq-1/bootstrap/work/*/*.env
+            build/ksq-1/bootstrap/work/*/*.sha256
+            build/ksq-1/bootstrap/results/**
+          if-no-files-found: warn
+          retention-days: 30
