@@ -7,16 +7,14 @@ on:
     paths:
       - 'tests/kde-stack/**'
       - 'scripts/ci/prepare-kde-stack-apt-metadata.sh'
-      - 'scripts/ci/generate-kde-build-closure.py'
-      - 'scripts/ci/generate-kde-build-closure-v2.py'
+      - 'scripts/ci/generate-kde-build-closure-v3.py'
       - 'packages/supralinux-desktop/debian/control'
       - '.github/workflows/ksq-0-dependency-closure.yml'
   pull_request:
     paths:
       - 'tests/kde-stack/**'
       - 'scripts/ci/prepare-kde-stack-apt-metadata.sh'
-      - 'scripts/ci/generate-kde-build-closure.py'
-      - 'scripts/ci/generate-kde-build-closure-v2.py'
+      - 'scripts/ci/generate-kde-build-closure-v3.py'
       - 'packages/supralinux-desktop/debian/control'
       - '.github/workflows/ksq-0-dependency-closure.yml'
   workflow_dispatch:
@@ -41,9 +39,9 @@ jobs:
       - name: Prepare isolated pinned APT metadata
         shell: bash
         run: bash scripts/ci/prepare-kde-stack-apt-metadata.sh
-      - name: Generate provider-aware transitive Build-Depends closure
+      - name: Generate exact transitive Build-Depends closure
         shell: bash
-        run: python3 scripts/ci/generate-kde-build-closure-v2.py --allow-unresolved
+        run: python3 scripts/ci/generate-kde-build-closure-v3.py --allow-unresolved
       - name: Show dependency-closure state
         if: always()
         shell: bash
@@ -51,7 +49,8 @@ jobs:
           set -euo pipefail
           if [[ -f build/ksq-0/closure-status.env ]]; then cat build/ksq-0/closure-status.env; else echo 'closure-status.env was not generated'; fi
           if [[ -f build/ksq-0/unresolved.tsv ]]; then echo '--- unresolved ---'; cat build/ksq-0/unresolved.tsv; fi
-          if [[ -f build/ksq-0/source-decision-candidates.tsv ]]; then echo '--- source decisions required ---'; cat build/ksq-0/source-decision-candidates.tsv; fi
+          if [[ -f build/ksq-0/source-selections-applied.tsv ]]; then echo '--- source selections applied ---'; cat build/ksq-0/source-selections-applied.tsv; fi
+          if [[ -f build/ksq-0/build-dep-overrides-applied.tsv ]]; then echo '--- build-dependency overrides applied ---'; cat build/ksq-0/build-dep-overrides-applied.tsv; fi
       - name: Preserve KSQ-0 dependency evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -59,7 +58,8 @@ jobs:
           name: aurora-ksq-0-dependency-closure
           path: |
             tests/kde-stack/apt-metadata-snapshot.env
-            tests/kde-stack/ksq-0-source-overrides.tsv
+            tests/kde-stack/ksq-0-source-selections.tsv
+            tests/kde-stack/ksq-0-build-dep-overrides.tsv
             build/ksq-0/apt/*.sources
             build/ksq-0/apt-*-indextargets.txt
             build/ksq-0/apt-metadata.sha256
@@ -68,6 +68,8 @@ jobs:
             build/ksq-0/build-dependency-edges.tsv
             build/ksq-0/ubuntu-satisfied-build-deps.tsv
             build/ksq-0/source-decision-candidates.tsv
+            build/ksq-0/source-selections-applied.tsv
+            build/ksq-0/build-dep-overrides-applied.tsv
             build/ksq-0/unresolved.tsv
             build/ksq-0/build-order.tsv
             build/ksq-0/selected-source-records.txt
