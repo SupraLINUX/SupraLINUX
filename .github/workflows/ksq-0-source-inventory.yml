@@ -1,0 +1,71 @@
+name: Aurora KSQ-0 source inventory
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - 'tests/kde-stack/**'
+      - 'scripts/ci/validate-kde-stack-source-manifests.sh'
+      - 'scripts/ci/validate-kde-stack-roots.py'
+      - 'packages/supralinux-desktop/debian/control'
+      - '.github/workflows/ksq-0-source-inventory.yml'
+  pull_request:
+    paths:
+      - 'tests/kde-stack/**'
+      - 'scripts/ci/validate-kde-stack-source-manifests.sh'
+      - 'scripts/ci/validate-kde-stack-roots.py'
+      - 'packages/supralinux-desktop/debian/control'
+      - '.github/workflows/ksq-0-source-inventory.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-inventory:
+    name: Validate pinned KDE source inventory
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Verify Resolute amd64 runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          . /etc/os-release
+          test "${VERSION_CODENAME}" = "resolute"
+          test "$(dpkg --print-architecture)" = "amd64"
+          printf 'AURORA_KSQ_0_RUNNER=%s/%s\n' "${VERSION_CODENAME}" "$(dpkg --print-architecture)"
+
+      - name: Validate official release-set manifests
+        shell: bash
+        run: bash scripts/ci/validate-kde-stack-source-manifests.sh
+
+      - name: Validate Aurora package-root classification
+        shell: bash
+        run: python3 scripts/ci/validate-kde-stack-roots.py
+
+      - name: Show derived official source URLs
+        shell: bash
+        run: |
+          set -euo pipefail
+          wc -l build/ksq-0/validated-source-urls.tsv
+          head -n 5 build/ksq-0/validated-source-urls.tsv
+          tail -n 5 build/ksq-0/validated-source-urls.tsv
+
+      - name: Preserve KSQ-0 source inventory evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: aurora-ksq-0-source-inventory-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            tests/kde-stack/release-sets.tsv
+            tests/kde-stack/plasma-6.7.4-sources.tsv
+            tests/kde-stack/frameworks-6.29.0-sources.tsv
+            tests/kde-stack/aurora-package-roots.tsv
+            build/ksq-0/validated-source-urls.tsv
+          if-no-files-found: error
+          retention-days: 30
