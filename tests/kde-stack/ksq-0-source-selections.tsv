@@ -1,0 +1,4 @@
+binary_package	source_package	source_version	origin	candidate_family	decision	build_depends	reason
+plasma-wayland-protocols	plasma-wayland-protocols	1.21.0-1	ubuntu-stonking-snapshot	kde-adjacent-backport	backport	-	Stable Plasma protocol set required by KWin and plasma-workspace 6.7.4; Resolute 1.20.0 is insufficient.
+qtkeychain-qt6-dev	qtkeychain	0.17.0-1	ubuntu-stonking-snapshot	kde-adjacent-backport	backport	-	Current stable qtkeychain; plasma-nm 6.7.4 requires >= 0.16.0 and Resolute 0.15.0 is insufficient.
+wayland-protocols	wayland-protocols	1.48-1	debian-source	ubuntu-platform-compat-backport	backport	debhelper-compat (= 13), libwayland-dev (>= 1.23.0), meson (>= 0.58.0), pkgconf	Latest stable protocol revision satisfying KWin 6.7.4 without upgrading Resolute core Wayland; 1.49 requires libwayland-dev >= 1.25.0 while Resolute provides 1.24.x.
