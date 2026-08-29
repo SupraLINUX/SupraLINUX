@@ -269,7 +269,7 @@ def main() -> int:
     stanza = (
         f"{source} ({new_version}) resolute; urgency=medium\n\n"
         f"  * SupraLINUX Aurora KSQ-1 rebuild from certified packaging base {version}.\n"
-        "  * Apply only packaging/source adaptations explicitly recorded by KDE Stack Qualification.\n"
+        "  * Apply only packaging adaptations explicitly certified by KSQ-0.\n"
         + ("\n".join(extra_lines) + "\n" if extra_lines else "")
         + "\n"
         f" -- SupraLINUX Build System <build@supralinux.invalid>  {snapshot_rfc2822(snapshot)}\n\n"
