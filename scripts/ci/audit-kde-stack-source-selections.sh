@@ -49,16 +49,23 @@ grep -Fq 'Build-Depends:' "${DOWNLOADS}/qtkeychain_0.17.0-1.dsc"
 grep -Fq 'debhelper-compat (= 13)' "${DOWNLOADS}/qtkeychain_0.17.0-1.dsc"
 grep -Fq 'debhelper-compat (= 14)' "${DOWNLOADS}/kwallet-pam_6.7.4-0ubuntu3.dsc"
 
-# ftp.debian.org retains the exact 1.48 source set even after mirrors moved to 1.49.
-# File identity is independently pinned below with FTP-Master SHA256 values.
-DEBIAN_WAYLAND_BASE='https://ftp.debian.org/debian/pool/main/w/wayland-protocols'
-for file in \
-  wayland-protocols_1.48-1.dsc \
-  wayland-protocols_1.48.orig.tar.xz \
-  wayland-protocols_1.48.orig.tar.xz.asc \
-  wayland-protocols_1.48-1.debian.tar.xz; do
-  curl --fail --location --silent --show-error "${DEBIAN_WAYLAND_BASE}/${file}" -o "${DOWNLOADS}/${file}"
-done
+# Debian Snapshot serves immutable files directly by their SHA-1 identity.
+# SHA-1 values and SHA-256 values below come from the accepted source uploads;
+# the second digest check protects content identity independently of transport.
+DEBIAN_SNAPSHOT_FILE='https://snapshot.debian.org/file'
+curl --fail --location --silent --show-error \
+  "${DEBIAN_SNAPSHOT_FILE}/6be63f02c5dbf851a22cef09c3f2b33074bd78d2" \
+  -o "${DOWNLOADS}/wayland-protocols_1.48-1.dsc"
+curl --fail --location --silent --show-error \
+  "${DEBIAN_SNAPSHOT_FILE}/61a9d1f8454fa612a70f3a35b3a5f99471cba4ba" \
+  -o "${DOWNLOADS}/wayland-protocols_1.48.orig.tar.xz"
+curl --fail --location --silent --show-error \
+  "${DEBIAN_SNAPSHOT_FILE}/3f1d50a88477db8193debab281be9ca0b64d0dce" \
+  -o "${DOWNLOADS}/wayland-protocols_1.48.orig.tar.xz.asc"
+curl --fail --location --silent --show-error \
+  "${DEBIAN_SNAPSHOT_FILE}/7eebc38bb402028be3de4e3d815037e3b601d25d" \
+  -o "${DOWNLOADS}/wayland-protocols_1.48-1.debian.tar.xz"
+
 cat > "${OUT}/wayland-protocols-1.48.sha256" <<'EOF_HASHES'
 f0b19a01b59a7501baef8360af45153d340997fa36e44ba322ff3d20b9ec253a  wayland-protocols_1.48-1.dsc
 398036ac0eb6484982ddbde7ff86848d753231f9cdeeae983f06b52946625aa1  wayland-protocols_1.48.orig.tar.xz
@@ -72,9 +79,8 @@ EOF_HASHES
 grep -Fq 'libwayland-dev (>= 1.23.0)' "${DOWNLOADS}/wayland-protocols_1.48-1.dsc"
 grep -Fq 'debhelper-compat (= 13)' "${DOWNLOADS}/wayland-protocols_1.48-1.dsc"
 
-DEBIAN_KWALLET_BASE='https://ftp.debian.org/debian/pool/main/k/kwallet-pam'
 curl --fail --location --silent --show-error \
-  "${DEBIAN_KWALLET_BASE}/kwallet-pam_6.7.4-3.debian.tar.xz" \
+  "${DEBIAN_SNAPSHOT_FILE}/d55713ce26a9b25d69f6604cf9e4accf63464ce8" \
   -o "${DOWNLOADS}/kwallet-pam_6.7.4-3.debian.tar.xz"
 printf '%s  %s\n' \
   '3a639fd37e4b4d65e66dc6121b4d5313c09e9345dcfb0fa9859d4db8154c380f' \
