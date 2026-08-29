@@ -21,6 +21,14 @@ A feature is not complete merely because its GUI package is installed.
 - [ ] Common failure path tested
 - [ ] Upgrade path tested when state/configuration is persistent
 
+## Version-scoped certification
+
+A PASS belongs to the exact software/runtime scope that produced its evidence. Replacing KDE Frameworks, Plasma, KWin, Qt or another component that can materially affect the tested path requires the applicable regression gates before the PASS can describe the new release candidate.
+
+Historical evidence is preserved for comparison; it is never silently relabelled as evidence for a different stack.
+
+A newer KDE release is not promoted because it builds or because its version number is newer. It must satisfy `docs/KDE_STACK_QUALIFICATION.md`, including reproducible source packaging, dependency closure, clean install, upgrade, rollback/recovery, boot/session regressions and fresh runtime-surface reconciliation before feature certification continues.
+
 ## Baseline integration areas
 
 The Phase 1 baseline must explicitly validate at least:
@@ -72,6 +80,8 @@ The supported installation must not require users to run a post-install script t
 
 If the known fix is “install package X”, the normal solution is to make the responsible SupraLINUX package declare the correct dependency/recommendation and test it.
 
+A distribution-owned compatibility launcher, override or patch is acceptable only when its underlying integration defect and maintenance/removal condition are documented and the resulting user path is tested. It must not be used to hide an unexplained failure.
+
 ## Release gates
 
-A release candidate must not be promoted to stable solely because it builds. Stable requires explicit review of the current test matrix and known issues.
+A release candidate must not be promoted to stable solely because it builds. Stable requires explicit review of the current test matrix, package/source provenance, known issues, upgrade/rollback evidence and security-maintenance ownership for any SupraLINUX override.
