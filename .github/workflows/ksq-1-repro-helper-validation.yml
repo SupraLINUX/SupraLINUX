@@ -1,0 +1,34 @@
+name: Aurora KSQ-1 reproducibility helper validation
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-1-repro-helper-validation.yml'
+      - 'scripts/ci/build-ksq-1-repro-source.sh'
+      - 'scripts/ci/validate-ksq-1-reproducibility.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-helpers:
+    name: Validate KSQ-1 reproducibility helpers
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Verify helper syntax and CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n scripts/ci/build-ksq-1-repro-source.sh
+          python3 -m py_compile scripts/ci/validate-ksq-1-reproducibility.py
+          python3 scripts/ci/validate-ksq-1-reproducibility.py --help >/dev/null
+          test -x scripts/ci/build-ksq-1-repro-source.sh
+          test -x scripts/ci/validate-ksq-1-reproducibility.py
+          echo AURORA_KSQ_1_REPRO_HELPERS_VALID
