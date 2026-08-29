@@ -49,7 +49,9 @@ grep -Fq 'Build-Depends:' "${DOWNLOADS}/qtkeychain_0.17.0-1.dsc"
 grep -Fq 'debhelper-compat (= 13)' "${DOWNLOADS}/qtkeychain_0.17.0-1.dsc"
 grep -Fq 'debhelper-compat (= 14)' "${DOWNLOADS}/kwallet-pam_6.7.4-0ubuntu3.dsc"
 
-DEBIAN_WAYLAND_BASE='https://deb.debian.org/debian/pool/main/w/wayland-protocols'
+# ftp.debian.org retains the exact 1.48 source set even after mirrors moved to 1.49.
+# File identity is independently pinned below with FTP-Master SHA256 values.
+DEBIAN_WAYLAND_BASE='https://ftp.debian.org/debian/pool/main/w/wayland-protocols'
 for file in \
   wayland-protocols_1.48-1.dsc \
   wayland-protocols_1.48.orig.tar.xz \
@@ -70,7 +72,7 @@ EOF_HASHES
 grep -Fq 'libwayland-dev (>= 1.23.0)' "${DOWNLOADS}/wayland-protocols_1.48-1.dsc"
 grep -Fq 'debhelper-compat (= 13)' "${DOWNLOADS}/wayland-protocols_1.48-1.dsc"
 
-DEBIAN_KWALLET_BASE='https://deb.debian.org/debian/pool/main/k/kwallet-pam'
+DEBIAN_KWALLET_BASE='https://ftp.debian.org/debian/pool/main/k/kwallet-pam'
 curl --fail --location --silent --show-error \
   "${DEBIAN_KWALLET_BASE}/kwallet-pam_6.7.4-3.debian.tar.xz" \
   -o "${DOWNLOADS}/kwallet-pam_6.7.4-3.debian.tar.xz"
