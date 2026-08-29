@@ -78,13 +78,20 @@ The preferred exit is always to return ownership to Ubuntu once the required sta
 
 **Classification:** SupraLINUX packaging adaptation; upstream/runtime behavior must remain unchanged.
 
-**Source origin:** Ubuntu Stonking `kwallet-pam 4:6.7.4-0ubuntu3`, which syncs Debian 6.7.4-3 PAM integration/fixes.
+**Source origin:** Ubuntu Stonking `kwallet-pam 4:6.7.4-0ubuntu3`, which preserves Debian 6.7.4-3 PAM integration/fixes while retaining Ubuntu's packaging delta that does not use `dh-sequence-plasma`.
 
 **Resolute constraint:** Resolute's `debhelper` provides compat level 13, while this source packaging declares `debhelper-compat (= 14)`.
 
-**SupraLINUX delta:** exactly:
+**Primary SupraLINUX build delta:**
 
 `debhelper-compat (= 14)` → `debhelper-compat (= 13)`
+
+**Required compat-13 relationship restoration:** Debian's 6.7.4-2 packaging changelog records that `${shlibs:Depends}`, `${qml6:Depends}` and `${misc:Depends}` were removed when the packaging moved to debhelper compat 14 because compat 14 automatically applies relationship substvars. Compat 13 does not provide that behavior. Therefore the SupraLINUX compat-13 build must explicitly restore the equivalent relationship tokens:
+
+- `libpam-kwallet-common`: `${misc:Depends}`;
+- `libpam-kwallet5`: `${misc:Depends}`, `${qml6:Depends}`, `${shlibs:Depends}`.
+
+This is a dependency-metadata semantic restoration required by the compat downgrade; it is not a KDE/PAM runtime behavior change and does not authorize adding `dh-sequence-plasma` to the Ubuntu packaging.
 
 No PAM functional file is intentionally modified.
 
@@ -95,16 +102,20 @@ No PAM functional file is intentionally modified.
 - `debian/libpam-kwallet-common.prerm`
 - `debian/pam-configs/kde-kwallet`
 
-It also requires `libpam-runtime`, `pam-auth-update`, and the Password profile. The actual rebuilt package must later pass `scripts/ci/validate-kwallet-pam-installation.sh`, proving `pam_kwallet5.so` registration in both `common-session` and `common-auth` after installation.
+It also requires `libpam-runtime`, `pam-auth-update`, and the Password profile. KSQ-1 must verify that the rebuilt binary metadata actually contains the expected runtime dependency closure and install the packages in a disposable Resolute rootfs. `scripts/ci/validate-kwallet-pam-installation.sh` must prove `pam_kwallet5.so` registration in both `common-session` and `common-auth` after installation.
 
-**Maintenance/security responsibility:** SupraLINUX owns this rebuilt binary and must track KWallet/KDE Plasma updates and Ubuntu/Debian packaging changes. Any upstream/source update invalidates the current byte-identity evidence and requires a fresh audit.
+The package-level KSQ-1 installation gate does **not** by itself certify live KWallet auto-unlock in a graphical login session. End-to-end auto-unlock remains a later runtime/functional certification requirement.
 
-**Update procedure:** begin from the newest compatible stable upstream/source packaging, preserve all functional PAM integration, determine whether the compat-level delta is still required, and rerun KSQ-0 before rebuilding. Never solve a future packaging failure by deleting PAM maintainer scripts or dependencies.
+**Maintenance/security responsibility:** SupraLINUX owns this rebuilt binary and must track KWallet/KDE Plasma updates and Ubuntu/Debian packaging changes. Any upstream/source update invalidates the current byte-identity and compat-semantics evidence and requires a fresh audit.
+
+**Update procedure:** begin from the newest compatible stable upstream/source packaging, preserve all functional PAM integration, determine whether the compat-level delta and explicit relationship substvars are still required, and rerun KSQ-0 before rebuilding. Never solve a future packaging failure by deleting PAM maintainer scripts, runtime dependency generation, or integration files.
 
 **Removal condition:** remove the adaptation when the supported Ubuntu base's debhelper can build the selected official packaging unchanged, or when newer accepted packaging no longer needs the compat-level change.
 
 ## Current override boundary
 
-KSQ-0 certifies **three source backports and one packaging adaptation only**. There is no authorization to override Qt, Wayland runtime, Mesa, libdrm, kernel, firmware, systemd, PipeWire/WirePlumber, NetworkManager, or base compiler/runtime libraries.
+KSQ-0 certifies **three source backports and one packaging adaptation only**. The compat-13 relationship restoration above is part of the single `kwallet-pam` packaging adaptation; it does not create another source/backport exception.
+
+There is no authorization to override Qt, Wayland runtime, Mesa, libdrm, kernel, firmware, systemd, PipeWire/WirePlumber, NetworkManager, or base compiler/runtime libraries.
 
 A candidate change that requires any such expansion stops qualification and opens a new architecture review before implementation.
