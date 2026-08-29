@@ -84,7 +84,7 @@ def snapshot_id() -> str:
 
 
 def manifest_modules(path: Path, version: str) -> set[str]:
-    rows = read_tsv(path, ["module", "version", "url", "sha256"])
+    rows = read_tsv(path, ["module", "version", "sha256"])
     for row in rows:
         if row["version"] != version:
             die(f"mixed version in {path}: {row}")
