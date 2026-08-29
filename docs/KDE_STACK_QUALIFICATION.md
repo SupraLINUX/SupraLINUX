@@ -1,14 +1,18 @@
 # Aurora KDE Stack Qualification
 
-Status: **ACTIVE / PROVISIONAL ARCHITECTURE GATE**
+Status: **ACTIVE — KSQ-0 CERTIFIED / KSQ-1 NEXT**
 
-This gate decides which KDE stack becomes the versioned foundation for the rest of Aurora's C4 certification. It exists because feature certification is meaningful only against the software stack that will actually ship.
+This gate decides which KDE stack becomes the versioned foundation for the rest of Aurora's C4 certification. Feature certification is meaningful only against the software stack that will actually ship.
 
-C4.1 and later feature work are paused while this gate is open.
+C4.1 and later feature work remain paused while KDE Stack Qualification is open.
+
+Canonical KSQ-0 acceptance: `docs/validation/AURORA_KSQ_0_ACCEPTANCE.md`.
+
+Canonical override ownership: `docs/KDE_STACK_OVERRIDES.md`.
 
 ## 1. Existing known-good baseline
 
-The current development repository reached these milestones using Ubuntu 26.04's KDE stack:
+The development repository reached these milestones using Ubuntu 26.04's historical KDE stack:
 
 - Plasma 6.6.6;
 - KDE Frameworks 6.24.x;
@@ -19,13 +23,13 @@ The current development repository reached these milestones using Ubuntu 26.04's
 - C4.0 accepted;
 - incremental C4.1 evidence accepted for the capabilities recorded in the C4 documentation.
 
-This evidence is not discarded. It is **historical version-scoped evidence**. It may be used for regression comparison, but it must never be represented as evidence produced by a newer KDE stack.
+This evidence is not discarded. It is **historical version-scoped evidence**. It may be used for regression comparison, but it must never be represented as evidence produced by the candidate KDE stack.
 
-The Baloo compatibility launcher and C4.1b harness introduced while diagnosing the 6.6.6 baseline also remain in the repository until the candidate stack proves whether they are still needed. Removing a workaround before reproducing the corresponding behavior on the new stack would destroy useful evidence.
+The Baloo compatibility launcher and C4.1b harness introduced while diagnosing the 6.6.6 baseline remain until the candidate stack proves whether they are still needed. Removing a workaround before reproducing the corresponding behavior on the new stack would destroy useful evidence.
 
 ## 2. Candidate architecture
 
-Qualification target as of 2026-08-28:
+Qualified source/dependency target as of 2026-08-29:
 
 | Layer | Candidate owner/version |
 |---|---|
@@ -37,42 +41,84 @@ Qualification target as of 2026-08-28:
 | NetworkManager | Ubuntu |
 | Wayland runtime | Ubuntu |
 | Qt | Ubuntu Qt 6.10.2 |
-| KDE Frameworks | SupraLINUX candidate 6.29.x |
+| KDE Frameworks | SupraLINUX candidate 6.29.0 |
 | Plasma | SupraLINUX candidate 6.7.4 |
 | KWin | SupraLINUX candidate 6.7.4 |
-| `plasma-wayland-protocols` | backport only if required by the selected Plasma/KWin source packages |
-| `wayland-protocols` | minimal compatible backport only if required; do not replace Wayland runtime merely to obtain a newer protocol-data package |
-| KDE Gear | **not decided here**; separate stable-version review after this gate |
+| `plasma-wayland-protocols` | SupraLINUX backport candidate 1.21.0-1 |
+| `qtkeychain` | SupraLINUX backport candidate 0.17.0-1 |
+| `wayland-protocols` | SupraLINUX compatibility backport candidate 1.48-1 |
+| `kwallet-pam` | 4:6.7.4-0ubuntu3 with build-only debhelper compat 14→13 adaptation |
+| KDE Gear | separate stable-version review; not adopted by KSQ-0 |
 
-The candidate versions are not release commitments. If exact build requirements prove that another stable point release in the same compatible generation is the cleaner target, the change must be documented before proceeding.
+KDE upstream's current stable releases at the time of this certification are Plasma 6.7.4, Frameworks 6.29.0 and KDE Gear 26.08. Gear is intentionally evaluated independently and is not implicitly inherited from the Plasma qualification.
 
-## 3. Research basis
+These are still **candidate product versions**, not a release commitment. KSQ-0 certifies that the exact source/dependency architecture is closed and compatible at the metadata/source level. KSQ-1 and later must still prove builds, repository closure, installation, upgrade, rollback and runtime behavior.
 
-The architecture decision is based on current upstream/distribution evidence, not on version-number preference alone:
+## 3. KSQ-0 certified result
 
-- Ubuntu 26.04 already provides Qt 6.10.2, matching the Qt generation expected by Plasma 6.7;
-- KDE Frameworks 6.29 remains compatible with Qt 6.10;
-- Kubuntu/Ubuntu development packaging already contains Plasma/KWin 6.7.4 and current Frameworks source packaging that can be audited as a packaging reference;
-- KDE neon demonstrates that modern KDE releases can be built on an Ubuntu 26.04/Resolute base, but SupraLINUX will not depend on neon binary repositories for its supported product;
-- dependency research found a small set of protocol/build-package deltas rather than an immediate requirement to replace kernel, Mesa, Qt or the Wayland runtime.
+KSQ-0 is **CERTIFIED** on engineering commit:
 
-These findings authorize a prototype; they do **not** constitute a PASS.
+`4e7db453f626e78ca72c353ab314e16e00c9003f`
 
-Before implementing each package, current official KDE, Ubuntu and Debian/Kubuntu source metadata must be rechecked because versions and dependency relationships can move.
+Canonical strict closure run: `33231879994`.
 
-## 4. Packaging principles
+Canonical inventory run: `33231880014`.
+
+Pinned Ubuntu archive snapshot: `20260829T022000Z`.
+
+Accepted source closure:
+
+- 101 selected source packages;
+- 101 topologically ordered build nodes;
+- 59 Frameworks 6.29.0 sources;
+- 39 Plasma 6.7.4 sources;
+- 2 KDE-adjacent explicit backports;
+- 1 Ubuntu-platform compatibility backport;
+- 1 explicit packaging build-dependency adaptation;
+- 0 unresolved dependencies;
+- 0 unresolved source/package decisions.
+
+The strict workflow does not use `--allow-unresolved`. Any unresolved dependency, stale declared exception, source selection conflict, DAG cycle, or unconsumed policy entry fails the gate.
+
+The three explicit source selections are:
+
+1. `plasma-wayland-protocols 1.21.0-1` because Plasma/KWin 6.7.4 require >=1.21 while Resolute has 1.20;
+2. `qtkeychain 0.17.0-1` because Plasma-NM 6.7.4 requires >=0.16 while Resolute has 0.15;
+3. `wayland-protocols 1.48-1` because KWin 6.7.4 requires >=1.48 while Resolute has 1.47. Version 1.48 is deliberately used instead of widening the Wayland runtime boundary for newer packaging.
+
+`kwallet-pam 4:6.7.4-0ubuntu3` requires one packaging-only adaptation from `debhelper-compat (= 14)` to `debhelper-compat (= 13)`. The source audit proves its PAM installation, postinst, prerm and PAM profile files are byte-identical to Debian 6.7.4-3 and retains a later installation contract checking `pam_kwallet5.so` in both `common-session` and `common-auth`.
+
+The obsolete direct dependency/root `plasma-session-wayland` was removed because current Plasma 6.7.4 packages the Wayland session through `plasma-workspace` itself.
+
+See `docs/validation/AURORA_KSQ_0_ACCEPTANCE.md` for artifact IDs/digests and `docs/KDE_STACK_OVERRIDES.md` for maintenance/security ownership and removal conditions.
+
+## 4. Research and provenance basis
+
+The architecture decision is based on upstream/distribution evidence, not version-number preference alone:
+
+- Ubuntu 26.04 provides Qt 6.10.2, matching the Qt generation required by the candidate;
+- KDE Frameworks 6.29.0 remains compatible with that Qt generation;
+- current Ubuntu/Kubuntu development source packaging provides a maintained packaging reference for Plasma/KWin 6.7.4 and Frameworks 6.29.0;
+- the dependency graph proves a small explicit compatibility set rather than a requirement to replace kernel, Mesa, Qt or Wayland runtime;
+- Ubuntu source/binary metadata is pinned to the Ubuntu Snapshot Service;
+- deliberately historical Debian source inputs are addressed through Debian Snapshot immutable content identities plus pinned SHA-256 verification.
+
+Before implementing or updating any package, current official KDE, Ubuntu and Debian/Kubuntu source metadata must be rechecked because versions and dependency relationships can move.
+
+## 5. Packaging principles
 
 1. Build DEBs; never install the supported KDE stack manually into `/usr/local`.
 2. Use official stable KDE source tarballs/releases.
 3. Prefer maintained Debian/Kubuntu packaging as the packaging base when technically valid for Resolute.
-4. Record the exact packaging base commit/version for every source package.
+4. Record the exact packaging source/version for every source package.
 5. Keep SupraLINUX patches minimal, reviewable and removable.
 6. Do not enable a third-party binary repository as an undeclared runtime dependency.
-7. Every intentional override must use deterministic package versions and APT behavior; no blanket origin priority may accidentally override unrelated Ubuntu packages.
+7. Every intentional override must use deterministic versions and APT behavior; no blanket origin priority may accidentally override unrelated Ubuntu packages.
 8. Build dependencies used only in CI/builders must not leak into product dependencies.
 9. The source-package graph, not a hand-maintained list of executable names, determines what must be rebuilt.
+10. Every override/backport must remain documented in `docs/KDE_STACK_OVERRIDES.md` with origin, reason, security ownership, update procedure and removal condition.
 
-## 5. Platform-boundary rule
+## 6. Platform-boundary rule
 
 The default answer for the following remains **Ubuntu package**:
 
@@ -87,15 +133,15 @@ The default answer for the following remains **Ubuntu package**:
 - Qt;
 - base compiler/runtime libraries.
 
-If the KDE candidate requires replacing one of these layers, stop and open a documented architecture review. Do not silently widen the backport set until the dependency solver becomes green.
+If a later KDE candidate/build requires replacing one of these layers, stop and open a documented architecture review. Do not silently widen the backport set until a solver/build becomes green.
 
 A small protocol-data/build-tool backport does not automatically imply replacing its runtime platform. The exact dependency semantics must be investigated first.
 
-## 6. Qualification stages
+## 7. Qualification stages
 
-### KSQ-0 — Source and dependency inventory
+### KSQ-0 — Source and dependency inventory — **CERTIFIED**
 
-PASS requires:
+PASS contract:
 
 - exact KDE release-set/source-package inventory;
 - exact Frameworks package inventory required by that release-set;
@@ -105,9 +151,13 @@ PASS requires:
 - no unresolved package-name/API assumptions;
 - source provenance and checksums/signature verification strategy documented.
 
-### KSQ-1 — Reproducible source builds
+All criteria passed. Canonical evidence is `docs/validation/AURORA_KSQ_0_ACCEPTANCE.md`.
 
-Build the candidate only on clean Ubuntu 26.04 builders.
+A change to the candidate release set, source selections, packaging overrides, pinned snapshot, or a relevant platform dependency reopens the corresponding KSQ-0 regression before downstream evidence can be reused.
+
+### KSQ-1 — Reproducible source builds — **NEXT**
+
+Build the certified 101-source candidate only on clean Ubuntu 26.04 builders.
 
 PASS requires:
 
@@ -115,7 +165,11 @@ PASS requires:
 - deterministic documented build order or dependency-driven builder process;
 - no dependency on packages from an uncontrolled newer Ubuntu suite at build or runtime;
 - build logs and resulting source/binary package manifests retained;
-- package versions make the intended upgrade relationships explicit.
+- package versions make the intended upgrade relationships explicit;
+- the `kwallet-pam` compat-13 adaptation is materialized reproducibly without changing its certified PAM functional files;
+- built packages that can receive meaningful package-level installation smoke tests do so before KSQ-1 closes.
+
+The build system must consume only the KSQ-0 certified closure/selections. It may not discover new implicit Stonking binary dependencies during compilation.
 
 ### KSQ-2 — APT repository and dependency closure
 
@@ -140,7 +194,8 @@ PASS requires:
 - no manual post-install command is needed to finish the KDE stack;
 - expected Plasma Wayland and SDDM components are installed;
 - Snap policy remains intact;
-- no unintended Ubuntu/Kubuntu desktop metapackage is pulled in.
+- no unintended Ubuntu/Kubuntu desktop metapackage is pulled in;
+- `scripts/ci/validate-kwallet-pam-installation.sh` passes against the installed candidate rootfs.
 
 ### KSQ-4 — Upgrade from the historical baseline
 
@@ -161,7 +216,7 @@ A testing candidate must not make recovery undefined.
 
 PASS requires a documented and tested method to return a disposable upgraded system to the previous known-good KDE baseline or an equivalent known-good snapshot/image state. The method must account for package-version downgrades, ABI transitions and configuration compatibility; “manually reinstall packages until it works” is not a rollback strategy.
 
-This gate does not require SupraLINUX to expose a polished end-user rollback UI yet. It requires engineering recovery during qualification.
+This gate does not require a polished end-user rollback UI yet. It requires engineering recovery during qualification.
 
 ### KSQ-6 — Boot/session regression
 
@@ -210,7 +265,8 @@ PASS requires:
 - defined process for rebuilding security/bug-fix point releases;
 - explicit testing→stable promotion procedure;
 - ability to identify every supported SupraLINUX KDE binary back to source/version;
-- documentation that Ubuntu security updates to an overridden binary package do not automatically patch the SupraLINUX build.
+- documentation that Ubuntu security updates to an overridden binary package do not automatically patch the SupraLINUX build;
+- all active override ownership records remain synchronized with `docs/KDE_STACK_OVERRIDES.md`.
 
 ### KSQ-10 — Architecture decision
 
@@ -222,23 +278,23 @@ The gate closes with one explicit result:
 
 There is no partial implicit adoption.
 
-## 7. C4 interaction while this gate is open
+## 8. C4 interaction while this gate is open
 
 - C4.1 is paused.
-- Existing C4.1 workflows/harnesses may remain in Git as historical/regression tooling.
-- A green result produced on the old 6.6.6 stack while this gate is open does not certify the candidate stack.
-- No pending C4 capability is promoted solely because the equivalent behavior passed on the historical stack.
-- If the new stack is adopted, the new C4.0 surface becomes canonical before further feature certification.
+- Existing C4.1 workflows/harnesses remain historical/regression tooling.
+- A green result produced on the old 6.6.6 stack does not certify the candidate stack.
+- No pending C4 capability is promoted solely because equivalent behavior passed on the historical stack.
+- If the new stack is adopted, the candidate C4.0 surface becomes canonical before feature certification resumes.
 
-## 8. KDE Gear
+## 9. KDE Gear
 
-KDE Gear is deliberately excluded from the GO/NO-GO decision for Plasma/Frameworks.
+KDE Gear is deliberately excluded from the Plasma/Frameworks source-architecture decision.
 
-After this gate closes, open a separate review that asks whether the newest stable KDE Gear release can be integrated without destabilizing the qualified desktop/platform boundary. Gear must receive the same source-provenance, packaging, dependency, upgrade and functional-treatment discipline appropriate to the applications that SupraLINUX actually ships.
+The current upstream stable Gear series is 26.08. It must receive a separate compatibility and packaging review for the applications/integrations Aurora actually ships. In particular, currently deferred direct roots such as `kio-extras`, `kdenetwork-filesharing` and `krdc` may not remain indefinitely “deferred” if their functionality is exposed to the user.
 
-Do not keep an older Gear merely because Ubuntu froze it, and do not update Gear merely because a newer version number exists.
+Do not keep an older Gear merely because Ubuntu froze it, and do not update Gear merely because a newer version number exists. Choose the newest stable technically compatible set and certify it.
 
-## 9. Evidence retention
+## 10. Evidence retention
 
 Each qualification stage must produce enough evidence to reproduce the decision later. At minimum retain:
 
