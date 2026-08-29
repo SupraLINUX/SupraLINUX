@@ -1,0 +1,103 @@
+name: Aurora KSQ-1 syntax materialization identity
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-1-syntax-materialization-identity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validate-source-identity:
+    name: Match materialized node 29 to proven source
+    runs-on: ubuntu-26.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Restore proven patched-build evidence
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-syntax-repro-patched-build
+          path: build/ksq-1/syntax-identity/reference
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33279750116
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prepare pinned KSQ-1 runner
+        shell: bash
+        run: bash scripts/ci/prepare-ksq-1-runner.sh
+
+      - name: Materialize current node 29 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ci/fetch-prepare-ksq-1-source.sh \
+            kf6-syntax-highlighting \
+            6.29.0-0ubuntu1 \
+            "$PWD/build/ksq-1/syntax-identity/current"
+
+      - name: Require exact proven source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/ksq-1/syntax-identity"
+          CURRENT="${ROOT}/current"
+          REFERENCE="${ROOT}/reference/evidence"
+          OUT="${ROOT}/evidence"
+          mkdir -p "${OUT}"
+
+          EXPECTED_DSC='65f733fc3d36480847d1c1289918e4e959b26c709123179b3554a84903c211fd'
+          EXPECTED_DELTA='14b59fe1e9553e26e48f9598a1baabc6b26b090809e57003d5461817a927b96a'
+          DSC="${CURRENT}/kf6-syntax-highlighting_6.29.0-0ubuntu1~supra26.04.1.dsc"
+          DELTA="${CURRENT}/kf6-syntax-highlighting_6.29.0-0ubuntu1~supra26.04.1.debian.tar.xz"
+
+          [[ -f "${DSC}" && -f "${DELTA}" ]]
+          [[ "$(sha256sum "${DSC}" | cut -d' ' -f1)" == "${EXPECTED_DSC}" ]]
+          [[ "$(sha256sum "${DELTA}" | cut -d' ' -f1)" == "${EXPECTED_DELTA}" ]]
+
+          grep -Fq "${EXPECTED_DSC}" "${REFERENCE}/patched-source.sha256"
+          grep -Fq "${EXPECTED_DELTA}" "${REFERENCE}/patched-source.sha256"
+          cmp packaging/ksq-1/patches/kf6-syntax-highlighting/supralinux-deterministic-jinja-order.patch \
+              "${REFERENCE}/supralinux-deterministic-jinja-order.patch"
+          cmp "${CURRENT}/source/debian/patches/series" "${REFERENCE}/patch-series"
+
+          grep -Fqx 'AURORA_KSQ_1_PACKAGING_ADAPTATIONS_APPLIED=1' "${CURRENT}/prepared-source.env"
+          grep -Fqx 'AURORA_KSQ_1_PACKAGING_ADAPTATION_IDS=kf6-syntax-highlighting-deterministic-jinja-order' \
+            "${CURRENT}/prepared-source.env"
+          grep -Fqx 'AURORA_KSQ_1_OVERRIDES_APPLIED=0' "${CURRENT}/prepared-source.env"
+
+          {
+            echo "${EXPECTED_DSC}  kf6-syntax-highlighting_6.29.0-0ubuntu1~supra26.04.1.dsc"
+            echo "${EXPECTED_DELTA}  kf6-syntax-highlighting_6.29.0-0ubuntu1~supra26.04.1.debian.tar.xz"
+          } > "${OUT}/materialized-source.sha256"
+          {
+            echo 'AURORA_KSQ_1_SYNTAX_MATERIALIZATION_STATUS=PASS'
+            echo 'AURORA_KSQ_1_SYNTAX_MATERIALIZATION_SOURCE=kf6-syntax-highlighting'
+            echo 'AURORA_KSQ_1_SYNTAX_MATERIALIZATION_VERSION=6.29.0-0ubuntu1~supra26.04.1'
+            echo 'AURORA_KSQ_1_SYNTAX_MATERIALIZATION_REFERENCE_RUN=33279750116'
+            echo 'AURORA_KSQ_1_SYNTAX_MATERIALIZATION_SOURCE_IDENTITY=byte-identical'
+            echo 'AURORA_KSQ_1_FULL_CERTIFIED=no'
+          } > "${OUT}/status.env"
+          cp -a "${CURRENT}/prepared-source.env" "${OUT}/"
+          cp -a "${CURRENT}/source/debian/patches/series" "${OUT}/patch-series"
+          cp -a packaging/ksq-1/patches/kf6-syntax-highlighting/supralinux-deterministic-jinja-order.patch "${OUT}/"
+          cat "${OUT}/status.env"
+
+      - name: Preserve source-identity evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-syntax-materialization-identity
+          path: |
+            build/ksq-1/syntax-identity/evidence/**
+            build/ksq-1/syntax-identity/current/*.dsc
+            build/ksq-1/syntax-identity/current/*.debian.tar.*
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
