@@ -1,34 +1,39 @@
-# Plasma Package Audit — Ubuntu 26.04 LTS
+# Plasma Package Audit — Historical Ubuntu KDE 6.6.6 baseline
 
-Status: **broad development candidate installed and boot/session validated; exact dependency set remains unfrozen pending C4 evidence**.
+Status: **HISTORICAL / VERSION-SCOPED; package composition and C1-C3/C4.0 evidence preserved while KDE Stack Qualification is active**.
 
-Purpose: determine the smallest complete package composition that gives SupraLINUX an upstream-like KDE Plasma desktop in which every shipped/exposed feature has its backend and integration present.
+Purpose: preserve the first broad Ubuntu 26.04 Plasma package composition that gave SupraLINUX an upstream-like KDE desktop and exposed the surfaces used to build the original C4 contract. This is now a regression/reference document, not a statement that Ubuntu's KDE versions are the final Aurora release stack.
 
-This is not a copy of `kubuntu-desktop`. Kubuntu remains a comparative reference for integrations that minimal Plasma packaging may omit, never an automatic dependency source.
+This is not a copy of `kubuntu-desktop`. Kubuntu remains an important integration and packaging reference, but SupraLINUX does not inherit Kubuntu metapackages or third-party binaries automatically. For a newer KDE stack, maintained Debian/Kubuntu packaging may be used as the packaging base only after its dependencies/deltas are audited for Resolute.
 
-The canonical runtime/executable feature status now lives in:
+The historical runtime/executable feature status lives in:
 
 - `docs/PLASMA_INTEGRATION_MATRIX.md`
 - `docs/C4_CERTIFICATION.md`
 
-## 1. Current validation context
+The active architecture gate is:
 
-The historical “first clean Ubuntu 26.04 installation” is complete. The current broad candidate has already:
+- `docs/KDE_STACK_QUALIFICATION.md`
 
-- built successfully as DEB packages;
+## 1. Historical validation context
+
+The first clean Ubuntu 26.04 / KDE 6.6.6 development candidate successfully:
+
+- built the SupraLINUX packages as DEBs;
 - resolved through APT under the SupraLINUX Snap policy;
 - installed in an isolated clean Resolute rootfs;
 - booted through C1;
 - reached a real SDDM/KWin Wayland greeter through C2;
-- reached a stable real Plasma Wayland user session with XWayland compatibility through C3.
+- reached a stable real Plasma Wayland user session with XWayland compatibility through C3;
+- produced an accepted C4.0 runtime-surface reconciliation.
 
-Those results prove composition/session viability. They do not prove feature completeness and therefore do not freeze the dependency set.
+Those results prove composition/session viability for that exact stack. They do not prove feature completeness and they do not automatically transfer to Plasma/KWin/Frameworks replacements.
 
-## 2. Current REQUIRED-candidate areas
+## 2. Historical REQUIRED-candidate areas
 
-The development `supralinux-desktop` intentionally remains broader than a minimal KDE installation so C4 can test the complete intended surface.
+The pre-qualification `supralinux-desktop` candidate intentionally remained broader than a minimal KDE installation so C4 could test the complete intended surface.
 
-| Area | Current candidate package(s) | C4 owner / reason |
+| Area | Historical candidate package(s) | C4 owner / reason |
 |---|---|---|
 | Plasma shell/workspace | `plasma-desktop`, `plasma-workspace` | C3 prerequisite + C4.0/C4.1 surface inventory |
 | Wayland session | `plasma-session-wayland` | C3 prerequisite |
@@ -65,21 +70,21 @@ The development `supralinux-desktop` intentionally remains broader than a minima
 | Virtual keyboard | `plasma-keyboard` | C4.1/C4.15 |
 | Crash/credential UI helpers | `drkonqi`, `ksshaskpass`, `pinentry-qt` | C4.15 |
 
-The table is a candidate audit, not proof that every entry must remain a hard dependency after C4.
+This table captures the historical broad candidate. It is not proof that every entry must remain a hard dependency after the KDE stack and C4 are finalized.
 
 ## 3. KWin and Plasma KCM surface
 
-The detailed package-derived KCM inventory remains in `docs/KCM_AUDIT.md`.
+The detailed historical package-derived KCM inventory remains in `docs/KCM_AUDIT.md`.
 
-C4.0 now adds a stronger rule: the live guest must discover its actual installed KCM/KWin/integration surface and compare that result with a versioned coverage manifest. This protects Aurora from silently gaining an untested user-visible feature after an Ubuntu/KDE update.
+The accepted historical C4.0 gate used live discovery to compare the actual installed KCM/KWin/integration surface with a versioned coverage manifest. If a new KDE stack is adopted, C4.0 must be regenerated from that live runtime rather than editing this table to predict the result.
 
 Static package research is therefore an input, not the final source of truth for coverage.
 
-## 4. Feature-completeness decisions currently promoted into the candidate
+## 4. Feature-completeness decisions promoted into the historical candidate
 
 ### Flatpak
 
-Current candidate:
+Historical candidate:
 
 - `flatpak`
 - `kde-config-flatpak`
@@ -88,15 +93,15 @@ Reason: Flatpak is a first-class SupraLINUX application layer. C4.6 must prove a
 
 ### Remote Desktop
 
-Current hard candidate:
+Historical hard candidate:
 
 - `krdp`
 
-`krdc` remains `Recommends` and must not be automatically treated as a certified baseline application. C4.8 decides whether the client remains optional or is promoted later.
+`krdc` remained `Recommends` and must not be automatically treated as a certified baseline application. C4.8 decides whether the client remains optional or is promoted later.
 
 ### Printing
 
-Current candidate:
+Historical candidate:
 
 - `print-manager`
 - `cups`
@@ -107,7 +112,7 @@ C4.9 must exercise a real controlled IPP job lifecycle, not only package/service
 
 ### Network sharing
 
-Current candidate:
+Historical candidate:
 
 - `kdenetwork-filesharing`
 - `samba`
@@ -118,7 +123,7 @@ C4.11 verifies both remote SMB consumption and local share creation/access. `sam
 
 ### VPN
 
-Current candidate:
+Historical candidate:
 
 - `network-manager-openvpn`
 - `network-manager-openconnect`
@@ -127,17 +132,17 @@ C4.3 must establish real controlled tunnels and traffic. Other protocols remain 
 
 ### Accessibility
 
-Current candidate:
+Historical candidate:
 
 - `at-spi2-core`
 - `orca`
 - `speech-dispatcher`
 
-C4.14 determines whether the current composition provides a genuinely usable assistive path or whether an additional provider/runtime is needed.
+C4.14 determines whether the composition provides a genuinely usable assistive path or whether an additional provider/runtime is needed.
 
 ### SMART disk health
 
-Current candidate:
+Historical candidate:
 
 - `plasma-disks`
 
@@ -145,7 +150,7 @@ C4 can validate package/surface integration, but a meaningful physical SMART cla
 
 ### GTK application coherence
 
-Current candidate:
+Historical candidate:
 
 - `breeze-gtk-theme`
 - `kde-config-gtk-style`
@@ -158,24 +163,26 @@ The previous package-audit blocker was that Ubuntu's `plasma-discover` recommend
 
 That resolver risk is no longer an implementation blocker: the shipped `supralinux-snap-policy` has been implemented and CI verifies that Discover resolves under the policy without pulling either the Snap backend or `snapd`.
 
-This does **not** promote Discover into the hard `supralinux-desktop` dependency set.
+This does **not** automatically promote Discover into the hard `supralinux-desktop` dependency set.
 
-Current decision:
+Current product decision remains:
 
 - Snap resolver policy: implemented/validated;
 - Discover baseline role: still a later product/software-management decision;
 - no Snap backend in Aurora's default policy state.
 
-## 6. Portal backend question — CANDIDATE ROUTING TO BE CERTIFIED IN C4.6
+Any changed dependency/recommendation graph in the candidate KDE stack must be re-audited rather than assuming the 6.6.6 resolver result is unchanged.
 
-The current `supralinux-desktop` installs both:
+## 6. Portal backend question — TO BE CERTIFIED AFTER STACK QUALIFICATION
+
+The historical `supralinux-desktop` installs both:
 
 - `xdg-desktop-portal-kde`;
 - `xdg-desktop-portal-gtk`.
 
-This is now an explicit candidate policy, not an unresolved package-presence question. `docs/PORTAL_POLICY.md` defines KDE as primary and GTK as compatibility fallback candidate.
+This is an explicit candidate policy, not an unresolved package-presence question. `docs/PORTAL_POLICY.md` defines KDE as primary and GTK as compatibility fallback candidate.
 
-C4.6 must record effective routing and determine from runtime evidence whether the GTK backend is required and whether it stays out of KDE-specific interfaces.
+Once C4 resumes, C4.6 must record effective routing and determine from runtime evidence whether the GTK backend is required and whether it stays out of KDE-specific interfaces.
 
 Only after C4.6 may the GTK backend be kept or removed from the final candidate.
 
@@ -192,8 +199,10 @@ These remain outside the hard candidate until policy/testing is adequate:
 | KDE Connect | `kdeconnect` | Deliberate app/product decision |
 | Browser integration | `plasma-browser-integration` | Wait for browser/default-app policy |
 | Scanner workflow | scanner app/backend stack | No scanner UI/app currently exposed by baseline |
-| Archive/RAR workflow | Ark/backend choices | Phase 5 capability unless C4.0 discovers a current exposed surface |
+| Archive/RAR workflow | Ark/backend choices | Phase 5 capability unless runtime discovery exposes a current surface |
 | Firmware UI | `fwupd` + UI | Coupled to store/updater product decision |
+
+The new KDE stack's runtime may add/remove surfaces. Do not pre-classify those changes until KSQ-7/C4.0 discovery provides evidence.
 
 ## 8. Explicit non-inheritance from Kubuntu
 
@@ -209,25 +218,25 @@ The following remain NOT automatically inherited:
 - Ubuntu/Kubuntu-specific helpers without a SupraLINUX architectural reason;
 - duplicate applications merely because Kubuntu recommends them.
 
-Every inherited-looking package needs a SupraLINUX reason and, by C4 closure, a matrix/evidence owner where it is a direct desktop dependency.
+Using Kubuntu's maintained source packaging for a KDE source package does not mean adopting the Kubuntu desktop product. Every binary dependency and Ubuntu/Kubuntu-specific patch still needs a SupraLINUX reason.
 
-## 9. Dependency-chain observations retained from research
+## 9. Dependency-chain observations retained from historical research
 
-- `plasma-session-wayland` expresses the intended Wayland session relationship and pulls the appropriate KWin Wayland/session chain.
-- KWin Wayland pulls XWayland compatibility; SupraLINUX intentionally retains that compatibility path.
+- `plasma-session-wayland` expressed the intended Wayland session relationship and pulled the appropriate KWin Wayland/session chain in the historical baseline.
+- KWin Wayland pulled XWayland compatibility; SupraLINUX intentionally retains that compatibility path.
 - `pipewire-audio` is Ubuntu's desktop PipeWire abstraction and brings the normal compatibility/WirePlumber/Bluetooth-audio pieces through its dependency chain.
-- Ubuntu retains the package name `libpam-kwallet5` for current KWallet PAM integration.
-- `kio-extras` materially expands KIO protocol/device support and remains a candidate because SupraLINUX intends common network/file protocols to work out of the box.
+- Ubuntu retained the package name `libpam-kwallet5` for the audited KWallet PAM integration.
+- `kio-extras` materially expanded KIO protocol/device support and remained a candidate because SupraLINUX intends common network/file protocols to work out of the box.
 
-Recheck current Ubuntu 26.04 metadata before release freeze; package relationships may change in updates.
+Every KDE-package-specific relationship must be rechecked against the candidate source packages before adoption.
 
-## 10. Current metapackage state
+## 10. Metapackage state during KDE Stack Qualification
 
-`supralinux-desktop` remains an explicitly development/unreleased candidate. Its dependency list is intentionally broad enough to create a complete test surface.
+`supralinux-desktop` on `development` remains the known historical broad candidate until the new stack is proven. The feature branch may introduce prototype packaging, but `development` must not pretend the candidate KDE stack is already accepted.
 
-Do not reduce or expand it merely to optimize package count before C4.0.
+Do not reduce or expand the release dependency set merely to optimize package count during architecture qualification.
 
-After C4.0 coverage is green, later C4 defects may justify isolated dependency/configuration changes. After C4 closes, every direct dependency must be one of:
+If the new stack is adopted, its regenerated C4.0 and later C4 defects may justify isolated dependency/configuration changes. After C4 closes, every direct dependency must be one of:
 
 - tested and justified;
 - hardware-dependent but product-justified;
@@ -237,13 +246,15 @@ Only then should the exact dependency set be considered for freeze.
 
 ## 11. Immediate next steps
 
-The previous clean-rootfs/C1-C3 work is complete. The package-audit sequence is now:
+The previous clean-rootfs/C1-C3/C4.0 work is historical and complete for KDE 6.6.6. The active package sequence is now:
 
-1. implement C4.0 runtime surface/dependency inventory;
-2. compare it to the versioned capability manifest;
-3. close any coverage gaps without changing product packages merely for convenience;
-4. implement C4.1 and later feature subgates;
-5. when a feature fails, isolate frontend/backend/service/API before modifying dependencies;
-6. record package/configuration changes as evidence-driven fixes;
-7. complete C4.15 direct-dependency closure;
+1. execute KSQ-0 source/dependency inventory in `docs/KDE_STACK_QUALIFICATION.md`;
+2. build the newer KDE stack reproducibly on clean Resolute builders;
+3. prove APT dependency closure, clean install, upgrade and rollback;
+4. re-run C1-C3 on the candidate;
+5. regenerate C4.0 and this package audit from the live candidate if it is adopted;
+6. only then resume C4.1 and later feature subgates;
+7. complete C4.15 direct-dependency closure on the adopted stack;
 8. only then freeze/refine the final `supralinux-desktop` set.
+
+If the KDE candidate receives a NO-GO, document why, return this baseline to current status, and resume C4.1 without rewriting the failed qualification as product history.

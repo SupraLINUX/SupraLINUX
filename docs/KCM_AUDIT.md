@@ -1,14 +1,16 @@
-# Plasma System Settings KCM Audit — Aurora
+# Plasma System Settings KCM Audit — Historical Ubuntu KDE 6.6.6 baseline
 
-Status: **initial package-surface inventory established; C4.0 runtime coverage reconciliation pending**.
+Status: **HISTORICAL / VERSION-SCOPED INPUT; C4.0 accepted on the Ubuntu KDE 6.6.6 baseline; regenerate if a new KDE stack is adopted**.
 
-Purpose: enumerate System Settings modules that become visible through the selected Plasma packages so SupraLINUX can enforce its quality rule: a visible setting is not complete until its backend, permissions, integration and test owner are known.
+Purpose: preserve the package-derived System Settings/KWin surface that was used to build the first executable Aurora C4 inventory, so SupraLINUX can compare a future stack against a known baseline without rewriting history.
 
-This document is a research/input inventory. The canonical executable capability IDs and statuses live in `docs/PLASMA_INTEGRATION_MATRIX.md`; the execution contract lives in `docs/C4_CERTIFICATION.md`.
+This document describes the Ubuntu 26.04 KDE 6.6.6-era package surface. The historical executable capability IDs/statuses live in `docs/PLASMA_INTEGRATION_MATRIX.md`; the execution contract and current pause live in `docs/C4_CERTIFICATION.md`; the active architecture gate is `docs/KDE_STACK_QUALIFICATION.md`.
 
-## 1. KCMs shipped directly by `plasma-desktop` in Ubuntu 26.04
+If the KDE Stack Qualification adopts a newer stack, do not edit the tables below until the new packages/runtime have actually been inventoried. Generate the new runtime surface first, classify deltas, then update this audit from evidence.
 
-The audited Ubuntu 26.04 package surface includes these System Settings modules/plugins:
+## 1. KCMs shipped directly by `plasma-desktop` in the historical Ubuntu 26.04 baseline
+
+The audited Ubuntu 26.04 / Plasma 6.6.6 package surface included these System Settings modules/plugins:
 
 | KCM/plugin | Functional area | C4 acceptance focus |
 |---|---|---|
@@ -37,11 +39,11 @@ The audited Ubuntu 26.04 package surface includes these System Settings modules/
 | `kcmspellchecking` | Spell checking | Dictionaries/providers for supported C4 locales |
 | `kcm_krunnersettings` | KRunner settings | Plugin list/configuration lifecycle |
 
-The same package exposes accessibility schemas for bell, color-blindness correction, invert, keyboard, mouse, screen reader, shake cursor and zoom/magnifier behavior. C4.0 must reconcile the installed runtime surface rather than assuming this static list remains complete after Ubuntu/KDE updates.
+The same package exposed accessibility schemas for bell, color-blindness correction, invert, keyboard, mouse, screen reader, shake cursor and zoom/magnifier behavior. The accepted historical C4.0 runtime inventory, rather than this static table alone, is the evidence for what was actually exposed by that baseline.
 
-## 2. KWin KCM surface from `kwin-common`
+## 2. KWin KCM surface from historical `kwin-common`
 
-The audited Ubuntu 26.04 KWin surface includes:
+The audited Ubuntu 26.04 / KWin 6.6.6 surface included:
 
 | KCM/plugin | Functional area | C4 acceptance focus |
 |---|---|---|
@@ -58,11 +60,11 @@ The audited Ubuntu 26.04 KWin surface includes:
 | `kcm_kwintabbox` | Task/window switcher | Layout/behavior and Alt-Tab operation |
 | `kcm_kwintouchscreen` | Touchscreen edges | Surface inventory plus later hardware validation |
 
-KWin also ships screenshot/screencast plugins. C4 therefore treats Wayland capture/sharing as a KWin + PipeWire + portal/client path, not merely a portal-package check.
+KWin also shipped screenshot/screencast plugins. C4 therefore treats Wayland capture/sharing as a KWin + PipeWire + portal/client path, not merely a portal-package check.
 
-## 3. External KCM/integration surfaces in the current candidate
+## 3. External KCM/integration surfaces in the historical candidate
 
-| Package(s) | Visible/related surface | Current C4 treatment |
+| Package(s) | Visible/related surface | C4 treatment |
 |---|---|---|
 | `kscreen` | Displays / HDR/display OSD | C4.1 virtual-output test; physical multi-monitor/HDR later |
 | `powerdevil` | Power/battery/brightness | C4.12; hardware capability split |
@@ -84,12 +86,12 @@ KWin also ships screenshot/screencast plugins. C4 therefore treats Wayland captu
 
 ## 4. Network/VPN integration
 
-The current candidate includes:
+The historical candidate included:
 
 - `network-manager-openvpn`
 - `network-manager-openconnect`
 
-These remain candidates because Plasma-NM exposes corresponding workflows. C4.3 must prove real controlled tunnels and traffic; plugin presence alone is insufficient.
+These were selected because Plasma-NM exposes corresponding workflows. When C4 resumes on the adopted stack, C4.3 must prove real controlled tunnels and traffic; plugin presence alone remains insufficient.
 
 Additional VPN protocols are not automatically claimed. The rule remains: do not present a workflow as supported unless its backend is present and tested.
 
@@ -97,18 +99,18 @@ Additional VPN protocols are not automatically claimed. The rule remains: do not
 
 ### Printing
 
-Current product candidates:
+Historical product candidates:
 
 - `print-manager`
 - `cups`
 - `cups-client`
 - `cups-filters`
 
-C4.9 must exercise a real virtual IPP job path, queue state, cancellation and failure behavior.
+C4.9 must exercise a real virtual IPP job path, queue state, cancellation and failure behavior on the adopted stack.
 
 ### Samba sharing
 
-Current product candidates:
+Historical product candidates:
 
 - `kdenetwork-filesharing`
 - `samba`
@@ -131,7 +133,7 @@ Hardware status is separate from C4 execution status. A virtualized software sta
 
 ## 7. Deliberately unresolved / not currently claimed
 
-These remain outside the hard baseline until policy and complete backend paths are chosen:
+These remained outside the hard baseline until policy and complete backend paths are chosen:
 
 - `plasma-firewall` — no supported firewall backend policy selected;
 - `plasma-thunderbolt` — physical authorization testing required;
@@ -140,20 +142,22 @@ These remain outside the hard baseline until policy and complete backend paths a
 - KDE Connect — product/default-app decision;
 - browser integration — waits for browser/default-app policy;
 - scanner workflow — no scanner UI/app is currently exposed by the baseline;
-- archive/RAR workflow — Phase 5 application capability unless C4.0 discovers a current exposed surface.
+- archive/RAR workflow — Phase 5 application capability unless runtime discovery exposes a current surface.
 
-Discover is resolver-safe under the implemented Snap policy, but remains outside the hard `supralinux-desktop` baseline until its product role is deliberately chosen.
+Discover is resolver-safe under the implemented Snap policy, but its hard-baseline role remains a deliberate product decision and must be re-evaluated against the adopted KDE stack.
 
-## 8. Immediate C4 work
+## 8. Next work
 
-The old “first clean-system pass” is complete and must not be repeated as if it were pending. The next sequence is now:
+The historical package/KCM audit and historical C4.0 are complete. Do not repeat their old checklist as if it were unfinished work.
 
-1. implement C4.0 runtime surface discovery;
-2. generate a versioned coverage manifest from the known matrix IDs;
-3. compare runtime-discovered KCM/KWin/integration surfaces against that manifest;
-4. fail on any unknown in-scope exposed surface;
-5. only after C4.0 is green, implement C4.1;
-6. let later C4 failures drive package/configuration changes one isolated defect at a time;
-7. after all C4 subgates close, re-evaluate and freeze the exact dependency set.
+The active sequence is now:
 
-Do not add or remove product packages merely to make this static audit list look tidy before C4.0 establishes the actual runtime surface.
+1. complete `docs/KDE_STACK_QUALIFICATION.md`;
+2. if the candidate KDE stack is rejected, resume C4.1 on the last known-good baseline and retain this audit as current reference;
+3. if the candidate KDE stack is adopted, install the qualified package set in a clean runtime;
+4. regenerate the package-derived KCM/KWin inventory from that stack;
+5. rerun C4.0 and compare the new live surface against this historical baseline;
+6. classify every added, removed or renamed surface before updating capability mappings;
+7. only then resume C4.1 and later functional gates.
+
+Do not add or remove product packages merely to make this static historical audit look tidy. Runtime/dependency evidence drives the new audit.

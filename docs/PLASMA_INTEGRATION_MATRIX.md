@@ -1,23 +1,27 @@
-# Plasma Integration Matrix — Ubuntu 26.04 LTS / Aurora C4
+# Plasma Integration Matrix — Historical Ubuntu KDE 6.6.6 baseline / Aurora C4
 
-Status: **C4 executable contract active; C4.0 accepted / GREEN; C4.1 OPEN / ACTIVE; C4.1a accepted / GREEN**.
+Status: **HISTORICAL / VERSION-SCOPED; C4 paused for KDE Stack Qualification; C4.0 accepted / GREEN and C4.1a accepted / GREEN on KDE 6.6.6 only**.
 
-This is the canonical capability inventory for Aurora's first integration milestone. `docs/C4_CERTIFICATION.md` defines how these rows are executed, evidenced and certified.
+This matrix is the canonical capability inventory for the historical Ubuntu 26.04 / Plasma 6.6.6 C4 baseline. `docs/C4_CERTIFICATION.md` defines how these rows are executed, evidenced and certified; `docs/KDE_STACK_QUALIFICATION.md` defines the active architecture gate.
+
+If a newer KDE stack is adopted, do not rename this evidence into the new baseline. Re-run C4.0 from the live stack, classify the complete surface delta, update this matrix from evidence, and then re-execute any version-sensitive PASS rows before they describe the release candidate.
 
 A package being installed is not a pass. A KCM opening is not a pass. A capability passes only when the shipped user workflow reaches its real backend and the resulting state is observed.
 
-Aurora's product boundary for C4 is intentionally strict: Plasma-owned or Plasma-recommended feature surfaces that are installed/exposed by the shipped desktop are in scope. They are not treated as optional accidents merely because Ubuntu pulled them through `Recommends`.
+Aurora's product boundary for C4 is intentionally strict: Plasma-owned or Plasma-recommended feature surfaces that are installed/exposed by the shipped desktop are in scope. They are not treated as optional accidents merely because a packaging graph pulled them through `Recommends`.
+
+**Version-scope rule:** status cells below record the historical 6.6.6-derived state. `PASS-C4` and `PREREQUISITE-CERTIFIED` entries are preserved as evidence but are not automatically transferable to a different Frameworks/Plasma/KWin stack.
 
 ## Status vocabulary
 
 Execution status:
 
-- `PREREQUISITE-CERTIFIED` — already covered by accepted C1/C2/C3 evidence.
+- `PREREQUISITE-CERTIFIED` — covered by accepted prerequisite evidence for the stack that produced this matrix.
 - `PENDING-C4` — in automated C4 scope and not yet executed.
-- `PASS-C4` — automated C4 acceptance passed.
+- `PASS-C4` — automated C4 acceptance passed for the evidence-producing stack.
 - `FAIL-C4` — reproducible integration defect.
 - `BLOCKED-UPSTREAM` — reproduced upstream blocker with evidence.
-- `NOT-EXPOSED` — intentionally not part of the current Aurora Plasma baseline.
+- `NOT-EXPOSED` — intentionally not part of the audited Plasma baseline.
 - `FUTURE` — deliberately deferred product work.
 
 Hardware status:
@@ -36,11 +40,11 @@ Hardware status:
 | AUR-CORE-003 | X11 app compatibility under Wayland | C3 acceptance | PREREQUISITE-CERTIFIED |
 | AUR-CORE-004 | SDDM KWin Wayland greeter | C2 acceptance | PREREQUISITE-CERTIFIED |
 
-These rows are not reopened by C4 unless a later product change creates a documented regression scope.
+These rows are accepted for the historical KDE 6.6.6 baseline. A Frameworks/Plasma/KWin stack replacement is a documented regression trigger under `docs/C4_CERTIFICATION.md`.
 
 ## C4.0 — Surface and contract inventory
 
-Canonical evidence: `docs/validation/AURORA_C4_0_ACCEPTANCE.md`.
+Canonical historical evidence: `docs/validation/AURORA_C4_0_ACCEPTANCE.md`.
 
 | ID | User surface / claim | Backend / authoritative state | Test class | PASS criterion | Status | HW |
 |---|---|---|---|---|---|---|
@@ -53,7 +57,7 @@ Canonical evidence: `docs/validation/AURORA_C4_0_ACCEPTANCE.md`.
 
 ## C4.1 — System Settings / KWin / desktop software behavior
 
-Accepted incremental evidence: `docs/validation/AURORA_C4_1A_ACCEPTANCE.md` (`AUR-KCM-002`, `AUR-KWIN-004`). C4.1 remains open; no other row inherits PASS from this increment.
+Accepted historical incremental evidence: `docs/validation/AURORA_C4_1A_ACCEPTANCE.md` (`AUR-KCM-002`, `AUR-KWIN-004`). C4.1 is paused and never closed on this baseline; no other row inherits PASS from this increment.
 
 | ID | User surface / claim | Backend / authoritative state | Test class | PASS criterion | Status | HW |
 |---|---|---|---|---|---|---|
@@ -223,7 +227,7 @@ C4 initially exercises at least `en_US.UTF-8` and `es_AR.UTF-8`; the full suppor
 
 ## C4.15 — Additional Plasma integrations and closure audit
 
-C4.15 owns Plasma feature surfaces discovered through Ubuntu's current Plasma package graph that do not fit earlier gates. Because Aurora promises a complete functional Plasma desktop, these are supported product surfaces unless a later explicit product decision removes them before release.
+C4.15 historically owned Plasma feature surfaces discovered through Ubuntu's Plasma 6.6.6 package graph that did not fit earlier gates. If a new stack is adopted, KSQ-7/C4.0 must decide which of these surfaces still exist, which changed, and what new surfaces must be added.
 
 | ID | User surface / claim | Backend / authoritative state | Test class | PASS criterion | Status | HW |
 |---|---|---|---|---|---|---|
@@ -246,7 +250,7 @@ C4.15 owns Plasma feature surfaces discovered through Ubuntu's current Plasma pa
 
 ## Software management / Snap policy
 
-Snap policy remains a certified prerequisite. Discover itself is now in C4 because Ubuntu's current Plasma package graph installs/recommends it and Aurora's complete-Plasma policy therefore treats its visible functionality as product scope.
+Snap policy remains a certified prerequisite for the historical baseline. Discover itself entered C4 because Ubuntu's Plasma 6.6.6 package graph installed/recommended it and Aurora's complete-Plasma policy therefore treated its visible functionality as product scope. Re-evaluate the new graph after stack qualification.
 
 | ID | Capability | Backend / authoritative state | PASS criterion | Status |
 |---|---|---|---|---|
@@ -257,19 +261,21 @@ Snap policy remains a certified prerequisite. Discover itself is now in C4 becau
 | AUR-SW-005 | Discover manages Flatpak | Discover Flatpak backend + Flatpak | local test Flatpak appears/installs/removes through Discover | PENDING-C4 |
 | AUR-SW-006 | Discover firmware updates | Discover fwupd backend + fwupd | backend loads and controlled/no-device path is healthy; representative firmware HW later | PENDING-C4 |
 
-## Explicitly outside the current C4 Plasma surface
+## Explicitly outside the historical C4 Plasma surface
 
-The following are not implicitly added merely because unrelated packages exist:
+The following were not implicitly added merely because unrelated packages existed:
 
 - fingerprint authentication, until a Plasma-visible enrollment/authentication path is deliberately included;
 - KDE Connect as a default application, unless it enters the shipped desktop package graph;
-- scanner application/workflow, because the current Plasma baseline exposes no scanner UI;
+- scanner application/workflow, because the audited Plasma baseline exposed no scanner UI;
 - unrelated KDE applications such as Krita/Kdenlive/KMail/etc.; application-set selection is a later product layer.
 
-Archive handling is different from an arbitrary app decision because the installed KIO `archive` worker is already a shipped surface. C4.11 therefore certifies the currently exposed KIO archive worker. A full Ark/RAR desktop application workflow remains a later application-set decision unless Ark is promoted into the baseline.
+Archive handling was different from an arbitrary app decision because the installed KIO `archive` worker was already a shipped surface. C4.11 therefore covers the exposed KIO archive worker. A full Ark/RAR desktop application workflow remains a later application-set decision unless Ark is promoted into the baseline.
 
 ## Matrix execution rule
 
-C4.0 is the guard against silent coverage gaps. Its accepted runtime inventory proves that every currently exposed Plasma/KWin/integration surface and every current `plasma-desktop` feature recommendation maps to this matrix for the accepted C4.0 source state. Re-run C4.0 whenever a later change can alter that surface.
+The accepted historical C4.0 runtime inventory proved that every exposed Plasma/KWin/integration surface and every audited `plasma-desktop` feature recommendation mapped to this matrix for that exact source/runtime state.
 
-After C4 is complete, this matrix becomes evidence for making the required product dependencies explicit in `supralinux-desktop`. Reliance on Ubuntu `Recommends` alone is not considered sufficient for a feature that Aurora promises.
+While KDE Stack Qualification is open, this matrix is frozen as regression evidence. If a new stack is adopted, C4.0 must be regenerated before this document can again describe the release-candidate surface. Do not carry PASS states forward merely because a capability ID has the same name.
+
+After C4 is complete on the adopted stack, the matrix becomes evidence for making required product dependencies explicit in `supralinux-desktop`. Reliance on packaging `Recommends` alone is not sufficient for a feature that Aurora promises.
