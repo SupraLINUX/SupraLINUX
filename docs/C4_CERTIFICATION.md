@@ -30,6 +30,8 @@ Current rules while `docs/KDE_STACK_QUALIFICATION.md` is open:
 - if the candidate stack is adopted, C1-C3 regression and a fresh C4.0 reconciliation are required before C4.1 resumes;
 - the Baloo compatibility work remains evidence until the candidate stack proves whether it is still required.
 
+Historical C4.1b File Search investigation is recorded in `docs/validation/AURORA_C4_1B_HISTORICAL.md`. Run `33221026223` at HEAD `7d9586ae2023c6281c0385b1987c2ed19f004084` proved that the compatibility launcher made `baloo_file` resolvable as `/usr/bin/baloo_file` and advanced beyond the original SESSION failure, but later failed at `INDEXING`. Because the harness did not propagate the complete graphical Plasma session environment to its KCM-equivalent Baloo launch and the extractor aborted during `QGuiApplication` initialization, that later failure is classified as **harness/session-environment fidelity — product result inconclusive**, not as `PASS-C4` or a confirmed product defect. `AUR-KCM-003` remains pending.
+
 ## 3. Non-goals
 
 C4 does not:
@@ -145,6 +147,10 @@ Accepted historical incremental evidence on KDE 6.6.6:
 - `docs/validation/AURORA_C4_1A_ACCEPTANCE.md` — **ACCEPTED / GREEN**;
 - `AUR-KCM-002` Activities — **PASS-C4 on the historical stack**;
 - `AUR-KWIN-004` Virtual Desktops — **PASS-C4 on the historical stack**.
+
+Historical non-acceptance evidence:
+
+- `docs/validation/AURORA_C4_1B_HISTORICAL.md` — File Search/Baloo investigation; executable-resolution fix proved, later indexing result inconclusive due harness graphical-session environment fidelity; `AUR-KCM-003` remains `PENDING-C4`.
 
 No other C4.1 capability inherits PASS from C4.1a. If a new KDE stack is adopted, the applicable historical PASS rows must be re-executed before they can describe the new release candidate.
 
