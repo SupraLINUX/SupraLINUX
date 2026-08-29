@@ -2,7 +2,7 @@
 
 SupraLINUX CI validates packaging, clean-system composition and real VM behavior against Ubuntu 26.04 LTS (`resolute`), the base generation used by Aurora.
 
-Current architecture state: **KDE Stack Qualification active; C4 feature certification paused**. The C1-C3/C4.0/C4.1a results described below were produced by the historical Ubuntu KDE 6.6.6 / Frameworks 6.24 baseline and remain version-scoped evidence.
+Current architecture state: **KDE Stack Qualification active; KSQ-0 CERTIFIED; KSQ-1 next; C4 feature certification paused**. The C1-C3/C4.0/C4.1a results described below were produced by the historical Ubuntu KDE 6.6.6 / Frameworks 6.24 baseline and remain version-scoped evidence.
 
 ## Runner
 
@@ -102,22 +102,62 @@ A candidate KWin/Plasma stack must pass C3, including XWayland compatibility, ag
 
 Canonical plan: `docs/KDE_STACK_QUALIFICATION.md`.
 
-This gate owns the work required before SupraLINUX may replace Ubuntu's KDE 6.6.6/KF 6.24 baseline with the current preferred stable candidate. It includes:
+Override/backport ownership: `docs/KDE_STACK_OVERRIDES.md`.
 
-- exact source/dependency inventory;
-- reproducible clean Resolute source builds;
-- temporary/testing SupraLINUX APT repository;
-- dependency closure without uncontrolled newer-Ubuntu runtime packages;
-- clean installation;
-- 6.6.6 → candidate APT upgrade;
-- rollback/recovery;
-- C1-C3 regressions;
-- fresh C4.0 runtime-surface reconciliation;
-- compatibility-workaround review;
-- security/update ownership;
-- explicit GO/NO-GO.
+### KSQ-0 — source and dependency inventory
 
-Until this gate closes, C4.1 and later feature work is paused.
+Status: **CERTIFIED**
+
+Canonical acceptance: `docs/validation/AURORA_KSQ_0_ACCEPTANCE.md`.
+
+Canonical engineering commit: `4e7db453f626e78ca72c353ab314e16e00c9003f`.
+
+Inventory workflow: `.github/workflows/ksq-0-source-inventory.yml`
+
+Accepted inventory run: `33231880014`.
+
+Strict dependency workflow: `.github/workflows/ksq-0-dependency-closure.yml`
+
+Accepted strict run: `33231879994`.
+
+The strict gate proves:
+
+- official Plasma 6.7.4 and Frameworks 6.29.0 source manifests validate;
+- all 62 direct `supralinux-desktop` roots are classified;
+- APT metadata is pinned to Ubuntu snapshot `20260829T022000Z`;
+- Resolute is the only binary repository used by the closure model;
+- Stonking contributes source metadata only;
+- the exact transitive build closure contains 101 source packages;
+- all 101 are topologically ordered;
+- `UNRESOLVED=0`;
+- no source decision remains implicit;
+- exactly three external source selections and one packaging build-dependency adaptation are declared and consumed;
+- selected external source objects/checksums are audited;
+- `kwallet-pam` PAM functional packaging is byte-identical to Debian 6.7.4-3 where required.
+
+The candidate retains Ubuntu ownership for kernel, firmware, Mesa/libdrm, systemd, PipeWire/WirePlumber, NetworkManager, Wayland runtime, Qt and base runtime/compiler libraries.
+
+### KSQ-1 — reproducible source builds
+
+Status: **NEXT**
+
+KSQ-1 may now consume the KSQ-0 certified 101-source closure. It must build on clean Resolute builders and may not add undeclared Stonking/newer-suite binary dependencies to make builds pass.
+
+Any change to the certified release set, source selections, packaging overrides, snapshot or relevant platform boundary reopens the corresponding KSQ-0 regression first.
+
+The later qualification sequence remains:
+
+- KSQ-2 temporary/testing SupraLINUX APT repository and binary dependency closure;
+- KSQ-3 clean installation;
+- KSQ-4 upgrade from the historical 6.6.6/KF 6.24 baseline;
+- KSQ-5 rollback/recovery;
+- KSQ-6 C1-C3 regressions;
+- KSQ-7 fresh C4.0 runtime-surface reconciliation;
+- KSQ-8 compatibility-workaround review;
+- KSQ-9 security/update ownership;
+- KSQ-10 explicit GO/NO-GO.
+
+Until KSQ-10 closes, C4.1 and later feature work remains paused.
 
 ## C4 feature integration certification
 
@@ -146,7 +186,7 @@ All unknown, missing and unresolved-owner result sets were empty in the accepted
 
 Canonical historical evidence: `docs/validation/AURORA_C4_0_ACCEPTANCE.md`.
 
-C4.0 is a coverage gate, not a feature-functionality gate. Its historical PASS must not be propagated to a candidate KDE stack or to C4.1-C4.15 capabilities.
+C4.0 is a coverage gate, not a feature-functionality gate. Its historical PASS must not be propagated to the candidate KDE stack or to C4.1-C4.15 capabilities.
 
 ### Historical C4.1 work
 
@@ -179,8 +219,9 @@ Certification evidence is version-scoped. Regression is required when a later pr
 
 Examples:
 
-- documentation-only qualification/C4 changes: no boot/session regression run;
+- documentation-only qualification/C4 changes: no boot/session or KSQ-0 rerun;
 - harness/fixture-only additions that do not alter the product image: no automatic C1-C3 rerun;
+- change to a KSQ-0 release set/source selection/override/pinned snapshot: rerun affected KSQ-0 inventory/closure before downstream evidence is reusable;
 - Frameworks/Plasma/KWin stack replacement: C1 composition/boot smoke + C2 + C3 + fresh C4.0 before feature certification resumes;
 - later Plasma/KWin/session/XWayland package or configuration changes within an accepted stack: C3 regression, plus C2 if greeter infrastructure overlaps, and C4.0 if the effective surface can change;
 - SDDM/KWin greeter changes: C2 and normally C3;
@@ -193,7 +234,7 @@ The triggering change must record the regression reason. Historical evidence rem
 
 Serial guest markers remain the primary deterministic evidence channel for VM gates. A green workflow or QEMU exit code alone is insufficient.
 
-For KDE Stack Qualification and C4, evidence additionally includes source/package manifests, build logs, APT transactions, product/fixture package manifests, ownership/version inventories and targeted backend/service logs. Product dependencies and CI-only fixture dependencies must be reported separately.
+For KDE Stack Qualification and C4, evidence additionally includes source/package manifests, build logs, APT transactions, product/fixture package manifests, ownership/version inventories, source checksums, explicit override records and targeted backend/service logs. Product dependencies and CI-only fixture dependencies must be reported separately.
 
 ## Storage policy
 
