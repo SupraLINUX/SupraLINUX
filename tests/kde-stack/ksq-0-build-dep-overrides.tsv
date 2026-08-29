@@ -1,0 +1,2 @@
+source_package	source_version	field	from_relation	to_relation	reason
+kwallet-pam	4:6.7.4-0ubuntu3	Build-Depends	debhelper-compat (= 14)	debhelper-compat (= 13)	Keep the current 6.7.4 PAM integration while building on Ubuntu 26.04 debhelper 13; functional PAM files maintainer scripts and runtime dependencies must be preserved and audited before KSQ-0 closes.
