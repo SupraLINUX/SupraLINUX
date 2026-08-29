@@ -90,7 +90,8 @@ printf '%s  %s\n' \
   sha256sum -c "${OUT}/kwallet-pam-debian-6.7.4-3.sha256"
 )
 
-mkdir -p "${UNPACK}/kwallet-ubuntu" "${UNPACK}/kwallet-debian-reference"
+rm -rf "${UNPACK}/kwallet-ubuntu" "${UNPACK}/kwallet-debian-reference"
+mkdir -p "${UNPACK}/kwallet-debian-reference"
 dpkg-source -x "${DOWNLOADS}/kwallet-pam_6.7.4-0ubuntu3.dsc" "${UNPACK}/kwallet-ubuntu" >/dev/null
 tar -xJf "${DOWNLOADS}/kwallet-pam_6.7.4-3.debian.tar.xz" -C "${UNPACK}/kwallet-debian-reference"
 
