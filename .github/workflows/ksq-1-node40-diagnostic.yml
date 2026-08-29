@@ -1,4 +1,4 @@
-name: Aurora KSQ-1 node 040 dependency diagnostic
+name: Aurora KSQ-1 node 040 alternative resolution validation
 
 on:
   push:
@@ -13,15 +13,15 @@ permissions:
   actions: read
 
 jobs:
-  diagnose-node-040:
-    name: Diagnose kf6-kfilemetadata build dependencies
+  validate-node-040:
+    name: Validate kf6-kfilemetadata alternative build dependency
     runs-on: ubuntu-26.04
     timeout-minutes: 30
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Restore certified binaries 001-020 from failed full run
+      - name: Restore certified binaries 001-020 from full run
         uses: actions/download-artifact@v8
         with:
           name: aurora-ksq-1-debs-001-020
@@ -34,30 +34,32 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p build/ksq-1/node-040-diagnostic/evidence
+          mkdir -p build/ksq-1/node-040-validation/evidence
           count="$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)"
           (( count > 0 ))
           (
             cd build/ksq-1/full/debs
             find . -maxdepth 1 -type f -name '*.deb' -printf '%f\0' | sort -z | xargs -0 sha256sum
-          ) > build/ksq-1/node-040-diagnostic/evidence/restored-debs.sha256
-          echo "AURORA_KSQ_1_DIAGNOSTIC_PRIOR_RUN=33250886255" > build/ksq-1/node-040-diagnostic/evidence/input.env
-          echo "AURORA_KSQ_1_DIAGNOSTIC_PRIOR_ARTIFACT_ID=9715288962" >> build/ksq-1/node-040-diagnostic/evidence/input.env
-          echo "AURORA_KSQ_1_DIAGNOSTIC_RESTORED_DEBS=${count}" >> build/ksq-1/node-040-diagnostic/evidence/input.env
+          ) > build/ksq-1/node-040-validation/evidence/restored-debs.sha256
+          {
+            echo "AURORA_KSQ_1_NODE40_INPUT_RUN=33250886255"
+            echo "AURORA_KSQ_1_NODE40_INPUT_ARTIFACT_ID=9715288962"
+            echo "AURORA_KSQ_1_NODE40_RESTORED_DEBS=${count}"
+          } > build/ksq-1/node-040-validation/evidence/input.env
 
       - name: Prepare pinned KSQ-1 runner
         shell: bash
         run: bash scripts/ci/prepare-ksq-1-runner.sh
 
-      - name: Diagnose node 040 with apt explainer
+      - name: Build node 040 with alternative resolution
         shell: bash
         run: |
-          set -uo pipefail
+          set -euo pipefail
           ROOT="$PWD"
-          DIAG="${ROOT}/build/ksq-1/node-040-diagnostic"
-          WORK="${DIAG}/work"
-          RESULT="${DIAG}/result"
-          EVIDENCE="${DIAG}/evidence"
+          VALIDATION="${ROOT}/build/ksq-1/node-040-validation"
+          WORK="${VALIDATION}/work"
+          RESULT="${VALIDATION}/result"
+          EVIDENCE="${VALIDATION}/evidence"
           mkdir -p "${WORK}" "${RESULT}" "${EVIDENCE}"
 
           row="$(awk -F '\t' '$1 == 40 {print $0}' build/ksq-0/build-order.tsv)"
@@ -75,13 +77,12 @@ jobs:
           cp -a "${WORK}/source/debian/changelog" "${EVIDENCE}/debian-changelog"
           cp -a "${WORK}/prepared-source.env" "${EVIDENCE}/"
           cp -a "${AURORA_KSQ_1_PREPARED_DSC}" "${EVIDENCE}/"
+          grep -Fq 'libpostproc-dev | hello' "${EVIDENCE}/debian-control"
 
           # shellcheck disable=SC1091
           . build/ksq-1/environment/build-environment.env
           TARBALL="${AURORA_KSQ_1_BUILD_ENV_TARBALL:?missing chroot tarball}"
 
-          echo "AURORA_KSQ_1_DIAGNOSTIC_BUILD_START order=${order} source=${source} version=${AURORA_KSQ_1_VERSION}" | tee "${EVIDENCE}/diagnostic-status.env"
-          set +e
           DEB_BUILD_OPTIONS="parallel=2" sbuild \
             --chroot-mode=unshare \
             --chroot="${TARBALL}" \
@@ -96,47 +97,57 @@ jobs:
             --purge-build=always \
             --purge-deps=always \
             --extra-package="${ROOT}/build/ksq-1/full/debs" \
+            --resolve-alternatives \
             --bd-uninstallable-explainer=apt \
-            --build-deps-failed-commands='echo AURORA_KSQ_1_BUILD_DEPS_FAILED_HOOK; dpkg-checkbuilddeps debian/control || true; apt-get -s -o Debug::pkgProblemResolver=yes build-dep . || true' \
-            --log-external-command-output \
-            --log-external-command-error \
-            "${AURORA_KSQ_1_PREPARED_DSC}" 2>&1 | tee "${EVIDENCE}/sbuild-console.log"
-          rc=${PIPESTATUS[0]}
-          set -e
+            "${AURORA_KSQ_1_PREPARED_DSC}"
 
           while IFS= read -r -d '' generated; do
             directory="$(dirname "${generated}")"
             basename="$(basename "${generated}")"
             safe_basename="${basename//:/-}"
             if [[ "${safe_basename}" != "${basename}" ]]; then
+              [[ ! -e "${directory}/${safe_basename}" ]]
               mv "${generated}" "${directory}/${safe_basename}"
             fi
           done < <(find "${RESULT}" -maxdepth 1 -type f -name '*:*' -print0)
 
-          find "${RESULT}" -maxdepth 1 -type f \( -name '*.build' -o -name '*.buildinfo' -o -name '*.changes' \) -exec cp -a {} "${EVIDENCE}/" \;
-          {
-            echo "AURORA_KSQ_1_DIAGNOSTIC_ORDER=${order}"
-            echo "AURORA_KSQ_1_DIAGNOSTIC_SOURCE=${source}"
-            echo "AURORA_KSQ_1_DIAGNOSTIC_BASE=${base_version}"
-            echo "AURORA_KSQ_1_DIAGNOSTIC_VERSION=${AURORA_KSQ_1_VERSION}"
-            echo "AURORA_KSQ_1_DIAGNOSTIC_SBUILD_EXIT=${rc}"
-          } >> "${EVIDENCE}/diagnostic-status.env"
+          mapfile -t debs < <(find "${RESULT}" -maxdepth 1 -type f -name '*.deb' -print | sort)
+          mapfile -t buildlogs < <(find "${RESULT}" -maxdepth 1 -type f -name '*.build' -print | sort)
+          (( ${#debs[@]} > 0 )) || { echo 'node 40 produced no DEBs' >&2; exit 1; }
+          (( ${#buildlogs[@]} > 0 )) || { echo 'node 40 produced no build log' >&2; exit 1; }
 
-          : > "${EVIDENCE}/resolver-summary.txt"
-          for log in "${EVIDENCE}"/*.build "${EVIDENCE}/sbuild-console.log"; do
-            [[ -f "${log}" ]] || continue
-            grep -nE '(^E:|unmet dependencies|not installable|no installation candidate|Depends:|Conflicts:|Broken |pkgProblemResolver|build dependencies)' "${log}" >> "${EVIDENCE}/resolver-summary.txt" || true
+          for deb in "${debs[@]}"; do
+            [[ "$(dpkg-deb -f "${deb}" Version)" == "${AURORA_KSQ_1_VERSION}" ]]
           done
 
-          cat "${EVIDENCE}/resolver-summary.txt" || true
-          exit "${rc}"
+          cat "${buildlogs[@]}" | grep -nE 'libpostproc-dev|hello' > "${EVIDENCE}/alternative-resolution.log"
+          grep -Fq 'hello' "${EVIDENCE}/alternative-resolution.log"
 
-      - name: Preserve node 040 diagnostic evidence
+          cp -a "${buildlogs[@]}" "${EVIDENCE}/"
+          find "${RESULT}" -maxdepth 1 -type f \( -name '*.buildinfo' -o -name '*.changes' \) -exec cp -a {} "${EVIDENCE}/" \;
+          (
+            cd "${RESULT}"
+            find . -maxdepth 1 -type f \( -name '*.deb' -o -name '*.ddeb' -o -name '*.build' -o -name '*.buildinfo' -o -name '*.changes' \) -printf '%f\0' | sort -z | xargs -0 sha256sum
+          ) > "${EVIDENCE}/build-artifacts.sha256"
+
+          {
+            echo "AURORA_KSQ_1_NODE40_STATUS=PASS"
+            echo "AURORA_KSQ_1_NODE40_ORDER=${order}"
+            echo "AURORA_KSQ_1_NODE40_SOURCE=${source}"
+            echo "AURORA_KSQ_1_NODE40_VERSION=${AURORA_KSQ_1_VERSION}"
+            echo "AURORA_KSQ_1_NODE40_RESOLVE_ALTERNATIVES=yes"
+            echo "AURORA_KSQ_1_NODE40_ALTERNATIVE=hello"
+            echo "AURORA_KSQ_1_NODE40_DEBS=${#debs[@]}"
+            echo "AURORA_KSQ_1_NODE40_FULL_KSQ1_CERTIFIED=no"
+          } > "${EVIDENCE}/validation-status.env"
+          cat "${EVIDENCE}/validation-status.env"
+
+      - name: Preserve node 040 validation evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: aurora-ksq-1-node-040-diagnostic
-          path: build/ksq-1/node-040-diagnostic/evidence/
+          name: aurora-ksq-1-node-040-alternative-validation
+          path: build/ksq-1/node-040-validation/evidence/
           if-no-files-found: error
           retention-days: 30
           overwrite: true
