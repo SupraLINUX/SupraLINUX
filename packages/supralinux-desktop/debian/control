@@ -14,7 +14,6 @@ Depends:
  supralinux-settings (>= 0.1.0~dev2),
  plasma-desktop,
  plasma-workspace,
- plasma-session-wayland,
  systemsettings,
  baloo6,
  sddm,
@@ -81,7 +80,9 @@ Description: SupraLINUX KDE Plasma desktop integration metapackage
  It intentionally does not depend on kubuntu-desktop. The dependency set is
  built from Plasma-visible capabilities and their required integration layers.
  .
- SupraLINUX offers the Plasma desktop session on Wayland. XWayland remains part
+ SupraLINUX offers the Plasma desktop session on Wayland. Plasma 6.7.4 ships
+ the Wayland session descriptor and session targets from plasma-workspace;
+ no separate plasma-session-wayland package is required. XWayland remains part
  of the baseline so legacy X11 applications continue to work inside the Wayland
  session. X11 libraries or compatibility components are not removed merely for
  architectural purity.
