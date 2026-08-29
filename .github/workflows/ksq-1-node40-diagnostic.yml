@@ -1,0 +1,142 @@
+name: Aurora KSQ-1 node 040 dependency diagnostic
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-1-node40-diagnostic.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnose-node-040:
+    name: Diagnose kf6-kfilemetadata build dependencies
+    runs-on: ubuntu-26.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Restore certified binaries 001-020 from failed full run
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-debs-001-020
+          path: build/ksq-1/full/debs
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33250886255'
+          github-token: ${{ github.token }}
+
+      - name: Record restored binary evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ksq-1/node-040-diagnostic/evidence
+          count="$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)"
+          (( count > 0 ))
+          (
+            cd build/ksq-1/full/debs
+            find . -maxdepth 1 -type f -name '*.deb' -printf '%f\0' | sort -z | xargs -0 sha256sum
+          ) > build/ksq-1/node-040-diagnostic/evidence/restored-debs.sha256
+          echo "AURORA_KSQ_1_DIAGNOSTIC_PRIOR_RUN=33250886255" > build/ksq-1/node-040-diagnostic/evidence/input.env
+          echo "AURORA_KSQ_1_DIAGNOSTIC_PRIOR_ARTIFACT_ID=9715288962" >> build/ksq-1/node-040-diagnostic/evidence/input.env
+          echo "AURORA_KSQ_1_DIAGNOSTIC_RESTORED_DEBS=${count}" >> build/ksq-1/node-040-diagnostic/evidence/input.env
+
+      - name: Prepare pinned KSQ-1 runner
+        shell: bash
+        run: bash scripts/ci/prepare-ksq-1-runner.sh
+
+      - name: Diagnose node 040 with apt explainer
+        shell: bash
+        run: |
+          set -uo pipefail
+          ROOT="$PWD"
+          DIAG="${ROOT}/build/ksq-1/node-040-diagnostic"
+          WORK="${DIAG}/work"
+          RESULT="${DIAG}/result"
+          EVIDENCE="${DIAG}/evidence"
+          mkdir -p "${WORK}" "${RESULT}" "${EVIDENCE}"
+
+          row="$(awk -F '\t' '$1 == 40 {print $0}' build/ksq-0/build-order.tsv)"
+          [[ -n "${row}" ]] || { echo 'node 40 missing from closure' >&2; exit 1; }
+          IFS=$'\t' read -r order source base_version family decision <<< "${row}"
+          [[ "${order}" == 40 && "${source}" == kf6-kfilemetadata ]] || {
+            echo "unexpected node 40: ${row}" >&2
+            exit 1
+          }
+
+          bash scripts/ci/fetch-prepare-ksq-1-source.sh "${source}" "${base_version}" "${WORK}"
+          # shellcheck disable=SC1091
+          . "${WORK}/prepared-source.env"
+          cp -a "${WORK}/source/debian/control" "${EVIDENCE}/debian-control"
+          cp -a "${WORK}/source/debian/changelog" "${EVIDENCE}/debian-changelog"
+          cp -a "${WORK}/prepared-source.env" "${EVIDENCE}/"
+          cp -a "${AURORA_KSQ_1_PREPARED_DSC}" "${EVIDENCE}/"
+
+          # shellcheck disable=SC1091
+          . build/ksq-1/environment/build-environment.env
+          TARBALL="${AURORA_KSQ_1_BUILD_ENV_TARBALL:?missing chroot tarball}"
+
+          echo "AURORA_KSQ_1_DIAGNOSTIC_BUILD_START order=${order} source=${source} version=${AURORA_KSQ_1_VERSION}" | tee "${EVIDENCE}/diagnostic-status.env"
+          set +e
+          DEB_BUILD_OPTIONS="parallel=2" sbuild \
+            --chroot-mode=unshare \
+            --chroot="${TARBALL}" \
+            --dist=resolute \
+            --arch=amd64 \
+            --build-dir="${RESULT}" \
+            --build-path=/build/supralinux-ksq1 \
+            --jobs=2 \
+            --no-enable-network \
+            --no-run-lintian \
+            --no-run-autopkgtest \
+            --purge-build=always \
+            --purge-deps=always \
+            --extra-package="${ROOT}/build/ksq-1/full/debs" \
+            --bd-uninstallable-explainer=apt \
+            --build-deps-failed-commands='echo AURORA_KSQ_1_BUILD_DEPS_FAILED_HOOK; dpkg-checkbuilddeps debian/control || true; apt-get -s -o Debug::pkgProblemResolver=yes build-dep . || true' \
+            --log-external-command-output \
+            --log-external-command-error \
+            "${AURORA_KSQ_1_PREPARED_DSC}" 2>&1 | tee "${EVIDENCE}/sbuild-console.log"
+          rc=${PIPESTATUS[0]}
+          set -e
+
+          while IFS= read -r -d '' generated; do
+            directory="$(dirname "${generated}")"
+            basename="$(basename "${generated}")"
+            safe_basename="${basename//:/-}"
+            if [[ "${safe_basename}" != "${basename}" ]]; then
+              mv "${generated}" "${directory}/${safe_basename}"
+            fi
+          done < <(find "${RESULT}" -maxdepth 1 -type f -name '*:*' -print0)
+
+          find "${RESULT}" -maxdepth 1 -type f \( -name '*.build' -o -name '*.buildinfo' -o -name '*.changes' \) -exec cp -a {} "${EVIDENCE}/" \;
+          {
+            echo "AURORA_KSQ_1_DIAGNOSTIC_ORDER=${order}"
+            echo "AURORA_KSQ_1_DIAGNOSTIC_SOURCE=${source}"
+            echo "AURORA_KSQ_1_DIAGNOSTIC_BASE=${base_version}"
+            echo "AURORA_KSQ_1_DIAGNOSTIC_VERSION=${AURORA_KSQ_1_VERSION}"
+            echo "AURORA_KSQ_1_DIAGNOSTIC_SBUILD_EXIT=${rc}"
+          } >> "${EVIDENCE}/diagnostic-status.env"
+
+          : > "${EVIDENCE}/resolver-summary.txt"
+          for log in "${EVIDENCE}"/*.build "${EVIDENCE}/sbuild-console.log"; do
+            [[ -f "${log}" ]] || continue
+            grep -nE '(^E:|unmet dependencies|not installable|no installation candidate|Depends:|Conflicts:|Broken |pkgProblemResolver|build dependencies)' "${log}" >> "${EVIDENCE}/resolver-summary.txt" || true
+          done
+
+          cat "${EVIDENCE}/resolver-summary.txt" || true
+          exit "${rc}"
+
+      - name: Preserve node 040 diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-node-040-diagnostic
+          path: build/ksq-1/node-040-diagnostic/evidence/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
