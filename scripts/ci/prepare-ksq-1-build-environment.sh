@@ -64,9 +64,13 @@ sha256sum "${TARBALL}" > "${OUT}/resolute-amd64-buildd.tar.zst.sha256"
   echo "AURORA_KSQ_1_BUILD_ENV_ARCH=amd64"
   echo "AURORA_KSQ_1_BUILD_ENV_BACKEND=unshare"
   echo "AURORA_KSQ_1_BUILD_ENV_TARBALL=${TARBALL}"
-  echo "AURORA_KSQ_1_BUILD_ENV_SBUILD=$(sbuild --version | head -n1)"
-  echo "AURORA_KSQ_1_BUILD_ENV_MMDEBSTRAP=$(mmdebstrap --version | head -n1)"
 } > "${OUT}/build-environment.env"
 
+{
+  sbuild --version | head -n1
+  mmdebstrap --version | head -n1
+} > "${OUT}/build-environment-tool-versions.txt"
+
 cat "${OUT}/build-environment.env"
+cat "${OUT}/build-environment-tool-versions.txt"
 echo "AURORA_KSQ_1_BUILD_ENV_SUCCESS"
