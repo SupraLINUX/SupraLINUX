@@ -95,6 +95,7 @@ for index in "${!bootstrap_rows[@]}"; do
   echo "AURORA_KSQ_1_EVIDENCE_FILENAMES_SANITIZED=${sanitized} source=${source}"
 
   mapfile -t debs < <(find "${result}" -maxdepth 1 -type f -name '*.deb' -print | sort)
+  mapfile -t ddebs < <(find "${result}" -maxdepth 1 -type f -name '*.ddeb' -print | sort)
   mapfile -t buildinfos < <(find "${result}" -maxdepth 1 -type f -name '*.buildinfo' -print | sort)
   mapfile -t changes < <(find "${result}" -maxdepth 1 -type f -name '*.changes' -print | sort)
   [[ "${#debs[@]}" -gt 0 ]] || { echo "AURORA_KSQ_1_BOOTSTRAP_FAILURE: ${source} produced no debs" >&2; exit 1; }
@@ -110,8 +111,19 @@ for index in "${!bootstrap_rows[@]}"; do
     cp -a "${deb}" "${OUT}/debs/"
   done
 
-  sha256sum "${dsc}" "${buildinfos[@]}" "${changes[@]}" "${debs[@]}" \
-    | sort > "${result}/artifacts.sha256"
+  artifacts=("${dsc}" "${buildinfos[@]}" "${changes[@]}" "${debs[@]}")
+  if (( ${#ddebs[@]} > 0 )); then artifacts+=("${ddebs[@]}"); fi
+  : > "${result}/artifacts.sha256"
+  for artifact in "${artifacts[@]}"; do
+    [[ "${artifact}" == "${OUT}/"* ]] || {
+      echo "AURORA_KSQ_1_BOOTSTRAP_FAILURE: evidence path escaped bootstrap root: ${artifact}" >&2
+      exit 1
+    }
+    digest="$(sha256sum "${artifact}" | awk '{print $1}')"
+    printf '%s  %s\n' "${digest}" "${artifact#${OUT}/}" >> "${result}/artifacts.sha256"
+  done
+  sort -o "${result}/artifacts.sha256" "${result}/artifacts.sha256"
+
   printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\tPASS\n' \
     "${order}" "${source}" "${base_version}" "${supra_version}" \
     "${#debs[@]}" "${#buildinfos[@]}" "${#changes[@]}" >> "${MANIFEST}"
@@ -124,7 +136,10 @@ if find "${OUT}" -type f -printf '%f\n' | grep -Eq '[":<>|*?]'; then
   exit 1
 fi
 
-find "${OUT}/debs" -maxdepth 1 -type f -name '*.deb' -print0 | sort -z | xargs -0 sha256sum > "${OUT}/bootstrap-debs.sha256"
+(
+  cd "${OUT}"
+  find debs -maxdepth 1 -type f -name '*.deb' -print0 | sort -z | xargs -0 sha256sum
+) > "${OUT}/bootstrap-debs.sha256"
 {
   echo "AURORA_KSQ_1_BOOTSTRAP_STATUS=PASS"
   echo "AURORA_KSQ_1_BOOTSTRAP_SOURCES=${COUNT}"
