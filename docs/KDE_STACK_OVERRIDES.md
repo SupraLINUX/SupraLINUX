@@ -112,9 +112,41 @@ The package-level KSQ-1 installation gate does **not** by itself certify live KW
 
 **Removal condition:** remove the adaptation when the supported Ubuntu base's debhelper can build the selected official packaging unchanged, or when newer accepted packaging no longer needs the compat-level change.
 
+## 5. `kf6-syntax-highlighting 6.29.0-0ubuntu1` deterministic Jinja-generation patch
+
+**Classification:** SupraLINUX build-time source adaptation for reproducibility. It changes only the build-time grammar traversal order; it does not intentionally change syntax-definition content or runtime APIs.
+
+**Source origin:** KDE Frameworks Syntax Highlighting 6.29.0 using Ubuntu Stonking packaging `6.29.0-0ubuntu1` from the pinned Ubuntu snapshot `20260829T022000Z`.
+
+**Root cause:** Frameworks 6.29.0's `data/generators/generate_jinja.py` chooses pending grammars with Python `set.pop()`. Python hash randomization therefore changes the generator's dry-run output order across `PYTHONHASHSEED` values. `data/CMakeLists.txt` consumes that output order as `out_xmls`/`gen_defs`, and that ordering reaches the embedded syntax QRC. Independent KSQ-1 builds consequently produced two different `libkf6syntaxhighlighting6` binaries even though the generated XML contents were identical.
+
+KDE upstream commit `fb41b0e8848ac054d6eda97d65fc63e8880c8360`/MR !806, included in Frameworks 6.29.0, fixed an earlier timestamp-based reproducibility defect in the same generator but did not make the pending-set traversal deterministic. Upstream `master` still contained `set.pop()` when rechecked on 2026-08-29.
+
+**SupraLINUX delta:** `packaging/ksq-1/patches/kf6-syntax-highlighting/supralinux-deterministic-jinja-order.patch` replaces the single traversal operation:
+
+`lang = to_do.pop()`
+
+with deterministic lexicographic selection:
+
+`lang = min(to_do)` followed by `to_do.remove(lang)`.
+
+The adaptation is declared machine-readably as `kf6-syntax-highlighting-deterministic-jinja-order` in `tests/kde-stack/ksq-1-packaging-adaptations.tsv`. Source preparation fails closed if the expected upstream line, quilt packaging shape, implementation path or adaptation metadata drifts.
+
+**Evidence:** root-cause run `33279585912` proved four different original orders under `PYTHONHASHSEED=1,2,3,4` while generated XML contents stayed identical; the deterministic traversal produced one order across all four seeds. Patched package run `33279750116` then built the exact node 29 source twice against certified nodes 1–28 with seeds 1 and 2. All six DEBs and three DDEBs were byte-identical; the workflow's red conclusion was caused only by a later evidence-copy command after all binary `cmp` checks had passed. Artifact `9722758709` has digest `sha256:105962964acbfc8f2b13ec0d19675d758a2e5f117e5e8b202ff59943aabaeeaa`. Independent artifact validator run `33280301683` is PASS; artifact `9722778323` has digest `sha256:bc8b272c945cb7124ad67af3b0dd575882eb166faf0bee6d603112ee036b9506`.
+
+**Regression scope:** the certified source DAG gives node 29 five downstream descendants: node 68 `drkonqi`, node 81 `kf6-ktexteditor`, node 99 `plasma-workspace`, node 100 `plasma-desktop`, and node 101 `powerdevil`. Those nodes plus node 29 must not reuse pre-patch build certification. The current full-DAG regression on the materialized adaptation remains authoritative before KSQ-1 can close.
+
+**Maintenance/security responsibility:** SupraLINUX owns the patched binary while the delta exists. Every accepted Frameworks point release must be checked first for an upstream deterministic traversal or equivalent fix. If upstream resolves the defect, carrying this patch forward is prohibited unless a new defect is independently demonstrated.
+
+**Update procedure:** start from the new stable official source/packaging, reproduce the original nondeterminism test, remove the patch if upstream is deterministic, or rebase only after proving the same root cause remains. Re-run the affected build/reproducibility regressions and any downstream gates invalidated by the source change.
+
+**Removal condition:** remove immediately when the accepted stable KDE source produces deterministic Jinja/QRC ordering without the SupraLINUX patch.
+
 ## Current override boundary
 
-KSQ-0 certifies **three source backports and one packaging adaptation only**. The compat-13 relationship restoration above is part of the single `kwallet-pam` packaging adaptation; it does not create another source/backport exception.
+Canonical KSQ-0 acceptance certifies **three source backports and the `kwallet-pam` packaging adaptation**. KSQ-1 has additionally materialized the single `kf6-syntax-highlighting` reproducibility patch above after independently proving its cause and correction. The new patch does not change the dependency closure or widen Ubuntu platform ownership, but it is an owned source override and therefore invalidates the affected build evidence until the current regressions pass.
+
+The current machine-readable KSQ-1 adaptation boundary is exactly two IDs in `tests/kde-stack/ksq-1-packaging-adaptations.tsv`: the KWallet compat-13 relationship restoration and the Syntax Highlighting deterministic-Jinja patch. Any third adaptation is a boundary change and must fail the current KSQ-1 final validator until explicitly investigated and reviewed.
 
 There is no authorization to override Qt, Wayland runtime, Mesa, libdrm, kernel, firmware, systemd, PipeWire/WirePlumber, NetworkManager, or base compiler/runtime libraries.
 
