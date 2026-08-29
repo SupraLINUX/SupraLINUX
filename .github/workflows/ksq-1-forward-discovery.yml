@@ -1,0 +1,249 @@
+name: Aurora KSQ-1 forward DAG discovery
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-1-forward-discovery.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  BASE_RUN_ID: '33250886255'
+
+jobs:
+  discover-021-040:
+    name: Discovery build 021-040
+    runs-on: ubuntu-26.04
+    timeout-minutes: 150
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Restore previously proven 001-020 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-debs-001-020
+          path: build/ksq-1/full/debs
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ env.BASE_RUN_ID }}
+          github-token: ${{ github.token }}
+
+      - name: Mark discovery provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ksq-1/discovery
+          {
+            echo 'AURORA_KSQ_1_DISCOVERY_CANONICAL=no'
+            echo "AURORA_KSQ_1_DISCOVERY_BASE_RUN=${BASE_RUN_ID}"
+            echo 'AURORA_KSQ_1_DISCOVERY_BASE_RANGE=001-020'
+            echo "AURORA_KSQ_1_DISCOVERY_HEAD=${GITHUB_SHA}"
+          } > build/ksq-1/discovery/provenance.env
+
+      - name: Prepare pinned KSQ-1 runner
+        shell: bash
+        run: bash scripts/ci/prepare-ksq-1-runner.sh
+
+      - name: Build discovery sources 021-040
+        shell: bash
+        run: bash scripts/ci/build-ksq-1-range.sh 21 40
+
+      - name: Preserve discovery binaries 021-040
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-discovery-debs-021-040
+          path: build/ksq-1/full/chunk-021-040/new-debs/
+          if-no-files-found: warn
+          retention-days: 7
+          overwrite: true
+
+      - name: Preserve discovery evidence 021-040
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-discovery-evidence-021-040
+          path: |
+            build/ksq-1/discovery/provenance.env
+            build/ksq-1/full/chunk-021-040/evidence/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+  discover-041-060:
+    name: Discovery build 041-060
+    needs: discover-021-040
+    runs-on: ubuntu-26.04
+    timeout-minutes: 150
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Restore base 001-020 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-debs-001-020
+          path: build/ksq-1/full/debs
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ env.BASE_RUN_ID }}
+          github-token: ${{ github.token }}
+
+      - name: Restore discovery 021-040 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-discovery-debs-021-040
+          path: build/ksq-1/full/debs
+          merge-multiple: true
+
+      - name: Prepare pinned KSQ-1 runner
+        shell: bash
+        run: bash scripts/ci/prepare-ksq-1-runner.sh
+
+      - name: Build discovery sources 041-060
+        shell: bash
+        run: bash scripts/ci/build-ksq-1-range.sh 41 60
+
+      - name: Preserve discovery binaries 041-060
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-discovery-debs-041-060
+          path: build/ksq-1/full/chunk-041-060/new-debs/
+          if-no-files-found: warn
+          retention-days: 7
+          overwrite: true
+
+      - name: Preserve discovery evidence 041-060
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-discovery-evidence-041-060
+          path: build/ksq-1/full/chunk-041-060/evidence/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+  discover-061-080:
+    name: Discovery build 061-080 and KWallet package gate
+    needs: discover-041-060
+    runs-on: ubuntu-26.04
+    timeout-minutes: 180
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Restore base 001-020 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-debs-001-020
+          path: build/ksq-1/full/debs
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ env.BASE_RUN_ID }}
+          github-token: ${{ github.token }}
+
+      - name: Restore discovery checkpoints 021-060
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-discovery-debs-*
+          path: build/ksq-1/full/debs
+          merge-multiple: true
+
+      - name: Prepare pinned KSQ-1 runner
+        shell: bash
+        run: bash scripts/ci/prepare-ksq-1-runner.sh
+
+      - name: Build discovery sources 061-080
+        shell: bash
+        run: bash scripts/ci/build-ksq-1-range.sh 61 80
+
+      - name: Validate KWallet PAM package integration
+        shell: bash
+        run: bash scripts/ci/validate-ksq-1-kwallet-pam.sh
+
+      - name: Preserve KWallet discovery evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-discovery-kwallet-pam
+          path: build/ksq-1/full/kwallet-pam-validation/
+          if-no-files-found: warn
+          retention-days: 7
+          overwrite: true
+
+      - name: Preserve discovery binaries 061-080
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-discovery-debs-061-080
+          path: build/ksq-1/full/chunk-061-080/new-debs/
+          if-no-files-found: warn
+          retention-days: 7
+          overwrite: true
+
+      - name: Preserve discovery evidence 061-080
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-discovery-evidence-061-080
+          path: build/ksq-1/full/chunk-061-080/evidence/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+
+  discover-081-101:
+    name: Discovery build 081-101
+    needs: discover-061-080
+    runs-on: ubuntu-26.04
+    timeout-minutes: 180
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Restore base 001-020 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-debs-001-020
+          path: build/ksq-1/full/debs
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ env.BASE_RUN_ID }}
+          github-token: ${{ github.token }}
+
+      - name: Restore discovery checkpoints 021-080
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-discovery-debs-*
+          path: build/ksq-1/full/debs
+          merge-multiple: true
+
+      - name: Prepare pinned KSQ-1 runner
+        shell: bash
+        run: bash scripts/ci/prepare-ksq-1-runner.sh
+
+      - name: Build discovery sources 081-101
+        shell: bash
+        run: bash scripts/ci/build-ksq-1-range.sh 81 101
+
+      - name: Preserve discovery binaries 081-101
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-discovery-debs-081-101
+          path: build/ksq-1/full/chunk-081-101/new-debs/
+          if-no-files-found: warn
+          retention-days: 7
+          overwrite: true
+
+      - name: Preserve discovery evidence 081-101
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-discovery-evidence-081-101
+          path: build/ksq-1/full/chunk-081-101/evidence/
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
