@@ -137,11 +137,13 @@ The strict gate proves:
 
 The candidate retains Ubuntu ownership for kernel, firmware, Mesa/libdrm, systemd, PipeWire/WirePlumber, NetworkManager, Wayland runtime, Qt and base runtime/compiler libraries.
 
+The KSQ-1 Syntax Highlighting reproducibility patch does not alter this dependency boundary. Post-materialization KSQ-0 regressions passed: closure run `33281492212`, artifact `9723122890`, digest `sha256:8a305b70965c98702122d2afc30da08474234a04e8422bd09da391f8f22396ff`; source-inventory run `33281492218`, artifact `9723114366`, digest `sha256:e380ae378d9cb2161b66557d9eaafb9ae7f8b253691b8324a9506cc19c8d75a1`.
+
 ### KSQ-1 — reproducible source builds
 
 Status: **ACTIVE**
 
-Workflow: `.github/workflows/ksq-1-full-builds.yml`.
+Full build workflow: `.github/workflows/ksq-1-full-builds.yml`.
 
 The builder consumes the certified 101-source DAG on clean Resolute amd64 runners. Each checkpoint recreates and revalidates the pinned snapshot build environment. Candidate dependencies are transported between jobs only as explicit DEB checkpoint artifacts; Stonking is not enabled as a binary repository.
 
@@ -160,11 +162,40 @@ The alternative-resolver requirement is evidence-based. Full run `33250886255` b
 
 Global builder commit `fe12df912217d44465a7a613d79ba3f523d4e700` incorporates that proven fix. It also records `.build`, `.buildinfo`, `.changes`, partial DEBs/DDEBs, hashes, first failed source/order and successful DEBs already produced in a checkpoint before returning failure, so a package failure remains diagnosable without guessing from a workflow status.
 
-Current full regression run for the global builder: `33264059201`. It is **ACTIVE**, not accepted yet.
+Historical independent-reference full run `33264059201` has built nodes 001–080 successfully and is retained only for byte-for-byte comparison when prepared-source identity and relevant builder inputs are proven unchanged. It is not the current candidate build.
 
-Canonical bootstrap evidence remains run `33248631454`, artifact `9713725769`, digest `sha256:ee26c3f3421adcf4e64d351e10ba61c2bc890ba8c4bfded4b7e37dcb72fd9c7d`.
+The authoritative full-DAG candidate is run `33281736655` on source-preparation commit `90fd5d3119ebfaab42f721d3bdd977a3472da498`. Earlier materialization runs `33281492213` and `33281655808` are superseded because follow-up commits removed changelog deltas not required by the actual source patch.
 
-Even a future 101/101 green full build does not by itself close KSQ-1. Reproducibility must be demonstrated by repeated byte-for-byte build comparison under controlled variations using the Debian/Ubuntu reproducible-build tooling available on Resolute, with diagnostic evidence retained for any divergence.
+Canonical bootstrap evidence before the new adaptation remains run `33248631454`, artifact `9713725769`, digest `sha256:ee26c3f3421adcf4e64d351e10ba61c2bc890ba8c4bfded4b7e37dcb72fd9c7d`. Bootstrap regression run `33281736633` exercises the final source-preparation semantics for nodes 1–4.
+
+#### KSQ-1 explicit adaptation boundary
+
+Machine-readable manifest: `tests/kde-stack/ksq-1-packaging-adaptations.tsv`.
+
+The current boundary is exactly two IDs:
+
+- `kwallet-pam-compat13-relationship-substvars`;
+- `kf6-syntax-highlighting-deterministic-jinja-order`.
+
+`prepare-ksq-1-source.py` applies only declared adaptations and emits per-source adaptation metadata. `fetch-prepare-ksq-1-source.sh` carries that metadata into retained source evidence. `validate-ksq-1-full.py` requires exactly 101 prepared-source evidence records and rejects any mismatch between source/version, declared adaptation, Build-Depends override count or KWallet substvar restoration count.
+
+The Syntax Highlighting patch is retained at `packaging/ksq-1/patches/kf6-syntax-highlighting/supralinux-deterministic-jinja-order.patch`. Root-cause workflow `.github/workflows/ksq-1-syntax-repro-investigation.yml` proved the `set.pop()`/Python hash-order cause. Patched-build evidence was independently revalidated by `.github/workflows/ksq-1-syntax-repro-artifact-validation.yml` in run `33280301683`.
+
+Materialization-identity workflow `.github/workflows/ksq-1-syntax-materialization-identity.yml` compares the source produced by the current source-prep code against the exact `.dsc`, `.debian.tar.xz`, patch and series already used by the successful two-seed package experiment. A source-byte mismatch fails before that experiment may be reused.
+
+#### KSQ-1 reproducibility gate
+
+Validator: `scripts/ci/validate-ksq-1-reproducibility.py`.
+
+The gate must account for all 101 source nodes and every produced candidate DEB. For an unaffected source, the validator first requires exact prepared-source identity between the authoritative candidate and an independent reference build (`.dsc`, generated source delta, `debian/control`, `debian/changelog`) plus the same binary package shape; only then does it accept byte-identical DEB comparison.
+
+The Syntax Highlighting patch invalidates exactly six source nodes for pre-patch reproducibility evidence: node 29 `kf6-syntax-highlighting` and descendant nodes 68 `drkonqi`, 81 `kf6-ktexteditor`, 99 `plasma-workspace`, 100 `plasma-desktop`, and 101 `powerdevil`. Those six require dedicated independent rebuild hashes against the patched candidate and cannot inherit old binary hashes.
+
+Thus the planned complete proof is 95 unchanged-input sources by independent full-DAG comparison plus 6 affected sources by dedicated independent rebuild. Any source-identity mismatch automatically moves that source out of the reusable 95 and requires a fresh rebuild rather than relaxing the check.
+
+`reprotest` and `diffoscope` remain the diagnostic tools for controlled variations and root-causing any divergence. A single green build is never sufficient.
+
+Even a future 101/101 green full build does not by itself close KSQ-1. The complete reproducibility comparison and a consolidated relocatable/self-verifying acceptance artifact must pass before KSQ-1 can be certified.
 
 Any change to the certified release set, source selections, packaging overrides, snapshot or relevant platform boundary reopens the corresponding KSQ-0 regression first.
 
