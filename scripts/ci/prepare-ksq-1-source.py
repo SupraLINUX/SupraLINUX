@@ -72,6 +72,64 @@ def apply_override(source_tree: Path, row: dict[str, str]) -> None:
     control.write_text(text.replace(before, after, 1), encoding="utf-8")
 
 
+def restore_kwallet_compat13_substvars(source_tree: Path, source: str, version: str) -> int:
+    if source != "kwallet-pam" or version != "4:6.7.4-0ubuntu3":
+        return 0
+
+    control = source_tree / "debian/control"
+    text = control.read_text(encoding="utf-8")
+
+    if "debhelper-compat (= 13)" not in text or "debhelper-compat (= 14)" in text:
+        fail("kwallet-pam compat-13 packaging adaptation was not applied before substvar restoration")
+    if "dh-sequence-plasma" in text:
+        fail("kwallet-pam unexpectedly contains dh-sequence-plasma; Ubuntu packaging delta must be preserved")
+
+    common_before = """Package: libpam-kwallet-common
+Architecture: all
+Depends: socat,
+"""
+    common_after = """Package: libpam-kwallet-common
+Architecture: all
+Depends: ${misc:Depends},
+         socat,
+"""
+    pam_before = """Package: libpam-kwallet5
+Architecture: any
+Depends: kwallet6,
+         libpam-kwallet-common (>= ${source:Version}),
+         libpam-runtime,
+"""
+    pam_after = """Package: libpam-kwallet5
+Architecture: any
+Depends: ${misc:Depends},
+         ${qml6:Depends},
+         ${shlibs:Depends},
+         kwallet6,
+         libpam-kwallet-common (>= ${source:Version}),
+         libpam-runtime,
+"""
+
+    for label, before, after in (
+        ("libpam-kwallet-common", common_before, common_after),
+        ("libpam-kwallet5", pam_before, pam_after),
+    ):
+        occurrences = text.count(before)
+        if occurrences != 1:
+            fail(
+                f"kwallet-pam {label} control stanza drift: "
+                f"expected certified compat-14 form once, found {occurrences}"
+            )
+        text = text.replace(before, after, 1)
+
+    required = ("${misc:Depends}", "${qml6:Depends}", "${shlibs:Depends}")
+    for token in required:
+        if token not in text:
+            fail(f"kwallet-pam compat-13 restoration missing {token}")
+
+    control.write_text(text, encoding="utf-8")
+    return 3
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source-tree", required=True, type=Path)
@@ -105,10 +163,18 @@ def main() -> int:
             apply_override(tree, row)
             applied.append(row)
 
+    restored_substvars = restore_kwallet_compat13_substvars(tree, source, version)
+
     stanza = (
         f"{source} ({new_version}) resolute; urgency=medium\n\n"
         f"  * SupraLINUX Aurora KSQ-1 rebuild from certified packaging base {version}.\n"
-        "  * Apply only packaging adaptations explicitly certified by KSQ-0.\n\n"
+        "  * Apply only packaging adaptations explicitly certified by KSQ-0.\n"
+        + (
+            "  * Restore relationship substvars required by debhelper compat 13.\n"
+            if restored_substvars
+            else ""
+        )
+        + "\n"
         f" -- SupraLINUX Build System <build@supralinux.invalid>  {snapshot_rfc2822(snapshot)}\n\n"
     )
     changelog.write_text(stanza + original, encoding="utf-8")
@@ -132,6 +198,7 @@ def main() -> int:
                 f"AURORA_KSQ_1_VERSION_SUFFIX={args.suffix}",
                 f"AURORA_KSQ_1_APT_SNAPSHOT={snapshot}",
                 f"AURORA_KSQ_1_OVERRIDES_APPLIED={len(applied)}",
+                f"AURORA_KSQ_1_COMPAT13_SUBSTVARS_RESTORED={restored_substvars}",
             ]
         )
         + "\n",
@@ -142,6 +209,7 @@ def main() -> int:
     print(f"AURORA_KSQ_1_PACKAGING_BASE={version}")
     print(f"AURORA_KSQ_1_VERSION={new_version}")
     print(f"AURORA_KSQ_1_OVERRIDES_APPLIED={len(applied)}")
+    print(f"AURORA_KSQ_1_COMPAT13_SUBSTVARS_RESTORED={restored_substvars}")
     print("AURORA_KSQ_1_SOURCE_PREP_SUCCESS")
     return 0
 
