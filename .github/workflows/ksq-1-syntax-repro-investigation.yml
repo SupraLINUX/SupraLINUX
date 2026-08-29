@@ -1,0 +1,163 @@
+name: Aurora KSQ-1 syntax-highlighting reproducibility investigation
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-1-syntax-repro-investigation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  investigate-generator-order:
+    name: Prove kf6-syntax-highlighting generator nondeterminism
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Prepare pinned KSQ-1 runner
+        shell: bash
+        run: bash scripts/ci/prepare-ksq-1-runner.sh
+
+      - name: Fetch exact certified node 29 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ci/fetch-prepare-ksq-1-source.sh \
+            kf6-syntax-highlighting \
+            6.29.0-0ubuntu1 \
+            "$PWD/build/ksq-1/syntax-repro/source-work"
+
+      - name: Reproduce hash-seed-dependent Jinja ordering and test deterministic queue
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD"
+          WORK="${ROOT}/build/ksq-1/syntax-repro"
+          SRC="${WORK}/source-work/source"
+          GEN="${SRC}/data/generators/generate_jinja.py"
+          SYNTAX="${SRC}/data/syntax"
+          EVIDENCE="${WORK}/evidence"
+          mkdir -p "${EVIDENCE}" "${WORK}/dry-run"
+
+          [[ -f "${GEN}" ]]
+          grep -Fq "lang_tag.set('version', max(lang_tag.get('version'), jinja_tag.get('version')))" "${GEN}"
+          grep -Fq 'to_do = set()' "${GEN}"
+          grep -Fq 'lang = to_do.pop()' "${GEN}"
+
+          langs=(html css xml json yaml toml sql python cpp qml java groovy rust javascript typescript ruby cmake qmake ini bash zsh dockerfile terraform systemd-unit)
+          inputs=()
+          for lang in "${langs[@]}"; do
+            input="${SYNTAX}/${lang}.xml"
+            [[ -f "${input}" ]]
+            inputs+=("${input}")
+          done
+
+          sha256sum "${GEN}" > "${EVIDENCE}/original-generator.sha256"
+          cp -a "${WORK}/source-work/prepared-source.env" "${EVIDENCE}/"
+
+          run_generator() {
+            local generator="$1"
+            local label="$2"
+            local seed="$3"
+            local out="${WORK}/${label}-seed-${seed}"
+            mkdir -p "${out}"
+
+            PYTHONHASHSEED="${seed}" python3 "${generator}" --dry-run \
+              --jinja-xml "${SYNTAX}/jinja.xml" \
+              --prefix jinja- \
+              --output-dir "${WORK}/dry-run" \
+              "${inputs[@]}" \
+              | sed "s#^${WORK}/dry-run/##" \
+              > "${EVIDENCE}/${label}-order-seed-${seed}.txt"
+
+            PYTHONHASHSEED="${seed}" python3 "${generator}" \
+              --jinja-xml "${SYNTAX}/jinja.xml" \
+              --prefix jinja- \
+              --output-dir "${out}" \
+              "${inputs[@]}"
+
+            (
+              cd "${out}"
+              find . -maxdepth 1 -type f -name '*.xml' -printf '%P\0' \
+                | sort -z \
+                | xargs -0 sha256sum
+            ) > "${EVIDENCE}/${label}-content-seed-${seed}.sha256"
+          }
+
+          for seed in 1 2 3 4; do
+            run_generator "${GEN}" original "${seed}"
+          done
+
+          for seed in 2 3 4; do
+            cmp -s "${EVIDENCE}/original-content-seed-1.sha256" "${EVIDENCE}/original-content-seed-${seed}.sha256"
+          done
+
+          original_unique_orders="$({ for seed in 1 2 3 4; do sha256sum "${EVIDENCE}/original-order-seed-${seed}.txt" | awk '{print $1}'; done; } | sort -u | wc -l)"
+          (( original_unique_orders > 1 )) || {
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_FAILURE: original generator order did not vary across controlled hash seeds' >&2
+            exit 1
+          }
+
+          FIXED="${WORK}/generate_jinja.deterministic.py"
+          cp -a "${GEN}" "${FIXED}"
+          python3 - "${FIXED}" <<'PY'
+          from pathlib import Path
+          import sys
+
+          path = Path(sys.argv[1])
+          text = path.read_text()
+          old = '        lang = to_do.pop()\n'
+          new = '        lang = min(to_do)\n        to_do.remove(lang)\n'
+          if text.count(old) != 1:
+              raise SystemExit(f'expected exactly one queue pop, found {text.count(old)}')
+          path.write_text(text.replace(old, new))
+          PY
+
+          diff -u "${GEN}" "${FIXED}" > "${EVIDENCE}/deterministic-queue.patch" || true
+          grep -Fq 'lang = min(to_do)' "${FIXED}"
+          grep -Fq 'to_do.remove(lang)' "${FIXED}"
+
+          for seed in 1 2 3 4; do
+            run_generator "${FIXED}" fixed "${seed}"
+          done
+
+          for seed in 2 3 4; do
+            cmp -s "${EVIDENCE}/fixed-order-seed-1.txt" "${EVIDENCE}/fixed-order-seed-${seed}.txt"
+            cmp -s "${EVIDENCE}/fixed-content-seed-1.sha256" "${EVIDENCE}/fixed-content-seed-${seed}.sha256"
+          done
+
+          fixed_unique_orders="$({ for seed in 1 2 3 4; do sha256sum "${EVIDENCE}/fixed-order-seed-${seed}.txt" | awk '{print $1}'; done; } | sort -u | wc -l)"
+          [[ "${fixed_unique_orders}" == 1 ]]
+
+          diff -u "${EVIDENCE}/original-order-seed-1.txt" "${EVIDENCE}/original-order-seed-2.txt" > "${EVIDENCE}/original-order-seed-1-vs-2.diff" || true
+          {
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_STATUS=PASS'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_SOURCE=kf6-syntax-highlighting'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_PACKAGING_BASE=6.29.0-0ubuntu1'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_NODE=29'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_SEEDS=1,2,3,4'
+            echo "AURORA_KSQ_1_SYNTAX_REPRO_ORIGINAL_UNIQUE_ORDERS=${original_unique_orders}"
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_ORIGINAL_CONTENT_IDENTICAL=yes'
+            echo "AURORA_KSQ_1_SYNTAX_REPRO_FIXED_UNIQUE_ORDERS=${fixed_unique_orders}"
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_FIXED_CONTENT_IDENTICAL=yes'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_ROOT_CAUSE=python-set-pop-order'
+            echo 'AURORA_KSQ_1_SYNTAX_REPRO_CANDIDATE_PATCH_APPLIED=no'
+            echo 'AURORA_KSQ_1_FULL_CERTIFIED=no'
+          } > "${EVIDENCE}/status.env"
+          cat "${EVIDENCE}/status.env"
+
+      - name: Preserve investigation evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-syntax-repro-investigation
+          path: build/ksq-1/syntax-repro/evidence/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
