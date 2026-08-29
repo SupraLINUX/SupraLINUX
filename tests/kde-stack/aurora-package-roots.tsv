@@ -2,7 +2,6 @@ binary_package	relation	candidate_family	upstream_module	ksq_action
 supralinux-settings	Depends	supralinux	-	retain
 plasma-desktop	Depends	plasma-6.7.4	plasma-desktop	rebuild
 plasma-workspace	Depends	plasma-6.7.4	plasma-workspace	rebuild
-plasma-session-wayland	Depends	plasma-6.7.4	plasma-workspace	rebuild
 systemsettings	Depends	plasma-6.7.4	systemsettings	rebuild
 baloo6	Depends	frameworks-6.29.0	baloo	rebuild
 sddm	Depends	ubuntu-platform	-	keep-ubuntu
