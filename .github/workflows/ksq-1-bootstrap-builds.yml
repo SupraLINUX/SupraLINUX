@@ -104,11 +104,12 @@ jobs:
             build/ksq-1/bootstrap/build-manifest.tsv
             build/ksq-1/bootstrap/bootstrap-status.env
             build/ksq-1/bootstrap/bootstrap-debs.sha256
+            build/ksq-1/bootstrap/debs/**
             build/ksq-1/bootstrap/work/*/*.dsc
             build/ksq-1/bootstrap/work/*/*.tar.*
             build/ksq-1/bootstrap/work/*/*.asc
             build/ksq-1/bootstrap/work/*/*.env
             build/ksq-1/bootstrap/work/*/*.sha256
             build/ksq-1/bootstrap/results/**
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 30
