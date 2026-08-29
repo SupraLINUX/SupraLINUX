@@ -1,8 +1,8 @@
 # Aurora C4 — Feature Integration Certification
 
-Status: **implementation active; C4.0 accepted / GREEN / CLOSED; C4.1 OPEN / ACTIVE; C4.1a accepted / GREEN (`AUR-KCM-002`, `AUR-KWIN-004`)**
+Status: **PAUSED FOR KDE STACK QUALIFICATION; historical KDE 6.6.6 baseline: C4.0 accepted / GREEN, C4.1a accepted / GREEN (`AUR-KCM-002`, `AUR-KWIN-004`); C4.1 not closed**
 
-C1, C2 and C3 are certified prerequisites. C4 must not reopen them unless a later product change creates a real regression risk.
+C1, C2 and C3 are certified prerequisites for the historical Ubuntu KDE 6.6.6 development baseline. `docs/KDE_STACK_QUALIFICATION.md` is now the active architecture gate. If the KDE stack changes, those results remain historical evidence and the applicable boot/session regressions plus C4.0 must run again before C4 feature certification resumes.
 
 ## 1. Purpose
 
@@ -12,11 +12,25 @@ Aurora's product rule is deliberately strict:
 
 > If Plasma exposes the function in the shipped SupraLINUX desktop, the user must be able to use it without installing additional packages, helpers, backends or plugins.
 
-For C4, Plasma feature packages installed through Ubuntu's current `plasma-desktop` dependency/recommendation graph are product surfaces, not accidental extras. C4.0 inventories them before `supralinux-desktop` dependencies are made explicit.
+For the historical C4.0/C4.1 evidence, Plasma feature packages installed through Ubuntu 26.04's `plasma-desktop` dependency/recommendation graph were product surfaces, not accidental extras. If the candidate KDE stack is adopted, that live surface must be rediscovered and reconciled rather than assuming the historical Ubuntu graph remains authoritative.
 
-The canonical capability inventory lives in `docs/PLASMA_INTEGRATION_MATRIX.md`.
+The canonical capability inventory lives in `docs/PLASMA_INTEGRATION_MATRIX.md`. While KDE Stack Qualification is open, that matrix describes the historical 6.6.6-derived C4 surface and must be regenerated/reconciled before becoming canonical for a newly adopted stack.
 
-## 2. Non-goals
+## 2. Version scope and qualification pause
+
+Certification evidence is version-scoped.
+
+The currently accepted C1-C3/C4.0/C4.1a evidence was generated on the Ubuntu 26.04 KDE development baseline (Plasma 6.6.6 / Frameworks 6.24.x / Ubuntu Qt 6.10.2). It remains valid evidence for that baseline only.
+
+Current rules while `docs/KDE_STACK_QUALIFICATION.md` is open:
+
+- C4.1 and later C4 implementation is paused;
+- accepted historical evidence and artifacts are preserved, not deleted or relabelled;
+- a green historical C4 workflow does not certify the candidate KDE stack;
+- if the candidate stack is adopted, C1-C3 regression and a fresh C4.0 reconciliation are required before C4.1 resumes;
+- the Baloo compatibility work remains evidence until the candidate stack proves whether it is still required.
+
+## 3. Non-goals
 
 C4 does not:
 
@@ -29,7 +43,7 @@ C4 does not:
 
 The “unrelated application” rule does not exclude Plasma-owned feature applications already exposed by the Plasma package graph, such as Discover or Plasma System Monitor. Those are C4 scope when shipped.
 
-## 3. Status vocabulary
+## 4. Status vocabulary
 
 Capability execution status:
 
@@ -50,7 +64,7 @@ Hardware claim status is separate:
 
 A capability may be `PASS-C4` and still be `PENDING-HW`.
 
-## 4. Required capability contract
+## 5. Required capability contract
 
 Every C4 capability must identify or be traceable to:
 
@@ -77,15 +91,15 @@ Every C4 capability must identify or be traceable to:
 
 CI fixtures must never be silently promoted into product dependencies.
 
-## 5. C4 gate layout
+## 6. C4 gate layout
 
 ### C4.0 — Surface and contract inventory
 
-Status: **ACCEPTED / GREEN / CLOSED**
+Status: **HISTORICAL ACCEPTED / GREEN on KDE 6.6.6; REVALIDATION REQUIRED IF KDE STACK CHANGES**
 
-Canonical evidence: `docs/validation/AURORA_C4_0_ACCEPTANCE.md`.
+Canonical historical evidence: `docs/validation/AURORA_C4_0_ACCEPTANCE.md`.
 
-Goal: prove that the certification matrix covers the complete currently shipped Aurora Plasma surface before feature testing or package correction begins.
+Goal: prove that the certification matrix covers the complete shipped Aurora Plasma surface before feature testing or package correction begins.
 
 The runtime/post-boot inventory must collect at least:
 
@@ -102,7 +116,7 @@ The runtime/post-boot inventory must collect at least:
 - current direct `plasma-desktop` feature `Recommends`;
 - package owner and version for every discovered plugin/surface where resolvable.
 
-Versioned manifests in `tests/c4/` define the expected surface. The host reconciliation stage compares runtime composite keys against those manifests and verifies that every capability ID referenced by a manifest exists in `docs/PLASMA_INTEGRATION_MATRIX.md`.
+Versioned manifests in `tests/c4/` define the expected surface for the stack they were generated against. The host reconciliation stage compares runtime composite keys against those manifests and verifies that every capability ID referenced by a manifest exists in `docs/PLASMA_INTEGRATION_MATRIX.md`.
 
 PASS requires:
 
@@ -116,23 +130,23 @@ PASS requires:
 - portal routing configuration present;
 - live Plasma session stability through the inventory.
 
-The current accepted C4.0 composition was revalidated after the evidence-driven addition of `baloo6` for `AUR-KCM-003`. Run `33211234383` at HEAD `57b296054efc391ec986ed57a57a9a028601de76` reconciled **100 KCM IDs, 62 direct desktop dependencies, 3 portal descriptors, 29 KWin surfaces, 123 Plasma/KDED/KIO integration surfaces and 36 `plasma-desktop` feature recommendations** with zero unknown, missing or unresolved-owner results. Its artifact is `aurora-c4-0-surface-diagnostics-33211234383-1`, ID `9701846713`, digest `sha256:6f10d1643f72e852d89ab5566d193942ce36957c445d916e73148beb0c26aab1`.
+The accepted historical C4.0 composition was revalidated after the evidence-driven addition of `baloo6` for `AUR-KCM-003`. Run `33211234383` at HEAD `57b296054efc391ec986ed57a57a9a028601de76` reconciled **100 KCM IDs, 62 direct desktop dependencies, 3 portal descriptors, 29 KWin surfaces, 123 Plasma/KDED/KIO integration surfaces and 36 `plasma-desktop` feature recommendations** with zero unknown, missing or unresolved-owner results. Its artifact is `aurora-c4-0-surface-diagnostics-33211234383-1`, ID `9701846713`, digest `sha256:6f10d1643f72e852d89ab5566d193942ce36957c445d916e73148beb0c26aab1`.
 
-The post-Baloo surface delta is fully mapped to `AUR-KCM-003 / C4.1`: direct dependency `baloo6`, KDED plugin `baloosearchmodule`, and KIO workers `baloosearch`, `tags` and `timeline`. C4.0 establishes only their presence, ownership and traceability; it does **not** make File Search `PASS-C4`.
+The post-Baloo historical surface delta is fully mapped to `AUR-KCM-003 / C4.1`: direct dependency `baloo6`, KDED plugin `baloosearchmodule`, and KIO workers `baloosearch`, `tags` and `timeline`. C4.0 establishes only their presence, ownership and traceability; it does **not** make File Search `PASS-C4`.
 
-C4.0 is closed again. Re-run it only when a later change can alter the effective shipped/discovered surface or dependency graph. C4.1 remains unblocked.
+If the KDE candidate is adopted, do not edit this historical evidence to match the new stack. Generate a new C4.0 runtime inventory, classify the surface delta, update manifests/matrix ownership, and accept that new evidence separately.
 
 ### C4.1 — System Settings / KWin / Plasma shell behavior
 
-Status: **OPEN / ACTIVE**
+Status: **PAUSED — KDE STACK QUALIFICATION**
 
-Accepted incremental evidence:
+Accepted historical incremental evidence on KDE 6.6.6:
 
 - `docs/validation/AURORA_C4_1A_ACCEPTANCE.md` — **ACCEPTED / GREEN**;
-- `AUR-KCM-002` Activities — **PASS-C4**;
-- `AUR-KWIN-004` Virtual Desktops — **PASS-C4**.
+- `AUR-KCM-002` Activities — **PASS-C4 on the historical stack**;
+- `AUR-KWIN-004` Virtual Desktops — **PASS-C4 on the historical stack**.
 
-No other C4.1 capability inherits PASS from C4.1a. All remaining C4.1 rows stay pending until their own applicable contract is executed and accepted.
+No other C4.1 capability inherits PASS from C4.1a. If a new KDE stack is adopted, the applicable historical PASS rows must be re-executed before they can describe the new release candidate.
 
 Covers software-only or virtualizable Plasma/KWin settings, built-in shell widgets and desktop services: activities, Baloo/search, autostart, defaults/file associations, notifications, appearance, keyboard layouts, global shortcuts, workspace/session behavior, recent files, KWin animations/effects/scripts, virtual desktops, decorations, rules, XWayland policy, window behavior, screen edges, task switching and screen locking.
 
@@ -218,7 +232,7 @@ Cover AT-SPI, Orca, Speech Dispatcher and every inventoried KWin accessibility p
 
 ### C4.15 — Additional Plasma integrations and closure audit
 
-This gate owns Plasma feature surfaces discovered by C4.0 that do not naturally belong to earlier gates. Current Aurora discovery includes:
+This gate owns Plasma feature surfaces discovered by C4.0 that do not naturally belong to earlier gates. Current historical Aurora discovery includes:
 
 - Plasma Firewall and its real firewall backend;
 - Plasma Vaults and shipped encryption backend(s);
@@ -234,9 +248,9 @@ This gate owns Plasma feature surfaces discovered by C4.0 that do not naturally 
 - `pinentry-qt`;
 - closure of `modemmanager`, `rfkill`, `iio-sensor-proxy`, `switcheroo-control`, `plasma-keyboard` and `plasma-disks`.
 
-A feature already exposed by the shipped Plasma graph may not be labelled “optional” merely to avoid its test. If Aurora does not want to support such a feature, removing the user-visible product surface is a deliberate later product decision requiring regression review; it is not a C4 shortcut.
+A feature exposed by the adopted Plasma graph may not be labelled “optional” merely to avoid its test. If Aurora does not want to support such a feature, removing the user-visible product surface is a deliberate product decision requiring regression review; it is not a C4 shortcut.
 
-## 6. Common PASS contract
+## 7. Common PASS contract
 
 A capability may become `PASS-C4` only when all applicable points are true:
 
@@ -253,7 +267,7 @@ A capability may become `PASS-C4` only when all applicable points are true:
 11. package versions and targeted logs are recorded;
 12. CI-only fixtures are separated from product dependencies.
 
-## 7. Failure classification
+## 8. Failure classification
 
 Every failure must be classified before changing packages:
 
@@ -266,7 +280,7 @@ Every failure must be classified before changing packages:
 
 Do not change multiple product variables simultaneously when one defect can be isolated first.
 
-## 8. Evidence contract
+## 9. Evidence contract
 
 Each subgate uses deterministic markers:
 
@@ -281,34 +295,39 @@ The harness requires exactly one final success marker, zero failure markers and 
 
 Artifacts include applicable serial logs, capability manifests, package/version ownership, journals, D-Bus/API snapshots, fixture logs, crash/failed-unit inventory, portal routing and cleanup state.
 
-## 9. Regression rule for C1-C3
+## 10. Regression rule for C1-C3 and stack changes
 
 C4 implementation does not automatically re-run C1-C3. Regression is required only when a change can plausibly affect certified scope:
 
-- core Plasma/KWin/session package changes → C3, and C2 if greeter/session infrastructure overlaps;
+- KDE Frameworks/Plasma/KWin stack replacement or major version-set change → re-run C1 as composition/boot smoke, C2, C3 and then C4.0 before feature certification resumes;
+- core Plasma/KWin/session package changes within an accepted stack → C3, and C2 if greeter/session infrastructure overlaps;
 - SDDM/KWin greeter configuration → C2 and normally C3;
 - kernel/initramfs/base/systemd changes → C1 plus affected later gates;
 - XWayland/session compatibility changes → C3;
 - documentation/manifests/harness-only C4 changes → no C1-C3 rerun.
 
-## 10. C4 closure rule
+Historical PASS evidence remains attached to the exact stack that produced it.
+
+## 11. C4 closure rule
 
 C4 is complete only when:
 
-- C4.0 coverage is green;
+- the KDE stack used for the release candidate has passed its architecture qualification;
+- C4.0 coverage is green on that adopted stack;
 - every current in-scope matrix capability is `PASS-C4`, `BLOCKED-UPSTREAM` with an explicit release decision, or explicitly hardware-deferred without overstating support;
 - every direct `supralinux-desktop` dependency is justified;
-- every Plasma feature package Aurora promises is made an explicit product dependency rather than relying accidentally on Ubuntu `Recommends`;
+- every Plasma feature package Aurora promises is made an explicit product dependency rather than relying accidentally on packaging recommendations;
 - no unknown exposed Plasma/KWin/KDED/KIO/portal feature remains;
 - known warnings/failures have classifications;
 - the exact candidate dependency set is re-evaluated and only afterward frozen.
 
 C4 completion does not replace C5 manual VM QA or later physical-hardware certification.
 
-## 11. Current upstream/reference documentation
+## 12. Current upstream/reference documentation
 
-Recheck before implementing each subgate because Ubuntu 26.04 updates can move package versions/APIs:
+Recheck before implementing each subgate because Ubuntu/KDE updates can move package versions/APIs:
 
+- KDE Stack Qualification: `docs/KDE_STACK_QUALIFICATION.md`
 - Ubuntu 26.04 package metadata: `https://packages.ubuntu.com/resolute/` and `https://packages.ubuntu.com/resolute-updates/`
 - KDE Plasma documentation: `https://docs.kde.org/`
 - KDE developer/admin documentation: `https://develop.kde.org/`
@@ -322,4 +341,4 @@ Recheck before implementing each subgate because Ubuntu 26.04 updates can move p
 - UDisks2: `https://storaged.org/doc/udisks2-api/latest/`
 - xdg-user-dirs: `https://www.freedesktop.org/wiki/Software/xdg-user-dirs/`
 
-The repository acceptance records under `docs/validation/` are authoritative for C1, C2, C3, C4.0 and accepted incremental C4 slices such as C4.1a.
+The repository acceptance records under `docs/validation/` remain authoritative historical evidence for C1, C2, C3, C4.0 and accepted incremental C4 slices such as C4.1a until equivalent evidence is generated and accepted on a newly adopted stack.

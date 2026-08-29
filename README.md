@@ -26,15 +26,21 @@ The first milestone is intentionally not a visual redesign. SupraLINUX-specific 
 - Packages: DEB + APT
 - Additional application ecosystem: Flatpak
 - Snap: blocked by default and not installed by default
-- Kernel, Mesa and NVIDIA stack: Ubuntu
-- KDE/Plasma packages: Ubuntu repositories
+- Kernel, Mesa, Qt and foundational platform stack: Ubuntu
+- KDE/Plasma policy: newest compatible official stable KDE release, rebuilt/integrated by SupraLINUX when qualification justifies overriding Ubuntu's KDE packages
+- Current KDE qualification candidate: Plasma/KWin 6.7.4 + KDE Frameworks 6.29.x on Ubuntu 26.04 / Qt 6.10.2; **not yet accepted as the Aurora release stack**
+- KDE Gear: separate stable-version review after the Plasma/Frameworks stack is qualified
 - Installer: Calamares
 - Filesystem default: ext4
 - Development model: reproducible, package-driven, monorepo
 
+## Current engineering state
+
+The previous Ubuntu-provided KDE baseline (Plasma 6.6.6 / Frameworks 6.24) produced accepted C1-C3 and C4.0 evidence plus incremental C4.1 evidence. That evidence remains valid as historical version-scoped evidence, but C4.1 is paused while `docs/KDE_STACK_QUALIFICATION.md` evaluates the newer KDE stack. If the candidate stack is adopted, applicable boot/session gates and C4.0 must be rerun before C4 functional certification continues.
+
 ## Repository model
 
-Installed systems will use Ubuntu repositories together with SupraLINUX repositories. Ubuntu remains the source of the base system and the overwhelming majority of upstream packages. SupraLINUX repositories carry SupraLINUX-owned packages and intentional, documented overrides only.
+Installed systems will use Ubuntu repositories together with SupraLINUX repositories. Ubuntu remains the source of the base system and the overwhelming majority of upstream packages. SupraLINUX repositories carry SupraLINUX-owned packages and intentional, documented overrides/backports, including a qualified KDE stack when required by the accepted KDE release policy.
 
 ## Project rules
 

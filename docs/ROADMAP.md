@@ -27,21 +27,60 @@ Goal: a clean Ubuntu 26.04 base can become the SupraLINUX baseline through packa
 
 - [x] Define the first candidate Ubuntu 26.04 base composition (`supralinux-base`)
 - [x] Inventory the first Plasma 6 package/KCM surface available in Ubuntu 26.04; audit remains iterative
-- [ ] Freeze the exact `supralinux-desktop` dependency set after C4 evidence
+- [ ] Freeze the exact `supralinux-desktop` dependency set after KDE-stack qualification and C4 evidence
 - [x] Keep XWayland present for legacy X11 application compatibility in the Wayland desktop baseline
 - [x] Add Ubuntu 26.04 package-build/APT-resolution CI gate
 - [x] Add isolated clean Ubuntu 26.04 rootfs installation gate
 - [x] Pass the clean-rootfs gate and record its resulting package set
-- [x] Build and pass the first real bootable VM validation harness (C1)
-- [x] Ensure SDDM reaches a working KWin Wayland greeter in the VM (C2)
-- [x] Ensure the normal Plasma Wayland user session boots reliably (C3)
-- [x] Validate XWayland application compatibility from inside the real Plasma Wayland session (C3)
+- [x] Build and pass the first real bootable VM validation harness (C1) on the Ubuntu KDE 6.6.6 development baseline
+- [x] Ensure SDDM reaches a working KWin Wayland greeter in the VM (C2) on the Ubuntu KDE 6.6.6 development baseline
+- [x] Ensure the normal Plasma Wayland user session boots reliably (C3) on the Ubuntu KDE 6.6.6 development baseline
+- [x] Validate XWayland application compatibility from inside the real Plasma Wayland session (C3) on the Ubuntu KDE 6.6.6 development baseline
+
+### KDE Stack Qualification — ACTIVE
+
+Canonical plan: `docs/KDE_STACK_QUALIFICATION.md`.
+
+Reason: before finishing feature-level C4 certification, Aurora must decide whether the release desktop remains on Ubuntu's Plasma 6.6.6/KF 6.24 packages or adopts a SupraLINUX-maintained newer official stable KDE stack. Certifications are version-scoped and must not be silently transferred between these stacks.
+
+Current candidate:
+
+- Ubuntu 26.04 LTS platform;
+- Ubuntu Qt 6.10.2;
+- KDE Frameworks 6.29.x candidate maintained by SupraLINUX;
+- Plasma/KWin 6.7.4 candidate maintained by SupraLINUX;
+- narrowly required compatible protocol/build backports only;
+- KDE Gear deferred to a separate stable-version review after this gate.
+
+Required before adoption:
+
+- [ ] Freeze exact source-package inventory and dependency DAG
+- [ ] Record source provenance and packaging base for every override/backport
+- [ ] Reproducibly build the complete candidate on clean Ubuntu 26.04 builders
+- [ ] Prove dependency closure without pulling an uncontrolled newer Ubuntu platform
+- [ ] Keep Ubuntu Qt, Wayland runtime, Mesa and kernel unless separately justified
+- [ ] Build a temporary SupraLINUX APT testing repository for the candidate
+- [ ] Prove clean install from Ubuntu 26.04 base
+- [ ] Prove supported upgrade from the current 6.6.6/KF 6.24 development baseline
+- [ ] Prove rollback/recovery to the prior known-good stack
+- [ ] Re-run C1
+- [ ] Re-run C2
+- [ ] Re-run C3, including XWayland compatibility
+- [ ] Regenerate/reconcile C4.0 against the new live surface
+- [ ] Classify all regressions/deltas before adoption
+- [ ] Document ongoing KDE security/update ownership and testing→stable promotion
+- [ ] Explicit GO/NO-GO architecture decision
+
+**Gate rule:** C4.1 and later C4 functional work are paused until the KDE stack decision closes. Existing 6.6.6 evidence is preserved as historical baseline evidence and must not be rewritten as if it were produced by the new stack.
 
 ### C4 — Feature integration certification
 
+Current state: **PAUSED at C4.1 pending KDE Stack Qualification**.
+
 - [x] Define the executable C4 certification contract and subgate boundaries
-- [x] C4.0 — Runtime surface/contract inventory and 100% coverage reconciliation
-- [ ] C4.1 — System Settings / KWin / software-only desktop behavior
+- [x] C4.0 — Runtime surface/contract inventory and 100% coverage reconciliation on the KDE 6.6.6 historical baseline
+- [ ] C4.0 — Re-run/reconcile on the adopted KDE stack if the stack changes
+- [ ] C4.1 — System Settings / KWin / software-only desktop behavior (paused; accepted 6.6.6 incremental evidence remains historical)
 - [ ] C4.2 — Polkit / KWallet / privileged actions
 - [ ] C4.3 — NetworkManager / Plasma-NM / VPN
 - [ ] C4.4 — PipeWire / WirePlumber / Plasma audio
@@ -57,7 +96,7 @@ Goal: a clean Ubuntu 26.04 base can become the SupraLINUX baseline through packa
 - [ ] C4.14 — Accessibility
 - [ ] C4.15 — Auxiliary integration / direct-dependency closure
 
-The historical feature checkboxes below remain as product-level outcomes. They close only when their owning C4 subgate has provided the required evidence:
+The historical feature checkboxes below remain as product-level outcomes. They close only when their owning C4 subgate has provided the required evidence on the adopted release-candidate stack:
 
 - [ ] Validate Polkit integration
 - [ ] Validate NetworkManager integration
@@ -74,7 +113,7 @@ The historical feature checkboxes below remain as product-level outcomes. They c
 - [ ] Validate power management and suspend/resume within C4 VM scope
 - [ ] Validate Flatpak desktop integration
 
-**Phase 1 exit criterion:** Plasma remains close to upstream and every feature SupraLINUX exposes in the baseline works without requiring the user to discover missing packages. Hardware-only claims remain explicitly separated until representative hardware testing.
+**Phase 1 exit criterion:** the adopted KDE stack is qualified, Plasma remains close to upstream, and every feature SupraLINUX exposes in the baseline works without requiring the user to discover missing packages. Hardware-only claims remain explicitly separated until representative hardware testing.
 
 ## Phase 2 — SupraLINUX packaging
 

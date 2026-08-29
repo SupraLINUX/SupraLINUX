@@ -25,7 +25,10 @@ Status labels used below:
 - **ACCEPTED** Kernel: Ubuntu kernel.
 - **ACCEPTED** Mesa: Ubuntu packages.
 - **ACCEPTED** NVIDIA driver infrastructure: Ubuntu packages and mechanisms.
+- **ACCEPTED** Qt remains owned by Ubuntu unless a separately documented architecture decision proves that replacing it is necessary.
+- **ACCEPTED** Wayland runtime, systemd, PipeWire, NetworkManager and comparable base-platform infrastructure remain owned by Ubuntu unless a separately documented architecture decision proves that an override is necessary.
 - **ACCEPTED** Do not fork the kernel, Mesa, Qt, Plasma, systemd, APT, NetworkManager, PipeWire, or similar foundational components without a documented technical need.
+- **ACCEPTED** Rebuilding or backporting an unmodified official KDE release as a DEB does not by itself constitute a Plasma fork. Source patches beyond packaging/integration must be individually justified and documented.
 - **ACCEPTED** SupraLINUX is derived from Ubuntu base/minimal, not from Ubuntu Desktop and not from `kubuntu-desktop`.
 
 ## 3. KDE Plasma baseline
@@ -39,6 +42,11 @@ Status labels used below:
 - **ACCEPTED** Initial goal: the most vanilla Plasma experience practical, while making every selected and exposed Plasma feature work end-to-end.
 - **ACCEPTED** The first milestone is integration and completeness, not visual differentiation.
 - **ACCEPTED** Do not modify/fork Plasma merely to make SupraLINUX look different. SupraLINUX should develop on top of Plasma using supported extension and integration mechanisms.
+- **ACCEPTED — KDE release policy:** SupraLINUX seeks the newest official stable KDE release that is technically compatible with the Aurora Ubuntu LTS platform. SupraLINUX is not automatically limited to the KDE version frozen in Ubuntu 26.04, but beta, RC, git/master and otherwise experimental KDE builds are not product candidates.
+- **ACCEPTED — Promotion rule:** a newer KDE release never enters the supported product automatically. It must pass reproducible package builds, dependency closure, clean installation, upgrade, rollback, boot/session regression, runtime-surface reconciliation and applicable functional certification before promotion from testing to stable.
+- **ACCEPTED — Platform boundary:** a newer KDE release is not by itself sufficient reason to replace Ubuntu's Qt, Wayland runtime, Mesa, kernel or other foundational platform layers. Crossing that boundary requires a separate architecture decision and its own qualification evidence.
+- **PROVISIONAL — Aurora KDE stack candidate:** evaluate KDE Frameworks 6.29.x with Plasma/KWin 6.7.4 on Ubuntu 26.04 LTS using Ubuntu Qt 6.10.2. This is a qualification target, not yet the accepted Aurora release stack.
+- **PROVISIONAL — KDE Gear policy:** KDE Gear is evaluated independently after the Plasma/Frameworks stack is qualified, with preference for the newest official stable release compatible with Aurora and subject to the same packaging, integration and certification discipline.
 - **ACCEPTED — Feature completeness rule:** if a feature/control is exposed to the user in the shipped Plasma experience, its required backend/dependencies must be present and the feature must be tested. Do not ship visible controls that fail because a dependency or backend was omitted.
 - **ACCEPTED** Examples of completeness areas include remote desktop, Flatpak permissions integration, networking, audio, Bluetooth, printing, archive/file-format support, network shares, portals, language support, power management, removable media, and other features presented by the desktop.
 
@@ -89,9 +97,11 @@ Rules:
 ## 7. Ubuntu and SupraLINUX repositories
 
 - **ACCEPTED** Installed systems use Ubuntu repositories and SupraLINUX repositories together.
-- **ACCEPTED** Ubuntu remains the source for the vast majority of base packages, security updates, kernel, Mesa, Qt, KDE packages, libraries, and drivers.
-- **ACCEPTED** SupraLINUX repositories contain only SupraLINUX-owned packages and intentional overrides/backports.
+- **ACCEPTED** Ubuntu remains the source for the vast majority of base packages, security updates, kernel, Mesa, Qt, libraries, drivers and platform services.
+- **ACCEPTED** SupraLINUX repositories contain SupraLINUX-owned packages and intentional documented overrides/backports; a qualified KDE stack may therefore be supplied by SupraLINUX rather than by Ubuntu when the KDE release policy requires it.
 - **ACCEPTED** Do not mirror/copy Ubuntu packages into the SupraLINUX repository without a concrete reason.
+- **ACCEPTED** When practical, KDE backports should reuse official upstream release tarballs and maintained Debian/Kubuntu packaging rather than inventing unrelated packaging or installing manually into `/usr/local`.
+- **ACCEPTED** KDE packages maintained by SupraLINUX must record source provenance, exact version, packaging base, SupraLINUX delta, maintenance/security responsibility, dependency rationale, upgrade/rollback behavior and removal condition.
 - **ACCEPTED** Initial SupraLINUX channels: `stable` and `testing`, initially with a simple `main` component.
 - **ACCEPTED** An Ubuntu-derived package override must document: why the fork/override exists, what differs from Ubuntu, maintenance responsibility, and the condition under which the override can be removed.
 - **ACCEPTED** Do not give every package from the SupraLINUX origin a blanket priority that accidentally overrides Ubuntu. Intentional overrides must be explicit through package versions and/or scoped APT pinning.
@@ -162,6 +172,7 @@ Before public release the project MUST have:
 - **ACCEPTED** A documented, explicit promotion process from testing to stable.
 - **ACCEPTED** Stable publication must not happen automatically merely because CI builds successfully.
 - **ACCEPTED** Secure Boot work should initially rely on Ubuntu kernel/shim/GRUB mechanisms instead of introducing a custom kernel/signing stack.
+- **ACCEPTED** If SupraLINUX overrides an Ubuntu KDE package, SupraLINUX assumes responsibility for tracking applicable upstream KDE security fixes and publishing qualified updates for the override; Ubuntu updates to the replaced binary package cannot be assumed to secure the SupraLINUX override automatically.
 
 ## 15. Quality contract
 
@@ -172,6 +183,7 @@ Before public release the project MUST have:
 - **ACCEPTED** Do not hide missing dependencies behind first-run setup chores. Features intended as part of the base experience should already work after installation.
 - **ACCEPTED** Localization is part of quality. A release is not considered correctly integrated if the installer says one language while the first session, user directories, formats, or core Plasma/Qt UI are left partially in another language because required locale/translation setup was missing or ran in the wrong order.
 - **ACCEPTED** CI that performs real package installation must use an isolated disposable environment/rootfs rather than mutating the hosted runner into something that could hide missing base dependencies.
+- **ACCEPTED** Certification evidence is version-scoped. A PASS obtained on one KDE/Qt/runtime stack must not be silently carried forward after a package-stack change that can affect the tested behavior; the applicable regression gates must run again.
 
 ## 16. Versioning
 
@@ -200,4 +212,4 @@ Do not make these first-release goals unless a concrete need appears:
 - full custom updater
 - large application suite without clear user value
 
-The first objective is a vanilla, complete, reliable Plasma system on Ubuntu LTS. Product-specific SupraLINUX applications and deeper UX changes come after that baseline is proven.
+A SupraLINUX-maintained package set for an official stable KDE release is permitted by the KDE release policy and is not itself a Plasma fork. The first objective remains a vanilla, complete, reliable Plasma system on Ubuntu LTS. Product-specific SupraLINUX applications and deeper UX changes come after that baseline is proven.

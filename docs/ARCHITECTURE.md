@@ -4,6 +4,8 @@
 
 SupraLINUX is built from Ubuntu 26.04 LTS base/minimal. It does not inherit Ubuntu Desktop or the `kubuntu-desktop` metapackage.
 
+Ubuntu owns the platform. SupraLINUX owns product composition and may own a qualified KDE desktop stack when that is required to satisfy the accepted KDE release policy.
+
 ```text
 Ubuntu 26.04 LTS base
         │
@@ -13,12 +15,14 @@ Ubuntu 26.04 LTS base
         ├── NetworkManager
         ├── PipeWire
         ├── Mesa
-        ├── Qt
-        └── KDE/Plasma packages from Ubuntu
+        ├── Wayland runtime
+        └── Qt
                 │
                 ▼
-           SupraLINUX layer
+        SupraLINUX desktop layer
                 │
+        ├── qualified KDE Frameworks / Plasma / KWin
+        ├── narrowly required KDE/protocol backports
         ├── supralinux-base
         ├── supralinux-desktop
         ├── supralinux-settings
@@ -31,9 +35,31 @@ Ubuntu 26.04 LTS base
         └── supralinux-meta
 ```
 
+## KDE stack status
+
+The previously certified development baseline uses Ubuntu 26.04 KDE packages (Plasma 6.6.6 / Frameworks 6.24). That baseline remains useful historical evidence but is not frozen as Aurora's release stack.
+
+The active qualification candidate is:
+
+```text
+Ubuntu 26.04 LTS
+├── Qt 6.10.2                    Ubuntu
+├── kernel / Mesa / Wayland      Ubuntu
+├── KDE Frameworks 6.29.x        SupraLINUX candidate
+├── Plasma 6.7.4                 SupraLINUX candidate
+├── KWin 6.7.4                   SupraLINUX candidate
+└── KDE Gear                     separate later review
+```
+
+The candidate is **PROVISIONAL** until `docs/KDE_STACK_QUALIFICATION.md` closes every required gate. A failed qualification returns Aurora to the last known-good architecture rather than forcing the newer stack into the product.
+
 ## Design rule
 
 SupraLINUX integrates Plasma; it does not fork Plasma for identity. Upstream KDE/Qt extension points and Linux desktop interfaces are preferred over invasive patches.
+
+Rebuilding official stable KDE source releases as reproducible DEBs is an integration/packaging responsibility, not permission to diverge arbitrarily from upstream. Prefer maintained Debian/Kubuntu packaging where technically valid, document every SupraLINUX delta, and keep patches minimal and removable.
+
+A KDE update must not drag the whole Ubuntu platform forward merely because newer components exist. Qt, Wayland runtime, Mesa, kernel and other foundational layers stay on Ubuntu unless independent evidence and an explicit architecture decision justify crossing that boundary.
 
 ## Desktop completeness
 
@@ -104,8 +130,8 @@ Ubuntu repositories
 ├── firmware
 ├── drivers
 ├── Mesa
+├── Wayland runtime
 ├── Qt
-├── KDE/Plasma
 └── most applications/libraries
 
 SupraLINUX repository
@@ -113,7 +139,8 @@ SupraLINUX repository
 ├── settings
 ├── artwork
 ├── installer integration
-└── intentional documented overrides/backports
+├── intentional documented overrides/backports
+└── qualified KDE Frameworks / Plasma / KWin when adopted
 ```
 
 Initial SupraLINUX channels:
@@ -123,7 +150,9 @@ stable/main
 testing/main
 ```
 
-There is no blanket higher APT priority for all SupraLINUX-origin packages. Overrides are explicit.
+There is no blanket higher APT priority for all SupraLINUX-origin packages. Overrides are explicit. New KDE builds enter `testing` first and require explicit promotion after qualification; CI success alone never means stable promotion.
+
+SupraLINUX must not depend on a KDE neon runtime repository or another third-party binary repository to assemble the supported product. Such projects may be used as engineering references, but supported packages must have documented source provenance and be built under the SupraLINUX qualification model.
 
 ## Snap policy
 
