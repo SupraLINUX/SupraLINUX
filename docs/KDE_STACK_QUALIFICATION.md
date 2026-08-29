@@ -1,6 +1,6 @@
 # Aurora KDE Stack Qualification
 
-Status: **ACTIVE — KSQ-0 CERTIFIED / KSQ-1 NEXT**
+Status: **ACTIVE — KSQ-0 CERTIFIED / KSQ-1 ACTIVE**
 
 This gate decides which KDE stack becomes the versioned foundation for the rest of Aurora's C4 certification. Feature certification is meaningful only against the software stack that will actually ship.
 
@@ -47,7 +47,7 @@ Qualified source/dependency target as of 2026-08-29:
 | `plasma-wayland-protocols` | SupraLINUX backport candidate 1.21.0-1 |
 | `qtkeychain` | SupraLINUX backport candidate 0.17.0-1 |
 | `wayland-protocols` | SupraLINUX compatibility backport candidate 1.48-1 |
-| `kwallet-pam` | 4:6.7.4-0ubuntu3 with build-only debhelper compat 14→13 adaptation |
+| `kwallet-pam` | 4:6.7.4-0ubuntu3 with build-only debhelper compat 14→13 adaptation and compat-13 relationship substvar restoration |
 | KDE Gear | separate stable-version review; not adopted by KSQ-0 |
 
 KDE upstream's current stable releases at the time of this certification are Plasma 6.7.4, Frameworks 6.29.0 and KDE Gear 26.08. Gear is intentionally evaluated independently and is not implicitly inherited from the Plasma qualification.
@@ -86,7 +86,7 @@ The three explicit source selections are:
 2. `qtkeychain 0.17.0-1` because Plasma-NM 6.7.4 requires >=0.16 while Resolute has 0.15;
 3. `wayland-protocols 1.48-1` because KWin 6.7.4 requires >=1.48 while Resolute has 1.47. Version 1.48 is deliberately used instead of widening the Wayland runtime boundary for newer packaging.
 
-`kwallet-pam 4:6.7.4-0ubuntu3` requires one packaging-only adaptation from `debhelper-compat (= 14)` to `debhelper-compat (= 13)`. The source audit proves its PAM installation, postinst, prerm and PAM profile files are byte-identical to Debian 6.7.4-3 and retains a later installation contract checking `pam_kwallet5.so` in both `common-session` and `common-auth`.
+`kwallet-pam 4:6.7.4-0ubuntu3` requires one packaging-only adaptation from `debhelper-compat (= 14)` to `debhelper-compat (= 13)`. Because debhelper compat 14 automatically applies relationship substvars that compat 13 does not, KSQ-1 must also restore the explicit `${misc:Depends}`, `${qml6:Depends}` and `${shlibs:Depends}` relationships removed by the compat-14 packaging transition. This restores dependency-generation semantics only; no PAM functional file is intentionally changed. The source audit proves the PAM installation, postinst, prerm and PAM profile files are byte-identical to Debian 6.7.4-3 and retains a later installation contract checking `pam_kwallet5.so` in both `common-session` and `common-auth`.
 
 The obsolete direct dependency/root `plasma-session-wayland` was removed because current Plasma 6.7.4 packages the Wayland session through `plasma-workspace` itself.
 
@@ -155,7 +155,7 @@ All criteria passed. Canonical evidence is `docs/validation/AURORA_KSQ_0_ACCEPTA
 
 A change to the candidate release set, source selections, packaging overrides, pinned snapshot, or a relevant platform dependency reopens the corresponding KSQ-0 regression before downstream evidence can be reused.
 
-### KSQ-1 — Reproducible source builds — **NEXT**
+### KSQ-1 — Reproducible source builds — **ACTIVE**
 
 Build the certified 101-source candidate only on clean Ubuntu 26.04 builders.
 
@@ -167,9 +167,24 @@ PASS requires:
 - build logs and resulting source/binary package manifests retained;
 - package versions make the intended upgrade relationships explicit;
 - the `kwallet-pam` compat-13 adaptation is materialized reproducibly without changing its certified PAM functional files;
-- built packages that can receive meaningful package-level installation smoke tests do so before KSQ-1 closes.
+- built packages that can receive meaningful package-level installation smoke tests do so before KSQ-1 closes;
+- reproducibility is demonstrated by independent rebuild comparison, not inferred from one successful clean build.
 
-The build system must consume only the KSQ-0 certified closure/selections. It may not discover new implicit Stonking binary dependencies during compilation.
+The build system consumes only the KSQ-0 certified closure/selections and the pinned Ubuntu snapshot `20260829T022000Z`. Candidate package versions append `~supra26.04.1` to the certified packaging base so they sort above the older Resolute KDE baseline while remaining below an equivalent official packaging revision.
+
+#### KSQ-1 evidence to date
+
+Canonical bootstrap run `33248631454` on `a414245cb2c66d754cb046bdca06188e2bfd059d` built DAG nodes 1–4 successfully and produced self-contained, relocatable SHA-256 evidence. Bootstrap artifact `9713725769` has digest `sha256:ee26c3f3421adcf4e64d351e10ba61c2bc890ba8c4bfded4b7e37dcb72fd9c7d`.
+
+The first full-DAG run `33250886255` on `964561767fb1d0c45883d3de6754958e4263eebf` proved nodes 1–39 build successfully. Node 40, `kf6-kfilemetadata 6.29.0-0ubuntu1~supra26.04.1`, stopped during Build-Depends resolution. No package or platform change was made from that symptom.
+
+A dedicated diagnostic run `33263391639` reproduced node 40 against the same certified 1–20 binary checkpoint and proved the actual cause: the source declares `libpostproc-dev | hello`, while sbuild's APT resolver considered only the first alternative because the builder had not enabled alternative dependency resolution. The failure was therefore a builder-policy defect, not a missing KDE dependency or justification to widen the Ubuntu platform boundary.
+
+Corrective run `33263576164` changed only the relevant sbuild resolver behavior by adding `--resolve-alternatives` (plus the APT uninstallable-dependency explainer). It successfully built node 40, selected the valid `hello` alternative, and produced six candidate DEBs. Artifact `9718028796` has digest `sha256:1808c2e3150c5ee8447a0e0242706bdb89f00e613c617b9a6b983479806caac0`.
+
+Global builder commit `fe12df912217d44465a7a613d79ba3f523d4e700` applies the proven alternative-resolver behavior to the complete DAG and also preserves `.build`, `.buildinfo`, `.changes`, partial DEBs, hashes and explicit FAIL state before aborting any future failed source. Full regression run `33264059201` is the active candidate run for this builder. Earlier 1–39 PASS results remain useful diagnostic evidence but are not propagated as certification after the global builder semantics changed.
+
+The reproducibility subgate will use Debian/Ubuntu reproducible-build tooling to require byte-for-byte identical binary results from repeated builds under controlled variations and retain diagnostics for any divergence. This subgate is not yet PASS and KSQ-1 must not close until it does.
 
 ### KSQ-2 — APT repository and dependency closure
 
