@@ -1,0 +1,266 @@
+name: Aurora KSQ-1 syntax-highlighting patched reproducibility build
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-1-syntax-repro-patched-build.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validate-patched-node-29:
+    name: Build patched kf6-syntax-highlighting twice
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Restore canonical nodes 001-020
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-debs-001-020
+          path: build/ksq-1/syntax-patched/debs
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33264059201
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Restore canonical nodes 021-040 for filtering
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-debs-021-040
+          path: build/ksq-1/syntax-patched/input-021-040
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33264059201
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Restore canonical evidence 021-040
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-evidence-021-040
+          path: build/ksq-1/syntax-patched/evidence-021-040
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33264059201
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Restrict build dependencies to certified nodes 001-028
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/ksq-1/syntax-patched"
+          INDEX="$(find "${ROOT}/evidence-021-040" -type f -name binary-packages.tsv -print -quit)"
+          [[ -f "${INDEX}" ]]
+
+          expected_021_028="${ROOT}/expected-021-028.txt"
+          awk -F '\t' 'NR > 1 && $1 >= 21 && $1 <= 28 {print $4}' "${INDEX}" | sort > "${expected_021_028}"
+          [[ "$(wc -l < "${expected_021_028}")" -eq 40 ]]
+
+          while IFS= read -r filename; do
+            [[ -f "${ROOT}/input-021-040/${filename}" ]]
+            cp -a "${ROOT}/input-021-040/${filename}" "${ROOT}/debs/"
+          done < "${expected_021_028}"
+
+          [[ "$(find "${ROOT}/debs" -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 143 ]]
+          mkdir -p "${ROOT}/evidence"
+          (
+            cd "${ROOT}/debs"
+            find . -maxdepth 1 -type f -name '*.deb' -printf '%f\0' | sort -z | xargs -0 sha256sum
+          ) > "${ROOT}/evidence/input-nodes-001-028.sha256"
+          cp -a "${expected_021_028}" "${ROOT}/evidence/"
+          {
+            echo 'AURORA_KSQ_1_SYNTAX_PATCH_INPUT_RUN=33264059201'
+            echo 'AURORA_KSQ_1_SYNTAX_PATCH_INPUT_LAST_NODE=28'
+            echo 'AURORA_KSQ_1_SYNTAX_PATCH_INPUT_DEBS=143'
+          } > "${ROOT}/evidence/input.env"
+
+      - name: Prepare pinned KSQ-1 runner
+        shell: bash
+        run: bash scripts/ci/prepare-ksq-1-runner.sh
+
+      - name: Fetch exact certified node 29 source and materialize test patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD/build/ksq-1/syntax-patched"
+          WORK="${ROOT}/source-work"
+          bash scripts/ci/fetch-prepare-ksq-1-source.sh \
+            kf6-syntax-highlighting \
+            6.29.0-0ubuntu1 \
+            "${WORK}"
+
+          SRC="${WORK}/source"
+          TARGET="${SRC}/data/generators/generate_jinja.py"
+          PATCHDIR="${SRC}/debian/patches"
+          PATCH="${PATCHDIR}/supralinux-deterministic-jinja-order.patch"
+          mkdir -p "${PATCHDIR}"
+          [[ ! -s "${PATCHDIR}/series" ]] || {
+            echo 'unexpected existing patch series in certified packaging base' >&2
+            exit 1
+          }
+          grep -Fq '        lang = to_do.pop()' "${TARGET}"
+          [[ "$(grep -Fc '        lang = to_do.pop()' "${TARGET}")" -eq 1 ]]
+
+          cat > "${PATCH}" <<'PATCH'
+          Description: Make Jinja syntax generation order deterministic
+           The generator uses set.pop() to choose the next grammar. Python hash
+           randomization changes that order between builds, and CMake consumes
+           the dry-run output order when constructing the embedded syntax QRC.
+           Select the lexicographically smallest pending grammar instead.
+          Author: SupraLINUX Build System <build@supralinux.invalid>
+          Origin: vendor
+          Forwarded: no
+          Last-Update: 2026-08-29
+          --- a/data/generators/generate_jinja.py
+          +++ b/data/generators/generate_jinja.py
+          @@ -264,7 +264,8 @@ def main():
+                   sys.exit(2)
+           
+               while to_do:
+          -        lang = to_do.pop()
+          +        lang = min(to_do)
+          +        to_do.remove(lang)
+                   out_file = os.path.join(args.output_dir,
+                                           args.prefix + os.path.basename(xmls[lang]))
+                   infuse_header(grammars[lang], jinja.getroot(), args.xtra_ext)
+          PATCH
+          printf '%s\n' 'supralinux-deterministic-jinja-order.patch' > "${PATCHDIR}/series"
+
+          python3 - "${TARGET}" <<'PY'
+          from pathlib import Path
+          import sys
+          path = Path(sys.argv[1])
+          text = path.read_text()
+          old = '        lang = to_do.pop()\n'
+          new = '        lang = min(to_do)\n        to_do.remove(lang)\n'
+          if text.count(old) != 1:
+              raise SystemExit(f'expected one source line, found {text.count(old)}')
+          path.write_text(text.replace(old, new))
+          PY
+
+          rm -f "${WORK}"/kf6-syntax-highlighting_6.29.0-0ubuntu1~supra26.04.1.dsc
+          rm -f "${WORK}"/kf6-syntax-highlighting_6.29.0-0ubuntu1~supra26.04.1.debian.tar.*
+          (
+            cd "${WORK}"
+            dpkg-source -b source >/dev/null
+          )
+          DSC="${WORK}/kf6-syntax-highlighting_6.29.0-0ubuntu1~supra26.04.1.dsc"
+          [[ -f "${DSC}" ]]
+          cp -a "${PATCH}" "${ROOT}/evidence/"
+          cp -a "${PATCHDIR}/series" "${ROOT}/evidence/patch-series"
+          sha256sum "${DSC}" "${WORK}"/kf6-syntax-highlighting_6.29.0-0ubuntu1~supra26.04.1.debian.tar.* \
+            > "${ROOT}/evidence/patched-source.sha256"
+
+      - name: Build patched node 29 with independent hash seeds
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD"
+          TEST="${ROOT}/build/ksq-1/syntax-patched"
+          DSC="${TEST}/source-work/kf6-syntax-highlighting_6.29.0-0ubuntu1~supra26.04.1.dsc"
+          DEBS="${TEST}/debs"
+          . "${ROOT}/build/ksq-1/environment/build-environment.env"
+          TARBALL="${AURORA_KSQ_1_BUILD_ENV_TARBALL:?missing build environment}"
+
+          normalize() {
+            local dir="$1"
+            while IFS= read -r -d '' file; do
+              local base safe
+              base="$(basename "${file}")"
+              safe="${base//:/-}"
+              [[ "${base}" == "${safe}" ]] || mv "${file}" "$(dirname "${file}")/${safe}"
+            done < <(find "${dir}" -maxdepth 1 -type f -name '*:*' -print0)
+          }
+
+          for seed in 1 2; do
+            RESULT="${TEST}/seed-${seed}"
+            mkdir -p "${RESULT}"
+            CONFIG="${TEST}/sbuild-seed-${seed}.conf"
+            printf "\$build_environment = { 'PYTHONHASHSEED' => '%s' };\n" "${seed}" > "${CONFIG}"
+            SBUILD_CONFIG="${CONFIG}" DEB_BUILD_OPTIONS='parallel=2' sbuild \
+              --chroot-mode=unshare \
+              --chroot="${TARBALL}" \
+              --dist=resolute \
+              --arch=amd64 \
+              --build-dir="${RESULT}" \
+              --build-path=/build/supralinux-ksq1 \
+              --jobs=2 \
+              --no-enable-network \
+              --no-run-lintian \
+              --no-run-autopkgtest \
+              --purge-build=always \
+              --purge-deps=always \
+              --resolve-alternatives \
+              --bd-uninstallable-explainer=apt \
+              --extra-package="${DEBS}" \
+              "${DSC}"
+            normalize "${RESULT}"
+            grep -Fq "PYTHONHASHSEED=${seed}" "${RESULT}"/*.build || {
+              echo "build log does not prove PYTHONHASHSEED=${seed}" >&2
+              exit 1
+            }
+          done
+
+      - name: Require byte-identical patched binary packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          TEST="$PWD/build/ksq-1/syntax-patched"
+          EVIDENCE="${TEST}/evidence"
+          mkdir -p "${EVIDENCE}"
+
+          for seed in 1 2; do
+            (
+              cd "${TEST}/seed-${seed}"
+              find . -maxdepth 1 -type f \( -name '*.deb' -o -name '*.ddeb' \) -printf '%f\0' \
+                | sort -z \
+                | xargs -0 sha256sum
+            ) > "${EVIDENCE}/seed-${seed}-binaries.sha256"
+          done
+
+          names1="${EVIDENCE}/seed-1-names.txt"
+          names2="${EVIDENCE}/seed-2-names.txt"
+          sed 's/^[0-9a-f]\{64\}  //' "${EVIDENCE}/seed-1-binaries.sha256" | sort > "${names1}"
+          sed 's/^[0-9a-f]\{64\}  //' "${EVIDENCE}/seed-2-binaries.sha256" | sort > "${names2}"
+          cmp "${names1}" "${names2}"
+          [[ "$(grep -c '\.deb$' "${names1}")" -eq 6 ]]
+          [[ "$(grep -c '\.ddeb$' "${names1}")" -eq 3 ]]
+
+          while IFS= read -r filename; do
+            cmp "${TEST}/seed-1/${filename}" "${TEST}/seed-2/${filename}"
+          done < "${names1}"
+
+          cp -a "${TEST}/seed-1"/*.build "${EVIDENCE}/seed-1.build"
+          cp -a "${TEST}/seed-2"/*.build "${EVIDENCE}/seed-2.build"
+          {
+            echo 'AURORA_KSQ_1_SYNTAX_PATCHED_BUILD_STATUS=PASS'
+            echo 'AURORA_KSQ_1_SYNTAX_PATCHED_SOURCE=kf6-syntax-highlighting'
+            echo 'AURORA_KSQ_1_SYNTAX_PATCHED_NODE=29'
+            echo 'AURORA_KSQ_1_SYNTAX_PATCHED_VERSION=6.29.0-0ubuntu1~supra26.04.1'
+            echo 'AURORA_KSQ_1_SYNTAX_PATCHED_HASH_SEEDS=1,2'
+            echo 'AURORA_KSQ_1_SYNTAX_PATCHED_DEBS=6'
+            echo 'AURORA_KSQ_1_SYNTAX_PATCHED_DDEBS=3'
+            echo 'AURORA_KSQ_1_SYNTAX_PATCHED_BYTE_IDENTICAL=yes'
+            echo 'AURORA_KSQ_1_SYNTAX_PATCHED_PRODUCT_ADAPTATION_COMMITTED=no'
+            echo 'AURORA_KSQ_1_FULL_CERTIFIED=no'
+          } > "${EVIDENCE}/status.env"
+          cat "${EVIDENCE}/status.env"
+
+      - name: Preserve patched reproducibility evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-syntax-repro-patched-build
+          path: |
+            build/ksq-1/syntax-patched/evidence/
+            build/ksq-1/syntax-patched/seed-1/*.deb
+            build/ksq-1/syntax-patched/seed-1/*.ddeb
+            build/ksq-1/syntax-patched/seed-2/*.deb
+            build/ksq-1/syntax-patched/seed-2/*.ddeb
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
