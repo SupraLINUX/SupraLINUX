@@ -8,6 +8,7 @@ on:
       - 'tests/kde-stack/**'
       - 'scripts/ci/prepare-kde-stack-apt-metadata.sh'
       - 'scripts/ci/generate-kde-build-closure.py'
+      - 'scripts/ci/generate-kde-build-closure-v2.py'
       - 'packages/supralinux-desktop/debian/control'
       - '.github/workflows/ksq-0-dependency-closure.yml'
   pull_request:
@@ -15,6 +16,7 @@ on:
       - 'tests/kde-stack/**'
       - 'scripts/ci/prepare-kde-stack-apt-metadata.sh'
       - 'scripts/ci/generate-kde-build-closure.py'
+      - 'scripts/ci/generate-kde-build-closure-v2.py'
       - 'packages/supralinux-desktop/debian/control'
       - '.github/workflows/ksq-0-dependency-closure.yml'
   workflow_dispatch:
@@ -39,16 +41,16 @@ jobs:
       - name: Prepare isolated pinned APT metadata
         shell: bash
         run: bash scripts/ci/prepare-kde-stack-apt-metadata.sh
-      - name: Generate transitive Build-Depends closure
+      - name: Generate provider-aware transitive Build-Depends closure
         shell: bash
-        run: python3 scripts/ci/generate-kde-build-closure.py --allow-unresolved
+        run: python3 scripts/ci/generate-kde-build-closure-v2.py --allow-unresolved
       - name: Show dependency-closure state
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           if [[ -f build/ksq-0/closure-status.env ]]; then cat build/ksq-0/closure-status.env; else echo 'closure-status.env was not generated'; fi
-          if [[ -f build/ksq-0/unresolved.tsv ]]; then echo '--- unresolved (first 100 rows) ---'; head -n 101 build/ksq-0/unresolved.tsv; fi
+          if [[ -f build/ksq-0/unresolved.tsv ]]; then echo '--- unresolved ---'; cat build/ksq-0/unresolved.tsv; fi
           if [[ -f build/ksq-0/source-decision-candidates.tsv ]]; then echo '--- source decisions required ---'; cat build/ksq-0/source-decision-candidates.tsv; fi
       - name: Preserve KSQ-0 dependency evidence
         if: always()
