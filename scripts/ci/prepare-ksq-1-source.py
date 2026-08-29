@@ -263,8 +263,6 @@ def main() -> int:
     extra_lines: list[str] = []
     if restored_substvars:
         extra_lines.append("  * Restore relationship substvars required by debhelper compat 13.")
-    if SYNTAX_ADAPTATION in applied_adaptation_ids:
-        extra_lines.append("  * Make Jinja syntax generation order deterministic for reproducible binary output.")
 
     stanza = (
         f"{source} ({new_version}) resolute; urgency=medium\n\n"
