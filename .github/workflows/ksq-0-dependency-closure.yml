@@ -8,6 +8,7 @@ on:
       - 'tests/kde-stack/**'
       - 'scripts/ci/prepare-kde-stack-apt-metadata.sh'
       - 'scripts/ci/generate-kde-build-closure-v3.py'
+      - 'scripts/ci/audit-kde-stack-source-selections.sh'
       - 'packages/supralinux-desktop/debian/control'
       - '.github/workflows/ksq-0-dependency-closure.yml'
   pull_request:
@@ -15,6 +16,7 @@ on:
       - 'tests/kde-stack/**'
       - 'scripts/ci/prepare-kde-stack-apt-metadata.sh'
       - 'scripts/ci/generate-kde-build-closure-v3.py'
+      - 'scripts/ci/audit-kde-stack-source-selections.sh'
       - 'packages/supralinux-desktop/debian/control'
       - '.github/workflows/ksq-0-dependency-closure.yml'
   workflow_dispatch:
@@ -42,6 +44,9 @@ jobs:
       - name: Generate exact transitive Build-Depends closure
         shell: bash
         run: python3 scripts/ci/generate-kde-build-closure-v3.py --allow-unresolved
+      - name: Audit exact selected source inputs
+        shell: bash
+        run: bash scripts/ci/audit-kde-stack-source-selections.sh
       - name: Show dependency-closure state
         if: always()
         shell: bash
@@ -51,6 +56,7 @@ jobs:
           if [[ -f build/ksq-0/unresolved.tsv ]]; then echo '--- unresolved ---'; cat build/ksq-0/unresolved.tsv; fi
           if [[ -f build/ksq-0/source-selections-applied.tsv ]]; then echo '--- source selections applied ---'; cat build/ksq-0/source-selections-applied.tsv; fi
           if [[ -f build/ksq-0/build-dep-overrides-applied.tsv ]]; then echo '--- build-dependency overrides applied ---'; cat build/ksq-0/build-dep-overrides-applied.tsv; fi
+          if [[ -f build/ksq-0/source-audit/kwallet-pam-integration-audit.txt ]]; then echo '--- kwallet PAM audit summary ---'; head -n 160 build/ksq-0/source-audit/kwallet-pam-integration-audit.txt; fi
       - name: Preserve KSQ-0 dependency evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -74,5 +80,6 @@ jobs:
             build/ksq-0/build-order.tsv
             build/ksq-0/selected-source-records.txt
             build/ksq-0/closure-status.env
+            build/ksq-0/source-audit/**
           if-no-files-found: warn
           retention-days: 30
