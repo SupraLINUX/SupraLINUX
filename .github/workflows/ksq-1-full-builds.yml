@@ -41,11 +41,12 @@ jobs:
         run: bash scripts/ci/build-ksq-1-range.sh 1 20
 
       - name: Preserve binary checkpoint 001-020
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: aurora-ksq-1-debs-001-020
           path: build/ksq-1/full/chunk-001-020/new-debs/
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
           overwrite: true
 
@@ -91,11 +92,12 @@ jobs:
         run: bash scripts/ci/build-ksq-1-range.sh 21 40
 
       - name: Preserve binary checkpoint 021-040
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: aurora-ksq-1-debs-021-040
           path: build/ksq-1/full/chunk-021-040/new-debs/
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
           overwrite: true
 
@@ -141,11 +143,12 @@ jobs:
         run: bash scripts/ci/build-ksq-1-range.sh 41 60
 
       - name: Preserve binary checkpoint 041-060
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: aurora-ksq-1-debs-041-060
           path: build/ksq-1/full/chunk-041-060/new-debs/
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
           overwrite: true
 
@@ -195,20 +198,22 @@ jobs:
         run: bash scripts/ci/validate-ksq-1-kwallet-pam.sh
 
       - name: Preserve KWallet PAM evidence
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: aurora-ksq-1-kwallet-pam-validation
           path: build/ksq-1/full/kwallet-pam-validation/
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
           overwrite: true
 
       - name: Preserve binary checkpoint 061-080
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: aurora-ksq-1-debs-061-080
           path: build/ksq-1/full/chunk-061-080/new-debs/
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
           overwrite: true
 
@@ -254,11 +259,12 @@ jobs:
         run: bash scripts/ci/build-ksq-1-range.sh 81 101
 
       - name: Preserve binary checkpoint 081-101
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: aurora-ksq-1-debs-081-101
           path: build/ksq-1/full/chunk-081-101/new-debs/
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
           overwrite: true
 

@@ -42,6 +42,105 @@ mapfile -t rows < <(awk -F '\t' -v start="${START}" -v end="${END}" 'NR > 1 && $
 expected_count=$((END - START + 1))
 [[ "${#rows[@]}" -eq "${expected_count}" ]] || fail "expected ${expected_count} closure rows, got ${#rows[@]}"
 
+normalize_result_filenames() {
+  local result_dir="$1"
+  local generated directory basename safe_basename
+  while IFS= read -r -d '' generated; do
+    directory="$(dirname "${generated}")"
+    basename="$(basename "${generated}")"
+    safe_basename="${basename//:/-}"
+    if [[ "${safe_basename}" != "${basename}" ]]; then
+      [[ ! -e "${directory}/${safe_basename}" ]] || fail "evidence filename collision ${safe_basename}"
+      mv "${generated}" "${directory}/${safe_basename}"
+    fi
+  done < <(find "${result_dir}" -maxdepth 1 -type f -name '*:*' -print0)
+}
+
+write_deb_hashes() {
+  (
+    cd "${DEBS}"
+    find . -maxdepth 1 -type f -name '*.deb' -printf '%f\0' | sort -z | xargs -0 -r sha256sum \
+      > "${EVIDENCE}/accumulated-debs.sha256"
+  )
+  (
+    cd "${NEW_DEBS}"
+    find . -maxdepth 1 -type f -name '*.deb' -printf '%f\0' | sort -z | xargs -0 -r sha256sum \
+      > "${EVIDENCE}/new-debs.sha256"
+  )
+}
+
+record_failed_build() {
+  local order="$1"
+  local source="$2"
+  local base_version="$3"
+  local supra_version="$4"
+  local family="$5"
+  local decision="$6"
+  local result="$7"
+  local source_evidence="$8"
+  local sbuild_rc="$9"
+  local failed_output="${source_evidence}/failed-output"
+  local new_deb_count accumulated_deb_count
+  local -a failed_debs failed_ddebs failed_buildinfos failed_changes
+
+  mapfile -t failed_debs < <(find "${result}" -maxdepth 1 -type f -name '*.deb' -print | sort)
+  mapfile -t failed_ddebs < <(find "${result}" -maxdepth 1 -type f -name '*.ddeb' -print | sort)
+  mapfile -t failed_buildinfos < <(find "${result}" -maxdepth 1 -type f -name '*.buildinfo' -print | sort)
+  mapfile -t failed_changes < <(find "${result}" -maxdepth 1 -type f -name '*.changes' -print | sort)
+
+  mkdir -p "${failed_output}"
+  while IFS= read -r -d '' artifact; do
+    cp -a "${artifact}" "${failed_output}/"
+  done < <(find "${result}" -maxdepth 1 -type f \
+    \( -name '*.build' -o -name '*.buildinfo' -o -name '*.changes' -o -name '*.deb' -o -name '*.ddeb' \) \
+    -print0)
+
+  if find "${failed_output}" -maxdepth 1 -type f -print -quit | grep -q .; then
+    (
+      cd "${source_evidence}"
+      find failed-output -maxdepth 1 -type f -printf '%p\0' | sort -z | xargs -0 -r sha256sum \
+        > build-artifacts.sha256
+    )
+  else
+    : > "${source_evidence}/build-artifacts.sha256"
+  fi
+
+  {
+    echo "AURORA_KSQ_1_BUILD_RESULT=FAIL"
+    echo "AURORA_KSQ_1_BUILD_ORDER=${order}"
+    echo "AURORA_KSQ_1_BUILD_SOURCE=${source}"
+    echo "AURORA_KSQ_1_BUILD_VERSION=${supra_version}"
+    echo "AURORA_KSQ_1_BUILD_SBUILD_EXIT=${sbuild_rc}"
+    echo "AURORA_KSQ_1_BUILD_RESOLVE_ALTERNATIVES=yes"
+  } > "${source_evidence}/build-status.env"
+
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\tFAIL\n' \
+    "${order}" "${source}" "${base_version}" "${supra_version}" "${family}" "${decision}" \
+    "${#failed_debs[@]}" "${#failed_buildinfos[@]}" "${#failed_changes[@]}" >> "${MANIFEST}"
+
+  write_deb_hashes
+  new_deb_count="$(find "${NEW_DEBS}" -maxdepth 1 -type f -name '*.deb' | wc -l)"
+  accumulated_deb_count="$(find "${DEBS}" -maxdepth 1 -type f -name '*.deb' | wc -l)"
+  {
+    echo "AURORA_KSQ_1_RANGE_STATUS=FAIL"
+    echo "AURORA_KSQ_1_RANGE_FIRST_ORDER=${START}"
+    echo "AURORA_KSQ_1_RANGE_REQUESTED_LAST_ORDER=${END}"
+    echo "AURORA_KSQ_1_RANGE_LAST_COMPLETED_ORDER=$((order - 1))"
+    echo "AURORA_KSQ_1_RANGE_FAILED_ORDER=${order}"
+    echo "AURORA_KSQ_1_RANGE_FAILED_SOURCE=${source}"
+    echo "AURORA_KSQ_1_RANGE_SBUILD_EXIT=${sbuild_rc}"
+    echo "AURORA_KSQ_1_RANGE_NEW_DEBS=${new_deb_count}"
+    echo "AURORA_KSQ_1_RANGE_ACCUMULATED_DEBS=${accumulated_deb_count}"
+    echo "AURORA_KSQ_1_RANGE_RESOLVE_ALTERNATIVES=yes"
+    echo "AURORA_KSQ_1_RANGE_FULL_CERTIFIED=no"
+  } > "${EVIDENCE}/range-status.env"
+
+  cat "${MANIFEST}"
+  cat "${EVIDENCE}/range-status.env"
+  echo "AURORA_KSQ_1_RANGE_BUILD_FAILED order=${order} source=${source} sbuild_exit=${sbuild_rc}" >&2
+  return 0
+}
+
 declare -A prior_binary_owner=()
 if compgen -G "${DEBS}/*.deb" >/dev/null; then
   while IFS= read -r -d '' deb; do
@@ -81,6 +180,7 @@ for row in "${rows[@]}"; do
   fi
 
   echo "AURORA_KSQ_1_BUILD_START order=${order} source=${source} version=${supra_version}"
+  set +e
   DEB_BUILD_OPTIONS="parallel=2" sbuild \
     --chroot-mode=unshare \
     --chroot="${TARBALL}" \
@@ -94,18 +194,21 @@ for row in "${rows[@]}"; do
     --no-run-autopkgtest \
     --purge-build=always \
     --purge-deps=always \
+    --resolve-alternatives \
+    --bd-uninstallable-explainer=apt \
     "${extra_args[@]}" \
     "${dsc}"
+  sbuild_rc=$?
+  set -e
 
-  while IFS= read -r -d '' generated; do
-    directory="$(dirname "${generated}")"
-    basename="$(basename "${generated}")"
-    safe_basename="${basename//:/-}"
-    if [[ "${safe_basename}" != "${basename}" ]]; then
-      [[ ! -e "${directory}/${safe_basename}" ]] || fail "evidence filename collision ${safe_basename}"
-      mv "${generated}" "${directory}/${safe_basename}"
-    fi
-  done < <(find "${result}" -maxdepth 1 -type f -name '*:*' -print0)
+  normalize_result_filenames "${result}"
+
+  if (( sbuild_rc != 0 )); then
+    record_failed_build \
+      "${order}" "${source}" "${base_version}" "${supra_version}" "${family}" "${decision}" \
+      "${result}" "${source_evidence}" "${sbuild_rc}"
+    exit "${sbuild_rc}"
+  fi
 
   mapfile -t debs < <(find "${result}" -maxdepth 1 -type f -name '*.deb' -print | sort)
   mapfile -t ddebs < <(find "${result}" -maxdepth 1 -type f -name '*.ddeb' -print | sort)
@@ -158,6 +261,14 @@ for row in "${rows[@]}"; do
     printf '%s\n' "${ddebs[@]##*/}" > "${source_evidence}/debug-symbol-packages.txt"
   fi
 
+  {
+    echo "AURORA_KSQ_1_BUILD_RESULT=PASS"
+    echo "AURORA_KSQ_1_BUILD_ORDER=${order}"
+    echo "AURORA_KSQ_1_BUILD_SOURCE=${source}"
+    echo "AURORA_KSQ_1_BUILD_VERSION=${supra_version}"
+    echo "AURORA_KSQ_1_BUILD_RESOLVE_ALTERNATIVES=yes"
+  } > "${source_evidence}/build-status.env"
+
   printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\tPASS\n' \
     "${order}" "${source}" "${base_version}" "${supra_version}" "${family}" "${decision}" \
     "${#debs[@]}" "${#buildinfos[@]}" "${#changes[@]}" >> "${MANIFEST}"
@@ -172,16 +283,7 @@ if find "${CHUNK}" -type f -printf '%f\n' | grep -Eq '[":<>|*?]'; then
   fail "chunk contains cross-filesystem-invalid filename characters"
 fi
 
-(
-  cd "${DEBS}"
-  find . -maxdepth 1 -type f -name '*.deb' -printf '%f\0' | sort -z | xargs -0 sha256sum \
-    > "${EVIDENCE}/accumulated-debs.sha256"
-)
-(
-  cd "${NEW_DEBS}"
-  find . -maxdepth 1 -type f -name '*.deb' -printf '%f\0' | sort -z | xargs -0 sha256sum \
-    > "${EVIDENCE}/new-debs.sha256"
-)
+write_deb_hashes
 
 new_deb_count="$(find "${NEW_DEBS}" -maxdepth 1 -type f -name '*.deb' | wc -l)"
 accumulated_deb_count="$(find "${DEBS}" -maxdepth 1 -type f -name '*.deb' | wc -l)"
@@ -192,6 +294,7 @@ accumulated_deb_count="$(find "${DEBS}" -maxdepth 1 -type f -name '*.deb' | wc -
   echo "AURORA_KSQ_1_RANGE_SOURCES=${expected_count}"
   echo "AURORA_KSQ_1_RANGE_NEW_DEBS=${new_deb_count}"
   echo "AURORA_KSQ_1_RANGE_ACCUMULATED_DEBS=${accumulated_deb_count}"
+  echo "AURORA_KSQ_1_RANGE_RESOLVE_ALTERNATIVES=yes"
   echo "AURORA_KSQ_1_RANGE_FULL_CERTIFIED=no"
 } > "${EVIDENCE}/range-status.env"
 
