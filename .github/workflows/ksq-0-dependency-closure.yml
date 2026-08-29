@@ -1,4 +1,4 @@
-name: Aurora KSQ-0 dependency closure discovery
+name: Aurora KSQ-0 source and dependency qualification
 
 on:
   push:
@@ -7,16 +7,22 @@ on:
     paths:
       - 'tests/kde-stack/**'
       - 'scripts/ci/prepare-kde-stack-apt-metadata.sh'
-      - 'scripts/ci/generate-kde-build-closure-v3.py'
+      - 'scripts/ci/generate-kde-build-closure.py'
       - 'scripts/ci/audit-kde-stack-source-selections.sh'
+      - 'scripts/ci/validate-kde-stack-source-manifests.sh'
+      - 'scripts/ci/validate-kde-stack-roots.py'
+      - 'scripts/ci/validate-kwallet-pam-installation.sh'
       - 'packages/supralinux-desktop/debian/control'
       - '.github/workflows/ksq-0-dependency-closure.yml'
   pull_request:
     paths:
       - 'tests/kde-stack/**'
       - 'scripts/ci/prepare-kde-stack-apt-metadata.sh'
-      - 'scripts/ci/generate-kde-build-closure-v3.py'
+      - 'scripts/ci/generate-kde-build-closure.py'
       - 'scripts/ci/audit-kde-stack-source-selections.sh'
+      - 'scripts/ci/validate-kde-stack-source-manifests.sh'
+      - 'scripts/ci/validate-kde-stack-roots.py'
+      - 'scripts/ci/validate-kwallet-pam-installation.sh'
       - 'packages/supralinux-desktop/debian/control'
       - '.github/workflows/ksq-0-dependency-closure.yml'
   workflow_dispatch:
@@ -26,28 +32,47 @@ permissions:
 
 jobs:
   dependency-closure:
-    name: Discover source Build-Depends closure
+    name: Qualify source Build-Depends closure
     runs-on: ubuntu-26.04
     timeout-minutes: 30
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
       - name: Verify pinned source inventory
         shell: bash
         run: |
           set -euo pipefail
           bash scripts/ci/validate-kde-stack-source-manifests.sh
           python3 scripts/ci/validate-kde-stack-roots.py
+
       - name: Prepare isolated pinned APT metadata
         shell: bash
         run: bash scripts/ci/prepare-kde-stack-apt-metadata.sh
-      - name: Generate exact transitive Build-Depends closure
+
+      - name: Generate strict transitive Build-Depends closure
         shell: bash
-        run: python3 scripts/ci/generate-kde-build-closure-v3.py --allow-unresolved
+        run: python3 scripts/ci/generate-kde-build-closure.py
+
+      - name: Assert KSQ-0 closure contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          . build/ksq-0/closure-status.env
+          [[ "${AURORA_KSQ_0_CLOSURE_STATUS}" == "COMPLETE" ]]
+          [[ "${AURORA_KSQ_0_CLOSURE_UNRESOLVED}" == "0" ]]
+          [[ "${AURORA_KSQ_0_CLOSURE_SOURCES}" == "${AURORA_KSQ_0_CLOSURE_BUILD_ORDERED}" ]]
+          [[ "$(wc -l < build/ksq-0/unresolved.tsv)" -eq 1 ]]
+          [[ "$(wc -l < build/ksq-0/source-decision-candidates.tsv)" -eq 1 ]]
+          [[ "$(($(wc -l < build/ksq-0/source-selections-applied.tsv) - 1))" -eq 3 ]]
+          [[ "$(($(wc -l < build/ksq-0/build-dep-overrides-applied.tsv) - 1))" -eq 1 ]]
+          echo AURORA_KSQ_0_STRICT_CLOSURE_SUCCESS
+
       - name: Audit exact selected source inputs
         shell: bash
         run: bash scripts/ci/audit-kde-stack-source-selections.sh
-      - name: Show dependency-closure state
+
+      - name: Show qualification state
         if: always()
         shell: bash
         run: |
@@ -56,8 +81,12 @@ jobs:
           if [[ -f build/ksq-0/unresolved.tsv ]]; then echo '--- unresolved ---'; cat build/ksq-0/unresolved.tsv; fi
           if [[ -f build/ksq-0/source-selections-applied.tsv ]]; then echo '--- source selections applied ---'; cat build/ksq-0/source-selections-applied.tsv; fi
           if [[ -f build/ksq-0/build-dep-overrides-applied.tsv ]]; then echo '--- build-dependency overrides applied ---'; cat build/ksq-0/build-dep-overrides-applied.tsv; fi
-          if [[ -f build/ksq-0/source-audit/kwallet-pam-integration-audit.txt ]]; then echo '--- kwallet PAM audit summary ---'; head -n 160 build/ksq-0/source-audit/kwallet-pam-integration-audit.txt; fi
-      - name: Preserve KSQ-0 dependency evidence
+          if [[ -f build/ksq-0/source-audit/kwallet-pam-integration-audit.txt ]]; then
+            echo '--- kwallet PAM audit contract ---'
+            grep '^AURORA_KSQ_0_KWALLET_' build/ksq-0/source-audit/kwallet-pam-integration-audit.txt
+          fi
+
+      - name: Preserve KSQ-0 qualification evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:

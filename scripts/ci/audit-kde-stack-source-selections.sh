@@ -95,22 +95,49 @@ mkdir -p "${UNPACK}/kwallet-debian-reference"
 dpkg-source -x "${DOWNLOADS}/kwallet-pam_6.7.4-0ubuntu3.dsc" "${UNPACK}/kwallet-ubuntu" >/dev/null
 tar -xJf "${DOWNLOADS}/kwallet-pam_6.7.4-3.debian.tar.xz" -C "${UNPACK}/kwallet-debian-reference"
 
-KW_DEBIAN="${UNPACK}/kwallet-ubuntu/debian"
-[[ -d "${KW_DEBIAN}" ]] || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: kwallet debian directory missing" >&2; exit 1; }
-grep -Eq 'libpam-runtime' "${KW_DEBIAN}/control" || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: kwallet lacks libpam-runtime dependency" >&2; exit 1; }
-grep -Rqs 'pam-auth-update' "${KW_DEBIAN}" || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: kwallet lacks pam-auth-update integration" >&2; exit 1; }
-grep -Rqs 'pam-auth-update' "${KW_DEBIAN}"/*postinst || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: kwallet postinst lacks pam-auth-update" >&2; exit 1; }
-grep -Rqs 'pam-auth-update' "${KW_DEBIAN}"/*prerm || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: kwallet prerm lacks pam-auth-update" >&2; exit 1; }
-grep -Rqs 'Password' "${KW_DEBIAN}" || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: kwallet lacks PAM Password stanza/profile" >&2; exit 1; }
-grep -Rqs 'pam-configs' "${KW_DEBIAN}" || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: kwallet lacks pam-configs installation" >&2; exit 1; }
+KW_UBUNTU="${UNPACK}/kwallet-ubuntu/debian"
+KW_DEBIAN="${UNPACK}/kwallet-debian-reference/debian"
+[[ -d "${KW_UBUNTU}" ]] || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: Ubuntu kwallet debian directory missing" >&2; exit 1; }
+[[ -d "${KW_DEBIAN}" ]] || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: Debian kwallet reference directory missing" >&2; exit 1; }
+
+grep -Eq 'libpam-runtime' "${KW_UBUNTU}/control" || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: kwallet lacks libpam-runtime dependency" >&2; exit 1; }
+grep -Rqs 'pam-auth-update' "${KW_UBUNTU}" || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: kwallet lacks pam-auth-update integration" >&2; exit 1; }
+grep -Rqs 'pam-auth-update' "${KW_UBUNTU}"/*postinst || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: kwallet postinst lacks pam-auth-update" >&2; exit 1; }
+grep -Rqs 'pam-auth-update' "${KW_UBUNTU}"/*prerm || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: kwallet prerm lacks pam-auth-update" >&2; exit 1; }
+grep -Rqs 'Password' "${KW_UBUNTU}" || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: kwallet lacks PAM Password stanza/profile" >&2; exit 1; }
+grep -Rqs 'pam-configs' "${KW_UBUNTU}" || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: kwallet lacks pam-configs installation" >&2; exit 1; }
+
+# Ubuntu 0ubuntu3 claims to sync the Debian 6.7.4-3 PAM integration.  Require
+# the functional packaging files to be byte-identical so our compat-level
+# adaptation cannot silently regress auto-unlock or PAM registration.
+for file in \
+  libpam-kwallet-common.install \
+  libpam-kwallet-common.postinst \
+  libpam-kwallet-common.prerm \
+  pam-configs/kde-kwallet; do
+  cmp -s "${KW_UBUNTU}/${file}" "${KW_DEBIAN}/${file}" || {
+    echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: kwallet PAM file diverges from Debian 6.7.4-3: ${file}" >&2
+    diff -u "${KW_DEBIAN}/${file}" "${KW_UBUNTU}/${file}" || true
+    exit 1
+  }
+done
+
+DEBIAN_TEST="${KW_DEBIAN}/tests/control"
+[[ -f "${DEBIAN_TEST}" ]] || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: Debian kwallet PAM autopkgtest missing" >&2; exit 1; }
+grep -Fq 'grep pam_kwallet5\.so /etc/pam.d/common-session && grep pam_kwallet5\.so /etc/pam.d/common-auth' "${DEBIAN_TEST}" || {
+  echo "AURORA_KSQ_0_SOURCE_AUDIT_FAILURE: Debian kwallet PAM autopkgtest contract changed" >&2
+  exit 1
+}
 
 {
   echo 'AURORA_KSQ_0_KWALLET_SOURCE=4:6.7.4-0ubuntu3'
   echo 'AURORA_KSQ_0_KWALLET_PAM_AUTH_UPDATE=present'
   echo 'AURORA_KSQ_0_KWALLET_LIBPAM_RUNTIME=present'
   echo 'AURORA_KSQ_0_KWALLET_PASSWORD_PROFILE=present'
+  echo 'AURORA_KSQ_0_KWALLET_PAM_FILES_MATCH_DEBIAN_6_7_4_3=yes'
+  echo 'AURORA_KSQ_0_KWALLET_INSTALL_TEST_CONTRACT=common-session+common-auth'
   echo '--- Ubuntu 0ubuntu3 PAM-related files ---'
-  find "${KW_DEBIAN}" -maxdepth 2 -type f -print | sort | while read -r file; do
+  find "${KW_UBUNTU}" -maxdepth 2 -type f -print | sort | while read -r file; do
     if grep -qsE 'pam-auth-update|pam-configs|Password' "$file"; then
       echo "### ${file#${UNPACK}/kwallet-ubuntu/}"
       cat "$file"
@@ -118,7 +145,7 @@ grep -Rqs 'pam-configs' "${KW_DEBIAN}" || { echo "AURORA_KSQ_0_SOURCE_AUDIT_FAIL
     fi
   done
   echo '--- Debian 6.7.4-3 PAM-related reference files ---'
-  find "${UNPACK}/kwallet-debian-reference/debian" -maxdepth 2 -type f -print | sort | while read -r file; do
+  find "${KW_DEBIAN}" -maxdepth 2 -type f -print | sort | while read -r file; do
     if grep -qsE 'pam-auth-update|pam-configs|Password' "$file"; then
       echo "### ${file#${UNPACK}/kwallet-debian-reference/}"
       cat "$file"
