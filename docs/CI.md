@@ -2,7 +2,7 @@
 
 SupraLINUX CI validates packaging, clean-system composition and real VM behavior against Ubuntu 26.04 LTS (`resolute`), the base generation used by Aurora.
 
-Current architecture state: **KDE Stack Qualification active; KSQ-0 CERTIFIED; KSQ-1 next; C4 feature certification paused**. The C1-C3/C4.0/C4.1a results described below were produced by the historical Ubuntu KDE 6.6.6 / Frameworks 6.24 baseline and remain version-scoped evidence.
+Current architecture state: **KDE Stack Qualification active; KSQ-0 CERTIFIED; KSQ-1 ACTIVE; C4 feature certification paused**. The C1-C3/C4.0/C4.1a results described below were produced by the historical Ubuntu KDE 6.6.6 / Frameworks 6.24 baseline and remain version-scoped evidence.
 
 ## Runner
 
@@ -139,9 +139,32 @@ The candidate retains Ubuntu ownership for kernel, firmware, Mesa/libdrm, system
 
 ### KSQ-1 — reproducible source builds
 
-Status: **NEXT**
+Status: **ACTIVE**
 
-KSQ-1 may now consume the KSQ-0 certified 101-source closure. It must build on clean Resolute builders and may not add undeclared Stonking/newer-suite binary dependencies to make builds pass.
+Workflow: `.github/workflows/ksq-1-full-builds.yml`.
+
+The builder consumes the certified 101-source DAG on clean Resolute amd64 runners. Each checkpoint recreates and revalidates the pinned snapshot build environment. Candidate dependencies are transported between jobs only as explicit DEB checkpoint artifacts; Stonking is not enabled as a binary repository.
+
+Build checkpoints are:
+
+- 001–020;
+- 021–040;
+- 041–060;
+- 061–080, followed by the KWallet PAM package-level installation gate;
+- 081–101;
+- final 101-source manifest/hash validation.
+
+`sbuild` runs unshare-backed against the pinned buildd tarball with build-time network disabled. It receives accumulated candidate DEBs through `--extra-package`, enables normal Debian alternative Build-Depends resolution with `--resolve-alternatives`, and enables the APT uninstallable-dependency explainer.
+
+The alternative-resolver requirement is evidence-based. Full run `33250886255` built nodes 1–39 and failed on node 40 (`kf6-kfilemetadata`) because its valid `libpostproc-dev | hello` relationship was being reduced to the unavailable first alternative by the original sbuild invocation. Diagnostic run `33263391639` proved the resolver cause. Corrective run `33263576164` kept the source, snapshot and prior candidate binaries unchanged, enabled alternative resolution, selected `hello`, and built node 40 successfully. Its artifact `9718028796` has digest `sha256:1808c2e3150c5ee8447a0e0242706bdb89f00e613c617b9a6b983479806caac0`.
+
+Global builder commit `fe12df912217d44465a7a613d79ba3f523d4e700` incorporates that proven fix. It also records `.build`, `.buildinfo`, `.changes`, partial DEBs/DDEBs, hashes, first failed source/order and successful DEBs already produced in a checkpoint before returning failure, so a package failure remains diagnosable without guessing from a workflow status.
+
+Current full regression run for the global builder: `33264059201`. It is **ACTIVE**, not accepted yet.
+
+Canonical bootstrap evidence remains run `33248631454`, artifact `9713725769`, digest `sha256:ee26c3f3421adcf4e64d351e10ba61c2bc890ba8c4bfded4b7e37dcb72fd9c7d`.
+
+Even a future 101/101 green full build does not by itself close KSQ-1. Reproducibility must be demonstrated by repeated byte-for-byte build comparison under controlled variations using the Debian/Ubuntu reproducible-build tooling available on Resolute, with diagnostic evidence retained for any divergence.
 
 Any change to the certified release set, source selections, packaging overrides, snapshot or relevant platform boundary reopens the corresponding KSQ-0 regression first.
 
@@ -219,9 +242,10 @@ Certification evidence is version-scoped. Regression is required when a later pr
 
 Examples:
 
-- documentation-only qualification/C4 changes: no boot/session or KSQ-0 rerun;
+- documentation-only qualification/C4 changes: no boot/session or KSQ rerun;
 - harness/fixture-only additions that do not alter the product image: no automatic C1-C3 rerun;
 - change to a KSQ-0 release set/source selection/override/pinned snapshot: rerun affected KSQ-0 inventory/closure before downstream evidence is reusable;
+- build-harness changes that can alter Build-Depends resolution or output invalidate affected KSQ-1 build evidence even when package sources are unchanged;
 - Frameworks/Plasma/KWin stack replacement: C1 composition/boot smoke + C2 + C3 + fresh C4.0 before feature certification resumes;
 - later Plasma/KWin/session/XWayland package or configuration changes within an accepted stack: C3 regression, plus C2 if greeter infrastructure overlaps, and C4.0 if the effective surface can change;
 - SDDM/KWin greeter changes: C2 and normally C3;
@@ -235,6 +259,8 @@ The triggering change must record the regression reason. Historical evidence rem
 Serial guest markers remain the primary deterministic evidence channel for VM gates. A green workflow or QEMU exit code alone is insufficient.
 
 For KDE Stack Qualification and C4, evidence additionally includes source/package manifests, build logs, APT transactions, product/fixture package manifests, ownership/version inventories, source checksums, explicit override records and targeted backend/service logs. Product dependencies and CI-only fixture dependencies must be reported separately.
+
+KSQ-1 failed checkpoints must retain the first failed source/order and the actual sbuild diagnostics. A workflow-level failure string alone is not sufficient root-cause evidence.
 
 ## Storage policy
 
