@@ -75,6 +75,25 @@ for index in "${!bootstrap_rows[@]}"; do
     "${extra_args[@]}" \
     "${dsc}"
 
+  # sbuild names its human-readable .build log with an ISO timestamp containing
+  # colons. GitHub artifact storage rejects ':' for cross-filesystem portability.
+  # The log content is evidence; only its filename is normalized before upload.
+  sanitized=0
+  while IFS= read -r -d '' generated; do
+    directory="$(dirname "${generated}")"
+    basename="$(basename "${generated}")"
+    safe_basename="${basename//:/-}"
+    if [[ "${safe_basename}" != "${basename}" ]]; then
+      [[ ! -e "${directory}/${safe_basename}" ]] || {
+        echo "AURORA_KSQ_1_BOOTSTRAP_FAILURE: evidence filename collision for ${safe_basename}" >&2
+        exit 1
+      }
+      mv "${generated}" "${directory}/${safe_basename}"
+      sanitized=$((sanitized + 1))
+    fi
+  done < <(find "${result}" -maxdepth 1 -type f -name '*:*' -print0)
+  echo "AURORA_KSQ_1_EVIDENCE_FILENAMES_SANITIZED=${sanitized} source=${source}"
+
   mapfile -t debs < <(find "${result}" -maxdepth 1 -type f -name '*.deb' -print | sort)
   mapfile -t buildinfos < <(find "${result}" -maxdepth 1 -type f -name '*.buildinfo' -print | sort)
   mapfile -t changes < <(find "${result}" -maxdepth 1 -type f -name '*.changes' -print | sort)
@@ -98,6 +117,12 @@ for index in "${!bootstrap_rows[@]}"; do
     "${#debs[@]}" "${#buildinfos[@]}" "${#changes[@]}" >> "${MANIFEST}"
   echo "AURORA_KSQ_1_BUILD_SUCCESS order=${order} source=${source} version=${supra_version}"
 done
+
+if find "${OUT}" -type f -printf '%f\n' | grep -Eq '[":<>|*?]'; then
+  echo "AURORA_KSQ_1_BOOTSTRAP_FAILURE: artifact evidence still contains cross-filesystem-invalid filename characters" >&2
+  find "${OUT}" -type f -printf '%p\n' | grep -E '[":<>|*?]' >&2 || true
+  exit 1
+fi
 
 find "${OUT}/debs" -maxdepth 1 -type f -name '*.deb' -print0 | sort -z | xargs -0 sha256sum > "${OUT}/bootstrap-debs.sha256"
 {
