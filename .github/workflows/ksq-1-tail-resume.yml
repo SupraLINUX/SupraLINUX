@@ -20,6 +20,7 @@ jobs:
       base_head_sha: ${{ steps.selection.outputs.base_head_sha }}
       partial_last: ${{ steps.selection.outputs.partial_last }}
       resume_start: ${{ steps.selection.outputs.resume_start }}
+      resume_chunk: ${{ steps.selection.outputs.resume_chunk }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -34,13 +35,13 @@ jobs:
         run: |
           set -euo pipefail
           . .github/ksq-1-tail-resume.env
-
           [[ "${AURORA_KSQ_1_TAIL_RESUME_STATUS}" == "ACTIVE" ]]
           [[ "${AURORA_KSQ_1_TAIL_BASE_RUN_ID}" =~ ^[0-9]+$ ]]
           [[ "${AURORA_KSQ_1_TAIL_BASE_HEAD_SHA}" =~ ^[0-9a-f]{40}$ ]]
           [[ "${AURORA_KSQ_1_TAIL_PARTIAL_LAST}" =~ ^[0-9]+$ ]]
           (( AURORA_KSQ_1_TAIL_PARTIAL_LAST >= 81 && AURORA_KSQ_1_TAIL_PARTIAL_LAST <= 100 ))
           resume_start="$((AURORA_KSQ_1_TAIL_PARTIAL_LAST + 1))"
+          resume_chunk="$(printf '%03d-101' "${resume_start}")"
 
           python3 - \
             "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${AURORA_KSQ_1_TAIL_BASE_RUN_ID}" \
@@ -49,7 +50,6 @@ jobs:
           import json
           import sys
           import urllib.request
-
           url, token, expected_head = sys.argv[1:]
           request = urllib.request.Request(
               url,
@@ -103,14 +103,15 @@ jobs:
           AURORA_KSQ_1_TAIL_PARTIAL_LAST=${AURORA_KSQ_1_TAIL_PARTIAL_LAST}
           AURORA_KSQ_1_TAIL_RESUME_FIRST=${resume_start}
           AURORA_KSQ_1_TAIL_RESUME_LAST=101
+          AURORA_KSQ_1_TAIL_RESUME_CHUNK=${resume_chunk}
           AURORA_KSQ_1_TAIL_RESUME_HEAD_SHA=${GITHUB_SHA}
           AURORA_KSQ_1_TAIL_BUILD_INPUT_DRIFT=0
           EOF
-
           echo "base_run_id=${AURORA_KSQ_1_TAIL_BASE_RUN_ID}" >> "${GITHUB_OUTPUT}"
           echo "base_head_sha=${AURORA_KSQ_1_TAIL_BASE_HEAD_SHA}" >> "${GITHUB_OUTPUT}"
           echo "partial_last=${AURORA_KSQ_1_TAIL_PARTIAL_LAST}" >> "${GITHUB_OUTPUT}"
           echo "resume_start=${resume_start}" >> "${GITHUB_OUTPUT}"
+          echo "resume_chunk=${resume_chunk}" >> "${GITHUB_OUTPUT}"
           echo AURORA_KSQ_1_TAIL_SELECTION_VALID
 
       - name: Preserve input provenance
@@ -131,56 +132,22 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Restore base DEBs 001-020
+      - name: Restore all base DEB checkpoints
         uses: actions/download-artifact@v8
         with:
-          name: aurora-ksq-1-debs-001-020
-          path: build/ksq-1/tail-resume/base-debs/001-020
+          pattern: aurora-ksq-1-debs-*
+          path: build/ksq-1/tail-resume/base-debs
+          merge-multiple: false
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
           run-id: ${{ needs.configure.outputs.base_run_id }}
 
-      - name: Restore base DEBs 021-040
+      - name: Restore all base evidence checkpoints
         uses: actions/download-artifact@v8
         with:
-          name: aurora-ksq-1-debs-021-040
-          path: build/ksq-1/tail-resume/base-debs/021-040
-          github-token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          run-id: ${{ needs.configure.outputs.base_run_id }}
-
-      - name: Restore base DEBs 041-060
-        uses: actions/download-artifact@v8
-        with:
-          name: aurora-ksq-1-debs-041-060
-          path: build/ksq-1/tail-resume/base-debs/041-060
-          github-token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          run-id: ${{ needs.configure.outputs.base_run_id }}
-
-      - name: Restore base DEBs 061-080
-        uses: actions/download-artifact@v8
-        with:
-          name: aurora-ksq-1-debs-061-080
-          path: build/ksq-1/tail-resume/base-debs/061-080
-          github-token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          run-id: ${{ needs.configure.outputs.base_run_id }}
-
-      - name: Restore timed-out tail DEBs
-        uses: actions/download-artifact@v8
-        with:
-          name: aurora-ksq-1-debs-081-101
-          path: build/ksq-1/tail-resume/partial-debs
-          github-token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          run-id: ${{ needs.configure.outputs.base_run_id }}
-
-      - name: Restore timed-out tail evidence
-        uses: actions/download-artifact@v8
-        with:
-          name: aurora-ksq-1-evidence-081-101
-          path: build/ksq-1/tail-resume/partial-evidence
+          pattern: aurora-ksq-1-evidence-*
+          path: build/ksq-1/tail-resume/base-evidence
+          merge-multiple: false
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
           run-id: ${{ needs.configure.outputs.base_run_id }}
@@ -189,42 +156,44 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          for name in 001-020 021-040 041-060 061-080 081-101; do
+            [[ -d "build/ksq-1/tail-resume/base-debs/aurora-ksq-1-debs-${name}" ]]
+            [[ -d "build/ksq-1/tail-resume/base-evidence/aurora-ksq-1-evidence-${name}" ]]
+          done
           python3 - \
             "${{ needs.configure.outputs.partial_last }}" \
-            build/ksq-1/tail-resume/partial-evidence \
-            build/ksq-1/tail-resume/partial-debs <<'PY'
+            build/ksq-1/tail-resume/base-evidence/aurora-ksq-1-evidence-081-101 \
+            build/ksq-1/tail-resume/base-debs/aurora-ksq-1-debs-081-101 <<'PY'
           import csv
           import subprocess
           import sys
           from pathlib import Path
-
           partial_last = int(sys.argv[1])
           evidence = Path(sys.argv[2])
           debs = Path(sys.argv[3])
           manifest_header = ["order", "source_package", "packaging_base", "supra_version", "candidate_family", "decision", "deb_count", "buildinfo_count", "changes_count", "result"]
           binary_header = ["order", "source_package", "binary_package", "filename", "version", "architecture"]
-
           with (evidence / "build-manifest.tsv").open(newline="", encoding="utf-8") as handle:
-              manifest = list(csv.DictReader(handle, delimiter="\t"))
-              if not manifest or list(manifest[0]) != manifest_header:
+              reader = csv.DictReader(handle, delimiter="\t")
+              if reader.fieldnames != manifest_header:
                   raise SystemExit("partial manifest header mismatch")
+              manifest = list(reader)
           expected_orders = list(range(81, partial_last + 1))
           if [int(row["order"]) for row in manifest] != expected_orders:
               raise SystemExit("partial manifest does not cover exact contiguous PASS prefix")
           if any(row["result"] != "PASS" for row in manifest):
               raise SystemExit("partial manifest contains non-PASS row")
-
           with (evidence / "binary-packages.tsv").open(newline="", encoding="utf-8") as handle:
-              binary = list(csv.DictReader(handle, delimiter="\t"))
-              if not binary or list(binary[0]) != binary_header:
+              reader = csv.DictReader(handle, delimiter="\t")
+              if reader.fieldnames != binary_header:
                   raise SystemExit("partial binary index header mismatch")
+              binary = list(reader)
           if set(int(row["order"]) for row in binary) != set(expected_orders):
               raise SystemExit("partial binary index does not cover every completed source")
           expected_files = {row["filename"] for row in binary}
           actual_files = {path.name for path in debs.glob("*.deb")}
           if expected_files != actual_files:
               raise SystemExit(f"partial DEB set mismatch missing={sorted(expected_files-actual_files)} extra={sorted(actual_files-expected_files)}")
-
           for row in binary:
               deb = debs / row["filename"]
               fields = tuple(
@@ -234,7 +203,6 @@ jobs:
               wanted = (row["binary_package"], row["version"], row["architecture"])
               if fields != wanted:
                   raise SystemExit(f"partial DEB metadata mismatch for {deb.name}")
-
           pass_orders = set()
           for status in evidence.glob("*-*/build-status.env"):
               values = {}
@@ -254,11 +222,11 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build/ksq-1/tail-resume/prior-debs build/ksq-1/full/debs
-          for dir in build/ksq-1/tail-resume/base-debs/*; do
-            cp -a "${dir}"/*.deb build/ksq-1/tail-resume/prior-debs/
+          for name in 001-020 021-040 041-060 061-080; do
+            cp -a "build/ksq-1/tail-resume/base-debs/aurora-ksq-1-debs-${name}/"*.deb build/ksq-1/tail-resume/prior-debs/
           done
           cp -a build/ksq-1/tail-resume/prior-debs/*.deb build/ksq-1/full/debs/
-          cp -a build/ksq-1/tail-resume/partial-debs/*.deb build/ksq-1/full/debs/
+          cp -a build/ksq-1/tail-resume/base-debs/aurora-ksq-1-debs-081-101/*.deb build/ksq-1/full/debs/
           python3 - <<'PY'
           import subprocess
           from pathlib import Path
@@ -280,16 +248,14 @@ jobs:
       - name: Build missing tail sources
         timeout-minutes: 330
         shell: bash
-        run: |
-          set -euo pipefail
-          bash scripts/ci/build-ksq-1-range.sh "${{ needs.configure.outputs.resume_start }}" 101
+        run: bash scripts/ci/build-ksq-1-range.sh "${{ needs.configure.outputs.resume_start }}" 101
 
       - name: Preserve completion DEBs
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: aurora-ksq-1-tail-completion-debs
-          path: build/ksq-1/full/chunk-${{ needs.configure.outputs.resume_start }}-101/new-debs/
+          path: build/ksq-1/full/chunk-${{ needs.configure.outputs.resume_chunk }}/new-debs/
           if-no-files-found: warn
           retention-days: 30
           overwrite: true
@@ -299,7 +265,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: aurora-ksq-1-tail-completion-evidence
-          path: build/ksq-1/full/chunk-${{ needs.configure.outputs.resume_start }}-101/evidence/
+          path: build/ksq-1/full/chunk-${{ needs.configure.outputs.resume_chunk }}/evidence/
           if-no-files-found: error
           retention-days: 30
           overwrite: true
@@ -321,20 +287,20 @@ jobs:
           name: aurora-ksq-1-tail-resume-input-provenance
           path: build/ksq-1/tail-resume/provenance
 
-      - name: Restore base DEB checkpoints
+      - name: Restore all base DEB checkpoints
         uses: actions/download-artifact@v8
         with:
-          pattern: aurora-ksq-1-debs-0[0-7]*
+          pattern: aurora-ksq-1-debs-*
           path: build/ksq-1/tail-resume/base-debs
           merge-multiple: false
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
           run-id: ${{ needs.configure.outputs.base_run_id }}
 
-      - name: Restore base evidence checkpoints
+      - name: Restore all base evidence checkpoints
         uses: actions/download-artifact@v8
         with:
-          pattern: aurora-ksq-1-evidence-0[0-7]*
+          pattern: aurora-ksq-1-evidence-*
           path: build/ksq-1/tail-resume/base-evidence
           merge-multiple: false
           github-token: ${{ github.token }}
@@ -346,24 +312,6 @@ jobs:
         with:
           name: aurora-ksq-1-kwallet-pam-validation
           path: build/ksq-1/tail-resume/base-kwallet
-          github-token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          run-id: ${{ needs.configure.outputs.base_run_id }}
-
-      - name: Restore partial tail DEBs
-        uses: actions/download-artifact@v8
-        with:
-          name: aurora-ksq-1-debs-081-101
-          path: build/ksq-1/tail-resume/partial-debs
-          github-token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          run-id: ${{ needs.configure.outputs.base_run_id }}
-
-      - name: Restore partial tail evidence
-        uses: actions/download-artifact@v8
-        with:
-          name: aurora-ksq-1-evidence-081-101
-          path: build/ksq-1/tail-resume/partial-evidence
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
           run-id: ${{ needs.configure.outputs.base_run_id }}
@@ -385,7 +333,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build/ksq-1/tail-resume/prior-debs
-          find build/ksq-1/tail-resume/base-debs -type f -name '*.deb' -exec cp -a {} build/ksq-1/tail-resume/prior-debs/ \;
+          for name in 001-020 021-040 041-060 061-080; do
+            cp -a "build/ksq-1/tail-resume/base-debs/aurora-ksq-1-debs-${name}/"*.deb build/ksq-1/tail-resume/prior-debs/
+          done
 
       - name: Prepare pinned validation runner
         shell: bash
@@ -397,8 +347,8 @@ jobs:
           set -euo pipefail
           python3 scripts/ci/merge-ksq-1-tail-resume.py \
             --partial-last "${{ needs.configure.outputs.partial_last }}" \
-            --partial-evidence build/ksq-1/tail-resume/partial-evidence \
-            --partial-debs build/ksq-1/tail-resume/partial-debs \
+            --partial-evidence build/ksq-1/tail-resume/base-evidence/aurora-ksq-1-evidence-081-101 \
+            --partial-debs build/ksq-1/tail-resume/base-debs/aurora-ksq-1-debs-081-101 \
             --completion-evidence build/ksq-1/tail-resume/completion-evidence \
             --completion-debs build/ksq-1/tail-resume/completion-debs \
             --prior-debs build/ksq-1/tail-resume/prior-debs \
@@ -417,8 +367,8 @@ jobs:
           mkdir -p build/ksq-1/full/debs build/ksq-1/full/evidence-artifacts build/ksq-1/full/kwallet-validation
           cp -a build/ksq-1/tail-resume/prior-debs/*.deb build/ksq-1/full/debs/
           cp -a build/ksq-1/tail-resume/canonical-debs-081-101/*.deb build/ksq-1/full/debs/
-          for dir in build/ksq-1/tail-resume/base-evidence/*; do
-            cp -a "${dir}" build/ksq-1/full/evidence-artifacts/
+          for name in 001-020 021-040 041-060 061-080; do
+            cp -a "build/ksq-1/tail-resume/base-evidence/aurora-ksq-1-evidence-${name}" build/ksq-1/full/evidence-artifacts/
           done
           cp -a build/ksq-1/tail-resume/canonical-evidence-081-101 build/ksq-1/full/evidence-artifacts/aurora-ksq-1-evidence-081-101
           cp -a build/ksq-1/tail-resume/base-kwallet/. build/ksq-1/full/kwallet-validation/
@@ -437,10 +387,10 @@ jobs:
             'base-debs build/ksq-1/tail-resume/base-debs' \
             'base-evidence build/ksq-1/tail-resume/base-evidence' \
             'base-kwallet build/ksq-1/tail-resume/base-kwallet' \
-            'partial-debs build/ksq-1/tail-resume/partial-debs' \
-            'partial-evidence build/ksq-1/tail-resume/partial-evidence' \
             'completion-debs build/ksq-1/tail-resume/completion-debs' \
-            'completion-evidence build/ksq-1/tail-resume/completion-evidence'; do
+            'completion-evidence build/ksq-1/tail-resume/completion-evidence' \
+            'canonical-tail-debs build/ksq-1/tail-resume/canonical-debs-081-101' \
+            'canonical-tail-evidence build/ksq-1/tail-resume/canonical-evidence-081-101'; do
             name="${pair%% *}"
             dir="${pair#* }"
             (cd "${dir}" && find . -type f -print0 | sort -z | xargs -0 sha256sum) > "${out}/${name}.sha256"
@@ -464,7 +414,6 @@ jobs:
           if-no-files-found: error
           retention-days: 30
           overwrite: true
-
       - name: Promote DEBs 021-040
         uses: actions/upload-artifact@v7
         with:
@@ -473,7 +422,6 @@ jobs:
           if-no-files-found: error
           retention-days: 30
           overwrite: true
-
       - name: Promote DEBs 041-060
         uses: actions/upload-artifact@v7
         with:
@@ -482,7 +430,6 @@ jobs:
           if-no-files-found: error
           retention-days: 30
           overwrite: true
-
       - name: Promote DEBs 061-080
         uses: actions/upload-artifact@v7
         with:
@@ -491,7 +438,6 @@ jobs:
           if-no-files-found: error
           retention-days: 30
           overwrite: true
-
       - name: Promote evidence 001-020
         uses: actions/upload-artifact@v7
         with:
@@ -500,7 +446,6 @@ jobs:
           if-no-files-found: error
           retention-days: 30
           overwrite: true
-
       - name: Promote evidence 021-040
         uses: actions/upload-artifact@v7
         with:
@@ -509,7 +454,6 @@ jobs:
           if-no-files-found: error
           retention-days: 30
           overwrite: true
-
       - name: Promote evidence 041-060
         uses: actions/upload-artifact@v7
         with:
@@ -518,7 +462,6 @@ jobs:
           if-no-files-found: error
           retention-days: 30
           overwrite: true
-
       - name: Promote evidence 061-080
         uses: actions/upload-artifact@v7
         with:
@@ -527,7 +470,6 @@ jobs:
           if-no-files-found: error
           retention-days: 30
           overwrite: true
-
       - name: Promote canonical DEBs 081-101
         uses: actions/upload-artifact@v7
         with:
@@ -536,7 +478,6 @@ jobs:
           if-no-files-found: error
           retention-days: 30
           overwrite: true
-
       - name: Promote canonical evidence 081-101
         uses: actions/upload-artifact@v7
         with:
@@ -545,7 +486,6 @@ jobs:
           if-no-files-found: error
           retention-days: 30
           overwrite: true
-
       - name: Promote KWallet package gate
         uses: actions/upload-artifact@v7
         with:
@@ -554,16 +494,18 @@ jobs:
           if-no-files-found: error
           retention-days: 30
           overwrite: true
-
       - name: Preserve promoted full validation
         uses: actions/upload-artifact@v7
         with:
           name: aurora-ksq-1-full-build-validation
-          path: build/ksq-1/full/final-validation/
+          path: |
+            build/ksq-1/full/full-build-manifest.tsv
+            build/ksq-1/full/full-binary-packages.tsv
+            build/ksq-1/full/full-debs.sha256
+            build/ksq-1/full/full-build-status.env
           if-no-files-found: error
           retention-days: 30
           overwrite: true
-
       - name: Preserve tail resume provenance
         uses: actions/upload-artifact@v7
         with:
