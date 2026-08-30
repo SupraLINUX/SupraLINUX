@@ -1,0 +1,183 @@
+name: Aurora KSQ-1 technical acceptance bundle
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - 'tests/kde-stack/ksq-1-acceptance-runs.env'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  consolidate:
+    name: Revalidate and consolidate KSQ-1 evidence
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Load accepted run selection
+        id: runs
+        shell: bash
+        run: |
+          set -euo pipefail
+          . tests/kde-stack/ksq-1-acceptance-runs.env
+          [[ "${AURORA_KSQ_1_ACCEPTANCE_RUNS_STATUS}" == "ACTIVE" ]]
+          for var in \
+            AURORA_KSQ_1_CANDIDATE_RUN_ID \
+            AURORA_KSQ_1_REFERENCE_RUN_ID \
+            AURORA_KSQ_1_REPRO_RUN_ID \
+            AURORA_KSQ_1_KSQ0_CLOSURE_RUN_ID \
+            AURORA_KSQ_1_KSQ0_INVENTORY_RUN_ID; do
+            [[ "${!var}" =~ ^[0-9]+$ ]]
+          done
+          [[ "${AURORA_KSQ_1_CANDIDATE_RUN_ID}" != "${AURORA_KSQ_1_REFERENCE_RUN_ID}" ]]
+          echo "candidate_run_id=${AURORA_KSQ_1_CANDIDATE_RUN_ID}" >> "${GITHUB_OUTPUT}"
+          echo "repro_run_id=${AURORA_KSQ_1_REPRO_RUN_ID}" >> "${GITHUB_OUTPUT}"
+          echo "ksq0_closure_run_id=${AURORA_KSQ_1_KSQ0_CLOSURE_RUN_ID}" >> "${GITHUB_OUTPUT}"
+          echo "ksq0_inventory_run_id=${AURORA_KSQ_1_KSQ0_INVENTORY_RUN_ID}" >> "${GITHUB_OUTPUT}"
+
+      - name: Restore authoritative candidate DEBs
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-debs-*
+          path: build/ksq-1/full/debs
+          merge-multiple: true
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.runs.outputs.candidate_run_id }}
+
+      - name: Restore authoritative candidate range evidence
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-evidence-*
+          path: build/ksq-1/full/evidence-artifacts
+          merge-multiple: false
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.runs.outputs.candidate_run_id }}
+
+      - name: Restore candidate KWallet package gate
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-kwallet-pam-validation
+          path: build/ksq-1/full/kwallet-validation
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.runs.outputs.candidate_run_id }}
+
+      - name: Restore original candidate full validation
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-full-build-validation
+          path: build/ksq-1/original-full-validation
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.runs.outputs.candidate_run_id }}
+
+      - name: Restore reproducibility acceptance
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-reproducibility-validation
+          path: build/ksq-1/repro/acceptance-artifact
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.runs.outputs.repro_run_id }}
+
+      - name: Restore dedicated reproducibility proofs
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-repro-order-*
+          path: build/ksq-1/repro/dedicated-proofs
+          merge-multiple: false
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.runs.outputs.repro_run_id }}
+
+      - name: Restore KSQ-0 closure regression evidence
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-0-dependency-closure
+          path: build/ksq-1/ksq0-regression/closure
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.runs.outputs.ksq0_closure_run_id }}
+
+      - name: Restore KSQ-0 inventory regression evidence
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-0-source-inventory-*
+          path: build/ksq-1/ksq0-regression/inventory
+          merge-multiple: true
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.runs.outputs.ksq0_inventory_run_id }}
+
+      - name: Normalize reproducibility acceptance location
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ksq-1/repro/acceptance
+          status="$(find build/ksq-1/repro/acceptance-artifact -type f -name reproducibility-status.env -print)"
+          manifest="$(find build/ksq-1/repro/acceptance-artifact -type f -name reproducibility-manifest.tsv -print)"
+          [[ "$(printf '%s\n' "${status}" | sed '/^$/d' | wc -l)" -eq 1 ]]
+          [[ "$(printf '%s\n' "${manifest}" | sed '/^$/d' | wc -l)" -eq 1 ]]
+          cp -a "${status}" build/ksq-1/repro/acceptance/reproducibility-status.env
+          cp -a "${manifest}" build/ksq-1/repro/acceptance/reproducibility-manifest.tsv
+
+      - name: Prepare pinned KSQ-1 validation state
+        shell: bash
+        run: bash scripts/ci/prepare-ksq-1-runner.sh
+
+      - name: Independently revalidate complete candidate build evidence
+        shell: bash
+        run: python3 scripts/ci/validate-ksq-1-full.py
+
+      - name: Validate combined KSQ-1 technical acceptance
+        shell: bash
+        run: python3 scripts/ci/validate-ksq-1-technical-acceptance.py
+
+      - name: Capture exact repository and bundle file hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=build/ksq-1/technical-acceptance
+          git rev-parse HEAD > "${out}/acceptance-head.txt"
+          git status --porcelain=v1 > "${out}/git-status.txt"
+          git archive --format=tar.gz --output="${out}/repository-snapshot.tar.gz" HEAD
+          {
+            find build/ksq-1/full/debs -type f -name '*.deb' -print0
+            find build/ksq-1/full/evidence-artifacts -type f -print0
+            find build/ksq-1/full/kwallet-validation -type f -print0
+            find build/ksq-1/original-full-validation -type f -print0
+            find build/ksq-1/repro/acceptance-artifact -type f -print0
+            find build/ksq-1/repro/dedicated-proofs -type f -print0
+            find build/ksq-1/ksq0-regression -type f -print0
+            printf '%s\0' tests/kde-stack/ksq-1-acceptance-runs.env
+            printf '%s\0' "${out}/technical-acceptance-status.env"
+            printf '%s\0' "${out}/acceptance-head.txt"
+            printf '%s\0' "${out}/repository-snapshot.tar.gz"
+          } | sort -z | xargs -0 sha256sum > "${out}/bundle-files.sha256"
+          echo AURORA_KSQ_1_ACCEPTANCE_BUNDLE_HASHED
+
+      - name: Preserve self-contained KSQ-1 technical acceptance bundle
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-technical-acceptance
+          path: |
+            tests/kde-stack/ksq-1-acceptance-runs.env
+            build/ksq-1/technical-acceptance/**
+            build/ksq-1/full/debs/**
+            build/ksq-1/full/evidence-artifacts/**
+            build/ksq-1/full/kwallet-validation/**
+            build/ksq-1/original-full-validation/**
+            build/ksq-1/repro/acceptance-artifact/**
+            build/ksq-1/repro/dedicated-proofs/**
+            build/ksq-1/ksq0-regression/**
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
