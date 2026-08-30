@@ -13,6 +13,7 @@ on:
       - 'scripts/ci/validate-ksq-1-reproducibility.py'
       - 'scripts/ci/validate-ksq-1-technical-acceptance.py'
       - 'scripts/ci/merge-ksq-1-tail-resume.py'
+      - 'scripts/ci/test-merge-ksq-1-tail-resume.py'
   workflow_dispatch:
 
 permissions:
@@ -35,9 +36,11 @@ jobs:
           python3 -m py_compile \
             scripts/ci/validate-ksq-1-reproducibility.py \
             scripts/ci/validate-ksq-1-technical-acceptance.py \
-            scripts/ci/merge-ksq-1-tail-resume.py
+            scripts/ci/merge-ksq-1-tail-resume.py \
+            scripts/ci/test-merge-ksq-1-tail-resume.py
           python3 scripts/ci/validate-ksq-1-reproducibility.py --help >/dev/null
           python3 scripts/ci/merge-ksq-1-tail-resume.py --help >/dev/null
+          python3 scripts/ci/test-merge-ksq-1-tail-resume.py
           test -x scripts/ci/build-ksq-1-repro-source.sh
           test -x scripts/ci/validate-ksq-1-reproducibility.py
           grep -Fq "tests/kde-stack/ksq-1-repro-runs.env" .github/workflows/ksq-1-reproducibility.yml
@@ -47,6 +50,7 @@ jobs:
           grep -Fq "AURORA_KSQ_1_CERTIFIED=no" scripts/ci/validate-ksq-1-technical-acceptance.py
           grep -Fq "AURORA_KSQ_2_UNBLOCKED=no" scripts/ci/validate-ksq-1-technical-acceptance.py
           grep -Fq "timeout-minutes: 330" .github/workflows/ksq-1-tail-resume.yml
+          grep -Fq "resume_chunk=\"\$(printf '%03d-101'" .github/workflows/ksq-1-tail-resume.yml
           grep -Fq "AURORA_KSQ_1_TAIL_FULL_CERTIFIED=no" scripts/ci/merge-ksq-1-tail-resume.py
           ruby -e 'require "yaml"; YAML.parse_file(ARGV.fetch(0))' .github/workflows/ksq-1-reproducibility.yml
           ruby -e 'require "yaml"; YAML.parse_file(ARGV.fetch(0))' .github/workflows/ksq-1-technical-acceptance.yml
