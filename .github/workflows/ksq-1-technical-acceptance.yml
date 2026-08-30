@@ -122,19 +122,35 @@ jobs:
         run: |
           set -euo pipefail
 
+          one_file() {
+            local root="$1" name="$2" result
+            result="$(find "${root}" -type f -name "${name}" -print)"
+            [[ "$(printf '%s\n' "${result}" | sed '/^$/d' | wc -l)" -eq 1 ]]
+            printf '%s\n' "${result}"
+          }
+
           mkdir -p build/ksq-1/repro/acceptance
-          repro_status="$(find build/ksq-1/repro/acceptance-artifact -type f -name reproducibility-status.env -print)"
-          repro_manifest="$(find build/ksq-1/repro/acceptance-artifact -type f -name reproducibility-manifest.tsv -print)"
-          [[ "$(printf '%s\n' "${repro_status}" | sed '/^$/d' | wc -l)" -eq 1 ]]
-          [[ "$(printf '%s\n' "${repro_manifest}" | sed '/^$/d' | wc -l)" -eq 1 ]]
-          cp -a "${repro_status}" build/ksq-1/repro/acceptance/reproducibility-status.env
-          cp -a "${repro_manifest}" build/ksq-1/repro/acceptance/reproducibility-manifest.tsv
+          cp -a "$(one_file build/ksq-1/repro/acceptance-artifact reproducibility-status.env)" \
+            build/ksq-1/repro/acceptance/reproducibility-status.env
+          cp -a "$(one_file build/ksq-1/repro/acceptance-artifact reproducibility-manifest.tsv)" \
+            build/ksq-1/repro/acceptance/reproducibility-manifest.tsv
+          cp -a "$(one_file build/ksq-1/repro/acceptance-artifact ksq-1-repro-runs.env)" \
+            build/ksq-1/repro/acceptance/repro-runs.env
 
           mkdir -p build/ksq-1/original-full-validation
           for name in full-build-manifest.tsv full-binary-packages.tsv full-debs.sha256 full-build-status.env; do
-            source="$(find build/ksq-1/original-full-validation-artifact -type f -name "${name}" -print)"
-            [[ "$(printf '%s\n' "${source}" | sed '/^$/d' | wc -l)" -eq 1 ]]
-            cp -a "${source}" "build/ksq-1/original-full-validation/${name}"
+            cp -a "$(one_file build/ksq-1/original-full-validation-artifact "${name}")" \
+              "build/ksq-1/original-full-validation/${name}"
+          done
+
+          mkdir -p build/ksq-1/ksq0-normalized/inventory
+          for name in closure-status.env unresolved.tsv source-selections-applied.tsv build-dep-overrides-applied.tsv; do
+            cp -a "$(one_file build/ksq-1/ksq0-regression/closure "${name}")" \
+              "build/ksq-1/ksq0-normalized/${name}"
+          done
+          for name in release-sets.tsv plasma-6.7.4-sources.tsv frameworks-6.29.0-sources.tsv aurora-package-roots.tsv validated-source-urls.tsv; do
+            cp -a "$(one_file build/ksq-1/ksq0-regression/inventory "${name}")" \
+              "build/ksq-1/ksq0-normalized/inventory/${name}"
           done
           echo AURORA_KSQ_1_ACCEPTANCE_DOWNLOADS_NORMALIZED
 
@@ -167,6 +183,7 @@ jobs:
             find build/ksq-1/repro/acceptance-artifact -type f -print0
             find build/ksq-1/repro/dedicated-proofs -type f -print0
             find build/ksq-1/ksq0-regression -type f -print0
+            find build/ksq-1/ksq0-normalized -type f -print0
             printf '%s\0' tests/kde-stack/ksq-1-acceptance-runs.env
             printf '%s\0' "${out}/technical-acceptance-status.env"
             printf '%s\0' "${out}/acceptance-head.txt"
@@ -189,6 +206,7 @@ jobs:
             build/ksq-1/repro/acceptance-artifact/**
             build/ksq-1/repro/dedicated-proofs/**
             build/ksq-1/ksq0-regression/**
+            build/ksq-1/ksq0-normalized/**
           if-no-files-found: error
           retention-days: 30
           overwrite: true
