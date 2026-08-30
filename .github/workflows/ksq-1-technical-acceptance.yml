@@ -74,7 +74,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: aurora-ksq-1-full-build-validation
-          path: build/ksq-1/original-full-validation
+          path: build/ksq-1/original-full-validation-artifact
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
           run-id: ${{ steps.runs.outputs.candidate_run_id }}
@@ -117,17 +117,26 @@ jobs:
           repository: ${{ github.repository }}
           run-id: ${{ steps.runs.outputs.ksq0_inventory_run_id }}
 
-      - name: Normalize reproducibility acceptance location
+      - name: Normalize downloaded acceptance evidence
         shell: bash
         run: |
           set -euo pipefail
+
           mkdir -p build/ksq-1/repro/acceptance
-          status="$(find build/ksq-1/repro/acceptance-artifact -type f -name reproducibility-status.env -print)"
-          manifest="$(find build/ksq-1/repro/acceptance-artifact -type f -name reproducibility-manifest.tsv -print)"
-          [[ "$(printf '%s\n' "${status}" | sed '/^$/d' | wc -l)" -eq 1 ]]
-          [[ "$(printf '%s\n' "${manifest}" | sed '/^$/d' | wc -l)" -eq 1 ]]
-          cp -a "${status}" build/ksq-1/repro/acceptance/reproducibility-status.env
-          cp -a "${manifest}" build/ksq-1/repro/acceptance/reproducibility-manifest.tsv
+          repro_status="$(find build/ksq-1/repro/acceptance-artifact -type f -name reproducibility-status.env -print)"
+          repro_manifest="$(find build/ksq-1/repro/acceptance-artifact -type f -name reproducibility-manifest.tsv -print)"
+          [[ "$(printf '%s\n' "${repro_status}" | sed '/^$/d' | wc -l)" -eq 1 ]]
+          [[ "$(printf '%s\n' "${repro_manifest}" | sed '/^$/d' | wc -l)" -eq 1 ]]
+          cp -a "${repro_status}" build/ksq-1/repro/acceptance/reproducibility-status.env
+          cp -a "${repro_manifest}" build/ksq-1/repro/acceptance/reproducibility-manifest.tsv
+
+          mkdir -p build/ksq-1/original-full-validation
+          for name in full-build-manifest.tsv full-binary-packages.tsv full-debs.sha256 full-build-status.env; do
+            source="$(find build/ksq-1/original-full-validation-artifact -type f -name "${name}" -print)"
+            [[ "$(printf '%s\n' "${source}" | sed '/^$/d' | wc -l)" -eq 1 ]]
+            cp -a "${source}" "build/ksq-1/original-full-validation/${name}"
+          done
+          echo AURORA_KSQ_1_ACCEPTANCE_DOWNLOADS_NORMALIZED
 
       - name: Prepare pinned KSQ-1 validation state
         shell: bash
@@ -153,6 +162,7 @@ jobs:
             find build/ksq-1/full/debs -type f -name '*.deb' -print0
             find build/ksq-1/full/evidence-artifacts -type f -print0
             find build/ksq-1/full/kwallet-validation -type f -print0
+            find build/ksq-1/original-full-validation-artifact -type f -print0
             find build/ksq-1/original-full-validation -type f -print0
             find build/ksq-1/repro/acceptance-artifact -type f -print0
             find build/ksq-1/repro/dedicated-proofs -type f -print0
@@ -174,6 +184,7 @@ jobs:
             build/ksq-1/full/debs/**
             build/ksq-1/full/evidence-artifacts/**
             build/ksq-1/full/kwallet-validation/**
+            build/ksq-1/original-full-validation-artifact/**
             build/ksq-1/original-full-validation/**
             build/ksq-1/repro/acceptance-artifact/**
             build/ksq-1/repro/dedicated-proofs/**
