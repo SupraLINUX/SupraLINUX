@@ -6,8 +6,11 @@ on:
       - feature/kde-stack-qualification
     paths:
       - '.github/workflows/ksq-1-repro-helper-validation.yml'
+      - '.github/workflows/ksq-1-reproducibility.yml'
+      - '.github/workflows/ksq-1-technical-acceptance.yml'
       - 'scripts/ci/build-ksq-1-repro-source.sh'
       - 'scripts/ci/validate-ksq-1-reproducibility.py'
+      - 'scripts/ci/validate-ksq-1-technical-acceptance.py'
   workflow_dispatch:
 
 permissions:
@@ -27,8 +30,15 @@ jobs:
         run: |
           set -euo pipefail
           bash -n scripts/ci/build-ksq-1-repro-source.sh
-          python3 -m py_compile scripts/ci/validate-ksq-1-reproducibility.py
+          python3 -m py_compile \
+            scripts/ci/validate-ksq-1-reproducibility.py \
+            scripts/ci/validate-ksq-1-technical-acceptance.py
           python3 scripts/ci/validate-ksq-1-reproducibility.py --help >/dev/null
           test -x scripts/ci/build-ksq-1-repro-source.sh
           test -x scripts/ci/validate-ksq-1-reproducibility.py
+          grep -Fq "tests/kde-stack/ksq-1-repro-runs.env" .github/workflows/ksq-1-reproducibility.yml
+          grep -Fq "tests/kde-stack/ksq-1-acceptance-runs.env" .github/workflows/ksq-1-technical-acceptance.yml
+          grep -Fq "order: [29, 68, 81, 99, 100, 101]" .github/workflows/ksq-1-reproducibility.yml
+          grep -Fq "AURORA_KSQ_1_CERTIFIED=no" scripts/ci/validate-ksq-1-technical-acceptance.py
+          grep -Fq "AURORA_KSQ_2_UNBLOCKED=no" scripts/ci/validate-ksq-1-technical-acceptance.py
           echo AURORA_KSQ_1_REPRO_HELPERS_VALID
