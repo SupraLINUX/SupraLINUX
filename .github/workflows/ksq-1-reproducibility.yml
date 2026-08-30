@@ -5,7 +5,7 @@ on:
     branches:
       - feature/kde-stack-qualification
     paths:
-      - 'tests/kde-stack/ksq-1-repro-runs.env'
+      - '.github/ksq-1-repro-runs.env'
 
 permissions:
   contents: read
@@ -27,7 +27,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          . tests/kde-stack/ksq-1-repro-runs.env
+          . .github/ksq-1-repro-runs.env
           [[ "${AURORA_KSQ_1_REPRO_RUNS_STATUS}" == "ACTIVE" ]]
           [[ "${AURORA_KSQ_1_CANDIDATE_RUN_ID}" =~ ^[0-9]+$ ]]
           [[ "${AURORA_KSQ_1_REFERENCE_RUN_ID}" =~ ^[0-9]+$ ]]
@@ -182,7 +182,7 @@ jobs:
         with:
           name: aurora-ksq-1-reproducibility-validation
           path: |
-            tests/kde-stack/ksq-1-repro-runs.env
+            .github/ksq-1-repro-runs.env
             build/ksq-1/repro/acceptance/**
             build/ksq-1/repro/dedicated-proofs/**/source-identity.env
             build/ksq-1/repro/dedicated-proofs/**/prepared-source.sha256
