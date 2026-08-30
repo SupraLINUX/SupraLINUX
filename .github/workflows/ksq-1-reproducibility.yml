@@ -1,0 +1,193 @@
+name: Aurora KSQ-1 reproducibility qualification
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - 'tests/kde-stack/ksq-1-repro-runs.env'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  configure:
+    name: Validate reproducibility run selection
+    runs-on: ubuntu-26.04
+    outputs:
+      candidate_run_id: ${{ steps.runs.outputs.candidate_run_id }}
+      reference_run_id: ${{ steps.runs.outputs.reference_run_id }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Validate selected runs
+        id: runs
+        shell: bash
+        run: |
+          set -euo pipefail
+          . tests/kde-stack/ksq-1-repro-runs.env
+          [[ "${AURORA_KSQ_1_REPRO_RUNS_STATUS}" == "ACTIVE" ]]
+          [[ "${AURORA_KSQ_1_CANDIDATE_RUN_ID}" =~ ^[0-9]+$ ]]
+          [[ "${AURORA_KSQ_1_REFERENCE_RUN_ID}" =~ ^[0-9]+$ ]]
+          [[ "${AURORA_KSQ_1_CANDIDATE_RUN_ID}" != "${AURORA_KSQ_1_REFERENCE_RUN_ID}" ]]
+          echo "candidate_run_id=${AURORA_KSQ_1_CANDIDATE_RUN_ID}" >> "${GITHUB_OUTPUT}"
+          echo "reference_run_id=${AURORA_KSQ_1_REFERENCE_RUN_ID}" >> "${GITHUB_OUTPUT}"
+          echo AURORA_KSQ_1_REPRO_RUN_SELECTION_VALID
+
+  rebuild-affected:
+    name: Independent rebuild order ${{ matrix.order }}
+    needs: configure
+    runs-on: ubuntu-26.04
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        order: [29, 68, 81, 99, 100, 101]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Restore authoritative candidate DEBs
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-debs-*
+          path: build/ksq-1/repro/candidate/debs
+          merge-multiple: true
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.candidate_run_id }}
+
+      - name: Restore authoritative candidate evidence
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-evidence-*
+          path: build/ksq-1/repro/candidate/evidence
+          merge-multiple: false
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.candidate_run_id }}
+
+      - name: Require complete candidate checkpoint set
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(find build/ksq-1/repro/candidate/evidence -type f -name build-manifest.tsv | wc -l)" -eq 5 ]]
+          [[ "$(find build/ksq-1/repro/candidate/evidence -type f -name binary-packages.tsv | wc -l)" -eq 5 ]]
+          [[ "$(find build/ksq-1/repro/candidate/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" -gt 0 ]]
+
+      - name: Prepare pinned independent builder
+        shell: bash
+        run: bash scripts/ci/prepare-ksq-1-runner.sh
+
+      - name: Rebuild affected source and require byte identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ci/build-ksq-1-repro-source.sh \
+            "${{ matrix.order }}" \
+            build/ksq-1/repro/candidate/debs \
+            build/ksq-1/repro/candidate/evidence \
+            build/ksq-1/repro/dedicated
+
+      - name: Preserve dedicated rebuild proof
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-repro-order-${{ matrix.order }}
+          path: build/ksq-1/repro/dedicated/${{ matrix.order }}-*/evidence/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+  validate-reproducibility:
+    name: Validate 101-source reproducibility
+    needs:
+      - configure
+      - rebuild-affected
+    runs-on: ubuntu-26.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Restore authoritative candidate DEBs
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-debs-*
+          path: build/ksq-1/repro/candidate/debs
+          merge-multiple: true
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.candidate_run_id }}
+
+      - name: Restore authoritative candidate evidence
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-evidence-*
+          path: build/ksq-1/repro/candidate/evidence
+          merge-multiple: false
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.candidate_run_id }}
+
+      - name: Restore independent reference DEBs
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-debs-*
+          path: build/ksq-1/repro/reference/debs
+          merge-multiple: true
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.reference_run_id }}
+
+      - name: Restore independent reference evidence
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-evidence-*
+          path: build/ksq-1/repro/reference/evidence
+          merge-multiple: false
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.reference_run_id }}
+
+      - name: Restore dedicated rebuild proofs
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-repro-order-*
+          path: build/ksq-1/repro/dedicated-proofs
+          merge-multiple: false
+
+      - name: Validate complete reproducibility evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t proofs < <(find build/ksq-1/repro/dedicated-proofs -type f -name dedicated-proof.tsv -print | sort)
+          [[ "${#proofs[@]}" -eq 6 ]]
+          args=()
+          for proof in "${proofs[@]}"; do
+            args+=(--dedicated-proof "${proof}")
+          done
+          python3 scripts/ci/validate-ksq-1-reproducibility.py \
+            --reference-debs build/ksq-1/repro/reference/debs \
+            --reference-evidence build/ksq-1/repro/reference/evidence \
+            --candidate-debs build/ksq-1/repro/candidate/debs \
+            --candidate-evidence build/ksq-1/repro/candidate/evidence \
+            "${args[@]}" \
+            --output-dir build/ksq-1/repro/acceptance
+
+      - name: Preserve reproducibility acceptance evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-reproducibility-validation
+          path: |
+            tests/kde-stack/ksq-1-repro-runs.env
+            build/ksq-1/repro/acceptance/**
+            build/ksq-1/repro/dedicated-proofs/**/source-identity.env
+            build/ksq-1/repro/dedicated-proofs/**/prepared-source.sha256
+            build/ksq-1/repro/dedicated-proofs/**/dedicated-proof.tsv
+            build/ksq-1/repro/dedicated-proofs/**/status.env
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
