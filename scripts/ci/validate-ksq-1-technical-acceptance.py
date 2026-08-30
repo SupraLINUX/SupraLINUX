@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 FULL = ROOT / "build/ksq-1/full"
 REPRO = ROOT / "build/ksq-1/repro/acceptance"
 ORIGINAL = ROOT / "build/ksq-1/original-full-validation"
+KSQ0 = ROOT / "build/ksq-1/ksq0-normalized"
 RUNS = ROOT / "tests/kde-stack/ksq-1-acceptance-runs.env"
 OUT = ROOT / "build/ksq-1/technical-acceptance"
 
@@ -63,6 +64,46 @@ def main() -> int:
     if runs["AURORA_KSQ_1_CANDIDATE_RUN_ID"] == runs["AURORA_KSQ_1_REFERENCE_RUN_ID"]:
         fail("candidate and reference run IDs must differ")
 
+    repro_runs = read_env(REPRO / "repro-runs.env")
+    require(
+        repro_runs,
+        {
+            "AURORA_KSQ_1_REPRO_RUNS_STATUS": "ACTIVE",
+            "AURORA_KSQ_1_CANDIDATE_RUN_ID": runs["AURORA_KSQ_1_CANDIDATE_RUN_ID"],
+            "AURORA_KSQ_1_REFERENCE_RUN_ID": runs["AURORA_KSQ_1_REFERENCE_RUN_ID"],
+        },
+        "reproducibility provenance",
+    )
+
+    closure = read_env(KSQ0 / "closure-status.env")
+    require(
+        closure,
+        {
+            "AURORA_KSQ_0_CLOSURE_STATUS": "COMPLETE",
+            "AURORA_KSQ_0_CLOSURE_UNRESOLVED": "0",
+            "AURORA_KSQ_0_CLOSURE_SOURCES": "101",
+            "AURORA_KSQ_0_CLOSURE_BUILD_ORDERED": "101",
+        },
+        "KSQ-0 closure regression",
+    )
+    if (KSQ0 / "unresolved.tsv").read_text(encoding="utf-8").count("\n") != 1:
+        fail("KSQ-0 regression unresolved.tsv is not header-only")
+    if (KSQ0 / "source-selections-applied.tsv").read_text(encoding="utf-8").count("\n") != 4:
+        fail("KSQ-0 regression did not record exactly three source selections")
+    if (KSQ0 / "build-dep-overrides-applied.tsv").read_text(encoding="utf-8").count("\n") != 2:
+        fail("KSQ-0 regression did not record exactly one Build-Depends override")
+
+    for name in (
+        "release-sets.tsv",
+        "plasma-6.7.4-sources.tsv",
+        "frameworks-6.29.0-sources.tsv",
+        "aurora-package-roots.tsv",
+    ):
+        require_same_file(ROOT / "tests/kde-stack" / name, KSQ0 / "inventory" / name, f"KSQ-0 inventory {name}")
+    urls = KSQ0 / "inventory/validated-source-urls.tsv"
+    if not urls.is_file() or len(urls.read_text(encoding="utf-8").splitlines()) < 2:
+        fail("KSQ-0 inventory validated source URLs missing/empty")
+
     full = read_env(FULL / "full-build-status.env")
     require(
         full,
@@ -109,8 +150,6 @@ def main() -> int:
     if repro.get("AURORA_KSQ_1_REPRODUCIBILITY_BINARIES") != full.get("AURORA_KSQ_1_FULL_BUILD_BINARIES"):
         fail("full-build and reproducibility binary counts differ")
 
-    # The original full-run validator and the independent consolidation rerun
-    # must describe exactly the same accepted candidate package set.
     for name in (
         "full-build-manifest.tsv",
         "full-binary-packages.tsv",
@@ -137,6 +176,8 @@ def main() -> int:
                 f"AURORA_KSQ_1_TECHNICAL_ACCEPTANCE_BINARIES={full['AURORA_KSQ_1_FULL_BUILD_BINARIES']}",
                 "AURORA_KSQ_1_TECHNICAL_ACCEPTANCE_KWALLET=PASS",
                 "AURORA_KSQ_1_TECHNICAL_ACCEPTANCE_REPRODUCIBILITY=PASS",
+                "AURORA_KSQ_1_TECHNICAL_ACCEPTANCE_KSQ0_REGRESSION=PASS",
+                "AURORA_KSQ_1_TECHNICAL_ACCEPTANCE_PROVENANCE=PASS",
                 "AURORA_KSQ_1_CERTIFIED=no",
                 "AURORA_KSQ_2_UNBLOCKED=no",
             ]
