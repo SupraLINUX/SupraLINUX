@@ -9,6 +9,7 @@ on:
       - '.github/workflows/ksq-1-reproducibility.yml'
       - '.github/workflows/ksq-1-technical-acceptance.yml'
       - '.github/workflows/ksq-1-tail-resume.yml'
+      - '.github/workflows/ksq-1-tail-resume-candidate.yml'
       - 'scripts/ci/build-ksq-1-repro-source.sh'
       - 'scripts/ci/validate-ksq-1-reproducibility.py'
       - 'scripts/ci/validate-ksq-1-technical-acceptance.py'
@@ -46,13 +47,17 @@ jobs:
           grep -Fq "tests/kde-stack/ksq-1-repro-runs.env" .github/workflows/ksq-1-reproducibility.yml
           grep -Fq "tests/kde-stack/ksq-1-acceptance-runs.env" .github/workflows/ksq-1-technical-acceptance.yml
           grep -Fq ".github/ksq-1-tail-resume.env" .github/workflows/ksq-1-tail-resume.yml
+          grep -Fq ".github/ksq-1-tail-resume-candidate.env" .github/workflows/ksq-1-tail-resume-candidate.yml
           grep -Fq "order: [29, 68, 81, 99, 100, 101]" .github/workflows/ksq-1-reproducibility.yml
           grep -Fq "AURORA_KSQ_1_CERTIFIED=no" scripts/ci/validate-ksq-1-technical-acceptance.py
           grep -Fq "AURORA_KSQ_2_UNBLOCKED=no" scripts/ci/validate-ksq-1-technical-acceptance.py
           grep -Fq "timeout-minutes: 330" .github/workflows/ksq-1-tail-resume.yml
           grep -Fq "resume_chunk=\"\$(printf '%03d-101'" .github/workflows/ksq-1-tail-resume.yml
+          grep -Fq "build-ksq-1-range.sh 99 101" .github/workflows/ksq-1-tail-resume-candidate.yml
+          grep -Fq "BASE_RUN_ID: '33281736655'" .github/workflows/ksq-1-tail-resume-candidate.yml
           grep -Fq "AURORA_KSQ_1_TAIL_FULL_CERTIFIED=no" scripts/ci/merge-ksq-1-tail-resume.py
           ruby -e 'require "yaml"; YAML.parse_file(ARGV.fetch(0))' .github/workflows/ksq-1-reproducibility.yml
           ruby -e 'require "yaml"; YAML.parse_file(ARGV.fetch(0))' .github/workflows/ksq-1-technical-acceptance.yml
           ruby -e 'require "yaml"; YAML.parse_file(ARGV.fetch(0))' .github/workflows/ksq-1-tail-resume.yml
+          ruby -e 'require "yaml"; YAML.parse_file(ARGV.fetch(0))' .github/workflows/ksq-1-tail-resume-candidate.yml
           echo AURORA_KSQ_1_REPRO_HELPERS_VALID
