@@ -1,0 +1,574 @@
+name: Aurora KSQ-1 tail resume
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/ksq-1-tail-resume.env'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  configure:
+    name: Validate tail resume selection
+    runs-on: ubuntu-26.04
+    outputs:
+      base_run_id: ${{ steps.selection.outputs.base_run_id }}
+      base_head_sha: ${{ steps.selection.outputs.base_head_sha }}
+      partial_last: ${{ steps.selection.outputs.partial_last }}
+      resume_start: ${{ steps.selection.outputs.resume_start }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Validate base run and build-input identity
+        id: selection
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          . .github/ksq-1-tail-resume.env
+
+          [[ "${AURORA_KSQ_1_TAIL_RESUME_STATUS}" == "ACTIVE" ]]
+          [[ "${AURORA_KSQ_1_TAIL_BASE_RUN_ID}" =~ ^[0-9]+$ ]]
+          [[ "${AURORA_KSQ_1_TAIL_BASE_HEAD_SHA}" =~ ^[0-9a-f]{40}$ ]]
+          [[ "${AURORA_KSQ_1_TAIL_PARTIAL_LAST}" =~ ^[0-9]+$ ]]
+          (( AURORA_KSQ_1_TAIL_PARTIAL_LAST >= 81 && AURORA_KSQ_1_TAIL_PARTIAL_LAST <= 100 ))
+          resume_start="$((AURORA_KSQ_1_TAIL_PARTIAL_LAST + 1))"
+
+          python3 - \
+            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${AURORA_KSQ_1_TAIL_BASE_RUN_ID}" \
+            "${GH_TOKEN}" \
+            "${AURORA_KSQ_1_TAIL_BASE_HEAD_SHA}" <<'PY'
+          import json
+          import sys
+          import urllib.request
+
+          url, token, expected_head = sys.argv[1:]
+          request = urllib.request.Request(
+              url,
+              headers={
+                  "Accept": "application/vnd.github+json",
+                  "Authorization": f"Bearer {token}",
+                  "X-GitHub-Api-Version": "2022-11-28",
+              },
+          )
+          with urllib.request.urlopen(request, timeout=30) as response:
+              data = json.load(response)
+          if data.get("name") != "Aurora KSQ-1 full source builds":
+              raise SystemExit(f"unexpected base workflow: {data.get('name')!r}")
+          if data.get("head_sha") != expected_head:
+              raise SystemExit(f"base run head {data.get('head_sha')} != {expected_head}")
+          if data.get("status") != "completed":
+              raise SystemExit(f"base run is not completed: {data.get('status')}")
+          print(f"AURORA_KSQ_1_TAIL_BASE_RUN_CONCLUSION={data.get('conclusion')}")
+          PY
+
+          git fetch --no-tags --depth=1 origin "${AURORA_KSQ_1_TAIL_BASE_HEAD_SHA}"
+          mkdir -p build/ksq-1/tail-resume/provenance
+          build_inputs=(
+            tests/kde-stack
+            packaging/ksq-1
+            packages/supralinux-desktop/debian/control
+            scripts/ci/validate-kde-stack-source-manifests.sh
+            scripts/ci/validate-kde-stack-roots.py
+            scripts/ci/prepare-kde-stack-apt-metadata.sh
+            scripts/ci/generate-kde-build-closure.py
+            scripts/ci/audit-kde-stack-source-selections.sh
+            scripts/ci/prepare-ksq-1-source.py
+            scripts/ci/fetch-prepare-ksq-1-source.sh
+            scripts/ci/prepare-ksq-1-build-environment.sh
+            scripts/ci/prepare-ksq-1-runner.sh
+            scripts/ci/build-ksq-1-range.sh
+            scripts/ci/validate-ksq-1-kwallet-pam.sh
+            scripts/ci/validate-kwallet-pam-installation.sh
+            scripts/ci/validate-ksq-1-full.py
+            .github/workflows/ksq-1-full-builds.yml
+          )
+          git diff --name-status "${AURORA_KSQ_1_TAIL_BASE_HEAD_SHA}" HEAD -- "${build_inputs[@]}" \
+            > build/ksq-1/tail-resume/provenance/build-input-diff.txt
+          [[ ! -s build/ksq-1/tail-resume/provenance/build-input-diff.txt ]]
+
+          cat > build/ksq-1/tail-resume/provenance/selection.env <<EOF
+          AURORA_KSQ_1_TAIL_RESUME_STATUS=ACTIVE
+          AURORA_KSQ_1_TAIL_BASE_RUN_ID=${AURORA_KSQ_1_TAIL_BASE_RUN_ID}
+          AURORA_KSQ_1_TAIL_BASE_HEAD_SHA=${AURORA_KSQ_1_TAIL_BASE_HEAD_SHA}
+          AURORA_KSQ_1_TAIL_PARTIAL_FIRST=81
+          AURORA_KSQ_1_TAIL_PARTIAL_LAST=${AURORA_KSQ_1_TAIL_PARTIAL_LAST}
+          AURORA_KSQ_1_TAIL_RESUME_FIRST=${resume_start}
+          AURORA_KSQ_1_TAIL_RESUME_LAST=101
+          AURORA_KSQ_1_TAIL_RESUME_HEAD_SHA=${GITHUB_SHA}
+          AURORA_KSQ_1_TAIL_BUILD_INPUT_DRIFT=0
+          EOF
+
+          echo "base_run_id=${AURORA_KSQ_1_TAIL_BASE_RUN_ID}" >> "${GITHUB_OUTPUT}"
+          echo "base_head_sha=${AURORA_KSQ_1_TAIL_BASE_HEAD_SHA}" >> "${GITHUB_OUTPUT}"
+          echo "partial_last=${AURORA_KSQ_1_TAIL_PARTIAL_LAST}" >> "${GITHUB_OUTPUT}"
+          echo "resume_start=${resume_start}" >> "${GITHUB_OUTPUT}"
+          echo AURORA_KSQ_1_TAIL_SELECTION_VALID
+
+      - name: Preserve input provenance
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-tail-resume-input-provenance
+          path: build/ksq-1/tail-resume/provenance/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+  build-completion:
+    name: Build missing tail sources
+    needs: configure
+    runs-on: ubuntu-26.04
+    timeout-minutes: 360
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Restore base DEBs 001-020
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-debs-001-020
+          path: build/ksq-1/tail-resume/base-debs/001-020
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.base_run_id }}
+
+      - name: Restore base DEBs 021-040
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-debs-021-040
+          path: build/ksq-1/tail-resume/base-debs/021-040
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.base_run_id }}
+
+      - name: Restore base DEBs 041-060
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-debs-041-060
+          path: build/ksq-1/tail-resume/base-debs/041-060
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.base_run_id }}
+
+      - name: Restore base DEBs 061-080
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-debs-061-080
+          path: build/ksq-1/tail-resume/base-debs/061-080
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.base_run_id }}
+
+      - name: Restore timed-out tail DEBs
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-debs-081-101
+          path: build/ksq-1/tail-resume/partial-debs
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.base_run_id }}
+
+      - name: Restore timed-out tail evidence
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-evidence-081-101
+          path: build/ksq-1/tail-resume/partial-evidence
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.base_run_id }}
+
+      - name: Validate partial tail before dependency reuse
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - \
+            "${{ needs.configure.outputs.partial_last }}" \
+            build/ksq-1/tail-resume/partial-evidence \
+            build/ksq-1/tail-resume/partial-debs <<'PY'
+          import csv
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          partial_last = int(sys.argv[1])
+          evidence = Path(sys.argv[2])
+          debs = Path(sys.argv[3])
+          manifest_header = ["order", "source_package", "packaging_base", "supra_version", "candidate_family", "decision", "deb_count", "buildinfo_count", "changes_count", "result"]
+          binary_header = ["order", "source_package", "binary_package", "filename", "version", "architecture"]
+
+          with (evidence / "build-manifest.tsv").open(newline="", encoding="utf-8") as handle:
+              manifest = list(csv.DictReader(handle, delimiter="\t"))
+              if not manifest or list(manifest[0]) != manifest_header:
+                  raise SystemExit("partial manifest header mismatch")
+          expected_orders = list(range(81, partial_last + 1))
+          if [int(row["order"]) for row in manifest] != expected_orders:
+              raise SystemExit("partial manifest does not cover exact contiguous PASS prefix")
+          if any(row["result"] != "PASS" for row in manifest):
+              raise SystemExit("partial manifest contains non-PASS row")
+
+          with (evidence / "binary-packages.tsv").open(newline="", encoding="utf-8") as handle:
+              binary = list(csv.DictReader(handle, delimiter="\t"))
+              if not binary or list(binary[0]) != binary_header:
+                  raise SystemExit("partial binary index header mismatch")
+          if set(int(row["order"]) for row in binary) != set(expected_orders):
+              raise SystemExit("partial binary index does not cover every completed source")
+          expected_files = {row["filename"] for row in binary}
+          actual_files = {path.name for path in debs.glob("*.deb")}
+          if expected_files != actual_files:
+              raise SystemExit(f"partial DEB set mismatch missing={sorted(expected_files-actual_files)} extra={sorted(actual_files-expected_files)}")
+
+          for row in binary:
+              deb = debs / row["filename"]
+              fields = tuple(
+                  subprocess.run(["dpkg-deb", "-f", str(deb), field], check=True, text=True, stdout=subprocess.PIPE).stdout.strip()
+                  for field in ("Package", "Version", "Architecture")
+              )
+              wanted = (row["binary_package"], row["version"], row["architecture"])
+              if fields != wanted:
+                  raise SystemExit(f"partial DEB metadata mismatch for {deb.name}")
+
+          pass_orders = set()
+          for status in evidence.glob("*-*/build-status.env"):
+              values = {}
+              for line in status.read_text(encoding="utf-8").splitlines():
+                  if "=" in line:
+                      key, value = line.split("=", 1)
+                      values[key] = value
+              if values.get("AURORA_KSQ_1_BUILD_RESULT") == "PASS":
+                  pass_orders.add(int(values["AURORA_KSQ_1_BUILD_ORDER"]))
+          if pass_orders != set(expected_orders):
+              raise SystemExit(f"partial PASS status set mismatch: {sorted(pass_orders)}")
+          print(f"AURORA_KSQ_1_TAIL_PARTIAL_VALID=81-{partial_last}")
+          PY
+
+      - name: Assemble prior candidate dependency state
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ksq-1/tail-resume/prior-debs build/ksq-1/full/debs
+          for dir in build/ksq-1/tail-resume/base-debs/*; do
+            cp -a "${dir}"/*.deb build/ksq-1/tail-resume/prior-debs/
+          done
+          cp -a build/ksq-1/tail-resume/prior-debs/*.deb build/ksq-1/full/debs/
+          cp -a build/ksq-1/tail-resume/partial-debs/*.deb build/ksq-1/full/debs/
+          python3 - <<'PY'
+          import subprocess
+          from pathlib import Path
+          seen = {}
+          for deb in sorted(Path("build/ksq-1/full/debs").glob("*.deb")):
+              package = subprocess.run(["dpkg-deb", "-f", str(deb), "Package"], check=True, text=True, stdout=subprocess.PIPE).stdout.strip()
+              if package in seen:
+                  raise SystemExit(f"duplicate binary package {package}: {seen[package]} / {deb.name}")
+              seen[package] = deb.name
+          if not seen:
+              raise SystemExit("no prior candidate DEBs assembled")
+          print(f"AURORA_KSQ_1_TAIL_PRIOR_BINARIES={len(seen)}")
+          PY
+
+      - name: Prepare pinned independent runner
+        shell: bash
+        run: bash scripts/ci/prepare-ksq-1-runner.sh
+
+      - name: Build missing tail sources
+        timeout-minutes: 330
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ci/build-ksq-1-range.sh "${{ needs.configure.outputs.resume_start }}" 101
+
+      - name: Preserve completion DEBs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-tail-completion-debs
+          path: build/ksq-1/full/chunk-${{ needs.configure.outputs.resume_start }}-101/new-debs/
+          if-no-files-found: warn
+          retention-days: 30
+          overwrite: true
+
+      - name: Preserve completion evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-tail-completion-evidence
+          path: build/ksq-1/full/chunk-${{ needs.configure.outputs.resume_start }}-101/evidence/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+  promote:
+    name: Merge and validate canonical 101-source candidate
+    needs:
+      - configure
+      - build-completion
+    runs-on: ubuntu-26.04
+    timeout-minutes: 120
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Restore input provenance
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-tail-resume-input-provenance
+          path: build/ksq-1/tail-resume/provenance
+
+      - name: Restore base DEB checkpoints
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-debs-0[0-7]*
+          path: build/ksq-1/tail-resume/base-debs
+          merge-multiple: false
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.base_run_id }}
+
+      - name: Restore base evidence checkpoints
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-evidence-0[0-7]*
+          path: build/ksq-1/tail-resume/base-evidence
+          merge-multiple: false
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.base_run_id }}
+
+      - name: Restore base KWallet package gate
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-kwallet-pam-validation
+          path: build/ksq-1/tail-resume/base-kwallet
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.base_run_id }}
+
+      - name: Restore partial tail DEBs
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-debs-081-101
+          path: build/ksq-1/tail-resume/partial-debs
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.base_run_id }}
+
+      - name: Restore partial tail evidence
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-evidence-081-101
+          path: build/ksq-1/tail-resume/partial-evidence
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ needs.configure.outputs.base_run_id }}
+
+      - name: Restore completion DEBs
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-tail-completion-debs
+          path: build/ksq-1/tail-resume/completion-debs
+
+      - name: Restore completion evidence
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-1-tail-completion-evidence
+          path: build/ksq-1/tail-resume/completion-evidence
+
+      - name: Assemble prior DEB state
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ksq-1/tail-resume/prior-debs
+          find build/ksq-1/tail-resume/base-debs -type f -name '*.deb' -exec cp -a {} build/ksq-1/tail-resume/prior-debs/ \;
+
+      - name: Prepare pinned validation runner
+        shell: bash
+        run: bash scripts/ci/prepare-ksq-1-runner.sh
+
+      - name: Merge validated tail evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/ci/merge-ksq-1-tail-resume.py \
+            --partial-last "${{ needs.configure.outputs.partial_last }}" \
+            --partial-evidence build/ksq-1/tail-resume/partial-evidence \
+            --partial-debs build/ksq-1/tail-resume/partial-debs \
+            --completion-evidence build/ksq-1/tail-resume/completion-evidence \
+            --completion-debs build/ksq-1/tail-resume/completion-debs \
+            --prior-debs build/ksq-1/tail-resume/prior-debs \
+            --output-evidence build/ksq-1/tail-resume/canonical-evidence-081-101 \
+            --output-debs build/ksq-1/tail-resume/canonical-debs-081-101 \
+            --base-run-id "${{ needs.configure.outputs.base_run_id }}" \
+            --base-head-sha "${{ needs.configure.outputs.base_head_sha }}" \
+            --resume-run-id "${GITHUB_RUN_ID}" \
+            --resume-head-sha "${GITHUB_SHA}"
+
+      - name: Assemble canonical full validation state
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf build/ksq-1/full/debs build/ksq-1/full/evidence-artifacts build/ksq-1/full/kwallet-validation
+          mkdir -p build/ksq-1/full/debs build/ksq-1/full/evidence-artifacts build/ksq-1/full/kwallet-validation
+          cp -a build/ksq-1/tail-resume/prior-debs/*.deb build/ksq-1/full/debs/
+          cp -a build/ksq-1/tail-resume/canonical-debs-081-101/*.deb build/ksq-1/full/debs/
+          for dir in build/ksq-1/tail-resume/base-evidence/*; do
+            cp -a "${dir}" build/ksq-1/full/evidence-artifacts/
+          done
+          cp -a build/ksq-1/tail-resume/canonical-evidence-081-101 build/ksq-1/full/evidence-artifacts/aurora-ksq-1-evidence-081-101
+          cp -a build/ksq-1/tail-resume/base-kwallet/. build/ksq-1/full/kwallet-validation/
+
+      - name: Revalidate complete 101-source candidate
+        shell: bash
+        run: python3 scripts/ci/validate-ksq-1-full.py
+
+      - name: Hash promoted transfer inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=build/ksq-1/tail-resume/provenance
+          mkdir -p "${out}"
+          for pair in \
+            'base-debs build/ksq-1/tail-resume/base-debs' \
+            'base-evidence build/ksq-1/tail-resume/base-evidence' \
+            'base-kwallet build/ksq-1/tail-resume/base-kwallet' \
+            'partial-debs build/ksq-1/tail-resume/partial-debs' \
+            'partial-evidence build/ksq-1/tail-resume/partial-evidence' \
+            'completion-debs build/ksq-1/tail-resume/completion-debs' \
+            'completion-evidence build/ksq-1/tail-resume/completion-evidence'; do
+            name="${pair%% *}"
+            dir="${pair#* }"
+            (cd "${dir}" && find . -type f -print0 | sort -z | xargs -0 sha256sum) > "${out}/${name}.sha256"
+          done
+          cat > "${out}/promotion.env" <<EOF
+          AURORA_KSQ_1_TAIL_PROMOTION_STATUS=PASS
+          AURORA_KSQ_1_TAIL_BASE_RUN_ID=${{ needs.configure.outputs.base_run_id }}
+          AURORA_KSQ_1_TAIL_BASE_HEAD_SHA=${{ needs.configure.outputs.base_head_sha }}
+          AURORA_KSQ_1_TAIL_PARTIAL_LAST=${{ needs.configure.outputs.partial_last }}
+          AURORA_KSQ_1_TAIL_RESUME_RUN_ID=${GITHUB_RUN_ID}
+          AURORA_KSQ_1_TAIL_RESUME_HEAD_SHA=${GITHUB_SHA}
+          AURORA_KSQ_1_TAIL_FULL_VALIDATION=PASS
+          AURORA_KSQ_1_TAIL_FULL_CERTIFIED=no
+          EOF
+
+      - name: Promote DEBs 001-020
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-debs-001-020
+          path: build/ksq-1/tail-resume/base-debs/aurora-ksq-1-debs-001-020/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+      - name: Promote DEBs 021-040
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-debs-021-040
+          path: build/ksq-1/tail-resume/base-debs/aurora-ksq-1-debs-021-040/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+      - name: Promote DEBs 041-060
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-debs-041-060
+          path: build/ksq-1/tail-resume/base-debs/aurora-ksq-1-debs-041-060/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+      - name: Promote DEBs 061-080
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-debs-061-080
+          path: build/ksq-1/tail-resume/base-debs/aurora-ksq-1-debs-061-080/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+      - name: Promote evidence 001-020
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-evidence-001-020
+          path: build/ksq-1/tail-resume/base-evidence/aurora-ksq-1-evidence-001-020/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+      - name: Promote evidence 021-040
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-evidence-021-040
+          path: build/ksq-1/tail-resume/base-evidence/aurora-ksq-1-evidence-021-040/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+      - name: Promote evidence 041-060
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-evidence-041-060
+          path: build/ksq-1/tail-resume/base-evidence/aurora-ksq-1-evidence-041-060/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+      - name: Promote evidence 061-080
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-evidence-061-080
+          path: build/ksq-1/tail-resume/base-evidence/aurora-ksq-1-evidence-061-080/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+      - name: Promote canonical DEBs 081-101
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-debs-081-101
+          path: build/ksq-1/tail-resume/canonical-debs-081-101/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+      - name: Promote canonical evidence 081-101
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-evidence-081-101
+          path: build/ksq-1/tail-resume/canonical-evidence-081-101/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+      - name: Promote KWallet package gate
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-kwallet-pam-validation
+          path: build/ksq-1/tail-resume/base-kwallet/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+      - name: Preserve promoted full validation
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-full-build-validation
+          path: build/ksq-1/full/final-validation/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
+
+      - name: Preserve tail resume provenance
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-tail-resume-provenance
+          path: build/ksq-1/tail-resume/provenance/
+          if-no-files-found: error
+          retention-days: 30
+          overwrite: true
