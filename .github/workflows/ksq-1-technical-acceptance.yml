@@ -5,7 +5,7 @@ on:
     branches:
       - feature/kde-stack-qualification
     paths:
-      - 'tests/kde-stack/ksq-1-acceptance-runs.env'
+      - '.github/ksq-1-acceptance-runs.env'
 
 permissions:
   contents: read
@@ -25,7 +25,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          . tests/kde-stack/ksq-1-acceptance-runs.env
+          . .github/ksq-1-acceptance-runs.env
           [[ "${AURORA_KSQ_1_ACCEPTANCE_RUNS_STATUS}" == "ACTIVE" ]]
           for var in \
             AURORA_KSQ_1_CANDIDATE_RUN_ID \
@@ -132,10 +132,10 @@ jobs:
           mkdir -p build/ksq-1/repro/acceptance
           cp -a "$(one_file build/ksq-1/repro/acceptance-artifact reproducibility-status.env)" \
             build/ksq-1/repro/acceptance/reproducibility-status.env
-          cp -a "$(one_file build/ksq-1/repro/acceptance-artifact reproducibility-manifest.tsv)" \
-            build/ksq-1/repro/acceptance/reproducibility-manifest.tsv
           cp -a "$(one_file build/ksq-1/repro/acceptance-artifact ksq-1-repro-runs.env)" \
             build/ksq-1/repro/acceptance/repro-runs.env
+          cp -a "$(one_file build/ksq-1/repro/acceptance-artifact reproducibility-manifest.tsv)" \
+            build/ksq-1/repro/acceptance/reproducibility-manifest.tsv
 
           mkdir -p build/ksq-1/original-full-validation
           for name in full-build-manifest.tsv full-binary-packages.tsv full-debs.sha256 full-build-status.env; do
@@ -192,7 +192,7 @@ jobs:
           git rev-parse HEAD > "${bundle}/metadata/acceptance-head.txt"
           git archive --format=tar.gz --output="${bundle}/repository/repository-snapshot.tar.gz" HEAD
 
-          cp -a tests/kde-stack/ksq-1-acceptance-runs.env "${bundle}/metadata/"
+          cp -a .github/ksq-1-acceptance-runs.env "${bundle}/metadata/"
           cp -a build/ksq-1/technical-acceptance/technical-acceptance-status.env "${bundle}/metadata/"
           cp -a build/ksq-1/full/debs/. "${bundle}/candidate/debs/"
           cp -a build/ksq-1/full/evidence-artifacts/. "${bundle}/candidate/range-evidence/"
