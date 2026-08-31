@@ -47,11 +47,6 @@ jobs:
           EOF_SOURCES
 
           export DEBIAN_FRONTEND=noninteractive
-
-          # The official minimal Ubuntu image has no CA bundle. Bootstrap only
-          # ca-certificates from the same signed Ubuntu snapshot. TLS peer/host
-          # verification is relaxed for this first acquisition only; apt-secure
-          # signature and package-hash verification remain enabled.
           apt_tls_bootstrap=(
             -o Acquire::https::Verify-Peer=false
             -o Acquire::https::Verify-Host=false
@@ -65,8 +60,6 @@ jobs:
             2>&1 | tee "${out}/apt-bootstrap-ca.log"
           dpkg-query -W -f='${Status}\n' ca-certificates | grep -Fxq 'install ok installed'
 
-          # From this point onward TLS verification must be normal. Throw away
-          # the indexes obtained during the CA bootstrap and reacquire them.
           rm -rf /var/lib/apt/lists/*
           apt-get update 2>&1 | tee "${out}/apt-verified-update.log"
           grep -Fq "snapshot.ubuntu.com/ubuntu/${snapshot}" "${out}/apt-verified-update.log"
@@ -81,13 +74,37 @@ jobs:
 
           for command in \
             sudo git python3 curl sbuild mmdebstrap newuidmap newgidmap zstd \
-            debuild dch dpkg-source dpkg-buildpackage unshare; do
+            debuild dch dpkg-source dpkg-buildpackage unshare useradd; do
             command -v "${command}" >/dev/null || {
               echo "AURORA_KSQ_SELF_HOSTED_REP_FAILURE: missing ${command} after bootstrap" >&2
               exit 1
             }
           done
-          unshare -Ur true
+
+          # mmdebstrap --mode=unshare is designed to run as an ordinary user.
+          # When invoked by root it does not create a user namespace and a mount
+          # namespace therefore requires CAP_SYS_ADMIN. Keep the container
+          # unprivileged and create a dedicated build identity instead.
+          if getent passwd 1000 >/dev/null; then
+            existing_user="$(getent passwd 1000 | cut -d: -f1)"
+            [[ "${existing_user}" == "ksq" ]] || {
+              echo "AURORA_KSQ_SELF_HOSTED_REP_FAILURE: uid 1000 already belongs to ${existing_user}" >&2
+              exit 1
+            }
+          else
+            useradd --create-home --uid 1000 --shell /bin/bash ksq
+          fi
+          printf 'ksq ALL=(ALL) NOPASSWD:ALL\n' > /etc/sudoers.d/ksq
+          chmod 0440 /etc/sudoers.d/ksq
+          grep -q '^ksq:' /etc/subuid || echo 'ksq:100000:65536' >> /etc/subuid
+          grep -q '^ksq:' /etc/subgid || echo 'ksq:100000:65536' >> /etc/subgid
+          chown -R ksq:ksq "${GITHUB_WORKSPACE}"
+
+          # Validate the same namespace classes required by mmdebstrap unshare
+          # mode: user, mount, PID, UTS and IPC, with the configured subid range.
+          sudo -u ksq -H unshare \
+            --map-auto --map-user=65536 --map-group=65536 --keep-caps \
+            --mount --pid --uts --ipc --fork true
 
           dpkg-query -W -f='${Package}\t${Version}\n' \
             sudo git python3 curl ca-certificates \
@@ -100,20 +117,27 @@ jobs:
             echo 'AURORA_KSQ_SELF_HOSTED_REP_CA_BOOTSTRAP=same-snapshot+apt-secure'
             echo 'AURORA_KSQ_SELF_HOSTED_REP_TLS_AFTER_CA=verified'
             echo 'AURORA_KSQ_SELF_HOSTED_REP_SECCOMP=unconfined'
+            echo 'AURORA_KSQ_SELF_HOSTED_REP_BUILD_USER=ksq'
+            echo 'AURORA_KSQ_SELF_HOSTED_REP_BUILD_UID=1000'
+            echo 'AURORA_KSQ_SELF_HOSTED_REP_SUBUID=100000:65536'
+            echo 'AURORA_KSQ_SELF_HOSTED_REP_NAMESPACE_SET=user+mount+pid+uts+ipc'
             echo 'AURORA_KSQ_SELF_HOSTED_REP_UNSHARE=PASS'
           } > "${out}/environment.env"
+          chown -R ksq:ksq "${out}"
 
       - name: Prepare KSQ-1 build environment
         shell: bash
         run: |
           set -euo pipefail
-          bash scripts/ci/prepare-ksq-1-runner.sh
+          sudo -u ksq -H env GITHUB_WORKSPACE="${GITHUB_WORKSPACE}" CI=true \
+            bash -c 'cd "$GITHUB_WORKSPACE" && bash scripts/ci/prepare-ksq-1-runner.sh'
 
       - name: Build representative certified source 001
         shell: bash
         run: |
           set -euo pipefail
-          bash scripts/ci/build-ksq-1-range.sh 1 1
+          sudo -u ksq -H env GITHUB_WORKSPACE="${GITHUB_WORKSPACE}" CI=true \
+            bash -c 'cd "$GITHUB_WORKSPACE" && bash scripts/ci/build-ksq-1-range.sh 1 1'
 
       - name: Record representative PASS
         shell: bash
