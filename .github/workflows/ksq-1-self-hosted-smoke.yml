@@ -1,0 +1,59 @@
+name: Aurora KSQ-1 self-hosted runner smoke
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-1-self-hosted-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Validate isolated SupraLINUX KSQ runner
+    runs-on: [self-hosted, Linux, X64, supralinux-ksq, docker]
+    timeout-minutes: 10
+    container:
+      image: ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b
+    steps:
+      - name: Validate pinned Resolute container
+        shell: bash
+        run: |
+          set -euo pipefail
+          . /etc/os-release
+          [[ "${ID}" == "ubuntu" ]]
+          [[ "${VERSION_ID}" == "26.04" ]]
+          [[ "${VERSION_CODENAME}" == "resolute" ]]
+          [[ "$(dpkg --print-architecture)" == "amd64" ]]
+          printf 'AURORA_KSQ_RUNNER_OS=%s\n' "${PRETTY_NAME}"
+          printf 'AURORA_KSQ_RUNNER_ARCH=%s\n' "$(dpkg --print-architecture)"
+
+      - name: Validate container isolation and workspace
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ -f /.dockerenv ]]
+          test -d "${GITHUB_WORKSPACE}"
+          touch "${GITHUB_WORKSPACE}/.aurora-runner-smoke"
+          test -f "${GITHUB_WORKSPACE}/.aurora-runner-smoke"
+          mount | grep -F "${GITHUB_WORKSPACE}" || true
+          printf 'AURORA_KSQ_RUNNER_CONTAINERIZED=yes\n'
+
+      - name: Validate network and package metadata access
+        shell: bash
+        run: |
+          set -euo pipefail
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update
+          apt-cache policy bash dpkg | sed -n '1,40p'
+          printf 'AURORA_KSQ_RUNNER_APT_NETWORK=PASS\n'
+
+      - name: Record smoke PASS
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf 'AURORA_KSQ_SELF_HOSTED_SMOKE=PASS\n'
+          printf 'AURORA_KSQ_CONTAINER_IMAGE_DIGEST=sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b\n'
