@@ -1,4 +1,4 @@
-name: Aurora KSQ-1 self-hosted sbuild unshare diagnostic
+name: Aurora KSQ-1 self-hosted sbuild unshare smoke
 
 on:
   push:
@@ -12,10 +12,10 @@ permissions:
   contents: read
 
 jobs:
-  sbuild-unshare-contract:
-    name: Inspect Resolute sbuild unshare invocation contract
+  sbuild-unshare-smoke:
+    name: Exercise Resolute sbuild unshare end-to-end
     runs-on: [self-hosted, Linux, X64, supralinux-ksq, docker]
-    timeout-minutes: 20
+    timeout-minutes: 30
     container:
       image: ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b
       options: --security-opt seccomp=unconfined --security-opt apparmor=supralinux-ksq-unshare
@@ -24,11 +24,11 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Inspect exact installed sbuild unshare implementation
+      - name: Exercise exact sbuild unshare path with smoke source
         shell: bash
         run: |
           set -euo pipefail
-          out="${GITHUB_WORKSPACE}/build/ksq-self-hosted-sbuild-contract"
+          out="${GITHUB_WORKSPACE}/build/ksq-self-hosted-sbuild-smoke"
           mkdir -p "${out}"
 
           . tests/kde-stack/apt-metadata-snapshot.env
@@ -55,56 +55,150 @@ jobs:
             >"${out}/apt-bootstrap-ca.log" 2>&1
           rm -rf /var/lib/apt/lists/*
           apt-get update >"${out}/apt-verified-update.log" 2>&1
-          apt-get install -y --no-install-recommends sbuild uidmap libcap2-bin util-linux sudo \
+          apt-get install -y --no-install-recommends \
+            sudo sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+            ca-certificates ubuntu-keyring gzip xz-utils diffutils libcap2-bin \
             >"${out}/apt-toolchain.log" 2>&1
 
-          dpkg-query -W -f='${Package}\t${Version}\n' sbuild libsbuild-perl uidmap libcap2-bin \
-            | sort | tee "${out}/versions.tsv"
-          [[ "$(dpkg-query -W -f='${Version}' sbuild)" == '0.91.2ubuntu3' ]]
-          [[ "$(cat /proc/self/attr/current)" == 'supralinux-ksq-unshare (enforce)' ]]
+          printf 'ubuntu ALL=(ALL) NOPASSWD:ALL\n' > /etc/sudoers.d/ubuntu-ksq
+          chmod 0440 /etc/sudoers.d/ubuntu-ksq
+          grep -q '^ubuntu:' /etc/subuid || echo 'ubuntu:100000:65536' >> /etc/subuid
+          grep -q '^ubuntu:' /etc/subgid || echo 'ubuntu:100000:65536' >> /etc/subgid
 
-          helper=/usr/libexec/sbuild-usernsexec
-          [[ -f "${helper}" ]]
-          sha256sum "${helper}" | tee "${out}/sbuild-usernsexec.sha256"
-          cp -a "${helper}" "${out}/sbuild-usernsexec"
+          # Proven correction for Resolute uidmap 1:4.17.4-2ubuntu3 in this
+          # nested-unshare container model (run 33422301732).
+          chmod u-s /usr/bin/newuidmap /usr/bin/newgidmap
+          setcap cap_setuid=ep /usr/bin/newuidmap
+          setcap cap_setgid=ep /usr/bin/newgidmap
 
-          chroot_module="$(dpkg -L libsbuild-perl | grep -E '/Sbuild/ChrootUnshare\.pm$' | head -n1)"
-          session_module="$(dpkg -L libsbuild-perl | grep -E '/Sbuild/ChrootUnshare/Session\.pm$' | head -n1 || true)"
-          [[ -n "${chroot_module}" && -f "${chroot_module}" ]]
-          printf 'AURORA_KSQ_SBUILD_CHROOT_UNSHARE_MODULE=%s\n' "${chroot_module}" | tee "${out}/module-path.env"
-          sha256sum "${chroot_module}" | tee "${out}/ChrootUnshare.pm.sha256"
-          cp -a "${chroot_module}" "${out}/ChrootUnshare.pm"
-          if [[ -n "${session_module}" && -f "${session_module}" ]]; then
-            printf 'AURORA_KSQ_SBUILD_CHROOT_UNSHARE_SESSION_MODULE=%s\n' "${session_module}" | tee -a "${out}/module-path.env"
-            sha256sum "${session_module}" | tee "${out}/ChrootUnshare-Session.pm.sha256"
-            cp -a "${session_module}" "${out}/ChrootUnshare-Session.pm"
-          fi
+          ubuntu_gid="$(id -g ubuntu)"
+          chown -R ubuntu:"${ubuntu_gid}" "${GITHUB_WORKSPACE}"
 
-          echo '=== helper mount contract ==='
-          grep -nE "mount|umount|pivot_root|MS_(BIND|REC|PRIVATE|SLAVE)|system\(" "${helper}" \
-            | tee "${out}/helper-mount-related-lines.txt"
+          {
+            echo '=== sbuild smoke environment ==='
+            printf 'apparmor='; cat /proc/self/attr/current
+            printf 'SBUILD_ENABLE_PIVOT_ROOT=%s\n' "${SBUILD_ENABLE_PIVOT_ROOT-<unset>}"
+            dpkg-query -W -f='${Package}\t${Version}\n' \
+              sbuild libsbuild-perl mmdebstrap uidmap libcap2-bin | sort
+            stat -c '%A %a %U %G %u %g %n' /usr/bin/newuidmap /usr/bin/newgidmap
+            getcap /usr/bin/newuidmap /usr/bin/newgidmap
+            grep '^ubuntu:' /etc/subuid
+            grep '^ubuntu:' /etc/subgid
+          } | tee "${out}/environment.txt"
 
-          echo '=== ChrootUnshare invocation construction ==='
-          grep -nE 'usernsexec|pivotroot|sharedshm|/dev/shm|bind|mount|UNSHARE|SBUILD_ENABLE_PIVOT_ROOT|exec|command|run_command' \
-            "${chroot_module}" | tee "${out}/chroot-unshare-relevant-lines.txt"
+          # Re-prove the exact namespace prerequisite before creating the buildd tarball.
+          sudo -u ubuntu -H unshare \
+            --map-auto --map-user=65536 --map-group=65536 --keep-caps \
+            --mount --pid --uts --ipc --fork true \
+            >"${out}/namespace-preflight.stdout" 2>"${out}/namespace-preflight.stderr"
 
-          echo '=== ChrootUnshare complete numbered source ==='
-          nl -ba "${chroot_module}" | tee "${out}/ChrootUnshare-numbered.txt"
+          rm -rf "${GITHUB_WORKSPACE}/build/ksq-1/environment"
+          sudo -u ubuntu -H env GITHUB_WORKSPACE="${GITHUB_WORKSPACE}" CI=true \
+            bash -c 'cd "$GITHUB_WORKSPACE" && bash scripts/ci/prepare-ksq-1-build-environment.sh' \
+            >"${out}/prepare-build-environment.stdout" \
+            2>"${out}/prepare-build-environment.stderr"
 
-          if [[ -n "${session_module}" && -f "${session_module}" ]]; then
-            echo '=== Session invocation construction ==='
-            grep -nE 'usernsexec|pivotroot|sharedshm|/dev/shm|bind|mount|UNSHARE|SBUILD_ENABLE_PIVOT_ROOT|exec|command|run_command' \
-              "${session_module}" | tee "${out}/session-relevant-lines.txt" || true
-            nl -ba "${session_module}" | tee "${out}/Session-numbered.txt"
-          fi
+          . "${GITHUB_WORKSPACE}/build/ksq-1/environment/build-environment.env"
+          tarball="${AURORA_KSQ_1_BUILD_ENV_TARBALL:?missing buildd tarball}"
+          [[ -s "${tarball}" ]]
 
-          echo 'AURORA_KSQ_SBUILD_UNSHARE_INVOCATION_CONTRACT_CAPTURED'
+          smoke="${GITHUB_WORKSPACE}/build/ksq-sbuild-smoke-source/supralinux-ksq-sbuild-smoke-1.0"
+          rm -rf "${GITHUB_WORKSPACE}/build/ksq-sbuild-smoke-source"
+          mkdir -p "${smoke}/debian/source"
+          cat > "${smoke}/debian/control" <<'EOF_CONTROL'
+          Source: supralinux-ksq-sbuild-smoke
+          Section: devel
+          Priority: optional
+          Maintainer: SupraLINUX Build Certification <noreply@supralinux.invalid>
+          Build-Depends: debhelper-compat (= 13)
+          Standards-Version: 4.7.0
+          Rules-Requires-Root: no
 
-      - name: Preserve sbuild unshare contract evidence
+          Package: supralinux-ksq-sbuild-smoke
+          Architecture: all
+          Description: SupraLINUX KSQ sbuild unshare smoke package
+           Minimal package used only to exercise the certified sbuild unshare path.
+          EOF_CONTROL
+          cat > "${smoke}/debian/changelog" <<'EOF_CHANGELOG'
+          supralinux-ksq-sbuild-smoke (1.0) resolute; urgency=medium
+
+            * KSQ-1 sbuild unshare smoke package.
+
+           -- SupraLINUX Build Certification <noreply@supralinux.invalid>  Sun, 31 Aug 2026 18:00:00 +0000
+          EOF_CHANGELOG
+          cat > "${smoke}/debian/rules" <<'EOF_RULES'
+          #!/usr/bin/make -f
+          %:
+          	dh $@
+          EOF_RULES
+          chmod 0755 "${smoke}/debian/rules"
+          printf '3.0 (native)\n' > "${smoke}/debian/source/format"
+          printf 'KSQ-1 sbuild unshare smoke\n' > "${smoke}/smoke.txt"
+          printf 'smoke.txt usr/share/supralinux-ksq-sbuild-smoke/\n' > "${smoke}/debian/install"
+
+          chown -R ubuntu:"${ubuntu_gid}" "${GITHUB_WORKSPACE}/build/ksq-sbuild-smoke-source"
+          sudo -u ubuntu -H bash -c 'cd "$1" && dpkg-source -b .' bash "${smoke}" \
+            >"${out}/dpkg-source.stdout" 2>"${out}/dpkg-source.stderr"
+          dsc="${GITHUB_WORKSPACE}/build/ksq-sbuild-smoke-source/supralinux-ksq-sbuild-smoke_1.0.dsc"
+          [[ -s "${dsc}" ]]
+
+          result="${GITHUB_WORKSPACE}/build/ksq-sbuild-smoke-result"
+          rm -rf "${result}"
+          mkdir -p "${result}"
+          chown -R ubuntu:"${ubuntu_gid}" "${result}"
+
+          set +e
+          sudo -u ubuntu -H env DEB_BUILD_OPTIONS=parallel=2 \
+            sbuild \
+              --chroot-mode=unshare \
+              --chroot="${tarball}" \
+              --dist=resolute \
+              --arch=amd64 \
+              --build-dir="${result}" \
+              --build-path=/build/supralinux-ksq1-smoke \
+              --jobs=2 \
+              --no-enable-network \
+              --no-run-lintian \
+              --no-run-autopkgtest \
+              --purge-build=always \
+              --purge-deps=always \
+              --resolve-alternatives \
+              --bd-uninstallable-explainer=apt \
+              "${dsc}" \
+            >"${out}/sbuild.stdout" 2>"${out}/sbuild.stderr"
+          rc_sbuild=$?
+          set -e
+
+          {
+            echo "AURORA_KSQ_SBUILD_SMOKE_RC=${rc_sbuild}"
+            echo "AURORA_KSQ_SBUILD_SMOKE_TARBALL=${tarball}"
+            sha256sum "${tarball}"
+          } | tee "${out}/results.env"
+
+          echo '--- sbuild stderr tail ---'
+          tail -n 160 "${out}/sbuild.stderr" || true
+          echo '--- sbuild stdout tail ---'
+          tail -n 160 "${out}/sbuild.stdout" || true
+
+          find "${result}" -maxdepth 1 -type f -printf '%f\n' | sort \
+            | tee "${out}/result-files.txt"
+
+          [[ ${rc_sbuild} -eq 0 ]]
+          find "${result}" -maxdepth 1 -type f -name '*.deb' -print -quit | grep -q .
+          find "${result}" -maxdepth 1 -type f -name '*.buildinfo' -print -quit | grep -q .
+          find "${result}" -maxdepth 1 -type f -name '*.changes' -print -quit | grep -q .
+          echo 'AURORA_KSQ_SBUILD_UNSHARE_SMOKE_PASS'
+
+      - name: Preserve sbuild smoke evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: aurora-ksq-self-hosted-sbuild-contract
-          path: build/ksq-self-hosted-sbuild-contract/
-          if-no-files-found: error
+          name: aurora-ksq-self-hosted-sbuild-smoke
+          path: |
+            build/ksq-self-hosted-sbuild-smoke/
+            build/ksq-1/environment/build-environment.env
+            build/ksq-1/environment/build-environment-tool-versions.txt
+            build/ksq-1/environment/resolute-amd64-buildd.tar.zst.sha256
+            build/ksq-sbuild-smoke-result/
+          if-no-files-found: warn
           retention-days: 30
