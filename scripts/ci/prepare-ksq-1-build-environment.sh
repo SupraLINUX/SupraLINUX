@@ -35,6 +35,8 @@ mmdebstrap \
   --architectures=amd64 \
   --include=ca-certificates,ubuntu-keyring \
   --aptopt='Acquire::Check-Valid-Until "false";' \
+  --aptopt='Acquire::Retries "5";' \
+  --aptopt='APT::Update::Error-Mode "any";' \
   resolute "${TARBALL}" "${SOURCES}"
 
 [[ -s "${TARBALL}" ]] || { echo "AURORA_KSQ_1_ENV_FAILURE: buildd tarball missing" >&2; exit 1; }
