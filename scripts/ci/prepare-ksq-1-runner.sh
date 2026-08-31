@@ -15,7 +15,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 sudo apt-get update
 sudo apt-get install -y --no-install-recommends \
-  sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+  sbuild mmdebstrap uidmap libcap2-bin zstd devscripts dpkg-dev apt-utils \
   ca-certificates ubuntu-keyring gzip
 
 build_user="$(id -un)"
@@ -23,9 +23,15 @@ if ! grep -q "^${build_user}:" /etc/subuid; then
   sudo usermod --add-subuids 100000-165535 --add-subgids 100000-165535 "${build_user}"
 fi
 
+# Ubuntu Resolute uidmap 1:4.17.4-2ubuntu3 was proven on this nested-unshare
+# builder to fail in stock setuid mode and to pass with the precise upstream
+# file-capability model. Keep this normalization version-scoped and fail closed
+# if the distribution package changes until its behavior is re-qualified.
+bash "${ROOT}/scripts/ci/configure-ksq-uidmap-filecaps.sh"
+
 mkdir -p "${ROOT}/build/ksq-1"
 dpkg-query -W -f='${Package}\t${Version}\n' \
-  sbuild mmdebstrap uidmap dpkg-dev apt-utils ubuntu-keyring \
+  sbuild mmdebstrap uidmap libcap2-bin dpkg-dev apt-utils ubuntu-keyring \
   | sort > "${ROOT}/build/ksq-1/build-tool-versions.tsv"
 
 bash "${ROOT}/scripts/ci/validate-kde-stack-source-manifests.sh"
