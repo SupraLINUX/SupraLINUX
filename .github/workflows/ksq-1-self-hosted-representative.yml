@@ -1,4 +1,4 @@
-name: Aurora KSQ-1 self-hosted mmdebstrap diagnostic
+name: Aurora KSQ-1 self-hosted representative build
 
 on:
   push:
@@ -6,16 +6,17 @@ on:
       - feature/kde-stack-qualification
     paths:
       - '.github/workflows/ksq-1-self-hosted-representative.yml'
+      - '.github/ksq-self-hosted-representative-trigger.env'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  mmdebstrap-unshare:
-    name: Exercise canonical mmdebstrap unshare build environment
+  representative:
+    name: Build certified DAG source 001 on self-hosted runner
     runs-on: [self-hosted, Linux, X64, supralinux-ksq, docker]
-    timeout-minutes: 30
+    timeout-minutes: 90
     container:
       image: ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b
       options: --security-opt seccomp=unconfined --security-opt apparmor=supralinux-ksq-unshare
@@ -24,16 +25,16 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Exercise canonical build environment creation
+      - name: Bootstrap toolchain from certified Ubuntu snapshot
         shell: bash
         run: |
           set -euo pipefail
-          out="${GITHUB_WORKSPACE}/build/ksq-self-hosted-mmdebstrap-diagnostic"
+          out="${GITHUB_WORKSPACE}/build/ksq-self-hosted-representative"
           mkdir -p "${out}"
 
           . tests/kde-stack/apt-metadata-snapshot.env
           snapshot="${AURORA_KSQ_0_APT_SNAPSHOT:?missing KSQ-0 snapshot}"
-          [[ "${snapshot}" == "20260829T022000Z" ]]
+          [[ "${snapshot}" =~ ^[0-9]{8}T[0-9]{6}Z$ ]]
           snapshot_uri="https://snapshot.ubuntu.com/ubuntu/${snapshot}/"
 
           cat > /etc/apt/sources.list.d/ubuntu.sources <<EOF_SOURCES
@@ -50,95 +51,147 @@ jobs:
             -o Acquire::https::Verify-Peer=false
             -o Acquire::https::Verify-Host=false
           )
-          apt-get "${apt_tls_bootstrap[@]}" update >"${out}/apt-bootstrap-update.log" 2>&1
+          apt-get "${apt_tls_bootstrap[@]}" update 2>&1 | tee "${out}/apt-bootstrap-update.log"
+          grep -Fq "snapshot.ubuntu.com/ubuntu/${snapshot}" "${out}/apt-bootstrap-update.log"
+          ! grep -Eq 'archive\.ubuntu\.com|security\.ubuntu\.com' "${out}/apt-bootstrap-update.log"
+          ! grep -Eq '(^|[[:space:]])(NO_PUBKEY|EXPKEYSIG|BADSIG|The repository .* is not signed)' "${out}/apt-bootstrap-update.log"
+
           apt-get "${apt_tls_bootstrap[@]}" install -y --no-install-recommends ca-certificates \
-            >"${out}/apt-bootstrap-ca.log" 2>&1
+            2>&1 | tee "${out}/apt-bootstrap-ca.log"
+          dpkg-query -W -f='${Status}\n' ca-certificates | grep -Fxq 'install ok installed'
+
           rm -rf /var/lib/apt/lists/*
-          apt-get update >"${out}/apt-verified-update.log" 2>&1
+          apt-get update 2>&1 | tee "${out}/apt-verified-update.log"
+          grep -Fq "snapshot.ubuntu.com/ubuntu/${snapshot}" "${out}/apt-verified-update.log"
+          ! grep -Eq 'archive\.ubuntu\.com|security\.ubuntu\.com' "${out}/apt-verified-update.log"
+          ! grep -Eq '(^|[[:space:]])(Err:|W: Failed to fetch|NO_PUBKEY|EXPKEYSIG|BADSIG|The repository .* is not signed)' "${out}/apt-verified-update.log"
+
           apt-get install -y --no-install-recommends \
-            sudo sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
-            ca-certificates ubuntu-keyring gzip libcap2-bin \
-            >"${out}/apt-build-toolchain.log" 2>&1
+            sudo git python3 curl \
+            sbuild mmdebstrap uidmap libcap2-bin zstd devscripts dpkg-dev apt-utils \
+            ubuntu-keyring gzip xz-utils diffutils \
+            2>&1 | tee "${out}/apt-toolchain-install.log"
+
+          for command in \
+            sudo git python3 curl sbuild mmdebstrap newuidmap newgidmap getcap setcap zstd \
+            debuild dch dpkg-source dpkg-buildpackage unshare; do
+            command -v "${command}" >/dev/null || {
+              echo "AURORA_KSQ_SELF_HOSTED_REP_FAILURE: missing ${command} after bootstrap" >&2
+              exit 1
+            }
+          done
+
+          # The official Ubuntu 26.04 image already provides the ordinary
+          # build identity we need. Prove it instead of creating another user.
+          ubuntu_passwd="$(getent passwd ubuntu)"
+          [[ -n "${ubuntu_passwd}" ]]
+          [[ "$(printf '%s\n' "${ubuntu_passwd}" | cut -d: -f3)" == "1000" ]]
+          ubuntu_gid="$(printf '%s\n' "${ubuntu_passwd}" | cut -d: -f4)"
+          ubuntu_home="$(printf '%s\n' "${ubuntu_passwd}" | cut -d: -f6)"
+          ubuntu_shell="$(printf '%s\n' "${ubuntu_passwd}" | cut -d: -f7)"
+          [[ -n "${ubuntu_gid}" ]]
+          [[ -d "${ubuntu_home}" ]]
+          [[ -x "${ubuntu_shell}" ]]
+          getent group "${ubuntu_gid}" >/dev/null
+          id ubuntu | tee "${out}/build-user-id.txt"
+          printf '%s\n' "${ubuntu_passwd}" > "${out}/build-user-passwd.txt"
 
           printf 'ubuntu ALL=(ALL) NOPASSWD:ALL\n' > /etc/sudoers.d/ubuntu-ksq
           chmod 0440 /etc/sudoers.d/ubuntu-ksq
           grep -q '^ubuntu:' /etc/subuid || echo 'ubuntu:100000:65536' >> /etc/subuid
           grep -q '^ubuntu:' /etc/subgid || echo 'ubuntu:100000:65536' >> /etc/subgid
+          subuid_entry="$(grep '^ubuntu:' /etc/subuid | head -1)"
+          subgid_entry="$(grep '^ubuntu:' /etc/subgid | head -1)"
+          [[ -n "${subuid_entry}" ]]
+          [[ -n "${subgid_entry}" ]]
+          printf '%s\n' "${subuid_entry}" > "${out}/build-user-subuid.txt"
+          printf '%s\n' "${subgid_entry}" > "${out}/build-user-subgid.txt"
 
-          # Proven correction for Resolute uidmap 1:4.17.4-2ubuntu3 in this
-          # nested-unshare container model (run 33422301732).
-          chmod u-s /usr/bin/newuidmap /usr/bin/newgidmap
-          setcap cap_setuid=ep /usr/bin/newuidmap
-          setcap cap_setgid=ep /usr/bin/newgidmap
+          # Exact, version-scoped privilege model proven in run 33422301732.
+          # This helper refuses unknown uidmap package/helper states.
+          bash scripts/ci/configure-ksq-uidmap-filecaps.sh | tee "${out}/uidmap-normalization.env"
 
-          # Match the representative workflow's build-user ownership contract.
-          # Checkout and diagnostic setup execute as container root, but all KSQ
-          # builder scripts execute as the image-native ubuntu user (uid 1000).
-          ubuntu_gid="$(id -g ubuntu)"
+          # The host must have the versioned SupraLINUX KSQ AppArmor profile
+          # loaded in enforce mode. Docker applying that profile here is part
+          # of the representative builder contract, not a global host bypass.
+          [[ "$(cat /proc/self/attr/current)" == 'supralinux-ksq-unshare (enforce)' ]]
+          sha256sum scripts/ci/apparmor/supralinux-ksq-unshare > "${out}/apparmor-profile-source.sha256"
+
           chown -R ubuntu:"${ubuntu_gid}" "${GITHUB_WORKSPACE}"
 
-          {
-            echo '=== mmdebstrap diagnostic environment ==='
-            printf 'apparmor='; cat /proc/self/attr/current
-            dpkg-query -W -f='${Package}\t${Version}\n' sbuild mmdebstrap uidmap libcap2-bin | sort
-            stat -c '%A %a %U %G %u %g %n' /usr/bin/newuidmap /usr/bin/newgidmap
-            getcap /usr/bin/newuidmap /usr/bin/newgidmap
-            grep '^ubuntu:' /etc/subuid
-            grep '^ubuntu:' /etc/subgid
-            stat -c 'workspace=%U:%G:%u:%g:%a %n' "${GITHUB_WORKSPACE}"
-            stat -c 'build=%U:%G:%u:%g:%a %n' "${GITHUB_WORKSPACE}/build"
-          } | tee "${out}/environment.txt"
-
-          # Re-prove the exact namespace precondition in the same container
-          # immediately before invoking the canonical script.
+          # Validate the namespace set required by mmdebstrap/sbuild unshare
+          # mode as the ordinary build user. No parent-container CAP_SYS_ADMIN
+          # and no privileged Docker job.
           sudo -u ubuntu -H unshare \
             --map-auto --map-user=65536 --map-group=65536 --keep-caps \
-            --mount --pid --uts --ipc --fork true \
-            >"${out}/namespace-preflight.stdout" 2>"${out}/namespace-preflight.stderr"
+            --mount --pid --uts --ipc --fork true
 
-          rm -rf "${GITHUB_WORKSPACE}/build/ksq-1/environment"
-          set +e
-          sudo -u ubuntu -H bash scripts/ci/prepare-ksq-1-build-environment.sh \
-            >"${out}/prepare-build-environment.stdout" \
-            2>"${out}/prepare-build-environment.stderr"
-          rc_mmdebstrap=$?
-          set -e
-
+          dpkg-query -W -f='${Package}\t${Version}\n' \
+            sudo git python3 curl ca-certificates \
+            sbuild mmdebstrap uidmap libcap2-bin zstd devscripts dpkg-dev apt-utils \
+            ubuntu-keyring gzip xz-utils diffutils \
+            | sort > "${out}/toolchain.tsv"
           {
-            echo "AURORA_KSQ_MMDEBSTRAP_RC=${rc_mmdebstrap}"
-            echo 'AURORA_KSQ_MMDEBSTRAP_APPARMOR=supralinux-ksq-unshare'
-          } | tee "${out}/results.env"
+            echo "AURORA_KSQ_SELF_HOSTED_REP_SNAPSHOT=${snapshot}"
+            echo "AURORA_KSQ_SELF_HOSTED_REP_SNAPSHOT_URI=${snapshot_uri}"
+            echo 'AURORA_KSQ_SELF_HOSTED_REP_CA_BOOTSTRAP=same-snapshot+apt-secure'
+            echo 'AURORA_KSQ_SELF_HOSTED_REP_TLS_AFTER_CA=verified'
+            echo 'AURORA_KSQ_SELF_HOSTED_REP_SECCOMP=unconfined'
+            echo 'AURORA_KSQ_SELF_HOSTED_REP_APPARMOR=supralinux-ksq-unshare'
+            echo 'AURORA_KSQ_SELF_HOSTED_REP_UIDMAP_MODEL=filecap'
+            echo 'AURORA_KSQ_SELF_HOSTED_REP_BUILD_USER=ubuntu'
+            echo 'AURORA_KSQ_SELF_HOSTED_REP_BUILD_UID=1000'
+            echo "AURORA_KSQ_SELF_HOSTED_REP_BUILD_GID=${ubuntu_gid}"
+            echo "AURORA_KSQ_SELF_HOSTED_REP_SUBUID=${subuid_entry#ubuntu:}"
+            echo "AURORA_KSQ_SELF_HOSTED_REP_SUBGID=${subgid_entry#ubuntu:}"
+            echo 'AURORA_KSQ_SELF_HOSTED_REP_NAMESPACE_SET=user+mount+pid+uts+ipc'
+            echo 'AURORA_KSQ_SELF_HOSTED_REP_UNSHARE=PASS'
+          } > "${out}/environment.env"
+          chown -R ubuntu:"${ubuntu_gid}" "${out}"
 
-          echo '--- canonical stdout ---'
-          cat "${out}/prepare-build-environment.stdout"
-          echo '--- canonical stderr ---'
-          cat "${out}/prepare-build-environment.stderr"
+      - name: Prepare KSQ-1 build environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo -u ubuntu -H env GITHUB_WORKSPACE="${GITHUB_WORKSPACE}" CI=true \
+            bash -c 'cd "$GITHUB_WORKSPACE" && bash scripts/ci/prepare-ksq-1-runner.sh'
 
-          if [[ -f "${GITHUB_WORKSPACE}/build/ksq-1/environment/build-environment.env" ]]; then
-            cp "${GITHUB_WORKSPACE}/build/ksq-1/environment/build-environment.env" "${out}/"
-          fi
-          if [[ -f "${GITHUB_WORKSPACE}/build/ksq-1/environment/build-environment-tool-versions.txt" ]]; then
-            cp "${GITHUB_WORKSPACE}/build/ksq-1/environment/build-environment-tool-versions.txt" "${out}/"
-          fi
-          if [[ -f "${GITHUB_WORKSPACE}/build/ksq-1/environment/resolute-amd64-buildd.tar.zst.sha256" ]]; then
-            cp "${GITHUB_WORKSPACE}/build/ksq-1/environment/resolute-amd64-buildd.tar.zst.sha256" "${out}/"
-          fi
+      - name: Build representative certified source 001
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo -u ubuntu -H env GITHUB_WORKSPACE="${GITHUB_WORKSPACE}" CI=true \
+            bash -c 'cd "$GITHUB_WORKSPACE" && bash scripts/ci/build-ksq-1-range.sh 1 1'
 
-          [[ "$(cat /proc/self/attr/current)" == 'supralinux-ksq-unshare (enforce)' ]]
-          [[ ${rc_mmdebstrap} -eq 0 ]]
-          grep -Fqx 'AURORA_KSQ_1_BUILD_ENV_BACKEND=unshare' \
-            "${GITHUB_WORKSPACE}/build/ksq-1/environment/build-environment.env"
-          echo 'AURORA_KSQ_MMDEBSTRAP_UNSHARE_PASS'
+      - name: Record representative PASS
+        shell: bash
+        run: |
+          set -euo pipefail
+          . build/ksq-1/full/chunk-001-001/evidence/range-status.env
+          [[ "${AURORA_KSQ_1_RANGE_STATUS}" == "PASS" ]]
+          [[ "${AURORA_KSQ_1_RANGE_FIRST_ORDER}" == "1" ]]
+          [[ "${AURORA_KSQ_1_RANGE_LAST_COMPLETED_ORDER}" == "1" ]]
+          {
+            echo 'AURORA_KSQ_SELF_HOSTED_REPRESENTATIVE=PASS'
+            echo 'AURORA_KSQ_SELF_HOSTED_REPRESENTATIVE_RANGE=1-1'
+            echo "AURORA_KSQ_SELF_HOSTED_REPRESENTATIVE_DEBS=${AURORA_KSQ_1_RANGE_NEW_DEBS}"
+          } | tee build/ksq-self-hosted-representative/status.env
 
-      - name: Preserve mmdebstrap diagnostic
+      - name: Preserve representative evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: aurora-ksq-self-hosted-mmdebstrap-diagnostic
+          name: aurora-ksq-self-hosted-representative-001
           path: |
-            build/ksq-self-hosted-mmdebstrap-diagnostic/
+            build/ksq-self-hosted-representative/
+            build/ksq-0/closure-status.env
+            build/ksq-0/apt-metadata.sha256
+            build/ksq-0/source-audit/selected-source-files.sha256
+            build/ksq-1/build-tool-versions.tsv
             build/ksq-1/environment/build-environment.env
             build/ksq-1/environment/build-environment-tool-versions.txt
             build/ksq-1/environment/resolute-amd64-buildd.tar.zst.sha256
+            build/ksq-1/full/chunk-001-001/evidence/
+            build/ksq-1/full/chunk-001-001/new-debs/
           if-no-files-found: warn
           retention-days: 30
