@@ -1,0 +1,83 @@
+name: Aurora KSQ GitHub-hosted parity probe
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-github-hosted-parity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  parity:
+    name: Measure ubuntu-24.04 hosted container contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    container:
+      image: ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b
+      options: --security-opt seccomp=unconfined
+
+    steps:
+      - name: Probe hosted runner container security contract
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            uidmap libcap2-bin util-linux sudo ca-certificates
+
+          printf 'ubuntu ALL=(ALL) NOPASSWD:ALL\n' > /etc/sudoers.d/ubuntu-ksq
+          chmod 0440 /etc/sudoers.d/ubuntu-ksq
+          grep -q '^ubuntu:' /etc/subuid || echo 'ubuntu:100000:65536' >> /etc/subuid
+          grep -q '^ubuntu:' /etc/subgid || echo 'ubuntu:100000:65536' >> /etc/subgid
+
+          echo '=== HOSTED CONTRACT ==='
+          uname -a
+          cat /etc/os-release
+          printf 'apparmor='; cat /proc/self/attr/current || true
+          grep -E '^(Cap(Inh|Prm|Eff|Bnd|Amb)|NoNewPrivs|Seccomp):' /proc/self/status || true
+          cat /proc/self/uid_map
+          cat /proc/self/gid_map
+          sysctl kernel.apparmor_restrict_unprivileged_userns 2>/dev/null || true
+          sysctl kernel.unprivileged_userns_clone 2>/dev/null || true
+          sysctl user.max_user_namespaces 2>/dev/null || true
+          dpkg-query -W -f='${Package}\t${Version}\n' uidmap libcap2-bin util-linux
+          stat -c '%A %a %U %G %u %g %n' /usr/bin/newuidmap /usr/bin/newgidmap
+          getcap /usr/bin/newuidmap /usr/bin/newgidmap || true
+          grep '^ubuntu:' /etc/subuid /etc/subgid
+
+          set +e
+          sudo -u ubuntu -H unshare --user --map-root-user true
+          rc_root=$?
+          sudo -u ubuntu -H unshare \
+            --user --map-auto --map-user=65536 --map-group=65536 --keep-caps true
+          rc_auto_stock=$?
+          set -e
+
+          chmod u-s /usr/bin/newuidmap /usr/bin/newgidmap
+          setcap cap_setuid=ep /usr/bin/newuidmap
+          setcap cap_setgid=ep /usr/bin/newgidmap
+
+          set +e
+          sudo -u ubuntu -H unshare \
+            --user --map-auto --map-user=65536 --map-group=65536 --keep-caps true
+          rc_auto_filecap=$?
+          sudo -u ubuntu -H unshare \
+            --user --map-auto --map-user=65536 --map-group=65536 --keep-caps \
+            --mount --pid --uts --ipc --fork true
+          rc_full_filecap=$?
+          set -e
+
+          echo "HOSTED_MAP_ROOT_RC=${rc_root}"
+          echo "HOSTED_MAP_AUTO_STOCK_RC=${rc_auto_stock}"
+          echo "HOSTED_MAP_AUTO_FILECAP_RC=${rc_auto_filecap}"
+          echo "HOSTED_FULL_FILECAP_RC=${rc_full_filecap}"
+
+          # This is a measurement probe. Preserve the results even when the
+          # hosted environment rejects one of the tested namespace paths.
+          exit 0
