@@ -1,0 +1,110 @@
+name: Aurora KSQ-1 self-hosted toolchain audit
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-1-self-hosted-toolchain-audit.yml'
+      - '.github/ksq-self-hosted-toolchain-audit-trigger.env'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Audit bare pinned KSQ job container
+    runs-on: [self-hosted, Linux, X64, supralinux-ksq, docker]
+    timeout-minutes: 15
+    container:
+      image: ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b
+
+    steps:
+      - name: Validate pinned container and execution identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          . /etc/os-release
+          [[ "${ID}" == "ubuntu" ]]
+          [[ "${VERSION_ID}" == "26.04" ]]
+          [[ "${VERSION_CODENAME}" == "resolute" ]]
+          [[ "$(dpkg --print-architecture)" == "amd64" ]]
+          [[ -f /.dockerenv ]]
+          id
+          printf 'AURORA_KSQ_TOOLCHAIN_AUDIT_CONTAINER=PASS\n'
+
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Inventory bare-container commands
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="${GITHUB_WORKSPACE}/build/ksq-self-hosted-toolchain-audit"
+          mkdir -p "${out}"
+          printf 'command\tstatus\tpath\n' > "${out}/commands.tsv"
+          commands=(
+            bash sh sudo git python3 perl awk sed grep find tar gzip sha256sum
+            curl wget gpg dpkg dpkg-query dpkg-deb apt-get apt-cache
+            sbuild mmdebstrap newuidmap newgidmap zstd debuild dch
+            dpkg-source dpkg-buildpackage unshare
+          )
+          for command in "${commands[@]}"; do
+            if path="$(command -v "${command}" 2>/dev/null)"; then
+              printf '%s\tPRESENT\t%s\n' "${command}" "${path}" | tee -a "${out}/commands.tsv"
+            else
+              printf '%s\tMISSING\t-\n' "${command}" | tee -a "${out}/commands.tsv"
+            fi
+          done
+
+      - name: Inventory candidate package versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          export DEBIAN_FRONTEND=noninteractive
+          out="${GITHUB_WORKSPACE}/build/ksq-self-hosted-toolchain-audit"
+          apt-get update
+          apt-cache policy \
+            sudo git python3 sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+            ca-certificates ubuntu-keyring gzip \
+            > "${out}/apt-policy.txt"
+          cat "${out}/apt-policy.txt"
+
+      - name: Validate namespace capability required by mmdebstrap
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="${GITHUB_WORKSPACE}/build/ksq-self-hosted-toolchain-audit"
+          {
+            echo "uid=$(id -u)"
+            echo "gid=$(id -g)"
+            grep -E '^(Cap(Inh|Prm|Eff|Bnd|Amb)|NoNewPrivs|Seccomp):' /proc/self/status || true
+            if command -v unshare >/dev/null 2>&1 && unshare -Ur true; then
+              echo 'AURORA_KSQ_TOOLCHAIN_AUDIT_UNSHARE=PASS'
+            else
+              echo 'AURORA_KSQ_TOOLCHAIN_AUDIT_UNSHARE=FAIL'
+            fi
+          } | tee "${out}/namespace.txt"
+
+      - name: Record audit completion
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="${GITHUB_WORKSPACE}/build/ksq-self-hosted-toolchain-audit"
+          missing="$(awk -F '\t' '$2 == "MISSING" {count++} END {print count+0}' "${out}/commands.tsv")"
+          unshare_status="$(sed -n 's/^AURORA_KSQ_TOOLCHAIN_AUDIT_UNSHARE=//p' "${out}/namespace.txt")"
+          {
+            echo 'AURORA_KSQ_SELF_HOSTED_TOOLCHAIN_AUDIT=PASS'
+            echo "AURORA_KSQ_SELF_HOSTED_TOOLCHAIN_MISSING_COMMANDS=${missing}"
+            echo "AURORA_KSQ_SELF_HOSTED_TOOLCHAIN_UNSHARE=${unshare_status}"
+          } | tee "${out}/status.env"
+
+      - name: Preserve toolchain audit evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-self-hosted-toolchain-audit
+          path: build/ksq-self-hosted-toolchain-audit/
+          if-no-files-found: error
+          retention-days: 30
