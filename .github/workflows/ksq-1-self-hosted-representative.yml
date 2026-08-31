@@ -86,7 +86,6 @@ jobs:
             grep '^ubuntu:' /etc/subgid
           } | tee "${out}/environment.txt"
 
-          # Re-prove the exact namespace prerequisite before creating the buildd tarball.
           sudo -u ubuntu -H unshare \
             --map-auto --map-user=65536 --map-group=65536 --keep-caps \
             --mount --pid --uts --ipc --fork true \
@@ -179,6 +178,22 @@ jobs:
           tail -n 160 "${out}/sbuild.stderr" || true
           echo '--- sbuild stdout tail ---'
           tail -n 160 "${out}/sbuild.stdout" || true
+          echo '--- generated sbuild logs ---'
+          while IFS= read -r -d '' build_log; do
+            echo "### ${build_log}"
+            tail -n 320 "${build_log}" || true
+          done < <(find "${result}" -maxdepth 1 -type f -name '*.build' -print0)
+
+          # GitHub artifact names must be filesystem-portable. sbuild embeds an
+          # ISO timestamp containing ':' in failure log filenames.
+          while IFS= read -r -d '' generated; do
+            directory="$(dirname "${generated}")"
+            basename="$(basename "${generated}")"
+            safe_basename="${basename//:/-}"
+            if [[ "${safe_basename}" != "${basename}" ]]; then
+              mv "${generated}" "${directory}/${safe_basename}"
+            fi
+          done < <(find "${result}" -maxdepth 1 -type f -print0)
 
           find "${result}" -maxdepth 1 -type f -printf '%f\n' | sort \
             | tee "${out}/result-files.txt"
