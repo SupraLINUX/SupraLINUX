@@ -6,6 +6,7 @@ on:
       - feature/kde-stack-qualification
     paths:
       - '.github/workflows/ksq-1-self-hosted-smoke.yml'
+      - '.github/ksq-self-hosted-smoke-trigger.env'
   workflow_dispatch:
 
 permissions:
@@ -36,10 +37,9 @@ jobs:
         run: |
           set -euo pipefail
           [[ -f /.dockerenv ]]
-          test -d "${GITHUB_WORKSPACE}"
+          [[ -d "${GITHUB_WORKSPACE}" ]]
           touch "${GITHUB_WORKSPACE}/.aurora-runner-smoke"
-          test -f "${GITHUB_WORKSPACE}/.aurora-runner-smoke"
-          mount | grep -F "${GITHUB_WORKSPACE}" || true
+          [[ -f "${GITHUB_WORKSPACE}/.aurora-runner-smoke" ]]
           printf 'AURORA_KSQ_RUNNER_CONTAINERIZED=yes\n'
 
       - name: Validate network and package metadata access
