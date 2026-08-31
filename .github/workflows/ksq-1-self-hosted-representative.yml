@@ -46,16 +46,27 @@ jobs:
           EOF_SOURCES
 
           export DEBIAN_FRONTEND=noninteractive
+          apt_acquire=(
+            -o Acquire::Retries=5
+          )
           apt_tls_bootstrap=(
             -o Acquire::https::Verify-Peer=false
             -o Acquire::https::Verify-Host=false
           )
-          apt-get "${apt_tls_bootstrap[@]}" update >"${out}/apt-bootstrap-update.log" 2>&1
-          apt-get "${apt_tls_bootstrap[@]}" install -y --no-install-recommends ca-certificates \
+
+          # APT normally treats some transient index failures as warnings and
+          # may return zero with a partial package universe. KSQ must fail closed
+          # instead: retry transport failures, then reject any missing index.
+          apt-get "${apt_tls_bootstrap[@]}" "${apt_acquire[@]}" \
+            -o APT::Update::Error-Mode=any update \
+            >"${out}/apt-bootstrap-update.log" 2>&1
+          apt-get "${apt_tls_bootstrap[@]}" "${apt_acquire[@]}" \
+            install -y --no-install-recommends ca-certificates \
             >"${out}/apt-bootstrap-ca.log" 2>&1
           rm -rf /var/lib/apt/lists/*
-          apt-get update >"${out}/apt-verified-update.log" 2>&1
-          apt-get install -y --no-install-recommends \
+          apt-get "${apt_acquire[@]}" -o APT::Update::Error-Mode=any update \
+            >"${out}/apt-verified-update.log" 2>&1
+          apt-get "${apt_acquire[@]}" install -y --no-install-recommends \
             sudo sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
             ca-certificates ubuntu-keyring gzip xz-utils diffutils libcap2-bin \
             >"${out}/apt-toolchain.log" 2>&1
@@ -78,6 +89,8 @@ jobs:
             echo '=== sbuild smoke environment ==='
             printf 'apparmor='; cat /proc/self/attr/current
             printf 'SBUILD_ENABLE_PIVOT_ROOT=%s\n' "${SBUILD_ENABLE_PIVOT_ROOT-<unset>}"
+            echo 'APT_ACQUIRE_RETRIES=5'
+            echo 'APT_UPDATE_ERROR_MODE=any'
             dpkg-query -W -f='${Package}\t${Version}\n' \
               sbuild libsbuild-perl mmdebstrap uidmap libcap2-bin | sort
             stat -c '%A %a %U %G %u %g %n' /usr/bin/newuidmap /usr/bin/newgidmap
