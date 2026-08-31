@@ -29,13 +29,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          out="${GITHUB_WORKSPACE}/build/ksq-self-hosted-representative"
+          mkdir -p "${out}"
+
           . tests/kde-stack/apt-metadata-snapshot.env
           snapshot="${AURORA_KSQ_0_APT_SNAPSHOT:?missing KSQ-0 snapshot}"
           [[ "${snapshot}" =~ ^[0-9]{8}T[0-9]{6}Z$ ]]
+          snapshot_uri="https://snapshot.ubuntu.com/ubuntu/${snapshot}/"
 
           cat > /etc/apt/sources.list.d/ubuntu.sources <<EOF_SOURCES
           Types: deb
-          URIs: http://snapshot.ubuntu.com/ubuntu/${snapshot}/
+          URIs: ${snapshot_uri}
           Suites: resolute resolute-updates resolute-security resolute-backports
           Components: main universe restricted multiverse
           Architectures: amd64
@@ -43,16 +47,37 @@ jobs:
           EOF_SOURCES
 
           export DEBIAN_FRONTEND=noninteractive
-          apt-get update 2>&1 | tee /tmp/ksq-self-hosted-apt-update.log
-          if grep -Eq 'archive\.ubuntu\.com|security\.ubuntu\.com' /tmp/ksq-self-hosted-apt-update.log; then
-            echo 'AURORA_KSQ_SELF_HOSTED_REP_FAILURE: live Ubuntu archive used during toolchain bootstrap' >&2
-            exit 1
-          fi
+
+          # The official minimal Ubuntu image has no CA bundle. Bootstrap only
+          # ca-certificates from the same signed Ubuntu snapshot. TLS peer/host
+          # verification is relaxed for this first acquisition only; apt-secure
+          # signature and package-hash verification remain enabled.
+          apt_tls_bootstrap=(
+            -o Acquire::https::Verify-Peer=false
+            -o Acquire::https::Verify-Host=false
+          )
+          apt-get "${apt_tls_bootstrap[@]}" update 2>&1 | tee "${out}/apt-bootstrap-update.log"
+          grep -Fq "snapshot.ubuntu.com/ubuntu/${snapshot}" "${out}/apt-bootstrap-update.log"
+          ! grep -Eq 'archive\.ubuntu\.com|security\.ubuntu\.com' "${out}/apt-bootstrap-update.log"
+          ! grep -Eq '(^|[[:space:]])(NO_PUBKEY|EXPKEYSIG|BADSIG|The repository .* is not signed)' "${out}/apt-bootstrap-update.log"
+
+          apt-get "${apt_tls_bootstrap[@]}" install -y --no-install-recommends ca-certificates \
+            2>&1 | tee "${out}/apt-bootstrap-ca.log"
+          dpkg-query -W -f='${Status}\n' ca-certificates | grep -Fxq 'install ok installed'
+
+          # From this point onward TLS verification must be normal. Throw away
+          # the indexes obtained during the CA bootstrap and reacquire them.
+          rm -rf /var/lib/apt/lists/*
+          apt-get update 2>&1 | tee "${out}/apt-verified-update.log"
+          grep -Fq "snapshot.ubuntu.com/ubuntu/${snapshot}" "${out}/apt-verified-update.log"
+          ! grep -Eq 'archive\.ubuntu\.com|security\.ubuntu\.com' "${out}/apt-verified-update.log"
+          ! grep -Eq '(^|[[:space:]])(Err:|W: Failed to fetch|NO_PUBKEY|EXPKEYSIG|BADSIG|The repository .* is not signed)' "${out}/apt-verified-update.log"
 
           apt-get install -y --no-install-recommends \
-            sudo git python3 curl ca-certificates \
+            sudo git python3 curl \
             sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
-            ubuntu-keyring gzip xz-utils diffutils
+            ubuntu-keyring gzip xz-utils diffutils \
+            2>&1 | tee "${out}/apt-toolchain-install.log"
 
           for command in \
             sudo git python3 curl sbuild mmdebstrap newuidmap newgidmap zstd \
@@ -64,17 +89,19 @@ jobs:
           done
           unshare -Ur true
 
-          mkdir -p build/ksq-self-hosted-representative
           dpkg-query -W -f='${Package}\t${Version}\n' \
             sudo git python3 curl ca-certificates \
             sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
             ubuntu-keyring gzip xz-utils diffutils \
-            | sort > build/ksq-self-hosted-representative/toolchain.tsv
+            | sort > "${out}/toolchain.tsv"
           {
             echo "AURORA_KSQ_SELF_HOSTED_REP_SNAPSHOT=${snapshot}"
+            echo "AURORA_KSQ_SELF_HOSTED_REP_SNAPSHOT_URI=${snapshot_uri}"
+            echo 'AURORA_KSQ_SELF_HOSTED_REP_CA_BOOTSTRAP=same-snapshot+apt-secure'
+            echo 'AURORA_KSQ_SELF_HOSTED_REP_TLS_AFTER_CA=verified'
             echo 'AURORA_KSQ_SELF_HOSTED_REP_SECCOMP=unconfined'
             echo 'AURORA_KSQ_SELF_HOSTED_REP_UNSHARE=PASS'
-          } > build/ksq-self-hosted-representative/environment.env
+          } > "${out}/environment.env"
 
       - name: Prepare KSQ-1 build environment
         shell: bash
