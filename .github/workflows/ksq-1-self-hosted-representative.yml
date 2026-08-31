@@ -1,4 +1,4 @@
-name: Aurora KSQ-1 self-hosted representative build
+name: Aurora KSQ-1 self-hosted namespace diagnostic
 
 on:
   push:
@@ -6,17 +6,16 @@ on:
       - feature/kde-stack-qualification
     paths:
       - '.github/workflows/ksq-1-self-hosted-representative.yml'
-      - '.github/ksq-self-hosted-representative-trigger.env'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  representative:
-    name: Build certified DAG source 001 on self-hosted runner
+  namespace-diagnostic:
+    name: Diagnose nested unprivileged user namespaces
     runs-on: [self-hosted, Linux, X64, supralinux-ksq, docker]
-    timeout-minutes: 90
+    timeout-minutes: 20
     container:
       image: ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b
       options: --security-opt seccomp=unconfined
@@ -25,16 +24,16 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Bootstrap toolchain from certified Ubuntu snapshot
+      - name: Diagnose namespace environment
         shell: bash
         run: |
           set -euo pipefail
-          out="${GITHUB_WORKSPACE}/build/ksq-self-hosted-representative"
+          out="${GITHUB_WORKSPACE}/build/ksq-self-hosted-namespace-diagnostic"
           mkdir -p "${out}"
 
           . tests/kde-stack/apt-metadata-snapshot.env
           snapshot="${AURORA_KSQ_0_APT_SNAPSHOT:?missing KSQ-0 snapshot}"
-          [[ "${snapshot}" =~ ^[0-9]{8}T[0-9]{6}Z$ ]]
+          [[ "${snapshot}" == "20260829T022000Z" ]]
           snapshot_uri="https://snapshot.ubuntu.com/ubuntu/${snapshot}/"
 
           cat > /etc/apt/sources.list.d/ubuntu.sources <<EOF_SOURCES
@@ -51,134 +50,138 @@ jobs:
             -o Acquire::https::Verify-Peer=false
             -o Acquire::https::Verify-Host=false
           )
-          apt-get "${apt_tls_bootstrap[@]}" update 2>&1 | tee "${out}/apt-bootstrap-update.log"
-          grep -Fq "snapshot.ubuntu.com/ubuntu/${snapshot}" "${out}/apt-bootstrap-update.log"
-          ! grep -Eq 'archive\.ubuntu\.com|security\.ubuntu\.com' "${out}/apt-bootstrap-update.log"
-          ! grep -Eq '(^|[[:space:]])(NO_PUBKEY|EXPKEYSIG|BADSIG|The repository .* is not signed)' "${out}/apt-bootstrap-update.log"
-
+          apt-get "${apt_tls_bootstrap[@]}" update >"${out}/apt-bootstrap-update.log" 2>&1
           apt-get "${apt_tls_bootstrap[@]}" install -y --no-install-recommends ca-certificates \
-            2>&1 | tee "${out}/apt-bootstrap-ca.log"
-          dpkg-query -W -f='${Status}\n' ca-certificates | grep -Fxq 'install ok installed'
-
+            >"${out}/apt-bootstrap-ca.log" 2>&1
           rm -rf /var/lib/apt/lists/*
-          apt-get update 2>&1 | tee "${out}/apt-verified-update.log"
-          grep -Fq "snapshot.ubuntu.com/ubuntu/${snapshot}" "${out}/apt-verified-update.log"
-          ! grep -Eq 'archive\.ubuntu\.com|security\.ubuntu\.com' "${out}/apt-verified-update.log"
-          ! grep -Eq '(^|[[:space:]])(Err:|W: Failed to fetch|NO_PUBKEY|EXPKEYSIG|BADSIG|The repository .* is not signed)' "${out}/apt-verified-update.log"
-
+          apt-get update >"${out}/apt-verified-update.log" 2>&1
           apt-get install -y --no-install-recommends \
-            sudo git python3 curl \
-            sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
-            ubuntu-keyring gzip xz-utils diffutils \
-            2>&1 | tee "${out}/apt-toolchain-install.log"
-
-          for command in \
-            sudo git python3 curl sbuild mmdebstrap newuidmap newgidmap zstd \
-            debuild dch dpkg-source dpkg-buildpackage unshare; do
-            command -v "${command}" >/dev/null || {
-              echo "AURORA_KSQ_SELF_HOSTED_REP_FAILURE: missing ${command} after bootstrap" >&2
-              exit 1
-            }
-          done
-
-          # The official Ubuntu 26.04 image already provides the ordinary
-          # build identity we need. Prove it instead of creating another user.
-          ubuntu_passwd="$(getent passwd ubuntu)"
-          [[ -n "${ubuntu_passwd}" ]]
-          [[ "$(printf '%s\n' "${ubuntu_passwd}" | cut -d: -f3)" == "1000" ]]
-          ubuntu_gid="$(printf '%s\n' "${ubuntu_passwd}" | cut -d: -f4)"
-          ubuntu_home="$(printf '%s\n' "${ubuntu_passwd}" | cut -d: -f6)"
-          ubuntu_shell="$(printf '%s\n' "${ubuntu_passwd}" | cut -d: -f7)"
-          [[ -n "${ubuntu_gid}" ]]
-          [[ -d "${ubuntu_home}" ]]
-          [[ -x "${ubuntu_shell}" ]]
-          getent group "${ubuntu_gid}" >/dev/null
-          id ubuntu | tee "${out}/build-user-id.txt"
-          printf '%s\n' "${ubuntu_passwd}" > "${out}/build-user-passwd.txt"
+            sudo uidmap libcap2-bin util-linux curl python3 \
+            >"${out}/apt-diagnostic-toolchain.log" 2>&1
 
           printf 'ubuntu ALL=(ALL) NOPASSWD:ALL\n' > /etc/sudoers.d/ubuntu-ksq
           chmod 0440 /etc/sudoers.d/ubuntu-ksq
           grep -q '^ubuntu:' /etc/subuid || echo 'ubuntu:100000:65536' >> /etc/subuid
           grep -q '^ubuntu:' /etc/subgid || echo 'ubuntu:100000:65536' >> /etc/subgid
-          subuid_entry="$(grep '^ubuntu:' /etc/subuid | head -1)"
-          subgid_entry="$(grep '^ubuntu:' /etc/subgid | head -1)"
-          [[ -n "${subuid_entry}" ]]
-          [[ -n "${subgid_entry}" ]]
-          printf '%s\n' "${subuid_entry}" > "${out}/build-user-subuid.txt"
-          printf '%s\n' "${subgid_entry}" > "${out}/build-user-subgid.txt"
 
-          chown -R ubuntu:"${ubuntu_gid}" "${GITHUB_WORKSPACE}"
+          {
+            echo '=== identity ==='
+            id
+            id ubuntu
+            echo
+            echo '=== parent namespace maps ==='
+            cat /proc/self/uid_map
+            cat /proc/self/gid_map
+            echo
+            echo '=== process security ==='
+            grep -E '^(Cap(Inh|Prm|Eff|Bnd|Amb)|NoNewPrivs|Seccomp):' /proc/self/status
+            printf 'apparmor='; cat /proc/self/attr/current || true
+            echo
+            echo '=== root capabilities ==='
+            capsh --print
+            echo
+            echo '=== ubuntu capabilities before setuid helper ==='
+            sudo -u ubuntu -H capsh --print
+            echo
+            echo '=== uidmap helpers ==='
+            stat -c '%A %a %U %G %u %g %n' /usr/bin/newuidmap /usr/bin/newgidmap
+            getcap /usr/bin/newuidmap /usr/bin/newgidmap || true
+            echo
+            echo '=== subordinate ids ==='
+            grep '^ubuntu:' /etc/subuid || true
+            grep '^ubuntu:' /etc/subgid || true
+            echo
+            echo '=== mount flags ==='
+            findmnt -no TARGET,FSTYPE,OPTIONS / || true
+            findmnt -no TARGET,FSTYPE,OPTIONS /usr || true
+            echo
+            echo '=== Ubuntu userns policy ==='
+            sysctl kernel.apparmor_restrict_unprivileged_userns 2>&1 || true
+            sysctl kernel.unprivileged_userns_clone 2>&1 || true
+            sysctl user.max_user_namespaces 2>&1 || true
+            echo
+            echo '=== kernel ==='
+            uname -a
+          } | tee "${out}/namespace-environment.txt"
 
-          # Validate the namespace set required by mmdebstrap unshare mode as
-          # the ordinary build user. No CAP_SYS_ADMIN and no privileged job.
+          curl -fsS --unix-socket /var/run/docker.sock http://localhost/v1.55/info \
+            > "${out}/docker-info.json"
+          python3 - "${out}/docker-info.json" <<'PY'
+          import json, sys
+          p = sys.argv[1]
+          d = json.load(open(p, encoding='utf-8'))
+          keys = [
+              'ServerVersion', 'KernelVersion', 'OperatingSystem', 'OSType',
+              'Architecture', 'DockerRootDir', 'Name', 'CgroupDriver',
+              'CgroupVersion', 'SecurityOptions'
+          ]
+          for k in keys:
+              print(f'{k}={d.get(k)!r}')
+          PY
+          python3 - "${out}/docker-info.json" > "${out}/docker-info-summary.txt" <<'PY'
+          import json, sys
+          d = json.load(open(sys.argv[1], encoding='utf-8'))
+          for k in ('ServerVersion','KernelVersion','OperatingSystem','OSType','Architecture','DockerRootDir','Name','CgroupDriver','CgroupVersion','SecurityOptions'):
+              print(f'{k}={d.get(k)!r}')
+          PY
+          cat "${out}/docker-info-summary.txt"
+
+          hostname_id="$(cat /etc/hostname)"
+          if curl -fsS --unix-socket /var/run/docker.sock \
+              "http://localhost/v1.55/containers/${hostname_id}/json" \
+              > "${out}/job-container-inspect.json"; then
+            python3 - "${out}/job-container-inspect.json" > "${out}/job-container-security.txt" <<'PY'
+          import json, sys
+          d = json.load(open(sys.argv[1], encoding='utf-8'))
+          hc = d.get('HostConfig', {})
+          print(f"AppArmorProfile={d.get('AppArmorProfile')!r}")
+          print(f"UsernsMode={hc.get('UsernsMode')!r}")
+          print(f"Privileged={hc.get('Privileged')!r}")
+          print(f"CapAdd={hc.get('CapAdd')!r}")
+          print(f"CapDrop={hc.get('CapDrop')!r}")
+          print(f"SecurityOpt={hc.get('SecurityOpt')!r}")
+          PY
+            cat "${out}/job-container-security.txt"
+          else
+            echo 'container inspect unavailable by hostname' | tee "${out}/job-container-security.txt"
+          fi
+
+          set +e
+          sudo -u ubuntu -H unshare --user --map-root-user true \
+            >"${out}/test-map-root.stdout" 2>"${out}/test-map-root.stderr"
+          rc_map_root=$?
+
+          sudo -u ubuntu -H unshare --user \
+            --map-auto --map-user=65536 --map-group=65536 --keep-caps true \
+            >"${out}/test-map-auto.stdout" 2>"${out}/test-map-auto.stderr"
+          rc_map_auto=$?
+
           sudo -u ubuntu -H unshare \
             --map-auto --map-user=65536 --map-group=65536 --keep-caps \
-            --mount --pid --uts --ipc --fork true
+            --mount --pid --uts --ipc --fork true \
+            >"${out}/test-full.stdout" 2>"${out}/test-full.stderr"
+          rc_full=$?
+          set -e
 
-          dpkg-query -W -f='${Package}\t${Version}\n' \
-            sudo git python3 curl ca-certificates \
-            sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
-            ubuntu-keyring gzip xz-utils diffutils \
-            | sort > "${out}/toolchain.tsv"
           {
-            echo "AURORA_KSQ_SELF_HOSTED_REP_SNAPSHOT=${snapshot}"
-            echo "AURORA_KSQ_SELF_HOSTED_REP_SNAPSHOT_URI=${snapshot_uri}"
-            echo 'AURORA_KSQ_SELF_HOSTED_REP_CA_BOOTSTRAP=same-snapshot+apt-secure'
-            echo 'AURORA_KSQ_SELF_HOSTED_REP_TLS_AFTER_CA=verified'
-            echo 'AURORA_KSQ_SELF_HOSTED_REP_SECCOMP=unconfined'
-            echo 'AURORA_KSQ_SELF_HOSTED_REP_BUILD_USER=ubuntu'
-            echo 'AURORA_KSQ_SELF_HOSTED_REP_BUILD_UID=1000'
-            echo "AURORA_KSQ_SELF_HOSTED_REP_BUILD_GID=${ubuntu_gid}"
-            echo "AURORA_KSQ_SELF_HOSTED_REP_SUBUID=${subuid_entry#ubuntu:}"
-            echo "AURORA_KSQ_SELF_HOSTED_REP_SUBGID=${subgid_entry#ubuntu:}"
-            echo 'AURORA_KSQ_SELF_HOSTED_REP_NAMESPACE_SET=user+mount+pid+uts+ipc'
-            echo 'AURORA_KSQ_SELF_HOSTED_REP_UNSHARE=PASS'
-          } > "${out}/environment.env"
-          chown -R ubuntu:"${ubuntu_gid}" "${out}"
+            echo "AURORA_KSQ_NS_DIAG_MAP_ROOT_RC=${rc_map_root}"
+            echo "AURORA_KSQ_NS_DIAG_MAP_AUTO_RC=${rc_map_auto}"
+            echo "AURORA_KSQ_NS_DIAG_FULL_RC=${rc_full}"
+          } | tee "${out}/results.env"
 
-      - name: Prepare KSQ-1 build environment
-        shell: bash
-        run: |
-          set -euo pipefail
-          sudo -u ubuntu -H env GITHUB_WORKSPACE="${GITHUB_WORKSPACE}" CI=true \
-            bash -c 'cd "$GITHUB_WORKSPACE" && bash scripts/ci/prepare-ksq-1-runner.sh'
+          echo '--- map-root stderr ---'
+          cat "${out}/test-map-root.stderr"
+          echo '--- map-auto stderr ---'
+          cat "${out}/test-map-auto.stderr"
+          echo '--- full stderr ---'
+          cat "${out}/test-full.stderr"
+          echo 'AURORA_KSQ_NAMESPACE_DIAGNOSTIC_COMPLETE'
 
-      - name: Build representative certified source 001
-        shell: bash
-        run: |
-          set -euo pipefail
-          sudo -u ubuntu -H env GITHUB_WORKSPACE="${GITHUB_WORKSPACE}" CI=true \
-            bash -c 'cd "$GITHUB_WORKSPACE" && bash scripts/ci/build-ksq-1-range.sh 1 1'
-
-      - name: Record representative PASS
-        shell: bash
-        run: |
-          set -euo pipefail
-          . build/ksq-1/full/chunk-001-001/evidence/range-status.env
-          [[ "${AURORA_KSQ_1_RANGE_STATUS}" == "PASS" ]]
-          [[ "${AURORA_KSQ_1_RANGE_FIRST_ORDER}" == "1" ]]
-          [[ "${AURORA_KSQ_1_RANGE_LAST_COMPLETED_ORDER}" == "1" ]]
-          {
-            echo 'AURORA_KSQ_SELF_HOSTED_REPRESENTATIVE=PASS'
-            echo 'AURORA_KSQ_SELF_HOSTED_REPRESENTATIVE_RANGE=1-1'
-            echo "AURORA_KSQ_SELF_HOSTED_REPRESENTATIVE_DEBS=${AURORA_KSQ_1_RANGE_NEW_DEBS}"
-          } | tee build/ksq-self-hosted-representative/status.env
-
-      - name: Preserve representative evidence
+      - name: Preserve namespace diagnostic
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: aurora-ksq-self-hosted-representative-001
-          path: |
-            build/ksq-self-hosted-representative/
-            build/ksq-0/closure-status.env
-            build/ksq-0/apt-metadata.sha256
-            build/ksq-0/source-audit/selected-source-files.sha256
-            build/ksq-1/build-tool-versions.tsv
-            build/ksq-1/environment/build-environment.env
-            build/ksq-1/environment/build-environment-tool-versions.txt
-            build/ksq-1/environment/resolute-amd64-buildd.tar.zst.sha256
-            build/ksq-1/full/chunk-001-001/evidence/
-            build/ksq-1/full/chunk-001-001/new-debs/
-          if-no-files-found: warn
+          name: aurora-ksq-self-hosted-namespace-diagnostic
+          path: build/ksq-self-hosted-namespace-diagnostic/
+          if-no-files-found: error
           retention-days: 30
