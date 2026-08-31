@@ -12,6 +12,7 @@ on:
       - '.github/workflows/ksq-1-tail-resume-candidate.yml'
       - 'scripts/ci/build-ksq-1-repro-source.sh'
       - 'scripts/ci/validate-ksq-1-reproducibility.py'
+      - 'scripts/ci/validate-ksq-1-run-provenance.py'
       - 'scripts/ci/validate-ksq-1-technical-acceptance.py'
       - 'scripts/ci/merge-ksq-1-tail-resume.py'
       - 'scripts/ci/test-merge-ksq-1-tail-resume.py'
@@ -36,10 +37,12 @@ jobs:
           bash -n scripts/ci/build-ksq-1-repro-source.sh
           python3 -m py_compile \
             scripts/ci/validate-ksq-1-reproducibility.py \
+            scripts/ci/validate-ksq-1-run-provenance.py \
             scripts/ci/validate-ksq-1-technical-acceptance.py \
             scripts/ci/merge-ksq-1-tail-resume.py \
             scripts/ci/test-merge-ksq-1-tail-resume.py
           python3 scripts/ci/validate-ksq-1-reproducibility.py --help >/dev/null
+          python3 scripts/ci/validate-ksq-1-run-provenance.py --help >/dev/null
           python3 scripts/ci/merge-ksq-1-tail-resume.py --help >/dev/null
           python3 scripts/ci/test-merge-ksq-1-tail-resume.py
           test -x scripts/ci/build-ksq-1-repro-source.sh
@@ -50,6 +53,8 @@ jobs:
           ! grep -Fq "tests/kde-stack/ksq-1-acceptance-runs.env" .github/workflows/ksq-1-technical-acceptance.yml
           grep -Fq ".github/ksq-1-acceptance-runs.env" scripts/ci/validate-ksq-1-technical-acceptance.py
           ! grep -Fq "tests/kde-stack/ksq-1-acceptance-runs.env" scripts/ci/validate-ksq-1-technical-acceptance.py
+          grep -Fq "AURORA_KSQ_1_RUN_PROVENANCE_STATUS=PASS" scripts/ci/validate-ksq-1-run-provenance.py
+          grep -Fq "AURORA_KSQ_1_RUN_PROVENANCE_ARTIFACT_DIGESTS=sha256" scripts/ci/validate-ksq-1-run-provenance.py
           grep -Fq ".github/ksq-1-tail-resume.env" .github/workflows/ksq-1-tail-resume.yml
           grep -Fq ".github/ksq-1-tail-resume-candidate.env" .github/workflows/ksq-1-tail-resume-candidate.yml
           grep -Fq "order: [29, 68, 81, 99, 100, 101]" .github/workflows/ksq-1-reproducibility.yml
