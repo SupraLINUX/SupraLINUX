@@ -13,18 +13,18 @@ permissions:
 
 jobs:
   namespace-diagnostic:
-    name: Diagnose nested unprivileged user namespaces
+    name: Diagnose nested user namespaces without Docker AppArmor profile
     runs-on: [self-hosted, Linux, X64, supralinux-ksq, docker]
     timeout-minutes: 20
     container:
       image: ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b
-      options: --security-opt seccomp=unconfined
+      options: --security-opt seccomp=unconfined --security-opt apparmor=unconfined
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Diagnose namespace environment
+      - name: Run controlled AppArmor comparison
         shell: bash
         run: |
           set -euo pipefail
@@ -55,8 +55,7 @@ jobs:
             >"${out}/apt-bootstrap-ca.log" 2>&1
           rm -rf /var/lib/apt/lists/*
           apt-get update >"${out}/apt-verified-update.log" 2>&1
-          apt-get install -y --no-install-recommends \
-            sudo uidmap libcap2-bin util-linux curl python3 \
+          apt-get install -y --no-install-recommends sudo uidmap libcap2-bin util-linux \
             >"${out}/apt-diagnostic-toolchain.log" 2>&1
 
           printf 'ubuntu ALL=(ALL) NOPASSWD:ALL\n' > /etc/sudoers.d/ubuntu-ksq
@@ -65,86 +64,16 @@ jobs:
           grep -q '^ubuntu:' /etc/subgid || echo 'ubuntu:100000:65536' >> /etc/subgid
 
           {
-            echo '=== identity ==='
-            id
-            id ubuntu
-            echo
-            echo '=== parent namespace maps ==='
+            echo '=== controlled variable ==='
+            printf 'apparmor='; cat /proc/self/attr/current || true
+            grep -E '^(Cap(Inh|Prm|Eff|Bnd|Amb)|NoNewPrivs|Seccomp):' /proc/self/status
+            stat -c '%A %a %U %G %u %g %n' /usr/bin/newuidmap /usr/bin/newgidmap
+            grep '^ubuntu:' /etc/subuid
+            grep '^ubuntu:' /etc/subgid
+            sysctl kernel.apparmor_restrict_unprivileged_userns 2>&1 || true
             cat /proc/self/uid_map
             cat /proc/self/gid_map
-            echo
-            echo '=== process security ==='
-            grep -E '^(Cap(Inh|Prm|Eff|Bnd|Amb)|NoNewPrivs|Seccomp):' /proc/self/status
-            printf 'apparmor='; cat /proc/self/attr/current || true
-            echo
-            echo '=== root capabilities ==='
-            capsh --print
-            echo
-            echo '=== ubuntu capabilities before setuid helper ==='
-            sudo -u ubuntu -H capsh --print
-            echo
-            echo '=== uidmap helpers ==='
-            stat -c '%A %a %U %G %u %g %n' /usr/bin/newuidmap /usr/bin/newgidmap
-            getcap /usr/bin/newuidmap /usr/bin/newgidmap || true
-            echo
-            echo '=== subordinate ids ==='
-            grep '^ubuntu:' /etc/subuid || true
-            grep '^ubuntu:' /etc/subgid || true
-            echo
-            echo '=== mount flags ==='
-            findmnt -no TARGET,FSTYPE,OPTIONS / || true
-            findmnt -no TARGET,FSTYPE,OPTIONS /usr || true
-            echo
-            echo '=== Ubuntu userns policy ==='
-            sysctl kernel.apparmor_restrict_unprivileged_userns 2>&1 || true
-            sysctl kernel.unprivileged_userns_clone 2>&1 || true
-            sysctl user.max_user_namespaces 2>&1 || true
-            echo
-            echo '=== kernel ==='
-            uname -a
-          } | tee "${out}/namespace-environment.txt"
-
-          curl -fsS --unix-socket /var/run/docker.sock http://localhost/v1.55/info \
-            > "${out}/docker-info.json"
-          python3 - "${out}/docker-info.json" <<'PY'
-          import json, sys
-          p = sys.argv[1]
-          d = json.load(open(p, encoding='utf-8'))
-          keys = [
-              'ServerVersion', 'KernelVersion', 'OperatingSystem', 'OSType',
-              'Architecture', 'DockerRootDir', 'Name', 'CgroupDriver',
-              'CgroupVersion', 'SecurityOptions'
-          ]
-          for k in keys:
-              print(f'{k}={d.get(k)!r}')
-          PY
-          python3 - "${out}/docker-info.json" > "${out}/docker-info-summary.txt" <<'PY'
-          import json, sys
-          d = json.load(open(sys.argv[1], encoding='utf-8'))
-          for k in ('ServerVersion','KernelVersion','OperatingSystem','OSType','Architecture','DockerRootDir','Name','CgroupDriver','CgroupVersion','SecurityOptions'):
-              print(f'{k}={d.get(k)!r}')
-          PY
-          cat "${out}/docker-info-summary.txt"
-
-          hostname_id="$(cat /etc/hostname)"
-          if curl -fsS --unix-socket /var/run/docker.sock \
-              "http://localhost/v1.55/containers/${hostname_id}/json" \
-              > "${out}/job-container-inspect.json"; then
-            python3 - "${out}/job-container-inspect.json" > "${out}/job-container-security.txt" <<'PY'
-          import json, sys
-          d = json.load(open(sys.argv[1], encoding='utf-8'))
-          hc = d.get('HostConfig', {})
-          print(f"AppArmorProfile={d.get('AppArmorProfile')!r}")
-          print(f"UsernsMode={hc.get('UsernsMode')!r}")
-          print(f"Privileged={hc.get('Privileged')!r}")
-          print(f"CapAdd={hc.get('CapAdd')!r}")
-          print(f"CapDrop={hc.get('CapDrop')!r}")
-          print(f"SecurityOpt={hc.get('SecurityOpt')!r}")
-          PY
-            cat "${out}/job-container-security.txt"
-          else
-            echo 'container inspect unavailable by hostname' | tee "${out}/job-container-security.txt"
-          fi
+          } | tee "${out}/comparison-environment.txt"
 
           set +e
           sudo -u ubuntu -H unshare --user --map-root-user true \
@@ -164,6 +93,7 @@ jobs:
           set -e
 
           {
+            echo 'AURORA_KSQ_NS_DIAG_APPARMOR=unconfined'
             echo "AURORA_KSQ_NS_DIAG_MAP_ROOT_RC=${rc_map_root}"
             echo "AURORA_KSQ_NS_DIAG_MAP_AUTO_RC=${rc_map_auto}"
             echo "AURORA_KSQ_NS_DIAG_FULL_RC=${rc_full}"
@@ -175,13 +105,13 @@ jobs:
           cat "${out}/test-map-auto.stderr"
           echo '--- full stderr ---'
           cat "${out}/test-full.stderr"
-          echo 'AURORA_KSQ_NAMESPACE_DIAGNOSTIC_COMPLETE'
+          echo 'AURORA_KSQ_NAMESPACE_APPARMOR_COMPARISON_COMPLETE'
 
       - name: Preserve namespace diagnostic
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: aurora-ksq-self-hosted-namespace-diagnostic
+          name: aurora-ksq-self-hosted-namespace-apparmor-unconfined
           path: build/ksq-self-hosted-namespace-diagnostic/
           if-no-files-found: error
           retention-days: 30
