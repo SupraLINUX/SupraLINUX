@@ -13,6 +13,8 @@ These scripts implement the current Aurora validation layers.
 - `fetch-prepare-ksq-1-source.sh` fetches the exact certified source input and emits the prepared source package plus source-preparation evidence, including the exact applied adaptation IDs/count and certified Build-Depends override count.
 - `prepare-ksq-1-build-environment.sh` creates the clean Resolute amd64 buildd tarball from the pinned Ubuntu snapshot.
 - `prepare-ksq-1-runner.sh` revalidates KSQ-0, source selections and the pinned build environment on each fresh checkpoint runner.
+- `apparmor/supralinux-ksq-unshare` is the dedicated self-hosted KSQ container AppArmor profile under active qualification. It derives from Docker's default container policy and currently permits only the `make-rprivate /` propagation operation required by util-linux `unshare --mount`; arbitrary mounts remain denied by default.
+- `install-ksq-apparmor-profile.sh` installs and loads that profile on the dedicated self-hosted runner host and verifies it is in enforce mode. It is a host-administration helper, not a product installation script.
 - `build-ksq-1-bootstrap.sh` builds the first four certified DAG nodes and retains relocatable bootstrap evidence.
 - `build-ksq-1-range.sh START END` builds an ordered KSQ-1 DAG range with `sbuild --chroot-mode=unshare`, no build-time network, and accumulated candidate DEBs supplied through `--extra-package`. It enables `--resolve-alternatives` because Debian Build-Depends semantics include valid `A | B` alternatives. The APT uninstallable-dependency explainer is enabled for diagnosis. On failure it records the first failed source/order, `.build`, `.buildinfo`, `.changes`, any partial DEB/DDEB output, hashes and the successful DEBs already produced in that checkpoint before exiting non-zero.
 - `validate-ksq-1-kwallet-pam.sh` validates the rebuilt KWallet PAM binary dependency metadata and installs the candidate packages in a disposable Resolute environment before invoking the PAM registration contract.
@@ -31,7 +33,7 @@ Syntax Highlighting reproducibility has three evidence layers:
 
 Node-40 investigation established why alternative resolution is mandatory: `kf6-kfilemetadata` declares `libpostproc-dev | hello`; the original sbuild invocation considered only the first alternative and failed because `libpostproc-dev` is unavailable in the pinned Resolute archive. A dedicated validation proved that enabling normal alternative resolution selects `hello` and builds the package without changing package sources or widening the Ubuntu platform boundary.
 
-Canonical KSQ-0 evidence is documented in `docs/validation/AURORA_KSQ_0_ACCEPTANCE.md`, current KSQ-1 status in `docs/KDE_STACK_QUALIFICATION.md`, and override ownership in `docs/KDE_STACK_OVERRIDES.md`.
+Canonical KSQ-0 evidence is documented in `docs/validation/AURORA_KSQ_0_ACCEPTANCE.md`, current KSQ-1 status in `docs/KDE_STACK_QUALIFICATION.md`, self-hosted runner namespace qualification in `docs/validation/AURORA_KSQ_1_SELF_HOSTED_RUNNER.md`, and override ownership in `docs/KDE_STACK_OVERRIDES.md`.
 
 ## Historical/current product validation helpers
 
