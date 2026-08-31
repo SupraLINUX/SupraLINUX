@@ -1,4 +1,4 @@
-name: Aurora KSQ-1 self-hosted uidmap diagnostic
+name: Aurora KSQ-1 self-hosted uidmap root-cause diagnostic
 
 on:
   push:
@@ -12,8 +12,8 @@ permissions:
   contents: read
 
 jobs:
-  uidmap-diagnostic:
-    name: Isolate newuidmap privilege acquisition
+  uidmap-root-cause:
+    name: Prove stock setuid vs filecap uidmap behavior
     runs-on: [self-hosted, Linux, X64, supralinux-ksq, docker]
     timeout-minutes: 20
     container:
@@ -24,11 +24,11 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Run uidmap privilege diagnostic
+      - name: Run final uidmap root-cause controls
         shell: bash
         run: |
           set -euo pipefail
-          out="${GITHUB_WORKSPACE}/build/ksq-self-hosted-uidmap-diagnostic"
+          out="${GITHUB_WORKSPACE}/build/ksq-self-hosted-uidmap-root-cause"
           mkdir -p "${out}"
 
           . tests/kde-stack/apt-metadata-snapshot.env
@@ -55,7 +55,7 @@ jobs:
             >"${out}/apt-bootstrap-ca.log" 2>&1
           rm -rf /var/lib/apt/lists/*
           apt-get update >"${out}/apt-verified-update.log" 2>&1
-          apt-get install -y --no-install-recommends sudo uidmap libcap2-bin util-linux python3 \
+          apt-get install -y --no-install-recommends sudo uidmap libcap2-bin util-linux binutils \
             >"${out}/apt-diagnostic-toolchain.log" 2>&1
 
           printf 'ubuntu ALL=(ALL) NOPASSWD:ALL\n' > /etc/sudoers.d/ubuntu-ksq
@@ -64,93 +64,100 @@ jobs:
           grep -q '^ubuntu:' /etc/subgid || echo 'ubuntu:100000:65536' >> /etc/subgid
 
           {
-            echo '=== environment ==='
+            echo '=== exact package and binary evidence ==='
+            dpkg-query -W -f='${Package} ${Version}\n' uidmap libcap2 2>/dev/null || true
+            stat -c '%A %a %U %G %u %g %n' /usr/bin/newuidmap /usr/bin/newgidmap
+            echo '--- getcap stock ---'
+            getcap /usr/bin/newuidmap /usr/bin/newgidmap || true
+            echo '--- dynamic dependencies stock ---'
+            ldd /usr/bin/newuidmap || true
+            echo '--- cap symbols stock ---'
+            readelf -Ws /usr/bin/newuidmap | grep -E '(^|[[:space:]])(capset|prctl|seteuid)(@|$)' || true
+            echo '--- upstream libcap-path diagnostic strings stock ---'
+            strings /usr/bin/newuidmap | grep -E 'Could not prctl\(PR_SET_KEEPCAPS\)|Could not set caps|Could not seteuid' || true
+            echo '--- runtime policy ---'
             printf 'apparmor='; cat /proc/self/attr/current || true
             grep -E '^(Cap(Inh|Prm|Eff|Bnd|Amb)|NoNewPrivs|Seccomp):' /proc/self/status
-            stat -c '%A %a %U %G %u %g %n' /usr/bin/newuidmap /usr/bin/newgidmap
-            getcap /usr/bin/newuidmap /usr/bin/newgidmap || true
-            grep '^ubuntu:' /etc/subuid
-            grep '^ubuntu:' /etc/subgid
             sysctl kernel.apparmor_restrict_unprivileged_userns 2>&1 || true
             cat /proc/self/uid_map
-            cat /proc/self/gid_map
-          } | tee "${out}/environment.txt"
+          } | tee "${out}/environment-and-binary.txt"
 
-          # Probe whether an ordinary setuid-root ELF really gains euid 0 and
-          # effective capabilities inside this exact Docker job container.
-          cp /usr/bin/python3 /tmp/python3-ksq-suid
-          chown root:root /tmp/python3-ksq-suid
-          chmod 4755 /tmp/python3-ksq-suid
-          set +e
-          sudo -u ubuntu -H /tmp/python3-ksq-suid -c \
-            'import os; print(f"uid={os.getuid()} euid={os.geteuid()} gid={os.getgid()} egid={os.getegid()}"); print("".join(x for x in open("/proc/self/status") if x.startswith(("CapInh:","CapPrm:","CapEff:","CapBnd:","CapAmb:","NoNewPrivs:","Seccomp:"))))' \
-            >"${out}/setuid-probe.stdout" 2>"${out}/setuid-probe.stderr"
-          rc_setuid_probe=$?
-          set -e
-          cat "${out}/setuid-probe.stdout" || true
-          cat "${out}/setuid-probe.stderr" || true
-
+          CHILD_PID=''
+          CHILD_LAUNCHER=''
           start_unmapped_child() {
             local pidfile="$1"
             rm -f "${pidfile}"
             sudo -u ubuntu -H unshare --user --fork sh -c \
-              'echo $$ > "$1"; exec sleep 30' sh "${pidfile}" &
-            local launcher=$!
+              'echo $$ > "$1"; exec sleep 300' sh "${pidfile}" &
+            CHILD_LAUNCHER=$!
             for _ in $(seq 1 100); do
-              [[ -s "${pidfile}" ]] && break
+              if [[ -s "${pidfile}" ]]; then
+                CHILD_PID="$(cat "${pidfile}")"
+                [[ -d "/proc/${CHILD_PID}" ]] && return 0
+              fi
               sleep 0.05
             done
-            if [[ ! -s "${pidfile}" ]]; then
-              kill "${launcher}" 2>/dev/null || true
-              wait "${launcher}" 2>/dev/null || true
-              return 1
-            fi
-            cat "${pidfile}"
+            return 1
           }
+          stop_unmapped_child() {
+            [[ -n "${CHILD_PID}" ]] && kill "${CHILD_PID}" 2>/dev/null || true
+            [[ -n "${CHILD_LAUNCHER}" ]] && kill "${CHILD_LAUNCHER}" 2>/dev/null || true
+            CHILD_PID=''
+            CHILD_LAUNCHER=''
+          }
+          trap stop_unmapped_child EXIT
 
-          # Control A: root with CAP_SETUID in the parent namespace writes the
-          # same multi-line uid_map directly, without newuidmap.
+          # A: root inside the Docker parent namespace lacks CAP_SYS_ADMIN.
+          # It is therefore intentionally the wrong euid to open uid_map for
+          # a child user namespace owned by uid 1000.
+          start_unmapped_child /tmp/ksq-root-direct.pid
+          {
+            stat -c 'target_proc_owner uid=%u gid=%g mode=%a' "/proc/${CHILD_PID}"
+            cat "/proc/${CHILD_PID}/status" | grep -E '^(Uid|Gid):'
+          } >"${out}/target-before-root-direct.txt"
           set +e
-          pid_direct="$(start_unmapped_child /tmp/ksq-direct.pid)"
-          rc_start_direct=$?
-          if [[ ${rc_start_direct} -eq 0 ]]; then
-            printf '0 1000 1\n1 100000 65536\n' >"/proc/${pid_direct}/uid_map" 2>"${out}/direct-root-map.stderr"
-            rc_direct_root=$?
-            cat "/proc/${pid_direct}/uid_map" >"${out}/direct-root-map.txt" 2>/dev/null || true
-            kill "${pid_direct}" 2>/dev/null || true
-          else
-            rc_direct_root=125
-            echo 'failed to start unmapped child' >"${out}/direct-root-map.stderr"
-          fi
+          { printf '0 1000 1\n1 100000 65536\n' >"/proc/${CHILD_PID}/uid_map"; } \
+            2>"${out}/root-direct.stderr"
+          rc_root_direct=$?
           set -e
+          stop_unmapped_child
 
-          # Control B: reproduce the delegated helper path explicitly.
+          # B: stock Ubuntu uidmap is setuid-root.  With this package build it
+          # does not contain shadow 4.17.4's libcap/PR_SET_KEEPCAPS path, so it
+          # opens uid_map as euid 0 and hits the same kernel permission check.
+          start_unmapped_child /tmp/ksq-stock-helper.pid
           set +e
-          pid_helper="$(start_unmapped_child /tmp/ksq-helper.pid)"
-          rc_start_helper=$?
-          if [[ ${rc_start_helper} -eq 0 ]]; then
-            sudo -u ubuntu -H /usr/bin/newuidmap "${pid_helper}" 0 1000 1 1 100000 65536 \
-              >"${out}/newuidmap-setuid.stdout" 2>"${out}/newuidmap-setuid.stderr"
-            rc_newuidmap_setuid=$?
-            cat "/proc/${pid_helper}/uid_map" >"${out}/newuidmap-setuid-map.txt" 2>/dev/null || true
-            kill "${pid_helper}" 2>/dev/null || true
-          else
-            rc_newuidmap_setuid=125
-            echo 'failed to start unmapped child' >"${out}/newuidmap-setuid.stderr"
-          fi
+          sudo -u ubuntu -H /usr/bin/newuidmap "${CHILD_PID}" 0 1000 1 1 100000 65536 \
+            >"${out}/stock-newuidmap.stdout" 2>"${out}/stock-newuidmap.stderr"
+          rc_stock_helper=$?
           set -e
+          stop_unmapped_child
 
-          # Control C: replace setuid elevation with the precise capabilities
-          # required by the uidmap helpers, still inside the ephemeral container.
+          # C: use shadow's supported capability privilege model precisely:
+          # caller remains euid 1000, while helper receives only CAP_SETUID /
+          # CAP_SETGID in the parent namespace.
           chmod u-s /usr/bin/newuidmap /usr/bin/newgidmap
           setcap cap_setuid=ep /usr/bin/newuidmap
           setcap cap_setgid=ep /usr/bin/newgidmap
           {
-            echo '=== uidmap helpers after filecap conversion ==='
             stat -c '%A %a %U %G %u %g %n' /usr/bin/newuidmap /usr/bin/newgidmap
             getcap /usr/bin/newuidmap /usr/bin/newgidmap || true
           } | tee "${out}/filecap-helper-state.txt"
 
+          start_unmapped_child /tmp/ksq-filecap-helper.pid
+          set +e
+          sudo -u ubuntu -H /usr/bin/newuidmap "${CHILD_PID}" 0 1000 1 1 100000 65536 \
+            >"${out}/filecap-newuidmap.stdout" 2>"${out}/filecap-newuidmap.stderr"
+          rc_filecap_helper=$?
+          if [[ ${rc_filecap_helper} -eq 0 ]]; then
+            cat "/proc/${CHILD_PID}/uid_map" >"${out}/filecap-newuidmap-map.txt"
+          fi
+          set -e
+          stop_unmapped_child
+
+          # D: util-linux's documented auto mapping must now cross the original
+          # barrier.  The full namespace request is recorded separately to prove
+          # whether the next failure is mount/AppArmor rather than uidmap.
           set +e
           sudo -u ubuntu -H unshare --user \
             --map-auto --map-user=65536 --map-group=65536 --keep-caps true \
@@ -165,28 +172,35 @@ jobs:
           set -e
 
           {
-            echo "AURORA_KSQ_UIDMAP_DIAG_SETUID_PROBE_RC=${rc_setuid_probe}"
-            echo "AURORA_KSQ_UIDMAP_DIAG_DIRECT_ROOT_RC=${rc_direct_root}"
-            echo "AURORA_KSQ_UIDMAP_DIAG_SETUID_HELPER_RC=${rc_newuidmap_setuid}"
-            echo "AURORA_KSQ_UIDMAP_DIAG_FILECAP_MAP_AUTO_RC=${rc_filecap_map_auto}"
-            echo "AURORA_KSQ_UIDMAP_DIAG_FILECAP_FULL_RC=${rc_filecap_full}"
+            echo "AURORA_KSQ_UIDMAP_ROOT_DIRECT_RC=${rc_root_direct}"
+            echo "AURORA_KSQ_UIDMAP_STOCK_SETUID_RC=${rc_stock_helper}"
+            echo "AURORA_KSQ_UIDMAP_FILECAP_HELPER_RC=${rc_filecap_helper}"
+            echo "AURORA_KSQ_UIDMAP_FILECAP_MAP_AUTO_RC=${rc_filecap_map_auto}"
+            echo "AURORA_KSQ_UIDMAP_FILECAP_FULL_RC=${rc_filecap_full}"
           } | tee "${out}/results.env"
 
-          echo '--- direct root map stderr ---'
-          cat "${out}/direct-root-map.stderr" 2>/dev/null || true
-          echo '--- newuidmap setuid stderr ---'
-          cat "${out}/newuidmap-setuid.stderr" 2>/dev/null || true
+          echo '--- root direct stderr ---'
+          cat "${out}/root-direct.stderr" || true
+          echo '--- stock setuid newuidmap stderr ---'
+          cat "${out}/stock-newuidmap.stderr" || true
+          echo '--- filecap newuidmap stderr ---'
+          cat "${out}/filecap-newuidmap.stderr" || true
           echo '--- filecap map-auto stderr ---'
-          cat "${out}/filecap-map-auto.stderr" 2>/dev/null || true
+          cat "${out}/filecap-map-auto.stderr" || true
           echo '--- filecap full stderr ---'
-          cat "${out}/filecap-full.stderr" 2>/dev/null || true
-          echo 'AURORA_KSQ_UIDMAP_PRIVILEGE_DIAGNOSTIC_COMPLETE'
+          cat "${out}/filecap-full.stderr" || true
 
-      - name: Preserve uidmap diagnostic
+          [[ ${rc_root_direct} -ne 0 ]]
+          [[ ${rc_stock_helper} -ne 0 ]]
+          [[ ${rc_filecap_helper} -eq 0 ]]
+          [[ ${rc_filecap_map_auto} -eq 0 ]]
+          echo 'AURORA_KSQ_UIDMAP_ROOT_CAUSE_PROVEN'
+
+      - name: Preserve uidmap root-cause evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: aurora-ksq-self-hosted-uidmap-diagnostic
-          path: build/ksq-self-hosted-uidmap-diagnostic/
+          name: aurora-ksq-self-hosted-uidmap-root-cause
+          path: build/ksq-self-hosted-uidmap-root-cause/
           if-no-files-found: error
           retention-days: 30
