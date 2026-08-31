@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   sbuild-unshare-contract:
-    name: Inspect Resolute sbuild-usernsexec mount contract
+    name: Inspect Resolute sbuild unshare invocation contract
     runs-on: [self-hosted, Linux, X64, supralinux-ksq, docker]
     timeout-minutes: 20
     container:
@@ -68,17 +68,37 @@ jobs:
           sha256sum "${helper}" | tee "${out}/sbuild-usernsexec.sha256"
           cp -a "${helper}" "${out}/sbuild-usernsexec"
 
-          echo '=== failure-line context 330-430 ==='
-          nl -ba "${helper}" | sed -n '330,430p' | tee "${out}/lines-330-430.txt"
+          chroot_module="$(dpkg -L libsbuild-perl | grep -E '/Sbuild/ChrootUnshare\.pm$' | head -n1)"
+          session_module="$(dpkg -L libsbuild-perl | grep -E '/Sbuild/ChrootUnshare/Session\.pm$' | head -n1 || true)"
+          [[ -n "${chroot_module}" && -f "${chroot_module}" ]]
+          printf 'AURORA_KSQ_SBUILD_CHROOT_UNSHARE_MODULE=%s\n' "${chroot_module}" | tee "${out}/module-path.env"
+          sha256sum "${chroot_module}" | tee "${out}/ChrootUnshare.pm.sha256"
+          cp -a "${chroot_module}" "${out}/ChrootUnshare.pm"
+          if [[ -n "${session_module}" && -f "${session_module}" ]]; then
+            printf 'AURORA_KSQ_SBUILD_CHROOT_UNSHARE_SESSION_MODULE=%s\n' "${session_module}" | tee -a "${out}/module-path.env"
+            sha256sum "${session_module}" | tee "${out}/ChrootUnshare-Session.pm.sha256"
+            cp -a "${session_module}" "${out}/ChrootUnshare-Session.pm"
+          fi
 
-          echo '=== mount/umount/system calls across helper ==='
+          echo '=== helper mount contract ==='
           grep -nE "mount|umount|pivot_root|MS_(BIND|REC|PRIVATE|SLAVE)|system\(" "${helper}" \
-            | tee "${out}/mount-related-lines.txt"
+            | tee "${out}/helper-mount-related-lines.txt"
 
-          echo '=== setup-related context 430-620 ==='
-          nl -ba "${helper}" | sed -n '430,620p' | tee "${out}/lines-430-620.txt"
+          echo '=== ChrootUnshare invocation construction ==='
+          grep -nE 'usernsexec|pivotroot|sharedshm|/dev/shm|bind|mount|UNSHARE|SBUILD_ENABLE_PIVOT_ROOT|exec|command|run_command' \
+            "${chroot_module}" | tee "${out}/chroot-unshare-relevant-lines.txt"
 
-          echo 'AURORA_KSQ_SBUILD_UNSHARE_CONTRACT_CAPTURED'
+          echo '=== ChrootUnshare complete numbered source ==='
+          nl -ba "${chroot_module}" | tee "${out}/ChrootUnshare-numbered.txt"
+
+          if [[ -n "${session_module}" && -f "${session_module}" ]]; then
+            echo '=== Session invocation construction ==='
+            grep -nE 'usernsexec|pivotroot|sharedshm|/dev/shm|bind|mount|UNSHARE|SBUILD_ENABLE_PIVOT_ROOT|exec|command|run_command' \
+              "${session_module}" | tee "${out}/session-relevant-lines.txt" || true
+            nl -ba "${session_module}" | tee "${out}/Session-numbered.txt"
+          fi
+
+          echo 'AURORA_KSQ_SBUILD_UNSHARE_INVOCATION_CONTRACT_CAPTURED'
 
       - name: Preserve sbuild unshare contract evidence
         if: always()
