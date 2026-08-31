@@ -13,8 +13,14 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
   exit 1
 }
 
-sudo apt-get update
-sudo apt-get install -y --no-install-recommends \
+# Snapshot service failures must never degrade into a partial package index.
+# Acquire::Retries handles short transport failures; Error-Mode=any makes an
+# update fail closed if any index still cannot be fetched after those retries.
+apt_acquire=(
+  -o Acquire::Retries=5
+)
+sudo apt-get "${apt_acquire[@]}" -o APT::Update::Error-Mode=any update
+sudo apt-get "${apt_acquire[@]}" install -y --no-install-recommends \
   sbuild mmdebstrap uidmap libcap2-bin zstd devscripts dpkg-dev apt-utils \
   ca-certificates ubuntu-keyring gzip
 
