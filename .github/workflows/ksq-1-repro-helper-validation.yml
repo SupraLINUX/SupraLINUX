@@ -48,6 +48,8 @@ jobs:
           grep -Fq ".github/ksq-1-acceptance-runs.env" .github/workflows/ksq-1-technical-acceptance.yml
           ! grep -Fq "tests/kde-stack/ksq-1-repro-runs.env" .github/workflows/ksq-1-reproducibility.yml
           ! grep -Fq "tests/kde-stack/ksq-1-acceptance-runs.env" .github/workflows/ksq-1-technical-acceptance.yml
+          grep -Fq ".github/ksq-1-acceptance-runs.env" scripts/ci/validate-ksq-1-technical-acceptance.py
+          ! grep -Fq "tests/kde-stack/ksq-1-acceptance-runs.env" scripts/ci/validate-ksq-1-technical-acceptance.py
           grep -Fq ".github/ksq-1-tail-resume.env" .github/workflows/ksq-1-tail-resume.yml
           grep -Fq ".github/ksq-1-tail-resume-candidate.env" .github/workflows/ksq-1-tail-resume-candidate.yml
           grep -Fq "order: [29, 68, 81, 99, 100, 101]" .github/workflows/ksq-1-reproducibility.yml
