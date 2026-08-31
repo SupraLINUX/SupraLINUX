@@ -7,25 +7,35 @@
 # SupraLINUX delta:
 #   docker-default contains an unconditional `deny mount,` rule. KSQ-1 needs
 #   nested user+mount namespaces for mmdebstrap --mode=unshare and
-#   sbuild --chroot-mode=unshare. The rules below are limited to the mount
-#   operations performed by util-linux unshare and mmdebstrap 1.5.7 setup_mounts
-#   for the dedicated temporary root under /tmp/mmdebstrap.*/.
+#   sbuild --chroot-mode=unshare. The rules below are restricted to operations
+#   observed in the pinned Resolute toolchain and to its dedicated temporary
+#   roots under /tmp/mmdebstrap.*/ and /tmp/tmp.sbuild.*/.
 #
 # Proven requirements:
 #   - util-linux unshare recursively makes / private;
-#   - mmdebstrap bind-mounts the canonical character devices when mknod is not
-#     available in unshare mode;
-#   - mmdebstrap bind-mounts /dev/shm when present;
-#   - mmdebstrap creates a new devpts instance below the temporary root;
-#   - mmdebstrap recursively bind-mounts /sys because networking remains shared;
-#   - mmdebstrap mounts proc, with a documented rbind + rslave fallback.
+#   - mmdebstrap 1.5.7 mounts canonical devices, devpts, /sys and /proc below
+#     /tmp/mmdebstrap.*/ (canonical mmdebstrap PASS: run 33424405355 attempt 2);
+#   - sbuild 0.91.2ubuntu3 uses /usr/libexec/sbuild-usernsexec; the exact helper
+#     was captured with SHA-256
+#     218821c4a8892c60847be58c80e4d1fb02702b17ac6f7dce412faadecd8afc0a;
+#   - sbuild smoke run 33431673769 proved its first denied operation is the
+#     helper's line 374: `mount -o rbind $rootdir $rootdir` for
+#     /tmp/tmp.sbuild.*/;
+#   - that same installed helper then mounts only the canonical /dev devices,
+#     devpts, tmpfs /dev/shm, rbind /sys, tmpfs /sys/kernel and proc for the
+#     chroot-session setup used by this path;
+#   - SBUILD_ENABLE_PIVOT_ROOT was explicitly unset in the smoke environment,
+#     so no pivot_root permission is granted;
+#   - the Resolute sbuild default UNSHARE_BIND_MOUNTS is empty and SupraLINUX
+#     does not configure extra unshare bind mounts here, so no arbitrary rbind
+#     source rule is granted.
 #
 # Security scope:
 #   This profile is for the dedicated SupraLINUX KSQ GitHub Actions job container.
 #   It does not grant CAP_SYS_ADMIN to the parent Docker container, does not use
 #   privileged mode, and does not disable Ubuntu's unprivileged-userns policy.
-#   Mount targets are restricted to mmdebstrap's temporary root except for the
-#   single propagation change on / required when entering the nested mountns.
+#   Mount targets are restricted to the two tool-owned temporary-root patterns
+#   except for the single propagation change on / required by util-linux unshare.
 #
 # Removal condition:
 #   Remove this override when Docker's default profile permits the exact
@@ -79,20 +89,31 @@ profile supralinux-ksq-unshare flags=(attach_disconnected,mediate_deleted) {
   mount options=(rw,bind) /dev/zero -> /tmp/mmdebstrap.*/dev/zero,
   mount options=(rw,bind) /dev/shm/ -> /tmp/mmdebstrap.*/dev/shm/,
 
-  # 3. mmdebstrap must create a private devpts instance for the target instead
-  #    of exposing the host/container's existing /dev/pts instance.
+  # 3. mmdebstrap private devpts, /sys and /proc setup.
   mount fstype=devpts -> /tmp/mmdebstrap.*/dev/pts/,
-
-  # 4. In unshare mode mmdebstrap recursively bind-mounts /sys because it keeps
-  #    the network namespace shared and therefore cannot mount a new sysfs.
   mount options=(rw,rbind) /sys/ -> /tmp/mmdebstrap.*/sys/,
-
-  # 5. Prefer a fresh proc filesystem. If that kernel operation fails,
-  #    mmdebstrap falls back to rbind /proc and makes the result recursively
-  #    slave so changes below the target do not propagate outward.
   mount fstype=proc -> /tmp/mmdebstrap.*/proc/,
   mount options=(rw,rbind) /proc/ -> /tmp/mmdebstrap.*/proc/,
   mount options=(rw,make-rslave) -> /tmp/mmdebstrap.*/proc/,
+
+  # 4. sbuild 0.91.2ubuntu3 /usr/libexec/sbuild-usernsexec session setup.
+  #    First make the unpack root a mountpoint (the exact operation denied in
+  #    smoke run 33431673769), then populate only its standard virtual trees.
+  mount options=(rw,rbind) /tmp/tmp.sbuild.*/ -> /tmp/tmp.sbuild.*/,
+
+  mount options=(rw,bind) /dev/console -> /tmp/tmp.sbuild.*/dev/console,
+  mount options=(rw,bind) /dev/full -> /tmp/tmp.sbuild.*/dev/full,
+  mount options=(rw,bind) /dev/null -> /tmp/tmp.sbuild.*/dev/null,
+  mount options=(rw,bind) /dev/random -> /tmp/tmp.sbuild.*/dev/random,
+  mount options=(rw,bind) /dev/tty -> /tmp/tmp.sbuild.*/dev/tty,
+  mount options=(rw,bind) /dev/urandom -> /tmp/tmp.sbuild.*/dev/urandom,
+  mount options=(rw,bind) /dev/zero -> /tmp/tmp.sbuild.*/dev/zero,
+
+  mount fstype=devpts -> /tmp/tmp.sbuild.*/dev/pts/,
+  mount fstype=tmpfs -> /tmp/tmp.sbuild.*/dev/shm/,
+  mount options=(rw,rbind) /sys/ -> /tmp/tmp.sbuild.*/sys/,
+  mount fstype=tmpfs -> /tmp/tmp.sbuild.*/sys/kernel/,
+  mount fstype=proc -> /tmp/tmp.sbuild.*/proc/,
 
   # Keep Docker's protected /sys policy.
   deny /sys/[^f]*/** wklx,
