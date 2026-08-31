@@ -1,9 +1,18 @@
-Runner host facts observed before qualification:
-Docker Engine 28.0.0
+Runner host facts at qualification closure:
+Host OS Ubuntu 24.04.4 LTS (noble), linux/amd64
+Docker Engine 29.7.2
+Docker experimental=false
+containerd 2.3.4
+runc 1.4.3
 storage-driver overlay2
 cgroup-driver systemd
 cgroup-version 2
 host CPUs 4
 host reported RAM 8184340480 bytes
 Docker access available to runner account
+Actions Runner 2.336.0
+Actions Runner upstream global latest 2.337.0 at closure, subject to GitHub progressive rollout
+Repository-effective runner version observed: 2.336.0; clean reconnect produced no auto-update
 Pinned job container ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b
+ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER=true
+Canonical smoke run 33410973670 attempt 2 job 99552220167 result PASS
