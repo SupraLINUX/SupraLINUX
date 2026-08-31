@@ -75,6 +75,22 @@ def main() -> int:
         "reproducibility provenance",
     )
 
+    provenance = read_env(OUT / "run-provenance-status.env")
+    require(
+        provenance,
+        {
+            "AURORA_KSQ_1_RUN_PROVENANCE_STATUS": "PASS",
+            "AURORA_KSQ_1_RUN_PROVENANCE_RUNS": "5",
+            "AURORA_KSQ_1_RUN_PROVENANCE_ARTIFACTS": "33",
+            "AURORA_KSQ_1_RUN_PROVENANCE_ARTIFACT_DIGESTS": "sha256",
+            "AURORA_KSQ_1_RUN_PROVENANCE_EVENT": "push",
+        },
+        "exact run provenance",
+    )
+    for name in ("run-provenance.json", "run-provenance.sha256"):
+        if not (OUT / name).is_file():
+            fail(f"exact run provenance: missing {name}")
+
     closure = read_env(KSQ0 / "closure-status.env")
     require(
         closure,
