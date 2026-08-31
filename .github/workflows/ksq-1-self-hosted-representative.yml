@@ -71,6 +71,12 @@ jobs:
           setcap cap_setuid=ep /usr/bin/newuidmap
           setcap cap_setgid=ep /usr/bin/newgidmap
 
+          # Match the representative workflow's build-user ownership contract.
+          # Checkout and diagnostic setup execute as container root, but all KSQ
+          # builder scripts execute as the image-native ubuntu user (uid 1000).
+          ubuntu_gid="$(id -g ubuntu)"
+          chown -R ubuntu:"${ubuntu_gid}" "${GITHUB_WORKSPACE}"
+
           {
             echo '=== mmdebstrap diagnostic environment ==='
             printf 'apparmor='; cat /proc/self/attr/current
@@ -79,6 +85,8 @@ jobs:
             getcap /usr/bin/newuidmap /usr/bin/newgidmap
             grep '^ubuntu:' /etc/subuid
             grep '^ubuntu:' /etc/subgid
+            stat -c 'workspace=%U:%G:%u:%g:%a %n' "${GITHUB_WORKSPACE}"
+            stat -c 'build=%U:%G:%u:%g:%a %n' "${GITHUB_WORKSPACE}/build"
           } | tee "${out}/environment.txt"
 
           # Re-prove the exact namespace precondition in the same container
