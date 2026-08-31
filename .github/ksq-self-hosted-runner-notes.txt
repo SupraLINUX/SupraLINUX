@@ -1,0 +1,9 @@
+Runner host facts observed before qualification:
+Docker Engine 28.0.0
+storage-driver overlay2
+cgroup-driver systemd
+cgroup-version 2
+host CPUs 4
+host reported RAM 8184340480 bytes
+Docker access available to runner account
+Pinned job container ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b
