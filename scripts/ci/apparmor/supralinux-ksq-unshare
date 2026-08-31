@@ -1,0 +1,73 @@
+# SupraLINUX KSQ self-hosted build-container AppArmor profile.
+#
+# Origin:
+#   Derived from the current Moby/Docker docker-default AppArmor template.
+#   https://github.com/moby/profiles/blob/main/apparmor/template.go
+#
+# SupraLINUX delta:
+#   docker-default contains an unconditional `deny mount,` rule. KSQ-1 needs
+#   util-linux unshare(1) to create a mount namespace; unshare recursively
+#   changes propagation of / to private (equivalent to `mount --make-rprivate /`).
+#   This profile removes the blanket mount deny and permits ONLY that propagation
+#   operation. All other mount operations remain denied by AppArmor's default-deny
+#   behavior until a concrete KSQ-1/mmdebstrap operation proves that another rule
+#   is required.
+#
+# Security scope:
+#   This profile is for the dedicated SupraLINUX KSQ GitHub Actions job container.
+#   It does not grant CAP_SYS_ADMIN to the parent Docker container, does not use
+#   privileged mode, and does not disable Ubuntu's unprivileged-userns policy.
+#
+# Removal condition:
+#   Remove this override when the Docker default profile permits the exact
+#   unprivileged mount-namespace operation required by the certified KSQ build
+#   path, or when the KSQ build architecture no longer requires nested unshare.
+
+abi <abi/3.0>,
+#include <tunables/global>
+
+profile supralinux-ksq-unshare flags=(attach_disconnected,mediate_deleted) {
+  # Match the compatibility envelope of Docker's generated default profile.
+  #include <abstractions/base>
+
+  network,
+  deny network alg,
+  deny network vsock,
+
+  capability,
+  file,
+  umount,
+
+  # Host / runtime processes may signal the container.
+  signal (receive) peer=unconfined,
+  signal (receive) peer=runc,
+  signal (receive) peer=crun,
+
+  # Processes in this profile may signal one another.
+  signal (send,receive) peer=supralinux-ksq-unshare,
+
+  # Keep Docker's protected /proc policy.
+  deny @{PROC}/* w,
+  deny @{PROC}/{[^1-9/],[^1-9/][^0-9/],[^1-9s/][^0-9y/][^0-9s/],[^1-9/][^0-9/][^0-9/][^0-9/]*}/** w,
+  deny @{PROC}/sys/[^k]** w,
+  deny @{PROC}/sys/kernel/{?,??,[^s][^h][^m]**} w,
+  deny @{PROC}/sysrq-trigger rwklx,
+  deny @{PROC}/kcore rwklx,
+
+  # SupraLINUX KSQ delta from docker-default:
+  # util-linux unshare --mount defaults to recursively making / private.
+  # This is MS_PRIVATE|MS_REC only; it is not permission for arbitrary mounts.
+  mount options=(rw,make-rprivate) -> /,
+
+  # Keep Docker's protected /sys policy.
+  deny /sys/[^f]*/** wklx,
+  deny /sys/f[^s]*/** wklx,
+  deny /sys/fs/[^c]*/** wklx,
+  deny /sys/fs/c[^g]*/** wklx,
+  deny /sys/firmware/** rwklx,
+  deny /sys/devices/virtual/powercap/** rwklx,
+  deny /sys/kernel/security/** rwklx,
+
+  # Same-container tracing only, subject to the remaining kernel controls.
+  ptrace (trace,tracedby,read,readby) peer=supralinux-ksq-unshare,
+}
