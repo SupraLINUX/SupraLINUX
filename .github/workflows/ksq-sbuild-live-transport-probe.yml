@@ -1,0 +1,175 @@
+name: Aurora KSQ-1 sbuild live transport probe
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-sbuild-live-transport-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sbuild-live-transport-probe:
+    name: Isolate sbuild unshare from snapshot transport
+    runs-on: [self-hosted, Linux, X64, supralinux-ksq, docker]
+    timeout-minutes: 30
+    container:
+      image: ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b
+      options: --security-opt seccomp=unconfined --security-opt apparmor=supralinux-ksq-unshare
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Exercise exact sbuild helper via live Resolute transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="${GITHUB_WORKSPACE}/build/ksq-sbuild-live-transport-probe"
+          result="${out}/result"
+          mkdir -p "${out}" "${result}"
+
+          export DEBIAN_FRONTEND=noninteractive
+          apt_opts=(
+            -o Acquire::Retries=10
+            -o APT::Update::Error-Mode=any
+          )
+          apt-get "${apt_opts[@]}" update >"${out}/apt-update.log" 2>&1
+          apt-get -o Acquire::Retries=10 install -y --no-install-recommends \
+            sudo sbuild=0.91.2ubuntu3 libsbuild-perl=0.91.2ubuntu3 \
+            mmdebstrap=1.5.7-3 uidmap=1:4.17.4-2ubuntu3 \
+            libcap2-bin zstd devscripts dpkg-dev apt-utils ca-certificates \
+            ubuntu-keyring gzip xz-utils diffutils \
+            >"${out}/apt-toolchain.log" 2>&1
+
+          dpkg-query -W -f='${Package}\t${Version}\n' \
+            sbuild libsbuild-perl mmdebstrap uidmap libcap2-bin \
+            | sort | tee "${out}/tool-versions.tsv"
+          grep -Fxq $'sbuild\t0.91.2ubuntu3' "${out}/tool-versions.tsv"
+          grep -Fxq $'libsbuild-perl\t0.91.2ubuntu3' "${out}/tool-versions.tsv"
+          grep -Fxq $'mmdebstrap\t1.5.7-3' "${out}/tool-versions.tsv"
+          grep -Fxq $'uidmap\t1:4.17.4-2ubuntu3' "${out}/tool-versions.tsv"
+
+          printf 'ubuntu ALL=(ALL) NOPASSWD:ALL\n' > /etc/sudoers.d/ubuntu-ksq
+          chmod 0440 /etc/sudoers.d/ubuntu-ksq
+          grep -q '^ubuntu:' /etc/subuid || echo 'ubuntu:100000:65536' >> /etc/subuid
+          grep -q '^ubuntu:' /etc/subgid || echo 'ubuntu:100000:65536' >> /etc/subgid
+          chmod u-s /usr/bin/newuidmap /usr/bin/newgidmap
+          setcap cap_setuid=ep /usr/bin/newuidmap
+          setcap cap_setgid=ep /usr/bin/newgidmap
+
+          ubuntu_gid="$(id -g ubuntu)"
+          chown -R ubuntu:"${ubuntu_gid}" "${GITHUB_WORKSPACE}"
+
+          {
+            printf 'apparmor='; cat /proc/self/attr/current
+            printf 'SBUILD_ENABLE_PIVOT_ROOT=%s\n' "${SBUILD_ENABLE_PIVOT_ROOT-<unset>}"
+            stat -c '%A %a %U %G %u %g %n' /usr/bin/newuidmap /usr/bin/newgidmap
+            getcap /usr/bin/newuidmap /usr/bin/newgidmap
+            grep '^ubuntu:' /etc/subuid
+            grep '^ubuntu:' /etc/subgid
+          } | tee "${out}/environment.txt"
+
+          sudo -u ubuntu -H unshare \
+            --map-auto --map-user=65536 --map-group=65536 --keep-caps \
+            --mount --pid --uts --ipc --fork true \
+            >"${out}/namespace-preflight.stdout" 2>"${out}/namespace-preflight.stderr"
+
+          tarball="${out}/resolute-amd64-buildd-live-probe.tar.zst"
+          sudo -u ubuntu -H mmdebstrap \
+            --mode=unshare \
+            --variant=buildd \
+            --architectures=amd64 \
+            --include=ca-certificates,ubuntu-keyring \
+            --aptopt='Acquire::Retries "10";' \
+            resolute "${tarball}" \
+            'deb http://archive.ubuntu.com/ubuntu resolute main universe restricted multiverse' \
+            >"${out}/mmdebstrap.stdout" 2>"${out}/mmdebstrap.stderr"
+          [[ -s "${tarball}" ]]
+          sha256sum "${tarball}" > "${out}/tarball.sha256"
+
+          smoke="${out}/source/supralinux-ksq-sbuild-smoke-1.0"
+          mkdir -p "${smoke}/debian/source"
+          cat > "${smoke}/debian/control" <<'EOF_CONTROL'
+          Source: supralinux-ksq-sbuild-smoke
+          Section: devel
+          Priority: optional
+          Maintainer: SupraLINUX Build Certification <noreply@supralinux.invalid>
+          Build-Depends: debhelper-compat (= 13)
+          Standards-Version: 4.7.0
+          Rules-Requires-Root: no
+
+          Package: supralinux-ksq-sbuild-smoke
+          Architecture: all
+          Description: SupraLINUX KSQ sbuild unshare smoke package
+           Minimal package used only to exercise the sbuild unshare path.
+          EOF_CONTROL
+          cat > "${smoke}/debian/changelog" <<'EOF_CHANGELOG'
+          supralinux-ksq-sbuild-smoke (1.0) resolute; urgency=medium
+
+            * KSQ-1 sbuild unshare transport-isolation probe.
+
+           -- SupraLINUX Build Certification <noreply@supralinux.invalid>  Sun, 31 Aug 2026 18:00:00 +0000
+          EOF_CHANGELOG
+          cat > "${smoke}/debian/rules" <<'EOF_RULES'
+          #!/usr/bin/make -f
+          %:
+          	dh $@
+          EOF_RULES
+          chmod 0755 "${smoke}/debian/rules"
+          printf '3.0 (native)\n' > "${smoke}/debian/source/format"
+          printf 'KSQ-1 sbuild unshare smoke\n' > "${smoke}/smoke.txt"
+          printf 'smoke.txt usr/share/supralinux-ksq-sbuild-smoke/\n' > "${smoke}/debian/install"
+          chown -R ubuntu:"${ubuntu_gid}" "${out}/source" "${result}"
+
+          sudo -u ubuntu -H bash -c 'cd "$1" && dpkg-source -b .' bash "${smoke}" \
+            >"${out}/dpkg-source.stdout" 2>"${out}/dpkg-source.stderr"
+          dsc="${out}/source/supralinux-ksq-sbuild-smoke_1.0.dsc"
+          [[ -s "${dsc}" ]]
+
+          set +e
+          sudo -u ubuntu -H env DEB_BUILD_OPTIONS=parallel=2 \
+            sbuild \
+              --chroot-mode=unshare \
+              --chroot="${tarball}" \
+              --dist=resolute \
+              --arch=amd64 \
+              --build-dir="${result}" \
+              --build-path=/build/supralinux-ksq1-smoke \
+              --jobs=2 \
+              --no-enable-network \
+              --no-run-lintian \
+              --no-run-autopkgtest \
+              --purge-build=always \
+              --purge-deps=always \
+              --resolve-alternatives \
+              --bd-uninstallable-explainer=apt \
+              "${dsc}" \
+            >"${out}/sbuild.stdout" 2>"${out}/sbuild.stderr"
+          rc=$?
+          set -e
+
+          echo "AURORA_KSQ_SBUILD_LIVE_PROBE_RC=${rc}" | tee "${out}/result.env"
+          tail -n 200 "${out}/sbuild.stderr" || true
+          tail -n 200 "${out}/sbuild.stdout" || true
+          while IFS= read -r -d '' build_log; do
+            tail -n 320 "${build_log}" || true
+          done < <(find "${result}" -maxdepth 1 -type f -name '*.build' -print0)
+
+          [[ ${rc} -eq 0 ]]
+          find "${result}" -maxdepth 1 -type f -name '*.deb' -print -quit | grep -q .
+          find "${result}" -maxdepth 1 -type f -name '*.buildinfo' -print -quit | grep -q .
+          find "${result}" -maxdepth 1 -type f -name '*.changes' -print -quit | grep -q .
+          echo 'AURORA_KSQ_SBUILD_LIVE_TRANSPORT_PROBE_PASS'
+
+      - name: Preserve probe evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-sbuild-live-transport-probe
+          path: build/ksq-sbuild-live-transport-probe/
+          if-no-files-found: warn
+          retention-days: 30
