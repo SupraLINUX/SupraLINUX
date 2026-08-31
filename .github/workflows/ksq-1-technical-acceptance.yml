@@ -15,7 +15,7 @@ jobs:
   consolidate:
     name: Revalidate and consolidate KSQ-1 evidence
     runs-on: ubuntu-26.04
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -37,6 +37,7 @@ jobs:
           done
           [[ "${AURORA_KSQ_1_CANDIDATE_RUN_ID}" != "${AURORA_KSQ_1_REFERENCE_RUN_ID}" ]]
           echo "candidate_run_id=${AURORA_KSQ_1_CANDIDATE_RUN_ID}" >> "${GITHUB_OUTPUT}"
+          echo "reference_run_id=${AURORA_KSQ_1_REFERENCE_RUN_ID}" >> "${GITHUB_OUTPUT}"
           echo "repro_run_id=${AURORA_KSQ_1_REPRO_RUN_ID}" >> "${GITHUB_OUTPUT}"
           echo "ksq0_closure_run_id=${AURORA_KSQ_1_KSQ0_CLOSURE_RUN_ID}" >> "${GITHUB_OUTPUT}"
           echo "ksq0_inventory_run_id=${AURORA_KSQ_1_KSQ0_INVENTORY_RUN_ID}" >> "${GITHUB_OUTPUT}"
@@ -78,6 +79,26 @@ jobs:
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
           run-id: ${{ steps.runs.outputs.candidate_run_id }}
+
+      - name: Restore independent reference DEBs
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-debs-*
+          path: build/ksq-1/reference/debs
+          merge-multiple: true
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.runs.outputs.reference_run_id }}
+
+      - name: Restore independent reference range evidence
+        uses: actions/download-artifact@v8
+        with:
+          pattern: aurora-ksq-1-evidence-*
+          path: build/ksq-1/reference/evidence-artifacts
+          merge-multiple: false
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.runs.outputs.reference_run_id }}
 
       - name: Restore reproducibility acceptance
         uses: actions/download-artifact@v8
@@ -154,6 +175,21 @@ jobs:
           done
           echo AURORA_KSQ_1_ACCEPTANCE_DOWNLOADS_NORMALIZED
 
+      - name: Validate exact run and artifact provenance
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 scripts/ci/validate-ksq-1-run-provenance.py \
+            --repository "${GITHUB_REPOSITORY}" \
+            --selector .github/ksq-1-acceptance-runs.env \
+            --output-dir build/ksq-1/technical-acceptance
+          (
+            cd build/ksq-1/technical-acceptance
+            sha256sum -c run-provenance.sha256
+          )
+
       - name: Prepare pinned KSQ-1 validation state
         shell: bash
         run: bash scripts/ci/prepare-ksq-1-runner.sh
@@ -162,66 +198,60 @@ jobs:
         shell: bash
         run: python3 scripts/ci/validate-ksq-1-full.py
 
+      - name: Independently revalidate 95+6 reproducibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t proofs < <(find build/ksq-1/repro/dedicated-proofs -type f -name dedicated-proof.tsv -print | sort)
+          [[ "${#proofs[@]}" -eq 6 ]]
+          args=()
+          for proof in "${proofs[@]}"; do
+            args+=(--dedicated-proof "${proof}")
+          done
+          python3 scripts/ci/validate-ksq-1-reproducibility.py \
+            --reference-debs build/ksq-1/reference/debs \
+            --reference-evidence build/ksq-1/reference/evidence-artifacts \
+            --candidate-debs build/ksq-1/full/debs \
+            --candidate-evidence build/ksq-1/full/evidence-artifacts \
+            "${args[@]}" \
+            --output-dir build/ksq-1/repro/revalidated-acceptance
+          cmp \
+            build/ksq-1/repro/acceptance/reproducibility-status.env \
+            build/ksq-1/repro/revalidated-acceptance/reproducibility-status.env
+          cmp \
+            build/ksq-1/repro/acceptance/reproducibility-manifest.tsv \
+            build/ksq-1/repro/revalidated-acceptance/reproducibility-manifest.tsv
+          echo AURORA_KSQ_1_REPRODUCIBILITY_REVALIDATED
+
       - name: Validate combined KSQ-1 technical acceptance
         shell: bash
         run: python3 scripts/ci/validate-ksq-1-technical-acceptance.py
 
       - name: Stage and self-verify complete acceptance bundle
         shell: bash
-        run: |
-          set -euo pipefail
-          bundle=build/ksq-1/technical-acceptance-bundle
-          rm -rf "${bundle}"
-          mkdir -p \
-            "${bundle}/metadata" \
-            "${bundle}/repository" \
-            "${bundle}/candidate/debs" \
-            "${bundle}/candidate/range-evidence" \
-            "${bundle}/candidate/kwallet-validation" \
-            "${bundle}/candidate/original-full-validation-artifact" \
-            "${bundle}/candidate/revalidated-full" \
-            "${bundle}/reproducibility/acceptance-artifact" \
-            "${bundle}/reproducibility/dedicated-proofs" \
-            "${bundle}/ksq0/regression" \
-            "${bundle}/ksq0/normalized"
-
-          git diff --quiet
-          git diff --cached --quiet
-          git status --porcelain=v1 --untracked-files=no > "${bundle}/metadata/git-status.txt"
-          [[ ! -s "${bundle}/metadata/git-status.txt" ]]
-          git rev-parse HEAD > "${bundle}/metadata/acceptance-head.txt"
-          git archive --format=tar.gz --output="${bundle}/repository/repository-snapshot.tar.gz" HEAD
-
-          cp -a .github/ksq-1-acceptance-runs.env "${bundle}/metadata/"
-          cp -a build/ksq-1/technical-acceptance/technical-acceptance-status.env "${bundle}/metadata/"
-          cp -a build/ksq-1/full/debs/. "${bundle}/candidate/debs/"
-          cp -a build/ksq-1/full/evidence-artifacts/. "${bundle}/candidate/range-evidence/"
-          cp -a build/ksq-1/full/kwallet-validation/. "${bundle}/candidate/kwallet-validation/"
-          cp -a build/ksq-1/original-full-validation-artifact/. "${bundle}/candidate/original-full-validation-artifact/"
-          cp -a build/ksq-1/repro/acceptance-artifact/. "${bundle}/reproducibility/acceptance-artifact/"
-          cp -a build/ksq-1/repro/dedicated-proofs/. "${bundle}/reproducibility/dedicated-proofs/"
-          cp -a build/ksq-1/ksq0-regression/. "${bundle}/ksq0/regression/"
-          cp -a build/ksq-1/ksq0-normalized/. "${bundle}/ksq0/normalized/"
-
-          for name in full-build-manifest.tsv full-binary-packages.tsv full-debs.sha256 full-build-status.env; do
-            [[ -f "build/ksq-1/full/${name}" ]]
-            cp -a "build/ksq-1/full/${name}" "${bundle}/candidate/revalidated-full/${name}"
-          done
-
-          (
-            cd "${bundle}"
-            find . -type f ! -name bundle-files.sha256 -print0 \
-              | sort -z \
-              | xargs -0 sha256sum > bundle-files.sha256
-            sha256sum -c bundle-files.sha256
-          )
-          echo AURORA_KSQ_1_ACCEPTANCE_BUNDLE_SELF_VERIFIED
+        run: bash scripts/ci/stage-ksq-1-technical-acceptance.sh
 
       - name: Preserve self-contained KSQ-1 technical acceptance bundle
+        id: bundle-upload
         uses: actions/upload-artifact@v7
         with:
           name: aurora-ksq-1-technical-acceptance
-          path: build/ksq-1/technical-acceptance-bundle/
+          path: |
+            build/ksq-1/aurora-ksq-1-technical-acceptance.tar.gz
+            build/ksq-1/aurora-ksq-1-technical-acceptance.tar.gz.sha256
           if-no-files-found: error
           retention-days: 30
           overwrite: true
+
+      - name: Record final GitHub artifact trust root
+        shell: bash
+        run: |
+          set -euo pipefail
+          digest='${{ steps.bundle-upload.outputs.digest }}'
+          [[ "${digest}" =~ ^sha256:[0-9a-f]{64}$ ]]
+          echo "AURORA_KSQ_1_TECHNICAL_ACCEPTANCE_GITHUB_ARTIFACT_DIGEST=${digest}"
+          {
+            echo '### Aurora KSQ-1 technical acceptance artifact'
+            echo
+            echo "GitHub artifact SHA-256 trust root: \`${digest}\`"
+          } >> "${GITHUB_STEP_SUMMARY}"
