@@ -1,0 +1,94 @@
+name: Aurora KSQ snapshot transport GitHub-hosted probe
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-snapshot-transport-hosted-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot-transport:
+    name: Measure certified snapshot transport on ubuntu-24.04 hosted
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    container:
+      image: ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b
+      options: --security-opt seccomp=unconfined
+
+    steps:
+      - name: Measure same snapshot bootstrap and toolchain install
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          out=/tmp/ksq-snapshot-transport
+          mkdir -p "$out"
+          snapshot=20260829T022000Z
+          snapshot_uri="https://snapshot.ubuntu.com/ubuntu/${snapshot}/"
+
+          cat > /etc/apt/sources.list.d/ubuntu.sources <<EOF_SOURCES
+          Types: deb
+          URIs: ${snapshot_uri}
+          Suites: resolute resolute-updates resolute-security resolute-backports
+          Components: main universe restricted multiverse
+          Architectures: amd64
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          EOF_SOURCES
+
+          export DEBIAN_FRONTEND=noninteractive
+          apt_acquire=(-o Acquire::Retries=5)
+          apt_tls_bootstrap=(
+            -o Acquire::https::Verify-Peer=false
+            -o Acquire::https::Verify-Host=false
+          )
+
+          epoch_ms() { date +%s%3N; }
+          t0="$(epoch_ms)"
+
+          apt-get "${apt_tls_bootstrap[@]}" "${apt_acquire[@]}" \
+            -o APT::Update::Error-Mode=any update \
+            2>&1 | tee "$out/apt-bootstrap-update.log"
+          t1="$(epoch_ms)"
+
+          apt-get "${apt_tls_bootstrap[@]}" "${apt_acquire[@]}" \
+            install -y --no-install-recommends ca-certificates \
+            2>&1 | tee "$out/apt-bootstrap-ca.log"
+          t2="$(epoch_ms)"
+
+          rm -rf /var/lib/apt/lists/*
+          apt-get "${apt_acquire[@]}" -o APT::Update::Error-Mode=any update \
+            2>&1 | tee "$out/apt-verified-update.log"
+          t3="$(epoch_ms)"
+
+          apt-get "${apt_acquire[@]}" install -y --no-install-recommends \
+            sudo sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+            ca-certificates ubuntu-keyring gzip xz-utils diffutils libcap2-bin \
+            2>&1 | tee "$out/apt-toolchain.log"
+          t4="$(epoch_ms)"
+
+          {
+            echo "AURORA_KSQ_TRANSPORT_RUNNER=github-hosted-ubuntu-24.04"
+            echo "AURORA_KSQ_TRANSPORT_CONTAINER=ubuntu-26.04-pinned"
+            echo "AURORA_KSQ_TRANSPORT_SNAPSHOT=${snapshot}"
+            echo "AURORA_KSQ_TRANSPORT_BOOTSTRAP_UPDATE_MS=$((t1-t0))"
+            echo "AURORA_KSQ_TRANSPORT_CA_INSTALL_MS=$((t2-t1))"
+            echo "AURORA_KSQ_TRANSPORT_VERIFIED_UPDATE_MS=$((t3-t2))"
+            echo "AURORA_KSQ_TRANSPORT_TOOLCHAIN_INSTALL_MS=$((t4-t3))"
+            echo "AURORA_KSQ_TRANSPORT_TOTAL_MS=$((t4-t0))"
+            dpkg-query -W -f='${Package}\t${Version}\n' \
+              sbuild libsbuild-perl mmdebstrap uidmap libcap2-bin | sort
+          } | tee "$out/results.env"
+
+      - name: Preserve transport evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-snapshot-transport-github-hosted
+          path: /tmp/ksq-snapshot-transport/
+          if-no-files-found: warn
+          retention-days: 7
