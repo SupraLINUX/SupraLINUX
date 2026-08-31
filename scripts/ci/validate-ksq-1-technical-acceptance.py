@@ -10,7 +10,7 @@ FULL = ROOT / "build/ksq-1/full"
 REPRO = ROOT / "build/ksq-1/repro/acceptance"
 ORIGINAL = ROOT / "build/ksq-1/original-full-validation"
 KSQ0 = ROOT / "build/ksq-1/ksq0-normalized"
-RUNS = ROOT / "tests/kde-stack/ksq-1-acceptance-runs.env"
+RUNS = ROOT / ".github/ksq-1-acceptance-runs.env"
 OUT = ROOT / "build/ksq-1/technical-acceptance"
 
 
