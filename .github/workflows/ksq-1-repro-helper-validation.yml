@@ -11,6 +11,7 @@ on:
       - '.github/workflows/ksq-1-tail-resume.yml'
       - '.github/workflows/ksq-1-tail-resume-candidate.yml'
       - 'scripts/ci/build-ksq-1-repro-source.sh'
+      - 'scripts/ci/stage-ksq-1-technical-acceptance.sh'
       - 'scripts/ci/validate-ksq-1-reproducibility.py'
       - 'scripts/ci/validate-ksq-1-run-provenance.py'
       - 'scripts/ci/validate-ksq-1-technical-acceptance.py'
@@ -35,6 +36,7 @@ jobs:
         run: |
           set -euo pipefail
           bash -n scripts/ci/build-ksq-1-repro-source.sh
+          bash -n scripts/ci/stage-ksq-1-technical-acceptance.sh
           python3 -m py_compile \
             scripts/ci/validate-ksq-1-reproducibility.py \
             scripts/ci/validate-ksq-1-run-provenance.py \
@@ -55,6 +57,8 @@ jobs:
           ! grep -Fq "tests/kde-stack/ksq-1-acceptance-runs.env" scripts/ci/validate-ksq-1-technical-acceptance.py
           grep -Fq "AURORA_KSQ_1_RUN_PROVENANCE_STATUS=PASS" scripts/ci/validate-ksq-1-run-provenance.py
           grep -Fq "AURORA_KSQ_1_RUN_PROVENANCE_ARTIFACT_DIGESTS=sha256" scripts/ci/validate-ksq-1-run-provenance.py
+          grep -Fq "AURORA_KSQ_1_ACCEPTANCE_BUNDLE_SELF_VERIFIED" scripts/ci/stage-ksq-1-technical-acceptance.sh
+          grep -Fq "aurora-ksq-1-technical-acceptance.tar.gz.sha256" scripts/ci/stage-ksq-1-technical-acceptance.sh
           grep -Fq ".github/ksq-1-tail-resume.env" .github/workflows/ksq-1-tail-resume.yml
           grep -Fq ".github/ksq-1-tail-resume-candidate.env" .github/workflows/ksq-1-tail-resume-candidate.yml
           grep -Fq "order: [29, 68, 81, 99, 100, 101]" .github/workflows/ksq-1-reproducibility.yml
