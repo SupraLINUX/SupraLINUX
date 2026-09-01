@@ -99,7 +99,7 @@ jobs:
           rm -f /etc/apt/sources.list /etc/apt/sources.list.d/*
           cp "$SLICE/aurora-local.sources" /etc/apt/sources.list.d/aurora-local.sources
           apt-get -o APT::Update::Error-Mode=any update
-          apt-get --no-install-recommends install -y mmdebstrap uidmap libcap2-bin zstd ubuntu-keyring ca-certificates
+          apt-get --no-install-recommends install -y sudo mmdebstrap uidmap libcap2-bin zstd ubuntu-keyring ca-certificates
           grep -q '^ubuntu:' /etc/subuid || echo 'ubuntu:100000:65536' >> /etc/subuid
           grep -q '^ubuntu:' /etc/subgid || echo 'ubuntu:100000:65536' >> /etc/subgid
           bash /workspace/scripts/ci/configure-ksq-uidmap-filecaps.sh
