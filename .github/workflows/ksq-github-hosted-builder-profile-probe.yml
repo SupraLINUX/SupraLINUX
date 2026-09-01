@@ -40,7 +40,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo bash scripts/ci/install-ksq-apparmor-profile.sh | tee "$RUNNER_TEMP/apparmor.txt"
-          grep -qx 'supralinux-ksq-unshare (enforce)' /sys/kernel/security/apparmor/profiles
+          sudo grep -qx 'supralinux-ksq-unshare (enforce)' /sys/kernel/security/apparmor/profiles
 
       - name: Exercise pinned Resolute container namespace contract
         shell: bash
