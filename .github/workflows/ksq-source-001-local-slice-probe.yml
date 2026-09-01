@@ -1,0 +1,314 @@
+name: Aurora KSQ source 001 local-slice probe
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-source-001-local-slice-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-001:
+    name: Research source 001 on published local slice
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Verify research contract and prepare host
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -qx 'VERSION_ID="26.04"' /etc/os-release
+          test -s scripts/ci/aurora-ksq-snapshot-release.env
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          [[ "$AURORA_KSQ_SNAPSHOT_RELEASE_STATUS" == INDEPENDENTLY_VALIDATED ]]
+          [[ "$AURORA_KSQ_SNAPSHOT" == 20260829T022000Z ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_ID" == 538944111 ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256" == 8dc9087b53e90c085333644ffdb828b87ce0af6cd61ec5f1d516fe35e80529e7 ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES" == 973148160 ]]
+          host_apt=(
+            -o Dir::Etc::sourcelist=/etc/apt/sources.list.d/ubuntu.sources
+            -o Dir::Etc::sourceparts=-
+            -o APT::Get::List-Cleanup=0
+          )
+          sudo apt-get "${host_apt[@]}" -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get "${host_apt[@]}" -o Acquire::Retries=5 install -y --no-install-recommends curl python3 ubuntu-keyring gpgv
+          python3 -m py_compile scripts/ci/ksq-snapshot-slice.py scripts/ci/ksq-docker-builder.py scripts/ci/prepare-ksq-1-source.py
+          sudo bash scripts/ci/install-ksq-apparmor-profile.sh | tee "$RUNNER_TEMP/host-apparmor.txt"
+          sudo grep -qx 'supralinux-ksq-unshare (enforce)' /sys/kernel/security/apparmor/profiles
+
+      - name: Download and validate immutable snapshot slice
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          out="$RUNNER_TEMP/release"
+          rm -rf "$out"
+          mkdir -p "$out"
+          archive="$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/octet-stream' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_ID" \
+            -o "$archive"
+          [[ "$(stat -c '%s' "$archive")" == "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES" ]]
+          [[ "$(sha256sum "$archive" | awk '{print $1}')" == "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256" ]]
+          python3 - "$archive" "$AURORA_KSQ_SNAPSHOT" <<'PY'
+          import sys, tarfile
+          from pathlib import PurePosixPath
+          archive, snapshot = sys.argv[1:]
+          with tarfile.open(archive, 'r:') as tf:
+              members = tf.getmembers()
+              if not members:
+                  raise SystemExit('empty archive')
+              for m in members:
+                  p = PurePosixPath(m.name)
+                  if p.is_absolute() or '..' in p.parts or not p.parts or p.parts[0] != snapshot:
+                      raise SystemExit(f'unsafe archive member: {m.name}')
+                  if m.issym():
+                      raise SystemExit(f'symlink forbidden: {m.name}')
+                  if m.islnk():
+                      link = PurePosixPath(m.linkname)
+                      if link.is_absolute() or '..' in link.parts or not link.parts or link.parts[0] != snapshot:
+                          raise SystemExit(f'unsafe hardlink: {m.name} -> {m.linkname}')
+          PY
+          root=/opt/supralinux/archive
+          sudo rm -rf "$root/$AURORA_KSQ_SNAPSHOT"
+          sudo mkdir -p "$root"
+          sudo tar -C "$root" -xf "$archive"
+          python3 scripts/ci/ksq-snapshot-slice.py validate --slice-root "$root/$AURORA_KSQ_SNAPSHOT"
+
+      - name: Build certified DAG source 001 with network physically absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          image='ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b'
+          slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
+          evidence="$RUNNER_TEMP/source-001-evidence"
+          builder_evidence="$evidence/docker-builder"
+          name="supralinux-ksq-source001-${GITHUB_RUN_ID}"
+          rm -rf "$evidence"
+          mkdir -p "$evidence/result" "$builder_evidence"
+          cp scripts/ci/aurora-ksq-snapshot-release.env "$evidence/release-pin.env"
+          cp "$RUNNER_TEMP/host-apparmor.txt" "$evidence/host-apparmor.txt"
+          chmod 0777 "$evidence" "$evidence/result" "$builder_evidence"
+          docker pull "$image"
+          cid="$(python3 scripts/ci/ksq-docker-builder.py create \
+            --image "$image" \
+            --name "$name" \
+            --bind "$slice:$slice:ro" \
+            --bind "$GITHUB_WORKSPACE:/workspace:ro" \
+            --bind "$evidence:/evidence:rw" \
+            --evidence-dir "$builder_evidence")"
+          test -n "$cid"
+          trap 'python3 scripts/ci/ksq-docker-builder.py remove "$cid" >/dev/null 2>&1 || true' EXIT
+
+          set +e
+          docker exec -i "$cid" bash -s 2>&1 <<'EOF_CONTAINER' | tee "$evidence/container.log"
+          set -euo pipefail
+          snapshot=20260829T022000Z
+          repo="/opt/supralinux/archive/$snapshot"
+          source_pkg=kf6-extra-cmake-modules
+          base_version=6.29.0-0ubuntu1
+          expected_supra='6.29.0-0ubuntu1~supra26.04.1'
+          export DEBIAN_FRONTEND=noninteractive
+
+          cat /etc/os-release
+          grep -Eq '^supralinux-ksq-unshare( \(enforce\))?$' /proc/self/attr/current
+          cap_eff="$(awk '/^CapEff:/ {print $2}' /proc/self/status)"
+          cap_eff_val=$((16#$cap_eff))
+          test $((cap_eff_val & (1 << 21))) -eq 0
+          test "$(stat -f -c %T /proc)" = proc
+          test "$(findmnt -R /proc -n -o TARGET | wc -l)" -eq 1
+          if find /sys/class/net -mindepth 1 -maxdepth 1 ! -name lo -print -quit 2>/dev/null | grep -q .; then
+            echo 'AURORA_KSQ_SOURCE001_FAILURE: non-loopback interface exists' >&2
+            exit 1
+          fi
+
+          rm -f /etc/apt/sources.list /etc/apt/sources.list.d/*
+          cp "$repo/aurora-local.sources" /etc/apt/sources.list.d/aurora-local.sources
+          cat >/etc/apt/apt.conf.d/99supralinux-local-only <<'EOF_APT'
+          Acquire::http::Proxy "http://127.0.0.1:9/";
+          Acquire::https::Proxy "http://127.0.0.1:9/";
+          Acquire::Retries "0";
+          EOF_APT
+          if grep -RIE 'https?://' /etc/apt/sources.list /etc/apt/sources.list.d 2>/dev/null; then
+            echo 'AURORA_KSQ_SOURCE001_FAILURE: remote APT source active' >&2
+            exit 1
+          fi
+          apt-get -o APT::Update::Error-Mode=any update 2>&1 | tee /evidence/apt-update.log
+          apt-get --no-install-recommends install -y \
+            python3 sudo sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+            ca-certificates ubuntu-keyring gzip xz-utils diffutils libcap2-bin build-essential \
+            2>&1 | tee /evidence/tool-install.log
+          for log in /evidence/apt-update.log /evidence/tool-install.log; do
+            if grep -Ei 'https?://' "$log"; then
+              echo "AURORA_KSQ_SOURCE001_FAILURE: remote transport found in $log" >&2
+              exit 1
+            fi
+          done
+          dpkg-query -W -f='${Package}\t${Version}\n' sbuild libsbuild-perl mmdebstrap uidmap libcap2-bin util-linux dpkg-dev | sort > /evidence/toolchain.tsv
+
+          grep -q '^ubuntu:' /etc/subuid || echo 'ubuntu:100000:65536' >> /etc/subuid
+          grep -q '^ubuntu:' /etc/subgid || echo 'ubuntu:100000:65536' >> /etc/subgid
+          chmod u-s /usr/bin/newuidmap /usr/bin/newgidmap
+          setcap cap_setuid=ep /usr/bin/newuidmap
+          setcap cap_setgid=ep /usr/bin/newgidmap
+          su -s /bin/bash ubuntu -c 'unshare --map-auto --map-user=65536 --map-group=65536 --keep-caps --mount --pid --uts --ipc --fork true'
+
+          rm -f /tmp/resolute-local-buildd.tar.zst
+          su -s /bin/bash ubuntu -c \
+            "mmdebstrap --mode=unshare --variant=buildd --architectures=amd64 --include=ca-certificates,ubuntu-keyring --hook-dir=/usr/share/mmdebstrap/hooks/file-mirror-automount resolute /tmp/resolute-local-buildd.tar.zst /etc/apt/sources.list.d/aurora-local.sources" \
+            2>&1 | tee /evidence/mmdebstrap.log
+          test -s /tmp/resolute-local-buildd.tar.zst
+          if grep -Ei 'https?://' /evidence/mmdebstrap.log; then
+            echo 'AURORA_KSQ_SOURCE001_FAILURE: mmdebstrap attempted remote transport' >&2
+            exit 1
+          fi
+
+          work=/tmp/source001
+          rm -rf "$work"
+          mkdir -p "$work/download"
+          cd "$work/download"
+          apt-get source --download-only "$source_pkg=$base_version" 2>&1 | tee /evidence/source-fetch.log
+          if grep -Ei 'https?://' /evidence/source-fetch.log; then
+            echo 'AURORA_KSQ_SOURCE001_FAILURE: source fetch attempted remote transport' >&2
+            exit 1
+          fi
+          mapfile -t dscs < <(find . -maxdepth 1 -type f -name '*.dsc' -print | sort)
+          test "${#dscs[@]}" -eq 1
+          grep -Fqx "Source: $source_pkg" "${dscs[0]}"
+          grep -Fqx "Version: $base_version" "${dscs[0]}"
+          sha256sum ./* | sort > /evidence/original-source-objects.sha256
+
+          dpkg-source -x "${dscs[0]}" "$work/source" >/evidence/dpkg-source-extract.log 2>&1
+          python3 /workspace/scripts/ci/prepare-ksq-1-source.py \
+            --source-tree "$work/source" \
+            --expected-source "$source_pkg" \
+            --base-version "$base_version" \
+            2>&1 | tee /evidence/source-prepare.log
+          source "$work/supralinux-build-metadata.env"
+          [[ "$AURORA_KSQ_1_SOURCE" == "$source_pkg" ]]
+          [[ "$AURORA_KSQ_1_PACKAGING_BASE" == "$base_version" ]]
+          [[ "$AURORA_KSQ_1_VERSION" == "$expected_supra" ]]
+          cp "$work/supralinux-build-metadata.env" /evidence/
+
+          cd "$work"
+          dpkg-source -b source 2>&1 | tee /evidence/dpkg-source-build.log
+          prepared_dsc=""
+          while IFS= read -r candidate; do
+            if grep -Fqx "Source: $source_pkg" "$candidate" && grep -Fqx "Version: $expected_supra" "$candidate"; then
+              test -z "$prepared_dsc"
+              prepared_dsc="$candidate"
+            fi
+          done < <(find . -maxdepth 1 -type f -name '*.dsc' -print | sort)
+          test -n "$prepared_dsc"
+          sha256sum ./*~supra26.04.1* | sort > /evidence/prepared-source-objects.sha256
+
+          cat >/tmp/sbuild-local.conf <<EOF_SBUILD
+          \$unshare_bind_mounts = [ { directory => "$repo/ubuntu", mountpoint => "$repo/ubuntu" } ];
+          \$enable_network = 0;
+          EOF_SBUILD
+          chmod 0644 /tmp/sbuild-local.conf
+          chown ubuntu:ubuntu /tmp/sbuild-local.conf /tmp/resolute-local-buildd.tar.zst /evidence/result
+          chown -R ubuntu:ubuntu "$work"
+
+          set +e
+          SBUILD_CONFIG=/tmp/sbuild-local.conf su -s /bin/bash ubuntu -c \
+            "SBUILD_CONFIG=/tmp/sbuild-local.conf DEB_BUILD_OPTIONS=parallel=2 sbuild --chroot-mode=unshare --chroot=/tmp/resolute-local-buildd.tar.zst --dist=resolute --arch=amd64 --build-dir=/evidence/result --build-path=/build/supralinux-ksq1 --jobs=2 --no-enable-network --no-run-lintian --no-run-autopkgtest --purge-build=always --purge-deps=always --resolve-alternatives --bd-uninstallable-explainer=apt '$prepared_dsc'" \
+            2>&1 | tee /evidence/sbuild.stdout.log
+          pipe_status=("${PIPESTATUS[@]}")
+          set -e
+          sbuild_rc="${pipe_status[0]}"
+          tee_rc="${pipe_status[1]}"
+          printf 'AURORA_KSQ_SOURCE001_SBUILD_RC=%s\nAURORA_KSQ_SOURCE001_SBUILD_TEE_RC=%s\n' "$sbuild_rc" "$tee_rc" > /evidence/sbuild-command.env
+          test "$sbuild_rc" -eq 0
+          test "$tee_rc" -eq 0
+
+          mapfile -t build_logs < <(find /evidence/result -maxdepth 1 -type f -name '*.build' -print | sort)
+          mapfile -t debs < <(find /evidence/result -maxdepth 1 -type f -name '*.deb' -print | sort)
+          mapfile -t buildinfos < <(find /evidence/result -maxdepth 1 -type f -name '*.buildinfo' -print | sort)
+          mapfile -t changes < <(find /evidence/result -maxdepth 1 -type f -name '*.changes' -print | sort)
+          test "${#build_logs[@]}" -eq 1
+          test "${#debs[@]}" -gt 0
+          test "${#buildinfos[@]}" -eq 1
+          test "${#changes[@]}" -eq 1
+          grep -q '^Status: successful$' "${build_logs[0]}"
+          for deb in "${debs[@]}"; do
+            [[ "$(dpkg-deb -f "$deb" Version)" == "$expected_supra" ]]
+          done
+          sha256sum /evidence/result/* | sort > /evidence/build-artifacts.sha256
+          find /evidence/result -maxdepth 1 -type f -printf '%f\n' | sort > /evidence/build-files.txt
+          {
+            echo AURORA_KSQ_SOURCE001_LOCAL_SLICE_PROBE=PASS
+            echo AURORA_KSQ_SOURCE001_ORDER=1
+            echo AURORA_KSQ_SOURCE001_SOURCE=kf6-extra-cmake-modules
+            echo AURORA_KSQ_SOURCE001_PACKAGING_BASE=6.29.0-0ubuntu1
+            echo AURORA_KSQ_SOURCE001_VERSION=6.29.0-0ubuntu1~supra26.04.1
+            echo AURORA_KSQ_SOURCE001_SNAPSHOT=20260829T022000Z
+            echo AURORA_KSQ_SOURCE001_NETWORK_MODE=none
+            echo AURORA_KSQ_SOURCE001_APT_SOURCE=file-only
+            echo AURORA_KSQ_SOURCE001_MMDEBSTRAP=PASS
+            echo AURORA_KSQ_SOURCE001_SBUILD=PASS
+          } | tee /evidence/results.env
+          EOF_CONTAINER
+          pipe_status=("${PIPESTATUS[@]}")
+          set -e
+          container_rc="${pipe_status[0]}"
+          tee_rc="${pipe_status[1]}"
+          python3 scripts/ci/ksq-docker-builder.py remove "$cid"
+          trap - EXIT
+          printf 'AURORA_KSQ_SOURCE001_CONTAINER_RC=%s\nAURORA_KSQ_SOURCE001_CONTAINER_TEE_RC=%s\n' "$container_rc" "$tee_rc" > "$evidence/container-result.env"
+          test "$container_rc" -eq 0
+          test "$tee_rc" -eq 0
+
+      - name: Capture AppArmor audit
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/source-001-evidence"
+          mkdir -p "$evidence"
+          sudo dmesg | grep -E 'apparmor="DENIED".*profile="supralinux-ksq-unshare"' > "$evidence/host-apparmor-denied.log" || true
+          test ! -s "$evidence/host-apparmor-denied.log"
+
+      - name: Package source-001 research evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/source-001-evidence"
+          archive="$RUNNER_TEMP/aurora-ksq-source-001-local-slice-evidence.tar"
+          mkdir -p "$evidence"
+          tar -C "$RUNNER_TEMP" -cf "$archive" source-001-evidence
+          sha256sum "$archive" | tee "$archive.sha256"
+          tar -tf "$archive" | sort > "$RUNNER_TEMP/aurora-ksq-source-001-local-slice-evidence.members.txt"
+
+      - name: Preserve source-001 research evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-source-001-local-slice
+          path: |
+            ${{ runner.temp }}/aurora-ksq-source-001-local-slice-evidence.tar
+            ${{ runner.temp }}/aurora-ksq-source-001-local-slice-evidence.tar.sha256
+            ${{ runner.temp }}/aurora-ksq-source-001-local-slice-evidence.members.txt
+          if-no-files-found: error
+          retention-days: 30
