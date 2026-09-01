@@ -109,7 +109,7 @@ jobs:
             cat /proc/self/attr/current
             grep -Eq "^supralinux-ksq-unshare( \(enforce\))?$" /proc/self/attr/current
 
-            cap_eff="$(awk "$1 == \"CapEff:\" {print $2}" /proc/self/status)"
+            cap_eff="$(grep "^CapEff:" /proc/self/status | tr -s "[:space:]" " " | cut -d " " -f 2)"
             test -n "$cap_eff"
             cap_eff_val=$((16#$cap_eff))
             cap_sys_admin=$((1 << 21))
