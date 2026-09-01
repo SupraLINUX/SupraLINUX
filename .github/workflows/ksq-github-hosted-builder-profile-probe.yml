@@ -1,0 +1,92 @@
+name: Aurora KSQ GitHub-hosted stable builder profile probe
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-github-hosted-builder-profile-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hosted-builder-profile:
+    name: Probe Ubuntu 24.04 host plus pinned Resolute container
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Record stable host
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo '=== host ==='
+            cat /etc/os-release
+            uname -a
+            docker version
+            apparmor_status || true
+            sysctl kernel.apparmor_restrict_unprivileged_userns || true
+          } | tee "$RUNNER_TEMP/host.txt"
+          grep -qx 'VERSION_ID="24.04"' /etc/os-release
+
+      - name: Load scoped KSQ AppArmor profile on ephemeral host
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo bash scripts/ci/install-ksq-apparmor-profile.sh | tee "$RUNNER_TEMP/apparmor.txt"
+          grep -qx 'supralinux-ksq-unshare (enforce)' /sys/kernel/security/apparmor/profiles
+
+      - name: Exercise pinned Resolute container namespace contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          image='ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b'
+          docker pull "$image"
+          docker run --rm \
+            --security-opt seccomp=unconfined \
+            --security-opt apparmor=supralinux-ksq-unshare \
+            -v "$GITHUB_WORKSPACE:/workspace:ro" \
+            "$image" bash -euxo pipefail -c '
+              export DEBIAN_FRONTEND=noninteractive
+              apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+              apt-get -o Acquire::Retries=5 install -y --no-install-recommends uidmap libcap2-bin util-linux
+
+              grep -q "^ubuntu:" /etc/subuid || echo "ubuntu:100000:65536" >> /etc/subuid
+              grep -q "^ubuntu:" /etc/subgid || echo "ubuntu:100000:65536" >> /etc/subgid
+              chmod u-s /usr/bin/newuidmap /usr/bin/newgidmap
+              setcap cap_setuid=ep /usr/bin/newuidmap
+              setcap cap_setgid=ep /usr/bin/newgidmap
+
+              echo "=== container ==="
+              cat /etc/os-release
+              cat /proc/self/attr/current
+              stat -c "%A %a %U %G %n" /usr/bin/newuidmap /usr/bin/newgidmap
+              getcap /usr/bin/newuidmap /usr/bin/newgidmap
+              grep "^ubuntu:" /etc/subuid /etc/subgid
+
+              su -s /bin/bash ubuntu -c "unshare --map-auto --map-user=65536 --map-group=65536 --keep-caps --mount --pid --uts --ipc --fork true"
+
+              mkdir -p /tmp/tmp.sbuild.hosted-probe
+              chown ubuntu:ubuntu /tmp/tmp.sbuild.hosted-probe
+              su -s /bin/bash ubuntu -c "unshare --map-auto --map-user=65536 --map-group=65536 --keep-caps --mount --fork bash -c '\''mount --rbind /tmp/tmp.sbuild.hosted-probe /tmp/tmp.sbuild.hosted-probe; mountpoint /tmp/tmp.sbuild.hosted-probe; umount /tmp/tmp.sbuild.hosted-probe'\''"
+
+              echo AURORA_KSQ_GITHUB_HOSTED_STABLE_BUILDER_PROFILE_PASS
+            ' | tee "$RUNNER_TEMP/container.txt"
+
+      - name: Preserve probe evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-github-hosted-stable-builder-profile-probe
+          path: |
+            ${{ runner.temp }}/host.txt
+            ${{ runner.temp }}/apparmor.txt
+            ${{ runner.temp }}/container.txt
+          if-no-files-found: warn
+          retention-days: 30
