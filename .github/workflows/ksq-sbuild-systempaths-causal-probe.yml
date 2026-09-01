@@ -1,0 +1,209 @@
+name: Aurora KSQ sbuild systempaths causal probe
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-sbuild-systempaths-causal-probe.yml'
+      - 'scripts/ci/apparmor/supralinux-ksq-unshare'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sbuild-systempaths:
+    name: Prove procfs with Docker systempaths unconfined
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Prepare host and exact snapshot
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          grep -qx 'VERSION_ID="26.04"' /etc/os-release
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends curl python3 ubuntu-keyring gpgv
+          sudo bash scripts/ci/install-ksq-apparmor-profile.sh | tee "$RUNNER_TEMP/host-apparmor.txt"
+          sudo grep -qx 'supralinux-ksq-unshare (enforce)' /sys/kernel/security/apparmor/profiles
+
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          [[ "$AURORA_KSQ_SNAPSHOT_RELEASE_STATUS" == INDEPENDENTLY_VALIDATED ]]
+          out="$RUNNER_TEMP/release"
+          mkdir -p "$out"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/octet-stream' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_ID" \
+            -o "$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET"
+          [[ "$(stat -c '%s' "$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET")" == "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES" ]]
+          [[ "$(sha256sum "$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET" | awk '{print $1}')" == "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256" ]]
+          sudo mkdir -p /opt/supralinux/archive
+          sudo tar -C /opt/supralinux/archive -xf "$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET"
+          python3 scripts/ci/ksq-snapshot-slice.py validate --slice-root "/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
+
+      - name: Run exact sbuild path with systempaths unconfined
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          image='ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b'
+          slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
+          evidence="$RUNNER_TEMP/sbuild-systempaths-evidence"
+          rm -rf "$evidence"
+          mkdir -p "$evidence/sbuild-result"
+          chmod 0777 "$evidence" "$evidence/sbuild-result"
+          docker pull "$image"
+
+          set +e
+          docker run --rm -i \
+            --network none \
+            --security-opt seccomp=unconfined \
+            --security-opt apparmor=supralinux-ksq-unshare \
+            --security-opt systempaths=unconfined \
+            -v "$slice:/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT:ro" \
+            -v "$evidence:/evidence:rw" \
+            "$image" bash -s 2>&1 <<'EOF_CONTAINER' | tee "$evidence/container.log"
+          set -euo pipefail
+          snapshot=20260829T022000Z
+          repo="/opt/supralinux/archive/$snapshot"
+          export DEBIAN_FRONTEND=noninteractive
+
+          rm -f /etc/apt/sources.list /etc/apt/sources.list.d/*
+          cp "$repo/aurora-local.sources" /etc/apt/sources.list.d/aurora-local.sources
+          cat >/etc/apt/apt.conf.d/99supralinux-local-only <<'EOF_APT'
+          Acquire::http::Proxy "http://127.0.0.1:9/";
+          Acquire::https::Proxy "http://127.0.0.1:9/";
+          Acquire::Retries "0";
+          EOF_APT
+          apt-get -o APT::Update::Error-Mode=any update
+          apt-get --no-install-recommends install -y \
+            sudo sbuild mmdebstrap uidmap zstd dpkg-dev apt-utils ca-certificates \
+            ubuntu-keyring gzip xz-utils diffutils libcap2-bin build-essential util-linux
+
+          echo '=== outer container security ===' | tee /evidence/outer-security.txt
+          cat /proc/self/attr/current | tee -a /evidence/outer-security.txt
+          grep -E '^(CapInh|CapPrm|CapEff|CapBnd|CapAmb|NoNewPrivs|Seccomp):' /proc/self/status | tee -a /evidence/outer-security.txt
+          findmnt -R /proc -o TARGET,SOURCE,FSTYPE,OPTIONS | tee /evidence/outer-proc-mounts.txt
+          if capsh --has-p=cap_sys_admin >/dev/null 2>&1; then
+            echo 'AURORA_KSQ_FAILURE: parent container unexpectedly has CAP_SYS_ADMIN' >&2
+            exit 1
+          fi
+          grep -qx 'supralinux-ksq-unshare' /proc/self/attr/current
+          echo AURORA_KSQ_OUTER_NO_CAP_SYS_ADMIN=PASS
+
+          grep -q '^ubuntu:' /etc/subuid || echo 'ubuntu:100000:65536' >> /etc/subuid
+          grep -q '^ubuntu:' /etc/subgid || echo 'ubuntu:100000:65536' >> /etc/subgid
+          chmod u-s /usr/bin/newuidmap /usr/bin/newgidmap
+          setcap cap_setuid=ep /usr/bin/newuidmap
+          setcap cap_setgid=ep /usr/bin/newgidmap
+
+          rm -f /tmp/resolute-local-buildd.tar.zst
+          su -s /bin/bash ubuntu -c \
+            "mmdebstrap --mode=unshare --variant=buildd --architectures=amd64 --include=ca-certificates,ubuntu-keyring --hook-dir=/usr/share/mmdebstrap/hooks/file-mirror-automount resolute /tmp/resolute-local-buildd.tar.zst /etc/apt/sources.list.d/aurora-local.sources" \
+            2>&1 | tee /evidence/mmdebstrap.log
+          test -s /tmp/resolute-local-buildd.tar.zst
+
+          smoke=/tmp/supralinux-local-snapshot-smoke-1.0
+          rm -rf "$smoke" /tmp/supralinux-local-snapshot-smoke_1.0*
+          mkdir -p "$smoke/debian/source"
+          cat >"$smoke/debian/control" <<'EOF_CONTROL'
+          Source: supralinux-local-snapshot-smoke
+          Section: devel
+          Priority: optional
+          Maintainer: SupraLINUX Build Certification <noreply@supralinux.invalid>
+          Build-Depends: dpkg-dev
+          Standards-Version: 4.7.0
+          Rules-Requires-Root: no
+
+          Package: supralinux-local-snapshot-smoke
+          Architecture: all
+          Description: SupraLINUX local snapshot sbuild procfs probe
+           Minimal package used only to prove procfs inside sbuild unshare.
+          EOF_CONTROL
+          cat >"$smoke/debian/changelog" <<'EOF_CHANGELOG'
+          supralinux-local-snapshot-smoke (1.0) resolute; urgency=medium
+
+            * Prove procfs with Docker systempaths unconfined.
+
+           -- SupraLINUX Build Certification <noreply@supralinux.invalid>  Tue, 01 Sep 2026 11:45:00 +0000
+          EOF_CHANGELOG
+          cat >"$smoke/debian/rules" <<'EOF_RULES'
+          #!/usr/bin/make -f
+          binary binary-arch binary-indep build build-arch build-indep clean:
+          	@set -e; \
+          	test -r /proc/self/status; \
+          	grep -q '^Name:' /proc/self/status; \
+          	test "$$(stat -f -c %T /proc)" = proc; \
+          	grep -q ' /proc ' /proc/self/mountinfo; \
+          	echo AURORA_KSQ_SBUILD_PROC_USABLE=1; \
+          	if [ "$@" = binary ] || [ "$@" = binary-indep ]; then \
+          	  rm -rf debian/supralinux-local-snapshot-smoke; \
+          	  mkdir -p debian/supralinux-local-snapshot-smoke/DEBIAN; \
+          	  printf 'Package: supralinux-local-snapshot-smoke\nVersion: 1.0\nArchitecture: all\nSection: devel\nPriority: optional\nMaintainer: SupraLINUX Build Certification <noreply@supralinux.invalid>\nDescription: local snapshot smoke\n' > debian/supralinux-local-snapshot-smoke/DEBIAN/control; \
+          	  dpkg-deb --root-owner-group --build debian/supralinux-local-snapshot-smoke ..; \
+          	  dpkg-distaddfile supralinux-local-snapshot-smoke_1.0_all.deb devel optional; \
+          	fi
+          EOF_RULES
+          chmod 0755 "$smoke/debian/rules"
+          printf '3.0 (native)\n' >"$smoke/debian/source/format"
+          chown -R ubuntu:ubuntu "$smoke" /tmp/resolute-local-buildd.tar.zst /evidence/sbuild-result
+          su -s /bin/bash ubuntu -c "cd '$smoke' && dpkg-source -b ."
+
+          cat >/tmp/sbuild-local.conf <<EOF_SBUILD
+          \$unshare_bind_mounts = [ { directory => "$repo/ubuntu", mountpoint => "$repo/ubuntu" } ];
+          \$enable_network = 0;
+          EOF_SBUILD
+          chmod 0644 /tmp/sbuild-local.conf
+          chown ubuntu:ubuntu /tmp/sbuild-local.conf
+
+          set +e
+          SBUILD_CONFIG=/tmp/sbuild-local.conf su -s /bin/bash ubuntu -c \
+            "SBUILD_CONFIG=/tmp/sbuild-local.conf DEB_BUILD_OPTIONS=parallel=2 sbuild --debug --verbose --chroot-mode=unshare --chroot=/tmp/resolute-local-buildd.tar.zst --dist=resolute --arch=amd64 --build-dir=/evidence/sbuild-result --build-path=/build/supralinux-local-snapshot-smoke --jobs=2 --no-enable-network --no-run-lintian --no-run-autopkgtest --purge-build=never --purge-deps=never --resolve-alternatives --bd-uninstallable-explainer=apt /tmp/supralinux-local-snapshot-smoke_1.0.dsc" \
+            2>&1 | tee /evidence/sbuild-debug.log
+          rc=${PIPESTATUS[0]}
+          set -e
+          echo "SBUILD_PROBE_RC=$rc" | tee /evidence/sbuild-probe-result.env
+          find /evidence/sbuild-result -maxdepth 1 -type f -printf '%f\n' | sort | tee /evidence/sbuild-result-files.txt
+          test "$rc" -eq 0
+          grep -q 'AURORA_KSQ_SBUILD_PROC_USABLE=1' /evidence/sbuild-debug.log
+          find /evidence/sbuild-result -maxdepth 1 -type f -name '*.deb' -print -quit | grep -q .
+          find /evidence/sbuild-result -maxdepth 1 -type f -name '*.buildinfo' -print -quit | grep -q .
+          find /evidence/sbuild-result -maxdepth 1 -type f -name '*.changes' -print -quit | grep -q .
+          echo AURORA_KSQ_SBUILD_SYSTEMPATHS_CAUSAL_PASS=1 | tee /evidence/result.env
+          EOF_CONTAINER
+          rc=${PIPESTATUS[0]}
+          set -e
+          echo "SBUILD_CONTAINER_RC=$rc" | tee "$evidence/container-result.env"
+          exit "$rc"
+
+      - name: Capture host AppArmor audit
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/sbuild-systempaths-evidence"
+          mkdir -p "$evidence"
+          sudo dmesg | grep -E 'apparmor="DENIED".*profile="supralinux-ksq-unshare"' > "$evidence/host-apparmor-denied.log" || true
+          sudo dmesg | grep -E 'apparmor=.*supralinux-ksq-unshare|profile="supralinux-ksq-unshare"' > "$evidence/host-apparmor-related.log" || true
+
+      - name: Preserve causal evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-sbuild-systempaths-causal-probe
+          path: ${{ runner.temp }}/sbuild-systempaths-evidence
+          if-no-files-found: error
+          retention-days: 30
