@@ -114,7 +114,7 @@ jobs:
             --architectures=amd64 \
             --include='$DEB' \
             --hook-dir=/usr/share/mmdebstrap/hooks/file-mirror-automount \
-            resolute '$rootfs' /workspace/build/ksq-0/apt/resolute.sources" \
+            resolute '$rootfs' /etc/apt/sources.list.d/aurora-local.sources" \
             2>&1 | tee /workspace/build/probe/mmdebstrap.log
           su -s /bin/bash ubuntu -c \
             "mmdebstrap --unshare-helper /usr/sbin/chroot '$rootfs' dpkg-query -W extra-cmake-modules" \
