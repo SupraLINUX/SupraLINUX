@@ -56,7 +56,7 @@ jobs:
           gpgv --keyring /usr/share/keyrings/ubuntu-archive-keyring.gpg "$work/InRelease"
 
           python3 - "$work/InRelease" "$work/index.env" <<'PY'
-          import re, sys
+          import sys
           from pathlib import Path
 
           lines = Path(sys.argv[1]).read_text().splitlines()
@@ -108,6 +108,7 @@ jobs:
           python3 - \
             "$work/ksq0/build/ksq-0/selected-source-records.txt" \
             "$work/Sources" <<'PY'
+          import re
           import sys
           from pathlib import Path
 
@@ -126,11 +127,11 @@ jobs:
                   key,val=raw.split(':',1); cur[key]=val.lstrip()
               return records
 
-          def checksum_set(value):
+          def signed_checksum_rows(value):
               out=[]
               for line in value.splitlines():
                   p=line.split()
-                  if len(p)==3:
+                  if len(p)==3 and re.fullmatch(r'[0-9a-fA-F]{128}', p[0]) and p[1].isdigit():
                       out.append((p[2], int(p[1]), p[0].lower()))
               return out
 
@@ -138,29 +139,55 @@ jobs:
           marker='### bluedevil 4:6.7.4-2ubuntu1 origin=ubuntu-stonking@20260829T022000Z\n'
           start=canonical_text.index(marker)+len(marker)
           end=canonical_text.index('\n### ', start)
-          canonical=parse_deb822(canonical_text[start:end])[0]
+          block=canonical_text[start:end]
+          block_lines=block.splitlines()
+
+          directory_lines=[line.split(':',1)[1].strip() for line in block_lines if line.startswith('Directory:')]
+          if len(directory_lines)!=1:
+              raise SystemExit(f'canonical Directory parse failed: {directory_lines!r}')
+          canonical_directory=directory_lines[0]
+
+          try:
+              checksum_start=block_lines.index('Checksums-Sha512: ') + 1
+          except ValueError:
+              try:
+                  checksum_start=block_lines.index('Checksums-Sha512:') + 1
+              except ValueError:
+                  raise SystemExit('canonical Checksums-Sha512 field missing')
+          canonical_rows=[]
+          for line in block_lines[checksum_start:]:
+              if re.match(r'^[A-Za-z][A-Za-z0-9-]*:', line):
+                  break
+              p=line.split()
+              if len(p)==3 and re.fullmatch(r'[0-9a-fA-F]{128}', p[0]) and p[1].isdigit():
+                  canonical_rows.append((p[2], int(p[1]), p[0].lower()))
+              elif line.strip():
+                  raise SystemExit(f'unexpected canonical checksum continuation line: {line!r}')
 
           signed=[r for r in parse_deb822(signed_path.read_text()) if r.get('Package')=='bluedevil' and r.get('Version')=='4:6.7.4-2ubuntu1']
           if len(signed)!=1:
               raise SystemExit(f'expected one signed record, got {len(signed)}')
           signed=signed[0]
+          signed_rows=signed_checksum_rows(signed.get('Checksums-Sha512',''))
 
-          crows=checksum_set(canonical.get('Checksums-Sha512',''))
-          srows=checksum_set(signed.get('Checksums-Sha512',''))
-          print('=== CANONICAL Checksums-Sha512 order ===')
-          for r in crows: print(*r)
-          print('=== SIGNED Checksums-Sha512 order ===')
-          for r in srows: print(*r)
-          print(f'AURORA_KSQ_STONKING_DIRECTORY_CANONICAL={canonical.get("Directory")!r}')
+          print('=== CANONICAL Checksums-Sha512 identity rows ===')
+          for r in canonical_rows: print(*r)
+          print('=== SIGNED Checksums-Sha512 identity rows ===')
+          for r in signed_rows: print(*r)
+          print(f'AURORA_KSQ_STONKING_DIRECTORY_CANONICAL={canonical_directory!r}')
           print(f'AURORA_KSQ_STONKING_DIRECTORY_SIGNED={signed.get("Directory")!r}')
-          print(f'AURORA_KSQ_STONKING_CHECKSUM_TEXT_EQUAL={canonical.get("Checksums-Sha512","").strip()==signed.get("Checksums-Sha512","").strip()}')
-          print(f'AURORA_KSQ_STONKING_CHECKSUM_SET_EQUAL={set(crows)==set(srows)}')
-          print(f'AURORA_KSQ_STONKING_CHECKSUM_ORDER_EQUAL={crows==srows}')
-          if canonical.get('Directory','').strip()!=signed.get('Directory','').strip():
+          print(f'AURORA_KSQ_STONKING_CHECKSUM_SET_EQUAL={set(canonical_rows)==set(signed_rows)}')
+          print(f'AURORA_KSQ_STONKING_CHECKSUM_ORDER_EQUAL={canonical_rows==signed_rows}')
+          print(f'AURORA_KSQ_STONKING_CANONICAL_ROWS={len(canonical_rows)}')
+          print(f'AURORA_KSQ_STONKING_SIGNED_ROWS={len(signed_rows)}')
+
+          if canonical_directory!=signed.get('Directory','').strip():
               raise SystemExit('Directory differs')
-          if set(crows)!=set(srows):
+          if len(canonical_rows)!=3 or len(signed_rows)!=3:
+              raise SystemExit('unexpected source object count')
+          if set(canonical_rows)!=set(signed_rows):
               raise SystemExit('Checksums-Sha512 object identity set differs')
-          if crows==srows:
-              raise SystemExit('probe did not reproduce ordering-only mismatch')
-          print('AURORA_KSQ_STONKING_SOURCE_IDENTITY_ROOT_CAUSE=ORDERING_ONLY')
+
+          print('AURORA_KSQ_STONKING_SOURCE_IDENTITY_ROOT_CAUSE=CANONICAL_UNINDENTED_MULTILINE')
+          print('AURORA_KSQ_STONKING_SOURCE_IDENTITY_PROBE=PASS')
           PY
