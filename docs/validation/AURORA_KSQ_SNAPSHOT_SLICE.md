@@ -1,12 +1,14 @@
 # Aurora KSQ certified snapshot slice
 
-Status: **MATERIALIZATION/PUBLICATION IN PROGRESS — NOT YET CANONICAL**
+Status: **PUBLISHED / INDEPENDENTLY VALIDATED / REPOSITORY-PINNED**
 
-This document defines the archive slice used to remove Ubuntu Snapshot Service transport from the KSQ-1 critical path without changing Aurora's certified archive identity.
+This document records the durable byte-preserved archive slice for Aurora snapshot `20260829T022000Z`. The slice removes live Ubuntu Snapshot Service transport from the KSQ build critical path without changing the archive identities certified by KSQ-0.
 
-It is infrastructure qualification evidence, not KSQ-1 acceptance. KSQ-0 remains certified/closed, KSQ-1 remains active/not certified, KSQ-2 remains blocked, and C4.1 remains paused.
+This status certifies the snapshot engineering input itself. It does not certify a GitHub hosted runner, a KDE candidate, or KSQ-1.
 
-## Certified inputs
+KSQ-0 remains **CERTIFIED / CLOSED**. KSQ-1 remains **ACTIVE / NOT CERTIFIED**. KSQ-2 remains **BLOCKED**. C4.1 remains **PAUSED**.
+
+## Certified origin
 
 Ubuntu archive snapshot:
 
@@ -17,126 +19,79 @@ Canonical KSQ-0 closure evidence:
 - run `33231879994`;
 - artifact `9708738867`;
 - digest `sha256:5b23140181ea7e7931cb744f4c43930adba8f79e446c52d0f4b1c3c568106d50`;
-- closure status `COMPLETE`;
-- selected sources `101`;
-- unresolved dependencies/source decisions `0`.
+- closure `COMPLETE`;
+- selected source nodes `101`;
+- unresolved dependency/source decisions `0`.
 
-Canonical metadata-only size measurement:
+Canonical size/identity evidence:
 
 - run `33455898813`;
 - job `99695669970`;
 - artifact `9781553137`;
 - digest `sha256:39672453ba364d81cfa8621cd060201f845a6d940fb4ac04d45aa25be1ce0e19`;
-- certified binary/version seeds `244`;
-- selected binary objects `1541`;
+- 244 certified binary/version seeds;
+- 1541 binary `.deb` objects;
 - binary bytes `704826504`;
-- Ubuntu source objects `301`;
-- Ubuntu source bytes `212283819`;
-- Debian source objects `4`;
-- Debian source bytes `161155`;
+- 301 Ubuntu source objects / `212283819` bytes;
+- 4 Debian source objects / `161155` bytes;
 - APT lists measured uncompressed `83858183` bytes;
-- conservative raw upper bound `1001129661` bytes = `0.9324 GiB`;
-- recommended reservation with 25% headroom `1.1655 GiB`;
+- conservative raw upper bound `1001129661` bytes (`0.9324 GiB`);
+- 25% reservation `1.1655 GiB`;
 - package payloads downloaded by the measurement `0`.
 
-The size artifact contains the exact 1541 snapshot binary URIs selected by an empty-dpkg-state APT solve over the certified 244 seeds plus Essential/buildd/tooling roots. Materialization must not recompute that set from a newer archive.
+The live-archive control run `33456358421` proved that current archive drift had already removed certified versions of `freerdp3-dev`, `libssl-dev`, and `libwinpr3-dev`. This confirms that current-live archive resolution cannot substitute for the certified snapshot.
 
-## Live archive control
+## Published immutable engineering Release
 
-The non-canonical live archive control run `33456358421` / job `99697042924` failed because the current archive no longer offered the certified versions of:
+The durable slice is published as:
 
-- `freerdp3-dev=3.30.0+dfsg-0ubuntu0.26.04.2`;
-- `libssl-dev=3.5.5-1ubuntu3.4`;
-- `libwinpr3-dev=3.30.0+dfsg-0ubuntu0.26.04.2`.
+- Release ID `380209318`;
+- tag `ksq-snapshot-20260829T022000Z`;
+- asset ID `538944111`;
+- asset `aurora-ubuntu-snapshot-20260829T022000Z-amd64.tar`;
+- exact bytes `973148160`;
+- SHA-256 `8dc9087b53e90c085333644ffdb828b87ce0af6cd61ec5f1d516fe35e80529e7`;
+- manifest asset ID `538944115`;
+- manifest SHA-256 `f3b30842f18fdaf868af74bbb3c6309f90e6b15a1fed2fe29bfd36a633536afd`.
 
-Diagnostic artifact `9781682967` has digest `sha256:2edf9c572a2c134de83216beaae641e66e43cb50a8c5ddf19f6c90a8f1bce419`.
+Repository pin:
 
-This is evidence of normal live-archive drift. It is not a KDE/package defect and it cannot replace the snapshot-backed evidence.
+`scripts/ci/aurora-ksq-snapshot-release.env`
 
-## Execution-host decision
+Pin status:
 
-The slice is not designed around persistent storage on `espadarunica`.
+`AURORA_KSQ_SNAPSHOT_RELEASE_STATUS=INDEPENDENTLY_VALIDATED`
 
-The current canonical execution-host qualification is GitHub-hosted `ubuntu-26.04`:
+The Release is an engineering reproducibility input, not an Aurora product release.
 
-- qualifying workflow `.github/workflows/ksq-github-hosted-builder-profile-probe.yml`;
-- commit `067d6b160f0b8c0b2411a36beecc21cd7e8dc5da`;
-- run `33467690494`;
-- job `99730854792`;
-- result **SUCCESS**;
-- artifact `9785447790`;
-- digest `sha256:fbcaa74ec5810f4495396c1f0afe8eb3f1b1ab67ed34723ded0ffed12e293988`.
+## Identity and trust model
 
-The qualifying run observed Ubuntu 26.04 LTS, runner image version `20260824.116.1`, kernel `7.0.0-1012-azure`, AppArmor enforcing, then proved real unprivileged `mmdebstrap` and `sbuild` inside the pinned Resolute container.
+The slice is a byte-preserving subset of the certified upstream archives. It is not a regenerated repository and introduces no local archive-signing key.
 
-GitHub currently labels the runner image/service **Public preview**. Ubuntu 26.04 LTS itself is stable. SupraLINUX therefore treats runner-image changes as an infrastructure regression trigger rather than transferring PASS evidence blindly between images.
+Ubuntu trust remains:
 
-The previous GitHub-hosted Ubuntu 24.04 and `espadarunica` Ubuntu 24.04 investigations remain historical evidence only; neither is the selected canonical KSQ host.
+`Ubuntu archive key -> signed InRelease -> signed Packages/Sources identity -> retained object checksum`
 
-## Durable distribution model
+The tree preserves:
 
-The final certified slice is a content-addressed engineering input, not a machine-local cache.
+- original signed Ubuntu `InRelease` metadata;
+- retained signed `Packages.xz` and `Sources.xz` bytes;
+- corresponding `by-hash/SHA256` identities;
+- exactly the whitelisted Ubuntu pool objects;
+- the four certified Debian `wayland-protocols 1.48-1` source objects;
+- object manifests and provenance;
+- deterministic `aurora-local.sources`;
+- `COMPLETE` state.
 
-Target durable representation:
+No newer candidate is substituted and no index is regenerated.
 
-- exact asset name `aurora-ubuntu-snapshot-20260829T022000Z-amd64.tar`;
-- dedicated engineering Release tag `ksq-snapshot-20260829T022000Z`;
-- deterministic uncompressed GNU tar;
-- repository-pinned SHA-256 and byte size after independent publication validation;
-- committed provenance tying the asset back to snapshot `20260829T022000Z`, KSQ-0 artifact `9708738867`, and size artifact `9781553137`;
-- exact internal manifests and original Ubuntu signed metadata retained inside the archive.
+## Deterministic consumer path
 
-The archive is intentionally uncompressed. Nearly all large retained payloads are already compressed (`.deb`, `.xz`, ZIP provenance), and the certified raw upper bound is only `0.9324 GiB`. Avoiding an additional compressor removes compressor-version output from the canonical asset identity while remaining safely below GitHub's documented per-asset limit of 2 GiB.
-
-GitHub documents up to 1000 assets per Release, each file under 2 GiB, with no total Release size or bandwidth limit. The selected slice therefore requires no splitting. The Release is explicitly created with `--latest=false` and is an engineering reproducibility input, not an Aurora product release.
-
-The Release asset is the durable transport object. Its committed SHA-256 will be the entry-point identity; the internal Ubuntu trust chain and object manifests remain independently verified after extraction.
-
-Actions artifacts are not the durable storage mechanism because they have lifecycle/storage semantics intended for workflow artifacts. Actions cache is used only as a temporary resumable staging accelerator after failed remote acquisition and never as the canonical identity source.
-
-## Deterministic path and layout
-
-Materialization and consumption both use the deterministic root:
+Materialization and consumption use:
 
 `/opt/supralinux/archive/20260829T022000Z/`
 
-This is intentional because `aurora-local.sources` contains the deterministic `file:` URI consumed inside the pinned Resolute builder. The GitHub runner's random `${RUNNER_TEMP}` path is not embedded in the certified slice.
-
-The tree contains:
-
-- `ubuntu/dists/...`: original Ubuntu `InRelease`, `Packages.xz` and `Sources.xz` bytes required for Resolute and Stonking source metadata;
-- `ubuntu/dists/.../by-hash/SHA256/...`: hardlinks matching the signed index identities;
-- `ubuntu/pool/...`: exactly the whitelisted Ubuntu binary/source objects required by the certified closure;
-- `debian-sources/wayland-protocols-1.48/`: the four already-certified Debian Snapshot objects for `wayland-protocols 1.48-1`;
-- `manifests/`: exact object identities and sizes;
-- `provenance/`: canonical source/closure evidence needed to reconstruct why each retained object is present;
-- `aurora-local.sources`: deterministic local-only APT source definition;
-- `provenance.env` and `COMPLETE`: machine-readable completion/provenance state.
-
-The final tree is hardened read-only before publication. Consumer jobs extract it to the same deterministic host path and then mount it read-only into the pinned Resolute container at that exact path.
-
-## Identity model
-
-The slice is a byte-preserving copy of the certified upstream archives. It is deliberately **not** a newly generated APT repository.
-
-For Ubuntu content, the trust chain remains the Ubuntu archive trust chain:
-
-`Ubuntu archive key -> signed InRelease -> Packages/Sources checksum -> selected object checksum`.
-
-Materialization therefore must:
-
-1. verify each original Ubuntu `InRelease` with `ubuntu-archive-keyring.gpg`;
-2. obtain each retained `Packages.xz`/`Sources.xz` identity from that signed `InRelease`;
-3. obtain each binary `.deb` SHA-256 and size from the retained signed `Packages` metadata;
-4. obtain each Ubuntu source object SHA-512 and size from the retained signed `Sources` metadata and prove it matches the canonical KSQ-0 selected source record;
-5. retain only objects belonging to the certified closure;
-6. preserve the four Debian `wayland-protocols 1.48-1` objects using their already-fixed Debian Snapshot object identities and SHA-256 hashes.
-
-No index is regenerated, no local signing key is introduced, and no newer candidate version is substituted.
-
-## APT contract inside the pinned container
-
-The accepted source uses `file:` transport, Ubuntu's archive keyring, and explicitly disables snapshot URI rewriting because the local tree is already the byte-preserved snapshot.
+The APT contract inside the pinned Resolute builder is:
 
 ```text
 Types: deb deb-src
@@ -157,98 +112,111 @@ Check-Valid-Until: no
 Snapshot: no
 ```
 
-Stonking remains source-only. A Stonking binary `Packages` index is not retained or enabled.
+Stonking remains source-only. There is no Stonking binary suite in the consumer contract.
 
-The local-consumption gate must run with remote networking deliberately unavailable and still pass. Any active `http:`/`https:` source or any missing local object is a hard failure. There is no live-archive or Snapshot Service fallback.
-
-## Materialization and publication workflow
+## Consumer verification gate
 
 Workflow:
 
-`.github/workflows/ksq-snapshot-slice-materialize.yml`
+`.github/workflows/ksq-github-hosted-local-snapshot-gate.yml`
 
-Hosted publication implementation commit:
+Qualifying commit:
 
-`3ff18e9f24c7619fe978fd1a6ca5cffa12c57089`
+`94f3e0b03e17704828cfb0325b744fffe32911a9`
 
-Initial hosted publication run:
+Run / job:
 
-`33468142369`
+- run `33528728431`;
+- job `99926115300`;
+- result **SUCCESS**.
 
-The workflow runs on GitHub-hosted `ubuntu-26.04` and is fail-closed:
+Artifact:
 
-1. assert the publication host is Ubuntu 26.04;
-2. optionally restore `.staging-20260829T022000Z` from a GitHub Actions cache using `actions/cache/restore@v5`;
-3. treat restored cache bytes as untrusted and normalize only metadata hardlinks whose content hash matches the signed canonical peer;
-4. download canonical artifacts `9781553137` and `9708738867` and verify their exact ZIP SHA-256 values before materialization;
-5. acquire and verify signed Ubuntu metadata;
-6. materialize the exact binary/source whitelist;
-7. verify every object hash and byte count;
-8. verify the metadata and pool trees contain no unmanifested files;
-9. verify `by-hash` identities;
-10. harden the completed tree read-only;
-11. create the deterministic GNU tar with sorted names, numeric owner/group zero and fixed mtime epoch `1787970000` (`2026-08-29T02:20:00Z`);
-12. require the archive to remain below 2 GiB;
-13. calculate exact SHA-256 and byte size and include both in a companion provenance asset;
-14. refuse to overwrite an existing Release tag or same-name asset;
-15. publish the engineering Release with `--latest=false`;
-16. start a second fresh GitHub-hosted Ubuntu 26.04 job;
-17. independently re-download both published assets;
-18. compare the re-downloaded archive against the publisher job's exact SHA-256 and byte size;
-19. reject unsafe archive member names and symlinks before extraction;
-20. extract to `/opt/supralinux/archive` and rerun the full slice validator.
+- ID `9808961368`;
+- GitHub digest `sha256:8216edf709c99aa39148f3c788f7ae2d6be26b91efa4aaefa36280f772ba99ef`;
+- inner evidence TAR SHA-256 `1780e351dbbd2b5ad002a81e178a3c67536f19627d6951a38962fe947fbea1b9`.
 
-If remote Snapshot Service acquisition fails, only the partial staging directory may be saved in an Actions cache. A subsequent attempt must still revalidate all signed metadata/object identities before final promotion. Cache identity is never sufficient for acceptance.
+That fresh consumer proved with network mode `none`:
 
-The Release does **not** become canonical merely because this workflow publishes it. After the independent publication re-download succeeds, its exact SHA-256 and byte size must be committed to the repository. A fresh consumer gate must then trust only that repository pin before extraction.
+1. exact repository pin before extraction;
+2. safe archive member layout;
+3. complete slice validator PASS;
+4. all 244 certified APT candidates exact;
+5. empty-status closure exactly 1541 objects / `704826504` bytes;
+6. all package transport `file:`;
+7. build toolchain installation exclusively from local content;
+8. `mmdebstrap --mode=unshare` PASS;
+9. trivial `sbuild --chroot-mode=unshare` PASS;
+10. `sbuild` native `.build` evidence reports `Status: successful`;
+11. zero recorded AppArmor denials.
 
-## Required local-only acceptance before builder integration
+This closes the local-only consumer gate for the snapshot input.
 
-Before changing formal KSQ-1 source-build workflows, a fresh GitHub-hosted `ubuntu-26.04` job must:
+## Real source-node consumer proof
 
-1. load the narrow AppArmor profile on the ephemeral host;
-2. download the exact Release asset and verify its repository-pinned SHA-256 and byte size **before extraction**;
-3. reject unsafe archive layout and extract it to `/opt/supralinux/archive`;
-4. rerun the full slice validator;
-5. launch the pinned Ubuntu 26.04 container with the slice mounted read-only at the same deterministic path;
-6. make remote networking unavailable and configure APT exclusively with the retained `file:` sources;
-7. prove all 244 certified seed candidates equal the certified versions;
-8. prove an empty-status `apt-get --no-install-recommends --print-uris` solve of the same Essential/build/tooling + seed roots resolves exactly 1541 binary objects and `704826504` bytes;
-9. prove every resolved binary URI is inside the local slice;
-10. install the required build tooling exclusively from the local slice;
-11. run canonical `mmdebstrap --mode=unshare` against that local source;
-12. run the trivial `sbuild --chroot-mode=unshare` smoke and require `.deb`, `.buildinfo` and `.changes`;
-13. prove no remote archive/snapshot URI is active or used.
+The same published slice was then used to build certified DAG order 001 in an isolated research workflow:
 
-Only after this gate passes may the formal candidate/reference/reproducibility workflows be switched to the hosted local-slice path and source DAG 001 be rerun.
+`.github/workflows/ksq-source-001-local-slice-probe.yml`
 
-For sbuild unshare, current Ubuntu Resolute documentation explicitly provides `UNSHARE_BIND_MOUNTS` for binding an outside directory to a mountpoint inside the chroot. If the local snapshot path must be visible within the sbuild chroot, that supported mechanism must be exercised and its exact mount operation added narrowly to the AppArmor profile only after observing/proving the required contract. No broad mount permission will be added speculatively.
+Final commit:
 
-## Upstream documentation basis
+`3072e7945811d9ce226551fd9fab3ffbb6e5a5d2`
 
-Design is based on current stable documentation rather than transport assumptions:
+Run / job:
 
-- Ubuntu Snapshot Service: `https://documentation.ubuntu.com/server/explanation/software/about-apt-upgrade-and-snapshots/`;
-- Ubuntu Resolute `sources.list(5)`: `https://manpages.ubuntu.com/manpages/resolute/man5/sources.list.5.html`;
-- Ubuntu Resolute `apt-secure(8)`: `https://manpages.ubuntu.com/manpages/resolute/man8/apt-secure.8.html`;
-- Ubuntu Resolute `sbuild.conf(5)`: `https://manpages.ubuntu.com/manpages/stonking/man5/sbuild.conf.5.html`;
-- GitHub standard hosted runners: `https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/choose-the-runner-for-a-job`;
-- GitHub Releases quotas: `https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas`;
-- GitHub CLI `gh release create`: `https://cli.github.com/manual/gh_release_create`;
-- `actions/cache` v5 documentation: `https://github.com/actions/cache`.
+- run `33531933805`;
+- job `99936944948`;
+- result **SUCCESS**.
 
-The `file:` transport does not replace signature verification; APT still verifies the retained signed repository metadata. The local slice removes repeated network transport from the critical path, not archive authentication.
+Artifact:
 
-## Current gate state
+- ID `9810147299`;
+- GitHub digest `sha256:997074576b9ef9b9d0743d931e061d222f6911fde53b809ef223e8aa4f354125`;
+- inner evidence TAR SHA-256 `03f9ba7eeeaaf16ddab8345ec31da97e55c9195ae1518e5dd2c8b2ae13c12912`.
 
-- snapshot slice design: **ACCEPTED**;
-- GitHub-hosted Ubuntu 26.04 builder architecture: **QUALIFIED**;
-- hosted materialization/publication implementation: **RUNNING**;
-- durable snapshot Release asset: **NOT YET ACCEPTED**;
-- independently validated published asset: **PENDING**;
-- repository-pinned Release SHA-256/size: **NOT YET COMMITTED**;
-- local-only APT gate from repository-pinned published asset: **NOT RUN**;
-- canonical mmdebstrap regression on published local slice: **NOT RUN**;
-- canonical sbuild smoke on published local slice: **NOT RUN**;
-- source DAG 001 on hosted local-slice path: **NOT RUN**;
+Certified source identity:
+
+- source `kf6-extra-cmake-modules`;
+- packaging base `6.29.0-0ubuntu1`;
+- prepared version `6.29.0-0ubuntu1~supra26.04.1`.
+
+The run materialized exactly three regular source objects from the local `stonking` `deb-src`, prepared the source through the maintained KSQ-1 source-preparation code, and produced successful local-only DEBs:
+
+- `extra-cmake-modules_6.29.0-0ubuntu1~supra26.04.1_amd64.deb`;
+- `extra-cmake-modules-doc_6.29.0-0ubuntu1~supra26.04.1_all.deb`.
+
+No actual source or package transport used HTTP/HTTPS.
+
+### `Acquire::Source-Symlinks`
+
+APT's supported `Acquire::Source-Symlinks` option is significant for this local repository. Ubuntu Resolute `apt.conf(5)` documents it as true by default, allowing source archives from `file:` repositories to be represented as symlinks. KSQ's prepared-source workflow requires ordinary files, so local source acquisition explicitly uses:
+
+`Acquire::Source-Symlinks=false`
+
+This keeps acquisition and checksum verification inside APT while materializing regular source files. It is not a bypass of repository validation.
+
+## Execution-host boundary
+
+The Release slice is accepted as a durable content-identified engineering input. That conclusion is separate from the host used to test it.
+
+GitHub's `ubuntu-26.04` hosted runner remains **Public Preview** as of 2026-09-01. Consequently:
+
+- hosted local-only and source-001 PASS results are research qualification evidence;
+- they do not establish the canonical certification host;
+- a future stable/GA Ubuntu 26.04 host must rerun the relevant regressions before its evidence can be used for formal KSQ acceptance.
+
+The slice itself does not need to be regenerated merely because the execution host changes; its bytes and repository pin are independent identities.
+
+## Current state
+
+- certified snapshot identity: **FIXED**;
+- durable Release asset: **PUBLISHED**;
+- independent publication re-download/validation: **PASS**;
+- repository SHA-256/byte pin: **COMMITTED**;
+- local-only consumer gate: **PASS (RESEARCH HOST)**;
+- local-only mmdebstrap regression: **PASS (RESEARCH HOST)**;
+- local-only sbuild smoke: **PASS (RESEARCH HOST)**;
+- real source DAG 001 local-slice proof: **PASS (RESEARCH HOST)**;
+- GitHub `ubuntu-26.04` as canonical certification host: **NO — PUBLIC PREVIEW**;
+- stable canonical certification host: **TO BE SELECTED / QUALIFIED**;
 - KSQ-1: **ACTIVE / NOT CERTIFIED**.
