@@ -199,11 +199,27 @@ jobs:
           sudo dmesg | grep -E 'apparmor="DENIED".*profile="supralinux-ksq-unshare"' > "$evidence/host-apparmor-denied.log" || true
           sudo dmesg | grep -E 'apparmor=.*supralinux-ksq-unshare|profile="supralinux-ksq-unshare"' > "$evidence/host-apparmor-related.log" || true
 
+      - name: Package causal evidence losslessly
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/sbuild-systempaths-evidence"
+          archive="$RUNNER_TEMP/aurora-ksq-sbuild-systempaths-causal-evidence.tar"
+          checksum="$archive.sha256"
+          test -d "$evidence"
+          tar -C "$RUNNER_TEMP" -cf "$archive" sbuild-systempaths-evidence
+          sha256sum "$archive" | tee "$checksum"
+          tar -tf "$archive" | sort > "$RUNNER_TEMP/aurora-ksq-sbuild-systempaths-causal-evidence.members.txt"
+
       - name: Preserve causal evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: aurora-ksq-sbuild-systempaths-causal-probe
-          path: ${{ runner.temp }}/sbuild-systempaths-evidence
+          path: |
+            ${{ runner.temp }}/aurora-ksq-sbuild-systempaths-causal-evidence.tar
+            ${{ runner.temp }}/aurora-ksq-sbuild-systempaths-causal-evidence.tar.sha256
+            ${{ runner.temp }}/aurora-ksq-sbuild-systempaths-causal-evidence.members.txt
           if-no-files-found: error
           retention-days: 30
