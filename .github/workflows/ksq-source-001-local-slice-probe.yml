@@ -188,10 +188,12 @@ jobs:
           mkdir -p "$work/download"
           cd "$work/download"
           apt-get source --download-only "$source_pkg=$base_version" 2>&1 | tee /evidence/source-fetch.log
-          if grep -Ei 'https?://' /evidence/source-fetch.log; then
-            echo 'AURORA_KSQ_SOURCE001_FAILURE: source fetch attempted remote transport' >&2
+          grep -E '^(Get|Hit|Ign|Err):' /evidence/source-fetch.log > /evidence/source-fetch-transports.log || true
+          if grep -Ei '^(Get|Hit|Ign|Err):.*https?://' /evidence/source-fetch.log; then
+            echo 'AURORA_KSQ_SOURCE001_FAILURE: source acquisition used remote transport' >&2
             exit 1
           fi
+          grep -q '^Get:.* file:/opt/supralinux/archive/20260829T022000Z/ubuntu ' /evidence/source-fetch.log
           mapfile -t dscs < <(find . -maxdepth 1 -type f -name '*.dsc' -print | sort)
           test "${#dscs[@]}" -eq 1
           grep -Fqx "Source: $source_pkg" "${dscs[0]}"
