@@ -8,32 +8,35 @@ WORKDIR="${3:?work directory required}"
 APT_ROOT="${ROOT}/build/ksq-0/apt"
 AUDIT_DOWNLOADS="${ROOT}/build/ksq-0/source-audit/downloads"
 
-[[ -f "${APT_ROOT}/stonking.sources" ]] || { echo "AURORA_KSQ_1_FETCH_FAILURE: KSQ-0 APT metadata missing" >&2; exit 1; }
-[[ -f "${APT_ROOT}/resolute.sources" ]] || { echo "AURORA_KSQ_1_FETCH_FAILURE: Resolute APT metadata missing" >&2; exit 1; }
+[[ -f "${APT_ROOT}/stonking.sources" ]] || { echo "AURORA_KSQ_1_FETCH_FAILURE: KSQ-0-compatible local APT metadata missing" >&2; exit 1; }
+[[ -f "${APT_ROOT}/resolute.sources" ]] || { echo "AURORA_KSQ_1_FETCH_FAILURE: Resolute local APT metadata missing" >&2; exit 1; }
 
 rm -rf "${WORKDIR}"
 mkdir -p "${WORKDIR}"
 cd "${WORKDIR}"
 
-stonking_opts=(
-  -o "Dir::Etc::sourcelist=${APT_ROOT}/stonking.sources"
+common_opts=(
   -o "Dir::Etc::sourceparts=-"
-  -o "Dir::State::lists=${APT_ROOT}/stonking-lists"
   -o "Dir::State::status=${APT_ROOT}/empty-status"
-  -o "Dir::Cache=${APT_ROOT}/stonking-cache"
   -o "APT::Architecture=amd64"
   -o "APT::Architectures=amd64"
   -o "Acquire::Languages=none"
+  -o "Acquire::Retries=0"
+  -o "Acquire::http::Proxy=http://127.0.0.1:9/"
+  -o "Acquire::https::Proxy=http://127.0.0.1:9/"
+)
+stonking_opts=(
+  "${common_opts[@]}"
+  -o "Dir::Etc::sourcelist=${APT_ROOT}/stonking.sources"
+  -o "Dir::State::lists=${APT_ROOT}/stonking-lists"
+  -o "Dir::Cache=${APT_ROOT}/stonking-cache"
+  -o "Acquire::Source-Symlinks=false"
 )
 resolute_opts=(
+  "${common_opts[@]}"
   -o "Dir::Etc::sourcelist=${APT_ROOT}/resolute.sources"
-  -o "Dir::Etc::sourceparts=-"
   -o "Dir::State::lists=${APT_ROOT}/resolute-lists"
-  -o "Dir::State::status=${APT_ROOT}/empty-status"
   -o "Dir::Cache=${APT_ROOT}/resolute-cache"
-  -o "APT::Architecture=amd64"
-  -o "APT::Architectures=amd64"
-  -o "Acquire::Languages=none"
 )
 
 if [[ "${SOURCE}" == "wayland-protocols" && "${BASE_VERSION}" == "1.48-1" ]]; then
@@ -43,19 +46,24 @@ if [[ "${SOURCE}" == "wayland-protocols" && "${BASE_VERSION}" == "1.48-1" ]]; th
     wayland-protocols_1.48.orig.tar.xz.asc \
     wayland-protocols_1.48-1.debian.tar.xz; do
     [[ -f "${AUDIT_DOWNLOADS}/${file}" ]] || {
-      echo "AURORA_KSQ_1_FETCH_FAILURE: audited Debian source object missing: ${file}" >&2
+      echo "AURORA_KSQ_1_FETCH_FAILURE: certified Debian source object missing: ${file}" >&2
       exit 1
     }
     cp -a "${AUDIT_DOWNLOADS}/${file}" .
   done
 else
-  apt-get "${stonking_opts[@]}" source --download-only "${SOURCE}=${BASE_VERSION}"
+  fetch_log="${WORKDIR}/apt-source-fetch.log"
+  apt-get "${stonking_opts[@]}" source --download-only "${SOURCE}=${BASE_VERSION}" 2>&1 | tee "${fetch_log}"
+  if grep -Ei '^(Get|Hit|Ign|Err):.*https?://' "${fetch_log}"; then
+    echo "AURORA_KSQ_1_FETCH_FAILURE: remote source transport attempted" >&2
+    exit 1
+  fi
 fi
 
 mapfile -t dsc_files < <(find . -maxdepth 1 -type f -name '*.dsc' -printf '%f\n' | sort)
 [[ "${#dsc_files[@]}" -eq 1 ]] || {
-  echo "AURORA_KSQ_1_FETCH_FAILURE: expected one source dsc for ${SOURCE}, found ${#dsc_files[@]}" >&2
-  printf '%s\n' "${dsc_files[@]}" >&2
+  echo "AURORA_KSQ_1_FETCH_FAILURE: expected one regular source dsc for ${SOURCE}, found ${#dsc_files[@]}" >&2
+  find . -maxdepth 1 -printf '%y %p -> %l\n' >&2
   exit 1
 }
 ORIGINAL_DSC="${dsc_files[0]}"
@@ -94,7 +102,6 @@ for resolute_version in "${resolute_versions[@]}"; do
   }
 done
 
-# Rebuild the source package after the deterministic changelog/packaging delta.
 dpkg-source -b source >/dev/null
 
 PREPARED_DSC=""
