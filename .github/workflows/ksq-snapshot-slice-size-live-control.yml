@@ -1,0 +1,74 @@
+name: Aurora KSQ snapshot slice live size control
+
+on:
+  push:
+    branches: [feature/kde-stack-qualification]
+    paths: ['.github/workflows/ksq-snapshot-slice-size-live-control.yml']
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  live-control:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Measure current archive control without package downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/ksq0" "$RUNNER_TEMP/control"
+          curl -fsSL --retry 5 --retry-all-errors \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            'https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/9708738867/zip' \
+            -o "$RUNNER_TEMP/ksq0.zip"
+          unzip -q "$RUNNER_TEMP/ksq0.zip" -d "$RUNNER_TEMP/ksq0"
+          docker run --rm -i \
+            -v "$RUNNER_TEMP/ksq0:/evidence:ro" \
+            -v "$RUNNER_TEMP/control:/out" \
+            ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b bash -s <<'EOF'
+          set -euo pipefail
+          rm -f /etc/apt/sources.list /etc/apt/sources.list.d/*
+          cat >/etc/apt/sources.list.d/ubuntu.sources <<'SOURCES'
+          Types: deb
+          URIs: http://archive.ubuntu.com/ubuntu
+          Suites: resolute resolute-updates resolute-backports
+          Components: main universe restricted multiverse
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+          Types: deb
+          URIs: http://security.ubuntu.com/ubuntu
+          Suites: resolute-security
+          Components: main universe restricted multiverse
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          SOURCES
+          apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update >/out/apt-update.log 2>&1
+          awk -F '\t' 'NR>1 {p=$4;n=split($7,a," ");v="";for(i=1;i<=n;i++)if(index(a[i],p "=")==1){v=substr(a[i],length(p)+2);break} if(v!="")print p "\t" v}' \
+            /evidence/build/ksq-0/ubuntu-satisfied-build-deps.tsv | sort -u >/out/seeds.tsv
+          mismatches=0
+          while IFS=$'\t' read -r p v; do
+            c=$(apt-cache policy "$p" | awk '/Candidate:/ {print $2;exit}')
+            [[ "$c" == "$v" ]] || { printf '%s\t%s\t%s\n' "$p" "$v" "$c" >>/out/mismatches.tsv; mismatches=$((mismatches+1)); }
+          done </out/seeds.tsv
+          : >/tmp/empty-status
+          mapfile -t pins < <(while IFS=$'\t' read -r p v; do apt-cache show "$p=$v" >/dev/null 2>&1 && printf '%s=%s\n' "$p" "$v" || printf '%s\n' "$p"; done </out/seeds.tsv)
+          roots=('?essential' apt build-essential ca-certificates ubuntu-keyring sudo sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils gzip xz-utils diffutils libcap2-bin)
+          roots+=("${pins[@]}")
+          apt-get -o Dir::State::status=/tmp/empty-status --no-install-recommends --print-uris -y install "${roots[@]}" >/out/uris.txt
+          awk '/^\047/&&$3~/^[0-9]+$/{f=$2;gsub(/^\047|\047$/,"",f);if(!(f in s)){s[f]=$3;bytes+=$3;n++}}END{printf "LIVE_BINARY_OBJECTS=%d\nLIVE_BINARY_BYTES=%.0f\n",n,bytes}' /out/uris.txt >/out/results.env
+          echo LIVE_DIRECT_SEED_MISMATCHES=$mismatches >>/out/results.env
+          echo LIVE_APT_LIST_BYTES=$(du -sb /var/lib/apt/lists|awk '{print $1}') >>/out/results.env
+          cat /out/results.env
+          EOF
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: aurora-ksq-snapshot-slice-live-control
+          path: ${{ runner.temp }}/control/
+          retention-days: 7
