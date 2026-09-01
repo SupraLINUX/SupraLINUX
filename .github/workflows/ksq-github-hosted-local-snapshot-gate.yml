@@ -1,0 +1,359 @@
+name: Aurora KSQ GitHub-hosted local snapshot gate
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-github-hosted-local-snapshot-gate.yml'
+      - 'scripts/ci/aurora-ksq-snapshot-release.env'
+      - 'scripts/ci/ksq-snapshot-slice.py'
+      - 'scripts/ci/install-ksq-apparmor-profile.sh'
+      - 'scripts/ci/apparmor/supralinux-ksq-unshare'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  local-snapshot-gate:
+    name: Prove local-only APT, mmdebstrap and sbuild
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Verify pinned release identity contract
+        id: pin
+        shell: bash
+        run: |
+          set -euo pipefail
+          pin='scripts/ci/aurora-ksq-snapshot-release.env'
+          test -s "$pin"
+          set -a
+          source "$pin"
+          set +a
+          [[ "$AURORA_KSQ_SNAPSHOT_RELEASE_STATUS" == INDEPENDENTLY_VALIDATED ]]
+          [[ "$AURORA_KSQ_SNAPSHOT" == 20260829T022000Z ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_ARCH" == amd64 ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_RELEASE_ID" == 380209318 ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_RELEASE_TAG" == ksq-snapshot-20260829T022000Z ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_ID" == 538944111 ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET" == aurora-ubuntu-snapshot-20260829T022000Z-amd64.tar ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256" == 8dc9087b53e90c085333644ffdb828b87ce0af6cd61ec5f1d516fe35e80529e7 ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES" == 973148160 ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST_ASSET_ID" == 538944115 ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST_SHA256" == f3b30842f18fdaf868af74bbb3c6309f90e6b15a1fed2fe29bfd36a633536afd ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_CERTIFIED_SEEDS" == 244 ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_BINARY_OBJECTS" == 1541 ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_BINARY_BYTES" == 704826504 ]]
+          cat /etc/os-release
+          uname -a
+          grep -qx 'VERSION_ID="26.04"' /etc/os-release
+          cat "$pin"
+          echo "snapshot=$AURORA_KSQ_SNAPSHOT" >> "$GITHUB_OUTPUT"
+
+      - name: Bootstrap host-only transport and namespace tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl python3 ubuntu-keyring gpgv
+          python3 -m py_compile scripts/ci/ksq-snapshot-slice.py
+          sudo bash scripts/ci/install-ksq-apparmor-profile.sh | tee "$RUNNER_TEMP/host-apparmor.txt"
+          sudo grep -qx 'supralinux-ksq-unshare (enforce)' /sys/kernel/security/apparmor/profiles
+
+      - name: Download exact release assets by immutable asset IDs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          out="$RUNNER_TEMP/release"
+          rm -rf "$out"
+          mkdir -p "$out"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/octet-stream' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_ID" \
+            -o "$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/octet-stream' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST_ASSET_ID" \
+            -o "$out/$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST"
+          [[ "$(stat -c '%s' "$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET")" == "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES" ]]
+          [[ "$(sha256sum "$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET" | awk '{print $1}')" == "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256" ]]
+          [[ "$(sha256sum "$out/$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST" | awk '{print $1}')" == "$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST_SHA256" ]]
+          grep -qx "AURORA_KSQ_SNAPSHOT_RELEASE_TAG=$AURORA_KSQ_SNAPSHOT_RELEASE_TAG" "$out/$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST"
+          grep -qx "AURORA_KSQ_SNAPSHOT_RELEASE_ASSET=$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET" "$out/$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST"
+          grep -qx "AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256=$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256" "$out/$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST"
+          grep -qx "AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES=$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES" "$out/$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST"
+          sha256sum "$out/"* | tee "$RUNNER_TEMP/release-assets.sha256"
+
+      - name: Reject unsafe archive paths and validate extracted slice
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          archive="$RUNNER_TEMP/release/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET"
+          python3 - "$archive" "$AURORA_KSQ_SNAPSHOT" <<'PY'
+          import sys, tarfile
+          from pathlib import PurePosixPath
+          archive, snapshot = sys.argv[1:]
+          with tarfile.open(archive, 'r:') as tf:
+              members = tf.getmembers()
+              if not members:
+                  raise SystemExit('empty archive')
+              for m in members:
+                  p = PurePosixPath(m.name)
+                  if p.is_absolute() or '..' in p.parts or not p.parts or p.parts[0] != snapshot:
+                      raise SystemExit(f'unsafe archive member: {m.name}')
+                  if m.issym():
+                      raise SystemExit(f'symlink forbidden: {m.name}')
+                  if m.islnk():
+                      link = PurePosixPath(m.linkname)
+                      if link.is_absolute() or '..' in link.parts or not link.parts or link.parts[0] != snapshot:
+                          raise SystemExit(f'unsafe hardlink: {m.name} -> {m.linkname}')
+          print('AURORA_KSQ_LOCAL_GATE_ARCHIVE_NAMES_SAFE')
+          PY
+          root="$RUNNER_TEMP/archive"
+          rm -rf "$root"
+          mkdir -p "$root"
+          tar -C "$root" -xf "$archive"
+          slice="$root/$AURORA_KSQ_SNAPSHOT"
+          python3 scripts/ci/ksq-snapshot-slice.py validate --slice-root "$slice"
+          test -f "$slice/COMPLETE"
+          test "$(find "$slice" -xdev -type f | wc -l)" -eq 1938
+          grep -qF "URIs: file:/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT/ubuntu" "$slice/aurora-local.sources"
+          if grep -RIE 'https?://' "$slice/aurora-local.sources"; then
+            echo 'remote URI found in canonical local APT source' >&2
+            exit 1
+          fi
+
+      - name: Prove package closure, mmdebstrap and sbuild with network physically absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          image='ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b'
+          slice="$RUNNER_TEMP/archive/$AURORA_KSQ_SNAPSHOT"
+          evidence="$RUNNER_TEMP/local-gate-evidence"
+          rm -rf "$evidence"
+          mkdir -p "$evidence/sbuild-result"
+          cp scripts/ci/aurora-ksq-snapshot-release.env "$evidence/release-pin.env"
+          cp "$RUNNER_TEMP/release-assets.sha256" "$evidence/release-assets.sha256"
+          cp "$RUNNER_TEMP/host-apparmor.txt" "$evidence/host-apparmor.txt"
+          docker pull "$image"
+          chmod 0777 "$evidence" "$evidence/sbuild-result"
+
+          docker run --rm -i \
+            --network none \
+            --security-opt seccomp=unconfined \
+            --security-opt apparmor=supralinux-ksq-unshare \
+            -v "$slice:/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT:ro" \
+            -v "$evidence:/evidence:rw" \
+            "$image" bash -s 2>&1 <<'EOF_CONTAINER' | tee "$evidence/container.log"
+          set -euo pipefail
+          snapshot=20260829T022000Z
+          repo="/opt/supralinux/archive/$snapshot"
+          export DEBIAN_FRONTEND=noninteractive
+
+          echo '=== isolated container ==='
+          cat /etc/os-release
+          cat /proc/self/attr/current
+          test "$(cat /sys/class/net/lo/operstate 2>/dev/null || true)" = unknown || true
+          if find /sys/class/net -mindepth 1 -maxdepth 1 ! -name lo -print -quit 2>/dev/null | grep -q .; then
+            echo 'AURORA_KSQ_LOCAL_GATE_FAILURE: non-loopback interface exists in --network none container' >&2
+            exit 1
+          fi
+          test -r /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          test -r "$repo/aurora-local.sources"
+
+          rm -f /etc/apt/sources.list
+          rm -f /etc/apt/sources.list.d/*
+          cp "$repo/aurora-local.sources" /etc/apt/sources.list.d/aurora-local.sources
+          cat >/etc/apt/apt.conf.d/99supralinux-local-only <<'EOF_APTCONF'
+          Acquire::http::Proxy "http://127.0.0.1:9/";
+          Acquire::https::Proxy "http://127.0.0.1:9/";
+          Acquire::Retries "0";
+          EOF_APTCONF
+          if grep -RIE 'https?://' /etc/apt/sources.list /etc/apt/sources.list.d 2>/dev/null; then
+            echo 'AURORA_KSQ_LOCAL_GATE_FAILURE: remote package source remains active' >&2
+            exit 1
+          fi
+          apt-get -o APT::Update::Error-Mode=any update 2>&1 | tee /evidence/apt-update.log
+          if grep -Ei 'https?://' /evidence/apt-update.log; then
+            echo 'AURORA_KSQ_LOCAL_GATE_FAILURE: apt update attempted remote transport' >&2
+            exit 1
+          fi
+
+          seeds="$repo/provenance/certified-binary-seeds.tsv"
+          test -s "$seeds"
+          test "$(wc -l < "$seeds")" -eq 244
+          : >/evidence/candidate-verification.tsv
+          while IFS=$'\t' read -r pkg expected extra; do
+            test -n "$pkg"
+            test -n "$expected"
+            test -z "${extra:-}"
+            candidate="$(apt-cache policy "$pkg" | awk '/Candidate:/ {print $2; exit}')"
+            printf '%s\t%s\t%s\n' "$pkg" "$expected" "$candidate" >>/evidence/candidate-verification.tsv
+            if [[ "$candidate" != "$expected" ]]; then
+              echo "AURORA_KSQ_LOCAL_GATE_FAILURE: candidate mismatch $pkg expected=$expected candidate=$candidate" >&2
+              exit 1
+            fi
+          done < "$seeds"
+          test "$(wc -l < /evidence/candidate-verification.tsv)" -eq 244
+          echo AURORA_KSQ_LOCAL_GATE_CANDIDATES_EXACT=244
+
+          : >/tmp/empty-status
+          mapfile -t seed_specs < <(awk -F '\t' '{print $1 "=" $2}' "$seeds")
+          roots=('?essential' apt build-essential ca-certificates ubuntu-keyring sudo sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils gzip xz-utils diffutils libcap2-bin)
+          roots+=("${seed_specs[@]}")
+          apt-get -o Dir::State::status=/tmp/empty-status --no-install-recommends --print-uris --yes install "${roots[@]}" > /evidence/binary-print-uris.txt
+          python3 - /evidence/binary-print-uris.txt <<'PY'
+          import shlex, sys
+          rows = {}
+          for raw in open(sys.argv[1], encoding='utf-8'):
+              if not raw.startswith("'"):
+                  continue
+              fields = shlex.split(raw)
+              if len(fields) < 3 or not fields[2].isdigit():
+                  continue
+              uri, size = fields[0], int(fields[2])
+              if not uri.startswith('file:'):
+                  raise SystemExit(f'AURORA_KSQ_LOCAL_GATE_FAILURE: non-file package URI: {uri}')
+              old = rows.get(uri)
+              if old is not None and old != size:
+                  raise SystemExit(f'AURORA_KSQ_LOCAL_GATE_FAILURE: conflicting size for {uri}')
+              rows[uri] = size
+          count, total = len(rows), sum(rows.values())
+          print(f'AURORA_KSQ_LOCAL_GATE_BINARY_OBJECTS={count}')
+          print(f'AURORA_KSQ_LOCAL_GATE_BINARY_BYTES={total}')
+          if count != 1541 or total != 704826504:
+              raise SystemExit('AURORA_KSQ_LOCAL_GATE_FAILURE: exact empty-status closure mismatch')
+          PY
+
+          apt-get --no-install-recommends install -y \
+            sudo sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+            ca-certificates ubuntu-keyring gzip xz-utils diffutils libcap2-bin build-essential \
+            2>&1 | tee /evidence/local-tool-install.log
+          if grep -Ei 'https?://' /evidence/local-tool-install.log; then
+            echo 'AURORA_KSQ_LOCAL_GATE_FAILURE: package installation attempted remote transport' >&2
+            exit 1
+          fi
+          dpkg-query -W -f='${Package}\t${Version}\n' sbuild libsbuild-perl mmdebstrap uidmap libcap2-bin util-linux | sort | tee /evidence/toolchain.tsv
+
+          grep -q '^ubuntu:' /etc/subuid || echo 'ubuntu:100000:65536' >> /etc/subuid
+          grep -q '^ubuntu:' /etc/subgid || echo 'ubuntu:100000:65536' >> /etc/subgid
+          chmod u-s /usr/bin/newuidmap /usr/bin/newgidmap
+          setcap cap_setuid=ep /usr/bin/newuidmap
+          setcap cap_setgid=ep /usr/bin/newgidmap
+          su -s /bin/bash ubuntu -c 'unshare --map-auto --map-user=65536 --map-group=65536 --keep-caps --mount --pid --uts --ipc --fork true'
+          echo AURORA_KSQ_LOCAL_GATE_NAMESPACE_PASS
+
+          test -d /usr/share/mmdebstrap/hooks/file-mirror-automount
+          rm -f /tmp/resolute-local-buildd.tar.zst
+          su -s /bin/bash ubuntu -c \
+            "mmdebstrap --mode=unshare --variant=buildd --architectures=amd64 --include=ca-certificates,ubuntu-keyring --hook-dir=/usr/share/mmdebstrap/hooks/file-mirror-automount resolute /tmp/resolute-local-buildd.tar.zst /etc/apt/sources.list.d/aurora-local.sources" \
+            2>&1 | tee /evidence/mmdebstrap.log
+          test -s /tmp/resolute-local-buildd.tar.zst
+          if grep -Ei 'https?://' /evidence/mmdebstrap.log; then
+            echo 'AURORA_KSQ_LOCAL_GATE_FAILURE: mmdebstrap attempted remote transport' >&2
+            exit 1
+          fi
+          echo AURORA_KSQ_LOCAL_GATE_MMDEBSTRAP_PASS
+
+          smoke=/tmp/supralinux-local-snapshot-smoke-1.0
+          rm -rf "$smoke" /tmp/supralinux-local-snapshot-smoke_1.0* /evidence/sbuild-result/*
+          mkdir -p "$smoke/debian/source"
+          cat >"$smoke/debian/control" <<'EOF_CONTROL'
+          Source: supralinux-local-snapshot-smoke
+          Section: devel
+          Priority: optional
+          Maintainer: SupraLINUX Build Certification <noreply@supralinux.invalid>
+          Build-Depends: dpkg-dev
+          Standards-Version: 4.7.0
+          Rules-Requires-Root: no
+
+          Package: supralinux-local-snapshot-smoke
+          Architecture: all
+          Description: SupraLINUX local snapshot sbuild gate
+           Minimal package built only to prove local-only sbuild operation.
+          EOF_CONTROL
+          cat >"$smoke/debian/changelog" <<'EOF_CHANGELOG'
+          supralinux-local-snapshot-smoke (1.0) resolute; urgency=medium
+
+            * Local snapshot qualification gate.
+
+           -- SupraLINUX Build Certification <noreply@supralinux.invalid>  Tue, 01 Sep 2026 04:00:00 +0000
+          EOF_CHANGELOG
+          cat >"$smoke/debian/rules" <<'EOF_RULES'
+          #!/usr/bin/make -f
+          binary binary-arch binary-indep build build-arch build-indep clean:
+          	@set -e; \
+          	if [ "$@" = binary ] || [ "$@" = binary-indep ]; then \
+          	  rm -rf debian/supralinux-local-snapshot-smoke; \
+          	  mkdir -p debian/supralinux-local-snapshot-smoke/DEBIAN debian/supralinux-local-snapshot-smoke/usr/share/supralinux-local-snapshot-smoke; \
+          	  printf 'Package: supralinux-local-snapshot-smoke\nVersion: 1.0\nArchitecture: all\nMaintainer: SupraLINUX Build Certification <noreply@supralinux.invalid>\nDescription: local snapshot smoke\n' > debian/supralinux-local-snapshot-smoke/DEBIAN/control; \
+          	  printf 'local snapshot gate\n' > debian/supralinux-local-snapshot-smoke/usr/share/supralinux-local-snapshot-smoke/probe.txt; \
+          	  dpkg-deb --build debian/supralinux-local-snapshot-smoke ..; \
+          	fi
+          EOF_RULES
+          chmod 0755 "$smoke/debian/rules"
+          printf '3.0 (native)\n' >"$smoke/debian/source/format"
+          printf 'local snapshot gate\n' >"$smoke/probe.txt"
+          chown -R ubuntu:ubuntu "$smoke" /tmp/resolute-local-buildd.tar.zst /evidence/sbuild-result
+          su -s /bin/bash ubuntu -c "cd '$smoke' && dpkg-source -b ."
+          test -s /tmp/supralinux-local-snapshot-smoke_1.0.dsc
+
+          cat >/tmp/sbuild-local.conf <<EOF_SBUILD
+          \$unshare_bind_mounts = [ { directory => "$repo/ubuntu", mountpoint => "$repo/ubuntu" } ];
+          \$enable_network = 0;
+          EOF_SBUILD
+          chmod 0644 /tmp/sbuild-local.conf
+          chown ubuntu:ubuntu /tmp/sbuild-local.conf
+          SBUILD_CONFIG=/tmp/sbuild-local.conf su -s /bin/bash ubuntu -c \
+            "SBUILD_CONFIG=/tmp/sbuild-local.conf DEB_BUILD_OPTIONS=parallel=2 sbuild --chroot-mode=unshare --chroot=/tmp/resolute-local-buildd.tar.zst --dist=resolute --arch=amd64 --build-dir=/evidence/sbuild-result --build-path=/build/supralinux-local-snapshot-smoke --jobs=2 --no-enable-network --no-run-lintian --no-run-autopkgtest --purge-build=always --purge-deps=always --resolve-alternatives --bd-uninstallable-explainer=apt /tmp/supralinux-local-snapshot-smoke_1.0.dsc" \
+            2>&1 | tee /evidence/sbuild.log
+          if grep -Ei 'https?://' /evidence/sbuild.log; then
+            echo 'AURORA_KSQ_LOCAL_GATE_FAILURE: sbuild attempted remote transport' >&2
+            exit 1
+          fi
+          find /evidence/sbuild-result -maxdepth 1 -type f -printf '%f\n' | sort | tee /evidence/sbuild-files.txt
+          find /evidence/sbuild-result -maxdepth 1 -type f -name '*.deb' -print -quit | grep -q .
+          find /evidence/sbuild-result -maxdepth 1 -type f -name '*.buildinfo' -print -quit | grep -q .
+          find /evidence/sbuild-result -maxdepth 1 -type f -name '*.changes' -print -quit | grep -q .
+          echo AURORA_KSQ_LOCAL_GATE_SBUILD_PASS
+          {
+            echo AURORA_KSQ_GITHUB_HOSTED_LOCAL_SNAPSHOT_GATE=PASS
+            echo AURORA_KSQ_LOCAL_GATE_NETWORK_MODE=none
+            echo AURORA_KSQ_LOCAL_GATE_APT_SOURCE=file-only
+            echo AURORA_KSQ_LOCAL_GATE_CERTIFIED_SEEDS=244
+            echo AURORA_KSQ_LOCAL_GATE_BINARY_OBJECTS=1541
+            echo AURORA_KSQ_LOCAL_GATE_BINARY_BYTES=704826504
+            echo AURORA_KSQ_LOCAL_GATE_MMDEBSTRAP=PASS
+            echo AURORA_KSQ_LOCAL_GATE_SBUILD=PASS
+          } | tee /evidence/results.env
+          EOF_CONTAINER
+
+      - name: Preserve local-only gate evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-github-hosted-local-snapshot-gate
+          path: ${{ runner.temp }}/local-gate-evidence/
+          if-no-files-found: warn
+          retention-days: 30
