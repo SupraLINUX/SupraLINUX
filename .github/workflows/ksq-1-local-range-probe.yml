@@ -20,10 +20,11 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
-  range-001-020:
-    name: Prove maintained DAG range 001-020 on local slice
+  range-021-040:
+    name: Prove maintained DAG range 021-040 on local slice
     runs-on: ubuntu-26.04
     timeout-minutes: 300
 
@@ -57,6 +58,45 @@ jobs:
             scripts/ci/prepare-ksq-1-source.py
           sudo bash scripts/ci/install-ksq-apparmor-profile.sh | tee build/ksq-1/host-evidence/apparmor-load.txt
           sudo grep -qx 'supralinux-ksq-unshare (enforce)' /sys/kernel/security/apparmor/profiles
+
+      - name: Download exact 001-020 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9818465016'
+          path: ${{ runner.temp }}/prior-001-020
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33546093974'
+          digest-mismatch: error
+
+      - name: Verify and restore 001-020 checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          prior="$RUNNER_TEMP/prior-001-020"
+          evidence="$prior/ksq-1/full/chunk-001-020/evidence"
+          debs="$prior/ksq-1/full/chunk-001-020/new-debs"
+          grep -qx 'AURORA_KSQ_1_RANGE_STATUS=PASS' "$evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_FIRST_ORDER=1' "$evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_LAST_ORDER=20' "$evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_SOURCES=20' "$evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_NEW_DEBS=103' "$evidence/range-status.env"
+          [[ "$(sha256sum "$evidence/new-debs.sha256" | awk '{print $1}')" == b0be04014893808a79aaea514e2a5c4bc968b5c9c9769d8d7ea6cae7992b01f9 ]]
+          [[ "$(sha256sum "$evidence/build-manifest.tsv" | awk '{print $1}')" == ff87f96c85bc4ba1553f16b3700cf701eca04e9b749a1c739bb1088cceb3485b ]]
+          [[ "$(find "$debs" -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 103 ]]
+          (cd "$debs" && sha256sum -c "$evidence/new-debs.sha256")
+          mkdir -p build/ksq-1/full/debs
+          cp -a "$debs"/*.deb build/ksq-1/full/debs/
+          [[ "$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 103 ]]
+          cat > build/ksq-1/prior-checkpoint-001-020.env <<'EOF_CHECKPOINT'
+          AURORA_KSQ_1_PRIOR_RUN_ID=33546093974
+          AURORA_KSQ_1_PRIOR_ARTIFACT_ID=9818465016
+          AURORA_KSQ_1_PRIOR_ARTIFACT_SHA256=0eb45c7938b84db35ee734591622a6c621709117100d29376c01323ca0ab14ba
+          AURORA_KSQ_1_PRIOR_NEW_DEBS_MANIFEST_SHA256=b0be04014893808a79aaea514e2a5c4bc968b5c9c9769d8d7ea6cae7992b01f9
+          AURORA_KSQ_1_PRIOR_BUILD_MANIFEST_SHA256=ff87f96c85bc4ba1553f16b3700cf701eca04e9b749a1c739bb1088cceb3485b
+          AURORA_KSQ_1_PRIOR_DEBS=103
+          AURORA_KSQ_1_PRIOR_CHECKPOINT=PASS
+          EOF_CHECKPOINT
 
       - name: Download and validate immutable snapshot slice
         shell: bash
@@ -105,7 +145,7 @@ jobs:
           sudo tar -C "$root" -xf "$archive"
           python3 scripts/ci/ksq-snapshot-slice.py validate --slice-root "$root/$AURORA_KSQ_SNAPSHOT"
 
-      - name: Run maintained range 001-020 with package network absent
+      - name: Run maintained range 021-040 with package network absent
         shell: bash
         run: |
           set -euo pipefail
@@ -129,8 +169,8 @@ jobs:
           trap 'python3 scripts/ci/ksq-docker-builder.py remove "$cid" >/dev/null 2>&1 || true' EXIT
           set +e
           docker exec -i "$cid" env AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" \
-            bash /workspace/scripts/ci/run-ksq-1-local-range.sh 1 20 \
-            2>&1 | tee build/ksq-1/local-range-001-020.log
+            bash /workspace/scripts/ci/run-ksq-1-local-range.sh 21 40 \
+            2>&1 | tee build/ksq-1/local-range-021-040.log
           pipe_status=("${PIPESTATUS[@]}")
           set -e
           printf 'CONTAINER_RC=%s\nTEE_RC=%s\n' "${pipe_status[0]}" "${pipe_status[1]}" \
@@ -154,16 +194,20 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: aurora-ksq-1-local-range-001-020
+          name: aurora-ksq-1-local-range-021-040
           path: |
             build/ksq-1/host-evidence/
             build/ksq-1/docker-builder/
             build/ksq-1/local-range-command.env
-            build/ksq-1/local-range-001-020.log
+            build/ksq-1/local-range-021-040.log
+            build/ksq-1/prior-checkpoint-001-020.env
             build/ksq-1-local-runner-status.env
-            build/ksq-1/environment/
-            build/ksq-1/full/chunk-001-020/evidence/
-            build/ksq-1/full/chunk-001-020/new-debs/
+            build/ksq-1/environment/*.env
+            build/ksq-1/environment/*.sha256
+            build/ksq-1/environment/*.txt
+            build/ksq-1/environment/sbuild-local.conf
+            build/ksq-1/full/chunk-021-040/evidence/
+            build/ksq-1/full/chunk-021-040/new-debs/
             build/ksq-0/build-order.tsv
             build/ksq-0/closure-status.env
           if-no-files-found: warn
