@@ -2,115 +2,132 @@
 
 Status: **ACTIVE — NOT CERTIFIED**
 
-This file records the current engineering state of KSQ-1 while the authoritative full-DAG candidate is still running. It is not an acceptance record and must not be interpreted as permission to enter KSQ-2.
+This file records the current engineering state of KSQ-1. It is not an acceptance record and does not authorize entry into KSQ-2.
 
 ## Certified prerequisite
 
-KSQ-0 remains certified. The current KSQ-1 build contract consumes the certified 101-source closure and Ubuntu Resolute snapshot `20260829T022000Z`.
+KSQ-0 remains **CERTIFIED / CLOSED**.
 
-## Authoritative candidate
+The KSQ-1 build contract consumes:
 
-The authoritative patched full-DAG candidate was started as GitHub Actions run `33281736655` from commit `90fd5d3119ebfaab42f721d3bdd977a3472da498`.
+- the certified 101-source closure;
+- Ubuntu Resolute snapshot `20260829T022000Z`;
+- exact package identities already established by KSQ-0;
+- unprivileged `mmdebstrap --mode=unshare` and `sbuild --chroot-mode=unshare` isolation.
 
-At the time this record was written, its `001-020` job was still building and had not reported a package failure. No downstream checkpoint from this run may be assumed complete until its artifact and manifest are inspected.
+KSQ-2 remains **BLOCKED** and C4.1 remains **PAUSED** until KDE Stack Qualification is completed.
 
-A repository comparison from the candidate head to the later qualification-infrastructure commits showed no changes to candidate build inputs: the post-launch commits add reproducibility/tail-resume/acceptance tooling and documentation only. The tail-resume gate nevertheless verifies that build-input identity again before it may reuse any candidate artifact.
+## Current execution-host decision
 
-## Proven 081-101 timeout root cause
+The selected GitHub Actions execution host is now:
 
-The independent forward discovery run `33264431724` reached DAG order 99 before GitHub cancelled job `99165540923` at its configured `timeout-minutes: 180` ceiling.
+`runs-on: ubuntu-26.04`
 
-The build log proves the following source orders completed successfully before cancellation:
+This is intentionally different from the previously tested `ubuntu-24.04` hosted architecture and from the `espadarunica` Ubuntu 24.04 self-hosted runner.
 
-- 81 `kf6-ktexteditor`
-- 82 `libplasma`
-- 83 `kf6-frameworkintegration`
-- 84 `libksysguard`
-- 85 `sddm-kcm`
-- 86 `bluedevil`
-- 87 `kscreenlocker`
-- 88 `plasma-keyboard`
-- 89 `plasma-nm`
-- 90 `plasma-pa`
-- 91 `print-manager`
-- 92 `breeze`
-- 93 `ksystemstats`
-- 94 `plasma5support`
-- 95 `breeze-gtk`
-- 96 `kwin`
-- 97 `plasma-integration`
-- 98 `kscreen`
+Rationale:
 
-Order 99 `plasma-workspace` had started and remained inside `sbuild` when the job-level timeout cancelled the runner. There is no package build failure recorded for order 99.
+- SupraLINUX Aurora is based on Ubuntu 26.04 LTS;
+- the host kernel and host security mechanisms participate in user namespaces, AppArmor, seccomp, cgroups and mount behavior;
+- therefore the canonical KSQ build host should itself be Ubuntu 26.04 rather than relying on a 24.04 host plus a 26.04 userspace container.
 
-The preserved discovery evidence artifact is:
+As of 2026-09-01 GitHub labels its `ubuntu-26.04` runner image **Public preview**. This is a status of GitHub's runner image/service, not of Ubuntu 26.04 LTS itself. SupraLINUX does not treat the label as an automatic PASS: the runner must satisfy our own infrastructure qualification before it becomes canonical.
 
-- name: `aurora-ksq-1-discovery-evidence-081-101`
-- artifact ID: `9723899912`
-- SHA-256: `636382ea83362a944a1dd756c64c64095eff8727df92b4cf3f9165c827feb9cd`
+The build userspace remains additionally fixed by the pinned container:
 
-Its manifest contains exactly orders 81-98 as PASS. The preserved discovery DEB artifact is:
+`ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b`
 
-- name: `aurora-ksq-1-discovery-debs-081-101`
-- artifact ID: `9723899191`
-- SHA-256: `0319295375a765753aa615715342a532adeabb8f3916cc19d72ab3631b588781`
+This separates two identities that must both be recorded:
 
-It contains 58 normal DEBs from the completed prefix. Evidence for order 99 contains prepared-source material only and is not treated as a successful build.
+1. the GitHub-hosted Ubuntu 26.04 VM/kernel/security environment;
+2. the exact Ubuntu 26.04 OCI userspace used for the disposable builder.
 
-Conclusion: the observed stop is a **CI harness duration/granularity limit**, not evidence of a KDE dependency or package defect. No package, platform or architecture change is justified by this event.
+## Ubuntu 26.04 hosted qualification
 
-## Timeout-safe tail continuation
+Workflow:
 
-To avoid discarding proven candidate work, KSQ-1 now has a dormant tail-resume gate:
+`.github/workflows/ksq-github-hosted-builder-profile-probe.yml`
 
-- workflow: `.github/workflows/ksq-1-tail-resume.yml`
-- merger: `scripts/ci/merge-ksq-1-tail-resume.py`
-- functional fixture: `scripts/ci/test-merge-ksq-1-tail-resume.py`
+Qualification commit:
 
-The gate is deliberately inactive until `.github/ksq-1-tail-resume.env` is created with the exact completed authoritative base run and the actual last PASS order in its 081-101 artifact.
+`067d6b160f0b8c0b2411a36beecc21cd7e8dc5da`
 
-Before reuse, the gate requires:
+Run:
 
-1. the selected base run is a completed `Aurora KSQ-1 full source builds` run and its head SHA matches the selector;
-2. the current repository has zero drift in the explicit candidate build-input set compared with that head;
-3. standard base checkpoints 001-020, 021-040, 041-060 and 061-080 exist;
-4. the partial 081-101 artifact is a contiguous PASS prefix from order 81 through the declared last completed order;
-5. every retained DEB exists and its Package/Version/Architecture metadata matches the recorded binary index;
-6. only the missing suffix is rebuilt on a fresh pinned Resolute builder;
-7. the partial and completion evidence are merged only after exact source/version/order validation;
-8. the resulting canonical 081-101 checkpoint is revalidated together with 001-080 by the existing `validate-ksq-1-full.py` 101-source gate.
+`33467690494`
 
-The continuation job has a 360-minute job ceiling and a 330-minute build-step ceiling so artifact-preservation steps retain explicit headroom below GitHub's maximum job duration.
+The workflow requires all of the following on the GitHub-hosted `ubuntu-26.04` VM:
 
-The range builder uses zero-padded chunk IDs. The resume workflow therefore derives the completion chunk with `%03d-101` rather than assuming an unpadded directory name.
+1. `/etc/os-release` reports `VERSION_ID="26.04"`;
+2. the narrow `supralinux-ksq-unshare` AppArmor profile loads in enforcing mode;
+3. the pinned Resolute container launches without `--privileged` and without parent `CAP_SYS_ADMIN`;
+4. certified Resolute `uidmap` helpers are normalized to the already-proven file-capability model;
+5. the complete user/mount/PID/UTS/IPC namespace preflight passes;
+6. real `mmdebstrap --mode=unshare --variant=buildd` completes;
+7. a real trivial Debian source package completes through `sbuild --chroot-mode=unshare` and produces `.deb`, `.buildinfo` and `.changes` evidence.
 
-## Tail merger validation
+At the time of this status update, the run had already passed host identity and AppArmor profile loading and was executing the real mmdebstrap/sbuild phase. It is **not** recorded as qualified until the run completes successfully and its artifact is inspected.
 
-Run `33284759593` passed the helper/fixture gate. The fixture:
+## Snapshot requirement
 
-- creates 21 real minimal Debian packages;
-- models 81-98 as the reusable completed prefix;
-- retains prepared-but-not-PASS evidence for interrupted order 99;
-- models 99-101 as the independent completion suffix;
-- requires a successful canonical 81-101 merge;
-- then removes order 98 from the partial manifest and requires the merger to reject the non-contiguous prefix.
+The final KSQ path must not depend on the live Ubuntu archive or live Snapshot Service during source certification.
 
-The run emitted `AURORA_KSQ_1_TAIL_MERGER_TEST_PASS` and `AURORA_KSQ_1_REPRO_HELPERS_VALID`.
+The certified slice for `20260829T022000Z` has measured identity:
 
-## Reproducibility gate
+- 244 certified binary/version seeds;
+- 1541 binary `.deb` objects;
+- 704,826,504 binary bytes;
+- 301 Ubuntu source objects;
+- 4 Debian source objects;
+- conservative raw upper bound 1,001,129,661 bytes (`0.9324 GiB`).
 
-KSQ-1 reproducibility remains the previously fixed 95+6 contract:
+The durable distribution target remains a dedicated GitHub Release asset with repository-pinned SHA-256, byte size and provenance. GitHub permits individual Release assets below 2 GiB, so the measured slice fits without splitting even before compression.
+
+Before source node 001 may be rerun on the new architecture, a fresh GitHub-hosted Ubuntu 26.04 job must independently:
+
+1. obtain the exact published slice;
+2. verify its repository-pinned SHA-256 and internal provenance;
+3. expose it read-only to the pinned Resolute builder;
+4. configure APT exclusively through `file:` sources;
+5. make HTTP/HTTPS fallback unusable;
+6. verify all 244 exact candidates;
+7. reproduce the exact empty-status solve of 1541 objects / 704826504 bytes;
+8. complete canonical snapshot-backed mmdebstrap;
+9. complete canonical snapshot-backed sbuild smoke.
+
+Only after that gate passes may source DAG order 001 be rerun.
+
+## Preserved historical candidate evidence
+
+Earlier KSQ-1 runs remain historical evidence and are not discarded by the host migration.
+
+The forward 081-101 discovery run `33264431724` proved orders 81-98 completed and that order 99 was interrupted by the configured job timeout rather than by a demonstrated KDE/package failure. Its preserved evidence remains:
+
+- `aurora-ksq-1-discovery-evidence-081-101`, artifact `9723899912`, SHA-256 `636382ea83362a944a1dd756c64c64095eff8727df92b4cf3f9165c827feb9cd`;
+- `aurora-ksq-1-discovery-debs-081-101`, artifact `9723899191`, SHA-256 `0319295375a765753aa615715342a532adeabb8f3916cc19d72ab3631b588781`.
+
+The tail-resume tooling and prior candidate artifacts remain useful evidence, but no PASS from a different host/toolchain combination is automatically transferred to the new canonical execution path. Required regressions must be rerun.
+
+## Reproducibility contract
+
+KSQ-1 retains the 95+6 reproducibility contract:
 
 - 95 unaffected source nodes require exact prepared-source identity and byte-identical DEBs against an independent reference build;
 - orders 29, 68, 81, 99, 100 and 101 require dedicated independent rebuild proof against the final patched candidate.
 
-No reproducibility selector may be activated until the authoritative candidate, or a validated promoted tail-resume candidate derived from it, exposes a complete five-checkpoint artifact set and passes the full 101-source validator.
+No reproducibility selector may be promoted until the new Ubuntu 26.04 hosted path has passed the certified local-slice gate and produced a complete validated 101-source candidate.
 
-## Exit state
+## Current gate state
 
-Current state remains:
-
-- `KSQ-1 = ACTIVE`
-- `KSQ-1 certified = no`
-- `KSQ-2 unblocked = no`
-- `C4.1 = paused pending KDE Stack Qualification`
+- KSQ-0: **CERTIFIED / CLOSED**;
+- GitHub-hosted `ubuntu-26.04` selection: **ACCEPTED FOR QUALIFICATION**;
+- GitHub-hosted `ubuntu-26.04` infrastructure qualification: **RUNNING / NOT YET PASS**;
+- pinned Resolute build userspace: **RETAINED**;
+- certified snapshot Release asset: **NOT CREATED**;
+- hosted local-only APT gate: **NOT RUN**;
+- hosted snapshot-backed mmdebstrap: **NOT RUN**;
+- hosted snapshot-backed sbuild smoke: **NOT RUN**;
+- source node 001 on new canonical path: **NOT RUN**;
+- KSQ-1: **ACTIVE / NOT CERTIFIED**;
+- KSQ-2: **BLOCKED**;
+- C4.1: **PAUSED**.
