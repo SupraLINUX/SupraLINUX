@@ -1,0 +1,81 @@
+name: Aurora KSQ mmdebstrap local bind probe
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-mmdebstrap-local-bind-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-ro-bind:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Load scoped AppArmor profile
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -qx 'VERSION_ID="26.04"' /etc/os-release
+          sudo bash scripts/ci/install-ksq-apparmor-profile.sh
+          sudo grep -qx 'supralinux-ksq-unshare (enforce)' /sys/kernel/security/apparmor/profiles
+
+      - name: Prove exact mmdebstrap read-only bind contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          image='ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b'
+          source='/opt/supralinux/archive/20260829T022000Z/ubuntu'
+          sudo mkdir -p "$source"
+          printf 'aurora-local-bind-probe\n' | sudo tee "$source/probe.txt" >/dev/null
+          sudo chmod 0755 /opt/supralinux /opt/supralinux/archive /opt/supralinux/archive/20260829T022000Z "$source"
+          sudo chmod 0444 "$source/probe.txt"
+          docker pull "$image"
+
+          docker run --rm -i \
+            --security-opt seccomp=unconfined \
+            --security-opt apparmor=supralinux-ksq-unshare \
+            -v "$source:$source:ro" \
+            "$image" bash -s <<'EOF_CONTAINER'
+          set -euo pipefail
+          export DEBIAN_FRONTEND=noninteractive
+          source=/opt/supralinux/archive/20260829T022000Z/ubuntu
+          target=/tmp/mmdebstrap.PROBE/opt/supralinux/archive/20260829T022000Z/ubuntu
+
+          cat /proc/self/attr/current
+          apt-get -o Acquire::Retries=5 update
+          apt-get -o Acquire::Retries=5 install -y --no-install-recommends uidmap libcap2-bin util-linux
+          grep -q '^ubuntu:' /etc/subuid || echo 'ubuntu:100000:65536' >> /etc/subuid
+          grep -q '^ubuntu:' /etc/subgid || echo 'ubuntu:100000:65536' >> /etc/subgid
+          chmod u-s /usr/bin/newuidmap /usr/bin/newgidmap
+          setcap cap_setuid=ep /usr/bin/newuidmap
+          setcap cap_setgid=ep /usr/bin/newgidmap
+          mkdir -p "$target"
+          chown -R ubuntu:ubuntu /tmp/mmdebstrap.PROBE
+
+          su -s /bin/bash ubuntu -c "unshare --map-auto --map-user=65536 --map-group=65536 --keep-caps --mount --fork bash -ceu '
+            mount -o ro,bind $source $target
+            test \"\$(cat $target/probe.txt)\" = aurora-local-bind-probe
+            if touch $target/forbidden-write 2>/dev/null; then
+              echo AURORA_KSQ_MMDEBSTRAP_BIND_PROBE_FAILURE=WRITABLE >&2
+              exit 1
+            fi
+            findmnt -n -o OPTIONS -T $target/probe.txt
+            umount $target
+          '"
+          echo AURORA_KSQ_MMDEBSTRAP_EXACT_RO_BIND=PASS
+          EOF_CONTAINER
+
+      - name: Capture AppArmor audit on failure
+        if: failure()
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo dmesg | grep -iE 'apparmor|DENIED' | tail -n 100 || true
