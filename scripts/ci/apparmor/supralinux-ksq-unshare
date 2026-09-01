@@ -18,10 +18,15 @@
 #     /tmp/mmdebstrap.*/ (canonical mmdebstrap PASS: run 33424405355 attempt 2);
 #   - mmdebstrap's upstream file-mirror-automount hook uses
 #     `mount -o ro,bind <file-mirror> <rootdir>/<file-mirror>` in unshare mode;
-#   - local-only gate run 33471101421 proved that exact operation is required
-#     for certified mirror
-#       /opt/supralinux/archive/20260829T022000Z/ubuntu/
-#     and was denied before the narrowly-scoped rule below was added;
+#   - util-linux mount implements bind+ro as a bind followed by an additional
+#     read-only bind remount; this is userspace behavior, not one atomic kernel
+#     mount operation;
+#   - local-only gate run 33471101421 proved the certified mirror bind is
+#     required; run 33471523056 then proved the initial bind succeeded after
+#     adding it, but the subsequent read-only transition was denied, requiring
+#     the narrowly-scoped remount rule below;
+#   - the only certified mirror authorized here is
+#       /opt/supralinux/archive/20260829T022000Z/ubuntu/;
 #   - sbuild 0.91.2ubuntu3 uses /usr/libexec/sbuild-usernsexec; the exact helper
 #     was captured with SHA-256
 #     218821c4a8892c60847be58c80e4d1fb02702b17ac6f7dce412faadecd8afc0a;
@@ -41,7 +46,7 @@
 #   userns policy. Mount targets are restricted to tool-owned temporary roots,
 #   except for the single propagation change on / required by util-linux
 #   unshare. The only external repository bind source is the exact certified
-#   snapshot path and it is permitted read-only only.
+#   snapshot path and its destination may only be transitioned to read-only.
 #
 # Removal condition:
 #   Remove this override when Docker's default profile permits the exact
@@ -103,9 +108,11 @@ profile supralinux-ksq-unshare flags=(attach_disconnected,mediate_deleted) {
   mount options=(rw,make-rslave) -> /tmp/mmdebstrap.*/proc/,
 
   # 4. mmdebstrap file-mirror-automount for the one certified local snapshot.
-  #    Upstream uses `mount -o ro,bind`; do not allow rw, rbind or any other
-  #    external source/target combination here.
+  #    `mount -o ro,bind` is implemented by util-linux as an initial bind plus
+  #    a second remount that makes only the destination VFS mount read-only.
+  #    Do not allow rw, rbind, another source, or another destination here.
   mount options=(ro,bind) /opt/supralinux/archive/20260829T022000Z/ubuntu/ -> /tmp/mmdebstrap.*/opt/supralinux/archive/20260829T022000Z/ubuntu/,
+  remount options=(ro,bind) /tmp/mmdebstrap.*/opt/supralinux/archive/20260829T022000Z/ubuntu/,
 
   # 5. sbuild 0.91.2ubuntu3 /usr/libexec/sbuild-usernsexec session setup.
   #    First make the unpack root a mountpoint (the exact operation denied in
@@ -130,7 +137,6 @@ profile supralinux-ksq-unshare flags=(attach_disconnected,mediate_deleted) {
   deny /sys/[^f]*/** wklx,
   deny /sys/f[^s]*/** wklx,
   deny /sys/fs/[^c]*/** wklx,
-  deny /sys/fs/c[^g]*/** wklx,
   deny /sys/firmware/** rwklx,
   deny /sys/devices/virtual/powercap/** rwklx,
   deny /sys/kernel/security/** rwklx,
