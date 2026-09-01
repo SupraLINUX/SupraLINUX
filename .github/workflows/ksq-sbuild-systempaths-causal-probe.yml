@@ -101,7 +101,7 @@ jobs:
             echo 'AURORA_KSQ_FAILURE: parent container unexpectedly has CAP_SYS_ADMIN' >&2
             exit 1
           fi
-          grep -qx 'supralinux-ksq-unshare' /proc/self/attr/current
+          grep -Eq '^supralinux-ksq-unshare( \(enforce\))?$' /proc/self/attr/current
           echo AURORA_KSQ_OUTER_NO_CAP_SYS_ADMIN=PASS
 
           grep -q '^ubuntu:' /etc/subuid || echo 'ubuntu:100000:65536' >> /etc/subuid
