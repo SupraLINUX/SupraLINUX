@@ -1,0 +1,272 @@
+name: Aurora KSQ certified snapshot slice materialization
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-snapshot-slice-materialize.yml'
+      - 'scripts/ci/ksq-snapshot-slice.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  materialize-and-prove-local:
+    name: Materialize and prove local-only APT closure
+    runs-on: [self-hosted, Linux, X64, supralinux-ksq, docker]
+    timeout-minutes: 240
+    container:
+      image: ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b
+      volumes:
+        - /srv/supralinux/archive:/srv/supralinux/archive
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Bootstrap materialization tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl unzip python3 xz-utils ubuntu-keyring gpgv
+          python3 -m py_compile scripts/ci/ksq-snapshot-slice.py
+          {
+            . /etc/os-release
+            echo "CONTAINER_ID=${ID}"
+            echo "CONTAINER_VERSION_ID=${VERSION_ID}"
+            echo "CONTAINER_CODENAME=${VERSION_CODENAME}"
+            python3 --version
+            curl --version | head -n1
+            gpgv --version | head -n1
+            dpkg-query -W -f='${Package}\t${Version}\n' ubuntu-keyring ca-certificates xz-utils
+          } | tee "$RUNNER_TEMP/materializer-tool-versions.txt"
+
+      - name: Retrieve and verify canonical evidence
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/aurora-slice-input"
+          rm -rf "$root"
+          mkdir -p "$root/size" "$root/ksq0"
+
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            'https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/9781553137/zip' \
+            -o "$root/size.zip"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            'https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/9708738867/zip' \
+            -o "$root/ksq0.zip"
+
+          printf '%s  %s\n' \
+            '39672453ba364d81cfa8621cd060201f845a6d940fb4ac04d45aa25be1ce0e19' "$root/size.zip" \
+            '5b23140181ea7e7931cb744f4c43930adba8f79e446c52d0f4b1c3c568106d50' "$root/ksq0.zip" \
+            | sha256sum -c -
+
+          unzip -q "$root/size.zip" -d "$root/size"
+          unzip -q "$root/ksq0.zip" -d "$root/ksq0"
+          test -s "$root/size/results.env"
+          test -s "$root/size/binary-print-uris.txt"
+          test -s "$root/size/certified-binary-seeds.tsv"
+          test -s "$root/ksq0/build/ksq-0/selected-source-records.txt"
+          grep -qx 'AURORA_KSQ_SLICE_SNAPSHOT=20260829T022000Z' "$root/size/results.env"
+          grep -qx 'AURORA_KSQ_SLICE_BINARY_OBJECTS=1541' "$root/size/results.env"
+          grep -qx 'AURORA_KSQ_SLICE_BINARY_BYTES=704826504' "$root/size/results.env"
+          grep -qx 'AURORA_KSQ_0_APT_SNAPSHOT=20260829T022000Z' "$root/ksq0/build/ksq-0/closure-status.env"
+          grep -qx 'AURORA_KSQ_0_CLOSURE_STATUS=COMPLETE' "$root/ksq0/build/ksq-0/closure-status.env"
+
+      - name: Materialize exact certified slice
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/aurora-slice-input"
+          python3 scripts/ci/ksq-snapshot-slice.py materialize \
+            --archive-root /srv/supralinux/archive \
+            --size-artifact-dir "$root/size" \
+            --ksq0-artifact-dir "$root/ksq0" \
+            --size-artifact-zip "$root/size.zip" \
+            --ksq0-artifact-zip "$root/ksq0.zip" \
+            --workers 8
+
+      - name: Validate final immutable slice
+        shell: bash
+        run: |
+          set -euo pipefail
+          slice=/srv/supralinux/archive/20260829T022000Z
+          python3 scripts/ci/ksq-snapshot-slice.py validate --slice-root "$slice"
+          test -f "$slice/COMPLETE"
+          test ! -e /srv/supralinux/archive/.staging-20260829T022000Z
+          if find "$slice" -xdev -perm /0222 -print -quit | grep -q .; then
+            echo 'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: writable path remains in final slice' >&2
+            exit 1
+          fi
+          du -sb "$slice"
+
+      - name: Prove APT consumption is fully local and fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          slice=/srv/supralinux/archive/20260829T022000Z
+          evidence="$GITHUB_WORKSPACE/build/ksq-snapshot-slice-materialization"
+          mkdir -p "$evidence"
+
+          rm -f /etc/apt/sources.list
+          rm -rf /etc/apt/sources.list.d/*
+          cp "$slice/aurora-local.sources" /etc/apt/sources.list.d/aurora-local.sources
+          if grep -RqsE 'https?://' /etc/apt/sources.list /etc/apt/sources.list.d 2>/dev/null; then
+            echo 'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: remote APT source present in local-only gate' >&2
+            grep -RnsE 'https?://' /etc/apt/sources.list /etc/apt/sources.list.d 2>/dev/null || true
+            exit 1
+          fi
+
+          rm -rf /var/lib/apt/lists/*
+          offline=(
+            -o Acquire::Languages=none
+            -o Acquire::Retries=0
+            -o Acquire::http::Proxy=http://127.0.0.1:9
+            -o Acquire::https::Proxy=http://127.0.0.1:9
+            -o APT::Update::Error-Mode=any
+          )
+          apt-get "${offline[@]}" update 2>&1 | tee "$evidence/apt-local-update.log"
+
+          seeds="$slice/provenance/certified-binary-seeds.tsv"
+          test "$(wc -l <"$seeds")" -eq 244
+          : > "$evidence/candidate-verification.tsv"
+          while IFS=$'\t' read -r pkg expected; do
+            candidate="$(apt-cache policy "$pkg" | awk '/Candidate:/ {print $2; exit}')"
+            printf '%s\t%s\t%s\n' "$pkg" "$expected" "$candidate" >> "$evidence/candidate-verification.tsv"
+            [[ "$candidate" == "$expected" ]] || {
+              echo "AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: candidate mismatch: $pkg expected=$expected candidate=$candidate" >&2
+              exit 1
+            }
+          done < "$seeds"
+
+          : > /tmp/aurora-empty-dpkg-status
+          mapfile -t pins < <(awk -F '\t' '{print $1 "=" $2}' "$seeds")
+          roots=(
+            '?essential'
+            apt
+            build-essential
+            ca-certificates
+            ubuntu-keyring
+            sudo
+            sbuild
+            mmdebstrap
+            uidmap
+            zstd
+            devscripts
+            dpkg-dev
+            apt-utils
+            gzip
+            xz-utils
+            diffutils
+            libcap2-bin
+          )
+          roots+=("${pins[@]}")
+          apt-get "${offline[@]}" \
+            -o Dir::State::status=/tmp/aurora-empty-dpkg-status \
+            --no-install-recommends --print-uris --yes install "${roots[@]}" \
+            > "$evidence/local-print-uris.txt"
+
+          python3 - "$slice" "$evidence/local-print-uris.txt" <<'PY'
+          from pathlib import Path
+          from urllib.parse import unquote, urlparse
+          import shlex
+          import sys
+
+          slice_root = Path(sys.argv[1]).resolve()
+          uri_file = Path(sys.argv[2])
+          manifest = slice_root / 'manifests/binary.tsv'
+
+          expected = {}
+          lines = manifest.read_text(encoding='utf-8').splitlines()
+          header = lines[0].split('\t')
+          for line in lines[1:]:
+              row = dict(zip(header, line.split('\t')))
+              expected[row['path']] = int(row['size'])
+
+          resolved = {}
+          for line in uri_file.read_text(encoding='utf-8').splitlines():
+              if not line.startswith("'"):
+                  continue
+              fields = shlex.split(line)
+              if len(fields) < 3 or not fields[2].isdigit():
+                  continue
+              uri = fields[0]
+              parsed = urlparse(uri)
+              if parsed.scheme != 'file':
+                  raise SystemExit(f'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: non-file URI resolved: {uri}')
+              path = Path(unquote(parsed.path)).resolve()
+              try:
+                  rel = path.relative_to(slice_root).as_posix()
+              except ValueError as exc:
+                  raise SystemExit(f'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: URI escaped slice: {uri}') from exc
+              if not rel.startswith('ubuntu/pool/'):
+                  raise SystemExit(f'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: unexpected local URI: {uri}')
+              size = int(fields[2])
+              if rel in resolved and resolved[rel] != size:
+                  raise SystemExit(f'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: conflicting local URI size: {rel}')
+              resolved[rel] = size
+
+          if len(resolved) != 1541 or sum(resolved.values()) != 704826504:
+              raise SystemExit(
+                  f'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: local solve count/bytes mismatch: '
+                  f'{len(resolved)} / {sum(resolved.values())}'
+              )
+          if resolved != expected:
+              extra = sorted(set(resolved) - set(expected))[:10]
+              missing = sorted(set(expected) - set(resolved))[:10]
+              mismatched = sorted(k for k in set(resolved) & set(expected) if resolved[k] != expected[k])[:10]
+              raise SystemExit(
+                  f'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: local solve differs from manifest; '
+                  f'extra={extra} missing={missing} size_mismatch={mismatched}'
+              )
+          print('AURORA_KSQ_SNAPSHOT_SLICE_LOCAL_SOLVE_OBJECTS=1541')
+          print('AURORA_KSQ_SNAPSHOT_SLICE_LOCAL_SOLVE_BYTES=704826504')
+          print('AURORA_KSQ_SNAPSHOT_SLICE_LOCAL_APT_PASS')
+          PY
+
+          {
+            echo 'AURORA_KSQ_SNAPSHOT_SLICE_LOCAL_ONLY=1'
+            echo 'AURORA_KSQ_SNAPSHOT_SLICE_REMOTE_FALLBACK=0'
+            echo 'AURORA_KSQ_SNAPSHOT_SLICE_CERTIFIED_SEEDS=244'
+            echo 'AURORA_KSQ_SNAPSHOT_SLICE_BINARY_OBJECTS=1541'
+            echo 'AURORA_KSQ_SNAPSHOT_SLICE_BINARY_BYTES=704826504'
+          } | tee "$evidence/results.env"
+
+      - name: Preserve compact materialization evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          slice=/srv/supralinux/archive/20260829T022000Z
+          evidence="$GITHUB_WORKSPACE/build/ksq-snapshot-slice-materialization"
+          mkdir -p "$evidence"
+          cp "$RUNNER_TEMP/materializer-tool-versions.txt" "$evidence/" 2>/dev/null || true
+          if [[ -f "$slice/provenance.env" ]]; then
+            cp "$slice/provenance.env" "$evidence/slice-provenance.env"
+            sha256sum "$slice"/manifests/*.tsv > "$evidence/manifests.sha256"
+            find "$slice" -xdev -type f | wc -l | awk '{print "AURORA_KSQ_SNAPSHOT_SLICE_FILES=" $1}' > "$evidence/file-count.env"
+            du -sb "$slice" | awk '{print "AURORA_KSQ_SNAPSHOT_SLICE_DISK_BYTES=" $1}' >> "$evidence/file-count.env"
+          fi
+
+      - name: Upload compact materialization evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-certified-snapshot-slice-materialization
+          path: build/ksq-snapshot-slice-materialization/
+          if-no-files-found: warn
+          retention-days: 30
