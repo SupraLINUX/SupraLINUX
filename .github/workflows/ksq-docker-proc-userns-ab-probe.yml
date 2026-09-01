@@ -116,9 +116,10 @@ jobs:
           cat >/tmp/proc-ns-test.sh <<'EOF_TEST'
           #!/bin/sh
           set -eu
-          exec unshare --map-auto --map-user=65536 --map-group=65536 --keep-caps --mount --pid --uts --ipc --fork /bin/sh -ceu '
-            echo "=== nested namespace before procfs ==="
+          exec unshare --map-auto --map-user=65536 --map-group=65536 --keep-caps --setuid=0 --setgid=0 --mount --pid --uts --ipc --fork /bin/sh -ceu '
+            echo "=== nested namespace root phase before procfs ==="
             id || true
+            capsh --print || true
             rm -rf /tmp/proc-test
             mkdir -p /tmp/proc-test
             echo "=== nested proc mount attempt ==="
