@@ -6,6 +6,7 @@ on:
       - feature/kde-stack-qualification
     paths:
       - '.github/workflows/ksq-sbuild-local-session-probe.yml'
+      - 'scripts/ci/apparmor/supralinux-ksq-unshare'
   workflow_dispatch:
 
 permissions:
