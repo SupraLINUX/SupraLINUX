@@ -117,11 +117,8 @@ jobs:
           #!/bin/sh
           set -eu
           exec unshare --map-auto --map-user=65536 --map-group=65536 --keep-caps --mount --pid --uts --ipc --fork /bin/sh -ceu '
-            echo "=== nested namespace identity ==="
-            id
-            cat /proc/self/uid_map
-            cat /proc/self/gid_map
-            grep -E "^(Cap(Inh|Prm|Eff|Bnd|Amb)|NoNewPrivs|Seccomp):" /proc/self/status
+            echo "=== nested namespace before procfs ==="
+            id || true
             rm -rf /tmp/proc-test
             mkdir -p /tmp/proc-test
             echo "=== nested proc mount attempt ==="
@@ -129,7 +126,11 @@ jobs:
             test "$(stat -f -c %T /tmp/proc-test)" = proc
             test -r /tmp/proc-test/self/status
             grep -q "^Name:" /tmp/proc-test/self/status
-            grep -q " /tmp/proc-test " /proc/self/mountinfo
+            echo "=== nested namespace after procfs ==="
+            cat /tmp/proc-test/self/uid_map
+            cat /tmp/proc-test/self/gid_map
+            grep -E "^(Cap(Inh|Prm|Eff|Bnd|Amb)|NoNewPrivs|Seccomp):" /tmp/proc-test/self/status
+            grep -q " /tmp/proc-test " /tmp/proc-test/self/mountinfo
             echo AURORA_KSQ_DIRECT_NESTED_PROCFS_PASS=1
             umount /tmp/proc-test
           '
@@ -138,7 +139,6 @@ jobs:
           su -s /bin/sh ubuntu -c /tmp/proc-ns-test.sh
           EOF_CONTAINER
             rc=${PIPESTATUS[0]}
-            set -e
             printf '%s\n' "$rc" | tee "$out/rc.txt"
             return "$rc"
           }
