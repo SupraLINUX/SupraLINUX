@@ -19,7 +19,7 @@ KSQ-2 remains **BLOCKED** and C4.1 remains **PAUSED** until KDE Stack Qualificat
 
 ## Current execution-host decision
 
-The selected GitHub Actions execution host is now:
+The selected GitHub Actions execution host is:
 
 `runs-on: ubuntu-26.04`
 
@@ -29,9 +29,9 @@ Rationale:
 
 - SupraLINUX Aurora is based on Ubuntu 26.04 LTS;
 - the host kernel and host security mechanisms participate in user namespaces, AppArmor, seccomp, cgroups and mount behavior;
-- therefore the canonical KSQ build host should itself be Ubuntu 26.04 rather than relying on a 24.04 host plus a 26.04 userspace container.
+- therefore the canonical KSQ build host itself is Ubuntu 26.04 rather than a 24.04 host plus a 26.04 userspace container.
 
-As of 2026-09-01 GitHub labels its `ubuntu-26.04` runner image **Public preview**. This is a status of GitHub's runner image/service, not of Ubuntu 26.04 LTS itself. SupraLINUX does not treat the label as an automatic PASS: the runner must satisfy our own infrastructure qualification before it becomes canonical.
+As of 2026-09-01 GitHub labels its `ubuntu-26.04` runner image **Public preview**. This is a status of GitHub's runner image/service, not of Ubuntu 26.04 LTS itself. SupraLINUX has therefore qualified the exact infrastructure behavior required by KSQ instead of assuming acceptance from the label.
 
 The build userspace remains additionally fixed by the pinned container:
 
@@ -48,25 +48,39 @@ Workflow:
 
 `.github/workflows/ksq-github-hosted-builder-profile-probe.yml`
 
-Qualification commit:
+Qualifying commit:
 
 `067d6b160f0b8c0b2411a36beecc21cd7e8dc5da`
 
-Run:
+Run / job:
 
-`33467690494`
+- run `33467690494`;
+- job `99730854792`;
+- result **SUCCESS**.
 
-The workflow requires all of the following on the GitHub-hosted `ubuntu-26.04` VM:
+Evidence artifact:
 
-1. `/etc/os-release` reports `VERSION_ID="26.04"`;
-2. the narrow `supralinux-ksq-unshare` AppArmor profile loads in enforcing mode;
-3. the pinned Resolute container launches without `--privileged` and without parent `CAP_SYS_ADMIN`;
-4. certified Resolute `uidmap` helpers are normalized to the already-proven file-capability model;
-5. the complete user/mount/PID/UTS/IPC namespace preflight passes;
-6. real `mmdebstrap --mode=unshare --variant=buildd` completes;
-7. a real trivial Debian source package completes through `sbuild --chroot-mode=unshare` and produces `.deb`, `.buildinfo` and `.changes` evidence.
+- `aurora-ksq-github-hosted-2604-builder-profile-probe`;
+- artifact ID `9785447790`;
+- size `12150` bytes;
+- SHA-256 `fbcaa74ec5810f4495396c1f0afe8eb3f1b1ab67ed34723ded0ffed12e293988`.
 
-At the time of this status update, the run had already passed host identity and AppArmor profile loading and was executing the real mmdebstrap/sbuild phase. It is **not** recorded as qualified until the run completes successfully and its artifact is inspected.
+Observed host:
+
+- Ubuntu `26.04 LTS (Resolute Raccoon)`;
+- runner image `ubuntu-26.04` version `20260824.116.1`;
+- kernel `7.0.0-1012-azure`;
+- Docker `29.4.2`;
+- AppArmor active;
+- `kernel.apparmor_restrict_unprivileged_userns=1`.
+
+The narrow AppArmor profile loaded enforcing, the full namespace preflight passed, real `mmdebstrap --mode=unshare --variant=buildd` completed, and a real trivial source package completed through `sbuild --chroot-mode=unshare`, producing `.deb`, `.build`, `.buildinfo` and `.changes` outputs.
+
+The workflow emitted:
+
+`AURORA_KSQ_GITHUB_HOSTED_2604_REAL_SBUILD_PASS`
+
+Therefore the GitHub-hosted Ubuntu 26.04 execution architecture is **QUALIFIED** for the next KSQ infrastructure gates. This is not source-build or KSQ-1 acceptance evidence.
 
 ## Snapshot requirement
 
@@ -115,13 +129,16 @@ KSQ-1 retains the 95+6 reproducibility contract:
 - 95 unaffected source nodes require exact prepared-source identity and byte-identical DEBs against an independent reference build;
 - orders 29, 68, 81, 99, 100 and 101 require dedicated independent rebuild proof against the final patched candidate.
 
-No reproducibility selector may be promoted until the new Ubuntu 26.04 hosted path has passed the certified local-slice gate and produced a complete validated 101-source candidate.
+No reproducibility selector may be promoted until the Ubuntu 26.04 hosted path has passed the certified local-slice gate and produced a complete validated 101-source candidate.
 
 ## Current gate state
 
 - KSQ-0: **CERTIFIED / CLOSED**;
-- GitHub-hosted `ubuntu-26.04` selection: **ACCEPTED FOR QUALIFICATION**;
-- GitHub-hosted `ubuntu-26.04` infrastructure qualification: **RUNNING / NOT YET PASS**;
+- GitHub-hosted `ubuntu-26.04` host identity: **PASS**;
+- GitHub-hosted `ubuntu-26.04` AppArmor/namespace path: **PASS**;
+- GitHub-hosted real mmdebstrap: **PASS**;
+- GitHub-hosted real sbuild smoke: **PASS**;
+- GitHub-hosted Ubuntu 26.04 execution architecture: **QUALIFIED**;
 - pinned Resolute build userspace: **RETAINED**;
 - certified snapshot Release asset: **NOT CREATED**;
 - hosted local-only APT gate: **NOT RUN**;
