@@ -1,4 +1,4 @@
-name: Aurora KSQ certified snapshot slice materialization
+name: Aurora KSQ certified snapshot slice publication
 
 on:
   push:
@@ -10,42 +10,93 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   actions: read
 
+concurrency:
+  group: aurora-ksq-snapshot-20260829T022000Z-publication
+  cancel-in-progress: false
+
+env:
+  SNAPSHOT: '20260829T022000Z'
+  ARCHIVE_ROOT: /opt/supralinux/archive
+  RELEASE_TAG: ksq-snapshot-20260829T022000Z
+  RELEASE_ASSET: aurora-ubuntu-snapshot-20260829T022000Z-amd64.tar
+  RELEASE_MANIFEST: aurora-ubuntu-snapshot-20260829T022000Z-amd64.env
+  SNAPSHOT_EPOCH: '1787970000'
+
 jobs:
-  materialize-and-prove-local:
-    name: Materialize and prove local-only APT closure
-    runs-on: [self-hosted, Linux, X64, supralinux-ksq, docker]
+  materialize-and-publish:
+    name: Materialize, validate and publish certified slice
+    runs-on: ubuntu-26.04
     timeout-minutes: 240
-    container:
-      image: ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b
-      volumes:
-        - /srv/supralinux/archive:/srv/supralinux/archive
+    outputs:
+      archive_sha256: ${{ steps.package.outputs.archive_sha256 }}
+      archive_bytes: ${{ steps.package.outputs.archive_bytes }}
+      release_tag: ${{ env.RELEASE_TAG }}
+      release_asset: ${{ env.RELEASE_ASSET }}
+      release_manifest: ${{ env.RELEASE_MANIFEST }}
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
 
+      - name: Assert Ubuntu 26.04 publication host
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat /etc/os-release
+          uname -a
+          grep -qx 'VERSION_ID="26.04"' /etc/os-release
+          command -v gh
+          gh --version | head -n1
+          tar --version | head -n1
+
       - name: Bootstrap materialization tooling
         shell: bash
         run: |
           set -euo pipefail
-          export DEBIAN_FRONTEND=noninteractive
-          apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
-          apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
             ca-certificates curl unzip python3 xz-utils ubuntu-keyring gpgv
           python3 -m py_compile scripts/ci/ksq-snapshot-slice.py
-          {
-            . /etc/os-release
-            echo "CONTAINER_ID=${ID}"
-            echo "CONTAINER_VERSION_ID=${VERSION_ID}"
-            echo "CONTAINER_CODENAME=${VERSION_CODENAME}"
-            python3 --version
-            curl --version | head -n1
-            gpgv --version | head -n1
-            dpkg-query -W -f='${Package}\t${Version}\n' ubuntu-keyring ca-certificates xz-utils
-          } | tee "$RUNNER_TEMP/materializer-tool-versions.txt"
+          sudo install -d -o "$(id -u)" -g "$(id -g)" -m 0755 "$ARCHIVE_ROOT"
+
+      - name: Restore untrusted resumable staging cache
+        id: cache-restore
+        uses: actions/cache/restore@v5
+        with:
+          path: /opt/supralinux/archive/.staging-20260829T022000Z
+          key: aurora-ksq-snapshot-staging-20260829T022000Z-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            aurora-ksq-snapshot-staging-20260829T022000Z-
+
+      - name: Normalize restored metadata hardlinks
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage="$ARCHIVE_ROOT/.staging-$SNAPSHOT"
+          [[ -d "$stage" ]] || exit 0
+          while IFS= read -r -d '' byhash; do
+            digest="$(basename "$byhash")"
+            base="$(dirname "$(dirname "$(dirname "$byhash")")")"
+            matched=0
+            for canonical in "$base/Packages.xz" "$base/Sources.xz"; do
+              [[ -f "$canonical" ]] || continue
+              if [[ "$(sha256sum "$canonical" | awk '{print $1}')" == "$digest" ]]; then
+                matched=1
+                if [[ ! "$canonical" -ef "$byhash" ]]; then
+                  rm -f "$byhash"
+                  ln "$canonical" "$byhash"
+                fi
+                break
+              fi
+            done
+            if [[ "$matched" -ne 1 ]]; then
+              echo "AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: cached by-hash object has no canonical peer: $byhash" >&2
+              exit 1
+            fi
+          done < <(find "$stage/ubuntu/dists" -type f -path '*/by-hash/SHA256/*' -print0 2>/dev/null || true)
 
       - name: Retrieve and verify canonical evidence
         shell: bash
@@ -88,185 +139,259 @@ jobs:
           grep -qx 'AURORA_KSQ_0_CLOSURE_STATUS=COMPLETE' "$root/ksq0/build/ksq-0/closure-status.env"
 
       - name: Materialize exact certified slice
+        id: materialize
         shell: bash
         run: |
           set -euo pipefail
           root="$RUNNER_TEMP/aurora-slice-input"
           python3 scripts/ci/ksq-snapshot-slice.py materialize \
-            --archive-root /srv/supralinux/archive \
+            --archive-root "$ARCHIVE_ROOT" \
             --size-artifact-dir "$root/size" \
             --ksq0-artifact-dir "$root/ksq0" \
             --size-artifact-zip "$root/size.zip" \
             --ksq0-artifact-zip "$root/ksq0.zip" \
             --workers 8
 
+      - name: Inspect resumable staging after materialization attempt
+        id: staging
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          stage="$ARCHIVE_ROOT/.staging-$SNAPSHOT"
+          if [[ -d "$stage" ]]; then
+            echo 'exists=true' >> "$GITHUB_OUTPUT"
+            du -sb "$stage" || true
+          else
+            echo 'exists=false' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Save untrusted staging cache after transport failure
+        if: failure() && steps.staging.outputs.exists == 'true'
+        uses: actions/cache/save@v5
+        with:
+          path: /opt/supralinux/archive/.staging-20260829T022000Z
+          key: aurora-ksq-snapshot-staging-20260829T022000Z-${{ github.run_id }}-${{ github.run_attempt }}
+
       - name: Validate final immutable slice
         shell: bash
         run: |
           set -euo pipefail
-          slice=/srv/supralinux/archive/20260829T022000Z
+          slice="$ARCHIVE_ROOT/$SNAPSHOT"
           python3 scripts/ci/ksq-snapshot-slice.py validate --slice-root "$slice"
           test -f "$slice/COMPLETE"
-          test ! -e /srv/supralinux/archive/.staging-20260829T022000Z
+          test ! -e "$ARCHIVE_ROOT/.staging-$SNAPSHOT"
           if find "$slice" -xdev -perm /0222 -print -quit | grep -q .; then
             echo 'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: writable path remains in final slice' >&2
             exit 1
           fi
+          grep -qF "URIs: file:/opt/supralinux/archive/$SNAPSHOT/ubuntu" "$slice/aurora-local.sources"
           du -sb "$slice"
 
-      - name: Prove APT consumption is fully local and fail-closed
+      - name: Create deterministic uncompressed release archive
+        id: package
         shell: bash
         run: |
           set -euo pipefail
-          slice=/srv/supralinux/archive/20260829T022000Z
-          evidence="$GITHUB_WORKSPACE/build/ksq-snapshot-slice-materialization"
-          mkdir -p "$evidence"
+          archive="$RUNNER_TEMP/$RELEASE_ASSET"
+          manifest="$RUNNER_TEMP/$RELEASE_MANIFEST"
+          rm -f "$archive" "$manifest"
 
-          rm -f /etc/apt/sources.list
-          rm -rf /etc/apt/sources.list.d/*
-          cp "$slice/aurora-local.sources" /etc/apt/sources.list.d/aurora-local.sources
-          if grep -RqsE 'https?://' /etc/apt/sources.list /etc/apt/sources.list.d 2>/dev/null; then
-            echo 'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: remote APT source present in local-only gate' >&2
-            grep -RnsE 'https?://' /etc/apt/sources.list /etc/apt/sources.list.d 2>/dev/null || true
+          tar \
+            --sort=name \
+            --format=gnu \
+            --mtime="@$SNAPSHOT_EPOCH" \
+            --owner=0 \
+            --group=0 \
+            --numeric-owner \
+            -C "$ARCHIVE_ROOT" \
+            -cf "$archive" \
+            "$SNAPSHOT"
+
+          archive_sha256="$(sha256sum "$archive" | awk '{print $1}')"
+          archive_bytes="$(stat -c '%s' "$archive")"
+          if (( archive_bytes >= 2147483648 )); then
+            echo "AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: release asset is not under 2 GiB: $archive_bytes" >&2
             exit 1
           fi
 
-          rm -rf /var/lib/apt/lists/*
-          offline=(
-            -o Acquire::Languages=none
-            -o Acquire::Retries=0
-            -o Acquire::http::Proxy=http://127.0.0.1:9
-            -o Acquire::https::Proxy=http://127.0.0.1:9
-            -o APT::Update::Error-Mode=any
-          )
-          apt-get "${offline[@]}" update 2>&1 | tee "$evidence/apt-local-update.log"
+          cat >"$manifest" <<EOF_MANIFEST
+          AURORA_KSQ_SNAPSHOT_RELEASE_STATUS=PUBLISHED_CANDIDATE
+          AURORA_KSQ_SNAPSHOT=20260829T022000Z
+          AURORA_KSQ_SNAPSHOT_ARCH=amd64
+          AURORA_KSQ_SNAPSHOT_RELEASE_TAG=$RELEASE_TAG
+          AURORA_KSQ_SNAPSHOT_RELEASE_ASSET=$RELEASE_ASSET
+          AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256=$archive_sha256
+          AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES=$archive_bytes
+          AURORA_KSQ_SNAPSHOT_RELEASE_ARCHIVE_FORMAT=gnu-tar
+          AURORA_KSQ_SNAPSHOT_RELEASE_FIXED_MTIME_EPOCH=$SNAPSHOT_EPOCH
+          AURORA_KSQ_SNAPSHOT_MATERIALIZER_COMMIT=$GITHUB_SHA
+          AURORA_KSQ_SNAPSHOT_SIZE_ARTIFACT_ID=9781553137
+          AURORA_KSQ_SNAPSHOT_SIZE_ARTIFACT_SHA256=39672453ba364d81cfa8621cd060201f845a6d940fb4ac04d45aa25be1ce0e19
+          AURORA_KSQ_SNAPSHOT_KSQ0_ARTIFACT_ID=9708738867
+          AURORA_KSQ_SNAPSHOT_KSQ0_ARTIFACT_SHA256=5b23140181ea7e7931cb744f4c43930adba8f79e446c52d0f4b1c3c568106d50
+          AURORA_KSQ_SNAPSHOT_CERTIFIED_SEEDS=244
+          AURORA_KSQ_SNAPSHOT_BINARY_OBJECTS=1541
+          AURORA_KSQ_SNAPSHOT_BINARY_BYTES=704826504
+          EOF_MANIFEST
 
-          seeds="$slice/provenance/certified-binary-seeds.tsv"
-          test "$(wc -l <"$seeds")" -eq 244
-          : > "$evidence/candidate-verification.tsv"
-          while IFS=$'\t' read -r pkg expected; do
-            candidate="$(apt-cache policy "$pkg" | awk '/Candidate:/ {print $2; exit}')"
-            printf '%s\t%s\t%s\n' "$pkg" "$expected" "$candidate" >> "$evidence/candidate-verification.tsv"
-            [[ "$candidate" == "$expected" ]] || {
-              echo "AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: candidate mismatch: $pkg expected=$expected candidate=$candidate" >&2
-              exit 1
-            }
-          done < "$seeds"
+          sha256sum "$archive" "$manifest"
+          stat -c '%s %n' "$archive" "$manifest"
+          echo "archive_sha256=$archive_sha256" >> "$GITHUB_OUTPUT"
+          echo "archive_bytes=$archive_bytes" >> "$GITHUB_OUTPUT"
 
-          : > /tmp/aurora-empty-dpkg-status
-          mapfile -t pins < <(awk -F '\t' '{print $1 "=" $2}' "$seeds")
-          roots=(
-            '?essential'
-            apt
-            build-essential
-            ca-certificates
-            ubuntu-keyring
-            sudo
-            sbuild
-            mmdebstrap
-            uidmap
-            zstd
-            devscripts
-            dpkg-dev
-            apt-utils
-            gzip
-            xz-utils
-            diffutils
-            libcap2-bin
-          )
-          roots+=("${pins[@]}")
-          apt-get "${offline[@]}" \
-            -o Dir::State::status=/tmp/aurora-empty-dpkg-status \
-            --no-install-recommends --print-uris --yes install "${roots[@]}" \
-            > "$evidence/local-print-uris.txt"
+      - name: Publish immutable-identity engineering release candidate
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/$RELEASE_ASSET"
+          manifest="$RUNNER_TEMP/$RELEASE_MANIFEST"
+          notes="$RUNNER_TEMP/release-notes.md"
 
-          python3 - "$slice" "$evidence/local-print-uris.txt" <<'PY'
-          from pathlib import Path
-          from urllib.parse import unquote, urlparse
-          import shlex
-          import sys
+          if gh release view "$RELEASE_TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: release tag already exists; refusing overwrite: $RELEASE_TAG" >&2
+            exit 1
+          fi
 
-          slice_root = Path(sys.argv[1]).resolve()
-          uri_file = Path(sys.argv[2])
-          manifest = slice_root / 'manifests/binary.tsv'
+          cat >"$notes" <<'EOF_NOTES'
+          Engineering reproducibility input for SupraLINUX 1.0.0 Aurora KSQ.
 
-          expected = {}
-          lines = manifest.read_text(encoding='utf-8').splitlines()
-          header = lines[0].split('\t')
-          for line in lines[1:]:
-              row = dict(zip(header, line.split('\t')))
-              expected[row['path']] = int(row['size'])
+          This is not a SupraLINUX product release. It is the byte-preserved Ubuntu snapshot slice selected from certified snapshot `20260829T022000Z` for deterministic KSQ builds.
 
-          resolved = {}
-          for line in uri_file.read_text(encoding='utf-8').splitlines():
-              if not line.startswith("'"):
-                  continue
-              fields = shlex.split(line)
-              if len(fields) < 3 or not fields[2].isdigit():
-                  continue
-              uri = fields[0]
-              parsed = urlparse(uri)
-              if parsed.scheme != 'file':
-                  raise SystemExit(f'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: non-file URI resolved: {uri}')
-              path = Path(unquote(parsed.path)).resolve()
-              try:
-                  rel = path.relative_to(slice_root).as_posix()
-              except ValueError as exc:
-                  raise SystemExit(f'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: URI escaped slice: {uri}') from exc
-              if not rel.startswith('ubuntu/pool/'):
-                  raise SystemExit(f'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: unexpected local URI: {uri}')
-              size = int(fields[2])
-              if rel in resolved and resolved[rel] != size:
-                  raise SystemExit(f'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: conflicting local URI size: {rel}')
-              resolved[rel] = size
+          The archive must not be trusted by name alone. Consumers must use the SHA-256 and byte size committed in the SupraLINUX repository after independent re-download validation, then validate the internal signed Ubuntu metadata and manifests before use.
+          EOF_NOTES
 
-          if len(resolved) != 1541 or sum(resolved.values()) != 704826504:
-              raise SystemExit(
-                  f'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: local solve count/bytes mismatch: '
-                  f'{len(resolved)} / {sum(resolved.values())}'
-              )
-          if resolved != expected:
-              extra = sorted(set(resolved) - set(expected))[:10]
-              missing = sorted(set(expected) - set(resolved))[:10]
-              mismatched = sorted(k for k in set(resolved) & set(expected) if resolved[k] != expected[k])[:10]
-              raise SystemExit(
-                  f'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: local solve differs from manifest; '
-                  f'extra={extra} missing={missing} size_mismatch={mismatched}'
-              )
-          print('AURORA_KSQ_SNAPSHOT_SLICE_LOCAL_SOLVE_OBJECTS=1541')
-          print('AURORA_KSQ_SNAPSHOT_SLICE_LOCAL_SOLVE_BYTES=704826504')
-          print('AURORA_KSQ_SNAPSHOT_SLICE_LOCAL_APT_PASS')
-          PY
+          gh release create "$RELEASE_TAG" \
+            "$archive" \
+            "$manifest" \
+            -R "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "Aurora KSQ Ubuntu snapshot 20260829T022000Z" \
+            --notes-file "$notes" \
+            --latest=false
 
-          {
-            echo 'AURORA_KSQ_SNAPSHOT_SLICE_LOCAL_ONLY=1'
-            echo 'AURORA_KSQ_SNAPSHOT_SLICE_REMOTE_FALLBACK=0'
-            echo 'AURORA_KSQ_SNAPSHOT_SLICE_CERTIFIED_SEEDS=244'
-            echo 'AURORA_KSQ_SNAPSHOT_SLICE_BINARY_OBJECTS=1541'
-            echo 'AURORA_KSQ_SNAPSHOT_SLICE_BINARY_BYTES=704826504'
-          } | tee "$evidence/results.env"
+  independent-redownload:
+    name: Independently re-download and validate published bytes
+    needs: materialize-and-publish
+    runs-on: ubuntu-26.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
 
-      - name: Preserve compact materialization evidence
-        if: always()
+    steps:
+      - name: Check out exact publication commit
+        uses: actions/checkout@v7
+
+      - name: Assert fresh Ubuntu 26.04 consumer host
         shell: bash
         run: |
           set -euo pipefail
-          slice=/srv/supralinux/archive/20260829T022000Z
-          evidence="$GITHUB_WORKSPACE/build/ksq-snapshot-slice-materialization"
-          mkdir -p "$evidence"
-          cp "$RUNNER_TEMP/materializer-tool-versions.txt" "$evidence/" 2>/dev/null || true
-          if [[ -f "$slice/provenance.env" ]]; then
-            cp "$slice/provenance.env" "$evidence/slice-provenance.env"
-            sha256sum "$slice"/manifests/*.tsv > "$evidence/manifests.sha256"
-            find "$slice" -xdev -type f | wc -l | awk '{print "AURORA_KSQ_SNAPSHOT_SLICE_FILES=" $1}' > "$evidence/file-count.env"
-            du -sb "$slice" | awk '{print "AURORA_KSQ_SNAPSHOT_SLICE_DISK_BYTES=" $1}' >> "$evidence/file-count.env"
-          fi
+          grep -qx 'VERSION_ID="26.04"' /etc/os-release
+          cat /etc/os-release
+          uname -a
 
-      - name: Upload compact materialization evidence
-        if: always()
+      - name: Bootstrap independent validation tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            python3 ubuntu-keyring gpgv
+          python3 -m py_compile scripts/ci/ksq-snapshot-slice.py
+          sudo install -d -o "$(id -u)" -g "$(id -g)" -m 0755 "$ARCHIVE_ROOT"
+
+      - name: Download exact published assets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_SHA256: ${{ needs.materialize-and-publish.outputs.archive_sha256 }}
+          EXPECTED_BYTES: ${{ needs.materialize-and-publish.outputs.archive_bytes }}
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/release"
+          mkdir -p "$out"
+          gh release download "$RELEASE_TAG" \
+            -R "$GITHUB_REPOSITORY" \
+            --pattern "$RELEASE_ASSET" \
+            --pattern "$RELEASE_MANIFEST" \
+            --dir "$out"
+
+          archive="$out/$RELEASE_ASSET"
+          manifest="$out/$RELEASE_MANIFEST"
+          test -s "$archive"
+          test -s "$manifest"
+          actual_sha256="$(sha256sum "$archive" | awk '{print $1}')"
+          actual_bytes="$(stat -c '%s' "$archive")"
+          [[ "$actual_sha256" == "$EXPECTED_SHA256" ]]
+          [[ "$actual_bytes" == "$EXPECTED_BYTES" ]]
+          grep -qx "AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256=$EXPECTED_SHA256" "$manifest"
+          grep -qx "AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES=$EXPECTED_BYTES" "$manifest"
+          grep -qx "AURORA_KSQ_SNAPSHOT_RELEASE_TAG=$RELEASE_TAG" "$manifest"
+          grep -qx "AURORA_KSQ_SNAPSHOT_RELEASE_ASSET=$RELEASE_ASSET" "$manifest"
+
+      - name: Reject unsafe archive member names
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - "$RUNNER_TEMP/release/$RELEASE_ASSET" "$SNAPSHOT" <<'PY'
+          import sys
+          import tarfile
+          from pathlib import PurePosixPath
+
+          archive, snapshot = sys.argv[1:]
+          prefix = PurePosixPath(snapshot)
+          with tarfile.open(archive, 'r:') as tf:
+              members = tf.getmembers()
+              if not members:
+                  raise SystemExit('AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: empty release archive')
+              for member in members:
+                  p = PurePosixPath(member.name)
+                  if p.is_absolute() or '..' in p.parts or not p.parts or p.parts[0] != snapshot:
+                      raise SystemExit(f'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: unsafe archive member: {member.name}')
+                  if member.issym():
+                      raise SystemExit(f'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: symlink forbidden: {member.name}')
+                  if member.islnk():
+                      link = PurePosixPath(member.linkname)
+                      if link.is_absolute() or '..' in link.parts or not link.parts or link.parts[0] != snapshot:
+                          raise SystemExit(f'AURORA_KSQ_SNAPSHOT_SLICE_FAILURE: unsafe hardlink: {member.name} -> {member.linkname}')
+          print('AURORA_KSQ_SNAPSHOT_RELEASE_ARCHIVE_NAMES_SAFE')
+          PY
+
+      - name: Extract and independently validate published slice
+        shell: bash
+        env:
+          EXPECTED_SHA256: ${{ needs.materialize-and-publish.outputs.archive_sha256 }}
+          EXPECTED_BYTES: ${{ needs.materialize-and-publish.outputs.archive_bytes }}
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/release/$RELEASE_ASSET"
+          tar -C "$ARCHIVE_ROOT" -xf "$archive"
+          slice="$ARCHIVE_ROOT/$SNAPSHOT"
+          python3 scripts/ci/ksq-snapshot-slice.py validate --slice-root "$slice"
+          test -f "$slice/COMPLETE"
+          grep -qF "URIs: file:/opt/supralinux/archive/$SNAPSHOT/ubuntu" "$slice/aurora-local.sources"
+
+          evidence="$GITHUB_WORKSPACE/build/ksq-snapshot-release-validation"
+          mkdir -p "$evidence"
+          cp "$RUNNER_TEMP/release/$RELEASE_MANIFEST" "$evidence/"
+          {
+            echo 'AURORA_KSQ_SNAPSHOT_RELEASE_INDEPENDENT_REDOWNLOAD=PASS'
+            echo "AURORA_KSQ_SNAPSHOT_RELEASE_TAG=$RELEASE_TAG"
+            echo "AURORA_KSQ_SNAPSHOT_RELEASE_ASSET=$RELEASE_ASSET"
+            echo "AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256=$EXPECTED_SHA256"
+            echo "AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES=$EXPECTED_BYTES"
+            echo "AURORA_KSQ_SNAPSHOT_RELEASE_VALIDATED_PATH=$slice"
+            echo "AURORA_KSQ_SNAPSHOT_RELEASE_FILES=$(find "$slice" -xdev -type f | wc -l)"
+            echo "AURORA_KSQ_SNAPSHOT_RELEASE_DISK_BYTES=$(du -sb "$slice" | awk '{print $1}')"
+          } | tee "$evidence/results.env"
+          sha256sum "$archive" > "$evidence/release-asset.sha256"
+
+      - name: Preserve independent publication evidence
         uses: actions/upload-artifact@v7
         with:
-          name: aurora-ksq-certified-snapshot-slice-materialization
-          path: build/ksq-snapshot-slice-materialization/
-          if-no-files-found: warn
+          name: aurora-ksq-snapshot-release-independent-validation
+          path: build/ksq-snapshot-release-validation/
+          if-no-files-found: error
           retention-days: 30
