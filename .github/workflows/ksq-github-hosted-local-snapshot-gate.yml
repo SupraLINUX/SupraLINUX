@@ -8,6 +8,7 @@ on:
       - '.github/workflows/ksq-github-hosted-local-snapshot-gate.yml'
       - 'scripts/ci/aurora-ksq-snapshot-release.env'
       - 'scripts/ci/ksq-snapshot-slice.py'
+      - 'scripts/ci/ksq-docker-builder.py'
       - 'scripts/ci/install-ksq-apparmor-profile.sh'
       - 'scripts/ci/apparmor/supralinux-ksq-unshare'
   workflow_dispatch:
@@ -59,10 +60,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
-          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+          test -s /etc/apt/sources.list.d/ubuntu.sources
+          host_apt=(
+            -o Dir::Etc::sourcelist=/etc/apt/sources.list.d/ubuntu.sources
+            -o Dir::Etc::sourceparts=-
+            -o APT::Get::List-Cleanup=0
+          )
+          sudo apt-get "${host_apt[@]}" -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get "${host_apt[@]}" -o Acquire::Retries=5 install -y --no-install-recommends \
             ca-certificates curl python3 ubuntu-keyring gpgv
-          python3 -m py_compile scripts/ci/ksq-snapshot-slice.py
+          python3 -m py_compile scripts/ci/ksq-snapshot-slice.py scripts/ci/ksq-docker-builder.py
           sudo bash scripts/ci/install-ksq-apparmor-profile.sh | tee "$RUNNER_TEMP/host-apparmor.txt"
           sudo grep -qx 'supralinux-ksq-unshare (enforce)' /sys/kernel/security/apparmor/profiles
 
@@ -142,6 +149,7 @@ jobs:
           fi
 
       - name: Prove package closure, mmdebstrap and sbuild with network physically absent
+        id: local_gate
         shell: bash
         run: |
           set -euo pipefail
@@ -151,21 +159,27 @@ jobs:
           image='ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b'
           slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
           evidence="$RUNNER_TEMP/local-gate-evidence"
+          builder_evidence="$evidence/docker-builder"
+          name="supralinux-ksq-local-gate-${GITHUB_RUN_ID}"
           rm -rf "$evidence"
-          mkdir -p "$evidence/sbuild-result"
+          mkdir -p "$evidence/sbuild-result" "$builder_evidence"
           cp scripts/ci/aurora-ksq-snapshot-release.env "$evidence/release-pin.env"
           cp "$RUNNER_TEMP/release-assets.sha256" "$evidence/release-assets.sha256"
           cp "$RUNNER_TEMP/host-apparmor.txt" "$evidence/host-apparmor.txt"
+          chmod 0777 "$evidence" "$evidence/sbuild-result" "$builder_evidence"
           docker pull "$image"
-          chmod 0777 "$evidence" "$evidence/sbuild-result"
 
-          docker run --rm -i \
-            --network none \
-            --security-opt seccomp=unconfined \
-            --security-opt apparmor=supralinux-ksq-unshare \
-            -v "$slice:/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT:ro" \
-            -v "$evidence:/evidence:rw" \
-            "$image" bash -s 2>&1 <<'EOF_CONTAINER' | tee "$evidence/container.log"
+          cid="$(python3 scripts/ci/ksq-docker-builder.py create \
+            --image "$image" \
+            --name "$name" \
+            --bind "$slice:$slice:ro" \
+            --bind "$evidence:/evidence:rw" \
+            --evidence-dir "$builder_evidence")"
+          test -n "$cid"
+          trap 'python3 scripts/ci/ksq-docker-builder.py remove "$cid" >/dev/null 2>&1 || true' EXIT
+
+          set +e
+          docker exec -i "$cid" bash -s 2>&1 <<'EOF_CONTAINER' | tee "$evidence/container.log"
           set -euo pipefail
           snapshot=20260829T022000Z
           repo="/opt/supralinux/archive/$snapshot"
@@ -174,10 +188,22 @@ jobs:
           echo '=== isolated container ==='
           cat /etc/os-release
           cat /proc/self/attr/current
+          grep -Eq '^supralinux-ksq-unshare( \(enforce\))?$' /proc/self/attr/current
+          cap_eff="$(grep '^CapEff:' /proc/self/status | tr -s '[:space:]' ' ' | cut -d ' ' -f 2)"
+          test -n "$cap_eff"
+          cap_eff_val=$((16#$cap_eff))
+          test $((cap_eff_val & (1 << 21))) -eq 0
+          test "$(stat -f -c %T /proc)" = proc
+          test "$(findmnt -R /proc -n -o TARGET | wc -l)" -eq 1
+          test "$(findmnt -T /sys/firmware -n -o TARGET)" = /sys/firmware
+          test "$(findmnt -T /sys/firmware -n -o FSTYPE)" = tmpfs
           if find /sys/class/net -mindepth 1 -maxdepth 1 ! -name lo -print -quit 2>/dev/null | grep -q .; then
-            echo 'AURORA_KSQ_LOCAL_GATE_FAILURE: non-loopback interface exists in --network none container' >&2
+            echo 'AURORA_KSQ_LOCAL_GATE_FAILURE: non-loopback interface exists in network-none container' >&2
             exit 1
           fi
+          echo "AURORA_KSQ_LOCAL_GATE_CAP_EFF=$cap_eff"
+          echo AURORA_KSQ_LOCAL_GATE_PROC_SINGLE_MOUNT=PASS
+          echo AURORA_KSQ_LOCAL_GATE_SYS_MASKS=PASS
           test -r /usr/share/keyrings/ubuntu-archive-keyring.gpg
           test -r "$repo/aurora-local.sources"
 
@@ -313,12 +339,18 @@ jobs:
           #!/usr/bin/make -f
           binary binary-arch binary-indep build build-arch build-indep clean:
           	@set -e; \
+          	test -r /proc/self/status; \
+          	grep -q '^Name:' /proc/self/status; \
+          	test "$$(stat -f -c %T /proc)" = proc; \
+          	grep -q ' /proc ' /proc/self/mountinfo; \
+          	echo AURORA_KSQ_LOCAL_GATE_SBUILD_PROC_USABLE=1; \
           	if [ "$@" = binary ] || [ "$@" = binary-indep ]; then \
           	  rm -rf debian/supralinux-local-snapshot-smoke; \
           	  mkdir -p debian/supralinux-local-snapshot-smoke/DEBIAN debian/supralinux-local-snapshot-smoke/usr/share/supralinux-local-snapshot-smoke; \
-          	  printf 'Package: supralinux-local-snapshot-smoke\nVersion: 1.0\nArchitecture: all\nMaintainer: SupraLINUX Build Certification <noreply@supralinux.invalid>\nDescription: local snapshot smoke\n' > debian/supralinux-local-snapshot-smoke/DEBIAN/control; \
+          	  printf 'Package: supralinux-local-snapshot-smoke\nVersion: 1.0\nArchitecture: all\nSection: devel\nPriority: optional\nMaintainer: SupraLINUX Build Certification <noreply@supralinux.invalid>\nDescription: local snapshot smoke\n' > debian/supralinux-local-snapshot-smoke/DEBIAN/control; \
           	  printf 'local snapshot gate\n' > debian/supralinux-local-snapshot-smoke/usr/share/supralinux-local-snapshot-smoke/probe.txt; \
-          	  dpkg-deb --build debian/supralinux-local-snapshot-smoke ..; \
+          	  dpkg-deb --root-owner-group --build debian/supralinux-local-snapshot-smoke ..; \
+          	  dpkg-distaddfile supralinux-local-snapshot-smoke_1.0_all.deb devel optional; \
           	fi
           EOF_RULES
           chmod 0755 "$smoke/debian/rules"
@@ -341,6 +373,7 @@ jobs:
             echo 'AURORA_KSQ_LOCAL_GATE_FAILURE: sbuild attempted remote transport' >&2
             exit 1
           fi
+          grep -q 'AURORA_KSQ_LOCAL_GATE_SBUILD_PROC_USABLE=1' /evidence/sbuild.log
           find /evidence/sbuild-result -maxdepth 1 -type f -printf '%f\n' | sort | tee /evidence/sbuild-files.txt
           find /evidence/sbuild-result -maxdepth 1 -type f -name '*.deb' -print -quit | grep -q .
           find /evidence/sbuild-result -maxdepth 1 -type f -name '*.buildinfo' -print -quit | grep -q .
@@ -353,16 +386,52 @@ jobs:
             echo AURORA_KSQ_LOCAL_GATE_CERTIFIED_SEEDS=244
             echo AURORA_KSQ_LOCAL_GATE_BINARY_OBJECTS=1541
             echo AURORA_KSQ_LOCAL_GATE_BINARY_BYTES=704826504
+            echo AURORA_KSQ_LOCAL_GATE_PROC_SINGLE_MOUNT=PASS
+            echo AURORA_KSQ_LOCAL_GATE_SYS_MASKS=PASS
             echo AURORA_KSQ_LOCAL_GATE_MMDEBSTRAP=PASS
+            echo AURORA_KSQ_LOCAL_GATE_SBUILD_PROCFS=PASS
             echo AURORA_KSQ_LOCAL_GATE_SBUILD=PASS
           } | tee /evidence/results.env
           EOF_CONTAINER
+          container_rc=${PIPESTATUS[0]}
+          set -e
+
+          python3 scripts/ci/ksq-docker-builder.py remove "$cid"
+          trap - EXIT
+          echo "AURORA_KSQ_LOCAL_GATE_CONTAINER_RC=$container_rc" | tee "$evidence/container-result.env"
+          exit "$container_rc"
+
+      - name: Capture local gate AppArmor audit
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/local-gate-evidence"
+          mkdir -p "$evidence"
+          sudo dmesg | grep -E 'apparmor="DENIED".*profile="supralinux-ksq-unshare"' > "$evidence/host-apparmor-denied.log" || true
+          sudo dmesg | grep -E 'apparmor=.*supralinux-ksq-unshare|profile="supralinux-ksq-unshare"' > "$evidence/host-apparmor-related.log" || true
+          test ! -s "$evidence/host-apparmor-denied.log"
+
+      - name: Package local-only gate evidence losslessly
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/local-gate-evidence"
+          archive="$RUNNER_TEMP/aurora-ksq-github-hosted-local-snapshot-gate-evidence.tar"
+          mkdir -p "$evidence"
+          tar -C "$RUNNER_TEMP" -cf "$archive" local-gate-evidence
+          sha256sum "$archive" | tee "$archive.sha256"
+          tar -tf "$archive" | sort > "$RUNNER_TEMP/aurora-ksq-github-hosted-local-snapshot-gate-evidence.members.txt"
 
       - name: Preserve local-only gate evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: aurora-ksq-github-hosted-local-snapshot-gate
-          path: ${{ runner.temp }}/local-gate-evidence/
-          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/aurora-ksq-github-hosted-local-snapshot-gate-evidence.tar
+            ${{ runner.temp }}/aurora-ksq-github-hosted-local-snapshot-gate-evidence.tar.sha256
+            ${{ runner.temp }}/aurora-ksq-github-hosted-local-snapshot-gate-evidence.members.txt
+          if-no-files-found: error
           retention-days: 30
