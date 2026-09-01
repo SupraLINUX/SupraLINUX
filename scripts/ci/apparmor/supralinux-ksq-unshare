@@ -10,7 +10,7 @@
 #   sbuild --chroot-mode=unshare. The rules below are restricted to operations
 #   observed in the pinned Resolute toolchain, its dedicated temporary roots
 #   under /tmp/mmdebstrap.*/ and /tmp/tmp.sbuild.*/, and the one certified
-#   read-only Ubuntu snapshot mirror used by KSQ.
+#   Ubuntu snapshot mirror used by KSQ.
 #
 # Proven requirements:
 #   - util-linux unshare recursively makes / private;
@@ -30,14 +30,19 @@
 #   - sbuild 0.91.2ubuntu3 uses /usr/libexec/sbuild-usernsexec; the exact helper
 #     was captured with SHA-256
 #     218821c4a8892c60847be58c80e4d1fb02702b17ac6f7dce412faadecd8afc0a;
-#   - sbuild smoke run 33431673769 proved its first denied operation is the
-#     helper's line 374: `mount -o rbind $rootdir $rootdir` for
-#     /tmp/tmp.sbuild.*/;
-#   - that same installed helper then mounts only the canonical /dev devices,
-#     devpts, tmpfs /dev/shm, rbind /sys, tmpfs /sys/kernel and proc for the
-#     chroot-session setup used by this path;
-#   - SBUILD_ENABLE_PIVOT_ROOT was explicitly unset in the smoke environment,
-#     so no pivot_root permission is granted.
+#   - sbuild smoke run 33431673769 proved its unpack-root self-rbind at
+#     /tmp/tmp.sbuild.*/ is required;
+#   - focused local-only probe run 33498287161, artifact 9796670616, captured
+#     the exact AppArmor denial for UNSHARE_BIND_MOUNTS:
+#       source=/opt/supralinux/archive/20260829T022000Z/ubuntu/
+#       target=/tmp/tmp.sbuild.*/opt/supralinux/archive/20260829T022000Z/ubuntu/
+#       flags="rw, rbind";
+#   - the same run shows sbuild-usernsexec invokes its current session helper
+#     with --pivotroot; no additional pivot_root permission is granted here
+#     unless a concrete denial proves it necessary;
+#   - that helper also mounts only the canonical /dev devices, devpts, tmpfs
+#     /dev/shm, rbind /sys, tmpfs /sys/kernel and proc for the session path
+#     already observed and scoped below.
 #
 # Security scope:
 #   This profile is for the dedicated SupraLINUX KSQ GitHub Actions job
@@ -45,8 +50,11 @@
 #   does not use privileged mode, and does not disable Ubuntu's unprivileged
 #   userns policy. Mount targets are restricted to tool-owned temporary roots,
 #   except for the single propagation change on / required by util-linux
-#   unshare. The only external repository bind source is the exact certified
-#   snapshot path and its destination may only be transitioned to read-only.
+#   unshare. The only external repository source is the exact certified
+#   snapshot path. For mmdebstrap it is explicitly transitioned read-only;
+#   sbuild receives only the exact rw,rbind syscall its helper emitted, while
+#   the source itself is supplied to the container by Docker as a read-only
+#   bind mount.
 #
 # Removal condition:
 #   Remove this override when Docker's default profile permits the exact
@@ -115,9 +123,11 @@ profile supralinux-ksq-unshare flags=(attach_disconnected,mediate_deleted) {
   remount options=(ro,bind) /tmp/mmdebstrap.*/opt/supralinux/archive/20260829T022000Z/ubuntu/,
 
   # 5. sbuild 0.91.2ubuntu3 /usr/libexec/sbuild-usernsexec session setup.
-  #    First make the unpack root a mountpoint (the exact operation denied in
-  #    smoke run 33431673769), then populate only its standard virtual trees.
+  #    First make the unpack root a mountpoint, then allow exactly the external
+  #    snapshot rbind proven by run 33498287161. No arbitrary source or target
+  #    under the sbuild root is authorized.
   mount options=(rw,rbind) /tmp/tmp.sbuild.*/ -> /tmp/tmp.sbuild.*/,
+  mount options=(rw,rbind) /opt/supralinux/archive/20260829T022000Z/ubuntu/ -> /tmp/tmp.sbuild.*/opt/supralinux/archive/20260829T022000Z/ubuntu/,
 
   mount options=(rw,bind) /dev/console -> /tmp/tmp.sbuild.*/dev/console,
   mount options=(rw,bind) /dev/full -> /tmp/tmp.sbuild.*/dev/full,
