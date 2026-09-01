@@ -767,7 +767,8 @@ def validate_slice(final: Path, *, check_read_only: bool = True) -> None:
     for suite in list(RESOLUTE_SUITES) + ["stonking"]:
         verify_inrelease(final / "ubuntu/dists" / suite / "InRelease")
     sources_text = (final / "aurora-local.sources").read_text(encoding="utf-8")
-    expected_uri = f"URIs: file:{final}/ubuntu"
+    apt_root = final.parent / FINAL_BASENAME if final.name == STAGE_BASENAME else final
+    expected_uri = f"URIs: file:{apt_root}/ubuntu"
     if sources_text.count(expected_uri) != 2 or "Snapshot: no" not in sources_text or "http://" in sources_text or "https://" in sources_text:
         fail("local APT source is not strictly local/fail-closed")
     if check_read_only:
