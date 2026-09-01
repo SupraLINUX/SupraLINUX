@@ -1,6 +1,6 @@
 # Aurora KSQ-1 maintained local-slice range migration
 
-Status: **001-020 PASS — 021-040 NEXT**
+Status: **001-040 PASS — 041-060 IN PROGRESS**
 
 This document tracks migration of the maintained KSQ-1 range builder from legacy remote Snapshot Service assumptions to the published local snapshot slice.
 
@@ -8,7 +8,7 @@ It does not certify KSQ-1 by itself. KSQ-0 remains **CERTIFIED / CLOSED** and it
 
 ## Migration design
 
-The migration deliberately keeps `scripts/ci/build-ksq-1-range.sh` as the range/build engine. New local-slice helpers provide its environment instead of creating a second package-build implementation.
+The migration deliberately keeps `scripts/ci/build-ksq-1-range.sh` as the range/build engine. Local-slice helpers provide its environment instead of creating a second package-build implementation.
 
 Maintained helpers:
 
@@ -18,123 +18,137 @@ Maintained helpers:
 - `scripts/ci/prepare-ksq-1-local-runner.sh` verifies outer security/network invariants, installs the toolchain from the local slice, restores closed KSQ-0 source-audit evidence, regenerates the closure locally and requires byte-identical certified closure/build order;
 - `scripts/ci/run-ksq-1-local-range.sh` invokes the existing range builder with the local `SBUILD_CONFIG` contract.
 
-KSQ-0's source-audit workflow is **not rerun**. The immutable slice contains `provenance/github-artifact-9708738867.zip`, whose SHA-256 remains the certified `5b23140181ea7e7931cb744f4c43930adba8f79e446c52d0f4b1c3c568106d50`. The local runner restores the already-certified source-audit bytes from that object rather than consulting Debian Snapshot again.
+KSQ-0's source-audit workflow is **not rerun**. The immutable slice contains `provenance/github-artifact-9708738867.zip`, whose SHA-256 remains the certified `5b23140181ea7e7931cb744f4c43930adba8f79e446c52d0f4b1c3c568106d50`. The local runner restores those already-certified bytes rather than consulting Debian Snapshot again.
 
-Local source acquisition in `fetch-prepare-ksq-1-source.sh` uses `Acquire::Source-Symlinks=false`, the supported Resolute APT option required to materialize ordinary files from the signed `file:` source repository.
+Local source acquisition uses the supported Resolute APT option `Acquire::Source-Symlinks=false` so the maintained source-preparation code receives regular files from the signed `file:` repository.
 
-## Maintained range 001-005 qualification
+## Stable closure identity
 
-Workflow: `.github/workflows/ksq-1-local-range-probe.yml`
+Every qualifying range regenerates the 101-node DAG from the signed local slice and requires byte-identical equality against certified KSQ-0.
+
+Canonical `build-order.tsv` SHA-256:
+
+`9c53547df78a9f7c740228aba09490dfdb68e6307d2200e12ebf907dfa3fcb88`
+
+`closure-status.env` remains snapshot `20260829T022000Z`, status `COMPLETE`, sources `101`, unresolved `0`, build ordered `101`.
+
+## Maintained range 001-005
 
 - commit `0e9a009b23a91a3eb6575fc8cde0968db6dd47bf`;
 - run `33534104089`;
 - job `99944060131`;
 - result **SUCCESS**;
-- artifact ID `9811368088`;
-- artifact digest `sha256:4ec26fcd935120b190b08621b0443a0d3fee13e8194b77e9c43b62750393d948`;
+- artifact `9811368088`;
+- digest `sha256:4ec26fcd935120b190b08621b0443a0d3fee13e8194b77e9c43b62750393d948`;
 - sources `5`;
 - DEBs `12`;
 - AppArmor denials `0`;
-- HTTP/HTTPS package/source acquisition `0`.
+- HTTP/HTTPS package/source acquisitions `0`.
 
-This initial gate proved the existing maintained range builder could run unchanged against the local-slice environment, including the KDE-adjacent backports and the Debian `wayland-protocols` source restored from certified KSQ-0 evidence.
+This proved the maintained range builder could run unchanged against the local-slice environment, including KDE-adjacent backports and Debian `wayland-protocols` restored from certified KSQ-0 evidence.
 
-## Maintained range 001-020 qualification
-
-The first formal-sized chunk has now passed the same local-slice path.
-
-Workflow: `.github/workflows/ksq-1-local-range-probe.yml`
+## Maintained range 001-020
 
 - commit `05615aa0bfca4c6bee5a0d520f7332cb6bc5506e`;
 - run `33546093974`;
 - job `99983826266`;
 - result **SUCCESS**;
-- artifact ID `9818465016`;
-- artifact name `aurora-ksq-1-local-range-001-020`;
+- artifact `9818465016`;
 - artifact bytes `163328618`;
-- artifact digest `sha256:0eb45c7938b84db35ee734591622a6c621709117100d29376c01323ca0ab14ba`.
+- digest `sha256:0eb45c7938b84db35ee734591622a6c621709117100d29376c01323ca0ab14ba`;
+- sources `20/20 PASS`;
+- new/accumulated DEBs `103/103`;
+- native `.build` logs successful `20/20`;
+- container RC `0`, tee RC `0`;
+- AppArmor denials `0`;
+- HTTP/HTTPS package/source acquisitions `0`.
 
-Observed runner:
+The 001-020 checkpoint is pinned by artifact ID plus internal identities:
 
-- Ubuntu 26.04 LTS;
-- `ImageOS=ubuntu26`;
-- `ImageVersion=20260824.116.1`;
-- kernel `7.0.0-1012-azure`;
-- Docker `29.4.2`.
+- `new-debs.sha256`: `b0be04014893808a79aaea514e2a5c4bc968b5c9c9769d8d7ea6cae7992b01f9`;
+- `build-manifest.tsv`: `ff87f96c85bc4ba1553f16b3700cf701eca04e9b749a1c739bb1088cceb3485b`.
 
-The locally regenerated certified build order remained byte-identical to KSQ-0:
+## Maintained range 021-040
 
-`SHA-256 = 9c53547df78a9f7c740228aba09490dfdb68e6307d2200e12ebf907dfa3fcb88`
+The second formal-sized chunk has now passed using the exact 001-020 checkpoint.
 
-`closure-status.env` remained:
+- commit `d8fa7e6e26f002bc6ca94d04bbda8097e19607b6`;
+- run `33561782526`;
+- job `100035734787`;
+- result **SUCCESS**;
+- artifact `9824689982`;
+- artifact bytes `12667773`;
+- digest `sha256:08dffb19fe6d3fda5b8079ed862d3215440cfabaf51a249f79b5af49d3539d8e`.
 
-- snapshot `20260829T022000Z`;
-- status `COMPLETE`;
-- sources `101`;
-- unresolved `0`;
-- build ordered `101`.
+Before building order 21, the workflow downloaded artifact `9818465016` from run `33546093974` by exact ID and verified:
 
-The range evidence proves:
+- range status PASS for 001-020;
+- 103 checkpoint DEBs;
+- exact `new-debs.sha256` identity;
+- exact build-manifest identity;
+- SHA-256 of every checkpoint DEB.
 
-- `AURORA_KSQ_1_RANGE_STATUS=PASS`;
-- first order `1`;
-- last order `20`;
-- sources `20`;
-- new DEBs `103`;
-- accumulated DEBs `103`;
-- container RC `0`;
-- `tee` RC `0`;
-- 20/20 build-manifest rows `PASS`;
-- 20/20 native `.build` logs contain `Status: successful`;
-- 20/20 `build-status.env` records are `PASS`;
-- scoped AppArmor denied lines `0`;
-- actual APT `Get/Hit/Ign/Err` HTTP/HTTPS acquisition lines inside the package builder `0`;
-- remote fallback remains `forbidden`.
+The 021-040 artifact was then independently audited and proves:
 
-Orders 1-20 are:
+- sources `20/20 PASS`;
+- orders exactly `21..40`;
+- new DEBs `89`;
+- accumulated DEBs `192`;
+- native `.build` logs successful `20/20`;
+- new DEB checksum entries `89/89`, all verified;
+- container RC `0`, tee RC `0`;
+- AppArmor denials `0`;
+- HTTP/HTTPS package/source acquisition lines `0`;
+- regenerated build-order SHA-256 still `9c53547df78a9f7c740228aba09490dfdb68e6307d2200e12ebf907dfa3fcb88`.
 
-| Order | Source | Packaging base | Supra version | Decision | DEBs | Result |
-|---:|---|---|---|---|---:|---|
-| 1 | `kf6-extra-cmake-modules` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 2 | PASS |
-| 2 | `plasma-wayland-protocols` | `1.21.0-1` | `1.21.0-1~supra26.04.1` | backport | 1 | PASS |
-| 3 | `qtkeychain` | `0.17.0-1` | `0.17.0-1~supra26.04.1` | backport | 5 | PASS |
-| 4 | `wayland-protocols` | `1.48-1` | `1.48-1~supra26.04.1` | backport | 1 | PASS |
-| 5 | `kf6-attica` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 3 | PASS |
-| 6 | `kf6-bluez-qt` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 5 | PASS |
-| 7 | `kf6-breeze-icons` | `4:6.29.0-0ubuntu2` | `4:6.29.0-0ubuntu2~supra26.04.1` | rebuild | 6 | PASS |
-| 8 | `kf6-karchive` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 4 | PASS |
-| 9 | `kf6-kcodecs` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 4 | PASS |
-| 10 | `kf6-kconfig` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 9 | PASS |
-| 11 | `kf6-kcoreaddons` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 5 | PASS |
-| 12 | `kf6-kdbusaddons` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 5 | PASS |
-| 13 | `kf6-kglobalaccel` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 4 | PASS |
-| 14 | `kf6-kguiaddons` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 6 | PASS |
-| 15 | `kf6-kholidays` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 5 | PASS |
-| 16 | `kf6-ki18n` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 8 | PASS |
-| 17 | `kf6-kidletime` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 3 | PASS |
-| 18 | `kf6-kirigami` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 19 | PASS |
-| 19 | `kf6-kitemmodels` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 4 | PASS |
-| 20 | `kf6-kitemviews` | `6.29.0-0ubuntu1` | `6.29.0-0ubuntu1~supra26.04.1` | rebuild | 4 | PASS |
+The 021-040 checkpoint is pinned by:
 
-The 001-020 exit criteria for the first formal-sized chunk are therefore **100% satisfied**.
+- artifact ID `9824689982` / digest `sha256:08dffb19fe6d3fda5b8079ed862d3215440cfabaf51a249f79b5af49d3539d8e`;
+- `new-debs.sha256`: `3924d0151581a53f505ca8cd0a615b4ffee9c246afeabec003633905db159bfa`;
+- `build-manifest.tsv`: `6e121efdeb62b8c0c6c48ae14f60e41e452e16fe177f03536f1c2677848b111a`.
 
-## Remaining migration boundary
+## Maintained range 041-060
 
-The formal full-build workflow is not yet switched wholesale because later chunks have not yet completed equivalent local-slice regressions. In addition, `scripts/ci/validate-ksq-1-kwallet-pam.sh`, executed after chunk 061-080, still creates its validation rootfs directly from the remote Ubuntu Snapshot Service. That validator must be migrated and independently proven local-only before chunk 061-080 can be promoted.
+The next run restores both exact previous artifacts, verifies both independently, requires no overlapping DEB filenames, and requires exactly 192 accumulated DEBs before order 41 starts.
 
-Next gate:
+- commit `a5630f5299ca58479ad062989480a2202fbdded9`;
+- run `33572528721`;
+- state at this documentation update: **IN PROGRESS**.
 
-1. restore the exact 001-020 binary checkpoint from run `33546093974`;
-2. run orders 021-040 through the same local-slice builder;
-3. require exact DAG identity, complete PASS evidence, no remote acquisition, and zero scoped AppArmor denials;
-4. only then proceed to 041-060.
+No 041-060 PASS is recorded until the run and its artifact are audited.
+
+## KWallet PAM local-only boundary
+
+The legacy `scripts/ci/validate-ksq-1-kwallet-pam.sh` is not acceptable for the new contract because it creates its test rootfs directly from the remote Ubuntu Snapshot Service and uses a root-mode path.
+
+A replacement implementation now exists:
+
+`scripts/ci/validate-ksq-1-kwallet-pam-local.sh`
+
+Its intended contract is:
+
+- run inside the same scoped, networkless builder;
+- no outer `CAP_SYS_ADMIN`;
+- `mmdebstrap --mode=unshare`;
+- signed local `file:` snapshot only;
+- exact built `libpam-kwallet-common` and `libpam-kwallet5` DEBs supplied through the supported `mmdebstrap --include` local-DEB mechanism;
+- `file-mirror-automount` for local repository and DEB visibility;
+- `mmdebstrap --unshare-helper` for operations inside the shifted-ownership rootfs;
+- existing source-level dependency/substvar assertions retained;
+- PAM registration in `common-auth` and `common-session` required;
+- HTTP/HTTPS acquisition forbidden.
+
+This validator is **implemented but not yet qualified**. It will be tested only against the newly chained candidate once the build reaches the `kwallet-pam` source in the 061-080 phase.
 
 ## Current state
 
 - source 001 isolated local-slice proof: **PASS**;
 - maintained local-slice range 001-005: **PASS**;
 - maintained local-slice range 001-020: **PASS**;
-- maintained local-slice range 021-040: **NEXT**;
-- KWallet PAM local-only validator migration: **REQUIRED BEFORE 061-080 PROMOTION**;
+- maintained local-slice range 021-040: **PASS**;
+- maintained local-slice range 041-060: **IN PROGRESS**;
+- accumulated certified-path candidate through order 40: **192 DEBs**;
+- KWallet PAM local-only validator: **IMPLEMENTED / NOT YET QUALIFIED**;
+- 061-080 promotion: **BLOCKED ON 041-060 PASS + KWallet LOCAL VALIDATION**;
 - complete 101-source candidate: **NOT RUN**;
 - KSQ-1: **ACTIVE / NOT CERTIFIED**.
