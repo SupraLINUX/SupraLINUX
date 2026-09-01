@@ -112,11 +112,11 @@ mkdir -p "${ROOTFS}"
 chown ubuntu:ubuntu "${ROOTFS}"
 chmod 0755 "${ROOTFS}"
 
-# mmdebstrap documents that --include accepts exact package=version expressions
-# and local .deb paths, and that file-mirror-automount makes both file: mirrors
-# and included .deb objects available in unshare mode. The two PAM packages are
-# therefore installed exactly from the accumulated SupraLINUX build artifacts;
-# all remaining runtime dependencies resolve only from the certified local slice.
+# mmdebstrap documents that --include accepts local .deb paths and that the
+# file-mirror-automount hook makes both file: mirrors and included .deb objects
+# available in unshare mode. The two PAM packages are installed exactly from
+# accumulated SupraLINUX artifacts; every other dependency resolves only from
+# the certified local Ubuntu slice.
 set +e
 su -s /bin/bash ubuntu -c \
   "DEBIAN_FRONTEND=noninteractive mmdebstrap \
@@ -136,23 +136,21 @@ printf 'MMDEBSTRAP_RC=%s\nTEE_RC=%s\n' "${pipe_status[0]}" "${pipe_status[1]}" \
 [[ "${pipe_status[0]}" -eq 0 ]] || fail "mmdebstrap install failed"
 [[ "${pipe_status[1]}" -eq 0 ]] || fail "mmdebstrap evidence tee failed"
 
-# URL-looking package metadata is not transport evidence. Evaluate only APT
-# acquisition-status lines; the outer builder also has no non-loopback network.
+# URL-looking package metadata is not transport evidence. Evaluate actual APT
+# acquisition status only; the outer builder also has no non-loopback network.
 if grep -E '^(Get|Hit|Ign|Err):[0-9]+ https?://' "${EVIDENCE}/mmdebstrap-install.log"; then
   fail "remote package transport occurred during KWallet installation"
 fi
 
-run_in_rootfs() {
-  su -s /bin/bash ubuntu -c \
-    "mmdebstrap --unshare-helper /usr/sbin/chroot '${ROOTFS}' $*"
-}
-
-run_in_rootfs 'apt-get check' | tee "${EVIDENCE}/apt-check.txt"
-run_in_rootfs "dpkg-query -W -f='\${Package}\\t\${Version}\\n' libpam-kwallet-common libpam-kwallet5 kwallet6" \
+su -s /bin/bash ubuntu -c \
+  "mmdebstrap --unshare-helper /usr/sbin/chroot '${ROOTFS}' apt-get check" \
+  | tee "${EVIDENCE}/apt-check.txt"
+su -s /bin/bash ubuntu -c \
+  "mmdebstrap --unshare-helper /usr/sbin/chroot '${ROOTFS}' dpkg-query -W libpam-kwallet-common libpam-kwallet5 kwallet6" \
   | sort | tee "${EVIDENCE}/installed-versions.tsv"
 
-installed_pam_version="$(run_in_rootfs "dpkg-query -W -f='\${Version}' libpam-kwallet5")"
-installed_common_version="$(run_in_rootfs "dpkg-query -W -f='\${Version}' libpam-kwallet-common")"
+installed_pam_version="$(awk '$1 == "libpam-kwallet5" {print $2}' "${EVIDENCE}/installed-versions.tsv")"
+installed_common_version="$(awk '$1 == "libpam-kwallet-common" {print $2}' "${EVIDENCE}/installed-versions.tsv")"
 [[ "${installed_pam_version}" == "${PAM_VERSION}" ]] || fail "installed libpam-kwallet5 ${installed_pam_version} != built ${PAM_VERSION}"
 [[ "${installed_common_version}" == "${COMMON_VERSION}" ]] || fail "installed libpam-kwallet-common ${installed_common_version} != built ${COMMON_VERSION}"
 
