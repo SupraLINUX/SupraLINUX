@@ -147,8 +147,9 @@ jobs:
           	if [ "$@" = binary ] || [ "$@" = binary-indep ]; then \
           	  rm -rf debian/supralinux-local-snapshot-smoke; \
           	  mkdir -p debian/supralinux-local-snapshot-smoke/DEBIAN; \
-          	  printf 'Package: supralinux-local-snapshot-smoke\nVersion: 1.0\nArchitecture: all\nMaintainer: SupraLINUX Build Certification <noreply@supralinux.invalid>\nDescription: local snapshot smoke\n' > debian/supralinux-local-snapshot-smoke/DEBIAN/control; \
-          	  dpkg-deb --build debian/supralinux-local-snapshot-smoke ..; \
+          	  printf 'Package: supralinux-local-snapshot-smoke\nVersion: 1.0\nArchitecture: all\nSection: devel\nPriority: optional\nMaintainer: SupraLINUX Build Certification <noreply@supralinux.invalid>\nDescription: local snapshot smoke\n' > debian/supralinux-local-snapshot-smoke/DEBIAN/control; \
+          	  dpkg-deb --root-owner-group --build debian/supralinux-local-snapshot-smoke ..; \
+          	  dpkg-distaddfile supralinux-local-snapshot-smoke_1.0_all.deb devel optional; \
           	fi
           EOF_RULES
           chmod 0755 "$smoke/debian/rules"
