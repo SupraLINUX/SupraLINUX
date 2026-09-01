@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/ksq-snapshot-slice-materialize.yml'
       - 'scripts/ci/ksq-snapshot-slice.py'
+      - 'scripts/ci/ksq-normalize-selected-source-records.py'
   workflow_dispatch:
 
 permissions:
@@ -60,6 +61,7 @@ jobs:
           sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
             ca-certificates curl unzip python3 xz-utils ubuntu-keyring gpgv
           python3 -m py_compile scripts/ci/ksq-snapshot-slice.py
+          python3 -m py_compile scripts/ci/ksq-normalize-selected-source-records.py
           sudo install -d -o "$(id -u)" -g "$(id -g)" -m 0755 "$ARCHIVE_ROOT"
 
       - name: Restore untrusted resumable staging cache
@@ -137,6 +139,24 @@ jobs:
           grep -qx 'AURORA_KSQ_SLICE_BINARY_BYTES=704826504' "$root/size/results.env"
           grep -qx 'AURORA_KSQ_0_APT_SNAPSHOT=20260829T022000Z' "$root/ksq0/build/ksq-0/closure-status.env"
           grep -qx 'AURORA_KSQ_0_CLOSURE_STATUS=COMPLETE' "$root/ksq0/build/ksq-0/closure-status.env"
+
+      - name: Normalize certified flat source-record serialization
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/aurora-slice-input"
+          records="$root/ksq0/build/ksq-0/selected-source-records.txt"
+          raw="$root/ksq0/build/ksq-0/selected-source-records.canonical-flat.txt"
+          normalized="$root/ksq0/build/ksq-0/selected-source-records.normalized.txt"
+
+          cp "$records" "$raw"
+          python3 scripts/ci/ksq-normalize-selected-source-records.py "$raw" "$normalized"
+          mv "$normalized" "$records"
+
+          echo '=== canonical flat / normalized serialization identities ==='
+          sha256sum "$raw" "$records"
+          test -s "$raw"
+          test -s "$records"
 
       - name: Materialize exact certified slice
         id: materialize
