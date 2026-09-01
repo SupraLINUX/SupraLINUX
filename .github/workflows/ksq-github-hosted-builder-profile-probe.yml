@@ -1,4 +1,4 @@
-name: Aurora KSQ GitHub-hosted stable builder profile probe
+name: Aurora KSQ GitHub-hosted Ubuntu 26.04 builder profile probe
 
 on:
   push:
@@ -13,19 +13,22 @@ permissions:
 
 jobs:
   hosted-builder-profile:
-    name: Probe Ubuntu 24.04 host plus pinned Resolute container
-    runs-on: ubuntu-24.04
+    name: Probe Ubuntu 26.04 host plus pinned Resolute container
+    runs-on: ubuntu-26.04
     timeout-minutes: 30
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
 
-      - name: Record stable host
+      - name: Record Ubuntu 26.04 host
         shell: bash
         run: |
           set -euo pipefail
           {
+            echo '=== github runner image ==='
+            echo "ImageOS=${ImageOS:-<unset>}"
+            echo "ImageVersion=${ImageVersion:-<unset>}"
             echo '=== host ==='
             cat /etc/os-release
             uname -a
@@ -33,7 +36,7 @@ jobs:
             apparmor_status || true
             sysctl kernel.apparmor_restrict_unprivileged_userns || true
           } | tee "$RUNNER_TEMP/host.txt"
-          grep -qx 'VERSION_ID="24.04"' /etc/os-release
+          grep -qx 'VERSION_ID="26.04"' /etc/os-release
 
       - name: Load scoped KSQ AppArmor profile on ephemeral host
         shell: bash
@@ -137,14 +140,14 @@ jobs:
           find /tmp/sbuild-result -maxdepth 1 -type f -name '*.deb' -print -quit | grep -q .
           find /tmp/sbuild-result -maxdepth 1 -type f -name '*.buildinfo' -print -quit | grep -q .
           find /tmp/sbuild-result -maxdepth 1 -type f -name '*.changes' -print -quit | grep -q .
-          echo AURORA_KSQ_GITHUB_HOSTED_REAL_SBUILD_PASS
+          echo AURORA_KSQ_GITHUB_HOSTED_2604_REAL_SBUILD_PASS
           EOF_CONTAINER
 
       - name: Preserve probe evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: aurora-ksq-github-hosted-stable-builder-profile-probe
+          name: aurora-ksq-github-hosted-2604-builder-profile-probe
           path: |
             ${{ runner.temp }}/host.txt
             ${{ runner.temp }}/apparmor.txt
