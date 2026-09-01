@@ -366,15 +366,38 @@ jobs:
           EOF_SBUILD
           chmod 0644 /tmp/sbuild-local.conf
           chown ubuntu:ubuntu /tmp/sbuild-local.conf
+
+          set +e
           SBUILD_CONFIG=/tmp/sbuild-local.conf su -s /bin/bash ubuntu -c \
             "SBUILD_CONFIG=/tmp/sbuild-local.conf DEB_BUILD_OPTIONS=parallel=2 sbuild --chroot-mode=unshare --chroot=/tmp/resolute-local-buildd.tar.zst --dist=resolute --arch=amd64 --build-dir=/evidence/sbuild-result --build-path=/build/supralinux-local-snapshot-smoke --jobs=2 --no-enable-network --no-run-lintian --no-run-autopkgtest --purge-build=always --purge-deps=always --resolve-alternatives --bd-uninstallable-explainer=apt /tmp/supralinux-local-snapshot-smoke_1.0.dsc" \
             2>&1 | tee /evidence/sbuild.log
+          sbuild_pipeline_status=("${PIPESTATUS[@]}")
+          sbuild_rc=${sbuild_pipeline_status[0]}
+          sbuild_tee_rc=${sbuild_pipeline_status[1]}
+          set -e
+          {
+            echo "AURORA_KSQ_LOCAL_GATE_SBUILD_RC=$sbuild_rc"
+            echo "AURORA_KSQ_LOCAL_GATE_SBUILD_TEE_RC=$sbuild_tee_rc"
+          } | tee /evidence/sbuild-command.env
+          test "$sbuild_rc" -eq 0
+          test "$sbuild_tee_rc" -eq 0
+
           if grep -Ei 'https?://' /evidence/sbuild.log; then
-            echo 'AURORA_KSQ_LOCAL_GATE_FAILURE: sbuild attempted remote transport' >&2
+            echo 'AURORA_KSQ_LOCAL_GATE_FAILURE: sbuild attempted remote transport on captured stdout/stderr' >&2
             exit 1
           fi
-          grep -q 'AURORA_KSQ_LOCAL_GATE_SBUILD_PROC_USABLE=1' /evidence/sbuild.log
+
           find /evidence/sbuild-result -maxdepth 1 -type f -printf '%f\n' | sort | tee /evidence/sbuild-files.txt
+          mapfile -t sbuild_build_logs < <(find /evidence/sbuild-result -maxdepth 1 -type f -name '*.build' -print)
+          test "${#sbuild_build_logs[@]}" -eq 1
+          sbuild_build_log="${sbuild_build_logs[0]}"
+          printf '%s\n' "$(basename "$sbuild_build_log")" | tee /evidence/sbuild-build-log.basename
+          grep -qx 'Status: successful' "$sbuild_build_log"
+          proc_marker_count="$(grep -c '^AURORA_KSQ_LOCAL_GATE_SBUILD_PROC_USABLE=1$' "$sbuild_build_log")"
+          test "$proc_marker_count" -ge 2
+          echo "AURORA_KSQ_LOCAL_GATE_SBUILD_PROC_MARKERS=$proc_marker_count" | tee /evidence/sbuild-procfs.env
+
+          test "$(find /evidence/sbuild-result -maxdepth 1 -type f | wc -l)" -eq 4
           find /evidence/sbuild-result -maxdepth 1 -type f -name '*.deb' -print -quit | grep -q .
           find /evidence/sbuild-result -maxdepth 1 -type f -name '*.buildinfo' -print -quit | grep -q .
           find /evidence/sbuild-result -maxdepth 1 -type f -name '*.changes' -print -quit | grep -q .
@@ -393,12 +416,18 @@ jobs:
             echo AURORA_KSQ_LOCAL_GATE_SBUILD=PASS
           } | tee /evidence/results.env
           EOF_CONTAINER
-          container_rc=${PIPESTATUS[0]}
+          outer_pipeline_status=("${PIPESTATUS[@]}")
+          container_rc=${outer_pipeline_status[0]}
+          container_tee_rc=${outer_pipeline_status[1]}
           set -e
 
           python3 scripts/ci/ksq-docker-builder.py remove "$cid"
           trap - EXIT
-          echo "AURORA_KSQ_LOCAL_GATE_CONTAINER_RC=$container_rc" | tee "$evidence/container-result.env"
+          {
+            echo "AURORA_KSQ_LOCAL_GATE_CONTAINER_RC=$container_rc"
+            echo "AURORA_KSQ_LOCAL_GATE_CONTAINER_TEE_RC=$container_tee_rc"
+          } | tee "$evidence/container-result.env"
+          test "$container_tee_rc" -eq 0
           exit "$container_rc"
 
       - name: Capture local gate AppArmor audit
