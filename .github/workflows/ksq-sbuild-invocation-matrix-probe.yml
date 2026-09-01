@@ -147,7 +147,9 @@ jobs:
             name="$1"; flags="$2"; out="/evidence/$name"; mkdir -p "$out"; chown ubuntu:ubuntu "$out"
             set +e
             su -s /bin/bash ubuntu -c "$base $flags --build-dir='$out'" 2>&1 | tee "/evidence/$name.stdout.log"
-            cmd_rc=${PIPESTATUS[0]}; tee_rc=${PIPESTATUS[1]}
+            pipeline_status=("${PIPESTATUS[@]}")
+            cmd_rc=${pipeline_status[0]}
+            tee_rc=${pipeline_status[1]}
             set -e
             printf '%s\tpipe\t%s\t%s\t%s\n' "$name" "$flags" "$cmd_rc" "$tee_rc" | tee -a /evidence/invocation-matrix.tsv
           }
