@@ -217,6 +217,16 @@ jobs:
           test "$(wc -l < /evidence/candidate-verification.tsv)" -eq 244
           echo AURORA_KSQ_LOCAL_GATE_CANDIDATES_EXACT=244
 
+          apt-get --no-install-recommends install -y python3 \
+            2>&1 | tee /evidence/local-python-bootstrap.log
+          if grep -Ei 'https?://' /evidence/local-python-bootstrap.log; then
+            echo 'AURORA_KSQ_LOCAL_GATE_FAILURE: python bootstrap attempted remote transport' >&2
+            exit 1
+          fi
+          command -v python3
+          python3 --version
+          echo AURORA_KSQ_LOCAL_GATE_PYTHON_BOOTSTRAP=file-only
+
           : >/tmp/empty-status
           mapfile -t seed_specs < <(awk -F '\t' '{print $1 "=" $2}' "$seeds")
           roots=('?essential' apt build-essential ca-certificates ubuntu-keyring sudo sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils gzip xz-utils diffutils libcap2-bin)
