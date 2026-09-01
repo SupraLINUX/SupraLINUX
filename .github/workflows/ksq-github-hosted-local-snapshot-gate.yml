@@ -127,10 +127,10 @@ jobs:
                           raise SystemExit(f'unsafe hardlink: {m.name} -> {m.linkname}')
           print('AURORA_KSQ_LOCAL_GATE_ARCHIVE_NAMES_SAFE')
           PY
-          root="$RUNNER_TEMP/archive"
-          rm -rf "$root"
-          mkdir -p "$root"
-          tar -C "$root" -xf "$archive"
+          root='/opt/supralinux/archive'
+          sudo rm -rf "$root/$AURORA_KSQ_SNAPSHOT"
+          sudo mkdir -p "$root"
+          sudo tar -C "$root" -xf "$archive"
           slice="$root/$AURORA_KSQ_SNAPSHOT"
           python3 scripts/ci/ksq-snapshot-slice.py validate --slice-root "$slice"
           test -f "$slice/COMPLETE"
@@ -149,7 +149,7 @@ jobs:
           source scripts/ci/aurora-ksq-snapshot-release.env
           set +a
           image='ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b'
-          slice="$RUNNER_TEMP/archive/$AURORA_KSQ_SNAPSHOT"
+          slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
           evidence="$RUNNER_TEMP/local-gate-evidence"
           rm -rf "$evidence"
           mkdir -p "$evidence/sbuild-result"
@@ -174,7 +174,6 @@ jobs:
           echo '=== isolated container ==='
           cat /etc/os-release
           cat /proc/self/attr/current
-          test "$(cat /sys/class/net/lo/operstate 2>/dev/null || true)" = unknown || true
           if find /sys/class/net -mindepth 1 -maxdepth 1 ! -name lo -print -quit 2>/dev/null | grep -q .; then
             echo 'AURORA_KSQ_LOCAL_GATE_FAILURE: non-loopback interface exists in --network none container' >&2
             exit 1
