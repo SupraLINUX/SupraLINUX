@@ -144,6 +144,11 @@ jobs:
           #!/usr/bin/make -f
           binary binary-arch binary-indep build build-arch build-indep clean:
           	@set -e; \
+          	test -r /proc/self/status; \
+          	grep -q '^Name:' /proc/self/status; \
+          	test "$$(stat -f -c %T /proc)" = proc; \
+          	grep -q ' /proc ' /proc/self/mountinfo; \
+          	echo AURORA_KSQ_SBUILD_PROC_USABLE=1; \
           	if [ "$@" = binary ] || [ "$@" = binary-indep ]; then \
           	  rm -rf debian/supralinux-local-snapshot-smoke; \
           	  mkdir -p debian/supralinux-local-snapshot-smoke/DEBIAN; \
