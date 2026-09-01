@@ -1,0 +1,166 @@
+name: Aurora KSQ Stonking source identity probe
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-stonking-source-identity-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  SNAPSHOT: '20260829T022000Z'
+  SIZE_ARTIFACT_ID: '9781553137'
+  KSQ0_ARTIFACT_ID: '9708738867'
+
+jobs:
+  source-identity:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Install minimal tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -qx 'VERSION_ID="26.04"' /etc/os-release
+          sudo apt-get -o Acquire::Retries=5 update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends curl unzip xz-utils gpgv ubuntu-keyring python3
+
+      - name: Compare canonical and signed bluedevil records structurally
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/stonking-probe"
+          mkdir -p "$work/ksq0"
+
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/$KSQ0_ARTIFACT_ID/zip" \
+            -o "$work/ksq0.zip"
+          echo '5b23140181ea7e7931cb744f4c43930adba8f79e446c52d0f4b1c3c568106d50  '"$work/ksq0.zip" | sha256sum -c -
+          unzip -q "$work/ksq0.zip" -d "$work/ksq0"
+
+          base="https://snapshot.ubuntu.com/ubuntu/$SNAPSHOT"
+          curl --fail --location --retry 10 --retry-all-errors "$base/dists/stonking/InRelease" -o "$work/InRelease"
+          gpgv --keyring /usr/share/keyrings/ubuntu-archive-keyring.gpg "$work/InRelease"
+
+          python3 - "$work/InRelease" "$work/index.env" <<'PY'
+          import re, sys
+          from pathlib import Path
+
+          lines = Path(sys.argv[1]).read_text().splitlines()
+          start = lines.index('-----BEGIN PGP SIGNED MESSAGE-----') + 1
+          while lines[start] != '':
+              start += 1
+          start += 1
+          payload = []
+          for line in lines[start:]:
+              if line == '-----BEGIN PGP SIGNATURE-----':
+                  break
+              payload.append(line[2:] if line.startswith('- ') else line)
+
+          target = 'universe/source/Sources.xz'
+          found = None
+          for section, digest_len in [('SHA512', 128), ('SHA256', 64)]:
+              inside = False
+              for line in payload:
+                  if line == section + ':':
+                      inside = True
+                      continue
+                  if inside and line and not line[0].isspace():
+                      break
+                  if inside:
+                      parts = line.split()
+                      if len(parts) == 3 and parts[2] == target and len(parts[0]) == digest_len and parts[1].isdigit():
+                          found = (section, parts[0].lower(), parts[1])
+                          break
+              if found:
+                  break
+          if not found:
+              raise SystemExit('required signed Sources.xz identity not found')
+          Path(sys.argv[2]).write_text(f'ALGO={found[0]}\nDIGEST={found[1]}\nSIZE={found[2]}\n')
+          print(f'AURORA_KSQ_STONKING_INDEX_HASH_ALGORITHM={found[0]}')
+          print(f'AURORA_KSQ_STONKING_INDEX_HASH={found[1]}')
+          print(f'AURORA_KSQ_STONKING_INDEX_SIZE={found[2]}')
+          PY
+          source "$work/index.env"
+          curl --fail --location --retry 10 --retry-all-errors \
+            "$base/dists/stonking/universe/source/Sources.xz" -o "$work/Sources.xz"
+          test "$(stat -c '%s' "$work/Sources.xz")" = "$SIZE"
+          case "$ALGO" in
+            SHA512) test "$(sha512sum "$work/Sources.xz" | awk '{print $1}')" = "$DIGEST" ;;
+            SHA256) test "$(sha256sum "$work/Sources.xz" | awk '{print $1}')" = "$DIGEST" ;;
+            *) exit 1 ;;
+          esac
+          xz -dc "$work/Sources.xz" > "$work/Sources"
+
+          python3 - \
+            "$work/ksq0/build/ksq-0/selected-source-records.txt" \
+            "$work/Sources" <<'PY'
+          import sys
+          from pathlib import Path
+
+          canonical_path, signed_path = map(Path, sys.argv[1:])
+
+          def parse_deb822(text):
+              records=[]; cur={}; key=None
+              for raw in text.splitlines()+['']:
+                  if not raw.strip():
+                      if cur: records.append(cur); cur={}; key=None
+                      continue
+                  if raw[0].isspace() and key:
+                      cur[key] += '\n' + raw[1:]
+                      continue
+                  if ':' not in raw: continue
+                  key,val=raw.split(':',1); cur[key]=val.lstrip()
+              return records
+
+          def checksum_set(value):
+              out=[]
+              for line in value.splitlines():
+                  p=line.split()
+                  if len(p)==3:
+                      out.append((p[2], int(p[1]), p[0].lower()))
+              return out
+
+          canonical_text=canonical_path.read_text()
+          marker='### bluedevil 4:6.7.4-2ubuntu1 origin=ubuntu-stonking@20260829T022000Z\n'
+          start=canonical_text.index(marker)+len(marker)
+          end=canonical_text.index('\n### ', start)
+          canonical=parse_deb822(canonical_text[start:end])[0]
+
+          signed=[r for r in parse_deb822(signed_path.read_text()) if r.get('Package')=='bluedevil' and r.get('Version')=='4:6.7.4-2ubuntu1']
+          if len(signed)!=1:
+              raise SystemExit(f'expected one signed record, got {len(signed)}')
+          signed=signed[0]
+
+          crows=checksum_set(canonical.get('Checksums-Sha512',''))
+          srows=checksum_set(signed.get('Checksums-Sha512',''))
+          print('=== CANONICAL Checksums-Sha512 order ===')
+          for r in crows: print(*r)
+          print('=== SIGNED Checksums-Sha512 order ===')
+          for r in srows: print(*r)
+          print(f'AURORA_KSQ_STONKING_DIRECTORY_CANONICAL={canonical.get("Directory")!r}')
+          print(f'AURORA_KSQ_STONKING_DIRECTORY_SIGNED={signed.get("Directory")!r}')
+          print(f'AURORA_KSQ_STONKING_CHECKSUM_TEXT_EQUAL={canonical.get("Checksums-Sha512","").strip()==signed.get("Checksums-Sha512","").strip()}')
+          print(f'AURORA_KSQ_STONKING_CHECKSUM_SET_EQUAL={set(crows)==set(srows)}')
+          print(f'AURORA_KSQ_STONKING_CHECKSUM_ORDER_EQUAL={crows==srows}')
+          if canonical.get('Directory','').strip()!=signed.get('Directory','').strip():
+              raise SystemExit('Directory differs')
+          if set(crows)!=set(srows):
+              raise SystemExit('Checksums-Sha512 object identity set differs')
+          if crows==srows:
+              raise SystemExit('probe did not reproduce ordering-only mismatch')
+          print('AURORA_KSQ_STONKING_SOURCE_IDENTITY_ROOT_CAUSE=ORDERING_ONLY')
+          PY
