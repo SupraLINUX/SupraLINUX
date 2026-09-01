@@ -1,0 +1,102 @@
+name: Aurora KSQ selective Docker builder helper probe
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-docker-builder-helper-probe.yml'
+      - 'scripts/ci/ksq-docker-builder.py'
+      - 'scripts/ci/apparmor/supralinux-ksq-unshare'
+      - 'scripts/ci/install-ksq-apparmor-profile.sh'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  helper-probe:
+    name: Qualify selective Engine API builder helper
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Prepare scoped builder policy
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -qx 'VERSION_ID="26.04"' /etc/os-release
+          python3 -m py_compile scripts/ci/ksq-docker-builder.py
+          sudo bash scripts/ci/install-ksq-apparmor-profile.sh | tee "$RUNNER_TEMP/host-apparmor.txt"
+          sudo grep -qx 'supralinux-ksq-unshare (enforce)' /sys/kernel/security/apparmor/profiles
+
+      - name: Create and validate builder through helper
+        shell: bash
+        run: |
+          set -euo pipefail
+          image='ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b'
+          probe="$RUNNER_TEMP/helper-bind"
+          evidence="$RUNNER_TEMP/helper-evidence"
+          name="supralinux-ksq-helper-${GITHUB_RUN_ID}"
+          mkdir -p "$probe" "$evidence"
+          printf 'AURORA_KSQ_HELPER_BIND_SENTINEL\n' > "$probe/sentinel.txt"
+          docker pull "$image"
+
+          cid="$(python3 scripts/ci/ksq-docker-builder.py create \
+            --image "$image" \
+            --name "$name" \
+            --bind "$probe:/probe:ro" \
+            --evidence-dir "$evidence")"
+          test -n "$cid"
+          trap 'python3 scripts/ci/ksq-docker-builder.py remove "$cid" >/dev/null 2>&1 || true' EXIT
+
+          docker exec "$cid" bash -ceu '
+            set -o pipefail
+            grep -qx AURORA_KSQ_HELPER_BIND_SENTINEL /probe/sentinel.txt
+            test ! -w /probe/sentinel.txt
+
+            grep -Eq "^supralinux-ksq-unshare( \(enforce\))?$" /proc/self/attr/current
+            cap_eff="$(grep "^CapEff:" /proc/self/status | tr -s "[:space:]" " " | cut -d " " -f 2)"
+            test -n "$cap_eff"
+            cap_eff_val=$((16#$cap_eff))
+            test $((cap_eff_val & (1 << 21))) -eq 0
+
+            test "$(stat -f -c %T /proc)" = proc
+            test "$(findmnt -R /proc -n -o TARGET | wc -l)" -eq 1
+            test "$(findmnt -T /sys/firmware -n -o TARGET)" = /sys/firmware
+            test "$(findmnt -T /sys/firmware -n -o FSTYPE)" = tmpfs
+            test "$(find /sys/class/net -mindepth 1 -maxdepth 1 ! -name lo -print -quit | wc -l)" -eq 0
+
+            echo "CAP_EFF=$cap_eff"
+            echo AURORA_KSQ_DOCKER_BUILDER_RUNTIME=PASS
+          ' | tee "$evidence/runtime-check.txt"
+
+          python3 scripts/ci/ksq-docker-builder.py remove "$cid"
+          trap - EXIT
+          if docker inspect "$cid" >/dev/null 2>&1; then
+            echo 'AURORA_KSQ_HELPER_FAILURE: remove did not delete container' >&2
+            exit 1
+          fi
+          echo AURORA_KSQ_DOCKER_BUILDER_HELPER=PASS | tee "$evidence/helper-result.env"
+
+      - name: Capture AppArmor audit
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/helper-evidence"
+          mkdir -p "$evidence"
+          sudo dmesg | grep -E 'apparmor="DENIED".*profile="supralinux-ksq-unshare"' > "$evidence/host-apparmor-denied.log" || true
+          test ! -s "$evidence/host-apparmor-denied.log"
+
+      - name: Preserve helper evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-docker-builder-helper-probe
+          path: ${{ runner.temp }}/helper-evidence
+          if-no-files-found: error
+          retention-days: 30
