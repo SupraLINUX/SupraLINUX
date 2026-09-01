@@ -1,4 +1,4 @@
-# SupraLINUX KSQ self-hosted build-container AppArmor profile.
+# SupraLINUX KSQ GitHub-hosted build-container AppArmor profile.
 #
 # Origin:
 #   Derived from the current Moby/Docker docker-default AppArmor template.
@@ -8,13 +8,20 @@
 #   docker-default contains an unconditional `deny mount,` rule. KSQ-1 needs
 #   nested user+mount namespaces for mmdebstrap --mode=unshare and
 #   sbuild --chroot-mode=unshare. The rules below are restricted to operations
-#   observed in the pinned Resolute toolchain and to its dedicated temporary
-#   roots under /tmp/mmdebstrap.*/ and /tmp/tmp.sbuild.*/.
+#   observed in the pinned Resolute toolchain, its dedicated temporary roots
+#   under /tmp/mmdebstrap.*/ and /tmp/tmp.sbuild.*/, and the one certified
+#   read-only Ubuntu snapshot mirror used by KSQ.
 #
 # Proven requirements:
 #   - util-linux unshare recursively makes / private;
 #   - mmdebstrap 1.5.7 mounts canonical devices, devpts, /sys and /proc below
 #     /tmp/mmdebstrap.*/ (canonical mmdebstrap PASS: run 33424405355 attempt 2);
+#   - mmdebstrap's upstream file-mirror-automount hook uses
+#     `mount -o ro,bind <file-mirror> <rootdir>/<file-mirror>` in unshare mode;
+#   - local-only gate run 33471101421 proved that exact operation is required
+#     for certified mirror
+#       /opt/supralinux/archive/20260829T022000Z/ubuntu/
+#     and was denied before the narrowly-scoped rule below was added;
 #   - sbuild 0.91.2ubuntu3 uses /usr/libexec/sbuild-usernsexec; the exact helper
 #     was captured with SHA-256
 #     218821c4a8892c60847be58c80e4d1fb02702b17ac6f7dce412faadecd8afc0a;
@@ -25,17 +32,16 @@
 #     devpts, tmpfs /dev/shm, rbind /sys, tmpfs /sys/kernel and proc for the
 #     chroot-session setup used by this path;
 #   - SBUILD_ENABLE_PIVOT_ROOT was explicitly unset in the smoke environment,
-#     so no pivot_root permission is granted;
-#   - the Resolute sbuild default UNSHARE_BIND_MOUNTS is empty and SupraLINUX
-#     does not configure extra unshare bind mounts here, so no arbitrary rbind
-#     source rule is granted.
+#     so no pivot_root permission is granted.
 #
 # Security scope:
-#   This profile is for the dedicated SupraLINUX KSQ GitHub Actions job container.
-#   It does not grant CAP_SYS_ADMIN to the parent Docker container, does not use
-#   privileged mode, and does not disable Ubuntu's unprivileged-userns policy.
-#   Mount targets are restricted to the two tool-owned temporary-root patterns
-#   except for the single propagation change on / required by util-linux unshare.
+#   This profile is for the dedicated SupraLINUX KSQ GitHub Actions job
+#   container. It does not grant CAP_SYS_ADMIN to the parent Docker container,
+#   does not use privileged mode, and does not disable Ubuntu's unprivileged
+#   userns policy. Mount targets are restricted to tool-owned temporary roots,
+#   except for the single propagation change on / required by util-linux
+#   unshare. The only external repository bind source is the exact certified
+#   snapshot path and it is permitted read-only only.
 #
 # Removal condition:
 #   Remove this override when Docker's default profile permits the exact
@@ -96,7 +102,12 @@ profile supralinux-ksq-unshare flags=(attach_disconnected,mediate_deleted) {
   mount options=(rw,rbind) /proc/ -> /tmp/mmdebstrap.*/proc/,
   mount options=(rw,make-rslave) -> /tmp/mmdebstrap.*/proc/,
 
-  # 4. sbuild 0.91.2ubuntu3 /usr/libexec/sbuild-usernsexec session setup.
+  # 4. mmdebstrap file-mirror-automount for the one certified local snapshot.
+  #    Upstream uses `mount -o ro,bind`; do not allow rw, rbind or any other
+  #    external source/target combination here.
+  mount options=(ro,bind) /opt/supralinux/archive/20260829T022000Z/ubuntu/ -> /tmp/mmdebstrap.*/opt/supralinux/archive/20260829T022000Z/ubuntu/,
+
+  # 5. sbuild 0.91.2ubuntu3 /usr/libexec/sbuild-usernsexec session setup.
   #    First make the unpack root a mountpoint (the exact operation denied in
   #    smoke run 33431673769), then populate only its standard virtual trees.
   mount options=(rw,rbind) /tmp/tmp.sbuild.*/ -> /tmp/tmp.sbuild.*/,
