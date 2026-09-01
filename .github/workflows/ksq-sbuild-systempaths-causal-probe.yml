@@ -29,8 +29,14 @@ jobs:
         run: |
           set -euo pipefail
           grep -qx 'VERSION_ID="26.04"' /etc/os-release
-          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
-          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends curl python3 ubuntu-keyring gpgv
+          test -s /etc/apt/sources.list.d/ubuntu.sources
+          host_apt=(
+            -o Dir::Etc::sourcelist=/etc/apt/sources.list.d/ubuntu.sources
+            -o Dir::Etc::sourceparts=-
+            -o APT::Get::List-Cleanup=0
+          )
+          sudo apt-get "${host_apt[@]}" -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get "${host_apt[@]}" -o Acquire::Retries=5 install -y --no-install-recommends curl python3 ubuntu-keyring gpgv
           sudo bash scripts/ci/install-ksq-apparmor-profile.sh | tee "$RUNNER_TEMP/host-apparmor.txt"
           sudo grep -qx 'supralinux-ksq-unshare (enforce)' /sys/kernel/security/apparmor/profiles
 
