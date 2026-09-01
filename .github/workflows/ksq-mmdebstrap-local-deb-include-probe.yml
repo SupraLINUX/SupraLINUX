@@ -1,0 +1,147 @@
+name: Aurora KSQ mmdebstrap local-DEB include probe
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-mmdebstrap-local-deb-include-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  local-deb-include:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Qualify host
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -qx 'VERSION_ID="26.04"' /etc/os-release
+          host_apt=(
+            -o Dir::Etc::sourcelist=/etc/apt/sources.list.d/ubuntu.sources
+            -o Dir::Etc::sourceparts=-
+            -o APT::Get::List-Cleanup=0
+          )
+          sudo apt-get "${host_apt[@]}" -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get "${host_apt[@]}" -o Acquire::Retries=5 install -y --no-install-recommends curl python3 ubuntu-keyring gpgv
+          sudo bash scripts/ci/install-ksq-apparmor-profile.sh
+          sudo grep -qx 'supralinux-ksq-unshare (enforce)' /sys/kernel/security/apparmor/profiles
+
+      - name: Download exact 001-020 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9818465016'
+          path: build/probe/checkpoint
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33546093974'
+          digest-mismatch: error
+
+      - name: Download and validate snapshot
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          out="$RUNNER_TEMP/release"
+          mkdir -p "$out"
+          archive="$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/octet-stream' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_ID" \
+            -o "$archive"
+          [[ "$(stat -c '%s' "$archive")" == "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES" ]]
+          [[ "$(sha256sum "$archive" | awk '{print $1}')" == "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256" ]]
+          root=/opt/supralinux/archive
+          sudo rm -rf "$root/$AURORA_KSQ_SNAPSHOT"
+          sudo mkdir -p "$root"
+          sudo tar -C "$root" -xf "$archive"
+          python3 scripts/ci/ksq-snapshot-slice.py validate --slice-root "$root/$AURORA_KSQ_SNAPSHOT"
+
+      - name: Prove local DEB include in networkless scoped builder
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          image='ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b'
+          slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
+          deb="$GITHUB_WORKSPACE/build/probe/checkpoint/ksq-1/full/chunk-001-020/new-debs/extra-cmake-modules_6.29.0-0ubuntu1~supra26.04.1_amd64.deb"
+          test -f "$deb"
+          chmod -R a+rX build/probe/checkpoint
+          chmod -R a+rwX build
+          mkdir -p build/probe/evidence build/probe/rootfs
+          name="supralinux-ksq-local-deb-${GITHUB_RUN_ID}"
+          docker pull "$image"
+          cid="$(python3 scripts/ci/ksq-docker-builder.py create \
+            --image "$image" \
+            --name "$name" \
+            --bind "$slice:$slice:ro" \
+            --bind "$GITHUB_WORKSPACE:/workspace:ro" \
+            --bind "$GITHUB_WORKSPACE/build:/workspace/build:rw" \
+            --evidence-dir "$GITHUB_WORKSPACE/build/probe/evidence")"
+          trap 'python3 scripts/ci/ksq-docker-builder.py remove "$cid" >/dev/null 2>&1 || true' EXIT
+          docker exec -i "$cid" env SLICE="$slice" DEB="/workspace/${deb#$GITHUB_WORKSPACE/}" bash -s <<'EOF_BUILDER'
+          set -euo pipefail
+          rm -f /etc/apt/sources.list /etc/apt/sources.list.d/*
+          cp "$SLICE/aurora-local.sources" /etc/apt/sources.list.d/aurora-local.sources
+          apt-get -o APT::Update::Error-Mode=any update
+          apt-get --no-install-recommends install -y mmdebstrap uidmap libcap2-bin zstd ubuntu-keyring ca-certificates
+          grep -q '^ubuntu:' /etc/subuid || echo 'ubuntu:100000:65536' >> /etc/subuid
+          grep -q '^ubuntu:' /etc/subgid || echo 'ubuntu:100000:65536' >> /etc/subgid
+          bash /workspace/scripts/ci/configure-ksq-uidmap-filecaps.sh
+          chmod a+r "$DEB"
+          rootfs=/workspace/build/probe/rootfs
+          rm -rf "$rootfs"
+          mkdir -p "$rootfs"
+          chown ubuntu:ubuntu "$rootfs"
+          su -s /bin/bash ubuntu -c "mmdebstrap \
+            --mode=unshare \
+            --variant=minbase \
+            --architectures=amd64 \
+            --include='$DEB' \
+            --hook-dir=/usr/share/mmdebstrap/hooks/file-mirror-automount \
+            resolute '$rootfs' /workspace/build/ksq-0/apt/resolute.sources" \
+            2>&1 | tee /workspace/build/probe/mmdebstrap.log
+          su -s /bin/bash ubuntu -c \
+            "mmdebstrap --unshare-helper /usr/sbin/chroot '$rootfs' dpkg-query -W extra-cmake-modules" \
+            | tee /workspace/build/probe/installed.tsv
+          grep -Fq $'extra-cmake-modules\t6.29.0-0ubuntu1~supra26.04.1' /workspace/build/probe/installed.tsv
+          echo AURORA_KSQ_LOCAL_DEB_INCLUDE_PASS
+          EOF_BUILDER
+
+      - name: Capture AppArmor audit
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo journalctl -k --no-pager 2>/dev/null \
+            | grep 'apparmor="DENIED"' \
+            | grep 'profile="supralinux-ksq-unshare"' \
+            > build/probe/apparmor-denied.log || true
+
+      - name: Preserve evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-mmdebstrap-local-deb-include-probe
+          path: |
+            build/probe/mmdebstrap.log
+            build/probe/installed.tsv
+            build/probe/apparmor-denied.log
+            build/probe/evidence/
+          if-no-files-found: warn
+          retention-days: 7
