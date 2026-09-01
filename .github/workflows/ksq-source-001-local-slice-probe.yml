@@ -194,10 +194,23 @@ jobs:
             exit 1
           fi
           grep -q '^Get:.* file:/opt/supralinux/archive/20260829T022000Z/ubuntu ' /evidence/source-fetch.log
+          find . -maxdepth 1 -type f -printf '%f\t%s\n' | sort | tee /evidence/source-download-files.txt
           mapfile -t dscs < <(find . -maxdepth 1 -type f -name '*.dsc' -print | sort)
-          test "${#dscs[@]}" -eq 1
-          grep -Fqx "Source: $source_pkg" "${dscs[0]}"
-          grep -Fqx "Version: $base_version" "${dscs[0]}"
+          printf 'AURORA_KSQ_SOURCE001_DSC_COUNT=%s\n' "${#dscs[@]}" | tee /evidence/source-dsc-count.env
+          if [[ "${#dscs[@]}" -ne 1 ]]; then
+            echo "AURORA_KSQ_SOURCE001_FAILURE: expected one dsc, got ${#dscs[@]}" >&2
+            exit 1
+          fi
+          cp "${dscs[0]}" /evidence/original-source.dsc
+          sed -n -e '/^Source:/p' -e '/^Version:/p' "${dscs[0]}" | tee /evidence/original-dsc-identity.txt
+          if ! grep -Fqx "Source: $source_pkg" "${dscs[0]}"; then
+            echo "AURORA_KSQ_SOURCE001_FAILURE: dsc source identity mismatch" >&2
+            exit 1
+          fi
+          if ! grep -Fqx "Version: $base_version" "${dscs[0]}"; then
+            echo "AURORA_KSQ_SOURCE001_FAILURE: dsc version identity mismatch" >&2
+            exit 1
+          fi
           sha256sum ./* | sort > /evidence/original-source-objects.sha256
 
           dpkg-source -x "${dscs[0]}" "$work/source" >/evidence/dpkg-source-extract.log 2>&1
