@@ -40,6 +40,11 @@ EXPECTED_RAW_UPPER_BOUND = 1001129661
 
 RESOLUTE_SUITES = ("resolute", "resolute-updates", "resolute-security", "resolute-backports")
 COMPONENTS = ("main", "restricted", "universe", "multiverse")
+SUPPORTED_INDEX_HASHES = (
+    ("SHA512", "sha512", 128),
+    ("SHA256", "sha256", 64),
+)
+METADATA_HASH_POLICY = "prefer-SHA512-fallback-SHA256"
 
 DEBIAN_SOURCE_OBJECTS = {
     "wayland-protocols_1.48-1.dsc": (
@@ -127,23 +132,29 @@ def parse_clearsigned_payload(path: Path) -> str:
     return "\n".join(out) + "\n"
 
 
-def inrelease_sha256_map(path: Path) -> dict[str, tuple[int, str]]:
+def inrelease_checksum_section(path: Path, section: str, digest_len: int) -> dict[str, tuple[int, str]]:
     payload = parse_clearsigned_payload(path)
     mapping: dict[str, tuple[int, str]] = {}
-    in_sha256 = False
+    in_section = False
     for line in payload.splitlines():
-        if line == "SHA256:":
-            in_sha256 = True
+        if line == f"{section}:":
+            in_section = True
             continue
-        if in_sha256:
+        if in_section:
             if line and not line[0].isspace():
                 break
             parts = line.split()
-            if len(parts) == 3 and re.fullmatch(r"[0-9a-fA-F]{64}", parts[0]) and parts[1].isdigit():
+            if len(parts) == 3 and re.fullmatch(rf"[0-9a-fA-F]{{{digest_len}}}", parts[0]) and parts[1].isdigit():
                 mapping[parts[2]] = (int(parts[1]), parts[0].lower())
-    if not mapping:
-        fail(f"no SHA256 section parsed from {path}")
     return mapping
+
+
+def inrelease_strongest_map(path: Path) -> tuple[str, str, dict[str, tuple[int, str]]]:
+    for section, algorithm, digest_len in SUPPORTED_INDEX_HASHES:
+        mapping = inrelease_checksum_section(path, section, digest_len)
+        if mapping:
+            return section, algorithm, mapping
+    fail(f"no supported SHA512/SHA256 section parsed from {path}")
 
 
 def verify_inrelease(path: Path) -> None:
@@ -173,9 +184,6 @@ def curl_download(url: str, dest: Path, expected_size: int | None = None, expect
 
     resume = part.is_file() and part.stat().st_size > 0
     proc = invoke(resume)
-    # Curl exit 33 means the peer cannot satisfy a byte-range resume. In that
-    # narrow case discard only the incomplete staging object and retry once
-    # from byte zero; other transport failures retain the partial for reruns.
     if proc.returncode == 33 and resume:
         part.unlink(missing_ok=True)
         proc = invoke(False)
@@ -266,10 +274,13 @@ def metadata_targets() -> list[tuple[str, str]]:
     return targets
 
 
-def materialize_metadata(stage: Path) -> dict[tuple[str, str], Path]:
+def materialize_metadata(stage: Path) -> tuple[dict[tuple[str, str], Path], dict[str, tuple[str, str]]]:
     archive = stage / "ubuntu"
     result: dict[tuple[str, str], Path] = {}
+    signed_identity: dict[str, tuple[str, str]] = {}
+    allowed_by_hash: set[Path] = set()
     suites = list(RESOLUTE_SUITES) + ["stonking"]
+
     for suite in suites:
         rel = Path("dists") / suite / "InRelease"
         dest = archive / rel
@@ -279,22 +290,42 @@ def materialize_metadata(stage: Path) -> dict[tuple[str, str], Path]:
 
     for suite, rel_index in metadata_targets():
         inrelease = result[(suite, "InRelease")]
-        entries = inrelease_sha256_map(inrelease)
+        hash_section, algorithm, entries = inrelease_strongest_map(inrelease)
         if rel_index not in entries:
-            fail(f"signed InRelease does not contain required index {suite}/{rel_index}")
+            fail(f"signed InRelease does not contain required index {suite}/{rel_index} in {hash_section}")
         size, digest = entries[rel_index]
         rel = Path("dists") / suite / rel_index
         dest = archive / rel
-        curl_download(f"{BASE_URL}/{rel.as_posix()}", dest, size, digest, "sha256")
+        curl_download(f"{BASE_URL}/{rel.as_posix()}", dest, size, digest, algorithm)
         result[(suite, rel_index)] = dest
-        by_hash = dest.parent / "by-hash" / "SHA256" / digest
+
+        manifest_path = dest.relative_to(stage).as_posix()
+        signed_identity[manifest_path] = (hash_section, digest)
+        by_hash = dest.parent / "by-hash" / hash_section / digest
+        allowed_by_hash.add(by_hash)
         by_hash.parent.mkdir(parents=True, exist_ok=True)
         if by_hash.exists():
-            if sha(by_hash) != digest:
+            if by_hash.stat().st_size != size or sha(by_hash, algorithm) != digest:
                 fail(f"existing by-hash object mismatch: {by_hash}")
+            if not os.path.samefile(dest, by_hash):
+                by_hash.unlink()
+                os.link(dest, by_hash)
         else:
             os.link(dest, by_hash)
-    return result
+
+    for p in sorted((archive / "dists").rglob("*"), reverse=True):
+        if not p.is_file() or "/by-hash/" not in p.as_posix():
+            continue
+        if p not in allowed_by_hash:
+            p.unlink()
+    for p in sorted((archive / "dists").rglob("*"), reverse=True):
+        if p.is_dir() and "/by-hash" in p.as_posix():
+            try:
+                p.rmdir()
+            except OSError:
+                pass
+
+    return result, signed_identity
 
 
 def package_index_map(meta: dict[tuple[str, str], Path]) -> dict[str, dict[str, str]]:
@@ -556,17 +587,25 @@ def copy_provenance(stage: Path, size_zip: Path, ksq0_zip: Path, size_dir: Path,
         shutil.copy2(src, out / name)
 
 
-def metadata_manifest_rows(stage: Path) -> list[dict[str, str]]:
+def metadata_manifest_rows(stage: Path, signed_identity: dict[str, tuple[str, str]]) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     for p in sorted((stage / "ubuntu/dists").rglob("*")):
         if not p.is_file() or "/by-hash/" in p.as_posix():
             continue
         rel = p.relative_to(stage).as_posix()
-        rows.append({"path": rel, "size": str(p.stat().st_size), "sha256": sha(p)})
+        hash_section, signed_hash = signed_identity.get(rel, ("", ""))
+        rows.append({
+            "path": rel,
+            "size": str(p.stat().st_size),
+            "sha256": sha(p),
+            "signed_hash_algorithm": hash_section,
+            "signed_hash": signed_hash,
+        })
     return rows
 
 
 def write_provenance_env(stage: Path, binary_rows: list[dict[str, str]], source_rows: list[dict[str, str]], debian_rows: list[dict[str, str]], metadata_rows: list[dict[str, str]]) -> None:
+    hash_algorithms = sorted({r["signed_hash_algorithm"] for r in metadata_rows if r.get("signed_hash_algorithm")})
     content = "\n".join([
         "AURORA_KSQ_SNAPSHOT_SLICE_STATUS=COMPLETE",
         f"AURORA_KSQ_SNAPSHOT_SLICE_SNAPSHOT={SNAPSHOT}",
@@ -584,6 +623,8 @@ def write_provenance_env(stage: Path, binary_rows: list[dict[str, str]], source_
         f"AURORA_KSQ_SNAPSHOT_SLICE_DEBIAN_SOURCE_BYTES={sum(int(r['size']) for r in debian_rows)}",
         f"AURORA_KSQ_SNAPSHOT_SLICE_METADATA_OBJECTS={len(metadata_rows)}",
         f"AURORA_KSQ_SNAPSHOT_SLICE_METADATA_BYTES={sum(int(r['size']) for r in metadata_rows)}",
+        f"AURORA_KSQ_SNAPSHOT_SLICE_METADATA_HASH_POLICY={METADATA_HASH_POLICY}",
+        f"AURORA_KSQ_SNAPSHOT_SLICE_METADATA_BY_HASH_ALGORITHMS={','.join(hash_algorithms)}",
         "AURORA_KSQ_SNAPSHOT_SLICE_REMOTE_FALLBACK=forbidden",
         "AURORA_KSQ_SNAPSHOT_SLICE_APT_SNAPSHOT_MODE=disabled-local-copy",
         "",
@@ -630,6 +671,7 @@ def validate_slice(final: Path, *, check_read_only: bool = True) -> None:
         "AURORA_KSQ_SNAPSHOT_SLICE_SIZE_ARTIFACT_SHA256": SIZE_ARTIFACT_DIGEST,
         "AURORA_KSQ_SNAPSHOT_SLICE_KSQ0_ARTIFACT_ID": KSQ0_ARTIFACT_ID,
         "AURORA_KSQ_SNAPSHOT_SLICE_KSQ0_ARTIFACT_SHA256": KSQ0_ARTIFACT_DIGEST,
+        "AURORA_KSQ_SNAPSHOT_SLICE_METADATA_HASH_POLICY": METADATA_HASH_POLICY,
         "AURORA_KSQ_SNAPSHOT_SLICE_REMOTE_FALLBACK": "forbidden",
     }
     for k, v in required.items():
@@ -668,6 +710,7 @@ def validate_slice(final: Path, *, check_read_only: bool = True) -> None:
         if not p.is_file() or p.stat().st_size != int(row["size"]) or sha(p) != row["sha256"]:
             fail(f"Debian source object validation failed: {row['path']}")
 
+    inrelease_maps: dict[str, tuple[str, str, dict[str, tuple[int, str]]]] = {}
     expected_metadata: set[str] = set()
     expected_by_hash: set[str] = set()
     for row in metadata:
@@ -676,13 +719,33 @@ def validate_slice(final: Path, *, check_read_only: bool = True) -> None:
         if not p.is_file() or p.stat().st_size != int(row["size"]) or sha(p) != row["sha256"]:
             fail(f"metadata object validation failed: {row['path']}")
         if p.name in {"Packages.xz", "Sources.xz"}:
-            by_hash = p.parent / "by-hash" / "SHA256" / row["sha256"]
+            parts = Path(row["path"]).parts
+            if len(parts) < 5 or parts[0:2] != ("ubuntu", "dists"):
+                fail(f"unexpected metadata manifest path: {row['path']}")
+            suite = parts[2]
+            rel_index = "/".join(parts[3:])
+            if suite not in inrelease_maps:
+                inrelease_maps[suite] = inrelease_strongest_map(final / "ubuntu/dists" / suite / "InRelease")
+            hash_section, algorithm, signed_entries = inrelease_maps[suite]
+            signed_entry = signed_entries.get(rel_index)
+            if not signed_entry:
+                fail(f"metadata path absent from strongest signed checksum section: {suite}/{rel_index}")
+            signed_size, signed_digest = signed_entry
+            if signed_size != int(row["size"]):
+                fail(f"signed metadata size mismatch: {row['path']}")
+            if row.get("signed_hash_algorithm") != hash_section or row.get("signed_hash") != signed_digest:
+                fail(f"metadata manifest signed identity mismatch: {row['path']}")
+            if sha(p, algorithm) != signed_digest:
+                fail(f"metadata strongest signed hash mismatch: {row['path']}")
+            by_hash = p.parent / "by-hash" / hash_section / signed_digest
             rel_by_hash = by_hash.relative_to(final).as_posix()
             expected_by_hash.add(rel_by_hash)
-            if not by_hash.is_file() or by_hash.stat().st_size != p.stat().st_size or sha(by_hash) != row["sha256"]:
+            if not by_hash.is_file() or by_hash.stat().st_size != p.stat().st_size or sha(by_hash, algorithm) != signed_digest:
                 fail(f"by-hash metadata validation failed: {rel_by_hash}")
             if not os.path.samefile(p, by_hash):
                 fail(f"by-hash object is not the expected hardlink: {rel_by_hash}")
+        elif row.get("signed_hash_algorithm") or row.get("signed_hash"):
+            fail(f"unexpected signed-hash fields for non-index metadata: {row['path']}")
 
     actual_metadata = {
         p.relative_to(final).as_posix()
@@ -726,15 +789,15 @@ def materialize(args: argparse.Namespace) -> None:
     stage.mkdir(parents=True, exist_ok=True)
     validate_canonical_evidence(args.size_artifact_dir, args.ksq0_artifact_dir, args.size_artifact_zip, args.ksq0_artifact_zip)
     copy_provenance(stage, args.size_artifact_zip, args.ksq0_artifact_zip, args.size_artifact_dir, args.ksq0_artifact_dir)
-    meta = materialize_metadata(stage)
+    meta, signed_identity = materialize_metadata(stage)
     binary_rows = materialize_binaries(stage, args.size_artifact_dir, meta, args.workers)
     source_rows = materialize_ubuntu_sources(stage, args.ksq0_artifact_dir, meta, args.workers)
     debian_rows = materialize_debian_source(stage, args.ksq0_artifact_dir)
-    metadata_rows = metadata_manifest_rows(stage)
+    metadata_rows = metadata_manifest_rows(stage, signed_identity)
     write_tsv(stage / "manifests/binary.tsv", ["path", "size", "sha256", "package", "version", "architecture", "suite", "component"], binary_rows)
     write_tsv(stage / "manifests/ubuntu-source.tsv", ["path", "size", "sha512", "source", "version", "origin"], source_rows)
     write_tsv(stage / "manifests/debian-source.tsv", ["path", "size", "sha256", "snapshot_sha1", "url"], debian_rows)
-    write_tsv(stage / "manifests/metadata.tsv", ["path", "size", "sha256"], metadata_rows)
+    write_tsv(stage / "manifests/metadata.tsv", ["path", "size", "sha256", "signed_hash_algorithm", "signed_hash"], metadata_rows)
     write_local_sources(stage, final)
     write_provenance_env(stage, binary_rows, source_rows, debian_rows, metadata_rows)
     (stage / "COMPLETE").write_text("AURORA_KSQ_SNAPSHOT_SLICE_COMPLETE\n", encoding="utf-8")
