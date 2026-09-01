@@ -1,0 +1,152 @@
+name: Aurora KSQ proc-only builder security invariants
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-proc-only-security-invariants-probe.yml'
+      - 'scripts/ci/apparmor/supralinux-ksq-unshare'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proc-only-security:
+    name: Prove selective Docker system path confinement
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Load scoped AppArmor profile
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -qx 'VERSION_ID="26.04"' /etc/os-release
+          sudo bash scripts/ci/install-ksq-apparmor-profile.sh | tee "$RUNNER_TEMP/host-apparmor.txt"
+          sudo grep -qx 'supralinux-ksq-unshare (enforce)' /sys/kernel/security/apparmor/profiles
+
+      - name: Prove selective container security invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          image='ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b'
+          evidence="$RUNNER_TEMP/proc-only-security-evidence"
+          name="supralinux-ksq-proc-security-${GITHUB_RUN_ID}"
+          rm -rf "$evidence"
+          mkdir -p "$evidence"
+          docker pull "$image"
+
+          export KSQ_IMAGE="$image"
+          python3 - <<'PY' > "$RUNNER_TEMP/create-proc-only-security.json"
+          import glob, json, os
+          masked = [
+              '/sys/devices/virtual/powercap',
+              '/sys/firmware',
+          ]
+          masked.extend(sorted(glob.glob('/sys/devices/system/cpu/cpu*/thermal_throttle')))
+          print(json.dumps({
+              'Image': os.environ['KSQ_IMAGE'],
+              'Cmd': ['sleep', 'infinity'],
+              'HostConfig': {
+                  'NetworkMode': 'none',
+                  'SecurityOpt': [
+                      'seccomp=unconfined',
+                      'apparmor=supralinux-ksq-unshare',
+                  ],
+                  'MaskedPaths': masked,
+                  'ReadonlyPaths': [],
+              },
+          }, sort_keys=True))
+          PY
+
+          api="$(docker version --format '{{.Server.APIVersion}}')"
+          docker version | tee "$evidence/docker-version.txt"
+          curl --fail-with-body --silent --show-error \
+            --unix-socket /var/run/docker.sock \
+            -H 'Content-Type: application/json' \
+            --data-binary "@$RUNNER_TEMP/create-proc-only-security.json" \
+            "http://localhost/v${api}/containers/create?name=${name}" \
+            | tee "$evidence/create-response.json"
+          cid="$(python3 -c 'import json,sys; print(json.load(sys.stdin)["Id"])' < "$evidence/create-response.json")"
+          test -n "$cid"
+          trap 'docker rm -f "$cid" >/dev/null 2>&1 || true' EXIT
+          docker start "$cid"
+          docker inspect "$cid" | tee "$evidence/docker-inspect.json" >/dev/null
+
+          python3 - "$evidence/docker-inspect.json" <<'PY' | tee "$evidence/hostconfig-check.txt"
+          import json, sys
+          c = json.load(open(sys.argv[1], encoding='utf-8'))[0]
+          h = c['HostConfig']
+          masked = h.get('MaskedPaths') or []
+          readonly = h.get('ReadonlyPaths') or []
+          if h.get('Privileged') is not False:
+              raise SystemExit('AURORA_KSQ_FAILURE: Privileged is not false')
+          if h.get('CapAdd') not in (None, []):
+              raise SystemExit(f'AURORA_KSQ_FAILURE: CapAdd present: {h.get("CapAdd")!r}')
+          if h.get('NetworkMode') != 'none':
+              raise SystemExit(f'AURORA_KSQ_FAILURE: NetworkMode={h.get("NetworkMode")!r}')
+          if any(p.startswith('/proc') for p in masked):
+              raise SystemExit(f'AURORA_KSQ_FAILURE: proc masked path remains: {masked!r}')
+          if readonly:
+              raise SystemExit(f'AURORA_KSQ_FAILURE: readonly paths remain: {readonly!r}')
+          required = {'/sys/firmware', '/sys/devices/virtual/powercap'}
+          if not required.issubset(masked):
+              raise SystemExit(f'AURORA_KSQ_FAILURE: sys masks missing: {masked!r}')
+          if any(not p.startswith('/sys/') for p in masked):
+              raise SystemExit(f'AURORA_KSQ_FAILURE: unexpected mask: {masked!r}')
+          print('AURORA_KSQ_PROC_ONLY_HOSTCONFIG=PASS')
+          print('MASKED_PATHS=' + ','.join(masked))
+          print('READONLY_PATHS=')
+          PY
+
+          docker exec "$cid" bash -ceu '
+            set -o pipefail
+            cat /proc/self/attr/current
+            grep -Eq "^supralinux-ksq-unshare( \(enforce\))?$" /proc/self/attr/current
+
+            cap_eff="$(awk "$1 == \"CapEff:\" {print $2}" /proc/self/status)"
+            test -n "$cap_eff"
+            cap_eff_val=$((16#$cap_eff))
+            cap_sys_admin=$((1 << 21))
+            test $((cap_eff_val & cap_sys_admin)) -eq 0
+
+            test "$(stat -f -c %T /proc)" = proc
+            test "$(findmnt -R /proc -n -o TARGET | wc -l)" -eq 1
+
+            test -d /sys/firmware
+            test "$(findmnt -T /sys/firmware -n -o TARGET)" = /sys/firmware
+            test "$(findmnt -T /sys/firmware -n -o FSTYPE)" = tmpfs
+
+            test "$(find /sys/class/net -mindepth 1 -maxdepth 1 ! -name lo -print -quit | wc -l)" -eq 0
+
+            echo "CAP_EFF=$cap_eff"
+            echo AURORA_KSQ_PROC_ONLY_CAP_SYS_ADMIN_ABSENT=PASS
+            echo AURORA_KSQ_PROC_ONLY_PROC_SINGLE_MOUNT=PASS
+            echo AURORA_KSQ_PROC_ONLY_SYS_FIRMWARE_MASKED=PASS
+            echo AURORA_KSQ_PROC_ONLY_NETWORK_NONE=PASS
+            echo AURORA_KSQ_PROC_ONLY_SECURITY_INVARIANTS=PASS
+          ' | tee "$evidence/runtime-check.txt"
+
+      - name: Capture AppArmor audit
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/proc-only-security-evidence"
+          mkdir -p "$evidence"
+          sudo dmesg | grep -E 'apparmor="DENIED".*profile="supralinux-ksq-unshare"' > "$evidence/host-apparmor-denied.log" || true
+          test ! -s "$evidence/host-apparmor-denied.log"
+
+      - name: Preserve evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-proc-only-security-invariants
+          path: ${{ runner.temp }}/proc-only-security-evidence
+          if-no-files-found: error
+          retention-days: 30
