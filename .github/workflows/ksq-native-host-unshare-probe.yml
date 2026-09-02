@@ -110,15 +110,26 @@ jobs:
           source scripts/ci/aurora-ksq-snapshot-release.env
           set +a
           slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
-          lists="$RUNNER_TEMP/native-local-lists"
-          cache="$RUNNER_TEMP/native-local-cache"
-          mkdir -p "$lists/partial" "$cache/archives/partial"
+
+          # The hosted VM contains extra APT configuration such as
+          # command-not-found IndexTargets. It is host-image state and is not part
+          # of the KSQ builder contract, so use a clean APT config/list/cache root.
+          aptroot=/tmp/supralinux-native-apt
+          sudo rm -rf "$aptroot"
+          sudo install -d -o root -g root -m 0755 \
+            "$aptroot" "$aptroot/etc/apt.conf.d" "$aptroot/etc/sources.list.d" \
+            "$aptroot/lists" "$aptroot/cache" "$aptroot/cache/archives"
+          sudo install -d -o _apt -g root -m 0700 \
+            "$aptroot/lists/partial" "$aptroot/cache/archives/partial"
+          sudo touch "$aptroot/etc/apt.conf"
 
           apt_opts=(
+            -o "Dir::Etc::main=$aptroot/etc/apt.conf"
+            -o "Dir::Etc::parts=$aptroot/etc/apt.conf.d"
             -o "Dir::Etc::sourcelist=$slice/aurora-local.sources"
-            -o 'Dir::Etc::sourceparts=-'
-            -o "Dir::State::lists=$lists"
-            -o "Dir::Cache=$cache"
+            -o "Dir::Etc::sourceparts=$aptroot/etc/sources.list.d"
+            -o "Dir::State::lists=$aptroot/lists"
+            -o "Dir::Cache=$aptroot/cache"
             -o 'Acquire::Languages=none'
             -o 'Acquire::Retries=0'
             -o 'Acquire::http::Proxy=http://127.0.0.1:9/'
@@ -136,6 +147,10 @@ jobs:
             "$RUNNER_TEMP/native-toolchain-apt-update.log" \
             "$RUNNER_TEMP/native-toolchain-apt-install.log"; then
             echo 'AURORA_KSQ_NATIVE_FAILURE: remote APT transport used after local-only boundary' >&2
+            exit 1
+          fi
+          if grep -Fq '/cnf/' "$RUNNER_TEMP/native-toolchain-apt-update.log"; then
+            echo 'AURORA_KSQ_NATIVE_FAILURE: hosted command-not-found IndexTargets leaked into clean APT config' >&2
             exit 1
           fi
 
