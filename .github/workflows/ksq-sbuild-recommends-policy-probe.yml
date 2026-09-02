@@ -211,7 +211,7 @@ jobs:
           echo '### buildd-install-recommends-files'
           grep -RniE 'Install-Recommends|Recommends-Important' "$inspect/etc/apt" "$inspect/var/lib/sbuild" 2>/dev/null || true
 
-          work=build/ksq-1/probe-043/source
+          work=/workspace/build/ksq-1/probe-043/source
           rm -rf "$work"
           bash scripts/ci/fetch-prepare-ksq-1-source.sh kpipewire 6.7.4-0ubuntu2 "$work"
           . "$work/prepared-source.env"
