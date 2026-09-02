@@ -27,6 +27,11 @@
 #     the narrowly-scoped remount rule below;
 #   - the only certified mirror authorized here is
 #       /opt/supralinux/archive/20260829T022000Z/ubuntu/;
+#   - mmdebstrap 1.5.7 also bind-mounts each local .deb path supplied through
+#     --include into the same absolute path below its root. Probe run
+#     33620753454 captured the exact denied operation. SupraLINUX stages only
+#     those validator inputs under /tmp/supralinux-ksq-local-debs/ so the
+#     profile never grants mount access to the wider writable workspace;
 #   - sbuild 0.91.2ubuntu3 uses /usr/libexec/sbuild-usernsexec; the exact helper
 #     was captured with SHA-256
 #     218821c4a8892c60847be58c80e4d1fb02702b17ac6f7dce412faadecd8afc0a;
@@ -52,6 +57,7 @@
 #   except for the single propagation change on / required by util-linux
 #   unshare. The only external repository source is the exact certified
 #   snapshot path. For mmdebstrap it is explicitly transitioned read-only;
+#   local validator .debs are limited to one dedicated /tmp staging directory;
 #   sbuild receives only the exact rw,rbind syscall its helper emitted, while
 #   the source itself is supplied to the container by Docker as a read-only
 #   bind mount.
@@ -122,7 +128,12 @@ profile supralinux-ksq-unshare flags=(attach_disconnected,mediate_deleted) {
   mount options=(ro,bind) /opt/supralinux/archive/20260829T022000Z/ubuntu/ -> /tmp/mmdebstrap.*/opt/supralinux/archive/20260829T022000Z/ubuntu/,
   remount options=(ro,bind) /tmp/mmdebstrap.*/opt/supralinux/archive/20260829T022000Z/ubuntu/,
 
-  # 5. sbuild 0.91.2ubuntu3 /usr/libexec/sbuild-usernsexec session setup.
+  # 5. The same upstream hook bind-mounts local .deb paths passed via
+  #    --include. Permit only files staged for this purpose, and only at the
+  #    identical path below a canonical mmdebstrap temporary root.
+  mount options=(rw,bind) /tmp/supralinux-ksq-local-debs/*.deb -> /tmp/mmdebstrap.*/tmp/supralinux-ksq-local-debs/*.deb,
+
+  # 6. sbuild 0.91.2ubuntu3 /usr/libexec/sbuild-usernsexec session setup.
   #    First make the unpack root a mountpoint, then allow exactly the external
   #    snapshot rbind proven by run 33498287161. No arbitrary source or target
   #    under the sbuild root is authorized.
