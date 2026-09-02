@@ -1,4 +1,4 @@
-name: Aurora KSQ sbuild Recommends policy probe
+name: Aurora KSQ sbuild provider-context probe
 
 on:
   push:
@@ -149,7 +149,7 @@ jobs:
           sudo tar -C "$root" -xf "$archive"
           python3 scripts/ci/ksq-snapshot-slice.py validate --slice-root "$root/$AURORA_KSQ_SNAPSHOT"
 
-      - name: Inspect resolver and reproduce order 043 as ubuntu
+      - name: Reproduce order 043 and isolate provider selection
         shell: bash
         run: |
           set -euo pipefail
@@ -158,7 +158,7 @@ jobs:
           set +a
           image='ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b'
           slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
-          name="supralinux-ksq-sbuild-policy-${GITHUB_RUN_ID}"
+          name="supralinux-ksq-sbuild-provider-${GITHUB_RUN_ID}"
           mkdir -p build/ksq-1/probe-043/docker build/ksq-1/probe-043/evidence
           chmod -R 0777 build
           docker pull "$image"
@@ -177,15 +177,23 @@ jobs:
           bash scripts/ci/prepare-ksq-1-local-runner.sh
           chmod -R a+rX,a+w build
 
-          echo '### exact-toolchain'
+          # sbuild's failed-dependency hook creates another user namespace.  The
+          # minimal OCI fixture lacks /dev/console; provide only the path so the
+          # documented hook can run.  This is not a mount and grants no capability.
+          if [[ ! -e /dev/console ]]; then
+            : > /dev/console
+            chmod 0600 /dev/console
+          fi
+
+          printf '%s\n' 'AURORA_PROBE_SECTION=exact-toolchain'
           sbuild --version
           dpkg-query -W sbuild libsbuild-perl apt
-          echo '### resolver-source-policy'
+          printf '%s\n' 'AURORA_PROBE_SECTION=resolver-source-policy'
           grep -RniE 'Install-Recommends|Recommends-Important|apt\.conf' \
             /usr/share/perl5/Sbuild 2>/dev/null || true
-          echo '### outer-apt-policy'
+          printf '%s\n' 'AURORA_PROBE_SECTION=outer-apt-policy'
           apt-config dump | grep -iE 'Install-Recommends|Recommends-Important' || true
-          echo '### uidmap-product-user'
+          printf '%s\n' 'AURORA_PROBE_SECTION=uidmap-product-user'
           id ubuntu
           grep '^ubuntu:' /etc/subuid /etc/subgid
 
@@ -216,11 +224,14 @@ jobs:
             --purge-build=never --purge-deps=never \
             --resolve-alternatives --bd-uninstallable-explainer=apt \
             --extra-package=/workspace/build/ksq-1/full/debs \
-            --build-deps-failed-commands='echo ### failed-hook-apt-config; apt-config dump | grep -iE "Install-Recommends|Recommends-Important" || true' \
-            --build-deps-failed-commands='echo ### failed-hook-sbuild-apt-conf; find /var/lib/sbuild /etc/apt -maxdepth 3 -type f -print -exec grep -HniE "Install-Recommends|Recommends-Important" {} \; 2>/dev/null || true' \
-            --build-deps-failed-commands='echo ### failed-hook-dummy; apt-cache show sbuild-build-depends-main-dummy 2>/dev/null || true' \
-            --build-deps-failed-commands='echo ### AB-default-apt; apt-get -s install sbuild-build-depends-main-dummy 2>&1 || true' \
-            --build-deps-failed-commands='echo ### AB-explicit-no-recommends; apt-get -s --no-install-recommends install sbuild-build-depends-main-dummy 2>&1 || true' \
+            --build-deps-failed-commands='printf "%s\n" "AURORA_AB_SECTION=apt-config"; apt-config dump | grep -iE "Install-Recommends|Recommends-Important" || true' \
+            --build-deps-failed-commands='printf "%s\n" "AURORA_AB_SECTION=dummy"; apt-cache show sbuild-build-depends-main-dummy 2>/dev/null || true' \
+            --build-deps-failed-commands='printf "%s\n" "AURORA_AB_SECTION=providers"; apt-cache showpkg default-dbus-session-bus dbus-session-bus dbus-user-session dbus-x11 2>/dev/null || true' \
+            --build-deps-failed-commands='printf "%s\n" "AURORA_AB_SECTION=default-buildd"; f=/tmp/ab-default.log; apt-get -s install sbuild-build-depends-main-dummy >"$f" 2>&1; r=$?; cat "$f"; printf "AURORA_AB_DEFAULT_BUILDD_RC=%s\n" "$r"' \
+            --build-deps-failed-commands='printf "%s\n" "AURORA_AB_SECTION=no-recommends-buildd"; f=/tmp/ab-norec.log; apt-get -s --no-install-recommends install sbuild-build-depends-main-dummy >"$f" 2>&1; r=$?; cat "$f"; printf "AURORA_AB_NOREC_BUILDD_RC=%s\n" "$r"' \
+            --build-deps-failed-commands='printf "%s\n" "AURORA_AB_SECTION=no-recommends-buildd-plus-dbus-x11"; f=/tmp/ab-norec-x11.log; apt-get -s --no-install-recommends install sbuild-build-depends-main-dummy dbus-x11 >"$f" 2>&1; r=$?; cat "$f"; printf "AURORA_AB_NOREC_BUILDD_X11_RC=%s\n" "$r"' \
+            --build-deps-failed-commands='printf "%s\n" "AURORA_AB_SECTION=no-recommends-empty-status"; e=/tmp/aurora-empty-status; : >"$e"; f=/tmp/ab-empty.log; apt-get -s -o Dir::State::status="$e" --no-install-recommends install sbuild-build-depends-main-dummy >"$f" 2>&1; r=$?; cat "$f"; printf "AURORA_AB_NOREC_EMPTY_RC=%s\n" "$r"' \
+            --build-deps-failed-commands='printf "%s\n" "AURORA_AB_SECTION=no-recommends-empty-status-plus-dbus-x11"; e=/tmp/aurora-empty-status; : >"$e"; f=/tmp/ab-empty-x11.log; apt-get -s -o Dir::State::status="$e" --no-install-recommends install sbuild-build-depends-main-dummy dbus-x11 >"$f" 2>&1; r=$?; cat "$f"; printf "AURORA_AB_NOREC_EMPTY_X11_RC=%s\n" "$r"' \
             "$dsc"
           rc=$?
           set -e
@@ -237,6 +248,23 @@ jobs:
             > build/ksq-1/probe-043/evidence/container-rc.env
           test "${pipe_status[0]}" -eq 0
           test "${pipe_status[1]}" -eq 0
+
+      - name: Assert causal evidence is present
+        shell: bash
+        run: |
+          set -euo pipefail
+          log=build/ksq-1/probe-043/evidence/probe.log
+          grep -qF 'APT::Install-Recommends=false' "$log"
+          grep -qF 'AURORA_AB_SECTION=default-buildd' "$log"
+          grep -qF 'AURORA_AB_SECTION=no-recommends-buildd' "$log"
+          grep -qF 'AURORA_AB_SECTION=no-recommends-buildd-plus-dbus-x11' "$log"
+          grep -qF 'AURORA_AB_SECTION=no-recommends-empty-status' "$log"
+          grep -qF 'AURORA_AB_SECTION=no-recommends-empty-status-plus-dbus-x11' "$log"
+          grep -qF 'AURORA_AB_DEFAULT_BUILDD_RC=0' "$log"
+          grep -qF 'AURORA_AB_NOREC_BUILDD_RC=0' "$log"
+          grep -qF 'AURORA_AB_NOREC_BUILDD_X11_RC=0' "$log"
+          grep -qF 'AURORA_AB_NOREC_EMPTY_RC=0' "$log"
+          grep -qF 'AURORA_AB_NOREC_EMPTY_X11_RC=0' "$log"
 
       - name: Capture AppArmor audit and package evidence
         if: always()
@@ -255,7 +283,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: aurora-ksq-sbuild-recommends-policy-043
+          name: aurora-ksq-sbuild-provider-context-043
           path: |
             build/ksq-1/probe-043-evidence.tar
             build/ksq-1/probe-043-evidence.tar.sha256
