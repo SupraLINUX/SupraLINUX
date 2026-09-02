@@ -125,8 +125,8 @@ jobs:
             --hook-dir=/usr/share/mmdebstrap/hooks/file-mirror-automount \
             resolute '$rootfs' /etc/apt/sources.list.d/aurora-local.sources" \
             2>&1 | tee /workspace/build/probe/mmdebstrap.log
-          su -s /bin/bash ubuntu -c \
-            "mmdebstrap --unshare-helper /usr/sbin/chroot '$rootfs' dpkg-query -W supralinux-local-deb-probe" \
+          dpkg-query --admindir="$rootfs/var/lib/dpkg" \
+            --show --showformat='${Package}\t${Version}\n' supralinux-local-deb-probe \
             | tee /workspace/build/probe/installed.tsv
           grep -Fq $'supralinux-local-deb-probe\t1.0' /workspace/build/probe/installed.tsv
           test -f "$rootfs/usr/share/supralinux-local-deb-probe/probe.txt"
