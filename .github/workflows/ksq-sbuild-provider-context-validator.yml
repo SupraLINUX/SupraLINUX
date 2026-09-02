@@ -1,0 +1,117 @@
+name: Aurora KSQ order 043 provider-context validator
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-sbuild-provider-context-validator.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validate-provider-context:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Download exact provider-context evidence
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9845356230'
+          path: ${{ runner.temp }}/provider-context
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33626789742'
+          digest-mismatch: error
+
+      - name: Validate evidence and causal A/B result
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/provider-context"
+          tarfile="$root/ksq-1/probe-043-evidence.tar"
+          sums="$root/ksq-1/probe-043-evidence.tar.sha256"
+          [[ -s "$tarfile" && -s "$sums" ]]
+          [[ "$(sha256sum "$tarfile" | awk '{print $1}')" == c72782e0bb7edcd3a7bf0bc6e907fc1908ad2906443ac9b5ae9d52e197009b84 ]]
+          mkdir -p "$RUNNER_TEMP/extracted" "$RUNNER_TEMP/validated"
+          tar -xf "$tarfile" -C "$RUNNER_TEMP/extracted"
+          log="$RUNNER_TEMP/extracted/probe-043/evidence/probe.log"
+          denied="$RUNNER_TEMP/extracted/probe-043/evidence/apparmor-denied.log"
+          [[ -s "$log" ]]
+          [[ ! -s "$denied" ]]
+
+          python3 - "$log" "$RUNNER_TEMP/validated/provider-context-validation.env" <<'PY'
+          import sys
+          from pathlib import Path
+
+          log = Path(sys.argv[1]).read_text(errors='replace').splitlines()
+          out = Path(sys.argv[2])
+
+          def span(start, end):
+              i = next(i for i, line in enumerate(log) if start in line)
+              j = next(i for i, line in enumerate(log[i+1:], i+1) if end in line)
+              return '\n'.join(log[i:j+1])
+
+          cases = {
+              'DEFAULT_BUILDD': span('AURORA_AB_SECTION=default-buildd', 'AURORA_AB_DEFAULT_BUILDD_RC='),
+              'NOREC_BUILDD': span('AURORA_AB_SECTION=no-recommends-buildd"', 'AURORA_AB_NOREC_BUILDD_RC='),
+              'NOREC_BUILDD_X11': span('AURORA_AB_SECTION=no-recommends-buildd-plus-dbus-x11', 'AURORA_AB_NOREC_BUILDD_X11_RC='),
+              'NOREC_EMPTY': span('AURORA_AB_SECTION=no-recommends-empty-status"', 'AURORA_AB_NOREC_EMPTY_RC='),
+              'NOREC_EMPTY_X11': span('AURORA_AB_SECTION=no-recommends-empty-status-plus-dbus-x11', 'AURORA_AB_NOREC_EMPTY_X11_RC='),
+          }
+
+          expected = {
+              'DEFAULT_BUILDD': (True, False),
+              'NOREC_BUILDD': (True, False),
+              'NOREC_BUILDD_X11': (False, True),
+              'NOREC_EMPTY': (True, False),
+              'NOREC_EMPTY_X11': (False, True),
+          }
+          lines=[]
+          for name, text in cases.items():
+              has_user = 'Inst dbus-user-session ' in text
+              has_x11 = 'Inst dbus-x11 ' in text
+              exp_user, exp_x11 = expected[name]
+              if (has_user, has_x11) != (exp_user, exp_x11):
+                  raise SystemExit(f'{name}: expected user/x11={(exp_user,exp_x11)} got {(has_user,has_x11)}')
+              lines += [f'AURORA_KSQ_043_{name}_DBUS_USER_SESSION={int(has_user)}',
+                        f'AURORA_KSQ_043_{name}_DBUS_X11={int(has_x11)}']
+
+          whole='\n'.join(log)
+          if '-o APT::Install-Recommends=false' not in whole:
+              raise SystemExit('effective sbuild no-recommends command absent')
+          if 'File not found - /opt/supralinux/archive/20260829T022000Z/ubuntu/pool/main/d/dbus/dbus-user-session_1.16.2-2ubuntu4_amd64.deb' not in whole:
+              raise SystemExit('expected order-043 missing-object failure absent')
+
+          lines = [
+              'AURORA_KSQ_043_PROVIDER_CONTEXT_STATUS=PASS',
+              'AURORA_KSQ_043_SOURCE=kpipewire',
+              'AURORA_KSQ_043_SBUILD_RECOMMENDS_EFFECTIVE=false',
+              'AURORA_KSQ_043_EMPTY_STATUS_CAUSAL=false',
+              'AURORA_KSQ_043_GLOBAL_SEED_PROVIDER_MASKING=PROVEN',
+          ] + lines
+          out.write_text('\n'.join(lines)+'\n')
+          PY
+
+          cat "$RUNNER_TEMP/validated/provider-context-validation.env"
+          sha256sum "$RUNNER_TEMP/validated/provider-context-validation.env" > "$RUNNER_TEMP/validated/provider-context-validation.env.sha256"
+          cat > "$RUNNER_TEMP/validated/provenance.env" <<'EOF'
+          AURORA_KSQ_043_PROVIDER_SOURCE_RUN_ID=33626789742
+          AURORA_KSQ_043_PROVIDER_SOURCE_JOB_ID=100236315989
+          AURORA_KSQ_043_PROVIDER_SOURCE_COMMIT=350f491378aaa42344c7998281c2df1a1b71bcda
+          AURORA_KSQ_043_PROVIDER_SOURCE_ARTIFACT_ID=9845356230
+          AURORA_KSQ_043_PROVIDER_SOURCE_ARTIFACT_DIGEST=sha256:2aaa5bc1e6765c6a8e43a349170bb0ebd701a7d35fda952330eaa6ce223e4546
+          AURORA_KSQ_043_PROVIDER_EVIDENCE_TAR_SHA256=c72782e0bb7edcd3a7bf0bc6e907fc1908ad2906443ac9b5ae9d52e197009b84
+          EOF
+
+      - name: Preserve validated evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-order-043-provider-context-validated
+          path: ${{ runner.temp }}/validated/
+          if-no-files-found: error
+          retention-days: 30
