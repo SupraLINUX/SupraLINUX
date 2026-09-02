@@ -111,9 +111,10 @@ jobs:
           set +a
           slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
 
-          # The hosted VM contains extra APT configuration such as
-          # command-not-found IndexTargets. It is host-image state and is not part
-          # of the KSQ builder contract, so use a clean APT config/list/cache root.
+          # APT reads APT_CONFIG before Dir::Etc::Parts and Dir::Etc::main.
+          # Use that supported early configuration point so runner-image extras
+          # (command-not-found/AppStream/vendor hooks) are never loaded into the
+          # local-only bootstrap transaction.
           aptroot=/tmp/supralinux-native-apt
           sudo rm -rf "$aptroot"
           sudo install -d -o root -g root -m 0755 \
@@ -122,10 +123,13 @@ jobs:
           sudo install -d -o _apt -g root -m 0700 \
             "$aptroot/lists/partial" "$aptroot/cache/archives/partial"
           sudo touch "$aptroot/etc/apt.conf"
+          cat > "$aptroot/preload.conf" <<EOF_APT_PRELOAD
+          Dir::Etc::Parts "$aptroot/etc/apt.conf.d";
+          Dir::Etc::main "$aptroot/etc/apt.conf";
+          EOF_APT_PRELOAD
+          export APT_CONFIG="$aptroot/preload.conf"
 
           apt_opts=(
-            -o "Dir::Etc::main=$aptroot/etc/apt.conf"
-            -o "Dir::Etc::parts=$aptroot/etc/apt.conf.d"
             -o "Dir::Etc::sourcelist=$slice/aurora-local.sources"
             -o "Dir::Etc::sourceparts=$aptroot/etc/sources.list.d"
             -o "Dir::State::lists=$aptroot/lists"
@@ -136,9 +140,15 @@ jobs:
             -o 'Acquire::https::Proxy=http://127.0.0.1:9/'
           )
 
-          sudo apt-get "${apt_opts[@]}" -o APT::Update::Error-Mode=any update \
+          apt-config dump | tee "$RUNNER_TEMP/native-apt-config.txt"
+          if apt-config dump | grep -q '^Acquire::IndexTargets::deb::CNF'; then
+            echo 'AURORA_KSQ_NATIVE_FAILURE: command-not-found CNF target survived APT_CONFIG preload' >&2
+            exit 1
+          fi
+
+          sudo --preserve-env=APT_CONFIG apt-get "${apt_opts[@]}" -o APT::Update::Error-Mode=any update \
             2>&1 | tee "$RUNNER_TEMP/native-toolchain-apt-update.log"
-          sudo apt-get "${apt_opts[@]}" install -y --no-install-recommends \
+          sudo --preserve-env=APT_CONFIG apt-get "${apt_opts[@]}" install -y --no-install-recommends \
             sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
             gzip xz-utils diffutils libcap2-bin build-essential \
             2>&1 | tee "$RUNNER_TEMP/native-toolchain-apt-install.log"
@@ -150,7 +160,7 @@ jobs:
             exit 1
           fi
           if grep -Fq '/cnf/' "$RUNNER_TEMP/native-toolchain-apt-update.log"; then
-            echo 'AURORA_KSQ_NATIVE_FAILURE: hosted command-not-found IndexTargets leaked into clean APT config' >&2
+            echo 'AURORA_KSQ_NATIVE_FAILURE: hosted command-not-found IndexTarget leaked after APT_CONFIG preload' >&2
             exit 1
           fi
 
