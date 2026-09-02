@@ -1,0 +1,275 @@
+name: Aurora KSQ sbuild Recommends policy probe
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-sbuild-recommends-policy-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  order-043-resolver-policy:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Qualify host
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -qx 'VERSION_ID="26.04"' /etc/os-release
+          host_apt=(
+            -o Dir::Etc::sourcelist=/etc/apt/sources.list.d/ubuntu.sources
+            -o Dir::Etc::sourceparts=-
+            -o APT::Get::List-Cleanup=0
+          )
+          sudo apt-get "${host_apt[@]}" -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get "${host_apt[@]}" -o Acquire::Retries=5 install -y --no-install-recommends curl python3 ubuntu-keyring gpgv
+          sudo bash scripts/ci/install-ksq-apparmor-profile.sh
+          sudo grep -qx 'supralinux-ksq-unshare (enforce)' /sys/kernel/security/apparmor/profiles
+
+      - name: Download exact checkpoint artifacts
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9818465016,9824689982,9825739675'
+          path: ${{ runner.temp }}/checkpoints
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33572528721'
+          digest-mismatch: error
+        continue-on-error: true
+
+      - name: Download exact 001-020 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9818465016'
+          path: ${{ runner.temp }}/checkpoint-001-020
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33546093974'
+          digest-mismatch: error
+
+      - name: Download exact 021-040 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9824689982'
+          path: ${{ runner.temp }}/checkpoint-021-040
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33561782526'
+          digest-mismatch: error
+
+      - name: Download failed 041-060 diagnostic artifact
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9825739675'
+          path: ${{ runner.temp }}/checkpoint-041-failed
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33572528721'
+          digest-mismatch: error
+
+      - name: Restore exact pre-order-043 binary state
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ksq-1/probe-043 build/ksq-1/full/debs
+          cat > "$RUNNER_TEMP/checkpoint-spec.json" <<EOF_SPEC
+          [
+            {
+              "root": "$RUNNER_TEMP/checkpoint-001-020",
+              "first_order": 1,
+              "last_order": 20,
+              "run_id": "33546093974",
+              "artifact_id": "9818465016",
+              "artifact_digest": "sha256:0eb45c7938b84db35ee734591622a6c621709117100d29376c01323ca0ab14ba",
+              "new_debs": 103,
+              "accumulated_debs": 103,
+              "new_debs_manifest_sha256": "b0be04014893808a79aaea514e2a5c4bc968b5c9c9769d8d7ea6cae7992b01f9",
+              "build_manifest_sha256": "ff87f96c85bc4ba1553f16b3700cf701eca04e9b749a1c739bb1088cceb3485b"
+            },
+            {
+              "root": "$RUNNER_TEMP/checkpoint-021-040",
+              "first_order": 21,
+              "last_order": 40,
+              "run_id": "33561782526",
+              "artifact_id": "9824689982",
+              "artifact_digest": "sha256:08dffb19fe6d3fda5b8079ed862d3215440cfabaf51a249f79b5af49d3539d8e",
+              "new_debs": 89,
+              "accumulated_debs": 192,
+              "new_debs_manifest_sha256": "3924d0151581a53f505ca8cd0a615b4ffee9c246afeabec003633905db159bfa",
+              "build_manifest_sha256": "6e121efdeb62b8c0c6c48ae14f60e41e452e16fe177f03536f1c2677848b111a"
+            }
+          ]
+          EOF_SPEC
+          python3 scripts/ci/restore-ksq-1-checkpoint-chain.py \
+            --spec "$RUNNER_TEMP/checkpoint-spec.json" \
+            --target build/ksq-1/full/debs \
+            --evidence build/ksq-1/probe-043/checkpoint-chain
+          failed="$RUNNER_TEMP/checkpoint-041-failed/ksq-1/full/chunk-041-060"
+          grep -qx 'AURORA_KSQ_1_RANGE_STATUS=FAIL' "$failed/evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_LAST_COMPLETED_ORDER=42' "$failed/evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_FAILED_ORDER=43' "$failed/evidence/range-status.env"
+          [[ "$(sha256sum "$failed/evidence/new-debs.sha256" | awk '{print $1}')" == 697cec4f56368b8288a9a368b198f2a9064d67de82231041ca26018770e2590e ]]
+          [[ "$(sha256sum "$failed/evidence/build-manifest.tsv" | awk '{print $1}')" == 81db3a82b84b1620d89b3ae991c76bdc11a559c560c07c6a2cb906d34709189a ]]
+          [[ "$(find "$failed/new-debs" -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 7 ]]
+          (cd "$failed/new-debs" && sha256sum -c "$failed/evidence/new-debs.sha256")
+          awk -F '\t' 'NR==2 && $1==41 && $10=="PASS" {a=1} NR==3 && $1==42 && $10=="PASS" {b=1} NR==4 && $1==43 && $10=="FAIL" {c=1} END {exit !(a&&b&&c)}' "$failed/evidence/build-manifest.tsv"
+          for deb in "$failed"/new-debs/*.deb; do
+            name="$(basename "$deb")"
+            test ! -e "build/ksq-1/full/debs/$name"
+            pkg="$(dpkg-deb -f "$deb" Package)"
+            if find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' -print0 \
+              | xargs -0 -r -n1 dpkg-deb -f 2>/dev/null \
+              | grep -qx "$pkg"; then
+              echo "duplicate binary package in diagnostic state: $pkg" >&2
+              exit 1
+            fi
+            cp -a "$deb" build/ksq-1/full/debs/
+          done
+          [[ "$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 199 ]]
+          echo AURORA_KSQ_043_PRESTATE=PASS > build/ksq-1/probe-043/prestate.env
+
+      - name: Download and validate immutable snapshot slice
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          out="$RUNNER_TEMP/release"
+          mkdir -p "$out"
+          archive="$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/octet-stream' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_ID" \
+            -o "$archive"
+          [[ "$(stat -c '%s' "$archive")" == "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES" ]]
+          [[ "$(sha256sum "$archive" | awk '{print $1}')" == "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256" ]]
+          root=/opt/supralinux/archive
+          sudo rm -rf "$root/$AURORA_KSQ_SNAPSHOT"
+          sudo mkdir -p "$root"
+          sudo tar -C "$root" -xf "$archive"
+          python3 scripts/ci/ksq-snapshot-slice.py validate --slice-root "$root/$AURORA_KSQ_SNAPSHOT"
+
+      - name: Inspect exact sbuild resolver policy and reproduce order 043
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          image='ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b'
+          slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
+          name="supralinux-ksq-sbuild-policy-${GITHUB_RUN_ID}"
+          mkdir -p build/ksq-1/probe-043/docker build/ksq-1/probe-043/evidence
+          chmod -R 0777 build
+          docker pull "$image"
+          cid="$(python3 scripts/ci/ksq-docker-builder.py create \
+            --image "$image" --name "$name" \
+            --bind "$slice:$slice:ro" \
+            --bind "$GITHUB_WORKSPACE:/workspace:ro" \
+            --bind "$GITHUB_WORKSPACE/build:/workspace/build:rw" \
+            --evidence-dir "$GITHUB_WORKSPACE/build/ksq-1/probe-043/docker")"
+          trap 'python3 scripts/ci/ksq-docker-builder.py remove "$cid" >/dev/null 2>&1 || true' EXIT
+          set +e
+          docker exec -i "$cid" env AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" bash -s <<'EOF_BUILDER' \
+            2>&1 | tee build/ksq-1/probe-043/evidence/probe.log
+          set -euo pipefail
+          cd /workspace
+          bash scripts/ci/prepare-ksq-1-local-runner.sh
+          echo '### sbuild-version'
+          sbuild --version
+          dpkg-query -W sbuild libsbuild-perl apt
+          echo '### installed-resolver-source-grep'
+          grep -RniE 'Install-Recommends|Recommends-Important|apt\.conf' \
+            /usr/share/perl5/Sbuild /usr/libexec /usr/bin/sbuild 2>/dev/null || true
+          echo '### installed-resolver-files'
+          find /usr/share/perl5/Sbuild -maxdepth 2 -type f -print | sort
+          echo '### outer-apt-config'
+          apt-config dump | grep -iE 'Install-Recommends|Recommends-Important' || true
+
+          envfile=build/ksq-1/environment/build-environment.env
+          . "$envfile"
+          tarball="$AURORA_KSQ_1_BUILD_ENV_TARBALL"
+          inspect=build/ksq-1/probe-043/buildd-inspect
+          rm -rf "$inspect" && mkdir -p "$inspect"
+          tar --zstd -xf "$tarball" -C "$inspect" ./etc/apt ./var/lib/sbuild 2>/dev/null || \
+            tar --zstd -xf "$tarball" -C "$inspect" ./etc/apt 2>/dev/null || true
+          echo '### buildd-apt-files'
+          find "$inspect/etc/apt" -maxdepth 3 -type f -print -exec sh -c 'echo --- $1; cat "$1"' sh {} \; 2>/dev/null || true
+          echo '### buildd-install-recommends-files'
+          grep -RniE 'Install-Recommends|Recommends-Important' "$inspect/etc/apt" "$inspect/var/lib/sbuild" 2>/dev/null || true
+
+          work=build/ksq-1/probe-043/source
+          rm -rf "$work"
+          bash scripts/ci/fetch-prepare-ksq-1-source.sh kpipewire 6.7.4-0ubuntu2 "$work"
+          . "$work/prepared-source.env"
+          dsc="$AURORA_KSQ_1_PREPARED_DSC"
+          test "$AURORA_KSQ_1_VERSION" = '6.7.4-0ubuntu2~supra26.04.1'
+          result=build/ksq-1/probe-043/result
+          rm -rf "$result" && mkdir -p "$result"
+          export SBUILD_CONFIG="$AURORA_KSQ_1_SBUILD_CONFIG"
+          set +e
+          DEB_BUILD_OPTIONS=parallel=2 sbuild \
+            --debug --verbose \
+            --chroot-mode=unshare \
+            --chroot="$tarball" \
+            --dist=resolute --arch=amd64 \
+            --build-dir="$result" --build-path=/build/supralinux-ksq1 \
+            --jobs=2 --no-enable-network --no-run-lintian --no-run-autopkgtest \
+            --purge-build=never --purge-deps=never \
+            --resolve-alternatives --bd-uninstallable-explainer=apt \
+            --extra-package=build/ksq-1/full/debs \
+            --build-deps-failed-commands='echo ### failed-hook-apt-config; apt-config dump | grep -iE "Install-Recommends|Recommends-Important" || true' \
+            --build-deps-failed-commands='echo ### failed-hook-sbuild-apt-conf; find /var/lib/sbuild /etc/apt -maxdepth 3 -type f -print -exec grep -HniE "Install-Recommends|Recommends-Important" {} \; 2>/dev/null || true' \
+            --build-deps-failed-commands='echo ### failed-hook-dummy; apt-cache show sbuild-build-depends-main-dummy 2>/dev/null || true' \
+            --build-deps-failed-commands='echo ### failed-hook-sim-default; apt-get -s install sbuild-build-depends-main-dummy 2>&1 || true' \
+            --build-deps-failed-commands='echo ### failed-hook-sim-no-recommends; apt-get -s --no-install-recommends install sbuild-build-depends-main-dummy 2>&1 || true' \
+            "$dsc"
+          rc=$?
+          set -e
+          echo "AURORA_KSQ_043_SBUILD_RC=$rc" | tee build/ksq-1/probe-043/evidence/sbuild-rc.env
+          find "$result" -maxdepth 1 -type f -print -exec cp -a {} build/ksq-1/probe-043/evidence/ \; || true
+          exit 0
+          EOF_BUILDER
+          pipe_status=("${PIPESTATUS[@]}")
+          set -e
+          printf 'CONTAINER_RC=%s\nTEE_RC=%s\n' "${pipe_status[0]}" "${pipe_status[1]}" \
+            > build/ksq-1/probe-043/evidence/container-rc.env
+          test "${pipe_status[0]}" -eq 0
+          test "${pipe_status[1]}" -eq 0
+
+      - name: Capture AppArmor audit
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo journalctl -k --no-pager 2>/dev/null \
+            | grep 'apparmor="DENIED"' \
+            | grep 'profile="supralinux-ksq-unshare"' \
+            > build/ksq-1/probe-043/evidence/apparmor-denied.log || true
+
+      - name: Preserve diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-sbuild-recommends-policy-043
+          path: |
+            build/ksq-1/probe-043/
+            build/ksq-1/environment/*.env
+            build/ksq-1/environment/*.txt
+            build/ksq-1/environment/sbuild-local.conf
+            build/ksq-0/build-order.tsv
+          if-no-files-found: warn
+          retention-days: 14
