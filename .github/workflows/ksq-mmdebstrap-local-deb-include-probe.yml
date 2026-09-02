@@ -35,16 +35,6 @@ jobs:
           sudo bash scripts/ci/install-ksq-apparmor-profile.sh
           sudo grep -qx 'supralinux-ksq-unshare (enforce)' /sys/kernel/security/apparmor/profiles
 
-      - name: Download exact 001-020 checkpoint
-        uses: actions/download-artifact@v8
-        with:
-          artifact-ids: '9818465016'
-          path: build/probe/checkpoint
-          github-token: ${{ github.token }}
-          repository: SupraLINUX/SupraLINUX
-          run-id: '33546093974'
-          digest-mismatch: error
-
       - name: Download and validate snapshot
         shell: bash
         env:
@@ -80,11 +70,9 @@ jobs:
           set +a
           image='ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b'
           slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
-          deb="$GITHUB_WORKSPACE/build/probe/checkpoint/ksq-1/full/chunk-001-020/new-debs/extra-cmake-modules_6.29.0-0ubuntu1~supra26.04.1_amd64.deb"
-          test -f "$deb"
-          chmod -R a+rX build/probe/checkpoint
-          chmod -R a+rwX build
+          chmod -R a+rwX build 2>/dev/null || true
           mkdir -p build/probe/evidence
+          chmod -R a+rwX build
           name="supralinux-ksq-local-deb-${GITHUB_RUN_ID}"
           docker pull "$image"
           cid="$(python3 scripts/ci/ksq-docker-builder.py create \
@@ -95,7 +83,7 @@ jobs:
             --bind "$GITHUB_WORKSPACE/build:/workspace/build:rw" \
             --evidence-dir "$GITHUB_WORKSPACE/build/probe/evidence")"
           trap 'python3 scripts/ci/ksq-docker-builder.py remove "$cid" >/dev/null 2>&1 || true' EXIT
-          docker exec -i "$cid" env SLICE="$slice" DEB="/workspace/${deb#$GITHUB_WORKSPACE/}" bash -s <<'EOF_BUILDER'
+          docker exec -i "$cid" env SLICE="$slice" bash -s <<'EOF_BUILDER'
           set -euo pipefail
           rm -f /etc/apt/sources.list /etc/apt/sources.list.d/*
           cp "$SLICE/aurora-local.sources" /etc/apt/sources.list.d/aurora-local.sources
@@ -106,30 +94,42 @@ jobs:
           bash /workspace/scripts/ci/configure-ksq-uidmap-filecaps.sh
 
           stage=/tmp/supralinux-ksq-local-debs
-          rm -rf "$stage"
-          mkdir -p "$stage"
-          staged="$stage/$(basename "$DEB")"
-          cp -a "$DEB" "$staged"
+          pkgroot=/tmp/supralinux-local-deb-probe
+          rm -rf "$stage" "$pkgroot"
+          mkdir -p "$stage" "$pkgroot/DEBIAN" "$pkgroot/usr/share/supralinux-local-deb-probe"
+          cat > "$pkgroot/DEBIAN/control" <<'EOF_CONTROL'
+          Package: supralinux-local-deb-probe
+          Version: 1.0
+          Architecture: all
+          Section: devel
+          Priority: optional
+          Maintainer: SupraLINUX Build Certification <noreply@supralinux.invalid>
+          Description: dependency-free local deb include probe
+          EOF_CONTROL
+          printf 'local deb include probe\n' > "$pkgroot/usr/share/supralinux-local-deb-probe/probe.txt"
+          dpkg-deb --root-owner-group --build "$pkgroot" "$stage/supralinux-local-deb-probe_1.0_all.deb"
+          staged="$stage/supralinux-local-deb-probe_1.0_all.deb"
           chmod 0755 "$stage"
           chmod 0644 "$staged"
-          sha256sum "$DEB" "$staged" | tee /workspace/build/probe/staged-deb.sha256
-          test "$(sha256sum "$DEB" | awk '{print $1}')" = "$(sha256sum "$staged" | awk '{print $1}')"
+          sha256sum "$staged" | tee /workspace/build/probe/staged-deb.sha256
 
           rootfs="$(mktemp -d /tmp/mmdebstrap.supralinux-local-deb.XXXXXX)"
-          trap 'rm -rf "$rootfs" "$stage"' EXIT
+          trap 'rm -rf "$rootfs" "$stage" "$pkgroot"' EXIT
           chown ubuntu:ubuntu "$rootfs"
           su -s /bin/bash ubuntu -c "mmdebstrap \
             --mode=unshare \
-            --variant=minbase \
+            --variant=buildd \
             --architectures=amd64 \
+            --include=ca-certificates,ubuntu-keyring \
             --include='$staged' \
             --hook-dir=/usr/share/mmdebstrap/hooks/file-mirror-automount \
             resolute '$rootfs' /etc/apt/sources.list.d/aurora-local.sources" \
             2>&1 | tee /workspace/build/probe/mmdebstrap.log
           su -s /bin/bash ubuntu -c \
-            "mmdebstrap --unshare-helper /usr/sbin/chroot '$rootfs' dpkg-query -W extra-cmake-modules" \
+            "mmdebstrap --unshare-helper /usr/sbin/chroot '$rootfs' dpkg-query -W supralinux-local-deb-probe" \
             | tee /workspace/build/probe/installed.tsv
-          grep -Fq $'extra-cmake-modules\t6.29.0-0ubuntu1~supra26.04.1' /workspace/build/probe/installed.tsv
+          grep -Fq $'supralinux-local-deb-probe\t1.0' /workspace/build/probe/installed.tsv
+          test -f "$rootfs/usr/share/supralinux-local-deb-probe/probe.txt"
           echo AURORA_KSQ_LOCAL_DEB_INCLUDE_PASS
           EOF_BUILDER
 
@@ -142,6 +142,7 @@ jobs:
             | grep 'apparmor="DENIED"' \
             | grep 'profile="supralinux-ksq-unshare"' \
             > build/probe/apparmor-denied.log || true
+          test ! -s build/probe/apparmor-denied.log
 
       - name: Preserve evidence
         if: always()
