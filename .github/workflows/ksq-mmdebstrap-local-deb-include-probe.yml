@@ -83,7 +83,7 @@ jobs:
           test -f "$deb"
           chmod -R a+rX build/probe/checkpoint
           chmod -R a+rwX build
-          mkdir -p build/probe/evidence build/probe/rootfs
+          mkdir -p build/probe/evidence
           name="supralinux-ksq-local-deb-${GITHUB_RUN_ID}"
           docker pull "$image"
           cid="$(python3 scripts/ci/ksq-docker-builder.py create \
@@ -104,9 +104,8 @@ jobs:
           grep -q '^ubuntu:' /etc/subgid || echo 'ubuntu:100000:65536' >> /etc/subgid
           bash /workspace/scripts/ci/configure-ksq-uidmap-filecaps.sh
           chmod a+r "$DEB"
-          rootfs=/workspace/build/probe/rootfs
-          rm -rf "$rootfs"
-          mkdir -p "$rootfs"
+          rootfs="$(mktemp -d /tmp/mmdebstrap.supralinux-local-deb.XXXXXX)"
+          trap 'rm -rf "$rootfs"' EXIT
           chown ubuntu:ubuntu "$rootfs"
           su -s /bin/bash ubuntu -c "mmdebstrap \
             --mode=unshare \
