@@ -42,7 +42,7 @@ jobs:
             | sort | tee "$RUNNER_TEMP/native-toolchain.tsv"
           grep -q $'^sbuild\t0.91.2ubuntu3$' "$RUNNER_TEMP/native-toolchain.tsv"
           grep -q $'^libsbuild-perl\t0.91.2ubuntu3$' "$RUNNER_TEMP/native-toolchain.tsv"
-          grep -q $'^mmdebstrap\t1.5.7-1$' "$RUNNER_TEMP/native-toolchain.tsv"
+          grep -q $'^mmdebstrap\t1.5.7-3$' "$RUNNER_TEMP/native-toolchain.tsv"
 
           user="$(id -un)"
           if ! grep -q "^${user}:" /etc/subuid; then
