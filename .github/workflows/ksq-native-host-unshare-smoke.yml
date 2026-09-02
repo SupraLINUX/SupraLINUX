@@ -1,0 +1,184 @@
+name: Aurora KSQ native sbuild unshare smoke
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-native-host-unshare-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-sbuild-smoke:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Bootstrap native Ubuntu 26.04 host
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          echo AURORA_KSQ_NATIVE_DOCKER_USED=0 | tee "$RUNNER_TEMP/native-host.env"
+          uname -a | tee "$RUNNER_TEMP/native-uname.txt"
+          id | tee "$RUNNER_TEMP/native-id.txt"
+
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl python3 ubuntu-keyring gpgv \
+            sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+            gzip xz-utils diffutils libcap2-bin build-essential
+
+          sbuild --version | tee "$RUNNER_TEMP/native-sbuild-version.txt"
+          mmdebstrap --version | tee "$RUNNER_TEMP/native-mmdebstrap-version.txt"
+          dpkg-query -W -f='${Package}\t${Version}\n' \
+            sbuild libsbuild-perl mmdebstrap uidmap util-linux dpkg-dev apt-utils ubuntu-keyring \
+            | sort | tee "$RUNNER_TEMP/native-toolchain.tsv"
+          grep -q $'^sbuild\t0.91.2ubuntu3$' "$RUNNER_TEMP/native-toolchain.tsv"
+          grep -q $'^libsbuild-perl\t0.91.2ubuntu3$' "$RUNNER_TEMP/native-toolchain.tsv"
+          grep -q $'^mmdebstrap\t1.5.7-1$' "$RUNNER_TEMP/native-toolchain.tsv"
+
+          user="$(id -un)"
+          if ! grep -q "^${user}:" /etc/subuid; then
+            sudo usermod --add-subuids 1000000-1065535 "$user"
+          fi
+          if ! grep -q "^${user}:" /etc/subgid; then
+            sudo usermod --add-subgids 1000000-1065535 "$user"
+          fi
+          grep "^${user}:" /etc/subuid | tee "$RUNNER_TEMP/native-subuid.txt"
+          grep "^${user}:" /etc/subgid | tee "$RUNNER_TEMP/native-subgid.txt"
+          stat -c '%A %a %U %G %n' /usr/bin/newuidmap /usr/bin/newgidmap \
+            | tee "$RUNNER_TEMP/native-uidmap-permissions.txt"
+
+          unshare --map-auto --map-user=65536 --map-group=65536 --keep-caps \
+            --mount --pid --uts --ipc --fork \
+            sh -c 'id; test "$(id -u)" -eq 65536; mount -t tmpfs none /tmp; umount /tmp' \
+            2>&1 | tee "$RUNNER_TEMP/native-unshare-preflight.log"
+
+      - name: Download and validate immutable snapshot
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          out="$RUNNER_TEMP/release"
+          mkdir -p "$out"
+          archive="$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/octet-stream' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_ID" \
+            -o "$archive"
+          test "$(stat -c '%s' "$archive")" = "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES"
+          test "$(sha256sum "$archive" | awk '{print $1}')" = "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256"
+          sudo install -d /opt/supralinux/archive
+          sudo tar -C /opt/supralinux/archive -xf "$archive"
+          python3 scripts/ci/ksq-snapshot-slice.py validate \
+            --slice-root "/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
+
+      - name: Create buildd rootfs from snapshot without Docker
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
+
+          # From this point all APT/source inputs used by package work are local.
+          python3 scripts/ci/restore-ksq-0-certified-evidence.py \
+            --slice-root "$slice" --workspace "$GITHUB_WORKSPACE"
+          bash scripts/ci/validate-kde-stack-source-manifests.sh
+          python3 scripts/ci/validate-kde-stack-roots.py
+          AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" \
+            bash scripts/ci/prepare-ksq-1-local-apt-metadata.sh
+          python3 scripts/ci/generate-kde-build-closure.py
+          cmp build/ksq-0/build-order.tsv build/ksq-0/canonical/build-order.tsv
+          cmp build/ksq-0/closure-status.env build/ksq-0/canonical/closure-status.env
+
+          AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" \
+            bash scripts/ci/prepare-ksq-1-local-build-environment.sh \
+            2>&1 | tee "$RUNNER_TEMP/native-buildd.log"
+          test -s build/ksq-1/environment/resolute-amd64-buildd.tar.zst
+          sha256sum build/ksq-1/environment/resolute-amd64-buildd.tar.zst \
+            | tee "$RUNNER_TEMP/native-buildd.sha256"
+
+      - name: Build certified source 001 natively
+        shell: bash
+        run: |
+          set -euo pipefail
+          . build/ksq-1/environment/build-environment.env
+          export SBUILD_CONFIG="$AURORA_KSQ_1_SBUILD_CONFIG"
+
+          source_name="$(awk -F '\t' 'NR==2 {print $2}' build/ksq-0/build-order.tsv)"
+          base_version="$(awk -F '\t' 'NR==2 {print $3}' build/ksq-0/build-order.tsv)"
+          test "$source_name" = kf6-extra-cmake-modules
+          work="$GITHUB_WORKSPACE/build/ksq-native-smoke/source-001"
+          result="$GITHUB_WORKSPACE/build/ksq-native-smoke/result-001"
+          rm -rf "$work" "$result"
+          mkdir -p "$result"
+          bash scripts/ci/fetch-prepare-ksq-1-source.sh "$source_name" "$base_version" "$work"
+          . "$work/prepared-source.env"
+
+          DEB_BUILD_OPTIONS=parallel=2 sbuild \
+            --debug --verbose \
+            --chroot-mode=unshare \
+            --chroot="$AURORA_KSQ_1_BUILD_ENV_TARBALL" \
+            --dist=resolute --arch=amd64 \
+            --build-dir="$result" --build-path=/build/supralinux-ksq1 \
+            --jobs=2 --no-enable-network --no-run-lintian --no-run-autopkgtest \
+            --purge-build=always --purge-deps=always \
+            --resolve-alternatives --bd-uninstallable-explainer=apt \
+            --starting-build-commands='if find /sys/class/net -mindepth 1 -maxdepth 1 ! -name lo -print -quit | grep -q .; then echo AURORA_NATIVE_SBUILD_NETWORK=FAIL; exit 97; else echo AURORA_NATIVE_SBUILD_NETWORK=loopback-only; fi' \
+            "$AURORA_KSQ_1_PREPARED_DSC" \
+            2>&1 | tee "$RUNNER_TEMP/native-source-001.log"
+
+          grep -q 'AURORA_NATIVE_SBUILD_NETWORK=loopback-only' "$RUNNER_TEMP/native-source-001.log"
+          grep -Rqs '^Status: successful$' "$result"/*.build
+          test "$(find "$result" -maxdepth 1 -type f -name '*.deb' | wc -l)" -gt 0
+          echo AURORA_KSQ_NATIVE_SOURCE_001=PASS | tee "$RUNNER_TEMP/native-source-001.env"
+
+      - name: Audit native smoke
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ksq-native-smoke/evidence
+          cp -a "$RUNNER_TEMP"/native-* build/ksq-native-smoke/evidence/ 2>/dev/null || true
+          sudo journalctl -k --no-pager 2>/dev/null \
+            | grep 'apparmor="DENIED"' \
+            | grep -Ei 'comm="(sbuild|mmdebstrap|unshare|newuidmap|newgidmap)"|tmp\.sbuild|mmdebstrap' \
+            > build/ksq-native-smoke/evidence/apparmor-denied-relevant.log || true
+          denials="$(wc -l < build/ksq-native-smoke/evidence/apparmor-denied-relevant.log)"
+          source001=FAIL
+          [[ -f "$RUNNER_TEMP/native-source-001.env" ]] && source001=PASS
+          {
+            echo 'AURORA_KSQ_NATIVE_SMOKE_DOCKER_USED=0'
+            echo "AURORA_KSQ_NATIVE_SMOKE_SOURCE_001=$source001"
+            echo "AURORA_KSQ_NATIVE_SMOKE_APPARMOR_DENIALS=$denials"
+          } | tee build/ksq-native-smoke/evidence/status.env
+          if [[ "$source001" == PASS && "$denials" -eq 0 ]]; then
+            echo AURORA_KSQ_NATIVE_SMOKE=PASS | tee -a build/ksq-native-smoke/evidence/status.env
+          else
+            echo AURORA_KSQ_NATIVE_SMOKE=FAIL | tee -a build/ksq-native-smoke/evidence/status.env
+            exit 1
+          fi
+
+      - name: Upload native smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-native-sbuild-unshare-smoke
+          path: build/ksq-native-smoke/
+          if-no-files-found: warn
+          retention-days: 30
