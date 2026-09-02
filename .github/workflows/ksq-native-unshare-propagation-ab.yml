@@ -1,0 +1,146 @@
+name: Aurora KSQ native unshare propagation A-B
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-native-unshare-propagation-ab.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-unshare-ab:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Qualify host and namespace prerequisites
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          command -v unshare
+          command -v newuidmap
+          command -v newgidmap
+          user="$(id -un)"
+          grep "^${user}:" /etc/subuid | tee "$RUNNER_TEMP/subuid.txt"
+          grep "^${user}:" /etc/subgid | tee "$RUNNER_TEMP/subgid.txt"
+          stat -c '%A %a %U %G %n' /usr/bin/newuidmap /usr/bin/newgidmap \
+            | tee "$RUNNER_TEMP/uidmap-permissions.txt"
+          sysctl kernel.apparmor_restrict_unprivileged_userns \
+            | tee "$RUNNER_TEMP/apparmor-userns-sysctl.txt"
+          cat /proc/self/attr/current | tee "$RUNNER_TEMP/outer-apparmor-label.txt"
+          findmnt -no TARGET,PROPAGATION / | tee "$RUNNER_TEMP/root-propagation.txt"
+          date --iso-8601=seconds | tee "$RUNNER_TEMP/start-time.txt"
+
+      - name: Run controlled propagation A-B
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/unshare-ab"
+          mkdir -p "$out"
+
+          run_case() {
+            local name="$1"
+            shift
+            set +e
+            "$@" >"$out/$name.log" 2>&1
+            rc=$?
+            set -e
+            printf '%s\t%s\n' "$name" "$rc" | tee -a "$out/results.tsv"
+            cat "$out/$name.log"
+          }
+
+          # Control: prove the user namespace mapping itself works.
+          run_case userns-only \
+            unshare --map-auto --map-user=65536 --map-group=65536 --keep-caps \
+              --fork sh -c 'id; test "$(id -u)" -eq 65536'
+
+          # A: util-linux default when a mount namespace is requested.
+          run_case mount-default \
+            unshare --map-auto --map-user=65536 --map-group=65536 --keep-caps \
+              --mount --fork sh -c 'id; findmnt -no TARGET,PROPAGATION /'
+
+          # B1: create the same mount namespace but skip only util-linux's
+          # recursive "mount --make-rprivate /" convenience operation.
+          run_case mount-unchanged \
+            unshare --map-auto --map-user=65536 --map-group=65536 --keep-caps \
+              --mount --propagation unchanged --fork \
+              sh -c 'id; findmnt -no TARGET,PROPAGATION /'
+
+          # B2: prove whether a private mount operation inside that namespace is
+          # actually usable, rather than merely proving namespace creation.
+          run_case mount-unchanged-tmpfs \
+            unshare --map-auto --map-user=65536 --map-group=65536 --keep-caps \
+              --mount --propagation unchanged --fork \
+              sh -c 'set -eu; d=$(mktemp -d); mount -t tmpfs none "$d"; findmnt "$d"; umount "$d"; rmdir "$d"'
+
+          # B3: use a bind mount, because mmdebstrap/sbuild require bind mounts
+          # for the local snapshot and build inputs.
+          mkdir -p "$out/source" "$out/target"
+          printf 'probe\n' > "$out/source/value"
+          run_case mount-unchanged-bind \
+            unshare --map-auto --map-user=65536 --map-group=65536 --keep-caps \
+              --mount --propagation unchanged --fork \
+              sh -c "set -eu; mount --bind '$out/source' '$out/target'; test \"\$(cat '$out/target/value')\" = probe; umount '$out/target'"
+
+      - name: Capture and assert causal result
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ksq-native-unshare-ab/evidence
+          cp -a "$RUNNER_TEMP/unshare-ab" \
+            "$RUNNER_TEMP/subuid.txt" "$RUNNER_TEMP/subgid.txt" \
+            "$RUNNER_TEMP/uidmap-permissions.txt" \
+            "$RUNNER_TEMP/apparmor-userns-sysctl.txt" \
+            "$RUNNER_TEMP/outer-apparmor-label.txt" \
+            "$RUNNER_TEMP/root-propagation.txt" \
+            build/ksq-native-unshare-ab/evidence/ 2>/dev/null || true
+
+          start="$(cat "$RUNNER_TEMP/start-time.txt")"
+          sudo journalctl -k --since "$start" --no-pager 2>/dev/null \
+            | grep 'apparmor="DENIED"' \
+            | grep -E 'profile="unprivileged_userns"' \
+            > build/ksq-native-unshare-ab/evidence/apparmor-denied-userns.log || true
+
+          results="$RUNNER_TEMP/unshare-ab/results.tsv"
+          test -s "$results"
+          get_rc() { awk -F '\t' -v n="$1" '$1==n {print $2}' "$results"; }
+          userns_rc="$(get_rc userns-only)"
+          default_rc="$(get_rc mount-default)"
+          unchanged_rc="$(get_rc mount-unchanged)"
+          tmpfs_rc="$(get_rc mount-unchanged-tmpfs)"
+          bind_rc="$(get_rc mount-unchanged-bind)"
+
+          {
+            echo "AURORA_NATIVE_USERNS_ONLY_RC=$userns_rc"
+            echo "AURORA_NATIVE_MOUNT_DEFAULT_RC=$default_rc"
+            echo "AURORA_NATIVE_MOUNT_UNCHANGED_RC=$unchanged_rc"
+            echo "AURORA_NATIVE_MOUNT_UNCHANGED_TMPFS_RC=$tmpfs_rc"
+            echo "AURORA_NATIVE_MOUNT_UNCHANGED_BIND_RC=$bind_rc"
+          } | tee build/ksq-native-unshare-ab/evidence/status.env
+
+          # Fail-closed assertions for the facts already established. The B2/B3
+          # cases are intentionally recorded rather than pre-assumed.
+          test "$userns_rc" -eq 0
+          test "$default_rc" -ne 0
+          test "$unchanged_rc" -eq 0
+          grep -q 'flags="rw, rprivate"' \
+            build/ksq-native-unshare-ab/evidence/apparmor-denied-userns.log
+          echo AURORA_NATIVE_UNSHARE_PROPAGATION_CAUSE=PROVEN \
+            | tee -a build/ksq-native-unshare-ab/evidence/status.env
+
+      - name: Upload A-B evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-native-unshare-propagation-ab
+          path: build/ksq-native-unshare-ab/
+          if-no-files-found: warn
+          retention-days: 30
