@@ -6,6 +6,7 @@ on:
       - feature/kde-stack-qualification
     paths:
       - '.github/workflows/ksq-mmdebstrap-local-deb-include-probe.yml'
+      - 'scripts/ci/apparmor/supralinux-ksq-unshare'
   workflow_dispatch:
 
 permissions:
@@ -103,15 +104,25 @@ jobs:
           grep -q '^ubuntu:' /etc/subuid || echo 'ubuntu:100000:65536' >> /etc/subuid
           grep -q '^ubuntu:' /etc/subgid || echo 'ubuntu:100000:65536' >> /etc/subgid
           bash /workspace/scripts/ci/configure-ksq-uidmap-filecaps.sh
-          chmod a+r "$DEB"
+
+          stage=/tmp/supralinux-ksq-local-debs
+          rm -rf "$stage"
+          mkdir -p "$stage"
+          staged="$stage/$(basename "$DEB")"
+          cp -a "$DEB" "$staged"
+          chmod 0755 "$stage"
+          chmod 0644 "$staged"
+          sha256sum "$DEB" "$staged" | tee /workspace/build/probe/staged-deb.sha256
+          test "$(sha256sum "$DEB" | awk '{print $1}')" = "$(sha256sum "$staged" | awk '{print $1}')"
+
           rootfs="$(mktemp -d /tmp/mmdebstrap.supralinux-local-deb.XXXXXX)"
-          trap 'rm -rf "$rootfs"' EXIT
+          trap 'rm -rf "$rootfs" "$stage"' EXIT
           chown ubuntu:ubuntu "$rootfs"
           su -s /bin/bash ubuntu -c "mmdebstrap \
             --mode=unshare \
             --variant=minbase \
             --architectures=amd64 \
-            --include='$DEB' \
+            --include='$staged' \
             --hook-dir=/usr/share/mmdebstrap/hooks/file-mirror-automount \
             resolute '$rootfs' /etc/apt/sources.list.d/aurora-local.sources" \
             2>&1 | tee /workspace/build/probe/mmdebstrap.log
@@ -140,6 +151,7 @@ jobs:
           path: |
             build/probe/mmdebstrap.log
             build/probe/installed.tsv
+            build/probe/staged-deb.sha256
             build/probe/apparmor-denied.log
             build/probe/evidence/
           if-no-files-found: warn
