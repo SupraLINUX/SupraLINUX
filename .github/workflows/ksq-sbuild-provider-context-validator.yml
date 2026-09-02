@@ -51,17 +51,24 @@ jobs:
           log = Path(sys.argv[1]).read_text(errors='replace').splitlines()
           out = Path(sys.argv[2])
 
-          def span(start, end):
-              i = next(i for i, line in enumerate(log) if start in line)
-              j = next(i for i, line in enumerate(log[i+1:], i+1) if end in line)
+          def command_span(marker):
+              starts = [i for i, line in enumerate(log)
+                        if line.startswith('printf ') and marker in line]
+              if len(starts) != 1:
+                  raise SystemExit(f'{marker}: expected one top-level hook command, got {len(starts)}')
+              i = starts[0]
+              j = next((j for j in range(i + 1, len(log))
+                        if log[j].startswith("I: Finished running '") and marker in log[j]), None)
+              if j is None:
+                  raise SystemExit(f'{marker}: finished-run boundary absent')
               return '\n'.join(log[i:j+1])
 
           cases = {
-              'DEFAULT_BUILDD': span('AURORA_AB_SECTION=default-buildd', 'AURORA_AB_DEFAULT_BUILDD_RC='),
-              'NOREC_BUILDD': span('AURORA_AB_SECTION=no-recommends-buildd"', 'AURORA_AB_NOREC_BUILDD_RC='),
-              'NOREC_BUILDD_X11': span('AURORA_AB_SECTION=no-recommends-buildd-plus-dbus-x11', 'AURORA_AB_NOREC_BUILDD_X11_RC='),
-              'NOREC_EMPTY': span('AURORA_AB_SECTION=no-recommends-empty-status"', 'AURORA_AB_NOREC_EMPTY_RC='),
-              'NOREC_EMPTY_X11': span('AURORA_AB_SECTION=no-recommends-empty-status-plus-dbus-x11', 'AURORA_AB_NOREC_EMPTY_X11_RC='),
+              'DEFAULT_BUILDD': command_span('AURORA_AB_SECTION=default-buildd"'),
+              'NOREC_BUILDD': command_span('AURORA_AB_SECTION=no-recommends-buildd"'),
+              'NOREC_BUILDD_X11': command_span('AURORA_AB_SECTION=no-recommends-buildd-plus-dbus-x11"'),
+              'NOREC_EMPTY': command_span('AURORA_AB_SECTION=no-recommends-empty-status"'),
+              'NOREC_EMPTY_X11': command_span('AURORA_AB_SECTION=no-recommends-empty-status-plus-dbus-x11"'),
           }
 
           expected = {
