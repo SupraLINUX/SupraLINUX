@@ -1,0 +1,330 @@
+name: Aurora KSQ native build-context nonet probe
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-native-build-context-nonet-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-build-context-nonet:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Bootstrap exact Resolute toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          date --iso-8601=seconds > "$RUNNER_TEMP/start-time.txt"
+
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl python3 ubuntu-keyring gpgv \
+            sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+            gzip xz-utils diffutils libcap2-bin build-essential apparmor apparmor-utils
+
+          dpkg-query -W -f='${Package}\t${Version}\n' \
+            sbuild libsbuild-perl mmdebstrap uidmap util-linux apparmor \
+            | sort | tee "$RUNNER_TEMP/toolchain.tsv"
+          grep -q $'^sbuild\t0.91.2ubuntu3$' "$RUNNER_TEMP/toolchain.tsv"
+          grep -q $'^libsbuild-perl\t0.91.2ubuntu3$' "$RUNNER_TEMP/toolchain.tsv"
+          grep -q $'^mmdebstrap\t1.5.7-3$' "$RUNNER_TEMP/toolchain.tsv"
+
+          {
+            echo '# Installed Resolute sbuild network implementation evidence'
+            dpkg-query -W -f='${Package}\t${Version}\n' sbuild libsbuild-perl
+            for file in $(dpkg -L sbuild libsbuild-perl | grep -E '(^/usr/bin/sbuild$|\.pm$)' | sort -u); do
+              if grep -qE -- 'nonet|enable_network|build_env_cmnd' "$file"; then
+                echo "### $file"
+                grep -nE -C 8 -- 'nonet|enable_network|build_env_cmnd' "$file" || true
+              fi
+            done
+          } > "$RUNNER_TEMP/sbuild-network-implementation.log"
+          grep -q -- '--nonet' "$RUNNER_TEMP/sbuild-network-implementation.log"
+          grep -q 'enable_network' "$RUNNER_TEMP/sbuild-network-implementation.log"
+          grep -q 'build_env_cmnd' "$RUNNER_TEMP/sbuild-network-implementation.log"
+
+          user="$(id -un)"
+          grep "^${user}:" /etc/subuid | tee "$RUNNER_TEMP/subuid.txt"
+          grep "^${user}:" /etc/subgid | tee "$RUNNER_TEMP/subgid.txt"
+
+          sbuild_profile="$(dpkg -L apparmor | grep -E '/etc/apparmor\.d/(usr\.bin\.)?sbuild$' | head -n1)"
+          mmdebstrap_profile="$(dpkg -L apparmor | grep -E '/etc/apparmor\.d/(usr\.bin\.)?mmdebstrap$' | head -n1)"
+          test -s "$sbuild_profile"
+          test -s "$mmdebstrap_profile"
+          grep -q 'userns,' "$sbuild_profile"
+          grep -q 'userns,' "$mmdebstrap_profile"
+          cp "$sbuild_profile" "$RUNNER_TEMP/apparmor-sbuild.profile"
+          cp "$mmdebstrap_profile" "$RUNNER_TEMP/apparmor-mmdebstrap.profile"
+          sudo aa-status | tee "$RUNNER_TEMP/aa-status.txt"
+
+      - name: Download and validate immutable KSQ snapshot
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          out="$RUNNER_TEMP/release"
+          mkdir -p "$out"
+          archive="$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/octet-stream' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_ID" \
+            -o "$archive"
+          test "$(stat -c '%s' "$archive")" = "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES"
+          test "$(sha256sum "$archive" | awk '{print $1}')" = "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256"
+          sudo install -d /opt/supralinux/archive
+          sudo tar -C /opt/supralinux/archive -xf "$archive"
+          python3 scripts/ci/ksq-snapshot-slice.py validate \
+            --slice-root "/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
+
+      - name: Recreate certified local APT metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
+
+          python3 scripts/ci/restore-ksq-0-certified-evidence.py \
+            --slice-root "$slice" --workspace "$GITHUB_WORKSPACE"
+          bash scripts/ci/validate-kde-stack-source-manifests.sh
+          python3 scripts/ci/validate-kde-stack-roots.py
+
+          aptiso="$RUNNER_TEMP/ksq-apt-isolation"
+          mkdir -p "$aptiso/parts"
+          : > "$aptiso/main.conf"
+          cat > "$aptiso/preload.conf" <<EOF_APT
+          Dir::Etc::Parts "$aptiso/parts";
+          Dir::Etc::main "$aptiso/main.conf";
+          EOF_APT
+
+          APT_CONFIG="$aptiso/preload.conf" \
+            AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" \
+            bash scripts/ci/prepare-ksq-1-local-apt-metadata.sh \
+            2>&1 | tee "$RUNNER_TEMP/local-apt-metadata.log"
+
+          if grep -Eq 'c-n-f|/cnf/|Components' "$RUNNER_TEMP/local-apt-metadata.log"; then
+            echo AURORA_NATIVE_APT_ISOLATION_FAILURE >&2
+            exit 1
+          fi
+          grep -Fq "file:$slice/ubuntu" "$RUNNER_TEMP/local-apt-metadata.log"
+          python3 scripts/ci/generate-kde-build-closure.py
+          cmp build/ksq-0/build-order.tsv build/ksq-0/canonical/build-order.tsv
+          cmp build/ksq-0/closure-status.env build/ksq-0/canonical/closure-status.env
+          echo AURORA_NATIVE_LOCAL_APT_ISOLATION=PASS | tee "$RUNNER_TEMP/local-apt.env"
+
+      - name: Create buildd rootfs with official mmdebstrap unshare mode
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
+
+          AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" \
+            bash scripts/ci/prepare-ksq-1-local-build-environment.sh \
+            2>&1 | tee "$RUNNER_TEMP/mmdebstrap-buildd.log"
+          test -s build/ksq-1/environment/resolute-amd64-buildd.tar.zst
+          sha256sum build/ksq-1/environment/resolute-amd64-buildd.tar.zst \
+            | tee "$RUNNER_TEMP/buildd.sha256"
+          echo AURORA_NATIVE_MMDEBSTRAP_BUILDD=PASS | tee "$RUNNER_TEMP/mmdebstrap.env"
+
+      - name: Prepare certified source 001
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_name="$(awk -F '\t' 'NR==2 {print $2}' build/ksq-0/build-order.tsv)"
+          base_version="$(awk -F '\t' 'NR==2 {print $3}' build/ksq-0/build-order.tsv)"
+          test "$source_name" = kf6-extra-cmake-modules
+          work="$GITHUB_WORKSPACE/build/ksq-native-nonet/source-001"
+          result="$GITHUB_WORKSPACE/build/ksq-native-nonet/result-001"
+          rm -rf "$work" "$result"
+          mkdir -p "$result"
+
+          set +e
+          bash scripts/ci/fetch-prepare-ksq-1-source.sh \
+            "$source_name" "$base_version" "$work" \
+            2>&1 | tee "$RUNNER_TEMP/source-prep.log"
+          pipe_status=("${PIPESTATUS[@]}")
+          set -e
+          prep_rc="${pipe_status[0]}"
+          tee_rc="${pipe_status[1]}"
+          {
+            echo "AURORA_NATIVE_SOURCE_PREP_RC=$prep_rc"
+            echo "AURORA_NATIVE_SOURCE_PREP_TEE_RC=$tee_rc"
+          } | tee "$RUNNER_TEMP/source-prep-result.env"
+          test "$prep_rc" -eq 0
+          test "$tee_rc" -eq 0
+          test -s "$work/prepared-source.env"
+          echo AURORA_NATIVE_SOURCE_PREP=PASS | tee "$RUNNER_TEMP/source-prep.env"
+
+      - name: Configure network proof at existing buildd mountpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          . build/ksq-1/environment/build-environment.env
+
+          tar --zstd -tf "$AURORA_KSQ_1_BUILD_ENV_TARBALL" \
+            | sed 's#^\./##' \
+            | grep -qx 'mnt/'
+          echo AURORA_NATIVE_BUILDD_MNT_EXISTS=PASS | tee "$RUNNER_TEMP/buildd-mnt.env"
+
+          probe_dir="$GITHUB_WORKSPACE/build/ksq-native-nonet/probe-bin"
+          mkdir -p "$probe_dir"
+          cat > "$probe_dir/network-proof-wrapper" <<'EOF_WRAPPER'
+          #!/bin/sh
+          set -eu
+          echo AURORA_NATIVE_BUILD_NETWORK_WRAPPER=START
+          printf 'AURORA_NATIVE_BUILD_LABEL='
+          cat /proc/self/attr/current
+          printf 'AURORA_NATIVE_BUILD_NETNS='
+          readlink /proc/self/ns/net
+          netifs="$(find /sys/class/net -mindepth 1 -maxdepth 1 -printf '%f\n' | sort | paste -sd, -)"
+          echo "AURORA_NATIVE_BUILD_NETIFS=$netifs"
+          sed 's/^/AURORA_NATIVE_BUILD_ROUTE: /' /proc/net/route || true
+          if find /sys/class/net -mindepth 1 -maxdepth 1 ! -name lo -print -quit | grep -q .; then
+            echo AURORA_NATIVE_BUILD_NETWORK=FAIL
+            exit 97
+          fi
+          echo AURORA_NATIVE_BUILD_NETWORK=loopback-only
+          exec "$@"
+          EOF_WRAPPER
+          chmod 0755 "$probe_dir/network-proof-wrapper"
+
+          cat >> "$AURORA_KSQ_1_SBUILD_CONFIG" <<EOF_SBUILD_PROBE
+          \$unshare_bind_mounts = [
+            { directory => "$AURORA_KSQ_1_BUILD_ENV_LOCAL_SLICE/ubuntu", mountpoint => "$AURORA_KSQ_1_BUILD_ENV_LOCAL_SLICE/ubuntu" },
+            { directory => "$probe_dir", mountpoint => "/mnt" },
+          ];
+          \$build_env_cmnd = "/mnt/network-proof-wrapper";
+          EOF_SBUILD_PROBE
+          cat "$AURORA_KSQ_1_SBUILD_CONFIG" | tee "$RUNNER_TEMP/sbuild-probe-config.txt"
+          echo AURORA_NATIVE_BUILD_NETWORK_WRAPPER_CONFIGURED=PASS | tee "$RUNNER_TEMP/network-wrapper.env"
+
+      - name: Build source 001 with sbuild unshare and nonet
+        shell: bash
+        run: |
+          set -euo pipefail
+          . build/ksq-1/environment/build-environment.env
+          export SBUILD_CONFIG="$AURORA_KSQ_1_SBUILD_CONFIG"
+          work="$GITHUB_WORKSPACE/build/ksq-native-nonet/source-001"
+          result="$GITHUB_WORKSPACE/build/ksq-native-nonet/result-001"
+          . "$work/prepared-source.env"
+
+          set +e
+          DEB_BUILD_OPTIONS=parallel=2 sbuild \
+            --debug --verbose \
+            --chroot-mode=unshare \
+            --chroot="$AURORA_KSQ_1_BUILD_ENV_TARBALL" \
+            --dist=resolute --arch=amd64 \
+            --build-dir="$result" --build-path=/build/supralinux-ksq1 \
+            --jobs=2 --no-enable-network --no-run-lintian --no-run-autopkgtest \
+            --purge-build=always --purge-deps=always \
+            --resolve-alternatives --bd-uninstallable-explainer=apt \
+            "$AURORA_KSQ_1_PREPARED_DSC" \
+            2>&1 | tee "$RUNNER_TEMP/source-001.log"
+          pipe_status=("${PIPESTATUS[@]}")
+          set -e
+          sbuild_rc="${pipe_status[0]}"
+          tee_rc="${pipe_status[1]}"
+          {
+            echo "AURORA_NATIVE_SBUILD_RC=$sbuild_rc"
+            echo "AURORA_NATIVE_SBUILD_TEE_RC=$tee_rc"
+          } | tee "$RUNNER_TEMP/sbuild-result.env"
+
+          test "$sbuild_rc" -eq 0
+          test "$tee_rc" -eq 0
+          grep -q 'AURORA_NATIVE_BUILD_NETWORK_WRAPPER=START' "$RUNNER_TEMP/source-001.log"
+          grep -q 'AURORA_NATIVE_BUILD_NETWORK=loopback-only' "$RUNNER_TEMP/source-001.log"
+          grep -Eq 'sbuild-usernsexec.*--nonet|--nonet.*sbuild-usernsexec' "$RUNNER_TEMP/source-001.log"
+          if grep -Ei '^(Get|Hit|Ign|Err):.*https?://' "$RUNNER_TEMP/source-001.log"; then
+            echo AURORA_NATIVE_REMOTE_APT_TRANSPORT=FAIL >&2
+            exit 1
+          fi
+          grep -Rqs '^Status: successful$' "$result"/*.build
+          test "$(find "$result" -maxdepth 1 -type f -name '*.deb' | wc -l)" -gt 0
+          echo AURORA_NATIVE_SBUILD_NONET=PASS | tee "$RUNNER_TEMP/sbuild-network.env"
+          echo AURORA_NATIVE_SOURCE_001=PASS | tee "$RUNNER_TEMP/source-001.env"
+
+      - name: Collect evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence=build/ksq-native-nonet/evidence
+          mkdir -p "$evidence"
+          cp -a "$RUNNER_TEMP"/*.txt "$RUNNER_TEMP"/*.tsv "$RUNNER_TEMP"/*.env \
+            "$RUNNER_TEMP"/*.log "$RUNNER_TEMP"/*.profile "$RUNNER_TEMP"/*.sha256 \
+            "$evidence"/ 2>/dev/null || true
+
+          start="$(cat "$RUNNER_TEMP/start-time.txt")"
+          sudo journalctl -k --since "$start" --no-pager 2>/dev/null \
+            | grep 'apparmor="DENIED"' > "$evidence/apparmor-denied-all.log" || true
+          grep -Ei 'profile="[^\"]*(sbuild|mmdebstrap|unprivileged_userns)[^\"]*"|comm="(sbuild|mmdebstrap|unshare|mount|newuidmap|newgidmap)"' \
+            "$evidence/apparmor-denied-all.log" \
+            > "$evidence/apparmor-denied-relevant.log" || true
+          denials="$(wc -l < "$evidence/apparmor-denied-relevant.log")"
+
+          localapt=FAIL; mmdebstrap=FAIL; sourceprep=FAIL; mnt=FAIL; wrapper=FAIL; nonet=FAIL; source001=FAIL
+          [[ -f "$RUNNER_TEMP/local-apt.env" ]] && grep -qx 'AURORA_NATIVE_LOCAL_APT_ISOLATION=PASS' "$RUNNER_TEMP/local-apt.env" && localapt=PASS
+          [[ -f "$RUNNER_TEMP/mmdebstrap.env" ]] && grep -qx 'AURORA_NATIVE_MMDEBSTRAP_BUILDD=PASS' "$RUNNER_TEMP/mmdebstrap.env" && mmdebstrap=PASS
+          [[ -f "$RUNNER_TEMP/source-prep.env" ]] && grep -qx 'AURORA_NATIVE_SOURCE_PREP=PASS' "$RUNNER_TEMP/source-prep.env" && sourceprep=PASS
+          [[ -f "$RUNNER_TEMP/buildd-mnt.env" ]] && grep -qx 'AURORA_NATIVE_BUILDD_MNT_EXISTS=PASS' "$RUNNER_TEMP/buildd-mnt.env" && mnt=PASS
+          [[ -f "$RUNNER_TEMP/network-wrapper.env" ]] && grep -qx 'AURORA_NATIVE_BUILD_NETWORK_WRAPPER_CONFIGURED=PASS' "$RUNNER_TEMP/network-wrapper.env" && wrapper=PASS
+          [[ -f "$RUNNER_TEMP/sbuild-network.env" ]] && grep -qx 'AURORA_NATIVE_SBUILD_NONET=PASS' "$RUNNER_TEMP/sbuild-network.env" && nonet=PASS
+          [[ -f "$RUNNER_TEMP/source-001.env" ]] && grep -qx 'AURORA_NATIVE_SOURCE_001=PASS' "$RUNNER_TEMP/source-001.env" && source001=PASS
+
+          {
+            echo AURORA_NATIVE_DOCKER_USED=0
+            echo AURORA_NATIVE_CUSTOM_APPARMOR_USED=0
+            echo "AURORA_NATIVE_LOCAL_APT=$localapt"
+            echo "AURORA_NATIVE_MMDEBSTRAP=$mmdebstrap"
+            echo "AURORA_NATIVE_SOURCE_PREP=$sourceprep"
+            echo "AURORA_NATIVE_BUILDD_MNT=$mnt"
+            echo "AURORA_NATIVE_NETWORK_WRAPPER=$wrapper"
+            echo "AURORA_NATIVE_SBUILD_NONET=$nonet"
+            echo "AURORA_NATIVE_SOURCE_001=$source001"
+            echo "AURORA_NATIVE_RELEVANT_DENIALS=$denials"
+          } | tee "$evidence/status.env"
+
+          if [[ "$localapt" == PASS && "$mmdebstrap" == PASS && "$sourceprep" == PASS && "$mnt" == PASS && "$wrapper" == PASS && "$nonet" == PASS && "$source001" == PASS && "$denials" -eq 0 ]]; then
+            echo AURORA_NATIVE_BUILD_CONTEXT_NONET_PROBE=PASS | tee -a "$evidence/status.env"
+          else
+            echo AURORA_NATIVE_BUILD_CONTEXT_NONET_PROBE=FAIL | tee -a "$evidence/status.env"
+          fi
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-native-build-context-nonet
+          path: build/ksq-native-nonet/evidence/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce probe result
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat build/ksq-native-nonet/evidence/status.env
+          grep -qx 'AURORA_NATIVE_BUILD_CONTEXT_NONET_PROBE=PASS' \
+            build/ksq-native-nonet/evidence/status.env
