@@ -153,8 +153,9 @@ jobs:
           bash scripts/ci/fetch-prepare-ksq-1-source.sh \
             "$source_name" "$base_version" "$work" \
             2>&1 | tee "$RUNNER_TEMP/source-prep.log"
-          prep_rc="${PIPESTATUS[0]}"
-          tee_rc="${PIPESTATUS[1]}"
+          pipe_status=("${PIPESTATUS[@]}")
+          prep_rc="${pipe_status[0]}"
+          tee_rc="${pipe_status[1]}"
           set -e
           {
             echo "AURORA_NATIVE_SOURCE_PREP_RC=$prep_rc"
@@ -192,8 +193,9 @@ jobs:
             --starting-build-commands='echo -n AURORA_NATIVE_BUILD_LABEL=; cat /proc/self/attr/current; if find /sys/class/net -mindepth 1 -maxdepth 1 ! -name lo -print -quit | grep -q .; then echo AURORA_NATIVE_SBUILD_NETWORK=FAIL; exit 97; else echo AURORA_NATIVE_SBUILD_NETWORK=loopback-only; fi' \
             "$AURORA_KSQ_1_PREPARED_DSC" \
             2>&1 | tee "$RUNNER_TEMP/source-001.log"
-          sbuild_rc="${PIPESTATUS[0]}"
-          tee_rc="${PIPESTATUS[1]}"
+          pipe_status=("${PIPESTATUS[@]}")
+          sbuild_rc="${pipe_status[0]}"
+          tee_rc="${pipe_status[1]}"
           set -e
           {
             echo "AURORA_NATIVE_SBUILD_RC=$sbuild_rc"
