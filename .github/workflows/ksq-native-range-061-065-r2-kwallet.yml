@@ -97,8 +97,8 @@ jobs:
           [
             {"root":"$RUNNER_TEMP/cp-001-020","first_order":1,"last_order":20,"run_id":33546093974,"artifact_id":9818465016,"artifact_digest":"sha256:0eb45c7938b84db35ee734591622a6c621709117100d29376c01323ca0ab14ba","new_debs":103,"accumulated_debs":103,"new_debs_manifest_sha256":"b0be04014893808a79aaea514e2a5c4bc968b5c9c9769d8d7ea6cae7992b01f9","build_manifest_sha256":"ff87f96c85bc4ba1553f16b3700cf701eca04e9b749a1c739bb1088cceb3485b"},
             {"root":"$RUNNER_TEMP/cp-021-040","first_order":21,"last_order":40,"run_id":33561782526,"artifact_id":9824689982,"artifact_digest":"sha256:08dffb19fe6d3fda5b8079ed862d3215440cfabaf51a249f79b5af49d3539d8e","new_debs":89,"accumulated_debs":192,"new_debs_manifest_sha256":"3924d0151581a53f505ca8cd0a615b4ffee9c246afeabec003633905db159bfa","build_manifest_sha256":"6e121efdeb62b8c0c6c48ae14f60e41e452e16fe177f03536f1c2677848b111a"},
-            {"root":"$RUNNER_TEMP/cp-041-043","first_order":41,"last_order":43,"run_id":33753437984,"artifact_id":9892762100,"artifact_digest":"sha256:7a118c3225143021056781e2b45af114e719a1e5382bda5a1819c7346312b0f0","new_debs":13,"accumulated_debs":205,"new_debs_manifest_sha256":"d5e6cbd51cac0ac2d2dca953722ccbd1a43beb3c981766f683ae69ace539105c","build_manifest_sha256":"e4311aeba5c7856ac2c0ff803c9adc2fdcb63adb104d1a8f2707a1fc45696ab1"},
-            {"root":"$RUNNER_TEMP/cp-044-060","first_order":44,"last_order":60,"run_id":33767306768,"artifact_id":9900367299,"artifact_digest":"sha256:41a50bb17ea5ca4ab63c43a6aa6d6d030dae310ba716866824ac72d6c61dc4f3","new_debs":70,"accumulated_debs":275,"new_debs_manifest_sha256":"a712b2f8d67d2bbb8aea4f3ccc6f7af930e4cfc3974f5562c923b12ea23267a5","build_manifest_sha256":"4ac871dc0865bb10b27f0b23db8b8969e595c67ab4faa75dd295b0877ccaf709"}
+            {"root":"$RUNNER_TEMP/cp-041-043/build","first_order":41,"last_order":43,"run_id":33753437984,"artifact_id":9892762100,"artifact_digest":"sha256:7a118c3225143021056781e2b45af114e719a1e5382bda5a1819c7346312b0f0","new_debs":13,"accumulated_debs":205,"new_debs_manifest_sha256":"d5e6cbd51cac0ac2d2dca953722ccbd1a43beb3c981766f683ae69ace539105c","build_manifest_sha256":"e4311aeba5c7856ac2c0ff803c9adc2fdcb63adb104d1a8f2707a1fc45696ab1"},
+            {"root":"$RUNNER_TEMP/cp-044-060/build","first_order":44,"last_order":60,"run_id":33767306768,"artifact_id":9900367299,"artifact_digest":"sha256:41a50bb17ea5ca4ab63c43a6aa6d6d030dae310ba716866824ac72d6c61dc4f3","new_debs":70,"accumulated_debs":275,"new_debs_manifest_sha256":"a712b2f8d67d2bbb8aea4f3ccc6f7af930e4cfc3974f5562c923b12ea23267a5","build_manifest_sha256":"4ac871dc0865bb10b27f0b23db8b8969e595c67ab4faa75dd295b0877ccaf709"}
           ]
           EOF
           python3 scripts/ci/restore-ksq-1-checkpoint-chain.py \
@@ -209,13 +209,16 @@ jobs:
           grep -Ei 'profile="[^\"]*(sbuild|mmdebstrap|unprivileged_userns)[^\"]*"|comm="(sbuild|mmdebstrap|unshare|mount|newuidmap|newgidmap)"' \
             "$base/host-evidence/apparmor-denied-all.log" > "$base/host-evidence/apparmor-denied-relevant.log" || true
           denials="$(wc -l < "$base/host-evidence/apparmor-denied-relevant.log")"
-          . "$base/range-command.env"
-          . "$base/kwallet-command.env"
+          COMMAND_RC=99; TEE_RC=99; KWALLET_VALIDATOR_RC=99; KWALLET_VALIDATOR_TEE_RC=99
+          [[ ! -f "$base/range-command.env" ]] || . "$base/range-command.env"
+          [[ ! -f "$base/kwallet-command.env" ]] || . "$base/kwallet-command.env"
           if [[ "$COMMAND_RC" = 0 && "$TEE_RC" = 0 && "$KWALLET_VALIDATOR_RC" = 0 && "$KWALLET_VALIDATOR_TEE_RC" = 0 && "$denials" -eq 0 ]] \
+            && [[ -f "$evidence/range-status.env" ]] \
             && grep -qx 'AURORA_KSQ_1_RANGE_STATUS=PASS' "$evidence/range-status.env" \
             && grep -qx 'AURORA_KSQ_1_RANGE_FIRST_ORDER=61' "$evidence/range-status.env" \
             && grep -qx 'AURORA_KSQ_1_RANGE_LAST_ORDER=65' "$evidence/range-status.env" \
             && grep -qx 'AURORA_KSQ_1_RANGE_SOURCES=5' "$evidence/range-status.env" \
+            && [[ -f build/ksq-1/full/kwallet-pam-validation/status.env ]] \
             && grep -qx 'AURORA_KSQ_1_KWALLET_PAM_INSTALLATION=PASS' build/ksq-1/full/kwallet-pam-validation/status.env \
             && grep -qx 'AURORA_KSQ_1_KWALLET_VALIDATOR_MODE=native-unprivileged' build/ksq-1/full/kwallet-pam-validation/status.env; then
             logs="$(find "$evidence" -mindepth 2 -maxdepth 2 -type f -name '*.build' | wc -l)"
