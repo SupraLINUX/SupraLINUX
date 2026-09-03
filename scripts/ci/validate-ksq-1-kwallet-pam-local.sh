@@ -8,7 +8,7 @@ EVIDENCE="${STATE}/kwallet-pam-validation"
 SNAPSHOT_ENV="${ROOT}/scripts/ci/aurora-ksq-snapshot-release.env"
 PREPARED_CONTROL="${AURORA_KSQ_1_KWALLET_PREPARED_CONTROL:-${STATE}/chunk-061-065/evidence/65-kwallet-pam/debian-control}"
 ROOTFS="${AURORA_KSQ_1_KWALLET_ROOTFS:-/tmp/aurora-ksq1-kwallet-rootfs-${GITHUB_RUN_ID:-local}}"
-STAGE="${AURORA_KSQ_1_KWALLET_STAGE:-/tmp/aurora-ksq1-kwallet-repo-${GITHUB_RUN_ID:-local}}"
+STAGE="${AURORA_KSQ_1_KWALLET_STAGE:-/tmp/aurora-ksq1-kwallet-stage-${GITHUB_RUN_ID:-local}}"
 
 fail() { echo "AURORA_KSQ_1_KWALLET_LOCAL_FAILURE: $*" >&2; exit 1; }
 
@@ -33,7 +33,9 @@ fi
 for legacy in scripts/ci/ksq-docker-builder.py scripts/ci/install-ksq-apparmor-profile.sh scripts/ci/apparmor/supralinux-ksq-unshare scripts/ci/configure-ksq-uidmap-filecaps.sh; do
   [[ ! -e "${ROOT}/${legacy}" ]] || fail "legacy path present: ${legacy}"
 done
-for command in dpkg-deb dpkg-scanpackages gzip mmdebstrap sha256sum awk; do command -v "${command}" >/dev/null || fail "missing ${command}"; done
+for command in apt-get dpkg-deb dpkg-scanpackages gzip mmdebstrap sha256sum awk; do
+  command -v "${command}" >/dev/null || fail "missing ${command}"
+done
 [[ -d "${DEBS}" ]] || fail "accumulated DEBs missing"
 [[ -f "${PREPARED_CONTROL}" ]] || fail "prepared kwallet-pam control missing"
 [[ -f "${SLICE_ROOT}/COMPLETE" ]] || fail "slice incomplete"
@@ -73,7 +75,9 @@ done
 grep -Fq 'debhelper-compat (= 13)' "${PREPARED_CONTROL}" || fail "compat 13 absent"
 ! grep -Fq 'debhelper-compat (= 14)' "${PREPARED_CONTROL}" || fail "compat 14 leaked"
 ! grep -Fq 'dh-sequence-plasma' "${PREPARED_CONTROL}" || fail "Ubuntu no-dh-sequence-plasma delta lost"
-for token in '${misc:Depends}' '${qml6:Depends}' '${shlibs:Depends}'; do grep -Fq "${token}" "${PREPARED_CONTROL}" || fail "missing ${token}"; done
+for token in '${misc:Depends}' '${qml6:Depends}' '${shlibs:Depends}'; do
+  grep -Fq "${token}" "${PREPARED_CONTROL}" || fail "missing ${token}"
+done
 
 PAM_DEPENDS="$(dpkg-deb -f "${PAM_DEB}" Depends)"
 COMMON_DEPENDS="$(dpkg-deb -f "${COMMON_DEB}" Depends)"
@@ -89,10 +93,28 @@ printf '%s\n' "${KWALLET_DEPENDS}" | grep -Fq "libkf6walletbackend6 (= ${KWALLET
 ACCUMULATED_DEB_COUNT="$(find "${DEBS}" -maxdepth 1 -type f -name '*.deb' | wc -l)"
 [[ "${ACCUMULATED_DEB_COUNT}" -eq 295 ]] || fail "expected 295 accumulated DEBs at order 65, got ${ACCUMULATED_DEB_COUNT}"
 
+declare -A CANDIDATE_PATH=()
+declare -A CANDIDATE_VERSION=()
+declare -A CANDIDATE_ARCH=()
+while IFS= read -r -d '' deb; do
+  package="$(dpkg-deb -f "${deb}" Package)"
+  version="$(dpkg-deb -f "${deb}" Version)"
+  arch="$(dpkg-deb -f "${deb}" Architecture)"
+  [[ -z "${CANDIDATE_PATH[${package}]:-}" ]] || fail "duplicate accumulated package ${package}"
+  CANDIDATE_PATH["${package}"]="${deb}"
+  CANDIDATE_VERSION["${package}"]="${version}"
+  CANDIDATE_ARCH["${package}"]="${arch}"
+done < <(find "${DEBS}" -maxdepth 1 -type f -name '*.deb' -print0 | sort -z)
+[[ "${#CANDIDATE_PATH[@]}" -eq 295 ]] || fail "accumulated package identity count mismatch"
+
 rm -rf "${EVIDENCE}" "${STAGE}"
 REPO="${STAGE}/repo"
-mkdir -p "${EVIDENCE}" "${REPO}"
-chmod 0755 "${STAGE}" "${REPO}"
+SOLVER="${STAGE}/solver"
+CLOSURE="${STAGE}/candidate-closure"
+mkdir -p "${EVIDENCE}" "${REPO}" "${SOLVER}/sourceparts" "${SOLVER}/empty-parts" \
+  "${SOLVER}/lists/partial" "${SOLVER}/archives/partial" "${CLOSURE}"
+chmod 0755 "${STAGE}" "${REPO}" "${SOLVER}" "${SOLVER}/sourceparts" "${SOLVER}/empty-parts" \
+  "${SOLVER}/lists" "${SOLVER}/lists/partial" "${SOLVER}/archives" "${SOLVER}/archives/partial" "${CLOSURE}"
 cp -a "${PREPARED_CONTROL}" "${EVIDENCE}/prepared-debian-control"
 
 while IFS= read -r -d '' deb; do
@@ -125,6 +147,89 @@ candidate_debs=("${COMMON_DEB}" "${PAM_DEB}" "${KWALLET_DEB}" "${DATA_DEB}" "${L
   done
 } > "${EVIDENCE}/binary-control-audit.txt"
 
+# Resolve the exact install closure outside the chroot. This uses the same APT 3.2
+# semantics as the runner, the immutable r2 Ubuntu slice and the 295-package Supra
+# candidate repository. Only the selected Supra DEBs are then exposed to mmdebstrap
+# as individual local files, avoiding an additional directory bind mount.
+cp -a "${SOURCES}" "${SOLVER}/sourceparts/00-resolute.sources"
+printf 'deb [trusted=yes arch=amd64] file:%s ./\n' "${REPO}" > "${SOLVER}/sourceparts/10-supra.list"
+: > "${SOLVER}/empty.list"
+: > "${SOLVER}/empty-main.conf"
+: > "${SOLVER}/status"
+printf 'Dir::Etc::Parts "%s";\nDir::Etc::main "%s";\n' \
+  "${SOLVER}/empty-parts" "${SOLVER}/empty-main.conf" > "${SOLVER}/preload.conf"
+! grep -RqsE 'https?://' "${SOLVER}/sourceparts" || fail "remote URI leaked into solver sources"
+
+apt_opts=(
+  -o "Dir::Etc::sourcelist=${SOLVER}/empty.list"
+  -o "Dir::Etc::sourceparts=${SOLVER}/sourceparts"
+  -o "Dir::State::lists=${SOLVER}/lists"
+  -o "Dir::State::status=${SOLVER}/status"
+  -o "Dir::Cache::archives=${SOLVER}/archives"
+  -o "APT::Architecture=amd64"
+  -o "APT::Architectures=amd64"
+  -o "Acquire::Languages=none"
+  -o "Acquire::Retries=0"
+  -o "Acquire::http::Proxy=http://127.0.0.1:9/"
+  -o "Acquire::https::Proxy=http://127.0.0.1:9/"
+  -o "Debug::NoLocking=1"
+)
+
+APT_CONFIG="${SOLVER}/preload.conf" apt-get "${apt_opts[@]}" -o APT::Update::Error-Mode=any update \
+  2>&1 | tee "${EVIDENCE}/solver-update.log"
+! grep -E '^(Get|Hit|Ign|Err):[0-9]+ https?://' "${EVIDENCE}/solver-update.log" || fail "remote solver metadata transport occurred"
+grep -Fq "file:${REPO}" "${EVIDENCE}/solver-update.log" || fail "solver did not consume accumulated Supra repo"
+grep -Fq "file:${SLICE_ROOT}/ubuntu" "${EVIDENCE}/solver-update.log" || fail "solver did not consume r2 slice"
+
+TARGET_SPECS=(
+  "libpam-kwallet-common=${COMMON_VERSION}"
+  "libpam-kwallet5=${PAM_VERSION}"
+  "kwallet6=${KWALLET_VERSION}"
+  "libkf6wallet-data=${KWALLET_VERSION}"
+  "libkf6wallet6=${KWALLET_VERSION}"
+  "libkf6walletbackend6=${KWALLET_VERSION}"
+)
+printf '%s\n' "${TARGET_SPECS[@]}" > "${EVIDENCE}/solver-targets.txt"
+APT_CONFIG="${SOLVER}/preload.conf" apt-get "${apt_opts[@]}" --download-only --yes --no-remove install "${TARGET_SPECS[@]}" \
+  2>&1 | tee "${EVIDENCE}/solver-download.log"
+! grep -E '^(Get|Hit|Ign|Err):[0-9]+ https?://' "${EVIDENCE}/solver-download.log" || fail "remote solver package transport occurred"
+
+SOLVER_DEB_COUNT="$(find "${SOLVER}/archives" -maxdepth 1 -type f -name '*.deb' | wc -l)"
+[[ "${SOLVER_DEB_COUNT}" -gt 0 ]] || fail "solver materialized no DEBs"
+printf 'package\tversion\tarchitecture\tfilename\n' > "${EVIDENCE}/solver-selected-packages.tsv"
+printf 'package\tversion\tarchitecture\tfilename\n' > "${EVIDENCE}/candidate-closure.tsv"
+while IFS= read -r -d '' deb; do
+  package="$(dpkg-deb -f "${deb}" Package)"
+  version="$(dpkg-deb -f "${deb}" Version)"
+  arch="$(dpkg-deb -f "${deb}" Architecture)"
+  printf '%s\t%s\t%s\t%s\n' "${package}" "${version}" "${arch}" "$(basename "${deb}")" >> "${EVIDENCE}/solver-selected-packages.tsv"
+  if [[ -n "${CANDIDATE_PATH[${package}]:-}" ]]; then
+    [[ "${version}" == "${CANDIDATE_VERSION[${package}]}" ]] || fail "solver selected non-candidate ${package}=${version} instead of ${CANDIDATE_VERSION[${package}]}"
+    [[ "${arch}" == "${CANDIDATE_ARCH[${package}]}" ]] || fail "solver architecture mismatch for ${package}"
+    original="${CANDIDATE_PATH[${package}]}"
+    target="${CLOSURE}/$(basename "${original}")"
+    [[ ! -e "${target}" ]] || fail "candidate closure duplicate ${package}"
+    install -m 0644 "${original}" "${target}"
+    printf '%s\t%s\t%s\t%s\n' "${package}" "${version}" "${arch}" "$(basename "${original}")" >> "${EVIDENCE}/candidate-closure.tsv"
+  fi
+done < <(find "${SOLVER}/archives" -maxdepth 1 -type f -name '*.deb' -print0 | sort -z)
+
+CLOSURE_DEB_COUNT="$(find "${CLOSURE}" -maxdepth 1 -type f -name '*.deb' | wc -l)"
+[[ "${CLOSURE_DEB_COUNT}" -ge 6 ]] || fail "candidate closure unexpectedly small: ${CLOSURE_DEB_COUNT}"
+for spec in "${TARGET_SPECS[@]}"; do
+  wanted_package="${spec%%=*}"
+  wanted_version="${spec#*=}"
+  grep -Fq $'\n' 2>/dev/null || true
+  awk -F '\t' -v p="${wanted_package}" -v v="${wanted_version}" 'NR > 1 && $1 == p && $2 == v {found=1} END {exit !found}' \
+    "${EVIDENCE}/candidate-closure.tsv" || fail "target ${wanted_package}=${wanted_version} absent from candidate closure"
+done
+(
+  cd "${CLOSURE}"
+  find . -maxdepth 1 -type f -name '*.deb' -printf '%f\0' | sort -z | xargs -0 -r sha256sum
+) > "${EVIDENCE}/candidate-closure.sha256"
+printf 'AURORA_KSQ_1_KWALLET_SOLVER_DEBS=%s\nAURORA_KSQ_1_KWALLET_CANDIDATE_CLOSURE_DEBS=%s\n' \
+  "${SOLVER_DEB_COUNT}" "${CLOSURE_DEB_COUNT}" > "${EVIDENCE}/solver-closure.env"
+
 cleanup_rootfs() {
   [[ ! -e "${ROOTFS}" ]] || mmdebstrap --unshare-helper rm -rf "${ROOTFS}" >/dev/null 2>&1 || true
 }
@@ -136,26 +241,28 @@ trap cleanup_all EXIT
 cleanup_rootfs
 mkdir -p "${ROOTFS}"
 
-INCLUDE_PACKAGES="libpam-kwallet-common=${COMMON_VERSION},libpam-kwallet5=${PAM_VERSION},kwallet6=${KWALLET_VERSION},libkf6wallet-data=${KWALLET_VERSION},libkf6wallet6=${KWALLET_VERSION},libkf6walletbackend6=${KWALLET_VERSION}"
-SUPRA_MIRROR="deb [trusted=yes] file:${REPO} ./"
-printf 'AURORA_KSQ_1_KWALLET_INCLUDE=%s\nAURORA_KSQ_1_KWALLET_SUPRA_MIRROR=%s\n' \
-  "${INCLUDE_PACKAGES}" "${SUPRA_MIRROR}" > "${EVIDENCE}/installation-inputs.env"
+include_args=()
+while IFS= read -r -d '' deb; do
+  include_args+=("--include=${deb}")
+done < <(find "${CLOSURE}" -maxdepth 1 -type f -name '*.deb' -print0 | sort -z)
+[[ "${#include_args[@]}" -eq "${CLOSURE_DEB_COUNT}" ]] || fail "mmdebstrap include closure count mismatch"
+printf 'AURORA_KSQ_1_KWALLET_INCLUDE_DEBS=%s\n' "${CLOSURE_DEB_COUNT}" > "${EVIDENCE}/installation-inputs.env"
 
 set +e
 DEBIAN_FRONTEND=noninteractive mmdebstrap \
   --mode=unshare --variant=minbase --architectures=amd64 \
-  --include="${INCLUDE_PACKAGES}" \
+  "${include_args[@]}" \
   --hook-dir=/usr/share/mmdebstrap/hooks/file-mirror-automount \
   --aptopt='Acquire::Check-Valid-Until "false";' \
   --aptopt='Acquire::http::Proxy "http://127.0.0.1:9";' \
   --aptopt='Acquire::https::Proxy "http://127.0.0.1:9";' \
-  resolute "${ROOTFS}" "${SOURCES}" "${SUPRA_MIRROR}" 2>&1 | tee "${EVIDENCE}/mmdebstrap-install.log"
+  resolute "${ROOTFS}" "${SOURCES}" 2>&1 | tee "${EVIDENCE}/mmdebstrap-install.log"
 rcs=("${PIPESTATUS[@]}")
 set -e
 printf 'MMDEBSTRAP_RC=%s\nTEE_RC=%s\n' "${rcs[0]}" "${rcs[1]}" > "${EVIDENCE}/mmdebstrap-command.env"
 [[ "${rcs[0]}" -eq 0 && "${rcs[1]}" -eq 0 ]] || fail "mmdebstrap installation failed"
 ! grep -E '^(Get|Hit|Ign|Err):[0-9]+ https?://' "${EVIDENCE}/mmdebstrap-install.log" || fail "remote package transport occurred"
-grep -Fq "file:${REPO}" "${EVIDENCE}/mmdebstrap-install.log" || fail "accumulated Supra repo was not consumed"
+grep -Fq "bind-mounting ${CLOSURE}/" "${EVIDENCE}/mmdebstrap-install.log" || fail "candidate closure DEBs were not exposed to mmdebstrap"
 
 mmdebstrap --unshare-helper /usr/sbin/chroot "${ROOTFS}" apt-get check | tee "${EVIDENCE}/apt-check.txt"
 mmdebstrap --unshare-helper /usr/sbin/chroot "${ROOTFS}" dpkg-query -W \
@@ -164,10 +271,14 @@ mmdebstrap --unshare-helper /usr/sbin/chroot "${ROOTFS}" dpkg-query -W \
 installed_version() { awk -v p="$1" '$1 == p {print $2}' "${EVIDENCE}/installed-versions.tsv"; }
 [[ "$(installed_version libpam-kwallet5)" == "${PAM_VERSION}" ]] || fail "installed PAM mismatch"
 [[ "$(installed_version libpam-kwallet-common)" == "${COMMON_VERSION}" ]] || fail "installed common mismatch"
-for package in kwallet6 libkf6wallet-data libkf6wallet6 libkf6walletbackend6; do [[ "$(installed_version "${package}")" == "${KWALLET_VERSION}" ]] || fail "installed ${package} mismatch"; done
+for package in kwallet6 libkf6wallet-data libkf6wallet6 libkf6walletbackend6; do
+  [[ "$(installed_version "${package}")" == "${KWALLET_VERSION}" ]] || fail "installed ${package} mismatch"
+done
 
 bash "${ROOT}/scripts/ci/validate-kwallet-pam-installation.sh" "${ROOTFS}" | tee "${EVIDENCE}/pam-registration.txt"
-for pam_file in common-auth common-session; do grep -nE 'pam_kwallet5\.so' "${ROOTFS}/etc/pam.d/${pam_file}" > "${EVIDENCE}/${pam_file}-kwallet.txt"; done
+for pam_file in common-auth common-session; do
+  grep -nE 'pam_kwallet5\.so' "${ROOTFS}/etc/pam.d/${pam_file}" > "${EVIDENCE}/${pam_file}-kwallet.txt"
+done
 
 cat > "${EVIDENCE}/status.env" <<EOF
 AURORA_KSQ_1_KWALLET_VERSION=${PAM_VERSION}
@@ -177,9 +288,11 @@ AURORA_KSQ_1_KWALLET_SUBSTVARS_RESTORED=misc+qml6+shlibs
 AURORA_KSQ_1_KWALLET_BINARY_RUNTIME_DEPS=PASS
 AURORA_KSQ_1_KWALLET_PAM_INSTALLATION=PASS
 AURORA_KSQ_1_KWALLET_RUNTIME_AUTO_UNLOCK_CERTIFIED=no
-AURORA_KSQ_1_KWALLET_INSTALL_BACKEND=mmdebstrap-unshare-accumulated-local-repo
+AURORA_KSQ_1_KWALLET_INSTALL_BACKEND=mmdebstrap-unshare-apt-resolved-local-debs
 AURORA_KSQ_1_KWALLET_ACCUMULATED_REPO_DEBS=${REPO_DEB_COUNT}
 AURORA_KSQ_1_KWALLET_ACCUMULATED_REPO_PACKAGES=${PACKAGE_RECORDS}
+AURORA_KSQ_1_KWALLET_SOLVER_DEBS=${SOLVER_DEB_COUNT}
+AURORA_KSQ_1_KWALLET_CANDIDATE_CLOSURE_DEBS=${CLOSURE_DEB_COUNT}
 AURORA_KSQ_1_KWALLET_SLICE=${AURORA_KSQ_SNAPSHOT_SLICE_ID}
 AURORA_KSQ_1_KWALLET_UBUNTU_SNAPSHOT=${AURORA_KSQ_UBUNTU_SNAPSHOT}
 AURORA_KSQ_1_KWALLET_REMOTE_FALLBACK=forbidden-loopback-proxy
