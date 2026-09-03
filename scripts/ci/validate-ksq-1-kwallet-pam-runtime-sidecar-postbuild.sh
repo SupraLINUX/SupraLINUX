@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 SOURCE="${ROOT}/scripts/ci/validate-ksq-1-kwallet-pam-runtime-sidecar.sh"
 EXPECTED_BLOB="41d95eb5126052229e822061e979b32e700f7c33"
-TMP="${TMPDIR:-/tmp}/aurora-ksq1-kwallet-validator-v2-${GITHUB_RUN_ID:-local}.sh"
+TMP="${ROOT}/scripts/ci/.validate-ksq-1-kwallet-runtime-sidecar-v2-${GITHUB_RUN_ID:-local}.sh"
 
 fail() { echo "AURORA_KSQ_1_KWALLET_POSTBUILD_FAILURE: $*" >&2; exit 1; }
 
@@ -141,4 +141,5 @@ PY
 
 chmod 0755 "${TMP}"
 bash -n "${TMP}"
-exec bash "${TMP}"
+trap 'rm -f "${TMP}"' EXIT
+bash "${TMP}"
