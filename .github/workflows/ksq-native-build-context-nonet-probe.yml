@@ -26,6 +26,9 @@ jobs:
           grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
           test "$(dpkg --print-architecture)" = amd64
           date --iso-8601=seconds > "$RUNNER_TEMP/start-time.txt"
+          readlink /proc/self/ns/net | tee "$RUNNER_TEMP/host-netns.txt"
+          cat /proc/net/dev > "$RUNNER_TEMP/host-proc-net-dev.txt"
+          cat /proc/net/route > "$RUNNER_TEMP/host-proc-net-route.txt"
 
           sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
           sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
@@ -176,7 +179,7 @@ jobs:
           test -s "$work/prepared-source.env"
           echo AURORA_NATIVE_SOURCE_PREP=PASS | tee "$RUNNER_TEMP/source-prep.env"
 
-      - name: Compare bind sources and configure build-context proof
+      - name: Compare bind sources and configure namespace-aware network proof
         shell: bash
         run: |
           set -euo pipefail
@@ -202,22 +205,46 @@ jobs:
           echo AURORA_NATIVE_BUILD_NETWORK_WRAPPER=START
           printf 'AURORA_NATIVE_BUILD_LABEL='
           cat /proc/self/attr/current
-          printf 'AURORA_NATIVE_BUILD_NETNS='
-          readlink /proc/self/ns/net
-          netifs="$(find /sys/class/net -mindepth 1 -maxdepth 1 -printf '%f\n' | sort | paste -sd, -)"
-          echo "AURORA_NATIVE_BUILD_NETIFS=$netifs"
-          sed 's/^/AURORA_NATIVE_BUILD_ROUTE: /' /proc/net/route || true
-          if find /sys/class/net -mindepth 1 -maxdepth 1 ! -name lo -print -quit | grep -q .; then
-            echo AURORA_NATIVE_BUILD_NETWORK=FAIL
+
+          host_netns="$(cat /mnt/host-netns.txt)"
+          current_netns="$(readlink /proc/self/ns/net)"
+          echo "AURORA_NATIVE_HOST_NETNS=$host_netns"
+          echo "AURORA_NATIVE_BUILD_NETNS=$current_netns"
+          if [ "$current_netns" = "$host_netns" ]; then
+            echo AURORA_NATIVE_BUILD_NETNS_DIFFERENT=FAIL
+            exit 96
+          fi
+          echo AURORA_NATIVE_BUILD_NETNS_DIFFERENT=PASS
+
+          proc_ifaces="$(awk -F: 'NR > 2 {gsub(/[[:space:]]/, "", $1); if ($1 != "") print $1}' /proc/net/dev | sort | paste -sd, -)"
+          echo "AURORA_NATIVE_BUILD_PROC_NETIFS=$proc_ifaces"
+          if [ "$proc_ifaces" != "lo" ]; then
+            echo AURORA_NATIVE_BUILD_PROC_NETIFS_ONLY_LO=FAIL
             exit 97
           fi
-          echo AURORA_NATIVE_BUILD_NETWORK=loopback-only
+          echo AURORA_NATIVE_BUILD_PROC_NETIFS_ONLY_LO=PASS
+
+          ipv4_routes="$(awk 'NR > 1 {count++} END {print count+0}' /proc/net/route)"
+          echo "AURORA_NATIVE_BUILD_IPV4_ROUTES=$ipv4_routes"
+          sed 's/^/AURORA_NATIVE_BUILD_ROUTE: /' /proc/net/route || true
+          if [ "$ipv4_routes" -ne 0 ]; then
+            echo AURORA_NATIVE_BUILD_IPV4_ROUTE_ISOLATION=FAIL
+            exit 98
+          fi
+          echo AURORA_NATIVE_BUILD_IPV4_ROUTE_ISOLATION=PASS
+
+          sysfs_ifaces="$(find /sys/class/net -mindepth 1 -maxdepth 1 -printf '%f\n' | sort | paste -sd, -)"
+          echo "AURORA_NATIVE_BUILD_SYSFS_NETIFS_INHERITED_VIEW=$sysfs_ifaces"
+          echo AURORA_NATIVE_BUILD_SYSFS_NETIFS_GATE=NOT_USED
+
+          echo AURORA_NATIVE_BUILD_NETWORK=isolated
           exec "$@"
           EOF_WRAPPER
           chmod 0755 "$RUNNER_TEMP/network-proof-wrapper"
           install -m 0755 "$RUNNER_TEMP/network-proof-wrapper" "$workspace_probe/network-proof-wrapper"
           sudo install -d -m 0755 "$opt_probe"
           sudo install -m 0755 "$RUNNER_TEMP/network-proof-wrapper" "$opt_probe/network-proof-wrapper"
+          sudo install -m 0644 "$RUNNER_TEMP/host-netns.txt" "$opt_probe/host-netns.txt"
 
           {
             echo '# GitHub runner bind-source topology'
@@ -231,7 +258,7 @@ jobs:
             namei -l "$AURORA_KSQ_1_BUILD_ENV_LOCAL_SLICE/ubuntu"
             echo '## /opt probe'
             findmnt -T "$opt_probe" -o TARGET,SOURCE,FSTYPE,OPTIONS,PROPAGATION
-            stat -c '%A %a %U %G %u %g %n' "$opt_probe" "$opt_probe/network-proof-wrapper"
+            stat -c '%A %a %U %G %u %g %n' "$opt_probe" "$opt_probe/network-proof-wrapper" "$opt_probe/host-netns.txt"
             namei -l "$opt_probe"
           } | tee "$RUNNER_TEMP/bind-source-topology.txt"
 
@@ -280,7 +307,12 @@ jobs:
           test "$sbuild_rc" -eq 0
           test "$tee_rc" -eq 0
           grep -q 'AURORA_NATIVE_BUILD_NETWORK_WRAPPER=START' "$RUNNER_TEMP/source-001.log"
-          grep -q 'AURORA_NATIVE_BUILD_NETWORK=loopback-only' "$RUNNER_TEMP/source-001.log"
+          grep -q 'AURORA_NATIVE_BUILD_NETNS_DIFFERENT=PASS' "$RUNNER_TEMP/source-001.log"
+          grep -q 'AURORA_NATIVE_BUILD_PROC_NETIFS=lo' "$RUNNER_TEMP/source-001.log"
+          grep -q 'AURORA_NATIVE_BUILD_PROC_NETIFS_ONLY_LO=PASS' "$RUNNER_TEMP/source-001.log"
+          grep -q 'AURORA_NATIVE_BUILD_IPV4_ROUTES=0' "$RUNNER_TEMP/source-001.log"
+          grep -q 'AURORA_NATIVE_BUILD_IPV4_ROUTE_ISOLATION=PASS' "$RUNNER_TEMP/source-001.log"
+          grep -q 'AURORA_NATIVE_BUILD_NETWORK=isolated' "$RUNNER_TEMP/source-001.log"
           grep -Eq 'sbuild-usernsexec.*--nonet|--nonet.*sbuild-usernsexec' "$RUNNER_TEMP/source-001.log"
           if grep -Ei '^(Get|Hit|Ign|Err):.*https?://' "$RUNNER_TEMP/source-001.log"; then
             echo AURORA_NATIVE_REMOTE_APT_TRANSPORT=FAIL >&2
