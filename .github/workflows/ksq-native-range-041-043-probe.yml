@@ -1,0 +1,329 @@
+name: Aurora KSQ-1 native range 041-043 probe
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-native-range-041-043-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  native-range-041-043:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 180
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Bootstrap exact Resolute native toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          mkdir -p build/ksq-1/native-range-041-043/host-evidence
+          date --iso-8601=seconds > build/ksq-1/native-range-041-043/host-evidence/start-time.txt
+          readlink /proc/self/ns/net > build/ksq-1/native-range-041-043/host-evidence/host-netns.txt
+
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl python3 ubuntu-keyring gpgv \
+            sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+            gzip xz-utils diffutils libcap2-bin build-essential apparmor apparmor-utils
+
+          dpkg-query -W -f='${Package}\t${Version}\n' \
+            sbuild libsbuild-perl mmdebstrap uidmap util-linux apparmor \
+            | sort | tee build/ksq-1/native-range-041-043/host-evidence/toolchain.tsv
+          grep -q $'^sbuild\t0.91.2ubuntu3$' build/ksq-1/native-range-041-043/host-evidence/toolchain.tsv
+          grep -q $'^libsbuild-perl\t0.91.2ubuntu3$' build/ksq-1/native-range-041-043/host-evidence/toolchain.tsv
+          grep -q $'^mmdebstrap\t1.5.7-3$' build/ksq-1/native-range-041-043/host-evidence/toolchain.tsv
+
+          user="$(id -un)"
+          grep "^${user}:" /etc/subuid \
+            | tee build/ksq-1/native-range-041-043/host-evidence/subuid.txt
+          grep "^${user}:" /etc/subgid \
+            | tee build/ksq-1/native-range-041-043/host-evidence/subgid.txt
+
+          sbuild_profile="$(dpkg -L apparmor | grep -E '/etc/apparmor\.d/(usr\.bin\.)?sbuild$' | head -n1)"
+          mmdebstrap_profile="$(dpkg -L apparmor | grep -E '/etc/apparmor\.d/(usr\.bin\.)?mmdebstrap$' | head -n1)"
+          test -s "$sbuild_profile"
+          test -s "$mmdebstrap_profile"
+          grep -q 'userns,' "$sbuild_profile"
+          grep -q 'userns,' "$mmdebstrap_profile"
+          cp "$sbuild_profile" build/ksq-1/native-range-041-043/host-evidence/apparmor-sbuild.profile
+          cp "$mmdebstrap_profile" build/ksq-1/native-range-041-043/host-evidence/apparmor-mmdebstrap.profile
+          sudo aa-status > build/ksq-1/native-range-041-043/host-evidence/aa-status.txt
+
+          {
+            dpkg-query -W -f='${Package}\t${Version}\n' sbuild libsbuild-perl
+            for file in $(dpkg -L sbuild libsbuild-perl | grep -E '(^/usr/bin/sbuild$|\.pm$)' | sort -u); do
+              if grep -qE -- 'nonet|enable_network|build_env_cmnd' "$file"; then
+                echo "### $file"
+                grep -nE -C 8 -- 'nonet|enable_network|build_env_cmnd' "$file" || true
+              fi
+            done
+          } > build/ksq-1/native-range-041-043/host-evidence/sbuild-network-implementation.log
+          grep -q -- '--nonet' build/ksq-1/native-range-041-043/host-evidence/sbuild-network-implementation.log
+          grep -q 'enable_network' build/ksq-1/native-range-041-043/host-evidence/sbuild-network-implementation.log
+          grep -q 'build_env_cmnd' build/ksq-1/native-range-041-043/host-evidence/sbuild-network-implementation.log
+
+      - name: Download exact 001-020 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9818465016'
+          path: ${{ runner.temp }}/prior-001-020
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33546093974'
+          digest-mismatch: error
+
+      - name: Download exact 021-040 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9824689982'
+          path: ${{ runner.temp }}/prior-021-040
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33561782526'
+          digest-mismatch: error
+
+      - name: Verify and restore exact 001-040 checkpoint chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          p1="$RUNNER_TEMP/prior-001-020"
+          e1="$p1/ksq-1/full/chunk-001-020/evidence"
+          d1="$p1/ksq-1/full/chunk-001-020/new-debs"
+          p2="$RUNNER_TEMP/prior-021-040"
+          e2="$p2/ksq-1/full/chunk-021-040/evidence"
+          d2="$p2/ksq-1/full/chunk-021-040/new-debs"
+
+          grep -qx 'AURORA_KSQ_1_RANGE_STATUS=PASS' "$e1/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_FIRST_ORDER=1' "$e1/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_LAST_ORDER=20' "$e1/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_NEW_DEBS=103' "$e1/range-status.env"
+          test "$(sha256sum "$e1/new-debs.sha256" | awk '{print $1}')" = b0be04014893808a79aaea514e2a5c4bc968b5c9c9769d8d7ea6cae7992b01f9
+          test "$(sha256sum "$e1/build-manifest.tsv" | awk '{print $1}')" = ff87f96c85bc4ba1553f16b3700cf701eca04e9b749a1c739bb1088cceb3485b
+          test "$(find "$d1" -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 103
+          (cd "$d1" && sha256sum -c "$e1/new-debs.sha256")
+
+          grep -qx 'AURORA_KSQ_1_RANGE_STATUS=PASS' "$e2/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_FIRST_ORDER=21' "$e2/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_LAST_ORDER=40' "$e2/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_NEW_DEBS=89' "$e2/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_ACCUMULATED_DEBS=192' "$e2/range-status.env"
+          test "$(sha256sum "$e2/new-debs.sha256" | awk '{print $1}')" = 3924d0151581a53f505ca8cd0a615b4ffee9c246afeabec003633905db159bfa
+          test "$(sha256sum "$e2/build-manifest.tsv" | awk '{print $1}')" = 6e121efdeb62b8c0c6c48ae14f60e41e452e16fe177f03536f1c2677848b111a
+          test "$(find "$d2" -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 89
+          (cd "$d2" && sha256sum -c "$e2/new-debs.sha256")
+
+          comm -12 \
+            <(find "$d1" -maxdepth 1 -type f -name '*.deb' -printf '%f\n' | sort) \
+            <(find "$d2" -maxdepth 1 -type f -name '*.deb' -printf '%f\n' | sort) \
+            > build/ksq-1/native-range-041-043/host-evidence/checkpoint-overlap.txt
+          test ! -s build/ksq-1/native-range-041-043/host-evidence/checkpoint-overlap.txt
+
+          mkdir -p build/ksq-1/full/debs
+          cp -a "$d1"/*.deb build/ksq-1/full/debs/
+          cp -a "$d2"/*.deb build/ksq-1/full/debs/
+          test "$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 192
+
+          cat > build/ksq-1/native-range-041-043/prior-checkpoint-001-040.env <<'EOF_CHECKPOINT'
+          AURORA_KSQ_1_PRIOR_001_020_RUN_ID=33546093974
+          AURORA_KSQ_1_PRIOR_001_020_ARTIFACT_ID=9818465016
+          AURORA_KSQ_1_PRIOR_001_020_ARTIFACT_SHA256=0eb45c7938b84db35ee734591622a6c621709117100d29376c01323ca0ab14ba
+          AURORA_KSQ_1_PRIOR_001_020_DEBS=103
+          AURORA_KSQ_1_PRIOR_021_040_RUN_ID=33561782526
+          AURORA_KSQ_1_PRIOR_021_040_ARTIFACT_ID=9824689982
+          AURORA_KSQ_1_PRIOR_021_040_ARTIFACT_SHA256=08dffb19fe6d3fda5b8079ed862d3215440cfabaf51a249f79b5af49d3539d8e
+          AURORA_KSQ_1_PRIOR_021_040_NEW_DEBS_MANIFEST_SHA256=3924d0151581a53f505ca8cd0a615b4ffee9c246afeabec003633905db159bfa
+          AURORA_KSQ_1_PRIOR_021_040_BUILD_MANIFEST_SHA256=6e121efdeb62b8c0c6c48ae14f60e41e452e16fe177f03536f1c2677848b111a
+          AURORA_KSQ_1_PRIOR_021_040_DEBS=89
+          AURORA_KSQ_1_PRIOR_ACCUMULATED_DEBS=192
+          AURORA_KSQ_1_PRIOR_CHECKPOINT=PASS
+          EOF_CHECKPOINT
+
+      - name: Download and validate immutable snapshot slice
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_STATUS" = INDEPENDENTLY_VALIDATED
+          out="$RUNNER_TEMP/release"
+          mkdir -p "$out"
+          archive="$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/octet-stream' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_ID" \
+            -o "$archive"
+          test "$(stat -c '%s' "$archive")" = "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES"
+          test "$(sha256sum "$archive" | awk '{print $1}')" = "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256"
+          sudo install -d /opt/supralinux/archive
+          sudo tar -C /opt/supralinux/archive -xf "$archive"
+          python3 scripts/ci/ksq-snapshot-slice.py validate \
+            --slice-root "/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
+
+      - name: Recreate certified metadata and buildd environment natively
+        shell: bash
+        run: |
+          set -euo pipefail
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT"
+
+          python3 scripts/ci/restore-ksq-0-certified-evidence.py \
+            --slice-root "$slice" --workspace "$GITHUB_WORKSPACE"
+          bash scripts/ci/validate-kde-stack-source-manifests.sh
+          python3 scripts/ci/validate-kde-stack-roots.py
+
+          aptiso="$RUNNER_TEMP/ksq-apt-isolation"
+          mkdir -p "$aptiso/parts"
+          : > "$aptiso/main.conf"
+          cat > "$aptiso/preload.conf" <<EOF_APT
+          Dir::Etc::Parts "$aptiso/parts";
+          Dir::Etc::main "$aptiso/main.conf";
+          EOF_APT
+
+          APT_CONFIG="$aptiso/preload.conf" \
+            AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" \
+            bash scripts/ci/prepare-ksq-1-local-apt-metadata.sh \
+            2>&1 | tee build/ksq-1/native-range-041-043/local-apt-metadata.log
+          if grep -Eq 'c-n-f|/cnf/|Components' build/ksq-1/native-range-041-043/local-apt-metadata.log; then
+            echo AURORA_NATIVE_APT_ISOLATION_FAILURE >&2
+            exit 1
+          fi
+          grep -Fq "file:$slice/ubuntu" build/ksq-1/native-range-041-043/local-apt-metadata.log
+
+          python3 scripts/ci/generate-kde-build-closure.py
+          cmp build/ksq-0/build-order.tsv build/ksq-0/canonical/build-order.tsv
+          cmp build/ksq-0/closure-status.env build/ksq-0/canonical/closure-status.env
+          test "$(awk -F '\t' '$1 == 43 {print $2}' build/ksq-0/build-order.tsv)" = kpipewire
+
+          AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" \
+            bash scripts/ci/prepare-ksq-1-local-build-environment.sh \
+            2>&1 | tee build/ksq-1/native-range-041-043/mmdebstrap-buildd.log
+          test -s build/ksq-1/environment/resolute-amd64-buildd.tar.zst
+
+          bash scripts/ci/configure-ksq-1-native-sbuild-network-proof.sh \
+            2>&1 | tee build/ksq-1/native-range-041-043/network-proof-config.log
+          grep -qx 'AURORA_KSQ_1_NATIVE_NETWORK_PROOF=PASS' \
+            build/ksq-1/environment/native-sbuild-network-proof.env
+
+      - name: Build targeted native range 041-043
+        shell: bash
+        run: |
+          set -euo pipefail
+          . build/ksq-1/environment/build-environment.env
+          export SBUILD_CONFIG="$AURORA_KSQ_1_SBUILD_CONFIG"
+          set +e
+          bash scripts/ci/build-ksq-1-range.sh 41 43 \
+            2>&1 | tee build/ksq-1/native-range-041-043/range.log
+          pipe_status=("${PIPESTATUS[@]}")
+          set -e
+          {
+            echo "AURORA_NATIVE_RANGE_COMMAND_RC=${pipe_status[0]}"
+            echo "AURORA_NATIVE_RANGE_TEE_RC=${pipe_status[1]}"
+          } > build/ksq-1/native-range-041-043/range-command.env
+          exit 0
+
+      - name: Audit targeted native range
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/native-range-041-043
+          chunk=build/ksq-1/full/chunk-041-043
+          evidence="$chunk/evidence"
+          status=FAIL
+
+          start="$(cat "$base/host-evidence/start-time.txt")"
+          sudo journalctl -k --since "$start" --no-pager 2>/dev/null \
+            | grep 'apparmor="DENIED"' \
+            > "$base/host-evidence/apparmor-denied-all.log" || true
+          grep -Ei 'profile="[^\"]*(sbuild|mmdebstrap|unprivileged_userns)[^\"]*"|comm="(sbuild|mmdebstrap|unshare|mount|newuidmap|newgidmap)"' \
+            "$base/host-evidence/apparmor-denied-all.log" \
+            > "$base/host-evidence/apparmor-denied-relevant.log" || true
+          denials="$(wc -l < "$base/host-evidence/apparmor-denied-relevant.log")"
+
+          command_rc=missing
+          tee_rc=missing
+          if [[ -f "$base/range-command.env" ]]; then
+            . "$base/range-command.env"
+            command_rc="$AURORA_NATIVE_RANGE_COMMAND_RC"
+            tee_rc="$AURORA_NATIVE_RANGE_TEE_RC"
+          fi
+
+          if [[ "$command_rc" == 0 && "$tee_rc" == 0 && -f "$evidence/range-status.env" ]]; then
+            if grep -qx 'AURORA_KSQ_1_RANGE_STATUS=PASS' "$evidence/range-status.env" \
+              && grep -qx 'AURORA_KSQ_1_RANGE_FIRST_ORDER=41' "$evidence/range-status.env" \
+              && grep -qx 'AURORA_KSQ_1_RANGE_LAST_ORDER=43' "$evidence/range-status.env" \
+              && grep -qx 'AURORA_KSQ_1_RANGE_SOURCES=3' "$evidence/range-status.env" \
+              && awk -F '\t' 'NR > 1 && $1 >= 41 && $1 <= 43 && $10 == "PASS" {count++} END {exit count == 3 ? 0 : 1}' "$evidence/build-manifest.tsv" \
+              && awk -F '\t' '$1 == 43 && $2 == "kpipewire" && $10 == "PASS" {found=1} END {exit found ? 0 : 1}' "$evidence/build-manifest.tsv" \
+              && [[ "$denials" -eq 0 ]]; then
+              mapfile -t build_logs < <(find "$evidence" -mindepth 2 -maxdepth 2 -type f -name '*.build' -print | sort)
+              if [[ "${#build_logs[@]}" -eq 3 ]]; then
+                logs_ok=1
+                for log in "${build_logs[@]}"; do
+                  grep -q 'AURORA_NATIVE_BUILD_NETWORK_WRAPPER=START' "$log" || logs_ok=0
+                  grep -q 'AURORA_NATIVE_BUILD_NETNS_DIFFERENT=PASS' "$log" || logs_ok=0
+                  grep -q 'AURORA_NATIVE_BUILD_PROC_NETIFS=lo' "$log" || logs_ok=0
+                  grep -q 'AURORA_NATIVE_BUILD_PROC_NETIFS_ONLY_LO=PASS' "$log" || logs_ok=0
+                  grep -q 'AURORA_NATIVE_BUILD_IPV4_ROUTES=0' "$log" || logs_ok=0
+                  grep -q 'AURORA_NATIVE_BUILD_IPV4_ROUTE_ISOLATION=PASS' "$log" || logs_ok=0
+                  grep -q 'AURORA_NATIVE_BUILD_NETWORK=isolated' "$log" || logs_ok=0
+                  grep -q '^Status: successful$' "$log" || logs_ok=0
+                  if grep -Ei '^(Get|Hit|Ign|Err):.*https?://' "$log"; then
+                    logs_ok=0
+                  fi
+                done
+                [[ "$logs_ok" -eq 1 ]] && status=PASS
+              fi
+            fi
+          fi
+
+          {
+            echo "AURORA_NATIVE_RANGE_041_043_COMMAND_RC=$command_rc"
+            echo "AURORA_NATIVE_RANGE_041_043_TEE_RC=$tee_rc"
+            echo "AURORA_NATIVE_RANGE_041_043_APPARMOR_DENIALS=$denials"
+            echo "AURORA_NATIVE_RANGE_041_043_STATUS=$status"
+          } | tee "$base/audit.env"
+
+      - name: Upload targeted native evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-native-range-041-043
+          path: |
+            build/ksq-1/native-range-041-043/
+            build/ksq-1/environment/*.env
+            build/ksq-1/environment/*.txt
+            build/ksq-1/environment/*.sha256
+            build/ksq-1/environment/sbuild-local.conf
+            build/ksq-1/full/chunk-041-043/evidence/
+            build/ksq-1/full/chunk-041-043/new-debs/
+            build/ksq-0/build-order.tsv
+            build/ksq-0/closure-status.env
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Enforce targeted native result
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat build/ksq-1/native-range-041-043/audit.env
+          grep -qx 'AURORA_NATIVE_RANGE_041_043_STATUS=PASS' \
+            build/ksq-1/native-range-041-043/audit.env
