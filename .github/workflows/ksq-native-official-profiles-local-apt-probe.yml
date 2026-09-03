@@ -136,13 +136,10 @@ jobs:
             | tee "$RUNNER_TEMP/buildd.sha256"
           echo AURORA_NATIVE_MMDEBSTRAP_BUILDD=PASS | tee "$RUNNER_TEMP/mmdebstrap.env"
 
-      - name: Build certified source 001 natively with official sbuild profile
+      - name: Prepare certified source 001
         shell: bash
         run: |
           set -euo pipefail
-          . build/ksq-1/environment/build-environment.env
-          export SBUILD_CONFIG="$AURORA_KSQ_1_SBUILD_CONFIG"
-
           source_name="$(awk -F '\t' 'NR==2 {print $2}' build/ksq-0/build-order.tsv)"
           base_version="$(awk -F '\t' 'NR==2 {print $3}' build/ksq-0/build-order.tsv)"
           test "$source_name" = kf6-extra-cmake-modules
@@ -150,9 +147,39 @@ jobs:
           result="$GITHUB_WORKSPACE/build/ksq-native-v2/result-001"
           rm -rf "$work" "$result"
           mkdir -p "$result"
-          bash scripts/ci/fetch-prepare-ksq-1-source.sh "$source_name" "$base_version" "$work"
+
+          echo AURORA_NATIVE_SOURCE_PREP_STARTED=1 | tee "$RUNNER_TEMP/source-prep-phase.env"
+          set +e
+          bash scripts/ci/fetch-prepare-ksq-1-source.sh \
+            "$source_name" "$base_version" "$work" \
+            2>&1 | tee "$RUNNER_TEMP/source-prep.log"
+          prep_rc="${PIPESTATUS[0]}"
+          tee_rc="${PIPESTATUS[1]}"
+          set -e
+          {
+            echo "AURORA_NATIVE_SOURCE_PREP_RC=$prep_rc"
+            echo "AURORA_NATIVE_SOURCE_PREP_TEE_RC=$tee_rc"
+          } | tee "$RUNNER_TEMP/source-prep-result.env"
+
+          if [[ "$prep_rc" -ne 0 || "$tee_rc" -ne 0 ]]; then
+            echo "AURORA_NATIVE_SOURCE_PREP=FAIL" | tee "$RUNNER_TEMP/source-prep.env"
+            exit 1
+          fi
+          test -s "$work/prepared-source.env"
+          echo AURORA_NATIVE_SOURCE_PREP=PASS | tee "$RUNNER_TEMP/source-prep.env"
+
+      - name: Build prepared source 001 natively with official sbuild profile
+        shell: bash
+        run: |
+          set -euo pipefail
+          . build/ksq-1/environment/build-environment.env
+          export SBUILD_CONFIG="$AURORA_KSQ_1_SBUILD_CONFIG"
+          work="$GITHUB_WORKSPACE/build/ksq-native-v2/source-001"
+          result="$GITHUB_WORKSPACE/build/ksq-native-v2/result-001"
           . "$work/prepared-source.env"
 
+          echo AURORA_NATIVE_SBUILD_STARTED=1 | tee "$RUNNER_TEMP/sbuild-phase.env"
+          set +e
           DEB_BUILD_OPTIONS=parallel=2 sbuild \
             --debug --verbose \
             --chroot-mode=unshare \
@@ -165,13 +192,24 @@ jobs:
             --starting-build-commands='echo -n AURORA_NATIVE_BUILD_LABEL=; cat /proc/self/attr/current; if find /sys/class/net -mindepth 1 -maxdepth 1 ! -name lo -print -quit | grep -q .; then echo AURORA_NATIVE_SBUILD_NETWORK=FAIL; exit 97; else echo AURORA_NATIVE_SBUILD_NETWORK=loopback-only; fi' \
             "$AURORA_KSQ_1_PREPARED_DSC" \
             2>&1 | tee "$RUNNER_TEMP/source-001.log"
+          sbuild_rc="${PIPESTATUS[0]}"
+          tee_rc="${PIPESTATUS[1]}"
+          set -e
+          {
+            echo "AURORA_NATIVE_SBUILD_RC=$sbuild_rc"
+            echo "AURORA_NATIVE_SBUILD_TEE_RC=$tee_rc"
+          } | tee "$RUNNER_TEMP/sbuild-result.env"
 
+          if [[ "$sbuild_rc" -ne 0 || "$tee_rc" -ne 0 ]]; then
+            echo AURORA_NATIVE_SOURCE_001=FAIL | tee "$RUNNER_TEMP/source-001.env"
+            exit 1
+          fi
           grep -q 'AURORA_NATIVE_SBUILD_NETWORK=loopback-only' "$RUNNER_TEMP/source-001.log"
           grep -Rqs '^Status: successful$' "$result"/*.build
           test "$(find "$result" -maxdepth 1 -type f -name '*.deb' | wc -l)" -gt 0
           echo AURORA_NATIVE_SOURCE_001=PASS | tee "$RUNNER_TEMP/source-001.env"
 
-      - name: Audit native path
+      - name: Collect native evidence
         if: always()
         shell: bash
         run: |
@@ -188,25 +226,26 @@ jobs:
             build/ksq-native-v2/evidence/apparmor-denied-all.log \
             > build/ksq-native-v2/evidence/apparmor-denied-relevant.log || true
           denials="$(wc -l < build/ksq-native-v2/evidence/apparmor-denied-relevant.log)"
-          localapt=FAIL; mmdebstrap=FAIL; source001=FAIL
-          [[ -f "$RUNNER_TEMP/local-apt.env" ]] && localapt=PASS
-          [[ -f "$RUNNER_TEMP/mmdebstrap.env" ]] && mmdebstrap=PASS
-          [[ -f "$RUNNER_TEMP/source-001.env" ]] && source001=PASS
+          localapt=FAIL; mmdebstrap=FAIL; sourceprep=FAIL; source001=FAIL
+          [[ -f "$RUNNER_TEMP/local-apt.env" ]] && grep -qx 'AURORA_NATIVE_LOCAL_APT_ISOLATION=PASS' "$RUNNER_TEMP/local-apt.env" && localapt=PASS
+          [[ -f "$RUNNER_TEMP/mmdebstrap.env" ]] && grep -qx 'AURORA_NATIVE_MMDEBSTRAP_BUILDD=PASS' "$RUNNER_TEMP/mmdebstrap.env" && mmdebstrap=PASS
+          [[ -f "$RUNNER_TEMP/source-prep.env" ]] && grep -qx 'AURORA_NATIVE_SOURCE_PREP=PASS' "$RUNNER_TEMP/source-prep.env" && sourceprep=PASS
+          [[ -f "$RUNNER_TEMP/source-001.env" ]] && grep -qx 'AURORA_NATIVE_SOURCE_001=PASS' "$RUNNER_TEMP/source-001.env" && source001=PASS
           {
             echo 'AURORA_NATIVE_DOCKER_USED=0'
             echo 'AURORA_NATIVE_CUSTOM_APPARMOR_USED=0'
             echo "AURORA_NATIVE_LOCAL_APT=$localapt"
             echo "AURORA_NATIVE_MMDEBSTRAP=$mmdebstrap"
+            echo "AURORA_NATIVE_SOURCE_PREP=$sourceprep"
             echo "AURORA_NATIVE_SOURCE_001=$source001"
             echo "AURORA_NATIVE_RELEVANT_DENIALS=$denials"
           } | tee build/ksq-native-v2/evidence/status.env
-          if [[ "$localapt" == PASS && "$mmdebstrap" == PASS && "$source001" == PASS && "$denials" -eq 0 ]]; then
+          if [[ "$localapt" == PASS && "$mmdebstrap" == PASS && "$sourceprep" == PASS && "$source001" == PASS && "$denials" -eq 0 ]]; then
             echo AURORA_NATIVE_OFFICIAL_PROFILES_LOCAL_APT_PROBE=PASS \
               | tee -a build/ksq-native-v2/evidence/status.env
           else
             echo AURORA_NATIVE_OFFICIAL_PROFILES_LOCAL_APT_PROBE=FAIL \
               | tee -a build/ksq-native-v2/evidence/status.env
-            exit 1
           fi
 
       - name: Upload native evidence
@@ -214,6 +253,16 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: aurora-ksq-native-official-profiles-local-apt
-          path: build/ksq-native-v2/
-          if-no-files-found: warn
+          path: build/ksq-native-v2/evidence/
+          if-no-files-found: error
           retention-days: 30
+
+      - name: Enforce native probe result
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s build/ksq-native-v2/evidence/status.env
+          cat build/ksq-native-v2/evidence/status.env
+          grep -qx 'AURORA_NATIVE_OFFICIAL_PROFILES_LOCAL_APT_PROBE=PASS' \
+            build/ksq-native-v2/evidence/status.env
