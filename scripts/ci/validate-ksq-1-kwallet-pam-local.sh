@@ -106,12 +106,15 @@ for deb in "${candidate_debs[@]}"; do target="${STAGE}/$(basename "${deb}")"; cp
   done
 } > "${EVIDENCE}/binary-control-audit.txt"
 
-cleanup() {
+cleanup_rootfs() {
   [[ ! -e "${ROOTFS}" ]] || mmdebstrap --unshare-helper rm -rf "${ROOTFS}" >/dev/null 2>&1 || true
+}
+cleanup_all() {
+  cleanup_rootfs
   rm -rf "${STAGE}" || true
 }
-trap cleanup EXIT
-cleanup
+trap cleanup_all EXIT
+cleanup_rootfs
 mkdir -p "${ROOTFS}"
 include_args=(); for deb in "${staged[@]}"; do include_args+=("--include=${deb}"); done
 
