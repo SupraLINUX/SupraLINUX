@@ -1,0 +1,424 @@
+name: Aurora KSQ-1 native order 043 against corrected snapshot r2
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-native-order-043-r2-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  native-order-043-r2:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 180
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Qualify stock Resolute native toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          base=build/ksq-1/native-order-043-r2
+          mkdir -p "$base/host-evidence"
+          date --iso-8601=seconds > "$base/host-evidence/start-time.txt"
+          readlink /proc/self/ns/net > "$base/host-evidence/host-netns.txt"
+
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl python3 ubuntu-keyring gpgv \
+            sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+            gzip xz-utils diffutils build-essential apparmor apparmor-utils libcap2-bin
+
+          dpkg-query -W -f='${Package}\t${Version}\n' \
+            sbuild libsbuild-perl mmdebstrap uidmap util-linux apparmor \
+            | sort | tee "$base/host-evidence/toolchain.tsv"
+          grep -q $'^sbuild\t0.91.2ubuntu3$' "$base/host-evidence/toolchain.tsv"
+          grep -q $'^libsbuild-perl\t0.91.2ubuntu3$' "$base/host-evidence/toolchain.tsv"
+          grep -q $'^mmdebstrap\t1.5.7-3$' "$base/host-evidence/toolchain.tsv"
+          grep -q $'^uidmap\t1:4.17.4-2ubuntu3$' "$base/host-evidence/toolchain.tsv"
+
+          test "$(stat -c '%a' /usr/bin/newuidmap)" = 4755
+          test "$(stat -c '%a' /usr/bin/newgidmap)" = 4755
+          test -z "$(getcap /usr/bin/newuidmap /usr/bin/newgidmap || true)"
+          stat -c '%A %a %U %G %u %g %n' /usr/bin/newuidmap /usr/bin/newgidmap \
+            > "$base/host-evidence/uidmap-stock.txt"
+
+          user="$(id -un)"
+          grep "^${user}:" /etc/subuid | tee "$base/host-evidence/subuid.txt"
+          grep "^${user}:" /etc/subgid | tee "$base/host-evidence/subgid.txt"
+
+          sbuild_profile="$(dpkg -L apparmor | grep -E '/etc/apparmor\.d/(usr\.bin\.)?sbuild$' | head -n1)"
+          mmdebstrap_profile="$(dpkg -L apparmor | grep -E '/etc/apparmor\.d/(usr\.bin\.)?mmdebstrap$' | head -n1)"
+          test -s "$sbuild_profile"
+          test -s "$mmdebstrap_profile"
+          grep -q 'userns,' "$sbuild_profile"
+          grep -q 'userns,' "$mmdebstrap_profile"
+          cp "$sbuild_profile" "$base/host-evidence/apparmor-sbuild.profile"
+          cp "$mmdebstrap_profile" "$base/host-evidence/apparmor-mmdebstrap.profile"
+          sudo aa-status > "$base/host-evidence/aa-status.txt"
+
+          legacy=(
+            scripts/ci/ksq-docker-builder.py
+            scripts/ci/install-ksq-apparmor-profile.sh
+            scripts/ci/apparmor/supralinux-ksq-unshare
+            scripts/ci/prepare-ksq-1-local-runner.sh
+            scripts/ci/run-ksq-1-local-range.sh
+            scripts/ci/configure-ksq-uidmap-filecaps.sh
+          )
+          for path in "${legacy[@]}"; do
+            test ! -e "$path" || { echo "AURORA_NATIVE_LEGACY_PATH_PRESENT=$path" >&2; exit 1; }
+          done
+
+      - name: Download exact 001-020 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9818465016'
+          path: ${{ runner.temp }}/prior-001-020
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33546093974'
+          digest-mismatch: error
+
+      - name: Download exact 021-040 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9824689982'
+          path: ${{ runner.temp }}/prior-021-040
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33561782526'
+          digest-mismatch: error
+
+      - name: Download causal 041-042 temporary checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9882029309'
+          path: ${{ runner.temp }}/prior-041-043-failed
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33725437853'
+          digest-mismatch: error
+
+      - name: Restore 001-040 and prove temporary 041-042 checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/native-order-043-r2
+          p1="$RUNNER_TEMP/prior-001-020"
+          e1="$p1/ksq-1/full/chunk-001-020/evidence"
+          d1="$p1/ksq-1/full/chunk-001-020/new-debs"
+          p2="$RUNNER_TEMP/prior-021-040"
+          e2="$p2/ksq-1/full/chunk-021-040/evidence"
+          d2="$p2/ksq-1/full/chunk-021-040/new-debs"
+          p3="$RUNNER_TEMP/prior-041-043-failed"
+          e3="$p3/ksq-1/full/chunk-041-043/evidence"
+          d3="$p3/ksq-1/full/chunk-041-043/new-debs"
+
+          grep -qx 'AURORA_KSQ_1_RANGE_STATUS=PASS' "$e1/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_NEW_DEBS=103' "$e1/range-status.env"
+          test "$(sha256sum "$e1/new-debs.sha256" | awk '{print $1}')" = b0be04014893808a79aaea514e2a5c4bc968b5c9c9769d8d7ea6cae7992b01f9
+          test "$(sha256sum "$e1/build-manifest.tsv" | awk '{print $1}')" = ff87f96c85bc4ba1553f16b3700cf701eca04e9b749a1c739bb1088cceb3485b
+          test "$(find "$d1" -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 103
+          (cd "$d1" && sha256sum -c "$e1/new-debs.sha256")
+
+          grep -qx 'AURORA_KSQ_1_RANGE_STATUS=PASS' "$e2/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_NEW_DEBS=89' "$e2/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_ACCUMULATED_DEBS=192' "$e2/range-status.env"
+          test "$(sha256sum "$e2/new-debs.sha256" | awk '{print $1}')" = 3924d0151581a53f505ca8cd0a615b4ffee9c246afeabec003633905db159bfa
+          test "$(sha256sum "$e2/build-manifest.tsv" | awk '{print $1}')" = 6e121efdeb62b8c0c6c48ae14f60e41e452e16fe177f03536f1c2677848b111a
+          test "$(find "$d2" -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 89
+          (cd "$d2" && sha256sum -c "$e2/new-debs.sha256")
+
+          # This artifact is NOT promoted as r2 certification. It is used only
+          # to avoid rebuilding orders 41/42 while isolating the causal retest
+          # of order 43. Full 41-43 regression remains mandatory after PASS.
+          grep -qx 'AURORA_KSQ_1_RANGE_STATUS=FAIL' "$e3/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_LAST_COMPLETED_ORDER=42' "$e3/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_FAILED_ORDER=43' "$e3/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_FAILED_SOURCE=kpipewire' "$e3/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_NEW_DEBS=7' "$e3/range-status.env"
+          test "$(sha256sum "$e3/build-manifest.tsv" | awk '{print $1}')" = 81db3a82b84b1620d89b3ae991c76bdc11a559c560c07c6a2cb906d34709189a
+          test "$(sha256sum "$e3/new-debs.sha256" | awk '{print $1}')" = 697cec4f56368b8288a9a368b198f2a9064d67de82231041ca26018770e2590e
+          awk -F '\t' '$1 == 41 && $2 == "kf6-kunitconversion" && $10 == "PASS" {a=1} $1 == 42 && $2 == "knighttime" && $10 == "PASS" {b=1} $1 == 43 && $2 == "kpipewire" && $10 == "FAIL" {c=1} END {exit (a&&b&&c) ? 0 : 1}' "$e3/build-manifest.tsv"
+          grep -qx 'AURORA_KSQ_1_BUILD_RESULT=PASS' "$e3/41-kf6-kunitconversion/build-status.env"
+          grep -qx 'AURORA_KSQ_1_BUILD_RESULT=PASS' "$e3/42-knighttime/build-status.env"
+          test "$(find "$d3" -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 7
+          (cd "$d3" && sha256sum -c "$e3/new-debs.sha256")
+
+          for order in 41-kf6-kunitconversion 42-knighttime; do
+            mapfile -t logs < <(find "$e3/$order" -maxdepth 1 -type f -name '*.build' -print)
+            test "${#logs[@]}" -eq 1
+            grep -q 'AURORA_NATIVE_BUILD_NETWORK_WRAPPER=START' "${logs[0]}"
+            grep -q 'AURORA_NATIVE_BUILD_NETNS_DIFFERENT=PASS' "${logs[0]}"
+            grep -q 'AURORA_NATIVE_BUILD_PROC_NETIFS_ONLY_LO=PASS' "${logs[0]}"
+            grep -q 'AURORA_NATIVE_BUILD_IPV4_ROUTE_ISOLATION=PASS' "${logs[0]}"
+            grep -q 'AURORA_NATIVE_BUILD_NETWORK=isolated' "${logs[0]}"
+            grep -q '^Status: successful$' "${logs[0]}"
+          done
+
+          mapfile -t fail_logs < <(find "$e3/43-kpipewire/failed-output" -maxdepth 1 -type f -name '*.build' -print)
+          test "${#fail_logs[@]}" -eq 1
+          grep -Fq 'Failed to fetch file:/opt/supralinux/archive/20260829T022000Z/ubuntu/pool/main/d/dbus/dbus-user-session_1.16.2-2ubuntu4_amd64.deb' "${fail_logs[0]}"
+          grep -Fq 'File not found - /opt/supralinux/archive/20260829T022000Z/ubuntu/pool/main/d/dbus/dbus-user-session_1.16.2-2ubuntu4_amd64.deb' "${fail_logs[0]}"
+          grep -q '^Fail-Stage: install-deps$' "${fail_logs[0]}"
+
+          comm -12 \
+            <(find "$d1" -maxdepth 1 -type f -name '*.deb' -printf '%f\n' | sort) \
+            <(find "$d2" -maxdepth 1 -type f -name '*.deb' -printf '%f\n' | sort) \
+            > "$base/checkpoint-001-040-overlap.txt"
+          test ! -s "$base/checkpoint-001-040-overlap.txt"
+          comm -12 \
+            <(cat "$e1/new-debs.sha256" "$e2/new-debs.sha256" | awk '{print $2}' | sort) \
+            <(find "$d3" -maxdepth 1 -type f -name '*.deb' -printf '%f\n' | sort) \
+            > "$base/checkpoint-041-042-overlap.txt"
+          test ! -s "$base/checkpoint-041-042-overlap.txt"
+
+          mkdir -p build/ksq-1/full/debs
+          cp -a "$d1"/*.deb build/ksq-1/full/debs/
+          cp -a "$d2"/*.deb build/ksq-1/full/debs/
+          cp -a "$d3"/*.deb build/ksq-1/full/debs/
+          test "$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 199
+          echo AURORA_KSQ_1_ORDER_043_TEMP_PRIOR_DEBS=199 | tee "$base/prior-debs.env"
+          echo AURORA_KSQ_1_ORDER_041_042_REQUIRES_R2_REGRESSION=1 >> "$base/prior-debs.env"
+
+      - name: Download and independently validate canonical r2 slice
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/native-order-043-r2
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_STATUS" = INDEPENDENTLY_VALIDATED
+          test "$AURORA_KSQ_SNAPSHOT" = 20260829T022000Z-r2
+          test "$AURORA_KSQ_SNAPSHOT_SLICE_ID" = 20260829T022000Z-r2
+          test "$AURORA_KSQ_UBUNTU_SNAPSHOT" = 20260829T022000Z
+          test "$AURORA_KSQ_SNAPSHOT_ARCH" = amd64
+          test "$AURORA_KSQ_SNAPSHOT_ARCH_VARIANTS" = disabled
+          test "$AURORA_KSQ_SNAPSHOT_INSTALL_RECOMMENDS" = default
+          test "$AURORA_KSQ_SNAPSHOT_BINARY_OBJECTS" = 1783
+          test "$AURORA_KSQ_SNAPSHOT_BINARY_BYTES" = 785219274
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256" = 23413ddf1c1820aaa01dfa81005b37e8c9611bad2d0a632664d0e08282e69c3b
+          test "$AURORA_KSQ_SNAPSHOT_INDEPENDENT_ARTIFACT_SHA256" = c628aadcb577d5d1777ebf0b6d6c2e0d9c737fbfc82aa920e60f624a30c23b36
+
+          out="$RUNNER_TEMP/release-r2"
+          mkdir -p "$out"
+          archive="$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET"
+          manifest="$out/$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/octet-stream' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_ID" \
+            -o "$archive"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/octet-stream' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST_ASSET_ID" \
+            -o "$manifest"
+
+          test "$(stat -c '%s' "$archive")" = "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES"
+          test "$(sha256sum "$archive" | awk '{print $1}')" = "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256"
+          test "$(sha256sum "$manifest" | awk '{print $1}')" = "$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST_SHA256"
+          grep -qx "AURORA_KSQ_SNAPSHOT_SLICE_ID=$AURORA_KSQ_SNAPSHOT_SLICE_ID" "$manifest"
+          grep -qx "AURORA_KSQ_UBUNTU_SNAPSHOT=$AURORA_KSQ_UBUNTU_SNAPSHOT" "$manifest"
+          grep -qx 'AURORA_KSQ_SNAPSHOT_INSTALL_RECOMMENDS=default' "$manifest"
+          grep -qx 'AURORA_KSQ_SNAPSHOT_BINARY_OBJECTS=1783' "$manifest"
+
+          sudo install -d /opt/supralinux/archive
+          sudo tar -C /opt/supralinux/archive -xf "$archive"
+          slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT_SLICE_ID"
+          python3 scripts/ci/ksq-snapshot-slice-r2.py validate --slice-root "$slice"
+          grep -qx 'AURORA_KSQ_SNAPSHOT_SLICE_INSTALL_RECOMMENDS=default' "$slice/provenance.env"
+          grep -qx 'AURORA_KSQ_SNAPSHOT_SLICE_ARCH_VARIANTS=disabled' "$slice/provenance.env"
+          grep -qx 'AURORA_KSQ_SNAPSHOT_SLICE_BINARY_OBJECTS=1783' "$slice/provenance.env"
+          test -f "$slice/ubuntu/pool/main/d/dbus/dbus-user-session_1.16.2-2ubuntu4_amd64.deb"
+          test ! -e "$slice/ubuntu/pool/main/d/dbus/dbus-user-session_1.16.2-2ubuntu4_amd64v3.deb"
+          cp "$manifest" "$base/"
+          sha256sum "$archive" "$manifest" > "$base/r2-release-assets.sha256"
+
+      - name: Recreate certified metadata and clean r2 native buildd environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/native-order-043-r2
+          set -a
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          set +a
+          slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT_SLICE_ID"
+
+          python3 scripts/ci/restore-ksq-0-certified-evidence.py \
+            --slice-root "$slice" --workspace "$GITHUB_WORKSPACE"
+          bash scripts/ci/validate-kde-stack-source-manifests.sh
+          python3 scripts/ci/validate-kde-stack-roots.py
+
+          aptiso="$RUNNER_TEMP/ksq-apt-isolation"
+          mkdir -p "$aptiso/parts"
+          : > "$aptiso/main.conf"
+          cat > "$aptiso/preload.conf" <<EOF_APT
+          Dir::Etc::Parts "$aptiso/parts";
+          Dir::Etc::main "$aptiso/main.conf";
+          EOF_APT
+
+          APT_CONFIG="$aptiso/preload.conf" \
+            AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" \
+            bash scripts/ci/prepare-ksq-1-local-apt-metadata.sh \
+            2>&1 | tee "$base/local-apt-metadata.log"
+          if grep -Eq 'c-n-f|/cnf/|Components' "$base/local-apt-metadata.log"; then
+            echo AURORA_NATIVE_APT_ISOLATION_FAILURE >&2
+            exit 1
+          fi
+          grep -Fq "file:$slice/ubuntu" "$base/local-apt-metadata.log"
+
+          python3 scripts/ci/generate-kde-build-closure.py
+          cmp build/ksq-0/build-order.tsv build/ksq-0/canonical/build-order.tsv
+          cmp build/ksq-0/closure-status.env build/ksq-0/canonical/closure-status.env
+          test "$(awk -F '\t' '$1 == 43 {print $2}' build/ksq-0/build-order.tsv)" = kpipewire
+
+          AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" \
+            bash scripts/ci/prepare-ksq-1-local-build-environment.sh \
+            2>&1 | tee "$base/mmdebstrap-buildd.log"
+          test -s build/ksq-1/environment/resolute-amd64-buildd.tar.zst
+          grep -Fq "AURORA_KSQ_1_BUILD_ENV_LOCAL_SLICE=$slice" build/ksq-1/environment/build-environment.env
+
+          bash scripts/ci/configure-ksq-1-native-sbuild-network-proof.sh \
+            2>&1 | tee "$base/network-proof-config.log"
+          grep -qx 'AURORA_KSQ_1_NATIVE_NETWORK_PROOF=PASS' \
+            build/ksq-1/environment/native-sbuild-network-proof.env
+
+      - name: Build only order 043 kpipewire against r2
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/native-order-043-r2
+          . build/ksq-1/environment/build-environment.env
+          export SBUILD_CONFIG="$AURORA_KSQ_1_SBUILD_CONFIG"
+          set +e
+          bash scripts/ci/build-ksq-1-range.sh 43 43 \
+            2>&1 | tee "$base/order-043.log"
+          pipe_status=("${PIPESTATUS[@]}")
+          set -e
+          {
+            echo "AURORA_NATIVE_ORDER_043_COMMAND_RC=${pipe_status[0]}"
+            echo "AURORA_NATIVE_ORDER_043_TEE_RC=${pipe_status[1]}"
+          } > "$base/order-043-command.env"
+          exit 0
+
+      - name: Audit isolated order 043 result
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/native-order-043-r2
+          chunk=build/ksq-1/full/chunk-043-043
+          evidence="$chunk/evidence"
+          status=FAIL
+          command_rc=missing
+          tee_rc=missing
+
+          start="$(cat "$base/host-evidence/start-time.txt")"
+          sudo journalctl -k --since "$start" --no-pager 2>/dev/null \
+            | grep 'apparmor="DENIED"' > "$base/host-evidence/apparmor-denied-all.log" || true
+          grep -Ei 'profile="[^\"]*(sbuild|mmdebstrap|unprivileged_userns)[^\"]*"|comm="(sbuild|mmdebstrap|unshare|mount|newuidmap|newgidmap)"' \
+            "$base/host-evidence/apparmor-denied-all.log" \
+            > "$base/host-evidence/apparmor-denied-relevant.log" || true
+          denials="$(wc -l < "$base/host-evidence/apparmor-denied-relevant.log")"
+
+          if [[ -f "$base/order-043-command.env" ]]; then
+            . "$base/order-043-command.env"
+            command_rc="$AURORA_NATIVE_ORDER_043_COMMAND_RC"
+            tee_rc="$AURORA_NATIVE_ORDER_043_TEE_RC"
+          fi
+
+          if [[ "$command_rc" == 0 && "$tee_rc" == 0 && "$denials" -eq 0 \
+                && -f "$evidence/range-status.env" && -f "$evidence/build-manifest.tsv" ]]; then
+            if grep -qx 'AURORA_KSQ_1_RANGE_STATUS=PASS' "$evidence/range-status.env" \
+              && grep -qx 'AURORA_KSQ_1_RANGE_FIRST_ORDER=43' "$evidence/range-status.env" \
+              && grep -qx 'AURORA_KSQ_1_RANGE_LAST_ORDER=43' "$evidence/range-status.env" \
+              && grep -qx 'AURORA_KSQ_1_RANGE_SOURCES=1' "$evidence/range-status.env" \
+              && awk -F '\t' '$1 == 43 && $2 == "kpipewire" && $10 == "PASS" {found=1} END {exit found ? 0 : 1}' "$evidence/build-manifest.tsv"; then
+              mapfile -t build_logs < <(find "$evidence/43-kpipewire" -maxdepth 1 -type f -name '*.build' -print | sort)
+              if [[ "${#build_logs[@]}" -eq 1 ]]; then
+                log="${build_logs[0]}"
+                logs_ok=1
+                grep -q 'AURORA_NATIVE_BUILD_NETWORK_WRAPPER=START' "$log" || logs_ok=0
+                grep -q 'AURORA_NATIVE_BUILD_NETNS_DIFFERENT=PASS' "$log" || logs_ok=0
+                grep -q 'AURORA_NATIVE_BUILD_PROC_NETIFS=lo' "$log" || logs_ok=0
+                grep -q 'AURORA_NATIVE_BUILD_PROC_NETIFS_ONLY_LO=PASS' "$log" || logs_ok=0
+                grep -q 'AURORA_NATIVE_BUILD_IPV4_ROUTES=0' "$log" || logs_ok=0
+                grep -q 'AURORA_NATIVE_BUILD_IPV4_ROUTE_ISOLATION=PASS' "$log" || logs_ok=0
+                grep -q 'AURORA_NATIVE_BUILD_NETWORK=isolated' "$log" || logs_ok=0
+                grep -q '^Status: successful$' "$log" || logs_ok=0
+                grep -q 'dbus-user-session' "$log" || logs_ok=0
+                if grep -Fq 'Failed to fetch file:/opt/supralinux/archive/20260829T022000Z-r2/ubuntu/pool/main/d/dbus/dbus-user-session_1.16.2-2ubuntu4_amd64.deb' "$log"; then logs_ok=0; fi
+                if grep -Ei '^(Get|Hit|Ign|Err):.*https?://' "$log"; then logs_ok=0; fi
+                [[ "$logs_ok" -eq 1 ]] && status=PASS
+              fi
+            fi
+          fi
+
+          new_debs=0
+          accumulated=0
+          if [[ -f "$evidence/range-status.env" ]]; then
+            new_debs="$(awk -F= '$1=="AURORA_KSQ_1_RANGE_NEW_DEBS"{print $2}' "$evidence/range-status.env")"
+            accumulated="$(awk -F= '$1=="AURORA_KSQ_1_RANGE_ACCUMULATED_DEBS"{print $2}' "$evidence/range-status.env")"
+          fi
+          if [[ "$status" == PASS ]]; then
+            [[ "$new_debs" =~ ^[0-9]+$ && "$new_debs" -gt 0 ]] || status=FAIL
+            [[ "$accumulated" =~ ^[0-9]+$ && "$accumulated" -gt 199 ]] || status=FAIL
+          fi
+
+          {
+            echo "AURORA_NATIVE_ORDER_043_R2_COMMAND_RC=$command_rc"
+            echo "AURORA_NATIVE_ORDER_043_R2_TEE_RC=$tee_rc"
+            echo "AURORA_NATIVE_ORDER_043_R2_APPARMOR_DENIALS=$denials"
+            echo "AURORA_NATIVE_ORDER_043_R2_PRIOR_DEBS=199"
+            echo "AURORA_NATIVE_ORDER_043_R2_NEW_DEBS=$new_debs"
+            echo "AURORA_NATIVE_ORDER_043_R2_ACCUMULATED_DEBS=$accumulated"
+            echo "AURORA_NATIVE_ORDER_043_R2_DOCKER_USED=0"
+            echo "AURORA_NATIVE_ORDER_043_R2_CUSTOM_APPARMOR_USED=0"
+            echo "AURORA_NATIVE_ORDER_043_R2_UIDMAP_FILECAP_PATCH_USED=0"
+            echo "AURORA_NATIVE_ORDER_043_R2_TEMP_041_042_CHECKPOINT_ONLY=1"
+            echo "AURORA_NATIVE_ORDER_043_R2_FULL_041_043_REGRESSION_REQUIRED=1"
+            echo "AURORA_NATIVE_ORDER_043_R2_STATUS=$status"
+          } | tee "$base/audit.env"
+
+      - name: Upload isolated order 043 r2 evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-native-order-043-r2
+          path: |
+            build/ksq-1/native-order-043-r2/
+            build/ksq-1/environment/*.env
+            build/ksq-1/environment/*.txt
+            build/ksq-1/environment/*.sha256
+            build/ksq-1/environment/sbuild-local.conf
+            build/ksq-1/full/chunk-043-043/evidence/
+            build/ksq-1/full/chunk-043-043/new-debs/
+            build/ksq-0/build-order.tsv
+            build/ksq-0/closure-status.env
+            scripts/ci/aurora-ksq-snapshot-release.env
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Enforce isolated order 043 r2 result
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat build/ksq-1/native-order-043-r2/audit.env
+          grep -qx 'AURORA_NATIVE_ORDER_043_R2_STATUS=PASS' \
+            build/ksq-1/native-order-043-r2/audit.env
