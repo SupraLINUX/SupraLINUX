@@ -40,6 +40,20 @@ jobs:
           grep -q $'^libsbuild-perl\t0.91.2ubuntu3$' "$RUNNER_TEMP/toolchain.tsv"
           grep -q $'^mmdebstrap\t1.5.7-3$' "$RUNNER_TEMP/toolchain.tsv"
 
+          {
+            echo '# Ubuntu Resolute installed sbuild network implementation evidence'
+            dpkg-query -W -f='${Package}\t${Version}\n' sbuild libsbuild-perl
+            for file in $(dpkg -L sbuild libsbuild-perl | grep -E '(^/usr/bin/sbuild$|\.pm$)' | sort -u); do
+              matches="$(grep -nE -- 'nonet|enable_network|build_env_cmnd|dpkg-buildpackage' "$file" || true)"
+              if [[ -n "$matches" ]]; then
+                echo "### $file"
+                grep -nE -C 10 -- 'nonet|enable_network|build_env_cmnd|dpkg-buildpackage' "$file" || true
+              fi
+            done
+          } > "$RUNNER_TEMP/sbuild-network-implementation.log"
+          grep -q -- '--nonet' "$RUNNER_TEMP/sbuild-network-implementation.log"
+          grep -q 'enable_network' "$RUNNER_TEMP/sbuild-network-implementation.log"
+
           user="$(id -un)"
           grep "^${user}:" /etc/subuid | tee "$RUNNER_TEMP/subuid.txt"
           grep "^${user}:" /etc/subgid | tee "$RUNNER_TEMP/subgid.txt"
@@ -169,6 +183,43 @@ jobs:
           test -s "$work/prepared-source.env"
           echo AURORA_NATIVE_SOURCE_PREP=PASS | tee "$RUNNER_TEMP/source-prep.env"
 
+      - name: Install network proof wrapper in actual build context
+        shell: bash
+        run: |
+          set -euo pipefail
+          . build/ksq-1/environment/build-environment.env
+          probe_dir="$GITHUB_WORKSPACE/build/ksq-native-v2/probe-bin"
+          mkdir -p "$probe_dir"
+          cat > "$probe_dir/network-proof-wrapper" <<'EOF_WRAPPER'
+          #!/bin/sh
+          set -eu
+          echo AURORA_NATIVE_BUILD_NETWORK_WRAPPER=START
+          printf 'AURORA_NATIVE_BUILD_LABEL='
+          cat /proc/self/attr/current
+          printf 'AURORA_NATIVE_BUILD_NETNS='
+          readlink /proc/self/ns/net
+          netifs="$(find /sys/class/net -mindepth 1 -maxdepth 1 -printf '%f\n' | sort | paste -sd, -)"
+          echo "AURORA_NATIVE_BUILD_NETIFS=$netifs"
+          sed 's/^/AURORA_NATIVE_BUILD_ROUTE: /' /proc/net/route || true
+          if find /sys/class/net -mindepth 1 -maxdepth 1 ! -name lo -print -quit | grep -q .; then
+            echo AURORA_NATIVE_BUILD_NETWORK=FAIL
+            exit 97
+          fi
+          echo AURORA_NATIVE_BUILD_NETWORK=loopback-only
+          exec "$@"
+          EOF_WRAPPER
+          chmod 0755 "$probe_dir/network-proof-wrapper"
+
+          cat >> "$AURORA_KSQ_1_SBUILD_CONFIG" <<EOF_SBUILD_PROBE
+          \$unshare_bind_mounts = [
+            { directory => "$AURORA_KSQ_1_BUILD_ENV_LOCAL_SLICE/ubuntu", mountpoint => "$AURORA_KSQ_1_BUILD_ENV_LOCAL_SLICE/ubuntu" },
+            { directory => "$probe_dir", mountpoint => "$probe_dir" },
+          ];
+          \$build_env_cmnd = "$probe_dir/network-proof-wrapper";
+          EOF_SBUILD_PROBE
+          cat "$AURORA_KSQ_1_SBUILD_CONFIG" | tee "$RUNNER_TEMP/sbuild-probe-config.txt"
+          echo AURORA_NATIVE_BUILD_NETWORK_WRAPPER_CONFIGURED=PASS | tee "$RUNNER_TEMP/network-wrapper.env"
+
       - name: Build prepared source 001 natively with official sbuild profile
         shell: bash
         run: |
@@ -190,7 +241,6 @@ jobs:
             --jobs=2 --no-enable-network --no-run-lintian --no-run-autopkgtest \
             --purge-build=always --purge-deps=always \
             --resolve-alternatives --bd-uninstallable-explainer=apt \
-            --starting-build-commands='echo -n AURORA_NATIVE_BUILD_LABEL=; cat /proc/self/attr/current; if find /sys/class/net -mindepth 1 -maxdepth 1 ! -name lo -print -quit | grep -q .; then echo AURORA_NATIVE_SBUILD_NETWORK=FAIL; exit 97; else echo AURORA_NATIVE_SBUILD_NETWORK=loopback-only; fi' \
             "$AURORA_KSQ_1_PREPARED_DSC" \
             2>&1 | tee "$RUNNER_TEMP/source-001.log"
           pipe_status=("${PIPESTATUS[@]}")
@@ -206,9 +256,12 @@ jobs:
             echo AURORA_NATIVE_SOURCE_001=FAIL | tee "$RUNNER_TEMP/source-001.env"
             exit 1
           fi
-          grep -q 'AURORA_NATIVE_SBUILD_NETWORK=loopback-only' "$RUNNER_TEMP/source-001.log"
+          grep -q 'AURORA_NATIVE_BUILD_NETWORK_WRAPPER=START' "$RUNNER_TEMP/source-001.log"
+          grep -q 'AURORA_NATIVE_BUILD_NETWORK=loopback-only' "$RUNNER_TEMP/source-001.log"
+          grep -q -- '--nonet' "$RUNNER_TEMP/source-001.log"
           grep -Rqs '^Status: successful$' "$result"/*.build
           test "$(find "$result" -maxdepth 1 -type f -name '*.deb' | wc -l)" -gt 0
+          echo AURORA_NATIVE_SBUILD_NONET=PASS | tee "$RUNNER_TEMP/sbuild-network.env"
           echo AURORA_NATIVE_SOURCE_001=PASS | tee "$RUNNER_TEMP/source-001.env"
 
       - name: Collect native evidence
@@ -228,10 +281,12 @@ jobs:
             build/ksq-native-v2/evidence/apparmor-denied-all.log \
             > build/ksq-native-v2/evidence/apparmor-denied-relevant.log || true
           denials="$(wc -l < build/ksq-native-v2/evidence/apparmor-denied-relevant.log)"
-          localapt=FAIL; mmdebstrap=FAIL; sourceprep=FAIL; source001=FAIL
+          localapt=FAIL; mmdebstrap=FAIL; sourceprep=FAIL; networkwrapper=FAIL; nonet=FAIL; source001=FAIL
           [[ -f "$RUNNER_TEMP/local-apt.env" ]] && grep -qx 'AURORA_NATIVE_LOCAL_APT_ISOLATION=PASS' "$RUNNER_TEMP/local-apt.env" && localapt=PASS
           [[ -f "$RUNNER_TEMP/mmdebstrap.env" ]] && grep -qx 'AURORA_NATIVE_MMDEBSTRAP_BUILDD=PASS' "$RUNNER_TEMP/mmdebstrap.env" && mmdebstrap=PASS
           [[ -f "$RUNNER_TEMP/source-prep.env" ]] && grep -qx 'AURORA_NATIVE_SOURCE_PREP=PASS' "$RUNNER_TEMP/source-prep.env" && sourceprep=PASS
+          [[ -f "$RUNNER_TEMP/network-wrapper.env" ]] && grep -qx 'AURORA_NATIVE_BUILD_NETWORK_WRAPPER_CONFIGURED=PASS' "$RUNNER_TEMP/network-wrapper.env" && networkwrapper=PASS
+          [[ -f "$RUNNER_TEMP/sbuild-network.env" ]] && grep -qx 'AURORA_NATIVE_SBUILD_NONET=PASS' "$RUNNER_TEMP/sbuild-network.env" && nonet=PASS
           [[ -f "$RUNNER_TEMP/source-001.env" ]] && grep -qx 'AURORA_NATIVE_SOURCE_001=PASS' "$RUNNER_TEMP/source-001.env" && source001=PASS
           {
             echo 'AURORA_NATIVE_DOCKER_USED=0'
@@ -239,10 +294,12 @@ jobs:
             echo "AURORA_NATIVE_LOCAL_APT=$localapt"
             echo "AURORA_NATIVE_MMDEBSTRAP=$mmdebstrap"
             echo "AURORA_NATIVE_SOURCE_PREP=$sourceprep"
+            echo "AURORA_NATIVE_NETWORK_WRAPPER=$networkwrapper"
+            echo "AURORA_NATIVE_SBUILD_NONET=$nonet"
             echo "AURORA_NATIVE_SOURCE_001=$source001"
             echo "AURORA_NATIVE_RELEVANT_DENIALS=$denials"
           } | tee build/ksq-native-v2/evidence/status.env
-          if [[ "$localapt" == PASS && "$mmdebstrap" == PASS && "$sourceprep" == PASS && "$source001" == PASS && "$denials" -eq 0 ]]; then
+          if [[ "$localapt" == PASS && "$mmdebstrap" == PASS && "$sourceprep" == PASS && "$networkwrapper" == PASS && "$nonet" == PASS && "$source001" == PASS && "$denials" -eq 0 ]]; then
             echo AURORA_NATIVE_OFFICIAL_PROFILES_LOCAL_APT_PROBE=PASS \
               | tee -a build/ksq-native-v2/evidence/status.env
           else
