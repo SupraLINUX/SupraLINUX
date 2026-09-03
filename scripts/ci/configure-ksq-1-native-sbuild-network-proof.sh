@@ -20,6 +20,7 @@ fail() {
 TARBALL="${AURORA_KSQ_1_BUILD_ENV_TARBALL:?missing buildd tarball}"
 SBUILD_CONFIG_FILE="${AURORA_KSQ_1_SBUILD_CONFIG:?missing sbuild config}"
 SLICE_ROOT="${AURORA_KSQ_1_BUILD_ENV_LOCAL_SLICE:?missing local slice}"
+TAR_PATHS="${ROOT}/build/ksq-1/environment/buildd-tar-paths.txt"
 
 [[ -s "${TARBALL}" ]] || fail "buildd tarball missing"
 [[ -f "${SBUILD_CONFIG_FILE}" ]] || fail "sbuild config missing"
@@ -27,10 +28,13 @@ SLICE_ROOT="${AURORA_KSQ_1_BUILD_ENV_LOCAL_SLICE:?missing local slice}"
 [[ "${PROBE_DIR}" == /opt/supralinux/* ]] || fail "probe source must live below /opt/supralinux"
 
 # The unshare backend requires an existing mount target in the extracted rootfs.
+# Materialize the normalized tar listing before testing it. Using grep -q in the
+# tar|sed pipeline under pipefail makes grep close the pipe after a match, which
+# can SIGPIPE tar/sed and produce a false negative even when /mnt exists.
 tar --zstd -tf "${TARBALL}" \
     | sed -e 's#^\./##' -e 's#/$##' \
-    | grep -qx 'mnt' \
-    || fail "/mnt absent from buildd rootfs"
+    | sort -u > "${TAR_PATHS}"
+grep -qx 'mnt' "${TAR_PATHS}" || fail "/mnt absent from buildd rootfs"
 
 root_cmd=()
 if (( EUID != 0 )); then
