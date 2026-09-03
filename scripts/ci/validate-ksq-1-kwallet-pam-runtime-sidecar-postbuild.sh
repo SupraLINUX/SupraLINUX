@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 SOURCE="${ROOT}/scripts/ci/validate-ksq-1-kwallet-pam-runtime-sidecar.sh"
 EXPECTED_BLOB="41d95eb5126052229e822061e979b32e700f7c33"
-TMP="${ROOT}/scripts/ci/.validate-ksq-1-kwallet-runtime-sidecar-v2-${GITHUB_RUN_ID:-local}.sh"
+TMP="${ROOT}/scripts/ci/.validate-ksq-1-kwallet-runtime-sidecar-v3-${GITHUB_RUN_ID:-local}.sh"
 
 fail() { echo "AURORA_KSQ_1_KWALLET_POSTBUILD_FAILURE: $*" >&2; exit 1; }
 
@@ -12,7 +12,7 @@ fail() { echo "AURORA_KSQ_1_KWALLET_POSTBUILD_FAILURE: $*" >&2; exit 1; }
 command -v git >/dev/null || fail "git missing"
 command -v python3 >/dev/null || fail "python3 missing"
 [[ "$(git -C "${ROOT}" hash-object "${SOURCE}")" == "${EXPECTED_BLOB}" ]] \
-  || fail "source validator blob changed; review the v2 delta before reuse"
+  || fail "source validator blob changed; review the v3 delta before reuse"
 
 python3 - "${SOURCE}" "${TMP}" <<'PY'
 from pathlib import Path
@@ -136,7 +136,21 @@ printf 'AURORA_KSQ_1_KWALLET_SOLVER_DEBS=%s\nAURORA_KSQ_1_KWALLET_SOLVER_SELECTE
 SOLVER_DEB_COUNT="${SIMULATED_INSTALL_COUNT}"
 '''
 
-target.write_text(text[:start] + replacement + text[end:])
+patched = text[:start] + replacement + text[end:]
+minbase_marker = '  --mode=unshare --variant=minbase --architectures=amd64 \\\n'
+apt_marker = '  --mode=unshare --variant=apt --architectures=amd64 \\\n'
+if patched.count(minbase_marker) != 1:
+    raise SystemExit('postbuild validator: expected exactly one minbase bootstrap marker')
+patched = patched.replace(minbase_marker, apt_marker, 1)
+install_inputs_marker = 'printf \'AURORA_KSQ_1_KWALLET_INCLUDE_DEBS=%s\\n\' "${CLOSURE_DEB_COUNT}" > "${EVIDENCE}/installation-inputs.env"\n'
+if patched.count(install_inputs_marker) != 1:
+    raise SystemExit('postbuild validator: installation input marker is not unique')
+patched = patched.replace(
+    install_inputs_marker,
+    install_inputs_marker + 'printf \'AURORA_KSQ_1_KWALLET_BOOTSTRAP_VARIANT=apt\\n\' >> "${EVIDENCE}/installation-inputs.env"\n',
+    1,
+)
+target.write_text(patched)
 PY
 
 chmod 0755 "${TMP}"
