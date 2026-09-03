@@ -5,28 +5,52 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 STATE="${ROOT}/build/ksq-1/full"
 DEBS="${STATE}/debs"
 EVIDENCE="${STATE}/kwallet-pam-validation"
-SNAPSHOT="20260829T022000Z"
-SLICE_ROOT="${AURORA_KSQ_LOCAL_SLICE_ROOT:-/opt/supralinux/archive/${SNAPSHOT}}"
-SOURCES="${ROOT}/build/ksq-0/apt/resolute.sources"
-PREPARED_CONTROL="${STATE}/chunk-061-080/evidence/65-kwallet-pam/debian-control"
-ROOTFS="${STATE}/kwallet-pam-test-rootfs"
+SNAPSHOT_ENV="${ROOT}/scripts/ci/aurora-ksq-snapshot-release.env"
+PREPARED_CONTROL="${AURORA_KSQ_1_KWALLET_PREPARED_CONTROL:-${STATE}/chunk-061-065/evidence/65-kwallet-pam/debian-control}"
+ROOTFS="${AURORA_KSQ_1_KWALLET_ROOTFS:-/tmp/aurora-ksq1-kwallet-pam-rootfs-${GITHUB_RUN_ID:-local}}"
+STAGE="${AURORA_KSQ_1_KWALLET_STAGE:-/tmp/aurora-ksq1-kwallet-pam-debs-${GITHUB_RUN_ID:-local}}"
 
 fail() {
   echo "AURORA_KSQ_1_KWALLET_LOCAL_FAILURE: $*" >&2
   exit 1
 }
 
-[[ "$(id -u)" -eq 0 ]] || fail "must run as root inside the scoped builder"
-grep -Eq '^supralinux-ksq-unshare( \(enforce\))?$' /proc/self/attr/current \
-  || fail "scoped AppArmor profile is not enforcing"
-cap_eff="$(awk '/^CapEff:/ {print $2}' /proc/self/status)"
-cap_eff_val=$((16#${cap_eff}))
-(( (cap_eff_val & (1 << 21)) == 0 )) || fail "outer builder unexpectedly has CAP_SYS_ADMIN"
-if find /sys/class/net -mindepth 1 -maxdepth 1 ! -name lo -print -quit 2>/dev/null | grep -q .; then
-  fail "non-loopback network interface exists"
-fi
+[[ -f "${SNAPSHOT_ENV}" ]] || fail "canonical snapshot pointer missing"
+# shellcheck disable=SC1090
+set -a
+. "${SNAPSHOT_ENV}"
+set +a
 
-for command in dpkg-deb mmdebstrap sha256sum su awk; do
+[[ "${AURORA_KSQ_SNAPSHOT_RELEASE_STATUS}" == "INDEPENDENTLY_VALIDATED" ]] \
+  || fail "snapshot release is not independently validated"
+[[ "${AURORA_KSQ_SNAPSHOT_SLICE_ID}" == "20260829T022000Z-r2" ]] \
+  || fail "unexpected snapshot slice ${AURORA_KSQ_SNAPSHOT_SLICE_ID}"
+[[ "${AURORA_KSQ_UBUNTU_SNAPSHOT}" == "20260829T022000Z" ]] \
+  || fail "unexpected Ubuntu snapshot ${AURORA_KSQ_UBUNTU_SNAPSHOT}"
+[[ "${AURORA_KSQ_SNAPSHOT_ARCH}" == "amd64" ]] || fail "unexpected snapshot architecture"
+[[ "${AURORA_KSQ_SNAPSHOT_ARCH_VARIANTS}" == "disabled" ]] || fail "architecture variants enabled"
+[[ "${AURORA_KSQ_SNAPSHOT_INSTALL_RECOMMENDS}" == "default" ]] || fail "unexpected Recommends policy"
+
+SLICE_ROOT="${AURORA_KSQ_LOCAL_SLICE_ROOT:-/opt/supralinux/archive/${AURORA_KSQ_SNAPSHOT_SLICE_ID}}"
+SOURCES="${ROOT}/build/ksq-0/apt/resolute.sources"
+
+# The maintained KSQ builder is unprivileged. Reject accidental regression to
+# the old Docker/root/custom-AppArmor validator contract instead of adapting to it.
+[[ "$(id -u)" -ne 0 ]] || fail "validator must run as the unprivileged native runner user"
+if [[ -r /proc/self/attr/current ]]; then
+  current_profile="$(cat /proc/self/attr/current)"
+  [[ "${current_profile}" != *supralinux-ksq-unshare* ]] \
+    || fail "legacy custom AppArmor profile is active"
+fi
+for legacy in \
+  "${ROOT}/scripts/ci/ksq-docker-builder.py" \
+  "${ROOT}/scripts/ci/install-ksq-apparmor-profile.sh" \
+  "${ROOT}/scripts/ci/apparmor/supralinux-ksq-unshare" \
+  "${ROOT}/scripts/ci/configure-ksq-uidmap-filecaps.sh"; do
+  [[ ! -e "${legacy}" ]] || fail "legacy Docker/AppArmor path present: ${legacy}"
+done
+
+for command in dpkg-deb mmdebstrap sha256sum awk chroot; do
   command -v "${command}" >/dev/null || fail "missing command ${command}"
 done
 [[ -d "${DEBS}" ]] || fail "accumulated DEB directory missing"
@@ -69,7 +93,7 @@ for runtime_deb in "${KWALLET_DATA_DEB}" "${KWALLET_LIB_DEB}" "${KWALLET_BACKEND
     || fail "KWallet runtime binary version mismatch: $(basename "${runtime_deb}")"
 done
 
-# Preserve the source-level adaptation contract before installation.
+# Preserve the exact source-level adaptation contract before installation.
 grep -Fq 'debhelper-compat (= 13)' "${PREPARED_CONTROL}" || fail "prepared source is not compat 13"
 ! grep -Fq 'debhelper-compat (= 14)' "${PREPARED_CONTROL}" || fail "compat 14 leaked into prepared source"
 ! grep -Fq 'dh-sequence-plasma' "${PREPARED_CONTROL}" || fail "intentional Ubuntu no-dh-sequence-plasma delta was lost"
@@ -80,7 +104,7 @@ done
 PAM_DEPENDS="$(dpkg-deb -f "${PAM_DEB}" Depends)"
 COMMON_DEPENDS="$(dpkg-deb -f "${COMMON_DEB}" Depends)"
 KWALLET_DEPENDS="$(dpkg-deb -f "${KWALLET_DEB}" Depends)"
-for required in kwallet6 libpam-kwallet-common libpam-runtime libc6 libgcrypt20 libpam0g; do
+for required in libpam-kwallet-common libc6 libgcrypt20 libpam0g; do
   printf '%s\n' "${PAM_DEPENDS}" \
     | grep -Eq "(^|, )[[:space:]]*${required}([[:space:](,]|$)" \
     || fail "libpam-kwallet5 missing runtime dependency ${required}"
@@ -88,38 +112,39 @@ done
 printf '%s\n' "${COMMON_DEPENDS}" \
   | grep -Eq '(^|, )[[:space:]]*socat([[:space:](,]|$)' \
   || fail "libpam-kwallet-common missing socat dependency"
-printf '%s\n' "${KWALLET_DEPENDS}" \
-  | grep -Fq "libkf6wallet-data (= ${KWALLET_VERSION})" \
+printf '%s\n' "${KWALLET_DEPENDS}" | grep -Fq "libkf6wallet-data (= ${KWALLET_VERSION})" \
   || fail "kwallet6 does not require the rebuilt data package exactly"
-printf '%s\n' "${KWALLET_DEPENDS}" \
-  | grep -Fq "libkf6walletbackend6 (= ${KWALLET_VERSION})" \
+printf '%s\n' "${KWALLET_DEPENDS}" | grep -Fq "libkf6walletbackend6 (= ${KWALLET_VERSION})" \
   || fail "kwallet6 does not require the rebuilt backend package exactly"
 [[ "${PAM_DEPENDS}" != *'${'* && "${COMMON_DEPENDS}" != *'${'* && "${KWALLET_DEPENDS}" != *'${'* ]] \
   || fail "unexpanded substvar leaked into binary control"
 
-rm -rf "${EVIDENCE}"
-mkdir -p "${EVIDENCE}"
-for candidate_deb in \
-  "${COMMON_DEB}" "${PAM_DEB}" "${KWALLET_DEB}" \
-  "${KWALLET_DATA_DEB}" "${KWALLET_LIB_DEB}" "${KWALLET_BACKEND_DEB}"; do
-  chmod a+rX "${candidate_deb}"
-done
+rm -rf "${EVIDENCE}" "${STAGE}"
+mkdir -p "${EVIDENCE}" "${STAGE}"
+chmod 0755 "${STAGE}"
 cp -a "${PREPARED_CONTROL}" "${EVIDENCE}/prepared-debian-control"
+
+candidate_debs=(
+  "${COMMON_DEB}" "${PAM_DEB}" "${KWALLET_DEB}"
+  "${KWALLET_DATA_DEB}" "${KWALLET_LIB_DEB}" "${KWALLET_BACKEND_DEB}"
+)
+staged_debs=()
+for candidate_deb in "${candidate_debs[@]}"; do
+  target="${STAGE}/$(basename "${candidate_deb}")"
+  cp -a "${candidate_deb}" "${target}"
+  chmod 0644 "${target}"
+  staged_debs+=("${target}")
+done
+
 (
   cd "${STATE}"
-  sha256sum \
-    "debs/$(basename "${COMMON_DEB}")" \
-    "debs/$(basename "${PAM_DEB}")" \
-    "debs/$(basename "${KWALLET_DEB}")" \
-    "debs/$(basename "${KWALLET_DATA_DEB}")" \
-    "debs/$(basename "${KWALLET_LIB_DEB}")" \
-    "debs/$(basename "${KWALLET_BACKEND_DEB}")" \
-    > "${EVIDENCE}/kwallet-binaries.sha256"
-)
+  for candidate_deb in "${candidate_debs[@]}"; do
+    sha256sum "debs/$(basename "${candidate_deb}")"
+  done
+) > "${EVIDENCE}/kwallet-binaries.sha256"
+
 {
-  for candidate_deb in \
-    "${COMMON_DEB}" "${PAM_DEB}" "${KWALLET_DEB}" \
-    "${KWALLET_DATA_DEB}" "${KWALLET_LIB_DEB}" "${KWALLET_BACKEND_DEB}"; do
+  for candidate_deb in "${candidate_debs[@]}"; do
     echo "Package: $(dpkg-deb -f "${candidate_deb}" Package)"
     echo "Version: $(dpkg-deb -f "${candidate_deb}" Version)"
     echo "Depends: $(dpkg-deb -f "${candidate_deb}" Depends 2>/dev/null || true)"
@@ -127,42 +152,35 @@ cp -a "${PREPARED_CONTROL}" "${EVIDENCE}/prepared-debian-control"
   done
 } > "${EVIDENCE}/binary-control-audit.txt"
 
-# A directory created by mmdebstrap --mode=unshare has shifted ownership when
-# viewed from the outer namespace. Use mmdebstrap's documented --unshare-helper
-# whenever executing a command inside it, and remove it through the same mapping.
 cleanup_rootfs() {
   if [[ -e "${ROOTFS}" ]]; then
-    su -s /bin/bash ubuntu -c \
-      "mmdebstrap --unshare-helper rm -rf '${ROOTFS}'" >/dev/null 2>&1 || true
+    mmdebstrap --unshare-helper rm -rf "${ROOTFS}" >/dev/null 2>&1 || true
   fi
+  rm -rf "${STAGE}" || true
 }
 trap cleanup_rootfs EXIT
 cleanup_rootfs
 mkdir -p "${ROOTFS}"
-chown ubuntu:ubuntu "${ROOTFS}"
-chmod 0755 "${ROOTFS}"
 
-# mmdebstrap documents that --include accepts local .deb paths and that the
-# file-mirror-automount hook makes both file: mirrors and included .deb objects
-# available in unshare mode. Install the exact rebuilt PAM package pair plus the
-# exact rebuilt KWallet runtime quartet, preventing a false PASS against the
-# stock snapshot KWallet while all unrelated dependencies still resolve only
-# from the certified local Ubuntu slice.
+include_args=()
+for staged_deb in "${staged_debs[@]}"; do
+  include_args+=("--include=${staged_deb}")
+done
+
+# The canonical source list contains file: only. Proxies deliberately point any
+# accidental HTTP(S) request at a dead loopback endpoint, so remote fallback is
+# fail-closed even though mmdebstrap itself is not run in sbuild's build netns.
 set +e
-su -s /bin/bash ubuntu -c \
-  "DEBIAN_FRONTEND=noninteractive mmdebstrap \
-    --mode=unshare \
-    --variant=minbase \
-    --architectures=amd64 \
-    --include='${COMMON_DEB}' \
-    --include='${PAM_DEB}' \
-    --include='${KWALLET_DEB}' \
-    --include='${KWALLET_DATA_DEB}' \
-    --include='${KWALLET_LIB_DEB}' \
-    --include='${KWALLET_BACKEND_DEB}' \
-    --hook-dir=/usr/share/mmdebstrap/hooks/file-mirror-automount \
-    --aptopt='Acquire::Check-Valid-Until \"false\";' \
-    resolute '${ROOTFS}' '${SOURCES}'" \
+DEBIAN_FRONTEND=noninteractive mmdebstrap \
+  --mode=unshare \
+  --variant=minbase \
+  --architectures=amd64 \
+  "${include_args[@]}" \
+  --hook-dir=/usr/share/mmdebstrap/hooks/file-mirror-automount \
+  --aptopt='Acquire::Check-Valid-Until "false";' \
+  --aptopt='Acquire::http::Proxy "http://127.0.0.1:9";' \
+  --aptopt='Acquire::https::Proxy "http://127.0.0.1:9";' \
+  resolute "${ROOTFS}" "${SOURCES}" \
   2>&1 | tee "${EVIDENCE}/mmdebstrap-install.log"
 pipe_status=("${PIPESTATUS[@]}")
 set -e
@@ -171,27 +189,22 @@ printf 'MMDEBSTRAP_RC=%s\nTEE_RC=%s\n' "${pipe_status[0]}" "${pipe_status[1]}" \
 [[ "${pipe_status[0]}" -eq 0 ]] || fail "mmdebstrap install failed"
 [[ "${pipe_status[1]}" -eq 0 ]] || fail "mmdebstrap evidence tee failed"
 
-# URL-looking package metadata is not transport evidence. Evaluate actual APT
-# acquisition status only; the outer builder also has no non-loopback network.
 if grep -E '^(Get|Hit|Ign|Err):[0-9]+ https?://' "${EVIDENCE}/mmdebstrap-install.log"; then
   fail "remote package transport occurred during KWallet installation"
 fi
 
-su -s /bin/bash ubuntu -c \
-  "mmdebstrap --unshare-helper /usr/sbin/chroot '${ROOTFS}' apt-get check" \
+mmdebstrap --unshare-helper /usr/sbin/chroot "${ROOTFS}" apt-get check \
   | tee "${EVIDENCE}/apt-check.txt"
-su -s /bin/bash ubuntu -c \
-  "mmdebstrap --unshare-helper /usr/sbin/chroot '${ROOTFS}' dpkg-query -W libpam-kwallet-common libpam-kwallet5 kwallet6 libkf6wallet-data libkf6wallet6 libkf6walletbackend6" \
+mmdebstrap --unshare-helper /usr/sbin/chroot "${ROOTFS}" \
+  dpkg-query -W libpam-kwallet-common libpam-kwallet5 kwallet6 libkf6wallet-data libkf6wallet6 libkf6walletbackend6 \
   | sort | tee "${EVIDENCE}/installed-versions.tsv"
 
 installed_version() {
   local package="$1"
   awk -v wanted="${package}" '$1 == wanted {print $2}' "${EVIDENCE}/installed-versions.tsv"
 }
-[[ "$(installed_version libpam-kwallet5)" == "${PAM_VERSION}" ]] \
-  || fail "installed libpam-kwallet5 does not match rebuilt candidate"
-[[ "$(installed_version libpam-kwallet-common)" == "${COMMON_VERSION}" ]] \
-  || fail "installed libpam-kwallet-common does not match rebuilt candidate"
+[[ "$(installed_version libpam-kwallet5)" == "${PAM_VERSION}" ]] || fail "installed libpam-kwallet5 mismatch"
+[[ "$(installed_version libpam-kwallet-common)" == "${COMMON_VERSION}" ]] || fail "installed common package mismatch"
 for package in kwallet6 libkf6wallet-data libkf6wallet6 libkf6walletbackend6; do
   [[ "$(installed_version "${package}")" == "${KWALLET_VERSION}" ]] \
     || fail "installed ${package} does not match rebuilt KWallet candidate"
@@ -215,8 +228,12 @@ done
   echo "AURORA_KSQ_1_KWALLET_PAM_INSTALLATION=PASS"
   echo "AURORA_KSQ_1_KWALLET_RUNTIME_AUTO_UNLOCK_CERTIFIED=no"
   echo "AURORA_KSQ_1_KWALLET_INSTALL_BACKEND=mmdebstrap-unshare-local-debs"
-  echo "AURORA_KSQ_1_KWALLET_SNAPSHOT=${SNAPSHOT}"
-  echo "AURORA_KSQ_1_KWALLET_REMOTE_FALLBACK=forbidden"
+  echo "AURORA_KSQ_1_KWALLET_SLICE=${AURORA_KSQ_SNAPSHOT_SLICE_ID}"
+  echo "AURORA_KSQ_1_KWALLET_UBUNTU_SNAPSHOT=${AURORA_KSQ_UBUNTU_SNAPSHOT}"
+  echo "AURORA_KSQ_1_KWALLET_REMOTE_FALLBACK=forbidden-loopback-proxy"
+  echo "AURORA_KSQ_1_KWALLET_VALIDATOR_MODE=native-unprivileged"
+  echo "AURORA_KSQ_1_KWALLET_DOCKER_USED=0"
+  echo "AURORA_KSQ_1_KWALLET_CUSTOM_APPARMOR_USED=0"
 } > "${EVIDENCE}/status.env"
 
 cat "${EVIDENCE}/status.env"
