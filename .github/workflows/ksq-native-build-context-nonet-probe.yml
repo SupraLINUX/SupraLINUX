@@ -176,7 +176,7 @@ jobs:
           test -s "$work/prepared-source.env"
           echo AURORA_NATIVE_SOURCE_PREP=PASS | tee "$RUNNER_TEMP/source-prep.env"
 
-      - name: Configure network proof at existing buildd mountpoint
+      - name: Compare bind sources and configure build-context proof
         shell: bash
         run: |
           set -euo pipefail
@@ -192,9 +192,11 @@ jobs:
           grep -qx 'mnt' "$RUNNER_TEMP/buildd-tar-paths.txt"
           echo AURORA_NATIVE_BUILDD_MNT_EXISTS=PASS | tee "$RUNNER_TEMP/buildd-mnt.env"
 
-          probe_dir="$GITHUB_WORKSPACE/build/ksq-native-nonet/probe-bin"
-          mkdir -p "$probe_dir"
-          cat > "$probe_dir/network-proof-wrapper" <<'EOF_WRAPPER'
+          workspace_probe="$GITHUB_WORKSPACE/build/ksq-native-nonet/probe-bin"
+          opt_probe="/opt/supralinux/ksq-probe-bin"
+          mkdir -p "$workspace_probe"
+
+          cat > "$RUNNER_TEMP/network-proof-wrapper" <<'EOF_WRAPPER'
           #!/bin/sh
           set -eu
           echo AURORA_NATIVE_BUILD_NETWORK_WRAPPER=START
@@ -212,17 +214,37 @@ jobs:
           echo AURORA_NATIVE_BUILD_NETWORK=loopback-only
           exec "$@"
           EOF_WRAPPER
-          chmod 0755 "$probe_dir/network-proof-wrapper"
+          chmod 0755 "$RUNNER_TEMP/network-proof-wrapper"
+          install -m 0755 "$RUNNER_TEMP/network-proof-wrapper" "$workspace_probe/network-proof-wrapper"
+          sudo install -d -m 0755 "$opt_probe"
+          sudo install -m 0755 "$RUNNER_TEMP/network-proof-wrapper" "$opt_probe/network-proof-wrapper"
+
+          {
+            echo '# GitHub runner bind-source topology'
+            echo '## workspace probe'
+            findmnt -T "$workspace_probe" -o TARGET,SOURCE,FSTYPE,OPTIONS,PROPAGATION
+            stat -c '%A %a %U %G %u %g %n' "$workspace_probe" "$workspace_probe/network-proof-wrapper"
+            namei -l "$workspace_probe"
+            echo '## local snapshot bind source (known working)'
+            findmnt -T "$AURORA_KSQ_1_BUILD_ENV_LOCAL_SLICE/ubuntu" -o TARGET,SOURCE,FSTYPE,OPTIONS,PROPAGATION
+            stat -c '%A %a %U %G %u %g %n' "$AURORA_KSQ_1_BUILD_ENV_LOCAL_SLICE/ubuntu"
+            namei -l "$AURORA_KSQ_1_BUILD_ENV_LOCAL_SLICE/ubuntu"
+            echo '## /opt probe'
+            findmnt -T "$opt_probe" -o TARGET,SOURCE,FSTYPE,OPTIONS,PROPAGATION
+            stat -c '%A %a %U %G %u %g %n' "$opt_probe" "$opt_probe/network-proof-wrapper"
+            namei -l "$opt_probe"
+          } | tee "$RUNNER_TEMP/bind-source-topology.txt"
 
           cat >> "$AURORA_KSQ_1_SBUILD_CONFIG" <<EOF_SBUILD_PROBE
           \$unshare_bind_mounts = [
             { directory => "$AURORA_KSQ_1_BUILD_ENV_LOCAL_SLICE/ubuntu", mountpoint => "$AURORA_KSQ_1_BUILD_ENV_LOCAL_SLICE/ubuntu" },
-            { directory => "$probe_dir", mountpoint => "/mnt" },
+            { directory => "$opt_probe", mountpoint => "/mnt" },
           ];
           \$build_env_cmnd = "/mnt/network-proof-wrapper";
           EOF_SBUILD_PROBE
           cat "$AURORA_KSQ_1_SBUILD_CONFIG" | tee "$RUNNER_TEMP/sbuild-probe-config.txt"
           echo AURORA_NATIVE_BUILD_NETWORK_WRAPPER_CONFIGURED=PASS | tee "$RUNNER_TEMP/network-wrapper.env"
+          echo AURORA_NATIVE_BIND_SOURCE_OPT=PASS | tee "$RUNNER_TEMP/bind-source.env"
 
       - name: Build source 001 with sbuild unshare and nonet
         shell: bash
@@ -288,11 +310,12 @@ jobs:
             > "$evidence/apparmor-denied-relevant.log" || true
           denials="$(wc -l < "$evidence/apparmor-denied-relevant.log")"
 
-          localapt=FAIL; mmdebstrap=FAIL; sourceprep=FAIL; mnt=FAIL; wrapper=FAIL; nonet=FAIL; source001=FAIL
+          localapt=FAIL; mmdebstrap=FAIL; sourceprep=FAIL; mnt=FAIL; bindsource=FAIL; wrapper=FAIL; nonet=FAIL; source001=FAIL
           [[ -f "$RUNNER_TEMP/local-apt.env" ]] && grep -qx 'AURORA_NATIVE_LOCAL_APT_ISOLATION=PASS' "$RUNNER_TEMP/local-apt.env" && localapt=PASS
           [[ -f "$RUNNER_TEMP/mmdebstrap.env" ]] && grep -qx 'AURORA_NATIVE_MMDEBSTRAP_BUILDD=PASS' "$RUNNER_TEMP/mmdebstrap.env" && mmdebstrap=PASS
           [[ -f "$RUNNER_TEMP/source-prep.env" ]] && grep -qx 'AURORA_NATIVE_SOURCE_PREP=PASS' "$RUNNER_TEMP/source-prep.env" && sourceprep=PASS
           [[ -f "$RUNNER_TEMP/buildd-mnt.env" ]] && grep -qx 'AURORA_NATIVE_BUILDD_MNT_EXISTS=PASS' "$RUNNER_TEMP/buildd-mnt.env" && mnt=PASS
+          [[ -f "$RUNNER_TEMP/bind-source.env" ]] && grep -qx 'AURORA_NATIVE_BIND_SOURCE_OPT=PASS' "$RUNNER_TEMP/bind-source.env" && bindsource=PASS
           [[ -f "$RUNNER_TEMP/network-wrapper.env" ]] && grep -qx 'AURORA_NATIVE_BUILD_NETWORK_WRAPPER_CONFIGURED=PASS' "$RUNNER_TEMP/network-wrapper.env" && wrapper=PASS
           [[ -f "$RUNNER_TEMP/sbuild-network.env" ]] && grep -qx 'AURORA_NATIVE_SBUILD_NONET=PASS' "$RUNNER_TEMP/sbuild-network.env" && nonet=PASS
           [[ -f "$RUNNER_TEMP/source-001.env" ]] && grep -qx 'AURORA_NATIVE_SOURCE_001=PASS' "$RUNNER_TEMP/source-001.env" && source001=PASS
@@ -304,13 +327,14 @@ jobs:
             echo "AURORA_NATIVE_MMDEBSTRAP=$mmdebstrap"
             echo "AURORA_NATIVE_SOURCE_PREP=$sourceprep"
             echo "AURORA_NATIVE_BUILDD_MNT=$mnt"
+            echo "AURORA_NATIVE_BIND_SOURCE_OPT=$bindsource"
             echo "AURORA_NATIVE_NETWORK_WRAPPER=$wrapper"
             echo "AURORA_NATIVE_SBUILD_NONET=$nonet"
             echo "AURORA_NATIVE_SOURCE_001=$source001"
             echo "AURORA_NATIVE_RELEVANT_DENIALS=$denials"
           } | tee "$evidence/status.env"
 
-          if [[ "$localapt" == PASS && "$mmdebstrap" == PASS && "$sourceprep" == PASS && "$mnt" == PASS && "$wrapper" == PASS && "$nonet" == PASS && "$source001" == PASS && "$denials" -eq 0 ]]; then
+          if [[ "$localapt" == PASS && "$mmdebstrap" == PASS && "$sourceprep" == PASS && "$mnt" == PASS && "$bindsource" == PASS && "$wrapper" == PASS && "$nonet" == PASS && "$source001" == PASS && "$denials" -eq 0 ]]; then
             echo AURORA_NATIVE_BUILD_CONTEXT_NONET_PROBE=PASS | tee -a "$evidence/status.env"
           else
             echo AURORA_NATIVE_BUILD_CONTEXT_NONET_PROBE=FAIL | tee -a "$evidence/status.env"
