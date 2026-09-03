@@ -183,8 +183,13 @@ jobs:
           . build/ksq-1/environment/build-environment.env
 
           tar --zstd -tf "$AURORA_KSQ_1_BUILD_ENV_TARBALL" \
-            | sed 's#^\./##' \
-            | grep -qx 'mnt/'
+            | sed -e 's#^\./##' -e 's#/$##' \
+            | sort -u \
+            | tee "$RUNNER_TEMP/buildd-tar-paths.txt" >/dev/null
+          grep -E '^[^/]+$' "$RUNNER_TEMP/buildd-tar-paths.txt" \
+            | sort -u \
+            | tee "$RUNNER_TEMP/buildd-top-level.txt"
+          grep -qx 'mnt' "$RUNNER_TEMP/buildd-tar-paths.txt"
           echo AURORA_NATIVE_BUILDD_MNT_EXISTS=PASS | tee "$RUNNER_TEMP/buildd-mnt.env"
 
           probe_dir="$GITHUB_WORKSPACE/build/ksq-native-nonet/probe-bin"
