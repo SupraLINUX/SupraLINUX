@@ -1,16 +1,16 @@
 # Aurora KSQ certified snapshot slice
 
-Status: **PUBLISHED / INDEPENDENTLY VALIDATED / REPOSITORY-PINNED**
+Status: **R2 PUBLISHED / INDEPENDENTLY VALIDATED / REPOSITORY-PINNED**
 
-This document records the durable byte-preserved archive slice for Aurora snapshot `20260829T022000Z`. It removes live Ubuntu Snapshot Service transport from the KSQ build critical path without changing identities certified by KSQ-0.
+This document records the durable byte-preserved archive slice used by Aurora KSQ for upstream Ubuntu snapshot `20260829T022000Z`. The upstream snapshot identity remains fixed; the corrected local SupraLINUX slice is versioned independently as `20260829T022000Z-r2`.
 
 The snapshot engineering input is accepted. KSQ-1 itself remains **ACTIVE / NOT CERTIFIED**.
 
 ## Certified origin
 
-Canonical KSQ-0 closure evidence:
+Canonical KSQ-0 closure evidence remains unchanged:
 
-- snapshot `20260829T022000Z`;
+- upstream snapshot `20260829T022000Z`;
 - run `33231879994`;
 - artifact `9708738867`;
 - digest `sha256:5b23140181ea7e7931cb744f4c43930adba8f79e446c52d0f4b1c3c568106d50`;
@@ -18,30 +18,37 @@ Canonical KSQ-0 closure evidence:
 - 101 source nodes;
 - unresolved dependency/source decisions `0`.
 
-Canonical size/identity evidence:
+The local slice is an execution/materialization artifact and does not redefine the certified source DAG or Ubuntu snapshot.
 
-- run `33455898813`;
-- artifact `9781553137`;
-- digest `sha256:39672453ba364d81cfa8621cd060201f845a6d940fb4ac04d45aa25be1ce0e19`;
-- 244 certified binary/version seeds;
-- 1541 binary `.deb` objects;
-- `704826504` binary bytes;
-- 301 Ubuntu source objects / `212283819` bytes;
-- 4 Debian source objects / `161155` bytes;
-- conservative raw upper bound `1001129661` bytes (`0.9324 GiB`).
+## Historical r1 and proven correction
 
-The live-archive control run `33456358421` already proved archive drift by showing that certified versions of `freerdp3-dev`, `libssl-dev` and `libwinpr3-dev` were no longer available live. Current-live resolution cannot replace this snapshot.
+The original local slice was materialized from the same upstream snapshot but its binary closure was calculated with explicit `apt-get --no-install-recommends`.
 
-## Published immutable engineering Release
+Historical r1 identity:
 
-- Release ID `380209318`;
 - tag `ksq-snapshot-20260829T022000Z`;
-- asset ID `538944111`;
-- asset `aurora-ubuntu-snapshot-20260829T022000Z-amd64.tar`;
-- exact bytes `973148160`;
-- SHA-256 `8dc9087b53e90c085333644ffdb828b87ce0af6cd61ec5f1d516fe35e80529e7`;
-- manifest asset ID `538944115`;
-- manifest SHA-256 `f3b30842f18fdaf868af74bbb3c6309f90e6b15a1fed2fe29bfd36a633536afd`.
+- 1541 binary `.deb` objects;
+- 704826504 binary bytes;
+- Release ID `380209318`;
+- archive asset ID `538944111`;
+- archive SHA-256 `8dc9087b53e90c085333644ffdb828b87ce0af6cd61ec5f1d516fe35e80529e7`.
+
+Order 43 later proved that this closure did not reproduce the effective normal APT dependency semantics used by the real `sbuild` builder: `pipewire-bin` recommends `dbus-user-session`, and APT requested `dbus-user-session=1.16.2-2ubuntu4`, which r1 had never materialized.
+
+Controlled native A/B evidence on the same snapshot and 244 exact pinned seeds:
+
+- workflow `.github/workflows/ksq-native-snapshot-recommends-closure-ab.yml`;
+- run `33729123389`;
+- artifact `9883165109`;
+- digest `sha256:0b617d25f575efead1dbe904eb24cc1b31df94a3f07ce32a7dbd25fc1327c20d`;
+- explicit no-Recommends: 1541 objects / 704826504 bytes;
+- default Recommends: 1783 objects / 785219274 bytes.
+
+The A/B also proved a separate host-dependent architecture-variant risk. The accepted generic-amd64 closure therefore disables `APT::Architecture-Variants` during materialization so the slice does not depend on `amd64v3` host selection.
+
+This correction is not a manual `dbus-user-session` exception and does not modify `kpipewire` or force `sbuild` into no-Recommends mode.
+
+## Canonical corrected r2 Release
 
 Repository pin:
 
@@ -51,110 +58,113 @@ with:
 
 `AURORA_KSQ_SNAPSHOT_RELEASE_STATUS=INDEPENDENTLY_VALIDATED`
 
+and distinct identities:
+
+- `AURORA_KSQ_UBUNTU_SNAPSHOT=20260829T022000Z`;
+- `AURORA_KSQ_SNAPSHOT=20260829T022000Z-r2`.
+
+Canonical r2 materialization/publication:
+
+- materializer `scripts/ci/ksq-snapshot-slice-r2.py`;
+- workflow `.github/workflows/ksq-snapshot-slice-r2-materialize.yml`;
+- materializer commit `2732374413f5391867df801e8c9538c425be1e9d`;
+- publication run `33729892275`;
+- publication job `100567186893`: PASS;
+- independent validation job `100569481825`: PASS.
+
+Engineering Release:
+
+- Release ID `381836501`;
+- tag `ksq-snapshot-20260829T022000Z-r2`;
+- archive asset ID `542414026`;
+- archive `aurora-ubuntu-snapshot-20260829T022000Z-r2-amd64.tar`;
+- exact bytes `1054177280`;
+- SHA-256 `23413ddf1c1820aaa01dfa81005b37e8c9611bad2d0a632664d0e08282e69c3b`;
+- manifest asset ID `542414028`;
+- manifest SHA-256 `6ed95b495ded7744f081335684c2918eeae96dbc822fa53b0d9fb5bc2da0f481`.
+
+Accepted r2 closure:
+
+- 244 certified binary/version seeds;
+- 1783 binary `.deb` objects;
+- `785219274` binary bytes;
+- 301 Ubuntu source objects / `212283819` bytes;
+- 4 Debian source objects / `161155` bytes;
+- generic `amd64`;
+- architecture variants disabled;
+- default APT Recommends semantics.
+
+Independent re-download/validation evidence:
+
+- artifact `9883714959`;
+- digest `sha256:c628aadcb577d5d1777ebf0b6d6c2e0d9c737fbfc82aa920e60f624a30c23b36`;
+- validated files `2184`;
+- validated disk bytes `1051413123`;
+- Ubuntu signed metadata validation: PASS.
+
 The Release is an engineering reproducibility input, not an Aurora product release.
 
 ## Trust model
 
-The slice is byte-preserving. It is not a regenerated repository and introduces no local archive-signing key.
+The slice is byte-preserving. It is not a regenerated Ubuntu repository and introduces no local archive-signing key.
 
 Ubuntu trust remains:
 
 `Ubuntu archive key -> signed InRelease -> Packages/Sources identity -> retained object checksum`
 
-The slice retains original signed metadata, the exact selected Ubuntu pool objects, the four certified Debian `wayland-protocols 1.48-1` source objects, manifests/provenance and deterministic local APT source configuration.
+The slice retains original signed metadata, exact selected Ubuntu pool objects, the four certified Debian `wayland-protocols 1.48-1` source objects, manifests/provenance and deterministic local APT source configuration.
 
-## Consumer path
+## Native consumer path
 
-Deterministic root:
+The maintained KSQ consumer architecture is native GitHub-hosted Ubuntu 26.04 plus unprivileged namespaces:
 
-`/opt/supralinux/archive/20260829T022000Z/`
+`ubuntu-26.04 -> local r2 slice -> mmdebstrap --mode=unshare --variant=buildd -> sbuild --chroot-mode=unshare`
 
-APT contract inside the pinned Resolute builder:
+The current path does not require Docker, privileged containers, outer `CAP_SYS_ADMIN`, custom AppArmor policy or host AppArmor relaxation.
 
-```text
-Types: deb deb-src
-URIs: file:/opt/supralinux/archive/20260829T022000Z/ubuntu
-Suites: resolute resolute-updates resolute-security resolute-backports
-Components: main restricted universe multiverse
-Architectures: amd64
-Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-Check-Valid-Until: no
-Snapshot: no
+APT package/source transport inside the qualified builder is local `file:` only. Local source acquisition uses Resolute APT `Acquire::Source-Symlinks=false` so source archives are materialized as ordinary files while retaining metadata/checksum validation.
 
-Types: deb-src
-URIs: file:/opt/supralinux/archive/20260829T022000Z/ubuntu
-Suites: stonking
-Components: main restricted universe multiverse
-Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-Check-Valid-Until: no
-Snapshot: no
-```
+## r2 build proof through order 43
 
-Stonking remains source-only.
+Order 43 was first retested alone against r2 to establish causality:
 
-## Local-only consumer qualification
+- run `33752870935`, job `100640242141`;
+- artifact `9892373802`;
+- digest `sha256:43e8abc95d0eeb57952488ce4b48653a8c736d0de48f166259d9cd5f15891b82`;
+- `kpipewire`: PASS;
+- six new DEBs;
+- zero relevant AppArmor denials;
+- zero external build acquisition.
 
-Workflow `.github/workflows/ksq-github-hosted-local-snapshot-gate.yml`:
+Because changing the local slice invalidated affected prior evidence, orders 41-43 were then rebuilt from the exact qualified 001-040 checkpoint against r2:
 
-- commit `94f3e0b03e17704828cfb0325b744fffe32911a9`;
-- run `33528728431`;
-- job `99926115300`;
-- result **SUCCESS**;
-- artifact `9808961368`;
-- artifact digest `sha256:8216edf709c99aa39148f3c788f7ae2d6be26b91efa4aaefa36280f772ba99ef`;
-- inner evidence TAR SHA-256 `1780e351dbbd2b5ad002a81e178a3c67536f19627d6951a38962fe947fbea1b9`.
+- run `33753437984`, job `100642085362`;
+- artifact `9892762100`;
+- digest `sha256:7a118c3225143021056781e2b45af114e719a1e5382bda5a1819c7346312b0f0`;
+- 41 `kf6-kunitconversion`: PASS;
+- 42 `knighttime`: PASS;
+- 43 `kpipewire`: PASS;
+- 13 new DEBs;
+- 205 accumulated DEBs;
+- build-manifest SHA-256 `e4311aeba5c7856ac2c0ff803c9adc2fdcb63adb104d1a8f2707a1fc45696ab1`;
+- `new-debs.sha256` file SHA-256 `d5e6cbd51cac0ac2d2dca953722ccbd1a43beb3c981766f683ae69ace539105c`.
 
-With network mode `none`, that gate proved:
-
-1. exact repository pin before extraction;
-2. safe archive layout and full validator PASS;
-3. all 244 certified candidates exact;
-4. exact empty-status closure: 1541 objects / `704826504` bytes;
-5. package transport exclusively `file:`;
-6. toolchain installation from the slice;
-7. namespace preflight;
-8. local-only `mmdebstrap` PASS;
-9. local-only `sbuild` PASS;
-10. functional procfs inside the build;
-11. zero scoped AppArmor denials.
-
-## Real source-node proof
-
-Workflow `.github/workflows/ksq-source-001-local-slice-probe.yml`:
-
-- final commit `3072e7945811d9ce226551fd9fab3ffbb6e5a5d2`;
-- run `33531933805`;
-- job `99936944948`;
-- result **SUCCESS**;
-- artifact `9810147299`;
-- digest `sha256:997074576b9ef9b9d0743d931e061d222f6911fde53b809ef223e8aa4f354125`.
-
-Certified source identity:
-
-- `kf6-extra-cmake-modules`;
-- packaging base `6.29.0-0ubuntu1`;
-- prepared version `6.29.0-0ubuntu1~supra26.04.1`.
-
-The run acquired the exact source objects from the local signed `stonking` source index and produced successful local-only DEBs.
-
-For source acquisition, Resolute APT's supported `Acquire::Source-Symlinks=false` option is part of the maintained local contract. APT defaults it to true and may otherwise represent local source archives as symlinks. Disabling source symlinks preserves APT metadata/checksum verification while giving the source-preparation pipeline ordinary files.
+Detailed record: `docs/validation/AURORA_KSQ_1_SNAPSHOT_R2_RANGE_041_043.md`.
 
 ## Execution-host policy
 
-The selected execution infrastructure is GitHub-hosted `ubuntu-26.04` plus the pinned Resolute builder image and the qualified selective Docker/AppArmor contract.
-
-GitHub's runner image/service remains Public Preview as of 2026-09-01. That is external CI infrastructure, not product software. SupraLINUX accepts it only through explicit empirical qualification and per-job invariant checks. A runner/security/tool change that invalidates a required invariant triggers regression; it does not change the snapshot bytes or trust identity.
+GitHub's `ubuntu-26.04` runner remains external Public Preview infrastructure. SupraLINUX accepts it for qualification only through explicit empirical invariant checks. A runner/kernel/security/tool change that invalidates a required property triggers regression; it does not change the pinned snapshot bytes or source identity.
 
 ## Current state
 
-- certified snapshot identity: **FIXED**;
-- durable Release asset: **PUBLISHED**;
-- independent publication re-download/validation: **PASS**;
+- certified upstream snapshot identity: **20260829T022000Z / FIXED**;
+- historical r1 slice: **SUPERSEDED FOR CURRENT KSQ BUILD INPUT**;
+- canonical r2 slice: **20260829T022000Z-r2**;
+- r2 Release asset: **PUBLISHED**;
+- r2 independent publication re-download/validation: **PASS**;
 - repository SHA-256/byte pin: **COMMITTED**;
-- local-only consumer gate: **PASS**;
-- local-only mmdebstrap regression: **PASS**;
-- local-only sbuild smoke: **PASS**;
-- real source DAG 001 local-slice proof: **PASS**;
-- GitHub-hosted Ubuntu 26.04 execution infrastructure: **QUALIFIED / SELECTED**;
-- formal 101-source local-slice migration: **NEXT**;
+- r2 closure policy: **DEFAULT RECOMMENDS / GENERIC AMD64**;
+- native `mmdebstrap`/`sbuild` path: **QUALIFIED THROUGH ORDER 43**;
+- complete 041-043 r2 regression: **PASS**;
+- orders 044-060 r2: **NOT YET QUALIFIED**;
 - KSQ-1: **ACTIVE / NOT CERTIFIED**.
