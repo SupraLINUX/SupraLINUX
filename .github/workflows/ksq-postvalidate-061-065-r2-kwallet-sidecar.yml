@@ -1,0 +1,323 @@
+name: Aurora KSQ-1 post-validate 061-065 KWallet sidecar artifact
+
+on:
+  push:
+    branches: [feature/kde-stack-qualification]
+    paths:
+      - '.github/workflows/ksq-postvalidate-061-065-r2-kwallet-sidecar.yml'
+      - 'scripts/ci/validate-ksq-1-kwallet-pam-runtime-sidecar-postbuild.sh'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  postvalidate-061-065-kwallet-sidecar:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Qualify post-validation toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          base=build/ksq-1/postvalidate-061-065-r2-sidecar
+          mkdir -p "$base/host-evidence"
+          date --iso-8601=seconds > "$base/host-evidence/start-time.txt"
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl python3 ubuntu-keyring gpgv mmdebstrap uidmap \
+            dpkg-dev apt-utils gzip xz-utils apparmor apparmor-utils libcap2-bin
+          dpkg-query -W -f='${Package}\t${Version}\n' mmdebstrap uidmap util-linux apparmor \
+            | sort | tee "$base/host-evidence/toolchain.tsv"
+          grep -q $'^mmdebstrap\t1.5.7-3$' "$base/host-evidence/toolchain.tsv"
+          test "$(stat -c '%a' /usr/bin/newuidmap)" = 4755
+          test "$(stat -c '%a' /usr/bin/newgidmap)" = 4755
+          test -z "$(getcap /usr/bin/newuidmap /usr/bin/newgidmap || true)"
+          bash -n scripts/ci/validate-ksq-1-kwallet-pam-runtime-sidecar-postbuild.sh
+          test "$(git hash-object scripts/ci/validate-ksq-1-kwallet-pam-runtime-sidecar.sh)" = 41d95eb5126052229e822061e979b32e700f7c33
+
+      - name: Download exact 001-020 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9818465016
+          path: ${{ runner.temp }}/cp-001-020
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33546093974
+
+      - name: Download exact 021-040 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9824689982
+          path: ${{ runner.temp }}/cp-021-040
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33561782526
+
+      - name: Download exact 041-043 r2 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9892762100
+          path: ${{ runner.temp }}/cp-041-043
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33753437984
+
+      - name: Download exact 044-060 r2 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9900367299
+          path: ${{ runner.temp }}/cp-044-060
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33767306768
+
+      - name: Download exact built 061-065 sidecar artifact
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9913134271
+          path: ${{ runner.temp }}/built-061-065
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33805321380
+
+      - name: Restore 001-060 and reconstruct exact built 061-065 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/postvalidate-061-065-r2-sidecar
+          cat > "$base/checkpoint-spec.json" <<EOFJSON
+          [
+            {"root":"$RUNNER_TEMP/cp-001-020","first_order":1,"last_order":20,"run_id":33546093974,"artifact_id":9818465016,"artifact_digest":"sha256:0eb45c7938b84db35ee734591622a6c621709117100d29376c01323ca0ab14ba","new_debs":103,"accumulated_debs":103,"new_debs_manifest_sha256":"b0be04014893808a79aaea514e2a5c4bc968b5c9c9769d8d7ea6cae7992b01f9","build_manifest_sha256":"ff87f96c85bc4ba1553f16b3700cf701eca04e9b749a1c739bb1088cceb3485b"},
+            {"root":"$RUNNER_TEMP/cp-021-040","first_order":21,"last_order":40,"run_id":33561782526,"artifact_id":9824689982,"artifact_digest":"sha256:08dffb19fe6d3fda5b8079ed862d3215440cfabaf51a249f79b5af49d3539d8e","new_debs":89,"accumulated_debs":192,"new_debs_manifest_sha256":"3924d0151581a53f505ca8cd0a615b4ffee9c246afeabec003633905db159bfa","build_manifest_sha256":"6e121efdeb62b8c0c6c48ae14f60e41e452e16fe177f03536f1c2677848b111a"},
+            {"root":"$RUNNER_TEMP/cp-041-043/build","first_order":41,"last_order":43,"run_id":33753437984,"artifact_id":9892762100,"artifact_digest":"sha256:7a118c3225143021056781e2b45af114e719a1e5382bda5a1819c7346312b0f0","new_debs":13,"accumulated_debs":205,"new_debs_manifest_sha256":"d5e6cbd51cac0ac2d2dca953722ccbd1a43beb3c981766f683ae69ace539105c","build_manifest_sha256":"e4311aeba5c7856ac2c0ff803c9adc2fdcb63adb104d1a8f2707a1fc45696ab1"},
+            {"root":"$RUNNER_TEMP/cp-044-060/build","first_order":44,"last_order":60,"run_id":33767306768,"artifact_id":9900367299,"artifact_digest":"sha256:41a50bb17ea5ca4ab63c43a6aa6d6d030dae310ba716866824ac72d6c61dc4f3","new_debs":70,"accumulated_debs":275,"new_debs_manifest_sha256":"a712b2f8d67d2bbb8aea4f3ccc6f7af930e4cfc3974f5562c923b12ea23267a5","build_manifest_sha256":"4ac871dc0865bb10b27f0b23db8b8969e595c67ab4faa75dd295b0877ccaf709"}
+          ]
+          EOFJSON
+          python3 scripts/ci/restore-ksq-1-checkpoint-chain.py \
+            --spec "$base/checkpoint-spec.json" \
+            --target build/ksq-1/full/debs \
+            --evidence "$base/checkpoint-evidence"
+          grep -qx 'AURORA_KSQ_1_CHECKPOINT_LAST_ORDER=60' "$base/checkpoint-evidence/checkpoint-status.env"
+          grep -qx 'AURORA_KSQ_1_CHECKPOINT_DEBS=275' "$base/checkpoint-evidence/checkpoint-status.env"
+
+          artifact="$RUNNER_TEMP/built-061-065"
+          chunk_src="$artifact/build/ksq-1/full/chunk-061-065"
+          test -d "$chunk_src/evidence"
+          test -d "$chunk_src/new-debs"
+          test "$(find "$chunk_src/new-debs" -maxdepth 1 -type f -name '*.deb' | wc -l)" = 20
+          grep -qx 'AURORA_KSQ_1_RANGE_STATUS=PASS' "$chunk_src/evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_FIRST_ORDER=61' "$chunk_src/evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_LAST_ORDER=65' "$chunk_src/evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_SOURCES=5' "$chunk_src/evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_NEW_DEBS=20' "$chunk_src/evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_ACCUMULATED_DEBS=295' "$chunk_src/evidence/range-status.env"
+          test "$(awk -F '\t' 'NR>1 && $10=="PASS" {n++} END {print n+0}' "$chunk_src/evidence/build-manifest.tsv")" = 5
+          test "$(find "$chunk_src/evidence" -mindepth 2 -maxdepth 2 -type f -name '*.build' | wc -l)" = 5
+          (cd "$chunk_src/new-debs" && sha256sum -c ../evidence/new-debs.sha256)
+
+          rm -rf build/ksq-1/full/chunk-061-065
+          mkdir -p build/ksq-1/full
+          cp -a "$chunk_src" build/ksq-1/full/chunk-061-065
+          while IFS= read -r -d '' deb; do
+            target="build/ksq-1/full/debs/$(basename "$deb")"
+            test ! -e "$target"
+            cp -a "$deb" "$target"
+          done < <(find build/ksq-1/full/chunk-061-065/new-debs -maxdepth 1 -type f -name '*.deb' -print0 | sort -z)
+          test "$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" = 295
+          (cd build/ksq-1/full/debs && sha256sum -c ../chunk-061-065/evidence/accumulated-debs.sha256)
+          {
+            echo 'AURORA_KSQ_1_POSTVALIDATE_SOURCE_RUN=33805321380'
+            echo 'AURORA_KSQ_1_POSTVALIDATE_SOURCE_ARTIFACT=9913134271'
+            echo 'AURORA_KSQ_1_POSTVALIDATE_SOURCE_ARTIFACT_DIGEST=sha256:035b5930f3821d764f51f7bf4b3bd2b8e82a302539e70c2c612b93f41d3e2e65'
+            echo 'AURORA_KSQ_1_POSTVALIDATE_PRIOR_DEBS=275'
+            echo 'AURORA_KSQ_1_POSTVALIDATE_NEW_DEBS=20'
+            echo 'AURORA_KSQ_1_POSTVALIDATE_ACCUMULATED_DEBS=295'
+            echo "AURORA_KSQ_1_POSTVALIDATE_NEW_DEBS_MANIFEST_SHA256=$(sha256sum build/ksq-1/full/chunk-061-065/evidence/new-debs.sha256 | awk '{print $1}')"
+            echo "AURORA_KSQ_1_POSTVALIDATE_BUILD_MANIFEST_SHA256=$(sha256sum build/ksq-1/full/chunk-061-065/evidence/build-manifest.tsv | awk '{print $1}')"
+          } | tee "$base/source-artifact.env"
+
+      - name: Download and validate canonical r2 slice
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/postvalidate-061-065-r2-sidecar
+          set -a; source scripts/ci/aurora-ksq-snapshot-release.env; set +a
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_STATUS" = INDEPENDENTLY_VALIDATED
+          test "$AURORA_KSQ_SNAPSHOT_SLICE_ID" = 20260829T022000Z-r2
+          test "$AURORA_KSQ_SNAPSHOT_BINARY_OBJECTS" = 1783
+          out="$RUNNER_TEMP/release-r2"; mkdir -p "$out"
+          archive="$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET"
+          manifest="$out/$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST"
+          for spec in "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_ID:$archive" "$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST_ASSET_ID:$manifest"; do
+            id="${spec%%:*}"; file="${spec#*:}"
+            curl --fail --location --retry 5 --retry-all-errors -H 'Accept: application/octet-stream' \
+              -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2022-11-28' \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$id" -o "$file"
+          done
+          test "$(sha256sum "$archive" | awk '{print $1}')" = "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256"
+          test "$(sha256sum "$manifest" | awk '{print $1}')" = "$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST_SHA256"
+          sudo install -d /opt/supralinux/archive
+          sudo tar -C /opt/supralinux/archive -xf "$archive"
+          slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT_SLICE_ID"
+          python3 scripts/ci/ksq-snapshot-slice-r2.py validate --slice-root "$slice"
+          cp "$manifest" "$base/"
+
+      - name: Download and independently validate canonical KWallet runtime extension
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/postvalidate-061-065-r2-sidecar
+          set -a; source scripts/ci/aurora-ksq-kwallet-runtime-extension.env; set +a
+          test "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_STATUS" = INDEPENDENTLY_VALIDATED
+          test "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_ID" = 20260829T022000Z-kwallet-runtime-r1
+          test "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_UBUNTU_SNAPSHOT" = 20260829T022000Z
+          test "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_PACKAGES" = 3
+          out="$RUNNER_TEMP/kwallet-runtime-extension-release"; rm -rf "$out"; mkdir -p "$out"
+          archive="$out/$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ASSET"
+          manifest="$out/$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_MANIFEST"
+          for spec in "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ASSET_ID:$archive" "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_MANIFEST_ASSET_ID:$manifest"; do
+            id="${spec%%:*}"; file="${spec#*:}"
+            curl --fail --location --retry 5 --retry-all-errors -H 'Accept: application/octet-stream' \
+              -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2022-11-28' \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$id" -o "$file"
+          done
+          test "$(sha256sum "$archive" | awk '{print $1}')" = "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ASSET_SHA256"
+          test "$(stat -c '%s' "$archive")" = "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ASSET_BYTES"
+          test "$(sha256sum "$manifest" | awk '{print $1}')" = "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_MANIFEST_SHA256"
+          python3 - "$archive" "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_ID" <<'PY'
+          import sys
+          import tarfile
+          from pathlib import PurePosixPath
+          archive, extension_id = sys.argv[1:]
+          with tarfile.open(archive, 'r:') as tf:
+              members = tf.getmembers()
+              if not members:
+                  raise SystemExit('empty runtime extension archive')
+              for member in members:
+                  p = PurePosixPath(member.name)
+                  if p.is_absolute() or '..' in p.parts or not p.parts or p.parts[0] != extension_id:
+                      raise SystemExit(f'unsafe runtime extension member: {member.name}')
+                  if member.issym():
+                      raise SystemExit(f'runtime extension symlink forbidden: {member.name}')
+                  if member.islnk():
+                      link = PurePosixPath(member.linkname)
+                      if link.is_absolute() or '..' in link.parts or not link.parts or link.parts[0] != extension_id:
+                          raise SystemExit(f'unsafe runtime extension hardlink: {member.name} -> {member.linkname}')
+          PY
+          extract="$RUNNER_TEMP/kwallet-runtime-extension"; rm -rf "$extract"; mkdir -p "$extract"
+          tar -C "$extract" -xf "$archive"
+          root="$extract/$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_ID"
+          python3 scripts/ci/ksq-kwallet-runtime-extension.py validate --root "$root" \
+            | tee "$base/runtime-extension-validation.log"
+          printf '%s\n' "$root" > "$base/runtime-extension-root.txt"
+          cp "$manifest" "$base/"
+
+      - name: Recreate certified local APT metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/postvalidate-061-065-r2-sidecar
+          set -a; source scripts/ci/aurora-ksq-snapshot-release.env; set +a
+          slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT_SLICE_ID"
+          python3 scripts/ci/restore-ksq-0-certified-evidence.py --slice-root "$slice" --workspace "$GITHUB_WORKSPACE"
+          aptiso="$RUNNER_TEMP/ksq-apt-isolation"; mkdir -p "$aptiso/parts"; : > "$aptiso/main.conf"
+          printf 'Dir::Etc::Parts "%s";\nDir::Etc::main "%s";\n' "$aptiso/parts" "$aptiso/main.conf" > "$aptiso/preload.conf"
+          APT_CONFIG="$aptiso/preload.conf" AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" \
+            bash scripts/ci/prepare-ksq-1-local-apt-metadata.sh 2>&1 | tee "$base/local-apt-metadata.log"
+          python3 scripts/ci/generate-kde-build-closure.py
+          cmp build/ksq-0/build-order.tsv build/ksq-0/canonical/build-order.tsv
+          test "$(sha256sum build/ksq-0/build-order.tsv | awk '{print $1}')" = 9c53547df78a9f7c740228aba09490dfdb68e6307d2200e12ebf907dfa3fcb88
+
+      - name: Post-validate exact KWallet sidecar candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/postvalidate-061-065-r2-sidecar
+          set -a; source scripts/ci/aurora-ksq-snapshot-release.env; set +a
+          slice="/opt/supralinux/archive/$AURORA_KSQ_SNAPSHOT_SLICE_ID"
+          extension_root="$(cat "$base/runtime-extension-root.txt")"
+          set +e
+          AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" \
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_ROOT="$extension_root" \
+            bash scripts/ci/validate-ksq-1-kwallet-pam-runtime-sidecar-postbuild.sh \
+            2>&1 | tee "$base/kwallet-postvalidator.log"
+          rcs=("${PIPESTATUS[@]}")
+          set -e
+          printf 'POSTVALIDATOR_RC=%s\nTEE_RC=%s\n' "${rcs[0]}" "${rcs[1]}" > "$base/postvalidator-command.env"
+          exit 0
+
+      - name: Audit independent post-validation
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/postvalidate-061-065-r2-sidecar
+          status=FAIL
+          start="$(cat "$base/host-evidence/start-time.txt")"
+          sudo journalctl -k --since "$start" --no-pager 2>/dev/null | grep 'apparmor="DENIED"' > "$base/host-evidence/apparmor-denied-all.log" || true
+          grep -Ei 'profile="[^\"]*(mmdebstrap|unprivileged_userns)[^\"]*"|comm="(mmdebstrap|unshare|mount|newuidmap|newgidmap)"' \
+            "$base/host-evidence/apparmor-denied-all.log" > "$base/host-evidence/apparmor-denied-relevant.log" || true
+          denials="$(wc -l < "$base/host-evidence/apparmor-denied-relevant.log")"
+          POSTVALIDATOR_RC=99; TEE_RC=99
+          [[ ! -f "$base/postvalidator-command.env" ]] || . "$base/postvalidator-command.env"
+          solver=build/ksq-1/full/kwallet-pam-validation/solver-closure.env
+          validator=build/ksq-1/full/kwallet-pam-validation/status.env
+          if [[ "$POSTVALIDATOR_RC" = 0 && "$TEE_RC" = 0 && "$denials" -eq 0 ]] \
+            && [[ -f "$solver" && -f "$validator" ]] \
+            && grep -qx 'AURORA_KSQ_1_KWALLET_SOLVER_DEBS=375' "$validator" \
+            && grep -qx 'AURORA_KSQ_1_KWALLET_SOLVER_SELECTED_PACKAGES=375' "$solver" \
+            && grep -qx 'AURORA_KSQ_1_KWALLET_SOLVER_PRESEEDED_DEBS=3' "$solver" \
+            && grep -qx 'AURORA_KSQ_1_KWALLET_SOLVER_ENUMERATION=apt-simulate+print-uris' "$solver" \
+            && grep -qx 'AURORA_KSQ_1_KWALLET_BINARY_RUNTIME_DEPS=PASS' "$validator" \
+            && grep -qx 'AURORA_KSQ_1_KWALLET_PAM_INSTALLATION=PASS' "$validator" \
+            && grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_STAGE=PASS' "$validator" \
+            && grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_ID=20260829T022000Z-kwallet-runtime-r1' "$validator" \
+            && grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_AUTO_UNLOCK_CERTIFIED=no' "$validator" \
+            && grep -qx 'AURORA_KSQ_1_KWALLET_VALIDATOR_MODE=native-unprivileged' "$validator"; then
+            selected="$(awk -F= '$1=="AURORA_KSQ_1_KWALLET_SOLVER_SELECTED_PACKAGES"{print $2}' "$solver")"
+            uris="$(awk -F= '$1=="AURORA_KSQ_1_KWALLET_SOLVER_FILE_URIS"{print $2}' "$solver")"
+            preseeded="$(awk -F= '$1=="AURORA_KSQ_1_KWALLET_SOLVER_PRESEEDED_DEBS"{print $2}' "$solver")"
+            [[ $((uris + preseeded)) -eq "$selected" ]] && status=PASS
+          fi
+          {
+            cat "$base/source-artifact.env"
+            echo "AURORA_KSQ_1_POSTVALIDATE_APPARMOR_DENIALS=$denials"
+            echo "AURORA_KSQ_1_POSTVALIDATE_DOCKER_USED=0"
+            echo "AURORA_KSQ_1_POSTVALIDATE_CUSTOM_APPARMOR_USED=0"
+            echo "AURORA_KSQ_1_POSTVALIDATE_STATUS=$status"
+          } | tee "$base/audit.env"
+
+      - name: Upload accepted 061-065 KWallet post-validation evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-postvalidated-range-061-065-r2-kwallet-sidecar
+          path: |
+            build/ksq-1/postvalidate-061-065-r2-sidecar/
+            build/ksq-1/full/chunk-061-065/evidence/
+            build/ksq-1/full/chunk-061-065/new-debs/
+            build/ksq-1/full/kwallet-pam-validation/
+            build/ksq-0/build-order.tsv
+            build/ksq-0/closure-status.env
+            scripts/ci/aurora-ksq-snapshot-release.env
+            scripts/ci/aurora-ksq-kwallet-runtime-extension.env
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce independent post-validation
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat build/ksq-1/postvalidate-061-065-r2-sidecar/audit.env
+          grep -qx 'AURORA_KSQ_1_POSTVALIDATE_STATUS=PASS' build/ksq-1/postvalidate-061-065-r2-sidecar/audit.env
