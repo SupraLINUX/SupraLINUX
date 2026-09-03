@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 SOURCE="${ROOT}/scripts/ci/validate-ksq-1-kwallet-pam-runtime-sidecar.sh"
 EXPECTED_BLOB="41d95eb5126052229e822061e979b32e700f7c33"
-TMP="${ROOT}/scripts/ci/.validate-ksq-1-kwallet-runtime-sidecar-v4-${GITHUB_RUN_ID:-local}.sh"
+TMP="${ROOT}/scripts/ci/.validate-ksq-1-kwallet-runtime-sidecar-v5-${GITHUB_RUN_ID:-local}.sh"
 
 fail() { echo "AURORA_KSQ_1_KWALLET_POSTBUILD_FAILURE: $*" >&2; exit 1; }
 
@@ -12,7 +12,7 @@ fail() { echo "AURORA_KSQ_1_KWALLET_POSTBUILD_FAILURE: $*" >&2; exit 1; }
 command -v git >/dev/null || fail "git missing"
 command -v python3 >/dev/null || fail "python3 missing"
 [[ "$(git -C "${ROOT}" hash-object "${SOURCE}")" == "${EXPECTED_BLOB}" ]] \
-  || fail "source validator blob changed; review the v4 delta before reuse"
+  || fail "source validator blob changed; review the v5 delta before reuse"
 
 python3 - "${SOURCE}" "${TMP}" <<'PY'
 from pathlib import Path
@@ -33,19 +33,12 @@ if text.find(start_marker, start + 1) >= 0:
     raise SystemExit('postbuild validator: solver download marker is not unique')
 
 replacement = r'''# Prove the solver selection independently of APT's archive-cache behavior.
-# apt-get --simulate emits one Inst line per selected unpack operation. With the
-# empty dpkg status used above, the exact KWallet install closure must contain 375
-# package operations under normal/default Recommends semantics.
 APT_CONFIG="${SOLVER}/preload.conf" apt-get "${apt_opts[@]}" --simulate --no-remove install "${TARGET_SPECS[@]}" \
   2>&1 | tee "${EVIDENCE}/solver-simulate.log"
 ! grep -q '^Remv ' "${EVIDENCE}/solver-simulate.log" || fail "solver simulation requested removals"
 SIMULATED_INSTALL_COUNT="$(grep -c '^Inst ' "${EVIDENCE}/solver-simulate.log" || true)"
 [[ "${SIMULATED_INSTALL_COUNT}" -eq 375 ]] || fail "expected 375 simulated install operations, got ${SIMULATED_INSTALL_COUNT}"
 
-# --print-uris enumerates objects APT would retrieve. The three independently
-# validated sidecar DEBs are already preseeded in Dir::Cache::archives, so they
-# are deliberately absent from this URI list. Every remaining object must be a
-# local file: URI and URI objects + preseeded objects must equal the simulation.
 APT_CONFIG="${SOLVER}/preload.conf" apt-get "${apt_opts[@]}" --print-uris --yes --no-remove install "${TARGET_SPECS[@]}" \
   2>&1 | tee "${EVIDENCE}/solver-uris.log"
 URI_LINE_COUNT="$(grep -c "^'" "${EVIDENCE}/solver-uris.log" || true)"
@@ -57,22 +50,15 @@ PRESEEDED_DEB_COUNT="$(awk -F '\t' 'NR > 1 && $5 == "yes" {count++} END {print c
 [[ $((FILE_URI_COUNT + PRESEEDED_DEB_COUNT)) -eq "${SIMULATED_INSTALL_COUNT}" ]] \
   || fail "solver object accounting mismatch: file_uris=${FILE_URI_COUNT} preseeded=${PRESEEDED_DEB_COUNT} selected=${SIMULATED_INSTALL_COUNT}"
 
-# Actually retrieve the complete closure from local sources. APT is permitted to
-# consume file: objects in place instead of copying them into Dir::Cache::archives;
-# success here proves every selected local object is physically available.
 APT_CONFIG="${SOLVER}/preload.conf" apt-get "${apt_opts[@]}" --download-only --yes --no-remove install "${TARGET_SPECS[@]}" \
   2>&1 | tee "${EVIDENCE}/solver-download.log"
 ! grep -E '^(Get|Hit|Ign|Err):[0-9]+ https?://' "${EVIDENCE}/solver-download.log" || fail "remote solver package transport occurred"
 ! grep -q '^Err:[0-9]' "${EVIDENCE}/solver-download.log" || fail "local solver still has unresolved package objects"
 
-# Parse the exact simulated package/version selection and materialize only those
-# Supra candidate DEBs that the solver selected. The sidecar packages are already
-# present in CLOSURE from the independently validated staging step.
 python3 - "${EVIDENCE}/solver-simulate.log" "${EVIDENCE}/solver-selected-packages.tsv" <<'PYSEL'
 from pathlib import Path
 import re
 import sys
-
 src, dst = map(Path, sys.argv[1:])
 rows = []
 seen = set()
@@ -132,44 +118,31 @@ done
 printf 'AURORA_KSQ_1_KWALLET_SOLVER_DEBS=%s\nAURORA_KSQ_1_KWALLET_SOLVER_SELECTED_PACKAGES=%s\nAURORA_KSQ_1_KWALLET_SOLVER_FILE_URIS=%s\nAURORA_KSQ_1_KWALLET_SOLVER_PRESEEDED_DEBS=%s\nAURORA_KSQ_1_KWALLET_SOLVER_ENUMERATION=apt-simulate+print-uris\nAURORA_KSQ_1_KWALLET_CANDIDATE_CLOSURE_DEBS=%s\nAURORA_KSQ_1_KWALLET_RECOMMENDS_POLICY=default-enabled\n' \
   "${SIMULATED_INSTALL_COUNT}" "${SIMULATED_INSTALL_COUNT}" "${FILE_URI_COUNT}" "${PRESEEDED_DEB_COUNT}" "${CLOSURE_DEB_COUNT}" \
   > "${EVIDENCE}/solver-closure.env"
-
 SOLVER_DEB_COUNT="${SIMULATED_INSTALL_COUNT}"
 '''
 
 patched = text[:start] + replacement + text[end:]
 
-# minbase adds the unrelated Priority:required bootstrap set. For this isolated
-# package-install proof use the documented apt variant (Essential + apt) and let
-# the explicitly included KWallet targets pull their own dependency closure.
 minbase_marker = '  --mode=unshare --variant=minbase --architectures=amd64 \\\n'
 apt_marker = '  --mode=unshare --variant=apt --architectures=amd64 \\\n'
 if patched.count(minbase_marker) != 1:
     raise SystemExit('postbuild validator: expected exactly one minbase bootstrap marker')
 patched = patched.replace(minbase_marker, apt_marker, 1)
 
-# mmdebstrap disables Recommends by default. The solver and the maintained r2
-# builder contract use normal APT semantics, so explicitly restore that policy.
 proxy_marker = '  --aptopt=\'Acquire::https::Proxy "http://127.0.0.1:9";\' \\\n'
 if patched.count(proxy_marker) != 1:
     raise SystemExit('postbuild validator: https proxy aptopt marker is not unique')
-patched = patched.replace(
-    proxy_marker,
-    proxy_marker + '  --aptopt=\'Apt::Install-Recommends "true";\' \\\n',
-    1,
-)
+patched = patched.replace(proxy_marker, proxy_marker + '  --aptopt=\'Apt::Install-Recommends "true";\' \\\n', 1)
 
 install_inputs_marker = 'printf \'AURORA_KSQ_1_KWALLET_INCLUDE_DEBS=%s\\n\' "${CLOSURE_DEB_COUNT}" > "${EVIDENCE}/installation-inputs.env"\n'
 if patched.count(install_inputs_marker) != 1:
     raise SystemExit('postbuild validator: installation input marker is not unique')
 patched = patched.replace(
     install_inputs_marker,
-    install_inputs_marker
-    + 'printf \'AURORA_KSQ_1_KWALLET_BOOTSTRAP_VARIANT=apt\\nAURORA_KSQ_1_KWALLET_INSTALL_RECOMMENDS=true\\n\' >> "${EVIDENCE}/installation-inputs.env"\n',
+    install_inputs_marker + 'printf \'AURORA_KSQ_1_KWALLET_BOOTSTRAP_VARIANT=apt\\nAURORA_KSQ_1_KWALLET_INSTALL_RECOMMENDS=true\\n\' >> "${EVIDENCE}/installation-inputs.env"\n',
     1,
 )
 
-# Ubuntu 26.04 defaults to coreutils-from-uutils, whose chroot lives in /usr/bin.
-# Resolve the host binary instead of assuming the GNU-provider /usr/sbin path.
 first_helper = 'mmdebstrap --unshare-helper /usr/sbin/chroot "${ROOTFS}" apt-get check | tee "${EVIDENCE}/apt-check.txt"\n'
 if patched.count(first_helper) != 1:
     raise SystemExit('postbuild validator: apt-check helper marker is not unique')
@@ -184,8 +157,6 @@ printf 'AURORA_KSQ_1_KWALLET_HOST_CHROOT=%s\nAURORA_KSQ_1_KWALLET_HOST_CHROOT_OW
 patched = patched.replace(first_helper, helper_prelude + first_helper, 1)
 patched = patched.replace('/usr/sbin/chroot', '"${CHROOT_BIN}"')
 
-# Prove that every package/version selected by the independent 375-operation
-# solver is installed in the rootfs, not merely that the six direct targets are.
 installed_versions_marker = 'mmdebstrap --unshare-helper "${CHROOT_BIN}" "${ROOTFS}" dpkg-query -W \\\n  libpam-kwallet-common libpam-kwallet5 kwallet6 libkf6wallet-data libkf6wallet6 libkf6walletbackend6 \\\n  | sort | tee "${EVIDENCE}/installed-versions.tsv"\n'
 if patched.count(installed_versions_marker) != 1:
     raise SystemExit('postbuild validator: installed-version query marker is not unique')
@@ -194,7 +165,6 @@ verify_block = r'''mmdebstrap --unshare-helper "${CHROOT_BIN}" "${ROOTFS}" dpkg-
 python3 - "${EVIDENCE}/solver-selected-packages.tsv" "${EVIDENCE}/installed-all-packages.tsv" "${EVIDENCE}/selected-install-verification.tsv" <<'PYVERIFY'
 from pathlib import Path
 import sys
-
 selected_path, installed_path, out_path = map(Path, sys.argv[1:])
 selected = {}
 for line in selected_path.read_text().splitlines()[1:]:
@@ -246,6 +216,15 @@ printf 'AURORA_KSQ_1_KWALLET_SELECTED_INSTALL_VERIFIED=%s\nAURORA_KSQ_1_KWALLET_
 
 '''
 patched = patched.replace(installed_versions_marker, verify_block + installed_versions_marker, 1)
+
+# dpkg-query's default -W format uses binary package identity and therefore adds
+# :amd64 for Multi-Arch:same packages. Accept that qualifier in the direct six-
+# package checks while preserving the exact version comparison.
+version_fn = 'installed_version() { awk -v p="$1" \'$1 == p {print $2}\' "${EVIDENCE}/installed-versions.tsv"; }\n'
+version_fn_multiarch = 'installed_version() { awk -v p="$1" \'$1 == p || $1 == p ":amd64" {print $2}\' "${EVIDENCE}/installed-versions.tsv"; }\n'
+if patched.count(version_fn) != 1:
+    raise SystemExit('postbuild validator: installed_version function marker is not unique')
+patched = patched.replace(version_fn, version_fn_multiarch, 1)
 
 target.write_text(patched)
 PY
