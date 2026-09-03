@@ -1,0 +1,327 @@
+name: Aurora KSQ-1 KWallet runtime extension publication
+
+on:
+  push:
+    branches: [feature/kde-stack-qualification]
+    paths:
+      - '.github/workflows/ksq-kwallet-runtime-extension-publish.yml'
+      - 'scripts/ci/ksq-kwallet-runtime-extension.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: aurora-ksq1-kwallet-runtime-extension-20260829T022000Z-r1
+  cancel-in-progress: false
+
+env:
+  SNAPSHOT: '20260829T022000Z'
+  EXTENSION_ID: '20260829T022000Z-kwallet-runtime-r1'
+  SNAPSHOT_EPOCH: '1787970000'
+  RELEASE_TAG: 'ksq-kwallet-runtime-20260829T022000Z-r1'
+  RELEASE_ASSET: 'aurora-ksq1-kwallet-runtime-20260829T022000Z-r1.tar'
+  RELEASE_MANIFEST: 'aurora-ksq1-kwallet-runtime-20260829T022000Z-r1.env'
+  CAUSAL_RUN_ID: '33801387899'
+  CAUSAL_ARTIFACT_ID: '9911718982'
+  CAUSAL_ARTIFACT_SHA256: '9617487a6aa4d26f5679ddca44409d12e8999331cfd5a53feeb5b09322e26bba'
+  R2_SIZE_ARTIFACT_ID: '9883249125'
+  R2_SIZE_ARTIFACT_SHA256: '2281ab4655dc8d33639d9a3bbfb75d60325829a6b0af19902c20e4406e0c945b'
+
+jobs:
+  materialize-and-publish:
+    name: Materialize and publish signed runtime extension
+    runs-on: ubuntu-26.04
+    timeout-minutes: 60
+    outputs:
+      archive_sha256: ${{ steps.package.outputs.archive_sha256 }}
+      archive_bytes: ${{ steps.package.outputs.archive_bytes }}
+      manifest_sha256: ${{ steps.package.outputs.manifest_sha256 }}
+
+    steps:
+      - name: Check out exact materializer commit
+        uses: actions/checkout@v7
+
+      - name: Assert stock Resolute publication host
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl unzip python3 xz-utils ubuntu-keyring gpgv dpkg-dev
+          python3 -m py_compile scripts/ci/ksq-kwallet-runtime-extension.py
+          command -v gh
+          command -v tar
+
+      - name: Download exact causal and r2 closure evidence
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          input="$RUNNER_TEMP/kwallet-runtime-extension-input"
+          rm -rf "$input"
+          mkdir -p "$input/causal" "$input/r2"
+
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/$CAUSAL_ARTIFACT_ID/zip" \
+            -o "$input/causal.zip"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/$R2_SIZE_ARTIFACT_ID/zip" \
+            -o "$input/r2.zip"
+
+          printf '%s  %s\n' \
+            "$CAUSAL_ARTIFACT_SHA256" "$input/causal.zip" \
+            "$R2_SIZE_ARTIFACT_SHA256" "$input/r2.zip" \
+            | sha256sum -c -
+
+          unzip -q "$input/causal.zip" -d "$input/causal"
+          unzip -q "$input/r2.zip" -d "$input/r2"
+          solver="$input/causal/build/ksq-1/full/kwallet-pam-validation/solver-download.log"
+          objects="$input/r2/binary-objects.tsv"
+          test -s "$solver"
+          test -s "$objects"
+          grep -q '^Err:196 .* lsb-base all 11\.6build1$' "$solver"
+          grep -q '^Err:352 .* libwrap0 amd64 7\.6\.q-36build2$' "$solver"
+          grep -q '^Err:353 .* socat amd64 1\.8\.1\.1-1ubuntu0\.1$' "$solver"
+          test "$(wc -l < "$objects")" -eq 1783
+
+      - name: Prove exact runtime gap from causal evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          input="$RUNNER_TEMP/kwallet-runtime-extension-input"
+          root="$RUNNER_TEMP/$EXTENSION_ID"
+          rm -rf "$root"
+          mkdir -p "$root"
+          python3 scripts/ci/ksq-kwallet-runtime-extension.py analyze \
+            --solver-log "$input/causal/build/ksq-1/full/kwallet-pam-validation/solver-download.log" \
+            --r2-binary-objects "$input/r2/binary-objects.tsv" \
+            --out-dir "$root" \
+            | tee "$RUNNER_TEMP/runtime-gap-analysis.log"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_GAP_STATUS=PROVEN' "$root/gap-status.env"
+          test "$(($(wc -l < "$root/runtime-gap.tsv") - 1))" -eq 3
+
+      - name: Materialize exact signed Ubuntu snapshot objects
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/$EXTENSION_ID"
+          python3 scripts/ci/ksq-kwallet-runtime-extension.py materialize --root "$root" \
+            | tee "$RUNNER_TEMP/runtime-extension-materialize.log"
+          python3 scripts/ci/ksq-kwallet-runtime-extension.py validate --root "$root" \
+            | tee "$RUNNER_TEMP/runtime-extension-validate.log"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_STATUS=IMMUTABLE' "$root/provenance.env"
+          test "$(find "$root/packages" -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 3
+          grep -q 'lsb-base_11.6build1_all.deb' "$root/packages.sha256"
+          grep -q 'libwrap0_7.6.q-36build2_amd64.deb' "$root/packages.sha256"
+          grep -q 'socat_1.8.1.1-1ubuntu0.1_amd64.deb' "$root/packages.sha256"
+
+      - name: Create deterministic immutable release bytes
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/$EXTENSION_ID"
+          archive="$RUNNER_TEMP/$RELEASE_ASSET"
+          manifest="$RUNNER_TEMP/$RELEASE_MANIFEST"
+          rm -f "$archive" "$manifest"
+
+          tar \
+            --sort=name \
+            --format=gnu \
+            --mtime="@$SNAPSHOT_EPOCH" \
+            --owner=0 \
+            --group=0 \
+            --numeric-owner \
+            -C "$RUNNER_TEMP" \
+            -cf "$archive" \
+            "$EXTENSION_ID"
+
+          archive_sha256="$(sha256sum "$archive" | awk '{print $1}')"
+          archive_bytes="$(stat -c '%s' "$archive")"
+          package_manifest_sha256="$(sha256sum "$root/packages.sha256" | awk '{print $1}')"
+          metadata_manifest_sha256="$(sha256sum "$root/snapshot-metadata.sha256" | awk '{print $1}')"
+          gap_sha256="$(sha256sum "$root/runtime-gap.tsv" | awk '{print $1}')"
+
+          cat > "$manifest" <<EOF_MANIFEST
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_STATUS=PUBLISHED_CANDIDATE
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_ID=$EXTENSION_ID
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_UBUNTU_SNAPSHOT=$SNAPSHOT
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_TAG=$RELEASE_TAG
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ASSET=$RELEASE_ASSET
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ASSET_SHA256=$archive_sha256
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ASSET_BYTES=$archive_bytes
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ARCHIVE_FORMAT=gnu-tar
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_FIXED_MTIME_EPOCH=$SNAPSHOT_EPOCH
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_MATERIALIZER_COMMIT=$GITHUB_SHA
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_CAUSAL_RUN_ID=$CAUSAL_RUN_ID
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_CAUSAL_ARTIFACT_ID=$CAUSAL_ARTIFACT_ID
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_CAUSAL_ARTIFACT_SHA256=$CAUSAL_ARTIFACT_SHA256
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_R2_SIZE_ARTIFACT_ID=$R2_SIZE_ARTIFACT_ID
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_R2_SIZE_ARTIFACT_SHA256=$R2_SIZE_ARTIFACT_SHA256
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_PACKAGES=3
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_PACKAGES_MANIFEST_SHA256=$package_manifest_sha256
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_METADATA_MANIFEST_SHA256=$metadata_manifest_sha256
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_GAP_SHA256=$gap_sha256
+          EOF_MANIFEST
+
+          manifest_sha256="$(sha256sum "$manifest" | awk '{print $1}')"
+          sha256sum "$archive" "$manifest"
+          stat -c '%s %n' "$archive" "$manifest"
+          echo "archive_sha256=$archive_sha256" >> "$GITHUB_OUTPUT"
+          echo "archive_bytes=$archive_bytes" >> "$GITHUB_OUTPUT"
+          echo "manifest_sha256=$manifest_sha256" >> "$GITHUB_OUTPUT"
+
+      - name: Publish or verify immutable engineering release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/$RELEASE_ASSET"
+          manifest="$RUNNER_TEMP/$RELEASE_MANIFEST"
+          notes="$RUNNER_TEMP/runtime-extension-release-notes.md"
+
+          if gh release view "$RELEASE_TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            existing="$RUNNER_TEMP/existing-release"
+            rm -rf "$existing"; mkdir -p "$existing"
+            gh release download "$RELEASE_TAG" -R "$GITHUB_REPOSITORY" \
+              --pattern "$RELEASE_ASSET" --pattern "$RELEASE_MANIFEST" --dir "$existing"
+            cmp "$archive" "$existing/$RELEASE_ASSET"
+            cmp "$manifest" "$existing/$RELEASE_MANIFEST"
+            echo 'AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ALREADY_IDENTICAL=PASS'
+          else
+            cat > "$notes" <<'EOF_NOTES'
+          Immutable KSQ-1 runtime-validation extension for SupraLINUX 1.0.0 Aurora.
+
+          The extension contains only the exact Ubuntu snapshot objects proven absent from the immutable r2 build slice but required by the order-65 KWallet/PAM installation closure. It does not replace or mutate r2 and is not a product repository or SupraLINUX release.
+          EOF_NOTES
+            gh release create "$RELEASE_TAG" \
+              "$archive" "$manifest" \
+              -R "$GITHUB_REPOSITORY" \
+              --target "$GITHUB_SHA" \
+              --title "Aurora KSQ-1 KWallet runtime extension $EXTENSION_ID" \
+              --notes-file "$notes" \
+              --latest=false
+          fi
+
+  independent-redownload:
+    name: Independently re-download and validate runtime extension
+    needs: materialize-and-publish
+    runs-on: ubuntu-26.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out exact publication commit
+        uses: actions/checkout@v7
+
+      - name: Bootstrap independent validator
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            python3 xz-utils ubuntu-keyring gpgv dpkg-dev
+          python3 -m py_compile scripts/ci/ksq-kwallet-runtime-extension.py
+
+      - name: Download exact published release bytes
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_SHA256: ${{ needs.materialize-and-publish.outputs.archive_sha256 }}
+          EXPECTED_BYTES: ${{ needs.materialize-and-publish.outputs.archive_bytes }}
+          EXPECTED_MANIFEST_SHA256: ${{ needs.materialize-and-publish.outputs.manifest_sha256 }}
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/release"
+          mkdir -p "$out"
+          gh release download "$RELEASE_TAG" -R "$GITHUB_REPOSITORY" \
+            --pattern "$RELEASE_ASSET" --pattern "$RELEASE_MANIFEST" --dir "$out"
+          archive="$out/$RELEASE_ASSET"
+          manifest="$out/$RELEASE_MANIFEST"
+          test "$(sha256sum "$archive" | awk '{print $1}')" = "$EXPECTED_SHA256"
+          test "$(stat -c '%s' "$archive")" = "$EXPECTED_BYTES"
+          test "$(sha256sum "$manifest" | awk '{print $1}')" = "$EXPECTED_MANIFEST_SHA256"
+          grep -qx "AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ASSET_SHA256=$EXPECTED_SHA256" "$manifest"
+          grep -qx "AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ASSET_BYTES=$EXPECTED_BYTES" "$manifest"
+          grep -qx "AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_ID=$EXTENSION_ID" "$manifest"
+          grep -qx "AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_UBUNTU_SNAPSHOT=$SNAPSHOT" "$manifest"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_PACKAGES=3' "$manifest"
+
+      - name: Reject unsafe archive members
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - "$RUNNER_TEMP/release/$RELEASE_ASSET" "$EXTENSION_ID" <<'PY'
+          import sys
+          import tarfile
+          from pathlib import PurePosixPath
+
+          archive, extension_id = sys.argv[1:]
+          with tarfile.open(archive, 'r:') as tf:
+              members = tf.getmembers()
+              if not members:
+                  raise SystemExit('empty extension archive')
+              for member in members:
+                  path = PurePosixPath(member.name)
+                  if path.is_absolute() or '..' in path.parts or not path.parts or path.parts[0] != extension_id:
+                      raise SystemExit(f'unsafe archive member: {member.name}')
+                  if member.issym():
+                      raise SystemExit(f'symlink forbidden: {member.name}')
+                  if member.islnk():
+                      link = PurePosixPath(member.linkname)
+                      if link.is_absolute() or '..' in link.parts or not link.parts or link.parts[0] != extension_id:
+                          raise SystemExit(f'unsafe hardlink: {member.name} -> {member.linkname}')
+          print('AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_ARCHIVE_NAMES_SAFE')
+          PY
+
+      - name: Extract and independently validate signed package provenance
+        shell: bash
+        env:
+          EXPECTED_SHA256: ${{ needs.materialize-and-publish.outputs.archive_sha256 }}
+          EXPECTED_MANIFEST_SHA256: ${{ needs.materialize-and-publish.outputs.manifest_sha256 }}
+        run: |
+          set -euo pipefail
+          extract="$RUNNER_TEMP/extracted"
+          mkdir -p "$extract"
+          tar -C "$extract" -xf "$RUNNER_TEMP/release/$RELEASE_ASSET"
+          root="$extract/$EXTENSION_ID"
+          python3 scripts/ci/ksq-kwallet-runtime-extension.py validate --root "$root" \
+            | tee "$RUNNER_TEMP/independent-validation.log"
+          evidence="$GITHUB_WORKSPACE/build/ksq-1/kwallet-runtime-extension-independent"
+          mkdir -p "$evidence"
+          cp "$RUNNER_TEMP/release/$RELEASE_MANIFEST" "$evidence/"
+          cp "$root/provenance.env" "$root/gap-status.env" "$root/runtime-gap.tsv" \
+             "$root/packages.sha256" "$root/snapshot-metadata.sha256" "$evidence/"
+          cat > "$evidence/status.env" <<EOF_STATUS
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_INDEPENDENT_VALIDATION=PASS
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_ID=$EXTENSION_ID
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_UBUNTU_SNAPSHOT=$SNAPSHOT
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_TAG=$RELEASE_TAG
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ASSET_SHA256=$EXPECTED_SHA256
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_MANIFEST_SHA256=$EXPECTED_MANIFEST_SHA256
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_PACKAGES=3
+          EOF_STATUS
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_INDEPENDENT_VALIDATION=PASS' "$evidence/status.env"
+
+      - name: Upload independent validation evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq1-kwallet-runtime-extension-independent
+          path: build/ksq-1/kwallet-runtime-extension-independent
+          if-no-files-found: error
+          compression-level: 0
