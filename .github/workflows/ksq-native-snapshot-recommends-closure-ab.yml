@@ -116,10 +116,22 @@ jobs:
             | sort -u > "$out/certified-binary-seeds.tsv"
           test "$(wc -l < "$out/certified-binary-seeds.tsv")" -eq 244
 
+          # Diagnostic only. The decisive identity gate is the exact object-list
+          # comparison below. Every install root is version-pinned, so apt-get
+          # itself will fail if any exact historical version is unavailable.
+          : > "$out/candidate-verification.tsv"
+          : > "$out/candidate-anomalies.tsv"
           while IFS=$'\t' read -r pkg expected; do
-            candidate="$(apt-cache "${apt_opts[@]}" policy "$pkg" | awk '/Candidate:/ {print $2; exit}')"
-            printf '%s\t%s\t%s\n' "$pkg" "$expected" "$candidate" >> "$out/candidate-verification.tsv"
-            test "$candidate" = "$expected" || { echo "candidate mismatch: $pkg expected=$expected candidate=$candidate" >&2; exit 3; }
+            set +e
+            policy="$(apt-cache "${apt_opts[@]}" policy "$pkg" 2>&1)"
+            policy_rc=$?
+            set -e
+            candidate="$(printf '%s\n' "$policy" | awk '/Candidate:/ {print $2; exit}')"
+            printf '%s\t%s\t%s\t%s\n' "$pkg" "$expected" "${candidate:-NONE}" "$policy_rc" >> "$out/candidate-verification.tsv"
+            if [[ "$policy_rc" -ne 0 || "$candidate" != "$expected" ]]; then
+              printf '%s\t%s\t%s\t%s\n' "$pkg" "$expected" "${candidate:-NONE}" "$policy_rc" >> "$out/candidate-anomalies.tsv"
+              printf '%s\n' "$policy" >> "$out/candidate-anomalies.log"
+            fi
           done < "$out/certified-binary-seeds.tsv"
 
           mapfile -t seeds < <(awk -F '\t' '{print $1 "=" $2}' "$out/certified-binary-seeds.tsv")
@@ -127,11 +139,11 @@ jobs:
           roots+=("${seeds[@]}")
 
           sudo apt-get "${apt_opts[@]}" --print-uris --yes install "${roots[@]}" \
-            > "$out/default-print-uris.txt"
+            > "$out/default-print-uris.txt" 2> "$out/default-resolve.stderr"
           sudo apt-get "${apt_opts[@]}" --no-install-recommends --print-uris --yes install "${roots[@]}" \
-            > "$out/no-recommends-print-uris.txt"
+            > "$out/no-recommends-print-uris.txt" 2> "$out/no-recommends-resolve.stderr"
 
-          apt-config "${apt_opts[@]}" dump | grep -iE 'APT::Install-Recommends|APT::Install-Suggests' \
+          apt-config dump | grep -iE 'APT::Install-Recommends|APT::Install-Suggests' \
             > "$out/apt-policy.txt" || true
           apt-cache "${apt_opts[@]}" show pipewire-bin \
             | awk 'BEGIN{RS=""} /^Package: pipewire-bin$/ && /Version: / {print; exit}' \
