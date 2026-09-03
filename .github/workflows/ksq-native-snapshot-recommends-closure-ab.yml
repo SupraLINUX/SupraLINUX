@@ -93,7 +93,10 @@ jobs:
           Snapshot: ${snapshot}
           SOURCES
 
+          # Aurora 1.0 is a generic amd64 product baseline. Architecture variants
+          # are an opt-in optimization and must not make qualification host-dependent.
           apt_opts=(
+            -o APT::Architecture-Variants=
             -o "Dir::Etc::sourcelist=$root/sources.list"
             -o "Dir::Etc::sourceparts=$root/sources.list.d"
             -o "Dir::State::lists=$root/lists"
@@ -102,6 +105,10 @@ jobs:
             -o APT::Get::List-Cleanup=0
             -o APT::Sandbox::User=root
           )
+
+          apt-config -o APT::Architecture-Variants= dump \
+            | grep -E '^(APT::Architecture|APT::Architectures|APT::Architecture-Variants|APT::Install-Recommends|APT::Install-Suggests)' \
+            | tee "$out/apt-policy.txt" || true
 
           sudo apt-get "${apt_opts[@]}" \
             -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update \
@@ -116,9 +123,8 @@ jobs:
             | sort -u > "$out/certified-binary-seeds.tsv"
           test "$(wc -l < "$out/certified-binary-seeds.tsv")" -eq 244
 
-          # Diagnostic only. The decisive identity gate is the exact object-list
-          # comparison below. Every install root is version-pinned, so apt-get
-          # itself will fail if any exact historical version is unavailable.
+          # Diagnostic only. Exact version pins plus the object-list identity gate
+          # below are authoritative for this A/B proof.
           : > "$out/candidate-verification.tsv"
           : > "$out/candidate-anomalies.tsv"
           while IFS=$'\t' read -r pkg expected; do
@@ -143,12 +149,15 @@ jobs:
           sudo apt-get "${apt_opts[@]}" --no-install-recommends --print-uris --yes install "${roots[@]}" \
             > "$out/no-recommends-print-uris.txt" 2> "$out/no-recommends-resolve.stderr"
 
-          apt-config dump | grep -iE 'APT::Install-Recommends|APT::Install-Suggests' \
-            > "$out/apt-policy.txt" || true
-          apt-cache "${apt_opts[@]}" show pipewire-bin \
-            | awk 'BEGIN{RS=""} /^Package: pipewire-bin$/ && /Version: / {print; exit}' \
-            > "$out/pipewire-bin-record.txt"
-          grep -Eq '^Recommends: .*dbus-user-session' "$out/pipewire-bin-record.txt"
+          # Preserve a direct package-relationship diagnostic without making a
+          # formatting-sensitive apt-cache parser part of the main proof gate.
+          apt-cache "${apt_opts[@]}" depends pipewire-bin \
+            > "$out/pipewire-bin-depends.txt" 2> "$out/pipewire-bin-depends.stderr" || true
+
+          if grep -q '_amd64v3\.deb' "$out/default-print-uris.txt" "$out/no-recommends-print-uris.txt"; then
+            echo AURORA_KSQ_RECOMMENDS_AB_FAILURE=architecture-variant-leaked >&2
+            exit 1
+          fi
 
       - name: Canonicalize and prove causal delta
         shell: bash
@@ -190,35 +199,46 @@ jobs:
               dst.write_text(''.join(f"{p}\t{rows[p]}\n" for p in sorted(rows)))
           PY
 
+          # Decisive historical identity proof: the published 1541-object slice
+          # was exactly the explicit no-Recommends generic-amd64 closure.
           cmp "$out/old.tsv" "$out/no-recommends.tsv"
           test "$(wc -l < "$out/old.tsv")" -eq 1541
+          norec_bytes="$(awk -F '\t' '{s+=$2} END{printf "%.0f",s}' "$out/no-recommends.tsv")"
+          test "$norec_bytes" = 704826504
 
           cut -f1 "$out/default.tsv" > "$out/default.paths"
           cut -f1 "$out/no-recommends.tsv" > "$out/no-recommends.paths"
           comm -23 "$out/default.paths" "$out/no-recommends.paths" > "$out/default-only.paths"
           comm -13 "$out/default.paths" "$out/no-recommends.paths" > "$out/no-recommends-only.paths"
-          test ! -s "$out/no-recommends-only.paths"
 
           awk 'NR==FNR{s[$1]=$2; next} ($1 in s){bytes+=s[$1]; count++} END{printf "AURORA_KSQ_RECOMMENDS_DEFAULT_ONLY_OBJECTS=%d\nAURORA_KSQ_RECOMMENDS_DEFAULT_ONLY_BYTES=%.0f\n",count,bytes}' \
-            "$out/default.tsv" "$out/default-only.paths" > "$out/delta.env"
+            "$out/default.tsv" "$out/default-only.paths" > "$out/default-delta.env"
+          awk 'NR==FNR{s[$1]=$2; next} ($1 in s){bytes+=s[$1]; count++} END{printf "AURORA_KSQ_RECOMMENDS_NORECOMMENDS_ONLY_OBJECTS=%d\nAURORA_KSQ_RECOMMENDS_NORECOMMENDS_ONLY_BYTES=%.0f\n",count,bytes}' \
+            "$out/no-recommends.tsv" "$out/no-recommends-only.paths" > "$out/no-recommends-delta.env"
+
           default_count="$(wc -l < "$out/default.tsv")"
           norec_count="$(wc -l < "$out/no-recommends.tsv")"
           default_bytes="$(awk -F '\t' '{s+=$2} END{printf "%.0f",s}' "$out/default.tsv")"
-          norec_bytes="$(awk -F '\t' '{s+=$2} END{printf "%.0f",s}' "$out/no-recommends.tsv")"
           {
             echo AURORA_KSQ_RECOMMENDS_AB_STATUS=PASS
             echo AURORA_KSQ_RECOMMENDS_SNAPSHOT=$snapshot
+            echo AURORA_KSQ_RECOMMENDS_ARCH_BASELINE=amd64
+            echo AURORA_KSQ_RECOMMENDS_ARCH_VARIANTS=disabled
             echo AURORA_KSQ_RECOMMENDS_OLD_EQUALS_EXPLICIT_NORECOMMENDS=1
             echo AURORA_KSQ_RECOMMENDS_NORECOMMENDS_OBJECTS=$norec_count
             echo AURORA_KSQ_RECOMMENDS_NORECOMMENDS_BYTES=$norec_bytes
             echo AURORA_KSQ_RECOMMENDS_DEFAULT_OBJECTS=$default_count
             echo AURORA_KSQ_RECOMMENDS_DEFAULT_BYTES=$default_bytes
-            cat "$out/delta.env"
+            cat "$out/default-delta.env"
+            cat "$out/no-recommends-delta.env"
           } | tee "$out/results.env"
 
-          grep -q '^pool/main/d/dbus/dbus-user-session_1.16.2-2ubuntu4_amd64.deb$' "$out/default-only.paths"
+          dbus='pool/main/d/dbus/dbus-user-session_1.16.2-2ubuntu4_amd64.deb'
+          grep -qx "$dbus" "$out/default.paths"
+          ! grep -qx "$dbus" "$out/no-recommends.paths"
           grep -q '^APT::Install-Recommends "1";' "$out/apt-policy.txt"
-          test "$default_count" -gt "$norec_count"
+          default_only="$(awk -F= '$1=="AURORA_KSQ_RECOMMENDS_DEFAULT_ONLY_OBJECTS"{print $2}' "$out/default-delta.env")"
+          test "$default_only" -gt 0
 
       - name: Preserve A/B evidence
         if: always()
