@@ -1,4 +1,4 @@
-name: Aurora KSQ certified snapshot slice size probe
+name: Aurora KSQ native snapshot slice closure and size
 
 on:
   push:
@@ -11,48 +11,87 @@ permissions:
   actions: read
 
 jobs:
-  size-snapshot-slice:
-    name: Calculate snapshot slice without downloading package payloads
-    runs-on: ubuntu-24.04
-    timeout-minutes: 60
+  native-snapshot-closure:
+    name: Calculate default-Recommends generic-amd64 slice closure natively
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+
     steps:
-      - name: Retrieve canonical KSQ-0 closure evidence
+      - name: Qualify Resolute host and bootstrap tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          mkdir -p "$RUNNER_TEMP/ksq0" "$RUNNER_TEMP/recommends-ab" "$RUNNER_TEMP/slice-size"
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl unzip ubuntu-keyring python3
+          {
+            echo AURORA_KSQ_SLICE_GENERATOR_HOST=ubuntu-26.04
+            echo AURORA_KSQ_SLICE_GENERATOR_ARCH=amd64
+            echo AURORA_KSQ_SLICE_GENERATOR_ARCH_VARIANTS=disabled
+            echo AURORA_KSQ_SLICE_GENERATOR_INSTALL_RECOMMENDS=default
+            apt-get --version | head -n1 | sed 's/^/AURORA_KSQ_SLICE_GENERATOR_APT=/'
+          } | tee "$RUNNER_TEMP/slice-size/generator.env"
+
+      - name: Retrieve exact certified inputs and causal A/B proof
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/ksq0" "$RUNNER_TEMP/slice-size"
           curl --fail --location --retry 5 --retry-all-errors \
             -H 'Accept: application/vnd.github+json' \
             -H "Authorization: Bearer ${GH_TOKEN}" \
             -H 'X-GitHub-Api-Version: 2022-11-28' \
             'https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/9708738867/zip' \
             -o "$RUNNER_TEMP/ksq0.zip"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            'https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/9883165109/zip' \
+            -o "$RUNNER_TEMP/recommends-ab.zip"
+
+          test "$(sha256sum "$RUNNER_TEMP/ksq0.zip" | awk '{print $1}')" = 5b23140181ea7e7931cb744f4c43930adba8f79e446c52d0f4b1c3c568106d50
+          test "$(sha256sum "$RUNNER_TEMP/recommends-ab.zip" | awk '{print $1}')" = 0b617d25f575efead1dbe904eb24cc1b31df94a3f07ce32a7dbd25fc1327c20d
           unzip -q "$RUNNER_TEMP/ksq0.zip" -d "$RUNNER_TEMP/ksq0"
+          unzip -q "$RUNNER_TEMP/recommends-ab.zip" -d "$RUNNER_TEMP/recommends-ab"
+
           test -s "$RUNNER_TEMP/ksq0/build/ksq-0/ubuntu-satisfied-build-deps.tsv"
           test -s "$RUNNER_TEMP/ksq0/build/ksq-0/selected-source-records.txt"
           grep -qx 'AURORA_KSQ_0_APT_SNAPSHOT=20260829T022000Z' "$RUNNER_TEMP/ksq0/build/ksq-0/closure-status.env"
           grep -qx 'AURORA_KSQ_0_CLOSURE_STATUS=COMPLETE' "$RUNNER_TEMP/ksq0/build/ksq-0/closure-status.env"
-          printf '%s\n' 'artifact_id=9708738867' \
-            'artifact_digest=sha256:5b23140181ea7e7931cb744f4c43930adba8f79e446c52d0f4b1c3c568106d50' \
-            > "$RUNNER_TEMP/slice-size/canonical-artifact.txt"
 
-      - name: Calculate binary and source object footprint
+          grep -qx 'AURORA_KSQ_RECOMMENDS_AB_STATUS=PASS' "$RUNNER_TEMP/recommends-ab/results.env"
+          grep -qx 'AURORA_KSQ_RECOMMENDS_ARCH_BASELINE=amd64' "$RUNNER_TEMP/recommends-ab/results.env"
+          grep -qx 'AURORA_KSQ_RECOMMENDS_ARCH_VARIANTS=disabled' "$RUNNER_TEMP/recommends-ab/results.env"
+          grep -qx 'AURORA_KSQ_RECOMMENDS_DEFAULT_OBJECTS=1783' "$RUNNER_TEMP/recommends-ab/results.env"
+          grep -qx 'AURORA_KSQ_RECOMMENDS_DEFAULT_BYTES=785219274' "$RUNNER_TEMP/recommends-ab/results.env"
+          test -s "$RUNNER_TEMP/recommends-ab/default.tsv"
+
+          cat > "$RUNNER_TEMP/slice-size/canonical-artifacts.txt" <<EOF_ARTIFACTS
+          KSQ0_ARTIFACT_ID=9708738867
+          KSQ0_ARTIFACT_SHA256=5b23140181ea7e7931cb744f4c43930adba8f79e446c52d0f4b1c3c568106d50
+          RECOMMENDS_AB_RUN_ID=33729123389
+          RECOMMENDS_AB_ARTIFACT_ID=9883165109
+          RECOMMENDS_AB_ARTIFACT_SHA256=0b617d25f575efead1dbe904eb24cc1b31df94a3f07ce32a7dbd25fc1327c20d
+          EOF_ARTIFACTS
+
+      - name: Calculate default-Recommends binary closure on exact Ubuntu snapshot
         shell: bash
         run: |
           set -euo pipefail
-          image='ubuntu:26.04@sha256:2260313b31c8c011cd2eebe728008efac1b3982be73eb71348ea2648d2c0e09b'
-          docker pull "$image"
-          docker run --rm -i \
-            -v "$RUNNER_TEMP/ksq0:/evidence:ro" \
-            -v "$RUNNER_TEMP/slice-size:/out" \
-            "$image" bash -s <<'EOF'
-          set -euo pipefail
           snapshot=20260829T022000Z
-          export DEBIAN_FRONTEND=noninteractive
-          rm -f /etc/apt/sources.list /etc/apt/sources.list.d/*
-          cat >/etc/apt/sources.list.d/ubuntu.sources <<SOURCES
+          root="$RUNNER_TEMP/apt-isolated"
+          evidence="$RUNNER_TEMP/ksq0"
+          out="$RUNNER_TEMP/slice-size"
+          mkdir -p "$root/lists/partial" "$root/archives/partial" "$root/sources.list.d"
+          : > "$root/status"
+          : > "$root/sources.list"
+
+          cat > "$root/sources.list.d/ubuntu.sources" <<SOURCES
           Types: deb
           URIs: http://archive.ubuntu.com/ubuntu
           Suites: resolute resolute-updates resolute-backports
@@ -68,75 +107,145 @@ jobs:
           Snapshot: ${snapshot}
           SOURCES
 
-          t0=$(date +%s)
-          # The minimal OCI image does not yet contain a usable CA bundle. TLS
-          # verification is disabled only while acquiring signed APT metadata;
-          # InRelease signatures remain mandatory and Error-Mode=any fails closed.
-          apt-get \
-            -o Acquire::Retries=5 \
-            -o Acquire::https::Verify-Peer=false \
-            -o Acquire::https::Verify-Host=false \
-            -o APT::Update::Error-Mode=any update 2>&1 | tee /out/apt-update.log
-          t1=$(date +%s)
+          apt_opts=(
+            -o APT::Architecture-Variants=
+            -o "Dir::Etc::sourcelist=$root/sources.list"
+            -o "Dir::Etc::sourceparts=$root/sources.list.d"
+            -o "Dir::State::lists=$root/lists"
+            -o "Dir::State::status=$root/status"
+            -o "Dir::Cache::archives=$root/archives"
+            -o APT::Get::List-Cleanup=0
+            -o APT::Sandbox::User=root
+          )
+
+          apt-config -o APT::Architecture-Variants= dump \
+            | grep -E '^(APT::Architecture|APT::Architectures|APT::Architecture-Variants|APT::Install-Recommends|APT::Install-Suggests)' \
+            | tee "$out/apt-policy.txt" || true
+          grep -q '^APT::Architecture "amd64";' "$out/apt-policy.txt"
+          grep -q '^APT::Architecture-Variants "";' "$out/apt-policy.txt"
+          grep -q '^APT::Install-Recommends "1";' "$out/apt-policy.txt"
+
+          t0="$(date +%s)"
+          sudo apt-get "${apt_opts[@]}" \
+            -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update \
+            2>&1 | tee "$out/apt-update.log"
+          t1="$(date +%s)"
 
           awk -F '\t' 'NR>1 {
             pkg=$4; n=split($7,a," "); ver=""
             for(i=1;i<=n;i++) if(index(a[i],pkg "=")==1) {ver=substr(a[i],length(pkg)+2); break}
             if(ver=="") {print "missing certified version for " pkg > "/dev/stderr"; exit 2}
             print pkg "\t" ver
-          }' /evidence/build/ksq-0/ubuntu-satisfied-build-deps.tsv | sort -u > /out/certified-binary-seeds.tsv
-          test "$(wc -l </out/certified-binary-seeds.tsv)" -eq 244
+          }' "$evidence/build/ksq-0/ubuntu-satisfied-build-deps.tsv" \
+            | sort -u > "$out/certified-binary-seeds.tsv"
+          test "$(wc -l < "$out/certified-binary-seeds.tsv")" -eq 244
 
+          : > "$out/candidate-verification.tsv"
           while IFS=$'\t' read -r pkg expected; do
-            candidate=$(apt-cache policy "$pkg" | awk '/Candidate:/ {print $2; exit}')
-            printf '%s\t%s\t%s\n' "$pkg" "$expected" "$candidate" >>/out/candidate-verification.tsv
-            [[ "$candidate" == "$expected" ]] || { echo "candidate mismatch: $pkg expected=$expected candidate=$candidate" >&2; exit 3; }
-          done </out/certified-binary-seeds.tsv
+            policy="$(apt-cache "${apt_opts[@]}" policy "$pkg")"
+            candidate="$(awk '/Candidate:/ {print $2; exit}' <<<"$policy")"
+            printf '%s\t%s\t%s\n' "$pkg" "$expected" "$candidate" >> "$out/candidate-verification.tsv"
+            test "$candidate" = "$expected" || { echo "candidate mismatch: $pkg expected=$expected candidate=$candidate" >&2; exit 3; }
+          done < "$out/certified-binary-seeds.tsv"
 
-          : >/tmp/empty-status
-          mapfile -t seeds < <(awk -F '\t' '{print $1 "=" $2}' /out/certified-binary-seeds.tsv)
+          mapfile -t seeds < <(awk -F '\t' '{print $1 "=" $2}' "$out/certified-binary-seeds.tsv")
           roots=('?essential' apt build-essential ca-certificates ubuntu-keyring sudo sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils gzip xz-utils diffutils libcap2-bin)
           roots+=("${seeds[@]}")
-          apt-get -o Dir::State::status=/tmp/empty-status --no-install-recommends --print-uris --yes install "${roots[@]}" > /out/binary-print-uris.txt
 
-          awk '/^\047/ && NF>=4 && $3~/^[0-9]+$/ {
-            f=$2; gsub(/^\047|\047$/, "", f); s=$3+0
-            if(!(f in seen)){seen[f]=s; total+=s; count++}
-            else if(seen[f]!=s){exit 4}
-          } END {printf "AURORA_KSQ_SLICE_BINARY_OBJECTS=%d\nAURORA_KSQ_SLICE_BINARY_BYTES=%.0f\n",count,total}' \
-            /out/binary-print-uris.txt > /out/binary-size.env
+          sudo apt-get "${apt_opts[@]}" --print-uris --yes install "${roots[@]}" \
+            > "$out/binary-print-uris.txt" 2> "$out/binary-resolve.stderr"
+
+          if grep -q '_amd64v3\.deb' "$out/binary-print-uris.txt"; then
+            echo AURORA_KSQ_SLICE_FAILURE=architecture-variant-leaked >&2
+            exit 1
+          fi
+
+          python3 - "$snapshot" "$out/binary-print-uris.txt" "$out/binary-objects.tsv" <<'PY'
+          import shlex, sys
+          from pathlib import Path
+          from urllib.parse import unquote, urlparse
+          snapshot, src, dst = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
+          marker = f"/ubuntu/{snapshot}/"
+          rows = {}
+          for raw in src.read_text().splitlines():
+              if not raw.startswith("'"):
+                  continue
+              fields = shlex.split(raw)
+              if len(fields) < 3:
+                  continue
+              path = unquote(urlparse(fields[0]).path)
+              if marker not in path:
+                  raise SystemExit(f"snapshot marker absent: {fields[0]}")
+              rel = path.split(marker, 1)[1]
+              size = int(fields[2])
+              if rel in rows and rows[rel] != size:
+                  raise SystemExit(f"conflicting size: {rel}")
+              rows[rel] = size
+          dst.write_text(''.join(f"{p}\t{rows[p]}\n" for p in sorted(rows)))
+          PY
+
+          cmp "$out/binary-objects.tsv" "$RUNNER_TEMP/recommends-ab/default.tsv"
+          bin_count="$(wc -l < "$out/binary-objects.tsv")"
+          bin_bytes="$(awk -F '\t' '{s+=$2} END{printf "%.0f",s}' "$out/binary-objects.tsv")"
+          test "$bin_count" -eq 1783
+          test "$bin_bytes" = 785219274
+          grep -qx 'pool/main/d/dbus/dbus-user-session_1.16.2-2ubuntu4_amd64.deb'$'\t'9468 "$out/binary-objects.tsv" || \
+            grep -q '^pool/main/d/dbus/dbus-user-session_1.16.2-2ubuntu4_amd64.deb'$'\t' "$out/binary-objects.tsv"
+
+          printf 'AURORA_KSQ_SLICE_BINARY_OBJECTS=%s\nAURORA_KSQ_SLICE_BINARY_BYTES=%s\n' \
+            "$bin_count" "$bin_bytes" > "$out/binary-size.env"
+          printf 'AURORA_KSQ_SLICE_APT_UPDATE_SECONDS=%s\n' "$((t1-t0))" > "$out/timing.env"
+
+      - name: Calculate source and metadata footprint
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/ksq0"
+          out="$RUNNER_TEMP/slice-size"
+          root="$RUNNER_TEMP/apt-isolated"
 
           awk '/^Checksums-Sha512:/ {on=1; next}
             on && NF>=3 && length($1)==128 && $2~/^[0-9]+$/ {
               f=$3; s=$2+0; if(!(f in seen)){seen[f]=s; total+=s; count++}; next
             } on {on=0}
             END {printf "AURORA_KSQ_SLICE_UBUNTU_SOURCE_OBJECTS=%d\nAURORA_KSQ_SLICE_UBUNTU_SOURCE_BYTES=%.0f\n",count,total}' \
-            /evidence/build/ksq-0/selected-source-records.txt > /out/source-size.env
+            "$evidence/build/ksq-0/selected-source-records.txt" > "$out/source-size.env"
 
-          deb_bytes=0; deb_count=0
-          while IFS= read -r -d '' f; do deb_bytes=$((deb_bytes+$(stat -c %s "$f"))); deb_count=$((deb_count+1)); done \
-            < <(find /evidence/build/ksq-0/source-audit/downloads -maxdepth 1 -type f -name 'wayland-protocols_1.48*' -print0 | sort -z)
+          deb_bytes=0
+          deb_count=0
+          while IFS= read -r -d '' f; do
+            deb_bytes=$((deb_bytes+$(stat -c %s "$f")))
+            deb_count=$((deb_count+1))
+          done < <(find "$evidence/build/ksq-0/source-audit/downloads" -maxdepth 1 -type f -name 'wayland-protocols_1.48*' -print0 | sort -z)
           test "$deb_count" -eq 4
-          printf 'AURORA_KSQ_SLICE_DEBIAN_SOURCE_OBJECTS=%d\nAURORA_KSQ_SLICE_DEBIAN_SOURCE_BYTES=%d\n' "$deb_count" "$deb_bytes" >> /out/source-size.env
+          printf 'AURORA_KSQ_SLICE_DEBIAN_SOURCE_OBJECTS=%d\nAURORA_KSQ_SLICE_DEBIAN_SOURCE_BYTES=%d\n' \
+            "$deb_count" "$deb_bytes" >> "$out/source-size.env"
 
-          bin=$(awk -F= '$1=="AURORA_KSQ_SLICE_BINARY_BYTES"{print $2}' /out/binary-size.env)
-          src=$(awk -F= '$1=="AURORA_KSQ_SLICE_UBUNTU_SOURCE_BYTES"{print $2}' /out/source-size.env)
-          dsrc=$(awk -F= '$1=="AURORA_KSQ_SLICE_DEBIAN_SOURCE_BYTES"{print $2}' /out/source-size.env)
-          meta=$(du -sb /var/lib/apt/lists | awk '{print $1}')
+          grep -qx 'AURORA_KSQ_SLICE_UBUNTU_SOURCE_OBJECTS=301' "$out/source-size.env"
+          grep -qx 'AURORA_KSQ_SLICE_UBUNTU_SOURCE_BYTES=212283819' "$out/source-size.env"
+          grep -qx 'AURORA_KSQ_SLICE_DEBIAN_SOURCE_OBJECTS=4' "$out/source-size.env"
+          grep -qx 'AURORA_KSQ_SLICE_DEBIAN_SOURCE_BYTES=161155' "$out/source-size.env"
+
+          bin="$(awk -F= '$1=="AURORA_KSQ_SLICE_BINARY_BYTES"{print $2}' "$out/binary-size.env")"
+          src="$(awk -F= '$1=="AURORA_KSQ_SLICE_UBUNTU_SOURCE_BYTES"{print $2}' "$out/source-size.env")"
+          dsrc="$(awk -F= '$1=="AURORA_KSQ_SLICE_DEBIAN_SOURCE_BYTES"{print $2}' "$out/source-size.env")"
+          meta="$(du -sb "$root/lists" | awk '{print $1}')"
           total=$((bin+src+dsrc+meta))
           {
             echo AURORA_KSQ_SLICE_STATUS=MEASURED_METADATA_ONLY
-            echo AURORA_KSQ_SLICE_SNAPSHOT=$snapshot
+            echo AURORA_KSQ_SLICE_UBUNTU_SNAPSHOT=20260829T022000Z
+            echo AURORA_KSQ_SLICE_ARCH=amd64
+            echo AURORA_KSQ_SLICE_ARCH_VARIANTS=disabled
+            echo AURORA_KSQ_SLICE_INSTALL_RECOMMENDS=default
             echo AURORA_KSQ_SLICE_CERTIFIED_BINARY_SEEDS=244
-            cat /out/binary-size.env /out/source-size.env
+            cat "$out/binary-size.env" "$out/source-size.env"
             echo AURORA_KSQ_SLICE_APT_LISTS_UNCOMPRESSED_BYTES=$meta
             echo AURORA_KSQ_SLICE_RAW_UPPER_BOUND_BYTES=$total
-            echo AURORA_KSQ_SLICE_APT_UPDATE_SECONDS=$((t1-t0))
+            cat "$out/timing.env"
             echo AURORA_KSQ_SLICE_PAYLOADS_DOWNLOADED=0
-          } | tee /out/results.env
-          EOF
+          } | tee "$out/results.env"
 
-      - name: Show size report
+      - name: Show native closure report
         shell: bash
         run: |
           set -euo pipefail
@@ -151,11 +260,11 @@ jobs:
           print(f'AURORA_KSQ_SLICE_RECOMMENDED_25PCT_HEADROOM_GIB={raw*1.25/2**30:.4f}')
           PY
 
-      - name: Preserve size evidence
+      - name: Preserve native closure evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: aurora-ksq-certified-snapshot-slice-size
+          name: aurora-ksq-native-snapshot-slice-closure-size
           path: ${{ runner.temp }}/slice-size/
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 30
