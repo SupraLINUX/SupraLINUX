@@ -8,7 +8,7 @@ EVIDENCE="${STATE}/kwallet-pam-validation"
 SNAPSHOT_ENV="${ROOT}/scripts/ci/aurora-ksq-snapshot-release.env"
 PREPARED_CONTROL="${AURORA_KSQ_1_KWALLET_PREPARED_CONTROL:-${STATE}/chunk-061-065/evidence/65-kwallet-pam/debian-control}"
 ROOTFS="${AURORA_KSQ_1_KWALLET_ROOTFS:-/tmp/aurora-ksq1-kwallet-rootfs-${GITHUB_RUN_ID:-local}}"
-STAGE="${AURORA_KSQ_1_KWALLET_STAGE:-/tmp/aurora-ksq1-kwallet-debs-${GITHUB_RUN_ID:-local}}"
+STAGE="${AURORA_KSQ_1_KWALLET_STAGE:-/tmp/aurora-ksq1-kwallet-repo-${GITHUB_RUN_ID:-local}}"
 
 fail() { echo "AURORA_KSQ_1_KWALLET_LOCAL_FAILURE: $*" >&2; exit 1; }
 
@@ -33,7 +33,7 @@ fi
 for legacy in scripts/ci/ksq-docker-builder.py scripts/ci/install-ksq-apparmor-profile.sh scripts/ci/apparmor/supralinux-ksq-unshare scripts/ci/configure-ksq-uidmap-filecaps.sh; do
   [[ ! -e "${ROOT}/${legacy}" ]] || fail "legacy path present: ${legacy}"
 done
-for command in dpkg-deb mmdebstrap sha256sum awk; do command -v "${command}" >/dev/null || fail "missing ${command}"; done
+for command in dpkg-deb dpkg-scanpackages gzip mmdebstrap sha256sum awk; do command -v "${command}" >/dev/null || fail "missing ${command}"; done
 [[ -d "${DEBS}" ]] || fail "accumulated DEBs missing"
 [[ -f "${PREPARED_CONTROL}" ]] || fail "prepared kwallet-pam control missing"
 [[ -f "${SLICE_ROOT}/COMPLETE" ]] || fail "slice incomplete"
@@ -86,13 +86,32 @@ printf '%s\n' "${KWALLET_DEPENDS}" | grep -Fq "libkf6wallet-data (= ${KWALLET_VE
 printf '%s\n' "${KWALLET_DEPENDS}" | grep -Fq "libkf6walletbackend6 (= ${KWALLET_VERSION})" || fail "kwallet6 backend relation wrong"
 [[ "${PAM_DEPENDS}${COMMON_DEPENDS}${KWALLET_DEPENDS}" != *'${'* ]] || fail "unexpanded substvar in binary control"
 
+ACCUMULATED_DEB_COUNT="$(find "${DEBS}" -maxdepth 1 -type f -name '*.deb' | wc -l)"
+[[ "${ACCUMULATED_DEB_COUNT}" -eq 295 ]] || fail "expected 295 accumulated DEBs at order 65, got ${ACCUMULATED_DEB_COUNT}"
+
 rm -rf "${EVIDENCE}" "${STAGE}"
-mkdir -p "${EVIDENCE}" "${STAGE}"
-chmod 0755 "${STAGE}"
+REPO="${STAGE}/repo"
+mkdir -p "${EVIDENCE}" "${REPO}"
+chmod 0755 "${STAGE}" "${REPO}"
 cp -a "${PREPARED_CONTROL}" "${EVIDENCE}/prepared-debian-control"
+
+while IFS= read -r -d '' deb; do
+  install -m 0644 "${deb}" "${REPO}/$(basename "${deb}")"
+done < <(find "${DEBS}" -maxdepth 1 -type f -name '*.deb' -print0 | sort -z)
+REPO_DEB_COUNT="$(find "${REPO}" -maxdepth 1 -type f -name '*.deb' | wc -l)"
+[[ "${REPO_DEB_COUNT}" -eq "${ACCUMULATED_DEB_COUNT}" ]] || fail "staged repo DEB count mismatch"
+(
+  cd "${REPO}"
+  dpkg-scanpackages . /dev/null > Packages
+  gzip -n -9 -c Packages > Packages.gz
+)
+PACKAGE_RECORDS="$(grep -c '^Package: ' "${REPO}/Packages")"
+[[ "${PACKAGE_RECORDS}" -eq "${ACCUMULATED_DEB_COUNT}" ]] || fail "local repo package record count mismatch"
+sha256sum "${REPO}/Packages" "${REPO}/Packages.gz" > "${EVIDENCE}/accumulated-repo-index.sha256"
+printf 'AURORA_KSQ_1_KWALLET_ACCUMULATED_REPO_DEBS=%s\nAURORA_KSQ_1_KWALLET_ACCUMULATED_REPO_PACKAGES=%s\n' \
+  "${REPO_DEB_COUNT}" "${PACKAGE_RECORDS}" > "${EVIDENCE}/accumulated-repo.env"
+
 candidate_debs=("${COMMON_DEB}" "${PAM_DEB}" "${KWALLET_DEB}" "${DATA_DEB}" "${LIB_DEB}" "${BACKEND_DEB}")
-staged=()
-for deb in "${candidate_debs[@]}"; do target="${STAGE}/$(basename "${deb}")"; cp -a "${deb}" "${target}"; chmod 0644 "${target}"; staged+=("${target}"); done
 (
   cd "${STATE}"
   for deb in "${candidate_debs[@]}"; do sha256sum "debs/$(basename "${deb}")"; done
@@ -116,22 +135,27 @@ cleanup_all() {
 trap cleanup_all EXIT
 cleanup_rootfs
 mkdir -p "${ROOTFS}"
-include_args=(); for deb in "${staged[@]}"; do include_args+=("--include=${deb}"); done
+
+INCLUDE_PACKAGES="libpam-kwallet-common=${COMMON_VERSION},libpam-kwallet5=${PAM_VERSION},kwallet6=${KWALLET_VERSION},libkf6wallet-data=${KWALLET_VERSION},libkf6wallet6=${KWALLET_VERSION},libkf6walletbackend6=${KWALLET_VERSION}"
+SUPRA_MIRROR="deb [trusted=yes] file:${REPO} ./"
+printf 'AURORA_KSQ_1_KWALLET_INCLUDE=%s\nAURORA_KSQ_1_KWALLET_SUPRA_MIRROR=%s\n' \
+  "${INCLUDE_PACKAGES}" "${SUPRA_MIRROR}" > "${EVIDENCE}/installation-inputs.env"
 
 set +e
 DEBIAN_FRONTEND=noninteractive mmdebstrap \
   --mode=unshare --variant=minbase --architectures=amd64 \
-  "${include_args[@]}" \
+  --include="${INCLUDE_PACKAGES}" \
   --hook-dir=/usr/share/mmdebstrap/hooks/file-mirror-automount \
   --aptopt='Acquire::Check-Valid-Until "false";' \
   --aptopt='Acquire::http::Proxy "http://127.0.0.1:9";' \
   --aptopt='Acquire::https::Proxy "http://127.0.0.1:9";' \
-  resolute "${ROOTFS}" "${SOURCES}" 2>&1 | tee "${EVIDENCE}/mmdebstrap-install.log"
+  resolute "${ROOTFS}" "${SOURCES}" "${SUPRA_MIRROR}" 2>&1 | tee "${EVIDENCE}/mmdebstrap-install.log"
 rcs=("${PIPESTATUS[@]}")
 set -e
 printf 'MMDEBSTRAP_RC=%s\nTEE_RC=%s\n' "${rcs[0]}" "${rcs[1]}" > "${EVIDENCE}/mmdebstrap-command.env"
 [[ "${rcs[0]}" -eq 0 && "${rcs[1]}" -eq 0 ]] || fail "mmdebstrap installation failed"
 ! grep -E '^(Get|Hit|Ign|Err):[0-9]+ https?://' "${EVIDENCE}/mmdebstrap-install.log" || fail "remote package transport occurred"
+grep -Fq "file:${REPO}" "${EVIDENCE}/mmdebstrap-install.log" || fail "accumulated Supra repo was not consumed"
 
 mmdebstrap --unshare-helper /usr/sbin/chroot "${ROOTFS}" apt-get check | tee "${EVIDENCE}/apt-check.txt"
 mmdebstrap --unshare-helper /usr/sbin/chroot "${ROOTFS}" dpkg-query -W \
@@ -153,7 +177,9 @@ AURORA_KSQ_1_KWALLET_SUBSTVARS_RESTORED=misc+qml6+shlibs
 AURORA_KSQ_1_KWALLET_BINARY_RUNTIME_DEPS=PASS
 AURORA_KSQ_1_KWALLET_PAM_INSTALLATION=PASS
 AURORA_KSQ_1_KWALLET_RUNTIME_AUTO_UNLOCK_CERTIFIED=no
-AURORA_KSQ_1_KWALLET_INSTALL_BACKEND=mmdebstrap-unshare-local-debs
+AURORA_KSQ_1_KWALLET_INSTALL_BACKEND=mmdebstrap-unshare-accumulated-local-repo
+AURORA_KSQ_1_KWALLET_ACCUMULATED_REPO_DEBS=${REPO_DEB_COUNT}
+AURORA_KSQ_1_KWALLET_ACCUMULATED_REPO_PACKAGES=${PACKAGE_RECORDS}
 AURORA_KSQ_1_KWALLET_SLICE=${AURORA_KSQ_SNAPSHOT_SLICE_ID}
 AURORA_KSQ_1_KWALLET_UBUNTU_SNAPSHOT=${AURORA_KSQ_UBUNTU_SNAPSHOT}
 AURORA_KSQ_1_KWALLET_REMOTE_FALLBACK=forbidden-loopback-proxy
