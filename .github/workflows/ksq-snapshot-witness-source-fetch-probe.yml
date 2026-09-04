@@ -56,7 +56,7 @@ jobs:
           AURORA_KSQ_1_FETCH_TRANSPORT_MODE: snapshot-witness
         run: |
           set -euo pipefail
-          work=build/ksq-1/snapshot-source-fetch-probe/order66
+          work="$GITHUB_WORKSPACE/build/ksq-1/snapshot-source-fetch-probe/order66"
           bash scripts/ci/fetch-prepare-ksq-1-source.sh \
             kf6-kxmlgui 6.29.0-0ubuntu1 "$work" \
             2>&1 | tee build/ksq-1/snapshot-source-fetch-probe/order66-fetch.log
