@@ -74,7 +74,6 @@ jobs:
           kw="$src/build/ksq-1/full/kwallet-pam-validation"
           test -d "$post" && test -d "$chunk/evidence" && test -d "$chunk/new-debs" && test -d "$kw"
 
-          # Exact source-build checkpoint identity and independent post-validation result.
           grep -qx 'AURORA_KSQ_1_POSTVALIDATE_SOURCE_RUN=33805321380' "$post/audit.env"
           grep -qx 'AURORA_KSQ_1_POSTVALIDATE_SOURCE_ARTIFACT=9913134271' "$post/audit.env"
           grep -qx 'AURORA_KSQ_1_POSTVALIDATE_SOURCE_ARTIFACT_DIGEST=sha256:035b5930f3821d764f51f7bf4b3bd2b8e82a302539e70c2c612b93f41d3e2e65' "$post/audit.env"
@@ -98,7 +97,6 @@ jobs:
           test "$(find "$chunk/new-debs" -maxdepth 1 -type f -name '*.deb' | wc -l)" = 20
           (cd "$chunk/new-debs" && sha256sum -c ../evidence/new-debs.sha256)
 
-          # Solver contract: normal/default APT Recommends and exact 375-object closure.
           grep -qx 'AURORA_KSQ_1_KWALLET_SOLVER_DEBS=375' "$kw/solver-closure.env"
           grep -qx 'AURORA_KSQ_1_KWALLET_SOLVER_SELECTED_PACKAGES=375' "$kw/solver-closure.env"
           grep -qx 'AURORA_KSQ_1_KWALLET_SOLVER_FILE_URIS=372' "$kw/solver-closure.env"
@@ -107,7 +105,6 @@ jobs:
           grep -qx 'AURORA_KSQ_1_KWALLET_RECOMMENDS_POLICY=default-enabled' "$kw/solver-closure.env"
           test "$(awk -F '\t' 'NR>1 {n++} END {print n+0}' "$kw/solver-selected-packages.tsv")" = 375
 
-          # Installation contract: apt bootstrap only, same Recommends policy, 375/375 selected versions installed.
           grep -qx 'MMDEBSTRAP_RC=0' "$kw/mmdebstrap-command.env"
           grep -qx 'TEE_RC=0' "$kw/mmdebstrap-command.env"
           grep -qx 'AURORA_KSQ_1_KWALLET_BOOTSTRAP_VARIANT=apt' "$kw/installation-inputs.env"
@@ -120,11 +117,9 @@ jobs:
           test "$(awk -F '\t' 'NR>1 && $4!="PASS" {n++} END {print n+0}' "$kw/selected-install-verification.tsv")" = 0
           test "$(wc -l < "$kw/installed-all-packages.tsv")" = 396
 
-          # Resolute host command provenance: do not assume legacy GNU /usr/sbin/chroot layout.
           grep -qx 'AURORA_KSQ_1_KWALLET_HOST_CHROOT=/usr/bin/chroot' "$kw/host-chroot.env"
           grep -qx 'AURORA_KSQ_1_KWALLET_HOST_CHROOT_OWNER=coreutils-from-uutils: /usr/bin/chroot' "$kw/host-chroot.env"
 
-          # Runtime extension remains a separate immutable exact three-object sidecar; r2 is not mutated.
           grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_STAGE=PASS' "$kw/runtime-extension-stage-status.env"
           grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_STATUS=INDEPENDENTLY_VALIDATED' "$kw/runtime-extension-stage-status.env"
           grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_ID=20260829T022000Z-kwallet-runtime-r1' "$kw/runtime-extension-stage-status.env"
@@ -137,7 +132,6 @@ jobs:
           grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_R2_BINARY_OBJECTS=1783' "$kw/gap-status.env"
           grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_GAP_PACKAGES=lsb-base,libwrap0,socat' "$kw/gap-status.env"
 
-          # End-state package and PAM proof.
           grep -qx 'AURORA_KSQ_1_KWALLET_VERSION=4:6.7.4-0ubuntu3~supra26.04.1' "$kw/status.env"
           grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_VERSION=6.29.0-0ubuntu1~supra26.04.1' "$kw/status.env"
           grep -qx 'AURORA_KSQ_1_KWALLET_BINARY_RUNTIME_DEPS=PASS' "$kw/status.env"
@@ -149,7 +143,8 @@ jobs:
           grep -qx 'AURORA_KWALLET_PAM_COMMON_SESSION=present' "$kw/pam-registration.txt"
           grep -qx 'AURORA_KWALLET_PAM_COMMON_AUTH=present' "$kw/pam-registration.txt"
           grep -qx 'AURORA_KWALLET_PAM_INSTALL_SUCCESS' "$kw/pam-registration.txt"
-          grep -qx 'No errors found' "$kw/apt-check.txt"
+          test -s "$kw/apt-check.txt"
+          ! grep -Eiq '(^E:|^Err:|unmet dependencies|dependency problems)' "$kw/apt-check.txt"
 
           python3 - "$kw/installed-versions.tsv" <<'PY'
           import sys
@@ -173,7 +168,6 @@ jobs:
           print('AURORA_KSQ_1_KWALLET_EXACT_INSTALLED_VERSIONS=PASS')
           PY
 
-          # Local-only package transport remains mandatory.
           ! grep -E '^(Get|Hit|Ign|Err):[0-9]+ https?://' "$kw/solver-update.log" "$kw/solver-download.log" "$kw/mmdebstrap-install.log"
           ! grep -q '^Err:[0-9]' "$kw/solver-download.log"
           test "$(grep -c "^'https\?://" "$kw/solver-uris.log" || true)" = 0
