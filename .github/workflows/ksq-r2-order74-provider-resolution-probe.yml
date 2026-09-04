@@ -28,17 +28,27 @@ jobs:
           apt-get --version | head -n1 | tee build/ksq-r2-order74-provider-probe/apt-version.txt
           grep -qx 'apt 3.2.0 (amd64)' build/ksq-r2-order74-provider-probe/apt-version.txt
           sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
-          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends ca-certificates ubuntu-keyring python3
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends ca-certificates ubuntu-keyring python3 unzip curl
 
       - name: Download exact r2 closure-generation evidence
-        uses: actions/download-artifact@v8
-        with:
-          artifact-ids: '9883249125'
-          path: ${{ runner.temp }}/r2-size
-          github-token: ${{ github.token }}
-          repository: SupraLINUX/SupraLINUX
-          run-id: '33729378261'
-          digest-mismatch: error
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          zip="$RUNNER_TEMP/r2-size.zip"
+          mkdir -p "$RUNNER_TEMP/r2-size"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/octet-stream' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            'https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/9883249125/zip' \
+            -o "$zip"
+          test "$(sha256sum "$zip" | awk '{print $1}')" = 2281ab4655dc8d33639d9a3bbfb75d60325829a6b0af19902c20e4406e0c945b
+          test "$(stat -c '%s' "$zip")" = 136259
+          unzip -q "$zip" -d "$RUNNER_TEMP/r2-size"
+          test -s "$RUNNER_TEMP/r2-size/certified-binary-seeds.tsv"
+          test -s "$RUNNER_TEMP/r2-size/binary-print-uris.txt"
 
       - name: Reproduce direct-root versus sbuild-style dummy resolution
         shell: bash
@@ -83,17 +93,14 @@ jobs:
             | tee "$out/apt-policy.txt"
           grep -q '^APT::Install-Recommends "1";' "$out/apt-policy.txt"
 
-          test -s "$src/certified-binary-seeds.tsv"
-          test -s "$src/binary-print-uris.txt"
           test "$(wc -l < "$src/certified-binary-seeds.tsv")" = 244
           grep -qx $'libcups2-dev\t2.4.16-1ubuntu1.3' "$src/certified-binary-seeds.tsv"
-
           mapfile -t seeds < <(awk -F '\t' '{print $1 "=" $2}' "$src/certified-binary-seeds.tsv")
           roots=('?essential' apt build-essential ca-certificates ubuntu-keyring sudo sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils gzip xz-utils diffutils libcap2-bin)
           roots+=("${seeds[@]}")
+
           sudo apt-get "${apt_opts[@]}" --print-uris --yes install "${roots[@]}" \
             > "$out/global-direct.print-uris" 2> "$out/global-direct.stderr"
-
           sudo apt-get "${apt_opts[@]}" --print-uris --yes install 'libcups2-dev=2.4.16-1ubuntu1.3' \
             > "$out/cups-direct.print-uris" 2> "$out/cups-direct.stderr"
 
@@ -107,11 +114,9 @@ jobs:
           Description: controlled sbuild-style dependency dummy
           CONTROL
           dpkg-deb --build "$RUNNER_TEMP/dummy" "$RUNNER_TEMP/sbuild-build-depends-main-dummy.deb"
-          dpkg-deb -f "$RUNNER_TEMP/sbuild-build-depends-main-dummy.deb" \
-            | tee "$out/dummy-control.txt"
+          dpkg-deb -f "$RUNNER_TEMP/sbuild-build-depends-main-dummy.deb" | tee "$out/dummy-control.txt"
           sudo apt-get "${apt_opts[@]}" --print-uris --yes install "$RUNNER_TEMP/sbuild-build-depends-main-dummy.deb" \
             > "$out/cups-dummy.print-uris" 2> "$out/cups-dummy.stderr"
-
           sudo apt-get "${apt_opts[@]}" --simulate --yes install "$RUNNER_TEMP/sbuild-build-depends-main-dummy.deb" \
             > "$out/cups-dummy.simulate" 2> "$out/cups-dummy-sim.stderr"
 
@@ -135,21 +140,17 @@ jobs:
                       continue
                   fields=shlex.split(raw)
                   path=unquote(urlparse(fields[0]).path)
-                  if marker not in path:
-                      continue
-                  paths.add(path.split(marker,1)[1])
+                  if marker in path:
+                      paths.add(path.split(marker,1)[1])
               for pkg, rel in targets.items():
                   rows.append((label,pkg,'yes' if rel in paths else 'no'))
           (out/'provider-selection.tsv').write_text('context\tpackage\tselected\n'+''.join('\t'.join(r)+'\n' for r in rows))
           print((out/'provider-selection.tsv').read_text(), end='')
           PY
 
-          # Historical r2 selection must be reproduced exactly for the relevant provider set.
           grep -qx $'global-direct\tlibjpeg-turbo8-dev\tyes' "$out/provider-selection.tsv"
           grep -qx $'global-direct\tlibjpeg8-dev\tno' "$out/provider-selection.tsv"
           grep -qx $'global-direct\tlibjpeg-dev\tno' "$out/provider-selection.tsv"
-
-          # Record, but do not prejudge, whether direct libcups2-dev and the sbuild-style dummy differ.
           {
             echo AURORA_KSQ_R2_ORDER74_PROVIDER_PROBE=PASS
             echo AURORA_KSQ_R2_ORDER74_SNAPSHOT=$snapshot
