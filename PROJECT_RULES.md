@@ -6,6 +6,7 @@ Status labels used below:
 - **ACCEPTED**: current project rule.
 - **PROVISIONAL**: direction agreed in principle but implementation details are still open.
 - **FUTURE**: intentional roadmap item; do not let it distort the first functional baseline.
+- **REJECTED**: explicitly excluded from the current product architecture/baseline unless a later documented decision reopens it with new evidence.
 
 ## 1. Identity
 
@@ -105,7 +106,10 @@ Rules:
 - **ACCEPTED** Initial SupraLINUX channels: `stable` and `testing`, initially with a simple `main` component.
 - **ACCEPTED** An Ubuntu-derived package override must document: why the fork/override exists, what differs from Ubuntu, maintenance responsibility, and the condition under which the override can be removed.
 - **ACCEPTED** Do not give every package from the SupraLINUX origin a blanket priority that accidentally overrides Ubuntu. Intentional overrides must be explicit through package versions and/or scoped APT pinning.
+- **ACCEPTED** Stable/testing repository publication is generation-based: every promoted state must have an immutable generation identity and an auditable manifest of exact Ubuntu/SupraLINUX package inputs, hashes and qualification evidence.
+- **ACCEPTED** Qualification that depends on Ubuntu archive state must record an exact Ubuntu Snapshot Service timestamp or equivalently immutable Ubuntu archive identity.
 - **PROVISIONAL** Public repository endpoint: `repo.supralinux.com`, hosted on SupraLINUX infrastructure and served as signed static APT repository content.
+- **PROVISIONAL** Package-generation rollback will be designed and certified independently of filesystem snapshots; rollback must target explicit known repository generations and prove package/configuration transition safety.
 
 ## 8. Installer, locale, and filesystems
 
@@ -118,7 +122,7 @@ Rules:
 - **ACCEPTED** Do not blindly run `xdg-user-dirs-update --force` on every login. Directory creation/migration must preserve user data and user choices.
 - **FUTURE** If the user changes language after installation, SupraLINUX should provide a safe, explicit migration path for localized XDG user-directory names rather than silently renaming populated folders.
 - **ACCEPTED** Default filesystem for the first release: ext4.
-- **FUTURE** Btrfs, snapshots, subvolumes, rollback, and advanced recovery can be added only after the complete design and failure modes are understood.
+- **FUTURE** Btrfs, filesystem snapshots/subvolumes, filesystem-level rollback, and advanced filesystem recovery can be added only after the complete design and failure modes are understood. They are not a prerequisite for package-generation rollback.
 
 ## 9. Reproducibility and ISO
 
@@ -160,6 +164,7 @@ Rules:
 - **FUTURE** SupraLINUX should provide a user-facing `Reset system`/recovery mechanism with at least a factory-reset/reinstall path and an option to preserve user data when technically safe.
 - **FUTURE** Recovery should support locally cached signed recovery media/image and may later support downloading a signed recovery image online.
 - **ACCEPTED** Recovery images, manifests, and metadata must be authenticated/signed before use.
+- **PROVISIONAL** TPM-backed full-disk encryption is deferred from the Aurora baseline pending a separate SupraLINUX/Calamares architecture and hardware qualification. Conflicting current Ubuntu 26.04 documentation maturity signals and known limitations must be resolved before promotion.
 
 ## 14. Security and release integrity
 
@@ -173,6 +178,7 @@ Before public release the project MUST have:
 - **ACCEPTED** Stable publication must not happen automatically merely because CI builds successfully.
 - **ACCEPTED** Secure Boot work should initially rely on Ubuntu kernel/shim/GRUB mechanisms instead of introducing a custom kernel/signing stack.
 - **ACCEPTED** If SupraLINUX overrides an Ubuntu KDE package, SupraLINUX assumes responsibility for tracking applicable upstream KDE security fixes and publishing qualified updates for the override; Ubuntu updates to the replaced binary package cannot be assumed to secure the SupraLINUX override automatically.
+- **ACCEPTED** Release artifacts and maintained SupraLINUX package outputs must gain machine-readable provenance/SBOM coverage appropriate to the artifact before public release; provenance complements rather than replaces reproducible-build evidence.
 
 ## 15. Quality contract
 
@@ -184,6 +190,7 @@ Before public release the project MUST have:
 - **ACCEPTED** Localization is part of quality. A release is not considered correctly integrated if the installer says one language while the first session, user directories, formats, or core Plasma/Qt UI are left partially in another language because required locale/translation setup was missing or ran in the wrong order.
 - **ACCEPTED** CI that performs real package installation must use an isolated disposable environment/rootfs rather than mutating the hosted runner into something that could hide missing base dependencies.
 - **ACCEPTED** Certification evidence is version-scoped. A PASS obtained on one KDE/Qt/runtime stack must not be silently carried forward after a package-stack change that can affect the tested behavior; the applicable regression gates must run again.
+- **ACCEPTED** Functional certification is organized by subsystem with explicit package-to-gate regression ownership. A changed input may reuse a PASS only when irrelevance to that gate is proven, not assumed.
 
 ## 16. Versioning
 
@@ -213,3 +220,23 @@ Do not make these first-release goals unless a concrete need appears:
 - large application suite without clear user value
 
 A SupraLINUX-maintained package set for an official stable KDE release is permitted by the KDE release policy and is not itself a Plasma fork. The first objective remains a vanilla, complete, reliable Plasma system on Ubuntu LTS. Product-specific SupraLINUX applications and deeper UX changes come after that baseline is proven.
+
+## 18. Aurora Integration Qualification contract
+
+The detailed adopted roadmap is `docs/AURORA_INTEGRATION_QUALIFICATION_ROADMAP.md`.
+
+- **ACCEPTED** KDE Stack Qualification remains the prerequisite for downstream Aurora Integration Qualification (AIQ). Do not mix unrelated feature work into an open KSQ gate merely because the eventual feature belongs in Aurora.
+- **ACCEPTED** After KSQ, Aurora integration is certified through ordered subsystem gates covering runtime/dependency surface, install/update/rollback, display/GPU, portals/Flatpak/remote desktop, audio/Bluetooth, networking/VPN, printing/scanning/OCR, multimedia/codecs, firmware/power, accessibility/localization, diagnostics/debug evidence, recovery/encryption, and final release integrity.
+- **ACCEPTED** SupraLINUX maintains a KDE LTS fix-parity review for relevant Kubuntu/Ubuntu 26.04 KDE fixes whenever SupraLINUX ships a newer maintained KDE stack. Each material fix must be proven already present, incorporated through the qualified source path, proven not applicable, or treated as an unresolved blocker where severity requires it.
+- **ACCEPTED** XDG portal/Flatpak support is an end-to-end contract, including applicable file chooser, URI opening, printing, screenshot, screencast, remote desktop, notifications, device/media permissions and persistence behavior; installing Flatpak alone is not sufficient.
+- **ACCEPTED** Audio/Bluetooth qualification includes A2DP and headset microphone/call profiles, reconnection, suspend/resume and routing behavior. LE Audio/BAP/LC3 remains **PROVISIONAL** until certified on representative hardware; Ubuntu PipeWire/WirePlumber remain platform owners.
+- **ACCEPTED** Baseline VPN integration targets maintained NetworkManager paths including WireGuard, OpenVPN, IKEv2/strongSwan and OpenConnect where packaged/qualified. **REJECTED**: PPTP as a SupraLINUX baseline VPN because the protocol is cryptographically broken and the NetworkManager plugin is unmaintained upstream.
+- **ACCEPTED** Printing/scanning is driverless-first: IPP Everywhere/AirPrint-class printing through CUPS and eSCL/AirScan/WSD scanning through qualified SANE/`sane-airscan`/`ipp-usb` integration where technically applicable. Legacy drivers remain compatibility paths, not the architecture for modern devices.
+- **ACCEPTED** If a shipped application exposes OCR, officially supported installation languages must include the corresponding maintained OCR language resources where available; users must not be required to discover missing language packages after installation.
+- **ACCEPTED** Accessibility completeness includes the external runtime pieces required by exposed Plasma accessibility functions, including a qualified screen-reader/speech path when that control is shipped. Missing supporting applications/backends are product dependencies, not post-install instructions.
+- **ACCEPTED** Firmware updates through Ubuntu-compatible `fwupd`/LVFS integration are part of the planned complete desktop baseline when hardware supports them.
+- **ACCEPTED** Ubuntu's power-profiles-daemon/UPower/PowerDevil path remains the default power-policy architecture. **REJECTED**: installing TLP or another parallel default policy manager without first proving a concrete deficiency and separately qualifying ownership/conflicts.
+- **ACCEPTED** Display/GPU qualification covers representative Intel, AMD and Ubuntu NVIDIA paths, hybrid graphics, external displays, suspend/resume, fractional scaling, XWayland compatibility and mixed-DPI. HDR/ICC/VRR support is **PROVISIONAL** until the complete relevant matrix passes; feature presence alone is not certification.
+- **ACCEPTED** SupraLINUX will provide a local, explicit, privacy-conscious diagnostic collection path and retain/index debug symbols/Build-IDs for SupraLINUX-owned binaries and maintained KDE overrides so released crashes remain diagnosable.
+- **REJECTED** Technology-preview/experimental Plasma functionality as an Aurora product baseline merely because it exists upstream. It may be researched in isolation and reconsidered after upstream stabilization plus SupraLINUX qualification.
+- **PROVISIONAL** GitHub-hosted `ubuntu-26.04` may be used for qualification experiments while GitHub labels it Public preview, but it is not accepted as final SupraLINUX release-build infrastructure until GitHub promotes it out of preview and SupraLINUX reruns the infrastructure qualification. Do not weaken AppArmor/host security, require privileged Docker or add broad outer privileges merely to force that architecture to pass.
