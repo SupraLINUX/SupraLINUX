@@ -66,12 +66,25 @@ bash "${ROOT}/scripts/ci/audit-kde-stack-source-selections.sh"
 
 bash "${ROOT}/scripts/ci/prepare-ksq-1-build-environment.sh" \
     2>&1 | tee "${OUT}/build-environment.log"
-# shellcheck disable=SC1091
-. "${ROOT}/build/ksq-1/environment/build-environment.env"
+BUILD_ENV_FILE="${ROOT}/build/ksq-1/environment/build-environment.env"
+# shellcheck disable=SC1090
+. "${BUILD_ENV_FILE}"
 [[ "${AURORA_KSQ_1_BUILD_ENV_SNAPSHOT}" == "${SNAPSHOT}" ]] || fail "build environment snapshot drifted"
 [[ "${AURORA_KSQ_1_BUILD_ENV_ARCH}" == "amd64" ]] || fail "build environment architecture drifted"
 [[ "${AURORA_KSQ_1_BUILD_ENV_BACKEND}" == "unshare" ]] || fail "build environment backend drifted"
 [[ -s "${AURORA_KSQ_1_BUILD_ENV_TARBALL}" ]] || fail "buildd tarball missing"
+
+# This is the one deliberate difference between an acceptance build environment
+# and a build-context witness environment. build-ksq-1-range.sh sources this
+# file before invoking the source helper, so an exported assignment propagates
+# only to witness child processes. The normal environment file contains no such
+# export and fetch-prepare-ksq-1-source.sh therefore remains local-only by default.
+if grep -q '^export AURORA_KSQ_1_FETCH_TRANSPORT_MODE=' "${BUILD_ENV_FILE}"; then
+    fail "unexpected pre-existing witness transport export"
+fi
+printf '%s\n' 'export AURORA_KSQ_1_FETCH_TRANSPORT_MODE=snapshot-witness' >> "${BUILD_ENV_FILE}"
+grep -qx 'export AURORA_KSQ_1_FETCH_TRANSPORT_MODE=snapshot-witness' "${BUILD_ENV_FILE}" \
+    || fail "witness transport export was not materialized"
 
 # Materialize the full tar listing before searching it. A grep -q consumer in a
 # tar pipeline under pipefail can close early and make tar report SIGPIPE even
@@ -92,6 +105,7 @@ if grep -RqsE '(^|[/.:])(archive\.ubuntu\.com|security\.ubuntu\.com)([/:]|$)' "$
 fi
 
 sha256sum "${AURORA_KSQ_1_BUILD_ENV_TARBALL}" > "${OUT}/buildd.sha256"
+sha256sum "${BUILD_ENV_FILE}" > "${OUT}/build-environment.env.sha256"
 {
     echo "AURORA_KSQ_1_SNAPSHOT_WITNESS_ENV_STATUS=PASS"
     echo "AURORA_KSQ_1_SNAPSHOT_WITNESS_SNAPSHOT=${SNAPSHOT}"
@@ -103,6 +117,8 @@ sha256sum "${AURORA_KSQ_1_BUILD_ENV_TARBALL}" > "${OUT}/buildd.sha256"
     echo "AURORA_KSQ_1_SNAPSHOT_WITNESS_INSTALL_RECOMMENDS=default"
     echo "AURORA_KSQ_1_SNAPSHOT_WITNESS_BUILD_NETWORK=disabled-by-sbuild"
     echo "AURORA_KSQ_1_SNAPSHOT_WITNESS_DEPENDENCY_TRANSPORT=timestamped-snapshot"
+    echo "AURORA_KSQ_1_SNAPSHOT_WITNESS_SOURCE_FETCH_TRANSPORT=snapshot-witness"
+    echo "AURORA_KSQ_1_SNAPSHOT_WITNESS_SOURCE_FETCH_SCOPE=exact-snapshot-host-and-timestamp"
     echo "AURORA_KSQ_1_SNAPSHOT_WITNESS_UIDMAP_MODE=stock-setuid"
     echo "AURORA_KSQ_1_SNAPSHOT_WITNESS_CUSTOM_APPARMOR=0"
     echo "AURORA_KSQ_1_SNAPSHOT_WITNESS_DOCKER=0"
