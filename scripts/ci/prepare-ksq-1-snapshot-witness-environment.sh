@@ -73,8 +73,12 @@ bash "${ROOT}/scripts/ci/prepare-ksq-1-build-environment.sh" \
 [[ "${AURORA_KSQ_1_BUILD_ENV_BACKEND}" == "unshare" ]] || fail "build environment backend drifted"
 [[ -s "${AURORA_KSQ_1_BUILD_ENV_TARBALL}" ]] || fail "buildd tarball missing"
 
-tar --zstd -tf "${AURORA_KSQ_1_BUILD_ENV_TARBALL}" \
-    | grep -q '^\./etc/apt/' || fail "buildd rootfs has no apt configuration"
+# Materialize the full tar listing before searching it. A grep -q consumer in a
+# tar pipeline under pipefail can close early and make tar report SIGPIPE even
+# though the sought path exists.
+tar_paths="${OUT}/buildd-tar-paths.txt"
+tar --zstd -tf "${AURORA_KSQ_1_BUILD_ENV_TARBALL}" > "${tar_paths}"
+grep -q '^\./etc/apt/' "${tar_paths}" || fail "buildd rootfs has no apt configuration"
 inspect="${OUT}/inspect"
 rm -rf "${inspect}"
 mkdir -p "${inspect}"
