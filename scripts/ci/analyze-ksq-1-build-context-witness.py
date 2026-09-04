@@ -8,11 +8,13 @@ from dataclasses import dataclass
 from pathlib import Path
 
 SNAPSHOT = "20260829T022000Z"
+SNAPSHOT_URI = f"https://snapshot.ubuntu.com/ubuntu/{SNAPSHOT}/"
 GET_RE = re.compile(
     rf"^Get:\d+\s+https://snapshot\.ubuntu\.com/ubuntu/{SNAPSHOT}\s+"
     r"(?P<suite>resolute(?:-(?:updates|security|backports))?)/(?P<component>main|universe|restricted|multiverse)\s+"
     r"(?P<index_arch>amd64)\s+(?P<package>\S+)\s+(?P<arch>amd64|all)\s+(?P<version>\S+)\s+\["
 )
+REMOTE_RE = re.compile(r"^(?:Get|Hit|Ign|Err):\d+\s+(?P<url>https?://\S+)")
 
 
 @dataclass(frozen=True, order=True)
@@ -103,7 +105,6 @@ def parse_range_status(evidence: Path, first: int, last: int) -> None:
         if values.get(k) != v:
             fail(f"{status}: {k} expected {v!r}, got {values.get(k)!r}")
 
-    dirs = []
     for order in range(first, last + 1):
         matches = sorted(evidence.glob(f"{order}-*"))
         if len(matches) != 1:
@@ -114,12 +115,14 @@ def parse_range_status(evidence: Path, first: int, last: int) -> None:
         text = build_status.read_text()
         if "AURORA_KSQ_1_BUILD_RESULT=PASS\n" not in text:
             fail(f"order {order} is not PASS")
-        dirs.append(matches[0])
 
 
-def collect_observed(evidence_roots: list[tuple[Path, int, int]]) -> tuple[dict[PackageKey, set[str]], int]:
+def collect_observed(
+    evidence_roots: list[tuple[Path, int, int]],
+) -> tuple[dict[PackageKey, set[str]], int, int]:
     observed: dict[PackageKey, set[str]] = {}
     log_count = 0
+    remote_transport_lines = 0
     for evidence, first, last in evidence_roots:
         parse_range_status(evidence, first, last)
         for order in range(first, last + 1):
@@ -130,7 +133,16 @@ def collect_observed(evidence_roots: list[tuple[Path, int, int]]) -> tuple[dict[
             log_count += 1
             log = logs[0]
             source = src_dir.name.split("-", 1)[1]
-            for raw in log.read_text(encoding="utf-8", errors="replace").splitlines():
+            for lineno, raw in enumerate(log.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
+                transport = REMOTE_RE.match(raw)
+                if transport:
+                    remote_transport_lines += 1
+                    url = transport.group("url")
+                    if not url.startswith(SNAPSHOT_URI):
+                        fail(
+                            f"order {order} {source}: non-snapshot HTTP(S) transport "
+                            f"at {log.name}:{lineno}: {url}"
+                        )
                 m = GET_RE.match(raw)
                 if not m:
                     continue
@@ -139,9 +151,11 @@ def collect_observed(evidence_roots: list[tuple[Path, int, int]]) -> tuple[dict[
     expected_logs = sum(last - first + 1 for _, first, last in evidence_roots)
     if log_count != expected_logs:
         fail(f"expected {expected_logs} witness logs, got {log_count}")
+    if remote_transport_lines == 0:
+        fail("no HTTP(S) dependency transport observed in witness build logs")
     if not observed:
         fail("no timestamped snapshot package acquisitions observed")
-    return observed, log_count
+    return observed, log_count, remote_transport_lines
 
 
 def main() -> None:
@@ -163,7 +177,7 @@ def main() -> None:
         (args.evidence_081_090, 81, 90),
         (args.evidence_091_101, 91, 101),
     ]
-    observed, log_count = collect_observed(evidence)
+    observed, log_count, remote_transport_lines = collect_observed(evidence)
 
     resolved: dict[PackageKey, PackageRecord] = {}
     missing_metadata: list[PackageKey] = []
@@ -220,12 +234,14 @@ def main() -> None:
         f.write("AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_LAST_ORDER=101\n")
         f.write("AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_SOURCES=36\n")
         f.write(f"AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_LOGS={log_count}\n")
+        f.write(f"AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_REMOTE_TRANSPORT_LINES={remote_transport_lines}\n")
         f.write(f"AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_PACKAGES={len(resolved)}\n")
         f.write(f"AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_OBJECTS={len(objects)}\n")
         f.write(f"AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_OBJECT_BYTES={observed_bytes}\n")
         f.write("AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_R2_OBJECTS=1783\n")
         f.write(f"AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_GAP_OBJECTS={len(gap)}\n")
         f.write(f"AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_GAP_BYTES={gap_bytes}\n")
+        f.write("AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_REMOTE_POLICY=fixed-snapshot-only\n")
         f.write("AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_SIGNED_METADATA=apt-verified-snapshot-packages\n")
         f.write("AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_MANUAL_PACKAGE_ADDITIONS=0\n")
 
