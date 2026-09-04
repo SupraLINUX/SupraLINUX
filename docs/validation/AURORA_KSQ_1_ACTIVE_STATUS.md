@@ -13,14 +13,14 @@ KSQ-1 consumes:
 - the certified 101-source DAG closure;
 - Ubuntu Resolute snapshot `20260829T022000Z`;
 - exact package/source identities established by KSQ-0;
-- unprivileged `mmdebstrap --mode=unshare --variant=buildd` and `sbuild --chroot-mode=unshare` isolation;
+- unprivileged `mmdebstrap --mode=unshare --variant=buildd` and `sbuild --chroot-mode=unshare` isolation for source builds;
 - the maintained 95+6 reproducibility contract.
 
 The upstream Ubuntu snapshot identity remains `20260829T022000Z`; the corrected SupraLINUX durable slice has the separate immutable identity `20260829T022000Z-r2`.
 
 ## Selected execution infrastructure
 
-The selected KSQ execution path is:
+The selected KSQ source-build path is:
 
 `GitHub-hosted Ubuntu 26.04 -> immutable local r2 slice -> mmdebstrap --mode=unshare --variant=buildd -> sbuild --chroot-mode=unshare --no-enable-network`
 
@@ -106,7 +106,7 @@ Canonical build-order SHA-256 remains `9c53547df78a9f7c740228aba09490dfdb68e6307
 - workflow `.github/workflows/ksq-native-range-044-060-r2.yml`;
 - commit `2f167566ad2d60bf013336ae834c4b37c5e4e9b4`;
 - run `33767306768`, job `100688352977`;
-- **PASS / job SUCCESS**;
+- **PASS / ACCEPTED**;
 - artifact `9900367299`;
 - digest `sha256:41a50bb17ea5ca4ab63c43a6aa6d6d030dae310ba716866824ac72d6c61dc4f3`;
 - exact prior checkpoint `205` DEBs verified before order 44;
@@ -120,41 +120,98 @@ Canonical build-order SHA-256 remains `9c53547df78a9f7c740228aba09490dfdb68e6307
 - relevant AppArmor denials `0`;
 - Docker/custom AppArmor/uidmap filecap adaptation `0`.
 
-The maintained r2 candidate is therefore qualified through **order 60**, with **275 accumulated DEBs**.
+### Orders 061-065 — native r2 + KWallet package gate
+
+Exact source-build evidence:
+
+- build run `33805321380`;
+- build artifact `9913134271`;
+- artifact digest `sha256:035b5930f3821d764f51f7bf4b3bd2b8e82a302539e70c2c612b93f41d3e2e65`;
+- exact prior checkpoint `275` DEBs verified before order 61;
+- orders `61..65`, sources `5/5 PASS`;
+- new DEBs `20`;
+- accumulated DEBs `295`.
+
+The source-build run's first-generation KWallet enforcement was not accepted as final authority. The exact already-built artifact was independently revalidated after the validator defects were investigated to root cause; no candidate package was rebuilt or changed for those corrections.
+
+Exact successful post-validation:
+
+- run `33819688197`;
+- commit `b35215edfa408fa2f13f2bf34d2afbbaa96c1f3a`;
+- artifact `9917851669`;
+- digest `sha256:12b398c5f7388844861cca60f3fac37256eb94b3a32f57a31df8802bdf258a5c`;
+- **SUCCESS**.
+
+Independent fail-closed acceptance of that exact evidence:
+
+- workflow `.github/workflows/ksq-accept-061-065-r2-kwallet-sidecar.yml`;
+- run `33821228782`;
+- commit `5b021477f00ab97e03b19e19da4e681abd7af7c0`;
+- artifact `9918320108`;
+- artifact digest `sha256:50c33e99c7593ce6b8d4a67c8ee11c1598ad93545ed362078a57410c4a892730`;
+- **SUCCESS**;
+- downloaded artifact independently verifies both its relative `evidence.sha256` and top-level `artifact-manifest.sha256` after relocation.
+
+The maintained r2 candidate is therefore accepted through **order 65**, with **295 accumulated DEBs**.
+
+Detailed record: `docs/validation/AURORA_KSQ_1_RANGE_061_065_KWALLET.md`.
 
 ## Checkpoint-chain hardening
 
 `scripts/ci/restore-ksq-1-checkpoint-chain.py` is the fail-closed checkpoint restorer. It validates contiguous source-order coverage, PASS state, internal manifest identities, every DEB SHA-256, filename/package uniqueness and exact cumulative counts before reconstructing the candidate set.
 
-The accepted chain through order 60 is exactly:
+The accepted binary build chain through order 65 is exactly:
 
 - 001-020 artifact `9818465016`;
 - 021-040 artifact `9824689982`;
 - 041-043 r2 artifact `9892762100`;
-- 044-060 r2 artifact `9900367299`.
+- 044-060 r2 artifact `9900367299`;
+- 061-065 r2 build artifact `9913134271`, whose KWallet package/install/PAM scope is accepted only in conjunction with post-validation artifact `9917851669` and independent acceptance artifact `9918320108`.
 
-The two newer native artifacts retain a top-level `build/` directory; consumers must account for that layout explicitly. The failed run `33777276308` demonstrated this fail-closed by rejecting an incorrect artifact root before any source build began.
+The newer native artifacts retain a top-level `build/` directory; consumers must account for that layout explicitly. The failed run `33777276308` demonstrated this fail-closed by rejecting an incorrect artifact root before any source build began.
 
 ## KWallet PAM native validation
 
 Order 65 is `kwallet-pam`. The old Docker/root/custom-AppArmor validator is rejected for the current architecture.
 
-`scripts/ci/validate-ksq-1-kwallet-pam-local.sh` has been ported to the native unprivileged contract. It consumes the canonical r2 slice and exact rebuilt candidate packages and requires:
+The accepted gate proves the exact package/install closure without broadening r2. The KWallet solver selects `375` packages under normal/default APT Recommends semantics. Exactly `372` package objects are available through the immutable r2/Supra inputs and exactly three Ubuntu runtime objects are outside r2's build-closure purpose:
 
-- `libpam-kwallet-common` and `libpam-kwallet5` from order 65;
-- rebuilt `kwallet6`, `libkf6wallet-data`, `libkf6wallet6`, `libkf6walletbackend6` from the candidate chain;
-- compat 13 and restored `${misc:Depends}`, `${qml6:Depends}`, `${shlibs:Depends}` source-control contract;
-- expected binary runtime dependencies including `kwallet6`, `libpam-runtime`, `libpam-kwallet-common` and `socat` where applicable;
-- clean `mmdebstrap --mode=unshare` installation from local r2 plus local candidate DEBs;
-- `apt-get check`;
+- `lsb-base=11.6build1`;
+- `libwrap0=7.6.q-36build2`;
+- `socat=1.8.1.1-1ubuntu0.1`.
+
+Those three objects remain a separate immutable, independently validated runtime extension:
+
+- ID `20260829T022000Z-kwallet-runtime-r1`;
+- release `382325880` / tag `ksq-kwallet-runtime-20260829T022000Z-r1`;
+- archive asset `543326513`, SHA-256 `89f9861d061a68498950bddb96b1f22ed41ddd205db118719f23b8836284b40e`;
+- manifest asset `543326512`, SHA-256 `40a2a1f2e720dd07c93ecdfc52c42b1cd2202a495a749d2722109028cbdf0c32`;
+- independent validation artifact `9912479235`, digest `sha256:6ae93f1906617e67734ca5afa6e675ec47aec2f27a7e0a0799c76145b84e8f1c`.
+
+For the isolated installation proof, the accepted post-validator uses:
+
+- `mmdebstrap --mode=unshare --variant=apt`, not `minbase`, so unrelated `Priority: required` bootstrap packages are not incorrectly folded into the KWallet runtime closure;
+- explicit `Apt::Install-Recommends "true"` so installation policy matches the proven 375-package solver policy;
+- the immutable r2 mirror, exact accumulated Supra candidate DEBs and exact three-object sidecar only;
+- blocked HTTP/HTTPS package transport;
+- resolved Ubuntu 26.04 host `chroot` path `/usr/bin/chroot`, owned by `coreutils-from-uutils`, instead of assuming the historical GNU `/usr/sbin/chroot` path.
+
+Accepted evidence proves:
+
+- exact solver selection `375`;
+- exact selected package/version pairs installed `375/375 PASS`;
+- total isolated rootfs package count `396` (375 selected packages plus the separate APT bootstrap consequences);
+- `mmdebstrap` RC `0`;
+- `apt-get check` success;
 - exact installed candidate versions;
 - `pam_kwallet5.so` registered in `common-auth` and `common-session`;
-- no HTTP/HTTPS package transport;
-- no Docker or custom AppArmor dependency.
+- relevant AppArmor denials `0`;
+- Docker/custom AppArmor `0`;
+- no HTTP/HTTPS package transport.
 
-This gate certifies package/install/PAM registration. Runtime session auto-unlock remains a later functional certification and is explicitly not claimed here.
+This gate certifies package relationships, local installation and PAM registration. Runtime session automatic unlock remains a later end-to-end functional certification and is explicitly recorded as:
 
-Workflow `.github/workflows/ksq-native-range-061-065-r2-kwallet.yml` is currently qualifying orders 61-65 and this KWallet installation gate. Orders 66-80 remain blocked until that workflow passes.
+`AURORA_KSQ_1_KWALLET_RUNTIME_AUTO_UNLOCK_CERTIFIED=no`
 
 ## Reproducibility contract
 
@@ -163,20 +220,26 @@ KSQ-1 retains the 95+6 contract:
 - 95 unaffected source nodes require exact prepared-source identity and byte-identical DEBs against independent reference evidence;
 - orders 29, 68, 81, 99, 100 and 101 require dedicated independent rebuild proof against the final patched candidate.
 
+Order 68 `drkonqi` may be built in the next range for dependency progress, but a range PASS does **not** satisfy its later dedicated reproducibility obligation.
+
 ## Current gate state
 
 - KSQ-0: **CERTIFIED / CLOSED**;
 - upstream Ubuntu snapshot: **20260829T022000Z / FIXED**;
 - canonical local slice: **20260829T022000Z-r2 / INDEPENDENTLY VALIDATED**;
 - GitHub-hosted Ubuntu 26.04 native unshare architecture: **QUALIFIED / SELECTED**;
-- maintained 001-020: **PASS**;
-- maintained 021-040: **PASS**;
-- maintained 041-043 r2: **PASS**;
-- maintained 044-060 r2: **PASS**;
-- accumulated candidate through order 60: **275 DEBs**;
-- orders 061-065 + KWallet PAM native gate: **IN PROGRESS / NOT YET ACCEPTED**;
-- orders 066-080: **BLOCKED ON 061-065 + KWALLET GATE**;
+- maintained 001-020: **PASS / ACCEPTED**;
+- maintained 021-040: **PASS / ACCEPTED**;
+- maintained 041-043 r2: **PASS / ACCEPTED**;
+- maintained 044-060 r2: **PASS / ACCEPTED**;
+- maintained 061-065 r2: **PASS / ACCEPTED**;
+- KWallet order-65 package/install/PAM gate: **PASS / ACCEPTED**;
+- KWallet runtime session auto-unlock: **NOT CERTIFIED HERE**;
+- accumulated candidate through order 65: **295 DEBs**;
+- orders 066-080: **UNBLOCKED / NEXT ACTIVE BUILD UNIT**;
 - complete 101-source candidate: **NOT RUN**;
 - KSQ-1: **ACTIVE / NOT CERTIFIED**;
 - KSQ-2: **BLOCKED**;
 - C4.1: **PAUSED**.
+
+Orders 66–80 currently have no declared packaging adaptation in `tests/kde-stack/ksq-1-packaging-adaptations.tsv`; their native range gate must therefore fail closed unless all 15 prepared-source evidence records show zero applied adaptations.
