@@ -39,7 +39,7 @@ jobs:
           zip="$RUNNER_TEMP/r2-size.zip"
           mkdir -p "$RUNNER_TEMP/r2-size"
           curl --fail --location --retry 5 --retry-all-errors \
-            -H 'Accept: application/octet-stream' \
+            -H 'Accept: application/vnd.github+json' \
             -H "Authorization: Bearer ${GH_TOKEN}" \
             -H 'X-GitHub-Api-Version: 2022-11-28' \
             'https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/9883249125/zip' \
@@ -86,8 +86,7 @@ jobs:
             -o APT::Get::List-Cleanup=0
             -o APT::Sandbox::User=root
           )
-          sudo apt-get "${apt_opts[@]}" -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update \
-            2>&1 | tee "$out/apt-update.log"
+          sudo apt-get "${apt_opts[@]}" -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update 2>&1 | tee "$out/apt-update.log"
           apt-config -o APT::Architecture-Variants= dump \
             | grep -E '^(APT::Architecture|APT::Architecture-Variants|APT::Install-Recommends)' \
             | tee "$out/apt-policy.txt"
@@ -99,10 +98,8 @@ jobs:
           roots=('?essential' apt build-essential ca-certificates ubuntu-keyring sudo sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils gzip xz-utils diffutils libcap2-bin)
           roots+=("${seeds[@]}")
 
-          sudo apt-get "${apt_opts[@]}" --print-uris --yes install "${roots[@]}" \
-            > "$out/global-direct.print-uris" 2> "$out/global-direct.stderr"
-          sudo apt-get "${apt_opts[@]}" --print-uris --yes install 'libcups2-dev=2.4.16-1ubuntu1.3' \
-            > "$out/cups-direct.print-uris" 2> "$out/cups-direct.stderr"
+          sudo apt-get "${apt_opts[@]}" --print-uris --yes install "${roots[@]}" > "$out/global-direct.print-uris" 2> "$out/global-direct.stderr"
+          sudo apt-get "${apt_opts[@]}" --print-uris --yes install 'libcups2-dev=2.4.16-1ubuntu1.3' > "$out/cups-direct.print-uris" 2> "$out/cups-direct.stderr"
 
           mkdir -p "$RUNNER_TEMP/dummy/DEBIAN"
           cat > "$RUNNER_TEMP/dummy/DEBIAN/control" <<'CONTROL'
@@ -115,10 +112,8 @@ jobs:
           CONTROL
           dpkg-deb --build "$RUNNER_TEMP/dummy" "$RUNNER_TEMP/sbuild-build-depends-main-dummy.deb"
           dpkg-deb -f "$RUNNER_TEMP/sbuild-build-depends-main-dummy.deb" | tee "$out/dummy-control.txt"
-          sudo apt-get "${apt_opts[@]}" --print-uris --yes install "$RUNNER_TEMP/sbuild-build-depends-main-dummy.deb" \
-            > "$out/cups-dummy.print-uris" 2> "$out/cups-dummy.stderr"
-          sudo apt-get "${apt_opts[@]}" --simulate --yes install "$RUNNER_TEMP/sbuild-build-depends-main-dummy.deb" \
-            > "$out/cups-dummy.simulate" 2> "$out/cups-dummy-sim.stderr"
+          sudo apt-get "${apt_opts[@]}" --print-uris --yes install "$RUNNER_TEMP/sbuild-build-depends-main-dummy.deb" > "$out/cups-dummy.print-uris" 2> "$out/cups-dummy.stderr"
+          sudo apt-get "${apt_opts[@]}" --simulate --yes install "$RUNNER_TEMP/sbuild-build-depends-main-dummy.deb" > "$out/cups-dummy.simulate" 2> "$out/cups-dummy-sim.stderr"
 
           python3 - "$snapshot" "$out" <<'PY'
           import shlex, sys
