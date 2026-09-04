@@ -26,14 +26,15 @@ jobs:
           set -euo pipefail
           grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
           test "$(dpkg --print-architecture)" = amd64
-          mkdir -p build/ksq-1/accept-061-065-r2-sidecar
+          out=build/ksq-1/accept-061-065-r2-sidecar
+          mkdir -p "$out"
           curl --fail --location --retry 5 --retry-all-errors \
             -H "Authorization: Bearer ${GH_TOKEN}" \
             -H 'Accept: application/vnd.github+json' \
             -H 'X-GitHub-Api-Version: 2022-11-28' \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/9917851669" \
-            -o build/ksq-1/accept-061-065-r2-sidecar/source-artifact.json
-          python3 - build/ksq-1/accept-061-065-r2-sidecar/source-artifact.json <<'PY'
+            -o "$out/source-artifact.json"
+          python3 - "$out/source-artifact.json" <<'PY'
           import json, sys
           p = json.load(open(sys.argv[1]))
           expected = {
@@ -178,7 +179,7 @@ jobs:
           cp "$kw/solver-closure.env" "$kw/installation-inputs.env" "$kw/selected-install-status.env" \
              "$kw/mmdebstrap-command.env" "$kw/host-chroot.env" "$kw/status.env" \
              "$kw/runtime-extension-stage-status.env" "$kw/gap-status.env" "$out/evidence/"
-          sha256sum "$out/evidence/"* > "$out/evidence.sha256"
+          (cd "$out" && sha256sum evidence/* > evidence.sha256 && sha256sum -c evidence.sha256)
           {
             echo 'AURORA_KSQ_1_ORDER65_ACCEPTANCE_STATUS=PASS'
             echo 'AURORA_KSQ_1_ORDER65_ACCEPTED_THROUGH_ORDER=65'
@@ -193,6 +194,7 @@ jobs:
             echo 'AURORA_KSQ_1_ORDER65_SOURCE_POSTVALIDATION_ARTIFACT=9917851669'
             echo 'AURORA_KSQ_1_ORDER65_SOURCE_POSTVALIDATION_ARTIFACT_DIGEST=sha256:12b398c5f7388844861cca60f3fac37256eb94b3a32f57a31df8802bdf258a5c'
           } | tee "$out/acceptance.env"
+          (cd "$out" && sha256sum acceptance.env source-artifact.json evidence.sha256 > artifact-manifest.sha256 && sha256sum -c artifact-manifest.sha256)
 
       - name: Upload independent acceptance evidence
         if: always()
@@ -208,5 +210,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat build/ksq-1/accept-061-065-r2-sidecar/acceptance.env
-          grep -qx 'AURORA_KSQ_1_ORDER65_ACCEPTANCE_STATUS=PASS' build/ksq-1/accept-061-065-r2-sidecar/acceptance.env
+          out=build/ksq-1/accept-061-065-r2-sidecar
+          cat "$out/acceptance.env"
+          grep -qx 'AURORA_KSQ_1_ORDER65_ACCEPTANCE_STATUS=PASS' "$out/acceptance.env"
+          (cd "$out" && sha256sum -c evidence.sha256 && sha256sum -c artifact-manifest.sha256)
