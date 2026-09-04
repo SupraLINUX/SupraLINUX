@@ -71,14 +71,14 @@ jobs:
           python3 - "$work/apt-source-fetch.log" <<'PY'
           import re, sys
           from pathlib import Path
-          prefix='https://snapshot.ubuntu.com/ubuntu/20260829T022000Z/'
+          allowed='https://snapshot.ubuntu.com/ubuntu/20260829T022000Z'
           urls=[]
           for raw in Path(sys.argv[1]).read_text(errors='replace').splitlines():
               if re.match(r'^(?:Get|Hit|Ign|Err):\d+\s+https?://', raw):
                   urls.append(raw.split()[1])
           if not urls:
               raise SystemExit('no HTTP(S) source transport observed')
-          bad=[u for u in urls if not u.startswith(prefix)]
+          bad=[u for u in urls if u != allowed and not u.startswith(allowed + '/')]
           if bad:
               raise SystemExit('non-snapshot source transport: '+', '.join(sorted(set(bad))))
           print(f'AURORA_KSQ_1_SOURCE_FETCH_PROBE_TRANSPORT_LINES={len(urls)}')
