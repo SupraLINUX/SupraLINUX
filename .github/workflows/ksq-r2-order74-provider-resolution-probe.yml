@@ -1,0 +1,168 @@
+name: Aurora KSQ r2 order74 provider resolution probe
+
+on:
+  push:
+    branches: [feature/kde-stack-qualification]
+    paths:
+      - '.github/workflows/ksq-r2-order74-provider-resolution-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  order74-provider-probe:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Qualify exact resolver host
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          mkdir -p build/ksq-r2-order74-provider-probe
+          apt-get --version | head -n1 | tee build/ksq-r2-order74-provider-probe/apt-version.txt
+          grep -qx 'apt 3.2.0 (amd64)' build/ksq-r2-order74-provider-probe/apt-version.txt
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends ca-certificates ubuntu-keyring python3
+
+      - name: Download exact r2 closure-generation evidence
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9883249125'
+          path: ${{ runner.temp }}/r2-size
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33729378261'
+          digest-mismatch: error
+
+      - name: Reproduce direct-root versus sbuild-style dummy resolution
+        shell: bash
+        run: |
+          set -euo pipefail
+          snapshot=20260829T022000Z
+          src="$RUNNER_TEMP/r2-size"
+          out=build/ksq-r2-order74-provider-probe
+          root="$RUNNER_TEMP/apt-isolated"
+          mkdir -p "$root/lists/partial" "$root/archives/partial" "$root/sources.list.d"
+          : > "$root/status"
+          : > "$root/sources.list"
+          cat > "$root/sources.list.d/ubuntu.sources" <<SOURCES
+          Types: deb
+          URIs: http://archive.ubuntu.com/ubuntu
+          Suites: resolute resolute-updates resolute-backports
+          Components: main universe restricted multiverse
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          Snapshot: ${snapshot}
+
+          Types: deb
+          URIs: http://security.ubuntu.com/ubuntu
+          Suites: resolute-security
+          Components: main universe restricted multiverse
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          Snapshot: ${snapshot}
+          SOURCES
+          apt_opts=(
+            -o APT::Architecture-Variants=
+            -o "Dir::Etc::sourcelist=$root/sources.list"
+            -o "Dir::Etc::sourceparts=$root/sources.list.d"
+            -o "Dir::State::lists=$root/lists"
+            -o "Dir::State::status=$root/status"
+            -o "Dir::Cache::archives=$root/archives"
+            -o APT::Get::List-Cleanup=0
+            -o APT::Sandbox::User=root
+          )
+          sudo apt-get "${apt_opts[@]}" -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update \
+            2>&1 | tee "$out/apt-update.log"
+          apt-config -o APT::Architecture-Variants= dump \
+            | grep -E '^(APT::Architecture|APT::Architecture-Variants|APT::Install-Recommends)' \
+            | tee "$out/apt-policy.txt"
+          grep -q '^APT::Install-Recommends "1";' "$out/apt-policy.txt"
+
+          test -s "$src/certified-binary-seeds.tsv"
+          test -s "$src/binary-print-uris.txt"
+          test "$(wc -l < "$src/certified-binary-seeds.tsv")" = 244
+          grep -qx $'libcups2-dev\t2.4.16-1ubuntu1.3' "$src/certified-binary-seeds.tsv"
+
+          mapfile -t seeds < <(awk -F '\t' '{print $1 "=" $2}' "$src/certified-binary-seeds.tsv")
+          roots=('?essential' apt build-essential ca-certificates ubuntu-keyring sudo sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils gzip xz-utils diffutils libcap2-bin)
+          roots+=("${seeds[@]}")
+          sudo apt-get "${apt_opts[@]}" --print-uris --yes install "${roots[@]}" \
+            > "$out/global-direct.print-uris" 2> "$out/global-direct.stderr"
+
+          sudo apt-get "${apt_opts[@]}" --print-uris --yes install 'libcups2-dev=2.4.16-1ubuntu1.3' \
+            > "$out/cups-direct.print-uris" 2> "$out/cups-direct.stderr"
+
+          mkdir -p "$RUNNER_TEMP/dummy/DEBIAN"
+          cat > "$RUNNER_TEMP/dummy/DEBIAN/control" <<'CONTROL'
+          Package: sbuild-build-depends-main-dummy
+          Version: 0.invalid.0
+          Architecture: amd64
+          Maintainer: SupraLINUX probe <build@supralinux.invalid>
+          Depends: libcups2-dev (= 2.4.16-1ubuntu1.3)
+          Description: controlled sbuild-style dependency dummy
+          CONTROL
+          dpkg-deb --build "$RUNNER_TEMP/dummy" "$RUNNER_TEMP/sbuild-build-depends-main-dummy.deb"
+          dpkg-deb -f "$RUNNER_TEMP/sbuild-build-depends-main-dummy.deb" \
+            | tee "$out/dummy-control.txt"
+          sudo apt-get "${apt_opts[@]}" --print-uris --yes install "$RUNNER_TEMP/sbuild-build-depends-main-dummy.deb" \
+            > "$out/cups-dummy.print-uris" 2> "$out/cups-dummy.stderr"
+
+          sudo apt-get "${apt_opts[@]}" --simulate --yes install "$RUNNER_TEMP/sbuild-build-depends-main-dummy.deb" \
+            > "$out/cups-dummy.simulate" 2> "$out/cups-dummy-sim.stderr"
+
+          python3 - "$snapshot" "$out" <<'PY'
+          import shlex, sys
+          from pathlib import Path
+          from urllib.parse import unquote, urlparse
+          snapshot, out = sys.argv[1], Path(sys.argv[2])
+          marker=f'/ubuntu/{snapshot}/'
+          targets={
+            'libjpeg-turbo8-dev':'pool/main/libj/libjpeg-turbo/libjpeg-turbo8-dev_2.1.5-4ubuntu4_amd64.deb',
+            'libjpeg8-dev':'pool/main/libj/libjpeg8-empty/libjpeg8-dev_8c-2ubuntu12_amd64.deb',
+            'libjpeg-dev':'pool/main/libj/libjpeg8-empty/libjpeg-dev_8c-2ubuntu12_amd64.deb',
+          }
+          rows=[]
+          for label in ('global-direct','cups-direct','cups-dummy'):
+              text=(out/f'{label}.print-uris').read_text()
+              paths=set()
+              for raw in text.splitlines():
+                  if not raw.startswith("'"):
+                      continue
+                  fields=shlex.split(raw)
+                  path=unquote(urlparse(fields[0]).path)
+                  if marker not in path:
+                      continue
+                  paths.add(path.split(marker,1)[1])
+              for pkg, rel in targets.items():
+                  rows.append((label,pkg,'yes' if rel in paths else 'no'))
+          (out/'provider-selection.tsv').write_text('context\tpackage\tselected\n'+''.join('\t'.join(r)+'\n' for r in rows))
+          print((out/'provider-selection.tsv').read_text(), end='')
+          PY
+
+          # Historical r2 selection must be reproduced exactly for the relevant provider set.
+          grep -qx $'global-direct\tlibjpeg-turbo8-dev\tyes' "$out/provider-selection.tsv"
+          grep -qx $'global-direct\tlibjpeg8-dev\tno' "$out/provider-selection.tsv"
+          grep -qx $'global-direct\tlibjpeg-dev\tno' "$out/provider-selection.tsv"
+
+          # Record, but do not prejudge, whether direct libcups2-dev and the sbuild-style dummy differ.
+          {
+            echo AURORA_KSQ_R2_ORDER74_PROVIDER_PROBE=PASS
+            echo AURORA_KSQ_R2_ORDER74_SNAPSHOT=$snapshot
+            echo AURORA_KSQ_R2_ORDER74_APT=3.2.0
+            echo AURORA_KSQ_R2_ORDER74_GLOBAL_ROOTS=direct-multi-root
+            echo AURORA_KSQ_R2_ORDER74_SBUILD_MODEL=dependency-dummy
+          } | tee "$out/status.env"
+
+      - name: Upload provider-resolution evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-r2-order74-provider-resolution-probe
+          path: build/ksq-r2-order74-provider-probe/
+          if-no-files-found: error
+          retention-days: 30
