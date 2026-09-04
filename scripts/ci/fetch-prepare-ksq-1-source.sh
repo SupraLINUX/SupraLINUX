@@ -7,14 +7,29 @@ BASE_VERSION="${2:?packaging base version required}"
 WORKDIR="${3:?work directory required}"
 APT_ROOT="${ROOT}/build/ksq-0/apt"
 AUDIT_DOWNLOADS="${ROOT}/build/ksq-0/source-audit/downloads"
+SNAPSHOT_ENV="${ROOT}/tests/kde-stack/apt-metadata-snapshot.env"
+TRANSPORT_MODE="${AURORA_KSQ_1_FETCH_TRANSPORT_MODE:-local-only}"
 
 [[ -f "${APT_ROOT}/stonking.sources" ]] || { echo "AURORA_KSQ_1_FETCH_FAILURE: KSQ-0-compatible local APT metadata missing" >&2; exit 1; }
 [[ -f "${APT_ROOT}/resolute.sources" ]] || { echo "AURORA_KSQ_1_FETCH_FAILURE: Resolute local APT metadata missing" >&2; exit 1; }
+[[ -f "${SNAPSHOT_ENV}" ]] || { echo "AURORA_KSQ_1_FETCH_FAILURE: snapshot identity missing" >&2; exit 1; }
+# shellcheck disable=SC1090
+. "${SNAPSHOT_ENV}"
+SNAPSHOT="${AURORA_KSQ_0_APT_SNAPSHOT:?missing snapshot identity}"
+[[ "${SNAPSHOT}" == "20260829T022000Z" ]] || { echo "AURORA_KSQ_1_FETCH_FAILURE: unexpected snapshot ${SNAPSHOT}" >&2; exit 1; }
+SNAPSHOT_URI="https://snapshot.ubuntu.com/ubuntu/${SNAPSHOT}/"
 
-rm -rf "${WORKDIR}"
-mkdir -p "${WORKDIR}"
-cd "${WORKDIR}"
+case "${TRANSPORT_MODE}" in
+  local-only|snapshot-witness) ;;
+  *)
+    echo "AURORA_KSQ_1_FETCH_FAILURE: unsupported transport mode ${TRANSPORT_MODE}" >&2
+    exit 1
+    ;;
+esac
 
+# Both modes remain fail-closed by default. The witness mode adds one host-specific
+# DIRECT exception while retaining the generic black-hole proxy for every other
+# HTTP(S) destination. APT 3.2 supports host-specific proxy selection.
 common_opts=(
   -o "Dir::Etc::sourceparts=-"
   -o "Dir::State::status=${APT_ROOT}/empty-status"
@@ -25,6 +40,26 @@ common_opts=(
   -o "Acquire::http::Proxy=http://127.0.0.1:9/"
   -o "Acquire::https::Proxy=http://127.0.0.1:9/"
 )
+if [[ "${TRANSPORT_MODE}" == "snapshot-witness" ]]; then
+  common_opts+=(
+    -o "Acquire::http::Proxy::snapshot.ubuntu.com=DIRECT"
+    -o "Acquire::https::Proxy::snapshot.ubuntu.com=DIRECT"
+  )
+
+  # The only configured remote URI may be the exact fixed Ubuntu snapshot.
+  for sources_file in "${APT_ROOT}/stonking.sources" "${APT_ROOT}/resolute.sources"; do
+    mapfile -t configured_uris < <(sed -n 's/^URIs:[[:space:]]*//p' "${sources_file}")
+    [[ "${#configured_uris[@]}" -eq 1 ]] || {
+      echo "AURORA_KSQ_1_FETCH_FAILURE: expected exactly one URI in ${sources_file}" >&2
+      exit 1
+    }
+    [[ "${configured_uris[0]}" == "${SNAPSHOT_URI}" ]] || {
+      echo "AURORA_KSQ_1_FETCH_FAILURE: non-snapshot URI in ${sources_file}: ${configured_uris[0]}" >&2
+      exit 1
+    }
+  done
+fi
+
 stonking_opts=(
   "${common_opts[@]}"
   -o "Dir::Etc::sourcelist=${APT_ROOT}/stonking.sources"
@@ -38,6 +73,10 @@ resolute_opts=(
   -o "Dir::State::lists=${APT_ROOT}/resolute-lists"
   -o "Dir::Cache=${APT_ROOT}/resolute-cache"
 )
+
+rm -rf "${WORKDIR}"
+mkdir -p "${WORKDIR}"
+cd "${WORKDIR}"
 
 if [[ "${SOURCE}" == "wayland-protocols" && "${BASE_VERSION}" == "1.48-1" ]]; then
   for file in \
@@ -54,9 +93,35 @@ if [[ "${SOURCE}" == "wayland-protocols" && "${BASE_VERSION}" == "1.48-1" ]]; th
 else
   fetch_log="${WORKDIR}/apt-source-fetch.log"
   apt-get "${stonking_opts[@]}" source --download-only "${SOURCE}=${BASE_VERSION}" 2>&1 | tee "${fetch_log}"
-  if grep -Ei '^(Get|Hit|Ign|Err):.*https?://' "${fetch_log}"; then
-    echo "AURORA_KSQ_1_FETCH_FAILURE: remote source transport attempted" >&2
-    exit 1
+
+  if [[ "${TRANSPORT_MODE}" == "local-only" ]]; then
+    if grep -Ei '^(Get|Hit|Ign|Err):.*https?://' "${fetch_log}"; then
+      echo "AURORA_KSQ_1_FETCH_FAILURE: remote source transport attempted" >&2
+      exit 1
+    fi
+  else
+    python3 - "${fetch_log}" "${SNAPSHOT_URI}" <<'PY'
+import re, sys
+from pathlib import Path
+log = Path(sys.argv[1])
+prefix = sys.argv[2]
+seen = 0
+for lineno, raw in enumerate(log.read_text(errors="replace").splitlines(), 1):
+    if not re.match(r"^(?:Get|Hit|Ign|Err):\d+\s+https?://", raw):
+        continue
+    fields = raw.split()
+    if len(fields) < 2:
+        raise SystemExit(f"AURORA_KSQ_1_FETCH_FAILURE: malformed transport line {lineno}: {raw}")
+    url = fields[1]
+    seen += 1
+    if not url.startswith(prefix):
+        raise SystemExit(
+            f"AURORA_KSQ_1_FETCH_FAILURE: non-snapshot transport line {lineno}: {url}"
+        )
+if seen == 0:
+    raise SystemExit("AURORA_KSQ_1_FETCH_FAILURE: witness source fetch observed no snapshot transport")
+print(f"AURORA_KSQ_1_FETCH_SNAPSHOT_TRANSPORT_LINES={seen}")
+PY
   fi
 fi
 
@@ -130,6 +195,14 @@ PREPARED_DSC="$(realpath "${PREPARED_DSC}")"
   echo "AURORA_KSQ_1_PACKAGING_ADAPTATIONS_APPLIED=${AURORA_KSQ_1_PACKAGING_ADAPTATIONS_APPLIED}"
   echo "AURORA_KSQ_1_PACKAGING_ADAPTATION_IDS=${AURORA_KSQ_1_PACKAGING_ADAPTATION_IDS}"
   echo "AURORA_KSQ_1_COMPAT13_SUBSTVARS_RESTORED=${AURORA_KSQ_1_COMPAT13_SUBSTVARS_RESTORED}"
+  echo "AURORA_KSQ_1_FETCH_TRANSPORT_MODE=${TRANSPORT_MODE}"
+  if [[ "${TRANSPORT_MODE}" == "snapshot-witness" ]]; then
+    echo "AURORA_KSQ_1_FETCH_ALLOWED_REMOTE=${SNAPSHOT_URI}"
+    echo "AURORA_KSQ_1_FETCH_OTHER_HTTP_TRANSPORT=blackholed"
+  else
+    echo "AURORA_KSQ_1_FETCH_ALLOWED_REMOTE=none"
+    echo "AURORA_KSQ_1_FETCH_OTHER_HTTP_TRANSPORT=blackholed"
+  fi
 } > "${WORKDIR}/prepared-source.env"
 
 sha256sum ./* 2>/dev/null | sort > "${WORKDIR}/prepared-source-files.sha256" || true
