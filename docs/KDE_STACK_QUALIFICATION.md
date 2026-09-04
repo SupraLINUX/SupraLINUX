@@ -211,6 +211,66 @@ The materialized adaptation boundary is machine-readable in `tests/kde-stack/ksq
 
 The final full-build validator fails if another adaptation appears implicitly or if any source reports adaptation metadata inconsistent with that manifest.
 
+##### Native r2 checkpoint through order 65 and KWallet package gate
+
+The maintained native qualification chain is now accepted through **order 65**, with **295 accumulated candidate DEBs**. This advances the previously accepted order-60 checkpoint without changing the immutable Ubuntu build slice `20260829T022000Z-r2`.
+
+Exact orders 61–65 source-build evidence:
+
+- run `33805321380`;
+- artifact `9913134271`;
+- digest `sha256:035b5930f3821d764f51f7bf4b3bd2b8e82a302539e70c2c612b93f41d3e2e65`;
+- 5/5 sources PASS;
+- 20 new DEBs;
+- 295 accumulated DEBs.
+
+The first-generation KWallet enforcement attached to that source-build run was not accepted merely because the source builds passed. The exact already-built candidate artifact was revalidated independently after two validator assumptions were investigated to root cause:
+
+1. `mmdebstrap --variant=minbase` adds the complete `Priority: required` bootstrap set and therefore introduced unrelated base packages outside the already-proven KWallet solver closure. The isolated runtime-install proof now uses `--variant=apt`, whose defined scope is Essential plus APT.
+2. `mmdebstrap` disables Recommends by default, while the accepted builder/solver policy uses normal APT Recommends semantics. The installation proof therefore enables `Apt::Install-Recommends "true"` explicitly rather than silently changing closure policy.
+
+A third Resolute-specific assumption was also removed: the qualified Ubuntu 26.04 runner provides `chroot` at `/usr/bin/chroot` through `coreutils-from-uutils`; the validator now resolves and records the real host binary instead of assuming the historical GNU `/usr/sbin/chroot` path.
+
+The exact KWallet solver selects **375** package/version operations under normal/default Recommends semantics. `372` are available through the immutable r2/Supra candidate inputs and exactly three Ubuntu runtime objects are outside r2's build-closure scope: `lsb-base=11.6build1`, `libwrap0=7.6.q-36build2`, and `socat=1.8.1.1-1ubuntu0.1`.
+
+Those three objects remain a separate immutable runtime extension instead of mutating r2:
+
+- extension `20260829T022000Z-kwallet-runtime-r1`;
+- release ID `382325880`;
+- archive asset `543326513`, SHA-256 `89f9861d061a68498950bddb96b1f22ed41ddd205db118719f23b8836284b40e`;
+- manifest asset `543326512`, SHA-256 `40a2a1f2e720dd07c93ecdfc52c42b1cd2202a495a749d2722109028cbdf0c32`;
+- independent validation artifact `9912479235`, digest `sha256:6ae93f1906617e67734ca5afa6e675ec47aec2f27a7e0a0799c76145b84e8f1c`.
+
+Successful exact-candidate post-validation:
+
+- run `33819688197`;
+- artifact `9917851669`;
+- digest `sha256:12b398c5f7388844861cca60f3fac37256eb94b3a32f57a31df8802bdf258a5c`;
+- 375 solver selections;
+- 375/375 exact selected package/version pairs installed;
+- `mmdebstrap` RC 0 with bootstrap variant `apt` and Recommends enabled;
+- 396 total rootfs packages, with bootstrap consequences kept distinct from the 375-package KWallet solver closure;
+- `apt-get check` successful;
+- exact six KWallet/PAM candidate versions installed;
+- `pam_kwallet5.so` registered in `common-auth` and `common-session`;
+- no HTTP/HTTPS package acquisition;
+- relevant AppArmor denials 0;
+- Docker/custom AppArmor 0.
+
+A second fail-closed acceptance workflow then consumed only that exact successful post-validation artifact and verified the stronger invariants plus evidence relocatability:
+
+- run `33821228782`;
+- artifact `9918320108`;
+- digest `sha256:50c33e99c7593ce6b8d4a67c8ee11c1598ad93545ed362078a57410c4a892730`;
+- conclusion **SUCCESS**;
+- relative `evidence.sha256` and top-level `artifact-manifest.sha256` both verify after extraction outside the runner.
+
+This order-65 gate certifies package relationships, the complete local installation of the exact KWallet solver selection, exact candidate versions, APT consistency and PAM registration. It explicitly does **not** certify runtime login/session automatic unlock; the accepted evidence retains `AURORA_KSQ_1_KWALLET_RUNTIME_AUTO_UNLOCK_CERTIFIED=no`.
+
+Canonical detailed record: `docs/validation/AURORA_KSQ_1_RANGE_061_065_KWALLET.md`.
+
+Orders 66–80 are now unblocked. No packaging adaptation is declared for any source in that range, so its range gate must require zero applied adaptations for all 15 sources. Order 68 `drkonqi` may be built there for dependency progress, but its later dedicated reproducibility rebuild remains mandatory under the 95+6 contract.
+
 ##### Reproducibility acceptance plan
 
 The reproducibility criterion is fixed before examining the final hashes. The candidate must account for all 101 source nodes and every produced binary DEB.
