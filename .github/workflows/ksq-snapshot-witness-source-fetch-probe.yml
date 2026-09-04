@@ -1,0 +1,110 @@
+name: Aurora KSQ snapshot witness source fetch probe
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-snapshot-witness-source-fetch-probe.yml'
+      - 'scripts/ci/fetch-prepare-ksq-1-source.sh'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  order66-source-fetch:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Qualify exact host and install source tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          apt-get --version | head -n1 | grep -qx 'apt 3.2.0 (amd64)'
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates python3 ubuntu-keyring dpkg-dev devscripts gpgv
+
+      - name: Recreate exact fixed snapshot metadata and source selection
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ksq-1/snapshot-source-fetch-probe
+          bash scripts/ci/validate-kde-stack-source-manifests.sh
+          python3 scripts/ci/validate-kde-stack-roots.py
+          bash scripts/ci/prepare-kde-stack-apt-metadata.sh \
+            2>&1 | tee build/ksq-1/snapshot-source-fetch-probe/apt-metadata.log
+          grep -Fq 'AURORA_KSQ_0_APT_METADATA_SUCCESS' \
+            build/ksq-1/snapshot-source-fetch-probe/apt-metadata.log
+          python3 scripts/ci/generate-kde-build-closure.py
+          bash scripts/ci/audit-kde-stack-source-selections.sh
+          test "$(sha256sum build/ksq-0/build-order.tsv | awk '{print $1}')" = \
+            9c53547df78a9f7c740228aba09490dfdb68e6307d2200e12ebf907dfa3fcb88
+          awk -F '\t' '$1==66 {print}' build/ksq-0/build-order.tsv \
+            | tee build/ksq-1/snapshot-source-fetch-probe/order66.tsv
+          grep -q $'^66\tkf6-kxmlgui\t6.29.0-0ubuntu1\t' \
+            build/ksq-1/snapshot-source-fetch-probe/order66.tsv
+
+      - name: Fetch and prepare order66 through witness transport policy
+        shell: bash
+        env:
+          AURORA_KSQ_1_FETCH_TRANSPORT_MODE: snapshot-witness
+        run: |
+          set -euo pipefail
+          work=build/ksq-1/snapshot-source-fetch-probe/order66
+          bash scripts/ci/fetch-prepare-ksq-1-source.sh \
+            kf6-kxmlgui 6.29.0-0ubuntu1 "$work" \
+            2>&1 | tee build/ksq-1/snapshot-source-fetch-probe/order66-fetch.log
+          grep -Fq 'AURORA_KSQ_1_FETCH_PREP_SUCCESS' \
+            build/ksq-1/snapshot-source-fetch-probe/order66-fetch.log
+          grep -qx 'AURORA_KSQ_1_FETCH_TRANSPORT_MODE=snapshot-witness' "$work/prepared-source.env"
+          grep -qx 'AURORA_KSQ_1_FETCH_ALLOWED_REMOTE=https://snapshot.ubuntu.com/ubuntu/20260829T022000Z/' \
+            "$work/prepared-source.env"
+          grep -qx 'AURORA_KSQ_1_FETCH_OTHER_HTTP_TRANSPORT=blackholed' "$work/prepared-source.env"
+          test -s "$work/apt-source-fetch.log"
+
+          python3 - "$work/apt-source-fetch.log" <<'PY'
+          import re, sys
+          from pathlib import Path
+          prefix='https://snapshot.ubuntu.com/ubuntu/20260829T022000Z/'
+          urls=[]
+          for raw in Path(sys.argv[1]).read_text(errors='replace').splitlines():
+              if re.match(r'^(?:Get|Hit|Ign|Err):\d+\s+https?://', raw):
+                  urls.append(raw.split()[1])
+          if not urls:
+              raise SystemExit('no HTTP(S) source transport observed')
+          bad=[u for u in urls if not u.startswith(prefix)]
+          if bad:
+              raise SystemExit('non-snapshot source transport: '+', '.join(sorted(set(bad))))
+          print(f'AURORA_KSQ_1_SOURCE_FETCH_PROBE_TRANSPORT_LINES={len(urls)}')
+          PY
+
+          ! grep -Eq '127\.0\.0\.1:9.*(Connection refused|Unable to connect)' \
+            build/ksq-1/snapshot-source-fetch-probe/order66-fetch.log
+          test -s "$work/source/debian/control"
+          test -s "$work/prepared-source.env"
+          sha256sum "$work"/*.dsc "$work"/prepared-source.env \
+            > build/ksq-1/snapshot-source-fetch-probe/evidence.sha256
+          {
+            echo 'AURORA_KSQ_1_SOURCE_FETCH_PROBE_STATUS=PASS'
+            echo 'AURORA_KSQ_1_SOURCE_FETCH_PROBE_ORDER=66'
+            echo 'AURORA_KSQ_1_SOURCE_FETCH_PROBE_SOURCE=kf6-kxmlgui'
+            echo 'AURORA_KSQ_1_SOURCE_FETCH_PROBE_BASE_VERSION=6.29.0-0ubuntu1'
+            echo 'AURORA_KSQ_1_SOURCE_FETCH_PROBE_SNAPSHOT=20260829T022000Z'
+            echo 'AURORA_KSQ_1_SOURCE_FETCH_PROBE_ALLOWED_HOST=snapshot.ubuntu.com'
+            echo 'AURORA_KSQ_1_SOURCE_FETCH_PROBE_OTHER_HTTP=blackholed'
+          } > build/ksq-1/snapshot-source-fetch-probe/status.env
+
+      - name: Preserve source transport proof
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-snapshot-witness-source-fetch-probe
+          path: build/ksq-1/snapshot-source-fetch-probe/
+          if-no-files-found: error
+          retention-days: 30
