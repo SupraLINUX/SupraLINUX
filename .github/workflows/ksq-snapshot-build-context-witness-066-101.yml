@@ -1,0 +1,612 @@
+name: Aurora KSQ snapshot build-context witness 066-101
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-snapshot-build-context-witness-066-101.yml'
+      - 'scripts/ci/prepare-ksq-1-snapshot-witness-environment.sh'
+      - 'scripts/ci/restore-ksq-1-accepted-through-065.sh'
+      - 'scripts/ci/stage-ksq-1-witness-prior-range.sh'
+      - 'scripts/ci/analyze-ksq-1-build-context-witness.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  accepted-065-state:
+    name: Reconstruct exact accepted checkpoint through order 65
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Qualify checkpoint transport host
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          python3 --version
+          dpkg-deb --version | head -n1
+
+      - name: Download exact 001-020 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9818465016'
+          path: ${{ runner.temp }}/prior-001-020
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33546093974'
+          digest-mismatch: error
+
+      - name: Download exact 021-040 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9824689982'
+          path: ${{ runner.temp }}/prior-021-040
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33561782526'
+          digest-mismatch: error
+
+      - name: Download exact 041-043 r2 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9892762100'
+          path: ${{ runner.temp }}/prior-041-043-r2
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33753437984'
+          digest-mismatch: error
+
+      - name: Download exact 044-060 r2 checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9900367299'
+          path: ${{ runner.temp }}/prior-044-060-r2
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33767306768'
+          digest-mismatch: error
+
+      - name: Download exact 061-065 r2 build checkpoint
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9913134271'
+          path: ${{ runner.temp }}/prior-061-065-r2
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33805321380'
+          digest-mismatch: error
+
+      - name: Download exact independent order65 acceptance
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: '9918320108'
+          path: ${{ runner.temp }}/accept-061-065-r2
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '33821228782'
+          digest-mismatch: error
+
+      - name: Restore and prove exact accepted state
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ci/restore-ksq-1-accepted-through-065.sh \
+            "$RUNNER_TEMP/accept-061-065-r2" \
+            "$RUNNER_TEMP/prior-001-020" \
+            "$RUNNER_TEMP/prior-021-040" \
+            "$RUNNER_TEMP/prior-041-043-r2" \
+            "$RUNNER_TEMP/prior-044-060-r2" \
+            "$RUNNER_TEMP/prior-061-065-r2" \
+            build/ksq-1/snapshot-witness/accepted-065
+          grep -qx 'AURORA_KSQ_1_ACCEPTED_065_RESTORE_STATUS=PASS' build/ksq-1/snapshot-witness/accepted-065/status.env
+          test "$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 295
+
+      - name: Preserve accepted DEB transport state
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-witness-accepted-065-debs
+          path: build/ksq-1/full/debs/*.deb
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Preserve accepted-state verification evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-witness-accepted-065-evidence
+          path: build/ksq-1/snapshot-witness/accepted-065/
+          if-no-files-found: error
+          retention-days: 30
+
+  witness-066-080:
+    name: Witness real build contexts 066-080
+    needs: accepted-065-state
+    runs-on: ubuntu-26.04
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install stock Resolute witness toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl python3 ubuntu-keyring gpgv \
+            sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+            gzip xz-utils diffutils build-essential apparmor apparmor-utils libcap2-bin
+
+      - name: Restore verified accepted-065 transport state
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-accepted-065-debs
+          path: build/ksq-1/full/debs
+
+      - name: Restore accepted-065 verification evidence
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-accepted-065-evidence
+          path: ${{ runner.temp }}/accepted-065-evidence
+
+      - name: Verify accepted-065 transport state
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/accepted-065-evidence"
+          grep -qx 'AURORA_KSQ_1_ACCEPTED_065_RESTORE_STATUS=PASS' "$evidence/status.env"
+          grep -qx 'AURORA_KSQ_1_ACCEPTED_065_DEBS=295' "$evidence/status.env"
+          test "$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 295
+          (cd build/ksq-1/full/debs && sha256sum -c "$evidence/accepted-065-debs.sha256")
+
+      - name: Prepare exact timestamped snapshot witness environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ci/prepare-ksq-1-snapshot-witness-environment.sh \
+            build/ksq-1/snapshot-witness/environment-066-080
+          grep -qx 'AURORA_KSQ_1_SNAPSHOT_WITNESS_ENV_STATUS=PASS' \
+            build/ksq-1/snapshot-witness/environment-066-080/status.env
+
+      - name: Build witness range 066-080
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=build/ksq-1/snapshot-witness/range-066-080
+          mkdir -p "$out"
+          set +e
+          bash scripts/ci/build-ksq-1-range.sh 66 80 2>&1 | tee "$out/range.log"
+          rc=("${PIPESTATUS[@]}")
+          set -e
+          printf 'AURORA_KSQ_1_WITNESS_RANGE_COMMAND_RC=%s\nAURORA_KSQ_1_WITNESS_RANGE_TEE_RC=%s\n' \
+            "${rc[0]}" "${rc[1]}" > "$out/command.env"
+          exit 0
+
+      - name: Preserve witness 066-080 DEBs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-witness-debs-066-080
+          path: build/ksq-1/full/chunk-066-080/new-debs/*.deb
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Preserve witness 066-080 evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-witness-evidence-066-080
+          path: build/ksq-1/full/chunk-066-080/evidence/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Preserve witness 066-080 environment evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-witness-environment-066-080
+          path: build/ksq-1/snapshot-witness/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce witness 066-080 PASS
+        shell: bash
+        run: |
+          set -euo pipefail
+          . build/ksq-1/snapshot-witness/range-066-080/command.env
+          test "$AURORA_KSQ_1_WITNESS_RANGE_COMMAND_RC" = 0
+          test "$AURORA_KSQ_1_WITNESS_RANGE_TEE_RC" = 0
+          status=build/ksq-1/full/chunk-066-080/evidence/range-status.env
+          grep -qx 'AURORA_KSQ_1_RANGE_STATUS=PASS' "$status"
+          grep -qx 'AURORA_KSQ_1_RANGE_FIRST_ORDER=66' "$status"
+          grep -qx 'AURORA_KSQ_1_RANGE_LAST_ORDER=80' "$status"
+          grep -qx 'AURORA_KSQ_1_RANGE_SOURCES=15' "$status"
+          grep -qx 'AURORA_KSQ_1_RANGE_FULL_CERTIFIED=no' "$status"
+
+  witness-081-090:
+    name: Witness real build contexts 081-090
+    needs: witness-066-080
+    runs-on: ubuntu-26.04
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install stock Resolute witness toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl python3 ubuntu-keyring gpgv \
+            sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+            gzip xz-utils diffutils build-essential apparmor apparmor-utils libcap2-bin
+
+      - name: Restore accepted-065 DEBs
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-accepted-065-debs
+          path: build/ksq-1/full/debs
+
+      - name: Restore accepted-065 evidence
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-accepted-065-evidence
+          path: ${{ runner.temp }}/accepted-065-evidence
+
+      - name: Restore prior witness 066-080 DEBs
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-debs-066-080
+          path: ${{ runner.temp }}/witness-debs-066-080
+
+      - name: Restore prior witness 066-080 evidence
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-evidence-066-080
+          path: ${{ runner.temp }}/witness-evidence-066-080
+
+      - name: Verify accepted state and stage prior witness range
+        shell: bash
+        run: |
+          set -euo pipefail
+          accepted="$RUNNER_TEMP/accepted-065-evidence"
+          grep -qx 'AURORA_KSQ_1_ACCEPTED_065_RESTORE_STATUS=PASS' "$accepted/status.env"
+          test "$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 295
+          (cd build/ksq-1/full/debs && sha256sum -c "$accepted/accepted-065-debs.sha256")
+          bash scripts/ci/stage-ksq-1-witness-prior-range.sh \
+            "$RUNNER_TEMP/witness-debs-066-080" "$RUNNER_TEMP/witness-evidence-066-080" 66 80 295
+
+      - name: Prepare exact timestamped snapshot witness environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ci/prepare-ksq-1-snapshot-witness-environment.sh \
+            build/ksq-1/snapshot-witness/environment-081-090
+
+      - name: Build witness range 081-090
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=build/ksq-1/snapshot-witness/range-081-090
+          mkdir -p "$out"
+          set +e
+          bash scripts/ci/build-ksq-1-range.sh 81 90 2>&1 | tee "$out/range.log"
+          rc=("${PIPESTATUS[@]}")
+          set -e
+          printf 'AURORA_KSQ_1_WITNESS_RANGE_COMMAND_RC=%s\nAURORA_KSQ_1_WITNESS_RANGE_TEE_RC=%s\n' \
+            "${rc[0]}" "${rc[1]}" > "$out/command.env"
+          exit 0
+
+      - name: Preserve witness 081-090 DEBs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-witness-debs-081-090
+          path: build/ksq-1/full/chunk-081-090/new-debs/*.deb
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Preserve witness 081-090 evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-witness-evidence-081-090
+          path: build/ksq-1/full/chunk-081-090/evidence/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Preserve witness 081-090 environment evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-witness-environment-081-090
+          path: build/ksq-1/snapshot-witness/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce witness 081-090 PASS
+        shell: bash
+        run: |
+          set -euo pipefail
+          . build/ksq-1/snapshot-witness/range-081-090/command.env
+          test "$AURORA_KSQ_1_WITNESS_RANGE_COMMAND_RC" = 0
+          test "$AURORA_KSQ_1_WITNESS_RANGE_TEE_RC" = 0
+          status=build/ksq-1/full/chunk-081-090/evidence/range-status.env
+          grep -qx 'AURORA_KSQ_1_RANGE_STATUS=PASS' "$status"
+          grep -qx 'AURORA_KSQ_1_RANGE_FIRST_ORDER=81' "$status"
+          grep -qx 'AURORA_KSQ_1_RANGE_LAST_ORDER=90' "$status"
+          grep -qx 'AURORA_KSQ_1_RANGE_SOURCES=10' "$status"
+          grep -qx 'AURORA_KSQ_1_RANGE_FULL_CERTIFIED=no' "$status"
+
+  witness-091-101:
+    name: Witness real build contexts 091-101
+    needs: witness-081-090
+    runs-on: ubuntu-26.04
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install stock Resolute witness toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl python3 ubuntu-keyring gpgv \
+            sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+            gzip xz-utils diffutils build-essential apparmor apparmor-utils libcap2-bin
+
+      - name: Restore accepted-065 DEBs
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-accepted-065-debs
+          path: build/ksq-1/full/debs
+
+      - name: Restore accepted-065 evidence
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-accepted-065-evidence
+          path: ${{ runner.temp }}/accepted-065-evidence
+
+      - name: Restore witness 066-080 DEBs
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-debs-066-080
+          path: ${{ runner.temp }}/witness-debs-066-080
+
+      - name: Restore witness 066-080 evidence
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-evidence-066-080
+          path: ${{ runner.temp }}/witness-evidence-066-080
+
+      - name: Restore witness 081-090 DEBs
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-debs-081-090
+          path: ${{ runner.temp }}/witness-debs-081-090
+
+      - name: Restore witness 081-090 evidence
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-evidence-081-090
+          path: ${{ runner.temp }}/witness-evidence-081-090
+
+      - name: Verify accepted state and stage prior witness ranges
+        shell: bash
+        run: |
+          set -euo pipefail
+          accepted="$RUNNER_TEMP/accepted-065-evidence"
+          grep -qx 'AURORA_KSQ_1_ACCEPTED_065_RESTORE_STATUS=PASS' "$accepted/status.env"
+          test "$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" -eq 295
+          (cd build/ksq-1/full/debs && sha256sum -c "$accepted/accepted-065-debs.sha256")
+          bash scripts/ci/stage-ksq-1-witness-prior-range.sh \
+            "$RUNNER_TEMP/witness-debs-066-080" "$RUNNER_TEMP/witness-evidence-066-080" 66 80 295
+          count_after_80="$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)"
+          bash scripts/ci/stage-ksq-1-witness-prior-range.sh \
+            "$RUNNER_TEMP/witness-debs-081-090" "$RUNNER_TEMP/witness-evidence-081-090" 81 90 "$count_after_80"
+
+      - name: Prepare exact timestamped snapshot witness environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ci/prepare-ksq-1-snapshot-witness-environment.sh \
+            build/ksq-1/snapshot-witness/environment-091-101
+
+      - name: Build witness range 091-101
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=build/ksq-1/snapshot-witness/range-091-101
+          mkdir -p "$out"
+          set +e
+          bash scripts/ci/build-ksq-1-range.sh 91 101 2>&1 | tee "$out/range.log"
+          rc=("${PIPESTATUS[@]}")
+          set -e
+          printf 'AURORA_KSQ_1_WITNESS_RANGE_COMMAND_RC=%s\nAURORA_KSQ_1_WITNESS_RANGE_TEE_RC=%s\n' \
+            "${rc[0]}" "${rc[1]}" > "$out/command.env"
+          exit 0
+
+      - name: Preserve witness 091-101 DEBs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-witness-debs-091-101
+          path: build/ksq-1/full/chunk-091-101/new-debs/*.deb
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Preserve witness 091-101 evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-witness-evidence-091-101
+          path: build/ksq-1/full/chunk-091-101/evidence/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Preserve witness 091-101 environment evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-witness-environment-091-101
+          path: build/ksq-1/snapshot-witness/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce witness 091-101 PASS
+        shell: bash
+        run: |
+          set -euo pipefail
+          . build/ksq-1/snapshot-witness/range-091-101/command.env
+          test "$AURORA_KSQ_1_WITNESS_RANGE_COMMAND_RC" = 0
+          test "$AURORA_KSQ_1_WITNESS_RANGE_TEE_RC" = 0
+          status=build/ksq-1/full/chunk-091-101/evidence/range-status.env
+          grep -qx 'AURORA_KSQ_1_RANGE_STATUS=PASS' "$status"
+          grep -qx 'AURORA_KSQ_1_RANGE_FIRST_ORDER=91' "$status"
+          grep -qx 'AURORA_KSQ_1_RANGE_LAST_ORDER=101' "$status"
+          grep -qx 'AURORA_KSQ_1_RANGE_SOURCES=11' "$status"
+          grep -qx 'AURORA_KSQ_1_RANGE_FULL_CERTIFIED=no' "$status"
+
+  analyze-witness:
+    name: Prove signed build-context set difference against r2
+    needs: [witness-066-080, witness-081-090, witness-091-101]
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install analysis tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl unzip python3 ubuntu-keyring apt
+          apt-get --version | head -n1 | grep -qx 'apt 3.2.0 (amd64)'
+
+      - name: Restore witness evidence 066-080
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-evidence-066-080
+          path: ${{ runner.temp }}/evidence-066-080
+
+      - name: Restore witness evidence 081-090
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-evidence-081-090
+          path: ${{ runner.temp }}/evidence-081-090
+
+      - name: Restore witness evidence 091-101
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-evidence-091-101
+          path: ${{ runner.temp }}/evidence-091-101
+
+      - name: Retrieve exact r2 closure-generation object list
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          zip="$RUNNER_TEMP/r2-size.zip"
+          out="$RUNNER_TEMP/r2-size"
+          mkdir -p "$out"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            'https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/9883249125/zip' \
+            -o "$zip"
+          test "$(sha256sum "$zip" | awk '{print $1}')" = 2281ab4655dc8d33639d9a3bbfb75d60325829a6b0af19902c20e4406e0c945b
+          test "$(stat -c '%s' "$zip")" = 136259
+          unzip -q "$zip" -d "$out"
+          test -s "$out/binary-objects.tsv"
+          test "$(wc -l < "$out/binary-objects.tsv")" -eq 1783
+
+      - name: Recreate APT-verified signed snapshot Packages corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ci/prepare-kde-stack-apt-metadata.sh \
+            2>&1 | tee build/ksq-0/witness-analysis-apt-metadata.log
+          grep -Fq 'AURORA_KSQ_0_APT_METADATA_SUCCESS' build/ksq-0/witness-analysis-apt-metadata.log
+          aptroot=build/ksq-0/apt
+          mapfile -t indexes < <(
+            apt-get \
+              -o "Dir::Etc::sourcelist=$aptroot/resolute.sources" \
+              -o Dir::Etc::sourceparts=- \
+              -o "Dir::State::lists=$aptroot/resolute-lists" \
+              -o "Dir::State::status=$aptroot/empty-status" \
+              -o "Dir::Cache=$aptroot/resolute-cache" \
+              -o APT::Architecture=amd64 \
+              -o APT::Architectures=amd64 \
+              -o Acquire::Languages=none \
+              indextargets --format '$Identifier\t$Architecture\t$Filename' \
+              | awk -F '\t' '$1=="Packages" && $2=="amd64" {print $3}' \
+              | sort -u
+          )
+          test "${#indexes[@]}" -gt 0
+          corpus=build/ksq-0/snapshot-packages-amd64.txt
+          : > "$corpus"
+          for index in "${indexes[@]}"; do
+            test -s "$index"
+            /usr/lib/apt/apt-helper cat-file "$index" >> "$corpus"
+            printf '\n' >> "$corpus"
+          done
+          test -s "$corpus"
+          sha256sum "$corpus" > "$corpus.sha256"
+          printf 'AURORA_KSQ_1_WITNESS_SIGNED_PACKAGE_INDEXES=%s\n' "${#indexes[@]}" \
+            > build/ksq-0/witness-signed-packages.env
+
+      - name: Analyze complete real-build witness union
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=build/ksq-1/snapshot-witness/analysis
+          python3 scripts/ci/analyze-ksq-1-build-context-witness.py \
+            --snapshot-packages build/ksq-0/snapshot-packages-amd64.txt \
+            --r2-objects "$RUNNER_TEMP/r2-size/binary-objects.tsv" \
+            --evidence-066-080 "$RUNNER_TEMP/evidence-066-080" \
+            --evidence-081-090 "$RUNNER_TEMP/evidence-081-090" \
+            --evidence-091-101 "$RUNNER_TEMP/evidence-091-101" \
+            --out "$out"
+          grep -qx 'AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_STATUS=PROVEN' "$out/status.env"
+          grep -qx 'AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_FIRST_ORDER=66' "$out/status.env"
+          grep -qx 'AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_LAST_ORDER=101' "$out/status.env"
+          grep -qx 'AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_SOURCES=36' "$out/status.env"
+          grep -qx 'AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_LOGS=36' "$out/status.env"
+          grep -qx 'AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_R2_OBJECTS=1783' "$out/status.env"
+          grep -qx 'AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_MANUAL_PACKAGE_ADDITIONS=0' "$out/status.env"
+          test -s "$out/observed-packages.tsv"
+          test -s "$out/observed-objects.tsv"
+          test -s "$out/gap-objects.tsv"
+          sha256sum "$out"/*.tsv "$out/status.env" \
+            build/ksq-0/snapshot-packages-amd64.txt \
+            "$RUNNER_TEMP/r2-size/binary-objects.tsv" \
+            > "$out/evidence.sha256"
+
+      - name: Preserve complete signed witness analysis
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-build-context-witness-066-101-analysis
+          path: |
+            build/ksq-1/snapshot-witness/analysis/
+            build/ksq-0/witness-signed-packages.env
+            build/ksq-0/snapshot-packages-amd64.txt.sha256
+            build/ksq-0/apt-metadata.sha256
+          if-no-files-found: error
+          retention-days: 30
