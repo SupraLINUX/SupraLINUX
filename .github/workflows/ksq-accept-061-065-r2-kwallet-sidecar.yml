@@ -1,0 +1,218 @@
+name: Aurora KSQ-1 accept 061-065 KWallet sidecar evidence
+
+on:
+  push:
+    branches: [feature/kde-stack-qualification]
+    paths:
+      - '.github/workflows/ksq-accept-061-065-r2-kwallet-sidecar.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  accept-061-065-kwallet-sidecar:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Qualify acceptance runner and source artifact identity
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          mkdir -p build/ksq-1/accept-061-065-r2-sidecar
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/9917851669" \
+            -o build/ksq-1/accept-061-065-r2-sidecar/source-artifact.json
+          python3 - build/ksq-1/accept-061-065-r2-sidecar/source-artifact.json <<'PY'
+          import json, sys
+          p = json.load(open(sys.argv[1]))
+          expected = {
+              'id': 9917851669,
+              'name': 'aurora-ksq-1-postvalidated-range-061-065-r2-kwallet-sidecar',
+              'size_in_bytes': 1460426,
+              'digest': 'sha256:12b398c5f7388844861cca60f3fac37256eb94b3a32f57a31df8802bdf258a5c',
+              'expired': False,
+          }
+          for key, value in expected.items():
+              if p.get(key) != value:
+                  raise SystemExit(f'artifact metadata mismatch for {key}: {p.get(key)!r} != {value!r}')
+          run = p.get('workflow_run') or {}
+          if run.get('id') != 33819688197:
+              raise SystemExit(f'unexpected workflow run: {run.get("id")}')
+          if run.get('head_sha') != 'b35215edfa408fa2f13f2bf34d2afbbaa96c1f3a':
+              raise SystemExit(f'unexpected workflow head: {run.get("head_sha")}')
+          print('AURORA_KSQ_1_ORDER65_SOURCE_ARTIFACT_IDENTITY=PASS')
+          PY
+
+      - name: Download exact successful post-validation artifact
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9917851669
+          path: ${{ runner.temp }}/accepted-source
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33819688197
+
+      - name: Independently audit exact 061-065 and KWallet evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          src="$RUNNER_TEMP/accepted-source"
+          out=build/ksq-1/accept-061-065-r2-sidecar
+          post="$src/build/ksq-1/postvalidate-061-065-r2-sidecar"
+          chunk="$src/build/ksq-1/full/chunk-061-065"
+          kw="$src/build/ksq-1/full/kwallet-pam-validation"
+          test -d "$post" && test -d "$chunk/evidence" && test -d "$chunk/new-debs" && test -d "$kw"
+
+          # Exact source-build checkpoint identity and independent post-validation result.
+          grep -qx 'AURORA_KSQ_1_POSTVALIDATE_SOURCE_RUN=33805321380' "$post/audit.env"
+          grep -qx 'AURORA_KSQ_1_POSTVALIDATE_SOURCE_ARTIFACT=9913134271' "$post/audit.env"
+          grep -qx 'AURORA_KSQ_1_POSTVALIDATE_SOURCE_ARTIFACT_DIGEST=sha256:035b5930f3821d764f51f7bf4b3bd2b8e82a302539e70c2c612b93f41d3e2e65' "$post/audit.env"
+          grep -qx 'AURORA_KSQ_1_POSTVALIDATE_PRIOR_DEBS=275' "$post/audit.env"
+          grep -qx 'AURORA_KSQ_1_POSTVALIDATE_NEW_DEBS=20' "$post/audit.env"
+          grep -qx 'AURORA_KSQ_1_POSTVALIDATE_ACCUMULATED_DEBS=295' "$post/audit.env"
+          grep -qx 'AURORA_KSQ_1_POSTVALIDATE_APPARMOR_DENIALS=0' "$post/audit.env"
+          grep -qx 'AURORA_KSQ_1_POSTVALIDATE_DOCKER_USED=0' "$post/audit.env"
+          grep -qx 'AURORA_KSQ_1_POSTVALIDATE_CUSTOM_APPARMOR_USED=0' "$post/audit.env"
+          grep -qx 'AURORA_KSQ_1_POSTVALIDATE_STATUS=PASS' "$post/audit.env"
+          grep -qx 'POSTVALIDATOR_RC=0' "$post/postvalidator-command.env"
+          grep -qx 'TEE_RC=0' "$post/postvalidator-command.env"
+
+          grep -qx 'AURORA_KSQ_1_RANGE_STATUS=PASS' "$chunk/evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_FIRST_ORDER=61' "$chunk/evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_LAST_ORDER=65' "$chunk/evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_SOURCES=5' "$chunk/evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_NEW_DEBS=20' "$chunk/evidence/range-status.env"
+          grep -qx 'AURORA_KSQ_1_RANGE_ACCUMULATED_DEBS=295' "$chunk/evidence/range-status.env"
+          test "$(awk -F '\t' 'NR>1 && $10=="PASS" {n++} END {print n+0}' "$chunk/evidence/build-manifest.tsv")" = 5
+          test "$(find "$chunk/new-debs" -maxdepth 1 -type f -name '*.deb' | wc -l)" = 20
+          (cd "$chunk/new-debs" && sha256sum -c ../evidence/new-debs.sha256)
+
+          # Solver contract: normal/default APT Recommends and exact 375-object closure.
+          grep -qx 'AURORA_KSQ_1_KWALLET_SOLVER_DEBS=375' "$kw/solver-closure.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_SOLVER_SELECTED_PACKAGES=375' "$kw/solver-closure.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_SOLVER_FILE_URIS=372' "$kw/solver-closure.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_SOLVER_PRESEEDED_DEBS=3' "$kw/solver-closure.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_SOLVER_ENUMERATION=apt-simulate+print-uris' "$kw/solver-closure.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RECOMMENDS_POLICY=default-enabled' "$kw/solver-closure.env"
+          test "$(awk -F '\t' 'NR>1 {n++} END {print n+0}' "$kw/solver-selected-packages.tsv")" = 375
+
+          # Installation contract: apt bootstrap only, same Recommends policy, 375/375 selected versions installed.
+          grep -qx 'MMDEBSTRAP_RC=0' "$kw/mmdebstrap-command.env"
+          grep -qx 'TEE_RC=0' "$kw/mmdebstrap-command.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_BOOTSTRAP_VARIANT=apt' "$kw/installation-inputs.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_INSTALL_RECOMMENDS=true' "$kw/installation-inputs.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_INCLUDE_DEBS=32' "$kw/installation-inputs.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_SELECTED_INSTALL_VERIFIED=375' "$kw/selected-install-status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_INSTALLED_TOTAL_PACKAGES=396' "$kw/selected-install-status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_INSTALL_RECOMMENDS=true' "$kw/selected-install-status.env"
+          test "$(awk -F '\t' 'NR>1 && $4=="PASS" {n++} END {print n+0}' "$kw/selected-install-verification.tsv")" = 375
+          test "$(awk -F '\t' 'NR>1 && $4!="PASS" {n++} END {print n+0}' "$kw/selected-install-verification.tsv")" = 0
+          test "$(wc -l < "$kw/installed-all-packages.tsv")" = 396
+
+          # Resolute host command provenance: do not assume legacy GNU /usr/sbin/chroot layout.
+          grep -qx 'AURORA_KSQ_1_KWALLET_HOST_CHROOT=/usr/bin/chroot' "$kw/host-chroot.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_HOST_CHROOT_OWNER=coreutils-from-uutils: /usr/bin/chroot' "$kw/host-chroot.env"
+
+          # Runtime extension remains a separate immutable exact three-object sidecar; r2 is not mutated.
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_STAGE=PASS' "$kw/runtime-extension-stage-status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_STATUS=INDEPENDENTLY_VALIDATED' "$kw/runtime-extension-stage-status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_ID=20260829T022000Z-kwallet-runtime-r1' "$kw/runtime-extension-stage-status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_PACKAGES=3' "$kw/runtime-extension-stage-status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_NETWORK_USED=0' "$kw/runtime-extension-stage-status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_GAP_STATUS=PROVEN' "$kw/gap-status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_ACQUISITIONS=375' "$kw/gap-status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_ACQUISITIONS_PRESENT=372' "$kw/gap-status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_ACQUISITIONS_MISSING=3' "$kw/gap-status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_R2_BINARY_OBJECTS=1783' "$kw/gap-status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_GAP_PACKAGES=lsb-base,libwrap0,socat' "$kw/gap-status.env"
+
+          # End-state package and PAM proof.
+          grep -qx 'AURORA_KSQ_1_KWALLET_VERSION=4:6.7.4-0ubuntu3~supra26.04.1' "$kw/status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_VERSION=6.29.0-0ubuntu1~supra26.04.1' "$kw/status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_BINARY_RUNTIME_DEPS=PASS' "$kw/status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_PAM_INSTALLATION=PASS' "$kw/status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_AUTO_UNLOCK_CERTIFIED=no' "$kw/status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_VALIDATOR_MODE=native-unprivileged' "$kw/status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_DOCKER_USED=0' "$kw/status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_CUSTOM_APPARMOR_USED=0' "$kw/status.env"
+          grep -qx 'AURORA_KWALLET_PAM_COMMON_SESSION=present' "$kw/pam-registration.txt"
+          grep -qx 'AURORA_KWALLET_PAM_COMMON_AUTH=present' "$kw/pam-registration.txt"
+          grep -qx 'AURORA_KWALLET_PAM_INSTALL_SUCCESS' "$kw/pam-registration.txt"
+          grep -qx 'No errors found' "$kw/apt-check.txt"
+
+          python3 - "$kw/installed-versions.tsv" <<'PY'
+          import sys
+          expected = {
+              'libpam-kwallet-common': '4:6.7.4-0ubuntu3~supra26.04.1',
+              'libpam-kwallet5': '4:6.7.4-0ubuntu3~supra26.04.1',
+              'kwallet6': '6.29.0-0ubuntu1~supra26.04.1',
+              'libkf6wallet-data': '6.29.0-0ubuntu1~supra26.04.1',
+              'libkf6wallet6': '6.29.0-0ubuntu1~supra26.04.1',
+              'libkf6walletbackend6': '6.29.0-0ubuntu1~supra26.04.1',
+          }
+          got = {}
+          for line in open(sys.argv[1]):
+              package, version = line.rstrip('\n').split('\t', 1)
+              package = package.split(':', 1)[0]
+              if package in got:
+                  raise SystemExit(f'duplicate normalized package {package}')
+              got[package] = version
+          if got != expected:
+              raise SystemExit(f'installed KWallet package set mismatch: {got!r}')
+          print('AURORA_KSQ_1_KWALLET_EXACT_INSTALLED_VERSIONS=PASS')
+          PY
+
+          # Local-only package transport remains mandatory.
+          ! grep -E '^(Get|Hit|Ign|Err):[0-9]+ https?://' "$kw/solver-update.log" "$kw/solver-download.log" "$kw/mmdebstrap-install.log"
+          ! grep -q '^Err:[0-9]' "$kw/solver-download.log"
+          test "$(grep -c "^'https\?://" "$kw/solver-uris.log" || true)" = 0
+          test "$(grep -c "^'file:" "$kw/solver-uris.log" || true)" = 372
+
+          mkdir -p "$out/evidence"
+          cp "$post/audit.env" "$out/evidence/source-postvalidation-audit.env"
+          cp "$kw/solver-closure.env" "$kw/installation-inputs.env" "$kw/selected-install-status.env" \
+             "$kw/mmdebstrap-command.env" "$kw/host-chroot.env" "$kw/status.env" \
+             "$kw/runtime-extension-stage-status.env" "$kw/gap-status.env" "$out/evidence/"
+          sha256sum "$out/evidence/"* > "$out/evidence.sha256"
+          {
+            echo 'AURORA_KSQ_1_ORDER65_ACCEPTANCE_STATUS=PASS'
+            echo 'AURORA_KSQ_1_ORDER65_ACCEPTED_THROUGH_ORDER=65'
+            echo 'AURORA_KSQ_1_ORDER65_ACCEPTED_ACCUMULATED_DEBS=295'
+            echo 'AURORA_KSQ_1_ORDER65_ACCEPTED_SOLVER_PACKAGES=375'
+            echo 'AURORA_KSQ_1_ORDER65_ACCEPTED_INSTALLED_SELECTION=375'
+            echo 'AURORA_KSQ_1_ORDER65_ACCEPTED_BOOTSTRAP_VARIANT=apt'
+            echo 'AURORA_KSQ_1_ORDER65_ACCEPTED_INSTALL_RECOMMENDS=true'
+            echo 'AURORA_KSQ_1_ORDER65_ACCEPTED_RUNTIME_EXTENSION=20260829T022000Z-kwallet-runtime-r1'
+            echo 'AURORA_KSQ_1_ORDER65_ACCEPTED_RUNTIME_AUTO_UNLOCK_CERTIFIED=no'
+            echo 'AURORA_KSQ_1_ORDER65_SOURCE_POSTVALIDATION_RUN=33819688197'
+            echo 'AURORA_KSQ_1_ORDER65_SOURCE_POSTVALIDATION_ARTIFACT=9917851669'
+            echo 'AURORA_KSQ_1_ORDER65_SOURCE_POSTVALIDATION_ARTIFACT_DIGEST=sha256:12b398c5f7388844861cca60f3fac37256eb94b3a32f57a31df8802bdf258a5c'
+          } | tee "$out/acceptance.env"
+
+      - name: Upload independent acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-accepted-through-065-kwallet-sidecar
+          path: build/ksq-1/accept-061-065-r2-sidecar/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce acceptance
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat build/ksq-1/accept-061-065-r2-sidecar/acceptance.env
+          grep -qx 'AURORA_KSQ_1_ORDER65_ACCEPTANCE_STATUS=PASS' build/ksq-1/accept-061-065-r2-sidecar/acceptance.env
