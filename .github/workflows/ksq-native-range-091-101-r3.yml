@@ -106,7 +106,7 @@ jobs:
           EXPECTED_ACCUMULATED_DEBS: ${{ steps.trigger.outputs.prior_accumulated_debs }}
         run: |
           set -euo pipefail
-          acc90="$RUNNER_TEMP/accept-090/ksq-1/accept-081-090-r3"
+          acc90="$RUNNER_TEMP/accept-090"
           (cd "$acc90" && sha256sum -c evidence.sha256)
           source "$acc90/acceptance.env"
           test "$AURORA_KSQ_R3_081_090_ACCEPTANCE" = PASS
@@ -136,7 +136,7 @@ jobs:
           source081_id="$AURORA_KSQ_R3_081_090_SOURCE_ARTIFACT_ID"
           fetch_zip "$accept080_id" "$RUNNER_TEMP/accept-080"
           fetch_zip "$source081_id" "$RUNNER_TEMP/source-081-090"
-          acc80="$RUNNER_TEMP/accept-080/ksq-1/accept-066-080-r3"
+          acc80="$RUNNER_TEMP/accept-080"
           (cd "$acc80" && sha256sum -c evidence.sha256)
           source "$acc80/acceptance.env"
           test "$AURORA_KSQ_R3_066_080_ACCEPTANCE" = PASS

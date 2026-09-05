@@ -154,7 +154,7 @@ jobs:
           EXPECTED_PRIOR_NEW_DEBS_MANIFEST_SHA256: ${{ steps.trigger.outputs.prior_new_debs_manifest_sha256 }}
         run: |
           set -euo pipefail
-          accept="$RUNNER_TEMP/accept-080/ksq-1/accept-066-080-r3"
+          accept="$RUNNER_TEMP/accept-080"
           test -d "$accept"
           (cd "$accept" && sha256sum -c evidence.sha256)
           source "$accept/acceptance.env"

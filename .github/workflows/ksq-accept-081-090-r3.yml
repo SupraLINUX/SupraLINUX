@@ -138,7 +138,7 @@ jobs:
           PRIOR_ARTIFACT_DIGEST: ${{ steps.trigger.outputs.prior_accept_artifact_digest }}
         run: |
           set -euo pipefail
-          prior="$RUNNER_TEMP/prior/ksq-1/accept-066-080-r3"
+          prior="$RUNNER_TEMP/prior"
           (cd "$prior" && sha256sum -c evidence.sha256)
           source "$prior/acceptance.env"
           test "$AURORA_KSQ_R3_066_080_ACCEPTANCE" = PASS
