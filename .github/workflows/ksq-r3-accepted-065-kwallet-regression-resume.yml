@@ -1,0 +1,369 @@
+name: Aurora KSQ-1 r3 accepted-065 KWallet regression resume
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/ksq-r3-accepted-065-regression-resume-trigger.env'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: aurora-ksq-r3-accepted-065-kwallet-regression-resume
+  cancel-in-progress: false
+
+jobs:
+  resume-r3-accepted-065:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Qualify stock Resolute toolchain and exact failed-tooling provenance
+        id: trigger
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          source .github/ksq-r3-accepted-065-regression-resume-trigger.env
+          test "$AURORA_KSQ_R3_RESUME_SLICE_ID" = 20260829T022000Z-r3
+          [[ "$AURORA_KSQ_R3_RESUME_FAILED_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$AURORA_KSQ_R3_RESUME_FAILED_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$AURORA_KSQ_R3_RESUME_FAILED_ARTIFACT_ID" =~ ^[0-9]+$ ]]
+          [[ "$AURORA_KSQ_R3_RESUME_FAILED_ARTIFACT_DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]]
+          [[ "$AURORA_KSQ_R3_RESUME_FAILED_ARTIFACT_SIZE" =~ ^[1-9][0-9]*$ ]]
+          {
+            echo "run_id=$AURORA_KSQ_R3_RESUME_FAILED_RUN_ID"
+            echo "head_sha=$AURORA_KSQ_R3_RESUME_FAILED_HEAD_SHA"
+            echo "artifact_id=$AURORA_KSQ_R3_RESUME_FAILED_ARTIFACT_ID"
+            echo "artifact_digest=$AURORA_KSQ_R3_RESUME_FAILED_ARTIFACT_DIGEST"
+            echo "artifact_size=$AURORA_KSQ_R3_RESUME_FAILED_ARTIFACT_SIZE"
+          } >> "$GITHUB_OUTPUT"
+          base=build/ksq-1/r3-accepted-065-regression-resume
+          mkdir -p "$base/host-evidence"
+          date --iso-8601=seconds > "$base/host-evidence/start-time.txt"
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl unzip jq python3 ubuntu-keyring gpgv \
+            sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+            gzip xz-utils diffutils build-essential apparmor apparmor-utils libcap2-bin
+          dpkg-query -W -f='${Package}\t${Version}\n' apt sbuild libsbuild-perl mmdebstrap uidmap util-linux apparmor \
+            | sort | tee "$base/host-evidence/toolchain.tsv"
+          grep -q $'^apt\t3.2.0' "$base/host-evidence/toolchain.tsv"
+          grep -q $'^sbuild\t0.91.2ubuntu3$' "$base/host-evidence/toolchain.tsv"
+          grep -q $'^libsbuild-perl\t0.91.2ubuntu3$' "$base/host-evidence/toolchain.tsv"
+          grep -q $'^mmdebstrap\t1.5.7-3$' "$base/host-evidence/toolchain.tsv"
+          test "$(stat -c '%a' /usr/bin/newuidmap)" = 4755
+          test "$(stat -c '%a' /usr/bin/newgidmap)" = 4755
+          test -z "$(getcap /usr/bin/newuidmap /usr/bin/newgidmap || true)"
+          test "$(git hash-object scripts/ci/validate-ksq-1-kwallet-pam-runtime-sidecar.sh)" = 41d95eb5126052229e822061e979b32e700f7c33
+          bash -n scripts/ci/validate-ksq-1-kwallet-pam-runtime-sidecar-postbuild.sh
+
+      - name: Prove exact prior failure was tooling-only after acquisition regression PASS
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ steps.trigger.outputs.run_id }}
+          HEAD_SHA: ${{ steps.trigger.outputs.head_sha }}
+          ARTIFACT_ID: ${{ steps.trigger.outputs.artifact_id }}
+          ARTIFACT_DIGEST: ${{ steps.trigger.outputs.artifact_digest }}
+          ARTIFACT_SIZE: ${{ steps.trigger.outputs.artifact_size }}
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/r3-accepted-065-regression-resume
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" > "$base/prior-run.json"
+          test "$(jq -r '.status' "$base/prior-run.json")" = completed
+          test "$(jq -r '.conclusion' "$base/prior-run.json")" = failure
+          test "$(jq -r '.head_sha' "$base/prior-run.json")" = "$HEAD_SHA"
+          test "$(jq -r '.head_branch' "$base/prior-run.json")" = feature/kde-stack-qualification
+          test "$(jq -r '.name' "$base/prior-run.json")" = 'Aurora KSQ-1 r3 accepted-065 and KWallet regression'
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/$ARTIFACT_ID" > "$base/prior-artifact.json"
+          test "$(jq -r '.id' "$base/prior-artifact.json")" = "$ARTIFACT_ID"
+          test "$(jq -r '.name' "$base/prior-artifact.json")" = aurora-ksq-r3-accepted-065-kwallet-regression
+          test "$(jq -r '.expired' "$base/prior-artifact.json")" = false
+          test "$(jq -r '.digest' "$base/prior-artifact.json")" = "$ARTIFACT_DIGEST"
+          test "$(jq -r '.size_in_bytes' "$base/prior-artifact.json")" = "$ARTIFACT_SIZE"
+
+      - name: Download exact prior failed-tooling artifact
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: ${{ steps.trigger.outputs.artifact_id }}
+          path: ${{ runner.temp }}/prior-regression
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ steps.trigger.outputs.run_id }}
+          digest-mismatch: error
+
+      - name: Reuse only independently sealed PASS evidence from prior run
+        shell: bash
+        run: |
+          set -euo pipefail
+          prior="$RUNNER_TEMP/prior-regression/ksq-1/r3-accepted-065-regression"
+          test -d "$prior"
+          (cd "$prior" && sha256sum -c evidence.sha256)
+          grep -qx 'AURORA_KSQ_R3_ACCEPTED_065_REGRESSION=FAIL' "$prior/acceptance.env"
+          grep -qx 'POSTVALIDATOR_RC=1' "$prior/kwallet-r3-command.env"
+          grep -qx 'TEE_RC=0' "$prior/kwallet-r3-command.env"
+          grep -Fqx 'AURORA_KSQ_1_KWALLET_LOCAL_FAILURE: prepared kwallet-pam control missing' "$prior/kwallet-r3-postvalidator.log"
+          grep -qx 'AURORA_KSQ_R3_ACCEPTED_065_ACQUISITION_REGRESSION=PASS' "$prior/acquisition-regression/acquisition-regression.env"
+          grep -qx 'AURORA_KSQ_R3_ACCEPTED_065_BUILD_LOGS=65' "$prior/acquisition-regression/acquisition-regression.env"
+          grep -qx 'AURORA_KSQ_R3_ACCEPTED_065_UBUNTU_ACQUISITION_EVENTS=28215' "$prior/acquisition-regression/acquisition-regression.env"
+          grep -qx 'AURORA_KSQ_R3_ACCEPTED_065_UNIQUE_UBUNTU_IDENTITIES=1052' "$prior/acquisition-regression/acquisition-regression.env"
+          grep -qx 'AURORA_KSQ_R3_ACCEPTED_065_R3_PAYLOADS_VERIFIED=1052' "$prior/acquisition-regression/acquisition-regression.env"
+          grep -qx 'AURORA_KSQ_R3_ACCEPTED_065_GAP_IDENTITY_INTERSECTION=0' "$prior/acquisition-regression/acquisition-regression.env"
+          grep -qx 'AURORA_KSQ_R3_ACCEPTED_065_GAP_PACKAGE_NAME_INTERSECTION=0' "$prior/acquisition-regression/acquisition-regression.env"
+          test ! -s "$prior/host-evidence/apparmor-denied-relevant.log"
+          test "$(wc -l < "$prior/prior-kwallet-solver-selected-packages.tsv")" = 376
+          cp "$prior/prior-kwallet-solver-selected-packages.tsv" build/ksq-1/r3-accepted-065-regression-resume/prior-kwallet-solver-selected-packages.tsv
+          cp "$prior/acquisition-regression/acquisition-regression.env" build/ksq-1/r3-accepted-065-regression-resume/prior-acquisition-regression.env
+          cp "$prior/r3-release-manifest.env" build/ksq-1/r3-accepted-065-regression-resume/r3-release-manifest.env
+          cp "$prior/r3-provenance.env" build/ksq-1/r3-accepted-065-regression-resume/r3-provenance.env
+          test "$(jq -r '.id' "$prior/r3-validation-artifact-api.json")" = 9969086882
+          test "$(jq -r '.digest' "$prior/r3-validation-artifact-api.json")" = sha256:6fc4c3cae63f53d5484d1e5c168f51c01fb285af5697bc6f1f8438a2cb899907
+          test "$(jq -r '.conclusion' "$prior/r3-validation-run-api.json")" = success
+          test "$(jq -r '.id' "$prior/r3-validation-run-api.json")" = 33964782073
+
+      - name: Download and validate exact r3 release from sealed manifest
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/r3-accepted-065-regression-resume
+          set -a; source "$base/r3-release-manifest.env"; set +a
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_STATUS" = PUBLISHED_CANDIDATE
+          test "$AURORA_KSQ_SNAPSHOT_SLICE_ID" = 20260829T022000Z-r3
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_TAG" = ksq-snapshot-20260829T022000Z-r3
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256" = cb904b478afe186b96823b1b2872d5937517e3de10c6d2dd3170ec29fea09bc6
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES" = 1055590400
+          test "$AURORA_KSQ_SNAPSHOT_BINARY_OBJECTS" = 1786
+          test "$AURORA_KSQ_SNAPSHOT_R3_GAP_OBJECTS" = 3
+          test "$AURORA_KSQ_SNAPSHOT_R3_GAP_BYTES" = 547318
+          test "$AURORA_KSQ_SNAPSHOT_R3_MANUAL_PACKAGE_ADDITIONS" = 0
+          out="$RUNNER_TEMP/r3-release"; mkdir -p "$out"
+          gh release download "$AURORA_KSQ_SNAPSHOT_RELEASE_TAG" -R "$GITHUB_REPOSITORY" -p "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET" -D "$out"
+          archive="$out/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET"
+          test "$(sha256sum "$archive" | awk '{print $1}')" = "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256"
+          test "$(stat -c '%s' "$archive")" = "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES"
+          sudo install -d -o "$(id -u)" -g "$(id -g)" -m 0755 /opt/supralinux/archive
+          tar -xf "$archive" -C /opt/supralinux/archive
+          python3 scripts/ci/ksq-snapshot-slice-r3.py validate --slice-root /opt/supralinux/archive/20260829T022000Z-r3
+
+      - name: Restore exact accepted checkpoint and recover preserved order65 control
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/r3-accepted-065-regression-resume
+          fetch_artifact() {
+            local id="$1" run="$2" digest="$3" out="$4"
+            local meta="$base/artifact-$id.json"
+            gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/$id" > "$meta"
+            test "$(jq -r '.id' "$meta")" = "$id"
+            test "$(jq -r '.workflow_run.id' "$meta")" = "$run"
+            test "$(jq -r '.expired' "$meta")" = false
+            test "$(jq -r '.digest' "$meta")" = "$digest"
+            mkdir -p "$out"
+            curl --fail --location --retry 5 --retry-all-errors \
+              -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H 'X-GitHub-Api-Version: 2022-11-28' \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" -o "$out.zip"
+            unzip -q "$out.zip" -d "$out"
+          }
+          fetch_artifact 9818465016 33546093974 sha256:0eb45c7938b84db35ee734591622a6c621709117100d29376c01323ca0ab14ba "$RUNNER_TEMP/prior-001-020"
+          fetch_artifact 9824689982 33561782526 sha256:08dffb19fe6d3fda5b8079ed862d3215440cfabaf51a249f79b5af49d3539d8e "$RUNNER_TEMP/prior-021-040"
+          fetch_artifact 9892762100 33753437984 sha256:7a118c3225143021056781e2b45af114e719a1e5382bda5a1819c7346312b0f0 "$RUNNER_TEMP/prior-041-043-r2"
+          fetch_artifact 9900367299 33767306768 sha256:41a50bb17ea5ca4ab63c43a6aa6d6d030dae310ba716866824ac72d6c61dc4f3 "$RUNNER_TEMP/prior-044-060-r2"
+          fetch_artifact 9913134271 33805321380 sha256:035b5930f3821d764f51f7bf4b3bd2b8e82a302539e70c2c612b93f41d3e2e65 "$RUNNER_TEMP/prior-061-065-r2"
+          fetch_artifact 9918320108 33821228782 sha256:50c33e99c7593ce6b8d4a67c8ee11c1598ad93545ed362078a57410c4a892730 "$RUNNER_TEMP/accept-061-065-r2"
+          bash scripts/ci/restore-ksq-1-accepted-through-065.sh \
+            "$RUNNER_TEMP/accept-061-065-r2" "$RUNNER_TEMP/prior-001-020" "$RUNNER_TEMP/prior-021-040" \
+            "$RUNNER_TEMP/prior-041-043-r2" "$RUNNER_TEMP/prior-044-060-r2" "$RUNNER_TEMP/prior-061-065-r2" \
+            "$base/accepted-065-restore"
+          grep -qx 'AURORA_KSQ_1_ACCEPTED_065_RESTORE_STATUS=PASS' "$base/accepted-065-restore/status.env"
+          grep -qx 'AURORA_KSQ_1_ACCEPTED_065_DEBS=295' "$base/accepted-065-restore/status.env"
+          test "$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" = 295
+          control="$RUNNER_TEMP/prior-061-065-r2/build/ksq-1/full/chunk-061-065/evidence/65-kwallet-pam/debian-control"
+          test -f "$control"
+          test "$(sha256sum "$control" | awk '{print $1}')" = 0d1bd544c29049af28ae6f225350f2dc8757a9ba00b77a9b3751946fd67468fe
+          printf '%s\n' "$control" > "$base/prepared-control-path.txt"
+
+      - name: Download and validate exact KWallet runtime extension
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/r3-accepted-065-regression-resume
+          set -a; source scripts/ci/aurora-ksq-kwallet-runtime-extension.env; set +a
+          test "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_STATUS" = INDEPENDENTLY_VALIDATED
+          test "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_ID" = 20260829T022000Z-kwallet-runtime-r1
+          test "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_PACKAGES" = 3
+          out="$RUNNER_TEMP/kwallet-runtime-extension-release"; mkdir -p "$out"
+          archive="$out/$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ASSET"
+          manifest="$out/$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_MANIFEST"
+          for spec in "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ASSET_ID:$archive" "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_MANIFEST_ASSET_ID:$manifest"; do
+            id="${spec%%:*}"; file="${spec#*:}"
+            curl --fail --location --retry 5 --retry-all-errors -H 'Accept: application/octet-stream' \
+              -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2022-11-28' \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/assets/$id" -o "$file"
+          done
+          test "$(sha256sum "$archive" | awk '{print $1}')" = "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ASSET_SHA256"
+          test "$(stat -c '%s' "$archive")" = "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_ASSET_BYTES"
+          test "$(sha256sum "$manifest" | awk '{print $1}')" = "$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_RELEASE_MANIFEST_SHA256"
+          extract="$RUNNER_TEMP/kwallet-runtime-extension"; mkdir -p "$extract"; tar -C "$extract" -xf "$archive"
+          root="$extract/$AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_ID"
+          python3 scripts/ci/ksq-kwallet-runtime-extension.py validate --root "$root" | tee "$base/runtime-extension-validation.log"
+          printf '%s\n' "$root" > "$base/runtime-extension-root.txt"
+
+      - name: Recreate strictly local r3 APT metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/r3-accepted-065-regression-resume
+          slice=/opt/supralinux/archive/20260829T022000Z-r3
+          python3 scripts/ci/restore-ksq-0-certified-evidence.py --slice-root "$slice" --workspace "$GITHUB_WORKSPACE"
+          aptiso="$RUNNER_TEMP/r3-apt-isolation"; mkdir -p "$aptiso/parts"; : > "$aptiso/main.conf"
+          printf 'Dir::Etc::Parts "%s";\nDir::Etc::main "%s";\nAcquire::http::Proxy "http://127.0.0.1:9/";\nAcquire::https::Proxy "http://127.0.0.1:9/";\nAcquire::Retries "0";\n' \
+            "$aptiso/parts" "$aptiso/main.conf" > "$aptiso/preload.conf"
+          APT_CONFIG="$aptiso/preload.conf" AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" \
+            bash scripts/ci/prepare-ksq-1-local-apt-metadata.sh 2>&1 | tee "$base/local-apt-metadata.log"
+          ! grep -E '^(Get|Hit|Ign|Err):.*https?://' "$base/local-apt-metadata.log"
+          grep -Fq "file:$slice/ubuntu" "$base/local-apt-metadata.log"
+          python3 scripts/ci/generate-kde-build-closure.py
+          cmp build/ksq-0/build-order.tsv build/ksq-0/canonical/build-order.tsv
+          cmp build/ksq-0/closure-status.env build/ksq-0/canonical/closure-status.env
+          test "$(sha256sum build/ksq-0/build-order.tsv | awk '{print $1}')" = 9c53547df78a9f7c740228aba09490dfdb68e6307d2200e12ebf907dfa3fcb88
+
+      - name: Replay exact KWallet solver and installation against r3
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/r3-accepted-065-regression-resume
+          slice=/opt/supralinux/archive/20260829T022000Z-r3
+          extension_root="$(cat "$base/runtime-extension-root.txt")"
+          prepared_control="$(cat "$base/prepared-control-path.txt")"
+          AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" \
+          AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_ROOT="$extension_root" \
+          AURORA_KSQ_1_KWALLET_PREPARED_CONTROL="$prepared_control" \
+            bash scripts/ci/validate-ksq-1-kwallet-pam-runtime-sidecar-postbuild.sh \
+            2>&1 | tee "$base/kwallet-r3-postvalidator.log"
+          ev=build/ksq-1/full/kwallet-pam-validation
+          grep -qx 'AURORA_KSQ_1_KWALLET_SOLVER_SELECTED_PACKAGES=375' "$ev/solver-closure.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_SOLVER_FILE_URIS=372' "$ev/solver-closure.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_SOLVER_PRESEEDED_DEBS=3' "$ev/solver-closure.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RECOMMENDS_POLICY=default-enabled' "$ev/solver-closure.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_SELECTED_INSTALL_VERIFIED=375' "$ev/selected-install-status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_INSTALLED_TOTAL_PACKAGES=396' "$ev/selected-install-status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_INSTALL_RECOMMENDS=true' "$ev/selected-install-status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_AUTO_UNLOCK_CERTIFIED=no' "$ev/status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_PAM_INSTALLATION=PASS' "$ev/status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_BINARY_RUNTIME_DEPS=PASS' "$ev/status.env"
+          grep -qx 'AURORA_KSQ_1_KWALLET_RUNTIME_EXTENSION_STAGE=PASS' "$ev/status.env"
+          test "$(wc -l < "$ev/solver-selected-packages.tsv")" = 376
+          tail -n +2 "$base/prior-kwallet-solver-selected-packages.tsv" | LC_ALL=C sort > "$base/prior-kwallet-selection.sorted"
+          tail -n +2 "$ev/solver-selected-packages.tsv" | LC_ALL=C sort > "$base/r3-kwallet-selection.sorted"
+          cmp "$base/prior-kwallet-selection.sorted" "$base/r3-kwallet-selection.sorted"
+          cp "$ev/solver-selected-packages.tsv" "$base/r3-kwallet-solver-selected-packages.tsv"
+          cp "$ev/selected-install-verification.tsv" "$base/r3-kwallet-selected-install-verification.tsv"
+          cat > "$base/kwallet-r3-regression.env" <<EOF
+          AURORA_KSQ_R3_KWALLET_REGRESSION=PASS
+          AURORA_KSQ_R3_KWALLET_LOCAL_SLICE=20260829T022000Z-r3
+          AURORA_KSQ_R3_KWALLET_PREVIOUS_SELECTION_PACKAGES=375
+          AURORA_KSQ_R3_KWALLET_CURRENT_SELECTION_PACKAGES=375
+          AURORA_KSQ_R3_KWALLET_SELECTION_IDENTITY=PASS
+          AURORA_KSQ_R3_KWALLET_SELECTED_INSTALL_VERIFIED=375
+          AURORA_KSQ_R3_KWALLET_INSTALLED_TOTAL_PACKAGES=396
+          AURORA_KSQ_R3_KWALLET_RUNTIME_EXTENSION=20260829T022000Z-kwallet-runtime-r1
+          AURORA_KSQ_R3_KWALLET_RUNTIME_AUTO_UNLOCK_CERTIFIED=no
+          EOF
+
+      - name: Prove generic buildd bootstrap remains local-only under r3
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/r3-accepted-065-regression-resume
+          slice=/opt/supralinux/archive/20260829T022000Z-r3
+          AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" bash scripts/ci/prepare-ksq-1-local-build-environment.sh \
+            2>&1 | tee "$base/r3-buildd-bootstrap.log"
+          grep -Fq "AURORA_KSQ_1_BUILD_ENV_LOCAL_SLICE=$slice" build/ksq-1/environment/build-environment.env
+          ! grep -E '^(Get|Hit|Ign|Err):.*https?://' "$base/r3-buildd-bootstrap.log"
+          cat > "$base/r3-buildd-bootstrap.env" <<EOF
+          AURORA_KSQ_R3_BUILDD_BOOTSTRAP=PASS
+          AURORA_KSQ_R3_BUILDD_BOOTSTRAP_SLICE=20260829T022000Z-r3
+          AURORA_KSQ_R3_BUILDD_BOOTSTRAP_REMOTE_PACKAGE_TRANSPORT=0
+          EOF
+
+      - name: Audit and seal completed r3 accepted-065 regression
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/r3-accepted-065-regression-resume
+          start="$(cat "$base/host-evidence/start-time.txt")"
+          sudo journalctl -k --since "$start" --no-pager 2>/dev/null | grep 'apparmor="DENIED"' > "$base/host-evidence/apparmor-denied-all.log" || true
+          grep -Ei 'profile="[^\"]*(sbuild|mmdebstrap|unprivileged_userns)[^\"]*"|comm="(sbuild|mmdebstrap|unshare|mount|newuidmap|newgidmap)"' \
+            "$base/host-evidence/apparmor-denied-all.log" > "$base/host-evidence/apparmor-denied-relevant.log" || true
+          denials="$(wc -l < "$base/host-evidence/apparmor-denied-relevant.log")"
+          acquisition=FAIL; kwallet=FAIL; selection=FAIL; bootstrap=FAIL
+          if [[ -f "$base/prior-acquisition-regression.env" ]] && grep -qx 'AURORA_KSQ_R3_ACCEPTED_065_ACQUISITION_REGRESSION=PASS' "$base/prior-acquisition-regression.env"; then acquisition=PASS; fi
+          if [[ -f "$base/kwallet-r3-regression.env" ]] && grep -qx 'AURORA_KSQ_R3_KWALLET_REGRESSION=PASS' "$base/kwallet-r3-regression.env"; then kwallet=PASS; fi
+          if [[ -f "$base/kwallet-r3-regression.env" ]] && grep -qx 'AURORA_KSQ_R3_KWALLET_SELECTION_IDENTITY=PASS' "$base/kwallet-r3-regression.env"; then selection=PASS; fi
+          if [[ -f "$base/r3-buildd-bootstrap.env" ]] && grep -qx 'AURORA_KSQ_R3_BUILDD_BOOTSTRAP=PASS' "$base/r3-buildd-bootstrap.env"; then bootstrap=PASS; fi
+          status=FAIL
+          if [[ "$acquisition" = PASS && "$kwallet" = PASS && "$selection" = PASS && "$bootstrap" = PASS && "$denials" -eq 0 ]]; then status=PASS; fi
+          cat > "$base/acceptance.env" <<EOF
+          AURORA_KSQ_R3_ACCEPTED_065_REGRESSION=$status
+          AURORA_KSQ_R3_ACCEPTED_065_CHECKPOINT_ORDER=65
+          AURORA_KSQ_R3_ACCEPTED_065_CHECKPOINT_DEBS=295
+          AURORA_KSQ_R3_ACCEPTED_065_ACQUISITION_REGRESSION=$acquisition
+          AURORA_KSQ_R3_ACCEPTED_065_BUILD_LOGS=65
+          AURORA_KSQ_R3_ACCEPTED_065_UBUNTU_ACQUISITION_EVENTS=28215
+          AURORA_KSQ_R3_ACCEPTED_065_UNIQUE_UBUNTU_IDENTITIES=1052
+          AURORA_KSQ_R3_ACCEPTED_065_GAP_OBJECTS=3
+          AURORA_KSQ_R3_ACCEPTED_065_GAP_BYTES=547318
+          AURORA_KSQ_R3_ACCEPTED_065_GAP_INTERSECTION=0
+          AURORA_KSQ_R3_ACCEPTED_065_KWALLET_REGRESSION=$kwallet
+          AURORA_KSQ_R3_ACCEPTED_065_KWALLET_SELECTION_IDENTITY=$selection
+          AURORA_KSQ_R3_ACCEPTED_065_KWALLET_AUTO_UNLOCK_CERTIFIED=no
+          AURORA_KSQ_R3_ACCEPTED_065_BUILDD_BOOTSTRAP=$bootstrap
+          AURORA_KSQ_R3_ACCEPTED_065_APPARMOR_DENIALS=$denials
+          AURORA_KSQ_R3_ACCEPTED_065_DOCKER_USED=0
+          AURORA_KSQ_R3_ACCEPTED_065_CUSTOM_APPARMOR_USED=0
+          AURORA_KSQ_R3_ACCEPTED_065_UIDMAP_FILECAP_HACK_USED=0
+          AURORA_KSQ_R3_ACCEPTED_065_FULL_SOURCE_REBUILD_REQUIRED=no
+          AURORA_KSQ_R3_ACCEPTED_065_NEXT_RANGE=66-80
+          EOF
+          (
+            cd "$base"
+            find . -type f ! -name evidence.sha256 -printf '%P\n' | LC_ALL=C sort | xargs -r sha256sum > evidence.sha256
+            sha256sum -c evidence.sha256
+          )
+          cat "$base/acceptance.env"
+
+      - name: Upload completed r3 accepted-065 regression evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-r3-accepted-065-kwallet-regression-resume
+          path: |
+            build/ksq-1/r3-accepted-065-regression-resume/
+            build/ksq-1/full/kwallet-pam-validation/
+            build/ksq-1/environment/build-environment.env
+            build/ksq-0/build-order.tsv
+            build/ksq-0/closure-status.env
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce completed r3 accepted-065 regression gate
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat build/ksq-1/r3-accepted-065-regression-resume/acceptance.env
+          grep -qx 'AURORA_KSQ_R3_ACCEPTED_065_REGRESSION=PASS' build/ksq-1/r3-accepted-065-regression-resume/acceptance.env
