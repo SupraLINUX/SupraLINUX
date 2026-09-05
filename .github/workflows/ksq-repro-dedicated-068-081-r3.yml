@@ -1,0 +1,291 @@
+name: Aurora KSQ-1 dedicated reproducibility 068 081 r3
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/ksq-r3-repro-dedicated-068-081-trigger.env'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: aurora-ksq-repro-dedicated-068-081-r3
+  cancel-in-progress: false
+
+jobs:
+  repro-dedicated-068-081-r3:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Qualify runner and exact accepted-090 boundary
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          source .github/ksq-r3-repro-dedicated-068-081-trigger.env
+          test "$AURORA_KSQ_R3_REPRO_DEDICATED_SLICE_ID" = 20260829T022000Z-r3
+          test "$AURORA_KSQ_R3_REPRO_DEDICATED_SOURCE_PREP_UMASK" = 0022
+          test "$AURORA_KSQ_R3_REPRO_DEDICATED_ACCEPTED090_RUN_ID" = 33994817042
+          test "$AURORA_KSQ_R3_REPRO_DEDICATED_ACCEPTED090_ARTIFACT_ID" = 9977725295
+          base=build/ksq-1/repro-dedicated-068-081-r3
+          mkdir -p "$base/host-evidence"
+          date --iso-8601=seconds > "$base/host-evidence/start-time.txt"
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/33994817042" > "$base/accepted090-run.json"
+          test "$(jq -r '.status' "$base/accepted090-run.json")" = completed
+          test "$(jq -r '.conclusion' "$base/accepted090-run.json")" = success
+          test "$(jq -r '.head_sha' "$base/accepted090-run.json")" = ddffb2dfb6aa6c48e56cc07b11a11696d6cb5c9b
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/9977725295" > "$base/accepted090-artifact.json"
+          test "$(jq -r '.name' "$base/accepted090-artifact.json")" = aurora-ksq-accept-081-090-r3
+          test "$(jq -r '.digest' "$base/accepted090-artifact.json")" = sha256:aa4d0499623073108161750881eee06804d1a1d20e5cd45e4a83ab4de3ad7d04
+          test "$(jq -r '.size_in_bytes' "$base/accepted090-artifact.json")" = 8115
+          test "$(jq -r '.expired' "$base/accepted090-artifact.json")" = false
+
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl python3 ubuntu-keyring gpgv jq unzip \
+            sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+            gzip xz-utils diffutils build-essential apparmor apparmor-utils libcap2-bin
+          dpkg-query -W -f='${Package}\t${Version}\n' sbuild libsbuild-perl mmdebstrap uidmap util-linux apparmor | sort | tee "$base/host-evidence/toolchain.tsv"
+          grep -q $'^sbuild\t0.91.2ubuntu3$' "$base/host-evidence/toolchain.tsv"
+          grep -q $'^libsbuild-perl\t0.91.2ubuntu3$' "$base/host-evidence/toolchain.tsv"
+          grep -q $'^mmdebstrap\t1.5.7-3$' "$base/host-evidence/toolchain.tsv"
+          test "$(stat -c '%a' /usr/bin/newuidmap)" = 4755
+          test "$(stat -c '%a' /usr/bin/newgidmap)" = 4755
+          test -z "$(getcap /usr/bin/newuidmap /usr/bin/newgidmap || true)"
+
+      - name: Download exact accepted-090 evidence
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9977725295
+          path: ${{ runner.temp }}/accepted-090
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33994817042
+          digest-mismatch: error
+
+      - name: Reconstruct exact candidate through order 90 and collect source evidence
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/repro-dedicated-068-081-r3
+          acc90="$RUNNER_TEMP/accepted-090"
+          (cd "$acc90" && sha256sum -c evidence.sha256)
+          source "$acc90/acceptance.env"
+          test "$AURORA_KSQ_R3_081_090_ACCEPTANCE" = PASS
+          test "$AURORA_KSQ_R3_081_090_ACCUMULATED_DEBS" = 376
+          test "$AURORA_KSQ_R3_081_090_KTEXTEDITOR_REPRODUCIBILITY_CERTIFIED" = no
+
+          fetch_zip() {
+            local id="$1" out="$2"
+            mkdir -p "$out"
+            curl --fail --location --retry 5 --retry-all-errors \
+              -H 'Accept: application/vnd.github+json' \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H 'X-GitHub-Api-Version: 2022-11-28' \
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" -o "$out.zip"
+            unzip -q "$out.zip" -d "$out"
+          }
+          fetch_zip 9818465016 "$RUNNER_TEMP/prior-001-020"
+          fetch_zip 9824689982 "$RUNNER_TEMP/prior-021-040"
+          fetch_zip 9892762100 "$RUNNER_TEMP/prior-041-043"
+          fetch_zip 9900367299 "$RUNNER_TEMP/prior-044-060"
+          fetch_zip 9913134271 "$RUNNER_TEMP/prior-061-065"
+          fetch_zip 9918320108 "$RUNNER_TEMP/accept-061-065"
+          bash scripts/ci/restore-ksq-1-accepted-through-065.sh \
+            "$RUNNER_TEMP/accept-061-065" \
+            "$RUNNER_TEMP/prior-001-020" "$RUNNER_TEMP/prior-021-040" \
+            "$RUNNER_TEMP/prior-041-043" "$RUNNER_TEMP/prior-044-060" "$RUNNER_TEMP/prior-061-065" \
+            "$base/accepted-065-restore"
+          test "$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" = 295
+
+          accept080_id="$AURORA_KSQ_R3_081_090_PRIOR_ACCEPT_ARTIFACT_ID"
+          raw081_id="$AURORA_KSQ_R3_081_090_SOURCE_ARTIFACT_ID"
+          fetch_zip "$accept080_id" "$RUNNER_TEMP/accepted-080"
+          (cd "$RUNNER_TEMP/accepted-080" && sha256sum -c evidence.sha256)
+          source "$RUNNER_TEMP/accepted-080/acceptance.env"
+          test "$AURORA_KSQ_R3_066_080_ACCEPTANCE" = PASS
+          test "$AURORA_KSQ_R3_066_080_ACCUMULATED_DEBS" = 345
+          raw066_id="$AURORA_KSQ_R3_066_080_SOURCE_ARTIFACT_ID"
+          fetch_zip "$raw066_id" "$RUNNER_TEMP/raw-066-080"
+          fetch_zip "$raw081_id" "$RUNNER_TEMP/raw-081-090"
+
+          chunk_root() {
+            local root="$1" range="$2" found= candidate
+            for candidate in "$root" "$root/build"; do
+              if [[ -d "$candidate/ksq-1/full/chunk-$range" ]]; then
+                test -z "$found"
+                found="$candidate/ksq-1/full/chunk-$range"
+              fi
+            done
+            test -n "$found"
+            printf '%s\n' "$found"
+          }
+          stage_range() {
+            local chunk="$1" expected_new="$2" expected_acc="$3"
+            test "$(find "$chunk/new-debs" -maxdepth 1 -type f -name '*.deb' | wc -l)" = "$expected_new"
+            (cd "$chunk/new-debs" && sha256sum -c ../evidence/new-debs.sha256)
+            while IFS= read -r -d '' deb; do
+              target="build/ksq-1/full/debs/$(basename "$deb")"
+              test ! -e "$target"
+              cp -a "$deb" "$target"
+            done < <(find "$chunk/new-debs" -maxdepth 1 -type f -name '*.deb' -print0 | sort -z)
+            test "$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" = "$expected_acc"
+          }
+          c066="$(chunk_root "$RUNNER_TEMP/raw-066-080" 066-080)"
+          c081="$(chunk_root "$RUNNER_TEMP/raw-081-090" 081-090)"
+          stage_range "$c066" 50 345
+          stage_range "$c081" 31 376
+
+          candidate_evidence="$base/candidate-evidence"
+          mkdir -p "$candidate_evidence/indexes" "$candidate_evidence/sources"
+          copy_index() {
+            local root="$1" range="$2" name="$3" chunk
+            chunk="$(chunk_root "$root" "$range")"
+            cp -a "$chunk/evidence/binary-packages.tsv" "$candidate_evidence/indexes/$name.tsv"
+          }
+          copy_index "$RUNNER_TEMP/prior-001-020" 001-020 001-020
+          copy_index "$RUNNER_TEMP/prior-021-040" 021-040 021-040
+          copy_index "$RUNNER_TEMP/prior-041-043" 041-043 041-043
+          copy_index "$RUNNER_TEMP/prior-044-060" 044-060 044-060
+          copy_index "$RUNNER_TEMP/prior-061-065" 061-065 061-065
+          cp -a "$c066/evidence/binary-packages.tsv" "$candidate_evidence/indexes/066-080.tsv"
+          cp -a "$c081/evidence/binary-packages.tsv" "$candidate_evidence/indexes/081-090.tsv"
+          cp -a "$c066/evidence/68-drkonqi" "$candidate_evidence/sources/"
+          cp -a "$c081/evidence/81-kf6-ktexteditor" "$candidate_evidence/sources/"
+          test "$(find "$candidate_evidence" -type f -name binary-packages.tsv -o -name '*.tsv' | wc -l)" -ge 7
+          test -f "$candidate_evidence/sources/68-drkonqi/build-status.env"
+          test -f "$candidate_evidence/sources/81-kf6-ktexteditor/build-status.env"
+
+      - name: Download and validate exact immutable r3 release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          v="$RUNNER_TEMP/r3-validation"; mkdir -p "$v"
+          curl --fail --location --retry 5 --retry-all-errors -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/9969086882/zip" -o "$v.zip"
+          unzip -q "$v.zip" -d "$v"
+          (cd "$v" && sha256sum -c evidence.sha256)
+          source "$v/acceptance.env"; test "$AURORA_KSQ_SNAPSHOT_R3_INDEPENDENT_VALIDATION" = PASS
+          source "$v/publication.env"
+          release="$RUNNER_TEMP/r3-release"; mkdir -p "$release"
+          gh release download "$AURORA_KSQ_SNAPSHOT_R3_RELEASE_TAG" -R "$GITHUB_REPOSITORY" -p "$AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET" -p "$AURORA_KSQ_SNAPSHOT_R3_RELEASE_MANIFEST" -D "$release"
+          test "$(sha256sum "$release/$AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET" | awk '{print $1}')" = cb904b478afe186b96823b1b2872d5937517e3de10c6d2dd3170ec29fea09bc6
+          sudo install -d -o "$(id -u)" -g "$(id -g)" -m 0755 /opt/supralinux/archive
+          tar -xf "$release/$AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET" -C /opt/supralinux/archive
+          python3 scripts/ci/ksq-snapshot-slice-r3.py validate --slice-root /opt/supralinux/archive/20260829T022000Z-r3
+
+      - name: Recreate local-only build environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/repro-dedicated-068-081-r3
+          slice=/opt/supralinux/archive/20260829T022000Z-r3
+          AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" bash scripts/ci/prepare-ksq-1-local-apt-metadata.sh 2>&1 | tee "$base/local-apt-metadata.log"
+          grep -q '^AURORA_KSQ_1_LOCAL_APT_HOST_FRAGMENTS=disabled$' "$base/local-apt-metadata.log"
+          grep -q '^AURORA_KSQ_1_LOCAL_APT_SUCCESS$' "$base/local-apt-metadata.log"
+          ! grep -Eq '^(Get|Hit|Ign|Err):[0-9]+ https?://' "$base/local-apt-metadata.log"
+          python3 scripts/ci/generate-kde-build-closure.py
+          test "$(sha256sum build/ksq-0/build-order.tsv | awk '{print $1}')" = 9c53547df78a9f7c740228aba09490dfdb68e6307d2200e12ebf907dfa3fcb88
+          AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" bash scripts/ci/prepare-ksq-1-local-build-environment.sh 2>&1 | tee "$base/mmdebstrap-buildd.log"
+          grep -q '^AURORA_KSQ_1_LOCAL_BUILD_ENV_SUCCESS$' "$base/mmdebstrap-buildd.log"
+          ! grep -Eq '^(Get|Hit|Ign|Err):[0-9]+ https?://' "$base/mmdebstrap-buildd.log"
+          bash scripts/ci/configure-ksq-1-native-sbuild-network-proof.sh 2>&1 | tee "$base/network-proof-config.log"
+          grep -qx 'AURORA_KSQ_1_NATIVE_NETWORK_PROOF=PASS' build/ksq-1/environment/native-sbuild-network-proof.env
+
+      - name: Rebuild dedicated orders 068 and 081
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/repro-dedicated-068-081-r3
+          source .github/ksq-r3-repro-dedicated-068-081-trigger.env
+          umask "$AURORA_KSQ_R3_REPRO_DEDICATED_SOURCE_PREP_UMASK"
+          test "$(umask)" = 0022
+          printf 'AURORA_KSQ_1_REPRO_SOURCE_PREP_UMASK=%s\n' "$(umask)" > "$base/source-preparation.env"
+          source build/ksq-1/environment/build-environment.env
+          export SBUILD_CONFIG="$AURORA_KSQ_1_SBUILD_CONFIG"
+          bash scripts/ci/build-ksq-1-repro-source.sh 68 build/ksq-1/full/debs "$base/candidate-evidence" "$base/rebuilds"
+          bash scripts/ci/build-ksq-1-repro-source.sh 81 build/ksq-1/full/debs "$base/candidate-evidence" "$base/rebuilds"
+
+      - name: Audit dedicated reproducibility
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/repro-dedicated-068-081-r3
+          status=FAIL
+          start="$(cat "$base/host-evidence/start-time.txt")"
+          sudo journalctl -k --since "$start" --no-pager 2>/dev/null | grep 'apparmor="DENIED"' > "$base/host-evidence/apparmor-denied-all.log" || true
+          grep -Ei 'profile="[^\"]*(sbuild|mmdebstrap|unprivileged_userns)[^\"]*"|comm="(sbuild|mmdebstrap|unshare|mount|newuidmap|newgidmap)"' "$base/host-evidence/apparmor-denied-all.log" > "$base/host-evidence/apparmor-denied-relevant.log" || true
+          denials="$(wc -l < "$base/host-evidence/apparmor-denied-relevant.log")"
+          ok=1
+          for item in 68-drkonqi 81-kf6-ktexteditor; do
+            ev="$base/rebuilds/$item/evidence"
+            test -f "$ev/status.env" || { ok=0; continue; }
+            grep -qx 'AURORA_KSQ_1_REPRO_BUILD_STATUS=PASS' "$ev/status.env" || ok=0
+            grep -qx 'AURORA_KSQ_1_REPRO_BYTE_IDENTICAL=yes' "$ev/status.env" || ok=0
+            grep -qx 'AURORA_KSQ_1_REPRO_SOURCE_IDENTITY=PASS' "$ev/source-identity.env" || ok=0
+            logs=("$ev"/*.build)
+            test "${#logs[@]}" -eq 1 || ok=0
+            if [[ -f "${logs[0]}" ]]; then
+              for marker in AURORA_NATIVE_BUILD_NETWORK_WRAPPER=START AURORA_NATIVE_BUILD_NETNS_DIFFERENT=PASS AURORA_NATIVE_BUILD_PROC_NETIFS_ONLY_LO=PASS AURORA_NATIVE_BUILD_IPV4_ROUTE_ISOLATION=PASS AURORA_NATIVE_BUILD_NETWORK=isolated 'Status: successful'; do
+                grep -q "$marker" "${logs[0]}" || ok=0
+              done
+              grep -Ei '^(Get|Hit|Ign|Err):.*https?://' "${logs[0]}" && ok=0 || true
+            fi
+          done
+          if [[ "$ok" -eq 1 && "$denials" -eq 0 ]]; then status=PASS; fi
+          {
+            echo "AURORA_KSQ_R3_REPRO_DEDICATED_068_081_STATUS=$status"
+            echo "AURORA_KSQ_R3_REPRO_ORDER68=$([[ -f "$base/rebuilds/68-drkonqi/evidence/status.env" ]] && echo PASS || echo FAIL)"
+            echo "AURORA_KSQ_R3_REPRO_ORDER81=$([[ -f "$base/rebuilds/81-kf6-ktexteditor/evidence/status.env" ]] && echo PASS || echo FAIL)"
+            echo "AURORA_KSQ_R3_REPRO_DEDICATED_APPARMOR_DENIALS=$denials"
+            echo "AURORA_KSQ_R3_REPRO_DEDICATED_SOURCE_PREP_UMASK=0022"
+            echo "AURORA_KSQ_R3_REPRO_DEDICATED_DOCKER_USED=0"
+            echo "AURORA_KSQ_R3_REPRO_DEDICATED_CUSTOM_APPARMOR_USED=0"
+            echo "AURORA_KSQ_R3_REPRO_DEDICATED_UIDMAP_FILECAP_PATCH_USED=0"
+            echo "AURORA_KSQ_1_FULL_CERTIFIED=no"
+          } | tee "$base/audit.env"
+          rm -rf "$base/rebuilds/68-drkonqi/deps" "$base/rebuilds/68-drkonqi/source-work" "$base/rebuilds/68-drkonqi/result"
+          rm -rf "$base/rebuilds/81-kf6-ktexteditor/deps" "$base/rebuilds/81-kf6-ktexteditor/source-work" "$base/rebuilds/81-kf6-ktexteditor/result"
+
+      - name: Upload dedicated reproducibility evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-repro-dedicated-068-081-r3
+          path: |
+            build/ksq-1/repro-dedicated-068-081-r3/audit.env
+            build/ksq-1/repro-dedicated-068-081-r3/source-preparation.env
+            build/ksq-1/repro-dedicated-068-081-r3/host-evidence/
+            build/ksq-1/repro-dedicated-068-081-r3/rebuilds/68-drkonqi/evidence/
+            build/ksq-1/repro-dedicated-068-081-r3/rebuilds/81-kf6-ktexteditor/evidence/
+            build/ksq-0/build-order.tsv
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Enforce dedicated reproducibility
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/repro-dedicated-068-081-r3
+          cat "$base/audit.env"
+          grep -qx 'AURORA_KSQ_R3_REPRO_DEDICATED_068_081_STATUS=PASS' "$base/audit.env"
+          grep -qx 'AURORA_KSQ_R3_REPRO_DEDICATED_APPARMOR_DENIALS=0' "$base/audit.env"
+          grep -qx 'AURORA_KSQ_R3_REPRO_DEDICATED_SOURCE_PREP_UMASK=0022' "$base/audit.env"
+          grep -qx 'AURORA_KSQ_R3_REPRO_DEDICATED_DOCKER_USED=0' "$base/audit.env"
+          grep -qx 'AURORA_KSQ_R3_REPRO_DEDICATED_CUSTOM_APPARMOR_USED=0' "$base/audit.env"
+          grep -qx 'AURORA_KSQ_R3_REPRO_DEDICATED_UIDMAP_FILECAP_PATCH_USED=0' "$base/audit.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_BUILD_STATUS=PASS' "$base/rebuilds/68-drkonqi/evidence/status.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_BUILD_STATUS=PASS' "$base/rebuilds/81-kf6-ktexteditor/evidence/status.env"
