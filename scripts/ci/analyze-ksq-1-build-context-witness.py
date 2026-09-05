@@ -190,6 +190,7 @@ def main() -> None:
     if missing_metadata:
         fail("observed package selections absent from signed snapshot metadata: " + ", ".join(map(str, missing_metadata[:20])))
 
+    # One exact payload object may satisfy only one exact package/version/arch record here.
     objects: dict[str, tuple[PackageKey, PackageRecord, set[str]]] = {}
     for key, rec in resolved.items():
         old = objects.get(rec.filename)
