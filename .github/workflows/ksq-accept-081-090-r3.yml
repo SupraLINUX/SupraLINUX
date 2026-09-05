@@ -1,0 +1,232 @@
+name: Aurora KSQ-1 accept native range 081-090 r3
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/ksq-r3-range-081-090-accept-trigger.env'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: aurora-ksq-accept-081-090-r3
+  cancel-in-progress: false
+
+jobs:
+  accept-081-090-r3:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Qualify exact 081-090 source and prior acceptance identities
+        id: trigger
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          source .github/ksq-r3-range-081-090-accept-trigger.env
+          test "$AURORA_KSQ_R3_081_090_ACCEPT_SLICE_ID" = 20260829T022000Z-r3
+          test "$AURORA_KSQ_R3_081_090_ACCEPT_FIRST_ORDER" = 81
+          test "$AURORA_KSQ_R3_081_090_ACCEPT_LAST_ORDER" = 90
+          test "$AURORA_KSQ_R3_081_090_ACCEPT_SOURCES" = 10
+          [[ "$AURORA_KSQ_R3_081_090_ACCEPT_PRIOR_DEBS" =~ ^[1-9][0-9]*$ ]]
+          [[ "$AURORA_KSQ_R3_081_090_ACCEPT_NEW_DEBS" =~ ^[1-9][0-9]*$ ]]
+          [[ "$AURORA_KSQ_R3_081_090_ACCEPT_ACCUMULATED_DEBS" =~ ^[1-9][0-9]*$ ]]
+          test "$AURORA_KSQ_R3_081_090_ACCEPT_ACCUMULATED_DEBS" -eq $((AURORA_KSQ_R3_081_090_ACCEPT_PRIOR_DEBS + AURORA_KSQ_R3_081_090_ACCEPT_NEW_DEBS))
+          for value in \
+            "$AURORA_KSQ_R3_081_090_ACCEPT_SOURCE_RUN_ID" "$AURORA_KSQ_R3_081_090_ACCEPT_SOURCE_ARTIFACT_ID" "$AURORA_KSQ_R3_081_090_ACCEPT_SOURCE_ARTIFACT_SIZE" \
+            "$AURORA_KSQ_R3_081_090_ACCEPT_PRIOR_ACCEPT_RUN_ID" "$AURORA_KSQ_R3_081_090_ACCEPT_PRIOR_ACCEPT_ARTIFACT_ID" "$AURORA_KSQ_R3_081_090_ACCEPT_PRIOR_ACCEPT_ARTIFACT_SIZE"; do
+            [[ "$value" =~ ^[1-9][0-9]*$ ]]
+          done
+          for value in "$AURORA_KSQ_R3_081_090_ACCEPT_SOURCE_HEAD_SHA" "$AURORA_KSQ_R3_081_090_ACCEPT_PRIOR_ACCEPT_HEAD_SHA"; do [[ "$value" =~ ^[0-9a-f]{40}$ ]]; done
+          for value in "$AURORA_KSQ_R3_081_090_ACCEPT_SOURCE_ARTIFACT_DIGEST" "$AURORA_KSQ_R3_081_090_ACCEPT_PRIOR_ACCEPT_ARTIFACT_DIGEST"; do [[ "$value" =~ ^sha256:[0-9a-f]{64}$ ]]; done
+          [[ "$AURORA_KSQ_R3_081_090_ACCEPT_NEW_DEBS_MANIFEST_SHA256" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$AURORA_KSQ_R3_081_090_ACCEPT_BUILD_MANIFEST_SHA256" =~ ^[0-9a-f]{64}$ ]]
+          {
+            echo "source_run_id=$AURORA_KSQ_R3_081_090_ACCEPT_SOURCE_RUN_ID"
+            echo "source_head_sha=$AURORA_KSQ_R3_081_090_ACCEPT_SOURCE_HEAD_SHA"
+            echo "source_artifact_id=$AURORA_KSQ_R3_081_090_ACCEPT_SOURCE_ARTIFACT_ID"
+            echo "source_artifact_digest=$AURORA_KSQ_R3_081_090_ACCEPT_SOURCE_ARTIFACT_DIGEST"
+            echo "source_artifact_size=$AURORA_KSQ_R3_081_090_ACCEPT_SOURCE_ARTIFACT_SIZE"
+            echo "prior_accept_run_id=$AURORA_KSQ_R3_081_090_ACCEPT_PRIOR_ACCEPT_RUN_ID"
+            echo "prior_accept_head_sha=$AURORA_KSQ_R3_081_090_ACCEPT_PRIOR_ACCEPT_HEAD_SHA"
+            echo "prior_accept_artifact_id=$AURORA_KSQ_R3_081_090_ACCEPT_PRIOR_ACCEPT_ARTIFACT_ID"
+            echo "prior_accept_artifact_digest=$AURORA_KSQ_R3_081_090_ACCEPT_PRIOR_ACCEPT_ARTIFACT_DIGEST"
+            echo "prior_accept_artifact_size=$AURORA_KSQ_R3_081_090_ACCEPT_PRIOR_ACCEPT_ARTIFACT_SIZE"
+            echo "prior_debs=$AURORA_KSQ_R3_081_090_ACCEPT_PRIOR_DEBS"
+            echo "new_debs=$AURORA_KSQ_R3_081_090_ACCEPT_NEW_DEBS"
+            echo "accumulated_debs=$AURORA_KSQ_R3_081_090_ACCEPT_ACCUMULATED_DEBS"
+            echo "new_debs_manifest_sha256=$AURORA_KSQ_R3_081_090_ACCEPT_NEW_DEBS_MANIFEST_SHA256"
+            echo "build_manifest_sha256=$AURORA_KSQ_R3_081_090_ACCEPT_BUILD_MANIFEST_SHA256"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Prove exact source and accepted-080 artifacts
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN_ID: ${{ steps.trigger.outputs.source_run_id }}
+          SOURCE_HEAD_SHA: ${{ steps.trigger.outputs.source_head_sha }}
+          SOURCE_ARTIFACT_ID: ${{ steps.trigger.outputs.source_artifact_id }}
+          SOURCE_ARTIFACT_DIGEST: ${{ steps.trigger.outputs.source_artifact_digest }}
+          SOURCE_ARTIFACT_SIZE: ${{ steps.trigger.outputs.source_artifact_size }}
+          PRIOR_RUN_ID: ${{ steps.trigger.outputs.prior_accept_run_id }}
+          PRIOR_HEAD_SHA: ${{ steps.trigger.outputs.prior_accept_head_sha }}
+          PRIOR_ARTIFACT_ID: ${{ steps.trigger.outputs.prior_accept_artifact_id }}
+          PRIOR_ARTIFACT_DIGEST: ${{ steps.trigger.outputs.prior_accept_artifact_digest }}
+          PRIOR_ARTIFACT_SIZE: ${{ steps.trigger.outputs.prior_accept_artifact_size }}
+        run: |
+          set -euo pipefail
+          out=build/ksq-1/accept-081-090-r3; mkdir -p "$out"
+          prove() {
+            local run="$1" head="$2" workflow="$3" artifact="$4" name="$5" digest="$6" size="$7" prefix="$8"
+            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$run" > "$out/${prefix}-run-api.json"
+            test "$(jq -r '.status' "$out/${prefix}-run-api.json")" = completed
+            test "$(jq -r '.conclusion' "$out/${prefix}-run-api.json")" = success
+            test "$(jq -r '.head_sha' "$out/${prefix}-run-api.json")" = "$head"
+            test "$(jq -r '.head_branch' "$out/${prefix}-run-api.json")" = feature/kde-stack-qualification
+            test "$(jq -r '.name' "$out/${prefix}-run-api.json")" = "$workflow"
+            gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact" > "$out/${prefix}-artifact-api.json"
+            test "$(jq -r '.name' "$out/${prefix}-artifact-api.json")" = "$name"
+            test "$(jq -r '.expired' "$out/${prefix}-artifact-api.json")" = false
+            test "$(jq -r '.digest' "$out/${prefix}-artifact-api.json")" = "$digest"
+            test "$(jq -r '.size_in_bytes' "$out/${prefix}-artifact-api.json")" = "$size"
+            test "$(jq -r '.workflow_run.id' "$out/${prefix}-artifact-api.json")" = "$run"
+            test "$(jq -r '.workflow_run.head_sha' "$out/${prefix}-artifact-api.json")" = "$head"
+          }
+          prove "$SOURCE_RUN_ID" "$SOURCE_HEAD_SHA" 'Aurora KSQ-1 native range 081-090 r3' "$SOURCE_ARTIFACT_ID" aurora-ksq-native-range-081-090-r3 "$SOURCE_ARTIFACT_DIGEST" "$SOURCE_ARTIFACT_SIZE" source
+          prove "$PRIOR_RUN_ID" "$PRIOR_HEAD_SHA" 'Aurora KSQ-1 accept native range 066-080 r3' "$PRIOR_ARTIFACT_ID" aurora-ksq-accept-066-080-r3 "$PRIOR_ARTIFACT_DIGEST" "$PRIOR_ARTIFACT_SIZE" prior
+
+      - name: Download exact source artifact
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: ${{ steps.trigger.outputs.source_artifact_id }}
+          path: ${{ runner.temp }}/source
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ steps.trigger.outputs.source_run_id }}
+          digest-mismatch: error
+
+      - name: Download exact accepted-080 artifact
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: ${{ steps.trigger.outputs.prior_accept_artifact_id }}
+          path: ${{ runner.temp }}/prior
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ steps.trigger.outputs.prior_accept_run_id }}
+          digest-mismatch: error
+
+      - name: Independently prove 081-090 evidence
+        shell: bash
+        env:
+          EXPECTED_PRIOR_DEBS: ${{ steps.trigger.outputs.prior_debs }}
+          EXPECTED_NEW_DEBS: ${{ steps.trigger.outputs.new_debs }}
+          EXPECTED_ACCUMULATED_DEBS: ${{ steps.trigger.outputs.accumulated_debs }}
+          EXPECTED_NEW_DEBS_MANIFEST_SHA256: ${{ steps.trigger.outputs.new_debs_manifest_sha256 }}
+          EXPECTED_BUILD_MANIFEST_SHA256: ${{ steps.trigger.outputs.build_manifest_sha256 }}
+          SOURCE_RUN_ID: ${{ steps.trigger.outputs.source_run_id }}
+          SOURCE_HEAD_SHA: ${{ steps.trigger.outputs.source_head_sha }}
+          SOURCE_ARTIFACT_ID: ${{ steps.trigger.outputs.source_artifact_id }}
+          SOURCE_ARTIFACT_DIGEST: ${{ steps.trigger.outputs.source_artifact_digest }}
+          PRIOR_RUN_ID: ${{ steps.trigger.outputs.prior_accept_run_id }}
+          PRIOR_ARTIFACT_ID: ${{ steps.trigger.outputs.prior_accept_artifact_id }}
+          PRIOR_ARTIFACT_DIGEST: ${{ steps.trigger.outputs.prior_accept_artifact_digest }}
+        run: |
+          set -euo pipefail
+          prior="$RUNNER_TEMP/prior/ksq-1/accept-066-080-r3"
+          (cd "$prior" && sha256sum -c evidence.sha256)
+          source "$prior/acceptance.env"
+          test "$AURORA_KSQ_R3_066_080_ACCEPTANCE" = PASS
+          test "$AURORA_KSQ_R3_066_080_ACCUMULATED_DEBS" = "$EXPECTED_PRIOR_DEBS"
+          test "$AURORA_KSQ_R3_066_080_NEXT_RANGE" = 81-90
+          src="$RUNNER_TEMP/source"
+          base="$src/build/ksq-1/native-range-081-090-r3"
+          evidence="$src/build/ksq-1/full/chunk-081-090/evidence"
+          new="$src/build/ksq-1/full/chunk-081-090/new-debs"
+          source "$base/audit.env"
+          test "$AURORA_NATIVE_RANGE_081_090_R3_STATUS" = PASS
+          test "$AURORA_NATIVE_RANGE_081_090_R3_COMMAND_RC" = 0
+          test "$AURORA_NATIVE_RANGE_081_090_R3_TEE_RC" = 0
+          test "$AURORA_NATIVE_RANGE_081_090_R3_APPARMOR_DENIALS" = 0
+          test "$AURORA_NATIVE_RANGE_081_090_R3_PRIOR_DEBS" = "$EXPECTED_PRIOR_DEBS"
+          test "$AURORA_NATIVE_RANGE_081_090_R3_NEW_DEBS" = "$EXPECTED_NEW_DEBS"
+          test "$AURORA_NATIVE_RANGE_081_090_R3_ACCUMULATED_DEBS" = "$EXPECTED_ACCUMULATED_DEBS"
+          test "$AURORA_NATIVE_RANGE_081_090_R3_PACKAGING_ADAPTATIONS" = 0
+          test "$AURORA_NATIVE_RANGE_081_090_R3_KTEXTEDITOR_REPRODUCIBILITY_CERTIFIED" = no
+          test "$AURORA_NATIVE_RANGE_081_090_R3_DOCKER_USED" = 0
+          test "$AURORA_NATIVE_RANGE_081_090_R3_CUSTOM_APPARMOR_USED" = 0
+          test "$AURORA_NATIVE_RANGE_081_090_R3_UIDMAP_FILECAP_PATCH_USED" = 0
+          test "$(sha256sum "$evidence/new-debs.sha256" | awk '{print $1}')" = "$EXPECTED_NEW_DEBS_MANIFEST_SHA256"
+          test "$(sha256sum "$evidence/build-manifest.tsv" | awk '{print $1}')" = "$EXPECTED_BUILD_MANIFEST_SHA256"
+          test "$(find "$new" -maxdepth 1 -type f -name '*.deb' | wc -l)" = "$EXPECTED_NEW_DEBS"
+          (cd "$new" && sha256sum -c ../evidence/new-debs.sha256)
+          python3 - "$evidence" <<'PY'
+          import csv,re,sys
+          from pathlib import Path
+          ev=Path(sys.argv[1])
+          expected=[
+          (81,'kf6-ktexteditor','6.29.0-0ubuntu1','frameworks-6.29.0','rebuild'),(82,'libplasma','6.7.4-0ubuntu1','plasma-6.7.4','rebuild'),(83,'kf6-frameworkintegration','6.29.0-0ubuntu1','frameworks-6.29.0','rebuild'),(84,'libksysguard','4:6.7.4-0ubuntu1','plasma-6.7.4','rebuild'),(85,'sddm-kcm','4:6.7.4-1ubuntu1','plasma-6.7.4','rebuild'),(86,'bluedevil','4:6.7.4-2ubuntu1','plasma-6.7.4','rebuild'),(87,'kscreenlocker','6.7.4-0ubuntu1','plasma-6.7.4','rebuild'),(88,'plasma-keyboard','6.7.4-0ubuntu1','plasma-6.7.4','rebuild'),(89,'plasma-nm','4:6.7.4-2ubuntu2','plasma-6.7.4','rebuild'),(90,'plasma-pa','4:6.7.4-0ubuntu1','plasma-6.7.4','rebuild')]
+          with (ev/'build-manifest.tsv').open(newline='',encoding='utf-8') as f: rows=list(csv.DictReader(f,delimiter='\t'))
+          got=[(int(r['order']),r['source_package'],r['packaging_base'],r['candidate_family'],r['decision']) for r in rows]
+          if got!=expected or any(r['result']!='PASS' for r in rows): raise SystemExit('081-090 manifest mismatch')
+          for order,source,*_ in expected:
+              d=ev/f'{order}-{source}'; logs=list(d.glob('*.build'))
+              if len(logs)!=1: raise SystemExit(f'{order}: .build cardinality')
+              vals=dict(line.split('=',1) for line in (d/'prepared-source.env').read_text().splitlines() if '=' in line)
+              if vals.get('AURORA_KSQ_1_PACKAGING_ADAPTATIONS_APPLIED')!='0' or vals.get('AURORA_KSQ_1_PACKAGING_ADAPTATION_IDS')!='-': raise SystemExit(f'{order}: unexpected adaptation')
+              text=logs[0].read_text(errors='replace')
+              for token in ['AURORA_NATIVE_BUILD_NETWORK_WRAPPER=START','AURORA_NATIVE_BUILD_NETNS_DIFFERENT=PASS','AURORA_NATIVE_BUILD_PROC_NETIFS_ONLY_LO=PASS','AURORA_NATIVE_BUILD_IPV4_ROUTE_ISOLATION=PASS','AURORA_NATIVE_BUILD_NETWORK=isolated','Status: successful']:
+                  if token not in text: raise SystemExit(f'{order}: missing {token}')
+              if re.search(r'^(Get|Hit|Ign|Err):.*https?://',text,re.M): raise SystemExit(f'{order}: remote transport')
+          PY
+          out=build/ksq-1/accept-081-090-r3
+          cp "$base/audit.env" "$out/source-audit.env"
+          cp "$evidence/build-manifest.tsv" "$out/build-manifest.tsv"
+          cp "$evidence/new-debs.sha256" "$out/new-debs.sha256"
+          cat > "$out/acceptance.env" <<EOF
+          AURORA_KSQ_R3_081_090_ACCEPTANCE=PASS
+          AURORA_KSQ_R3_081_090_SLICE_ID=20260829T022000Z-r3
+          AURORA_KSQ_R3_081_090_PRIOR_ACCEPT_RUN_ID=$PRIOR_RUN_ID
+          AURORA_KSQ_R3_081_090_PRIOR_ACCEPT_ARTIFACT_ID=$PRIOR_ARTIFACT_ID
+          AURORA_KSQ_R3_081_090_PRIOR_ACCEPT_ARTIFACT_DIGEST=$PRIOR_ARTIFACT_DIGEST
+          AURORA_KSQ_R3_081_090_SOURCE_RUN_ID=$SOURCE_RUN_ID
+          AURORA_KSQ_R3_081_090_SOURCE_HEAD_SHA=$SOURCE_HEAD_SHA
+          AURORA_KSQ_R3_081_090_SOURCE_ARTIFACT_ID=$SOURCE_ARTIFACT_ID
+          AURORA_KSQ_R3_081_090_SOURCE_ARTIFACT_DIGEST=$SOURCE_ARTIFACT_DIGEST
+          AURORA_KSQ_R3_081_090_FIRST_ORDER=81
+          AURORA_KSQ_R3_081_090_LAST_ORDER=90
+          AURORA_KSQ_R3_081_090_SOURCES=10
+          AURORA_KSQ_R3_081_090_PRIOR_DEBS=$EXPECTED_PRIOR_DEBS
+          AURORA_KSQ_R3_081_090_NEW_DEBS=$EXPECTED_NEW_DEBS
+          AURORA_KSQ_R3_081_090_ACCUMULATED_DEBS=$EXPECTED_ACCUMULATED_DEBS
+          AURORA_KSQ_R3_081_090_PACKAGING_ADAPTATIONS=0
+          AURORA_KSQ_R3_081_090_EXTERNAL_BUILD_HTTP=0
+          AURORA_KSQ_R3_081_090_APPARMOR_DENIALS=0
+          AURORA_KSQ_R3_081_090_KTEXTEDITOR_NORMAL_BUILD=PASS
+          AURORA_KSQ_R3_081_090_KTEXTEDITOR_REPRODUCIBILITY_CERTIFIED=no
+          AURORA_KSQ_R3_081_090_NEXT_RANGE=91-101
+          EOF
+          (cd "$out" && sha256sum acceptance.env source-run-api.json source-artifact-api.json prior-run-api.json prior-artifact-api.json source-audit.env build-manifest.tsv new-debs.sha256 > evidence.sha256 && sha256sum -c evidence.sha256)
+
+      - name: Upload independently accepted 081-090 evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-accept-081-090-r3
+          path: build/ksq-1/accept-081-090-r3/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd build/ksq-1/accept-081-090-r3
+          sha256sum -c evidence.sha256
+          grep -qx 'AURORA_KSQ_R3_081_090_ACCEPTANCE=PASS' acceptance.env
+          grep -qx 'AURORA_KSQ_R3_081_090_KTEXTEDITOR_REPRODUCIBILITY_CERTIFIED=no' acceptance.env
+          grep -qx 'AURORA_KSQ_R3_081_090_NEXT_RANGE=91-101' acceptance.env
