@@ -33,6 +33,7 @@ jobs:
           test "$AURORA_KSQ_1_WITNESS_TRIGGER_LAST_ORDER" = 101
           test "$AURORA_KSQ_1_WITNESS_TRIGGER_OVERALL_CONCLUSION" = failure
           test "$AURORA_KSQ_1_WITNESS_TRIGGER_ALLOWED_FAILED_JOB" = 'Prove signed build-context set difference against r2'
+          test "$AURORA_KSQ_1_WITNESS_TRIGGER_METADATA_SOURCE" = immutable-r2-signed-packages
           for suffix in 066_080 081_090 091_101; do
             eval "artifact_id=\${AURORA_KSQ_1_WITNESS_TRIGGER_EVIDENCE_${suffix}_ARTIFACT_ID}"
             eval "artifact_digest=\${AURORA_KSQ_1_WITNESS_TRIGGER_EVIDENCE_${suffix}_ARTIFACT_DIGEST}"
@@ -119,8 +120,8 @@ jobs:
           test "$(dpkg --print-architecture)" = amd64
           sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
           sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
-            ca-certificates curl unzip python3 ubuntu-keyring apt
-          apt-get --version | head -n1 | grep -qx 'apt 3.2.0 (amd64)'
+            ca-certificates curl unzip python3 ubuntu-keyring xz-utils gpgv
+          python3 -m py_compile scripts/ci/ksq-snapshot-slice-r2.py scripts/ci/analyze-ksq-1-build-context-witness.py
 
       - name: Download exact witness evidence 066-080
         uses: actions/download-artifact@v8
@@ -173,58 +174,84 @@ jobs:
           test "$(wc -l < "$out/binary-objects.tsv")" -eq 1783
           sha256sum "$out/binary-objects.tsv" > build/ksq-1/snapshot-witness-explicit-analysis/r2-binary-objects.sha256
 
-      - name: Recreate APT-verified signed snapshot package corpus
+      - name: Recreate signed snapshot package corpus from immutable r2
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           base=build/ksq-1/snapshot-witness-explicit-analysis
-          bash scripts/ci/prepare-kde-stack-apt-metadata.sh 2>&1 | tee "$base/apt-metadata.log"
-          grep -Fq 'AURORA_KSQ_0_APT_METADATA_SUCCESS' "$base/apt-metadata.log"
-          aptroot=build/ksq-0/apt
-          targets="$base/indextargets.txt"
-          apt-get \
-            -o "Dir::Etc::sourcelist=$aptroot/resolute.sources" \
-            -o Dir::Etc::sourceparts=- \
-            -o "Dir::State::lists=$aptroot/resolute-lists" \
-            -o "Dir::State::status=$aptroot/empty-status" \
-            -o "Dir::Cache=$aptroot/resolute-cache" \
-            -o APT::Architecture=amd64 \
-            -o APT::Architectures=amd64 \
-            -o Acquire::Languages=none \
-            indextargets > "$targets"
-          python3 - "$targets" "$base/package-indexes.txt" <<'PY'
-          import sys
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_STATUS" = INDEPENDENTLY_VALIDATED
+          test "$AURORA_KSQ_SNAPSHOT" = 20260829T022000Z-r2
+          test "$AURORA_KSQ_UBUNTU_SNAPSHOT" = 20260829T022000Z
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_ID" = 381836501
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_ID" = 542414026
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256" = 23413ddf1c1820aaa01dfa81005b37e8c9611bad2d0a632664d0e08282e69c3b
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES" = 1054177280
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST_ASSET_ID" = 542414028
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST_SHA256" = 6ed95b495ded7744f081335684c2918eeae96dbc822fa53b0d9fb5bc2da0f481
+
+          release="$RUNNER_TEMP/r2-release"
+          archive_root=/opt/supralinux/archive
+          sudo install -d -o "$(id -u)" -g "$(id -g)" -m 0755 "$archive_root"
+          mkdir -p "$release"
+          gh release download "$AURORA_KSQ_SNAPSHOT_RELEASE_TAG" -R "$GITHUB_REPOSITORY" \
+            -p "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET" \
+            -p "$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST" \
+            -D "$release"
+          archive="$release/$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET"
+          manifest="$release/$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST"
+          test "$(sha256sum "$archive" | awk '{print $1}')" = "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256"
+          test "$(stat -c '%s' "$archive")" = "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES"
+          test "$(sha256sum "$manifest" | awk '{print $1}')" = "$AURORA_KSQ_SNAPSHOT_RELEASE_MANIFEST_SHA256"
+          tar -xf "$archive" -C "$archive_root"
+          slice="$archive_root/$AURORA_KSQ_SNAPSHOT"
+          python3 scripts/ci/ksq-snapshot-slice-r2.py validate --slice-root "$slice" \
+            2>&1 | tee "$base/r2-slice-validation.log"
+
+          python3 - "$slice" "$base/package-indexes.txt" "$base/snapshot-packages-amd64.txt" "$base/r2-signed-package-indexes.sha256" <<'PY'
+          import hashlib, lzma, sys
           from pathlib import Path
-          source, output = map(Path, sys.argv[1:])
-          rows=[]; stanza={}
-          def flush():
-              global stanza
-              if stanza.get('Identifier') == 'Packages' and stanza.get('Architecture') == 'amd64':
-                  filename=stanza.get('Filename')
-                  if not filename:
-                      raise SystemExit('Packages indextarget missing Filename')
-                  rows.append(filename)
-              stanza={}
-          for raw in source.read_text().splitlines()+['']:
-              if not raw:
-                  flush(); continue
-              if ': ' in raw:
-                  k,v=raw.split(': ',1); stanza[k]=v
-          unique=sorted(set(rows))
-          if not unique:
-              raise SystemExit('no amd64 Packages indextargets found')
-          output.write_text(''.join(x+'\n' for x in unique))
+          root, listing, corpus, hashes = map(Path, sys.argv[1:])
+          suites=('resolute','resolute-updates','resolute-security','resolute-backports')
+          components=('main','restricted','universe','multiverse')
+          indexes=[]
+          for suite in suites:
+              for component in components:
+                  p=root/'ubuntu/dists'/suite/component/'binary-amd64/Packages.xz'
+                  if not p.is_file():
+                      raise SystemExit(f'missing inherited signed Packages index: {p}')
+                  indexes.append(p)
+          if len(indexes) != 16:
+              raise SystemExit(f'expected 16 signed Packages indexes, got {len(indexes)}')
+          listing.write_text(''.join(str(p.relative_to(root))+'\n' for p in indexes), encoding='utf-8')
+          with corpus.open('w', encoding='utf-8') as out:
+              for p in indexes:
+                  with lzma.open(p, 'rt', encoding='utf-8', errors='strict') as src:
+                      out.write(src.read())
+                  out.write('\n')
+          with hashes.open('w', encoding='utf-8') as out:
+              for p in indexes:
+                  h=hashlib.sha256(p.read_bytes()).hexdigest()
+                  out.write(f'{h}  {p.relative_to(root)}\n')
           PY
-          corpus="$base/snapshot-packages-amd64.txt"
-          : > "$corpus"
-          while IFS= read -r index; do
-            test -s "$index"
-            /usr/lib/apt/apt-helper cat-file "$index" >> "$corpus"
-            printf '\n' >> "$corpus"
-          done < "$base/package-indexes.txt"
-          test -s "$corpus"
-          sha256sum "$corpus" > "$base/snapshot-packages-amd64.txt.sha256"
-          cp build/ksq-0/apt-metadata.sha256 "$base/apt-metadata.sha256"
+          test -s "$base/snapshot-packages-amd64.txt"
+          test "$(wc -l < "$base/package-indexes.txt")" -eq 16
+          sha256sum "$base/snapshot-packages-amd64.txt" > "$base/snapshot-packages-amd64.txt.sha256"
+          sha256sum "$slice/manifests/metadata.tsv" > "$base/r2-metadata-manifest.sha256"
+          cat > "$base/r2-release-input.env" <<EOF
+          AURORA_KSQ_1_WITNESS_METADATA_SOURCE=immutable-r2-signed-packages
+          AURORA_KSQ_1_WITNESS_METADATA_SLICE_ID=20260829T022000Z-r2
+          AURORA_KSQ_1_WITNESS_METADATA_UPSTREAM_SNAPSHOT=20260829T022000Z
+          AURORA_KSQ_1_WITNESS_METADATA_RELEASE_ID=381836501
+          AURORA_KSQ_1_WITNESS_METADATA_RELEASE_ASSET_ID=542414026
+          AURORA_KSQ_1_WITNESS_METADATA_RELEASE_ASSET_SHA256=23413ddf1c1820aaa01dfa81005b37e8c9611bad2d0a632664d0e08282e69c3b
+          AURORA_KSQ_1_WITNESS_METADATA_RELEASE_ASSET_BYTES=1054177280
+          AURORA_KSQ_1_WITNESS_METADATA_RELEASE_MANIFEST_ASSET_ID=542414028
+          AURORA_KSQ_1_WITNESS_METADATA_RELEASE_MANIFEST_SHA256=6ed95b495ded7744f081335684c2918eeae96dbc822fa53b0d9fb5bc2da0f481
+          AURORA_KSQ_1_WITNESS_METADATA_PACKAGE_INDEXES=16
+          EOF
 
       - name: Prove complete signed 066-101 build-context difference
         shell: bash
@@ -268,13 +295,14 @@ jobs:
             echo 'AURORA_KSQ_1_WITNESS_PARENT_RUN_OVERALL_CONCLUSION=failure'
             echo 'AURORA_KSQ_1_WITNESS_BUILD_JOBS=PASS'
             echo 'AURORA_KSQ_1_WITNESS_ALLOWED_ANALYSIS_FAILURE=PASS'
+            echo 'AURORA_KSQ_1_WITNESS_METADATA_SOURCE=immutable-r2-signed-packages'
             echo "AURORA_KSQ_1_WITNESS_ANALYZER_COMMIT=$(git rev-parse HEAD)"
             cat "$out/status.env"
           } > "$base/acceptance.env"
           (
             cd "$base"
             find result -maxdepth 1 -type f -printf '%p\n' | LC_ALL=C sort > manifest-files.txt
-            printf '%s\n' acceptance.env trigger.env witness-run-api.json witness-jobs-api.json artifact-066-080-api.json artifact-081-090-api.json artifact-091-101-api.json snapshot-packages-amd64.txt.sha256 apt-metadata.sha256 r2-binary-objects.sha256 historical-oracle-comparison.tsv >> manifest-files.txt
+            printf '%s\n' acceptance.env trigger.env witness-run-api.json witness-jobs-api.json artifact-066-080-api.json artifact-081-090-api.json artifact-091-101-api.json snapshot-packages-amd64.txt.sha256 r2-binary-objects.sha256 r2-release-input.env r2-slice-validation.log r2-signed-package-indexes.sha256 r2-metadata-manifest.sha256 historical-oracle-comparison.tsv >> manifest-files.txt
             LC_ALL=C sort -u manifest-files.txt -o manifest-files.txt
             xargs sha256sum < manifest-files.txt > evidence.sha256
             sha256sum -c evidence.sha256
