@@ -200,9 +200,14 @@ The r3 regression authorized later ranges to test from the accepted order-65 sta
 - local-only source-build run `33973287438`: 15/15 PASS, 50 new DEBs, 345 accumulated DEBs;
 - independent acceptance run `33978315934`: PASS, artifact `9972976872`, digest `sha256:ebd60471d9834efbb4fad9f5680c6a153000aa8b9393f4821a70ff148edc2511`.
 
-The maintained checkpoint is therefore **order 80 / 345 DEBs**. The next authorized range is 81–90, and it must consume the exact accepted-080 plus source-artifact provenance rather than reconstruct a new implicit predecessor.
+Range 81–90 has since separately completed both required stages:
 
-Order 68 `drkonqi` remains normal-build PASS / dedicated reproducibility **NOT CERTIFIED**.
+- local-only source-build run `33978550975`: 10/10 PASS, 31 new DEBs, 376 accumulated DEBs;
+- independent acceptance run `33994817042`: PASS, artifact `9977725295`, digest `sha256:aa4d0499623073108161750881eee06804d1a1d20e5cd45e4a83ab4de3ad7d04`.
+
+The maintained checkpoint is therefore **order 90 / 376 DEBs**. The next authorized range is 91–101 and must consume the exact accepted-090 provenance.
+
+Orders 68 `drkonqi` and 81 `kf6-ktexteditor` remain normal-build PASS / dedicated reproducibility **NOT CERTIFIED**.
 
 ## 11. Gate state after r3 regression
 
@@ -211,12 +216,12 @@ Order 68 `drkonqi` remains normal-build PASS / dedicated reproducibility **NOT C
 - witness gap: **3 objects / 547318 bytes**;
 - r3: **MATERIALIZED / INDEPENDENTLY VALIDATED**;
 - r3 accepted-order-65 regression: **PASS**;
-- accepted KSQ-1 checkpoint: **order 80 / 345 DEBs**;
+- accepted KSQ-1 checkpoint: **order 90 / 376 DEBs**;
 - KWallet regression under r3: **PASS**;
 - KWallet auto-unlock: **NOT CERTIFIED**;
 - orders 66–80: **PASS / independently accepted**;
-- orders 81–90: **ACTIVE local-only range / not accepted**;
-- orders 91–101: **NOT ACCEPTED**;
+- orders 81–90: **PASS / independently accepted**;
+- orders 91–101: **ACTIVE local-only range / not accepted**;
 - KSQ-1: **ACTIVE / NOT CERTIFIED**;
 - KSQ-2: **BLOCKED**;
 - C4.1: **PAUSED**.

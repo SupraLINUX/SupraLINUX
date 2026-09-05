@@ -271,7 +271,11 @@ Canonical detailed record: `docs/validation/AURORA_KSQ_1_RANGE_061_065_KWALLET.m
 
 Orders 66–80 are now **independently accepted on immutable r3**. Source-build run `33973287438` produced 15/15 PASS, 50 new DEBs and 345 accumulated DEBs with zero range adaptations, zero external build APT HTTP(S), zero relevant AppArmor denials and no Docker/custom-AppArmor/uidmap-filecap workaround. Independent acceptance run `33978315934`, artifact `9972976872`, digest `sha256:ebd60471d9834efbb4fad9f5680c6a153000aa8b9393f4821a70ff148edc2511`, promotes the maintained checkpoint to **order 80 / 345 DEBs**. Detailed evidence is `docs/validation/AURORA_KSQ_1_RANGE_066_080_R3.md`.
 
-Order 68 `drkonqi` has a normal-build PASS only; its dedicated reproducibility rebuild remains mandatory under the 95+6 contract. Orders 81–90 are now the active local-only range from the exact independently accepted order-80 checkpoint.
+Order 68 `drkonqi` has a normal-build PASS only; its dedicated reproducibility rebuild remains mandatory under the 95+6 contract.
+
+Orders 81–90 are now **independently accepted on immutable r3**. Source-build run `33978550975` produced 10/10 PASS, 31 new DEBs and 376 accumulated DEBs with zero range adaptations, zero external build APT HTTP(S) and zero relevant AppArmor denials. The first acceptance attempt `33994677077` failed closed only on an artifact extraction-root assumption and promoted nothing. After fail-closed heterogeneous-root detection was applied to all downstream consumers, acceptance run `33994817042`, artifact `9977725295`, digest `sha256:aa4d0499623073108161750881eee06804d1a1d20e5cd45e4a83ab4de3ad7d04`, promoted the maintained checkpoint to **order 90 / 376 DEBs**. Detailed evidence is `docs/validation/AURORA_KSQ_1_RANGE_081_090_R3.md`.
+
+Order 81 `kf6-ktexteditor` has normal-build PASS only and still requires its dedicated reproducibility rebuild. Orders 91–101 are now the active local-only range from the exact independently accepted order-90 checkpoint.
 
 ##### Reproducibility acceptance plan
 

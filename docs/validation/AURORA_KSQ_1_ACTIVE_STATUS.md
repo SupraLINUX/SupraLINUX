@@ -255,13 +255,45 @@ Detailed record: `docs/validation/AURORA_KSQ_1_RANGE_066_080_R3.md`.
 
 The two earlier pre-build red runs remain classified as tooling failures: `33965423386` exposed host APT fragment leakage and `33972965871` exposed an ephemeral `build/ksq-0/canonical` assumption. Neither built a source or demonstrated a product/snapshot defect.
 
-## Orders 081–090 — current local-only gate
+## Orders 081–090 — ACCEPTED on r3
 
-Range 81–90 is active from the exact independently accepted order-80 checkpoint. Its maintained workflow consumes both the accepted-080 evidence artifact and the exact 66–80 source artifact, reconstructs the complete 345-DEB predecessor state, validates immutable r3 again and rebuilds orders 81–90 with the same local-only unshare/sbuild network-isolation contract.
+The complete local-only range and its separate fail-closed acceptance are PASS.
 
-Current run: `33978550975` on source HEAD `8b54e2aa98e7df0d82a09b0d840cd2163913c409`.
+Source-build evidence:
 
-Order 81 `kf6-ktexteditor` may pass its normal range build without satisfying its later dedicated reproducibility requirement.
+- run `33978550975`;
+- source HEAD `8b54e2aa98e7df0d82a09b0d840cd2163913c409`;
+- artifact `9974023708`;
+- digest `sha256:dfa78a851139b279f08d58bef9a0d95fc9261a26c18b6c1dc85a65afe29401ed`;
+- 10/10 sources PASS;
+- 31 new DEBs;
+- accumulated DEBs: `376`;
+- packaging adaptations: `0`;
+- external APT HTTP(S) during source builds: `0`;
+- relevant AppArmor denials: `0`.
+
+The first independent-acceptance attempt (`33994677077`) failed closed only because its validator assumed a `build/ksq-1/...` extraction root while this raw artifact is rooted at `ksq-1/...`. The source and predecessor identities had already passed; no checkpoint was promoted. Downstream source-artifact consumers now resolve exactly one supported root and reject missing/ambiguous layouts.
+
+Successful independent acceptance:
+
+- run `33994817042`;
+- acceptance HEAD `ddffb2dfb6aa6c48e56cc07b11a11696d6cb5c9b`;
+- artifact `9977725295`;
+- digest `sha256:aa4d0499623073108161750881eee06804d1a1d20e5cd45e4a83ab4de3ad7d04`;
+- `evidence.sha256`: PASS after independent download/extraction;
+- accepted checkpoint: **order 90 / 376 DEBs**.
+
+Order 81 `kf6-ktexteditor` has normal-build PASS only; its dedicated reproducibility obligation remains **NOT CERTIFIED**.
+
+Detailed record: `docs/validation/AURORA_KSQ_1_RANGE_081_090_R3.md`.
+
+## Orders 091–101 — current local-only gate
+
+Range 91–101 is active from the exact independently accepted order-90 checkpoint. Its maintained workflow reconstructs the complete accepted dependency chain, validates immutable r3 again and builds orders 91–101 under the same local-only unshare/sbuild network-isolation contract.
+
+Current run: `33994908104` on source HEAD `7f680a9eb18096bf5908abe131bc943c3564a6f4`.
+
+Orders 99 `plasma-workspace`, 100 `plasma-desktop` and 101 `powerdevil` may pass their normal builds without satisfying their later dedicated reproducibility requirements.
 
 ## Reproducibility contract
 
@@ -294,12 +326,12 @@ remains mandatory until its independent rebuild gate passes.
 - independent witness gap analysis: **PROVEN / 3 objects / 547318 bytes**;
 - r3: **IMMUTABLE CANDIDATE / MATERIALIZED / INDEPENDENTLY VALIDATED**;
 - r3 accepted-065 regression: **PASS**;
-- maintained accepted checkpoint: **order 80 / 345 DEBs**;
+- maintained accepted checkpoint: **order 90 / 376 DEBs**;
 - KWallet package/install/PAM regression under r3: **PASS**;
 - KWallet automatic session unlock: **NOT CERTIFIED**;
 - orders 066–080: **PASS / INDEPENDENTLY ACCEPTED**;
-- orders 081–090: **LOCAL-ONLY BUILD ACTIVE / NOT ACCEPTED**;
-- orders 091–101: **NOT ACCEPTED**;
+- orders 081–090: **PASS / INDEPENDENTLY ACCEPTED**;
+- orders 091–101: **LOCAL-ONLY BUILD ACTIVE / NOT ACCEPTED**;
 - DrKonqi dedicated reproducibility: **NOT CERTIFIED**;
 - complete 101-source candidate: **NOT ACCEPTED**;
 - KSQ-1: **ACTIVE / NOT CERTIFIED**;
