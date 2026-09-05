@@ -1,0 +1,217 @@
+name: Aurora KSQ snapshot slice r3 base-identity validation
+
+on:
+  workflow_run:
+    workflows:
+      - Aurora KSQ witness-derived snapshot slice r3 publication
+    types:
+      - completed
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: aurora-ksq-snapshot-20260829T022000Z-r3-base-identity
+  cancel-in-progress: false
+
+env:
+  UPSTREAM_SNAPSHOT: '20260829T022000Z'
+  BASE_SLICE_ID: '20260829T022000Z-r2'
+  SLICE_ID: '20260829T022000Z-r3'
+  BASE_RELEASE_TAG: ksq-snapshot-20260829T022000Z-r2
+  BASE_RELEASE_ASSET: aurora-ubuntu-snapshot-20260829T022000Z-r2-amd64.tar
+  BASE_RELEASE_MANIFEST: aurora-ubuntu-snapshot-20260829T022000Z-r2-amd64.env
+  RELEASE_TAG: ksq-snapshot-20260829T022000Z-r3
+  RELEASE_ASSET: aurora-ubuntu-snapshot-20260829T022000Z-r3-amd64.tar
+  RELEASE_MANIFEST: aurora-ubuntu-snapshot-20260829T022000Z-r3-amd64.env
+
+jobs:
+  prove-strict-extension:
+    name: Prove r3 is byte-preserving extension of r2
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: feature/kde-stack-qualification
+
+      - name: Install independent comparison tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl python3 xz-utils ubuntu-keyring gpgv diffutils
+          python3 -m py_compile scripts/ci/ksq-snapshot-slice-r2.py scripts/ci/ksq-snapshot-slice-r3.py
+
+      - name: Download and verify canonical r2 release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          source scripts/ci/aurora-ksq-snapshot-release.env
+          test "$AURORA_KSQ_SNAPSHOT" = "$BASE_SLICE_ID"
+          test "$AURORA_KSQ_UBUNTU_SNAPSHOT" = "$UPSTREAM_SNAPSHOT"
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256" = 23413ddf1c1820aaa01dfa81005b37e8c9611bad2d0a632664d0e08282e69c3b
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES" = 1054177280
+          dir="$RUNNER_TEMP/r2-release"
+          mkdir -p "$dir" "$RUNNER_TEMP/r2"
+          gh release download "$BASE_RELEASE_TAG" -R "$GITHUB_REPOSITORY" \
+            -p "$BASE_RELEASE_ASSET" -p "$BASE_RELEASE_MANIFEST" -D "$dir"
+          test "$(sha256sum "$dir/$BASE_RELEASE_ASSET" | awk '{print $1}')" = 23413ddf1c1820aaa01dfa81005b37e8c9611bad2d0a632664d0e08282e69c3b
+          test "$(stat -c '%s' "$dir/$BASE_RELEASE_ASSET")" = 1054177280
+          test "$(sha256sum "$dir/$BASE_RELEASE_MANIFEST" | awk '{print $1}')" = 6ed95b495ded7744f081335684c2918eeae96dbc822fa53b0d9fb5bc2da0f481
+          tar -xf "$dir/$BASE_RELEASE_ASSET" -C "$RUNNER_TEMP/r2"
+          python3 scripts/ci/ksq-snapshot-slice-r2.py validate --slice-root "$RUNNER_TEMP/r2/$BASE_SLICE_ID"
+
+      - name: Download and verify exact r3 candidate release
+        id: r3
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          dir="$RUNNER_TEMP/r3-release"
+          mkdir -p "$dir" "$RUNNER_TEMP/r3"
+          gh release download "$RELEASE_TAG" -R "$GITHUB_REPOSITORY" \
+            -p "$RELEASE_ASSET" -p "$RELEASE_MANIFEST" -D "$dir"
+          source "$dir/$RELEASE_MANIFEST"
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_STATUS" = PUBLISHED_CANDIDATE
+          test "$AURORA_KSQ_SNAPSHOT_SLICE_ID" = "$SLICE_ID"
+          test "$AURORA_KSQ_UBUNTU_SNAPSHOT" = "$UPSTREAM_SNAPSHOT"
+          test "$AURORA_KSQ_SNAPSHOT_R3_BASE_SLICE_ID" = "$BASE_SLICE_ID"
+          test "$AURORA_KSQ_SNAPSHOT_R3_BASE_RELEASE_ASSET_SHA256" = 23413ddf1c1820aaa01dfa81005b37e8c9611bad2d0a632664d0e08282e69c3b
+          test "$AURORA_KSQ_SNAPSHOT_R3_MANUAL_PACKAGE_ADDITIONS" = 0
+          test "$(sha256sum "$dir/$RELEASE_ASSET" | awk '{print $1}')" = "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256"
+          test "$(stat -c '%s' "$dir/$RELEASE_ASSET")" = "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES"
+          tar -xf "$dir/$RELEASE_ASSET" -C "$RUNNER_TEMP/r3"
+          python3 scripts/ci/ksq-snapshot-slice-r3.py validate --slice-root "$RUNNER_TEMP/r3/$SLICE_ID"
+          echo "archive_sha256=$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256" >> "$GITHUB_OUTPUT"
+          echo "gap_objects=$AURORA_KSQ_SNAPSHOT_R3_GAP_OBJECTS" >> "$GITHUB_OUTPUT"
+          echo "gap_bytes=$AURORA_KSQ_SNAPSHOT_R3_GAP_BYTES" >> "$GITHUB_OUTPUT"
+
+      - name: Prove signed metadata and source inputs are byte-identical
+        shell: bash
+        run: |
+          set -euo pipefail
+          r2="$RUNNER_TEMP/r2/$BASE_SLICE_ID"
+          r3="$RUNNER_TEMP/r3/$SLICE_ID"
+          cmp -s "$r2/manifests/metadata.tsv" "$r3/manifests/metadata.tsv"
+          cmp -s "$r2/manifests/ubuntu-source.tsv" "$r3/manifests/ubuntu-source.tsv"
+          cmp -s "$r2/manifests/debian-source.tsv" "$r3/manifests/debian-source.tsv"
+          diff -qr "$r2/ubuntu/dists" "$r3/ubuntu/dists"
+          diff -qr "$r2/debian-sources" "$r3/debian-sources"
+
+          python3 - "$r2" "$r3" <<'PY'
+          import csv, hashlib, sys
+          from pathlib import Path
+          r2, r3 = map(Path, sys.argv[1:])
+          def rows(path):
+              with path.open(newline='') as f:
+                  return list(csv.DictReader(f, delimiter='\t'))
+          def digest(path, alg='sha512'):
+              h=hashlib.new(alg)
+              with path.open('rb') as f:
+                  for chunk in iter(lambda:f.read(1024*1024), b''):
+                      h.update(chunk)
+              return h.hexdigest()
+          for row in rows(r2/'manifests/ubuntu-source.tsv'):
+              a=r2/row['path']; b=r3/row['path']
+              if a.stat().st_size != b.stat().st_size or digest(a) != digest(b):
+                  raise SystemExit(f'Ubuntu source payload changed: {row["path"]}')
+          for row in rows(r2/'manifests/debian-source.tsv'):
+              a=r2/row['path']; b=r3/row['path']
+              if a.read_bytes() != b.read_bytes():
+                  raise SystemExit(f'Debian source payload changed: {row["path"]}')
+          print('AURORA_KSQ_R3_SOURCE_IDENTITY=PASS')
+          PY
+
+      - name: Prove all 1783 pre-existing binary payloads are unchanged and only gap was added
+        shell: bash
+        run: |
+          set -euo pipefail
+          r2="$RUNNER_TEMP/r2/$BASE_SLICE_ID"
+          r3="$RUNNER_TEMP/r3/$SLICE_ID"
+          cmp -s "$r2/manifests/binary.tsv" "$r3/provenance/r3/base-r2-binary.tsv"
+          python3 - "$r2" "$r3" <<'PY'
+          import csv, hashlib, sys
+          from pathlib import Path
+          r2, r3 = map(Path, sys.argv[1:])
+          fields=['path','size','sha256','package','version','architecture','suite','component']
+          def rows(path):
+              with path.open(newline='') as f:
+                  data=list(csv.DictReader(f, delimiter='\t'))
+              return {x['path']:x for x in data}
+          base=rows(r2/'manifests/binary.tsv')
+          candidate=rows(r3/'manifests/binary.tsv')
+          added=rows(r3/'manifests/r3-added-binary.tsv')
+          if len(base) != 1783:
+              raise SystemExit(f'base binary count != 1783: {len(base)}')
+          if set(candidate) != set(base) | set(added):
+              raise SystemExit('r3 binary manifest is not exact union of r2 + added')
+          if set(base) & set(added):
+              raise SystemExit('r3 added set overlaps r2')
+          for path, row in base.items():
+              if candidate[path] != row:
+                  raise SystemExit(f'pre-existing manifest row changed: {path}')
+              a=r2/path; b=r3/path
+              if a.stat().st_size != b.stat().st_size:
+                  raise SystemExit(f'pre-existing payload size changed: {path}')
+              h=hashlib.sha256()
+              with b.open('rb') as f:
+                  for chunk in iter(lambda:f.read(1024*1024), b''):
+                      h.update(chunk)
+              if h.hexdigest() != row['sha256']:
+                  raise SystemExit(f'pre-existing payload hash changed: {path}')
+          print(f'AURORA_KSQ_R3_BASE_BINARY_IDENTITY={len(base)}')
+          print(f'AURORA_KSQ_R3_ADDED_BINARY_OBJECTS={len(added)}')
+          PY
+
+      - name: Seal strict-extension evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=build/ksq-1/r3-base-identity
+          mkdir -p "$out"
+          r2="$RUNNER_TEMP/r2/$BASE_SLICE_ID"
+          r3="$RUNNER_TEMP/r3/$SLICE_ID"
+          cp "$r2/manifests/metadata.tsv" "$out/r2-metadata.tsv"
+          cp "$r3/manifests/metadata.tsv" "$out/r3-metadata.tsv"
+          cp "$r2/manifests/binary.tsv" "$out/r2-binary.tsv"
+          cp "$r3/manifests/r3-added-binary.tsv" "$out/r3-added-binary.tsv"
+          cp "$r3/manifests/r3-gap.tsv" "$out/r3-gap.tsv"
+          cat > "$out/acceptance.env" <<EOF
+          AURORA_KSQ_SNAPSHOT_R3_BASE_IDENTITY_VALIDATION=PASS
+          AURORA_KSQ_SNAPSHOT_R3_SLICE_ID=$SLICE_ID
+          AURORA_KSQ_SNAPSHOT_R3_UPSTREAM_SNAPSHOT=$UPSTREAM_SNAPSHOT
+          AURORA_KSQ_SNAPSHOT_R3_BASE_RELEASE_ASSET_SHA256=23413ddf1c1820aaa01dfa81005b37e8c9611bad2d0a632664d0e08282e69c3b
+          AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET_SHA256=${{ steps.r3.outputs.archive_sha256 }}
+          AURORA_KSQ_SNAPSHOT_R3_APT_METADATA_IDENTITY=PASS
+          AURORA_KSQ_SNAPSHOT_R3_SOURCE_INPUT_IDENTITY=PASS
+          AURORA_KSQ_SNAPSHOT_R3_PREEXISTING_BINARY_IDENTITY=PASS
+          AURORA_KSQ_SNAPSHOT_R3_BASE_BINARY_OBJECTS=1783
+          AURORA_KSQ_SNAPSHOT_R3_GAP_OBJECTS=${{ steps.r3.outputs.gap_objects }}
+          AURORA_KSQ_SNAPSHOT_R3_GAP_BYTES=${{ steps.r3.outputs.gap_bytes }}
+          AURORA_KSQ_SNAPSHOT_R3_MANUAL_PACKAGE_ADDITIONS=0
+          EOF
+          (
+            cd "$out"
+            find . -maxdepth 1 -type f ! -name evidence.sha256 -printf '%P\n' \
+              | LC_ALL=C sort \
+              | xargs -r sha256sum \
+              > evidence.sha256
+            sha256sum -c evidence.sha256
+          )
+
+      - name: Upload strict-extension validation evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-snapshot-r3-base-identity-validation
+          path: build/ksq-1/r3-base-identity/
+          if-no-files-found: error
+          retention-days: 30
