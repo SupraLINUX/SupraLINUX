@@ -16,12 +16,28 @@ ARCHIVE="${SLICE_ROOT}/ubuntu"
 
 rm -rf "${APT_ROOT}"
 mkdir -p \
+  "${APT_ROOT}/empty-parts" \
   "${APT_ROOT}/resolute-lists/partial" \
   "${APT_ROOT}/stonking-lists/partial" \
   "${APT_ROOT}/resolute-cache/archives/partial" \
   "${APT_ROOT}/stonking-cache/archives/partial"
 : > "${APT_ROOT}/empty-status"
+: > "${APT_ROOT}/empty-main.conf"
 chmod -R a+rX,u+w "${APT_ROOT}"
+
+# APT reads APT_CONFIG first, then Dir::Etc::Parts and Dir::Etc::main, and only
+# afterwards applies command-line -o overrides.  Therefore strict local-only
+# operation must redirect the fragment directory and main config from APT_CONFIG
+# itself; command-line source/cache overrides alone do not prevent host fragments
+# (for example command-not-found CNF targets) from being loaded first.
+cat > "${APT_ROOT}/preload.conf" <<EOF_APT
+Dir::Etc::Parts "${APT_ROOT}/empty-parts";
+Dir::Etc::main "${APT_ROOT}/empty-main.conf";
+Acquire::Languages "none";
+Acquire::Retries "0";
+Acquire::http::Proxy "http://127.0.0.1:9/";
+Acquire::https::Proxy "http://127.0.0.1:9/";
+EOF_APT
 
 cat > "${APT_ROOT}/resolute.sources" <<EOF_RESOLUTE
 Types: deb deb-src
@@ -62,8 +78,8 @@ apt_opts() {
 
 for profile in resolute stonking; do
   mapfile -t opts < <(apt_opts "${profile}")
-  apt-get "${opts[@]}" -o APT::Update::Error-Mode=any update
-  apt-get "${opts[@]}" indextargets > "${OUT}/apt-${profile}-indextargets.txt"
+  APT_CONFIG="${APT_ROOT}/preload.conf" apt-get "${opts[@]}" -o APT::Update::Error-Mode=any update
+  APT_CONFIG="${APT_ROOT}/preload.conf" apt-get "${opts[@]}" indextargets > "${OUT}/apt-${profile}-indextargets.txt"
 done
 
 for evidence in "${OUT}/apt-resolute-indextargets.txt" "${OUT}/apt-stonking-indextargets.txt"; do
@@ -91,4 +107,6 @@ chmod -R a+rX,a+w "${APT_ROOT}"
 
 printf 'AURORA_KSQ_1_LOCAL_APT_SNAPSHOT=%s\n' "${SNAPSHOT}"
 printf 'AURORA_KSQ_1_LOCAL_APT_URI=file:%s\n' "${ARCHIVE}"
+printf 'AURORA_KSQ_1_LOCAL_APT_CONFIG=%s\n' "${APT_ROOT}/preload.conf"
+printf 'AURORA_KSQ_1_LOCAL_APT_HOST_FRAGMENTS=disabled\n'
 printf 'AURORA_KSQ_1_LOCAL_APT_SUCCESS\n'
