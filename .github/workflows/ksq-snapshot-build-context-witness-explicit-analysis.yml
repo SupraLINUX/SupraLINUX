@@ -38,6 +38,26 @@ jobs:
           mkdir -p build/ksq-1/snapshot-witness-explicit-analysis
           cp "$trigger" build/ksq-1/snapshot-witness-explicit-analysis/trigger.env
 
+      - name: Prove trigger references the exact successful witness run
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WITNESS_RUN_ID: ${{ steps.trigger.outputs.run_id }}
+          WITNESS_HEAD_SHA: ${{ steps.trigger.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+          run_json=build/ksq-1/snapshot-witness-explicit-analysis/witness-run-api.json
+          gh api \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "/repos/$GITHUB_REPOSITORY/actions/runs/$WITNESS_RUN_ID" \
+            > "$run_json"
+          test "$(jq -r '.status' "$run_json")" = completed
+          test "$(jq -r '.conclusion' "$run_json")" = success
+          test "$(jq -r '.head_sha' "$run_json")" = "$WITNESS_HEAD_SHA"
+          test "$(jq -r '.head_branch' "$run_json")" = feature/kde-stack-qualification
+          test "$(jq -r '.name' "$run_json")" = 'Aurora KSQ snapshot build-context witness 066-101'
+
       - name: Install analysis tools
         shell: bash
         run: |
@@ -198,7 +218,7 @@ jobs:
           (
             cd "$base"
             find result -maxdepth 1 -type f -printf '%p\n' | LC_ALL=C sort > manifest-files.txt
-            printf '%s\n' acceptance.env trigger.env snapshot-packages-amd64.txt.sha256 apt-metadata.sha256 r2-binary-objects.sha256 historical-oracle-comparison.tsv >> manifest-files.txt
+            printf '%s\n' acceptance.env trigger.env witness-run-api.json snapshot-packages-amd64.txt.sha256 apt-metadata.sha256 r2-binary-objects.sha256 historical-oracle-comparison.tsv >> manifest-files.txt
             LC_ALL=C sort -u manifest-files.txt -o manifest-files.txt
             xargs sha256sum < manifest-files.txt > evidence.sha256
             sha256sum -c evidence.sha256
