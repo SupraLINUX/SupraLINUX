@@ -135,6 +135,49 @@ The trigger must bind the exact successful r3 publication run and exact publicat
 6. revalidates the original independent witness analysis and compares its `gap-objects.tsv` byte-for-byte with r3;
 7. emits independent evidence while keeping `CANONICAL_POINTER_UPDATED=no` and `KSQ_REGRESSION_REQUIRED=yes`.
 
+### 5. Static pipeline preflight
+
+Workflow:
+
+- `.github/workflows/ksq-r3-preflight.yml`.
+
+Run `33935224782` on commit `229f2bd9f37960f8db8a357aeb151344dc4bc2df` completed **SUCCESS** on Ubuntu 26.04.1. Its log explicitly proves:
+
+- `scripts/ci/ksq-snapshot-slice-r3.py` passes `python3 -m py_compile`;
+- explicit witness-analysis YAML parses;
+- explicit r3 materialization YAML parses;
+- explicit r3 validation YAML parses;
+- local-only 66–80 r3 regression YAML parses;
+- final marker: `AURORA_KSQ_R3_PREFLIGHT=PASS`.
+
+This preflight validates syntax/structure only. It does not materialize or validate an r3 release.
+
+### 6. Local-only 66–80 r3 regression gate
+
+Workflow:
+
+- `.github/workflows/ksq-native-range-066-080-r3-regression.yml`;
+- initial commit: `14421ffd20b943d27d7c059c05c2e4386268649d`.
+
+Trigger:
+
+- `.github/ksq-r3-range-066-080-trigger.env` — **not created yet**.
+
+The trigger is eligible only after explicit independent r3 validation passes and must bind that exact validation run and artifact identity. The regression workflow then:
+
+1. revalidates the independent r3 validation run/artifact through the GitHub API;
+2. requires strict r2→r3 identity PASS, signed metadata/source identity PASS, no manual additions and `CANONICAL_POINTER_UPDATED=no`;
+3. reconstructs the exact accepted 1–65 / 295-DEB state through the existing fail-closed restore helper;
+4. downloads the exact r3 release candidate by the hashes preserved in the validation artifact;
+5. validates r3 without modifying `scripts/ci/aurora-ksq-snapshot-release.env`;
+6. creates local-only APT/mmdebstrap state from the explicit r3 path;
+7. enforces the exact build order 66–80 and zero declared packaging adaptations;
+8. builds all 15 sources with the existing unshare network-isolation proof;
+9. audits AppArmor denials, build manifests, new-DEB hashes, package adaptations and per-build network isolation;
+10. keeps DrKonqi reproducibility explicitly outside this range gate.
+
+This is the first workflow that may produce acceptability evidence for orders 66–80 on r3. The snapshot pointer remains unchanged until the required regression and artifact inspection close.
+
 ## Regression and promotion boundary
 
 Even if r3 publication and independent validation pass, r3 is not automatically canonical and previous KSQ evidence is not automatically carried forward.
@@ -152,9 +195,11 @@ Only after the required regression passes may the canonical snapshot pointer be 
 - 66–101 per-build witness: **ACTIVE**;
 - explicit witness-analysis trigger: **NOT CREATED**;
 - r3 implementation: **PREPARED**;
+- r3 static pipeline preflight: **PASS** (`33935224782`);
 - explicit r3 materialization trigger: **NOT CREATED**;
 - r3 release: **DOES NOT EXIST / NOT MATERIALIZED**;
 - explicit r3 validation trigger: **NOT CREATED**;
+- local-only r3 range trigger: **NOT CREATED**;
 - r3 canonical pointer: **NO**;
 - orders 66–80: **NOT ACCEPTED**;
 - KSQ-1: **ACTIVE / NOT CERTIFIED**;
