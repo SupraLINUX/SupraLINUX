@@ -14,6 +14,7 @@ permissions:
 env:
   BASE_SLICE_ID: '20260829T022000Z-r2'
   TEST_SLICE_ID: '20260829T022000Z-r3'
+  ARCHIVE_ROOT: /opt/supralinux/archive
   R2_TAG: ksq-snapshot-20260829T022000Z-r2
   R2_ASSET: aurora-ubuntu-snapshot-20260829T022000Z-r2-amd64.tar
 
@@ -34,6 +35,7 @@ jobs:
           sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
             ca-certificates curl python3 xz-utils ubuntu-keyring gpgv
           python3 -m py_compile scripts/ci/ksq-snapshot-slice-r3.py
+          sudo install -d -o "$(id -u)" -g "$(id -g)" -m 0755 "$ARCHIVE_ROOT"
 
       - name: Download and validate immutable r2 base
         shell: bash
@@ -41,9 +43,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          root="$RUNNER_TEMP/archive"
+          root="$ARCHIVE_ROOT"
           release="$RUNNER_TEMP/r2-release"
-          mkdir -p "$root" "$release"
+          mkdir -p "$release"
           gh release download "$R2_TAG" -R "$GITHUB_REPOSITORY" -p "$R2_ASSET" \
             -p aurora-ubuntu-snapshot-20260829T022000Z-r2-amd64.env -D "$release"
           test "$(sha256sum "$release/$R2_ASSET" | awk '{print $1}')" = 23413ddf1c1820aaa01dfa81005b37e8c9611bad2d0a632664d0e08282e69c3b
@@ -56,7 +58,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          root="$RUNNER_TEMP/archive/$BASE_SLICE_ID"
+          root="$ARCHIVE_ROOT/$BASE_SLICE_ID"
           analysis="$RUNNER_TEMP/synthetic-analysis"
           mkdir -p "$analysis/result"
           python3 - "$root" "$analysis/result/gap-objects.tsv" <<'PY'
@@ -123,7 +125,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          archive_root="$RUNNER_TEMP/archive"
+          archive_root="$ARCHIVE_ROOT"
           analysis="$RUNNER_TEMP/synthetic-analysis"
           python3 scripts/ci/ksq-snapshot-slice-r3.py materialize \
             --archive-root "$archive_root" \
@@ -147,8 +149,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          r2="$RUNNER_TEMP/archive/$BASE_SLICE_ID"
-          r3="$RUNNER_TEMP/archive/$TEST_SLICE_ID"
+          r2="$ARCHIVE_ROOT/$BASE_SLICE_ID"
+          r3="$ARCHIVE_ROOT/$TEST_SLICE_ID"
           cmp -s "$r2/manifests/metadata.tsv" "$r3/manifests/metadata.tsv"
           cmp -s "$r2/manifests/ubuntu-source.tsv" "$r3/manifests/ubuntu-source.tsv"
           cmp -s "$r2/manifests/debian-source.tsv" "$r3/manifests/debian-source.tsv"
@@ -166,7 +168,7 @@ jobs:
           cp "$RUNNER_TEMP/materialize.log" "$out/"
           cp "$RUNNER_TEMP/validate.log" "$out/"
           cp "$RUNNER_TEMP/synthetic-analysis/result/gap-objects.tsv" "$out/synthetic-gap.tsv"
-          cp "$RUNNER_TEMP/archive/$TEST_SLICE_ID/provenance.env" "$out/synthetic-r3-provenance.env"
+          cp "$ARCHIVE_ROOT/$TEST_SLICE_ID/provenance.env" "$out/synthetic-r3-provenance.env"
           cat > "$out/status.env" <<EOF
           AURORA_KSQ_R3_MECHANICS_PROBE=PASS
           AURORA_KSQ_R3_MECHANICS_PROBE_INPUT=canonical-r2-plus-synthetic-single-signed-gap
