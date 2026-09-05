@@ -1,0 +1,46 @@
+name: Aurora KSQ r3 pipeline preflight
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/workflows/ksq-r3-preflight.yml'
+      - '.github/workflows/ksq-snapshot-build-context-witness-explicit-analysis.yml'
+      - '.github/workflows/ksq-snapshot-slice-r3-explicit-materialize.yml'
+      - '.github/workflows/ksq-snapshot-slice-r3-explicit-validation.yml'
+      - '.github/workflows/ksq-native-range-066-080-r3-regression.yml'
+      - 'scripts/ci/ksq-snapshot-slice-r3.py'
+
+permissions:
+  contents: read
+
+jobs:
+  static-preflight:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Validate r3 Python and workflow YAML syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          python3 -m py_compile scripts/ci/ksq-snapshot-slice-r3.py
+          ruby -e '
+            require "yaml"
+            ARGV.each do |path|
+              doc = YAML.load_file(path, aliases: true)
+              raise "#{path}: top level is not mapping" unless doc.is_a?(Hash)
+              on = doc.key?("on") ? doc["on"] : doc[true]
+              raise "#{path}: missing on" if on.nil?
+              jobs = doc["jobs"]
+              raise "#{path}: missing jobs" unless jobs.is_a?(Hash) && !jobs.empty?
+              puts "AURORA_KSQ_R3_YAML_PASS=#{path}"
+            end
+          ' \
+            .github/workflows/ksq-snapshot-build-context-witness-explicit-analysis.yml \
+            .github/workflows/ksq-snapshot-slice-r3-explicit-materialize.yml \
+            .github/workflows/ksq-snapshot-slice-r3-explicit-validation.yml \
+            .github/workflows/ksq-native-range-066-080-r3-regression.yml
+          echo AURORA_KSQ_R3_PREFLIGHT=PASS
