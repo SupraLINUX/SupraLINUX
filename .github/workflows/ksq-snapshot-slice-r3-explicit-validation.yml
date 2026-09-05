@@ -19,6 +19,7 @@ env:
   UPSTREAM_SNAPSHOT: '20260829T022000Z'
   BASE_SLICE_ID: '20260829T022000Z-r2'
   SLICE_ID: '20260829T022000Z-r3'
+  ARCHIVE_ROOT: /opt/supralinux/archive
   BASE_RELEASE_TAG: ksq-snapshot-20260829T022000Z-r2
   BASE_RELEASE_ASSET: aurora-ubuntu-snapshot-20260829T022000Z-r2-amd64.tar
   BASE_RELEASE_MANIFEST: aurora-ubuntu-snapshot-20260829T022000Z-r2-amd64.env
@@ -66,6 +67,7 @@ jobs:
           sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
             ca-certificates curl unzip python3 xz-utils ubuntu-keyring gpgv diffutils
           python3 -m py_compile scripts/ci/ksq-snapshot-slice-r2.py scripts/ci/ksq-snapshot-slice-r3.py
+          sudo install -d -o "$(id -u)" -g "$(id -g)" -m 0755 "$ARCHIVE_ROOT"
 
       - name: Revalidate exact publication run and artifact identity
         shell: bash
@@ -154,7 +156,7 @@ jobs:
         run: |
           set -euo pipefail
           dir="$RUNNER_TEMP/r3-release"
-          mkdir -p "$dir" "$RUNNER_TEMP/r3"
+          mkdir -p "$dir"
           gh release download "$RELEASE_TAG" -R "$GITHUB_REPOSITORY" -p "$RELEASE_ASSET" -p "$RELEASE_MANIFEST" -D "$dir"
           archive="$dir/$RELEASE_ASSET"
           manifest="$dir/$RELEASE_MANIFEST"
@@ -171,8 +173,8 @@ jobs:
           test "$AURORA_KSQ_SNAPSHOT_R3_MANUAL_PACKAGE_ADDITIONS" = 0
           test "$AURORA_KSQ_SNAPSHOT_R3_GAP_OBJECTS" = '${{ steps.publication.outputs.gap_objects }}'
           test "$AURORA_KSQ_SNAPSHOT_R3_GAP_BYTES" = '${{ steps.publication.outputs.gap_bytes }}'
-          tar -xf "$archive" -C "$RUNNER_TEMP/r3"
-          python3 scripts/ci/ksq-snapshot-slice-r3.py validate --slice-root "$RUNNER_TEMP/r3/$SLICE_ID" \
+          tar -xf "$archive" -C "$ARCHIVE_ROOT"
+          python3 scripts/ci/ksq-snapshot-slice-r3.py validate --slice-root "$ARCHIVE_ROOT/$SLICE_ID" \
             | tee build-r3-validation.log
           grep -Fqx 'AURORA_KSQ_SNAPSHOT_R3_VALID' build-r3-validation.log
 
@@ -189,20 +191,20 @@ jobs:
           test "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256" = 23413ddf1c1820aaa01dfa81005b37e8c9611bad2d0a632664d0e08282e69c3b
           test "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES" = 1054177280
           dir="$RUNNER_TEMP/r2-release"
-          mkdir -p "$dir" "$RUNNER_TEMP/r2"
+          mkdir -p "$dir"
           gh release download "$BASE_RELEASE_TAG" -R "$GITHUB_REPOSITORY" -p "$BASE_RELEASE_ASSET" -p "$BASE_RELEASE_MANIFEST" -D "$dir"
           test "$(sha256sum "$dir/$BASE_RELEASE_ASSET" | awk '{print $1}')" = 23413ddf1c1820aaa01dfa81005b37e8c9611bad2d0a632664d0e08282e69c3b
           test "$(stat -c '%s' "$dir/$BASE_RELEASE_ASSET")" = 1054177280
           test "$(sha256sum "$dir/$BASE_RELEASE_MANIFEST" | awk '{print $1}')" = 6ed95b495ded7744f081335684c2918eeae96dbc822fa53b0d9fb5bc2da0f481
-          tar -xf "$dir/$BASE_RELEASE_ASSET" -C "$RUNNER_TEMP/r2"
-          python3 scripts/ci/ksq-snapshot-slice-r2.py validate --slice-root "$RUNNER_TEMP/r2/$BASE_SLICE_ID"
+          tar -xf "$dir/$BASE_RELEASE_ASSET" -C "$ARCHIVE_ROOT"
+          python3 scripts/ci/ksq-snapshot-slice-r2.py validate --slice-root "$ARCHIVE_ROOT/$BASE_SLICE_ID"
 
       - name: Prove r3 is strict byte-preserving extension of r2
         shell: bash
         run: |
           set -euo pipefail
-          r2="$RUNNER_TEMP/r2/$BASE_SLICE_ID"
-          r3="$RUNNER_TEMP/r3/$SLICE_ID"
+          r2="$ARCHIVE_ROOT/$BASE_SLICE_ID"
+          r3="$ARCHIVE_ROOT/$SLICE_ID"
           cmp -s "$r2/manifests/metadata.tsv" "$r3/manifests/metadata.tsv"
           cmp -s "$r2/manifests/ubuntu-source.tsv" "$r3/manifests/ubuntu-source.tsv"
           cmp -s "$r2/manifests/debian-source.tsv" "$r3/manifests/debian-source.tsv"
@@ -264,7 +266,7 @@ jobs:
           unzip -q "$RUNNER_TEMP/witness-analysis.zip" -d "$RUNNER_TEMP/witness-analysis"
           grep -qx 'AURORA_KSQ_1_WITNESS_INDEPENDENT_ANALYSIS=PASS' "$RUNNER_TEMP/witness-analysis/acceptance.env"
           grep -qx 'AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_STATUS=PROVEN' "$RUNNER_TEMP/witness-analysis/result/status.env"
-          cmp -s "$RUNNER_TEMP/witness-analysis/result/gap-objects.tsv" "$RUNNER_TEMP/r3/$SLICE_ID/manifests/r3-gap.tsv"
+          cmp -s "$RUNNER_TEMP/witness-analysis/result/gap-objects.tsv" "$ARCHIVE_ROOT/$SLICE_ID/manifests/r3-gap.tsv"
           cat > "$RUNNER_TEMP/witness-analysis/analysis-artifact.env" <<EOF
           AURORA_KSQ_1_WITNESS_ANALYSIS_RUN_ID=$ANALYSIS_RUN_ID
           AURORA_KSQ_1_WITNESS_ANALYSIS_HEAD_SHA=$ANALYSIS_HEAD_SHA
@@ -272,7 +274,7 @@ jobs:
           AURORA_KSQ_1_WITNESS_ANALYSIS_ARTIFACT_DIGEST=$ANALYSIS_ARTIFACT_DIGEST
           EOF
           python3 scripts/ci/ksq-snapshot-slice-r3.py validate \
-            --slice-root "$RUNNER_TEMP/r3/$SLICE_ID" \
+            --slice-root "$ARCHIVE_ROOT/$SLICE_ID" \
             --witness-analysis-dir "$RUNNER_TEMP/witness-analysis" \
             | tee build-r3-witness-validation.log
           grep -Fqx 'AURORA_KSQ_SNAPSHOT_R3_VALID' build-r3-witness-validation.log
@@ -285,9 +287,9 @@ jobs:
           mkdir -p "$out"
           cp "$RUNNER_TEMP/publication-evidence/publication.env" "$out/"
           cp "$RUNNER_TEMP/publication-evidence/analysis-artifact.env" "$out/"
-          cp "$RUNNER_TEMP/r3/$SLICE_ID/provenance.env" "$out/r3-provenance.env"
-          cp "$RUNNER_TEMP/r3/$SLICE_ID/manifests/r3-gap.tsv" "$out/r3-gap.tsv"
-          cp "$RUNNER_TEMP/r3/$SLICE_ID/manifests/r3-added-binary.tsv" "$out/r3-added-binary.tsv"
+          cp "$ARCHIVE_ROOT/$SLICE_ID/provenance.env" "$out/r3-provenance.env"
+          cp "$ARCHIVE_ROOT/$SLICE_ID/manifests/r3-gap.tsv" "$out/r3-gap.tsv"
+          cp "$ARCHIVE_ROOT/$SLICE_ID/manifests/r3-added-binary.tsv" "$out/r3-added-binary.tsv"
           cp build-r3-validation.log "$out/"
           cp build-r3-witness-validation.log "$out/"
           cat > "$out/acceptance.env" <<EOF
