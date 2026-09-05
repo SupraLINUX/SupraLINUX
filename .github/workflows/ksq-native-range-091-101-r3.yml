@@ -146,7 +146,14 @@ jobs:
 
           stage_range() {
             local root="$1" range="$2" expected_new="$3" expected_acc="$4"
-            local chunk="$root/build/ksq-1/full/chunk-$range"
+            local chunk= candidate
+            for candidate in "$root" "$root/build"; do
+              if [[ -d "$candidate/ksq-1/full/chunk-$range" ]]; then
+                test -z "$chunk"
+                chunk="$candidate/ksq-1/full/chunk-$range"
+              fi
+            done
+            test -n "$chunk"
             test -d "$chunk/new-debs" && test -f "$chunk/evidence/new-debs.sha256"
             test "$(find "$chunk/new-debs" -maxdepth 1 -type f -name '*.deb' | wc -l)" = "$expected_new"
             (cd "$chunk/new-debs" && sha256sum -c ../evidence/new-debs.sha256)

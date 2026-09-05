@@ -141,7 +141,18 @@ jobs:
           test "$AURORA_KSQ_R3_081_090_ACCUMULATED_DEBS" = "$EXPECTED_PRIOR_DEBS"
           test "$AURORA_KSQ_R3_081_090_NEXT_RANGE" = 91-101
 
-          src="$RUNNER_TEMP/source"; base="$src/build/ksq-1/native-range-091-101-r3"; evidence="$src/build/ksq-1/full/chunk-091-101/evidence"; new="$src/build/ksq-1/full/chunk-091-101/new-debs"
+          src="$RUNNER_TEMP/source"
+          source_root=
+          for candidate in "$src" "$src/build"; do
+            if [[ -d "$candidate/ksq-1/full/chunk-091-101" ]]; then
+              test -z "$source_root"
+              source_root="$candidate"
+            fi
+          done
+          test -n "$source_root"
+          base="$source_root/ksq-1/native-range-091-101-r3"
+          evidence="$source_root/ksq-1/full/chunk-091-101/evidence"
+          new="$source_root/ksq-1/full/chunk-091-101/new-debs"
           source "$base/audit.env"
           test "$AURORA_NATIVE_RANGE_091_101_R3_STATUS" = PASS
           test "$AURORA_NATIVE_RANGE_091_101_R3_COMMAND_RC" = 0
