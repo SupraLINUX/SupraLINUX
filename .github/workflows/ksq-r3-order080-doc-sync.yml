@@ -1,0 +1,141 @@
+name: Aurora KSQ r3 order-080 documentation sync
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/ksq-r3-order080-doc-sync.trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Synchronize accepted order-080 state
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(text: str, old: str, new: str, label: str) -> str:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected one match, found {count}')
+              return text.replace(old, new)
+
+          active = Path('docs/validation/AURORA_KSQ_1_ACTIVE_STATUS.md')
+          t = active.read_text(encoding='utf-8')
+          t = replace_once(t, '## Accepted maintained checkpoint chain through order 65', '## Accepted maintained checkpoint chain through order 80', 'active heading')
+          t = replace_once(
+              t,
+              'The formally accepted candidate checkpoint remains **order 65 / 295 accumulated DEBs** until a later local-only range receives its own independent acceptance.',
+              'The accepted 1–65 chain remains valid under the proven r3 regression. The independently accepted r3 range 66–80 below advances the maintained checkpoint to **order 80 / 345 accumulated DEBs**.',
+              'active checkpoint sentence')
+          start = '## Orders 066–080 — current local-only gate\n'
+          end = '## Reproducibility contract\n'
+          if t.count(start) != 1 or t.count(end) != 1:
+              raise SystemExit('active range section markers are not unique')
+          replacement = '''## Orders 066–080 — ACCEPTED on r3
+
+The complete local-only range and its separate fail-closed acceptance are PASS.
+
+Source-build evidence:
+
+- run `33973287438`;
+- source HEAD `e812059c50f8f1def9a1a18489840bbee1762231`;
+- artifact `9972463409`;
+- digest `sha256:e1c9dccad9164a8e8445ff2487fc17d61c55816bfa3c22da385c336cca3feda5`;
+- 15/15 sources PASS;
+- 50 new DEBs;
+- accumulated DEBs: `345`;
+- packaging adaptations: `0`;
+- external APT HTTP(S) during source builds: `0`;
+- relevant AppArmor denials: `0`;
+- Docker/custom AppArmor/uidmap-filecap hacks: `0/0/0`.
+
+Independent acceptance:
+
+- run `33978315934`;
+- acceptance HEAD `2772d36a07722d142ed37c5fe8295d1b64d8a1d7`;
+- artifact `9972976872`;
+- digest `sha256:ebd60471d9834efbb4fad9f5680c6a153000aa8b9393f4821a70ff148edc2511`;
+- `evidence.sha256`: PASS after independent download/extraction;
+- accepted checkpoint: **order 80 / 345 DEBs**.
+
+Order 68 `drkonqi` built normally and is included in the accepted dependency checkpoint, but its dedicated reproducibility obligation remains explicitly **NOT CERTIFIED**.
+
+Detailed record: `docs/validation/AURORA_KSQ_1_RANGE_066_080_R3.md`.
+
+The two earlier pre-build red runs remain classified as tooling failures: `33965423386` exposed host APT fragment leakage and `33972965871` exposed an ephemeral `build/ksq-0/canonical` assumption. Neither built a source or demonstrated a product/snapshot defect.
+
+## Orders 081–090 — current local-only gate
+
+Range 81–90 is active from the exact independently accepted order-80 checkpoint. Its maintained workflow consumes both the accepted-080 evidence artifact and the exact 66–80 source artifact, reconstructs the complete 345-DEB predecessor state, validates immutable r3 again and rebuilds orders 81–90 with the same local-only unshare/sbuild network-isolation contract.
+
+Current run: `33978550975` on source HEAD `8b54e2aa98e7df0d82a09b0d840cd2163913c409`.
+
+Order 81 `kf6-ktexteditor` may pass its normal range build without satisfying its later dedicated reproducibility requirement.
+
+'''
+          i = t.index(start); j = t.index(end)
+          t = t[:i] + replacement + t[j:]
+          t = replace_once(t, '- maintained accepted checkpoint: **order 65 / 295 DEBs**;', '- maintained accepted checkpoint: **order 80 / 345 DEBs**;', 'active state checkpoint')
+          t = replace_once(t, '- orders 066–080: **LOCAL-ONLY BUILD ACTIVE / NOT ACCEPTED**;\n- orders 081–101: **NOT ACCEPTED**;', '- orders 066–080: **PASS / INDEPENDENTLY ACCEPTED**;\n- orders 081–090: **LOCAL-ONLY BUILD ACTIVE / NOT ACCEPTED**;\n- orders 091–101: **NOT ACCEPTED**;', 'active state ranges')
+          active.write_text(t, encoding='utf-8')
+
+          qual = Path('docs/KDE_STACK_QUALIFICATION.md')
+          q = qual.read_text(encoding='utf-8')
+          old = 'Orders 66–80 are now unblocked. No packaging adaptation is declared for any source in that range, so its range gate must require zero applied adaptations for all 15 sources. Order 68 `drkonqi` may be built there for dependency progress, but its later dedicated reproducibility rebuild remains mandatory under the 95+6 contract.'
+          new = '''Orders 66–80 are now **independently accepted on immutable r3**. Source-build run `33973287438` produced 15/15 PASS, 50 new DEBs and 345 accumulated DEBs with zero range adaptations, zero external build APT HTTP(S), zero relevant AppArmor denials and no Docker/custom-AppArmor/uidmap-filecap workaround. Independent acceptance run `33978315934`, artifact `9972976872`, digest `sha256:ebd60471d9834efbb4fad9f5680c6a153000aa8b9393f4821a70ff148edc2511`, promotes the maintained checkpoint to **order 80 / 345 DEBs**. Detailed evidence is `docs/validation/AURORA_KSQ_1_RANGE_066_080_R3.md`.
+
+Order 68 `drkonqi` has a normal-build PASS only; its dedicated reproducibility rebuild remains mandatory under the 95+6 contract. Orders 81–90 are now the active local-only range from the exact independently accepted order-80 checkpoint.'''
+          q = replace_once(q, old, new, 'qualification range paragraph')
+          qual.write_text(q, encoding='utf-8')
+
+          r3 = Path('docs/validation/AURORA_KSQ_1_R3_SLICE_AND_REGRESSION.md')
+          r = r3.read_text(encoding='utf-8')
+          r = replace_once(r, 'Status: **r3 MATERIALIZED / INDEPENDENTLY VALIDATED — accepted-order-65 regression PASS**', 'Status: **r3 MATERIALIZED / INDEPENDENTLY VALIDATED — accepted-order-65 regression PASS — downstream order 80 accepted**', 'r3 status')
+          r = replace_once(r, 'This record covers creation of the corrective Ubuntu payload slice `20260829T022000Z-r3` and the regression required before any later KSQ-1 range may consume it. It does not accept orders 66–101 and does not close KSQ-1.', 'This record covers creation of the corrective Ubuntu payload slice `20260829T022000Z-r3` and the regression required before later KSQ-1 ranges may consume it. Downstream range 66–80 has since received its own independent acceptance; see `docs/validation/AURORA_KSQ_1_RANGE_066_080_R3.md`. Orders 81–101 remain outside this record, and KSQ-1 is not closed.', 'r3 intro')
+          start = '## 10. Downstream authorization boundary\n'
+          end = '## 11. Gate state after r3 regression\n'
+          if r.count(start) != 1 or r.count(end) != 1:
+              raise SystemExit('r3 downstream markers are not unique')
+          replacement = '''## 10. Downstream authorization boundary
+
+The r3 regression authorized later ranges to test from the accepted order-65 state; it did not itself promote them. Range 66–80 has now separately completed both required stages:
+
+- local-only source-build run `33973287438`: 15/15 PASS, 50 new DEBs, 345 accumulated DEBs;
+- independent acceptance run `33978315934`: PASS, artifact `9972976872`, digest `sha256:ebd60471d9834efbb4fad9f5680c6a153000aa8b9393f4821a70ff148edc2511`.
+
+The maintained checkpoint is therefore **order 80 / 345 DEBs**. The next authorized range is 81–90, and it must consume the exact accepted-080 plus source-artifact provenance rather than reconstruct a new implicit predecessor.
+
+Order 68 `drkonqi` remains normal-build PASS / dedicated reproducibility **NOT CERTIFIED**.
+
+'''
+          i = r.index(start); j = r.index(end)
+          r = r[:i] + replacement + r[j:]
+          r = replace_once(r, '- accepted KSQ-1 checkpoint: **order 65 / 295 DEBs**;', '- accepted KSQ-1 checkpoint: **order 80 / 345 DEBs**;', 'r3 state checkpoint')
+          r = replace_once(r, '- orders 66–80: **NOT ACCEPTED until local-only build + independent acceptance**;\n- orders 81–101: **NOT ACCEPTED**;', '- orders 66–80: **PASS / independently accepted**;\n- orders 81–90: **ACTIVE local-only range / not accepted**;\n- orders 91–101: **NOT ACCEPTED**;', 'r3 state ranges')
+          r3.write_text(r, encoding='utf-8')
+          PY
+          git diff --check
+          git diff -- docs/validation/AURORA_KSQ_1_ACTIVE_STATUS.md docs/KDE_STACK_QUALIFICATION.md docs/validation/AURORA_KSQ_1_R3_SLICE_AND_REGRESSION.md
+
+      - name: Commit synchronized documentation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/validation/AURORA_KSQ_1_ACTIVE_STATUS.md docs/KDE_STACK_QUALIFICATION.md docs/validation/AURORA_KSQ_1_R3_SLICE_AND_REGRESSION.md
+          test "$(git diff --cached --name-only | wc -l)" -eq 3
+          git commit -m 'docs(ksq): advance maintained checkpoint to order 80'
+          git push origin HEAD:feature/kde-stack-qualification
