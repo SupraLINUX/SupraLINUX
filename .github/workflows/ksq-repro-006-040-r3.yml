@@ -1,0 +1,276 @@
+name: Aurora KSQ-1 reproducibility 006-040 r3
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/ksq-r3-repro-006-040-trigger.env'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: aurora-ksq-repro-006-040-r3
+  cancel-in-progress: false
+
+jobs:
+  repro-006-040-r3:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Qualify runner and exact candidate inputs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          source .github/ksq-r3-repro-006-040-trigger.env
+          test "$AURORA_KSQ_R3_REPRO_006_040_SLICE_ID" = 20260829T022000Z-r3
+          test "$AURORA_KSQ_R3_REPRO_006_040_FIRST_ORDER" = 6
+          test "$AURORA_KSQ_R3_REPRO_006_040_LAST_ORDER" = 40
+          test "$AURORA_KSQ_R3_REPRO_006_040_SOURCE_PREP_UMASK" = 0002
+          test "$AURORA_KSQ_R3_REPRO_006_040_CANDIDATE_001_020_RUN_ID" = 33546093974
+          test "$AURORA_KSQ_R3_REPRO_006_040_CANDIDATE_001_020_ARTIFACT_ID" = 9818465016
+          test "$AURORA_KSQ_R3_REPRO_006_040_CANDIDATE_021_040_RUN_ID" = 33561782526
+          test "$AURORA_KSQ_R3_REPRO_006_040_CANDIDATE_021_040_ARTIFACT_ID" = 9824689982
+          base=build/ksq-1/repro-006-040-r3
+          mkdir -p "$base/host-evidence"
+          date --iso-8601=seconds > "$base/host-evidence/start-time.txt"
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl python3 ubuntu-keyring gpgv jq unzip \
+            sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
+            gzip xz-utils diffutils build-essential apparmor apparmor-utils libcap2-bin
+          dpkg-query -W -f='${Package}\t${Version}\n' sbuild libsbuild-perl mmdebstrap uidmap util-linux apparmor | sort | tee "$base/host-evidence/toolchain.tsv"
+          grep -q $'^sbuild\t0.91.2ubuntu3$' "$base/host-evidence/toolchain.tsv"
+          grep -q $'^libsbuild-perl\t0.91.2ubuntu3$' "$base/host-evidence/toolchain.tsv"
+          grep -q $'^mmdebstrap\t1.5.7-3$' "$base/host-evidence/toolchain.tsv"
+          test "$(stat -c '%a' /usr/bin/newuidmap)" = 4755
+          test "$(stat -c '%a' /usr/bin/newgidmap)" = 4755
+          test -z "$(getcap /usr/bin/newuidmap /usr/bin/newgidmap || true)"
+
+          prove_artifact() {
+            local run="$1" head="$2" artifact="$3" name="$4" digest="$5" size="$6" prefix="$7"
+            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$run" > "$base/${prefix}-run.json"
+            test "$(jq -r '.status' "$base/${prefix}-run.json")" = completed
+            test "$(jq -r '.conclusion' "$base/${prefix}-run.json")" = success
+            test "$(jq -r '.head_sha' "$base/${prefix}-run.json")" = "$head"
+            gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact" > "$base/${prefix}-artifact.json"
+            test "$(jq -r '.name' "$base/${prefix}-artifact.json")" = "$name"
+            test "$(jq -r '.expired' "$base/${prefix}-artifact.json")" = false
+            test "$(jq -r '.digest' "$base/${prefix}-artifact.json")" = "$digest"
+            test "$(jq -r '.size_in_bytes' "$base/${prefix}-artifact.json")" = "$size"
+            test "$(jq -r '.workflow_run.id' "$base/${prefix}-artifact.json")" = "$run"
+            test "$(jq -r '.workflow_run.head_sha' "$base/${prefix}-artifact.json")" = "$head"
+          }
+          prove_artifact 33546093974 05615aa0bfca4c6bee5a0d520f7332cb6bc5506e 9818465016 aurora-ksq-1-local-range-001-020 sha256:0eb45c7938b84db35ee734591622a6c621709117100d29376c01323ca0ab14ba 163328618 candidate001020
+          prove_artifact 33561782526 d8fa7e6e26f002bc6ca94d04bbda8097e19607b6 9824689982 aurora-ksq-1-local-range-021-040 sha256:08dffb19fe6d3fda5b8079ed862d3215440cfabaf51a249f79b5af49d3539d8e 12667773 candidate021040
+
+      - name: Download exact candidate 001-020
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9818465016
+          path: ${{ runner.temp }}/candidate-001-020
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33546093974
+          digest-mismatch: error
+
+      - name: Download exact candidate 021-040
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9824689982
+          path: ${{ runner.temp }}/candidate-021-040
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33561782526
+          digest-mismatch: error
+
+      - name: Validate candidate chain and stage exact orders 001-005 dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/repro-006-040-r3
+          cat > "$base/candidate-checkpoint-spec.json" <<EOF
+          [
+            {"root":"$RUNNER_TEMP/candidate-001-020","first_order":1,"last_order":20,"run_id":33546093974,"artifact_id":9818465016,"artifact_digest":"sha256:0eb45c7938b84db35ee734591622a6c621709117100d29376c01323ca0ab14ba","new_debs":103,"accumulated_debs":103,"new_debs_manifest_sha256":"b0be04014893808a79aaea514e2a5c4bc968b5c9c9769d8d7ea6cae7992b01f9","build_manifest_sha256":"ff87f96c85bc4ba1553f16b3700cf701eca04e9b749a1c739bb1088cceb3485b"},
+            {"root":"$RUNNER_TEMP/candidate-021-040","first_order":21,"last_order":40,"run_id":33561782526,"artifact_id":9824689982,"artifact_digest":"sha256:08dffb19fe6d3fda5b8079ed862d3215440cfabaf51a249f79b5af49d3539d8e","new_debs":89,"accumulated_debs":192,"new_debs_manifest_sha256":"3924d0151581a53f505ca8cd0a615b4ffee9c246afeabec003633905db159bfa","build_manifest_sha256":"6e121efdeb62b8c0c6c48ae14f60e41e452e16fe177f03536f1c2677848b111a"}
+          ]
+          EOF
+          python3 scripts/ci/restore-ksq-1-checkpoint-chain.py \
+            --spec "$base/candidate-checkpoint-spec.json" \
+            --target "$RUNNER_TEMP/candidate-001-040-debs" \
+            --evidence "$base/candidate-chain-evidence"
+          grep -qx 'AURORA_KSQ_1_CHECKPOINT_CHAIN=PASS' "$base/candidate-chain-evidence/checkpoint-status.env"
+          grep -qx 'AURORA_KSQ_1_CHECKPOINT_LAST_ORDER=40' "$base/candidate-chain-evidence/checkpoint-status.env"
+          grep -qx 'AURORA_KSQ_1_CHECKPOINT_DEBS=192' "$base/candidate-chain-evidence/checkpoint-status.env"
+
+          rm -rf build/ksq-1/full
+          mkdir -p build/ksq-1/full/debs
+          python3 - "$RUNNER_TEMP/candidate-001-020" "$RUNNER_TEMP/candidate-001-040-debs" build/ksq-1/full/debs "$base/preseed-001-005.tsv" <<'PY'
+          import csv,hashlib,shutil,sys
+          from pathlib import Path
+          root,merged,target,out=map(Path,sys.argv[1:])
+          indexes=list(root.rglob('binary-packages.tsv'))
+          if len(indexes)!=1: raise SystemExit(f'001-020 binary index cardinality {len(indexes)}')
+          with indexes[0].open(newline='',encoding='utf-8') as f: rows=[r for r in csv.DictReader(f,delimiter='\t') if 1<=int(r['order'])<=5]
+          if {int(r['order']) for r in rows}!={1,2,3,4,5}: raise SystemExit('001-005 source coverage mismatch')
+          names=[r['filename'] for r in rows]
+          if len(names)!=len(set(names)): raise SystemExit('duplicate 001-005 binary filename')
+          target.mkdir(parents=True,exist_ok=True)
+          with out.open('w',newline='',encoding='utf-8') as f:
+              w=csv.writer(f,delimiter='\t',lineterminator='\n'); w.writerow(['order','source_package','binary_package','filename','sha256'])
+              for r in sorted(rows,key=lambda x:(int(x['order']),x['binary_package'])):
+                  src=merged/r['filename']; dst=target/r['filename']
+                  if not src.is_file(): raise SystemExit(f'missing preseed {src}')
+                  shutil.copy2(src,dst)
+                  h=hashlib.sha256(src.read_bytes()).hexdigest()
+                  w.writerow([r['order'],r['source_package'],r['binary_package'],r['filename'],h])
+          print(f'AURORA_KSQ_R3_REPRO_006_040_PRESEED_DEBS={len(rows)}')
+          PY
+          test "$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" = 12
+          test "$(awk 'END{print NR-1}' "$base/preseed-001-005.tsv")" = 12
+
+      - name: Download and validate exact immutable r3 release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          v="$RUNNER_TEMP/r3-validation"; mkdir -p "$v"
+          curl --fail --location --retry 5 --retry-all-errors -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/9969086882/zip" -o "$v.zip"
+          unzip -q "$v.zip" -d "$v"
+          (cd "$v" && sha256sum -c evidence.sha256)
+          source "$v/acceptance.env"
+          test "$AURORA_KSQ_SNAPSHOT_R3_INDEPENDENT_VALIDATION" = PASS
+          source "$v/publication.env"
+          test "$AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET_SHA256" = cb904b478afe186b96823b1b2872d5937517e3de10c6d2dd3170ec29fea09bc6
+          release="$RUNNER_TEMP/r3-release"; mkdir -p "$release"
+          gh release download "$AURORA_KSQ_SNAPSHOT_R3_RELEASE_TAG" -R "$GITHUB_REPOSITORY" -p "$AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET" -p "$AURORA_KSQ_SNAPSHOT_R3_RELEASE_MANIFEST" -D "$release"
+          test "$(sha256sum "$release/$AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET" | awk '{print $1}')" = "$AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET_SHA256"
+          sudo install -d -o "$(id -u)" -g "$(id -g)" -m 0755 /opt/supralinux/archive
+          tar -xf "$release/$AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET" -C /opt/supralinux/archive
+          python3 scripts/ci/ksq-snapshot-slice-r3.py validate --slice-root /opt/supralinux/archive/20260829T022000Z-r3
+
+      - name: Recreate current local-only build environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/repro-006-040-r3
+          slice=/opt/supralinux/archive/20260829T022000Z-r3
+          AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" bash scripts/ci/prepare-ksq-1-local-apt-metadata.sh 2>&1 | tee "$base/local-apt-metadata.log"
+          grep -q '^AURORA_KSQ_1_LOCAL_APT_HOST_FRAGMENTS=disabled$' "$base/local-apt-metadata.log"
+          grep -q '^AURORA_KSQ_1_LOCAL_APT_SUCCESS$' "$base/local-apt-metadata.log"
+          ! grep -Eq 'c-n-f|/cnf/|Components' "$base/local-apt-metadata.log"
+          ! grep -Eq '^(Get|Hit|Ign|Err):[0-9]+ https?://' "$base/local-apt-metadata.log"
+          python3 scripts/ci/generate-kde-build-closure.py
+          test "$(sha256sum build/ksq-0/build-order.tsv | awk '{print $1}')" = 9c53547df78a9f7c740228aba09490dfdb68e6307d2200e12ebf907dfa3fcb88
+          AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" bash scripts/ci/prepare-ksq-1-local-build-environment.sh 2>&1 | tee "$base/mmdebstrap-buildd.log"
+          grep -q '^AURORA_KSQ_1_LOCAL_BUILD_ENV_SUCCESS$' "$base/mmdebstrap-buildd.log"
+          ! grep -Eq '^(Get|Hit|Ign|Err):[0-9]+ https?://' "$base/mmdebstrap-buildd.log"
+          bash scripts/ci/configure-ksq-1-native-sbuild-network-proof.sh 2>&1 | tee "$base/network-proof-config.log"
+          grep -qx 'AURORA_KSQ_1_NATIVE_NETWORK_PROOF=PASS' build/ksq-1/environment/native-sbuild-network-proof.env
+
+      - name: Independently rebuild orders 006-040 with explicit candidate source umask
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/repro-006-040-r3
+          source .github/ksq-r3-repro-006-040-trigger.env
+          umask "$AURORA_KSQ_R3_REPRO_006_040_SOURCE_PREP_UMASK"
+          test "$(umask)" = 0002
+          printf 'AURORA_KSQ_1_REPRO_SOURCE_PREP_UMASK=%s\n' "$(umask)" | tee "$base/source-preparation.env"
+          source build/ksq-1/environment/build-environment.env
+          export SBUILD_CONFIG="$AURORA_KSQ_1_SBUILD_CONFIG"
+          set +e
+          bash scripts/ci/build-ksq-1-range.sh 6 40 2>&1 | tee "$base/range.log"
+          ps=("${PIPESTATUS[@]}")
+          set -e
+          printf 'AURORA_KSQ_R3_REPRO_006_040_COMMAND_RC=%s\nAURORA_KSQ_R3_REPRO_006_040_TEE_RC=%s\n' "${ps[0]}" "${ps[1]}" > "$base/range-command.env"
+          exit 0
+
+      - name: Audit strict source and binary reproducibility
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/repro-006-040-r3
+          status=FAIL; command_rc=missing; tee_rc=missing
+          start="$(cat "$base/host-evidence/start-time.txt")"
+          sudo journalctl -k --since "$start" --no-pager 2>/dev/null | grep 'apparmor="DENIED"' > "$base/host-evidence/apparmor-denied-all.log" || true
+          grep -Ei 'profile="[^\"]*(sbuild|mmdebstrap|unprivileged_userns)[^\"]*"|comm="(sbuild|mmdebstrap|unshare|mount|newuidmap|newgidmap)"' "$base/host-evidence/apparmor-denied-all.log" > "$base/host-evidence/apparmor-denied-relevant.log" || true
+          denials="$(wc -l < "$base/host-evidence/apparmor-denied-relevant.log")"
+          if [[ -f "$base/range-command.env" ]]; then source "$base/range-command.env"; command_rc="$AURORA_KSQ_R3_REPRO_006_040_COMMAND_RC"; tee_rc="$AURORA_KSQ_R3_REPRO_006_040_TEE_RC"; fi
+          chunk=build/ksq-1/full/chunk-006-040
+          if [[ "$command_rc" == 0 && "$tee_rc" == 0 && "$denials" -eq 0 && -f "$chunk/evidence/range-status.env" ]]; then
+            grep -qx 'AURORA_KSQ_1_RANGE_STATUS=PASS' "$chunk/evidence/range-status.env"
+            grep -qx 'AURORA_KSQ_1_RANGE_FIRST_ORDER=6' "$chunk/evidence/range-status.env"
+            grep -qx 'AURORA_KSQ_1_RANGE_LAST_ORDER=40' "$chunk/evidence/range-status.env"
+            grep -qx 'AURORA_KSQ_1_RANGE_SOURCES=35' "$chunk/evidence/range-status.env"
+            test "$(find "$chunk/new-debs" -maxdepth 1 -type f -name '*.deb' | wc -l)" = 180
+            test "$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" = 192
+            (cd "$chunk/new-debs" && sha256sum -c ../evidence/new-debs.sha256)
+            python3 scripts/ci/validate-ksq-1-repro-range.py \
+              --first 6 --last 40 \
+              --candidate-root "$RUNNER_TEMP/candidate-001-020" \
+              --candidate-root "$RUNNER_TEMP/candidate-021-040" \
+              --rebuilt-root "$chunk" \
+              --output "$base/proof"
+            grep -qx 'AURORA_KSQ_1_REPRO_RANGE_STATUS=PASS' "$base/proof/status.env"
+            grep -q $'^29\tkf6-syntax-highlighting\t' "$base/proof/source-proof.tsv"
+            grep -q 'kf6-syntax-highlighting-deterministic-jinja-order' "$base/proof/source-proof.tsv"
+            cat > "$base/order29-dedicated.env" <<EOF
+          AURORA_KSQ_1_REPRO_ORDER29_DEDICATED=PASS
+          AURORA_KSQ_1_REPRO_ORDER29_SOURCE=kf6-syntax-highlighting
+          AURORA_KSQ_1_REPRO_ORDER29_SOURCE_IDENTITY=PASS
+          AURORA_KSQ_1_REPRO_ORDER29_BINARY_IDENTITY=PASS
+          EOF
+            status=PASS
+          fi
+          {
+            echo "AURORA_KSQ_R3_REPRO_006_040_STATUS=$status"
+            echo "AURORA_KSQ_R3_REPRO_006_040_COMMAND_RC=$command_rc"
+            echo "AURORA_KSQ_R3_REPRO_006_040_TEE_RC=$tee_rc"
+            echo "AURORA_KSQ_R3_REPRO_006_040_APPARMOR_DENIALS=$denials"
+            echo "AURORA_KSQ_R3_REPRO_006_040_SOURCE_PREP_UMASK=0002"
+            echo "AURORA_KSQ_R3_REPRO_006_040_DOCKER_USED=0"
+            echo "AURORA_KSQ_R3_REPRO_006_040_CUSTOM_APPARMOR_USED=0"
+            echo "AURORA_KSQ_R3_REPRO_006_040_UIDMAP_FILECAP_PATCH_USED=0"
+            echo "AURORA_KSQ_1_FULL_CERTIFIED=no"
+          } | tee "$base/audit.env"
+
+      - name: Upload reproducibility evidence 006-040
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-repro-006-040-r3
+          path: |
+            build/ksq-1/repro-006-040-r3/
+            build/ksq-1/full/chunk-006-040/evidence/
+            build/ksq-1/full/chunk-006-040/new-debs/
+            build/ksq-0/build-order.tsv
+            build/ksq-0/closure-status.env
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Enforce reproducibility gate 006-040
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/repro-006-040-r3
+          cat "$base/audit.env"
+          grep -qx 'AURORA_KSQ_R3_REPRO_006_040_STATUS=PASS' "$base/audit.env"
+          grep -qx 'AURORA_KSQ_R3_REPRO_006_040_APPARMOR_DENIALS=0' "$base/audit.env"
+          grep -qx 'AURORA_KSQ_R3_REPRO_006_040_SOURCE_PREP_UMASK=0002' "$base/audit.env"
+          grep -qx 'AURORA_KSQ_R3_REPRO_006_040_DOCKER_USED=0' "$base/audit.env"
+          grep -qx 'AURORA_KSQ_R3_REPRO_006_040_CUSTOM_APPARMOR_USED=0' "$base/audit.env"
+          grep -qx 'AURORA_KSQ_R3_REPRO_006_040_UIDMAP_FILECAP_PATCH_USED=0' "$base/audit.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_RANGE_STATUS=PASS' "$base/proof/status.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_ORDER29_DEDICATED=PASS' "$base/order29-dedicated.env"
