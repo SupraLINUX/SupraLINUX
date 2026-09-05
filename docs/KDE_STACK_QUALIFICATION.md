@@ -269,7 +269,9 @@ This order-65 gate certifies package relationships, the complete local installat
 
 Canonical detailed record: `docs/validation/AURORA_KSQ_1_RANGE_061_065_KWALLET.md`.
 
-Orders 66–80 are now unblocked. No packaging adaptation is declared for any source in that range, so its range gate must require zero applied adaptations for all 15 sources. Order 68 `drkonqi` may be built there for dependency progress, but its later dedicated reproducibility rebuild remains mandatory under the 95+6 contract.
+Orders 66–80 are now **independently accepted on immutable r3**. Source-build run `33973287438` produced 15/15 PASS, 50 new DEBs and 345 accumulated DEBs with zero range adaptations, zero external build APT HTTP(S), zero relevant AppArmor denials and no Docker/custom-AppArmor/uidmap-filecap workaround. Independent acceptance run `33978315934`, artifact `9972976872`, digest `sha256:ebd60471d9834efbb4fad9f5680c6a153000aa8b9393f4821a70ff148edc2511`, promotes the maintained checkpoint to **order 80 / 345 DEBs**. Detailed evidence is `docs/validation/AURORA_KSQ_1_RANGE_066_080_R3.md`.
+
+Order 68 `drkonqi` has a normal-build PASS only; its dedicated reproducibility rebuild remains mandatory under the 95+6 contract. Orders 81–90 are now the active local-only range from the exact independently accepted order-80 checkpoint.
 
 ##### Reproducibility acceptance plan
 

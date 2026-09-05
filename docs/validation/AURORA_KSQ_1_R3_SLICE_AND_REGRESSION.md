@@ -1,8 +1,8 @@
 # Aurora KSQ-1 — immutable r3 slice and accepted-order-65 regression
 
-Status: **r3 MATERIALIZED / INDEPENDENTLY VALIDATED — accepted-order-65 regression PASS**
+Status: **r3 MATERIALIZED / INDEPENDENTLY VALIDATED — accepted-order-65 regression PASS — downstream order 80 accepted**
 
-This record covers creation of the corrective Ubuntu payload slice `20260829T022000Z-r3` and the regression required before any later KSQ-1 range may consume it. It does not accept orders 66–101 and does not close KSQ-1.
+This record covers creation of the corrective Ubuntu payload slice `20260829T022000Z-r3` and the regression required before later KSQ-1 ranges may consume it. Downstream range 66–80 has since received its own independent acceptance; see `docs/validation/AURORA_KSQ_1_RANGE_066_080_R3.md`. Orders 81–101 remain outside this record, and KSQ-1 is not closed.
 
 ## 1. Fixed input
 
@@ -195,27 +195,14 @@ A second pre-build run `33972965871` then failed only because its workflow compa
 
 ## 10. Downstream authorization boundary
 
-The accepted KSQ-1 checkpoint remains **order 65 / 295 DEBs** until the next real local-only range receives independent acceptance.
+The r3 regression authorized later ranges to test from the accepted order-65 state; it did not itself promote them. Range 66–80 has now separately completed both required stages:
 
-The current 66–80 path must prove all of the following before checkpoint promotion:
+- local-only source-build run `33973287438`: 15/15 PASS, 50 new DEBs, 345 accumulated DEBs;
+- independent acceptance run `33978315934`: PASS, artifact `9972976872`, digest `sha256:ebd60471d9834efbb4fad9f5680c6a153000aa8b9393f4821a70ff148edc2511`.
 
-- exact independently validated r3 provenance;
-- exact accepted-order-65 r3 regression provenance;
-- 15/15 source builds PASS;
-- `sbuild --no-enable-network` for every build;
-- isolated network namespace evidence in every `.build` log;
-- zero external HTTP package transport during source builds;
-- zero relevant AppArmor denials;
-- zero Docker/custom AppArmor/uidmap-filecap hacks;
-- zero new packaging adaptations in orders 66–80;
-- correct source/build/binary manifests and hashes;
-- independent post-build acceptance artifact.
+The maintained checkpoint is therefore **order 80 / 345 DEBs**. The next authorized range is 81–90, and it must consume the exact accepted-080 plus source-artifact provenance rather than reconstruct a new implicit predecessor.
 
-Order 68 `drkonqi` may pass its normal range build without satisfying its separate reproducibility obligation.
-
-`DRKONQI_REPRODUCIBILITY_CERTIFIED=no`
-
-remains mandatory until its dedicated independent rebuild proof passes.
+Order 68 `drkonqi` remains normal-build PASS / dedicated reproducibility **NOT CERTIFIED**.
 
 ## 11. Gate state after r3 regression
 
@@ -224,11 +211,12 @@ remains mandatory until its dedicated independent rebuild proof passes.
 - witness gap: **3 objects / 547318 bytes**;
 - r3: **MATERIALIZED / INDEPENDENTLY VALIDATED**;
 - r3 accepted-order-65 regression: **PASS**;
-- accepted KSQ-1 checkpoint: **order 65 / 295 DEBs**;
+- accepted KSQ-1 checkpoint: **order 80 / 345 DEBs**;
 - KWallet regression under r3: **PASS**;
 - KWallet auto-unlock: **NOT CERTIFIED**;
-- orders 66–80: **NOT ACCEPTED until local-only build + independent acceptance**;
-- orders 81–101: **NOT ACCEPTED**;
+- orders 66–80: **PASS / independently accepted**;
+- orders 81–90: **ACTIVE local-only range / not accepted**;
+- orders 91–101: **NOT ACCEPTED**;
 - KSQ-1: **ACTIVE / NOT CERTIFIED**;
 - KSQ-2: **BLOCKED**;
 - C4.1: **PAUSED**.

@@ -43,7 +43,7 @@ Slice `20260829T022000Z-r2` remains immutable historical evidence:
 
 Independent r2 publication validation remains PASS. r2 remains the exact slice originally used by the accepted builds through order 65, but it is now **proven insufficient as a universal payload closure for all real 101-source sbuild contexts**. It must never be mutated.
 
-## Accepted maintained checkpoint chain through order 65
+## Accepted maintained checkpoint chain through order 80
 
 ### Orders 001–020
 
@@ -102,7 +102,7 @@ Independent fail-closed acceptance:
 - digest `sha256:50c33e99c7593ce6b8d4a67c8ee11c1598ad93545ed362078a57410c4a892730`;
 - SUCCESS.
 
-The formally accepted candidate checkpoint remains **order 65 / 295 accumulated DEBs** until a later local-only range receives its own independent acceptance.
+The accepted 1–65 chain remains valid under the proven r3 regression. The independently accepted r3 range 66–80 below advances the maintained checkpoint to **order 80 / 345 accumulated DEBs**.
 
 Detailed record: `docs/validation/AURORA_KSQ_1_RANGE_061_065_KWALLET.md`.
 
@@ -222,31 +222,46 @@ This proves that a complete 1–65 source rebuild is not required solely because
 
 KWallet automatic session unlock remains **NOT CERTIFIED**; this regression does not broaden its certification scope.
 
-## Orders 066–080 — current local-only gate
+## Orders 066–080 — ACCEPTED on r3
 
-Orders 66–80 are still **NOT ACCEPTED** until the full local-only range and its independent acceptance pass.
+The complete local-only range and its separate fail-closed acceptance are PASS.
 
-Two pre-build tooling failures were isolated without building any source:
-
-1. run `33965423386`: host `/etc/apt/apt.conf.d` command-not-found configuration leaked into the supposedly isolated APT invocation and requested `cnf/Commands-amd64`; this was a local APT configuration-isolation defect, not missing r3 build payload;
-2. run `33972965871`: after APT isolation was fixed and proved PASS, the workflow referenced non-versioned ephemeral `build/ksq-0/canonical/*` files that do not exist in a clean checkout; this was a workflow baseline-materialization defect, not DAG drift.
-
-APT isolation was fixed in commit `1f034d99c604a11918a673db9a9e49e9d717221a` by setting `Dir::Etc::Parts` and `Dir::Etc::main` in the early `APT_CONFIG` preload itself. The helper now proves `AURORA_KSQ_1_LOCAL_APT_HOST_FRAGMENTS=disabled`.
-
-The range gate was then made self-contained/provenance-safe in commit `f33a8a587461b3b6208f12abfc8e0c97b17a3e7c`: it consumes the exact independent r3 validation artifact and exact accepted-065 r3 regression artifact, regenerates the certified DAG in a clean checkout, recreates local-only APT/buildd state and fails closed on network/AppArmor/adaptation evidence.
-
-Current real local-only 66–80 run:
+Source-build evidence:
 
 - run `33973287438`;
 - source HEAD `e812059c50f8f1def9a1a18489840bbee1762231`;
-- r3 validation provenance: PASS;
-- accepted-065 r3 regression provenance: PASS;
-- exact order-65 restore: PASS;
-- exact r3 release validation: PASS;
-- isolated APT + unshare build environment: PASS;
-- source build range 66–80: **IN PROGRESS / NOT YET ACCEPTED** at the time of this status update.
+- artifact `9972463409`;
+- digest `sha256:e1c9dccad9164a8e8445ff2487fc17d61c55816bfa3c22da385c336cca3feda5`;
+- 15/15 sources PASS;
+- 50 new DEBs;
+- accumulated DEBs: `345`;
+- packaging adaptations: `0`;
+- external APT HTTP(S) during source builds: `0`;
+- relevant AppArmor denials: `0`;
+- Docker/custom AppArmor/uidmap-filecap hacks: `0/0/0`.
 
-A separate independent acceptance workflow is prepared and remains inactive until a successful source artifact exists. No source in 66–80 is accepted merely because the build workflow becomes green.
+Independent acceptance:
+
+- run `33978315934`;
+- acceptance HEAD `2772d36a07722d142ed37c5fe8295d1b64d8a1d7`;
+- artifact `9972976872`;
+- digest `sha256:ebd60471d9834efbb4fad9f5680c6a153000aa8b9393f4821a70ff148edc2511`;
+- `evidence.sha256`: PASS after independent download/extraction;
+- accepted checkpoint: **order 80 / 345 DEBs**.
+
+Order 68 `drkonqi` built normally and is included in the accepted dependency checkpoint, but its dedicated reproducibility obligation remains explicitly **NOT CERTIFIED**.
+
+Detailed record: `docs/validation/AURORA_KSQ_1_RANGE_066_080_R3.md`.
+
+The two earlier pre-build red runs remain classified as tooling failures: `33965423386` exposed host APT fragment leakage and `33972965871` exposed an ephemeral `build/ksq-0/canonical` assumption. Neither built a source or demonstrated a product/snapshot defect.
+
+## Orders 081–090 — current local-only gate
+
+Range 81–90 is active from the exact independently accepted order-80 checkpoint. Its maintained workflow consumes both the accepted-080 evidence artifact and the exact 66–80 source artifact, reconstructs the complete 345-DEB predecessor state, validates immutable r3 again and rebuilds orders 81–90 with the same local-only unshare/sbuild network-isolation contract.
+
+Current run: `33978550975` on source HEAD `8b54e2aa98e7df0d82a09b0d840cd2163913c409`.
+
+Order 81 `kf6-ktexteditor` may pass its normal range build without satisfying its later dedicated reproducibility requirement.
 
 ## Reproducibility contract
 
@@ -279,11 +294,12 @@ remains mandatory until its independent rebuild gate passes.
 - independent witness gap analysis: **PROVEN / 3 objects / 547318 bytes**;
 - r3: **IMMUTABLE CANDIDATE / MATERIALIZED / INDEPENDENTLY VALIDATED**;
 - r3 accepted-065 regression: **PASS**;
-- maintained accepted checkpoint: **order 65 / 295 DEBs**;
+- maintained accepted checkpoint: **order 80 / 345 DEBs**;
 - KWallet package/install/PAM regression under r3: **PASS**;
 - KWallet automatic session unlock: **NOT CERTIFIED**;
-- orders 066–080: **LOCAL-ONLY BUILD ACTIVE / NOT ACCEPTED**;
-- orders 081–101: **NOT ACCEPTED**;
+- orders 066–080: **PASS / INDEPENDENTLY ACCEPTED**;
+- orders 081–090: **LOCAL-ONLY BUILD ACTIVE / NOT ACCEPTED**;
+- orders 091–101: **NOT ACCEPTED**;
 - DrKonqi dedicated reproducibility: **NOT CERTIFIED**;
 - complete 101-source candidate: **NOT ACCEPTED**;
 - KSQ-1: **ACTIVE / NOT CERTIFIED**;
