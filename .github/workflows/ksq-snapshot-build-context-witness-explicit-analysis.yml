@@ -1,0 +1,213 @@
+name: Aurora KSQ snapshot build-context witness explicit analysis
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/ksq-snapshot-witness-analysis-trigger.env'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  analyze-witness:
+    name: Analyze exact preserved 066-101 witness artifacts
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Resolve explicit witness run identity
+        id: trigger
+        shell: bash
+        run: |
+          set -euo pipefail
+          trigger=.github/ksq-snapshot-witness-analysis-trigger.env
+          test -f "$trigger"
+          source "$trigger"
+          [[ "$AURORA_KSQ_1_WITNESS_TRIGGER_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$AURORA_KSQ_1_WITNESS_TRIGGER_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$AURORA_KSQ_1_WITNESS_TRIGGER_FIRST_ORDER" = 66
+          test "$AURORA_KSQ_1_WITNESS_TRIGGER_LAST_ORDER" = 101
+          {
+            echo "run_id=$AURORA_KSQ_1_WITNESS_TRIGGER_RUN_ID"
+            echo "head_sha=$AURORA_KSQ_1_WITNESS_TRIGGER_HEAD_SHA"
+          } >> "$GITHUB_OUTPUT"
+          mkdir -p build/ksq-1/snapshot-witness-explicit-analysis
+          cp "$trigger" build/ksq-1/snapshot-witness-explicit-analysis/trigger.env
+
+      - name: Install analysis tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl unzip python3 ubuntu-keyring apt
+          apt-get --version | head -n1 | grep -qx 'apt 3.2.0 (amd64)'
+
+      - name: Download exact witness evidence 066-080
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-evidence-066-080
+          path: ${{ runner.temp }}/evidence-066-080
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ steps.trigger.outputs.run_id }}
+          digest-mismatch: error
+
+      - name: Download exact witness evidence 081-090
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-evidence-081-090
+          path: ${{ runner.temp }}/evidence-081-090
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ steps.trigger.outputs.run_id }}
+          digest-mismatch: error
+
+      - name: Download exact witness evidence 091-101
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-witness-evidence-091-101
+          path: ${{ runner.temp }}/evidence-091-101
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ steps.trigger.outputs.run_id }}
+          digest-mismatch: error
+
+      - name: Retrieve exact historical r2 object list
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          zip="$RUNNER_TEMP/r2-size.zip"
+          out="$RUNNER_TEMP/r2-size"
+          mkdir -p "$out"
+          curl --fail --location --retry 5 --retry-all-errors \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            'https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/9883249125/zip' \
+            -o "$zip"
+          test "$(sha256sum "$zip" | awk '{print $1}')" = 2281ab4655dc8d33639d9a3bbfb75d60325829a6b0af19902c20e4406e0c945b
+          test "$(stat -c '%s' "$zip")" = 136259
+          unzip -q "$zip" -d "$out"
+          test "$(wc -l < "$out/binary-objects.tsv")" -eq 1783
+          sha256sum "$out/binary-objects.tsv" > build/ksq-1/snapshot-witness-explicit-analysis/r2-binary-objects.sha256
+
+      - name: Recreate APT-verified signed snapshot package corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/snapshot-witness-explicit-analysis
+          bash scripts/ci/prepare-kde-stack-apt-metadata.sh 2>&1 | tee "$base/apt-metadata.log"
+          grep -Fq 'AURORA_KSQ_0_APT_METADATA_SUCCESS' "$base/apt-metadata.log"
+          aptroot=build/ksq-0/apt
+          targets="$base/indextargets.txt"
+          apt-get \
+            -o "Dir::Etc::sourcelist=$aptroot/resolute.sources" \
+            -o Dir::Etc::sourceparts=- \
+            -o "Dir::State::lists=$aptroot/resolute-lists" \
+            -o "Dir::State::status=$aptroot/empty-status" \
+            -o "Dir::Cache=$aptroot/resolute-cache" \
+            -o APT::Architecture=amd64 \
+            -o APT::Architectures=amd64 \
+            -o Acquire::Languages=none \
+            indextargets > "$targets"
+          python3 - "$targets" "$base/package-indexes.txt" <<'PY'
+          import sys
+          from pathlib import Path
+          source, output = map(Path, sys.argv[1:])
+          rows=[]; stanza={}
+          def flush():
+              global stanza
+              if stanza.get('Identifier') == 'Packages' and stanza.get('Architecture') == 'amd64':
+                  filename=stanza.get('Filename')
+                  if not filename:
+                      raise SystemExit('Packages indextarget missing Filename')
+                  rows.append(filename)
+              stanza={}
+          for raw in source.read_text().splitlines()+['']:
+              if not raw:
+                  flush(); continue
+              if ': ' in raw:
+                  k,v=raw.split(': ',1); stanza[k]=v
+          unique=sorted(set(rows))
+          if not unique:
+              raise SystemExit('no amd64 Packages indextargets found')
+          output.write_text(''.join(x+'\n' for x in unique))
+          PY
+          corpus="$base/snapshot-packages-amd64.txt"
+          : > "$corpus"
+          while IFS= read -r index; do
+            test -s "$index"
+            /usr/lib/apt/apt-helper cat-file "$index" >> "$corpus"
+            printf '\n' >> "$corpus"
+          done < "$base/package-indexes.txt"
+          test -s "$corpus"
+          sha256sum "$corpus" > "$base/snapshot-packages-amd64.txt.sha256"
+          cp build/ksq-0/apt-metadata.sha256 "$base/apt-metadata.sha256"
+
+      - name: Prove complete signed 066-101 build-context difference
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/snapshot-witness-explicit-analysis
+          out="$base/result"
+          python3 scripts/ci/analyze-ksq-1-build-context-witness.py \
+            --snapshot-packages "$base/snapshot-packages-amd64.txt" \
+            --r2-objects "$RUNNER_TEMP/r2-size/binary-objects.tsv" \
+            --evidence-066-080 "$RUNNER_TEMP/evidence-066-080" \
+            --evidence-081-090 "$RUNNER_TEMP/evidence-081-090" \
+            --evidence-091-101 "$RUNNER_TEMP/evidence-091-101" \
+            --out "$out"
+          grep -qx 'AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_STATUS=PROVEN' "$out/status.env"
+          grep -qx 'AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_SNAPSHOT=20260829T022000Z' "$out/status.env"
+          grep -qx 'AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_SOURCES=36' "$out/status.env"
+          grep -qx 'AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_LOGS=36' "$out/status.env"
+          grep -qx 'AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_R2_OBJECTS=1783' "$out/status.env"
+          grep -qx 'AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_MANUAL_PACKAGE_ADDITIONS=0' "$out/status.env"
+          test -s "$out/observed-packages.tsv"
+          test -s "$out/observed-objects.tsv"
+          test -s "$out/gap-objects.tsv"
+          python3 - "$out/gap-objects.tsv" "$base/historical-oracle-comparison.tsv" <<'PY'
+          import csv, sys
+          from pathlib import Path
+          gap, output = map(Path, sys.argv[1:])
+          with gap.open(newline='') as f:
+              rows=list(csv.DictReader(f, delimiter='\t'))
+          paths={r['filename'] for r in rows}
+          oracle=[
+              'pool/main/libj/libjpeg8-empty/libjpeg8-dev_8c-2ubuntu12_amd64.deb',
+              'pool/main/libj/libjpeg8-empty/libjpeg-dev_8c-2ubuntu12_amd64.deb',
+              'pool/main/c/curl/libcurl4-openssl-dev_8.18.0-1ubuntu2.4_amd64.deb',
+          ]
+          output.write_text('filename\tpresent_in_current_gap\n'+''.join(f'{p}\t{"yes" if p in paths else "no"}\n' for p in oracle))
+          PY
+          {
+            cat "$base/trigger.env"
+            echo 'AURORA_KSQ_1_WITNESS_INDEPENDENT_ANALYSIS=PASS'
+            echo "AURORA_KSQ_1_WITNESS_ANALYZER_COMMIT=$(git rev-parse HEAD)"
+            cat "$out/status.env"
+          } > "$base/acceptance.env"
+          (
+            cd "$base"
+            find result -maxdepth 1 -type f -printf '%p\n' | LC_ALL=C sort > manifest-files.txt
+            printf '%s\n' acceptance.env trigger.env snapshot-packages-amd64.txt.sha256 apt-metadata.sha256 r2-binary-objects.sha256 historical-oracle-comparison.tsv >> manifest-files.txt
+            LC_ALL=C sort -u manifest-files.txt -o manifest-files.txt
+            xargs sha256sum < manifest-files.txt > evidence.sha256
+            sha256sum -c evidence.sha256
+          )
+
+      - name: Preserve explicit independent witness analysis
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-build-context-witness-066-101-independent-analysis
+          path: build/ksq-1/snapshot-witness-explicit-analysis/
+          if-no-files-found: error
+          retention-days: 30
