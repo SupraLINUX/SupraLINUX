@@ -25,16 +25,29 @@ Authoritative current witness run:
 - workflow: `.github/workflows/ksq-snapshot-build-context-witness-066-101.yml`;
 - run: `33929720702`;
 - head used by the witness: `84596eaf2f7d7735b74f48a48fdde82229500f7a`;
-- accepted input reconstructed before witness: order 65 / 295 DEBs;
-- first witness range: 66–80;
-- state at this record: still executing the real `sbuild` range; no range result is inferred before the job closes.
+- accepted input reconstructed before witness: order 65 / 295 DEBs.
+
+Range 66–80 has completed its witness role successfully:
+
+- job `101205756905`: **SUCCESS**;
+- evidence artifact ID: `9960012834`;
+- artifact digest: `sha256:64ecfafccc729d832bdf8f51325ab2dd66debef1d3cc20383c958f5d0a6898d3`;
+- 15/15 source rows PASS;
+- 15 successful `.build` logs;
+- 50 new DEBs / 345 witness-chain accumulated DEBs;
+- zero packaging adaptations in all 15 prepared sources;
+- `AURORA_KSQ_1_RANGE_FULL_CERTIFIED=no` remains explicit.
+
+This range result is witness evidence only. It is not order-80 acceptance and does not replace the future local-only r3 regression.
+
+Range 81–90 is currently executing in the same run. Range 91–101 has not yet been accepted as complete witness evidence. No complete 66–101 gap is inferred before all three witness ranges close.
 
 The source-fetch transport was independently proven before relying on the long witness:
 
 - probe run `33929750946`: PASS;
 - source acquisition limited to `https://snapshot.ubuntu.com/ubuntu/20260829T022000Z`;
 - non-snapshot HTTP(S) transport remains fail-closed;
-- package builds still use `sbuild --no-enable-network`.
+- package builds still use `sbuild --no-enable-network` where the authoritative local-only build gate requires it.
 
 ## r3 derivation contract
 
@@ -135,7 +148,34 @@ The trigger must bind the exact successful r3 publication run and exact publicat
 6. revalidates the original independent witness analysis and compares its `gap-objects.tsv` byte-for-byte with r3;
 7. emits independent evidence while keeping `CANONICAL_POINTER_UPDATED=no` and `KSQ_REGRESSION_REQUIRED=yes`.
 
-### 5. Static pipeline preflight
+### 5. Materializer mechanics probe
+
+Workflow:
+
+- `.github/workflows/ksq-r3-materializer-mechanics-probe.yml`.
+
+The first probe run `33935394602` correctly failed before materialization because r2 was extracted under `$RUNNER_TEMP`, while the immutable r2 `aurora-local.sources` is intentionally bound to its certified local path `/opt/supralinux/archive/20260829T022000Z-r2`. The r2 archive SHA-256, byte count and Ubuntu signatures had already passed; the failure was solely the fail-closed local-path invariant.
+
+The probe was corrected without weakening the validator by mounting the downloaded r2 release at the same certified archive root. Commit `78f77fed00796e2952b5af1e64365193af120dd2` produced run `33936466728`, which completed **SUCCESS**.
+
+Its independently inspected artifact:
+
+- artifact ID: `9960344170`;
+- digest: `sha256:e633384754022d0f8742bc41775f70f58f1dd13f850fee6e0d4b9709241c688a`;
+- all `evidence.sha256` entries verify;
+- the synthetic fixture contains exactly `1784 = 1783 r2 + 1` binary objects;
+- the one synthetic object is resolved from inherited signed Ubuntu metadata and verified by exact size/SHA-256;
+- Ubuntu archive signatures validate;
+- base metadata/source manifests are byte-identical;
+- `AURORA_KSQ_SNAPSHOT_R3_MANUAL_PACKAGE_ADDITIONS=0`;
+- `AURORA_KSQ_R3_MECHANICS_BASE_IDENTITY=PASS`;
+- `AURORA_KSQ_R3_MECHANICS_PROBE_PROMOTABLE=no`;
+- `AURORA_KSQ_R3_MECHANICS_PROBE_WITNESS_EVIDENCE=no`;
+- `AURORA_KSQ_R3_MECHANICS_PROBE_RELEASE_PUBLISHED=no`.
+
+This proves the mechanics of copy → signed gap resolution/download → manifest extension → signature/whitelist validation → read-only r3 fixture. It does not establish the real 66–101 gap and cannot promote any snapshot.
+
+### 6. Static pipeline preflight
 
 Workflow:
 
@@ -152,7 +192,7 @@ Run `33935224782` on commit `229f2bd9f37960f8db8a357aeb151344dc4bc2df` completed
 
 This preflight validates syntax/structure only. It does not materialize or validate an r3 release.
 
-### 6. Local-only 66–80 r3 regression gate
+### 7. Local-only 66–80 r3 regression gate
 
 Workflow:
 
@@ -192,9 +232,12 @@ Only after the required regression passes may the canonical snapshot pointer be 
 
 - accepted checkpoint: **order 65 / 295 DEBs**;
 - r2: **immutable / accepted through order 65 / rejected as complete 101-source payload closure**;
-- 66–101 per-build witness: **ACTIVE**;
+- witness 66–80: **PASS as witness only / NOT CERTIFIED**;
+- witness 81–90: **ACTIVE**;
+- witness 91–101: **PENDING**;
 - explicit witness-analysis trigger: **NOT CREATED**;
 - r3 implementation: **PREPARED**;
+- r3 materializer mechanics probe: **PASS / NON-PROMOTABLE** (`33936466728`);
 - r3 static pipeline preflight: **PASS** (`33935224782`);
 - explicit r3 materialization trigger: **NOT CREATED**;
 - r3 release: **DOES NOT EXIST / NOT MATERIALIZED**;
