@@ -38,7 +38,7 @@ The source-fetch transport was independently proven before relying on the long w
 
 ## r3 derivation contract
 
-r3 may be materialized only if the independent 66–101 analysis proves all 36 source contexts and emits a non-empty `gap-objects.tsv` whose rows are machine-derived from the real build logs and APT-verified Ubuntu snapshot metadata.
+r3 may be materialized only if an independent 66–101 analysis proves all 36 source contexts and emits a non-empty `gap-objects.tsv` whose rows are machine-derived from the real build logs and APT-verified Ubuntu snapshot metadata.
 
 No historical package list, observed JPEG/curl gap, package name, workaround or manual addition is allowed to create the r3 gap.
 
@@ -53,9 +53,33 @@ The materializer additionally re-resolves every proposed gap row against the sig
 
 The original 1783 r2 binary objects and all source/metadata objects are retained. r2 itself is never modified.
 
-## Prepared implementation
+## Branch-safe promotion chain
 
-### Materializer
+A branch-only `workflow_run` receiver is not used as the authoritative chain because GitHub evaluates that trigger from the default branch. The active KSQ work remains on `feature/kde-stack-qualification`, so promotion is explicitly bound by committed trigger files containing exact run/artifact identities.
+
+No trigger file described below exists until its predecessor has actually passed and its output artifact has been independently inspected.
+
+### 1. Explicit witness analysis
+
+Workflow:
+
+- `.github/workflows/ksq-snapshot-build-context-witness-explicit-analysis.yml`.
+
+Trigger:
+
+- `.github/ksq-snapshot-witness-analysis-trigger.env` — **not created yet**.
+
+The trigger must contain the exact completed witness run ID, exact 40-hex head SHA, and order range 66–101. Before downloading artifacts the workflow verifies through the GitHub API that the referenced run is `completed/success`, belongs to `feature/kde-stack-qualification`, has the exact expected workflow name and exact head SHA.
+
+It then downloads only these artifacts from that exact run:
+
+- `aurora-ksq-witness-evidence-066-080`;
+- `aurora-ksq-witness-evidence-081-090`;
+- `aurora-ksq-witness-evidence-091-101`.
+
+The analyzer reconstructs the signed snapshot package corpus, compares all 36 observed build contexts with the exact 1783-object r2 manifest and publishes `aurora-ksq-build-context-witness-066-101-independent-analysis` only after `PROVEN`, 36/36 logs and `MANUAL_PACKAGE_ADDITIONS=0` are established.
+
+### 2. r3 materializer
 
 `scripts/ci/ksq-snapshot-slice-r3.py`
 
@@ -75,40 +99,62 @@ Properties:
 - validates the complete object whitelist and signed metadata;
 - hardens the completed slice read-only.
 
-### Publication workflow
+### 3. Explicit r3 publication
 
-`.github/workflows/ksq-snapshot-slice-r3-materialize.yml`
+Workflow:
 
-Commit introducing the workflow: `a7fdd88b89244335b56211164b31f271742121c6`.
+- `.github/workflows/ksq-snapshot-slice-r3-explicit-materialize.yml`.
 
-Push preflight run `33934340147` passed. On a normal push the materialization job is skipped. Publication is eligible only after the independent build-context analysis workflow itself finishes `success`.
+Trigger:
 
-A published r3 remains a **candidate**. The workflow refuses to overwrite an existing r3 release tag.
+- `.github/ksq-snapshot-r3-materialize-trigger.env` — **not created yet**.
 
-### Independent validation
+The trigger must bind exact analysis run ID, exact head SHA, exact artifact ID, digest and size. The workflow revalidates those identities through the GitHub API, downloads that exact analysis artifact, redownloads and validates the immutable canonical r2 release, materializes only the signed gap and refuses to overwrite an existing r3 release tag.
 
-Prepared independent validators:
+A published r3 remains a **candidate**. Publication never updates `scripts/ci/aurora-ksq-snapshot-release.env`.
 
-- `.github/workflows/ksq-snapshot-slice-r3-independent-validation.yml` — fresh redownload of r3, full object/signature validation and exact cross-check against the referenced independent witness artifact;
-- `.github/workflows/ksq-snapshot-slice-r3-base-identity-validation.yml` — fresh independent downloads of both r2 and r3 and proof that r3 is a strict payload-only extension: identical signed metadata/source inputs, identical 1783 pre-existing binary manifest rows/payloads, plus exactly the witness gap.
+A non-authoritative `workflow_run` prototype and its preflight are retained as engineering history, but they are not the branch-safe promotion path.
 
-The second validator was introduced by commit `4c8dc7b069f2086ae87e4cc61beaf3adfd2ce7bd`.
+### 4. Explicit independent r3 validation
 
-Neither validator updates the canonical snapshot pointer.
+Workflow:
 
-## Promotion boundary
+- `.github/workflows/ksq-snapshot-slice-r3-explicit-validation.yml`.
 
-Even if r3 publication and both independent validations pass, r3 is not automatically canonical and previous KSQ evidence is not automatically carried forward.
+Trigger:
 
-Before promotion, the regression scope must be decided from proven identity results and executed. The next maintained local-only range must then be rebuilt against the independently validated r3 input. Orders 66–80 remain unaccepted until that occurs.
+- `.github/ksq-snapshot-r3-validation-trigger.env` — **not created yet**.
+
+The trigger must bind the exact successful r3 publication run and exact publication artifact identity. A fresh Ubuntu 26.04 runner then:
+
+1. revalidates the publication run/artifact identity;
+2. downloads the r3 release independently from the publication artifact;
+3. validates the full r3 slice and signed metadata;
+4. independently downloads canonical r2;
+5. proves r3 is a strict byte-preserving extension of r2: identical signed metadata, source inputs and all 1783 pre-existing binary manifest rows/payload hashes, plus exactly the witness gap;
+6. revalidates the original independent witness analysis and compares its `gap-objects.tsv` byte-for-byte with r3;
+7. emits independent evidence while keeping `CANONICAL_POINTER_UPDATED=no` and `KSQ_REGRESSION_REQUIRED=yes`.
+
+## Regression and promotion boundary
+
+Even if r3 publication and independent validation pass, r3 is not automatically canonical and previous KSQ evidence is not automatically carried forward.
+
+If strict-extension validation proves that all signed metadata, source inputs and the original 1783 payloads are byte-identical, that identity evidence may be used to define the smallest technically justified regression scope, but it does not by itself waive regression.
+
+The next maintained build unit must be rebuilt local-only against the independently validated r3 candidate, with the exact r3 release identity and validation artifact fixed in the regression trigger. Orders 66–80 remain unaccepted until that local-only build and its full artifact inspection pass.
+
+Only after the required regression passes may the canonical snapshot pointer be considered for promotion from r2 to r3.
 
 ## Current gate
 
 - accepted checkpoint: **order 65 / 295 DEBs**;
 - r2: **immutable / accepted through order 65 / rejected as complete 101-source payload closure**;
 - 66–101 per-build witness: **ACTIVE**;
+- explicit witness-analysis trigger: **NOT CREATED**;
 - r3 implementation: **PREPARED**;
+- explicit r3 materialization trigger: **NOT CREATED**;
 - r3 release: **DOES NOT EXIST / NOT MATERIALIZED**;
+- explicit r3 validation trigger: **NOT CREATED**;
 - r3 canonical pointer: **NO**;
 - orders 66–80: **NOT ACCEPTED**;
 - KSQ-1: **ACTIVE / NOT CERTIFIED**;
