@@ -236,6 +236,16 @@ jobs:
           print('AURORA_KSQ_R3_STRICT_BASE_EXTENSION=PASS')
           PY
 
+      - name: Download exact original independent witness analysis artifact
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: ${{ steps.publication.outputs.analysis_artifact_id }}
+          path: ${{ runner.temp }}/witness-analysis
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ steps.publication.outputs.analysis_run_id }}
+          digest-mismatch: error
+
       - name: Revalidate original independent witness artifact and exact gap
         shell: bash
         env:
@@ -260,10 +270,6 @@ jobs:
           test "$(jq -r '.conclusion' "$run_json")" = success
           test "$(jq -r '.head_sha' "$run_json")" = "$ANALYSIS_HEAD_SHA"
           test "$(jq -r '.name' "$run_json")" = 'Aurora KSQ snapshot build-context witness explicit analysis'
-          mkdir -p "$RUNNER_TEMP/witness-analysis"
-          gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "/repos/$GITHUB_REPOSITORY/actions/artifacts/$ANALYSIS_ARTIFACT_ID/zip" > "$RUNNER_TEMP/witness-analysis.zip"
-          unzip -q "$RUNNER_TEMP/witness-analysis.zip" -d "$RUNNER_TEMP/witness-analysis"
           grep -qx 'AURORA_KSQ_1_WITNESS_INDEPENDENT_ANALYSIS=PASS' "$RUNNER_TEMP/witness-analysis/acceptance.env"
           grep -qx 'AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_STATUS=PROVEN' "$RUNNER_TEMP/witness-analysis/result/status.env"
           cmp -s "$RUNNER_TEMP/witness-analysis/result/gap-objects.tsv" "$ARCHIVE_ROOT/$SLICE_ID/manifests/r3-gap.tsv"
