@@ -1,0 +1,267 @@
+name: Aurora KSQ snapshot slice r3 independent validation
+
+on:
+  workflow_run:
+    workflows:
+      - Aurora KSQ witness-derived snapshot slice r3 publication
+    types:
+      - completed
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: aurora-ksq-snapshot-20260829T022000Z-r3-independent-validation
+  cancel-in-progress: false
+
+env:
+  UPSTREAM_SNAPSHOT: '20260829T022000Z'
+  BASE_SLICE_ID: '20260829T022000Z-r2'
+  SLICE_ID: '20260829T022000Z-r3'
+  RELEASE_TAG: ksq-snapshot-20260829T022000Z-r3
+  RELEASE_ASSET: aurora-ubuntu-snapshot-20260829T022000Z-r3-amd64.tar
+  RELEASE_MANIFEST: aurora-ubuntu-snapshot-20260829T022000Z-r3-amd64.env
+  PUBLICATION_EVIDENCE: aurora-ksq-snapshot-r3-publication-evidence
+
+jobs:
+  validate-r3-release:
+    name: Independently validate published r3 candidate
+    if: >-
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 120
+    steps:
+      - name: Record triggering publication identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test '${{ github.event.workflow_run.name }}' = 'Aurora KSQ witness-derived snapshot slice r3 publication'
+          mkdir -p build/ksq-1/r3-independent-validation
+          cat > build/ksq-1/r3-independent-validation/trigger.env <<EOF
+          AURORA_KSQ_R3_PUBLICATION_RUN_ID=${{ github.event.workflow_run.id }}
+          AURORA_KSQ_R3_PUBLICATION_HEAD_SHA=${{ github.event.workflow_run.head_sha }}
+          AURORA_KSQ_R3_PUBLICATION_CONCLUSION=${{ github.event.workflow_run.conclusion }}
+          EOF
+
+      - uses: actions/checkout@v7
+        with:
+          ref: feature/kde-stack-qualification
+
+      - name: Install independent validation tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
+          sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
+            ca-certificates curl unzip python3 xz-utils ubuntu-keyring gpgv
+          python3 -m py_compile scripts/ci/ksq-snapshot-slice-r3.py
+
+      - name: Download exact publication evidence from triggering run
+        uses: actions/download-artifact@v8
+        with:
+          name: aurora-ksq-snapshot-r3-publication-evidence
+          path: ${{ runner.temp }}/publication-evidence
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ github.event.workflow_run.id }}
+          digest-mismatch: error
+
+      - name: Parse and enforce candidate manifest contract
+        id: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/publication-evidence"
+          manifest="$evidence/$RELEASE_MANIFEST"
+          test -f "$manifest"
+          source "$manifest"
+          test "$AURORA_KSQ_SNAPSHOT_RELEASE_STATUS" = PUBLISHED_CANDIDATE
+          test "$AURORA_KSQ_SNAPSHOT_SLICE_ID" = "$SLICE_ID"
+          test "$AURORA_KSQ_UBUNTU_SNAPSHOT" = "$UPSTREAM_SNAPSHOT"
+          test "$AURORA_KSQ_SNAPSHOT_ARCH" = amd64
+          test "$AURORA_KSQ_SNAPSHOT_ARCH_VARIANTS" = disabled
+          test "$AURORA_KSQ_SNAPSHOT_INSTALL_RECOMMENDS" = default
+          test "$AURORA_KSQ_SNAPSHOT_R3_BASE_SLICE_ID" = "$BASE_SLICE_ID"
+          test "$AURORA_KSQ_SNAPSHOT_R3_BASE_RELEASE_ASSET_SHA256" = 23413ddf1c1820aaa01dfa81005b37e8c9611bad2d0a632664d0e08282e69c3b
+          test "$AURORA_KSQ_SNAPSHOT_R3_MANUAL_PACKAGE_ADDITIONS" = 0
+          [[ "$AURORA_KSQ_SNAPSHOT_R3_GAP_OBJECTS" =~ ^[1-9][0-9]*$ ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_R3_GAP_BYTES" =~ ^[1-9][0-9]*$ ]]
+          test "$AURORA_KSQ_SNAPSHOT_BINARY_OBJECTS" -eq $((1783 + AURORA_KSQ_SNAPSHOT_R3_GAP_OBJECTS))
+          test "$AURORA_KSQ_SNAPSHOT_BINARY_BYTES" -eq $((785219274 + AURORA_KSQ_SNAPSHOT_R3_GAP_BYTES))
+          [[ "$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$AURORA_KSQ_SNAPSHOT_R3_WITNESS_ANALYSIS_ARTIFACT_DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]]
+          {
+            echo "archive_sha256=$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_SHA256"
+            echo "archive_bytes=$AURORA_KSQ_SNAPSHOT_RELEASE_ASSET_BYTES"
+            echo "analysis_run_id=$AURORA_KSQ_SNAPSHOT_R3_WITNESS_ANALYSIS_RUN_ID"
+            echo "analysis_head_sha=$AURORA_KSQ_SNAPSHOT_R3_WITNESS_ANALYSIS_HEAD_SHA"
+            echo "analysis_artifact_id=$AURORA_KSQ_SNAPSHOT_R3_WITNESS_ANALYSIS_ARTIFACT_ID"
+            echo "analysis_artifact_digest=$AURORA_KSQ_SNAPSHOT_R3_WITNESS_ANALYSIS_ARTIFACT_DIGEST"
+            echo "gap_objects=$AURORA_KSQ_SNAPSHOT_R3_GAP_OBJECTS"
+            echo "gap_bytes=$AURORA_KSQ_SNAPSHOT_R3_GAP_BYTES"
+          } >> "$GITHUB_OUTPUT"
+          cp "$manifest" build/ksq-1/r3-independent-validation/candidate-manifest.env
+          sha256sum "$manifest" > build/ksq-1/r3-independent-validation/candidate-manifest.sha256
+
+      - name: Download immutable published r3 release from scratch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_ARCHIVE_SHA256: ${{ steps.candidate.outputs.archive_sha256 }}
+          EXPECTED_ARCHIVE_BYTES: ${{ steps.candidate.outputs.archive_bytes }}
+        run: |
+          set -euo pipefail
+          release="$RUNNER_TEMP/release"
+          mkdir -p "$release"
+          gh release download "$RELEASE_TAG" \
+            -R "$GITHUB_REPOSITORY" \
+            -p "$RELEASE_ASSET" \
+            -p "$RELEASE_MANIFEST" \
+            -D "$release"
+          archive="$release/$RELEASE_ASSET"
+          manifest="$release/$RELEASE_MANIFEST"
+          test "$(sha256sum "$archive" | awk '{print $1}')" = "$EXPECTED_ARCHIVE_SHA256"
+          test "$(stat -c '%s' "$archive")" = "$EXPECTED_ARCHIVE_BYTES"
+          cmp -s "$manifest" "$RUNNER_TEMP/publication-evidence/$RELEASE_MANIFEST"
+          sha256sum "$archive" > build/ksq-1/r3-independent-validation/release-archive.sha256
+          sha256sum "$manifest" > build/ksq-1/r3-independent-validation/release-manifest.sha256
+
+          mkdir -p "$RUNNER_TEMP/archive"
+          tar -xf "$archive" -C "$RUNNER_TEMP/archive"
+          test -d "$RUNNER_TEMP/archive/$SLICE_ID"
+
+      - name: Independently validate complete r3 slice and signed metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/ci/ksq-snapshot-slice-r3.py validate \
+            --slice-root "$RUNNER_TEMP/archive/$SLICE_ID" \
+            2>&1 | tee build/ksq-1/r3-independent-validation/r3-validate.log
+          grep -Fqx 'AURORA_KSQ_SNAPSHOT_R3_VALID' build/ksq-1/r3-independent-validation/r3-validate.log
+          grep -qx 'AURORA_KSQ_SNAPSHOT_R3_MANUAL_PACKAGE_ADDITIONS=0' \
+            "$RUNNER_TEMP/archive/$SLICE_ID/provenance.env"
+          cp "$RUNNER_TEMP/archive/$SLICE_ID/provenance.env" \
+            build/ksq-1/r3-independent-validation/r3-provenance.env
+          cp "$RUNNER_TEMP/archive/$SLICE_ID/manifests/r3-gap.tsv" \
+            build/ksq-1/r3-independent-validation/r3-gap.tsv
+          cp "$RUNNER_TEMP/archive/$SLICE_ID/manifests/r3-added-binary.tsv" \
+            build/ksq-1/r3-independent-validation/r3-added-binary.tsv
+
+      - name: Verify referenced independent witness artifact still exists unchanged
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ANALYSIS_RUN_ID: ${{ steps.candidate.outputs.analysis_run_id }}
+          ANALYSIS_ARTIFACT_ID: ${{ steps.candidate.outputs.analysis_artifact_id }}
+          ANALYSIS_ARTIFACT_DIGEST: ${{ steps.candidate.outputs.analysis_artifact_digest }}
+        run: |
+          set -euo pipefail
+          json=build/ksq-1/r3-independent-validation/witness-artifact-api.json
+          gh api \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "/repos/$GITHUB_REPOSITORY/actions/artifacts/$ANALYSIS_ARTIFACT_ID" \
+            > "$json"
+          test "$(jq -r '.id' "$json")" = "$ANALYSIS_ARTIFACT_ID"
+          test "$(jq -r '.name' "$json")" = aurora-ksq-build-context-witness-066-101-independent-analysis
+          test "$(jq -r '.expired' "$json")" = false
+          test "$(jq -r '.digest' "$json")" = "$ANALYSIS_ARTIFACT_DIGEST"
+          workflow_run_id="$(jq -r '.workflow_run.id // empty' "$json")"
+          if [[ -n "$workflow_run_id" ]]; then
+            test "$workflow_run_id" = "$ANALYSIS_RUN_ID"
+          fi
+
+      - name: Download exact referenced independent witness artifact
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: ${{ steps.candidate.outputs.analysis_artifact_id }}
+          path: ${{ runner.temp }}/witness-analysis
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ steps.candidate.outputs.analysis_run_id }}
+          digest-mismatch: error
+
+      - name: Cross-check embedded r3 gap against original witness analysis
+        shell: bash
+        env:
+          ANALYSIS_RUN_ID: ${{ steps.candidate.outputs.analysis_run_id }}
+          ANALYSIS_HEAD_SHA: ${{ steps.candidate.outputs.analysis_head_sha }}
+          ANALYSIS_ARTIFACT_ID: ${{ steps.candidate.outputs.analysis_artifact_id }}
+          ANALYSIS_ARTIFACT_DIGEST: ${{ steps.candidate.outputs.analysis_artifact_digest }}
+        run: |
+          set -euo pipefail
+          analysis="$RUNNER_TEMP/witness-analysis"
+          test -f "$analysis/acceptance.env"
+          test -f "$analysis/result/status.env"
+          test -f "$analysis/result/gap-objects.tsv"
+          cat > "$analysis/analysis-artifact.env" <<EOF
+          AURORA_KSQ_1_WITNESS_ANALYSIS_RUN_ID=$ANALYSIS_RUN_ID
+          AURORA_KSQ_1_WITNESS_ANALYSIS_HEAD_SHA=$ANALYSIS_HEAD_SHA
+          AURORA_KSQ_1_WITNESS_ANALYSIS_ARTIFACT_ID=$ANALYSIS_ARTIFACT_ID
+          AURORA_KSQ_1_WITNESS_ANALYSIS_ARTIFACT_DIGEST=$ANALYSIS_ARTIFACT_DIGEST
+          EOF
+          cmp -s \
+            "$analysis/result/gap-objects.tsv" \
+            "$RUNNER_TEMP/archive/$SLICE_ID/manifests/r3-gap.tsv"
+          python3 scripts/ci/ksq-snapshot-slice-r3.py validate \
+            --slice-root "$RUNNER_TEMP/archive/$SLICE_ID" \
+            --witness-analysis-dir "$analysis" \
+            2>&1 | tee build/ksq-1/r3-independent-validation/r3-witness-crosscheck.log
+          grep -Fqx 'AURORA_KSQ_SNAPSHOT_R3_VALID' \
+            build/ksq-1/r3-independent-validation/r3-witness-crosscheck.log
+
+      - name: Audit strictly local APT source contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          slice="$RUNNER_TEMP/archive/$SLICE_ID"
+          sources="$slice/aurora-local.sources"
+          test "$(grep -Fc "URIs: file:$slice/ubuntu" "$sources")" -eq 2
+          grep -q '^Snapshot: no$' "$sources"
+          ! grep -Eq 'https?://' "$sources"
+          ! find "$slice" -type l -print -quit | grep -q .
+          if find "$slice" -xdev -perm /0222 -print -quit | grep -q .; then
+            echo 'AURORA_KSQ_SNAPSHOT_R3_INDEPENDENT_FAILURE: writable path in release' >&2
+            exit 1
+          fi
+
+      - name: Seal independent validation evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=build/ksq-1/r3-independent-validation
+          cat > "$out/acceptance.env" <<EOF
+          AURORA_KSQ_SNAPSHOT_R3_INDEPENDENT_VALIDATION=PASS
+          AURORA_KSQ_SNAPSHOT_R3_SLICE_ID=$SLICE_ID
+          AURORA_KSQ_SNAPSHOT_R3_UPSTREAM_SNAPSHOT=$UPSTREAM_SNAPSHOT
+          AURORA_KSQ_SNAPSHOT_R3_PUBLICATION_RUN_ID=${{ github.event.workflow_run.id }}
+          AURORA_KSQ_SNAPSHOT_R3_PUBLICATION_HEAD_SHA=${{ github.event.workflow_run.head_sha }}
+          AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET_SHA256=${{ steps.candidate.outputs.archive_sha256 }}
+          AURORA_KSQ_SNAPSHOT_R3_WITNESS_ANALYSIS_RUN_ID=${{ steps.candidate.outputs.analysis_run_id }}
+          AURORA_KSQ_SNAPSHOT_R3_WITNESS_ANALYSIS_ARTIFACT_ID=${{ steps.candidate.outputs.analysis_artifact_id }}
+          AURORA_KSQ_SNAPSHOT_R3_WITNESS_ANALYSIS_ARTIFACT_DIGEST=${{ steps.candidate.outputs.analysis_artifact_digest }}
+          AURORA_KSQ_SNAPSHOT_R3_GAP_OBJECTS=${{ steps.candidate.outputs.gap_objects }}
+          AURORA_KSQ_SNAPSHOT_R3_GAP_BYTES=${{ steps.candidate.outputs.gap_bytes }}
+          AURORA_KSQ_SNAPSHOT_R3_MANUAL_PACKAGE_ADDITIONS=0
+          AURORA_KSQ_SNAPSHOT_R3_CANONICAL_POINTER_UPDATED=no
+          AURORA_KSQ_SNAPSHOT_R3_KSQ_REGRESSION_REQUIRED=yes
+          EOF
+          (
+            cd "$out"
+            find . -maxdepth 1 -type f ! -name evidence.sha256 -printf '%P\n' \
+              | LC_ALL=C sort \
+              | xargs -r sha256sum \
+              > evidence.sha256
+            sha256sum -c evidence.sha256
+          )
+
+      - name: Upload independent r3 validation evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-snapshot-r3-independent-validation
+          path: build/ksq-1/r3-independent-validation/
+          if-no-files-found: error
+          retention-days: 30
