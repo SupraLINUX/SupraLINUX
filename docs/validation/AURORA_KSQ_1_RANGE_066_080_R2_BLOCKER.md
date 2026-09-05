@@ -1,8 +1,8 @@
 # Aurora KSQ-1 — range 066–080 r2 blocker
 
-Status: **BLOCKED / ROOT CAUSE PROVEN**
+Status: **HISTORICAL BLOCKER / ROOT CAUSE PROVEN / CORRECTIVE r3 MATERIALIZED**
 
-This record captures the proven state after the first maintained native attempt to build orders 66–80. It does not accept any part of the range as a checkpoint.
+This record captures the proven r2 failure and its corrective closure. It does not by itself accept any source in orders 66–80.
 
 ## Causal run
 
@@ -50,7 +50,7 @@ During the real `sbuild 0.91.2ubuntu3` APT dependency installation, APT selected
 - `libjpeg8-dev=8c-2ubuntu12`
 - `libjpeg-dev=8c-2ubuntu12`
 
-The canonical r2 repository metadata advertises all of them, but its materialized pool contains `libjpeg-turbo8-dev` and does not contain the two selected `libjpeg8-empty` development payloads:
+The r2 repository metadata advertises all of them, but its materialized pool contains `libjpeg-turbo8-dev` and does not contain the two selected `libjpeg8-empty` development payloads:
 
 - `pool/main/libj/libjpeg8-empty/libjpeg8-dev_8c-2ubuntu12_amd64.deb`
 - `pool/main/libj/libjpeg8-empty/libjpeg-dev_8c-2ubuntu12_amd64.deb`
@@ -100,36 +100,105 @@ Across the available successful build logs through order 98, after normalizing D
 - `libjpeg-dev_8c-2ubuntu12_amd64.deb`;
 - `libcurl4-openssl-dev_8.18.0-1ubuntu2.4_amd64.deb`.
 
-This is **not** a package-addition prescription. The historical run did not complete orders 99–101, and current qualification must derive the complete requirement from current real build contexts rather than append this observed list manually.
+This was **not** treated as a package-addition prescription. Because the historical run did not provide complete valid build logs through 101, current qualification extended the proof with a new real build-context witness through order 101.
 
-## Corrective design boundary
+## Corrective build-context witness — completed
 
-No package is being added manually and `xdg-desktop-portal-kde` is not being patched.
-
-The replacement closure must be generated from the union of real per-build dependency-resolution contexts, preserving:
+The replacement-closure input was derived from the union of real per-build dependency-resolution contexts while preserving:
 
 - Ubuntu snapshot `20260829T022000Z`;
-- APT `3.2.0` / sbuild `0.91.2ubuntu3` semantics qualified on the selected Ubuntu 26.04 runner;
+- APT/sbuild semantics qualified on Ubuntu 26.04;
 - normal/default Recommends policy;
-- architecture `amd64` with architecture variants disabled;
-- exact accepted Supra binary checkpoints as they become available in DAG order;
-- `--no-enable-network` for the package build itself while allowing the dependency resolver, only in the non-acceptance witness phase, to retrieve from the pinned Ubuntu snapshot;
-- signed Ubuntu metadata as the authority mapping each observed package/version/architecture to its exact `Filename`, `Size` and `SHA256`.
+- generic `amd64`;
+- exact accepted Supra binary checkpoint through order 65;
+- real sbuild source-build contexts;
+- signed Ubuntu metadata as the authority mapping package/version/architecture to `Filename`, `Size` and `SHA256`.
 
-The active corrective step is therefore a current **build-context witness** for orders 66–101 starting from the accepted order-65 / 295-DEB checkpoint. Its output will be compared against the 1783 r2 objects. Only the complete set difference produced by that algorithm may be materialized into a new immutable slice identity.
+Witness parent run `33929720702` completed all source builds 66–101 successfully: **36/36 PASS**. The parent conclusion is red only because its obsolete embedded analyzer failed after the builds; the three build artifacts were subsequently consumed by an independent explicit analysis.
 
-A replacement slice is not accepted merely because its witness set closes the observed gap. It must be independently materialized/validated and then re-run through the required local-only regression chain before the maintained checkpoint can advance.
+Authoritative analyzer:
+
+- run `33962296018`;
+- artifact `9968317241`;
+- digest `sha256:b7db4224c5bd7cd89f6e274cb8a0c617327bc917cee1185cff9e0b2a07ea0694`;
+- witness status: `PROVEN`;
+- observed package objects: `1114`;
+- r2 objects: `1783`;
+- exact set difference: **3 objects / 547318 bytes**;
+- manual package additions: `0`.
+
+The resulting complete gap is exactly the three objects previously seen by the historical oracle, now including current coverage through orders 99–101. The agreement is 3/3, but the authoritative input is the machine-derived current witness result.
+
+## r3 corrective slice — completed
+
+The corrective slice has a new immutable identity:
+
+`20260829T022000Z-r3`
+
+It was generated algorithmically from immutable r2 plus the proven witness set difference. No filename exception list was inserted into the materializer.
+
+Materialization/publication:
+
+- run `33964548214`;
+- 1786 binary objects;
+- binary payload bytes: `785766592`;
+- archive bytes: `1055590400`;
+- archive SHA-256: `cb904b478afe186b96823b1b2872d5937517e3de10c6d2dd3170ec29fea09bc6`;
+- tag: `ksq-snapshot-20260829T022000Z-r3`;
+- manifest SHA-256: `b683797c7850c47bcd6d80e093504301deac05e78010f6395af0885fb9ce005e`;
+- manual package additions: `0`.
+
+Independent validation:
+
+- run `33964782073`;
+- artifact `9969086882`;
+- digest `sha256:6fc4c3cae63f53d5484d1e5c168f51c01fb285af5697bc6f1f8438a2cb899907`;
+- strict r2 extension: PASS;
+- signed metadata identity: PASS;
+- all 1783 pre-existing payload identities: PASS;
+- source-input identity: PASS;
+- exact witness-gap inclusion: PASS.
+
+r2 remains immutable. r3 is a distinct candidate slice.
+
+## Regression caused by r3 — completed through accepted order 65
+
+Because r3 changes payload availability, prior acceptance was not carried forward by assertion.
+
+Regression run `33965237362`, artifact `9969240177`, digest `sha256:8b829f4cd81afc26c340d727561b2ea2c5438487c4e1a945ce01f1eaa940165f`, proves:
+
+- exact checkpoint 1–65 / 295 DEBs restored;
+- 65 successful historical build logs inspected;
+- 28215 Ubuntu acquisition events / 1052 unique Ubuntu identities;
+- intersection between all accepted 1–65 acquisitions and the three newly materialized r3 objects: `0`;
+- every historical payload identity still present in r3;
+- KWallet solver/install replay against r3: PASS;
+- KWallet exact 375-package selection identity: PASS;
+- generic buildd bootstrap against r3: PASS;
+- AppArmor denials: `0`;
+- Docker/custom AppArmor/uidmap-filecap hacks: `0`.
+
+KWallet automatic runtime session unlock remains **NOT CERTIFIED**.
+
+## Current use of this blocker record
+
+The r2 blocker itself is closed as a causal investigation. It remains historical evidence explaining why r2 cannot be used as the universal 101-source payload service.
+
+It does **not** certify 66–80. The maintained path has moved to r3 and must still pass the real local-only range plus independent acceptance.
+
+The current r3 local-only 66–80 run is `33973287438` on source HEAD `e812059c50f8f1def9a1a18489840bbee1762231`. Before entering source compilation it had already passed exact r3 validation provenance, accepted-065 r3 regression provenance, checkpoint restore, r3 release validation and clean local-only APT/buildd preparation. Its source-build result is intentionally not recorded as PASS here until that run and independent acceptance finish.
 
 ## Gate state
 
-- accepted KSQ-1 checkpoint remains: **order 65 / 295 DEBs**;
-- orders 66–80: **NOT ACCEPTED**;
+- accepted KSQ-1 checkpoint: **order 65 / 295 DEBs**;
+- r2 root cause: **PROVEN / CLOSED**;
+- build-context witness 66–101: **PROVEN / 36 of 36 source builds SUCCESS**;
+- witness set difference: **3 objects / 547318 bytes**;
+- r3: **MATERIALIZED / INDEPENDENTLY VALIDATED / DISTINCT IMMUTABLE IDENTITY**;
+- accepted-065 regression against r3: **PASS**;
+- orders 66–80: **LOCAL-ONLY r3 GATE ACTIVE / NOT ACCEPTED**;
 - orders 81–101: **NOT ACCEPTED**;
-- r2: remains immutable historical/canonical input for the accepted-through-65 evidence, but is proven insufficient as a general payload closure for continuing the 101-source build;
-- r2 aggregate-closure root cause: **PROVEN**;
-- replacement build-context witness: **ACTIVE**;
+- DrKonqi dedicated reproducibility: **NOT CERTIFIED**;
 - KSQ-1: **ACTIVE / NOT CERTIFIED**;
 - KSQ-2: **BLOCKED**;
 - C4.1: **PAUSED**.
-
-Any replacement build slice is a new immutable identity and triggers the required downstream regression before earlier PASS evidence may be carried forward.
