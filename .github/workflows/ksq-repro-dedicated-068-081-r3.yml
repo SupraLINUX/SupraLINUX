@@ -151,18 +151,20 @@ jobs:
           copy_index() {
             local root="$1" range="$2" name="$3" chunk
             chunk="$(chunk_root "$root" "$range")"
-            cp -a "$chunk/evidence/binary-packages.tsv" "$candidate_evidence/indexes/$name.tsv"
+            mkdir -p "$candidate_evidence/indexes/$name"
+            cp -a "$chunk/evidence/binary-packages.tsv" "$candidate_evidence/indexes/$name/binary-packages.tsv"
           }
           copy_index "$RUNNER_TEMP/prior-001-020" 001-020 001-020
           copy_index "$RUNNER_TEMP/prior-021-040" 021-040 021-040
           copy_index "$RUNNER_TEMP/prior-041-043" 041-043 041-043
           copy_index "$RUNNER_TEMP/prior-044-060" 044-060 044-060
           copy_index "$RUNNER_TEMP/prior-061-065" 061-065 061-065
-          cp -a "$c066/evidence/binary-packages.tsv" "$candidate_evidence/indexes/066-080.tsv"
-          cp -a "$c081/evidence/binary-packages.tsv" "$candidate_evidence/indexes/081-090.tsv"
+          mkdir -p "$candidate_evidence/indexes/066-080" "$candidate_evidence/indexes/081-090"
+          cp -a "$c066/evidence/binary-packages.tsv" "$candidate_evidence/indexes/066-080/binary-packages.tsv"
+          cp -a "$c081/evidence/binary-packages.tsv" "$candidate_evidence/indexes/081-090/binary-packages.tsv"
           cp -a "$c066/evidence/68-drkonqi" "$candidate_evidence/sources/"
           cp -a "$c081/evidence/81-kf6-ktexteditor" "$candidate_evidence/sources/"
-          test "$(find "$candidate_evidence" -type f -name binary-packages.tsv -o -name '*.tsv' | wc -l)" -ge 7
+          test "$(find "$candidate_evidence/indexes" -type f -name binary-packages.tsv | wc -l)" = 7
           test -f "$candidate_evidence/sources/68-drkonqi/build-status.env"
           test -f "$candidate_evidence/sources/81-kf6-ktexteditor/build-status.env"
 
@@ -235,9 +237,9 @@ jobs:
             grep -qx 'AURORA_KSQ_1_REPRO_BUILD_STATUS=PASS' "$ev/status.env" || ok=0
             grep -qx 'AURORA_KSQ_1_REPRO_BYTE_IDENTICAL=yes' "$ev/status.env" || ok=0
             grep -qx 'AURORA_KSQ_1_REPRO_SOURCE_IDENTITY=PASS' "$ev/source-identity.env" || ok=0
-            logs=("$ev"/*.build)
+            mapfile -t logs < <(find "$ev" -maxdepth 1 -type f -name '*.build' -print | sort)
             test "${#logs[@]}" -eq 1 || ok=0
-            if [[ -f "${logs[0]}" ]]; then
+            if [[ "${#logs[@]}" -eq 1 && -f "${logs[0]}" ]]; then
               for marker in AURORA_NATIVE_BUILD_NETWORK_WRAPPER=START AURORA_NATIVE_BUILD_NETNS_DIFFERENT=PASS AURORA_NATIVE_BUILD_PROC_NETIFS_ONLY_LO=PASS AURORA_NATIVE_BUILD_IPV4_ROUTE_ISOLATION=PASS AURORA_NATIVE_BUILD_NETWORK=isolated 'Status: successful'; do
                 grep -q "$marker" "${logs[0]}" || ok=0
               done
