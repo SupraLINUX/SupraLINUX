@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Qualify stock Resolute toolchain and explicit regression trigger
+      - name: Qualify stock Resolute toolchain and explicit regression provenance
         id: trigger
         shell: bash
         run: |
@@ -33,17 +33,39 @@ jobs:
           test -f "$trigger"
           source "$trigger"
           test "$AURORA_KSQ_R3_RANGE_TRIGGER_SLICE_ID" = 20260829T022000Z-r3
-          [[ "$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_RUN_ID" =~ ^[0-9]+$ ]]
-          [[ "$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]
-          [[ "$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_ARTIFACT_ID" =~ ^[0-9]+$ ]]
-          [[ "$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_ARTIFACT_DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]]
-          [[ "$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_ARTIFACT_SIZE" =~ ^[1-9][0-9]*$ ]]
+          test "$AURORA_KSQ_R3_RANGE_TRIGGER_ACCEPTED_065_REGRESSION_STATUS" = PASS
+          test "$AURORA_KSQ_R3_RANGE_TRIGGER_LOCAL_APT_ISOLATION_FIX_COMMIT" = 1f034d99c604a11918a673db9a9e49e9d717221a
+          test "$(git hash-object scripts/ci/prepare-ksq-1-local-apt-metadata.sh)" = f2b0df6b968f1c2459bf7d8ef1cb4e083411cb7d
+          for value in \
+            "$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_RUN_ID" \
+            "$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_ARTIFACT_ID" \
+            "$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_ARTIFACT_SIZE" \
+            "$AURORA_KSQ_R3_RANGE_TRIGGER_ACCEPTED_065_REGRESSION_RUN_ID" \
+            "$AURORA_KSQ_R3_RANGE_TRIGGER_ACCEPTED_065_REGRESSION_ARTIFACT_ID" \
+            "$AURORA_KSQ_R3_RANGE_TRIGGER_ACCEPTED_065_REGRESSION_ARTIFACT_SIZE"; do
+            [[ "$value" =~ ^[1-9][0-9]*$ ]]
+          done
+          for value in \
+            "$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_HEAD_SHA" \
+            "$AURORA_KSQ_R3_RANGE_TRIGGER_ACCEPTED_065_REGRESSION_HEAD_SHA"; do
+            [[ "$value" =~ ^[0-9a-f]{40}$ ]]
+          done
+          for value in \
+            "$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_ARTIFACT_DIGEST" \
+            "$AURORA_KSQ_R3_RANGE_TRIGGER_ACCEPTED_065_REGRESSION_ARTIFACT_DIGEST"; do
+            [[ "$value" =~ ^sha256:[0-9a-f]{64}$ ]]
+          done
           {
-            echo "run_id=$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_RUN_ID"
-            echo "head_sha=$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_HEAD_SHA"
-            echo "artifact_id=$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_ARTIFACT_ID"
-            echo "artifact_digest=$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_ARTIFACT_DIGEST"
-            echo "artifact_size=$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_ARTIFACT_SIZE"
+            echo "validation_run_id=$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_RUN_ID"
+            echo "validation_head_sha=$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_HEAD_SHA"
+            echo "validation_artifact_id=$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_ARTIFACT_ID"
+            echo "validation_artifact_digest=$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_ARTIFACT_DIGEST"
+            echo "validation_artifact_size=$AURORA_KSQ_R3_RANGE_TRIGGER_VALIDATION_ARTIFACT_SIZE"
+            echo "regression_run_id=$AURORA_KSQ_R3_RANGE_TRIGGER_ACCEPTED_065_REGRESSION_RUN_ID"
+            echo "regression_head_sha=$AURORA_KSQ_R3_RANGE_TRIGGER_ACCEPTED_065_REGRESSION_HEAD_SHA"
+            echo "regression_artifact_id=$AURORA_KSQ_R3_RANGE_TRIGGER_ACCEPTED_065_REGRESSION_ARTIFACT_ID"
+            echo "regression_artifact_digest=$AURORA_KSQ_R3_RANGE_TRIGGER_ACCEPTED_065_REGRESSION_ARTIFACT_DIGEST"
+            echo "regression_artifact_size=$AURORA_KSQ_R3_RANGE_TRIGGER_ACCEPTED_065_REGRESSION_ARTIFACT_SIZE"
           } >> "$GITHUB_OUTPUT"
 
           base=build/ksq-1/native-range-066-080-r3
@@ -52,7 +74,7 @@ jobs:
           readlink /proc/self/ns/net > "$base/host-evidence/host-netns.txt"
           sudo apt-get -o Acquire::Retries=5 -o APT::Update::Error-Mode=any update
           sudo apt-get -o Acquire::Retries=5 install -y --no-install-recommends \
-            ca-certificates curl python3 ubuntu-keyring gpgv \
+            ca-certificates curl python3 ubuntu-keyring gpgv jq unzip \
             sbuild mmdebstrap uidmap zstd devscripts dpkg-dev apt-utils \
             gzip xz-utils diffutils build-essential apparmor apparmor-utils libcap2-bin
           dpkg-query -W -f='${Package}\t${Version}\n' \
@@ -65,47 +87,76 @@ jobs:
           test "$(stat -c '%a' /usr/bin/newuidmap)" = 4755
           test "$(stat -c '%a' /usr/bin/newgidmap)" = 4755
           test -z "$(getcap /usr/bin/newuidmap /usr/bin/newgidmap || true)"
+          for legacy in scripts/ci/ksq-docker-builder.py scripts/ci/install-ksq-apparmor-profile.sh scripts/ci/apparmor/supralinux-ksq-unshare scripts/ci/configure-ksq-uidmap-filecaps.sh; do
+            test ! -e "$legacy"
+          done
 
-      - name: Prove exact successful independent r3 validation run and artifact
+      - name: Prove exact r3 validation and accepted-065 regression identities
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-          VALIDATION_RUN_ID: ${{ steps.trigger.outputs.run_id }}
-          VALIDATION_HEAD_SHA: ${{ steps.trigger.outputs.head_sha }}
-          VALIDATION_ARTIFACT_ID: ${{ steps.trigger.outputs.artifact_id }}
-          VALIDATION_ARTIFACT_DIGEST: ${{ steps.trigger.outputs.artifact_digest }}
-          VALIDATION_ARTIFACT_SIZE: ${{ steps.trigger.outputs.artifact_size }}
+          VALIDATION_RUN_ID: ${{ steps.trigger.outputs.validation_run_id }}
+          VALIDATION_HEAD_SHA: ${{ steps.trigger.outputs.validation_head_sha }}
+          VALIDATION_ARTIFACT_ID: ${{ steps.trigger.outputs.validation_artifact_id }}
+          VALIDATION_ARTIFACT_DIGEST: ${{ steps.trigger.outputs.validation_artifact_digest }}
+          VALIDATION_ARTIFACT_SIZE: ${{ steps.trigger.outputs.validation_artifact_size }}
+          REGRESSION_RUN_ID: ${{ steps.trigger.outputs.regression_run_id }}
+          REGRESSION_HEAD_SHA: ${{ steps.trigger.outputs.regression_head_sha }}
+          REGRESSION_ARTIFACT_ID: ${{ steps.trigger.outputs.regression_artifact_id }}
+          REGRESSION_ARTIFACT_DIGEST: ${{ steps.trigger.outputs.regression_artifact_digest }}
+          REGRESSION_ARTIFACT_SIZE: ${{ steps.trigger.outputs.regression_artifact_size }}
         run: |
           set -euo pipefail
           base=build/ksq-1/native-range-066-080-r3
-          run_json="$base/r3-validation-run-api.json"
-          artifact_json="$base/r3-validation-artifact-api.json"
-          gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "/repos/$GITHUB_REPOSITORY/actions/runs/$VALIDATION_RUN_ID" > "$run_json"
-          test "$(jq -r '.status' "$run_json")" = completed
-          test "$(jq -r '.conclusion' "$run_json")" = success
-          test "$(jq -r '.head_sha' "$run_json")" = "$VALIDATION_HEAD_SHA"
-          test "$(jq -r '.head_branch' "$run_json")" = feature/kde-stack-qualification
-          test "$(jq -r '.name' "$run_json")" = 'Aurora KSQ snapshot slice r3 explicit independent validation'
-          gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "/repos/$GITHUB_REPOSITORY/actions/artifacts/$VALIDATION_ARTIFACT_ID" > "$artifact_json"
-          test "$(jq -r '.id' "$artifact_json")" = "$VALIDATION_ARTIFACT_ID"
-          test "$(jq -r '.name' "$artifact_json")" = aurora-ksq-snapshot-r3-explicit-independent-validation
-          test "$(jq -r '.expired' "$artifact_json")" = false
-          test "$(jq -r '.digest' "$artifact_json")" = "$VALIDATION_ARTIFACT_DIGEST"
-          test "$(jq -r '.size_in_bytes' "$artifact_json")" = "$VALIDATION_ARTIFACT_SIZE"
+          prove_run_artifact() {
+            local run_id="$1" head_sha="$2" workflow_name="$3" artifact_id="$4" artifact_name="$5" digest="$6" size="$7" prefix="$8"
+            gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' \
+              "/repos/$GITHUB_REPOSITORY/actions/runs/$run_id" > "$base/${prefix}-run-api.json"
+            test "$(jq -r '.status' "$base/${prefix}-run-api.json")" = completed
+            test "$(jq -r '.conclusion' "$base/${prefix}-run-api.json")" = success
+            test "$(jq -r '.head_sha' "$base/${prefix}-run-api.json")" = "$head_sha"
+            test "$(jq -r '.head_branch' "$base/${prefix}-run-api.json")" = feature/kde-stack-qualification
+            test "$(jq -r '.name' "$base/${prefix}-run-api.json")" = "$workflow_name"
+            gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' \
+              "/repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id" > "$base/${prefix}-artifact-api.json"
+            test "$(jq -r '.id' "$base/${prefix}-artifact-api.json")" = "$artifact_id"
+            test "$(jq -r '.name' "$base/${prefix}-artifact-api.json")" = "$artifact_name"
+            test "$(jq -r '.expired' "$base/${prefix}-artifact-api.json")" = false
+            test "$(jq -r '.digest' "$base/${prefix}-artifact-api.json")" = "$digest"
+            test "$(jq -r '.size_in_bytes' "$base/${prefix}-artifact-api.json")" = "$size"
+            test "$(jq -r '.workflow_run.id' "$base/${prefix}-artifact-api.json")" = "$run_id"
+            test "$(jq -r '.workflow_run.head_sha' "$base/${prefix}-artifact-api.json")" = "$head_sha"
+          }
+          prove_run_artifact "$VALIDATION_RUN_ID" "$VALIDATION_HEAD_SHA" \
+            'Aurora KSQ snapshot slice r3 explicit independent validation' \
+            "$VALIDATION_ARTIFACT_ID" aurora-ksq-snapshot-r3-explicit-independent-validation \
+            "$VALIDATION_ARTIFACT_DIGEST" "$VALIDATION_ARTIFACT_SIZE" r3-validation
+          prove_run_artifact "$REGRESSION_RUN_ID" "$REGRESSION_HEAD_SHA" \
+            'Aurora KSQ-1 r3 accepted-065 KWallet regression resume' \
+            "$REGRESSION_ARTIFACT_ID" aurora-ksq-r3-accepted-065-kwallet-regression-resume \
+            "$REGRESSION_ARTIFACT_DIGEST" "$REGRESSION_ARTIFACT_SIZE" accepted065-regression
 
       - name: Download exact independent r3 validation artifact
         uses: actions/download-artifact@v8
         with:
-          artifact-ids: ${{ steps.trigger.outputs.artifact_id }}
+          artifact-ids: ${{ steps.trigger.outputs.validation_artifact_id }}
           path: ${{ runner.temp }}/r3-validation
           github-token: ${{ github.token }}
           repository: SupraLINUX/SupraLINUX
-          run-id: ${{ steps.trigger.outputs.run_id }}
+          run-id: ${{ steps.trigger.outputs.validation_run_id }}
           digest-mismatch: error
 
-      - name: Enforce independent r3 validation and extract release identity
+      - name: Download exact accepted-065 r3 regression artifact
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: ${{ steps.trigger.outputs.regression_artifact_id }}
+          path: ${{ runner.temp }}/accepted065-regression
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ steps.trigger.outputs.regression_run_id }}
+          digest-mismatch: error
+
+      - name: Enforce r3 validation and accepted-065 regression evidence
         id: r3
         shell: bash
         run: |
@@ -122,22 +173,33 @@ jobs:
           test "$AURORA_KSQ_SNAPSHOT_R3_UPSTREAM_SNAPSHOT" = 20260829T022000Z
           test "$AURORA_KSQ_SNAPSHOT_R3_MANUAL_PACKAGE_ADDITIONS" = 0
           test "$AURORA_KSQ_SNAPSHOT_R3_CANONICAL_POINTER_UPDATED" = no
-          test "$AURORA_KSQ_SNAPSHOT_R3_KSQ_REGRESSION_REQUIRED" = yes
-          [[ "$AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET_SHA256" =~ ^[0-9a-f]{64}$ ]]
-          [[ "$AURORA_KSQ_SNAPSHOT_R3_GAP_OBJECTS" =~ ^[1-9][0-9]*$ ]]
-          [[ "$AURORA_KSQ_SNAPSHOT_R3_GAP_BYTES" =~ ^[1-9][0-9]*$ ]]
-
           source "$v/publication.env"
           test "$AURORA_KSQ_SNAPSHOT_R3_PUBLICATION" = PASS
-          test "$AURORA_KSQ_SNAPSHOT_R3_SLICE_ID" = 20260829T022000Z-r3
-          test "$AURORA_KSQ_SNAPSHOT_R3_RELEASE_TAG" = ksq-snapshot-20260829T022000Z-r3
-          test "$AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET" = aurora-ubuntu-snapshot-20260829T022000Z-r3-amd64.tar
-          test "$AURORA_KSQ_SNAPSHOT_R3_RELEASE_MANIFEST" = aurora-ubuntu-snapshot-20260829T022000Z-r3-amd64.env
-          test "$AURORA_KSQ_SNAPSHOT_R3_MANUAL_PACKAGE_ADDITIONS" = 0
           test "$AURORA_KSQ_SNAPSHOT_R3_CANONICAL" = no
-          [[ "$AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET_SHA256" =~ ^[0-9a-f]{64}$ ]]
-          [[ "$AURORA_KSQ_SNAPSHOT_R3_RELEASE_MANIFEST_SHA256" =~ ^[0-9a-f]{64}$ ]]
-          [[ "$AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET_BYTES" =~ ^[1-9][0-9]*$ ]]
+
+          reg="$RUNNER_TEMP/accepted065-regression/ksq-1/r3-accepted-065-regression-resume"
+          test -d "$reg"
+          (cd "$reg" && sha256sum -c evidence.sha256)
+          source "$reg/acceptance.env"
+          test "$AURORA_KSQ_R3_ACCEPTED_065_REGRESSION" = PASS
+          test "$AURORA_KSQ_R3_ACCEPTED_065_CHECKPOINT_ORDER" = 65
+          test "$AURORA_KSQ_R3_ACCEPTED_065_CHECKPOINT_DEBS" = 295
+          test "$AURORA_KSQ_R3_ACCEPTED_065_ACQUISITION_REGRESSION" = PASS
+          test "$AURORA_KSQ_R3_ACCEPTED_065_GAP_OBJECTS" = 3
+          test "$AURORA_KSQ_R3_ACCEPTED_065_GAP_BYTES" = 547318
+          test "$AURORA_KSQ_R3_ACCEPTED_065_GAP_INTERSECTION" = 0
+          test "$AURORA_KSQ_R3_ACCEPTED_065_KWALLET_REGRESSION" = PASS
+          test "$AURORA_KSQ_R3_ACCEPTED_065_KWALLET_SELECTION_IDENTITY" = PASS
+          test "$AURORA_KSQ_R3_ACCEPTED_065_KWALLET_AUTO_UNLOCK_CERTIFIED" = no
+          test "$AURORA_KSQ_R3_ACCEPTED_065_BUILDD_BOOTSTRAP" = PASS
+          test "$AURORA_KSQ_R3_ACCEPTED_065_APPARMOR_DENIALS" = 0
+          test "$AURORA_KSQ_R3_ACCEPTED_065_DOCKER_USED" = 0
+          test "$AURORA_KSQ_R3_ACCEPTED_065_CUSTOM_APPARMOR_USED" = 0
+          test "$AURORA_KSQ_R3_ACCEPTED_065_UIDMAP_FILECAP_HACK_USED" = 0
+          test "$AURORA_KSQ_R3_ACCEPTED_065_FULL_SOURCE_REBUILD_REQUIRED" = no
+          test "$AURORA_KSQ_R3_ACCEPTED_065_NEXT_RANGE" = 66-80
+
+          source "$v/publication.env"
           {
             echo "tag=$AURORA_KSQ_SNAPSHOT_R3_RELEASE_TAG"
             echo "asset=$AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET"
@@ -145,33 +207,30 @@ jobs:
             echo "archive_bytes=$AURORA_KSQ_SNAPSHOT_R3_RELEASE_ASSET_BYTES"
             echo "manifest=$AURORA_KSQ_SNAPSHOT_R3_RELEASE_MANIFEST"
             echo "manifest_sha256=$AURORA_KSQ_SNAPSHOT_R3_RELEASE_MANIFEST_SHA256"
-            echo "gap_objects=$AURORA_KSQ_SNAPSHOT_R3_GAP_OBJECTS"
-            echo "gap_bytes=$AURORA_KSQ_SNAPSHOT_R3_GAP_BYTES"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Download exact accepted checkpoints through order 65
+      - name: Restore exact accepted checkpoint through order 65
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           fetch_artifact() {
-            local id="$1" run="$2" out="$3"
+            local id="$1" out="$2"
             mkdir -p "$out"
             curl --fail --location --retry 5 --retry-all-errors \
               -H 'Accept: application/vnd.github+json' \
               -H "Authorization: Bearer ${GH_TOKEN}" \
               -H 'X-GitHub-Api-Version: 2022-11-28' \
-              "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" \
-              -o "$out.zip"
+              "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" -o "$out.zip"
             unzip -q "$out.zip" -d "$out"
           }
-          fetch_artifact 9818465016 33546093974 "$RUNNER_TEMP/prior-001-020"
-          fetch_artifact 9824689982 33561782526 "$RUNNER_TEMP/prior-021-040"
-          fetch_artifact 9892762100 33753437984 "$RUNNER_TEMP/prior-041-043-r2"
-          fetch_artifact 9900367299 33767306768 "$RUNNER_TEMP/prior-044-060-r2"
-          fetch_artifact 9913134271 33805321380 "$RUNNER_TEMP/prior-061-065-r2"
-          fetch_artifact 9918320108 33821228782 "$RUNNER_TEMP/accept-061-065-r2"
+          fetch_artifact 9818465016 "$RUNNER_TEMP/prior-001-020"
+          fetch_artifact 9824689982 "$RUNNER_TEMP/prior-021-040"
+          fetch_artifact 9892762100 "$RUNNER_TEMP/prior-041-043-r2"
+          fetch_artifact 9900367299 "$RUNNER_TEMP/prior-044-060-r2"
+          fetch_artifact 9913134271 "$RUNNER_TEMP/prior-061-065-r2"
+          fetch_artifact 9918320108 "$RUNNER_TEMP/accept-061-065-r2"
           bash scripts/ci/restore-ksq-1-accepted-through-065.sh \
             "$RUNNER_TEMP/accept-061-065-r2" \
             "$RUNNER_TEMP/prior-001-020" \
@@ -180,10 +239,10 @@ jobs:
             "$RUNNER_TEMP/prior-044-060-r2" \
             "$RUNNER_TEMP/prior-061-065-r2" \
             build/ksq-1/native-range-066-080-r3/accepted-065-restore
-          grep -qx 'AURORA_KSQ_1_ACCEPTED_065_RESTORE_STATUS=PASS' \
-            build/ksq-1/native-range-066-080-r3/accepted-065-restore/status.env
+          grep -qx 'AURORA_KSQ_1_ACCEPTED_065_RESTORE_STATUS=PASS' build/ksq-1/native-range-066-080-r3/accepted-065-restore/status.env
+          test "$(find build/ksq-1/full/debs -maxdepth 1 -type f -name '*.deb' | wc -l)" = 295
 
-      - name: Download and validate exact r3 release without changing canonical pointer
+      - name: Download and validate exact r3 release
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -212,33 +271,29 @@ jobs:
           cp "$release/$R3_MANIFEST" build/ksq-1/native-range-066-080-r3/r3-release-manifest.env
           cp "$slice/provenance.env" build/ksq-1/native-range-066-080-r3/r3-provenance.env
 
-      - name: Recreate strictly local r3 APT and unshare build environment
+      - name: Recreate local-only r3 APT and unshare build environment
         shell: bash
         run: |
           set -euo pipefail
           base=build/ksq-1/native-range-066-080-r3
           slice=/opt/supralinux/archive/20260829T022000Z-r3
-          test -d "$slice"
-          aptiso="$RUNNER_TEMP/apt-isolation"
-          mkdir -p "$aptiso"
-          cat > "$aptiso/preload.conf" <<EOF
-          Acquire::http::Proxy "http://127.0.0.1:9/";
-          Acquire::https::Proxy "http://127.0.0.1:9/";
-          Acquire::Retries "0";
-          Acquire::Languages "none";
-          EOF
-          APT_CONFIG="$aptiso/preload.conf" AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" \
-            bash scripts/ci/prepare-ksq-1-local-apt-metadata.sh 2>&1 | tee "$base/local-apt-metadata.log"
-          if grep -Eq 'c-n-f|/cnf/|Components' "$base/local-apt-metadata.log"; then
-            echo AURORA_NATIVE_R3_APT_ISOLATION_FAILURE >&2
-            exit 1
-          fi
-          grep -Fq "file:$slice/ubuntu" "$base/local-apt-metadata.log"
+          AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" bash scripts/ci/prepare-ksq-1-local-apt-metadata.sh 2>&1 | tee "$base/local-apt-metadata.log"
+          grep -q '^AURORA_KSQ_1_LOCAL_APT_HOST_FRAGMENTS=disabled$' "$base/local-apt-metadata.log"
+          grep -q '^AURORA_KSQ_1_LOCAL_APT_SUCCESS$' "$base/local-apt-metadata.log"
+          ! grep -Eq 'c-n-f|/cnf/|Components' "$base/local-apt-metadata.log"
+          ! grep -Eq '^(Get|Hit|Ign|Err):[0-9]+ https?://' "$base/local-apt-metadata.log"
 
           python3 scripts/ci/generate-kde-build-closure.py
-          cmp build/ksq-0/build-order.tsv build/ksq-0/canonical/build-order.tsv
-          cmp build/ksq-0/closure-status.env build/ksq-0/canonical/closure-status.env
           test "$(sha256sum build/ksq-0/build-order.tsv | awk '{print $1}')" = 9c53547df78a9f7c740228aba09490dfdb68e6307d2200e12ebf907dfa3fcb88
+          grep -qx 'AURORA_KSQ_0_APT_SNAPSHOT=20260829T022000Z' build/ksq-0/closure-status.env
+          grep -qx 'AURORA_KSQ_0_CLOSURE_STATUS=COMPLETE' build/ksq-0/closure-status.env
+          grep -qx 'AURORA_KSQ_0_CLOSURE_SOURCES=101' build/ksq-0/closure-status.env
+          grep -qx 'AURORA_KSQ_0_CLOSURE_UNRESOLVED=0' build/ksq-0/closure-status.env
+          grep -qx 'AURORA_KSQ_0_CLOSURE_BUILD_ORDERED=101' build/ksq-0/closure-status.env
+          grep -qx 'AURORA_KSQ_0_CLOSURE_FRAMEWORKS_6_29_0=59' build/ksq-0/closure-status.env
+          grep -qx 'AURORA_KSQ_0_CLOSURE_KDE_ADJACENT_BACKPORT=2' build/ksq-0/closure-status.env
+          grep -qx 'AURORA_KSQ_0_CLOSURE_PLASMA_6_7_4=39' build/ksq-0/closure-status.env
+          grep -qx 'AURORA_KSQ_0_CLOSURE_UBUNTU_PLATFORM_COMPAT_BACKPORT=1' build/ksq-0/closure-status.env
 
           python3 - <<'PY'
           import csv
@@ -261,22 +316,25 @@ jobs:
           with open('build/ksq-0/build-order.tsv',newline='',encoding='utf-8') as f:
               rows=list(csv.DictReader(f,delimiter='\t'))
           got=[(int(r['order']),r['source_package'],r['packaging_version'],r['candidate_family'],r['decision']) for r in rows if 66<=int(r['order'])<=80]
-          if got!=expected: raise SystemExit(f'orders 66-80 drifted: {got!r}')
+          if got != expected:
+              raise SystemExit(f'orders 66-80 drifted: {got!r}')
           with open('tests/kde-stack/ksq-1-packaging-adaptations.tsv',newline='',encoding='utf-8') as f:
               adaptations=list(csv.DictReader(f,delimiter='\t'))
           targets={(s,v) for _,s,v,_,_ in expected}
           leaked=[r for r in adaptations if (r['source_package'],r['source_version']) in targets]
-          if leaked: raise SystemExit(f'orders 66-80 unexpectedly declare packaging adaptations: {leaked!r}')
+          if leaked:
+              raise SystemExit(f'orders 66-80 unexpectedly declare packaging adaptations: {leaked!r}')
           print('AURORA_KSQ_1_RANGE_066_080_DECLARED_ADAPTATIONS=0')
           PY
 
-          AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" bash scripts/ci/prepare-ksq-1-local-build-environment.sh \
-            2>&1 | tee "$base/mmdebstrap-buildd.log"
+          AURORA_KSQ_LOCAL_SLICE_ROOT="$slice" bash scripts/ci/prepare-ksq-1-local-build-environment.sh 2>&1 | tee "$base/mmdebstrap-buildd.log"
           grep -Fq "AURORA_KSQ_1_BUILD_ENV_LOCAL_SLICE=$slice" build/ksq-1/environment/build-environment.env
+          grep -q '^AURORA_KSQ_1_LOCAL_BUILD_ENV_SUCCESS$' "$base/mmdebstrap-buildd.log"
+          ! grep -Eq '^(Get|Hit|Ign|Err):[0-9]+ https?://' "$base/mmdebstrap-buildd.log"
           bash scripts/ci/configure-ksq-1-native-sbuild-network-proof.sh 2>&1 | tee "$base/network-proof-config.log"
           grep -qx 'AURORA_KSQ_1_NATIVE_NETWORK_PROOF=PASS' build/ksq-1/environment/native-sbuild-network-proof.env
 
-      - name: Build native range 066-080 against independently validated r3 candidate
+      - name: Build native range 066-080 against r3 local-only
         shell: bash
         run: |
           set -euo pipefail
@@ -309,7 +367,7 @@ jobs:
             "$base/host-evidence/apparmor-denied-all.log" > "$base/host-evidence/apparmor-denied-relevant.log" || true
           denials="$(wc -l < "$base/host-evidence/apparmor-denied-relevant.log")"
           if [[ -f "$base/range-command.env" ]]; then
-            . "$base/range-command.env"
+            source "$base/range-command.env"
             command_rc="$AURORA_NATIVE_RANGE_066_080_R3_COMMAND_RC"
             tee_rc="$AURORA_NATIVE_RANGE_066_080_R3_TEE_RC"
           fi
@@ -326,22 +384,24 @@ jobs:
               && grep -qx 'AURORA_KSQ_1_RANGE_LAST_ORDER=80' "$evidence/range-status.env" \
               && grep -qx 'AURORA_KSQ_1_RANGE_SOURCES=15' "$evidence/range-status.env"; then
               python3 - "$evidence/build-manifest.tsv" "$evidence" <<'PY'
-          import csv,sys
+          import csv, sys
           from pathlib import Path
-          manifest,evidence=Path(sys.argv[1]),Path(sys.argv[2])
+          manifest, evidence = Path(sys.argv[1]), Path(sys.argv[2])
           expected=[
           (66,'kf6-kxmlgui','6.29.0-0ubuntu1','frameworks-6.29.0','rebuild'),(67,'kf6-kio','6.29.0-0ubuntu1','frameworks-6.29.0','rebuild'),(68,'drkonqi','6.7.4-1ubuntu1','plasma-6.7.4','rebuild'),(69,'kf6-baloo','6.29.0-0ubuntu1','frameworks-6.29.0','rebuild'),(70,'kf6-kcmutils','6.29.0-0ubuntu1','frameworks-6.29.0','rebuild'),(71,'kf6-knotifyconfig','6.29.0-0ubuntu1','frameworks-6.29.0','rebuild'),(72,'kf6-kparts','6.29.0-0ubuntu1','frameworks-6.29.0','rebuild'),(73,'kglobalacceld','6.7.4-0ubuntu1','plasma-6.7.4','rebuild'),(74,'xdg-desktop-portal-kde','6.7.4-0ubuntu1','plasma-6.7.4','rebuild'),(75,'flatpak-kcm','6.7.4-0ubuntu1','plasma-6.7.4','rebuild'),(76,'kf6-knewstuff','6.29.0-0ubuntu1','frameworks-6.29.0','rebuild'),(77,'kinfocenter','4:6.7.4-0ubuntu1','plasma-6.7.4','rebuild'),(78,'krdp','6.7.4-0ubuntu2','plasma-6.7.4','rebuild'),(79,'plasma-disks','6.7.4-1ubuntu1','plasma-6.7.4','rebuild'),(80,'systemsettings','4:6.7.4-0ubuntu1','plasma-6.7.4','rebuild')]
-          with manifest.open(newline='',encoding='utf-8') as f: rows=list(csv.DictReader(f,delimiter='\t'))
+          with manifest.open(newline='', encoding='utf-8') as f:
+              rows=list(csv.DictReader(f, delimiter='\t'))
           got=[(int(r['order']),r['source_package'],r['packaging_base'],r['candidate_family'],r['decision']) for r in rows]
-          if got!=expected: raise SystemExit(f'manifest identity mismatch: {got!r}')
-          if any(r['result']!='PASS' for r in rows): raise SystemExit('manifest contains non-PASS source')
-          for order,source,*_ in expected:
-              prep=evidence/f'{order}-{source}'/'prepared-source.env'
+          if got != expected:
+              raise SystemExit(f'manifest identity mismatch: {got!r}')
+          if any(r['result'] != 'PASS' for r in rows):
+              raise SystemExit('manifest contains non-PASS source')
+          for order, source, *_ in expected:
               vals={}
-              for line in prep.read_text().splitlines():
+              for line in (evidence/f'{order}-{source}'/'prepared-source.env').read_text().splitlines():
                   if '=' in line:
                       k,v=line.split('=',1); vals[k]=v
-              if vals.get('AURORA_KSQ_1_PACKAGING_ADAPTATIONS_APPLIED')!='0' or vals.get('AURORA_KSQ_1_PACKAGING_ADAPTATION_IDS')!='-':
+              if vals.get('AURORA_KSQ_1_PACKAGING_ADAPTATIONS_APPLIED') != '0' or vals.get('AURORA_KSQ_1_PACKAGING_ADAPTATION_IDS') != '-':
                   raise SystemExit(f'{order} {source}: unexpected packaging adaptation')
           PY
               mapfile -t logs < <(find "$evidence" -mindepth 2 -maxdepth 2 -type f -name '*.build' -print | sort)
@@ -375,6 +435,7 @@ jobs:
             echo "AURORA_NATIVE_RANGE_066_080_R3_DOCKER_USED=0"
             echo "AURORA_NATIVE_RANGE_066_080_R3_CUSTOM_APPARMOR_USED=0"
             echo "AURORA_NATIVE_RANGE_066_080_R3_UIDMAP_FILECAP_PATCH_USED=0"
+            echo "AURORA_NATIVE_RANGE_066_080_R3_ACCEPTED_065_REGRESSION=PASS"
             echo "AURORA_NATIVE_RANGE_066_080_R3_SNAPSHOT_POINTER_CANONICAL_CHANGED=no"
             echo "AURORA_NATIVE_RANGE_066_080_R3_STATUS=$status"
           } | tee "$base/audit.env"
@@ -402,6 +463,11 @@ jobs:
           set -euo pipefail
           cat build/ksq-1/native-range-066-080-r3/audit.env
           grep -qx 'AURORA_NATIVE_RANGE_066_080_R3_STATUS=PASS' build/ksq-1/native-range-066-080-r3/audit.env
+          grep -qx 'AURORA_NATIVE_RANGE_066_080_R3_ACCEPTED_065_REGRESSION=PASS' build/ksq-1/native-range-066-080-r3/audit.env
           grep -qx 'AURORA_NATIVE_RANGE_066_080_R3_PACKAGING_ADAPTATIONS=0' build/ksq-1/native-range-066-080-r3/audit.env
           grep -qx 'AURORA_NATIVE_RANGE_066_080_R3_DRKONQI_REPRODUCIBILITY_CERTIFIED=no' build/ksq-1/native-range-066-080-r3/audit.env
+          grep -qx 'AURORA_NATIVE_RANGE_066_080_R3_APPARMOR_DENIALS=0' build/ksq-1/native-range-066-080-r3/audit.env
+          grep -qx 'AURORA_NATIVE_RANGE_066_080_R3_DOCKER_USED=0' build/ksq-1/native-range-066-080-r3/audit.env
+          grep -qx 'AURORA_NATIVE_RANGE_066_080_R3_CUSTOM_APPARMOR_USED=0' build/ksq-1/native-range-066-080-r3/audit.env
+          grep -qx 'AURORA_NATIVE_RANGE_066_080_R3_UIDMAP_FILECAP_PATCH_USED=0' build/ksq-1/native-range-066-080-r3/audit.env
           grep -qx 'AURORA_NATIVE_RANGE_066_080_R3_SNAPSHOT_POINTER_CANONICAL_CHANGED=no' build/ksq-1/native-range-066-080-r3/audit.env
