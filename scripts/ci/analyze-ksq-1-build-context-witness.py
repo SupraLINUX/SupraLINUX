@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 SNAPSHOT = "20260829T022000Z"
-SNAPSHOT_URI = f"https://snapshot.ubuntu.com/ubuntu/{SNAPSHOT}/"
+SNAPSHOT_BASE = f"https://snapshot.ubuntu.com/ubuntu/{SNAPSHOT}"
 GET_RE = re.compile(
     rf"^Get:\d+\s+https://snapshot\.ubuntu\.com/ubuntu/{SNAPSHOT}\s+"
     r"(?P<suite>resolute(?:-(?:updates|security|backports))?)/(?P<component>main|universe|restricted|multiverse)\s+"
@@ -138,7 +138,7 @@ def collect_observed(
                 if transport:
                     remote_transport_lines += 1
                     url = transport.group("url")
-                    if not url.startswith(SNAPSHOT_URI):
+                    if url != SNAPSHOT_BASE and not url.startswith(SNAPSHOT_BASE + "/"):
                         fail(
                             f"order {order} {source}: non-snapshot HTTP(S) transport "
                             f"at {log.name}:{lineno}: {url}"
@@ -190,7 +190,6 @@ def main() -> None:
     if missing_metadata:
         fail("observed package selections absent from signed snapshot metadata: " + ", ".join(map(str, missing_metadata[:20])))
 
-    # One exact payload object may satisfy only one exact package/version/arch record here.
     objects: dict[str, tuple[PackageKey, PackageRecord, set[str]]] = {}
     for key, rec in resolved.items():
         old = objects.get(rec.filename)
