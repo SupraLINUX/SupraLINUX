@@ -2,7 +2,7 @@
 
 Status: **ACTIVE — NOT CERTIFIED**
 
-This is the current engineering status of KSQ-1. It is not an acceptance record and does not authorize entry into KSQ-2.
+This is the current engineering status of KSQ-1. It is not a final KSQ-1 acceptance record and does not authorize entry into KSQ-2.
 
 - KSQ-0: **CERTIFIED / CLOSED**.
 - KSQ-1: **ACTIVE / NOT CERTIFIED**.
@@ -13,7 +13,7 @@ This is the current engineering status of KSQ-1. It is not an acceptance record 
 
 KSQ-1 consumes the certified 101-source DAG, Ubuntu Resolute snapshot `20260829T022000Z`, and the exact package/source identities established by KSQ-0.
 
-The selected maintained source-build architecture is:
+The maintained source-build architecture is:
 
 `GitHub-hosted Ubuntu 26.04 -> immutable local snapshot slice -> mmdebstrap --mode=unshare --variant=buildd -> sbuild --chroot-mode=unshare --no-enable-network`
 
@@ -23,30 +23,27 @@ Canonical build-order SHA-256:
 
 `9c53547df78a9f7c740228aba09490dfdb68e6307d2200e12ebf907dfa3fcb88`
 
-## Immutable r2 input
+APT Recommends remain at normal/default behavior. The obsolete `--no-install-recommends` closure policy is not used to emulate sbuild.
 
-The accepted-through-order-65 evidence uses the immutable slice `20260829T022000Z-r2`:
+## Immutable r2 historical input
+
+Slice `20260829T022000Z-r2` remains immutable historical evidence:
 
 - upstream snapshot: `20260829T022000Z`;
 - release ID: `381836501`;
-- tag: `ksq-snapshot-20260829T022000Z-r2`;
 - archive asset: `542414026`;
 - archive bytes: `1054177280`;
 - archive SHA-256: `23413ddf1c1820aaa01dfa81005b37e8c9611bad2d0a632664d0e08282e69c3b`;
 - manifest asset: `542414028`;
 - manifest SHA-256: `6ed95b495ded7744f081335684c2918eeae96dbc822fa53b0d9fb5bc2da0f481`;
-- generic `amd64`, architecture variants disabled;
-- normal/default APT Recommends policy;
-- 244 certified binary/version seeds;
 - 1783 binary `.deb` objects / `785219274` bytes;
 - 301 Ubuntu source objects;
-- 4 Debian source objects.
+- 4 Debian source objects;
+- normal/default APT Recommends policy.
 
-Independent r2 publication validation remains PASS. r2 is immutable and remains the exact input of the already accepted build evidence through order 65.
+Independent r2 publication validation remains PASS. r2 remains the exact slice originally used by the accepted builds through order 65, but it is now **proven insufficient as a universal payload closure for all real 101-source sbuild contexts**. It must never be mutated.
 
-r2 is **not** being mutated to correct later closure deficiencies.
-
-## Accepted maintained checkpoint chain
+## Accepted maintained checkpoint chain through order 65
 
 ### Orders 001–020
 
@@ -64,7 +61,7 @@ r2 is **not** being mutated to correct later closure deficiencies.
 - 20/20 sources PASS;
 - accumulated DEBs: `192`.
 
-### Orders 041–043 — r2 regression
+### Orders 041–043
 
 - run `33753437984`;
 - artifact `9892762100`;
@@ -105,94 +102,189 @@ Independent fail-closed acceptance:
 - digest `sha256:50c33e99c7593ce6b8d4a67c8ee11c1598ad93545ed362078a57410c4a892730`;
 - SUCCESS.
 
-The maintained candidate is accepted through **order 65 / 295 accumulated DEBs**.
+The formally accepted candidate checkpoint remains **order 65 / 295 accumulated DEBs** until a later local-only range receives its own independent acceptance.
 
 Detailed record: `docs/validation/AURORA_KSQ_1_RANGE_061_065_KWALLET.md`.
 
 ## KWallet scope
 
-The accepted order-65 solver selects exactly `375` packages. Exactly three runtime objects needed by that isolated installation proof are outside r2's build-closure purpose:
+The accepted order-65 solver selects exactly `375` packages. Its three separately qualified runtime objects remain in immutable sidecar `20260829T022000Z-kwallet-runtime-r1`:
 
 - `lsb-base=11.6build1`;
 - `libwrap0=7.6.q-36build2`;
 - `socat=1.8.1.1-1ubuntu0.1`.
 
-They remain in the separate immutable runtime sidecar `20260829T022000Z-kwallet-runtime-r1`:
+Sidecar identity:
 
 - release `382325880`;
 - archive asset `543326513`, SHA-256 `89f9861d061a68498950bddb96b1f22ed41ddd205db118719f23b8836284b40e`;
-- manifest asset `543326512`, SHA-256 `40a2a1f2e720dd07c93ecdfc52c42b1cd2202a495a749d2722109028cbdf0c32`;
-- independent validation artifact `9912479235`, digest `sha256:6ae93f1906617e67734ca5afa6e675ec47aec2f27a7e0a0799c76145b84e8f1c`.
+- manifest asset `543326512`, SHA-256 `40a2a1f2e720dd07c93ecdfc52c42b1cd2202a495a749d2722109028cbdf0c32`.
 
-This certifies package relationships, local installation and PAM registration. Runtime session automatic unlock is still explicitly **not certified** in this gate.
+This certifies package relationships, local installation and PAM registration only. Runtime session automatic unlock remains explicitly **NOT CERTIFIED**.
 
-## Orders 066–080: r2 blocker
+## r2 closure defect — root cause closed
 
-The first maintained 66–80 attempt is run `33821750759`, artifact `9919609367`, digest `sha256:e04615715fcee3450c14db3f1a7085d09cd937c7db8d2520c0bff49f60546998`.
+The first maintained 66–80 attempt against r2 was run `33821750759`, artifact `9919609367`, digest `sha256:e04615715fcee3450c14db3f1a7085d09cd937c7db8d2520c0bff49f60546998`.
 
-Orders 66–73 built successfully inside that run but are **not accepted as a checkpoint** because the range failed at order 74 `xdg-desktop-portal-kde`.
+Orders 66–73 built but were not accepted because order 74 `xdg-desktop-portal-kde` failed while installing Build-Depends. The signed r2 metadata advertised two `libjpeg8-empty` transition payloads that were not physically materialized in r2.
 
-The order-74 failure is a local-slice payload under-closure, not a KDE source/Build-Depends defect. Real `sbuild` dependency resolution selected:
+The cause was not KDE source drift, Recommends, AppArmor or Internet access. The invalid r2 assumption was that one aggregate APT transaction over all direct roots necessarily yields a payload superset of every independent sbuild Build-Depends transaction. Provider/alternative choices differ by transaction context.
 
-- `libjpeg-turbo8-dev=2.1.5-4ubuntu4`;
-- `libjpeg8-dev=8c-2ubuntu12`;
-- `libjpeg-dev=8c-2ubuntu12`.
+Detailed record: `docs/validation/AURORA_KSQ_1_RANGE_066_080_R2_BLOCKER.md`.
 
-r2 contains the first payload but not the two `libjpeg8-empty` development payloads advertised by its own signed metadata.
+## Complete build-context witness — PROVEN
 
-Controlled A/B run `33862761542`, artifact `9933323436`, digest `sha256:4cdc54e59e77238cfc9d8c9c238e8dc947fb531241dcb43a3263f6278db7f987`, proves the root cause:
+Authoritative real build-context witness parent run:
 
-- the original aggregate 244-seed r2 transaction selects `libjpeg-turbo8-dev` but omits `libjpeg8-dev` and `libjpeg-dev`;
-- isolated direct `libcups2-dev=2.4.16-1ubuntu1.3` selects all three;
-- an isolated sbuild-style dependency dummy with the same `libcups2-dev` relation also selects all three.
+- run `33929720702`;
+- witness HEAD `84596eaf2f7d7735b74f48a48fdde82229500f7a`;
+- ranges 66–80, 81–90 and 91–101: **36/36 source builds SUCCESS**;
+- final witness candidate state: `424` accumulated DEBs;
+- new packaging adaptations in 66–101: `0`.
 
-Therefore the sbuild dummy model is not the cause. The invalid assumption was that one aggregate APT transaction over the Build-Depends seeds of many independent sources necessarily yields a payload superset of every real per-source build transaction. It does not: provider/transition-package decisions change with transaction context.
+The parent run is globally red only because its obsolete embedded analyzer failed after all real build jobs had succeeded. Those build artifacts were then consumed by an independent explicit analyzer with exact run/head/artifact/digest provenance.
 
-Detailed causal record: `docs/validation/AURORA_KSQ_1_RANGE_066_080_R2_BLOCKER.md`.
+Authoritative independent analysis:
 
-## Corrective witness now active
+- run `33962296018`;
+- artifact `9968317241`;
+- digest `sha256:b7db4224c5bd7cd89f6e274cb8a0c617327bc917cee1185cff9e0b2a07ea0694`;
+- `AURORA_KSQ_1_BUILD_CONTEXT_WITNESS_STATUS=PROVEN`;
+- 36 sources / 36 logs;
+- 1114 observed package objects;
+- 492106800 observed payload bytes;
+- r2 objects: 1783;
+- exact gap: **3 objects / 547318 bytes**;
+- remote policy: `fixed-snapshot-only`;
+- manual package additions: `0`.
 
-No missing package is being appended manually, no package source is being patched, and r2 is not being modified.
+The machine-derived r2 gap is exactly:
 
-The active correction is workflow:
+- `libcurl4-openssl-dev=8.18.0-1ubuntu2.4`, payload SHA-256 `997e26288998c0243109bf60b4f8c9a90b6f3613c30e58c977e4ad0a8b84b2c7`;
+- `libjpeg-dev=8c-2ubuntu12`, payload SHA-256 `6606cd1c27def2b3d7290b7dff160a282bd04c4307bc94e9edfff529ad1c6c52`;
+- `libjpeg8-dev=8c-2ubuntu12`, payload SHA-256 `a78cf5d66c47f957441c019ab2316a028bb14ee70fb503cc4fad35ec2ac467ff`.
 
-`.github/workflows/ksq-snapshot-build-context-witness-066-101.yml`
+These names are output evidence, not hard-coded materializer seeds. They also match the prior historical oracle 3/3.
 
-It reconstructs the exact accepted order-65 state, then executes current real build contexts in three sequential witness ranges:
+## Immutable r3 candidate — materialized and independently validated
 
-- 66–80;
-- 81–90;
-- 91–101.
+New slice identity: `20260829T022000Z-r3`.
 
-The package build itself keeps `sbuild --no-enable-network`. During this explicitly non-acceptance witness phase, APT may retrieve Build-Depends only from the fixed timestamped Ubuntu snapshot `20260829T022000Z` so the exact package/version selections of each real build can be observed.
+r3 was generated algorithmically from immutable r2 plus the machine-derived witness set difference. It does not mutate r2 and does not contain manually appended exception names.
 
-The final analyzer maps those observed selections through APT-verified signed snapshot `Packages` metadata to exact `Filename`, `Size` and `SHA256`, unions all 36 source-build contexts, and computes the exact set difference against the 1783 r2 objects.
+Materialization/publication run:
 
-Only that machine-derived complete difference can be considered as input to a new immutable slice. The historical three observed gaps (`libjpeg8-dev`, `libjpeg-dev`, `libcurl4-openssl-dev`) are regression oracles only, not a manual inclusion list.
+- run `33964548214`;
+- 1786 binary objects (`1783 + 3`);
+- binary payload bytes: `785766592` (`785219274 + 547318`);
+- archive bytes: `1055590400`;
+- archive SHA-256: `cb904b478afe186b96823b1b2872d5937517e3de10c6d2dd3170ec29fea09bc6`;
+- release tag: `ksq-snapshot-20260829T022000Z-r3`;
+- manifest SHA-256: `b683797c7850c47bcd6d80e093504301deac05e78010f6395af0885fb9ce005e`;
+- manual package additions: `0`.
 
-A future replacement slice will have a new immutable identity and must be independently materialized and validated. Because the snapshot input changes, required earlier regressions must be re-run before previous PASS evidence can be carried forward.
+Independent r3 validation:
+
+- run `33964782073`;
+- artifact `9969086882`;
+- digest `sha256:6fc4c3cae63f53d5484d1e5c168f51c01fb285af5697bc6f1f8438a2cb899907`;
+- strict r2 extension: PASS;
+- signed metadata identity: PASS;
+- pre-existing 1783 payload identity: PASS;
+- source-input identity: PASS;
+- exact witness gap inclusion: PASS.
+
+r3 preserves the same signed Ubuntu package universe and exact versions as r2; it changes payload completeness only.
+
+## Required r3 regression through accepted order 65 — PASS
+
+The r3 change was not allowed to inherit prior acceptance without proof.
+
+Final regression run:
+
+- run `33965237362`;
+- artifact `9969240177`;
+- digest `sha256:8b829f4cd81afc26c340d727561b2ea2c5438487c4e1a945ce01f1eaa940165f`;
+- accepted checkpoint restored: order `65` / `295` DEBs;
+- historical successful build logs examined: `65`;
+- Ubuntu acquisition events: `28215`;
+- unique Ubuntu package identities: `1052`;
+- r3 delta intersection with all accepted 1–65 acquisitions: `0`;
+- all historical required payload identities present in r3: PASS;
+- KWallet solver/install replay against r3: PASS;
+- KWallet selected packages: `375`;
+- KWallet selection identity versus accepted r2 evidence: PASS;
+- generic `mmdebstrap --mode=unshare --variant=buildd` bootstrap against r3: PASS;
+- AppArmor denials: `0`;
+- Docker/custom AppArmor/uidmap-filecap hacks: `0`.
+
+This proves that a complete 1–65 source rebuild is not required solely because r3 materialized three already-advertised payloads. The existing order-65 acceptance remains valid under the explicitly proven r3 regression contract.
+
+KWallet automatic session unlock remains **NOT CERTIFIED**; this regression does not broaden its certification scope.
+
+## Orders 066–080 — current local-only gate
+
+Orders 66–80 are still **NOT ACCEPTED** until the full local-only range and its independent acceptance pass.
+
+Two pre-build tooling failures were isolated without building any source:
+
+1. run `33965423386`: host `/etc/apt/apt.conf.d` command-not-found configuration leaked into the supposedly isolated APT invocation and requested `cnf/Commands-amd64`; this was a local APT configuration-isolation defect, not missing r3 build payload;
+2. run `33972965871`: after APT isolation was fixed and proved PASS, the workflow referenced non-versioned ephemeral `build/ksq-0/canonical/*` files that do not exist in a clean checkout; this was a workflow baseline-materialization defect, not DAG drift.
+
+APT isolation was fixed in commit `1f034d99c604a11918a673db9a9e49e9d717221a` by setting `Dir::Etc::Parts` and `Dir::Etc::main` in the early `APT_CONFIG` preload itself. The helper now proves `AURORA_KSQ_1_LOCAL_APT_HOST_FRAGMENTS=disabled`.
+
+The range gate was then made self-contained/provenance-safe in commit `f33a8a587461b3b6208f12abfc8e0c97b17a3e7c`: it consumes the exact independent r3 validation artifact and exact accepted-065 r3 regression artifact, regenerates the certified DAG in a clean checkout, recreates local-only APT/buildd state and fails closed on network/AppArmor/adaptation evidence.
+
+Current real local-only 66–80 run:
+
+- run `33973287438`;
+- source HEAD `e812059c50f8f1def9a1a18489840bbee1762231`;
+- r3 validation provenance: PASS;
+- accepted-065 r3 regression provenance: PASS;
+- exact order-65 restore: PASS;
+- exact r3 release validation: PASS;
+- isolated APT + unshare build environment: PASS;
+- source build range 66–80: **IN PROGRESS / NOT YET ACCEPTED** at the time of this status update.
+
+A separate independent acceptance workflow is prepared and remains inactive until a successful source artifact exists. No source in 66–80 is accepted merely because the build workflow becomes green.
 
 ## Reproducibility contract
 
-KSQ-1 retains the maintained 95+6 contract:
+KSQ-1 retains the maintained `95 + 6` contract:
 
 - 95 unaffected source nodes require exact prepared-source identity and byte-identical DEBs against independent reference evidence;
 - orders 29, 68, 81, 99, 100 and 101 require dedicated independent rebuild proof against the final candidate.
 
-A witness or range PASS does not satisfy those dedicated reproducibility obligations.
+The six dedicated nodes are:
+
+- 29 `syntax-highlighting`;
+- 68 `drkonqi`;
+- 81 `kf6-ktexteditor`;
+- 99 `plasma-workspace`;
+- 100 `plasma-desktop`;
+- 101 `powerdevil`.
+
+A normal witness/range build PASS does not satisfy those dedicated reproducibility obligations. In particular:
+
+`DRKONQI_REPRODUCIBILITY_CERTIFIED=no`
+
+remains mandatory until its independent rebuild gate passes.
 
 ## Current gate state
 
 - KSQ-0: **CERTIFIED / CLOSED**;
 - Ubuntu snapshot: **20260829T022000Z / FIXED**;
-- r2 slice: **IMMUTABLE / independently validated / accepted input through order 65**;
-- r2 as complete 101-source build payload closure: **REJECTED / proven under-closed**;
-- r2 aggregate-closure root cause: **PROVEN**;
-- maintained 001–065: **PASS / ACCEPTED**;
-- accumulated accepted candidate: **295 DEBs**;
-- orders 066–080: **BLOCKED ON r2 / NOT ACCEPTED**;
+- r2: **IMMUTABLE / historical / proven under-closed for universal sbuild payload service**;
+- 66–101 build-context witness: **PROVEN / 36 of 36 builds SUCCESS**;
+- independent witness gap analysis: **PROVEN / 3 objects / 547318 bytes**;
+- r3: **IMMUTABLE CANDIDATE / MATERIALIZED / INDEPENDENTLY VALIDATED**;
+- r3 accepted-065 regression: **PASS**;
+- maintained accepted checkpoint: **order 65 / 295 DEBs**;
+- KWallet package/install/PAM regression under r3: **PASS**;
+- KWallet automatic session unlock: **NOT CERTIFIED**;
+- orders 066–080: **LOCAL-ONLY BUILD ACTIVE / NOT ACCEPTED**;
 - orders 081–101: **NOT ACCEPTED**;
-- per-build snapshot closure witness 066–101: **ACTIVE**;
+- DrKonqi dedicated reproducibility: **NOT CERTIFIED**;
 - complete 101-source candidate: **NOT ACCEPTED**;
 - KSQ-1: **ACTIVE / NOT CERTIFIED**;
 - KSQ-2: **BLOCKED**;
