@@ -10,6 +10,7 @@ on:
       - '.github/workflows/ksq-snapshot-slice-r3-explicit-materialize.yml'
       - '.github/workflows/ksq-snapshot-slice-r3-explicit-validation.yml'
       - '.github/workflows/ksq-native-range-066-080-r3-regression.yml'
+      - 'scripts/ci/analyze-ksq-1-build-context-witness.py'
       - 'scripts/ci/ksq-snapshot-slice-r3.py'
 
 permissions:
@@ -26,7 +27,9 @@ jobs:
           set -euo pipefail
           grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
           test "$(dpkg --print-architecture)" = amd64
-          python3 -m py_compile scripts/ci/ksq-snapshot-slice-r3.py
+          python3 -m py_compile \
+            scripts/ci/analyze-ksq-1-build-context-witness.py \
+            scripts/ci/ksq-snapshot-slice-r3.py
           ruby -e '
             require "yaml"
             ARGV.each do |path|
