@@ -31,6 +31,16 @@ jobs:
           [[ "$AURORA_KSQ_1_WITNESS_TRIGGER_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]
           test "$AURORA_KSQ_1_WITNESS_TRIGGER_FIRST_ORDER" = 66
           test "$AURORA_KSQ_1_WITNESS_TRIGGER_LAST_ORDER" = 101
+          test "$AURORA_KSQ_1_WITNESS_TRIGGER_OVERALL_CONCLUSION" = failure
+          test "$AURORA_KSQ_1_WITNESS_TRIGGER_ALLOWED_FAILED_JOB" = 'Prove signed build-context set difference against r2'
+          for suffix in 066_080 081_090 091_101; do
+            eval "artifact_id=\${AURORA_KSQ_1_WITNESS_TRIGGER_EVIDENCE_${suffix}_ARTIFACT_ID}"
+            eval "artifact_digest=\${AURORA_KSQ_1_WITNESS_TRIGGER_EVIDENCE_${suffix}_ARTIFACT_DIGEST}"
+            [[ "$artifact_id" =~ ^[0-9]+$ ]]
+            [[ "$artifact_digest" =~ ^sha256:[0-9a-f]{64}$ ]]
+            echo "artifact_${suffix}_id=$artifact_id" >> "$GITHUB_OUTPUT"
+            echo "artifact_${suffix}_digest=$artifact_digest" >> "$GITHUB_OUTPUT"
+          done
           {
             echo "run_id=$AURORA_KSQ_1_WITNESS_TRIGGER_RUN_ID"
             echo "head_sha=$AURORA_KSQ_1_WITNESS_TRIGGER_HEAD_SHA"
@@ -38,25 +48,68 @@ jobs:
           mkdir -p build/ksq-1/snapshot-witness-explicit-analysis
           cp "$trigger" build/ksq-1/snapshot-witness-explicit-analysis/trigger.env
 
-      - name: Prove trigger references the exact successful witness run
+      - name: Prove exact completed witness build jobs and evidence identities
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           WITNESS_RUN_ID: ${{ steps.trigger.outputs.run_id }}
           WITNESS_HEAD_SHA: ${{ steps.trigger.outputs.head_sha }}
+          ARTIFACT_066_ID: ${{ steps.trigger.outputs.artifact_066_080_id }}
+          ARTIFACT_066_DIGEST: ${{ steps.trigger.outputs.artifact_066_080_digest }}
+          ARTIFACT_081_ID: ${{ steps.trigger.outputs.artifact_081_090_id }}
+          ARTIFACT_081_DIGEST: ${{ steps.trigger.outputs.artifact_081_090_digest }}
+          ARTIFACT_091_ID: ${{ steps.trigger.outputs.artifact_091_101_id }}
+          ARTIFACT_091_DIGEST: ${{ steps.trigger.outputs.artifact_091_101_digest }}
         run: |
           set -euo pipefail
-          run_json=build/ksq-1/snapshot-witness-explicit-analysis/witness-run-api.json
-          gh api \
-            -H 'Accept: application/vnd.github+json' \
-            -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "/repos/$GITHUB_REPOSITORY/actions/runs/$WITNESS_RUN_ID" \
-            > "$run_json"
+          base=build/ksq-1/snapshot-witness-explicit-analysis
+          run_json="$base/witness-run-api.json"
+          jobs_json="$base/witness-jobs-api.json"
+          gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "/repos/$GITHUB_REPOSITORY/actions/runs/$WITNESS_RUN_ID" > "$run_json"
           test "$(jq -r '.status' "$run_json")" = completed
-          test "$(jq -r '.conclusion' "$run_json")" = success
+          test "$(jq -r '.conclusion' "$run_json")" = failure
           test "$(jq -r '.head_sha' "$run_json")" = "$WITNESS_HEAD_SHA"
           test "$(jq -r '.head_branch' "$run_json")" = feature/kde-stack-qualification
           test "$(jq -r '.name' "$run_json")" = 'Aurora KSQ snapshot build-context witness 066-101'
+          gh api --paginate -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "/repos/$GITHUB_REPOSITORY/actions/runs/$WITNESS_RUN_ID/jobs?per_page=100" > "$jobs_json"
+          python3 - "$jobs_json" <<'PY'
+          import json, sys
+          from pathlib import Path
+          data=json.loads(Path(sys.argv[1]).read_text())
+          jobs=data.get('jobs', [])
+          required={
+              'Reconstruct exact accepted checkpoint through order 65':'success',
+              'Witness real build contexts 066-080':'success',
+              'Witness real build contexts 081-090':'success',
+              'Witness real build contexts 091-101':'success',
+              'Prove signed build-context set difference against r2':'failure',
+          }
+          if len(jobs) != len(required):
+              raise SystemExit(f'unexpected witness job count: {len(jobs)} != {len(required)}')
+          seen={j.get('name'):j.get('conclusion') for j in jobs}
+          if seen != required:
+              raise SystemExit(f'witness job conclusions mismatch: {seen!r}')
+          if any(j.get('status') != 'completed' for j in jobs):
+              raise SystemExit('non-completed witness job present')
+          print('AURORA_KSQ_1_WITNESS_BUILD_JOBS=PASS')
+          print('AURORA_KSQ_1_WITNESS_ALLOWED_ANALYSIS_FAILURE=PASS')
+          PY
+          verify_artifact() {
+            local id="$1" digest="$2" name="$3" out="$4"
+            gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' \
+              "/repos/$GITHUB_REPOSITORY/actions/artifacts/$id" > "$out"
+            test "$(jq -r '.id' "$out")" = "$id"
+            test "$(jq -r '.name' "$out")" = "$name"
+            test "$(jq -r '.expired' "$out")" = false
+            test "$(jq -r '.digest' "$out")" = "$digest"
+            test "$(jq -r '.workflow_run.id' "$out")" = "$WITNESS_RUN_ID"
+            test "$(jq -r '.workflow_run.head_sha' "$out")" = "$WITNESS_HEAD_SHA"
+          }
+          verify_artifact "$ARTIFACT_066_ID" "$ARTIFACT_066_DIGEST" aurora-ksq-witness-evidence-066-080 "$base/artifact-066-080-api.json"
+          verify_artifact "$ARTIFACT_081_ID" "$ARTIFACT_081_DIGEST" aurora-ksq-witness-evidence-081-090 "$base/artifact-081-090-api.json"
+          verify_artifact "$ARTIFACT_091_ID" "$ARTIFACT_091_DIGEST" aurora-ksq-witness-evidence-091-101 "$base/artifact-091-101-api.json"
 
       - name: Install analysis tools
         shell: bash
@@ -72,7 +125,7 @@ jobs:
       - name: Download exact witness evidence 066-080
         uses: actions/download-artifact@v8
         with:
-          name: aurora-ksq-witness-evidence-066-080
+          artifact-ids: ${{ steps.trigger.outputs.artifact_066_080_id }}
           path: ${{ runner.temp }}/evidence-066-080
           github-token: ${{ github.token }}
           repository: SupraLINUX/SupraLINUX
@@ -82,7 +135,7 @@ jobs:
       - name: Download exact witness evidence 081-090
         uses: actions/download-artifact@v8
         with:
-          name: aurora-ksq-witness-evidence-081-090
+          artifact-ids: ${{ steps.trigger.outputs.artifact_081_090_id }}
           path: ${{ runner.temp }}/evidence-081-090
           github-token: ${{ github.token }}
           repository: SupraLINUX/SupraLINUX
@@ -92,7 +145,7 @@ jobs:
       - name: Download exact witness evidence 091-101
         uses: actions/download-artifact@v8
         with:
-          name: aurora-ksq-witness-evidence-091-101
+          artifact-ids: ${{ steps.trigger.outputs.artifact_091_101_id }}
           path: ${{ runner.temp }}/evidence-091-101
           github-token: ${{ github.token }}
           repository: SupraLINUX/SupraLINUX
@@ -212,13 +265,16 @@ jobs:
           {
             cat "$base/trigger.env"
             echo 'AURORA_KSQ_1_WITNESS_INDEPENDENT_ANALYSIS=PASS'
+            echo 'AURORA_KSQ_1_WITNESS_PARENT_RUN_OVERALL_CONCLUSION=failure'
+            echo 'AURORA_KSQ_1_WITNESS_BUILD_JOBS=PASS'
+            echo 'AURORA_KSQ_1_WITNESS_ALLOWED_ANALYSIS_FAILURE=PASS'
             echo "AURORA_KSQ_1_WITNESS_ANALYZER_COMMIT=$(git rev-parse HEAD)"
             cat "$out/status.env"
           } > "$base/acceptance.env"
           (
             cd "$base"
             find result -maxdepth 1 -type f -printf '%p\n' | LC_ALL=C sort > manifest-files.txt
-            printf '%s\n' acceptance.env trigger.env witness-run-api.json snapshot-packages-amd64.txt.sha256 apt-metadata.sha256 r2-binary-objects.sha256 historical-oracle-comparison.tsv >> manifest-files.txt
+            printf '%s\n' acceptance.env trigger.env witness-run-api.json witness-jobs-api.json artifact-066-080-api.json artifact-081-090-api.json artifact-091-101-api.json snapshot-packages-amd64.txt.sha256 apt-metadata.sha256 r2-binary-objects.sha256 historical-oracle-comparison.tsv >> manifest-files.txt
             LC_ALL=C sort -u manifest-files.txt -o manifest-files.txt
             xargs sha256sum < manifest-files.txt > evidence.sha256
             sha256sum -c evidence.sha256
