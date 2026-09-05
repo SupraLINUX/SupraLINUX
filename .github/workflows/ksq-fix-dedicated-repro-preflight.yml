@@ -1,0 +1,51 @@
+name: Aurora KSQ fix dedicated repro preflight
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/ksq-fix-dedicated-repro-preflight.trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+      - name: Apply exact fail-closed corrections
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('.github/workflows/ksq-repro-dedicated-068-081-r3.yml')
+          t=p.read_text(encoding='utf-8')
+          pairs=[
+          ('''          copy_index() {\n            local root="$1" range="$2" name="$3" chunk\n            chunk="$(chunk_root "$root" "$range")"\n            cp -a "$chunk/evidence/binary-packages.tsv" "$candidate_evidence/indexes/$name.tsv"\n          }\n''','''          copy_index() {\n            local root="$1" range="$2" name="$3" chunk\n            chunk="$(chunk_root "$root" "$range")"\n            mkdir -p "$candidate_evidence/indexes/$name"\n            cp -a "$chunk/evidence/binary-packages.tsv" "$candidate_evidence/indexes/$name/binary-packages.tsv"\n          }\n'''),
+          ('''          cp -a "$c066/evidence/binary-packages.tsv" "$candidate_evidence/indexes/066-080.tsv"\n          cp -a "$c081/evidence/binary-packages.tsv" "$candidate_evidence/indexes/081-090.tsv"\n          cp -a "$c066/evidence/68-drkonqi" "$candidate_evidence/sources/"\n          cp -a "$c081/evidence/81-kf6-ktexteditor" "$candidate_evidence/sources/"\n          test "$(find "$candidate_evidence" -type f -name binary-packages.tsv -o -name '*.tsv' | wc -l)" -ge 7\n''','''          mkdir -p "$candidate_evidence/indexes/066-080" "$candidate_evidence/indexes/081-090"\n          cp -a "$c066/evidence/binary-packages.tsv" "$candidate_evidence/indexes/066-080/binary-packages.tsv"\n          cp -a "$c081/evidence/binary-packages.tsv" "$candidate_evidence/indexes/081-090/binary-packages.tsv"\n          cp -a "$c066/evidence/68-drkonqi" "$candidate_evidence/sources/"\n          cp -a "$c081/evidence/81-kf6-ktexteditor" "$candidate_evidence/sources/"\n          test "$(find "$candidate_evidence/indexes" -type f -name binary-packages.tsv | wc -l)" = 7\n'''),
+          ('''            logs=("$ev"/*.build)\n            test "${#logs[@]}" -eq 1 || ok=0\n            if [[ -f "${logs[0]}" ]]; then\n''','''            mapfile -t logs < <(find "$ev" -maxdepth 1 -type f -name '*.build' -print | sort)\n            test "${#logs[@]}" -eq 1 || ok=0\n            if [[ "${#logs[@]}" -eq 1 && -f "${logs[0]}" ]]; then\n''')]
+          for old,new in pairs:
+              n=t.count(old)
+              if n!=1: raise SystemExit(f'expected one exact replacement, found {n}')
+              t=t.replace(old,new)
+          p.write_text(t,encoding='utf-8')
+          print('AURORA_KSQ_DEDICATED_REPRO_PREFLIGHT_FIX=PASS')
+          PY
+          git diff --check
+          grep -q 'indexes/066-080/binary-packages.tsv' .github/workflows/ksq-repro-dedicated-068-081-r3.yml
+          grep -q 'mapfile -t logs' .github/workflows/ksq-repro-dedicated-068-081-r3.yml
+      - name: Commit correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/ksq-repro-dedicated-068-081-r3.yml
+          git commit -m 'ci(ksq): harden dedicated repro evidence indexing'
+          echo "AURORA_PATCH_COMMIT=$(git rev-parse HEAD)"
+          git push origin HEAD:feature/kde-stack-qualification
