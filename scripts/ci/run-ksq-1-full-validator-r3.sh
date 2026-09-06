@@ -23,6 +23,13 @@ fail() {
 [[ "${AURORA_KSQ_R3_FULL_VALIDATOR_KWALLET_ARTIFACT_ID:-}" == 9918320108 ]] || fail "KWallet artifact pin mismatch"
 [[ "${AURORA_KSQ_R3_FULL_VALIDATOR_KWALLET_ARTIFACT_DIGEST:-}" == sha256:50c33e99c7593ce6b8d4a67c8ee11c1598ad93545ed362078a57410c4a892730 ]] || fail "KWallet digest pin mismatch"
 [[ "${AURORA_KSQ_R3_FULL_VALIDATOR_KWALLET_ARTIFACT_SIZE:-}" == 4947 ]] || fail "KWallet size pin mismatch"
+[[ "${AURORA_KSQ_R3_FULL_VALIDATOR_KSQ0_RUN_ID:-}" == 33231879994 ]] || fail "KSQ-0 run pin mismatch"
+[[ "${AURORA_KSQ_R3_FULL_VALIDATOR_KSQ0_HEAD_SHA:-}" == 4e7db453f626e78ca72c353ab314e16e00c9003f ]] || fail "KSQ-0 head pin mismatch"
+[[ "${AURORA_KSQ_R3_FULL_VALIDATOR_KSQ0_ARTIFACT_ID:-}" == 9708738867 ]] || fail "KSQ-0 artifact pin mismatch"
+[[ "${AURORA_KSQ_R3_FULL_VALIDATOR_KSQ0_ARTIFACT_DIGEST:-}" == sha256:5b23140181ea7e7931cb744f4c43930adba8f79e446c52d0f4b1c3c568106d50 ]] || fail "KSQ-0 digest pin mismatch"
+[[ "${AURORA_KSQ_R3_FULL_VALIDATOR_KSQ0_ARTIFACT_SIZE:-}" == 573184 ]] || fail "KSQ-0 size pin mismatch"
+[[ "${AURORA_KSQ_R3_FULL_VALIDATOR_KSQ0_BUILD_ORDER_SHA256:-}" == 9c53547df78a9f7c740228aba09490dfdb68e6307d2200e12ebf907dfa3fcb88 ]] || fail "KSQ-0 build-order pin mismatch"
+[[ "${AURORA_KSQ_R3_FULL_VALIDATOR_KSQ0_APT_SNAPSHOT:-}" == 20260829T022000Z ]] || fail "KSQ-0 snapshot pin mismatch"
 
 [[ -n "${GH_TOKEN:-}" ]] || fail "GH_TOKEN missing"
 [[ -n "${GITHUB_REPOSITORY:-}" ]] || fail "GITHUB_REPOSITORY missing"
@@ -30,7 +37,7 @@ fail() {
 
 grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release || fail "runner is not Ubuntu 26.04"
 [[ "$(dpkg --print-architecture)" == amd64 ]] || fail "runner architecture is not amd64"
-for command in gh curl jq unzip python3 sha256sum dpkg-deb; do
+for command in gh curl jq unzip python3 sha256sum dpkg-deb cmp; do
   command -v "$command" >/dev/null || fail "missing command $command"
 done
 
@@ -40,26 +47,40 @@ mkdir -p "$base/provenance"
 cp "$TRIGGER" "$base/provenance/trigger.env"
 
 prove_artifact() {
-  local role="$1" run="$2" head="$3" artifact="$4" name="$5" digest="$6" size="$7"
+  local role="$1" run="$2" head="$3" workflow="$4" run_name="$5" artifact="$6" artifact_name="$7" digest="$8" size="$9"
   gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$run" > "$base/provenance/${role}-run.json"
   [[ "$(jq -r '.status' "$base/provenance/${role}-run.json")" == completed ]] || fail "$role run incomplete"
   [[ "$(jq -r '.conclusion' "$base/provenance/${role}-run.json")" == success ]] || fail "$role run not successful"
+  [[ "$(jq -r '.head_branch' "$base/provenance/${role}-run.json")" == feature/kde-stack-qualification ]] || fail "$role run branch mismatch"
   [[ "$(jq -r '.head_sha' "$base/provenance/${role}-run.json")" == "$head" ]] || fail "$role run head mismatch"
+  [[ "$(jq -r '.path' "$base/provenance/${role}-run.json")" == "$workflow" ]] || fail "$role workflow mismatch"
+  [[ "$(jq -r '.name' "$base/provenance/${role}-run.json")" == "$run_name" ]] || fail "$role workflow name mismatch"
   gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact" > "$base/provenance/${role}-artifact.json"
-  [[ "$(jq -r '.name' "$base/provenance/${role}-artifact.json")" == "$name" ]] || fail "$role artifact name mismatch"
+  [[ "$(jq -r '.id' "$base/provenance/${role}-artifact.json")" == "$artifact" ]] || fail "$role artifact id mismatch"
+  [[ "$(jq -r '.name' "$base/provenance/${role}-artifact.json")" == "$artifact_name" ]] || fail "$role artifact name mismatch"
   [[ "$(jq -r '.digest' "$base/provenance/${role}-artifact.json")" == "$digest" ]] || fail "$role artifact digest mismatch"
   [[ "$(jq -r '.size_in_bytes' "$base/provenance/${role}-artifact.json")" == "$size" ]] || fail "$role artifact size mismatch"
   [[ "$(jq -r '.workflow_run.id' "$base/provenance/${role}-artifact.json")" == "$run" ]] || fail "$role artifact run mismatch"
+  [[ "$(jq -r '.workflow_run.head_branch' "$base/provenance/${role}-artifact.json")" == feature/kde-stack-qualification ]] || fail "$role artifact branch mismatch"
   [[ "$(jq -r '.workflow_run.head_sha' "$base/provenance/${role}-artifact.json")" == "$head" ]] || fail "$role artifact head mismatch"
   [[ "$(jq -r '.expired' "$base/provenance/${role}-artifact.json")" == false ]] || fail "$role artifact expired"
 }
 
 prove_artifact canonical 34009066345 12ed5856b31ebe3870791c5e3d71ecfec70eba43 \
+  .github/workflows/ksq-prepare-repro-input-101-r3.yml \
+  'Aurora KSQ-1 canonical repro input 101 r3' \
   9981890909 aurora-ksq-repro-input-101-r3 \
   sha256:96455b0b2c0ea203e67efc39fd3177da0be72543bd322f208400e90f4d7ac181 334364239
 prove_artifact kwallet 33821228782 5b021477f00ab97e03b19e19da4e681abd7af7c0 \
+  .github/workflows/ksq-accept-061-065-r2-kwallet-sidecar.yml \
+  'Aurora KSQ-1 accept 061-065 KWallet sidecar evidence' \
   9918320108 aurora-ksq-1-accepted-through-065-kwallet-sidecar \
   sha256:50c33e99c7593ce6b8d4a67c8ee11c1598ad93545ed362078a57410c4a892730 4947
+prove_artifact ksq0 33231879994 4e7db453f626e78ca72c353ab314e16e00c9003f \
+  .github/workflows/ksq-0-dependency-closure.yml \
+  'Aurora KSQ-0 source and dependency qualification' \
+  9708738867 aurora-ksq-0-dependency-closure \
+  sha256:5b23140181ea7e7931cb744f4c43930adba8f79e446c52d0f4b1c3c568106d50 573184
 
 download_and_prove() {
   local artifact="$1" digest="$2" size="$3" output="$4"
@@ -78,8 +99,10 @@ download_and_prove() {
 
 canonical="$RUNNER_TEMP/canonical-repro-input"
 kwallet="$RUNNER_TEMP/accepted-065"
+ksq0="$RUNNER_TEMP/accepted-ksq0"
 download_and_prove 9981890909 "$AURORA_KSQ_R3_FULL_VALIDATOR_CANONICAL_ARTIFACT_DIGEST" "$AURORA_KSQ_R3_FULL_VALIDATOR_CANONICAL_ARTIFACT_SIZE" "$canonical"
 download_and_prove 9918320108 "$AURORA_KSQ_R3_FULL_VALIDATOR_KWALLET_ARTIFACT_DIGEST" "$AURORA_KSQ_R3_FULL_VALIDATOR_KWALLET_ARTIFACT_SIZE" "$kwallet"
+download_and_prove 9708738867 "$AURORA_KSQ_R3_FULL_VALIDATOR_KSQ0_ARTIFACT_DIGEST" "$AURORA_KSQ_R3_FULL_VALIDATOR_KSQ0_ARTIFACT_SIZE" "$ksq0"
 
 (
   cd "$canonical"
@@ -107,8 +130,45 @@ source "$kwallet/acceptance.env"
 [[ "${AURORA_KSQ_1_ORDER65_ACCEPTED_ACCUMULATED_DEBS:-}" == 295 ]] || fail "KWallet acceptance count mismatch"
 [[ -f "$kwallet/evidence/status.env" ]] || fail "KWallet detailed status missing"
 
-python3 scripts/ci/generate-kde-build-closure.py
-[[ "$(sha256sum build/ksq-0/build-order.tsv | awk '{print $1}')" == 9c53547df78a9f7c740228aba09490dfdb68e6307d2200e12ebf907dfa3fcb88 ]] || fail "build-order identity mismatch"
+ksq0_closure="$ksq0/build/ksq-0"
+[[ -f "$ksq0_closure/closure-status.env" ]] || fail "KSQ-0 closure status missing"
+[[ -f "$ksq0_closure/build-order.tsv" ]] || fail "KSQ-0 build order missing"
+[[ -f "$ksq0/tests/kde-stack/apt-metadata-snapshot.env" ]] || fail "KSQ-0 snapshot evidence missing"
+# shellcheck disable=SC1090
+source "$ksq0_closure/closure-status.env"
+[[ "${AURORA_KSQ_0_APT_SNAPSHOT:-}" == "$AURORA_KSQ_R3_FULL_VALIDATOR_KSQ0_APT_SNAPSHOT" ]] || fail "KSQ-0 closure snapshot mismatch"
+[[ "${AURORA_KSQ_0_CLOSURE_STATUS:-}" == COMPLETE ]] || fail "KSQ-0 closure not complete"
+[[ "${AURORA_KSQ_0_CLOSURE_SOURCES:-}" == 101 ]] || fail "KSQ-0 source count mismatch"
+[[ "${AURORA_KSQ_0_CLOSURE_UNRESOLVED:-}" == 0 ]] || fail "KSQ-0 unresolved dependency count mismatch"
+[[ "${AURORA_KSQ_0_CLOSURE_BUILD_ORDERED:-}" == 101 ]] || fail "KSQ-0 build-order count mismatch"
+[[ "${AURORA_KSQ_0_CLOSURE_FRAMEWORKS_6_29_0:-}" == 59 ]] || fail "KSQ-0 Frameworks source count mismatch"
+[[ "${AURORA_KSQ_0_CLOSURE_KDE_ADJACENT_BACKPORT:-}" == 2 ]] || fail "KSQ-0 adjacent backport count mismatch"
+[[ "${AURORA_KSQ_0_CLOSURE_PLASMA_6_7_4:-}" == 39 ]] || fail "KSQ-0 Plasma source count mismatch"
+[[ "${AURORA_KSQ_0_CLOSURE_UBUNTU_PLATFORM_COMPAT_BACKPORT:-}" == 1 ]] || fail "KSQ-0 platform compatibility backport count mismatch"
+grep -qx "AURORA_KSQ_0_APT_SNAPSHOT=$AURORA_KSQ_R3_FULL_VALIDATOR_KSQ0_APT_SNAPSHOT" "$ksq0/tests/kde-stack/apt-metadata-snapshot.env" || fail "KSQ-0 pinned snapshot file mismatch"
+[[ "$(wc -l < "$ksq0_closure/unresolved.tsv")" == 1 ]] || fail "KSQ-0 unresolved.tsv is not header-only"
+[[ "$(wc -l < "$ksq0_closure/source-decision-candidates.tsv")" == 1 ]] || fail "KSQ-0 source decisions are unresolved"
+[[ "$(wc -l < "$ksq0_closure/source-selections-applied.tsv")" == 4 ]] || fail "KSQ-0 source-selection count mismatch"
+[[ "$(wc -l < "$ksq0_closure/build-dep-overrides-applied.tsv")" == 2 ]] || fail "KSQ-0 build-dependency override count mismatch"
+[[ "$(sha256sum "$ksq0_closure/build-order.tsv" | awk '{print $1}')" == "$AURORA_KSQ_R3_FULL_VALIDATOR_KSQ0_BUILD_ORDER_SHA256" ]] || fail "KSQ-0 build-order identity mismatch"
+
+# Prove the exact canonical 101-source candidate still matches the certified KSQ-0 DAG.
+{
+  printf 'order\tsource_package\tpackaging_version\tcandidate_family\tdecision\n'
+  awk -F '\t' 'BEGIN { OFS="\t" } FNR > 1 { print $1, $2, $3, $5, $6 }' \
+    "$canonical"/payload/chunks/chunk-*/evidence/build-manifest.tsv | sort -t $'\t' -k1,1n
+} > "$base/candidate-closure-order.tsv"
+[[ "$(awk 'END { print NR - 1 }' "$base/candidate-closure-order.tsv")" == 101 ]] || fail "canonical closure projection count mismatch"
+cmp -s "$ksq0_closure/build-order.tsv" "$base/candidate-closure-order.tsv" || fail "canonical candidate differs from certified KSQ-0 build order"
+cp -a "$ksq0_closure/build-order.tsv" "$base/ksq0-build-order.tsv"
+cp -a "$ksq0_closure/closure-status.env" "$base/ksq0-closure-status.env"
+cp -a "$ksq0/tests/kde-stack/apt-metadata-snapshot.env" "$base/ksq0-apt-metadata-snapshot.env"
+
+# validate-ksq-1-full.py consumes the certified closure from build/ksq-0.
+# Stage only the accepted build order; do not regenerate KSQ-0 on this fresh KSQ-1 runner.
+rm -rf build/ksq-0
+mkdir -p build/ksq-0
+cp -a "$ksq0_closure/build-order.tsv" build/ksq-0/build-order.tsv
 
 # Stage the canonical representation without copying its 424 DEBs again.
 rm -rf build/ksq-1/full
@@ -140,18 +200,20 @@ cp -a "$canonical/payload/checkpoint-provenance.tsv" "$base/canonical-checkpoint
 [[ "$(awk 'END{print NR-1}' "$base/full-binary-packages.tsv")" == 424 ]] || fail "retained binary row count mismatch"
 [[ "$(wc -l < "$base/full-debs.sha256")" == 424 ]] || fail "retained DEB hash count mismatch"
 
-cat > "$base/status.env" <<EOF
+cat > "$base/status.env" <<EOF_STATUS
 AURORA_KSQ_R3_FULL_VALIDATOR=PASS
 AURORA_KSQ_R3_FULL_VALIDATOR_SOURCES=101
 AURORA_KSQ_R3_FULL_VALIDATOR_BINARIES=424
 AURORA_KSQ_R3_FULL_VALIDATOR_CANONICAL_RANGES=5
 AURORA_KSQ_R3_FULL_VALIDATOR_PACKAGING_ADAPTATIONS=2
 AURORA_KSQ_R3_FULL_VALIDATOR_KWALLET=PASS
+AURORA_KSQ_R3_FULL_VALIDATOR_KSQ0=PASS
 AURORA_KSQ_R3_FULL_VALIDATOR_CANONICAL_INPUT_ARTIFACT=9981890909
 AURORA_KSQ_R3_FULL_VALIDATOR_KWALLET_ARTIFACT=9918320108
+AURORA_KSQ_R3_FULL_VALIDATOR_KSQ0_ARTIFACT=9708738867
 AURORA_KSQ_R3_FULL_REPRODUCIBILITY_CERTIFIED=no
 AURORA_KSQ_1_FULL_CERTIFIED=no
-EOF
+EOF_STATUS
 
 (
   cd "$base"
