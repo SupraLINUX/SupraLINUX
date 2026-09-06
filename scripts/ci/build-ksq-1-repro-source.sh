@@ -113,13 +113,13 @@ candidate_dsc="$(find "${candidate_source_dir}" -maxdepth 1 -type f -name '*.dsc
 [[ "$(printf '%s\n' "${candidate_dsc}" | sed '/^$/d' | wc -l)" -eq 1 ]] || fail "candidate prepared dsc missing/ambiguous"
 cmp "${current_dsc}" "${candidate_dsc}" || fail "prepared dsc differs from authoritative candidate"
 
-mapfile -t current_deltas < <(find "${WORK}" -maxdepth 1 -type f -name '*~supra26.04.1*' ! -name '*.dsc' -printf '%f\n' | sort)
+mapfile -t current_deltas < <(find "${WORK}" -maxdepth 1 -type f -name '*~supra*.debian.tar.*' -printf '%f\n' | sort)
 ((${#current_deltas[@]} > 0)) || fail "prepared source delta missing"
 for name in "${current_deltas[@]}"; do
   [[ -f "${candidate_source_dir}/${name}" ]] || fail "candidate evidence missing source delta ${name}"
   cmp "${WORK}/${name}" "${candidate_source_dir}/${name}" || fail "source delta differs: ${name}"
 done
-candidate_delta_count="$(find "${candidate_source_dir}" -maxdepth 1 -type f -name '*~supra26.04.1*' ! -name '*.dsc' | wc -l)"
+candidate_delta_count="$(find "${candidate_source_dir}" -maxdepth 1 -type f -name '*~supra*.debian.tar.*' | wc -l)"
 [[ "${candidate_delta_count}" -eq "${#current_deltas[@]}" ]] || fail "candidate/current source delta set differs"
 
 {
