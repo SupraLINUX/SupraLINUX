@@ -163,6 +163,26 @@ def manifest_by_order(rows: list[dict[str, str]], orders: set[int], label: str) 
     return result
 
 
+def inferred_ranged_root(root: Path, label: str) -> RangedRoot:
+    root = root.resolve()
+    if not root.is_dir():
+        fail(f"{label} root does not exist: {root}")
+    status_files = list(root.rglob("range-status.env"))
+    if len(status_files) != 1:
+        fail(f"{label} root {root}: range-status.env cardinality {len(status_files)}")
+    values = read_env(status_files[0])
+    try:
+        first = int(values["AURORA_KSQ_1_RANGE_FIRST_ORDER"])
+        last = int(values["AURORA_KSQ_1_RANGE_LAST_ORDER"])
+    except (KeyError, ValueError):
+        fail(f"{label} root {root}: invalid authoritative range metadata")
+    if values.get("AURORA_KSQ_1_RANGE_STATUS") != "PASS":
+        fail(f"{label} root {root}: range status is not PASS")
+    if first < 1 or last > 101 or first > last:
+        fail(f"{label} root {root}: invalid authoritative range {first}-{last}")
+    return RangedRoot(first, last, root)
+
+
 def candidate_ranges_from_args(args: argparse.Namespace, orders: set[int]) -> list[RangedRoot]:
     if args.candidate_root_range and args.candidate_root:
         fail("do not mix --candidate-root-range with --candidate-root")
@@ -171,12 +191,10 @@ def candidate_ranges_from_args(args: argparse.Namespace, orders: set[int]) -> li
             parse_ranged_root(spec, "candidate") for spec in args.candidate_root_range
         ]
     else:
-        roots = [path.resolve() for path in (args.candidate_root or [])]
-        if len(roots) != 1:
-            fail("multiple candidate roots require explicit --candidate-root-range FIRST-LAST=PATH")
-        if not roots[0].is_dir():
-            fail(f"candidate root does not exist: {roots[0]}")
-        ranges = [RangedRoot(min(orders), max(orders), roots[0])]
+        roots = list(args.candidate_root or [])
+        if not roots:
+            fail("at least one candidate root is required")
+        ranges = [inferred_ranged_root(root, "candidate") for root in roots]
     for order in sorted(orders):
         authoritative_root(ranges, order, "candidate")
     return ranges
