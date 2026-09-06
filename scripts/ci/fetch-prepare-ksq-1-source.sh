@@ -32,6 +32,7 @@ fi
 
 rm -rf "${WORKDIR}"
 mkdir -p "${WORKDIR}"
+WORKDIR="$(realpath "${WORKDIR}")"
 cd "${WORKDIR}"
 
 common_opts=(
