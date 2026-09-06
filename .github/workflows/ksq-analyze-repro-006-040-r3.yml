@@ -1,0 +1,200 @@
+name: Aurora KSQ-1 analyze preserved repro 006-040 r3
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/ksq-r3-repro-006-040-analyze-trigger.env'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: aurora-ksq-analyze-repro-006-040-r3
+  cancel-in-progress: false
+
+jobs:
+  analyze-preserved-repro:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Qualify exact immutable inputs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          source .github/ksq-r3-repro-006-040-analyze-trigger.env
+          test "$AURORA_KSQ_R3_REPRO_ANALYZE_RUN_ID" = 33995573548
+          test "$AURORA_KSQ_R3_REPRO_ANALYZE_HEAD_SHA" = bff066be817f2f2658f48e3f0015e79fef0401aa
+          test "$AURORA_KSQ_R3_REPRO_ANALYZE_ARTIFACT_ID" = 9979480345
+          test "$AURORA_KSQ_R3_REPRO_ANALYZE_ARTIFACT_DIGEST" = sha256:cdc46d24a8c527341f6b71ef6aeab1ed1deb4d7694ad9c05de230140882ab958
+          test "$AURORA_KSQ_R3_REPRO_ANALYZE_ARTIFACT_SIZE" = 31824702
+          base=build/ksq-1/repro-006-040-analysis-r3
+          mkdir -p "$base/provenance"
+
+          prove() {
+            local run="$1" head="$2" conclusion="$3" artifact="$4" name="$5" digest="$6" size="$7" prefix="$8"
+            gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$run" > "$base/provenance/${prefix}-run.json"
+            test "$(jq -r '.status' "$base/provenance/${prefix}-run.json")" = completed
+            test "$(jq -r '.conclusion' "$base/provenance/${prefix}-run.json")" = "$conclusion"
+            test "$(jq -r '.head_sha' "$base/provenance/${prefix}-run.json")" = "$head"
+            gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact" > "$base/provenance/${prefix}-artifact.json"
+            test "$(jq -r '.name' "$base/provenance/${prefix}-artifact.json")" = "$name"
+            test "$(jq -r '.expired' "$base/provenance/${prefix}-artifact.json")" = false
+            test "$(jq -r '.digest' "$base/provenance/${prefix}-artifact.json")" = "$digest"
+            test "$(jq -r '.size_in_bytes' "$base/provenance/${prefix}-artifact.json")" = "$size"
+            test "$(jq -r '.workflow_run.id' "$base/provenance/${prefix}-artifact.json")" = "$run"
+            test "$(jq -r '.workflow_run.head_sha' "$base/provenance/${prefix}-artifact.json")" = "$head"
+          }
+          prove 33546093974 05615aa0bfca4c6bee5a0d520f7332cb6bc5506e success 9818465016 aurora-ksq-1-local-range-001-020 sha256:0eb45c7938b84db35ee734591622a6c621709117100d29376c01323ca0ab14ba 163328618 candidate001020
+          prove 33561782526 d8fa7e6e26f002bc6ca94d04bbda8097e19607b6 success 9824689982 aurora-ksq-1-local-range-021-040 sha256:08dffb19fe6d3fda5b8079ed862d3215440cfabaf51a249f79b5af49d3539d8e 12667773 candidate021040
+          prove 33995573548 bff066be817f2f2658f48e3f0015e79fef0401aa failure 9979480345 aurora-ksq-repro-006-040-r3 sha256:cdc46d24a8c527341f6b71ef6aeab1ed1deb4d7694ad9c05de230140882ab958 31824702 preserved-repro
+
+      - name: Download exact candidate 001-020
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9818465016
+          path: ${{ runner.temp }}/candidate-001-020
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33546093974
+          digest-mismatch: error
+
+      - name: Download exact candidate 021-040
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9824689982
+          path: ${{ runner.temp }}/candidate-021-040
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33561782526
+          digest-mismatch: error
+
+      - name: Download exact preserved repro 006-040
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9979480345
+          path: ${{ runner.temp }}/preserved-repro
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33995573548
+          digest-mismatch: error
+
+      - name: Reanalyze preserved build evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/repro-006-040-analysis-r3
+          repro="$RUNNER_TEMP/preserved-repro"
+          chunk_root() {
+            local found= candidate
+            for candidate in "$repro/ksq-1/full/chunk-006-040" "$repro/build/ksq-1/full/chunk-006-040"; do
+              if [[ -d "$candidate" ]]; then
+                test -z "$found"
+                found="$candidate"
+              fi
+            done
+            test -n "$found"
+            printf '%s\n' "$found"
+          }
+          evidence_root() {
+            local found= candidate
+            for candidate in "$repro/ksq-1/repro-006-040-r3" "$repro/build/ksq-1/repro-006-040-r3"; do
+              if [[ -d "$candidate" ]]; then
+                test -z "$found"
+                found="$candidate"
+              fi
+            done
+            test -n "$found"
+            printf '%s\n' "$found"
+          }
+          chunk="$(chunk_root)"
+          historical="$(evidence_root)"
+
+          test "$(sha256sum "$chunk/evidence/range-status.env" | awk '{print $1}')" = b95a746e6c9c4e5dce9e6d56678ab43f7a46dae5017a136552b917e6d54409dc
+          test "$(sha256sum "$chunk/evidence/new-debs.sha256" | awk '{print $1}')" = 81b5ddacacc001b43300f61277469acf40e640cb675d6e3d98e63e2ab8dddfd4
+          test "$(sha256sum "$chunk/evidence/build-manifest.tsv" | awk '{print $1}')" = 7f00fdbbd5d43e373947bfb6eee55d1459ba2c7fe431b546c9cab17453bc5445
+          test "$(sha256sum "$chunk/evidence/binary-packages.tsv" | awk '{print $1}')" = 4205027fe53714a3b67701a0c5500a5a274b66e2a553f283909113f33c3ccb1d
+          test "$(sha256sum "$historical/range-command.env" | awk '{print $1}')" = 5322492cfb4d3d5fabf6beee5978ee6fd9c8f9319762d0c7863fa43411d9a3f1
+          test "$(sha256sum "$historical/source-preparation.env" | awk '{print $1}')" = 4c4b95bb3a45927d779cb8668ab6511643d863ce957965160865206f9f2bc13b
+          test "$(sha256sum "$historical/host-evidence/apparmor-denied-relevant.log" | awk '{print $1}')" = e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+          source "$chunk/evidence/range-status.env"
+          test "$AURORA_KSQ_1_RANGE_STATUS" = PASS
+          test "$AURORA_KSQ_1_RANGE_FIRST_ORDER" = 6
+          test "$AURORA_KSQ_1_RANGE_LAST_ORDER" = 40
+          test "$AURORA_KSQ_1_RANGE_SOURCES" = 35
+          test "$AURORA_KSQ_1_RANGE_NEW_DEBS" = 180
+          test "$AURORA_KSQ_1_RANGE_ACCUMULATED_DEBS" = 192
+          source "$historical/range-command.env"
+          test "$AURORA_KSQ_R3_REPRO_006_040_COMMAND_RC" = 0
+          test "$AURORA_KSQ_R3_REPRO_006_040_TEE_RC" = 0
+          grep -qx 'AURORA_KSQ_1_REPRO_SOURCE_PREP_UMASK=0002' "$historical/source-preparation.env"
+          test ! -s "$historical/host-evidence/apparmor-denied-relevant.log"
+          test "$(find "$chunk/new-debs" -maxdepth 1 -type f -name '*.deb' | wc -l)" = 180
+          (cd "$chunk/new-debs" && sha256sum -c ../evidence/new-debs.sha256)
+
+          python3 scripts/ci/validate-ksq-1-repro-range.py \
+            --first 6 --last 40 \
+            --candidate-root-range "1-20=$RUNNER_TEMP/candidate-001-020" \
+            --candidate-root-range "21-40=$RUNNER_TEMP/candidate-021-040" \
+            --rebuilt-root "$chunk" \
+            --output "$base/proof"
+          grep -qx 'AURORA_KSQ_1_REPRO_RANGE_STATUS=PASS' "$base/proof/status.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_CANDIDATE_RANGE_BINDING=PASS' "$base/proof/status.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_RANGE_SOURCES=35' "$base/proof/status.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_RANGE_BINARIES=180' "$base/proof/status.env"
+          grep -q $'^29\tkf6-syntax-highlighting\t' "$base/proof/source-proof.tsv"
+          grep -q 'kf6-syntax-highlighting-deterministic-jinja-order' "$base/proof/source-proof.tsv"
+
+          cat > "$base/order29-dedicated.env" <<'EOF'
+          AURORA_KSQ_1_REPRO_ORDER29_DEDICATED=PASS
+          AURORA_KSQ_1_REPRO_ORDER29_SOURCE=kf6-syntax-highlighting
+          AURORA_KSQ_1_REPRO_ORDER29_SOURCE_IDENTITY=PASS
+          AURORA_KSQ_1_REPRO_ORDER29_BINARY_IDENTITY=PASS
+          AURORA_KSQ_1_REPRO_ORDER29_SOURCE_PREP_UMASK=0002
+          EOF
+          cat > "$base/audit.env" <<'EOF'
+          AURORA_KSQ_R3_REPRO_006_040_ANALYSIS_STATUS=PASS
+          AURORA_KSQ_R3_REPRO_006_040_PRESERVED_RUN_ID=33995573548
+          AURORA_KSQ_R3_REPRO_006_040_PRESERVED_ARTIFACT_ID=9979480345
+          AURORA_KSQ_R3_REPRO_006_040_BUILD_COMMAND_RC=0
+          AURORA_KSQ_R3_REPRO_006_040_BUILD_TEE_RC=0
+          AURORA_KSQ_R3_REPRO_006_040_APPARMOR_DENIALS=0
+          AURORA_KSQ_R3_REPRO_006_040_SOURCE_PREP_UMASK=0002
+          AURORA_KSQ_R3_REPRO_006_040_DOCKER_USED=0
+          AURORA_KSQ_R3_REPRO_006_040_CUSTOM_APPARMOR_USED=0
+          AURORA_KSQ_R3_REPRO_006_040_UIDMAP_FILECAP_PATCH_USED=0
+          AURORA_KSQ_R3_REPRO_006_040_REUSED_BUILD_COUNT=35
+          AURORA_KSQ_R3_REPRO_006_040_REUSED_BINARY_COUNT=180
+          AURORA_KSQ_1_FULL_CERTIFIED=no
+          EOF
+          (cd "$base" && find proof provenance -type f -print0 | sort -z | xargs -0 sha256sum; sha256sum audit.env order29-dedicated.env) > "$base/evidence.sha256"
+          (cd "$base" && sha256sum -c evidence.sha256)
+
+      - name: Upload independently sealed repro analysis
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-repro-006-040-r3-analysis
+          path: build/ksq-1/repro-006-040-analysis-r3/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce analyzer-only gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/repro-006-040-analysis-r3
+          (cd "$base" && sha256sum -c evidence.sha256)
+          grep -qx 'AURORA_KSQ_R3_REPRO_006_040_ANALYSIS_STATUS=PASS' "$base/audit.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_ORDER29_DEDICATED=PASS' "$base/order29-dedicated.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_RANGE_STATUS=PASS' "$base/proof/status.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_RANGE_SOURCE_IDENTITY=PASS' "$base/proof/status.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_RANGE_BINARY_IDENTITY=PASS' "$base/proof/status.env"
