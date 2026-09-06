@@ -1,0 +1,48 @@
+name: Aurora KSQ fix dedicated repro source delta selector
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/ksq-fix-repro-source-delta-glob.trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Apply exact source-delta selector fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('scripts/ci/build-ksq-1-repro-source.sh')
+          s = p.read_text()
+          old1 = "mapfile -t current_deltas < <(find \"${WORK}\" -maxdepth 1 -type f -name '*~supra26.04.1*' ! -name '*.dsc' -printf '%f\\n' | sort)"
+          new1 = "mapfile -t current_deltas < <(find \"${WORK}\" -maxdepth 1 -type f -name '*~supra*.debian.tar.*' -printf '%f\\n' | sort)"
+          old2 = "candidate_delta_count=\"$(find \"${candidate_source_dir}\" -maxdepth 1 -type f -name '*~supra26.04.1*' ! -name '*.dsc' | wc -l)\""
+          new2 = "candidate_delta_count=\"$(find \"${candidate_source_dir}\" -maxdepth 1 -type f -name '*~supra*.debian.tar.*' | wc -l)\""
+          if s.count(old1) != 1 or s.count(old2) != 1:
+              raise SystemExit('expected source-delta selector shape not found exactly once')
+          s = s.replace(old1, new1).replace(old2, new2)
+          p.write_text(s)
+          PY
+          git diff --check
+          git diff -- scripts/ci/build-ksq-1-repro-source.sh
+          test "$(git diff --numstat -- scripts/ci/build-ksq-1-repro-source.sh | awk '{print $1+$2}')" = 4
+      - name: Commit tooling-only fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add scripts/ci/build-ksq-1-repro-source.sh
+          git commit -m 'ci(ksq): scope repro source delta identity to source artifacts'
+          git push origin HEAD:feature/kde-stack-qualification
