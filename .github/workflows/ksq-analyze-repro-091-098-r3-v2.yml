@@ -1,0 +1,300 @@
+name: Aurora KSQ-1 reusable reproducibility 091-098 r3 v2
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/ksq-r3-repro-091-098-analyze-v2-trigger.env'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: aurora-ksq-analyze-repro-091-098-r3-v2
+  cancel-in-progress: false
+
+jobs:
+  analyze-reusable-091-098-v2:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Qualify exact candidate and independent reference provenance
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          grep -Eq '^VERSION_ID="26\.04(\.1)?"$' /etc/os-release
+          test "$(dpkg --print-architecture)" = amd64
+          source .github/ksq-r3-repro-091-098-analyze-v2-trigger.env
+          base=build/ksq-1/repro-reusable-091-098-r3-v2
+          mkdir -p "$base/provenance"
+          cp .github/ksq-r3-repro-091-098-analyze-v2-trigger.env "$base/provenance/trigger.env"
+
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$AURORA_KSQ_R3_REPRO_091_098_CANDIDATE_RUN_ID" > "$base/provenance/candidate-run.json"
+          test "$(jq -r '.status' "$base/provenance/candidate-run.json")" = completed
+          test "$(jq -r '.conclusion' "$base/provenance/candidate-run.json")" = success
+          test "$(jq -r '.head_sha' "$base/provenance/candidate-run.json")" = "$AURORA_KSQ_R3_REPRO_091_098_CANDIDATE_HEAD_SHA"
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/$AURORA_KSQ_R3_REPRO_091_098_CANDIDATE_ARTIFACT_ID" > "$base/provenance/candidate-artifact.json"
+          test "$(jq -r '.name' "$base/provenance/candidate-artifact.json")" = aurora-ksq-native-range-091-101-r3
+          test "$(jq -r '.digest' "$base/provenance/candidate-artifact.json")" = "$AURORA_KSQ_R3_REPRO_091_098_CANDIDATE_ARTIFACT_DIGEST"
+          test "$(jq -r '.size_in_bytes' "$base/provenance/candidate-artifact.json")" = "$AURORA_KSQ_R3_REPRO_091_098_CANDIDATE_ARTIFACT_SIZE"
+          test "$(jq -r '.workflow_run.id' "$base/provenance/candidate-artifact.json")" = "$AURORA_KSQ_R3_REPRO_091_098_CANDIDATE_RUN_ID"
+          test "$(jq -r '.workflow_run.head_sha' "$base/provenance/candidate-artifact.json")" = "$AURORA_KSQ_R3_REPRO_091_098_CANDIDATE_HEAD_SHA"
+          test "$(jq -r '.expired' "$base/provenance/candidate-artifact.json")" = false
+
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$AURORA_KSQ_R3_REPRO_091_098_ACCEPT_RUN_ID" > "$base/provenance/accept101-run.json"
+          test "$(jq -r '.status' "$base/provenance/accept101-run.json")" = completed
+          test "$(jq -r '.conclusion' "$base/provenance/accept101-run.json")" = success
+          test "$(jq -r '.head_sha' "$base/provenance/accept101-run.json")" = "$AURORA_KSQ_R3_REPRO_091_098_ACCEPT_HEAD_SHA"
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/$AURORA_KSQ_R3_REPRO_091_098_ACCEPT_ARTIFACT_ID" > "$base/provenance/accept101-artifact.json"
+          test "$(jq -r '.name' "$base/provenance/accept101-artifact.json")" = aurora-ksq-accept-091-101-r3
+          test "$(jq -r '.digest' "$base/provenance/accept101-artifact.json")" = "$AURORA_KSQ_R3_REPRO_091_098_ACCEPT_ARTIFACT_DIGEST"
+          test "$(jq -r '.size_in_bytes' "$base/provenance/accept101-artifact.json")" = "$AURORA_KSQ_R3_REPRO_091_098_ACCEPT_ARTIFACT_SIZE"
+          test "$(jq -r '.workflow_run.id' "$base/provenance/accept101-artifact.json")" = "$AURORA_KSQ_R3_REPRO_091_098_ACCEPT_RUN_ID"
+          test "$(jq -r '.workflow_run.head_sha' "$base/provenance/accept101-artifact.json")" = "$AURORA_KSQ_R3_REPRO_091_098_ACCEPT_HEAD_SHA"
+          test "$(jq -r '.expired' "$base/provenance/accept101-artifact.json")" = false
+
+          gh api "/repos/$GITHUB_REPOSITORY/actions/runs/$AURORA_KSQ_R3_REPRO_091_098_REFERENCE_RUN_ID" > "$base/provenance/reference-run.json"
+          test "$(jq -r '.status' "$base/provenance/reference-run.json")" = completed
+          test "$(jq -r '.conclusion' "$base/provenance/reference-run.json")" = cancelled
+          test "$(jq -r '.head_sha' "$base/provenance/reference-run.json")" = "$AURORA_KSQ_R3_REPRO_091_098_REFERENCE_HEAD_SHA"
+          gh api "/repos/$GITHUB_REPOSITORY/actions/jobs/$AURORA_KSQ_R3_REPRO_091_098_REFERENCE_JOB_ID" > "$base/provenance/reference-job.json"
+          test "$(jq -r '.run_id' "$base/provenance/reference-job.json")" = "$AURORA_KSQ_R3_REPRO_091_098_REFERENCE_RUN_ID"
+          test "$(jq -r '.status' "$base/provenance/reference-job.json")" = completed
+          test "$(jq -r '.conclusion' "$base/provenance/reference-job.json")" = cancelled
+          test "$(jq -r '.steps[] | select(.name=="Preserve binary checkpoint 081-101") | .conclusion' "$base/provenance/reference-job.json")" = success
+          test "$(jq -r '.steps[] | select(.name=="Preserve build evidence 081-101") | .conclusion' "$base/provenance/reference-job.json")" = success
+
+          for spec in \
+            "$AURORA_KSQ_R3_REPRO_091_098_REFERENCE_EVIDENCE_ARTIFACT_ID|aurora-ksq-1-evidence-081-101|$AURORA_KSQ_R3_REPRO_091_098_REFERENCE_EVIDENCE_DIGEST|$AURORA_KSQ_R3_REPRO_091_098_REFERENCE_EVIDENCE_SIZE|reference-evidence" \
+            "$AURORA_KSQ_R3_REPRO_091_098_REFERENCE_DEBS_ARTIFACT_ID|aurora-ksq-1-debs-081-101|$AURORA_KSQ_R3_REPRO_091_098_REFERENCE_DEBS_DIGEST|$AURORA_KSQ_R3_REPRO_091_098_REFERENCE_DEBS_SIZE|reference-debs"; do
+            IFS='|' read -r id name digest size prefix <<< "$spec"
+            gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/$id" > "$base/provenance/$prefix-artifact.json"
+            test "$(jq -r '.name' "$base/provenance/$prefix-artifact.json")" = "$name"
+            test "$(jq -r '.digest' "$base/provenance/$prefix-artifact.json")" = "$digest"
+            test "$(jq -r '.size_in_bytes' "$base/provenance/$prefix-artifact.json")" = "$size"
+            test "$(jq -r '.workflow_run.id' "$base/provenance/$prefix-artifact.json")" = "$AURORA_KSQ_R3_REPRO_091_098_REFERENCE_RUN_ID"
+            test "$(jq -r '.workflow_run.head_sha' "$base/provenance/$prefix-artifact.json")" = "$AURORA_KSQ_R3_REPRO_091_098_REFERENCE_HEAD_SHA"
+            test "$(jq -r '.expired' "$base/provenance/$prefix-artifact.json")" = false
+          done
+
+      - name: Download exact current candidate 091-101
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9979632407
+          path: ${{ runner.temp }}/candidate
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33994908104
+          digest-mismatch: error
+
+      - name: Download exact accepted 101 proof
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9979901723
+          path: ${{ runner.temp }}/accepted101
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 34002503177
+          digest-mismatch: error
+
+      - name: Download exact historical evidence 081-101
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9729820568
+          path: ${{ runner.temp }}/reference-evidence
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33281736655
+          digest-mismatch: error
+
+      - name: Download exact historical binaries 081-101
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: 9729819980
+          path: ${{ runner.temp }}/reference-debs
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: 33281736655
+          digest-mismatch: error
+
+      - name: Compare reusable orders 091-098 only
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/repro-reusable-091-098-r3-v2
+          (cd "$RUNNER_TEMP/accepted101" && sha256sum -c evidence.sha256)
+          source "$RUNNER_TEMP/accepted101/acceptance.env"
+          test "$AURORA_KSQ_R3_091_101_ACCEPTANCE" = PASS
+          test "$AURORA_KSQ_R3_091_101_ACCUMULATED_DEBS" = 424
+
+          candidate=
+          for p in "$RUNNER_TEMP/candidate/ksq-1/full/chunk-091-101" "$RUNNER_TEMP/candidate/build/ksq-1/full/chunk-091-101"; do
+            if [[ -d "$p" ]]; then test -z "$candidate"; candidate="$p"; fi
+          done
+          test -n "$candidate"
+          ref_ev="$RUNNER_TEMP/reference-evidence"
+          ref_debs="$RUNNER_TEMP/reference-debs"
+
+          python3 - "$candidate" "$ref_ev" "$ref_debs" "$base" <<'PY'
+          from __future__ import annotations
+          import csv, hashlib, subprocess, sys
+          from pathlib import Path
+
+          candidate, ref_ev, ref_debs, out = map(Path, sys.argv[1:])
+          orders = set(range(91, 99))
+          out.mkdir(parents=True, exist_ok=True)
+
+          def sha(path: Path) -> str:
+              h = hashlib.sha256()
+              with path.open('rb') as f:
+                  for block in iter(lambda: f.read(1024 * 1024), b''):
+                      h.update(block)
+              return h.hexdigest()
+
+          def read_tsv(path: Path):
+              with path.open(newline='', encoding='utf-8') as f:
+                  return list(csv.DictReader(f, delimiter='\t'))
+
+          def read_env(path: Path):
+              values = {}
+              for line in path.read_text(encoding='utf-8', errors='replace').splitlines():
+                  if '=' in line:
+                      key, value = line.split('=', 1)
+                      values[key] = value
+              return values
+
+          cm = {int(r['order']): r for r in read_tsv(candidate/'evidence/build-manifest.tsv') if int(r['order']) in orders}
+          rm = {int(r['order']): r for r in read_tsv(ref_ev/'build-manifest.tsv') if int(r['order']) in orders}
+          if set(cm) != orders or set(rm) != orders:
+              raise SystemExit('manifest coverage mismatch')
+
+          manifest_keys = ['source_package','packaging_base','supra_version','candidate_family','decision','deb_count','result']
+          source_rows = []
+          for order in sorted(orders):
+              if any(cm[order].get(k) != rm[order].get(k) for k in manifest_keys):
+                  raise SystemExit(f'order {order}: manifest mismatch')
+              if cm[order]['result'] != 'PASS' or rm[order]['result'] != 'PASS':
+                  raise SystemExit(f'order {order}: manifest result not PASS')
+
+              source = cm[order]['source_package']
+              version = cm[order]['supra_version']
+              cdir = candidate/'evidence'/f'{order}-{source}'
+              rdir = ref_ev/f'{order}-{source}'
+              if not cdir.is_dir() or not rdir.is_dir():
+                  raise SystemExit(f'order {order}: source evidence missing')
+
+              for label, env in [('candidate', read_env(cdir/'build-status.env')), ('reference', read_env(rdir/'build-status.env'))]:
+                  expected = {
+                      'AURORA_KSQ_1_BUILD_RESULT': 'PASS',
+                      'AURORA_KSQ_1_BUILD_ORDER': str(order),
+                      'AURORA_KSQ_1_BUILD_SOURCE': source,
+                      'AURORA_KSQ_1_BUILD_VERSION': version,
+                  }
+                  for key, value in expected.items():
+                      if env.get(key) != value:
+                          raise SystemExit(f'order {order}: {label} {key} {env.get(key)!r} != {value!r}')
+
+              for name in ('debian-control', 'debian-changelog'):
+                  if sha(cdir/name) != sha(rdir/name):
+                      raise SystemExit(f'order {order}: {name} differs')
+
+              cdsc = list(cdir.glob('*.dsc'))
+              rdsc = list(rdir.glob('*.dsc'))
+              if len(cdsc) != 1 or len(rdsc) != 1 or cdsc[0].name != rdsc[0].name or sha(cdsc[0]) != sha(rdsc[0]):
+                  raise SystemExit(f'order {order}: dsc differs')
+
+              cdel = {p.name: sha(p) for p in cdir.glob('*~supra*.debian.tar.*')}
+              rdel = {p.name: sha(p) for p in rdir.glob('*~supra*.debian.tar.*')}
+              if not cdel or cdel != rdel:
+                  raise SystemExit(f'order {order}: Debian source delta differs')
+
+              rlogs = list(rdir.glob('*.build'))
+              clogs = list(cdir.glob('*.build'))
+              if len(rlogs) != 1 or len(clogs) != 1:
+                  raise SystemExit(f'order {order}: build log cardinality')
+              if 'Status: successful' not in rlogs[0].read_text(errors='replace'):
+                  raise SystemExit(f'order {order}: historical build log not successful')
+              if 'Status: successful' not in clogs[0].read_text(errors='replace'):
+                  raise SystemExit(f'order {order}: candidate build log not successful')
+
+              source_rows.append([order, source, cdsc[0].name, sha(cdsc[0]), next(iter(cdel.values()))])
+
+          cb = [r for r in read_tsv(candidate/'evidence/binary-packages.tsv') if int(r['order']) in orders]
+          rb = [r for r in read_tsv(ref_ev/'binary-packages.tsv') if int(r['order']) in orders]
+          key = lambda r: (int(r['order']), r['source_package'], r['binary_package'], r['filename'], r['version'], r['architecture'])
+          if sorted(map(key, cb)) != sorted(map(key, rb)):
+              raise SystemExit('binary package shape differs')
+          if len(cb) != 27:
+              raise SystemExit(f'expected 27 reusable binaries, got {len(cb)}')
+
+          binary_rows = []
+          for row in sorted(cb, key=key):
+              current = candidate/'new-debs'/row['filename']
+              reference = ref_debs/row['filename']
+              if not current.is_file() or not reference.is_file():
+                  raise SystemExit(f"missing DEB {row['filename']}")
+              digest = sha(current)
+              if digest != sha(reference):
+                  raise SystemExit(f"non-identical DEB {row['filename']}")
+              package = subprocess.check_output(['dpkg-deb','-f',str(current),'Package'], text=True).strip()
+              version = subprocess.check_output(['dpkg-deb','-f',str(current),'Version'], text=True).strip()
+              arch = subprocess.check_output(['dpkg-deb','-f',str(current),'Architecture'], text=True).strip()
+              if (package, version, arch) != (row['binary_package'], row['version'], row['architecture']):
+                  raise SystemExit(f"metadata mismatch {row['filename']}")
+              binary_rows.append([row['order'], row['source_package'], package, row['filename'], version, arch, digest])
+
+          with (out/'source-proof.tsv').open('w', newline='', encoding='utf-8') as f:
+              writer = csv.writer(f, delimiter='\t', lineterminator='\n')
+              writer.writerow(['order','source_package','dsc','dsc_sha256','debian_delta_sha256'])
+              writer.writerows(source_rows)
+          with (out/'binary-proof.tsv').open('w', newline='', encoding='utf-8') as f:
+              writer = csv.writer(f, delimiter='\t', lineterminator='\n')
+              writer.writerow(['order','source_package','binary_package','filename','version','architecture','sha256'])
+              writer.writerows(binary_rows)
+
+          (out/'status.env').write_text('\n'.join([
+              'AURORA_KSQ_1_REPRO_REUSABLE_091_098_STATUS=PASS',
+              'AURORA_KSQ_1_REPRO_REUSABLE_FIRST_ORDER=91',
+              'AURORA_KSQ_1_REPRO_REUSABLE_LAST_ORDER=98',
+              'AURORA_KSQ_1_REPRO_REUSABLE_SOURCES=8',
+              'AURORA_KSQ_1_REPRO_REUSABLE_BINARIES=27',
+              'AURORA_KSQ_1_REPRO_REUSABLE_BUILD_STATUS_CONTRACT=AURORA_KSQ_1_BUILD_RESULT',
+              'AURORA_KSQ_1_REPRO_REUSABLE_SOURCE_IDENTITY=PASS',
+              'AURORA_KSQ_1_REPRO_REUSABLE_BINARY_IDENTITY=PASS',
+              'AURORA_KSQ_1_REPRO_REUSABLE_099_101_INCLUDED=no',
+              'AURORA_KSQ_1_FULL_CERTIFIED=no',
+              '',
+          ]), encoding='utf-8')
+          PY
+
+          (cd "$base" && { find provenance -type f -print0 | sort -z | xargs -0 sha256sum; sha256sum source-proof.tsv binary-proof.tsv status.env; }) > "$base/evidence.sha256"
+          (cd "$base" && sha256sum -c evidence.sha256)
+
+      - name: Upload reusable 091-098 proof
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-repro-reusable-091-098-r3-v2
+          path: build/ksq-1/repro-reusable-091-098-r3-v2/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce reusable 091-098 gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=build/ksq-1/repro-reusable-091-098-r3-v2
+          (cd "$base" && sha256sum -c evidence.sha256)
+          grep -qx 'AURORA_KSQ_1_REPRO_REUSABLE_091_098_STATUS=PASS' "$base/status.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_REUSABLE_SOURCES=8' "$base/status.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_REUSABLE_BINARIES=27' "$base/status.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_REUSABLE_BUILD_STATUS_CONTRACT=AURORA_KSQ_1_BUILD_RESULT' "$base/status.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_REUSABLE_SOURCE_IDENTITY=PASS' "$base/status.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_REUSABLE_BINARY_IDENTITY=PASS' "$base/status.env"
+          grep -qx 'AURORA_KSQ_1_REPRO_REUSABLE_099_101_INCLUDED=no' "$base/status.env"
+          grep -qx 'AURORA_KSQ_1_FULL_CERTIFIED=no' "$base/status.env"
