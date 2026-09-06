@@ -1,0 +1,64 @@
+name: Aurora KSQ-1 reproducibility 001-005 r3
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/ksq-r3-repro-001-005-trigger.env'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: aurora-ksq-repro-001-005-r3
+  cancel-in-progress: false
+
+jobs:
+  repro-001-005-r3:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Rebuild and compare orders 001-005
+        id: repro
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/ci/run-ksq-repro-001-005-r3.sh
+
+      - name: Upload reusable 001-005 reference proof
+        id: upload
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-repro-001-005-r3
+          path: build/ksq-1/repro-001-005-r3/
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 1
+
+      - name: Enforce reproducibility result
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test '${{ steps.repro.outcome }}' = success
+          test '${{ steps.upload.outcome }}' = success
+          grep -qx 'AURORA_KSQ_R3_REPRO_001_005=PASS' build/ksq-1/repro-001-005-r3/audit.env
+          grep -qx 'AURORA_KSQ_R3_REPRO_001_005_SOURCES=5' build/ksq-1/repro-001-005-r3/audit.env
+          grep -qx 'AURORA_KSQ_R3_REPRO_001_005_BINARIES=12' build/ksq-1/repro-001-005-r3/audit.env
+          grep -qx 'AURORA_KSQ_R3_REPRO_001_005_SOURCE_IDENTITY=PASS' build/ksq-1/repro-001-005-r3/audit.env
+          grep -qx 'AURORA_KSQ_R3_REPRO_001_005_BINARY_IDENTITY=PASS' build/ksq-1/repro-001-005-r3/audit.env
+          grep -qx 'AURORA_KSQ_R3_REPRO_001_005_APPARMOR_DENIALS=0' build/ksq-1/repro-001-005-r3/audit.env
+          grep -qx 'AURORA_KSQ_R3_REPRO_001_005_DOCKER_USED=0' build/ksq-1/repro-001-005-r3/audit.env
+          grep -qx 'AURORA_KSQ_R3_REPRO_001_005_CUSTOM_APPARMOR_USED=0' build/ksq-1/repro-001-005-r3/audit.env
+          grep -qx 'AURORA_KSQ_R3_REPRO_001_005_UIDMAP_FILECAP_PATCH_USED=0' build/ksq-1/repro-001-005-r3/audit.env
+          raw_digest='${{ steps.upload.outputs.artifact-digest }}'
+          artifact_id='${{ steps.upload.outputs.artifact-id }}'
+          [[ "$raw_digest" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$artifact_id" =~ ^[0-9]+$ ]]
+          echo "AURORA_KSQ_R3_REPRO_001_005_ARTIFACT_ID=$artifact_id"
+          echo "AURORA_KSQ_R3_REPRO_001_005_ARTIFACT_DIGEST=sha256:$raw_digest"
