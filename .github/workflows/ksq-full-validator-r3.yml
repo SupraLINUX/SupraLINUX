@@ -1,0 +1,60 @@
+name: Aurora KSQ-1 final 101-source validator r3
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/ksq-r3-full-validator-trigger.env'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: aurora-ksq-full-validator-r3
+  cancel-in-progress: false
+
+jobs:
+  validate-101:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Validate canonical 101-source build and KWallet gate
+        id: validator
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/ci/run-ksq-1-full-validator-r3.sh
+
+      - name: Upload final build validation evidence
+        id: upload
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-1-full-validator-r3
+          path: build/ksq-1/final-build-validation-r3/
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 1
+
+      - name: Enforce final build validator
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test '${{ steps.validator.outcome }}' = success
+          test '${{ steps.upload.outcome }}' = success
+          grep -qx 'AURORA_KSQ_R3_FULL_VALIDATOR=PASS' build/ksq-1/final-build-validation-r3/status.env
+          grep -qx 'AURORA_KSQ_R3_FULL_VALIDATOR_SOURCES=101' build/ksq-1/final-build-validation-r3/status.env
+          grep -qx 'AURORA_KSQ_R3_FULL_VALIDATOR_BINARIES=424' build/ksq-1/final-build-validation-r3/status.env
+          grep -qx 'AURORA_KSQ_R3_FULL_VALIDATOR_PACKAGING_ADAPTATIONS=2' build/ksq-1/final-build-validation-r3/status.env
+          grep -qx 'AURORA_KSQ_R3_FULL_VALIDATOR_KWALLET=PASS' build/ksq-1/final-build-validation-r3/status.env
+          raw_digest='${{ steps.upload.outputs.artifact-digest }}'
+          artifact_id='${{ steps.upload.outputs.artifact-id }}'
+          [[ "$raw_digest" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$artifact_id" =~ ^[0-9]+$ ]]
+          echo "AURORA_KSQ_R3_FULL_VALIDATOR_ARTIFACT_ID=$artifact_id"
+          echo "AURORA_KSQ_R3_FULL_VALIDATOR_ARTIFACT_DIGEST=sha256:$raw_digest"
