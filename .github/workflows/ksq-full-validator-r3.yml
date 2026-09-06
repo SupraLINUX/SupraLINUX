@@ -52,6 +52,7 @@ jobs:
           grep -qx 'AURORA_KSQ_R3_FULL_VALIDATOR_BINARIES=424' build/ksq-1/final-build-validation-r3/status.env
           grep -qx 'AURORA_KSQ_R3_FULL_VALIDATOR_PACKAGING_ADAPTATIONS=2' build/ksq-1/final-build-validation-r3/status.env
           grep -qx 'AURORA_KSQ_R3_FULL_VALIDATOR_KWALLET=PASS' build/ksq-1/final-build-validation-r3/status.env
+          grep -qx 'AURORA_KSQ_R3_FULL_VALIDATOR_KSQ0=PASS' build/ksq-1/final-build-validation-r3/status.env
           raw_digest='${{ steps.upload.outputs.artifact-digest }}'
           artifact_id='${{ steps.upload.outputs.artifact-id }}'
           [[ "$raw_digest" =~ ^[0-9a-f]{64}$ ]]
