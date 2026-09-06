@@ -1,0 +1,59 @@
+name: Aurora KSQ-1 reusable reproducibility 041-098 r3
+
+on:
+  push:
+    branches:
+      - feature/kde-stack-qualification
+    paths:
+      - '.github/ksq-r3-repro-041-098-analyze-trigger.env'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: aurora-ksq-repro-041-098-r3
+  cancel-in-progress: false
+
+jobs:
+  analyze-041-098:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Analyze candidate against historical reference 041-098
+        id: analyze
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/ci/run-ksq-analyze-repro-041-098-r3.sh
+
+      - name: Upload reusable 041-098 proof
+        id: upload
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: aurora-ksq-repro-reusable-041-098-r3
+          path: build/ksq-1/repro-reusable-041-098-r3/
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 1
+
+      - name: Enforce reusable proof
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test '${{ steps.analyze.outcome }}' = success
+          test '${{ steps.upload.outcome }}' = success
+          grep -qx 'AURORA_KSQ_R3_REPRO_041_098=PASS' build/ksq-1/repro-reusable-041-098-r3/audit.env
+          grep -qx 'AURORA_KSQ_R3_REPRO_041_098_SOURCES=58' build/ksq-1/repro-reusable-041-098-r3/audit.env
+          grep -qx 'AURORA_KSQ_R3_REPRO_041_098_SOURCE_IDENTITY=PASS' build/ksq-1/repro-reusable-041-098-r3/audit.env
+          grep -qx 'AURORA_KSQ_R3_REPRO_041_098_BINARY_IDENTITY=PASS' build/ksq-1/repro-reusable-041-098-r3/audit.env
+          raw_digest='${{ steps.upload.outputs.artifact-digest }}'
+          artifact_id='${{ steps.upload.outputs.artifact-id }}'
+          [[ "$raw_digest" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$artifact_id" =~ ^[0-9]+$ ]]
+          echo "AURORA_KSQ_R3_REPRO_041_098_ARTIFACT_ID=$artifact_id"
+          echo "AURORA_KSQ_R3_REPRO_041_098_ARTIFACT_DIGEST=sha256:$raw_digest"
