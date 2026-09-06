@@ -6,6 +6,7 @@ import csv
 import hashlib
 import re
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import NoReturn
 
@@ -23,6 +24,34 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+@dataclass(frozen=True)
+class RangedRoot:
+    first: int
+    last: int
+    root: Path
+
+
+def parse_ranged_root(spec: str, label: str) -> RangedRoot:
+    range_part, sep, path_part = spec.partition("=")
+    match = re.fullmatch(r"([1-9][0-9]*)-([1-9][0-9]*)", range_part)
+    if not sep or match is None or not path_part:
+        fail(f"invalid {label} range declaration {spec!r}; expected FIRST-LAST=PATH")
+    first, last = map(int, match.groups())
+    if first < 1 or last > 101 or first > last:
+        fail(f"invalid {label} range {first}-{last}")
+    root = Path(path_part).resolve()
+    if not root.is_dir():
+        fail(f"{label} root does not exist: {root}")
+    return RangedRoot(first, last, root)
+
+
+def authoritative_root(ranges: list[RangedRoot], order: int, label: str) -> Path:
+    matches = [entry.root for entry in ranges if entry.first <= order <= entry.last]
+    if len(matches) != 1:
+        fail(f"{label}: order {order} authoritative root cardinality {len(matches)}")
+    return matches[0]
+
+
 def rows_from(roots: list[Path], name: str) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     seen: set[Path] = set()
@@ -34,6 +63,31 @@ def rows_from(roots: list[Path], name: str) -> list[dict[str, str]]:
             seen.add(resolved)
             with path.open(newline="", encoding="utf-8") as handle:
                 rows.extend(csv.DictReader(handle, delimiter="\t"))
+    return rows
+
+
+def rows_from_ranged_roots(
+    ranges: list[RangedRoot], name: str, orders: set[int], label: str
+) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    seen: set[Path] = set()
+    for entry in ranges:
+        scoped_orders = {order for order in orders if entry.first <= order <= entry.last}
+        if not scoped_orders:
+            continue
+        for path in entry.root.rglob(name):
+            resolved = path.resolve()
+            if resolved in seen:
+                continue
+            seen.add(resolved)
+            with path.open(newline="", encoding="utf-8") as handle:
+                for row in csv.DictReader(handle, delimiter="\t"):
+                    try:
+                        order = int(row["order"])
+                    except (KeyError, TypeError, ValueError):
+                        fail(f"{label}: malformed order in {path}")
+                    if order in scoped_orders:
+                        rows.append(row)
     return rows
 
 
@@ -49,6 +103,18 @@ def source_dir(roots: list[Path], order: int, source: str) -> Path:
     return next(iter(found.values()))
 
 
+def ranged_source_dir(ranges: list[RangedRoot], order: int, source: str, label: str) -> Path:
+    root = authoritative_root(ranges, order, label)
+    name = f"{order}-{source}"
+    found: dict[Path, Path] = {}
+    for path in root.rglob(name):
+        if path.is_dir() and (path / "prepared-source.env").is_file():
+            found[path.resolve()] = path
+    if len(found) != 1:
+        fail(f"{name}: source evidence cardinality {len(found)} inside authoritative root {root}")
+    return next(iter(found.values()))
+
+
 def find_deb(roots: list[Path], filename: str) -> Path:
     found: dict[Path, Path] = {}
     for root in roots:
@@ -57,6 +123,19 @@ def find_deb(roots: list[Path], filename: str) -> Path:
                 found[path.resolve()] = path
     if len(found) != 1:
         fail(f"{filename}: DEB cardinality {len(found)}")
+    return next(iter(found.values()))
+
+
+def ranged_find_deb(
+    ranges: list[RangedRoot], order: int, filename: str, label: str
+) -> Path:
+    root = authoritative_root(ranges, order, label)
+    found: dict[Path, Path] = {}
+    for path in root.rglob(filename):
+        if path.is_file() and path.suffix == ".deb":
+            found[path.resolve()] = path
+    if len(found) != 1:
+        fail(f"{filename}: DEB cardinality {len(found)} inside authoritative root {root}")
     return next(iter(found.values()))
 
 
@@ -84,11 +163,36 @@ def manifest_by_order(rows: list[dict[str, str]], orders: set[int], label: str) 
     return result
 
 
+def candidate_ranges_from_args(args: argparse.Namespace, orders: set[int]) -> list[RangedRoot]:
+    if args.candidate_root_range and args.candidate_root:
+        fail("do not mix --candidate-root-range with --candidate-root")
+    if args.candidate_root_range:
+        ranges = [
+            parse_ranged_root(spec, "candidate") for spec in args.candidate_root_range
+        ]
+    else:
+        roots = [path.resolve() for path in (args.candidate_root or [])]
+        if len(roots) != 1:
+            fail("multiple candidate roots require explicit --candidate-root-range FIRST-LAST=PATH")
+        if not roots[0].is_dir():
+            fail(f"candidate root does not exist: {roots[0]}")
+        ranges = [RangedRoot(min(orders), max(orders), roots[0])]
+    for order in sorted(orders):
+        authoritative_root(ranges, order, "candidate")
+    return ranges
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--first", type=int, required=True)
     parser.add_argument("--last", type=int, required=True)
-    parser.add_argument("--candidate-root", type=Path, action="append", required=True)
+    parser.add_argument("--candidate-root", type=Path, action="append")
+    parser.add_argument(
+        "--candidate-root-range",
+        action="append",
+        metavar="FIRST-LAST=PATH",
+        help="bind each candidate checkpoint root to the exact source-order range it authoritatively represents",
+    )
     parser.add_argument("--rebuilt-root", type=Path, action="append", required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
@@ -96,11 +200,15 @@ def main() -> int:
     if args.first < 1 or args.last > 101 or args.first > args.last:
         fail("invalid order range")
     orders = set(range(args.first, args.last + 1))
-    candidate_roots = [path.resolve() for path in args.candidate_root]
+    candidate_ranges = candidate_ranges_from_args(args, orders)
     rebuilt_roots = [path.resolve() for path in args.rebuilt_root]
+    if not all(path.is_dir() for path in rebuilt_roots):
+        fail("one or more rebuilt roots do not exist")
 
     candidate_manifest = manifest_by_order(
-        rows_from(candidate_roots, "build-manifest.tsv"), orders, "candidate"
+        rows_from_ranged_roots(candidate_ranges, "build-manifest.tsv", orders, "candidate"),
+        orders,
+        "candidate",
     )
     rebuilt_manifest = manifest_by_order(
         rows_from(rebuilt_roots, "build-manifest.tsv"), orders, "rebuilt"
@@ -123,9 +231,9 @@ def main() -> int:
         if candidate_manifest[order].get("result") != "PASS":
             fail(f"order {order} candidate result is not PASS")
 
-    candidate_binaries = [
-        row for row in rows_from(candidate_roots, "binary-packages.tsv") if int(row["order"]) in orders
-    ]
+    candidate_binaries = rows_from_ranged_roots(
+        candidate_ranges, "binary-packages.tsv", orders, "candidate"
+    )
     rebuilt_binaries = [
         row for row in rows_from(rebuilt_roots, "binary-packages.tsv") if int(row["order"]) in orders
     ]
@@ -156,7 +264,7 @@ def main() -> int:
     source_rows: list[list[str]] = []
     for order in sorted(orders):
         source = candidate_manifest[order]["source_package"]
-        candidate_dir = source_dir(candidate_roots, order, source)
+        candidate_dir = ranged_source_dir(candidate_ranges, order, source, "candidate")
         rebuilt_dir = source_dir(rebuilt_roots, order, source)
         candidate_env = read_env(candidate_dir / "prepared-source.env")
         rebuilt_env = read_env(rebuilt_dir / "prepared-source.env")
@@ -225,7 +333,8 @@ def main() -> int:
 
     binary_rows: list[list[str]] = []
     for row in sorted(candidate_binaries, key=binary_key):
-        candidate_deb = find_deb(candidate_roots, row["filename"])
+        order = int(row["order"])
+        candidate_deb = ranged_find_deb(candidate_ranges, order, row["filename"], "candidate")
         rebuilt_deb = find_deb(rebuilt_roots, row["filename"])
         candidate_sha = sha256(candidate_deb)
         rebuilt_sha = sha256(rebuilt_deb)
@@ -262,6 +371,7 @@ def main() -> int:
                 f"AURORA_KSQ_1_REPRO_RANGE_LAST_ORDER={args.last}",
                 f"AURORA_KSQ_1_REPRO_RANGE_SOURCES={len(orders)}",
                 f"AURORA_KSQ_1_REPRO_RANGE_BINARIES={len(binary_rows)}",
+                "AURORA_KSQ_1_REPRO_CANDIDATE_RANGE_BINDING=PASS",
                 "AURORA_KSQ_1_REPRO_RANGE_SOURCE_IDENTITY=PASS",
                 "AURORA_KSQ_1_REPRO_RANGE_BINARY_IDENTITY=PASS",
                 "AURORA_KSQ_1_FULL_CERTIFIED=no",
