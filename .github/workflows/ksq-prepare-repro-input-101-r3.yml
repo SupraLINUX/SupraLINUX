@@ -45,8 +45,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          digest='${{ steps.upload.outputs.digest }}'
-          [[ "$digest" =~ ^sha256:[0-9a-f]{64}$ ]]
+          raw_digest='${{ steps.upload.outputs.artifact-digest }}'
+          artifact_id='${{ steps.upload.outputs.artifact-id }}'
+          [[ "$raw_digest" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$artifact_id" =~ ^[0-9]+$ ]]
+          digest="sha256:${raw_digest}"
+          echo "AURORA_KSQ_1_REPRO_INPUT_GITHUB_ARTIFACT_ID=$artifact_id"
           echo "AURORA_KSQ_1_REPRO_INPUT_GITHUB_ARTIFACT_DIGEST=$digest"
           {
             echo '### Aurora KSQ-1 canonical repro input'
@@ -54,5 +58,6 @@ jobs:
             echo 'Sources: 101'
             echo 'DEBs: 424'
             echo 'Canonical ranges: 5'
+            echo "GitHub artifact ID: \`$artifact_id\`"
             echo "GitHub artifact digest: \`$digest\`"
           } >> "$GITHUB_STEP_SUMMARY"
