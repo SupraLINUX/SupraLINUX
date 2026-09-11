@@ -2,12 +2,18 @@ name: Phase 1 authoritative KVM package proof
 
 on:
   workflow_dispatch:
+  pull_request:
+    types: [labeled]
 
 permissions:
   contents: read
 
 jobs:
   authoritative-package-proof:
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' ||
+          (github.event.label.name == 'ci:authoritative-package-proof' &&
+           github.event.pull_request.head.repo.full_name == github.repository) }}
     name: sbuild + autopkgtest/QEMU on KVM guest
     runs-on: [self-hosted, linux, x64, supralinux, ubuntu-26.04, kvm, ephemeral]
     timeout-minutes: 90

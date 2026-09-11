@@ -1,25 +1,33 @@
 # Authoritative KVM runner provisioning
 
-Status: **implementation available; no runner image certified yet**  
+Status: **guest and host orchestration implemented; no runner image certified yet**  
 Last reviewed: **2026-09-11**
 
-This document describes preparation of the Ubuntu 26.04 guest that acts as the authoritative GitHub Actions runner. It does not describe the long-lived KVM/libvirt host, whose physical placement is infrastructure-specific.
+This document describes the preparation boundary between the long-lived KVM/libvirt host and the disposable Ubuntu 26.04 guest that acts as the authoritative GitHub Actions runner.
 
 ## Host boundary
 
-The host must provide KVM virtualization and expose nested KVM to the Ubuntu 26.04 runner guest. The guest should use host CPU virtualization capabilities (for example, libvirt host-passthrough) so that `/dev/kvm` is available inside the guest.
+The host provides KVM/libvirt capacity and exposes nested virtualization to the runner guest. It is not itself a SupraLINUX build runner. The authoritative identity begins inside the disposable Ubuntu 26.04 VM.
 
-The host itself is not a SupraLINUX build runner. Its role is to create and destroy disposable guest VMs.
+Host orchestration is implemented in `scripts/run-kvm-jit-gate.sh` and documented in `docs/runners/host-kvm.md`.
+
+## Source image
+
+Use Ubuntu's released Resolute amd64 cloud image. `scripts/fetch-ubuntu-26.04-cloud-image.sh` downloads the release metadata, verifies `SHA256SUMS.gpg` with Ubuntu's cloud-image keyring, verifies the image SHA-256 and writes provenance next to the downloaded image.
+
+A daily image must not silently replace the released-image source for the authoritative runner.
 
 ## Guest preparation
 
-Inside a freshly installed Ubuntu 26.04 KVM guest, run:
+Inside a freshly booted Ubuntu 26.04 KVM preparation guest, run:
 
 ```bash
 scripts/provision-authoritative-runner-guest.sh
 ```
 
-The script verifies that the guest is Ubuntu 26.04 running under KVM, installs the declared build/test toolchain, configures subordinate UID/GID ranges when missing, adds the intended runner user to the `kvm` group, and records the actual package versions used during provisioning.
+The script verifies Ubuntu 26.04/KVM, installs the declared build/test toolchain, configures subordinate UID/GID ranges when missing, adds the intended runner user to the `kvm` group, enables qemu-guest-agent, installs the GitHub Actions runner and records actual versions/provenance.
+
+The Actions runner installer resolves the current stable `actions/runner` release, requires GitHub's published SHA-256 digest for the Linux x64 asset, verifies the archive and records the exact release/digest installed. No runner registration credential is stored in the image.
 
 A new login/session is required after adding the runner user to the `kvm` group.
 
@@ -31,17 +39,31 @@ After `/dev/kvm` is readable/writable by the runner user, run:
 scripts/prepare-autopkgtest-qemu-image.sh
 ```
 
-The script calls Ubuntu's `autopkgtest-buildvm-ubuntu-cloud` for `resolute`/`amd64`, installs the resulting image at:
+The script calls Ubuntu's `autopkgtest-buildvm-ubuntu-cloud` for `resolute`/`amd64`, installs the image at:
 
 ```text
 /var/lib/supralinux/autopkgtest/resolute-amd64.img
 ```
 
-and generates real SHA-256/provenance evidence beside it. No QEMU image hash is hard-coded in source control before the image actually exists.
+and generates its real SHA-256/provenance. No QEMU image hash is invented or predeclared.
 
-## GitHub runner registration
+## Golden-image seal
 
-Registration is deliberately outside the baked image because the registration/JIT token is short-lived and sensitive. At VM boot, the orchestration layer must obtain a fresh token, register the runner with `--ephemeral`, and apply the labels:
+After guest provisioning and QEMU-image preparation, run:
+
+```bash
+scripts/seal-authoritative-runner-image.sh
+```
+
+The seal records the current Actions-runner evidence and QEMU-image SHA-256, removes any runner registration/work state, cleans APT cache, and resets cloud-init/machine identity for safe cloning. Power the VM off immediately afterwards and use the sealed disk only as a backing image.
+
+## Runtime JIT registration
+
+The golden image contains the runner software but **no GitHub registration token, PAT or JIT configuration**.
+
+At runtime the libvirt host calls GitHub's repository JIT endpoint, receives `encoded_jit_config`, boots a fresh overlay guest and injects the JIT configuration into `/run` through qemu-guest-agent. The runner executes one job and is then removed. The host destroys the overlay after exporting diagnostics/evidence.
+
+Required runtime labels are:
 
 ```text
 self-hosted
@@ -53,15 +75,26 @@ kvm
 ephemeral
 ```
 
-After one job, the runner is de-registered by GitHub and the orchestration layer must destroy the VM.
+## Pre-merge gate activation
+
+The KVM workflows can be certified while the PR remains Draft. They listen for controlled label events:
+
+```text
+ci:runner-contract
+ci:authoritative-package-proof
+```
+
+The host applies a label only after the matching JIT runner is online, preventing a self-hosted job from sitting queued with no intended runner. Both host and workflows reject fork PRs.
 
 ## Certification sequence
 
-A prepared VM image is still **pending**, not authoritative, until real evidence exists for:
+A prepared VM image remains **pending** until real evidence exists for:
 
-1. `runner-contract.yml` PASS;
-2. the QEMU image SHA-256;
-3. `authoritative-package-proof.yml` PASS;
-4. preserved runner/build/test logs and artifacts.
+1. signed Ubuntu source-image verification and recorded source SHA-256;
+2. golden-image preparation/seal provenance;
+3. prepared QEMU test-image SHA-256;
+4. `runner-contract.yml` PASS on a disposable JIT KVM guest;
+5. `authoritative-package-proof.yml` PASS on a separate disposable JIT KVM guest;
+6. preserved workflow artifacts and host/runner diagnostics.
 
-The next infrastructure dependency is therefore a KVM/libvirt host that can boot this guest with nested KVM and perform ephemeral GitHub runner registration.
+The remaining dependency is an actual KVM/libvirt host on which to execute this implementation.

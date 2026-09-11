@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-TARGET_USER="${SUDO_USER:-${USER}}"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+TARGET_USER="${SUPRALINUX_RUNNER_USER:-${SUDO_USER:-${USER}}}"
 
-if [[ "${EUID}" -eq 0 && -z "${SUDO_USER:-}" ]]; then
-    printf 'Run this script as the intended runner user with sudo available, not as a direct root login.\n' >&2
+if [[ "${EUID}" -eq 0 && -z "${SUDO_USER:-}" && -z "${SUPRALINUX_RUNNER_USER:-}" ]]; then
+    printf 'Run as the intended runner user with sudo, or set SUPRALINUX_RUNNER_USER.\n' >&2
     exit 1
 fi
 
@@ -20,12 +21,19 @@ if [[ "${VIRT}" != "kvm" ]]; then
     exit 1
 fi
 
+if ! id "${TARGET_USER}" >/dev/null 2>&1; then
+    printf 'Intended runner user does not exist: %s\n' "${TARGET_USER}" >&2
+    exit 1
+fi
+
 printf 'Provisioning SupraLINUX authoritative runner guest for user %s...\n' "${TARGET_USER}"
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     aptly \
     autopkgtest \
     build-essential \
+    ca-certificates \
+    curl \
     debhelper \
     devscripts \
     dpkg-dev \
@@ -33,7 +41,9 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     gnupg \
     jq \
     mmdebstrap \
+    openssh-server \
     python3 \
+    qemu-guest-agent \
     qemu-system-x86 \
     qemu-utils \
     sbuild \
@@ -54,8 +64,14 @@ else
     exit 1
 fi
 
+sudo systemctl enable ssh qemu-guest-agent
+sudo systemctl restart ssh
+sudo systemctl restart qemu-guest-agent || true
+
 sudo install -d -m 0755 /var/lib/supralinux/autopkgtest
 sudo install -d -m 0755 /var/lib/supralinux/evidence
+
+SUPRALINUX_RUNNER_USER="${TARGET_USER}" "${ROOT}/scripts/install-actions-runner.sh"
 
 {
     printf 'prepared_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -67,11 +83,12 @@ sudo install -d -m 0755 /var/lib/supralinux/evidence
     uname -a
     printf '\npackages:\n'
     dpkg-query -W -f='${Package}\t${Version}\n' \
-        aptly autopkgtest build-essential debhelper devscripts dpkg-dev git gnupg jq \
-        mmdebstrap python3 qemu-system-x86 qemu-utils sbuild uidmap ubuntu-keyring
+        aptly autopkgtest build-essential ca-certificates curl debhelper devscripts \
+        dpkg-dev git gnupg jq mmdebstrap openssh-server python3 qemu-guest-agent \
+        qemu-system-x86 qemu-utils sbuild uidmap ubuntu-keyring
 } | sudo tee /var/lib/supralinux/evidence/runner-guest-provisioning.txt >/dev/null
 
-printf '\nGuest tooling provisioned.\n'
+printf '\nGuest tooling and verified Actions runner installed.\n'
 printf 'A new login/session is required for kvm group membership to apply.\n'
-printf 'After that, verify /dev/kvm access and run scripts/prepare-autopkgtest-qemu-image.sh.\n'
-printf 'GitHub runner registration is intentionally separate because it requires a short-lived registration/JIT token.\n'
+printf 'After that, verify /dev/kvm and run scripts/prepare-autopkgtest-qemu-image.sh.\n'
+printf 'GitHub JIT configuration is intentionally generated on the libvirt host at VM runtime.\n'

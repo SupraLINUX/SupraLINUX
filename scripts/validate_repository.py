@@ -18,6 +18,13 @@ def require(condition: bool, message: str) -> None:
         errors.append(message)
 
 
+def read_required(path: Path) -> str:
+    if not path.exists():
+        errors.append(f"required file missing: {path.relative_to(ROOT)}")
+        return ""
+    return path.read_text(encoding="utf-8")
+
+
 try:
     data = json.loads(MANIFEST.read_text(encoding="utf-8"))
 except Exception as exc:
@@ -66,20 +73,68 @@ require(authoritative.get("build_isolation") == "sbuild-unshare", "authoritative
 require(authoritative.get("system_test") == "autopkgtest-qemu", "authoritative package system test must use autopkgtest-qemu")
 require(authoritative.get("nested_kvm_required") is True, "authoritative package testing requires nested KVM")
 
+workflow_texts: dict[str, str] = {}
 if WORKFLOWS.exists():
     for path in sorted(WORKFLOWS.glob("*.y*ml")):
         text = path.read_text(encoding="utf-8")
+        workflow_texts[path.name] = text
         require("ubuntu-latest" not in text, f"{path.relative_to(ROOT)} must not use ubuntu-latest")
+        require("pull_request_target" not in text, f"{path.relative_to(ROOT)} must not use pull_request_target")
 
-required_docs = [
+runner_contract = workflow_texts.get("runner-contract.yml", "")
+authoritative_proof = workflow_texts.get("authoritative-package-proof.yml", "")
+hosted_proof = workflow_texts.get("package-build-proof.yml", "")
+
+for filename, text, gate_label in (
+    ("runner-contract.yml", runner_contract, "ci:runner-contract"),
+    ("authoritative-package-proof.yml", authoritative_proof, "ci:authoritative-package-proof"),
+):
+    require(bool(text), f"missing authoritative workflow: .github/workflows/{filename}")
+    require("types: [labeled]" in text, f"{filename} must use an explicit PR labeled trigger for pre-merge certification")
+    require(gate_label in text, f"{filename} must require controlled label {gate_label}")
+    require(
+        "github.event.pull_request.head.repo.full_name == github.repository" in text,
+        f"{filename} must refuse fork PRs on self-hosted runners",
+    )
+    for label in ("self-hosted", "linux", "x64", "supralinux", "ubuntu-26.04", "kvm", "ephemeral"):
+        require(label in text, f"{filename} must target authoritative runner label {label}")
+
+require("paths:" in hosted_proof, "hosted package preflight must use path filters")
+require("packages/supralinux-build-test/**" in hosted_proof, "hosted package preflight must track proof-package changes")
+require("scripts/run-package-build-proof.sh" in hosted_proof, "hosted package preflight must track its build script")
+
+required_files = [
     ROOT / "docs" / "architecture" / "overview.md",
     ROOT / "docs" / "architecture" / "build-ci.md",
     ROOT / "docs" / "status" / "2026-09-11.md",
     ROOT / "docs" / "decisions" / "ADR-0001-authority-provider.md",
     ROOT / "docs" / "runners" / "ubuntu-26.04.md",
+    ROOT / "docs" / "runners" / "provisioning.md",
+    ROOT / "docs" / "runners" / "host-kvm.md",
+    ROOT / "scripts" / "install-actions-runner.sh",
+    ROOT / "scripts" / "fetch-ubuntu-26.04-cloud-image.sh",
+    ROOT / "scripts" / "provision-authoritative-runner-guest.sh",
+    ROOT / "scripts" / "prepare-autopkgtest-qemu-image.sh",
+    ROOT / "scripts" / "seal-authoritative-runner-image.sh",
+    ROOT / "scripts" / "run-kvm-jit-gate.sh",
+    ROOT / "scripts" / "run-authoritative-package-proof.sh",
 ]
-for path in required_docs:
-    require(path.exists(), f"required documentation missing: {path.relative_to(ROOT)}")
+for path in required_files:
+    require(path.exists(), f"required architecture/runner file missing: {path.relative_to(ROOT)}")
+
+host_orchestrator = read_required(ROOT / "scripts" / "run-kvm-jit-gate.sh")
+require("generate-jitconfig" in host_orchestrator, "host orchestrator must use GitHub JIT runner configuration")
+require("/run/supralinux-jit-config" in host_orchestrator, "JIT configuration must be injected into guest tmpfs")
+require("virt-copy-out" in host_orchestrator, "host orchestrator must export guest diagnostics before deleting the overlay")
+require("Authoritative self-hosted gates refuse fork PRs" in host_orchestrator, "host orchestrator must refuse fork PRs")
+
+installer = read_required(ROOT / "scripts" / "install-actions-runner.sh")
+require(".digest" in installer, "Actions runner installer must consume GitHub-published asset digest")
+require("sha256sum --check --strict" in installer, "Actions runner installer must verify the downloaded archive")
+
+cloud_fetcher = read_required(ROOT / "scripts" / "fetch-ubuntu-26.04-cloud-image.sh")
+require("SHA256SUMS.gpg" in cloud_fetcher, "Ubuntu cloud image fetcher must verify signed checksum metadata")
+require("gpgv" in cloud_fetcher, "Ubuntu cloud image fetcher must perform signature verification")
 
 if errors:
     for error in errors:
@@ -100,7 +155,7 @@ print(
     f"candidate={provider.get('candidate_version', 'n/a')}, certification={cert['status']}"
 )
 print(
-    "CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}".format(
+    "CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; JIT=required".format(
         hosted=hosted["role"],
         platform=authoritative["platform"],
         virt=authoritative["virtualization"],

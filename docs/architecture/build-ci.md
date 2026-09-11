@@ -42,22 +42,31 @@ The hosted package-build preflight creates a fresh Ubuntu 26.04 `buildd` rootfs 
 
 A real hosted attempt on 2026-09-11 demonstrated that `sbuild/unshare` can complete but `autopkgtest/unshare` can fail while constructing its testbed because of UID/GID ownership mapping. That backend is therefore not part of the authoritative testing contract.
 
+The expensive hosted build proof is path-filtered to the proof package, its build script and its workflow. Documentation/runner-orchestration-only changes continue through repository policy without needlessly rebuilding the package.
+
 ### Authoritative KVM build/test lane
 
 Release-relevant package evidence is produced inside disposable self-hosted **KVM virtual machines** running Ubuntu 26.04. The KVM guest, not the long-lived physical/virtualization host, is the GitHub Actions runner.
 
-Required conceptual labels:
+Required labels are:
 
 `self-hosted`, `linux`, `x64`, `supralinux`, `ubuntu-26.04`, `kvm`, `ephemeral`
 
+The authoritative runner uses GitHub's just-in-time runner configuration. The host requests a fresh `encoded_jit_config` for each guest and starts the already-installed runner with `run.sh --jitconfig`. No persistent GitHub runner credential is stored in the golden image.
+
 The VM lifecycle is one job per disposable instance:
 
-1. boot a clean VM from the approved Ubuntu 26.04 runner image;
-2. register the GitHub Actions runner with ephemeral registration;
-3. execute exactly one job;
-4. export build/test evidence and runner logs;
-5. allow GitHub to de-register the ephemeral runner;
-6. destroy the VM and its writable disk state.
+1. create a writable qcow2 overlay from the sealed Ubuntu 26.04 golden image;
+2. boot a KVM VM with nested virtualization exposed;
+3. request and inject a fresh JIT runner configuration into guest tmpfs;
+4. wait until the JIT runner is online;
+5. trigger exactly one controlled authoritative PR gate;
+6. execute exactly one job;
+7. upload build/test evidence and export runner diagnostics;
+8. remove any transient trigger label/stale runner record;
+9. destroy the VM and writable disk state.
+
+Pre-merge authoritative gates use `pull_request` `labeled` events because `workflow_dispatch` is not used as a dependency for workflows that have not yet reached the default branch. The controlled labels are `ci:runner-contract` and `ci:authoritative-package-proof`. Both the workflows and host orchestrator reject fork PRs before any self-hosted code execution.
 
 Inside the authoritative runner VM:
 
@@ -65,13 +74,21 @@ Inside the authoritative runner VM:
 - `sbuild` uses the `unshare` backend while that backend remains certified for the runner image;
 - `.deb`, `.changes`, `.buildinfo` and hashes are captured immediately after a successful build, before later gates run;
 - package/system testing uses `autopkgtest` with its QEMU backend and a prepared Ubuntu 26.04 image;
-- nested KVM is required for the authoritative QEMU test gate so that system tests run with hardware virtualization rather than silently falling back to software emulation.
+- nested KVM is required for the authoritative QEMU test gate so system tests do not silently fall back to software emulation.
 
-This gives separate isolation boundaries for the runner VM, the package build environment and the package runtime test VM.
+This gives separate isolation boundaries for the host, runner VM, package build environment and package runtime test VM.
 
 Containers may be used for auxiliary services, but they must not replace either the authoritative KVM runner boundary or the QEMU system-test boundary when doing so changes semantics.
 
-See `docs/runners/ubuntu-26.04.md`.
+See `docs/runners/ubuntu-26.04.md`, `docs/runners/provisioning.md` and `docs/runners/host-kvm.md`.
+
+## Golden runner image supply chain
+
+The runner image begins from Ubuntu's released Resolute amd64 cloud image. Its `SHA256SUMS.gpg` signature and the selected image checksum must be verified before the source image is admitted.
+
+Guest preparation records installed tool versions. The GitHub Actions runner archive is accepted only after checking the SHA-256 digest published in GitHub release metadata. The nested `autopkgtest` QEMU image receives its own generated SHA-256/provenance. The golden image is then cleaned of runner registration/job state and clone identity before use as a read-only backing image.
+
+A prepared image is not authoritative merely because these steps were scripted. Certification still requires execution on real KVM infrastructure.
 
 ## Evidence contract
 
@@ -88,9 +105,12 @@ Important builds must retain, where applicable:
 - `.changes`;
 - `.buildinfo`;
 - package manifests;
-- runner VM image revision and certification evidence;
+- source/golden runner VM image revision and certification evidence;
+- verified GitHub Actions runner release/digest;
 - SHA-256 of the prepared `autopkgtest` QEMU base image used by the run;
-- CI run identifiers and result state.
+- PR head SHA and CI run identifiers;
+- host-side runner/VM diagnostics where applicable;
+- terminal gate state.
 
 Hashes and test results are evidence, not placeholders. They must never be invented or copied from unrelated builds.
 

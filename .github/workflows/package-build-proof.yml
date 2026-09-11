@@ -4,7 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'packages/supralinux-build-test/**'
+      - 'scripts/run-package-build-proof.sh'
+      - '.github/workflows/package-build-proof.yml'
   pull_request:
+    paths:
+      - 'packages/supralinux-build-test/**'
+      - 'scripts/run-package-build-proof.sh'
+      - '.github/workflows/package-build-proof.yml'
   workflow_dispatch:
 
 permissions:
