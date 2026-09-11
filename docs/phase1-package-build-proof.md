@@ -1,6 +1,6 @@
 # Phase 1 — package-build proof
 
-Status: **implementation in progress; hosted clean build demonstrated, authoritative KVM test pending**  
+Status: **hosted clean-build preflight PASS; authoritative KVM test pending**  
 Last reviewed: **2026-09-11**
 
 ## Purpose
@@ -24,7 +24,7 @@ The package is not part of the intended desktop product.
 
 ## Hosted preflight lane
 
-`.github/workflows/package-build-proof.yml` runs on explicit GitHub-hosted `ubuntu-26.04` and now limits its claim to the clean-build preflight:
+`.github/workflows/package-build-proof.yml` runs on explicit GitHub-hosted `ubuntu-26.04` and limits its claim to the clean-build preflight:
 
 1. verify Ubuntu 26.04;
 2. verify user-namespace/subordinate-ID support;
@@ -35,7 +35,7 @@ The package is not part of the intended desktop product.
 7. immediately hash and preserve those artifacts;
 8. upload complete build evidence.
 
-This lane is **non-authoritative** and no longer runs `autopkgtest/unshare`. A PASS here means only that the clean package-build preflight passed.
+This lane is **non-authoritative** and does not claim the system-test gate.
 
 ## Authoritative lane
 
@@ -68,7 +68,7 @@ Until a certified runner exists, this lane is pending and is not dispatched mere
 
 - commit: `2191257afab786906ba75ef693e63d4394828126`;
 - workflow run: `34612684880`;
-- overall workflow/node state: **FAIL** because the attempted test gate failed;
+- overall workflow/node state: **FAIL** because the attempted testbed gate failed;
 - repository-policy run on the same commit: **PASS** (`34612685023`);
 - source package creation: **PASS**;
 - fresh `mmdebstrap` resolute buildd rootfs: **PASS**;
@@ -78,39 +78,49 @@ Until a certified runner exists, this lane is pending and is not dispatched mere
 - `autopkgtest/unshare` testbed creation: **FAIL** with exit code `16` while extracting files whose UID/GID ownership could not be mapped;
 - artifact upload: **PASS**;
 - artifact ID: `10268924575`;
-- artifact ZIP SHA-256: `bf7284454e04548936a89bc0576f96bef6ad9d1d141af3c02e817de7f926e0b8`;
+- artifact ZIP SHA-256: `bf7284454e04548936a89bc0576f96bef6ad9d1d141af3c02e817de7f926e0b8`.
+
+Attempt 2 exposed an evidence defect: binary artifacts were copied only after `autopkgtest`, and `sbuild.log` was empty. Both were corrected before attempt 3.
+
+### Attempt 3 — hosted clean-build preflight PASS
+
+- commit: `616d1f91b5aff2b1891bbe8ebfafb409e573818e`;
+- workflow run: `34615234032`;
+- result: **PASS**;
+- repository-policy run: **PASS** (`34615233851`);
+- artifact ID: `10269819217`;
+- artifact ZIP SHA-256: `6ac6862bd712e346934472cfc3b6e2c50d49165dbc608216a2ed52eb0623befc`;
+- `.deb` SHA-256: `3422149c39160b984a1fe3afa8e04286b29050144029a305c5058a7dadc5caf4`;
+- `.changes` SHA-256: `4cc921de00dbd0bf448809f5394bbceb94282fb626a3c39c473d58f81db87839`;
+- `.buildinfo` SHA-256: `7cd6415472b3cf7b1f01e67249b6030210bd4d1011c0b11e622cb7bf49c5c46f`;
 - source `.dsc` SHA-256: `8582e9774ab04a9151e4675701bf09a9d815e482c0b7522dd44e4acd364305c4`;
 - source tarball SHA-256: `51e293c475d19d97962d064ac86888bf35da474b4d6de1f5301ed433bd88d668`;
-- sbuild rootfs tarball SHA-256: `2cda6d2612cedbb8211368083a57176d96dbd78dbf7b504f849c4877779213f1`.
+- fresh sbuild rootfs SHA-256: `a7915cb70414103ddb9bcda5228a7ec30c2ce1c8d1a0161e54df7184cdb821eb`;
+- `sbuild.log`: **101653 bytes**, ending with `Status: successful`;
+- Lintian completed successfully with one warning (`no-manual-page`) on the intentionally trivial proof package.
 
-The binary-build PASS is supported by the execution path: the script checked for all required binary build artifacts and then invoked `autopkgtest` with the concrete file `supralinux-build-test_0.1.0_all.deb`. However, attempt 2 exposed an evidence defect: the binary artifacts were copied to the evidence directory only *after* `autopkgtest`, so the subsequent testbed failure prevented them from being retained. `sbuild.log` was also empty because the previous invocation did not request verbose stdout logging.
+The artifact was downloaded and inspected after the workflow completed. It contains the actual `.deb`, `.changes`, `.buildinfo`, build/rootfs/source hashes, logs and `result.json`. `result.json` explicitly records `state: PASS`, `authoritative: false`, `scope: source-and-clean-sbuild-only`, and no system-test backend.
 
-Those evidence defects are corrected in the next implementation: binary artifacts and hashes are preserved immediately after `sbuild`, and `sbuild --verbose` is used.
-
-## Architecture decision after attempt 2
-
-The hosted runner remains useful for build preflight but is not the authoritative system-test environment.
-
-The accepted Phase 1 architecture is now:
+## Accepted Phase 1 architecture
 
 ```text
 GitHub-hosted ubuntu-26.04
-└── non-authoritative source + sbuild preflight
+└── non-authoritative source + sbuild preflight  [PASS demonstrated]
 
 Disposable Ubuntu 26.04 KVM runner VM
-├── fresh sbuild/unshare package build
+├── fresh sbuild/unshare package build          [pending authoritative evidence]
 └── autopkgtest
-    └── nested QEMU/KVM Ubuntu 26.04 test VM
+    └── nested QEMU/KVM Ubuntu 26.04 test VM    [pending authoritative evidence]
 ```
 
-This preserves the successful `sbuild/unshare` mechanism while moving the runtime/system test to the QEMU backend intended for full VM isolation.
+Guest preparation is implemented by `scripts/provision-authoritative-runner-guest.sh` and `scripts/prepare-autopkgtest-qemu-image.sh`; see `docs/runners/provisioning.md`.
 
 ## Completion criteria
 
 Phase 1 is not complete until real evidence shows all of the following:
 
-- hosted clean-build preflight PASS with preserved `.deb`, `.changes`, `.buildinfo` and non-empty build log;
-- authoritative KVM runner contract PASS;
-- authoritative clean `sbuild` package build PASS;
-- authoritative `autopkgtest/QEMU` smoke test PASS;
+- hosted clean-build preflight PASS with preserved `.deb`, `.changes`, `.buildinfo` and non-empty build log — **PASS**;
+- authoritative KVM runner contract PASS — **pending**;
+- authoritative clean `sbuild` package build PASS — **pending**;
+- authoritative `autopkgtest/QEMU` smoke test PASS — **pending**;
 - real hashes, logs and run IDs recorded in this document and the dated status document.

@@ -104,6 +104,15 @@ The approved runner image must provide at least:
 
 Exact package versions belong in certification evidence from the actual runner image.
 
+## Provisioning implementation
+
+The repository now contains guest-side preparation scripts:
+
+- `scripts/provision-authoritative-runner-guest.sh` installs and records the real Ubuntu 26.04 build/test toolchain;
+- `scripts/prepare-autopkgtest-qemu-image.sh` creates the real Resolute QEMU test image and records its generated SHA-256/provenance.
+
+See `docs/runners/provisioning.md` for the handoff between the KVM host, guest-image preparation and ephemeral GitHub runner registration.
+
 ## Certification requirement
 
 A VM is not authoritative merely because `/etc/os-release` says 26.04. Certification must capture at least:

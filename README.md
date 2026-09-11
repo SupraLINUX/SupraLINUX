@@ -16,6 +16,8 @@ See:
 
 - [`docs/architecture/overview.md`](docs/architecture/overview.md)
 - [`docs/architecture/build-ci.md`](docs/architecture/build-ci.md)
+- [`docs/runners/ubuntu-26.04.md`](docs/runners/ubuntu-26.04.md)
+- [`docs/runners/provisioning.md`](docs/runners/provisioning.md)
 - [`docs/decisions/ADR-0001-authority-provider.md`](docs/decisions/ADR-0001-authority-provider.md)
 - [`docs/status/2026-09-11.md`](docs/status/2026-09-11.md)
 - [`manifests/desktop-stack.json`](manifests/desktop-stack.json)
@@ -26,10 +28,10 @@ The repository manifest records the verified upstream snapshot used by developme
 
 ## CI model
 
-Repository policy checks run on the explicit GitHub-hosted `ubuntu-26.04` label. Authoritative package builds are designed for disposable self-hosted Ubuntu 26.04 VMs using `sbuild`; a hosted runner is not treated as release evidence merely because it has the right OS version.
+GitHub-hosted `ubuntu-26.04` is a non-authoritative preflight lane. Release-relevant build/test evidence is defined to run inside disposable self-hosted Ubuntu 26.04 **KVM** VMs. Package builds remain isolated through fresh `sbuild/unshare` environments, while system/package tests use `autopkgtest/QEMU` with nested KVM.
 
 Build graph state is represented as `PASS`, `FAIL` or `BLOCKED`. `BLOCKED` is never counted as `FAIL`.
 
 ## Development state
 
-This project is in architecture/bootstrap development. No document in this repository should be interpreted as evidence that a full KDE stack has already been built or certified unless the corresponding artifacts and CI evidence exist.
+This project is in architecture/bootstrap development. The hosted clean-build preflight has real PASS evidence, but the authoritative KVM runner and its QEMU test image are not yet certified. No document should be interpreted as evidence that a full KDE stack has already been built or certified unless the corresponding artifacts and CI evidence exist.
