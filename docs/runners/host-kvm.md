@@ -1,27 +1,27 @@
 # KVM/libvirt host orchestration
 
-Status: **host bootstrap and JIT orchestration implemented; not yet executed on a real host**  
+Status: **host bootstrap, golden-image build and JIT orchestration implemented; not yet executed on a real host**  
 Last reviewed: **2026-09-11**
 
-The long-lived host is an infrastructure provider only. It is not a SupraLINUX build runner and must not be treated as release evidence. Its job is to provide KVM/libvirt, create one disposable Ubuntu 26.04 KVM guest for one authoritative GitHub Actions job, preserve host/runner diagnostics, and destroy the writable VM state afterwards.
+The long-lived host is an infrastructure provider only. It is not a SupraLINUX build runner and must not be treated as release evidence. Its job is to provide KVM/libvirt, build the sealed Ubuntu 26.04 golden runner image, create one disposable runner guest per authoritative GitHub Actions job, preserve host/runner diagnostics, and destroy writable VM state afterwards.
 
 ## Current upstream inputs
 
-The authoritative runner image starts from Ubuntu's **released** Resolute cloud image, not a daily image. SupraLINUX does not hard-code an image hash before downloading it; `scripts/fetch-ubuntu-26.04-cloud-image.sh` verifies `SHA256SUMS.gpg` with Ubuntu's cloud-image keyring and records the signed SHA-256 actually observed.
+The authoritative runner image starts from Ubuntu's **released** Resolute cloud image, not a daily image. `scripts/fetch-ubuntu-26.04-cloud-image.sh` verifies `SHA256SUMS.gpg` with Ubuntu's cloud-image keyring and records the signed SHA-256 actually observed.
 
-GitHub's current REST API provides repository-scoped JIT runner configuration through:
+GitHub's REST API provides repository-scoped JIT runner configuration through:
 
 ```text
 POST /repos/{owner}/{repo}/actions/runners/generate-jitconfig
 ```
 
-The response includes a runner record and `encoded_jit_config`, which is passed to the runner process with `run.sh --jitconfig`. The JIT configuration is generated per VM and is not baked into the golden image.
+The response includes a runner record and `encoded_jit_config`, which is passed to `run.sh --jitconfig`. The JIT configuration is generated per VM and is not baked into the golden image.
 
-Ubuntu 26.04 currently provides the host packages used by the supported bootstrap recipe, including `libvirt-daemon-system`, `qemu-system-x86`, `virt-install` and `libguestfs-tools`. Package availability was rechecked against the Resolute archive on 2026-09-11. Exact installed versions are captured from the real host when the provisioning script runs.
+Ubuntu 26.04 provides the host packages used by the supported bootstrap recipe, including `libvirt-daemon-system`, `qemu-system-x86`, `virt-install` and `libguestfs-tools`. Exact installed versions are runtime evidence from the real host.
 
 ## Supported host bootstrap recipe
 
-The repository currently supports an automated host-bootstrap recipe for **Ubuntu 26.04 amd64/x86_64**. The host does not become a desktop/platform authority by using Ubuntu; Ubuntu is simply the selected provider for this CI infrastructure recipe.
+The repository currently supports an automated host-bootstrap recipe for **Ubuntu 26.04 amd64/x86_64**. Ubuntu is the provider for this CI infrastructure recipe; it does not become authoritative for KDE or desktop contents.
 
 Run as the intended orchestration user with sudo available:
 
@@ -29,17 +29,9 @@ Run as the intended orchestration user with sudo available:
 scripts/provision-kvm-host.sh
 ```
 
-The script:
+The script installs KVM/QEMU, libvirt, `virt-install`, libguestfs and support tools, configures `kvm`/`libvirt` group access, starts the selected libvirt network when available and records host package/network/module state.
 
-1. verifies Ubuntu 26.04 and x86_64;
-2. requires CPU virtualization flags (`vmx` or `svm`) to be visible;
-3. installs KVM/QEMU, libvirt, `virt-install`, libguestfs and support tools from Ubuntu;
-4. adds the orchestration user to `kvm` and `libvirt`;
-5. starts/enables libvirt's `default` network if already defined by the packaged configuration;
-6. creates the SupraLINUX host state/evidence directories;
-7. records the actual package versions/network/module state used by the host.
-
-It deliberately does **not** alter firmware/BIOS settings, unload/reload KVM modules, or force a nested-virtualization module option. Those operations can disrupt existing VMs and therefore require explicit operator action.
+It deliberately does **not** alter firmware/BIOS settings or forcibly unload/reload KVM modules. Those operations can disrupt existing VMs and require explicit operator action.
 
 After provisioning, open a new login session and run the read-only preflight:
 
@@ -49,95 +41,61 @@ scripts/check-kvm-host.sh
 
 The preflight requires:
 
-- x86_64;
-- visible `vmx`/`svm`;
-- `/dev/kvm` present and readable/writable by the orchestration user;
-- current user membership in `kvm` and `libvirt`;
-- the loaded `kvm_intel` or `kvm_amd` module to report nested virtualization enabled;
-- `virsh`, `virt-install`, QEMU, `virt-copy-out` and support commands;
-- working `qemu:///system` libvirt access;
-- an active configured libvirt network (`default` unless overridden).
+- x86_64 and visible `vmx`/`svm`;
+- `/dev/kvm` present and readable/writable;
+- user membership in `kvm` and `libvirt`;
+- nested virtualization enabled in the loaded vendor KVM module;
+- QEMU/KVM, `virsh`, `virt-install`, `virt-sysprep`, `virt-cat`, `virt-copy-out` and support commands;
+- working `qemu:///system` access;
+- an active configured libvirt network.
 
-If nested KVM is disabled, the preflight reports **FAIL**. It does not attempt to fix the host automatically.
+If nested KVM is disabled, the preflight reports **FAIL** and does not attempt to modify the host automatically.
 
-## Host requirements for authoritative execution
+## Golden image build
 
-The orchestration user ultimately needs:
+After host preflight passes:
 
-- KVM with `/dev/kvm` readable/writable;
-- nested KVM enabled;
-- libvirt and an active network;
-- `virsh` and `virt-install`;
-- `qemu-img` and QEMU/KVM acceleration;
-- `virt-copy-out` from libguestfs tools;
-- `curl`, `jq`, `base64`, `sha256sum` and `gpgv`;
-- read access to the sealed golden qcow2 image;
-- write access to the configured ephemeral-disk and host-evidence directories.
+```bash
+scripts/fetch-ubuntu-26.04-cloud-image.sh
+scripts/build-authoritative-runner-image.sh
+```
 
-The definitive nested-KVM test remains inside the runner guest: the authoritative workflows require `/dev/kvm` to be usable from the Ubuntu 26.04 runner VM.
+`build-authoritative-runner-image.sh` is the preferred reproducible path. It requires the verified source image plus provenance, creates a preparation overlay, boots it under KVM with host CPU passthrough, checks out the exact requested SupraLINUX commit, provisions the guest, creates the nested `autopkgtest` image, seals guest-side state, powers the VM off, exports evidence, runs explicit offline `virt-sysprep`, flattens the overlay, validates the resulting qcow2 with `qemu-img check` and records its SHA-256/provenance.
+
+Default output:
+
+```text
+/var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2
+```
+
+An existing image is not replaced unless the operator explicitly sets:
+
+```bash
+SUPRALINUX_REPLACE_GOLDEN_IMAGE=1
+```
+
+A failed golden build preserves its work directory/evidence and must not be treated as a certified image.
 
 ## Host authentication
 
-`scripts/run-kvm-jit-gate.sh` consumes a host-only token from `SUPRALINUX_GITHUB_TOKEN` (or `GITHUB_TOKEN` as a fallback). It is never copied into the guest.
+`scripts/run-kvm-jit-gate.sh` consumes a host-only token from `SUPRALINUX_GITHUB_TOKEN` (or `GITHUB_TOKEN` as fallback). It is never copied into the guest.
 
-The token must be able to:
-
-- create repository JIT runner configuration;
-- list/delete repository self-hosted runners;
-- read Actions runs;
-- create/add/remove the controlled PR gate labels.
-
-For fine-grained credentials this means repository Administration access sufficient for self-hosted-runner configuration, Actions read access, and Issues write access for labels. If the selected runner group is managed at organization scope, the host operator must also have the corresponding organization runner-group access.
-
-The required runner group ID is supplied explicitly through `SUPRALINUX_RUNNER_GROUP_ID`; the script does not guess a group ID.
+The token must be able to create repository JIT runner configuration, list/delete repository runners, read Actions runs, and create/add/remove the controlled PR gate labels. The runner group ID is supplied explicitly through `SUPRALINUX_RUNNER_GROUP_ID`; the script does not guess one.
 
 ## Security boundary
 
 Authoritative self-hosted workflows are not allowed to run arbitrary fork PRs. Both the workflow condition and the host orchestrator verify that the PR head repository is exactly `SupraLINUX/SupraLINUX` before a self-hosted gate is triggered.
 
-The host waits for the JIT runner to become `online` before adding one of these controlled labels:
+The host waits for the JIT runner to become `online` before adding one controlled label:
 
 ```text
 ci:runner-contract
 ci:authoritative-package-proof
 ```
 
-The workflows listen only for the corresponding `pull_request` `labeled` event. `workflow_dispatch` remains available after the workflow exists on the default branch, but pre-merge certification does not depend on merging first.
-
-## Golden image preparation
-
-1. Fetch and verify the released Ubuntu 26.04 image:
-
-   ```bash
-   scripts/fetch-ubuntu-26.04-cloud-image.sh
-   ```
-
-2. Boot a preparation VM from that image under KVM, with nested KVM exposed.
-3. Inside the guest, from the repository checkout, run:
-
-   ```bash
-   scripts/provision-authoritative-runner-guest.sh
-   ```
-
-4. Start a new login session so `kvm` group membership applies, then create the nested QEMU test image:
-
-   ```bash
-   scripts/prepare-autopkgtest-qemu-image.sh
-   ```
-
-5. Seal the golden image:
-
-   ```bash
-   scripts/seal-authoritative-runner-image.sh
-   ```
-
-6. Power the preparation VM off and use that disk only as a read-only backing image for ephemeral overlays.
-
-The seal removes runner registration/job state and uses `cloud-init clean --logs --machine-id` so each clone receives a new machine identity on boot. The image remains **pending certification** until its first real contract and package-proof runs pass.
-
 ## One-job JIT gate lifecycle
 
-For a real host, configure the golden image and runner group, then run one gate at a time:
+With a sealed golden image and runner group configured:
 
 ```bash
 export SUPRALINUX_GITHUB_TOKEN='...'
@@ -151,35 +109,26 @@ scripts/run-kvm-jit-gate.sh authoritative-package-proof
 For each invocation the host script:
 
 1. verifies the target PR is open and same-repository;
-2. creates a fresh qcow2 overlay from the sealed golden image;
+2. creates a fresh qcow2 overlay from the golden image;
 3. boots a KVM VM with host CPU passthrough;
 4. waits for qemu-guest-agent;
 5. requests a fresh GitHub JIT configuration;
-6. writes that configuration only to `/run/supralinux-jit-config` inside the guest;
-7. launches the runner as the non-root runner user;
-8. waits for the runner to become online;
-9. adds the controlled PR label, causing exactly the requested self-hosted workflow to queue;
-10. observes the runner become busy and then disappear after its one JIT job;
-11. resolves the workflow conclusion and requires `success`;
-12. removes the PR label, exports `_diag` and SupraLINUX evidence with libguestfs, records host/overlay metadata, and destroys the VM/overlay.
+6. writes that configuration only to `/run/supralinux-jit-config` in the guest;
+7. launches the non-root runner;
+8. waits for it to become online;
+9. adds exactly the requested controlled PR label;
+10. observes the one JIT job;
+11. requires the workflow conclusion to be `success`;
+12. removes the label, exports `_diag` and SupraLINUX evidence, and destroys the VM/overlay.
 
-A failed or interrupted invocation still executes cleanup. An unused/stale JIT runner record is explicitly deleted where possible. No authoritative PASS is inferred from provisioning alone.
+Cleanup runs on failed/interrupted invocations. No authoritative PASS is inferred from provisioning or from the host script alone.
 
 ## Evidence
 
-Host-side evidence is stored outside the guest under the configured host evidence root. It includes host provisioning versions, host preflight output when captured, PR head SHA, golden-image SHA-256, VM definition, runner state snapshots, resolved workflow run and exported guest diagnostics where available.
+Host-side evidence includes host provisioning/preflight data, verified source-image provenance, golden-image build inputs, guest provisioning evidence, offline sysprep log, qcow2 validation, golden-image SHA-256, PR head SHA, VM definition, runner state snapshots, resolved workflow run and exported guest diagnostics.
 
-The GitHub workflow separately uploads package/runner evidence. Promotion decisions must use the workflow result plus retained evidence, not the host script exit code in isolation.
+The GitHub workflow separately uploads package/runner evidence. Promotion decisions require the workflow result plus retained evidence.
 
 ## Current blocker
 
-No real KVM host has executed this orchestration yet. Therefore host preflight, nested KVM, JIT guest startup, runner-group policy, QEMU system testing and destruction/export behavior remain **pending execution**, not PASS.
-
-## Primary references
-
-- Ubuntu 26.04 `libvirt-daemon-system`: https://packages.ubuntu.com/resolute-updates/libvirt-daemon-system
-- Ubuntu 26.04 `qemu-system-x86`: https://packages.ubuntu.com/resolute/qemu-system-x86
-- Ubuntu 26.04 `virt-install`: https://packages.ubuntu.com/resolute/virt-install
-- Ubuntu 26.04 `libguestfs-tools`: https://packages.ubuntu.com/resolute/libguestfs-tools
-- Ubuntu virtualization CPU checks: https://documentation.ubuntu.com/security/security-features/platform-protections/cpu/
-- Ubuntu QCOW/KVM public-image guidance: https://documentation.ubuntu.com/public-images/public-images-how-to/launch-qcow-with-qemu/
+No real KVM host has executed this complete chain yet. Therefore host preflight, golden-image build, nested KVM, JIT startup, runner-group policy, QEMU system testing and cleanup/export behavior remain **pending execution**, not PASS.

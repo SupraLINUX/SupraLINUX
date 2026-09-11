@@ -111,8 +111,9 @@ required_files = [
     ROOT / "scripts" / "check-kvm-host.sh",
     ROOT / "scripts" / "provision-kvm-host.sh",
     ROOT / "scripts" / "package-preflight-needed.sh",
-    ROOT / "scripts" / "install-actions-runner.sh",
     ROOT / "scripts" / "fetch-ubuntu-26.04-cloud-image.sh",
+    ROOT / "scripts" / "build-authoritative-runner-image.sh",
+    ROOT / "scripts" / "install-actions-runner.sh",
     ROOT / "scripts" / "provision-authoritative-runner-guest.sh",
     ROOT / "scripts" / "prepare-autopkgtest-qemu-image.sh",
     ROOT / "scripts" / "seal-authoritative-runner-image.sh",
@@ -130,27 +131,45 @@ for tracked in (
 ):
     require(tracked in package_delta, f"package preflight delta detector must track {tracked}")
 
+host_provisioner = read_required(ROOT / "scripts" / "provision-kvm-host.sh")
+for package in ("libvirt-daemon-system", "qemu-system-x86", "virt-install", "libguestfs-tools"):
+    require(package in host_provisioner, f"host provisioning must install {package}")
+require("does NOT change BIOS" in host_provisioner, "host provisioning must explicitly avoid automatic BIOS/KVM-module changes")
+
+host_checker = read_required(ROOT / "scripts" / "check-kvm-host.sh")
+require("/dev/kvm" in host_checker, "host preflight must validate /dev/kvm")
+require("parameters/nested" in host_checker, "host preflight must validate nested KVM state")
+require("qemu:///system" in host_checker, "host preflight must validate system libvirt connection")
+for command in ("virt-sysprep", "virt-cat", "virt-copy-out"):
+    require(command in host_checker, f"host preflight must validate {command}")
+
+cloud_fetcher = read_required(ROOT / "scripts" / "fetch-ubuntu-26.04-cloud-image.sh")
+require("SHA256SUMS.gpg" in cloud_fetcher, "Ubuntu cloud image fetcher must verify signed checksum metadata")
+require("gpgv" in cloud_fetcher, "Ubuntu cloud image fetcher must perform signature verification")
+
+golden_builder = read_required(ROOT / "scripts" / "build-authoritative-runner-image.sh")
+require("scripts/check-kvm-host.sh" in golden_builder, "golden image builder must require host preflight")
+require(".provenance.txt" in golden_builder, "golden image builder must require verified source-image provenance")
+require("--cpu host-passthrough" in golden_builder, "golden image builder must expose host CPU virtualization capabilities")
+require("scripts/provision-authoritative-runner-guest.sh" in golden_builder, "golden image builder must provision the runner guest")
+require("scripts/prepare-autopkgtest-qemu-image.sh" in golden_builder, "golden image builder must prepare the nested QEMU test image")
+require("scripts/seal-authoritative-runner-image.sh" in golden_builder, "golden image builder must seal guest-side runner state")
+require("virt-sysprep" in golden_builder, "golden image builder must perform offline clone-safety cleanup")
+require("machine-id" in golden_builder and "ssh-hostkeys" in golden_builder, "golden image builder must reset machine and SSH host identity")
+require("qemu-img convert" in golden_builder, "golden image builder must flatten the preparation overlay")
+require("qemu-img check" in golden_builder, "golden image builder must validate the final qcow2")
+require("SUPRALINUX_REPLACE_GOLDEN_IMAGE" in golden_builder, "golden image replacement must require explicit opt-in")
+require("golden-image-sha256.txt" in golden_builder, "golden image builder must retain final image SHA-256 evidence")
+
+installer = read_required(ROOT / "scripts" / "install-actions-runner.sh")
+require(".digest" in installer, "Actions runner installer must consume GitHub-published asset digest")
+require("sha256sum --check --strict" in installer, "Actions runner installer must verify the downloaded archive")
+
 host_orchestrator = read_required(ROOT / "scripts" / "run-kvm-jit-gate.sh")
 require("generate-jitconfig" in host_orchestrator, "host orchestrator must use GitHub JIT runner configuration")
 require("/run/supralinux-jit-config" in host_orchestrator, "JIT configuration must be injected into guest tmpfs")
 require("virt-copy-out" in host_orchestrator, "host orchestrator must export guest diagnostics before deleting the overlay")
 require("Authoritative self-hosted gates refuse fork PRs" in host_orchestrator, "host orchestrator must refuse fork PRs")
-
-host_provisioner = read_required(ROOT / "scripts" / "provision-kvm-host.sh")
-for package in ("libvirt-daemon-system", "qemu-system-x86", "virt-install", "libguestfs-tools"):
-    require(package in host_provisioner, f"host provisioning must install {package}")
-require("does NOT change BIOS" in host_provisioner, "host provisioning must explicitly avoid automatic BIOS/KVM-module changes")
-host_checker = read_required(ROOT / "scripts" / "check-kvm-host.sh")
-require("/dev/kvm" in host_checker, "host preflight must validate /dev/kvm")
-require("parameters/nested" in host_checker, "host preflight must validate nested KVM state")
-require("qemu:///system" in host_checker, "host preflight must validate system libvirt connection")
-
-installer = read_required(ROOT / "scripts" / "install-actions-runner.sh")
-require(".digest" in installer, "Actions runner installer must consume GitHub-published asset digest")
-require("sha256sum --check --strict" in installer, "Actions runner installer must verify the downloaded archive")
-cloud_fetcher = read_required(ROOT / "scripts" / "fetch-ubuntu-26.04-cloud-image.sh")
-require("SHA256SUMS.gpg" in cloud_fetcher, "Ubuntu cloud image fetcher must verify signed checksum metadata")
-require("gpgv" in cloud_fetcher, "Ubuntu cloud image fetcher must perform signature verification")
 
 if errors:
     for error in errors:
@@ -171,7 +190,8 @@ print(
     f"candidate={provider.get('candidate_version', 'n/a')}, certification={cert['status']}"
 )
 print(
-    "CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; JIT=required; host-preflight=required; hosted-delta-gate=required".format(
+    "CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; "
+    "JIT=required; host-preflight=required; golden-builder=required; hosted-delta-gate=required".format(
         hosted=hosted["role"],
         platform=authoritative["platform"],
         virt=authoritative["virtualization"],
