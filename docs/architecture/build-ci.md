@@ -42,7 +42,9 @@ The hosted package-build preflight creates a fresh Ubuntu 26.04 `buildd` rootfs 
 
 A real hosted attempt on 2026-09-11 demonstrated that `sbuild/unshare` can complete but `autopkgtest/unshare` can fail while constructing its testbed because of UID/GID ownership mapping. That backend is therefore not part of the authoritative testing contract.
 
-The expensive hosted build proof is path-filtered to the proof package, its build script and its workflow. Documentation/runner-orchestration-only changes continue through repository policy without needlessly rebuilding the package.
+GitHub's top-level `pull_request.paths` filter compares the PR against its base, so in a long-lived PR it remains true after a relevant file was changed once. SupraLINUX therefore does not use that filter as the expensive-build suppression mechanism. On `pull_request/synchronize`, the hosted workflow compares the webhook's `before` and `after` SHAs and runs the expensive package build only when that event delta touches the proof package, its build script, the delta detector, or the workflow itself. `opened`/`reopened` conservatively compare the PR base and head; manual dispatch always runs. The small scope-check job may still run for documentation/infrastructure changes, but the expensive `sbuild` work is intentionally skipped.
+
+The `pull_request/synchronize` payload's `before`/`after` SHAs are part of GitHub's current webhook schema. `scripts/package-preflight-needed.sh` owns the repository path policy so the workflow does not duplicate it.
 
 ### Authoritative KVM build/test lane
 

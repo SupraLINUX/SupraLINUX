@@ -94,9 +94,11 @@ for filename, text, gate_label in (
     for label in ("self-hosted", "linux", "x64", "supralinux", "ubuntu-26.04", "kvm", "ephemeral"):
         require(label in text, f"{filename} must target authoritative runner label {label}")
 
-require("paths:" in hosted_proof, "hosted package preflight must use path filters")
-require("packages/supralinux-build-test/**" in hosted_proof, "hosted package preflight must track proof-package changes")
-require("scripts/run-package-build-proof.sh" in hosted_proof, "hosted package preflight must track its build script")
+require("types: [opened, synchronize, reopened]" in hosted_proof, "hosted package preflight must declare explicit PR lifecycle events")
+require("github.event.before" in hosted_proof, "hosted package preflight must use synchronize before SHA")
+require("github.event.after" in hosted_proof, "hosted package preflight must use synchronize after SHA")
+require("scripts/package-preflight-needed.sh" in hosted_proof, "hosted package preflight must gate expensive builds on event-delta changes")
+require("fetch-depth: 0" in hosted_proof, "hosted package preflight must fetch comparison history")
 
 required_files = [
     ROOT / "docs" / "architecture" / "overview.md",
@@ -108,6 +110,7 @@ required_files = [
     ROOT / "docs" / "runners" / "host-kvm.md",
     ROOT / "scripts" / "check-kvm-host.sh",
     ROOT / "scripts" / "provision-kvm-host.sh",
+    ROOT / "scripts" / "package-preflight-needed.sh",
     ROOT / "scripts" / "install-actions-runner.sh",
     ROOT / "scripts" / "fetch-ubuntu-26.04-cloud-image.sh",
     ROOT / "scripts" / "provision-authoritative-runner-guest.sh",
@@ -119,6 +122,14 @@ required_files = [
 for path in required_files:
     require(path.exists(), f"required architecture/runner file missing: {path.relative_to(ROOT)}")
 
+package_delta = read_required(ROOT / "scripts" / "package-preflight-needed.sh")
+for tracked in (
+    "packages/supralinux-build-test/*",
+    "scripts/run-package-build-proof.sh",
+    ".github/workflows/package-build-proof.yml",
+):
+    require(tracked in package_delta, f"package preflight delta detector must track {tracked}")
+
 host_orchestrator = read_required(ROOT / "scripts" / "run-kvm-jit-gate.sh")
 require("generate-jitconfig" in host_orchestrator, "host orchestrator must use GitHub JIT runner configuration")
 require("/run/supralinux-jit-config" in host_orchestrator, "JIT configuration must be injected into guest tmpfs")
@@ -129,7 +140,6 @@ host_provisioner = read_required(ROOT / "scripts" / "provision-kvm-host.sh")
 for package in ("libvirt-daemon-system", "qemu-system-x86", "virt-install", "libguestfs-tools"):
     require(package in host_provisioner, f"host provisioning must install {package}")
 require("does NOT change BIOS" in host_provisioner, "host provisioning must explicitly avoid automatic BIOS/KVM-module changes")
-
 host_checker = read_required(ROOT / "scripts" / "check-kvm-host.sh")
 require("/dev/kvm" in host_checker, "host preflight must validate /dev/kvm")
 require("parameters/nested" in host_checker, "host preflight must validate nested KVM state")
@@ -161,7 +171,7 @@ print(
     f"candidate={provider.get('candidate_version', 'n/a')}, certification={cert['status']}"
 )
 print(
-    "CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; JIT=required; host-preflight=required".format(
+    "CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; JIT=required; host-preflight=required; hosted-delta-gate=required".format(
         hosted=hosted["role"],
         platform=authoritative["platform"],
         virt=authoritative["virtualization"],

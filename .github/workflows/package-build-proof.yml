@@ -4,15 +4,8 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'packages/supralinux-build-test/**'
-      - 'scripts/run-package-build-proof.sh'
-      - '.github/workflows/package-build-proof.yml'
   pull_request:
-    paths:
-      - 'packages/supralinux-build-test/**'
-      - 'scripts/run-package-build-proof.sh'
-      - '.github/workflows/package-build-proof.yml'
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 permissions:
@@ -27,15 +20,88 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Determine whether this event delta affects the package proof
+        id: scope
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_ACTION: ${{ github.event.action }}
+          EVENT_BEFORE: ${{ github.event.before }}
+          EVENT_AFTER: ${{ github.event.after }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          CURRENT_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${EVENT_NAME}" == "workflow_dispatch" ]]; then
+            echo "run=true" >> "${GITHUB_OUTPUT}"
+            echo "Manual dispatch always runs the hosted package preflight."
+            exit 0
+          fi
+
+          before=""
+          after=""
+
+          if [[ "${EVENT_NAME}" == "pull_request" ]]; then
+            if [[ "${EVENT_ACTION}" == "synchronize" ]]; then
+              before="${EVENT_BEFORE}"
+              after="${EVENT_AFTER}"
+            else
+              before="${PR_BASE_SHA}"
+              after="${PR_HEAD_SHA}"
+            fi
+          elif [[ "${EVENT_NAME}" == "push" ]]; then
+            before="${EVENT_BEFORE}"
+            after="${CURRENT_SHA}"
+          else
+            echo "Unsupported event for package-preflight scope: ${EVENT_NAME}" >&2
+            exit 1
+          fi
+
+          if [[ "${before}" =~ ^0{40}$ ]]; then
+            echo "run=true" >> "${GITHUB_OUTPUT}"
+            echo "No previous commit exists for this ref; running conservatively."
+            exit 0
+          fi
+
+          for sha in "${before}" "${after}"; do
+            if [[ ! "${sha}" =~ ^[0-9a-fA-F]{40}$ ]]; then
+              echo "Missing/invalid comparison SHA for ${EVENT_NAME}/${EVENT_ACTION}: ${sha}" >&2
+              exit 1
+            fi
+            if ! git cat-file -e "${sha}^{commit}" 2>/dev/null; then
+              git fetch --no-tags origin "${sha}"
+            fi
+          done
+
+          echo "Comparing event delta ${before}..${after}"
+          if scripts/package-preflight-needed.sh "${before}" "${after}"; then
+            echo "run=true" >> "${GITHUB_OUTPUT}"
+          else
+            rc=$?
+            if [[ "${rc}" -ne 1 ]]; then
+              exit "${rc}"
+            fi
+            echo "run=false" >> "${GITHUB_OUTPUT}"
+          fi
 
       - name: Build package in clean sbuild environment
+        if: steps.scope.outputs.run == 'true'
         run: scripts/run-package-build-proof.sh
 
       - name: Upload build evidence
-        if: always()
+        if: always() && steps.scope.outputs.run == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: phase1-hosted-build-preflight-${{ github.sha }}
           path: evidence/package-build-proof/
           if-no-files-found: error
           retention-days: 30
+
+      - name: Report intentionally skipped package build
+        if: steps.scope.outputs.run == 'false'
+        run: echo 'Hosted package build intentionally skipped; this event delta did not touch the package-proof inputs.'
