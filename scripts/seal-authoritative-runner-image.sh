@@ -11,7 +11,7 @@ if [[ "${ID}" != "ubuntu" || "${VERSION_ID}" != "26.04" ]]; then
     exit 1
 fi
 if [[ "$(systemd-detect-virt --vm 2>/dev/null || true)" != "kvm" ]]; then
-    printf 'Golden runner image must be sealed inside its KVM preparation VM.\n' >&2
+    printf 'Golden runner image must be pre-sealed inside its KVM preparation VM.\n' >&2
     exit 1
 fi
 if [[ ! -x "${RUNNER_DIR}/run.sh" ]]; then
@@ -31,12 +31,13 @@ sudo install -d -m 0755 "${EVIDENCE_DIR}"
 SEAL_TMP="$(mktemp)"
 trap 'rm -f "${SEAL_TMP}"' EXIT
 {
-    printf 'sealed_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    printf 'presealed_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
     printf 'platform=Ubuntu 26.04 LTS\n'
     printf 'virtualization=kvm\n'
     printf 'kernel=%s\n' "$(uname -r)"
     printf 'actions_runner_evidence_sha256='; sha256sum "${EVIDENCE_DIR}/actions-runner.txt" | awk '{print $1}'
     printf 'autopkgtest_image_sha256='; sha256sum "${AUTOPKGTEST_IMAGE}" | awk '{print $1}'
+    printf 'identity_reset=host-side-virt-sysprep-required\n'
     printf '\nactions_runner:\n'
     cat "${EVIDENCE_DIR}/actions-runner.txt"
     printf '\nautopkgtest_image:\n'
@@ -50,16 +51,8 @@ sudo rm -f \
     "${RUNNER_DIR}/.credentials_rsaparams"
 sudo rm -rf "${RUNNER_DIR}/_work" "${RUNNER_DIR}/_diag"
 sudo apt-get clean
-
-if command -v cloud-init >/dev/null 2>&1; then
-    sudo cloud-init clean --logs --machine-id
-else
-    printf 'cloud-init is required to safely reset clone identity.\n' >&2
-    exit 1
-fi
-
 sudo rm -f /var/log/supralinux-actions-runner-console.log
 sync
 
-printf 'Golden image sealed. Power this preparation VM off now; do not boot the golden disk again before cloning it.\n'
+printf 'Guest pre-seal complete. Clone identity is intentionally reset offline by the host after poweroff.\n'
 printf 'Seal evidence: %s/base-image-seal.txt\n' "${EVIDENCE_DIR}"

@@ -33,8 +33,10 @@ fi
 printf 'Installing Ubuntu 26.04 KVM/libvirt host tooling...\n'
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    cloud-image-utils \
     cpu-checker \
     curl \
+    genisoimage \
     gnupg \
     jq \
     libguestfs-tools \
@@ -64,11 +66,13 @@ fi
 sudo virsh --connect "${LIBVIRT_URI}" net-autostart "${LIBVIRT_NETWORK}"
 
 sudo install -d -m 0755 /var/lib/supralinux/images
+sudo install -d -m 0755 /var/lib/supralinux/golden-builds
 sudo install -d -m 0755 /var/lib/supralinux/ephemeral-runners
 sudo install -d -m 0755 /var/lib/supralinux/evidence
 sudo install -d -m 0755 "${EVIDENCE_DIR}"
 sudo chown "${TARGET_USER}:$(id -gn "${TARGET_USER}")" \
     /var/lib/supralinux/images \
+    /var/lib/supralinux/golden-builds \
     /var/lib/supralinux/ephemeral-runners \
     /var/lib/supralinux/evidence
 
@@ -85,8 +89,8 @@ trap 'rm -f "${EVIDENCE_TMP}"' EXIT
     uname -a
     printf '\npackages:\n'
     dpkg-query -W -f='${Package}\t${Version}\n' \
-        cpu-checker curl gnupg jq libguestfs-tools libvirt-clients libvirt-daemon-system \
-        qemu-system-x86 qemu-utils ubuntu-keyring virt-install
+        cloud-image-utils cpu-checker curl genisoimage gnupg jq libguestfs-tools \
+        libvirt-clients libvirt-daemon-system qemu-system-x86 qemu-utils ubuntu-keyring virt-install
     printf '\nnetwork:\n'
     sudo virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}"
     printf '\nkvm-module-state:\n'

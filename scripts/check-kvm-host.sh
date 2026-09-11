@@ -74,7 +74,21 @@ else
     fail 'could not read kvm_intel/kvm_amd nested parameter'
 fi
 
-required=(virsh virt-install qemu-img qemu-system-x86_64 virt-copy-out curl jq base64 sha256sum gpgv)
+required=(
+    virsh
+    virt-install
+    virt-cat
+    virt-copy-out
+    virt-sysprep
+    qemu-img
+    qemu-system-x86_64
+    genisoimage
+    curl
+    jq
+    base64
+    sha256sum
+    gpgv
+)
 for command_name in "${required[@]}"; do
     if command -v "${command_name}" >/dev/null 2>&1; then
         pass "command available: ${command_name}"
@@ -94,17 +108,17 @@ fi
 if command -v virsh >/dev/null 2>&1; then
     if virsh --connect "${LIBVIRT_URI}" uri >/dev/null 2>&1; then
         pass "libvirt system connection works (${LIBVIRT_URI})"
-        if virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}" > /tmp/supralinux-net-info.$$ 2>/dev/null; then
-            if grep -Eq '^Active:[[:space:]]+yes$' /tmp/supralinux-net-info.$$; then
+        net_info="$(mktemp)"
+        if virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}" > "${net_info}" 2>/dev/null; then
+            if grep -Eq '^Active:[[:space:]]+yes$' "${net_info}"; then
                 pass "libvirt network is active: ${LIBVIRT_NETWORK}"
             else
                 fail "libvirt network exists but is not active: ${LIBVIRT_NETWORK}"
             fi
-            rm -f /tmp/supralinux-net-info.$$
         else
-            rm -f /tmp/supralinux-net-info.$$
             fail "libvirt network is unavailable: ${LIBVIRT_NETWORK}"
         fi
+        rm -f "${net_info}"
     else
         fail "cannot connect to libvirt system URI: ${LIBVIRT_URI}"
     fi
