@@ -84,6 +84,7 @@ required=(
     qemu-system-x86_64
     genisoimage
     curl
+    flock
     jq
     base64
     sha256sum

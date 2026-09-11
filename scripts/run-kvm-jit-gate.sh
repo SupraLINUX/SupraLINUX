@@ -19,15 +19,17 @@ BUSY_TIMEOUT_SECONDS="${SUPRALINUX_BUSY_TIMEOUT_SECONDS:-300}"
 JOB_TIMEOUT_SECONDS="${SUPRALINUX_JOB_TIMEOUT_SECONDS:-7200}"
 API_VERSION="2026-03-10"
 HOST_GITHUB_TOKEN="${SUPRALINUX_GITHUB_TOKEN:-${GITHUB_TOKEN:-}}"
+RUNNER_CONTRACT_WORKFLOW="Authoritative runner contract"
+PACKAGE_PROOF_WORKFLOW="Phase 1 authoritative KVM package proof"
 
 case "${GATE}" in
     runner-contract)
         GATE_LABEL="ci:runner-contract"
-        WORKFLOW_NAME="Authoritative runner contract"
+        WORKFLOW_NAME="${RUNNER_CONTRACT_WORKFLOW}"
         ;;
     authoritative-package-proof)
         GATE_LABEL="ci:authoritative-package-proof"
-        WORKFLOW_NAME="Phase 1 authoritative KVM package proof"
+        WORKFLOW_NAME="${PACKAGE_PROOF_WORKFLOW}"
         ;;
     *)
         printf 'Usage: %s {runner-contract|authoritative-package-proof}\n' "$0" >&2
@@ -55,6 +57,7 @@ fi
 required_commands=(
     base64
     curl
+    flock
     jq
     qemu-img
     sha256sum
@@ -69,8 +72,24 @@ for command_name in "${required_commands[@]}"; do
     }
 done
 
+GOLDEN_PROVENANCE="${GOLDEN_IMAGE}.provenance.txt"
 if [[ ! -f "${GOLDEN_IMAGE}" ]]; then
     printf 'Golden image not found: %s\n' "${GOLDEN_IMAGE}" >&2
+    exit 1
+fi
+if [[ ! -f "${GOLDEN_PROVENANCE}" ]]; then
+    printf 'Golden image provenance is missing: %s\n' "${GOLDEN_PROVENANCE}" >&2
+    exit 1
+fi
+GOLDEN_SHA256="$(sha256sum "${GOLDEN_IMAGE}" | awk '{print $1}')"
+PROVENANCE_SHA256="$(awk -F= '$1 == "golden_image_sha256" {print $2; exit}' "${GOLDEN_PROVENANCE}")"
+if [[ ! "${PROVENANCE_SHA256}" =~ ^[0-9a-fA-F]{64}$ || "${PROVENANCE_SHA256,,}" != "${GOLDEN_SHA256,,}" ]]; then
+    printf 'Golden image SHA-256 does not match its provenance. image=%s provenance=%s\n' \
+        "${GOLDEN_SHA256}" "${PROVENANCE_SHA256:-missing}" >&2
+    exit 1
+fi
+if ! grep -qx 'source_checkout_removed=yes' "${GOLDEN_PROVENANCE}"; then
+    printf 'Golden image provenance does not confirm source checkout cleanup.\n' >&2
     exit 1
 fi
 if [[ ! -c /dev/kvm || ! -r /dev/kvm || ! -w /dev/kvm ]]; then
@@ -150,14 +169,25 @@ label_uri() {
     jq -rn --arg value "$1" '$value|@uri'
 }
 
-RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)-$$"
+SAFE_REPOSITORY="${REPOSITORY//[^a-zA-Z0-9._-]/-}"
 SAFE_GATE="${GATE//[^a-zA-Z0-9-]/-}"
+mkdir -p "${STATE_DIR}/.locks"
+LOCK_FILE="${STATE_DIR}/.locks/${SAFE_REPOSITORY}-authoritative.lock"
+exec 9>"${LOCK_FILE}"
+if ! flock -n 9; then
+    printf 'Another SupraLINUX authoritative JIT orchestration is already active on this host: %s\n' "${LOCK_FILE}" >&2
+    exit 1
+fi
+
+RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)-$$"
 VM_NAME="supralinux-${SAFE_GATE}-${RUN_ID,,}"
 RUN_DIR="${STATE_DIR}/${VM_NAME}"
 OVERLAY="${RUN_DIR}/disk.qcow2"
 EVIDENCE_DIR="${EVIDENCE_ROOT}/${VM_NAME}"
 STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 RUNNER_ID=""
+GUEST_RUNNER_PID=""
+WORKFLOW_RUN_ID=""
 LABEL_ADDED=0
 VM_CREATED=0
 
@@ -205,9 +235,10 @@ cleanup() {
     fi
     rmdir "${RUN_DIR}" >/dev/null 2>&1 || true
 
-    printf '{\n  "gate": %s,\n  "exit_code": %d,\n  "finished_at": %s\n}\n' \
+    printf '{\n  "gate": %s,\n  "exit_code": %d,\n  "workflow_run_id": %s,\n  "finished_at": %s\n}\n' \
         "$(jq -Rn --arg v "${GATE}" '$v')" \
         "${rc}" \
+        "$(jq -Rn --arg v "${WORKFLOW_RUN_ID}" '$v')" \
         "$(jq -Rn --arg v "$(date -u +%Y-%m-%dT%H:%M:%SZ)" '$v')" \
         > "${EVIDENCE_DIR}/host-result.json"
     exit "${rc}"
@@ -221,6 +252,7 @@ PR_JSON="$(api GET "/repos/${REPOSITORY}/pulls/${PR_NUMBER}")"
 PR_STATE="$(jq -r '.state' <<<"${PR_JSON}")"
 PR_HEAD_REPO="$(jq -r '.head.repo.full_name // empty' <<<"${PR_JSON}")"
 PR_HEAD_SHA="$(jq -r '.head.sha // empty' <<<"${PR_JSON}")"
+PR_HEAD_BRANCH="$(jq -r '.head.ref // empty' <<<"${PR_JSON}")"
 if [[ "${PR_STATE}" != "open" ]]; then
     printf 'PR #%s is not open.\n' "${PR_NUMBER}" >&2
     exit 1
@@ -229,27 +261,49 @@ if [[ "${PR_HEAD_REPO}" != "${REPOSITORY}" ]]; then
     printf 'Authoritative self-hosted gates refuse fork PRs: %s\n' "${PR_HEAD_REPO}" >&2
     exit 1
 fi
-if [[ -z "${PR_HEAD_SHA}" ]]; then
-    printf 'Could not resolve PR head SHA.\n' >&2
+if [[ ! "${PR_HEAD_SHA}" =~ ^[0-9a-fA-F]{40}$ ]]; then
+    printf 'Could not resolve a valid PR head SHA.\n' >&2
     exit 1
 fi
+
+printf 'Checking for stale/active authoritative workflow runs before creating a runner...\n'
+ACTIVE_RUNS_JSON="$(api GET "/repos/${REPOSITORY}/actions/runs?event=pull_request&per_page=100")"
+ACTIVE_AUTHORITATIVE="$(jq -c \
+    --arg runner_contract "${RUNNER_CONTRACT_WORKFLOW}" \
+    --arg package_proof "${PACKAGE_PROOF_WORKFLOW}" \
+    '[.workflow_runs[] | select((.name == $runner_contract or .name == $package_proof) and .status != "completed")]' \
+    <<<"${ACTIVE_RUNS_JSON}")"
+if (( $(jq 'length' <<<"${ACTIVE_AUTHORITATIVE}") > 0 )); then
+    printf 'Refusing to create a JIT runner while another authoritative workflow is active or queued:\n' >&2
+    jq -r '.[] | "  id=\(.id) name=\(.name) status=\(.status) url=\(.html_url)"' <<<"${ACTIVE_AUTHORITATIVE}" >&2
+    exit 1
+fi
+
+BASELINE_RUNS_JSON="$(api GET "/repos/${REPOSITORY}/actions/runs?event=pull_request&head_sha=${PR_HEAD_SHA}&per_page=100")"
+BASELINE_RUN_IDS="$(jq -c --arg workflow "${WORKFLOW_NAME}" '[.workflow_runs[] | select(.name == $workflow) | .id]' <<<"${BASELINE_RUNS_JSON}")"
+printf '%s\n' "${BASELINE_RUN_IDS}" > "${EVIDENCE_DIR}/workflow-baseline-ids.json"
 
 {
     printf 'started_at=%s\n' "${STARTED_AT}"
     printf 'repository=%s\n' "${REPOSITORY}"
     printf 'pr_number=%s\n' "${PR_NUMBER}"
     printf 'pr_head_sha=%s\n' "${PR_HEAD_SHA}"
+    printf 'pr_head_branch=%s\n' "${PR_HEAD_BRANCH}"
     printf 'gate=%s\n' "${GATE}"
     printf 'gate_label=%s\n' "${GATE_LABEL}"
     printf 'workflow_name=%s\n' "${WORKFLOW_NAME}"
     printf 'vm_name=%s\n' "${VM_NAME}"
     printf 'golden_image=%s\n' "${GOLDEN_IMAGE}"
-    printf 'golden_image_sha256='; sha256sum "${GOLDEN_IMAGE}" | awk '{print $1}'
+    printf 'golden_image_sha256=%s\n' "${GOLDEN_SHA256}"
+    printf 'golden_provenance=%s\n' "${GOLDEN_PROVENANCE}"
+    printf 'local_lock=%s\n' "${LOCK_FILE}"
     printf 'libvirt_uri=%s\n' "${LIBVIRT_URI}"
     printf 'libvirt_network=%s\n' "${LIBVIRT_NETWORK}"
     printf 'vm_memory_mib=%s\n' "${VM_MEMORY_MIB}"
     printf 'vm_vcpus=%s\n' "${VM_VCPUS}"
     printf 'vm_disk_size_gib=%s\n' "${VM_DISK_SIZE_GIB}"
+    printf '\ngolden_provenance_contents:\n'
+    cat "${GOLDEN_PROVENANCE}"
 } > "${EVIDENCE_DIR}/host-environment.txt"
 
 printf 'Ensuring trigger label exists and is currently absent...\n'
@@ -286,6 +340,21 @@ qga() {
     virsh qemu-agent-command "${VM_NAME}" "$1"
 }
 
+guest_runner_status() {
+    [[ -n "${GUEST_RUNNER_PID}" ]] || return 0
+    qga "$(jq -nc --argjson pid "${GUEST_RUNNER_PID}" '{execute:"guest-exec-status",arguments:{pid:$pid}}')"
+}
+
+fail_if_guest_runner_exited() {
+    local status
+    status="$(guest_runner_status)"
+    if [[ -n "${status}" && "$(jq -r '.return.exited // false' <<<"${status}")" == "true" ]]; then
+        printf '%s\n' "${status}" > "${EVIDENCE_DIR}/guest-runner-exited.json"
+        printf 'Guest Actions runner process exited before the expected lifecycle point.\n' >&2
+        return 1
+    fi
+}
+
 printf 'Waiting for qemu-guest-agent...\n'
 DEADLINE=$(( $(date +%s) + ONLINE_TIMEOUT_SECONDS ))
 until qga '{"execute":"guest-ping"}' >/dev/null 2>&1; do
@@ -319,9 +388,15 @@ qga "${WRITE_PAYLOAD}" >/dev/null
 qga "$(jq -nc --argjson handle "${HANDLE}" '{execute:"guest-file-close",arguments:{handle:$handle}}')" >/dev/null
 unset JIT_CONFIG JIT_JSON
 
-START_COMMAND="chown ${RUNNER_USER}:${RUNNER_USER} /run/supralinux-jit-config && chmod 600 /run/supralinux-jit-config && : > /var/log/supralinux-actions-runner-console.log && chown ${RUNNER_USER}:${RUNNER_USER} /var/log/supralinux-actions-runner-console.log && exec su -s /bin/bash - ${RUNNER_USER} -c 'cd /opt/actions-runner && config=\"\$(cat /run/supralinux-jit-config)\" && rm -f /run/supralinux-jit-config && exec ./run.sh --jitconfig \"\$config\" >>/var/log/supralinux-actions-runner-console.log 2>&1'"
+START_COMMAND="chown ${RUNNER_USER}:${RUNNER_USER} /run/supralinux-jit-config && chmod 600 /run/supralinux-jit-config && : > /var/log/supralinux-actions-runner-console.log && chown ${RUNNER_USER}:${RUNNER_USER} /var/log/supralinux-actions-runner-console.log && exec su --login --shell /bin/bash --command 'cd /opt/actions-runner && config=\"\$(cat /run/supralinux-jit-config)\" && rm -f /run/supralinux-jit-config && exec ./run.sh --jitconfig \"\$config\" >>/var/log/supralinux-actions-runner-console.log 2>&1' ${RUNNER_USER}"
 EXEC_PAYLOAD="$(jq -nc --arg cmd "${START_COMMAND}" '{execute:"guest-exec",arguments:{path:"/bin/bash",arg:["-lc",$cmd],"capture-output":false}}')"
-qga "${EXEC_PAYLOAD}" > "${EVIDENCE_DIR}/guest-runner-exec.json"
+EXEC_RESULT="$(qga "${EXEC_PAYLOAD}")"
+printf '%s\n' "${EXEC_RESULT}" > "${EVIDENCE_DIR}/guest-runner-exec.json"
+GUEST_RUNNER_PID="$(jq -r '.return.pid // empty' <<<"${EXEC_RESULT}")"
+if [[ ! "${GUEST_RUNNER_PID}" =~ ^[0-9]+$ ]]; then
+    printf 'qemu-guest-agent did not return a valid runner process PID.\n' >&2
+    exit 1
+fi
 
 runner_snapshot() {
     api GET "/repos/${REPOSITORY}/actions/runners?per_page=100" \
@@ -331,6 +406,7 @@ runner_snapshot() {
 printf 'Waiting for JIT runner to become online...\n'
 DEADLINE=$(( $(date +%s) + ONLINE_TIMEOUT_SECONDS ))
 while true; do
+    fail_if_guest_runner_exited || exit 1
     SNAPSHOT="$(runner_snapshot)"
     if [[ -n "${SNAPSHOT}" && "$(jq -r '.status' <<<"${SNAPSHOT}")" == "online" ]]; then
         printf '%s\n' "${SNAPSHOT}" > "${EVIDENCE_DIR}/runner-online.json"
@@ -351,6 +427,7 @@ LABEL_ADDED=1
 printf 'Waiting for GitHub to assign the single JIT job...\n'
 DEADLINE=$(( $(date +%s) + BUSY_TIMEOUT_SECONDS ))
 while true; do
+    fail_if_guest_runner_exited || exit 1
     SNAPSHOT="$(runner_snapshot)"
     if [[ -n "${SNAPSHOT}" && "$(jq -r '.busy' <<<"${SNAPSHOT}")" == "true" ]]; then
         printf '%s\n' "${SNAPSHOT}" > "${EVIDENCE_DIR}/runner-busy.json"
@@ -367,7 +444,37 @@ while true; do
     sleep 3
 done
 
-printf 'Waiting for the JIT runner to complete its one job and deregister...\n'
+printf 'Resolving the newly-created workflow run by exact PR head SHA...\n'
+DEADLINE=$(( $(date +%s) + 120 ))
+while true; do
+    RUNS_JSON="$(api GET "/repos/${REPOSITORY}/actions/runs?event=pull_request&head_sha=${PR_HEAD_SHA}&per_page=100")"
+    CANDIDATES="$(jq -c \
+        --arg workflow "${WORKFLOW_NAME}" \
+        --arg sha "${PR_HEAD_SHA}" \
+        --argjson baseline "${BASELINE_RUN_IDS}" \
+        '[.workflow_runs[]
+          | select(.name == $workflow and .head_sha == $sha)
+          | select(.id as $id | ($baseline | index($id) | not))]' \
+        <<<"${RUNS_JSON}")"
+    CANDIDATE_COUNT="$(jq 'length' <<<"${CANDIDATES}")"
+    if (( CANDIDATE_COUNT > 1 )); then
+        printf '%s\n' "${CANDIDATES}" > "${EVIDENCE_DIR}/workflow-run-ambiguous.json"
+        printf 'More than one new authoritative workflow run appeared for the exact PR head SHA; refusing ambiguous attribution.\n' >&2
+        exit 1
+    fi
+    if (( CANDIDATE_COUNT == 1 )); then
+        WORKFLOW_RUN_ID="$(jq -r '.[0].id' <<<"${CANDIDATES}")"
+        printf '%s\n' "$(jq -c '.[0]' <<<"${CANDIDATES}")" > "${EVIDENCE_DIR}/workflow-run-created.json"
+        break
+    fi
+    if (( $(date +%s) >= DEADLINE )); then
+        printf 'Could not resolve the new workflow run for %s at head %s.\n' "${WORKFLOW_NAME}" "${PR_HEAD_SHA}" >&2
+        exit 1
+    fi
+    sleep 2
+done
+
+printf 'Bound gate to workflow run ID %s. Waiting for the JIT runner to finish and deregister...\n' "${WORKFLOW_RUN_ID}"
 DEADLINE=$(( $(date +%s) + JOB_TIMEOUT_SECONDS ))
 while true; do
     SNAPSHOT="$(runner_snapshot)"
@@ -381,23 +488,22 @@ while true; do
     sleep 5
 done
 
-printf 'Resolving workflow conclusion...\n'
-DEADLINE=$(( $(date +%s) + 120 ))
-WORKFLOW_RUN=""
+printf 'Waiting for bound workflow run %s to complete...\n' "${WORKFLOW_RUN_ID}"
+DEADLINE=$(( $(date +%s) + 180 ))
 while true; do
-    RUNS_JSON="$(api GET "/repos/${REPOSITORY}/actions/runs?event=pull_request&per_page=100")"
-    WORKFLOW_RUN="$(jq -c \
-        --arg workflow "${WORKFLOW_NAME}" \
-        --arg branch "$(jq -r '.head.ref' <<<"${PR_JSON}")" \
-        --arg started "${STARTED_AT}" \
-        '[.workflow_runs[] | select(.name == $workflow and .head_branch == $branch and .created_at >= $started)] | sort_by(.created_at) | last // empty' \
-        <<<"${RUNS_JSON}")"
-    if [[ -n "${WORKFLOW_RUN}" && "$(jq -r '.status' <<<"${WORKFLOW_RUN}")" == "completed" ]]; then
+    WORKFLOW_RUN="$(api GET "/repos/${REPOSITORY}/actions/runs/${WORKFLOW_RUN_ID}")"
+    if [[ "$(jq -r '.head_sha // empty' <<<"${WORKFLOW_RUN}")" != "${PR_HEAD_SHA}" || \
+          "$(jq -r '.name // empty' <<<"${WORKFLOW_RUN}")" != "${WORKFLOW_NAME}" || \
+          "$(jq -r '.event // empty' <<<"${WORKFLOW_RUN}")" != "pull_request" ]]; then
+        printf 'Bound workflow run identity changed or does not match the requested gate.\n' >&2
+        exit 1
+    fi
+    if [[ "$(jq -r '.status' <<<"${WORKFLOW_RUN}")" == "completed" ]]; then
         printf '%s\n' "${WORKFLOW_RUN}" > "${EVIDENCE_DIR}/workflow-run.json"
         break
     fi
     if (( $(date +%s) >= DEADLINE )); then
-        printf 'Could not resolve a completed workflow run for %s.\n' "${WORKFLOW_NAME}" >&2
+        printf 'Timed out waiting for workflow run %s to reach completed state.\n' "${WORKFLOW_RUN_ID}" >&2
         exit 1
     fi
     sleep 3

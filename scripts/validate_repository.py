@@ -77,9 +77,13 @@ if WORKFLOWS.exists():
         require("ubuntu-latest" not in text, f"{path.relative_to(ROOT)} must not use ubuntu-latest")
         require("pull_request_target" not in text, f"{path.relative_to(ROOT)} must not use pull_request_target")
 
+repository_policy = workflow_texts.get("repository-policy.yml", "")
 runner_contract = workflow_texts.get("runner-contract.yml", "")
 authoritative_proof = workflow_texts.get("authoritative-package-proof.yml", "")
 hosted_proof = workflow_texts.get("package-build-proof.yml", "")
+
+require("bash -n scripts/*.sh" in repository_policy, "repository policy must syntax-check all shell scripts")
+
 for filename, text, gate_label in (
     ("runner-contract.yml", runner_contract, "ci:runner-contract"),
     ("authoritative-package-proof.yml", authoritative_proof, "ci:authoritative-package-proof"),
@@ -141,7 +145,7 @@ host_checker = read_required(ROOT / "scripts" / "check-kvm-host.sh")
 require("/dev/kvm" in host_checker, "host preflight must validate /dev/kvm")
 require("parameters/nested" in host_checker, "host preflight must validate nested KVM state")
 require("qemu:///system" in host_checker, "host preflight must validate system libvirt connection")
-for command in ("virt-sysprep", "virt-cat", "virt-copy-out"):
+for command in ("virt-sysprep", "virt-cat", "virt-copy-out", "flock"):
     require(command in host_checker, f"host preflight must validate {command}")
 
 cloud_fetcher = read_required(ROOT / "scripts" / "fetch-ubuntu-26.04-cloud-image.sh")
@@ -179,6 +183,16 @@ require("generate-jitconfig" in host_orchestrator, "host orchestrator must use G
 require("/run/supralinux-jit-config" in host_orchestrator, "JIT configuration must be injected into guest tmpfs")
 require("virt-copy-out" in host_orchestrator, "host orchestrator must export guest diagnostics before deleting the overlay")
 require("Authoritative self-hosted gates refuse fork PRs" in host_orchestrator, "host orchestrator must refuse fork PRs")
+require("flock -n" in host_orchestrator, "host orchestrator must serialize authoritative jobs on one host")
+require("workflow-baseline-ids.json" in host_orchestrator, "host orchestrator must snapshot workflow run IDs before triggering")
+require("head_sha=${PR_HEAD_SHA}" in host_orchestrator, "host orchestrator must query workflow runs by exact PR head SHA")
+require("actions/runs/${WORKFLOW_RUN_ID}" in host_orchestrator, "host orchestrator must bind to one exact workflow run ID")
+require("status != \"completed\"" in host_orchestrator, "host orchestrator must refuse pre-existing active authoritative workflows")
+require("guest-exec-status" in host_orchestrator, "host orchestrator must detect premature guest runner exit")
+require("GOLDEN_PROVENANCE" in host_orchestrator, "host orchestrator must require golden-image provenance")
+require("PROVENANCE_SHA256" in host_orchestrator, "host orchestrator must verify golden-image SHA-256 against provenance")
+require("source_checkout_removed=yes" in host_orchestrator, "host orchestrator must require source-clean golden provenance")
+require("su --login --shell /bin/bash --command" in host_orchestrator, "guest Actions runner must start with an explicit non-root login shell")
 
 if errors:
     for error in errors:
@@ -200,7 +214,8 @@ print(
 )
 print(
     "CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; "
-    "JIT=required; host-preflight=required; golden-builder=required; stable-source-storage=required; hosted-delta-gate=required".format(
+    "JIT=required; exact-run-binding=required; host-preflight=required; golden-builder=required; "
+    "stable-source-storage=required; shell-syntax=required; hosted-delta-gate=required".format(
         hosted=hosted["role"],
         platform=authoritative["platform"],
         virt=authoritative["virtualization"],

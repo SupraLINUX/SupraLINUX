@@ -20,6 +20,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Validate shell syntax
+        shell: bash
+        run: bash -n scripts/*.sh
+
       - name: Validate repository invariants
         run: python3 scripts/validate_repository.py
 
