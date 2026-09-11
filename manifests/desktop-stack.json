@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-11",
+  "platform": {
+    "authority": "ubuntu",
+    "distribution": "Ubuntu",
+    "version": "26.04 LTS",
+    "series": "resolute"
+  },
+  "desktop": {
+    "authority": "kde-upstream",
+    "plasma": {
+      "version": "6.7.5",
+      "release_date": "2026-09-08",
+      "evidence": "https://kde.org/announcements/plasma/6/6.7.5/"
+    },
+    "frameworks": {
+      "version": "6.30.0",
+      "release_date": "2026-09-09",
+      "evidence": "https://kde.org/announcements/frameworks/6/6.30.0/"
+    },
+    "gear": {
+      "version": "26.08.1",
+      "release_date": "2026-09-10",
+      "evidence": "https://kde.org/announcements/gear/26.08.1/"
+    }
+  },
+  "qt": {
+    "requirement_authority": "kde-upstream",
+    "source_authority": "qt-project",
+    "required_series": "6.10",
+    "requirement_evidence": "https://community.kde.org/Schedules/Plasma_6",
+    "provider": {
+      "name": "ubuntu",
+      "series": "resolute",
+      "candidate_version": "6.10.2+dfsg-7",
+      "candidate_evidence": "https://packages.ubuntu.com/resolute/amd64/qt6-base-dev",
+      "status": "reuse-candidate"
+    },
+    "certification": {
+      "status": "pending",
+      "evidence": []
+    }
+  },
+  "ci": {
+    "hosted_runner": {
+      "label": "ubuntu-26.04",
+      "status": "public-preview",
+      "evidence": "https://github.com/actions/runner-images/issues/14226"
+    },
+    "authoritative_runner": {
+      "platform": "ubuntu-26.04",
+      "lifecycle": "ephemeral-vm",
+      "status": "pending-certification"
+    }
+  }
+}

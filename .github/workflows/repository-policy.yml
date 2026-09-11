@@ -1,0 +1,51 @@
+name: Repository policy
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate architecture manifest
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Validate repository invariants
+        run: python3 scripts/validate_repository.py
+
+      - name: Verify runner and Ubuntu Qt candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          . /etc/os-release
+          if [[ "${VERSION_ID}" != "26.04" ]]; then
+            echo "Expected Ubuntu 26.04, got ${PRETTY_NAME}" >&2
+            exit 1
+          fi
+
+          sudo apt-get update
+          candidate="$(apt-cache policy qt6-base-dev | awk '/Candidate:/ {print $2}')"
+          if [[ -z "${candidate}" || "${candidate}" == "(none)" ]]; then
+            echo "qt6-base-dev has no candidate on this Ubuntu 26.04 runner" >&2
+            exit 1
+          fi
+
+          required="$(python3 -c 'import json; print(json.load(open("manifests/desktop-stack.json"))["qt"]["required_series"])')"
+          case "${candidate}" in
+            "${required}".*) ;;
+            *)
+              echo "Ubuntu Qt candidate ${candidate} does not match required Qt series ${required}" >&2
+              exit 1
+              ;;
+          esac
+
+          echo "Ubuntu ${VERSION_ID}; Qt candidate ${candidate}; required series ${required}: PASS"

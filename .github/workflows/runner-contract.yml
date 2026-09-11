@@ -1,0 +1,55 @@
+name: Authoritative runner contract
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    name: Verify disposable Ubuntu 26.04 build runner
+    runs-on: [self-hosted, linux, x64, supralinux, ubuntu-26.04, ephemeral]
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Verify operating system
+        shell: bash
+        run: |
+          set -euo pipefail
+          . /etc/os-release
+          test "${ID}" = "ubuntu"
+          test "${VERSION_ID}" = "26.04"
+          echo "${PRETTY_NAME}"
+
+      - name: Verify build tool contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            sbuild
+            debootstrap
+            dpkg-buildpackage
+            autopkgtest
+            qemu-system-x86_64
+            aptly
+            gpg
+            git
+            jq
+            python3
+          )
+
+          failed=0
+          for command_name in "${required[@]}"; do
+            if ! command -v "${command_name}" >/dev/null 2>&1; then
+              echo "Missing required command: ${command_name}" >&2
+              failed=1
+            fi
+          done
+          exit "${failed}"
+
+      - name: Validate repository invariants
+        run: python3 scripts/validate_repository.py
