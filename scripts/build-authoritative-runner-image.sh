@@ -4,7 +4,7 @@ set -Eeuo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPOSITORY_URL="${SUPRALINUX_REPOSITORY_URL:-https://github.com/SupraLINUX/SupraLINUX.git}"
 SOURCE_COMMIT="${SUPRALINUX_SOURCE_COMMIT:-$(git -C "${ROOT}" rev-parse HEAD)}"
-SOURCE_IMAGE="${SUPRALINUX_SOURCE_IMAGE:-${ROOT}/.work/cloud-images/resolute/ubuntu-26.04-server-cloudimg-amd64.img}"
+SOURCE_IMAGE="${SUPRALINUX_SOURCE_IMAGE:-/var/lib/supralinux/images/source/resolute/ubuntu-26.04-server-cloudimg-amd64.img}"
 TARGET_IMAGE="${SUPRALINUX_GOLDEN_IMAGE:-/var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2}"
 LIBVIRT_URI="${SUPRALINUX_LIBVIRT_URI:-qemu:///system}"
 LIBVIRT_NETWORK="${SUPRALINUX_LIBVIRT_NETWORK:-default}"
@@ -144,10 +144,12 @@ write_files:
       SUPRALINUX_RUNNER_USER='${RUNNER_USER}' /opt/supralinux-src/scripts/provision-authoritative-runner-guest.sh
       sudo -iu '${RUNNER_USER}' bash -lc 'cd /opt/supralinux-src && ./scripts/prepare-autopkgtest-qemu-image.sh'
       SUPRALINUX_RUNNER_USER='${RUNNER_USER}' /opt/supralinux-src/scripts/seal-authoritative-runner-image.sh
+      rm -rf /opt/supralinux-src
       {
           printf 'completed_at=%s\\n' "\$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           printf 'source_commit=%s\\n' '${SOURCE_COMMIT}'
           printf 'runner_user=%s\\n' '${RUNNER_USER}'
+          printf 'source_checkout_removed=yes\\n'
       } > /var/lib/supralinux/evidence/golden-build-complete.txt
 runcmd:
   - [ /usr/local/sbin/supralinux-golden-build ]
@@ -219,6 +221,10 @@ if ! grep -qx "source_commit=${SOURCE_COMMIT}" <<<"${COMPLETE_TEXT}"; then
     printf 'Guest completion evidence does not match requested source commit.\n' >&2
     exit 1
 fi
+if ! grep -qx 'source_checkout_removed=yes' <<<"${COMPLETE_TEXT}"; then
+    printf 'Guest completion evidence does not confirm removal of the build checkout.\n' >&2
+    exit 1
+fi
 
 printf 'Applying explicit offline clone-safety operations...\n'
 SUPPORTED_OPS="$(virt-sysprep --list-operations | awk '{print $1}')"
@@ -255,6 +261,7 @@ PROVENANCE_TMP="$(mktemp)"
     printf 'golden_image=%s\n' "${TARGET_IMAGE}"
     printf 'golden_image_sha256=%s\n' "${GOLDEN_SHA256}"
     printf 'virt_sysprep_operations=%s\n' "${OPS_CSV}"
+    printf 'source_checkout_removed=yes\n'
     printf '\nqemu_image_info:\n'
     qemu-img info "${TARGET_IMAGE}"
 } > "${PROVENANCE_TMP}"

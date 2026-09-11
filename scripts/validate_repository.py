@@ -135,6 +135,7 @@ host_provisioner = read_required(ROOT / "scripts" / "provision-kvm-host.sh")
 for package in ("libvirt-daemon-system", "qemu-system-x86", "virt-install", "libguestfs-tools"):
     require(package in host_provisioner, f"host provisioning must install {package}")
 require("does NOT change BIOS" in host_provisioner, "host provisioning must explicitly avoid automatic BIOS/KVM-module changes")
+require("/var/lib/supralinux/golden-builds" in host_provisioner, "host provisioning must create writable golden-build state")
 
 host_checker = read_required(ROOT / "scripts" / "check-kvm-host.sh")
 require("/dev/kvm" in host_checker, "host preflight must validate /dev/kvm")
@@ -146,10 +147,16 @@ for command in ("virt-sysprep", "virt-cat", "virt-copy-out"):
 cloud_fetcher = read_required(ROOT / "scripts" / "fetch-ubuntu-26.04-cloud-image.sh")
 require("SHA256SUMS.gpg" in cloud_fetcher, "Ubuntu cloud image fetcher must verify signed checksum metadata")
 require("gpgv" in cloud_fetcher, "Ubuntu cloud image fetcher must perform signature verification")
+require(
+    "/var/lib/supralinux/images/source/resolute" in cloud_fetcher,
+    "Ubuntu source image must default to stable host infrastructure storage",
+)
+require("${PWD}/.work/cloud-images" not in cloud_fetcher, "Ubuntu source image must not default to the developer checkout")
 
 golden_builder = read_required(ROOT / "scripts" / "build-authoritative-runner-image.sh")
 require("scripts/check-kvm-host.sh" in golden_builder, "golden image builder must require host preflight")
 require(".provenance.txt" in golden_builder, "golden image builder must require verified source-image provenance")
+require("/var/lib/supralinux/images/source/resolute" in golden_builder, "golden image builder must default to the stable verified source image")
 require("--cpu host-passthrough" in golden_builder, "golden image builder must expose host CPU virtualization capabilities")
 require("scripts/provision-authoritative-runner-guest.sh" in golden_builder, "golden image builder must provision the runner guest")
 require("scripts/prepare-autopkgtest-qemu-image.sh" in golden_builder, "golden image builder must prepare the nested QEMU test image")
@@ -160,6 +167,8 @@ require("qemu-img convert" in golden_builder, "golden image builder must flatten
 require("qemu-img check" in golden_builder, "golden image builder must validate the final qcow2")
 require("SUPRALINUX_REPLACE_GOLDEN_IMAGE" in golden_builder, "golden image replacement must require explicit opt-in")
 require("golden-image-sha256.txt" in golden_builder, "golden image builder must retain final image SHA-256 evidence")
+require("source_checkout_removed=yes" in golden_builder, "golden image builder must prove the temporary source checkout is removed")
+require("rm -rf /opt/supralinux-src" in golden_builder, "golden image builder must remove the build checkout before publication")
 
 installer = read_required(ROOT / "scripts" / "install-actions-runner.sh")
 require(".digest" in installer, "Actions runner installer must consume GitHub-published asset digest")
@@ -191,7 +200,7 @@ print(
 )
 print(
     "CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; "
-    "JIT=required; host-preflight=required; golden-builder=required; hosted-delta-gate=required".format(
+    "JIT=required; host-preflight=required; golden-builder=required; stable-source-storage=required; hosted-delta-gate=required".format(
         hosted=hosted["role"],
         platform=authoritative["platform"],
         virt=authoritative["virtualization"],

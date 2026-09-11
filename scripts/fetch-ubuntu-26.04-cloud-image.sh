@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 BASE_URL="${SUPRALINUX_CLOUD_IMAGE_BASE_URL:-https://cloud-images.ubuntu.com/releases/resolute/release}"
 IMAGE_NAME="ubuntu-26.04-server-cloudimg-amd64.img"
-DEST_DIR="${SUPRALINUX_CLOUD_IMAGE_DIR:-${PWD}/.work/cloud-images/resolute}"
+DEST_DIR="${SUPRALINUX_CLOUD_IMAGE_DIR:-/var/lib/supralinux/images/source/resolute}"
 KEYRING="${SUPRALINUX_CLOUD_IMAGE_KEYRING:-/usr/share/keyrings/ubuntu-cloudimage-keyring.gpg}"
 REFRESH="${SUPRALINUX_REFRESH_CLOUD_IMAGE:-0}"
 
@@ -19,7 +19,11 @@ if [[ ! -r "${KEYRING}" ]]; then
     exit 1
 fi
 
-mkdir -p "${DEST_DIR}"
+if ! mkdir -p "${DEST_DIR}"; then
+    printf 'Cannot create cloud-image directory: %s\n' "${DEST_DIR}" >&2
+    printf 'Run scripts/provision-kvm-host.sh first or set SUPRALINUX_CLOUD_IMAGE_DIR to a writable host path.\n' >&2
+    exit 1
+fi
 IMAGE="${DEST_DIR}/${IMAGE_NAME}"
 SUMS="${DEST_DIR}/SHA256SUMS"
 SIGNATURE="${DEST_DIR}/SHA256SUMS.gpg"
@@ -59,6 +63,7 @@ install -m 0644 "${TMP_DIR}/SHA256SUMS.gpg" "${SIGNATURE}"
     printf 'sha256=%s\n' "${EXPECTED}"
     printf 'signature=verified-with-gpgv\n'
     printf 'keyring=%s\n' "${KEYRING}"
+    printf 'stored_at=%s\n' "${IMAGE}"
 } > "${PROVENANCE}"
 
 printf 'Verified image: %s\n' "${IMAGE}"
