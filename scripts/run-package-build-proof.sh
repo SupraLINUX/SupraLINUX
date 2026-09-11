@@ -7,10 +7,13 @@ WORK_DIR="${ROOT}/.work/package-build-proof"
 OUT_DIR="${WORK_DIR}/out"
 EVIDENCE_DIR="${ROOT}/evidence/package-build-proof"
 RESULT_JSON="${EVIDENCE_DIR}/result.json"
+CHROOT_TARBALL="${HOME}/.cache/sbuild/resolute-amd64.tar.gz"
+MIRROR="${SBUILD_MIRROR:-http://azure.archive.ubuntu.com/ubuntu}"
 STATE="FAIL"
 STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
-mkdir -p "${OUT_DIR}" "${EVIDENCE_DIR}"
+rm -rf "${WORK_DIR}" "${EVIDENCE_DIR}"
+mkdir -p "${OUT_DIR}" "${EVIDENCE_DIR}" "$(dirname "${CHROOT_TARBALL}")"
 
 write_result() {
     local rc="$?"
@@ -30,6 +33,7 @@ Path(path).write_text(json.dumps({
     "finished_at": finished,
     "authoritative": False,
     "runner_class": "github-hosted-ubuntu-26.04",
+    "sbuild_backend": "unshare",
 }, indent=2) + "\n", encoding="utf-8")
 PY
 }
@@ -50,12 +54,24 @@ sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     autopkgtest \
     debhelper \
-    debootstrap \
     devscripts \
     dpkg-dev \
-    schroot \
+    mmdebstrap \
     sbuild \
+    uidmap \
     ubuntu-keyring
+
+# The unshare backend needs subordinate UID/GID ranges. GitHub-hosted images
+# normally provide them; add a private range only if this disposable runner lacks one.
+if ! grep -q "^${USER}:" /etc/subuid; then
+    sudo usermod --add-subuids 100000-165535 "${USER}"
+fi
+if ! grep -q "^${USER}:" /etc/subgid; then
+    sudo usermod --add-subgids 100000-165535 "${USER}"
+fi
+
+printf 'Verifying unprivileged user namespace support...\n'
+unshare --user --map-auto true
 
 {
     printf 'host_os:\n'
@@ -63,38 +79,50 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     printf '\nuname:\n'
     uname -a
     printf '\ntool_versions:\n'
-    dpkg-query -W -f='${Package}\t${Version}\n' autopkgtest debhelper debootstrap devscripts dpkg-dev schroot sbuild ubuntu-keyring
+    dpkg-query -W -f='${Package}\t${Version}\n' autopkgtest debhelper devscripts dpkg-dev mmdebstrap sbuild uidmap ubuntu-keyring
+    printf '\nsubuid:\n'
+    grep "^${USER}:" /etc/subuid || true
+    printf '\nsubgid:\n'
+    grep "^${USER}:" /etc/subgid || true
+    printf '\nunprivileged_userns_clone:\n'
+    sysctl -n kernel.unprivileged_userns_clone 2>/dev/null || printf 'not-exposed\n'
+    printf '\nmirror:\n%s\n' "${MIRROR}"
 } > "${EVIDENCE_DIR}/environment.txt"
 
 printf 'Creating source package...\n'
-rm -rf "${WORK_DIR}/source-output"
-mkdir -p "${WORK_DIR}/source-output"
 pushd "${PACKAGE_DIR}" >/dev/null
 dpkg-buildpackage -S -us -uc -d
 popd >/dev/null
 
 DSC="${ROOT}/packages/supralinux-build-test_0.1.0.dsc"
-TARBALL="${ROOT}/packages/supralinux-build-test_0.1.0.tar.xz"
+SOURCE_TARBALL="${ROOT}/packages/supralinux-build-test_0.1.0.tar.xz"
 test -f "${DSC}"
-test -f "${TARBALL}"
-sha256sum "${DSC}" "${TARBALL}" > "${EVIDENCE_DIR}/source-sha256.txt"
+test -f "${SOURCE_TARBALL}"
+sha256sum "${DSC}" "${SOURCE_TARBALL}" > "${EVIDENCE_DIR}/source-sha256.txt"
 
-printf 'Creating fresh resolute sbuild chroot...\n'
-sudo rm -rf /srv/chroot/resolute-amd64-sbuild
-sudo sbuild-createchroot \
-    --arch=amd64 \
+printf 'Creating fresh resolute buildd rootfs for sbuild/unshare...\n'
+rm -f "${CHROOT_TARBALL}"
+mmdebstrap \
+    --mode=unshare \
+    --variant=buildd \
+    --architectures=amd64 \
     --components=main,universe \
+    --include=ca-certificates,ubuntu-keyring \
     resolute \
-    /srv/chroot/resolute-amd64-sbuild \
-    http://archive.ubuntu.com/ubuntu
+    "${CHROOT_TARBALL}" \
+    "${MIRROR}" |& tee "${EVIDENCE_DIR}/rootfs.log"
 
-sudo usermod -aG sbuild "${USER}"
-schroot -l | tee "${EVIDENCE_DIR}/schroot-list.txt"
+test -s "${CHROOT_TARBALL}"
+sha256sum "${CHROOT_TARBALL}" > "${EVIDENCE_DIR}/rootfs-sha256.txt"
 
-printf 'Building package with sbuild...\n'
-pushd "${OUT_DIR}" >/dev/null
-sg sbuild -c "sbuild --dist=resolute --arch=amd64 '${DSC}'" |& tee "${EVIDENCE_DIR}/sbuild.log"
-popd >/dev/null
+printf 'Building package with sbuild/unshare...\n'
+sbuild \
+    --chroot-mode=unshare \
+    --dist=resolute \
+    --arch=amd64 \
+    --arch-all \
+    --build-dir="${OUT_DIR}" \
+    "${DSC}" |& tee "${EVIDENCE_DIR}/sbuild.log"
 
 mapfile -t DEBS < <(find "${OUT_DIR}" -maxdepth 1 -type f -name '*.deb' -print | sort)
 mapfile -t CHANGES < <(find "${OUT_DIR}" -maxdepth 1 -type f -name '*.changes' -print | sort)
@@ -106,8 +134,12 @@ if (( ${#DEBS[@]} == 0 || ${#CHANGES[@]} == 0 || ${#BUILDINFO[@]} == 0 )); then
     exit 1
 fi
 
-printf 'Running autopkgtest smoke test against built binary...\n'
-autopkgtest "${DSC}" "${DEBS[0]}" -- null |& tee "${EVIDENCE_DIR}/autopkgtest.log"
+printf 'Running autopkgtest in an isolated unshare testbed...\n'
+autopkgtest "${DSC}" "${DEBS[0]}" -- \
+    unshare \
+    --release resolute \
+    --arch amd64 \
+    --tarball "${CHROOT_TARBALL}" |& tee "${EVIDENCE_DIR}/autopkgtest.log"
 
 printf 'Capturing build artifact hashes...\n'
 sha256sum "${DEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" > "${EVIDENCE_DIR}/artifact-sha256.txt"

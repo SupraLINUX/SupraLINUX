@@ -32,11 +32,13 @@ For each campaign:
 
 ## Runner classes
 
-### Hosted policy lane
+### Hosted policy/proof lane
 
-GitHub-hosted `ubuntu-26.04` is suitable for repository validation, metadata checks and lightweight reproducible probes. The label is explicit; `ubuntu-latest` is forbidden because it lets GitHub change the platform underneath the project.
+GitHub-hosted `ubuntu-26.04` is suitable for repository validation, metadata checks and non-authoritative package-pipeline proofs. The label is explicit; `ubuntu-latest` is forbidden because it lets GitHub change the platform underneath the project.
 
 As of 2026-09-11 GitHub documents Ubuntu 26.04 hosted runners as public preview. Therefore hosted-runner success is useful CI evidence but is not, by itself, release-build certification.
+
+The package proof uses `sbuild`'s `unshare` backend with a freshly generated Ubuntu 26.04 `buildd` rootfs. This avoids dependence on persistent `schroot` registrations or group/session state. `autopkgtest` uses its `unshare` virtualization backend for the hosted package smoke test. The isolation backend is an implementation detail of the build environment and does not change which project layer is authoritative.
 
 ### Authoritative build lane
 
@@ -46,7 +48,7 @@ Release-relevant package builds are designed for disposable self-hosted VMs with
 
 The VM lifecycle is one job per disposable instance. Build state is not reused between jobs. The runner registration must be ephemeral and the VM must be destroyed after the job.
 
-The build environment should use clean `sbuild` environments based on Ubuntu 26.04. Containers may be used for auxiliary services, but they must not silently replace the authoritative package build environment when doing so changes package-build semantics.
+The package build inside each VM uses a clean `sbuild` environment. `unshare` is preferred when supported by the certified runner image because it is rootless and does not depend on a persistent schroot registry; changing this backend later requires evidence and a documentation update. Containers may be used for auxiliary services, but they must not silently replace the authoritative VM boundary when doing so changes package-build semantics.
 
 See `docs/runners/ubuntu-26.04.md`.
 
