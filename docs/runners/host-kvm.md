@@ -1,13 +1,13 @@
 # KVM/libvirt host orchestration
 
-Status: **implemented in repository; not yet executed on a real host**  
+Status: **host bootstrap and JIT orchestration implemented; not yet executed on a real host**  
 Last reviewed: **2026-09-11**
 
-The long-lived host is an infrastructure provider only. It is not a SupraLINUX build runner and must not be treated as release evidence. Its job is to create one disposable Ubuntu 26.04 KVM guest for one authoritative GitHub Actions job, preserve host/runner diagnostics, and destroy the writable VM state afterwards.
+The long-lived host is an infrastructure provider only. It is not a SupraLINUX build runner and must not be treated as release evidence. Its job is to provide KVM/libvirt, create one disposable Ubuntu 26.04 KVM guest for one authoritative GitHub Actions job, preserve host/runner diagnostics, and destroy the writable VM state afterwards.
 
 ## Current upstream inputs
 
-The authoritative runner image starts from Ubuntu's **released** Resolute cloud image, not a daily image. As observed on 2026-09-11, the release endpoint publishes `ubuntu-26.04-server-cloudimg-amd64.img` under the Resolute released-image tree. SupraLINUX does not hard-code an image hash before downloading it; `scripts/fetch-ubuntu-26.04-cloud-image.sh` verifies `SHA256SUMS.gpg` with Ubuntu's cloud-image keyring and records the signed SHA-256 actually observed.
+The authoritative runner image starts from Ubuntu's **released** Resolute cloud image, not a daily image. SupraLINUX does not hard-code an image hash before downloading it; `scripts/fetch-ubuntu-26.04-cloud-image.sh` verifies `SHA256SUMS.gpg` with Ubuntu's cloud-image keyring and records the signed SHA-256 actually observed.
 
 GitHub's current REST API provides repository-scoped JIT runner configuration through:
 
@@ -17,20 +17,64 @@ POST /repos/{owner}/{repo}/actions/runners/generate-jitconfig
 
 The response includes a runner record and `encoded_jit_config`, which is passed to the runner process with `run.sh --jitconfig`. The JIT configuration is generated per VM and is not baked into the golden image.
 
-## Host requirements
+Ubuntu 26.04 currently provides the host packages used by the supported bootstrap recipe, including `libvirt-daemon-system`, `qemu-system-x86`, `virt-install` and `libguestfs-tools`. Package availability was rechecked against the Resolute archive on 2026-09-11. Exact installed versions are captured from the real host when the provisioning script runs.
 
-The orchestration user needs:
+## Supported host bootstrap recipe
+
+The repository currently supports an automated host-bootstrap recipe for **Ubuntu 26.04 amd64/x86_64**. The host does not become a desktop/platform authority by using Ubuntu; Ubuntu is simply the selected provider for this CI infrastructure recipe.
+
+Run as the intended orchestration user with sudo available:
+
+```bash
+scripts/provision-kvm-host.sh
+```
+
+The script:
+
+1. verifies Ubuntu 26.04 and x86_64;
+2. requires CPU virtualization flags (`vmx` or `svm`) to be visible;
+3. installs KVM/QEMU, libvirt, `virt-install`, libguestfs and support tools from Ubuntu;
+4. adds the orchestration user to `kvm` and `libvirt`;
+5. starts/enables libvirt's `default` network if already defined by the packaged configuration;
+6. creates the SupraLINUX host state/evidence directories;
+7. records the actual package versions/network/module state used by the host.
+
+It deliberately does **not** alter firmware/BIOS settings, unload/reload KVM modules, or force a nested-virtualization module option. Those operations can disrupt existing VMs and therefore require explicit operator action.
+
+After provisioning, open a new login session and run the read-only preflight:
+
+```bash
+scripts/check-kvm-host.sh
+```
+
+The preflight requires:
+
+- x86_64;
+- visible `vmx`/`svm`;
+- `/dev/kvm` present and readable/writable by the orchestration user;
+- current user membership in `kvm` and `libvirt`;
+- the loaded `kvm_intel` or `kvm_amd` module to report nested virtualization enabled;
+- `virsh`, `virt-install`, QEMU, `virt-copy-out` and support commands;
+- working `qemu:///system` libvirt access;
+- an active configured libvirt network (`default` unless overridden).
+
+If nested KVM is disabled, the preflight reports **FAIL**. It does not attempt to fix the host automatically.
+
+## Host requirements for authoritative execution
+
+The orchestration user ultimately needs:
 
 - KVM with `/dev/kvm` readable/writable;
-- libvirt and an active network, `default` unless overridden;
+- nested KVM enabled;
+- libvirt and an active network;
 - `virsh` and `virt-install`;
-- `qemu-img`;
+- `qemu-img` and QEMU/KVM acceleration;
 - `virt-copy-out` from libguestfs tools;
-- `curl`, `jq`, `base64` and `sha256sum`;
+- `curl`, `jq`, `base64`, `sha256sum` and `gpgv`;
 - read access to the sealed golden qcow2 image;
 - write access to the configured ephemeral-disk and host-evidence directories.
 
-Nested virtualization must be enabled on the host. The definitive check remains inside the guest: the authoritative workflows require `/dev/kvm` to be usable from the Ubuntu 26.04 runner VM.
+The definitive nested-KVM test remains inside the runner guest: the authoritative workflows require `/dev/kvm` to be usable from the Ubuntu 26.04 runner VM.
 
 ## Host authentication
 
@@ -123,10 +167,19 @@ A failed or interrupted invocation still executes cleanup. An unused/stale JIT r
 
 ## Evidence
 
-Host-side evidence is stored outside the guest under the configured host evidence root. It includes the PR head SHA, golden-image SHA-256, VM definition, runner state snapshots, resolved workflow run and exported guest diagnostics where available.
+Host-side evidence is stored outside the guest under the configured host evidence root. It includes host provisioning versions, host preflight output when captured, PR head SHA, golden-image SHA-256, VM definition, runner state snapshots, resolved workflow run and exported guest diagnostics where available.
 
 The GitHub workflow separately uploads package/runner evidence. Promotion decisions must use the workflow result plus retained evidence, not the host script exit code in isolation.
 
 ## Current blocker
 
-No real KVM host has executed this orchestration yet. Therefore nested KVM, JIT guest startup, runner-group policy, QEMU system testing and destruction/export behavior remain **pending execution**, not PASS.
+No real KVM host has executed this orchestration yet. Therefore host preflight, nested KVM, JIT guest startup, runner-group policy, QEMU system testing and destruction/export behavior remain **pending execution**, not PASS.
+
+## Primary references
+
+- Ubuntu 26.04 `libvirt-daemon-system`: https://packages.ubuntu.com/resolute-updates/libvirt-daemon-system
+- Ubuntu 26.04 `qemu-system-x86`: https://packages.ubuntu.com/resolute/qemu-system-x86
+- Ubuntu 26.04 `virt-install`: https://packages.ubuntu.com/resolute/virt-install
+- Ubuntu 26.04 `libguestfs-tools`: https://packages.ubuntu.com/resolute/libguestfs-tools
+- Ubuntu virtualization CPU checks: https://documentation.ubuntu.com/security/security-features/platform-protections/cpu/
+- Ubuntu QCOW/KVM public-image guidance: https://documentation.ubuntu.com/public-images/public-images-how-to/launch-qcow-with-qemu/
