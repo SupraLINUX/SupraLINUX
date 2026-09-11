@@ -39,6 +39,7 @@ Path(path).write_text(json.dumps({
     "outer_virtualization": "kvm",
     "sbuild_backend": "unshare",
     "system_test_backend": "autopkgtest-qemu",
+    "system_test_acceleration": "kvm-required",
 }, indent=2) + "\n", encoding="utf-8")
 PY
 }
@@ -86,10 +87,13 @@ for command_name in "${required_commands[@]}"; do
     }
 done
 
-qemu-system-x86_64 -accel help 2>&1 | grep -q 'kvm' || {
+qemu-system-x86_64 -accel help 2>&1 | grep -q '^kvm$' || {
     printf 'QEMU does not expose the KVM accelerator.\n' >&2
     exit 1
 }
+
+printf 'Proving nested KVM can actually initialize QEMU...\n'
+"${ROOT}/scripts/check-nested-kvm-runtime.sh" "${EVIDENCE_DIR}/nested-kvm-runtime.txt"
 
 if [[ ! -f "${AUTOPKGTEST_QEMU_IMAGE}" ]]; then
     printf 'Missing certified autopkgtest QEMU image: %s\n' "${AUTOPKGTEST_QEMU_IMAGE}" >&2
@@ -117,6 +121,7 @@ fi
     dpkg-query -W -f='${Package}\t${Version}\n' autopkgtest dpkg-dev mmdebstrap qemu-system-x86 qemu-utils sbuild uidmap ubuntu-keyring 2>/dev/null || true
     printf '\nautopkgtest_qemu_image:\n%s\n' "${AUTOPKGTEST_QEMU_IMAGE}"
     qemu-img info "${AUTOPKGTEST_QEMU_IMAGE}"
+    printf '\nautopkgtest_qemu_options:\n-accel kvm\n'
     printf '\nmirror:\n%s\n' "${MIRROR}"
 } > "${EVIDENCE_DIR}/environment.txt"
 sha256sum "${AUTOPKGTEST_QEMU_IMAGE}" > "${EVIDENCE_DIR}/autopkgtest-image-sha256.txt"
@@ -185,11 +190,12 @@ sha256sum "${DEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" > "${EVIDENCE_DIR}/arti
 cp -a "${DEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${EVIDENCE_DIR}/"
 
 STAGE="autopkgtest-qemu"
-printf 'Running autopkgtest in a nested QEMU/KVM Ubuntu 26.04 testbed...\n'
+printf 'Running autopkgtest in a nested QEMU/KVM Ubuntu 26.04 testbed with KVM forced...\n'
 autopkgtest "${DSC}" "${DEBS[0]}" -- \
     qemu \
     --cpus=2 \
     --ram-size=2048 \
+    --qemu-options='-accel kvm' \
     "${AUTOPKGTEST_QEMU_IMAGE}" |& tee "${EVIDENCE_DIR}/autopkgtest.log"
 
 STATE="PASS"

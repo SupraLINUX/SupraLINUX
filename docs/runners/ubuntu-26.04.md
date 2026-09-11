@@ -1,19 +1,17 @@
 # Ubuntu 26.04 authoritative runner contract
 
-Status: **design and repository implementation complete; KVM image not yet certified**  
+Status: **repository implementation complete; real KVM certification pending**  
 Last reviewed: **2026-09-11**
 
-## Hosted runner
+## Hosted lane
 
-Repository checks and non-authoritative package-build preflight use explicit GitHub Actions `ubuntu-26.04`. `ubuntu-latest` is not permitted.
+Repository policy and non-authoritative package-build preflight use explicit GitHub-hosted `ubuntu-26.04`; `ubuntu-latest` is forbidden. The expensive hosted `sbuild` proof is gated on the actual event delta, so infrastructure/documentation-only updates run the scope check but skip the package build.
 
-Hosted success is useful preflight evidence but is not release-build certification. Expensive hosted package builds are now gated on the actual event delta; infrastructure/documentation-only updates run the scope check but skip `sbuild`.
+## Authoritative boundary
 
-## Authoritative runner boundary
+The authoritative runner is a disposable Ubuntu 26.04 **KVM VM**. The long-lived libvirt host only supplies infrastructure and is not release-build evidence.
 
-The authoritative runner is a disposable **KVM virtual machine** running Ubuntu 26.04. A long-lived physical host may provide libvirt/KVM capacity, but it is not itself the build runner.
-
-Required labels:
+Required runner labels:
 
 ```text
 self-hosted
@@ -25,79 +23,81 @@ kvm
 ephemeral
 ```
 
-The guest must report Ubuntu 26.04 and KVM virtualization. `/dev/kvm` must be readable/writable by the runner user so `autopkgtest/QEMU` can use nested KVM.
+The guest must report Ubuntu 26.04 under KVM and expose readable/writable `/dev/kvm` to the runner user.
+
+## Nested KVM is a runtime requirement, not a label
+
+Checking that `/dev/kvm` exists or that QEMU was compiled with KVM support is insufficient. `scripts/check-nested-kvm-runtime.sh` actually starts a minimal paused x86_64 QEMU instance with:
+
+```text
+-machine q35 -accel kvm -cpu host
+```
+
+A healthy probe remains running until `timeout(1)` terminates it; any early QEMU failure is a gate failure and its output is preserved as evidence.
+
+`runner-contract.yml` executes this runtime probe. `scripts/run-authoritative-package-proof.sh` executes it again immediately before build/test work, so a runner cannot pass merely because KVM was available when its golden image was created.
+
+## System-test acceleration must not fall back to TCG
+
+Ubuntu 26.04 `autopkgtest-virt-qemu` can run QEMU without hardware acceleration when KVM is unavailable. SupraLINUX explicitly forbids that for authoritative evidence.
+
+The authoritative package proof therefore invokes the QEMU backend with:
+
+```text
+--qemu-options='-accel kvm'
+```
+
+This selects only the KVM accelerator. If nested KVM cannot initialize, the QEMU/autopkgtest gate fails instead of silently degrading to software emulation. Result evidence records `system_test_acceleration: kvm-required`.
 
 ## Golden image contract
 
-The golden runner image must be created from a verified Ubuntu released Resolute cloud image. `scripts/build-authoritative-runner-image.sh` is the supported builder and must record:
+The golden runner image is built from a signed/verified released Ubuntu Resolute cloud image by `scripts/build-authoritative-runner-image.sh`. Required provenance includes the source image SHA-256, exact SupraLINUX source commit, verified Actions runner digest, nested `autopkgtest` image SHA-256, offline sysprep evidence, final qcow2 validation and final golden-image SHA-256.
 
-- source-image signed-checksum provenance;
-- exact SupraLINUX source commit;
-- Actions runner release/digest evidence;
-- nested `autopkgtest` image SHA-256;
-- guest provisioning/seal evidence;
-- offline `virt-sysprep` log;
-- final qcow2 validation;
-- final golden-image SHA-256/provenance.
+The golden image contains runner software but no persistent GitHub credential and no temporary SupraLINUX build-source checkout.
 
-The final image is not replaced implicitly; replacement requires explicit operator opt-in. A successfully built image is still **pending certification** until real JIT/KVM workflows pass.
+## Runtime JIT lifecycle
 
-## Runtime lifecycle
+The host obtains repository-scoped `encoded_jit_config`, injects it into guest tmpfs and launches the runner as a non-root login user. One host-local `flock` serializes authoritative gates on the supported single-host setup.
 
-1. create a writable overlay from the sealed golden image;
-2. boot the Ubuntu 26.04 KVM guest with host CPU virtualization exposed;
-3. request a repository-scoped GitHub JIT configuration;
-4. inject the JIT configuration only into guest tmpfs;
-5. execute one controlled job;
-6. upload workflow evidence and export runner diagnostics;
-7. remove stale labels/runner records if necessary;
-8. destroy the VM and writable state.
+Before triggering, the orchestrator refuses to start if an authoritative workflow is already queued/active. It snapshots prior workflow run IDs for the exact PR head SHA, applies the controlled label only after the JIT runner is online, then binds evidence to exactly one newly-created workflow run ID for that SHA. Ambiguous attribution fails closed.
 
-Pre-merge certification uses controlled PR labels `ci:runner-contract` and `ci:authoritative-package-proof`; fork PRs are refused by both workflow and host orchestration.
-
-## Build isolation inside the VM
-
-The outer KVM VM does not replace package-level build isolation:
+Controlled pre-merge labels:
 
 ```text
-Ubuntu 26.04 KVM runner VM
-└── fresh sbuild/unshare rootfs
-    └── .deb + .changes + .buildinfo
+ci:runner-contract
+ci:authoritative-package-proof
 ```
 
-Artifacts and hashes are captured immediately after `sbuild` succeeds.
+Fork PRs are refused by both workflow conditions and host orchestration.
 
-## System test isolation
+## Package isolation
 
-System/package tests use a second virtualization boundary:
+The authoritative package path is:
 
 ```text
-Ubuntu 26.04 KVM runner VM
-└── autopkgtest
-    └── QEMU/KVM Ubuntu 26.04 test VM
+Ubuntu 26.04 KVM JIT runner VM
+├── fresh sbuild/unshare build rootfs
+│   └── .deb + .changes + .buildinfo + hashes
+└── autopkgtest/QEMU with -accel kvm
+    └── nested Ubuntu 26.04 KVM test VM
 ```
 
-SupraLINUX reserves:
+Build artifacts are captured immediately after successful `sbuild`, before later test gates.
 
-```text
-/var/lib/supralinux/autopkgtest/resolute-amd64.img
-```
+## Continuous repository validation
 
-No QEMU-image hash is source-controlled before the image actually exists.
+Repository Policy runs `bash -n scripts/*.sh` and the machine-readable policy validator on GitHub-hosted Ubuntu 26.04. This validates syntax and required architectural invariants before host-side scripts reach real infrastructure.
 
 ## Certification requirement
 
-Certification must capture at least:
+A runner image/campaign becomes authoritative only after real evidence exists for:
 
-- host preflight state;
-- golden runner image SHA-256/provenance;
-- Ubuntu release/kernel and KVM boundary;
-- `/dev/kvm` and nested virtualization state;
-- installed tool versions;
-- nested `autopkgtest` image SHA-256;
-- successful `runner-contract.yml`;
-- successful authoritative `sbuild` proof;
-- successful `autopkgtest/QEMU` proof;
-- workflow IDs, logs and artifacts.
+1. host KVM/nested preflight;
+2. verified Ubuntu source image and golden-image provenance;
+3. real nested-KVM runtime probe PASS;
+4. `runner-contract.yml` PASS on a disposable JIT guest;
+5. authoritative `sbuild` PASS with retained `.deb/.changes/.buildinfo`;
+6. `autopkgtest/QEMU` PASS with KVM forced;
+7. bound workflow IDs, logs, hashes and artifacts.
 
-Until the real KVM host executes both authoritative workflows successfully, authoritative status remains **pending**, not `PASS`.
+Until those real KVM executions occur, authoritative status remains **pending**, not PASS.

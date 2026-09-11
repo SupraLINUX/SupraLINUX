@@ -33,7 +33,7 @@ jobs:
           test -c /dev/kvm
           test -r /dev/kvm
           test -w /dev/kvm
-          qemu-system-x86_64 -accel help 2>&1 | grep -q kvm
+          qemu-system-x86_64 -accel help 2>&1 | grep -q '^kvm$'
           echo "${PRETTY_NAME}"
           systemd-detect-virt --vm
           ls -l /dev/kvm
@@ -55,6 +55,7 @@ jobs:
             git
             jq
             python3
+            timeout
           )
 
           failed=0
@@ -71,6 +72,10 @@ jobs:
             failed=1
           fi
           exit "${failed}"
+
+      - name: Prove nested KVM runtime
+        shell: bash
+        run: scripts/check-nested-kvm-runtime.sh evidence/runner-contract/nested-kvm-runtime.txt
 
       - name: Capture runner contract evidence
         shell: bash

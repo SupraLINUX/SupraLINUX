@@ -9,7 +9,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "manifests" / "desktop-stack.json"
 WORKFLOWS = ROOT / ".github" / "workflows"
-
 errors: list[str] = []
 
 
@@ -79,25 +78,22 @@ if WORKFLOWS.exists():
 
 repository_policy = workflow_texts.get("repository-policy.yml", "")
 runner_contract = workflow_texts.get("runner-contract.yml", "")
-authoritative_proof = workflow_texts.get("authoritative-package-proof.yml", "")
+authoritative_proof_workflow = workflow_texts.get("authoritative-package-proof.yml", "")
 hosted_proof = workflow_texts.get("package-build-proof.yml", "")
-
 require("bash -n scripts/*.sh" in repository_policy, "repository policy must syntax-check all shell scripts")
 
 for filename, text, gate_label in (
     ("runner-contract.yml", runner_contract, "ci:runner-contract"),
-    ("authoritative-package-proof.yml", authoritative_proof, "ci:authoritative-package-proof"),
+    ("authoritative-package-proof.yml", authoritative_proof_workflow, "ci:authoritative-package-proof"),
 ):
     require(bool(text), f"missing authoritative workflow: .github/workflows/{filename}")
     require("types: [labeled]" in text, f"{filename} must use an explicit PR labeled trigger for pre-merge certification")
     require(gate_label in text, f"{filename} must require controlled label {gate_label}")
-    require(
-        "github.event.pull_request.head.repo.full_name == github.repository" in text,
-        f"{filename} must refuse fork PRs on self-hosted runners",
-    )
+    require("github.event.pull_request.head.repo.full_name == github.repository" in text, f"{filename} must refuse fork PRs on self-hosted runners")
     for label in ("self-hosted", "linux", "x64", "supralinux", "ubuntu-26.04", "kvm", "ephemeral"):
         require(label in text, f"{filename} must target authoritative runner label {label}")
 
+require("scripts/check-nested-kvm-runtime.sh" in runner_contract, "runner contract must execute a real nested-KVM runtime probe")
 require("types: [opened, synchronize, reopened]" in hosted_proof, "hosted package preflight must declare explicit PR lifecycle events")
 require("github.event.before" in hosted_proof, "hosted package preflight must use synchronize before SHA")
 require("github.event.after" in hosted_proof, "hosted package preflight must use synchronize after SHA")
@@ -113,6 +109,7 @@ required_files = [
     ROOT / "docs" / "runners" / "provisioning.md",
     ROOT / "docs" / "runners" / "host-kvm.md",
     ROOT / "scripts" / "check-kvm-host.sh",
+    ROOT / "scripts" / "check-nested-kvm-runtime.sh",
     ROOT / "scripts" / "provision-kvm-host.sh",
     ROOT / "scripts" / "package-preflight-needed.sh",
     ROOT / "scripts" / "fetch-ubuntu-26.04-cloud-image.sh",
@@ -128,11 +125,7 @@ for path in required_files:
     require(path.exists(), f"required architecture/runner file missing: {path.relative_to(ROOT)}")
 
 package_delta = read_required(ROOT / "scripts" / "package-preflight-needed.sh")
-for tracked in (
-    "packages/supralinux-build-test/*",
-    "scripts/run-package-build-proof.sh",
-    ".github/workflows/package-build-proof.yml",
-):
+for tracked in ("packages/supralinux-build-test/*", "scripts/run-package-build-proof.sh", ".github/workflows/package-build-proof.yml"):
     require(tracked in package_delta, f"package preflight delta detector must track {tracked}")
 
 host_provisioner = read_required(ROOT / "scripts" / "provision-kvm-host.sh")
@@ -148,13 +141,16 @@ require("qemu:///system" in host_checker, "host preflight must validate system l
 for command in ("virt-sysprep", "virt-cat", "virt-copy-out", "flock"):
     require(command in host_checker, f"host preflight must validate {command}")
 
+nested_probe = read_required(ROOT / "scripts" / "check-nested-kvm-runtime.sh")
+require("-accel kvm" in nested_probe, "nested KVM runtime probe must force the KVM accelerator")
+require("-cpu host" in nested_probe, "nested KVM runtime probe must exercise a host CPU under KVM")
+require("probe_exit_code" in nested_probe and "RC}" in nested_probe, "nested KVM runtime probe must preserve its QEMU result")
+require("nested_kvm_runtime=PASS" in nested_probe, "nested KVM runtime probe must record explicit PASS evidence")
+
 cloud_fetcher = read_required(ROOT / "scripts" / "fetch-ubuntu-26.04-cloud-image.sh")
 require("SHA256SUMS.gpg" in cloud_fetcher, "Ubuntu cloud image fetcher must verify signed checksum metadata")
 require("gpgv" in cloud_fetcher, "Ubuntu cloud image fetcher must perform signature verification")
-require(
-    "/var/lib/supralinux/images/source/resolute" in cloud_fetcher,
-    "Ubuntu source image must default to stable host infrastructure storage",
-)
+require("/var/lib/supralinux/images/source/resolute" in cloud_fetcher, "Ubuntu source image must default to stable host infrastructure storage")
 require("${PWD}/.work/cloud-images" not in cloud_fetcher, "Ubuntu source image must not default to the developer checkout")
 
 golden_builder = read_required(ROOT / "scripts" / "build-authoritative-runner-image.sh")
@@ -189,10 +185,14 @@ require("head_sha=${PR_HEAD_SHA}" in host_orchestrator, "host orchestrator must 
 require("actions/runs/${WORKFLOW_RUN_ID}" in host_orchestrator, "host orchestrator must bind to one exact workflow run ID")
 require("status != \"completed\"" in host_orchestrator, "host orchestrator must refuse pre-existing active authoritative workflows")
 require("guest-exec-status" in host_orchestrator, "host orchestrator must detect premature guest runner exit")
-require("GOLDEN_PROVENANCE" in host_orchestrator, "host orchestrator must require golden-image provenance")
-require("PROVENANCE_SHA256" in host_orchestrator, "host orchestrator must verify golden-image SHA-256 against provenance")
+require("GOLDEN_PROVENANCE" in host_orchestrator and "PROVENANCE_SHA256" in host_orchestrator, "host orchestrator must verify golden-image provenance")
 require("source_checkout_removed=yes" in host_orchestrator, "host orchestrator must require source-clean golden provenance")
 require("su --login --shell /bin/bash --command" in host_orchestrator, "guest Actions runner must start with an explicit non-root login shell")
+
+authoritative_proof = read_required(ROOT / "scripts" / "run-authoritative-package-proof.sh")
+require("scripts/check-nested-kvm-runtime.sh" in authoritative_proof, "authoritative package proof must run the nested-KVM runtime probe")
+require("--qemu-options='-accel kvm'" in authoritative_proof, "authoritative autopkgtest must force KVM and forbid silent TCG fallback")
+require('"system_test_acceleration": "kvm-required"' in authoritative_proof, "authoritative result evidence must record KVM-required acceleration")
 
 if errors:
     for error in errors:
@@ -201,26 +201,8 @@ if errors:
 
 print("Repository policy validation: PASS")
 print(f"Platform: {platform['version']} ({platform['series']})")
-print(
-    "Desktop: Plasma {plasma}, Frameworks {frameworks}, Gear {gear}".format(
-        plasma=desktop["plasma"]["version"],
-        frameworks=desktop["frameworks"]["version"],
-        gear=desktop["gear"]["version"],
-    )
-)
-print(
-    f"Qt: required {qt['required_series']}, provider={provider['name']}, "
-    f"candidate={provider.get('candidate_version', 'n/a')}, certification={cert['status']}"
-)
-print(
-    "CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; "
-    "JIT=required; exact-run-binding=required; host-preflight=required; golden-builder=required; "
-    "stable-source-storage=required; shell-syntax=required; hosted-delta-gate=required".format(
-        hosted=hosted["role"],
-        platform=authoritative["platform"],
-        virt=authoritative["virtualization"],
-        lifecycle=authoritative["lifecycle"],
-        build=authoritative["build_isolation"],
-        test=authoritative["system_test"],
-    )
-)
+print("Desktop: Plasma {plasma}, Frameworks {frameworks}, Gear {gear}".format(
+    plasma=desktop["plasma"]["version"], frameworks=desktop["frameworks"]["version"], gear=desktop["gear"]["version"]))
+print(f"Qt: required {qt['required_series']}, provider={provider['name']}, candidate={provider.get('candidate_version', 'n/a')}, certification={cert['status']}")
+print("CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; KVM-runtime=required; JIT=required; exact-run-binding=required; shell-syntax=required".format(
+    hosted=hosted["role"], platform=authoritative["platform"], virt=authoritative["virtualization"], lifecycle=authoritative["lifecycle"], build=authoritative["build_isolation"], test=authoritative["system_test"]))
