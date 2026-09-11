@@ -45,12 +45,17 @@
   "ci": {
     "hosted_runner": {
       "label": "ubuntu-26.04",
+      "role": "non-authoritative-preflight",
       "status": "public-preview",
       "evidence": "https://github.com/actions/runner-images/issues/14226"
     },
     "authoritative_runner": {
       "platform": "ubuntu-26.04",
+      "virtualization": "kvm",
       "lifecycle": "ephemeral-vm",
+      "build_isolation": "sbuild-unshare",
+      "system_test": "autopkgtest-qemu",
+      "nested_kvm_required": true,
       "status": "pending-certification"
     }
   }

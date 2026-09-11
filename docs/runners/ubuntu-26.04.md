@@ -1,11 +1,11 @@
-# Ubuntu 26.04 runner contract
+# Ubuntu 26.04 authoritative runner contract
 
-Status: **design contract; self-hosted image not yet certified**  
+Status: **design implemented in CI; KVM image not yet certified**  
 Last reviewed: **2026-09-11**
 
 ## Hosted runner
 
-Repository checks use the explicit GitHub Actions label:
+Repository checks and the non-authoritative package-build preflight use the explicit GitHub Actions label:
 
 ```text
 ubuntu-26.04
@@ -13,13 +13,13 @@ ubuntu-26.04
 
 `ubuntu-latest` is not permitted in SupraLINUX workflows.
 
-Current external status: GitHub lists Ubuntu 26.04 x64 and arm64 hosted images, but marks them as public preview as of this review date.
+GitHub documents Ubuntu 26.04 hosted runners as public preview as of this review date. They are useful for early failure discovery but are not the release authority.
 
-## Self-hosted authoritative runner
+## Authoritative runner boundary
 
-The authoritative build runner is a disposable Ubuntu 26.04 VM, not a long-lived workstation and not a stateful build host.
+The authoritative runner is a disposable **KVM virtual machine** running Ubuntu 26.04. A long-lived physical host or workstation may provide libvirt/KVM capacity, but it is not itself the build runner.
 
-Required conceptual labels:
+Required conceptual GitHub labels:
 
 ```text
 self-hosted
@@ -27,39 +27,96 @@ linux
 x64
 supralinux
 ubuntu-26.04
+kvm
 ephemeral
 ```
 
-Expected lifecycle:
+The guest must report:
 
-1. boot a clean VM from the approved runner image;
-2. register the GitHub Actions runner using ephemeral registration;
-3. execute exactly one job;
-4. export required build evidence;
-5. unregister automatically;
-6. destroy the VM.
+```text
+ID=ubuntu
+VERSION_ID=26.04
+systemd-detect-virt --vm -> kvm
+```
+
+For the authoritative system-test gate, `/dev/kvm` must be present and readable/writable by the runner user. This is the explicit nested-KVM contract for running `autopkgtest/QEMU` inside the runner VM.
+
+## Lifecycle
+
+1. Boot a clean VM from an approved Ubuntu 26.04 runner image.
+2. Register the GitHub Actions runner with `--ephemeral`.
+3. Execute exactly one job.
+4. Upload build/test evidence and preserve runner diagnostics externally.
+5. Allow the ephemeral runner registration to be removed after the job.
+6. Destroy the VM and all writable state.
+
+GitHub recommends ephemeral self-hosted runners for autoscaling because an ephemeral runner is assigned only one job. The image and lifecycle automation remain SupraLINUX responsibilities.
+
+## Build isolation inside the VM
+
+The outer KVM VM is not a replacement for package-level build isolation.
+
+The package build still uses:
+
+```text
+Ubuntu 26.04 KVM runner VM
+└── fresh sbuild/unshare build rootfs
+    └── .deb + .changes + .buildinfo
+```
+
+The build artifacts and their hashes are captured immediately after `sbuild` succeeds. A later test failure must not erase evidence that the build gate already passed.
+
+## System test isolation
+
+System/package tests use a second VM boundary:
+
+```text
+Ubuntu 26.04 KVM runner VM
+└── autopkgtest
+    └── QEMU/KVM Ubuntu 26.04 test VM
+```
+
+Ubuntu 26.04 ships `autopkgtest 5.55`; its `autopkgtest-virt-qemu` backend uses a temporary overlay and does not modify the supplied base image. Ubuntu provides `autopkgtest-buildvm-ubuntu-cloud` to prepare an Ubuntu QEMU test image.
+
+SupraLINUX reserves the following path inside the runner image:
+
+```text
+/var/lib/supralinux/autopkgtest/resolute-amd64.img
+```
+
+That image is not considered certified until a real SHA-256 and build provenance have been recorded. No hash is predeclared in the repository.
 
 ## Expected toolchain
 
-The runner image is expected to provide at least:
+The approved runner image must provide at least:
 
 - `sbuild`;
-- `schroot` or the selected supported sbuild backend;
-- `debootstrap`;
-- `devscripts`;
-- `dpkg-dev`;
-- `debhelper`;
-- `build-essential`;
+- `mmdebstrap`;
+- `uidmap`;
+- `devscripts` and `dpkg-dev`;
+- `debhelper` and `build-essential`;
 - `autopkgtest`;
-- QEMU system tooling for VM tests;
-- `aptly` for repository work where the runner role requires it;
+- `autopkgtest-buildvm-ubuntu-cloud`;
+- `qemu-system-x86_64` and `qemu-img`;
+- `aptly` for repository roles that require it;
 - `gnupg` for non-secret verification operations;
 - Git, jq and Python 3.
 
-Exact package versions belong in the runner-image manifest once the image build exists.
+Exact package versions belong in certification evidence from the actual runner image.
 
 ## Certification requirement
 
-A VM image is not a SupraLINUX authoritative runner merely because `/etc/os-release` says 26.04. Certification must capture the image revision, installed tool versions, virtualization capabilities and a successful clean sbuild/autopkgtest smoke campaign.
+A VM is not authoritative merely because `/etc/os-release` says 26.04. Certification must capture at least:
 
-The manual `runner-contract` workflow exists to test the contract once such a runner is connected. Until then, the runner state is **pending**, not **passing**.
+- runner VM image revision/build identifier;
+- Ubuntu release and kernel;
+- `systemd-detect-virt` result;
+- `/dev/kvm` access;
+- relevant KVM module/nested state;
+- installed tool versions;
+- SHA-256 of the prepared `autopkgtest` QEMU base image;
+- successful clean `sbuild` proof;
+- successful `autopkgtest/QEMU` proof;
+- workflow run ID and preserved logs/artifacts.
+
+The manual `runner-contract` workflow checks the static contract. The separate authoritative package-proof workflow checks the complete build/test path. Until both have real passing evidence, authoritative status is **pending**, not `PASS`.

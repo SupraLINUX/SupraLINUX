@@ -10,17 +10,19 @@ The phases are gates, not calendar promises. A later phase may be prepared in pa
 - architecture and authority/provider ADR;
 - machine-readable desktop-stack manifest;
 - explicit Ubuntu 26.04 hosted policy CI;
-- self-hosted runner contract;
+- authoritative disposable Ubuntu 26.04 KVM runner contract;
 - documentation status discipline.
 
 ## Phase 1 — package-build proof
 
 - trivial SupraLINUX Debian source package;
-- clean Ubuntu 26.04 sbuild;
-- preserve `.deb`, `.changes`, `.buildinfo` and logs;
-- autopkgtest smoke test;
-- QEMU-based system test path;
-- classify build outcome as PASS/FAIL/BLOCKED.
+- GitHub-hosted non-authoritative clean-build preflight;
+- disposable Ubuntu 26.04 KVM runner for authoritative execution;
+- clean `sbuild/unshare` package build inside that VM;
+- preserve `.deb`, `.changes`, `.buildinfo`, hashes and logs immediately after build;
+- `autopkgtest/QEMU` smoke test in a nested Ubuntu 26.04 test VM;
+- certify nested KVM and the QEMU base-image hash;
+- classify each attempted/not-attempted gate using PASS/FAIL/BLOCKED semantics.
 
 ## Phase 2 — repository and publisher
 

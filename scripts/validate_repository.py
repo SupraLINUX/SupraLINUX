@@ -56,10 +56,15 @@ if cert.get("status") == "certified":
 ci = data.get("ci", {})
 hosted = ci.get("hosted_runner", {})
 require(hosted.get("label") == "ubuntu-26.04", "hosted runner must be explicitly ubuntu-26.04")
+require(hosted.get("role") == "non-authoritative-preflight", "hosted runner must be non-authoritative preflight")
 
 authoritative = ci.get("authoritative_runner", {})
 require(authoritative.get("platform") == "ubuntu-26.04", "authoritative runner platform must be ubuntu-26.04")
+require(authoritative.get("virtualization") == "kvm", "authoritative runner virtualization must be kvm")
 require(authoritative.get("lifecycle") == "ephemeral-vm", "authoritative runner must use ephemeral VMs")
+require(authoritative.get("build_isolation") == "sbuild-unshare", "authoritative package build must use sbuild-unshare")
+require(authoritative.get("system_test") == "autopkgtest-qemu", "authoritative package system test must use autopkgtest-qemu")
+require(authoritative.get("nested_kvm_required") is True, "authoritative package testing requires nested KVM")
 
 if WORKFLOWS.exists():
     for path in sorted(WORKFLOWS.glob("*.y*ml")):
@@ -71,6 +76,7 @@ required_docs = [
     ROOT / "docs" / "architecture" / "build-ci.md",
     ROOT / "docs" / "status" / "2026-09-11.md",
     ROOT / "docs" / "decisions" / "ADR-0001-authority-provider.md",
+    ROOT / "docs" / "runners" / "ubuntu-26.04.md",
 ]
 for path in required_docs:
     require(path.exists(), f"required documentation missing: {path.relative_to(ROOT)}")
@@ -92,4 +98,14 @@ print(
 print(
     f"Qt: required {qt['required_series']}, provider={provider['name']}, "
     f"candidate={provider.get('candidate_version', 'n/a')}, certification={cert['status']}"
+)
+print(
+    "CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}".format(
+        hosted=hosted["role"],
+        platform=authoritative["platform"],
+        virt=authoritative["virtualization"],
+        lifecycle=authoritative["lifecycle"],
+        build=authoritative["build_isolation"],
+        test=authoritative["system_test"],
+    )
 )

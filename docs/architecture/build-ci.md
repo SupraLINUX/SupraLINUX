@@ -9,9 +9,9 @@ SupraLINUX uses a DAG-guided hybrid build strategy. The purpose is to discover i
 
 Each build node has exactly one of these terminal states:
 
-- `PASS`: the node was actually built successfully and its artifacts may feed dependents;
-- `FAIL`: the node was actually attempted and failed for its own build/test reason;
-- `BLOCKED`: the node was not attempted because at least one required dependency is `FAIL` or unavailable.
+- `PASS`: the node was actually built/tested successfully for the gate being evaluated and its artifacts may feed dependents;
+- `FAIL`: the node or gate was actually attempted and failed for its own build/test reason;
+- `BLOCKED`: the node or gate was not attempted because at least one required dependency or execution capability is unavailable.
 
 `BLOCKED` must never be counted as `FAIL`.
 
@@ -24,31 +24,52 @@ For each campaign:
 3. identify topological levels;
 4. attempt every buildable node in a level, parallelizing independent nodes;
 5. continue independent branches after failures;
-6. expose only `PASS` artifacts to dependent levels;
+6. expose only artifacts that passed the required build gate to dependent levels;
 7. mark impossible downstream nodes `BLOCKED`;
-8. preserve logs and metadata for every attempted node;
+8. preserve logs and metadata for every attempted node/gate;
 9. fix root causes incrementally;
 10. rerun the complete campaign before promotion.
 
 ## Runner classes
 
-### Hosted policy/proof lane
+### Hosted preflight lane
 
-GitHub-hosted `ubuntu-26.04` is suitable for repository validation, metadata checks and non-authoritative package-pipeline proofs. The label is explicit; `ubuntu-latest` is forbidden because it lets GitHub change the platform underneath the project.
+GitHub-hosted `ubuntu-26.04` is suitable for repository validation, metadata checks and non-authoritative package-build preflight. The label is explicit; `ubuntu-latest` is forbidden because it lets GitHub change the platform underneath the project.
 
-As of 2026-09-11 GitHub documents Ubuntu 26.04 hosted runners as public preview. Therefore hosted-runner success is useful CI evidence but is not, by itself, release-build certification.
+As of 2026-09-11 GitHub documents Ubuntu 26.04 hosted runners as public preview. Hosted success is useful CI evidence but is not release-build certification.
 
-The package proof uses `sbuild`'s `unshare` backend with a freshly generated Ubuntu 26.04 `buildd` rootfs. This avoids dependence on persistent `schroot` registrations or group/session state. `autopkgtest` uses its `unshare` virtualization backend for the hosted package smoke test. The isolation backend is an implementation detail of the build environment and does not change which project layer is authoritative.
+The hosted package-build preflight creates a fresh Ubuntu 26.04 `buildd` rootfs with `mmdebstrap`, builds the proof package through `sbuild --chroot-mode=unshare`, and preserves `.deb`, `.changes`, `.buildinfo`, logs and hashes. It intentionally does **not** claim the authoritative system-test gate.
 
-### Authoritative build lane
+A real hosted attempt on 2026-09-11 demonstrated that `sbuild/unshare` can complete but `autopkgtest/unshare` can fail while constructing its testbed because of UID/GID ownership mapping. That backend is therefore not part of the authoritative testing contract.
 
-Release-relevant package builds are designed for disposable self-hosted VMs with labels similar to:
+### Authoritative KVM build/test lane
 
-`self-hosted`, `linux`, `x64`, `supralinux`, `ubuntu-26.04`, `ephemeral`
+Release-relevant package evidence is produced inside disposable self-hosted **KVM virtual machines** running Ubuntu 26.04. The KVM guest, not the long-lived physical/virtualization host, is the GitHub Actions runner.
 
-The VM lifecycle is one job per disposable instance. Build state is not reused between jobs. The runner registration must be ephemeral and the VM must be destroyed after the job.
+Required conceptual labels:
 
-The package build inside each VM uses a clean `sbuild` environment. `unshare` is preferred when supported by the certified runner image because it is rootless and does not depend on a persistent schroot registry; changing this backend later requires evidence and a documentation update. Containers may be used for auxiliary services, but they must not silently replace the authoritative VM boundary when doing so changes package-build semantics.
+`self-hosted`, `linux`, `x64`, `supralinux`, `ubuntu-26.04`, `kvm`, `ephemeral`
+
+The VM lifecycle is one job per disposable instance:
+
+1. boot a clean VM from the approved Ubuntu 26.04 runner image;
+2. register the GitHub Actions runner with ephemeral registration;
+3. execute exactly one job;
+4. export build/test evidence and runner logs;
+5. allow GitHub to de-register the ephemeral runner;
+6. destroy the VM and its writable disk state.
+
+Inside the authoritative runner VM:
+
+- package compilation uses a fresh `sbuild` environment;
+- `sbuild` uses the `unshare` backend while that backend remains certified for the runner image;
+- `.deb`, `.changes`, `.buildinfo` and hashes are captured immediately after a successful build, before later gates run;
+- package/system testing uses `autopkgtest` with its QEMU backend and a prepared Ubuntu 26.04 image;
+- nested KVM is required for the authoritative QEMU test gate so that system tests run with hardware virtualization rather than silently falling back to software emulation.
+
+This gives separate isolation boundaries for the runner VM, the package build environment and the package runtime test VM.
+
+Containers may be used for auxiliary services, but they must not replace either the authoritative KVM runner boundary or the QEMU system-test boundary when doing so changes semantics.
 
 See `docs/runners/ubuntu-26.04.md`.
 
@@ -67,6 +88,8 @@ Important builds must retain, where applicable:
 - `.changes`;
 - `.buildinfo`;
 - package manifests;
+- runner VM image revision and certification evidence;
+- SHA-256 of the prepared `autopkgtest` QEMU base image used by the run;
 - CI run identifiers and result state.
 
 Hashes and test results are evidence, not placeholders. They must never be invented or copied from unrelated builds.
@@ -75,7 +98,7 @@ Hashes and test results are evidence, not placeholders. They must never be inven
 
 The intended package flow is:
 
-`upstream stable -> SupraLINUX packaging -> clean build -> tests -> incoming/staging -> candidate -> stable`
+`upstream stable -> SupraLINUX packaging -> authoritative clean build -> authoritative tests -> incoming/staging -> candidate -> stable`
 
 Repository publication and signing are separate from compilation. Builders should not require the stable repository private signing key. Promotion to stable is a gated publisher operation after required evidence passes.
 
@@ -85,13 +108,15 @@ The initial gates are:
 
 - repository/manifest validation;
 - source integrity;
-- clean package build;
+- hosted clean-build preflight;
+- authoritative Ubuntu 26.04 KVM runner certification;
+- authoritative clean package build under `sbuild`;
 - package metadata validation;
-- package-level tests;
+- `autopkgtest/QEMU` system/package tests;
 - dependency DAG consistency;
 - install/upgrade tests;
 - KDE session/runtime smoke tests;
 - Ubuntu application compatibility tests for replaced shared libraries;
 - repository publication verification.
 
-Additional gates can be added, but existing gates must not be removed silently; the architecture documentation and manifest policy must change with the implementation.
+Additional gates can be added, but existing gates must not be removed silently; architecture documentation and machine-readable policy must change with the implementation.
