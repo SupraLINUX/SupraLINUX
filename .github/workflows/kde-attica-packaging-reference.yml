@@ -37,7 +37,7 @@ jobs:
               before="${{ github.event.pull_request.base.sha }}"
               after="${{ github.event.pull_request.head.sha }}"
             fi
-            if scripts/kde-attica-packaging-reference-needed.sh "${before}" "${after}"; then
+            if bash scripts/kde-attica-packaging-reference-needed.sh "${before}" "${after}"; then
               run=true
             else
               rc=$?
