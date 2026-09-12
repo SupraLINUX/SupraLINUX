@@ -1,29 +1,29 @@
 # KDE Frameworks 6.30 — Tier 1 package Batch 2
 
-Status: **prepared; no package result claimed yet**
+Status: **first real attempt complete: 0 PASS, 3 FAIL; revision 2 remediation prepared**
 
 Batch 2 contains three independent Tier 1 nodes: **KTextTemplate**, **KArchive** and **KHolidays**. KDE upstream 6.30.0 remains the source/build authority. Ubuntu Resolute is the direct compatibility/provider target; Debian sid packaging is a technical reference only.
 
-## Selection rationale
+## First real attempt
 
-The three nodes depend only on the already-PASS ECM root inside KDE Frameworks and therefore can be attempted in parallel. They deliberately exercise different integration profiles without introducing a Framework-to-Framework dependency: KTextTemplate exercises Qt Core plus its upstream optional QML integration, KArchive exercises KDE's default compression backends, and KHolidays exercises required Qt QML plus Flex/Bison parser generation.
+Workflow run `34720201713` attempted all three nodes independently from commit `5edf71b390088a551af81e7fc7e8d87a8378104f`. All three are real own-cause **FAIL**, not BLOCKED.
 
-KItemModels was not selected for this batch because its build/test profile adds QML test modules and Xvfb. It remains pending and can be handled in a later independent batch.
+- **KTextTemplate `6.30.0-0supralinux1`** — job `103624554096`, artifact `10306265683`, SHA-256 `c164640037e564a43479daaa740f55c0f7578d977a7c38bfeb691fbd6b88544a`. Configure/build/install completed and **10/10 autotests PASS**. `dh_makeshlibs` then failed at `dpkg-gensymbols`.
+- **KArchive `6.30.0-0supralinux1`** — job `103624554004`, artifact `10305889632`, SHA-256 `1850a0a6dd7f267870fda83f17f5990f806ec76ae8fe810144557c46af532d01`. `dh_auto_configure` failed before tests because ECM requires **Qt6::LinguistTools** for translation installation.
+- **KHolidays `6.30.0-0supralinux1`** — job `103624554109`, artifact `10305513311`, SHA-256 `522257440d6e04563162178dd3d3ab3ae658dc56c129dcf7f482fef8219bb0dc`. It failed at the same configure-time `Qt6::LinguistTools` requirement before tests.
 
-## Upstream 6.30 requirements retained
+KArchive and KHolidays did not reach autotests, symbols, Lintian or consumer smoke. KTextTemplate did not reach the external Lintian/consumer gates because `sbuild` stopped at symbols.
 
-- KTextTemplate: CMake >= 3.29, ECM 6.30, Qt Core >= 6.9 required; Qt QML is optional upstream and intentionally available in the SupraLINUX build so the established plugin/runtime contract remains present.
-- KArchive: CMake >= 3.29, ECM 6.30, Qt Core >= 6.9 plus the upstream-default ZLIB, BZip2, LibLZMA, OpenSSL and LibZstd backends. No default compression backend is disabled.
-- KHolidays: CMake >= 3.29, ECM 6.30, Qt Core+QML >= 6.9, Flex and Bison >= 3.3.2.
+## Remediation revision 2
 
-`BUILD_TESTING=ON` is explicit for all three. KHolidays retains serialized `dh_auto_test --no-parallel` from the technical packaging reference; this changes scheduling only and does not suppress tests. The Ubuntu/Debian `BUILD_QCH=ON` flag is not copied because Frameworks 6.30 uses explicit ECMGenerateQDoc targets; QDoc remains a later common policy phase.
+All three are prepared as `6.30.0-0supralinux2`, but remain canonical FAIL until a real retry passes.
 
-## ABI and compatibility inputs
+For **KArchive** and **KHolidays**, `qt6-tools-dev (>= 6.5.0~)` is added strictly as the Ubuntu provider of the Qt LinguistTools component required by KDE ECM. KDE/ECM determines the need; Ubuntu merely supplies the compatible Qt implementation.
 
-Binary names, Architecture and Multi-Arch contracts follow the retained Ubuntu Resolute binary-contract snapshot. Symbols use the retained **Debian 6.28** trees because they are closer to KDE 6.30 than Ubuntu 6.24. This does not make Debian an authority: a real 6.30 build must prove the ABI with `dpkg-gensymbols`; any new/missing symbol becomes real evidence to review, not something pre-filled here.
+For **KTextTemplate**, the retained Debian 6.28 symbols file remains the hash-pinned starting point. A reviewed package-local patch is then applied and the resulting symbols file must hash to `e5c0e999ec374102a6b6693fa70f55f4b12bf38eed2013c573e765a521cf0585` before source-package assembly. The review accounts for upstream's scriptable-tags plugin split, treats compiler/Qt template emissions as optional, treats the inline `Exception` vtable as optional, and adds the new binary-compatible `Filter` constructor/context API at minimum upstream version `6.30.0`.
 
-Reference source: workflow run `34708030450`, artifact `10301938362`. ECM predecessor: `extra-cmake-modules 6.30.0-0supralinux3`, artifact `10298635300`.
+The three `-doc` package descriptions are corrected: QDoc is outside the default Frameworks build profile, so these packages are compatibility placeholders rather than claims that QCH documentation was built.
 
 ## State semantics
 
-Preparation does not promote the canonical Tier 1 DAG. Until the hosted clean-package jobs actually run, KTextTemplate, KArchive and KHolidays remain `pending`. A real own-cause failure becomes FAIL; a node is BLOCKED only when an actual failed predecessor prevents its attempt. Independent jobs continue regardless of another Batch 2 result.
+Current canonical Tier 1 state is **4 PASS, 22 pending, 3 FAIL, 0 BLOCKED**. The three FAIL nodes do not block the other Tier 1 nodes because Tier 1 Frameworks depend only on ECM/Qt/third-party inputs, not on one another. Revision 2 may become PASS only after a real clean-package retry.
