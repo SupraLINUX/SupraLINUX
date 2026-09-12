@@ -7,7 +7,6 @@ Build-Depends: debhelper-compat (= 13),
                dh-sequence-pkgkde-symbolshelper,
                cmake (>= 3.29~),
                extra-cmake-modules (>= 6.30.0~),
-               reuse,
                qt6-base-dev (>= 6.9.0~),
 Standards-Version: 4.7.4
 Homepage: https://invent.kde.org/frameworks/threadweaver

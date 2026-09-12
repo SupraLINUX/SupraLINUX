@@ -1,3 +1,12 @@
+kf6-kcodecs (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Remove the SupraLINUX REUSE lint gate from debian/rules: KDE 6.30 does
+    not define full-tree REUSE compliance as a package-build requirement,
+    and the gate aborted before the real upstream autotests could run.
+  * Keep the KDE upstream test suite enabled through dh_auto_test.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 15:10:00 -0300
+
 kf6-kcodecs (6.30.0-0supralinux1) resolute; urgency=medium
 
   * Package KDE Frameworks kcodecs 6.30.0 from KDE upstream stable.

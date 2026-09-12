@@ -33,11 +33,7 @@ values = {
     "SYMBOLS_REFERENCE_SHA256": symbols["sha256"],
     "COPYRIGHT_REFERENCE_SHA256": node["copyright"]["sha256"],
     "RUNTIME_PACKAGE": node["runtime_package"],
-    "DEV_PACKAGE": node["development_package"],
-    "DOC_PACKAGE": node["documentation_package"],
     "SONAME": node["soname"],
-    "CMAKE_PACKAGE": node["cmake_package"],
-    "CMAKE_TARGET": node["cmake_target"],
     "CONSUMER_RUN": node["consumer_run"],
     "ECM_VERSION": shared["extra_cmake_modules"]["version"],
     "ECM_DEB_SHA256": shared["extra_cmake_modules"]["deb_sha256"],
@@ -57,7 +53,6 @@ EVIDENCE_DIR="${ROOT}/evidence/kde-tier1-package-preflight/${NODE}"
 RESULT_JSON="${EVIDENCE_DIR}/result.json"
 CHROOT_TARBALL="${HOME}/.cache/sbuild/resolute-amd64.tar"
 MIRROR="${SBUILD_MIRROR:-http://azure.archive.ubuntu.com/ubuntu}"
-UPSTREAM_TARBALL="${NODE}-${UPSTREAM_VERSION}.tar.xz"
 
 : "${ECM_ARTIFACT_DIR:?ECM_ARTIFACT_DIR must point at the retained ECM PASS artifact}"
 : "${TIER1_REFERENCE_DIR:?TIER1_REFERENCE_DIR must point at retained generic packaging-tree evidence}"
@@ -106,10 +101,11 @@ python3 - "${CAMPAIGN}" "${NODE}" <<'PY'
 import json
 import sys
 from pathlib import Path
+
 data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
 node = data["nodes"][sys.argv[2]]
-if node["state"] != "prepared-pending-build":
-    raise SystemExit(f"Node must be prepared-pending-build before attempt, got {node['state']}")
+if node["state"] not in {"prepared-pending-build", "remediation-pending-build"}:
+    raise SystemExit(f"Node must be prepared/remediation-pending-build before attempt, got {node['state']}")
 if data["authority"] != "kde-upstream" or data["frameworks_series"] != "6.30.0":
     raise SystemExit("Campaign authority/version mismatch")
 PY
@@ -135,6 +131,7 @@ python3 - "${REFERENCE_SNAPSHOT}" "${NODE}" <<'PY'
 import json
 import sys
 from pathlib import Path
+
 data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
 node = sys.argv[2]
 if data.get("authority") is not False or data.get("role") != "packaging-reference-trees-only":
@@ -282,6 +279,7 @@ mapfile -t EXPECTED_PACKAGES < <(python3 - "${CAMPAIGN}" "${NODE}" <<'PY'
 import json
 import sys
 from pathlib import Path
+
 data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
 for item in data["nodes"][sys.argv[2]]["binary_contracts"]:
     print(item["name"])
@@ -362,8 +360,6 @@ if f"{node['documentation_package']} (= {version})" not in recommends:
 PY
 
 RUNTIME_DEB="${DEB_BY_PACKAGE[$RUNTIME_PACKAGE]}"
-DEV_DEB="${DEB_BY_PACKAGE[$DEV_PACKAGE]}"
-DOC_DEB="${DEB_BY_PACKAGE[$DOC_PACKAGE]}"
 
 {
     for deb in "${DEBS[@]}"; do
