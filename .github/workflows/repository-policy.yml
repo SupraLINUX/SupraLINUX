@@ -20,9 +20,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Install Ubuntu ShellCheck
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends shellcheck
+          shellcheck --version
+
       - name: Validate shell syntax
         shell: bash
         run: bash -n scripts/*.sh
+
+      - name: Lint shell scripts
+        shell: bash
+        run: shellcheck -e SC1091 scripts/*.sh
 
       - name: Test KVM-required QEMU wrapper
         shell: bash
@@ -42,7 +54,6 @@ jobs:
             exit 1
           fi
 
-          sudo apt-get update
           candidate="$(apt-cache policy qt6-base-dev | awk '/Candidate:/ {print $2}')"
           if [[ -z "${candidate}" || "${candidate}" == "(none)" ]]; then
             echo "qt6-base-dev has no candidate on this Ubuntu 26.04 runner" >&2
