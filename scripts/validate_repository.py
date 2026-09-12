@@ -89,6 +89,8 @@ require("--no-install-recommends gnupg" in repository_policy, "repository policy
 require("--no-install-recommends shellcheck" in repository_policy, "repository policy must install Ubuntu ShellCheck")
 require("scripts/test-qemu-kvm-required.sh" in repository_policy, "repository policy must functionally test the KVM-only QEMU wrapper")
 require("scripts/test-verify-ubuntu-cloud-image-provenance.sh" in repository_policy, "repository policy must functionally test signed Ubuntu source-image verification")
+require("scripts/test-check-actions-runner-runtime.sh" in repository_policy, "repository policy must functionally test effective Actions runner provenance")
+require("scripts/test-check-golden-image-provenance.sh" in repository_policy, "repository policy must functionally test the golden-image provenance gate")
 
 for filename, text, gate_label in (
     ("runner-contract.yml", runner_contract, "ci:runner-contract"),
@@ -101,6 +103,8 @@ for filename, text, gate_label in (
     for label in ("self-hosted", "linux", "x64", "supralinux", "ubuntu-26.04", "kvm", "ephemeral"):
         require(label in text, f"{filename} missing authoritative runner label {label}")
 
+require("scripts/check-actions-runner-runtime.sh" in runner_contract, "runner contract must verify the effective Actions runner against golden provenance")
+require("actions-runner-runtime.txt" in runner_contract, "runner contract must retain effective Actions runner evidence")
 require("scripts/check-nested-kvm-runtime.sh" in runner_contract, "runner contract must execute the nested-KVM runtime probe")
 require("types: [opened, synchronize, reopened]" in hosted_workflow, "hosted package preflight must use explicit PR lifecycle events")
 require("github.event.before" in hosted_workflow and "github.event.after" in hosted_workflow, "hosted package preflight must use synchronize before/after SHAs")
@@ -117,6 +121,10 @@ required_files = [
     "docs/runners/host-kvm.md",
     "scripts/check-kvm-host.sh",
     "scripts/check-nested-kvm-runtime.sh",
+    "scripts/check-actions-runner-runtime.sh",
+    "scripts/test-check-actions-runner-runtime.sh",
+    "scripts/check-golden-image-provenance.sh",
+    "scripts/test-check-golden-image-provenance.sh",
     "scripts/provision-kvm-host.sh",
     "scripts/package-preflight-needed.sh",
     "scripts/fetch-ubuntu-26.04-cloud-image.sh",
@@ -130,6 +138,7 @@ required_files = [
     "scripts/qemu-kvm-required.sh",
     "scripts/test-qemu-kvm-required.sh",
     "scripts/run-kvm-jit-gate.sh",
+    "scripts/run-kvm-jit-gate-core.sh",
     "scripts/run-authoritative-package-proof.sh",
 ]
 for relative in required_files:
@@ -206,7 +215,56 @@ require(verify_pos >= 0 and inspect_pos >= 0 and verify_pos < inspect_pos, "gold
 installer = read_required("scripts/install-actions-runner.sh")
 require(".digest" in installer and "sha256sum --check --strict" in installer, "Actions runner archive must use GitHub-published SHA-256 verification")
 
-host_orchestrator = read_required("scripts/run-kvm-jit-gate.sh")
+runner_runtime_checker = read_required("scripts/check-actions-runner-runtime.sh")
+for token, message in (
+    ("bin/Runner.Listener", "runner runtime checker must query Runner.Listener directly"),
+    ("--version", "runner runtime checker must query the effective runner version"),
+    ("--commit", "runner runtime checker must retain the effective runner commit"),
+    ("runtime_matches_verified_version=yes", "runner runtime checker must emit explicit version-match evidence"),
+    ("Rebuild the golden runner image", "runner runtime mismatch must fail closed and require golden refresh"),
+):
+    require(token in runner_runtime_checker, message)
+require("run.sh" not in runner_runtime_checker, "runner runtime checker must not derive version/commit through run.sh wrapper output")
+
+runner_runtime_test = read_required("scripts/test-check-actions-runner-runtime.sh")
+for token, message in (
+    ("bin/Runner.Listener", "runner runtime test must emulate the real Runner.Listener interface"),
+    ("FAKE_RUNNER_VERSION=2.338.0", "runner runtime test must reject an auto-updated version mismatch"),
+    ("truncated runtime runner commit", "runner runtime test must reject truncated commit evidence"),
+    ("missing Runner.Listener executable", "runner runtime test must reject a missing listener binary"),
+    ("Actions runner runtime provenance functional test: PASS", "runner runtime test must emit explicit PASS evidence"),
+):
+    require(token in runner_runtime_test, message)
+
+golden_provenance_checker = read_required("scripts/check-golden-image-provenance.sh")
+for token, message in (
+    ("golden_image_sha256", "golden provenance checker must require the published golden hash"),
+    ("source_image_sha256", "golden provenance checker must require the verified source-image hash"),
+    ("source_commit", "golden provenance checker must require the source commit"),
+    ("source_checkout_removed", "golden provenance checker must require source-checkout cleanup"),
+    ("source_image_provenance_verified", "golden provenance checker must require signed source-image re-verification"),
+    ("ACTUAL_GOLDEN_SHA256", "golden provenance checker must hash the current image bytes"),
+    ("golden_provenance_verification=PASS", "golden provenance checker must emit explicit PASS evidence"),
+):
+    require(token in golden_provenance_checker, message)
+
+golden_provenance_test = read_required("scripts/test-check-golden-image-provenance.sh")
+for token, message in (
+    ("modified golden-image bytes", "golden provenance test must reject modified golden bytes"),
+    ("without signed source verification", "golden provenance test must reject missing signed-source proof"),
+    ("without source-checkout cleanup", "golden provenance test must reject missing cleanup proof"),
+    ("duplicate golden-image hashes", "golden provenance test must reject ambiguous golden hashes"),
+    ("truncated source commit", "golden provenance test must reject invalid source commit evidence"),
+    ("Golden image provenance functional test: PASS", "golden provenance test must emit explicit PASS evidence"),
+):
+    require(token in golden_provenance_test, message)
+
+host_entrypoint = read_required("scripts/run-kvm-jit-gate.sh")
+require("scripts/check-golden-image-provenance.sh" in host_entrypoint, "JIT entrypoint must verify golden provenance before orchestration")
+require("scripts/run-kvm-jit-gate-core.sh" in host_entrypoint, "JIT entrypoint must delegate only after provenance verification")
+require('exec "${ROOT}/scripts/run-kvm-jit-gate-core.sh" "$@"' in host_entrypoint, "JIT entrypoint must preserve arguments when delegating to the core")
+
+host_orchestrator = read_required("scripts/run-kvm-jit-gate-core.sh")
 for token, message in (
     ("generate-jitconfig", "host orchestrator must use JIT configuration"),
     ("/run/supralinux-jit-config", "JIT config must live in guest tmpfs"),
@@ -216,13 +274,15 @@ for token, message in (
     ("head_sha=${PR_HEAD_SHA}", "host orchestrator must query the exact PR head SHA"),
     ("actions/runs/${WORKFLOW_RUN_ID}", "host orchestrator must bind an exact workflow run ID"),
     ("guest-exec-status", "host orchestrator must detect premature runner exit"),
-    ("PROVENANCE_SHA256", "host orchestrator must verify the golden image against provenance"),
-    ("source_checkout_removed=yes", "host orchestrator must require a source-clean golden image"),
+    ("PROVENANCE_SHA256", "host orchestrator core must verify the golden image against provenance"),
+    ("source_checkout_removed=yes", "host orchestrator core must require a source-clean golden image"),
     ("su --login --shell /bin/bash --command", "guest runner must start non-root with an explicit login shell"),
 ):
     require(token in host_orchestrator, message)
 
 authoritative_proof = read_required("scripts/run-authoritative-package-proof.sh")
+require("scripts/check-actions-runner-runtime.sh" in authoritative_proof, "authoritative proof must verify effective Actions runner provenance")
+require("actions-runner-runtime.txt" in authoritative_proof, "authoritative proof must retain effective Actions runner evidence")
 require("scripts/check-nested-kvm-runtime.sh" in authoritative_proof, "authoritative proof must run the nested-KVM runtime probe")
 require("--qemu-command=\"${KVM_QEMU_WRAPPER}\"" in authoritative_proof, "authoritative autopkgtest must use the KVM-only QEMU wrapper")
 require("--qemu-architecture=x86_64" in authoritative_proof, "authoritative autopkgtest must pin QEMU architecture")
@@ -258,8 +318,9 @@ print(
 )
 print(
     "CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; "
-    "signed-source-reverification=required; KVM-runtime=required; deterministic-qemu-wrapper=required; "
-    "JIT=required; exact-run-binding=required; shell-syntax=required; shellcheck=required".format(
+    "signed-source-reverification=required; golden-provenance-gate=required; runner-runtime-provenance=required; "
+    "KVM-runtime=required; deterministic-qemu-wrapper=required; JIT=required; exact-run-binding=required; "
+    "shell-syntax=required; shellcheck=required".format(
         hosted=hosted["role"],
         platform=authoritative["platform"],
         virt=authoritative["virtualization"],
