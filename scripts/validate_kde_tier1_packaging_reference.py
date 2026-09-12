@@ -24,7 +24,6 @@ EXPECTED_SNAPSHOT = {
     "debian_reference_upstream_versions": ["6.28.0", "6.28.1"],
     "framework_package_build_certification": "pending",
 }
-
 EXPECTED_BINARY_CONTRACT_SNAPSHOT = {
     "status": "PASS",
     "claim": "binary-packaging-contract-reference-only",
@@ -49,6 +48,11 @@ EXPECTED_BINARY_CONTRACT_SNAPSHOT = {
     ],
     "framework_package_build_certification": "pending",
 }
+ATTICA_PASS = {
+    "workflow_run": 34706416753,
+    "artifact_id": 10301851297,
+    "artifact_sha256": "f1ed135e9d5a25e6773957b2e52817fba03280293249f54257efc4e18304de27",
+}
 
 errors: list[str] = []
 
@@ -72,7 +76,6 @@ def load(path: Path) -> dict:
 
 source = load(SOURCE_MANIFEST)
 reference = load(REFERENCE_MANIFEST)
-
 source_nodes = source.get("nodes", [])
 require(source.get("frameworks_series") == "6.30.0", "Packaging reference must follow Frameworks 6.30.0")
 require(isinstance(source_nodes, list) and len(source_nodes) == 29, "Packaging reference requires the fixed 29-node Tier 1 set")
@@ -84,10 +87,7 @@ require(reference.get("authority") is False, "Packaging references must never be
 require(reference.get("role") == "packaging-reference-only", "Packaging-reference role changed unexpectedly")
 require(reference.get("selected_kde") == "6.30.0", "Packaging reference must follow selected KDE 6.30.0")
 require(reference.get("snapshot") == EXPECTED_SNAPSHOT, "Packaging-reference PASS evidence changed without review")
-require(
-    reference.get("binary_contract_snapshot") == EXPECTED_BINARY_CONTRACT_SNAPSHOT,
-    "Binary-contract PASS evidence changed without review",
-)
+require(reference.get("binary_contract_snapshot") == EXPECTED_BINARY_CONTRACT_SNAPSHOT, "Binary-contract PASS evidence changed without review")
 
 references = reference.get("references", {})
 require(references.get("ubuntu", {}).get("distribution") == "ubuntu", "Ubuntu reference distribution missing")
@@ -110,15 +110,28 @@ nodes = reference.get("nodes", {})
 require(isinstance(nodes, dict), "Packaging-reference nodes must be an object")
 require(set(nodes) == source_ids, "Packaging-reference node set must exactly match Tier 1")
 for node_id in sorted(source_ids):
-    node = nodes.get(node_id, {})
-    require(node == {"source_package": f"kf6-{node_id}"}, f"{node_id}: source package mapping must remain kf6-{node_id}")
+    require(nodes.get(node_id) == {"source_package": f"kf6-{node_id}"}, f"{node_id}: source package mapping must remain kf6-{node_id}")
 
 for node in source_nodes:
     if not isinstance(node, dict):
         continue
     node_id = node.get("id", "<unknown>")
-    require(node.get("packaging") == {"state": "pending"}, f"{node_id}: packaging state must remain pending during reference capture")
-    require(node.get("state") == "pending", f"{node_id}: DAG state must remain pending during reference capture")
+    if node_id == "attica":
+        packaging = node.get("packaging", {})
+        require(packaging.get("state") == "PASS", "attica: actual package-build PASS must be retained independently of reference snapshots")
+        require(packaging.get("package_version") == "6.30.0-0supralinux2", "attica: validated package revision mismatch")
+        require(packaging.get("downstream_eligible") is True, "attica: PASS package must be downstream eligible")
+        pass_items = [x for x in packaging.get("evidence", []) if isinstance(x, dict) and x.get("result") == "PASS"]
+        require(len(pass_items) == 1, "attica: exactly one retained package PASS expected")
+        if pass_items:
+            item = pass_items[0]
+            require(item.get("workflow_run") == ATTICA_PASS["workflow_run"], "attica: package PASS run mismatch")
+            require(item.get("artifact_id") == ATTICA_PASS["artifact_id"], "attica: package PASS artifact mismatch")
+            require(item.get("artifact_sha256") == ATTICA_PASS["artifact_sha256"], "attica: package PASS digest mismatch")
+        require(node.get("state") == "PASS", "attica: node state must be PASS after actual build")
+    else:
+        require(node.get("packaging") == {"state": "pending"}, f"{node_id}: packaging state must remain pending until an actual package attempt")
+        require(node.get("state") == "pending", f"{node_id}: DAG state must remain pending until an actual package attempt")
 
 if errors:
     for error in errors:
@@ -129,4 +142,4 @@ print("KDE Frameworks Tier 1 packaging-reference policy: PASS")
 print("Reference authorities: none; Ubuntu Resolute and Debian sid are technical inputs only")
 print("Source packaging snapshot evidence: PASS, non-authoritative")
 print("Binary-contract snapshot evidence: PASS, non-authoritative")
-print("Framework packaging/DAG states: pending")
+print("Actual package states: attica PASS; 28 Tier 1 nodes pending")

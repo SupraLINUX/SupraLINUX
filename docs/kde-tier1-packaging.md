@@ -1,131 +1,99 @@
-# KDE Frameworks 6.30 Tier 1 — packaging preparation
+# KDE Frameworks 6.30 Tier 1 — packaging preparation and campaign
 
-Status: **provider preflight PASS; source packaging-reference snapshot PASS; binary-contract snapshot PASS; Framework packaging/build campaign pending**  
+Status: **provider/source/binary reference gates PASS; Attica package PASS; 28 Tier 1 packages pending**  
 Last reviewed: **2026-09-12**
 
-## Purpose
+## Authority model
 
-Before writing SupraLINUX `debian/` metadata for the 29 Tier 1 Frameworks, the project captures current Ubuntu Resolute and Debian sid packaging metadata as technical reference evidence.
+KDE Frameworks 6.30.0 source/build metadata defines requirements, defaults and selected KDE version. Ubuntu Resolute is the platform/provider and compatibility target. Debian/Ubuntu packaging is technical reference for Debian contracts only.
 
-This does **not** change project authority:
+Reference metadata never promotes a Framework node. Only an actual package attempt may produce PASS/FAIL; BLOCKED is reserved for nodes that cannot be attempted because a prerequisite is FAIL.
 
-- KDE Frameworks 6.30.0 source/build metadata remains authoritative for KDE requirements, features and defaults;
-- Ubuntu Resolute remains the platform and compatibility reference;
-- Debian and Ubuntu packaging may inform package names, dependency expressions, Multi-Arch layout, symbols/shlibs handling and other Debian-policy details;
-- neither distro is allowed to select the KDE version or silently disable an upstream default feature.
+## Source packaging-reference PASS
 
-## Why two packaging references
+The source snapshot resolved all 58 expected source records (29 Ubuntu Resolute + 29 Debian sid):
 
-Ubuntu Resolute is the direct compatibility target, but its Frameworks packages trail the selected KDE Frameworks 6.30.0 stack. Debian sid is closer to current Frameworks packaging and is therefore useful for newer packaging mechanics. Both remain references only.
+- run `34701132721`;
+- artifact `10299579234`;
+- artifact SHA-256 `a2951c297f125ad81d1487075f0a0a6250114c4e875f3ba3870c3c18c09adaca`;
+- `snapshot.json` SHA-256 `601c668342c206af179e9c564bf87cac6a166f1070fe9af0b640cb57d2151597`;
+- `versions.tsv` SHA-256 `af6fd90121801eaf322442c43b793422494dfd5a109edccf484f5d24b463ea9b`.
 
-The snapshots record what each archive actually publishes at execution time rather than hard-coding an assumed distro version into SupraLINUX architecture.
-
-## Machine-readable mapping
-
-`manifests/kde-frameworks-tier1-packaging-reference.json` maps each of the fixed 29 Tier 1 nodes to its Debian-family source package (`kf6-<framework>`).
-
-The manifest is explicitly:
-
-- `authority: false`;
-- `role: packaging-reference-only`;
-- backed by retained workflow/artifact evidence;
-- prohibited from changing a Framework's build/DAG state.
-
-Repository Policy verifies that this node set exactly matches `manifests/kde-frameworks-tier1.json` and that every Framework remains `packaging.state=pending` and `state=pending` until an actual package build is attempted.
-
-## Source-packaging reference PASS
-
-The retained source snapshot resolved all **58** expected source records: 29 from Ubuntu Resolute and the same 29 from Debian sid.
-
-Evidence:
-
-- workflow run: `34701132721`;
-- PR head: `943a99f7465e311bbc72d63cbe6555a29aa4b5ab`;
-- artifact: `10299579234`;
-- artifact SHA-256: `a2951c297f125ad81d1487075f0a0a6250114c4e875f3ba3870c3c18c09adaca`;
-- normalized `snapshot.json` SHA-256: `601c668342c206af179e9c564bf87cac6a166f1070fe9af0b640cb57d2151597`;
-- `versions.tsv` SHA-256: `af6fd90121801eaf322442c43b793422494dfd5a109edccf484f5d24b463ea9b`;
-- result: `PASS`, `authority=false`, `role=packaging-reference-only`, `framework_package_build_certification=pending`.
-
-Observed reference versions:
-
-- Ubuntu Resolute: 28 nodes at upstream `6.24.0`; `modemmanager-qt` at `6.23.0`;
-- Debian sid: 28 nodes at upstream `6.28.0`; `syntax-highlighting` at `6.28.1`.
-
-These versions are evidence about reference packaging only. SupraLINUX remains selected on KDE Frameworks **6.30.0**.
-
-The binary-package name sets exposed by the source stanzas are identical for **28 of 29** nodes. The exception is `kirigami`, where Debian adds:
-
-- `libkirigamiforms6`;
-- `libkirigamiformsprivatecards6`;
-- `libkirigamiformsprivateflat6`;
-- `libkirigamiformsprivatetemplates6`.
-
-Fourteen source packages also have Build-Depends name differences between the Ubuntu and Debian references. Those differences are reference signals, not architecture decisions.
+Ubuntu references are mostly 6.24.0 (`modemmanager-qt` 6.23.0); Debian references are mostly 6.28.0 (`syntax-highlighting` 6.28.1). SupraLINUX remains on KDE 6.30.0.
 
 ## Binary-contract reference PASS
 
-The source snapshot alone is insufficient to preserve Debian/Ubuntu compatibility because it does not provide the complete installed binary-package contract.
+The isolated binary-contract snapshot captured Architecture, Multi-Arch, dependency/recommendation fields, Provides/Breaks/Replaces/Conflicts and package/source relationships without installing Debian sid binaries:
 
-`.github/workflows/kde-tier1-binary-contract-reference.yml` therefore captures the following fields for every binary package published by the selected source stanzas in both archives:
+- run `34704117024`;
+- artifact `10301282501`;
+- artifact SHA-256 `9441b2f2957b350a46026b0df3bd5eb3578e1578671aab3b7afc7a0929ce1a97`;
+- `binary-contracts.json` SHA-256 `e44507d0dd73db913a91bd4852c452f783618aab0bd6a3790e4c4f4c40707b7b`.
 
-- package version and source-package relationship;
-- `Architecture` and `Multi-Arch`;
-- `Pre-Depends`, `Depends`, `Recommends`, `Suggests` and `Enhances`;
-- `Provides`, `Breaks`, `Replaces` and `Conflicts`;
-- `Section` and `Priority`.
+There are 147 Ubuntu binary records and 151 Debian records. The four Debian-only names are the Kirigami Forms libraries identified by the source snapshot. This is a compatibility review signal, not authority.
 
-The retained PASS is:
+## First package proof — Attica
 
-- workflow run: `34704117024`;
-- PR head: `be7a53c34a7ac27065f848ea3abc14b867673bde`;
-- artifact: `10301282501`;
-- artifact SHA-256: `9441b2f2957b350a46026b0df3bd5eb3578e1578671aab3b7afc7a0929ce1a97`;
-- `binary-query-plan.tsv` SHA-256: `b26c95d381db242c3c7a87228044a37bac8696e211358149a08bb5b55f411bb9`;
-- `binary-contracts.json` SHA-256: `e44507d0dd73db913a91bd4852c452f783618aab0bd6a3790e4c4f4c40707b7b`;
-- `binary-contracts.tsv` SHA-256: `ef29ecdf03a35616a7cd0155a54a0d93828ff2af9bd9a3dcba37c0dbdb8bb1ca`;
-- Ubuntu binary records: `147`;
-- Debian binary records: `151`;
-- common binary package names: `147`;
-- Ubuntu-only names: `0`;
-- Debian-only names: `4` (the four Kirigami Forms libraries listed above);
-- result: `PASS`, `authority=false`, `role=binary-packaging-contract-reference-only`, `framework_package_build_certification=pending`.
+The Attica packaging references agree on the core split:
 
-The metric `packages_with_contract_differences` is not itself an incompatibility count because versioned dependencies and Ubuntu's `universe/` section prefix naturally differ. Compatibility decisions must be made field-by-field.
+- `libkf6attica6`;
+- `libkf6attica-dev`;
+- `libkf6attica-doc`.
 
-The binary/source indexes use independent APT list directories. Debian sid is queried only as archive metadata: no Debian binary package is installed, no Debian repository is added to the host's normal APT configuration, and Debian never becomes a provider for SupraLINUX.
+Exact `debian/` reference trees were retained in run `34704689773`, artifact `10301617541`, SHA-256 `ce9e9949f643736f25ec27d2850cb0654334b64a28dfcd293df78ae1b1f60407`.
 
-## Attica packaging contract selected for first proof
+### Attempt 1 — FAIL
 
-Attica is intentionally the first real Tier 1 packaging proof because KDE 6.30 upstream has a small dependency surface: ECM 6.30, Qt Core/Network >= 6.9, and Qt Test only when tests are enabled. The library keeps `SOVERSION 6` and installs the shared library, development headers, CMake package files, pkg-config metadata, logging categories and QDoc output.
+- package `6.30.0-0supralinux1`;
+- run `34705165994`;
+- artifact `10300903114`;
+- artifact SHA-256 `171cfe8553aba2af8f42a640ee5f50f82988005edbd104b737d93b639dc38300`;
+- stage: `source-package`;
+- cause: source assembly with `dpkg-buildpackage -S` executed KDE build helpers on the host before clean sbuild.
 
-The two retained packaging references agree on the package split:
+### Attempt 2 — PASS
 
-- `libkf6attica6` — runtime library;
-- `libkf6attica-dev` — development files;
-- `libkf6attica-doc` — documentation.
+The source package was instead assembled with `dpkg-source -b`, leaving package Build-Depends to the clean Resolute build root.
 
-The structural binary contracts also agree:
+- package `6.30.0-0supralinux2`;
+- run `34706416753`;
+- artifact `10301851297`;
+- artifact SHA-256 `f1ed135e9d5a25e6773957b2e52817fba03280293249f54257efc4e18304de27`;
+- source SHA-256 verified: `3eec8d2d9c77ad5f7cfd38e44e4b1492c5d0dec695b13f711c09f7d6187c276c`;
+- retained ECM predecessor: `extra-cmake-modules 6.30.0-0supralinux3`;
+- tests: 6/6 PASS;
+- Lintian errors: PASS;
+- SONAME: `libKF6Attica.so.6`;
+- consumer smoke: PASS;
+- downstream eligible: yes.
 
-- `libkf6attica6`: `Multi-Arch: same`;
-- `libkf6attica-dev`: depends on the exact matching runtime package and Qt base development package, and recommends the exact matching doc package;
-- `libkf6attica-doc`: `Architecture: all`, `Multi-Arch: foreign`;
-- no reference Attica package declares `Provides`, `Breaks`, `Replaces` or `Conflicts`.
+The doc compatibility package produces an `empty-binary-package` Lintian warning because Attica 6.30's QDoc targets are explicit rather than part of the normal build. This is retained evidence, not hidden; there are no Lintian errors.
 
-Ubuntu and Debian differ only in archive-specific section naming and version/minimum expressions for this node. SupraLINUX packaging must retain the structural contract while using KDE 6.30 and the selected Resolute Qt provider.
+## Current campaign state
 
-## Evidence semantics
+`manifests/kde-frameworks-tier1.json` records:
 
-Both packaging-reference PASS states are **non-authoritative**. They prove that coherent reference metadata was captured; they do not prove that any SupraLINUX Framework package builds.
+- Attica: PASS, package `6.30.0-0supralinux2`, hosted/non-authoritative, downstream eligible;
+- other 28 Tier 1 nodes: pending.
 
-Therefore reference PASS states do not change any Framework node to PASS, FAIL or BLOCKED.
+`manifests/kde-dag.json` records the same Attica node after the ECM PASS root, including both the historical FAIL and current PASS attempt.
 
-## Next gate
+## Generalized build contract
 
-The next gate is the real Attica 6.30.0 package build. Its `debian/` tree must be justified against exact KDE 6.30.0 outputs, the resolved dependency/provider manifest and the retained compatibility contracts.
+Every remaining Tier 1 package campaign must follow the same evidence model:
 
-The build campaign reuses the established ECM model:
+1. exact KDE 6.30 source + KDE-published SHA-256;
+2. package metadata audited against current upstream requirements and retained compatibility references;
+3. source package assembled without contaminating the host with package Build-Depends;
+4. retained ECM PASS injected as predecessor;
+5. fresh Resolute `sbuild` root;
+6. upstream tests where deterministic, with any exclusions documented narrowly;
+7. Debian binary contract/ABI review appropriate to the node;
+8. fatal Lintian error gate;
+9. consumer smoke where a useful public API can be exercised;
+10. `.deb`, `.changes`, `.buildinfo`, `.dsc`, source/rootfs hashes and logs retained;
+11. node marked PASS/FAIL only after the real attempt.
 
-KDE source + verified SHA-256 → Debian source package → fresh Resolute build root → retained ECM PASS artifact → `sbuild` → `.deb/.changes/.buildinfo` → Lintian/tests/consumer checks → DAG evidence.
+## Next implementation step
 
-Only a real attempted Attica build may change the `attica` DAG state from `pending` to PASS or FAIL.
+Generalize the Attica-specific runner into reusable Tier 1 package infrastructure while keeping package-specific policy (binary split, symbols, tests, patches, consumer smoke) explicit. Then prepare several independent low-dependency nodes and run them in parallel rather than serializing all 28 behind one package.

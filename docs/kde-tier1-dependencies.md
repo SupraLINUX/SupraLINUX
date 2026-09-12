@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 Tier 1 — dependency resolution
 
-Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping resolved; hosted provider preflight PASS; package-build certification pending**  
+Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping resolved; hosted provider preflight PASS; Attica package PASS; 28 package nodes pending**  
 Last reviewed: **2026-09-12**
 
 ## Contract
@@ -68,41 +68,50 @@ Optional Solid iOS-device support (`libimobiledevice` + `libplist`) remains opti
 
 With upstream defaults, `prison` requires QRencode, Dmtx, ZXing, Qt Quick and Qt Multimedia. Dmtx and ZXing become mandatory in this selected profile because `WITH_DMTX` and `WITH_ZXING` default to ON; scanner support also keeps `WITH_MULTIMEDIA=ON`.
 
-Prison 6.30 does not express ZXing compatibility as one plain `>= 1.4.0` CMake request. It probes ZXing config packages in order `3.0`, `2.0`, `1.4.0` and accepts the first one exposing `ZXing::ZXing`. The preflight mirrors that upstream discovery strategy. Resolute provides ZXing `2.3.0-5`, which passes both the Debian-version floor and the actual KDE discovery path.
+Prison 6.30 probes ZXing config packages in order `3.0`, `2.0`, `1.4.0` and accepts the first one exposing `ZXing::ZXing`. The preflight mirrors that strategy. Resolute ZXing `2.3.0-5` passes both the Debian-version floor and KDE's discovery path.
 
 ### Sonnet spell backends
 
 Sonnet discovers Aspell, HSpell, Hunspell and Voikko. Each individual backend is optional, but on the selected non-Android build Sonnet fails if **none** can be built.
 
-The manifest models this as an upstream `required_any_of` group. The provider preflight installs every mapped backend candidate that Resolute exposes while gating only the upstream invariant: at least one candidate must exist.
+The manifest models this as an upstream `required_any_of` group. The provider preflight installs every mapped backend candidate Resolute exposes while gating the upstream invariant: at least one candidate must exist.
 
-HSpell is a packaging exception: Debian/Ubuntu provides its development header/library through `hspell`. SupraLINUX must not invent a `libhspell-dev` package. The hosted PASS verified the real HSpell development surface after installation.
+HSpell is a packaging exception: Debian/Ubuntu provides its development header/library through `hspell`; SupraLINUX must not invent `libhspell-dev`.
 
 ## Hosted provider evidence
 
-The first valid hosted provider PASS is:
+First valid hosted provider PASS:
 
-- workflow run: `34700048774`;
-- PR head: `6ce61bc02c4aba146bcc33b16d17f56fb66f057a`;
-- artifact: `10299608166`;
-- artifact SHA-256: `da6808c31554da4105713e060e328d4130253a100c628fef279d8d0a9cf8ceb3`;
-- Ubuntu runner: 26.04.1 LTS;
-- result: `status=PASS`, `provider_candidate=ubuntu-resolute`, `framework_package_build_certification=pending`.
+- run `34700048774`;
+- PR head `6ce61bc02c4aba146bcc33b16d17f56fb66f057a`;
+- artifact `10299608166`;
+- artifact SHA-256 `da6808c31554da4105713e060e328d4130253a100c628fef279d8d0a9cf8ceb3`;
+- result: `status=PASS`, `provider_candidate=ubuntu-resolute`, provider evidence only.
 
-The retained artifact verifies package candidates and installed versions, sensitive minimum versions, Qt/PySide/Shiboken 6.10.2 coherence, HSpell's real development surface and CMake discovery of the sensitive provider set.
+Historical runs `34699717549` and `34699889060` remain gate-implementation FAIL evidence; neither is a Framework node FAIL because no Framework was attempted.
 
-Historical failures are retained because they describe gate defects, not dependency-provider failures:
+## First package evidence using this dependency model
 
-- run `34699717549`: FAIL caused by the preflight's early-exit `apt-cache policy | awk` pipeline under `pipefail`; artifact `10300026527`, SHA-256 `d43a2926a355957be068f96f16d561e0a8bd8a349e7157b037f752232165c2d6`;
-- run `34699889060`: FAIL caused by a probe stricter than Prison upstream (`find_package(ZXing 1.4.0)` rejected the valid Resolute ZXing 2.3 config); artifact `10299827166`, SHA-256 `046ba9aa335659584a7345942473ebc3d5a5bff5b15c3a246180a0484cd5f0cb`.
+Attica's upstream dependency surface is ECM 6.30 + Qt Core/Network >=6.9, with Qt Test/Widgets used by its enabled tests/examples. Its successful package run demonstrates that the provider/dependency model can feed a real Framework build without allowing Ubuntu's older Frameworks stack to substitute for the selected KDE stack.
 
-Neither historical FAIL is counted as a Framework FAIL because no Framework package was attempted.
+Attica PASS:
+
+- package `6.30.0-0supralinux2`;
+- run `34706416753`;
+- artifact `10301851297`;
+- artifact SHA-256 `f1ed135e9d5a25e6773957b2e52817fba03280293249f54257efc4e18304de27`;
+- tests 6/6 PASS;
+- consumer PASS against Ubuntu Qt 6.10.2;
+- retained ECM predecessor `6.30.0-0supralinux3`;
+- current Attica state PASS/downstream eligible.
+
+This one package PASS does not promote the remaining 28 Frameworks or constitute final Qt-provider certification.
 
 ## Qt component extensions
 
 The existing Qt-provider preflight remains the qualification path for the selected Ubuntu Qt candidate. Tier 1 adds component-level needs on top of that baseline, notably `GuiPrivate`, `WaylandClient`, `ShaderTools`, `Multimedia` for Prison, `UiPlugin` for default Designer plugins and `Charts` as a recommended KUserFeedback feature.
 
-The Tier 1 dependency preflight proves provider availability/coherence only. It does not redefine the Qt version and does not constitute final Qt certification.
+The Tier 1 provider preflight proves provider availability/coherence only. It does not redefine Qt and does not constitute final Qt certification.
 
 ## Evidence state
 
@@ -111,8 +120,10 @@ Current state:
 - upstream dependency resolution: **resolved**;
 - Ubuntu package-name mapping: **resolved**;
 - Ubuntu hosted provider availability/version evidence: **PASS**;
-- Tier 1 packaging: **pending**;
-- Tier 1 build state: **pending**;
+- Attica package/build state: **PASS**, downstream eligible;
+- remaining Tier 1 package/build states: **28 pending**;
+- current Tier 1 FAIL: **0**;
+- current Tier 1 BLOCKED: **0**;
 - final Qt provider certification: **pending**.
 
-No Framework node is promoted by the provider PASS. PASS/FAIL/BLOCKED for Frameworks begins only when the corresponding package build is actually attempted.
+No Framework node is promoted by provider evidence alone. Attica is PASS because its package was actually attempted and passed; unattempted Frameworks remain pending.

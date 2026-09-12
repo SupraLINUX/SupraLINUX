@@ -78,11 +78,27 @@ EXPECTED_PROVIDER_EVIDENCE = {
     },
 }
 
+ATTICA_PASS = {
+    "package_version": "6.30.0-0supralinux2",
+    "workflow_run": 34706416753,
+    "commit": "9945bfa92d776d432c76e17516b0ff9452b6d159",
+    "artifact_id": 10301851297,
+    "artifact_sha256": "f1ed135e9d5a25e6773957b2e52817fba03280293249f54257efc4e18304de27",
+}
+ATTICA_FAIL = {
+    "workflow_run": 34705165994,
+    "commit": "c18c8dcd1934a5bba874e642ba9b14729d2e69df",
+    "artifact_id": 10300903114,
+    "artifact_sha256": "171cfe8553aba2af8f42a640ee5f50f82988005edbd104b737d93b639dc38300",
+}
+
 errors: list[str] = []
+
 
 def require(value: bool, message: str) -> None:
     if not value:
         errors.append(message)
+
 
 def load_json(path: Path) -> dict:
     try:
@@ -93,6 +109,7 @@ def load_json(path: Path) -> dict:
     require(isinstance(data, dict), f"{path.relative_to(ROOT)} must contain a JSON object")
     return data
 
+
 def requirement(deps: dict, key: str) -> dict:
     item = deps.get("requirements", {}).get(key)
     if not isinstance(item, dict):
@@ -100,8 +117,58 @@ def requirement(deps: dict, key: str) -> dict:
         return {}
     return item
 
+
 def require_min(deps: dict, key: str, minimum: str) -> None:
     require(requirement(deps, key).get("minimum") == minimum, f"{key} minimum must remain {minimum}")
+
+
+def validate_attica_state(node: dict) -> None:
+    packaging = node.get("packaging", {})
+    require(packaging.get("state") == "PASS", "attica: packaging state must be PASS")
+    require(packaging.get("package_version") == ATTICA_PASS["package_version"], "attica: validated package revision mismatch")
+    require(packaging.get("claim") == "hosted-clean-package-preflight", "attica: hosted claim mismatch")
+    require(packaging.get("authoritative") is False, "attica: hosted PASS must remain non-authoritative")
+    require(packaging.get("downstream_eligible") is True, "attica: PASS artifact must be downstream eligible")
+    require(node.get("state") == "PASS", "attica: DAG state must be PASS")
+    evidence = packaging.get("evidence", [])
+    require(isinstance(evidence, list) and len(evidence) == 2, "attica: exactly two retained attempts expected")
+    if not isinstance(evidence, list):
+        return
+    by_result = {item.get("result"): item for item in evidence if isinstance(item, dict)}
+    fail = by_result.get("FAIL", {})
+    passed = by_result.get("PASS", {})
+    require(fail.get("workflow_run") == ATTICA_FAIL["workflow_run"], "attica: first FAIL run mismatch")
+    require(fail.get("commit") == ATTICA_FAIL["commit"], "attica: first FAIL commit mismatch")
+    require(fail.get("attempted_package_version") == "6.30.0-0supralinux1", "attica: first attempted revision mismatch")
+    require(fail.get("artifact_id") == ATTICA_FAIL["artifact_id"], "attica: first FAIL artifact mismatch")
+    require(fail.get("artifact_sha256") == ATTICA_FAIL["artifact_sha256"], "attica: first FAIL digest mismatch")
+    require(fail.get("failure_stage") == "source-package", "attica: first FAIL stage mismatch")
+    require("dh-sequence-kf6" in str(fail.get("cause", "")), "attica: first FAIL root cause must be retained")
+    require(passed.get("workflow_run") == ATTICA_PASS["workflow_run"], "attica: PASS run mismatch")
+    require(passed.get("commit") == ATTICA_PASS["commit"], "attica: PASS commit mismatch")
+    require(passed.get("attempted_package_version") == ATTICA_PASS["package_version"], "attica: PASS revision mismatch")
+    require(passed.get("artifact_id") == ATTICA_PASS["artifact_id"], "attica: PASS artifact mismatch")
+    require(passed.get("artifact_sha256") == ATTICA_PASS["artifact_sha256"], "attica: PASS digest mismatch")
+    require(passed.get("stage") == "complete", "attica: PASS stage must be complete")
+    require(passed.get("tests") == "6/6 PASS", "attica: upstream test evidence mismatch")
+    require(passed.get("lintian") == "PASS-errors", "attica: Lintian error gate must pass")
+    require(passed.get("consumer_smoke") == "PASS", "attica: consumer smoke must pass")
+    require(passed.get("abi_soname") == "libKF6Attica.so.6", "attica: SONAME evidence mismatch")
+    require(passed.get("ecm_predecessor") == "6.30.0-0supralinux3", "attica: ECM predecessor evidence mismatch")
+    files = passed.get("files", {})
+    expected_files = {
+        "libkf6attica-dev_deb_sha256":"884e917a29b9618000621029d0dd42c00d4f2e1c925aa03cbf905978b82f0a4b",
+        "libkf6attica-doc_deb_sha256":"30bb8e97a2a087809a1ca6d017f6beb8dcee5933d416d958c555033020d77a83",
+        "libkf6attica6_deb_sha256":"5f52b2ce38c6dc1ad884d16e9d616c781b098a0445a68485d24087c4572d86de",
+        "changes_sha256":"859b76c5cd99a7c949071098e44ae43943e8619a7174c120cfe2a1cf4ebc428e",
+        "buildinfo_sha256":"5e10c1f72d07f6f61beff17e3ed3f0cf0254016d23d8c2bd0d1dec9c983bd5f4",
+        "dsc_sha256":"25a0a2993787329d3ceae7a6485c9134605a3a188aed492bbc073ec5d5edbc72",
+        "debian_tar_sha256":"0fcfabd68df435228170d657754641259c92d75147e00925c5d4766eeb105aa0",
+        "orig_tar_sha256":"3eec8d2d9c77ad5f7cfd38e44e4b1492c5d0dec695b13f711c09f7d6187c276c",
+        "rootfs_sha256":"37cef66de0b97f406f0fb59be51d7cbb221b68936db998b5e5a91804cbe97763",
+    }
+    require(files == expected_files, "attica: retained PASS artifact hashes changed without review")
+
 
 source = load_json(SOURCE_MANIFEST)
 deps = load_json(DEPENDENCY_MANIFEST)
@@ -141,8 +208,11 @@ for node in source_nodes:
     require(node.get("depends_on") == ["extra-cmake-modules"], f"{node_id}: DAG must depend on PASS ECM")
     require(node.get("kde_framework_dependencies") == [], f"{node_id}: Tier 1 cannot depend on another KDE Framework")
     require(node.get("external_dependencies") == {"status":"resolved","manifest":"manifests/kde-frameworks-tier1-dependencies.json","node":node_id}, f"{node_id}: external dependency resolution reference mismatch")
-    require(node.get("packaging") == {"state":"pending"}, f"{node_id}: packaging must remain pending until implemented")
-    require(node.get("state") == "pending", f"{node_id}: node must remain pending until attempted")
+    if node_id == "attica":
+        validate_attica_state(node)
+    else:
+        require(node.get("packaging") == {"state":"pending"}, f"{node_id}: packaging must remain pending until attempted")
+        require(node.get("state") == "pending", f"{node_id}: node must remain pending until attempted")
     require(node.get("source_url") == f"https://download.kde.org/stable/frameworks/6.30/{node_id}-6.30.0.tar.xz", f"{node_id}: source URL must be KDE stable tarball")
     source_hash = str(node.get("source_sha256", ""))
     require(re.fullmatch(r"[0-9a-f]{64}", source_hash) is not None, f"{node_id}: source SHA-256 must be lowercase 64-hex")
@@ -233,5 +303,5 @@ if errors:
 print("KDE Frameworks 6.30 Tier 1 source/dependency validation: PASS")
 print(f"Tier 1 nodes: {len(source_nodes)}")
 print("Upstream external dependency metadata: resolved and blob-pinned")
-print("Ubuntu Resolute provider mapping: hosted preflight PASS; Framework package certification pending")
-print("Packaging/DAG states: pending until actual builds")
+print("Ubuntu Resolute provider mapping: hosted preflight PASS; final certification pending")
+print("Tier 1 package states: attica PASS/downstream-eligible; 28 pending")

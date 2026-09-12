@@ -3,12 +3,7 @@
   "as_of": "2026-09-12",
   "frameworks_series": "6.30.0",
   "authority": "kde-upstream",
-  "states": [
-    "PASS",
-    "FAIL",
-    "BLOCKED",
-    "pending"
-  ],
+  "states": ["PASS", "FAIL", "BLOCKED", "pending"],
   "nodes": {
     "extra-cmake-modules": {
       "tier": "build-system-root",
@@ -19,9 +14,7 @@
       "source_authority": "kde-upstream",
       "package_provider": "supralinux",
       "source_package": "kf6-extra-cmake-modules",
-      "binary_packages": [
-        "extra-cmake-modules"
-      ],
+      "binary_packages": ["extra-cmake-modules"],
       "package_version": "6.30.0-0supralinux3",
       "ubuntu_reference_version": "6.24.0-0ubuntu1",
       "depends_on": [],
@@ -88,6 +81,64 @@
           "capture package artifacts before post-build Lintian and consumer gates"
         ]
       }
+    },
+    "attica": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/attica-6.30.0.tar.xz",
+      "source_sha256": "3eec8d2d9c77ad5f7cfd38e44e4b1492c5d0dec695b13f711c09f7d6187c276c",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-attica",
+      "binary_packages": ["libkf6attica6", "libkf6attica-dev", "libkf6attica-doc"],
+      "package_version": "6.30.0-0supralinux2",
+      "ubuntu_reference_version": "6.24.0-0ubuntu1",
+      "depends_on": ["extra-cmake-modules"],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "run_id": 34705165994,
+          "commit": "c18c8dcd1934a5bba874e642ba9b14729d2e69df",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10300903114,
+          "artifact_sha256": "171cfe8553aba2af8f42a640ee5f50f82988005edbd104b737d93b639dc38300",
+          "result": "FAIL",
+          "failure_stage": "source-package",
+          "cause": "dpkg-buildpackage -S invoked debian/rules clean on the host and dh could not load dh-sequence-kf6; build helpers belong in the clean sbuild environment"
+        },
+        {
+          "type": "github-actions-run",
+          "run_id": 34706416753,
+          "commit": "9945bfa92d776d432c76e17516b0ff9452b6d159",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10301851297,
+          "artifact_sha256": "f1ed135e9d5a25e6773957b2e52817fba03280293249f54257efc4e18304de27",
+          "result": "PASS",
+          "stage": "complete",
+          "tests": "6/6 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6Attica.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true,
+          "files": {
+            "libkf6attica-dev_deb_sha256": "884e917a29b9618000621029d0dd42c00d4f2e1c925aa03cbf905978b82f0a4b",
+            "libkf6attica-doc_deb_sha256": "30bb8e97a2a087809a1ca6d017f6beb8dcee5933d416d958c555033020d77a83",
+            "libkf6attica6_deb_sha256": "5f52b2ce38c6dc1ad884d16e9d616c781b098a0445a68485d24087c4572d86de",
+            "changes_sha256": "859b76c5cd99a7c949071098e44ae43943e8619a7174c120cfe2a1cf4ebc428e",
+            "buildinfo_sha256": "5e10c1f72d07f6f61beff17e3ed3f0cf0254016d23d8c2bd0d1dec9c983bd5f4",
+            "dsc_sha256": "25a0a2993787329d3ceae7a6485c9134605a3a188aed492bbc073ec5d5edbc72",
+            "debian_tar_sha256": "0fcfabd68df435228170d657754641259c92d75147e00925c5d4766eeb105aa0",
+            "orig_tar_sha256": "3eec8d2d9c77ad5f7cfd38e44e4b1492c5d0dec695b13f711c09f7d6187c276c",
+            "rootfs_sha256": "37cef66de0b97f406f0fb59be51d7cbb221b68936db998b5e5a91804cbe97763"
+          }
+        }
+      ]
     }
   }
 }

@@ -1,102 +1,115 @@
 # KDE Frameworks 6.30 — Tier 1
 
-Status: **source set fixed; external dependency metadata resolved; Ubuntu provider preflight PASS; packaging pending; build campaign pending**  
+Status: **29-node source set fixed; dependencies/provider references resolved; Attica hosted package PASS; 28 package nodes pending**  
 Last reviewed: **2026-09-12**
 
 ## Authority and scope
 
-Tier membership comes from KDE's API index. KDE defines Tier 1 as frameworks that depend only on Qt and possibly third-party libraries, never on another KDE Framework.
+Tier membership comes from KDE's API index. KDE defines Tier 1 as Frameworks depending only on Qt and possibly third-party libraries, never on another KDE Framework.
 
-The selected release is KDE Frameworks **6.30.0**. Source URLs and SHA-256 values come from KDE's 6.30.0 release information page, not from Ubuntu package versions.
+The selected release is KDE Frameworks **6.30.0**. Source URLs, source hashes, build requirements and defaults come from KDE upstream. Ubuntu and Debian packaging remain provider/compatibility references only.
 
-KDE Frameworks 6.30.0 declares a Qt minimum of **6.9.0**. SupraLINUX has hosted preflight evidence for the Ubuntu Resolute Qt **6.10.2** candidate. Ubuntu remains provider only; selected Frameworks, Plasma and KWin builds plus runtime/package-compatibility evidence are still required before final Qt-provider certification.
+Frameworks 6.30 declares Qt >= **6.9.0**. SupraLINUX currently uses Ubuntu Resolute Qt **6.10.2** as provider candidate with hosted preflight evidence. Final Qt-provider certification still requires broader selected KDE builds, runtime/compatibility evidence and the authoritative release lane.
 
 ## Prerequisite
 
-Extra CMake Modules is the Tier 0/build-system predecessor and has a hosted clean-package PASS:
+Extra CMake Modules 6.30.0 is the build-system predecessor and hosted DAG root:
 
-- package: `extra-cmake-modules` `6.30.0-0supralinux3`;
+- package: `extra-cmake-modules 6.30.0-0supralinux3`;
 - workflow run: `34694951158`;
-- `.deb` SHA-256: `ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f`.
+- artifact: `10298635300`;
+- `.deb` SHA-256: `ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f`;
+- hosted state: **PASS**, downstream eligible.
 
-Only this retained PASS artifact is eligible to feed the Tier 1 hosted build campaign.
+Tier 1 builds may consume only this retained PASS predecessor in the hosted campaign.
 
 ## Fixed Tier 1 set
 
-`manifests/kde-frameworks-tier1.json` contains **29** KDE-upstream Tier 1 nodes:
+`manifests/kde-frameworks-tier1.json` contains these **29** KDE Tier 1 nodes:
 
 `attica`, `bluez-qt`, `karchive`, `kcalendarcore`, `kcodecs`, `kconfig`, `kcoreaddons`, `kdbusaddons`, `kglobalaccel`, `kguiaddons`, `kholidays`, `ki18n`, `kidletime`, `kirigami`, `kitemmodels`, `kitemviews`, `kplotting`, `kquickcharts`, `syntax-highlighting`, `ktexttemplate`, `kuserfeedback`, `kwidgetsaddons`, `kwindowsystem`, `modemmanager-qt`, `networkmanager-qt`, `prison`, `solid`, `sonnet`, `threadweaver`.
 
-Every node has:
+Every node remains pinned to upstream 6.30.0, its KDE-published source SHA-256, no KDE Framework dependency, and ECM as build-system predecessor.
 
-- upstream version `6.30.0`;
-- exact KDE stable tarball URL;
-- KDE-published source SHA-256;
-- `kde_framework_dependencies: []`;
-- build-system predecessor `extra-cmake-modules`;
-- a resolved dependency reference into `manifests/kde-frameworks-tier1-dependencies.json`;
-- packaging state `pending`;
-- DAG state `pending`.
+## Dependency/provider evidence
 
-`pending` remains intentional. Dependency/provider discovery is not a Framework build attempt, so no Tier 1 node becomes PASS, FAIL or BLOCKED from the provider gate alone.
+External dependency metadata is machine-readable in `manifests/kde-frameworks-tier1-dependencies.json`. The policy keeps `required`, `default_enabled`, `recommended`, `optional`, `runtime` and `required_any_of` distinct and keeps Qt components separate from other dependencies.
 
-## Dependency resolution
-
-The non-KDE dependency model is documented in `docs/kde-tier1-dependencies.md` and machine-readable in `manifests/kde-frameworks-tier1-dependencies.json`.
-
-Resolution rules are:
-
-1. exact KDE `v6.30.0` build metadata is authoritative;
-2. Linux/shared-library upstream defaults are preserved unless a documented decision changes them;
-3. `required`, `default_enabled`, `recommended`, `optional`, `runtime` and `required_any_of` remain distinct;
-4. Qt components are recorded separately from non-Qt dependencies;
-5. Ubuntu Resolute package names are provider mappings only, never the source of KDE requirements;
-6. hosted Ubuntu checks prove candidate availability/coherence only; package builds remain the certification gate.
-
-## Provider preflight PASS
-
-`.github/workflows/kde-tier1-dependency-preflight.yml` is a **non-authoritative hosted provider check** on Ubuntu 26.04.
-
-First valid PASS evidence:
+First valid hosted provider PASS:
 
 - workflow run: `34700048774`;
-- PR head: `6ce61bc02c4aba146bcc33b16d17f56fb66f057a`;
 - artifact: `10299608166`;
 - artifact SHA-256: `da6808c31554da4105713e060e328d4130253a100c628fef279d8d0a9cf8ceb3`.
 
-The retained artifact proves that the selected mandatory/default-enabled Resolute provider set is installable, verifies sensitive minimum versions, keeps Qt/PySide/Shiboken coherent at 6.10.2, verifies HSpell's real development surface and passes the sensitive CMake discovery probe including Prison's upstream-compatible ZXing selection.
+This proves candidate availability/coherence only. It does not turn an unbuilt Framework into PASS.
 
-Historical run `34699717549` is retained as a gate-implementation FAIL caused by a broken-pipe interaction in the APT candidate helper. Historical run `34699889060` is retained as a gate-implementation FAIL caused by a ZXing CMake probe stricter than Prison 6.30 upstream. Neither represents a Framework FAIL because no Framework node was attempted.
+Source packaging-reference PASS:
 
-A hosted provider PASS does **not** certify a Framework package and does not promote the Ubuntu Qt provider to final certification.
+- run `34701132721`;
+- artifact `10299579234`;
+- artifact SHA-256 `a2951c297f125ad81d1487075f0a0a6250114c4e875f3ba3870c3c18c09adaca`.
 
-## Policy
+Binary-contract reference PASS:
 
-Repository Policy executes `scripts/validate_kde_tier1.py`. The validator pins:
+- run `34704117024`;
+- artifact `10301282501`;
+- artifact SHA-256 `9441b2f2957b350a46026b0df3bd5eb3578e1578671aab3b7afc7a0929ce1a97`.
 
-- the exact 29-node upstream set and source hashes;
-- exact `v6.30.0` dependency-metadata blob SHAs;
-- the Frameworks Qt minimum and current Qt-provider evidence state;
-- the ECM PASS predecessor;
-- the hosted Tier 1 dependency-provider PASS evidence;
-- dependency classifications and sensitive minimum versions;
-- the Sonnet at-least-one spell-backend rule;
-- the real Ubuntu/Debian HSpell mapping (`hspell`, not an invented `libhspell-dev`);
-- the requirement that packaging/DAG states remain pending until actual builds occur.
+Neither reference snapshot is authoritative over KDE.
 
-## Build-campaign contract
+## First real Tier 1 package — Attica PASS
 
-The next stage prepares Debian packaging for all 29 Tier 1 nodes and executes independent nodes in parallel. Each build must consume only retained PASS predecessors and preserve, at minimum:
+Attica 6.30.0 was attempted twice.
 
-- exact upstream source and source SHA-256;
-- packaging revision and dependency set;
-- build configuration;
-- complete `sbuild` log;
-- `.deb`, `.changes` and `.buildinfo` artifacts;
-- artifact SHA-256 values;
-- Lintian/test/consumer-smoke evidence where applicable;
-- explicit DAG result `PASS`, `FAIL` or `BLOCKED`.
+Attempt 1, package `6.30.0-0supralinux1`:
 
-The existing ECM pipeline is the implementation model: verified KDE source → Debian source package → fresh Resolute build root → `sbuild` → artifact capture → package checks → consumer validation → DAG evidence.
+- run `34705165994`;
+- artifact `10300903114`;
+- artifact SHA-256 `171cfe8553aba2af8f42a640ee5f50f82988005edbd104b737d93b639dc38300`;
+- result: **FAIL** at `source-package` because host-side `dpkg-buildpackage -S` invoked `debian/rules` before the clean sbuild environment.
 
-An implemented package definition that has not yet been attempted remains `pending`. A node attempted and failing for its own cause becomes `FAIL`. A node is `BLOCKED` only when an actual prerequisite is `FAIL`; `BLOCKED` is never counted as `FAIL`.
+Attempt 2, package `6.30.0-0supralinux2`:
+
+- commit `9945bfa92d776d432c76e17516b0ff9452b6d159`;
+- run `34706416753`;
+- artifact `10301851297`;
+- artifact SHA-256 `f1ed135e9d5a25e6773957b2e52817fba03280293249f54257efc4e18304de27`;
+- result: **PASS**;
+- tests: **6/6 PASS**;
+- Lintian error gate: **PASS**;
+- ABI SONAME: `libKF6Attica.so.6`;
+- consumer smoke: **PASS**;
+- `.buildinfo` proves ECM `6.30.0-0supralinux3`;
+- downstream eligible: **yes**.
+
+The historical FAIL remains retained, but the current Attica node state is PASS.
+
+## Current node states
+
+- `attica`: **PASS**, `6.30.0-0supralinux2`, downstream eligible;
+- remaining 28 Tier 1 nodes: **pending**;
+- current Tier 1 FAIL nodes: **0**;
+- current Tier 1 BLOCKED nodes: **0**.
+
+An unattempted node remains pending. A node becomes FAIL only after a real attempt fails for its own cause. BLOCKED is used only when a required predecessor is FAIL and the node therefore cannot be attempted.
+
+## Policy validation
+
+Repository Policy validates:
+
+- exact 29-node upstream set and hashes;
+- exact 6.30 dependency-metadata blob pins;
+- Qt and external dependency minima;
+- ECM PASS predecessor;
+- provider/reference evidence;
+- Attica's exact FAIL→PASS history and retained artifact hashes;
+- Attica's hosted/non-authoritative status and downstream eligibility;
+- all remaining Tier 1 package/DAG states staying pending until actually attempted.
+
+## Next stage
+
+The proven path is now:
+
+KDE source + hash → source package → retained ECM PASS → fresh Resolute `sbuild` → tests/ABI/policy → consumer smoke → retained artifacts → explicit DAG state.
+
+The next engineering task is to generalize this path for the remaining 28 independent Tier 1 nodes and prepare enough package definitions to run them in parallel. Independent failures must not stop unrelated nodes; only PASS artifacts may feed later tiers.
