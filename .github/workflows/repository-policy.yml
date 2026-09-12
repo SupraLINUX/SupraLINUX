@@ -50,6 +50,10 @@ jobs:
         shell: bash
         run: scripts/test-check-actions-runner-runtime.sh
 
+      - name: Test golden-image provenance gate
+        shell: bash
+        run: scripts/test-check-golden-image-provenance.sh
+
       - name: Validate repository invariants
         run: python3 scripts/validate_repository.py
 
