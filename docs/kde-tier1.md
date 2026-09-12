@@ -65,6 +65,8 @@ A node becomes FAIL only after a real package attempt fails for its own cause. B
 
 Batch 1 package CI fingerprints only build inputs actually consumed by the runner. State/evidence/hash bookkeeping, validators and documentation must not rebuild an already-PASS node. A run selected by an infrastructure scope bug that aborts before source/package work is not recorded as a package FAIL.
 
-## Next stage
+## Batch 2 prepared
 
-Batch 2 should prepare another group of independent low-dependency Tier 1 nodes from the remaining 25, preserving per-package binary contracts, symbols/ABI policy, optional features, tests and consumer smokes. Independent failures must not stop unrelated nodes.
+KTextTemplate, KArchive and KHolidays are the next independent package attempts. Their preparation lives in a separate Batch 2 campaign so the closed Batch 1 ledger and runner remain reproducible. Debian 6.28 symbols are used as the closer technical ABI baseline while Ubuntu Resolute remains the direct binary-compatibility target. KDE 6.30 upstream defaults and autotests remain enabled; stale distro `BUILD_QCH` settings are not inherited.
+
+Canonical state is still **4 PASS / 25 pending / 0 FAIL / 0 BLOCKED** until these jobs actually attempt their packages.
