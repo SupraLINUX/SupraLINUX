@@ -1,0 +1,6 @@
+kf6-extra-cmake-modules (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE Frameworks upstream stable 6.30.0 for SupraLINUX.
+  * Preserve the Ubuntu-compatible binary package name extra-cmake-modules.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 10:45:00 +0000

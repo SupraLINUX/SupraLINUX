@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-12",
+  "frameworks_series": "6.30.0",
+  "authority": "kde-upstream",
+  "states": [
+    "PASS",
+    "FAIL",
+    "BLOCKED",
+    "pending"
+  ],
+  "nodes": {
+    "extra-cmake-modules": {
+      "tier": "build-system-root",
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/extra-cmake-modules-6.30.0.tar.xz",
+      "source_sha256": "22c9f7ff930dae7329faebf2942d2424f4a298c43bb3f11e217be6b12f227f6e",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-extra-cmake-modules",
+      "binary_packages": [
+        "extra-cmake-modules"
+      ],
+      "package_version": "6.30.0-0supralinux1",
+      "ubuntu_reference_version": "6.24.0-0ubuntu1",
+      "depends_on": [],
+      "state": "pending",
+      "evidence": []
+    }
+  }
+}

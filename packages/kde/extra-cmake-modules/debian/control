@@ -1,0 +1,23 @@
+Source: kf6-extra-cmake-modules
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake (>= 3.29),
+ ninja-build,
+ python3
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+Homepage: https://invent.kde.org/frameworks/extra-cmake-modules
+
+Package: extra-cmake-modules
+Architecture: all
+Depends: ${misc:Depends}
+Suggests: qt6-base-dev
+Description: extra modules and scripts for CMake
+ Extra CMake Modules extends CMake with modules, find modules, KDE build
+ settings and toolchain helpers used throughout KDE software.
+ .
+ This SupraLINUX package follows KDE upstream stable and intentionally
+ supersedes the older Ubuntu-provided KDE Frameworks version.
