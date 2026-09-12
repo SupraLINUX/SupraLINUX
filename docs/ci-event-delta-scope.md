@@ -1,6 +1,6 @@
 # CI event-delta scope
 
-Status: **implemented for Attica package/reference workflows; verification in CI in progress**  
+Status: **implemented and verified for Attica package/reference workflows**  
 Last reviewed: **2026-09-12**
 
 ## Purpose
@@ -33,6 +33,25 @@ Documentation and machine-readable evidence/state changes are intentionally not 
 The first documentation-only exercise reached the new scope step but failed with exit `126`: the new helper files had been created through the GitHub Contents API with mode `0644`, while the workflows invoked them as executables. No expensive Attica build/reference steps ran in that failed exercise.
 
 The correction invokes scope helpers explicitly through `bash`, so scope logic no longer depends on their executable bit. Repository Policy validates the input lists, exact event-delta binding and conditional gating of expensive steps.
+
+## Verified documentation-only skip
+
+Commit `5b09963d3af85b4d1b014102ff12c385fb3bf775` changed documentation only after the correction.
+
+- Attica package workflow run `34707922535`: **PASS**;
+  - delta-scope step: PASS;
+  - ECM artifact download: skipped;
+  - Attica reference artifact download: skipped;
+  - clean Resolute `sbuild`: skipped;
+  - package evidence upload: skipped;
+  - intentional-skip report: PASS.
+- Attica packaging-reference workflow run `34707922491`: **PASS**;
+  - delta-scope step: PASS;
+  - Ubuntu/Debian tree capture: skipped;
+  - evidence upload: skipped;
+  - intentional-skip report: PASS.
+
+This proves that a documentation/evidence-only synchronization no longer repeats expensive Attica package or reference work.
 
 ## Required semantics
 
