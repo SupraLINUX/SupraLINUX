@@ -25,7 +25,9 @@ A historical `autopkgtest/unshare` attempt failed during testbed setup after `sb
 
 The expensive hosted build is gated on the actual PR event delta. Infrastructure/documentation-only `synchronize` events execute the scope-check but skip `sbuild`; this behavior has real PASS evidence.
 
-Repository Policy also validates every shell script with `bash -n`. The deterministic KVM-only QEMU wrapper has an additional functional test using a fake QEMU executable so argument order/quoting and missing-binary failure semantics are checked without requiring KVM on the hosted runner.
+Repository Policy validates every shell script with both `bash -n` and Ubuntu 26.04's packaged ShellCheck. The current policy installs the Ubuntu `shellcheck` package from Resolute and executes `shellcheck -e SC1091 scripts/*.sh`; `SC1091` is excluded only because `/etc/os-release` is an intentional runtime system file rather than a repository source file. The deterministic KVM-only QEMU wrapper has an additional functional test using a fake QEMU executable so argument order/quoting and missing-binary failure semantics are checked without requiring KVM on the hosted runner.
+
+ShellCheck 0.11.0 from Ubuntu package `0.11.0-2` passed the complete current script set in policy run `34661759319`.
 
 ## Authoritative KVM/JIT lane
 
@@ -126,7 +128,9 @@ Repository publication/signing are separate from compilation. Builders should no
 
 ## Initial gates
 
-- repository/manifest and shell-syntax validation;
+- repository/manifest validation;
+- Bash syntax validation;
+- ShellCheck static analysis using the Ubuntu 26.04 package;
 - deterministic QEMU-wrapper functional validation;
 - source integrity;
 - hosted clean-build preflight;

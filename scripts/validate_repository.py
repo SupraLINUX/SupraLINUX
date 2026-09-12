@@ -79,6 +79,8 @@ runner_contract = workflow_texts.get("runner-contract.yml", "")
 authoritative_workflow = workflow_texts.get("authoritative-package-proof.yml", "")
 hosted_proof = workflow_texts.get("package-build-proof.yml", "")
 require("bash -n scripts/*.sh" in repository_policy, "repository policy must syntax-check all shell scripts")
+require("apt-get install -y --no-install-recommends shellcheck" in repository_policy, "repository policy must install Ubuntu ShellCheck")
+require("shellcheck -e SC1091 scripts/*.sh" in repository_policy, "repository policy must lint all shell scripts with ShellCheck")
 require("scripts/test-qemu-kvm-required.sh" in repository_policy, "repository policy must functionally test the KVM-required QEMU wrapper")
 
 for filename, text, gate_label in (
@@ -209,5 +211,5 @@ print(f"Platform: {platform['version']} ({platform['series']})")
 print("Desktop: Plasma {plasma}, Frameworks {frameworks}, Gear {gear}".format(
     plasma=desktop["plasma"]["version"], frameworks=desktop["frameworks"]["version"], gear=desktop["gear"]["version"]))
 print(f"Qt: required {qt['required_series']}, provider={provider['name']}, candidate={provider.get('candidate_version', 'n/a')}, certification={cert['status']}")
-print("CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; KVM-runtime=required; deterministic-qemu-wrapper=required; wrapper-functional-test=required; JIT=required; exact-run-binding=required; shell-syntax=required".format(
+print("CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; KVM-runtime=required; deterministic-qemu-wrapper=required; wrapper-functional-test=required; JIT=required; exact-run-binding=required; shell-syntax=required; shellcheck=required".format(
     hosted=hosted["role"], platform=authoritative["platform"], virt=authoritative["virtualization"], lifecycle=authoritative["lifecycle"], build=authoritative["build_isolation"], test=authoritative["system_test"]))
