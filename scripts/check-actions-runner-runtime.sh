@@ -4,17 +4,17 @@ set -Eeuo pipefail
 RUNNER_DIR="${SUPRALINUX_ACTIONS_RUNNER_DIR:-/opt/actions-runner}"
 PROVENANCE="${SUPRALINUX_RUNNER_PROVENANCE:-/var/lib/supralinux/evidence/actions-runner.txt}"
 EVIDENCE_OUT="${1:-${SUPRALINUX_RUNNER_RUNTIME_EVIDENCE:-}}"
-RUNNER="${RUNNER_DIR}/run.sh"
+LISTENER="${RUNNER_DIR}/bin/Runner.Listener"
 
-for command_name in awk grep tail tr; do
+for command_name in awk tr; do
     command -v "${command_name}" >/dev/null 2>&1 || {
         printf 'Missing required command: %s\n' "${command_name}" >&2
         exit 1
     }
 done
 
-if [[ ! -x "${RUNNER}" ]]; then
-    printf 'GitHub Actions runner launcher is missing or not executable: %s\n' "${RUNNER}" >&2
+if [[ ! -x "${LISTENER}" ]]; then
+    printf 'GitHub Actions Runner.Listener is missing or not executable: %s\n' "${LISTENER}" >&2
     exit 1
 fi
 if [[ ! -f "${PROVENANCE}" || ! -r "${PROVENANCE}" ]]; then
@@ -45,14 +45,14 @@ if [[ ! "${ASSET_SHA256}" =~ ^[0-9a-fA-F]{64}$ ]]; then
     exit 1
 fi
 
-RUNTIME_VERSION="$("${RUNNER}" --version | tail -n 1 | tr -d '\r[:space:]')"
-RUNTIME_COMMIT="$("${RUNNER}" --commit | tail -n 1 | tr -d '\r[:space:]')"
+RUNTIME_VERSION="$("${LISTENER}" --version | tr -d '\r[:space:]')"
+RUNTIME_COMMIT="$("${LISTENER}" --commit | tr -d '\r[:space:]')"
 if [[ ! "${RUNTIME_VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     printf 'Could not resolve a valid runtime Actions runner version: %s\n' "${RUNTIME_VERSION}" >&2
     exit 1
 fi
-if [[ ! "${RUNTIME_COMMIT}" =~ ^[0-9a-fA-F]{7,40}$ ]]; then
-    printf 'Could not resolve a valid runtime Actions runner commit: %s\n' "${RUNTIME_COMMIT}" >&2
+if [[ ! "${RUNTIME_COMMIT}" =~ ^[0-9a-fA-F]{40}$ ]]; then
+    printf 'Could not resolve a full runtime Actions runner commit SHA: %s\n' "${RUNTIME_COMMIT}" >&2
     exit 1
 fi
 

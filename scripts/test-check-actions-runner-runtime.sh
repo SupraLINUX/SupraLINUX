@@ -8,18 +8,18 @@ trap 'rm -rf "${TMP_DIR}"' EXIT
 RUNNER_DIR="${TMP_DIR}/actions-runner"
 PROVENANCE="${TMP_DIR}/actions-runner.txt"
 EVIDENCE="${TMP_DIR}/runtime-evidence.txt"
-mkdir -p "${RUNNER_DIR}"
+mkdir -p "${RUNNER_DIR}/bin"
 
-cat > "${RUNNER_DIR}/run.sh" <<'EOF'
+cat > "${RUNNER_DIR}/bin/Runner.Listener" <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 case "${1:-}" in
     --version) printf '%s\n' "${FAKE_RUNNER_VERSION:-2.337.0}" ;;
-    --commit) printf '%s\n' "${FAKE_RUNNER_COMMIT:-397b032abcd1234}" ;;
+    --commit) printf '%s\n' "${FAKE_RUNNER_COMMIT:-397b032cbf865e9c3ddfab89d533ec19325e1273}" ;;
     *) exit 2 ;;
 esac
 EOF
-chmod 0755 "${RUNNER_DIR}/run.sh"
+chmod 0755 "${RUNNER_DIR}/bin/Runner.Listener"
 
 write_provenance() {
     cat > "${PROVENANCE}" <<'EOF'
@@ -43,6 +43,7 @@ run_check > "${TMP_DIR}/valid.log"
 grep -Fqx 'Actions runner runtime provenance verification: PASS' "${TMP_DIR}/valid.log"
 grep -Fqx 'runtime_matches_verified_version=yes' "${EVIDENCE}"
 grep -Fqx 'runtime_version=2.337.0' "${EVIDENCE}"
+grep -Fqx 'runtime_commit=397b032cbf865e9c3ddfab89d533ec19325e1273' "${EVIDENCE}"
 
 if FAKE_RUNNER_VERSION=2.338.0 run_check >/dev/null 2>&1; then
     printf 'Runtime verifier accepted an auto-updated runner that differs from golden provenance.\n' >&2
@@ -66,6 +67,18 @@ fi
 write_provenance
 if FAKE_RUNNER_COMMIT=not-a-commit run_check >/dev/null 2>&1; then
     printf 'Runtime verifier accepted an invalid runtime runner commit.\n' >&2
+    exit 1
+fi
+
+write_provenance
+if FAKE_RUNNER_COMMIT=397b032abcd1234 run_check >/dev/null 2>&1; then
+    printf 'Runtime verifier accepted a truncated runtime runner commit.\n' >&2
+    exit 1
+fi
+
+rm -f "${RUNNER_DIR}/bin/Runner.Listener"
+if run_check >/dev/null 2>&1; then
+    printf 'Runtime verifier accepted a missing Runner.Listener executable.\n' >&2
     exit 1
 fi
 
