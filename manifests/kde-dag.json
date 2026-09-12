@@ -22,7 +22,7 @@
       "binary_packages": [
         "extra-cmake-modules"
       ],
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "ubuntu_reference_version": "6.24.0-0ubuntu1",
       "depends_on": [],
       "state": "FAIL",
@@ -37,15 +37,29 @@
           "result": "FAIL",
           "failure_stage": "dh_auto_test",
           "cause": "BUILD_TESTING=OFF removed the Ninja test target while debhelper still invoked dh_auto_test/ninja test"
+        },
+        {
+          "type": "github-actions-run",
+          "run_id": 34690027788,
+          "job_id": 103543538213,
+          "commit": "801b99792dc60e7c14cb78d1846f9b8c9a476de8",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10296517706,
+          "artifact_sha256": "89ef0003fd8282965a4c253bcd0150b8f040fe134ca0385d1365cd8c31808239",
+          "result": "FAIL",
+          "failure_stage": "consumer-smoke",
+          "cause": "binary build succeeded, but Lintian reported missing copyright metadata and a missing Python runtime dependency; the Qt-integrated consumer smoke then failed because qtpaths6 was absent from the consumer environment"
         }
       ],
       "remediation": {
-        "candidate_package_version": "6.30.0-0supralinux2",
+        "candidate_package_version": "6.30.0-0supralinux3",
         "status": "pending-validation",
         "changes": [
-          "override dh_auto_test in the BUILD_TESTING=OFF package-preflight profile",
-          "retain downstream ECM consumer smoke as a separate required gate",
-          "align reusable sbuild rootfs path/format with resolute-amd64.tar"
+          "ship Debian copyright metadata for the upstream BSD-3-Clause/BSD-2-Clause/MIT license set",
+          "declare python3:any runtime dependency for installed Python helper scripts",
+          "make post-build Lintian errors an explicit fatal gate",
+          "provide Ubuntu Qt 6.10 qtpaths6 tooling to the Qt-integrated consumer smoke",
+          "capture package artifacts before post-build Lintian and consumer gates"
         ]
       }
     }

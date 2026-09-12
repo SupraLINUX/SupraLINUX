@@ -1,12 +1,12 @@
 # KDE stable dependency DAG
 
-Status: **ECM root attempted; current state FAIL; remediation pending validation**
+Status: **ECM root attempted; current state FAIL; remediation 6.30.0-0supralinux3 pending validation**
 
 Last reviewed: **2026-09-12**
 
 ## Authority
 
-KDE upstream stable defines the desktop versions and dependency requirements. Ubuntu 26.04 remains the platform provider for generic build/runtime dependencies, but Ubuntu's KDE package versions do not select the SupraLINUX KDE stack.
+KDE upstream stable defines desktop versions and dependency requirements. Ubuntu 26.04 remains the platform provider for generic build/runtime dependencies, but Ubuntu's KDE package versions do not select the SupraLINUX KDE stack.
 
 Current selected snapshot:
 
@@ -29,7 +29,7 @@ Each node is one of:
 
 ## Node 0 — Extra CMake Modules
 
-`extra-cmake-modules` is the build-system root for the selected Frameworks line. KDE publishes Extra CMake Modules **6.30.0** as part of KDE Frameworks 6.30.0.
+KDE publishes Extra CMake Modules **6.30.0** as part of KDE Frameworks 6.30.0.
 
 Upstream authority:
 
@@ -43,53 +43,48 @@ SupraLINUX package identity:
 
 - source package: `kf6-extra-cmake-modules`;
 - binary package: `extra-cmake-modules`;
-- current remediation candidate: `6.30.0-0supralinux2`;
+- current remediation candidate: `6.30.0-0supralinux3`;
 - architecture: `all`;
 - current node state: **FAIL** until the remediation is actually rebuilt and passes.
 
 ### Attempt 1 — FAIL
 
-Commit `99b95b1c0897ed20af6c8add7aa1620ef1795019` attempted `6.30.0-0supralinux1` in workflow run **34689672632**.
-
-Evidence artifact:
+Commit `99b95b1c0897ed20af6c8add7aa1620ef1795019`, package `6.30.0-0supralinux1`, workflow run **34689672632**.
 
 - artifact ID: **10296512341**;
-- artifact digest: `sha256:d47ac7361106ceb5f04729c1a3dcb4103b30255684e5b3f53b833edd6d4f6558`.
+- artifact digest: `sha256:d47ac7361106ceb5f04729c1a3dcb4103b30255684e5b3f53b833edd6d4f6558`;
+- verified KDE source, Debian source package and clean configure/build: PASS;
+- failure stage: `dh_auto_test`;
+- cause: `BUILD_TESTING=OFF` removed Ninja's `test` target while debhelper still invoked `ninja test`.
 
-What passed before the failure:
+The remediation explicitly overrides `dh_auto_test` for this package-preflight profile and aligns the reusable sbuild rootfs with `${HOME}/.cache/sbuild/resolute-amd64.tar`.
 
-- KDE upstream tarball download: PASS;
-- exact KDE-published source SHA-256 verification: PASS;
-- Debian source-package creation: PASS;
-- clean Ubuntu 26.04 build environment preparation: PASS;
-- CMake configure: PASS;
-- Ninja build: PASS (`ninja: no work to do`, expected for this module-only package).
+### Attempt 2 — FAIL
 
-Actual root cause:
+Commit `801b99792dc60e7c14cb78d1846f9b8c9a476de8`, package `6.30.0-0supralinux2`, workflow run **34690027788**, job **103543538213**.
 
-- package configuration deliberately used `BUILD_TESTING=OFF`;
-- that means the generated Ninja build does not contain a `test` target;
-- debhelper still executed `dh_auto_test`, which called `ninja test`;
-- Ninja failed with `unknown target 'test'`;
-- therefore the node is **FAIL at `dh_auto_test` by packaging integration**, not an ECM source, compiler, Qt or dependency failure.
+- artifact ID: **10296517706**;
+- artifact digest: `sha256:89ef0003fd8282965a4c253bcd0150b8f040fe134ca0385d1365cd8c31808239`;
+- clean sbuild binary build: PASS;
+- attempt-1 `dh_auto_test` defect: resolved;
+- Lintian findings: `no-copyright-file`, `python3-script-but-no-python3-dep`, and source warning `no-debian-copyright-in-source`;
+- final `result.json` failure stage: `consumer-smoke`;
+- consumer cause: `KDEInstallDirs6` reached `ECMQueryQt.cmake`, which could not find a Qt 6 `qtpaths` executable in the test environment.
 
-A second non-causal issue was observed: the preflight generated `resolute-amd64-kde-ecm.tar.gz`, while `sbuild --chroot-mode=unshare` searches its cache for `resolute-amd64.tar`; consequently sbuild generated another rootfs instead of reusing ours.
+The build itself was successful; the node nevertheless remains FAIL because packaging policy and the required downstream consumer gate did not both pass.
 
-### Remediation candidate — 6.30.0-0supralinux2
+### Remediation candidate — 6.30.0-0supralinux3
 
-The next package revision makes the evidence unambiguous rather than rebuilding different packaging under the same Debian version.
+This revision:
 
-Changes pending validation:
+1. adds Debian copyright metadata for the upstream BSD-3-Clause/BSD-2-Clause/MIT aggregate license set;
+2. declares `python3:any` for installed Python helper scripts;
+3. makes a separate `lintian --fail-on error` invocation mandatory, so packaging errors cannot be hidden behind a successful sbuild status;
+4. provides Ubuntu `qt6-base-dev`/`qtpaths6` to the Qt-integrated consumer environment and records the Qt version/path;
+5. captures `.deb`, `.changes`, `.buildinfo`, package metadata and hashes before post-build gates so any later FAIL remains inspectable.
 
-1. `override_dh_auto_test` explicitly does not invoke a nonexistent test target when the package-preflight profile sets `BUILD_TESTING=OFF`;
-2. the post-build downstream consumer smoke remains mandatory and still has to resolve `find_package(ECM 6.30.0)` plus representative ECM/KDE modules from the produced `.deb`;
-3. the reusable rootfs is generated as `${HOME}/.cache/sbuild/resolute-amd64.tar` with tar format, matching the cache convention reported by `sbuild/unshare`;
-4. rootfs/source/artifact hashes continue to be retained.
-
-This hosted package preflight does **not** claim that the full ECM upstream test suite has run. Upstream tests are a separate quality gate to add before production/stable certification. The current node PASS criterion is narrower: verified source + clean package build + Debian metadata + downstream consumer smoke, sufficient to feed subsequent hosted DAG discovery.
+This hosted package preflight does **not** claim that the full ECM upstream test suite has run. The upstream test suite remains a separate quality gate before stable/production certification.
 
 ## Next nodes
 
-KDE Frameworks Tier 1 contains nodes with no compile-time dependency on another Framework, so they can later be built in parallel using ECM and the Qt/provider baseline. They remain unattempted while ECM is FAIL; they are not mislabeled as FAIL.
-
-Only after the ECM remediation actually produces a PASS artifact will that artifact become eligible to feed Tier 1.
+Frameworks Tier 1 remains unattempted while ECM is FAIL. Only after `6.30.0-0supralinux3` actually produces a PASS artifact may that artifact feed the next topological level. Independent Tier 1 nodes can then run in parallel according to the upstream-derived DAG.

@@ -13,7 +13,9 @@ Homepage: https://invent.kde.org/frameworks/extra-cmake-modules
 
 Package: extra-cmake-modules
 Architecture: all
-Depends: ${misc:Depends}
+Depends:
+ python3:any,
+ ${misc:Depends}
 Suggests: qt6-base-dev
 Description: extra modules and scripts for CMake
  Extra CMake Modules extends CMake with modules, find modules, KDE build

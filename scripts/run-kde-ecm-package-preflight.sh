@@ -12,7 +12,7 @@ CHROOT_TARBALL="${HOME}/.cache/sbuild/resolute-amd64.tar"
 MIRROR="${SBUILD_MIRROR:-http://azure.archive.ubuntu.com/ubuntu}"
 
 UPSTREAM_VERSION="6.30.0"
-DEBIAN_VERSION="${UPSTREAM_VERSION}-0supralinux2"
+DEBIAN_VERSION="${UPSTREAM_VERSION}-0supralinux3"
 SOURCE_PACKAGE="kf6-extra-cmake-modules"
 BINARY_PACKAGE="extra-cmake-modules"
 UPSTREAM_TARBALL="extra-cmake-modules-${UPSTREAM_VERSION}.tar.xz"
@@ -75,9 +75,11 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     debhelper \
     devscripts \
     dpkg-dev \
+    lintian \
     mmdebstrap \
     ninja-build \
     python3 \
+    qt6-base-dev \
     sbuild \
     uidmap \
     ubuntu-keyring \
@@ -91,6 +93,15 @@ if ! grep -q "^${USER}:" /etc/subgid; then
 fi
 unshare --user --map-auto true
 
+if ! command -v qtpaths6 >/dev/null 2>&1 && [[ -x /usr/lib/qt6/bin/qtpaths6 ]]; then
+    export PATH="/usr/lib/qt6/bin:${PATH}"
+fi
+if ! command -v qtpaths6 >/dev/null 2>&1; then
+    printf 'qtpaths6 is required for the Qt-integrated ECM consumer smoke.\n' >&2
+    exit 1
+fi
+qtpaths6 --qt-version > "${EVIDENCE_DIR}/qt6-consumer-version.txt"
+
 {
     printf 'host_os:\n'
     cat /etc/os-release
@@ -98,7 +109,7 @@ unshare --user --map-auto true
     uname -a
     printf '\ntool_versions:\n'
     dpkg-query -W -f='${Package}\t${Version}\n' \
-        ca-certificates cmake curl debhelper devscripts dpkg-dev mmdebstrap ninja-build python3 sbuild uidmap ubuntu-keyring xz-utils
+        ca-certificates cmake curl debhelper devscripts dpkg-dev lintian mmdebstrap ninja-build python3 qt6-base-dev qt6-base-dev-tools sbuild uidmap ubuntu-keyring xz-utils
     printf '\nupstream_authority=kde-upstream\n'
     printf 'upstream_version=%s\n' "${UPSTREAM_VERSION}"
     printf 'debian_version=%s\n' "${DEBIAN_VERSION}"
@@ -108,7 +119,10 @@ unshare --user --map-auto true
     printf 'ubuntu_reference_version=6.24.0-0ubuntu1\n'
     printf 'package_provider=supralinux\n'
     printf 'upstream_tests=disabled-in-package-preflight\n'
+    printf 'postbuild_lintian=required-fail-on-error\n'
     printf 'postbuild_consumer_smoke=required\n'
+    printf 'consumer_qt_provider=ubuntu-qt6-base-dev\n'
+    printf 'consumer_qtpaths=%s\n' "$(command -v qtpaths6)"
 } > "${EVIDENCE_DIR}/environment.txt"
 
 STAGE="upstream-source"
@@ -192,6 +206,15 @@ if [[ "${BUILT_VERSION}" != "${DEBIAN_VERSION}" || "${BUILT_ARCH}" != "all" ]]; 
     exit 1
 fi
 
+STAGE="artifact-capture"
+sha256sum "${DEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" > "${EVIDENCE_DIR}/artifact-sha256.txt"
+cp -a "${DEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${EVIDENCE_DIR}/"
+dpkg-deb -I "${ECM_DEB}" > "${EVIDENCE_DIR}/extra-cmake-modules-control.txt"
+dpkg-deb -c "${ECM_DEB}" > "${EVIDENCE_DIR}/extra-cmake-modules-filelist.txt"
+
+STAGE="lintian"
+lintian --fail-on error "${CHANGES[0]}" |& tee "${EVIDENCE_DIR}/lintian.log"
+
 STAGE="consumer-smoke"
 CONSUMER_ROOT="${WORK_DIR}/consumer-root"
 CONSUMER_SRC="${WORK_DIR}/consumer-src"
@@ -230,12 +253,7 @@ cmake -S "${CONSUMER_SRC}" -B "${CONSUMER_BUILD}" \
     -DECM_DIR="${ECM_DIR}" |& tee "${EVIDENCE_DIR}/consumer-cmake.log"
 grep -F 'SUPRALINUX_ECM_VERSION=6.30.0' "${EVIDENCE_DIR}/consumer-cmake.log"
 
-STAGE="artifact-capture"
-sha256sum "${DEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" > "${EVIDENCE_DIR}/artifact-sha256.txt"
-cp -a "${DEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${EVIDENCE_DIR}/"
-dpkg-deb -I "${ECM_DEB}" > "${EVIDENCE_DIR}/extra-cmake-modules-control.txt"
-dpkg-deb -c "${ECM_DEB}" > "${EVIDENCE_DIR}/extra-cmake-modules-filelist.txt"
-
+STAGE="dag-pass-evidence"
 {
     printf 'node=extra-cmake-modules\n'
     printf 'state=PASS\n'
@@ -244,6 +262,8 @@ dpkg-deb -c "${ECM_DEB}" > "${EVIDENCE_DIR}/extra-cmake-modules-filelist.txt"
     printf 'binary_package=%s\n' "${BINARY_PACKAGE}"
     printf 'architecture=%s\n' "${BUILT_ARCH}"
     printf 'upstream_tests=not-run-in-package-preflight\n'
+    printf 'lintian=PASS\n'
+    printf 'consumer_qt=PASS\n'
     printf 'consumer_smoke=PASS\n'
     printf 'downstream_eligible=yes\n'
 } > "${EVIDENCE_DIR}/dag-node.txt"
