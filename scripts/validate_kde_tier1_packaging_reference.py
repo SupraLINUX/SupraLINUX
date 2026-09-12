@@ -25,6 +25,13 @@ EXPECTED_SNAPSHOT = {
     "framework_package_build_certification": "pending",
 }
 
+EXPECTED_BINARY_CONTRACT_SNAPSHOT = {
+    "status": "pending",
+    "claim": "binary-packaging-contract-reference-only",
+    "authoritative": False,
+    "framework_package_build_certification": "pending",
+}
+
 errors: list[str] = []
 
 
@@ -59,6 +66,10 @@ require(reference.get("authority") is False, "Packaging references must never be
 require(reference.get("role") == "packaging-reference-only", "Packaging-reference role changed unexpectedly")
 require(reference.get("selected_kde") == "6.30.0", "Packaging reference must follow selected KDE 6.30.0")
 require(reference.get("snapshot") == EXPECTED_SNAPSHOT, "Packaging-reference PASS evidence changed without review")
+require(
+    reference.get("binary_contract_snapshot") == EXPECTED_BINARY_CONTRACT_SNAPSHOT,
+    "Binary-contract snapshot must remain pending until a real retained workflow PASS is recorded",
+)
 
 references = reference.get("references", {})
 require(references.get("ubuntu", {}).get("distribution") == "ubuntu", "Ubuntu reference distribution missing")
@@ -98,5 +109,6 @@ if errors:
 
 print("KDE Frameworks Tier 1 packaging-reference policy: PASS")
 print("Reference authorities: none; Ubuntu Resolute and Debian sid are technical inputs only")
-print("Snapshot evidence: PASS, non-authoritative")
+print("Source packaging snapshot evidence: PASS, non-authoritative")
+print("Binary-contract snapshot evidence: pending until real workflow PASS")
 print("Framework packaging/DAG states: pending")

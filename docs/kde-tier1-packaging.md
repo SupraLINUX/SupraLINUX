@@ -1,11 +1,11 @@
 # KDE Frameworks 6.30 Tier 1 — packaging preparation
 
-Status: **provider preflight PASS; packaging-reference snapshot PASS; Framework packaging/build campaign pending**  
+Status: **provider preflight PASS; source packaging-reference snapshot PASS; binary-contract snapshot pending; Framework packaging/build campaign pending**  
 Last reviewed: **2026-09-12**
 
 ## Purpose
 
-Before writing SupraLINUX `debian/` metadata for the 29 Tier 1 Frameworks, the project captures current Ubuntu Resolute and Debian sid source-packaging metadata as technical reference evidence.
+Before writing SupraLINUX `debian/` metadata for the 29 Tier 1 Frameworks, the project captures current Ubuntu Resolute and Debian sid packaging metadata as technical reference evidence.
 
 This does **not** change project authority:
 
@@ -18,7 +18,7 @@ This does **not** change project authority:
 
 Ubuntu Resolute is the direct compatibility target, but its Frameworks packages trail the selected KDE Frameworks 6.30.0 stack. Debian sid is closer to current Frameworks packaging and is therefore useful for newer packaging mechanics. Both remain references only.
 
-The snapshot records what each archive actually publishes at execution time rather than hard-coding an assumed distro version into SupraLINUX architecture.
+The snapshots record what each archive actually publishes at execution time rather than hard-coding an assumed distro version into SupraLINUX architecture.
 
 ## Machine-readable mapping
 
@@ -33,21 +33,18 @@ The manifest is explicitly:
 
 Repository Policy verifies that this node set exactly matches `manifests/kde-frameworks-tier1.json` and that every Framework remains `packaging.state=pending` and `state=pending` until an actual package build is attempted.
 
-## Isolated archive capture
+## Source-packaging reference capture
 
-`.github/workflows/kde-tier1-packaging-reference.yml` runs on Ubuntu 26.04 and invokes `scripts/run-kde-tier1-packaging-reference-snapshot.sh`.
+`.github/workflows/kde-tier1-packaging-reference.yml` captures isolated source indexes from Ubuntu Resolute and Debian sid.
 
-The script keeps archive namespaces separate:
+The source snapshot keeps archive namespaces separate:
 
 - Ubuntu source indexes: `resolute`, `resolute-updates` and `resolute-security`, components `main,universe`;
 - Debian source index: `sid`, component `main`;
-- only `deb-src` indexes are added for the reference capture;
-- Debian binary repositories are never enabled;
+- the archives are read only as packaging references;
 - each reference has its own APT source list and APT list directory.
 
-This prevents a Debian sid package from becoming an accidental provider on the Ubuntu runner.
-
-## First retained snapshot PASS
+## First retained source snapshot PASS
 
 Evidence:
 
@@ -75,9 +72,9 @@ Debian sid is also not a single exact Frameworks revision:
 
 These versions are evidence about reference packaging only. SupraLINUX remains selected on KDE Frameworks **6.30.0**.
 
-## Binary-package contract comparison
+## Binary-package name comparison from source metadata
 
-The binary-package name sets are identical between the two reference distributions for **28 of 29** Tier 1 source packages.
+The binary-package name sets are identical between the two source-package references for **28 of 29** Tier 1 source packages.
 
 The exception is `kirigami`. Debian 6.28 adds four binary libraries that are absent from the Ubuntu 6.24 reference:
 
@@ -103,9 +100,44 @@ Notable examples include:
 
 These differences are reference signals. The selected SupraLINUX Build-Depends for each package must be justified against KDE 6.30.0 and the resolved provider manifest.
 
-## Captured fields
+## Binary-contract reference gate
 
-For every Tier 1 source package and for both references, the snapshot records the newest source stanza visible in the isolated index, including:
+The source snapshot is insufficient to preserve Debian/Ubuntu compatibility by itself because source metadata does not provide the complete installed binary-package contract.
+
+`.github/workflows/kde-tier1-binary-contract-reference.yml` therefore runs a second, separate reference gate using `scripts/run-kde-tier1-binary-contract-snapshot.sh`.
+
+The gate captures, for every binary package published by the selected source stanza in both references:
+
+- package version and source-package relationship;
+- `Architecture`;
+- `Multi-Arch`;
+- `Pre-Depends` and `Depends`;
+- `Recommends`, `Suggests` and `Enhances`;
+- `Provides`;
+- `Breaks`;
+- `Replaces`;
+- `Conflicts`;
+- `Section` and `Priority`.
+
+The binary and source indexes use independent APT list directories for Ubuntu and Debian. Debian sid is queried only as archive metadata. No Debian binary package is installed, no Debian repository is added to the host's normal APT configuration, and Debian is never promoted to provider status.
+
+The binary-contract manifest state is currently **pending**. A real workflow PASS is required before these fields may be treated as retained reference evidence.
+
+## Binary-contract safety gates
+
+The binary-contract snapshot fails instead of silently adapting if:
+
+- the retained source-packaging reference snapshot is not PASS;
+- an expected source or binary package cannot be resolved in its isolated archive;
+- a binary stanza resolves to a different source package than the selected Tier 1 mapping;
+- a reference package reports an upstream version newer than selected KDE 6.30.0;
+- the workflow is not running on Ubuntu 26.04.
+
+A successful binary-contract snapshot may update only `binary_contract_snapshot` evidence. It may not mark a Framework package PASS, FAIL or BLOCKED.
+
+## Captured source fields
+
+For every Tier 1 source package and for both references, the source snapshot records the newest source stanza visible in the isolated index, including:
 
 - source package and Debian version;
 - normalized upstream version;
@@ -120,26 +152,15 @@ For every Tier 1 source package and for both references, the snapshot records th
 
 Raw `apt-cache showsrc` records are retained beside the normalized `snapshot.json` and `versions.tsv` files.
 
-## Safety gates
-
-The snapshot fails rather than silently adapting when:
-
-- any of the 29 expected source packages is absent from Ubuntu Resolute or Debian sid;
-- the source-package mapping no longer matches the selected Tier 1 set;
-- a reference upstream version is newer than the selected KDE 6.30.0 release;
-- the workflow is not running on Ubuntu 26.04.
-
-A reference moving ahead of KDE 6.30.0 is treated as a review signal because SupraLINUX must first re-evaluate the selected KDE stable release rather than ingest packaging for a newer desktop implicitly.
-
 ## Evidence semantics
 
-A packaging-reference workflow PASS proves only that a coherent, current reference snapshot was captured. It does **not** prove that any SupraLINUX Framework package builds.
+A packaging-reference workflow PASS proves only that coherent reference metadata was captured. It does **not** prove that any SupraLINUX Framework package builds.
 
-Therefore this PASS updates only the packaging-reference evidence state. It does not change any Framework node to PASS, FAIL or BLOCKED.
+Therefore reference PASS states update only reference evidence. They do not change any Framework node to PASS, FAIL or BLOCKED.
 
 ## Next gate
 
-SupraLINUX packaging can now be authored node-by-node. Each `debian/` tree must be audited against exact KDE 6.30.0 defaults and the already resolved provider manifest rather than copied blindly from either reference distro.
+After a real binary-contract PASS is inspected and retained, SupraLINUX packaging can be authored node-by-node. Each `debian/` tree must be audited against exact KDE 6.30.0 defaults, the resolved provider manifest, source-packaging reference evidence and binary-contract evidence rather than copied blindly from either reference distro.
 
 The build campaign will reuse the established ECM model: exact KDE source + verified hash → Debian source package → fresh Resolute build root → `sbuild` → `.deb/.changes/.buildinfo` → package checks/tests → DAG evidence.
 
