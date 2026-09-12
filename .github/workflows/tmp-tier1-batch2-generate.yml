@@ -1,0 +1,55 @@
+name: Temporary Tier 1 batch 2 generator
+
+on:
+  push:
+    branches: [tmp-tier1-batch2-prep]
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  generate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - name: Download retained Tier 1 packaging trees
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10301938362'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34708030450'
+          path: .work/tier1-reference
+
+      - name: Generate and validate preparation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/tmp-tier1-batch2-generate.py
+          bash -n scripts/run-kde-tier1-package-batch2-preflight.sh
+          bash -n scripts/kde-tier1-package-batch2-needed.sh
+          python3 scripts/validate_kde_tier1_package_batch2.py
+
+      - name: Commit generated preparation
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .work
+          git config user.name 'SupraLINUX CI'
+          git config user.email 'ci@supralinux.invalid'
+          git add packages/kde/ktexttemplate packages/kde/karchive packages/kde/kholidays \
+            manifests/kde-tier1-package-campaign-batch2.json \
+            scripts/run-kde-tier1-package-batch2-preflight.sh \
+            scripts/kde-tier1-package-batch2-needed.sh \
+            scripts/validate_kde_tier1_package_batch2.py \
+            .github/workflows/kde-tier1-package-batch2.yml \
+            .github/workflows/repository-policy.yml \
+            docs/kde-tier1-package-batch2.md docs/kde-tier1.md docs/status/2026-09-12.md
+          git diff --cached --check
+          git commit -m 'tmp: prepare Tier 1 batch 2 tree'
+          git push origin HEAD:tmp-tier1-batch2-prep
