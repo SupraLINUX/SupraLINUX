@@ -37,6 +37,11 @@
       "candidate_evidence": "https://packages.ubuntu.com/resolute/amd64/qt6-base-dev",
       "status": "reuse-candidate"
     },
+    "provider_preflight": {
+      "scope": "plasma-frameworks-baseline",
+      "status": "pending",
+      "evidence": []
+    },
     "certification": {
       "status": "pending",
       "evidence": []
