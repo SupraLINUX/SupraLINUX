@@ -47,6 +47,19 @@ The runner must be a disposable Ubuntu 26.04 KVM guest. Inside it:
 
 A package/runtime test cannot count as authoritative if nested KVM is unavailable or QEMU falls back to software emulation.
 
+## Repository-side wrapper validation
+
+The KVM-only QEMU wrapper is also validated on the hosted policy lane without claiming KVM execution. `scripts/test-qemu-kvm-required.sh` replaces QEMU with a fake executable and verifies:
+
+- the wrapper prepends exactly `-accel kvm`;
+- all remaining QEMU arguments are forwarded in order;
+- an argument containing spaces remains one argument;
+- a configured missing QEMU executable produces exit code `127`.
+
+Commit `a11e87e9ac4c5df006dc6ee3dadbce1e39451c5d` passed Repository Policy run **34661595969**, including the dedicated wrapper functional-test step, shell syntax, repository invariants and the live Ubuntu/Qt check. Hosted package-preflight run **34661595978** on the same commit completed **PASS** with the expensive `sbuild` and artifact-upload steps explicitly skipped because the delta did not affect package-build inputs.
+
+This proves wrapper behavior and CI policy only. It does not replace the runtime nested-KVM probe required inside the authoritative guest.
+
 ## Evidence history
 
 ### Historical attempt 1 — schroot session failure
@@ -91,7 +104,8 @@ A later full hosted proof, run `34640717571`, also completed **PASS**; artifact 
 
 ```text
 GitHub-hosted ubuntu-26.04
-└── non-authoritative source + sbuild preflight       [PASS demonstrated]
+├── non-authoritative source + sbuild preflight       [PASS demonstrated]
+└── deterministic KVM-wrapper functional policy test [PASS demonstrated]
 
 Disposable Ubuntu 26.04 KVM JIT runner VM
 ├── nested-KVM runtime probe                          [pending real host]
@@ -107,6 +121,7 @@ The runner image/toolchain/JIT lifecycle are implemented by the scripts under `s
 Phase 1 is complete only when real evidence shows:
 
 - hosted clean-build preflight PASS with retained binary artifacts/logs — **PASS**;
+- hosted deterministic QEMU-wrapper functional test — **PASS** (`34661595969`);
 - real KVM host and golden-image provenance — **pending**;
 - authoritative runner-contract PASS including runtime nested-KVM probe — **pending**;
 - authoritative clean `sbuild` package build PASS — **pending**;
