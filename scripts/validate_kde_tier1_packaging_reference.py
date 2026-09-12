@@ -8,6 +8,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_MANIFEST = ROOT / "manifests" / "kde-frameworks-tier1.json"
 REFERENCE_MANIFEST = ROOT / "manifests" / "kde-frameworks-tier1-packaging-reference.json"
+SCOPE = ROOT / "scripts" / "kde-tier1-packaging-reference-needed.sh"
+WORKFLOW = ROOT / ".github" / "workflows" / "kde-tier1-packaging-reference.yml"
 
 EXPECTED_SNAPSHOT = {
     "status": "PASS",
@@ -74,8 +76,19 @@ def load(path: Path) -> dict:
     return data
 
 
+def read(path: Path) -> str:
+    try:
+        return path.read_text(encoding="utf-8")
+    except Exception as exc:
+        errors.append(f"cannot read {path.relative_to(ROOT)}: {exc}")
+        return ""
+
+
 source = load(SOURCE_MANIFEST)
 reference = load(REFERENCE_MANIFEST)
+scope = read(SCOPE)
+workflow = read(WORKFLOW)
+
 source_nodes = source.get("nodes", [])
 require(source.get("frameworks_series") == "6.30.0", "Packaging reference must follow Frameworks 6.30.0")
 require(isinstance(source_nodes, list) and len(source_nodes) == 29, "Packaging reference requires the fixed 29-node Tier 1 set")
@@ -121,7 +134,7 @@ for node in source_nodes:
         require(packaging.get("state") == "PASS", "attica: actual package-build PASS must be retained independently of reference snapshots")
         require(packaging.get("package_version") == "6.30.0-0supralinux2", "attica: validated package revision mismatch")
         require(packaging.get("downstream_eligible") is True, "attica: PASS package must be downstream eligible")
-        pass_items = [x for x in packaging.get("evidence", []) if isinstance(x, dict) and x.get("result") == "PASS"]
+        pass_items = [item for item in packaging.get("evidence", []) if isinstance(item, dict) and item.get("result") == "PASS"]
         require(len(pass_items) == 1, "attica: exactly one retained package PASS expected")
         if pass_items:
             item = pass_items[0]
@@ -133,6 +146,31 @@ for node in source_nodes:
         require(node.get("packaging") == {"state": "pending"}, f"{node_id}: packaging state must remain pending until an actual package attempt")
         require(node.get("state") == "pending", f"{node_id}: DAG state must remain pending until an actual package attempt")
 
+for token in (
+    "manifests/kde-frameworks-tier1.json",
+    "manifests/kde-frameworks-tier1-packaging-reference.json",
+    "scripts/run-kde-tier1-packaging-reference-snapshot.sh",
+    "scripts/kde-tier1-packaging-reference-needed.sh",
+    ".github/workflows/kde-tier1-packaging-reference.yml",
+):
+    require(token in scope, f"Packaging-reference scope must track input {token}")
+require("docs/" not in scope, "Packaging-reference snapshot must not rerun for documentation-only changes")
+require("validate_kde_tier1_packaging_reference.py" not in scope, "Packaging-reference snapshot must not rerun for validator-only changes")
+require('git diff --name-only "${BEFORE}" "${AFTER}" --' in scope, "Packaging-reference scope must compare the exact event delta")
+
+for token in (
+    "fetch-depth: 0",
+    "github.event.before",
+    "github.event.after",
+    "github.event.pull_request.base.sha",
+    "github.event.pull_request.head.sha",
+    "scripts/kde-tier1-packaging-reference-needed.sh",
+    "steps.scope.outputs.run == 'true'",
+    "steps.scope.outputs.run == 'false'",
+):
+    require(token in workflow, f"Packaging-reference workflow missing event-delta invariant: {token}")
+require("paths:" not in workflow, "Packaging-reference workflow must not rely on PR-wide paths filtering")
+
 if errors:
     for error in errors:
         print(f"ERROR: {error}", file=sys.stderr)
@@ -142,4 +180,5 @@ print("KDE Frameworks Tier 1 packaging-reference policy: PASS")
 print("Reference authorities: none; Ubuntu Resolute and Debian sid are technical inputs only")
 print("Source packaging snapshot evidence: PASS, non-authoritative")
 print("Binary-contract snapshot evidence: PASS, non-authoritative")
+print("Reference snapshot CI: exact event-delta scoped; docs/validator edits do not refresh external metadata")
 print("Actual package states: attica PASS; 28 Tier 1 nodes pending")
