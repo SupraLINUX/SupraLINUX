@@ -18,14 +18,15 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805da76410c181273ba90b1 # v7.0.1
 
       - name: Install Ubuntu policy tools
         shell: bash
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends gnupg shellcheck
+          sudo apt-get install -y --no-install-recommends gnupg
+          sudo apt-get install -y --no-install-recommends shellcheck
           shellcheck --version
           gpgv --version | head -1
 

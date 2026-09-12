@@ -105,4 +105,4 @@ if verify_fixture >/dev/null 2>&1; then
     exit 1
 fi
 
-printf 'Ubuntu signed source-image verification functional test: PASS\n'
+printf 'Ubuntu source-image provenance functional test: PASS (signed metadata reverified)\n'

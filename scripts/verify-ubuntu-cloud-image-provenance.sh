@@ -50,9 +50,9 @@ if (( ${#SIGNED_HASHES[@]} != 1 )); then
         "${IMAGE_NAME}" "${#SIGNED_HASHES[@]}" >&2
     exit 1
 fi
-SIGNED_SHA256="${SIGNED_HASHES[0]}"
-if [[ ! "${SIGNED_SHA256}" =~ ^[0-9a-fA-F]{64}$ ]]; then
-    printf 'Invalid SHA-256 in signed metadata: %s\n' "${SIGNED_SHA256}" >&2
+EXPECTED_SHA256="${SIGNED_HASHES[0]}"
+if [[ ! "${EXPECTED_SHA256}" =~ ^[0-9a-fA-F]{64}$ ]]; then
+    printf 'Invalid SHA-256 in signed metadata: %s\n' "${EXPECTED_SHA256}" >&2
     exit 1
 fi
 
@@ -66,17 +66,17 @@ if [[ ! "${PROVENANCE_SHA256}" =~ ^[0-9a-fA-F]{64}$ ]]; then
     printf 'Invalid provenance SHA-256: %s\n' "${PROVENANCE_SHA256}" >&2
     exit 1
 fi
-if [[ "${PROVENANCE_SHA256,,}" != "${SIGNED_SHA256,,}" ]]; then
+if [[ "${PROVENANCE_SHA256,,}" != "${EXPECTED_SHA256,,}" ]]; then
     printf 'Provenance SHA-256 does not match signed Ubuntu metadata.\n' >&2
-    printf 'Signed:     %s\n' "${SIGNED_SHA256}" >&2
+    printf 'Signed:     %s\n' "${EXPECTED_SHA256}" >&2
     printf 'Provenance: %s\n' "${PROVENANCE_SHA256}" >&2
     exit 1
 fi
 
 ACTUAL_SHA256="$(sha256sum "${IMAGE}" | awk '{print $1}')"
-if [[ "${ACTUAL_SHA256,,}" != "${SIGNED_SHA256,,}" ]]; then
-    printf 'Ubuntu source-image SHA-256 does not match signed Ubuntu metadata.\n' >&2
-    printf 'Signed: %s\n' "${SIGNED_SHA256}" >&2
+if [[ "${ACTUAL_SHA256,,}" != "${EXPECTED_SHA256,,}" ]]; then
+    printf 'Ubuntu source-image SHA-256 mismatch against signed Ubuntu metadata.\n' >&2
+    printf 'Signed: %s\n' "${EXPECTED_SHA256}" >&2
     printf 'Actual: %s\n' "${ACTUAL_SHA256}" >&2
     exit 1
 fi
