@@ -66,6 +66,9 @@ jobs:
       - name: Validate KDE Frameworks Tier 1 manifest
         run: python3 scripts/validate_kde_tier1.py
 
+      - name: Validate KDE Frameworks Tier 1 packaging-reference policy
+        run: python3 scripts/validate_kde_tier1_packaging_reference.py
+
       - name: Verify runner and Ubuntu Qt candidate
         shell: bash
         run: |

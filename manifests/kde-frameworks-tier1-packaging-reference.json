@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-12",
+  "authority": false,
+  "role": "packaging-reference-only",
+  "selected_kde": "6.30.0",
+  "snapshot": {
+    "status": "pending",
+    "claim": "no-packaging-or-dag-state-change"
+  },
+  "references": {
+    "ubuntu": {
+      "distribution": "ubuntu",
+      "series": "resolute",
+      "components": ["main", "universe"],
+      "purpose": "Ubuntu compatibility and binary-package contract reference"
+    },
+    "debian": {
+      "distribution": "debian",
+      "series": "sid",
+      "components": ["main"],
+      "purpose": "Newer Debian KF6 packaging and ABI-contract reference"
+    }
+  },
+  "policy": {
+    "kde_upstream_remains_authority": true,
+    "reference_packaging_may_not_disable_upstream_defaults_without_documented_reason": true,
+    "reference_versions_do_not_select_kde_version": true,
+    "reference_binary_names_are_inputs_for_compatibility_review_not_automatic_decisions": true
+  },
+  "nodes": {
+    "attica": {"source_package": "kf6-attica"},
+    "bluez-qt": {"source_package": "kf6-bluez-qt"},
+    "karchive": {"source_package": "kf6-karchive"},
+    "kcalendarcore": {"source_package": "kf6-kcalendarcore"},
+    "kcodecs": {"source_package": "kf6-kcodecs"},
+    "kconfig": {"source_package": "kf6-kconfig"},
+    "kcoreaddons": {"source_package": "kf6-kcoreaddons"},
+    "kdbusaddons": {"source_package": "kf6-kdbusaddons"},
+    "kglobalaccel": {"source_package": "kf6-kglobalaccel"},
+    "kguiaddons": {"source_package": "kf6-kguiaddons"},
+    "kholidays": {"source_package": "kf6-kholidays"},
+    "ki18n": {"source_package": "kf6-ki18n"},
+    "kidletime": {"source_package": "kf6-kidletime"},
+    "kirigami": {"source_package": "kf6-kirigami"},
+    "kitemmodels": {"source_package": "kf6-kitemmodels"},
+    "kitemviews": {"source_package": "kf6-kitemviews"},
+    "kplotting": {"source_package": "kf6-kplotting"},
+    "kquickcharts": {"source_package": "kf6-kquickcharts"},
+    "syntax-highlighting": {"source_package": "kf6-syntax-highlighting"},
+    "ktexttemplate": {"source_package": "kf6-ktexttemplate"},
+    "kuserfeedback": {"source_package": "kf6-kuserfeedback"},
+    "kwidgetsaddons": {"source_package": "kf6-kwidgetsaddons"},
+    "kwindowsystem": {"source_package": "kf6-kwindowsystem"},
+    "modemmanager-qt": {"source_package": "kf6-modemmanager-qt"},
+    "networkmanager-qt": {"source_package": "kf6-networkmanager-qt"},
+    "prison": {"source_package": "kf6-prison"},
+    "solid": {"source_package": "kf6-solid"},
+    "sonnet": {"source_package": "kf6-sonnet"},
+    "threadweaver": {"source_package": "kf6-threadweaver"}
+  }
+}
