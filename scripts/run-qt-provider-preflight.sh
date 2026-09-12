@@ -94,6 +94,11 @@ for package in "${PACKAGES[@]}"; do
             "${package}" "${installed:-missing}" "${candidate:-missing}" >&2
         exit 1
     fi
+    if [[ "${installed}" != "${candidate}" ]]; then
+        printf 'Qt provider package is not at the current APT candidate: %s installed=%s candidate=%s\n' \
+            "${package}" "${installed}" "${candidate}" >&2
+        exit 1
+    fi
     upstream="$(normalize_upstream_version "${installed}")" || {
         printf 'Cannot normalize Qt upstream version for %s: %s\n' "${package}" "${installed}" >&2
         exit 1

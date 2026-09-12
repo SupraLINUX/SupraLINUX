@@ -80,6 +80,7 @@ repository_policy = workflow_texts.get("repository-policy.yml", "")
 runner_contract = workflow_texts.get("runner-contract.yml", "")
 authoritative_workflow = workflow_texts.get("authoritative-package-proof.yml", "")
 hosted_workflow = workflow_texts.get("package-build-proof.yml", "")
+qt_provider_workflow = workflow_texts.get("qt-provider-preflight.yml", "")
 
 require(f"actions/checkout@{CHECKOUT_SHA}" in repository_policy, "repository policy checkout action must use the approved immutable SHA")
 require("ubuntu-26.04" in repository_policy, "repository policy must use explicit ubuntu-26.04")
@@ -91,6 +92,8 @@ require("scripts/test-qemu-kvm-required.sh" in repository_policy, "repository po
 require("scripts/test-verify-ubuntu-cloud-image-provenance.sh" in repository_policy, "repository policy must functionally test signed Ubuntu source-image verification")
 require("scripts/test-check-actions-runner-runtime.sh" in repository_policy, "repository policy must functionally test effective Actions runner provenance")
 require("scripts/test-check-golden-image-provenance.sh" in repository_policy, "repository policy must functionally test the golden-image provenance gate")
+require("python3 scripts/validate_qt_provider.py" in repository_policy, "repository policy must execute the Qt provider invariant validator")
+require(bool(qt_provider_workflow), "missing Qt provider preflight workflow")
 
 for filename, text, gate_label in (
     ("runner-contract.yml", runner_contract, "ci:runner-contract"),
@@ -119,6 +122,10 @@ required_files = [
     "docs/runners/ubuntu-26.04.md",
     "docs/runners/provisioning.md",
     "docs/runners/host-kvm.md",
+    "docs/qt-provider-certification.md",
+    "scripts/validate_qt_provider.py",
+    "scripts/run-qt-provider-preflight.sh",
+    "scripts/qt-provider-preflight-needed.sh",
     "scripts/check-kvm-host.sh",
     "scripts/check-nested-kvm-runtime.sh",
     "scripts/check-actions-runner-runtime.sh",
@@ -320,7 +327,7 @@ print(
     "CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; "
     "signed-source-reverification=required; golden-provenance-gate=required; runner-runtime-provenance=required; "
     "KVM-runtime=required; deterministic-qemu-wrapper=required; JIT=required; exact-run-binding=required; "
-    "shell-syntax=required; shellcheck=required".format(
+    "qt-provider-policy=required; shell-syntax=required; shellcheck=required".format(
         hosted=hosted["role"],
         platform=authoritative["platform"],
         virt=authoritative["virtualization"],

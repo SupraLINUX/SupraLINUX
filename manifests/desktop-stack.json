@@ -39,8 +39,17 @@
     },
     "provider_preflight": {
       "scope": "plasma-frameworks-baseline",
-      "status": "pending",
-      "evidence": []
+      "status": "pass",
+      "resolved_upstream_version": "6.10.2",
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "run_id": 34665704108,
+          "commit": "bffcc3ce42f65bc73b784dbf94b90429be2262b0",
+          "artifact_id": 10288816586,
+          "artifact_sha256": "90a25a24b60dcc02691c7043eb3a985f21013c73e3ea4489a7427fa74e618e33"
+        }
+      ]
     },
     "certification": {
       "status": "pending",

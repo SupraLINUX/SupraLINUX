@@ -1,6 +1,7 @@
 # Qt provider certification
 
-Status: **Ubuntu provider preflight pending; final certification pending**  
+Provider preflight: **PASS**  
+Final certification: **pending**  
 Last reviewed: **2026-09-11**
 
 ## Authority and provider
@@ -14,23 +15,38 @@ Current KDE schedule evidence:
 
 Current Ubuntu Resolute candidate evidence includes:
 
-- `qt6-base-dev` 6.10.2+dfsg-7: <https://packages.ubuntu.com/resolute/amd64/qt6-base-dev>
-- `qt6-declarative-dev` 6.10.2+dfsg-3: <https://packages.ubuntu.com/resolute/amd64/qt6-declarative-dev>
-- `qt6-declarative-private-dev` 6.10.2+dfsg-3: <https://packages.ubuntu.com/resolute/amd64/qt6-declarative-private-dev>
-- `qt6-wayland-dev` 6.10.2-4: <https://packages.ubuntu.com/qt6-wayland-dev>
-- `qt6-wayland-private-dev` 6.10.2-4: <https://packages.ubuntu.com/resolute/amd64/qt6-wayland-private-dev>
-- `qt6-svg-dev` 6.10.2-2: <https://packages.ubuntu.com/resolute/qt6-svg-dev>
-- `qt6-shadertools-dev` 6.10.2-1: <https://packages.ubuntu.com/search?keywords=qt6-shadertools-dev>
-- `qt6-tools-dev` 6.10.2-1: <https://packages.ubuntu.com/resolute/qt6-tools-dev>
-- `qt6-5compat-dev` 6.10.2-1: <https://packages.ubuntu.com/search?keywords=qt6-5compat-dev&suite=resolute>
+- `qt6-base-dev` / private: 6.10.2+dfsg-7;
+- `qt6-declarative-dev` / private: 6.10.2+dfsg-3;
+- `qt6-wayland-dev` / private: 6.10.2-4;
+- `qt6-svg-dev`: 6.10.2-2;
+- `qt6-shadertools-dev`: 6.10.2-1;
+- `qt6-tools-dev` / tools: 6.10.2-1;
+- `qt6-5compat-dev`: 6.10.2-1.
 
-Qt documents patch releases as maintenance releases and states its source/binary compatibility promises for Qt 6, subject to the documented exceptions and same-toolchain/configuration requirements: <https://doc.qt.io/qt-6.10/qt-releases.html>.
+Although Debian revisions differ, they all resolve to upstream **Qt 6.10.2**. Qt documents patch releases as maintenance releases and its Qt 6 compatibility commitments remain subject to the documented toolchain/configuration/private-API caveats: <https://doc.qt.io/qt-6.10/qt-releases.html>.
 
-These facts make Ubuntu Qt 6.10.2 a plausible provider. They do **not** certify it.
+These facts and the successful provider preflight make Ubuntu Qt 6.10.2 a validated **reuse candidate** for the Plasma/Frameworks baseline. They do **not** constitute final KDE-stack certification.
 
-## Provider preflight scope
+## Provider preflight evidence
 
-The initial provider preflight deliberately targets the Qt closure needed as a baseline for Plasma/Frameworks packaging, not every optional Qt module that might appear later in KDE Gear.
+First real PASS:
+
+- commit: `bffcc3ce42f65bc73b784dbf94b90429be2262b0`;
+- workflow: `Qt provider preflight`;
+- run: **34665704108**;
+- artifact: **10288816586**;
+- artifact SHA-256: `90a25a24b60dcc02691c7043eb3a985f21013c73e3ea4489a7427fa74e618e33`;
+- hosted image: Ubuntu 26.04.1, image `ubuntu-26.04` version `20260907.131.1`;
+- effective Qt runtime: **6.10.2**;
+- compiler observed: GCC **15.2.0**;
+- CMake configure/build: **PASS**;
+- runtime probe: **PASS**.
+
+The same commit also had Repository Policy run `34665704104` PASS and package preflight `34665704091` PASS with its expensive `sbuild` path intentionally skipped.
+
+## Baseline closure proven
+
+The initial provider preflight targets the Qt closure needed as a baseline for Plasma/Frameworks packaging, not every optional module that may later be required by individual KDE Gear applications.
 
 Packages under the baseline gate:
 
@@ -42,36 +58,65 @@ Packages under the baseline gate:
 - `qt6-tools-dev`, `qt6-tools-dev-tools`;
 - `qt6-5compat-dev`.
 
-`scripts/run-qt-provider-preflight.sh` requires:
+The first PASS proved all baseline packages install from Resolute and normalize to upstream `6.10.2`. The hardened preflight additionally requires each installed Debian package version to equal the current APT candidate, preventing stale locally installed Qt packages from satisfying the gate.
 
-1. Ubuntu 26.04 runtime;
-2. manifest-required Qt series `6.10`;
-3. all baseline packages installed and available from APT;
-4. every baseline package resolving to one coherent upstream Qt patch release, currently expected to be 6.10.x;
-5. `qtpaths6` runtime version matching that package baseline;
-6. CMake discovery of public targets for Core, Gui, Widgets, DBus, Network, Concurrent, QML, Quick, QuickControls2, SVG, ShaderTools, Core5Compat and WaylandClient;
-7. CMake discovery of private Gui, QML, Quick and WaylandClient targets;
-8. successful compilation and execution of a probe linked against that closure;
-9. retained package, CMake, runtime and result evidence.
+## CMake and runtime surface proven
 
-The hosted lane is non-authoritative and its result is explicitly named **provider preflight**, not certification.
+The PASS resolved public targets for:
+
+- Core, Gui, Widgets, DBus, Network, Concurrent;
+- Qml, Quick, QuickControls2;
+- Svg, ShaderTools, Core5Compat;
+- WaylandClient.
+
+It also resolved the private targets:
+
+- `Qt6::GuiPrivate`;
+- `Qt6::QmlPrivate`;
+- `Qt6::QuickPrivate`;
+- `Qt6::WaylandClientPrivate`.
+
+CMake emitted the expected Qt warning for private modules: consumers of private headers are tied to the specific Qt module build version. This is material evidence, not noise. SupraLINUX therefore treats the exact upstream patch level as part of the private-API build contract and rejects a mixed baseline such as Base 6.10.2 plus Declarative 6.10.3.
+
+The compiled probe linked the public/private closure and executed with:
+
+```text
+qt_runtime_version=6.10.2
+qml_engine=PASS
+svg_module=PASS
+core5compat=PASS
+```
+
+## Claim boundary
+
+The hosted result is explicitly `ubuntu-qt-provider-preflight-only` and is non-authoritative for final KDE compatibility.
+
+Provider preflight PASS establishes:
+
+1. KDE-selected Qt series 6.10 is available from Ubuntu 26.04;
+2. the declared baseline packages are coherent at upstream 6.10.2;
+3. public and selected private CMake targets required for early Plasma/Frameworks packaging are discoverable;
+4. a representative C++/QML/SVG/Core5Compat program builds and runs against that provider.
+
+It does not establish that every Framework, Plasma component, KWin consumer or Gear application builds and runs correctly.
 
 ## Why Gear is not predeclared here
 
 KDE Gear is a collection of applications with a wider and package-specific Qt dependency surface. SupraLINUX will extend the Qt module closure from the actual upstream dependency DAG for each selected application. Optional modules such as Multimedia, WebSockets, WebEngine, Positioning or Speech are added only when upstream KDE packages require them.
 
-This preserves the project rule: KDE decides what KDE needs; Ubuntu does not define the desktop dependency set.
+This preserves the project rule: **KDE decides what KDE needs**; Ubuntu does not define the desktop dependency set.
 
 ## Final certification requirements
 
-Ubuntu Qt may move from `reuse-candidate`/`pending` to certified only after evidence establishes at minimum:
+Ubuntu Qt may move from `reuse-candidate` with final certification `pending` to certified only after evidence establishes at minimum:
 
-1. provider preflight PASS on current Ubuntu 26.04;
-2. selected KDE Frameworks/Plasma sources configure and build against that provider;
-3. private-API consumers required by the selected KDE stack build successfully;
-4. package metadata/ABI contracts remain compatible with the SupraLINUX/Ubuntu package model;
-5. KDE runtime/session smoke tests pass;
-6. compatibility tests for relevant Ubuntu and third-party Qt applications pass;
-7. real evidence is recorded in the manifest/status documentation.
+1. provider preflight PASS on current Ubuntu 26.04 — **PASS**;
+2. selected KDE Frameworks sources configure and build against that provider — **pending**;
+3. selected Plasma/KWin sources configure and build against that provider — **pending**;
+4. private-API consumers required by the selected KDE stack build successfully — **pending beyond the synthetic baseline probe**;
+5. Debian package metadata/ABI contracts remain compatible with the SupraLINUX/Ubuntu package model — **pending**;
+6. KDE runtime/session smoke tests pass — **pending**;
+7. compatibility tests for relevant Ubuntu and third-party Qt applications pass — **pending**;
+8. real evidence is recorded in manifests/status documentation — **ongoing**.
 
-Until then, `qt.certification.status` remains `pending`.
+Until those stronger gates pass, `qt.certification.status` remains `pending` and Ubuntu remains a `reuse-candidate`, not a certified Qt provider.
