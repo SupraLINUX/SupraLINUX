@@ -322,7 +322,7 @@
       ],
       "pass_files": {
         "libkf6dbusaddons_bin_deb_sha256": "68400eb262bb9fa2007adcc60147bab81846d16c8db93cd370edd3a83934a138",
-        "libkf6dbusaddons_data_deb_sha256": "279d4f563b0b9ee509d7aac09974c5a870973bc4380897add15ada15e4d1413",
+        "libkf6dbusaddons_data_deb_sha256": "279d4f563b0b9ee509d7aac09974c5a870973bc43808987add15ada15e4d1413",
         "libkf6dbusaddons_dev_deb_sha256": "1d2c9c54b56a9db028b513b66ff912d679c4762aa1003fa4fc89513c9267c91f",
         "libkf6dbusaddons_doc_deb_sha256": "e85fe27a90f289321ab3290fa449a384261d5da10ab4797ef8cd1b443b300ae3",
         "libkf6dbusaddons6_deb_sha256": "c66f0b0fb84bf4f20c39a9b2fcf9aaae09c30dae31a3cfa54b48702b648f7a12",
