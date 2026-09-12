@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PKG = ROOT / "packages" / "kde" / "attica" / "debian"
 TIER1 = ROOT / "manifests" / "kde-frameworks-tier1.json"
+RUNNER = ROOT / "scripts" / "run-kde-attica-package-preflight.sh"
 
 errors: list[str] = []
 
@@ -50,6 +51,7 @@ changelog = text(PKG / "changelog")
 patch = text(PKG / "patches" / "Disable-network-dependant-test.patch")
 symbols_ref = text(PKG / "libkf6attica6.symbols.reference")
 readme = text(PKG / "README.source")
+runner = text(RUNNER)
 
 require(control.startswith("Source: kf6-attica\n"), "Attica source package name must remain kf6-attica")
 require("Maintainer: SupraLINUX Project <packages@supralinux.invalid>" in control, "Attica maintainer must use the SupraLINUX packaging identity")
@@ -80,7 +82,11 @@ require("-DBUILD_TESTING=ON" in rules, "Attica package profile must keep upstrea
 require("-DSKIP_LICENSE_TESTS=OFF" in rules, "Attica package profile must keep outbound license tests enabled")
 require("DEB_BUILD_MAINT_OPTIONS = hardening=+all" in rules, "Attica package must retain Debian hardening")
 
-require(changelog.startswith("kf6-attica (6.30.0-0supralinux1) resolute;"), "Attica changelog version/distribution mismatch")
+require(changelog.startswith("kf6-attica (6.30.0-0supralinux2) resolute;"), "Attica changelog must use remediation revision 6.30.0-0supralinux2")
+require("6.30.0-0supralinux1" in changelog, "Attica changelog must retain first attempted revision")
+require("dpkg-source -b" in runner, "Attica runner must assemble the source package with dpkg-source -b")
+require("dpkg-buildpackage -S" not in runner, "Attica runner must not execute debian/rules on the host while assembling source")
+require('DEBIAN_VERSION="${UPSTREAM_VERSION}-0supralinux2"' in runner, "Attica runner must use remediation revision 6.30.0-0supralinux2")
 require("providertest.cpp" in patch and "# providertest.cpp" in patch, "Attica package must disable only the live-network provider test")
 require("https://autoconfig.kde.org" in readme or "autoconfig.kde.org" in readme, "Attica README.source must document why the network test is disabled")
 
@@ -104,15 +110,16 @@ if isinstance(attica, dict):
     require(attica.get("upstream_version") == "6.30.0", "Attica selected upstream version must remain 6.30.0")
     require(attica.get("source_sha256") == "3eec8d2d9c77ad5f7cfd38e44e4b1492c5d0dec695b13f711c09f7d6187c276c", "Attica upstream source hash changed unexpectedly")
     require(attica.get("depends_on") == ["extra-cmake-modules"], "Attica must depend only on ECM at this Tier")
-    require(attica.get("packaging") == {"state": "pending"}, "Attica packaging state must stay pending until a real build attempt is recorded")
-    require(attica.get("state") == "pending", "Attica DAG state must stay pending until a real build attempt is recorded")
+    require(attica.get("packaging") == {"state": "pending"}, "Attica packaging manifest stays pending until remediation run result is recorded")
+    require(attica.get("state") == "pending", "Attica DAG manifest stays pending until remediation run result is recorded")
 
 if errors:
     for error in errors:
         print(f"ERROR: {error}", file=sys.stderr)
     raise SystemExit(1)
 
-print("KDE Attica 6.30 packaging preparation validation: PASS")
-print("Package version: 6.30.0-0supralinux1")
+print("KDE Attica 6.30 packaging remediation validation: PASS")
+print("Package version: 6.30.0-0supralinux2")
 print("Qt floor: 6.9.0; ECM predecessor: 6.30.0")
-print("Packaging/DAG state: pending until actual sbuild result")
+print("Source assembly: dpkg-source -b; build helpers resolved in clean sbuild")
+print("Manifest state remains pending until remediation run result is recorded")

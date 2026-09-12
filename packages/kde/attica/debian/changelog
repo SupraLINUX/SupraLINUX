@@ -1,3 +1,11 @@
+kf6-attica (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Keep the first hosted package attempt as historical FAIL evidence.
+  * Assemble the 3.0 (quilt) source package with dpkg-source -b so KDE/Debian
+    build helpers are resolved only inside the clean sbuild environment.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 13:28:00 -0300
+
 kf6-attica (6.30.0-0supralinux1) resolute; urgency=medium
 
   * Package KDE Frameworks Attica 6.30.0 from KDE upstream stable.

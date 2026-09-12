@@ -1,11 +1,11 @@
 # KDE Frameworks 6.30 — Attica packaging
 
-Status: **packaging reference-tree PASS; SupraLINUX packaging prepared; first clean package build pending**  
+Status: **packaging reference-tree PASS; first SupraLINUX package attempt FAIL; remediation revision 6.30.0-0supralinux2 prepared**  
 Last reviewed: **2026-09-12**
 
 ## Scope
 
-`attica` is the first KDE Frameworks 6.30 Tier 1 node selected for an actual SupraLINUX package proof. It remains `packaging.state=pending` and DAG `state=pending` until a real package-build campaign is attempted.
+`attica` is the first KDE Frameworks 6.30 Tier 1 node selected for an actual SupraLINUX package proof.
 
 KDE upstream `v6.30.0` is authoritative for the build. The pinned source is:
 
@@ -56,7 +56,7 @@ Selected direct build dependencies are:
 - `qt6-base-dev (>= 6.9.0~)` — supplies Core, Network, Test and Widgets required by Attica's selected build/test profile;
 - `python3` and `reuse` — preserve ECMCheckOutboundLicense/REUSE license tests.
 
-The older reference-only dependencies `doxygen`, `libxkbcommon-dev` and `qt6-tools-dev` are not direct requirements of the selected default Attica 6.30 build. They are therefore not carried into this first package proof merely because older distro packaging lists them.
+The older reference-only dependencies `doxygen`, `libxkbcommon-dev` and `qt6-tools-dev` are not direct requirements of the selected default Attica 6.30 build and are not carried into this package merely because older distro packaging lists them.
 
 ## Tests and deterministic build policy
 
@@ -76,13 +76,13 @@ The package name `libkf6attica-doc` is retained for compatibility. In this first
 
 ## Symbols / ABI baseline
 
-The first package proof starts `dpkg-gensymbols` from the exact Ubuntu Resolute `libkf6attica6.symbols` compatibility baseline retained in artifact `10301617541`:
+The package proof starts `dpkg-gensymbols` from the exact Ubuntu Resolute `libkf6attica6.symbols` compatibility baseline retained in artifact `10301617541`:
 
 - symbols SHA-256: `e67d131171c8e3ea79c6bbbb2434aa2492580d19ba7dccdaa7038766cd9827ad`.
 
-Because that file is large, the repository stores a small `libkf6attica6.symbols.reference` record. `scripts/run-kde-attica-package-preflight.sh` verifies and copies the retained full symbols file into `debian/libkf6attica6.symbols` **before** creating the Debian source package. The retained `.dsc`/`.debian.tar.xz` from the build therefore contains the complete symbols baseline actually used.
+Because that file is large, the repository stores a small `libkf6attica6.symbols.reference` record. `scripts/run-kde-attica-package-preflight.sh` verifies and copies the retained full symbols file into `debian/libkf6attica6.symbols` before creating the Debian source package. The retained `.dsc`/`.debian.tar.xz` from a successful source-package stage therefore contains the complete symbols baseline actually used.
 
-An ABI delta reported by `dpkg-gensymbols` is not suppressed. It is a real Attica packaging/build result that must be reviewed and, if appropriate, used to establish the new SupraLINUX 6.30 symbols baseline.
+An ABI delta reported by `dpkg-gensymbols` is not suppressed. It is a real Attica packaging/build result that must be reviewed and, if appropriate, used to establish the SupraLINUX 6.30 symbols baseline.
 
 ## ECM predecessor
 
@@ -96,19 +96,41 @@ The clean Attica build is not allowed to resolve Ubuntu's older ECM. It must con
 
 The Attica workflow downloads that exact retained artifact and passes its `.deb` through sbuild's `--extra-package` mechanism. The resulting `.buildinfo` must explicitly prove `extra-cmake-modules (= 6.30.0-0supralinux3)` or the gate fails.
 
-## First package gate
+## Package attempt 1 — FAIL
 
-`.github/workflows/kde-attica-package-preflight.yml` will run the prepared package in a fresh Ubuntu Resolute `sbuild` root. The gate requires:
+Commit `c18c8dcd1934a5bba874e642ba9b14729d2e69df` attempted package `6.30.0-0supralinux1`.
+
+- workflow run: `34705165994`;
+- result: **FAIL**;
+- evidence artifact: `10300903114`;
+- artifact SHA-256: `171cfe8553aba2af8f42a640ee5f50f82988005edbd104b737d93b639dc38300`;
+- failure stage: `source-package`.
+
+The retained ECM and Attica packaging-reference artifacts both downloaded and verified successfully. The failure occurred before `sbuild`: `dpkg-buildpackage -S` invoked `debian/rules clean` on the GitHub-hosted runner, and debhelper attempted to load `dh-sequence-kf6`, which intentionally belongs to the clean build environment rather than the source-assembly host.
+
+This is a real Attica/pipeline FAIL because the node was actually attempted. It is not a KDE upstream, Qt-provider, ECM-predecessor or ABI failure.
+
+## Remediation revision 6.30.0-0supralinux2
+
+The remediation does not install KDE build helpers into the host runner. Instead, the source package is assembled with `dpkg-source -b` using source format `3.0 (quilt)`. `dpkg-source` creates the `.dsc` and Debian tarball without executing `debian/rules`; the actual Build-Depends, including `dh-sequence-kf6`, are then resolved only inside the fresh Resolute `sbuild` environment.
+
+This keeps the host as source-assembly infrastructure and preserves the clean-build boundary. Debian's `dpkg-source(1)` explicitly defines `-b/--build directory` as the operation for building a source package from a debianized source tree.
+
+The first failed revision remains in `debian/changelog`; the candidate is `6.30.0-0supralinux2`.
+
+## Remediation package gate
+
+`.github/workflows/kde-attica-package-preflight.yml` reruns the package in a fresh Ubuntu Resolute `sbuild` root. The gate requires:
 
 1. KDE source SHA-256 verification;
 2. exact ECM artifact and symbols-reference verification;
-3. a Debian source package containing the injected symbols baseline;
+3. source-package assembly through `dpkg-source -b` without host-side KDE build helpers;
 4. build/tests in a fresh Resolute buildd root;
-5. exactly `libkf6attica6`, `libkf6attica-dev` and `libkf6attica-doc` at `6.30.0-0supralinux1`;
+5. exactly `libkf6attica6`, `libkf6attica-dev` and `libkf6attica-doc` at `6.30.0-0supralinux2`;
 6. preserved Multi-Arch/dependency/compatibility fields;
 7. SONAME `libKF6Attica.so.6`;
 8. retained `.deb`, `.changes`, `.buildinfo`, `.dsc`, source tarballs and hashes;
 9. Lintian with errors fatal;
 10. a real CMake consumer build and execution against the generated runtime/dev packages.
 
-Only the outcome of that actual build may promote `attica` from `pending` to PASS or FAIL.
+The result of that actual remediation build determines whether Attica can move to PASS or remains FAIL. The other 28 Tier 1 nodes are unaffected and remain pending.

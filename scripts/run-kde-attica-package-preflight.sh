@@ -12,7 +12,7 @@ CHROOT_TARBALL="${HOME}/.cache/sbuild/resolute-amd64.tar"
 MIRROR="${SBUILD_MIRROR:-http://azure.archive.ubuntu.com/ubuntu}"
 
 UPSTREAM_VERSION="6.30.0"
-DEBIAN_VERSION="${UPSTREAM_VERSION}-0supralinux1"
+DEBIAN_VERSION="${UPSTREAM_VERSION}-0supralinux2"
 SOURCE_PACKAGE="kf6-attica"
 UPSTREAM_TARBALL="attica-${UPSTREAM_VERSION}.tar.xz"
 UPSTREAM_URL="https://download.kde.org/stable/frameworks/6.30/${UPSTREAM_TARBALL}"
@@ -156,8 +156,8 @@ if ! cmp -s "${SYMBOLS_REFERENCE}" "${SOURCE_DIR}/debian/libkf6attica6.symbols";
 fi
 
 STAGE="source-package"
-pushd "${SOURCE_DIR}" >/dev/null
-dpkg-buildpackage -S -us -uc -d
+pushd "${SOURCE_WORK}" >/dev/null
+dpkg-source -b "$(basename "${SOURCE_DIR}")"
 popd >/dev/null
 
 DSC="${SOURCE_WORK}/${SOURCE_PACKAGE}_${DEBIAN_VERSION}.dsc"
@@ -165,9 +165,6 @@ DEBIAN_TARBALL="${SOURCE_WORK}/${SOURCE_PACKAGE}_${DEBIAN_VERSION}.debian.tar.xz
 test -s "${DSC}"
 test -s "${DEBIAN_TARBALL}"
 sha256sum "${DSC}" "${ORIG_TARBALL}" "${DEBIAN_TARBALL}" > "${EVIDENCE_DIR}/source-package-sha256.txt"
-
-dpkg-source --before-build "${SOURCE_DIR}"
-dpkg-source --after-build "${SOURCE_DIR}"
 
 STAGE="sbuild-rootfs"
 rm -f "${CHROOT_TARBALL}"
