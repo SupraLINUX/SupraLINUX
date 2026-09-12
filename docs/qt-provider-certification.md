@@ -2,7 +2,7 @@
 
 Provider preflight: **PASS**  
 Final certification: **pending**  
-Last reviewed: **2026-09-11**
+Last reviewed: **2026-09-12**
 
 ## Authority and provider
 
@@ -44,6 +44,16 @@ First real PASS:
 
 The same commit also had Repository Policy run `34665704104` PASS and package preflight `34665704091` PASS with its expensive `sbuild` path intentionally skipped.
 
+Second hardened PASS:
+
+- branch commit: `8cf0b4c9b156937c7ae322970d57bc5fd5561a9c`;
+- workflow run: **34666082893**;
+- artifact: **10289775722**;
+- artifact SHA-256: `67e8254f7c54a72e5c99000e9f00fb180a9b78b6ac39c05ad56ba0a4a2fa979b`;
+- result: **PASS** after adding the stricter `installed Debian version == current APT candidate` requirement for every baseline package.
+
+On that same head, Repository Policy run **34666082909** is retained as a transition **FAIL**. All pre-existing architecture/KVM checks and the general repository validator passed; only `Validate Qt provider invariants` failed because `validate_qt_provider.py` compared the documented status phrases case-sensitively (`provider`/`final`) while this document correctly used title-case headings (`Provider`/`Final`). This was a policy-validator defect, not a Qt-provider failure. Commit `284807f04a45a75a87e8cc65bdaf6a2bb4287a1a` corrected the validator by normalizing documentation text before status checks.
+
 ## Baseline closure proven
 
 The initial provider preflight targets the Qt closure needed as a baseline for Plasma/Frameworks packaging, not every optional module that may later be required by individual KDE Gear applications.
@@ -58,7 +68,7 @@ Packages under the baseline gate:
 - `qt6-tools-dev`, `qt6-tools-dev-tools`;
 - `qt6-5compat-dev`.
 
-The first PASS proved all baseline packages install from Resolute and normalize to upstream `6.10.2`. The hardened preflight additionally requires each installed Debian package version to equal the current APT candidate, preventing stale locally installed Qt packages from satisfying the gate.
+The first PASS proved all baseline packages install from Resolute and normalize to upstream `6.10.2`. The hardened preflight additionally requires each installed Debian package version to equal the current APT candidate, preventing stale locally installed Qt packages from satisfying the gate. Run `34666082893` proved that stricter condition in CI.
 
 ## CMake and runtime surface proven
 
