@@ -17,13 +17,15 @@ The package preflight creates a fresh Resolute `buildd` rootfs with `mmdebstrap`
 
 Expensive hosted package work is gated on the actual PR event delta. Infrastructure/documentation-only synchronizations still run scope policy but skip `sbuild`; this skip path has repeated real PASS evidence.
 
-Repository Policy currently requires:
+Repository Policy requires:
 
 - immutable `actions/checkout` SHA `3d3c42e5aac5ba805825da76410c181273ba90b1`;
 - Bash syntax validation for all `scripts/*.sh`;
 - Ubuntu 26.04 ShellCheck (`shellcheck -e SC1091 scripts/*.sh`);
 - deterministic KVM-QEMU wrapper functional testing;
-- cryptographic Ubuntu source-image verification functional testing;
+- cryptographic Ubuntu source-image functional testing;
+- effective GitHub Actions runner provenance functional testing;
+- golden-image provenance functional testing;
 - repository architecture/invariant validation;
 - live Ubuntu/Qt candidate validation.
 
@@ -38,6 +40,23 @@ Release-relevant evidence is produced inside disposable self-hosted Ubuntu 26.04
 The host requests a fresh repository-scoped JIT configuration, injects it into guest tmpfs, executes one controlled job, exports diagnostics and destroys writable VM state. Fork PRs are refused before self-hosted execution.
 
 Host orchestration is serialized. It rejects pre-existing queued/active authoritative workflows before creating a runner, snapshots workflow IDs before the trigger, and binds evidence to exactly one newly-created workflow run for the exact PR head SHA. Ambiguous attribution fails closed.
+
+The public host entrypoint is `scripts/run-kvm-jit-gate.sh`. Before it delegates to `scripts/run-kvm-jit-gate-core.sh`, it validates the golden image with `scripts/check-golden-image-provenance.sh`. Therefore JIT orchestration cannot start from a golden image whose current bytes, source commit, source cleanup or signed-source verification evidence fail policy.
+
+## Effective Actions runner provenance
+
+The golden builder verifies the GitHub-published SHA-256 for the selected stable `actions/runner` asset and records the release tag/hash. Because JIT configuration does not expose a supported `disableupdate` registration input, authoritative runtime also verifies the effective runner.
+
+`scripts/check-actions-runner-runtime.sh` queries the actual `bin/Runner.Listener` binary directly using `--version` and `--commit`. It requires:
+
+- exactly one verified runner `tag` and `asset_sha256` in golden provenance evidence;
+- a semantic runtime version matching the verified golden release;
+- a full 40-hex runtime source commit;
+- explicit runtime evidence `runtime_matches_verified_version=yes`.
+
+A version mismatch fails closed and requires rebuilding the golden image. The checker deliberately does not derive version/commit from `run.sh`: upstream `run.sh` delegates through `run-helper.sh`, while `Runner.Listener` itself handles `--version`/`--commit` directly before normal run mode.
+
+Both `runner-contract.yml` and the authoritative package proof execute this runtime check and retain `actions-runner-runtime.txt`.
 
 ## Real nested-KVM gate
 
@@ -70,30 +89,19 @@ Build artifacts are captured before runtime tests so a later test failure cannot
 
 ## Ubuntu runner source-image integrity
 
-Source-image trust is checked twice and against the same Ubuntu signing authority.
+Source-image trust is checked twice against the same Ubuntu signing authority.
 
 ### Fetch-time verification
 
-`scripts/fetch-ubuntu-26.04-cloud-image.sh` downloads the released Resolute amd64 cloud image together with `SHA256SUMS` and `SHA256SUMS.gpg`, verifies the signature with Ubuntu's cloud-image keyring, derives the expected image SHA-256 from the signed metadata, verifies the downloaded bytes, and stores all metadata/provenance under stable host storage.
+`scripts/fetch-ubuntu-26.04-cloud-image.sh` downloads the released Resolute amd64 cloud image together with `SHA256SUMS` and `SHA256SUMS.gpg`, verifies the signature with Ubuntu's cloud-image keyring, derives the expected image SHA-256 from the signed metadata, verifies the downloaded bytes, and stores metadata/provenance under stable host storage.
 
 ### Use-time cryptographic re-verification
 
-Before the golden builder even asks `qemu-img` to inspect the source image, `scripts/verify-ubuntu-cloud-image-provenance.sh`:
+Before the golden builder even asks `qemu-img` to inspect the source image, `scripts/verify-ubuntu-cloud-image-provenance.sh` re-runs `gpgv`, derives the expected hash from freshly verified Ubuntu metadata, and requires provenance and actual bytes to match that signed value.
 
-1. requires the expected Resolute/amd64 image filename and provenance;
-2. requires the retained `SHA256SUMS`, `SHA256SUMS.gpg` and Ubuntu keyring;
-3. runs `gpgv` again on the retained signed checksum metadata;
-4. derives the expected SHA-256 for the exact image filename from the freshly verified `SHA256SUMS`;
-5. requires the provenance SHA-256 to agree with that signed value;
-6. recalculates the actual image SHA-256 and requires equality with the signed value.
+Repository Policy tests this logic with an ephemeral GPG signing key and real detached signatures, including negative cases for tampering and forged mutable provenance.
 
-The accepted hash therefore comes from cryptographically reverified Ubuntu metadata, not from mutable provenance text. Modifying image and provenance together is insufficient unless the attacker can also produce a signature accepted by the configured Ubuntu keyring.
-
-Repository Policy tests this logic with an ephemeral GPG signing key and real detached signatures. It includes negative cases for modified image bytes, checksum metadata changed after signing, invalid provenance signature marker, duplicate provenance hashes, and jointly modified image+provenance without matching signed metadata.
-
-## Golden runner-image chain
-
-The supported host recipe currently targets Ubuntu 26.04 amd64/x86_64 as infrastructure provider. The host must pass `scripts/check-kvm-host.sh`; bootstrap never silently changes firmware or forcibly reloads KVM modules.
+## Golden runner-image chain and admission gate
 
 ```text
 released Ubuntu Resolute cloud image
@@ -102,24 +110,24 @@ released Ubuntu Resolute cloud image
 -> temporary qcow2 preparation overlay
 -> Ubuntu 26.04 KVM preparation VM
 -> exact SupraLINUX source commit checkout
--> runner/toolchain provisioning
+-> verified runner/toolchain provisioning
 -> nested autopkgtest image creation
 -> runner pre-seal + temporary source checkout removal
 -> VM poweroff
 -> offline virt-sysprep identity cleanup
 -> qemu-img flatten + check
 -> standalone golden qcow2 + SHA-256/provenance
+-> golden provenance admission gate
+-> disposable JIT overlay
 ```
+
+`scripts/check-golden-image-provenance.sh` admits a golden image only when it has exactly one valid `golden_image_sha256`, `source_image_sha256`, `source_commit`, `source_checkout_removed=yes` and `source_image_provenance_verified=yes`, and the current golden bytes hash to the recorded SHA-256. Ambiguity or tampering is FAIL.
 
 Existing golden images are never replaced without explicit `SUPRALINUX_REPLACE_GOLDEN_IMAGE=1` opt-in.
 
-## GitHub runner software
-
-The golden builder resolves the current stable `actions/runner` release and verifies GitHub's published asset SHA-256 before installation. Version/hash are retained in image evidence. JIT `generate-jitconfig` does not expose GitHub's `disableupdate` registration option, so runtime diagnostics must preserve the effective runner version; golden images must be refreshed when runner updates require it rather than relying on an unsupported JIT flag.
-
 ## Evidence contract
 
-Important build/test evidence includes, where applicable: source/version/commit and hashes; dependency/configuration manifests; complete logs; `.deb`, `.changes`, `.buildinfo`; host preflight; signed Ubuntu source metadata and use-time verification evidence; Actions runner version/digest; nested test-image hash; offline sysprep/qcow2 validation; final golden-image hash/provenance; nested-KVM probe; QEMU-wrapper hash; exact PR head and workflow run ID; runner/VM diagnostics; terminal state.
+Important build/test evidence includes, where applicable: source/version/commit and hashes; dependency/configuration manifests; complete logs; `.deb`, `.changes`, `.buildinfo`; host preflight; signed Ubuntu source metadata and use-time verification; Actions runner verified release/digest plus effective runtime version/commit; golden admission evidence; nested test-image hash; offline sysprep/qcow2 validation; final golden-image hash/provenance; nested-KVM probe; QEMU-wrapper hash; exact PR head and workflow run ID; runner/VM diagnostics; terminal state.
 
 Hashes/results are evidence and must never be invented or copied from unrelated runs.
 
@@ -131,6 +139,6 @@ Repository publication/signing remains separate from compilation. Builders do no
 
 ## Initial gates
 
-Repository/manifest validation; Bash syntax; ShellCheck; QEMU-wrapper functional test; signed Ubuntu source-image functional test; source integrity; hosted clean-build preflight; host KVM/nested preflight; verified source image; use-time cryptographic source re-verification; golden-image build/provenance; authoritative JIT/KVM runner certification; real nested-KVM runtime probe; authoritative `sbuild`; package metadata; `autopkgtest/QEMU` through KVM-only wrapper; DAG consistency; install/upgrade tests; KDE session/runtime smoke tests; Ubuntu application compatibility tests for replaced shared libraries; repository publication verification.
+Repository/manifest validation; Bash syntax; ShellCheck; QEMU-wrapper test; signed Ubuntu source-image test; effective Actions runner provenance test; golden-image provenance test; source integrity; hosted clean-build preflight; host KVM/nested preflight; verified source image; use-time cryptographic source re-verification; golden-image build/provenance; golden admission; authoritative JIT/KVM runner certification; real nested-KVM runtime probe; authoritative `sbuild`; package metadata; `autopkgtest/QEMU` through KVM-only wrapper; DAG consistency; install/upgrade tests; KDE session/runtime smoke tests; Ubuntu application compatibility tests for replaced shared libraries; repository publication verification.
 
 Existing gates cannot be removed silently: implementation, machine-readable policy and documentation must change together.
