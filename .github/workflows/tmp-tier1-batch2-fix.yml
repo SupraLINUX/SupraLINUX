@@ -19,8 +19,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m py_compile scripts/tmp-tier1-batch2-fix.py
+          python3 -m py_compile scripts/tmp-tier1-batch2-fix.py scripts/tmp-tier1-batch2-fix-code.py
           python3 scripts/tmp-tier1-batch2-fix.py
+          python3 scripts/tmp-tier1-batch2-fix-code.py
           bash -n scripts/run-kde-tier1-package-batch2-preflight.sh scripts/kde-tier1-package-batch2-needed.sh
           python3 scripts/validate_kde_tier1.py
           python3 scripts/validate_kde_tier1_package_batch2.py
