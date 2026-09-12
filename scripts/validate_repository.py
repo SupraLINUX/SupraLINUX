@@ -82,6 +82,7 @@ require("bash -n scripts/*.sh" in repository_policy, "repository policy must syn
 require("apt-get install -y --no-install-recommends shellcheck" in repository_policy, "repository policy must install Ubuntu ShellCheck")
 require("shellcheck -e SC1091 scripts/*.sh" in repository_policy, "repository policy must lint all shell scripts with ShellCheck")
 require("scripts/test-qemu-kvm-required.sh" in repository_policy, "repository policy must functionally test the KVM-required QEMU wrapper")
+require("scripts/test-verify-ubuntu-cloud-image-provenance.sh" in repository_policy, "repository policy must functionally test Ubuntu source-image provenance verification")
 
 for filename, text, gate_label in (
     ("runner-contract.yml", runner_contract, "ci:runner-contract"),
@@ -113,6 +114,8 @@ required_files = [
     "scripts/provision-kvm-host.sh",
     "scripts/package-preflight-needed.sh",
     "scripts/fetch-ubuntu-26.04-cloud-image.sh",
+    "scripts/verify-ubuntu-cloud-image-provenance.sh",
+    "scripts/test-verify-ubuntu-cloud-image-provenance.sh",
     "scripts/build-authoritative-runner-image.sh",
     "scripts/install-actions-runner.sh",
     "scripts/provision-authoritative-runner-guest.sh",
@@ -149,10 +152,29 @@ cloud_fetcher = read_required(ROOT / "scripts/fetch-ubuntu-26.04-cloud-image.sh"
 require("SHA256SUMS.gpg" in cloud_fetcher and "gpgv" in cloud_fetcher, "Ubuntu source image must use signed checksum verification")
 require("/var/lib/supralinux/images/source/resolute" in cloud_fetcher, "Ubuntu source image must default to stable host storage")
 
+source_verifier = read_required(ROOT / "scripts/verify-ubuntu-cloud-image-provenance.sh")
+for token, message in (
+    ("release=resolute", "source-image verifier must require Resolute provenance"),
+    ("architecture=amd64", "source-image verifier must require amd64 provenance"),
+    ("signature=verified-with-gpgv", "source-image verifier must require verified signature provenance"),
+    ("EXPECTED_SHA256", "source-image verifier must parse expected SHA-256"),
+    ("ACTUAL_SHA256", "source-image verifier must calculate actual SHA-256"),
+    ("Ubuntu source-image SHA-256 mismatch", "source-image verifier must fail closed on hash mismatch"),
+):
+    require(token in source_verifier, message)
+
+source_verifier_test = read_required(ROOT / "scripts/test-verify-ubuntu-cloud-image-provenance.sh")
+require("tampered" in source_verifier_test, "source-image verifier test must exercise modified image bytes")
+require("signature=unverified" in source_verifier_test, "source-image verifier test must reject unverified signature metadata")
+require("duplicate sha256" in source_verifier_test, "source-image verifier test must reject ambiguous hash metadata")
+require("Ubuntu source-image provenance functional test: PASS" in source_verifier_test, "source-image verifier test must emit explicit PASS evidence")
+
 golden_builder = read_required(ROOT / "scripts/build-authoritative-runner-image.sh")
 for token, message in (
     ("scripts/check-kvm-host.sh", "golden builder must require host preflight"),
-    (".provenance.txt", "golden builder must require source provenance"),
+    ("scripts/verify-ubuntu-cloud-image-provenance.sh", "golden builder must re-verify source-image provenance before use"),
+    ("source-image-verification.txt", "golden builder must retain source-image verification evidence"),
+    ("source_image_provenance_verified=yes", "golden provenance must record source-image re-verification"),
     ("--cpu host-passthrough", "golden builder must expose host CPU virtualization"),
     ("scripts/provision-authoritative-runner-guest.sh", "golden builder must provision guest"),
     ("scripts/prepare-autopkgtest-qemu-image.sh", "golden builder must prepare nested test image"),
@@ -211,5 +233,5 @@ print(f"Platform: {platform['version']} ({platform['series']})")
 print("Desktop: Plasma {plasma}, Frameworks {frameworks}, Gear {gear}".format(
     plasma=desktop["plasma"]["version"], frameworks=desktop["frameworks"]["version"], gear=desktop["gear"]["version"]))
 print(f"Qt: required {qt['required_series']}, provider={provider['name']}, candidate={provider.get('candidate_version', 'n/a')}, certification={cert['status']}")
-print("CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; KVM-runtime=required; deterministic-qemu-wrapper=required; wrapper-functional-test=required; JIT=required; exact-run-binding=required; shell-syntax=required; shellcheck=required".format(
+print("CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; KVM-runtime=required; deterministic-qemu-wrapper=required; wrapper-functional-test=required; source-image-reverification=required; JIT=required; exact-run-binding=required; shell-syntax=required; shellcheck=required".format(
     hosted=hosted["role"], platform=authoritative["platform"], virt=authoritative["virtualization"], lifecycle=authoritative["lifecycle"], build=authoritative["build_isolation"], test=authoritative["system_test"]))

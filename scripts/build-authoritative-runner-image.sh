@@ -5,6 +5,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPOSITORY_URL="${SUPRALINUX_REPOSITORY_URL:-https://github.com/SupraLINUX/SupraLINUX.git}"
 SOURCE_COMMIT="${SUPRALINUX_SOURCE_COMMIT:-$(git -C "${ROOT}" rev-parse HEAD)}"
 SOURCE_IMAGE="${SUPRALINUX_SOURCE_IMAGE:-/var/lib/supralinux/images/source/resolute/ubuntu-26.04-server-cloudimg-amd64.img}"
+SOURCE_PROVENANCE="${SOURCE_IMAGE}.provenance.txt"
 TARGET_IMAGE="${SUPRALINUX_GOLDEN_IMAGE:-/var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2}"
 LIBVIRT_URI="${SUPRALINUX_LIBVIRT_URI:-qemu:///system}"
 LIBVIRT_NETWORK="${SUPRALINUX_LIBVIRT_NETWORK:-default}"
@@ -52,8 +53,8 @@ if [[ ! -f "${SOURCE_IMAGE}" ]]; then
     printf 'Run scripts/fetch-ubuntu-26.04-cloud-image.sh first, or set SUPRALINUX_SOURCE_IMAGE.\n' >&2
     exit 1
 fi
-if [[ ! -f "${SOURCE_IMAGE}.provenance.txt" ]]; then
-    printf 'Source-image provenance is missing: %s.provenance.txt\n' "${SOURCE_IMAGE}" >&2
+if [[ ! -f "${SOURCE_PROVENANCE}" ]]; then
+    printf 'Source-image provenance is missing: %s\n' "${SOURCE_PROVENANCE}" >&2
     exit 1
 fi
 if [[ -e "${TARGET_IMAGE}" && "${REPLACE}" != "1" ]]; then
@@ -71,7 +72,6 @@ WORK_DISK="${BUILD_DIR}/golden-work.qcow2"
 USER_DATA="${BUILD_DIR}/user-data"
 META_DATA="${BUILD_DIR}/meta-data"
 TARGET_TMP="${TARGET_IMAGE}.tmp-${BUILD_ID}"
-SOURCE_FORMAT="$(qemu-img info --output=json "${SOURCE_IMAGE}" | jq -r '.format')"
 SUCCESS=0
 VM_DEFINED=0
 
@@ -100,6 +100,14 @@ cleanup() {
 trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
+
+printf 'Re-validating Ubuntu source image against signed-download provenance...\n'
+"${ROOT}/scripts/verify-ubuntu-cloud-image-provenance.sh" \
+    "${SOURCE_IMAGE}" \
+    "${SOURCE_PROVENANCE}" \
+    | tee "${EVIDENCE_DIR}/source-image-verification.txt"
+
+SOURCE_FORMAT="$(qemu-img info --output=json "${SOURCE_IMAGE}" | jq -r '.format')"
 
 printf 'Creating preparation overlay from verified Ubuntu 26.04 image...\n'
 qemu-img create -f qcow2 -F "${SOURCE_FORMAT}" -b "${SOURCE_IMAGE}" "${WORK_DISK}"
@@ -167,6 +175,7 @@ EOF_USER
     printf 'repository_url=%s\n' "${REPOSITORY_URL}"
     printf 'source_image=%s\n' "${SOURCE_IMAGE}"
     printf 'source_image_sha256='; sha256sum "${SOURCE_IMAGE}" | awk '{print $1}'
+    printf 'source_image_provenance_verified=yes\n'
     printf 'source_image_format=%s\n' "${SOURCE_FORMAT}"
     printf 'vm_name=%s\n' "${VM_NAME}"
     printf 'memory_mib=%s\n' "${VM_MEMORY_MIB}"
@@ -175,7 +184,7 @@ EOF_USER
     printf 'user_data_sha256='; sha256sum "${USER_DATA}" | awk '{print $1}'
     printf 'meta_data_sha256='; sha256sum "${META_DATA}" | awk '{print $1}'
     printf '\nsource_image_provenance:\n'
-    cat "${SOURCE_IMAGE}.provenance.txt"
+    cat "${SOURCE_PROVENANCE}"
 } > "${EVIDENCE_DIR}/build-inputs.txt"
 
 printf 'Booting Ubuntu 26.04 preparation VM with cloud-init...\n'
@@ -258,6 +267,7 @@ PROVENANCE_TMP="$(mktemp)"
     printf 'repository_url=%s\n' "${REPOSITORY_URL}"
     printf 'source_image=%s\n' "${SOURCE_IMAGE}"
     printf 'source_image_sha256='; sha256sum "${SOURCE_IMAGE}" | awk '{print $1}'
+    printf 'source_image_provenance_verified=yes\n'
     printf 'golden_image=%s\n' "${TARGET_IMAGE}"
     printf 'golden_image_sha256=%s\n' "${GOLDEN_SHA256}"
     printf 'virt_sysprep_operations=%s\n' "${OPS_CSV}"

@@ -27,7 +27,9 @@ The expensive hosted build is gated on the actual PR event delta. Infrastructure
 
 Repository Policy validates every shell script with both `bash -n` and Ubuntu 26.04's packaged ShellCheck. The current policy installs the Ubuntu `shellcheck` package from Resolute and executes `shellcheck -e SC1091 scripts/*.sh`; `SC1091` is excluded only because `/etc/os-release` is an intentional runtime system file rather than a repository source file. The deterministic KVM-only QEMU wrapper has an additional functional test using a fake QEMU executable so argument order/quoting and missing-binary failure semantics are checked without requiring KVM on the hosted runner.
 
-ShellCheck 0.11.0 from Ubuntu package `0.11.0-2` passed the complete current script set in policy run `34661759319`.
+ShellCheck 0.11.0 from Ubuntu package `0.11.0-2` passed the complete script set in policy run `34661759319`.
+
+Repository Policy also functionally tests Ubuntu source-image provenance verification without KVM. The test accepts a correct fixture and must reject changed image bytes, an invalid signature marker and ambiguous duplicate `sha256` fields.
 
 ## Authoritative KVM/JIT lane
 
@@ -80,11 +82,19 @@ The supported infrastructure recipe currently targets Ubuntu 26.04 amd64/x86_64.
 
 The host must pass `scripts/check-kvm-host.sh`. The verified Ubuntu source image defaults to stable host storage under `/var/lib/supralinux/images/source/resolute/` rather than a developer checkout.
 
+Source-image integrity has two distinct gates:
+
+1. `scripts/fetch-ubuntu-26.04-cloud-image.sh` verifies Ubuntu's signed `SHA256SUMS.gpg`, verifies the selected image checksum and writes provenance at download time;
+2. immediately before the image is inspected or used as a qcow2 backing file, `scripts/build-authoritative-runner-image.sh` calls `scripts/verify-ubuntu-cloud-image-provenance.sh`, which requires `release=resolute`, `architecture=amd64`, `signature=verified-with-gpgv`, exactly one valid provenance `sha256`, and byte-for-byte agreement with a freshly calculated SHA-256.
+
+The revalidation result is retained as `source-image-verification.txt`, and successful golden provenance records `source_image_provenance_verified=yes`. This closes the gap between a verified download and later use of a potentially modified local file.
+
 Golden-image chain:
 
 ```text
 released Ubuntu Resolute cloud image
 -> signed checksum verification
+-> use-time provenance/SHA-256 revalidation
 -> temporary qcow2 preparation overlay
 -> Ubuntu 26.04 KVM preparation VM
 -> exact SupraLINUX commit checkout
@@ -108,6 +118,7 @@ Important builds retain, where applicable:
 - complete logs;
 - `.deb`, `.changes`, `.buildinfo`, manifests and hashes;
 - host preflight and verified Ubuntu source-image provenance;
+- source-image use-time revalidation evidence;
 - exact source commit used for the golden image;
 - Actions runner release/digest;
 - nested `autopkgtest` image SHA-256;
@@ -132,10 +143,12 @@ Repository publication/signing are separate from compilation. Builders should no
 - Bash syntax validation;
 - ShellCheck static analysis using the Ubuntu 26.04 package;
 - deterministic QEMU-wrapper functional validation;
+- Ubuntu source-image provenance functional validation;
 - source integrity;
 - hosted clean-build preflight;
 - host KVM/nested preflight;
 - verified Ubuntu runner source image;
+- use-time source-image provenance/SHA-256 revalidation;
 - reproducible golden-image provenance;
 - authoritative Ubuntu 26.04 JIT/KVM runner certification;
 - real nested-KVM runtime probe;

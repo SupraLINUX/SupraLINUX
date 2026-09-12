@@ -40,6 +40,10 @@ jobs:
         shell: bash
         run: scripts/test-qemu-kvm-required.sh
 
+      - name: Test Ubuntu cloud-image provenance verifier
+        shell: bash
+        run: scripts/test-verify-ubuntu-cloud-image-provenance.sh
+
       - name: Validate repository invariants
         run: python3 scripts/validate_repository.py
 

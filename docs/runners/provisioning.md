@@ -25,6 +25,16 @@ This keeps the backing image in stable host infrastructure storage for `qemu:///
 
 A daily image must not silently replace the released-image source.
 
+Before the golden builder inspects or uses the local image, `scripts/verify-ubuntu-cloud-image-provenance.sh` revalidates the stored provenance and recalculates the image SHA-256. It requires:
+
+- `release=resolute`;
+- `architecture=amd64`;
+- `signature=verified-with-gpgv`;
+- exactly one valid `sha256` field;
+- equality between that provenance hash and the current image bytes.
+
+This is deliberately a second integrity check. Fetch-time verification proves what was downloaded; use-time verification detects later local modification before the image becomes a backing file.
+
 ## Preferred golden-image build
 
 Golden-image preparation is automated by:
@@ -33,21 +43,22 @@ Golden-image preparation is automated by:
 scripts/build-authoritative-runner-image.sh
 ```
 
-The builder requires the KVM host preflight to pass and refuses to proceed without the verified source image and its provenance file. It then:
+The builder requires the KVM host preflight to pass and refuses to proceed without the verified source image and provenance. It then:
 
-1. creates a writable qcow2 preparation overlay from the verified Ubuntu image;
-2. boots an Ubuntu 26.04 preparation VM with `virt-install`, host CPU passthrough and cloud-init;
-3. checks out the exact requested SupraLINUX commit inside the VM;
-4. runs `scripts/provision-authoritative-runner-guest.sh`;
-5. runs `scripts/prepare-autopkgtest-qemu-image.sh` as the runner user;
-6. runs `scripts/seal-authoritative-runner-image.sh`;
-7. removes the temporary `/opt/supralinux-src` build checkout from the guest and records that fact in completion evidence;
-8. waits for the preparation VM to power off;
-9. exports guest preparation evidence with libguestfs;
-10. applies explicit offline `virt-sysprep` operations for machine identity, SSH host keys, DHCP state, logs and temporary files;
-11. flattens the preparation overlay into a standalone qcow2 with `qemu-img convert`;
-12. validates the final image with `qemu-img check`;
-13. records the final golden-image SHA-256 and provenance.
+1. revalidates source-image provenance/SHA-256 and stores `source-image-verification.txt`;
+2. inspects the now-revalidated image and creates a writable qcow2 preparation overlay;
+3. boots an Ubuntu 26.04 preparation VM with `virt-install`, host CPU passthrough and cloud-init;
+4. checks out the exact requested SupraLINUX commit inside the VM;
+5. runs `scripts/provision-authoritative-runner-guest.sh`;
+6. runs `scripts/prepare-autopkgtest-qemu-image.sh` as the runner user;
+7. runs `scripts/seal-authoritative-runner-image.sh`;
+8. removes the temporary `/opt/supralinux-src` build checkout from the guest and records that fact in completion evidence;
+9. waits for the preparation VM to power off;
+10. exports guest preparation evidence with libguestfs;
+11. applies explicit offline `virt-sysprep` operations for machine identity, SSH host keys, DHCP state, logs and temporary files;
+12. flattens the preparation overlay into a standalone qcow2 with `qemu-img convert`;
+13. validates the final image with `qemu-img check`;
+14. records the final golden-image SHA-256/provenance, including `source_image_provenance_verified=yes`.
 
 The default target is:
 
@@ -107,12 +118,13 @@ The host adds a label only after the matching JIT runner is online. Both host an
 A prepared image remains **pending** until real evidence exists for:
 
 1. signed Ubuntu source-image verification and real source SHA-256;
-2. successful automated golden-image build from an exact source commit;
-3. confirmation that temporary build source is absent from the golden guest;
-4. golden-image SHA-256 and offline sysprep/flatten/check evidence;
-5. prepared nested QEMU test-image SHA-256;
-6. `runner-contract.yml` PASS on a disposable JIT KVM guest;
-7. `authoritative-package-proof.yml` PASS on a separate disposable JIT KVM guest;
-8. preserved workflow artifacts and host/runner diagnostics.
+2. use-time source-image provenance/SHA-256 revalidation;
+3. successful automated golden-image build from an exact source commit;
+4. confirmation that temporary build source is absent from the golden guest;
+5. golden-image SHA-256 and offline sysprep/flatten/check evidence;
+6. prepared nested QEMU test-image SHA-256;
+7. `runner-contract.yml` PASS on a disposable JIT KVM guest;
+8. `authoritative-package-proof.yml` PASS on a separate disposable JIT KVM guest;
+9. preserved workflow artifacts and host/runner diagnostics.
 
 The remaining dependency is an actual KVM/libvirt host on which to execute this implementation.
