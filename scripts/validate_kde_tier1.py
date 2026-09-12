@@ -64,6 +64,19 @@ EXPECTED_EXTRA_BLOBS = {
     "kwidgetsaddons":{"src/designer/CMakeLists.txt":"32b9a587556ac3df8b4a6e1b97c1e839115809e9"},
     "sonnet":{"src/plugins/CMakeLists.txt":"b835f521d75cb5a321d695d140f34f1a81503e0f"},
 }
+EXPECTED_PROVIDER_EVIDENCE = {
+    "distribution": "ubuntu",
+    "series": "resolute",
+    "status": "hosted-preflight-pass",
+    "evidence": {
+        "workflow_run": 34700048774,
+        "head_sha": "6ce61bc02c4aba146bcc33b16d17f56fb66f057a",
+        "artifact_id": 10299608166,
+        "artifact_sha256": "da6808c31554da4105713e060e328d4130253a100c628fef279d8d0a9cf8ceb3",
+        "authoritative": False,
+        "claim": "provider-availability-only",
+    },
+}
 
 errors: list[str] = []
 
@@ -139,7 +152,7 @@ require(deps.get("schema") == 1, "Tier 1 dependency manifest schema must be 1")
 require(deps.get("authority") == "kde-upstream", "Dependency authority must remain KDE upstream")
 require(deps.get("frameworks") == "6.30.0", "Dependency manifest must target Frameworks 6.30.0")
 require(deps.get("target") == "linux", "Dependency manifest target must be Linux")
-require(deps.get("provider_candidate") == {"distribution":"ubuntu","series":"resolute","status":"resolved-pending-hosted-preflight"}, "Provider candidate must remain Ubuntu Resolute / pending hosted preflight")
+require(deps.get("provider_candidate") == EXPECTED_PROVIDER_EVIDENCE, "Provider candidate must retain the hosted Resolute PASS evidence and remain non-authoritative")
 require(deps.get("common") == {"cmake_minimum":"3.29","ecm":"6.30.0","qt_minimum":"6.9.0"}, "Common Frameworks 6.30 build minima changed unexpectedly")
 
 qt_map = deps.get("qt_provider_packages", {})
@@ -220,5 +233,5 @@ if errors:
 print("KDE Frameworks 6.30 Tier 1 source/dependency validation: PASS")
 print(f"Tier 1 nodes: {len(source_nodes)}")
 print("Upstream external dependency metadata: resolved and blob-pinned")
-print("Ubuntu Resolute provider mapping: resolved; hosted preflight pending")
+print("Ubuntu Resolute provider mapping: hosted preflight PASS; Framework package certification pending")
 print("Packaging/DAG states: pending until actual builds")
