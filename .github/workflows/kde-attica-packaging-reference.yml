@@ -4,18 +4,8 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'scripts/run-kde-attica-packaging-reference.sh'
-      - '.github/workflows/kde-attica-packaging-reference.yml'
-      - 'docs/kde-attica-packaging.md'
-      - 'packages/kde/attica/**'
   pull_request:
     types: [opened, synchronize, reopened]
-    paths:
-      - 'scripts/run-kde-attica-packaging-reference.sh'
-      - '.github/workflows/kde-attica-packaging-reference.yml'
-      - 'docs/kde-attica-packaging.md'
-      - 'packages/kde/attica/**'
   workflow_dispatch:
 
 permissions:
@@ -30,15 +20,50 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Determine whether this event delta affects Attica packaging references
+        id: scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          run=true
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            if [[ "${{ github.event.action }}" == "synchronize" ]]; then
+              before="${{ github.event.before }}"
+              after="${{ github.event.after }}"
+            else
+              before="${{ github.event.pull_request.base.sha }}"
+              after="${{ github.event.pull_request.head.sha }}"
+            fi
+            if scripts/kde-attica-packaging-reference-needed.sh "${before}" "${after}"; then
+              run=true
+            else
+              rc=$?
+              if [[ "${rc}" -eq 1 ]]; then
+                run=false
+              else
+                exit "${rc}"
+              fi
+            fi
+          fi
+          echo "run=${run}" >> "${GITHUB_OUTPUT}"
 
       - name: Capture pinned Ubuntu/Debian packaging trees
+        if: steps.scope.outputs.run == 'true'
         run: scripts/run-kde-attica-packaging-reference.sh
 
       - name: Upload Attica packaging-reference evidence
-        if: always()
+        if: steps.scope.outputs.run == 'true' && always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: kde-attica-packaging-reference-${{ github.event.pull_request.head.sha || github.sha }}
           path: evidence/kde-attica-packaging-reference/
           if-no-files-found: error
           retention-days: 30
+
+      - name: Report intentionally skipped Attica reference capture
+        if: steps.scope.outputs.run != 'true'
+        shell: bash
+        run: echo "Attica packaging-reference capture intentionally skipped; event delta does not affect reference inputs."
