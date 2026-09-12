@@ -10,6 +10,7 @@ RESULT_JSON="${EVIDENCE_DIR}/result.json"
 CHROOT_TARBALL="${HOME}/.cache/sbuild/resolute-amd64.tar.gz"
 MIRROR="${SBUILD_MIRROR:-http://archive.ubuntu.com/ubuntu}"
 AUTOPKGTEST_QEMU_IMAGE="${AUTOPKGTEST_QEMU_IMAGE:-/var/lib/supralinux/autopkgtest/resolute-amd64.img}"
+KVM_QEMU_WRAPPER="${ROOT}/scripts/qemu-kvm-required.sh"
 STATE="FAIL"
 STAGE="initialization"
 STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -86,6 +87,10 @@ for command_name in "${required_commands[@]}"; do
         exit 1
     }
 done
+if [[ ! -x "${KVM_QEMU_WRAPPER}" ]]; then
+    printf 'Missing executable KVM-required QEMU wrapper: %s\n' "${KVM_QEMU_WRAPPER}" >&2
+    exit 1
+fi
 
 qemu-system-x86_64 -accel help 2>&1 | grep -q '^kvm$' || {
     printf 'QEMU does not expose the KVM accelerator.\n' >&2
@@ -121,10 +126,12 @@ fi
     dpkg-query -W -f='${Package}\t${Version}\n' autopkgtest dpkg-dev mmdebstrap qemu-system-x86 qemu-utils sbuild uidmap ubuntu-keyring 2>/dev/null || true
     printf '\nautopkgtest_qemu_image:\n%s\n' "${AUTOPKGTEST_QEMU_IMAGE}"
     qemu-img info "${AUTOPKGTEST_QEMU_IMAGE}"
-    printf '\nautopkgtest_qemu_options:\n-accel kvm\n'
+    printf '\nautopkgtest_qemu_command:\n%s\n' "${KVM_QEMU_WRAPPER}"
+    printf 'autopkgtest_qemu_architecture=x86_64\n'
     printf '\nmirror:\n%s\n' "${MIRROR}"
 } > "${EVIDENCE_DIR}/environment.txt"
 sha256sum "${AUTOPKGTEST_QEMU_IMAGE}" > "${EVIDENCE_DIR}/autopkgtest-image-sha256.txt"
+sha256sum "${KVM_QEMU_WRAPPER}" > "${EVIDENCE_DIR}/qemu-kvm-wrapper-sha256.txt"
 
 if ! grep -q "^${USER}:" /etc/subuid; then
     printf 'Runner user lacks a subordinate UID range required by sbuild/unshare.\n' >&2
@@ -190,12 +197,13 @@ sha256sum "${DEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" > "${EVIDENCE_DIR}/arti
 cp -a "${DEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${EVIDENCE_DIR}/"
 
 STAGE="autopkgtest-qemu"
-printf 'Running autopkgtest in a nested QEMU/KVM Ubuntu 26.04 testbed with KVM forced...\n'
+printf 'Running autopkgtest in a nested Ubuntu 26.04 QEMU/KVM testbed with KVM forced by the QEMU command wrapper...\n'
 autopkgtest "${DSC}" "${DEBS[0]}" -- \
     qemu \
+    --qemu-command="${KVM_QEMU_WRAPPER}" \
+    --qemu-architecture=x86_64 \
     --cpus=2 \
     --ram-size=2048 \
-    --qemu-options='-accel kvm' \
     "${AUTOPKGTEST_QEMU_IMAGE}" |& tee "${EVIDENCE_DIR}/autopkgtest.log"
 
 STATE="PASS"

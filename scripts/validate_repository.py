@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 from __future__ import annotations
 
 import json
@@ -69,130 +68,129 @@ require(authoritative.get("system_test") == "autopkgtest-qemu", "authoritative p
 require(authoritative.get("nested_kvm_required") is True, "authoritative package testing requires nested KVM")
 
 workflow_texts: dict[str, str] = {}
-if WORKFLOWS.exists():
-    for path in sorted(WORKFLOWS.glob("*.y*ml")):
-        text = path.read_text(encoding="utf-8")
-        workflow_texts[path.name] = text
-        require("ubuntu-latest" not in text, f"{path.relative_to(ROOT)} must not use ubuntu-latest")
-        require("pull_request_target" not in text, f"{path.relative_to(ROOT)} must not use pull_request_target")
+for path in sorted(WORKFLOWS.glob("*.y*ml")):
+    text = path.read_text(encoding="utf-8")
+    workflow_texts[path.name] = text
+    require("ubuntu-latest" not in text, f"{path.relative_to(ROOT)} must not use ubuntu-latest")
+    require("pull_request_target" not in text, f"{path.relative_to(ROOT)} must not use pull_request_target")
 
 repository_policy = workflow_texts.get("repository-policy.yml", "")
 runner_contract = workflow_texts.get("runner-contract.yml", "")
-authoritative_proof_workflow = workflow_texts.get("authoritative-package-proof.yml", "")
+authoritative_workflow = workflow_texts.get("authoritative-package-proof.yml", "")
 hosted_proof = workflow_texts.get("package-build-proof.yml", "")
 require("bash -n scripts/*.sh" in repository_policy, "repository policy must syntax-check all shell scripts")
 
 for filename, text, gate_label in (
     ("runner-contract.yml", runner_contract, "ci:runner-contract"),
-    ("authoritative-package-proof.yml", authoritative_proof_workflow, "ci:authoritative-package-proof"),
+    ("authoritative-package-proof.yml", authoritative_workflow, "ci:authoritative-package-proof"),
 ):
     require(bool(text), f"missing authoritative workflow: .github/workflows/{filename}")
-    require("types: [labeled]" in text, f"{filename} must use an explicit PR labeled trigger for pre-merge certification")
+    require("types: [labeled]" in text, f"{filename} must use a PR labeled trigger")
     require(gate_label in text, f"{filename} must require controlled label {gate_label}")
-    require("github.event.pull_request.head.repo.full_name == github.repository" in text, f"{filename} must refuse fork PRs on self-hosted runners")
+    require("github.event.pull_request.head.repo.full_name == github.repository" in text, f"{filename} must refuse fork PRs")
     for label in ("self-hosted", "linux", "x64", "supralinux", "ubuntu-26.04", "kvm", "ephemeral"):
         require(label in text, f"{filename} must target authoritative runner label {label}")
 
 require("scripts/check-nested-kvm-runtime.sh" in runner_contract, "runner contract must execute a real nested-KVM runtime probe")
 require("types: [opened, synchronize, reopened]" in hosted_proof, "hosted package preflight must declare explicit PR lifecycle events")
-require("github.event.before" in hosted_proof, "hosted package preflight must use synchronize before SHA")
-require("github.event.after" in hosted_proof, "hosted package preflight must use synchronize after SHA")
-require("scripts/package-preflight-needed.sh" in hosted_proof, "hosted package preflight must gate expensive builds on event-delta changes")
-require("fetch-depth: 0" in hosted_proof, "hosted package preflight must fetch comparison history")
+require("github.event.before" in hosted_proof and "github.event.after" in hosted_proof, "hosted preflight must compare synchronize before/after SHAs")
+require("scripts/package-preflight-needed.sh" in hosted_proof, "hosted preflight must gate expensive builds on event delta")
+require("fetch-depth: 0" in hosted_proof, "hosted preflight must fetch comparison history")
 
 required_files = [
-    ROOT / "docs" / "architecture" / "overview.md",
-    ROOT / "docs" / "architecture" / "build-ci.md",
-    ROOT / "docs" / "status" / "2026-09-11.md",
-    ROOT / "docs" / "decisions" / "ADR-0001-authority-provider.md",
-    ROOT / "docs" / "runners" / "ubuntu-26.04.md",
-    ROOT / "docs" / "runners" / "provisioning.md",
-    ROOT / "docs" / "runners" / "host-kvm.md",
-    ROOT / "scripts" / "check-kvm-host.sh",
-    ROOT / "scripts" / "check-nested-kvm-runtime.sh",
-    ROOT / "scripts" / "provision-kvm-host.sh",
-    ROOT / "scripts" / "package-preflight-needed.sh",
-    ROOT / "scripts" / "fetch-ubuntu-26.04-cloud-image.sh",
-    ROOT / "scripts" / "build-authoritative-runner-image.sh",
-    ROOT / "scripts" / "install-actions-runner.sh",
-    ROOT / "scripts" / "provision-authoritative-runner-guest.sh",
-    ROOT / "scripts" / "prepare-autopkgtest-qemu-image.sh",
-    ROOT / "scripts" / "seal-authoritative-runner-image.sh",
-    ROOT / "scripts" / "run-kvm-jit-gate.sh",
-    ROOT / "scripts" / "run-authoritative-package-proof.sh",
+    "docs/architecture/overview.md",
+    "docs/architecture/build-ci.md",
+    "docs/status/2026-09-11.md",
+    "docs/decisions/ADR-0001-authority-provider.md",
+    "docs/runners/ubuntu-26.04.md",
+    "docs/runners/provisioning.md",
+    "docs/runners/host-kvm.md",
+    "scripts/check-kvm-host.sh",
+    "scripts/check-nested-kvm-runtime.sh",
+    "scripts/provision-kvm-host.sh",
+    "scripts/package-preflight-needed.sh",
+    "scripts/fetch-ubuntu-26.04-cloud-image.sh",
+    "scripts/build-authoritative-runner-image.sh",
+    "scripts/install-actions-runner.sh",
+    "scripts/provision-authoritative-runner-guest.sh",
+    "scripts/prepare-autopkgtest-qemu-image.sh",
+    "scripts/seal-authoritative-runner-image.sh",
+    "scripts/qemu-kvm-required.sh",
+    "scripts/run-kvm-jit-gate.sh",
+    "scripts/run-authoritative-package-proof.sh",
 ]
-for path in required_files:
-    require(path.exists(), f"required architecture/runner file missing: {path.relative_to(ROOT)}")
+for relative in required_files:
+    require((ROOT / relative).exists(), f"required architecture/runner file missing: {relative}")
 
-package_delta = read_required(ROOT / "scripts" / "package-preflight-needed.sh")
+package_delta = read_required(ROOT / "scripts/package-preflight-needed.sh")
 for tracked in ("packages/supralinux-build-test/*", "scripts/run-package-build-proof.sh", ".github/workflows/package-build-proof.yml"):
     require(tracked in package_delta, f"package preflight delta detector must track {tracked}")
 
-host_provisioner = read_required(ROOT / "scripts" / "provision-kvm-host.sh")
+host_provisioner = read_required(ROOT / "scripts/provision-kvm-host.sh")
 for package in ("libvirt-daemon-system", "qemu-system-x86", "virt-install", "libguestfs-tools"):
     require(package in host_provisioner, f"host provisioning must install {package}")
 require("does NOT change BIOS" in host_provisioner, "host provisioning must explicitly avoid automatic BIOS/KVM-module changes")
-require("/var/lib/supralinux/golden-builds" in host_provisioner, "host provisioning must create writable golden-build state")
+require("/var/lib/supralinux/golden-builds" in host_provisioner, "host provisioning must create golden-build state")
 
-host_checker = read_required(ROOT / "scripts" / "check-kvm-host.sh")
-require("/dev/kvm" in host_checker, "host preflight must validate /dev/kvm")
-require("parameters/nested" in host_checker, "host preflight must validate nested KVM state")
-require("qemu:///system" in host_checker, "host preflight must validate system libvirt connection")
-for command in ("virt-sysprep", "virt-cat", "virt-copy-out", "flock"):
-    require(command in host_checker, f"host preflight must validate {command}")
+host_checker = read_required(ROOT / "scripts/check-kvm-host.sh")
+for token in ("/dev/kvm", "parameters/nested", "qemu:///system", "virt-sysprep", "virt-cat", "virt-copy-out", "flock"):
+    require(token in host_checker, f"host preflight missing required check: {token}")
 
-nested_probe = read_required(ROOT / "scripts" / "check-nested-kvm-runtime.sh")
-require("-accel kvm" in nested_probe, "nested KVM runtime probe must force the KVM accelerator")
-require("-cpu host" in nested_probe, "nested KVM runtime probe must exercise a host CPU under KVM")
-require("probe_exit_code" in nested_probe and "RC}" in nested_probe, "nested KVM runtime probe must preserve its QEMU result")
-require("nested_kvm_runtime=PASS" in nested_probe, "nested KVM runtime probe must record explicit PASS evidence")
+nested_probe = read_required(ROOT / "scripts/check-nested-kvm-runtime.sh")
+require("-accel kvm" in nested_probe, "nested KVM runtime probe must force KVM")
+require("-cpu host" in nested_probe, "nested KVM runtime probe must exercise host CPU")
+require("probe_exit_code" in nested_probe and "nested_kvm_runtime=PASS" in nested_probe, "nested KVM probe must retain explicit result evidence")
 
-cloud_fetcher = read_required(ROOT / "scripts" / "fetch-ubuntu-26.04-cloud-image.sh")
-require("SHA256SUMS.gpg" in cloud_fetcher, "Ubuntu cloud image fetcher must verify signed checksum metadata")
-require("gpgv" in cloud_fetcher, "Ubuntu cloud image fetcher must perform signature verification")
-require("/var/lib/supralinux/images/source/resolute" in cloud_fetcher, "Ubuntu source image must default to stable host infrastructure storage")
-require("${PWD}/.work/cloud-images" not in cloud_fetcher, "Ubuntu source image must not default to the developer checkout")
+cloud_fetcher = read_required(ROOT / "scripts/fetch-ubuntu-26.04-cloud-image.sh")
+require("SHA256SUMS.gpg" in cloud_fetcher and "gpgv" in cloud_fetcher, "Ubuntu source image must use signed checksum verification")
+require("/var/lib/supralinux/images/source/resolute" in cloud_fetcher, "Ubuntu source image must default to stable host storage")
 
-golden_builder = read_required(ROOT / "scripts" / "build-authoritative-runner-image.sh")
-require("scripts/check-kvm-host.sh" in golden_builder, "golden image builder must require host preflight")
-require(".provenance.txt" in golden_builder, "golden image builder must require verified source-image provenance")
-require("/var/lib/supralinux/images/source/resolute" in golden_builder, "golden image builder must default to the stable verified source image")
-require("--cpu host-passthrough" in golden_builder, "golden image builder must expose host CPU virtualization capabilities")
-require("scripts/provision-authoritative-runner-guest.sh" in golden_builder, "golden image builder must provision the runner guest")
-require("scripts/prepare-autopkgtest-qemu-image.sh" in golden_builder, "golden image builder must prepare the nested QEMU test image")
-require("scripts/seal-authoritative-runner-image.sh" in golden_builder, "golden image builder must seal guest-side runner state")
-require("virt-sysprep" in golden_builder, "golden image builder must perform offline clone-safety cleanup")
-require("machine-id" in golden_builder and "ssh-hostkeys" in golden_builder, "golden image builder must reset machine and SSH host identity")
-require("qemu-img convert" in golden_builder, "golden image builder must flatten the preparation overlay")
-require("qemu-img check" in golden_builder, "golden image builder must validate the final qcow2")
-require("SUPRALINUX_REPLACE_GOLDEN_IMAGE" in golden_builder, "golden image replacement must require explicit opt-in")
-require("golden-image-sha256.txt" in golden_builder, "golden image builder must retain final image SHA-256 evidence")
-require("source_checkout_removed=yes" in golden_builder, "golden image builder must prove the temporary source checkout is removed")
-require("rm -rf /opt/supralinux-src" in golden_builder, "golden image builder must remove the build checkout before publication")
+golden_builder = read_required(ROOT / "scripts/build-authoritative-runner-image.sh")
+for token, message in (
+    ("scripts/check-kvm-host.sh", "golden builder must require host preflight"),
+    (".provenance.txt", "golden builder must require source provenance"),
+    ("--cpu host-passthrough", "golden builder must expose host CPU virtualization"),
+    ("scripts/provision-authoritative-runner-guest.sh", "golden builder must provision guest"),
+    ("scripts/prepare-autopkgtest-qemu-image.sh", "golden builder must prepare nested test image"),
+    ("scripts/seal-authoritative-runner-image.sh", "golden builder must seal guest state"),
+    ("virt-sysprep", "golden builder must perform offline clone cleanup"),
+    ("qemu-img convert", "golden builder must flatten overlay"),
+    ("qemu-img check", "golden builder must validate final qcow2"),
+    ("SUPRALINUX_REPLACE_GOLDEN_IMAGE", "golden replacement must require opt-in"),
+    ("source_checkout_removed=yes", "golden builder must prove temporary checkout removal"),
+):
+    require(token in golden_builder, message)
+require("machine-id" in golden_builder and "ssh-hostkeys" in golden_builder, "golden builder must reset machine/SSH identity")
 
-installer = read_required(ROOT / "scripts" / "install-actions-runner.sh")
-require(".digest" in installer, "Actions runner installer must consume GitHub-published asset digest")
-require("sha256sum --check --strict" in installer, "Actions runner installer must verify the downloaded archive")
+installer = read_required(ROOT / "scripts/install-actions-runner.sh")
+require(".digest" in installer and "sha256sum --check --strict" in installer, "Actions runner archive must use GitHub-published SHA-256 verification")
 
-host_orchestrator = read_required(ROOT / "scripts" / "run-kvm-jit-gate.sh")
-require("generate-jitconfig" in host_orchestrator, "host orchestrator must use GitHub JIT runner configuration")
-require("/run/supralinux-jit-config" in host_orchestrator, "JIT configuration must be injected into guest tmpfs")
-require("virt-copy-out" in host_orchestrator, "host orchestrator must export guest diagnostics before deleting the overlay")
-require("Authoritative self-hosted gates refuse fork PRs" in host_orchestrator, "host orchestrator must refuse fork PRs")
-require("flock -n" in host_orchestrator, "host orchestrator must serialize authoritative jobs on one host")
-require("workflow-baseline-ids.json" in host_orchestrator, "host orchestrator must snapshot workflow run IDs before triggering")
-require("head_sha=${PR_HEAD_SHA}" in host_orchestrator, "host orchestrator must query workflow runs by exact PR head SHA")
-require("actions/runs/${WORKFLOW_RUN_ID}" in host_orchestrator, "host orchestrator must bind to one exact workflow run ID")
-require("status != \"completed\"" in host_orchestrator, "host orchestrator must refuse pre-existing active authoritative workflows")
-require("guest-exec-status" in host_orchestrator, "host orchestrator must detect premature guest runner exit")
-require("GOLDEN_PROVENANCE" in host_orchestrator and "PROVENANCE_SHA256" in host_orchestrator, "host orchestrator must verify golden-image provenance")
-require("source_checkout_removed=yes" in host_orchestrator, "host orchestrator must require source-clean golden provenance")
-require("su --login --shell /bin/bash --command" in host_orchestrator, "guest Actions runner must start with an explicit non-root login shell")
+host_orchestrator = read_required(ROOT / "scripts/run-kvm-jit-gate.sh")
+for token, message in (
+    ("generate-jitconfig", "host orchestrator must use GitHub JIT config"),
+    ("/run/supralinux-jit-config", "JIT config must live in guest tmpfs"),
+    ("Authoritative self-hosted gates refuse fork PRs", "host orchestrator must refuse fork PRs"),
+    ("flock -n", "host orchestrator must serialize local authoritative jobs"),
+    ("workflow-baseline-ids.json", "host orchestrator must snapshot run IDs before trigger"),
+    ("head_sha=${PR_HEAD_SHA}", "host orchestrator must query exact PR head SHA"),
+    ("actions/runs/${WORKFLOW_RUN_ID}", "host orchestrator must bind exact workflow run ID"),
+    ("guest-exec-status", "host orchestrator must detect premature runner exit"),
+    ("PROVENANCE_SHA256", "host orchestrator must verify golden SHA against provenance"),
+    ("source_checkout_removed=yes", "host orchestrator must require source-clean golden provenance"),
+    ("su --login --shell /bin/bash --command", "guest runner must start non-root with explicit login shell"),
+):
+    require(token in host_orchestrator, message)
 
-authoritative_proof = read_required(ROOT / "scripts" / "run-authoritative-package-proof.sh")
-require("scripts/check-nested-kvm-runtime.sh" in authoritative_proof, "authoritative package proof must run the nested-KVM runtime probe")
-require("--qemu-options='-accel kvm'" in authoritative_proof, "authoritative autopkgtest must force KVM and forbid silent TCG fallback")
-require('"system_test_acceleration": "kvm-required"' in authoritative_proof, "authoritative result evidence must record KVM-required acceleration")
+authoritative_proof = read_required(ROOT / "scripts/run-authoritative-package-proof.sh")
+require("scripts/check-nested-kvm-runtime.sh" in authoritative_proof, "authoritative proof must run nested-KVM runtime probe")
+require("--qemu-command=\"${KVM_QEMU_WRAPPER}\"" in authoritative_proof, "authoritative autopkgtest must use the KVM-required QEMU wrapper")
+require("--qemu-architecture=x86_64" in authoritative_proof, "authoritative autopkgtest must pin QEMU architecture")
+require("qemu-kvm-wrapper-sha256.txt" in authoritative_proof, "authoritative evidence must hash the QEMU wrapper")
+require('"system_test_acceleration": "kvm-required"' in authoritative_proof, "authoritative result must record KVM-required acceleration")
+
+qemu_wrapper = read_required(ROOT / "scripts/qemu-kvm-required.sh")
+require('exec "${QEMU}" -accel kvm "$@"' in qemu_wrapper, "QEMU wrapper must select KVM only")
+require("tcg" not in qemu_wrapper.lower(), "KVM-required QEMU wrapper must not contain a TCG fallback")
 
 if errors:
     for error in errors:
@@ -204,5 +202,5 @@ print(f"Platform: {platform['version']} ({platform['series']})")
 print("Desktop: Plasma {plasma}, Frameworks {frameworks}, Gear {gear}".format(
     plasma=desktop["plasma"]["version"], frameworks=desktop["frameworks"]["version"], gear=desktop["gear"]["version"]))
 print(f"Qt: required {qt['required_series']}, provider={provider['name']}, candidate={provider.get('candidate_version', 'n/a')}, certification={cert['status']}")
-print("CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; KVM-runtime=required; JIT=required; exact-run-binding=required; shell-syntax=required".format(
+print("CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; KVM-runtime=required; deterministic-qemu-wrapper=required; JIT=required; exact-run-binding=required; shell-syntax=required".format(
     hosted=hosted["role"], platform=authoritative["platform"], virt=authoritative["virtualization"], lifecycle=authoritative["lifecycle"], build=authoritative["build_isolation"], test=authoritative["system_test"]))

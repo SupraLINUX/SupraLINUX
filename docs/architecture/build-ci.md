@@ -5,141 +5,140 @@ Last reviewed: **2026-09-11**
 
 ## Principles
 
-SupraLINUX uses a DAG-guided hybrid build strategy. The purpose is to discover independent failures early without converting downstream dependency fallout into false failures.
+SupraLINUX uses a DAG-guided hybrid build strategy. Each build node has exactly one terminal state:
 
-Each build node has exactly one terminal state:
+- `PASS`: actually built/tested successfully for the evaluated gate;
+- `FAIL`: actually attempted and failed for its own reason;
+- `BLOCKED`: not attempted because a required dependency or execution capability is unavailable.
 
-- `PASS`: the node was actually built/tested successfully for the gate being evaluated and its artifacts may feed dependents;
-- `FAIL`: the node or gate was actually attempted and failed for its own build/test reason;
-- `BLOCKED`: the node or gate was not attempted because a required dependency or execution capability is unavailable.
+`BLOCKED` is never counted as `FAIL`.
 
-`BLOCKED` must never be counted as `FAIL`.
+For each campaign, resolve the source/version manifest, construct the dependency DAG, build all possible nodes by topological level, continue independent branches after failures, expose only PASS artifacts to dependents, preserve evidence and rerun the complete campaign before promotion.
 
-## Execution strategy
+## Hosted preflight lane
 
-For each campaign:
+GitHub-hosted `ubuntu-26.04` performs repository validation, metadata checks and non-authoritative clean package-build preflight. `ubuntu-latest` is forbidden.
 
-1. resolve the selected source/version manifest;
-2. construct the dependency DAG;
-3. identify topological levels;
-4. attempt every buildable node in a level, parallelizing independent nodes;
-5. continue independent branches after failures;
-6. expose only artifacts that passed the required build gate to dependents;
-7. mark impossible downstream nodes `BLOCKED`;
-8. preserve logs and metadata for every attempted node/gate;
-9. fix root causes incrementally;
-10. rerun the complete campaign before promotion.
+The hosted package proof creates a fresh Resolute `buildd` rootfs with `mmdebstrap`, builds through `sbuild --chroot-mode=unshare`, and preserves `.deb`, `.changes`, `.buildinfo`, logs and hashes. It intentionally does not claim the authoritative system-test gate.
 
-## Runner classes
+A historical `autopkgtest/unshare` attempt failed during testbed setup after `sbuild/unshare` had succeeded. That backend is therefore not the authoritative system-test boundary.
 
-### Hosted preflight lane
+The expensive hosted build is gated on the actual PR event delta. Infrastructure/documentation-only `synchronize` events execute the scope-check but skip `sbuild`; this behavior has real PASS evidence.
 
-GitHub-hosted `ubuntu-26.04` is used for repository validation, metadata checks and non-authoritative package-build preflight. `ubuntu-latest` is forbidden.
+## Authoritative KVM/JIT lane
 
-The hosted package proof creates a fresh Ubuntu 26.04 `buildd` rootfs with `mmdebstrap`, builds through `sbuild --chroot-mode=unshare`, and preserves `.deb`, `.changes`, `.buildinfo`, logs and hashes. It does not claim the authoritative system-test gate.
+Release-relevant evidence is produced inside disposable self-hosted Ubuntu 26.04 **KVM VMs**. Required labels are:
 
-`autopkgtest/unshare` is not part of the authoritative testing contract because a real hosted attempt failed in testbed setup because of UID/GID ownership mapping even though binary `sbuild/unshare` had completed.
+`self-hosted`, `linux`, `x64`, `supralinux`, `ubuntu-26.04`, `kvm`, `ephemeral`.
 
-The expensive hosted build is gated on the actual event delta. On `pull_request/synchronize`, the workflow compares the event `before` and `after` SHAs and invokes `scripts/package-preflight-needed.sh`. Infrastructure/documentation-only deltas still run the small scope-check job but explicitly skip `sbuild`. Run `34658857824` is real evidence that this skip path works as intended.
+The host requests fresh repository-scoped JIT configuration, injects it into guest tmpfs, executes one controlled job, exports diagnostics and destroys writable VM state. Pre-merge gates use controlled labels `ci:runner-contract` and `ci:authoritative-package-proof`; fork PRs are refused before self-hosted code execution.
 
-### Authoritative KVM build/test lane
+Host orchestration is serialized locally. Before a runner is created, pre-existing queued/active authoritative workflows are rejected. Workflow evidence is bound to exactly one newly-created run ID for the exact PR head SHA; ambiguous attribution fails closed.
 
-Release-relevant package evidence is produced inside disposable self-hosted **KVM virtual machines** running Ubuntu 26.04. The KVM guest, not the long-lived host, is the GitHub Actions runner.
+## Runtime KVM requirement
 
-Required labels:
+Nested KVM is an executable runtime gate, not merely a runner label or `/dev/kvm` existence check.
 
-`self-hosted`, `linux`, `x64`, `supralinux`, `ubuntu-26.04`, `kvm`, `ephemeral`
+`scripts/check-nested-kvm-runtime.sh` starts a minimal paused QEMU process using `-accel kvm -cpu host`. A healthy process remains alive until the probe timeout terminates it. Early QEMU failure is a gate failure.
 
-The runner uses repository-scoped GitHub JIT configuration. The host requests fresh `encoded_jit_config`, injects it into guest tmpfs, executes exactly one controlled job, exports diagnostics and destroys writable VM state.
+The runner-contract workflow and authoritative package proof both execute this probe.
 
-Pre-merge authoritative gates use controlled `pull_request` label events: `ci:runner-contract` and `ci:authoritative-package-proof`. Both workflow and host orchestration reject fork PRs before self-hosted code execution.
+## Deterministic system-test virtualization
 
-Inside the authoritative runner VM:
+Ubuntu's `autopkgtest-virt-qemu` can operate without hardware acceleration. Software emulation cannot count as authoritative SupraLINUX evidence.
 
-- package compilation uses fresh `sbuild/unshare` isolation;
-- `.deb`, `.changes`, `.buildinfo` and hashes are captured before later gates;
-- system testing uses `autopkgtest/QEMU` with a prepared Ubuntu 26.04 image;
-- nested KVM is mandatory so the authoritative system-test gate cannot silently fall back to software emulation.
-
-This gives distinct boundaries for host, runner VM, package build rootfs and package runtime test VM.
-
-## Host and golden runner image supply chain
-
-The supported bootstrap recipe currently targets Ubuntu 26.04 amd64/x86_64 as an infrastructure provider. Host provisioning may install/configure KVM/libvirt and the standard network but does not silently modify firmware or force KVM-module reloads.
-
-The host must pass `scripts/check-kvm-host.sh` before golden-image construction or authoritative execution.
-
-The golden-image chain is:
+The authoritative proof therefore supplies `scripts/qemu-kvm-required.sh` through `autopkgtest-virt-qemu --qemu-command` and pins `--qemu-architecture=x86_64`. The wrapper executes only:
 
 ```text
-Ubuntu released Resolute cloud image
+qemu-system-x86_64 -accel kvm <autopkgtest arguments>
+```
+
+There is no TCG fallback in the wrapper. The wrapper SHA-256 is retained in the run evidence.
+
+Inside the authoritative runner VM the package path is:
+
+```text
+fresh sbuild/unshare
+└── .deb + .changes + .buildinfo + hashes
+
+then
+
+autopkgtest/QEMU
+└── KVM-only QEMU command wrapper
+    └── nested Ubuntu 26.04 KVM test VM
+```
+
+Build artifacts are captured before the runtime test so a later test failure cannot erase evidence of a build PASS.
+
+## Host and golden-image supply chain
+
+The supported infrastructure recipe currently targets Ubuntu 26.04 amd64/x86_64. Host provisioning can install/configure KVM/libvirt and its network, but must not silently change BIOS/firmware or force KVM-module reloads.
+
+The host must pass `scripts/check-kvm-host.sh`. The verified Ubuntu source image defaults to stable host storage under `/var/lib/supralinux/images/source/resolute/` rather than a developer checkout.
+
+Golden-image chain:
+
+```text
+released Ubuntu Resolute cloud image
 -> signed checksum verification
 -> temporary qcow2 preparation overlay
 -> Ubuntu 26.04 KVM preparation VM
--> exact SupraLINUX source commit checkout
+-> exact SupraLINUX commit checkout
 -> runner/toolchain provisioning
--> nested autopkgtest QEMU image creation
--> guest-side seal
+-> nested autopkgtest image creation
+-> runner seal + temporary source checkout removal
 -> VM poweroff
 -> offline virt-sysprep
 -> qemu-img flatten + check
--> standalone golden qcow2 + SHA-256/provenance
+-> standalone golden qcow2 + real SHA-256/provenance
 ```
 
-`scripts/build-authoritative-runner-image.sh` implements this sequence. It refuses to publish over an existing golden image unless `SUPRALINUX_REPLACE_GOLDEN_IMAGE=1` is set explicitly. Failed preparation state is retained for diagnosis.
-
-The Actions runner archive is accepted only after verifying GitHub's published SHA-256 digest. The nested `autopkgtest` image and final golden qcow2 receive real generated SHA-256 evidence. No image hash is invented in source control.
-
-A built golden image is still **pending**, not authoritative, until real KVM/JIT contract and package-proof workflows pass using that image.
+The GitHub Actions runner archive is accepted only after verifying GitHub's published SHA-256 digest. Existing golden images are not replaced without explicit opt-in.
 
 ## Evidence contract
 
 Important builds retain, where applicable:
 
-- source identifier/archive/version/commit/tag;
-- SHA-256 of downloaded source inputs;
-- resolved build dependencies and configuration;
-- complete build/test logs;
-- `.deb`, `.changes`, `.buildinfo` and manifests;
-- host provisioning/preflight evidence;
-- signed Ubuntu source-image provenance and SHA-256;
-- exact repository commit used to build the golden image;
-- GitHub Actions runner release/digest evidence;
-- nested `autopkgtest` QEMU-image SHA-256;
-- offline sysprep and qcow2 validation logs;
+- source/version/commit/tag and input hashes;
+- resolved build dependencies/configuration;
+- complete logs;
+- `.deb`, `.changes`, `.buildinfo`, manifests and hashes;
+- host preflight and verified Ubuntu source-image provenance;
+- exact source commit used for the golden image;
+- Actions runner release/digest;
+- nested `autopkgtest` image SHA-256;
+- offline sysprep/qcow2 validation;
 - final golden-image SHA-256/provenance;
-- PR head SHA and CI run identifiers;
-- runner/VM diagnostics;
-- terminal gate state.
+- nested-KVM runtime-probe evidence;
+- KVM-only QEMU wrapper SHA-256;
+- PR head SHA, bound workflow run ID and CI identifiers;
+- runner/VM diagnostics and terminal gate state.
 
-Hashes and test results are evidence, not placeholders. They must never be invented or copied from unrelated builds.
+Hashes and results are evidence, never placeholders.
 
 ## Repository/promotion model
 
-The intended package flow is:
-
 `upstream stable -> SupraLINUX packaging -> authoritative clean build -> authoritative tests -> incoming/staging -> candidate -> stable`
 
-Repository publication and signing are separate from compilation. Builders should not require the stable repository private signing key.
+Repository publication/signing are separate from compilation. Builders should not require the stable repository private signing key.
 
-## Gates
+## Initial gates
 
-Initial gates are:
-
-- repository/manifest validation;
+- repository/manifest and shell-syntax validation;
 - source integrity;
 - hosted clean-build preflight;
-- host KVM/nested-virtualization preflight;
+- host KVM/nested preflight;
 - verified Ubuntu runner source image;
-- reproducible golden runner-image build/provenance;
-- authoritative Ubuntu 26.04 KVM runner certification;
-- authoritative clean package build under `sbuild`;
+- reproducible golden-image provenance;
+- authoritative Ubuntu 26.04 JIT/KVM runner certification;
+- real nested-KVM runtime probe;
+- authoritative clean `sbuild` build;
 - package metadata validation;
-- `autopkgtest/QEMU` system/package tests;
+- `autopkgtest/QEMU` through the KVM-only QEMU wrapper;
 - dependency DAG consistency;
 - install/upgrade tests;
 - KDE session/runtime smoke tests;
 - Ubuntu application compatibility tests for replaced shared libraries;
 - repository publication verification.
 
-Existing gates must not be removed silently; architecture documentation and machine-readable policy must change with implementation.
+Existing gates must not be removed silently; policy and documentation must change with implementation.
