@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 Tier 1 — packaging preparation and campaign
 
-Status: **provider/source/binary reference gates PASS; Attica package PASS; 28 Tier 1 packages pending**  
+Status: **provider/source/binary/tree reference gates PASS; Attica package PASS; 28 Tier 1 packages pending**  
 Last reviewed: **2026-09-12**
 
 ## Authority model
@@ -19,7 +19,7 @@ The source snapshot resolved all 58 expected source records (29 Ubuntu Resolute 
 - `snapshot.json` SHA-256 `601c668342c206af179e9c564bf87cac6a166f1070fe9af0b640cb57d2151597`;
 - `versions.tsv` SHA-256 `af6fd90121801eaf322442c43b793422494dfd5a109edccf484f5d24b463ea9b`.
 
-Ubuntu references are mostly 6.24.0 (`modemmanager-qt` 6.23.0); Debian references are mostly 6.28.0 (`syntax-highlighting` 6.28.1). SupraLINUX remains on KDE 6.30.0.
+Ubuntu references are 6.23.0/6.24.0 and Debian references are 6.28.0/6.28.1. SupraLINUX remains on KDE 6.30.0.
 
 ## Binary-contract reference PASS
 
@@ -30,17 +30,36 @@ The isolated binary-contract snapshot captured Architecture, Multi-Arch, depende
 - artifact SHA-256 `9441b2f2957b350a46026b0df3bd5eb3578e1578671aab3b7afc7a0929ce1a97`;
 - `binary-contracts.json` SHA-256 `e44507d0dd73db913a91bd4852c452f783618aab0bd6a3790e4c4f4c40707b7b`.
 
-There are 147 Ubuntu binary records and 151 Debian records. The four Debian-only names are the Kirigami Forms libraries identified by the source snapshot. This is a compatibility review signal, not authority.
+There are 147 Ubuntu binary records and 151 Debian records. The four Debian-only names are Kirigami Forms libraries. This is a compatibility review signal, not authority.
+
+## Generic `debian/` tree reference PASS
+
+A second reference lane now captures the complete distro `debian/` trees for every Tier 1 node rather than only normalized source metadata.
+
+First complete PASS:
+
+- commit `310510007d29c5d844d0dba770635c7336884a3d`;
+- run `34708030450`;
+- artifact `10301938362`;
+- artifact SHA-256 `6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6`;
+- nodes: 29;
+- Ubuntu Resolute trees: 29;
+- Debian sid trees: 29;
+- total hash-verified `debian/` trees: 58.
+
+The capture derives archive URLs and SHA-256 values from APT-verified signed `deb-src` metadata, verifies each `.debian.tar.*`, extracts the complete tree and records per-file hashes. Artifact inspection confirmed all 58 tree manifests and all files referenced by those manifests.
+
+Machine-readable evidence is stored separately in `manifests/kde-frameworks-tier1-packaging-tree-evidence.json`. Evidence-only, documentation-only and validator-only changes are excluded from the external recapture scope. This reference PASS changes no package/DAG state.
 
 ## First package proof — Attica
 
-The Attica packaging references agree on the core split:
+Attica preserves the established binary split:
 
 - `libkf6attica6`;
 - `libkf6attica-dev`;
 - `libkf6attica-doc`.
 
-Exact `debian/` reference trees were retained in run `34704689773`, artifact `10301617541`, SHA-256 `ce9e9949f643736f25ec27d2850cb0654334b64a28dfcd293df78ae1b1f60407`.
+Its original dedicated `debian/` reference artifact remains the immutable input used by the actual package build: run `34704689773`, artifact `10301617541`, SHA-256 `ce9e9949f643736f25ec27d2850cb0654334b64a28dfcd293df78ae1b1f60407`.
 
 ### Attempt 1 — FAIL
 
@@ -78,6 +97,8 @@ The doc compatibility package produces an `empty-binary-package` Lintian warning
 
 `manifests/kde-dag.json` records the same Attica node after the ECM PASS root, including both the historical FAIL and current PASS attempt.
 
+The generic packaging-tree PASS does not alter those states.
+
 ## Generalized build contract
 
 Every remaining Tier 1 package campaign must follow the same evidence model:
@@ -96,4 +117,4 @@ Every remaining Tier 1 package campaign must follow the same evidence model:
 
 ## Next implementation step
 
-Generalize the Attica-specific runner into reusable Tier 1 package infrastructure while keeping package-specific policy (binary split, symbols, tests, patches, consumer smoke) explicit. Then prepare several independent low-dependency nodes and run them in parallel rather than serializing all 28 behind one package.
+Use the generic 58-tree artifact plus KDE 6.30 upstream metadata and the binary-contract snapshot to prepare several independent low-dependency Tier 1 packages together. The shared build machinery should be generalized, while binary splits, symbols, test exclusions, optional features and consumer smokes remain explicit per package. Independent prepared nodes should then build in parallel rather than serializing the remaining 28 behind one node.
