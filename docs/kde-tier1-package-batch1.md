@@ -1,67 +1,104 @@
 # KDE Frameworks 6.30 Tier 1 — package batch 1
 
-Status: **attempts 1 and 2 are historical FAIL; remediation `-0supralinux3` prepared**  
+Status: **KDBusAddons PASS; ThreadWeaver PASS; KCodecs FAIL with `-0supralinux4` remediation prepared**  
 Last reviewed: **2026-09-12**
 
 ## Scope and authority
 
-The first generalized Tier 1 package batch contains `kcodecs`, `kdbusaddons` and `threadweaver`. They are independent KDE Frameworks 6.30 nodes whose only KDE predecessor is the retained Extra CMake Modules PASS root, so the CI matrix keeps `fail-fast: false` and attempts all three even when another fails.
+Batch 1 contains three independent KDE Frameworks 6.30 Tier 1 nodes: `kcodecs`, `kdbusaddons`, and `threadweaver`. KDE upstream stable is the authority for source, dependency requirements, tests, ABI/API and release behavior. Ubuntu Resolute and Debian sid are technical packaging/provider references only.
 
-KDE upstream `v6.30.0` remains authoritative for source, CMake requirements, Qt minimums, defaults and tests. Ubuntu Resolute provides compatible Qt/general dependencies and remains the application/package compatibility target. Ubuntu and Debian packaging trees are reference inputs only.
-
-Retained inputs:
-
+Shared retained inputs:
 - ECM `6.30.0-0supralinux3`: run `34694951158`, artifact `10298635300`, `.deb` SHA-256 `ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f`;
-- generic Tier 1 packaging trees: run `34708030450`, artifact `10301938362`, artifact SHA-256 `6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6`;
-- Debian watch-v5 KDE signing key: SHA-256 `86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d`.
+- generic packaging trees: run `34708030450`, artifact `10301938362`, SHA-256 `6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6`.
 
-## Attempt 1 — real FAIL on all three nodes
+The batch matrix uses `fail-fast: false`. PASS, FAIL and BLOCKED retain their project meanings; none of these nodes is BLOCKED because ECM is PASS and the three nodes are independent.
 
-Commit `50611225422b05803ee49d8d5fc8ff4f84a21d99`, workflow `34709829162`.
+## Attempt 1 — three FAILs
+
+Commit `50611225422b05803ee49d8d5fc8ff4f84a21d99`, run `34709829162`.
+
+All three packages were actually attempted. They failed before KDE autotests because SupraLINUX had inserted an invalid full-tree `reuse lint` gate. Therefore autotests did not run in attempt 1.
 
 - KCodecs: job `103596438631`, artifact `10302917591`, SHA-256 `6fcf23a69991e453d3563d580aa63fa082c27ce8490ad52dd9e125ee41cd8f6f`.
 - KDBusAddons: job `103596438606`, artifact `10303285563`, SHA-256 `2a581e9f4c01c15c611b5b3d3a98343504177f1d52fb2225f92ce3c6428f54ed`.
 - ThreadWeaver: job `103596438491`, artifact `10303265649`, SHA-256 `0b47374207ae54632c4ba9594eedbcc72d46eed552696b608110ebb5bce6acb6`.
 
-All three were genuinely attempted and are therefore FAIL, not BLOCKED. They reached `sbuild` but the SupraLINUX packaging override ran an invented full-tree `reuse lint` before KDE's real tests. **The KDE autotests did not run in attempt 1.** The REUSE gate was removed because KDE 6.30 does not define full-tree REUSE compliance as a package-build requirement.
+The invented REUSE gate was removed rather than papered over with synthetic metadata. KDE autotests remain enabled.
 
-Repository Policy run `34709829038` also independently exposed unused variables in the generic runner. That was CI infrastructure evidence, not a Framework package failure.
+## Attempt 2 — tests PASS, package gates still FAIL
 
-## Attempt 2 — KDE tests PASS, packaging still FAIL
+Commit `3fa96423bb01b8a7cd63a62ab5947cf7ef57b482`, run `34710627400`.
 
-Commit `3fa96423bb01b8a7cd63a62ab5947cf7ef57b482`, workflow `34710627400`. Repository Policy run `34710627439` was PASS.
+- KCodecs: **8/8 tests PASS**; job `103598645411`, artifact `10303621032`, SHA-256 `722b83f04fadc67337129f6435547e0c9b3ad6b8b3d02655be258d86cb62e6a6`; final state FAIL because Ubuntu 6.24 symbols still contained two `KCharsets` constructors no longer present.
+- KDBusAddons: **3/3 tests PASS**; job `103598645369`, artifact `10303366682`, SHA-256 `75879797c369c29c00eb6fa647cca9958645eb80437531f7dfee42fe99327763`; final state FAIL because absent Multi-Arch was normalized incorrectly and the watch-file PGP key was missing.
+- ThreadWeaver: **8/8 tests PASS**; job `103598645228`, artifact `10302524114`, SHA-256 `5582b94c2e134011297a51fd02183464253c0c5f43678a79fd256f128b2f2d6f`; same package-contract/PGP findings as KDBusAddons.
 
-The REUSE remediation worked: all upstream test suites ran and passed before later packaging failures.
+Debian sid 6.28 had already removed the same two KCodecs constructors, so the KCodecs public symbols baseline moved to the retained Debian reference instead of weakening ABI checks.
 
-- KCodecs: **8/8 tests PASS**; job `103598645411`, artifact `10303621032`, SHA-256 `722b83f04fadc67337129f6435547e0c9b3ad6b8b3d02655be258d86cb62e6a6`. The build then failed at `dpkg-gensymbols`: the Ubuntu Resolute 6.24 reference still required `KCharsets` C1/C2 constructors that are absent in KDE 6.30. Debian 6.28 had already removed exactly those two symbols from its reference. KDE 6.30 also introduces `std::format` in `UnicodeGroupProber`, and GCC/libstdc++ emits additional implementation/template symbols; these are non-fatal additions and are recorded rather than treated as an upstream ABI regression.
-- KDBusAddons: **3/3 tests PASS** and the binary build completed; job `103598645369`, artifact `10303366682`, SHA-256 `75879797c369c29c00eb6fa647cca9958645eb80437531f7dfee42fe99327763`. The SupraLINUX contract checker then failed because `dpkg-deb -f Multi-Arch` reports an absent field as `no`, while the retained package-contract snapshot normalizes absence to `null`. The build log also exposed `debian-watch-file-pubkey-file-is-missing`; `Standards-Version: 4.7.4` was newer than Resolute's recognized 4.7.3 baseline.
-- ThreadWeaver: **8/8 tests PASS** and the binary build completed; job `103598645228`, artifact `10302524114`, SHA-256 `5582b94c2e134011297a51fd02183464253c0c5f43678a79fd256f128b2f2d6f`. It hit the same Multi-Arch normalization issue and the same watch-key/Standards-Version packaging issues.
+## Attempt 3 — two PASS, one FAIL
 
-The three attempt-2 results remain historical FAIL. Passing KDE tests do not convert a failed package gate into PASS.
+Commit `c4de13b66184cb3b84283f1c4c5f0668f577b0de`, run `34713034164`. Repository Policy run `34713034169` is PASS.
 
-## Remediation `6.30.0-0supralinux3`
+### KDBusAddons — PASS
 
-The third candidate keeps KDE source and tests unchanged. Only packaging contracts and metadata are corrected:
+- package `6.30.0-0supralinux3`;
+- job `103605147881`;
+- artifact `10304340428`;
+- artifact SHA-256 `2bfb451724808b5318625eee3df25a6104c9b6da77482737ac54eea058a7e799`;
+- tests: **3/3 PASS**;
+- Lintian error gate: PASS; retained warnings are `empty-binary-package` for the compatibility doc stub and missing manpage for `kquitapp6`;
+- SONAME `libKF6DBusAddons.so.6`;
+- consumer smoke PASS;
+- ECM predecessor proof: `6.30.0-0supralinux3`;
+- downstream eligible: yes.
 
-1. KCodecs selects the retained **Debian sid `kf6-kcodecs 6.28.0-1` symbols baseline**, SHA-256 `35f6b7b6885b3db41bcce95b99610b2e917e1b4e13d5ba7e801b93dd47c4f8c7`, instead of the stale Ubuntu 6.24 symbols baseline. Debian remains a reference provider, not an authority over KDE.
-2. The generic runner selects the symbols tree explicitly from the campaign manifest; KDBusAddons and ThreadWeaver continue using the Ubuntu Resolute symbols references.
-3. The binary-contract validator normalizes both an absent `Multi-Arch` field and `Multi-Arch: no` to the same internal `null` representation. It does **not** add `Multi-Arch: no` to package control files, preserving the established package contract.
-4. Each package includes `debian/upstream/signing-key.asc`, matching the retained Debian watch-v5 metadata, instead of disabling PGP verification. Key SHA-256: `86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d`.
-5. `Standards-Version` is set to `4.7.3`, the policy level recognized by the current Resolute Lintian.
-6. KDE autotests remain enabled exactly as in attempt 2: KCodecs/ThreadWeaver through `dh_auto_test`, KDBusAddons inside `dbus-run-session`.
-7. Lintian `--fail-on error`, SONAME checks, exact binary split/contracts, retained ECM proof and package-specific downstream CMake consumer smoke remain mandatory.
+### ThreadWeaver — PASS
 
-Warnings for the intentionally compatibility-only empty `*-doc` packages remain visible. KDBusAddons' missing manpage warning for `kquitapp6` also remains visible; neither is suppressed as an error workaround.
+- package `6.30.0-0supralinux3`;
+- job `103605147772`;
+- artifact `10303986419`;
+- artifact SHA-256 `6395f11ed633fb034b0bf61a95639ce00005e3211994b04924abeb306deed2b8`;
+- tests: **8/8 PASS**;
+- Lintian error gate: PASS; only the retained `empty-binary-package` doc warning remains;
+- SONAME `libKF6ThreadWeaver.so.6`;
+- consumer smoke PASS;
+- ECM predecessor proof: `6.30.0-0supralinux3`;
+- downstream eligible: yes.
 
-## KCodecs symbols note
+### KCodecs — FAIL
 
-The switch from Ubuntu 6.24 to Debian 6.28 is evidence-driven. The fatal difference was the pair:
+- attempted package `6.30.0-0supralinux3`;
+- job `103605147896`;
+- artifact `10304255731`;
+- artifact SHA-256 `336d771a73091f2b0a7c60cf55833b5205f2c4bc8a8e87802065fe38333c2b0d`;
+- tests: **8/8 PASS**;
+- source package, clean `sbuild`, binary split, Multi-Arch contract and SONAME all reached successfully;
+- final stage: `lintian`;
+- cause: 15 new libstdc++ `std::format`/Unicode implementation symbols were emitted into `libKF6Codecs.so.6`; `dpkg-gensymbols` assigned `6.30.0-0supralinux3` as their minimum version and Lintian correctly rejects a Debian revision in a symbol minimum.
 
-- `_ZN9KCharsetsC1Ev`
-- `_ZN9KCharsetsC2Ev`
+KDE 6.30 itself now uses `<format>` in `UnicodeGroupProber.cpp`. These symbols are toolchain/template implementation details, not new KCodecs public API. Debian's source-symbols format explicitly supports the `optional` tag for private/template symbols whose presence can vary without constituting an ABI break.
 
-Both are already absent from the Debian 6.28 symbols baseline. The selected KDE 6.30 source additionally uses `<format>` in `src/probers/UnicodeGroupProber.cpp`; the resulting libstdc++ `std::format`/Unicode implementation symbols are new, non-fatal symbol additions. SupraLINUX records them as implementation/compiler-derived output rather than inventing them as KDE public API.
+## KCodecs attempt 4 remediation
 
-## Current state before attempt 3
+Candidate: `6.30.0-0supralinux4`.
 
-`kcodecs`, `kdbusaddons` and `threadweaver` are current **FAIL** package attempts with a prepared `-0supralinux3` remediation. None is BLOCKED because ECM is PASS and the nodes are independent. No node becomes downstream-eligible until the complete hosted package gate returns PASS and its evidence is recorded.
+The retained Debian 6.28 public symbols file remains the base reference, SHA-256 `35f6b7b6885b3db41bcce95b99610b2e917e1b4e13d5ba7e801b93dd47c4f8c7`.
+
+SupraLINUX adds an auditable source-template override `debian/libkf6codecs6.symbols.supralinux`, SHA-256 `b87cbfbfe47d7cf99248b57196257a2765987297a701310de513d1e36c51d696`. Exactly 15 new `std::format`/Unicode implementation symbols are tagged `(optional=toolchain)` with upstream minimum `6.30.0`. No existing public symbol minimum is weakened or removed.
+
+The candidate template was checked locally with `dpkg-gensymbols -c4` against the `libKF6Codecs.so.6.30.0` binary produced by attempt 3 and passes without warnings. The real `-0supralinux4` clean build remains pending CI; KCodecs therefore remains current **FAIL** and is not downstream eligible.
+
+## Current batch state
+
+- KCodecs: **FAIL**, remediation `6.30.0-0supralinux4` pending validation.
+- KDBusAddons: **PASS**, downstream eligible.
+- ThreadWeaver: **PASS**, downstream eligible.
+- BLOCKED: none.
+
+`manifests/kde-tier1-package-campaign.json` is the canonical current attempt ledger for this in-flight batch. Synchronization of the top-level `manifests/kde-dag.json` and general Tier 1 status documentation is intentionally pending until the KCodecs attempt-4 result closes, so this preparatory commit does not falsely promote KCodecs or require a second state transition mid-attempt. The older embedded `packaging` placeholders in `manifests/kde-frameworks-tier1.json` are source-bootstrap metadata, not the current batch-attempt authority.
+
+## CI scope
+
+State/evidence-only changes to the campaign ledger no longer force all three packages to rebuild. The scope helper compares a per-node build-input fingerprint. A package-path change still rebuilds that node; shared runner/workflow changes still rebuild all affected nodes. This allows PASS nodes to remain untouched while KCodecs iterates independently.
+
+Hosted PASS remains non-authoritative release evidence. Final candidate/stable promotion still requires the separate KVM/JIT/runtime/compatibility gates.

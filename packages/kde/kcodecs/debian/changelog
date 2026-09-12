@@ -1,12 +1,20 @@
+kf6-kcodecs (6.30.0-0supralinux4) resolute; urgency=medium
+
+  * Review the 15 new libstdc++ std::format/Unicode implementation symbols
+    emitted by KDE 6.30 and tag them optional=toolchain with upstream minimum
+    6.30.0 instead of a Debian revision.
+  * Retain Debian sid 6.28 symbols as the audited public-ABI baseline.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 17:03:00 -0300
+
 kf6-kcodecs (6.30.0-0supralinux3) resolute; urgency=medium
 
-  * Use the retained Debian 6.28 symbols baseline after the Ubuntu 6.24
-    baseline proved stale for the removed KCharsets constructors.
-  * Add the KDE release signing key required by the Debian watch v5 PGP gate.
-  * Align Standards-Version with the 4.7.3 policy level recognized by Resolute.
-  * Preserve the 8/8 passing KDE 6.30 autotests from the previous attempt.
+  * Move the symbols reference from Ubuntu 6.24 to Debian sid 6.28 after
+    confirming the two removed KCharsets constructors are already absent there.
+  * Add the retained KDE upstream signing key required by the watch-file PGP
+    policy and use Standards-Version 4.7.3 supported by Resolute Lintian.
 
- -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 15:45:00 -0300
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 16:00:00 -0300
 
 kf6-kcodecs (6.30.0-0supralinux2) resolute; urgency=medium
 
