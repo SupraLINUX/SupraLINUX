@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 Tier 1 — packaging preparation
 
-Status: **provider preflight PASS; packaging-reference snapshot implementation prepared; first snapshot pending; Framework packaging pending**  
+Status: **provider preflight PASS; packaging-reference snapshot PASS; Framework packaging/build campaign pending**  
 Last reviewed: **2026-09-12**
 
 ## Purpose
@@ -16,9 +16,9 @@ This does **not** change project authority:
 
 ## Why two packaging references
 
-Ubuntu Resolute is the direct compatibility target, but its Frameworks packages currently trail the selected KDE Frameworks 6.30.0 stack. Debian sid is closer to current Frameworks packaging and is therefore useful for newer packaging mechanics. Both remain references only.
+Ubuntu Resolute is the direct compatibility target, but its Frameworks packages trail the selected KDE Frameworks 6.30.0 stack. Debian sid is closer to current Frameworks packaging and is therefore useful for newer packaging mechanics. Both remain references only.
 
-The snapshot intentionally records what each archive actually publishes at execution time rather than hard-coding an assumed distro version into SupraLINUX architecture.
+The snapshot records what each archive actually publishes at execution time rather than hard-coding an assumed distro version into SupraLINUX architecture.
 
 ## Machine-readable mapping
 
@@ -28,9 +28,10 @@ The manifest is explicitly:
 
 - `authority: false`;
 - `role: packaging-reference-only`;
-- `snapshot.status: pending` until a real workflow PASS is retained.
+- backed by retained workflow/artifact evidence;
+- prohibited from changing a Framework's build/DAG state.
 
-Repository policy verifies that this node set exactly matches `manifests/kde-frameworks-tier1.json` and that every Framework remains `packaging.state=pending` and `state=pending` while reference metadata is being gathered.
+Repository Policy verifies that this node set exactly matches `manifests/kde-frameworks-tier1.json` and that every Framework remains `packaging.state=pending` and `state=pending` until an actual package build is attempted.
 
 ## Isolated archive capture
 
@@ -45,6 +46,62 @@ The script keeps archive namespaces separate:
 - each reference has its own APT source list and APT list directory.
 
 This prevents a Debian sid package from becoming an accidental provider on the Ubuntu runner.
+
+## First retained snapshot PASS
+
+Evidence:
+
+- workflow run: `34701132721`;
+- PR head: `943a99f7465e311bbc72d63cbe6555a29aa4b5ab`;
+- artifact: `10299579234`;
+- artifact SHA-256: `a2951c297f125ad81d1487075f0a0a6250114c4e875f3ba3870c3c18c09adaca`;
+- normalized `snapshot.json` SHA-256: `601c668342c206af179e9c564bf87cac6a166f1070fe9af0b640cb57d2151597`;
+- `versions.tsv` SHA-256: `af6fd90121801eaf322442c43b793422494dfd5a109edccf484f5d24b463ea9b`;
+- result: `PASS`, `authority=false`, `role=packaging-reference-only`, `framework_package_build_certification=pending`.
+
+The snapshot resolved all **58** expected source records: 29 from Ubuntu Resolute and the same 29 from Debian sid.
+
+## Observed reference versions
+
+Ubuntu Resolute is not uniform across this Tier 1 set:
+
+- 28 nodes use upstream Frameworks `6.24.0` packaging;
+- `modemmanager-qt` uses upstream `6.23.0` packaging.
+
+Debian sid is also not a single exact Frameworks revision:
+
+- 28 nodes use upstream `6.28.0` packaging;
+- `syntax-highlighting` uses upstream `6.28.1` packaging.
+
+These versions are evidence about reference packaging only. SupraLINUX remains selected on KDE Frameworks **6.30.0**.
+
+## Binary-package contract comparison
+
+The binary-package name sets are identical between the two reference distributions for **28 of 29** Tier 1 source packages.
+
+The exception is `kirigami`. Debian 6.28 adds four binary libraries that are absent from the Ubuntu 6.24 reference:
+
+- `libkirigamiforms6`;
+- `libkirigamiformsprivatecards6`;
+- `libkirigamiformsprivateflat6`;
+- `libkirigamiformsprivatetemplates6`.
+
+This is a concrete example of why SupraLINUX must derive the final binary split from KDE 6.30 installed outputs plus compatibility requirements, not merely freeze Ubuntu's older split.
+
+## Build-Depends comparison
+
+Fourteen Tier 1 source packages have at least one package-name difference in `Build-Depends` between the captured Ubuntu and Debian references.
+
+Notable examples include:
+
+- `kcoreaddons`: Debian adds `libmount-dev`, `qt6-base-private-dev`, `xauth` and `xvfb`; the first two align with dependencies already identified independently from KDE 6.30 upstream metadata;
+- `kconfig`: Debian adds `qt6-base-private-dev` and moves D-Bus test infrastructure from `dbus-x11` to `dbus-daemon`;
+- `kcalendarcore`, `kitemviews`, `kplotting` and `syntax-highlighting`: Debian adds `xauth`/`xvfb` test infrastructure;
+- `ki18n`: Debian adds `iso-codes` and `locales-all`;
+- `prison`: Debian adds `dh-sequence-pkgkde-symbolshelper`;
+- `sonnet`: Debian adds `dh-sequence-qmldeps`.
+
+These differences are reference signals. The selected SupraLINUX Build-Depends for each package must be justified against KDE 6.30.0 and the resolved provider manifest.
 
 ## Captured fields
 
@@ -78,10 +135,12 @@ A reference moving ahead of KDE 6.30.0 is treated as a review signal because Sup
 
 A packaging-reference workflow PASS proves only that a coherent, current reference snapshot was captured. It does **not** prove that any SupraLINUX Framework package builds.
 
-Therefore a snapshot PASS may update only the packaging-reference evidence state. It may not change any Framework node to PASS, FAIL or BLOCKED.
+Therefore this PASS updates only the packaging-reference evidence state. It does not change any Framework node to PASS, FAIL or BLOCKED.
 
 ## Next gate
 
-After the first snapshot PASS is inspected and its artifact/hash are retained, SupraLINUX packaging can be authored node-by-node. Each `debian/` tree must be audited against exact KDE 6.30.0 defaults and the already resolved provider manifest rather than copied blindly from either reference distro.
+SupraLINUX packaging can now be authored node-by-node. Each `debian/` tree must be audited against exact KDE 6.30.0 defaults and the already resolved provider manifest rather than copied blindly from either reference distro.
 
-The subsequent build campaign will reuse the established ECM model: exact KDE source + verified hash → Debian source package → fresh Resolute build root → `sbuild` → `.deb/.changes/.buildinfo` → package checks/tests → DAG evidence.
+The build campaign will reuse the established ECM model: exact KDE source + verified hash → Debian source package → fresh Resolute build root → `sbuild` → `.deb/.changes/.buildinfo` → package checks/tests → DAG evidence.
+
+The first packaging proof is intentionally a simple Tier 1 leaf (`attica`) so the generalized Framework package pipeline can be validated before expanding to the remaining 28 independent Tier 1 nodes.

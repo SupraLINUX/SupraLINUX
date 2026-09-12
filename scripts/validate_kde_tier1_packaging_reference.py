@@ -9,6 +9,22 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE_MANIFEST = ROOT / "manifests" / "kde-frameworks-tier1.json"
 REFERENCE_MANIFEST = ROOT / "manifests" / "kde-frameworks-tier1-packaging-reference.json"
 
+EXPECTED_SNAPSHOT = {
+    "status": "PASS",
+    "claim": "packaging-reference-snapshot-only",
+    "authoritative": False,
+    "workflow_run": 34701132721,
+    "head_sha": "943a99f7465e311bbc72d63cbe6555a29aa4b5ab",
+    "artifact_id": 10299579234,
+    "artifact_sha256": "a2951c297f125ad81d1487075f0a0a6250114c4e875f3ba3870c3c18c09adaca",
+    "snapshot_json_sha256": "601c668342c206af179e9c564bf87cac6a166f1070fe9af0b640cb57d2151597",
+    "versions_tsv_sha256": "af6fd90121801eaf322442c43b793422494dfd5a109edccf484f5d24b463ea9b",
+    "nodes": 29,
+    "ubuntu_reference_upstream_versions": ["6.23.0", "6.24.0"],
+    "debian_reference_upstream_versions": ["6.28.0", "6.28.1"],
+    "framework_package_build_certification": "pending",
+}
+
 errors: list[str] = []
 
 
@@ -42,7 +58,7 @@ require(reference.get("schema") == 1, "Packaging-reference schema must be 1")
 require(reference.get("authority") is False, "Packaging references must never be authoritative")
 require(reference.get("role") == "packaging-reference-only", "Packaging-reference role changed unexpectedly")
 require(reference.get("selected_kde") == "6.30.0", "Packaging reference must follow selected KDE 6.30.0")
-require(reference.get("snapshot") == {"status": "pending", "claim": "no-packaging-or-dag-state-change"}, "Reference snapshot must remain pending until a real workflow PASS is recorded")
+require(reference.get("snapshot") == EXPECTED_SNAPSHOT, "Packaging-reference PASS evidence changed without review")
 
 references = reference.get("references", {})
 require(references.get("ubuntu", {}).get("distribution") == "ubuntu", "Ubuntu reference distribution missing")
@@ -82,5 +98,5 @@ if errors:
 
 print("KDE Frameworks Tier 1 packaging-reference policy: PASS")
 print("Reference authorities: none; Ubuntu Resolute and Debian sid are technical inputs only")
-print("Snapshot evidence: pending")
+print("Snapshot evidence: PASS, non-authoritative")
 print("Framework packaging/DAG states: pending")
