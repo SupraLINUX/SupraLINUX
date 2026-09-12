@@ -1,0 +1,32 @@
+name: Temporary Tier 1 batch 2 clean-tree validation
+
+on:
+  push:
+    branches: [tmp-tier1-batch2-fix]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Validate clean remediation tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends shellcheck gnupg
+          bash -n scripts/*.sh
+          shellcheck -e SC1091 scripts/*.sh
+          python3 scripts/validate_repository.py
+          python3 scripts/validate_qt_provider.py
+          python3 scripts/validate_kde_dag.py
+          python3 scripts/validate_kde_tier1.py
+          python3 scripts/validate_kde_tier1_package_batch1.py
+          python3 scripts/validate_kde_tier1_package_batch2.py
+          python3 scripts/validate_kde_tier1_packaging_reference.py
+          python3 scripts/validate_kde_tier1_packaging_tree.py
+          python3 scripts/validate_kde_attica_package.py
+          python3 scripts/validate_kde_attica_ci_scope.py
