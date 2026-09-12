@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-12",
+  "frameworks_series": "6.30.0",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "batch": "tier1-batch-1",
+  "state": "prepared-pending-build",
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+    },
+    "packaging_trees": {
+      "status": "PASS",
+      "workflow_run": 34708030450,
+      "artifact_id": 10301938362,
+      "artifact_sha256": "6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6",
+      "snapshot_json_sha256": "f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345"
+    }
+  },
+  "nodes": {
+    "kcodecs": {
+      "state": "prepared-pending-build",
+      "source_package": "kf6-kcodecs",
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kcodecs-6.30.0.tar.xz",
+      "source_sha256": "a42c79ff3237b73789d1c63cdfd848c0d59671ce5e93723a2efa128f00cb3450",
+      "root_cmake_blob": "a4844477467d5c7b47875f837fa6db0b22550397",
+      "package_version": "6.30.0-0supralinux1",
+      "symbols": {
+        "file": "libkf6codecs6.symbols",
+        "sha256": "8dfcf6c469195a45e5f1d038a42cf1f223fe12d00c3ee1e3aa5125142935e1a3",
+        "reference": "ubuntu-resolute"
+      },
+      "runtime_package": "libkf6codecs6",
+      "development_package": "libkf6codecs-dev",
+      "documentation_package": "libkf6codecs-doc",
+      "binary_contracts": [
+        {"name": "libkf6codecs-data", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6codecs-dev", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "libkf6codecs-doc", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6codecs6", "architecture": "amd64", "multi_arch": "same"}
+      ],
+      "soname": "libKF6Codecs.so.6",
+      "cmake_package": "KF6Codecs",
+      "cmake_target": "KF6::Codecs",
+      "consumer_run": "direct",
+      "copyright": {"file": "copyright", "sha256": "deb13c487cf8ec5a988f1673e690d0125bfc1fa451c95a9dd3e9bcbc867cca76", "reference": "debian-sid"}
+    },
+    "kdbusaddons": {
+      "state": "prepared-pending-build",
+      "source_package": "kf6-kdbusaddons",
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kdbusaddons-6.30.0.tar.xz",
+      "source_sha256": "063ef80460f76d86dc4b033ef04b65b69ba82ee0de410440fe609465e7f5a997",
+      "root_cmake_blob": "26cde2148db4d86adeea0f4bda597f0f9e610816",
+      "package_version": "6.30.0-0supralinux1",
+      "symbols": {"file": "libkf6dbusaddons6.symbols", "sha256": "03b48faa6b7c5b400f3a165c38c4c5e7e7fc454a0b099ef1ad776b3809851683", "reference": "ubuntu-resolute"},
+      "runtime_package": "libkf6dbusaddons6",
+      "development_package": "libkf6dbusaddons-dev",
+      "documentation_package": "libkf6dbusaddons-doc",
+      "binary_contracts": [
+        {"name": "libkf6dbusaddons-bin", "architecture": "amd64", "multi_arch": null},
+        {"name": "libkf6dbusaddons-data", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6dbusaddons-dev", "architecture": "amd64", "multi_arch": null},
+        {"name": "libkf6dbusaddons-doc", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6dbusaddons6", "architecture": "amd64", "multi_arch": "same"}
+      ],
+      "soname": "libKF6DBusAddons.so.6",
+      "cmake_package": "KF6DBusAddons",
+      "cmake_target": "KF6::DBusAddons",
+      "consumer_run": "dbus-session",
+      "copyright": {"file": "copyright", "sha256": "46cde028d2d8f600ea3a3a4b41b7e0c40d5264dfb50cad40484c865fb0823ede", "reference": "debian-sid"}
+    },
+    "threadweaver": {
+      "state": "prepared-pending-build",
+      "source_package": "kf6-threadweaver",
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/threadweaver-6.30.0.tar.xz",
+      "source_sha256": "e5400968a41820393e76190ab5dbb276c09513263d1b185d64b40f82dcd9b457",
+      "root_cmake_blob": "309efd1d962d925a71610ea65fed2a1007ef055d",
+      "package_version": "6.30.0-0supralinux1",
+      "symbols": {"file": "libkf6threadweaver6.symbols", "sha256": "a7403ee234e24d20f20502ed4a07b13ef265ec285cd5fb2b44709dfea39907b7", "reference": "ubuntu-resolute"},
+      "runtime_package": "libkf6threadweaver6",
+      "development_package": "libkf6threadweaver-dev",
+      "documentation_package": "libkf6threadweaver-doc",
+      "binary_contracts": [
+        {"name": "libkf6threadweaver-dev", "architecture": "amd64", "multi_arch": null},
+        {"name": "libkf6threadweaver-doc", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6threadweaver6", "architecture": "amd64", "multi_arch": "same"}
+      ],
+      "soname": "libKF6ThreadWeaver.so.6",
+      "cmake_package": "KF6ThreadWeaver",
+      "cmake_target": "KF6::ThreadWeaver",
+      "consumer_run": "direct",
+      "copyright": {"file": "copyright", "sha256": "baa640b7abaa7f5f1fbfc0acd11f4ecedf9a01f187b691523ea5d879cb35ff88", "reference": "debian-sid"}
+    }
+  }
+}

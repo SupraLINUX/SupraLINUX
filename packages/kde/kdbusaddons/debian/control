@@ -1,0 +1,60 @@
+Source: kf6-kdbusaddons
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               cmake (>= 3.29~),
+               dbus-daemon <!nocheck>,
+               extra-cmake-modules (>= 6.30.0~),
+               reuse,
+               qt6-base-dev (>= 6.9.0~),
+               qt6-base-private-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.9.0~),
+Standards-Version: 4.7.4
+Homepage: https://invent.kde.org/frameworks/kdbusaddons
+Rules-Requires-Root: no
+
+Package: libkf6dbusaddons-bin
+Architecture: any
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Description: command-line tools for KDBusAddons
+ This package contains kquitapp6 from KDE Frameworks KDBusAddons.
+
+Package: libkf6dbusaddons-data
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: data files for KDBusAddons
+ This package contains translations and logging-category data.
+
+Package: libkf6dbusaddons-dev
+Section: libdevel
+Architecture: any
+Depends: libkf6dbusaddons6 (= ${binary:Version}),
+         qt6-base-dev (>= 6.9.0~),
+         ${misc:Depends},
+Recommends: libkf6dbusaddons-doc (= ${source:Version}),
+Description: development files for KDBusAddons
+ Development headers and CMake metadata for KDE Frameworks KDBusAddons.
+
+Package: libkf6dbusaddons-doc
+Section: doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: documentation compatibility package for KDBusAddons
+ Compatibility package retaining the established Debian-family package name.
+ QDoc generation is handled separately from the default Framework build.
+
+Package: libkf6dbusaddons6
+Architecture: any
+Multi-Arch: same
+Depends: libkf6dbusaddons-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: libkf6dbusaddons-bin (= ${binary:Version}),
+Description: convenience classes on top of Qt D-Bus
+ KDE Frameworks KDBusAddons provides convenience classes on top of Qt D-Bus.
