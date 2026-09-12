@@ -54,6 +54,17 @@ Second hardened PASS:
 
 On that same head, Repository Policy run **34666082909** is retained as a transition **FAIL**. All pre-existing architecture/KVM checks and the general repository validator passed; only `Validate Qt provider invariants` failed because `validate_qt_provider.py` compared the documented status phrases case-sensitively (`provider`/`final`) while this document correctly used title-case headings (`Provider`/`Final`). This was a policy-validator defect, not a Qt-provider failure. Commit `284807f04a45a75a87e8cc65bdaf6a2bb4287a1a` corrected the validator by normalizing documentation text before status checks.
 
+Correction verification:
+
+- head: `89e12d0d1d6f92811d7d3da4e6ed4d4d1c2bcbcb`;
+- Repository Policy **34688817960**: **PASS**, including `Validate Qt provider invariants` and the live Ubuntu Qt candidate check;
+- Qt provider preflight **34688817853**: **PASS**;
+- Qt evidence artifact: **10296212097**;
+- Qt artifact SHA-256: `8b0faa9c375641a535d6e8790e0330ec0a27b5f9638dc3ca642df4c75932e271`;
+- package preflight **34688817841**: **PASS** with `sbuild` and artifact upload intentionally skipped because the event delta did not affect package-proof inputs.
+
+This closes the documentation-validator defect without changing the Qt technical conclusion: provider preflight is PASS; final Qt provider certification is still pending KDE DAG/runtime/compatibility evidence.
+
 ## Baseline closure proven
 
 The initial provider preflight targets the Qt closure needed as a baseline for Plasma/Frameworks packaging, not every optional module that may later be required by individual KDE Gear applications.
