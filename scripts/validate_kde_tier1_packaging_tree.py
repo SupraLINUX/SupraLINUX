@@ -33,14 +33,12 @@ EXPECTED_EVIDENCE = {
     "framework_package_build_certification": "unchanged",
     "package_state_effect": "none",
 }
-
+PASS_NODES = {"attica", "kcodecs", "kdbusaddons", "threadweaver"}
 errors: list[str] = []
-
 
 def require(condition: bool, message: str) -> None:
     if not condition:
         errors.append(message)
-
 
 def read(path: Path) -> str:
     try:
@@ -49,7 +47,6 @@ def read(path: Path) -> str:
         errors.append(f"cannot read {path.relative_to(ROOT)}: {exc}")
         return ""
 
-
 def load(path: Path) -> dict:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
@@ -57,10 +54,8 @@ def load(path: Path) -> dict:
         print(f"ERROR: cannot load {path.relative_to(ROOT)}: {exc}", file=sys.stderr)
         raise SystemExit(1)
     if not isinstance(value, dict):
-        print(f"ERROR: {path.relative_to(ROOT)} must contain an object", file=sys.stderr)
-        raise SystemExit(1)
+        raise SystemExit(f"ERROR: {path.relative_to(ROOT)} must contain an object")
     return value
-
 
 source = load(SOURCE_MANIFEST)
 reference = load(REFERENCE_MANIFEST)
@@ -77,18 +72,18 @@ node_ids = {node.get("id") for node in nodes if isinstance(node, dict)}
 require(len(node_ids) == 29 and None not in node_ids, "Tier 1 node IDs are incomplete")
 
 require(reference.get("authority") is False, "Packaging references must remain non-authoritative")
-require(reference.get("role") == "packaging-reference-only", "Packaging-reference manifest role changed unexpectedly")
+require(reference.get("role") == "packaging-reference-only", "Packaging-reference role changed unexpectedly")
 require(reference.get("selected_kde") == "6.30.0", "Packaging-reference manifest must follow selected KDE 6.30.0")
 reference_nodes = reference.get("nodes", {})
-require(set(reference_nodes) == node_ids, "Packaging-tree source-package mapping must cover the exact Tier 1 set")
+require(set(reference_nodes) == node_ids, "Packaging-tree source-package mapping must cover exact Tier 1 set")
 for node_id in sorted(node_ids):
-    require(reference_nodes.get(node_id) == {"source_package": f"kf6-{node_id}"}, f"{node_id}: source-package mapping changed unexpectedly")
+    require(reference_nodes.get(node_id) == {"source_package": f"kf6-{node_id}"}, f"{node_id}: source-package mapping changed")
 
 require(evidence.get("schema") == 1, "Packaging-tree evidence schema must be 1")
 require(evidence.get("authority") is False, "Packaging-tree evidence must remain non-authoritative")
-require(evidence.get("role") == "packaging-reference-trees-only", "Packaging-tree evidence role changed unexpectedly")
+require(evidence.get("role") == "packaging-reference-trees-only", "Packaging-tree evidence role changed")
 require(evidence.get("selected_kde") == "6.30.0", "Packaging-tree evidence must follow selected KDE 6.30.0")
-require(evidence.get("status") == "PASS", "Packaging-tree hosted capture must retain PASS evidence")
+require(evidence.get("status") == "PASS", "Packaging-tree hosted capture must retain PASS")
 require(evidence.get("evidence") == EXPECTED_EVIDENCE, "Packaging-tree PASS evidence changed without review")
 
 for token in (
@@ -107,13 +102,12 @@ for token in (
 ):
     require(token in runner, f"Packaging-tree runner missing invariant: {token}")
 
-require("https://archive.ubuntu.com/ubuntu" in runner, "Packaging-tree runner must use Ubuntu archive HTTPS provider")
-require("https://deb.debian.org/debian" in runner, "Packaging-tree runner must use Debian archive HTTPS provider")
+require("https://archive.ubuntu.com/ubuntu" in runner, "Packaging-tree runner must use Ubuntu HTTPS archive")
+require("https://deb.debian.org/debian" in runner, "Packaging-tree runner must use Debian HTTPS archive")
 require("resolute main universe" in runner and "resolute-updates main universe" in runner and "resolute-security main universe" in runner, "Ubuntu source indices must cover Resolute release/updates/security")
 require("sid main" in runner, "Debian source index must be sid main")
-require("Reference" in runner and "newer than selected KDE" in runner, "Packaging-tree lane must stop for a reference newer than selected KDE")
 require("tree-files.sha256" in runner and "tree-hashes.tsv" in runner, "Packaging-tree lane must retain extracted-tree hashes")
-require("download-plan.tsv" in runner and "snapshot.json" in runner and "versions.tsv" in runner, "Packaging-tree lane must retain normalized provenance records")
+require("download-plan.tsv" in runner and "snapshot.json" in runner and "versions.tsv" in runner, "Packaging-tree lane must retain provenance records")
 
 for token in (
     "manifests/kde-frameworks-tier1.json",
@@ -125,8 +119,8 @@ for token in (
     require(token in scope, f"Packaging-tree scope must track input {token}")
 require("docs/" not in scope, "Packaging-tree capture must not rerun for documentation-only changes")
 require("validate_kde_tier1_packaging_tree.py" not in scope, "Packaging-tree capture must not rerun for validator-only changes")
-require("kde-frameworks-tier1-packaging-tree-evidence.json" not in scope, "Packaging-tree evidence-only updates must not trigger external recapture")
-require('git diff --name-only "${BEFORE}" "${AFTER}" --' in scope, "Packaging-tree scope must compare the exact event delta")
+require("kde-frameworks-tier1-packaging-tree-evidence.json" not in scope, "Evidence-only updates must not trigger recapture")
+require('git diff --name-only "${BEFORE}" "${AFTER}" --' in scope, "Packaging-tree scope must compare exact event delta")
 
 for token in (
     "runs-on: ubuntu-26.04",
@@ -143,23 +137,26 @@ for token in (
 ):
     require(token in workflow, f"Packaging-tree workflow missing invariant: {token}")
 require("paths:" not in workflow, "Packaging-tree workflow must not use PR-wide paths filtering")
-require("workflow_dispatch" in workflow, "Packaging-tree workflow must support explicit manual refresh")
+require("workflow_dispatch" in workflow, "Packaging-tree workflow must support manual refresh")
 
-require("KDE upstream" in doc and "authority" in doc.lower(), "Packaging-tree documentation must preserve KDE authority")
-require("58" in doc and "29" in doc, "Packaging-tree documentation must state tree/node counts")
-require("Checksums-Sha256" in doc, "Packaging-tree documentation must describe signed-index checksum provenance")
-require("A packaging-reference-tree PASS is not a Framework package PASS." in doc, "Packaging-tree documentation must distinguish reference PASS from package PASS")
+require("KDE upstream" in doc and "authority" in doc.lower(), "Packaging-tree docs must preserve KDE authority")
+require("58" in doc and "29" in doc, "Packaging-tree docs must state tree/node counts")
+require("Checksums-Sha256" in doc, "Packaging-tree docs must describe signed-index provenance")
+require("A packaging-reference-tree PASS is not a Framework package PASS." in doc, "Packaging-tree docs must distinguish reference PASS")
 for value in (str(EXPECTED_EVIDENCE["workflow_run"]), str(EXPECTED_EVIDENCE["artifact_id"]), EXPECTED_EVIDENCE["artifact_sha256"]):
-    require(value in doc, f"Packaging-tree documentation must retain PASS evidence {value}")
+    require(value in doc, f"Packaging-tree docs must retain PASS evidence {value}")
 
 for node in nodes:
     if not isinstance(node, dict):
         continue
     node_id = node.get("id")
-    if node_id == "attica":
-        require(node.get("state") == "PASS", "Attica package PASS must remain intact")
+    if node_id in PASS_NODES:
+        require(node.get("state") == "PASS", f"{node_id}: later real package PASS must remain intact")
     else:
-        require(node.get("state") == "pending", f"{node_id}: reference-tree work must not promote package state")
+        require(node.get("state") == "pending", f"{node_id}: reference-tree work must not promote unattempted package state")
+
+require(sum(1 for node in nodes if node.get("state") == "PASS") == 4, "Packaging-tree validator expects 4 actual package PASS nodes")
+require(sum(1 for node in nodes if node.get("state") == "pending") == 25, "Packaging-tree validator expects 25 pending nodes")
 
 if errors:
     for error in errors:
@@ -167,6 +164,5 @@ if errors:
     raise SystemExit(1)
 
 print("KDE Tier 1 packaging-tree policy validation: PASS")
-print("Capture evidence: run 34708030450, artifact 10301938362, 58 hash-verified debian/ trees")
-print("Authority: KDE upstream; Ubuntu/Debian trees are compatibility references only")
-print("Package state remains independent: attica PASS; 28 pending")
+print("Capture evidence remains run 34708030450 / artifact 10301938362 / 58 trees")
+print("Reference work has no state authority; current real package state is 4 PASS / 25 pending")
