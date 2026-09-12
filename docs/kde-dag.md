@@ -69,6 +69,8 @@ Commit `801b99792dc60e7c14cb78d1846f9b8c9a476de8`, package `6.30.0-0supralinux2`
 - final failure stage: `consumer-smoke`;
 - consumer cause: Qt-integrated ECM module processing could not find Qt 6 `qtpaths6` in the consumer environment.
 
+The remediation that subsequently passed made `lintian --fail-on error` an explicit fatal gate, added the missing package metadata/runtime dependency, and installed/exposed `qtpaths6` from the selected Ubuntu Qt provider for the consumer smoke.
+
 ### Attempt 3 — PASS
 
 Commit `cafc5aff98fd28efdc2edf889a2e0f9a73dacb48`, package `6.30.0-0supralinux3`, workflow run **34694951158**, job **103556722010**.
