@@ -79,6 +79,7 @@ runner_contract = workflow_texts.get("runner-contract.yml", "")
 authoritative_workflow = workflow_texts.get("authoritative-package-proof.yml", "")
 hosted_proof = workflow_texts.get("package-build-proof.yml", "")
 require("bash -n scripts/*.sh" in repository_policy, "repository policy must syntax-check all shell scripts")
+require("scripts/test-qemu-kvm-required.sh" in repository_policy, "repository policy must functionally test the KVM-required QEMU wrapper")
 
 for filename, text, gate_label in (
     ("runner-contract.yml", runner_contract, "ci:runner-contract"),
@@ -116,6 +117,7 @@ required_files = [
     "scripts/prepare-autopkgtest-qemu-image.sh",
     "scripts/seal-authoritative-runner-image.sh",
     "scripts/qemu-kvm-required.sh",
+    "scripts/test-qemu-kvm-required.sh",
     "scripts/run-kvm-jit-gate.sh",
     "scripts/run-authoritative-package-proof.sh",
 ]
@@ -192,6 +194,11 @@ qemu_wrapper = read_required(ROOT / "scripts/qemu-kvm-required.sh")
 require('exec "${QEMU}" -accel kvm "$@"' in qemu_wrapper, "QEMU wrapper must select KVM only")
 require("tcg" not in qemu_wrapper.lower(), "KVM-required QEMU wrapper must not contain a TCG fallback")
 
+qemu_wrapper_test = read_required(ROOT / "scripts/test-qemu-kvm-required.sh")
+require("Supra Linux Runner" in qemu_wrapper_test, "QEMU wrapper test must verify an argument containing spaces")
+require("MISSING_RC" in qemu_wrapper_test and "127" in qemu_wrapper_test, "QEMU wrapper test must verify missing-executable failure semantics")
+require("KVM-required QEMU wrapper functional test: PASS" in qemu_wrapper_test, "QEMU wrapper test must emit explicit PASS evidence")
+
 if errors:
     for error in errors:
         print(f"ERROR: {error}", file=sys.stderr)
@@ -202,5 +209,5 @@ print(f"Platform: {platform['version']} ({platform['series']})")
 print("Desktop: Plasma {plasma}, Frameworks {frameworks}, Gear {gear}".format(
     plasma=desktop["plasma"]["version"], frameworks=desktop["frameworks"]["version"], gear=desktop["gear"]["version"]))
 print(f"Qt: required {qt['required_series']}, provider={provider['name']}, candidate={provider.get('candidate_version', 'n/a')}, certification={cert['status']}")
-print("CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; KVM-runtime=required; deterministic-qemu-wrapper=required; JIT=required; exact-run-binding=required; shell-syntax=required".format(
+print("CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; KVM-runtime=required; deterministic-qemu-wrapper=required; wrapper-functional-test=required; JIT=required; exact-run-binding=required; shell-syntax=required".format(
     hosted=hosted["role"], platform=authoritative["platform"], virt=authoritative["virtualization"], lifecycle=authoritative["lifecycle"], build=authoritative["build_isolation"], test=authoritative["system_test"]))

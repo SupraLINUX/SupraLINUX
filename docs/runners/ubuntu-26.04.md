@@ -55,20 +55,11 @@ qemu-system-x86_64 -accel kvm <autopkgtest arguments>
 
 The authoritative proof supplies that wrapper through `autopkgtest-virt-qemu --qemu-command` and pins `--qemu-architecture=x86_64`. Because SupraLINUX supplies the QEMU command itself, the test does not rely on autopkgtest's acceleration auto-detection and has no TCG fallback path in the wrapper.
 
-The wrapper is hashed into the authoritative evidence as `qemu-kvm-wrapper-sha256.txt`. Result evidence records `system_test_acceleration: kvm-required`.
+The wrapper is hashed into authoritative evidence as `qemu-kvm-wrapper-sha256.txt`. Result evidence records `system_test_acceleration: kvm-required`.
 
 ## Golden image contract
 
-The golden runner image is built from a signed and verified released Ubuntu Resolute cloud image by `scripts/build-authoritative-runner-image.sh`. Required provenance includes:
-
-- signed source-image metadata and SHA-256;
-- exact SupraLINUX source commit;
-- verified GitHub Actions runner release/digest;
-- nested `autopkgtest` image SHA-256;
-- guest provisioning/seal evidence;
-- removal of the temporary build-source checkout;
-- offline `virt-sysprep` evidence;
-- final qcow2 validation and SHA-256.
+The golden runner image is built from a signed and verified released Ubuntu Resolute cloud image by `scripts/build-authoritative-runner-image.sh`. Required provenance includes signed source metadata/hash, exact SupraLINUX commit, verified Actions runner digest, nested `autopkgtest` image hash, guest provisioning/seal evidence, removal of temporary source, offline sysprep evidence and final qcow2 hash/validation.
 
 The golden image contains runner software but no persistent GitHub credential and no temporary SupraLINUX build checkout.
 
@@ -102,7 +93,9 @@ Build artifacts are captured immediately after successful `sbuild`, before later
 
 ## Continuous repository validation
 
-Repository Policy executes `bash -n scripts/*.sh` and `scripts/validate_repository.py` on GitHub-hosted Ubuntu 26.04. The policy requires the runtime nested-KVM probe, deterministic KVM-only QEMU wrapper, exact workflow-run binding, golden-image provenance, same-repository PR guard and the rest of the authoritative contract.
+Repository Policy executes `bash -n scripts/*.sh` and `scripts/validate_repository.py` on GitHub-hosted Ubuntu 26.04. It also runs `scripts/test-qemu-kvm-required.sh` with a fake QEMU executable to prove the wrapper prepends `-accel kvm`, preserves argument boundaries including spaces, and fails with exit code 127 when the configured QEMU executable does not exist.
+
+This hosted functional test does not claim KVM availability; real KVM initialization remains the responsibility of `scripts/check-nested-kvm-runtime.sh` inside the authoritative guest.
 
 ## Certification requirement
 

@@ -25,6 +25,8 @@ A historical `autopkgtest/unshare` attempt failed during testbed setup after `sb
 
 The expensive hosted build is gated on the actual PR event delta. Infrastructure/documentation-only `synchronize` events execute the scope-check but skip `sbuild`; this behavior has real PASS evidence.
 
+Repository Policy also validates every shell script with `bash -n`. The deterministic KVM-only QEMU wrapper has an additional functional test using a fake QEMU executable so argument order/quoting and missing-binary failure semantics are checked without requiring KVM on the hosted runner.
+
 ## Authoritative KVM/JIT lane
 
 Release-relevant evidence is produced inside disposable self-hosted Ubuntu 26.04 **KVM VMs**. Required labels are:
@@ -53,9 +55,9 @@ The authoritative proof therefore supplies `scripts/qemu-kvm-required.sh` throug
 qemu-system-x86_64 -accel kvm <autopkgtest arguments>
 ```
 
-There is no TCG fallback in the wrapper. The wrapper SHA-256 is retained in the run evidence.
+There is no TCG fallback in the wrapper. The wrapper SHA-256 is retained in authoritative evidence.
 
-Inside the authoritative runner VM the package path is:
+Inside the authoritative runner VM:
 
 ```text
 fresh sbuild/unshare
@@ -125,6 +127,7 @@ Repository publication/signing are separate from compilation. Builders should no
 ## Initial gates
 
 - repository/manifest and shell-syntax validation;
+- deterministic QEMU-wrapper functional validation;
 - source integrity;
 - hosted clean-build preflight;
 - host KVM/nested preflight;
