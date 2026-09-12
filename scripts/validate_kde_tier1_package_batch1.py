@@ -157,13 +157,15 @@ for node_id in EXPECTED:
 require(dag.get("nodes", {}).get("extra-cmake-modules", {}).get("state") == "PASS", "ECM DAG root must remain PASS")
 
 require(hashlib.sha256(KCODECS_SYMBOLS.read_bytes()).hexdigest() == "b87cbfbfe47d7cf99248b57196257a2765987297a701310de513d1e36c51d696", "KCodecs reviewed symbols override hash mismatch")
-toolchain_lines = [line for line in symbols.splitlines() if line.startswith("(optional=toolchain)")]
+toolchain_lines = [line.strip() for line in symbols.splitlines() if line.strip().startswith("(optional=toolchain)")]
 require(len(toolchain_lines) == 15, "KCodecs must retain exactly 15 reviewed optional=toolchain symbols")
 for line in toolchain_lines:
     require(line.endswith(" 6.30.0"), "KCodecs toolchain symbols must use upstream minimum 6.30.0")
     require("-0supralinux" not in line, "KCodecs symbols must never use a Debian revision as minimum")
 require("cp debian/libkf6codecs6.symbols.supralinux debian/libkf6codecs6.symbols" in rules, "KCodecs rules must install reviewed symbols before dh_makeshlibs")
-require(rules.index("cp debian/libkf6codecs6.symbols.supralinux") < rules.index("dh_makeshlibs"), "KCodecs reviewed symbols must be installed before dh_makeshlibs")
+copy_pos = rules.index("cp debian/libkf6codecs6.symbols.supralinux")
+invoke_pos = rules.index("\tdh_makeshlibs", copy_pos)
+require(copy_pos < invoke_pos, "KCodecs reviewed symbols must be installed before dh_makeshlibs")
 
 for token in (
     '"upstream_version": node["upstream_version"]',
