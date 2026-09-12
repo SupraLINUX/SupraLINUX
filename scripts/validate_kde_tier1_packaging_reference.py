@@ -50,31 +50,27 @@ EXPECTED_BINARY_CONTRACT_SNAPSHOT = {
     ],
     "framework_package_build_certification": "pending",
 }
-ATTICA_PASS = {
-    "workflow_run": 34706416753,
-    "artifact_id": 10301851297,
-    "artifact_sha256": "f1ed135e9d5a25e6773957b2e52817fba03280293249f54257efc4e18304de27",
+PASS_NODES = {
+    "attica": ("6.30.0-0supralinux2", 34706416753, 10301851297, "f1ed135e9d5a25e6773957b2e52817fba03280293249f54257efc4e18304de27"),
+    "kcodecs": ("6.30.0-0supralinux4", 34716761551, 10305050385, "d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45"),
+    "kdbusaddons": ("6.30.0-0supralinux3", 34713034164, 10304340428, "2bfb451724808b5318625eee3df25a6104c9b6da77482737ac54eea058a7e799"),
+    "threadweaver": ("6.30.0-0supralinux3", 34713034164, 10303986419, "6395f11ed633fb034b0bf61a95639ce00005e3211994b04924abeb306deed2b8"),
 }
-
 errors: list[str] = []
-
 
 def require(condition: bool, message: str) -> None:
     if not condition:
         errors.append(message)
 
-
 def load(path: Path) -> dict:
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        value = json.loads(path.read_text(encoding="utf-8"))
     except Exception as exc:
         print(f"ERROR: cannot load {path.relative_to(ROOT)}: {exc}", file=sys.stderr)
         raise SystemExit(1)
-    if not isinstance(data, dict):
-        print(f"ERROR: {path.relative_to(ROOT)} must contain an object", file=sys.stderr)
-        raise SystemExit(1)
-    return data
-
+    if not isinstance(value, dict):
+        raise SystemExit(f"ERROR: {path.relative_to(ROOT)} must contain an object")
+    return value
 
 def read(path: Path) -> str:
     try:
@@ -82,7 +78,6 @@ def read(path: Path) -> str:
     except Exception as exc:
         errors.append(f"cannot read {path.relative_to(ROOT)}: {exc}")
         return ""
-
 
 source = load(SOURCE_MANIFEST)
 reference = load(REFERENCE_MANIFEST)
@@ -104,11 +99,11 @@ require(reference.get("binary_contract_snapshot") == EXPECTED_BINARY_CONTRACT_SN
 
 references = reference.get("references", {})
 require(references.get("ubuntu", {}).get("distribution") == "ubuntu", "Ubuntu reference distribution missing")
-require(references.get("ubuntu", {}).get("series") == "resolute", "Ubuntu packaging reference must be Resolute")
-require(references.get("ubuntu", {}).get("components") == ["main", "universe"], "Ubuntu reference components changed unexpectedly")
+require(references.get("ubuntu", {}).get("series") == "resolute", "Ubuntu reference must be Resolute")
+require(references.get("ubuntu", {}).get("components") == ["main", "universe"], "Ubuntu reference components changed")
 require(references.get("debian", {}).get("distribution") == "debian", "Debian reference distribution missing")
-require(references.get("debian", {}).get("series") == "sid", "Debian packaging reference must be sid")
-require(references.get("debian", {}).get("components") == ["main"], "Debian reference components changed unexpectedly")
+require(references.get("debian", {}).get("series") == "sid", "Debian reference must be sid")
+require(references.get("debian", {}).get("components") == ["main"], "Debian reference components changed")
 
 policy = reference.get("policy", {})
 for key in (
@@ -120,31 +115,33 @@ for key in (
     require(policy.get(key) is True, f"Packaging reference policy must keep {key}=true")
 
 nodes = reference.get("nodes", {})
-require(isinstance(nodes, dict), "Packaging-reference nodes must be an object")
 require(set(nodes) == source_ids, "Packaging-reference node set must exactly match Tier 1")
 for node_id in sorted(source_ids):
-    require(nodes.get(node_id) == {"source_package": f"kf6-{node_id}"}, f"{node_id}: source package mapping must remain kf6-{node_id}")
+    require(nodes.get(node_id) == {"source_package": f"kf6-{node_id}"}, f"{node_id}: source package mapping changed")
 
 for node in source_nodes:
     if not isinstance(node, dict):
         continue
-    node_id = node.get("id", "<unknown>")
-    if node_id == "attica":
+    node_id = node.get("id")
+    if node_id in PASS_NODES:
+        version, run, artifact, digest = PASS_NODES[node_id]
         packaging = node.get("packaging", {})
-        require(packaging.get("state") == "PASS", "attica: actual package-build PASS must be retained independently of reference snapshots")
-        require(packaging.get("package_version") == "6.30.0-0supralinux2", "attica: validated package revision mismatch")
-        require(packaging.get("downstream_eligible") is True, "attica: PASS package must be downstream eligible")
-        pass_items = [item for item in packaging.get("evidence", []) if isinstance(item, dict) and item.get("result") == "PASS"]
-        require(len(pass_items) == 1, "attica: exactly one retained package PASS expected")
-        if pass_items:
-            item = pass_items[0]
-            require(item.get("workflow_run") == ATTICA_PASS["workflow_run"], "attica: package PASS run mismatch")
-            require(item.get("artifact_id") == ATTICA_PASS["artifact_id"], "attica: package PASS artifact mismatch")
-            require(item.get("artifact_sha256") == ATTICA_PASS["artifact_sha256"], "attica: package PASS digest mismatch")
-        require(node.get("state") == "PASS", "attica: node state must be PASS after actual build")
+        require(node.get("state") == "PASS", f"{node_id}: actual package PASS must remain intact")
+        require(packaging.get("state") == "PASS", f"{node_id}: packaging PASS must remain intact")
+        require(packaging.get("package_version") == version, f"{node_id}: validated revision mismatch")
+        require(packaging.get("downstream_eligible") is True, f"{node_id}: PASS must remain downstream eligible")
+        passes = [item for item in packaging.get("evidence", []) if isinstance(item, dict) and item.get("result") == "PASS"]
+        require(len(passes) == 1, f"{node_id}: exactly one current PASS evidence item expected")
+        if passes:
+            require(passes[0].get("workflow_run") == run, f"{node_id}: PASS run mismatch")
+            require(passes[0].get("artifact_id") == artifact, f"{node_id}: PASS artifact mismatch")
+            require(passes[0].get("artifact_sha256") == digest, f"{node_id}: PASS digest mismatch")
     else:
-        require(node.get("packaging") == {"state": "pending"}, f"{node_id}: packaging state must remain pending until an actual package attempt")
-        require(node.get("state") == "pending", f"{node_id}: DAG state must remain pending until an actual package attempt")
+        require(node.get("packaging") == {"state":"pending"}, f"{node_id}: unattempted packaging must remain pending")
+        require(node.get("state") == "pending", f"{node_id}: unattempted node must remain pending")
+
+require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 4, "Reference validator expects 4 actual package PASS nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "pending") == 25, "Reference validator expects 25 pending nodes")
 
 for token in (
     "manifests/kde-frameworks-tier1.json",
@@ -156,7 +153,7 @@ for token in (
     require(token in scope, f"Packaging-reference scope must track input {token}")
 require("docs/" not in scope, "Packaging-reference snapshot must not rerun for documentation-only changes")
 require("validate_kde_tier1_packaging_reference.py" not in scope, "Packaging-reference snapshot must not rerun for validator-only changes")
-require('git diff --name-only "${BEFORE}" "${AFTER}" --' in scope, "Packaging-reference scope must compare the exact event delta")
+require('git diff --name-only "${BEFORE}" "${AFTER}" --' in scope, "Packaging-reference scope must compare exact event delta")
 
 for token in (
     "fetch-depth: 0",
@@ -177,8 +174,5 @@ if errors:
     raise SystemExit(1)
 
 print("KDE Frameworks Tier 1 packaging-reference policy: PASS")
-print("Reference authorities: none; Ubuntu Resolute and Debian sid are technical inputs only")
-print("Source packaging snapshot evidence: PASS, non-authoritative")
-print("Binary-contract snapshot evidence: PASS, non-authoritative")
-print("Reference snapshot CI: exact event-delta scoped; docs/validator edits do not refresh external metadata")
-print("Actual package states: attica PASS; 28 Tier 1 nodes pending")
+print("Reference snapshots remain non-authoritative technical inputs")
+print("Actual package states: 4 PASS; 25 pending")

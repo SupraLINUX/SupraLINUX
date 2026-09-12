@@ -9,25 +9,68 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CAMPAIGN = ROOT / "manifests" / "kde-tier1-package-campaign.json"
+TIER1 = ROOT / "manifests" / "kde-frameworks-tier1.json"
+DAG = ROOT / "manifests" / "kde-dag.json"
 SCOPE = ROOT / "scripts" / "kde-tier1-package-preflight-needed.sh"
+RUNNER = ROOT / "scripts" / "run-kde-tier1-package-preflight.sh"
+WORKFLOW = ROOT / ".github" / "workflows" / "kde-tier1-package-preflight.yml"
 DOC = ROOT / "docs" / "kde-tier1-package-batch1.md"
-SYMBOLS = ROOT / "packages" / "kde" / "kcodecs" / "debian" / "libkf6codecs6.symbols.supralinux"
-RULES = ROOT / "packages" / "kde" / "kcodecs" / "debian" / "rules"
-CHANGELOG = ROOT / "packages" / "kde" / "kcodecs" / "debian" / "changelog"
+KCODECS_SYMBOLS = ROOT / "packages" / "kde" / "kcodecs" / "debian" / "libkf6codecs6.symbols.supralinux"
+KCODECS_RULES = ROOT / "packages" / "kde" / "kcodecs" / "debian" / "rules"
 
+EXPECTED = {
+    "kcodecs": {
+        "version": "6.30.0-0supralinux4",
+        "run": 34716761551,
+        "job": 103615297758,
+        "artifact": 10305050385,
+        "digest": "d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45",
+        "tests": "8/8 PASS",
+        "soname": "libKF6Codecs.so.6",
+    },
+    "kdbusaddons": {
+        "version": "6.30.0-0supralinux3",
+        "run": 34713034164,
+        "job": 103605147881,
+        "artifact": 10304340428,
+        "digest": "2bfb451724808b5318625eee3df25a6104c9b6da77482737ac54eea058a7e799",
+        "tests": "3/3 PASS",
+        "soname": "libKF6DBusAddons.so.6",
+    },
+    "threadweaver": {
+        "version": "6.30.0-0supralinux3",
+        "run": 34713034164,
+        "job": 103605147772,
+        "artifact": 10303986419,
+        "digest": "6395f11ed633fb034b0bf61a95639ce00005e3211994b04924abeb306deed2b8",
+        "tests": "8/8 PASS",
+        "soname": "libKF6ThreadWeaver.so.6",
+    },
+}
+SCOPE_INCIDENT = {
+    "run": 34716761551,
+    "commit": "6c156b6a1dc0fc9e6c9e43eae90c3da86f6b0cb9",
+    "kdbusaddons_job": 103615297686,
+    "kdbusaddons_artifact": 10305410248,
+    "kdbusaddons_digest": "ce17097096841a500ce8b2e4f24171253b91ba1dce4a6560d0107d626eb32b1a",
+    "threadweaver_job": 103615297757,
+    "threadweaver_artifact": 10304955612,
+    "threadweaver_digest": "79e5393b892ae1ee3fb9a19c21e2f41bb691c7c55bf40487bb2d5de7c42fc507",
+}
 errors: list[str] = []
 
-def require(cond: bool, msg: str) -> None:
-    if not cond:
-        errors.append(msg)
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        errors.append(message)
 
 def load(path: Path) -> dict:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
     except Exception as exc:
-        raise SystemExit(f"cannot load {path.relative_to(ROOT)}: {exc}")
+        print(f"ERROR: cannot load {path.relative_to(ROOT)}: {exc}", file=sys.stderr)
+        raise SystemExit(1)
     if not isinstance(value, dict):
-        raise SystemExit(f"{path.relative_to(ROOT)} must contain an object")
+        raise SystemExit(f"ERROR: {path.relative_to(ROOT)} must contain an object")
     return value
 
 def read(path: Path) -> str:
@@ -38,117 +81,133 @@ def read(path: Path) -> str:
         return ""
 
 campaign = load(CAMPAIGN)
+tier1 = load(TIER1)
+dag = load(DAG)
 scope = read(SCOPE)
+runner = read(RUNNER)
+workflow = read(WORKFLOW)
 doc = read(DOC)
-symbols = read(SYMBOLS)
-rules = read(RULES)
-changelog = read(CHANGELOG)
+symbols = read(KCODECS_SYMBOLS)
+rules = read(KCODECS_RULES)
 
-require(campaign.get("schema") == 1, "campaign schema must remain 1")
-require(campaign.get("frameworks_series") == "6.30.0", "campaign must target Frameworks 6.30.0")
-require(campaign.get("authority") == "kde-upstream", "KDE upstream must remain authority")
-require(campaign.get("state") == "mixed-pass-fail-remediation", "batch state must reflect mixed PASS/FAIL")
-require(campaign.get("canonical_state_role") == "current-package-attempt-ledger", "campaign must declare current-state role")
+require(campaign.get("schema") == 1, "Batch campaign schema must be 1")
+require(campaign.get("authority") == "kde-upstream", "Batch authority must remain KDE upstream")
+require(campaign.get("frameworks_series") == "6.30.0", "Batch must remain on Frameworks 6.30.0")
+require(campaign.get("state") == "PASS", "Batch 1 must be closed PASS after all three material package PASSes")
+require(campaign.get("shared_predecessors", {}).get("extra_cmake_modules", {}).get("version") == "6.30.0-0supralinux3", "Batch must consume validated ECM")
+require(campaign.get("shared_predecessors", {}).get("packaging_trees", {}).get("artifact_id") == 10301938362, "Batch must retain generic packaging-tree artifact")
+
 nodes = campaign.get("nodes", {})
-require(set(nodes) == {"kcodecs", "kdbusaddons", "threadweaver"}, "batch node set changed")
-
-expected = {
-    "kcodecs": {
-        "state": "remediation-pending-build",
-        "last_result": "FAIL",
-        "package_version": "6.30.0-0supralinux4",
-        "job3": 103605147896,
-        "artifact3": 10304255731,
-        "digest3": "336d771a73091f2b0a7c60cf55833b5205f2c4bc8a8e87802065fe38333c2b0d",
-        "tests3": "8/8 PASS",
-    },
-    "kdbusaddons": {
-        "state": "PASS",
-        "last_result": "PASS",
-        "package_version": "6.30.0-0supralinux3",
-        "job3": 103605147881,
-        "artifact3": 10304340428,
-        "digest3": "2bfb451724808b5318625eee3df25a6104c9b6da77482737ac54eea058a7e799",
-        "tests3": "3/3 PASS",
-    },
-    "threadweaver": {
-        "state": "PASS",
-        "last_result": "PASS",
-        "package_version": "6.30.0-0supralinux3",
-        "job3": 103605147772,
-        "artifact3": 10303986419,
-        "digest3": "6395f11ed633fb034b0bf61a95639ce00005e3211994b04924abeb306deed2b8",
-        "tests3": "8/8 PASS",
-    },
-}
-
-for node_id, exp in expected.items():
+require(set(nodes) == set(EXPECTED), "Batch 1 node set changed unexpectedly")
+for node_id, expected in EXPECTED.items():
     node = nodes.get(node_id, {})
-    require(node.get("state") == exp["state"], f"{node_id}: current state mismatch")
-    require(node.get("last_result") == exp["last_result"], f"{node_id}: last_result mismatch")
-    require(node.get("package_version") == exp["package_version"], f"{node_id}: package revision mismatch")
-    evidence = node.get("evidence", [])
-    require(isinstance(evidence, list) and len(evidence) == 3, f"{node_id}: exactly three attempts must be retained")
-    if isinstance(evidence, list) and len(evidence) == 3:
-        a1, a2, a3 = evidence
-        require(a1.get("workflow_run") == 34709829162 and a1.get("result") == "FAIL", f"{node_id}: attempt 1 evidence mismatch")
-        require(a1.get("autotests_reached") is False, f"{node_id}: attempt 1 must not claim autotests")
-        require(a2.get("workflow_run") == 34710627400 and a2.get("result") == "FAIL", f"{node_id}: attempt 2 evidence mismatch")
-        require(str(a2.get("tests", "")).endswith("PASS"), f"{node_id}: attempt 2 test PASS evidence missing")
-        require(a3.get("workflow_run") == 34713034164, f"{node_id}: attempt 3 run mismatch")
-        require(a3.get("job_id") == exp["job3"], f"{node_id}: attempt 3 job mismatch")
-        require(a3.get("artifact_id") == exp["artifact3"] and a3.get("artifact_sha256") == exp["digest3"], f"{node_id}: attempt 3 artifact mismatch")
-        require(a3.get("tests") == exp["tests3"], f"{node_id}: attempt 3 tests mismatch")
-        require(a3.get("result") == exp["last_result"], f"{node_id}: attempt 3 result mismatch")
+    require(node.get("state") == "PASS", f"{node_id}: current state must be PASS")
+    require(node.get("last_result") == "PASS", f"{node_id}: last result must be PASS")
+    require(node.get("downstream_eligible") is True, f"{node_id}: must be downstream eligible")
+    require(node.get("package_version") == expected["version"], f"{node_id}: validated revision mismatch")
+    passes = [item for item in node.get("evidence", []) if isinstance(item, dict) and item.get("result") == "PASS"]
+    require(len(passes) == 1, f"{node_id}: exactly one retained current PASS expected")
+    if passes:
+        item = passes[0]
+        require(item.get("workflow_run") == expected["run"], f"{node_id}: PASS run mismatch")
+        require(item.get("job_id") == expected["job"], f"{node_id}: PASS job mismatch")
+        require(item.get("artifact_id") == expected["artifact"], f"{node_id}: PASS artifact mismatch")
+        require(item.get("artifact_sha256") == expected["digest"], f"{node_id}: PASS artifact digest mismatch")
+        require(item.get("tests") == expected["tests"], f"{node_id}: test evidence mismatch")
+        require(item.get("lintian") == "PASS-errors", f"{node_id}: Lintian errors gate must pass")
+        require(item.get("consumer_smoke") == "PASS", f"{node_id}: consumer smoke must pass")
+        require(item.get("abi_soname") == expected["soname"], f"{node_id}: SONAME mismatch")
+        require(item.get("ecm_predecessor") == "6.30.0-0supralinux3", f"{node_id}: ECM proof mismatch")
+    files = node.get("pass_files", {})
+    require(isinstance(files, dict) and bool(files), f"{node_id}: PASS file hashes required")
+    for key, digest in files.items():
+        require(re.fullmatch(r"[0-9a-f]{64}", str(digest)) is not None, f"{node_id}: invalid hash {key}")
 
-for node_id in ("kdbusaddons", "threadweaver"):
-    node = nodes[node_id]
-    require(node.get("downstream_eligible") is True, f"{node_id}: PASS must be downstream eligible")
-    require(node["evidence"][2].get("lintian") == "PASS-errors", f"{node_id}: Lintian PASS evidence missing")
-    require(node["evidence"][2].get("consumer_smoke") == "PASS", f"{node_id}: consumer PASS evidence missing")
-    require(isinstance(node.get("pass_files"), dict) and bool(node["pass_files"]), f"{node_id}: retained artifact file hashes missing")
+incidents = campaign.get("ci_scope_incidents", [])
+require(len(incidents) == 1, "Exactly one retained batch-1 scope incident expected")
+if incidents:
+    incident = incidents[0]
+    require(incident.get("workflow_run") == SCOPE_INCIDENT["run"], "Scope incident run mismatch")
+    require(incident.get("commit") == SCOPE_INCIDENT["commit"], "Scope incident commit mismatch")
+    require(incident.get("classification") == "infrastructure-scope-selection", "Scope incident classification mismatch")
+    require(incident.get("package_state_effect") == "none", "Scope incident must not alter package state")
+    jobs = {item.get("node"): item for item in incident.get("jobs", []) if isinstance(item, dict)}
+    for node_id in ("kdbusaddons", "threadweaver"):
+        require(jobs.get(node_id, {}).get("abort_stage") == "campaign-validation", f"{node_id}: scope incident must abort before package attempt")
+        require("got PASS" in jobs.get(node_id, {}).get("message", ""), f"{node_id}: scope incident abort message missing")
+    require(jobs.get("kdbusaddons", {}).get("job_id") == SCOPE_INCIDENT["kdbusaddons_job"], "KDBusAddons scope incident job mismatch")
+    require(jobs.get("kdbusaddons", {}).get("artifact_id") == SCOPE_INCIDENT["kdbusaddons_artifact"], "KDBusAddons scope incident artifact mismatch")
+    require(jobs.get("kdbusaddons", {}).get("artifact_sha256") == SCOPE_INCIDENT["kdbusaddons_digest"], "KDBusAddons scope incident digest mismatch")
+    require(jobs.get("threadweaver", {}).get("job_id") == SCOPE_INCIDENT["threadweaver_job"], "ThreadWeaver scope incident job mismatch")
+    require(jobs.get("threadweaver", {}).get("artifact_id") == SCOPE_INCIDENT["threadweaver_artifact"], "ThreadWeaver scope incident artifact mismatch")
+    require(jobs.get("threadweaver", {}).get("artifact_sha256") == SCOPE_INCIDENT["threadweaver_digest"], "ThreadWeaver scope incident digest mismatch")
 
-kcodecs = nodes["kcodecs"]
-sym = kcodecs.get("symbols", {})
-reviewed = sym.get("reviewed_override", {})
-require(sym.get("tree_provider") == "debian", "kcodecs: base symbols reference must remain Debian")
-require(sym.get("sha256") == "35f6b7b6885b3db41bcce95b99610b2e917e1b4e13d5ba7e801b93dd47c4f8c7", "kcodecs: Debian 6.28 symbols baseline changed")
-require(reviewed.get("sha256") == "b87cbfbfe47d7cf99248b57196257a2765987297a701310de513d1e36c51d696", "kcodecs: reviewed symbols override hash mismatch")
-if SYMBOLS.exists():
-    actual = hashlib.sha256(SYMBOLS.read_bytes()).hexdigest()
-    require(actual == reviewed.get("sha256"), "kcodecs: reviewed symbols file content/hash mismatch")
-optional_lines = [line for line in symbols.splitlines() if "(optional=toolchain)" in line]
-require(len(optional_lines) == 15, "kcodecs: exactly 15 toolchain symbols must be optional")
-for line in optional_lines:
-    require(re.match(r"^\s+\(optional=toolchain\)\S+@Base 6\.30\.0$", line) is not None, f"kcodecs: malformed optional symbol line: {line}")
-require("6.30.0-0supralinux" not in symbols, "kcodecs: source symbols template must not encode Debian revision minima")
-require("override_dh_makeshlibs:" in rules and "libkf6codecs6.symbols.supralinux" in rules, "kcodecs: reviewed symbols override must be installed before dh_makeshlibs")
-require(changelog.startswith("kf6-kcodecs (6.30.0-0supralinux4) resolute;"), "kcodecs: changelog must start at -0supralinux4")
+tier_nodes = {item.get("id"): item for item in tier1.get("nodes", []) if isinstance(item, dict)}
+for node_id, expected in EXPECTED.items():
+    node = tier_nodes.get(node_id, {})
+    require(node.get("state") == "PASS", f"{node_id}: canonical Tier 1 state must be PASS")
+    require(node.get("packaging", {}).get("package_version") == expected["version"], f"{node_id}: canonical Tier 1 package version mismatch")
+require(sum(1 for item in tier_nodes.values() if item.get("state") == "PASS") == 4, "Canonical Tier 1 PASS count must be 4")
+require(sum(1 for item in tier_nodes.values() if item.get("state") == "pending") == 25, "Canonical Tier 1 pending count must be 25")
+
+for node_id in EXPECTED:
+    dag_node = dag.get("nodes", {}).get(node_id, {})
+    require(dag_node.get("state") == "PASS", f"{node_id}: global DAG state must be PASS")
+    require(dag_node.get("downstream_eligible") is True, f"{node_id}: global DAG node must be downstream eligible")
+require(dag.get("nodes", {}).get("extra-cmake-modules", {}).get("state") == "PASS", "ECM DAG root must remain PASS")
+
+require(hashlib.sha256(KCODECS_SYMBOLS.read_bytes()).hexdigest() == "b87cbfbfe47d7cf99248b57196257a2765987297a701310de513d1e36c51d696", "KCodecs reviewed symbols override hash mismatch")
+toolchain_lines = [line.strip() for line in symbols.splitlines() if line.strip().startswith("(optional=toolchain)")]
+require(len(toolchain_lines) == 15, "KCodecs must retain exactly 15 reviewed optional=toolchain symbols")
+for line in toolchain_lines:
+    require(line.endswith(" 6.30.0"), "KCodecs toolchain symbols must use upstream minimum 6.30.0")
+    require("-0supralinux" not in line, "KCodecs symbols must never use a Debian revision as minimum")
+require("cp debian/libkf6codecs6.symbols.supralinux debian/libkf6codecs6.symbols" in rules, "KCodecs rules must install reviewed symbols before dh_makeshlibs")
+copy_pos = rules.index("cp debian/libkf6codecs6.symbols.supralinux")
+invoke_pos = rules.index("\tdh_makeshlibs", copy_pos)
+require(copy_pos < invoke_pos, "KCodecs reviewed symbols must be installed before dh_makeshlibs")
 
 for token in (
-    'packages/kde/"${NODE}"/*',
-    'fingerprint(load(before)) == fingerprint(load(after))',
-    '"state", "last_result", "evidence", "downstream_eligible", "pass_files"',
-    'Shared package runner/workflow changed',
+    '"upstream_version": node["upstream_version"]',
+    '"source_package": node["source_package"]',
+    '"package_version": node["package_version"]',
+    '"source_url": node["source_url"]',
+    '"source_sha256": node["source_sha256"]',
+    '"symbols_file": symbols["file"]',
+    '"symbols_sha256": symbols["sha256"]',
+    '"symbols_tree_provider": symbols["tree_provider"]',
+    '"copyright_sha256": copyright_meta["sha256"]',
+    '"binary_contracts": node["binary_contracts"]',
+    '"soname": node["soname"]',
+    '"consumer_run": node["consumer_run"]',
+    'state/evidence/descriptive-only',
+    'already PASS and no consumed build input changed; skip',
 ):
-    require(token in scope, f"scope helper missing invariant: {token}")
-require("docs/" not in scope, "docs-only changes must not rebuild packages")
+    require(token in scope, f"Semantic scope missing consumed-input invariant: {token}")
+for forbidden in ('"state": node["state"]', '"evidence": node["evidence"]', '"last_result": node["last_result"]', '"pass_files": node["pass_files"]'):
+    require(forbidden not in scope, f"Scope fingerprint must not depend on result metadata: {forbidden}")
 
-for token in (
-    "34713034164",
-    "10304340428",
-    "10303986419",
-    "10304255731",
-    "6.30.0-0supralinux4",
-    "optional=toolchain",
-    "dpkg-gensymbols -c4",
+for token in ("fail-fast: false", "max-parallel: 3", "kcodecs", "kdbusaddons", "threadweaver", "scripts/kde-tier1-package-preflight-needed.sh"):
+    require(token in workflow, f"Batch workflow missing invariant: {token}")
+require("Node must be prepared/remediation-pending-build before attempt" in runner, "Runner must reject accidental rebuilds of PASS nodes")
+
+for value in (
+    "3/3 PASS",
+    "4 Tier 1 PASS",
+    "25 pending",
+    "34716761551",
+    "10305050385",
+    "d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45",
+    "infrastructure scope",
 ):
-    require(token in doc, f"batch documentation missing {token}")
+    require(value.lower() in doc.lower(), f"Batch documentation must retain closure evidence: {value}")
 
 if errors:
     for error in errors:
         print(f"ERROR: {error}", file=sys.stderr)
     raise SystemExit(1)
 
-print("KDE Tier 1 batch 1 current-state validation: PASS")
-print("KDBusAddons PASS; ThreadWeaver PASS; KCodecs FAIL with -0supralinux4 remediation prepared")
+print("KDE Frameworks Tier 1 batch 1 canonical closure: PASS")
+print("Batch nodes: kcodecs, kdbusaddons, threadweaver = 3/3 PASS")
+print("Canonical Tier 1: 4 PASS, 25 pending, 0 FAIL, 0 BLOCKED")
+print("Scope incident retained as infrastructure-only; package PASS states unchanged")
