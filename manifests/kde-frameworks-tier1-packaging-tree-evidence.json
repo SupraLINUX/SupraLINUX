@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-12",
+  "authority": false,
+  "role": "packaging-reference-trees-only",
+  "selected_kde": "6.30.0",
+  "status": "PASS",
+  "evidence": {
+    "workflow_run": 34708030450,
+    "head_sha": "310510007d29c5d844d0dba770635c7336884a3d",
+    "artifact_id": 10301938362,
+    "artifact_sha256": "6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6",
+    "snapshot_json_sha256": "f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345",
+    "versions_tsv_sha256": "af6fd90121801eaf322442c43b793422494dfd5a109edccf484f5d24b463ea9b",
+    "download_plan_tsv_sha256": "0b8776adbe14a9629350d1d00bc48475b32b5dbeae57e60ca15b7d69e18560b4",
+    "tree_hashes_tsv_sha256": "abf95096bbc16718102a53a132a576c9f61252d13321c58027325ffb2819c09e",
+    "nodes": 29,
+    "packaging_trees": 58,
+    "ubuntu_trees": 29,
+    "debian_trees": 29,
+    "ubuntu_reference_upstream_versions": [
+      "6.23.0",
+      "6.24.0"
+    ],
+    "debian_reference_upstream_versions": [
+      "6.28.0",
+      "6.28.1"
+    ],
+    "source_index_signature": "APT-verified",
+    "framework_package_build_certification": "unchanged",
+    "package_state_effect": "none"
+  }
+}

@@ -1,0 +1,35 @@
+kf6-kcodecs (6.30.0-0supralinux4) resolute; urgency=medium
+
+  * Review the 15 new libstdc++ std::format/Unicode implementation symbols
+    emitted by KDE 6.30 and tag them optional=toolchain with upstream minimum
+    6.30.0 instead of a Debian revision.
+  * Retain Debian sid 6.28 symbols as the audited public-ABI baseline.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 17:03:00 -0300
+
+kf6-kcodecs (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Move the symbols reference from Ubuntu 6.24 to Debian sid 6.28 after
+    confirming the two removed KCharsets constructors are already absent there.
+  * Add the retained KDE upstream signing key required by the watch-file PGP
+    policy and use Standards-Version 4.7.3 supported by Resolute Lintian.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 16:00:00 -0300
+
+kf6-kcodecs (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Remove the SupraLINUX REUSE lint gate from debian/rules: KDE 6.30 does
+    not define full-tree REUSE compliance as a package-build requirement,
+    and the gate aborted before the real upstream autotests could run.
+  * Keep the KDE upstream test suite enabled through dh_auto_test.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 15:10:00 -0300
+
+kf6-kcodecs (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE Frameworks kcodecs 6.30.0 from KDE upstream stable.
+  * Preserve Debian-family binary package contracts as compatibility inputs.
+  * Build against SupraLINUX ECM 6.30.0 and KDE-selected Qt >= 6.9.
+  * Keep QDoc outside the default package build until a common Frameworks policy is selected.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 14:35:00 -0300

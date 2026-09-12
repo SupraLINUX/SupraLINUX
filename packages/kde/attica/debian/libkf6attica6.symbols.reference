@@ -1,0 +1,13 @@
+# The first Attica 6.30 package proof seeds dpkg-gensymbols from the exact
+# Ubuntu Resolute compatibility baseline retained in workflow artifact
+# 10301617541 (run 34704689773).
+#
+# Source artifact file:
+#   ubuntu-resolute/debian/libkf6attica6.symbols
+# SHA-256:
+#   e67d131171c8e3ea79c6bbbb2434aa2492580d19ba7dccdaa7038766cd9827ad
+#
+# scripts/run-kde-attica-package-preflight.sh verifies this hash and copies the
+# file to debian/libkf6attica6.symbols before the Debian source package is made.
+# The resulting .dsc/debian.tar.xz therefore contains the complete symbols
+# baseline used for the actual build.

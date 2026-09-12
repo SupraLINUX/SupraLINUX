@@ -1,0 +1,15 @@
+# SupraLINUX ktexttemplate packaging
+
+KDE Frameworks 6.30.0 is the source/build authority. Ubuntu Resolute and Debian sid
+packaging trees are compatibility references only.
+
+The full symbols file is intentionally not duplicated in Git. The Batch 2 hosted
+runner verifies and injects the exact Debian 6.28 baseline from workflow run
+34708030450 / artifact 10301938362 before dpkg-source -b. Debian is selected for
+the symbols baseline because it is closer to KDE 6.30; Ubuntu remains the direct
+binary-compatibility target. Any 6.30 ABI delta must be reviewed from a real build.
+
+QDoc targets generated through ECMGenerateQDoc are not part of the default build.
+The established documentation binary package name is retained as a compatibility
+stub until SupraLINUX defines a common Frameworks QDoc policy. Upstream autotests
+remain enabled.

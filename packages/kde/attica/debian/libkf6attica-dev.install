@@ -1,0 +1,4 @@
+usr/include/KF6/Attica/
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6Attica/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6Attica.so
+usr/lib/${DEB_HOST_MULTIARCH}/pkgconfig/KF6Attica.pc

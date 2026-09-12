@@ -1,0 +1,6 @@
+# Ubuntu Resolute compatibility symbols baseline retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+node=kdbusaddons
+path=trees/ubuntu/kdbusaddons/debian/libkf6dbusaddons6.symbols
+sha256=03b48faa6b7c5b400f3a165c38c4c5e7e7fc454a0b099ef1ad776b3809851683

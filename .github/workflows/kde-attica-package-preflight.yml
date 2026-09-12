@@ -1,0 +1,90 @@
+name: KDE DAG - Attica 6.30 package preflight
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  attica:
+    name: Attica 6.30 clean package preflight
+    runs-on: ubuntu-26.04
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Determine whether this event delta affects Attica package inputs
+        id: scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          run=true
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            if [[ "${{ github.event.action }}" == "synchronize" ]]; then
+              before="${{ github.event.before }}"
+              after="${{ github.event.after }}"
+            else
+              before="${{ github.event.pull_request.base.sha }}"
+              after="${{ github.event.pull_request.head.sha }}"
+            fi
+            if bash scripts/kde-attica-package-preflight-needed.sh "${before}" "${after}"; then
+              run=true
+            else
+              rc=$?
+              if [[ "${rc}" -eq 1 ]]; then
+                run=false
+              else
+                exit "${rc}"
+              fi
+            fi
+          fi
+          echo "run=${run}" >> "${GITHUB_OUTPUT}"
+
+      - name: Download retained ECM PASS artifact
+        if: steps.scope.outputs.run == 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          artifact-ids: '10298635300'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34694951158'
+          path: .work/retained-ecm
+
+      - name: Download retained Attica packaging-reference artifact
+        if: steps.scope.outputs.run == 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          artifact-ids: '10301617541'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34704689773'
+          path: .work/retained-attica-reference
+
+      - name: Build and validate Attica 6.30 in clean Resolute sbuild
+        if: steps.scope.outputs.run == 'true'
+        env:
+          ECM_ARTIFACT_DIR: ${{ github.workspace }}/.work/retained-ecm
+          ATTICA_REFERENCE_DIR: ${{ github.workspace }}/.work/retained-attica-reference
+        run: scripts/run-kde-attica-package-preflight.sh
+
+      - name: Upload Attica package evidence
+        if: steps.scope.outputs.run == 'true' && always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: kde-attica-package-preflight-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-attica-package-preflight/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Report intentionally skipped Attica package build
+        if: steps.scope.outputs.run != 'true'
+        shell: bash
+        run: echo "Attica package preflight intentionally skipped; event delta does not affect package inputs."

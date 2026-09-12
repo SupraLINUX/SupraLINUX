@@ -1,0 +1,62 @@
+Source: kf6-ktexttemplate
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               cmake (>= 3.29~),
+               extra-cmake-modules (>= 6.30.0~),
+               qt6-base-dev (>= 6.9.0~),
+               qt6-declarative-dev (>= 6.9.0~),
+Standards-Version: 4.7.3
+Homepage: https://invent.kde.org/frameworks/ktexttemplate
+Rules-Requires-Root: no
+
+Package: libkf6texttemplate-dev
+Section: libdevel
+Architecture: any
+Depends: libkf6texttemplate6 (= ${binary:Version}),
+         qt6-base-dev (>= 6.9.0~),
+         ${misc:Depends},
+Recommends: libkf6texttemplate-doc (= ${source:Version}),
+Description: library used for text processing - development files
+ The goal of KTextTemplate is to make it easier for application
+ developers to separate the structure of documents from the data
+ they contain, opening the door for theming and advanced generation
+ of other text such as code.
+ .
+ The syntax uses the syntax of the Django template system, and
+ the core design of Django is reused in KTextTemplate.
+ .
+ This package contains the development files for KTextTemplate.
+
+Package: libkf6texttemplate-doc
+Section: doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: library used for text processing - documentation
+ The goal of KTextTemplate is to make it easier for application
+ developers to separate the structure of documents from the data
+ they contain, opening the door for theming and advanced generation
+ of other text such as code.
+ .
+ The syntax uses the syntax of the Django template system, and
+ the core design of Django is reused in KTextTemplate.
+ .
+ This package contains the documentation for KTextTemplate.
+
+Package: libkf6texttemplate6
+Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends},
+Depends: ${misc:Depends}, ${shlibs:Depends},
+Description: library used for text processing
+ The goal of KTextTemplate is to make it easier for application
+ developers to separate the structure of documents from the data
+ they contain, opening the door for theming and advanced generation
+ of other text such as code.
+ .
+ The syntax uses the syntax of the Django template system, and
+ the core design of Django is reused in KTextTemplate.

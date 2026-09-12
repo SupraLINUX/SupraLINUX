@@ -1,0 +1,113 @@
+name: Repository policy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate architecture manifest
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Ubuntu policy tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gnupg
+          sudo apt-get install -y --no-install-recommends shellcheck
+          shellcheck --version
+          gpgv --version | head -1
+
+      - name: Validate shell syntax
+        shell: bash
+        run: bash -n scripts/*.sh
+
+      - name: Lint shell scripts
+        shell: bash
+        run: shellcheck -e SC1091 scripts/*.sh
+
+      - name: Test KVM-required QEMU wrapper
+        shell: bash
+        run: scripts/test-qemu-kvm-required.sh
+
+      - name: Test signed Ubuntu source-image verification
+        shell: bash
+        run: scripts/test-verify-ubuntu-cloud-image-provenance.sh
+
+      - name: Test effective Actions runner provenance checker
+        shell: bash
+        run: scripts/test-check-actions-runner-runtime.sh
+
+      - name: Test golden-image provenance gate
+        shell: bash
+        run: scripts/test-check-golden-image-provenance.sh
+
+      - name: Validate repository invariants
+        run: python3 scripts/validate_repository.py
+
+      - name: Validate Qt provider invariants
+        run: python3 scripts/validate_qt_provider.py
+
+      - name: Validate KDE DAG invariants
+        run: python3 scripts/validate_kde_dag.py
+
+      - name: Validate KDE Frameworks Tier 1 manifest
+        run: python3 scripts/validate_kde_tier1.py
+
+      - name: Validate KDE Frameworks Tier 1 packaging-reference policy
+        run: python3 scripts/validate_kde_tier1_packaging_reference.py
+
+      - name: Validate KDE Tier 1 packaging-tree policy
+        run: python3 scripts/validate_kde_tier1_packaging_tree.py
+
+      - name: Validate KDE Tier 1 batch 1 preparation
+        run: python3 scripts/validate_kde_tier1_package_batch1.py
+
+      - name: Validate KDE Tier 1 batch 2 preparation
+        run: python3 scripts/validate_kde_tier1_package_batch2.py
+
+      - name: Validate KDE Attica 6.30 packaging preparation
+        run: python3 scripts/validate_kde_attica_package.py
+
+      - name: Validate KDE Attica CI delta scope
+        run: python3 scripts/validate_kde_attica_ci_scope.py
+
+      - name: Verify runner and Ubuntu Qt candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          . /etc/os-release
+          if [[ "${VERSION_ID}" != "26.04" ]]; then
+            echo "Expected Ubuntu 26.04, got ${PRETTY_NAME}" >&2
+            exit 1
+          fi
+
+          candidate="$(apt-cache policy qt6-base-dev | awk '/Candidate:/ {print $2}')"
+          if [[ -z "${candidate}" || "${candidate}" == "(none)" ]]; then
+            echo "qt6-base-dev has no candidate on this Ubuntu 26.04 runner" >&2
+            exit 1
+          fi
+
+          required="$(python3 -c 'import json; print(json.load(open("manifests/desktop-stack.json"))["qt"]["required_series"])')"
+          case "${candidate}" in
+            "${required}".*) ;;
+            *)
+              echo "Ubuntu Qt candidate ${candidate} does not match required Qt series ${required}" >&2
+              exit 1
+              ;;
+          esac
+
+          echo "Ubuntu ${VERSION_ID}; Qt candidate ${candidate}; required series ${required}: PASS"
