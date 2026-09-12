@@ -22,11 +22,32 @@
       "binary_packages": [
         "extra-cmake-modules"
       ],
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "ubuntu_reference_version": "6.24.0-0ubuntu1",
       "depends_on": [],
-      "state": "pending",
-      "evidence": []
+      "state": "FAIL",
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "run_id": 34689672632,
+          "commit": "99b95b1c0897ed20af6c8add7aa1620ef1795019",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10296512341,
+          "artifact_sha256": "d47ac7361106ceb5f04729c1a3dcb4103b30255684e5b3f53b833edd6d4f6558",
+          "result": "FAIL",
+          "failure_stage": "dh_auto_test",
+          "cause": "BUILD_TESTING=OFF removed the Ninja test target while debhelper still invoked dh_auto_test/ninja test"
+        }
+      ],
+      "remediation": {
+        "candidate_package_version": "6.30.0-0supralinux2",
+        "status": "pending-validation",
+        "changes": [
+          "override dh_auto_test in the BUILD_TESTING=OFF package-preflight profile",
+          "retain downstream ECM consumer smoke as a separate required gate",
+          "align reusable sbuild rootfs path/format with resolute-amd64.tar"
+        ]
+      }
     }
   }
 }

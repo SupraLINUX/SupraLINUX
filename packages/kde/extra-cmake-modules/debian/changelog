@@ -1,3 +1,11 @@
+kf6-extra-cmake-modules (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Disable debhelper's test target invocation when BUILD_TESTING is disabled;
+    downstream consumer smoke remains mandatory in the package preflight.
+  * Align the reusable sbuild/unshare rootfs with sbuild's expected tar path.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 11:15:00 +0000
+
 kf6-extra-cmake-modules (6.30.0-0supralinux1) resolute; urgency=medium
 
   * Package KDE Frameworks upstream stable 6.30.0 for SupraLINUX.

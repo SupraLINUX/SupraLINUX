@@ -8,11 +8,11 @@ SOURCE_WORK="${WORK_DIR}/source"
 OUT_DIR="${WORK_DIR}/out"
 EVIDENCE_DIR="${ROOT}/evidence/kde-ecm-package-preflight"
 RESULT_JSON="${EVIDENCE_DIR}/result.json"
-CHROOT_TARBALL="${HOME}/.cache/sbuild/resolute-amd64-kde-ecm.tar.gz"
+CHROOT_TARBALL="${HOME}/.cache/sbuild/resolute-amd64.tar"
 MIRROR="${SBUILD_MIRROR:-http://azure.archive.ubuntu.com/ubuntu}"
 
 UPSTREAM_VERSION="6.30.0"
-DEBIAN_VERSION="${UPSTREAM_VERSION}-0supralinux1"
+DEBIAN_VERSION="${UPSTREAM_VERSION}-0supralinux2"
 SOURCE_PACKAGE="kf6-extra-cmake-modules"
 BINARY_PACKAGE="extra-cmake-modules"
 UPSTREAM_TARBALL="extra-cmake-modules-${UPSTREAM_VERSION}.tar.xz"
@@ -31,12 +31,12 @@ write_result() {
     local rc="$?"
     local finished_at
     finished_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-    python3 - "${RESULT_JSON}" "${STATE}" "${rc}" "${STAGE}" "${STARTED_AT}" "${finished_at}" "${UPSTREAM_VERSION}" <<'PY'
+    python3 - "${RESULT_JSON}" "${STATE}" "${rc}" "${STAGE}" "${STARTED_AT}" "${finished_at}" "${UPSTREAM_VERSION}" "${DEBIAN_VERSION}" <<'PY'
 import json
 import sys
 from pathlib import Path
 
-path, state, rc, stage, started, finished, version = sys.argv[1:]
+path, state, rc, stage, started, finished, version, debian_version = sys.argv[1:]
 Path(path).write_text(json.dumps({
     "node": "kde-frameworks-extra-cmake-modules",
     "state": state,
@@ -48,6 +48,7 @@ Path(path).write_text(json.dumps({
     "runner_class": "github-hosted-ubuntu-26.04",
     "upstream_authority": "kde-upstream",
     "upstream_version": version,
+    "debian_version": debian_version,
     "artifact_role": "dag-root-provider",
     "claim": "hosted-clean-package-preflight-only",
 }, indent=2) + "\n", encoding="utf-8")
@@ -57,7 +58,7 @@ trap write_result EXIT
 
 exec > >(tee -a "${EVIDENCE_DIR}/pipeline.log") 2>&1
 
-printf '=== SupraLINUX KDE DAG: Extra CMake Modules %s ===\n' "${UPSTREAM_VERSION}"
+printf '=== SupraLINUX KDE DAG: Extra CMake Modules %s (%s) ===\n' "${UPSTREAM_VERSION}" "${DEBIAN_VERSION}"
 
 STAGE="host-validation"
 . /etc/os-release
@@ -100,11 +101,14 @@ unshare --user --map-auto true
         ca-certificates cmake curl debhelper devscripts dpkg-dev mmdebstrap ninja-build python3 sbuild uidmap ubuntu-keyring xz-utils
     printf '\nupstream_authority=kde-upstream\n'
     printf 'upstream_version=%s\n' "${UPSTREAM_VERSION}"
+    printf 'debian_version=%s\n' "${DEBIAN_VERSION}"
     printf 'upstream_url=%s\n' "${UPSTREAM_URL}"
     printf 'upstream_sha256=%s\n' "${UPSTREAM_SHA256}"
     printf 'kde_info_url=%s\n' "${KDE_INFO_URL}"
     printf 'ubuntu_reference_version=6.24.0-0ubuntu1\n'
     printf 'package_provider=supralinux\n'
+    printf 'upstream_tests=disabled-in-package-preflight\n'
+    printf 'postbuild_consumer_smoke=required\n'
 } > "${EVIDENCE_DIR}/environment.txt"
 
 STAGE="upstream-source"
@@ -140,7 +144,8 @@ mmdebstrap \
     --variant=buildd \
     --architectures=amd64 \
     --components=main,universe \
-    --include=ca-certificates,ubuntu-keyring \
+    --skip=output/mknod \
+    --format=tar \
     resolute \
     "${CHROOT_TARBALL}" \
     "${MIRROR}" |& tee "${EVIDENCE_DIR}/rootfs.log"
@@ -238,6 +243,7 @@ dpkg-deb -c "${ECM_DEB}" > "${EVIDENCE_DIR}/extra-cmake-modules-filelist.txt"
     printf 'debian_version=%s\n' "${DEBIAN_VERSION}"
     printf 'binary_package=%s\n' "${BINARY_PACKAGE}"
     printf 'architecture=%s\n' "${BUILT_ARCH}"
+    printf 'upstream_tests=not-run-in-package-preflight\n'
     printf 'consumer_smoke=PASS\n'
     printf 'downstream_eligible=yes\n'
 } > "${EVIDENCE_DIR}/dag-node.txt"

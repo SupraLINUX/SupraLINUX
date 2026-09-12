@@ -9,3 +9,6 @@ override_dh_auto_configure:
 		-DBUILD_HTML_DOCS=OFF \
 		-DBUILD_MAN_DOCS=OFF \
 		-DBUILD_QTHELP_DOCS=OFF
+
+override_dh_auto_test:
+	@echo "ECM upstream tests are disabled in this package-preflight profile; downstream consumer smoke is executed after sbuild."
