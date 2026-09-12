@@ -109,6 +109,14 @@ Retained hashes:
 
 The consumer CMake project found `KF6Attica 6.30.0`, linked against the produced `libKF6Attica.so.6.30.0` plus Ubuntu Qt 6.10.2, and executed successfully.
 
+## CI event-delta scope
+
+Attica's package-build and distro-reference workflows no longer use PR-wide `paths:` filtering as the decision for expensive work. On `pull_request/synchronize`, each workflow compares the exact event `before..after` delta after a full-history checkout.
+
+The package build runs only when its actual inputs change: `packages/kde/attica/**`, the package runner, its scope helper or its workflow. The packaging-reference capture is independently scoped to its capture runner, scope helper and workflow. Documentation and machine-readable evidence/state changes therefore do not by themselves recreate the Resolute rootfs, download predecessor artifacts, execute `sbuild`, or recapture unchanged distro reference trees.
+
+Repository Policy validates these scope invariants with `scripts/validate_kde_attica_ci_scope.py`. An intentional scope miss exits with the dedicated skip state and the workflow reports the skip instead of presenting it as a build failure.
+
 ## Current state
 
 `attica` is now:
