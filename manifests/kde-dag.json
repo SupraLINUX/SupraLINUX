@@ -25,7 +25,7 @@
       "package_version": "6.30.0-0supralinux3",
       "ubuntu_reference_version": "6.24.0-0ubuntu1",
       "depends_on": [],
-      "state": "FAIL",
+      "state": "PASS",
       "evidence": [
         {
           "type": "github-actions-run",
@@ -49,11 +49,37 @@
           "result": "FAIL",
           "failure_stage": "consumer-smoke",
           "cause": "binary build succeeded, but Lintian reported missing copyright metadata and a missing Python runtime dependency; the Qt-integrated consumer smoke then failed because qtpaths6 was absent from the consumer environment"
+        },
+        {
+          "type": "github-actions-run",
+          "run_id": 34694951158,
+          "job_id": 103556722010,
+          "commit": "cafc5aff98fd28efdc2edf889a2e0f9a73dacb48",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10298635300,
+          "artifact_sha256": "181ea1434e803453d61d345a28adeba5ad9cee09a7c93948c6ce3ef1214984ff",
+          "result": "PASS",
+          "stage": "complete",
+          "claim": "hosted-clean-package-preflight-only",
+          "qt_consumer_version": "6.10.2",
+          "lintian": "PASS",
+          "consumer_smoke": "PASS",
+          "downstream_eligible": true,
+          "files": {
+            "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f",
+            "changes_sha256": "1ea11dda85d3c5e7b52d3fd82f53206ff8e0a669b16cc01b3b44e323c6c665c7",
+            "buildinfo_sha256": "440dc70274cd1b2660647b988b0243c935c058cf98d136929c1bee39ea542b1b",
+            "dsc_sha256": "b634ecc73a1c569e506a9d5d52e09a5e948854df248caba84f579ded983ffe21",
+            "debian_tar_sha256": "0256f17ee6201ffea0081804c04ab1e49611a23addfd2c64facb9d1dd41c8a83",
+            "orig_tar_sha256": "22c9f7ff930dae7329faebf2942d2424f4a298c43bb3f11e217be6b12f227f6e",
+            "rootfs_sha256": "469407fc2d4e3e55d2f77d22ff487e66e7722d3b450c3e7b4bb6016a2f6e8b5a"
+          }
         }
       ],
       "remediation": {
         "candidate_package_version": "6.30.0-0supralinux3",
-        "status": "pending-validation",
+        "status": "validated",
+        "validated_by_run_id": 34694951158,
         "changes": [
           "ship Debian copyright metadata for the upstream BSD-3-Clause/BSD-2-Clause/MIT license set",
           "declare python3:any runtime dependency for installed Python helper scripts",
