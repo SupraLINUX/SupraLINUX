@@ -9,7 +9,7 @@ Build-Depends: debhelper-compat (= 13),
                extra-cmake-modules (>= 6.30.0~),
                qt6-base-dev (>= 6.9.0~),
                qt6-tools-dev (>= 6.9.0~),
-Standards-Version: 4.7.4
+Standards-Version: 4.7.3
 Homepage: https://invent.kde.org/frameworks/kcodecs
 Rules-Requires-Root: no
 

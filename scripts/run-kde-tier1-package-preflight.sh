@@ -23,6 +23,7 @@ if not isinstance(node, dict):
     raise SystemExit(f"Unknown campaign node: {node_id}")
 symbols = node["symbols"]
 shared = data["shared_predecessors"]
+signing = data["shared_packaging_inputs"]["signing_key"]
 values = {
     "UPSTREAM_VERSION": node["upstream_version"],
     "SOURCE_PACKAGE": node["source_package"],
@@ -31,7 +32,9 @@ values = {
     "UPSTREAM_SHA256": node["source_sha256"],
     "SYMBOLS_FILE": symbols["file"],
     "SYMBOLS_REFERENCE_SHA256": symbols["sha256"],
+    "SYMBOLS_REFERENCE_TREE": symbols["tree_provider"],
     "COPYRIGHT_REFERENCE_SHA256": node["copyright"]["sha256"],
+    "SIGNING_KEY_SHA256": signing["sha256"],
     "RUNTIME_PACKAGE": node["runtime_package"],
     "SONAME": node["soname"],
     "CONSUMER_RUN": node["consumer_run"],
@@ -112,6 +115,8 @@ PY
 test -d "${PACKAGE_META}"
 test -s "${CONSUMER_META}/CMakeLists.txt"
 test -s "${CONSUMER_META}/main.cpp"
+test -s "${PACKAGE_META}/upstream/signing-key.asc"
+printf '%s  %s\n' "${SIGNING_KEY_SHA256}" "${PACKAGE_META}/upstream/signing-key.asc" | sha256sum --check --strict
 
 STAGE="retained-input-validation"
 ECM_DEB="$(find "${ECM_ARTIFACT_DIR}" -maxdepth 2 -type f -name "extra-cmake-modules_${ECM_VERSION}_all.deb" -print -quit)"
@@ -127,28 +132,33 @@ sha256sum "${ECM_DEB}" > "${EVIDENCE_DIR}/ecm-predecessor-sha256.txt"
 REFERENCE_SNAPSHOT="${TIER1_REFERENCE_DIR}/snapshot.json"
 test -s "${REFERENCE_SNAPSHOT}"
 printf '%s  %s\n' "${REFERENCE_SNAPSHOT_SHA256}" "${REFERENCE_SNAPSHOT}" | sha256sum --check --strict
-python3 - "${REFERENCE_SNAPSHOT}" "${NODE}" <<'PY'
+python3 - "${REFERENCE_SNAPSHOT}" "${NODE}" "${SYMBOLS_REFERENCE_TREE}" <<'PY'
 import json
 import sys
 from pathlib import Path
 
 data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
 node = sys.argv[2]
+provider = sys.argv[3]
 if data.get("authority") is not False or data.get("role") != "packaging-reference-trees-only":
     raise SystemExit("Generic packaging-tree artifact has wrong authority/role")
 if node not in data.get("nodes", {}):
     raise SystemExit(f"Generic packaging-tree artifact lacks node {node}")
+if provider not in data["nodes"][node]:
+    raise SystemExit(f"Generic packaging-tree artifact lacks provider {provider} for {node}")
 PY
 
-SYMBOLS_REFERENCE="${TIER1_REFERENCE_DIR}/trees/ubuntu/${NODE}/debian/${SYMBOLS_FILE}"
+SYMBOLS_REFERENCE="${TIER1_REFERENCE_DIR}/trees/${SYMBOLS_REFERENCE_TREE}/${NODE}/debian/${SYMBOLS_FILE}"
 test -s "${SYMBOLS_REFERENCE}"
 printf '%s  %s\n' "${SYMBOLS_REFERENCE_SHA256}" "${SYMBOLS_REFERENCE}" | sha256sum --check --strict
 sha256sum "${SYMBOLS_REFERENCE}" > "${EVIDENCE_DIR}/symbols-reference-sha256.txt"
+printf 'provider=%s\n' "${SYMBOLS_REFERENCE_TREE}" > "${EVIDENCE_DIR}/symbols-reference-provider.txt"
 
 COPYRIGHT_REFERENCE="${TIER1_REFERENCE_DIR}/trees/debian/${NODE}/debian/copyright"
 test -s "${COPYRIGHT_REFERENCE}"
 printf '%s  %s\n' "${COPYRIGHT_REFERENCE_SHA256}" "${COPYRIGHT_REFERENCE}" | sha256sum --check --strict
 sha256sum "${COPYRIGHT_REFERENCE}" > "${EVIDENCE_DIR}/copyright-reference-sha256.txt"
+sha256sum "${PACKAGE_META}/upstream/signing-key.asc" > "${EVIDENCE_DIR}/signing-key-sha256.txt"
 
 STAGE="host-validation"
 . /etc/os-release
@@ -333,6 +343,10 @@ def field(path: Path, name: str) -> str:
     proc = subprocess.run(["dpkg-deb", "-f", str(path), name], text=True, capture_output=True)
     return proc.stdout.strip() if proc.returncode == 0 else ""
 
+def normalized_multi_arch(path: Path):
+    value = field(path, "Multi-Arch")
+    return None if value in {"", "no"} else value
+
 for contract in node["binary_contracts"]:
     name = contract["name"]
     path = debs.get(name)
@@ -341,9 +355,9 @@ for contract in node["binary_contracts"]:
     architecture = field(path, "Architecture")
     if architecture != contract["architecture"]:
         raise SystemExit(f"{name}: architecture {architecture!r} != {contract['architecture']!r}")
-    multi = field(path, "Multi-Arch") or None
+    multi = normalized_multi_arch(path)
     if multi != contract["multi_arch"]:
-        raise SystemExit(f"{name}: Multi-Arch {multi!r} != {contract['multi_arch']!r}")
+        raise SystemExit(f"{name}: normalized Multi-Arch {multi!r} != {contract['multi_arch']!r}")
     for compatibility_field in ("Provides", "Breaks", "Replaces", "Conflicts"):
         if field(path, compatibility_field):
             raise SystemExit(f"{name}: unexpected {compatibility_field}={field(path, compatibility_field)}")
@@ -423,7 +437,9 @@ STAGE="dag-pass-evidence"
     echo "debian_version=${DEBIAN_VERSION}"
     echo "ecm_predecessor=${ECM_VERSION}"
     echo "source_sha256=${UPSTREAM_SHA256}"
+    echo "symbols_reference_tree=${SYMBOLS_REFERENCE_TREE}"
     echo "symbols_baseline_sha256=${SYMBOLS_REFERENCE_SHA256}"
+    echo "signing_key_sha256=${SIGNING_KEY_SHA256}"
     echo "tests=PASS-via-sbuild"
     echo "lintian=PASS-errors"
     echo "abi_soname=${SONAME}"

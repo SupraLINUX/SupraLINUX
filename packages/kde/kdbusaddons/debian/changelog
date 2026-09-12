@@ -1,3 +1,13 @@
+kf6-kdbusaddons (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Add the KDE release signing key required by the Debian watch v5 PGP gate.
+  * Align Standards-Version with the 4.7.3 policy level recognized by Resolute.
+  * Keep absent Multi-Arch metadata semantically equivalent to dpkg-deb's
+    reported value "no" in the external package-contract validator.
+  * Preserve the 3/3 passing KDE 6.30 autotests from the previous attempt.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 15:45:00 -0300
+
 kf6-kdbusaddons (6.30.0-0supralinux2) resolute; urgency=medium
 
   * Remove the SupraLINUX REUSE lint gate from debian/rules: KDE 6.30 does
