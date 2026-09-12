@@ -1,0 +1,10 @@
+kf6-karchive (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE Frameworks karchive 6.30.0 from KDE upstream stable.
+  * Preserve Debian-family binary package names and Multi-Arch contracts as
+    compatibility inputs while selecting dependencies from KDE 6.30 requirements.
+  * Build against retained SupraLINUX ECM 6.30 and KDE-selected Qt >= 6.9.
+  * Keep KDE upstream autotests enabled and keep QDoc outside the default build.
+  * Use the retained Debian 6.28 symbols tree as the closest technical ABI baseline.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 18:00:00 -0300

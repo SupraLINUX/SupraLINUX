@@ -1,0 +1,196 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-12",
+  "frameworks_series": "6.30.0",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "batch": "tier1-batch-2",
+  "state": "prepared-pending-build",
+  "canonical_state_role": "batch-package-attempt-ledger",
+  "selected_nodes": [
+    "ktexttemplate",
+    "karchive",
+    "kholidays"
+  ],
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+    },
+    "packaging_trees": {
+      "status": "PASS",
+      "workflow_run": 34708030450,
+      "artifact_id": 10301938362,
+      "artifact_sha256": "6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6",
+      "snapshot_json_sha256": "f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345"
+    }
+  },
+  "shared_packaging_inputs": {
+    "signing_key": {
+      "path": "debian/upstream/signing-key.asc",
+      "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d",
+      "source": "retained-debian-packaging-reference"
+    }
+  },
+  "nodes": {
+    "ktexttemplate": {
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false,
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-ktexttemplate",
+      "source_sha256": "c3c229944d25294102e4e8a5b49fa0c0f481da9d33f8bec3782e8a53afd47493",
+      "root_cmake_blob": "e68c80cc6106c87e321d23729f882052ab386972",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/ktexttemplate-6.30.0.tar.xz",
+      "runtime_package": "libkf6texttemplate6",
+      "development_package": "libkf6texttemplate-dev",
+      "documentation_package": "libkf6texttemplate-doc",
+      "binary_contracts": [
+        {
+          "name": "libkf6texttemplate-dev",
+          "architecture": "amd64",
+          "multi_arch": null
+        },
+        {
+          "name": "libkf6texttemplate-doc",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6texttemplate6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        }
+      ],
+      "soname": "libKF6TextTemplate.so.6",
+      "cmake_package": "KF6TextTemplate",
+      "cmake_target": "KF6::TextTemplate",
+      "consumer_run": "direct",
+      "copyright": {
+        "file": "copyright",
+        "sha256": "b7b88bf2a8f3f4d19fb85b0d00d1464430a4f97a1949616a16a5a956c6c97109",
+        "reference": "debian-sid-6.28"
+      },
+      "package_version": "6.30.0-0supralinux1",
+      "symbols": {
+        "file": "libkf6texttemplate6.symbols",
+        "sha256": "552e0c732cef6e8e0679d014fc7416ad23ecaa83322df9475a09d640e9831273",
+        "tree_provider": "debian",
+        "reference_version": "6.28.0"
+      },
+      "evidence": []
+    },
+    "karchive": {
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false,
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-karchive",
+      "source_sha256": "4cf89d91e429d2ece3110e78f7ef7011952b0412cb15011329516b46f21e98e2",
+      "root_cmake_blob": "6f86222fb967c7f3e29c15ecef40bf355d8004d0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/karchive-6.30.0.tar.xz",
+      "runtime_package": "libkf6archive6",
+      "development_package": "libkf6archive-dev",
+      "documentation_package": "libkf6archive-doc",
+      "binary_contracts": [
+        {
+          "name": "libkf6archive-data",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6archive-dev",
+          "architecture": "amd64",
+          "multi_arch": null
+        },
+        {
+          "name": "libkf6archive-doc",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6archive6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        }
+      ],
+      "soname": "libKF6Archive.so.6",
+      "cmake_package": "KF6Archive",
+      "cmake_target": "KF6::Archive",
+      "consumer_run": "direct",
+      "copyright": {
+        "file": "copyright",
+        "sha256": "c82d4cf65cdfb5255a04d9e842edc6df47aece48318fd4de6c7c9a61660006ff",
+        "reference": "debian-sid-6.28"
+      },
+      "package_version": "6.30.0-0supralinux1",
+      "symbols": {
+        "file": "libkf6archive6.symbols",
+        "sha256": "acd4b767ad9cc821345a973e09c1e42c63d45fc3eef45197a35d84475c83878e",
+        "tree_provider": "debian",
+        "reference_version": "6.28.0"
+      },
+      "evidence": []
+    },
+    "kholidays": {
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false,
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-kholidays",
+      "source_sha256": "02bfbc33296fe86b364491f6d5cad9d83360bb4fdd2923386a325b309eac0b9b",
+      "root_cmake_blob": "ee43159b9e7259c8c4cefe0db38e2ca715b73ad9",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kholidays-6.30.0.tar.xz",
+      "runtime_package": "libkf6holidays6",
+      "development_package": "libkf6holidays-dev",
+      "documentation_package": "libkf6holidays-doc",
+      "binary_contracts": [
+        {
+          "name": "libkf6holidays-data",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6holidays-dev",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6holidays-doc",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6holidays6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "qml6-module-org-kde-kholidays",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        }
+      ],
+      "soname": "libKF6Holidays.so.6",
+      "cmake_package": "KF6Holidays",
+      "cmake_target": "KF6::Holidays",
+      "consumer_run": "direct",
+      "copyright": {
+        "file": "copyright",
+        "sha256": "c9b4c8797fc5a93733224a2ed442a3de75b3bdb5ef24dd8bdf5abb48d34a1e73",
+        "reference": "debian-sid-6.28"
+      },
+      "package_version": "6.30.0-0supralinux1",
+      "symbols": {
+        "file": "libkf6holidays6.symbols",
+        "sha256": "b0be25ddbc4c7abeb121bb0d3c3ca053d33e2a9fa88695bea210c50d56c256cd",
+        "tree_provider": "debian",
+        "reference_version": "6.28.0"
+      },
+      "evidence": []
+    }
+  }
+}
