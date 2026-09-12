@@ -1,0 +1,45 @@
+name: Temporary Tier 1 batch 2 remediation
+
+on:
+  push:
+    branches: [tmp-tier1-batch2-fix]
+
+permissions:
+  contents: write
+
+jobs:
+  remediate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - name: Generate and validate remediation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/tmp-tier1-batch2-fix.py
+          python3 scripts/tmp-tier1-batch2-fix.py
+          bash -n scripts/run-kde-tier1-package-batch2-preflight.sh scripts/kde-tier1-package-batch2-needed.sh
+          python3 scripts/validate_kde_tier1.py
+          python3 scripts/validate_kde_tier1_package_batch2.py
+          python3 scripts/validate_kde_tier1_packaging_reference.py
+          python3 scripts/validate_kde_tier1_packaging_tree.py
+          python3 scripts/validate_kde_dag.py
+          git diff --check
+      - name: Commit non-workflow remediation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'SupraLINUX CI'
+          git config user.email 'ci@supralinux.invalid'
+          git add manifests/kde-tier1-package-campaign-batch2.json manifests/kde-frameworks-tier1.json \
+            packages/kde/ktexttemplate packages/kde/karchive packages/kde/kholidays \
+            scripts/run-kde-tier1-package-batch2-preflight.sh \
+            scripts/validate_kde_tier1_package_batch2.py scripts/validate_kde_tier1.py \
+            scripts/validate_kde_tier1_packaging_reference.py scripts/validate_kde_tier1_packaging_tree.py \
+            docs/kde-tier1-package-batch2.md docs/kde-tier1.md docs/status/2026-09-12.md
+          git diff --cached --check
+          git commit -m 'tmp: generate Tier 1 batch 2 remediation'
+          git push origin HEAD:tmp-tier1-batch2-fix
