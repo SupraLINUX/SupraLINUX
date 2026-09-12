@@ -84,7 +84,12 @@ sudo apt-get update
 
 candidate_for() {
     local package="$1"
-    apt-cache policy "${package}" | awk '/Candidate:/ {print $2; exit}'
+    local policy
+    if ! policy="$(apt-cache policy "${package}" 2>&1)"; then
+        printf 'apt-cache policy failed for %s:\n%s\n' "${package}" "${policy}" >&2
+        return 1
+    fi
+    awk '/Candidate:/ {print $2}' <<<"${policy}"
 }
 
 : > "${EVIDENCE}/apt-candidates.tsv"
