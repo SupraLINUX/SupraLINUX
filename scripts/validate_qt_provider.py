@@ -73,6 +73,7 @@ workflow = read(WORKFLOW)
 script = read(PREFLIGHT)
 delta = read(DELTA)
 doc = read(DOC)
+doc_lower = doc.lower()
 
 require("ubuntu-latest" not in workflow, "Qt provider workflow must not use ubuntu-latest")
 require("pull_request_target" not in workflow, "Qt provider workflow must not use pull_request_target")
@@ -128,16 +129,16 @@ for tracked in (
 ):
     require(tracked in delta, f"Qt provider event-delta detector must track {tracked}")
 
-require("provider preflight" in doc.lower(), "Qt provider documentation must describe the provider preflight boundary")
-require("final certification" in doc.lower(), "Qt provider documentation must distinguish final certification")
+require("provider preflight" in doc_lower, "Qt provider documentation must describe the provider preflight boundary")
+require("final certification" in doc_lower, "Qt provider documentation must distinguish final certification")
 require("34665704108" in doc, "Qt provider documentation must record the first real PASS run")
 require("10288816586" in doc, "Qt provider documentation must record the first evidence artifact")
 require("90a25a24b60dcc02691c7043eb3a985f21013c73e3ea4489a7427fa74e618e33" in doc, "Qt provider documentation must record the first artifact digest")
 
 if preflight.get("status") == "pass":
-    require("provider preflight **PASS**" in doc or "provider preflight: **PASS**" in doc, "documentation must reflect provider preflight PASS")
+    require("provider preflight **pass**" in doc_lower or "provider preflight: **pass**" in doc_lower, "documentation must reflect provider preflight PASS")
 if certification.get("status") == "pending":
-    require("final certification **pending**" in doc or "final certification: **pending**" in doc, "documentation must reflect final Qt certification pending")
+    require("final certification **pending**" in doc_lower or "final certification: **pending**" in doc_lower, "documentation must reflect final Qt certification pending")
 
 if errors:
     for error in errors:
