@@ -26,9 +26,27 @@ EXPECTED_SNAPSHOT = {
 }
 
 EXPECTED_BINARY_CONTRACT_SNAPSHOT = {
-    "status": "pending",
+    "status": "PASS",
     "claim": "binary-packaging-contract-reference-only",
     "authoritative": False,
+    "workflow_run": 34704117024,
+    "head_sha": "be7a53c34a7ac27065f848ea3abc14b867673bde",
+    "artifact_id": 10301282501,
+    "artifact_sha256": "9441b2f2957b350a46026b0df3bd5eb3578e1578671aab3b7afc7a0929ce1a97",
+    "binary_query_plan_sha256": "b26c95d381db242c3c7a87228044a37bac8696e211358149a08bb5b55f411bb9",
+    "binary_contracts_json_sha256": "e44507d0dd73db913a91bd4852c452f783618aab0bd6a3790e4c4f4c40707b7b",
+    "binary_contracts_tsv_sha256": "ef29ecdf03a35616a7cd0155a54a0d93828ff2af9bd9a3dcba37c0dbdb8bb1ca",
+    "ubuntu_binary_packages": 147,
+    "debian_binary_packages": 151,
+    "common_binary_packages": 147,
+    "ubuntu_only_binary_packages": 0,
+    "debian_only_binary_packages": 4,
+    "debian_only_packages": [
+        "libkirigamiforms6",
+        "libkirigamiformsprivatecards6",
+        "libkirigamiformsprivateflat6",
+        "libkirigamiformsprivatetemplates6",
+    ],
     "framework_package_build_certification": "pending",
 }
 
@@ -68,7 +86,7 @@ require(reference.get("selected_kde") == "6.30.0", "Packaging reference must fol
 require(reference.get("snapshot") == EXPECTED_SNAPSHOT, "Packaging-reference PASS evidence changed without review")
 require(
     reference.get("binary_contract_snapshot") == EXPECTED_BINARY_CONTRACT_SNAPSHOT,
-    "Binary-contract snapshot must remain pending until a real retained workflow PASS is recorded",
+    "Binary-contract PASS evidence changed without review",
 )
 
 references = reference.get("references", {})
@@ -110,5 +128,5 @@ if errors:
 print("KDE Frameworks Tier 1 packaging-reference policy: PASS")
 print("Reference authorities: none; Ubuntu Resolute and Debian sid are technical inputs only")
 print("Source packaging snapshot evidence: PASS, non-authoritative")
-print("Binary-contract snapshot evidence: pending until real workflow PASS")
+print("Binary-contract snapshot evidence: PASS, non-authoritative")
 print("Framework packaging/DAG states: pending")

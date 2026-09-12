@@ -15,38 +15,45 @@
     "snapshot_json_sha256": "601c668342c206af179e9c564bf87cac6a166f1070fe9af0b640cb57d2151597",
     "versions_tsv_sha256": "af6fd90121801eaf322442c43b793422494dfd5a109edccf484f5d24b463ea9b",
     "nodes": 29,
-    "ubuntu_reference_upstream_versions": [
-      "6.23.0",
-      "6.24.0"
-    ],
-    "debian_reference_upstream_versions": [
-      "6.28.0",
-      "6.28.1"
-    ],
+    "ubuntu_reference_upstream_versions": ["6.23.0", "6.24.0"],
+    "debian_reference_upstream_versions": ["6.28.0", "6.28.1"],
     "framework_package_build_certification": "pending"
   },
   "binary_contract_snapshot": {
-    "status": "pending",
+    "status": "PASS",
     "claim": "binary-packaging-contract-reference-only",
     "authoritative": false,
+    "workflow_run": 34704117024,
+    "head_sha": "be7a53c34a7ac27065f848ea3abc14b867673bde",
+    "artifact_id": 10301282501,
+    "artifact_sha256": "9441b2f2957b350a46026b0df3bd5eb3578e1578671aab3b7afc7a0929ce1a97",
+    "binary_query_plan_sha256": "b26c95d381db242c3c7a87228044a37bac8696e211358149a08bb5b55f411bb9",
+    "binary_contracts_json_sha256": "e44507d0dd73db913a91bd4852c452f783618aab0bd6a3790e4c4f4c40707b7b",
+    "binary_contracts_tsv_sha256": "ef29ecdf03a35616a7cd0155a54a0d93828ff2af9bd9a3dcba37c0dbdb8bb1ca",
+    "ubuntu_binary_packages": 147,
+    "debian_binary_packages": 151,
+    "common_binary_packages": 147,
+    "ubuntu_only_binary_packages": 0,
+    "debian_only_binary_packages": 4,
+    "debian_only_packages": [
+      "libkirigamiforms6",
+      "libkirigamiformsprivatecards6",
+      "libkirigamiformsprivateflat6",
+      "libkirigamiformsprivatetemplates6"
+    ],
     "framework_package_build_certification": "pending"
   },
   "references": {
     "ubuntu": {
       "distribution": "ubuntu",
       "series": "resolute",
-      "components": [
-        "main",
-        "universe"
-      ],
+      "components": ["main", "universe"],
       "purpose": "Ubuntu compatibility and binary-package contract reference"
     },
     "debian": {
       "distribution": "debian",
       "series": "sid",
-      "components": [
-        "main"
-      ],
+      "components": ["main"],
       "purpose": "Newer Debian KF6 packaging and ABI-contract reference"
     }
   },
@@ -57,92 +64,34 @@
     "reference_binary_names_are_inputs_for_compatibility_review_not_automatic_decisions": true
   },
   "nodes": {
-    "attica": {
-      "source_package": "kf6-attica"
-    },
-    "bluez-qt": {
-      "source_package": "kf6-bluez-qt"
-    },
-    "karchive": {
-      "source_package": "kf6-karchive"
-    },
-    "kcalendarcore": {
-      "source_package": "kf6-kcalendarcore"
-    },
-    "kcodecs": {
-      "source_package": "kf6-kcodecs"
-    },
-    "kconfig": {
-      "source_package": "kf6-kconfig"
-    },
-    "kcoreaddons": {
-      "source_package": "kf6-kcoreaddons"
-    },
-    "kdbusaddons": {
-      "source_package": "kf6-kdbusaddons"
-    },
-    "kglobalaccel": {
-      "source_package": "kf6-kglobalaccel"
-    },
-    "kguiaddons": {
-      "source_package": "kf6-kguiaddons"
-    },
-    "kholidays": {
-      "source_package": "kf6-kholidays"
-    },
-    "ki18n": {
-      "source_package": "kf6-ki18n"
-    },
-    "kidletime": {
-      "source_package": "kf6-kidletime"
-    },
-    "kirigami": {
-      "source_package": "kf6-kirigami"
-    },
-    "kitemmodels": {
-      "source_package": "kf6-kitemmodels"
-    },
-    "kitemviews": {
-      "source_package": "kf6-kitemviews"
-    },
-    "kplotting": {
-      "source_package": "kf6-kplotting"
-    },
-    "kquickcharts": {
-      "source_package": "kf6-kquickcharts"
-    },
-    "syntax-highlighting": {
-      "source_package": "kf6-syntax-highlighting"
-    },
-    "ktexttemplate": {
-      "source_package": "kf6-ktexttemplate"
-    },
-    "kuserfeedback": {
-      "source_package": "kf6-kuserfeedback"
-    },
-    "kwidgetsaddons": {
-      "source_package": "kf6-kwidgetsaddons"
-    },
-    "kwindowsystem": {
-      "source_package": "kf6-kwindowsystem"
-    },
-    "modemmanager-qt": {
-      "source_package": "kf6-modemmanager-qt"
-    },
-    "networkmanager-qt": {
-      "source_package": "kf6-networkmanager-qt"
-    },
-    "prison": {
-      "source_package": "kf6-prison"
-    },
-    "solid": {
-      "source_package": "kf6-solid"
-    },
-    "sonnet": {
-      "source_package": "kf6-sonnet"
-    },
-    "threadweaver": {
-      "source_package": "kf6-threadweaver"
-    }
+    "attica": {"source_package": "kf6-attica"},
+    "bluez-qt": {"source_package": "kf6-bluez-qt"},
+    "karchive": {"source_package": "kf6-karchive"},
+    "kcalendarcore": {"source_package": "kf6-kcalendarcore"},
+    "kcodecs": {"source_package": "kf6-kcodecs"},
+    "kconfig": {"source_package": "kf6-kconfig"},
+    "kcoreaddons": {"source_package": "kf6-kcoreaddons"},
+    "kdbusaddons": {"source_package": "kf6-kdbusaddons"},
+    "kglobalaccel": {"source_package": "kf6-kglobalaccel"},
+    "kguiaddons": {"source_package": "kf6-kguiaddons"},
+    "kholidays": {"source_package": "kf6-kholidays"},
+    "ki18n": {"source_package": "kf6-ki18n"},
+    "kidletime": {"source_package": "kf6-kidletime"},
+    "kirigami": {"source_package": "kf6-kirigami"},
+    "kitemmodels": {"source_package": "kf6-kitemmodels"},
+    "kitemviews": {"source_package": "kf6-kitemviews"},
+    "kplotting": {"source_package": "kf6-kplotting"},
+    "kquickcharts": {"source_package": "kf6-kquickcharts"},
+    "syntax-highlighting": {"source_package": "kf6-syntax-highlighting"},
+    "ktexttemplate": {"source_package": "kf6-ktexttemplate"},
+    "kuserfeedback": {"source_package": "kf6-kuserfeedback"},
+    "kwidgetsaddons": {"source_package": "kf6-kwidgetsaddons"},
+    "kwindowsystem": {"source_package": "kf6-kwindowsystem"},
+    "modemmanager-qt": {"source_package": "kf6-modemmanager-qt"},
+    "networkmanager-qt": {"source_package": "kf6-networkmanager-qt"},
+    "prison": {"source_package": "kf6-prison"},
+    "solid": {"source_package": "kf6-solid"},
+    "sonnet": {"source_package": "kf6-sonnet"},
+    "threadweaver": {"source_package": "kf6-threadweaver"}
   }
 }
