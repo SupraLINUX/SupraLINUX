@@ -1,0 +1,71 @@
+--- libkf6texttemplate6.symbols.base
++++ libkf6texttemplate6.symbols
+@@ -1,8 +1,8 @@
+ # SymbolsHelper-Confirmed: 6.0.0 amd64
+ libKF6TextTemplate.so.6 libkf6texttemplate6 #MINVER#
+ * Build-Depends-Package: libkf6texttemplate-dev
+- _ZGVZN9QMetaType21registerConverterImplI5QListIP7QObjectE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 6.0.0
+- _ZGVZN9QMetaType23registerMutableViewImplI5QListIP7QObjectE9QIterableI13QMetaSequenceEEEbSt8functionIFbPvS9_EES_S_E10unregister@Base 6.0.0
++ (optional=templinst)_ZGVZN9QMetaType21registerConverterImplI5QListIP7QObjectE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 6.0.0
++ (optional=templinst)_ZGVZN9QMetaType23registerMutableViewImplI5QListIP7QObjectE9QIterableI13QMetaSequenceEEEbSt8functionIFbPvS9_EES_S_E10unregister@Base 6.0.0
+  _ZN13KTextTemplate10SafeString12NestedString10push_frontERKS0_@Base 6.0.0
+  _ZN13KTextTemplate10SafeString12NestedString10setUnicodeEPK5QChari@Base 6.0.0
+  _ZN13KTextTemplate10SafeString12NestedString4chopEi@Base 6.0.0
+@@ -211,6 +211,8 @@
+  _ZN13KTextTemplate6EngineD1Ev@Base 6.0.0
+  _ZN13KTextTemplate6EngineD2Ev@Base 6.0.0
+  _ZN13KTextTemplate6Filter9setStreamEPNS_12OutputStreamE@Base 6.0.0
++ _ZN13KTextTemplate6FilterC1Ev@Base 6.30.0
++ _ZN13KTextTemplate6FilterC2Ev@Base 6.30.0
+  _ZN13KTextTemplate6FilterD0Ev@Base 6.0.0
+  _ZN13KTextTemplate6FilterD1Ev@Base 6.0.0
+  _ZN13KTextTemplate6FilterD2Ev@Base 6.0.0
+@@ -284,7 +286,7 @@
+  _ZN13KTextTemplate8VariableaSERKS0_@Base 6.0.0
+  _ZN13KTextTemplate8markSafeERKNS_10SafeStringE@Base 6.0.0
+  _ZN13KTextTemplate8toStringERK5QListI8QVariantE@Base 6.0.0
+- _ZN13QMetaSequence12MetaSequenceI5QListIP7QObjectEE5valueE@Base 6.0.0
++ (optional=templinst)_ZN13QMetaSequence12MetaSequenceI5QListIP7QObjectEE5valueE@Base 6.0.0
+  _ZNK13KTextTemplate10SafeString11needsEscapeEv@Base 6.0.0
+  _ZNK13KTextTemplate10SafeString12NestedString10normalizedEN7QString17NormalizationFormE@Base 6.0.0
+  _ZNK13KTextTemplate10SafeString12NestedString10normalizedEN7QString17NormalizationFormEN5QChar14UnicodeVersionE@Base 6.0.0
+@@ -383,6 +385,7 @@
+  _ZNK13KTextTemplate6Filter6escapeERK7QString@Base 6.0.0
+  _ZNK13KTextTemplate6Filter6escapeERKNS_10SafeStringE@Base 6.0.0
+  _ZNK13KTextTemplate6Filter6isSafeEv@Base 6.0.0
++ _ZNK13KTextTemplate6Filter7contextEv@Base 6.30.0
+  _ZNK13KTextTemplate6Parser10metaObjectEv@Base 6.0.0
+  _ZNK13KTextTemplate6Parser12hasNextTokenEv@Base 6.0.0
+  _ZNK13KTextTemplate6Parser9getFilterERK7QString@Base 6.0.0
+@@ -422,8 +425,8 @@
+  _ZTIN13KTextTemplate6ParserE@Base 6.0.0
+  _ZTIN13KTextTemplate8TextNodeE@Base 6.0.0
+  _ZTIN13KTextTemplate9ExceptionE@Base 6.0.0
+- _ZTIZN9QMetaType17registerConverterI5QListIP7QObjectE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS4_EEEEbT1_EUlPKvPvE_@Base 6.0.0
+- _ZTIZN9QMetaType19registerMutableViewI5QListIP7QObjectE9QIterableI13QMetaSequenceEN9QtPrivate37QSequentialIterableMutableViewFunctorIS4_EEEEbT1_EUlPvSC_E_@Base 6.0.0
++ (optional=templinst)_ZTIZN9QMetaType17registerConverterI5QListIP7QObjectE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS4_EEEEbT1_EUlPKvPvE_@Base 6.0.0
++ (optional=templinst)_ZTIZN9QMetaType19registerMutableViewI5QListIP7QObjectE9QIterableI13QMetaSequenceEN9QtPrivate37QSequentialIterableMutableViewFunctorIS4_EEEEbT1_EUlPvSC_E_@Base 6.0.0
+  _ZTSN13KTextTemplate11QtLocalizerE@Base 6.0.0
+  _ZTSN13KTextTemplate12OutputStreamE@Base 6.0.0
+  _ZTSN13KTextTemplate12TemplateImplE@Base 6.0.0
+@@ -441,8 +444,8 @@
+  _ZTSN13KTextTemplate6ParserE@Base 6.0.0
+  _ZTSN13KTextTemplate8TextNodeE@Base 6.0.0
+  _ZTSN13KTextTemplate9ExceptionE@Base 6.0.0
+- _ZTSZN9QMetaType17registerConverterI5QListIP7QObjectE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS4_EEEEbT1_EUlPKvPvE_@Base 6.0.0
+- _ZTSZN9QMetaType19registerMutableViewI5QListIP7QObjectE9QIterableI13QMetaSequenceEN9QtPrivate37QSequentialIterableMutableViewFunctorIS4_EEEEbT1_EUlPvSC_E_@Base 6.0.0
++ (optional=templinst)_ZTSZN9QMetaType17registerConverterI5QListIP7QObjectE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS4_EEEEbT1_EUlPKvPvE_@Base 6.0.0
++ (optional=templinst)_ZTSZN9QMetaType19registerMutableViewI5QListIP7QObjectE9QIterableI13QMetaSequenceEN9QtPrivate37QSequentialIterableMutableViewFunctorIS4_EEEEbT1_EUlPvSC_E_@Base 6.0.0
+  _ZTVN13KTextTemplate11QtLocalizerE@Base 6.0.0
+  _ZTVN13KTextTemplate12OutputStreamE@Base 6.0.0
+  _ZTVN13KTextTemplate12TemplateImplE@Base 6.0.0
+@@ -459,8 +462,6 @@
+  _ZTVN13KTextTemplate6FilterE@Base 6.0.0
+  _ZTVN13KTextTemplate6ParserE@Base 6.0.0
+  _ZTVN13KTextTemplate8TextNodeE@Base 6.0.0
+- _ZTVN13KTextTemplate9ExceptionE@Base 6.0.0
++ (optional=inline)_ZTVN13KTextTemplate9ExceptionE@Base 6.0.0
+  (optional=templinst)_ZZN9QMetaType21registerConverterImplI5QListIP7QObjectE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 6.0.0
+  (optional=templinst)_ZZN9QMetaType23registerMutableViewImplI5QListIP7QObjectE9QIterableI13QMetaSequenceEEEbSt8functionIFbPvS9_EES_S_E10unregister@Base 6.0.0
+- qt_plugin_instance@Base 6.0.0
+- qt_plugin_query_metadata_v2@Base 6.0.0
