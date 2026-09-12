@@ -69,6 +69,9 @@ jobs:
       - name: Validate KDE Frameworks Tier 1 packaging-reference policy
         run: python3 scripts/validate_kde_tier1_packaging_reference.py
 
+      - name: Validate KDE Attica 6.30 packaging preparation
+        run: python3 scripts/validate_kde_attica_package.py
+
       - name: Verify runner and Ubuntu Qt candidate
         shell: bash
         run: |
