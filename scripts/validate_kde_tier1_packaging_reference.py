@@ -50,6 +50,7 @@ EXPECTED_BINARY_CONTRACT_SNAPSHOT = {
     ],
     "framework_package_build_certification": "pending",
 }
+FAIL_NODES = {"karchive", "kholidays", "ktexttemplate"}
 PASS_NODES = {
     "attica": ("6.30.0-0supralinux2", 34706416753, 10301851297, "f1ed135e9d5a25e6773957b2e52817fba03280293249f54257efc4e18304de27"),
     "kcodecs": ("6.30.0-0supralinux4", 34716761551, 10305050385, "d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45"),
@@ -136,12 +137,17 @@ for node in source_nodes:
             require(passes[0].get("workflow_run") == run, f"{node_id}: PASS run mismatch")
             require(passes[0].get("artifact_id") == artifact, f"{node_id}: PASS artifact mismatch")
             require(passes[0].get("artifact_sha256") == digest, f"{node_id}: PASS digest mismatch")
+    elif node_id in FAIL_NODES:
+        require(node.get("state") == "FAIL", f"{node_id}: real package FAIL must remain visible")
+        require(node.get("packaging", {}).get("state") == "FAIL", f"{node_id}: packaging FAIL must remain visible")
+        require(node.get("packaging", {}).get("downstream_eligible") is False, f"{node_id}: FAIL cannot feed downstream")
     else:
         require(node.get("packaging") == {"state":"pending"}, f"{node_id}: unattempted packaging must remain pending")
         require(node.get("state") == "pending", f"{node_id}: unattempted node must remain pending")
 
 require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 4, "Reference validator expects 4 actual package PASS nodes")
-require(sum(1 for node in source_nodes if node.get("state") == "pending") == 25, "Reference validator expects 25 pending nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "pending") == 22, "Reference validator expects 22 pending nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "FAIL") == 3, "Reference validator expects 3 real FAIL nodes")
 
 for token in (
     "manifests/kde-frameworks-tier1.json",
@@ -175,4 +181,4 @@ if errors:
 
 print("KDE Frameworks Tier 1 packaging-reference policy: PASS")
 print("Reference snapshots remain non-authoritative technical inputs")
-print("Actual package states: 4 PASS; 25 pending")
+print("Actual package states: 4 PASS; 22 pending; 3 FAIL; 0 BLOCKED")

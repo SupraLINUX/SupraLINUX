@@ -33,6 +33,9 @@ values = {
     "SYMBOLS_FILE": symbols["file"],
     "SYMBOLS_REFERENCE_SHA256": symbols["sha256"],
     "SYMBOLS_REFERENCE_TREE": symbols["tree_provider"],
+    "SYMBOLS_REVIEW_PATCH": symbols.get("review_patch", ""),
+    "SYMBOLS_REVIEW_PATCH_SHA256": symbols.get("review_patch_sha256", ""),
+    "SYMBOLS_REVIEWED_SHA256": symbols.get("reviewed_sha256", ""),
     "COPYRIGHT_REFERENCE_SHA256": node["copyright"]["sha256"],
     "SIGNING_KEY_SHA256": signing["sha256"],
     "RUNTIME_PACKAGE": node["runtime_package"],
@@ -181,6 +184,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     mmdebstrap \
     ninja-build \
     pkg-config \
+    patch \
     qt6-base-dev \
     sbuild \
     uidmap \
@@ -219,6 +223,15 @@ test -d "${EXTRACTED}"
 mv "${EXTRACTED}" "${SOURCE_DIR}"
 cp -a "${PACKAGE_META}" "${SOURCE_DIR}/debian"
 cp -a "${SYMBOLS_REFERENCE}" "${SOURCE_DIR}/debian/${SYMBOLS_FILE}"
+if [[ -n "${SYMBOLS_REVIEW_PATCH}" ]]; then
+    REVIEW_PATCH="${PACKAGE_META}/${SYMBOLS_REVIEW_PATCH}"
+    test -s "${REVIEW_PATCH}"
+    printf '%s  %s\n' "${SYMBOLS_REVIEW_PATCH_SHA256}" "${REVIEW_PATCH}" | sha256sum --check --strict
+    patch --batch --forward "${SOURCE_DIR}/debian/${SYMBOLS_FILE}" "${REVIEW_PATCH}"
+    printf '%s  %s\n' "${SYMBOLS_REVIEWED_SHA256}" "${SOURCE_DIR}/debian/${SYMBOLS_FILE}" | sha256sum --check --strict
+    sha256sum "${REVIEW_PATCH}" > "${EVIDENCE_DIR}/symbols-review-patch-sha256.txt"
+    sha256sum "${SOURCE_DIR}/debian/${SYMBOLS_FILE}" > "${EVIDENCE_DIR}/reviewed-symbols-sha256.txt"
+fi
 cp -a "${COPYRIGHT_REFERENCE}" "${SOURCE_DIR}/debian/copyright"
 python3 - "${SOURCE_DIR}/debian/copyright" <<'PY'
 import sys
@@ -240,7 +253,11 @@ chmod +x "${SOURCE_DIR}/debian/rules"
 
 sha256sum "${SOURCE_DIR}/debian/${SYMBOLS_FILE}" > "${EVIDENCE_DIR}/injected-symbols-sha256.txt"
 sha256sum "${SOURCE_DIR}/debian/copyright" > "${EVIDENCE_DIR}/injected-copyright-sha256.txt"
-cmp -s "${SYMBOLS_REFERENCE}" "${SOURCE_DIR}/debian/${SYMBOLS_FILE}"
+if [[ -z "${SYMBOLS_REVIEW_PATCH}" ]]; then
+    cmp -s "${SYMBOLS_REFERENCE}" "${SOURCE_DIR}/debian/${SYMBOLS_FILE}"
+else
+    [[ "$(sha256sum "${SOURCE_DIR}/debian/${SYMBOLS_FILE}" | awk '{print $1}')" == "${SYMBOLS_REVIEWED_SHA256}" ]]
+fi
 grep -Fq "2026, SupraLINUX Project" "${SOURCE_DIR}/debian/copyright"
 
 STAGE="source-package"

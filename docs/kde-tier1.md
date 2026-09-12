@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 1
 
-Status: **29-node source set fixed; 4 hosted package PASS; 25 package nodes pending; 0 current FAIL; 0 BLOCKED**
+Status: **29-node source set fixed; 4 hosted package PASS; 22 package nodes pending; 3 current FAIL; 0 BLOCKED**
 
 Last reviewed: **2026-09-12**
 
@@ -55,8 +55,8 @@ KDE 6.30's `std::format` use emits 15 compiler/libstdc++ implementation symbols.
 ## Current states
 
 - PASS: **4**;
-- pending: **25**;
-- current FAIL: **0**;
+- pending: **22**;
+- current FAIL: **3** — KTextTemplate, KArchive, KHolidays;
 - BLOCKED: **0**.
 
 A node becomes FAIL only after a real package attempt fails for its own cause. BLOCKED is reserved for nodes not attempted because a predecessor is FAIL.
@@ -70,3 +70,7 @@ Batch 1 package CI fingerprints only build inputs actually consumed by the runne
 KTextTemplate, KArchive and KHolidays are the next independent package attempts. Their preparation lives in a separate Batch 2 campaign so the closed Batch 1 ledger and runner remain reproducible. Debian 6.28 symbols are used as the closer technical ABI baseline while Ubuntu Resolute remains the direct binary-compatibility target. KDE 6.30 upstream defaults and autotests remain enabled; stale distro `BUILD_QCH` settings are not inherited.
 
 Canonical state is still **4 PASS / 25 pending / 0 FAIL / 0 BLOCKED** until these jobs actually attempt their packages.
+
+## Batch 2 first-attempt evidence
+
+Workflow `34720201713` produced three real FAILs. KArchive/KHolidays failed at configure because the ECM translation path lacked Qt6 LinguistTools; KTextTemplate passed 10/10 tests and failed at the symbols gate. See `docs/kde-tier1-package-batch2.md`.

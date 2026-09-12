@@ -123,9 +123,32 @@
         "node": "karchive"
       },
       "packaging": {
-        "state": "pending"
+        "state": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "downstream_eligible": false,
+        "evidence": [
+          {
+            "result": "FAIL",
+            "workflow_run": 34720201713,
+            "job_id": 103624554004,
+            "commit": "5edf71b390088a551af81e7fc7e8d87a8378104f",
+            "attempted_package_version": "6.30.0-0supralinux1",
+            "artifact_id": 10305889632,
+            "artifact_sha256": "1850a0a6dd7f267870fda83f17f5990f806ec76ae8fe810144557c46af532d01",
+            "failure_stage": "sbuild",
+            "failure_substage": "dh_auto_configure/Qt6LinguistTools",
+            "tests": "not-reached",
+            "cause": "dh_auto_configure failed because ECM ECMPoQmTools requires Qt6 LinguistTools for translation installation and qt6-tools-dev was missing from Build-Depends."
+          }
+        ],
+        "remediation": {
+          "next_package_version": "6.30.0-0supralinux2",
+          "state": "prepared-pending-build"
+        }
       },
-      "state": "pending"
+      "state": "FAIL"
     },
     {
       "id": "kcalendarcore",
@@ -422,9 +445,32 @@
         "node": "kholidays"
       },
       "packaging": {
-        "state": "pending"
+        "state": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "downstream_eligible": false,
+        "evidence": [
+          {
+            "result": "FAIL",
+            "workflow_run": 34720201713,
+            "job_id": 103624554109,
+            "commit": "5edf71b390088a551af81e7fc7e8d87a8378104f",
+            "attempted_package_version": "6.30.0-0supralinux1",
+            "artifact_id": 10305513311,
+            "artifact_sha256": "522257440d6e04563162178dd3d3ab3ae658dc56c129dcf7f482fef8219bb0dc",
+            "failure_stage": "sbuild",
+            "failure_substage": "dh_auto_configure/Qt6LinguistTools",
+            "tests": "not-reached",
+            "cause": "dh_auto_configure failed because ECM ECMPoQmTools requires Qt6 LinguistTools for translation installation and qt6-tools-dev was missing from Build-Depends."
+          }
+        ],
+        "remediation": {
+          "next_package_version": "6.30.0-0supralinux2",
+          "state": "prepared-pending-build"
+        }
       },
-      "state": "pending"
+      "state": "FAIL"
     },
     {
       "id": "ki18n",
@@ -611,9 +657,32 @@
         "node": "ktexttemplate"
       },
       "packaging": {
-        "state": "pending"
+        "state": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "downstream_eligible": false,
+        "evidence": [
+          {
+            "result": "FAIL",
+            "workflow_run": 34720201713,
+            "job_id": 103624554096,
+            "commit": "5edf71b390088a551af81e7fc7e8d87a8378104f",
+            "attempted_package_version": "6.30.0-0supralinux1",
+            "artifact_id": 10306265683,
+            "artifact_sha256": "c164640037e564a43479daaa740f55c0f7578d977a7c38bfeb691fbd6b88544a",
+            "failure_stage": "sbuild",
+            "failure_substage": "dh_makeshlibs/dpkg-gensymbols",
+            "tests": "10/10 PASS",
+            "cause": "KDE 6.30 built and all 10 autotests passed, but dpkg-gensymbols rejected the retained Debian 6.28 symbols baseline after upstream moved scriptable-tags into a plugin and added binary-compatible Filter API."
+          }
+        ],
+        "remediation": {
+          "next_package_version": "6.30.0-0supralinux2",
+          "state": "prepared-pending-build"
+        }
       },
-      "state": "pending"
+      "state": "FAIL"
     },
     {
       "id": "kuserfeedback",

@@ -11,6 +11,7 @@ Build-Depends: debhelper-compat (= 13),
                extra-cmake-modules (>= 6.30.0~),
                flex,
                qt6-base-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.5.0~),
                qt6-declarative-dev (>= 6.9.0~),
 Standards-Version: 4.7.3
 Homepage: https://invent.kde.org/frameworks/kholidays
@@ -50,7 +51,8 @@ Description: holidays calculation library (documentation)
  This library provides a C++ API that determines holiday and other special
  events for a geographical region.
  .
- This package contains the qch documentation files.
+ This package is a compatibility placeholder. QDoc generation is outside the
+ default SupraLINUX Frameworks build profile.
 
 Package: libkf6holidays6
 Architecture: any

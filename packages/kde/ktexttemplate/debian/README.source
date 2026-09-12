@@ -13,3 +13,11 @@ QDoc targets generated through ECMGenerateQDoc are not part of the default build
 The established documentation binary package name is retained as a compatibility
 stub until SupraLINUX defines a common Frameworks QDoc policy. Upstream autotests
 remain enabled.
+
+## KDE 6.30 symbols review
+
+The first 6.30 hosted build completed configure/build/install and 10/10 autotests, then dpkg-gensymbols exposed a real delta from the retained Debian 6.28 baseline. The reviewed packaging patch is applied only after the retained baseline hash is verified.
+
+Upstream 6.29 moved scriptable-tags from libKF6TextTemplate.so.6 into its own plugin, so the two generic qt_plugin_* symbols are removed from the main-library baseline and Qt metatype/template emissions are optional. KDE 6.30 adds the binary-compatible Filter constructor/context API; those symbols use upstream minimum version 6.30.0. Exception's inline virtual implementation can make its weak vtable emission toolchain-dependent and is tagged optional=inline.
+
+The runner verifies the reviewed symbols SHA-256 before source-package assembly.

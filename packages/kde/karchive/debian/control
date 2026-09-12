@@ -13,6 +13,7 @@ Build-Depends: debhelper-compat (= 13),
                libzstd-dev,
                pkgconf,
                qt6-base-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.5.0~),
                zlib1g-dev,
                zstd,
 Standards-Version: 4.7.3
@@ -69,7 +70,8 @@ Description: Qt 6 addon providing access to numerous types of archives (document
  .
  This package is part of KDE Frameworks 6.
  .
- This package contains the qch documentation files.
+ This package is a compatibility placeholder. QDoc generation is outside the
+ default SupraLINUX Frameworks build profile.
 Section: doc
 
 Package: libkf6archive6

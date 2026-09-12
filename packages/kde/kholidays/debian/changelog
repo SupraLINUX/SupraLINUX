@@ -1,3 +1,12 @@
+kf6-kholidays (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Add qt6-tools-dev as the Ubuntu provider of Qt6 LinguistTools required by
+    KDE ECM translation installation during the default build.
+  * Correct the documentation package description: QDoc is outside the default
+    Frameworks build profile, so the package is a compatibility placeholder.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 19:15:00 -0300
+
 kf6-kholidays (6.30.0-0supralinux1) resolute; urgency=medium
 
   * Package KDE Frameworks kholidays 6.30.0 from KDE upstream stable.

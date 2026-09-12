@@ -1,3 +1,13 @@
+kf6-ktexttemplate (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Review the Debian 6.28 symbols baseline against the real KDE 6.30 build:
+    retain compiler/template emissions as optional, account for the upstream
+    scriptable-tags plugin split, and add the new Filter API at minimum 6.30.0.
+  * Correct the documentation package description: QDoc is outside the default
+    Frameworks build profile, so the package is a compatibility placeholder.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 19:15:00 -0300
+
 kf6-ktexttemplate (6.30.0-0supralinux1) resolute; urgency=medium
 
   * Package KDE Frameworks ktexttemplate 6.30.0 from KDE upstream stable.

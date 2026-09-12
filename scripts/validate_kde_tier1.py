@@ -14,6 +14,11 @@ EXPECTED_SOURCE_HASHES = {'attica': '3eec8d2d9c77ad5f7cfd38e44e4b1492c5d0dec695b
 EXPECTED_ROOT_CMAKE_BLOBS = {'attica': '92ae57c6bf82a8fad6c412b5b47a8c45a8652d88', 'bluez-qt': '88dd15daf02a31098f230028b7222bb9355e6ba2', 'karchive': '6f86222fb967c7f3e29c15ecef40bf355d8004d0', 'kcalendarcore': '0414c1256b209ae14c41f2ccc0a99480f3298a17', 'kcodecs': 'a4844477467d5c7b47875f837fa6db0b22550397', 'kconfig': '1567b39f76304dcfdede6846c6ceb4b780ceb8d5', 'kcoreaddons': '05f43e4eadd696009eb619e7d0cae656608d66f4', 'kdbusaddons': '26cde2148db4d86adeea0f4bda597f0f9e610816', 'kglobalaccel': '274623176b4c0f9b72edea3bd770530f76c8f607', 'kguiaddons': '35571804fb913f4b86f52b8d98e4b7973014d0e7', 'kholidays': 'ee43159b9e7259c8c4cefe0db38e2ca715b73ad9', 'ki18n': '0a252c9696f8106205034b3ffc741f251ad54f3d', 'kidletime': '3617fd79358beaea36d862483b8b4947eef30508', 'kirigami': '15bb9d921461c4adafaf7901f1ad6b6758e27e83', 'kitemmodels': '3d20e22e28fc67fd7e4d10ec4a60d2f5d2095264', 'kitemviews': 'd4abc8277881fff0ad85d06167b0f1e5c8e0977d', 'kplotting': 'ee78f84b45359e54a309cecb4042faa7c60c6290', 'kquickcharts': 'b3e62a5fb195a484d50be09c3f50970714364d8a', 'syntax-highlighting': 'cbd31a8f3c8b981931fc0d39ee5991f5c7f6903a', 'ktexttemplate': 'e68c80cc6106c87e321d23729f882052ab386972', 'kuserfeedback': 'e478a36c6e029ca53d076e89ff07aa62d2979839', 'kwidgetsaddons': 'f76e59170f9edb461f097e17049fba9bc6355941', 'kwindowsystem': 'e8317948e1df27330ceddf45bf418aa2a02bde5b', 'modemmanager-qt': '1c253781f61fe39608b7d102a9359ca2f9afb1b0', 'networkmanager-qt': 'be28b0b1092c3b64a4561fcb28f0dbf811e6a939', 'prison': '0d267e718edbc28556da8eb0489d1274030b2c93', 'solid': '65681c1db745cd52a547659f1b778fa42bb3cb52', 'sonnet': '2b1e0306ee3c51d144fa33e1ef725abc06cb4fe6', 'threadweaver': '309efd1d962d925a71610ea65fed2a1007ef055d'}
 EXPECTED_EXTRA_BLOBS = {'kitemviews': {'src/designer/CMakeLists.txt': '26a6cd08e9d558ee6092dc23ff7d620d900e18f5'}, 'kplotting': {'src/designer/CMakeLists.txt': 'f8d5cd8cf8677e7eaa69745ee6c8ca23a0c6bb94'}, 'kwidgetsaddons': {'src/designer/CMakeLists.txt': '32b9a587556ac3df8b4a6e1b97c1e839115809e9'}, 'sonnet': {'src/plugins/CMakeLists.txt': 'b835f521d75cb5a321d695d140f34f1a81503e0f'}}
 EXPECTED_PASS = {'attica': {'version': '6.30.0-0supralinux2', 'run': 34706416753, 'artifact': 10301851297, 'digest': 'f1ed135e9d5a25e6773957b2e52817fba03280293249f54257efc4e18304de27', 'tests': '6/6 PASS', 'soname': 'libKF6Attica.so.6'}, 'kcodecs': {'version': '6.30.0-0supralinux4', 'run': 34716761551, 'job': 103615297758, 'artifact': 10305050385, 'digest': 'd83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45', 'tests': '8/8 PASS', 'soname': 'libKF6Codecs.so.6'}, 'kdbusaddons': {'version': '6.30.0-0supralinux3', 'run': 34713034164, 'job': 103605147881, 'artifact': 10304340428, 'digest': '2bfb451724808b5318625eee3df25a6104c9b6da77482737ac54eea058a7e799', 'tests': '3/3 PASS', 'soname': 'libKF6DBusAddons.so.6'}, 'threadweaver': {'version': '6.30.0-0supralinux3', 'run': 34713034164, 'job': 103605147772, 'artifact': 10303986419, 'digest': '6395f11ed633fb034b0bf61a95639ce00005e3211994b04924abeb306deed2b8', 'tests': '8/8 PASS', 'soname': 'libKF6ThreadWeaver.so.6'}}
+EXPECTED_FAIL = {
+    "karchive": (34720201713, 103624554004, 10305889632, "1850a0a6dd7f267870fda83f17f5990f806ec76ae8fe810144557c46af532d01"),
+    "kholidays": (34720201713, 103624554109, 10305513311, "522257440d6e04563162178dd3d3ab3ae658dc56c129dcf7f482fef8219bb0dc"),
+    "ktexttemplate": (34720201713, 103624554096, 10306265683, "c164640037e564a43479daaa740f55c0f7578d977a7c38bfeb691fbd6b88544a"),
+}
 EXPECTED_PROVIDER_EVIDENCE = {
     "distribution": "ubuntu",
     "series": "resolute",
@@ -119,13 +124,28 @@ for node in nodes:
     require(node.get("external_dependencies") == {"status":"resolved","manifest":"manifests/kde-frameworks-tier1-dependencies.json","node":node_id}, f"{node_id}: dependency resolution reference mismatch")
     if node_id in EXPECTED_PASS:
         validate_pass(node)
+    elif node_id in EXPECTED_FAIL:
+        run, job, artifact, digest = EXPECTED_FAIL[node_id]
+        packaging = node.get("packaging", {})
+        require(node.get("state") == "FAIL", f"{node_id}: current node state must record real FAIL")
+        require(packaging.get("state") == "FAIL", f"{node_id}: packaging state must record real FAIL")
+        require(packaging.get("downstream_eligible") is False, f"{node_id}: FAIL cannot feed downstream")
+        evidence = [x for x in packaging.get("evidence", []) if isinstance(x, dict) and x.get("result") == "FAIL"]
+        require(len(evidence) == 1, f"{node_id}: exactly one first-attempt FAIL expected")
+        if evidence:
+            item=evidence[0]
+            require(item.get("workflow_run") == run and item.get("job_id") == job, f"{node_id}: FAIL run/job mismatch")
+            require(item.get("artifact_id") == artifact and item.get("artifact_sha256") == digest, f"{node_id}: FAIL artifact mismatch")
+            require(item.get("attempted_package_version") == "6.30.0-0supralinux1", f"{node_id}: first attempt revision")
+        require(packaging.get("remediation", {}).get("next_package_version") == "6.30.0-0supralinux2", f"{node_id}: remediation revision")
     else:
         require(node.get("packaging") == {"state":"pending"}, f"{node_id}: unattempted packaging state must remain pending")
         require(node.get("state") == "pending", f"{node_id}: unattempted node state must remain pending")
 
 require(sum(1 for n in nodes if n.get("state") == "PASS") == 4, "Tier 1 current PASS count must be 4")
-require(sum(1 for n in nodes if n.get("state") == "pending") == 25, "Tier 1 current pending count must be 25")
-require(not any(n.get("state") in {"FAIL","BLOCKED"} for n in nodes), "Tier 1 must have no current FAIL/BLOCKED nodes after batch 1 closure")
+require(sum(1 for n in nodes if n.get("state") == "pending") == 22, "Tier 1 current pending count must be 22")
+require(sum(1 for n in nodes if n.get("state") == "FAIL") == 3, "Tier 1 current FAIL count must be 3")
+require(not any(n.get("state") == "BLOCKED" for n in nodes), "Tier 1 must have no BLOCKED nodes; Batch 2 nodes are independent")
 
 require(deps.get("schema") == 1, "Dependency manifest schema must be 1")
 require(deps.get("authority") == "kde-upstream", "Dependency authority must remain KDE upstream")
@@ -168,5 +188,5 @@ if errors:
     raise SystemExit(1)
 
 print("KDE Frameworks 6.30 Tier 1 source/dependency validation: PASS")
-print("Tier 1 package states: 4 PASS/downstream-eligible; 25 pending; 0 FAIL; 0 BLOCKED")
+print("Tier 1 package states: 4 PASS/downstream-eligible; 22 pending; 3 FAIL; 0 BLOCKED")
 print("Ubuntu Resolute provider mapping: hosted preflight PASS; final certification pending")
