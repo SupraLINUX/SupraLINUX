@@ -30,9 +30,7 @@ for path in "${changed_paths[@]}"; do
         manifests/kde-frameworks-tier1-packaging-reference.json|\
         scripts/run-kde-tier1-packaging-reference-snapshot.sh|\
         scripts/kde-tier1-packaging-reference-needed.sh|\
-        scripts/validate_kde_tier1_packaging_reference.py|\
-        .github/workflows/kde-tier1-packaging-reference.yml|\
-        docs/kde-tier1-packaging.md)
+        .github/workflows/kde-tier1-packaging-reference.yml)
             printf 'Relevant Tier 1 packaging-reference change: %s\n' "${path}"
             exit 0
             ;;
