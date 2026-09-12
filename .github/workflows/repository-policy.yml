@@ -46,6 +46,10 @@ jobs:
         shell: bash
         run: scripts/test-verify-ubuntu-cloud-image-provenance.sh
 
+      - name: Test effective Actions runner provenance checker
+        shell: bash
+        run: scripts/test-check-actions-runner-runtime.sh
+
       - name: Validate repository invariants
         run: python3 scripts/validate_repository.py
 

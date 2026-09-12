@@ -51,6 +51,10 @@ exec > >(tee -a "${EVIDENCE_DIR}/pipeline.log") 2>&1
 printf '=== SupraLINUX authoritative package proof ===\n'
 
 STAGE="runner-contract"
+printf 'Verifying effective Actions runner version against golden-image provenance...\n'
+"${ROOT}/scripts/check-actions-runner-runtime.sh" \
+    "${EVIDENCE_DIR}/actions-runner-runtime.txt"
+
 . /etc/os-release
 if [[ "${ID}" != "ubuntu" || "${VERSION_ID}" != "26.04" ]]; then
     printf 'Expected Ubuntu 26.04 guest; got %s %s\n' "${ID}" "${VERSION_ID}" >&2
@@ -124,6 +128,8 @@ fi
     done
     printf '\ntool_versions:\n'
     dpkg-query -W -f='${Package}\t${Version}\n' autopkgtest dpkg-dev mmdebstrap qemu-system-x86 qemu-utils sbuild uidmap ubuntu-keyring 2>/dev/null || true
+    printf '\nactions_runner_runtime:\n'
+    cat "${EVIDENCE_DIR}/actions-runner-runtime.txt"
     printf '\nautopkgtest_qemu_image:\n%s\n' "${AUTOPKGTEST_QEMU_IMAGE}"
     qemu-img info "${AUTOPKGTEST_QEMU_IMAGE}"
     printf '\nautopkgtest_qemu_command:\n%s\n' "${KVM_QEMU_WRAPPER}"
