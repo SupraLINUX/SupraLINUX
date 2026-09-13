@@ -1,3 +1,12 @@
+kf6-karchive (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Record the first clean package attempt as a real configure-stage FAIL.
+  * Add qt6-tools-dev because ECM ECMPoQmTools requires Qt6::LinguistTools to
+    configure KArchive's translation handling on the Ubuntu Resolute provider.
+  * Keep KDE 6.30 source, compression backends, tests and ABI reference unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sun, 13 Sep 2026 15:50:00 -0300
+
 kf6-karchive (6.30.0-0supralinux1) resolute; urgency=medium
 
   * Package KDE Frameworks karchive 6.30.0 from KDE upstream stable.
