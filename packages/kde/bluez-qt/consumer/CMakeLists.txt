@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(bluez-qt-consumer LANGUAGES CXX)
+find_package(KF6BluezQt 6.30 REQUIRED)
+add_executable(bluez-qt-consumer main.cpp)
+target_compile_features(bluez-qt-consumer PRIVATE cxx_std_17)
+target_link_libraries(bluez-qt-consumer PRIVATE KF6::BluezQt ${CMAKE_DL_LIBS})

@@ -1,0 +1,48 @@
+Source: kf6-kplotting
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               cmake (>= 3.29~),
+               extra-cmake-modules (>= 6.30.0~),
+               qt6-base-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.9.0~),
+               xauth <!nocheck>,
+               xvfb <!nocheck>,
+Standards-Version: 4.7.3
+Homepage: https://invent.kde.org/frameworks/kplotting
+Rules-Requires-Root: no
+
+Package: libkf6plotting-dev
+Section: libdevel
+Architecture: any
+Depends: libkf6plotting6 (= ${binary:Version}),
+         qt6-base-dev (>= 6.9.0~),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: libkf6plotting-doc (= ${source:Version}),
+Description: development files for KPlotting
+ KPlotting provides QWidget-based classes for plotting data.
+ .
+ This package contains the development files.
+
+Package: libkf6plotting-doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: KPlotting documentation compatibility package
+ This package preserves the Debian-family KPlotting documentation package name
+ for package compatibility.
+ .
+ The current SupraLINUX build profile does not ship QCH documentation files.
+Section: doc
+
+Package: libkf6plotting6
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Description: KDE Frameworks classes for plotting data
+ KPlotting provides QWidget-based classes for plotting data in natural data units.
