@@ -83,7 +83,7 @@ También incorpora metadata requerida y `qtpaths6` al consumer.
 
 El ECM hosted preflight no afirma ejecutar toda la upstream test suite.
 
-La cobertura upstream completa sigue como gate separado.
+La upstream test suite completa sigue como **separate gate** de calidad.
 
 ## Tier 1 PASS
 
