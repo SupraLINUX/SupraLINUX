@@ -184,6 +184,26 @@ La fingerprint corregida usa sólo inputs consumidos por el runner.
 
 Estado, evidencia y metadata descriptiva no provocan rebuild.
 
+## Revalidación source+binary Lintian
+
+Después del incidente Batch 2 con `.ddeb`, se creó un lane específico para cerrar el mismo punto ciego en los PASS históricos de Batch 1.
+
+Workflow `34892250114` sobre commit `2b0e78b67becc2ece1064816e20b9a2b9d883c47` reejecutó las mismas revisiones Debian sin incrementarlas.
+
+El gate preserva los `.ddeb` referenciados por `.changes` y ejecuta Lintian sobre `.dsc` y `.changes`.
+
+Los tres nodos volvieron a compilar y validar correctamente:
+
+- KCodecs job `104137548290`, artifact `10367990559`, artifact SHA-256 `434aee54a56b91d6f7791bb02483e61522d287a7ed1920bcb0c2872d177d3ff6` — PASS;
+- KDBusAddons job `104137547996`, artifact `10367472262`, artifact SHA-256 `aac536a623fb4907b89ac73f3241032fa465e43985332eaedfd0a8c699bd76d6` — PASS;
+- ThreadWeaver job `104137547891`, artifact `10367666440`, artifact SHA-256 `acf24b54f72005f3068c6257216d88a47a44efca44302f6b2bed5f6a9d0d6e6c` — PASS.
+
+Esta revalidación es evidencia adicional hosted y no sustituye los artifacts PASS canónicos originales.
+
+Tampoco sustituye la certificación KVM/JIT autoritativa.
+
+El registro estructurado está en `manifests/kde-tier1-batch1-lintian-revalidation.json`.
+
 ## Closure
 
 Batch 1 permanece **3/3 PASS**.
