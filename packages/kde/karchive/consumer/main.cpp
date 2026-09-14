@@ -1,4 +1,4 @@
-#include <KArchive/KZip>
+#include <KZip>
 #include <QString>
 
 int main()

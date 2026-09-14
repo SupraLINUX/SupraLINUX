@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 1 package Batch 2
 
-Status: **KTextTemplate PASS; KArchive and KHolidays revision 6.30.0-0supralinux3 prepared after their second real FAIL**
+Status: **KTextTemplate PASS; KHolidays PASS; KArchive FAIL only at consumer-smoke after successful package build/tests/Lintian**
 
 Last reviewed: **2026-09-14**
 
@@ -52,6 +52,45 @@ The 36 exports belong to `KHolidays::HebrewDate` and `KHolidays::HebrewConverter
 
 Revision `-0supralinux3` keeps the exact Debian 6.28 baseline SHA-256 `b0be25ddbc4c7abeb121bb0d3c3ca053d33e2a9fa88695bea210c50d56c256cd` and applies a deterministic hash-pinned transform before `dh_makeshlibs`. The reviewed result SHA-256 is `fac03d2f96ccec7b6cbcfd30d59cee86496d3a0f6b5ad02d3392496b61e7c135`; the transform file SHA-256 is `6b0a250fc6c847ee8bedadf83b922a81921aa9bc7a8cc32382c969210b3b3c69`.
 
+## Attempt 3 — workflow 34834818877
+
+Head commit: `1634e56fcbb7dd4cc7a931f98a846b485c84077e`. KArchive and KHolidays were really rebuilt; KTextTemplate was intentionally skipped because its consumed build inputs did not change.
+
+| Node | Job | Artifact | Artifact SHA-256 | Result / exact stage |
+| --- | ---: | ---: | --- | --- |
+| KArchive | 103946132310 | 10342979027 | `216d291414f884ea49cfc3661575973ec09081bc92080e76d0a12e0e476eb562` | **FAIL** at `consumer-smoke`; sbuild successful, 5/5 tests PASS, Lintian error gate PASS, SONAME `libKF6Archive.so.6` PASS |
+| KHolidays | 103946132514 | 10343623713 | `bb6ce23797d69f46f430fa53fef9e439b94772ce4566a3684f3a7038cada854d` | **PASS** complete; 8/8 tests, Lintian error gate, SONAME and consumer smoke PASS |
+
+### KArchive consumer-smoke diagnosis
+
+The third KArchive package itself is valid through all package gates. `libkf6archive-dev_6.30.0-0supralinux3_amd64.deb` contains both the generated CamelCase forwarding headers (`KArchive`, `KZip`, `K7Zip`, etc.) and the lowercase implementation headers under `/usr/include/KF6/KArchive/`. Upstream's exported `KF6::Archive` target advertises that directory itself as its include directory.
+
+The SupraLINUX smoke test incorrectly used `#include <KArchive/KZip>`, which asks the compiler for `/usr/include/KF6/KArchive/KArchive/KZip`. That path is not the KDE install contract. The correct consumer include is `#include <KZip>`, resolved through `KF6::Archive`'s exported include directory. The remediation therefore changes only the SupraLINUX consumer probe; package revision `6.30.0-0supralinux3`, KDE source, symbols baseline and package contents remain unchanged.
+
+KArchive remains **FAIL** and is not downstream-eligible until a real rerun passes the corrected consumer smoke. The successful package build alone is not promoted to PASS.
+
+### KHolidays PASS evidence
+
+The retained KHolidays PASS artifact proves:
+
+- revision `6.30.0-0supralinux3`;
+- 8/8 upstream tests PASS;
+- Lintian error gate PASS;
+- SONAME `libKF6Holidays.so.6`;
+- consumer smoke PASS;
+- `.buildinfo` exact ECM predecessor `6.30.0-0supralinux3`;
+- runtime `.deb` SHA-256 `1ce83590add63defda14cb81d9540f8a10b29cf428e730b837b3c2b1866a441e`;
+- development `.deb` `25257b454cef04bd6d7aa875b0c5ff79774387d6c438b8d098118b414da7a191`;
+- data `.deb` `7a611425648cace15dbc5a99c39462a2531cfe04253a0143175f8e2b18e5cf29`;
+- doc `.deb` `44935c0c97f8de3c3d21c7c5184a0fa3297aee648a39ec0f1b283dbabb767bbf`;
+- QML `.deb` `f9981a3258ebcb312911a60aadd769f5b6ae02ce3be8fdaaf057aa868fe3119d`;
+- `.changes` `a76446a2412fcc05ac3b527d4873e79b8df202b27e01a76d5d5ebb75cd0cd24c`;
+- `.buildinfo` `0d2f37f59ce201342cd9d5a62db70bd04a0beaa0343af83b01d6c706a8787575`;
+- `.dsc` `735efa970be24cab57020befe9e30ffe4b6c2ee6a14bfe365207cd6aa70ffe30`;
+- Debian tar `58c1a5f2334b180a8dd22fb79a567ba3ba6e3a524e683e90239c5c4cdc8a8077`;
+- upstream tar `02bfbc33296fe86b364491f6d5cad9d83360bb4fdd2923386a325b309eac0b9b`;
+- rootfs `482fab954ea0630eba1362053725d3ac9b11ad791a1f7bdab95a8baae20e43ef`.
+
 ## KTextTemplate current-head revalidation
 
 Commit `3944b0fe78d51ac9ac77566948c0419e2bfa7b0a` pinned the exact transform bytes and triggered a real KTextTemplate rebuild in workflow `34776524481`.
@@ -73,4 +112,4 @@ The current artifact includes runtime `.deb` SHA-256 `1b45b1191176062de32faaf96c
 
 The retained packaging-tree reference remains workflow run `34708030450`, artifact `10301938362`; ECM predecessor remains `extra-cmake-modules 6.30.0-0supralinux3`, artifact `10298635300`.
 
-Batch 2 is **1 PASS / 2 remediation-pending-build**. KTextTemplate's PASS is recorded in the Batch 2 ledger. KArchive and KHolidays remain FAIL until their `-0supralinux3` packages complete the full gate. The canonical Tier 1/DAG manifests are intentionally reconciled in the closure commit after the active remediation campaign finishes, so no future node may consume KArchive or KHolidays before a real PASS. Historical FAIL evidence remains preserved.
+Batch 2 is now **2 PASS / 1 remediation-pending-build** in the observed CI evidence: KTextTemplate and KHolidays have real complete PASS artifacts; KArchive remains FAIL solely because the consumer probe used the wrong include form. The Batch 2 attempt ledger and canonical Tier 1/DAG manifests are reconciled in the closure commit after KArchive passes the corrected probe. Until then KArchive must not feed downstream nodes. Historical FAIL evidence remains preserved.
