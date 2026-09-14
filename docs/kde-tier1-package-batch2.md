@@ -50,7 +50,7 @@ The second build completed and passed all 8 upstream tests. `dpkg-gensymbols` di
 
 The 36 exports belong to `KHolidays::HebrewDate` and `KHolidays::HebrewConverter`; upstream KDE introduced the corresponding public implementation/header support in the 6.30 development cycle. They are therefore recorded at upstream minimum **6.30.0**, not hidden and not marked as toolchain implementation symbols.
 
-Revision `-0supralinux3` keeps the exact Debian 6.28 baseline SHA-256 `b0be25ddbc4c7abeb121bb0d3c3ca053d33e2a9fa88695bea210c50d56c256cd` and applies a deterministic hash-pinned transform before `dh_makeshlibs`. The reviewed result SHA-256 is `fac03d2f96ccec7b6cbcfd30d59cee86496d3a0f6b5ad02d3392496b61e7c135`; the transform file SHA-256 is `07cce864692746d336af132d0c4dfd50e5127f89f430c1931a14dfb0f72a8cbf`.
+Revision `-0supralinux3` keeps the exact Debian 6.28 baseline SHA-256 `b0be25ddbc4c7abeb121bb0d3c3ca053d33e2a9fa88695bea210c50d56c256cd` and applies a deterministic hash-pinned transform before `dh_makeshlibs`. The reviewed result SHA-256 is `fac03d2f96ccec7b6cbcfd30d59cee86496d3a0f6b5ad02d3392496b61e7c135`; the transform file SHA-256 is `6b0a250fc6c847ee8bedadf83b922a81921aa9bc7a8cc32382c969210b3b3c69`.
 
 ## KTextTemplate current-head revalidation
 

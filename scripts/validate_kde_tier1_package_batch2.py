@@ -103,7 +103,7 @@ req(kh["evidence"][-1]["failure_stage"] == "lintian" and kh["evidence"][-1]["tes
 kh_override = kh["symbols"]["reviewed_override"]
 req(kh_override["base_reference_sha256"] == EXPECTED["kholidays"]["symbols"], "kholidays: transform baseline")
 req(kh_override["result_sha256"] == "fac03d2f96ccec7b6cbcfd30d59cee86496d3a0f6b5ad02d3392496b61e7c135", "kholidays: transform result")
-req(kh_override["file_sha256"] == "07cce864692746d336af132d0c4dfd50e5127f89f430c1931a14dfb0f72a8cbf", "kholidays: transform pin")
+req(kh_override["file_sha256"] == "6b0a250fc6c847ee8bedadf83b922a81921aa9bc7a8cc32382c969210b3b3c69", "kholidays: transform pin")
 req(sha(ROOT / "packages/kde/kholidays/debian" / kh_override["file"]) == kh_override["file_sha256"], "kholidays: transform file hash")
 kh_rules = (ROOT / "packages/kde/kholidays/debian/rules").read_text(encoding="utf-8")
 req("override_dh_makeshlibs" in kh_rules and "python3 debian/apply-symbols-delta.py" in kh_rules, "kholidays: transform hook")
