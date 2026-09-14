@@ -10,6 +10,7 @@ fi
 
 RUNNER="${ROOT}/scripts/run-kde-tier1-package-batch2-preflight.sh"
 EVIDENCE_DIR="${ROOT}/evidence/kde-tier1-package-preflight/${NODE}"
+OUT_DIR="${ROOT}/.work/kde-tier1-package-preflight/${NODE}/out"
 RESULT_JSON="${EVIDENCE_DIR}/result.json"
 SBUILD_LOG="${EVIDENCE_DIR}/sbuild.log"
 DAG_NODE="${EVIDENCE_DIR}/dag-node.txt"
@@ -44,6 +45,12 @@ PY
 if grep -Eq '^Lintian:[[:space:]]+fail[[:space:]]*$' "${SBUILD_LOG}"; then
     grep -E '^(E:|Lintian:)' "${SBUILD_LOG}" > "${EVIDENCE_DIR}/sbuild-lintian-failures.txt" || true
     fail_gate "sbuild-lintian" "sbuild reported a Lintian failure"
+fi
+
+mapfile -t DDEBS < <(find "${OUT_DIR}" -maxdepth 1 -type f -name '*.ddeb' -print | sort)
+if (( ${#DDEBS[@]} > 0 )); then
+    cp -a "${DDEBS[@]}" "${EVIDENCE_DIR}/"
+    sha256sum "${DDEBS[@]}" > "${EVIDENCE_DIR}/debug-artifact-sha256.txt"
 fi
 
 mapfile -t DSCS < <(find "${EVIDENCE_DIR}" -maxdepth 1 -type f -name '*.dsc' -print | sort)
