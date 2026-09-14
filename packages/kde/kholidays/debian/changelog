@@ -1,3 +1,14 @@
+kf6-kholidays (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Record the second clean package attempt as a real Lintian-stage FAIL after
+    8/8 upstream tests and the binary build passed.
+  * Add the 36 public Hebrew-calendar exports introduced by KDE 6.30 to the
+    reviewed symbols contract with upstream minimum version 6.30.0.
+  * Keep the retained Debian 6.28 symbols file as the verified baseline and apply
+    the reviewed delta deterministically before dh_makeshlibs.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Mon, 14 Sep 2026 07:30:00 -0300
+
 kf6-kholidays (6.30.0-0supralinux2) resolute; urgency=medium
 
   * Record the first clean package attempt as a real configure-stage FAIL.

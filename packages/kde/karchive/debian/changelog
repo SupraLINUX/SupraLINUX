@@ -1,3 +1,13 @@
+kf6-karchive (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Record the second clean package attempt as a real packaging-stage FAIL after
+    5/5 upstream tests passed.
+  * Install the upstream KF6Archive.pc pkg-config file in libkf6archive-dev so
+    dh_missing no longer rejects a valid development artifact left in debian/tmp.
+  * Keep KDE 6.30 source, dependencies, tests, ABI baseline and binary contracts unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Mon, 14 Sep 2026 07:30:00 -0300
+
 kf6-karchive (6.30.0-0supralinux2) resolute; urgency=medium
 
   * Record the first clean package attempt as a real configure-stage FAIL.
