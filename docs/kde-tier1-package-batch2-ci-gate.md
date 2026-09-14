@@ -10,6 +10,8 @@ Usa commit `e251338e7347e47245a83a64a6ec2efa1651b4ff`.
 
 Clasifica este workflow como fallo de infraestructura CI.
 
+Classification: **infrastructure-evidence-completeness**.
+
 No clasifiques sus tres nodos como FAIL propios de paquetes.
 
 Los tres paquetes completaron build, tests y consumer smoke.
