@@ -1,136 +1,170 @@
 # KDE Frameworks 6.30 — Tier 1 package Batch 2
 
-Status: **remediation-pending-build**
+Status: **PASS — 3/3 hosted clean-package preflight**
 
 Last reviewed: **2026-09-14**
 
-Mantén KDE Frameworks 6.30.0 como autoridad upstream.
+KDE Frameworks 6.30.0 sigue siendo la autoridad upstream.
 
-Mantén Ubuntu Resolute como proveedor y objetivo de compatibilidad.
+Ubuntu Resolute sigue siendo proveedor y objetivo de compatibilidad.
 
-Mantén ECM `6.30.0-0supralinux3` como predecesor PASS.
+ECM `6.30.0-0supralinux3` sigue siendo el predecesor PASS.
 
-## Nodos
+Este Batch 2 no constituye todavía prueba KVM/JIT autoritativa.
 
-Incluye `KTextTemplate`, `KArchive` y `KHolidays`.
+## Nodos promovidos
 
-Trata cada nodo como independiente.
+- `KTextTemplate 6.30.0-0supralinux3`: **PASS**.
+- `KArchive 6.30.0-0supralinux4`: **PASS**.
+- `KHolidays 6.30.0-0supralinux4`: **PASS**.
+
+Los tres nodos son `downstream_eligible=true` para campañas hosted posteriores.
 
 No conviertas `SKIPPED` en `PASS`.
 
-Promueve un nodo solamente después de una compilación real.
+Conserva los FAIL históricos después de una revisión posterior PASS.
 
-## Intento 1
+## Campaña final
 
-Usa workflow `34720201713` como primera campaña real.
+Usa workflow `34884764702`.
 
-Usa commit `5edf71b390088a551af81e7fc7e8d87a8378104f`.
+Usa commit `e0f4e7c48dcf7541538eb919374a3f4b6c293b75`.
 
-Clasifica `KTextTemplate` como FAIL en `dpkg-gensymbols`.
+El workflow ejecutó realmente los tres nodos.
 
-Conserva sus `10/10` tests PASS previos al fallo.
+### KTextTemplate
 
-Clasifica `KArchive` como FAIL por `Qt6::LinguistTools` ausente.
+Usa job `104112549851`.
 
-Clasifica `KHolidays` como FAIL por `Qt6::LinguistTools` ausente.
+Usa artifact `10363863115`.
 
-Añade `qt6-tools-dev` como proveedor de `Qt6::LinguistTools`.
-
-No conviertas Ubuntu en autoridad sobre Qt.
-
-## Intento 2
-
-Usa workflow `34776389758` como segunda campaña.
-
-Clasifica `KTextTemplate` como PASS real.
-
-Conserva su ABI transformado desde Debian 6.28.
-
-Conserva `KArchive` como FAIL tras `5/5` tests PASS.
-
-Identifica `KF6Archive.pc` como archivo omitido del paquete `-dev`.
-
-Conserva `KHolidays` como FAIL tras `8/8` tests PASS.
-
-Registra 36 símbolos públicos nuevos de calendario hebreo.
-
-Mantén esos símbolos con versión mínima upstream `6.30.0`.
-
-## Revalidación KTextTemplate
-
-Usa workflow `34776524481` como PASS revalidado.
-
-Usa artifact `10323233062`.
-
-Usa SHA-256 `c0825408584e8d2e37a66ba95764e3e33adeafeaa5adcb30c253fb706c6c9f27`.
+Usa artifact SHA-256 `7b9d0390ed90c882f4b7ad1993924e722bfb7ad35238c2ced52bbd5809555bc9`.
 
 Conserva `10/10` tests PASS.
 
-Conserva SONAME `libKF6TextTemplate.so.6`.
-
-Trata ese PASS como histórico para revisión `-0supralinux2`.
-
-## Intento 3
-
-Usa workflow `34834818877` como tercera campaña.
-
-Usa commit `1634e56fcbb7dd4cc7a931f98a846b485c84077e`.
-
-Clasifica `KArchive` como FAIL en `consumer-smoke`.
-
-Conserva `5/5` tests PASS y Lintian sin errores.
-
-Corrige el probe desde `<KArchive/KZip>` hacia `<KZip>`.
-
-Reclasifica `KHolidays` como FAIL validado.
-
-No mantengas el `false PASS` emitido por el gate anterior.
-
-Conserva artifact `10343623713` como evidencia histórica.
-
-Conserva SHA-256 `bb6ce23797d69f46f430fa53fef9e439b94772ce4566a3684f3a7038cada854d`.
-
-Conserva `8/8` tests PASS y consumer smoke PASS.
-
-Registra el error Lintian `rules-require-build-prerequisite`.
-
-Añade `python3:any` porque `debian/rules` ejecuta Python.
-
-Identifica la causa del `false PASS` en el gate anterior.
-
-El gate anterior validaba sólo `.changes` después de `sbuild`.
-
-El log `sbuild` ya contenía `Lintian: fail`.
-
-## KArchive PASS histórico
-
-Usa workflow `34843318489` como PASS real de `KArchive -3`.
-
-Usa artifact `10346983258`.
-
-Usa SHA-256 `2f851d5c3cf2f568e87f075483f86a8107eba635956982220c35533c9be8cf3b`.
-
-Conserva `5/5` tests PASS.
-
-Conserva SONAME `libKF6Archive.so.6`.
+Conserva Lintian sin errores.
 
 Conserva consumer smoke PASS.
 
-Trata ese PASS como histórico tras abrir revisión `-0supralinux4`.
+Conserva SONAME `libKF6TextTemplate.so.6`.
 
-## Gate Lintian corregido
+### KArchive
 
-Ejecuta primero el runner de compilación existente.
+Usa job `104112549742`.
 
-Rechaza cualquier resumen `Lintian: fail` emitido por `sbuild`.
+Usa artifact `10364726750`.
 
-Ejecuta Lintian contra `.dsc` y `.changes` conjuntamente.
+Usa artifact SHA-256 `0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e`.
 
-Corrige `result.json` a FAIL cuando falle el gate.
+Conserva `5/5` tests PASS.
 
-Elimina `dag-node.txt` cuando falle el gate.
+Conserva Lintian sin errores.
 
-Publica PASS sólo después del gate corregido.
+Conserva consumer smoke PASS.
+
+Conserva SONAME `libKF6Archive.so.6`.
+
+### KHolidays
+
+Usa job `104112549858`.
+
+Usa artifact `10364169061`.
+
+Usa artifact SHA-256 `62186f3d6d0c856fed7b055ae917ceec0b6cdf216b37b93e22126bf3ebc8f37a`.
+
+Conserva `8/8` tests PASS.
+
+Conserva Lintian sin errores.
+
+Conserva consumer smoke PASS.
+
+Conserva SONAME `libKF6Holidays.so.6`.
+
+## Historia KTextTemplate
+
+Workflow `34720201713` produjo FAIL en `dpkg-gensymbols`.
+
+Sus `10/10` tests habían pasado antes del fallo.
+
+KDE 6.30 añadió tres símbolos públicos `Filter`.
+
+KDE 6.30 dejó de exportar símbolos internos del plugin principal.
+
+La transformación ABI permanece determinística y versionada.
+
+Workflow `34776524481` validó la revisión `-0supralinux2`.
+
+Ese PASS queda como evidencia histórica.
+
+## Historia KArchive
+
+Workflow `34720201713` falló por `Qt6::LinguistTools` ausente.
+
+Añade `qt6-tools-dev` como proveedor técnico del requisito KDE.
+
+Ubuntu no se convierte por ello en autoridad sobre Qt.
+
+Workflow `34776389758` alcanzó `5/5` tests PASS.
+
+Ese intento falló porque `KF6Archive.pc` no estaba empaquetado.
+
+Workflow `34834818877` falló en el consumer smoke.
+
+El probe usaba `<KArchive/KZip>` incorrectamente.
+
+El include correcto es `<KZip>`.
+
+Workflow `34843318489` validó `KArchive -3`.
+
+Ese PASS queda como evidencia histórica.
+
+## Historia KHolidays
+
+Workflow `34720201713` falló por `Qt6::LinguistTools` ausente.
+
+Workflow `34776389758` alcanzó `8/8` tests PASS.
+
+Ese intento reveló 36 símbolos públicos nuevos de calendario hebreo.
+
+Mantén esos símbolos con versión mínima upstream `6.30.0`.
+
+Workflow `34834818877` emitió un `false PASS` del pipeline.
+
+La revisión posterior reclasificó correctamente ese intento como FAIL.
+
+El error era `rules-require-build-prerequisite`.
+
+`debian/rules` ejecutaba Python sin declarar `python3`.
+
+`python3:any` está ahora declarado en `Build-Depends`.
+
+## Gate Lintian
+
+Rechaza cualquier `Lintian: fail` informado por `sbuild`.
+
+Ejecuta además Lintian contra `.dsc` y `.changes`.
+
+Preserva los `.ddeb` referenciados antes de esa validación.
+
+Conserva sus SHA-256 como evidencia.
+
+Elimina `dag-node.txt` cuando el gate falle.
+
+Publica PASS sólo después del gate completo.
+
+## Incidente de infraestructura
+
+Workflow `34884049556` no produjo FAIL propios de paquetes.
+
+Los tres builds completaron tests y consumer smoke.
+
+El wrapper omitió `.ddeb` referenciados por `.changes`.
+
+Lintian abortó por evidencia incompleta.
+
+Commit `e0f4e7c48dcf7541538eb919374a3f4b6c293b75` corrigió esa captura.
+
+Workflow `34884764702` validó la corrección completa.
 
 ## Política de paquetes `-doc`
 
@@ -140,26 +174,20 @@ No declares contenido QCH inexistente.
 
 Los tres paquetes actuales sólo contienen metadatos Debian.
 
-Documenta explícitamente esa ausencia en `debian/control`.
-
 Mantén QDoc fuera del build predeterminado actual.
 
 Revisa una política QDoc común antes de añadir QCH real.
 
-## Revisiones pendientes
+## Estado canónico
 
-Compila `KTextTemplate 6.30.0-0supralinux3`.
+Promueve los tres nodos a `PASS`.
 
-Compila `KArchive 6.30.0-0supralinux4`.
+Marca los tres como downstream elegibles.
 
-Compila `KHolidays 6.30.0-0supralinux4`.
+Actualiza `manifests/kde-frameworks-tier1.json`.
 
-Mantén los tres nodos como `remediation-pending-build`.
+Actualiza `manifests/kde-dag.json`.
 
-Mantén `downstream_eligible=false` para las revisiones pendientes.
-
-Conserva todo PASS anterior como evidencia histórica.
-
-Actualiza el DAG canónico sólo después del cierre completo.
+El Tier 1 queda en **7 PASS / 22 pending / 0 FAIL / 0 BLOCKED**.
 
 Mantén el PR #1 en Draft.

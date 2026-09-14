@@ -1,105 +1,125 @@
 # KDE Frameworks 6.30 — Batch 2 CI gate evidence
 
+Status: **remediated and validated**
+
 Last reviewed: **2026-09-14**
 
 ## Workflow 34884049556
 
-Use commit `e251338e7347e47245a83a64a6ec2efa1651b4ff`.
+Usa commit `e251338e7347e47245a83a64a6ec2efa1651b4ff`.
 
-Classify this workflow as a **CI harness failure**.
+Clasifica este workflow como fallo de infraestructura CI.
 
-Do not classify its three package nodes as package-own FAIL.
+No clasifiques sus tres nodos como FAIL propios de paquetes.
 
-All three package builds completed before the wrapper failure.
+Los tres paquetes completaron build, tests y consumer smoke.
 
 ### KTextTemplate
 
-Use job `104110141498`.
+Job `104110141498`.
 
-Use artifact `10364256456`.
+Artifact `10364256456`.
 
-Use artifact SHA-256 `006b1f60aa28132d1da975432f98acdb57c257430ef3aaabea4e239252edbf0d`.
+Artifact SHA-256 `006b1f60aa28132d1da975432f98acdb57c257430ef3aaabea4e239252edbf0d`.
 
-Record revision `6.30.0-0supralinux3`.
+Revisión `6.30.0-0supralinux3`.
 
-Record `10/10` upstream tests PASS.
+Tests `10/10` PASS.
 
-Record `Lintian: warn` from `sbuild`.
+`sbuild` informó `Lintian: warn`.
 
-Record consumer smoke PASS.
+Consumer smoke PASS.
 
-Record wrapper failure at `lintian-source-binary`.
+El wrapper falló en `lintian-source-binary`.
 
 ### KArchive
 
-Use job `104110142062`.
+Job `104110142062`.
 
-Use artifact `10364111842`.
+Artifact `10364111842`.
 
-Use artifact SHA-256 `6208a5cb9ccf4e1dfb34248573f9cf937dc2e320165ecd811625fbf6ea7c0b5c`.
+Artifact SHA-256 `6208a5cb9ccf4e1dfb34248573f9cf937dc2e320165ecd811625fbf6ea7c0b5c`.
 
-Record revision `6.30.0-0supralinux4`.
+Revisión `6.30.0-0supralinux4`.
 
-Record `5/5` upstream tests PASS.
+Tests `5/5` PASS.
 
-Record `Lintian: warn` from `sbuild`.
+`sbuild` informó `Lintian: warn`.
 
-Record consumer smoke PASS.
+Consumer smoke PASS.
 
-Record wrapper failure at `lintian-source-binary`.
+El wrapper falló en `lintian-source-binary`.
 
 ### KHolidays
 
-Use job `104110141944`.
+Job `104110141944`.
 
-Use artifact `10364111805`.
+Artifact `10364111805`.
 
-Use artifact SHA-256 `1256146d001bd6792d7844c034cf4589890e51c1e84c2371a8f893d362b1b774`.
+Artifact SHA-256 `1256146d001bd6792d7844c034cf4589890e51c1e84c2371a8f893d362b1b774`.
 
-Record revision `6.30.0-0supralinux4`.
+Revisión `6.30.0-0supralinux4`.
 
-Record `8/8` upstream tests PASS.
+Tests `8/8` PASS.
 
-Record `Lintian: warn` from `sbuild`.
+`sbuild` informó `Lintian: warn`.
 
-Record consumer smoke PASS.
+Consumer smoke PASS.
 
-Record wrapper failure at `lintian-source-binary`.
+El wrapper falló en `lintian-source-binary`.
 
-Confirm removal of the previous `python3` prerequisite error.
+El error anterior de `python3` ya no apareció.
 
-## Root cause
+## Causa raíz
 
-Inspect standalone Lintian after the successful base runner.
+Cada `.changes` referenciaba un `*-dbgsym_*.ddeb` generado.
 
-Observe each `.changes` file referencing a generated `*-dbgsym_*.ddeb`.
+El directorio de evidencia no contenía esos `.ddeb`.
 
-Observe the evidence directory lacking that referenced `.ddeb`.
+Lintian abortaba antes de validar el paquete completo.
 
-Observe Lintian aborting before evaluating the complete `.changes` input.
-
-Example failure:
+Ejemplo observado:
 
 `libkf6holidays6-dbgsym_6.30.0-0supralinux4_amd64.ddeb does not exist`.
 
-Treat this condition as a wrapper defect.
+La causa pertenece al wrapper de evidencia.
 
-Do not change KDE source for this defect.
+No pertenece a KDE upstream.
 
-Do not change package revisions for this defect.
+No pertenece al packaging de los tres nodos.
 
-## Remediation
+No requiere incrementar revisiones Debian.
 
-Copy generated `.ddeb` files from the build output directory.
+## Remediación
 
-Preserve their SHA-256 values as CI evidence.
+Commit `e0f4e7c48dcf7541538eb919374a3f4b6c293b75` corrige el wrapper.
 
-Run standalone Lintian against `.dsc` and `.changes` afterward.
+Copia los `.ddeb` desde el directorio de salida.
 
-Retain the existing `sbuild` summary check for `Lintian: fail`.
+Preserva sus SHA-256 en la evidencia.
 
-Keep `dag-node.txt` absent when the corrected gate fails.
+Después ejecuta Lintian contra `.dsc` y `.changes`.
 
-Rerun all three nodes after changing the shared wrapper.
+Mantiene además el rechazo de `Lintian: fail` desde `sbuild`.
 
-Promote no node until that rerun completes.
+Mantiene `dag-node.txt` ausente ante un fallo real.
+
+## Validación final
+
+Workflow `34884764702` valida la remediación.
+
+Los tres nodos ejecutaron build real.
+
+KTextTemplate job `104112549851`: PASS.
+
+KArchive job `104112549742`: PASS.
+
+KHolidays job `104112549858`: PASS.
+
+Todos superaron el gate Lintian completo.
+
+Todos superaron consumer smoke.
+
+Todos son downstream elegibles en el lane hosted.
+
+Esta evidencia no sustituye la prueba KVM/JIT autoritativa.

@@ -1,76 +1,198 @@
 # KDE stable dependency DAG
 
-Status: **ECM root PASS; 4 Frameworks Tier 1 PASS; 25 Tier 1 pending; 0 current FAIL; 0 BLOCKED**
+Status: **ECM root PASS; 7 Frameworks Tier 1 PASS; 22 Tier 1 pending; 0 current FAIL; 0 BLOCKED**
 
-Last reviewed: **2026-09-12**
+Last reviewed: **2026-09-14**
 
 ## Authority
 
-KDE upstream stable defines the KDE desktop, Frameworks versions and their dependency requirements. Ubuntu 26.04 is the platform/provider and compatibility target. A distro reference can help implement Debian packaging, but it does not select the KDE version.
+KDE upstream stable define el desktop y sus requisitos.
 
-Current selected snapshot:
+Ubuntu 26.04 es plataforma, proveedor y objetivo de compatibilidad.
+
+Un packaging de otra distribución sólo aporta referencia técnica.
+
+No selecciona la versión KDE de SupraLINUX.
+
+Snapshot seleccionado:
 
 - Plasma 6.7.5;
 - KDE Frameworks 6.30.0;
 - KDE Gear 26.08.1;
 - KDE-selected Qt series 6.10;
-- Ubuntu Resolute Qt 6.10.2 provider baseline: hosted preflight PASS, final provider certification pending.
+- Ubuntu Resolute Qt 6.10.2: hosted preflight PASS;
+- final Qt provider certification: pending.
 
-Ubuntu 26.04 currently carries `extra-cmake-modules` 6.24.0-0ubuntu1. That is a **technical packaging reference only**; KDE upstream 6.30.0 remains authority for SupraLINUX ECM.
+Ubuntu 26.04 currently carries `extra-cmake-modules` 6.24.0-0ubuntu1.
 
-## DAG semantics
+Eso es una **technical packaging reference only**.
 
-- `PASS`: actually attempted and completed the defined gate; the retained artifact may feed dependents.
-- `FAIL`: actually attempted and failed for its own cause.
-- `BLOCKED`: not attempted because a required predecessor is FAIL.
-- `pending`: not attempted yet.
+KDE upstream 6.30.0 sigue siendo autoridad para ECM.
 
-`BLOCKED` is never counted as `FAIL`. Historical FAIL attempts remain evidence after a later revision reaches PASS.
+## Semántica DAG
 
-Hosted PASS proves only the hosted clean-package gate for that artifact. The authoritative KVM/JIT lane, system/runtime tests and Ubuntu/third-party compatibility work remain separate release gates.
+- `PASS`: el gate definido fue intentado y completado.
+- `FAIL`: el nodo fue intentado y falló por causa propia.
+- `BLOCKED`: no se intenta porque un predecesor requerido está FAIL.
+- `pending`: todavía no se intentó.
+
+`BLOCKED` is never counted as `FAIL`.
+
+Los FAIL históricos permanecen como evidencia tras un PASS posterior.
+
+Un hosted PASS no sustituye la prueba KVM/JIT autoritativa.
+
+Los tests de sistema y compatibilidad siguen siendo gates separados.
 
 ## Extra CMake Modules 6.30.0 — PASS
 
-Source SHA-256: `22c9f7ff930dae7329faebf2942d2424f4a298c43bb3f11e217be6b12f227f6e`.
+Source SHA-256 `22c9f7ff930dae7329faebf2942d2424f4a298c43bb3f11e217be6b12f227f6e`.
 
-Validated package: `extra-cmake-modules 6.30.0-0supralinux3`.
+Paquete validado `extra-cmake-modules 6.30.0-0supralinux3`.
 
-Attempt history:
+### Historial
 
-1. `6.30.0-0supralinux1`, run `34689672632`, artifact `10296512341`, artifact SHA-256 `d47ac7361106ceb5f04729c1a3dcb4103b30255684e5b3f53b833edd6d4f6558`: **FAIL** at `dh_auto_test` because `BUILD_TESTING=OFF` removed the Ninja test target.
-2. `6.30.0-0supralinux2`, run `34690027788`, job `103543538213`, artifact `10296517706`, artifact SHA-256 `89ef0003fd8282965a4c253bcd0150b8f040fe134ca0385d1365cd8c31808239`: **FAIL** at consumer smoke after packaging findings; the Qt consumer also lacked `qtpaths6`.
-3. `6.30.0-0supralinux3`, run `34694951158`, job `103556722010`, artifact `10298635300`, artifact SHA-256 `181ea1434e803453d61d345a28adeba5ad9cee09a7c93948c6ce3ef1214984ff`: **PASS**.
+1. `6.30.0-0supralinux1`.
+   Run `34689672632`.
+   Artifact `10296512341`.
+   SHA-256 `d47ac7361106ceb5f04729c1a3dcb4103b30255684e5b3f53b833edd6d4f6558`.
+   Resultado **FAIL** en `dh_auto_test`.
+   `BUILD_TESTING=OFF` eliminó el target Ninja esperado.
 
-The successful revision makes `lintian --fail-on error` fatal, carries required runtime/copyright metadata and supplies `qtpaths6` to the consumer environment. Retained `.deb` SHA-256: `ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f`.
+2. `6.30.0-0supralinux2`.
+   Run `34690027788`.
+   Job `103543538213`.
+   Artifact `10296517706`.
+   SHA-256 `89ef0003fd8282965a4c253bcd0150b8f040fe134ca0385d1365cd8c31808239`.
+   Resultado **FAIL** en consumer smoke.
+   También reveló findings de packaging.
+   El consumer Qt carecía de `qtpaths6`.
 
-The ECM hosted preflight does not claim the full upstream test suite; broader test coverage is a separate quality gate.
+3. `6.30.0-0supralinux3`.
+   Run `34694951158`.
+   Job `103556722010`.
+   Artifact `10298635300`.
+   SHA-256 `181ea1434e803453d61d345a28adeba5ad9cee09a7c93948c6ce3ef1214984ff`.
+   Resultado **PASS**.
 
-## Tier 1 package state
+La revisión PASS hace fatal `lintian --fail-on error`.
 
-### Attica — PASS
+También incorpora metadata requerida y `qtpaths6` al consumer.
 
-Validated revision `6.30.0-0supralinux2`, run `34706416753`, artifact `10301851297`, artifact SHA-256 `f1ed135e9d5a25e6773957b2e52817fba03280293249f54257efc4e18304de27`. Tests: **6/6 PASS**. SONAME `libKF6Attica.so.6`. Consumer smoke PASS. Downstream eligible.
+`.deb` SHA-256 `ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f`.
 
-Its historical attempt 1 remains FAIL evidence: run `34705165994`, artifact `10300903114`, SHA-256 `171cfe8553aba2af8f42a640ee5f50f82988005edbd104b737d93b639dc38300`.
+El ECM hosted preflight no afirma ejecutar toda la upstream test suite.
+
+La cobertura upstream completa sigue como gate separado.
+
+## Tier 1 PASS
+
+### Attica
+
+`6.30.0-0supralinux2`.
+
+Run `34706416753`.
+
+Artifact `10301851297`.
+
+Artifact SHA-256 `f1ed135e9d5a25e6773957b2e52817fba03280293249f54257efc4e18304de27`.
+
+Tests `6/6` PASS.
+
+Consumer smoke PASS.
 
 ### Batch 1 — 3/3 PASS
 
-All three nodes depend only on the retained ECM PASS root and were built independently with `fail-fast: false`.
+Los tres nodos dependen sólo de ECM PASS.
 
-- **KCodecs**: `6.30.0-0supralinux4`, run `34716761551`, job `103615297758`, artifact `10305050385`, artifact SHA-256 `d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45`; tests **8/8 PASS**; Lintian error gate PASS; SONAME `libKF6Codecs.so.6`; consumer smoke PASS.
-- **KDBusAddons**: `6.30.0-0supralinux3`, run `34713034164`, job `103605147881`, artifact `10304340428`, artifact SHA-256 `2bfb451724808b5318625eee3df25a6104c9b6da77482737ac54eea058a7e799`; tests **3/3 PASS**; SONAME `libKF6DBusAddons.so.6`; consumer smoke PASS.
-- **ThreadWeaver**: `6.30.0-0supralinux3`, run `34713034164`, job `103605147772`, artifact `10303986419`, artifact SHA-256 `6395f11ed633fb034b0bf61a95639ce00005e3211994b04924abeb306deed2b8`; tests **8/8 PASS**; SONAME `libKF6ThreadWeaver.so.6`; consumer smoke PASS.
+- KCodecs `6.30.0-0supralinux4`: PASS.
+- KDBusAddons `6.30.0-0supralinux3`: PASS.
+- ThreadWeaver `6.30.0-0supralinux3`: PASS.
 
-KCodecs uses the newer retained Debian 6.28 symbols reference because it already reflects the two removed `KCharsets` constructors. Fifteen compiler/libstdc++ implementation symbols emitted by KDE 6.30's `std::format` use were reviewed and tagged `(optional=toolchain)` with upstream minimum `6.30.0`; a Debian revision is not used as a symbols minimum.
+KCodecs usa Debian 6.28 como referencia técnica de símbolos.
 
-## Scope incident — infrastructure only
+Quince símbolos internos toolchain tienen mínimo upstream `6.30.0`.
 
-Run `34716761551` also selected already-PASS KDBusAddons and ThreadWeaver due an over-broad first semantic fingerprint. Jobs `103615297686` and `103615297757` aborted at `campaign-validation` with “got PASS”, before source-package assembly or `sbuild`. Their tiny artifacts `10305410248` (`ce17097096841a500ce8b2e4f24171253b91ba1dce4a6560d0107d626eb32b1a`) and `10304955612` (`79e5393b892ae1ee3fb9a19c21e2f41bb691c7c55bf40487bb2d5de7c42fc507`) are retained as infrastructure-scope evidence and **do not create package FAILs**.
+No usan una revisión Debian como mínimo ABI.
 
-The corrected selector fingerprints only values actually consumed by the package runner. State, evidence, PASS hashes and descriptive metadata cannot request a rebuild.
+### Batch 2 — 3/3 PASS
 
-## Current state and next expansion
+Workflow final `34884764702`.
 
-Current Tier 1 totals are **4 PASS, 25 pending, 0 current FAIL, 0 BLOCKED**. Only retained PASS artifacts may feed later tiers.
+Commit `e0f4e7c48dcf7541538eb919374a3f4b6c293b75`.
 
-Batch 2 should select another independent low-dependency group from the remaining 25 Tier 1 nodes, keeping package-specific symbols, binary contracts, optional features, tests and consumer smokes explicit.
+- KTextTemplate `6.30.0-0supralinux3`.
+  Job `104112549851`.
+  Artifact `10363863115`.
+  SHA-256 `7b9d0390ed90c882f4b7ad1993924e722bfb7ad35238c2ced52bbd5809555bc9`.
+  Tests `10/10` PASS.
+  SONAME `libKF6TextTemplate.so.6`.
+  Consumer smoke PASS.
+
+- KArchive `6.30.0-0supralinux4`.
+  Job `104112549742`.
+  Artifact `10364726750`.
+  SHA-256 `0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e`.
+  Tests `5/5` PASS.
+  SONAME `libKF6Archive.so.6`.
+  Consumer smoke PASS.
+
+- KHolidays `6.30.0-0supralinux4`.
+  Job `104112549858`.
+  Artifact `10364169061`.
+  SHA-256 `62186f3d6d0c856fed7b055ae917ceec0b6cdf216b37b93e22126bf3ebc8f37a`.
+  Tests `8/8` PASS.
+  SONAME `libKF6Holidays.so.6`.
+  Consumer smoke PASS.
+
+Todos superaron Lintian contra source y binary evidence.
+
+Todos son downstream elegibles en el lane hosted.
+
+## Incidentes de infraestructura
+
+Run `34716761551` seleccionó dos nodos ya PASS incorrectamente.
+
+KDBusAddons job `103615297686` abortó antes de source build.
+
+Artifact `10305410248`.
+
+SHA-256 `ce17097096841a500ce8b2e4f24171253b91ba1dce4a6560d0107d626eb32b1a`.
+
+ThreadWeaver job `103615297757` abortó antes de source build.
+
+Artifact `10304955612`.
+
+SHA-256 `79e5393b892ae1ee3fb9a19c21e2f41bb691c7c55bf40487bb2d5de7c42fc507`.
+
+Estos abortos no crean FAIL de paquetes.
+
+Run `34884049556` reveló otro fallo del harness.
+
+El gate Lintian reforzado no preservaba `.ddeb` referenciados.
+
+Los paquetes ya habían completado build, tests y consumer smoke.
+
+El incidente tampoco crea FAIL de paquetes.
+
+Commit `e0f4e7c48dcf7541538eb919374a3f4b6c293b75` corrige el gate.
+
+Run `34884764702` valida la corrección.
+
+## Estado actual
+
+Tier 1 queda en **7 PASS, 22 pending, 0 current FAIL, 0 BLOCKED**.
+
+Sólo artifacts PASS retenidos pueden alimentar dependientes.
+
+## Próxima expansión
+
+Selecciona otro grupo independiente entre los 22 nodos pendientes.
+
+Mantén la compilación paralela por nivel topológico.
+
+Continúa aunque existan FAIL independientes.
+
+No intentes nodos dependientes de un FAIL.
+
+Mantén BLOCKED separado de FAIL.

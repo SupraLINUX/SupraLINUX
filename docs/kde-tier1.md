@@ -1,72 +1,258 @@
 # KDE Frameworks 6.30 — Tier 1
 
-Status: **29-node source set fixed; 4 hosted package PASS; 25 package nodes pending; 0 current FAIL; 0 BLOCKED**
+Status: **29-node source set fixed; 7 hosted package PASS; 22 package nodes pending; 0 current FAIL; 0 BLOCKED**
 
-Last reviewed: **2026-09-12**
+Last reviewed: **2026-09-14**
 
 ## Authority and scope
 
-Tier membership and source requirements come from KDE upstream. SupraLINUX selects KDE Frameworks **6.30.0**. Ubuntu Resolute provides the platform, Qt/general dependencies and compatibility target; Ubuntu/Debian packaging is technical reference only.
+Tier membership and source requirements come from KDE upstream.
 
-Frameworks 6.30 requires Qt >= **6.9.0**. Ubuntu Resolute Qt **6.10.2** is the current provider candidate with hosted preflight PASS; final provider certification still requires broader KDE/runtime/compatibility evidence.
+SupraLINUX selecciona KDE Frameworks **6.30.0**.
 
-## Prerequisite
+Ubuntu Resolute proporciona plataforma, dependencias generales y compatibilidad.
 
-Extra CMake Modules is the retained build-system root:
+Ubuntu y Debian son referencias técnicas de packaging.
 
-- `extra-cmake-modules 6.30.0-0supralinux3`;
+No seleccionan la versión KDE de SupraLINUX.
+
+Frameworks 6.30 requiere Qt >= **6.9.0**.
+
+Ubuntu Resolute Qt **6.10.2** sigue como proveedor candidato.
+
+Su hosted preflight está PASS.
+
+La certificación final del proveedor sigue pendiente.
+
+## Prerequisito
+
+Extra CMake Modules sigue siendo el root del build-system.
+
+- paquete `extra-cmake-modules 6.30.0-0supralinux3`;
 - run `34694951158`;
 - artifact `10298635300`;
 - `.deb` SHA-256 `ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f`;
-- state **PASS**, downstream eligible.
+- estado **PASS**;
+- downstream eligible.
 
-## Fixed Tier 1 set
+## Conjunto Tier 1
 
-The manifest contains exactly 29 nodes:
+El manifest contiene exactamente 29 nodos.
 
 `attica`, `bluez-qt`, `karchive`, `kcalendarcore`, `kcodecs`, `kconfig`, `kcoreaddons`, `kdbusaddons`, `kglobalaccel`, `kguiaddons`, `kholidays`, `ki18n`, `kidletime`, `kirigami`, `kitemmodels`, `kitemviews`, `kplotting`, `kquickcharts`, `syntax-highlighting`, `ktexttemplate`, `kuserfeedback`, `kwidgetsaddons`, `kwindowsystem`, `modemmanager-qt`, `networkmanager-qt`, `prison`, `solid`, `sonnet`, `threadweaver`.
 
-Every node remains pinned to KDE 6.30.0 and its KDE-published SHA-256. A Tier 1 node has no KDE Framework predecessor other than the ECM build-system root.
+Cada nodo permanece fijado a KDE 6.30.0.
 
-## Reference evidence
+Cada source SHA-256 permanece fijado al valor KDE publicado.
+
+Un nodo Tier 1 no depende de otro Framework KDE.
+
+Todos dependen únicamente del root ECM dentro del DAG KDE.
+
+## Evidencia de referencia
 
 - provider availability: run `34700048774`, artifact `10299608166`;
 - source packaging reference: run `34701132721`, artifact `10299579234`;
 - binary-contract reference: run `34704117024`, artifact `10301282501`;
-- generic 58-tree packaging reference: run `34708030450`, artifact `10301938362`.
+- generic packaging tree: run `34708030450`, artifact `10301938362`.
 
-These gates are non-authoritative references and do not promote package state.
+Estos gates son referencias no autoritativas.
 
-## Current package PASS nodes
+No promueven estado por sí solos.
 
-- **Attica** `6.30.0-0supralinux2`: run `34706416753`, artifact `10301851297`, tests 6/6 PASS, downstream eligible.
-- **KCodecs** `6.30.0-0supralinux4`: run `34716761551`, job `103615297758`, artifact `10305050385`, SHA-256 `d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45`, tests 8/8 PASS, Lintian/ABI/consumer PASS.
-- **KDBusAddons** `6.30.0-0supralinux3`: run `34713034164`, job `103605147881`, artifact `10304340428`, tests 3/3 PASS, full package gate PASS.
-- **ThreadWeaver** `6.30.0-0supralinux3`: run `34713034164`, job `103605147772`, artifact `10303986419`, tests 8/8 PASS, full package gate PASS.
+## PASS actuales
 
-Historical FAIL attempts remain attached to each node as evidence; they do not change the current PASS state.
+### Attica
+
+`6.30.0-0supralinux2`.
+
+Run `34706416753`.
+
+Artifact `10301851297`.
+
+Tests `6/6` PASS.
+
+Consumer smoke PASS.
+
+Downstream eligible.
+
+### KCodecs
+
+`6.30.0-0supralinux4`.
+
+Run `34716761551`.
+
+Job `103615297758`.
+
+Artifact `10305050385`.
+
+Artifact SHA-256 `d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45`.
+
+Tests `8/8` PASS.
+
+Lintian, ABI y consumer smoke PASS.
+
+### KDBusAddons
+
+`6.30.0-0supralinux3`.
+
+Run `34713034164`.
+
+Job `103605147881`.
+
+Artifact `10304340428`.
+
+Tests `3/3` PASS.
+
+Full package gate PASS.
+
+### ThreadWeaver
+
+`6.30.0-0supralinux3`.
+
+Run `34713034164`.
+
+Job `103605147772`.
+
+Artifact `10303986419`.
+
+Tests `8/8` PASS.
+
+Full package gate PASS.
+
+### KTextTemplate
+
+`6.30.0-0supralinux3`.
+
+Run `34884764702`.
+
+Job `104112549851`.
+
+Artifact `10363863115`.
+
+Artifact SHA-256 `7b9d0390ed90c882f4b7ad1993924e722bfb7ad35238c2ced52bbd5809555bc9`.
+
+Tests `10/10` PASS.
+
+Lintian error gate PASS.
+
+Consumer smoke PASS.
+
+SONAME `libKF6TextTemplate.so.6`.
+
+### KArchive
+
+`6.30.0-0supralinux4`.
+
+Run `34884764702`.
+
+Job `104112549742`.
+
+Artifact `10364726750`.
+
+Artifact SHA-256 `0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e`.
+
+Tests `5/5` PASS.
+
+Lintian error gate PASS.
+
+Consumer smoke PASS.
+
+SONAME `libKF6Archive.so.6`.
+
+### KHolidays
+
+`6.30.0-0supralinux4`.
+
+Run `34884764702`.
+
+Job `104112549858`.
+
+Artifact `10364169061`.
+
+Artifact SHA-256 `62186f3d6d0c856fed7b055ae917ceec0b6cdf216b37b93e22126bf3ebc8f37a`.
+
+Tests `8/8` PASS.
+
+Lintian error gate PASS.
+
+Consumer smoke PASS.
+
+SONAME `libKF6Holidays.so.6`.
 
 ## KCodecs ABI/symbol policy
 
-Ubuntu 6.24's symbols reference was stale for KDE 6.30 because it still required two `KCharsets` constructors already absent from Debian 6.28. SupraLINUX therefore uses the retained Debian 6.28 symbols reference as the technical baseline.
+Ubuntu 6.24 tenía una referencia de símbolos obsoleta para KDE 6.30.
 
-KDE 6.30's `std::format` use emits 15 compiler/libstdc++ implementation symbols. They are retained in the reviewed symbols file as `(optional=toolchain)` with minimum **6.30.0**, never a Debian revision. `dpkg-gensymbols -c4` was verified against the actual built library before the clean hosted attempt, and the real `-0supralinux4` build then PASSed.
+Todavía exigía dos constructores `KCharsets` ya eliminados.
 
-## Current states
+SupraLINUX usa Debian 6.28 como baseline técnico más cercano.
 
-- PASS: **4**;
-- pending: **25**;
+KDE 6.30 emite 15 símbolos internos por `std::format`.
+
+Se conservan como `(optional=toolchain)`.
+
+Su versión mínima es upstream `6.30.0`.
+
+No se usa una revisión Debian como versión mínima.
+
+## Batch 2 ABI y packaging
+
+KTextTemplate conserva una transformación ABI determinística revisada.
+
+KArchive empaqueta `KF6Archive.pc` dentro del paquete de desarrollo.
+
+KHolidays conserva 36 símbolos públicos nuevos del calendario hebreo.
+
+Esos símbolos tienen mínimo upstream `6.30.0`.
+
+KHolidays declara `python3:any` para su transformación de símbolos.
+
+Los tres paquetes `-doc` preservan nombres Debian-family.
+
+Actualmente no contienen QCH.
+
+No se afirma documentación QCH inexistente.
+
+## Gate Lintian Batch 2
+
+El gate rechaza `Lintian: fail` informado por `sbuild`.
+
+También valida `.dsc` y `.changes` conjuntamente.
+
+Preserva los `.ddeb` referenciados por `.changes`.
+
+Workflow `34884049556` descubrió la omisión inicial de `.ddeb`.
+
+Ese run es fallo de infraestructura, no FAIL de paquetes.
+
+Workflow `34884764702` valida la remediación completa.
+
+## Estados actuales
+
+- PASS: **7**;
+- pending: **22**;
 - current FAIL: **0**;
 - BLOCKED: **0**.
 
-A node becomes FAIL only after a real package attempt fails for its own cause. BLOCKED is reserved for nodes not attempted because a predecessor is FAIL.
+Un nodo sólo es FAIL tras un intento real por causa propia.
+
+BLOCKED queda reservado para un nodo no intentado por un FAIL predecesor.
+
+Los FAIL históricos permanecen como evidencia después de un PASS posterior.
 
 ## CI scope
 
-Batch 1 package CI fingerprints only build inputs actually consumed by the runner. State/evidence/hash bookkeeping, validators and documentation must not rebuild an already-PASS node. A run selected by an infrastructure scope bug that aborts before source/package work is not recorded as a package FAIL.
+La selección de CI debe depender de inputs realmente consumidos.
 
-## Batch 2 prepared
+Cambios de estado, evidencia o documentación no deben recompilar un PASS.
 
-KTextTemplate, KArchive and KHolidays are the next independent package attempts. Their preparation lives in a separate Batch 2 campaign so the closed Batch 1 ledger and runner remain reproducible. Debian 6.28 symbols are used as the closer technical ABI baseline while Ubuntu Resolute remains the direct binary-compatibility target. KDE 6.30 upstream defaults and autotests remain enabled; stale distro `BUILD_QCH` settings are not inherited.
+Un fallo del selector o del harness no crea un FAIL del paquete.
 
-Canonical state is still **4 PASS / 25 pending / 0 FAIL / 0 BLOCKED** until these jobs actually attempt their packages.
+## Próximo trabajo
+
+Selecciona otro grupo independiente entre los 22 nodos pendientes.
+
+Mantén explícitos símbolos, contratos binarios, features opcionales y tests.
+
+Mantén el PR #1 en Draft.

@@ -5,7 +5,7 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "batch": "tier1-batch-2",
-  "state": "remediation-pending-build",
+  "state": "PASS",
   "canonical_state_role": "batch-package-attempt-ledger",
   "selected_nodes": [
     "ktexttemplate",
@@ -42,9 +42,9 @@
   },
   "nodes": {
     "ktexttemplate": {
-      "state": "remediation-pending-build",
+      "state": "PASS",
       "last_result": "PASS",
-      "downstream_eligible": false,
+      "downstream_eligible": true,
       "upstream_version": "6.30.0",
       "source_package": "kf6-ktexttemplate",
       "source_sha256": "c3c229944d25294102e4e8a5b49fa0c0f481da9d33f8bec3782e8a53afd47493",
@@ -127,24 +127,42 @@
           "abi_soname": "libKF6TextTemplate.so.6",
           "ecm_predecessor": "6.30.0-0supralinux3",
           "downstream_eligible": true
+        },
+        {
+          "result": "PASS",
+          "workflow_run": 34884764702,
+          "job_id": 104112549851,
+          "commit": "e0f4e7c48dcf7541538eb919374a3f4b6c293b75",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10363863115,
+          "artifact_sha256": "7b9d0390ed90c882f4b7ad1993924e722bfb7ad35238c2ced52bbd5809555bc9",
+          "stage": "complete",
+          "tests": "10/10 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6TextTemplate.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "downstream_eligible": true
         }
       ],
       "last_pass_files": {
-        "libkf6texttemplate_dev_deb_sha256": "0905718c7d1a3d227b3e29a4b945a8751f87a9bb19e0d0e5fff498393373b631",
-        "libkf6texttemplate_doc_deb_sha256": "b8cf9fa1983fbae53e612293c9106dcb79ca0bb64d58db71b7e4bf53a2de3811",
-        "libkf6texttemplate6_deb_sha256": "1b45b1191176062de32faaf96ce85f20329aa717e1f1ad71453ce91ac6ffbebc",
-        "changes_sha256": "4c0beb03941304a2ff1bf9b9e3d62949b3c671aef9a51a382384702207c1ab2f",
-        "buildinfo_sha256": "84ef4928cc5032cf423ae8d4bec6817bb97ae4bf563177909d79895272b61af3",
-        "dsc_sha256": "50b9e77a72799e0fa841b74af91285955de60c186ec71ca0845bd000f1597260",
+        "libkf6texttemplate_dev_deb_sha256": "29d6b4ed0fef9bc7dbb414b704940858fffb6e5bf8eb867d3b9d6f3427b6f314",
+        "libkf6texttemplate_doc_deb_sha256": "e9a31233b1cb432ec5cf10ed6c7b454ba98de2540c74a0082d6b5c9c42ca8d53",
+        "libkf6texttemplate6_deb_sha256": "bed52b166af6b724e33c1b95c1d08ff4eb9e305e391932ec55c894b4509a875f",
+        "libkf6texttemplate6_dbgsym_ddeb_sha256": "e46b0f3da342ffabd383c46123cc4204ec9dd94efe03e8b3217d94958b2e507d",
+        "changes_sha256": "cc5aaf7074d9dd44e53f5416dc59c3bf7b7c19fab2c2f45723f46e1552177797",
+        "buildinfo_sha256": "fe59945142686016d1c4ba058bc451d02803fcf40eb742c5b2a04cea253ce130",
+        "dsc_sha256": "46827296607ad5632c0527cf1e78c240565faa990dfe2d52fd4fc18b19063dac",
         "orig_tar_sha256": "c3c229944d25294102e4e8a5b49fa0c0f481da9d33f8bec3782e8a53afd47493",
-        "debian_tar_sha256": "b8b6ed78b93fc12d2818ed66c2f105dacaa98293f72ca563ba11974313fce857",
-        "rootfs_sha256": "9f1d5cc7e07f0856829f6e37f86b59e1a63eb1dbeb41196426956766da44c949"
+        "debian_tar_sha256": "71ad75ef7d15af09d81200cd50d67db65da323288b3d00cc27ffd2d1ca7fa8e9",
+        "rootfs_sha256": "8d6f50faf0bc63926b86bbff88c4062a21609c073a7d6b3b4136eba4e6b7c637"
       }
     },
     "karchive": {
-      "state": "remediation-pending-build",
+      "state": "PASS",
       "last_result": "PASS",
-      "downstream_eligible": false,
+      "downstream_eligible": true,
       "upstream_version": "6.30.0",
       "source_package": "kf6-karchive",
       "source_sha256": "4cf89d91e429d2ece3110e78f7ef7011952b0412cb15011329516b46f21e98e2",
@@ -231,25 +249,43 @@
           "abi_soname": "libKF6Archive.so.6",
           "ecm_predecessor": "6.30.0-0supralinux3",
           "downstream_eligible": true
+        },
+        {
+          "result": "PASS",
+          "workflow_run": 34884764702,
+          "job_id": 104112549742,
+          "commit": "e0f4e7c48dcf7541538eb919374a3f4b6c293b75",
+          "attempted_package_version": "6.30.0-0supralinux4",
+          "artifact_id": 10364726750,
+          "artifact_sha256": "0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e",
+          "stage": "complete",
+          "tests": "5/5 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6Archive.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "downstream_eligible": true
         }
       ],
       "last_pass_files": {
-        "libkf6archive_data_deb_sha256": "9ad62282b7e21ff05739cc11cc8df8e034f90486a7a5207c51dc15ff37697bf8",
-        "libkf6archive_dev_deb_sha256": "a30d45f9a6d2be973855cea3ff34fd6ac34a24907ebf7569d05e2d36132afb8a",
-        "libkf6archive_doc_deb_sha256": "74d19b496a148ef8a0c796a7ac4d678300b2798da0918f88a81297d99f831455",
-        "libkf6archive6_deb_sha256": "273138d172fcc25cb79fefec29336648793fc732da9de97e2440cc77609d4f18",
-        "changes_sha256": "e81354f0b80a2e2759f2133ea2c398e60394099275e5c06124c91e2362b721a2",
-        "buildinfo_sha256": "ef2aa39e30ff7f02bff355f1b85c147fafdd39e0935c82690777d6897e5eb009",
-        "dsc_sha256": "0767b343759c6c7eef150aada3c449ae8e4691ca700751bcba2e9773993fc4a0",
+        "libkf6archive_data_deb_sha256": "da46f11fc791e0038b981b1fcddf6bc41718bd0fe9edd932bbd0e0ab26745d83",
+        "libkf6archive_dev_deb_sha256": "e9d34c95f1d25405cc603b9f1db5ee18e779d170bd5e3b1bd420a1137ca38843",
+        "libkf6archive_doc_deb_sha256": "a053b59865cf3dd4031dbcc0c417eef581f5ee57d2b1d3ca3844b59bdb6f7e65",
+        "libkf6archive6_deb_sha256": "dca57450e619cd01834152a3fffb943342128bd61ca514fa082c8b0eb1ba7541",
+        "libkf6archive6_dbgsym_ddeb_sha256": "7aa9daa48418dbd3df74f03bc12838266d2df9e97923298f7293c02779de2af9",
+        "changes_sha256": "c58872c9ddf4f56bc9d83f78107d83294045594a5c217e19ad0a4d16dfd79736",
+        "buildinfo_sha256": "8bd6f19a1d6676242deb3fb0bbdd18e8472bc1b6205842639b4a439c25c41b13",
+        "dsc_sha256": "4938c3df5f4299d5feae1bfe22663dec64455f62519a310d664a5daaeb5839cd",
         "orig_tar_sha256": "4cf89d91e429d2ece3110e78f7ef7011952b0412cb15011329516b46f21e98e2",
-        "debian_tar_sha256": "88b095ea5f0bb445e75f249e632dab2ea1c2ca345356829c79e66008e76185fe",
-        "rootfs_sha256": "3f6030cbc3929a20361ef8eebd9123d749530c0439508ae1706cd413691b3622"
+        "debian_tar_sha256": "1f76ab399b9f8c839bdd161b2e0ef0e607e54796e79c96ae8674bf0faae0a11f",
+        "rootfs_sha256": "26a8641742fd097034b77a73c6abf93001351e816a8f9d7076c717f8d189c477"
       }
     },
     "kholidays": {
-      "state": "remediation-pending-build",
-      "last_result": "FAIL",
-      "downstream_eligible": false,
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
       "upstream_version": "6.30.0",
       "source_package": "kf6-kholidays",
       "source_sha256": "02bfbc33296fe86b364491f6d5cad9d83360bb4fdd2923386a325b309eac0b9b",
@@ -333,8 +369,57 @@
           "consumer_smoke": "PASS",
           "sbuild_lintian": "fail",
           "cause": "debian/rules executes python3 apply-symbols-delta.py but python3 was missing from Build-Depends; the old post-build gate linted only binary .changes and missed the source-package error."
+        },
+        {
+          "result": "PASS",
+          "workflow_run": 34884764702,
+          "job_id": 104112549858,
+          "commit": "e0f4e7c48dcf7541538eb919374a3f4b6c293b75",
+          "attempted_package_version": "6.30.0-0supralinux4",
+          "artifact_id": 10364169061,
+          "artifact_sha256": "62186f3d6d0c856fed7b055ae917ceec0b6cdf216b37b93e22126bf3ebc8f37a",
+          "stage": "complete",
+          "tests": "8/8 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6Holidays.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "downstream_eligible": true
         }
-      ]
+      ],
+      "last_pass_files": {
+        "libkf6holidays_data_deb_sha256": "18969b5b6d8c67edc11b318490319467554a5282ed1bbbfbb575288fbe11b86f",
+        "libkf6holidays_dev_deb_sha256": "ddd86750ccd60d6cb44b2b2178137efa1a1a29cfab06f0d0a76fdc5c4adce2ca",
+        "libkf6holidays_doc_deb_sha256": "37bec22b859f72baa3293c626ff2306578e5e29f74eae6643ef34802b259be43",
+        "libkf6holidays6_deb_sha256": "0f292936c6b9c64c10ef60eb2f5f52f01bf3188bc4400389492891fb6479b124",
+        "qml6_module_org_kde_kholidays_deb_sha256": "17180b8ec90f1515c7920b7a5c47069cfd2bacbc8db60e40899c7bbb8edfcb42",
+        "libkf6holidays6_dbgsym_ddeb_sha256": "15cc58d6303ed57d397cc59903f3be1a5ef51f008d99f3d69d5442ab690fe485",
+        "qml6_module_org_kde_kholidays_dbgsym_ddeb_sha256": "b9489ec0318b6e18d6a7a42d129619e5a936e3a289b0c7be4578c2d3a4a036a4",
+        "changes_sha256": "574014fe1e231ca13de2f6b8df83fb6001875f2efc289d0ee0f818d451267427",
+        "buildinfo_sha256": "d7d5c7a22207d8fa1b5c43d850dde1a4e4309cdfc1b97fb07257ee38e4ae81e1",
+        "dsc_sha256": "442001063d45843c555f3aae30a289c7be5913a8f075f43e70c064d736db2a79",
+        "orig_tar_sha256": "02bfbc33296fe86b364491f6d5cad9d83360bb4fdd2923386a325b309eac0b9b",
+        "debian_tar_sha256": "e2fad5b6f1c96874cae39adba3891cb188195c72a95e14fab77d554697db132d",
+        "rootfs_sha256": "c3168896424af56036321aef8908c5b4f36e6d0b53ce3f2f9e90b172745614c7"
+      }
     }
-  }
+  },
+  "ci_harness_incidents": [
+    {
+      "workflow_run": 34884049556,
+      "commit": "e251338e7347e47245a83a64a6ec2efa1651b4ff",
+      "classification": "infrastructure-evidence-completeness",
+      "package_state_effect": "none",
+      "affected_nodes": [
+        "ktexttemplate",
+        "karchive",
+        "kholidays"
+      ],
+      "cause": "The strengthened standalone Lintian gate evaluated .dsc plus .changes, but the evidence directory omitted generated dbgsym .ddeb files referenced by .changes. Lintian aborted on missing input after each package build, tests and consumer smoke had completed.",
+      "remediation": "Copy generated .ddeb files from the build output into evidence before standalone Lintian, preserve their SHA-256 values, then rerun all three nodes.",
+      "remediation_commit": "e0f4e7c48dcf7541538eb919374a3f4b6c293b75",
+      "validated_by_run": 34884764702
+    }
+  ]
 }
