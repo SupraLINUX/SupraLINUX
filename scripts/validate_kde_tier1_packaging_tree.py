@@ -33,12 +33,14 @@ EXPECTED_EVIDENCE = {
     "framework_package_build_certification": "unchanged",
     "package_state_effect": "none",
 }
-PASS_NODES = {"attica", "kcodecs", "kdbusaddons", "threadweaver"}
+PASS_NODES = {"attica", "kcodecs", "kdbusaddons", "threadweaver", "ktexttemplate", "karchive", "kholidays"}
 errors: list[str] = []
+
 
 def require(condition: bool, message: str) -> None:
     if not condition:
         errors.append(message)
+
 
 def read(path: Path) -> str:
     try:
@@ -46,6 +48,7 @@ def read(path: Path) -> str:
     except Exception as exc:
         errors.append(f"cannot read {path.relative_to(ROOT)}: {exc}")
         return ""
+
 
 def load(path: Path) -> dict:
     try:
@@ -56,6 +59,7 @@ def load(path: Path) -> dict:
     if not isinstance(value, dict):
         raise SystemExit(f"ERROR: {path.relative_to(ROOT)} must contain an object")
     return value
+
 
 source = load(SOURCE_MANIFEST)
 reference = load(REFERENCE_MANIFEST)
@@ -87,9 +91,9 @@ require(evidence.get("status") == "PASS", "Packaging-tree hosted capture must re
 require(evidence.get("evidence") == EXPECTED_EVIDENCE, "Packaging-tree PASS evidence changed without review")
 
 for token in (
-    'role": "packaging-reference-trees-only"',
-    '"authoritative": False',
-    '"framework_package_build_certification": "unchanged"',
+    'role\": \"packaging-reference-trees-only\"',
+    '\"authoritative\": False',
+    '\"framework_package_build_certification\": \"unchanged\"',
     "ubuntu-archive-keyring.gpg",
     "debian-archive-keyring.gpg",
     "Checksums-Sha256",
@@ -155,8 +159,8 @@ for node in nodes:
     else:
         require(node.get("state") == "pending", f"{node_id}: reference-tree work must not promote unattempted package state")
 
-require(sum(1 for node in nodes if node.get("state") == "PASS") == 4, "Packaging-tree validator expects 4 actual package PASS nodes")
-require(sum(1 for node in nodes if node.get("state") == "pending") == 25, "Packaging-tree validator expects 25 pending nodes")
+require(sum(1 for node in nodes if node.get("state") == "PASS") == 7, "Packaging-tree validator expects 7 actual package PASS nodes")
+require(sum(1 for node in nodes if node.get("state") == "pending") == 22, "Packaging-tree validator expects 22 pending nodes")
 
 if errors:
     for error in errors:
@@ -165,4 +169,4 @@ if errors:
 
 print("KDE Tier 1 packaging-tree policy validation: PASS")
 print("Capture evidence remains run 34708030450 / artifact 10301938362 / 58 trees")
-print("Reference work has no state authority; current real package state is 4 PASS / 25 pending")
+print("Reference work has no state authority; current real package state is 7 PASS / 22 pending")

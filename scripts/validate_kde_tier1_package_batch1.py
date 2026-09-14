@@ -59,9 +59,11 @@ SCOPE_INCIDENT = {
 }
 errors: list[str] = []
 
+
 def require(condition: bool, message: str) -> None:
     if not condition:
         errors.append(message)
+
 
 def load(path: Path) -> dict:
     try:
@@ -73,12 +75,14 @@ def load(path: Path) -> dict:
         raise SystemExit(f"ERROR: {path.relative_to(ROOT)} must contain an object")
     return value
 
+
 def read(path: Path) -> str:
     try:
         return path.read_text(encoding="utf-8")
     except Exception as exc:
         errors.append(f"cannot read {path.relative_to(ROOT)}: {exc}")
         return ""
+
 
 campaign = load(CAMPAIGN)
 tier1 = load(TIER1)
@@ -93,7 +97,7 @@ rules = read(KCODECS_RULES)
 require(campaign.get("schema") == 1, "Batch campaign schema must be 1")
 require(campaign.get("authority") == "kde-upstream", "Batch authority must remain KDE upstream")
 require(campaign.get("frameworks_series") == "6.30.0", "Batch must remain on Frameworks 6.30.0")
-require(campaign.get("state") == "PASS", "Batch 1 must be closed PASS after all three material package PASSes")
+require(campaign.get("state") == "PASS", "Batch 1 must remain closed PASS")
 require(campaign.get("shared_predecessors", {}).get("extra_cmake_modules", {}).get("version") == "6.30.0-0supralinux3", "Batch must consume validated ECM")
 require(campaign.get("shared_predecessors", {}).get("packaging_trees", {}).get("artifact_id") == 10301938362, "Batch must retain generic packaging-tree artifact")
 
@@ -147,8 +151,8 @@ for node_id, expected in EXPECTED.items():
     node = tier_nodes.get(node_id, {})
     require(node.get("state") == "PASS", f"{node_id}: canonical Tier 1 state must be PASS")
     require(node.get("packaging", {}).get("package_version") == expected["version"], f"{node_id}: canonical Tier 1 package version mismatch")
-require(sum(1 for item in tier_nodes.values() if item.get("state") == "PASS") == 4, "Canonical Tier 1 PASS count must be 4")
-require(sum(1 for item in tier_nodes.values() if item.get("state") == "pending") == 25, "Canonical Tier 1 pending count must be 25")
+require(sum(1 for item in tier_nodes.values() if item.get("state") == "PASS") == 7, "Canonical Tier 1 PASS count must be 7")
+require(sum(1 for item in tier_nodes.values() if item.get("state") == "pending") == 22, "Canonical Tier 1 pending count must be 22")
 
 for node_id in EXPECTED:
     dag_node = dag.get("nodes", {}).get(node_id, {})
@@ -193,8 +197,8 @@ require("Node must be prepared/remediation-pending-build before attempt" in runn
 
 for value in (
     "3/3 PASS",
-    "4 Tier 1 PASS",
-    "25 pending",
+    "7 Tier 1 PASS",
+    "22 pending",
     "34716761551",
     "10305050385",
     "d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45",
@@ -209,5 +213,5 @@ if errors:
 
 print("KDE Frameworks Tier 1 batch 1 canonical closure: PASS")
 print("Batch nodes: kcodecs, kdbusaddons, threadweaver = 3/3 PASS")
-print("Canonical Tier 1: 4 PASS, 25 pending, 0 FAIL, 0 BLOCKED")
+print("Canonical Tier 1: 7 PASS, 22 pending, 0 FAIL, 0 BLOCKED")
 print("Scope incident retained as infrastructure-only; package PASS states unchanged")
