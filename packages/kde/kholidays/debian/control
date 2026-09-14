@@ -10,6 +10,7 @@ Build-Depends: debhelper-compat (= 13),
                cmake (>= 3.29~),
                extra-cmake-modules (>= 6.30.0~),
                flex,
+               python3:any,
                qt6-base-dev (>= 6.9.0~),
                qt6-declarative-dev (>= 6.9.0~),
                qt6-tools-dev (>= 6.9.0~),
@@ -47,11 +48,11 @@ Section: doc
 Architecture: all
 Multi-Arch: foreign
 Depends: ${misc:Depends},
-Description: holidays calculation library (documentation)
- This library provides a C++ API that determines holiday and other special
- events for a geographical region.
+Description: KHolidays documentation compatibility package
+ This package preserves the Debian-family KHolidays documentation package name
+ for package compatibility.
  .
- This package contains the qch documentation files.
+ The current SupraLINUX build profile does not ship QCH documentation files.
 
 Package: libkf6holidays6
 Architecture: any

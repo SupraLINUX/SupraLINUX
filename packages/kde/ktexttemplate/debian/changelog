@@ -1,3 +1,12 @@
+kf6-ktexttemplate (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Reopen Batch 2 after validating the documentation binary contents.
+  * Describe libkf6texttemplate-doc as a compatibility package because the
+    current build profile ships no QCH payload.
+  * Keep KDE 6.30 source, tested ABI transform and runtime contracts unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Mon, 14 Sep 2026 15:54:00 -0300
+
 kf6-ktexttemplate (6.30.0-0supralinux2) resolute; urgency=medium
 
   * Record the first clean package attempt as a real dpkg-gensymbols FAIL after

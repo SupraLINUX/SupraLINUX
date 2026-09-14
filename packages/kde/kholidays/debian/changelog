@@ -1,3 +1,15 @@
+kf6-kholidays (6.30.0-0supralinux4) resolute; urgency=medium
+
+  * Reclassify revision -0supralinux3 as FAIL after reviewing sbuild source
+    Lintian output hidden by the previous post-build gate.
+  * Add python3:any because debian/rules executes apply-symbols-delta.py.
+  * Validate Lintian against both source .dsc and binary .changes evidence.
+  * Describe libkf6holidays-doc as a compatibility package because the current
+    build profile ships no QCH payload.
+  * Keep KDE 6.30 source and the reviewed 36-symbol ABI delta unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Mon, 14 Sep 2026 15:54:00 -0300
+
 kf6-kholidays (6.30.0-0supralinux3) resolute; urgency=medium
 
   * Record the second clean package attempt as a real Lintian-stage FAIL after

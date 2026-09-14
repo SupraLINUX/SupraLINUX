@@ -33,7 +33,7 @@ for path in "${changed_paths[@]}"; do
             printf 'Node packaging/consumer changed for %s: %s\n' "${NODE}" "${path}"
             exit 0
             ;;
-        scripts/run-kde-tier1-package-batch2-preflight.sh|.github/workflows/kde-tier1-package-batch2.yml)
+        scripts/run-kde-tier1-package-batch2-preflight.sh|scripts/run-kde-tier1-package-batch2-validated.sh|.github/workflows/kde-tier1-package-batch2.yml)
             printf 'Shared package runner/workflow changed for %s: %s\n' "${NODE}" "${path}"
             exit 0
             ;;

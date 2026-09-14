@@ -61,16 +61,11 @@ Package: libkf6archive-doc
 Architecture: all
 Multi-Arch: foreign
 Depends: ${misc:Depends},
-Description: Qt 6 addon providing access to numerous types of archives (documentation)
- KArchive provides classes for easy reading, creation and manipulation of
- "archive" formats like ZIP and TAR.
+Description: KArchive documentation compatibility package
+ This package preserves the Debian-family KArchive documentation package name
+ for package compatibility.
  .
- It also provides transparent compression and decompression of data, like the
- GZip format, via a subclass of QIODevice.
- .
- This package is part of KDE Frameworks 6.
- .
- This package contains the qch documentation files.
+ The current SupraLINUX build profile does not ship QCH documentation files.
 Section: doc
 
 Package: libkf6archive6

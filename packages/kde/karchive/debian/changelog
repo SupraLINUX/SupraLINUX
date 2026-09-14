@@ -1,3 +1,13 @@
+kf6-karchive (6.30.0-0supralinux4) resolute; urgency=medium
+
+  * Record revision -0supralinux3 as a real complete package PASS after fixing
+    the SupraLINUX consumer include probe.
+  * Describe libkf6archive-doc as a compatibility package because the current
+    build profile ships no QCH payload.
+  * Keep KDE 6.30 source, compression backends, tests and ABI baseline unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Mon, 14 Sep 2026 15:54:00 -0300
+
 kf6-karchive (6.30.0-0supralinux3) resolute; urgency=medium
 
   * Record the second clean package attempt as a real packaging-stage FAIL after

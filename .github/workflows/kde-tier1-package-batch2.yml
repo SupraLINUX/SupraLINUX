@@ -81,7 +81,7 @@ jobs:
         env:
           ECM_ARTIFACT_DIR: ${{ github.workspace }}/.work/retained-ecm
           TIER1_REFERENCE_DIR: ${{ github.workspace }}/.work/retained-tier1-reference
-        run: bash scripts/run-kde-tier1-package-batch2-preflight.sh "${{ matrix.node }}"
+        run: bash scripts/run-kde-tier1-package-batch2-validated.sh "${{ matrix.node }}"
 
       - name: Upload per-node package evidence
         if: steps.scope.outputs.run == 'true' && always()
