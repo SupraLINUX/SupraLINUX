@@ -55,12 +55,17 @@ PASS_NODES = {
     "kcodecs": ("6.30.0-0supralinux4", 34716761551, 10305050385, "d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45"),
     "kdbusaddons": ("6.30.0-0supralinux3", 34713034164, 10304340428, "2bfb451724808b5318625eee3df25a6104c9b6da77482737ac54eea058a7e799"),
     "threadweaver": ("6.30.0-0supralinux3", 34713034164, 10303986419, "6395f11ed633fb034b0bf61a95639ce00005e3211994b04924abeb306deed2b8"),
+    "ktexttemplate": ("6.30.0-0supralinux3", 34884764702, 10363863115, "7b9d0390ed90c882f4b7ad1993924e722bfb7ad35238c2ced52bbd5809555bc9"),
+    "karchive": ("6.30.0-0supralinux4", 34884764702, 10364726750, "0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e"),
+    "kholidays": ("6.30.0-0supralinux4", 34884764702, 10364169061, "62186f3d6d0c856fed7b055ae917ceec0b6cdf216b37b93e22126bf3ebc8f37a"),
 }
 errors: list[str] = []
+
 
 def require(condition: bool, message: str) -> None:
     if not condition:
         errors.append(message)
+
 
 def load(path: Path) -> dict:
     try:
@@ -72,12 +77,14 @@ def load(path: Path) -> dict:
         raise SystemExit(f"ERROR: {path.relative_to(ROOT)} must contain an object")
     return value
 
+
 def read(path: Path) -> str:
     try:
         return path.read_text(encoding="utf-8")
     except Exception as exc:
         errors.append(f"cannot read {path.relative_to(ROOT)}: {exc}")
         return ""
+
 
 source = load(SOURCE_MANIFEST)
 reference = load(REFERENCE_MANIFEST)
@@ -140,8 +147,8 @@ for node in source_nodes:
         require(node.get("packaging") == {"state":"pending"}, f"{node_id}: unattempted packaging must remain pending")
         require(node.get("state") == "pending", f"{node_id}: unattempted node must remain pending")
 
-require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 4, "Reference validator expects 4 actual package PASS nodes")
-require(sum(1 for node in source_nodes if node.get("state") == "pending") == 25, "Reference validator expects 25 pending nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 7, "Reference validator expects 7 actual package PASS nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "pending") == 22, "Reference validator expects 22 pending nodes")
 
 for token in (
     "manifests/kde-frameworks-tier1.json",
@@ -175,4 +182,4 @@ if errors:
 
 print("KDE Frameworks Tier 1 packaging-reference policy: PASS")
 print("Reference snapshots remain non-authoritative technical inputs")
-print("Actual package states: 4 PASS; 25 pending")
+print("Actual package states: 7 PASS; 22 pending")
