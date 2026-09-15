@@ -35,4 +35,6 @@ Hosted Ubuntu 26.04 dependency-preflight evidence:
 
 The run installed `modemmanager-dev`, checked its minimum provider version and required `pkg-config --atleast-version=1.0 ModemManager` to succeed.
 
-This is provider-availability evidence only. It does not promote ModemManagerQt. Final package evidence still requires the clean Batch 5 `sbuild` attempt.
+This is provider-availability evidence only. It does not promote ModemManagerQt.
+
+Batch 5 subsequently attempted `6.30.0-0supralinux1` in run `35014875475`, job `104535671188`. The package configured, built and passed 11/11 tests, confirming the corrected provider surface was sufficient. The attempt failed later at the unrelated Lintian symbols gate for `_ZSt19piecewise_construct@Base`; that historical package FAIL is retained separately and is being remediated as `6.30.0-0supralinux2`.

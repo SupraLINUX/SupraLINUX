@@ -106,7 +106,9 @@ Batch 5 selects `kidletime`, `modemmanager-qt` and `networkmanager-qt`.
 - ModemManagerQt uses corrected provider `modemmanager-dev` for KDE's `ModemManager >= 1.0` requirement.
 - NetworkManagerQt explicitly carries both `libnm-dev` and `libglib2.0-dev` because upstream CMake directly probes `libnm>=1.4.0` and `gio-2.0`; its QML module remains enabled.
 
-The batch is prepared, not promoted. These three nodes remain canonical `pending` until real package attempts complete.
+Run `35014875475` then attempted all three packages. KIdleTime and NetworkManagerQt are real package-ledger PASS; ModemManagerQt built and passed 11/11 tests but failed the Lintian symbols gate on `_ZSt19piecewise_construct@Base`. Its `6.30.0-0supralinux2` remediation changes only deterministic symbols metadata.
+
+Canonical promotion remains deferred to Batch 5 closure, so all three nodes remain canonical `pending` in Tier1/DAG while the remediation is open.
 
 ## Hosted provider evidence
 
@@ -143,4 +145,4 @@ Current canonical state:
 - current Tier 1 BLOCKED: **0**;
 - final Qt provider certification: **pending**.
 
-Provider evidence alone never promotes a Framework. Each of the thirteen PASS nodes has real package-attempt evidence. Batch 5 preparation does not change those counts.
+Provider evidence alone never promotes a Framework. Each of the thirteen canonical PASS nodes has real package-attempt evidence. Batch 5 now additionally has two unpromoted package-ledger PASS nodes and one retained package FAIL under remediation; canonical counts remain unchanged until closure.

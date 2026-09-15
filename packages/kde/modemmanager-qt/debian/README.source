@@ -16,3 +16,17 @@ QDoc is disabled in the current common Frameworks profile. The established
 documentation binary package name is retained as a compatibility stub and does not
 claim QCH payload. Upstream autotests remain enabled except for explicitly documented
 service-dependent tests that cannot be satisfied in the isolated package-build lane.
+
+The first `6.30.0-0supralinux1` attempt built successfully and passed 11/11 tests,
+but sbuild's Lintian gate rejected `_ZSt19piecewise_construct@Base` after
+dpkg-gensymbols assigned the current Debian revision. This is libstdc++ toolchain
+surface, not a KDE API requirement. Revision `6.30.0-0supralinux2` applies the same
+reviewed strategy already validated for BluezQt: before `dh_makeshlibs`, a deterministic
+script requires the exact retained baseline hash and inserts only
+`(optional=toolchain)_ZSt19piecewise_construct@Base 6.30.0`.
+
+Remediation hashes:
+
+- baseline SHA-256: `70c9ebc08c99174f022c3b4b38ed4cde4a8725f0a2f8ea04a09371132312d6f2`;
+- transformed symbols SHA-256: `b717475396376ac884bb3587ab2a0e898af5beb940836c45ee834758eec6820f`;
+- transform script SHA-256: `f468a9e752ecb79ccc05e3a7e344622f7b1e6aeae94fb71089a94f0f51d5559b`.
