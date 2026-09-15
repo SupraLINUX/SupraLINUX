@@ -1,6 +1,6 @@
 # ModemManager provider correction — 2026-09-15
 
-Status: **provider mapping correction pending CI validation**
+Status: **validated**
 
 ## Authority
 
@@ -22,10 +22,17 @@ The provider mapping is corrected to:
 - KDE authority: unchanged;
 - package/DAG state effect: none.
 
-This is a provider-metadata/preflight correction. It does not promote any KDE node and does not change the selected KDE or Qt versions.
+## Validation
 
-## Gate
+Hosted Ubuntu 26.04 dependency-preflight evidence:
 
-The correction is accepted only after the hosted Ubuntu 26.04 Tier 1 dependency preflight passes with `modemmanager-dev` installed and `pkg-config --atleast-version=1.0 ModemManager` succeeding.
+- run `35012023822`;
+- job `104526071758`;
+- commit `48fd01bfa7b254b5e5c8447b3d609f76a91f786f`;
+- artifact `10414525047`;
+- artifact SHA-256 `db6868402b08bca82241d07980e158639a2f2fc64c4a5ab595fa58846361cb4a`;
+- result: PASS.
 
-Final package certification remains the real clean `sbuild` package build; hosted provider preflight is non-authoritative.
+The run installed `modemmanager-dev`, checked its minimum provider version and required `pkg-config --atleast-version=1.0 ModemManager` to succeed.
+
+This is provider-availability evidence only. It does not promote ModemManagerQt. Final package evidence still requires the clean Batch 5 `sbuild` attempt.
