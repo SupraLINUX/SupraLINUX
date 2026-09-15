@@ -58,6 +58,9 @@ PASS_NODES = {
     "ktexttemplate": ("6.30.0-0supralinux3", 34884764702, 10363863115, "7b9d0390ed90c882f4b7ad1993924e722bfb7ad35238c2ced52bbd5809555bc9"),
     "karchive": ("6.30.0-0supralinux4", 34884764702, 10364726750, "0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e"),
     "kholidays": ("6.30.0-0supralinux4", 34884764702, 10364169061, "62186f3d6d0c856fed7b055ae917ceec0b6cdf216b37b93e22126bf3ebc8f37a"),
+    "kitemmodels": ("6.30.0-0supralinux1", 34896417969, 10369501432, "b806eaf27f733c1a2b5cc1d108ca442fef673b6dc0a53cfc5fff38abd2bf6732"),
+    "bluez-qt": ("6.30.0-0supralinux2", 34945979836, 10387429776, "db8a3718a31eaae00d5f9fbdb60014dfeb1faf1c2bc84a88f9ab0d9bffec07ed"),
+    "kplotting": ("6.30.0-0supralinux1", 34896417969, 10369086459, "f4c4f7425e582b5001fdffced34d045dc46152074422bd2bcf994e544bb96bb8"),
 }
 errors: list[str] = []
 
@@ -147,8 +150,8 @@ for node in source_nodes:
         require(node.get("packaging") == {"state":"pending"}, f"{node_id}: unattempted packaging must remain pending")
         require(node.get("state") == "pending", f"{node_id}: unattempted node must remain pending")
 
-require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 7, "Reference validator expects 7 actual package PASS nodes")
-require(sum(1 for node in source_nodes if node.get("state") == "pending") == 22, "Reference validator expects 22 pending nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 10, "Reference validator expects 10 actual package PASS nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "pending") == 19, "Reference validator expects 19 pending nodes")
 
 for token in (
     "manifests/kde-frameworks-tier1.json",
@@ -182,4 +185,4 @@ if errors:
 
 print("KDE Frameworks Tier 1 packaging-reference policy: PASS")
 print("Reference snapshots remain non-authoritative technical inputs")
-print("Actual package states: 7 PASS; 22 pending")
+print("Actual package states: 10 PASS; 19 pending")
