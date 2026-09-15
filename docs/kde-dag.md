@@ -232,19 +232,29 @@ Tier 1 queda en **10 PASS, 19 pending, 0 current FAIL, 0 BLOCKED**.
 
 Sólo artifacts PASS retenidos pueden alimentar dependientes.
 
+## Batch 4 — campaña activa de remediación
+
+La primera campaña real de Batch 4 fue el run `34999449194` desde `209f6234cbd94d0b4e02df509b25ae5a6e0922fd`.
+
+- KItemViews `6.30.0-0supralinux1`: PASS real, job `104483912528`, artifact `10409267184`, SHA-256 `7e34fa7ede21510cf6829448e7b45a5c2832aaf9ac2719b9cb4125d23b593e55`, tests `2/2 PASS`, Lintian/SONAME/consumer smoke PASS.
+- KGlobalAccel `6.30.0-0supralinux1`: FAIL real, job `104483912661`, artifact `10408264332`, SHA-256 `1b7564f211967d1be8b61a96bc2a67389c6164f566e54dad79682d37a33bf6e5`, en `sbuild`/CMake antes de tests.
+- KSyntaxHighlighting `6.30.0-0supralinux1`: FAIL real, job `104483912313`, artifact `10408154532`, SHA-256 `8601077898fcba1ea5708fbd4e5a1c0d877825f969b8b39999d7d6bf131fbfe4`, en `sbuild`/CMake antes de tests.
+
+Los dos FAIL independientes tienen la misma causa de packaging: ECM `ECMPoQmTools` requiere Qt 6 `LinguistTools` y faltaba `qt6-tools-dev` en Build-Depends. Ubuntu Resolute 6.10.2 proporciona ese componente.
+
+Las revisiones de remediación son KGlobalAccel `6.30.0-0supralinux2` y KSyntaxHighlighting `6.30.0-0supralinux2`, ambas con `qt6-tools-dev (>= 6.9.0~)`. No cambia el source KDE.
+
+Durante la campaña abierta, la evidencia de intentos vive en `manifests/kde-tier1-package-campaign-batch4.json`. La promoción canónica del Tier 1 y del DAG de paquetes se difiere hasta el commit de cierre; por eso el estado global permanece **10 PASS / 19 pending / 0 current FAIL / 0 BLOCKED** aunque KItemViews ya tenga evidencia PASS real.
+
+El `KeyError: 'kitemviews'` del validator Batch 4 en Repository Policy fue un supuesto incorrecto sobre esa frontera de estado, no un FAIL de paquete. La corrección valida el ledger real y no exige una promoción DAG prematura.
+
 ## Próxima expansión
 
-Antes de abrir Batch 4, revalidar la release estable KDE upstream actual.
+Primero deben reconstruirse realmente KGlobalAccel `-2` y KSyntaxHighlighting `-2`. KItemViews debe hacer scope-skip y conservar su PASS retenido.
 
-Selecciona otro grupo independiente entre los 19 nodos pendientes.
+Si ambas remediaciones pasan todos los gates, Batch 4 puede cerrarse y el estado canónico podrá promoverse a **13 PASS / 16 pending / 0 current FAIL / 0 BLOCKED**.
 
-Mantén la compilación paralela por nivel topológico.
-
-Continúa aunque existan FAIL independientes.
-
-No intentes nodos dependientes de un FAIL.
-
-Mantén BLOCKED separado de FAIL.
+Si alguna remediación falla, registrar ese intento como FAIL real y continuar con una nueva revisión; no convertirlo en BLOCKED ni ocultar evidencia.
 
 KConfig sigue diferido hasta extender explícitamente el runner para su contrato ABI multi-library.
 

@@ -1,3 +1,12 @@
+kf6-syntax-highlighting (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Add qt6-tools-dev to Build-Depends because the ECM Po/Qm translation
+    install path requires the Qt6 LinguistTools CMake component in clean sbuild.
+  * Preserve the failed 6.30.0-0supralinux1 attempt as historical evidence;
+    no KDE upstream source change is required for this remediation.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Tue, 15 Sep 2026 17:50:00 +0000
+
 kf6-syntax-highlighting (6.30.0-0supralinux1) resolute; urgency=medium
 
   * Package KDE Frameworks 6.30.0 for SupraLINUX.

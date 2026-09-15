@@ -1,98 +1,137 @@
 # KDE Frameworks 6.30 Tier 1 — package batch 4
 
-Status: **PREPARED — build attempts pending**
+Status: **ACTIVE — 1 real PASS retained; 2 real FAIL attempts remediated and pending rebuild**
 
 Last reviewed: **2026-09-15**
 
-## Selection
+## Authority and canonical boundary
 
-Batch 4 contains three independent Tier 1 nodes:
+KDE Frameworks `6.30.0` remains the selected stable upstream release. KDE upstream is the source/build authority. Ubuntu Resolute is provider/compatibility target; Ubuntu and Debian packaging remain technical references only.
+
+Batch 4 contains:
 
 - `kitemviews` (KItemViews);
 - `kglobalaccel` (KGlobalAccel);
 - `syntax-highlighting` (KSyntaxHighlighting).
 
-All three depend only on the retained ECM `6.30.0-0supralinux3` root inside the KDE Frameworks Tier 1 DAG. None depends on another KDE Framework, so they can be attempted in parallel with `fail-fast: false`.
+All three depend only on retained ECM `6.30.0-0supralinux3` inside the Tier 1 DAG. They are independent and are attempted with `fail-fast: false`.
 
-KDE Frameworks `6.30.0` remains the selected stable upstream release. KDE upstream is the source/build authority. Ubuntu Resolute remains provider/compatibility target, while Ubuntu/Debian packaging is reference material only.
-
-## Why these nodes
-
-The current hosted package runner models one primary ABI library, one SONAME and one symbols baseline per node. These three nodes fit that model:
-
-- **KItemViews** builds the single `libKF6ItemViews.so.6` ABI library. KDE enables its Qt Designer plugin by default when not cross-compiling, so SupraLINUX explicitly retains that path and provides Qt `UiPlugin` through `qt6-tools-dev`.
-- **KGlobalAccel** builds the single `libKF6GlobalAccel.so.6` ABI library. KDE 6.30 requires Qt DBus/Gui/Widgets and, with Qt >= 6.10, `Qt6GuiPrivate`; its enabled tests additionally require QtQml. SupraLINUX therefore includes `qt6-base-private-dev` and `qt6-declarative-dev` for reasons traceable to upstream build files.
-- **KSyntaxHighlighting** builds the single `libKF6SyntaxHighlighting.so.6` ABI library plus tools and a QML module. Perl is an upstream-required generator dependency. XercesC remains an optional upstream compile-time syntax-definition validator and is deliberately enabled in the selected provider profile because Resolute provides it. Python remains optional and is not promoted to a hard package requirement.
-
-`KConfig` remains deferred because it exports multiple ABI libraries/symbol files and needs an explicit multi-library runner extension. `KWidgetsAddons` is not selected in this batch because its Linux/shared build enables Python bindings by default, bringing Shiboken6/PySide6 into the build surface while cleaner independent nodes remain.
-
-## Packaging references and ABI baselines
-
-The retained generic packaging-tree artifact is still:
-
-- workflow run `34708030450`;
-- artifact `10301938362`;
-- artifact SHA-256 `6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6`;
-- snapshot JSON SHA-256 `f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345`.
-
-Debian sid is used only for the closer ABI symbols baseline:
-
-- KItemViews Debian 6.28.0 symbols SHA-256 `c95ecbc24ccee885f1aa50df1c2aab41f54eb561baf66b1b219a562a5ce372cf`;
-- KGlobalAccel Debian 6.28.0 symbols SHA-256 `967876c92b88b1a0654b06084c70604191464ecaded59df4bbf4dea71c0c6bb7`;
-- KSyntaxHighlighting Debian 6.28.1 symbols SHA-256 `3dd1d9e56a8fa8b802ffb6708ec65984cef422bcbe7660583c907a827aec47dd`.
-
-Any KDE 6.30 ABI delta must come from a real build and be reviewed. No symbols change is pre-declared as PASS.
-
-## Source authority pins
-
-The KDE 6.30 source inputs remain pinned to upstream release artifacts:
-
-- KItemViews source SHA-256 `9452f2b0cc5dd0214b88c4ce33297866be89af4177af14f5390cfb616e49c153`, root CMake blob `d4abc8277881fff0ad85d06167b0f1e5c8e0977d`;
-- KGlobalAccel source SHA-256 `e532ebd4cbfc8d6d79c6c38c556f1871315fedae8db2b69b574b9c496f171473`, root CMake blob `274623176b4c0f9b72edea3bd770530f76c8f607`;
-- KSyntaxHighlighting source SHA-256 `fc429b093058bec4878306cbbfb3aa0560ff4a3f166c69504036c507fe72afcc`, root CMake blob `cbd31a8f3c8b981931fc0d39ee5991f5c7f6903a`.
-
-Each package begins at revision `6.30.0-0supralinux1`.
-
-## Binary compatibility contracts
-
-The retained Ubuntu/Debian binary-contract snapshot is used as a compatibility input, not as the KDE authority.
-
-Expected binary packages:
-
-- KItemViews: `libkf6itemviews-data`, `libkf6itemviews-dev`, `libkf6itemviews-doc`, `libkf6itemviews6`;
-- KGlobalAccel: `libkf6globalaccel-data`, `libkf6globalaccel-dev`, `libkf6globalaccel-doc`, `libkf6globalaccel6`;
-- KSyntaxHighlighting: `libkf6syntaxhighlighting-data`, `libkf6syntaxhighlighting-dev`, `libkf6syntaxhighlighting-doc`, `libkf6syntaxhighlighting-tools`, `libkf6syntaxhighlighting6`, `qml6-module-org-kde-syntaxhighlighting`.
-
-The Batch 4 runner verifies package count, Architecture, Multi-Arch, selected Depends/Recommends contracts, absence of unexpected Provides/Breaks/Replaces/Conflicts, SONAME and a CMake + runtime `dlopen()` consumer smoke.
-
-## Documentation package policy
-
-QCH remains disabled in the common Frameworks profile. The Debian-family `-doc` package names are retained as compatibility stubs with descriptions that explicitly state that QCH is not shipped. No package description may claim QCH payload that the build does not produce.
-
-## CI gates
-
-A node becomes PASS only after a real clean hosted attempt completes all current non-authoritative gates:
-
-- exact upstream source SHA-256;
-- retained ECM PASS artifact consumed as predecessor;
-- exact retained symbols/copyright references verified before source-package creation;
-- `dpkg-source -b` followed by clean Ubuntu 26.04 `sbuild`/unshare;
-- upstream tests enabled;
-- expected binary contracts checked;
-- SONAME checked;
-- `.ddeb`, `.changes`, `.buildinfo`, `.dsc`, source tarballs and hashes retained;
-- `sbuild` Lintian summary checked;
-- `lintian --fail-on error` run against `.dsc` and `.changes`;
-- consumer CMake configure/build plus runtime SONAME load.
-
-Independent FAIL nodes do not stop their peers. BLOCKED is reserved for a node that cannot be attempted because a predecessor FAILed; these three nodes share only an already-PASS ECM predecessor.
-
-## Canonical state before attempts
-
-Preparing Batch 4 **does not promote any Framework**.
-
-Canonical Tier 1 remains:
+The current canonical Tier 1 snapshot remains deliberately unchanged until Batch 4 is closed:
 
 **10 PASS / 19 pending / 0 current FAIL / 0 BLOCKED**.
 
-KItemViews, KGlobalAccel and KSyntaxHighlighting remain `pending` until real build evidence exists. PR #1 remains Draft and no merge is authorized.
+This is not a denial of the real attempt results. In-flight attempt truth is recorded in `manifests/kde-tier1-package-campaign-batch4.json`; the canonical Tier 1 manifest and package DAG are promoted only in the closure commit. That prevents a partial batch from being confused with a completed downstream-eligible state.
+
+PR #1 remains Draft. No merge is authorized.
+
+## Attempt 1 — workflow `34999449194`
+
+The first real hosted package campaign ran from commit `209f6234cbd94d0b4e02df509b25ae5a6e0922fd`.
+
+### KItemViews — PASS retained
+
+KItemViews `6.30.0-0supralinux1` completed the real package lane:
+
+- job `104483912528`;
+- artifact `10409267184`;
+- artifact SHA-256 `7e34fa7ede21510cf6829448e7b45a5c2832aaf9ac2719b9cb4125d23b593e55`;
+- upstream tests `2/2 PASS`;
+- Lintian error gate PASS;
+- SONAME `libKF6ItemViews.so.6` PASS;
+- consumer CMake configure/build and runtime `dlopen()` smoke PASS;
+- ECM predecessor `6.30.0-0supralinux3` consumed.
+
+This is a real hosted-preflight PASS and is retained. It is **not** rebuilt merely because the other two nodes require packaging remediation.
+
+### KGlobalAccel `-1` — historical real FAIL
+
+KGlobalAccel `6.30.0-0supralinux1` was really attempted and failed in clean `sbuild`:
+
+- job `104483912661`;
+- artifact `10408264332`;
+- artifact SHA-256 `1b7564f211967d1be8b61a96bc2a67389c6164f566e54dad79682d37a33bf6e5`;
+- failure stage: `sbuild` / `dh_auto_configure` / CMake;
+- tests: not reached.
+
+The configure failure came from ECM `ECMPoQmTools`: it requires the Qt 6 `LinguistTools` CMake component for the translation install path. The package did not declare the provider package containing that component.
+
+This is a package-attempt **FAIL**, not BLOCKED and not an infrastructure failure. It remains historical evidence after remediation.
+
+### KSyntaxHighlighting `-1` — historical real FAIL
+
+KSyntaxHighlighting `6.30.0-0supralinux1` failed at the same real package stage and for the same root cause:
+
+- job `104483912313`;
+- artifact `10408154532`;
+- artifact SHA-256 `8601077898fcba1ea5708fbd4e5a1c0d877825f969b8b39999d7d6bf131fbfe4`;
+- failure stage: `sbuild` / `dh_auto_configure` / CMake;
+- tests: not reached.
+
+`ECMPoQmTools` could not resolve required Qt 6 `LinguistTools` because the corresponding Build-Depends provider was absent.
+
+This is also a real package-attempt **FAIL**. It is independent from KGlobalAccel and is not BLOCKED.
+
+## Root cause and remediation
+
+Ubuntu Resolute provides `qt6-tools-dev` `6.10.2-1`, including the `Qt6LinguistTools` CMake package. This matches the KDE-selected Qt 6.10 provider line and resolves the component actually requested by ECM.
+
+No KDE source change, KDE version downgrade, Qt replacement or dependency-policy relaxation is justified.
+
+The remediation is therefore packaging-only:
+
+- KGlobalAccel becomes candidate `6.30.0-0supralinux2` and adds `qt6-tools-dev (>= 6.9.0~)` to Build-Depends;
+- KSyntaxHighlighting becomes candidate `6.30.0-0supralinux2` and adds the same requirement;
+- both `-1` FAIL attempts remain in the campaign evidence ledger;
+- the source SHA-256, KDE upstream source, ABI baseline and consumer contracts remain unchanged.
+
+KItemViews already declared `qt6-tools-dev` for its upstream-default Designer plugin and therefore did not suffer this omission.
+
+## Batch 4 state model
+
+The campaign ledger now distinguishes three facts:
+
+- KItemViews: `PASS`, retained attempt, hosted downstream evidence available but canonical promotion deferred until batch closure;
+- KGlobalAccel: last attempt `FAIL`, candidate `-2` is `remediation-pending-build`;
+- KSyntaxHighlighting: last attempt `FAIL`, candidate `-2` is `remediation-pending-build`.
+
+The canonical Tier 1 manifest continues to report all three as `pending` until the closure gate. The package DAG is likewise not rewritten to claim a pre-closure promotion. This avoids fabricating PASS state from preparation alone.
+
+## Packaging and CI contracts retained
+
+The remediation does not relax any existing gate. The runner still requires:
+
+- exact KDE upstream source SHA-256;
+- ECM PASS predecessor artifact;
+- exact retained symbols/copyright references;
+- `dpkg-source -b` followed by clean Ubuntu 26.04 `sbuild` with unshare;
+- upstream tests enabled;
+- expected binary Architecture/Multi-Arch/Depends/Recommends contracts;
+- SONAME verification;
+- retention of `.deb`, `.ddeb`, `.changes`, `.buildinfo`, `.dsc`, source tarballs and hashes;
+- `sbuild` Lintian summary verification;
+- standalone `lintian --fail-on error` against source and binary evidence;
+- consumer CMake configure/build plus runtime SONAME load.
+
+QCH remains disabled in the common Frameworks profile. `-doc` package names remain compatibility stubs and must not claim QCH payload that is not built.
+
+## Scope expectation for the remediation commit
+
+The semantic scope selector consumes package inputs rather than descriptive state/evidence metadata.
+
+Expected behavior on the remediation commit:
+
+- KItemViews: scope-skip; no source download, no `sbuild`, no new artifact;
+- KGlobalAccel: real rebuild of `6.30.0-0supralinux2`;
+- KSyntaxHighlighting: real rebuild of `6.30.0-0supralinux2`.
+
+Repository Policy must validate the remediation state before any result is promoted.
+
+## Deferred nodes
+
+`KConfig` remains deferred because it exports multiple ABI libraries/symbol files and requires an explicit multi-library runner extension.
+
+`KWidgetsAddons` remains deferred from this batch because its Linux/shared default enables Python bindings and adds Shiboken6/PySide6 surface while simpler independent nodes remain.
+
+## Next gate
+
+Batch 4 is not closed yet. The next valid transition requires real `-2` builds for KGlobalAccel and KSyntaxHighlighting. If both pass all gates, the closure commit can promote the three Batch 4 nodes and change the canonical count to `13 PASS / 16 pending / 0 current FAIL / 0 BLOCKED`. If either `-2` fails, that new FAIL must be retained and remediated instead of being hidden or reclassified.

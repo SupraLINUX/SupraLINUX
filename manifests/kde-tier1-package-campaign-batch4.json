@@ -5,8 +5,12 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "batch": "tier1-batch-4",
-  "state": "prepared-pending-build",
+  "state": "remediation-pending-build",
   "canonical_state_role": "batch-package-attempt-ledger",
+  "canonical_snapshot": {
+    "state": "unchanged-until-batch-closure",
+    "tier1": "10 PASS / 19 pending / 0 current FAIL / 0 BLOCKED"
+  },
   "selected_nodes": [
     "kitemviews",
     "kglobalaccel",
@@ -54,9 +58,9 @@
   },
   "nodes": {
     "kitemviews": {
-      "state": "prepared-pending-build",
-      "last_result": null,
-      "downstream_eligible": false,
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
       "upstream_version": "6.30.0",
       "source_package": "kf6-kitemviews",
       "source_sha256": "9452f2b0cc5dd0214b88c4ce33297866be89af4177af14f5390cfb616e49c153",
@@ -84,11 +88,27 @@
       "copyright": {"file":"copyright","sha256":"add1ae526e4064439b04a0d2fa162e178f049c96411fe3922a9562a2f25304c6","reference":"debian-sid-6.28.0"},
       "package_version": "6.30.0-0supralinux1",
       "symbols": {"file":"libkf6itemviews6.symbols","sha256":"c95ecbc24ccee885f1aa50df1c2aab41f54eb561baf66b1b219a562a5ce372cf","tree_provider":"debian","reference_version":"6.28.0"},
-      "evidence": []
+      "evidence": [
+        {"result":"PASS","workflow_run":34999449194,"job_id":104483912528,"commit":"209f6234cbd94d0b4e02df509b25ae5a6e0922fd","attempted_package_version":"6.30.0-0supralinux1","artifact_id":10409267184,"artifact_sha256":"7e34fa7ede21510cf6829448e7b45a5c2832aaf9ac2719b9cb4125d23b593e55","stage":"complete","tests":"2/2 PASS","lintian":"PASS-errors","consumer_smoke":"PASS","abi_soname":"libKF6ItemViews.so.6","ecm_predecessor":"6.30.0-0supralinux3","downstream_eligible":true}
+      ],
+      "last_pass_files": {
+        "libkf6itemviews_data_deb_sha256":"d2444550a7ce4bd796a24b98d0688bfe6e072abace1f9130cd9b6ad3b93bf682",
+        "libkf6itemviews_dev_deb_sha256":"6641e1d8bef8df05e37c4f0cfc24bdfe93dada02001822d695edcefd160dd5a6",
+        "libkf6itemviews_doc_deb_sha256":"c679820397908aea8c4dbc4b0a544d6b5c65ecdb1b52f440348eb0b68cbb216b",
+        "libkf6itemviews6_deb_sha256":"d7bd3eb44a8bae2e03978faf711f7e9d27058e8d91e4ac20db97013a946c1a90",
+        "libkf6itemviews_dev_dbgsym_ddeb_sha256":"f4942362386a215ce646648fe7743b86fbdc05a6008ea385a1fa95644638baf4",
+        "libkf6itemviews6_dbgsym_ddeb_sha256":"440eab177799c583590031ef2ec6cb09f0324fa74eb9469af9bbd7b764a4af03",
+        "changes_sha256":"a07fadaaa134bfe92c0ea1fb923c86ccdf3514db7d4a845f1dea64e233aa8f79",
+        "buildinfo_sha256":"1c32064d918c4fb91f299b87d5d0ced2601f86b51bff8d259ece537680db1178",
+        "dsc_sha256":"30c0a1d09c57e864fbddd208e6cb7c03fcd6088b2f0e03069fd3149f25426ac6",
+        "orig_tar_sha256":"9452f2b0cc5dd0214b88c4ce33297866be89af4177af14f5390cfb616e49c153",
+        "debian_tar_sha256":"9d5c0ad0b5fa27d2874f54c0d3722c7183501d86dbeff3729e17f563690c9a3b",
+        "rootfs_sha256":"ffe122c915dc75fea3ce1f6d1cd50df9cd53620b7af3e2d291b7d0776a436356"
+      }
     },
     "kglobalaccel": {
-      "state": "prepared-pending-build",
-      "last_result": null,
+      "state": "remediation-pending-build",
+      "last_result": "FAIL",
       "downstream_eligible": false,
       "upstream_version": "6.30.0",
       "source_package": "kf6-kglobalaccel",
@@ -105,23 +125,31 @@
         {"name":"libkf6globalaccel6","architecture":"amd64","multi_arch":"same"}
       ],
       "dependency_contracts": {
-        "libkf6globalaccel-dev": ["libkf6globalaccel6 (= 6.30.0-0supralinux1)","qt6-base-dev (>= 6.9.0~)"],
-        "libkf6globalaccel6": ["libkf6globalaccel-data (= 6.30.0-0supralinux1)"]
+        "libkf6globalaccel-dev": ["libkf6globalaccel6 (= 6.30.0-0supralinux2)","qt6-base-dev (>= 6.9.0~)"],
+        "libkf6globalaccel6": ["libkf6globalaccel-data (= 6.30.0-0supralinux2)"]
       },
-      "recommendation_contracts": {"libkf6globalaccel-dev":["libkf6globalaccel-doc (= 6.30.0-0supralinux1)"]},
-      "build_profile_tokens": ["qt6-base-dev (>= 6.9.0~)","qt6-base-private-dev (>= 6.9.0~)","qt6-declarative-dev (>= 6.9.0~)","xauth <!nocheck>","xvfb <!nocheck>"],
+      "recommendation_contracts": {"libkf6globalaccel-dev":["libkf6globalaccel-doc (= 6.30.0-0supralinux2)"]},
+      "build_profile_tokens": ["qt6-base-dev (>= 6.9.0~)","qt6-base-private-dev (>= 6.9.0~)","qt6-declarative-dev (>= 6.9.0~)","qt6-tools-dev (>= 6.9.0~)","xauth <!nocheck>","xvfb <!nocheck>"],
       "soname": "libKF6GlobalAccel.so.6",
       "cmake_package": "KF6GlobalAccel",
       "cmake_target": "KF6::GlobalAccel",
       "consumer_run": "direct",
       "copyright": {"file":"copyright","sha256":"1991e59510c1a15e9f0eba6479a249ec17579ad2f97d3686e0ed975f8614de34","reference":"debian-sid-6.28.0"},
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "symbols": {"file":"libkf6globalaccel6.symbols","sha256":"967876c92b88b1a0654b06084c70604191464ecaded59df4bbf4dea71c0c6bb7","tree_provider":"debian","reference_version":"6.28.0"},
-      "evidence": []
+      "evidence": [
+        {"result":"FAIL","workflow_run":34999449194,"job_id":104483912661,"commit":"209f6234cbd94d0b4e02df509b25ae5a6e0922fd","attempted_package_version":"6.30.0-0supralinux1","artifact_id":10408264332,"artifact_sha256":"1b7564f211967d1be8b61a96bc2a67389c6164f566e54dad79682d37a33bf6e5","failure_stage":"sbuild","failure_substage":"dh_auto_configure/CMake","tests":"not-reached","cause":"ECMPoQmTools required Qt6 LinguistTools during configure, but qt6-tools-dev was missing from Build-Depends."}
+      ],
+      "remediation": {
+        "candidate_package_version":"6.30.0-0supralinux2",
+        "status":"pending-validation",
+        "changes":["add qt6-tools-dev (>= 6.9.0~) to Build-Depends so the ECM Po/Qm translation path can resolve Qt6 LinguistTools"],
+        "source_change":false
+      }
     },
     "syntax-highlighting": {
-      "state": "prepared-pending-build",
-      "last_result": null,
+      "state": "remediation-pending-build",
+      "last_result": "FAIL",
       "downstream_eligible": false,
       "upstream_version": "6.30.0",
       "source_package": "kf6-syntax-highlighting",
@@ -140,21 +168,29 @@
         {"name":"qml6-module-org-kde-syntaxhighlighting","architecture":"amd64","multi_arch":"same"}
       ],
       "dependency_contracts": {
-        "libkf6syntaxhighlighting-dev": ["libkf6syntaxhighlighting6 (= 6.30.0-0supralinux1)","qml6-module-org-kde-syntaxhighlighting (= 6.30.0-0supralinux1)","qt6-base-dev (>= 6.9.0~)","qt6-declarative-dev (>= 6.9.0~)"],
-        "libkf6syntaxhighlighting-tools": ["libkf6syntaxhighlighting6 (= 6.30.0-0supralinux1)"],
-        "libkf6syntaxhighlighting6": ["libkf6syntaxhighlighting-data (= 6.30.0-0supralinux1)"],
-        "qml6-module-org-kde-syntaxhighlighting": ["libkf6syntaxhighlighting6 (= 6.30.0-0supralinux1)"]
+        "libkf6syntaxhighlighting-dev": ["libkf6syntaxhighlighting6 (= 6.30.0-0supralinux2)","qml6-module-org-kde-syntaxhighlighting (= 6.30.0-0supralinux2)","qt6-base-dev (>= 6.9.0~)","qt6-declarative-dev (>= 6.9.0~)"],
+        "libkf6syntaxhighlighting-tools": ["libkf6syntaxhighlighting6 (= 6.30.0-0supralinux2)"],
+        "libkf6syntaxhighlighting6": ["libkf6syntaxhighlighting-data (= 6.30.0-0supralinux2)"],
+        "qml6-module-org-kde-syntaxhighlighting": ["libkf6syntaxhighlighting6 (= 6.30.0-0supralinux2)"]
       },
-      "recommendation_contracts": {"libkf6syntaxhighlighting-dev":["libkf6syntaxhighlighting-doc (= 6.30.0-0supralinux1)"]},
-      "build_profile_tokens": ["dh-sequence-qmldeps","libxerces-c-dev","perl:any","qt6-base-dev (>= 6.9.0~)","qt6-declarative-dev (>= 6.9.0~)","xauth <!nocheck>","xvfb <!nocheck>"],
+      "recommendation_contracts": {"libkf6syntaxhighlighting-dev":["libkf6syntaxhighlighting-doc (= 6.30.0-0supralinux2)"]},
+      "build_profile_tokens": ["dh-sequence-qmldeps","libxerces-c-dev","perl:any","qt6-base-dev (>= 6.9.0~)","qt6-declarative-dev (>= 6.9.0~)","qt6-tools-dev (>= 6.9.0~)","xauth <!nocheck>","xvfb <!nocheck>"],
       "soname": "libKF6SyntaxHighlighting.so.6",
       "cmake_package": "KF6SyntaxHighlighting",
       "cmake_target": "KF6::SyntaxHighlighting",
       "consumer_run": "direct",
       "copyright": {"file":"copyright","sha256":"96abcf79db76923a43e841f4a22c41a2e81394a0ff074ce1f06009e962ba2d35","reference":"debian-sid-6.28.1"},
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "symbols": {"file":"libkf6syntaxhighlighting6.symbols","sha256":"3dd1d9e56a8fa8b802ffb6708ec65984cef422bcbe7660583c907a827aec47dd","tree_provider":"debian","reference_version":"6.28.1"},
-      "evidence": []
+      "evidence": [
+        {"result":"FAIL","workflow_run":34999449194,"job_id":104483912313,"commit":"209f6234cbd94d0b4e02df509b25ae5a6e0922fd","attempted_package_version":"6.30.0-0supralinux1","artifact_id":10408154532,"artifact_sha256":"8601077898fcba1ea5708fbd4e5a1c0d877825f969b8b39999d7d6bf131fbfe4","failure_stage":"sbuild","failure_substage":"dh_auto_configure/CMake","tests":"not-reached","cause":"ECMPoQmTools required Qt6 LinguistTools during configure, but qt6-tools-dev was missing from Build-Depends."}
+      ],
+      "remediation": {
+        "candidate_package_version":"6.30.0-0supralinux2",
+        "status":"pending-validation",
+        "changes":["add qt6-tools-dev (>= 6.9.0~) to Build-Depends so the ECM Po/Qm translation path can resolve Qt6 LinguistTools"],
+        "source_change":false
+      }
     }
   }
 }
