@@ -282,6 +282,16 @@ El validator inicial de Batch 4 en el commit `209f6234cbd94d0b4e02df509b25ae5a6e
 
 La corrección separa evidencia de campaña abierta y promoción canónica; Repository Policy run `35006476864` pasó con esa frontera corregida. El incidente no crea FAIL de Framework.
 
+### ECM closure scope incident
+
+El commit de cierre Batch 4 `037b16b7954593641041953fa4a9452f819de314` disparó innecesariamente el ECM package preflight porque el selector anterior trataba `manifests/kde-dag.json` y `docs/kde-dag.md` como inputs de build. El runner ECM no consume ninguno de esos archivos.
+
+Run `35009710506`, job `104518322483`, terminó PASS y generó artifact `10413246489`, SHA-256 `19f8ce8e17be9efab705df0a8974d89ef90ddcd06f5a9c53745f40ad227dcff4`.
+
+Clasificación: `infrastructure-scope-selection`; `package_state_effect=none`. No reemplaza el PASS canónico ECM `6.30.0-0supralinux3`, no crea una nueva revisión y no se usa para promocionar estado.
+
+La remediación limita el selector ECM a inputs realmente consumidos por el package lane: `packages/kde/extra-cmake-modules/*`, `scripts/run-kde-ecm-package-preflight.sh` y `.github/workflows/kde-ecm-package-preflight.yml`. Cambios de DAG, evidencia, documentación o del propio selector deben ejecutar el workflow pero hacer scope-skip, sin `sbuild` ni artifact nuevo.
+
 ## Estado actual
 
 Tier 1 queda en **13 PASS, 16 pending, 0 current FAIL, 0 BLOCKED**.

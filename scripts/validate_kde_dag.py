@@ -13,6 +13,7 @@ RUNNER = ROOT / "scripts" / "run-kde-ecm-package-preflight.sh"
 DELTA = ROOT / "scripts" / "kde-ecm-preflight-needed.sh"
 DOC = ROOT / "docs" / "kde-dag.md"
 STATUS_DOC = ROOT / "docs" / "status" / "2026-09-12.md"
+CURRENT_STATUS_DOC = ROOT / "docs" / "status" / "2026-09-15.md"
 PACKAGE_DIR = ROOT / "packages" / "kde" / "extra-cmake-modules" / "debian"
 CONTROL = PACKAGE_DIR / "control"
 COPYRIGHT = PACKAGE_DIR / "copyright"
@@ -31,6 +32,13 @@ SECOND_FAIL = {
     "job_id": 103543538213,
     "artifact_id": 10296517706,
     "digest": "89ef0003fd8282965a4c253bcd0150b8f040fe134ca0385d1365cd8c31808239",
+}
+UNNECESSARY_SCOPE_RUN = {
+    "run_id": 35009710506,
+    "job_id": 104518322483,
+    "artifact_id": 10413246489,
+    "digest": "19f8ce8e17be9efab705df0a8974d89ef90ddcd06f5a9c53745f40ad227dcff4",
+    "commit": "037b16b7954593641041953fa4a9452f819de314",
 }
 CANDIDATE = "6.30.0-0supralinux3"
 errors: list[str] = []
@@ -105,6 +113,7 @@ runner = read(RUNNER)
 delta = read(DELTA)
 doc = read(DOC)
 status_doc = read(STATUS_DOC)
+current_status_doc = read(CURRENT_STATUS_DOC)
 control = read(CONTROL)
 copyright_text = read(COPYRIGHT)
 changelog = read(CHANGELOG)
@@ -145,14 +154,28 @@ require(runner.index('STAGE="artifact-capture"') < runner.index('STAGE="lintian"
 require("override_dh_auto_test:" in rules, "ECM packaging must explicitly handle dh_auto_test when BUILD_TESTING is disabled")
 require("BUILD_TESTING=OFF" in rules, "ECM package-preflight profile must explicitly record disabled upstream tests")
 
+# Scope must follow actual package-consumed inputs. The runner does not consume
+# canonical DAG state/evidence or documentation, so those changes must not
+# rebuild a validated ECM package.
 for tracked in (
     "packages/kde/extra-cmake-modules/*",
     "scripts/run-kde-ecm-package-preflight.sh",
     ".github/workflows/kde-ecm-package-preflight.yml",
+):
+    require(tracked in delta, f"ECM delta detector must track consumed input {tracked}")
+for non_input in (
     "manifests/kde-dag.json",
     "docs/kde-dag.md",
+    "scripts/kde-ecm-preflight-needed.sh",
 ):
-    require(tracked in delta, f"ECM delta detector must track {tracked}")
+    require(non_input in delta, f"ECM delta detector must document non-input {non_input}")
+require("NOT build inputs" in delta, "ECM delta detector must explicitly document non-build inputs")
+require("git diff --name-only" in delta, "ECM delta detector must compare exact event delta")
+require("event delta changes no ECM package-consumed input; skip rebuild" in delta, "ECM delta detector must expose explicit skip reason")
+# Non-input tokens may appear only in comments/documentation, not in the git-diff pathspec block.
+pathspec_block = delta.split("git diff --name-only", 1)[1].split(")", 1)[0]
+for non_input in ("manifests/kde-dag.json", "docs/kde-dag.md", "scripts/kde-ecm-preflight-needed.sh"):
+    require(non_input not in pathspec_block, f"ECM non-input must not trigger rebuild: {non_input}")
 
 require("Source: kf6-extra-cmake-modules" in control, "ECM control must preserve source package name")
 require(re.search(r"^Package: extra-cmake-modules$", control, re.MULTILINE) is not None, "ECM control must preserve binary package name")
@@ -174,6 +197,16 @@ for value in (str(FIRST_FAIL["run_id"]), str(FIRST_FAIL["artifact_id"]), FIRST_F
 require("upstream test suite" in doc.lower() and "separate" in doc.lower(), "KDE DAG docs must not overclaim upstream test coverage")
 require(CANDIDATE in doc and CANDIDATE in status_doc, "docs must identify the current ECM remediation candidate")
 require("lintian --fail-on error" in doc and "qtpaths6" in doc, "KDE DAG docs must document second-failure remediation gates")
+for value in (
+    str(UNNECESSARY_SCOPE_RUN["run_id"]),
+    str(UNNECESSARY_SCOPE_RUN["job_id"]),
+    str(UNNECESSARY_SCOPE_RUN["artifact_id"]),
+    UNNECESSARY_SCOPE_RUN["digest"],
+    UNNECESSARY_SCOPE_RUN["commit"],
+):
+    require(value in doc, f"KDE DAG docs must retain ECM scope incident evidence {value}")
+    require(value in current_status_doc, f"2026-09-15 status must retain ECM scope incident evidence {value}")
+require("scope" in doc.lower() and "package_state_effect=none" in doc, "KDE DAG docs must classify ECM rebuild as scope-only with no package-state effect")
 
 if errors:
     for error in errors:
@@ -184,3 +217,4 @@ print("KDE DAG policy validation: PASS")
 print(f"Frameworks series: {data['frameworks_series']}")
 print(f"ECM: version={ecm['upstream_version']} package={ecm['package_version']} state={ecm['state']}")
 print(f"ECM source SHA-256: {ecm['source_sha256']}")
+print("ECM rebuild scope: package-consumed inputs only; DAG/docs/state-only changes skip")
