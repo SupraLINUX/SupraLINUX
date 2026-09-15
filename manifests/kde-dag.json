@@ -263,6 +263,73 @@
         {"type": "github-actions-run", "result": "PASS", "workflow_run": 34896417969, "job_id": 104151532320, "commit": "806d16476b034e796658ea1ab9028eb3a9a14e1b", "attempted_package_version": "6.30.0-0supralinux1", "artifact_id": 10369086459, "artifact_sha256": "f4c4f7425e582b5001fdffced34d045dc46152074422bd2bcf994e544bb96bb8", "stage": "complete", "tests": "5/5 PASS", "lintian": "PASS-errors", "consumer_smoke": "PASS", "abi_soname": "libKF6Plotting.so.6", "ecm_predecessor": "6.30.0-0supralinux3", "downstream_eligible": true}
       ],
       "pass_files": {"libkf6plotting_dev_deb_sha256": "c4e0d15019b532a9f85933013f8f9426ccaba1bf9a30953b9991cd8cfaa0dba2", "libkf6plotting_doc_deb_sha256": "fcb85feaf4bca9229cace8ee10c44115948e3bd7495d0d3c38fb7669fd9d71ba", "libkf6plotting6_deb_sha256": "90d52129fac90181528d2bc8d63db8830ddad1af18313bd6f985cbc4d238349d", "changes_sha256": "607809c70fc452a584c1f43d66278621132d65e81d66768847518a81a172190a", "buildinfo_sha256": "77f5226af9f1667a77a0b0d27d4e80ff640b3ee11fe9c6f4cec97702a0ad45d2", "dsc_sha256": "a798a1f222fe1f2c081e93644d2bc3fd48f5db341b3357905c81909d919e661e", "orig_tar_sha256": "f5a67be85c21665e052371301889443196b9de5b3927aff353a3d3e27730dd11", "debian_tar_sha256": "d30e788b3e80ad44a652348f7d9917798d7219b687b75bedd3d411f2207e8f4a"}
+    },
+    "kitemviews": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kitemviews-6.30.0.tar.xz",
+      "source_sha256": "9452f2b0cc5dd0214b88c4ce33297866be89af4177af14f5390cfb616e49c153",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-kitemviews",
+      "binary_packages": ["libkf6itemviews-data", "libkf6itemviews-dev", "libkf6itemviews-doc", "libkf6itemviews6"],
+      "package_version": "6.30.0-0supralinux1",
+      "depends_on": ["extra-cmake-modules"],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "evidence": [
+        {"type":"github-actions-run","result":"PASS","workflow_run":34999449194,"job_id":104483912528,"commit":"209f6234cbd94d0b4e02df509b25ae5a6e0922fd","attempted_package_version":"6.30.0-0supralinux1","artifact_id":10409267184,"artifact_sha256":"7e34fa7ede21510cf6829448e7b45a5c2832aaf9ac2719b9cb4125d23b593e55","stage":"complete","tests":"2/2 PASS","lintian":"PASS-errors","consumer_smoke":"PASS","abi_soname":"libKF6ItemViews.so.6","ecm_predecessor":"6.30.0-0supralinux3","downstream_eligible":true}
+      ],
+      "pass_files": {"libkf6itemviews_data_deb_sha256":"d2444550a7ce4bd796a24b98d0688bfe6e072abace1f9130cd9b6ad3b93bf682","libkf6itemviews_dev_deb_sha256":"6641e1d8bef8df05e37c4f0cfc24bdfe93dada02001822d695edcefd160dd5a6","libkf6itemviews_doc_deb_sha256":"c679820397908aea8c4dbc4b0a544d6b5c65ecdb1b52f440348eb0b68cbb216b","libkf6itemviews6_deb_sha256":"d7bd3eb44a8bae2e03978faf711f7e9d27058e8d91e4ac20db97013a946c1a90","libkf6itemviews_dev_dbgsym_ddeb_sha256":"f4942362386a215ce646648fe7743b86fbdc05a6008ea385a1fa95644638baf4","libkf6itemviews6_dbgsym_ddeb_sha256":"440eab177799c583590031ef2ec6cb09f0324fa74eb9469af9bbd7b764a4af03","changes_sha256":"a07fadaaa134bfe92c0ea1fb923c86ccdf3514db7d4a845f1dea64e233aa8f79","buildinfo_sha256":"1c32064d918c4fb91f299b87d5d0ced2601f86b51bff8d259ece537680db1178","dsc_sha256":"30c0a1d09c57e864fbddd208e6cb7c03fcd6088b2f0e03069fd3149f25426ac6","orig_tar_sha256":"9452f2b0cc5dd0214b88c4ce33297866be89af4177af14f5390cfb616e49c153","debian_tar_sha256":"9d5c0ad0b5fa27d2874f54c0d3722c7183501d86dbeff3729e17f563690c9a3b","rootfs_sha256":"ffe122c915dc75fea3ce1f6d1cd50df9cd53620b7af3e2d291b7d0776a436356"}
+    },
+    "kglobalaccel": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kglobalaccel-6.30.0.tar.xz",
+      "source_sha256": "e532ebd4cbfc8d6d79c6c38c556f1871315fedae8db2b69b574b9c496f171473",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-kglobalaccel",
+      "binary_packages": ["libkf6globalaccel-data", "libkf6globalaccel-dev", "libkf6globalaccel-doc", "libkf6globalaccel6"],
+      "package_version": "6.30.0-0supralinux2",
+      "depends_on": ["extra-cmake-modules"],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "evidence": [
+        {"type":"github-actions-run","result":"FAIL","workflow_run":34999449194,"job_id":104483912661,"commit":"209f6234cbd94d0b4e02df509b25ae5a6e0922fd","attempted_package_version":"6.30.0-0supralinux1","artifact_id":10408264332,"artifact_sha256":"1b7564f211967d1be8b61a96bc2a67389c6164f566e54dad79682d37a33bf6e5","failure_stage":"sbuild","failure_substage":"dh_auto_configure/CMake","tests":"not-reached","cause":"ECMPoQmTools required Qt6 LinguistTools during configure, but qt6-tools-dev was missing from Build-Depends."},
+        {"type":"github-actions-run","result":"PASS","workflow_run":35006477086,"job_id":104507372240,"commit":"163cde7bedd95c2ffb16c031aa12dada99f84161","attempted_package_version":"6.30.0-0supralinux2","artifact_id":10412320520,"artifact_sha256":"cb8143633cf15745a235937ea55ee096cb094cc96da3bd1fc39dc914f3acb3b1","stage":"complete","tests":"1/1 PASS","lintian":"PASS-errors","consumer_smoke":"PASS","abi_soname":"libKF6GlobalAccel.so.6","ecm_predecessor":"6.30.0-0supralinux3","validated_gate":"sbuild-summary-plus-dsc-plus-changes","downstream_eligible":true}
+      ],
+      "pass_files": {"libkf6globalaccel_data_deb_sha256":"c8b08f85cd11839c2e6e8fbd44a1b8bbdb5fd8a3915c9c841d69d2e53f67c6b2","libkf6globalaccel_dev_deb_sha256":"421f08f291ac0afe7ef75c0f3764b7aaeac103e0559282ecb1fbedec863dd2d6","libkf6globalaccel_doc_deb_sha256":"e34071d5e38aa342d7a8969d9ac7aa83ee65d1a2939ca641a7a3793bf6478862","libkf6globalaccel6_deb_sha256":"3b38259b8e543130d0635e6925ec2d47bd50edacf450bd4b1a3b0b4855f5636c","libkf6globalaccel6_dbgsym_ddeb_sha256":"bf7d2119ef7b5206df8bde5f08f7f3a44939ac85b9c97bc636c96e14008fb289","changes_sha256":"8b59ec7190fea8e47012bfb9dc9bceb0176614f0ea92bfcc386be3f4088c8c70","buildinfo_sha256":"c569c3958f292c16d4c0f1e9a63aec84916588792a61e2f22f42799b468c75ea","dsc_sha256":"0156261cddad4fe4cb6786ee70b1c09d9808dd192811da1247f90965247e84ba","orig_tar_sha256":"e532ebd4cbfc8d6d79c6c38c556f1871315fedae8db2b69b574b9c496f171473","debian_tar_sha256":"364e8a71e7508295c888c50cda059f0a7cb4a5f8435b5b97855d766bce0f0a27","rootfs_sha256":"1ade4c027d4c51ff571d487f026eebc84a37324f82d501d4a9ec90eefef37b87"},
+      "remediation": {"candidate_package_version":"6.30.0-0supralinux2","status":"validated","validated_by_run_id":35006477086,"changes":["add qt6-tools-dev (>= 6.9.0~) to Build-Depends so the ECM Po/Qm translation path can resolve Qt6 LinguistTools"],"source_change":false}
+    },
+    "syntax-highlighting": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/syntax-highlighting-6.30.0.tar.xz",
+      "source_sha256": "fc429b093058bec4878306cbbfb3aa0560ff4a3f166c69504036c507fe72afcc",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-syntax-highlighting",
+      "binary_packages": ["libkf6syntaxhighlighting-data", "libkf6syntaxhighlighting-dev", "libkf6syntaxhighlighting-doc", "libkf6syntaxhighlighting-tools", "libkf6syntaxhighlighting6", "qml6-module-org-kde-syntaxhighlighting"],
+      "package_version": "6.30.0-0supralinux2",
+      "depends_on": ["extra-cmake-modules"],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "evidence": [
+        {"type":"github-actions-run","result":"FAIL","workflow_run":34999449194,"job_id":104483912313,"commit":"209f6234cbd94d0b4e02df509b25ae5a6e0922fd","attempted_package_version":"6.30.0-0supralinux1","artifact_id":10408154532,"artifact_sha256":"8601077898fcba1ea5708fbd4e5a1c0d877825f969b8b39999d7d6bf131fbfe4","failure_stage":"sbuild","failure_substage":"dh_auto_configure/CMake","tests":"not-reached","cause":"ECMPoQmTools required Qt6 LinguistTools during configure, but qt6-tools-dev was missing from Build-Depends."},
+        {"type":"github-actions-run","result":"PASS","workflow_run":35006477086,"job_id":104507371855,"commit":"163cde7bedd95c2ffb16c031aa12dada99f84161","attempted_package_version":"6.30.0-0supralinux2","artifact_id":10411888269,"artifact_sha256":"1ec0d1e7d046b1393fbb299c9a6fec7e85ee4ac59ed5deafa0c777ead67c0b5f","stage":"complete","tests":"8/8 PASS","lintian":"PASS-errors","consumer_smoke":"PASS","abi_soname":"libKF6SyntaxHighlighting.so.6","ecm_predecessor":"6.30.0-0supralinux3","validated_gate":"sbuild-summary-plus-dsc-plus-changes","downstream_eligible":true}
+      ],
+      "pass_files": {"libkf6syntaxhighlighting_data_deb_sha256":"e42c72d49d27f7390fef036f593abcc0e6aa4967636bc7fcf4a28aa76d42b004","libkf6syntaxhighlighting_dev_deb_sha256":"009edce32489b202b64c9b82f26dd52cf0914f3242fc41633553379b790326a5","libkf6syntaxhighlighting_doc_deb_sha256":"41701dccba3102fb688236468d33013e88237fae275a85b9b9f5109ae1594058","libkf6syntaxhighlighting_tools_deb_sha256":"826917b1df261b380dbe5cf8db1afbfa4ab8f68f1cbb964819bc8e894605a5ba","libkf6syntaxhighlighting6_deb_sha256":"fb622b0165505e0c5e6af7eda45ff984bb8089f2fdad68f3ac4194ce3bfccde6","qml6_module_org_kde_syntaxhighlighting_deb_sha256":"cb2314577549d417e292bd89dd51cb6848778b7a18ebd35869df35afad45aceb","libkf6syntaxhighlighting_tools_dbgsym_ddeb_sha256":"fc7c287f2d3d4b74be0cb0296afadd34b9c111282d2f22ba53fcd86bb84200ac","libkf6syntaxhighlighting6_dbgsym_ddeb_sha256":"df219c804671a8f793721c1ebfa5cc248bb8932556932d70e3433b22359cfaaf","qml6_module_org_kde_syntaxhighlighting_dbgsym_ddeb_sha256":"c9caa58d8993efec0e44940ddccc0b41ade44587809504395c9e0a49acf47b29","changes_sha256":"c08bab4063743718e5d9b12d41a1dbc46fc4b717e44e5d32f162d12f84029747","buildinfo_sha256":"9a6cccc46355308e86011491b1bad812365ef2c8530d43c5644c1599bd3db901","dsc_sha256":"03a2e472fbe06d0644f61324ebc258f3a02b8fa2fe04b7d34d3a65dbbddcd14c","orig_tar_sha256":"fc429b093058bec4878306cbbfb3aa0560ff4a3f166c69504036c507fe72afcc","debian_tar_sha256":"d4feb75005fa94f15d755da9672a0608c4449fb4ebf5fe8148c188ed34657872","rootfs_sha256":"ade003bc7be5dbffc04d63b98343b3a88a1d70f92fb29e2e1f8007d3765460d0"},
+      "remediation": {"candidate_package_version":"6.30.0-0supralinux2","status":"validated","validated_by_run_id":35006477086,"changes":["add qt6-tools-dev (>= 6.9.0~) to Build-Depends so the ECM Po/Qm translation path can resolve Qt6 LinguistTools"],"source_change":false}
     }
   },
   "ci_scope_incidents": [
@@ -293,6 +360,14 @@
       "package_state_effect": "none",
       "cause": "The Batch 3 Repository Policy validator matched the target name override_dh_makeshlibs: as if it were the dh_makeshlibs command invocation and produced a false transform-order failure.",
       "remediation": "Match actual Make recipe command lines and require the symbols transform command to precede the real dh_makeshlibs invocation."
+    },
+    {
+      "workflow_run": 34999449194,
+      "commit": "209f6234cbd94d0b4e02df509b25ae5a6e0922fd",
+      "classification": "infrastructure-validator-canonical-boundary",
+      "package_state_effect": "none",
+      "cause": "The first Batch 4 validator assumed selected nodes already existed in the promoted package DAG and raised KeyError while the campaign was still intentionally open.",
+      "remediation": "Validate in-flight attempts in the Batch 4 campaign ledger and defer canonical Tier 1/DAG promotion until closure; Repository Policy run 35006476864 validated the corrected boundary."
     }
   ]
 }

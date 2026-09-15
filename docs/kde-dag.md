@@ -1,6 +1,6 @@
 # KDE stable dependency DAG
 
-Status: **ECM root PASS; 10 Frameworks Tier 1 PASS; 19 Tier 1 pending; 0 current FAIL; 0 BLOCKED**
+Status: **ECM root PASS; 13 Frameworks Tier 1 PASS; 16 Tier 1 pending; 0 current FAIL; 0 BLOCKED**
 
 Last reviewed: **2026-09-15**
 
@@ -188,6 +188,58 @@ BluezQt `6.30.0-0supralinux2` quedó PASS real:
 
 Los tres nodos de Batch 3 son downstream elegibles en el lane hosted.
 
+### Batch 4 — 3/3 PASS
+
+KItemViews conservó su PASS real del primer intento. KGlobalAccel y KSyntaxHighlighting conservaron sus FAIL `-1` y pasaron tras una revisión de packaging `-2`.
+
+- KItemViews `6.30.0-0supralinux1`.
+  Run `34999449194`.
+  Job `104483912528`.
+  Artifact `10409267184`.
+  SHA-256 `7e34fa7ede21510cf6829448e7b45a5c2832aaf9ac2719b9cb4125d23b593e55`.
+  Tests `2/2` PASS.
+  SONAME `libKF6ItemViews.so.6`.
+  Consumer smoke PASS.
+
+- KGlobalAccel attempt 1 `6.30.0-0supralinux1`.
+  Run `34999449194`.
+  Job `104483912661`.
+  Artifact `10408264332`.
+  SHA-256 `1b7564f211967d1be8b61a96bc2a67389c6164f566e54dad79682d37a33bf6e5`.
+  Resultado **FAIL** en `dh_auto_configure`/CMake antes de tests.
+  ECM `ECMPoQmTools` requería Qt 6 `LinguistTools`, pero faltaba `qt6-tools-dev` en Build-Depends.
+
+- KGlobalAccel `6.30.0-0supralinux2`.
+  Run `35006477086`.
+  Job `104507372240`.
+  Artifact `10412320520`.
+  SHA-256 `cb8143633cf15745a235937ea55ee096cb094cc96da3bd1fc39dc914f3acb3b1`.
+  Tests `1/1` PASS.
+  Lintian error gate PASS.
+  SONAME `libKF6GlobalAccel.so.6` PASS.
+  Consumer smoke PASS.
+
+- KSyntaxHighlighting attempt 1 `6.30.0-0supralinux1`.
+  Run `34999449194`.
+  Job `104483912313`.
+  Artifact `10408154532`.
+  SHA-256 `8601077898fcba1ea5708fbd4e5a1c0d877825f969b8b39999d7d6bf131fbfe4`.
+  Resultado **FAIL** en `dh_auto_configure`/CMake antes de tests por la misma dependencia `LinguistTools` no provista.
+
+- KSyntaxHighlighting `6.30.0-0supralinux2`.
+  Run `35006477086`.
+  Job `104507371855`.
+  Artifact `10411888269`.
+  SHA-256 `1ec0d1e7d046b1393fbb299c9a6fec7e85ee4ac59ed5deafa0c777ead67c0b5f`.
+  Tests `8/8` PASS.
+  Lintian error gate PASS.
+  SONAME `libKF6SyntaxHighlighting.so.6` PASS.
+  Consumer smoke PASS.
+
+La remediación de ambos paquetes añade `qt6-tools-dev (>= 6.9.0~)` y no cambia KDE source ni ABI baseline. KItemViews fue scope-skipped en run `35006477086` y no se reconstruyó innecesariamente.
+
+Los tres nodos de Batch 4 son downstream elegibles en el lane hosted.
+
 ## Incidentes de infraestructura
 
 Run `34716761551` seleccionó dos nodos ya PASS incorrectamente.
@@ -226,36 +278,22 @@ El packaging BluezQt ya tenía el orden correcto: primero `python3 debian/apply-
 
 El validator ahora distingue target e invocación real. Este incidente no crea FAIL de Framework.
 
+El validator inicial de Batch 4 en el commit `209f6234cbd94d0b4e02df509b25ae5a6e0922fd` asumió que los nodos seleccionados ya estaban en el DAG canónico y lanzó `KeyError: 'kitemviews'`.
+
+La corrección separa evidencia de campaña abierta y promoción canónica; Repository Policy run `35006476864` pasó con esa frontera corregida. El incidente no crea FAIL de Framework.
+
 ## Estado actual
 
-Tier 1 queda en **10 PASS, 19 pending, 0 current FAIL, 0 BLOCKED**.
+Tier 1 queda en **13 PASS, 16 pending, 0 current FAIL, 0 BLOCKED**.
 
 Sólo artifacts PASS retenidos pueden alimentar dependientes.
 
-## Batch 4 — campaña activa de remediación
-
-La primera campaña real de Batch 4 fue el run `34999449194` desde `209f6234cbd94d0b4e02df509b25ae5a6e0922fd`.
-
-- KItemViews `6.30.0-0supralinux1`: PASS real, job `104483912528`, artifact `10409267184`, SHA-256 `7e34fa7ede21510cf6829448e7b45a5c2832aaf9ac2719b9cb4125d23b593e55`, tests `2/2 PASS`, Lintian/SONAME/consumer smoke PASS.
-- KGlobalAccel `6.30.0-0supralinux1`: FAIL real, job `104483912661`, artifact `10408264332`, SHA-256 `1b7564f211967d1be8b61a96bc2a67389c6164f566e54dad79682d37a33bf6e5`, en `sbuild`/CMake antes de tests.
-- KSyntaxHighlighting `6.30.0-0supralinux1`: FAIL real, job `104483912313`, artifact `10408154532`, SHA-256 `8601077898fcba1ea5708fbd4e5a1c0d877825f969b8b39999d7d6bf131fbfe4`, en `sbuild`/CMake antes de tests.
-
-Los dos FAIL independientes tienen la misma causa de packaging: ECM `ECMPoQmTools` requiere Qt 6 `LinguistTools` y faltaba `qt6-tools-dev` en Build-Depends. Ubuntu Resolute 6.10.2 proporciona ese componente.
-
-Las revisiones de remediación son KGlobalAccel `6.30.0-0supralinux2` y KSyntaxHighlighting `6.30.0-0supralinux2`, ambas con `qt6-tools-dev (>= 6.9.0~)`. No cambia el source KDE.
-
-Durante la campaña abierta, la evidencia de intentos vive en `manifests/kde-tier1-package-campaign-batch4.json`. La promoción canónica del Tier 1 y del DAG de paquetes se difiere hasta el commit de cierre; por eso el estado global permanece **10 PASS / 19 pending / 0 current FAIL / 0 BLOCKED** aunque KItemViews ya tenga evidencia PASS real.
-
-El `KeyError: 'kitemviews'` del validator Batch 4 en Repository Policy fue un supuesto incorrecto sobre esa frontera de estado, no un FAIL de paquete. La corrección valida el ledger real y no exige una promoción DAG prematura.
+Hosted package-preflight sigue sin sustituir el futuro gate autoritativo KVM/JIT.
 
 ## Próxima expansión
 
-Primero deben reconstruirse realmente KGlobalAccel `-2` y KSyntaxHighlighting `-2`. KItemViews debe hacer scope-skip y conservar su PASS retenido.
-
-Si ambas remediaciones pasan todos los gates, Batch 4 puede cerrarse y el estado canónico podrá promoverse a **13 PASS / 16 pending / 0 current FAIL / 0 BLOCKED**.
-
-Si alguna remediación falla, registrar ese intento como FAIL real y continuar con una nueva revisión; no convertirlo en BLOCKED ni ocultar evidencia.
-
 KConfig sigue diferido hasta extender explícitamente el runner para su contrato ABI multi-library.
+
+Los próximos nodos deben seleccionarse desde los 16 Tier 1 pendientes usando el mismo criterio DAG: construir todos los independientes posibles, conservar PASS, registrar FAIL reales y marcar BLOCKED sólo por predecesor FAIL.
 
 PR #1 permanece Draft. No merge.

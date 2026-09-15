@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 Tier 1 — dependency resolution
 
-Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping resolved; hosted provider preflight PASS; 10 package nodes PASS; 19 package nodes pending**  
+Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping resolved; hosted provider preflight PASS; 13 package nodes PASS; 16 package nodes pending**  
 Last reviewed: **2026-09-15**
 
 ## Contract
@@ -40,7 +40,13 @@ The strongest selected Tier 1 constraint therefore gates the provider at `waylan
 
 `kitemviews`, `kplotting` and `kwidgetsaddons` enable Qt Designer plugins by default when not cross-compiling. Their Designer paths use ECM's Qt Designer support and require Qt `UiPlugin`; the provider mapping uses `qt6-tools-dev`.
 
-KItemViews is selected for Batch 4 with `BUILD_DESIGNERPLUGIN=ON`, preserving that KDE default explicitly.
+KItemViews Batch 4 retained `BUILD_DESIGNERPLUGIN=ON` and passed as `6.30.0-0supralinux1`.
+
+### Translation tooling and Qt LinguistTools
+
+Batch 4 exposed a provider mapping that preparation had missed: ECM `ECMPoQmTools` uses the Qt 6 `LinguistTools` CMake component when installing translations. Resolute provides that component through `qt6-tools-dev`.
+
+The omission caused real `-1` package FAILs for KGlobalAccel and KSyntaxHighlighting. Adding `qt6-tools-dev (>= 6.9.0~)` to their Build-Depends produced real PASS revisions `6.30.0-0supralinux2` in run `35006477086`. This is a provider/packaging correction, not a change in KDE authority or KDE requirements.
 
 ### Generators and language tooling
 
@@ -72,15 +78,21 @@ Prison 6.30 probes ZXing config packages in order `3.0`, `2.0`, `1.4.0` and acce
 
 Sonnet discovers Aspell, HSpell, Hunspell and Voikko. Each backend is individually optional, but on the selected non-Android build Sonnet fails if **none** can be built. The manifest models this as `required_any_of` and the provider profile maps all available candidates. HSpell is a packaging exception: Debian/Ubuntu provides its development header/library through `hspell`; SupraLINUX must not invent `libhspell-dev`.
 
-## Batch 4 dependency profile
+## Batch 4 dependency profile and closure evidence
 
-The Batch 4 selection is `kitemviews`, `kglobalaccel` and `syntax-highlighting`.
+The Batch 4 selection was `kitemviews`, `kglobalaccel` and `syntax-highlighting`.
 
-- KItemViews requires Qt Widgets >= 6.9. Its default Designer plugin is retained and therefore `qt6-tools-dev` is present.
-- KGlobalAccel requires Qt DBus/Gui/Widgets >= 6.9; with the selected Qt 6.10 provider upstream additionally requires `Qt6GuiPrivate`. Its enabled test subdirectory requires QtQml, so `qt6-declarative-dev` is a test/build input rather than an inherited distro-only dependency.
-- KSyntaxHighlighting requires Qt Core/Network/Test and Perl. Gui is retained in the selected default profile; Qt Quick is available through `qt6-declarative-dev`, so the upstream QML module is built. XercesC validation is deliberately enabled as described above.
+- KItemViews requires Qt Widgets >= 6.9 and retains the default Designer plugin via `qt6-tools-dev`.
+- KGlobalAccel requires Qt DBus/Gui/Widgets >= 6.9; with Qt 6.10 upstream additionally requires `Qt6GuiPrivate`; enabled tests require QtQml; ECM translation handling additionally requires `Qt6LinguistTools` supplied by `qt6-tools-dev`.
+- KSyntaxHighlighting requires Qt Core/Network/Test and Perl; Gui and the QML module remain in the selected profile; XercesC validation is enabled; ECM translation handling also requires `qt6-tools-dev`.
 
 Reference-only dependencies that cannot be traced to the selected KDE 6.30 build path, such as inherited `libxkbcommon-dev` entries in these Debian trees, are not copied into SupraLINUX packaging merely because they exist downstream.
+
+Closure evidence:
+
+- KItemViews PASS: run `34999449194`, artifact `10409267184`, SHA-256 `7e34fa7ede21510cf6829448e7b45a5c2832aaf9ac2719b9cb4125d23b593e55`.
+- KGlobalAccel remediation PASS: run `35006477086`, artifact `10412320520`, SHA-256 `cb8143633cf15745a235937ea55ee096cb094cc96da3bd1fc39dc914f3acb3b1`.
+- KSyntaxHighlighting remediation PASS: run `35006477086`, artifact `10411888269`, SHA-256 `1ec0d1e7d046b1393fbb299c9a6fec7e85ee4ac59ed5deafa0c777ead67c0b5f`.
 
 ## Hosted provider evidence
 
@@ -96,16 +108,16 @@ Historical runs `34699717549` and `34699889060` remain gate-implementation FAIL 
 
 ## Package evidence status
 
-Attica was the first real Framework package PASS against this dependency model. Subsequent Batch 1, Batch 2 and Batch 3 package evidence has promoted ten Tier 1 nodes in total. Preparation of Batch 4 does not transfer PASS to any new revision or node.
+Attica was the first real Framework package PASS against this dependency model. Batch 1, Batch 2, Batch 3 and Batch 4 evidence has now promoted thirteen Tier 1 nodes.
 
 Current canonical state:
 
 - upstream dependency resolution: **resolved**;
 - Ubuntu package-name mapping: **resolved**;
 - Ubuntu hosted provider availability/version evidence: **PASS**;
-- Tier 1 package/build states: **10 PASS / 19 pending**;
+- Tier 1 package/build states: **13 PASS / 16 pending**;
 - current Tier 1 FAIL: **0**;
 - current Tier 1 BLOCKED: **0**;
 - final Qt provider certification: **pending**.
 
-No Framework is promoted by provider evidence or packaging preparation alone. A node becomes PASS only after a real package attempt satisfies its gates.
+Provider evidence alone never promotes a Framework. Each of the thirteen PASS nodes has real package-attempt evidence.

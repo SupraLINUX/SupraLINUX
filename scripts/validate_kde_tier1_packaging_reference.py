@@ -42,12 +42,7 @@ EXPECTED_BINARY_CONTRACT_SNAPSHOT = {
     "common_binary_packages": 147,
     "ubuntu_only_binary_packages": 0,
     "debian_only_binary_packages": 4,
-    "debian_only_packages": [
-        "libkirigamiforms6",
-        "libkirigamiformsprivatecards6",
-        "libkirigamiformsprivateflat6",
-        "libkirigamiformsprivatetemplates6",
-    ],
+    "debian_only_packages": ["libkirigamiforms6", "libkirigamiformsprivatecards6", "libkirigamiformsprivateflat6", "libkirigamiformsprivatetemplates6"],
     "framework_package_build_certification": "pending",
 }
 PASS_NODES = {
@@ -61,14 +56,15 @@ PASS_NODES = {
     "kitemmodels": ("6.30.0-0supralinux1", 34896417969, 10369501432, "b806eaf27f733c1a2b5cc1d108ca442fef673b6dc0a53cfc5fff38abd2bf6732"),
     "bluez-qt": ("6.30.0-0supralinux2", 34945979836, 10387429776, "db8a3718a31eaae00d5f9fbdb60014dfeb1faf1c2bc84a88f9ab0d9bffec07ed"),
     "kplotting": ("6.30.0-0supralinux1", 34896417969, 10369086459, "f4c4f7425e582b5001fdffced34d045dc46152074422bd2bcf994e544bb96bb8"),
+    "kitemviews": ("6.30.0-0supralinux1", 34999449194, 10409267184, "7e34fa7ede21510cf6829448e7b45a5c2832aaf9ac2719b9cb4125d23b593e55"),
+    "kglobalaccel": ("6.30.0-0supralinux2", 35006477086, 10412320520, "cb8143633cf15745a235937ea55ee096cb094cc96da3bd1fc39dc914f3acb3b1"),
+    "syntax-highlighting": ("6.30.0-0supralinux2", 35006477086, 10411888269, "1ec0d1e7d046b1393fbb299c9a6fec7e85ee4ac59ed5deafa0c777ead67c0b5f"),
 }
 errors: list[str] = []
-
 
 def require(condition: bool, message: str) -> None:
     if not condition:
         errors.append(message)
-
 
 def load(path: Path) -> dict:
     try:
@@ -80,7 +76,6 @@ def load(path: Path) -> dict:
         raise SystemExit(f"ERROR: {path.relative_to(ROOT)} must contain an object")
     return value
 
-
 def read(path: Path) -> str:
     try:
         return path.read_text(encoding="utf-8")
@@ -88,25 +83,21 @@ def read(path: Path) -> str:
         errors.append(f"cannot read {path.relative_to(ROOT)}: {exc}")
         return ""
 
-
 source = load(SOURCE_MANIFEST)
 reference = load(REFERENCE_MANIFEST)
 scope = read(SCOPE)
 workflow = read(WORKFLOW)
-
 source_nodes = source.get("nodes", [])
 require(source.get("frameworks_series") == "6.30.0", "Packaging reference must follow Frameworks 6.30.0")
 require(isinstance(source_nodes, list) and len(source_nodes) == 29, "Packaging reference requires the fixed 29-node Tier 1 set")
 source_ids = {node.get("id") for node in source_nodes if isinstance(node, dict)}
 require(len(source_ids) == 29 and None not in source_ids, "Tier 1 source node IDs are incomplete")
-
 require(reference.get("schema") == 1, "Packaging-reference schema must be 1")
 require(reference.get("authority") is False, "Packaging references must never be authoritative")
 require(reference.get("role") == "packaging-reference-only", "Packaging-reference role changed unexpectedly")
 require(reference.get("selected_kde") == "6.30.0", "Packaging reference must follow selected KDE 6.30.0")
 require(reference.get("snapshot") == EXPECTED_SNAPSHOT, "Packaging-reference PASS evidence changed without review")
 require(reference.get("binary_contract_snapshot") == EXPECTED_BINARY_CONTRACT_SNAPSHOT, "Binary-contract PASS evidence changed without review")
-
 references = reference.get("references", {})
 require(references.get("ubuntu", {}).get("distribution") == "ubuntu", "Ubuntu reference distribution missing")
 require(references.get("ubuntu", {}).get("series") == "resolute", "Ubuntu reference must be Resolute")
@@ -114,21 +105,13 @@ require(references.get("ubuntu", {}).get("components") == ["main", "universe"], 
 require(references.get("debian", {}).get("distribution") == "debian", "Debian reference distribution missing")
 require(references.get("debian", {}).get("series") == "sid", "Debian reference must be sid")
 require(references.get("debian", {}).get("components") == ["main"], "Debian reference components changed")
-
 policy = reference.get("policy", {})
-for key in (
-    "kde_upstream_remains_authority",
-    "reference_packaging_may_not_disable_upstream_defaults_without_documented_reason",
-    "reference_versions_do_not_select_kde_version",
-    "reference_binary_names_are_inputs_for_compatibility_review_not_automatic_decisions",
-):
+for key in ("kde_upstream_remains_authority","reference_packaging_may_not_disable_upstream_defaults_without_documented_reason","reference_versions_do_not_select_kde_version","reference_binary_names_are_inputs_for_compatibility_review_not_automatic_decisions"):
     require(policy.get(key) is True, f"Packaging reference policy must keep {key}=true")
-
 nodes = reference.get("nodes", {})
 require(set(nodes) == source_ids, "Packaging-reference node set must exactly match Tier 1")
 for node_id in sorted(source_ids):
     require(nodes.get(node_id) == {"source_package": f"kf6-{node_id}"}, f"{node_id}: source package mapping changed")
-
 for node in source_nodes:
     if not isinstance(node, dict):
         continue
@@ -149,40 +132,20 @@ for node in source_nodes:
     else:
         require(node.get("packaging") == {"state":"pending"}, f"{node_id}: unattempted packaging must remain pending")
         require(node.get("state") == "pending", f"{node_id}: unattempted node must remain pending")
-
-require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 10, "Reference validator expects 10 actual package PASS nodes")
-require(sum(1 for node in source_nodes if node.get("state") == "pending") == 19, "Reference validator expects 19 pending nodes")
-
-for token in (
-    "manifests/kde-frameworks-tier1.json",
-    "manifests/kde-frameworks-tier1-packaging-reference.json",
-    "scripts/run-kde-tier1-packaging-reference-snapshot.sh",
-    "scripts/kde-tier1-packaging-reference-needed.sh",
-    ".github/workflows/kde-tier1-packaging-reference.yml",
-):
+require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 13, "Reference validator expects 13 actual package PASS nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "pending") == 16, "Reference validator expects 16 pending nodes")
+for token in ("manifests/kde-frameworks-tier1.json","manifests/kde-frameworks-tier1-packaging-reference.json","scripts/run-kde-tier1-packaging-reference-snapshot.sh","scripts/kde-tier1-packaging-reference-needed.sh",".github/workflows/kde-tier1-packaging-reference.yml"):
     require(token in scope, f"Packaging-reference scope must track input {token}")
 require("docs/" not in scope, "Packaging-reference snapshot must not rerun for documentation-only changes")
 require("validate_kde_tier1_packaging_reference.py" not in scope, "Packaging-reference snapshot must not rerun for validator-only changes")
 require('git diff --name-only "${BEFORE}" "${AFTER}" --' in scope, "Packaging-reference scope must compare exact event delta")
-
-for token in (
-    "fetch-depth: 0",
-    "github.event.before",
-    "github.event.after",
-    "github.event.pull_request.base.sha",
-    "github.event.pull_request.head.sha",
-    "scripts/kde-tier1-packaging-reference-needed.sh",
-    "steps.scope.outputs.run == 'true'",
-    "steps.scope.outputs.run == 'false'",
-):
+for token in ("fetch-depth: 0","github.event.before","github.event.after","github.event.pull_request.base.sha","github.event.pull_request.head.sha","scripts/kde-tier1-packaging-reference-needed.sh","steps.scope.outputs.run == 'true'","steps.scope.outputs.run == 'false'"):
     require(token in workflow, f"Packaging-reference workflow missing event-delta invariant: {token}")
 require("paths:" not in workflow, "Packaging-reference workflow must not rely on PR-wide paths filtering")
-
 if errors:
     for error in errors:
         print(f"ERROR: {error}", file=sys.stderr)
     raise SystemExit(1)
-
 print("KDE Frameworks Tier 1 packaging-reference policy: PASS")
 print("Reference snapshots remain non-authoritative technical inputs")
-print("Actual package states: 10 PASS; 19 pending")
+print("Actual package states: 13 PASS; 16 pending")
