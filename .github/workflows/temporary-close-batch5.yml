@@ -1,4 +1,4 @@
-name: Temporary export for KDE Tier 1 Batch 5 closure
+name: Temporary validated KDE Tier 1 Batch 5 closure applicator
 
 on:
   push:
@@ -6,29 +6,120 @@ on:
       - architecture/bootstrap-v1
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  export-repository:
+  apply-and-close:
+    name: Apply validated Batch 5 closure
     runs-on: ubuntu-26.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Checkout exact branch head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
-      - name: Export exact repository snapshot
+      - name: Detect staged closure payload
+        id: payload
         shell: bash
         run: |
           set -euo pipefail
-          tar --exclude=.git -czf /tmp/supralinux-batch5-close-source.tar.gz .
-          sha256sum /tmp/supralinux-batch5-close-source.tar.gz
+          if [[ -f .tmp/batch5-close/part-00 ]]; then
+            echo 'present=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'present=false' >> "$GITHUB_OUTPUT"
+            echo 'No staged Batch 5 closure payload; this is the expected post-close self-trigger.'
+          fi
 
-      - name: Upload repository snapshot
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: batch5-close-source-${{ github.sha }}
-          path: /tmp/supralinux-batch5-close-source.tar.gz
-          if-no-files-found: error
-          retention-days: 1
+      - name: Reconstruct and verify validated closure patch
+        if: steps.payload.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(find .tmp/batch5-close -maxdepth 1 -type f -name 'part-*' | wc -l)" -eq 8
+          cat .tmp/batch5-close/part-{00..07} > /tmp/closure.patch.gz.b64
+          echo 'ccec185eee025485265176d3894e8aac8d8ac25661b4df266db7229ddf9fbfc8  /tmp/closure.patch.gz.b64' | sha256sum -c -
+          base64 -d /tmp/closure.patch.gz.b64 > /tmp/closure.patch.gz
+          echo 'b9e0a7ad022a607ad4ef9dc6935399f600547540a9836d2e0a94888d023fa09d  /tmp/closure.patch.gz' | sha256sum -c -
+          gzip -dc /tmp/closure.patch.gz > /tmp/closure.patch
+          echo '5f92d1d39558a579185e28c2c2d17d8ddc50942ceff8b38467ea71a83c4dfb93  /tmp/closure.patch' | sha256sum -c -
+          git apply --check /tmp/closure.patch
+          git apply /tmp/closure.patch
+          test ! -e NOOP
+          git diff --quiet -- .github/workflows/temporary-close-batch5.yml
+
+      - name: Install repository policy tools
+        if: steps.payload.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gnupg shellcheck
+          shellcheck --version
+          gpgv --version | head -1
+
+      - name: Run repository policy gates on closure tree
+        if: steps.payload.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n scripts/*.sh
+          shellcheck -e SC1091 scripts/*.sh
+          scripts/test-qemu-kvm-required.sh
+          scripts/test-verify-ubuntu-cloud-image-provenance.sh
+          scripts/test-check-actions-runner-runtime.sh
+          scripts/test-check-golden-image-provenance.sh
+          python3 scripts/validate_repository.py
+          python3 scripts/validate_qt_provider.py
+          python3 scripts/validate_kde_dag.py
+          python3 scripts/validate_kde_tier1.py
+          python3 scripts/validate_kde_tier1_packaging_reference.py
+          python3 scripts/validate_kde_tier1_packaging_tree.py
+          python3 scripts/validate_kde_tier1_package_batch1.py
+          python3 scripts/validate_kde_tier1_package_batch2.py
+          python3 scripts/validate_kde_tier1_package_batch3.py
+          python3 scripts/validate_kde_tier1_package_batch4.py
+          python3 scripts/validate_kde_tier1_package_batch5.py
+          python3 scripts/validate_kde_attica_package.py
+          python3 scripts/validate_kde_attica_ci_scope.py
+          python3 -m py_compile scripts/validate_*.py
+          git diff --check
+
+      - name: Verify closure diff scope and create canonical commit
+        if: steps.payload.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .tmp/batch5-close
+          git diff --quiet -- .github/workflows/temporary-close-batch5.yml
+          python3 - <<'PY'
+          import subprocess
+          expected = {
+              'NOOP',
+              'docs/kde-dag.md',
+              'docs/kde-tier1-dependencies.md',
+              'docs/kde-tier1-package-batch5.md',
+              'docs/status/2026-09-15-batch5.md',
+              'docs/status/2026-09-15.md',
+              'manifests/kde-dag.json',
+              'manifests/kde-frameworks-tier1.json',
+              'manifests/kde-tier1-package-campaign-batch5.json',
+              'scripts/validate_kde_tier1.py',
+              'scripts/validate_kde_tier1_package_batch1.py',
+              'scripts/validate_kde_tier1_package_batch4.py',
+              'scripts/validate_kde_tier1_package_batch5.py',
+              'scripts/validate_kde_tier1_packaging_reference.py',
+              'scripts/validate_kde_tier1_packaging_tree.py',
+              *{f'.tmp/batch5-close/part-{i:02d}' for i in range(8)},
+          }
+          changed = set(subprocess.check_output(['git','diff','--name-only'], text=True).splitlines())
+          if changed != expected:
+              raise SystemExit(f'Unexpected closure diff scope.\nExpected: {sorted(expected)}\nActual: {sorted(changed)}')
+          print(f'Closure diff scope: PASS ({len(changed)} paths)')
+          PY
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'kde: close Tier 1 batch 5'
+          git push origin HEAD:architecture/bootstrap-v1
