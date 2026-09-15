@@ -5,7 +5,7 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "batch": "tier1-batch-6",
-  "state": "prepared-pending-build",
+  "state": "remediation-pending-build",
   "canonical_state_role": "batch-package-attempt-ledger",
   "canonical_snapshot": {
     "state": "unpromoted-open-batch",
@@ -77,7 +77,7 @@
     "kwindowsystem": {
       "upstream_version": "6.30.0",
       "source_package": "kf6-kwindowsystem",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kwindowsystem-6.30.0.tar.xz",
       "source_sha256": "639a501b877446b19905399d27e2be2b6ebb0bb481abe3209dc4d535a12e12ca",
       "root_cmake_blob": "e8317948e1df27330ceddf45bf418aa2a02bde5b",
@@ -113,8 +113,8 @@
       ],
       "dependency_contracts": {
         "libkf6windowsystem-dev": [
-          "libkf6windowsystem6 (= 6.30.0-0supralinux1)",
-          "qml6-module-org-kde-kwindowsystem (= 6.30.0-0supralinux1)",
+          "libkf6windowsystem6 (= 6.30.0-0supralinux2)",
+          "qml6-module-org-kde-kwindowsystem (= 6.30.0-0supralinux2)",
           "qt6-base-dev (>= 6.9.0~)",
           "qt6-declarative-dev (>= 6.9.0~)",
           "qt6-wayland-dev (>= 6.9.0~)"
@@ -122,7 +122,7 @@
       },
       "recommendation_contracts": {
         "libkf6windowsystem-dev": [
-          "libkf6windowsystem-doc (= 6.30.0-0supralinux1)"
+          "libkf6windowsystem-doc (= 6.30.0-0supralinux2)"
         ],
         "libkf6windowsystem6": [
           "qt6-wayland"
@@ -134,6 +134,7 @@
         "libxcb-icccm4-dev",
         "libxcb-keysyms1-dev",
         "libxcb-res0-dev",
+        "libxcb-xfixes0-dev",
         "libxcb1-dev",
         "libxfixes-dev",
         "libxkbcommon-dev",
@@ -171,15 +172,37 @@
         "signer_fingerprint": "90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1",
         "source": "retained-debian-packaging-reference"
       },
-      "state": "prepared-pending-build",
-      "last_result": null,
+      "state": "remediation-pending-build",
+      "last_result": "FAIL",
       "downstream_eligible": false,
-      "evidence": []
+      "evidence": [
+        {
+          "result": "FAIL",
+          "workflow_run": 35034742520,
+          "job_id": 104601176595,
+          "commit": "74fe53f698ad108958b9409029e8d51cc61c0956",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10422598658,
+          "artifact_sha256": "cc38c90312b6e73b2dc338712c391af96664cdd2a342d16f2a163bce67c1be1b",
+          "failure_stage": "sbuild",
+          "failure_substage": "build/missing-development-header",
+          "cause": "src/kx11extras.cpp includes xcb/xfixes.h, but libxcb-xfixes0-dev was omitted from Build-Depends; both retained Debian 6.28 and Ubuntu 6.24 packaging references declare that development provider."
+        }
+      ],
+      "remediation": {
+        "candidate_package_version": "6.30.0-0supralinux2",
+        "status": "remediation-pending-build",
+        "source_change": false,
+        "changes": [
+          "add libxcb-xfixes0-dev to Build-Depends",
+          "retain KDE 6.30.0 source and X11/Wayland/QML defaults unchanged"
+        ]
+      }
     },
     "solid": {
       "upstream_version": "6.30.0",
       "source_package": "kf6-solid",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/solid-6.30.0.tar.xz",
       "source_sha256": "bdbfdc9f26b87e12b951097825af2956f2dee3f14c701d780277b69701f2c74e",
       "root_cmake_blob": "65681c1db745cd52a547659f1b778fa42bb3cb52",
@@ -215,7 +238,7 @@
       ],
       "dependency_contracts": {
         "libkf6solid-dev": [
-          "libkf6solid6 (= 6.30.0-0supralinux1)",
+          "libkf6solid6 (= 6.30.0-0supralinux2)",
           "qt6-base-dev (>= 6.9.0~)"
         ]
       },
@@ -237,6 +260,7 @@
         "libplist-dev",
         "libudev-dev",
         "libxkbcommon-dev",
+        "python3:any",
         "qt6-base-dev (>= 6.9.0~)",
         "qt6-tools-dev (>= 6.9.0~)"
       ],
@@ -261,10 +285,38 @@
         "signer_fingerprint": "90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1",
         "source": "retained-debian-packaging-reference"
       },
-      "state": "prepared-pending-build",
-      "last_result": null,
+      "state": "remediation-pending-build",
+      "last_result": "FAIL",
       "downstream_eligible": false,
-      "evidence": []
+      "evidence": [
+        {
+          "result": "FAIL",
+          "workflow_run": 35034742520,
+          "job_id": 104601176254,
+          "commit": "74fe53f698ad108958b9409029e8d51cc61c0956",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10422873422,
+          "artifact_sha256": "135a63a6855bed690e6bbdbf67dc924b5dbd8bd304f0a78c84920927772e15a0",
+          "failure_stage": "sbuild",
+          "failure_substage": "Lintian/symbols",
+          "tests": "5/5 PASS",
+          "cause": "The package built and all 5 tests passed, but dpkg-gensymbols added _ZSt19piecewise_construct@Base at the current Debian revision and Lintian rejected symbols-file-contains-current-version-with-debian-revision."
+        }
+      ],
+      "remediation": {
+        "candidate_package_version": "6.30.0-0supralinux2",
+        "status": "remediation-pending-build",
+        "source_change": false,
+        "symbols_baseline_sha256": "4928d196746e4f497733ab7052eea5bf1b219013fb58c6aa4c52284f6e0eb419",
+        "symbols_result_sha256": "8614c45e8a902f3c3011b8cec65680ab5152314c798a71ebec108fc50fb547d0",
+        "symbols_transform_sha256": "35fff06320bf6a5ec8db8ba5f4e062e2242f692446f3d19304602ba7147c0b70",
+        "provider_reference": "Ubuntu retained 6.24 symbols records _ZSt19piecewise_construct@Base at 6.4.0 on !armhf !riscv64",
+        "changes": [
+          "insert optional=toolchain piecewise_construct at minimum 6.4.0 with Ubuntu reference architecture condition",
+          "declare python3:any because debian/rules executes the hash-locked transform",
+          "retain KDE source and all non-toolchain Debian 6.28 ABI symbols unchanged"
+        ]
+      }
     }
   }
 }

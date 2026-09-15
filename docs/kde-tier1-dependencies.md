@@ -149,3 +149,9 @@ Provider evidence alone never promotes a Framework. Each of the sixteen canonica
 ## Batch 6 selection
 
 KWindowSystem and Solid are the next package candidates. This does not change authority: KDE upstream 6.30.0 defines requirements; Ubuntu Resolute is only a provider. KWindowSystem retains QML, X11 and Wayland with Wayland Protocols >= 1.46 and Plasma Wayland Protocols. Solid retains DBus, udev and libmount; IMobileDevice/PList remain upstream-optional and their Ubuntu providers are supplied rather than disabled. Canonical Tier 1 remains **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED** until real package evidence is promoted.
+
+## Batch 6 provider correction evidence
+
+Initial run `35034742520` proved the selected KDE 6.30 source reaches real package compilation on Resolute. KWindowSystem exposed one packaging omission: upstream source includes `xcb/xfixes.h`, while the SupraLINUX Build-Depends lacked `libxcb-xfixes0-dev`. Both retained Debian 6.28 and Ubuntu 6.24 packaging trees include that provider, so revision `-2` adds it without changing KDE's X11/Wayland/QML feature selection.
+
+Solid completed its build and `5/5` tests. Its failure was not a missing provider: Lintian rejected the toolchain-exported `_ZSt19piecewise_construct@Base`. Ubuntu's retained symbols baseline records this export at minimum `6.4.0` on architectures other than armhf/riscv64. SupraLINUX keeps the Debian 6.28 public ABI baseline and marks only that export `optional=toolchain` with the retained Ubuntu architecture/minimum-version evidence.

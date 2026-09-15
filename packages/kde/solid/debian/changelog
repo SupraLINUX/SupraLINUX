@@ -1,3 +1,12 @@
+kf6-solid (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Preserve the Debian 6.28 public symbols baseline and classify the observed
+    libstdc++ piecewise_construct export as optional toolchain surface, using
+    the Ubuntu reference minimum version/architecture evidence.
+  * Add python3:any for the hash-locked symbols transform invoked from rules.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Tue, 15 Sep 2026 20:43:00 -0300
+
 kf6-solid (6.30.0-0supralinux1) resolute; urgency=medium
 
   * SupraLINUX clean KDE Frameworks 6.30.0 package preflight.

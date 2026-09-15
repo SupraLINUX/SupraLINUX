@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 Tier 1 — package Batch 6
 
-Status: **prepared — builds pending**
+Status: **remediation prepared — second builds pending**
 Last reviewed: **2026-09-15**
 
 ## Selection
@@ -29,6 +29,15 @@ Official KDE source hashes:
 Retained Debian 6.28 packaging references remain technical references only: run `34708030450`, artifact `10301938362`. The per-node keyring bundles differ byte-for-byte but both contain the Frameworks 6.30 signer fingerprint `90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1`; the campaign records each bundle hash separately rather than pretending they are identical.
 
 Dependency-provider preflight remains run `35012023822`, job `104526071758`, artifact `10414525047`, SHA-256 `db6868402b08bca82241d07980e158639a2f2fc64c4a5ab595fa58846361cb4a`. This is provider-availability evidence only and is not package PASS evidence.
+
+## Initial real attempt and remediation
+
+Run `35034742520` attempted both nodes from preparation commit `74fe53f698ad108958b9409029e8d51cc61c0956`. Both are real package FAIL results in the Batch 6 attempt ledger; neither is BLOCKED. Canonical Tier 1 remains unpromoted at **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED**.
+
+- KWindowSystem `6.30.0-0supralinux1`: job `104601176595`, artifact `10422598658`, artifact SHA-256 `cc38c90312b6e73b2dc338712c391af96664cdd2a342d16f2a163bce67c1be1b`. CMake configured and compilation started, then `src/kx11extras.cpp` failed on missing `xcb/xfixes.h`. The retained Debian 6.28 and Ubuntu 6.24 packaging trees both declare `libxcb-xfixes0-dev`; SupraLINUX had omitted it. Revision `-2` adds only that Build-Depends and leaves KDE source plus X11/Wayland/QML defaults unchanged.
+- Solid `6.30.0-0supralinux1`: job `104601176254`, artifact `10422873422`, artifact SHA-256 `135a63a6855bed690e6bbdbf67dc924b5dbd8bd304f0a78c84920927772e15a0`. The package built and passed `5/5` tests. Lintian then rejected `_ZSt19piecewise_construct@Base` because `dpkg-gensymbols` assigned the current Debian revision as its minimum version. The retained Ubuntu symbols reference already records this libstdc++/toolchain export at `6.4.0` on `!armhf !riscv64`. Revision `-2` keeps the Debian 6.28 public ABI baseline and applies one hash-locked optional-toolchain delta: `(optional=toolchain|arch=!armhf !riscv64)_ZSt19piecewise_construct@Base 6.4.0`. `python3:any` is declared because `debian/rules` executes the transform.
+
+The Solid transform SHA-256 is `35fff06320bf6a5ec8db8ba5f4e062e2242f692446f3d19304602ba7147c0b70`; the reviewed transformed symbols SHA-256 is `8614c45e8a902f3c3011b8cec65680ab5152314c798a71ebec108fc50fb547d0`. Neither remediation changes KDE source, Qt selection, authority boundaries or the canonical DAG.
 
 ## Deferred surfaces
 

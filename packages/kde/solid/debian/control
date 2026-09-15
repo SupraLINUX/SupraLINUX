@@ -15,6 +15,7 @@ Build-Depends: debhelper-compat (= 13),
                libplist-dev,
                libudev-dev [linux-any],
                libxkbcommon-dev,
+               python3:any,
                qt6-base-dev (>= 6.9.0~),
                qt6-tools-dev (>= 6.9.0~),
 Standards-Version: 4.7.3
