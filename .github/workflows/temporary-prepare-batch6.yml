@@ -1,0 +1,177 @@
+name: Temporary validated KDE Tier 1 Batch 6 preparation applicator
+
+on:
+  push:
+    branches:
+      - architecture/bootstrap-v1
+
+permissions:
+  contents: write
+
+jobs:
+  apply-and-prepare:
+    name: Apply validated Batch 6 preparation
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact branch head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Verify and extract staged Batch 6 payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(find .tmp/batch6-prepare -maxdepth 1 -type f -name 'part-*' | wc -l)" -eq 72
+          find .tmp/batch6-prepare -maxdepth 1 -type f -name 'part-*' -print0 | sort -z | xargs -0 cat > /tmp/batch6-payload.tar.gz.b64
+          base64 -d /tmp/batch6-payload.tar.gz.b64 > /tmp/batch6-payload.tar.gz
+          echo '6907e804cab7eed672acd90d03c9d466070b50826347f5b195079234a9ac8ebc  /tmp/batch6-payload.tar.gz' | sha256sum -c -
+          tar -tzf /tmp/batch6-payload.tar.gz | sort > /tmp/archive-paths
+          cat > /tmp/expected-paths <<'PATHS'
+          .github/workflows/kde-tier1-package-batch6.yml
+          .github/workflows/repository-policy.yml
+          docs/kde-tier1-dependencies.md
+          docs/kde-tier1-package-batch6.md
+          docs/status/2026-09-15-batch6.md
+          docs/status/2026-09-15.md
+          manifests/kde-tier1-package-campaign-batch6.json
+          packages/kde/kwindowsystem/consumer/CMakeLists.txt
+          packages/kde/kwindowsystem/consumer/main.cpp
+          packages/kde/kwindowsystem/debian/README.source
+          packages/kde/kwindowsystem/debian/changelog
+          packages/kde/kwindowsystem/debian/control
+          packages/kde/kwindowsystem/debian/copyright.reference
+          packages/kde/kwindowsystem/debian/libkf6windowsystem-data.install
+          packages/kde/kwindowsystem/debian/libkf6windowsystem-dev.install
+          packages/kde/kwindowsystem/debian/libkf6windowsystem-doc.install
+          packages/kde/kwindowsystem/debian/libkf6windowsystem6.install
+          packages/kde/kwindowsystem/debian/libkf6windowsystem6.symbols.reference
+          packages/kde/kwindowsystem/debian/libkf6windowsystem6.symbols.reference.meta
+          packages/kde/kwindowsystem/debian/qml6-module-org-kde-kwindowsystem.install
+          packages/kde/kwindowsystem/debian/rules
+          packages/kde/kwindowsystem/debian/source/format
+          packages/kde/kwindowsystem/debian/upstream/signing-key.asc
+          packages/kde/solid/consumer/CMakeLists.txt
+          packages/kde/solid/consumer/main.cpp
+          packages/kde/solid/debian/README.source
+          packages/kde/solid/debian/changelog
+          packages/kde/solid/debian/control
+          packages/kde/solid/debian/copyright.reference
+          packages/kde/solid/debian/libkf6solid-bin.install
+          packages/kde/solid/debian/libkf6solid-data.install
+          packages/kde/solid/debian/libkf6solid-dev.install
+          packages/kde/solid/debian/libkf6solid-doc.install
+          packages/kde/solid/debian/libkf6solid6.install
+          packages/kde/solid/debian/libkf6solid6.symbols.reference
+          packages/kde/solid/debian/libkf6solid6.symbols.reference.meta
+          packages/kde/solid/debian/rules
+          packages/kde/solid/debian/source/format
+          packages/kde/solid/debian/upstream/signing-key.asc
+          scripts/kde-tier1-package-batch6-needed.sh
+          scripts/run-kde-tier1-package-batch6-preflight.sh
+          scripts/validate_kde_tier1_package_batch6.py
+          PATHS
+          diff -u /tmp/expected-paths /tmp/archive-paths
+          tar -xzf /tmp/batch6-payload.tar.gz -C .
+          git status --porcelain=v1 | cut -c4- | sort > /tmp/payload-delta
+          diff -u /tmp/expected-paths /tmp/payload-delta
+          git diff --quiet -- manifests/kde-frameworks-tier1.json manifests/kde-dag.json
+
+      - name: Install repository policy tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gnupg shellcheck
+          shellcheck --version
+          gpgv --version | head -1
+
+      - name: Run repository policy gates on Batch 6 preparation tree
+        shell: bash
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          set -euo pipefail
+          bash -n scripts/*.sh
+          shellcheck -e SC1091 scripts/*.sh
+          scripts/test-qemu-kvm-required.sh
+          scripts/test-verify-ubuntu-cloud-image-provenance.sh
+          scripts/test-check-actions-runner-runtime.sh
+          scripts/test-check-golden-image-provenance.sh
+          python3 scripts/validate_repository.py
+          python3 scripts/validate_qt_provider.py
+          python3 scripts/validate_kde_dag.py
+          python3 scripts/validate_kde_tier1.py
+          python3 scripts/validate_kde_tier1_packaging_reference.py
+          python3 scripts/validate_kde_tier1_packaging_tree.py
+          python3 scripts/validate_kde_tier1_package_batch1.py
+          python3 scripts/validate_kde_tier1_package_batch2.py
+          python3 scripts/validate_kde_tier1_package_batch3.py
+          python3 scripts/validate_kde_tier1_package_batch4.py
+          python3 scripts/validate_kde_tier1_package_batch5.py
+          python3 scripts/validate_kde_tier1_package_batch6.py
+          python3 scripts/validate_kde_attica_package.py
+          python3 scripts/validate_kde_attica_ci_scope.py
+          git diff --check
+
+      - name: Verify final scope and create canonical preparation commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .tmp/batch6-prepare/part-*
+          rmdir .tmp/batch6-prepare .tmp 2>/dev/null || true
+          rm -f .github/workflows/temporary-prepare-batch6.yml
+          cat > /tmp/expected-paths <<'PATHS'
+          .github/workflows/kde-tier1-package-batch6.yml
+          .github/workflows/repository-policy.yml
+          docs/kde-tier1-dependencies.md
+          docs/kde-tier1-package-batch6.md
+          docs/status/2026-09-15-batch6.md
+          docs/status/2026-09-15.md
+          manifests/kde-tier1-package-campaign-batch6.json
+          packages/kde/kwindowsystem/consumer/CMakeLists.txt
+          packages/kde/kwindowsystem/consumer/main.cpp
+          packages/kde/kwindowsystem/debian/README.source
+          packages/kde/kwindowsystem/debian/changelog
+          packages/kde/kwindowsystem/debian/control
+          packages/kde/kwindowsystem/debian/copyright.reference
+          packages/kde/kwindowsystem/debian/libkf6windowsystem-data.install
+          packages/kde/kwindowsystem/debian/libkf6windowsystem-dev.install
+          packages/kde/kwindowsystem/debian/libkf6windowsystem-doc.install
+          packages/kde/kwindowsystem/debian/libkf6windowsystem6.install
+          packages/kde/kwindowsystem/debian/libkf6windowsystem6.symbols.reference
+          packages/kde/kwindowsystem/debian/libkf6windowsystem6.symbols.reference.meta
+          packages/kde/kwindowsystem/debian/qml6-module-org-kde-kwindowsystem.install
+          packages/kde/kwindowsystem/debian/rules
+          packages/kde/kwindowsystem/debian/source/format
+          packages/kde/kwindowsystem/debian/upstream/signing-key.asc
+          packages/kde/solid/consumer/CMakeLists.txt
+          packages/kde/solid/consumer/main.cpp
+          packages/kde/solid/debian/README.source
+          packages/kde/solid/debian/changelog
+          packages/kde/solid/debian/control
+          packages/kde/solid/debian/copyright.reference
+          packages/kde/solid/debian/libkf6solid-bin.install
+          packages/kde/solid/debian/libkf6solid-data.install
+          packages/kde/solid/debian/libkf6solid-dev.install
+          packages/kde/solid/debian/libkf6solid-doc.install
+          packages/kde/solid/debian/libkf6solid6.install
+          packages/kde/solid/debian/libkf6solid6.symbols.reference
+          packages/kde/solid/debian/libkf6solid6.symbols.reference.meta
+          packages/kde/solid/debian/rules
+          packages/kde/solid/debian/source/format
+          packages/kde/solid/debian/upstream/signing-key.asc
+          scripts/kde-tier1-package-batch6-needed.sh
+          scripts/run-kde-tier1-package-batch6-preflight.sh
+          scripts/validate_kde_tier1_package_batch6.py
+          PATHS
+          git diff HEAD^ --name-only | sort > /tmp/final-delta
+          diff -u /tmp/expected-paths /tmp/final-delta
+          git diff --quiet HEAD^ -- manifests/kde-frameworks-tier1.json manifests/kde-dag.json
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'kde: prepare Tier 1 batch 6'
+          git push origin HEAD:architecture/bootstrap-v1
