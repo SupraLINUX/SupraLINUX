@@ -1,0 +1,69 @@
+Source: kf6-solid
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               bison (>= 2:3.0~),
+               cmake (>= 3.29~),
+               dbus-daemon <!nocheck>,
+               extra-cmake-modules (>= 6.30.0~),
+               flex,
+               libimobiledevice-dev,
+               libmount-dev [linux-any],
+               libplist-dev,
+               libudev-dev [linux-any],
+               libxkbcommon-dev,
+               qt6-base-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.9.0~),
+Standards-Version: 4.7.3
+Homepage: https://invent.kde.org/frameworks/solid
+Rules-Requires-Root: no
+
+Package: libkf6solid-bin
+Architecture: any
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: udisks2 [linux-any],
+            upower,
+Description: Solid hardware query utility
+ This package contains the solid-hardware6 command-line tool.
+
+Package: libkf6solid-data
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: Solid shared data
+ This package contains translations and logging metadata for KDE Solid.
+
+Package: libkf6solid-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libkf6solid6 (= ${binary:Version}),
+         qt6-base-dev (>= 6.9.0~),
+         ${misc:Depends},
+Recommends: libkf6solid-doc (= ${source:Version}),
+Description: development files for Solid
+ This package contains headers, CMake metadata and the development symlink.
+
+Package: libkf6solid-doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: Solid documentation compatibility package
+ This package preserves the Debian-family documentation package name.
+ .
+ The current SupraLINUX common Frameworks profile does not ship QCH files.
+Section: doc
+
+Package: libkf6solid6
+Architecture: any
+Multi-Arch: same
+Depends: libkf6solid-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: media-player-info [linux-any],
+Description: Solid device integration runtime library
+ Solid provides KDE applications with a hardware-independent device API.

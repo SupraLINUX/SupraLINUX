@@ -146,3 +146,6 @@ Current canonical state:
 - final Qt provider certification: **pending**.
 
 Provider evidence alone never promotes a Framework. Each of the sixteen canonical PASS nodes has real package-attempt evidence. Batch 5 is closed 3/3 PASS; the two earlier ModemManagerQt FAIL attempts remain retained as historical evidence while its `-3` PASS is the current downstream-eligible state.
+## Batch 6 selection
+
+KWindowSystem and Solid are the next package candidates. This does not change authority: KDE upstream 6.30.0 defines requirements; Ubuntu Resolute is only a provider. KWindowSystem retains QML, X11 and Wayland with Wayland Protocols >= 1.46 and Plasma Wayland Protocols. Solid retains DBus, udev and libmount; IMobileDevice/PList remain upstream-optional and their Ubuntu providers are supplied rather than disabled. Canonical Tier 1 remains **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED** until real package evidence is promoted.

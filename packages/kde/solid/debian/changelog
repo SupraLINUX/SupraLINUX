@@ -1,0 +1,6 @@
+kf6-solid (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * SupraLINUX clean KDE Frameworks 6.30.0 package preflight.
+  * Preserve KDE upstream Linux defaults; disable only QCH under the established common Frameworks profile.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Tue, 15 Sep 2026 18:00:00 -0300

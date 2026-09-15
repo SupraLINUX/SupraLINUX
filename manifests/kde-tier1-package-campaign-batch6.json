@@ -1,0 +1,270 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-15",
+  "frameworks_series": "6.30.0",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "batch": "tier1-batch-6",
+  "state": "prepared-pending-build",
+  "canonical_state_role": "batch-package-attempt-ledger",
+  "canonical_snapshot": {
+    "state": "unpromoted-open-batch",
+    "tier1": "16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED"
+  },
+  "selected_nodes": [
+    "kwindowsystem",
+    "solid"
+  ],
+  "selection_rationale": {
+    "policy": "independent Tier 1 nodes compatible with the current single-primary-library ABI package runner while preserving KDE Linux defaults",
+    "why_now": {
+      "kwindowsystem": "Single primary ABI/symbols file; upstream X11, Wayland and QML defaults can be preserved without a runner architecture change.",
+      "solid": "Single primary ABI/symbols file; Linux DBus, udev and libmount defaults can be preserved. Optional IMobileDevice/PList providers are included when Ubuntu provides them."
+    },
+    "deferred": {
+      "kconfig": "Multiple ABI libraries/symbol files require an explicit multi-library runner extension.",
+      "ki18n": "Multiple ABI libraries/symbol files require an explicit multi-library runner extension.",
+      "sonnet": "Multiple ABI libraries plus plugin surface require an explicit runner extension.",
+      "kcoreaddons": "Upstream Linux/shared defaults enable Python bindings; not disabled merely for packaging convenience.",
+      "kguiaddons": "Upstream defaults include Python bindings and broader X11/Wayland surface; not disabled merely for packaging convenience.",
+      "kwidgetsaddons": "Upstream defaults enable Python bindings; not disabled merely for packaging convenience.",
+      "kcalendarcore": "Default QML plus Python/Shiboken/PySide surface is deferred until that packaging lane is designed.",
+      "kirigami": "QML/Quick-heavy multi-library package surface.",
+      "kquickcharts": "Multiple primary symbol files / QML-heavy surface.",
+      "kuserfeedback": "Multiple primary symbol files and optional feature matrix.",
+      "prison": "Multiple primary symbol files plus barcode/multimedia providers."
+    }
+  },
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+    },
+    "packaging_trees": {
+      "status": "PASS",
+      "workflow_run": 34708030450,
+      "artifact_id": 10301938362,
+      "artifact_sha256": "6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6",
+      "snapshot_json_sha256": "f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345"
+    },
+    "dependency_provider": {
+      "status": "PASS",
+      "workflow_run": 35012023822,
+      "job_id": 104526071758,
+      "commit": "48fd01bfa7b254b5e5c8447b3d609f76a91f786f",
+      "artifact_id": 10414525047,
+      "artifact_sha256": "db6868402b08bca82241d07980e158639a2f2fc64c4a5ab595fa58846361cb4a",
+      "authoritative": false,
+      "claim": "provider-availability-only"
+    }
+  },
+  "shared_packaging_inputs": {
+    "documentation_policy": {
+      "qch_enabled": false,
+      "package_role": "debian-family-compatibility-name",
+      "note": "Batch 6 documentation packages are compatibility stubs; no QCH payload is claimed."
+    },
+    "lintian_policy": {
+      "sbuild_summary_required": true,
+      "source_and_changes_required": true,
+      "preserve_referenced_ddeb": true
+    }
+  },
+  "nodes": {
+    "kwindowsystem": {
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-kwindowsystem",
+      "package_version": "6.30.0-0supralinux1",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kwindowsystem-6.30.0.tar.xz",
+      "source_sha256": "639a501b877446b19905399d27e2be2b6ebb0bb481abe3209dc4d535a12e12ca",
+      "root_cmake_blob": "e8317948e1df27330ceddf45bf418aa2a02bde5b",
+      "runtime_package": "libkf6windowsystem6",
+      "development_package": "libkf6windowsystem-dev",
+      "documentation_package": "libkf6windowsystem-doc",
+      "binary_contracts": [
+        {
+          "name": "libkf6windowsystem-data",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6windowsystem-dev",
+          "architecture": "amd64",
+          "multi_arch": null
+        },
+        {
+          "name": "libkf6windowsystem-doc",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6windowsystem6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "qml6-module-org-kde-kwindowsystem",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        }
+      ],
+      "dependency_contracts": {
+        "libkf6windowsystem-dev": [
+          "libkf6windowsystem6 (= 6.30.0-0supralinux1)",
+          "qml6-module-org-kde-kwindowsystem (= 6.30.0-0supralinux1)",
+          "qt6-base-dev (>= 6.9.0~)",
+          "qt6-declarative-dev (>= 6.9.0~)",
+          "qt6-wayland-dev (>= 6.9.0~)"
+        ]
+      },
+      "recommendation_contracts": {
+        "libkf6windowsystem-dev": [
+          "libkf6windowsystem-doc (= 6.30.0-0supralinux1)"
+        ],
+        "libkf6windowsystem6": [
+          "qt6-wayland"
+        ]
+      },
+      "build_profile_tokens": [
+        "dh-sequence-qmldeps",
+        "libx11-dev",
+        "libxcb-icccm4-dev",
+        "libxcb-keysyms1-dev",
+        "libxcb-res0-dev",
+        "libxcb1-dev",
+        "libxfixes-dev",
+        "libxkbcommon-dev",
+        "libxrender-dev",
+        "pkgconf",
+        "plasma-wayland-protocols",
+        "qt6-base-dev (>= 6.9.0~)",
+        "qt6-base-private-dev (>= 6.9.0~)",
+        "qt6-declarative-dev (>= 6.9.0~)",
+        "qt6-tools-dev (>= 6.9.0~)",
+        "qt6-wayland-dev (>= 6.9.0~)",
+        "wayland-protocols (>= 1.46~)",
+        "weston <!nocheck>",
+        "xauth <!nocheck>",
+        "xvfb <!nocheck>"
+      ],
+      "soname": "libKF6WindowSystem.so.6",
+      "cmake_package": "KF6WindowSystem",
+      "cmake_target": "KF6::WindowSystem",
+      "consumer_run": "direct",
+      "symbols": {
+        "file": "libkf6windowsystem6.symbols",
+        "sha256": "8aa9d83d65633f470c6c6f0e8f7f00bd56750d904bfeb465e514fc9fa70aa595",
+        "tree_provider": "debian",
+        "reference_version": "6.28.0"
+      },
+      "copyright": {
+        "file": "copyright",
+        "sha256": "872a164a55eda5b800588294d0686a94843225ff88579b90451ce41ee515b8a4",
+        "reference": "debian-sid-6.28.0"
+      },
+      "signing_key": {
+        "path": "debian/upstream/signing-key.asc",
+        "sha256": "5a0228357021204326d88472f29689b0ba25b29cd9ea4c97dab898a0aa4614d8",
+        "signer_fingerprint": "90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1",
+        "source": "retained-debian-packaging-reference"
+      },
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false,
+      "evidence": []
+    },
+    "solid": {
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-solid",
+      "package_version": "6.30.0-0supralinux1",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/solid-6.30.0.tar.xz",
+      "source_sha256": "bdbfdc9f26b87e12b951097825af2956f2dee3f14c701d780277b69701f2c74e",
+      "root_cmake_blob": "65681c1db745cd52a547659f1b778fa42bb3cb52",
+      "runtime_package": "libkf6solid6",
+      "development_package": "libkf6solid-dev",
+      "documentation_package": "libkf6solid-doc",
+      "binary_contracts": [
+        {
+          "name": "libkf6solid-bin",
+          "architecture": "amd64",
+          "multi_arch": null
+        },
+        {
+          "name": "libkf6solid-data",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6solid-dev",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6solid-doc",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6solid6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        }
+      ],
+      "dependency_contracts": {
+        "libkf6solid-dev": [
+          "libkf6solid6 (= 6.30.0-0supralinux1)",
+          "qt6-base-dev (>= 6.9.0~)"
+        ]
+      },
+      "recommendation_contracts": {
+        "libkf6solid-bin": [
+          "udisks2",
+          "upower"
+        ],
+        "libkf6solid6": [
+          "media-player-info"
+        ]
+      },
+      "build_profile_tokens": [
+        "bison (>= 2:3.0~)",
+        "dbus-daemon <!nocheck>",
+        "flex",
+        "libimobiledevice-dev",
+        "libmount-dev",
+        "libplist-dev",
+        "libudev-dev",
+        "libxkbcommon-dev",
+        "qt6-base-dev (>= 6.9.0~)",
+        "qt6-tools-dev (>= 6.9.0~)"
+      ],
+      "soname": "libKF6Solid.so.6",
+      "cmake_package": "KF6Solid",
+      "cmake_target": "KF6::Solid",
+      "consumer_run": "direct",
+      "symbols": {
+        "file": "libkf6solid6.symbols",
+        "sha256": "4928d196746e4f497733ab7052eea5bf1b219013fb58c6aa4c52284f6e0eb419",
+        "tree_provider": "debian",
+        "reference_version": "6.28.0"
+      },
+      "copyright": {
+        "file": "copyright",
+        "sha256": "17c41b7829d7497ddbd06d84c02a9e158cb00ce6f933619184917dc5af61199b",
+        "reference": "debian-sid-6.28.0"
+      },
+      "signing_key": {
+        "path": "debian/upstream/signing-key.asc",
+        "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d",
+        "signer_fingerprint": "90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1",
+        "source": "retained-debian-packaging-reference"
+      },
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false,
+      "evidence": []
+    }
+  }
+}
