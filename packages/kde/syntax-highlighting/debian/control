@@ -1,0 +1,81 @@
+Source: kf6-syntax-highlighting
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               dh-sequence-qmldeps,
+               cmake (>= 3.29~),
+               extra-cmake-modules (>= 6.30.0~),
+               libxerces-c-dev,
+               perl:any,
+               qt6-base-dev (>= 6.9.0~),
+               qt6-declarative-dev (>= 6.9.0~),
+               xauth <!nocheck>,
+               xvfb <!nocheck>,
+Standards-Version: 4.7.3
+Homepage: https://invent.kde.org/frameworks/syntax-highlighting
+Rules-Requires-Root: no
+
+Package: libkf6syntaxhighlighting-data
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: syntax highlighting engine - data
+ KSyntaxHighlighting is the standalone Kate syntax highlighting engine.
+ .
+ This package provides translations.
+
+Package: libkf6syntaxhighlighting-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libkf6syntaxhighlighting6 (= ${binary:Version}),
+         qml6-module-org-kde-syntaxhighlighting (= ${binary:Version}),
+         qt6-base-dev (>= 6.9.0~),
+         qt6-declarative-dev (>= 6.9.0~),
+         ${misc:Depends},
+Recommends: libkf6syntaxhighlighting-doc (= ${source:Version}),
+Description: development files for KSyntaxHighlighting
+ KSyntaxHighlighting provides the standalone Kate syntax highlighting engine.
+ .
+ This package contains development files.
+
+Package: libkf6syntaxhighlighting-doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: KSyntaxHighlighting documentation compatibility package
+ This package preserves the Debian-family KSyntaxHighlighting documentation package
+ name for package compatibility.
+ .
+ The current SupraLINUX build profile does not ship QCH documentation files.
+Section: doc
+
+Package: libkf6syntaxhighlighting-tools
+Architecture: any
+Depends: libkf6syntaxhighlighting6 (= ${binary:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: tools for KSyntaxHighlighting
+ This package provides command-line tools for the syntax highlighting engine.
+
+Package: libkf6syntaxhighlighting6
+Architecture: any
+Multi-Arch: same
+Depends: libkf6syntaxhighlighting-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: syntax highlighting engine
+ KSyntaxHighlighting is the standalone Kate syntax highlighting engine.
+
+Package: qml6-module-org-kde-syntaxhighlighting
+Architecture: any
+Multi-Arch: same
+Depends: libkf6syntaxhighlighting6 (= ${binary:Version}),
+         ${misc:Depends},
+         ${qml6:Depends},
+         ${shlibs:Depends},
+Description: QML bindings for KSyntaxHighlighting
+ This package contains the Qt Quick QML module for KSyntaxHighlighting.

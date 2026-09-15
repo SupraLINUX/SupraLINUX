@@ -1,0 +1,160 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-15",
+  "frameworks_series": "6.30.0",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "batch": "tier1-batch-4",
+  "state": "prepared-pending-build",
+  "canonical_state_role": "batch-package-attempt-ledger",
+  "selected_nodes": [
+    "kitemviews",
+    "kglobalaccel",
+    "syntax-highlighting"
+  ],
+  "selection_rationale": {
+    "policy": "independent Tier 1 nodes compatible with the current single-library ABI package runner",
+    "deferred": {
+      "kconfig": "Deferred because KConfig exports multiple ABI libraries/symbol files and requires an explicit multi-library runner extension before packaging.",
+      "kwidgetsaddons": "Not selected for this batch because upstream Linux/shared builds enable Python bindings by default, adding Shiboken6/PySide6 surface while cleaner independent nodes remain."
+    }
+  },
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+    },
+    "packaging_trees": {
+      "status": "PASS",
+      "workflow_run": 34708030450,
+      "artifact_id": 10301938362,
+      "artifact_sha256": "6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6",
+      "snapshot_json_sha256": "f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345"
+    }
+  },
+  "shared_packaging_inputs": {
+    "signing_key": {
+      "path": "debian/upstream/signing-key.asc",
+      "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d",
+      "source": "retained-debian-packaging-reference"
+    },
+    "documentation_policy": {
+      "qch_enabled": false,
+      "package_role": "debian-family-compatibility-name",
+      "note": "Batch 4 documentation packages are compatibility stubs; no QCH payload is claimed."
+    },
+    "lintian_policy": {
+      "sbuild_summary_required": true,
+      "source_and_changes_required": true,
+      "preserve_referenced_ddeb": true
+    }
+  },
+  "nodes": {
+    "kitemviews": {
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false,
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-kitemviews",
+      "source_sha256": "9452f2b0cc5dd0214b88c4ce33297866be89af4177af14f5390cfb616e49c153",
+      "root_cmake_blob": "d4abc8277881fff0ad85d06167b0f1e5c8e0977d",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kitemviews-6.30.0.tar.xz",
+      "runtime_package": "libkf6itemviews6",
+      "development_package": "libkf6itemviews-dev",
+      "documentation_package": "libkf6itemviews-doc",
+      "binary_contracts": [
+        {"name":"libkf6itemviews-data","architecture":"all","multi_arch":"foreign"},
+        {"name":"libkf6itemviews-dev","architecture":"amd64","multi_arch":null},
+        {"name":"libkf6itemviews-doc","architecture":"all","multi_arch":"foreign"},
+        {"name":"libkf6itemviews6","architecture":"amd64","multi_arch":"same"}
+      ],
+      "dependency_contracts": {
+        "libkf6itemviews-dev": ["libkf6itemviews6 (= 6.30.0-0supralinux1)","qt6-base-dev (>= 6.9.0~)"],
+        "libkf6itemviews6": ["libkf6itemviews-data (= 6.30.0-0supralinux1)"]
+      },
+      "recommendation_contracts": {"libkf6itemviews-dev":["libkf6itemviews-doc (= 6.30.0-0supralinux1)"]},
+      "build_profile_tokens": ["qt6-base-dev (>= 6.9.0~)","qt6-tools-dev (>= 6.9.0~)","xauth <!nocheck>","xvfb <!nocheck>"],
+      "soname": "libKF6ItemViews.so.6",
+      "cmake_package": "KF6ItemViews",
+      "cmake_target": "KF6::ItemViews",
+      "consumer_run": "direct",
+      "copyright": {"file":"copyright","sha256":"add1ae526e4064439b04a0d2fa162e178f049c96411fe3922a9562a2f25304c6","reference":"debian-sid-6.28.0"},
+      "package_version": "6.30.0-0supralinux1",
+      "symbols": {"file":"libkf6itemviews6.symbols","sha256":"c95ecbc24ccee885f1aa50df1c2aab41f54eb561baf66b1b219a562a5ce372cf","tree_provider":"debian","reference_version":"6.28.0"},
+      "evidence": []
+    },
+    "kglobalaccel": {
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false,
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-kglobalaccel",
+      "source_sha256": "e532ebd4cbfc8d6d79c6c38c556f1871315fedae8db2b69b574b9c496f171473",
+      "root_cmake_blob": "274623176b4c0f9b72edea3bd770530f76c8f607",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kglobalaccel-6.30.0.tar.xz",
+      "runtime_package": "libkf6globalaccel6",
+      "development_package": "libkf6globalaccel-dev",
+      "documentation_package": "libkf6globalaccel-doc",
+      "binary_contracts": [
+        {"name":"libkf6globalaccel-data","architecture":"all","multi_arch":"foreign"},
+        {"name":"libkf6globalaccel-dev","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkf6globalaccel-doc","architecture":"all","multi_arch":"foreign"},
+        {"name":"libkf6globalaccel6","architecture":"amd64","multi_arch":"same"}
+      ],
+      "dependency_contracts": {
+        "libkf6globalaccel-dev": ["libkf6globalaccel6 (= 6.30.0-0supralinux1)","qt6-base-dev (>= 6.9.0~)"],
+        "libkf6globalaccel6": ["libkf6globalaccel-data (= 6.30.0-0supralinux1)"]
+      },
+      "recommendation_contracts": {"libkf6globalaccel-dev":["libkf6globalaccel-doc (= 6.30.0-0supralinux1)"]},
+      "build_profile_tokens": ["qt6-base-dev (>= 6.9.0~)","qt6-base-private-dev (>= 6.9.0~)","qt6-declarative-dev (>= 6.9.0~)","xauth <!nocheck>","xvfb <!nocheck>"],
+      "soname": "libKF6GlobalAccel.so.6",
+      "cmake_package": "KF6GlobalAccel",
+      "cmake_target": "KF6::GlobalAccel",
+      "consumer_run": "direct",
+      "copyright": {"file":"copyright","sha256":"1991e59510c1a15e9f0eba6479a249ec17579ad2f97d3686e0ed975f8614de34","reference":"debian-sid-6.28.0"},
+      "package_version": "6.30.0-0supralinux1",
+      "symbols": {"file":"libkf6globalaccel6.symbols","sha256":"967876c92b88b1a0654b06084c70604191464ecaded59df4bbf4dea71c0c6bb7","tree_provider":"debian","reference_version":"6.28.0"},
+      "evidence": []
+    },
+    "syntax-highlighting": {
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false,
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-syntax-highlighting",
+      "source_sha256": "fc429b093058bec4878306cbbfb3aa0560ff4a3f166c69504036c507fe72afcc",
+      "root_cmake_blob": "cbd31a8f3c8b981931fc0d39ee5991f5c7f6903a",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/syntax-highlighting-6.30.0.tar.xz",
+      "runtime_package": "libkf6syntaxhighlighting6",
+      "development_package": "libkf6syntaxhighlighting-dev",
+      "documentation_package": "libkf6syntaxhighlighting-doc",
+      "binary_contracts": [
+        {"name":"libkf6syntaxhighlighting-data","architecture":"all","multi_arch":"foreign"},
+        {"name":"libkf6syntaxhighlighting-dev","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkf6syntaxhighlighting-doc","architecture":"all","multi_arch":"foreign"},
+        {"name":"libkf6syntaxhighlighting-tools","architecture":"amd64","multi_arch":null},
+        {"name":"libkf6syntaxhighlighting6","architecture":"amd64","multi_arch":"same"},
+        {"name":"qml6-module-org-kde-syntaxhighlighting","architecture":"amd64","multi_arch":"same"}
+      ],
+      "dependency_contracts": {
+        "libkf6syntaxhighlighting-dev": ["libkf6syntaxhighlighting6 (= 6.30.0-0supralinux1)","qml6-module-org-kde-syntaxhighlighting (= 6.30.0-0supralinux1)","qt6-base-dev (>= 6.9.0~)","qt6-declarative-dev (>= 6.9.0~)"],
+        "libkf6syntaxhighlighting-tools": ["libkf6syntaxhighlighting6 (= 6.30.0-0supralinux1)"],
+        "libkf6syntaxhighlighting6": ["libkf6syntaxhighlighting-data (= 6.30.0-0supralinux1)"],
+        "qml6-module-org-kde-syntaxhighlighting": ["libkf6syntaxhighlighting6 (= 6.30.0-0supralinux1)"]
+      },
+      "recommendation_contracts": {"libkf6syntaxhighlighting-dev":["libkf6syntaxhighlighting-doc (= 6.30.0-0supralinux1)"]},
+      "build_profile_tokens": ["dh-sequence-qmldeps","libxerces-c-dev","perl:any","qt6-base-dev (>= 6.9.0~)","qt6-declarative-dev (>= 6.9.0~)","xauth <!nocheck>","xvfb <!nocheck>"],
+      "soname": "libKF6SyntaxHighlighting.so.6",
+      "cmake_package": "KF6SyntaxHighlighting",
+      "cmake_target": "KF6::SyntaxHighlighting",
+      "consumer_run": "direct",
+      "copyright": {"file":"copyright","sha256":"96abcf79db76923a43e841f4a22c41a2e81394a0ff074ce1f06009e962ba2d35","reference":"debian-sid-6.28.1"},
+      "package_version": "6.30.0-0supralinux1",
+      "symbols": {"file":"libkf6syntaxhighlighting6.symbols","sha256":"3dd1d9e56a8fa8b802ffb6708ec65984cef422bcbe7660583c907a827aec47dd","tree_provider":"debian","reference_version":"6.28.1"},
+      "evidence": []
+    }
+  }
+}

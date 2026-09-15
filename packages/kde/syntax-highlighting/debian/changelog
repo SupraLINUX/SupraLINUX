@@ -1,0 +1,7 @@
+kf6-syntax-highlighting (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE Frameworks 6.30.0 for SupraLINUX.
+  * Keep KDE upstream build defaults except the documented common QCH disablement.
+  * Preserve Debian-family binary package contracts as compatibility inputs.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Tue, 15 Sep 2026 16:00:00 +0000
