@@ -5,7 +5,7 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "batch": "tier1-batch-3",
-  "state": "remediation-pending-build",
+  "state": "PASS",
   "canonical_state_role": "batch-package-attempt-ledger",
   "selected_nodes": [
     "kitemmodels",
@@ -130,12 +130,28 @@
           "policy": "Mark the KDE 6.30 libstdc++ piecewise_construct implementation export optional=toolchain at upstream minimum 6.30.0; preserve all reviewed Debian 6.28 ABI symbols unchanged."
         }
       },
-      "state": "remediation-pending-build",
-      "last_result": "FAIL",
-      "downstream_eligible": false,
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
       "evidence": [
-        {"result": "FAIL", "workflow_run": 34896417969, "job_id": 104151532330, "commit": "806d16476b034e796658ea1ab9028eb3a9a14e1b", "attempted_package_version": "6.30.0-0supralinux1", "artifact_id": 10369725265, "artifact_sha256": "ab85b1c2eeef6bf2dc9d622d6695b95427cca6e246ac13a0f825034e9e63d195", "failure_stage": "sbuild", "failure_substage": "lintian", "tests": "18/18 PASS", "cause": "KDE 6.30 exposed libstdc++ _ZSt19piecewise_construct as an implementation/toolchain symbol; dpkg-gensymbols assigned the package revision 6.30.0-0supralinux1 as its minimum version and Lintian rejected the resulting symbols entry."}
-      ]
+        {"result": "FAIL", "workflow_run": 34896417969, "job_id": 104151532330, "commit": "806d16476b034e796658ea1ab9028eb3a9a14e1b", "attempted_package_version": "6.30.0-0supralinux1", "artifact_id": 10369725265, "artifact_sha256": "ab85b1c2eeef6bf2dc9d622d6695b95427cca6e246ac13a0f825034e9e63d195", "failure_stage": "sbuild", "failure_substage": "lintian", "tests": "18/18 PASS", "cause": "KDE 6.30 exposed libstdc++ _ZSt19piecewise_construct as an implementation/toolchain symbol; dpkg-gensymbols assigned the package revision 6.30.0-0supralinux1 as its minimum version and Lintian rejected the resulting symbols entry."},
+        {"result": "PASS", "workflow_run": 34945979836, "job_id": 104305337324, "commit": "b58b5e6072bb14487e304857d34a53659ec50f60", "attempted_package_version": "6.30.0-0supralinux2", "artifact_id": 10387429776, "artifact_sha256": "db8a3718a31eaae00d5f9fbdb60014dfeb1faf1c2bc84a88f9ab0d9bffec07ed", "stage": "complete", "tests": "18/18 PASS", "lintian": "PASS-errors", "consumer_smoke": "PASS", "abi_soname": "libKF6BluezQt.so.6", "ecm_predecessor": "6.30.0-0supralinux3", "validated_gate": "sbuild-summary-plus-dsc-plus-changes", "downstream_eligible": true}
+      ],
+      "last_pass_files": {
+        "libkf6bluezqt_data_deb_sha256": "9808f45d03676e3c52cb6340292844b616c8d7de708ca8c1fc6b6bbefacc9d22",
+        "libkf6bluezqt_dev_deb_sha256": "8c5ec894ee5485f54367a61a436feb1417692c507bac7c10743d274bf8f4ed34",
+        "libkf6bluezqt_doc_deb_sha256": "f3df69a26254310ab6e5d7e57a848e2069eaa8b19fd0b100353ff045f196cb3c",
+        "libkf6bluezqt6_deb_sha256": "b201ee31c785d74742b44e8ff5ac391311e006ca8a0232f96f8e4c8a303ab4f1",
+        "qml6_module_org_kde_bluezqt_deb_sha256": "c18b5b3e20324daa370f6e7cc88e226d02aeb37fcd32f7fa411f2d4ce8b7056f",
+        "libkf6bluezqt6_dbgsym_ddeb_sha256": "b7bff473ca885a075160ef0803a00519c87811d057aab9bb51d5e940ac45c701",
+        "qml6_module_org_kde_bluezqt_dbgsym_ddeb_sha256": "a9ca6d797156267e88e8289176ad1ecba2f188a4376307cd36dbb604a5bd4f85",
+        "changes_sha256": "ef5cd417823ffeb99f018c797de1f16c8cbc3d8b10fccfb27990c8a75bde791f",
+        "buildinfo_sha256": "ae7bcfb738a23466cf17b0a5d62942a18cc8fcaefe781858aed22f3fd72a6ac8",
+        "dsc_sha256": "16151f327748ac94ad132b840cbf687fca0e6a4aa4fa41d3be1bfdb5be6fa4d8",
+        "orig_tar_sha256": "f5045b14a6c689bbfded9437582f943dd4f8f74537085ab6115bcacdea2110d8",
+        "debian_tar_sha256": "436bb103f386a6e050ed4b39c0b1a695d599d309301091caa1e83b92d1cf0951",
+        "rootfs_sha256": "705ab043038a413f7744a60398a6e48305ca5b87ac0a57c4d6c1a1a4be05f4d2"
+      }
     },
     "kplotting": {
       "upstream_version": "6.30.0",

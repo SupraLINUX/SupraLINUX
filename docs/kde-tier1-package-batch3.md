@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 Tier 1 — package batch 3
 
-Status: **REMEDIATION — BluezQt attempt 2 pending**
+Status: **PASS — canonical closure complete**
 
 Last reviewed: **2026-09-15**
 
@@ -24,21 +24,17 @@ The current package runner models one primary ABI library, one SONAME and one sy
 
 ## Packaging policy
 
-KItemModels and KPlotting remain at revision `6.30.0-0supralinux1` after passing attempt 1. BluezQt moves to `6.30.0-0supralinux2` for the reviewed symbols remediation.
+KItemModels and KPlotting remain at revision `6.30.0-0supralinux1`. BluezQt is certified at `6.30.0-0supralinux2` after its reviewed symbols remediation.
 
-Debian-family binary package names and Multi-Arch contracts are preserved as compatibility inputs.
+Debian-family binary package names and Multi-Arch contracts are preserved as compatibility inputs. The retained Debian 6.28 symbols files came from workflow `34708030450`, artifact `10301938362`; they do not select the KDE version. KDE 6.30 remains authoritative.
 
-The retained Debian 6.28 symbols files are injected from workflow `34708030450`, artifact `10301938362`; they do not select the KDE version. Any KDE 6.30 ABI delta is reviewed from a real build.
-
-QCH is disabled in the current common Frameworks profile. Documentation package names are retained as compatibility stubs and do not claim QCH payload.
-
-Upstream autotests remain enabled.
+QCH is disabled in the current common Frameworks profile. Documentation package names are retained as compatibility stubs and do not claim QCH payload. Upstream autotests remain enabled.
 
 ## Attempt 1 — run 34896417969
 
-The three independent nodes were actually attempted from commit `806d16476b034e796658ea1ab9028eb3a9a14e1b`.
+All three nodes were actually attempted from commit `806d16476b034e796658ea1ab9028eb3a9a14e1b`.
 
-### KItemModels — PASS
+### KItemModels — PASS retained
 
 - job `104151531993`;
 - package `6.30.0-0supralinux1`;
@@ -50,7 +46,7 @@ The three independent nodes were actually attempted from commit `806d16476b034e7
 - consumer CMake/build/runtime smoke PASS;
 - consumed ECM `6.30.0-0supralinux3`.
 
-### KPlotting — PASS
+### KPlotting — PASS retained
 
 - job `104151532320`;
 - package `6.30.0-0supralinux1`;
@@ -62,7 +58,9 @@ The three independent nodes were actually attempted from commit `806d16476b034e7
 - consumer CMake/build/runtime smoke PASS;
 - consumed ECM `6.30.0-0supralinux3`.
 
-### BluezQt — real FAIL, not BLOCKED
+### BluezQt — historical real FAIL, retained
+
+Attempt 1 remains recorded and is not rewritten as PASS or BLOCKED:
 
 - job `104151532330`;
 - attempted package `6.30.0-0supralinux1`;
@@ -72,30 +70,47 @@ The three independent nodes were actually attempted from commit `806d16476b034e7
 - upstream tests `18/18 PASS`;
 - failure stage: `sbuild` Lintian gate.
 
-The sole Lintian error was `symbols-file-contains-current-version-with-debian-revision` for `_ZSt19piecewise_construct@Base` in `libKF6BluezQt.so.6`. `dpkg-gensymbols` observed this libstdc++ implementation/toolchain export in the KDE 6.30 build and assigned the package revision `6.30.0-0supralinux1` as its minimum version. The five older `_Rb_tree` template-instantiation symbols missing from the build are already optional in the retained Debian baseline and are not the failure cause.
+The failure was `symbols-file-contains-current-version-with-debian-revision` for `_ZSt19piecewise_construct@Base` in `libKF6BluezQt.so.6`. The remediation deliberately changes only the reviewed symbols policy: `debian/apply-symbols-delta.py` pins the Debian 6.28 baseline SHA-256 `b72bea28842160da234b3bbab7975623616cd58f3e522b1e5d8705a279eef4f7`, adds `(optional=toolchain)_ZSt19piecewise_construct@Base 6.30.0`, and verifies transformed SHA-256 `0fd10c9d93b303fa48aa5cd66aaf4727fbc27f4b784926f5ce5f8d20606bf37a`. The transform file itself is SHA-256 `6e7f4a36c5b5b71c80728c23da82180af0772b4d9abf2f3feb834ffda0007565`.
 
-BluezQt is therefore a real independent FAIL. KItemModels and KPlotting remain valid PASS results; neither is invalidated or reclassified.
+## BluezQt remediation PASS — run 34945979836
 
-## BluezQt remediation for attempt 2
+BluezQt `6.30.0-0supralinux2` was rebuilt from commit `b58b5e6072bb14487e304857d34a53659ec50f60` and completed successfully:
 
-The fix is deliberately limited to symbols policy; no KDE dependency or upstream source change is justified by the evidence.
+- job `104305337324`;
+- artifact `10387429776`;
+- artifact SHA-256 `db8a3718a31eaae00d5f9fbdb60014dfeb1faf1c2bc84a88f9ab0d9bffec07ed`;
+- upstream tests `18/18 PASS`;
+- Lintian `--fail-on error` PASS; only non-fatal warnings remained;
+- SONAME `libKF6BluezQt.so.6` PASS;
+- consumer CMake configure/build/runtime smoke PASS;
+- consumed ECM `6.30.0-0supralinux3`;
+- downstream eligibility: PASS.
 
-`debian/apply-symbols-delta.py` verifies the exact retained Debian 6.28 baseline SHA-256 `b72bea28842160da234b3bbab7975623616cd58f3e522b1e5d8705a279eef4f7`, inserts exactly one reviewed line:
+The artifact also preserves `.deb`, `.ddeb`, `.changes`, `.buildinfo`, `.dsc`, source hashes, rootfs hash, build logs, consumer logs and Lintian evidence.
 
-`(optional=toolchain)_ZSt19piecewise_construct@Base 6.30.0`
+## Repository Policy false positive and validator correction
 
-and verifies the transformed symbols file SHA-256 `0fd10c9d93b303fa48aa5cd66aaf4727fbc27f4b784926f5ce5f8d20606bf37a` before replacing the build-time symbols file. The transform itself has SHA-256 `6e7f4a36c5b5b71c80728c23da82180af0772b4d9abf2f3feb834ffda0007565`.
+Repository Policy run `34945979830`, job `104305336760`, failed at the Batch 3 preparation validator even though the BluezQt package job itself passed. This was an infrastructure validator defect, not a Framework FAIL.
 
-This follows the already proven SupraLINUX policy used for reviewed implementation/toolchain symbols: implementation-only exports are not promoted into a mandatory public ABI contract, while the Debian 6.28 public ABI baseline remains intact.
+The old validator used a raw string search for the first occurrence of `dh_makeshlibs`. In `debian/rules`, that matched the target name `override_dh_makeshlibs:` before the recipe line that actually executes `dh_makeshlibs`, producing a false ordering failure.
 
-BluezQt revision `6.30.0-0supralinux2` must pass a fresh clean build, all upstream tests, Lintian, SONAME checks and consumer smoke before it can become PASS.
+The validator now distinguishes the target `override_dh_makeshlibs:` from an **invocación real** del comando. It locates Make recipe command lines after trimming indentation and verifies that `python3 debian/apply-symbols-delta.py` executes before the real `dh_makeshlibs` invocation. BluezQt packaging itself is unchanged because the real recipe order was already correct.
 
 ## CI scope
 
-The Batch 3 delta detector fingerprints only inputs consumed by each node. Recording PASS/FAIL evidence does not rebuild unrelated nodes. The BluezQt package revision and package metadata change affect only the BluezQt fingerprint, so KItemModels and KPlotting are intentionally skipped on the remediation commit.
+The remediation run also verifies intended scope behavior: KItemModels and KPlotting completed via the scope-skip path, with package build/download/upload steps skipped, while only BluezQt rebuilt. State/evidence/documentation changes therefore do not invalidate retained PASS artifacts.
 
-## Canonical Tier 1 state before Batch 3 closure
+The Batch 3 closure commit changes canonical state, evidence, documentation and validator semantics. It must not request package rebuilds unless a consumed package input changes.
 
-The per-node attempt ledger now contains two valid PASS results and one current FAIL/remediation, but canonical promotion remains atomic at Batch 3 closure. Therefore the canonical Tier 1 manifest remains **7 PASS / 22 pending / 0 current FAIL / 0 BLOCKED** until all three Batch 3 nodes have valid PASS evidence.
+## Canonical Tier 1 state after Batch 3 closure
 
-If BluezQt attempt 2 passes and the closure validators pass, Batch 3 can be promoted to **10 PASS / 19 pending / 0 current FAIL / 0 BLOCKED**. The BluezQt attempt-1 FAIL remains preserved as historical evidence.
+Batch 3 is canonically closed with:
+
+- KItemModels: PASS retained;
+- KPlotting: PASS retained;
+- BluezQt `6.30.0-0supralinux2`: new real PASS;
+- BluezQt attempt-1 FAIL: retained as historical evidence.
+
+Canonical Tier 1 state is now **10 PASS / 19 pending / 0 current FAIL / 0 BLOCKED**.
+
+PR #1 remains Draft. No merge is authorized.

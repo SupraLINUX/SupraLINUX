@@ -1,8 +1,8 @@
 # KDE Frameworks 6.30 Tier 1 — packaging preparation and campaign
 
-Status: **reference gates PASS; Attica + Batch 1 package proofs PASS; 4 Tier 1 PASS / 25 pending**
+Status: **reference gates PASS; package Batches 1–3 closed; 10 Tier 1 PASS / 19 pending / 0 current FAIL / 0 BLOCKED**
 
-Last reviewed: **2026-09-12**
+Last reviewed: **2026-09-15**
 
 ## Authority model
 
@@ -46,37 +46,50 @@ The hosted package contract is:
 7. package-specific binary/ABI/symbol checks;
 8. fatal `lintian --fail-on error`;
 9. package-specific CMake consumer smoke;
-10. `.deb`, `.changes`, `.buildinfo`, `.dsc`, source/rootfs hashes and logs retained;
+10. `.deb`, `.ddeb` when generated, `.changes`, `.buildinfo`, `.dsc`, source/rootfs hashes and logs retained;
 11. PASS/FAIL assigned only from the real attempt.
 
-## Current PASS packages
+## Canonical PASS packages
 
-Attica `6.30.0-0supralinux2` established the first proof.
+The ten current Tier 1 PASS nodes are:
 
-Batch 1 then generalized the path with `fail-fast: false`:
+- Attica `6.30.0-0supralinux2`;
+- KCodecs `6.30.0-0supralinux4`;
+- KDBusAddons `6.30.0-0supralinux3`;
+- ThreadWeaver `6.30.0-0supralinux3`;
+- KTextTemplate `6.30.0-0supralinux3`;
+- KArchive `6.30.0-0supralinux4`;
+- KHolidays `6.30.0-0supralinux4`;
+- KItemModels `6.30.0-0supralinux1`;
+- KPlotting `6.30.0-0supralinux1`;
+- BluezQt `6.30.0-0supralinux2`.
 
-- KCodecs `6.30.0-0supralinux4`: run `34716761551`, artifact `10305050385`, 8/8 tests PASS.
-- KDBusAddons `6.30.0-0supralinux3`: run `34713034164`, artifact `10304340428`, 3/3 tests PASS.
-- ThreadWeaver `6.30.0-0supralinux3`: run `34713034164`, artifact `10303986419`, 8/8 tests PASS.
+All are hosted/non-authoritative package proofs and downstream eligible inside the hosted DAG lane.
 
-All four Tier 1 PASS artifacts are hosted/non-authoritative but downstream eligible inside the hosted DAG lane.
+## Reviewed ABI/symbol policy
 
-## KCodecs reviewed symbols
+KCodecs uses Debian 6.28 as the closest technical symbols baseline and marks 15 compiler/libstdc++ implementation symbols caused by KDE 6.30 `std::format` as `(optional=toolchain)` at upstream minimum `6.30.0`.
 
-KCodecs is deliberately not forced to the older Ubuntu 6.24 symbols baseline. Debian 6.28 already reflects the removal of two old `KCharsets` constructors. SupraLINUX retains that newer reference and layers a reviewed symbols override for 15 compiler/libstdc++ implementation symbols caused by KDE 6.30 `std::format` use.
+BluezQt follows the same principle for `_ZSt19piecewise_construct@Base`. Attempt 1 (`6.30.0-0supralinux1`) remains a historical real FAIL after 18/18 upstream tests because Lintian rejected the package revision as an ABI minimum. The reviewed deterministic transform produced revision `6.30.0-0supralinux2`, which passed workflow `34945979836`, job `104305337324`, artifact `10387429776`, artifact SHA-256 `db8a3718a31eaae00d5f9fbdb60014dfeb1faf1c2bc84a88f9ab0d9bffec07ed`, with 18/18 tests, Lintian error gate and consumer smoke PASS.
 
-Those 15 entries are `(optional=toolchain)` with minimum `6.30.0`. This prevents compiler-specific implementation leakage from being mistaken for a stable public ABI while preserving visibility and auditability.
+Historical FAIL evidence is retained; a later PASS never erases it.
 
-## Scope discipline
+## Scope and validator discipline
 
-Evidence-only or state-only edits must not rebuild packages. The initial Batch 1 semantic fingerprint was too broad and selected two already-PASS nodes on run `34716761551`; both aborted at `campaign-validation` before a package attempt. This is retained as infrastructure-scope evidence and has no package-state effect.
+Evidence-only, state-only and documentation-only edits must not rebuild packages. The semantic scope detector compares consumed package inputs rather than descriptive metadata.
 
-The corrected fingerprint compares only fields consumed by the runner plus package/consumer file changes and shared runner/workflow changes.
+Repository Policy run `34945979830` exposed a validator false positive: the Batch 3 validator treated the Make target `override_dh_makeshlibs:` as if it were execution of `dh_makeshlibs`. The package recipe already had the correct order. The validator now locates the actual Make recipe command and verifies that the symbols transform executes before the real `dh_makeshlibs` invocation.
+
+This incident has no package-state effect.
 
 ## Current campaign state
 
-`manifests/kde-frameworks-tier1.json` now records **4 PASS and 25 pending**. `manifests/kde-dag.json` records ECM plus Attica/KCodecs/KDBusAddons/ThreadWeaver as PASS. There are **0 current FAIL and 0 BLOCKED** Tier 1 nodes.
+`manifests/kde-frameworks-tier1.json` and `manifests/kde-dag.json` record **10 PASS / 19 pending / 0 current FAIL / 0 BLOCKED** after canonical Batch 3 closure.
+
+Only retained PASS artifacts may feed downstream builds.
 
 ## Next implementation step
 
-Prepare Batch 2 from the remaining 25 Tier 1 nodes, favoring independent packages with straightforward Qt/external dependencies so they can be built in parallel. Keep package-specific contracts explicit rather than over-generalizing the runner.
+Re-check current KDE upstream stable metadata, then select the next ready Tier 1 group from the remaining 19 nodes. Prefer independent nodes that fit the current runner; extend the runner explicitly where a Framework exposes multiple ABI libraries rather than forcing it into a single-library contract.
+
+Keep PR #1 Draft. No merge is authorized at this stage.
