@@ -10,6 +10,7 @@ Build-Depends: debhelper-compat (= 13),
                extra-cmake-modules (>= 6.30.0~),
                modemmanager-dev (>= 1.0),
                pkgconf,
+               python3:any,
                qt6-base-dev (>= 6.9.0~),
                qt6-tools-dev (>= 6.9.0~),
 Standards-Version: 4.7.3

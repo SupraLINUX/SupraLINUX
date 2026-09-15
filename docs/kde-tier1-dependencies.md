@@ -106,7 +106,7 @@ Batch 5 selects `kidletime`, `modemmanager-qt` and `networkmanager-qt`.
 - ModemManagerQt uses corrected provider `modemmanager-dev` for KDE's `ModemManager >= 1.0` requirement.
 - NetworkManagerQt explicitly carries both `libnm-dev` and `libglib2.0-dev` because upstream CMake directly probes `libnm>=1.4.0` and `gio-2.0`; its QML module remains enabled.
 
-Run `35014875475` then attempted all three packages. KIdleTime and NetworkManagerQt are real package-ledger PASS; ModemManagerQt built and passed 11/11 tests but failed the Lintian symbols gate on `_ZSt19piecewise_construct@Base`. Its `6.30.0-0supralinux2` remediation changes only deterministic symbols metadata.
+Run `35014875475` then attempted all three packages. KIdleTime and NetworkManagerQt are real package-ledger PASS; ModemManagerQt built and passed 11/11 tests but failed the Lintian symbols gate on `_ZSt19piecewise_construct@Base`. Its `6.30.0-0supralinux2` attempt successfully fixed that symbols issue and again passed 11/11 tests, then failed Lintian because the Python transform invoked by `debian/rules` lacked an explicit Python build prerequisite. Candidate `6.30.0-0supralinux3` retains the same symbols transform and adds only `python3:any` to Build-Depends.
 
 Canonical promotion remains deferred to Batch 5 closure, so all three nodes remain canonical `pending` in Tier1/DAG while the remediation is open.
 

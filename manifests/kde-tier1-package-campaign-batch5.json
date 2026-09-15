@@ -209,20 +209,21 @@
       ],
       "dependency_contracts": {
         "libkf6modemmanagerqt-dev": [
-          "libkf6modemmanagerqt6 (= 6.30.0-0supralinux2)",
+          "libkf6modemmanagerqt6 (= 6.30.0-0supralinux3)",
           "modemmanager-dev (>= 1.0)",
           "qt6-base-dev (>= 6.9.0~)"
         ]
       },
       "recommendation_contracts": {
         "libkf6modemmanagerqt-dev": [
-          "libkf6modemmanagerqt-doc (= 6.30.0-0supralinux2)"
+          "libkf6modemmanagerqt-doc (= 6.30.0-0supralinux3)"
         ]
       },
       "build_profile_tokens": [
         "dbus-daemon <!nocheck>",
         "modemmanager-dev (>= 1.0)",
         "pkgconf",
+        "python3:any",
         "qt6-base-dev (>= 6.9.0~)",
         "qt6-tools-dev (>= 6.9.0~)"
       ],
@@ -235,7 +236,7 @@
         "sha256": "6863209ef5575d5ac62b9e77d9ee6ee7a4c06e05622cb9671499686696c4605d",
         "reference": "debian-sid-6.28.0"
       },
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "symbols": {
         "file": "libkf6modemmanagerqt6.symbols",
         "sha256": "70c9ebc08c99174f022c3b4b38ed4cde4a8725f0a2f8ea04a09371132312d6f2",
@@ -255,6 +256,20 @@
           "failure_substage": "Lintian/symbols",
           "tests": "11/11 PASS",
           "cause": "dpkg-gensymbols added _ZSt19piecewise_construct@Base at the current Debian revision; Lintian rejected symbols-file-contains-current-version-with-debian-revision."
+        },
+        {
+          "result": "FAIL",
+          "workflow_run": 35017509303,
+          "job_id": 104544555425,
+          "commit": "77f4c6e9e077e12bf7063ee2f872255d397ec8c8",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10416692119,
+          "artifact_sha256": "2b081f989d42f6d4820b238c9e739ccb4104080ceae7a49aa49cb20305eb66d7",
+          "failure_stage": "sbuild",
+          "failure_substage": "Lintian/build-prerequisite",
+          "tests": "11/11 PASS",
+          "symbols_transform": "PASS",
+          "cause": "The hash-locked symbols transform succeeded, but debian/rules invokes python3 without declaring python3:any (or an equivalent Python build prerequisite); Lintian rejected rules-require-build-prerequisite."
         }
       ],
       "provider_contract": {
@@ -263,12 +278,12 @@
         "pkg_config_module": "ModemManager"
       },
       "remediation": {
-        "candidate_package_version": "6.30.0-0supralinux2",
+        "candidate_package_version": "6.30.0-0supralinux3",
         "status": "prepared",
         "source_change": false,
         "changes": [
-          "apply a deterministic hash-locked symbols delta before dh_makeshlibs",
-          "mark _ZSt19piecewise_construct@Base optional=toolchain at upstream 6.30.0"
+          "retain the validated deterministic hash-locked symbols delta before dh_makeshlibs",
+          "declare python3:any explicitly in Build-Depends because debian/rules invokes the transform script"
         ],
         "symbols_baseline_sha256": "70c9ebc08c99174f022c3b4b38ed4cde4a8725f0a2f8ea04a09371132312d6f2",
         "symbols_result_sha256": "b717475396376ac884bb3587ab2a0e898af5beb940836c45ee834758eec6820f",

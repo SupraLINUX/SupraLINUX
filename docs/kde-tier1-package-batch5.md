@@ -60,7 +60,7 @@ This is a real node `FAIL`, not `BLOCKED`. The corrected `modemmanager-dev` prov
 
 ## ModemManagerQt remediation
 
-Revision `6.30.0-0supralinux2` keeps KDE source and dependencies unchanged. Before `dh_makeshlibs`, a deterministic script verifies the exact retained Debian 6.28 symbols baseline and inserts exactly:
+Revision `6.30.0-0supralinux2` kept KDE source and dependencies unchanged. Before `dh_makeshlibs`, a deterministic script verifies the exact retained Debian 6.28 symbols baseline and inserts exactly:
 
 `(optional=toolchain)_ZSt19piecewise_construct@Base 6.30.0`
 
@@ -72,7 +72,9 @@ Hashes:
 - transformed symbols SHA-256 `b717475396376ac884bb3587ab2a0e898af5beb940836c45ee834758eec6820f`;
 - transform script SHA-256 `f468a9e752ecb79ccc05e3a7e344622f7b1e6aeae94fb71089a94f0f51d5559b`.
 
-The historical `-1` FAIL remains retained. `-2` is remediation-pending-build until a new real attempt passes.
+The historical `-1` FAIL remains retained. The real `-2` attempt in run `35017509303`, job `104544555425`, artifact `10416692119`, SHA-256 `2b081f989d42f6d4820b238c9e739ccb4104080ceae7a49aa49cb20305eb66d7`, proved the symbols transform itself worked and again passed 11/11 tests. It then failed Lintian because `debian/rules` invokes `python3` without declaring a Python build prerequisite (`rules-require-build-prerequisite`).
+
+Revision `6.30.0-0supralinux3` therefore retains the exact reviewed symbols transform and adds only `python3:any` to Build-Depends. KDE source, Qt and provider requirements remain unchanged. `-3` is remediation-pending-build until a real attempt passes.
 
 ## Provider inputs
 

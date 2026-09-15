@@ -57,7 +57,7 @@ for node,e in EXPECTED.items():
     elif node=='modemmanager-qt':
         req(n['state']=='remediation-pending-build',f'{node}: remediation state')
         req(n['last_result']=='FAIL' and n['downstream_eligible'] is False,f'{node}: retained FAIL state')
-        req(n['package_version']=='6.30.0-0supralinux2',f'{node}: remediation revision')
+        req(n['package_version']=='6.30.0-0supralinux3',f'{node}: remediation revision')
     req(n['source_sha256']==e['source'],f'{node}: source SHA')
     req(n['root_cmake_blob']==e['blob'],f'{node}: root CMake blob')
     req(n['runtime_package']==e['runtime'],f'{node}: runtime')
@@ -86,8 +86,6 @@ for node,e in EXPECTED.items():
     req(f"find_package({e['cmake']} 6.30 REQUIRED)" in consumer and e['target'] in consumer,f'{node}: consumer CMake')
     req(e['soname'] in main and 'dlopen' in main,f'{node}: runtime consumer')
 
-
-# Retained first-attempt evidence. Package-ledger PASS does not equal canonical promotion.
 PASS_EXPECTED={
  'kidletime':{'job':104535671033,'artifact':10414598079,'digest':'272ccad537d21905cf75a1add74e937d176c20c05c38bf967226fef4ab28b605','tests':'1/1 PASS','soname':'libKF6IdleTime.so.6'},
  'networkmanager-qt':{'job':104535671250,'artifact':10414714325,'digest':'abf927b5749b34094d2b5ee530831f64638ba116a83e8b82f925a758aa018ad4','tests':'38/38 PASS','soname':'libKF6NetworkManagerQt.so.6'},
@@ -105,30 +103,41 @@ for node,want in PASS_EXPECTED.items():
         req(ev.get('lintian')=='PASS-errors' and ev.get('consumer_smoke')=='PASS',f'{node}: PASS gates')
         req(ev.get('abi_soname')==want['soname'] and ev.get('downstream_eligible') is True,f'{node}: PASS ABI/downstream')
     for key,digest in c['nodes'][node].get('last_pass_files',{}).items():
-        req(re.fullmatch(r'[0-9a-f]{64}',str(digest)) is not None,f'{node}: invalid retained file hash {key}')
+        req(re.fullmatch(r'^[0-9a-f]{64}',str(digest)) is not None,f'{node}: invalid retained file hash {key}')
 
 mm=c['nodes']['modemmanager-qt']
 mm_ev=mm.get('evidence',[])
-req(len(mm_ev)==1 and mm_ev[0].get('result')=='FAIL','modemmanager-qt: retain exactly one historical FAIL')
-if mm_ev:
+req(len(mm_ev)==2 and all(ev.get('result')=='FAIL' for ev in mm_ev),'modemmanager-qt: retain exactly two historical FAIL attempts')
+if len(mm_ev)>=1:
     ev=mm_ev[0]
-    req(ev.get('workflow_run')==35014875475 and ev.get('job_id')==104535671188,'modemmanager-qt: FAIL run/job')
-    req(ev.get('commit')=='30b5dcd293527b488c88cf0a861883ee869e3ea0','modemmanager-qt: FAIL commit')
-    req(ev.get('attempted_package_version')=='6.30.0-0supralinux1','modemmanager-qt: historical FAIL revision')
-    req(ev.get('artifact_id')==10415586492 and ev.get('artifact_sha256')=='f79f98cc73f561e5750c4db7917917a043f260131af0ac19180fd835dee78af7','modemmanager-qt: FAIL artifact')
-    req(ev.get('failure_stage')=='sbuild' and ev.get('failure_substage')=='Lintian/symbols','modemmanager-qt: FAIL stage')
-    req(ev.get('tests')=='11/11 PASS','modemmanager-qt: tests passed before Lintian failure')
-    req('_ZSt19piecewise_construct@Base' in ev.get('cause',''),'modemmanager-qt: retained root cause')
+    req(ev.get('workflow_run')==35014875475 and ev.get('job_id')==104535671188,'modemmanager-qt: -1 FAIL run/job')
+    req(ev.get('commit')=='30b5dcd293527b488c88cf0a861883ee869e3ea0','modemmanager-qt: -1 FAIL commit')
+    req(ev.get('attempted_package_version')=='6.30.0-0supralinux1','modemmanager-qt: -1 historical FAIL revision')
+    req(ev.get('artifact_id')==10415586492 and ev.get('artifact_sha256')=='f79f98cc73f561e5750c4db7917917a043f260131af0ac19180fd835dee78af7','modemmanager-qt: -1 FAIL artifact')
+    req(ev.get('failure_stage')=='sbuild' and ev.get('failure_substage')=='Lintian/symbols','modemmanager-qt: -1 FAIL stage')
+    req(ev.get('tests')=='11/11 PASS','modemmanager-qt: -1 tests passed before Lintian failure')
+    req('_ZSt19piecewise_construct@Base' in ev.get('cause',''),'modemmanager-qt: -1 retained root cause')
+if len(mm_ev)>=2:
+    ev=mm_ev[1]
+    req(ev.get('workflow_run')==35017509303 and ev.get('job_id')==104544555425,'modemmanager-qt: -2 FAIL run/job')
+    req(ev.get('commit')=='77f4c6e9e077e12bf7063ee2f872255d397ec8c8','modemmanager-qt: -2 FAIL commit')
+    req(ev.get('attempted_package_version')=='6.30.0-0supralinux2','modemmanager-qt: -2 historical FAIL revision')
+    req(ev.get('artifact_id')==10416692119 and ev.get('artifact_sha256')=='2b081f989d42f6d4820b238c9e739ccb4104080ceae7a49aa49cb20305eb66d7','modemmanager-qt: -2 FAIL artifact')
+    req(ev.get('failure_stage')=='sbuild' and ev.get('failure_substage')=='Lintian/build-prerequisite','modemmanager-qt: -2 FAIL stage')
+    req(ev.get('tests')=='11/11 PASS' and ev.get('symbols_transform')=='PASS','modemmanager-qt: -2 tests/symbols transform evidence')
+    req('python3' in ev.get('cause','') and 'rules-require-build-prerequisite' in ev.get('cause',''),'modemmanager-qt: -2 retained root cause')
 rem=mm.get('remediation',{})
-req(rem.get('candidate_package_version')=='6.30.0-0supralinux2' and rem.get('status')=='prepared','modemmanager-qt: remediation candidate')
+req(rem.get('candidate_package_version')=='6.30.0-0supralinux3' and rem.get('status')=='prepared','modemmanager-qt: remediation candidate')
 req(rem.get('source_change') is False,'modemmanager-qt: remediation must not change KDE source')
 req(rem.get('symbols_baseline_sha256')=='70c9ebc08c99174f022c3b4b38ed4cde4a8725f0a2f8ea04a09371132312d6f2','modemmanager-qt: baseline hash')
 req(rem.get('symbols_result_sha256')=='b717475396376ac884bb3587ab2a0e898af5beb940836c45ee834758eec6820f','modemmanager-qt: transformed hash')
 req(rem.get('symbols_transform_sha256')=='f468a9e752ecb79ccc05e3a7e344622f7b1e6aeae94fb71089a94f0f51d5559b','modemmanager-qt: transform hash')
+req(any('python3:any' in change for change in rem.get('changes',[])),'modemmanager-qt: -3 must document explicit Python build prerequisite')
 
 req('xvfb-run -a dh_auto_test' in text(ROOT/'packages/kde/kidletime/debian/rules'),'KIdleTime tests via Xvfb')
 mm_control=text(ROOT/'packages/kde/modemmanager-qt/debian/control')
 req('modemmanager-dev (>= 1.0)' in mm_control and 'libmm-glib-dev' not in mm_control,'ModemManager provider contract')
+req('python3:any' in mm_control,'ModemManagerQt -3 must declare Python rules prerequisite')
 mm_rules=text(ROOT/'packages/kde/modemmanager-qt/debian/rules')
 req('dbus-run-session dh_auto_test -Skf6' in mm_rules,'ModemManagerQt D-Bus test session')
 req('override_dh_makeshlibs:' in mm_rules and 'python3 debian/apply-symbols-delta.py' in mm_rules,'ModemManagerQt symbols remediation order')
@@ -166,7 +175,8 @@ req('b717475396376ac884bb3587ab2a0e898af5beb940836c45ee834758eec6820f' in text(D
 req('13 PASS / 16 pending / 0 current FAIL / 0 BLOCKED' in text(DOC),'Batch 5 canonical count')
 
 if errors:
-    for x in errors: print('ERROR:',x,file=sys.stderr)
+    for x in errors:
+        print('ERROR:',x,file=sys.stderr)
     raise SystemExit(1)
 print('KDE Tier 1 Batch 5 open-remediation validation: PASS')
 print('Selected: kidletime, modemmanager-qt, networkmanager-qt')

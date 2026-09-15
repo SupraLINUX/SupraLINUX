@@ -30,3 +30,9 @@ Remediation hashes:
 - baseline SHA-256: `70c9ebc08c99174f022c3b4b38ed4cde4a8725f0a2f8ea04a09371132312d6f2`;
 - transformed symbols SHA-256: `b717475396376ac884bb3587ab2a0e898af5beb940836c45ee834758eec6820f`;
 - transform script SHA-256: `f468a9e752ecb79ccc05e3a7e344622f7b1e6aeae94fb71089a94f0f51d5559b`.
+
+The real `6.30.0-0supralinux2` attempt confirmed the symbols transform and passed
+11/11 tests, then failed Lintian because `debian/rules` invokes the Python transform
+without an explicit Python build prerequisite. Revision `6.30.0-0supralinux3` adds
+`python3:any` to Build-Depends only; the reviewed symbols delta and KDE source stay
+unchanged.
