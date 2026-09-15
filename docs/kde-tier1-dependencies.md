@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 Tier 1 — dependency resolution
 
-Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping resolved; hosted provider preflight PASS; 13 package nodes PASS; 16 package nodes pending**  
+Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping resolved; hosted provider preflight PASS; 16 package nodes PASS; 13 package nodes pending**
 Last reviewed: **2026-09-15**
 
 ## Contract
@@ -106,9 +106,9 @@ Batch 5 selects `kidletime`, `modemmanager-qt` and `networkmanager-qt`.
 - ModemManagerQt uses corrected provider `modemmanager-dev` for KDE's `ModemManager >= 1.0` requirement.
 - NetworkManagerQt explicitly carries both `libnm-dev` and `libglib2.0-dev` because upstream CMake directly probes `libnm>=1.4.0` and `gio-2.0`; its QML module remains enabled.
 
-Run `35014875475` then attempted all three packages. KIdleTime and NetworkManagerQt are real package-ledger PASS; ModemManagerQt built and passed 11/11 tests but failed the Lintian symbols gate on `_ZSt19piecewise_construct@Base`. Its `6.30.0-0supralinux2` attempt successfully fixed that symbols issue and again passed 11/11 tests, then failed Lintian because the Python transform invoked by `debian/rules` lacked an explicit Python build prerequisite. Candidate `6.30.0-0supralinux3` retains the same symbols transform and adds only `python3:any` to Build-Depends.
+Run `35014875475` attempted all three packages. KIdleTime and NetworkManagerQt passed immediately. ModemManagerQt built and passed 11/11 tests but failed the Lintian symbols gate on `_ZSt19piecewise_construct@Base`. Its `6.30.0-0supralinux2` attempt fixed that symbols issue and again passed 11/11 tests, then failed Lintian because the Python transform invoked by `debian/rules` lacked an explicit Python build prerequisite.
 
-Canonical promotion remains deferred to Batch 5 closure, so all three nodes remain canonical `pending` in Tier1/DAG while the remediation is open.
+Revision `6.30.0-0supralinux3` retained the same reviewed transform and added only `python3:any` to Build-Depends. Run `35021323444`, job `104557423664`, artifact `10417683848`, SHA-256 `42d4f804effc6e4b9148e8c01887bdce6f95f0554ac4d03295e844a861a54eb7`, passed 11/11 tests plus Lintian/SONAME/consumer smoke. Batch 5 is now canonically closed 3/3 PASS and all three nodes are downstream-eligible.
 
 ## Hosted provider evidence
 
@@ -133,16 +133,16 @@ Historical runs `34699717549` and `34699889060` remain gate-implementation FAIL 
 
 ## Package evidence status
 
-Attica was the first real Framework package PASS against this dependency model. Batch 1, Batch 2, Batch 3 and Batch 4 evidence has now promoted thirteen Tier 1 nodes.
+Attica was the first real Framework package PASS against this dependency model. Batch 1 through Batch 5 evidence has now promoted sixteen Tier 1 nodes.
 
 Current canonical state:
 
 - upstream dependency resolution: **resolved**;
 - Ubuntu package-name mapping: **resolved**;
 - Ubuntu hosted provider availability/version evidence: **PASS**;
-- Tier 1 package/build states: **13 PASS / 16 pending**;
+- Tier 1 package/build states: **16 PASS / 13 pending**;
 - current Tier 1 FAIL: **0**;
 - current Tier 1 BLOCKED: **0**;
 - final Qt provider certification: **pending**.
 
-Provider evidence alone never promotes a Framework. Each of the thirteen canonical PASS nodes has real package-attempt evidence. Batch 5 now additionally has two unpromoted package-ledger PASS nodes and one retained package FAIL under remediation; canonical counts remain unchanged until closure.
+Provider evidence alone never promotes a Framework. Each of the sixteen canonical PASS nodes has real package-attempt evidence. Batch 5 is closed 3/3 PASS; the two earlier ModemManagerQt FAIL attempts remain retained as historical evidence while its `-3` PASS is the current downstream-eligible state.

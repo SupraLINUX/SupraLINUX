@@ -118,8 +118,8 @@ for node_id, expected in EXPECTED.items():
     node = tier_nodes.get(node_id, {})
     require(node.get("state") == "PASS", f"{node_id}: canonical Tier 1 state must be PASS")
     require(node.get("packaging", {}).get("package_version") == expected["version"], f"{node_id}: canonical Tier 1 package version mismatch")
-require(sum(1 for item in tier_nodes.values() if item.get("state") == "PASS") == 13, "Canonical Tier 1 PASS count must be 13 after later batch promotions")
-require(sum(1 for item in tier_nodes.values() if item.get("state") == "pending") == 16, "Canonical Tier 1 pending count must be 16 after later batch promotions")
+require(sum(1 for item in tier_nodes.values() if item.get("state") == "PASS") == 16, "Canonical Tier 1 PASS count must be 16 after later batch promotions")
+require(sum(1 for item in tier_nodes.values() if item.get("state") == "pending") == 13, "Canonical Tier 1 pending count must be 13 after later batch promotions")
 
 for node_id in EXPECTED:
     dag_node = dag.get("nodes", {}).get(node_id, {})
@@ -153,5 +153,5 @@ if errors:
     raise SystemExit(1)
 print("KDE Frameworks Tier 1 batch 1 canonical closure: PASS")
 print("Batch nodes: kcodecs, kdbusaddons, threadweaver = 3/3 PASS")
-print("Canonical Tier 1 now: 13 PASS, 16 pending, 0 FAIL, 0 BLOCKED; Batch 1 historical closure remains 7/22")
+print("Canonical Tier 1 now: 16 PASS, 13 pending, 0 FAIL, 0 BLOCKED; Batch 1 historical closure remains 7/22")
 print("Scope incident retained as infrastructure-only; package PASS states unchanged")

@@ -36,6 +36,9 @@ EXPECTED_PASS = {
     'kitemviews': {'version':'6.30.0-0supralinux1','run':34999449194,'job':104483912528,'artifact':10409267184,'digest':'7e34fa7ede21510cf6829448e7b45a5c2832aaf9ac2719b9cb4125d23b593e55','tests':'2/2 PASS','soname':'libKF6ItemViews.so.6'},
     'kglobalaccel': {'version':'6.30.0-0supralinux2','run':35006477086,'job':104507372240,'artifact':10412320520,'digest':'cb8143633cf15745a235937ea55ee096cb094cc96da3bd1fc39dc914f3acb3b1','tests':'1/1 PASS','soname':'libKF6GlobalAccel.so.6'},
     'syntax-highlighting': {'version':'6.30.0-0supralinux2','run':35006477086,'job':104507371855,'artifact':10411888269,'digest':'1ec0d1e7d046b1393fbb299c9a6fec7e85ee4ac59ed5deafa0c777ead67c0b5f','tests':'8/8 PASS','soname':'libKF6SyntaxHighlighting.so.6'},
+    'kidletime': {'version':'6.30.0-0supralinux1','run':35014875475,'job':104535671033,'artifact':10414598079,'digest':'272ccad537d21905cf75a1add74e937d176c20c05c38bf967226fef4ab28b605','tests':'1/1 PASS','soname':'libKF6IdleTime.so.6'},
+    'modemmanager-qt': {'version':'6.30.0-0supralinux3','run':35021323444,'job':104557423664,'artifact':10417683848,'digest':'42d4f804effc6e4b9148e8c01887bdce6f95f0554ac4d03295e844a861a54eb7','tests':'11/11 PASS','soname':'libKF6ModemManagerQt.so.6'},
+    'networkmanager-qt': {'version':'6.30.0-0supralinux1','run':35014875475,'job':104535671250,'artifact':10414714325,'digest':'abf927b5749b34094d2b5ee530831f64638ba116a83e8b82f925a758aa018ad4','tests':'38/38 PASS','soname':'libKF6NetworkManagerQt.so.6'},
 }
 EXPECTED_PROVIDER_EVIDENCE = {'distribution':'ubuntu','series':'resolute','status':'hosted-preflight-pass','evidence':{'workflow_run':34700048774,'head_sha':'6ce61bc02c4aba146bcc33b16d17f56fb66f057a','artifact_id':10299608166,'artifact_sha256':'da6808c31554da4105713e060e328d4130253a100c628fef279d8d0a9cf8ceb3','authoritative':False,'claim':'provider-availability-only'}}
 errors: list[str] = []
@@ -129,9 +132,9 @@ for node in nodes:
     else:
         require(node.get('packaging') == {'state':'pending'}, f'{node_id}: unattempted packaging state must remain pending')
         require(node.get('state') == 'pending', f'{node_id}: unattempted node state must remain pending')
-require(sum(1 for n in nodes if n.get('state') == 'PASS') == 13, 'Tier 1 current PASS count must be 13')
-require(sum(1 for n in nodes if n.get('state') == 'pending') == 16, 'Tier 1 current pending count must be 16')
-require(not any(n.get('state') in {'FAIL','BLOCKED'} for n in nodes), 'Tier 1 must have no current FAIL/BLOCKED nodes after Batch 4 closure')
+require(sum(1 for n in nodes if n.get('state') == 'PASS') == 16, 'Tier 1 current PASS count must be 16')
+require(sum(1 for n in nodes if n.get('state') == 'pending') == 13, 'Tier 1 current pending count must be 13')
+require(not any(n.get('state') in {'FAIL','BLOCKED'} for n in nodes), 'Tier 1 must have no current FAIL/BLOCKED nodes after Batch 5 closure')
 require(deps.get('schema') == 1, 'Dependency manifest schema must be 1')
 require(deps.get('authority') == 'kde-upstream', 'Dependency authority must remain KDE upstream')
 require(deps.get('frameworks') == '6.30.0', 'Dependency manifest must target Frameworks 6.30.0')
@@ -167,5 +170,5 @@ if errors:
         print(f'ERROR: {error}', file=sys.stderr)
     raise SystemExit(1)
 print('KDE Frameworks 6.30 Tier 1 source/dependency validation: PASS')
-print('Tier 1 package states: 13 PASS/downstream-eligible; 16 pending; 0 FAIL; 0 BLOCKED')
+print('Tier 1 package states: 16 PASS/downstream-eligible; 13 pending; 0 FAIL; 0 BLOCKED')
 print('Ubuntu Resolute provider mapping: hosted preflight PASS; final certification pending')

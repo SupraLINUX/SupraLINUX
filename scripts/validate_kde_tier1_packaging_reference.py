@@ -59,6 +59,9 @@ PASS_NODES = {
     "kitemviews": ("6.30.0-0supralinux1", 34999449194, 10409267184, "7e34fa7ede21510cf6829448e7b45a5c2832aaf9ac2719b9cb4125d23b593e55"),
     "kglobalaccel": ("6.30.0-0supralinux2", 35006477086, 10412320520, "cb8143633cf15745a235937ea55ee096cb094cc96da3bd1fc39dc914f3acb3b1"),
     "syntax-highlighting": ("6.30.0-0supralinux2", 35006477086, 10411888269, "1ec0d1e7d046b1393fbb299c9a6fec7e85ee4ac59ed5deafa0c777ead67c0b5f"),
+    "kidletime": ("6.30.0-0supralinux1", 35014875475, 10414598079, "272ccad537d21905cf75a1add74e937d176c20c05c38bf967226fef4ab28b605"),
+    "modemmanager-qt": ("6.30.0-0supralinux3", 35021323444, 10417683848, "42d4f804effc6e4b9148e8c01887bdce6f95f0554ac4d03295e844a861a54eb7"),
+    "networkmanager-qt": ("6.30.0-0supralinux1", 35014875475, 10414714325, "abf927b5749b34094d2b5ee530831f64638ba116a83e8b82f925a758aa018ad4"),
 }
 errors: list[str] = []
 
@@ -132,8 +135,8 @@ for node in source_nodes:
     else:
         require(node.get("packaging") == {"state":"pending"}, f"{node_id}: unattempted packaging must remain pending")
         require(node.get("state") == "pending", f"{node_id}: unattempted node must remain pending")
-require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 13, "Reference validator expects 13 actual package PASS nodes")
-require(sum(1 for node in source_nodes if node.get("state") == "pending") == 16, "Reference validator expects 16 pending nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 16, "Reference validator expects 16 actual package PASS nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "pending") == 13, "Reference validator expects 13 pending nodes")
 for token in ("manifests/kde-frameworks-tier1.json","manifests/kde-frameworks-tier1-packaging-reference.json","scripts/run-kde-tier1-packaging-reference-snapshot.sh","scripts/kde-tier1-packaging-reference-needed.sh",".github/workflows/kde-tier1-packaging-reference.yml"):
     require(token in scope, f"Packaging-reference scope must track input {token}")
 require("docs/" not in scope, "Packaging-reference snapshot must not rerun for documentation-only changes")
@@ -148,4 +151,4 @@ if errors:
     raise SystemExit(1)
 print("KDE Frameworks Tier 1 packaging-reference policy: PASS")
 print("Reference snapshots remain non-authoritative technical inputs")
-print("Actual package states: 13 PASS; 16 pending")
+print("Actual package states: 16 PASS; 13 pending")

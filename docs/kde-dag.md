@@ -296,9 +296,19 @@ Clasificación: `infrastructure-scope-selection`; `package_state_effect=none`. E
 
 El contrato corregido queda explícito y validado: `0 = rebuild`, `1 = intentional skip`, cualquier otro status es error. El selector sigue limitado a `packages/kde/extra-cmake-modules/*`, `scripts/run-kde-ecm-package-preflight.sh` y `.github/workflows/kde-ecm-package-preflight.yml`. Cambios de DAG, evidencia, documentación, validators o del propio selector deben ejecutar el workflow pero hacer scope-skip, sin `sbuild` ni artifact nuevo.
 
+### Batch 5 — 3/3 PASS
+
+Batch 5 promoted KIdleTime, ModemManagerQt and NetworkManagerQt.
+
+- KIdleTime `6.30.0-0supralinux1`: run `35014875475`, job `104535671033`, artifact `10414598079`, `1/1 PASS`.
+- NetworkManagerQt `6.30.0-0supralinux1`: run `35014875475`, job `104535671250`, artifact `10414714325`, `38/38 PASS`.
+- ModemManagerQt retained real FAIL attempts `-1` and `-2`. Revision `6.30.0-0supralinux3` passed run `35021323444`, job `104557423664`, artifact `10417683848`, SHA-256 `42d4f804effc6e4b9148e8c01887bdce6f95f0554ac4d03295e844a861a54eb7`, with `11/11 PASS`, Lintian, SONAME and consumer smoke PASS.
+
+El estado canónico de cada uno es ahora PASS y downstream-eligible. Los FAIL históricos de ModemManagerQt quedan como evidencia de intentos, no como estado actual.
+
 ## Estado actual
 
-Tier 1 queda en **13 PASS, 16 pending, 0 current FAIL, 0 BLOCKED**.
+Tier 1 queda en **16 PASS, 13 pending, 0 current FAIL, 0 BLOCKED**.
 
 Sólo artifacts PASS retenidos pueden alimentar dependientes.
 
@@ -308,6 +318,6 @@ Hosted package-preflight sigue sin sustituir el futuro gate autoritativo KVM/JIT
 
 KConfig sigue diferido hasta extender explícitamente el runner para su contrato ABI multi-library.
 
-Los próximos nodos deben seleccionarse desde los 16 Tier 1 pendientes usando el mismo criterio DAG: construir todos los independientes posibles, conservar PASS, registrar FAIL reales y marcar BLOCKED sólo por predecesor FAIL.
+Los próximos nodos deben seleccionarse desde los 13 Tier 1 pendientes usando el mismo criterio DAG: construir todos los independientes posibles, conservar PASS, registrar FAIL reales y marcar BLOCKED sólo por predecesor FAIL.
 
 PR #1 permanece Draft. No merge.

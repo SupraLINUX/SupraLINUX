@@ -19,15 +19,62 @@
       "source_authority": "kde-upstream",
       "package_provider": "supralinux",
       "source_package": "kf6-extra-cmake-modules",
-      "binary_packages": ["extra-cmake-modules"],
+      "binary_packages": [
+        "extra-cmake-modules"
+      ],
       "package_version": "6.30.0-0supralinux3",
       "ubuntu_reference_version": "6.24.0-0ubuntu1",
       "depends_on": [],
       "state": "PASS",
       "evidence": [
-        {"type": "github-actions-run", "run_id": 34689672632, "commit": "99b95b1c0897ed20af6c8add7aa1620ef1795019", "attempted_package_version": "6.30.0-0supralinux1", "artifact_id": 10296512341, "artifact_sha256": "d47ac7361106ceb5f04729c1a3dcb4103b30255684e5b3f53b833edd6d4f6558", "result": "FAIL", "failure_stage": "dh_auto_test", "cause": "BUILD_TESTING=OFF removed the Ninja test target while debhelper still invoked dh_auto_test/ninja test"},
-        {"type": "github-actions-run", "run_id": 34690027788, "job_id": 103543538213, "commit": "801b99792dc60e7c14cb78d1846f9b8c9a476de8", "attempted_package_version": "6.30.0-0supralinux2", "artifact_id": 10296517706, "artifact_sha256": "89ef0003fd8282965a4c253bcd0150b8f040fe134ca0385d1365cd8c31808239", "result": "FAIL", "failure_stage": "consumer-smoke", "cause": "binary build succeeded, but Lintian reported missing copyright metadata and a missing Python runtime dependency; the Qt-integrated consumer smoke then failed because qtpaths6 was absent from the consumer environment"},
-        {"type": "github-actions-run", "run_id": 34694951158, "job_id": 103556722010, "commit": "cafc5aff98fd28efdc2edf889a2e0f9a73dacb48", "attempted_package_version": "6.30.0-0supralinux3", "artifact_id": 10298635300, "artifact_sha256": "181ea1434e803453d61d345a28adeba5ad9cee09a7c93948c6ce3ef1214984ff", "result": "PASS", "stage": "complete", "claim": "hosted-clean-package-preflight-only", "qt_consumer_version": "6.10.2", "lintian": "PASS", "consumer_smoke": "PASS", "downstream_eligible": true, "files": {"deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f", "changes_sha256": "1ea11dda85d3c5e7b52d3fd82f53206ff8e0a669b16cc01b3b44e323c6c665c7", "buildinfo_sha256": "440dc70274cd1b2660647b988b0243c935c058cf98d136929c1bee39ea542b1b", "dsc_sha256": "b634ecc73a1c569e506a9d5d52e09a5e948854df248caba84f579ded983ffe21", "debian_tar_sha256": "0256f17ee6201ffea0081804c04ab1e49611a23addfd2c64facb9d1dd41c8a83", "orig_tar_sha256": "22c9f7ff930dae7329faebf2942d2424f4a298c43bb3f11e217be6b12f227f6e", "rootfs_sha256": "469407fc2d4e3e55d2f77d22ff487e66e7722d3b450c3e7b4bb6016a2f6e8b5a"}}
+        {
+          "type": "github-actions-run",
+          "run_id": 34689672632,
+          "commit": "99b95b1c0897ed20af6c8add7aa1620ef1795019",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10296512341,
+          "artifact_sha256": "d47ac7361106ceb5f04729c1a3dcb4103b30255684e5b3f53b833edd6d4f6558",
+          "result": "FAIL",
+          "failure_stage": "dh_auto_test",
+          "cause": "BUILD_TESTING=OFF removed the Ninja test target while debhelper still invoked dh_auto_test/ninja test"
+        },
+        {
+          "type": "github-actions-run",
+          "run_id": 34690027788,
+          "job_id": 103543538213,
+          "commit": "801b99792dc60e7c14cb78d1846f9b8c9a476de8",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10296517706,
+          "artifact_sha256": "89ef0003fd8282965a4c253bcd0150b8f040fe134ca0385d1365cd8c31808239",
+          "result": "FAIL",
+          "failure_stage": "consumer-smoke",
+          "cause": "binary build succeeded, but Lintian reported missing copyright metadata and a missing Python runtime dependency; the Qt-integrated consumer smoke then failed because qtpaths6 was absent from the consumer environment"
+        },
+        {
+          "type": "github-actions-run",
+          "run_id": 34694951158,
+          "job_id": 103556722010,
+          "commit": "cafc5aff98fd28efdc2edf889a2e0f9a73dacb48",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10298635300,
+          "artifact_sha256": "181ea1434e803453d61d345a28adeba5ad9cee09a7c93948c6ce3ef1214984ff",
+          "result": "PASS",
+          "stage": "complete",
+          "claim": "hosted-clean-package-preflight-only",
+          "qt_consumer_version": "6.10.2",
+          "lintian": "PASS",
+          "consumer_smoke": "PASS",
+          "downstream_eligible": true,
+          "files": {
+            "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f",
+            "changes_sha256": "1ea11dda85d3c5e7b52d3fd82f53206ff8e0a669b16cc01b3b44e323c6c665c7",
+            "buildinfo_sha256": "440dc70274cd1b2660647b988b0243c935c058cf98d136929c1bee39ea542b1b",
+            "dsc_sha256": "b634ecc73a1c569e506a9d5d52e09a5e948854df248caba84f579ded983ffe21",
+            "debian_tar_sha256": "0256f17ee6201ffea0081804c04ab1e49611a23addfd2c64facb9d1dd41c8a83",
+            "orig_tar_sha256": "22c9f7ff930dae7329faebf2942d2424f4a298c43bb3f11e217be6b12f227f6e",
+            "rootfs_sha256": "469407fc2d4e3e55d2f77d22ff487e66e7722d3b450c3e7b4bb6016a2f6e8b5a"
+          }
+        }
       ],
       "remediation": {
         "candidate_package_version": "6.30.0-0supralinux3",
@@ -51,175 +98,60 @@
       "source_authority": "kde-upstream",
       "package_provider": "supralinux",
       "source_package": "kf6-attica",
-      "binary_packages": ["libkf6attica6", "libkf6attica-dev", "libkf6attica-doc"],
+      "binary_packages": [
+        "libkf6attica6",
+        "libkf6attica-dev",
+        "libkf6attica-doc"
+      ],
       "package_version": "6.30.0-0supralinux2",
       "ubuntu_reference_version": "6.24.0-0ubuntu1",
-      "depends_on": ["extra-cmake-modules"],
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
       "state": "PASS",
       "claim": "hosted-clean-package-preflight",
       "authoritative": false,
       "downstream_eligible": true,
       "evidence": [
-        {"type": "github-actions-run", "run_id": 34705165994, "commit": "c18c8dcd1934a5bba874e642ba9b14729d2e69df", "attempted_package_version": "6.30.0-0supralinux1", "artifact_id": 10300903114, "artifact_sha256": "171cfe8553aba2af8f42a640ee5f50f82988005edbd104b737d93b639dc38300", "result": "FAIL", "failure_stage": "source-package", "cause": "dpkg-buildpackage -S invoked debian/rules clean on the host and dh could not load dh-sequence-kf6; build helpers belong in the clean sbuild environment"},
-        {"type": "github-actions-run", "run_id": 34706416753, "commit": "9945bfa92d776d432c76e17516b0ff9452b6d159", "attempted_package_version": "6.30.0-0supralinux2", "artifact_id": 10301851297, "artifact_sha256": "f1ed135e9d5a25e6773957b2e52817fba03280293249f54257efc4e18304de27", "result": "PASS", "stage": "complete", "tests": "6/6 PASS", "lintian": "PASS-errors", "consumer_smoke": "PASS", "abi_soname": "libKF6Attica.so.6", "ecm_predecessor": "6.30.0-0supralinux3", "downstream_eligible": true, "files": {"libkf6attica-dev_deb_sha256": "884e917a29b9618000621029d0dd42c00d4f2e1c925aa03cbf905978b82f0a4b", "libkf6attica-doc_deb_sha256": "30bb8e97a2a087809a1ca6d017f6beb8dcee5933d416d958c555033020d77a83", "libkf6attica6_deb_sha256": "5f52b2ce38c6dc1ad884d16e9d616c781b098a0445a68485d24087c4572d86de", "changes_sha256": "859b76c5cd99a7c949071098e44ae43943e8619a7174c120cfe2a1cf4ebc428e", "buildinfo_sha256": "5e10c1f72d07f6f61beff17e3ed3f0cf0254016d23d8c2bd0d1dec9c983bd5f4", "dsc_sha256": "25a0a2993787329d3ceae7a6485c9134605a3a188aed492bbc073ec5d5edbc72", "debian_tar_sha256": "0fcfabd68df435228170d657754641259c92d75147e00925c5d4766eeb105aa0", "orig_tar_sha256": "3eec8d2d9c77ad5f7cfd38e44e4b1492c5d0dec695b13f711c09f7d6187c276c", "rootfs_sha256": "37cef66de0b97f406f0fb59be51d7cbb221b68936db998b5e5a91804cbe97763"}}
+        {
+          "type": "github-actions-run",
+          "run_id": 34705165994,
+          "commit": "c18c8dcd1934a5bba874e642ba9b14729d2e69df",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10300903114,
+          "artifact_sha256": "171cfe8553aba2af8f42a640ee5f50f82988005edbd104b737d93b639dc38300",
+          "result": "FAIL",
+          "failure_stage": "source-package",
+          "cause": "dpkg-buildpackage -S invoked debian/rules clean on the host and dh could not load dh-sequence-kf6; build helpers belong in the clean sbuild environment"
+        },
+        {
+          "type": "github-actions-run",
+          "run_id": 34706416753,
+          "commit": "9945bfa92d776d432c76e17516b0ff9452b6d159",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10301851297,
+          "artifact_sha256": "f1ed135e9d5a25e6773957b2e52817fba03280293249f54257efc4e18304de27",
+          "result": "PASS",
+          "stage": "complete",
+          "tests": "6/6 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6Attica.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true,
+          "files": {
+            "libkf6attica-dev_deb_sha256": "884e917a29b9618000621029d0dd42c00d4f2e1c925aa03cbf905978b82f0a4b",
+            "libkf6attica-doc_deb_sha256": "30bb8e97a2a087809a1ca6d017f6beb8dcee5933d416d958c555033020d77a83",
+            "libkf6attica6_deb_sha256": "5f52b2ce38c6dc1ad884d16e9d616c781b098a0445a68485d24087c4572d86de",
+            "changes_sha256": "859b76c5cd99a7c949071098e44ae43943e8619a7174c120cfe2a1cf4ebc428e",
+            "buildinfo_sha256": "5e10c1f72d07f6f61beff17e3ed3f0cf0254016d23d8c2bd0d1dec9c983bd5f4",
+            "dsc_sha256": "25a0a2993787329d3ceae7a6485c9134605a3a188aed492bbc073ec5d5edbc72",
+            "debian_tar_sha256": "0fcfabd68df435228170d657754641259c92d75147e00925c5d4766eeb105aa0",
+            "orig_tar_sha256": "3eec8d2d9c77ad5f7cfd38e44e4b1492c5d0dec695b13f711c09f7d6187c276c",
+            "rootfs_sha256": "37cef66de0b97f406f0fb59be51d7cbb221b68936db998b5e5a91804cbe97763"
+          }
+        }
       ]
-    },
-    "kcodecs": {
-      "tier": 1,
-      "upstream_version": "6.30.0",
-      "source_url": "https://download.kde.org/stable/frameworks/6.30/kcodecs-6.30.0.tar.xz",
-      "source_sha256": "a42c79ff3237b73789d1c63cdfd848c0d59671ce5e93723a2efa128f00cb3450",
-      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
-      "source_authority": "kde-upstream",
-      "package_provider": "supralinux",
-      "source_package": "kf6-kcodecs",
-      "binary_packages": ["libkf6codecs-data", "libkf6codecs-dev", "libkf6codecs-doc", "libkf6codecs6"],
-      "package_version": "6.30.0-0supralinux4",
-      "ubuntu_reference_version": "6.24.0-0ubuntu1",
-      "depends_on": ["extra-cmake-modules"],
-      "state": "PASS",
-      "claim": "hosted-clean-package-preflight",
-      "authoritative": false,
-      "downstream_eligible": true,
-      "evidence": [
-        {"type": "github-actions-run", "result": "FAIL", "workflow_run": 34709829162, "job_id": 103596438631, "commit": "50611225422b05803ee49d8d5fc8ff4f84a21d99", "attempted_package_version": "6.30.0-0supralinux1", "artifact_id": 10302917591, "artifact_sha256": "6fcf23a69991e453d3563d580aa63fa082c27ce8490ad52dd9e125ee41cd8f6f", "failure_stage": "sbuild", "failure_substage": "override_dh_auto_test/reuse-lint-before-autotests", "autotests_reached": false},
-        {"type": "github-actions-run", "result": "FAIL", "workflow_run": 34710627400, "job_id": 103598645411, "commit": "3fa96423bb01b8a7cd63a62ab5947cf7ef57b482", "attempted_package_version": "6.30.0-0supralinux2", "artifact_id": 10303621032, "artifact_sha256": "722b83f04fadc67337129f6435547e0c9b3ad6b8b3d02655be258d86cb62e6a6", "failure_stage": "sbuild", "failure_substage": "dpkg-gensymbols", "tests": "8/8 PASS", "cause": "Ubuntu 6.24 symbols baseline still required two KCharsets constructors already removed from the newer Debian 6.28 reference."},
-        {"type": "github-actions-run", "result": "FAIL", "workflow_run": 34713034164, "job_id": 103605147896, "commit": "c4de13b66184cb3b84283f1c4c5f0668f577b0de", "attempted_package_version": "6.30.0-0supralinux3", "artifact_id": 10304255731, "artifact_sha256": "336d771a73091f2b0a7c60cf55833b5205f2c4bc8a8e87802065fe38333c2b0d", "failure_stage": "lintian", "tests": "8/8 PASS", "cause": "15 new libstdc++ std::format/Unicode implementation symbols received a Debian-revision minimum version and required reviewed optional=toolchain tagging at upstream 6.30.0."},
-        {"type": "github-actions-run", "result": "PASS", "workflow_run": 34716761551, "job_id": 103615297758, "commit": "6c156b6a1dc0fc9e6c9e43eae90c3da86f6b0cb9", "attempted_package_version": "6.30.0-0supralinux4", "artifact_id": 10305050385, "artifact_sha256": "d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45", "stage": "complete", "tests": "8/8 PASS", "lintian": "PASS-errors", "consumer_smoke": "PASS", "abi_soname": "libKF6Codecs.so.6", "ecm_predecessor": "6.30.0-0supralinux3", "downstream_eligible": true}
-      ],
-      "pass_files": {"libkf6codecs_data_deb_sha256": "70f2197d5fa6f475d2d414ef9a13a3e885bceee73e7dcf95983f3a3313565c24", "libkf6codecs_dev_deb_sha256": "87be51ba7f3ea8813e1ce61b3c6975b312db9c62d24f41e0909edb4d344f92dd", "libkf6codecs_doc_deb_sha256": "a84b0b5a59e9e0098975d5e247910ab5d2d65b42b85076f02ce7b17c4907337a", "libkf6codecs6_deb_sha256": "66b34b1ec140e1942d906c4e8537661bd540f959277e41de9a772e1e0956be13", "changes_sha256": "58997e31c6e8de45aa47899345845b0ecbbe73a77001e74ec807001e2808380f", "buildinfo_sha256": "b7b76708384495225491b58067c10547c5c29ab66282bca3371ac2069c649ff6", "dsc_sha256": "50d5e17652c58fab76fc3c7c4e3f765e14df744487d8600bf2950e68d5403ce4", "orig_tar_sha256": "a42c79ff3237b73789d1c63cdfd848c0d59671ce5e93723a2efa128f00cb3450", "debian_tar_sha256": "756165e036368ed6038e755603dac7028b80c535908ac67c2d18d831e19bb21f", "rootfs_sha256": "b0bcb87ff643d730940cbd267745cf18e868e01f64e7270d0ddeb2e348c950cf"}
-    },
-    "kdbusaddons": {
-      "tier": 1,
-      "upstream_version": "6.30.0",
-      "source_url": "https://download.kde.org/stable/frameworks/6.30/kdbusaddons-6.30.0.tar.xz",
-      "source_sha256": "063ef80460f76d86dc4b033ef04b65b69ba82ee0de410440fe609465e7f5a997",
-      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
-      "source_authority": "kde-upstream",
-      "package_provider": "supralinux",
-      "source_package": "kf6-kdbusaddons",
-      "binary_packages": ["libkf6dbusaddons-bin", "libkf6dbusaddons-data", "libkf6dbusaddons-dev", "libkf6dbusaddons-doc", "libkf6dbusaddons6"],
-      "package_version": "6.30.0-0supralinux3",
-      "ubuntu_reference_version": "6.24.0-0ubuntu1",
-      "depends_on": ["extra-cmake-modules"],
-      "state": "PASS",
-      "claim": "hosted-clean-package-preflight",
-      "authoritative": false,
-      "downstream_eligible": true,
-      "evidence": [
-        {"type": "github-actions-run", "result": "FAIL", "workflow_run": 34709829162, "job_id": 103596438606, "commit": "50611225422b05803ee49d8d5fc8ff4f84a21d99", "attempted_package_version": "6.30.0-0supralinux1", "artifact_id": 10303285563, "artifact_sha256": "2a581e9f4c01c15c611b5b3d3a98343504177f1d52fb2225f92ce3c6428f54ed", "failure_stage": "sbuild", "failure_substage": "override_dh_auto_test/reuse-lint-before-autotests", "autotests_reached": false},
-        {"type": "github-actions-run", "result": "FAIL", "workflow_run": 34710627400, "job_id": 103598645369, "commit": "3fa96423bb01b8a7cd63a62ab5947cf7ef57b482", "attempted_package_version": "6.30.0-0supralinux2", "artifact_id": 10303366682, "artifact_sha256": "75879797c369c29c00eb6fa647cca9958645eb80437531f7dfee42fe99327763", "failure_stage": "artifact-contract", "failure_substage": "multi-arch-normalization", "tests": "3/3 PASS", "cause": "The binary build succeeded, but absent Multi-Arch was normalized incorrectly and the watch signing key was missing."},
-        {"type": "github-actions-run", "result": "PASS", "workflow_run": 34713034164, "job_id": 103605147881, "commit": "c4de13b66184cb3b84283f1c4c5f0668f577b0de", "attempted_package_version": "6.30.0-0supralinux3", "artifact_id": 10304340428, "artifact_sha256": "2bfb451724808b5318625eee3df25a6104c9b6da77482737ac54eea058a7e799", "stage": "complete", "tests": "3/3 PASS", "lintian": "PASS-errors", "consumer_smoke": "PASS", "abi_soname": "libKF6DBusAddons.so.6", "ecm_predecessor": "6.30.0-0supralinux3", "downstream_eligible": true}
-      ],
-      "pass_files": {"libkf6dbusaddons_bin_deb_sha256": "68400eb262bb9fa2007adcc60147bab81846d16c8db93cd370edd3a83934a138", "libkf6dbusaddons_data_deb_sha256": "279d4f563b0b9ee509d7aac09974c5a870973bc43808987add15ada15e4d1413", "libkf6dbusaddons_dev_deb_sha256": "1d2c9c54b56a9db028b513b66ff912d679c4762aa1003fa4fc89513c9267c91f", "libkf6dbusaddons_doc_deb_sha256": "e85fe27a90f289321ab3290fa449a384261d5da10ab4797ef8cd1b443b300ae3", "libkf6dbusaddons6_deb_sha256": "c66f0b0fb84bf4f20c39a9b2fcf9aaae09c30dae31a3cfa54b48702b648f7a12", "changes_sha256": "67ed7eb5596818ef19922893f816b155216082f7048b39e537875fd7759bf3f3", "buildinfo_sha256": "47d4215d6e61e461ae9d104af742ef9974fbb36b893f9f533813ba9fec0b98b3", "dsc_sha256": "0112406b56d572a7a6d0188b548ff50c3b4bce2dbb2248e30525358de6431cd2", "orig_tar_sha256": "063ef80460f76d86dc4b033ef04b65b69ba82ee0de410440fe609465e7f5a997", "debian_tar_sha256": "f4de0634b395468999cafeceb291b5c9b6c3e691bab12f5984b0da45ccb86072", "rootfs_sha256": "343852488c40af5faed057865544efefc2b75b0d625da68bfc30bab287ec3312"}
-    },
-    "threadweaver": {
-      "tier": 1,
-      "upstream_version": "6.30.0",
-      "source_url": "https://download.kde.org/stable/frameworks/6.30/threadweaver-6.30.0.tar.xz",
-      "source_sha256": "e5400968a41820393e76190ab5dbb276c09513263d1b185d64b40f82dcd9b457",
-      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
-      "source_authority": "kde-upstream",
-      "package_provider": "supralinux",
-      "source_package": "kf6-threadweaver",
-      "binary_packages": ["libkf6threadweaver-dev", "libkf6threadweaver-doc", "libkf6threadweaver6"],
-      "package_version": "6.30.0-0supralinux3",
-      "ubuntu_reference_version": "6.24.0-0ubuntu1",
-      "depends_on": ["extra-cmake-modules"],
-      "state": "PASS",
-      "claim": "hosted-clean-package-preflight",
-      "authoritative": false,
-      "downstream_eligible": true,
-      "evidence": [
-        {"type": "github-actions-run", "result": "FAIL", "workflow_run": 34709829162, "job_id": 103596438491, "commit": "50611225422b05803ee49d8d5fc8ff4f84a21d99", "attempted_package_version": "6.30.0-0supralinux1", "artifact_id": 10303265649, "artifact_sha256": "0b47374207ae54632c4ba9594eedbcc72d46eed552696b608110ebb5bce6acb6", "failure_stage": "sbuild", "failure_substage": "override_dh_auto_test/reuse-lint-before-autotests", "autotests_reached": false},
-        {"type": "github-actions-run", "result": "FAIL", "workflow_run": 34710627400, "job_id": 103598645228, "commit": "3fa96423bb01b8a7cd63a62ab5947cf7ef57b482", "attempted_package_version": "6.30.0-0supralinux2", "artifact_id": 10302524114, "artifact_sha256": "5582b94c2e134011297a51fd02183464253c0c5f43678a79fd256f128b2f2d6f", "failure_stage": "artifact-contract", "failure_substage": "multi-arch-normalization", "tests": "8/8 PASS", "cause": "The binary build succeeded, but absent Multi-Arch was normalized incorrectly and the watch signing key was missing."},
-        {"type": "github-actions-run", "result": "PASS", "workflow_run": 34713034164, "job_id": 103605147772, "commit": "c4de13b66184cb3b84283f1c4c5f0668f577b0de", "attempted_package_version": "6.30.0-0supralinux3", "artifact_id": 10303986419, "artifact_sha256": "6395f11ed633fb034b0bf61a95639ce00005e3211994b04924abeb306deed2b8", "stage": "complete", "tests": "8/8 PASS", "lintian": "PASS-errors", "consumer_smoke": "PASS", "abi_soname": "libKF6ThreadWeaver.so.6", "ecm_predecessor": "6.30.0-0supralinux3", "downstream_eligible": true}
-      ],
-      "pass_files": {"libkf6threadweaver_dev_deb_sha256": "ec4585b496eeef55999714c233b6b59072af48ca69825128030f7d134407116a", "libkf6threadweaver_doc_deb_sha256": "4ebb11331e932ad8f5d94c8211f645e928f2f26d51623241c494969457fdc121", "libkf6threadweaver6_deb_sha256": "28c2fe19783555ed338fe5d94bc458cee5ed4a4fd2e57ccef69b30f84bcd13c3", "changes_sha256": "c3a9c04f8c04a1dcf60b15fc1ef9215872123604053889549203693fae1279a0", "buildinfo_sha256": "62e09bce3c24b819f081caea337b274a58909f39fa725494acce431be8fdecec", "dsc_sha256": "af8dc6428b8568cf5aedefdf6311c11265881651dd2a997af56868f828ed56a5", "orig_tar_sha256": "e5400968a41820393e76190ab5dbb276c09513263d1b185d64b40f82dcd9b457", "debian_tar_sha256": "c35d1d3c271365cbee47cb5d6178e5618ef487f8f7db520477f7bf077bc94a0b", "rootfs_sha256": "3ef7b4eabfb90e97d762bd546c8f0e3a8bbc7e21d422bb6f001173f29ccdcbf4"}
-    },
-    "karchive": {
-      "tier": 1,
-      "upstream_version": "6.30.0",
-      "source_url": "https://download.kde.org/stable/frameworks/6.30/karchive-6.30.0.tar.xz",
-      "source_sha256": "4cf89d91e429d2ece3110e78f7ef7011952b0412cb15011329516b46f21e98e2",
-      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
-      "source_authority": "kde-upstream",
-      "package_provider": "supralinux",
-      "source_package": "kf6-karchive",
-      "binary_packages": ["libkf6archive-data", "libkf6archive-dev", "libkf6archive-doc", "libkf6archive6"],
-      "package_version": "6.30.0-0supralinux4",
-      "depends_on": ["extra-cmake-modules"],
-      "state": "PASS",
-      "claim": "hosted-clean-package-preflight",
-      "authoritative": false,
-      "downstream_eligible": true,
-      "evidence": [
-        {"type": "github-actions-run", "result": "PASS", "workflow_run": 34884764702, "job_id": 104112549742, "commit": "e0f4e7c48dcf7541538eb919374a3f4b6c293b75", "attempted_package_version": "6.30.0-0supralinux4", "artifact_id": 10364726750, "artifact_sha256": "0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e", "stage": "complete", "tests": "5/5 PASS", "lintian": "PASS-errors", "consumer_smoke": "PASS", "abi_soname": "libKF6Archive.so.6", "ecm_predecessor": "6.30.0-0supralinux3", "validated_gate": "sbuild-summary-plus-dsc-plus-changes", "downstream_eligible": true}
-      ],
-      "pass_files": {"libkf6archive_data_deb_sha256": "da46f11fc791e0038b981b1fcddf6bc41718bd0fe9edd932bbd0e0ab26745d83", "libkf6archive_dev_deb_sha256": "e9d34c95f1d25405cc603b9f1db5ee18e779d170bd5e3b1bd420a1137ca38843", "libkf6archive_doc_deb_sha256": "a053b59865cf3dd4031dbcc0c417eef581f5ee57d2b1d3ca3844b59bdb6f7e65", "libkf6archive6_deb_sha256": "dca57450e619cd01834152a3fffb943342128bd61ca514fa082c8b0eb1ba7541", "changes_sha256": "c58872c9ddf4f56bc9d83f78107d83294045594a5c217e19ad0a4d16dfd79736", "buildinfo_sha256": "8bd6f19a1d6676242deb3fb0bbdd18e8472bc1b6205842639b4a439c25c41b13", "dsc_sha256": "4938c3df5f4299d5feae1bfe22663dec64455f62519a310d664a5daaeb5839cd", "orig_tar_sha256": "4cf89d91e429d2ece3110e78f7ef7011952b0412cb15011329516b46f21e98e2", "debian_tar_sha256": "1f76ab399b9f8c839bdd161b2e0ef0e607e54796e79c96ae8674bf0faae0a11f", "rootfs_sha256": "26a8641742fd097034b77a73c6abf93001351e816a8f9d7076c717f8d189c477"}
-    },
-    "kholidays": {
-      "tier": 1,
-      "upstream_version": "6.30.0",
-      "source_url": "https://download.kde.org/stable/frameworks/6.30/kholidays-6.30.0.tar.xz",
-      "source_sha256": "02bfbc33296fe86b364491f6d5cad9d83360bb4fdd2923386a325b309eac0b9b",
-      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
-      "source_authority": "kde-upstream",
-      "package_provider": "supralinux",
-      "source_package": "kf6-kholidays",
-      "binary_packages": ["libkf6holidays-data", "libkf6holidays-dev", "libkf6holidays-doc", "libkf6holidays6", "qml6-module-org-kde-kholidays"],
-      "package_version": "6.30.0-0supralinux4",
-      "depends_on": ["extra-cmake-modules"],
-      "state": "PASS",
-      "claim": "hosted-clean-package-preflight",
-      "authoritative": false,
-      "downstream_eligible": true,
-      "evidence": [
-        {"type": "github-actions-run", "result": "PASS", "workflow_run": 34884764702, "job_id": 104112549858, "commit": "e0f4e7c48dcf7541538eb919374a3f4b6c293b75", "attempted_package_version": "6.30.0-0supralinux4", "artifact_id": 10364169061, "artifact_sha256": "62186f3d6d0c856fed7b055ae917ceec0b6cdf216b37b93e22126bf3ebc8f37a", "stage": "complete", "tests": "8/8 PASS", "lintian": "PASS-errors", "consumer_smoke": "PASS", "abi_soname": "libKF6Holidays.so.6", "ecm_predecessor": "6.30.0-0supralinux3", "validated_gate": "sbuild-summary-plus-dsc-plus-changes", "downstream_eligible": true}
-      ],
-      "pass_files": {"libkf6holidays_data_deb_sha256": "18969b5b6d8c67edc11b318490319467554a5282ed1bbbfbb575288fbe11b86f", "libkf6holidays_dev_deb_sha256": "ddd86750ccd60d6cb44b2b2178137efa1a1a29cfab06f0d0a76fdc5c4adce2ca", "libkf6holidays_doc_deb_sha256": "37bec22b859f72baa3293c626ff2306578e5e29f74eae6643ef34802b259be43", "libkf6holidays6_deb_sha256": "0f292936c6b9c64c10ef60eb2f5f52f01bf3188bc4400389492891fb6479b124", "qml6_module_org_kde_kholidays_deb_sha256": "17180b8ec90f1515c7920b7a5c47069cfd2bacbc8db60e40899c7bbb8edfcb42", "changes_sha256": "574014fe1e231ca13de2f6b8df83fb6001875f2efc289d0ee0f818d451267427", "buildinfo_sha256": "d7d5c7a22207d8fa1b5c43d850dde1a4e4309cdfc1b97fb07257ee38e4ae81e1", "dsc_sha256": "442001063d45843c555f3aae30a289c7be5913a8f075f43e70c064d736db2a79", "orig_tar_sha256": "02bfbc33296fe86b364491f6d5cad9d83360bb4fdd2923386a325b309eac0b9b", "debian_tar_sha256": "e2fad5b6f1c96874cae39adba3891cb188195c72a95e14fab77d554697db132d", "rootfs_sha256": "c3168896424af56036321aef8908c5b4f36e6d0b53ce3f2f9e90b172745614c7"}
-    },
-    "ktexttemplate": {
-      "tier": 1,
-      "upstream_version": "6.30.0",
-      "source_url": "https://download.kde.org/stable/frameworks/6.30/ktexttemplate-6.30.0.tar.xz",
-      "source_sha256": "c3c229944d25294102e4e8a5b49fa0c0f481da9d33f8bec3782e8a53afd47493",
-      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
-      "source_authority": "kde-upstream",
-      "package_provider": "supralinux",
-      "source_package": "kf6-ktexttemplate",
-      "binary_packages": ["libkf6texttemplate-dev", "libkf6texttemplate-doc", "libkf6texttemplate6"],
-      "package_version": "6.30.0-0supralinux3",
-      "depends_on": ["extra-cmake-modules"],
-      "state": "PASS",
-      "claim": "hosted-clean-package-preflight",
-      "authoritative": false,
-      "downstream_eligible": true,
-      "evidence": [
-        {"type": "github-actions-run", "result": "PASS", "workflow_run": 34884764702, "job_id": 104112549851, "commit": "e0f4e7c48dcf7541538eb919374a3f4b6c293b75", "attempted_package_version": "6.30.0-0supralinux3", "artifact_id": 10363863115, "artifact_sha256": "7b9d0390ed90c882f4b7ad1993924e722bfb7ad35238c2ced52bbd5809555bc9", "stage": "complete", "tests": "10/10 PASS", "lintian": "PASS-errors", "consumer_smoke": "PASS", "abi_soname": "libKF6TextTemplate.so.6", "ecm_predecessor": "6.30.0-0supralinux3", "validated_gate": "sbuild-summary-plus-dsc-plus-changes", "downstream_eligible": true}
-      ],
-      "pass_files": {"libkf6texttemplate_dev_deb_sha256": "29d6b4ed0fef9bc7dbb414b704940858fffb6e5bf8eb867d3b9d6f3427b6f314", "libkf6texttemplate_doc_deb_sha256": "e9a31233b1cb432ec5cf10ed6c7b454ba98de2540c74a0082d6b5c9c42ca8d53", "libkf6texttemplate6_deb_sha256": "bed52b166af6b724e33c1b95c1d08ff4eb9e305e391932ec55c894b4509a875f", "changes_sha256": "cc5aaf7074d9dd44e53f5416dc59c3bf7b7c19fab2c2f45723f46e1552177797", "buildinfo_sha256": "fe59945142686016d1c4ba058bc451d02803fcf40eb742c5b2a04cea253ce130", "dsc_sha256": "46827296607ad5632c0527cf1e78c240565faa990dfe2d52fd4fc18b19063dac", "orig_tar_sha256": "c3c229944d25294102e4e8a5b49fa0c0f481da9d33f8bec3782e8a53afd47493", "debian_tar_sha256": "71ad75ef7d15af09d81200cd50d67db65da323288b3d00cc27ffd2d1ca7fa8e9", "rootfs_sha256": "8d6f50faf0bc63926b86bbff88c4062a21609c073a7d6b3b4136eba4e6b7c637"}
-    },
-    "kitemmodels": {
-      "tier": 1,
-      "upstream_version": "6.30.0",
-      "source_url": "https://download.kde.org/stable/frameworks/6.30/kitemmodels-6.30.0.tar.xz",
-      "source_sha256": "f807e5b37aa913d2563ee1a21b2bce7d34495f32f38c7f35f16262d736bdfd55",
-      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
-      "source_authority": "kde-upstream",
-      "package_provider": "supralinux",
-      "source_package": "kf6-kitemmodels",
-      "binary_packages": ["libkf6itemmodels-dev", "libkf6itemmodels-doc", "libkf6itemmodels6", "qml6-module-org-kde-kitemmodels"],
-      "package_version": "6.30.0-0supralinux1",
-      "depends_on": ["extra-cmake-modules"],
-      "state": "PASS",
-      "claim": "hosted-clean-package-preflight",
-      "authoritative": false,
-      "downstream_eligible": true,
-      "evidence": [
-        {"type": "github-actions-run", "result": "PASS", "workflow_run": 34896417969, "job_id": 104151531993, "commit": "806d16476b034e796658ea1ab9028eb3a9a14e1b", "attempted_package_version": "6.30.0-0supralinux1", "artifact_id": 10369501432, "artifact_sha256": "b806eaf27f733c1a2b5cc1d108ca442fef673b6dc0a53cfc5fff38abd2bf6732", "stage": "complete", "tests": "13/13 PASS", "lintian": "PASS-errors", "consumer_smoke": "PASS", "abi_soname": "libKF6ItemModels.so.6", "ecm_predecessor": "6.30.0-0supralinux3", "downstream_eligible": true}
-      ],
-      "pass_files": {"libkf6itemmodels_dev_deb_sha256": "381fb150c5916815f461a042edfcfca57afe4f6a5319752a782b365414cc826f", "libkf6itemmodels_doc_deb_sha256": "c8319bd1bd2ed2a618b71a718390dafd7ad0af3eca858f1a4efa128d774e7d75", "libkf6itemmodels6_deb_sha256": "4a0d2d19c51c2bec169b21ea7079a63927f44fdaa739559e8411047d6c72986a", "qml6_module_org_kde_kitemmodels_deb_sha256": "f2bf532fe4af7ae979c52209c0ad1888c4bc3c461c9c4288e58af7be8e39c733", "changes_sha256": "3007d279d3ae96a99bf9cfbe9a10f8f8a3bcacbe1c486a83cc78d21521914bbd", "buildinfo_sha256": "050851c9e7831e460c704af79cd9e5de07094df9c6289f54dc32d7874bc84012", "dsc_sha256": "9acd04570d25cb23695200ec7523d40e913c56cf1897a9c7f9cd2d4b2e903ef1", "orig_tar_sha256": "f807e5b37aa913d2563ee1a21b2bce7d34495f32f38c7f35f16262d736bdfd55", "debian_tar_sha256": "919c8d16897536bb905f465726ee4e2ba7c3d7f663ce34016b4c5f5e4706e8a5"}
     },
     "bluez-qt": {
       "tier": 1,
@@ -230,60 +162,305 @@
       "source_authority": "kde-upstream",
       "package_provider": "supralinux",
       "source_package": "kf6-bluez-qt",
-      "binary_packages": ["libkf6bluezqt-data", "libkf6bluezqt-dev", "libkf6bluezqt-doc", "libkf6bluezqt6", "qml6-module-org-kde-bluezqt"],
+      "binary_packages": [
+        "libkf6bluezqt-data",
+        "libkf6bluezqt-dev",
+        "libkf6bluezqt-doc",
+        "libkf6bluezqt6",
+        "qml6-module-org-kde-bluezqt"
+      ],
       "package_version": "6.30.0-0supralinux2",
-      "depends_on": ["extra-cmake-modules"],
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
       "state": "PASS",
       "claim": "hosted-clean-package-preflight",
       "authoritative": false,
       "downstream_eligible": true,
       "evidence": [
-        {"type": "github-actions-run", "result": "FAIL", "workflow_run": 34896417969, "job_id": 104151532330, "commit": "806d16476b034e796658ea1ab9028eb3a9a14e1b", "attempted_package_version": "6.30.0-0supralinux1", "artifact_id": 10369725265, "artifact_sha256": "ab85b1c2eeef6bf2dc9d622d6695b95427cca6e246ac13a0f825034e9e63d195", "failure_stage": "sbuild", "failure_substage": "lintian", "tests": "18/18 PASS", "cause": "KDE 6.30 exposed libstdc++ _ZSt19piecewise_construct as an implementation/toolchain symbol; dpkg-gensymbols assigned the package revision 6.30.0-0supralinux1 as its minimum version and Lintian rejected the resulting symbols entry."},
-        {"type": "github-actions-run", "result": "PASS", "workflow_run": 34945979836, "job_id": 104305337324, "commit": "b58b5e6072bb14487e304857d34a53659ec50f60", "attempted_package_version": "6.30.0-0supralinux2", "artifact_id": 10387429776, "artifact_sha256": "db8a3718a31eaae00d5f9fbdb60014dfeb1faf1c2bc84a88f9ab0d9bffec07ed", "stage": "complete", "tests": "18/18 PASS", "lintian": "PASS-errors", "consumer_smoke": "PASS", "abi_soname": "libKF6BluezQt.so.6", "ecm_predecessor": "6.30.0-0supralinux3", "validated_gate": "sbuild-summary-plus-dsc-plus-changes", "downstream_eligible": true}
+        {
+          "type": "github-actions-run",
+          "result": "FAIL",
+          "workflow_run": 34896417969,
+          "job_id": 104151532330,
+          "commit": "806d16476b034e796658ea1ab9028eb3a9a14e1b",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10369725265,
+          "artifact_sha256": "ab85b1c2eeef6bf2dc9d622d6695b95427cca6e246ac13a0f825034e9e63d195",
+          "failure_stage": "sbuild",
+          "failure_substage": "lintian",
+          "tests": "18/18 PASS",
+          "cause": "KDE 6.30 exposed libstdc++ _ZSt19piecewise_construct as an implementation/toolchain symbol; dpkg-gensymbols assigned the package revision 6.30.0-0supralinux1 as its minimum version and Lintian rejected the resulting symbols entry."
+        },
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 34945979836,
+          "job_id": 104305337324,
+          "commit": "b58b5e6072bb14487e304857d34a53659ec50f60",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10387429776,
+          "artifact_sha256": "db8a3718a31eaae00d5f9fbdb60014dfeb1faf1c2bc84a88f9ab0d9bffec07ed",
+          "stage": "complete",
+          "tests": "18/18 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6BluezQt.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "downstream_eligible": true
+        }
       ],
-      "pass_files": {"libkf6bluezqt_data_deb_sha256": "9808f45d03676e3c52cb6340292844b616c8d7de708ca8c1fc6b6bbefacc9d22", "libkf6bluezqt_dev_deb_sha256": "8c5ec894ee5485f54367a61a436feb1417692c507bac7c10743d274bf8f4ed34", "libkf6bluezqt_doc_deb_sha256": "f3df69a26254310ab6e5d7e57a848e2069eaa8b19fd0b100353ff045f196cb3c", "libkf6bluezqt6_deb_sha256": "b201ee31c785d74742b44e8ff5ac391311e006ca8a0232f96f8e4c8a303ab4f1", "qml6_module_org_kde_bluezqt_deb_sha256": "c18b5b3e20324daa370f6e7cc88e226d02aeb37fcd32f7fa411f2d4ce8b7056f", "changes_sha256": "ef5cd417823ffeb99f018c797de1f16c8cbc3d8b10fccfb27990c8a75bde791f", "buildinfo_sha256": "ae7bcfb738a23466cf17b0a5d62942a18cc8fcaefe781858aed22f3fd72a6ac8", "dsc_sha256": "16151f327748ac94ad132b840cbf687fca0e6a4aa4fa41d3be1bfdb5be6fa4d8", "orig_tar_sha256": "f5045b14a6c689bbfded9437582f943dd4f8f74537085ab6115bcacdea2110d8", "debian_tar_sha256": "436bb103f386a6e050ed4b39c0b1a695d599d309301091caa1e83b92d1cf0951", "rootfs_sha256": "705ab043038a413f7744a60398a6e48305ca5b87ac0a57c4d6c1a1a4be05f4d2"}
+      "pass_files": {
+        "libkf6bluezqt_data_deb_sha256": "9808f45d03676e3c52cb6340292844b616c8d7de708ca8c1fc6b6bbefacc9d22",
+        "libkf6bluezqt_dev_deb_sha256": "8c5ec894ee5485f54367a61a436feb1417692c507bac7c10743d274bf8f4ed34",
+        "libkf6bluezqt_doc_deb_sha256": "f3df69a26254310ab6e5d7e57a848e2069eaa8b19fd0b100353ff045f196cb3c",
+        "libkf6bluezqt6_deb_sha256": "b201ee31c785d74742b44e8ff5ac391311e006ca8a0232f96f8e4c8a303ab4f1",
+        "qml6_module_org_kde_bluezqt_deb_sha256": "c18b5b3e20324daa370f6e7cc88e226d02aeb37fcd32f7fa411f2d4ce8b7056f",
+        "changes_sha256": "ef5cd417823ffeb99f018c797de1f16c8cbc3d8b10fccfb27990c8a75bde791f",
+        "buildinfo_sha256": "ae7bcfb738a23466cf17b0a5d62942a18cc8fcaefe781858aed22f3fd72a6ac8",
+        "dsc_sha256": "16151f327748ac94ad132b840cbf687fca0e6a4aa4fa41d3be1bfdb5be6fa4d8",
+        "orig_tar_sha256": "f5045b14a6c689bbfded9437582f943dd4f8f74537085ab6115bcacdea2110d8",
+        "debian_tar_sha256": "436bb103f386a6e050ed4b39c0b1a695d599d309301091caa1e83b92d1cf0951",
+        "rootfs_sha256": "705ab043038a413f7744a60398a6e48305ca5b87ac0a57c4d6c1a1a4be05f4d2"
+      }
     },
-    "kplotting": {
+    "karchive": {
       "tier": 1,
       "upstream_version": "6.30.0",
-      "source_url": "https://download.kde.org/stable/frameworks/6.30/kplotting-6.30.0.tar.xz",
-      "source_sha256": "f5a67be85c21665e052371301889443196b9de5b3927aff353a3d3e27730dd11",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/karchive-6.30.0.tar.xz",
+      "source_sha256": "4cf89d91e429d2ece3110e78f7ef7011952b0412cb15011329516b46f21e98e2",
       "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
       "source_authority": "kde-upstream",
       "package_provider": "supralinux",
-      "source_package": "kf6-kplotting",
-      "binary_packages": ["libkf6plotting-dev", "libkf6plotting-doc", "libkf6plotting6"],
-      "package_version": "6.30.0-0supralinux1",
-      "depends_on": ["extra-cmake-modules"],
+      "source_package": "kf6-karchive",
+      "binary_packages": [
+        "libkf6archive-data",
+        "libkf6archive-dev",
+        "libkf6archive-doc",
+        "libkf6archive6"
+      ],
+      "package_version": "6.30.0-0supralinux4",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
       "state": "PASS",
       "claim": "hosted-clean-package-preflight",
       "authoritative": false,
       "downstream_eligible": true,
       "evidence": [
-        {"type": "github-actions-run", "result": "PASS", "workflow_run": 34896417969, "job_id": 104151532320, "commit": "806d16476b034e796658ea1ab9028eb3a9a14e1b", "attempted_package_version": "6.30.0-0supralinux1", "artifact_id": 10369086459, "artifact_sha256": "f4c4f7425e582b5001fdffced34d045dc46152074422bd2bcf994e544bb96bb8", "stage": "complete", "tests": "5/5 PASS", "lintian": "PASS-errors", "consumer_smoke": "PASS", "abi_soname": "libKF6Plotting.so.6", "ecm_predecessor": "6.30.0-0supralinux3", "downstream_eligible": true}
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 34884764702,
+          "job_id": 104112549742,
+          "commit": "e0f4e7c48dcf7541538eb919374a3f4b6c293b75",
+          "attempted_package_version": "6.30.0-0supralinux4",
+          "artifact_id": 10364726750,
+          "artifact_sha256": "0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e",
+          "stage": "complete",
+          "tests": "5/5 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6Archive.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "downstream_eligible": true
+        }
       ],
-      "pass_files": {"libkf6plotting_dev_deb_sha256": "c4e0d15019b532a9f85933013f8f9426ccaba1bf9a30953b9991cd8cfaa0dba2", "libkf6plotting_doc_deb_sha256": "fcb85feaf4bca9229cace8ee10c44115948e3bd7495d0d3c38fb7669fd9d71ba", "libkf6plotting6_deb_sha256": "90d52129fac90181528d2bc8d63db8830ddad1af18313bd6f985cbc4d238349d", "changes_sha256": "607809c70fc452a584c1f43d66278621132d65e81d66768847518a81a172190a", "buildinfo_sha256": "77f5226af9f1667a77a0b0d27d4e80ff640b3ee11fe9c6f4cec97702a0ad45d2", "dsc_sha256": "a798a1f222fe1f2c081e93644d2bc3fd48f5db341b3357905c81909d919e661e", "orig_tar_sha256": "f5a67be85c21665e052371301889443196b9de5b3927aff353a3d3e27730dd11", "debian_tar_sha256": "d30e788b3e80ad44a652348f7d9917798d7219b687b75bedd3d411f2207e8f4a"}
+      "pass_files": {
+        "libkf6archive_data_deb_sha256": "da46f11fc791e0038b981b1fcddf6bc41718bd0fe9edd932bbd0e0ab26745d83",
+        "libkf6archive_dev_deb_sha256": "e9d34c95f1d25405cc603b9f1db5ee18e779d170bd5e3b1bd420a1137ca38843",
+        "libkf6archive_doc_deb_sha256": "a053b59865cf3dd4031dbcc0c417eef581f5ee57d2b1d3ca3844b59bdb6f7e65",
+        "libkf6archive6_deb_sha256": "dca57450e619cd01834152a3fffb943342128bd61ca514fa082c8b0eb1ba7541",
+        "changes_sha256": "c58872c9ddf4f56bc9d83f78107d83294045594a5c217e19ad0a4d16dfd79736",
+        "buildinfo_sha256": "8bd6f19a1d6676242deb3fb0bbdd18e8472bc1b6205842639b4a439c25c41b13",
+        "dsc_sha256": "4938c3df5f4299d5feae1bfe22663dec64455f62519a310d664a5daaeb5839cd",
+        "orig_tar_sha256": "4cf89d91e429d2ece3110e78f7ef7011952b0412cb15011329516b46f21e98e2",
+        "debian_tar_sha256": "1f76ab399b9f8c839bdd161b2e0ef0e607e54796e79c96ae8674bf0faae0a11f",
+        "rootfs_sha256": "26a8641742fd097034b77a73c6abf93001351e816a8f9d7076c717f8d189c477"
+      }
     },
-    "kitemviews": {
+    "kcodecs": {
       "tier": 1,
       "upstream_version": "6.30.0",
-      "source_url": "https://download.kde.org/stable/frameworks/6.30/kitemviews-6.30.0.tar.xz",
-      "source_sha256": "9452f2b0cc5dd0214b88c4ce33297866be89af4177af14f5390cfb616e49c153",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kcodecs-6.30.0.tar.xz",
+      "source_sha256": "a42c79ff3237b73789d1c63cdfd848c0d59671ce5e93723a2efa128f00cb3450",
       "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
       "source_authority": "kde-upstream",
       "package_provider": "supralinux",
-      "source_package": "kf6-kitemviews",
-      "binary_packages": ["libkf6itemviews-data", "libkf6itemviews-dev", "libkf6itemviews-doc", "libkf6itemviews6"],
-      "package_version": "6.30.0-0supralinux1",
-      "depends_on": ["extra-cmake-modules"],
+      "source_package": "kf6-kcodecs",
+      "binary_packages": [
+        "libkf6codecs-data",
+        "libkf6codecs-dev",
+        "libkf6codecs-doc",
+        "libkf6codecs6"
+      ],
+      "package_version": "6.30.0-0supralinux4",
+      "ubuntu_reference_version": "6.24.0-0ubuntu1",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
       "state": "PASS",
       "claim": "hosted-clean-package-preflight",
       "authoritative": false,
       "downstream_eligible": true,
       "evidence": [
-        {"type":"github-actions-run","result":"PASS","workflow_run":34999449194,"job_id":104483912528,"commit":"209f6234cbd94d0b4e02df509b25ae5a6e0922fd","attempted_package_version":"6.30.0-0supralinux1","artifact_id":10409267184,"artifact_sha256":"7e34fa7ede21510cf6829448e7b45a5c2832aaf9ac2719b9cb4125d23b593e55","stage":"complete","tests":"2/2 PASS","lintian":"PASS-errors","consumer_smoke":"PASS","abi_soname":"libKF6ItemViews.so.6","ecm_predecessor":"6.30.0-0supralinux3","downstream_eligible":true}
+        {
+          "type": "github-actions-run",
+          "result": "FAIL",
+          "workflow_run": 34709829162,
+          "job_id": 103596438631,
+          "commit": "50611225422b05803ee49d8d5fc8ff4f84a21d99",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10302917591,
+          "artifact_sha256": "6fcf23a69991e453d3563d580aa63fa082c27ce8490ad52dd9e125ee41cd8f6f",
+          "failure_stage": "sbuild",
+          "failure_substage": "override_dh_auto_test/reuse-lint-before-autotests",
+          "autotests_reached": false
+        },
+        {
+          "type": "github-actions-run",
+          "result": "FAIL",
+          "workflow_run": 34710627400,
+          "job_id": 103598645411,
+          "commit": "3fa96423bb01b8a7cd63a62ab5947cf7ef57b482",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10303621032,
+          "artifact_sha256": "722b83f04fadc67337129f6435547e0c9b3ad6b8b3d02655be258d86cb62e6a6",
+          "failure_stage": "sbuild",
+          "failure_substage": "dpkg-gensymbols",
+          "tests": "8/8 PASS",
+          "cause": "Ubuntu 6.24 symbols baseline still required two KCharsets constructors already removed from the newer Debian 6.28 reference."
+        },
+        {
+          "type": "github-actions-run",
+          "result": "FAIL",
+          "workflow_run": 34713034164,
+          "job_id": 103605147896,
+          "commit": "c4de13b66184cb3b84283f1c4c5f0668f577b0de",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10304255731,
+          "artifact_sha256": "336d771a73091f2b0a7c60cf55833b5205f2c4bc8a8e87802065fe38333c2b0d",
+          "failure_stage": "lintian",
+          "tests": "8/8 PASS",
+          "cause": "15 new libstdc++ std::format/Unicode implementation symbols received a Debian-revision minimum version and required reviewed optional=toolchain tagging at upstream 6.30.0."
+        },
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 34716761551,
+          "job_id": 103615297758,
+          "commit": "6c156b6a1dc0fc9e6c9e43eae90c3da86f6b0cb9",
+          "attempted_package_version": "6.30.0-0supralinux4",
+          "artifact_id": 10305050385,
+          "artifact_sha256": "d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45",
+          "stage": "complete",
+          "tests": "8/8 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6Codecs.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        }
       ],
-      "pass_files": {"libkf6itemviews_data_deb_sha256":"d2444550a7ce4bd796a24b98d0688bfe6e072abace1f9130cd9b6ad3b93bf682","libkf6itemviews_dev_deb_sha256":"6641e1d8bef8df05e37c4f0cfc24bdfe93dada02001822d695edcefd160dd5a6","libkf6itemviews_doc_deb_sha256":"c679820397908aea8c4dbc4b0a544d6b5c65ecdb1b52f440348eb0b68cbb216b","libkf6itemviews6_deb_sha256":"d7bd3eb44a8bae2e03978faf711f7e9d27058e8d91e4ac20db97013a946c1a90","libkf6itemviews_dev_dbgsym_ddeb_sha256":"f4942362386a215ce646648fe7743b86fbdc05a6008ea385a1fa95644638baf4","libkf6itemviews6_dbgsym_ddeb_sha256":"440eab177799c583590031ef2ec6cb09f0324fa74eb9469af9bbd7b764a4af03","changes_sha256":"a07fadaaa134bfe92c0ea1fb923c86ccdf3514db7d4a845f1dea64e233aa8f79","buildinfo_sha256":"1c32064d918c4fb91f299b87d5d0ced2601f86b51bff8d259ece537680db1178","dsc_sha256":"30c0a1d09c57e864fbddd208e6cb7c03fcd6088b2f0e03069fd3149f25426ac6","orig_tar_sha256":"9452f2b0cc5dd0214b88c4ce33297866be89af4177af14f5390cfb616e49c153","debian_tar_sha256":"9d5c0ad0b5fa27d2874f54c0d3722c7183501d86dbeff3729e17f563690c9a3b","rootfs_sha256":"ffe122c915dc75fea3ce1f6d1cd50df9cd53620b7af3e2d291b7d0776a436356"}
+      "pass_files": {
+        "libkf6codecs_data_deb_sha256": "70f2197d5fa6f475d2d414ef9a13a3e885bceee73e7dcf95983f3a3313565c24",
+        "libkf6codecs_dev_deb_sha256": "87be51ba7f3ea8813e1ce61b3c6975b312db9c62d24f41e0909edb4d344f92dd",
+        "libkf6codecs_doc_deb_sha256": "a84b0b5a59e9e0098975d5e247910ab5d2d65b42b85076f02ce7b17c4907337a",
+        "libkf6codecs6_deb_sha256": "66b34b1ec140e1942d906c4e8537661bd540f959277e41de9a772e1e0956be13",
+        "changes_sha256": "58997e31c6e8de45aa47899345845b0ecbbe73a77001e74ec807001e2808380f",
+        "buildinfo_sha256": "b7b76708384495225491b58067c10547c5c29ab66282bca3371ac2069c649ff6",
+        "dsc_sha256": "50d5e17652c58fab76fc3c7c4e3f765e14df744487d8600bf2950e68d5403ce4",
+        "orig_tar_sha256": "a42c79ff3237b73789d1c63cdfd848c0d59671ce5e93723a2efa128f00cb3450",
+        "debian_tar_sha256": "756165e036368ed6038e755603dac7028b80c535908ac67c2d18d831e19bb21f",
+        "rootfs_sha256": "b0bcb87ff643d730940cbd267745cf18e868e01f64e7270d0ddeb2e348c950cf"
+      }
+    },
+    "kdbusaddons": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kdbusaddons-6.30.0.tar.xz",
+      "source_sha256": "063ef80460f76d86dc4b033ef04b65b69ba82ee0de410440fe609465e7f5a997",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-kdbusaddons",
+      "binary_packages": [
+        "libkf6dbusaddons-bin",
+        "libkf6dbusaddons-data",
+        "libkf6dbusaddons-dev",
+        "libkf6dbusaddons-doc",
+        "libkf6dbusaddons6"
+      ],
+      "package_version": "6.30.0-0supralinux3",
+      "ubuntu_reference_version": "6.24.0-0ubuntu1",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "result": "FAIL",
+          "workflow_run": 34709829162,
+          "job_id": 103596438606,
+          "commit": "50611225422b05803ee49d8d5fc8ff4f84a21d99",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10303285563,
+          "artifact_sha256": "2a581e9f4c01c15c611b5b3d3a98343504177f1d52fb2225f92ce3c6428f54ed",
+          "failure_stage": "sbuild",
+          "failure_substage": "override_dh_auto_test/reuse-lint-before-autotests",
+          "autotests_reached": false
+        },
+        {
+          "type": "github-actions-run",
+          "result": "FAIL",
+          "workflow_run": 34710627400,
+          "job_id": 103598645369,
+          "commit": "3fa96423bb01b8a7cd63a62ab5947cf7ef57b482",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10303366682,
+          "artifact_sha256": "75879797c369c29c00eb6fa647cca9958645eb80437531f7dfee42fe99327763",
+          "failure_stage": "artifact-contract",
+          "failure_substage": "multi-arch-normalization",
+          "tests": "3/3 PASS",
+          "cause": "The binary build succeeded, but absent Multi-Arch was normalized incorrectly and the watch signing key was missing."
+        },
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 34713034164,
+          "job_id": 103605147881,
+          "commit": "c4de13b66184cb3b84283f1c4c5f0668f577b0de",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10304340428,
+          "artifact_sha256": "2bfb451724808b5318625eee3df25a6104c9b6da77482737ac54eea058a7e799",
+          "stage": "complete",
+          "tests": "3/3 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6DBusAddons.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        }
+      ],
+      "pass_files": {
+        "libkf6dbusaddons_bin_deb_sha256": "68400eb262bb9fa2007adcc60147bab81846d16c8db93cd370edd3a83934a138",
+        "libkf6dbusaddons_data_deb_sha256": "279d4f563b0b9ee509d7aac09974c5a870973bc43808987add15ada15e4d1413",
+        "libkf6dbusaddons_dev_deb_sha256": "1d2c9c54b56a9db028b513b66ff912d679c4762aa1003fa4fc89513c9267c91f",
+        "libkf6dbusaddons_doc_deb_sha256": "e85fe27a90f289321ab3290fa449a384261d5da10ab4797ef8cd1b443b300ae3",
+        "libkf6dbusaddons6_deb_sha256": "c66f0b0fb84bf4f20c39a9b2fcf9aaae09c30dae31a3cfa54b48702b648f7a12",
+        "changes_sha256": "67ed7eb5596818ef19922893f816b155216082f7048b39e537875fd7759bf3f3",
+        "buildinfo_sha256": "47d4215d6e61e461ae9d104af742ef9974fbb36b893f9f533813ba9fec0b98b3",
+        "dsc_sha256": "0112406b56d572a7a6d0188b548ff50c3b4bce2dbb2248e30525358de6431cd2",
+        "orig_tar_sha256": "063ef80460f76d86dc4b033ef04b65b69ba82ee0de410440fe609465e7f5a997",
+        "debian_tar_sha256": "f4de0634b395468999cafeceb291b5c9b6c3e691bab12f5984b0da45ccb86072",
+        "rootfs_sha256": "343852488c40af5faed057865544efefc2b75b0d625da68bfc30bab287ec3312"
+      }
     },
     "kglobalaccel": {
       "tier": 1,
@@ -294,19 +471,559 @@
       "source_authority": "kde-upstream",
       "package_provider": "supralinux",
       "source_package": "kf6-kglobalaccel",
-      "binary_packages": ["libkf6globalaccel-data", "libkf6globalaccel-dev", "libkf6globalaccel-doc", "libkf6globalaccel6"],
+      "binary_packages": [
+        "libkf6globalaccel-data",
+        "libkf6globalaccel-dev",
+        "libkf6globalaccel-doc",
+        "libkf6globalaccel6"
+      ],
       "package_version": "6.30.0-0supralinux2",
-      "depends_on": ["extra-cmake-modules"],
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
       "state": "PASS",
       "claim": "hosted-clean-package-preflight",
       "authoritative": false,
       "downstream_eligible": true,
       "evidence": [
-        {"type":"github-actions-run","result":"FAIL","workflow_run":34999449194,"job_id":104483912661,"commit":"209f6234cbd94d0b4e02df509b25ae5a6e0922fd","attempted_package_version":"6.30.0-0supralinux1","artifact_id":10408264332,"artifact_sha256":"1b7564f211967d1be8b61a96bc2a67389c6164f566e54dad79682d37a33bf6e5","failure_stage":"sbuild","failure_substage":"dh_auto_configure/CMake","tests":"not-reached","cause":"ECMPoQmTools required Qt6 LinguistTools during configure, but qt6-tools-dev was missing from Build-Depends."},
-        {"type":"github-actions-run","result":"PASS","workflow_run":35006477086,"job_id":104507372240,"commit":"163cde7bedd95c2ffb16c031aa12dada99f84161","attempted_package_version":"6.30.0-0supralinux2","artifact_id":10412320520,"artifact_sha256":"cb8143633cf15745a235937ea55ee096cb094cc96da3bd1fc39dc914f3acb3b1","stage":"complete","tests":"1/1 PASS","lintian":"PASS-errors","consumer_smoke":"PASS","abi_soname":"libKF6GlobalAccel.so.6","ecm_predecessor":"6.30.0-0supralinux3","validated_gate":"sbuild-summary-plus-dsc-plus-changes","downstream_eligible":true}
+        {
+          "type": "github-actions-run",
+          "result": "FAIL",
+          "workflow_run": 34999449194,
+          "job_id": 104483912661,
+          "commit": "209f6234cbd94d0b4e02df509b25ae5a6e0922fd",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10408264332,
+          "artifact_sha256": "1b7564f211967d1be8b61a96bc2a67389c6164f566e54dad79682d37a33bf6e5",
+          "failure_stage": "sbuild",
+          "failure_substage": "dh_auto_configure/CMake",
+          "tests": "not-reached",
+          "cause": "ECMPoQmTools required Qt6 LinguistTools during configure, but qt6-tools-dev was missing from Build-Depends."
+        },
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 35006477086,
+          "job_id": 104507372240,
+          "commit": "163cde7bedd95c2ffb16c031aa12dada99f84161",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10412320520,
+          "artifact_sha256": "cb8143633cf15745a235937ea55ee096cb094cc96da3bd1fc39dc914f3acb3b1",
+          "stage": "complete",
+          "tests": "1/1 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6GlobalAccel.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "downstream_eligible": true
+        }
       ],
-      "pass_files": {"libkf6globalaccel_data_deb_sha256":"c8b08f85cd11839c2e6e8fbd44a1b8bbdb5fd8a3915c9c841d69d2e53f67c6b2","libkf6globalaccel_dev_deb_sha256":"421f08f291ac0afe7ef75c0f3764b7aaeac103e0559282ecb1fbedec863dd2d6","libkf6globalaccel_doc_deb_sha256":"e34071d5e38aa342d7a8969d9ac7aa83ee65d1a2939ca641a7a3793bf6478862","libkf6globalaccel6_deb_sha256":"3b38259b8e543130d0635e6925ec2d47bd50edacf450bd4b1a3b0b4855f5636c","libkf6globalaccel6_dbgsym_ddeb_sha256":"bf7d2119ef7b5206df8bde5f08f7f3a44939ac85b9c97bc636c96e14008fb289","changes_sha256":"8b59ec7190fea8e47012bfb9dc9bceb0176614f0ea92bfcc386be3f4088c8c70","buildinfo_sha256":"c569c3958f292c16d4c0f1e9a63aec84916588792a61e2f22f42799b468c75ea","dsc_sha256":"0156261cddad4fe4cb6786ee70b1c09d9808dd192811da1247f90965247e84ba","orig_tar_sha256":"e532ebd4cbfc8d6d79c6c38c556f1871315fedae8db2b69b574b9c496f171473","debian_tar_sha256":"364e8a71e7508295c888c50cda059f0a7cb4a5f8435b5b97855d766bce0f0a27","rootfs_sha256":"1ade4c027d4c51ff571d487f026eebc84a37324f82d501d4a9ec90eefef37b87"},
-      "remediation": {"candidate_package_version":"6.30.0-0supralinux2","status":"validated","validated_by_run_id":35006477086,"changes":["add qt6-tools-dev (>= 6.9.0~) to Build-Depends so the ECM Po/Qm translation path can resolve Qt6 LinguistTools"],"source_change":false}
+      "pass_files": {
+        "libkf6globalaccel_data_deb_sha256": "c8b08f85cd11839c2e6e8fbd44a1b8bbdb5fd8a3915c9c841d69d2e53f67c6b2",
+        "libkf6globalaccel_dev_deb_sha256": "421f08f291ac0afe7ef75c0f3764b7aaeac103e0559282ecb1fbedec863dd2d6",
+        "libkf6globalaccel_doc_deb_sha256": "e34071d5e38aa342d7a8969d9ac7aa83ee65d1a2939ca641a7a3793bf6478862",
+        "libkf6globalaccel6_deb_sha256": "3b38259b8e543130d0635e6925ec2d47bd50edacf450bd4b1a3b0b4855f5636c",
+        "libkf6globalaccel6_dbgsym_ddeb_sha256": "bf7d2119ef7b5206df8bde5f08f7f3a44939ac85b9c97bc636c96e14008fb289",
+        "changes_sha256": "8b59ec7190fea8e47012bfb9dc9bceb0176614f0ea92bfcc386be3f4088c8c70",
+        "buildinfo_sha256": "c569c3958f292c16d4c0f1e9a63aec84916588792a61e2f22f42799b468c75ea",
+        "dsc_sha256": "0156261cddad4fe4cb6786ee70b1c09d9808dd192811da1247f90965247e84ba",
+        "orig_tar_sha256": "e532ebd4cbfc8d6d79c6c38c556f1871315fedae8db2b69b574b9c496f171473",
+        "debian_tar_sha256": "364e8a71e7508295c888c50cda059f0a7cb4a5f8435b5b97855d766bce0f0a27",
+        "rootfs_sha256": "1ade4c027d4c51ff571d487f026eebc84a37324f82d501d4a9ec90eefef37b87"
+      },
+      "remediation": {
+        "candidate_package_version": "6.30.0-0supralinux2",
+        "status": "validated",
+        "validated_by_run_id": 35006477086,
+        "changes": [
+          "add qt6-tools-dev (>= 6.9.0~) to Build-Depends so the ECM Po/Qm translation path can resolve Qt6 LinguistTools"
+        ],
+        "source_change": false
+      }
+    },
+    "kholidays": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kholidays-6.30.0.tar.xz",
+      "source_sha256": "02bfbc33296fe86b364491f6d5cad9d83360bb4fdd2923386a325b309eac0b9b",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-kholidays",
+      "binary_packages": [
+        "libkf6holidays-data",
+        "libkf6holidays-dev",
+        "libkf6holidays-doc",
+        "libkf6holidays6",
+        "qml6-module-org-kde-kholidays"
+      ],
+      "package_version": "6.30.0-0supralinux4",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 34884764702,
+          "job_id": 104112549858,
+          "commit": "e0f4e7c48dcf7541538eb919374a3f4b6c293b75",
+          "attempted_package_version": "6.30.0-0supralinux4",
+          "artifact_id": 10364169061,
+          "artifact_sha256": "62186f3d6d0c856fed7b055ae917ceec0b6cdf216b37b93e22126bf3ebc8f37a",
+          "stage": "complete",
+          "tests": "8/8 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6Holidays.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "downstream_eligible": true
+        }
+      ],
+      "pass_files": {
+        "libkf6holidays_data_deb_sha256": "18969b5b6d8c67edc11b318490319467554a5282ed1bbbfbb575288fbe11b86f",
+        "libkf6holidays_dev_deb_sha256": "ddd86750ccd60d6cb44b2b2178137efa1a1a29cfab06f0d0a76fdc5c4adce2ca",
+        "libkf6holidays_doc_deb_sha256": "37bec22b859f72baa3293c626ff2306578e5e29f74eae6643ef34802b259be43",
+        "libkf6holidays6_deb_sha256": "0f292936c6b9c64c10ef60eb2f5f52f01bf3188bc4400389492891fb6479b124",
+        "qml6_module_org_kde_kholidays_deb_sha256": "17180b8ec90f1515c7920b7a5c47069cfd2bacbc8db60e40899c7bbb8edfcb42",
+        "changes_sha256": "574014fe1e231ca13de2f6b8df83fb6001875f2efc289d0ee0f818d451267427",
+        "buildinfo_sha256": "d7d5c7a22207d8fa1b5c43d850dde1a4e4309cdfc1b97fb07257ee38e4ae81e1",
+        "dsc_sha256": "442001063d45843c555f3aae30a289c7be5913a8f075f43e70c064d736db2a79",
+        "orig_tar_sha256": "02bfbc33296fe86b364491f6d5cad9d83360bb4fdd2923386a325b309eac0b9b",
+        "debian_tar_sha256": "e2fad5b6f1c96874cae39adba3891cb188195c72a95e14fab77d554697db132d",
+        "rootfs_sha256": "c3168896424af56036321aef8908c5b4f36e6d0b53ce3f2f9e90b172745614c7"
+      }
+    },
+    "kidletime": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kidletime-6.30.0.tar.xz",
+      "source_sha256": "22873204292ddb757e5a0a57004c57debe1285cd0fd4e796d07e9de2402e60c3",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-kidletime",
+      "binary_packages": [
+        "libkf6idletime-dev",
+        "libkf6idletime-doc",
+        "libkf6idletime6"
+      ],
+      "package_version": "6.30.0-0supralinux1",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 35014875475,
+          "job_id": 104535671033,
+          "commit": "30b5dcd293527b488c88cf0a861883ee869e3ea0",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10414598079,
+          "artifact_sha256": "272ccad537d21905cf75a1add74e937d176c20c05c38bf967226fef4ab28b605",
+          "stage": "complete",
+          "tests": "1/1 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6IdleTime.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        }
+      ],
+      "pass_files": {
+        "libkf6idletime_dev_deb_sha256": "91f46cbedcd002e175ed47f2d67263a96e58a9aadbfe6602031db83c9fec0dc0",
+        "libkf6idletime_doc_deb_sha256": "d46d408417d18ad4dd5dcfd12e90360c120d8a9ea11306170be2e6e70ae71c8a",
+        "libkf6idletime6_deb_sha256": "855530deaa8dd29715928806792a9797ece6e5f5e975976b08beabcd9bd68028",
+        "libkf6idletime6_dbgsym_ddeb_sha256": "7da03341afded3939e617968cd54d3c5115f4cd9298df05aa9adb30d317066c2",
+        "changes_sha256": "ed753e65add80fc116a662dd744b2c2f0fc53ea385ce0834564cd227b38bbce3",
+        "buildinfo_sha256": "951b20d820886da2a015760d82fde8c361635488bb57f1891e239764923f2bf0",
+        "dsc_sha256": "be555bca2562b5f5f3b69081dff269872c54cf5f39911f57bfdf05a4ff6afb4b",
+        "orig_tar_sha256": "22873204292ddb757e5a0a57004c57debe1285cd0fd4e796d07e9de2402e60c3",
+        "debian_tar_sha256": "8ebb5aa03fea7c5a6b6b1de24211e5b75cc80c4949679d7a2b785e9044227586",
+        "rootfs_sha256": "1b28a68693bd7dba3e175811726cf668d94e9184b4714f3c1034a724b8c8eb18"
+      }
+    },
+    "kitemmodels": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kitemmodels-6.30.0.tar.xz",
+      "source_sha256": "f807e5b37aa913d2563ee1a21b2bce7d34495f32f38c7f35f16262d736bdfd55",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-kitemmodels",
+      "binary_packages": [
+        "libkf6itemmodels-dev",
+        "libkf6itemmodels-doc",
+        "libkf6itemmodels6",
+        "qml6-module-org-kde-kitemmodels"
+      ],
+      "package_version": "6.30.0-0supralinux1",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 34896417969,
+          "job_id": 104151531993,
+          "commit": "806d16476b034e796658ea1ab9028eb3a9a14e1b",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10369501432,
+          "artifact_sha256": "b806eaf27f733c1a2b5cc1d108ca442fef673b6dc0a53cfc5fff38abd2bf6732",
+          "stage": "complete",
+          "tests": "13/13 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6ItemModels.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        }
+      ],
+      "pass_files": {
+        "libkf6itemmodels_dev_deb_sha256": "381fb150c5916815f461a042edfcfca57afe4f6a5319752a782b365414cc826f",
+        "libkf6itemmodels_doc_deb_sha256": "c8319bd1bd2ed2a618b71a718390dafd7ad0af3eca858f1a4efa128d774e7d75",
+        "libkf6itemmodels6_deb_sha256": "4a0d2d19c51c2bec169b21ea7079a63927f44fdaa739559e8411047d6c72986a",
+        "qml6_module_org_kde_kitemmodels_deb_sha256": "f2bf532fe4af7ae979c52209c0ad1888c4bc3c461c9c4288e58af7be8e39c733",
+        "changes_sha256": "3007d279d3ae96a99bf9cfbe9a10f8f8a3bcacbe1c486a83cc78d21521914bbd",
+        "buildinfo_sha256": "050851c9e7831e460c704af79cd9e5de07094df9c6289f54dc32d7874bc84012",
+        "dsc_sha256": "9acd04570d25cb23695200ec7523d40e913c56cf1897a9c7f9cd2d4b2e903ef1",
+        "orig_tar_sha256": "f807e5b37aa913d2563ee1a21b2bce7d34495f32f38c7f35f16262d736bdfd55",
+        "debian_tar_sha256": "919c8d16897536bb905f465726ee4e2ba7c3d7f663ce34016b4c5f5e4706e8a5"
+      }
+    },
+    "kitemviews": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kitemviews-6.30.0.tar.xz",
+      "source_sha256": "9452f2b0cc5dd0214b88c4ce33297866be89af4177af14f5390cfb616e49c153",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-kitemviews",
+      "binary_packages": [
+        "libkf6itemviews-data",
+        "libkf6itemviews-dev",
+        "libkf6itemviews-doc",
+        "libkf6itemviews6"
+      ],
+      "package_version": "6.30.0-0supralinux1",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 34999449194,
+          "job_id": 104483912528,
+          "commit": "209f6234cbd94d0b4e02df509b25ae5a6e0922fd",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10409267184,
+          "artifact_sha256": "7e34fa7ede21510cf6829448e7b45a5c2832aaf9ac2719b9cb4125d23b593e55",
+          "stage": "complete",
+          "tests": "2/2 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6ItemViews.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        }
+      ],
+      "pass_files": {
+        "libkf6itemviews_data_deb_sha256": "d2444550a7ce4bd796a24b98d0688bfe6e072abace1f9130cd9b6ad3b93bf682",
+        "libkf6itemviews_dev_deb_sha256": "6641e1d8bef8df05e37c4f0cfc24bdfe93dada02001822d695edcefd160dd5a6",
+        "libkf6itemviews_doc_deb_sha256": "c679820397908aea8c4dbc4b0a544d6b5c65ecdb1b52f440348eb0b68cbb216b",
+        "libkf6itemviews6_deb_sha256": "d7bd3eb44a8bae2e03978faf711f7e9d27058e8d91e4ac20db97013a946c1a90",
+        "libkf6itemviews_dev_dbgsym_ddeb_sha256": "f4942362386a215ce646648fe7743b86fbdc05a6008ea385a1fa95644638baf4",
+        "libkf6itemviews6_dbgsym_ddeb_sha256": "440eab177799c583590031ef2ec6cb09f0324fa74eb9469af9bbd7b764a4af03",
+        "changes_sha256": "a07fadaaa134bfe92c0ea1fb923c86ccdf3514db7d4a845f1dea64e233aa8f79",
+        "buildinfo_sha256": "1c32064d918c4fb91f299b87d5d0ced2601f86b51bff8d259ece537680db1178",
+        "dsc_sha256": "30c0a1d09c57e864fbddd208e6cb7c03fcd6088b2f0e03069fd3149f25426ac6",
+        "orig_tar_sha256": "9452f2b0cc5dd0214b88c4ce33297866be89af4177af14f5390cfb616e49c153",
+        "debian_tar_sha256": "9d5c0ad0b5fa27d2874f54c0d3722c7183501d86dbeff3729e17f563690c9a3b",
+        "rootfs_sha256": "ffe122c915dc75fea3ce1f6d1cd50df9cd53620b7af3e2d291b7d0776a436356"
+      }
+    },
+    "kplotting": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kplotting-6.30.0.tar.xz",
+      "source_sha256": "f5a67be85c21665e052371301889443196b9de5b3927aff353a3d3e27730dd11",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-kplotting",
+      "binary_packages": [
+        "libkf6plotting-dev",
+        "libkf6plotting-doc",
+        "libkf6plotting6"
+      ],
+      "package_version": "6.30.0-0supralinux1",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 34896417969,
+          "job_id": 104151532320,
+          "commit": "806d16476b034e796658ea1ab9028eb3a9a14e1b",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10369086459,
+          "artifact_sha256": "f4c4f7425e582b5001fdffced34d045dc46152074422bd2bcf994e544bb96bb8",
+          "stage": "complete",
+          "tests": "5/5 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6Plotting.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        }
+      ],
+      "pass_files": {
+        "libkf6plotting_dev_deb_sha256": "c4e0d15019b532a9f85933013f8f9426ccaba1bf9a30953b9991cd8cfaa0dba2",
+        "libkf6plotting_doc_deb_sha256": "fcb85feaf4bca9229cace8ee10c44115948e3bd7495d0d3c38fb7669fd9d71ba",
+        "libkf6plotting6_deb_sha256": "90d52129fac90181528d2bc8d63db8830ddad1af18313bd6f985cbc4d238349d",
+        "changes_sha256": "607809c70fc452a584c1f43d66278621132d65e81d66768847518a81a172190a",
+        "buildinfo_sha256": "77f5226af9f1667a77a0b0d27d4e80ff640b3ee11fe9c6f4cec97702a0ad45d2",
+        "dsc_sha256": "a798a1f222fe1f2c081e93644d2bc3fd48f5db341b3357905c81909d919e661e",
+        "orig_tar_sha256": "f5a67be85c21665e052371301889443196b9de5b3927aff353a3d3e27730dd11",
+        "debian_tar_sha256": "d30e788b3e80ad44a652348f7d9917798d7219b687b75bedd3d411f2207e8f4a"
+      }
+    },
+    "ktexttemplate": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/ktexttemplate-6.30.0.tar.xz",
+      "source_sha256": "c3c229944d25294102e4e8a5b49fa0c0f481da9d33f8bec3782e8a53afd47493",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-ktexttemplate",
+      "binary_packages": [
+        "libkf6texttemplate-dev",
+        "libkf6texttemplate-doc",
+        "libkf6texttemplate6"
+      ],
+      "package_version": "6.30.0-0supralinux3",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 34884764702,
+          "job_id": 104112549851,
+          "commit": "e0f4e7c48dcf7541538eb919374a3f4b6c293b75",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10363863115,
+          "artifact_sha256": "7b9d0390ed90c882f4b7ad1993924e722bfb7ad35238c2ced52bbd5809555bc9",
+          "stage": "complete",
+          "tests": "10/10 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6TextTemplate.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "downstream_eligible": true
+        }
+      ],
+      "pass_files": {
+        "libkf6texttemplate_dev_deb_sha256": "29d6b4ed0fef9bc7dbb414b704940858fffb6e5bf8eb867d3b9d6f3427b6f314",
+        "libkf6texttemplate_doc_deb_sha256": "e9a31233b1cb432ec5cf10ed6c7b454ba98de2540c74a0082d6b5c9c42ca8d53",
+        "libkf6texttemplate6_deb_sha256": "bed52b166af6b724e33c1b95c1d08ff4eb9e305e391932ec55c894b4509a875f",
+        "changes_sha256": "cc5aaf7074d9dd44e53f5416dc59c3bf7b7c19fab2c2f45723f46e1552177797",
+        "buildinfo_sha256": "fe59945142686016d1c4ba058bc451d02803fcf40eb742c5b2a04cea253ce130",
+        "dsc_sha256": "46827296607ad5632c0527cf1e78c240565faa990dfe2d52fd4fc18b19063dac",
+        "orig_tar_sha256": "c3c229944d25294102e4e8a5b49fa0c0f481da9d33f8bec3782e8a53afd47493",
+        "debian_tar_sha256": "71ad75ef7d15af09d81200cd50d67db65da323288b3d00cc27ffd2d1ca7fa8e9",
+        "rootfs_sha256": "8d6f50faf0bc63926b86bbff88c4062a21609c073a7d6b3b4136eba4e6b7c637"
+      }
+    },
+    "modemmanager-qt": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/modemmanager-qt-6.30.0.tar.xz",
+      "source_sha256": "d7c4106dc130729fdfd435abaeaf85039a874fc18563a41755e14f7ea174ae21",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-modemmanager-qt",
+      "binary_packages": [
+        "libkf6modemmanagerqt-dev",
+        "libkf6modemmanagerqt-doc",
+        "libkf6modemmanagerqt6"
+      ],
+      "package_version": "6.30.0-0supralinux3",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "result": "FAIL",
+          "workflow_run": 35014875475,
+          "job_id": 104535671188,
+          "commit": "30b5dcd293527b488c88cf0a861883ee869e3ea0",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10415586492,
+          "artifact_sha256": "f79f98cc73f561e5750c4db7917917a043f260131af0ac19180fd835dee78af7",
+          "failure_stage": "sbuild",
+          "failure_substage": "Lintian/symbols",
+          "tests": "11/11 PASS",
+          "cause": "dpkg-gensymbols added _ZSt19piecewise_construct@Base at the current Debian revision; Lintian rejected symbols-file-contains-current-version-with-debian-revision."
+        },
+        {
+          "type": "github-actions-run",
+          "result": "FAIL",
+          "workflow_run": 35017509303,
+          "job_id": 104544555425,
+          "commit": "77f4c6e9e077e12bf7063ee2f872255d397ec8c8",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10416692119,
+          "artifact_sha256": "2b081f989d42f6d4820b238c9e739ccb4104080ceae7a49aa49cb20305eb66d7",
+          "failure_stage": "sbuild",
+          "failure_substage": "Lintian/build-prerequisite",
+          "tests": "11/11 PASS",
+          "symbols_transform": "PASS",
+          "cause": "The hash-locked symbols transform succeeded, but debian/rules invokes python3 without declaring python3:any (or an equivalent Python build prerequisite); Lintian rejected rules-require-build-prerequisite."
+        },
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 35021323444,
+          "job_id": 104557423664,
+          "commit": "dea48cdc1184e0fc961ea4f3efc0b38e19a2fb8d",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10417683848,
+          "artifact_sha256": "42d4f804effc6e4b9148e8c01887bdce6f95f0554ac4d03295e844a861a54eb7",
+          "stage": "complete",
+          "tests": "11/11 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6ModemManagerQt.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "downstream_eligible": true
+        }
+      ],
+      "pass_files": {
+        "libkf6modemmanagerqt_dev_deb_sha256": "1a9a69eff9542006535e52a4a3dfaba7378c506240c19dde6bf0599c73105302",
+        "libkf6modemmanagerqt_doc_deb_sha256": "cf9102c482151ca33edd94f7e086ab767d44287858e6d73e8f2629e0d297bf0d",
+        "libkf6modemmanagerqt6_deb_sha256": "7a52678aa62fc69eafdaff513a6bc4a9f72938ff3ea552a7bc99e58a3a3e0c4f",
+        "libkf6modemmanagerqt6_dbgsym_ddeb_sha256": "563c0b886433ed461be1bd830f1f338ae36f47282b0e31b2c52264fff46c6222",
+        "changes_sha256": "c2631cceca814bdfee0e7b7ce9e888fdcb97a198fff64c0089d088b1e0493a9d",
+        "buildinfo_sha256": "5e93dfb613a2405b916839747aeb718485a12846889263d58eed62a75d889223",
+        "dsc_sha256": "b02fcc77644d524af831543ac8282be48885296753e85c0517175d523d58115e",
+        "orig_tar_sha256": "d7c4106dc130729fdfd435abaeaf85039a874fc18563a41755e14f7ea174ae21",
+        "debian_tar_sha256": "648b8013108455bee99a09c93e79aa1132436df63d884dc6601828105a53934c",
+        "rootfs_sha256": "d9545276368dd4116cb234e9925c59311b30e4c934ff18ac1b7558f9fa1e308b"
+      },
+      "remediation": {
+        "candidate_package_version": "6.30.0-0supralinux3",
+        "status": "validated",
+        "source_change": false,
+        "changes": [
+          "retain the validated deterministic hash-locked symbols delta before dh_makeshlibs",
+          "declare python3:any explicitly in Build-Depends because debian/rules invokes the transform script"
+        ],
+        "symbols_baseline_sha256": "70c9ebc08c99174f022c3b4b38ed4cde4a8725f0a2f8ea04a09371132312d6f2",
+        "symbols_result_sha256": "b717475396376ac884bb3587ab2a0e898af5beb940836c45ee834758eec6820f",
+        "symbols_transform_sha256": "f468a9e752ecb79ccc05e3a7e344622f7b1e6aeae94fb71089a94f0f51d5559b",
+        "validated_by_run_id": 35021323444
+      }
+    },
+    "networkmanager-qt": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/networkmanager-qt-6.30.0.tar.xz",
+      "source_sha256": "f6ba5f54d413ea0b2642207a6ebd0803e7cb8392b91fcf8a1679fd0c21062865",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-networkmanager-qt",
+      "binary_packages": [
+        "libkf6networkmanagerqt-dev",
+        "libkf6networkmanagerqt-doc",
+        "libkf6networkmanagerqt6",
+        "qml6-module-org-kde-networkmanager"
+      ],
+      "package_version": "6.30.0-0supralinux1",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 35014875475,
+          "job_id": 104535671250,
+          "commit": "30b5dcd293527b488c88cf0a861883ee869e3ea0",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10414714325,
+          "artifact_sha256": "abf927b5749b34094d2b5ee530831f64638ba116a83e8b82f925a758aa018ad4",
+          "stage": "complete",
+          "tests": "38/38 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6NetworkManagerQt.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        }
+      ],
+      "pass_files": {
+        "libkf6networkmanagerqt_dev_deb_sha256": "f3a29d5fb6e34762aba94f50389570db5c4fd6ee5c0f8bdad7c371a8f4b1e1d3",
+        "libkf6networkmanagerqt_doc_deb_sha256": "f99ba4f1ba29f7e7adc6b87a60b9910e8650ece17767b8bd2b34ca5fa54b70a8",
+        "libkf6networkmanagerqt6_deb_sha256": "788f33d95eb531e75eef66a4a24be05adbfeb108abde84d0448dc7bdb36208ad",
+        "qml6_module_org_kde_networkmanager_deb_sha256": "8c5a1cec0a9386d1c974e96d9636fc780a2f9a72d78f572810a22423d11000b9",
+        "libkf6networkmanagerqt6_dbgsym_ddeb_sha256": "ea35187faa36a33bd2e71a8573c2cdad11d9afeb7b26cca37eeeaeaaafac0338",
+        "qml6_module_org_kde_networkmanager_dbgsym_ddeb_sha256": "e26832d08adee13911cd1a4fc33236a3f22d0035a46e41f9efff83b03755f275",
+        "changes_sha256": "7595636639c8cc9a447609286d6e06e8c4d7d5df3f865102cfa6f659c60746c4",
+        "buildinfo_sha256": "1fe33c330ff7ac1875a93bf68b3e94d712b6df9db879620a5d5382d4edfebf08",
+        "dsc_sha256": "9de0795c067e58c3715b01bb7c3fe659f36fbbe12e41e90e44b5243c5e7532e2",
+        "orig_tar_sha256": "f6ba5f54d413ea0b2642207a6ebd0803e7cb8392b91fcf8a1679fd0c21062865",
+        "debian_tar_sha256": "7a53d321ad9f4b95f1dbb3b58f007013a0d43086ffd38b19af3937493235b1d4",
+        "rootfs_sha256": "772cce7005b53f83cd6b9bab82e40a9c261bb5ccaa0da8c5cd7f3673156eb90c"
+      }
     },
     "syntax-highlighting": {
       "tier": 1,
@@ -317,19 +1034,163 @@
       "source_authority": "kde-upstream",
       "package_provider": "supralinux",
       "source_package": "kf6-syntax-highlighting",
-      "binary_packages": ["libkf6syntaxhighlighting-data", "libkf6syntaxhighlighting-dev", "libkf6syntaxhighlighting-doc", "libkf6syntaxhighlighting-tools", "libkf6syntaxhighlighting6", "qml6-module-org-kde-syntaxhighlighting"],
+      "binary_packages": [
+        "libkf6syntaxhighlighting-data",
+        "libkf6syntaxhighlighting-dev",
+        "libkf6syntaxhighlighting-doc",
+        "libkf6syntaxhighlighting-tools",
+        "libkf6syntaxhighlighting6",
+        "qml6-module-org-kde-syntaxhighlighting"
+      ],
       "package_version": "6.30.0-0supralinux2",
-      "depends_on": ["extra-cmake-modules"],
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
       "state": "PASS",
       "claim": "hosted-clean-package-preflight",
       "authoritative": false,
       "downstream_eligible": true,
       "evidence": [
-        {"type":"github-actions-run","result":"FAIL","workflow_run":34999449194,"job_id":104483912313,"commit":"209f6234cbd94d0b4e02df509b25ae5a6e0922fd","attempted_package_version":"6.30.0-0supralinux1","artifact_id":10408154532,"artifact_sha256":"8601077898fcba1ea5708fbd4e5a1c0d877825f969b8b39999d7d6bf131fbfe4","failure_stage":"sbuild","failure_substage":"dh_auto_configure/CMake","tests":"not-reached","cause":"ECMPoQmTools required Qt6 LinguistTools during configure, but qt6-tools-dev was missing from Build-Depends."},
-        {"type":"github-actions-run","result":"PASS","workflow_run":35006477086,"job_id":104507371855,"commit":"163cde7bedd95c2ffb16c031aa12dada99f84161","attempted_package_version":"6.30.0-0supralinux2","artifact_id":10411888269,"artifact_sha256":"1ec0d1e7d046b1393fbb299c9a6fec7e85ee4ac59ed5deafa0c777ead67c0b5f","stage":"complete","tests":"8/8 PASS","lintian":"PASS-errors","consumer_smoke":"PASS","abi_soname":"libKF6SyntaxHighlighting.so.6","ecm_predecessor":"6.30.0-0supralinux3","validated_gate":"sbuild-summary-plus-dsc-plus-changes","downstream_eligible":true}
+        {
+          "type": "github-actions-run",
+          "result": "FAIL",
+          "workflow_run": 34999449194,
+          "job_id": 104483912313,
+          "commit": "209f6234cbd94d0b4e02df509b25ae5a6e0922fd",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10408154532,
+          "artifact_sha256": "8601077898fcba1ea5708fbd4e5a1c0d877825f969b8b39999d7d6bf131fbfe4",
+          "failure_stage": "sbuild",
+          "failure_substage": "dh_auto_configure/CMake",
+          "tests": "not-reached",
+          "cause": "ECMPoQmTools required Qt6 LinguistTools during configure, but qt6-tools-dev was missing from Build-Depends."
+        },
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 35006477086,
+          "job_id": 104507371855,
+          "commit": "163cde7bedd95c2ffb16c031aa12dada99f84161",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10411888269,
+          "artifact_sha256": "1ec0d1e7d046b1393fbb299c9a6fec7e85ee4ac59ed5deafa0c777ead67c0b5f",
+          "stage": "complete",
+          "tests": "8/8 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6SyntaxHighlighting.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "downstream_eligible": true
+        }
       ],
-      "pass_files": {"libkf6syntaxhighlighting_data_deb_sha256":"e42c72d49d27f7390fef036f593abcc0e6aa4967636bc7fcf4a28aa76d42b004","libkf6syntaxhighlighting_dev_deb_sha256":"009edce32489b202b64c9b82f26dd52cf0914f3242fc41633553379b790326a5","libkf6syntaxhighlighting_doc_deb_sha256":"41701dccba3102fb688236468d33013e88237fae275a85b9b9f5109ae1594058","libkf6syntaxhighlighting_tools_deb_sha256":"826917b1df261b380dbe5cf8db1afbfa4ab8f68f1cbb964819bc8e894605a5ba","libkf6syntaxhighlighting6_deb_sha256":"fb622b0165505e0c5e6af7eda45ff984bb8089f2fdad68f3ac4194ce3bfccde6","qml6_module_org_kde_syntaxhighlighting_deb_sha256":"cb2314577549d417e292bd89dd51cb6848778b7a18ebd35869df35afad45aceb","libkf6syntaxhighlighting_tools_dbgsym_ddeb_sha256":"fc7c287f2d3d4b74be0cb0296afadd34b9c111282d2f22ba53fcd86bb84200ac","libkf6syntaxhighlighting6_dbgsym_ddeb_sha256":"df219c804671a8f793721c1ebfa5cc248bb8932556932d70e3433b22359cfaaf","qml6_module_org_kde_syntaxhighlighting_dbgsym_ddeb_sha256":"c9caa58d8993efec0e44940ddccc0b41ade44587809504395c9e0a49acf47b29","changes_sha256":"c08bab4063743718e5d9b12d41a1dbc46fc4b717e44e5d32f162d12f84029747","buildinfo_sha256":"9a6cccc46355308e86011491b1bad812365ef2c8530d43c5644c1599bd3db901","dsc_sha256":"03a2e472fbe06d0644f61324ebc258f3a02b8fa2fe04b7d34d3a65dbbddcd14c","orig_tar_sha256":"fc429b093058bec4878306cbbfb3aa0560ff4a3f166c69504036c507fe72afcc","debian_tar_sha256":"d4feb75005fa94f15d755da9672a0608c4449fb4ebf5fe8148c188ed34657872","rootfs_sha256":"ade003bc7be5dbffc04d63b98343b3a88a1d70f92fb29e2e1f8007d3765460d0"},
-      "remediation": {"candidate_package_version":"6.30.0-0supralinux2","status":"validated","validated_by_run_id":35006477086,"changes":["add qt6-tools-dev (>= 6.9.0~) to Build-Depends so the ECM Po/Qm translation path can resolve Qt6 LinguistTools"],"source_change":false}
+      "pass_files": {
+        "libkf6syntaxhighlighting_data_deb_sha256": "e42c72d49d27f7390fef036f593abcc0e6aa4967636bc7fcf4a28aa76d42b004",
+        "libkf6syntaxhighlighting_dev_deb_sha256": "009edce32489b202b64c9b82f26dd52cf0914f3242fc41633553379b790326a5",
+        "libkf6syntaxhighlighting_doc_deb_sha256": "41701dccba3102fb688236468d33013e88237fae275a85b9b9f5109ae1594058",
+        "libkf6syntaxhighlighting_tools_deb_sha256": "826917b1df261b380dbe5cf8db1afbfa4ab8f68f1cbb964819bc8e894605a5ba",
+        "libkf6syntaxhighlighting6_deb_sha256": "fb622b0165505e0c5e6af7eda45ff984bb8089f2fdad68f3ac4194ce3bfccde6",
+        "qml6_module_org_kde_syntaxhighlighting_deb_sha256": "cb2314577549d417e292bd89dd51cb6848778b7a18ebd35869df35afad45aceb",
+        "libkf6syntaxhighlighting_tools_dbgsym_ddeb_sha256": "fc7c287f2d3d4b74be0cb0296afadd34b9c111282d2f22ba53fcd86bb84200ac",
+        "libkf6syntaxhighlighting6_dbgsym_ddeb_sha256": "df219c804671a8f793721c1ebfa5cc248bb8932556932d70e3433b22359cfaaf",
+        "qml6_module_org_kde_syntaxhighlighting_dbgsym_ddeb_sha256": "c9caa58d8993efec0e44940ddccc0b41ade44587809504395c9e0a49acf47b29",
+        "changes_sha256": "c08bab4063743718e5d9b12d41a1dbc46fc4b717e44e5d32f162d12f84029747",
+        "buildinfo_sha256": "9a6cccc46355308e86011491b1bad812365ef2c8530d43c5644c1599bd3db901",
+        "dsc_sha256": "03a2e472fbe06d0644f61324ebc258f3a02b8fa2fe04b7d34d3a65dbbddcd14c",
+        "orig_tar_sha256": "fc429b093058bec4878306cbbfb3aa0560ff4a3f166c69504036c507fe72afcc",
+        "debian_tar_sha256": "d4feb75005fa94f15d755da9672a0608c4449fb4ebf5fe8148c188ed34657872",
+        "rootfs_sha256": "ade003bc7be5dbffc04d63b98343b3a88a1d70f92fb29e2e1f8007d3765460d0"
+      },
+      "remediation": {
+        "candidate_package_version": "6.30.0-0supralinux2",
+        "status": "validated",
+        "validated_by_run_id": 35006477086,
+        "changes": [
+          "add qt6-tools-dev (>= 6.9.0~) to Build-Depends so the ECM Po/Qm translation path can resolve Qt6 LinguistTools"
+        ],
+        "source_change": false
+      }
+    },
+    "threadweaver": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/threadweaver-6.30.0.tar.xz",
+      "source_sha256": "e5400968a41820393e76190ab5dbb276c09513263d1b185d64b40f82dcd9b457",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-threadweaver",
+      "binary_packages": [
+        "libkf6threadweaver-dev",
+        "libkf6threadweaver-doc",
+        "libkf6threadweaver6"
+      ],
+      "package_version": "6.30.0-0supralinux3",
+      "ubuntu_reference_version": "6.24.0-0ubuntu1",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "result": "FAIL",
+          "workflow_run": 34709829162,
+          "job_id": 103596438491,
+          "commit": "50611225422b05803ee49d8d5fc8ff4f84a21d99",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10303265649,
+          "artifact_sha256": "0b47374207ae54632c4ba9594eedbcc72d46eed552696b608110ebb5bce6acb6",
+          "failure_stage": "sbuild",
+          "failure_substage": "override_dh_auto_test/reuse-lint-before-autotests",
+          "autotests_reached": false
+        },
+        {
+          "type": "github-actions-run",
+          "result": "FAIL",
+          "workflow_run": 34710627400,
+          "job_id": 103598645228,
+          "commit": "3fa96423bb01b8a7cd63a62ab5947cf7ef57b482",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10302524114,
+          "artifact_sha256": "5582b94c2e134011297a51fd02183464253c0c5f43678a79fd256f128b2f2d6f",
+          "failure_stage": "artifact-contract",
+          "failure_substage": "multi-arch-normalization",
+          "tests": "8/8 PASS",
+          "cause": "The binary build succeeded, but absent Multi-Arch was normalized incorrectly and the watch signing key was missing."
+        },
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 34713034164,
+          "job_id": 103605147772,
+          "commit": "c4de13b66184cb3b84283f1c4c5f0668f577b0de",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10303986419,
+          "artifact_sha256": "6395f11ed633fb034b0bf61a95639ce00005e3211994b04924abeb306deed2b8",
+          "stage": "complete",
+          "tests": "8/8 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6ThreadWeaver.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        }
+      ],
+      "pass_files": {
+        "libkf6threadweaver_dev_deb_sha256": "ec4585b496eeef55999714c233b6b59072af48ca69825128030f7d134407116a",
+        "libkf6threadweaver_doc_deb_sha256": "4ebb11331e932ad8f5d94c8211f645e928f2f26d51623241c494969457fdc121",
+        "libkf6threadweaver6_deb_sha256": "28c2fe19783555ed338fe5d94bc458cee5ed4a4fd2e57ccef69b30f84bcd13c3",
+        "changes_sha256": "c3a9c04f8c04a1dcf60b15fc1ef9215872123604053889549203693fae1279a0",
+        "buildinfo_sha256": "62e09bce3c24b819f081caea337b274a58909f39fa725494acce431be8fdecec",
+        "dsc_sha256": "af8dc6428b8568cf5aedefdf6311c11265881651dd2a997af56868f828ed56a5",
+        "orig_tar_sha256": "e5400968a41820393e76190ab5dbb276c09513263d1b185d64b40f82dcd9b457",
+        "debian_tar_sha256": "c35d1d3c271365cbee47cb5d6178e5618ef487f8f7db520477f7bf077bc94a0b",
+        "rootfs_sha256": "3ef7b4eabfb90e97d762bd546c8f0e3a8bbc7e21d422bb6f001173f29ccdcbf4"
+      }
     }
   },
   "ci_scope_incidents": [
@@ -340,8 +1201,22 @@
       "package_state_effect": "none",
       "cause": "The first semantic campaign fingerprint included descriptive node metadata that is not consumed by the package runner, so already-PASS kdbusaddons and threadweaver were selected unnecessarily.",
       "jobs": [
-        {"node": "kdbusaddons", "job_id": 103615297686, "artifact_id": 10305410248, "artifact_sha256": "ce17097096841a500ce8b2e4f24171253b91ba1dce4a6560d0107d626eb32b1a", "abort_stage": "campaign-validation", "message": "Node must be prepared/remediation-pending-build before attempt, got PASS"},
-        {"node": "threadweaver", "job_id": 103615297757, "artifact_id": 10304955612, "artifact_sha256": "79e5393b892ae1ee3fb9a19c21e2f41bb691c7c55bf40487bb2d5de7c42fc507", "abort_stage": "campaign-validation", "message": "Node must be prepared/remediation-pending-build before attempt, got PASS"}
+        {
+          "node": "kdbusaddons",
+          "job_id": 103615297686,
+          "artifact_id": 10305410248,
+          "artifact_sha256": "ce17097096841a500ce8b2e4f24171253b91ba1dce4a6560d0107d626eb32b1a",
+          "abort_stage": "campaign-validation",
+          "message": "Node must be prepared/remediation-pending-build before attempt, got PASS"
+        },
+        {
+          "node": "threadweaver",
+          "job_id": 103615297757,
+          "artifact_id": 10304955612,
+          "artifact_sha256": "79e5393b892ae1ee3fb9a19c21e2f41bb691c7c55bf40487bb2d5de7c42fc507",
+          "abort_stage": "campaign-validation",
+          "message": "Node must be prepared/remediation-pending-build before attempt, got PASS"
+        }
       ],
       "remediation": "Scope fingerprint now compares only fields actually consumed by the package runner; state/evidence/descriptive metadata cannot request a rebuild."
     },

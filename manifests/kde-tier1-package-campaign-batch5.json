@@ -5,11 +5,11 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "batch": "tier1-batch-5",
-  "state": "open-remediation",
+  "state": "PASS",
   "canonical_state_role": "batch-package-attempt-ledger",
   "canonical_snapshot": {
-    "state": "unpromoted-open-batch",
-    "tier1": "13 PASS / 16 pending / 0 current FAIL / 0 BLOCKED"
+    "state": "promoted-at-batch-closure",
+    "tier1": "16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED"
   },
   "selected_nodes": [
     "kidletime",
@@ -179,9 +179,9 @@
       }
     },
     "modemmanager-qt": {
-      "state": "remediation-pending-build",
-      "last_result": "FAIL",
-      "downstream_eligible": false,
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
       "upstream_version": "6.30.0",
       "source_package": "kf6-modemmanager-qt",
       "source_sha256": "d7c4106dc130729fdfd435abaeaf85039a874fc18563a41755e14f7ea174ae21",
@@ -270,6 +270,23 @@
           "tests": "11/11 PASS",
           "symbols_transform": "PASS",
           "cause": "The hash-locked symbols transform succeeded, but debian/rules invokes python3 without declaring python3:any (or an equivalent Python build prerequisite); Lintian rejected rules-require-build-prerequisite."
+        },
+        {
+          "result": "PASS",
+          "workflow_run": 35021323444,
+          "job_id": 104557423664,
+          "commit": "dea48cdc1184e0fc961ea4f3efc0b38e19a2fb8d",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10417683848,
+          "artifact_sha256": "42d4f804effc6e4b9148e8c01887bdce6f95f0554ac4d03295e844a861a54eb7",
+          "stage": "complete",
+          "tests": "11/11 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6ModemManagerQt.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "downstream_eligible": true
         }
       ],
       "provider_contract": {
@@ -279,7 +296,7 @@
       },
       "remediation": {
         "candidate_package_version": "6.30.0-0supralinux3",
-        "status": "prepared",
+        "status": "validated",
         "source_change": false,
         "changes": [
           "retain the validated deterministic hash-locked symbols delta before dh_makeshlibs",
@@ -287,7 +304,20 @@
         ],
         "symbols_baseline_sha256": "70c9ebc08c99174f022c3b4b38ed4cde4a8725f0a2f8ea04a09371132312d6f2",
         "symbols_result_sha256": "b717475396376ac884bb3587ab2a0e898af5beb940836c45ee834758eec6820f",
-        "symbols_transform_sha256": "f468a9e752ecb79ccc05e3a7e344622f7b1e6aeae94fb71089a94f0f51d5559b"
+        "symbols_transform_sha256": "f468a9e752ecb79ccc05e3a7e344622f7b1e6aeae94fb71089a94f0f51d5559b",
+        "validated_by_run_id": 35021323444
+      },
+      "last_pass_files": {
+        "libkf6modemmanagerqt_dev_deb_sha256": "1a9a69eff9542006535e52a4a3dfaba7378c506240c19dde6bf0599c73105302",
+        "libkf6modemmanagerqt_doc_deb_sha256": "cf9102c482151ca33edd94f7e086ab767d44287858e6d73e8f2629e0d297bf0d",
+        "libkf6modemmanagerqt6_deb_sha256": "7a52678aa62fc69eafdaff513a6bc4a9f72938ff3ea552a7bc99e58a3a3e0c4f",
+        "libkf6modemmanagerqt6_dbgsym_ddeb_sha256": "563c0b886433ed461be1bd830f1f338ae36f47282b0e31b2c52264fff46c6222",
+        "changes_sha256": "c2631cceca814bdfee0e7b7ce9e888fdcb97a198fff64c0089d088b1e0493a9d",
+        "buildinfo_sha256": "5e93dfb613a2405b916839747aeb718485a12846889263d58eed62a75d889223",
+        "dsc_sha256": "b02fcc77644d524af831543ac8282be48885296753e85c0517175d523d58115e",
+        "orig_tar_sha256": "d7c4106dc130729fdfd435abaeaf85039a874fc18563a41755e14f7ea174ae21",
+        "debian_tar_sha256": "648b8013108455bee99a09c93e79aa1132436df63d884dc6601828105a53934c",
+        "rootfs_sha256": "d9545276368dd4116cb234e9925c59311b30e4c934ff18ac1b7558f9fa1e308b"
       }
     },
     "networkmanager-qt": {
@@ -403,6 +433,16 @@
         "debian_tar_sha256": "7a53d321ad9f4b95f1dbb3b58f007013a0d43086ffd38b19af3937493235b1d4",
         "rootfs_sha256": "772cce7005b53f83cd6b9bab82e40a9c261bb5ccaa0da8c5cd7f3673156eb90c"
       }
+    }
+  },
+  "closure": {
+    "workflow_run": 35021323444,
+    "commit": "dea48cdc1184e0fc961ea4f3efc0b38e19a2fb8d",
+    "repository_policy_run": 35021323425,
+    "scope": {
+      "kidletime": "scope-skip-retained-pass",
+      "modemmanager-qt": "rebuilt-pass",
+      "networkmanager-qt": "scope-skip-retained-pass"
     }
   }
 }
