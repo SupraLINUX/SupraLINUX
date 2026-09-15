@@ -1,0 +1,8 @@
+kf6-modemmanager-qt (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE Frameworks 6.30.0 for SupraLINUX.
+  * Use Ubuntu Resolute modemmanager-dev as provider for KDE's ModemManager >= 1.0 requirement.
+  * Disable only QCH generation under the documented common Frameworks profile.
+  * Preserve Debian-family binary package contracts as compatibility inputs.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Tue, 15 Sep 2026 19:20:00 +0000

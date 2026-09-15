@@ -1,0 +1,3 @@
+usr/include/KF6/KIdleTime
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6IdleTime/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6IdleTime.so

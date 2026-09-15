@@ -1,0 +1,6 @@
+# Debian sid packaging copyright metadata retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+node=kidletime
+path=trees/debian/kidletime/debian/copyright
+sha256=1afa9e5366e809877f085a8918ac733de4935be71be1aee3ff785362aee2bd0b

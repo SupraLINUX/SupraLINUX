@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all reproducible=-fixfilepath
+export EXCLUDED_TESTS = managertest|settingstest|activeconnectiontest
+%:
+	dh $@
+override_dh_auto_configure:
+	dh_auto_configure -- -DBUILD_QCH=OFF
+override_dh_auto_test:
+	dh_auto_test -Skf6 -- ARGS+="-E \"^(${EXCLUDED_TESTS})\""

@@ -1,0 +1,6 @@
+# Debian sid symbols baseline retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+node=modemmanager-qt
+path=trees/debian/modemmanager-qt/debian/libkf6modemmanagerqt6.symbols
+sha256=70c9ebc08c99174f022c3b4b38ed4cde4a8725f0a2f8ea04a09371132312d6f2

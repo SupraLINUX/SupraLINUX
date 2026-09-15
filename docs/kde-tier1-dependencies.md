@@ -62,9 +62,13 @@ For Batch 4, KSyntaxHighlighting deliberately includes `libxerces-c-dev` so the 
 
 - `kcalendarcore`: libical >= 3.0.
 - `kcoreaddons`: libmount is required on Linux; root-level udev discovery remains optional.
-- `modemmanager-qt`: ModemManager >= 1.0.
+- `modemmanager-qt`: KDE requires `ModemManager >= 1.0` and probes pkg-config module `ModemManager`; Ubuntu Resolute provides that development surface through `modemmanager-dev`.
 - `networkmanager-qt`: libnm >= 1.4.0 and GIO 2.0.
 - `solid`: libmount and udev are required for the selected Linux default backend set.
+
+The earlier `libmm-glib-dev`/`mm-glib` mapping for ModemManagerQt was incorrect because it checked a related client-library surface rather than the interface requested by KDE's `FindModemManager.cmake`. The correction is provider-only; KDE authority and its minimum requirement are unchanged.
+
+Targeted revalidation of the corrected mapping passed in run `35012023822`, job `104526071758`, artifact `10414525047`, SHA-256 `db6868402b08bca82241d07980e158639a2f2fc64c4a5ab595fa58846361cb4a`.
 
 Optional Solid iOS-device support (`libimobiledevice` + `libplist`) remains optional and is not a build gate merely because Resolute can provide it.
 
@@ -94,15 +98,34 @@ Closure evidence:
 - KGlobalAccel remediation PASS: run `35006477086`, artifact `10412320520`, SHA-256 `cb8143633cf15745a235937ea55ee096cb094cc96da3bd1fc39dc914f3acb3b1`.
 - KSyntaxHighlighting remediation PASS: run `35006477086`, artifact `10411888269`, SHA-256 `1ec0d1e7d046b1393fbb299c9a6fec7e85ee4ac59ed5deafa0c777ead67c0b5f`.
 
+## Batch 5 provider profile
+
+Batch 5 selects `kidletime`, `modemmanager-qt` and `networkmanager-qt`.
+
+- KIdleTime retains upstream X11 and Wayland defaults and their provider surface.
+- ModemManagerQt uses corrected provider `modemmanager-dev` for KDE's `ModemManager >= 1.0` requirement.
+- NetworkManagerQt explicitly carries both `libnm-dev` and `libglib2.0-dev` because upstream CMake directly probes `libnm>=1.4.0` and `gio-2.0`; its QML module remains enabled.
+
+The batch is prepared, not promoted. These three nodes remain canonical `pending` until real package attempts complete.
+
 ## Hosted provider evidence
 
-Provider availability evidence remains:
+Original broad provider-availability evidence:
 
 - run `34700048774`;
 - PR head `6ce61bc02c4aba146bcc33b16d17f56fb66f057a`;
 - artifact `10299608166`;
 - artifact SHA-256 `da6808c31554da4105713e060e328d4130253a100c628fef279d8d0a9cf8ceb3`;
-- result: `status=PASS`, `provider_candidate=ubuntu-resolute`, provider evidence only.
+- result: PASS; provider evidence only.
+
+Current targeted evidence for the corrected ModemManager provider mapping:
+
+- run `35012023822`;
+- job `104526071758`;
+- commit `48fd01bfa7b254b5e5c8447b3d609f76a91f786f`;
+- artifact `10414525047`;
+- artifact SHA-256 `db6868402b08bca82241d07980e158639a2f2fc64c4a5ab595fa58846361cb4a`;
+- result: PASS; provider-availability evidence only.
 
 Historical runs `34699717549` and `34699889060` remain gate-implementation FAIL evidence; neither is a Framework node FAIL because no Framework was attempted.
 
@@ -120,4 +143,4 @@ Current canonical state:
 - current Tier 1 BLOCKED: **0**;
 - final Qt provider certification: **pending**.
 
-Provider evidence alone never promotes a Framework. Each of the thirteen PASS nodes has real package-attempt evidence.
+Provider evidence alone never promotes a Framework. Each of the thirteen PASS nodes has real package-attempt evidence. Batch 5 preparation does not change those counts.
