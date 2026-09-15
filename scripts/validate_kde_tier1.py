@@ -89,6 +89,9 @@ EXPECTED_PASS = {
     'ktexttemplate': {'version': '6.30.0-0supralinux3', 'run': 34884764702, 'job': 104112549851, 'artifact': 10363863115, 'digest': '7b9d0390ed90c882f4b7ad1993924e722bfb7ad35238c2ced52bbd5809555bc9', 'tests': '10/10 PASS', 'soname': 'libKF6TextTemplate.so.6'},
     'karchive': {'version': '6.30.0-0supralinux4', 'run': 34884764702, 'job': 104112549742, 'artifact': 10364726750, 'digest': '0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e', 'tests': '5/5 PASS', 'soname': 'libKF6Archive.so.6'},
     'kholidays': {'version': '6.30.0-0supralinux4', 'run': 34884764702, 'job': 104112549858, 'artifact': 10364169061, 'digest': '62186f3d6d0c856fed7b055ae917ceec0b6cdf216b37b93e22126bf3ebc8f37a', 'tests': '8/8 PASS', 'soname': 'libKF6Holidays.so.6'},
+    'kitemmodels': {'version': '6.30.0-0supralinux1', 'run': 34896417969, 'job': 104151531993, 'artifact': 10369501432, 'digest': 'b806eaf27f733c1a2b5cc1d108ca442fef673b6dc0a53cfc5fff38abd2bf6732', 'tests': '13/13 PASS', 'soname': 'libKF6ItemModels.so.6'},
+    'bluez-qt': {'version': '6.30.0-0supralinux2', 'run': 34945979836, 'job': 104305337324, 'artifact': 10387429776, 'digest': 'db8a3718a31eaae00d5f9fbdb60014dfeb1faf1c2bc84a88f9ab0d9bffec07ed', 'tests': '18/18 PASS', 'soname': 'libKF6BluezQt.so.6'},
+    'kplotting': {'version': '6.30.0-0supralinux1', 'run': 34896417969, 'job': 104151532320, 'artifact': 10369086459, 'digest': 'f4c4f7425e582b5001fdffced34d045dc46152074422bd2bcf994e544bb96bb8', 'tests': '5/5 PASS', 'soname': 'libKF6Plotting.so.6'},
 }
 
 EXPECTED_PROVIDER_EVIDENCE = {
@@ -206,9 +209,9 @@ for node in nodes:
         require(node.get('packaging') == {'state':'pending'}, f'{node_id}: unattempted packaging state must remain pending')
         require(node.get('state') == 'pending', f'{node_id}: unattempted node state must remain pending')
 
-require(sum(1 for n in nodes if n.get('state') == 'PASS') == 7, 'Tier 1 current PASS count must be 7')
-require(sum(1 for n in nodes if n.get('state') == 'pending') == 22, 'Tier 1 current pending count must be 22')
-require(not any(n.get('state') in {'FAIL','BLOCKED'} for n in nodes), 'Tier 1 must have no current FAIL/BLOCKED nodes after Batch 2 closure')
+require(sum(1 for n in nodes if n.get('state') == 'PASS') == 10, 'Tier 1 current PASS count must be 10')
+require(sum(1 for n in nodes if n.get('state') == 'pending') == 19, 'Tier 1 current pending count must be 19')
+require(not any(n.get('state') in {'FAIL','BLOCKED'} for n in nodes), 'Tier 1 must have no current FAIL/BLOCKED nodes after Batch 3 closure')
 
 require(deps.get('schema') == 1, 'Dependency manifest schema must be 1')
 require(deps.get('authority') == 'kde-upstream', 'Dependency authority must remain KDE upstream')
@@ -238,6 +241,7 @@ for key, minimum in (('libical','3.0'),('python-dev','3.9'),('bison-3.3.2','3.3.
 require(requirement(deps, 'hspell').get('packages') == ['hspell'], 'HSpell provider mapping must use hspell')
 for node_id in ('kitemviews','kplotting','kwidgetsaddons'):
     require('UiPlugin' in dep_nodes[node_id]['qt'].get('default_enabled', []), f'{node_id}: designer plugin requires Qt UiPlugin')
+
 sonnet_groups = dep_nodes['sonnet']['external'].get('required_any_of', [])
 require(len(sonnet_groups) == 1, 'Sonnet must retain one backend alternative group')
 if sonnet_groups:
@@ -250,5 +254,5 @@ if errors:
     raise SystemExit(1)
 
 print('KDE Frameworks 6.30 Tier 1 source/dependency validation: PASS')
-print('Tier 1 package states: 7 PASS/downstream-eligible; 22 pending; 0 FAIL; 0 BLOCKED')
+print('Tier 1 package states: 10 PASS/downstream-eligible; 19 pending; 0 FAIL; 0 BLOCKED')
 print('Ubuntu Resolute provider mapping: hosted preflight PASS; final certification pending')
