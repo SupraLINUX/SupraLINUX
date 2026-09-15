@@ -74,7 +74,7 @@ jobs:
           PATHS
           diff -u /tmp/expected-paths /tmp/archive-paths
           tar -xzf /tmp/batch6-payload.tar.gz -C .
-          git status --porcelain=v1 | cut -c4- | sort > /tmp/payload-delta
+          git status --porcelain=v1 --untracked-files=all | cut -c4- | sort > /tmp/payload-delta
           diff -u /tmp/expected-paths /tmp/payload-delta
           git diff --quiet -- manifests/kde-frameworks-tier1.json manifests/kde-dag.json
 
@@ -119,6 +119,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          BASE_COMMIT='8f24c5ada9b89b646c2e1ff6412d40e50713ddef'
+          git merge-base --is-ancestor "${BASE_COMMIT}" HEAD
           rm -f .tmp/batch6-prepare/part-*
           rmdir .tmp/batch6-prepare .tmp 2>/dev/null || true
           rm -f .github/workflows/temporary-prepare-batch6.yml
@@ -166,12 +168,12 @@ jobs:
           scripts/run-kde-tier1-package-batch6-preflight.sh
           scripts/validate_kde_tier1_package_batch6.py
           PATHS
-          git diff HEAD^ --name-only | sort > /tmp/final-delta
+          git add -A
+          git diff --cached "${BASE_COMMIT}" --name-only | sort > /tmp/final-delta
           diff -u /tmp/expected-paths /tmp/final-delta
-          git diff --quiet HEAD^ -- manifests/kde-frameworks-tier1.json manifests/kde-dag.json
-          git diff --check
+          git diff --cached --quiet "${BASE_COMMIT}" -- manifests/kde-frameworks-tier1.json manifests/kde-dag.json
+          git diff --cached --check "${BASE_COMMIT}"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
           git commit -m 'kde: prepare Tier 1 batch 6'
           git push origin HEAD:architecture/bootstrap-v1
