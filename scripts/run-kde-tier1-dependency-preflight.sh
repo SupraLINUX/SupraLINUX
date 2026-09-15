@@ -178,7 +178,7 @@ check_pkg_min libical-dev 3.0
 check_pkg_min libwayland-dev 1.9
 check_pkg_min wayland-protocols 1.46
 check_pkg_min plasma-wayland-protocols 1.15.0
-check_pkg_min libmm-glib-dev 1.0
+check_pkg_min modemmanager-dev 1.0
 check_pkg_min libnm-dev 1.4.0
 check_pkg_min libzxing-dev 1.4.0
 
@@ -209,10 +209,11 @@ for package in qt6-base-private-dev qt6-declarative-dev qt6-svg-dev qt6-wayland-
 done
 
 : > "${EVIDENCE}/pkg-config-versions.tsv"
-for module in libical libnm gio-2.0 libzstd wayland-client mm-glib; do
+for module in libical libnm gio-2.0 libzstd wayland-client ModemManager; do
     version="$(pkg-config --modversion "${module}")"
     printf '%s\t%s\n' "${module}" "${version}" >> "${EVIDENCE}/pkg-config-versions.tsv"
 done
+pkg-config --atleast-version=1.0 ModemManager
 
 if dpkg-query -W -f='${Status}' hspell 2>/dev/null | grep -q 'ok installed'; then
     test -f /usr/include/hspell.h
