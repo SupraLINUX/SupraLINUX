@@ -40,6 +40,11 @@ UNNECESSARY_SCOPE_RUN = {
     "digest": "19f8ce8e17be9efab705df0a8974d89ef90ddcd06f5a9c53745f40ad227dcff4",
     "commit": "037b16b7954593641041953fa4a9452f819de314",
 }
+SCOPE_CONTRACT_RUN = {
+    "run_id": 35010423516,
+    "job_id": 104520693096,
+    "commit": "906d8be5094f04d03a01de035e73b6c65ea0a58a",
+}
 CANDIDATE = "6.30.0-0supralinux3"
 errors: list[str] = []
 
@@ -126,6 +131,7 @@ require(f"actions/checkout@{CHECKOUT_SHA}" in workflow, "ECM workflow must pin a
 require(f"actions/upload-artifact@{UPLOAD_SHA}" in workflow, "ECM workflow must pin approved upload-artifact SHA")
 require("fetch-depth: 0" in workflow, "ECM workflow must fetch history for event-delta scope")
 require("scripts/kde-ecm-preflight-needed.sh" in workflow, "ECM workflow must use event-delta scope detection")
+require("if [[ \"${rc}\" -eq 1 ]]" in workflow, "ECM workflow must reserve selector exit 1 for intentional scope skip")
 require("scripts/run-kde-ecm-package-preflight.sh" in workflow, "ECM workflow must execute clean package preflight")
 require("evidence/kde-ecm-package-preflight/" in workflow, "ECM workflow must retain node evidence")
 
@@ -172,6 +178,9 @@ for non_input in (
 require("NOT build inputs" in delta, "ECM delta detector must explicitly document non-build inputs")
 require("git diff --name-only" in delta, "ECM delta detector must compare exact event delta")
 require("event delta changes no ECM package-consumed input; skip rebuild" in delta, "ECM delta detector must expose explicit skip reason")
+require("0 = rebuild ECM" in delta and "1 = intentional scope skip" in delta, "ECM delta detector must document its exit-status contract")
+require("exit 0" in delta and "exit 1" in delta, "ECM delta detector must return distinct statuses for rebuild and intentional skip")
+require(delta.index("run=true") < delta.index("exit 0") < delta.index("run=false") < delta.index("exit 1"), "ECM delta detector must map run=true to exit 0 and run=false to exit 1")
 # Non-input tokens may appear only in comments/documentation, not in the git-diff pathspec block.
 pathspec_block = delta.split("git diff --name-only", 1)[1].split(")", 1)[0]
 for non_input in ("manifests/kde-dag.json", "docs/kde-dag.md", "scripts/kde-ecm-preflight-needed.sh"):
@@ -206,7 +215,15 @@ for value in (
 ):
     require(value in doc, f"KDE DAG docs must retain ECM scope incident evidence {value}")
     require(value in current_status_doc, f"2026-09-15 status must retain ECM scope incident evidence {value}")
+for value in (
+    str(SCOPE_CONTRACT_RUN["run_id"]),
+    str(SCOPE_CONTRACT_RUN["job_id"]),
+    SCOPE_CONTRACT_RUN["commit"],
+):
+    require(value in doc, f"KDE DAG docs must retain ECM selector-contract incident evidence {value}")
+    require(value in current_status_doc, f"2026-09-15 status must retain ECM selector-contract incident evidence {value}")
 require("scope" in doc.lower() and "package_state_effect=none" in doc, "KDE DAG docs must classify ECM rebuild as scope-only with no package-state effect")
+require("0 = rebuild" in doc and "1 = intentional skip" in doc, "KDE DAG docs must document ECM selector exit-status contract")
 
 if errors:
     for error in errors:

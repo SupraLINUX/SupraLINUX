@@ -290,7 +290,11 @@ Run `35009710506`, job `104518322483`, terminó PASS y generó artifact `1041324
 
 Clasificación: `infrastructure-scope-selection`; `package_state_effect=none`. No reemplaza el PASS canónico ECM `6.30.0-0supralinux3`, no crea una nueva revisión y no se usa para promocionar estado.
 
-La remediación limita el selector ECM a inputs realmente consumidos por el package lane: `packages/kde/extra-cmake-modules/*`, `scripts/run-kde-ecm-package-preflight.sh` y `.github/workflows/kde-ecm-package-preflight.yml`. Cambios de DAG, evidencia, documentación o del propio selector deben ejecutar el workflow pero hacer scope-skip, sin `sbuild` ni artifact nuevo.
+La primera remediación en commit `906d8be5094f04d03a01de035e73b6c65ea0a58a` corrigió correctamente el pathspec, pero expuso un segundo defecto del harness: el selector imprimía `run=false` y terminaba con status 0. El workflow consume el exit status, por lo que run `35010423516`, job `104520693096`, entró incorrectamente en `sbuild` aunque el delta no contenía inputs consumidos por el package lane.
+
+Clasificación: `infrastructure-scope-selection`; `package_state_effect=none`. Ese intento no modifica la revisión canónica de ECM y cualquier artifact que produzca es no autoritativo para promoción.
+
+El contrato corregido queda explícito y validado: `0 = rebuild`, `1 = intentional skip`, cualquier otro status es error. El selector sigue limitado a `packages/kde/extra-cmake-modules/*`, `scripts/run-kde-ecm-package-preflight.sh` y `.github/workflows/kde-ecm-package-preflight.yml`. Cambios de DAG, evidencia, documentación, validators o del propio selector deben ejecutar el workflow pero hacer scope-skip, sin `sbuild` ni artifact nuevo.
 
 ## Estado actual
 

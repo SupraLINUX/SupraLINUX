@@ -13,6 +13,11 @@ AFTER="${2:?after SHA required}"
 #   manifests/kde-dag.json
 #   docs/kde-dag.md
 #   scripts/kde-ecm-preflight-needed.sh
+#
+# Exit-status contract consumed by kde-ecm-package-preflight.yml:
+#   0 = rebuild ECM
+#   1 = intentional scope skip
+#  >1 = selector error
 
 mapfile -t CHANGED < <(
     git diff --name-only "${BEFORE}" "${AFTER}" -- \
@@ -25,8 +30,10 @@ if (( ${#CHANGED[@]} > 0 )); then
     printf 'run=true\n'
     printf 'reason=ECM package-consumed input changed\n'
     printf 'changed=%s\n' "$(IFS=,; printf '%s' "${CHANGED[*]}")"
+    exit 0
 else
     printf 'run=false\n'
     printf 'reason=event delta changes no ECM package-consumed input; skip rebuild\n'
     printf 'changed=\n'
+    exit 1
 fi
