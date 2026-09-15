@@ -1,11 +1,11 @@
 {
   "schema": 1,
-  "as_of": "2026-09-14",
+  "as_of": "2026-09-15",
   "frameworks_series": "6.30.0",
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "batch": "tier1-batch-3",
-  "state": "prepared-pending-build",
+  "state": "remediation-pending-build",
   "canonical_state_role": "batch-package-attempt-ledger",
   "selected_nodes": [
     "kitemmodels",
@@ -53,9 +53,6 @@
   },
   "nodes": {
     "kitemmodels": {
-      "state": "prepared-pending-build",
-      "last_result": null,
-      "downstream_eligible": false,
       "upstream_version": "6.30.0",
       "source_package": "kf6-kitemmodels",
       "source_sha256": "f807e5b37aa913d2563ee1a21b2bce7d34495f32f38c7f35f16262d736bdfd55",
@@ -65,29 +62,120 @@
       "development_package": "libkf6itemmodels-dev",
       "documentation_package": "libkf6itemmodels-doc",
       "binary_contracts": [
-        {"name":"libkf6itemmodels-dev","architecture":"amd64","multi_arch":null},
-        {"name":"libkf6itemmodels-doc","architecture":"all","multi_arch":"foreign"},
-        {"name":"libkf6itemmodels6","architecture":"amd64","multi_arch":"same"},
-        {"name":"qml6-module-org-kde-kitemmodels","architecture":"amd64","multi_arch":"same"}
+        {"name": "libkf6itemmodels-dev", "architecture": "amd64", "multi_arch": null},
+        {"name": "libkf6itemmodels-doc", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6itemmodels6", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "qml6-module-org-kde-kitemmodels", "architecture": "amd64", "multi_arch": "same"}
       ],
-      "soname":"libKF6ItemModels.so.6",
-      "cmake_package":"KF6ItemModels",
-      "cmake_target":"KF6::ItemModels",
-      "consumer_run":"direct",
-      "copyright":{"file":"copyright","sha256":"5bb5a4a002ba2a70f417baf4d6f3ace2f395580b881b7a66205106587bd72f5d","reference":"debian-sid-6.28"},
-      "package_version":"6.30.0-0supralinux1",
-      "symbols":{"file":"libkf6itemmodels6.symbols","sha256":"d9cbc25df40c2ea378cb8e3e77dafcea63a7b542315dc90498cb27f087db1c1e","tree_provider":"debian","reference_version":"6.28.0"},
-      "evidence":[]
+      "soname": "libKF6ItemModels.so.6",
+      "cmake_package": "KF6ItemModels",
+      "cmake_target": "KF6::ItemModels",
+      "consumer_run": "direct",
+      "copyright": {"file": "copyright", "sha256": "5bb5a4a002ba2a70f417baf4d6f3ace2f395580b881b7a66205106587bd72f5d", "reference": "debian-sid-6.28"},
+      "package_version": "6.30.0-0supralinux1",
+      "symbols": {"file": "libkf6itemmodels6.symbols", "sha256": "d9cbc25df40c2ea378cb8e3e77dafcea63a7b542315dc90498cb27f087db1c1e", "tree_provider": "debian", "reference_version": "6.28.0"},
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "evidence": [
+        {"result": "PASS", "workflow_run": 34896417969, "job_id": 104151531993, "commit": "806d16476b034e796658ea1ab9028eb3a9a14e1b", "attempted_package_version": "6.30.0-0supralinux1", "artifact_id": 10369501432, "artifact_sha256": "b806eaf27f733c1a2b5cc1d108ca442fef673b6dc0a53cfc5fff38abd2bf6732", "stage": "complete", "tests": "13/13 PASS", "lintian": "PASS-errors", "consumer_smoke": "PASS", "abi_soname": "libKF6ItemModels.so.6", "ecm_predecessor": "6.30.0-0supralinux3", "downstream_eligible": true}
+      ],
+      "last_pass_files": {
+        "libkf6itemmodels_dev_deb_sha256": "381fb150c5916815f461a042edfcfca57afe4f6a5319752a782b365414cc826f",
+        "libkf6itemmodels_doc_deb_sha256": "c8319bd1bd2ed2a618b71a718390dafd7ad0af3eca858f1a4efa128d774e7d75",
+        "libkf6itemmodels6_deb_sha256": "4a0d2d19c51c2bec169b21ea7079a63927f44fdaa739559e8411047d6c72986a",
+        "qml6_module_org_kde_kitemmodels_deb_sha256": "f2bf532fe4af7ae979c52209c0ad1888c4bc3c461c9c4288e58af7be8e39c733",
+        "libkf6itemmodels6_dbgsym_ddeb_sha256": "0e213fe270df59ee6e658de8ba85910ec120eca35a73ccadb9ab782e2b9c00e2",
+        "qml6_module_org_kde_kitemmodels_dbgsym_ddeb_sha256": "539bf90111885dd3c0ed1d6da889bf31e6e6da7e558da1e6f88f8bff4f27823b",
+        "changes_sha256": "3007d279d3ae96a99bf9cfbe9a10f8f8a3bcacbe1c486a83cc78d21521914bbd",
+        "buildinfo_sha256": "050851c9e7831e460c704af79cd9e5de07094df9c6289f54dc32d7874bc84012",
+        "dsc_sha256": "9acd04570d25cb23695200ec7523d40e913c56cf1897a9c7f9cd2d4b2e903ef1",
+        "orig_tar_sha256": "f807e5b37aa913d2563ee1a21b2bce7d34495f32f38c7f35f16262d736bdfd55",
+        "debian_tar_sha256": "919c8d16897536bb905f465726ee4e2ba7c3d7f663ce34016b4c5f5e4706e8a5"
+      }
     },
     "bluez-qt": {
-      "state":"prepared-pending-build","last_result":null,"downstream_eligible":false,"upstream_version":"6.30.0","source_package":"kf6-bluez-qt","source_sha256":"f5045b14a6c689bbfded9437582f943dd4f8f74537085ab6115bcacdea2110d8","root_cmake_blob":"88dd15daf02a31098f230028b7222bb9355e6ba2","source_url":"https://download.kde.org/stable/frameworks/6.30/bluez-qt-6.30.0.tar.xz","runtime_package":"libkf6bluezqt6","development_package":"libkf6bluezqt-dev","documentation_package":"libkf6bluezqt-doc",
-      "binary_contracts":[{"name":"libkf6bluezqt-data","architecture":"all","multi_arch":"foreign"},{"name":"libkf6bluezqt-dev","architecture":"amd64","multi_arch":null},{"name":"libkf6bluezqt-doc","architecture":"all","multi_arch":"foreign"},{"name":"libkf6bluezqt6","architecture":"amd64","multi_arch":"same"},{"name":"qml6-module-org-kde-bluezqt","architecture":"amd64","multi_arch":"same"}],
-      "soname":"libKF6BluezQt.so.6","cmake_package":"KF6BluezQt","cmake_target":"KF6::BluezQt","consumer_run":"direct","copyright":{"file":"copyright","sha256":"e31b43f516a2ac6700b0d72f2da53a9dfdf8acffa358f299afee181d9aa52302","reference":"debian-sid-6.28"},"package_version":"6.30.0-0supralinux1","symbols":{"file":"libkf6bluezqt6.symbols","sha256":"b72bea28842160da234b3bbab7975623616cd58f3e522b1e5d8705a279eef4f7","tree_provider":"debian","reference_version":"6.28.0"},"evidence":[]
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-bluez-qt",
+      "source_sha256": "f5045b14a6c689bbfded9437582f943dd4f8f74537085ab6115bcacdea2110d8",
+      "root_cmake_blob": "88dd15daf02a31098f230028b7222bb9355e6ba2",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/bluez-qt-6.30.0.tar.xz",
+      "runtime_package": "libkf6bluezqt6",
+      "development_package": "libkf6bluezqt-dev",
+      "documentation_package": "libkf6bluezqt-doc",
+      "binary_contracts": [
+        {"name": "libkf6bluezqt-data", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6bluezqt-dev", "architecture": "amd64", "multi_arch": null},
+        {"name": "libkf6bluezqt-doc", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6bluezqt6", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "qml6-module-org-kde-bluezqt", "architecture": "amd64", "multi_arch": "same"}
+      ],
+      "soname": "libKF6BluezQt.so.6",
+      "cmake_package": "KF6BluezQt",
+      "cmake_target": "KF6::BluezQt",
+      "consumer_run": "direct",
+      "copyright": {"file": "copyright", "sha256": "e31b43f516a2ac6700b0d72f2da53a9dfdf8acffa358f299afee181d9aa52302", "reference": "debian-sid-6.28"},
+      "package_version": "6.30.0-0supralinux2",
+      "symbols": {
+        "file": "libkf6bluezqt6.symbols",
+        "sha256": "b72bea28842160da234b3bbab7975623616cd58f3e522b1e5d8705a279eef4f7",
+        "tree_provider": "debian",
+        "reference_version": "6.28.0",
+        "reviewed_override": {
+          "method": "deterministic-transform",
+          "file": "apply-symbols-delta.py",
+          "file_sha256": "6e7f4a36c5b5b71c80728c23da82180af0772b4d9abf2f3feb834ffda0007565",
+          "base_reference_sha256": "b72bea28842160da234b3bbab7975623616cd58f3e522b1e5d8705a279eef4f7",
+          "result_sha256": "0fd10c9d93b303fa48aa5cd66aaf4727fbc27f4b784926f5ce5f8d20606bf37a",
+          "policy": "Mark the KDE 6.30 libstdc++ piecewise_construct implementation export optional=toolchain at upstream minimum 6.30.0; preserve all reviewed Debian 6.28 ABI symbols unchanged."
+        }
+      },
+      "state": "remediation-pending-build",
+      "last_result": "FAIL",
+      "downstream_eligible": false,
+      "evidence": [
+        {"result": "FAIL", "workflow_run": 34896417969, "job_id": 104151532330, "commit": "806d16476b034e796658ea1ab9028eb3a9a14e1b", "attempted_package_version": "6.30.0-0supralinux1", "artifact_id": 10369725265, "artifact_sha256": "ab85b1c2eeef6bf2dc9d622d6695b95427cca6e246ac13a0f825034e9e63d195", "failure_stage": "sbuild", "failure_substage": "lintian", "tests": "18/18 PASS", "cause": "KDE 6.30 exposed libstdc++ _ZSt19piecewise_construct as an implementation/toolchain symbol; dpkg-gensymbols assigned the package revision 6.30.0-0supralinux1 as its minimum version and Lintian rejected the resulting symbols entry."}
+      ]
     },
     "kplotting": {
-      "state":"prepared-pending-build","last_result":null,"downstream_eligible":false,"upstream_version":"6.30.0","source_package":"kf6-kplotting","source_sha256":"f5a67be85c21665e052371301889443196b9de5b3927aff353a3d3e27730dd11","root_cmake_blob":"ee78f84b45359e54a309cecb4042faa7c60c6290","source_url":"https://download.kde.org/stable/frameworks/6.30/kplotting-6.30.0.tar.xz","runtime_package":"libkf6plotting6","development_package":"libkf6plotting-dev","documentation_package":"libkf6plotting-doc",
-      "binary_contracts":[{"name":"libkf6plotting-dev","architecture":"amd64","multi_arch":null},{"name":"libkf6plotting-doc","architecture":"all","multi_arch":"foreign"},{"name":"libkf6plotting6","architecture":"amd64","multi_arch":"same"}],
-      "soname":"libKF6Plotting.so.6","cmake_package":"KF6Plotting","cmake_target":"KF6::Plotting","consumer_run":"direct","copyright":{"file":"copyright","sha256":"b6f2494ed26d104f6640da11e7588616b04609427a6f81dc2fc22152eaf292f1","reference":"debian-sid-6.28"},"package_version":"6.30.0-0supralinux1","symbols":{"file":"libkf6plotting6.symbols","sha256":"de5fddb29e85c05edefee280b2acf547d285318e6334b63b4a58527f59260cdb","tree_provider":"debian","reference_version":"6.28.0"},"evidence":[]
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-kplotting",
+      "source_sha256": "f5a67be85c21665e052371301889443196b9de5b3927aff353a3d3e27730dd11",
+      "root_cmake_blob": "ee78f84b45359e54a309cecb4042faa7c60c6290",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kplotting-6.30.0.tar.xz",
+      "runtime_package": "libkf6plotting6",
+      "development_package": "libkf6plotting-dev",
+      "documentation_package": "libkf6plotting-doc",
+      "binary_contracts": [
+        {"name": "libkf6plotting-dev", "architecture": "amd64", "multi_arch": null},
+        {"name": "libkf6plotting-doc", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6plotting6", "architecture": "amd64", "multi_arch": "same"}
+      ],
+      "soname": "libKF6Plotting.so.6",
+      "cmake_package": "KF6Plotting",
+      "cmake_target": "KF6::Plotting",
+      "consumer_run": "direct",
+      "copyright": {"file": "copyright", "sha256": "b6f2494ed26d104f6640da11e7588616b04609427a6f81dc2fc22152eaf292f1", "reference": "debian-sid-6.28"},
+      "package_version": "6.30.0-0supralinux1",
+      "symbols": {"file": "libkf6plotting6.symbols", "sha256": "de5fddb29e85c05edefee280b2acf547d285318e6334b63b4a58527f59260cdb", "tree_provider": "debian", "reference_version": "6.28.0"},
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "evidence": [
+        {"result": "PASS", "workflow_run": 34896417969, "job_id": 104151532320, "commit": "806d16476b034e796658ea1ab9028eb3a9a14e1b", "attempted_package_version": "6.30.0-0supralinux1", "artifact_id": 10369086459, "artifact_sha256": "f4c4f7425e582b5001fdffced34d045dc46152074422bd2bcf994e544bb96bb8", "stage": "complete", "tests": "5/5 PASS", "lintian": "PASS-errors", "consumer_smoke": "PASS", "abi_soname": "libKF6Plotting.so.6", "ecm_predecessor": "6.30.0-0supralinux3", "downstream_eligible": true}
+      ],
+      "last_pass_files": {
+        "libkf6plotting_dev_deb_sha256": "c4e0d15019b532a9f85933013f8f9426ccaba1bf9a30953b9991cd8cfaa0dba2",
+        "libkf6plotting_doc_deb_sha256": "fcb85feaf4bca9229cace8ee10c44115948e3bd7495d0d3c38fb7669fd9d71ba",
+        "libkf6plotting6_deb_sha256": "90d52129fac90181528d2bc8d63db8830ddad1af18313bd6f985cbc4d238349d",
+        "libkf6plotting_dev_dbgsym_ddeb_sha256": "6f3390af4c4c597b56748d03bb796056408f3ed85788ef3364f217e60b133a1b",
+        "libkf6plotting6_dbgsym_ddeb_sha256": "c6f14f0380e02bf5763ad1a851192ed4afa418d397ebabbc5e8599989768dae4",
+        "changes_sha256": "607809c70fc452a584c1f43d66278621132d65e81d66768847518a81a172190a",
+        "buildinfo_sha256": "77f5226af9f1667a77a0b0d27d4e80ff640b3ee11fe9c6f4cec97702a0ad45d2",
+        "dsc_sha256": "a798a1f222fe1f2c081e93644d2bc3fd48f5db341b3357905c81909d919e661e",
+        "orig_tar_sha256": "f5a67be85c21665e052371301889443196b9de5b3927aff353a3d3e27730dd11",
+        "debian_tar_sha256": "d30e788b3e80ad44a652348f7d9917798d7219b687b75bedd3d411f2207e8f4a"
+      }
     }
   }
 }

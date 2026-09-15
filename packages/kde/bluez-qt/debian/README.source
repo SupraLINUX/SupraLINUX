@@ -9,6 +9,17 @@ runner verifies and injects the exact Debian 6.28 baseline from workflow run
 the symbols baseline because it is closer to KDE 6.30; Ubuntu remains the direct
 binary-compatibility target. Any 6.30 ABI delta must be reviewed from a real build.
 
+Attempt 1 built KDE 6.30 successfully and passed 18/18 upstream tests, but
+`dpkg-gensymbols` observed `_ZSt19piecewise_construct` as a new libstdc++
+implementation/toolchain export and assigned the package revision as its minimum
+version. Lintian correctly rejected that generated ABI contract.
+
+`debian/apply-symbols-delta.py` therefore verifies the exact retained baseline,
+adds only `(optional=toolchain)_ZSt19piecewise_construct@Base 6.30.0`, verifies
+the complete transformed symbols digest, and only then allows `dh_makeshlibs` to
+continue. This keeps the Debian 6.28 public ABI baseline intact without treating a
+toolchain implementation export as mandatory public BluezQt ABI.
+
 QDoc targets generated through ECMGenerateQDoc are not part of the default build.
 The established documentation binary package name is retained as a compatibility
 stub until SupraLINUX defines a common Frameworks QDoc policy. Upstream autotests

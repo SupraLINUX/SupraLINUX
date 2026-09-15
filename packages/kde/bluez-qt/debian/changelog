@@ -1,10 +1,21 @@
+kf6-bluez-qt (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Preserve attempt-1 FAIL evidence after the clean KDE 6.30 build passed
+    18/18 upstream tests but Lintian rejected a toolchain symbols minimum.
+  * Apply a hash-pinned transform to the retained Debian 6.28 symbols baseline.
+  * Mark _ZSt19piecewise_construct as optional=toolchain at upstream 6.30.0.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Tue, 15 Sep 2026 15:00:00 -0300
+
 kf6-bluez-qt (6.30.0-0supralinux1) resolute; urgency=medium
 
   * Package KDE Frameworks bluez-qt 6.30.0 from KDE upstream stable.
   * Preserve Debian-family binary package names and Multi-Arch contracts as
-    compatibility inputs while selecting dependencies from KDE 6.30 requirements.
+    compatibility inputs while selecting dependencies from KDE 6.30
+    requirements.
   * Build against retained SupraLINUX ECM 6.30 and KDE-selected Qt >= 6.9.
   * Keep KDE upstream autotests enabled and keep QDoc outside the default build.
-  * Use the retained Debian 6.28 symbols tree as the closest technical ABI baseline.
+  * Use the retained Debian 6.28 symbols tree as the closest technical ABI
+    baseline.
 
  -- SupraLINUX Project <packages@supralinux.invalid>  Mon, 14 Sep 2026 18:10:00 -0300
