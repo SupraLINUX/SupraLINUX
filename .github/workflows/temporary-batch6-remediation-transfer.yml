@@ -1,0 +1,89 @@
+name: Temporary Batch 6 remediation blob materializer
+
+on:
+  push:
+    branches:
+      - tmp-batch6-remediation-transfer
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: "${{ github.event.head_commit.message != 'kde: materialize Tier 1 batch 6 remediation blobs' }}"
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact temporary branch head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Verify and extract remediation payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(find .tmp/batch6-remediation-transfer -maxdepth 1 -type f -name 'part-*' | wc -l)" -eq 34
+          find .tmp/batch6-remediation-transfer -maxdepth 1 -type f -name 'part-*' -print0 | sort -z | xargs -0 cat > /tmp/payload.tar.gz.b64
+          base64 -d /tmp/payload.tar.gz.b64 > /tmp/payload.tar.gz
+          echo 'e2063bb50c26669c3326cc13e865b48f898b9c5729423c4d088e0c889929e3d0  /tmp/payload.tar.gz' | sha256sum -c -
+          tar -tzf /tmp/payload.tar.gz | sort > /tmp/archive-paths
+          cat > /tmp/expected-paths <<'PATHS'
+          docs/kde-tier1-dependencies.md
+          docs/kde-tier1-package-batch6.md
+          docs/status/2026-09-15-batch6.md
+          docs/status/2026-09-15.md
+          manifests/kde-tier1-package-campaign-batch6.json
+          packages/kde/kwindowsystem/debian/changelog
+          packages/kde/kwindowsystem/debian/control
+          packages/kde/solid/debian/apply-symbols-delta.py
+          packages/kde/solid/debian/changelog
+          packages/kde/solid/debian/control
+          packages/kde/solid/debian/rules
+          scripts/validate_kde_tier1_package_batch6.py
+          PATHS
+          diff -u /tmp/expected-paths /tmp/archive-paths
+          tar -xzf /tmp/payload.tar.gz -C .
+          git status --porcelain=v1 --untracked-files=all | cut -c4- | sort > /tmp/payload-delta
+          diff -u /tmp/expected-paths /tmp/payload-delta
+          git diff --quiet -- manifests/kde-frameworks-tier1.json manifests/kde-dag.json
+
+      - name: Validate remediation tree
+        shell: bash
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends shellcheck
+          bash -n scripts/*.sh
+          shellcheck -e SC1091 scripts/*.sh
+          python3 scripts/validate_repository.py
+          python3 scripts/validate_kde_dag.py
+          python3 scripts/validate_kde_tier1.py
+          python3 scripts/validate_kde_tier1_package_batch6.py
+          git diff --check
+
+      - name: Commit exact remediation files on temporary branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- \
+            docs/kde-tier1-dependencies.md \
+            docs/kde-tier1-package-batch6.md \
+            docs/status/2026-09-15-batch6.md \
+            docs/status/2026-09-15.md \
+            manifests/kde-tier1-package-campaign-batch6.json \
+            packages/kde/kwindowsystem/debian/changelog \
+            packages/kde/kwindowsystem/debian/control \
+            packages/kde/solid/debian/apply-symbols-delta.py \
+            packages/kde/solid/debian/changelog \
+            packages/kde/solid/debian/control \
+            packages/kde/solid/debian/rules \
+            scripts/validate_kde_tier1_package_batch6.py
+          git diff --cached --check
+          test "$(git diff --cached --name-only | wc -l)" -eq 12
+          git commit -m 'kde: materialize Tier 1 batch 6 remediation blobs'
+          git push origin HEAD:tmp-batch6-remediation-transfer
