@@ -1,3 +1,10 @@
+kf6-kwindowsystem (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Add libxcb-xfixes0-dev required by upstream X11 code for xcb/xfixes.h.
+  * Retain KDE 6.30.0 source and the existing X11/Wayland/QML feature profile.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Tue, 15 Sep 2026 20:43:00 -0300
+
 kf6-kwindowsystem (6.30.0-0supralinux1) resolute; urgency=medium
 
   * SupraLINUX clean KDE Frameworks 6.30.0 package preflight.
