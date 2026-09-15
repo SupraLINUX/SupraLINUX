@@ -1,0 +1,425 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-14",
+  "frameworks_series": "6.30.0",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "batch": "tier1-batch-2",
+  "state": "PASS",
+  "canonical_state_role": "batch-package-attempt-ledger",
+  "selected_nodes": [
+    "ktexttemplate",
+    "karchive",
+    "kholidays"
+  ],
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+    },
+    "packaging_trees": {
+      "status": "PASS",
+      "workflow_run": 34708030450,
+      "artifact_id": 10301938362,
+      "artifact_sha256": "6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6",
+      "snapshot_json_sha256": "f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345"
+    }
+  },
+  "shared_packaging_inputs": {
+    "signing_key": {
+      "path": "debian/upstream/signing-key.asc",
+      "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d",
+      "source": "retained-debian-packaging-reference"
+    },
+    "documentation_policy": {
+      "qch_enabled": false,
+      "package_role": "debian-family-compatibility-name",
+      "note": "Batch 2 documentation packages currently contain Debian metadata only; no QCH payload is claimed."
+    }
+  },
+  "nodes": {
+    "ktexttemplate": {
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-ktexttemplate",
+      "source_sha256": "c3c229944d25294102e4e8a5b49fa0c0f481da9d33f8bec3782e8a53afd47493",
+      "root_cmake_blob": "e68c80cc6106c87e321d23729f882052ab386972",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/ktexttemplate-6.30.0.tar.xz",
+      "runtime_package": "libkf6texttemplate6",
+      "development_package": "libkf6texttemplate-dev",
+      "documentation_package": "libkf6texttemplate-doc",
+      "binary_contracts": [
+        {"name": "libkf6texttemplate-dev", "architecture": "amd64", "multi_arch": null},
+        {"name": "libkf6texttemplate-doc", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6texttemplate6", "architecture": "amd64", "multi_arch": "same"}
+      ],
+      "soname": "libKF6TextTemplate.so.6",
+      "cmake_package": "KF6TextTemplate",
+      "cmake_target": "KF6::TextTemplate",
+      "consumer_run": "direct",
+      "copyright": {
+        "file": "copyright",
+        "sha256": "b7b88bf2a8f3f4d19fb85b0d00d1464430a4f97a1949616a16a5a956c6c97109",
+        "reference": "debian-sid-6.28"
+      },
+      "package_version": "6.30.0-0supralinux3",
+      "symbols": {
+        "file": "libkf6texttemplate6.symbols",
+        "sha256": "552e0c732cef6e8e0679d014fc7416ad23ecaa83322df9475a09d640e9831273",
+        "tree_provider": "debian",
+        "reference_version": "6.28.0",
+        "reviewed_override": {
+          "method": "deterministic-transform",
+          "file": "apply-symbols-delta.py",
+          "file_sha256": "d8f1d4908662c223d83a18cf7bf0f5fa954e2b1e3c1513b3978f481e282b9925",
+          "base_reference_sha256": "552e0c732cef6e8e0679d014fc7416ad23ecaa83322df9475a09d640e9831273",
+          "result_sha256": "2ff2111ce15f910328557c3295008fa21588518a0156626425df3c7b9f1b0e19",
+          "policy": "Drop implementation-only Qt meta/plugin exports moved out of libKF6TextTemplate in KDE 6.30; keep the inline Exception vtable optional; add the three public Filter symbols at upstream minimum 6.30.0."
+        }
+      },
+      "evidence": [
+        {
+          "result": "FAIL",
+          "workflow_run": 34720201713,
+          "job_id": 103624554096,
+          "commit": "5edf71b390088a551af81e7fc7e8d87a8378104f",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10306265683,
+          "artifact_sha256": "c164640037e564a43479daaa740f55c0f7578d977a7c38bfeb691fbd6b88544a",
+          "failure_stage": "sbuild",
+          "failure_substage": "dpkg-gensymbols",
+          "tests": "10/10 PASS",
+          "cause": "The real KDE 6.30 build added three public Filter symbols and no longer exported 11 Qt/plugin implementation symbols plus the inline Exception vtable from the main library after upstream moved scriptable-tag support into a plugin."
+        },
+        {
+          "result": "PASS",
+          "workflow_run": 34776389758,
+          "job_id": 103775171198,
+          "commit": "5b7e539b2512a1486ffa1816017932dca76a73ac",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10323646687,
+          "artifact_sha256": "c9343f846f172770081700c74e6bb42e9d99090ec1e66b3c978de49c243b1462",
+          "stage": "complete",
+          "tests": "10/10 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6TextTemplate.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        },
+        {
+          "result": "PASS",
+          "workflow_run": 34776524481,
+          "job_id": 103315694490,
+          "commit": "3944b0fe78d51ac9ac77566948c0419e2bfa7b0a",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10323233062,
+          "artifact_sha256": "c0825408584e8d2e37a66ba95764e3e33adeafeaa5adcb30c253fb706c6c9f27",
+          "stage": "complete",
+          "tests": "10/10 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6TextTemplate.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        },
+        {
+          "result": "PASS",
+          "workflow_run": 34884764702,
+          "job_id": 104112549851,
+          "commit": "e0f4e7c48dcf7541538eb919374a3f4b6c293b75",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10363863115,
+          "artifact_sha256": "7b9d0390ed90c882f4b7ad1993924e722bfb7ad35238c2ced52bbd5809555bc9",
+          "stage": "complete",
+          "tests": "10/10 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6TextTemplate.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "downstream_eligible": true
+        }
+      ],
+      "last_pass_files": {
+        "libkf6texttemplate_dev_deb_sha256": "29d6b4ed0fef9bc7dbb414b704940858fffb6e5bf8eb867d3b9d6f3427b6f314",
+        "libkf6texttemplate_doc_deb_sha256": "e9a31233b1cb432ec5cf10ed6c7b454ba98de2540c74a0082d6b5c9c42ca8d53",
+        "libkf6texttemplate6_deb_sha256": "bed52b166af6b724e33c1b95c1d08ff4eb9e305e391932ec55c894b4509a875f",
+        "libkf6texttemplate6_dbgsym_ddeb_sha256": "e46b0f3da342ffabd383c46123cc4204ec9dd94efe03e8b3217d94958b2e507d",
+        "changes_sha256": "cc5aaf7074d9dd44e53f5416dc59c3bf7b7c19fab2c2f45723f46e1552177797",
+        "buildinfo_sha256": "fe59945142686016d1c4ba058bc451d02803fcf40eb742c5b2a04cea253ce130",
+        "dsc_sha256": "46827296607ad5632c0527cf1e78c240565faa990dfe2d52fd4fc18b19063dac",
+        "orig_tar_sha256": "c3c229944d25294102e4e8a5b49fa0c0f481da9d33f8bec3782e8a53afd47493",
+        "debian_tar_sha256": "71ad75ef7d15af09d81200cd50d67db65da323288b3d00cc27ffd2d1ca7fa8e9",
+        "rootfs_sha256": "8d6f50faf0bc63926b86bbff88c4062a21609c073a7d6b3b4136eba4e6b7c637"
+      }
+    },
+    "karchive": {
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-karchive",
+      "source_sha256": "4cf89d91e429d2ece3110e78f7ef7011952b0412cb15011329516b46f21e98e2",
+      "root_cmake_blob": "6f86222fb967c7f3e29c15ecef40bf355d8004d0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/karchive-6.30.0.tar.xz",
+      "runtime_package": "libkf6archive6",
+      "development_package": "libkf6archive-dev",
+      "documentation_package": "libkf6archive-doc",
+      "binary_contracts": [
+        {"name": "libkf6archive-data", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6archive-dev", "architecture": "amd64", "multi_arch": null},
+        {"name": "libkf6archive-doc", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6archive6", "architecture": "amd64", "multi_arch": "same"}
+      ],
+      "soname": "libKF6Archive.so.6",
+      "cmake_package": "KF6Archive",
+      "cmake_target": "KF6::Archive",
+      "consumer_run": "direct",
+      "copyright": {
+        "file": "copyright",
+        "sha256": "c82d4cf65cdfb5255a04d9e842edc6df47aece48318fd4de6c7c9a61660006ff",
+        "reference": "debian-sid-6.28"
+      },
+      "package_version": "6.30.0-0supralinux4",
+      "symbols": {
+        "file": "libkf6archive6.symbols",
+        "sha256": "acd4b767ad9cc821345a973e09c1e42c63d45fc3eef45197a35d84475c83878e",
+        "tree_provider": "debian",
+        "reference_version": "6.28.0"
+      },
+      "evidence": [
+        {
+          "result": "FAIL",
+          "workflow_run": 34720201713,
+          "job_id": 103624554004,
+          "commit": "5edf71b390088a551af81e7fc7e8d87a8378104f",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10305889632,
+          "artifact_sha256": "1850a0a6dd7f267870fda83f17f5990f806ec76ae8fe810144557c46af532d01",
+          "failure_stage": "sbuild",
+          "failure_substage": "dh_auto_configure/Qt6LinguistTools",
+          "autotests_reached": false,
+          "cause": "ECM ECMPoQmTools requires Qt6::LinguistTools, but qt6-tools-dev was absent from Build-Depends."
+        },
+        {
+          "result": "FAIL",
+          "workflow_run": 34776389758,
+          "job_id": 103775171200,
+          "commit": "5b7e539b2512a1486ffa1816017932dca76a73ac",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10323946438,
+          "artifact_sha256": "9778cf376281794f3e2ac84977b1eef0747f575d70d148c5453dc0da96b65dbe",
+          "failure_stage": "sbuild",
+          "failure_substage": "dh_missing",
+          "tests": "5/5 PASS",
+          "cause": "KF6Archive.pc was installed upstream into debian/tmp/usr/lib/x86_64-linux-gnu/pkgconfig but was not assigned to libkf6archive-dev."
+        },
+        {
+          "result": "FAIL",
+          "workflow_run": 34834818877,
+          "job_id": 103946132310,
+          "commit": "1634e56fcbb7dd4cc7a931f98a846b485c84077e",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10342979027,
+          "artifact_sha256": "216d291414f884ea49cfc3661575973ec09081bc92080e76d0a12e0e476eb562",
+          "failure_stage": "consumer-smoke",
+          "tests": "5/5 PASS",
+          "lintian": "PASS-errors",
+          "abi_soname": "libKF6Archive.so.6",
+          "cause": "The SupraLINUX consumer probe used <KArchive/KZip> although KF6::Archive exports /usr/include/KF6/KArchive directly; the correct include is <KZip>."
+        },
+        {
+          "result": "PASS",
+          "workflow_run": 34843318489,
+          "job_id": 103973149002,
+          "commit": "12cd9c9d5f1bc4ce5e7c02f8bb172f077ac00a8c",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10346983258,
+          "artifact_sha256": "2f851d5c3cf2f568e87f075483f86a8107eba635956982220c35533c9be8cf3b",
+          "stage": "complete",
+          "tests": "5/5 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6Archive.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        },
+        {
+          "result": "PASS",
+          "workflow_run": 34884764702,
+          "job_id": 104112549742,
+          "commit": "e0f4e7c48dcf7541538eb919374a3f4b6c293b75",
+          "attempted_package_version": "6.30.0-0supralinux4",
+          "artifact_id": 10364726750,
+          "artifact_sha256": "0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e",
+          "stage": "complete",
+          "tests": "5/5 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6Archive.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "downstream_eligible": true
+        }
+      ],
+      "last_pass_files": {
+        "libkf6archive_data_deb_sha256": "da46f11fc791e0038b981b1fcddf6bc41718bd0fe9edd932bbd0e0ab26745d83",
+        "libkf6archive_dev_deb_sha256": "e9d34c95f1d25405cc603b9f1db5ee18e779d170bd5e3b1bd420a1137ca38843",
+        "libkf6archive_doc_deb_sha256": "a053b59865cf3dd4031dbcc0c417eef581f5ee57d2b1d3ca3844b59bdb6f7e65",
+        "libkf6archive6_deb_sha256": "dca57450e619cd01834152a3fffb943342128bd61ca514fa082c8b0eb1ba7541",
+        "libkf6archive6_dbgsym_ddeb_sha256": "7aa9daa48418dbd3df74f03bc12838266d2df9e97923298f7293c02779de2af9",
+        "changes_sha256": "c58872c9ddf4f56bc9d83f78107d83294045594a5c217e19ad0a4d16dfd79736",
+        "buildinfo_sha256": "8bd6f19a1d6676242deb3fb0bbdd18e8472bc1b6205842639b4a439c25c41b13",
+        "dsc_sha256": "4938c3df5f4299d5feae1bfe22663dec64455f62519a310d664a5daaeb5839cd",
+        "orig_tar_sha256": "4cf89d91e429d2ece3110e78f7ef7011952b0412cb15011329516b46f21e98e2",
+        "debian_tar_sha256": "1f76ab399b9f8c839bdd161b2e0ef0e607e54796e79c96ae8674bf0faae0a11f",
+        "rootfs_sha256": "26a8641742fd097034b77a73c6abf93001351e816a8f9d7076c717f8d189c477"
+      }
+    },
+    "kholidays": {
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-kholidays",
+      "source_sha256": "02bfbc33296fe86b364491f6d5cad9d83360bb4fdd2923386a325b309eac0b9b",
+      "root_cmake_blob": "ee43159b9e7259c8c4cefe0db38e2ca715b73ad9",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kholidays-6.30.0.tar.xz",
+      "runtime_package": "libkf6holidays6",
+      "development_package": "libkf6holidays-dev",
+      "documentation_package": "libkf6holidays-doc",
+      "binary_contracts": [
+        {"name": "libkf6holidays-data", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6holidays-dev", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "libkf6holidays-doc", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6holidays6", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "qml6-module-org-kde-kholidays", "architecture": "amd64", "multi_arch": "same"}
+      ],
+      "soname": "libKF6Holidays.so.6",
+      "cmake_package": "KF6Holidays",
+      "cmake_target": "KF6::Holidays",
+      "consumer_run": "direct",
+      "copyright": {
+        "file": "copyright",
+        "sha256": "c9b4c8797fc5a93733224a2ed442a3de75b3bdb5ef24dd8bdf5abb48d34a1e73",
+        "reference": "debian-sid-6.28"
+      },
+      "package_version": "6.30.0-0supralinux4",
+      "symbols": {
+        "file": "libkf6holidays6.symbols",
+        "sha256": "b0be25ddbc4c7abeb121bb0d3c3ca053d33e2a9fa88695bea210c50d56c256cd",
+        "tree_provider": "debian",
+        "reference_version": "6.28.0",
+        "reviewed_override": {
+          "method": "deterministic-transform",
+          "file": "apply-symbols-delta.py",
+          "file_sha256": "6b0a250fc6c847ee8bedadf83b922a81921aa9bc7a8cc32382c969210b3b3c69",
+          "base_reference_sha256": "b0be25ddbc4c7abeb121bb0d3c3ca053d33e2a9fa88695bea210c50d56c256cd",
+          "result_sha256": "fac03d2f96ccec7b6cbcfd30d59cee86496d3a0f6b5ad02d3392496b61e7c135",
+          "policy": "Add the 36 public HebrewDate/HebrewConverter exports introduced upstream in KDE Frameworks 6.30 at upstream minimum 6.30.0; no existing symbol is removed or hidden."
+        }
+      },
+      "evidence": [
+        {
+          "result": "FAIL",
+          "workflow_run": 34720201713,
+          "job_id": 103624554109,
+          "commit": "5edf71b390088a551af81e7fc7e8d87a8378104f",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10305513311,
+          "artifact_sha256": "522257440d6e04563162178dd3d3ab3ae658dc56c129dcf7f482fef8219bb0dc",
+          "failure_stage": "sbuild",
+          "failure_substage": "dh_auto_configure/Qt6LinguistTools",
+          "autotests_reached": false,
+          "cause": "ECM ECMPoQmTools requires Qt6::LinguistTools, but qt6-tools-dev was absent from Build-Depends."
+        },
+        {
+          "result": "FAIL",
+          "workflow_run": 34776389758,
+          "job_id": 103775171063,
+          "commit": "5b7e539b2512a1486ffa1816017932dca76a73ac",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10323921696,
+          "artifact_sha256": "57f842e542abe69dcbdcbcd2961cee2ec774201e5d4a9babeee5274029838a5c",
+          "failure_stage": "lintian",
+          "failure_substage": "symbols-file-contains-current-version-with-debian-revision",
+          "tests": "8/8 PASS",
+          "cause": "The successful KDE 6.30 build added 36 genuine Hebrew-calendar exports; dpkg-gensymbols assigned the full Debian revision as their minimum and Lintian rejected that package contract."
+        },
+        {
+          "result": "FAIL",
+          "pipeline_claim": "PASS",
+          "raw_result_json_state": "PASS",
+          "validated_result": "FAIL",
+          "workflow_run": 34834818877,
+          "job_id": 103946132514,
+          "commit": "1634e56fcbb7dd4cc7a931f98a846b485c84077e",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10343623713,
+          "artifact_sha256": "bb6ce23797d69f46f430fa53fef9e439b94772ce4566a3684f3a7038cada854d",
+          "failure_stage": "lintian",
+          "failure_substage": "rules-require-build-prerequisite",
+          "tests": "8/8 PASS",
+          "consumer_smoke": "PASS",
+          "sbuild_lintian": "fail",
+          "cause": "debian/rules executes python3 apply-symbols-delta.py but python3 was missing from Build-Depends; the old post-build gate linted only binary .changes and missed the source-package error."
+        },
+        {
+          "result": "PASS",
+          "workflow_run": 34884764702,
+          "job_id": 104112549858,
+          "commit": "e0f4e7c48dcf7541538eb919374a3f4b6c293b75",
+          "attempted_package_version": "6.30.0-0supralinux4",
+          "artifact_id": 10364169061,
+          "artifact_sha256": "62186f3d6d0c856fed7b055ae917ceec0b6cdf216b37b93e22126bf3ebc8f37a",
+          "stage": "complete",
+          "tests": "8/8 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6Holidays.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "downstream_eligible": true
+        }
+      ],
+      "last_pass_files": {
+        "libkf6holidays_data_deb_sha256": "18969b5b6d8c67edc11b318490319467554a5282ed1bbbfbb575288fbe11b86f",
+        "libkf6holidays_dev_deb_sha256": "ddd86750ccd60d6cb44b2b2178137efa1a1a29cfab06f0d0a76fdc5c4adce2ca",
+        "libkf6holidays_doc_deb_sha256": "37bec22b859f72baa3293c626ff2306578e5e29f74eae6643ef34802b259be43",
+        "libkf6holidays6_deb_sha256": "0f292936c6b9c64c10ef60eb2f5f52f01bf3188bc4400389492891fb6479b124",
+        "qml6_module_org_kde_kholidays_deb_sha256": "17180b8ec90f1515c7920b7a5c47069cfd2bacbc8db60e40899c7bbb8edfcb42",
+        "libkf6holidays6_dbgsym_ddeb_sha256": "15cc58d6303ed57d397cc59903f3be1a5ef51f008d99f3d69d5442ab690fe485",
+        "qml6_module_org_kde_kholidays_dbgsym_ddeb_sha256": "b9489ec0318b6e18d6a7a42d129619e5a936e3a289b0c7be4578c2d3a4a036a4",
+        "changes_sha256": "574014fe1e231ca13de2f6b8df83fb6001875f2efc289d0ee0f818d451267427",
+        "buildinfo_sha256": "d7d5c7a22207d8fa1b5c43d850dde1a4e4309cdfc1b97fb07257ee38e4ae81e1",
+        "dsc_sha256": "442001063d45843c555f3aae30a289c7be5913a8f075f43e70c064d736db2a79",
+        "orig_tar_sha256": "02bfbc33296fe86b364491f6d5cad9d83360bb4fdd2923386a325b309eac0b9b",
+        "debian_tar_sha256": "e2fad5b6f1c96874cae39adba3891cb188195c72a95e14fab77d554697db132d",
+        "rootfs_sha256": "c3168896424af56036321aef8908c5b4f36e6d0b53ce3f2f9e90b172745614c7"
+      }
+    }
+  },
+  "ci_harness_incidents": [
+    {
+      "workflow_run": 34884049556,
+      "commit": "e251338e7347e47245a83a64a6ec2efa1651b4ff",
+      "classification": "infrastructure-evidence-completeness",
+      "package_state_effect": "none",
+      "affected_nodes": [
+        "ktexttemplate",
+        "karchive",
+        "kholidays"
+      ],
+      "cause": "The strengthened standalone Lintian gate evaluated .dsc plus .changes, but the evidence directory omitted generated dbgsym .ddeb files referenced by .changes. Lintian aborted on missing input after each package build, tests and consumer smoke had completed.",
+      "remediation": "Copy generated .ddeb files from the build output into evidence before standalone Lintian, preserve their SHA-256 values, then rerun all three nodes.",
+      "remediation_commit": "e0f4e7c48dcf7541538eb919374a3f4b6c293b75",
+      "validated_by_run": 34884764702
+    }
+  ]
+}

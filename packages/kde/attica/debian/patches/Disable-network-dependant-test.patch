@@ -1,0 +1,25 @@
+From: Maximiliano Curia <maxy@gnuservers.com.ar>
+Date: Wed, 15 Aug 2018 11:26:39 +0200
+Subject: Disable network dependent test
+
+The provider autotest still performs live requests to autoconfig.kde.org in
+Attica 6.30.0. Keep package builds deterministic and independent of external
+network availability while retaining the remaining upstream autotests.
+
+---
+ autotests/CMakeLists.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/autotests/CMakeLists.txt b/autotests/CMakeLists.txt
+index 2bfba3a..e982075 100644
+--- a/autotests/CMakeLists.txt
++++ b/autotests/CMakeLists.txt
+@@ -6,6 +6,7 @@ set_package_properties(Qt6Test PROPERTIES PURPOSE "Required for autotests")
+ ecm_add_tests(
+   configtest.cpp
+   persontest.cpp
+-  providertest.cpp
++  # Disable network dependent test
++  # providertest.cpp
+   LINK_LIBRARIES Qt6::Test KF6::Attica
+ )

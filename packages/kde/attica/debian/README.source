@@ -1,0 +1,48 @@
+SupraLINUX Attica packaging notes
+=================================
+
+This Debian packaging targets KDE Frameworks Attica 6.30.0 for Ubuntu
+Resolute as the SupraLINUX platform.
+
+Authority and provider
+----------------------
+
+KDE upstream v6.30.0 defines the source, build requirements, SOVERSION and
+default build behaviour. Ubuntu Resolute is a provider/compatibility target;
+it does not select the KDE version.
+
+Symbols baseline
+----------------
+
+The first Attica package proof deliberately starts from the exact Ubuntu
+Resolute libkf6attica6 symbols baseline retained by the project's packaging
+reference workflow. The large symbols file is injected by
+scripts/run-kde-attica-package-preflight.sh before the source package is
+created.
+
+The retained baseline has SHA-256:
+
+e67d131171c8e3ea79c6bbbb2434aa2492580d19ba7dccdaa7038766cd9827ad
+
+The generated .dsc/.debian.tar.xz retained as build evidence contains the
+actual libkf6attica6.symbols file used by dpkg-gensymbols. Any ABI delta in
+KDE 6.30 must therefore be observed and reviewed rather than hidden.
+
+Tests
+-----
+
+BUILD_TESTING remains enabled. The long-standing Debian-family patch disables
+only providertest.cpp because Attica 6.30 still performs live network requests
+to autoconfig.kde.org in that test. The other upstream autotests remain active.
+REUSE-based outbound-license tests remain enabled when the build dependency is
+available (it is an explicit Build-Depends here).
+
+QDoc
+----
+
+Attica 6.30 uses ECMGenerateQDoc, where documentation generation is exposed
+through explicit prepare/generate/QCH targets and is not part of the normal
+build. The inherited BUILD_QCH=ON distro flag is therefore not used. The
+libkf6attica-doc package name is retained for Debian/Ubuntu compatibility; a
+separate documentation campaign can later decide whether to invoke the
+explicit upstream QDoc targets across Frameworks consistently.

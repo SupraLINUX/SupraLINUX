@@ -1,0 +1,6 @@
+# Ubuntu Resolute compatibility symbols baseline retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+node=kcodecs
+path=trees/ubuntu/kcodecs/debian/libkf6codecs6.symbols
+sha256=8dfcf6c469195a45e5f1d038a42cf1f223fe12d00c3ee1e3aa5125142935e1a3

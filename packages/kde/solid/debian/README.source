@@ -1,0 +1,15 @@
+# SupraLINUX solid source/package notes
+
+KDE upstream v6.30.0 is the authority for source and build requirements.
+Source: https://download.kde.org/stable/frameworks/6.30/solid-6.30.0.tar.xz
+Source SHA-256: bdbfdc9f26b87e12b951097825af2956f2dee3f14c701d780277b69701f2c74e
+Upstream root CMakeLists Git blob: 65681c1db745cd52a547659f1b778fa42bb3cb52
+
+Debian 6.28.0 baseline packaging is retained only as a technical compatibility reference.
+Packaging-tree evidence: run 34708030450, artifact 10301938362.
+Symbols baseline SHA-256: 4928d196746e4f497733ab7052eea5bf1b219013fb58c6aa4c52284f6e0eb419
+Copyright baseline SHA-256: 17c41b7829d7497ddbd06d84c02a9e158cb00ce6f933619184917dc5af61199b
+Retained signing-key bundle SHA-256: 86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d
+Frameworks 6.30 signer fingerprint present in bundle: 90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1.
+
+SupraLINUX preserves upstream Linux defaults. QCH is disabled only under the already-established common Frameworks package profile; the documentation binary name remains as an empty compatibility package.

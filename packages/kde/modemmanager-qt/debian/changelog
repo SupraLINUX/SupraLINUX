@@ -1,0 +1,24 @@
+kf6-modemmanager-qt (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Declare python3:any as an explicit build prerequisite for the hash-locked
+    symbols transform invoked from debian/rules.
+  * Preserve the reviewed toolchain-symbol delta and KDE source unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Tue, 15 Sep 2026 20:18:00 +0000
+
+kf6-modemmanager-qt (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Mark the GCC/libstdc++ piecewise_construct ABI symbol as optional toolchain
+    surface at upstream version 6.30.0 using a hash-locked symbols transform.
+  * Retain KDE source and dependency inputs unchanged from the -1 attempt.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Tue, 15 Sep 2026 19:55:00 +0000
+
+kf6-modemmanager-qt (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE Frameworks 6.30.0 for SupraLINUX.
+  * Use Ubuntu Resolute modemmanager-dev as provider for KDE's ModemManager >= 1.0 requirement.
+  * Disable only QCH generation under the documented common Frameworks profile.
+  * Preserve Debian-family binary package contracts as compatibility inputs.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Tue, 15 Sep 2026 19:20:00 +0000

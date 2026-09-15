@@ -1,0 +1,5 @@
+supralinux-build-test (0.1.0) resolute; urgency=medium
+
+  * Initial package-build proof for SupraLINUX Phase 1.
+
+ -- SupraLINUX Project <noreply@supralinux.invalid>  Fri, 11 Sep 2026 11:35:00 -0300

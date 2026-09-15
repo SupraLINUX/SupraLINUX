@@ -1,0 +1,66 @@
+name: KDE DAG - ECM package preflight
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ecm:
+    name: Extra CMake Modules 6.30 package preflight
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Determine whether this event delta affects ECM
+        id: scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          run=true
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            if [[ "${{ github.event.action }}" == "synchronize" ]]; then
+              before="${{ github.event.before }}"
+              after="${{ github.event.after }}"
+            else
+              before="${{ github.event.pull_request.base.sha }}"
+              after="${{ github.event.pull_request.head.sha }}"
+            fi
+            if scripts/kde-ecm-preflight-needed.sh "${before}" "${after}"; then
+              run=true
+            else
+              rc=$?
+              if [[ "${rc}" -eq 1 ]]; then
+                run=false
+              else
+                exit "${rc}"
+              fi
+            fi
+          fi
+          echo "run=${run}" >> "${GITHUB_OUTPUT}"
+
+      - name: Build KDE ECM package in clean sbuild
+        if: steps.scope.outputs.run == 'true'
+        shell: bash
+        run: scripts/run-kde-ecm-package-preflight.sh
+
+      - name: Upload ECM package evidence
+        if: steps.scope.outputs.run == 'true' && always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: kde-ecm-package-preflight-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-ecm-package-preflight/
+          if-no-files-found: error
+
+      - name: Report intentionally skipped ECM build
+        if: steps.scope.outputs.run != 'true'
+        shell: bash
+        run: echo "ECM package preflight intentionally skipped; event delta does not affect this DAG node."

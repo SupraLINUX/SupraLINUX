@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.29)
+project(SupraLINUXKDBusAddonsConsumer LANGUAGES CXX)
+find_package(KF6DBusAddons 6.30.0 REQUIRED CONFIG)
+add_executable(kdbusaddons-consumer main.cpp)
+target_link_libraries(kdbusaddons-consumer PRIVATE KF6::DBusAddons)
