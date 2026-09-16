@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 Tier 1 — dependency resolution
 
-Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping resolved; hosted provider preflight PASS; 18 package nodes PASS; 11 package nodes pending**
+Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping updated for ECM Python bindings; hosted provider revalidation pending; 18 package nodes PASS; 11 package nodes pending**
 Last reviewed: **2026-09-16**
 
 ## Contract
@@ -22,9 +22,9 @@ The dependency manifest distinguishes `required`, `default_enabled`, `recommende
 
 ### Python bindings
 
-`kcalendarcore`, `kcoreaddons`, `kguiaddons` and `kwidgetsaddons` enable Python bindings by default on the selected Linux/shared-library paths. Their profile includes Python >= 3.9 development files, Shiboken6 and PySide6. Resolute maps these to `python3-dev`, `libshiboken6-dev` and `libpyside6-dev`.
+`kcalendarcore`, `kcoreaddons`, `kguiaddons` and `kwidgetsaddons` enable Python bindings by default on the selected Linux/shared-library paths. Their profile includes Python >= 3.9 development files, Shiboken6, PySide6 and the Python `build` frontend used by ECM 6.30 to execute `python -m build --wheel --no-isolation`. Resolute maps these to `python3-dev`, `libshiboken6-dev`, `libpyside6-dev` and `python3-build`.
 
-The hosted provider PASS verifies that Shiboken6 and PySide6 normalize to the same upstream Qt patch level as the selected Ubuntu Qt candidate: **6.10.2**.
+The earlier hosted provider PASS verified that Shiboken6 and PySide6 normalize to the same upstream Qt patch level as the selected Ubuntu Qt candidate: **6.10.2**, but it predates the `python3-build` mapping. Batch 7 discovery run `35054417698` (job `104661454268`, artifact `10429918034`, SHA-256 `86cd447eab87f42d088ba6569529b15012d26084f0974456651b143786a64fa8`) reached KCalendarCore configuration with Python/Shiboken/PySide present and failed only because ECM could not import `build`. The mapping is therefore corrected and provider revalidation is pending; Python bindings are not disabled to hide the omission.
 
 ### X11 and Wayland
 
