@@ -1,13 +1,15 @@
 # KDE Frameworks 6.30 Tier 1 — package Batch 6
 
-Status: **Solid retained PASS — KWindowSystem package/tests PASS but shared consumer-runtime runner remediation pending**
-Last reviewed: **2026-09-15**
+Status: **CLOSED PASS — KWindowSystem `6.30.0-0supralinux4` and Solid `6.30.0-0supralinux2` canonical/downstream-eligible**
+Last reviewed: **2026-09-16**
 
-## Selection
+Current canonical Tier 1: **18 PASS / 11 pending / 0 current FAIL / 0 BLOCKED**. Final Batch 6 evidence is workflow run `35047623320`; the execution sections below preserve the pre-closure history that led to that result.
+
+## Selection (historical pre-closure)
 
 Batch 6 contains **KWindowSystem** and **Solid**. Both are independent Tier 1 frameworks whose only KDE predecessor is the retained Extra CMake Modules PASS and each has one primary shared-library ABI/symbols baseline. The package lane remains single-primary-library; the shared consumer-runtime validation is being hardened after real evidence exposed host dependency leakage.
 
-Canonical Tier 1 remains **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED** until real package attempts pass and a separate closure commit promotes them.
+At selection time, canonical Tier 1 was **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED** pending real package attempts and a separate closure promotion.
 
 ## KDE authority and Linux defaults
 
@@ -91,9 +93,9 @@ Because `scripts/run-kde-tier1-package-batch6-preflight.sh` is a shared input in
 
 KConfig, KI18n and Sonnet remain deferred because the present package runner assumes one primary ABI symbols file. KCoreAddons, KGuiAddons, KWidgetsAddons and KCalendarCore are not made easier by silently switching off upstream Python bindings. Kirigami/KQuickCharts and other multi-library/QML-heavy surfaces stay outside this lane until their packaging contracts are explicitly designed.
 
-## Promotion rule
+## Promotion rule (historical pre-closure)
 
-The open batch is not canonically closed. Solid has retained real PASS evidence but will be revalidated because the shared consumer-runtime runner changed. KWindowSystem remains remediation-pending-build even though its `-4` package build and all upstream tests passed, because the complete package gate includes consumer runtime validation. Canonical Tier1/DAG remains unchanged until a subsequent run passes the complete corrected lane for the affected nodes and a separate closure commit promotes them.
+Before closure, the batch was not yet canonically closed. Solid retained real PASS evidence but required revalidation because the shared consumer-runtime runner changed. KWindowSystem remained remediation-pending-build even though its `-4` package build and all upstream tests passed, because the complete package gate also included consumer runtime validation. Canonical Tier1/DAG therefore remained unchanged until the corrected lane passed and the separate closure commit promoted both nodes.
 
 A node becomes PASS only after a real clean Resolute sbuild, tests, Lintian error gate, binary/package contracts, SONAME check and consumer smoke all pass and evidence is retained. Canonical Tier1/DAG state changes only in a subsequent closure commit.
 

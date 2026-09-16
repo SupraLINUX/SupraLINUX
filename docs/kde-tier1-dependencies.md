@@ -1,7 +1,7 @@
 # KDE Frameworks 6.30 Tier 1 — dependency resolution
 
-Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping resolved; hosted provider preflight PASS; 16 package nodes PASS; 13 package nodes pending**
-Last reviewed: **2026-09-15**
+Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping resolved; hosted provider preflight PASS; 18 package nodes PASS; 11 package nodes pending**
+Last reviewed: **2026-09-16**
 
 ## Contract
 
@@ -140,16 +140,16 @@ Current canonical state:
 - upstream dependency resolution: **resolved**;
 - Ubuntu package-name mapping: **resolved**;
 - Ubuntu hosted provider availability/version evidence: **PASS**;
-- Tier 1 package/build states: **16 PASS / 13 pending**;
+- Tier 1 package/build states: **18 PASS / 11 pending**;
 - current Tier 1 FAIL: **0**;
 - current Tier 1 BLOCKED: **0**;
 - final Qt provider certification: **pending**.
 
-Provider evidence alone never promotes a Framework. Each of the sixteen canonical PASS nodes has real package-attempt evidence. Batch 5 is closed 3/3 PASS; the two earlier ModemManagerQt FAIL attempts remain retained as historical evidence while its `-3` PASS is the current downstream-eligible state.
+Provider evidence alone never promotes a Framework. Each of the eighteen canonical PASS nodes has real package-attempt evidence. Batch 5 remains historically closed 3/3 PASS, and Batch 6 is closed 2/2 PASS. Earlier ModemManagerQt, KWindowSystem and Solid FAIL attempts remain retained as historical evidence while their later PASS revisions are the current downstream-eligible state.
 
-## Batch 6 selection
+## Batch 6 selection (historical pre-closure)
 
-KWindowSystem and Solid are the next package candidates. This does not change authority: KDE upstream 6.30.0 defines requirements; Ubuntu Resolute is only a provider. KWindowSystem retains QML, X11 and Wayland with Wayland Protocols >= 1.46 and Plasma Wayland Protocols. Solid retains DBus, udev and libmount; IMobileDevice/PList remain upstream-optional and their Ubuntu providers are supplied rather than disabled. Canonical Tier 1 remains **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED** until real package evidence is promoted.
+At Batch 6 selection time, KWindowSystem and Solid were the next package candidates. This did not change authority: KDE upstream 6.30.0 defined requirements; Ubuntu Resolute remained only a provider. KWindowSystem retained QML, X11 and Wayland with Wayland Protocols >= 1.46 and Plasma Wayland Protocols. Solid retained DBus, udev and libmount; IMobileDevice/PList remained upstream-optional and their Ubuntu providers were supplied rather than disabled. The canonical Tier 1 state at that historical point was **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED** pending real package promotion.
 
 ## Batch 6 provider correction evidence
 
@@ -179,7 +179,7 @@ This failure does **not** add a KDE runtime requirement and does not change the 
 
 The shared runner remediation installs the exact locally built `.deb` set through APT with `--no-install-recommends`, lets Ubuntu Resolute satisfy only external `Depends`, runs `apt-get check`, verifies exact installed SupraLINUX revisions, and still compiles/runs against the extracted built artifacts. This preserves the authority/provider boundary: KDE/package metadata decides the dependency contract; Ubuntu merely provides dependencies matching that contract.
 
-Because this changes a shared Batch 6 build input, both KWindowSystem and the retained-PASS Solid node must revalidate. No package revision is bumped for this runner-only correction. Canonical Tier 1 remains **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED** until the corrected lane passes and closure promotes the nodes.
+Because this changed a shared Batch 6 build input, both KWindowSystem and the retained-PASS Solid node had to revalidate. No package revision was bumped for this runner-only correction. At that remediation point, canonical Tier 1 remained **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED** until the corrected lane passed and closure promoted the nodes.
 
 <!-- BATCH6-CANONICAL-CLOSURE -->
 ## Batch 6 canonical closure

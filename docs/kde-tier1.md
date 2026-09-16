@@ -1,8 +1,8 @@
 # KDE Frameworks 6.30 — Tier 1
 
-Status: **29-node source set fixed; 10 hosted package PASS; 19 package nodes pending; 0 current FAIL; 0 BLOCKED**
+Status: **29-node source set fixed; 18 hosted package PASS; 11 package nodes pending; 0 current FAIL; 0 BLOCKED**
 
-Last reviewed: **2026-09-15**
+Last reviewed: **2026-09-16**
 
 ## Authority and scope
 
@@ -68,6 +68,27 @@ All three pass Lintian, SONAME and consumer-smoke gates.
 
 BluezQt attempt 1 at `6.30.0-0supralinux1` remains a historical real FAIL. It is not BLOCKED and is not erased by the later PASS.
 
+### Batch 4
+
+- KItemViews `6.30.0-0supralinux1`: run `34999449194`, job `104483912528`, artifact `10409267184`, 2/2 tests PASS.
+- KGlobalAccel `6.30.0-0supralinux2`: run `35006477086`, job `104507372240`, artifact `10412320520`, 1/1 tests PASS; its `-1` missing-`LinguistTools` attempt remains historical FAIL evidence.
+- KSyntaxHighlighting `6.30.0-0supralinux2`: run `35006477086`, job `104507371855`, artifact `10411888269`, 8/8 tests PASS; its `-1` missing-`LinguistTools` attempt remains historical FAIL evidence.
+
+### Batch 5
+
+- KIdleTime `6.30.0-0supralinux1`: run `35014875475`, job `104535671033`, artifact `10414598079`, 1/1 tests PASS.
+- ModemManagerQt `6.30.0-0supralinux3`: run `35021323444`, job `104557423664`, artifact `10417683848`, 11/11 tests PASS; two earlier real FAIL attempts remain historical evidence.
+- NetworkManagerQt `6.30.0-0supralinux1`: run `35014875475`, job `104535671250`, artifact `10414714325`, 38/38 tests PASS.
+
+### Batch 6
+
+Final shared-runner revalidation workflow `35047623320`:
+
+- KWindowSystem `6.30.0-0supralinux4`: job `104640833059`, artifact `10428130399`, ZIP SHA-256 `9c35d5e228d3f8b71fb1e84863fac030bfd26a8e3c528ae718e788708db01272`, 14/14 tests PASS, Lintian/SONAME/consumer runtime closure PASS.
+- Solid `6.30.0-0supralinux2`: job `104640833295`, artifact `10427653865`, ZIP SHA-256 `cff267d012a3e103b53bd6e19757e6c3b0af7dc873f4cd166a4505f58aee8389`, 5/5 tests PASS, Lintian/SONAME/consumer runtime closure PASS.
+
+Both are downstream-eligible. KWindowSystem's four prior FAIL attempts and Solid's earlier FAIL plus historical PASS remain retained as evidence; current node state is PASS.
+
 ## ABI and packaging policy
 
 KCodecs uses Debian 6.28 as the closest technical symbols baseline. Fifteen `std::format`-related compiler/libstdc++ implementation symbols are retained as `(optional=toolchain)` at upstream minimum `6.30.0` rather than being promoted to public ABI.
@@ -86,8 +107,8 @@ Repository Policy run `34945979830` exposed such an infrastructure-only issue: t
 
 ## Current state
 
-- PASS: **10**;
-- pending: **19**;
+- PASS: **18**;
+- pending: **11**;
 - current FAIL: **0**;
 - BLOCKED: **0**.
 
@@ -95,6 +116,6 @@ Only retained PASS artifacts may feed downstream nodes.
 
 ## Next work
 
-Revalidate the current KDE stable release metadata before starting the next package batch, then select another independent group among the 19 pending nodes. Keep ABI contracts, optional features and tests explicit; extend the package runner when a Framework requires multiple ABI libraries instead of weakening the model.
+The eleven pending nodes are `kcalendarcore`, `kconfig`, `kcoreaddons`, `kguiaddons`, `ki18n`, `kirigami`, `kquickcharts`, `kuserfeedback`, `kwidgetsaddons`, `prison` and `sonnet`. Revalidate the current KDE stable release metadata before Batch 7 selection, then choose the next independent group whose packaging contracts fit the available runner. Keep ABI contracts, upstream-default features and tests explicit; extend the runner for multi-library or binding-heavy Frameworks instead of weakening the model.
 
 PR #1 remains Draft. No merge is authorized.
