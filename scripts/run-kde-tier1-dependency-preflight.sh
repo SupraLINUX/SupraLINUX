@@ -152,6 +152,13 @@ mapfile -t install_packages < <(
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${install_packages[@]}"
 
+python3 - <<'PY' > "${EVIDENCE}/python-build-provider.txt"
+import build
+print(f'module=build')
+print(f'version={getattr(build, "__version__", "unknown")}')
+print('status=PASS')
+PY
+
 {
     printf 'package\tinstalled-version\n'
     for package in "${install_packages[@]}"; do

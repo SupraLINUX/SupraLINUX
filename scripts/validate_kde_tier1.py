@@ -42,7 +42,7 @@ EXPECTED_PASS = {
     'kwindowsystem': {'version':'6.30.0-0supralinux4','run':35047623320,'job':104640833059,'artifact':10428130399,'digest':'9c35d5e228d3f8b71fb1e84863fac030bfd26a8e3c528ae718e788708db01272','tests':'14/14 PASS','soname':'libKF6WindowSystem.so.6'},
     'solid': {'version':'6.30.0-0supralinux2','run':35047623320,'job':104640833295,'artifact':10427653865,'digest':'cff267d012a3e103b53bd6e19757e6c3b0af7dc873f4cd166a4505f58aee8389','tests':'5/5 PASS','soname':'libKF6Solid.so.6'},
 }
-EXPECTED_PROVIDER_EVIDENCE = {'distribution':'ubuntu','series':'resolute','status':'hosted-preflight-pass','evidence':{'workflow_run':34700048774,'head_sha':'6ce61bc02c4aba146bcc33b16d17f56fb66f057a','artifact_id':10299608166,'artifact_sha256':'da6808c31554da4105713e060e328d4130253a100c628fef279d8d0a9cf8ceb3','authoritative':False,'claim':'provider-availability-only'}}
+EXPECTED_PROVIDER_PREVIOUS_EVIDENCE = {'workflow_run':34700048774,'head_sha':'6ce61bc02c4aba146bcc33b16d17f56fb66f057a','artifact_id':10299608166,'artifact_sha256':'da6808c31554da4105713e060e328d4130253a100c628fef279d8d0a9cf8ceb3','authoritative':False,'claim':'provider-availability-only'}
 errors: list[str] = []
 
 def require(value: bool, message: str) -> None:
@@ -142,7 +142,12 @@ require(deps.get('schema') == 1, 'Dependency manifest schema must be 1')
 require(deps.get('authority') == 'kde-upstream', 'Dependency authority must remain KDE upstream')
 require(deps.get('frameworks') == '6.30.0', 'Dependency manifest must target Frameworks 6.30.0')
 require(deps.get('target') == 'linux', 'Dependency manifest target must be Linux')
-require(deps.get('provider_candidate') == EXPECTED_PROVIDER_EVIDENCE, 'Provider availability evidence changed unexpectedly')
+provider = deps.get('provider_candidate', {})
+require(provider.get('distribution') == 'ubuntu' and provider.get('series') == 'resolute', 'Provider candidate must remain Ubuntu Resolute')
+require(provider.get('status') == 'revalidation-pending', 'Provider candidate must remain revalidation-pending until python3-build evidence passes')
+require(provider.get('previous_evidence') == EXPECTED_PROVIDER_PREVIOUS_EVIDENCE, 'Previous provider evidence must be retained')
+require(provider.get('revalidation', {}).get('discovered_by', {}).get('workflow_run') == 35054417698, 'python3-build discovery run must be retained')
+require(provider.get('revalidation', {}).get('discovered_by', {}).get('artifact_sha256') == '86cd447eab87f42d088ba6569529b15012d26084f0974456651b143786a64fa8', 'python3-build discovery artifact digest must be retained')
 require(deps.get('common') == {'cmake_minimum':'3.29','ecm':'6.30.0','qt_minimum':'6.9.0'}, 'Common Frameworks minima changed unexpectedly')
 qt_map = deps.get('qt_provider_packages', {})
 for component in ('Core','Gui','GuiPrivate','Qml','Quick','WaylandClient','ShaderTools','Multimedia','UiPlugin'):
@@ -161,6 +166,9 @@ for node_id in EXPECTED_SOURCE_HASHES:
 for key, minimum in (('libical','3.0'),('python-dev','3.9'),('bison-3.3.2','3.3.2'),('wayland-client','1.9'),('plasma-wayland-protocols-1.15','1.15.0'),('wayland-protocols-1.46','1.46'),('modemmanager','1.0'),('libnm','1.4.0'),('zxing','1.4.0')):
     require(requirement(deps, key).get('minimum') == minimum, f'{key} minimum must remain {minimum}')
 require(requirement(deps, 'hspell').get('packages') == ['hspell'], 'HSpell provider mapping must use hspell')
+require(requirement(deps, 'python-build').get('packages') == ['python3-build'], 'Python build provider mapping must use python3-build')
+for node_id in ('kcalendarcore','kcoreaddons','kguiaddons','kwidgetsaddons'):
+    require('python-build' in dep_nodes[node_id]['external'].get('default_enabled', []), f'{node_id}: default Python bindings require python-build provider')
 for node_id in ('kitemviews','kplotting','kwidgetsaddons'):
     require('UiPlugin' in dep_nodes[node_id]['qt'].get('default_enabled', []), f'{node_id}: designer plugin requires Qt UiPlugin')
 sonnet_groups = dep_nodes['sonnet']['external'].get('required_any_of', [])
