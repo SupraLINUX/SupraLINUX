@@ -1,0 +1,79 @@
+name: Materialize Batch 6 Tier1 validator fix
+
+on:
+  push:
+    branches:
+      - tooling/batch6-tier1-validator-fix
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-26.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Update Tier 1 validator and closure documentation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          validator = Path('scripts/validate_kde_tier1.py')
+          text = validator.read_text(encoding='utf-8')
+          anchor = "    'networkmanager-qt': {'version':'6.30.0-0supralinux1','run':35014875475,'job':104535671250,'artifact':10414714325,'digest':'abf927b5749b34094d2b5ee530831f64638ba116a83e8b82f925a758aa018ad4','tests':'38/38 PASS','soname':'libKF6NetworkManagerQt.so.6'},\n"
+          additions = (
+              "    'kwindowsystem': {'version':'6.30.0-0supralinux4','run':35047623320,'job':104640833059,'artifact':10428130399,'digest':'9c35d5e228d3f8b71fb1e84863fac030bfd26a8e3c528ae718e788708db01272','tests':'14/14 PASS','soname':'libKF6WindowSystem.so.6'},\n"
+              "    'solid': {'version':'6.30.0-0supralinux2','run':35047623320,'job':104640833295,'artifact':10427653865,'digest':'cff267d012a3e103b53bd6e19757e6c3b0af7dc873f4cd166a4505f58aee8389','tests':'5/5 PASS','soname':'libKF6Solid.so.6'},\n"
+          )
+          if "'kwindowsystem': {'version':'6.30.0-0supralinux4','run':35047623320" not in text:
+              if anchor not in text:
+                  raise SystemExit('networkmanager EXPECTED_PASS anchor not found')
+              text = text.replace(anchor, anchor + additions, 1)
+          replacements = {
+              "== 16, 'Tier 1 current PASS count must be 16'": "== 18, 'Tier 1 current PASS count must be 18'",
+              "== 13, 'Tier 1 current pending count must be 13'": "== 11, 'Tier 1 current pending count must be 11'",
+              "after Batch 5 closure": "after Batch 6 closure",
+              "Tier 1 package states: 16 PASS/downstream-eligible; 13 pending; 0 FAIL; 0 BLOCKED": "Tier 1 package states: 18 PASS/downstream-eligible; 11 pending; 0 FAIL; 0 BLOCKED",
+          }
+          for old, new in replacements.items():
+              if old in text:
+                  text = text.replace(old, new)
+              elif new not in text:
+                  raise SystemExit(f'validator replacement anchor missing: {old}')
+          validator.write_text(text, encoding='utf-8')
+
+          doc = Path('docs/status/2026-09-15-batch6.md')
+          d = doc.read_text(encoding='utf-8')
+          marker = '### Canonical Tier 1 validator follow-up'
+          if marker not in d:
+              d += (
+                  '\n\n' + marker + '\n\n'
+                  '- The Batch 6 canonical promotion exposed a stale global Tier 1 validator expectation (`16 PASS / 13 pending`). '
+                  'The validator is updated to the promoted `18 PASS / 11 pending` state and now recognizes the retained KWindowSystem and Solid PASS evidence from run `35047623320`. '
+                  'This is a policy-validator alignment only: no package, source, runner, ABI, or build-input change.\n'
+              )
+              doc.write_text(d, encoding='utf-8')
+          PY
+      - name: Validate generated state
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/validate_kde_tier1.py scripts/validate_kde_tier1_package_batch6.py
+          python3 scripts/validate_kde_dag.py
+          python3 scripts/validate_kde_tier1.py
+          python3 scripts/validate_kde_tier1_package_batch6.py
+      - name: Commit materialized blobs on tooling branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'SupraLINUX CI'
+          git config user.email 'ci@supralinux.invalid'
+          git add scripts/validate_kde_tier1.py docs/status/2026-09-15-batch6.md
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'tooling: materialize Batch 6 Tier1 validator fix'
+          git push
