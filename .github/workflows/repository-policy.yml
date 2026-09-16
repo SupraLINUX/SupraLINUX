@@ -54,6 +54,10 @@ jobs:
         shell: bash
         run: scripts/test-check-golden-image-provenance.sh
 
+      - name: Test KDE Tier 1 dependency preflight semantic scope
+        shell: bash
+        run: scripts/test-kde-tier1-dependency-preflight-scope.sh
+
       - name: Validate repository invariants
         run: python3 scripts/validate_repository.py
 
@@ -86,6 +90,7 @@ jobs:
 
       - name: Validate KDE Tier 1 batch 5 preparation
         run: python3 scripts/validate_kde_tier1_package_batch5.py
+
       - name: Validate KDE Tier 1 batch 6 preparation
         run: python3 scripts/validate_kde_tier1_package_batch6.py
 
