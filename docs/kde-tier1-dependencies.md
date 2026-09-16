@@ -155,3 +155,10 @@ KWindowSystem and Solid are the next package candidates. This does not change au
 Initial run `35034742520` proved the selected KDE 6.30 source reaches real package compilation on Resolute. KWindowSystem exposed one packaging omission: upstream source includes `xcb/xfixes.h`, while the SupraLINUX Build-Depends lacked `libxcb-xfixes0-dev`. Both retained Debian 6.28 and Ubuntu 6.24 packaging trees include that provider, so revision `-2` adds it without changing KDE's X11/Wayland/QML feature selection.
 
 Solid completed its build and `5/5` tests. Its failure was not a missing provider: Lintian rejected the toolchain-exported `_ZSt19piecewise_construct@Base`. Ubuntu's retained symbols baseline records this export at minimum `6.4.0` on architectures other than armhf/riscv64. SupraLINUX keeps the Debian 6.28 public ABI baseline and marks only that export `optional=toolchain` with the retained Ubuntu architecture/minimum-version evidence.
+
+
+## Batch 6 second-attempt evidence
+
+Run `35038057329` confirms the Solid provider/ABI remediation: Solid `6.30.0-0supralinux2` passed `5/5` tests, Lintian, SONAME and consumer smoke (artifact `10423914110`, SHA-256 `7cc2b15e2fa627e3cd280395e0ac48bd3658c7328d194958b872713738b97fc0`).
+
+KWindowSystem `-2` also confirms `libxcb-xfixes0-dev` was the correct missing build provider: compilation now succeeds. The remaining failure is test-fixture-only. Upstream KDE's v6.30.0 tests require a NETWM-compliant X11 window manager and explicitly mention OpenBox on build.kde.org. Revision `-3` therefore adds `openbox <!nocheck>` plus `x11-utils <!nocheck>` and waits for `_NET_SUPPORTING_WM_CHECK` inside Xvfb; these are test providers and do not alter the runtime dependency contract.

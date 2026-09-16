@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 Tier 1 — package Batch 6
 
-Status: **remediation prepared — second builds pending**
+Status: **Solid PASS — KWindowSystem third build pending**
 Last reviewed: **2026-09-15**
 
 ## Selection
@@ -13,7 +13,7 @@ Canonical Tier 1 remains **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED** u
 
 KDE Frameworks 6.30.0 remains authority. Ubuntu Resolute supplies providers only.
 
-KWindowSystem 6.30.0 keeps upstream Linux defaults enabled: QML bindings, X11 and Wayland. Its package profile therefore includes Qt GuiPrivate for the selected Qt 6.10 series, Qt QML, Qt Wayland Client, X11/XCB, Wayland Protocols >= 1.46 and Plasma Wayland Protocols. The test package inputs include Xvfb and Weston so the X11 and headless-Wayland upstream tests can execute rather than disabling the suite.
+KWindowSystem 6.30.0 keeps upstream Linux defaults enabled: QML bindings, X11 and Wayland. Its package profile therefore includes Qt GuiPrivate for the selected Qt 6.10 series, Qt QML, Qt Wayland Client, X11/XCB, Wayland Protocols >= 1.46 and Plasma Wayland Protocols. The test package inputs include Xvfb, OpenBox, x11-utils and Weston so the X11 and headless-Wayland upstream tests can execute rather than disabling the suite. OpenBox is a nocheck-only fixture, not a runtime dependency.
 
 Solid 6.30.0 keeps DBus, udev, libmount and the standard Linux backends enabled. Flex and Bison are required. IMobileDevice and PList are upstream-optional; the Ubuntu providers are included so the optional iOS backend is built when upstream detection succeeds. No `UDEV_DISABLED` or distro-only HAL override is introduced.
 
@@ -39,12 +39,23 @@ Run `35034742520` attempted both nodes from preparation commit `74fe53f698ad1089
 
 The Solid transform SHA-256 is `35fff06320bf6a5ec8db8ba5f4e062e2242f692446f3d19304602ba7147c0b70`; the reviewed transformed symbols SHA-256 is `8614c45e8a902f3c3011b8cec65680ab5152314c798a71ebec108fc50fb547d0`. Neither remediation changes KDE source, Qt selection, authority boundaries or the canonical DAG.
 
+## Second real attempt and KWindowSystem test-fixture remediation
+
+Run `35038057329` tested revision `6.30.0-0supralinux2` from commit `ce2853eff3546bb7ad07bf28eedc3b2cab5aed2f`. Repository Policy `35038057338` passed.
+
+- **Solid `-2`: PASS.** Job `104611513122`, artifact `10423914110`, artifact SHA-256 `7cc2b15e2fa627e3cd280395e0ac48bd3658c7328d194958b872713738b97fc0`. All `5/5` upstream CTest suites passed, Lintian's error gate passed, SONAME is `libKF6Solid.so.6`, and the consumer smoke test passed. Solid is eligible for canonical promotion at Batch 6 closure, but the canonical Tier 1 manifest remains unchanged while the batch is open.
+- **KWindowSystem `-2`: FAIL.** Job `104611513304`, artifact `10424431374`, artifact SHA-256 `7b47be8422970fd10c1f67ef450f05bcff9f6086f7f188cd5f91bfcf3c082904`. The missing-header problem was resolved and compilation completed. CTest then reported `11/14` suites passing; the failing suites were `kwindowinfox11test`, `kwindowsystemx11test` and `kwindowsystem_threadtest`, all of which exercise window-manager-managed X11 state.
+
+This second KWindowSystem failure is an incomplete test fixture, not a KDE source failure. KDE upstream `v6.30.0` explicitly documents in `autotests/kwindowinfox11test.cpp` that `build.kde.org` uses **OpenBox**, and `kwindowsystemx11test.cpp` states that multiple tests require a running NETWM-compliant window manager. Bare Xvfb supplies an X server but no window manager.
+
+Revision `6.30.0-0supralinux3` therefore keeps every upstream test enabled and changes only the test environment: `openbox <!nocheck>` and `x11-utils <!nocheck>` are added, `Xvfb` starts OpenBox, the fixture waits until `_NET_SUPPORTING_WM_CHECK` contains a real window id, and only then runs `dh_auto_test`. No KDE source, production dependency, X11/Wayland/QML feature, Qt choice or canonical DAG state changes.
+
 ## Deferred surfaces
 
 KConfig, KI18n and Sonnet remain deferred because the present package runner assumes one primary ABI symbols file. KCoreAddons, KGuiAddons, KWidgetsAddons and KCalendarCore are not made easier by silently switching off upstream Python bindings. Kirigami/KQuickCharts and other multi-library/QML-heavy surfaces stay outside this lane until their packaging contracts are explicitly designed.
 
 ## Promotion rule
 
-Preparation is not PASS. Neither node is downstream-eligible yet. A node becomes PASS only after a real clean Resolute sbuild, tests, Lintian error gate, binary/package contracts, SONAME check and consumer smoke all pass and evidence is retained. Canonical Tier1/DAG state changes only in a subsequent closure commit.
+The open batch is not canonically closed. Solid has real PASS evidence and is package-attempt downstream-eligible; KWindowSystem remains remediation-pending-build. Canonical Tier1/DAG remains unchanged until a separate closure commit. A node becomes PASS only after a real clean Resolute sbuild, tests, Lintian error gate, binary/package contracts, SONAME check and consumer smoke all pass and evidence is retained. Canonical Tier1/DAG state changes only in a subsequent closure commit.
 
 PR #1 remains **OPEN + DRAFT**. No merge is authorized.

@@ -1,3 +1,10 @@
+kf6-kwindowsystem (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Run the upstream X11 test suites inside Xvfb with OpenBox, matching KDE upstream CI assumptions for NETWM-dependent tests.
+  * Add OpenBox and x11-utils as nocheck-only test-fixture dependencies.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 00:15:00 +0000
+
 kf6-kwindowsystem (6.30.0-0supralinux2) resolute; urgency=medium
 
   * Add libxcb-xfixes0-dev required by upstream X11 code for xcb/xfixes.h.
