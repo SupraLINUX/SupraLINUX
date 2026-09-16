@@ -77,7 +77,7 @@
     "kwindowsystem": {
       "upstream_version": "6.30.0",
       "source_package": "kf6-kwindowsystem",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kwindowsystem-6.30.0.tar.xz",
       "source_sha256": "639a501b877446b19905399d27e2be2b6ebb0bb481abe3209dc4d535a12e12ca",
       "root_cmake_blob": "e8317948e1df27330ceddf45bf418aa2a02bde5b",
@@ -113,8 +113,8 @@
       ],
       "dependency_contracts": {
         "libkf6windowsystem-dev": [
-          "libkf6windowsystem6 (= 6.30.0-0supralinux2)",
-          "qml6-module-org-kde-kwindowsystem (= 6.30.0-0supralinux2)",
+          "libkf6windowsystem6 (= 6.30.0-0supralinux3)",
+          "qml6-module-org-kde-kwindowsystem (= 6.30.0-0supralinux3)",
           "qt6-base-dev (>= 6.9.0~)",
           "qt6-declarative-dev (>= 6.9.0~)",
           "qt6-wayland-dev (>= 6.9.0~)"
@@ -122,7 +122,7 @@
       },
       "recommendation_contracts": {
         "libkf6windowsystem-dev": [
-          "libkf6windowsystem-doc (= 6.30.0-0supralinux2)"
+          "libkf6windowsystem-doc (= 6.30.0-0supralinux3)"
         ],
         "libkf6windowsystem6": [
           "qt6-wayland"
@@ -149,7 +149,9 @@
         "wayland-protocols (>= 1.46~)",
         "weston <!nocheck>",
         "xauth <!nocheck>",
-        "xvfb <!nocheck>"
+        "xvfb <!nocheck>",
+        "openbox <!nocheck>",
+        "x11-utils <!nocheck>"
       ],
       "soname": "libKF6WindowSystem.so.6",
       "cmake_package": "KF6WindowSystem",
@@ -187,15 +189,30 @@
           "failure_stage": "sbuild",
           "failure_substage": "build/missing-development-header",
           "cause": "src/kx11extras.cpp includes xcb/xfixes.h, but libxcb-xfixes0-dev was omitted from Build-Depends; both retained Debian 6.28 and Ubuntu 6.24 packaging references declare that development provider."
+        },
+        {
+          "result": "FAIL",
+          "workflow_run": 35038057329,
+          "job_id": 104611513304,
+          "commit": "ce2853eff3546bb7ad07bf28eedc3b2cab5aed2f",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10424431374,
+          "artifact_sha256": "7b47be8422970fd10c1f67ef450f05bcff9f6086f7f188cd5f91bfcf3c082904",
+          "failure_stage": "sbuild",
+          "failure_substage": "autotest/X11-window-manager-fixture",
+          "tests": "11/14 CTest suites PASS",
+          "cause": "Compilation succeeded after adding libxcb-xfixes0-dev, but NETWM-dependent X11 suites failed under bare Xvfb because no window manager was running. KDE upstream kwindowinfox11test.cpp documents OpenBox as the window manager used by build.kde.org."
         }
       ],
       "remediation": {
-        "candidate_package_version": "6.30.0-0supralinux2",
+        "candidate_package_version": "6.30.0-0supralinux3",
         "status": "remediation-pending-build",
         "source_change": false,
+        "upstream_test_reference": "KDE/kwindowsystem v6.30.0 autotests/kwindowinfox11test.cpp documents OpenBox on build.kde.org",
         "changes": [
-          "add libxcb-xfixes0-dev to Build-Depends",
-          "retain KDE 6.30.0 source and X11/Wayland/QML defaults unchanged"
+          "add openbox and x11-utils as <!nocheck>-only test fixture dependencies",
+          "run upstream tests under Xvfb with OpenBox and verify _NET_SUPPORTING_WM_CHECK before CTest",
+          "retain all KDE X11/Wayland/QML tests enabled; no test exclusions"
         ]
       }
     },
@@ -285,9 +302,9 @@
         "signer_fingerprint": "90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1",
         "source": "retained-debian-packaging-reference"
       },
-      "state": "remediation-pending-build",
-      "last_result": "FAIL",
-      "downstream_eligible": false,
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
       "evidence": [
         {
           "result": "FAIL",
@@ -301,11 +318,27 @@
           "failure_substage": "Lintian/symbols",
           "tests": "5/5 PASS",
           "cause": "The package built and all 5 tests passed, but dpkg-gensymbols added _ZSt19piecewise_construct@Base at the current Debian revision and Lintian rejected symbols-file-contains-current-version-with-debian-revision."
+        },
+        {
+          "result": "PASS",
+          "workflow_run": 35038057329,
+          "job_id": 104611513122,
+          "commit": "ce2853eff3546bb7ad07bf28eedc3b2cab5aed2f",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10423914110,
+          "artifact_sha256": "7cc2b15e2fa627e3cd280395e0ac48bd3658c7328d194958b872713738b97fc0",
+          "stage": "complete",
+          "tests": "5/5 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6Solid.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
         }
       ],
       "remediation": {
         "candidate_package_version": "6.30.0-0supralinux2",
-        "status": "remediation-pending-build",
+        "status": "resolved-pass",
         "source_change": false,
         "symbols_baseline_sha256": "4928d196746e4f497733ab7052eea5bf1b219013fb58c6aa4c52284f6e0eb419",
         "symbols_result_sha256": "8614c45e8a902f3c3011b8cec65680ab5152314c798a71ebec108fc50fb547d0",

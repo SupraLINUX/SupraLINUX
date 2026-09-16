@@ -5,4 +5,4 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=+all reproducible=-fixfilepath
 override_dh_auto_configure:
 	dh_auto_configure -- -DBUILD_QCH=OFF
 override_dh_auto_test:
-	xvfb-run -a dh_auto_test -Skf6
+	xvfb-run -a debian/run-tests-with-openbox.sh
