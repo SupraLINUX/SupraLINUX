@@ -32,6 +32,14 @@ jobs:
               if anchor not in text:
                   raise SystemExit('networkmanager EXPECTED_PASS anchor not found')
               text = text.replace(anchor, anchor + additions, 1)
+
+          old_pass_logic = """    passes = [item for item in evidence if isinstance(item, dict) and item.get('result') == 'PASS']\n    require(len(passes) == 1, f'{node_id}: exactly one retained current PASS expected')\n    if not passes:\n        return\n    item = passes[0]\n"""
+          new_pass_logic = """    passes = [item for item in evidence if isinstance(item, dict) and item.get('result') == 'PASS']\n    current_passes = [item for item in passes if item.get('workflow_run') == expected['run'] and item.get('artifact_id') == expected['artifact']]\n    require(len(current_passes) == 1, f'{node_id}: exactly one retained current PASS matching expected run/artifact required')\n    if not current_passes:\n        return\n    item = current_passes[0]\n"""
+          if old_pass_logic in text:
+              text = text.replace(old_pass_logic, new_pass_logic, 1)
+          elif new_pass_logic not in text:
+              raise SystemExit('validate_pass selection anchor not found')
+
           replacements = {
               "== 16, 'Tier 1 current PASS count must be 16'": "== 18, 'Tier 1 current PASS count must be 18'",
               "== 13, 'Tier 1 current pending count must be 13'": "== 11, 'Tier 1 current pending count must be 11'",
@@ -51,8 +59,8 @@ jobs:
           if marker not in d:
               d += (
                   '\n\n' + marker + '\n\n'
-                  '- The Batch 6 canonical promotion exposed a stale global Tier 1 validator expectation (`16 PASS / 13 pending`). '
-                  'The validator is updated to the promoted `18 PASS / 11 pending` state and now recognizes the retained KWindowSystem and Solid PASS evidence from run `35047623320`. '
+                  '- The Batch 6 canonical promotion exposed stale global Tier 1 validator assumptions: the previous `16 PASS / 13 pending` count and a single-PASS-only evidence rule. '
+                  'The validator is aligned to `18 PASS / 11 pending` and selects the current retained PASS by expected run/artifact while preserving legitimate historical PASS evidence such as Solid revalidation. '
                   'This is a policy-validator alignment only: no package, source, runner, ABI, or build-input change.\n'
               )
               doc.write_text(d, encoding='utf-8')
