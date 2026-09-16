@@ -1,8 +1,8 @@
 # KDE Frameworks 6.30 Tier 1 — package Batch 7
 
-Status: **REMEDIATION PENDING BUILD — first real package attempt retained as 3 FAIL**
+Status: **REVISION -3 PREPARED — two real FAIL attempts retained; no Batch 7 PASS yet**
 
-Canonical promoted Tier 1 remains **18 PASS / 11 pending / 0 current promoted FAIL / 0 BLOCKED**. This does not erase the Batch 7 attempt ledger: run `35102198701` really attempted all three selected pending nodes and all three failed during `sbuild` before promotion.
+Canonical promoted Tier 1 remains **18 PASS / 11 pending / 0 current FAIL / 0 BLOCKED**. The Batch 7 attempt ledger separately records real FAIL attempts for the three still-pending nodes.
 
 ## Selection
 
@@ -12,97 +12,81 @@ Batch 7 contains three independent nodes:
 - `kcoreaddons`
 - `kwidgetsaddons`
 
-KGuiAddons remains deliberately deferred. Its public `KImageCache` development header consumes KCoreAddons (`kshareddatacache.h`), so its `-dev` contract must be fed by a retained local KCoreAddons PASS rather than by an Ubuntu KDE package.
+KGuiAddons remains deferred because its public `KImageCache` development surface consumes KCoreAddons. Its package/development contract must be fed by a retained local KCoreAddons PASS, not an Ubuntu KDE package.
 
-## Upstream authority and Python bindings
+## KDE defaults retained
 
-Technical layout run `35086226149`, job `104761571679`, artifact `10443202060`, SHA-256 `c50a32b26e18ee84173b5a00cbd85e0c2b380660be9d939eb489c370f1317e77`, passed and established the selected KDE 6.30 defaults:
+Upstream-layout run `35086226149`, job `104761571679`, artifact `10443202060`, SHA-256 `c50a32b26e18ee84173b5a00cbd85e0c2b380660be9d939eb489c370f1317e77`, established:
 
-- `BUILD_PYTHON_BINDINGS=ON` for KCalendarCore, KCoreAddons and KWidgetsAddons;
+- `BUILD_PYTHON_BINDINGS=ON` for all three nodes;
 - `BUILD_TESTING=ON` for all three;
-- `BUILD_DESIGNERPLUGIN=ON` for KWidgetsAddons;
-- installed Python modules are `KCalendarCore`, `KCoreAddons` and `KWidgetsAddons`;
-- the Frameworks export PySide binding headers/typesystems required by downstream bindings.
+- `BUILD_DESIGNERPLUGIN=ON` for KWidgetsAddons.
 
-SupraLINUX does not disable these defaults to simplify packaging.
+SupraLINUX keeps those KDE 6.30 defaults explicit. Debian Python packaging uses `DEB_PYTHON_INSTALL_LAYOUT=deb`; the bindings remain split into `python3-*` packages under `/usr/lib/python3/dist-packages`.
 
-## Debian Python filesystem contract
+## Attempt 1 — revision -1
 
-Every Batch 7 package exports `DEB_PYTHON_INSTALL_LAYOUT=deb`. Python extensions are split into dedicated `python3-*` packages under `/usr/lib/python3/dist-packages`; development packages retain the exported `/usr/include/PySide6/<Framework>/` and `/usr/share/PySide6/typesystems/` metadata.
+Run `35102198701` attempted all three nodes with `fail-fast: false`.
 
-## Provider evidence before the package attempt
+All three failed in `sbuild` because Shiboken/ApiExtractor could not locate Clang's built-in include/resource directory in the clean environment. The first remediation added `clang`, `libclang-dev` and `llvm-dev` without changing KDE source or disabling bindings/tests.
 
-The earlier provider correction remains backed by run `35087361837`, job `104765243282`, artifact `10442512801`, SHA-256 `49f74d493dd18ed68ecee668f68549cf5f71279fcb96e2f481ceef0eaccf5fa9`. It verified `python3-build 1.4.0-1`, `import build`, and PySide6/Shiboken6 aligned with Qt `6.10.2`.
+Artifacts:
 
-That evidence was provider-availability evidence only. It did not prove that a minimal clean `sbuild` contained the Clang development/resource-dir surface used internally by Shiboken's ApiExtractor.
+- KCalendarCore: job `104814147716`, artifact `10448034196`, SHA-256 `c76b9900d622e5ae4ab5823771baeabcbe8e2e180811ed01ac18d42b99f792e4`;
+- KCoreAddons: job `104814147979`, artifact `10449051854`, SHA-256 `d7943a390efd8610cdab14422085c6c534f0d5877ece6910f36d8a01288acba7`;
+- KWidgetsAddons: job `104814148006`, artifact `10448668591`, SHA-256 `227370b1da6151ed68155e2dfc65252db77f68e6ec03ee8f5737550709c8b995`.
 
-## First real package attempt — retained FAIL evidence
+## Attempt 2 — revision -2
 
-Run `35102198701` on commit `f4e1754a348f56e2a47c69cf334a12bba3d4338d` executed all three matrix nodes with `fail-fast: false`.
+Repository Policy for the Clang/LLVM remediation passed in run `35103681773`.
 
-### KCalendarCore `6.30.0-0supralinux1`
+Run `35103681715` then attempted all three `6.30.0-0supralinux2` packages. The Clang/LLVM correction worked: each build passed Shiboken wrapper generation and reached final Python extension linking.
 
-- job `104814147716`;
-- artifact `10448034196`;
-- artifact SHA-256 `c76b9900d622e5ae4ab5823771baeabcbe8e2e180811ed01ac18d42b99f792e4`;
-- rootfs SHA-256 `bf2f0a5c3e9ac32396439474c12dc3d8528622b626d2adcc8056e5f288bef970`;
-- result: `FAIL`, stage `sbuild`.
+The new common failure occurred when ECM invoked:
 
-Shiboken reported that it could not locate Clang's built-in include directory and then ApiExtractor failed because `/usr/include/c++/15/cstddef` could not resolve `stddef.h`.
+`python3 -m build --wheel --no-isolation`
 
-### KCoreAddons `6.30.0-0supralinux1`
+All three failed with:
 
-- job `104814147979`;
-- artifact `10449051854`;
-- artifact SHA-256 `d7943a390efd8610cdab14422085c6c534f0d5877ece6910f36d8a01288acba7`;
-- rootfs SHA-256 `350c778059425e3a06383b52d868440396e352b57b9afcb56474287a48f534cd`;
-- result: `FAIL`, stage `sbuild`.
+`BackendUnavailable: Cannot import 'setuptools.build_meta'`
 
-It exposed the same Shiboken/ApiExtractor failure and missing `stddef.h` after Shiboken could not resolve Clang's built-in include directory.
+Artifacts:
 
-### KWidgetsAddons `6.30.0-0supralinux1`
+- KCalendarCore: job `104819252283`, artifact `10449348134`, SHA-256 `5e24d94981c060541e008c81ef6e76e3f785b5e52fe249206aa117920c9d7040`;
+- KCoreAddons: job `104819252182`, artifact `10449846512`, SHA-256 `17df43995650455389ee2f0d565ed966dd536abaeaf6f56bb44877c762c478af`;
+- KWidgetsAddons: job `104819252378`, artifact `10449886366`, SHA-256 `0ded038e3a2b7cac8bc94dc5eb61e8183cc1cdcc45284d0040ddbc4ee9670760`.
 
-- job `104814148006`;
-- artifact `10448668591`;
-- artifact SHA-256 `227370b1da6151ed68155e2dfc65252db77f68e6ec03ee8f5737550709c8b995`;
-- rootfs SHA-256 `5e4efab6af0773d306e543a6f9089927881d1281efb017ccd8973587692e4e3d`;
-- result: `FAIL`, stage `sbuild`.
+These are real `FAIL`, not `BLOCKED`.
 
-It exposed the same resource-dir warning; ApiExtractor then failed resolving `limits.h`.
+## Setuptools provider gate
 
-These are real node FAIL attempts, not `BLOCKED`. They share one packaging/toolchain cause; there is no evidence from this attempt that KDE's C++ source, upstream feature defaults or the selected Qt provider must be changed.
+Ubuntu Resolute is only the provider. KDE/ECM remains authority over the binding build flow.
 
-## Remediation `6.30.0-0supralinux2`
+Provider-only commit `78760b565dd49e981fa0891535da289120b40470` passed Repository Policy in run `35106561229`.
 
-The clean build had Shiboken/PySide and Clang runtime libraries, but no explicit Clang/LLVM development toolchain contract. Resolute's own `pyside6` source packaging declares `clang`, `libclang-dev` and `llvm-dev` as build dependencies for this binding-generation surface.
+Dependency-provider run `35106561251`, job `104829186807`, artifact `10450572112`, SHA-256 `488592048a0514b8f6234e8820c959817a151782fef41c138b71f7a8b7fe8fc4`, passed and proved:
 
-SupraLINUX revision `-2` therefore adds exactly these three Build-Depends to each Batch 7 node:
+- `python3-build 1.4.0-1` frontend import PASS;
+- `python3-setuptools 78.1.1-0.1build1` installed from Resolute;
+- `setuptools.build_meta` import PASS.
 
-- `clang`;
-- `libclang-dev`;
-- `llvm-dev`.
+Batch 7 run `35106561165` intentionally skipped all three nodes for that provider-only delta.
 
-This is a provider/packaging correction. It does **not** change KDE authority, source hashes, Python bindings, tests, KWidgetsAddons Designer support, or the Debian Python install layout.
+## Revision -3
 
-The next package attempt must prove that the correction is sufficient. No PASS is claimed in advance.
+The `6.30.0-0supralinux3` package revision adds `python3-setuptools` to Build-Depends for all three nodes. It keeps:
 
-## Package gates
+- KDE 6.30.0 source hashes unchanged;
+- Python bindings and tests enabled;
+- KWidgetsAddons Designer plugin enabled;
+- `clang`, `libclang-dev`, `llvm-dev`;
+- `DEB_PYTHON_INSTALL_LAYOUT=deb`;
+- retained ECM and packaging-tree predecessors.
 
-A Batch 7 PASS still requires, per node:
+## PASS gate
 
-1. exact KDE 6.30.0 source SHA verification;
-2. retained ECM PASS and packaging-reference hash verification;
-3. clean Resolute `sbuild`;
-4. a non-zero CTest run with `100% tests passed`;
-5. exact expected binary package set;
-6. SONAME check;
-7. source+binary Lintian error gate;
-8. APT installation of the locally built package closure and `apt-get check`;
-9. exact locally built package versions;
-10. Python import from the exact locally built `python3-*` package;
-11. C++ consumer configure/build/run against extracted local artifacts;
-12. retained `.deb`, `.ddeb`, `.changes`, `.buildinfo`, `.dsc`, source tarballs, rootfs hash and logs.
+A node becomes PASS only after a real clean build proves source hash, `sbuild`, non-zero 100% CTest pass, expected binary set, SONAME, source+binary Lintian error gate, exact local package installation/`apt-get check`, Python import, C++ consumer configure/build/run and retained reproducibility evidence.
 
-Debian/Ubuntu packaging remains technical provider/compatibility reference only. KDE upstream 6.30.0 remains source and feature authority.
+Until then KCalendarCore, KCoreAddons and KWidgetsAddons remain canonical `pending` and downstream-ineligible.
 
 PR #1 remains **OPEN + DRAFT**. No merge is authorized.

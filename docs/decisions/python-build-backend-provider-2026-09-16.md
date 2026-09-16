@@ -1,6 +1,6 @@
 # Python wheel backend provider for KDE Frameworks 6.30 bindings
 
-Status: **provider revalidation pending**
+Status: **PASS — Ubuntu Resolute provider validated**
 
 Date: **2026-09-16**
 
@@ -16,9 +16,9 @@ It currently affects Batch 7 (`kcalendarcore`, `kcoreaddons`, `kwidgetsaddons`) 
 
 KDE/ECM remains the authority for whether Python bindings are built and for the build flow. Ubuntu Resolute is only a provider of the Python packaging tools used to satisfy that upstream-selected flow.
 
-`python3-build` provides the PEP 517 frontend (`python -m build`). It does **not** provide the Setuptools backend used by the generated wheel project. With `--no-isolation`, build dependencies are not downloaded into an isolated environment; they must already exist in the clean package build environment.
+`python3-build` provides the PEP 517 frontend (`python -m build`). It does not provide the Setuptools backend used by the generated wheel project. With `--no-isolation`, the backend must already exist in the clean package build environment.
 
-SupraLINUX therefore treats `python3-setuptools` as a **shared packaging-tool provider** for the ECM binding lane. This does not change KDE source, disable bindings, change test defaults, or make Ubuntu authoritative over KDE.
+SupraLINUX therefore treats `python3-setuptools` as a **shared packaging-tool provider** for the ECM binding lane. This does not change KDE source, disable bindings, change tests, alter KWidgetsAddons Designer support, or change the Debian Python layout `DEB_PYTHON_INSTALL_LAYOUT=deb`.
 
 ## Evidence that exposed the omission
 
@@ -36,18 +36,36 @@ Retained FAIL evidence:
 
 All three failures occurred at `stage: sbuild`. None is `BLOCKED`.
 
-## Provider candidate
+## Provider validation
 
-Ubuntu Resolute publishes `python3-setuptools 78.1.1-0.1build1`. The existing Resolute `python3-build 1.4.0-1` already depends on `python3-wheel`, so no additional explicit Wheel provider is introduced solely for this failure.
+Provider-only commit `78760b565dd49e981fa0891535da289120b40470` intentionally did not alter the Batch 7 package trees.
 
-Before Batch 7 revision `-3` is attempted, the hosted provider preflight must:
+Repository Policy passed in run `35106561229`.
 
-1. require a Resolute candidate for `python3-setuptools`;
-2. install it in the hosted provider environment;
-3. import `setuptools.build_meta` successfully;
-4. retain the installed package version and provider evidence artifact.
+The hosted dependency-provider preflight passed in run `35106561251`, job `104829186807`, artifact `10450572112`, SHA-256 `488592048a0514b8f6234e8820c959817a151782fef41c138b71f7a8b7fe8fc4`.
 
-Only after that gate passes may the Batch 7 package trees add `python3-setuptools` and advance to revision `6.30.0-0supralinux3`.
+Retained evidence proves:
+
+- `python3-build 1.4.0-1`: frontend import PASS;
+- `python3-setuptools 78.1.1-0.1build1`: installed from Ubuntu Resolute;
+- `setuptools.build_meta`: import PASS;
+- Qt/PySide/Shiboken baseline remains `6.10.2`;
+- provider claim remains non-authoritative and limited to availability.
+
+Batch 7 run `35106561165` for the provider-only commit skipped all three package builds intentionally, confirming the semantic scope gate.
+
+## Packaging consequence
+
+Batch 7 revision `6.30.0-0supralinux3` may now add exactly `python3-setuptools` to the three package Build-Depends while retaining:
+
+- KDE Frameworks 6.30.0 sources unchanged;
+- `BUILD_PYTHON_BINDINGS=ON`;
+- `BUILD_TESTING=ON`;
+- `BUILD_DESIGNERPLUGIN=ON` for KWidgetsAddons;
+- `DEB_PYTHON_INSTALL_LAYOUT=deb`;
+- the validated Clang/LLVM binding-generator toolchain.
+
+The package revision must still pass its own clean `sbuild`, tests, Lintian, binary contracts, Python import and C++ consumer smoke before any node is promoted.
 
 ## State separation
 
