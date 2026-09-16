@@ -1,0 +1,52 @@
+name: Materialize Batch 7 python-build provider transition
+
+on:
+  push:
+    branches:
+      - tooling/batch7-provider-python-build
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Materialize provider transition
+        run: python3 scripts/materialize-batch7-python-build-provider.py
+
+      - name: Validate dependency model
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/validate_kde_tier1.py
+          python3 scripts/validate_kde_tier1.py
+
+      - name: Run updated Ubuntu Resolute dependency provider preflight
+        run: bash scripts/run-kde-tier1-dependency-preflight.sh
+
+      - name: Upload provider evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: batch7-python-build-provider-${{ github.sha }}
+          path: evidence/kde-tier1-dependency-preflight/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit materialized provider transition
+        run: |
+          set -euo pipefail
+          git config user.name 'SupraLINUX CI'
+          git config user.email 'ci@supralinux.invalid'
+          git add \
+            manifests/kde-frameworks-tier1-dependencies.json \
+            scripts/validate_kde_tier1.py \
+            scripts/run-kde-tier1-dependency-preflight.sh \
+            docs/kde-tier1-dependencies.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'tooling: materialize python-build provider transition'
+          git push
