@@ -64,6 +64,10 @@ jobs:
           manifests/kde-tier1-package-campaign-batch7.json
           scripts/validate_kde_tier1.py
           scripts/validate_kde_tier1_global_discovery.py
+          scripts/validate_kde_tier1_package_batch1.py
+          scripts/validate_kde_tier1_package_batch4.py
+          scripts/validate_kde_tier1_package_batch5.py
+          scripts/validate_kde_tier1_package_batch6.py
           scripts/validate_kde_tier1_package_batch7.py
           scripts/validate_kde_tier1_packaging_reference.py
           scripts/validate_kde_tier1_packaging_tree.py
@@ -120,6 +124,10 @@ jobs:
             manifests/kde-tier1-package-campaign-batch7.json \
             scripts/validate_kde_tier1.py \
             scripts/validate_kde_tier1_global_discovery.py \
+            scripts/validate_kde_tier1_package_batch1.py \
+            scripts/validate_kde_tier1_package_batch4.py \
+            scripts/validate_kde_tier1_package_batch5.py \
+            scripts/validate_kde_tier1_package_batch6.py \
             scripts/validate_kde_tier1_package_batch7.py \
             scripts/validate_kde_tier1_packaging_reference.py \
             scripts/validate_kde_tier1_packaging_tree.py
