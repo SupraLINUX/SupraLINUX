@@ -113,6 +113,11 @@ Batch 1 through Batch 6 are canonically closed. Representative later closures in
 
 Historical FAILs remain evidence after later PASS. BLOCKED remains distinct from FAIL.
 
+<!-- BATCH6-CANONICAL-CLOSURE -->
+## Batch 6 canonical closure
+
+KWindowSystem `6.30.0-0supralinux4` and Solid `6.30.0-0supralinux2` remain canonical hosted-clean-package-preflight PASS and downstream-eligible from workflow run `35047623320`. Their historical FAIL attempts remain retained. The Batch 6 closure snapshot is **18 PASS / 11 pending / 0 current FAIL / 0 BLOCKED**.
+
 ## Current state
 
 - upstream dependency resolution: **resolved**;
