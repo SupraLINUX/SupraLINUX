@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-16",
+  "scope": "kde-frameworks-tier1-6.30",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "strategy": "dag-global-discovery",
+  "canonical_tier1_manifest": "manifests/kde-frameworks-tier1.json",
+  "policy": {
+    "build_every_runnable_node_per_topological_level": true,
+    "parallelize_independent_nodes": true,
+    "fail_fast": false,
+    "continue_after_independent_failures": true,
+    "blocked_is_not_fail": true,
+    "only_pass_artifacts_feed_dependents": true,
+    "preserve_every_real_attempt": true,
+    "rerun_affected_nodes_after_remediation": true,
+    "repeat_full_campaign_after_remediation_set": true
+  },
+  "promoted_snapshot": {
+    "pass": 18,
+    "pending": 11,
+    "current_fail": 0,
+    "blocked": 0,
+    "note": "Promoted DAG state only. Historical failed package attempts are retained separately and do not become promoted FAIL until the canonical DAG records them as such."
+  },
+  "readiness_state_model": {
+    "runnable": "A real package attempt is technically valid with the current runner lane and retained predecessors.",
+    "lane-pending": "The node is topologically available but must not be attempted until a runner can validate its package surface without false CI failures.",
+    "dependency-blocked": "The node cannot yet be attempted because a required local predecessor has no retained PASS artifact.",
+    "note": "Readiness states are campaign-planning metadata. They are not DAG PASS/FAIL/BLOCKED results."
+  },
+  "lanes": {
+    "single-abi-python": {
+      "status": "ready",
+      "runner": "scripts/run-kde-tier1-package-batch7-preflight.sh",
+      "nodes": ["kcalendarcore", "kcoreaddons", "kwidgetsaddons"]
+    },
+    "multi-abi": {
+      "status": "implementation-pending",
+      "nodes": ["kconfig", "ki18n", "sonnet"],
+      "required_capability": "validate multiple runtime ABIs/symbol files and package splits in one source build"
+    },
+    "qml-multisurface": {
+      "status": "implementation-pending",
+      "nodes": ["kirigami", "kquickcharts"],
+      "required_capability": "validate QML-heavy packages, multiple libraries, QML imports and runtime closure"
+    },
+    "multi-surface-optional": {
+      "status": "implementation-pending",
+      "nodes": ["kuserfeedback", "prison"],
+      "required_capability": "validate multiple libraries plus optional/provider-selected feature surfaces without silently disabling upstream defaults"
+    },
+    "local-predecessor": {
+      "status": "dependency-wait",
+      "nodes": ["kguiaddons"],
+      "required_capability": "consume the retained local KCoreAddons PASS -dev/runtime artifacts rather than Ubuntu KDE packages"
+    }
+  },
+  "nodes": {
+    "kcalendarcore": {"readiness": "runnable", "lane": "single-abi-python", "local_predecessors": []},
+    "kcoreaddons": {"readiness": "runnable", "lane": "single-abi-python", "local_predecessors": []},
+    "kwidgetsaddons": {"readiness": "runnable", "lane": "single-abi-python", "local_predecessors": []},
+    "kconfig": {"readiness": "lane-pending", "lane": "multi-abi", "local_predecessors": []},
+    "ki18n": {"readiness": "lane-pending", "lane": "multi-abi", "local_predecessors": []},
+    "sonnet": {"readiness": "lane-pending", "lane": "multi-abi", "local_predecessors": []},
+    "kirigami": {"readiness": "lane-pending", "lane": "qml-multisurface", "local_predecessors": []},
+    "kquickcharts": {"readiness": "lane-pending", "lane": "qml-multisurface", "local_predecessors": []},
+    "kuserfeedback": {"readiness": "lane-pending", "lane": "multi-surface-optional", "local_predecessors": []},
+    "prison": {"readiness": "lane-pending", "lane": "multi-surface-optional", "local_predecessors": []},
+    "kguiaddons": {"readiness": "dependency-blocked", "lane": "local-predecessor", "local_predecessors": ["kcoreaddons"]}
+  },
+  "next_actions": [
+    "finish the currently runnable Batch 7 remediation without waiting to make unrelated lanes available",
+    "implement the multi-ABI lane and immediately attempt kconfig, ki18n and sonnet in parallel",
+    "implement QML/multisurface and optional-feature lanes, then attempt all newly runnable independent nodes",
+    "when kcoreaddons reaches PASS, make kguiaddons runnable using only the retained local predecessor artifacts",
+    "aggregate the campaign by root cause and retain per-node artifacts/logs",
+    "after remediations, repeat the complete runnable campaign rather than relying only on targeted reruns"
+  ]
+}
