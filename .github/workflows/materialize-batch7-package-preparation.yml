@@ -1,0 +1,75 @@
+name: Tooling - materialize and validate Batch 7 package preparation
+
+on:
+  push:
+    branches:
+      - tooling/batch7-package-preparation
+
+permissions:
+  contents: write
+
+jobs:
+  materialize-validate:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - name: Materialize deterministic Batch 7 preparation tree
+        run: python3 scripts/materialize-batch7-preparation.py
+
+      - name: Install policy tools
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gnupg shellcheck
+
+      - name: Run complete Repository Policy validation chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n scripts/*.sh
+          shellcheck -e SC1091 scripts/*.sh
+          scripts/test-qemu-kvm-required.sh
+          scripts/test-verify-ubuntu-cloud-image-provenance.sh
+          scripts/test-check-actions-runner-runtime.sh
+          scripts/test-check-golden-image-provenance.sh
+          scripts/test-kde-tier1-dependency-preflight-scope.sh
+          scripts/test-kde-tier1-package-batch7-scope.sh
+          python3 scripts/validate_repository.py
+          python3 scripts/validate_qt_provider.py
+          python3 scripts/validate_kde_dag.py
+          python3 scripts/validate_kde_tier1.py
+          python3 scripts/validate_kde_tier1_packaging_reference.py
+          python3 scripts/validate_kde_tier1_packaging_tree.py
+          python3 scripts/validate_kde_tier1_package_batch1.py
+          python3 scripts/validate_kde_tier1_package_batch2.py
+          python3 scripts/validate_kde_tier1_package_batch3.py
+          python3 scripts/validate_kde_tier1_package_batch4.py
+          python3 scripts/validate_kde_tier1_package_batch5.py
+          python3 scripts/validate_kde_tier1_package_batch6.py
+          python3 scripts/validate_kde_tier1_package_batch7.py
+          python3 scripts/validate_kde_attica_package.py
+          python3 scripts/validate_kde_attica_ci_scope.py
+          . /etc/os-release
+          [[ "${VERSION_ID}" == "26.04" ]]
+          candidate="$(apt-cache policy qt6-base-dev | awk '/Candidate:/ {print $2}')"
+          required="$(python3 -c 'import json; print(json.load(open("manifests/desktop-stack.json"))["qt"]["required_series"])')"
+          [[ "${candidate}" == "${required}".* ]]
+
+      - name: Commit validated technical tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name chmodmasx
+          git config user.email daninicob@gmail.com
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No materialized delta to commit."
+            exit 0
+          fi
+          git commit -m "tooling: validate Batch 7 package preparation"
+          git push origin HEAD:tooling/batch7-package-preparation
