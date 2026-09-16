@@ -1,0 +1,83 @@
+name: Temporary Batch 6 KWindowSystem third-attempt materializer
+
+on:
+  push:
+    branches:
+      - tmp-batch6-rem3-transfer
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: "${{ github.event.head_commit.message != 'tmp: materialize Batch 6 KWindowSystem third-attempt delta' }}"
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact temporary branch head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Verify and apply exact third-attempt patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '01b43b84ed7405aca7aff0bd6fa04b6783483f91516d97d7ab52e7577b1cf660  .tmp/batch6-rem3/payload.b64' | sha256sum -c -
+          base64 -d .tmp/batch6-rem3/payload.b64 > /tmp/batch6-rem3.patch.gz
+          echo '0b308e123bf3b9abdd7e61260c129609b9d2be6e3a882d8eb3064d0c89b9e75a  /tmp/batch6-rem3.patch.gz' | sha256sum -c -
+          gzip -dc /tmp/batch6-rem3.patch.gz > /tmp/batch6-rem3.patch
+          echo 'b490d27ac2894fdf720f4c88f4f9c87496519a1aae9f0b96d338fccc90240a5d  /tmp/batch6-rem3.patch' | sha256sum -c -
+          git apply --check /tmp/batch6-rem3.patch
+          git apply /tmp/batch6-rem3.patch
+          git diff --quiet -- manifests/kde-frameworks-tier1.json manifests/kde-dag.json
+          git diff --check
+
+      - name: Install repository policy tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends shellcheck
+          shellcheck --version
+
+      - name: Validate third-attempt tree
+        shell: bash
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          set -euo pipefail
+          bash -n scripts/*.sh
+          shellcheck -e SC1091 scripts/*.sh
+          python3 scripts/validate_repository.py
+          python3 scripts/validate_kde_dag.py
+          python3 scripts/validate_kde_tier1.py
+          python3 scripts/validate_kde_tier1_package_batch6.py
+          git diff --check
+
+      - name: Commit only canonical third-attempt files
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/expected-paths <<'PATHS'
+          docs/kde-tier1-dependencies.md
+          docs/kde-tier1-package-batch6.md
+          docs/status/2026-09-15-batch6.md
+          docs/status/2026-09-15.md
+          manifests/kde-tier1-package-campaign-batch6.json
+          packages/kde/kwindowsystem/debian/changelog
+          packages/kde/kwindowsystem/debian/control
+          packages/kde/kwindowsystem/debian/rules
+          packages/kde/kwindowsystem/debian/run-tests-with-openbox.sh
+          scripts/validate_kde_tier1_package_batch6.py
+          PATHS
+          git diff --name-only | sort > /tmp/actual-paths
+          diff -u /tmp/expected-paths /tmp/actual-paths
+          git add -- $(cat /tmp/expected-paths)
+          git diff --cached --name-only | sort > /tmp/staged-paths
+          diff -u /tmp/expected-paths /tmp/staged-paths
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'tmp: materialize Batch 6 KWindowSystem third-attempt delta'
+          git push origin HEAD:tmp-batch6-rem3-transfer
