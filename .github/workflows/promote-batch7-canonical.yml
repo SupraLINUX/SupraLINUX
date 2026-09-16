@@ -41,7 +41,10 @@ jobs:
 
       - name: Apply deterministic promotion transform
         shell: bash
-        run: bash tooling/scripts/run-promote-batch7-canonical.sh canonical
+        run: |
+          set -euo pipefail
+          bash tooling/scripts/run-promote-batch7-canonical.sh canonical
+          python3 tooling/scripts/update-batch7-promotion-dependent-validators.py canonical
 
       - name: Audit exact promotion delta
         shell: bash
@@ -62,6 +65,8 @@ jobs:
           scripts/validate_kde_tier1.py
           scripts/validate_kde_tier1_global_discovery.py
           scripts/validate_kde_tier1_package_batch7.py
+          scripts/validate_kde_tier1_packaging_reference.py
+          scripts/validate_kde_tier1_packaging_tree.py
           EOF
           git status --short
           {
@@ -115,7 +120,9 @@ jobs:
             manifests/kde-tier1-package-campaign-batch7.json \
             scripts/validate_kde_tier1.py \
             scripts/validate_kde_tier1_global_discovery.py \
-            scripts/validate_kde_tier1_package_batch7.py
+            scripts/validate_kde_tier1_package_batch7.py \
+            scripts/validate_kde_tier1_packaging_reference.py \
+            scripts/validate_kde_tier1_packaging_tree.py
           git diff --cached --check
           git commit -m "kde: promote Tier 1 Batch 7 canonical PASS"
           git push origin HEAD:architecture/bootstrap-v1
