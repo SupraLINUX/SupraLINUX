@@ -39,6 +39,8 @@ EXPECTED_PASS = {
     'kidletime': {'version':'6.30.0-0supralinux1','run':35014875475,'job':104535671033,'artifact':10414598079,'digest':'272ccad537d21905cf75a1add74e937d176c20c05c38bf967226fef4ab28b605','tests':'1/1 PASS','soname':'libKF6IdleTime.so.6'},
     'modemmanager-qt': {'version':'6.30.0-0supralinux3','run':35021323444,'job':104557423664,'artifact':10417683848,'digest':'42d4f804effc6e4b9148e8c01887bdce6f95f0554ac4d03295e844a861a54eb7','tests':'11/11 PASS','soname':'libKF6ModemManagerQt.so.6'},
     'networkmanager-qt': {'version':'6.30.0-0supralinux1','run':35014875475,'job':104535671250,'artifact':10414714325,'digest':'abf927b5749b34094d2b5ee530831f64638ba116a83e8b82f925a758aa018ad4','tests':'38/38 PASS','soname':'libKF6NetworkManagerQt.so.6'},
+    'kwindowsystem': {'version':'6.30.0-0supralinux4','run':35047623320,'job':104640833059,'artifact':10428130399,'digest':'9c35d5e228d3f8b71fb1e84863fac030bfd26a8e3c528ae718e788708db01272','tests':'14/14 PASS','soname':'libKF6WindowSystem.so.6'},
+    'solid': {'version':'6.30.0-0supralinux2','run':35047623320,'job':104640833295,'artifact':10427653865,'digest':'cff267d012a3e103b53bd6e19757e6c3b0af7dc873f4cd166a4505f58aee8389','tests':'5/5 PASS','soname':'libKF6Solid.so.6'},
 }
 EXPECTED_PROVIDER_EVIDENCE = {'distribution':'ubuntu','series':'resolute','status':'hosted-preflight-pass','evidence':{'workflow_run':34700048774,'head_sha':'6ce61bc02c4aba146bcc33b16d17f56fb66f057a','artifact_id':10299608166,'artifact_sha256':'da6808c31554da4105713e060e328d4130253a100c628fef279d8d0a9cf8ceb3','authoritative':False,'claim':'provider-availability-only'}}
 errors: list[str] = []
@@ -77,10 +79,11 @@ def validate_pass(node: dict) -> None:
     require(packaging.get('downstream_eligible') is True, f'{node_id}: PASS must be downstream eligible')
     evidence = packaging.get('evidence', [])
     passes = [item for item in evidence if isinstance(item, dict) and item.get('result') == 'PASS']
-    require(len(passes) == 1, f'{node_id}: exactly one retained current PASS expected')
-    if not passes:
+    current_passes = [item for item in passes if item.get('workflow_run') == expected['run'] and item.get('artifact_id') == expected['artifact']]
+    require(len(current_passes) == 1, f'{node_id}: exactly one retained current PASS matching expected run/artifact required')
+    if not current_passes:
         return
-    item = passes[0]
+    item = current_passes[0]
     require(item.get('workflow_run') == expected['run'], f'{node_id}: PASS run mismatch')
     if 'job' in expected:
         require(item.get('job_id') == expected['job'], f'{node_id}: PASS job mismatch')
@@ -132,9 +135,9 @@ for node in nodes:
     else:
         require(node.get('packaging') == {'state':'pending'}, f'{node_id}: unattempted packaging state must remain pending')
         require(node.get('state') == 'pending', f'{node_id}: unattempted node state must remain pending')
-require(sum(1 for n in nodes if n.get('state') == 'PASS') == 16, 'Tier 1 current PASS count must be 16')
-require(sum(1 for n in nodes if n.get('state') == 'pending') == 13, 'Tier 1 current pending count must be 13')
-require(not any(n.get('state') in {'FAIL','BLOCKED'} for n in nodes), 'Tier 1 must have no current FAIL/BLOCKED nodes after Batch 5 closure')
+require(sum(1 for n in nodes if n.get('state') == 'PASS') == 18, 'Tier 1 current PASS count must be 18')
+require(sum(1 for n in nodes if n.get('state') == 'pending') == 11, 'Tier 1 current pending count must be 11')
+require(not any(n.get('state') in {'FAIL','BLOCKED'} for n in nodes), 'Tier 1 must have no current FAIL/BLOCKED nodes after Batch 6 closure')
 require(deps.get('schema') == 1, 'Dependency manifest schema must be 1')
 require(deps.get('authority') == 'kde-upstream', 'Dependency authority must remain KDE upstream')
 require(deps.get('frameworks') == '6.30.0', 'Dependency manifest must target Frameworks 6.30.0')
@@ -170,5 +173,5 @@ if errors:
         print(f'ERROR: {error}', file=sys.stderr)
     raise SystemExit(1)
 print('KDE Frameworks 6.30 Tier 1 source/dependency validation: PASS')
-print('Tier 1 package states: 16 PASS/downstream-eligible; 13 pending; 0 FAIL; 0 BLOCKED')
+print('Tier 1 package states: 18 PASS/downstream-eligible; 11 pending; 0 FAIL; 0 BLOCKED')
 print('Ubuntu Resolute provider mapping: hosted preflight PASS; final certification pending')
