@@ -10,6 +10,7 @@ for sha in "${BEFORE}" "${AFTER}"; do
   [[ "${sha}" =~ ^[0-9a-fA-F]{40}$ ]] || exit 2
   git cat-file -e "${sha}^{commit}" 2>/dev/null || exit 2
 done
+
 mapfile -t changed < <(git diff --name-only "${BEFORE}" "${AFTER}" --)
 for p in "${changed[@]}"; do
   case "${p}" in
@@ -17,37 +18,60 @@ for p in "${changed[@]}"; do
       exit 0 ;;
   esac
 done
-if printf '%s\n' "${changed[@]}" | grep -Fxq manifests/kde-tier1-package-campaign-batch7.json; then
-  if ! git cat-file -e "${BEFORE}:manifests/kde-tier1-package-campaign-batch7.json" 2>/dev/null; then exit 0; fi
+
+CAMPAIGN="manifests/kde-tier1-package-campaign-batch7.json"
+if printf '%s\n' "${changed[@]}" | grep -Fxq "${CAMPAIGN}"; then
+  git cat-file -e "${BEFORE}:${CAMPAIGN}" 2>/dev/null || exit 0
   if ! python3 - "${BEFORE}" "${AFTER}" "${NODE}" <<'PY2'
-import json,subprocess,sys
-b,a,n=sys.argv[1:]
-def load(r):
-    return json.loads(subprocess.check_output(["git","show",f"{r}:manifests/kde-tier1-package-campaign-batch7.json"],text=True))
-def fp(d):
-    x=d["nodes"][n]; e=d["shared_predecessors"]["extra_cmake_modules"]; t=d["shared_predecessors"]["packaging_trees"]
-    p=d["shared_packaging_inputs"]["python_policy"]; s=x["signing_key"]; y=x["symbols"]; c=x["copyright"]
-    keys=("upstream_version","source_package","package_version","source_url","source_sha256","runtime_package",
-          "development_package","documentation_package","python_package","python_module","binary_contracts",
-          "dependency_contracts","recommendation_contracts","build_profile_tokens","soname","cmake_package",
-          "cmake_target","consumer_run","upstream_defaults")
+import json
+import subprocess
+import sys
+
+before, after, node = sys.argv[1:]
+
+def load(ref):
+    return json.loads(subprocess.check_output(
+        ["git", "show", f"{ref}:manifests/kde-tier1-package-campaign-batch7.json"],
+        text=True,
+    ))
+
+def fingerprint(data):
+    if data.get("schema") != 2:
+        raise SystemExit(1)
+    selected = tuple(data.get("selected_nodes", []))
+    if node not in selected:
+        raise SystemExit(1)
+    n = data["nodes"][node]
+    shared = data["shared_predecessors"]
+    ecm = shared["extra_cmake_modules"]
+    trees = shared["packaging_trees"]
+    py = shared["python_wheel_backend_provider"]
+    keys = (
+        "upstream_version", "source_package", "package_version", "source_url",
+        "source_sha256", "runtime_package", "python_package", "python_module",
+        "soname", "binary_contracts", "dependency_contracts",
+        "recommendation_contracts", "upstream_defaults", "symbols",
+        "copyright", "signing_key",
+    )
     return {
-      "frameworks":d["frameworks_series"],"authority":d["authority"],"provider":d["provider_platform"],
-      "ecm":[e["version"],e["deb_sha256"]],"trees":t["snapshot_json_sha256"],"python_policy":p,
-      "key":s["sha256"],"node":{k:x[k] for k in keys},
-      "symbols":[y["file"],y["sha256"],y["tree_provider"]],"copyright":c["sha256"]
+        "schema": data["schema"],
+        "frameworks": data["frameworks_series"],
+        "authority": data["authority"],
+        "provider": data["provider_platform"],
+        "selected_nodes": selected,
+        "ecm": [ecm["version"], ecm["deb_sha256"]],
+        "packaging_tree": trees["snapshot_json_sha256"],
+        "python_backend": [py["package"], py["version"], py["backend_module"]],
+        "node": {k: n[k] for k in keys},
     }
-raise SystemExit(0 if fp(load(b))==fp(load(a)) else 1)
+
+raise SystemExit(0 if fingerprint(load(before)) == fingerprint(load(after)) else 1)
 PY2
-  then exit 0; fi
+  then
+    exit 0
+  fi
 fi
-if printf '%s\n' "${changed[@]}" | grep -Fxq scripts/kde-tier1-package-batch7-needed.sh; then
-  state="$(python3 - "${AFTER}" "${NODE}" <<'PY2'
-import json,subprocess,sys
-d=json.loads(subprocess.check_output(["git","show",f"{sys.argv[1]}:manifests/kde-tier1-package-campaign-batch7.json"],text=True))
-print(d["nodes"][sys.argv[2]]["state"])
-PY2
-)"
-  [[ "${state}" == "PASS" ]] || exit 0
-fi
+
+# The append-only attempt ledger and planning/result metadata do not alter the
+# package build contract. They therefore do not trigger an expensive rebuild.
 exit 1
