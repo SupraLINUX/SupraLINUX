@@ -66,9 +66,13 @@ jobs:
           set -euo pipefail
           git config user.name chmodmasx
           git config user.email daninicob@gmail.com
-          # The Batch 7 workflow was present during validation, but this Actions
-          # token cannot push workflow-file changes. Add it later through the
-          # authorized GitHub connector, then remove this staging workflow.
+          # The materialized tree changes two workflow files: Repository Policy
+          # and the new Batch 7 workflow. The Actions token cannot push workflow
+          # changes, so retain Repository Policy from HEAD and remove the new
+          # Batch 7 workflow here. Both workflow changes are applied later via
+          # the authorized GitHub connector after the validated non-workflow
+          # staging tree has been pushed.
+          git checkout -- .github/workflows/repository-policy.yml
           rm -f .github/workflows/kde-tier1-package-batch7.yml
           git add -A
           if git diff --cached --quiet; then
