@@ -26,6 +26,19 @@ raw = lzma.decompress(blob)
 with tarfile.open(fileobj=io.BytesIO(raw), mode="r:") as tf:
     tf.extractall(ROOT, filter="data")
 
+# The canonical package DAG contains promoted PASS nodes only. Pending/in-flight
+# Tier 1 nodes remain in the Tier 1 manifest/campaign and must be absent here.
+validator = ROOT / "scripts/validate_kde_tier1_package_batch7.py"
+vs = validator.read_text()
+old_selected = '    req(dag.get(n,{}).get("state")=="pending",f"{n} DAG must remain pending")'
+new_selected = '    req(n not in dag,f"{n} must stay absent from promoted package DAG before PASS")'
+old_deferred = 'req(tier["kguiaddons"].get("state")=="pending" and dag.get("kguiaddons",{}).get("state")=="pending","KGuiAddons must remain deferred/pending")'
+new_deferred = 'req(tier["kguiaddons"].get("state")=="pending" and "kguiaddons" not in dag,"KGuiAddons must remain pending and absent from promoted package DAG")'
+if old_selected not in vs or old_deferred not in vs:
+    raise SystemExit("Batch 7 validator DAG-semantics anchors not found")
+vs = vs.replace(old_selected, new_selected, 1).replace(old_deferred, new_deferred, 1)
+validator.write_text(vs)
+
 policy = ROOT / ".github/workflows/repository-policy.yml"
 s = policy.read_text()
 scope_anchor = (
