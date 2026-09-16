@@ -1,3 +1,13 @@
+kf6-kwidgetsaddons (6.30.0-0supralinux6) resolute; urgency=medium
+
+  * Make the geometry-sensitive upstream test fixture deterministic by adding
+    DejaVu Sans and fontconfig as explicit nocheck build dependencies.
+  * Require generic sans-serif to resolve to DejaVu Sans before tests, while
+    preserving the complete 27-test inventory and the 25/2 Xvfb/Openbox split.
+  * Keep KDE 6.30.0 source, Python bindings and Designer plugin unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 15:55:00 -0300
+
 kf6-kwidgetsaddons (6.30.0-0supralinux5) resolute; urgency=medium
 
   * Keep the complete 27-test upstream inventory but partition the test fixture:

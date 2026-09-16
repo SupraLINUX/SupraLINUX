@@ -15,16 +15,16 @@
     "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
   },
   "last_campaign": {
-    "workflow_run": 35131119792,
-    "commit": "1f5fcdc68e1bbb2a7cc3f93dc20687aadc15cec0",
+    "workflow_run": 35134670463,
+    "commit": "e0228ddb21fb57a639245b2fb93494854bccd928",
     "results": {
-      "kconfig": {"result":"DIAG_FAIL","job_id":104912090505,"artifact_id":10461886238,"artifact_sha256":"231cfd286876889997590b67fcfe640f34510cc46ae7fc0a3a96e72af5124142","stage":"configure","classification":"provider-profile-omission","remediation":"add qt6-base-private-dev and assert the versioned QtCore private include surface"},
-      "ki18n": {"result":"DIAG_FAIL","job_id":104912090737,"artifact_id":10461686975,"artifact_sha256":"9edeb81c9ecdb92d07691a1b333169858c13348a25bb92c7e5a8bb3dcbec8aaf","stage":"tests","tests":"14/17 PASS","classification":"provider-translation-surface-missing","remediation":"add Ubuntu French language-pack provider and assert iso_3166-1/iso_3166-2 French catalogs before build"},
-      "sonnet": {"result":"DIAG_PASS","job_id":104912091007,"artifact_id":10460838096,"artifact_sha256":"18e1c8ed50063b17d0f4063b511c4c82badf68c702768e2d01f9fb72a7b86855"},
-      "kirigami": {"result":"DIAG_PASS","job_id":104912090447,"artifact_id":10461303414,"artifact_sha256":"a69730c8d09d8acce2ee103c98a0d85faf819cbbe1bedb6fdac1a77364ddc7ba"},
-      "kquickcharts": {"result":"DIAG_PASS","job_id":104912090786,"artifact_id":10461177852,"artifact_sha256":"9db7bceb571b2595723bbe2c16ff60ea8a1fecdb0525ff53ba860231b8dd4530"},
-      "kuserfeedback": {"result":"DIAG_PASS","job_id":104912090591,"artifact_id":10461537028,"artifact_sha256":"e91e08e4d47039274c8806db5c310bbbd31dba4bd38d4c622a67ccdd5c10d0ac"},
-      "prison": {"result":"DIAG_PASS","job_id":104912090832,"artifact_id":10460853327,"artifact_sha256":"a90e7fda5401670092e74d83e58bfa14c2ebd75d186a5a33a25c6328efb986c0"}
+      "kconfig": {"result":"DIAG_PASS","job_id":104923940842,"artifact_id":10463162930,"artifact_sha256":"8af6e430985ac9d46886032c7e4073eaacd6a599eb66f005b15abba723b10c0c"},
+      "ki18n": {"result":"DIAG_FAIL","job_id":104923940865,"artifact_id":10462837843,"artifact_sha256":"96801e17f96956a616a06be32e11facdde6dfdef0809ce966865a8d95718e537","stage":"tests","tests":"14/17 PASS","classification":"locale-fixture-overrides-upstream-test-locale","cause":"French iso-codes catalogs were present, but the common diagnostic fixture forced LC_ALL=C.UTF-8; that overrides KI18n tests which set LANG=fr_CH.UTF-8 and prevents gettext LANGUAGE fallback from exercising the intended locale path.","remediation":"install locales-all, assert en_US.UTF-8 and fr_CH.UTF-8, keep French iso-codes catalogs, run unchanged KI18n tests with LANG=en_US.UTF-8 and LC_ALL unset"},
+      "sonnet": {"result":"DIAG_PASS","job_id":104923941024,"artifact_id":10462543371,"artifact_sha256":"c832539c4fa053d125f62764886bbad6158814e33a0a39afcdd914f2b62b3bf6"},
+      "kirigami": {"result":"DIAG_PASS","job_id":104923940883,"artifact_id":10462063740,"artifact_sha256":"1014cb8cce1b43f9a3912b4e45acf752a2bf9520bc8dad2c7a6b8f2e1f9077b6"},
+      "kquickcharts": {"result":"DIAG_PASS","job_id":104923940752,"artifact_id":10462337704,"artifact_sha256":"ee33a55f58ea0e56c7d8af5cfa571790531e92f5897b1f88c25520ceae0c042b"},
+      "kuserfeedback": {"result":"DIAG_PASS","job_id":104923940498,"artifact_id":10462087859,"artifact_sha256":"baf1b41d7b74b4001b165ef5426ec78cd5ffdec7acc15e43234a7a0d5035727e"},
+      "prison": {"result":"DIAG_PASS","job_id":104923940882,"artifact_id":10462272649,"artifact_sha256":"3f7dfd401f1906845b8465a7059ed4cda55b6e7fd520108a90bc8a1a5d7713b0"}
     }
   },
   "common_build_packages": ["build-essential","ca-certificates","cmake","curl","dbus-x11","gettext","ninja-build","openbox","pkg-config","python3","x11-utils","xauth","xvfb","xz-utils"],
@@ -39,8 +39,10 @@
     "ki18n": {
       "source_url": "https://download.kde.org/stable/frameworks/6.30/ki18n-6.30.0.tar.xz",
       "source_sha256": "dfbfc8af89b3bc68810b094bf87746db87c3eeb35b75caeb1882681ebed563bd",
-      "provider_packages": ["iso-codes","language-pack-fr-base","qt6-base-dev","qt6-declarative-dev","qt6-tools-dev"],
+      "provider_packages": ["iso-codes","language-pack-fr-base","locales-all","qt6-base-dev","qt6-declarative-dev","qt6-tools-dev"],
       "provider_assertions": ["iso-3166-french-catalogs"],
+      "required_locales": ["en_US.UTF-8","fr_CH.UTF-8"],
+      "test_environment": {"LANG":"en_US.UTF-8","LC_ALL":null},
       "cmake_defaults": {"BUILD_WITH_QML":"ON"}
     },
     "sonnet": {
@@ -74,6 +76,6 @@
       "cmake_defaults": {"WITH_DMTX":"ON","WITH_ZXING":"ON","WITH_QUICK":"ON","WITH_MULTIMEDIA":"ON"}
     }
   },
-  "gates": ["exact source SHA-256","exact retained ECM predecessor","Ubuntu Resolute provider install","provider-specific surface assertions","upstream default option assertions","CMake configure","compile","unchanged upstream tests under deterministic Xvfb/Openbox fixture","DESTDIR install staging"],
+  "gates": ["exact source SHA-256","exact retained ECM predecessor","Ubuntu Resolute provider install","provider-specific surface assertions","required locale assertions","upstream default option assertions","CMake configure","compile","unchanged upstream tests under deterministic Xvfb/Openbox fixture","DESTDIR install staging"],
   "note": "Diagnostic results discover source/configure/build/test/provider failures early. They never imply package PASS, downstream eligibility, ABI acceptance, Lintian acceptance or DAG promotion."
 }

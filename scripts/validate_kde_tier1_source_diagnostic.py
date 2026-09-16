@@ -42,7 +42,7 @@ for node,defaults in expected_defaults.items():
 
 required_provider_tokens={
  "kconfig":{"qt6-base-dev","qt6-base-private-dev","qt6-declarative-dev"},
- "ki18n":{"qt6-base-dev","qt6-declarative-dev","iso-codes","language-pack-fr-base"},
+ "ki18n":{"qt6-base-dev","qt6-declarative-dev","iso-codes","language-pack-fr-base","locales-all"},
  "sonnet":{"libaspell-dev","hspell","libhunspell-dev","libvoikko-dev"},
  "kirigami":{"qt6-base-private-dev","qt6-declarative-dev","qt6-svg-dev","qt6-shadertools-dev"},
  "kquickcharts":{"qt6-declarative-dev","qt6-shadertools-dev"},
@@ -53,27 +53,31 @@ for node,tokens in required_provider_tokens.items():
     missing=tokens-set(m["nodes"][node]["provider_packages"])
     if missing: fail(f"{node}: provider profile lost {sorted(missing)}")
 if m["nodes"]["kconfig"].get("provider_assertions") != ["qt-core-private-versioned-includes"]: fail("KConfig provider assertion mismatch")
-if m["nodes"]["ki18n"].get("provider_assertions") != ["iso-3166-french-catalogs"]: fail("KI18n provider assertion mismatch")
+ki=m["nodes"]["ki18n"]
+if ki.get("provider_assertions") != ["iso-3166-french-catalogs"]: fail("KI18n provider assertion mismatch")
+if ki.get("required_locales") != ["en_US.UTF-8","fr_CH.UTF-8"]: fail("KI18n required locale contract mismatch")
+if ki.get("test_environment") != {"LANG":"en_US.UTF-8","LC_ALL":None}: fail("KI18n test locale fixture mismatch")
 
 ecm=m.get("ecm_predecessor",{})
 if ecm.get("version")!="6.30.0-0supralinux3" or ecm.get("artifact_id")!=10298635300 or ecm.get("deb_sha256")!="ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f": fail("ECM predecessor mismatch")
 
 campaign=m.get("last_campaign",{})
-if campaign.get("workflow_run") != 35131119792 or campaign.get("commit") != "1f5fcdc68e1bbb2a7cc3f93dc20687aadc15cec0": fail("diagnostic campaign evidence mismatch")
+if campaign.get("workflow_run") != 35134670463 or campaign.get("commit") != "e0228ddb21fb57a639245b2fb93494854bccd928": fail("diagnostic campaign evidence mismatch")
 results=campaign.get("results",{})
 if set(results)!=set(expected): fail("diagnostic campaign result set mismatch")
-if {n:results[n].get("result") for n in expected} != {"kconfig":"DIAG_FAIL","ki18n":"DIAG_FAIL","sonnet":"DIAG_PASS","kirigami":"DIAG_PASS","kquickcharts":"DIAG_PASS","kuserfeedback":"DIAG_PASS","prison":"DIAG_PASS"}: fail("diagnostic campaign result classification mismatch")
-for n in ("kconfig","ki18n"):
-    if results[n].get("artifact_id") is None or not results[n].get("artifact_sha256"): fail(f"{n}: missing FAIL evidence")
+if {n:results[n].get("result") for n in expected} != {"kconfig":"DIAG_PASS","ki18n":"DIAG_FAIL","sonnet":"DIAG_PASS","kirigami":"DIAG_PASS","kquickcharts":"DIAG_PASS","kuserfeedback":"DIAG_PASS","prison":"DIAG_PASS"}: fail("diagnostic campaign result classification mismatch")
+for n in expected:
+    if results[n].get("artifact_id") is None or not results[n].get("artifact_sha256"): fail(f"{n}: missing campaign evidence")
+if results["ki18n"].get("classification") != "locale-fixture-overrides-upstream-test-locale" or results["ki18n"].get("tests") != "14/17 PASS": fail("KI18n v2 failure classification mismatch")
 
 workflow=W.read_text(); runner=R.read_text(); selector=S.read_text()
 for token in ("fail-fast: false","max-parallel: 7","kconfig, ki18n, sonnet, kirigami, kquickcharts, kuserfeedback, prison",'"${{ matrix.node }}"'):
     if token not in workflow: fail(f"source diagnostic workflow missing {token}")
-for token in ("non-promoting-source-diagnostic","DIAG_PASS","DIAG_FAIL","-DBUILD_TESTING=ON","sha256sum --check --strict","provider-surface-validation","qt6-base-private-dev","iso_3166-1.mo","iso_3166-2.mo","upstream-default-validation","cmake --build","ctest --test-dir","cmake --install","_NET_SUPPORTING_WM_CHECK",'"package_gate":False','"dag_state_change":False'):
+for token in ("non-promoting-source-diagnostic","DIAG_PASS","DIAG_FAIL","-DBUILD_TESTING=ON","sha256sum --check --strict","provider-surface-validation","qt6-base-private-dev","iso_3166-1.mo","iso_3166-2.mo","REQUIRED_LOCALES","locale -a","TEST_LC_ALL_UNSET","unset LC_ALL","test-environment.txt","upstream-default-validation","cmake --build","ctest --test-dir","cmake --install","_NET_SUPPORTING_WM_CHECK",'"package_gate":False','"dag_state_change":False'):
     if token not in runner: fail(f"source diagnostic runner lost gate {token}")
 if "ctest -E" in runner or "--exclude" in runner: fail("source diagnostic must not filter upstream tests")
 for token in ("Usage: $0 <before-sha> <after-sha> <node>","last_campaign","nodes","kde-frameworks-tier1-dependencies.json","run-kde-tier1-source-diagnostic.sh"):
     if token not in selector: fail(f"per-node diagnostic selector missing {token}")
 
 print("KDE Tier 1 global source diagnostic policy: PASS")
-print("nodes=7; first campaign=5 DIAG_PASS / 2 DIAG_FAIL; per-node scope enabled; package promotion disabled")
+print("nodes=7; second campaign=6 DIAG_PASS / 1 DIAG_FAIL; KI18n locale-fixture remediation prepared; package promotion disabled")

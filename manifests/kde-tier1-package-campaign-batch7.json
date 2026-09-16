@@ -11,7 +11,7 @@
     "state": "promotion-pending-after-two-retained-pass-results",
     "tier1": "18 PASS / 11 pending in canonical manifest; KCalendarCore and KCoreAddons have retained PASS evidence awaiting canonical promotion"
   },
-  "selected_nodes": ["kcalendarcore", "kcoreaddons", "kwidgetsaddons"],
+  "selected_nodes": ["kcalendarcore","kcoreaddons","kwidgetsaddons"],
   "shared_predecessors": {
     "extra_cmake_modules": {"state":"PASS","version":"6.30.0-0supralinux3","workflow_run":34694951158,"artifact_id":10298635300,"deb_sha256":"ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"},
     "packaging_trees": {"status":"PASS","workflow_run":34708030450,"artifact_id":10301938362,"artifact_sha256":"6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6","snapshot_json_sha256":"f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345"},
@@ -25,9 +25,7 @@
       "copyright":{"sha256":"578646ab9522f3decfc3f64fa153f599f9004c213e5df03c21b5ee31e2584d13"},
       "signing_key":{"sha256":"86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"},
       "upstream_defaults":{"BUILD_PYTHON_BINDINGS":"ON","BUILD_TESTING":"ON"},
-      "binary_contracts":[
-        {"name":"libkf6calendarcore-data","architecture":"all","multi_arch":"foreign"},{"name":"libkf6calendarcore-dev","architecture":"amd64","multi_arch":"same"},{"name":"libkf6calendarcore-doc","architecture":"all","multi_arch":"foreign"},{"name":"libkf6calendarcore6","architecture":"amd64","multi_arch":"same"},{"name":"qml6-module-org-kde-calendarcore","architecture":"amd64","multi_arch":"same"},{"name":"python3-kcalendarcore","architecture":"amd64","multi_arch":null}
-      ],
+      "binary_contracts":[{"name":"libkf6calendarcore-data","architecture":"all","multi_arch":"foreign"},{"name":"libkf6calendarcore-dev","architecture":"amd64","multi_arch":"same"},{"name":"libkf6calendarcore-doc","architecture":"all","multi_arch":"foreign"},{"name":"libkf6calendarcore6","architecture":"amd64","multi_arch":"same"},{"name":"qml6-module-org-kde-calendarcore","architecture":"amd64","multi_arch":"same"},{"name":"python3-kcalendarcore","architecture":"amd64","multi_arch":null}],
       "dependency_contracts":{"libkf6calendarcore6":["libkf6calendarcore-data (= 6.30.0-0supralinux5)"],"qml6-module-org-kde-calendarcore":["libkf6calendarcore-data (= 6.30.0-0supralinux5)"],"libkf6calendarcore-dev":["libkf6calendarcore6 (= 6.30.0-0supralinux5)","qml6-module-org-kde-calendarcore (= 6.30.0-0supralinux5)","qt6-base-dev (>= 6.9.0~)"],"python3-kcalendarcore":["libkf6calendarcore6 (= 6.30.0-0supralinux5)","python3-pyside6.qtcore","python3-pyside6.qtgui"]},
       "recommendation_contracts":{"libkf6calendarcore-dev":["libkf6calendarcore-doc (= 6.30.0-0supralinux5)"]},
       "state":"PASS","last_result":"PASS","downstream_eligible":true,
@@ -44,20 +42,20 @@
       "dependency_contracts":{"libkf6coreaddons-dev":["libkf6coreaddons6 (= 6.30.0-0supralinux4)","qml6-module-org-kde-coreaddons (= 6.30.0-0supralinux4)","qt6-base-dev (>= 6.9.0~)"],"python3-kcoreaddons":["libkf6coreaddons6 (= 6.30.0-0supralinux4)","python3-pyside6.qtcore"]},
       "recommendation_contracts":{"libkf6coreaddons-dev":["libkf6coreaddons-doc (= 6.30.0-0supralinux4)"]},
       "state":"PASS","last_result":"PASS","downstream_eligible":true,
-      "pass_evidence":{"workflow_run":35122522242,"job_id":104883541991,"commit":"ea465e7f78ee621f6456246e7ba76e0a89e46d78","artifact_id":10457958023,"artifact_sha256":"c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64","rootfs_sha256":"dd7762ba1cdc25dd57b05e8203b3d5d4d448d9ee7131ac0b99d1d85989854794","tests":"34/34 PASS","lintian":"PASS-errors","consumer_smoke":"PASS","python_import":"PASS","apt_check":"PASS"}
+      "pass_evidence":{"workflow_run":35122522242,"job_id":104883541991,"commit":"ea465e7f78ee621f6456246e7ba76e0a89e46d78","artifact_id":10457958023,"artifact_sha256":"c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64","rootfs_sha256":"dd7762ba1cdc25dd57b05e8203b3d5d4d448d9ee7131ac0b99d1d85989854794","tests":"34/34 PASS","lintian":"PASS-errors","consumer_smoke":"PASS","python_import":"PASS","apt_check":"PASS","abi_soname":"libKF6CoreAddons.so.6"}
     },
     "kwidgetsaddons": {
-      "upstream_version":"6.30.0","source_package":"kf6-kwidgetsaddons","package_version":"6.30.0-0supralinux5","source_url":"https://download.kde.org/stable/frameworks/6.30/kwidgetsaddons-6.30.0.tar.xz","source_sha256":"ab1333c258678caa7562120a1c03bb71779f7232f1a0e75b9525d921dee3e0a3",
+      "upstream_version":"6.30.0","source_package":"kf6-kwidgetsaddons","package_version":"6.30.0-0supralinux6","source_url":"https://download.kde.org/stable/frameworks/6.30/kwidgetsaddons-6.30.0.tar.xz","source_sha256":"ab1333c258678caa7562120a1c03bb71779f7232f1a0e75b9525d921dee3e0a3",
       "runtime_package":"libkf6widgetsaddons6","python_package":"python3-kwidgetsaddons","python_module":"KWidgetsAddons","soname":"libKF6WidgetsAddons.so.6",
       "symbols":{"file":"libkf6widgetsaddons6.symbols","sha256":"31c352878dc27c56a6357ad35c308acac8871b1a105273721923cc697e68c323","tree_provider":"debian","reference_version":"6.28.0"},
       "copyright":{"sha256":"5165a3d00e3f02c151bcc62602ea39ccc45783fcdcf360b9c283967636246647"},
       "signing_key":{"sha256":"86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"},
       "upstream_defaults":{"BUILD_PYTHON_BINDINGS":"ON","BUILD_TESTING":"ON","BUILD_DESIGNERPLUGIN":"ON"},
       "binary_contracts":[{"name":"libkf6widgetsaddons-data","architecture":"all","multi_arch":"foreign"},{"name":"libkf6widgetsaddons-dev","architecture":"amd64","multi_arch":null},{"name":"libkf6widgetsaddons-doc","architecture":"all","multi_arch":"foreign"},{"name":"libkf6widgetsaddons6","architecture":"amd64","multi_arch":"same"},{"name":"python3-kwidgetsaddons","architecture":"amd64","multi_arch":null}],
-      "dependency_contracts":{"libkf6widgetsaddons-dev":["libkf6widgetsaddons6 (= 6.30.0-0supralinux5)","qt6-base-dev (>= 6.9.0~)"],"python3-kwidgetsaddons":["libkf6widgetsaddons6 (= 6.30.0-0supralinux5)","python3-pyside6.qtwidgets"]},
-      "recommendation_contracts":{"libkf6widgetsaddons-dev":["libkf6widgetsaddons-doc (= 6.30.0-0supralinux5)"]},
+      "dependency_contracts":{"libkf6widgetsaddons-dev":["libkf6widgetsaddons6 (= 6.30.0-0supralinux6)","qt6-base-dev (>= 6.9.0~)"],"python3-kwidgetsaddons":["libkf6widgetsaddons6 (= 6.30.0-0supralinux6)","python3-pyside6.qtwidgets"]},
+      "recommendation_contracts":{"libkf6widgetsaddons-dev":["libkf6widgetsaddons-doc (= 6.30.0-0supralinux6)"]},
       "state":"remediation-pending-build","last_result":"FAIL","downstream_eligible":false,
-      "remediation":{"cause":"Revision -3 proved the 25 non-gesture suites pass under bare Xvfb while only the two activation-dependent gesture tests fail; revision -4 proved those two gesture tests pass under Openbox but a previously green KSqueezedTextLabel geometry test then fails under the global WM fixture.","change":"partition the unchanged 27-test inventory by required fixture: assert 27 total = 25 non-gesture + 2 gesture tests, run 25 under bare Xvfb, then start verified Openbox and run exactly the two gesture tests","tests_omitted":false,"source_change":false,"fixture_partition":{"total":27,"bare_xvfb":25,"xvfb_openbox":2,"openbox_tests":["ktwofingertaptest","ktwofingerswipetest"]}}
+      "remediation":{"cause":"Revision -5 proved the 27=25+2 partition itself is correct, but the bare-Xvfb partition still failed 1/25 at KSqueezedTextLabel before Openbox started. Compared with the earlier -3 chroot where that test passed, the test environment no longer had DejaVu and instead resolved through the font set introduced with the Openbox stack. The upstream test uses default QFontMetrics and is therefore sensitive to the fixture's default sans-serif metrics.","change":"add fontconfig and fonts-dejavu-core as explicit nocheck test-fixture dependencies, assert generic sans-serif resolves to DejaVu Sans before CTest, then retain the unchanged 27-test inventory with 25 bare-Xvfb suites followed by the two gesture suites under verified Openbox","tests_omitted":false,"source_change":false,"font_fixture":{"resolver":"fontconfig","provider":"fonts-dejavu-core","generic":"sans-serif","expected_family_contains":"DejaVu Sans"},"fixture_partition":{"total":27,"bare_xvfb":25,"xvfb_openbox":2,"openbox_tests":["ktwofingertaptest","ktwofingerswipetest"]}}
     }
   }
 }

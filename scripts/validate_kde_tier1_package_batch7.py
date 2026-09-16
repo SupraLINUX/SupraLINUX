@@ -20,7 +20,7 @@ if a.get("immutable_history") is not True or set(a.get("attempts",{}))!=expected
 hist_expect={
  "kcalendarcore":(["FAIL","FAIL","FAIL","FAIL","PASS"],[f"6.30.0-0supralinux{i}" for i in range(1,6)]),
  "kcoreaddons":(["FAIL","FAIL","FAIL","PASS"],[f"6.30.0-0supralinux{i}" for i in range(1,5)]),
- "kwidgetsaddons":(["FAIL","FAIL","FAIL","FAIL"],[f"6.30.0-0supralinux{i}" for i in range(1,5)]),
+ "kwidgetsaddons":(["FAIL","FAIL","FAIL","FAIL","FAIL"],[f"6.30.0-0supralinux{i}" for i in range(1,6)]),
 }
 for node,(results,versions) in hist_expect.items():
     hist=a["attempts"][node]
@@ -40,10 +40,14 @@ for key,value in {"workflow_run":35122522242,"job_id":104883541991,"artifact_id"
     if kope.get(key)!=value: fail(f"KCoreAddons PASS evidence mismatch: {key}")
 
 kw=m["nodes"]["kwidgetsaddons"]
-if kw.get("package_version")!="6.30.0-0supralinux5" or kw.get("state")!="remediation-pending-build" or kw.get("last_result")!="FAIL" or kw.get("downstream_eligible") is not False: fail("KWidgetsAddons -5 remediation state mismatch")
-part=kw.get("remediation",{}).get("fixture_partition",{})
+if kw.get("package_version")!="6.30.0-0supralinux6" or kw.get("state")!="remediation-pending-build" or kw.get("last_result")!="FAIL" or kw.get("downstream_eligible") is not False: fail("KWidgetsAddons -6 remediation state mismatch")
+rem=kw.get("remediation",{}); part=rem.get("fixture_partition",{}); font=rem.get("font_fixture",{})
 if part != {"total":27,"bare_xvfb":25,"xvfb_openbox":2,"openbox_tests":["ktwofingertaptest","ktwofingerswipetest"]}: fail("KWidgetsAddons fixture partition mismatch")
-if kw.get("remediation",{}).get("tests_omitted") is not False or kw.get("remediation",{}).get("source_change") is not False: fail("KWidgetsAddons must retain all upstream tests/source")
+if font != {"resolver":"fontconfig","provider":"fonts-dejavu-core","generic":"sans-serif","expected_family_contains":"DejaVu Sans"}: fail("KWidgetsAddons font fixture mismatch")
+if rem.get("tests_omitted") is not False or rem.get("source_change") is not False: fail("KWidgetsAddons must retain all upstream tests/source")
+last=a["attempts"]["kwidgetsaddons"][-1]
+for key,value in {"workflow_run":35134670336,"job_id":104923940192,"artifact_id":10462188593,"artifact_sha256":"f5c47f8efbf1ca2172e0578b104e472875f01966b17f33f34eeadf47daef8aa5","rootfs_sha256":"82eb0b91799d774ab0354ec2efb2a346a4557a1a6884bec860a93cbc678b7042","failure_substage":"tests/font-metric-fixture-before-openbox"}.items():
+    if last.get(key)!=value: fail(f"KWidgetsAddons -5 FAIL evidence mismatch: {key}")
 
 for node in expected:
     base=ROOT/"packages/kde"/node/"debian"; control=(base/"control").read_text(); rules=(base/"rules").read_text()
@@ -63,11 +67,11 @@ required={" _ZN10KAboutData6setUrlENS_7UrlTypeERK7QString@Base 6.29.0"," _ZNK10K
 if set((kod/"libkf6coreaddons6.symbols.supralinux-overlay").read_text().splitlines()) != required: fail("KCoreAddons ABI overlay regression")
 
 kwd=ROOT/"packages/kde/kwidgetsaddons/debian"; kwc=(kwd/"control").read_text(); kwr=(kwd/"rules").read_text()
-if "6.30.0-0supralinux5" not in (kwd/"changelog").read_text().splitlines()[0]: fail("KWidgetsAddons changelog not at -5")
-for token in ("openbox <!nocheck>","x11-utils <!nocheck>"):
+if "6.30.0-0supralinux6" not in (kwd/"changelog").read_text().splitlines()[0]: fail("KWidgetsAddons changelog not at -6")
+for token in ("fontconfig <!nocheck>","fonts-dejavu-core <!nocheck>","openbox <!nocheck>","x11-utils <!nocheck>"):
     if token not in kwc: fail(f"KWidgetsAddons missing test fixture dependency {token}")
-for token in ("-DBUILD_DESIGNERPLUGIN=ON","DEB_BUILD_OPTIONS"," nocheck ","ctest --test-dir","-N -E","-N -R","test \"$$total\" -eq 27","test \"$$nongesture\" -eq 25","test \"$$gesture\" -eq 2","ktwofingertaptest","ktwofingerswipetest","openbox","_NET_SUPPORTING_WM_CHECK"):
-    if token not in kwr: fail(f"KWidgetsAddons complete fixture partition missing {token}")
+for token in ("-DBUILD_DESIGNERPLUGIN=ON","DEB_BUILD_OPTIONS"," nocheck ","fc-match","DejaVu Sans","ctest --test-dir","-N -E","-N -R","test \"$$total\" -eq 27","test \"$$nongesture\" -eq 25","test \"$$gesture\" -eq 2","ktwofingertaptest","ktwofingerswipetest","openbox","_NET_SUPPORTING_WM_CHECK"):
+    if token not in kwr: fail(f"KWidgetsAddons deterministic fixture missing {token}")
 if kwr.count("ctest --test-dir") < 5: fail("KWidgetsAddons must inventory both partitions and execute both partitions")
 
 workflow=W.read_text(); runner=R.read_text()
@@ -77,4 +81,4 @@ for token in ("100% tests passed, 0 tests failed","Lintian:[[:space:]]+fail","py
     if token not in runner: fail(f"Batch 7 runner lost strict gate {token}")
 
 print("KDE Tier 1 Batch 7 preparation: PASS")
-print("KCalendarCore=PASS; KCoreAddons=PASS; KWidgetsAddons=-5 fixture-partition pending real build")
+print("KCalendarCore=PASS; KCoreAddons=PASS; KWidgetsAddons=-6 deterministic font/test fixture pending real build")

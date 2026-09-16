@@ -14,10 +14,23 @@ m=json.loads(Path(sys.argv[1]).read_text())
 node=m.get("nodes",{}).get(sys.argv[2])
 if not isinstance(node,dict): raise SystemExit(f"unknown diagnostic node: {sys.argv[2]}")
 ecm=m["ecm_predecessor"]
-for k,v in {"SOURCE_URL":node["source_url"],"SOURCE_SHA256":node["source_sha256"],"ECM_VERSION":ecm["version"],"ECM_SHA256":ecm["deb_sha256"]}.items():
+test_env=node.get("test_environment",{})
+lang=test_env.get("LANG","C.UTF-8")
+lc_all=test_env.get("LC_ALL","C.UTF-8")
+for k,v in {
+    "SOURCE_URL":node["source_url"],
+    "SOURCE_SHA256":node["source_sha256"],
+    "ECM_VERSION":ecm["version"],
+    "ECM_SHA256":ecm["deb_sha256"],
+    "TEST_LANG":lang,
+    "TEST_LC_ALL":"" if lc_all is None else lc_all,
+}.items():
     print(f"{k}={shlex.quote(str(v))}")
+print(f"TEST_LC_ALL_UNSET={'1' if lc_all is None else '0'}")
 print("COMMON_PACKAGES=("+" ".join(shlex.quote(x) for x in m["common_build_packages"])+")")
 print("NODE_PACKAGES=("+" ".join(shlex.quote(x) for x in node["provider_packages"])+")")
+print("PROVIDER_ASSERTIONS=("+" ".join(shlex.quote(x) for x in node.get("provider_assertions",[]))+")")
+print("REQUIRED_LOCALES=("+" ".join(shlex.quote(x) for x in node.get("required_locales",[]))+")")
 PY
 )"
 
@@ -30,6 +43,7 @@ RESULT_JSON="${EVIDENCE_DIR}/result.json"
 DIAG_RESULT="DIAG_FAIL"
 STAGE="initialization"
 STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
 rm -rf "${WORK_DIR}" "${EVIDENCE_DIR}"
 mkdir -p "${WORK_DIR}" "${EVIDENCE_DIR}"
 
@@ -40,13 +54,20 @@ write_result() {
 import json,sys
 from pathlib import Path
 p,node,result,rc,stage,started,finished=sys.argv[1:]
-Path(p).write_text(json.dumps({"node":node,"diagnostic_result":result,"exit_code":int(rc),"stage":stage,"started_at":started,"finished_at":finished,"claim":"non-promoting-source-diagnostic","authoritative":False,"package_gate":False,"dag_state_change":False,"downstream_eligible_claimed":False,"runner_class":"github-hosted-ubuntu-26.04"},indent=2)+"\n")
+Path(p).write_text(json.dumps({
+    "node":node,"diagnostic_result":result,"exit_code":int(rc),"stage":stage,
+    "started_at":started,"finished_at":finished,
+    "claim":"non-promoting-source-diagnostic","authoritative":False,
+    "package_gate":False,"dag_state_change":False,"downstream_eligible_claimed":False,
+    "runner_class":"github-hosted-ubuntu-26.04"
+},indent=2)+"\n")
 PY
 }
 trap write_result EXIT
 exec > >(tee -a "${EVIDENCE_DIR}/pipeline.log") 2>&1
 
 echo "=== SupraLINUX KDE Tier 1 source diagnostic: ${NODE} ==="
+
 STAGE="manifest-validation"
 python3 - "${MANIFEST}" "${NODE}" <<'PY'
 import json,sys
@@ -70,23 +91,38 @@ printf '%s\n' "${PACKAGES[@]}" > "${EVIDENCE_DIR}/requested-provider-packages.tx
 dpkg-query -W -f='${Package}\t${Version}\n' "${PACKAGES[@]}" 2>/dev/null | sort > "${EVIDENCE_DIR}/installed-provider-packages.txt"
 
 STAGE="provider-surface-validation"
-case "${NODE}" in
-  kconfig)
-    dpkg-query -W -f='${Status}\n' qt6-base-private-dev | grep -Fxq 'install ok installed'
-    private_dir="$(find /usr/include -type d -path '*/qt6/QtCore/*/QtCore/private' -print -quit 2>/dev/null || true)"
-    [[ -n "${private_dir}" ]] || { echo "Qt6 CorePrivate versioned headers are unavailable" >&2; exit 1; }
-    printf 'qt-core-private-versioned-includes=%s\n' "${private_dir}" > "${EVIDENCE_DIR}/provider-surface.txt"
-    ;;
-  ki18n)
-    iso1="$(find /usr/share/locale /usr/share/locale-langpack -type f -path '*/fr/LC_MESSAGES/iso_3166-1.mo' -print -quit 2>/dev/null || true)"
-    iso2="$(find /usr/share/locale /usr/share/locale-langpack -type f -path '*/fr/LC_MESSAGES/iso_3166-2.mo' -print -quit 2>/dev/null || true)"
-    [[ -n "${iso1}" && -n "${iso2}" ]] || { echo "French iso-codes gettext catalogs are unavailable" >&2; exit 1; }
-    printf 'iso_3166-1=%s\niso_3166-2=%s\n' "${iso1}" "${iso2}" > "${EVIDENCE_DIR}/provider-surface.txt"
-    ;;
-  *)
-    printf 'no-node-specific-provider-surface-assertion\n' > "${EVIDENCE_DIR}/provider-surface.txt"
-    ;;
-esac
+for assertion in "${PROVIDER_ASSERTIONS[@]}"; do
+    case "${assertion}" in
+        qt-core-private-versioned-includes)
+            compgen -G '/usr/include/*/qt6/QtCore/*/QtCore/private' >/dev/null || { echo "qt6-base-private-dev installed but versioned QtCore private include surface is absent" >&2; exit 1; }
+            ;;
+        iso-3166-french-catalogs)
+            ISO1="$(find /usr/share/locale /usr/share/locale-langpack -type f -path '*/fr/LC_MESSAGES/iso_3166-1.mo' -print -quit 2>/dev/null || true)"
+            ISO2="$(find /usr/share/locale /usr/share/locale-langpack -type f -path '*/fr/LC_MESSAGES/iso_3166-2.mo' -print -quit 2>/dev/null || true)"
+            [[ -n "${ISO1}" && -s "${ISO1}" && -n "${ISO2}" && -s "${ISO2}" ]] || { echo "French iso-codes catalogs are absent after provider installation" >&2; exit 1; }
+            printf '%s\n%s\n' "${ISO1}" "${ISO2}" > "${EVIDENCE_DIR}/iso-codes-french-catalogs.txt"
+            ;;
+        *) echo "Unknown provider assertion: ${assertion}" >&2; exit 2 ;;
+    esac
+done
+
+locale_exists() {
+    local wanted="${1,,}" have
+    wanted="${wanted/utf-8/utf8}"
+    while IFS= read -r have; do
+        have="${have,,}"
+        have="${have/utf-8/utf8}"
+        [[ "${have}" == "${wanted}" ]] && return 0
+    done < <(locale -a)
+    return 1
+}
+if ((${#REQUIRED_LOCALES[@]})); then
+    : > "${EVIDENCE_DIR}/required-locales.txt"
+    for required_locale in "${REQUIRED_LOCALES[@]}"; do
+        locale_exists "${required_locale}" || { echo "Required locale is unavailable: ${required_locale}" >&2; locale -a >&2; exit 1; }
+        printf '%s\n' "${required_locale}" >> "${EVIDENCE_DIR}/required-locales.txt"
+    done
+fi
 
 ECM_DEB="$(find "${ECM_ARTIFACT_DIR}" -maxdepth 2 -type f -name "extra-cmake-modules_${ECM_VERSION}_all.deb" -print -quit)"
 [[ -n "${ECM_DEB}" && -s "${ECM_DEB}" ]] || { echo "Retained ECM PASS .deb missing" >&2; exit 1; }
@@ -111,7 +147,8 @@ STAGE="upstream-default-validation"
 python3 - "${MANIFEST}" "${NODE}" "${BUILD_DIR}/CMakeCache.txt" <<'PY'
 import json,sys
 from pathlib import Path
-m=json.loads(Path(sys.argv[1]).read_text()); node=sys.argv[2]; cache={}
+m=json.loads(Path(sys.argv[1]).read_text()); node=sys.argv[2]
+cache={}
 for line in Path(sys.argv[3]).read_text(errors="replace").splitlines():
     if not line or line.startswith(('#','//')) or '=' not in line or ':' not in line.split('=',1)[0]: continue
     left,value=line.split('=',1); cache[left.split(':',1)[0]]=value
@@ -126,10 +163,10 @@ cmake --build "${BUILD_DIR}" --parallel 2 |& tee "${EVIDENCE_DIR}/build.log"
 
 STAGE="tests"
 TEST_WRAPPER="${WORK_DIR}/run-tests-under-x.sh"
-cat > "${TEST_WRAPPER}" <<'EOF'
+cat > "${TEST_WRAPPER}" <<'EOF2'
 #!/usr/bin/env bash
 set -Eeuo pipefail
-: "${BUILD_DIR:?}"; : "${EVIDENCE_DIR:?}"
+: "${BUILD_DIR:?}"; : "${EVIDENCE_DIR:?}"; : "${TEST_LANG:?}"; : "${TEST_LC_ALL_UNSET:?}"
 openbox >"${EVIDENCE_DIR}/openbox.log" 2>&1 &
 wm_pid=$!
 cleanup() { kill "${wm_pid}" 2>/dev/null || true; wait "${wm_pid}" 2>/dev/null || true; }
@@ -140,17 +177,25 @@ for _ in $(seq 1 100); do
     sleep 0.1
 done
 [[ "${ready}" == true ]] || { echo "Openbox did not publish a real EWMH supporting-WM window" >&2; exit 1; }
-export QT_QPA_PLATFORM=xcb LANG=C.UTF-8 LC_ALL=C.UTF-8
+export QT_QPA_PLATFORM=xcb
+export LANG="${TEST_LANG}"
+if [[ "${TEST_LC_ALL_UNSET}" == 1 ]]; then unset LC_ALL; else export LC_ALL="${TEST_LC_ALL}"; fi
+{
+    printf 'LANG=%s\n' "${LANG}"
+    if [[ -v LC_ALL ]]; then printf 'LC_ALL=%s\n' "${LC_ALL}"; else printf 'LC_ALL=<unset>\n'; fi
+    printf 'LANGUAGE=%s\n' "${LANGUAGE-<unset>}"
+    locale
+} > "${EVIDENCE_DIR}/test-environment.txt"
 ctest --test-dir "${BUILD_DIR}" --output-on-failure -j1 |& tee "${EVIDENCE_DIR}/tests.log"
-EOF
+EOF2
 chmod +x "${TEST_WRAPPER}"
-export BUILD_DIR EVIDENCE_DIR
+export BUILD_DIR EVIDENCE_DIR TEST_LANG TEST_LC_ALL TEST_LC_ALL_UNSET
 dbus-run-session -- xvfb-run -a -s '-screen 0 1920x1080x24' "${TEST_WRAPPER}"
 
 STAGE="install-staging"
 mkdir -p "${INSTALL_ROOT}"
 DESTDIR="${INSTALL_ROOT}" cmake --install "${BUILD_DIR}" |& tee "${EVIDENCE_DIR}/install.log"
-find "${INSTALL_ROOT}" \( -type f -o -type l \) | sed "s#^${INSTALL_ROOT}##" | sort > "${EVIDENCE_DIR}/installed-files.txt"
+find "${INSTALL_ROOT}" -type f -o -type l | sed "s#^${INSTALL_ROOT}##" | sort > "${EVIDENCE_DIR}/installed-files.txt"
 test -s "${EVIDENCE_DIR}/installed-files.txt"
 
 STAGE="complete"

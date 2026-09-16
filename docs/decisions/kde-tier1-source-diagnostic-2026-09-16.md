@@ -2,63 +2,70 @@
 
 Date: **2026-09-16**
 
-Status: **FIRST CAMPAIGN COMPLETE — 5 DIAG_PASS / 2 DIAG_FAIL; targeted remediation prepared**
+Status: **SECOND CAMPAIGN COMPLETE — 6 DIAG_PASS / 1 DIAG_FAIL; KI18n locale-fixture remediation prepared**
 
 ## Purpose and semantics
 
-The package DAG remains the only path that may promote a KDE node to package `PASS`. The source-diagnostic lane exists to discover provider/configure/build/test failures across independent nodes before every specialized Debian packaging lane exists.
+The package DAG remains the only path that may promote a KDE node to package `PASS`. The source-diagnostic lane discovers provider/configure/build/test failures across independent nodes before every specialized Debian packaging lane exists.
 
-It reports only `DIAG_PASS` and `DIAG_FAIL`. Neither value changes the canonical package DAG. In particular, `DIAG_PASS` does not prove Debian package splits, symbols/ABI policy, Lintian, Multi-Arch, `.deb` runtime closure, `.changes`, `.buildinfo` or downstream eligibility.
+It reports only `DIAG_PASS` and `DIAG_FAIL`. Neither value changes the canonical package DAG. A `DIAG_PASS` does not prove Debian package splits, symbols/ABI policy, Lintian, Multi-Arch, `.deb` runtime closure, `.changes`, `.buildinfo` or downstream eligibility.
 
-## First campaign
+## First campaign — run 35131119792
 
-Run `35131119792` at commit `1f5fcdc68e1bbb2a7cc3f93dc20687aadc15cec0` attempted all seven nodes independently with `fail-fast: false`.
+Commit `1f5fcdc68e1bbb2a7cc3f93dc20687aadc15cec0` attempted all seven nodes independently with `fail-fast: false`.
 
-| Node | Result | Evidence / classification |
-| --- | --- | --- |
-| KConfig | `DIAG_FAIL` | job `104912090505`, artifact `10461886238`, SHA-256 `231cfd286876889997590b67fcfe640f34510cc46ae7fc0a3a96e72af5124142`; configure failed because `Qt6::CorePrivate` referenced a missing versioned private-header path while `qt6-base-private-dev` was absent |
-| KI18n | `DIAG_FAIL` | job `104912090737`, artifact `10461686975`, SHA-256 `9edeb81c9ecdb92d07691a1b333169858c13348a25bb92c7e5a8bb3dcbec8aaf`; build completed, then 3/17 locale-data tests lacked French `iso-codes` translations |
-| Sonnet | `DIAG_PASS` | job `104912091007`, artifact `10460838096`, SHA-256 `18e1c8ed50063b17d0f4063b511c4c82badf68c702768e2d01f9fb72a7b86855` |
-| Kirigami | `DIAG_PASS` | job `104912090447`, artifact `10461303414`, SHA-256 `a69730c8d09d8acce2ee103c98a0d85faf819cbbe1bedb6fdac1a77364ddc7ba` |
-| KQuickCharts | `DIAG_PASS` | job `104912090786`, artifact `10461177852`, SHA-256 `9db7bceb571b2595723bbe2c16ff60ea8a1fecdb0525ff53ba860231b8dd4530` |
-| KUserFeedback | `DIAG_PASS` | job `104912090591`, artifact `10461537028`, SHA-256 `e91e08e4d47039274c8806db5c310bbbd31dba4bd38d4c622a67ccdd5c10d0ac` |
-| Prison | `DIAG_PASS` | job `104912090832`, artifact `10460853327`, SHA-256 `a90e7fda5401670092e74d83e58bfa14c2ebd75d186a5a33a25c6328efb986c0` |
+- KConfig: `DIAG_FAIL` at configure because `Qt6::CorePrivate` referenced the missing versioned Qt private-header surface; `qt6-base-private-dev` was absent.
+- KI18n: `DIAG_FAIL`, 14/17 tests; the three failures expected French `iso-codes` translations.
+- Sonnet, Kirigami, KQuickCharts, KUserFeedback and Prison: `DIAG_PASS`.
 
-None of the five diagnostic PASS results is a package PASS.
+This campaign established two independent provider/fixture hypotheses without changing package state.
 
-## KConfig remediation
+## Second campaign — run 35134670463
 
-KConfig 6.30 configured far enough to resolve `Qt6CorePrivate`, but the imported target referenced the versioned QtCore private include surface that was not installed. The diagnostic profile had `qt6-base-dev` but not `qt6-base-private-dev`.
+Commit `e0228ddb21fb57a639245b2fb93494854bccd928` reran the seven nodes once because the common runner and selector contract changed.
 
-The next profile adds `qt6-base-private-dev`. The runner also asserts that a versioned `QtCore/.../QtCore/private` directory actually exists before CMake configure. This converts the fix from an assumption into a tested provider contract.
+| Node | Result | Job | Artifact | Artifact SHA-256 |
+| --- | --- | ---: | ---: | --- |
+| KConfig | `DIAG_PASS` | `104923940842` | `10463162930` | `8af6e430985ac9d46886032c7e4073eaacd6a599eb66f005b15abba723b10c0c` |
+| KI18n | `DIAG_FAIL` | `104923940865` | `10462837843` | `96801e17f96956a616a06be32e11facdde6dfdef0809ce966865a8d95718e537` |
+| Sonnet | `DIAG_PASS` | `104923941024` | `10462543371` | `c832539c4fa053d125f62764886bbad6158814e33a0a39afcdd914f2b62b3bf6` |
+| Kirigami | `DIAG_PASS` | `104923940883` | `10462063740` | `1014cb8cce1b43f9a3912b4e45acf752a2bf9520bc8dad2c7a6b8f2e1f9077b6` |
+| KQuickCharts | `DIAG_PASS` | `104923940752` | `10462337704` | `ee33a55f58ea0e56c7d8af5cfa571790531e92f5897b1f88c25520ceae0c042b` |
+| KUserFeedback | `DIAG_PASS` | `104923940498` | `10462087859` | `baf1b41d7b74b4001b165ef5426ec78cd5ffdec7acc15e43234a7a0d5035727e` |
+| Prison | `DIAG_PASS` | `104923940882` | `10462272649` | `3f7dfd401f1906845b8465a7059ed4cda55b6e7fd520108a90bc8a1a5d7713b0` |
 
-## KI18n remediation
+KConfig therefore validates the provider correction: `qt6-base-private-dev` plus a real versioned private-header assertion is sufficient for the source diagnostic.
 
-KI18n compiled completely. The only failures were `kcatalogtest`, `kcountrytest` and `kcountrysubdivisiontest`, all expecting French translations from the `iso_3166-1` / `iso_3166-2` gettext domains. Examples include `New Zealand -> Nouvelle-Zélande` and `Wien -> Vienne`.
+## KI18n v2 classification
 
-Ubuntu 26.04 supplies `iso-codes` as data and moves language-specific translation coverage through Ubuntu language packs. The next diagnostic profile therefore adds `language-pack-fr-base`. Before compiling, the runner requires actual French `iso_3166-1.mo` and `iso_3166-2.mo` catalogs under the normal or Ubuntu language-pack locale tree. The remediation is considered proven only if the next unchanged upstream tests pass.
+The second attempt disproved the narrower hypothesis that French catalogs were simply absent. `language-pack-fr-base` installed real `iso_3166-1.mo` and `iso_3166-2.mo` catalogs and the pre-build assertion passed, but the same three upstream tests still failed.
+
+The common test wrapper forced `LANG=C.UTF-8 LC_ALL=C.UTF-8`. KI18n's upstream tests intentionally manipulate `LANG` and `LANGUAGE`; for example, `kcountrytest` sets `LANG=fr_CH.UTF-8`, while `kcatalogtest` constructs a long `LANGUAGE=fr_CH:...` value to exercise KCatalog/gettext behavior. `LC_ALL` has higher locale precedence and therefore neutralized the test's `LANG` selection. With the effective C locale, gettext does not exercise the intended `LANGUAGE` translation path.
+
+This is a diagnostic-fixture failure, not justification to patch KDE source or disable tests.
+
+## KI18n v3 remediation
+
+The node profile now declares its locale requirements and test environment explicitly:
+
+- provider `locales-all` supplies precompiled locales;
+- `language-pack-fr-base` continues to supply the required French catalogs;
+- `en_US.UTF-8` and `fr_CH.UTF-8` must both be discoverable through `locale -a` before configure;
+- the test wrapper sets `LANG=en_US.UTF-8` and unsets `LC_ALL` only for KI18n;
+- the unchanged upstream test suite remains the proof gate.
+
+The runner reads this fixture from node metadata. Other nodes retain the existing `C.UTF-8` default. Once this common runner change has passed, later provider/profile changes can use the existing per-node semantic selector instead of rerunning unrelated green nodes.
 
 ## Upstream defaults
 
-The diagnostic runner does not disable features to obtain a green result. It preserves and checks the selected KDE 6.30 defaults, including GUI/QML/DBus for KConfig, QML for KI18n, backends and Designer plugin for Sonnet, Desktop style and DBus for Kirigami, and the enabled multimedia/barcode paths for Prison.
-
-## Per-node scope
-
-The first implementation used a global semantic selector. That would rerun five already-green nodes whenever only KConfig or KI18n changed. The selector is now per-node:
-
-- changes to one node's diagnostic profile rerun only that node;
-- evidence-only `last_campaign` changes do not rerun diagnostics;
-- common runner/workflow/dependency-provider changes conservatively rerun the full matrix;
-- documentation-only changes do not run the diagnostic lane.
-
-This preserves broad discovery while avoiding repeated expensive work after the common infrastructure stabilizes.
+The runner does not disable KDE features to obtain a green result. It preserves and checks the selected KDE 6.30 defaults, including GUI/QML/DBus for KConfig, QML for KI18n, backends and Designer plugin for Sonnet, Desktop style and DBus for Kirigami, and enabled multimedia/barcode paths for Prison.
 
 ## Relationship to package lanes
 
 1. source diagnostics discover failures broadly and early;
-2. specialized package lanes produce `.deb` evidence;
+2. specialized package lanes produce real Debian package evidence;
 3. only package `PASS` artifacts may feed downstream package nodes;
-4. diagnostic fixes must still pass full package gates;
-5. global package campaigns are repeated after remediation.
+4. diagnostic fixes must still pass the full package gates;
+5. package campaigns continue independently of diagnostic FAILs that do not form DAG predecessors.
 
-KGuiAddons is intentionally outside this seven-node source matrix because its package validation must consume the retained local KCoreAddons PASS rather than substitute Ubuntu KDE packages.
+KGuiAddons remains outside this seven-node source matrix because its package validation must consume the retained local KCoreAddons PASS rather than substitute an Ubuntu KDE package.

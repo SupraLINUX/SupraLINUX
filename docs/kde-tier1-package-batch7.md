@@ -1,92 +1,66 @@
 # KDE Frameworks 6.30 Tier 1 — package Batch 7
 
-Status: **REVISION -3 PREPARED — two real FAIL attempts retained; no Batch 7 PASS yet**
+Status: **2 PASS retained / 1 remediation prepared (`KWidgetsAddons -6`)**
 
-Canonical promoted Tier 1 remains **18 PASS / 11 pending / 0 current FAIL / 0 BLOCKED**. The Batch 7 attempt ledger separately records real FAIL attempts for the three still-pending nodes.
+Canonical Tier 1 remains **18 PASS / 11 pending / 0 current FAIL / 0 BLOCKED** until KCalendarCore and KCoreAddons are promoted to `manifests/kde-frameworks-tier1.json`.
 
 ## Selection
 
-Batch 7 contains three independent nodes:
+Batch 7 contains three independently attempted nodes:
 
-- `kcalendarcore`
-- `kcoreaddons`
-- `kwidgetsaddons`
+- KCalendarCore;
+- KCoreAddons;
+- KWidgetsAddons.
 
-KGuiAddons remains deferred because its public `KImageCache` development surface consumes KCoreAddons. Its package/development contract must be fed by a retained local KCoreAddons PASS, not an Ubuntu KDE package.
+KGuiAddons is deferred to a local-predecessor package lane because its development surface consumes KCoreAddons. It must use the retained SupraLINUX KCoreAddons PASS rather than an Ubuntu KDE substitute.
 
-## KDE defaults retained
+## Common packaging path
 
-Upstream-layout run `35086226149`, job `104761571679`, artifact `10443202060`, SHA-256 `c50a32b26e18ee84173b5a00cbd85e0c2b380660be9d939eb489c370f1317e77`, established:
+All three preserve KDE 6.30 source and upstream feature defaults:
 
-- `BUILD_PYTHON_BINDINGS=ON` for all three nodes;
-- `BUILD_TESTING=ON` for all three;
-- `BUILD_DESIGNERPLUGIN=ON` for KWidgetsAddons.
+- `BUILD_PYTHON_BINDINGS=ON`;
+- `BUILD_TESTING=ON`;
+- KWidgetsAddons additionally keeps `BUILD_DESIGNERPLUGIN=ON`.
 
-SupraLINUX keeps those KDE 6.30 defaults explicit. Debian Python packaging uses `DEB_PYTHON_INSTALL_LAYOUT=deb`; the bindings remain split into `python3-*` packages under `/usr/lib/python3/dist-packages`.
+The clean build path uses retained ECM `6.30.0-0supralinux3`, the retained Tier 1 packaging reference tree, Clang/LLVM for Shiboken ApiExtractor, `python3-build` plus `python3-setuptools`, strict Lintian, local package installation/APT closure, Python import and C++ consumer smoke.
 
-## Attempt 1 — revision -1
+## KCalendarCore
 
-Run `35102198701` attempted all three nodes with `fail-fast: false`.
+Real attempts:
 
-All three failed in `sbuild` because Shiboken/ApiExtractor could not locate Clang's built-in include/resource directory in the clean environment. The first remediation added `clang`, `libclang-dev` and `llvm-dev` without changing KDE source or disabling bindings/tests.
+1. `-1` FAIL: Clang built-ins unavailable to ApiExtractor.
+2. `-2` FAIL: `setuptools.build_meta` unavailable to ECM's isolated-disabled wheel build.
+3. `-3` FAIL: 507/507 tests PASS, then `dh_missing` found 18 unowned translation catalogs.
+4. `-4` FAIL: translation split and package build succeeded, but Lintian rejected 18 new public symbols with Debian-revision minima.
+5. `-5` PASS: run `35130213945`, job `104909057699`, artifact `10461386548`, artifact SHA-256 `6f191cad05620093d9e97e1df3fec78d82e9f9df74270ba8a6bc6b328c61e2f6`, 507/507 tests PASS, all package gates PASS.
 
-Artifacts:
+The final ABI overlay records 10 APIs introduced in KDE 6.29.0 and 8 in KDE 6.30.0.
 
-- KCalendarCore: job `104814147716`, artifact `10448034196`, SHA-256 `c76b9900d622e5ae4ab5823771baeabcbe8e2e180811ed01ac18d42b99f792e4`;
-- KCoreAddons: job `104814147979`, artifact `10449051854`, SHA-256 `d7943a390efd8610cdab14422085c6c534f0d5877ece6910f36d8a01288acba7`;
-- KWidgetsAddons: job `104814148006`, artifact `10448668591`, SHA-256 `227370b1da6151ed68155e2dfc65252db77f68e6ec03ee8f5737550709c8b995`.
+## KCoreAddons
 
-## Attempt 2 — revision -2
+Real attempts:
 
-Repository Policy for the Clang/LLVM remediation passed in run `35103681773`.
+1. `-1` FAIL: Clang built-ins unavailable to ApiExtractor.
+2. `-2` FAIL: `setuptools.build_meta` unavailable.
+3. `-3` FAIL: 34/34 tests PASS, then Lintian rejected two KAboutData symbols with the current Debian revision as minimum.
+4. `-4` PASS: run `35122522242`, job `104883541991`, artifact `10457958023`, artifact SHA-256 `c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64`, 34/34 tests PASS, all package gates PASS.
 
-Run `35103681715` then attempted all three `6.30.0-0supralinux2` packages. The Clang/LLVM correction worked: each build passed Shiboken wrapper generation and reached final Python extension linking.
+## KWidgetsAddons
 
-The new common failure occurred when ECM invoked:
+Real attempts:
 
-`python3 -m build --wheel --no-isolation`
+1. `-1` FAIL: Clang built-ins unavailable.
+2. `-2` FAIL: `setuptools.build_meta` unavailable.
+3. `-3` FAIL: 25/27 tests PASS; only the two activation-dependent gesture suites failed under bare Xvfb.
+4. `-4` FAIL: verified Openbox fixed the gestures, but `KSqueezedTextLabel` failed under the global WM fixture; 26/27 PASS.
+5. `-5` FAIL: run `35134670336`, job `104923940192`, artifact `10462188593`, SHA-256 `f5c47f8efbf1ca2172e0578b104e472875f01966b17f33f34eeadf47daef8aa5`. The 27=25+2 partition was correct, but the bare-Xvfb partition was 24/25 because `KSqueezedTextLabel` still failed before Openbox started.
 
-All three failed with:
+Revision `-6` keeps the 25/2 partition and adds an explicit deterministic font fixture: `fontconfig` + `fonts-dejavu-core`, with a pre-test assertion that generic sans-serif resolves to DejaVu Sans. This is a CI environment contract, not an upstream KDE requirement.
 
-`BackendUnavailable: Cannot import 'setuptools.build_meta'`
+No test is omitted, disabled or patched.
 
-Artifacts:
+## State semantics
 
-- KCalendarCore: job `104819252283`, artifact `10449348134`, SHA-256 `5e24d94981c060541e008c81ef6e76e3f785b5e52fe249206aa117920c9d7040`;
-- KCoreAddons: job `104819252182`, artifact `10449846512`, SHA-256 `17df43995650455389ee2f0d565ed966dd536abaeaf6f56bb44877c762c478af`;
-- KWidgetsAddons: job `104819252378`, artifact `10449886366`, SHA-256 `0ded038e3a2b7cac8bc94dc5eb61e8183cc1cdcc45284d0040ddbc4ee9670760`.
-
-These are real `FAIL`, not `BLOCKED`.
-
-## Setuptools provider gate
-
-Ubuntu Resolute is only the provider. KDE/ECM remains authority over the binding build flow.
-
-Provider-only commit `78760b565dd49e981fa0891535da289120b40470` passed Repository Policy in run `35106561229`.
-
-Dependency-provider run `35106561251`, job `104829186807`, artifact `10450572112`, SHA-256 `488592048a0514b8f6234e8820c959817a151782fef41c138b71f7a8b7fe8fc4`, passed and proved:
-
-- `python3-build 1.4.0-1` frontend import PASS;
-- `python3-setuptools 78.1.1-0.1build1` installed from Resolute;
-- `setuptools.build_meta` import PASS.
-
-Batch 7 run `35106561165` intentionally skipped all three nodes for that provider-only delta.
-
-## Revision -3
-
-The `6.30.0-0supralinux3` package revision adds `python3-setuptools` to Build-Depends for all three nodes. It keeps:
-
-- KDE 6.30.0 source hashes unchanged;
-- Python bindings and tests enabled;
-- KWidgetsAddons Designer plugin enabled;
-- `clang`, `libclang-dev`, `llvm-dev`;
-- `DEB_PYTHON_INSTALL_LAYOUT=deb`;
-- retained ECM and packaging-tree predecessors.
-
-## PASS gate
-
-A node becomes PASS only after a real clean build proves source hash, `sbuild`, non-zero 100% CTest pass, expected binary set, SONAME, source+binary Lintian error gate, exact local package installation/`apt-get check`, Python import, C++ consumer configure/build/run and retained reproducibility evidence.
-
-Until then KCalendarCore, KCoreAddons and KWidgetsAddons remain canonical `pending` and downstream-ineligible.
+Historical real FAIL attempts remain immutable evidence after later PASS. A retained PASS is downstream-eligible only after all package gates pass. Scope-skipped jobs do not replace retained PASS artifacts and do not create new package results.
 
 PR #1 remains **OPEN + DRAFT**. No merge is authorized.
