@@ -1,0 +1,88 @@
+Source: kf6-kcoreaddons
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               dh-sequence-python3,
+               cmake (>= 3.29~),
+               extra-cmake-modules (>= 6.30.0~),
+               libpyside6-dev,
+               libshiboken6-dev,
+               python3-build,
+               python3-dev (>= 3.9~),
+               qt6-base-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.9.0~),
+               dh-sequence-qmldeps,
+               libmount-dev [linux-any],
+               libudev-dev [linux-any],
+               qt6-base-private-dev (>= 6.9.0~),
+               qt6-declarative-dev (>= 6.9.0~),
+               shared-mime-info (>= 2.1~),
+               xauth <!nocheck>,
+               xvfb <!nocheck>,
+Standards-Version: 4.7.4
+Homepage: https://invent.kde.org/frameworks/kcoreaddons
+Rules-Requires-Root: no
+
+Package: libkf6coreaddons-data
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: KCoreAddons shared data
+ This package contains architecture-independent runtime data for KDE KCoreAddons.
+
+Package: libkf6coreaddons-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libkf6coreaddons6 (= ${binary:Version}),
+         qml6-module-org-kde-coreaddons (= ${binary:Version}),
+         qt6-base-dev (>= 6.9.0~),
+         ${misc:Depends},
+Recommends: libkf6coreaddons-doc (= ${source:Version}),
+Description: development files for KDE KCoreAddons
+ This package contains headers, CMake metadata, the development symlink,
+ and the exported PySide/Shiboken binding development metadata.
+
+Package: libkf6coreaddons-doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Section: doc
+Description: KDE KCoreAddons documentation compatibility package
+ This package preserves the Debian-family documentation package name.
+ .
+ The current SupraLINUX common Frameworks profile does not ship QCH files.
+
+Package: libkf6coreaddons6
+Architecture: any
+Multi-Arch: same
+Depends: libkf6coreaddons-data (= ${source:Version}),
+         shared-mime-info (>= 2.1~),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: KDE KCoreAddons runtime library
+ This package contains the KDE Frameworks 6 KCoreAddons runtime library.
+
+Package: qml6-module-org-kde-coreaddons
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${qml6:Depends},
+         ${shlibs:Depends},
+Description: KDE KCoreAddons QML module
+ This package contains the QML module shipped by KDE KCoreAddons.
+
+Package: python3-kcoreaddons
+Section: python
+Architecture: any
+Depends: libkf6coreaddons6 (= ${binary:Version}),
+         python3-pyside6.qtcore,
+         ${misc:Depends},
+         ${python3:Depends},
+         ${shlibs:Depends},
+Description: Python 3 bindings for KDE KCoreAddons
+ This package contains the upstream KDE Frameworks 6 Python bindings for
+ KCoreAddons, generated with Shiboken6/PySide6.

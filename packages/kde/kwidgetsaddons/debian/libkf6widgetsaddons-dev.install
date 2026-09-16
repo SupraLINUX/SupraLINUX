@@ -1,0 +1,6 @@
+usr/include/KF6/KWidgetsAddons/
+usr/include/PySide6/KWidgetsAddons/
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6WidgetsAddons/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6WidgetsAddons.so
+usr/lib/${DEB_HOST_MULTIARCH}/qt6/plugins/designer/kwidgetsaddons6widgets.so
+usr/share/PySide6/typesystems/typesystem_kwidgetsaddons.xml

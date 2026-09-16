@@ -1,0 +1,6 @@
+provider=debian
+reference_version=6.28.0
+workflow_run=34708030450
+artifact_id=10301938362
+path=trees/debian/kwidgetsaddons/debian/libkf6widgetsaddons6.symbols
+sha256=31c352878dc27c56a6357ad35c308acac8871b1a105273721923cc697e68c323

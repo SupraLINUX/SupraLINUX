@@ -1,0 +1,24 @@
+# SupraLINUX KCalendarCore source/package notes
+
+KDE upstream v6.30.0 is the authority for source, features and build requirements.
+Source: https://download.kde.org/stable/frameworks/6.30/kcalendarcore-6.30.0.tar.xz
+Source SHA-256: e8bf60e398e2f8098a4db7db44c5475d70540ad8f8948a123c8bc109dc4db776
+Upstream root CMakeLists Git blob: 0414c1256b209ae14c41f2ccc0a99480f3298a17
+
+Batch 7 preserves the KDE 6.30 Linux/shared-library defaults: Python bindings and
+tests are enabled; KWidgetsAddons also keeps its Designer plugin enabled. The
+explicit ON flags in debian/rules mirror the verified upstream 6.30 defaults and
+make accidental feature loss fail closed. QCH remains disabled only under the
+already-established common SupraLINUX Frameworks package profile.
+
+Python installation uses DEB_PYTHON_INSTALL_LAYOUT=deb so ECM sysconfig installs
+the extension under /usr/lib/python3/dist-packages rather than /usr/local.
+
+Debian 6.28.0 packaging is retained only as a technical compatibility reference
+for public symbols, package split conventions and copyright metadata.
+Packaging-tree evidence: run 34708030450, artifact 10301938362.
+Symbols baseline SHA-256: 2662789d8c2e5715f218e40826a15a261a151bfda2d2695e5c5efefbc2d26127
+Copyright baseline SHA-256: 578646ab9522f3decfc3f64fa153f599f9004c213e5df03c21b5ee31e2584d13
+Retained signing-key bundle SHA-256: 86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d
+Frameworks 6.30 signer fingerprint in the retained bundle:
+90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1.
