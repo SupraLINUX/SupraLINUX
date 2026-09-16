@@ -1,0 +1,118 @@
+name: One-shot Batch 7 canonical promotion
+
+on:
+  push:
+    branches:
+      - tooling/batch7-promotion
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout promotion tooling
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: tooling/batch7-promotion
+          path: tooling
+          fetch-depth: 1
+
+      - name: Checkout exact canonical branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: architecture/bootstrap-v1
+          path: canonical
+          fetch-depth: 0
+
+      - name: Verify canonical source commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected=411f50dec9a05bb63569ae69589e202d7278f77f
+          actual="$(git -C canonical rev-parse HEAD)"
+          [[ "${actual}" == "${expected}" ]] || {
+            echo "Canonical branch moved: expected ${expected}, got ${actual}" >&2
+            exit 1
+          }
+
+      - name: Apply deterministic promotion transform
+        shell: bash
+        run: bash tooling/scripts/run-promote-batch7-canonical.sh canonical
+
+      - name: Audit exact promotion delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd canonical
+          git diff --check
+          cat > /tmp/expected-files <<'EOF'
+          docs/kde-dag.md
+          docs/kde-tier1-dependencies.md
+          docs/kde-tier1-package-batch7.md
+          docs/status/2026-09-16-batch7-promotion.md
+          docs/status/2026-09-16-batch7.md
+          manifests/kde-dag.json
+          manifests/kde-frameworks-tier1.json
+          manifests/kde-tier1-global-discovery.json
+          manifests/kde-tier1-package-campaign-batch7.json
+          scripts/validate_kde_tier1.py
+          scripts/validate_kde_tier1_global_discovery.py
+          scripts/validate_kde_tier1_package_batch7.py
+          EOF
+          git status --short
+          git diff --name-only | sort > /tmp/actual-files
+          sort -o /tmp/expected-files /tmp/expected-files
+          diff -u /tmp/expected-files /tmp/actual-files
+
+      - name: Validate promoted repository state
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd canonical
+          python3 scripts/validate_repository.py
+          python3 scripts/validate_kde_dag.py
+          python3 scripts/validate_kde_tier1.py
+          python3 scripts/validate_kde_tier1_global_discovery.py
+          python3 scripts/validate_kde_tier1_source_diagnostic.py
+          python3 scripts/validate_kde_tier1_packaging_reference.py
+          python3 scripts/validate_kde_tier1_packaging_tree.py
+          python3 scripts/validate_kde_tier1_package_batch1.py
+          python3 scripts/validate_kde_tier1_package_batch2.py
+          python3 scripts/validate_kde_tier1_package_batch3.py
+          python3 scripts/validate_kde_tier1_package_batch4.py
+          python3 scripts/validate_kde_tier1_package_batch5.py
+          python3 scripts/validate_kde_tier1_package_batch6.py
+          python3 scripts/validate_kde_tier1_package_batch7.py
+          python3 scripts/validate_kde_attica_package.py
+          python3 scripts/validate_kde_attica_ci_scope.py
+          bash scripts/test-kde-tier1-dependency-preflight-scope.sh
+          bash scripts/test-kde-tier1-package-batch7-scope.sh
+          bash scripts/test-kde-tier1-source-diagnostic-scope.sh
+
+      - name: Commit and push canonical promotion
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd canonical
+          git config user.name "SupraLINUX CI"
+          git config user.email "ci@supralinux.invalid"
+          git add \
+            docs/kde-dag.md \
+            docs/kde-tier1-dependencies.md \
+            docs/kde-tier1-package-batch7.md \
+            docs/status/2026-09-16-batch7-promotion.md \
+            docs/status/2026-09-16-batch7.md \
+            manifests/kde-dag.json \
+            manifests/kde-frameworks-tier1.json \
+            manifests/kde-tier1-global-discovery.json \
+            manifests/kde-tier1-package-campaign-batch7.json \
+            scripts/validate_kde_tier1.py \
+            scripts/validate_kde_tier1_global_discovery.py \
+            scripts/validate_kde_tier1_package_batch7.py
+          git diff --cached --check
+          git commit -m "kde: promote Tier 1 Batch 7 canonical PASS"
+          git push origin HEAD:architecture/bootstrap-v1
