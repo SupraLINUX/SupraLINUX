@@ -26,10 +26,10 @@ if m.get("schema") != 2 or m.get("authority") != "kde-upstream" or m.get("framew
 if m.get("state") != "PASS":
     fail("Batch 7 must be technically closed PASS")
 if m.get("canonical_snapshot") != {
-    "state": "technical-closure-awaiting-canonical-promotion",
-    "tier1": "18 PASS / 11 pending in canonical manifest; all three Batch 7 nodes have retained PASS evidence and are ready for atomic canonical promotion",
+    "state": "canonical-promoted",
+    "tier1": "21 PASS / 8 pending / 0 current FAIL / 0 BLOCKED after Batch 7 canonical promotion",
 }:
-    fail("Batch 7 pre-promotion canonical snapshot mismatch")
+    fail("Batch 7 canonical promotion snapshot mismatch")
 if set(m.get("selected_nodes", [])) != expected or set(m.get("nodes", {})) != expected:
     fail("Batch 7 node set mismatch")
 if m.get("attempt_ledger") != "manifests/kde-tier1-package-batch7-attempts.json":
@@ -163,4 +163,4 @@ for token in ("100% tests passed, 0 tests failed", "Lintian:[[:space:]]+fail", "
 
 print("KDE Tier 1 Batch 7 technical closure: PASS")
 print("KCalendarCore, KCoreAddons and KWidgetsAddons = 3/3 retained PASS/downstream-eligible")
-print("Canonical Tier 1 promotion remains a separate atomic state update: currently 18 PASS / 11 pending")
+print("Canonical Tier 1 state after Batch 7: 21 PASS / 8 pending / 0 FAIL / 0 BLOCKED")

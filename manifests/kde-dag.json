@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-15",
+  "as_of": "2026-09-16",
   "frameworks_series": "6.30.0",
   "authority": "kde-upstream",
   "states": [
@@ -1473,6 +1473,193 @@
         "revalidation_artifact_id": 10427653865,
         "revalidation_artifact_sha256": "cff267d012a3e103b53bd6e19757e6c3b0af7dc873f4cd166a4505f58aee8389",
         "reason": "Shared Batch 6 consumer-runtime closure was revalidated without a package change; prior PASS evidence is retained and the exact same package revision passed under the corrected runner."
+      }
+    },
+    "kcalendarcore": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kcalendarcore-6.30.0.tar.xz",
+      "source_sha256": "e8bf60e398e2f8098a4db7db44c5475d70540ad8f8948a123c8bc109dc4db776",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
+      "package_provider": "supralinux",
+      "source_package": "kf6-kcalendarcore",
+      "binary_packages": [
+        "libkf6calendarcore-data",
+        "libkf6calendarcore-dev",
+        "libkf6calendarcore-doc",
+        "libkf6calendarcore6",
+        "qml6-module-org-kde-calendarcore",
+        "python3-kcalendarcore"
+      ],
+      "package_version": "6.30.0-0supralinux5",
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "attempt_ledger": "manifests/kde-tier1-package-batch7-attempts.json",
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 35130213945,
+          "job_id": 104909057699,
+          "commit": "9b9e313176d5154656274976872feb7be34ab126",
+          "attempted_package_version": "6.30.0-0supralinux5",
+          "artifact_id": 10461386548,
+          "artifact_sha256": "6f191cad05620093d9e97e1df3fec78d82e9f9df74270ba8a6bc6b328c61e2f6",
+          "stage": "complete",
+          "tests": "507/507 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "python_import": "PASS",
+          "apt_check": "PASS",
+          "abi_soname": "libKF6CalendarCore.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        }
+      ],
+      "pass_files": {
+        "libkf6calendarcore_data_deb_sha256": "a3e14761b6cb3e70cacbdfb17ea7cc410a44db7f440b84973c7bc66abd355578",
+        "libkf6calendarcore_dev_deb_sha256": "b91b0fbbc45cbffad59f4b307d4499c3bda1ec10c1d81c6fb91ec4afa5c2c0ea",
+        "libkf6calendarcore_doc_deb_sha256": "d29c4d07d687b9b855c56fcfd5d9d7b62d013edc228851adc38f9df62de4dd43",
+        "libkf6calendarcore6_deb_sha256": "ce8063e65119b8f8b46efe848519187131878390e302cbe5aaa667ae5862ab17",
+        "python3_kcalendarcore_deb_sha256": "d2a21b8ab286eec081a327130eeb48c45fc24be720757b8bf50c581a36a7fb5f",
+        "qml6_module_org_kde_calendarcore_deb_sha256": "696e26826a3acc4126cb0536d8c03041f1abbf70f5b2c5b1009eb12a87fb67a0",
+        "changes_sha256": "5c3c8b22ca19379ef9c8cfe11b5a381f91c692f3b51de81e5a392b2d01e8fe77",
+        "buildinfo_sha256": "42a21961f0df871ccdb1fdf3c40ba1f8d23e5f1c285d7690f357669d35e55478",
+        "dsc_sha256": "bc7812c4da1756a00777de3ad4a1d4d8e825803ad62130e17ce58452e282e492",
+        "orig_tar_sha256": "e8bf60e398e2f8098a4db7db44c5475d70540ad8f8948a123c8bc109dc4db776",
+        "debian_tar_sha256": "d7c71cfedda54211de813ba21be878dce6629a974c25f06299bd41eeac61cf11",
+        "rootfs_sha256": "eb3e6bfe65b142c1308d8a1892e00c6bd57028126147ac09376778dec60692f6"
+      }
+    },
+    "kcoreaddons": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kcoreaddons-6.30.0.tar.xz",
+      "source_sha256": "cc68fe15beb0fca2036cff8742f468c1345406bf99793fffacbf8f2a3f89bc4b",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
+      "package_provider": "supralinux",
+      "source_package": "kf6-kcoreaddons",
+      "binary_packages": [
+        "libkf6coreaddons-data",
+        "libkf6coreaddons-dev",
+        "libkf6coreaddons-doc",
+        "libkf6coreaddons6",
+        "qml6-module-org-kde-coreaddons",
+        "python3-kcoreaddons"
+      ],
+      "package_version": "6.30.0-0supralinux4",
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "attempt_ledger": "manifests/kde-tier1-package-batch7-attempts.json",
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 35122522242,
+          "job_id": 104883541991,
+          "commit": "ea465e7f78ee621f6456246e7ba76e0a89e46d78",
+          "attempted_package_version": "6.30.0-0supralinux4",
+          "artifact_id": 10457958023,
+          "artifact_sha256": "c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64",
+          "stage": "complete",
+          "tests": "34/34 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "python_import": "PASS",
+          "apt_check": "PASS",
+          "abi_soname": "libKF6CoreAddons.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        }
+      ],
+      "pass_files": {
+        "libkf6coreaddons_data_deb_sha256": "f05f55e3c6486af9d3ff48aa38215784bbb347aae1cd5fb760f5513760364908",
+        "libkf6coreaddons_dev_deb_sha256": "9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636",
+        "libkf6coreaddons_doc_deb_sha256": "27895f2792f26ed4c0949fecddcf5dc562f5f15f22c939694137b70c917ef2fc",
+        "libkf6coreaddons6_deb_sha256": "015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb",
+        "python3_kcoreaddons_deb_sha256": "0aff04f52eb0ad76b3fa2028ab8d04f576059d6a2ec7330d896a1ed8e150460b",
+        "qml6_module_org_kde_coreaddons_deb_sha256": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345",
+        "changes_sha256": "592ccce875d7288dc2aeae52db429d5de69a84ee047d9ea3188d178de11fe8bb",
+        "buildinfo_sha256": "990702d2dd5e71146e8ed82f428aecc0320119a46d203603c320715ed12d9fbb",
+        "dsc_sha256": "f4ba7ab929e3be4d122505b4af717c36d36055837d45c628eaacac0371ee5276",
+        "orig_tar_sha256": "cc68fe15beb0fca2036cff8742f468c1345406bf99793fffacbf8f2a3f89bc4b",
+        "debian_tar_sha256": "7d26791ae9a30406d7d23edd71ee7c470d26961a7df0f1eb4437c071e25b7152",
+        "rootfs_sha256": "dd7762ba1cdc25dd57b05e8203b3d5d4d448d9ee7131ac0b99d1d85989854794"
+      }
+    },
+    "kwidgetsaddons": {
+      "tier": 1,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kwidgetsaddons-6.30.0.tar.xz",
+      "source_sha256": "ab1333c258678caa7562120a1c03bb71779f7232f1a0e75b9525d921dee3e0a3",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
+      "package_provider": "supralinux",
+      "source_package": "kf6-kwidgetsaddons",
+      "binary_packages": [
+        "libkf6widgetsaddons-data",
+        "libkf6widgetsaddons-dev",
+        "libkf6widgetsaddons-doc",
+        "libkf6widgetsaddons6",
+        "python3-kwidgetsaddons"
+      ],
+      "package_version": "6.30.0-0supralinux7",
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "attempt_ledger": "manifests/kde-tier1-package-batch7-attempts.json",
+      "evidence": [
+        {
+          "type": "github-actions-run",
+          "result": "PASS",
+          "workflow_run": 35145607543,
+          "job_id": 104960718770,
+          "commit": "00be0b419b9f897cf7b7dbc8ca396e20916ead9b",
+          "attempted_package_version": "6.30.0-0supralinux7",
+          "artifact_id": 10467164025,
+          "artifact_sha256": "f40e8ed941fb603578e9ad6a0b82f652f05d9035975352a4edb601fda9100c3e",
+          "stage": "complete",
+          "tests": "27/27 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "python_import": "PASS",
+          "apt_check": "PASS",
+          "abi_soname": "libKF6WidgetsAddons.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        }
+      ],
+      "pass_files": {
+        "libkf6widgetsaddons_data_deb_sha256": "c9e7cfe4f8ec0f027a3ecb53383832b4971d88e0c6cd7235de563afbe8cf031f",
+        "libkf6widgetsaddons_dev_deb_sha256": "53d6d367a418fe29b8514d5980b219b59c84adb635e7f3f7acded259dea7501b",
+        "libkf6widgetsaddons_doc_deb_sha256": "badceb41d9d5eefa0bce370c02c0c2ccc11a8b695427a9f2947dc2c62124e788",
+        "libkf6widgetsaddons6_deb_sha256": "9c12483a1cf5afec0e0b645ff541ae6ad93ac4603fa549cdb6c9cb43a873360b",
+        "python3_kwidgetsaddons_deb_sha256": "01d95387e01decfea9addda3f65e39ca6eb3481510af0cc3bccbccc068fa305c",
+        "libkf6widgetsaddons_dev_dbgsym_ddeb_sha256": "91c1a1076ea2896767a5236200836ef69ce364be713432aff71c27d1311e8f66",
+        "libkf6widgetsaddons6_dbgsym_ddeb_sha256": "bbe2e34d3b24ccd8dd2b1e5e73e8b2e65b5e0f9919fb4560ad524c9b0ac98fdc",
+        "python3_kwidgetsaddons_dbgsym_ddeb_sha256": "ee3a5fdb873ac4628d7a130ee03a7b24032bddfa582476ca5c87366f897f8bf4",
+        "changes_sha256": "9160452f243b6458fdc9106c6f7abdec97ef7bd0d57b56f6e4ea42f86d3fd4ff",
+        "buildinfo_sha256": "d6c69420d77524cef57b7caeda685b7223498bb12d9e9f767a9ab50fb43916e8",
+        "dsc_sha256": "a93440f813dff86475febfb51b305be3e4fbab7c6dde6e0690b25aa124e9ee0d",
+        "orig_tar_sha256": "ab1333c258678caa7562120a1c03bb71779f7232f1a0e75b9525d921dee3e0a3",
+        "debian_tar_sha256": "a0022dc8b317e1e36e6304a82db6fd537206f236379836373de6ed00d4a55df6",
+        "rootfs_sha256": "d381a2d238103d21dbce47af60377b48ca77b385ab8598d135d30386ac17cf12"
       }
     }
   },

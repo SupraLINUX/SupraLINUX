@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 Tier 1 — dependency resolution
 
-Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping validated; canonical Tier 1 still 18 PASS / 11 pending; Batch 7 is technically 3/3 PASS awaiting atomic canonical promotion**
+Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping validated; canonical Tier 1 21 PASS / 8 pending after Batch 7 promotion**
 
 Last reviewed: **2026-09-16**
 
@@ -85,7 +85,7 @@ KWindowSystem `6.30.0-0supralinux4` and Solid `6.30.0-0supralinux2` remain canon
 
 ## Batch 7 technical closure
 
-Batch 7 is now technically **3/3 PASS** while canonical promotion remains a separate atomic state update:
+Batch 7 is **3/3 PASS and canonically promoted**:
 
 - KCoreAddons `6.30.0-0supralinux4`: run `35122522242`, artifact `10457958023`, SHA-256 `c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64`, 34/34 tests PASS.
 - KCalendarCore `6.30.0-0supralinux5`: run `35130213945`, artifact `10461386548`, SHA-256 `6f191cad05620093d9e97e1df3fec78d82e9f9df74270ba8a6bc6b328c61e2f6`, 507/507 tests PASS.
@@ -100,9 +100,9 @@ Historical FAIL attempts remain retained in `manifests/kde-tier1-package-batch7-
 - upstream dependency resolution: **resolved**;
 - Ubuntu Resolute package-name/provider mapping: **resolved for the current selected profiles**;
 - hosted provider evidence: **PASS where recorded**;
-- canonical Tier 1 package state: **18 PASS / 11 pending / 0 current FAIL / 0 BLOCKED**;
-- Batch 7 retained package evidence: **3/3 PASS, awaiting atomic canonical promotion**;
-- KGuiAddons: next local-predecessor lane after KCoreAddons canonical promotion;
+- canonical Tier 1 package state: **21 PASS / 8 pending / 0 current FAIL / 0 BLOCKED**;
+- Batch 7 retained package evidence: **3/3 PASS and canonically promoted**;
+- KGuiAddons: predecessor satisfied; local-predecessor package lane implementation is the next step;
 - final Qt provider certification: **pending**.
 
 Provider evidence alone never promotes a Framework. Only retained package PASS artifacts may feed dependents.

@@ -6,10 +6,8 @@ ROOT = Path(__file__).resolve().parents[1]
 CAMPAIGN = ROOT / "manifests/kde-tier1-global-discovery.json"
 TIER1 = ROOT / "manifests/kde-frameworks-tier1.json"
 
-
 def fail(message: str) -> None:
     raise SystemExit(message)
-
 
 def load(path: Path):
     try:
@@ -17,17 +15,12 @@ def load(path: Path):
     except Exception as exc:
         fail(f"cannot parse {path.relative_to(ROOT)}: {exc}")
 
-
 c = load(CAMPAIGN)
 t = load(TIER1)
-
-if c.get("schema") != 1:
-    fail("global discovery schema must be 1")
-if c.get("strategy") != "dag-global-discovery":
-    fail("unexpected global discovery strategy")
+if c.get("schema") != 1 or c.get("strategy") != "dag-global-discovery":
+    fail("global discovery identity mismatch")
 if c.get("authority") != "kde-upstream" or c.get("provider_platform") != "ubuntu-resolute":
     fail("authority/provider separation regressed")
-
 required_policy = {
     "build_every_runnable_node_per_topological_level": True,
     "parallelize_independent_nodes": True,
@@ -40,72 +33,49 @@ required_policy = {
     "repeat_full_campaign_after_remediation_set": True,
 }
 if c.get("policy") != required_policy:
-    fail("global discovery policy does not match the canonical DAG campaign contract")
-
-nodes = c.get("nodes")
-lanes = c.get("lanes")
-if not isinstance(nodes, dict) or not isinstance(lanes, dict):
-    fail("nodes/lanes must be objects")
-
-allowed_readiness = {"runnable", "lane-pending", "dependency-blocked"}
-for node, meta in nodes.items():
-    if meta.get("readiness") not in allowed_readiness:
-        fail(f"{node}: invalid readiness {meta.get('readiness')!r}")
-    lane = meta.get("lane")
-    if lane not in lanes:
-        fail(f"{node}: unknown lane {lane!r}")
-    if node not in lanes[lane].get("nodes", []):
-        fail(f"{node}: lane membership mismatch")
-
-lane_members = [n for meta in lanes.values() for n in meta.get("nodes", [])]
-if len(lane_members) != len(set(lane_members)):
-    fail("a node appears in more than one discovery lane")
-if set(lane_members) != set(nodes):
-    fail("lane membership does not exactly cover discovery nodes")
-
-expected = {
-    "kcalendarcore", "kcoreaddons", "kwidgetsaddons", "kconfig", "ki18n", "sonnet",
-    "kirigami", "kquickcharts", "kuserfeedback", "prison", "kguiaddons",
-}
+    fail("global discovery policy changed")
+nodes = c.get("nodes", {})
+lanes = c.get("lanes", {})
+expected = {"kconfig", "ki18n", "sonnet", "kirigami", "kquickcharts", "kuserfeedback", "prison", "kguiaddons"}
 if set(nodes) != expected:
-    fail(f"unexpected discovery node set: {sorted(set(nodes) ^ expected)}")
-
-# The canonical Tier 1 manifest must agree that these are exactly the unpromoted nodes.
-tier_nodes = t.get("nodes")
-if not isinstance(tier_nodes, list):
-    fail("Tier 1 nodes must be a list")
+    fail(f"unexpected post-Batch7 discovery set: {sorted(set(nodes) ^ expected)}")
+allowed = {"runnable", "lane-pending", "dependency-blocked"}
+for node, meta in nodes.items():
+    if meta.get("readiness") not in allowed:
+        fail(f"{node}: invalid readiness")
+    lane = meta.get("lane")
+    if lane not in lanes or node not in lanes[lane].get("nodes", []):
+        fail(f"{node}: lane membership mismatch")
+lane_members = [n for meta in lanes.values() for n in meta.get("nodes", [])]
+if len(lane_members) != len(set(lane_members)) or set(lane_members) != expected:
+    fail("lane membership must cover each discovery node exactly once")
+tier_nodes = t.get("nodes", [])
 state_by_id = {n["id"]: n.get("state") for n in tier_nodes}
-nonpass = {node for node, state in state_by_id.items() if state != "PASS"}
-passed = {node for node, state in state_by_id.items() if state == "PASS"}
-if nonpass != expected:
-    fail(f"global discovery set != canonical non-PASS Tier 1 set: {sorted(nonpass ^ expected)}")
-if len(passed) != 18 or len(nonpass) != 11:
-    fail(f"unexpected promoted snapshot PASS={len(passed)} non-PASS={len(nonpass)}")
-
+nonpass = {n for n, state in state_by_id.items() if state != "PASS"}
+passed = {n for n, state in state_by_id.items() if state == "PASS"}
+if nonpass != expected or len(passed) != 21 or len(nonpass) != 8:
+    fail(f"canonical promotion mismatch PASS={len(passed)} non-PASS={len(nonpass)}")
 snapshot = c.get("promoted_snapshot", {})
-if snapshot.get("pass") != len(passed) or snapshot.get("pending") != len(nonpass):
-    fail("promoted snapshot counts do not match the canonical Tier 1 manifest")
-
-# Ready lane must already have a real runner/package tree. Lane-pending nodes must not be mislabeled FAIL.
+if snapshot.get("pass") != 21 or snapshot.get("pending") != 8 or snapshot.get("current_fail") != 0 or snapshot.get("blocked") != 0:
+    fail("promoted snapshot mismatch")
 ready = {n for n, m in nodes.items() if m["readiness"] == "runnable"}
-if ready != {"kcalendarcore", "kcoreaddons", "kwidgetsaddons"}:
-    fail(f"unexpected currently runnable set: {sorted(ready)}")
-for node in ready:
-    if not (ROOT / "packages/kde" / node / "debian/control").is_file():
-        fail(f"{node}: runnable but package tree is missing")
-if not (ROOT / "scripts/run-kde-tier1-package-batch7-preflight.sh").is_file():
-    fail("single-ABI Python lane runner is missing")
-
+blocked = {n for n, m in nodes.items() if m["readiness"] == "dependency-blocked"}
+lane_pending = {n for n, m in nodes.items() if m["readiness"] == "lane-pending"}
+if ready:
+    fail(f"no package lane is runnable immediately after canonical promotion: {sorted(ready)}")
+if blocked:
+    fail(f"no discovery node should remain dependency-blocked after KCoreAddons PASS: {sorted(blocked)}")
+if lane_pending != expected:
+    fail("all eight remaining nodes must be lane-pending until their package runners exist")
 kgui = nodes["kguiaddons"]
-if kgui["readiness"] != "dependency-blocked" or kgui.get("local_predecessors") != ["kcoreaddons"]:
-    fail("KGuiAddons must remain dependency-blocked on the local KCoreAddons PASS")
-
-if lanes["multi-abi"].get("status") != "implementation-pending":
-    fail("multi-ABI lane must remain implementation-pending until its runner exists")
-if lanes["qml-multisurface"].get("status") != "implementation-pending":
-    fail("QML/multisurface lane must remain implementation-pending until its runner exists")
-if lanes["multi-surface-optional"].get("status") != "implementation-pending":
-    fail("multi-surface/optional lane must remain implementation-pending until its runner exists")
-
+if kgui.get("local_predecessors") != ["kcoreaddons"] or kgui.get("lane") != "local-predecessor":
+    fail("KGuiAddons must retain its local KCoreAddons predecessor contract")
+if lanes["local-predecessor"].get("status") != "implementation-pending":
+    fail("KGuiAddons lane must remain implementation-pending until its runner exists")
+if lanes["single-abi-python"].get("status") != "completed" or lanes["single-abi-python"].get("nodes") != []:
+    fail("Batch 7 single-ABI Python lane must be closed after promotion")
+for lane in ("multi-abi", "qml-multisurface", "multi-surface-optional"):
+    if lanes[lane].get("status") != "implementation-pending":
+        fail(f"{lane}: must remain implementation-pending")
 print("KDE Tier 1 global discovery policy: PASS")
-print(f"promoted PASS={len(passed)}; discovery nodes={len(nonpass)}; runnable={len(ready)}; lane-pending=7; dependency-blocked=1")
+print("promoted PASS=21; discovery nodes=8; runnable=0; lane-pending=8; dependency-blocked=0")

@@ -1,6 +1,6 @@
 # KDE stable dependency DAG
 
-Status: **ECM root PASS; 18 Frameworks Tier 1 PASS; 11 Tier 1 pending; 0 current FAIL; 0 BLOCKED**
+Status: **ECM root PASS; 21 Frameworks Tier 1 PASS; 8 Tier 1 pending; 0 current FAIL; 0 BLOCKED**
 
 Last reviewed: **2026-09-16**
 
@@ -326,3 +326,14 @@ PR #1 permanece Draft. No merge.
 ## Batch 6 canonical closure
 
 KWindowSystem `6.30.0-0supralinux4` and Solid `6.30.0-0supralinux2` are canonical hosted-clean-package-preflight PASS and downstream-eligible. Final evidence is workflow run `35047623320`: KWindowSystem job `104640833059`, artifact `10428130399`, ZIP SHA-256 `9c35d5e228d3f8b71fb1e84863fac030bfd26a8e3c528ae718e788708db01272`, 14/14 tests PASS; Solid job `104640833295`, artifact `10427653865`, ZIP SHA-256 `cff267d012a3e103b53bd6e19757e6c3b0af7dc873f4cd166a4505f58aee8389`, 5/5 tests PASS. Both pass Lintian error gating, consumer smoke, exact local-package installation and `apt-get check`. The shared consumer-runtime closure remediation is therefore validated. Canonical Tier 1 is **18 PASS / 11 pending / 0 current FAIL / 0 BLOCKED**. Historical FAIL attempts remain retained as evidence; BLOCKED remains distinct from FAIL.
+
+
+### Batch 7 — 3/3 PASS
+
+Canonical promotion completed on 2026-09-16.
+
+- KCalendarCore `6.30.0-0supralinux5`: run `35130213945`, job `104909057699`, artifact `10461386548`, 507/507 tests PASS.
+- KCoreAddons `6.30.0-0supralinux4`: run `35122522242`, job `104883541991`, artifact `10457958023`, 34/34 tests PASS.
+- KWidgetsAddons `6.30.0-0supralinux7`: run `35145607543`, job `104960718770`, artifact `10467164025`, 27/27 tests PASS.
+
+All three pass Lintian, exact APT runtime closure and consumer smoke; Python imports pass for their enabled bindings. Historical FAIL attempts remain retained in `manifests/kde-tier1-package-batch7-attempts.json`. Canonical Tier 1 is **21 PASS / 8 pending / 0 current FAIL / 0 BLOCKED**. KGuiAddons is no longer predecessor-blocked; its local-predecessor package runner remains to be implemented.
