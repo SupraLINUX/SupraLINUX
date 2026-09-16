@@ -1,0 +1,64 @@
+name: Materialize Batch 7 provider evidence closure
+
+on:
+  push:
+    branches:
+      - tooling/batch7-provider-evidence-closure
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - name: Materialize provider evidence closure
+        run: python3 scripts/materialize-batch7-provider-evidence-closure.py
+
+      - name: Validate scope implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n scripts/kde-tier1-dependency-preflight-needed.sh scripts/test-kde-tier1-dependency-preflight-scope.sh
+          python3 -m py_compile scripts/kde-tier1-dependency-contract-fingerprint.py scripts/validate_kde_tier1.py
+          scripts/test-kde-tier1-dependency-preflight-scope.sh
+
+      - name: Run complete Repository Policy Python validator chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/validate_repository.py
+          python3 scripts/validate_qt_provider.py
+          python3 scripts/validate_kde_dag.py
+          python3 scripts/validate_kde_tier1.py
+          python3 scripts/validate_kde_tier1_packaging_reference.py
+          python3 scripts/validate_kde_tier1_packaging_tree.py
+          python3 scripts/validate_kde_tier1_package_batch1.py
+          python3 scripts/validate_kde_tier1_package_batch2.py
+          python3 scripts/validate_kde_tier1_package_batch3.py
+          python3 scripts/validate_kde_tier1_package_batch4.py
+          python3 scripts/validate_kde_tier1_package_batch5.py
+          python3 scripts/validate_kde_tier1_package_batch6.py
+          python3 scripts/validate_kde_attica_package.py
+          python3 scripts/validate_kde_attica_ci_scope.py
+
+      - name: Commit materialized canonical closure files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'SupraLINUX CI'
+          git config user.email 'ci@supralinux.invalid'
+          git add \
+            manifests/kde-frameworks-tier1-dependencies.json \
+            scripts/validate_kde_tier1.py \
+            docs/kde-tier1-dependencies.md \
+            docs/status/2026-09-16-batch7.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'tooling: materialize Batch 7 provider evidence closure'
+          git push
