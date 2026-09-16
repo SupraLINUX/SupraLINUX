@@ -5,11 +5,11 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "batch": "tier1-batch-6",
-  "state": "remediation-pending-build",
+  "state": "PASS",
   "canonical_state_role": "batch-package-attempt-ledger",
   "canonical_snapshot": {
-    "state": "unpromoted-open-batch",
-    "tier1": "16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED"
+    "state": "promoted-at-batch-closure",
+    "tier1": "18 PASS / 11 pending / 0 current FAIL / 0 BLOCKED"
   },
   "selected_nodes": [
     "kwindowsystem",
@@ -73,14 +73,16 @@
       "preserve_referenced_ddeb": true
     },
     "consumer_runtime_policy": {
-      "status": "remediation-pending-revalidation",
+      "status": "validated",
       "install_method": "apt-get-local-debs",
       "install_recommends": false,
       "exact_built_versions_required": true,
       "apt_check_required": true,
       "compile_against_extracted_artifacts": true,
       "runtime_library_precedence": "consumer-root-via-LD_LIBRARY_PATH",
-      "reason": "KWindowSystem attempt -4 proved the package correctly Depends on libxcb-res0, while the old consumer-root runner never installed external runtime Depends and therefore leaked host package availability into the smoke result."
+      "reason": "KWindowSystem attempt -4 proved the package correctly Depends on libxcb-res0, while the old consumer-root runner never installed external runtime Depends and therefore leaked host package availability into the smoke result.",
+      "validated_by_run": 35047623320,
+      "validated_commit": "c7a7a6adca9e44d5ff9bdee984d9f40a097290f9"
     }
   },
   "nodes": {
@@ -184,9 +186,9 @@
         "signer_fingerprint": "90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1",
         "source": "retained-debian-packaging-reference"
       },
-      "state": "remediation-pending-build",
-      "last_result": "FAIL",
-      "downstream_eligible": false,
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
       "evidence": [
         {
           "result": "FAIL",
@@ -241,11 +243,45 @@
           "lintian": "PASS-errors",
           "package_runtime_dependency": "libxcb-res0 (>= 1.10)",
           "cause": "The serial X11 remediation succeeded: all 14 CTest suites passed, sbuild completed successfully and the Lintian error gate passed. The consumer then failed to dlopen libKF6WindowSystem because libxcb-res.so.0 was absent from the hosted runner. The built libkf6windowsystem6 package correctly Depends on libxcb-res0 (>= 1.10), and readelf records libxcb-res.so.0 as NEEDED; the old consumer-root runner extracted only the built Batch 6 .debs and never installed their external runtime Depends."
+        },
+        {
+          "result": "PASS",
+          "workflow_run": 35047623320,
+          "job_id": 104640833059,
+          "commit": "c7a7a6adca9e44d5ff9bdee984d9f40a097290f9",
+          "attempted_package_version": "6.30.0-0supralinux4",
+          "artifact_id": 10428130399,
+          "artifact_sha256": "9c35d5e228d3f8b71fb1e84863fac030bfd26a8e3c528ae718e788708db01272",
+          "stage": "complete",
+          "tests": "14/14 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6WindowSystem.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "apt_check": "PASS",
+          "consumer_runtime_closure": "PASS",
+          "downstream_eligible": true,
+          "files": {
+            "libkf6windowsystem_data_deb_sha256": "f6c55bec9b08ccbf002bb52016f080c0804e3161576f01acccd608900a662200",
+            "libkf6windowsystem_dev_deb_sha256": "d3a7f2fb13af68faf8bf36c048f039ff4aeaa50a90e44c5afb13f53bd7711e5c",
+            "libkf6windowsystem_doc_deb_sha256": "6c6b080d60946cff5ba7b7762407b5da3dfb275e38e7a7d82fdcd0e1378d78de",
+            "libkf6windowsystem6_deb_sha256": "fd5245b8b292f94e6dce9be56e0ca721e7b4d007a8a85be9dd98fcbcd4671acc",
+            "qml6_module_org_kde_kwindowsystem_deb_sha256": "07d4f715ea2783ae3b8daf88b907edf4cb62ae44760d190e8a8ddea908594b01",
+            "libkf6windowsystem6_dbgsym_ddeb_sha256": "57c83b7263d3235f27a237baa76d2818acdd77c77f2fbdc078647b5148127f2d",
+            "qml6_module_org_kde_kwindowsystem_dbgsym_ddeb_sha256": "88d07aac93c80c33001669da71d4fa3ba40193d9b292572d19beeb2b08818fc9",
+            "changes_sha256": "bb8caef7dfd048774e12e552add9a915b91394b96f9046d1dd3c8262dbee6a6e",
+            "buildinfo_sha256": "f6fdb22a061aaf05e13c9eca2f8f305518c6965bfa91c41774aabd8e7165d87a",
+            "dsc_sha256": "0b07ad33cd0238a853ef222d2195b8bbd7cc7f0fa22a1d4f46d5c6bf88906f87",
+            "orig_tar_sha256": "639a501b877446b19905399d27e2be2b6ebb0bb481abe3209dc4d535a12e12ca",
+            "debian_tar_sha256": "c0048558625428b6daf6e8524276a20d284b8723cee758fa760cf38ac6f578f8",
+            "rootfs_sha256": "c9b726402226ff31d1117fbf6db2a2d9497debd4efc7cd4d91494fcf6de55215"
+          }
         }
       ],
       "remediation": {
         "candidate_package_version": "6.30.0-0supralinux4",
-        "status": "remediation-pending-build",
+        "status": "validated",
         "source_change": false,
         "package_change": false,
         "runner_change": true,
@@ -258,7 +294,26 @@
           "run apt-get check and verify every locally built binary package is installed at the exact built Debian version",
           "compile the consumer against the extracted built artifacts and keep the built runtime library first in LD_LIBRARY_PATH; Ubuntu only supplies the external dependency closure",
           "allow a retained PASS node to rebuild when the shared Batch 6 runner changes, preserving its prior PASS evidence rather than rewriting history"
-        ]
+        ],
+        "validated_by_run_id": 35047623320,
+        "validated_by_job_id": 104640833059,
+        "validated_by_artifact_id": 10428130399,
+        "validated_consumer_runtime_closure": "PASS"
+      },
+      "last_pass_files": {
+        "libkf6windowsystem_data_deb_sha256": "f6c55bec9b08ccbf002bb52016f080c0804e3161576f01acccd608900a662200",
+        "libkf6windowsystem_dev_deb_sha256": "d3a7f2fb13af68faf8bf36c048f039ff4aeaa50a90e44c5afb13f53bd7711e5c",
+        "libkf6windowsystem_doc_deb_sha256": "6c6b080d60946cff5ba7b7762407b5da3dfb275e38e7a7d82fdcd0e1378d78de",
+        "libkf6windowsystem6_deb_sha256": "fd5245b8b292f94e6dce9be56e0ca721e7b4d007a8a85be9dd98fcbcd4671acc",
+        "qml6_module_org_kde_kwindowsystem_deb_sha256": "07d4f715ea2783ae3b8daf88b907edf4cb62ae44760d190e8a8ddea908594b01",
+        "libkf6windowsystem6_dbgsym_ddeb_sha256": "57c83b7263d3235f27a237baa76d2818acdd77c77f2fbdc078647b5148127f2d",
+        "qml6_module_org_kde_kwindowsystem_dbgsym_ddeb_sha256": "88d07aac93c80c33001669da71d4fa3ba40193d9b292572d19beeb2b08818fc9",
+        "changes_sha256": "bb8caef7dfd048774e12e552add9a915b91394b96f9046d1dd3c8262dbee6a6e",
+        "buildinfo_sha256": "f6fdb22a061aaf05e13c9eca2f8f305518c6965bfa91c41774aabd8e7165d87a",
+        "dsc_sha256": "0b07ad33cd0238a853ef222d2195b8bbd7cc7f0fa22a1d4f46d5c6bf88906f87",
+        "orig_tar_sha256": "639a501b877446b19905399d27e2be2b6ebb0bb481abe3209dc4d535a12e12ca",
+        "debian_tar_sha256": "c0048558625428b6daf6e8524276a20d284b8723cee758fa760cf38ac6f578f8",
+        "rootfs_sha256": "c9b726402226ff31d1117fbf6db2a2d9497debd4efc7cd4d91494fcf6de55215"
       }
     },
     "solid": {
@@ -379,6 +434,40 @@
           "abi_soname": "libKF6Solid.so.6",
           "ecm_predecessor": "6.30.0-0supralinux3",
           "downstream_eligible": true
+        },
+        {
+          "result": "PASS",
+          "workflow_run": 35047623320,
+          "job_id": 104640833295,
+          "commit": "c7a7a6adca9e44d5ff9bdee984d9f40a097290f9",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10427653865,
+          "artifact_sha256": "cff267d012a3e103b53bd6e19757e6c3b0af7dc873f4cd166a4505f58aee8389",
+          "stage": "complete",
+          "tests": "5/5 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6Solid.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "apt_check": "PASS",
+          "consumer_runtime_closure": "PASS",
+          "downstream_eligible": true,
+          "files": {
+            "libkf6solid_bin_deb_sha256": "804ba4fcbd8eefb088ba771bed1eeb9317e3662cee91f5724de7581ae13ce9b8",
+            "libkf6solid_data_deb_sha256": "949d495165f79e1a980476d12fa3573a8748f94e3f86412d679cab9ff2de3aaf",
+            "libkf6solid_dev_deb_sha256": "dc01cfc7e8158129391580304d56d5bf8f5c685eca2b39e080237d96ae087286",
+            "libkf6solid_doc_deb_sha256": "684afa8723f89970b2f7b34cc9b53ca67dfedd0194fe9b6173111299bee8ba63",
+            "libkf6solid6_deb_sha256": "e8f573ce4e6d14e5796908c72d27505b32e1ccd23c806c073ac79333626ba9fe",
+            "libkf6solid_bin_dbgsym_ddeb_sha256": "7fe44a287c5c4727375d6b07431435111031d7aa0bfb097136a9f160c24dd2ae",
+            "libkf6solid6_dbgsym_ddeb_sha256": "ab1c956f40fb21cd411b91e847f32c24a1770e1bf4d2025fc59fb9079b9d468a",
+            "changes_sha256": "41de01ccad5f7365edd0a4ae158c56331f48d21cadd9666aedbdd75e99db7966",
+            "buildinfo_sha256": "993c920cd61cd4bcdbbb347bc06c778d774794d6c5f249ae82c47c172a0536c8",
+            "dsc_sha256": "4c299abff676ae86528c1fded9aed0bdc1bd98cfc8284c7c20ca996e80fae588",
+            "orig_tar_sha256": "bdbfdc9f26b87e12b951097825af2956f2dee3f14c701d780277b69701f2c74e",
+            "debian_tar_sha256": "f4aec00b52e9c2c3446c9cd61b6f3278ea3c4848f5f6949cc263176cc085235f",
+            "rootfs_sha256": "1c7e6571a3c5d744a010c8b2750984190f2a4a062884f0682462773e090c9179"
+          }
         }
       ],
       "remediation": {
@@ -396,13 +485,32 @@
         ]
       },
       "shared_runner_revalidation": {
-        "status": "pending",
+        "status": "PASS",
         "trigger": "consumer-runtime-closure-remediation",
         "package_change": false,
         "package_version": "6.30.0-0supralinux2",
         "retained_pass_workflow_run": 35038057329,
         "retained_pass_artifact_id": 10423914110,
-        "reason": "The shared Batch 6 preflight runner changed after KWindowSystem exposed host runtime dependency leakage; the selector therefore intentionally rebuilds Solid under the corrected consumer-runtime contract while retaining its prior PASS evidence."
+        "revalidation_workflow_run": 35047623320,
+        "revalidation_job_id": 104640833295,
+        "revalidation_artifact_id": 10427653865,
+        "revalidation_artifact_sha256": "cff267d012a3e103b53bd6e19757e6c3b0af7dc873f4cd166a4505f58aee8389",
+        "reason": "Shared Batch 6 consumer-runtime closure was revalidated without a package change; prior PASS evidence is retained and the exact same package revision passed under the corrected runner."
+      },
+      "last_pass_files": {
+        "libkf6solid_bin_deb_sha256": "804ba4fcbd8eefb088ba771bed1eeb9317e3662cee91f5724de7581ae13ce9b8",
+        "libkf6solid_data_deb_sha256": "949d495165f79e1a980476d12fa3573a8748f94e3f86412d679cab9ff2de3aaf",
+        "libkf6solid_dev_deb_sha256": "dc01cfc7e8158129391580304d56d5bf8f5c685eca2b39e080237d96ae087286",
+        "libkf6solid_doc_deb_sha256": "684afa8723f89970b2f7b34cc9b53ca67dfedd0194fe9b6173111299bee8ba63",
+        "libkf6solid6_deb_sha256": "e8f573ce4e6d14e5796908c72d27505b32e1ccd23c806c073ac79333626ba9fe",
+        "libkf6solid_bin_dbgsym_ddeb_sha256": "7fe44a287c5c4727375d6b07431435111031d7aa0bfb097136a9f160c24dd2ae",
+        "libkf6solid6_dbgsym_ddeb_sha256": "ab1c956f40fb21cd411b91e847f32c24a1770e1bf4d2025fc59fb9079b9d468a",
+        "changes_sha256": "41de01ccad5f7365edd0a4ae158c56331f48d21cadd9666aedbdd75e99db7966",
+        "buildinfo_sha256": "993c920cd61cd4bcdbbb347bc06c778d774794d6c5f249ae82c47c172a0536c8",
+        "dsc_sha256": "4c299abff676ae86528c1fded9aed0bdc1bd98cfc8284c7c20ca996e80fae588",
+        "orig_tar_sha256": "bdbfdc9f26b87e12b951097825af2956f2dee3f14c701d780277b69701f2c74e",
+        "debian_tar_sha256": "f4aec00b52e9c2c3446c9cd61b6f3278ea3c4848f5f6949cc263176cc085235f",
+        "rootfs_sha256": "1c7e6571a3c5d744a010c8b2750984190f2a4a062884f0682462773e090c9179"
       }
     }
   }
