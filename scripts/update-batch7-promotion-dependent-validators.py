@@ -57,4 +57,79 @@ s = replace_once(s,
     "packaging-tree summary")
 p.write_text(s)
 
-print("Promotion-dependent packaging reference/tree validators: PASS")
+# Batch 1: preserve its historical closure (7/22) but advance only its assertions
+# about the current canonical frontier.
+p = root / "scripts/validate_kde_tier1_package_batch1.py"
+s = p.read_text()
+s = replace_once(s,
+    'require(sum(1 for item in tier_nodes.values() if item.get("state") == "PASS") == 18, "Canonical Tier 1 PASS count must be 18 after Batch 6 closure")',
+    'require(sum(1 for item in tier_nodes.values() if item.get("state") == "PASS") == 21, "Canonical Tier 1 PASS count must be 21 after Batch 7 closure")',
+    "Batch1 current PASS count")
+s = replace_once(s,
+    'require(sum(1 for item in tier_nodes.values() if item.get("state") == "pending") == 11, "Canonical Tier 1 pending count must be 11 after Batch 6 closure")',
+    'require(sum(1 for item in tier_nodes.values() if item.get("state") == "pending") == 8, "Canonical Tier 1 pending count must be 8 after Batch 7 closure")',
+    "Batch1 current pending count")
+s = replace_once(s,
+    'print("Canonical Tier 1 now: 18 PASS, 11 pending, 0 FAIL, 0 BLOCKED; Batch 1 historical closure remains 7/22")',
+    'print("Canonical Tier 1 now: 21 PASS, 8 pending, 0 FAIL, 0 BLOCKED; Batch 1 historical closure remains 7/22")',
+    "Batch1 summary")
+p.write_text(s)
+
+# Batch 4: preserve its 13/16 closure snapshot and historical docs; update only
+# present-day canonical assertions and the current dependency-document count.
+p = root / "scripts/validate_kde_tier1_package_batch4.py"
+s = p.read_text()
+s = replace_once(s,
+    'req(sum(1 for n in tier1.values() if n.get("state") == "PASS") == 18, "Current Tier 1 PASS count must be 18 after Batch 6 closure")',
+    'req(sum(1 for n in tier1.values() if n.get("state") == "PASS") == 21, "Current Tier 1 PASS count must be 21 after Batch 7 closure")',
+    "Batch4 current PASS count")
+s = replace_once(s,
+    'req(sum(1 for n in tier1.values() if n.get("state") == "pending") == 11, "Current Tier 1 pending count must be 11 after Batch 6 closure")',
+    'req(sum(1 for n in tier1.values() if n.get("state") == "pending") == 8, "Current Tier 1 pending count must be 8 after Batch 7 closure")',
+    "Batch4 current pending count")
+s = replace_once(s,
+    'req("18 PASS / 11 pending" in depdoc, "dependency documentation current canonical count")',
+    'req("21 PASS / 8 pending" in depdoc, "dependency documentation current canonical count")',
+    "Batch4 dependency doc current count")
+s = replace_once(s,
+    'print("Current canonical Tier 1: 18 PASS / 11 pending / 0 FAIL / 0 BLOCKED; Batch 4 historical closure remains 13/16")',
+    'print("Current canonical Tier 1: 21 PASS / 8 pending / 0 FAIL / 0 BLOCKED; Batch 4 historical closure remains 13/16")',
+    "Batch4 summary")
+p.write_text(s)
+
+# Batch 5: the 2026-09-15 status file is historical and must remain 18/11. Only
+# current Tier1 state and living DAG/dependency docs advance to 21/8.
+p = root / "scripts/validate_kde_tier1_package_batch5.py"
+s = p.read_text()
+s = replace_once(s,
+    'req(sum(1 for n in tier.values() if n.get("state") == "PASS") == 18, "Tier1 current PASS count must be 18")',
+    'req(sum(1 for n in tier.values() if n.get("state") == "PASS") == 21, "Tier1 current PASS count must be 21")',
+    "Batch5 current PASS count")
+s = replace_once(s,
+    'req(sum(1 for n in tier.values() if n.get("state") == "pending") == 11, "Tier1 current pending count must be 11")',
+    'req(sum(1 for n in tier.values() if n.get("state") == "pending") == 8, "Tier1 current pending count must be 8")',
+    "Batch5 current pending count")
+old_docs = '''for path in (CURRENT_STATUS, DAG_DOC, DEPENDENCY_DOC):\n    t = text(path)\n    req("18 PASS" in t and "11 pending" in t, f"{path.name}: current canonical count")'''
+new_docs = '''t = text(CURRENT_STATUS)\nreq("18 PASS" in t and "11 pending" in t, f"{CURRENT_STATUS.name}: historical 2026-09-15 canonical count")\nfor path in (DAG_DOC, DEPENDENCY_DOC):\n    t = text(path)\n    req("21 PASS" in t and "8 pending" in t, f"{path.name}: current canonical count")'''
+s = replace_once(s, old_docs, new_docs, "Batch5 current/historical docs split")
+s = replace_once(s,
+    'print("Canonical Tier 1: 18 PASS / 11 pending / 0 FAIL / 0 BLOCKED")',
+    'print("Canonical Tier 1: 21 PASS / 8 pending / 0 FAIL / 0 BLOCKED")',
+    "Batch5 summary")
+p.write_text(s)
+
+# Batch 6: keep the campaign closure snapshot and every BATCH6-CANONICAL-CLOSURE
+# historical marker at 18/11. Only the current Tier1 count and current summary advance.
+p = root / "scripts/validate_kde_tier1_package_batch6.py"
+s = p.read_text()
+s = replace_once(s,
+    "counts={s:sum(x.get('state')==s for x in t['nodes']) for s in ('PASS','pending','FAIL','BLOCKED')}; req(counts=={'PASS':18,'pending':11,'FAIL':0,'BLOCKED':0},f'Tier1 counts {counts}')",
+    "counts={s:sum(x.get('state')==s for x in t['nodes']) for s in ('PASS','pending','FAIL','BLOCKED')}; req(counts=={'PASS':21,'pending':8,'FAIL':0,'BLOCKED':0},f'Tier1 current counts {counts}')",
+    "Batch6 current counts")
+s = replace_once(s,
+    "print('Canonical Tier 1: 18 PASS / 11 pending / 0 current FAIL / 0 BLOCKED')",
+    "print('Canonical Tier 1 current state: 21 PASS / 8 pending / 0 current FAIL / 0 BLOCKED; Batch 6 historical closure remains 18/11')",
+    "Batch6 summary")
+p.write_text(s)
+
+print("Promotion-dependent validators: PASS; historical batch closure snapshots preserved")
