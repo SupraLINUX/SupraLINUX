@@ -1,8 +1,8 @@
 # KDE stable dependency DAG
 
-Status: **ECM root PASS; 13 Frameworks Tier 1 PASS; 16 Tier 1 pending; 0 current FAIL; 0 BLOCKED**
+Status: **ECM root PASS; 18 Frameworks Tier 1 PASS; 11 Tier 1 pending; 0 current FAIL; 0 BLOCKED**
 
-Last reviewed: **2026-09-15**
+Last reviewed: **2026-09-16**
 
 ## Authority
 
@@ -308,7 +308,7 @@ El estado canónico de cada uno es ahora PASS y downstream-eligible. Los FAIL hi
 
 ## Estado actual
 
-Tier 1 queda en **16 PASS, 13 pending, 0 current FAIL, 0 BLOCKED**.
+Tier 1 queda en **18 PASS, 11 pending, 0 current FAIL, 0 BLOCKED** tras el cierre canónico de Batch 6.
 
 Sólo artifacts PASS retenidos pueden alimentar dependientes.
 
