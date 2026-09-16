@@ -1,0 +1,58 @@
+name: Materialize Batch 6 canonical documentation cleanup
+
+on:
+  push:
+    branches:
+      - tooling/batch6-doc-canonical-cleanup
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-26.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Materialize canonical documentation cleanup
+        shell: bash
+        run: python3 scripts/materialize-batch6-doc-canonical-cleanup.py
+
+      - name: Run complete Repository Policy Python validator chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/validate_repository.py
+          python3 scripts/validate_qt_provider.py
+          python3 scripts/validate_kde_dag.py
+          python3 scripts/validate_kde_tier1.py
+          python3 scripts/validate_kde_tier1_packaging_reference.py
+          python3 scripts/validate_kde_tier1_packaging_tree.py
+          python3 scripts/validate_kde_tier1_package_batch1.py
+          python3 scripts/validate_kde_tier1_package_batch2.py
+          python3 scripts/validate_kde_tier1_package_batch3.py
+          python3 scripts/validate_kde_tier1_package_batch4.py
+          python3 scripts/validate_kde_tier1_package_batch5.py
+          python3 scripts/validate_kde_tier1_package_batch6.py
+          python3 scripts/validate_kde_attica_package.py
+          python3 scripts/validate_kde_attica_ci_scope.py
+
+      - name: Commit materialized docs on tooling branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'SupraLINUX CI'
+          git config user.email 'ci@supralinux.invalid'
+          git add \
+            docs/kde-dag.md \
+            docs/kde-tier1-dependencies.md \
+            docs/status/2026-09-15.md \
+            docs/kde-tier1-package-batch6.md \
+            docs/status/2026-09-15-batch6.md \
+            docs/kde-tier1.md
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'tooling: materialize canonical documentation cleanup'
+          git push
