@@ -1,0 +1,10 @@
+kf6-kcalendarcore (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * SupraLINUX KDE Frameworks 6.30.0 Batch 7 clean package preflight.
+  * Preserve upstream Python bindings and test defaults; do not inherit
+    downstream BUILD_PYTHON_BINDINGS=OFF or BUILD_TESTING=OFF shortcuts.
+  * Install Python extension modules using Debian's deb_system sysconfig layout.
+  * Retain Debian 6.28 public symbols/copyright only as technical compatibility
+    baselines; KDE upstream 6.30.0 remains source and feature authority.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 09:45:00 -0300
