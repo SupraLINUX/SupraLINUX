@@ -60,16 +60,20 @@ jobs:
           required="$(python3 -c 'import json; print(json.load(open("manifests/desktop-stack.json"))["qt"]["required_series"])')"
           [[ "${candidate}" == "${required}".* ]]
 
-      - name: Commit validated technical tree
+      - name: Commit validated non-workflow staging tree
         shell: bash
         run: |
           set -euo pipefail
           git config user.name chmodmasx
           git config user.email daninicob@gmail.com
+          # The Batch 7 workflow was present during validation, but this Actions
+          # token cannot push workflow-file changes. Add it later through the
+          # authorized GitHub connector, then remove this staging workflow.
+          rm -f .github/workflows/kde-tier1-package-batch7.yml
           git add -A
           if git diff --cached --quiet; then
             echo "No materialized delta to commit."
             exit 0
           fi
-          git commit -m "tooling: validate Batch 7 package preparation"
+          git commit -m "tooling: validated Batch 7 package tree [skip ci]"
           git push origin HEAD:tooling/batch7-package-preparation
