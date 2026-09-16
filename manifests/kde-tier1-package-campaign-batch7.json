@@ -1,39 +1,17 @@
 {
-  "schema": 1,
+  "schema": 2,
   "as_of": "2026-09-16",
   "frameworks_series": "6.30.0",
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "batch": "tier1-batch-7",
   "state": "remediation-pending-build",
-  "canonical_state_role": "batch-package-attempt-ledger",
+  "attempt_ledger": "manifests/kde-tier1-package-batch7-attempts.json",
   "canonical_snapshot": {
     "state": "unpromoted-open-batch",
     "tier1": "18 PASS / 11 pending / 0 current FAIL / 0 BLOCKED"
   },
-  "selected_nodes": [
-    "kcalendarcore",
-    "kcoreaddons",
-    "kwidgetsaddons"
-  ],
-  "selection_rationale": {
-    "policy": "independent Tier 1 nodes with one primary C++ ABI that preserve KDE 6.30 Python/test defaults and can be validated without consuming another pending KDE node",
-    "why_now": {
-      "kcalendarcore": "Single primary C++ ABI plus QML and upstream Shiboken/PySide binding; provider prerequisites are now verified.",
-      "kcoreaddons": "Single primary C++ ABI plus QML and upstream Shiboken/PySide binding; provider prerequisites are now verified.",
-      "kwidgetsaddons": "Single primary C++ ABI plus Designer plugin and upstream Shiboken/PySide binding; provider prerequisites are now verified."
-    },
-    "deferred": {
-      "kguiaddons": "Its public KImageCache development surface requires KCoreAddons; only a retained local KCoreAddons PASS may feed the -dev dependency.",
-      "kconfig": "Multiple ABI libraries/symbol files require the explicit multi-library runner lane.",
-      "ki18n": "Multiple ABI libraries/symbol files require the explicit multi-library runner lane.",
-      "sonnet": "Multiple ABI libraries plus plugin surface require the explicit multi-library runner lane.",
-      "kirigami": "QML/Quick-heavy multi-surface package lane.",
-      "kquickcharts": "Multiple primary symbol files / QML-heavy surface.",
-      "kuserfeedback": "Multiple primary symbol files and optional feature matrix.",
-      "prison": "Multiple primary libraries plus barcode/multimedia provider surface."
-    }
-  },
+  "selected_nodes": ["kcalendarcore", "kcoreaddons", "kwidgetsaddons"],
   "shared_predecessors": {
     "extra_cmake_modules": {
       "state": "PASS",
@@ -49,561 +27,125 @@
       "artifact_sha256": "6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6",
       "snapshot_json_sha256": "f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345"
     },
-    "dependency_provider": {
-      "status": "PASS",
-      "workflow_run": 35087361837,
-      "job_id": 104765243282,
-      "commit": "a60cf80e2adae2f40c994c8ca8e661d23822b0b6",
-      "artifact_id": 10442512801,
-      "artifact_sha256": "49f74d493dd18ed68ecee668f68549cf5f71279fcb96e2f481ceef0eaccf5fa9",
-      "authoritative": false,
-      "claim": "provider-availability-only",
-      "python_build": {
-        "package": "python3-build",
-        "version": "1.4.0-1",
-        "module": "build",
-        "module_version": "1.4.0",
-        "import_status": "PASS"
-      },
-      "qt_pyside_shiboken": "6.10.2"
-    },
     "python_wheel_backend_provider": {
       "status": "PASS",
       "workflow_run": 35106561251,
       "job_id": 104829186807,
-      "commit": "78760b565dd49e981fa0891535da289120b40470",
       "artifact_id": 10450572112,
       "artifact_sha256": "488592048a0514b8f6234e8820c959817a151782fef41c138b71f7a8b7fe8fc4",
-      "authoritative": false,
-      "claim": "provider-availability-only",
       "package": "python3-setuptools",
       "version": "78.1.1-0.1build1",
-      "backend_module": "setuptools.build_meta",
-      "backend_import_status": "PASS",
-      "frontend_package": "python3-build",
-      "frontend_version": "1.4.0-1",
-      "frontend_import_status": "PASS"
-    },
-    "upstream_layout_probe": {
-      "status": "PASS",
-      "workflow_run": 35086226149,
-      "job_id": 104761571679,
-      "commit": "1e97234908f3a8b201dfa6550278c3b1c380619d",
-      "artifact_id": 10443202060,
-      "artifact_sha256": "c50a32b26e18ee84173b5a00cbd85e0c2b380660be9d939eb489c370f1317e77",
-      "claim": "technical-layout-discovery-only",
-      "authoritative": false,
-      "verified_defaults": {
-        "BUILD_PYTHON_BINDINGS": "ON",
-        "BUILD_TESTING": "ON",
-        "kwidgetsaddons_BUILD_DESIGNERPLUGIN": "ON"
-      }
-    }
-  },
-  "shared_packaging_inputs": {
-    "documentation_policy": {
-      "qch_enabled": false,
-      "package_role": "debian-family-compatibility-name",
-      "note": "Batch 7 documentation packages are compatibility stubs; no QCH payload is claimed."
-    },
-    "python_policy": {
-      "build_bindings": true,
-      "tests_enabled": true,
-      "install_layout": "deb_system",
-      "environment": "DEB_PYTHON_INSTALL_LAYOUT=deb",
-      "package_split": "python3-per-framework",
-      "runtime_smoke": "import-module",
-      "note": "Explicit ON flags mirror verified KDE 6.30 defaults and fail closed if provider support regresses."
-    },
-    "python_binding_toolchain": {
-      "status": "validated",
-      "discovered_by_run": 35102198701,
-      "validated_by_run": 35103681715,
-      "failure_substage": "python-bindings/clang-builtins-unavailable",
-      "build_depends": [
-        "clang",
-        "libclang-dev",
-        "llvm-dev"
-      ],
-      "reason": "Revision -2 progressed all three clean builds past Shiboken ApiExtractor wrapper generation and into final Python extension linking, validating the explicit Clang/LLVM development providers.",
-      "reference": "Ubuntu Resolute pyside6 source Build-Depends",
-      "source_change": false
-    },
-    "python_wheel_backend": {
-      "status": "PASS",
-      "discovered_by_run": 35103681715,
-      "failure_substage": "python-wheel/setuptools-backend-unavailble",
-      "build_depends": [
-        "python3-setuptools"
-    ],
-      "provider_workflow_run": 35106561251,
-      "provider_job_id": 104829186807,
-      "provider_artifact_id": 10450572112,
-      "provider_artifact_sha256": "488592048a0514b8f6234e8820c959817a151782fef41c138b71f7a8b7fe8fc4",
-      "backend_module": "setuptools.build_meta",
-      "backend_import_status": "PASS",
-      "reason": "ECM invokes python3 -m build --wheel --no-isolation; the clean sbuild therefore must provide the Setuptools PEP 517 backend explicitly.",
-      "source_change": false
-    },
-    "lintian_policy": {
-      "sbuild_summary_required": true,
-      "source_and_changes_required": true,
-      "preserve_referenced_ddeb": true
-    },
-    "consumer_runtime_policy": {
-      "install_method": "apt-get-local-debs",
-      "install_recommends": false,
-      "exact_built_versions_required": true,
-      "apt_check_required": true,
-      "compile_against_extracted_artifacts": true,
-      "python_import_required": true
+      "backend_module": "setuptools.build_meta"
     }
   },
   "nodes": {
     "kcalendarcore": {
       "upstream_version": "6.30.0",
       "source_package": "kf6-kcalendarcore",
-      "package_version": "6.30.0-0supralinux3",
+      "package_version": "6.30.0-0supralinux4",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kcalendarcore-6.30.0.tar.xz",
       "source_sha256": "e8bf60e398e2f8098a4db7db44c5475d70540ad8f8948a123c8bc109dc4db776",
-      "root_cmake_blob": "0414c1256b209ae14c41f2ccc0a99480f3298a17",
       "runtime_package": "libkf6calendarcore6",
-      "development_package": "libkf6calendarcore-dev",
-      "documentation_package": "libkf6calendarcore-doc",
       "python_package": "python3-kcalendarcore",
       "python_module": "KCalendarCore",
+      "soname": "libKF6CalendarCore.so.6",
+      "symbols": {"file": "libkf6calendarcore6.symbols", "sha256": "2662789d8c2e5715f218e40826a15a261a151bfda2d2695e5c5efefbc2d26127", "tree_provider": "debian", "reference_version": "6.28.0"},
+      "copyright": {"sha256": "578646ab9522f3decfc3f64fa153f599f9004c213e5df03c21b5ee31e2584d13"},
+      "signing_key": {"sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"},
+      "upstream_defaults": {"BUILD_PYTHON_BINDINGS": "ON", "BUILD_TESTING": "ON"},
       "binary_contracts": [
-        {
-          "name": "libkf6calendarcore-dev",
-          "architecture": "amd64",
-          "multi_arch": "same"
-        },
-        {
-          "name": "libkf6calendarcore-doc",
-          "architecture": "all",
-          "multi_arch": "foreign"
-        },
-        {
-          "name": "libkf6calendarcore6",
-          "architecture": "amd64",
-          "multi_arch": "same"
-        },
-        {
-          "name": "qml6-module-org-kde-calendarcore",
-          "architecture": "amd64",
-          "multi_arch": "same"
-        },
-        {
-          "name": "python3-kcalendarcore",
-          "architecture": "amd64",
-          "multi_arch": null
-        }
+        {"name": "libkf6calendarcore-data", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6calendarcore-dev", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "libkf6calendarcore-doc", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6calendarcore6", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "qml6-module-org-kde-calendarcore", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "python3-kcalendarcore", "architecture": "amd64", "multi_arch": null}
       ],
       "dependency_contracts": {
-        "libkf6calendarcore-dev": [
-          "libkf6calendarcore6 (= 6.30.0-0supralinux3)",
-          "qml6-module-org-kde-calendarcore (= 6.30.0-0supralinux3)",
-          "qt6-base-dev (>= 6.9.0~)"
-        ],
-        "python3-kcalendarcore": [
-          "libkf6calendarcore6 (= 6.30.0-0supralinux3)",
-          "python3-pyside6.qtcore",
-          "python3-pyside6.qtgui"
-        ]
+        "libkf6calendarcore6": ["libkf6calendarcore-data (= 6.30.0-0supralinux4)"],
+        "qml6-module-org-kde-calendarcore": ["libkf6calendarcore-data (= 6.30.0-0supralinux4)"],
+        "libkf6calendarcore-dev": ["libkf6calendarcore6 (= 6.30.0-0supralinux4)", "qml6-module-org-kde-calendarcore (= 6.30.0-0supralinux4)", "qt6-base-dev (>= 6.9.0~)"],
+        "python3-kcalendarcore": ["libkf6calendarcore6 (= 6.30.0-0supralinux4)", "python3-pyside6.qtcore", "python3-pyside6.qtgui"]
       },
-      "recommendation_contracts": {
-        "libkf6calendarcore-dev": [
-          "libkf6calendarcore-doc (= 6.30.0-0supralinux3)"
-        ]
-      },
-      "build_profile_tokens": [
-        "debhelper-compat (= 13)",
-        "dh-sequence-kf6",
-        "dh-sequence-pkgkde-symbolshelper",
-        "dh-sequence-python3",
-        "cmake (>= 3.29~)",
-        "extra-cmake-modules (>= 6.30.0~)",
-        "clang",
-        "libclang-dev",
-        "llvm-dev",
-        "libpyside6-dev",
-        "libshiboken6-dev",
-        "python3-build",
-        "python3-setuptools",
-        "python3-dev (>= 3.9~)",
-        "qt6-base-dev (>= 6.9.0~)",
-        "qt6-tools-dev (>= 6.9.0~)",
-        "dh-sequence-qmldeps",
-        "bison",
-        "libical-dev (>= 3.0~)",
-        "libxkbcommon-dev",
-        "qt6-declarative-dev (>= 6.9.0~)",
-        "tzdata <!nocheck>",
-        "tzdata-legacy <!nocheck>",
-        "xauth <!nocheck>",
-        "xvfb <!nocheck>"
-      ],
-      "soname": "libKF6CalendarCore.so.6",
-      "cmake_package": "KF6CalendarCore",
-      "cmake_target": "KF6::CalendarCore",
-      "consumer_run": "direct",
-      "symbols": {
-        "file": "libkf6calendarcore6.symbols",
-        "sha256": "2662789d8c2e5715f218e40826a15a261a151bfda2d2695e5c5efefbc2d26127",
-        "tree_provider": "debian",
-        "reference_version": "6.28.0"
-      },
-      "copyright": {
-        "file": "copyright",
-        "sha256": "578646ab9522f3decfc3f64fa153f599f9004c213e5df03c21b5ee31e2584d13",
-        "reference": "debian-sid-6.28.0"
-      },
-      "signing_key": {
-        "path": "debian/upstream/signing-key.asc",
-        "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d",
-        "signer_fingerprint": "90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1",
-        "source": "retained-debian-packaging-reference"
-      },
-      "upstream_defaults": {
-        "BUILD_PYTHON_BINDINGS": "ON",
-        "BUILD_TESTING": "ON"
-      },
+      "recommendation_contracts": {"libkf6calendarcore-dev": ["libkf6calendarcore-doc (= 6.30.0-0supralinux4)"]},
       "state": "remediation-pending-build",
       "last_result": "FAIL",
       "downstream_eligible": false,
-      "evidence": [
-        {
-          "result": "FAIL",
-          "workflow_run": 35102198701,
-          "job_id": 104814147716,
-          "commit": "f4e1754a348f56e2a47c69cf334a12bba3d4338d",
-          "attempted_package_version": "6.30.0-0supralinux1",
-          "artifact_id": 10448034196,
-          "artifact_sha256": "c76b9900d622e5ae4ab5823771baeabcbe8e2e180811ed01ac18d42b99f792e4",
-          "rootfs_sha256": "bf2f0a5c3e9ac32396439474c12dc3d8528622b626d2adcc8056e5f288bef970",
-          "failure_stage": "sbuild",
-          "failure_substage": "python-bindings/clang-builtins-unavailable",
-          "cause": "Shiboken ApiExtractor could not locate Clang's built-in include directory or llvm-config in the clean sbuild; parsing then failed because /usr/include/c++/15/cstddef could not resolve stddef.h."
-        },
-        {
-          "result": "FAIL",
-          "workflow_run": 35103681715,
-          "job_id": 104819252283,
-          "commit": "1c950b3352631fa723456ace5de71c6f8cb973f8",
-          "attempted_package_version": "6.30.0-0supralinux2",
-          "artifact_id": 10449348134,
-          "artifact_sha256": "5e24d94981c060541e008c81ef6e76e3f785b5e52fe249206aa117920c9d7040",
-          "rootfs_sha256": "dd795df9c016d6df5649d2bae706bb20704488d3bac5158ef8cd5040a68e8e29",
-          "failure_stage": "sbuild",
-          "failure_substage": "python-wheel/setuptools-backend-unavailable",
-          "cause": "The Clang/LLVM remediation progressed through Shiboken wrapper generation and final Python extension linking. ECM then invoked python3 -m build --wheel --no-isolation and failed with BackendUnavailable: Cannot import 'setuptools.build_meta' because the Setuptools backend was absent from the clean sbuild."
-        }
-      ],
       "remediation": {
-        "candidate_package_version": "6.30.0-0supralinux3",
-        "status": "remediation-pending-build",
-        "source_change": false,
-        "changes": [
-          "add python3-setuptools to Build-Depends so ECM's python3 -m build --wheel --no-isolation can import setuptools.build_meta",
-          "retain the validated clang, libclang-dev and llvm-dev binding-generator toolchain",
-          "retain KDE 6.30.0 source, Python bindings, tests and Debian Python install layout unchanged"
-        ]
+        "cause": "KDE 6.30 installs translation catalogs that the previous binary split did not own.",
+        "change": "add libkf6calendarcore-data and make runtime/QML packages depend on the exact source version",
+        "reference": "Debian kf6-kcalendarcore 6.30.0 split; technical packaging reference only"
       }
     },
     "kcoreaddons": {
       "upstream_version": "6.30.0",
       "source_package": "kf6-kcoreaddons",
-      "package_version": "6.30.0-0supralinux3",
+      "package_version": "6.30.0-0supralinux4",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kcoreaddons-6.30.0.tar.xz",
       "source_sha256": "cc68fe15beb0fca2036cff8742f468c1345406bf99793fffacbf8f2a3f89bc4b",
-      "root_cmake_blob": "05f43e4eadd696009eb619e7d0cae656608d66f4",
       "runtime_package": "libkf6coreaddons6",
-      "development_package": "libkf6coreaddons-dev",
-      "documentation_package": "libkf6coreaddons-doc",
       "python_package": "python3-kcoreaddons",
       "python_module": "KCoreAddons",
+      "soname": "libKF6CoreAddons.so.6",
+      "symbols": {"file": "libkf6coreaddons6.symbols", "sha256": "fe942c30b322dfac41f3907f614603299a2a6b6cbbc4b55f517bf26fa114ccda", "tree_provider": "debian", "reference_version": "6.28.0", "overlay": "debian/libkf6coreaddons6.symbols.supralinux-overlay"},
+      "copyright": {"sha256": "c1fae48599500ee465964528e9ef5ec1a9bf58ac1cb84bd30850a3d99d50aef1"},
+      "signing_key": {"sha256": "5a0228357021204326d88472f29689b0ba25b29cd9ea4c97dab898a0aa4614d8"},
+      "upstream_defaults": {"BUILD_PYTHON_BINDINGS": "ON", "BUILD_TESTING": "ON"},
       "binary_contracts": [
-        {
-          "name": "libkf6coreaddons-data",
-          "architecture": "all",
-          "multi_arch": "foreign"
-        },
-        {
-          "name": "libkf6coreaddons-dev",
-          "architecture": "amd64",
-          "multi_arch": "same"
-        },
-        {
-          "name": "libkf6coreaddons-doc",
-          "architecture": "all",
-          "multi_arch": "foreign"
-        },
-        {
-          "name": "libkf6coreaddons6",
-          "architecture": "amd64",
-          "multi_arch": "same"
-        },
-        {
-          "name": "qml6-module-org-kde-coreaddons",
-          "architecture": "amd64",
-          "multi_arch": "same"
-        },
-        {
-          "name": "python3-kcoreaddons",
-          "architecture": "amd64",
-          "multi_arch": null
-        }
+        {"name": "libkf6coreaddons-data", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6coreaddons-dev", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "libkf6coreaddons-doc", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6coreaddons6", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "qml6-module-org-kde-coreaddons", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "python3-kcoreaddons", "architecture": "amd64", "multi_arch": null}
       ],
       "dependency_contracts": {
-        "libkf6coreaddons-dev": [
-          "libkf6coreaddons6 (= 6.30.0-0supralinux3)",
-          "qml6-module-org-kde-coreaddons (= 6.30.0-0supralinux3)",
-          "qt6-base-dev (>= 6.9.0~)"
-        ],
-        "python3-kcoreaddons": [
-          "libkf6coreaddons6 (= 6.30.0-0supralinux3)",
-          "python3-pyside6.qtcore"
-        ]
+        "libkf6coreaddons-dev": ["libkf6coreaddons6 (= 6.30.0-0supralinux4)", "qml6-module-org-kde-coreaddons (= 6.30.0-0supralinux4)", "qt6-base-dev (>= 6.9.0~)"],
+        "python3-kcoreaddons": ["libkf6coreaddons6 (= 6.30.0-0supralinux4)", "python3-pyside6.qtcore"]
       },
-      "recommendation_contracts": {
-        "libkf6coreaddons-dev": [
-          "libkf6coreaddons-doc (= 6.30.0-0supralinux3)"
-        ]
-      },
-      "build_profile_tokens": [
-        "debhelper-compat (= 13)",
-        "dh-sequence-kf6",
-        "dh-sequence-pkgkde-symbolshelper",
-        "dh-sequence-python3",
-        "cmake (>= 3.29~)",
-        "extra-cmake-modules (>= 6.30.0~)",
-        "clang",
-        "libclang-dev",
-        "llvm-dev",
-        "libpyside6-dev",
-        "libshiboken6-dev",
-        "python3-build",
-        "python3-setuptools",
-        "python3-dev (>= 3.9~)",
-        "qt6-base-dev (>= 6.9.0~)",
-        "qt6-tools-dev (>= 6.9.0~)",
-        "dh-sequence-qmldeps",
-        "libmount-dev [linux-any]",
-        "libudev-dev [linux-any]",
-        "qt6-base-private-dev (>= 6.9.0~)",
-        "qt6-declarative-dev (>= 6.9.0~)",
-        "shared-mime-info (>= 2.1~)",
-        "xauth <!nocheck>",
-        "xvfb <!nocheck>"
-      ],
-      "soname": "libKF6CoreAddons.so.6",
-      "cmake_package": "KF6CoreAddons",
-      "cmake_target": "KF6::CoreAddons",
-      "consumer_run": "direct",
-      "symbols": {
-        "file": "libkf6coreaddons6.symbols",
-        "sha256": "fe942c30b322dfac41f3907f614603299a2a6b6cbbc4b55f517bf26fa114ccda",
-        "tree_provider": "debian",
-        "reference_version": "6.28.0"
-      },
-      "copyright": {
-        "file": "copyright",
-        "sha256": "c1fae48599500ee465964528e9ef5ec1a9bf58ac1cb84bd30850a3d99d50aef1",
-        "reference": "debian-sid-6.28.0"
-      },
-      "signing_key": {
-        "path": "debian/upstream/signing-key.asc",
-        "sha256": "5a0228357021204326d88472f29689b0ba25b29cd9ea4c97dab898a0aa4614d8",
-        "signer_fingerprint": "90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1",
-        "source": "retained-debian-packaging-reference"
-      },
-      "upstream_defaults": {
-        "BUILD_PYTHON_BINDINGS": "ON",
-        "BUILD_TESTING": "ON"
-      },
+      "recommendation_contracts": {"libkf6coreaddons-dev": ["libkf6coreaddons-doc (= 6.30.0-0supralinux4)"]},
       "state": "remediation-pending-build",
       "last_result": "FAIL",
       "downstream_eligible": false,
-      "evidence": [
-        {
-          "result": "FAIL",
-          "workflow_run": 35102198701,
-          "job_id": 104814147979,
-          "commit": "f4e1754a348f56e2a47c69cf334a12bba3d4338d",
-          "attempted_package_version": "6.30.0-0supralinux1",
-          "artifact_id": 10449051854,
-          "artifact_sha256": "d7943a390efd8610cdab14422085c6c534f0d5877ece6910f36d8a01288acba7",
-          "rootfs_sha256": "350c778059425e3a06383b52d868440396e352b57b9afcb56474287a48f534cd",
-          "failure_stage": "sbuild",
-          "failure_substage": "python-bindings/clang-builtins-unavailable",
-          "cause": "Shiboken ApiExtractor could not locate Clang's built-in include directory or llvm-config in the clean sbuild; parsing then failed because /usr/include/c++/15/cstddef could not resolve stddef.h."
-        },
-        {
-          "result": "FAIL",
-          "workflow_run": 35103681715,
-          "job_id": 104819252182,
-          "commit": "1c950b3352631fa723456ace5de71c6f8cb973f8",
-          "attempted_package_version": "6.30.0-0supralinux2",
-          "artifact_id": 10449846512,
-          "artifact_sha256": "17df43995650455389ee2f0d565ed966dd536abaeaf6f56bb44877c762c478af",
-          "rootfs_sha256": "2005a540537cd84e6153502b5d8b781dd6728ec2fee46297a2a62896ab8e936e",
-          "failure_stage": "sbuild",
-          "failure_substage": "python-wheel/setuptools-backend-unavailable",
-          "cause": "The Clang/LLVM remediation progressed through Shiboken wrapper generation and final Python extension linking. ECM then invoked python3 -m build --wheel --no-isolation and failed with BackendUnavailable: Cannot import 'setuptools.build_meta' because the Setuptools backend was absent from the clean sbuild."
-        }
-      ],
       "remediation": {
-        "candidate_package_version": "6.30.0-0supralinux3",
-        "status": "remediation-pending-build",
-        "source_change": false,
-        "changes": [
-          "add python3-setuptools to Build-Depends so ECM's python3 -m build --wheel --no-isolation can import setuptools.build_meta",
-          "retain the validated clang, libclang-dev and llvm-dev binding-generator toolchain",
-          "retain KDE 6.30.0 source, Python bindings, tests and Debian Python install layout unchanged"
-        ]
+        "cause": "KDE 6.30 adds KAboutData::setUrl() and KAboutData::url(); dpkg-gensymbols otherwise assigns the Debian package revision as their minimum version and Lintian rejects it.",
+        "change": "apply a two-symbol ABI overlay with upstream introduction baseline 6.29.0 before dh_makeshlibs",
+        "source_change": false
       }
     },
     "kwidgetsaddons": {
       "upstream_version": "6.30.0",
       "source_package": "kf6-kwidgetsaddons",
-      "package_version": "6.30.0-0supralinux3",
+      "package_version": "6.30.0-0supralinux4",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kwidgetsaddons-6.30.0.tar.xz",
       "source_sha256": "ab1333c258678caa7562120a1c03bb71779f7232f1a0e75b9525d921dee3e0a3",
-      "root_cmake_blob": "f76e59170f9edb461f097e17049fba9bc6355941",
       "runtime_package": "libkf6widgetsaddons6",
-      "development_package": "libkf6widgetsaddons-dev",
-      "documentation_package": "libkf6widgetsaddons-doc",
       "python_package": "python3-kwidgetsaddons",
       "python_module": "KWidgetsAddons",
+      "soname": "libKF6WidgetsAddons.so.6",
+      "symbols": {"file": "libkf6widgetsaddons6.symbols", "sha256": "31c352878dc27c56a6357ad35c308acac8871b1a105273721923cc697e68c323", "tree_provider": "debian", "reference_version": "6.28.0"},
+      "copyright": {"sha256": "5165a3d00e3f02c151bcc62602ea39ccc45783fcdcf360b9c283967636246647"},
+      "signing_key": {"sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"},
+      "upstream_defaults": {"BUILD_PYTHON_BINDINGS": "ON", "BUILD_TESTING": "ON", "BUILD_DESIGNERPLUGIN": "ON"},
       "binary_contracts": [
-        {
-          "name": "libkf6widgetsaddons-data",
-          "architecture": "all",
-          "multi_arch": "foreign"
-        },
-        {
-          "name": "libkf6widgetsaddons-dev",
-          "architecture": "amd64",
-          "multi_arch": null
-        },
-        {
-          "name": "libkf6widgetsaddons-doc",
-          "architecture": "all",
-          "multi_arch": "foreign"
-        },
-        {
-          "name": "libkf6widgetsaddons6",
-          "architecture": "amd64",
-          "multi_arch": "same"
-        },
-        {
-          "name": "python3-kwidgetsaddons",
-          "architecture": "amd64",
-          "multi_arch": null
-        }
+        {"name": "libkf6widgetsaddons-data", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6widgetsaddons-dev", "architecture": "amd64", "multi_arch": null},
+        {"name": "libkf6widgetsaddons-doc", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6widgetsaddons6", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "python3-kwidgetsaddons", "architecture": "amd64", "multi_arch": null}
       ],
       "dependency_contracts": {
-        "libkf6widgetsaddons-dev": [
-          "libkf6widgetsaddons6 (= 6.30.0-0supralinux3)",
-          "qt6-base-dev (>= 6.9.0~)"
-        ],
-        "python3-kwidgetsaddons": [
-          "libkf6widgetsaddons6 (= 6.30.0-0supralinux3)",
-          "python3-pyside6.qtwidgets"
-        ]
+        "libkf6widgetsaddons-dev": ["libkf6widgetsaddons6 (= 6.30.0-0supralinux4)", "qt6-base-dev (>= 6.9.0~)"],
+        "python3-kwidgetsaddons": ["libkf6widgetsaddons6 (= 6.30.0-0supralinux4)", "python3-pyside6.qtwidgets"]
       },
-      "recommendation_contracts": {
-        "libkf6widgetsaddons-dev": [
-          "libkf6widgetsaddons-doc (= 6.30.0-0supralinux3)"
-        ]
-      },
-      "build_profile_tokens": [
-        "debhelper-compat (= 13)",
-        "dh-sequence-kf6",
-        "dh-sequence-pkgkde-symbolshelper",
-        "dh-sequence-python3",
-        "cmake (>= 3.29~)",
-        "extra-cmake-modules (>= 6.30.0~)",
-        "clang",
-        "libclang-dev",
-        "llvm-dev",
-        "libpyside6-dev",
-        "libshiboken6-dev",
-        "python3-build",
-        "python3-setuptools",
-        "python3-dev (>= 3.9~)",
-        "qt6-base-dev (>= 6.9.0~)",
-        "qt6-tools-dev (>= 6.9.0~)",
-        "libxkbcommon-dev",
-        "xauth <!nocheck>",
-        "xvfb <!nocheck>"
-      ],
-      "soname": "libKF6WidgetsAddons.so.6",
-      "cmake_package": "KF6WidgetsAddons",
-      "cmake_target": "KF6::WidgetsAddons",
-      "consumer_run": "direct",
-      "symbols": {
-        "file": "libkf6widgetsaddons6.symbols",
-        "sha256": "31c352878dc27c56a6357ad35c308acac8871b1a105273721923cc697e68c323",
-        "tree_provider": "debian",
-        "reference_version": "6.28.0"
-      },
-      "copyright": {
-        "file": "copyright",
-        "sha256": "5165a3d00e3f02c151bcc62602ea39ccc45783fcdcf360b9c283967636246647",
-        "reference": "debian-sid-6.28.0"
-      },
-      "signing_key": {
-        "path": "debian/upstream/signing-key.asc",
-        "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d",
-        "signer_fingerprint": "90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1",
-        "source": "retained-debian-packaging-reference"
-      },
-      "upstream_defaults": {
-        "BUILD_PYTHON_BINDINGS": "ON",
-        "BUILD_TESTING": "ON",
-        "BUILD_DESIGNERPLUGIN": "ON"
-      },
+      "recommendation_contracts": {"libkf6widgetsaddons-dev": ["libkf6widgetsaddons-doc (= 6.30.0-0supralinux4)"]},
       "state": "remediation-pending-build",
       "last_result": "FAIL",
       "downstream_eligible": false,
-      "evidence": [
-        {
-          "result": "FAIL",
-          "workflow_run": 35102198701,
-          "job_id": 104814148006,
-          "commit": "f4e1754a348f56e2a47c69cf334a12bba3d4338d",
-          "attempted_package_version": "6.30.0-0supralinux1",
-          "artifact_id": 10448668591,
-          "artifact_sha256": "227370b1da6151ed68155e2dfc65252db77f68e6ec03ee8f5737550709c8b995",
-          "rootfs_sha256": "5e4efab6af0773d306e543a6f9089927881d1281efb017ccd8973587692e4e3d",
-          "failure_stage": "sbuild",
-          "failure_substage": "python-bindings/clang-builtins-unavailable",
-          "cause": "Shiboken ApiExtractor could not locate Clang's built-in include directory or llvm-config in the clean sbuild; parsing then failed because the system limits.h chain could not resolve Clang's built-in limits.h."
-        },
-        {
-          "result": "FAIL",
-          "workflow_run": 35103681715,
-          "job_id": 104819252378,
-          "commit": "1c950b3352631fa723456ace5de71c6f8cb973f8",
-          "attempted_package_version": "6.30.0-0supralinux2",
-          "artifact_id": 10449886366,
-          "artifact_sha256": "0ded038e3a2b7cac8bc94dc5eb61e8183cc1cdcc45284d0040ddbc4ee9670760",
-          "rootfs_sha256": "cf6853445e63401a9066fa17db7bf2c23407bafe4cf3bf54f4f262700fa4aefd",
-          "failure_stage": "sbuild",
-          "failure_substage": "python-wheel/setuptools-backend-unavailable",
-          "cause": "The Clang/LLVM remediation progressed through Shiboken wrapper generation and final Python extension linking. ECM then invoked python3 -m build --wheel --no-isolation and failed with BackendUnavailable: Cannot import 'setuptools.build_meta' because the Setuptools backend was absent from the clean sbuild."
-        }
-      ],
       "remediation": {
-        "candidate_package_version": "6.30.0-0supralinux3",
-        "status": "remediation-pending-build",
-        "source_change": false,
-        "changes": [
-          "add python3-setuptools to Build-Depends so ECM's python3 -m build --wheel --no-isolation can import setuptools.build_meta",
-          "retain the validated clang, libclang-dev and llvm-dev binding-generator toolchain",
-          "retain KDE 6.30.0 source, Python bindings, tests, Designer plugin and Debian Python install layout unchanged"
-        ]
+        "cause": "two gesture tests require an active top-level window; Xvfb alone does not provide a window manager",
+        "change": "run the unchanged test suite under Xvfb with Openbox and verify the EWMH supporting-WM window before dh_auto_test",
+        "source_change": false
       }
     }
   }

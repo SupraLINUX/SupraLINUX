@@ -1,3 +1,11 @@
+kf6-kcalendarcore (6.30.0-0supralinux4) resolute; urgency=medium
+
+  * Split KDE 6.30 translation catalogs into libkf6calendarcore-data.
+  * Make runtime and QML packages consume the exact data package revision.
+  * Keep upstream Python bindings/tests and the validated build toolchain enabled.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 13:30:00 -0300
+
 kf6-kcalendarcore (6.30.0-0supralinux3) resolute; urgency=medium
 
   * Add explicit python3-setuptools build dependency so ECM's

@@ -1,3 +1,11 @@
+kf6-kcoreaddons (6.30.0-0supralinux4) resolute; urgency=medium
+
+  * Record KAboutData setUrl()/url() ABI additions with upstream 6.29.0 minimum.
+  * Apply the two-symbol overlay before normal dh_makeshlibs processing.
+  * Keep KDE 6.30.0 source, bindings and tests unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 13:30:00 -0300
+
 kf6-kcoreaddons (6.30.0-0supralinux3) resolute; urgency=medium
 
   * Add explicit python3-setuptools build dependency so ECM's

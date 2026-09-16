@@ -19,6 +19,8 @@ Build-Depends: debhelper-compat (= 13),
                qt6-base-dev (>= 6.9.0~),
                qt6-tools-dev (>= 6.9.0~),
                libxkbcommon-dev,
+               openbox <!nocheck>,
+               x11-utils <!nocheck>,
                xauth <!nocheck>,
                xvfb <!nocheck>,
 Standards-Version: 4.7.4

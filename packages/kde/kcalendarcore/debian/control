@@ -31,6 +31,13 @@ Standards-Version: 4.7.4
 Homepage: https://invent.kde.org/frameworks/kcalendarcore
 Rules-Requires-Root: no
 
+Package: libkf6calendarcore-data
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: KDE KCalendarCore shared data
+ This package contains architecture-independent translation catalogs for KDE KCalendarCore.
+
 Package: libkf6calendarcore-dev
 Section: libdevel
 Architecture: any
@@ -57,7 +64,8 @@ Description: KDE KCalendarCore documentation compatibility package
 Package: libkf6calendarcore6
 Architecture: any
 Multi-Arch: same
-Depends: ${misc:Depends},
+Depends: libkf6calendarcore-data (= ${source:Version}),
+         ${misc:Depends},
          ${shlibs:Depends},
 Description: KDE KCalendarCore runtime library
  This package contains the KDE Frameworks 6 KCalendarCore runtime library.
@@ -65,7 +73,8 @@ Description: KDE KCalendarCore runtime library
 Package: qml6-module-org-kde-calendarcore
 Architecture: any
 Multi-Arch: same
-Depends: ${misc:Depends},
+Depends: libkf6calendarcore-data (= ${source:Version}),
+         ${misc:Depends},
          ${qml6:Depends},
          ${shlibs:Depends},
 Description: KDE KCalendarCore QML module

@@ -10,3 +10,6 @@ override_dh_auto_configure:
 
 override_dh_auto_test:
 	LANG=C.UTF-8 LC_ALL=C.UTF-8 xvfb-run -a dh_auto_test --no-parallel
+
+execute_before_dh_makeshlibs:
+	grep -Fq '_ZN10KAboutData6setUrlENS_7UrlTypeERK7QString@Base 6.29.0' debian/libkf6coreaddons6.symbols || cat debian/libkf6coreaddons6.symbols.supralinux-overlay >> debian/libkf6coreaddons6.symbols
