@@ -35,7 +35,10 @@ out = pathlib.Path(sys.argv[2])
 registry = m["requirements"]
 qt_map = m["qt_provider_packages"]
 
-mandatory = {"cmake", "g++", "ninja-build", "pkgconf", "python3"}
+# python3-setuptools is a shared packaging-tool provider for ECM-generated
+# Python wheels. ECM executes python -m build --wheel --no-isolation, so the
+# setuptools.build_meta backend must be present in the clean build environment.
+mandatory = {"cmake", "g++", "ninja-build", "pkgconf", "python3", "python3-setuptools"}
 recommended = set()
 optional = set()
 alternatives = []
@@ -153,9 +156,16 @@ mapfile -t install_packages < <(
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${install_packages[@]}"
 
 python3 - <<'PY' > "${EVIDENCE}/python-build-provider.txt"
+import importlib.metadata
 import build
-print(f'module=build')
-print(f'version={getattr(build, "__version__", "unknown")}')
+import setuptools.build_meta
+
+print('frontend_module=build')
+print(f'frontend_version={getattr(build, "__version__", "unknown")}')
+print('frontend_import_status=PASS')
+print('backend_module=setuptools.build_meta')
+print(f'setuptools_package_version={importlib.metadata.version("setuptools")}')
+print('backend_import_status=PASS')
 print('status=PASS')
 PY
 
@@ -267,6 +277,7 @@ cmake -S "${probe_dir}" -B "${probe_dir}/build" -GNinja -DCMAKE_BUILD_TYPE=Relea
     echo "provider_check=hosted-non-authoritative"
     echo "ubuntu_version=${VERSION_ID}"
     echo "qt_upstream=${qt_base_upstream}"
+    echo "python_wheel_backend=setuptools.build_meta"
     echo "framework_package_build_certification=pending"
 } > "${EVIDENCE}/summary.env"
 
