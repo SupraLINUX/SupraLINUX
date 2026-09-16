@@ -71,7 +71,7 @@ jobs:
           packages/kde/kwindowsystem/debian/run-tests-with-openbox.sh
           scripts/validate_kde_tier1_package_batch6.py
           PATHS
-          git diff --name-only | sort > /tmp/actual-paths
+          git status --porcelain=v1 --untracked-files=all | cut -c4- | sort > /tmp/actual-paths
           diff -u /tmp/expected-paths /tmp/actual-paths
           git add -- $(cat /tmp/expected-paths)
           git diff --cached --name-only | sort > /tmp/staged-paths
