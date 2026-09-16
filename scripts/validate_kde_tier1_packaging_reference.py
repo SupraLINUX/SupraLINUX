@@ -62,6 +62,8 @@ PASS_NODES = {
     "kidletime": ("6.30.0-0supralinux1", 35014875475, 10414598079, "272ccad537d21905cf75a1add74e937d176c20c05c38bf967226fef4ab28b605"),
     "modemmanager-qt": ("6.30.0-0supralinux3", 35021323444, 10417683848, "42d4f804effc6e4b9148e8c01887bdce6f95f0554ac4d03295e844a861a54eb7"),
     "networkmanager-qt": ("6.30.0-0supralinux1", 35014875475, 10414714325, "abf927b5749b34094d2b5ee530831f64638ba116a83e8b82f925a758aa018ad4"),
+    "kwindowsystem": ("6.30.0-0supralinux4", 35047623320, 10428130399, "9c35d5e228d3f8b71fb1e84863fac030bfd26a8e3c528ae718e788708db01272"),
+    "solid": ("6.30.0-0supralinux2", 35047623320, 10427653865, "cff267d012a3e103b53bd6e19757e6c3b0af7dc873f4cd166a4505f58aee8389"),
 }
 errors: list[str] = []
 
@@ -127,16 +129,17 @@ for node in source_nodes:
         require(packaging.get("package_version") == version, f"{node_id}: validated revision mismatch")
         require(packaging.get("downstream_eligible") is True, f"{node_id}: PASS must remain downstream eligible")
         passes = [item for item in packaging.get("evidence", []) if isinstance(item, dict) and item.get("result") == "PASS"]
-        require(len(passes) == 1, f"{node_id}: exactly one current PASS evidence item expected")
-        if passes:
-            require(passes[0].get("workflow_run") == run, f"{node_id}: PASS run mismatch")
-            require(passes[0].get("artifact_id") == artifact, f"{node_id}: PASS artifact mismatch")
-            require(passes[0].get("artifact_sha256") == digest, f"{node_id}: PASS digest mismatch")
+        current_passes = [item for item in passes if item.get("workflow_run") == run and item.get("artifact_id") == artifact]
+        require(len(current_passes) == 1, f"{node_id}: exactly one current PASS matching expected run/artifact required")
+        if current_passes:
+            require(current_passes[0].get("workflow_run") == run, f"{node_id}: PASS run mismatch")
+            require(current_passes[0].get("artifact_id") == artifact, f"{node_id}: PASS artifact mismatch")
+            require(current_passes[0].get("artifact_sha256") == digest, f"{node_id}: PASS digest mismatch")
     else:
         require(node.get("packaging") == {"state":"pending"}, f"{node_id}: unattempted packaging must remain pending")
         require(node.get("state") == "pending", f"{node_id}: unattempted node must remain pending")
-require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 16, "Reference validator expects 16 actual package PASS nodes")
-require(sum(1 for node in source_nodes if node.get("state") == "pending") == 13, "Reference validator expects 13 pending nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 18, "Reference validator expects 18 actual package PASS nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "pending") == 11, "Reference validator expects 11 pending nodes")
 for token in ("manifests/kde-frameworks-tier1.json","manifests/kde-frameworks-tier1-packaging-reference.json","scripts/run-kde-tier1-packaging-reference-snapshot.sh","scripts/kde-tier1-packaging-reference-needed.sh",".github/workflows/kde-tier1-packaging-reference.yml"):
     require(token in scope, f"Packaging-reference scope must track input {token}")
 require("docs/" not in scope, "Packaging-reference snapshot must not rerun for documentation-only changes")
@@ -151,4 +154,4 @@ if errors:
     raise SystemExit(1)
 print("KDE Frameworks Tier 1 packaging-reference policy: PASS")
 print("Reference snapshots remain non-authoritative technical inputs")
-print("Actual package states: 16 PASS; 13 pending")
+print("Actual package states: 18 PASS; 11 pending")
