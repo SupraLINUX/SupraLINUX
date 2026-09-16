@@ -15,16 +15,16 @@
     "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
   },
   "last_campaign": {
-    "workflow_run": 35134670463,
-    "commit": "e0228ddb21fb57a639245b2fb93494854bccd928",
+    "workflow_run": 35138333645,
+    "commit": "6b3a8b9f408c5fff4bceec81ac9ffb3e47a4dbd3",
     "results": {
-      "kconfig": {"result":"DIAG_PASS","job_id":104923940842,"artifact_id":10463162930,"artifact_sha256":"8af6e430985ac9d46886032c7e4073eaacd6a599eb66f005b15abba723b10c0c"},
-      "ki18n": {"result":"DIAG_FAIL","job_id":104923940865,"artifact_id":10462837843,"artifact_sha256":"96801e17f96956a616a06be32e11facdde6dfdef0809ce966865a8d95718e537","stage":"tests","tests":"14/17 PASS","classification":"locale-fixture-overrides-upstream-test-locale","cause":"French iso-codes catalogs were present, but the common diagnostic fixture forced LC_ALL=C.UTF-8; that overrides KI18n tests which set LANG=fr_CH.UTF-8 and prevents gettext LANGUAGE fallback from exercising the intended locale path.","remediation":"install locales-all, assert en_US.UTF-8 and fr_CH.UTF-8, keep French iso-codes catalogs, run unchanged KI18n tests with LANG=en_US.UTF-8 and LC_ALL unset"},
-      "sonnet": {"result":"DIAG_PASS","job_id":104923941024,"artifact_id":10462543371,"artifact_sha256":"c832539c4fa053d125f62764886bbad6158814e33a0a39afcdd914f2b62b3bf6"},
-      "kirigami": {"result":"DIAG_PASS","job_id":104923940883,"artifact_id":10462063740,"artifact_sha256":"1014cb8cce1b43f9a3912b4e45acf752a2bf9520bc8dad2c7a6b8f2e1f9077b6"},
-      "kquickcharts": {"result":"DIAG_PASS","job_id":104923940752,"artifact_id":10462337704,"artifact_sha256":"ee33a55f58ea0e56c7d8af5cfa571790531e92f5897b1f88c25520ceae0c042b"},
-      "kuserfeedback": {"result":"DIAG_PASS","job_id":104923940498,"artifact_id":10462087859,"artifact_sha256":"baf1b41d7b74b4001b165ef5426ec78cd5ffdec7acc15e43234a7a0d5035727e"},
-      "prison": {"result":"DIAG_PASS","job_id":104923940882,"artifact_id":10462272649,"artifact_sha256":"3f7dfd401f1906845b8465a7059ed4cda55b6e7fd520108a90bc8a1a5d7713b0"}
+      "kconfig": {"result":"DIAG_PASS","job_id":104936243505,"artifact_id":10464074545,"artifact_sha256":"9f05b0e368c4d1a7eb3dbec441680b423fd3f8b4a7fc2a0cdcbf9edbb3ca6e68"},
+      "ki18n": {"result":"DIAG_PASS","job_id":104936243967,"artifact_id":10463404553,"artifact_sha256":"86b5f05313d164358ac36e1cc4982b72fad90bad3175114d2b2b493691a6bec3"},
+      "sonnet": {"result":"DIAG_PASS","job_id":104936243844,"artifact_id":10464073832,"artifact_sha256":"6b17c7f02213282a520f4127feb010e9a37dbbafce9c8ab17d7f76164b22d7b6"},
+      "kirigami": {"result":"DIAG_PASS","job_id":104936243949,"artifact_id":10464419377,"artifact_sha256":"f83a7e508fa2031dcf5401a7590e9598ab3d5888230af60b153c4b77d4b53185"},
+      "kquickcharts": {"result":"DIAG_PASS","job_id":104936243779,"artifact_id":10463808939,"artifact_sha256":"5d1023d260fe167d846a8b3f16310c6771bb08f79688095bd27ba5ea79798a28"},
+      "kuserfeedback": {"result":"DIAG_PASS","job_id":104936243847,"artifact_id":10463474227,"artifact_sha256":"490be26e6790ac56114948be44e0b068061479e448c1ba1b3ee227c231902d39"},
+      "prison": {"result":"DIAG_PASS","job_id":104936243826,"artifact_id":10464172535,"artifact_sha256":"cee0b26d3c3dbad53b0924d8c15cde6b11813863a4e800634a8b9ae2cfdb90b5"}
     }
   },
   "common_build_packages": ["build-essential","ca-certificates","cmake","curl","dbus-x11","gettext","ninja-build","openbox","pkg-config","python3","x11-utils","xauth","xvfb","xz-utils"],

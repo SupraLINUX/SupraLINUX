@@ -45,17 +45,26 @@
       "pass_evidence":{"workflow_run":35122522242,"job_id":104883541991,"commit":"ea465e7f78ee621f6456246e7ba76e0a89e46d78","artifact_id":10457958023,"artifact_sha256":"c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64","rootfs_sha256":"dd7762ba1cdc25dd57b05e8203b3d5d4d448d9ee7131ac0b99d1d85989854794","tests":"34/34 PASS","lintian":"PASS-errors","consumer_smoke":"PASS","python_import":"PASS","apt_check":"PASS","abi_soname":"libKF6CoreAddons.so.6"}
     },
     "kwidgetsaddons": {
-      "upstream_version":"6.30.0","source_package":"kf6-kwidgetsaddons","package_version":"6.30.0-0supralinux6","source_url":"https://download.kde.org/stable/frameworks/6.30/kwidgetsaddons-6.30.0.tar.xz","source_sha256":"ab1333c258678caa7562120a1c03bb71779f7232f1a0e75b9525d921dee3e0a3",
+      "upstream_version":"6.30.0","source_package":"kf6-kwidgetsaddons","package_version":"6.30.0-0supralinux7","source_url":"https://download.kde.org/stable/frameworks/6.30/kwidgetsaddons-6.30.0.tar.xz","source_sha256":"ab1333c258678caa7562120a1c03bb71779f7232f1a0e75b9525d921dee3e0a3",
       "runtime_package":"libkf6widgetsaddons6","python_package":"python3-kwidgetsaddons","python_module":"KWidgetsAddons","soname":"libKF6WidgetsAddons.so.6",
-      "symbols":{"file":"libkf6widgetsaddons6.symbols","sha256":"31c352878dc27c56a6357ad35c308acac8871b1a105273721923cc697e68c323","tree_provider":"debian","reference_version":"6.28.0"},
+      "symbols":{"file":"libkf6widgetsaddons6.symbols","sha256":"31c352878dc27c56a6357ad35c308acac8871b1a105273721923cc697e68c323","tree_provider":"debian","reference_version":"6.28.0","overlay":"debian/libkf6widgetsaddons6.symbols.supralinux-overlay"},
       "copyright":{"sha256":"5165a3d00e3f02c151bcc62602ea39ccc45783fcdcf360b9c283967636246647"},
       "signing_key":{"sha256":"86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"},
       "upstream_defaults":{"BUILD_PYTHON_BINDINGS":"ON","BUILD_TESTING":"ON","BUILD_DESIGNERPLUGIN":"ON"},
       "binary_contracts":[{"name":"libkf6widgetsaddons-data","architecture":"all","multi_arch":"foreign"},{"name":"libkf6widgetsaddons-dev","architecture":"amd64","multi_arch":null},{"name":"libkf6widgetsaddons-doc","architecture":"all","multi_arch":"foreign"},{"name":"libkf6widgetsaddons6","architecture":"amd64","multi_arch":"same"},{"name":"python3-kwidgetsaddons","architecture":"amd64","multi_arch":null}],
-      "dependency_contracts":{"libkf6widgetsaddons-dev":["libkf6widgetsaddons6 (= 6.30.0-0supralinux6)","qt6-base-dev (>= 6.9.0~)"],"python3-kwidgetsaddons":["libkf6widgetsaddons6 (= 6.30.0-0supralinux6)","python3-pyside6.qtwidgets"]},
-      "recommendation_contracts":{"libkf6widgetsaddons-dev":["libkf6widgetsaddons-doc (= 6.30.0-0supralinux6)"]},
+      "dependency_contracts":{"libkf6widgetsaddons-dev":["libkf6widgetsaddons6 (= 6.30.0-0supralinux7)","qt6-base-dev (>= 6.9.0~)"],"python3-kwidgetsaddons":["libkf6widgetsaddons6 (= 6.30.0-0supralinux7)","python3-pyside6.qtwidgets"]},
+      "recommendation_contracts":{"libkf6widgetsaddons-dev":["libkf6widgetsaddons-doc (= 6.30.0-0supralinux7)"]},
       "state":"remediation-pending-build","last_result":"FAIL","downstream_eligible":false,
-      "remediation":{"cause":"Revision -5 proved the 27=25+2 partition itself is correct, but the bare-Xvfb partition still failed 1/25 at KSqueezedTextLabel before Openbox started. Compared with the earlier -3 chroot where that test passed, the test environment no longer had DejaVu and instead resolved through the font set introduced with the Openbox stack. The upstream test uses default QFontMetrics and is therefore sensitive to the fixture's default sans-serif metrics.","change":"add fontconfig and fonts-dejavu-core as explicit nocheck test-fixture dependencies, assert generic sans-serif resolves to DejaVu Sans before CTest, then retain the unchanged 27-test inventory with 25 bare-Xvfb suites followed by the two gesture suites under verified Openbox","tests_omitted":false,"source_change":false,"font_fixture":{"resolver":"fontconfig","provider":"fonts-dejavu-core","generic":"sans-serif","expected_family_contains":"DejaVu Sans"},"fixture_partition":{"total":27,"bare_xvfb":25,"xvfb_openbox":2,"openbox_tests":["ktwofingertaptest","ktwofingerswipetest"]}}
+      "remediation":{
+        "cause":"Revision -6 validated the deterministic test fixture with 27/27 upstream suites PASS and completed the binary build. Lintian then rejected the package because libkf6widgetsaddons-dev did not consume the shlibs dependency generated for its Qt Designer plugin, and six newly observed symbols carried the current Debian revision as their minimum version.",
+        "change":"consume ${shlibs:Depends} in libkf6widgetsaddons-dev and apply a reviewed symbols overlay before dh_makeshlibs: five KDE APIs introduced in Frameworks 6.29.0 plus _ZSt19piecewise_construct as optional=toolchain at upstream minimum 6.30.0; keep the already-green 27-test fixture unchanged",
+        "tests_omitted":false,
+        "source_change":false,
+        "dependency_fix":{"package":"libkf6widgetsaddons-dev","substvar":"${shlibs:Depends}","reason":"usr/lib/x86_64-linux-gnu/qt6/plugins/designer/kwidgetsaddons6widgets.so is a packaged shared object and dh_shlibdeps already generates the required runtime dependency set"},
+        "abi_overlay":{"kde_minimum_6_29":["_ZN11KColorCombo14dragEnterEventEP15QDragEnterEvent@Base","_ZN11KColorCombo16contextMenuEventEP17QContextMenuEvent@Base","_ZN11KColorCombo9dropEventEP10QDropEvent@Base","_ZN12KColorButton16contextMenuEventEP17QContextMenuEvent@Base","_ZNK16KAssistantDialog10onLastPageEv@Base"],"toolchain_minimum_6_30":["_ZSt19piecewise_construct@Base"]},
+        "font_fixture":{"resolver":"fontconfig","provider":"fonts-dejavu-core","generic":"sans-serif","expected_family_contains":"DejaVu Sans"},
+        "fixture_partition":{"total":27,"bare_xvfb":25,"xvfb_openbox":2,"openbox_tests":["ktwofingertaptest","ktwofingerswipetest"]}
+      }
     }
   }
 }

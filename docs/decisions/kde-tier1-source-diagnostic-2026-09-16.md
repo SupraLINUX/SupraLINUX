@@ -2,7 +2,7 @@
 
 Date: **2026-09-16**
 
-Status: **SECOND CAMPAIGN COMPLETE — 6 DIAG_PASS / 1 DIAG_FAIL; KI18n locale-fixture remediation prepared**
+Status: **THIRD CAMPAIGN COMPLETE — 7 DIAG_PASS / 0 DIAG_FAIL**
 
 ## Purpose and semantics
 
@@ -10,62 +10,73 @@ The package DAG remains the only path that may promote a KDE node to package `PA
 
 It reports only `DIAG_PASS` and `DIAG_FAIL`. Neither value changes the canonical package DAG. A `DIAG_PASS` does not prove Debian package splits, symbols/ABI policy, Lintian, Multi-Arch, `.deb` runtime closure, `.changes`, `.buildinfo` or downstream eligibility.
 
-## First campaign — run 35131119792
+## Campaign 1 — run `35131119792`
 
 Commit `1f5fcdc68e1bbb2a7cc3f93dc20687aadc15cec0` attempted all seven nodes independently with `fail-fast: false`.
 
-- KConfig: `DIAG_FAIL` at configure because `Qt6::CorePrivate` referenced the missing versioned Qt private-header surface; `qt6-base-private-dev` was absent.
-- KI18n: `DIAG_FAIL`, 14/17 tests; the three failures expected French `iso-codes` translations.
+- KConfig: `DIAG_FAIL` because `Qt6::CorePrivate` referenced a missing versioned private-header surface; the provider profile lacked `qt6-base-private-dev`.
+- KI18n: `DIAG_FAIL`, 14/17 tests, initially exposing missing effective French locale data.
 - Sonnet, Kirigami, KQuickCharts, KUserFeedback and Prison: `DIAG_PASS`.
 
-This campaign established two independent provider/fixture hypotheses without changing package state.
+## Campaign 2 — run `35134670463`
 
-## Second campaign — run 35134670463
+Commit `e0228ddb21fb57a639245b2fb93494854bccd928` validated the KConfig provider correction and refined the KI18n diagnosis.
 
-Commit `e0228ddb21fb57a639245b2fb93494854bccd928` reran the seven nodes once because the common runner and selector contract changed.
+KConfig became `DIAG_PASS`. KI18n remained `DIAG_FAIL` even though real French `iso_3166-1.mo` and `iso_3166-2.mo` catalogs were installed. The common runner forced `LC_ALL=C.UTF-8`, which has higher locale precedence than the `LANG` and `LANGUAGE` values intentionally manipulated by KI18n's upstream tests. That fixture prevented the tests from exercising the intended gettext locale path.
+
+The result established a CI-fixture defect, not a KDE source defect.
+
+## Campaign 3 — run `35138333645`
+
+Commit `6b3a8b9f408c5fff4bceec81ac9ffb3e47a4dbd3` validated the final locale fixture and revalidated all seven nodes because the common diagnostic runner changed.
 
 | Node | Result | Job | Artifact | Artifact SHA-256 |
 | --- | --- | ---: | ---: | --- |
-| KConfig | `DIAG_PASS` | `104923940842` | `10463162930` | `8af6e430985ac9d46886032c7e4073eaacd6a599eb66f005b15abba723b10c0c` |
-| KI18n | `DIAG_FAIL` | `104923940865` | `10462837843` | `96801e17f96956a616a06be32e11facdde6dfdef0809ce966865a8d95718e537` |
-| Sonnet | `DIAG_PASS` | `104923941024` | `10462543371` | `c832539c4fa053d125f62764886bbad6158814e33a0a39afcdd914f2b62b3bf6` |
-| Kirigami | `DIAG_PASS` | `104923940883` | `10462063740` | `1014cb8cce1b43f9a3912b4e45acf752a2bf9520bc8dad2c7a6b8f2e1f9077b6` |
-| KQuickCharts | `DIAG_PASS` | `104923940752` | `10462337704` | `ee33a55f58ea0e56c7d8af5cfa571790531e92f5897b1f88c25520ceae0c042b` |
-| KUserFeedback | `DIAG_PASS` | `104923940498` | `10462087859` | `baf1b41d7b74b4001b165ef5426ec78cd5ffdec7acc15e43234a7a0d5035727e` |
-| Prison | `DIAG_PASS` | `104923940882` | `10462272649` | `3f7dfd401f1906845b8465a7059ed4cda55b6e7fd520108a90bc8a1a5d7713b0` |
+| KConfig | `DIAG_PASS` | `104936243505` | `10464074545` | `9f05b0e368c4d1a7eb3dbec441680b423fd3f8b4a7fc2a0cdcbf9edbb3ca6e68` |
+| KI18n | `DIAG_PASS` | `104936243967` | `10463404553` | `86b5f05313d164358ac36e1cc4982b72fad90bad3175114d2b2b493691a6bec3` |
+| Sonnet | `DIAG_PASS` | `104936243844` | `10464073832` | `6b17c7f02213282a520f4127feb010e9a37dbbafce9c8ab17d7f76164b22d7b6` |
+| Kirigami | `DIAG_PASS` | `104936243949` | `10464419377` | `f83a7e508fa2031dcf5401a7590e9598ab3d5888230af60b153c4b77d4b53185` |
+| KQuickCharts | `DIAG_PASS` | `104936243779` | `10463808939` | `5d1023d260fe167d846a8b3f16310c6771bb08f79688095bd27ba5ea79798a28` |
+| KUserFeedback | `DIAG_PASS` | `104936243847` | `10463474227` | `490be26e6790ac56114948be44e0b068061479e448c1ba1b3ee227c231902d39` |
+| Prison | `DIAG_PASS` | `104936243826` | `10464172535` | `cee0b26d3c3dbad53b0924d8c15cde6b11813863a4e800634a8b9ae2cfdb90b5` |
 
-KConfig therefore validates the provider correction: `qt6-base-private-dev` plus a real versioned private-header assertion is sufficient for the source diagnostic.
+Result: **7/7 DIAG_PASS**.
 
-## KI18n v2 classification
+## KConfig validated provider contract
 
-The second attempt disproved the narrower hypothesis that French catalogs were simply absent. `language-pack-fr-base` installed real `iso_3166-1.mo` and `iso_3166-2.mo` catalogs and the pre-build assertion passed, but the same three upstream tests still failed.
+The selected Linux build path requires the Qt private Core surface. Ubuntu Resolute provides it through `qt6-base-private-dev`. The runner additionally asserts that the versioned `QtCore/.../QtCore/private` directory actually exists before CMake configure. Campaigns 2 and 3 both validate that provider mapping.
 
-The common test wrapper forced `LANG=C.UTF-8 LC_ALL=C.UTF-8`. KI18n's upstream tests intentionally manipulate `LANG` and `LANGUAGE`; for example, `kcountrytest` sets `LANG=fr_CH.UTF-8`, while `kcatalogtest` constructs a long `LANGUAGE=fr_CH:...` value to exercise KCatalog/gettext behavior. `LC_ALL` has higher locale precedence and therefore neutralized the test's `LANG` selection. With the effective C locale, gettext does not exercise the intended `LANGUAGE` translation path.
+## KI18n validated locale contract
 
-This is a diagnostic-fixture failure, not justification to patch KDE source or disable tests.
+The final diagnostic profile declares the test fixture rather than overriding upstream locale behavior:
 
-## KI18n v3 remediation
+- `locales-all` provides the required compiled locales;
+- `language-pack-fr-base` provides the French iso-codes catalogs;
+- `en_US.UTF-8` and `fr_CH.UTF-8` must both be visible through `locale -a`;
+- the KI18n test wrapper sets `LANG=en_US.UTF-8` and leaves `LC_ALL` unset;
+- upstream tests remain unchanged.
 
-The node profile now declares its locale requirements and test environment explicitly:
-
-- provider `locales-all` supplies precompiled locales;
-- `language-pack-fr-base` continues to supply the required French catalogs;
-- `en_US.UTF-8` and `fr_CH.UTF-8` must both be discoverable through `locale -a` before configure;
-- the test wrapper sets `LANG=en_US.UTF-8` and unsets `LC_ALL` only for KI18n;
-- the unchanged upstream test suite remains the proof gate.
-
-The runner reads this fixture from node metadata. Other nodes retain the existing `C.UTF-8` default. Once this common runner change has passed, later provider/profile changes can use the existing per-node semantic selector instead of rerunning unrelated green nodes.
+Campaign 3 `DIAG_PASS` validates this correction. No KDE source patch and no test exclusion is required.
 
 ## Upstream defaults
 
-The runner does not disable KDE features to obtain a green result. It preserves and checks the selected KDE 6.30 defaults, including GUI/QML/DBus for KConfig, QML for KI18n, backends and Designer plugin for Sonnet, Desktop style and DBus for Kirigami, and enabled multimedia/barcode paths for Prison.
+The diagnostic runner does not disable features to obtain green results. It preserves and validates the selected KDE 6.30 defaults, including GUI/QML/DBus for KConfig, QML for KI18n, spell backends and Designer plugin for Sonnet, Desktop style and DBus for Kirigami, and enabled multimedia/barcode paths for Prison.
+
+## Scope policy
+
+The selector is per-node after common infrastructure stabilizes:
+
+- node-specific provider/profile changes rerun only that node;
+- evidence-only `last_campaign` changes do not rerun diagnostics;
+- common runner/workflow/provider-contract changes conservatively rerun the matrix;
+- documentation-only changes do not run source diagnostics.
 
 ## Relationship to package lanes
 
-1. source diagnostics discover failures broadly and early;
-2. specialized package lanes produce real Debian package evidence;
+1. source diagnostics discover provider/configure/build/test failures broadly;
+2. specialized package lanes produce `.deb` evidence;
 3. only package `PASS` artifacts may feed downstream package nodes;
-4. diagnostic fixes must still pass the full package gates;
-5. package campaigns continue independently of diagnostic FAILs that do not form DAG predecessors.
+4. diagnostic corrections must still pass package gates;
+5. `DIAG_PASS` never implies downstream eligibility.
 
-KGuiAddons remains outside this seven-node source matrix because its package validation must consume the retained local KCoreAddons PASS rather than substitute an Ubuntu KDE package.
+KGuiAddons remains outside this source matrix because its development/consumer contract must consume the retained local KCoreAddons PASS rather than substitute an Ubuntu KDE package.

@@ -62,13 +62,22 @@ ecm=m.get("ecm_predecessor",{})
 if ecm.get("version")!="6.30.0-0supralinux3" or ecm.get("artifact_id")!=10298635300 or ecm.get("deb_sha256")!="ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f": fail("ECM predecessor mismatch")
 
 campaign=m.get("last_campaign",{})
-if campaign.get("workflow_run") != 35134670463 or campaign.get("commit") != "e0228ddb21fb57a639245b2fb93494854bccd928": fail("diagnostic campaign evidence mismatch")
+if campaign.get("workflow_run") != 35138333645 or campaign.get("commit") != "6b3a8b9f408c5fff4bceec81ac9ffb3e47a4dbd3": fail("diagnostic campaign evidence mismatch")
 results=campaign.get("results",{})
 if set(results)!=set(expected): fail("diagnostic campaign result set mismatch")
-if {n:results[n].get("result") for n in expected} != {"kconfig":"DIAG_PASS","ki18n":"DIAG_FAIL","sonnet":"DIAG_PASS","kirigami":"DIAG_PASS","kquickcharts":"DIAG_PASS","kuserfeedback":"DIAG_PASS","prison":"DIAG_PASS"}: fail("diagnostic campaign result classification mismatch")
-for n in expected:
-    if results[n].get("artifact_id") is None or not results[n].get("artifact_sha256"): fail(f"{n}: missing campaign evidence")
-if results["ki18n"].get("classification") != "locale-fixture-overrides-upstream-test-locale" or results["ki18n"].get("tests") != "14/17 PASS": fail("KI18n v2 failure classification mismatch")
+if {n:results[n].get("result") for n in expected} != {n:"DIAG_PASS" for n in expected}: fail("third diagnostic campaign must be 7/7 DIAG_PASS")
+expected_evidence={
+ "kconfig":(104936243505,10464074545,"9f05b0e368c4d1a7eb3dbec441680b423fd3f8b4a7fc2a0cdcbf9edbb3ca6e68"),
+ "ki18n":(104936243967,10463404553,"86b5f05313d164358ac36e1cc4982b72fad90bad3175114d2b2b493691a6bec3"),
+ "sonnet":(104936243844,10464073832,"6b17c7f02213282a520f4127feb010e9a37dbbafce9c8ab17d7f76164b22d7b6"),
+ "kirigami":(104936243949,10464419377,"f83a7e508fa2031dcf5401a7590e9598ab3d5888230af60b153c4b77d4b53185"),
+ "kquickcharts":(104936243779,10463808939,"5d1023d260fe167d846a8b3f16310c6771bb08f79688095bd27ba5ea79798a28"),
+ "kuserfeedback":(104936243847,10463474227,"490be26e6790ac56114948be44e0b068061479e448c1ba1b3ee227c231902d39"),
+ "prison":(104936243826,10464172535,"cee0b26d3c3dbad53b0924d8c15cde6b11813863a4e800634a8b9ae2cfdb90b5"),
+}
+for n,(job,artifact,digest) in expected_evidence.items():
+    item=results[n]
+    if item.get("job_id")!=job or item.get("artifact_id")!=artifact or item.get("artifact_sha256")!=digest: fail(f"{n}: third campaign evidence mismatch")
 
 workflow=W.read_text(); runner=R.read_text(); selector=S.read_text()
 for token in ("fail-fast: false","max-parallel: 7","kconfig, ki18n, sonnet, kirigami, kquickcharts, kuserfeedback, prison",'"${{ matrix.node }}"'):
@@ -80,4 +89,4 @@ for token in ("Usage: $0 <before-sha> <after-sha> <node>","last_campaign","nodes
     if token not in selector: fail(f"per-node diagnostic selector missing {token}")
 
 print("KDE Tier 1 global source diagnostic policy: PASS")
-print("nodes=7; second campaign=6 DIAG_PASS / 1 DIAG_FAIL; KI18n locale-fixture remediation prepared; package promotion disabled")
+print("nodes=7; third campaign=7 DIAG_PASS / 0 DIAG_FAIL; package promotion disabled")

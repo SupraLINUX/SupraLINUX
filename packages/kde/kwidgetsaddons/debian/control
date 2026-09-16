@@ -42,6 +42,7 @@ Architecture: any
 Depends: libkf6widgetsaddons6 (= ${binary:Version}),
          qt6-base-dev (>= 6.9.0~),
          ${misc:Depends},
+         ${shlibs:Depends},
 Recommends: libkf6widgetsaddons-doc (= ${source:Version}),
 Description: development files for KDE KWidgetsAddons
  This package contains headers, CMake metadata, the development symlink,

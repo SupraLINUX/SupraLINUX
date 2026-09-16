@@ -1,198 +1,126 @@
 # KDE Frameworks 6.30 Tier 1 — dependency resolution
 
-Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping validated for ECM Python bindings; hosted provider preflight PASS; 18 package nodes PASS; 11 package nodes pending**
+Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping validated; 18 canonical package PASS / 11 pending; newer Batch 7 PASS evidence awaits canonical promotion**
+
 Last reviewed: **2026-09-16**
 
 ## Contract
 
 This document separates two questions:
 
-- **Authority:** what KDE Frameworks 6.30.0 requires or enables in its selected Linux/default build paths.
-- **Provider:** which Ubuntu Resolute packages may satisfy those requirements for SupraLINUX.
+- **Authority:** KDE Frameworks 6.30.0 defines required dependencies, minimums, enabled/default features and build behavior.
+- **Provider:** Ubuntu Resolute may provide packages that satisfy those requirements. Provider choice does not make Ubuntu authoritative over KDE.
 
-The authoritative dependency inputs are the exact KDE `v6.30.0` build files recorded, with blob SHA pins, in `manifests/kde-frameworks-tier1-dependencies.json`. Ubuntu/Debian names are provider mappings and packaging references only.
+The authoritative source inputs and KDE build metadata remain pinned in `manifests/kde-frameworks-tier1.json` and `manifests/kde-frameworks-tier1-dependencies.json`. Debian/Ubuntu packaging is a technical reference only.
 
-The dependency manifest distinguishes `required`, `default_enabled`, `recommended`, `optional`, `runtime` and `required_any_of`. Optional features are not silently promoted to architectural requirements; conversely, default-enabled KDE features are not disabled merely because a distribution reference chose differently.
+The provider model distinguishes required, default-enabled, recommended, optional, runtime and required-any-of dependencies. SupraLINUX does not disable a KDE default merely because a downstream distribution chose a different profile.
 
-## Resolved dependency groups
+## Python bindings and ECM wheel path
 
-### Compression and archive support
+`kcalendarcore`, `kcoreaddons`, `kguiaddons` and `kwidgetsaddons` enable Python bindings on the selected Linux/shared-library path. The complete provider surface discovered and validated for the current ECM/Shiboken path is:
 
-`karchive` defaults to all four support switches enabled and therefore uses zlib, bzip2, liblzma/xz, OpenSSL and libzstd/pkg-config in the selected profile. Resolute mappings are `zlib1g-dev`, `libbz2-dev`, `liblzma-dev`, `libssl-dev`, `libzstd-dev` and `pkgconf`.
+- `python3-dev`;
+- `libshiboken6-dev`;
+- `libpyside6-dev`;
+- `python3-build`;
+- `python3-setuptools`;
+- `clang`;
+- `libclang-dev`;
+- `llvm-dev`.
 
-### Python bindings
+`DEB_PYTHON_INSTALL_LAYOUT=deb` keeps the installed Python modules in the Debian-compatible system layout. Python bindings remain enabled; these packages are provider corrections, not feature reductions.
 
-`kcalendarcore`, `kcoreaddons`, `kguiaddons` and `kwidgetsaddons` enable Python bindings by default on the selected Linux/shared-library paths. Their profile includes Python >= 3.9 development files, Shiboken6, PySide6 and the Python `build` frontend used by ECM 6.30 to execute `python -m build --wheel --no-isolation`. Resolute maps these to `python3-dev`, `libshiboken6-dev`, `libpyside6-dev` and `python3-build`.
+### Evidence chain
 
-The earlier hosted provider PASS verified that Shiboken6 and PySide6 normalize to the same upstream Qt patch level as the selected Ubuntu Qt candidate: **6.10.2**, but it predates the `python3-build` mapping. Batch 7 discovery run `35054417698` (job `104661454268`, artifact `10429918034`, SHA-256 `86cd447eab87f42d088ba6569529b15012d26084f0974456651b143786a64fa8`) reached KCalendarCore configuration with Python/Shiboken/PySide present and failed only because ECM could not import `build`. The mapping was corrected without disabling Python bindings. Real revalidation then passed in run `35087361837`, job `104765243282`, artifact `10442512801`, ZIP SHA-256 `49f74d493dd18ed68ecee668f68549cf5f71279fcb96e2f481ceef0eaccf5fa9`: Resolute installed `python3-build 1.4.0-1`, `import build` reported module version `1.4.0`, and the existing PySide6/Shiboken6 checks remained aligned to Qt `6.10.2`. This is provider-availability evidence only, not a Framework package PASS.
+The initial provider revalidation run `35087361837`, job `104765243282`, artifact `10442512801`, artifact SHA-256 `49f74d493dd18ed68ecee668f68549cf5f71279fcb96e2f481ceef0eaccf5fa9`, proved Resolute provides `python3-build 1.4.0-1`; `import build` reported module version `1.4.0`. PySide6/Shiboken6 remained aligned with the selected Qt provider at Qt 6.10.2. This is provider evidence only.
 
-### X11 and Wayland
+The first real Batch 7 package run `35102198701` then exposed a distinct clean-sbuild requirement: Shiboken/ApiExtractor could not locate Clang built-in headers or `llvm-config`. The package profiles therefore added `clang`, `libclang-dev` and `llvm-dev`. This preserved `BUILD_PYTHON_BINDINGS=ON`.
 
-The selected Linux defaults retain X11 and Wayland paths where KDE enables them. Notable requirements include:
+Run `35103681715` proved that correction worked: all three Batch 7 nodes passed wrapper generation and final Python-extension linking, but ECM's `python3 -m build --wheel --no-isolation` then failed because `setuptools.build_meta` was unavailable in the build environment.
 
-- `kguiaddons`: X11/XCB, Wayland client >= 1.9, wayland-protocols >= 1.39, plasma-wayland-protocols >= 1.15.0;
-- `kidletime`: X11/XCB Sync plus a usable idle poller, Wayland client >= 1.9, wayland-protocols >= 1.27, plasma-wayland-protocols >= 1.6.0;
-- `kwindowsystem`: X11/XCB components and wayland-protocols >= 1.46 plus plasma-wayland-protocols.
+Provider run `35106561251`, job `104829186807`, artifact `10450572112`, SHA-256 `488592048a0514b8f6234e8820c959817a151782fef41c138b71f7a8b7fe8fc4`, validated Resolute `python3-setuptools 78.1.1-0.1build1` and successful import of `setuptools.build_meta`. The package profiles then added `python3-setuptools` explicitly.
 
-The strongest selected Tier 1 constraint therefore gates the provider at `wayland-protocols >= 1.46`. Hosted evidence observed Resolute `wayland-protocols 1.47-1`, `libwayland-dev 1.24.0-2` and `plasma-wayland-protocols 1.20.0-2`.
+The final proof is the package lane itself: KCoreAddons `6.30.0-0supralinux4` is retained PASS with 34/34 tests, and KCalendarCore `6.30.0-0supralinux5` is retained PASS with 507/507 tests. KWidgetsAddons `-6` also completed Python generation, binary build and 27/27 upstream tests before failing later at a packaging-only Lintian gate. This confirms the binding provider chain without turning provider packages into KDE authority.
 
-### Qt Designer plugins
+## X11 and Wayland
 
-`kitemviews`, `kplotting` and `kwidgetsaddons` enable Qt Designer plugins by default when not cross-compiling. Their Designer paths use ECM's Qt Designer support and require Qt `UiPlugin`; the provider mapping uses `qt6-tools-dev`.
+The selected Linux defaults retain X11 and Wayland wherever KDE enables them.
 
-KItemViews Batch 4 retained `BUILD_DESIGNERPLUGIN=ON` and passed as `6.30.0-0supralinux1`.
+- `kguiaddons`: X11/XCB, Wayland client >= 1.9, Wayland Protocols >= 1.39 and Plasma Wayland Protocols >= 1.15.0; Qt 6.10 also needs the Qt Gui private surface on enabled Wayland/DBus paths.
+- `kidletime`: X11/XCB Sync plus the Wayland idle path.
+- `kwindowsystem`: X11/XCB plus Wayland Protocols >= 1.46 and Plasma Wayland Protocols.
 
-### Translation tooling and Qt LinguistTools
+The strongest selected Tier 1 Wayland Protocols floor is therefore >= 1.46. Resolute provider evidence has satisfied that floor. KWindowSystem's retained PASS also validates its X11/Wayland package path.
 
-Batch 4 exposed a provider mapping that preparation had missed: ECM `ECMPoQmTools` uses the Qt 6 `LinguistTools` CMake component when installing translations. Resolute provides that component through `qt6-tools-dev`.
+## Qt Designer plugins
 
-The omission caused real `-1` package FAILs for KGlobalAccel and KSyntaxHighlighting. Adding `qt6-tools-dev (>= 6.9.0~)` to their Build-Depends produced real PASS revisions `6.30.0-0supralinux2` in run `35006477086`. This is a provider/packaging correction, not a change in KDE authority or KDE requirements.
+`kitemviews`, `kplotting` and `kwidgetsaddons` retain the upstream Designer-plugin path. `qt6-tools-dev` provides the Qt `UiPlugin` development surface.
 
-### Generators and language tooling
+KWidgetsAddons additionally demonstrates why package splits must consume generated runtime substvars: its Designer plugin is packaged in `libkf6widgetsaddons-dev`, so `${shlibs:Depends}` must be present in that binary package's `Depends`. This is a Debian package-contract requirement caused by the shared object being shipped there, not a new KDE dependency.
 
-- `kholidays`: Flex and Bison >= 3.3.2 are required.
-- `solid`: Flex and Bison >= 3.0 are required.
-- `syntax-highlighting`: Perl is required. XercesC is optional compile-time validation and Python is optional generator tooling.
-- `ki18n`: Python is required for installed i18n tooling. On the selected glibc platform, libintl functionality is supplied by libc.
-- `kuserfeedback`: Flex/Bison, PHP and PHPUnit are upstream recommended/non-fatal dependencies.
+## Translation tooling and locale data
 
-For Batch 4, KSyntaxHighlighting deliberately includes `libxerces-c-dev` so the available upstream XML validation path is exercised, while Python remains optional and is not converted into a hard architectural dependency.
+ECM `ECMPoQmTools` uses Qt 6 LinguistTools; Resolute provides that surface through `qt6-tools-dev`. Missing it caused the historical KGlobalAccel and KSyntaxHighlighting `-1` package FAILs; their corrected `-2` revisions passed.
 
-### Platform/service libraries
+KI18n requires Python for installed tooling and relies on libc/gettext behavior on glibc systems. The source-diagnostic lane established a separate test-fixture contract for its locale-sensitive tests:
+
+- `locales-all` for compiled locales;
+- `language-pack-fr-base` for the required French iso-codes catalogs;
+- `en_US.UTF-8` and `fr_CH.UTF-8` present;
+- `LC_ALL` must not override the locale selections made by upstream tests.
+
+Diagnostic run `35138333645` validates the resulting unchanged upstream KI18n suite. This evidence is non-promoting and does not replace package gates.
+
+## Generators and language tooling
+
+- `kholidays`: Flex and Bison >= 3.3.2.
+- `solid`: Flex and Bison >= 3.0.
+- `syntax-highlighting`: Perl required; XercesC remains optional validation tooling and is enabled in the selected provider profile.
+- `kuserfeedback`: Flex/Bison, PHP and PHPUnit follow upstream's recommended/non-fatal profile.
+
+## Platform/service libraries
 
 - `kcalendarcore`: libical >= 3.0.
-- `kcoreaddons`: libmount is required on Linux; root-level udev discovery remains optional.
-- `modemmanager-qt`: KDE requires `ModemManager >= 1.0` and probes pkg-config module `ModemManager`; Ubuntu Resolute provides that development surface through `modemmanager-dev`.
+- `kcoreaddons`: libmount required on Linux; root-level udev discovery remains optional.
+- `modemmanager-qt`: KDE probes pkg-config module `ModemManager >= 1.0`; Resolute provider is `modemmanager-dev`.
 - `networkmanager-qt`: libnm >= 1.4.0 and GIO 2.0.
-- `solid`: libmount and udev are required for the selected Linux default backend set.
+- `solid`: libmount and udev for the selected Linux backend set; IMobileDevice/PList remain optional.
 
-The earlier `libmm-glib-dev`/`mm-glib` mapping for ModemManagerQt was incorrect because it checked a related client-library surface rather than the interface requested by KDE's `FindModemManager.cmake`. The correction is provider-only; KDE authority and its minimum requirement are unchanged.
+The earlier ModemManager mapping to a related `mm-glib` development surface was corrected because it did not satisfy KDE's actual `FindModemManager.cmake` query. Targeted provider revalidation passed in run `35012023822`, job `104526071758`, artifact `10414525047`, SHA-256 `db6868402b08bca82241d07980e158639a2f2fc64c4a5ab595fa58846361cb4a`.
 
-Targeted revalidation of the corrected mapping passed in run `35012023822`, job `104526071758`, artifact `10414525047`, SHA-256 `db6868402b08bca82241d07980e158639a2f2fc64c4a5ab595fa58846361cb4a`.
+## Prison barcode stack
 
-Optional Solid iOS-device support (`libimobiledevice` + `libplist`) remains optional and is not a build gate merely because Resolute can provide it.
+With the selected upstream defaults, Prison requires QRencode, Dmtx, ZXing, Qt Quick and Qt Multimedia. `WITH_DMTX`, `WITH_ZXING`, `WITH_QUICK` and `WITH_MULTIMEDIA` remain ON. Resolute ZXing `2.3.0-5` satisfies KDE's accepted config-package discovery path. Prison is `DIAG_PASS` in the global source lane; package PASS remains a separate gate.
 
-### Prison barcode stack
+## Sonnet spell backends
 
-With upstream defaults, `prison` requires QRencode, Dmtx, ZXing, Qt Quick and Qt Multimedia. Dmtx and ZXing become mandatory in the selected profile because `WITH_DMTX` and `WITH_ZXING` default to ON; scanner support keeps `WITH_MULTIMEDIA=ON`.
+Sonnet discovers Aspell, HSpell, Hunspell and Voikko. Each is individually optional, but the selected non-Android build cannot proceed with no usable backend. SupraLINUX models this as required-any-of and supplies available providers. Debian/Ubuntu's HSpell development surface is provided by `hspell`; SupraLINUX does not invent a `libhspell-dev` package name.
 
-Prison 6.30 probes ZXing config packages in order `3.0`, `2.0`, `1.4.0` and accepts the first one exposing `ZXing::ZXing`. Resolute ZXing `2.3.0-5` passes both the version floor and KDE discovery path.
+## ABI/toolchain exports
 
-### Sonnet spell backends
+Compiler/libstdc++ implementation exports are not treated as new KDE public APIs merely because `dpkg-gensymbols` observes them. The reviewed policy already used for BluezQt, ModemManagerQt, Solid and now KWidgetsAddons classifies `_ZSt19piecewise_construct@Base` as `(optional=toolchain)` with an upstream release minimum rather than the current Debian package revision.
 
-Sonnet discovers Aspell, HSpell, Hunspell and Voikko. Each backend is individually optional, but on the selected non-Android build Sonnet fails if **none** can be built. The manifest models this as `required_any_of` and the provider profile maps all available candidates. HSpell is a packaging exception: Debian/Ubuntu provides its development header/library through `hspell`; SupraLINUX must not invent `libhspell-dev`.
+Public KDE APIs are instead assigned the actual upstream introduction release after source comparison. Batch 7 applies this rule to KCoreAddons, KCalendarCore and KWidgetsAddons rather than suppressing Lintian.
 
-## Batch 4 dependency profile and closure evidence
+## Retained package closure evidence
 
-The Batch 4 selection was `kitemviews`, `kglobalaccel` and `syntax-highlighting`.
+Batch 1 through Batch 6 are canonically closed. Representative later closures include:
 
-- KItemViews requires Qt Widgets >= 6.9 and retains the default Designer plugin via `qt6-tools-dev`.
-- KGlobalAccel requires Qt DBus/Gui/Widgets >= 6.9; with Qt 6.10 upstream additionally requires `Qt6GuiPrivate`; enabled tests require QtQml; ECM translation handling additionally requires `Qt6LinguistTools` supplied by `qt6-tools-dev`.
-- KSyntaxHighlighting requires Qt Core/Network/Test and Perl; Gui and the QML module remain in the selected profile; XercesC validation is enabled; ECM translation handling also requires `qt6-tools-dev`.
+- KWindowSystem `6.30.0-0supralinux4`: run `35047623320`, job `104640833059`, artifact `10428130399`, SHA-256 `9c35d5e228d3f8b71fb1e84863fac030bfd26a8e3c528ae718e788708db01272`, 14/14 tests PASS.
+- Solid `6.30.0-0supralinux2`: run `35047623320`, job `104640833295`, artifact `10427653865`, SHA-256 `cff267d012a3e103b53bd6e19757e6c3b0af7dc873f4cd166a4505f58aee8389`, 5/5 tests PASS.
+- KCoreAddons `6.30.0-0supralinux4`: retained Batch 7 package PASS, canonical promotion pending.
+- KCalendarCore `6.30.0-0supralinux5`: retained Batch 7 package PASS, canonical promotion pending.
 
-Reference-only dependencies that cannot be traced to the selected KDE 6.30 build path, such as inherited `libxkbcommon-dev` entries in these Debian trees, are not copied into SupraLINUX packaging merely because they exist downstream.
+Historical FAILs remain evidence after later PASS. BLOCKED remains distinct from FAIL.
 
-Closure evidence:
-
-- KItemViews PASS: run `34999449194`, artifact `10409267184`, SHA-256 `7e34fa7ede21510cf6829448e7b45a5c2832aaf9ac2719b9cb4125d23b593e55`.
-- KGlobalAccel remediation PASS: run `35006477086`, artifact `10412320520`, SHA-256 `cb8143633cf15745a235937ea55ee096cb094cc96da3bd1fc39dc914f3acb3b1`.
-- KSyntaxHighlighting remediation PASS: run `35006477086`, artifact `10411888269`, SHA-256 `1ec0d1e7d046b1393fbb299c9a6fec7e85ee4ac59ed5deafa0c777ead67c0b5f`.
-
-## Batch 5 provider profile
-
-Batch 5 selects `kidletime`, `modemmanager-qt` and `networkmanager-qt`.
-
-- KIdleTime retains upstream X11 and Wayland defaults and their provider surface.
-- ModemManagerQt uses corrected provider `modemmanager-dev` for KDE's `ModemManager >= 1.0` requirement.
-- NetworkManagerQt explicitly carries both `libnm-dev` and `libglib2.0-dev` because upstream CMake directly probes `libnm>=1.4.0` and `gio-2.0`; its QML module remains enabled.
-
-Run `35014875475` attempted all three packages. KIdleTime and NetworkManagerQt passed immediately. ModemManagerQt built and passed 11/11 tests but failed the Lintian symbols gate on `_ZSt19piecewise_construct@Base`. Its `6.30.0-0supralinux2` attempt fixed that symbols issue and again passed 11/11 tests, then failed Lintian because the Python transform invoked by `debian/rules` lacked an explicit Python build prerequisite.
-
-Revision `6.30.0-0supralinux3` retained the same reviewed transform and added only `python3:any` to Build-Depends. Run `35021323444`, job `104557423664`, artifact `10417683848`, SHA-256 `42d4f804effc6e4b9148e8c01887bdce6f95f0554ac4d03295e844a861a54eb7`, passed 11/11 tests plus Lintian/SONAME/consumer smoke. Batch 5 is now canonically closed 3/3 PASS and all three nodes are downstream-eligible.
-
-## Hosted provider evidence
-
-Original broad provider-availability evidence:
-
-- run `34700048774`;
-- PR head `6ce61bc02c4aba146bcc33b16d17f56fb66f057a`;
-- artifact `10299608166`;
-- artifact SHA-256 `da6808c31554da4105713e060e328d4130253a100c628fef279d8d0a9cf8ceb3`;
-- result: PASS; provider evidence only.
-
-Current provider revalidation for ECM Python bindings:
-
-- run `35087361837`;
-- job `104765243282`;
-- commit `a60cf80e2adae2f40c994c8ca8e661d23822b0b6`;
-- artifact `10442512801`;
-- artifact SHA-256 `49f74d493dd18ed68ecee668f68549cf5f71279fcb96e2f481ceef0eaccf5fa9`;
-- `python3-build 1.4.0-1`, Python module `build 1.4.0`: PASS;
-- PySide6/Shiboken6 remain aligned to Qt `6.10.2`;
-- result: PASS; provider-availability evidence only.
-
-Current targeted evidence for the corrected ModemManager provider mapping:
-
-- run `35012023822`;
-- job `104526071758`;
-- commit `48fd01bfa7b254b5e5c8447b3d609f76a91f786f`;
-- artifact `10414525047`;
-- artifact SHA-256 `db6868402b08bca82241d07980e158639a2f2fc64c4a5ab595fa58846361cb4a`;
-- result: PASS; provider-availability evidence only.
-
-Historical runs `34699717549` and `34699889060` remain gate-implementation FAIL evidence; neither is a Framework node FAIL because no Framework was attempted.
-
-## Package evidence status
-
-Attica was the first real Framework package PASS against this dependency model. Batch 1 through Batch 5 evidence has now promoted sixteen Tier 1 nodes.
-
-Current canonical state:
+## Current state
 
 - upstream dependency resolution: **resolved**;
-- Ubuntu package-name mapping: **resolved**;
-- Ubuntu hosted provider availability/version evidence: **PASS**;
-- Tier 1 package/build states: **18 PASS / 11 pending**;
-- current Tier 1 FAIL: **0**;
-- current Tier 1 BLOCKED: **0**;
+- Ubuntu Resolute package-name/provider mapping: **resolved for the current selected profiles**;
+- hosted provider evidence: **PASS where recorded**;
+- canonical Tier 1 package state: **18 PASS / 11 pending / 0 current FAIL / 0 BLOCKED**;
+- KCalendarCore and KCoreAddons: retained PASS awaiting canonical promotion;
+- KWidgetsAddons: independent remediation lane;
 - final Qt provider certification: **pending**.
 
-Provider evidence alone never promotes a Framework. Each of the eighteen canonical PASS nodes has real package-attempt evidence. Batch 5 remains historically closed 3/3 PASS, and Batch 6 is closed 2/2 PASS. Earlier ModemManagerQt, KWindowSystem and Solid FAIL attempts remain retained as historical evidence while their later PASS revisions are the current downstream-eligible state.
-
-## Batch 6 selection (historical pre-closure)
-
-At Batch 6 selection time, KWindowSystem and Solid were the next package candidates. This did not change authority: KDE upstream 6.30.0 defined requirements; Ubuntu Resolute remained only a provider. KWindowSystem retained QML, X11 and Wayland with Wayland Protocols >= 1.46 and Plasma Wayland Protocols. Solid retained DBus, udev and libmount; IMobileDevice/PList remained upstream-optional and their Ubuntu providers were supplied rather than disabled. The canonical Tier 1 state at that historical point was **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED** pending real package promotion.
-
-## Batch 6 provider correction evidence
-
-Initial run `35034742520` proved the selected KDE 6.30 source reaches real package compilation on Resolute. KWindowSystem exposed one packaging omission: upstream source includes `xcb/xfixes.h`, while the SupraLINUX Build-Depends lacked `libxcb-xfixes0-dev`. Both retained Debian 6.28 and Ubuntu 6.24 packaging trees include that provider, so revision `-2` adds it without changing KDE's X11/Wayland/QML feature selection.
-
-Solid completed its build and `5/5` tests. Its failure was not a missing provider: Lintian rejected the toolchain-exported `_ZSt19piecewise_construct@Base`. Ubuntu's retained symbols baseline records this export at minimum `6.4.0` on architectures other than armhf/riscv64. SupraLINUX keeps the Debian 6.28 public ABI baseline and marks only that export `optional=toolchain` with the retained Ubuntu architecture/minimum-version evidence.
-
-## Batch 6 second-attempt evidence
-
-Run `35038057329` confirms the Solid provider/ABI remediation: Solid `6.30.0-0supralinux2` passed `5/5` tests, Lintian, SONAME and consumer smoke (artifact `10423914110`, SHA-256 `7cc2b15e2fa627e3cd280395e0ac48bd3658c7328d194958b872713738b97fc0`).
-
-KWindowSystem `-2` also confirms `libxcb-xfixes0-dev` was the correct missing build provider: compilation now succeeds. The remaining failure is test-fixture-only. Upstream KDE's v6.30.0 tests require a NETWM-compliant X11 window manager and explicitly mention OpenBox on build.kde.org. Revision `-3` therefore adds `openbox <!nocheck>` plus `x11-utils <!nocheck>` and waits for `_NET_SUPPORTING_WM_CHECK` inside Xvfb; these are test providers and do not alter the runtime dependency contract.
-
-## Batch 6 third-attempt test-fixture evidence
-
-Run `35040999577` confirms that the OpenBox test provider and readiness check are correct: KWindowSystem `6.30.0-0supralinux3` compiles, OpenBox publishes `_NET_SUPPORTING_WM_CHECK`, the Wayland suite passes and CTest advances to `12/14` suites PASS. The retained FAIL evidence is job `104620609155`, artifact `10425162919`, SHA-256 `58481311a264849cbe78c166fcfd2e174d95bc56e04e32be9cab7efed3a2b9dc`.
-
-The remaining failures are not unresolved providers. They occur because stateful X11 test executables share one Xvfb/OpenBox display while `dh_auto_test` inherits parallel test execution. One suite owns the global compositor selection and root-window effect properties; another expects the active-window signal count from a clean initial X11 state. KDE's own `kwindowsystemx11test.cpp` explicitly warns that `testActiveWindowChanged()` must be the first test because later X11 state would make it fail.
-
-Revision `-4` keeps all dependency mappings and the same nocheck-only Xvfb/OpenBox test providers. It serializes only the `dh_auto_test` phase with `--no-parallel`, preserving normal build parallelism and every upstream X11/Wayland test. This is test-fixture execution policy, not a new runtime/provider contract and not a change in KDE authority.
-
-## Batch 6 fourth-attempt runtime-closure evidence
-
-Run `35046462679` proves the `-4` X11 execution policy: KWindowSystem passes **14/14 CTest suites**, `sbuild` completes and the Lintian error gate passes. The remaining FAIL is later at `consumer-smoke` (job `104637230834`, artifact `10426857754`, artifact ZIP SHA-256 `ec2af4fb475bfc11f91592d2f18190f39175334b21356b179fc8fd4e60e19ac2`).
-
-This failure does **not** add a KDE runtime requirement and does not change the provider mapping. The built `libkf6windowsystem6` package already declares `libxcb-res0 (>= 1.10)`, while `readelf` correctly records `libxcb-res.so.0` as a needed library. The defect is in the hosted consumer-smoke runner: it extracted the locally built `.deb` set but did not materialize external runtime `Depends`, so the result leaked the host's preinstalled-library set.
-
-The shared runner remediation installs the exact locally built `.deb` set through APT with `--no-install-recommends`, lets Ubuntu Resolute satisfy only external `Depends`, runs `apt-get check`, verifies exact installed SupraLINUX revisions, and still compiles/runs against the extracted built artifacts. This preserves the authority/provider boundary: KDE/package metadata decides the dependency contract; Ubuntu merely provides dependencies matching that contract.
-
-Because this changed a shared Batch 6 build input, both KWindowSystem and the retained-PASS Solid node had to revalidate. No package revision was bumped for this runner-only correction. At that remediation point, canonical Tier 1 remained **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED** until the corrected lane passed and closure promoted the nodes.
-
-<!-- BATCH6-CANONICAL-CLOSURE -->
-## Batch 6 canonical closure
-
-KWindowSystem `6.30.0-0supralinux4` and Solid `6.30.0-0supralinux2` are canonical hosted-clean-package-preflight PASS and downstream-eligible. Final evidence is workflow run `35047623320`: KWindowSystem job `104640833059`, artifact `10428130399`, ZIP SHA-256 `9c35d5e228d3f8b71fb1e84863fac030bfd26a8e3c528ae718e788708db01272`, 14/14 tests PASS; Solid job `104640833295`, artifact `10427653865`, ZIP SHA-256 `cff267d012a3e103b53bd6e19757e6c3b0af7dc873f4cd166a4505f58aee8389`, 5/5 tests PASS. Both pass Lintian error gating, consumer smoke, exact local-package installation and `apt-get check`. The shared consumer-runtime closure remediation is therefore validated. Canonical Tier 1 is **18 PASS / 11 pending / 0 current FAIL / 0 BLOCKED**. Historical FAIL attempts remain retained as evidence; BLOCKED remains distinct from FAIL.
+Provider evidence alone never promotes a Framework. Only retained package PASS artifacts may become downstream predecessors.
