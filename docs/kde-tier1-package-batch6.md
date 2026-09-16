@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 Tier 1 — package Batch 6
 
-Status: **Solid PASS — KWindowSystem third build pending**
+Status: **Solid PASS — KWindowSystem fourth build pending**
 Last reviewed: **2026-09-15**
 
 ## Selection
@@ -48,7 +48,20 @@ Run `35038057329` tested revision `6.30.0-0supralinux2` from commit `ce2853eff35
 
 This second KWindowSystem failure is an incomplete test fixture, not a KDE source failure. KDE upstream `v6.30.0` explicitly documents in `autotests/kwindowinfox11test.cpp` that `build.kde.org` uses **OpenBox**, and `kwindowsystemx11test.cpp` states that multiple tests require a running NETWM-compliant window manager. Bare Xvfb supplies an X server but no window manager.
 
-Revision `6.30.0-0supralinux3` therefore keeps every upstream test enabled and changes only the test environment: `openbox <!nocheck>` and `x11-utils <!nocheck>` are added, `Xvfb` starts OpenBox, the fixture waits until `_NET_SUPPORTING_WM_CHECK` contains a real window id, and only then runs `dh_auto_test`. No KDE source, production dependency, X11/Wayland/QML feature, Qt choice or canonical DAG state changes.
+Revision `6.30.0-0supralinux3` therefore kept every upstream test enabled and changed only the test environment: `openbox <!nocheck>` and `x11-utils <!nocheck>` were added, `Xvfb` starts OpenBox, the fixture waits until `_NET_SUPPORTING_WM_CHECK` contains a real window id, and only then runs `dh_auto_test`. No KDE source, production dependency, X11/Wayland/QML feature, Qt choice or canonical DAG state changed.
+
+## Third real attempt and X11 test-serialization remediation
+
+Run `35040999577` tested KWindowSystem `6.30.0-0supralinux3` from commit `0da3238a528893a28e624d89014dc82dea3d8e9d`. Repository Policy `35040999426` passed. Solid correctly scope-skipped because its retained `-2` PASS inputs did not change.
+
+KWindowSystem `-3` is a real FAIL: job `104620609155`, artifact `10425162919`, artifact SHA-256 `58481311a264849cbe78c166fcfd2e174d95bc56e04e32be9cab7efed3a2b9dc`. Compilation completed, OpenBox became ready, the Wayland suite passed, and CTest reached **12/14 suites PASS**. The two remaining failures were:
+
+- `kwindoweffectstest`: `testEffectAvailable(BackgroundContrast)` observed `compositingChangedSpy.count() == 0` instead of `1` while faking the global `_NET_WM_CM_S0` compositor selection.
+- `kwindowsystemx11test`: `testActiveWindowChanged()` observed two `activeWindowChanged` signals instead of the single signal upstream expects for its first X11 case.
+
+The build log shows `dh_auto_test` inherited `parallel=4`, so independent CTest executables ran concurrently against the same Xvfb/OpenBox root-window and NETWM state. Upstream `autotests/CMakeLists.txt` does not give each suite a separate X server or mark these X11 suites as isolated, and `kwindowsystemx11test.cpp` explicitly requires `testActiveWindowChanged()` to be the first case because later X11 state would invalidate it. This is a test-fixture concurrency defect in the package execution environment, not evidence for changing KDE source.
+
+Revision `6.30.0-0supralinux4` therefore preserves the same Xvfb/OpenBox fixture and all upstream tests, but invokes only `dh_auto_test` with debhelper's supported `--no-parallel` control. Compilation remains free to use normal parallelism. No tests are excluded and no production feature or runtime dependency changes.
 
 ## Deferred surfaces
 

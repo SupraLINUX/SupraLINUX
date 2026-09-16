@@ -18,7 +18,7 @@ while [ "${i}" -lt 50 ]; do
         exit 1
     fi
     if xprop -root _NET_SUPPORTING_WM_CHECK 2>/dev/null | grep -q 'window id #'; then
-        dh_auto_test -Skf6
+        dh_auto_test -Skf6 --no-parallel
         exit $?
     fi
     i=$((i + 1))

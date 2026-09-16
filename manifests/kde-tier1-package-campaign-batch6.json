@@ -77,7 +77,7 @@
     "kwindowsystem": {
       "upstream_version": "6.30.0",
       "source_package": "kf6-kwindowsystem",
-      "package_version": "6.30.0-0supralinux3",
+      "package_version": "6.30.0-0supralinux4",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kwindowsystem-6.30.0.tar.xz",
       "source_sha256": "639a501b877446b19905399d27e2be2b6ebb0bb481abe3209dc4d535a12e12ca",
       "root_cmake_blob": "e8317948e1df27330ceddf45bf418aa2a02bde5b",
@@ -113,8 +113,8 @@
       ],
       "dependency_contracts": {
         "libkf6windowsystem-dev": [
-          "libkf6windowsystem6 (= 6.30.0-0supralinux3)",
-          "qml6-module-org-kde-kwindowsystem (= 6.30.0-0supralinux3)",
+          "libkf6windowsystem6 (= 6.30.0-0supralinux4)",
+          "qml6-module-org-kde-kwindowsystem (= 6.30.0-0supralinux4)",
           "qt6-base-dev (>= 6.9.0~)",
           "qt6-declarative-dev (>= 6.9.0~)",
           "qt6-wayland-dev (>= 6.9.0~)"
@@ -122,7 +122,7 @@
       },
       "recommendation_contracts": {
         "libkf6windowsystem-dev": [
-          "libkf6windowsystem-doc (= 6.30.0-0supralinux3)"
+          "libkf6windowsystem-doc (= 6.30.0-0supralinux4)"
         ],
         "libkf6windowsystem6": [
           "qt6-wayland"
@@ -202,16 +202,30 @@
           "failure_substage": "autotest/X11-window-manager-fixture",
           "tests": "11/14 CTest suites PASS",
           "cause": "Compilation succeeded after adding libxcb-xfixes0-dev, but NETWM-dependent X11 suites failed under bare Xvfb because no window manager was running. KDE upstream kwindowinfox11test.cpp documents OpenBox as the window manager used by build.kde.org."
+        },
+        {
+          "result": "FAIL",
+          "workflow_run": 35040999577,
+          "job_id": 104620609155,
+          "commit": "0da3238a528893a28e624d89014dc82dea3d8e9d",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10425162919,
+          "artifact_sha256": "58481311a264849cbe78c166fcfd2e174d95bc56e04e32be9cab7efed3a2b9dc",
+          "failure_stage": "sbuild",
+          "failure_substage": "autotest/X11-shared-display-parallelism",
+          "tests": "12/14 CTest suites PASS",
+          "cause": "OpenBox became ready and the Wayland suite passed, but dh_auto_test inherited parallel=4 and ran X11 suites concurrently against the same Xvfb/OpenBox root state. kwindoweffectstest failed a compositor-selection signal count and kwindowsystemx11test received two activeWindowChanged signals where upstream expects one; the failures are consistent with cross-suite X11 state interference rather than a KDE source, provider or ABI failure."
         }
       ],
       "remediation": {
-        "candidate_package_version": "6.30.0-0supralinux3",
+        "candidate_package_version": "6.30.0-0supralinux4",
         "status": "remediation-pending-build",
         "source_change": false,
-        "upstream_test_reference": "KDE/kwindowsystem v6.30.0 autotests/kwindowinfox11test.cpp documents OpenBox on build.kde.org",
+        "upstream_test_reference": "KDE/kwindowsystem v6.30.0 autotests share one X11 server/WM fixture; kwindowsystemx11test requires clean initial X11 state, while Debian debhelper supports --no-parallel on the affected dh_auto_test phase",
         "changes": [
-          "add openbox and x11-utils as <!nocheck>-only test fixture dependencies",
-          "run upstream tests under Xvfb with OpenBox and verify _NET_SUPPORTING_WM_CHECK before CTest",
+          "retain openbox and x11-utils as <!nocheck>-only test fixture dependencies",
+          "retain Xvfb + OpenBox readiness check via _NET_SUPPORTING_WM_CHECK",
+          "run only dh_auto_test with --no-parallel so stateful X11 suites do not race on the shared X server/window manager",
           "retain all KDE X11/Wayland/QML tests enabled; no test exclusions"
         ]
       }

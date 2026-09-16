@@ -1,3 +1,10 @@
+kf6-kwindowsystem (6.30.0-0supralinux4) resolute; urgency=medium
+
+  * Serialize the upstream test phase inside the shared Xvfb/OpenBox fixture to prevent cross-suite X11 state interference.
+  * Keep every upstream X11 and Wayland test enabled; build parallelism remains unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 01:15:00 +0000
+
 kf6-kwindowsystem (6.30.0-0supralinux3) resolute; urgency=medium
 
   * Run the upstream X11 test suites inside Xvfb with OpenBox, matching KDE upstream CI assumptions for NETWM-dependent tests.

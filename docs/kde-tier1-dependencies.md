@@ -162,3 +162,11 @@ Solid completed its build and `5/5` tests. Its failure was not a missing provide
 Run `35038057329` confirms the Solid provider/ABI remediation: Solid `6.30.0-0supralinux2` passed `5/5` tests, Lintian, SONAME and consumer smoke (artifact `10423914110`, SHA-256 `7cc2b15e2fa627e3cd280395e0ac48bd3658c7328d194958b872713738b97fc0`).
 
 KWindowSystem `-2` also confirms `libxcb-xfixes0-dev` was the correct missing build provider: compilation now succeeds. The remaining failure is test-fixture-only. Upstream KDE's v6.30.0 tests require a NETWM-compliant X11 window manager and explicitly mention OpenBox on build.kde.org. Revision `-3` therefore adds `openbox <!nocheck>` plus `x11-utils <!nocheck>` and waits for `_NET_SUPPORTING_WM_CHECK` inside Xvfb; these are test providers and do not alter the runtime dependency contract.
+
+## Batch 6 third-attempt test-fixture evidence
+
+Run `35040999577` confirms that the OpenBox test provider and readiness check are correct: KWindowSystem `6.30.0-0supralinux3` compiles, OpenBox publishes `_NET_SUPPORTING_WM_CHECK`, the Wayland suite passes and CTest advances to `12/14` suites PASS. The retained FAIL evidence is job `104620609155`, artifact `10425162919`, SHA-256 `58481311a264849cbe78c166fcfd2e174d95bc56e04e32be9cab7efed3a2b9dc`.
+
+The remaining failures are not unresolved providers. They occur because stateful X11 test executables share one Xvfb/OpenBox display while `dh_auto_test` inherits parallel test execution. One suite owns the global compositor selection and root-window effect properties; another expects the active-window signal count from a clean initial X11 state. KDE's own `kwindowsystemx11test.cpp` explicitly warns that `testActiveWindowChanged()` must be the first test because later X11 state would make it fail.
+
+Revision `-4` keeps all dependency mappings and the same nocheck-only Xvfb/OpenBox test providers. It serializes only the `dh_auto_test` phase with `--no-parallel`, preserving normal build parallelism and every upstream X11/Wayland test. This is test-fixture execution policy, not a new runtime/provider contract and not a change in KDE authority.
