@@ -1,11 +1,11 @@
 # KDE Frameworks 6.30 Tier 1 — package Batch 6
 
-Status: **Solid PASS — KWindowSystem fourth build pending**
+Status: **Solid retained PASS — KWindowSystem package/tests PASS but shared consumer-runtime runner remediation pending**
 Last reviewed: **2026-09-15**
 
 ## Selection
 
-Batch 6 contains **KWindowSystem** and **Solid**. Both are independent Tier 1 frameworks whose only KDE predecessor is the retained Extra CMake Modules PASS and each has one primary shared-library ABI/symbols baseline, so the existing runner can validate them without a multi-library architecture change.
+Batch 6 contains **KWindowSystem** and **Solid**. Both are independent Tier 1 frameworks whose only KDE predecessor is the retained Extra CMake Modules PASS and each has one primary shared-library ABI/symbols baseline. The package lane remains single-primary-library; the shared consumer-runtime validation is being hardened after real evidence exposed host dependency leakage.
 
 Canonical Tier 1 remains **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED** until real package attempts pass and a separate closure commit promotes them.
 
@@ -13,7 +13,7 @@ Canonical Tier 1 remains **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED** u
 
 KDE Frameworks 6.30.0 remains authority. Ubuntu Resolute supplies providers only.
 
-KWindowSystem 6.30.0 keeps upstream Linux defaults enabled: QML bindings, X11 and Wayland. Its package profile therefore includes Qt GuiPrivate for the selected Qt 6.10 series, Qt QML, Qt Wayland Client, X11/XCB, Wayland Protocols >= 1.46 and Plasma Wayland Protocols. The test package inputs include Xvfb, OpenBox, x11-utils and Weston so the X11 and headless-Wayland upstream tests can execute rather than disabling the suite. OpenBox is a nocheck-only fixture, not a runtime dependency.
+KWindowSystem 6.30.0 keeps upstream Linux defaults enabled: QML bindings, X11 and Wayland. Its package profile therefore includes Qt GuiPrivate for the selected Qt 6.10 series, Qt QML, Qt Wayland Client, X11/XCB, Wayland Protocols >= 1.46 and Plasma Wayland Protocols. The test package inputs include Xvfb, OpenBox, x11-utils and Weston so the X11 and headless-Wayland upstream tests execute rather than being disabled. OpenBox is a nocheck-only fixture, not a runtime dependency.
 
 Solid 6.30.0 keeps DBus, udev, libmount and the standard Linux backends enabled. Flex and Bison are required. IMobileDevice and PList are upstream-optional; the Ubuntu providers are included so the optional iOS backend is built when upstream detection succeeds. No `UDEV_DISABLED` or distro-only HAL override is introduced.
 
@@ -63,12 +63,38 @@ The build log shows `dh_auto_test` inherited `parallel=4`, so independent CTest 
 
 Revision `6.30.0-0supralinux4` therefore preserves the same Xvfb/OpenBox fixture and all upstream tests, but invokes only `dh_auto_test` with debhelper's supported `--no-parallel` control. Compilation remains free to use normal parallelism. No tests are excluded and no production feature or runtime dependency changes.
 
+## Fourth real attempt: tests fixed, consumer-runtime runner defect exposed
+
+Run `35046462679` tested KWindowSystem `6.30.0-0supralinux4` from commit `4555476f37ddfb2c3cb95c09378a9e4b9667b87b`; Repository Policy `35046462646` passed. Solid correctly scope-skipped on that commit because only KWindowSystem package/test-fixture inputs had changed.
+
+KWindowSystem `-4` is a real FAIL, but the previous test remediation is now proven correct. Job `104637230834`, artifact `10426857754`, artifact ZIP SHA-256 `ec2af4fb475bfc11f91592d2f18190f39175334b21356b179fc8fd4e60e19ac2`. `sbuild` completed successfully, **14/14 CTest suites passed**, and the Lintian error gate passed. The build produced the expected `.deb`, `.ddeb`, `.dsc`, `.changes` and `.buildinfo` artifacts.
+
+The failure occurs only at `consumer-smoke`. The consumer configures, compiles and links against the newly built KWindowSystem artifacts, then runtime loading fails because `libxcb-res.so.0` is absent from the GitHub-hosted runner. This is not a missing package dependency: the built `libkf6windowsystem6` control metadata correctly declares `libxcb-res0 (>= 1.10)`, and `readelf` on `libKF6WindowSystem.so.6.30.0` records `libxcb-res.so.0` as `NEEDED`.
+
+Root cause: the old consumer runner extracted only the locally built Batch 6 `.deb` files into `consumer-root`, but never installed their external runtime `Depends`. The smoke result therefore depended accidentally on whichever runtime libraries happened to be preinstalled on the hosted runner. KWindowSystem exposed that leakage because `libxcb-res0` was not present.
+
+### Shared runner remediation
+
+This is a runner-only correction; there is **no package revision bump**. KWindowSystem remains `6.30.0-0supralinux4` and Solid remains `6.30.0-0supralinux2`.
+
+Before consumer execution the corrected runner will:
+
+1. install the exact locally built `.deb` set through APT with `--no-install-recommends`, allowing Ubuntu Resolute to provide only external `Depends`;
+2. run `apt-get check`;
+3. verify with `dpkg-query` that every locally built binary package is installed at exactly the revision produced by the current build;
+4. still configure/build the consumer against the extracted local artifacts via `CMAKE_PREFIX_PATH`;
+5. still place the locally built runtime library first in `LD_LIBRARY_PATH`, so the library under test is the SupraLINUX artifact rather than an Ubuntu replacement.
+
+Because `scripts/run-kde-tier1-package-batch6-preflight.sh` is a shared input in the Batch 6 scope selector, this remediation intentionally rebuilds **both** KWindowSystem and Solid. Solid's previous PASS is retained as historical evidence; it is not demoted or erased merely because the shared runner must be revalidated.
+
 ## Deferred surfaces
 
 KConfig, KI18n and Sonnet remain deferred because the present package runner assumes one primary ABI symbols file. KCoreAddons, KGuiAddons, KWidgetsAddons and KCalendarCore are not made easier by silently switching off upstream Python bindings. Kirigami/KQuickCharts and other multi-library/QML-heavy surfaces stay outside this lane until their packaging contracts are explicitly designed.
 
 ## Promotion rule
 
-The open batch is not canonically closed. Solid has real PASS evidence and is package-attempt downstream-eligible; KWindowSystem remains remediation-pending-build. Canonical Tier1/DAG remains unchanged until a separate closure commit. A node becomes PASS only after a real clean Resolute sbuild, tests, Lintian error gate, binary/package contracts, SONAME check and consumer smoke all pass and evidence is retained. Canonical Tier1/DAG state changes only in a subsequent closure commit.
+The open batch is not canonically closed. Solid has retained real PASS evidence but will be revalidated because the shared consumer-runtime runner changed. KWindowSystem remains remediation-pending-build even though its `-4` package build and all upstream tests passed, because the complete package gate includes consumer runtime validation. Canonical Tier1/DAG remains unchanged until a subsequent run passes the complete corrected lane for the affected nodes and a separate closure commit promotes them.
+
+A node becomes PASS only after a real clean Resolute sbuild, tests, Lintian error gate, binary/package contracts, SONAME check and consumer smoke all pass and evidence is retained. Canonical Tier1/DAG state changes only in a subsequent closure commit.
 
 PR #1 remains **OPEN + DRAFT**. No merge is authorized.

@@ -1,7 +1,7 @@
 # Build, CI and promotion architecture
 
 Status: **active architecture**  
-Last reviewed: **2026-09-11**
+Last reviewed: **2026-09-15**
 
 ## Build semantics
 
@@ -14,6 +14,10 @@ Campaigns resolve the selected manifest, construct the dependency DAG, build eve
 GitHub-hosted `ubuntu-26.04` is non-authoritative. It performs repository/manifest policy, static checks and clean package-build preflight. `ubuntu-latest` is forbidden.
 
 The package preflight creates a fresh Resolute `buildd` rootfs with `mmdebstrap`, builds through `sbuild --chroot-mode=unshare`, and preserves `.deb`, `.changes`, `.buildinfo`, hashes and logs. It intentionally does not claim the authoritative system-test gate.
+
+Consumer smoke must validate the built package's actual runtime dependency closure rather than inheriting whatever libraries happen to exist on the hosted runner. For package lanes using the Batch 6 pattern, the exact locally built `.deb` set is installed through APT with `--no-install-recommends`; APT resolves external `Depends`, `apt-get check` must pass, and every locally built package is verified at the exact built Debian version. Consumer CMake discovery still uses the extracted local artifacts, and the built runtime library remains first in `LD_LIBRARY_PATH`, so Ubuntu supplies external dependencies without replacing the SupraLINUX artifact under test.
+
+A shared runner change is itself a build input for every node using that runner. Therefore a retained `PASS` node may be intentionally revalidated when shared runner semantics change; its previous PASS evidence is preserved rather than rewritten or silently scope-skipped.
 
 Expensive hosted package work is gated on the actual PR event delta. Infrastructure/documentation-only synchronizations still run scope policy but skip `sbuild`; this skip path has repeated real PASS evidence.
 

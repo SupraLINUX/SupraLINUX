@@ -16,10 +16,10 @@
     "solid"
   ],
   "selection_rationale": {
-    "policy": "independent Tier 1 nodes compatible with the current single-primary-library ABI package runner while preserving KDE Linux defaults",
+    "policy": "independent Tier 1 nodes compatible with the single-primary-library ABI package lane while preserving KDE Linux defaults; shared consumer-runtime validation is hardened when evidence exposes host dependency leakage",
     "why_now": {
-      "kwindowsystem": "Single primary ABI/symbols file; upstream X11, Wayland and QML defaults can be preserved without a runner architecture change.",
-      "solid": "Single primary ABI/symbols file; Linux DBus, udev and libmount defaults can be preserved. Optional IMobileDevice/PList providers are included when Ubuntu provides them."
+      "kwindowsystem": "Single primary ABI/symbols file; upstream X11, Wayland and QML defaults remain preserved while the shared consumer-smoke runtime closure is corrected.",
+      "solid": "Single primary ABI/symbols file; Linux DBus, udev and libmount defaults remain preserved. Optional IMobileDevice/PList providers are included when Ubuntu provides them."
     },
     "deferred": {
       "kconfig": "Multiple ABI libraries/symbol files require an explicit multi-library runner extension.",
@@ -71,6 +71,16 @@
       "sbuild_summary_required": true,
       "source_and_changes_required": true,
       "preserve_referenced_ddeb": true
+    },
+    "consumer_runtime_policy": {
+      "status": "remediation-pending-revalidation",
+      "install_method": "apt-get-local-debs",
+      "install_recommends": false,
+      "exact_built_versions_required": true,
+      "apt_check_required": true,
+      "compile_against_extracted_artifacts": true,
+      "runtime_library_precedence": "consumer-root-via-LD_LIBRARY_PATH",
+      "reason": "KWindowSystem attempt -4 proved the package correctly Depends on libxcb-res0, while the old consumer-root runner never installed external runtime Depends and therefore leaked host package availability into the smoke result."
     }
   },
   "nodes": {
@@ -215,18 +225,39 @@
           "failure_substage": "autotest/X11-shared-display-parallelism",
           "tests": "12/14 CTest suites PASS",
           "cause": "OpenBox became ready and the Wayland suite passed, but dh_auto_test inherited parallel=4 and ran X11 suites concurrently against the same Xvfb/OpenBox root state. kwindoweffectstest failed a compositor-selection signal count and kwindowsystemx11test received two activeWindowChanged signals where upstream expects one; the failures are consistent with cross-suite X11 state interference rather than a KDE source, provider or ABI failure."
+        },
+        {
+          "result": "FAIL",
+          "workflow_run": 35046462679,
+          "job_id": 104637230834,
+          "commit": "4555476f37ddfb2c3cb95c09378a9e4b9667b87b",
+          "attempted_package_version": "6.30.0-0supralinux4",
+          "artifact_id": 10426857754,
+          "artifact_sha256": "ec2af4fb475bfc11f91592d2f18190f39175334b21356b179fc8fd4e60e19ac2",
+          "failure_stage": "consumer-smoke",
+          "failure_substage": "runner/external-runtime-closure-not-materialized",
+          "tests": "14/14 CTest suites PASS",
+          "sbuild": "PASS",
+          "lintian": "PASS-errors",
+          "package_runtime_dependency": "libxcb-res0 (>= 1.10)",
+          "cause": "The serial X11 remediation succeeded: all 14 CTest suites passed, sbuild completed successfully and the Lintian error gate passed. The consumer then failed to dlopen libKF6WindowSystem because libxcb-res.so.0 was absent from the hosted runner. The built libkf6windowsystem6 package correctly Depends on libxcb-res0 (>= 1.10), and readelf records libxcb-res.so.0 as NEEDED; the old consumer-root runner extracted only the built Batch 6 .debs and never installed their external runtime Depends."
         }
       ],
       "remediation": {
         "candidate_package_version": "6.30.0-0supralinux4",
         "status": "remediation-pending-build",
         "source_change": false,
-        "upstream_test_reference": "KDE/kwindowsystem v6.30.0 autotests share one X11 server/WM fixture; kwindowsystemx11test requires clean initial X11 state, while Debian debhelper supports --no-parallel on the affected dh_auto_test phase",
+        "package_change": false,
+        "runner_change": true,
+        "validated_test_result": "14/14 CTest suites PASS in workflow run 35046462679",
+        "upstream_test_reference": "KDE/kwindowsystem v6.30.0 X11/Wayland/QML suites are retained; X11 suites pass when the shared Xvfb/OpenBox fixture is serialized with dh_auto_test --no-parallel",
         "changes": [
           "retain openbox and x11-utils as <!nocheck>-only test fixture dependencies",
-          "retain Xvfb + OpenBox readiness check via _NET_SUPPORTING_WM_CHECK",
-          "run only dh_auto_test with --no-parallel so stateful X11 suites do not race on the shared X server/window manager",
-          "retain all KDE X11/Wayland/QML tests enabled; no test exclusions"
+          "retain Xvfb + OpenBox readiness check via _NET_SUPPORTING_WM_CHECK and dh_auto_test --no-parallel",
+          "before consumer execution, install the exact locally built .deb set through apt-get --no-install-recommends so external Depends are materialized by Ubuntu Resolute",
+          "run apt-get check and verify every locally built binary package is installed at the exact built Debian version",
+          "compile the consumer against the extracted built artifacts and keep the built runtime library first in LD_LIBRARY_PATH; Ubuntu only supplies the external dependency closure",
+          "allow a retained PASS node to rebuild when the shared Batch 6 runner changes, preserving its prior PASS evidence rather than rewriting history"
         ]
       }
     },
@@ -363,6 +394,15 @@
           "declare python3:any because debian/rules executes the hash-locked transform",
           "retain KDE source and all non-toolchain Debian 6.28 ABI symbols unchanged"
         ]
+      },
+      "shared_runner_revalidation": {
+        "status": "pending",
+        "trigger": "consumer-runtime-closure-remediation",
+        "package_change": false,
+        "package_version": "6.30.0-0supralinux2",
+        "retained_pass_workflow_run": 35038057329,
+        "retained_pass_artifact_id": 10423914110,
+        "reason": "The shared Batch 6 preflight runner changed after KWindowSystem exposed host runtime dependency leakage; the selector therefore intentionally rebuilds Solid under the corrected consumer-runtime contract while retaining its prior PASS evidence."
       }
     }
   }

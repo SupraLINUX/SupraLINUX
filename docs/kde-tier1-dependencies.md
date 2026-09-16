@@ -146,6 +146,7 @@ Current canonical state:
 - final Qt provider certification: **pending**.
 
 Provider evidence alone never promotes a Framework. Each of the sixteen canonical PASS nodes has real package-attempt evidence. Batch 5 is closed 3/3 PASS; the two earlier ModemManagerQt FAIL attempts remain retained as historical evidence while its `-3` PASS is the current downstream-eligible state.
+
 ## Batch 6 selection
 
 KWindowSystem and Solid are the next package candidates. This does not change authority: KDE upstream 6.30.0 defines requirements; Ubuntu Resolute is only a provider. KWindowSystem retains QML, X11 and Wayland with Wayland Protocols >= 1.46 and Plasma Wayland Protocols. Solid retains DBus, udev and libmount; IMobileDevice/PList remain upstream-optional and their Ubuntu providers are supplied rather than disabled. Canonical Tier 1 remains **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED** until real package evidence is promoted.
@@ -155,7 +156,6 @@ KWindowSystem and Solid are the next package candidates. This does not change au
 Initial run `35034742520` proved the selected KDE 6.30 source reaches real package compilation on Resolute. KWindowSystem exposed one packaging omission: upstream source includes `xcb/xfixes.h`, while the SupraLINUX Build-Depends lacked `libxcb-xfixes0-dev`. Both retained Debian 6.28 and Ubuntu 6.24 packaging trees include that provider, so revision `-2` adds it without changing KDE's X11/Wayland/QML feature selection.
 
 Solid completed its build and `5/5` tests. Its failure was not a missing provider: Lintian rejected the toolchain-exported `_ZSt19piecewise_construct@Base`. Ubuntu's retained symbols baseline records this export at minimum `6.4.0` on architectures other than armhf/riscv64. SupraLINUX keeps the Debian 6.28 public ABI baseline and marks only that export `optional=toolchain` with the retained Ubuntu architecture/minimum-version evidence.
-
 
 ## Batch 6 second-attempt evidence
 
@@ -170,3 +170,13 @@ Run `35040999577` confirms that the OpenBox test provider and readiness check ar
 The remaining failures are not unresolved providers. They occur because stateful X11 test executables share one Xvfb/OpenBox display while `dh_auto_test` inherits parallel test execution. One suite owns the global compositor selection and root-window effect properties; another expects the active-window signal count from a clean initial X11 state. KDE's own `kwindowsystemx11test.cpp` explicitly warns that `testActiveWindowChanged()` must be the first test because later X11 state would make it fail.
 
 Revision `-4` keeps all dependency mappings and the same nocheck-only Xvfb/OpenBox test providers. It serializes only the `dh_auto_test` phase with `--no-parallel`, preserving normal build parallelism and every upstream X11/Wayland test. This is test-fixture execution policy, not a new runtime/provider contract and not a change in KDE authority.
+
+## Batch 6 fourth-attempt runtime-closure evidence
+
+Run `35046462679` proves the `-4` X11 execution policy: KWindowSystem passes **14/14 CTest suites**, `sbuild` completes and the Lintian error gate passes. The remaining FAIL is later at `consumer-smoke` (job `104637230834`, artifact `10426857754`, artifact ZIP SHA-256 `ec2af4fb475bfc11f91592d2f18190f39175334b21356b179fc8fd4e60e19ac2`).
+
+This failure does **not** add a KDE runtime requirement and does not change the provider mapping. The built `libkf6windowsystem6` package already declares `libxcb-res0 (>= 1.10)`, while `readelf` correctly records `libxcb-res.so.0` as a needed library. The defect is in the hosted consumer-smoke runner: it extracted the locally built `.deb` set but did not materialize external runtime `Depends`, so the result leaked the host's preinstalled-library set.
+
+The shared runner remediation installs the exact locally built `.deb` set through APT with `--no-install-recommends`, lets Ubuntu Resolute satisfy only external `Depends`, runs `apt-get check`, verifies exact installed SupraLINUX revisions, and still compiles/runs against the extracted built artifacts. This preserves the authority/provider boundary: KDE/package metadata decides the dependency contract; Ubuntu merely provides dependencies matching that contract.
+
+Because this changes a shared Batch 6 build input, both KWindowSystem and the retained-PASS Solid node must revalidate. No package revision is bumped for this runner-only correction. Canonical Tier 1 remains **16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED** until the corrected lane passes and closure promotes the nodes.

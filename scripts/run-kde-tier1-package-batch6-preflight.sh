@@ -57,7 +57,7 @@ python3 - "${CAMPAIGN}" "${NODE}" <<'PY2'
 import json,sys
 from pathlib import Path
 d=json.loads(Path(sys.argv[1]).read_text()); n=d['nodes'][sys.argv[2]]
-if n['state'] not in {'prepared-pending-build','remediation-pending-build'}: raise SystemExit(f"Node must be prepared/remediation-pending-build before attempt, got {n['state']}")
+if n['state'] not in {'prepared-pending-build','remediation-pending-build','PASS'}: raise SystemExit(f"Node must be prepared/remediation-pending-build or retained PASS before attempt, got {n['state']}")
 if d['authority']!='kde-upstream' or d['frameworks_series']!='6.30.0': raise SystemExit('Campaign authority/version mismatch')
 PY2
 test -d "${PACKAGE_META}"; test -s "${CONSUMER_META}/CMakeLists.txt"; test -s "${CONSUMER_META}/main.cpp"; test -s "${PACKAGE_META}/upstream/signing-key.asc"
@@ -175,6 +175,16 @@ cp -a "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${O
 
 STAGE="lintian-source-binary"
 lintian --fail-on error "${DSC}" "${CHANGES[0]}" |& tee "${EVIDENCE_DIR}/lintian-source-binary.log"
+
+STAGE="consumer-runtime-closure"
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${DEBS[@]}" |& tee "${EVIDENCE_DIR}/consumer-runtime-install.log"
+sudo apt-get check |& tee "${EVIDENCE_DIR}/consumer-runtime-check.log"
+: > "${EVIDENCE_DIR}/consumer-runtime-packages.txt"
+for package in "${EXPECTED_PACKAGES[@]}"; do
+ installed_version="$(dpkg-query -W -f='${Version}' "${package}")"
+ [[ "${installed_version}" == "${DEBIAN_VERSION}" ]] || { echo "Installed ${package} version ${installed_version} != built ${DEBIAN_VERSION}" >&2; exit 1; }
+ printf '%s=%s\n' "${package}" "${installed_version}" >> "${EVIDENCE_DIR}/consumer-runtime-packages.txt"
+done
 
 STAGE="consumer-smoke"
 CONSUMER_ROOT="${WORK_DIR}/consumer-root"; CONSUMER_BUILD="${WORK_DIR}/consumer-build"; mkdir -p "${CONSUMER_ROOT}"
