@@ -43,6 +43,7 @@ EXPECTED_PASS = {
     'solid': {'version':'6.30.0-0supralinux2','run':35047623320,'job':104640833295,'artifact':10427653865,'digest':'cff267d012a3e103b53bd6e19757e6c3b0af7dc873f4cd166a4505f58aee8389','tests':'5/5 PASS','soname':'libKF6Solid.so.6'},
 }
 EXPECTED_PROVIDER_PREVIOUS_EVIDENCE = {'workflow_run':34700048774,'head_sha':'6ce61bc02c4aba146bcc33b16d17f56fb66f057a','artifact_id':10299608166,'artifact_sha256':'da6808c31554da4105713e060e328d4130253a100c628fef279d8d0a9cf8ceb3','authoritative':False,'claim':'provider-availability-only'}
+EXPECTED_PROVIDER_CURRENT_EVIDENCE = {'workflow_run':35087361837,'job_id':104765243282,'head_sha':'a60cf80e2adae2f40c994c8ca8e661d23822b0b6','artifact_id':10442512801,'artifact_sha256':'49f74d493dd18ed68ecee668f68549cf5f71279fcb96e2f481ceef0eaccf5fa9','manifest_sha256':'ccf4ff9fc8e4227787208fd4950812b0244552ab3463e58aae41df424842b2a8','authoritative':False,'claim':'provider-availability-only','python_build':{'package':'python3-build','package_version':'1.4.0-1','module':'build','module_version':'1.4.0','import_status':'PASS'},'qt_upstream':'6.10.2'}
 errors: list[str] = []
 
 def require(value: bool, message: str) -> None:
@@ -144,8 +145,11 @@ require(deps.get('frameworks') == '6.30.0', 'Dependency manifest must target Fra
 require(deps.get('target') == 'linux', 'Dependency manifest target must be Linux')
 provider = deps.get('provider_candidate', {})
 require(provider.get('distribution') == 'ubuntu' and provider.get('series') == 'resolute', 'Provider candidate must remain Ubuntu Resolute')
-require(provider.get('status') == 'revalidation-pending', 'Provider candidate must remain revalidation-pending until python3-build evidence passes')
+require(provider.get('status') == 'hosted-preflight-pass', 'Provider candidate must be hosted-preflight-pass after python3-build revalidation')
 require(provider.get('previous_evidence') == EXPECTED_PROVIDER_PREVIOUS_EVIDENCE, 'Previous provider evidence must be retained')
+require(provider.get('evidence') == EXPECTED_PROVIDER_CURRENT_EVIDENCE, 'Current provider revalidation evidence changed unexpectedly')
+require(provider.get('revalidation', {}).get('status') == 'PASS', 'python3-build provider revalidation must be PASS')
+require(provider.get('revalidation', {}).get('validated_by') == EXPECTED_PROVIDER_CURRENT_EVIDENCE, 'python3-build validated_by evidence must match current evidence')
 require(provider.get('revalidation', {}).get('discovered_by', {}).get('workflow_run') == 35054417698, 'python3-build discovery run must be retained')
 require(provider.get('revalidation', {}).get('discovered_by', {}).get('artifact_sha256') == '86cd447eab87f42d088ba6569529b15012d26084f0974456651b143786a64fa8', 'python3-build discovery artifact digest must be retained')
 require(deps.get('common') == {'cmake_minimum':'3.29','ecm':'6.30.0','qt_minimum':'6.9.0'}, 'Common Frameworks minima changed unexpectedly')

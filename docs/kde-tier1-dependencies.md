@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 Tier 1 — dependency resolution
 
-Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping updated for ECM Python bindings; hosted provider revalidation pending; 18 package nodes PASS; 11 package nodes pending**
+Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping validated for ECM Python bindings; hosted provider preflight PASS; 18 package nodes PASS; 11 package nodes pending**
 Last reviewed: **2026-09-16**
 
 ## Contract
@@ -24,7 +24,7 @@ The dependency manifest distinguishes `required`, `default_enabled`, `recommende
 
 `kcalendarcore`, `kcoreaddons`, `kguiaddons` and `kwidgetsaddons` enable Python bindings by default on the selected Linux/shared-library paths. Their profile includes Python >= 3.9 development files, Shiboken6, PySide6 and the Python `build` frontend used by ECM 6.30 to execute `python -m build --wheel --no-isolation`. Resolute maps these to `python3-dev`, `libshiboken6-dev`, `libpyside6-dev` and `python3-build`.
 
-The earlier hosted provider PASS verified that Shiboken6 and PySide6 normalize to the same upstream Qt patch level as the selected Ubuntu Qt candidate: **6.10.2**, but it predates the `python3-build` mapping. Batch 7 discovery run `35054417698` (job `104661454268`, artifact `10429918034`, SHA-256 `86cd447eab87f42d088ba6569529b15012d26084f0974456651b143786a64fa8`) reached KCalendarCore configuration with Python/Shiboken/PySide present and failed only because ECM could not import `build`. The mapping is therefore corrected and provider revalidation is pending; Python bindings are not disabled to hide the omission.
+The earlier hosted provider PASS verified that Shiboken6 and PySide6 normalize to the same upstream Qt patch level as the selected Ubuntu Qt candidate: **6.10.2**, but it predates the `python3-build` mapping. Batch 7 discovery run `35054417698` (job `104661454268`, artifact `10429918034`, SHA-256 `86cd447eab87f42d088ba6569529b15012d26084f0974456651b143786a64fa8`) reached KCalendarCore configuration with Python/Shiboken/PySide present and failed only because ECM could not import `build`. The mapping was corrected without disabling Python bindings. Real revalidation then passed in run `35087361837`, job `104765243282`, artifact `10442512801`, ZIP SHA-256 `49f74d493dd18ed68ecee668f68549cf5f71279fcb96e2f481ceef0eaccf5fa9`: Resolute installed `python3-build 1.4.0-1`, `import build` reported module version `1.4.0`, and the existing PySide6/Shiboken6 checks remained aligned to Qt `6.10.2`. This is provider-availability evidence only, not a Framework package PASS.
 
 ### X11 and Wayland
 
@@ -119,6 +119,17 @@ Original broad provider-availability evidence:
 - artifact `10299608166`;
 - artifact SHA-256 `da6808c31554da4105713e060e328d4130253a100c628fef279d8d0a9cf8ceb3`;
 - result: PASS; provider evidence only.
+
+Current provider revalidation for ECM Python bindings:
+
+- run `35087361837`;
+- job `104765243282`;
+- commit `a60cf80e2adae2f40c994c8ca8e661d23822b0b6`;
+- artifact `10442512801`;
+- artifact SHA-256 `49f74d493dd18ed68ecee668f68549cf5f71279fcb96e2f481ceef0eaccf5fa9`;
+- `python3-build 1.4.0-1`, Python module `build 1.4.0`: PASS;
+- PySide6/Shiboken6 remain aligned to Qt `6.10.2`;
+- result: PASS; provider-availability evidence only.
 
 Current targeted evidence for the corrected ModemManager provider mapping:
 
