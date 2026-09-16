@@ -1,3 +1,13 @@
+kf6-kcalendarcore (6.30.0-0supralinux5) resolute; urgency=medium
+
+  * Add a reviewed 18-symbol ABI overlay after the successful -4 build exposed
+    KDE 6.29/6.30 public APIs missing from the retained Debian 6.28 baseline.
+  * Use upstream introduction baselines: ten symbols at 6.29.0 and eight at
+    6.30.0; do not suppress Lintian or alter KDE source.
+  * Keep the -4 translation split, Python bindings and full test suite intact.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 14:35:00 -0300
+
 kf6-kcalendarcore (6.30.0-0supralinux4) resolute; urgency=medium
 
   * Split KDE 6.30 translation catalogs into libkf6calendarcore-data.

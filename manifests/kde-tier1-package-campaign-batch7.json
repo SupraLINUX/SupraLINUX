@@ -5,11 +5,11 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "batch": "tier1-batch-7",
-  "state": "remediation-pending-build",
+  "state": "partial-pass-remediation-pending-build",
   "attempt_ledger": "manifests/kde-tier1-package-batch7-attempts.json",
   "canonical_snapshot": {
-    "state": "unpromoted-open-batch",
-    "tier1": "18 PASS / 11 pending / 0 current FAIL / 0 BLOCKED"
+    "state": "promotion-pending-after-kcoreaddons-pass",
+    "tier1": "18 PASS / 11 pending in canonical manifest; KCoreAddons has a retained PASS awaiting canonical promotion"
   },
   "selected_nodes": ["kcalendarcore", "kcoreaddons", "kwidgetsaddons"],
   "shared_predecessors": {
@@ -42,14 +42,20 @@
     "kcalendarcore": {
       "upstream_version": "6.30.0",
       "source_package": "kf6-kcalendarcore",
-      "package_version": "6.30.0-0supralinux4",
+      "package_version": "6.30.0-0supralinux5",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kcalendarcore-6.30.0.tar.xz",
       "source_sha256": "e8bf60e398e2f8098a4db7db44c5475d70540ad8f8948a123c8bc109dc4db776",
       "runtime_package": "libkf6calendarcore6",
       "python_package": "python3-kcalendarcore",
       "python_module": "KCalendarCore",
       "soname": "libKF6CalendarCore.so.6",
-      "symbols": {"file": "libkf6calendarcore6.symbols", "sha256": "2662789d8c2e5715f218e40826a15a261a151bfda2d2695e5c5efefbc2d26127", "tree_provider": "debian", "reference_version": "6.28.0"},
+      "symbols": {
+        "file": "libkf6calendarcore6.symbols",
+        "sha256": "2662789d8c2e5715f218e40826a15a261a151bfda2d2695e5c5efefbc2d26127",
+        "tree_provider": "debian",
+        "reference_version": "6.28.0",
+        "overlay": "debian/libkf6calendarcore6.symbols.supralinux-overlay"
+      },
       "copyright": {"sha256": "578646ab9522f3decfc3f64fa153f599f9004c213e5df03c21b5ee31e2584d13"},
       "signing_key": {"sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"},
       "upstream_defaults": {"BUILD_PYTHON_BINDINGS": "ON", "BUILD_TESTING": "ON"},
@@ -62,19 +68,21 @@
         {"name": "python3-kcalendarcore", "architecture": "amd64", "multi_arch": null}
       ],
       "dependency_contracts": {
-        "libkf6calendarcore6": ["libkf6calendarcore-data (= 6.30.0-0supralinux4)"],
-        "qml6-module-org-kde-calendarcore": ["libkf6calendarcore-data (= 6.30.0-0supralinux4)"],
-        "libkf6calendarcore-dev": ["libkf6calendarcore6 (= 6.30.0-0supralinux4)", "qml6-module-org-kde-calendarcore (= 6.30.0-0supralinux4)", "qt6-base-dev (>= 6.9.0~)"],
-        "python3-kcalendarcore": ["libkf6calendarcore6 (= 6.30.0-0supralinux4)", "python3-pyside6.qtcore", "python3-pyside6.qtgui"]
+        "libkf6calendarcore6": ["libkf6calendarcore-data (= 6.30.0-0supralinux5)"],
+        "qml6-module-org-kde-calendarcore": ["libkf6calendarcore-data (= 6.30.0-0supralinux5)"],
+        "libkf6calendarcore-dev": ["libkf6calendarcore6 (= 6.30.0-0supralinux5)", "qml6-module-org-kde-calendarcore (= 6.30.0-0supralinux5)", "qt6-base-dev (>= 6.9.0~)"],
+        "python3-kcalendarcore": ["libkf6calendarcore6 (= 6.30.0-0supralinux5)", "python3-pyside6.qtcore", "python3-pyside6.qtgui"]
       },
-      "recommendation_contracts": {"libkf6calendarcore-dev": ["libkf6calendarcore-doc (= 6.30.0-0supralinux4)"]},
+      "recommendation_contracts": {"libkf6calendarcore-dev": ["libkf6calendarcore-doc (= 6.30.0-0supralinux5)"]},
       "state": "remediation-pending-build",
       "last_result": "FAIL",
       "downstream_eligible": false,
       "remediation": {
-        "cause": "KDE 6.30 installs translation catalogs that the previous binary split did not own.",
-        "change": "add libkf6calendarcore-data and make runtime/QML packages depend on the exact source version",
-        "reference": "Debian kf6-kcalendarcore 6.30.0 split; technical packaging reference only"
+        "cause": "Revision -4 passed 507/507 tests and built successfully; Lintian then rejected 18 public symbols whose auto-generated minimum version contained the Debian revision.",
+        "change": "apply a reviewed ABI overlay before dh_makeshlibs: APIs present since KDE 6.29 use 6.29.0 and APIs introduced in KDE 6.30 use 6.30.0",
+        "baseline_groups": {"6.29.0": 10, "6.30.0": 8},
+        "lintian_suppressed": false,
+        "source_change": false
       }
     },
     "kcoreaddons": {
@@ -104,13 +112,21 @@
         "python3-kcoreaddons": ["libkf6coreaddons6 (= 6.30.0-0supralinux4)", "python3-pyside6.qtcore"]
       },
       "recommendation_contracts": {"libkf6coreaddons-dev": ["libkf6coreaddons-doc (= 6.30.0-0supralinux4)"]},
-      "state": "remediation-pending-build",
-      "last_result": "FAIL",
-      "downstream_eligible": false,
-      "remediation": {
-        "cause": "KDE 6.30 adds KAboutData::setUrl() and KAboutData::url(); dpkg-gensymbols otherwise assigns the Debian package revision as their minimum version and Lintian rejects it.",
-        "change": "apply a two-symbol ABI overlay with upstream introduction baseline 6.29.0 before dh_makeshlibs",
-        "source_change": false
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "pass_evidence": {
+        "workflow_run": 35122522242,
+        "job_id": 104883541991,
+        "commit": "ea465e7f78ee621f6456246e7ba76e0a89e46d78",
+        "artifact_id": 10457958023,
+        "artifact_sha256": "c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64",
+        "rootfs_sha256": "dd7762ba1cdc25dd57b05e8203b3d5d4d448d9ee7131ac0b99d1d85989854794",
+        "tests": "34/34 PASS",
+        "lintian": "PASS-errors",
+        "consumer_smoke": "PASS",
+        "python_import": "PASS",
+        "apt_check": "PASS"
       }
     },
     "kwidgetsaddons": {
@@ -143,8 +159,9 @@
       "last_result": "FAIL",
       "downstream_eligible": false,
       "remediation": {
-        "cause": "two gesture tests require an active top-level window; Xvfb alone does not provide a window manager",
-        "change": "run the unchanged test suite under Xvfb with Openbox and verify the EWMH supporting-WM window before dh_auto_test",
+        "cause": "Revision -4 fixed both qWaitForWindowActive gesture failures; 26/27 suites now pass, with only KSqueezedTextLabelAutotest::testElisionOnResize(normal text) failing because the tooltip is already non-empty before the explicit squeeze.",
+        "change": "diagnose geometry/font/style determinism before changing the package fixture; do not disable or filter the upstream test",
+        "tests_filtered": false,
         "source_change": false
       }
     }
