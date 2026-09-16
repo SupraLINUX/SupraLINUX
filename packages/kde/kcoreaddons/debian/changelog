@@ -1,3 +1,11 @@
+kf6-kcoreaddons (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Add explicit clang, libclang-dev and llvm-dev build dependencies so
+    Shiboken/ApiExtractor can locate Clang's built-in headers in clean sbuild.
+  * Keep KDE 6.30.0 source, Python bindings and upstream test defaults unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 10:35:00 -0300
+
 kf6-kcoreaddons (6.30.0-0supralinux1) resolute; urgency=medium
 
   * SupraLINUX KDE Frameworks 6.30.0 Batch 7 clean package preflight.
