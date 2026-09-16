@@ -14,75 +14,66 @@
     "artifact_id": 10298635300,
     "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
   },
-  "common_build_packages": [
-    "build-essential",
-    "ca-certificates",
-    "cmake",
-    "curl",
-    "dbus-x11",
-    "gettext",
-    "ninja-build",
-    "openbox",
-    "pkg-config",
-    "python3",
-    "x11-utils",
-    "xauth",
-    "xvfb",
-    "xz-utils"
-  ],
+  "last_campaign": {
+    "workflow_run": 35131119792,
+    "commit": "1f5fcdc68e1bbb2a7cc3f93dc20687aadc15cec0",
+    "results": {
+      "kconfig": {"result":"DIAG_FAIL","job_id":104912090505,"artifact_id":10461886238,"artifact_sha256":"231cfd286876889997590b67fcfe640f34510cc46ae7fc0a3a96e72af5124142","stage":"configure","classification":"provider-profile-omission","remediation":"add qt6-base-private-dev and assert the versioned QtCore private include surface"},
+      "ki18n": {"result":"DIAG_FAIL","job_id":104912090737,"artifact_id":10461686975,"artifact_sha256":"9edeb81c9ecdb92d07691a1b333169858c13348a25bb92c7e5a8bb3dcbec8aaf","stage":"tests","tests":"14/17 PASS","classification":"provider-translation-surface-missing","remediation":"add Ubuntu French language-pack provider and assert iso_3166-1/iso_3166-2 French catalogs before build"},
+      "sonnet": {"result":"DIAG_PASS","job_id":104912091007,"artifact_id":10460838096,"artifact_sha256":"18e1c8ed50063b17d0f4063b511c4c82badf68c702768e2d01f9fb72a7b86855"},
+      "kirigami": {"result":"DIAG_PASS","job_id":104912090447,"artifact_id":10461303414,"artifact_sha256":"a69730c8d09d8acce2ee103c98a0d85faf819cbbe1bedb6fdac1a77364ddc7ba"},
+      "kquickcharts": {"result":"DIAG_PASS","job_id":104912090786,"artifact_id":10461177852,"artifact_sha256":"9db7bceb571b2595723bbe2c16ff60ea8a1fecdb0525ff53ba860231b8dd4530"},
+      "kuserfeedback": {"result":"DIAG_PASS","job_id":104912090591,"artifact_id":10461537028,"artifact_sha256":"e91e08e4d47039274c8806db5c310bbbd31dba4bd38d4c622a67ccdd5c10d0ac"},
+      "prison": {"result":"DIAG_PASS","job_id":104912090832,"artifact_id":10460853327,"artifact_sha256":"a90e7fda5401670092e74d83e58bfa14c2ebd75d186a5a33a25c6328efb986c0"}
+    }
+  },
+  "common_build_packages": ["build-essential","ca-certificates","cmake","curl","dbus-x11","gettext","ninja-build","openbox","pkg-config","python3","x11-utils","xauth","xvfb","xz-utils"],
   "nodes": {
     "kconfig": {
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kconfig-6.30.0.tar.xz",
       "source_sha256": "0e98bac324cd716849202d4b246a948e363d6792a8eb09c78417cdde9559f56e",
-      "provider_packages": ["qt6-base-dev", "qt6-declarative-dev", "qt6-tools-dev"],
-      "cmake_defaults": {"KCONFIG_USE_GUI":"ON", "KCONFIG_USE_QML":"ON", "USE_DBUS":"ON"}
+      "provider_packages": ["qt6-base-dev","qt6-base-private-dev","qt6-declarative-dev","qt6-tools-dev"],
+      "provider_assertions": ["qt-core-private-versioned-includes"],
+      "cmake_defaults": {"KCONFIG_USE_GUI":"ON","KCONFIG_USE_QML":"ON","USE_DBUS":"ON"}
     },
     "ki18n": {
       "source_url": "https://download.kde.org/stable/frameworks/6.30/ki18n-6.30.0.tar.xz",
       "source_sha256": "dfbfc8af89b3bc68810b094bf87746db87c3eeb35b75caeb1882681ebed563bd",
-      "provider_packages": ["iso-codes", "qt6-base-dev", "qt6-declarative-dev", "qt6-tools-dev"],
+      "provider_packages": ["iso-codes","language-pack-fr-base","qt6-base-dev","qt6-declarative-dev","qt6-tools-dev"],
+      "provider_assertions": ["iso-3166-french-catalogs"],
       "cmake_defaults": {"BUILD_WITH_QML":"ON"}
     },
     "sonnet": {
       "source_url": "https://download.kde.org/stable/frameworks/6.30/sonnet-6.30.0.tar.xz",
       "source_sha256": "1574ef5c17f38e315de104b94580ccc1b7ec1db2650cb4bace2e14159bf61e10",
-      "provider_packages": ["hspell", "libaspell-dev", "libhunspell-dev", "libvoikko-dev", "qt6-base-dev", "qt6-declarative-dev", "qt6-tools-dev"],
-      "cmake_defaults": {"SONNET_USE_WIDGETS":"ON", "SONNET_USE_QML":"ON", "SONNET_NO_BACKENDS":"OFF", "BUILD_DESIGNERPLUGIN":"ON"}
+      "provider_packages": ["hspell","libaspell-dev","libhunspell-dev","libvoikko-dev","qt6-base-dev","qt6-declarative-dev","qt6-tools-dev"],
+      "cmake_defaults": {"SONNET_USE_WIDGETS":"ON","SONNET_USE_QML":"ON","SONNET_NO_BACKENDS":"OFF","BUILD_DESIGNERPLUGIN":"ON"}
     },
     "kirigami": {
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kirigami-6.30.0.tar.xz",
       "source_sha256": "6de811e559c20dc1086c0cf2c34bb98712dbe4d45f960c62c3c3f887332c95f8",
-      "provider_packages": ["qt6-base-dev", "qt6-base-private-dev", "qt6-declarative-dev", "qt6-shadertools-dev", "qt6-svg-dev", "qt6-tools-dev"],
-      "cmake_defaults": {"BUILD_SHARED_LIBS":"ON", "DESKTOP_ENABLED":"ON", "BUILD_EXAMPLES":"OFF", "UBUNTU_TOUCH":"OFF", "USE_DBUS":"ON"}
+      "provider_packages": ["qt6-base-dev","qt6-base-private-dev","qt6-declarative-dev","qt6-shadertools-dev","qt6-svg-dev","qt6-tools-dev"],
+      "cmake_defaults": {"BUILD_SHARED_LIBS":"ON","DESKTOP_ENABLED":"ON","BUILD_EXAMPLES":"OFF","UBUNTU_TOUCH":"OFF","USE_DBUS":"ON"}
     },
     "kquickcharts": {
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kquickcharts-6.30.0.tar.xz",
       "source_sha256": "9fe8c0c78ffd23ccfb99cc36477550a229c114ad057def938f38cdec35f82ab1",
-      "provider_packages": ["qt6-declarative-dev", "qt6-shadertools-dev", "qt6-tools-dev"],
+      "provider_packages": ["qt6-declarative-dev","qt6-shadertools-dev","qt6-tools-dev"],
       "cmake_defaults": {"BUILD_EXAMPLES":"OFF"}
     },
     "kuserfeedback": {
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kuserfeedback-6.30.0.tar.xz",
       "source_sha256": "c8a463c8e570f6d532cbe150732220575c6385df97c91399b6c84450691771ca",
-      "provider_packages": ["bison", "flex", "php-cli", "phpunit", "qt6-base-dev", "qt6-charts-dev", "qt6-declarative-dev", "qt6-svg-dev", "qt6-tools-dev", "qt6-tools-dev-tools"],
-      "cmake_defaults": {"ENABLE_SURVEY_TARGET_EXPRESSIONS":"ON", "ENABLE_PHP":"ON", "ENABLE_PHP_UNIT":"ON", "ENABLE_DOCS":"ON", "ENABLE_CONSOLE":"OFF"}
+      "provider_packages": ["bison","flex","php-cli","phpunit","qt6-base-dev","qt6-charts-dev","qt6-declarative-dev","qt6-svg-dev","qt6-tools-dev","qt6-tools-dev-tools"],
+      "cmake_defaults": {"ENABLE_SURVEY_TARGET_EXPRESSIONS":"ON","ENABLE_PHP":"ON","ENABLE_PHP_UNIT":"ON","ENABLE_DOCS":"ON","ENABLE_CONSOLE":"OFF"}
     },
     "prison": {
       "source_url": "https://download.kde.org/stable/frameworks/6.30/prison-6.30.0.tar.xz",
       "source_sha256": "2cdb0a2689ab45b907c76c9a01c1dc14855b8e5329ad0a9cf65c1ad64e5fed1b",
-      "provider_packages": ["libdmtx-dev", "libqrencode-dev", "libzxing-dev", "qt6-base-dev", "qt6-declarative-dev", "qt6-multimedia-dev", "qt6-tools-dev"],
-      "cmake_defaults": {"WITH_DMTX":"ON", "WITH_ZXING":"ON", "WITH_QUICK":"ON", "WITH_MULTIMEDIA":"ON"}
+      "provider_packages": ["libdmtx-dev","libqrencode-dev","libzxing-dev","qt6-base-dev","qt6-declarative-dev","qt6-multimedia-dev","qt6-tools-dev"],
+      "cmake_defaults": {"WITH_DMTX":"ON","WITH_ZXING":"ON","WITH_QUICK":"ON","WITH_MULTIMEDIA":"ON"}
     }
   },
-  "gates": [
-    "exact source SHA-256",
-    "exact retained ECM predecessor",
-    "Ubuntu Resolute provider install",
-    "upstream default option assertions",
-    "CMake configure",
-    "compile",
-    "unchanged upstream tests under deterministic Xvfb/Openbox fixture",
-    "DESTDIR install staging"
-  ],
+  "gates": ["exact source SHA-256","exact retained ECM predecessor","Ubuntu Resolute provider install","provider-specific surface assertions","upstream default option assertions","CMake configure","compile","unchanged upstream tests under deterministic Xvfb/Openbox fixture","DESTDIR install staging"],
   "note": "Diagnostic results discover source/configure/build/test/provider failures early. They never imply package PASS, downstream eligibility, ABI acceptance, Lintian acceptance or DAG promotion."
 }

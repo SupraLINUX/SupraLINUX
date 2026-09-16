@@ -14,33 +14,69 @@ cp "${ROOT}/scripts/kde-tier1-source-diagnostic-needed.sh" scripts/
 printf '#!/bin/sh\n' > scripts/run-kde-tier1-source-diagnostic.sh
 printf 'name: diagnostic\n' > .github/workflows/kde-tier1-source-diagnostic.yml
 printf 'baseline\n' > docs/readme.md
-git add .
-git commit -qm baseline
+git add . && git commit -qm baseline
 BASE="$(git rev-parse HEAD)"
+
+expect_skip() {
+  local before="$1" after="$2" node="$3"
+  if scripts/kde-tier1-source-diagnostic-needed.sh "${before}" "${after}" "${node}"; then
+    echo "${node}: unexpectedly triggered" >&2; exit 1
+  else
+    local rc=$?; [[ "${rc}" -eq 1 ]] || exit "${rc}"
+  fi
+}
+expect_run() {
+  scripts/kde-tier1-source-diagnostic-needed.sh "$1" "$2" "$3"
+}
 
 printf 'docs only\n' >> docs/readme.md
 git add docs && git commit -qm docs-only
 DOCS="$(git rev-parse HEAD)"
-if scripts/kde-tier1-source-diagnostic-needed.sh "${BASE}" "${DOCS}"; then
-    echo "docs-only delta incorrectly triggered source diagnostic" >&2
-    exit 1
-else
-    rc=$?; [[ "${rc}" -eq 1 ]] || exit "${rc}"
-fi
+expect_skip "${BASE}" "${DOCS}" kconfig
+expect_skip "${BASE}" "${DOCS}" ki18n
 
 git reset --hard -q "${BASE}"
-printf '\n' >> manifests/kde-tier1-source-diagnostic.json
-git add manifests && git commit -qm diagnostic-manifest
-scripts/kde-tier1-source-diagnostic-needed.sh "${BASE}" "$(git rev-parse HEAD)"
+python3 - <<'PY'
+import json
+p='manifests/kde-tier1-source-diagnostic.json'; d=json.load(open(p))
+d['nodes']['kconfig']['provider_packages'].append('sentinel-provider')
+open(p,'w').write(json.dumps(d,indent=2)+'\n')
+PY
+git add manifests && git commit -qm kconfig-only
+KCONFIG="$(git rev-parse HEAD)"
+expect_run "${BASE}" "${KCONFIG}" kconfig
+expect_skip "${BASE}" "${KCONFIG}" ki18n
+expect_skip "${BASE}" "${KCONFIG}" sonnet
 
 git reset --hard -q "${BASE}"
-printf '\n' >> manifests/kde-frameworks-tier1-dependencies.json
-git add manifests && git commit -qm provider-manifest
-scripts/kde-tier1-source-diagnostic-needed.sh "${BASE}" "$(git rev-parse HEAD)"
+python3 - <<'PY'
+import json
+p='manifests/kde-tier1-source-diagnostic.json'; d=json.load(open(p))
+d['last_campaign']={'workflow_run':999}
+open(p,'w').write(json.dumps(d,indent=2)+'\n')
+PY
+git add manifests && git commit -qm evidence-only
+EVIDENCE="$(git rev-parse HEAD)"
+expect_skip "${BASE}" "${EVIDENCE}" kconfig
+expect_skip "${BASE}" "${EVIDENCE}" ki18n
+
+git reset --hard -q "${BASE}"
+python3 - <<'PY'
+import json
+p='manifests/kde-tier1-source-diagnostic.json'; d=json.load(open(p))
+d['provider_platform']='changed-common-provider'
+open(p,'w').write(json.dumps(d,indent=2)+'\n')
+PY
+git add manifests && git commit -qm common-manifest
+COMMON="$(git rev-parse HEAD)"
+expect_run "${BASE}" "${COMMON}" kconfig
+expect_run "${BASE}" "${COMMON}" ki18n
 
 git reset --hard -q "${BASE}"
 printf '# changed\n' >> scripts/run-kde-tier1-source-diagnostic.sh
 git add scripts && git commit -qm runner-change
-scripts/kde-tier1-source-diagnostic-needed.sh "${BASE}" "$(git rev-parse HEAD)"
+RUNNER="$(git rev-parse HEAD)"
+expect_run "${BASE}" "${RUNNER}" kconfig
+expect_run "${BASE}" "${RUNNER}" prison
 
-echo "KDE Tier 1 source diagnostic scope selector: PASS"
+echo "KDE Tier 1 per-node source diagnostic scope selector: PASS"

@@ -25,7 +25,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Determine whether global source diagnostic is needed
+      - name: Determine whether this diagnostic node is affected
         id: scope
         shell: bash
         run: |
@@ -39,7 +39,7 @@ jobs:
               before="${{ github.event.pull_request.base.sha }}"
               after="${{ github.event.pull_request.head.sha }}"
             fi
-            if bash scripts/kde-tier1-source-diagnostic-needed.sh "${before}" "${after}"; then
+            if bash scripts/kde-tier1-source-diagnostic-needed.sh "${before}" "${after}" "${{ matrix.node }}"; then
               run=true
             else
               rc=$?
@@ -75,4 +75,4 @@ jobs:
 
       - name: Report intentionally skipped diagnostic
         if: steps.scope.outputs.run != 'true'
-        run: echo "Global source diagnostic intentionally skipped; event delta does not affect its contract."
+        run: echo "${{ matrix.node }} intentionally skipped; event delta does not alter this node's diagnostic contract."

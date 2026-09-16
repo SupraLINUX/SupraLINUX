@@ -5,165 +5,59 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "batch": "tier1-batch-7",
-  "state": "partial-pass-remediation-pending-build",
+  "state": "two-pass-one-remediation-pending-build",
   "attempt_ledger": "manifests/kde-tier1-package-batch7-attempts.json",
   "canonical_snapshot": {
-    "state": "promotion-pending-after-kcoreaddons-pass",
-    "tier1": "18 PASS / 11 pending in canonical manifest; KCoreAddons has a retained PASS awaiting canonical promotion"
+    "state": "promotion-pending-after-two-retained-pass-results",
+    "tier1": "18 PASS / 11 pending in canonical manifest; KCalendarCore and KCoreAddons have retained PASS evidence awaiting canonical promotion"
   },
   "selected_nodes": ["kcalendarcore", "kcoreaddons", "kwidgetsaddons"],
   "shared_predecessors": {
-    "extra_cmake_modules": {
-      "state": "PASS",
-      "version": "6.30.0-0supralinux3",
-      "workflow_run": 34694951158,
-      "artifact_id": 10298635300,
-      "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
-    },
-    "packaging_trees": {
-      "status": "PASS",
-      "workflow_run": 34708030450,
-      "artifact_id": 10301938362,
-      "artifact_sha256": "6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6",
-      "snapshot_json_sha256": "f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345"
-    },
-    "python_wheel_backend_provider": {
-      "status": "PASS",
-      "workflow_run": 35106561251,
-      "job_id": 104829186807,
-      "artifact_id": 10450572112,
-      "artifact_sha256": "488592048a0514b8f6234e8820c959817a151782fef41c138b71f7a8b7fe8fc4",
-      "package": "python3-setuptools",
-      "version": "78.1.1-0.1build1",
-      "backend_module": "setuptools.build_meta"
-    }
+    "extra_cmake_modules": {"state":"PASS","version":"6.30.0-0supralinux3","workflow_run":34694951158,"artifact_id":10298635300,"deb_sha256":"ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"},
+    "packaging_trees": {"status":"PASS","workflow_run":34708030450,"artifact_id":10301938362,"artifact_sha256":"6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6","snapshot_json_sha256":"f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345"},
+    "python_wheel_backend_provider": {"status":"PASS","workflow_run":35106561251,"job_id":104829186807,"artifact_id":10450572112,"artifact_sha256":"488592048a0514b8f6234e8820c959817a151782fef41c138b71f7a8b7fe8fc4","package":"python3-setuptools","version":"78.1.1-0.1build1","backend_module":"setuptools.build_meta"}
   },
   "nodes": {
     "kcalendarcore": {
-      "upstream_version": "6.30.0",
-      "source_package": "kf6-kcalendarcore",
-      "package_version": "6.30.0-0supralinux5",
-      "source_url": "https://download.kde.org/stable/frameworks/6.30/kcalendarcore-6.30.0.tar.xz",
-      "source_sha256": "e8bf60e398e2f8098a4db7db44c5475d70540ad8f8948a123c8bc109dc4db776",
-      "runtime_package": "libkf6calendarcore6",
-      "python_package": "python3-kcalendarcore",
-      "python_module": "KCalendarCore",
-      "soname": "libKF6CalendarCore.so.6",
-      "symbols": {
-        "file": "libkf6calendarcore6.symbols",
-        "sha256": "2662789d8c2e5715f218e40826a15a261a151bfda2d2695e5c5efefbc2d26127",
-        "tree_provider": "debian",
-        "reference_version": "6.28.0",
-        "overlay": "debian/libkf6calendarcore6.symbols.supralinux-overlay"
-      },
-      "copyright": {"sha256": "578646ab9522f3decfc3f64fa153f599f9004c213e5df03c21b5ee31e2584d13"},
-      "signing_key": {"sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"},
-      "upstream_defaults": {"BUILD_PYTHON_BINDINGS": "ON", "BUILD_TESTING": "ON"},
-      "binary_contracts": [
-        {"name": "libkf6calendarcore-data", "architecture": "all", "multi_arch": "foreign"},
-        {"name": "libkf6calendarcore-dev", "architecture": "amd64", "multi_arch": "same"},
-        {"name": "libkf6calendarcore-doc", "architecture": "all", "multi_arch": "foreign"},
-        {"name": "libkf6calendarcore6", "architecture": "amd64", "multi_arch": "same"},
-        {"name": "qml6-module-org-kde-calendarcore", "architecture": "amd64", "multi_arch": "same"},
-        {"name": "python3-kcalendarcore", "architecture": "amd64", "multi_arch": null}
+      "upstream_version":"6.30.0","source_package":"kf6-kcalendarcore","package_version":"6.30.0-0supralinux5","source_url":"https://download.kde.org/stable/frameworks/6.30/kcalendarcore-6.30.0.tar.xz","source_sha256":"e8bf60e398e2f8098a4db7db44c5475d70540ad8f8948a123c8bc109dc4db776",
+      "runtime_package":"libkf6calendarcore6","python_package":"python3-kcalendarcore","python_module":"KCalendarCore","soname":"libKF6CalendarCore.so.6",
+      "symbols":{"file":"libkf6calendarcore6.symbols","sha256":"2662789d8c2e5715f218e40826a15a261a151bfda2d2695e5c5efefbc2d26127","tree_provider":"debian","reference_version":"6.28.0","overlay":"debian/libkf6calendarcore6.symbols.supralinux-overlay"},
+      "copyright":{"sha256":"578646ab9522f3decfc3f64fa153f599f9004c213e5df03c21b5ee31e2584d13"},
+      "signing_key":{"sha256":"86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"},
+      "upstream_defaults":{"BUILD_PYTHON_BINDINGS":"ON","BUILD_TESTING":"ON"},
+      "binary_contracts":[
+        {"name":"libkf6calendarcore-data","architecture":"all","multi_arch":"foreign"},{"name":"libkf6calendarcore-dev","architecture":"amd64","multi_arch":"same"},{"name":"libkf6calendarcore-doc","architecture":"all","multi_arch":"foreign"},{"name":"libkf6calendarcore6","architecture":"amd64","multi_arch":"same"},{"name":"qml6-module-org-kde-calendarcore","architecture":"amd64","multi_arch":"same"},{"name":"python3-kcalendarcore","architecture":"amd64","multi_arch":null}
       ],
-      "dependency_contracts": {
-        "libkf6calendarcore6": ["libkf6calendarcore-data (= 6.30.0-0supralinux5)"],
-        "qml6-module-org-kde-calendarcore": ["libkf6calendarcore-data (= 6.30.0-0supralinux5)"],
-        "libkf6calendarcore-dev": ["libkf6calendarcore6 (= 6.30.0-0supralinux5)", "qml6-module-org-kde-calendarcore (= 6.30.0-0supralinux5)", "qt6-base-dev (>= 6.9.0~)"],
-        "python3-kcalendarcore": ["libkf6calendarcore6 (= 6.30.0-0supralinux5)", "python3-pyside6.qtcore", "python3-pyside6.qtgui"]
-      },
-      "recommendation_contracts": {"libkf6calendarcore-dev": ["libkf6calendarcore-doc (= 6.30.0-0supralinux5)"]},
-      "state": "remediation-pending-build",
-      "last_result": "FAIL",
-      "downstream_eligible": false,
-      "remediation": {
-        "cause": "Revision -4 passed 507/507 tests and built successfully; Lintian then rejected 18 public symbols whose auto-generated minimum version contained the Debian revision.",
-        "change": "apply a reviewed ABI overlay before dh_makeshlibs: APIs present since KDE 6.29 use 6.29.0 and APIs introduced in KDE 6.30 use 6.30.0",
-        "baseline_groups": {"6.29.0": 10, "6.30.0": 8},
-        "lintian_suppressed": false,
-        "source_change": false
-      }
+      "dependency_contracts":{"libkf6calendarcore6":["libkf6calendarcore-data (= 6.30.0-0supralinux5)"],"qml6-module-org-kde-calendarcore":["libkf6calendarcore-data (= 6.30.0-0supralinux5)"],"libkf6calendarcore-dev":["libkf6calendarcore6 (= 6.30.0-0supralinux5)","qml6-module-org-kde-calendarcore (= 6.30.0-0supralinux5)","qt6-base-dev (>= 6.9.0~)"],"python3-kcalendarcore":["libkf6calendarcore6 (= 6.30.0-0supralinux5)","python3-pyside6.qtcore","python3-pyside6.qtgui"]},
+      "recommendation_contracts":{"libkf6calendarcore-dev":["libkf6calendarcore-doc (= 6.30.0-0supralinux5)"]},
+      "state":"PASS","last_result":"PASS","downstream_eligible":true,
+      "pass_evidence":{"workflow_run":35130213945,"job_id":104909057699,"commit":"9b9e313176d5154656274976872feb7be34ab126","artifact_id":10461386548,"artifact_sha256":"6f191cad05620093d9e97e1df3fec78d82e9f9df74270ba8a6bc6b328c61e2f6","rootfs_sha256":"eb3e6bfe65b142c1308d8a1892e00c6bd57028126147ac09376778dec60692f6","tests":"507/507 PASS","lintian":"PASS-errors","consumer_smoke":"PASS","python_import":"PASS","apt_check":"PASS","abi_soname":"libKF6CalendarCore.so.6"}
     },
     "kcoreaddons": {
-      "upstream_version": "6.30.0",
-      "source_package": "kf6-kcoreaddons",
-      "package_version": "6.30.0-0supralinux4",
-      "source_url": "https://download.kde.org/stable/frameworks/6.30/kcoreaddons-6.30.0.tar.xz",
-      "source_sha256": "cc68fe15beb0fca2036cff8742f468c1345406bf99793fffacbf8f2a3f89bc4b",
-      "runtime_package": "libkf6coreaddons6",
-      "python_package": "python3-kcoreaddons",
-      "python_module": "KCoreAddons",
-      "soname": "libKF6CoreAddons.so.6",
-      "symbols": {"file": "libkf6coreaddons6.symbols", "sha256": "fe942c30b322dfac41f3907f614603299a2a6b6cbbc4b55f517bf26fa114ccda", "tree_provider": "debian", "reference_version": "6.28.0", "overlay": "debian/libkf6coreaddons6.symbols.supralinux-overlay"},
-      "copyright": {"sha256": "c1fae48599500ee465964528e9ef5ec1a9bf58ac1cb84bd30850a3d99d50aef1"},
-      "signing_key": {"sha256": "5a0228357021204326d88472f29689b0ba25b29cd9ea4c97dab898a0aa4614d8"},
-      "upstream_defaults": {"BUILD_PYTHON_BINDINGS": "ON", "BUILD_TESTING": "ON"},
-      "binary_contracts": [
-        {"name": "libkf6coreaddons-data", "architecture": "all", "multi_arch": "foreign"},
-        {"name": "libkf6coreaddons-dev", "architecture": "amd64", "multi_arch": "same"},
-        {"name": "libkf6coreaddons-doc", "architecture": "all", "multi_arch": "foreign"},
-        {"name": "libkf6coreaddons6", "architecture": "amd64", "multi_arch": "same"},
-        {"name": "qml6-module-org-kde-coreaddons", "architecture": "amd64", "multi_arch": "same"},
-        {"name": "python3-kcoreaddons", "architecture": "amd64", "multi_arch": null}
-      ],
-      "dependency_contracts": {
-        "libkf6coreaddons-dev": ["libkf6coreaddons6 (= 6.30.0-0supralinux4)", "qml6-module-org-kde-coreaddons (= 6.30.0-0supralinux4)", "qt6-base-dev (>= 6.9.0~)"],
-        "python3-kcoreaddons": ["libkf6coreaddons6 (= 6.30.0-0supralinux4)", "python3-pyside6.qtcore"]
-      },
-      "recommendation_contracts": {"libkf6coreaddons-dev": ["libkf6coreaddons-doc (= 6.30.0-0supralinux4)"]},
-      "state": "PASS",
-      "last_result": "PASS",
-      "downstream_eligible": true,
-      "pass_evidence": {
-        "workflow_run": 35122522242,
-        "job_id": 104883541991,
-        "commit": "ea465e7f78ee621f6456246e7ba76e0a89e46d78",
-        "artifact_id": 10457958023,
-        "artifact_sha256": "c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64",
-        "rootfs_sha256": "dd7762ba1cdc25dd57b05e8203b3d5d4d448d9ee7131ac0b99d1d85989854794",
-        "tests": "34/34 PASS",
-        "lintian": "PASS-errors",
-        "consumer_smoke": "PASS",
-        "python_import": "PASS",
-        "apt_check": "PASS"
-      }
+      "upstream_version":"6.30.0","source_package":"kf6-kcoreaddons","package_version":"6.30.0-0supralinux4","source_url":"https://download.kde.org/stable/frameworks/6.30/kcoreaddons-6.30.0.tar.xz","source_sha256":"cc68fe15beb0fca2036cff8742f468c1345406bf99793fffacbf8f2a3f89bc4b",
+      "runtime_package":"libkf6coreaddons6","python_package":"python3-kcoreaddons","python_module":"KCoreAddons","soname":"libKF6CoreAddons.so.6",
+      "symbols":{"file":"libkf6coreaddons6.symbols","sha256":"fe942c30b322dfac41f3907f614603299a2a6b6cbbc4b55f517bf26fa114ccda","tree_provider":"debian","reference_version":"6.28.0","overlay":"debian/libkf6coreaddons6.symbols.supralinux-overlay"},
+      "copyright":{"sha256":"c1fae48599500ee465964528e9ef5ec1a9bf58ac1cb84bd30850a3d99d50aef1"},
+      "signing_key":{"sha256":"5a0228357021204326d88472f29689b0ba25b29cd9ea4c97dab898a0aa4614d8"},
+      "upstream_defaults":{"BUILD_PYTHON_BINDINGS":"ON","BUILD_TESTING":"ON"},
+      "binary_contracts":[{"name":"libkf6coreaddons-data","architecture":"all","multi_arch":"foreign"},{"name":"libkf6coreaddons-dev","architecture":"amd64","multi_arch":"same"},{"name":"libkf6coreaddons-doc","architecture":"all","multi_arch":"foreign"},{"name":"libkf6coreaddons6","architecture":"amd64","multi_arch":"same"},{"name":"qml6-module-org-kde-coreaddons","architecture":"amd64","multi_arch":"same"},{"name":"python3-kcoreaddons","architecture":"amd64","multi_arch":null}],
+      "dependency_contracts":{"libkf6coreaddons-dev":["libkf6coreaddons6 (= 6.30.0-0supralinux4)","qml6-module-org-kde-coreaddons (= 6.30.0-0supralinux4)","qt6-base-dev (>= 6.9.0~)"],"python3-kcoreaddons":["libkf6coreaddons6 (= 6.30.0-0supralinux4)","python3-pyside6.qtcore"]},
+      "recommendation_contracts":{"libkf6coreaddons-dev":["libkf6coreaddons-doc (= 6.30.0-0supralinux4)"]},
+      "state":"PASS","last_result":"PASS","downstream_eligible":true,
+      "pass_evidence":{"workflow_run":35122522242,"job_id":104883541991,"commit":"ea465e7f78ee621f6456246e7ba76e0a89e46d78","artifact_id":10457958023,"artifact_sha256":"c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64","rootfs_sha256":"dd7762ba1cdc25dd57b05e8203b3d5d4d448d9ee7131ac0b99d1d85989854794","tests":"34/34 PASS","lintian":"PASS-errors","consumer_smoke":"PASS","python_import":"PASS","apt_check":"PASS"}
     },
     "kwidgetsaddons": {
-      "upstream_version": "6.30.0",
-      "source_package": "kf6-kwidgetsaddons",
-      "package_version": "6.30.0-0supralinux4",
-      "source_url": "https://download.kde.org/stable/frameworks/6.30/kwidgetsaddons-6.30.0.tar.xz",
-      "source_sha256": "ab1333c258678caa7562120a1c03bb71779f7232f1a0e75b9525d921dee3e0a3",
-      "runtime_package": "libkf6widgetsaddons6",
-      "python_package": "python3-kwidgetsaddons",
-      "python_module": "KWidgetsAddons",
-      "soname": "libKF6WidgetsAddons.so.6",
-      "symbols": {"file": "libkf6widgetsaddons6.symbols", "sha256": "31c352878dc27c56a6357ad35c308acac8871b1a105273721923cc697e68c323", "tree_provider": "debian", "reference_version": "6.28.0"},
-      "copyright": {"sha256": "5165a3d00e3f02c151bcc62602ea39ccc45783fcdcf360b9c283967636246647"},
-      "signing_key": {"sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"},
-      "upstream_defaults": {"BUILD_PYTHON_BINDINGS": "ON", "BUILD_TESTING": "ON", "BUILD_DESIGNERPLUGIN": "ON"},
-      "binary_contracts": [
-        {"name": "libkf6widgetsaddons-data", "architecture": "all", "multi_arch": "foreign"},
-        {"name": "libkf6widgetsaddons-dev", "architecture": "amd64", "multi_arch": null},
-        {"name": "libkf6widgetsaddons-doc", "architecture": "all", "multi_arch": "foreign"},
-        {"name": "libkf6widgetsaddons6", "architecture": "amd64", "multi_arch": "same"},
-        {"name": "python3-kwidgetsaddons", "architecture": "amd64", "multi_arch": null}
-      ],
-      "dependency_contracts": {
-        "libkf6widgetsaddons-dev": ["libkf6widgetsaddons6 (= 6.30.0-0supralinux4)", "qt6-base-dev (>= 6.9.0~)"],
-        "python3-kwidgetsaddons": ["libkf6widgetsaddons6 (= 6.30.0-0supralinux4)", "python3-pyside6.qtwidgets"]
-      },
-      "recommendation_contracts": {"libkf6widgetsaddons-dev": ["libkf6widgetsaddons-doc (= 6.30.0-0supralinux4)"]},
-      "state": "remediation-pending-build",
-      "last_result": "FAIL",
-      "downstream_eligible": false,
-      "remediation": {
-        "cause": "Revision -4 fixed both qWaitForWindowActive gesture failures; 26/27 suites now pass, with only KSqueezedTextLabelAutotest::testElisionOnResize(normal text) failing because the tooltip is already non-empty before the explicit squeeze.",
-        "change": "diagnose geometry/font/style determinism before changing the package fixture; do not disable or filter the upstream test",
-        "tests_filtered": false,
-        "source_change": false
-      }
+      "upstream_version":"6.30.0","source_package":"kf6-kwidgetsaddons","package_version":"6.30.0-0supralinux5","source_url":"https://download.kde.org/stable/frameworks/6.30/kwidgetsaddons-6.30.0.tar.xz","source_sha256":"ab1333c258678caa7562120a1c03bb71779f7232f1a0e75b9525d921dee3e0a3",
+      "runtime_package":"libkf6widgetsaddons6","python_package":"python3-kwidgetsaddons","python_module":"KWidgetsAddons","soname":"libKF6WidgetsAddons.so.6",
+      "symbols":{"file":"libkf6widgetsaddons6.symbols","sha256":"31c352878dc27c56a6357ad35c308acac8871b1a105273721923cc697e68c323","tree_provider":"debian","reference_version":"6.28.0"},
+      "copyright":{"sha256":"5165a3d00e3f02c151bcc62602ea39ccc45783fcdcf360b9c283967636246647"},
+      "signing_key":{"sha256":"86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"},
+      "upstream_defaults":{"BUILD_PYTHON_BINDINGS":"ON","BUILD_TESTING":"ON","BUILD_DESIGNERPLUGIN":"ON"},
+      "binary_contracts":[{"name":"libkf6widgetsaddons-data","architecture":"all","multi_arch":"foreign"},{"name":"libkf6widgetsaddons-dev","architecture":"amd64","multi_arch":null},{"name":"libkf6widgetsaddons-doc","architecture":"all","multi_arch":"foreign"},{"name":"libkf6widgetsaddons6","architecture":"amd64","multi_arch":"same"},{"name":"python3-kwidgetsaddons","architecture":"amd64","multi_arch":null}],
+      "dependency_contracts":{"libkf6widgetsaddons-dev":["libkf6widgetsaddons6 (= 6.30.0-0supralinux5)","qt6-base-dev (>= 6.9.0~)"],"python3-kwidgetsaddons":["libkf6widgetsaddons6 (= 6.30.0-0supralinux5)","python3-pyside6.qtwidgets"]},
+      "recommendation_contracts":{"libkf6widgetsaddons-dev":["libkf6widgetsaddons-doc (= 6.30.0-0supralinux5)"]},
+      "state":"remediation-pending-build","last_result":"FAIL","downstream_eligible":false,
+      "remediation":{"cause":"Revision -3 proved the 25 non-gesture suites pass under bare Xvfb while only the two activation-dependent gesture tests fail; revision -4 proved those two gesture tests pass under Openbox but a previously green KSqueezedTextLabel geometry test then fails under the global WM fixture.","change":"partition the unchanged 27-test inventory by required fixture: assert 27 total = 25 non-gesture + 2 gesture tests, run 25 under bare Xvfb, then start verified Openbox and run exactly the two gesture tests","tests_omitted":false,"source_change":false,"fixture_partition":{"total":27,"bare_xvfb":25,"xvfb_openbox":2,"openbox_tests":["ktwofingertaptest","ktwofingerswipetest"]}}
     }
   }
 }

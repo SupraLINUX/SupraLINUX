@@ -14,12 +14,7 @@ m=json.loads(Path(sys.argv[1]).read_text())
 node=m.get("nodes",{}).get(sys.argv[2])
 if not isinstance(node,dict): raise SystemExit(f"unknown diagnostic node: {sys.argv[2]}")
 ecm=m["ecm_predecessor"]
-for k,v in {
-    "SOURCE_URL":node["source_url"],
-    "SOURCE_SHA256":node["source_sha256"],
-    "ECM_VERSION":ecm["version"],
-    "ECM_SHA256":ecm["deb_sha256"],
-}.items():
+for k,v in {"SOURCE_URL":node["source_url"],"SOURCE_SHA256":node["source_sha256"],"ECM_VERSION":ecm["version"],"ECM_SHA256":ecm["deb_sha256"]}.items():
     print(f"{k}={shlex.quote(str(v))}")
 print("COMMON_PACKAGES=("+" ".join(shlex.quote(x) for x in m["common_build_packages"])+")")
 print("NODE_PACKAGES=("+" ".join(shlex.quote(x) for x in node["provider_packages"])+")")
@@ -35,7 +30,6 @@ RESULT_JSON="${EVIDENCE_DIR}/result.json"
 DIAG_RESULT="DIAG_FAIL"
 STAGE="initialization"
 STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-
 rm -rf "${WORK_DIR}" "${EVIDENCE_DIR}"
 mkdir -p "${WORK_DIR}" "${EVIDENCE_DIR}"
 
@@ -46,51 +40,27 @@ write_result() {
 import json,sys
 from pathlib import Path
 p,node,result,rc,stage,started,finished=sys.argv[1:]
-Path(p).write_text(json.dumps({
-    "node": node,
-    "diagnostic_result": result,
-    "exit_code": int(rc),
-    "stage": stage,
-    "started_at": started,
-    "finished_at": finished,
-    "claim": "non-promoting-source-diagnostic",
-    "authoritative": False,
-    "package_gate": False,
-    "dag_state_change": False,
-    "downstream_eligible_claimed": False,
-    "runner_class": "github-hosted-ubuntu-26.04"
-},indent=2)+"\n")
+Path(p).write_text(json.dumps({"node":node,"diagnostic_result":result,"exit_code":int(rc),"stage":stage,"started_at":started,"finished_at":finished,"claim":"non-promoting-source-diagnostic","authoritative":False,"package_gate":False,"dag_state_change":False,"downstream_eligible_claimed":False,"runner_class":"github-hosted-ubuntu-26.04"},indent=2)+"\n")
 PY
 }
 trap write_result EXIT
 exec > >(tee -a "${EVIDENCE_DIR}/pipeline.log") 2>&1
 
 echo "=== SupraLINUX KDE Tier 1 source diagnostic: ${NODE} ==="
-
 STAGE="manifest-validation"
 python3 - "${MANIFEST}" "${NODE}" <<'PY'
 import json,sys
 from pathlib import Path
 m=json.loads(Path(sys.argv[1]).read_text()); node=sys.argv[2]
-if m.get("claim")!="non-promoting-source-diagnostic" or m.get("non_promoting") is not True:
-    raise SystemExit("diagnostic manifest lost non-promoting contract")
-if m.get("dag_state_changes_allowed") is not False:
-    raise SystemExit("diagnostic must not change DAG state")
+if m.get("claim")!="non-promoting-source-diagnostic" or m.get("non_promoting") is not True: raise SystemExit("diagnostic manifest lost non-promoting contract")
+if m.get("dag_state_changes_allowed") is not False: raise SystemExit("diagnostic must not change DAG state")
 if node not in m.get("nodes",{}): raise SystemExit(f"unknown node {node}")
 PY
 
 STAGE="host-validation"
 . /etc/os-release
-[[ "${ID}" == "ubuntu" && "${VERSION_ID}" == "26.04" ]] || {
-    echo "Expected Ubuntu 26.04, got ${PRETTY_NAME}" >&2
-    exit 1
-}
-{
-    cat /etc/os-release
-    uname -a
-    cmake --version 2>/dev/null || true
-    python3 --version
-} > "${EVIDENCE_DIR}/host.txt"
+[[ "${ID}" == "ubuntu" && "${VERSION_ID}" == "26.04" ]] || { echo "Expected Ubuntu 26.04, got ${PRETTY_NAME}" >&2; exit 1; }
+{ cat /etc/os-release; uname -a; cmake --version 2>/dev/null || true; python3 --version; } > "${EVIDENCE_DIR}/host.txt"
 
 STAGE="provider-install"
 sudo apt-get update
@@ -98,6 +68,25 @@ mapfile -t PACKAGES < <(printf '%s\n' "${COMMON_PACKAGES[@]}" "${NODE_PACKAGES[@
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${PACKAGES[@]}" |& tee "${EVIDENCE_DIR}/apt-install.log"
 printf '%s\n' "${PACKAGES[@]}" > "${EVIDENCE_DIR}/requested-provider-packages.txt"
 dpkg-query -W -f='${Package}\t${Version}\n' "${PACKAGES[@]}" 2>/dev/null | sort > "${EVIDENCE_DIR}/installed-provider-packages.txt"
+
+STAGE="provider-surface-validation"
+case "${NODE}" in
+  kconfig)
+    dpkg-query -W -f='${Status}\n' qt6-base-private-dev | grep -Fxq 'install ok installed'
+    private_dir="$(find /usr/include -type d -path '*/qt6/QtCore/*/QtCore/private' -print -quit 2>/dev/null || true)"
+    [[ -n "${private_dir}" ]] || { echo "Qt6 CorePrivate versioned headers are unavailable" >&2; exit 1; }
+    printf 'qt-core-private-versioned-includes=%s\n' "${private_dir}" > "${EVIDENCE_DIR}/provider-surface.txt"
+    ;;
+  ki18n)
+    iso1="$(find /usr/share/locale /usr/share/locale-langpack -type f -path '*/fr/LC_MESSAGES/iso_3166-1.mo' -print -quit 2>/dev/null || true)"
+    iso2="$(find /usr/share/locale /usr/share/locale-langpack -type f -path '*/fr/LC_MESSAGES/iso_3166-2.mo' -print -quit 2>/dev/null || true)"
+    [[ -n "${iso1}" && -n "${iso2}" ]] || { echo "French iso-codes gettext catalogs are unavailable" >&2; exit 1; }
+    printf 'iso_3166-1=%s\niso_3166-2=%s\n' "${iso1}" "${iso2}" > "${EVIDENCE_DIR}/provider-surface.txt"
+    ;;
+  *)
+    printf 'no-node-specific-provider-surface-assertion\n' > "${EVIDENCE_DIR}/provider-surface.txt"
+    ;;
+esac
 
 ECM_DEB="$(find "${ECM_ARTIFACT_DIR}" -maxdepth 2 -type f -name "extra-cmake-modules_${ECM_VERSION}_all.deb" -print -quit)"
 [[ -n "${ECM_DEB}" && -s "${ECM_DEB}" ]] || { echo "Retained ECM PASS .deb missing" >&2; exit 1; }
@@ -115,26 +104,20 @@ mkdir -p "${SOURCE_DIR}"
 tar -xJf "${TARBALL}" --strip-components=1 -C "${SOURCE_DIR}"
 
 STAGE="configure"
-cmake -S "${SOURCE_DIR}" -B "${BUILD_DIR}" -GNinja \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DBUILD_TESTING=ON |& tee "${EVIDENCE_DIR}/configure.log"
+cmake -S "${SOURCE_DIR}" -B "${BUILD_DIR}" -GNinja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_TESTING=ON |& tee "${EVIDENCE_DIR}/configure.log"
 cp "${BUILD_DIR}/CMakeCache.txt" "${EVIDENCE_DIR}/CMakeCache.txt"
 
 STAGE="upstream-default-validation"
 python3 - "${MANIFEST}" "${NODE}" "${BUILD_DIR}/CMakeCache.txt" <<'PY'
 import json,sys
 from pathlib import Path
-m=json.loads(Path(sys.argv[1]).read_text()); node=sys.argv[2]
-cache={}
+m=json.loads(Path(sys.argv[1]).read_text()); node=sys.argv[2]; cache={}
 for line in Path(sys.argv[3]).read_text(errors="replace").splitlines():
-    if not line or line.startswith(('#','//')) or '=' not in line or ':' not in line.split('=',1)[0]:
-        continue
-    left,value=line.split('=',1); key=left.split(':',1)[0]; cache[key]=value
+    if not line or line.startswith(('#','//')) or '=' not in line or ':' not in line.split('=',1)[0]: continue
+    left,value=line.split('=',1); cache[left.split(':',1)[0]]=value
 for key,expected in m['nodes'][node].get('cmake_defaults',{}).items():
     got=cache.get(key)
-    if got != expected:
-        raise SystemExit(f"{node}: upstream default {key}={got!r}, expected {expected!r}")
+    if got != expected: raise SystemExit(f"{node}: upstream default {key}={got!r}, expected {expected!r}")
 print(f"{node}: upstream default assertions PASS")
 PY
 
@@ -146,23 +129,18 @@ TEST_WRAPPER="${WORK_DIR}/run-tests-under-x.sh"
 cat > "${TEST_WRAPPER}" <<'EOF'
 #!/usr/bin/env bash
 set -Eeuo pipefail
-: "${BUILD_DIR:?}"
-: "${EVIDENCE_DIR:?}"
+: "${BUILD_DIR:?}"; : "${EVIDENCE_DIR:?}"
 openbox >"${EVIDENCE_DIR}/openbox.log" 2>&1 &
 wm_pid=$!
 cleanup() { kill "${wm_pid}" 2>/dev/null || true; wait "${wm_pid}" 2>/dev/null || true; }
 trap cleanup EXIT
 ready=false
 for _ in $(seq 1 100); do
-    if xprop -root _NET_SUPPORTING_WM_CHECK 2>/dev/null | grep -Eq 'window id # 0x[0-9a-fA-F]+'; then
-        ready=true
-        break
-    fi
+    if xprop -root _NET_SUPPORTING_WM_CHECK 2>/dev/null | grep -Eq 'window id # 0x[0-9a-fA-F]+'; then ready=true; break; fi
     sleep 0.1
 done
 [[ "${ready}" == true ]] || { echo "Openbox did not publish a real EWMH supporting-WM window" >&2; exit 1; }
-export QT_QPA_PLATFORM=xcb
-export LANG=C.UTF-8 LC_ALL=C.UTF-8
+export QT_QPA_PLATFORM=xcb LANG=C.UTF-8 LC_ALL=C.UTF-8
 ctest --test-dir "${BUILD_DIR}" --output-on-failure -j1 |& tee "${EVIDENCE_DIR}/tests.log"
 EOF
 chmod +x "${TEST_WRAPPER}"
@@ -172,18 +150,10 @@ dbus-run-session -- xvfb-run -a -s '-screen 0 1920x1080x24' "${TEST_WRAPPER}"
 STAGE="install-staging"
 mkdir -p "${INSTALL_ROOT}"
 DESTDIR="${INSTALL_ROOT}" cmake --install "${BUILD_DIR}" |& tee "${EVIDENCE_DIR}/install.log"
-find "${INSTALL_ROOT}" -type f -o -type l | sed "s#^${INSTALL_ROOT}##" | sort > "${EVIDENCE_DIR}/installed-files.txt"
+find "${INSTALL_ROOT}" \( -type f -o -type l \) | sed "s#^${INSTALL_ROOT}##" | sort > "${EVIDENCE_DIR}/installed-files.txt"
 test -s "${EVIDENCE_DIR}/installed-files.txt"
 
 STAGE="complete"
 DIAG_RESULT="DIAG_PASS"
-printf '%s\n' \
-    "node=${NODE}" \
-    "diagnostic_result=DIAG_PASS" \
-    "claim=non-promoting-source-diagnostic" \
-    "package_gate=false" \
-    "dag_state_change=false" \
-    "source_sha256=${SOURCE_SHA256}" \
-    "ecm_version=${ECM_VERSION}" \
-    > "${EVIDENCE_DIR}/summary.txt"
+printf '%s\n' "node=${NODE}" "diagnostic_result=DIAG_PASS" "claim=non-promoting-source-diagnostic" "package_gate=false" "dag_state_change=false" "source_sha256=${SOURCE_SHA256}" "ecm_version=${ECM_VERSION}" > "${EVIDENCE_DIR}/summary.txt"
 echo "KDE Tier 1 source diagnostic ${NODE}: DIAG_PASS (non-promoting)"

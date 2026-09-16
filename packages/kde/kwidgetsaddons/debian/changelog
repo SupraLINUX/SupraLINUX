@@ -1,3 +1,14 @@
+kf6-kwidgetsaddons (6.30.0-0supralinux5) resolute; urgency=medium
+
+  * Keep the complete 27-test upstream inventory but partition the test fixture:
+    run the 25 non-gesture suites under bare Xvfb, where they already passed,
+    then run only the two activation-dependent gesture suites under Openbox.
+  * Assert the CTest inventory is exactly 27 = 25 + 2 before running tests;
+    no upstream test is disabled, deleted or ignored.
+  * Keep KDE 6.30.0 source, Python bindings and Designer plugin unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 15:25:00 -0300
+
 kf6-kwidgetsaddons (6.30.0-0supralinux4) resolute; urgency=medium
 
   * Keep all upstream tests enabled and provide a real Openbox window manager
