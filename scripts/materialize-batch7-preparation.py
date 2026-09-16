@@ -70,13 +70,13 @@ if "Validate KDE Tier 1 batch 7 preparation" not in s:
     s = s.replace(validator_anchor, validator_block, 1)
 policy.write_text(s)
 
-for path in (
-    ROOT / "docs/status/2026-09-16-batch7-preparation-plan.md",
-    ROOT / ".github/workflows/materialize-batch7-package-preparation.yml",
-):
-    if path.exists():
-        path.unlink()
+marker = ROOT / "docs/status/2026-09-16-batch7-preparation-plan.md"
+if marker.exists():
+    marker.unlink()
 
+# Keep the currently executing tooling workflow in the staging branch so the
+# Actions token does not need workflows:write. It is removed later through the
+# authorized GitHub connector after the validated non-workflow tree is pushed.
 shutil.rmtree(CHUNK_DIR)
 try:
     CHUNK_DIR.parent.rmdir()
@@ -85,4 +85,4 @@ except OSError:
 
 self_path = Path(__file__).resolve()
 self_path.unlink()
-print(f"Batch 7 preparation payload materialized and tooling removed: sha256={actual}")
+print(f"Batch 7 preparation payload materialized; staging workflow retained: sha256={actual}")
