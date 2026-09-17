@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 1 Batch 8 — KGuiAddons
 
-Status: **prepared; real hosted build pending**  
+Status: **remediation pending; first real hosted attempt failed before source build**  
 Date: **2026-09-17**  
 Frameworks: **6.30.0**
 
@@ -12,7 +12,7 @@ KDE upstream 6.30.0 is authoritative. The selected source is:
 
 - URL: `https://download.kde.org/stable/frameworks/6.30/kguiaddons-6.30.0.tar.xz`
 - SHA-256: `e98864228d1c5e23f3428025eb9928697374fdc3eddebb3a9dec570de028a62d`
-- initial SupraLINUX revision: `6.30.0-0supralinux1`
+- SupraLINUX revision: `6.30.0-0supralinux1`
 
 The Debian 6.28.0 packaging tree retained by run `34708030450`, artifact `10301938362`, is a technical reference only. It does not define the KDE version, required Qt version, enabled features or SupraLINUX package policy.
 
@@ -68,30 +68,66 @@ The Python package is a SupraLINUX addition relative to the Debian 6.28 referenc
 
 The runtime SONAME gate is `libKF6GuiAddons.so.6`.
 
+## First real attempt — retained FAIL
+
+The first real Batch 8 attempt ran from head `64585a32ce481350df188237b71b5354d9aec4a7` in PR router run `35182478592`, job `105077454579`.
+
+The retained failure artifact is:
+
+- artifact ID: `10480782714`;
+- artifact digest: `sha256:690e29e1c44835c1568eaca7f950393fbd3487f03be050d1f4f47880bb107b9e`;
+- result: `FAIL`;
+- stage: `campaign-validation`;
+- package revision: `6.30.0-0supralinux1`.
+
+The failure happened before source-package creation and before compilation. The materialized `packages/kde/kguiaddons/debian/upstream/signing-key.asc` was the KCoreAddons reference key rather than the KGuiAddons reference key.
+
+Expected KGuiAddons key SHA-256:
+
+`86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d`
+
+Incorrect materialized key SHA-256:
+
+`5a0228357021204326d88472f29689b0ba25b29cd9ea4c97dab898a0aa4614d8`
+
+This is classified as a **node preparation FAIL before source build**. It is not evidence of a KGuiAddons compile failure, upstream defect, dependency failure or KCoreAddons build-edge requirement.
+
+Because no source package or binary package was produced, the remediation keeps revision `6.30.0-0supralinux1`.
+
+## Remediation
+
+The remediation replaces the incorrect key with the exact Debian KGuiAddons reference key from the retained packaging-tree artifact. The manifest-pinned hash remains unchanged because it was already correct.
+
+Repository Policy is also hardened so `validate_kde_tier1_package_batch8.py` hashes the materialized signing key and requires it to match the manifest before an expensive Batch 8 build may run. This prevents the same preparation error from reaching the package runner again.
+
+The attempt itself remains permanently recorded in `manifests/kde-tier1-package-batch8-attempts.json`; remediation does not erase or rewrite FAIL evidence.
+
 ## Build/test gate
 
 The hosted non-authoritative Batch 8 lane must prove all of the following before KGuiAddons may become downstream-eligible:
 
 1. exact upstream source SHA-256;
-2. exact retained ECM `6.30.0-0supralinux3` input;
-3. clean Resolute `sbuild --chroot-mode=unshare`;
-4. non-zero CTest summary with 100% PASS;
-5. Lintian source+binary errors gate;
-6. expected seven-package binary contract and Multi-Arch fields;
-7. SONAME `libKF6GuiAddons.so.6`;
-8. Python `KGuiAddons` import from the exact built package;
-9. APT runtime/development closure using exact built KGuiAddons packages plus the retained KCoreAddons development surface;
-10. consumer CMake build using `KF6::GuiAddons` and `KF6::CoreAddons`, including the `KImageCache` public header;
-11. no KCoreAddons package in the KGuiAddons Build-Depends closure.
+2. exact KGuiAddons signing-key SHA-256;
+3. exact retained ECM `6.30.0-0supralinux3` input;
+4. clean Resolute `sbuild --chroot-mode=unshare`;
+5. non-zero CTest summary with 100% PASS;
+6. Lintian source+binary errors gate;
+7. expected seven-package binary contract and Multi-Arch fields;
+8. SONAME `libKF6GuiAddons.so.6`;
+9. Python `KGuiAddons` import from the exact built package;
+10. APT runtime/development closure using exact built KGuiAddons packages plus the retained KCoreAddons development surface;
+11. consumer CMake build using `KF6::GuiAddons` and `KF6::CoreAddons`, including the `KImageCache` public header;
+12. no KCoreAddons package in the KGuiAddons Build-Depends closure.
 
-A failure in this real attempt will be recorded as KGuiAddons `FAIL` only if KGuiAddons was actually attempted and failed for its own package/build/test cause. Other nodes are unaffected; `BLOCKED` remains distinct from `FAIL`.
+A later build failure is KGuiAddons `FAIL` only when the node was actually attempted and failed for its own package/build/test cause. Other nodes are unaffected; `BLOCKED` remains distinct from `FAIL`.
 
 ## Promotion rule
 
-Preparation is not PASS evidence. Until the real Batch 8 build completes successfully:
+The first real attempt is retained FAIL evidence, not PASS evidence. Until a later Batch 8 run succeeds:
 
 - canonical `manifests/kde-frameworks-tier1.json` remains `kguiaddons: pending`;
 - KGuiAddons is not downstream-eligible;
-- the Tier 1 canonical count remains `21 PASS / 8 pending / 0 current FAIL / 0 BLOCKED`.
+- the Tier 1 canonical count remains `21 PASS / 8 pending / 0 current FAIL / 0 BLOCKED` because the canonical snapshot is not promoted from a failed preparation attempt;
+- the Batch 8 operational state is `remediation-pending-build`.
 
-If the first real build fails, preserve the failure evidence, fix the identified cause incrementally, bump the package revision where required, rerun, and only promote after a real PASS.
+Only a real PASS may promote KGuiAddons into the canonical Tier 1 manifest.

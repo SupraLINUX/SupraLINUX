@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import sys
@@ -88,6 +89,16 @@ for rel in required_package_files:
 require((CONSUMER / "CMakeLists.txt").exists(), "KGuiAddons consumer CMakeLists missing")
 require((CONSUMER / "main.cpp").exists(), "KGuiAddons consumer source missing")
 
+# Fail in Repository Policy before an expensive build if the materialized key
+# does not match the exact key pinned by the Batch 8 manifest.
+signing_key_path = PACKAGE / "upstream" / "signing-key.asc"
+if signing_key_path.exists():
+    signing_key_sha256 = hashlib.sha256(signing_key_path.read_bytes()).hexdigest()
+    require(
+        signing_key_sha256 == node.get("signing_key", {}).get("sha256"),
+        f"KGuiAddons signing key SHA-256 mismatch: {signing_key_sha256}",
+    )
+
 # Authority/provider distinction: KCoreAddons is not a build dependency, but the
 # public KImageCache header requires its development surface for consumers.
 build_dep_block = control.split("Build-Depends:", 1)[1].split("Standards-Version:", 1)[0] if "Build-Depends:" in control else ""
@@ -138,3 +149,4 @@ print("KDE Tier 1 Batch 8 preparation validation: PASS")
 print("Node: kguiaddons 6.30.0 / 6.30.0-0supralinux1")
 print("KCoreAddons role: consumer development surface only; not Build-Depends")
 print("Upstream defaults: Wayland/X11/DBus/geo/Python/tests ON")
+print("Signing key SHA-256: manifest/materialized bytes match")

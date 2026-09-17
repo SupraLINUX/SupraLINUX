@@ -3,6 +3,23 @@
   "as_of": "2026-09-17",
   "batch": "tier1-batch-8",
   "attempts": {
-    "kguiaddons": []
+    "kguiaddons": [
+      {
+        "attempt": 1,
+        "head_sha": "64585a32ce481350df188237b71b5354d9aec4a7",
+        "workflow_run": 35182478592,
+        "job_id": 105077454579,
+        "artifact_id": 10480782714,
+        "artifact_digest": "sha256:690e29e1c44835c1568eaca7f950393fbd3487f03be050d1f4f47880bb107b9e",
+        "result": "FAIL",
+        "stage": "campaign-validation",
+        "debian_version": "6.30.0-0supralinux1",
+        "source_package_created": false,
+        "cause": "materialized upstream/signing-key.asc did not match the manifest-pinned KGuiAddons signing-key SHA-256",
+        "expected_signing_key_sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d",
+        "materialized_signing_key_sha256": "5a0228357021204326d88472f29689b0ba25b29cd9ea4c97dab898a0aa4614d8",
+        "classification": "node-preparation-failure-before-source-build"
+      }
+    ]
   }
 }
