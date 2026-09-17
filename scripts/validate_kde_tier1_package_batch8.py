@@ -134,6 +134,7 @@ require(kcore.get("version") == "6.30.0-0supralinux4", "KCoreAddons retained ver
 require(kcore.get("artifact_id") == 10457958023 and kcore.get("workflow_run") == 35122522242, "KCoreAddons retained evidence mismatch")
 require(kcore.get("artifact_sha256") == "c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64", "KCoreAddons retained artifact digest mismatch")
 require(kcore.get("files") == {
+    "libkf6coreaddons_data": "f05f55e3c6486af9d3ff48aa38215784bbb347aae1cd5fb760f5513760364908",
     "libkf6coreaddons_dev": "9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636",
     "libkf6coreaddons6": "015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb",
     "qml6_module_org_kde_coreaddons": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345",
@@ -145,6 +146,8 @@ require("actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" in workflow,
 require("run-id: '34694951158'" in workflow and "artifact-ids: '10298635300'" in workflow, "Batch 8 workflow must download retained ECM evidence")
 require("run-id: '34708030450'" in workflow and "artifact-ids: '10301938362'" in workflow, "Batch 8 workflow must download retained packaging tree")
 require("run-id: '35122522242'" in workflow and "artifact-ids: '10457958023'" in workflow, "Batch 8 workflow must download retained KCoreAddons PASS")
+require("Validate and install retained KCoreAddons data closure" in workflow, "Batch 8 workflow must materialize the exact retained KCoreAddons data dependency before consumer validation")
+require("libkf6coreaddons_data" in workflow and "libkf6coreaddons-data" in workflow, "Batch 8 workflow must hash-pin and install retained KCoreAddons data")
 require("scripts/kde-tier1-package-batch8-needed.sh" in workflow, "Batch 8 workflow must use exact event-delta scope")
 require("scripts/run-kde-tier1-package-batch8-preflight.sh" in workflow, "Batch 8 workflow must execute the KGuiAddons runner")
 require("uses: ./.github/workflows/kde-tier1-package-batch8.yml" in router, "central PR router must invoke Batch 8")
@@ -154,7 +157,7 @@ for token in ("KCOREADDONS_ARTIFACT_DIR", "kcoreaddons_build_dependency=no", "li
 require("manifests/kde-tier1-package-campaign-batch8.json" in scope, "Batch 8 scope selector must fingerprint the campaign")
 require("packages/kde/kguiaddons/" in scope, "Batch 8 scope selector must track package metadata")
 require("Batch 8 scope selector: PASS" in scope_test, "Batch 8 scope functional test must emit PASS")
-require("KGuiAddons" in doc and "KCoreAddons" in doc and "Tier 1" in doc and "6.29.0" in doc, "Batch 8 documentation must explain Tier 1 and symbols-overlay evidence")
+require("KGuiAddons" in doc and "KCoreAddons" in doc and "Tier 1" in doc and "6.29.0" in doc and "libkf6coreaddons-data" in doc, "Batch 8 documentation must explain Tier 1, symbols-overlay evidence and retained consumer closure")
 
 if errors:
     for error in errors:
@@ -167,3 +170,4 @@ print("KCoreAddons role: consumer development surface only; not Build-Depends")
 print("Upstream defaults: Wayland/X11/DBus/geo/Python/tests ON")
 print("Signing key SHA-256: manifest/materialized bytes match")
 print("Symbols overlay: KSystemClipboard ownsClipboard/ownsSelection @ 6.29.0")
+print("Retained consumer closure: exact libkf6coreaddons-data hash pinned")

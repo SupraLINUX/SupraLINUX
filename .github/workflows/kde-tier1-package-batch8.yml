@@ -72,6 +72,20 @@ jobs:
           run-id: '35122522242'
           path: .work/retained-kcoreaddons
 
+      - name: Validate and install retained KCoreAddons data closure
+        if: steps.scope.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(python3 -c 'import json; print(json.load(open("manifests/kde-tier1-package-campaign-batch8.json"))["shared_predecessors"]["kcoreaddons_public_header_provider"]["version"])')"
+          expected="$(python3 -c 'import json; print(json.load(open("manifests/kde-tier1-package-campaign-batch8.json"))["shared_predecessors"]["kcoreaddons_public_header_provider"]["files"]["libkf6coreaddons_data"])')"
+          data_deb="$(find .work/retained-kcoreaddons -maxdepth 2 -type f -name "libkf6coreaddons-data_${version}_all.deb" -print -quit)"
+          [[ -n "${data_deb}" && -s "${data_deb}" ]]
+          printf '%s  %s\n' "${expected}" "${data_deb}" | sha256sum --check --strict
+          [[ "$(dpkg-deb -f "${data_deb}" Package)" == "libkf6coreaddons-data" ]]
+          [[ "$(dpkg-deb -f "${data_deb}" Version)" == "${version}" ]]
+          sudo dpkg -i "${data_deb}"
+
       - name: Build and validate KGuiAddons
         if: steps.scope.outputs.run == 'true'
         env:
@@ -79,6 +93,18 @@ jobs:
           TIER1_REFERENCE_DIR: ${{ github.workspace }}/.work/retained-tier1-reference
           KCOREADDONS_ARTIFACT_DIR: ${{ github.workspace }}/.work/retained-kcoreaddons
         run: bash scripts/run-kde-tier1-package-batch8-preflight.sh
+
+      - name: Record retained KCoreAddons data closure evidence
+        if: steps.scope.outputs.run == 'true' && always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="evidence/kde-tier1-package-batch8/kguiaddons"
+          mkdir -p "${evidence}"
+          version="$(python3 -c 'import json; print(json.load(open("manifests/kde-tier1-package-campaign-batch8.json"))["shared_predecessors"]["kcoreaddons_public_header_provider"]["version"])')"
+          data_deb="$(find .work/retained-kcoreaddons -maxdepth 2 -type f -name "libkf6coreaddons-data_${version}_all.deb" -print -quit)"
+          sha256sum "${data_deb}" > "${evidence}/kcoreaddons-data-consumer-closure-sha256.txt"
+          dpkg-query -W -f='${Package}=${Version}\n' libkf6coreaddons-data > "${evidence}/kcoreaddons-data-consumer-closure-package.txt"
 
       - name: Upload KGuiAddons package evidence
         if: steps.scope.outputs.run == 'true' && always()

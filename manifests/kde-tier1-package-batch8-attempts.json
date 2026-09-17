@@ -16,8 +16,6 @@
         "debian_version": "6.30.0-0supralinux1",
         "source_package_created": false,
         "cause": "materialized upstream/signing-key.asc did not match the manifest-pinned KGuiAddons signing-key SHA-256",
-        "expected_signing_key_sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d",
-        "materialized_signing_key_sha256": "5a0228357021204326d88472f29689b0ba25b29cd9ea4c97dab898a0aa4614d8",
         "classification": "node-preparation-failure-before-source-build"
       },
       {
@@ -34,16 +32,6 @@
         "cause": "Batch 8 pinned incorrect inner SHA-256 values for retained KCoreAddons libkf6coreaddons-dev and libkf6coreaddons6 packages",
         "retained_artifact_id": 10457958023,
         "retained_artifact_digest": "sha256:c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64",
-        "expected_before_remediation": {
-          "libkf6coreaddons_dev": "b91b0fbbc45cbffad59f4b307d4499c3bda1ec10c1d81c6fb91ec4afa5c2c0ea",
-          "libkf6coreaddons6": "ce8063e65119b8f8b46efe848519187131878390e302cbe5aaa667ae5862ab17",
-          "qml6_module_org_kde_coreaddons": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
-        },
-        "retained_artifact_sha256_evidence": {
-          "libkf6coreaddons_dev": "9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636",
-          "libkf6coreaddons6": "015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb",
-          "qml6_module_org_kde_coreaddons": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
-        },
         "classification": "retained-predecessor-hash-pinning-error-before-source-build"
       },
       {
@@ -61,13 +49,28 @@
         "ctest": "9/9 PASS",
         "lintian_status": "fail",
         "cause": "two KSystemClipboard symbols introduced upstream in 6.29 were auto-versioned as 6.30.0-0supralinux1, triggering symbols-file-contains-current-version-with-debian-revision",
-        "symbols": [
-          "_ZNK16KSystemClipboard13ownsClipboardEv@Base",
-          "_ZNK16KSystemClipboard13ownsSelectionEv@Base"
-        ],
-        "upstream_minimum_version": "6.29.0",
         "classification": "packaging-symbols-lintian-failure-after-successful-build",
         "remediation_package_version": "6.30.0-0supralinux2"
+      },
+      {
+        "attempt": 4,
+        "head_sha": "1680cc2a049965152f595bc80c8520f16a6675d8",
+        "workflow_run": 35184831705,
+        "job_id": 105084559971,
+        "artifact_id": 10481459177,
+        "artifact_digest": "sha256:453d3e2ae75d8ea8e20d8af634869dd0f83dc9469d545692783f3aab0d9e5358",
+        "result": "FAIL",
+        "stage": "consumer-runtime-closure",
+        "debian_version": "6.30.0-0supralinux2",
+        "source_package_created": true,
+        "binary_build_status": "successful",
+        "ctest": "9/9 PASS",
+        "lintian_status": "pass-with-warnings",
+        "cause": "consumer validation installed retained libkf6coreaddons6 without the exact retained libkf6coreaddons-data package required by that runtime package, so APT could not resolve the local retained KCoreAddons closure",
+        "missing_retained_package": "libkf6coreaddons-data_6.30.0-0supralinux4_all.deb",
+        "missing_retained_package_sha256": "f05f55e3c6486af9d3ff48aa38215784bbb347aae1cd5fb760f5513760364908",
+        "classification": "validation-harness-retained-consumer-closure-incomplete-after-successful-package-build",
+        "package_revision_change_required": false
       }
     ]
   }
