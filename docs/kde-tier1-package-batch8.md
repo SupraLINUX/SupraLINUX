@@ -102,6 +102,32 @@ Repository Policy is also hardened so `validate_kde_tier1_package_batch8.py` has
 
 The attempt itself remains permanently recorded in `manifests/kde-tier1-package-batch8-attempts.json`; remediation does not erase or rewrite FAIL evidence.
 
+## Second real attempt — retained FAIL
+
+After the signing-key remediation, head `6df438c345a10e679bc4f52d3bcfd427cb4fa603` passed Repository Policy run `35183197615` including the new materialized signing-key hash gate. The second real Batch 8 attempt ran in PR router run `35183198027`, job `105079635248`.
+
+Retained failure evidence:
+
+- artifact ID: `10481500636`;
+- artifact digest: `sha256:0011def5c3111d67266edc95bbd91b178057d3e65f8ff571e09e112d1658bf61`;
+- result: `FAIL`;
+- stage: `retained-input-validation`;
+- package revision: `6.30.0-0supralinux1`.
+
+The signing key, ECM predecessor, packaging-tree snapshot, KGuiAddons symbols reference and copyright reference all verified successfully. The failure occurred while validating the retained KCoreAddons PASS packages. Batch 8 had copied incorrect inner SHA-256 values for two files even though it referenced the correct retained artifact.
+
+The authoritative retained KCoreAddons artifact remains workflow run `35122522242`, artifact `10457958023`, digest `sha256:c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64`. Its own `artifact-sha256.txt` records:
+
+- `libkf6coreaddons-dev_6.30.0-0supralinux4_amd64.deb`: `9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636`;
+- `libkf6coreaddons6_6.30.0-0supralinux4_amd64.deb`: `015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb`;
+- `qml6-module-org-kde-coreaddons_6.30.0-0supralinux4_amd64.deb`: `8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345`.
+
+The first two values replace the incorrect Batch 8 pins `b91b0fbb…` and `ce8063e6…`; the QML hash was already correct. The retained artifact itself did not change.
+
+This is classified as a **retained-predecessor hash-pinning FAIL before source build**, not a KGuiAddons compilation, upstream, dependency or test failure. No source package was produced, so the package revision remains `6.30.0-0supralinux1`.
+
+Repository Policy is hardened again: the Batch 8 validator now pins the retained KCoreAddons workflow run, artifact ID, artifact digest and all three exact package SHA-256 values so this class of copied-evidence error fails before an expensive build. Attempt 2 is preserved in the append-only Batch 8 ledger.
+
 ## Build/test gate
 
 The hosted non-authoritative Batch 8 lane must prove all of the following before KGuiAddons may become downstream-eligible:

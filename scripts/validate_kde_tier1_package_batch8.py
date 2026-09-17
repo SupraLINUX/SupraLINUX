@@ -122,6 +122,12 @@ require(kcore.get("state") == "PASS", "Batch 8 requires retained KCoreAddons PAS
 require(kcore.get("build_dependency") is False, "KCoreAddons predecessor role must explicitly not be a build dependency")
 require(kcore.get("version") == "6.30.0-0supralinux4", "KCoreAddons retained version mismatch")
 require(kcore.get("artifact_id") == 10457958023 and kcore.get("workflow_run") == 35122522242, "KCoreAddons retained evidence mismatch")
+require(kcore.get("artifact_sha256") == "c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64", "KCoreAddons retained artifact digest mismatch")
+require(kcore.get("files") == {
+    "libkf6coreaddons_dev": "9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636",
+    "libkf6coreaddons6": "015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb",
+    "qml6_module_org_kde_coreaddons": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345",
+}, "KCoreAddons retained package SHA-256 evidence mismatch")
 
 require("workflow_call:" in workflow and "workflow_dispatch:" in workflow, "Batch 8 workflow must be reusable and manually dispatchable")
 require("\n  pull_request:\n" not in workflow, "Batch 8 workflow must not create an independent ordinary PR run")

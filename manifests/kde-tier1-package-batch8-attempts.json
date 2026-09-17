@@ -19,6 +19,32 @@
         "expected_signing_key_sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d",
         "materialized_signing_key_sha256": "5a0228357021204326d88472f29689b0ba25b29cd9ea4c97dab898a0aa4614d8",
         "classification": "node-preparation-failure-before-source-build"
+      },
+      {
+        "attempt": 2,
+        "head_sha": "6df438c345a10e679bc4f52d3bcfd427cb4fa603",
+        "workflow_run": 35183198027,
+        "job_id": 105079635248,
+        "artifact_id": 10481500636,
+        "artifact_digest": "sha256:0011def5c3111d67266edc95bbd91b178057d3e65f8ff571e09e112d1658bf61",
+        "result": "FAIL",
+        "stage": "retained-input-validation",
+        "debian_version": "6.30.0-0supralinux1",
+        "source_package_created": false,
+        "cause": "Batch 8 pinned incorrect inner SHA-256 values for retained KCoreAddons libkf6coreaddons-dev and libkf6coreaddons6 packages",
+        "retained_artifact_id": 10457958023,
+        "retained_artifact_digest": "sha256:c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64",
+        "expected_before_remediation": {
+          "libkf6coreaddons_dev": "b91b0fbbc45cbffad59f4b307d4499c3bda1ec10c1d81c6fb91ec4afa5c2c0ea",
+          "libkf6coreaddons6": "ce8063e65119b8f8b46efe848519187131878390e302cbe5aaa667ae5862ab17",
+          "qml6_module_org_kde_coreaddons": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
+        },
+        "retained_artifact_sha256_evidence": {
+          "libkf6coreaddons_dev": "9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636",
+          "libkf6coreaddons6": "015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb",
+          "qml6_module_org_kde_coreaddons": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
+        },
+        "classification": "retained-predecessor-hash-pinning-error-before-source-build"
       }
     ]
   }
