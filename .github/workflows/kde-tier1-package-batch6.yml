@@ -1,8 +1,7 @@
 name: KDE Frameworks Tier 1 package batch 6
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_call:
   workflow_dispatch:
 
 permissions:

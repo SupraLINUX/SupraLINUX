@@ -1,8 +1,7 @@
 name: KDE Frameworks Tier 1 batch 1 source Lintian revalidation
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_call:
   workflow_dispatch:
 
 permissions:

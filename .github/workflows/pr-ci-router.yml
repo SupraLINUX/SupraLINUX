@@ -1,0 +1,183 @@
+name: PR CI router
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  plan:
+    name: Plan PR event delta
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    outputs:
+      run_ci: ${{ steps.scope.outputs.run_ci }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - name: Classify PR event delta
+        id: scope
+        shell: bash
+        env:
+          EVENT_ACTION: ${{ github.event.action }}
+          EVENT_BEFORE: ${{ github.event.before }}
+          EVENT_AFTER: ${{ github.event.after }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${EVENT_ACTION}" == "synchronize" ]]; then
+            before="${EVENT_BEFORE}"
+            after="${EVENT_AFTER}"
+          else
+            before="${PR_BASE_SHA}"
+            after="${PR_HEAD_SHA}"
+          fi
+
+          for sha in "${before}" "${after}"; do
+            if [[ ! "${sha}" =~ ^[0-9a-fA-F]{40}$ ]]; then
+              echo "Invalid PR comparison SHA: ${sha}" >&2
+              exit 1
+            fi
+            if ! git cat-file -e "${sha}^{commit}" 2>/dev/null; then
+              git fetch --no-tags origin "${sha}"
+            fi
+          done
+
+          mapfile -t changed < <(git diff --name-only "${before}" "${after}" --)
+          printf 'PR event delta %s..%s contains %d changed path(s).\n' "${before}" "${after}" "${#changed[@]}"
+          printf '%s\n' "${changed[@]}"
+
+          run_ci=false
+          for path in "${changed[@]}"; do
+            case "${path}" in
+              docs/*|README.md)
+                ;;
+              *)
+                run_ci=true
+                break
+                ;;
+            esac
+          done
+
+          echo "run_ci=${run_ci}" >> "${GITHUB_OUTPUT}"
+          if [[ "${run_ci}" == "true" ]]; then
+            echo "Non-documentation input changed; invoking reusable CI lanes."
+          else
+            echo "Documentation-only event delta; reusable build/reference/provider lanes remain skipped."
+          fi
+
+  package-build-proof:
+    name: Phase 1 package preflight
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/package-build-proof.yml
+
+  kde-ecm-package-preflight:
+    name: ECM package preflight
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-ecm-package-preflight.yml
+
+  kde-attica-packaging-reference:
+    name: Attica packaging reference
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-attica-packaging-reference.yml
+
+  kde-attica-package-preflight:
+    name: Attica package preflight
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-attica-package-preflight.yml
+
+  kde-tier1-dependency-preflight:
+    name: Tier 1 dependency preflight
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-tier1-dependency-preflight.yml
+
+  kde-tier1-packaging-reference:
+    name: Tier 1 packaging reference
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-tier1-packaging-reference.yml
+
+  kde-tier1-packaging-tree:
+    name: Tier 1 packaging trees
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-tier1-packaging-tree.yml
+
+  kde-tier1-binary-contract-reference:
+    name: Tier 1 binary contract reference
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-tier1-binary-contract-reference.yml
+
+  kde-tier1-package-batch1:
+    name: Tier 1 package batch 1
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-tier1-package-preflight.yml
+
+  kde-tier1-package-batch1-revalidation:
+    name: Tier 1 batch 1 Lintian revalidation
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-tier1-package-batch1-revalidation.yml
+
+  kde-tier1-package-batch2:
+    name: Tier 1 package batch 2
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-tier1-package-batch2.yml
+
+  kde-tier1-package-batch3:
+    name: Tier 1 package batch 3
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-tier1-package-batch3.yml
+
+  kde-tier1-package-batch4:
+    name: Tier 1 package batch 4
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-tier1-package-batch4.yml
+
+  kde-tier1-package-batch5:
+    name: Tier 1 package batch 5
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-tier1-package-batch5.yml
+
+  kde-tier1-package-batch6:
+    name: Tier 1 package batch 6
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-tier1-package-batch6.yml
+
+  kde-tier1-package-batch7:
+    name: Tier 1 package batch 7
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-tier1-package-batch7.yml
+
+  kde-tier1-source-diagnostic:
+    name: Tier 1 source diagnostic
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-tier1-source-diagnostic.yml
+
+  qt-provider-preflight:
+    name: Qt provider preflight
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/qt-provider-preflight.yml
