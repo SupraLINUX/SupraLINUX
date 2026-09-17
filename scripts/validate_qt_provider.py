@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "manifests" / "desktop-stack.json"
 WORKFLOW = ROOT / ".github" / "workflows" / "qt-provider-preflight.yml"
+ROUTER = ROOT / ".github" / "workflows" / "pr-ci-router.yml"
 PREFLIGHT = ROOT / "scripts" / "run-qt-provider-preflight.sh"
 DELTA = ROOT / "scripts" / "qt-provider-preflight-needed.sh"
 DOC = ROOT / "docs" / "qt-provider-certification.md"
@@ -70,6 +71,7 @@ if certification.get("status") == "certified":
     require(bool(certification.get("evidence")), "final Qt certification requires separate evidence")
 
 workflow = read(WORKFLOW)
+router = read(ROUTER)
 script = read(PREFLIGHT)
 delta = read(DELTA)
 doc = read(DOC)
@@ -80,7 +82,11 @@ require("pull_request_target" not in workflow, "Qt provider workflow must not us
 require("runs-on: ubuntu-26.04" in workflow, "Qt provider workflow must run on explicit ubuntu-26.04")
 require(f"actions/checkout@{CHECKOUT_SHA}" in workflow, "Qt provider workflow must pin the approved checkout action SHA")
 require(f"actions/upload-artifact@{UPLOAD_SHA}" in workflow, "Qt provider workflow must pin the approved upload-artifact SHA")
-require("types: [opened, synchronize, reopened]" in workflow, "Qt provider workflow must use explicit PR lifecycle events")
+require("workflow_call:" in workflow, "Qt provider workflow must be reusable from the PR CI router")
+require("workflow_dispatch:" in workflow, "Qt provider workflow must remain manually dispatchable")
+require("\n  pull_request:\n" not in workflow, "Qt provider workflow must not create an independent ordinary PR run")
+require("types: [opened, synchronize, reopened]" in router, "PR CI router must own explicit ordinary PR lifecycle events")
+require("uses: ./.github/workflows/qt-provider-preflight.yml" in router, "PR CI router must invoke the Qt provider preflight")
 require("fetch-depth: 0" in workflow, "Qt provider workflow must fetch comparison history")
 require("scripts/qt-provider-preflight-needed.sh" in workflow, "Qt provider workflow must use event-delta scope detection")
 require("scripts/run-qt-provider-preflight.sh" in workflow, "Qt provider workflow must execute the provider preflight script")
