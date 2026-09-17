@@ -174,6 +174,12 @@ jobs:
     if: needs.plan.outputs.run_ci == 'true'
     uses: ./.github/workflows/kde-tier1-package-batch7.yml
 
+  kde-tier1-package-batch8:
+    name: Tier 1 package batch 8
+    needs: plan
+    if: needs.plan.outputs.run_ci == 'true'
+    uses: ./.github/workflows/kde-tier1-package-batch8.yml
+
   kde-tier1-source-diagnostic:
     name: Tier 1 source diagnostic
     needs: plan

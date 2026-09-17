@@ -1,0 +1,120 @@
+{
+  "schema": 2,
+  "as_of": "2026-09-17",
+  "frameworks_series": "6.30.0",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "batch": "tier1-batch-8",
+  "state": "prepared-pending-build",
+  "attempt_ledger": "manifests/kde-tier1-package-batch8-attempts.json",
+  "canonical_snapshot": {
+    "state": "pre-batch-8",
+    "tier1": "21 PASS / 8 pending / 0 current FAIL / 0 BLOCKED after Batch 7 canonical promotion"
+  },
+  "selected_nodes": [
+    "kguiaddons"
+  ],
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+    },
+    "packaging_trees": {
+      "status": "PASS",
+      "workflow_run": 34708030450,
+      "artifact_id": 10301938362,
+      "artifact_sha256": "6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6",
+      "snapshot_json_sha256": "f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345"
+    },
+    "kcoreaddons_public_header_provider": {
+      "state": "PASS",
+      "role": "consumer-development-surface-only",
+      "build_dependency": false,
+      "version": "6.30.0-0supralinux4",
+      "workflow_run": 35122522242,
+      "artifact_id": 10457958023,
+      "artifact_sha256": "c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64",
+      "files": {
+        "libkf6coreaddons_dev": "b91b0fbbc45cbffad59f4b307d4499c3bda1ec10c1d81c6fb91ec4afa5c2c0ea",
+        "libkf6coreaddons6": "ce8063e65119b8f8b46efe848519187131878390e302cbe5aaa667ae5862ab17",
+        "qml6_module_org_kde_coreaddons": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
+      }
+    }
+  },
+  "nodes": {
+    "kguiaddons": {
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-kguiaddons",
+      "package_version": "6.30.0-0supralinux1",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kguiaddons-6.30.0.tar.xz",
+      "source_sha256": "e98864228d1c5e23f3428025eb9928697374fdc3eddebb3a9dec570de028a62d",
+      "runtime_package": "libkf6guiaddons6",
+      "python_package": "python3-kguiaddons",
+      "python_module": "KGuiAddons",
+      "soname": "libKF6GuiAddons.so.6",
+      "symbols": {
+        "file": "libkf6guiaddons6.symbols",
+        "sha256": "aca1c20755a57e5763d3dd4d3ec8da3b1e41e00bd728d5c94ab6f2173d0041b4",
+        "tree_provider": "debian",
+        "reference_version": "6.28.0"
+      },
+      "copyright": {
+        "sha256": "682780cded94ed69804a179fd799d3085536c26055a3592cc3ab3a12757f0d74"
+      },
+      "signing_key": {
+        "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"
+      },
+      "upstream_defaults": {
+        "WITH_WAYLAND": "ON",
+        "WITH_X11": "ON",
+        "USE_DBUS": "ON",
+        "BUILD_GEO_SCHEME_HANDLER": "ON",
+        "BUILD_PYTHON_BINDINGS": "ON",
+        "BUILD_TESTING": "ON"
+      },
+      "kde_framework_build_dependencies": [],
+      "public_header_dependencies": [
+        "KCoreAddons"
+      ],
+      "binary_contracts": [
+        {"name": "libkf6guiaddons-bin", "architecture": "amd64", "multi_arch": null},
+        {"name": "libkf6guiaddons-data", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6guiaddons-dev", "architecture": "amd64", "multi_arch": null},
+        {"name": "libkf6guiaddons-doc", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6guiaddons6", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "qml6-module-org-kde-guiaddons", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "python3-kguiaddons", "architecture": "amd64", "multi_arch": null}
+      ],
+      "dependency_contracts": {
+        "libkf6guiaddons-dev": [
+          "libkf6coreaddons-dev (>= 6.30.0~)",
+          "libkf6guiaddons6 (= 6.30.0-0supralinux1)",
+          "qt6-base-dev (>= 6.9.0~)",
+          "qt6-wayland-dev (>= 6.9.0~)"
+        ],
+        "libkf6guiaddons6": [
+          "libkf6guiaddons-data (= 6.30.0-0supralinux1)"
+        ],
+        "python3-kguiaddons": [
+          "libkf6guiaddons6 (= 6.30.0-0supralinux1)",
+          "python3-pyside6.qtcore",
+          "python3-pyside6.qtgui"
+        ]
+      },
+      "recommendation_contracts": {
+        "libkf6guiaddons-dev": [
+          "libkf6guiaddons-doc (= 6.30.0-0supralinux1)"
+        ],
+        "libkf6guiaddons6": [
+          "libkf6guiaddons-bin (= 6.30.0-0supralinux1)"
+        ]
+      },
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false
+    }
+  }
+}

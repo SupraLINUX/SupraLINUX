@@ -1,0 +1,105 @@
+Source: kf6-kguiaddons
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               dh-sequence-python3,
+               dh-sequence-qmldeps,
+               cmake (>= 3.29~),
+               extra-cmake-modules (>= 6.30.0~),
+               clang,
+               libclang-dev,
+               llvm-dev,
+               libpyside6-dev,
+               libshiboken6-dev,
+               python3-build,
+               python3-setuptools,
+               python3-dev (>= 3.9~),
+               libwayland-dev (>= 1.9~) [linux-any],
+               libx11-dev,
+               libxcb1-dev,
+               libxkbcommon-dev,
+               pkgconf,
+               plasma-wayland-protocols (>= 1.15.0~) [linux-any],
+               qt6-base-dev (>= 6.9.0~),
+               qt6-base-private-dev (>= 6.9.0~),
+               qt6-declarative-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.9.0~),
+               qt6-wayland-dev (>= 6.9.0~) [linux-any],
+               wayland-protocols (>= 1.39~),
+               xauth <!nocheck>,
+               xvfb <!nocheck>,
+Standards-Version: 4.7.4
+Homepage: https://invent.kde.org/frameworks/kguiaddons
+Rules-Requires-Root: no
+
+Package: libkf6guiaddons-bin
+Architecture: any
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Description: KDE KGuiAddons geographical URI helper
+ This package contains the kde-geo-uri-handler runtime helper.
+
+Package: libkf6guiaddons-data
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: KDE KGuiAddons shared data
+ This package contains architecture-independent KGuiAddons runtime data.
+
+Package: libkf6guiaddons-dev
+Section: libdevel
+Architecture: any
+Depends: libkf6coreaddons-dev (>= 6.30.0~),
+         libkf6guiaddons6 (= ${binary:Version}),
+         qt6-base-dev (>= 6.9.0~),
+         qt6-wayland-dev (>= 6.9.0~) [linux-any],
+         ${misc:Depends},
+Recommends: libkf6guiaddons-doc (= ${source:Version}),
+Description: development files for KDE KGuiAddons
+ This package contains headers, CMake metadata and the development symlink.
+ KImageCache exposes a public KCoreAddons development-header dependency.
+
+Package: libkf6guiaddons-doc
+Section: doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: KDE KGuiAddons documentation compatibility package
+ This package preserves the Debian-family documentation package name.
+ .
+ The current SupraLINUX common Frameworks profile does not ship QCH files.
+
+Package: libkf6guiaddons6
+Architecture: any
+Multi-Arch: same
+Depends: libkf6guiaddons-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: libkf6guiaddons-bin (= ${binary:Version}),
+Description: KDE KGuiAddons runtime library
+ This package contains the KDE Frameworks 6 KGuiAddons runtime library.
+
+Package: qml6-module-org-kde-guiaddons
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${qml6:Depends},
+         ${shlibs:Depends},
+Description: KDE KGuiAddons QML module
+ This package contains the QML module shipped by KDE KGuiAddons.
+
+Package: python3-kguiaddons
+Section: python
+Architecture: any
+Depends: libkf6guiaddons6 (= ${binary:Version}),
+         python3-pyside6.qtcore,
+         python3-pyside6.qtgui,
+         ${misc:Depends},
+         ${python3:Depends},
+         ${shlibs:Depends},
+Description: Python 3 bindings for KDE KGuiAddons
+ This package contains the upstream KDE Frameworks 6 Python bindings for
+ KGuiAddons, generated with Shiboken6/PySide6.

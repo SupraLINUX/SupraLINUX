@@ -1,0 +1,94 @@
+name: KDE Frameworks Tier 1 package batch 8
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  kguiaddons-package:
+    name: kguiaddons 6.30 clean package preflight
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - name: Determine whether this event delta affects KGuiAddons
+        id: scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          run=true
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            if [[ "${{ github.event.action }}" == "synchronize" ]]; then
+              before="${{ github.event.before }}"
+              after="${{ github.event.after }}"
+            else
+              before="${{ github.event.pull_request.base.sha }}"
+              after="${{ github.event.pull_request.head.sha }}"
+            fi
+            if bash scripts/kde-tier1-package-batch8-needed.sh "${before}" "${after}"; then
+              run=true
+            else
+              rc=$?
+              [[ "${rc}" -eq 1 ]] && run=false || exit "${rc}"
+            fi
+          fi
+          echo "run=${run}" >> "${GITHUB_OUTPUT}"
+
+      - name: Download retained ECM PASS artifact
+        if: steps.scope.outputs.run == 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10298635300'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34694951158'
+          path: .work/retained-ecm
+
+      - name: Download retained Tier 1 packaging-tree artifact
+        if: steps.scope.outputs.run == 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10301938362'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34708030450'
+          path: .work/retained-tier1-reference
+
+      - name: Download retained KCoreAddons PASS artifact
+        if: steps.scope.outputs.run == 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10457958023'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35122522242'
+          path: .work/retained-kcoreaddons
+
+      - name: Build and validate KGuiAddons
+        if: steps.scope.outputs.run == 'true'
+        env:
+          ECM_ARTIFACT_DIR: ${{ github.workspace }}/.work/retained-ecm
+          TIER1_REFERENCE_DIR: ${{ github.workspace }}/.work/retained-tier1-reference
+          KCOREADDONS_ARTIFACT_DIR: ${{ github.workspace }}/.work/retained-kcoreaddons
+        run: bash scripts/run-kde-tier1-package-batch8-preflight.sh
+
+      - name: Upload KGuiAddons package evidence
+        if: steps.scope.outputs.run == 'true' && always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-tier1-batch8-kguiaddons-package-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-tier1-package-batch8/kguiaddons/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Report intentionally skipped KGuiAddons build
+        if: steps.scope.outputs.run != 'true'
+        run: echo "KGuiAddons Batch 8 package preflight intentionally skipped; event delta does not affect this node."
