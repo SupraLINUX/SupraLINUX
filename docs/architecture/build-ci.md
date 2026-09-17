@@ -17,6 +17,25 @@ A logical multi-file change is prepared as one coherent transaction and publishe
 
 Temporary materializer/promoter workflows are not the normative model for subsequent work. The complete rationale and operational rules are recorded in `docs/decisions/repository-mutation-strategy-2026-09-17.md`.
 
+## Pull-request CI routing
+
+Ordinary hosted pull-request CI is admitted through `.github/workflows/pr-ci-router.yml`. The router is the single subscriber for `pull_request` lifecycle events `opened`, `synchronize` and `reopened` across the migrated hosted package/reference/provider/diagnostic lanes.
+
+For a synchronization, the router evaluates the exact `${{ github.event.before }} -> ${{ github.event.after }}` delta. For opened/reopened PRs it compares base SHA to head SHA. A documentation-only delta (`docs/**` and/or `README.md`) stops after the router planning job; the 18 reusable hosted lanes remain skipped. A non-documentation delta may enter those lanes, where the existing lane-specific scope detectors still decide which expensive work is actually required.
+
+The routed workflows expose `workflow_call` and retain `workflow_dispatch`; workflows that already ran on `push: main` keep that trigger. They do not independently listen to ordinary PR lifecycle events. Controlled authoritative workflows triggered by labels remain separate from this router.
+
+The router also uses per-PR concurrency with `cancel-in-progress: true`. A newer synchronization cancels an obsolete router execution for the same PR instead of allowing stale package/reference work to continue.
+
+This architecture is policy-enforced by `scripts/validate_repository.py` and, for the Qt lane, `scripts/validate_qt_provider.py`. Live verification on 2026-09-17 established:
+
+- superseded router run `35178935759`: **cancelled** automatically;
+- Repository Policy run `35181296924`: **PASS**, 30/30 steps;
+- documentation-only router run `35181360370`: **PASS**, one planning job PASS and 18 reusable lanes skipped;
+- matching Repository Policy run `35181360187`: **PASS**, 30/30 steps.
+
+Detailed semantics and historical evidence are recorded in `docs/ci-event-delta-scope.md` and `docs/decisions/pr-ci-routing-2026-09-17.md`.
+
 ## Hosted preflight lane
 
 GitHub-hosted `ubuntu-26.04` is non-authoritative. It performs repository/manifest policy, static checks and clean package-build preflight. `ubuntu-latest` is forbidden.
@@ -27,7 +46,7 @@ The **consumer-runtime closure** smoke must validate the built package's actual 
 
 A shared runner change is itself a build input for every node using that runner. Therefore a retained `PASS` node may be intentionally revalidated when shared runner semantics change; its previous PASS evidence is preserved rather than rewritten or silently scope-skipped.
 
-Expensive hosted package work is gated on the actual PR event delta. Infrastructure/documentation-only synchronizations still run scope policy but skip `sbuild`; this skip path has repeated real PASS evidence.
+Expensive hosted package work is gated on the actual PR event delta. Documentation-only synchronizations stop at the centralized router before entering package/reference/provider lanes. For relevant deltas, each invoked lane still applies its own event-delta scope before expensive execution.
 
 Repository Policy requires:
 
@@ -39,6 +58,7 @@ Repository Policy requires:
 - effective GitHub Actions runner provenance functional testing;
 - golden-image provenance functional testing;
 - repository architecture/invariant validation;
+- centralized PR-router/reusable-lane invariants;
 - live Ubuntu/Qt candidate validation.
 
 `SC1091` is excluded only for intentional runtime system sources such as `/etc/os-release`; all other ShellCheck diagnostics are blocking.
@@ -151,6 +171,6 @@ Repository publication/signing remains separate from compilation. Builders do no
 
 ## Initial gates
 
-Repository/manifest validation; Bash syntax; ShellCheck; QEMU-wrapper test; signed Ubuntu source-image test; effective Actions runner provenance test; golden-image provenance test; source integrity; hosted clean-build preflight; host KVM/nested preflight; verified source image; use-time cryptographic source re-verification; golden-image build/provenance; golden admission; authoritative JIT/KVM runner certification; real nested-KVM runtime probe; authoritative `sbuild`; package metadata; `autopkgtest/QEMU` through KVM-only wrapper; DAG consistency; install/upgrade tests; KDE session/runtime smoke tests; Ubuntu application compatibility tests for replaced shared libraries; repository publication verification.
+Repository/manifest validation; Bash syntax; ShellCheck; QEMU-wrapper test; signed Ubuntu source-image test; effective Actions runner provenance test; golden-image provenance test; source integrity; centralized PR event-delta routing; hosted clean-build preflight; host KVM/nested preflight; verified source image; use-time cryptographic source re-verification; golden-image build/provenance; golden admission; authoritative JIT/KVM runner certification; real nested-KVM runtime probe; authoritative `sbuild`; package metadata; `autopkgtest/QEMU` through KVM-only wrapper; DAG consistency; install/upgrade tests; KDE session/runtime smoke tests; Ubuntu application compatibility tests for replaced shared libraries; repository publication verification.
 
 Existing gates cannot be removed silently: implementation, machine-readable policy and documentation must change together.

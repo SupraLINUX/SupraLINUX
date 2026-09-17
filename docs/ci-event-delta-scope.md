@@ -1,64 +1,88 @@
 # CI event-delta scope
 
-Status: **implemented and verified for Attica package/reference workflows**  
-Last reviewed: **2026-09-12**
+Status: **implemented and verified repository-wide for ordinary pull-request routing**  
+Last reviewed: **2026-09-17**
 
 ## Purpose
 
-Long-lived Draft PRs accumulate many changed paths relative to `main`. GitHub pull-request `paths:` filters therefore answer whether a path changed anywhere in the PR, not whether the latest synchronization changed a package input. That behavior caused expensive package/reference jobs to be scheduled again for evidence and documentation-only commits.
+Long-lived Draft PRs accumulate many changed paths relative to `main`. GitHub pull-request path filters answer whether a path changed anywhere in the PR, not whether the latest synchronization changed a package input. On PR #1 this caused documentation-only synchronizations to create many unrelated workflow runs even though the package lanes later skipped their expensive work.
 
-SupraLINUX package workflows that perform expensive work must distinguish workflow scheduling from expensive execution. A cheap job may start on a PR synchronization, but package builds, retained-artifact downloads and external reference captures should execute only when the exact event delta changes an input relevant to that operation.
+SupraLINUX therefore separates ordinary PR event admission from lane execution. One router evaluates the exact event delta first; only relevant synchronizations are allowed to fan out into reusable package/reference/provider/diagnostic lanes.
 
-## Attica implementation
+## Centralized PR router
 
-For `pull_request/synchronize`, the Attica workflows compare `${{ github.event.before }}` to `${{ github.event.after }}` after `actions/checkout` with `fetch-depth: 0`.
+`.github/workflows/pr-ci-router.yml` is the single owner of ordinary `pull_request` events for `opened`, `synchronize` and `reopened` across the migrated hosted preflight lanes.
 
-Package-build scope is limited to:
+For `pull_request/synchronize`, the router compares `${{ github.event.before }}` to `${{ github.event.after }}` after `actions/checkout` with `fetch-depth: 0`.
 
-- `packages/kde/attica/**`;
-- `scripts/run-kde-attica-package-preflight.sh`;
-- `scripts/kde-attica-package-preflight-needed.sh`;
-- `.github/workflows/kde-attica-package-preflight.yml`.
+For `opened` and `reopened`, it compares the PR base SHA with the PR head SHA.
 
-Packaging-reference scope is separate and limited to:
+The plan job classifies the changed paths before any reusable lane is invoked:
 
-- `scripts/run-kde-attica-packaging-reference.sh`;
-- `scripts/kde-attica-packaging-reference-needed.sh`;
-- `.github/workflows/kde-attica-packaging-reference.yml`.
+- if every changed path is under `docs/**` or is `README.md`, `run_ci=false`;
+- otherwise `run_ci=true` and the reusable lanes may be called.
 
-Documentation and machine-readable evidence/state changes are intentionally not build/reference inputs.
+The 18 migrated workflows keep their own lane-specific event-delta checks. The router decides whether the general hosted CI family needs to be entered at all; each called lane still decides whether its own node/reference/provider inputs changed. This preserves fine-grained scope while eliminating unnecessary top-level workflow runs for documentation-only synchronizations.
 
-## Historical implementation defect
+## Reusable lane contract
 
-The first documentation-only exercise reached the new scope step but failed with exit `126`: the new helper files had been created through the GitHub Contents API with mode `0644`, while the workflows invoked them as executables. No expensive Attica build/reference steps ran in that failed exercise.
+The migrated package/reference/provider/diagnostic workflows:
 
-The correction invokes scope helpers explicitly through `bash`, so scope logic no longer depends on their executable bit. Repository Policy validates the input lists, exact event-delta binding and conditional gating of expensive steps.
+- expose `workflow_call` for the PR router;
+- retain `workflow_dispatch` as the explicit manual/force path;
+- retain `push: main` where that trigger already existed;
+- do not independently subscribe to ordinary `pull_request` lifecycle events;
+- preserve the existing build, test, artifact and node-scope logic.
 
-## Verified documentation-only skip
+Repository Policy validates this contract and fails if a routed lane regains its own ordinary PR trigger or is no longer referenced by the router.
 
-Commit `5b09963d3af85b4d1b014102ff12c385fb3bf775` changed documentation only after the correction.
+Controlled authoritative workflows triggered by PR labels are intentionally outside this router. Their security/admission semantics are separate from ordinary hosted preflight routing.
 
-- Attica package workflow run `34707922535`: **PASS**;
-  - delta-scope step: PASS;
-  - ECM artifact download: skipped;
-  - Attica reference artifact download: skipped;
-  - clean Resolute `sbuild`: skipped;
-  - package evidence upload: skipped;
-  - intentional-skip report: PASS.
-- Attica packaging-reference workflow run `34707922491`: **PASS**;
-  - delta-scope step: PASS;
-  - Ubuntu/Debian tree capture: skipped;
-  - evidence upload: skipped;
-  - intentional-skip report: PASS.
+## Superseded-run cancellation
 
-This proves that a documentation/evidence-only synchronization no longer repeats expensive Attica package or reference work.
+The router uses:
+
+```yaml
+concurrency:
+  group: pr-ci-router-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+```
+
+A newer synchronization of the same PR cancels the older router run instead of allowing obsolete package/reference work to continue consuming runners. This affects execution scheduling only; retained PASS/FAIL evidence from completed historical runs is not rewritten.
+
+## Verified evidence
+
+The migration was validated incrementally rather than declared successful from static inspection alone.
+
+- Migration commit `65c4d33360fd6d5031e1e9a406f84b39446627a7` converted the hosted lanes to reusable workflows and introduced the router.
+- Commit `0ac245e462ba17f840b241e2c32c6cccf1975366` added per-PR concurrency with cancellation.
+- Router run `35178935759` was automatically **cancelled** when superseded by a newer synchronization, proving the cancellation contract.
+- Repository/Qt validators were aligned with the new architecture in commits `a4ee9c05d13b47c2cb9e7282e9c4e5c66ee9a6d9` and `bb475ab1ce5a882759704a07f4c86f4183e76d42`.
+- Repository Policy run `35181296924`: **PASS**, all 30 validation steps successful.
+- Final documentation-only probe commit `d4a9a698fe83ea9cb6341ecf80e08f096bb7386b` produced only two top-level workflows: Repository Policy and PR CI router.
+- PR CI router run `35181360370`: **PASS**; `Plan PR event delta` PASS and all 18 reusable hosted lanes `skipped` without runner execution.
+- Repository Policy run `35181360187`: **PASS**, all 30 validation steps successful on the same documentation-only probe.
+
+This is the accepted evidence that documentation-only synchronizations no longer fan out into package/reference/provider execution.
+
+## Historical Attica implementation
+
+Before the centralized router existed, Attica proved the basic exact-event-delta technique at lane level. Its package/reference workflows compared `${{ github.event.before }}` to `${{ github.event.after }}` and intentionally skipped expensive work for irrelevant deltas.
+
+An early scope-helper exercise failed with exit `126` because helper files created through the GitHub Contents API did not have executable mode. The correction invoked those helpers explicitly through `bash`. That historical failure remains evidence of the implementation defect; it was not a package FAIL.
+
+Commit `5b09963d3af85b4d1b014102ff12c385fb3bf775` later proved Attica documentation-only skip behavior in runs `34707922535` and `34707922491`.
+
+The centralized router generalizes the scheduling side of that model while retaining lane-level scope detection.
 
 ## Required semantics
 
-- A relevant input delta executes the corresponding expensive operation.
-- An irrelevant delta returns the intentional skip state and the job still succeeds.
-- `workflow_dispatch` remains an explicit way to force the operation.
-- A scope implementation error is a CI failure; it must not be reported as a package FAIL.
+- Ordinary hosted PR CI is admitted through one centralized router.
+- `synchronize` scope uses the exact event `before -> after` delta, not the cumulative PR diff.
+- Documentation-only deltas do not invoke the 18 routed hosted lanes.
+- Relevant non-documentation deltas may invoke the reusable lanes; each lane retains its own precise scope decision.
+- `workflow_dispatch` remains an explicit way to force an individual reusable lane.
+- Superseded router runs for the same PR are cancelled.
+- A router/scope implementation error is a CI failure; it must not be reported as a package FAIL.
 - Skipping an unchanged node does not alter existing PASS/FAIL/BLOCKED evidence.
-
-This mechanism is the template for the generalized Tier 1 package campaign.
+- Authoritative labeled/KVM workflows retain their separate controlled admission model.
