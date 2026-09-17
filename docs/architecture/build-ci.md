@@ -1,13 +1,21 @@
 # Build, CI and promotion architecture
 
 Status: **active architecture**  
-Last reviewed: **2026-09-15**
+Last reviewed: **2026-09-17**
 
 ## Build semantics
 
 SupraLINUX uses a DAG-guided hybrid build strategy. Every attempted node/gate ends as `PASS` or `FAIL`; a node not attempted because a prerequisite or execution capability is unavailable is `BLOCKED`. `BLOCKED` is never counted as `FAIL`.
 
 Campaigns resolve the selected manifest, construct the dependency DAG, build every possible independent node by topological level, expose only PASS artifacts to dependents, preserve evidence and rerun the complete campaign before promotion.
+
+## Repository mutation boundary
+
+Repository source state is assembled **before** CI. GitHub Actions validates, builds, tests and produces evidence; it is not the normal mechanism for materializing or editing the repository it is meant to validate.
+
+A logical multi-file change is prepared as one coherent transaction and published as one atomic Git commit. The preferred remote-write path is `blob -> tree -> commit -> ref`, based on the current branch tree. The branch HEAD is rechecked before publication and is never force-updated to hide concurrent changes.
+
+Temporary materializer/promoter workflows are not the normative model for subsequent work. The complete rationale and operational rules are recorded in `docs/decisions/repository-mutation-strategy-2026-09-17.md`.
 
 ## Hosted preflight lane
 
