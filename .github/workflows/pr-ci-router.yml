@@ -8,6 +8,10 @@ permissions:
   contents: read
   actions: read
 
+concurrency:
+  group: pr-ci-router-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   plan:
     name: Plan PR event delta
