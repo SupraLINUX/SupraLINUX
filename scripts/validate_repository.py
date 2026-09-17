@@ -81,6 +81,28 @@ runner_contract = workflow_texts.get("runner-contract.yml", "")
 authoritative_workflow = workflow_texts.get("authoritative-package-proof.yml", "")
 hosted_workflow = workflow_texts.get("package-build-proof.yml", "")
 qt_provider_workflow = workflow_texts.get("qt-provider-preflight.yml", "")
+pr_ci_router = workflow_texts.get("pr-ci-router.yml", "")
+
+routed_pr_workflows = (
+    "package-build-proof.yml",
+    "kde-ecm-package-preflight.yml",
+    "kde-attica-packaging-reference.yml",
+    "kde-attica-package-preflight.yml",
+    "kde-tier1-dependency-preflight.yml",
+    "kde-tier1-packaging-reference.yml",
+    "kde-tier1-packaging-tree.yml",
+    "kde-tier1-binary-contract-reference.yml",
+    "kde-tier1-package-preflight.yml",
+    "kde-tier1-package-batch1-revalidation.yml",
+    "kde-tier1-package-batch2.yml",
+    "kde-tier1-package-batch3.yml",
+    "kde-tier1-package-batch4.yml",
+    "kde-tier1-package-batch5.yml",
+    "kde-tier1-package-batch6.yml",
+    "kde-tier1-package-batch7.yml",
+    "kde-tier1-source-diagnostic.yml",
+    "qt-provider-preflight.yml",
+)
 
 require(f"actions/checkout@{CHECKOUT_SHA}" in repository_policy, "repository policy checkout action must use the approved immutable SHA")
 require("ubuntu-26.04" in repository_policy, "repository policy must use explicit ubuntu-26.04")
@@ -94,6 +116,29 @@ require("scripts/test-check-actions-runner-runtime.sh" in repository_policy, "re
 require("scripts/test-check-golden-image-provenance.sh" in repository_policy, "repository policy must functionally test the golden-image provenance gate")
 require("python3 scripts/validate_qt_provider.py" in repository_policy, "repository policy must execute the Qt provider invariant validator")
 require(bool(qt_provider_workflow), "missing Qt provider preflight workflow")
+
+# Ordinary pull-request work is admitted through one router. The package/reference/provider
+# lanes remain independently dispatchable/reusable, but must not each create their own PR run.
+require(bool(pr_ci_router), "missing PR CI router workflow")
+require("types: [opened, synchronize, reopened]" in pr_ci_router, "PR CI router must use explicit PR lifecycle events")
+require(f"actions/checkout@{CHECKOUT_SHA}" in pr_ci_router, "PR CI router checkout action must use the approved immutable SHA")
+require("fetch-depth: 0" in pr_ci_router, "PR CI router must fetch comparison history")
+require("github.event.before" in pr_ci_router and "github.event.after" in pr_ci_router, "PR CI router must use synchronize before/after SHAs")
+require("github.event.pull_request.base.sha" in pr_ci_router and "github.event.pull_request.head.sha" in pr_ci_router, "PR CI router must support opened/reopened base/head comparison")
+require("docs/*|README.md" in pr_ci_router, "PR CI router must recognize documentation-only event deltas")
+require("cancel-in-progress: true" in pr_ci_router, "PR CI router must cancel superseded runs")
+require("pr-ci-router-${{ github.event.pull_request.number }}" in pr_ci_router, "PR CI router concurrency must be scoped to the PR number")
+
+for filename in routed_pr_workflows:
+    text = workflow_texts.get(filename, "")
+    require(bool(text), f"missing routed reusable workflow: .github/workflows/{filename}")
+    require("workflow_call:" in text, f"{filename} must expose workflow_call for PR router reuse")
+    require("workflow_dispatch:" in text, f"{filename} must remain manually dispatchable")
+    require("\n  pull_request:\n" not in text, f"{filename} must not independently subscribe to ordinary pull_request lifecycle events")
+    require(
+        f"uses: ./.github/workflows/{filename}" in pr_ci_router,
+        f"PR CI router must invoke {filename}",
+    )
 
 for filename, text, gate_label in (
     ("runner-contract.yml", runner_contract, "ci:runner-contract"),
@@ -109,8 +154,9 @@ for filename, text, gate_label in (
 require("scripts/check-actions-runner-runtime.sh" in runner_contract, "runner contract must verify the effective Actions runner against golden provenance")
 require("actions-runner-runtime.txt" in runner_contract, "runner contract must retain effective Actions runner evidence")
 require("scripts/check-nested-kvm-runtime.sh" in runner_contract, "runner contract must execute the nested-KVM runtime probe")
-require("types: [opened, synchronize, reopened]" in hosted_workflow, "hosted package preflight must use explicit PR lifecycle events")
-require("github.event.before" in hosted_workflow and "github.event.after" in hosted_workflow, "hosted package preflight must use synchronize before/after SHAs")
+
+require("workflow_call:" in hosted_workflow, "hosted package preflight must be reusable from the PR CI router")
+require("github.event.before" in hosted_workflow and "github.event.after" in hosted_workflow, "hosted package preflight must preserve synchronize before/after SHA scoping")
 require("scripts/package-preflight-needed.sh" in hosted_workflow, "hosted package preflight must gate expensive work on event delta")
 require("fetch-depth: 0" in hosted_workflow, "hosted package preflight must fetch comparison history")
 
@@ -291,7 +337,7 @@ authoritative_proof = read_required("scripts/run-authoritative-package-proof.sh"
 require("scripts/check-actions-runner-runtime.sh" in authoritative_proof, "authoritative proof must verify effective Actions runner provenance")
 require("actions-runner-runtime.txt" in authoritative_proof, "authoritative proof must retain effective Actions runner evidence")
 require("scripts/check-nested-kvm-runtime.sh" in authoritative_proof, "authoritative proof must run the nested-KVM runtime probe")
-require("--qemu-command=\"${KVM_QEMU_WRAPPER}\"" in authoritative_proof, "authoritative autopkgtest must use the KVM-only QEMU wrapper")
+require('--qemu-command="${KVM_QEMU_WRAPPER}"' in authoritative_proof, "authoritative autopkgtest must use the KVM-only QEMU wrapper")
 require("--qemu-architecture=x86_64" in authoritative_proof, "authoritative autopkgtest must pin QEMU architecture")
 require("qemu-kvm-wrapper-sha256.txt" in authoritative_proof, "authoritative evidence must hash the QEMU wrapper")
 require('"system_test_acceleration": "kvm-required"' in authoritative_proof, "authoritative result must record KVM-required acceleration")
@@ -327,7 +373,7 @@ print(
     "CI: hosted={hosted}; authoritative={platform}/{virt}/{lifecycle}; build={build}; test={test}; "
     "signed-source-reverification=required; golden-provenance-gate=required; runner-runtime-provenance=required; "
     "KVM-runtime=required; deterministic-qemu-wrapper=required; JIT=required; exact-run-binding=required; "
-    "qt-provider-policy=required; shell-syntax=required; shellcheck=required".format(
+    "qt-provider-policy=required; shell-syntax=required; shellcheck=required; pr-ci-router=required".format(
         hosted=hosted["role"],
         platform=authoritative["platform"],
         virt=authoritative["virtualization"],
