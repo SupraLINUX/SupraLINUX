@@ -10,3 +10,6 @@ override_dh_auto_configure:
 
 override_dh_auto_test:
 	LANG=C.UTF-8 LC_ALL=C.UTF-8 xvfb-run -a dh_auto_test --no-parallel
+
+execute_before_dh_makeshlibs:
+	grep -Fq '_ZNK16KSystemClipboard13ownsClipboardEv@Base 6.29.0' debian/libkf6guiaddons6.symbols || cat debian/libkf6guiaddons6.symbols.supralinux-overlay >> debian/libkf6guiaddons6.symbols

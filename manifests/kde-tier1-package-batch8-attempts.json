@@ -45,6 +45,29 @@
           "qml6_module_org_kde_coreaddons": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
         },
         "classification": "retained-predecessor-hash-pinning-error-before-source-build"
+      },
+      {
+        "attempt": 3,
+        "head_sha": "a5d3d047b9c54a91f1c31dfe7bfcfb437e0f6963",
+        "workflow_run": 35183595245,
+        "job_id": 105080827688,
+        "artifact_id": 10480549680,
+        "artifact_digest": "sha256:eee95d50f04a8517eca828cff25cd52e0306684cfc61137569b15fb89d402fcd",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "debian_version": "6.30.0-0supralinux1",
+        "source_package_created": true,
+        "binary_build_status": "successful",
+        "ctest": "9/9 PASS",
+        "lintian_status": "fail",
+        "cause": "two KSystemClipboard symbols introduced upstream in 6.29 were auto-versioned as 6.30.0-0supralinux1, triggering symbols-file-contains-current-version-with-debian-revision",
+        "symbols": [
+          "_ZNK16KSystemClipboard13ownsClipboardEv@Base",
+          "_ZNK16KSystemClipboard13ownsSelectionEv@Base"
+        ],
+        "upstream_minimum_version": "6.29.0",
+        "classification": "packaging-symbols-lintian-failure-after-successful-build",
+        "remediation_package_version": "6.30.0-0supralinux2"
       }
     ]
   }

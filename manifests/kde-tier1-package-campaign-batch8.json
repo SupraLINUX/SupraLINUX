@@ -48,7 +48,7 @@
     "kguiaddons": {
       "upstream_version": "6.30.0",
       "source_package": "kf6-kguiaddons",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kguiaddons-6.30.0.tar.xz",
       "source_sha256": "e98864228d1c5e23f3428025eb9928697374fdc3eddebb3a9dec570de028a62d",
       "runtime_package": "libkf6guiaddons6",
@@ -59,7 +59,13 @@
         "file": "libkf6guiaddons6.symbols",
         "sha256": "aca1c20755a57e5763d3dd4d3ec8da3b1e41e00bd728d5c94ab6f2173d0041b4",
         "tree_provider": "debian",
-        "reference_version": "6.28.0"
+        "reference_version": "6.28.0",
+        "overlay_file": "libkf6guiaddons6.symbols.supralinux-overlay",
+        "overlay_minimum_upstream_version": "6.29.0",
+        "overlay_symbols": [
+          "_ZNK16KSystemClipboard13ownsClipboardEv@Base",
+          "_ZNK16KSystemClipboard13ownsSelectionEv@Base"
+        ]
       },
       "copyright": {
         "sha256": "682780cded94ed69804a179fd799d3085536c26055a3592cc3ab3a12757f0d74"
@@ -80,64 +86,36 @@
         "KCoreAddons"
       ],
       "binary_contracts": [
-        {
-          "name": "libkf6guiaddons-bin",
-          "architecture": "amd64",
-          "multi_arch": null
-        },
-        {
-          "name": "libkf6guiaddons-data",
-          "architecture": "all",
-          "multi_arch": "foreign"
-        },
-        {
-          "name": "libkf6guiaddons-dev",
-          "architecture": "amd64",
-          "multi_arch": null
-        },
-        {
-          "name": "libkf6guiaddons-doc",
-          "architecture": "all",
-          "multi_arch": "foreign"
-        },
-        {
-          "name": "libkf6guiaddons6",
-          "architecture": "amd64",
-          "multi_arch": "same"
-        },
-        {
-          "name": "qml6-module-org-kde-guiaddons",
-          "architecture": "amd64",
-          "multi_arch": "same"
-        },
-        {
-          "name": "python3-kguiaddons",
-          "architecture": "amd64",
-          "multi_arch": null
-        }
+        {"name": "libkf6guiaddons-bin", "architecture": "amd64", "multi_arch": null},
+        {"name": "libkf6guiaddons-data", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6guiaddons-dev", "architecture": "amd64", "multi_arch": null},
+        {"name": "libkf6guiaddons-doc", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6guiaddons6", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "qml6-module-org-kde-guiaddons", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "python3-kguiaddons", "architecture": "amd64", "multi_arch": null}
       ],
       "dependency_contracts": {
         "libkf6guiaddons-dev": [
           "libkf6coreaddons-dev (>= 6.30.0~)",
-          "libkf6guiaddons6 (= 6.30.0-0supralinux1)",
+          "libkf6guiaddons6 (= 6.30.0-0supralinux2)",
           "qt6-base-dev (>= 6.9.0~)",
           "qt6-wayland-dev (>= 6.9.0~)"
         ],
         "libkf6guiaddons6": [
-          "libkf6guiaddons-data (= 6.30.0-0supralinux1)"
+          "libkf6guiaddons-data (= 6.30.0-0supralinux2)"
         ],
         "python3-kguiaddons": [
-          "libkf6guiaddons6 (= 6.30.0-0supralinux1)",
+          "libkf6guiaddons6 (= 6.30.0-0supralinux2)",
           "python3-pyside6.qtcore",
           "python3-pyside6.qtgui"
         ]
       },
       "recommendation_contracts": {
         "libkf6guiaddons-dev": [
-          "libkf6guiaddons-doc (= 6.30.0-0supralinux1)"
+          "libkf6guiaddons-doc (= 6.30.0-0supralinux2)"
         ],
         "libkf6guiaddons6": [
-          "libkf6guiaddons-bin (= 6.30.0-0supralinux1)"
+          "libkf6guiaddons-bin (= 6.30.0-0supralinux2)"
         ]
       },
       "state": "remediation-pending-build",

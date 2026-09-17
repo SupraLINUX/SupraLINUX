@@ -50,13 +50,21 @@ require(campaign.get("selected_nodes") == ["kguiaddons"], "Batch 8 must select o
 node = campaign.get("nodes", {}).get("kguiaddons", {})
 require(node.get("upstream_version") == "6.30.0", "KGuiAddons upstream version must be 6.30.0")
 require(node.get("source_package") == "kf6-kguiaddons", "KGuiAddons source package mismatch")
-require(node.get("package_version") == "6.30.0-0supralinux1", "initial KGuiAddons package version mismatch")
+require(node.get("package_version") == "6.30.0-0supralinux2", "KGuiAddons remediation package version mismatch")
 require(node.get("source_sha256") == "e98864228d1c5e23f3428025eb9928697374fdc3eddebb3a9dec570de028a62d", "KGuiAddons source SHA-256 mismatch")
 require(node.get("state") in {"prepared-pending-build", "remediation-pending-build", "PASS"}, "KGuiAddons Batch 8 state is invalid")
 require(node.get("kde_framework_build_dependencies") == [], "KGuiAddons must remain Tier 1 without KDE Framework Build-Depends")
 require(node.get("public_header_dependencies") == ["KCoreAddons"], "KGuiAddons KImageCache public-header dependency must be explicit")
 for key in ("WITH_WAYLAND", "WITH_X11", "USE_DBUS", "BUILD_GEO_SCHEME_HANDLER", "BUILD_PYTHON_BINDINGS", "BUILD_TESTING"):
     require(node.get("upstream_defaults", {}).get(key) == "ON", f"KGuiAddons upstream default must remain ON: {key}")
+
+symbols = node.get("symbols", {})
+require(symbols.get("overlay_file") == "libkf6guiaddons6.symbols.supralinux-overlay", "KGuiAddons symbols overlay filename mismatch")
+require(symbols.get("overlay_minimum_upstream_version") == "6.29.0", "KGuiAddons symbols overlay must preserve upstream 6.29 introduction")
+require(symbols.get("overlay_symbols") == [
+    "_ZNK16KSystemClipboard13ownsClipboardEv@Base",
+    "_ZNK16KSystemClipboard13ownsSelectionEv@Base",
+], "KGuiAddons symbols overlay manifest contract mismatch")
 
 canonical = next((x for x in tier1.get("nodes", []) if x.get("id") == "kguiaddons"), None)
 require(isinstance(canonical, dict), "canonical Tier 1 manifest must contain kguiaddons")
@@ -74,33 +82,35 @@ runner = text(RUNNER)
 scope = text(SCOPE)
 scope_test = text(SCOPE_TEST)
 doc = text(DOC)
+overlay = text(PACKAGE / "libkf6guiaddons6.symbols.supralinux-overlay")
 
 required_package_files = (
     "README.source", "changelog", "control", "copyright.reference",
     "libkf6guiaddons-bin.install", "libkf6guiaddons-bin.lintian-overrides",
     "libkf6guiaddons-data.install", "libkf6guiaddons-dev.install",
     "libkf6guiaddons-doc.install", "libkf6guiaddons6.install",
-    "libkf6guiaddons6.symbols.reference", "python3-kguiaddons.install",
-    "qml6-module-org-kde-guiaddons.install", "rules", "source/format",
-    "upstream/signing-key.asc",
+    "libkf6guiaddons6.symbols.reference", "libkf6guiaddons6.symbols.supralinux-overlay",
+    "python3-kguiaddons.install", "qml6-module-org-kde-guiaddons.install", "rules",
+    "source/format", "upstream/signing-key.asc",
 )
 for rel in required_package_files:
     require((PACKAGE / rel).exists(), f"KGuiAddons package file missing: {rel}")
 require((CONSUMER / "CMakeLists.txt").exists(), "KGuiAddons consumer CMakeLists missing")
 require((CONSUMER / "main.cpp").exists(), "KGuiAddons consumer source missing")
 
-# Fail in Repository Policy before an expensive build if the materialized key
-# does not match the exact key pinned by the Batch 8 manifest.
 signing_key_path = PACKAGE / "upstream" / "signing-key.asc"
 if signing_key_path.exists():
     signing_key_sha256 = hashlib.sha256(signing_key_path.read_bytes()).hexdigest()
-    require(
-        signing_key_sha256 == node.get("signing_key", {}).get("sha256"),
-        f"KGuiAddons signing key SHA-256 mismatch: {signing_key_sha256}",
-    )
+    require(signing_key_sha256 == node.get("signing_key", {}).get("sha256"), f"KGuiAddons signing key SHA-256 mismatch: {signing_key_sha256}")
 
-# Authority/provider distinction: KCoreAddons is not a build dependency, but the
-# public KImageCache header requires its development surface for consumers.
+expected_overlay = (
+    " _ZNK16KSystemClipboard13ownsClipboardEv@Base 6.29.0\n"
+    " _ZNK16KSystemClipboard13ownsSelectionEv@Base 6.29.0\n"
+)
+require(overlay == expected_overlay, "KGuiAddons symbols overlay must contain exactly the two upstream-6.29 KSystemClipboard symbols")
+require("execute_before_dh_makeshlibs:" in rules, "KGuiAddons rules must apply the symbols overlay before dh_makeshlibs")
+require("libkf6guiaddons6.symbols.supralinux-overlay" in rules, "KGuiAddons rules must append the pinned symbols overlay")
+
 build_dep_block = control.split("Build-Depends:", 1)[1].split("Standards-Version:", 1)[0] if "Build-Depends:" in control else ""
 require("libkf6coreaddons-dev" not in build_dep_block, "KCoreAddons must not be a KGuiAddons Build-Depends")
 require("libkf6coreaddons-dev (>= 6.30.0~)" in control, "libkf6guiaddons-dev must expose KCoreAddons public-header dependency")
@@ -144,7 +154,7 @@ for token in ("KCOREADDONS_ARTIFACT_DIR", "kcoreaddons_build_dependency=no", "li
 require("manifests/kde-tier1-package-campaign-batch8.json" in scope, "Batch 8 scope selector must fingerprint the campaign")
 require("packages/kde/kguiaddons/" in scope, "Batch 8 scope selector must track package metadata")
 require("Batch 8 scope selector: PASS" in scope_test, "Batch 8 scope functional test must emit PASS")
-require("KGuiAddons" in doc and "KCoreAddons" in doc and "Tier 1" in doc, "Batch 8 documentation must explain KGuiAddons/KCoreAddons Tier 1 distinction")
+require("KGuiAddons" in doc and "KCoreAddons" in doc and "Tier 1" in doc and "6.29.0" in doc, "Batch 8 documentation must explain Tier 1 and symbols-overlay evidence")
 
 if errors:
     for error in errors:
@@ -152,7 +162,8 @@ if errors:
     raise SystemExit(1)
 
 print("KDE Tier 1 Batch 8 preparation validation: PASS")
-print("Node: kguiaddons 6.30.0 / 6.30.0-0supralinux1")
+print("Node: kguiaddons 6.30.0 / 6.30.0-0supralinux2")
 print("KCoreAddons role: consumer development surface only; not Build-Depends")
 print("Upstream defaults: Wayland/X11/DBus/geo/Python/tests ON")
 print("Signing key SHA-256: manifest/materialized bytes match")
+print("Symbols overlay: KSystemClipboard ownsClipboard/ownsSelection @ 6.29.0")
