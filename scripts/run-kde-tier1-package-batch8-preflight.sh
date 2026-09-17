@@ -3,7 +3,6 @@ set -Eeuo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CAMPAIGN="${ROOT}/manifests/kde-tier1-package-campaign-batch8.json"
-NODE="kguiaddons"
 
 eval "$(python3 - "${CAMPAIGN}" <<'PY2'
 import json, shlex, sys
@@ -82,7 +81,10 @@ test -s "${PACKAGE_META}/upstream/signing-key.asc"
 grep -Fq 'DEB_PYTHON_INSTALL_LAYOUT = deb' "${PACKAGE_META}/rules"
 grep -Fq -- '-DBUILD_PYTHON_BINDINGS=ON' "${PACKAGE_META}/rules"
 grep -Fq -- '-DBUILD_TESTING=ON' "${PACKAGE_META}/rules"
-! grep -Eq -- '-D(WITH_WAYLAND|WITH_X11|USE_DBUS|BUILD_GEO_SCHEME_HANDLER)=OFF' "${PACKAGE_META}/rules"
+if grep -Eq -- '-D(WITH_WAYLAND|WITH_X11|USE_DBUS|BUILD_GEO_SCHEME_HANDLER)=OFF' "${PACKAGE_META}/rules"; then
+  echo "KGuiAddons Linux upstream defaults must not be disabled" >&2
+  exit 1
+fi
 if sed -n '/^Build-Depends:/,/^[A-Z][A-Za-z-]*:/p' "${PACKAGE_META}/control" | grep -Fq 'libkf6coreaddons-dev'; then
   echo "KCoreAddons must not be a KGuiAddons Build-Depends" >&2; exit 1
 fi
