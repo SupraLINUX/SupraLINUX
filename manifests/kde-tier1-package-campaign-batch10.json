@@ -225,12 +225,12 @@
         "reason": "Kirigami validation did not PASS because of a consumer-harness infrastructure false negative; KQuickCharts full package validation was not attempted."
       },
       "last_validation_incident": {
-        "validation_cycle": 5,
-        "workflow_run": 35403143944,
-        "job_id": 105787263585,
-        "artifact_id": 10570704785,
-        "artifact_sha256": "7ddc766a2664c0af20fd7e265afc396ad5a0e210bc101bf151272c5ff0ff799a",
-        "rootfs_sha256": "b6f02804169e2347e6c4e11adfbd799887c02e238961ad5e0be76fa621644720",
+        "validation_cycle": 6,
+        "workflow_run": 35403658149,
+        "job_id": 105790735337,
+        "artifact_id": 10570804457,
+        "artifact_sha256": "8ba90bdf3514dc89e1d5ffac82c285ed089d9b8e038dee3c3cddf676b9f519f6",
+        "rootfs_sha256": "7b207b2d11d7fbbba430714ac49b8216a7d8c738d1e88a7a456b31fbe38e6b9d",
         "stage": "abi-contract",
         "classification": "INFRA",
         "package_state_effect": "none",
@@ -239,7 +239,10 @@
         "tests": "8/8 PASS",
         "dh_qmldeps": "PASS",
         "symbols_remediation": "PASS",
-        "cause": "abi-harness-looked-for-soname-dot-suffix-instead-of-exact-packaged-soname-symlink"
+        "generated_exports": 381,
+        "reference_required_export_count_amd64": 382,
+        "effective_required_export_count_amd64": 380,
+        "cause": "abi-harness-used-pre-remediation-required-export-floor"
       },
       "last_failure_evidence": {
         "validation_cycle": 4,
@@ -281,7 +284,7 @@
         {"name":"qml6-module-org-kde-quickcharts","architecture":"amd64","multi_arch":"same"}
       ],
       "abi_contracts": [
-        {"surface":"QuickCharts","runtime_package":"libquickcharts1","soname":"libQuickCharts.so.1","symbols_file":"libquickcharts1.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"ed06cd19136bc5a1bfb10fb7e5c93070fdb4f76ca81f8536243666297e8193e6","reference_export_count":393,"reference_optional_export_count":2,"reference_nonoptional_inapplicable_amd64_count":9,"reference_required_export_count_amd64":382},
+        {"surface":"QuickCharts","runtime_package":"libquickcharts1","soname":"libQuickCharts.so.1","symbols_file":"libquickcharts1.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"ed06cd19136bc5a1bfb10fb7e5c93070fdb4f76ca81f8536243666297e8193e6","reference_export_count":393,"reference_optional_export_count":2,"reference_nonoptional_inapplicable_amd64_count":9,"reference_required_export_count_amd64":382,"effective_required_export_count_amd64":380},
         {"surface":"QuickChartsControls","runtime_package":"libquickchartscontrols1","soname":"libQuickChartsControls.so.1","symbols_file":"libquickchartscontrols1.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"b7889c71de224a6824c0c7a44360278f198a7b37fe48fedc61cb2f81dd9f0876","reference_export_count":1,"reference_optional_export_count":0,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":1}
       ],
       "qml_contracts": [{"package":"qml6-module-org-kde-quickcharts","required_root_module":"org.kde.quickcharts","enumerate_all_declared_modules":true}],

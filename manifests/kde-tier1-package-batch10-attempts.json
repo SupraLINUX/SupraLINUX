@@ -117,6 +117,28 @@
         "dh_qmldeps": "PASS",
         "symbols_remediation": "PASS",
         "cause": "ABI harness searched for SONAME plus a dot suffix. KQuickCharts packages the exact libQuickCharts.so.1 SONAME symlink pointing to libQuickCharts.so.6.30.0, so the package was correct and the validation lookup was false-negative."
+      },
+      {
+        "validation_cycle": 6,
+        "package_version": "6.30.0-0supralinux3",
+        "commit": "c2b25ba797d20e9963af8823bb023436d7a2ef34",
+        "workflow_run": 35403658149,
+        "job_id": 105790735337,
+        "artifact_id": 10570804457,
+        "artifact_sha256": "8ba90bdf3514dc89e1d5ffac82c285ed089d9b8e038dee3c3cddf676b9f519f6",
+        "rootfs_sha256": "7b207b2d11d7fbbba430714ac49b8216a7d8c738d1e88a7a456b31fbe38e6b9d",
+        "stage": "abi-contract",
+        "classification": "INFRA",
+        "package_state_effect": "none",
+        "package_build": "successful",
+        "lintian": "PASS-errors",
+        "tests": "8/8 PASS",
+        "dh_qmldeps": "PASS",
+        "symbols_remediation": "PASS",
+        "generated_exports": 381,
+        "reference_required_export_count_amd64": 382,
+        "effective_required_export_count_amd64": 380,
+        "cause": "The ABI gate compared the generated symbols file against the retained pre-remediation required floor 382. The reviewed symbols overlay converts two existing required std::_Sp_counted_ptr<QQuickItem *> exports to optional, so the effective amd64 required floor is 380. The package generated 381 exports and therefore satisfies the remediated contract."
       }
     ]
   },

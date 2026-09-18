@@ -212,3 +212,15 @@ The later `abi-contract` gate produced a repository validation false negative. E
 Classification is **INFRA / package_state_effect=none**. This is not KQuickCharts attempt 3 and does not bump the package revision: `6.30.0-0supralinux3` remains the validation candidate. The shared Batch 10 runner now resolves the exact packaged SONAME path. Because the runner is shared, the next validation cycle deliberately revalidates both Kirigami and KQuickCharts.
 
 Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.
+
+## Validation cycle 6 — effective ABI floor after reviewed symbols remediation
+
+Repository Policy `35403657994` passed. PR CI `35403658149` rebuilt both Batch 10 nodes because the ABI runner changed. Kirigami `6.30.0-0supralinux2` revalidated PASS in job `105788851422`, artifact `10571533917`, ZIP SHA-256 `b0da3c39920ffaa46ddc481a0eacbeee737e9d0f08ebd39ba8a79ff647152fa3`, rootfs SHA-256 `053c2cb7e3d1f71591192f4551ad0e69f6d28eb32d9c972d649015268507e9e2`, with `44/44 PASS` and Lintian PASS.
+
+KQuickCharts `6.30.0-0supralinux3` then consumed that same-run Kirigami PASS and built successfully with `8/8 PASS`, `dh_qmldeps` PASS and Lintian PASS. Its job `105790735337`, artifact `10570804457`, ZIP SHA-256 `8ba90bdf3514dc89e1d5ffac82c285ed089d9b8e038dee3c3cddf676b9f519f6`, rootfs SHA-256 `7b207b2d11d7fbbba430714ac49b8216a7d8c738d1e88a7a456b31fbe38e6b9d`, stopped only at the repository ABI floor check.
+
+The retained Debian 6.28 QuickCharts baseline contains 393 exports, including 2 optional exports and 9 non-optional exports inapplicable on amd64, giving the historical pre-remediation required floor 382. The reviewed KQuickCharts symbols overlay converts two existing amd64 `std::_Sp_counted_ptr<QQuickItem *>` RTTI/vtable exports from required to `optional=templinst|arch=!riscv64`. Therefore the **effective required amd64 floor is 380**, while the historical reference floor remains 382. The built package emitted 381 exports; it satisfies the remediated ABI contract.
+
+Cycle 6 is classified **INFRA / package_state_effect=none**. It is not KQuickCharts attempt 3 and does not bump the package beyond `6.30.0-0supralinux3`. The manifest now records both `reference_required_export_count_amd64=382` and `effective_required_export_count_amd64=380`, and the runner uses the effective floor only when an explicitly reviewed override exists.
+
+Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** pending successful revalidation and separate Batch 10 promotion.

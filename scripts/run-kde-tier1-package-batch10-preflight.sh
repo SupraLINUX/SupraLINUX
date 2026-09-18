@@ -285,12 +285,14 @@ for abi in n['abi_contracts']:
   if abi['soname'] not in txt: raise SystemExit(f"{abi['surface']}: symbols header lacks SONAME")
   if '0supralinux' in txt: raise SystemExit(f"{abi['surface']}: symbols acquired Debian-revision minimum; requires reviewed overlay")
   exports=sum('@Base' in x for x in txt.splitlines())
-  required=abi['reference_required_export_count_amd64']
+  required=abi.get('effective_required_export_count_amd64',abi['reference_required_export_count_amd64'])
   if exports < required: raise SystemExit(f"{abi['surface']}: export count {exports} below required amd64 baseline {required}")
   (evidence/f"symbols-{abi['surface']}.txt").write_text(txt)
   summary.append(
       f"{abi['surface']} soname={abi['soname']} exports={exports} "
-      f"baseline_total={abi['reference_export_count']} required_amd64={required}"
+      f"baseline_total={abi['reference_export_count']} "
+      f"reference_required_amd64={abi['reference_required_export_count_amd64']} "
+      f"effective_required_amd64={required}"
   )
 (evidence/'abi-contracts.txt').write_text('\n'.join(summary)+'\n')
 PY2

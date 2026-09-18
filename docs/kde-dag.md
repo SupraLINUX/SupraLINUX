@@ -427,3 +427,9 @@ The `-3` correction declares `qml6-module-org-kde-kirigami (>= 6.30.0~)` for Deb
 Run `35403143944` does not add a KQuickCharts package FAIL. KQuickCharts `6.30.0-0supralinux3` built successfully with `8/8` tests, successful `dh_qmldeps` Kirigami resolution and Lintian without errors, then hit a false-negative `abi-contract` lookup.
 
 The packaged SONAME is present as `libQuickCharts.so.1 -> libQuickCharts.so.6.30.0`; the runner's `SONAME + ".*"` lookup was invalid for this versioning scheme. The shared runner now resolves the exact SONAME path. Classification is **INFRA / package_state_effect=none**; no package revision, DAG edge or canonical state changes. The shared-runner delta deliberately revalidates both Batch 10 nodes.
+
+### Batch 10 cycle 6 — reviewed effective ABI floor
+
+Run `35403658149` revalidated Kirigami PASS and then built KQuickCharts `6.30.0-0supralinux3` successfully, but the ABI harness used the retained **pre-remediation** required export floor. The historical QuickCharts baseline remains 382 required amd64 exports; the reviewed two-symbol `optional=templinst|arch=!riscv64` remediation lowers only the effective post-remediation floor to 380. The package emitted 381 exports.
+
+Therefore cycle 6 is **INFRA / package_state_effect=none**. KQuickCharts remains at `-3` with two real package attempts. The KDE dependency DAG is unchanged; the correction affects only ABI validation semantics. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** pending revalidation and separate promotion.

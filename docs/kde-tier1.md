@@ -158,3 +158,11 @@ KQuickCharts moves to `6.30.0-0supralinux3`. The added `qml6-module-org-kde-kiri
 KQuickCharts `6.30.0-0supralinux3` completed its real package build in PR CI `35403143944`: `8/8 PASS`, symbols remediation PASS, `dh_qmldeps` PASS with retained Kirigami `6.30.0-0supralinux2`, and Lintian without errors. Job `105787263585` then stopped at the repository `abi-contract` gate, artifact `10570704785`, SHA-256 `7ddc766a2664c0af20fd7e265afc396ad5a0e210bc101bf151272c5ff0ff799a`.
 
 This is **INFRA / package_state_effect=none**. The package does contain `libQuickCharts.so.1`; the harness incorrectly required a filename beginning `libQuickCharts.so.1.` even though the exact SONAME is a symlink to `libQuickCharts.so.6.30.0`. The generic Batch 10 ABI check now opens the exact packaged SONAME. QuickCharts stays at `-3`, real attempts stay at two, and canonical Tier 1 remains 25 PASS / 4 pending pending revalidation and separate promotion.
+
+### Batch 10 validation cycle 6
+
+Repository Policy `35403657994` passed. PR CI `35403658149` revalidated Kirigami `6.30.0-0supralinux2` PASS and then built KQuickCharts `6.30.0-0supralinux3` successfully. Kirigami artifact `10571533917` has SHA-256 `b0da3c39920ffaa46ddc481a0eacbeee737e9d0f08ebd39ba8a79ff647152fa3` and `44/44 PASS`. KQuickCharts artifact `10570804457` has SHA-256 `8ba90bdf3514dc89e1d5ffac82c285ed089d9b8e038dee3c3cddf676b9f519f6`, with `8/8 PASS`, `dh_qmldeps` PASS and Lintian PASS before the ABI gate.
+
+The gate used the historical Debian required floor 382 even though the reviewed symbols remediation had made two existing amd64 template-instantiation exports optional. The manifest now distinguishes `reference_required_export_count_amd64=382` from `effective_required_export_count_amd64=380`; the package emitted 381 exports. This is **INFRA / package_state_effect=none**, not a new package FAIL or revision bump.
+
+Canonical Tier 1 stays at **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until revalidation completes and Batch 10 is promoted separately.

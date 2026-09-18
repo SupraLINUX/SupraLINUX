@@ -173,3 +173,11 @@ The subsequent QuickCharts FAIL is therefore local to its own symbols metadata, 
 Run `35400585402` proves the retained-predecessor path: KQuickCharts consumed the retained Kirigami PASS package set, passed `8/8` upstream tests and the reviewed symbols remediation, then failed only when `dh_qmldeps` could not resolve `org.kde.kirigami` inside the package-build environment.
 
 For `6.30.0-0supralinux3`, `qml6-module-org-kde-kirigami (>= 6.30.0~)` is therefore a **Debian/QML packaging-time dependency**. It exists so `dh_qmldeps` can inspect the imported module while generating binary metadata. It is not a KDE Framework/CMake build dependency: KQuickCharts keeps `kde_framework_build_dependencies=[]`, does not add `libkirigami-dev`, and its upstream source-build dependency model is unchanged. The runner still enforces that Kirigami comes from retained/current SupraLINUX PASS evidence.
+
+## Batch 10 cycle 6 ABI reference versus effective floor
+
+KQuickCharts keeps Debian 6.28 as a technical ABI reference, not an authority. The retained `libquickcharts1.symbols` baseline has 393 exports, 2 optional exports and 9 non-optional exports inapplicable on amd64, so its historical required amd64 floor is 382.
+
+SupraLINUX's reviewed symbols remediation changes two **existing** amd64 `std::_Sp_counted_ptr<QQuickItem *>` RTTI/vtable entries from required to `optional=templinst|arch=!riscv64`. That does not rewrite the historical baseline metadata: `reference_required_export_count_amd64` remains 382. It creates an explicit reviewed runtime contract `effective_required_export_count_amd64=380`. Run `35403658149` generated 381 QuickCharts exports, which is above that effective floor.
+
+The runner now uses the effective floor only when the campaign records one explicitly; otherwise it falls back to the retained reference floor. This preserves both provenance and the reviewed remediation semantics.
