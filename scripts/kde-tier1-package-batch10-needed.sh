@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
-# Exit contract: 0 = rebuild this node, 1 = intentional scope-skip, any other status = selector error.
+# Exit contract: 0 = rebuild this node, 1 = intentional scope-skip, any other status = selector error.\n# Kirigami package-input changes propagate to KQuickCharts because Kirigami is its package-validation predecessor.
 [[ "$#" -eq 3 ]] || { echo "Usage: $0 <node> <before-sha> <after-sha>" >&2; exit 2; }
 NODE="$1"; BEFORE="$2"; AFTER="$3"
 case "${NODE}" in kirigami|kquickcharts) ;; *) exit 2 ;; esac

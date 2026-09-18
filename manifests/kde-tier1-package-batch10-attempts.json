@@ -19,6 +19,15 @@
       "classification": "infrastructure-scope-test-shellcheck",
       "package_state_effect": "none",
       "cause": "SC2251 in Batch 10 scope-test negative assertions under set -e; no package state was evaluated by Repository Policy."
+    },
+    {
+      "phase": "preparation",
+      "workflow_run": 35388572182,
+      "job_id": 105741309585,
+      "stage": "repository-policy-batch10-validator",
+      "classification": "infrastructure-validator-scope-contract-assumption",
+      "package_state_effect": "none",
+      "cause": "Batch 10 validator incorrectly required a literal KQuickCharts path token and looked for package_validation_dependencies in selector/workflow instead of campaign metadata; scope test and global discovery validator had already passed."
     }
   ]
 }

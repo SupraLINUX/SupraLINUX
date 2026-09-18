@@ -58,8 +58,9 @@ for node in ('kirigami','kquickcharts'): req(nodes[node].get('state')=='pending'
 runner=text(ROOT/'scripts/run-kde-tier1-package-batch10-preflight.sh'); scope=text(ROOT/'scripts/kde-tier1-package-batch10-needed.sh'); workflow=text(ROOT/'.github/workflows/kde-tier1-package-batch10.yml')
 for token in ('reference_required_export_count_amd64','abi-reference-counts.txt','0supralinux','qmlimportscanner','KIRIGAMI_ARTIFACT_DIR','qml6-module-org-kde-kirigami','consumer-smoke','sbuild --verbose'):
  req(token in runner,f'Batch10 runner missing {token}')
-for token in ('packages/kde/kirigami/*','packages/kde/kquickcharts/*','package_validation_dependencies'):
- req(token in scope or token in workflow,f'Batch10 scope/workflow missing {token}')
+req('packages/kde/${NODE}/*' in scope,'Batch10 selector must rebuild the selected node package tree')
+req('packages/kde/kirigami/*' in scope,'Batch10 selector must propagate Kirigami package changes to KQuickCharts')
+req('package_validation_dependencies' in json.dumps(c['nodes']['kquickcharts']),'Batch10 campaign must retain package-validation dependency metadata')
 for token in ('needs: kirigami-package',"state':'BLOCKED",'Download current-run Kirigami PASS artifact','Download retained Kirigami PASS artifact','needs.kirigami-package.outputs.built'):
  req(token in workflow,f'Batch10 workflow missing {token}')
 req('KF6::KirigamiPlatform' in text(ROOT/'packages/kde/kirigami/consumer/CMakeLists.txt'),'Kirigami official C++ target missing')

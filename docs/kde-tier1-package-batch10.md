@@ -77,3 +77,10 @@ The Batch 10 attempt ledger is intentionally empty before the first real package
 Repository Policy run `35388377180`, job `105740650985`, stopped at `Lint shell scripts` before the Batch 10 scope test or preparation validator could run. ShellCheck `SC2251` rejected three negative assertions in `test-kde-tier1-package-batch10-scope.sh` because bare `! command` under `set -e` can bypass errexit semantics.
 
 Classification: **infrastructure / package_state_effect=none**. No Kirigami or KQuickCharts package state is created by this failure. The test is rewritten with explicit `if command; then ... exit 1; fi` assertions. The shared selector also records its exit contract (`0=rebuild`, `1=intentional skip`) so the corrective commit deliberately revalidates both Batch 10 package gates after Repository Policy passes.
+
+
+## Preparation infrastructure incident — validator scope assumption
+
+Repository Policy run `35388572182`, job `105741309585`, passed ShellCheck, the Batch 10 semantic scope test and global discovery validation, then failed only in the Batch 10 preparation validator. The validator incorrectly required a literal `packages/kde/kquickcharts/*` token even though the selector intentionally uses the generic `packages/kde/${NODE}/*`, and it searched for `package_validation_dependencies` in selector/workflow text rather than in the campaign manifest where that metadata belongs.
+
+Classification: **infrastructure / package_state_effect=none**. The validator now tests the actual generic selector contract and the campaign metadata separately. The shared selector receives a documentation-only contract clarification so the next PR CI deliberately rebuilds both Batch 10 nodes after Repository Policy passes.
