@@ -121,3 +121,8 @@ Batch 8 canonically promotes KGuiAddons `6.30.0-0supralinux2` from run `35185562
 Batch 9 is now canonically promoted 3/3: KConfig `6.30.0-0supralinux4`, KI18n `6.30.0-0supralinux1` and Sonnet `6.30.0-0supralinux3` are PASS/downstream-eligible in both Tier 1 and the package DAG. KConfig final evidence is run `35360530830`, job `105650448776`, artifact `10554715051`, SHA-256 `bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e`, with `90/90 PASS`, Lintian, architecture-aware ABI, APT, QML and consumer smoke PASS. Final promotion precheck Repository Policy run `35365719747` passed and all three Batch 9 jobs scope-skipped, proving no rebuild was needed for promotion. Four canonical pending nodes remain: `kirigami`, `kquickcharts`, `kuserfeedback` and `prison`. The earlier source run `35138333645` remains DIAG_PASS only.
 
 PR #1 remains Draft. No merge is authorized.
+
+
+### Batch 10 preparation
+
+The QML/multisurface lane is implementation-ready without changing canonical state: **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. Kirigami is runnable. KQuickCharts remains a Tier 1 source with no KDE Framework build dependency on Kirigami; however, its full package QML/runtime closure is ordered after a retained SupraLINUX Kirigami PASS. If Kirigami fails, KQuickCharts package validation is BLOCKED rather than recorded as a package FAIL.

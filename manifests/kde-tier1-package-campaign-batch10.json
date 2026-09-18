@@ -1,0 +1,173 @@
+{
+  "schema": 2,
+  "as_of": "2026-09-18",
+  "frameworks_series": "6.30.0",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "batch": "tier1-batch-10",
+  "lane": "qml-multisurface",
+  "state": "implementation-ready-pending-build",
+  "attempt_ledger": "manifests/kde-tier1-package-batch10-attempts.json",
+  "canonical_snapshot": {
+    "state": "pre-batch-10",
+    "tier1": "25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED after Batch 9 canonical promotion"
+  },
+  "selected_nodes": [
+    "kirigami",
+    "kquickcharts"
+  ],
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+    },
+    "packaging_trees": {
+      "status": "PASS",
+      "workflow_run": 34708030450,
+      "artifact_id": 10301938362,
+      "artifact_sha256": "6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6",
+      "snapshot_json_sha256": "f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345",
+      "role": "technical-reference-only"
+    },
+    "binary_contracts": {
+      "status": "PASS",
+      "workflow_run": 34704117024,
+      "artifact_id": 10301282501,
+      "artifact_sha256": "9441b2f2957b350a46026b0df3bd5eb3578e1578671aab3b7afc7a0929ce1a97",
+      "contracts_json_sha256": "e44507d0dd73db913a91bd4852c452f783618aab0bd6a3790e4c4f4c40707b7b",
+      "role": "technical-reference-only"
+    },
+    "source_diagnostic": {
+      "status": "DIAG_PASS",
+      "promotes_package_state": false,
+      "workflow_run": 35138333645,
+      "commit": "6b3a8b9f408c5fff4bceec81ac9ffb3e47a4dbd3",
+      "role": "source-build-discovery-only"
+    }
+  },
+  "nodes": {
+    "kirigami": {
+      "signing_key": {
+        "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"
+      },
+      "qch_profile": "OFF-common-supralinux-frameworks",
+      "kde_framework_build_dependencies": [],
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false,
+      "name": "Kirigami",
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-kirigami",
+      "package_version": "6.30.0-0supralinux1",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kirigami-6.30.0.tar.xz",
+      "source_sha256": "6de811e559c20dc1086c0cf2c34bb98712dbe4d45f960c62c3c3f887332c95f8",
+      "upstream_defaults": {
+        "BUILD_SHARED_LIBS": "ON",
+        "DESKTOP_ENABLED": "ON",
+        "BUILD_EXAMPLES": "OFF",
+        "UBUNTU_TOUCH": "OFF",
+        "USE_DBUS": "ON",
+        "BUILD_TESTING": "ON"
+      },
+      "diagnostic_provider_packages": [
+        "qt6-base-dev",
+        "qt6-base-private-dev",
+        "qt6-declarative-dev",
+        "qt6-shadertools-dev",
+        "qt6-svg-dev",
+        "qt6-tools-dev"
+      ],
+      "diagnostic_evidence": {
+        "workflow_run": 35138333645,
+        "job_id": 104936243949,
+        "artifact_id": 10464419377,
+        "artifact_sha256": "f83a7e508fa2031dcf5401a7590e9598ab3d5888230af60b153c4b77d4b53185",
+        "result": "DIAG_PASS",
+        "promotes_package_state": false,
+        "tests": "44/44 PASS"
+      },
+      "copyright": {
+        "reference_sha256": "9b9ef851f0e58ab8379d1dd15d736fda505182076b3b7565366059c79ce431f3"
+      },
+      "binary_contracts": [
+        {"name":"libkirigami-data","architecture":"all","multi_arch":"foreign"},
+        {"name":"libkirigami-dev","architecture":"amd64","multi_arch":null},
+        {"name":"libkirigami-doc","architecture":"all","multi_arch":"foreign"},
+        {"name":"libkirigami6","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkirigamicontrols6","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkirigamidelegates6","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkirigamidialogs6","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkirigamiforms6","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkirigamiformsprivatecards6","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkirigamiformsprivateflat6","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkirigamiformsprivatetemplates6","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkirigamilayouts6","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkirigamilayoutsprivate6","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkirigamiplatform6","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkirigamipolyfill6","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkirigamiprimitives6","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkirigamiprivate6","architecture":"amd64","multi_arch":"same"},
+        {"name":"libkirigamitemplates6","architecture":"amd64","multi_arch":"same"},
+        {"name":"qml6-module-org-kde-kirigami","architecture":"amd64","multi_arch":"same"}
+      ],
+      "abi_contracts": [
+        {"surface":"Kirigami","runtime_package":"libkirigami6","soname":"libKirigami.so.6","symbols_file":"libkirigami6.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"f15ffa5b01acf5113477f5cd49f398d5be41f60b0874e06c6e64c792f32f78f2","reference_export_count":12,"reference_optional_export_count":2,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":10},
+        {"surface":"KirigamiControls","runtime_package":"libkirigamicontrols6","soname":"libKirigamiControls.so.6","symbols_file":"libkirigamicontrols6.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"18a292f5b614aecb1f71d1f2335989dc6b7217e25dccf511e11b38c1d3206849","reference_export_count":19,"reference_optional_export_count":4,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":15},
+        {"surface":"KirigamiDelegates","runtime_package":"libkirigamidelegates6","soname":"libKirigamiDelegates.so.6","symbols_file":"libkirigamidelegates6.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"b58d788f8cae861b02fdc5a681d84a23adda77d65461b84da0e1368256bfee2f","reference_export_count":1,"reference_optional_export_count":0,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":1},
+        {"surface":"KirigamiDialogs","runtime_package":"libkirigamidialogs6","soname":"libKirigamiDialogs.so.6","symbols_file":"libkirigamidialogs6.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"a83dada212cf55e8d06e78405d5fe1ed382fd54df304f06fef5a8286856a3227","reference_export_count":1,"reference_optional_export_count":0,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":1},
+        {"surface":"KirigamiForms","runtime_package":"libkirigamiforms6","soname":"libKirigamiForms.so.6","symbols_file":"libkirigamiforms6.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"94164d704482d3d9cfa3ec1ed61324a71eb6c6e21ad25bd159ffabb469bb83af","reference_export_count":1,"reference_optional_export_count":0,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":1},
+        {"surface":"KirigamiFormsPrivateCards","runtime_package":"libkirigamiformsprivatecards6","soname":"libKirigamiFormsPrivateCards.so.6","symbols_file":"libkirigamiformsprivatecards6.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"080732bf5305417218086c8849c77b08508a7315acfaca5e4e130161c3951614","reference_export_count":1,"reference_optional_export_count":0,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":1},
+        {"surface":"KirigamiFormsPrivateFlat","runtime_package":"libkirigamiformsprivateflat6","soname":"libKirigamiFormsPrivateFlat.so.6","symbols_file":"libkirigamiformsprivateflat6.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"6b501c473adb47811bb556bfd3376e5300bfc9af678b09531a375ddd1870089b","reference_export_count":1,"reference_optional_export_count":0,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":1},
+        {"surface":"KirigamiFormsPrivateTemplates","runtime_package":"libkirigamiformsprivatetemplates6","soname":"libKirigamiFormsPrivateTemplates.so.6","symbols_file":"libkirigamiformsprivatetemplates6.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"93bb2391edfa403d44ca5a3f3880556f378569b2aa412cdc9b23b1e50ee51eda","reference_export_count":1,"reference_optional_export_count":0,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":1},
+        {"surface":"KirigamiLayouts","runtime_package":"libkirigamilayouts6","soname":"libKirigamiLayouts.so.6","symbols_file":"libkirigamilayouts6.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"21d8d0fb97aed6c833932be13d867d4864e4285a4d57a8bb4554aea1bf8f2430","reference_export_count":26,"reference_optional_export_count":7,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":19},
+        {"surface":"KirigamiLayoutsPrivate","runtime_package":"libkirigamilayoutsprivate6","soname":"libKirigamiLayoutsPrivate.so.6","symbols_file":"libkirigamilayoutsprivate6.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"14528cf20ed796319fd115dd28d4c015c31bc2a3bfbc1bcffe20d8cabd7612c9","reference_export_count":1,"reference_optional_export_count":0,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":1},
+        {"surface":"KirigamiPlatform","runtime_package":"libkirigamiplatform6","soname":"libKirigamiPlatform.so.6","symbols_file":"libkirigamiplatform6.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"f1f823128c63a189f55baf3bc4091d144c3aae73d2ddcad1f727d92566e5e342","reference_export_count":445,"reference_optional_export_count":7,"reference_nonoptional_inapplicable_amd64_count":10,"reference_required_export_count_amd64":428},
+        {"surface":"KirigamiPolyfill","runtime_package":"libkirigamipolyfill6","soname":"libKirigamiPolyfill.so.6","symbols_file":"libkirigamipolyfill6.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"bebc8517dcabc3ec1e1bb0eb280e814661fe273b65c4ed9a4a6c8efde2549aa0","reference_export_count":1,"reference_optional_export_count":0,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":1},
+        {"surface":"KirigamiPrimitives","runtime_package":"libkirigamiprimitives6","soname":"libKirigamiPrimitives.so.6","symbols_file":"libkirigamiprimitives6.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"44e4b6bf0c253181da9aea815851569203f2fb58df680e4a0e6b80a892afbff8","reference_export_count":20,"reference_optional_export_count":1,"reference_nonoptional_inapplicable_amd64_count":9,"reference_required_export_count_amd64":10},
+        {"surface":"KirigamiPrivate","runtime_package":"libkirigamiprivate6","soname":"libKirigamiPrivate.so.6","symbols_file":"libkirigamiprivate6.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"746ac8304758ab8ccae255e1b7e8999d9a61269d4778087fed72ce86d4b0141e","reference_export_count":10,"reference_optional_export_count":2,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":8},
+        {"surface":"KirigamiTemplates","runtime_package":"libkirigamitemplates6","soname":"libKirigamiTemplates.so.6","symbols_file":"libkirigamitemplates6.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"c58094969b409f527c6fdcfc5af14ca42da6c604637cfd4b72bcc1f2c03f51e1","reference_export_count":1,"reference_optional_export_count":0,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":1}
+      ],
+      "qml_contracts": [{"package":"qml6-module-org-kde-kirigami","required_root_module":"org.kde.kirigami","enumerate_all_declared_modules":true}],
+      "package_validation_dependencies": [],
+      "patch_policy": {"retained":[],"excluded":["Debian BUILD_QCH=ON override","Debian QT_QML_NO_CACHEGEN=ON override"]},
+      "test_fixture": {"LANG":"C.UTF-8","LC_ALL":"C.UTF-8","xvfb":"1920x1080x24","window_manager":"openbox","dbus_session":true},
+      "expected_test_count": 44
+    },
+    "kquickcharts": {
+      "signing_key": {"sha256":"86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"},
+      "qch_profile": "OFF-common-supralinux-frameworks",
+      "kde_framework_build_dependencies": [],
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false,
+      "name": "KQuickCharts",
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-kquickcharts",
+      "package_version": "6.30.0-0supralinux1",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kquickcharts-6.30.0.tar.xz",
+      "source_sha256": "9fe8c0c78ffd23ccfb99cc36477550a229c114ad057def938f38cdec35f82ab1",
+      "upstream_defaults": {"BUILD_SHARED_LIBS":"ON","BUILD_EXAMPLES":"OFF","BUILD_TESTING":"ON"},
+      "diagnostic_provider_packages": ["qt6-declarative-dev","qt6-shadertools-dev","qt6-tools-dev"],
+      "diagnostic_evidence": {"workflow_run":35138333645,"job_id":104936243779,"artifact_id":10463808939,"artifact_sha256":"5d1023d260fe167d846a8b3f16310c6771bb08f79688095bd27ba5ea79798a28","result":"DIAG_PASS","promotes_package_state":false,"tests":"8/8 PASS"},
+      "copyright": {"reference_sha256":"f543030704eff9bfb1d562853c9de98e6d6033e5f73eea674d80e74ff3d019ac"},
+      "binary_contracts": [
+        {"name":"libquickcharts-dev","architecture":"amd64","multi_arch":"same"},
+        {"name":"libquickcharts1","architecture":"amd64","multi_arch":"same"},
+        {"name":"libquickchartscontrols1","architecture":"amd64","multi_arch":"same"},
+        {"name":"qml6-module-org-kde-quickcharts","architecture":"amd64","multi_arch":"same"}
+      ],
+      "abi_contracts": [
+        {"surface":"QuickCharts","runtime_package":"libquickcharts1","soname":"libQuickCharts.so.1","symbols_file":"libquickcharts1.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"ed06cd19136bc5a1bfb10fb7e5c93070fdb4f76ca81f8536243666297e8193e6","reference_export_count":393,"reference_optional_export_count":2,"reference_nonoptional_inapplicable_amd64_count":9,"reference_required_export_count_amd64":382},
+        {"surface":"QuickChartsControls","runtime_package":"libquickchartscontrols1","soname":"libQuickChartsControls.so.1","symbols_file":"libquickchartscontrols1.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"b7889c71de224a6824c0c7a44360278f198a7b37fe48fedc61cb2f81dd9f0876","reference_export_count":1,"reference_optional_export_count":0,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":1}
+      ],
+      "qml_contracts": [{"package":"qml6-module-org-kde-quickcharts","required_root_module":"org.kde.quickcharts","enumerate_all_declared_modules":true}],
+      "package_validation_dependencies": [{"node":"kirigami","kind":"qml-runtime-closure","required_local_packages":["qml6-module-org-kde-kirigami"],"not_kde_framework_build_dependency":true,"state":"awaiting-retained-PASS"}],
+      "patch_policy": {"retained":[],"excluded":["Debian architecture-specific test suppression"]},
+      "test_fixture": {"LANG":"C.UTF-8","LC_ALL":"C.UTF-8","xvfb":"1920x1080x24","window_manager":"openbox","dbus_session":true},
+      "expected_test_count": 8
+    }
+  }
+}

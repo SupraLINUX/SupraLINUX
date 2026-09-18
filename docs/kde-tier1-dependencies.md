@@ -144,3 +144,10 @@ The multi-ABI lane is complete and canonically promoted:
 - Sonnet `6.30.0-0supralinux3`: run `35358920602`, job `105645094787`, artifact `10554216487`, SHA-256 `ae5a33cf8699b96b7b7b8c1a83bc4d37a484878029818c1885b4f4f44f15b431`, `8/8 PASS`.
 
 All three pass Lintian, exact local-package APT closure, QML import scanning and C++ consumer validation. The remaining provider work belongs to the four unpromoted Tier 1 nodes; provider availability does not alter KDE authority.
+
+
+## Batch 10 Kirigami / KQuickCharts package-validation ordering
+
+Kirigami and KQuickCharts remain Tier 1 at the KDE Framework build-DAG level: both have `kde_framework_build_dependencies=[]`, and the retained 6.30 source diagnostic compiled KQuickCharts with its Qt provider set without introducing a Kirigami build edge.
+
+The packaged KQuickCharts QML surface is different: `qml6-module-org-kde-quickcharts` requires the `org.kde.kirigami` QML runtime surface. SupraLINUX therefore models Kirigami as a **package-validation predecessor** only. KQuickCharts full APT/QML/consumer validation consumes a retained SupraLINUX Kirigami PASS artifact and verifies the installed Kirigami QML package at the exact campaign version. Ubuntu's KDE package must not silently satisfy that closure.

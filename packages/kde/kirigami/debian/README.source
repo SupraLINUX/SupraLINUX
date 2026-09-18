@@ -1,0 +1,7 @@
+SupraLINUX kirigami packaging notes
+
+Authority is KDE Frameworks upstream stable 6.30.0. Ubuntu 26.04 Resolute is a provider platform only. Debian 6.28 packaging is retained only as a technical baseline for Debian-family binary names, package splits and symbols metadata.
+
+The active .symbols files are not stored in this package tree. The Batch 10 runner materializes the hash-pinned Debian 6.28 references into the ephemeral source package and validates architecture-aware required export floors before accepting PASS.
+
+QCH follows the common SupraLINUX Frameworks profile and is disabled. Upstream tests remain enabled. No downstream test-suppression patch or behavior patch is retained.

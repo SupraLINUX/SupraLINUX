@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all reproducible=-fixfilepath
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DBUILD_TESTING=ON -DBUILD_EXAMPLES=OFF
+
+override_dh_auto_test:
+	dbus-run-session -- xvfb-run -a -s "-screen 0 1920x1080x24" debian/run-tests-under-x.sh

@@ -1,0 +1,213 @@
+Source: kf6-kirigami
+Section: libs
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               dh-sequence-qmldeps,
+               cmake (>= 3.29~),
+               extra-cmake-modules (>= 6.30.0~),
+               libxkbcommon-dev,
+               pkgconf,
+               qt6-base-dev (>= 6.9.0~),
+               qt6-base-private-dev (>= 6.9.0~),
+               qt6-declarative-dev (>= 6.9.0~),
+               qt6-shadertools-dev (>= 6.9.0~),
+               qt6-svg-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.9.0~),
+               dbus-x11 <!nocheck>,
+               openbox <!nocheck>,
+               x11-utils <!nocheck>,
+               xauth <!nocheck>,
+               xvfb <!nocheck>
+Standards-Version: 4.7.4
+Rules-Requires-Root: no
+Homepage: https://invent.kde.org/frameworks/kirigami
+
+Package: libkirigami-data
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: Kirigami 6 shared data
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigami-dev
+Section: libdevel
+Architecture: any
+Depends: libkirigami6 (= ${binary:Version}),
+         libkirigamicontrols6 (= ${binary:Version}),
+         libkirigamidelegates6 (= ${binary:Version}),
+         libkirigamidialogs6 (= ${binary:Version}),
+         libkirigamiforms6 (= ${binary:Version}),
+         libkirigamiformsprivatecards6 (= ${binary:Version}),
+         libkirigamiformsprivateflat6 (= ${binary:Version}),
+         libkirigamiformsprivatetemplates6 (= ${binary:Version}),
+         libkirigamilayouts6 (= ${binary:Version}),
+         libkirigamilayoutsprivate6 (= ${binary:Version}),
+         libkirigamiplatform6 (= ${binary:Version}),
+         libkirigamipolyfill6 (= ${binary:Version}),
+         libkirigamiprimitives6 (= ${binary:Version}),
+         libkirigamiprivate6 (= ${binary:Version}),
+         libkirigamitemplates6 (= ${binary:Version}),
+         qml6-module-org-kde-kirigami (= ${binary:Version}),
+         qt6-base-dev (>= 6.9.0~),
+         qt6-declarative-dev (>= 6.9.0~),
+         ${misc:Depends},
+Recommends: libkirigami-doc (>= ${source:Version}),
+Description: Kirigami 6 development files
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigami-doc
+Section: doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: Kirigami 6 documentation placeholder
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigami6
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 runtime library (libkirigami6)
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigamicontrols6
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 runtime library (libkirigamicontrols6)
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigamidelegates6
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 runtime library (libkirigamidelegates6)
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigamidialogs6
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 runtime library (libkirigamidialogs6)
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigamiforms6
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 runtime library (libkirigamiforms6)
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigamiformsprivatecards6
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 runtime library (libkirigamiformsprivatecards6)
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigamiformsprivateflat6
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 runtime library (libkirigamiformsprivateflat6)
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigamiformsprivatetemplates6
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 runtime library (libkirigamiformsprivatetemplates6)
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigamilayouts6
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 runtime library (libkirigamilayouts6)
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigamilayoutsprivate6
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 runtime library (libkirigamilayoutsprivate6)
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigamiplatform6
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 runtime library (libkirigamiplatform6)
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigamipolyfill6
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 runtime library (libkirigamipolyfill6)
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigamiprimitives6
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 runtime library (libkirigamiprimitives6)
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigamiprivate6
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 runtime library (libkirigamiprivate6)
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkirigamitemplates6
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 runtime library (libkirigamitemplates6)
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: qml6-module-org-kde-kirigami
+Architecture: any
+Multi-Arch: same
+Depends: libkirigami6 (= ${binary:Version}),
+         libkirigamidelegates6 (= ${binary:Version}),
+         libkirigamiplatform6 (= ${binary:Version}),
+         ${misc:Depends},
+         ${qml6:Depends},
+         ${shlibs:Depends},
+Description: Kirigami 6 QML modules
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.

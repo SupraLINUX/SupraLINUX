@@ -1,0 +1,7 @@
+kf6-kirigami (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE Kirigami 6.30.0 from upstream stable.
+  * Preserve upstream desktop, DBus and shared-library defaults with tests on.
+  * Keep QCH off under the common SupraLINUX Frameworks documentation profile.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Fri, 18 Sep 2026 16:20:00 -0300

@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-18",
+  "batch": "tier1-batch-10",
+  "attempts": {
+    "kirigami": [],
+    "kquickcharts": []
+  },
+  "validation_incidents": {
+    "kirigami": [],
+    "kquickcharts": []
+  }
+}

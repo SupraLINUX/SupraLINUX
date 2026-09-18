@@ -28,7 +28,8 @@
     "runnable": "A real package attempt is technically valid with the current runner lane and retained predecessors.",
     "lane-pending": "The node is topologically available but must not be attempted until a runner can validate its package surface without false CI failures.",
     "dependency-blocked": "The node cannot yet be attempted because a required local predecessor has no retained PASS artifact.",
-    "note": "Readiness states are campaign-planning metadata. They are not DAG PASS/FAIL/BLOCKED results."
+    "note": "Readiness states are campaign-planning metadata. They are not DAG PASS/FAIL/BLOCKED results.",
+    "package-validation-dependent": "The node has no failed KDE build predecessor, but its full package/runtime validation requires a retained PASS artifact from another SupraLINUX package."
   },
   "lanes": {
     "single-abi-python": {
@@ -44,12 +45,14 @@
       "required_capability": "validate multiple runtime ABIs/symbol files and package splits in one source build"
     },
     "qml-multisurface": {
-      "status": "implementation-pending",
+      "status": "implementation-ready",
       "nodes": [
         "kirigami",
         "kquickcharts"
       ],
-      "required_capability": "validate QML-heavy packages, multiple libraries, QML imports and runtime closure"
+      "required_capability": "validate QML-heavy packages, multiple libraries, QML imports and runtime closure",
+      "runner": "scripts/run-kde-tier1-package-batch10-preflight.sh",
+      "workflow": ".github/workflows/kde-tier1-package-batch10.yml"
     },
     "multi-surface-optional": {
       "status": "implementation-pending",
@@ -68,14 +71,17 @@
   },
   "nodes": {
     "kirigami": {
-      "readiness": "lane-pending",
+      "readiness": "runnable",
       "lane": "qml-multisurface",
       "local_predecessors": []
     },
     "kquickcharts": {
-      "readiness": "lane-pending",
+      "readiness": "package-validation-dependent",
       "lane": "qml-multisurface",
-      "local_predecessors": []
+      "local_predecessors": [],
+      "package_validation_predecessors": [
+        "kirigami"
+      ]
     },
     "kuserfeedback": {
       "readiness": "lane-pending",
@@ -89,9 +95,9 @@
     }
   },
   "next_actions": [
-    "implement the QML/multisurface lane for kirigami and kquickcharts without reducing KDE upstream defaults",
+    "attempt Kirigami in the QML/multisurface lane; retain its PASS artifact before KQuickCharts full package validation",
+    "validate KQuickCharts against the retained SupraLINUX Kirigami QML/runtime package surface without inventing a KDE Framework build edge",
     "implement the multi-surface/optional-provider lane for kuserfeedback and prison while preserving every upstream-default feature whose provider exists",
-    "attempt every newly runnable independent node and continue after independent failures; BLOCKED remains reserved for failed predecessors",
     "retain DIAG_PASS as non-promoting discovery evidence; only retained package PASS artifacts may feed dependents"
   ]
 }

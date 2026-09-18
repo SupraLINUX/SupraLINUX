@@ -392,3 +392,10 @@ KConfig `6.30.0-0supralinux4`, KI18n `6.30.0-0supralinux1` and Sonnet `6.30.0-0s
 Final promotion precheck Repository Policy run `35365719747`, job `105667583358`, passed. PR CI scope-skipped KConfig job `105667619494`, KI18n job `105667619517` and Sonnet job `105667619509`.
 
 Canonical Tier 1 is **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. Historical Batch 9 FAIL attempts and infrastructure incidents remain retained separately.
+
+
+### Batch 10 — QML/multisurface implementation ready
+
+Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. Kirigami is the first runnable package node in Batch 10. KQuickCharts has no upstream KDE Framework build edge to Kirigami, but its complete package/QML runtime gate requires a retained Kirigami SupraLINUX PASS. This ordering is tracked separately from the KDE build DAG.
+
+If Kirigami is attempted and FAILs, KQuickCharts is not attempted and is recorded BLOCKED for package validation. If Kirigami passes, its artifact feeds KQuickCharts runtime/QML validation. Historical DIAG_PASS evidence remains non-promoting.
