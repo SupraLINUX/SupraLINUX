@@ -70,3 +70,10 @@ Kirigami's consumer uses the upstream-supported `KF6::KirigamiPlatform` target. 
 ## Current state
 
 The Batch 10 attempt ledger is intentionally empty before the first real package run. No node is promoted by this preparation commit. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+## Preparation infrastructure incident — scope-test ShellCheck
+
+Repository Policy run `35388377180`, job `105740650985`, stopped at `Lint shell scripts` before the Batch 10 scope test or preparation validator could run. ShellCheck `SC2251` rejected three negative assertions in `test-kde-tier1-package-batch10-scope.sh` because bare `! command` under `set -e` can bypass errexit semantics.
+
+Classification: **infrastructure / package_state_effect=none**. No Kirigami or KQuickCharts package state is created by this failure. The test is rewritten with explicit `if command; then ... exit 1; fi` assertions. The shared selector also records its exit contract (`0=rebuild`, `1=intentional skip`) so the corrective commit deliberately revalidates both Batch 10 package gates after Repository Policy passes.

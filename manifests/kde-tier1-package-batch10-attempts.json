@@ -9,5 +9,16 @@
   "validation_incidents": {
     "kirigami": [],
     "kquickcharts": []
-  }
+  },
+  "infrastructure_incidents": [
+    {
+      "phase": "preparation",
+      "workflow_run": 35388377180,
+      "job_id": 105740650985,
+      "stage": "repository-policy-shellcheck",
+      "classification": "infrastructure-scope-test-shellcheck",
+      "package_state_effect": "none",
+      "cause": "SC2251 in Batch 10 scope-test negative assertions under set -e; no package state was evaluated by Repository Policy."
+    }
+  ]
 }

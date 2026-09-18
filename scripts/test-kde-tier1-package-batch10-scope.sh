@@ -16,9 +16,11 @@ import json
 p='manifests/kde-tier1-package-campaign-batch10.json'; d=json.load(open(p)); d['nodes']['kirigami']['state']='PASS'; d['nodes']['kirigami']['pass_evidence']={'artifact_id':1,'workflow_run':2}; open(p,'w').write(json.dumps(d))
 PY
 git add .; git commit -qm result; R=$(git rev-parse HEAD)
-! bash "$SEL" kirigami "$BASE" "$R"; ! bash "$SEL" kquickcharts "$BASE" "$R"
+if bash "$SEL" kirigami "$BASE" "$R"; then echo "result-only campaign change rebuilt kirigami" >&2; exit 1; fi
+if bash "$SEL" kquickcharts "$BASE" "$R"; then echo "result-only campaign change rebuilt kquickcharts" >&2; exit 1; fi
 echo c >> packages/kde/kquickcharts/b; git add .; git commit -qm qc; Q=$(git rev-parse HEAD)
-! bash "$SEL" kirigami "$R" "$Q"; bash "$SEL" kquickcharts "$R" "$Q"
+if bash "$SEL" kirigami "$R" "$Q"; then echo "QuickCharts-only change rebuilt kirigami" >&2; exit 1; fi
+bash "$SEL" kquickcharts "$R" "$Q"
 echo c >> packages/kde/kirigami/a; git add .; git commit -qm kir; K=$(git rev-parse HEAD)
 bash "$SEL" kirigami "$Q" "$K"; bash "$SEL" kquickcharts "$Q" "$K"
 echo '#x' >> scripts/run-kde-tier1-package-batch10-preflight.sh; git add .; git commit -qm shared; S=$(git rev-parse HEAD)
