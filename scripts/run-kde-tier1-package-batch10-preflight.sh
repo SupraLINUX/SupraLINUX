@@ -275,7 +275,7 @@ for abi in n['abi_contracts']:
  p=debs[abi['runtime_package']]
  with tempfile.TemporaryDirectory() as td:
   root=Path(td); subprocess.run(['dpkg-deb','-x',str(p),str(root/'data')],check=True); subprocess.run(['dpkg-deb','-e',str(p),str(root/'control')],check=True)
-  libs=list((root/'data').rglob(abi['soname']+'.*'))
+  libs=list((root/'data').rglob(abi['soname']))
   if not libs: raise SystemExit(f"{abi['surface']}: {abi['soname']} payload missing")
   dyn=subprocess.check_output(['readelf','-d',str(libs[0])],text=True)
   if f'Library soname: [{abi["soname"]}]' not in dyn: raise SystemExit(f"{abi['surface']}: SONAME mismatch")

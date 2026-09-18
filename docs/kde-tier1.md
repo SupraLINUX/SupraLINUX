@@ -152,3 +152,9 @@ Kirigami is campaign-downstream-eligible but remains canonical pending until Bat
 Repository Policy `35400585217` passed. PR CI `35400585402` reused retained Kirigami PASS evidence and attempted KQuickCharts `6.30.0-0supralinux2`. Job `105779442087` is a real package FAIL at `dh_qmldeps`, artifact `10570720119`, ZIP SHA-256 `edbcef8faf5801ae9a5c95b59270f7726a2abbbc1a5268d994816bf731eb7066`, rootfs `413b2fabd4248a9a11a4ec47792873c4c730a9c8c4aa15336f73be4acc79bec8`, with `8/8 PASS` tests and successful symbol remediation before the failure.
 
 KQuickCharts moves to `6.30.0-0supralinux3`. The added `qml6-module-org-kde-kirigami (>= 6.30.0~)` Build-Depends exists only so Debian `dh_qmldeps` can resolve the packaged QML import. No `libkirigami-dev` dependency is added and `kde_framework_build_dependencies=[]` remains unchanged. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until separate promotion.
+
+### Batch 10 validation cycle 5
+
+KQuickCharts `6.30.0-0supralinux3` completed its real package build in PR CI `35403143944`: `8/8 PASS`, symbols remediation PASS, `dh_qmldeps` PASS with retained Kirigami `6.30.0-0supralinux2`, and Lintian without errors. Job `105787263585` then stopped at the repository `abi-contract` gate, artifact `10570704785`, SHA-256 `7ddc766a2664c0af20fd7e265afc396ad5a0e210bc101bf151272c5ff0ff799a`.
+
+This is **INFRA / package_state_effect=none**. The package does contain `libQuickCharts.so.1`; the harness incorrectly required a filename beginning `libQuickCharts.so.1.` even though the exact SONAME is a symlink to `libQuickCharts.so.6.30.0`. The generic Batch 10 ABI check now opens the exact packaged SONAME. QuickCharts stays at `-3`, real attempts stay at two, and canonical Tier 1 remains 25 PASS / 4 pending pending revalidation and separate promotion.

@@ -202,3 +202,13 @@ KQuickCharts `6.30.0-0supralinux2` was therefore attempted for the second time a
 Revision `6.30.0-0supralinux3` adds only `qml6-module-org-kde-kirigami (>= 6.30.0~)` as a Debian/QML metadata-generation Build-Depends. It does not add `libkirigami-dev`, does not alter upstream CMake requirements, and does not create a KDE Framework build dependency. The runner continues to require retained/current SupraLINUX Kirigami PASS evidence and exact-version runtime provenance.
 
 Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until KQuickCharts obtains retained PASS evidence and Batch 10 is separately promoted.
+
+## Validation cycle 5 — ABI harness false negative
+
+Repository Policy `35403143742` passed. PR CI run `35403143944` re-used retained Kirigami PASS evidence and built KQuickCharts `6.30.0-0supralinux3`. The package build itself completed successfully: upstream tests `8/8 PASS`, the reviewed symbols remediation completed, `dh_qmldeps` resolved `org.kde.kirigami`, the generated QML package depends on `qml6-module-org-kde-kirigami`, and Lintian completed without errors.
+
+The later `abi-contract` gate produced a repository validation false negative. Evidence: job `105787263585`, artifact `10570704785`, ZIP SHA-256 `7ddc766a2664c0af20fd7e265afc396ad5a0e210bc101bf151272c5ff0ff799a`, rootfs SHA-256 `b6f02804169e2347e6c4e11adfbd799887c02e238961ad5e0be76fa621644720`. The runner searched for `SONAME + ".*"`; KQuickCharts correctly packages the exact `libQuickCharts.so.1` SONAME symlink pointing to `libQuickCharts.so.6.30.0`, so that glob could never find the payload.
+
+Classification is **INFRA / package_state_effect=none**. This is not KQuickCharts attempt 3 and does not bump the package revision: `6.30.0-0supralinux3` remains the validation candidate. The shared Batch 10 runner now resolves the exact packaged SONAME path. Because the runner is shared, the next validation cycle deliberately revalidates both Kirigami and KQuickCharts.
+
+Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.

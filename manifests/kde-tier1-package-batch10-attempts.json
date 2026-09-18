@@ -98,7 +98,27 @@
         "cause": "False-negative consumer harness: CMake requested nonexistent umbrella package KF6Config.cmake via find_package(KF6 ...). The built libkirigami-dev correctly installs KF6KirigamiPlatformConfig.cmake and exports KF6::KirigamiPlatform."
       }
     ],
-    "kquickcharts": []
+    "kquickcharts": [
+      {
+        "validation_cycle": 5,
+        "package_version": "6.30.0-0supralinux3",
+        "commit": "90b6a7536efc224a9e45999524485df5e2f3ca1c",
+        "workflow_run": 35403143944,
+        "job_id": 105787263585,
+        "artifact_id": 10570704785,
+        "artifact_sha256": "7ddc766a2664c0af20fd7e265afc396ad5a0e210bc101bf151272c5ff0ff799a",
+        "rootfs_sha256": "b6f02804169e2347e6c4e11adfbd799887c02e238961ad5e0be76fa621644720",
+        "stage": "abi-contract",
+        "classification": "INFRA",
+        "package_state_effect": "none",
+        "package_build": "successful",
+        "lintian": "PASS-errors",
+        "tests": "8/8 PASS",
+        "dh_qmldeps": "PASS",
+        "symbols_remediation": "PASS",
+        "cause": "ABI harness searched for SONAME plus a dot suffix. KQuickCharts packages the exact libQuickCharts.so.1 SONAME symlink pointing to libQuickCharts.so.6.30.0, so the package was correct and the validation lookup was false-negative."
+      }
+    ]
   },
   "infrastructure_incidents": [
     {

@@ -224,6 +224,23 @@
         "package_attempted": false,
         "reason": "Kirigami validation did not PASS because of a consumer-harness infrastructure false negative; KQuickCharts full package validation was not attempted."
       },
+      "last_validation_incident": {
+        "validation_cycle": 5,
+        "workflow_run": 35403143944,
+        "job_id": 105787263585,
+        "artifact_id": 10570704785,
+        "artifact_sha256": "7ddc766a2664c0af20fd7e265afc396ad5a0e210bc101bf151272c5ff0ff799a",
+        "rootfs_sha256": "b6f02804169e2347e6c4e11adfbd799887c02e238961ad5e0be76fa621644720",
+        "stage": "abi-contract",
+        "classification": "INFRA",
+        "package_state_effect": "none",
+        "package_build": "successful",
+        "lintian": "PASS-errors",
+        "tests": "8/8 PASS",
+        "dh_qmldeps": "PASS",
+        "symbols_remediation": "PASS",
+        "cause": "abi-harness-looked-for-soname-dot-suffix-instead-of-exact-packaged-soname-symlink"
+      },
       "last_failure_evidence": {
         "validation_cycle": 4,
         "workflow_run": 35400585402,

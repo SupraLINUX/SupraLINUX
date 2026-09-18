@@ -421,3 +421,9 @@ This changes operational campaign state only: Kirigami is retained PASS, KQuickC
 Repository Policy `35400585217` passed. In PR CI `35400585402`, Kirigami scope-skipped and its retained PASS artifact was reused successfully. KQuickCharts `6.30.0-0supralinux2` was actually attempted and is therefore a real **FAIL** at `dh_qmldeps`, after `8/8` tests and the symbols remediation passed.
 
 The `-3` correction declares `qml6-module-org-kde-kirigami (>= 6.30.0~)` for Debian QML metadata generation only. The KDE build DAG does not change: KQuickCharts still has no Framework build edge to Kirigami. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** pending a QuickCharts PASS and separate promotion.
+
+### Batch 10 cycle 5 — ABI validation infrastructure correction
+
+Run `35403143944` does not add a KQuickCharts package FAIL. KQuickCharts `6.30.0-0supralinux3` built successfully with `8/8` tests, successful `dh_qmldeps` Kirigami resolution and Lintian without errors, then hit a false-negative `abi-contract` lookup.
+
+The packaged SONAME is present as `libQuickCharts.so.1 -> libQuickCharts.so.6.30.0`; the runner's `SONAME + ".*"` lookup was invalid for this versioning scheme. The shared runner now resolves the exact SONAME path. Classification is **INFRA / package_state_effect=none**; no package revision, DAG edge or canonical state changes. The shared-runner delta deliberately revalidates both Batch 10 nodes.
