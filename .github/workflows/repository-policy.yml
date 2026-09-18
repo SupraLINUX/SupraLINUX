@@ -66,6 +66,10 @@ jobs:
         shell: bash
         run: scripts/test-kde-tier1-package-batch8-scope.sh
 
+      - name: Test KDE Tier 1 Batch 9 package scope
+        shell: bash
+        run: scripts/test-kde-tier1-package-batch9-scope.sh
+
       - name: Test KDE Tier 1 global source diagnostic scope
         shell: bash
         run: scripts/test-kde-tier1-source-diagnostic-scope.sh
@@ -117,6 +121,9 @@ jobs:
 
       - name: Validate KDE Tier 1 batch 8 preparation
         run: python3 scripts/validate_kde_tier1_package_batch8.py
+
+      - name: Validate KDE Tier 1 batch 9 preparation
+        run: python3 scripts/validate_kde_tier1_package_batch9.py
 
       - name: Validate KDE Attica 6.30 packaging preparation
         run: python3 scripts/validate_kde_attica_package.py

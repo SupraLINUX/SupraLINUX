@@ -1,0 +1,109 @@
+Source: kf6-kconfig
+Section: libs
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               dh-sequence-qmldeps,
+               cmake (>= 3.29~),
+               dbus-daemon <!nocheck>,
+               doxygen (>= 1.8.13~),
+               extra-cmake-modules (>= 6.30.0~),
+               libxkbcommon-dev,
+               qt6-base-dev (>= 6.9.0~),
+               qt6-base-private-dev (>= 6.9.0~),
+               qt6-declarative-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.9.0~),
+               xauth <!nocheck>,
+               xvfb <!nocheck>,
+Standards-Version: 4.7.4
+Homepage: https://invent.kde.org/frameworks/kconfig
+Rules-Requires-Root: no
+
+Package: libkf6config-bin
+Architecture: any
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Description: SupraLINUX package for KDE Frameworks 6 KConfig (libkf6config-bin)
+ This binary package provides the libkf6config-bin split from KDE upstream KConfig.
+
+Package: libkf6config-data
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: SupraLINUX package for KDE Frameworks 6 KConfig (libkf6config-data)
+ This binary package provides the libkf6config-data split from KDE upstream KConfig.
+
+Package: libkf6config-dev
+Section: libdevel
+Architecture: any
+Depends: libkf6config-bin (= ${binary:Version}),
+         libkf6config-dev-bin (= ${binary:Version}),
+         libkf6configcore6 (= ${binary:Version}),
+         libkf6configgui6 (= ${binary:Version}),
+         libkf6configqml6 (= ${binary:Version}),
+         qml6-module-org-kde-config (= ${binary:Version}),
+         qt6-tools-dev (>= 6.9.0~),
+         ${misc:Depends},
+Recommends: libkf6config-doc (= ${source:Version}),
+Description: SupraLINUX package for KDE Frameworks 6 KConfig (libkf6config-dev)
+ This binary package provides the libkf6config-dev split from KDE upstream KConfig.
+
+Package: libkf6config-dev-bin
+Section: libdevel
+Architecture: any
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Description: SupraLINUX package for KDE Frameworks 6 KConfig (libkf6config-dev-bin)
+ This binary package provides the libkf6config-dev-bin split from KDE upstream KConfig.
+
+Package: libkf6config-doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: SupraLINUX package for KDE Frameworks 6 KConfig (libkf6config-doc)
+ This binary package provides the libkf6config-doc split from KDE upstream KConfig.
+Section: doc
+
+Package: libkf6configcore6
+Architecture: any
+Multi-Arch: same
+Depends: libkf6config-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: libkf6config-bin (= ${binary:Version}),
+Breaks: libkf6config-bin (<< 6.20.0-1~),
+Replaces: libkf6config-bin (<< 6.20.0-1~),
+Description: SupraLINUX package for KDE Frameworks 6 KConfig (libkf6configcore6)
+ This binary package provides the libkf6configcore6 split from KDE upstream KConfig.
+
+Package: libkf6configgui6
+Architecture: any
+Multi-Arch: same
+Depends: libkf6config-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: libkf6config-bin (= ${binary:Version}),
+Description: SupraLINUX package for KDE Frameworks 6 KConfig (libkf6configgui6)
+ This binary package provides the libkf6configgui6 split from KDE upstream KConfig.
+
+Package: libkf6configqml6
+Architecture: any
+Multi-Arch: same
+Depends: libkf6config-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: libkf6config-bin (= ${binary:Version}),
+Description: SupraLINUX package for KDE Frameworks 6 KConfig (libkf6configqml6)
+ This binary package provides the libkf6configqml6 split from KDE upstream KConfig.
+
+Package: qml6-module-org-kde-config
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${qml6:Depends},
+         ${shlibs:Depends},
+Description: SupraLINUX package for KDE Frameworks 6 KConfig (qml6-module-org-kde-config)
+ This binary package provides the qml6-module-org-kde-config split from KDE upstream KConfig.

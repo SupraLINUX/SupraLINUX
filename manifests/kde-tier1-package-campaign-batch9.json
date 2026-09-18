@@ -1,0 +1,450 @@
+{
+  "schema": 2,
+  "as_of": "2026-09-18",
+  "frameworks_series": "6.30.0",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "batch": "tier1-batch-9",
+  "lane": "multi-abi",
+  "state": "prepared-pending-build",
+  "attempt_ledger": "manifests/kde-tier1-package-batch9-attempts.json",
+  "canonical_snapshot": {
+    "state": "pre-batch-9",
+    "tier1": "22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED after Batch 8 canonical promotion"
+  },
+  "selected_nodes": [
+    "kconfig",
+    "ki18n",
+    "sonnet"
+  ],
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+    },
+    "packaging_trees": {
+      "status": "PASS",
+      "workflow_run": 34708030450,
+      "artifact_id": 10301938362,
+      "artifact_sha256": "6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6",
+      "snapshot_json_sha256": "f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345",
+      "role": "technical-reference-only"
+    },
+    "binary_contracts": {
+      "status": "PASS",
+      "workflow_run": 34704117024,
+      "artifact_id": 10301282501,
+      "artifact_sha256": "9441b2f2957b350a46026b0df3bd5eb3578e1578671aab3b7afc7a0929ce1a97",
+      "contracts_json_sha256": "e44507d0dd73db913a91bd4852c452f783618aab0bd6a3790e4c4f4c40707b7b",
+      "role": "technical-reference-only"
+    },
+    "source_diagnostic": {
+      "status": "DIAG_PASS",
+      "promotes_package_state": false,
+      "workflow_run": 35138333645,
+      "commit": "6b3a8b9f408c5fff4bceec81ac9ffb3e47a4dbd3",
+      "role": "source-build-discovery-only"
+    }
+  },
+  "nodes": {
+    "kconfig": {
+      "name": "KConfig",
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-kconfig",
+      "package_version": "6.30.0-0supralinux1",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kconfig-6.30.0.tar.xz",
+      "source_sha256": "0e98bac324cd716849202d4b246a948e363d6792a8eb09c78417cdde9559f56e",
+      "kde_framework_build_dependencies": [],
+      "upstream_defaults": {
+        "KCONFIG_USE_GUI": "ON",
+        "KCONFIG_USE_QML": "ON",
+        "USE_DBUS": "ON",
+        "BUILD_TESTING": "ON"
+      },
+      "qch_profile": "OFF-common-supralinux-frameworks",
+      "binary_contracts": [
+        {
+          "name": "libkf6config-bin",
+          "architecture": "amd64",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6config-data",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6config-dev",
+          "architecture": "amd64",
+          "multi_arch": null
+        },
+        {
+          "name": "libkf6config-dev-bin",
+          "architecture": "amd64",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6config-doc",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6configcore6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6configgui6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6configqml6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "qml6-module-org-kde-config",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        }
+      ],
+      "abi_contracts": [
+        {
+          "surface": "ConfigCore",
+          "runtime_package": "libkf6configcore6",
+          "soname": "libKF6ConfigCore.so.6",
+          "symbols_file": "libkf6configcore6.symbols",
+          "reference_provider": "debian",
+          "reference_version": "6.28.0",
+          "reference_sha256": "678bb37f4d3a2ea0910c41b4af0c7aeb4861495167a3749f91bb549f26821f15",
+          "reference_export_count": 648
+        },
+        {
+          "surface": "ConfigGui",
+          "runtime_package": "libkf6configgui6",
+          "soname": "libKF6ConfigGui.so.6",
+          "symbols_file": "libkf6configgui6.symbols",
+          "reference_provider": "debian",
+          "reference_version": "6.28.0",
+          "reference_sha256": "c131c44659cce576fbc0754a2a55fd470aa9c065f3efc7d92b49c0042dc758ea",
+          "reference_export_count": 170
+        },
+        {
+          "surface": "ConfigQml",
+          "runtime_package": "libkf6configqml6",
+          "soname": "libKF6ConfigQml.so.6",
+          "symbols_file": "libkf6configqml6.symbols",
+          "reference_provider": "debian",
+          "reference_version": "6.28.0",
+          "reference_sha256": "edf6527a6fffb6a852a5bde62c02f24ac59a05c198831986e42558dea3ecdeb9",
+          "reference_export_count": 22
+        }
+      ],
+      "qml_contracts": [
+        {
+          "package": "qml6-module-org-kde-config",
+          "module": "org.kde.config"
+        }
+      ],
+      "patch_policy": {
+        "retained": [
+          "Allow-packagers-set-kconfig_compiler-install-dir.patch"
+        ],
+        "excluded": [
+          "tests-skip-flaky-KConfigTest-testLocalDeletion.diff",
+          "tests-skip-flaky-KConfigTest-testKdeglobalsVsDefault.diff"
+        ]
+      },
+      "diagnostic_evidence": {
+        "job_id": 104936243505,
+        "artifact_id": 10464074545,
+        "artifact_sha256": "9f05b0e368c4d1a7eb3dbec441680b423fd3f8b4a7fc2a0cdcbf9edbb3ca6e68",
+        "workflow_run": 35138333645,
+        "result": "DIAG_PASS",
+        "promotes_package_state": false
+      },
+      "signing_key": {
+        "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"
+      },
+      "copyright": {
+        "reference_sha256": "093a0643bf4b9cea796f8179474228686c4dce93e13e5b079a8101c32ca56594"
+      },
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false,
+      "diagnostic_provider_packages": [
+        "qt6-base-dev",
+        "qt6-base-private-dev",
+        "qt6-declarative-dev",
+        "qt6-tools-dev"
+      ]
+    },
+    "ki18n": {
+      "name": "KI18n",
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-ki18n",
+      "package_version": "6.30.0-0supralinux1",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/ki18n-6.30.0.tar.xz",
+      "source_sha256": "dfbfc8af89b3bc68810b094bf87746db87c3eeb35b75caeb1882681ebed563bd",
+      "kde_framework_build_dependencies": [],
+      "upstream_defaults": {
+        "BUILD_WITH_QML": "ON",
+        "BUILD_TESTING": "ON"
+      },
+      "qch_profile": "OFF-common-supralinux-frameworks",
+      "binary_contracts": [
+        {
+          "name": "libkf6i18n-data",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6i18n-dev",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6i18n-doc",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6i18n6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6i18nlocaledata6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6i18nqml6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "qml6-module-org-kde-i18n-localedata",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "qml6-module-org-kde-ki18n",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        }
+      ],
+      "abi_contracts": [
+        {
+          "surface": "I18n",
+          "runtime_package": "libkf6i18n6",
+          "soname": "libKF6I18n.so.6",
+          "symbols_file": "libkf6i18n6.symbols",
+          "reference_provider": "debian",
+          "reference_version": "6.28.0",
+          "reference_sha256": "2a67417c8fcdc4c0d0b98eef60ea25dda575a248236a70487fdd63db33814bac",
+          "reference_export_count": 122
+        },
+        {
+          "surface": "I18nLocaleData",
+          "runtime_package": "libkf6i18nlocaledata6",
+          "soname": "libKF6I18nLocaleData.so.6",
+          "symbols_file": "libkf6i18nlocaledata6.symbols",
+          "reference_provider": "debian",
+          "reference_version": "6.28.0",
+          "reference_sha256": "383ef3ea856f32031e6094ad54bb14f6a01bfb4b2b3825c83e41415b21d70d3f",
+          "reference_export_count": 58
+        },
+        {
+          "surface": "I18nQml",
+          "runtime_package": "libkf6i18nqml6",
+          "soname": "libKF6I18nQml.so.6",
+          "symbols_file": "libkf6i18nqml6.symbols",
+          "reference_provider": "debian",
+          "reference_version": "6.28.0",
+          "reference_sha256": "32c8722d939420ea6e3794e4b1566600743f5bd9875ac89c3ffa2c05f6f4087c",
+          "reference_export_count": 33
+        }
+      ],
+      "qml_contracts": [
+        {
+          "package": "qml6-module-org-kde-ki18n",
+          "module": "org.kde.ki18n"
+        },
+        {
+          "package": "qml6-module-org-kde-i18n-localedata",
+          "module": "org.kde.i18n.localeData"
+        }
+      ],
+      "patch_policy": {
+        "retained": [],
+        "excluded": []
+      },
+      "diagnostic_evidence": {
+        "job_id": 104936243967,
+        "artifact_id": 10463404553,
+        "artifact_sha256": "86b5f05313d164358ac36e1cc4982b72fad90bad3175114d2b2b493691a6bec3",
+        "workflow_run": 35138333645,
+        "result": "DIAG_PASS",
+        "promotes_package_state": false
+      },
+      "signing_key": {
+        "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"
+      },
+      "copyright": {
+        "reference_sha256": "07ca7817e9c55ccfd19a980b21b40e9eb2cf64d87663e1d8d3641d8b9d034ba7"
+      },
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false,
+      "required_locales": [
+        "en_US.UTF-8",
+        "fr_CH.UTF-8"
+      ],
+      "test_environment": {
+        "LANG": "en_US.UTF-8",
+        "LC_ALL": null
+      },
+      "diagnostic_provider_packages": [
+        "iso-codes",
+        "language-pack-fr-base",
+        "locales-all",
+        "qt6-base-dev",
+        "qt6-declarative-dev",
+        "qt6-tools-dev"
+      ]
+    },
+    "sonnet": {
+      "name": "Sonnet",
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-sonnet",
+      "package_version": "6.30.0-0supralinux1",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/sonnet-6.30.0.tar.xz",
+      "source_sha256": "1574ef5c17f38e315de104b94580ccc1b7ec1db2650cb4bace2e14159bf61e10",
+      "kde_framework_build_dependencies": [],
+      "upstream_defaults": {
+        "SONNET_USE_WIDGETS": "ON",
+        "SONNET_USE_QML": "ON",
+        "SONNET_NO_BACKENDS": "OFF",
+        "BUILD_DESIGNERPLUGIN": "ON",
+        "BUILD_TESTING": "ON"
+      },
+      "qch_profile": "OFF-common-supralinux-frameworks",
+      "binary_contracts": [
+        {
+          "name": "sonnet6-plugins",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6sonnet-data",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6sonnet-dev",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6sonnet-dev-bin",
+          "architecture": "amd64",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6sonnet-doc",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6sonnetcore6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6sonnetui6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "qml6-module-org-kde-sonnet",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        }
+      ],
+      "abi_contracts": [
+        {
+          "surface": "SonnetCore",
+          "runtime_package": "libkf6sonnetcore6",
+          "soname": "libKF6SonnetCore.so.6",
+          "symbols_file": "libkf6sonnetcore6.symbols",
+          "reference_provider": "debian",
+          "reference_version": "6.28.0",
+          "reference_sha256": "da300d1551304beac95a201ecd5c27fbf1286fe1e2ef7ab893b959e5e656f2b6",
+          "reference_export_count": 263
+        },
+        {
+          "surface": "SonnetUi",
+          "runtime_package": "libkf6sonnetui6",
+          "soname": "libKF6SonnetUi.so.6",
+          "symbols_file": "libkf6sonnetui6.symbols",
+          "reference_provider": "debian",
+          "reference_version": "6.28.0",
+          "reference_sha256": "9db4210db32d6ca8966eca242ba20387ba813b492404051fbe4c4b7c46f96df0",
+          "reference_export_count": 179
+        }
+      ],
+      "qml_contracts": [
+        {
+          "package": "qml6-module-org-kde-sonnet",
+          "module": "org.kde.sonnet"
+        }
+      ],
+      "patch_policy": {
+        "retained": [],
+        "excluded": [
+          "cross.patch"
+        ]
+      },
+      "diagnostic_evidence": {
+        "job_id": 104936243844,
+        "artifact_id": 10464073832,
+        "artifact_sha256": "6b17c7f02213282a520f4127feb010e9a37dbbafce9c8ab17d7f76164b22d7b6",
+        "workflow_run": 35138333645,
+        "result": "DIAG_PASS",
+        "promotes_package_state": false
+      },
+      "signing_key": {
+        "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"
+      },
+      "copyright": {
+        "reference_sha256": "e388d91555caea05b5aec02ff0709b019ec2073a4a615dc4a422903f7e9a0fd0"
+      },
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false,
+      "backend_contract": {
+        "provider_packages": [
+          "hspell",
+          "libaspell-dev",
+          "libhunspell-dev",
+          "libvoikko-dev"
+        ],
+        "gate": "at-least-one-enabled"
+      },
+      "diagnostic_provider_packages": [
+        "hspell",
+        "libaspell-dev",
+        "libhunspell-dev",
+        "libvoikko-dev",
+        "qt6-base-dev",
+        "qt6-declarative-dev",
+        "qt6-tools-dev"
+      ]
+    }
+  }
+}

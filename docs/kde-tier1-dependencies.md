@@ -112,3 +112,12 @@ This does not introduce a KCoreAddons build edge. KGuiAddons' KDE Framework buil
 - final Qt provider certification: **pending**.
 
 Provider evidence alone never promotes a Framework. Only retained package PASS artifacts may feed dependents.
+
+
+## Batch 9 multi-ABI readiness
+
+KConfig, KI18n and Sonnet remain Tier 1 pending nodes with no KDE Framework build predecessor beyond retained ECM. The Batch 9 multi-ABI runner is now implemented and all three are independently runnable in parallel. Public/runtime surfaces are validated after build; they do not create undocumented Framework build edges.
+
+KConfig preserves GUI/QML/DBus defaults and validates three runtime ABIs. KI18n preserves QML and upstream tests with the validated locale providers `iso-codes`, `language-pack-fr-base` and `locales-all`. Sonnet preserves Widgets, QML, Designer and spelling backends and validates two runtime ABIs plus a packaged backend plugin. Debian 6.28 symbol files remain hash-pinned technical baselines only and are materialized ephemerally during clean builds.
+
+Source diagnostic run `35138333645` is non-promoting DIAG_PASS evidence. Canonical Tier 1 therefore remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until real Batch 9 package attempts pass their full gates.

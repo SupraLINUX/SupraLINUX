@@ -31,84 +31,32 @@
     "note": "Readiness states are campaign-planning metadata. They are not DAG PASS/FAIL/BLOCKED results."
   },
   "lanes": {
-    "single-abi-python": {
-      "status": "completed",
-      "runner": "scripts/run-kde-tier1-package-batch7-preflight.sh",
-      "nodes": []
-    },
+    "single-abi-python": {"status": "completed", "runner": "scripts/run-kde-tier1-package-batch7-preflight.sh", "nodes": []},
     "multi-abi": {
-      "status": "implementation-pending",
-      "nodes": [
-        "kconfig",
-        "ki18n",
-        "sonnet"
-      ],
+      "status": "implementation-ready",
+      "runner": "scripts/run-kde-tier1-package-batch9-preflight.sh",
+      "workflow": ".github/workflows/kde-tier1-package-batch9.yml",
+      "nodes": ["kconfig", "ki18n", "sonnet"],
       "required_capability": "validate multiple runtime ABIs/symbol files and package splits in one source build"
     },
-    "qml-multisurface": {
-      "status": "implementation-pending",
-      "nodes": [
-        "kirigami",
-        "kquickcharts"
-      ],
-      "required_capability": "validate QML-heavy packages, multiple libraries, QML imports and runtime closure"
-    },
-    "multi-surface-optional": {
-      "status": "implementation-pending",
-      "nodes": [
-        "kuserfeedback",
-        "prison"
-      ],
-      "required_capability": "validate multiple libraries plus optional/provider-selected feature surfaces without silently disabling upstream defaults"
-    },
-    "local-predecessor": {
-      "status": "completed",
-      "nodes": [],
-      "required_capability": "consume the retained local KCoreAddons PASS -dev/runtime artifacts rather than Ubuntu KDE packages",
-      "runner": "scripts/run-kde-tier1-package-batch8-preflight.sh"
-    }
+    "qml-multisurface": {"status": "implementation-pending", "nodes": ["kirigami", "kquickcharts"], "required_capability": "validate QML-heavy packages, multiple libraries, QML imports and runtime closure"},
+    "multi-surface-optional": {"status": "implementation-pending", "nodes": ["kuserfeedback", "prison"], "required_capability": "validate multiple libraries plus optional/provider-selected feature surfaces without silently disabling upstream defaults"},
+    "local-predecessor": {"status": "completed", "nodes": [], "required_capability": "consume the retained local KCoreAddons PASS -dev/runtime artifacts rather than Ubuntu KDE packages", "runner": "scripts/run-kde-tier1-package-batch8-preflight.sh"}
   },
   "nodes": {
-    "kconfig": {
-      "readiness": "lane-pending",
-      "lane": "multi-abi",
-      "local_predecessors": []
-    },
-    "ki18n": {
-      "readiness": "lane-pending",
-      "lane": "multi-abi",
-      "local_predecessors": []
-    },
-    "sonnet": {
-      "readiness": "lane-pending",
-      "lane": "multi-abi",
-      "local_predecessors": []
-    },
-    "kirigami": {
-      "readiness": "lane-pending",
-      "lane": "qml-multisurface",
-      "local_predecessors": []
-    },
-    "kquickcharts": {
-      "readiness": "lane-pending",
-      "lane": "qml-multisurface",
-      "local_predecessors": []
-    },
-    "kuserfeedback": {
-      "readiness": "lane-pending",
-      "lane": "multi-surface-optional",
-      "local_predecessors": []
-    },
-    "prison": {
-      "readiness": "lane-pending",
-      "lane": "multi-surface-optional",
-      "local_predecessors": []
-    }
+    "kconfig": {"readiness": "runnable", "lane": "multi-abi", "local_predecessors": []},
+    "ki18n": {"readiness": "runnable", "lane": "multi-abi", "local_predecessors": []},
+    "sonnet": {"readiness": "runnable", "lane": "multi-abi", "local_predecessors": []},
+    "kirigami": {"readiness": "lane-pending", "lane": "qml-multisurface", "local_predecessors": []},
+    "kquickcharts": {"readiness": "lane-pending", "lane": "qml-multisurface", "local_predecessors": []},
+    "kuserfeedback": {"readiness": "lane-pending", "lane": "multi-surface-optional", "local_predecessors": []},
+    "prison": {"readiness": "lane-pending", "lane": "multi-surface-optional", "local_predecessors": []}
   },
   "next_actions": [
-    "implement the multi-ABI package lane and attempt kconfig, ki18n and sonnet in parallel",
+    "attempt kconfig, ki18n and sonnet in parallel with the Batch 9 multi-ABI runner",
+    "classify each attempted node independently as PASS or FAIL; BLOCKED is reserved for a failed predecessor and does not apply to these three ECM-only peers",
+    "preserve independent PASS results while remediating only real FAIL nodes",
     "implement QML/multisurface and optional-feature lanes, then attempt every newly runnable independent node",
-    "retain DIAG_PASS as non-promoting discovery evidence; only package PASS may feed dependents",
-    "aggregate real package failures by root cause and repeat the complete runnable campaign after remediation sets"
+    "retain DIAG_PASS as non-promoting discovery evidence; only package PASS may feed dependents"
   ]
 }

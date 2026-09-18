@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all reproducible=-fixfilepath
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DBUILD_QCH=OFF -DBUILD_TESTING=ON -DBUILD_WITH_QML=ON
+
+override_dh_auto_test:
+	env -u LC_ALL -u LC_COLLATE -u LC_CTYPE LANG=en_US.UTF-8 dh_auto_test -Skf6 --no-parallel

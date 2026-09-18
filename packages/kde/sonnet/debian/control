@@ -1,0 +1,105 @@
+Source: kf6-sonnet
+Section: libs
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               dh-sequence-qmldeps,
+               aspell,
+               cmake (>= 3.29~),
+               doxygen,
+               extra-cmake-modules (>= 6.30.0~),
+               hspell,
+               libaspell-dev,
+               libhunspell-dev,
+               libvoikko-dev,
+               libxkbcommon-dev,
+               pkgconf,
+               qt6-base-dev (>= 6.9.0~),
+               qt6-declarative-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.9.0~),
+               xauth <!nocheck>,
+               xvfb <!nocheck>,
+               zlib1g-dev,
+Standards-Version: 4.7.4
+Homepage: https://invent.kde.org/frameworks/sonnet
+Rules-Requires-Root: no
+
+Package: sonnet6-plugins
+Section: kde
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Breaks: kf6-sonnet-plugins,
+Replaces: kf6-sonnet-plugins,
+Suggests: hspell,
+Description: SupraLINUX package for KDE Frameworks 6 Sonnet (sonnet6-plugins)
+ This binary package provides the sonnet6-plugins split from KDE upstream Sonnet.
+
+Package: libkf6sonnet-data
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: SupraLINUX package for KDE Frameworks 6 Sonnet (libkf6sonnet-data)
+ This binary package provides the libkf6sonnet-data split from KDE upstream Sonnet.
+
+Package: libkf6sonnet-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libkf6sonnet-dev-bin (= ${binary:Version}),
+         libkf6sonnetcore6 (= ${binary:Version}),
+         libkf6sonnetui6 (= ${binary:Version}),
+         qml6-module-org-kde-sonnet (= ${binary:Version}),
+         qt6-base-dev (>= 6.9.0~),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: libkf6sonnet-doc (= ${source:Version}),
+Description: SupraLINUX package for KDE Frameworks 6 Sonnet (libkf6sonnet-dev)
+ This binary package provides the libkf6sonnet-dev split from KDE upstream Sonnet.
+
+Package: libkf6sonnet-dev-bin
+Section: libdevel
+Architecture: any
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Description: SupraLINUX package for KDE Frameworks 6 Sonnet (libkf6sonnet-dev-bin)
+ This binary package provides the libkf6sonnet-dev-bin split from KDE upstream Sonnet.
+
+Package: libkf6sonnet-doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: SupraLINUX package for KDE Frameworks 6 Sonnet (libkf6sonnet-doc)
+ This binary package provides the libkf6sonnet-doc split from KDE upstream Sonnet.
+Section: doc
+
+Package: libkf6sonnetcore6
+Architecture: any
+Multi-Arch: same
+Depends: libkf6sonnet-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: sonnet6-plugins (= ${binary:Version}),
+Description: SupraLINUX package for KDE Frameworks 6 Sonnet (libkf6sonnetcore6)
+ This binary package provides the libkf6sonnetcore6 split from KDE upstream Sonnet.
+
+Package: libkf6sonnetui6
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: sonnet6-plugins (= ${binary:Version}),
+Description: SupraLINUX package for KDE Frameworks 6 Sonnet (libkf6sonnetui6)
+ This binary package provides the libkf6sonnetui6 split from KDE upstream Sonnet.
+
+Package: qml6-module-org-kde-sonnet
+Depends: ${misc:Depends},
+         ${qml6:Depends},
+         ${shlibs:Depends},
+Architecture: any
+Multi-Arch: same
+Description: SupraLINUX package for KDE Frameworks 6 Sonnet (qml6-module-org-kde-sonnet)
+ This binary package provides the qml6-module-org-kde-sonnet split from KDE upstream Sonnet.

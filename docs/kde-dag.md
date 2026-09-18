@@ -308,7 +308,7 @@ El estado canónico de cada uno es ahora PASS y downstream-eligible. Los FAIL hi
 
 ## Estado actual
 
-Tier 1 queda en **18 PASS, 11 pending, 0 current FAIL, 0 BLOCKED** tras el cierre canónico de Batch 6.
+Tier 1 queda en **22 PASS, 7 pending, 0 current FAIL, 0 BLOCKED** tras la promoción canónica de Batch 8.
 
 Sólo artifacts PASS retenidos pueden alimentar dependientes.
 
@@ -316,7 +316,7 @@ Hosted package-preflight sigue sin sustituir el futuro gate autoritativo KVM/JIT
 
 ## Próxima expansión
 
-La siguiente lane es **multi-ABI**: `kconfig`, `ki18n` y `sonnet`. El runner debe validar sus múltiples ABI/symbol files, splits de paquetes, tests y cierre APT sin reducir los defaults de KDE upstream.
+La lane **multi-ABI** de Batch 9 ya está implementada para `kconfig`, `ki18n` y `sonnet`: matrix independiente `fail-fast: false`, runner clean-package sobre Resolute, múltiples ABI/symbol files, splits de paquetes, QML/imports, tests, Lintian, cierre APT y consumer smoke sin reducir los defaults de KDE upstream. Los tres siguen pending hasta obtener PASS real.
 
 Tras Batch 8 quedan siete Tier 1 pendientes: `kconfig`, `ki18n`, `sonnet`, `kirigami`, `kquickcharts`, `kuserfeedback` y `prison`. Se mantiene la estrategia DAG: construir todos los independientes posibles, conservar PASS, registrar FAIL reales y marcar BLOCKED sólo por predecesor FAIL.
 
@@ -345,3 +345,10 @@ Canonical promotion completed on 2026-09-18. KGuiAddons `6.30.0-0supralinux2` is
 The DAG edge remains only `extra-cmake-modules -> kguiaddons`. KCoreAddons is deliberately **not** a KGuiAddons Framework build dependency; it is retained only for the public KImageCache development/consumer surface. Historical Batch 8 attempts 1–4 remain FAIL evidence and attempt 5 is the retained PASS.
 
 Canonical Tier 1 is now **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**. The next implementation lane is multi-ABI: `kconfig`, `ki18n` and `sonnet`.
+
+
+### Batch 9 — multi-ABI implementation ready
+
+KConfig, KI18n and Sonnet are independently runnable peers and have no local KDE Framework predecessor beyond retained ECM. Their source diagnostic run `35138333645` remains non-promoting DIAG_PASS evidence. The Batch 9 workflow may therefore attempt all three in parallel; a real FAIL is local to that node and does not make either peer BLOCKED.
+
+Canonical Tier 1 remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** before the first Batch 9 package attempt. Promotion is a separate step after retained real PASS evidence.
