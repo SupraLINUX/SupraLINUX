@@ -362,3 +362,10 @@ Run `35348130023` attempted all three independent multi-ABI peers. KI18n is reta
 ### Batch 9 attempt 2 campaign state
 
 Run `35354088696` revalidated all three peers because attempt 1 had changed the shared runner. KI18n remained PASS. KConfig and Sonnet remained real FAIL rather than BLOCKED, but their reviewed ABI-symbol deltas executed successfully; the only remaining failure was Lintian's direct-build-prerequisite rule for `python3`. Attempt 3 changes only those two package trees to `6.30.0-0supralinux3`, so semantic scope must rebuild KConfig/Sonnet and retain/scope-skip KI18n. Canonical Tier 1 remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until separate promotion.
+
+
+### Batch 9 validation cycle 3 infrastructure classification
+
+Run `35355395436` is not a new package FAIL for KConfig or Sonnet. Both package builds completed tests and Lintian successfully, but the shared runner compared amd64-generated export counts with retained totals containing optional and/or architecture-inapplicable symbols. KConfig ConfigCore generated 640 exports against a required amd64 baseline of 634; SonnetCore generated 255 against a required baseline of 254. The resulting job failures are retained as **INFRA / package_state_effect=none**. They do not become PASS either, because the false-negative abort prevented later runtime/QML/consumer gates from completing.
+
+The corrected runner derives and validates the retained baseline partition and revalidates all three multi-ABI peers. Canonical Tier 1 remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until separate promotion.

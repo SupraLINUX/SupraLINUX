@@ -6,7 +6,7 @@
   "provider_platform": "ubuntu-resolute",
   "batch": "tier1-batch-9",
   "lane": "multi-abi",
-  "state": "remediation-pending-build",
+  "state": "runner-remediation-pending-revalidation",
   "attempt_ledger": "manifests/kde-tier1-package-batch9-attempts.json",
   "canonical_snapshot": {
     "state": "pre-batch-9",
@@ -121,7 +121,10 @@
           "reference_provider": "debian",
           "reference_version": "6.28.0",
           "reference_sha256": "678bb37f4d3a2ea0910c41b4af0c7aeb4861495167a3749f91bb549f26821f15",
-          "reference_export_count": 648
+          "reference_export_count": 648,
+          "reference_optional_export_count": 6,
+          "reference_nonoptional_inapplicable_amd64_count": 8,
+          "reference_required_export_count_amd64": 634
         },
         {
           "surface": "ConfigGui",
@@ -131,7 +134,10 @@
           "reference_provider": "debian",
           "reference_version": "6.28.0",
           "reference_sha256": "c131c44659cce576fbc0754a2a55fd470aa9c065f3efc7d92b49c0042dc758ea",
-          "reference_export_count": 170
+          "reference_export_count": 170,
+          "reference_optional_export_count": 2,
+          "reference_nonoptional_inapplicable_amd64_count": 0,
+          "reference_required_export_count_amd64": 168
         },
         {
           "surface": "ConfigQml",
@@ -141,7 +147,10 @@
           "reference_provider": "debian",
           "reference_version": "6.28.0",
           "reference_sha256": "edf6527a6fffb6a852a5bde62c02f24ac59a05c198831986e42558dea3ecdeb9",
-          "reference_export_count": 22
+          "reference_export_count": 22,
+          "reference_optional_export_count": 0,
+          "reference_nonoptional_inapplicable_amd64_count": 0,
+          "reference_required_export_count_amd64": 22
         }
       ],
       "qml_contracts": [
@@ -259,7 +268,10 @@
           "reference_provider": "debian",
           "reference_version": "6.28.0",
           "reference_sha256": "2a67417c8fcdc4c0d0b98eef60ea25dda575a248236a70487fdd63db33814bac",
-          "reference_export_count": 122
+          "reference_export_count": 122,
+          "reference_optional_export_count": 1,
+          "reference_nonoptional_inapplicable_amd64_count": 0,
+          "reference_required_export_count_amd64": 121
         },
         {
           "surface": "I18nLocaleData",
@@ -269,7 +281,10 @@
           "reference_provider": "debian",
           "reference_version": "6.28.0",
           "reference_sha256": "383ef3ea856f32031e6094ad54bb14f6a01bfb4b2b3825c83e41415b21d70d3f",
-          "reference_export_count": 58
+          "reference_export_count": 58,
+          "reference_optional_export_count": 2,
+          "reference_nonoptional_inapplicable_amd64_count": 0,
+          "reference_required_export_count_amd64": 56
         },
         {
           "surface": "I18nQml",
@@ -279,7 +294,10 @@
           "reference_provider": "debian",
           "reference_version": "6.28.0",
           "reference_sha256": "32c8722d939420ea6e3794e4b1566600743f5bd9875ac89c3ffa2c05f6f4087c",
-          "reference_export_count": 33
+          "reference_export_count": 33,
+          "reference_optional_export_count": 0,
+          "reference_nonoptional_inapplicable_amd64_count": 0,
+          "reference_required_export_count_amd64": 33
         }
       ],
       "qml_contracts": [
@@ -414,7 +432,10 @@
           "reference_provider": "debian",
           "reference_version": "6.28.0",
           "reference_sha256": "da300d1551304beac95a201ecd5c27fbf1286fe1e2ef7ab893b959e5e656f2b6",
-          "reference_export_count": 263
+          "reference_export_count": 263,
+          "reference_optional_export_count": 9,
+          "reference_nonoptional_inapplicable_amd64_count": 0,
+          "reference_required_export_count_amd64": 254
         },
         {
           "surface": "SonnetUi",
@@ -424,7 +445,10 @@
           "reference_provider": "debian",
           "reference_version": "6.28.0",
           "reference_sha256": "9db4210db32d6ca8966eca242ba20387ba813b492404051fbe4c4b7c46f96df0",
-          "reference_export_count": 179
+          "reference_export_count": 179,
+          "reference_optional_export_count": 5,
+          "reference_nonoptional_inapplicable_amd64_count": 0,
+          "reference_required_export_count_amd64": 174
         }
       ],
       "qml_contracts": [
@@ -487,5 +511,54 @@
         "reviewed_upstream_minimum": "6.30.0"
       }
     }
+  },
+  "validation_incidents": {
+    "kconfig": [
+      {
+        "validation_cycle": 3,
+        "package_version": "6.30.0-0supralinux3",
+        "commit": "97e4feb51df541501b027ba80c4b86907d8763c8",
+        "workflow_run": 35355395436,
+        "job_id": 105633436677,
+        "artifact_id": 10551433966,
+        "artifact_sha256": "eed45f10d52f3190fcf099ceb63c4138f1c346d191d6aa85429b1beafd829b95",
+        "rootfs_sha256": "cd684394244cb651b6d36171bf140e8dfae4905d92b5f4da2d87d89b66754629",
+        "stage": "abi-contract",
+        "classification": "runner-false-negative-total-export-floor",
+        "package_state_effect": "none",
+        "package_build": "successful",
+        "lintian": "PASS-errors",
+        "tests": "90/90 PASS",
+        "observed_surface": "ConfigCore",
+        "observed_exports": 640,
+        "reference_total_exports": 648,
+        "reference_required_exports_amd64": 634,
+        "cause": "Runner compared generated amd64 exports against the cross-architecture total baseline; eight non-optional baseline exports are arch=armhf/riscv64 and inapplicable on amd64."
+      }
+    ],
+    "ki18n": [],
+    "sonnet": [
+      {
+        "validation_cycle": 3,
+        "package_version": "6.30.0-0supralinux3",
+        "commit": "97e4feb51df541501b027ba80c4b86907d8763c8",
+        "workflow_run": 35355395436,
+        "job_id": 105633436582,
+        "artifact_id": 10551832586,
+        "artifact_sha256": "f9352e5f5c3cd527cc32887896b1c6c4441e1291ee103204de470e3378a77218",
+        "rootfs_sha256": "9e79ae0631e0c4b7a59f3fb82af976eaaf9c388c01b57edfebd30001f37d38af",
+        "stage": "abi-contract",
+        "classification": "runner-false-negative-total-export-floor",
+        "package_state_effect": "none",
+        "package_build": "successful",
+        "lintian": "PASS-errors",
+        "tests": "8/8 PASS",
+        "observed_surface": "SonnetCore",
+        "observed_exports": 255,
+        "reference_total_exports": 263,
+        "reference_required_exports_amd64": 254,
+        "cause": "Runner compared generated exports against a baseline total containing nine optional=templinst entries; the generated 255 exports exceed the 254 required amd64 baseline."
+      }
+    ]
   }
 }

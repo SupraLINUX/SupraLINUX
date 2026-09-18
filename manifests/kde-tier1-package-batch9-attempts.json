@@ -93,5 +93,46 @@
         "cause": "Reviewed symbols delta passed; Lintian rejected debian/rules because python3:any was not declared in Build-Depends."
       }
     ]
+  },
+  "validation_incidents": {
+    "kconfig": [
+      {
+        "validation_cycle": 3,
+        "package_version": "6.30.0-0supralinux3",
+        "commit": "97e4feb51df541501b027ba80c4b86907d8763c8",
+        "workflow_run": 35355395436,
+        "job_id": 105633436677,
+        "artifact_id": 10551433966,
+        "artifact_sha256": "eed45f10d52f3190fcf099ceb63c4138f1c346d191d6aa85429b1beafd829b95",
+        "rootfs_sha256": "cd684394244cb651b6d36171bf140e8dfae4905d92b5f4da2d87d89b66754629",
+        "stage": "abi-contract",
+        "classification": "INFRA",
+        "package_state_effect": "none",
+        "package_build": "successful",
+        "lintian": "PASS-errors",
+        "tests": "90/90 PASS",
+        "cause": "False-negative ABI export floor: amd64 output 640 was compared to cross-architecture total 648 although only 634 baseline exports are required on amd64."
+      }
+    ],
+    "ki18n": [],
+    "sonnet": [
+      {
+        "validation_cycle": 3,
+        "package_version": "6.30.0-0supralinux3",
+        "commit": "97e4feb51df541501b027ba80c4b86907d8763c8",
+        "workflow_run": 35355395436,
+        "job_id": 105633436582,
+        "artifact_id": 10551832586,
+        "artifact_sha256": "f9352e5f5c3cd527cc32887896b1c6c4441e1291ee103204de470e3378a77218",
+        "rootfs_sha256": "9e79ae0631e0c4b7a59f3fb82af976eaaf9c388c01b57edfebd30001f37d38af",
+        "stage": "abi-contract",
+        "classification": "INFRA",
+        "package_state_effect": "none",
+        "package_build": "successful",
+        "lintian": "PASS-errors",
+        "tests": "8/8 PASS",
+        "cause": "False-negative ABI export floor: generated 255 exports were compared to total 263 although nine baseline exports are optional=templinst and only 254 are required."
+      }
+    ]
   }
 }

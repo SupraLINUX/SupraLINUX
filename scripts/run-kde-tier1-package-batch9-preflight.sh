@@ -81,17 +81,62 @@ REFERENCE_SNAPSHOT="${TIER1_REFERENCE_DIR}/snapshot.json"; test -s "${REFERENCE_
 printf '%s  %s\n' "${REFERENCE_SNAPSHOT_SHA256}" "${REFERENCE_SNAPSHOT}" | sha256sum --check --strict
 BINARY_CONTRACTS_JSON="${BINARY_CONTRACT_DIR}/binary-contracts.json"; test -s "${BINARY_CONTRACTS_JSON}"
 printf '%s  %s\n' "${BINARY_CONTRACTS_JSON_SHA256}" "${BINARY_CONTRACTS_JSON}" | sha256sum --check --strict
-python3 - "${CAMPAIGN}" "${NODE}" "${TIER1_REFERENCE_DIR}" <<'PY2'
+python3 - "${CAMPAIGN}" "${NODE}" "${TIER1_REFERENCE_DIR}" "${EVIDENCE_DIR}" <<'PY2'
 import hashlib,json,sys
 from pathlib import Path
-d=json.loads(Path(sys.argv[1]).read_text()); node=sys.argv[2]; tree=Path(sys.argv[3]); n=d['nodes'][node]
+d=json.loads(Path(sys.argv[1]).read_text()); node=sys.argv[2]; tree=Path(sys.argv[3]); evidence=Path(sys.argv[4]); n=d['nodes'][node]
+
+def classify_export(line, arch='amd64'):
+    s=line.strip()
+    if '@Base' not in s:
+        return None
+    tags=[]
+    if s.startswith('('):
+        try:
+            tags=s[1:s.index(')')].split('|')
+        except ValueError as exc:
+            raise SystemExit(f'{node}: malformed symbols tag line: {line}') from exc
+    if any(tag.startswith('optional=') for tag in tags):
+        return 'optional'
+    applicable=True
+    for tag in tags:
+        if not tag.startswith('arch='):
+            continue
+        values=tag[5:].split()
+        positive=[value for value in values if not value.startswith('!')]
+        negative=[value[1:] for value in values if value.startswith('!')]
+        if arch in negative or (positive and arch not in positive):
+            applicable=False
+    return 'required' if applicable else 'nonoptional-inapplicable'
+
+summary=[]
 for abi in n['abi_contracts']:
     retained=tree/'trees'/abi['reference_provider']/node/'debian'/abi['symbols_file']
     if not retained.is_file(): raise SystemExit(f'missing retained symbols reference {retained}')
     got=hashlib.sha256(retained.read_bytes()).hexdigest()
     if got!=abi['reference_sha256']: raise SystemExit(f'{retained}: symbols SHA mismatch {got}')
-    count=sum('@Base' in x for x in retained.read_text(errors='replace').splitlines())
-    if count!=abi['reference_export_count']: raise SystemExit(f"{node}/{abi['surface']}: symbols count {count} != {abi['reference_export_count']}")
+    counts={'total':0,'optional':0,'nonoptional-inapplicable':0,'required':0}
+    for line in retained.read_text(errors='replace').splitlines():
+        kind=classify_export(line)
+        if kind is None:
+            continue
+        counts['total']+=1
+        counts[kind]+=1
+    expected={
+        'total':abi['reference_export_count'],
+        'optional':abi['reference_optional_export_count'],
+        'nonoptional-inapplicable':abi['reference_nonoptional_inapplicable_amd64_count'],
+        'required':abi['reference_required_export_count_amd64'],
+    }
+    if counts!=expected:
+        raise SystemExit(f"{node}/{abi['surface']}: retained symbols classification {counts} != {expected}")
+    if counts['total'] != counts['optional'] + counts['nonoptional-inapplicable'] + counts['required']:
+        raise SystemExit(f"{node}/{abi['surface']}: retained symbols classification does not partition total")
+    summary.append(
+        f"{abi['surface']} total={counts['total']} optional={counts['optional']} "
+        f"nonoptional_inapplicable_amd64={counts['nonoptional-inapplicable']} required_amd64={counts['required']}"
+    )
+(evidence/'abi-reference-counts.txt').write_text('\n'.join(summary)+'\n')
 copyright=tree/'trees'/'debian'/node/'debian'/'copyright'
 if hashlib.sha256(copyright.read_bytes()).hexdigest()!=n['copyright']['reference_sha256']: raise SystemExit('copyright reference SHA mismatch')
 PY2
@@ -212,9 +257,13 @@ for abi in n['abi_contracts']:
   if abi['soname'] not in txt: raise SystemExit(f"{abi['surface']}: symbols header lacks SONAME")
   if '0supralinux' in txt: raise SystemExit(f"{abi['surface']}: symbols acquired Debian-revision minimum; requires reviewed overlay")
   exports=sum('@Base' in x for x in txt.splitlines())
-  if exports < abi['reference_export_count']: raise SystemExit(f"{abi['surface']}: export count {exports} below reference {abi['reference_export_count']}")
+  required=abi['reference_required_export_count_amd64']
+  if exports < required: raise SystemExit(f"{abi['surface']}: export count {exports} below required amd64 baseline {required}")
   (evidence/f"symbols-{abi['surface']}.txt").write_text(txt)
-  summary.append(f"{abi['surface']} soname={abi['soname']} exports={exports} baseline={abi['reference_export_count']}")
+  summary.append(
+      f"{abi['surface']} soname={abi['soname']} exports={exports} "
+      f"baseline_total={abi['reference_export_count']} required_amd64={required}"
+  )
 (evidence/'abi-contracts.txt').write_text('\n'.join(summary)+'\n')
 PY2
 

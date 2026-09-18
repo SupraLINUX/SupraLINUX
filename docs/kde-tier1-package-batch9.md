@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 1 — Batch 9 multi-ABI
 
-Status: **attempt 2 complete; attempt 3 prepared; canonical package state not promoted**
+Status: **validation cycle 3 classified as runner INFRA; ABI-gate remediation prepared; canonical package state not promoted**
 
 Last reviewed: **2026-09-18**
 
@@ -94,3 +94,32 @@ Attempt 2 therefore proves that both reviewed ABI deltas are correct. The remain
 KConfig and Sonnet move to `6.30.0-0supralinux3` and add exactly `python3:any` to `Build-Depends`, because `debian/rules` invokes `python3 debian/apply-symbols-delta.py` during the package build. No KDE feature/default, ABI minimum, downstream patch or symbols transformation changes from attempt 2.
 
 The semantic selector treats package-tree changes per node. Therefore attempt 3 must rebuild KConfig and Sonnet only. KI18n package inputs and per-node campaign build fingerprint are unchanged, so its retained attempt-2 PASS must scope-skip rather than rebuild.
+
+
+## Validation cycle 3 — runner false negative, no package-state effect
+
+PR CI run `35355395436` on commit `97e4feb51df541501b027ba80c4b86907d8763c8` rebuilt KConfig/Sonnet at `6.30.0-0supralinux3`; KI18n correctly scope-skipped because its package inputs were unchanged. Repository Policy run `35355394975` passed.
+
+Both rebuilt packages completed source build, upstream tests and Lintian successfully, then the shared runner rejected them at its numeric ABI export-count gate:
+
+- KConfig: job `105633436677`, artifact `10551433966`, ZIP SHA-256 `eed45f10d52f3190fcf099ceb63c4138f1c346d191d6aa85429b1beafd829b95`, rootfs `cd684394244cb651b6d36171bf140e8dfae4905d92b5f4da2d87d89b66754629`, tests `90/90 PASS`, Lintian PASS. ConfigCore generated 640 exports while the retained Debian baseline has 648 total. That total includes six `optional=templinst` entries plus eight non-optional exports restricted to `arch=armhf` or `arch=riscv64`; only **634** baseline exports are required on amd64. Therefore `640 < 648` is a runner false negative.
+- Sonnet: job `105633436582`, artifact `10551832586`, ZIP SHA-256 `f9352e5f5c3cd527cc32887896b1c6c4441e1291ee103204de470e3378a77218`, rootfs `9e79ae0631e0c4b7a59f3fb82af976eaaf9c388c01b57edfebd30001f37d38af`, tests `8/8 PASS`, Lintian PASS. SonnetCore generated 255 exports while the retained baseline has 263 total, nine of which are `optional=templinst`; only **254** are required on amd64. Therefore `255 < 263` is also a runner false negative.
+
+These events are recorded as validation infrastructure incidents with `package_state_effect=none`, not as package FAIL. They do not certify PASS because QML/APT/consumer gates were not reached after the false-negative abort.
+
+### Retained ABI baseline partition for amd64
+
+| Surface | Baseline total | Optional | Non-optional but inapplicable on amd64 | Required on amd64 |
+| --- | ---: | ---: | ---: | ---: |
+| ConfigCore | 648 | 6 | 8 | 634 |
+| ConfigGui | 170 | 2 | 0 | 168 |
+| ConfigQml | 22 | 0 | 0 | 22 |
+| I18n | 122 | 1 | 0 | 121 |
+| I18nLocaleData | 58 | 2 | 0 | 56 |
+| I18nQml | 33 | 0 | 0 | 33 |
+| SonnetCore | 263 | 9 | 0 | 254 |
+| SonnetUi | 179 | 5 | 0 | 174 |
+
+The runner now recomputes this partition directly from every retained hash-pinned Debian symbols file. It requires the computed total/optional/non-applicable/required counts to equal campaign metadata and uses only `reference_required_export_count_amd64` as the post-build numeric floor. `dpkg-gensymbols` remains the authoritative per-symbol missing-symbol check; the numeric gate remains an additional consistency guard.
+
+Because the shared runner changes, the next validation cycle revalidates KConfig, KI18n and Sonnet. Package revisions do not change: KConfig/Sonnet remain `6.30.0-0supralinux3`, KI18n remains `6.30.0-0supralinux1`.

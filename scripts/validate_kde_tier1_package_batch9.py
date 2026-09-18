@@ -35,6 +35,16 @@ for node,(source,sha,package_version,nbin,nabi,job,artifact,digest) in expected.
  req(n.get('upstream_defaults',{}).get('BUILD_TESTING')=='ON',f'{node}: BUILD_TESTING must be ON')
  req(n.get('qch_profile')=='OFF-common-supralinux-frameworks',f'{node}: QCH profile mismatch')
  req(len(n.get('binary_contracts',[]))==nbin and len(n.get('abi_contracts',[]))==nabi,f'{node}: binary/ABI contract count mismatch')
+ abi_expected={
+  'kconfig':{'ConfigCore':(648,6,8,634),'ConfigGui':(170,2,0,168),'ConfigQml':(22,0,0,22)},
+  'ki18n':{'I18n':(122,1,0,121),'I18nLocaleData':(58,2,0,56),'I18nQml':(33,0,0,33)},
+  'sonnet':{'SonnetCore':(263,9,0,254),'SonnetUi':(179,5,0,174)}
+ }[node]
+ for abi in n.get('abi_contracts',[]):
+  exp=abi_expected.get(abi.get('surface'))
+  req(exp is not None,f"{node}/{abi.get('surface')}: unexpected ABI surface")
+  if exp is not None:
+   req((abi.get('reference_export_count'),abi.get('reference_optional_export_count'),abi.get('reference_nonoptional_inapplicable_amd64_count'),abi.get('reference_required_export_count_amd64'))==exp,f"{node}/{abi.get('surface')}: ABI baseline partition mismatch")
  d=n.get('diagnostic_evidence',{}); req(d.get('workflow_run')==35138333645 and d.get('job_id')==job and d.get('artifact_id')==artifact and d.get('artifact_sha256')==digest and d.get('result')=='DIAG_PASS' and d.get('promotes_package_state') is False,f'{node}: DIAG_PASS evidence mismatch')
  req(n.get('state') in {'prepared-pending-build','remediation-pending-build','PASS'},f'{node}: invalid campaign state')
  can=canonical.get(node,{}); req(can.get('state')=='pending' and can.get('packaging',{}).get('state')=='pending',f'{node}: canonical state must remain pending before separate promotion')
@@ -65,7 +75,7 @@ req('env -u LC_ALL -u LC_COLLATE -u LC_CTYPE LANG=en_US.UTF-8' in ki_rules,'KI18
 kpol=c['nodes']['kconfig']['patch_policy']; req(kpol.get('retained')==['Allow-packagers-set-kconfig_compiler-install-dir.patch'] and len(kpol.get('excluded',[]))==2,'KConfig patch policy mismatch')
 req((ROOT/'packages/kde/kconfig/debian/patches/series').read_text().strip()=='Allow-packagers-set-kconfig_compiler-install-dir.patch','KConfig series must contain only technical layout patch')
 req(c['nodes']['sonnet']['patch_policy'].get('excluded')==['cross.patch'],'Sonnet cross.patch exclusion must be explicit')
-req(c.get('state')=='remediation-pending-build','Batch 9 campaign must record attempt-2 remediation state')
+req(c.get('state')=='runner-remediation-pending-revalidation','Batch 9 campaign must record runner-remediation state after validation cycle 3')
 # Reviewed ABI deltas are deterministic, hash-guarded, and run immediately before dh_makeshlibs.
 deltas={
  'kconfig':{
@@ -84,6 +94,17 @@ for node,meta in deltas.items():
  req('override_dh_makeshlibs:' in rules and '\tpython3 debian/apply-symbols-delta.py' in rules and '\tdh_makeshlibs' in rules and rules.index('\tpython3 debian/apply-symbols-delta.py') < rules.index('\tdh_makeshlibs'),f'{node}: symbols delta must execute before dh_makeshlibs')
 req(c['nodes']['kconfig'].get('last_failure_evidence',{}).get('reviewed_upstream_minimum')=='6.29.0','KConfig reviewed ABI minimum mismatch')
 req(c['nodes']['sonnet'].get('last_failure_evidence',{}).get('reviewed_upstream_minimum')=='6.30.0','Sonnet reviewed ABI minimum mismatch')
+inc=c.get('validation_incidents',{})
+incident_expected={
+ 'kconfig':(105633436677,10551433966,'eed45f10d52f3190fcf099ceb63c4138f1c346d191d6aa85429b1beafd829b95','cd684394244cb651b6d36171bf140e8dfae4905d92b5f4da2d87d89b66754629','90/90 PASS','ConfigCore',640,648,634),
+ 'sonnet':(105633436582,10551832586,'f9352e5f5c3cd527cc32887896b1c6c4441e1291ee103204de470e3378a77218','9e79ae0631e0c4b7a59f3fb82af976eaaf9c388c01b57edfebd30001f37d38af','8/8 PASS','SonnetCore',255,263,254)}
+req(inc.get('ki18n')==[],'KI18n must have no cycle-3 validation incident')
+for node,(job,artifact,digest,rootfs,tests,surface,observed,total,required) in incident_expected.items():
+ hist=inc.get(node,[])
+ req(len(hist)==1,f'{node}: expected exactly one validation-cycle-3 infrastructure incident')
+ if len(hist)==1:
+  x=hist[0]
+  req(x.get('validation_cycle')==3 and x.get('commit')=='97e4feb51df541501b027ba80c4b86907d8763c8' and x.get('workflow_run')==35355395436 and x.get('job_id')==job and x.get('artifact_id')==artifact and x.get('artifact_sha256')==digest and x.get('rootfs_sha256')==rootfs and x.get('stage')=='abi-contract' and x.get('classification')=='runner-false-negative-total-export-floor' and x.get('package_state_effect')=='none' and x.get('package_build')=='successful' and x.get('lintian')=='PASS-errors' and x.get('tests')==tests and x.get('observed_surface')==surface and x.get('observed_exports')==observed and x.get('reference_total_exports')==total and x.get('reference_required_exports_amd64')==required,f'{node}: validation-cycle-3 incident evidence mismatch')
 for node in ('kconfig','sonnet'):
  control=text(ROOT/'packages/kde'/node/'debian/control')
  readme=text(ROOT/'packages/kde'/node/'debian/README.source')
@@ -120,6 +141,14 @@ for node,(job,artifact,digest,rootfs,result,tests) in attempt2_expected.items():
  if len(hist)>=2:
   x=hist[1]
   req(x.get('attempt')==2 and x.get('commit')=='f23d5b995468d16189ef18e9b59b63ac3927736f' and x.get('workflow_run')==35354088696 and x.get('job_id')==job and x.get('artifact_id')==artifact and x.get('artifact_sha256')==digest and x.get('rootfs_sha256')==rootfs and x.get('result')==result and x.get('tests')==tests,f'{node}: attempt 2 retained evidence mismatch')
+ledger_inc=a.get('validation_incidents',{})
+req(ledger_inc.get('ki18n')==[],'KI18n attempt ledger must have no validation-cycle-3 incident')
+for node,(job,artifact,digest,rootfs,tests,_,observed,total,required) in incident_expected.items():
+ hist=ledger_inc.get(node,[])
+ req(len(hist)==1,f'{node}: attempt ledger validation incident missing')
+ if len(hist)==1:
+  x=hist[0]
+  req(x.get('validation_cycle')==3 and x.get('classification')=='INFRA' and x.get('package_state_effect')=='none' and x.get('commit')=='97e4feb51df541501b027ba80c4b86907d8763c8' and x.get('workflow_run')==35355395436 and x.get('job_id')==job and x.get('artifact_id')==artifact and x.get('artifact_sha256')==digest and x.get('rootfs_sha256')==rootfs and x.get('tests')==tests,f'{node}: attempt ledger infrastructure incident mismatch')
 # Discovery exposes exactly these three as independently runnable; no BLOCKED.
 for node in expected: req(g.get('nodes',{}).get(node,{}).get('readiness')=='runnable',f'{node}: must be runnable in global discovery')
 req(g.get('lanes',{}).get('multi-abi',{}).get('status')=='implementation-ready','multi-ABI lane must be implementation-ready')
@@ -128,11 +157,11 @@ for token in ('fail-fast: false','max-parallel: 3','node: [kconfig, ki18n, sonne
  req(token in workflow,f'Batch 9 workflow missing {token}')
 req('uses: ./.github/workflows/kde-tier1-package-batch9.yml' in router,'PR router must invoke Batch 9')
 req('Test KDE Tier 1 Batch 9 package scope' in policy and 'Validate KDE Tier 1 batch 9 preparation' in policy,'Repository Policy must test/validate Batch 9')
-for token in ('abi-contract',"STAGE='qml-import-smoke'","STAGE='qml-package-contract'",'consumer-runtime-closure','lintian --fail-on error','0supralinux','DDEBS','sbuild --verbose'):
+for token in ('abi-contract','reference_required_export_count_amd64','reference_optional_export_count','reference_nonoptional_inapplicable_amd64_count','abi-reference-counts.txt',"STAGE='qml-import-smoke'","STAGE='qml-package-contract'",'consumer-runtime-closure','lintian --fail-on error','0supralinux','DDEBS','sbuild --verbose'):
  req(token in runner,f'Batch 9 runner gate missing {token}')
 req('manifests/kde-tier1-package-campaign-batch9.json' in scope and 'packages/kde/${NODE}/' in scope,'Batch 9 scope selector contract missing')
 req('KDE Tier 1 Batch 9 scope selector: PASS' in scope_test,'Batch 9 scope test marker missing')
-for token in ('9441b2f2957b350a46026b0df3bd5eb3578e1578671aab3b7afc7a0929ce1a97','DIAG_PASS','QSKIP','cross.patch','22 PASS / 7 pending','6.30.0-0supralinux1'):
+for token in ('9441b2f2957b350a46026b0df3bd5eb3578e1578671aab3b7afc7a0929ce1a97','DIAG_PASS','QSKIP','cross.patch','22 PASS / 7 pending','6.30.0-0supralinux1','package_state_effect=none','634','254','reference_required_export_count_amd64'):
  req(token in doc,f'Batch 9 documentation missing {token}')
 if errors:
  for e in errors: print('ERROR:',e,file=sys.stderr)
