@@ -138,3 +138,11 @@ Kirigami remediation `6.30.0-0supralinux2` classifies the 38 newly emitted Qt/li
 Kirigami `6.30.0-0supralinux2` passed build, `44/44` tests, Lintian, the reviewed template-symbol remediation, ABI, QML and APT gates in run `35392233659`, then hit a repository consumer-harness false negative at `consumer-smoke`: the test requested nonexistent umbrella `KF6Config.cmake` instead of the installed `KF6KirigamiPlatformConfig.cmake`.
 
 This is retained as **INFRA / package_state_effect=none**, not a package FAIL. The package revision remains `-2`. KQuickCharts remained unattempted/BLOCKED. Canonical Tier 1 remains 25 PASS / 4 pending until a full PASS cycle and separate promotion.
+
+### Batch 10 validation cycle 3
+
+Kirigami `6.30.0-0supralinux2` is retained PASS from run `35398956698`, job `105774229788`, artifact `10569258322`, SHA-256 `6a008366edda84f8c285e5cf0a6b18a4b1089fc88e530d6e61b0f4f885dd7e30`, rootfs `8a1e3d09d8788ad38c81cb7071f7149c114f3582ee3c59d489114c3b81497a35`, with `44/44 PASS` and all Lintian/ABI/APT/QML/consumer gates PASS.
+
+KQuickCharts then consumed the exact Kirigami PASS and produced its first real package FAIL at `dh_makeshlibs`: job `105776448807`, artifact `10570203712`, tests `8/8 PASS`. QuickCharts moves to `6.30.0-0supralinux2` with two private `std::_Sp_counted_ptr<QQuickItem *>` RTTI/vtable entries marked `optional=templinst|arch=!riscv64` by deterministic hash-verified transformation.
+
+Kirigami is campaign-downstream-eligible but remains canonical pending until Batch 10 promotion. Canonical Tier 1 stays 25 PASS / 4 pending.

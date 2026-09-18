@@ -55,9 +55,9 @@
       },
       "qch_profile": "OFF-common-supralinux-frameworks",
       "kde_framework_build_dependencies": [],
-      "state": "remediation-pending-build",
-      "last_result": "FAIL",
-      "downstream_eligible": false,
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
       "last_failure_evidence": {
         "workflow_run": 35389030840,
         "job_id": 105742841430,
@@ -86,6 +86,36 @@
         "qml_import_smoke": "PASS",
         "symbols_remediation": "PASS",
         "cause": "consumer-harness-requested-nonexistent-KF6-umbrella-config"
+      },
+      "pass_evidence": {
+        "validation_cycle": 3,
+        "workflow_run": 35398956698,
+        "job_id": 105774229788,
+        "artifact_id": 10569258322,
+        "artifact_sha256": "6a008366edda84f8c285e5cf0a6b18a4b1089fc88e530d6e61b0f4f885dd7e30",
+        "rootfs_sha256": "8a1e3d09d8788ad38c81cb7071f7149c114f3582ee3c59d489114c3b81497a35",
+        "tests": "44/44 PASS",
+        "lintian": "PASS-errors",
+        "apt_check": "PASS",
+        "qml_import_smoke": "PASS",
+        "consumer_smoke": "PASS",
+        "abi_exports": {
+          "Kirigami": 12,
+          "KirigamiControls": 28,
+          "KirigamiDelegates": 10,
+          "KirigamiDialogs": 1,
+          "KirigamiForms": 1,
+          "KirigamiFormsPrivateCards": 10,
+          "KirigamiFormsPrivateFlat": 10,
+          "KirigamiFormsPrivateTemplates": 1,
+          "KirigamiLayouts": 26,
+          "KirigamiLayoutsPrivate": 1,
+          "KirigamiPlatform": 435,
+          "KirigamiPolyfill": 1,
+          "KirigamiPrimitives": 11,
+          "KirigamiPrivate": 10,
+          "KirigamiTemplates": 3
+        }
       },
       "symbols_remediation": {
         "policy": "optional=templinst",
@@ -180,8 +210,8 @@
       "signing_key": {"sha256":"86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"},
       "qch_profile": "OFF-common-supralinux-frameworks",
       "kde_framework_build_dependencies": [],
-      "state": "prepared-pending-build",
-      "last_result": "BLOCKED",
+      "state": "remediation-pending-build",
+      "last_result": "FAIL",
       "downstream_eligible": false,
       "last_blocked_evidence": {
         "validation_cycle": 2,
@@ -194,10 +224,32 @@
         "package_attempted": false,
         "reason": "Kirigami validation did not PASS because of a consumer-harness infrastructure false negative; KQuickCharts full package validation was not attempted."
       },
+      "last_failure_evidence": {
+        "validation_cycle": 3,
+        "workflow_run": 35398956698,
+        "job_id": 105776448807,
+        "artifact_id": 10570203712,
+        "artifact_sha256": "1f4a4a65e3e534d000b0507ff583f8ef657eb5836d0db840ef405d5ab501f12e",
+        "rootfs_sha256": "7da69856573c2d320f7e8a345d53fff793c39e0e8fe1e0e144bed73fcf3765d2",
+        "tests": "8/8 PASS",
+        "stage": "sbuild",
+        "kirigami_predecessor_version": "6.30.0-0supralinux2",
+        "cause": "missing-required-private-template-instantiation-symbols"
+      },
+      "symbols_remediation": {
+        "policy": "optional=templinst|arch=!riscv64",
+        "symbols_file": "libquickcharts1.symbols",
+        "baseline_sha256": "ed06cd19136bc5a1bfb10fb7e5c93070fdb4f76ca81f8536243666297e8193e6",
+        "result_sha256": "f1ba9c4d179d7dc3638f82fe5879c6ecea43455f520eff686aad508c4e32702e",
+        "changed_symbols": 2,
+        "minimum_version": "6.0.0",
+        "minimum_basis": "preserved-retained-baseline",
+        "rationale": "Two std::_Sp_counted_ptr<QQuickItem *> RTTI/vtable exports are private libstdc++ template-instantiation details and may disappear with toolchain/codegen changes; preserve the historical minimum and architecture tag while marking only those two entries optional."
+      },
       "name": "KQuickCharts",
       "upstream_version": "6.30.0",
       "source_package": "kf6-kquickcharts",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kquickcharts-6.30.0.tar.xz",
       "source_sha256": "9fe8c0c78ffd23ccfb99cc36477550a229c114ad057def938f38cdec35f82ab1",
       "upstream_defaults": {"BUILD_SHARED_LIBS":"ON","BUILD_EXAMPLES":"OFF","BUILD_TESTING":"ON"},
@@ -215,7 +267,7 @@
         {"surface":"QuickChartsControls","runtime_package":"libquickchartscontrols1","soname":"libQuickChartsControls.so.1","symbols_file":"libquickchartscontrols1.symbols","reference_provider":"debian","reference_version":"6.28.0","reference_sha256":"b7889c71de224a6824c0c7a44360278f198a7b37fe48fedc61cb2f81dd9f0876","reference_export_count":1,"reference_optional_export_count":0,"reference_nonoptional_inapplicable_amd64_count":0,"reference_required_export_count_amd64":1}
       ],
       "qml_contracts": [{"package":"qml6-module-org-kde-quickcharts","required_root_module":"org.kde.quickcharts","enumerate_all_declared_modules":true}],
-      "package_validation_dependencies": [{"node":"kirigami","kind":"qml-runtime-closure","required_local_packages":["qml6-module-org-kde-kirigami"],"not_kde_framework_build_dependency":true,"state":"awaiting-retained-PASS"}],
+      "package_validation_dependencies": [{"node":"kirigami","kind":"qml-runtime-closure","required_local_packages":["qml6-module-org-kde-kirigami"],"not_kde_framework_build_dependency":true,"state":"retained-PASS-available"}],
       "patch_policy": {"retained":[],"excluded":["Debian architecture-specific test suppression"]},
       "test_fixture": {"LANG":"C.UTF-8","LC_ALL":"C.UTF-8","xvfb":"1920x1080x24","window_manager":"openbox","dbus_session":true},
       "expected_test_count": 8

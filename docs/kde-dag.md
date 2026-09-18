@@ -409,3 +409,9 @@ PR CI `35389030840` confirms the DAG semantics in practice: Kirigami attempt 1 i
 Run `35392233659` did not create a second Kirigami package FAIL. The package reached consumer validation after all earlier gates passed; the final failure came from a wrong CMake package name in the repository harness. It is an infrastructure validation incident with no package-state effect.
 
 KQuickCharts again remained BLOCKED/unattempted because the Kirigami validation job did not finish PASS. No DAG edge changes.
+
+### Batch 10 cycle 3
+
+Kirigami now has retained PASS evidence from run `35398956698`. KQuickCharts was therefore unblocked and attempted for the first time, then failed locally at its own retained symbols contract after `8/8` tests PASS.
+
+This changes operational campaign state only: Kirigami is retained PASS, KQuickCharts is remediation-pending-build at `6.30.0-0supralinux2`. The canonical DAG remains unchanged at **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until the separate Batch 10 promotion.

@@ -7,3 +7,16 @@ The active .symbols files are not stored in this package tree. The Batch 10 runn
 QCH follows the common SupraLINUX Frameworks profile and is disabled. Upstream tests remain enabled. No downstream test-suppression patch or behavior patch is retained.
 
 debian/copyright.reference is provenance metadata only. The package runner materializes the complete hash-pinned Debian 6.28 copyright file from retained artifact 10301938362 into the ephemeral source package; SupraLINUX does not keep a second mutable copy in git.
+
+Attempt-1 ABI remediation
+-------------------------
+
+The first real KQuickCharts package attempt ran only after the current-run SupraLINUX Kirigami 6.30.0-0supralinux2 PASS artifact satisfied the QML/runtime package-validation predecessor. The KQuickCharts build then passed 8/8 upstream tests but dpkg-gensymbols rejected two retained Debian 6.28 std::_Sp_counted_ptr<QQuickItem *> RTTI/vtable exports that are absent with the current Resolute toolchain.
+
+These exports are C++ standard-library template-instantiation implementation details, not public KQuickCharts API. Revision 6.30.0-0supralinux2 applies a deterministic hash-guarded overlay immediately before dh_makeshlibs and changes only those two lines from arch=!riscv64 to optional=templinst|arch=!riscv64. Their historical 6.0.0 minimum is preserved. The already-optional std::_Rb_tree::find template symbol is deliberately unchanged.
+
+Retained baseline SHA-256:
+ed06cd19136bc5a1bfb10fb7e5c93070fdb4f76ca81f8536243666297e8193e6
+
+Reviewed transformed SHA-256:
+f1ba9c4d179d7dc3638f82fe5879c6ecea43455f520eff686aad508c4e32702e

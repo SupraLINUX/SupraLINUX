@@ -161,3 +161,9 @@ PR CI `35389030840` exercised the package-validation edge exactly as designed: K
 The built Kirigami development package proves the consumer-facing CMake contract directly: it installs `KF6KirigamiPlatformConfig.cmake`, which exports `KF6::KirigamiPlatform` and resolves Qt6 Core/Qml/Quick. The prior consumer test incorrectly searched for an umbrella `KF6Config.cmake` that Kirigami does not install.
 
 Correcting the consumer harness does not alter KDE Framework build dependencies, package-validation ordering or provider authority. KQuickCharts remains a package-validation dependent only.
+
+### Batch 10 cycle 3 retained predecessor proof
+
+Run `35398956698` proved both sides of the package-validation relation. Kirigami `6.30.0-0supralinux2` completed every package gate and became a retained PASS. KQuickCharts job `105776448807` then downloaded that current-run artifact and verified all 19 Kirigami binary packages at exactly the SupraLINUX version before entering its own `sbuild`.
+
+The subsequent QuickCharts FAIL is therefore local to its own symbols metadata, not a predecessor/provider failure. The next QuickCharts-only remediation may reuse Kirigami through campaign `pass_evidence`; this still does not create a KDE Framework build dependency.

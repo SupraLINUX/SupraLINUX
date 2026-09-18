@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 1 — Batch 10 QML/multisurface package campaign
 
-Status: **attempt 1 recorded; Kirigami remediation pending; package state not promoted**
+Status: **Kirigami retained PASS; KQuickCharts remediation pending; canonical state not promoted**
 
 As of 2026-09-18, KDE Frameworks 6.30.0 remains the selected upstream stable series. Batch 10 covers the remaining Tier 1 QML-heavy pair: Kirigami and KQuickCharts. Canonical Tier 1 before this campaign is **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.
 
@@ -151,3 +151,44 @@ KQuickCharts job `105755393521` was again not attempted. It recorded **BLOCKED**
 
 Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until retained full package PASS evidence is separately promoted.
 
+## Validation cycle 3 — Kirigami PASS, KQuickCharts attempt 1 FAIL
+
+Repository Policy run `35398956303` passed the corrected Batch 10 policy before package interpretation. PR CI run `35398956698` then validated the campaign on commit `25af7164a76a925f27814aabe1986727a53d49bf`.
+
+Kirigami `6.30.0-0supralinux2` is now a retained **PASS**:
+
+- job `105774229788`;
+- artifact `10569258322`;
+- artifact ZIP SHA-256 `6a008366edda84f8c285e5cf0a6b18a4b1089fc88e530d6e61b0f4f885dd7e30`;
+- rootfs SHA-256 `8a1e3d09d8788ad38c81cb7071f7149c114f3582ee3c59d489114c3b81497a35`;
+- tests `44/44 PASS`;
+- Lintian error gate PASS;
+- all 15 ABI surfaces satisfy their amd64 floors;
+- exact local APT closure/check PASS;
+- QML import validation PASS;
+- corrected `KF6KirigamiPlatform` consumer configure/build/run PASS;
+- downstream-eligible inside the Batch 10 campaign.
+
+The generated ABI export counts are: Kirigami `12`, Controls `28`, Delegates `10`, Dialogs `1`, Forms `1`, FormsPrivateCards `10`, FormsPrivateFlat `10`, FormsPrivateTemplates `1`, Layouts `26`, LayoutsPrivate `1`, Platform `435`, Polyfill `1`, Primitives `11`, Private `10`, Templates `3`.
+
+The same run therefore released KQuickCharts for its **first real package attempt**. Job `105776448807` downloaded the current-run Kirigami PASS artifact and verified all 19 Kirigami binary packages at exactly `6.30.0-0supralinux2`, proving the package-validation dependency was satisfied by SupraLINUX rather than Ubuntu.
+
+KQuickCharts `6.30.0-0supralinux1` then produced a real **FAIL**:
+
+- artifact `10570203712`;
+- artifact ZIP SHA-256 `1f4a4a65e3e534d000b0507ff583f8ef657eb5836d0db840ef405d5ab501f12e`;
+- rootfs SHA-256 `7da69856573c2d320f7e8a345d53fff793c39e0e8fe1e0e144bed73fcf3765d2`;
+- tests `8/8 PASS`;
+- failure stage: `sbuild` / `dh_makeshlibs`.
+
+`dpkg-gensymbols` reported three missing retained-baseline symbols. The `std::_Rb_tree::find` symbol was already `optional=templinst` and is not causal. The two causal entries are the `std::_Sp_counted_ptr<QQuickItem *>` RTTI/vtable exports `_ZTI...` and `_ZTV...`, both retained as mandatory on `arch=!riscv64`. They are private libstdc++ template-instantiation details rather than public KQuickCharts API.
+
+### KQuickCharts attempt-1 remediation
+
+KQuickCharts moves to `6.30.0-0supralinux2`. A deterministic `debian/apply-symbols-delta.py` verifies the retained Debian 6.28 baseline SHA-256 `ed06cd19136bc5a1bfb10fb7e5c93070fdb4f76ca81f8536243666297e8193e6`, changes **only** the two RTTI/vtable entries from `arch=!riscv64` to `optional=templinst|arch=!riscv64`, preserves their historical `6.0.0` minimum, and verifies transformed SHA-256 `f1ba9c4d179d7dc3638f82fe5879c6ecea43455f520eff686aad508c4e32702e`.
+
+The already-optional `std::_Rb_tree::find` line is deliberately unchanged. No active `.symbols` file is committed. `python3:any` is declared because `debian/rules` invokes the deterministic helper before `dh_makeshlibs`.
+
+Kirigami remains retained PASS and does not need a rebuild. The next semantic scope should skip Kirigami and make KQuickCharts resolve the retained Kirigami artifact through campaign `pass_evidence`.
+
+Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. Canonical promotion remains separate until both Batch 10 nodes have retained PASS evidence.

@@ -18,9 +18,45 @@
         "tests": "44/44 PASS",
         "package_build": "successful",
         "cause": "Lintian rejected 38 generated Qt/libstdc++ template-instantiation symbols carrying the current Debian revision across five Kirigami runtime symbol files."
+      },
+      {
+        "attempt": 2,
+        "validation_cycle": 3,
+        "package_version": "6.30.0-0supralinux2",
+        "commit": "25af7164a76a925f27814aabe1986727a53d49bf",
+        "workflow_run": 35398956698,
+        "job_id": 105774229788,
+        "artifact_id": 10569258322,
+        "artifact_sha256": "6a008366edda84f8c285e5cf0a6b18a4b1089fc88e530d6e61b0f4f885dd7e30",
+        "rootfs_sha256": "8a1e3d09d8788ad38c81cb7071f7149c114f3582ee3c59d489114c3b81497a35",
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "44/44 PASS",
+        "lintian": "PASS-errors",
+        "apt_check": "PASS",
+        "qml_import_smoke": "PASS",
+        "consumer_smoke": "PASS",
+        "downstream_eligible": true
       }
     ],
-    "kquickcharts": []
+    "kquickcharts": [
+      {
+        "attempt": 1,
+        "validation_cycle": 3,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "25af7164a76a925f27814aabe1986727a53d49bf",
+        "workflow_run": 35398956698,
+        "job_id": 105776448807,
+        "artifact_id": 10570203712,
+        "artifact_sha256": "1f4a4a65e3e534d000b0507ff583f8ef657eb5836d0db840ef405d5ab501f12e",
+        "rootfs_sha256": "7da69856573c2d320f7e8a345d53fff793c39e0e8fe1e0e144bed73fcf3765d2",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "8/8 PASS",
+        "kirigami_predecessor_version": "6.30.0-0supralinux2",
+        "cause": "dpkg-gensymbols rejected two retained Debian 6.28 std::_Sp_counted_ptr<QQuickItem *> RTTI/vtable template-instantiation symbols that are absent with the current amd64 toolchain; the third missing std::_Rb_tree::find symbol was already optional=templinst."
+      }
+    ]
   },
   "validation_incidents": {
     "kirigami": [

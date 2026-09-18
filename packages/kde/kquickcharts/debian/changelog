@@ -1,3 +1,11 @@
+kf6-kquickcharts (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Mark two private std::shared_ptr<QQuickItem *> RTTI/vtable template
+    instantiations optional while preserving their !riscv64 architecture tag.
+  * Declare python3:any for the deterministic symbols-delta helper.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Fri, 18 Sep 2026 19:15:00 -0300
+
 kf6-kquickcharts (6.30.0-0supralinux1) resolute; urgency=medium
 
   * Package KDE KQuickCharts 6.30.0 from upstream stable.
