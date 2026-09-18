@@ -166,3 +166,11 @@ Repository Policy `35403657994` passed. PR CI `35403658149` revalidated Kirigami
 The gate used the historical Debian required floor 382 even though the reviewed symbols remediation had made two existing amd64 template-instantiation exports optional. The manifest now distinguishes `reference_required_export_count_amd64=382` from `effective_required_export_count_amd64=380`; the package emitted 381 exports. This is **INFRA / package_state_effect=none**, not a new package FAIL or revision bump.
 
 Canonical Tier 1 stays at **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until revalidation completes and Batch 10 is promoted separately.
+
+### Batch 10 validation cycle 7
+
+PR CI `35406143858` confirms the effective ABI correction: KQuickCharts `6.30.0-0supralinux3` passed `8/8`, Lintian, `dh_qmldeps`, QuickCharts ABI `381 >= 380`, QML imports and exact APT closure. The package then produced real FAIL attempt 3 at `consumer-smoke`: job `105797738652`, artifact `10572841006`, SHA-256 `87c84de4c44bcf7bf6dfad958e85ea755dd34ae014dd85508c250e596b4b4563`, rootfs `bc109e0dd164e30611fa519db43aef659eba2346b1a3f3a1b8e5ce61a3aead92`.
+
+The exported `KF6QuickChartsConfig.cmake` requires ECM 6.30, but `libquickcharts-dev` did not depend on `extra-cmake-modules`. KQuickCharts moves to `6.30.0-0supralinux4` with `extra-cmake-modules (>= 6.30.0~)` in the development package Depends. Consumer validation also installs and verifies the retained SupraLINUX ECM `6.30.0-0supralinux3` provider.
+
+This does not create a KDE Framework build edge. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.

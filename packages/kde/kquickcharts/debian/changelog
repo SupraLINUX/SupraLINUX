@@ -1,3 +1,11 @@
+kf6-kquickcharts (6.30.0-0supralinux4) resolute; urgency=medium
+
+  * Add the exported ECM 6.30 development dependency to libquickcharts-dev.
+  * Keep the consumer closure pinned to the retained SupraLINUX ECM PASS
+    provider instead of accepting Ubuntu's older ECM.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Fri, 18 Sep 2026 20:55:00 -0300
+
 kf6-kquickcharts (6.30.0-0supralinux3) resolute; urgency=medium
 
   * Install the retained SupraLINUX Kirigami QML module in the package-build

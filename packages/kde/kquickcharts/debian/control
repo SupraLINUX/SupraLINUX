@@ -39,6 +39,7 @@ Section: libdevel
 Depends: libquickcharts1 (= ${binary:Version}),
          libquickchartscontrols1 (= ${binary:Version}),
          qml6-module-org-kde-quickcharts (= ${binary:Version}),
+         extra-cmake-modules (>= 6.30.0~),
          qt6-base-dev (>= 6.9.0~),
          qt6-declarative-dev (>= 6.9.0~),
          ${misc:Depends},

@@ -329,7 +329,7 @@ lintian --fail-on error "${DSC}" "${CHANGES[0]}" |& tee "${EVIDENCE_DIR}/lintian
 
 STAGE=consumer-runtime-closure
 INSTALL_DEBS=("${DEBS[@]}")
-if [[ "${NODE}" == kquickcharts ]]; then INSTALL_DEBS+=("${KIRIGAMI_DEBS[@]}"); fi
+if [[ "${NODE}" == kquickcharts ]]; then INSTALL_DEBS+=("${KIRIGAMI_DEBS[@]}" "${ECM_DEB}"); fi
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${INSTALL_DEBS[@]}" |& tee "${EVIDENCE_DIR}/consumer-runtime-install.log"
 sudo apt-get check |& tee "${EVIDENCE_DIR}/consumer-runtime-check.log"
 : > "${EVIDENCE_DIR}/consumer-runtime-packages.txt"
@@ -341,7 +341,9 @@ print(json.load(open(sys.argv[1]))['nodes']['kirigami']['package_version'])
 PY2
 )"
   [[ "$(dpkg-query -W -f='${Version}' qml6-module-org-kde-kirigami)" == "${KIRIGAMI_VERSION}" ]] || { echo "QuickCharts resolved non-SupraLINUX Kirigami QML runtime" >&2; exit 1; }
+  [[ "$(dpkg-query -W -f='${Version}' extra-cmake-modules)" == "${ECM_VERSION}" ]] || { echo "QuickCharts resolved non-SupraLINUX ECM development provider" >&2; exit 1; }
   printf 'qml6-module-org-kde-kirigami=%s\n' "${KIRIGAMI_VERSION}" >> "${EVIDENCE_DIR}/consumer-runtime-packages.txt"
+  printf 'extra-cmake-modules=%s\n' "${ECM_VERSION}" >> "${EVIDENCE_DIR}/consumer-runtime-packages.txt"
 fi
 
 STAGE='qml-import-smoke'

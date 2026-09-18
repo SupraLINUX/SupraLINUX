@@ -181,3 +181,13 @@ KQuickCharts keeps Debian 6.28 as a technical ABI reference, not an authority. T
 SupraLINUX's reviewed symbols remediation changes two **existing** amd64 `std::_Sp_counted_ptr<QQuickItem *>` RTTI/vtable entries from required to `optional=templinst|arch=!riscv64`. That does not rewrite the historical baseline metadata: `reference_required_export_count_amd64` remains 382. It creates an explicit reviewed runtime contract `effective_required_export_count_amd64=380`. Run `35403658149` generated 381 QuickCharts exports, which is above that effective floor.
 
 The runner now uses the effective floor only when the campaign records one explicitly; otherwise it falls back to the retained reference floor. This preserves both provenance and the reviewed remediation semantics.
+
+## Batch 10 cycle 7 exported ECM consumer contract
+
+KQuickCharts remains free of KDE Framework build dependencies. Separately, its installed KDE 6.30 development CMake config has an exported consumer requirement:
+
+`KF6QuickChartsConfig.cmake -> find_dependency(ECM 6.30.0) -> ECMFindQmlModule.cmake`.
+
+Therefore `libquickcharts-dev` must depend on `extra-cmake-modules (>= 6.30.0~)`. This is a **binary development/consumer dependency**, not a `kde_framework_build_dependencies` edge. KDE's exported config defines the need; SupraLINUX supplies its retained ECM `6.30.0-0supralinux3` PASS package.
+
+Cycle 7 proved the omission in a clean consumer after all earlier gates passed. The Batch 10 consumer gate now includes the retained ECM package in the local install transaction and verifies the installed version exactly, so Ubuntu's older ECM cannot satisfy the contract.

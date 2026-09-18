@@ -224,3 +224,15 @@ The retained Debian 6.28 QuickCharts baseline contains 393 exports, including 2 
 Cycle 6 is classified **INFRA / package_state_effect=none**. It is not KQuickCharts attempt 3 and does not bump the package beyond `6.30.0-0supralinux3`. The manifest now records both `reference_required_export_count_amd64=382` and `effective_required_export_count_amd64=380`, and the runner uses the effective floor only when an explicitly reviewed override exists.
 
 Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** pending successful revalidation and separate Batch 10 promotion.
+
+## Validation cycle 7 — exported ECM development dependency
+
+Repository Policy `35406143702` passed. PR CI `35406143858` rebuilt Batch 10 with the reviewed effective ABI floor. Kirigami `6.30.0-0supralinux2` revalidated PASS and supplied a current-run predecessor artifact to KQuickCharts.
+
+KQuickCharts `6.30.0-0supralinux3` passed build, `8/8` upstream tests, Lintian, `dh_qmldeps`, both ABI contracts including QuickCharts `381 >= 380`, QML import validation and exact local-package APT closure. It then failed at `consumer-smoke`: job `105797738652`, artifact `10572841006`, ZIP SHA-256 `87c84de4c44bcf7bf6dfad958e85ea755dd34ae014dd85508c250e596b4b4563`, rootfs SHA-256 `bc109e0dd164e30611fa519db43aef659eba2346b1a3f3a1b8e5ce61a3aead92`.
+
+The installed `libquickcharts-dev` exports `KF6QuickChartsConfig.cmake`, and that KDE 6.30 config explicitly calls `find_dependency(ECM 6.30.0)` before loading `ECMFindQmlModule.cmake`. The binary development package did not depend on `extra-cmake-modules`, so a clean consumer could not configure. This is a real packaging FAIL: the package's exported development contract was incomplete.
+
+Revision `6.30.0-0supralinux4` adds `extra-cmake-modules (>= 6.30.0~)` to **libquickcharts-dev Depends**. It does not add a KQuickCharts Framework build dependency; `kde_framework_build_dependencies=[]` remains unchanged. Consumer validation now installs and verifies the retained SupraLINUX ECM `6.30.0-0supralinux3` artifact alongside the local QuickCharts/Kirigami packages, preventing Ubuntu's older ECM from satisfying the exported config.
+
+KQuickCharts now has three real FAIL attempts; cycles 5 and 6 remain infrastructure incidents only. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until a retained QuickCharts PASS and separate promotion.

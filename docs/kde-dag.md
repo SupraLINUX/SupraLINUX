@@ -433,3 +433,11 @@ The packaged SONAME is present as `libQuickCharts.so.1 -> libQuickCharts.so.6.30
 Run `35403658149` revalidated Kirigami PASS and then built KQuickCharts `6.30.0-0supralinux3` successfully, but the ABI harness used the retained **pre-remediation** required export floor. The historical QuickCharts baseline remains 382 required amd64 exports; the reviewed two-symbol `optional=templinst|arch=!riscv64` remediation lowers only the effective post-remediation floor to 380. The package emitted 381 exports.
 
 Therefore cycle 6 is **INFRA / package_state_effect=none**. KQuickCharts remains at `-3` with two real package attempts. The KDE dependency DAG is unchanged; the correction affects only ABI validation semantics. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** pending revalidation and separate promotion.
+
+### Batch 10 cycle 7 — QuickCharts exported development dependency
+
+KQuickCharts `6.30.0-0supralinux3` reached `consumer-smoke` in run `35406143858` after build, `8/8` tests, Lintian, `dh_qmldeps`, ABI, QML and APT gates passed. Consumer configuration then failed because `KF6QuickChartsConfig.cmake` exports `find_dependency(ECM 6.30.0)` while `libquickcharts-dev` did not pull ECM.
+
+This is a real package FAIL, not BLOCKED or INFRA. Revision `-4` adds the ECM requirement to the development package and uses retained SupraLINUX ECM for consumer validation. The KDE Framework DAG itself is unchanged: `kde_framework_build_dependencies=[]`; ECM remains the shared build/tooling predecessor and now also satisfies the exported development consumer contract.
+
+Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** pending QuickCharts PASS and separate promotion.
