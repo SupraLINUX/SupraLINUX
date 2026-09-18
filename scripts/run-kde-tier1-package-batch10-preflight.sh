@@ -73,7 +73,8 @@ PY2
 for f in control rules changelog README.source copyright.reference upstream/signing-key.asc source/format run-tests-under-x.sh; do test -s "${PACKAGE_META}/${f}"; done
 test -s "${CONSUMER_META}/CMakeLists.txt"; test -s "${CONSUMER_META}/main.cpp"
 grep -Fq -- '-DBUILD_TESTING=ON' "${PACKAGE_META}/rules"
-if grep -R -Eq 'QT_QML_NO_CACHEGEN=ON|BUILD_QCH=ON|\|\|[[:space:]]*true' "${PACKAGE_META}"; then echo "Forbidden downstream feature/test override present" >&2; exit 1; fi
+if grep -Eq 'QT_QML_NO_CACHEGEN=ON|BUILD_QCH=ON' "${PACKAGE_META}/rules"; then echo "Forbidden downstream feature override present in debian/rules" >&2; exit 1; fi
+if grep -Eq 'dh_auto_test.*\|\|[[:space:]]*true' "${PACKAGE_META}/rules" "${PACKAGE_META}/run-tests-under-x.sh"; then echo "Forbidden downstream test suppression present" >&2; exit 1; fi
 printf '%s  %s\n' "${SIGNING_KEY_SHA256}" "${PACKAGE_META}/upstream/signing-key.asc" | sha256sum --check --strict
 
 STAGE=retained-input-validation

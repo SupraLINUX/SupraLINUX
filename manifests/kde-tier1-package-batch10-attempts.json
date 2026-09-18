@@ -28,6 +28,18 @@
       "classification": "infrastructure-validator-scope-contract-assumption",
       "package_state_effect": "none",
       "cause": "Batch 10 validator incorrectly required a literal KQuickCharts path token and looked for package_validation_dependencies in selector/workflow instead of campaign metadata; scope test and global discovery validator had already passed."
+    },
+    {
+      "phase": "first-policy-valid-package-run",
+      "workflow_run": 35388829761,
+      "job_id": 105742185938,
+      "artifact_id": 10564903426,
+      "artifact_sha256": "07e820838fb1192118c207cbbb919ad0246987ae973781c72f67acda013a3534",
+      "stage": "campaign-validation",
+      "classification": "infrastructure-runner-behavior-guard-false-positive",
+      "package_state_effect": "none",
+      "node": "kirigami",
+      "cause": "Runner recursively scanned all debian metadata and matched documentation of rejected BUILD_QCH/QT_QML_NO_CACHEGEN overrides (and could also match legitimate fixture cleanup '|| true') before source/rootfs build."
     }
   ]
 }

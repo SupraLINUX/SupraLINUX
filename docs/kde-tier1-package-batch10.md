@@ -84,3 +84,12 @@ Classification: **infrastructure / package_state_effect=none**. No Kirigami or K
 Repository Policy run `35388572182`, job `105741309585`, passed ShellCheck, the Batch 10 semantic scope test and global discovery validation, then failed only in the Batch 10 preparation validator. The validator incorrectly required a literal `packages/kde/kquickcharts/*` token even though the selector intentionally uses the generic `packages/kde/${NODE}/*`, and it searched for `package_validation_dependencies` in selector/workflow text rather than in the campaign manifest where that metadata belongs.
 
 Classification: **infrastructure / package_state_effect=none**. The validator now tests the actual generic selector contract and the campaign metadata separately. The shared selector receives a documentation-only contract clarification so the next PR CI deliberately rebuilds both Batch 10 nodes after Repository Policy passes.
+
+
+## First Policy-valid package run — runner behavior-guard incident
+
+Repository Policy `35388829511` passed completely on commit `5b985ead70bef19dc3727b549f01ee550cd85520`. PR CI run `35388829761` then selected Kirigami, but job `105742185938` aborted at campaign validation before source/rootfs build. Artifact `10564903426`, SHA-256 `07e820838fb1192118c207cbbb919ad0246987ae973781c72f67acda013a3534`.
+
+The shared runner recursively grepped all `debian/` metadata for forbidden downstream behavior tokens. That incorrectly matched the package documentation which explicitly records those rejected overrides and could also match legitimate `|| true` cleanup in the X fixture. Classification: **infrastructure / package_state_effect=none**; this is not Kirigami attempt 1 and does not create a package FAIL.
+
+The guard is narrowed to executable behavior only: forbidden feature flags are checked in `debian/rules`, and only a `dh_auto_test ... || true` suppression is rejected across the test command files. Documentation is no longer interpreted as executable policy.
