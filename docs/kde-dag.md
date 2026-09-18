@@ -376,3 +376,10 @@ The corrected runner derives and validates the retained baseline partition and r
 Run `35358920602` validates the architecture-aware runner correction. KI18n and Sonnet are retained PASS and downstream-eligible inside the campaign. KConfig is a real package FAIL at `consumer-smoke`, after all predecessor, source, test, Lintian, ABI, package-install and QML-import gates passed. The failure is local to KConfig and does not BLOCK or invalidate either peer.
 
 The KConfig consumer failure shows that `libkf6config-dev` must pull the provider for the exported `Qt6Qml >= 6.9.0` CMake dependency. KConfig moves to `6.30.0-0supralinux4`; KI18n/Sonnet remain unchanged PASS. Canonical Tier 1 remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until separate promotion.
+
+
+### Batch 9 validation cycle 5 — 3/3 retained PASS
+
+Run `35360530830` rebuilt only KConfig after the consumer-development dependency remediation. KI18n and Sonnet scope-skipped and retain their independent cycle-4 PASS evidence. KConfig `6.30.0-0supralinux4` passed job `105650448776`, artifact `10554715051`, SHA-256 `bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e`, rootfs `cf14256f216dd3ec9a67a7bca3bd46e8624391ffe40b2c08567dc1fe90a4b9e3`, with `90/90` tests and all Lintian/ABI/APT/QML/consumer gates PASS.
+
+The multi-ABI campaign is now **3/3 PASS retained**. This evidence does not itself mutate canonical DAG state; KConfig, KI18n and Sonnet remain canonical pending until the dedicated promotion commit. Historical FAIL and INFRA evidence is retained.

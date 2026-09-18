@@ -6,7 +6,7 @@
   "provider_platform": "ubuntu-resolute",
   "batch": "tier1-batch-9",
   "lane": "multi-abi",
-  "state": "kconfig-remediation-pending-build",
+  "state": "complete-ready-for-canonical-promotion",
   "attempt_ledger": "manifests/kde-tier1-package-batch9-attempts.json",
   "canonical_snapshot": {
     "state": "pre-batch-9",
@@ -182,9 +182,9 @@
       "copyright": {
         "reference_sha256": "093a0643bf4b9cea796f8179474228686c4dce93e13e5b079a8101c32ca56594"
       },
-      "state": "remediation-pending-build",
-      "last_result": "FAIL",
-      "downstream_eligible": false,
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
       "diagnostic_provider_packages": [
         "qt6-base-dev",
         "qt6-base-private-dev",
@@ -212,6 +212,40 @@
         "consumer_error": "KF6ConfigConfig.cmake requires Qt6Qml >= 6.9.0 but libkf6config-dev did not install the provider development package.",
         "required_provider_package": "qt6-declarative-dev (>= 6.9.0~)",
         "provider_observed": "Ubuntu 26.04 Resolute qt6-declarative-dev 6.10.2+dfsg-3"
+      },
+      "pass_evidence": {
+        "validation_cycle": 5,
+        "workflow_run": 35360530830,
+        "job_id": 105650448776,
+        "artifact_id": 10554715051,
+        "artifact_sha256": "bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e",
+        "rootfs_sha256": "cf14256f216dd3ec9a67a7bca3bd46e8624391ffe40b2c08567dc1fe90a4b9e3",
+        "tests": "90/90 PASS",
+        "lintian": "PASS-errors",
+        "apt_check": "PASS",
+        "consumer_smoke": "PASS",
+        "qml_import_smoke": "PASS",
+        "abi_exports": {
+          "ConfigCore": 640,
+          "ConfigGui": 171,
+          "ConfigQml": 22
+        },
+        "files": {
+          "libkf6config_bin_deb_sha256": "a5a2bfe058aaffd899a3c704fea9794a4c1e86daa2a75695b9a1847b348f3de9",
+          "libkf6config_data_deb_sha256": "fae22d6df5777929f730211047c0fbd47ca5e39ece62398782ddcd32e6e69e60",
+          "libkf6config_dev_bin_deb_sha256": "1bb3c373b3fdd212de33c3fd4a1874e75c86684366c74f6bf7b105454f568286",
+          "libkf6config_dev_deb_sha256": "71940050496c4baca03102dd1d131dbcd675c7d2e9ee60e887dfc548555422f9",
+          "libkf6config_doc_deb_sha256": "207a6075b1151d354316433f934d6952d0d304235373a864e930b09b5305b162",
+          "libkf6configcore6_deb_sha256": "998262610e611e8cebe8630dbe3d13de4daa059ead9c9924287b2bfe994c4b33",
+          "libkf6configgui6_deb_sha256": "2ed506a790a662b0681a040cd10ae39177e5acbe6ada849947adfe387c390729",
+          "libkf6configqml6_deb_sha256": "5d951cf7b3498f02197c5c539d665439b7f9a5d64813c3faf47325afb6be0b24",
+          "qml6_module_org_kde_config_deb_sha256": "b514993f60fe1f55ac7803ceab42ba0ef8a89dc58ab5d38463bfb63c9601bfd6",
+          "changes_sha256": "517cf586eaaccb6b70f59d0b57dc49031c7a4816a6893d076659ff005560c8a8",
+          "buildinfo_sha256": "6495cabccb924159b809c400ed3350fbef54fdbdea981b4349f975e5dadfe186",
+          "dsc_sha256": "22c26f2d00406f4e3769ce939ce650b782ece8ce2950bd5c747810dee4133245",
+          "orig_tar_sha256": "0e98bac324cd716849202d4b246a948e363d6792a8eb09c78417cdde9559f56e",
+          "debian_tar_sha256": "679fa57dcc44c24dd6d949a299ddf17b2dd0b5659b4563366fcb08a3f228b0fe"
+        }
       }
     },
     "ki18n": {
@@ -618,5 +652,26 @@
         "cause": "Runner compared generated exports against a baseline total containing nine optional=templinst entries; the generated 255 exports exceed the 254 required amd64 baseline."
       }
     ]
+  },
+  "closure_evidence": {
+    "repository_policy": {
+      "workflow_run": 35360530531,
+      "job_id": 105650391908,
+      "result": "PASS"
+    },
+    "pr_ci": {
+      "workflow_run": 35360530830,
+      "commit": "bfb02cdc6f6086ed41092cc900563dfa3be86e64"
+    },
+    "scope_skips": {
+      "ki18n": {
+        "job_id": 105650448606,
+        "result": "scope-skipped-retained-PASS"
+      },
+      "sonnet": {
+        "job_id": 105650448640,
+        "result": "scope-skipped-retained-PASS"
+      }
+    }
   }
 }

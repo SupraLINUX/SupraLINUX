@@ -46,6 +46,22 @@
         "stage": "consumer-smoke",
         "tests": "90/90 PASS",
         "cause": "Build/tests/Lintian/ABI/APT/QML import passed; consumer CMake failed because libkf6config-dev omitted qt6-declarative-dev although KF6ConfigConfig.cmake requires Qt6Qml >= 6.9.0."
+      },
+      {
+        "attempt": 4,
+        "validation_cycle": 5,
+        "package_version": "6.30.0-0supralinux4",
+        "commit": "bfb02cdc6f6086ed41092cc900563dfa3be86e64",
+        "workflow_run": 35360530830,
+        "job_id": 105650448776,
+        "artifact_id": 10554715051,
+        "artifact_sha256": "bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e",
+        "rootfs_sha256": "cf14256f216dd3ec9a67a7bca3bd46e8624391ffe40b2c08567dc1fe90a4b9e3",
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "90/90 PASS",
+        "downstream_eligible": true,
+        "cause": "qt6-declarative-dev consumer-development dependency closed the exported Qt6Qml >= 6.9.0 CMake contract; all full gates passed."
       }
     ],
     "ki18n": [

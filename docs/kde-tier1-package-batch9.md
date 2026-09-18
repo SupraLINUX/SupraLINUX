@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 1 — Batch 9 multi-ABI
 
-Status: **validation cycle 4 complete; KI18n/Sonnet PASS retained; KConfig consumer-closure remediation prepared; canonical package state not promoted**
+Status: **package campaign complete: 3/3 PASS retained; canonical promotion pending as a separate commit**
 
 Last reviewed: **2026-09-18**
 
@@ -140,3 +140,25 @@ The KConfig failure is a real package-contract failure, not infrastructure. KDE'
 KConfig therefore moves to `6.30.0-0supralinux4` with `qt6-declarative-dev (>= 6.9.0~)` added to the binary `libkf6config-dev` Depends. The package already had the same provider in Build-Depends; the correction closes the exported downstream development contract. No KDE feature/default, ABI delta or source patch changes.
 
 Because only the KConfig package tree and its per-node campaign build fingerprint change, the next Batch 9 run must rebuild KConfig and scope-skip KI18n/Sonnet while retaining their cycle-4 PASS evidence.
+
+
+## Validation cycle 5 — KConfig final PASS
+
+Repository Policy run `35360530531`, job `105650391908`, passed before the final package result. PR CI run `35360530830` on commit `bfb02cdc6f6086ed41092cc900563dfa3be86e64` rebuilt only KConfig; KI18n job `105650448606` and Sonnet job `105650448640` intentionally scope-skipped and retained their cycle-4 PASS evidence.
+
+KConfig `6.30.0-0supralinux4` is **PASS**:
+
+- job `105650448776`;
+- artifact `10554715051`;
+- artifact ZIP SHA-256 `bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e`;
+- rootfs SHA-256 `cf14256f216dd3ec9a67a7bca3bd46e8624391ffe40b2c08567dc1fe90a4b9e3`;
+- tests `90/90 PASS`;
+- Lintian source+binary error gate PASS;
+- exact local-package APT install/check PASS;
+- QML import smoke PASS;
+- consumer CMake/build/runtime smoke PASS;
+- generated ABI exports: ConfigCore `640 >= 634`, ConfigGui `171 >= 168`, ConfigQml `22 = 22`.
+
+The `qt6-declarative-dev (>= 6.9.0~)` binary development dependency therefore closes the exported `Qt6Qml >= 6.9.0` contract without reducing any KDE upstream feature/default.
+
+Batch 9 package state is now **3/3 retained PASS**: KConfig `6.30.0-0supralinux4`, KI18n `6.30.0-0supralinux1`, Sonnet `6.30.0-0supralinux3`. Historical FAIL attempts and cycle-3 infrastructure incidents remain preserved. Canonical Tier 1 remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until the separate promotion commit.

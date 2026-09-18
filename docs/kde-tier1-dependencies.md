@@ -130,3 +130,6 @@ KConfig 6.30's selected GUI/QML surface exports `KF6ConfigConfig.cmake`, which d
 Validation cycle 4 (run `35358920602`, KConfig job `105645094816`) proved that the package itself builds, passes `90/90` upstream tests, Lintian, architecture-aware ABI checks, exact local-package APT closure and QML import scanning, but a clean external CMake consumer cannot configure when only the previous `libkf6config-dev` dependency set is installed.
 
 Ubuntu 26.04 Resolute provides the needed development CMake/QML surface through `qt6-declarative-dev 6.10.2+dfsg-3`. SupraLINUX therefore adds `qt6-declarative-dev (>= 6.9.0~)` to the binary `libkf6config-dev` Depends in revision `6.30.0-0supralinux4`. This is provider mapping for a KDE-exported requirement, not an Ubuntu-authored KDE dependency or a change to upstream defaults.
+
+
+Final proof: KConfig `6.30.0-0supralinux4` passed run `35360530830`, job `105650448776`, artifact `10554715051` after the binary development dependency was added. The clean external consumer configure/build/run gate passed, so the `Qt6Qml >= 6.9.0` provider mapping is validated rather than merely inferred.
