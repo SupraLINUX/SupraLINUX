@@ -6,7 +6,7 @@
   "provider_platform": "ubuntu-resolute",
   "batch": "tier1-batch-9",
   "lane": "multi-abi",
-  "state": "complete-ready-for-canonical-promotion",
+  "state": "PASS",
   "attempt_ledger": "manifests/kde-tier1-package-batch9-attempts.json",
   "canonical_snapshot": {
     "state": "pre-batch-9",
@@ -684,5 +684,26 @@
       "cause": "Batch 9 validator searched lowercase validation cycle 4/5 tokens case-sensitively while the canonical documentation headings begin with uppercase Validation.",
       "remediation": "Compare required documentation tokens case-insensitively; package evidence and canonical state are unchanged."
     }
-  ]
+  ],
+  "canonical_promotion": {
+    "status": "promoted",
+    "tier1": "25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED",
+    "dag_nodes": [
+      "kconfig",
+      "ki18n",
+      "sonnet"
+    ]
+  },
+  "promotion_precheck": {
+    "repository_policy": {
+      "workflow_run": 35365719747,
+      "job_id": 105667583358,
+      "result": "PASS"
+    },
+    "scope_skips": {
+      "kconfig": 105667619494,
+      "ki18n": 105667619517,
+      "sonnet": 105667619509
+    }
+  }
 }

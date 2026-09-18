@@ -308,7 +308,7 @@ El estado canónico de cada uno es ahora PASS y downstream-eligible. Los FAIL hi
 
 ## Estado actual
 
-Tier 1 queda en **22 PASS, 7 pending, 0 current FAIL, 0 BLOCKED** tras la promoción canónica de Batch 8.
+Tier 1 queda en **25 PASS, 4 pending, 0 current FAIL, 0 BLOCKED** tras la promoción canónica de Batch 9.
 
 Sólo artifacts PASS retenidos pueden alimentar dependientes.
 
@@ -316,9 +316,9 @@ Hosted package-preflight sigue sin sustituir el futuro gate autoritativo KVM/JIT
 
 ## Próxima expansión
 
-La lane **multi-ABI** de Batch 9 ya está implementada para `kconfig`, `ki18n` y `sonnet`: matrix independiente `fail-fast: false`, runner clean-package sobre Resolute, múltiples ABI/symbol files, splits de paquetes, QML/imports, tests, Lintian, cierre APT y consumer smoke sin reducir los defaults de KDE upstream. Los tres siguen pending hasta obtener PASS real.
+La lane **multi-ABI** de Batch 9 está completada: `kconfig`, `ki18n` y `sonnet` son PASS canónicos y downstream-eligible. La próxima implementación se divide entre la lane **QML/multisurface** para `kirigami` y `kquickcharts`, y la lane **multi-surface/optional** para `kuserfeedback` y `prison`.
 
-Tras Batch 8 quedan siete Tier 1 pendientes: `kconfig`, `ki18n`, `sonnet`, `kirigami`, `kquickcharts`, `kuserfeedback` y `prison`. Se mantiene la estrategia DAG: construir todos los independientes posibles, conservar PASS, registrar FAIL reales y marcar BLOCKED sólo por predecesor FAIL.
+Tras Batch 9 quedan cuatro Tier 1 pendientes: `kirigami`, `kquickcharts`, `kuserfeedback` y `prison`. Se mantiene la estrategia DAG: construir todos los independientes posibles, conservar PASS, registrar FAIL reales y marcar BLOCKED sólo por predecesor FAIL.
 
 PR #1 permanece Draft. No merge.
 
@@ -383,3 +383,12 @@ The KConfig consumer failure shows that `libkf6config-dev` must pull the provide
 Run `35360530830` rebuilt only KConfig after the consumer-development dependency remediation. KI18n and Sonnet scope-skipped and retain their independent cycle-4 PASS evidence. KConfig `6.30.0-0supralinux4` passed job `105650448776`, artifact `10554715051`, SHA-256 `bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e`, rootfs `cf14256f216dd3ec9a67a7bca3bd46e8624391ffe40b2c08567dc1fe90a4b9e3`, with `90/90` tests and all Lintian/ABI/APT/QML/consumer gates PASS.
 
 The multi-ABI campaign is now **3/3 PASS retained**. This evidence does not itself mutate canonical DAG state; KConfig, KI18n and Sonnet remain canonical pending until the dedicated promotion commit. Historical FAIL and INFRA evidence is retained.
+
+
+### Batch 9 — canonical closure
+
+KConfig `6.30.0-0supralinux4`, KI18n `6.30.0-0supralinux1` and Sonnet `6.30.0-0supralinux3` are now canonical PASS/downstream-eligible DAG nodes, each depending only on retained ECM at the Framework build-DAG level. Final package evidence remains the retained Batch 9 PASS artifacts; promotion itself rebuilt nothing.
+
+Final promotion precheck Repository Policy run `35365719747`, job `105667583358`, passed. PR CI scope-skipped KConfig job `105667619494`, KI18n job `105667619517` and Sonnet job `105667619509`.
+
+Canonical Tier 1 is **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. Historical Batch 9 FAIL attempts and infrastructure incidents remain retained separately.

@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 1 — Batch 9 multi-ABI
 
-Status: **package campaign complete: 3/3 PASS retained; canonical promotion pending as a separate commit**
+Status: **PASS; 3/3 canonically promoted**
 
 Last reviewed: **2026-09-18**
 
@@ -8,7 +8,7 @@ Last reviewed: **2026-09-18**
 
 Batch 9 covers the independent Tier 1 nodes `kconfig`, `ki18n` and `sonnet`. KDE upstream stable 6.30.0 is authoritative. Ubuntu 26.04 Resolute is the provider platform. Debian 6.28 and Ubuntu packaging captures are technical references only and cannot select versions, disable KDE defaults or promote package state.
 
-Canonical Tier 1 remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until real package evidence is promoted separately.
+Batch 9 started from the historical pre-promotion snapshot **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**. After the promotion recorded below, canonical Tier 1 is **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.
 
 Attempt 1 used `6.30.0-0supralinux1` for all three packages. KI18n retains that PASS revision. KConfig and Sonnet used `6.30.0-0supralinux2` in attempt 2 to validate the reviewed ABI-symbol deltas, and now move to `6.30.0-0supralinux3` solely to declare the `python3:any` build prerequisite required by those deterministic delta scripts. All consume the retained ECM PASS `6.30.0-0supralinux3`.
 
@@ -169,3 +169,12 @@ Batch 9 package state is now **3/3 retained PASS**: KConfig `6.30.0-0supralinux4
 Repository Policy run `35365460369`, job `105666708183`, reached the Batch 9 validator after every earlier policy validator had passed. It failed only because the documentation-token check searched lowercase `validation cycle 4` and `validation cycle 5` case-sensitively while the actual section headings begin with uppercase `Validation`.
 
 Classification: **infrastructure-validator-documentation-case-sensitivity**, `package_state_effect=none`. No package build, PASS evidence or canonical state changes. The validator now compares documentation tokens case-insensitively.
+
+
+## Canonical promotion — Batch 9 closed
+
+The final promotion precheck passed Repository Policy run `35365719747`, job `105667583358`. The accompanying PR CI run `35365719942` intentionally scope-skipped all three already-retained PASS nodes: KConfig job `105667619494`, KI18n job `105667619517`, Sonnet job `105667619509`. No package was rebuilt for the promotion.
+
+KConfig `6.30.0-0supralinux4`, KI18n `6.30.0-0supralinux1` and Sonnet `6.30.0-0supralinux3` are now canonical `PASS`, downstream-eligible, and present in the canonical package DAG with the only Framework build predecessor `extra-cmake-modules`.
+
+Canonical Tier 1 after Batch 9 is **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. The remaining pending nodes are `kirigami`, `kquickcharts`, `kuserfeedback` and `prison`. The multi-ABI lane is completed. Historical real FAIL attempts and infrastructure incidents remain retained and are not rewritten.

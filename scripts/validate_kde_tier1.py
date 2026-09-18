@@ -45,6 +45,9 @@ EXPECTED_PASS = {
     'kcalendarcore': {'version':'6.30.0-0supralinux5','run':35130213945,'job':104909057699,'artifact':10461386548,'digest':'6f191cad05620093d9e97e1df3fec78d82e9f9df74270ba8a6bc6b328c61e2f6','tests':'507/507 PASS','soname':'libKF6CalendarCore.so.6'},
     'kcoreaddons': {'version':'6.30.0-0supralinux4','run':35122522242,'job':104883541991,'artifact':10457958023,'digest':'c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64','tests':'34/34 PASS','soname':'libKF6CoreAddons.so.6'},
     'kwidgetsaddons': {'version':'6.30.0-0supralinux7','run':35145607543,'job':104960718770,'artifact':10467164025,'digest':'f40e8ed941fb603578e9ad6a0b82f652f05d9035975352a4edb601fda9100c3e','tests':'27/27 PASS','soname':'libKF6WidgetsAddons.so.6'},
+    'kconfig': {'version':'6.30.0-0supralinux4','run':35360530830,'job':105650448776,'artifact':10554715051,'digest':'bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e','tests':'90/90 PASS','sonames':['libKF6ConfigCore.so.6','libKF6ConfigGui.so.6','libKF6ConfigQml.so.6']},
+    'ki18n': {'version':'6.30.0-0supralinux1','run':35358920602,'job':105645094825,'artifact':10553916882,'digest':'2a0d66f2760c49ba1128b8b51c741173a72e6f3ab51f3eb17c3584896d30a678','tests':'17/17 PASS','sonames':['libKF6I18n.so.6','libKF6I18nLocaleData.so.6','libKF6I18nQml.so.6']},
+    'sonnet': {'version':'6.30.0-0supralinux3','run':35358920602,'job':105645094787,'artifact':10554216487,'digest':'ae5a33cf8699b96b7b7b8c1a83bc4d37a484878029818c1885b4f4f44f15b431','tests':'8/8 PASS','sonames':['libKF6SonnetCore.so.6','libKF6SonnetUi.so.6']},
 }
 EXPECTED_PROVIDER_PREVIOUS_EVIDENCE = {'workflow_run':34700048774,'head_sha':'6ce61bc02c4aba146bcc33b16d17f56fb66f057a','artifact_id':10299608166,'artifact_sha256':'da6808c31554da4105713e060e328d4130253a100c628fef279d8d0a9cf8ceb3','authoritative':False,'claim':'provider-availability-only'}
 EXPECTED_PROVIDER_CURRENT_EVIDENCE = {'workflow_run':35087361837,'job_id':104765243282,'head_sha':'a60cf80e2adae2f40c994c8ca8e661d23822b0b6','artifact_id':10442512801,'artifact_sha256':'49f74d493dd18ed68ecee668f68549cf5f71279fcb96e2f481ceef0eaccf5fa9','manifest_sha256':'ccf4ff9fc8e4227787208fd4950812b0244552ab3463e58aae41df424842b2a8','authoritative':False,'claim':'provider-availability-only','python_build':{'package':'python3-build','package_version':'1.4.0-1','module':'build','module_version':'1.4.0','import_status':'PASS'},'qt_upstream':'6.10.2'}
@@ -97,7 +100,10 @@ def validate_pass(node: dict) -> None:
     require(item.get('tests') == expected['tests'], f'{node_id}: test evidence mismatch')
     require(item.get('lintian') == 'PASS-errors', f'{node_id}: Lintian error gate must pass')
     require(item.get('consumer_smoke') == 'PASS', f'{node_id}: consumer smoke must pass')
-    require(item.get('abi_soname') == expected['soname'], f'{node_id}: SONAME evidence mismatch')
+    if 'soname' in expected:
+        require(item.get('abi_soname') == expected['soname'], f'{node_id}: SONAME evidence mismatch')
+    else:
+        require(item.get('abi_sonames') == expected['sonames'], f'{node_id}: multi-ABI SONAME evidence mismatch')
     require(item.get('ecm_predecessor') == '6.30.0-0supralinux3', f'{node_id}: ECM predecessor mismatch')
     files = item.get('files', {})
     require(isinstance(files, dict) and bool(files), f'{node_id}: retained PASS file hashes required')
@@ -140,9 +146,9 @@ for node in nodes:
     else:
         require(node.get('packaging') == {'state':'pending'}, f'{node_id}: unattempted packaging state must remain pending')
         require(node.get('state') == 'pending', f'{node_id}: unattempted node state must remain pending')
-require(sum(1 for n in nodes if n.get('state') == 'PASS') == 22, 'Tier 1 current PASS count must be 22')
-require(sum(1 for n in nodes if n.get('state') == 'pending') == 7, 'Tier 1 current pending count must be 7')
-require(not any(n.get('state') in {'FAIL','BLOCKED'} for n in nodes), 'Tier 1 must have no current FAIL/BLOCKED nodes after Batch 8 closure')
+require(sum(1 for n in nodes if n.get('state') == 'PASS') == 25, 'Tier 1 current PASS count must be 25')
+require(sum(1 for n in nodes if n.get('state') == 'pending') == 4, 'Tier 1 current pending count must be 4')
+require(not any(n.get('state') in {'FAIL','BLOCKED'} for n in nodes), 'Tier 1 must have no current FAIL/BLOCKED nodes after Batch 9 closure')
 require(deps.get('schema') == 1, 'Dependency manifest schema must be 1')
 require(deps.get('authority') == 'kde-upstream', 'Dependency authority must remain KDE upstream')
 require(deps.get('frameworks') == '6.30.0', 'Dependency manifest must target Frameworks 6.30.0')
@@ -189,5 +195,5 @@ if errors:
         print(f'ERROR: {error}', file=sys.stderr)
     raise SystemExit(1)
 print('KDE Frameworks 6.30 Tier 1 source/dependency validation: PASS')
-print('Tier 1 package states: 22 PASS/downstream-eligible; 7 pending; 0 FAIL; 0 BLOCKED')
+print('Tier 1 package states: 25 PASS/downstream-eligible; 4 pending; 0 FAIL; 0 BLOCKED')
 print('Ubuntu Resolute provider mapping: hosted preflight PASS; final certification pending')

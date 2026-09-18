@@ -106,4 +106,8 @@ Attempt 5 is the required real PASS. KGuiAddons is therefore promoted to canonic
 
 Canonical Tier 1 after promotion is **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**. The four earlier FAIL attempts remain append-only historical evidence in `manifests/kde-tier1-package-batch8-attempts.json`; they are not rewritten as PASS.
 
-The next development lane is multi-ABI: `kconfig`, `ki18n` and `sonnet`.
+At the Batch 8 closure, the next development lane was multi-ABI: `kconfig`, `ki18n` and `sonnet`.
+
+## Current state after Batch 9
+
+Batch 9 later promoted KConfig, KI18n and Sonnet. The current canonical Tier 1 state is **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. Batch 8's **22 PASS / 7 pending** figure above remains the historical snapshot immediately after the KGuiAddons promotion.

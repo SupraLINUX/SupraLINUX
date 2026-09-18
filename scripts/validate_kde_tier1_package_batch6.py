@@ -10,7 +10,7 @@ def txt(p): return (R/p).read_text()
 c=load('manifests/kde-tier1-package-campaign-batch6.json'); t=load('manifests/kde-frameworks-tier1.json'); d=load('manifests/kde-dag.json')
 tier={x['id']:x for x in t['nodes']}; dag=d['nodes']
 req(c.get('state')=='PASS','batch state'); req(c.get('canonical_snapshot')=={'state':'promoted-at-batch-closure','tier1':'18 PASS / 11 pending / 0 current FAIL / 0 BLOCKED'},'canonical closure snapshot')
-counts={s:sum(x.get('state')==s for x in t['nodes']) for s in ('PASS','pending','FAIL','BLOCKED')}; req(counts=={'PASS':22,'pending':7,'FAIL':0,'BLOCKED':0},f'Tier1 current counts {counts}')
+counts={s:sum(x.get('state')==s for x in t['nodes']) for s in ('PASS','pending','FAIL','BLOCKED')}; req(counts=={'PASS':25,'pending':4,'FAIL':0,'BLOCKED':0},f'Tier1 current counts {counts}')
 crp=c['shared_packaging_inputs']['consumer_runtime_policy']; req(crp.get('status')=='validated' and crp.get('validated_by_run')==35047623320,'consumer runtime closure'); req(crp.get('install_method')=='apt-get-local-debs' and crp.get('apt_check_required') is True and crp.get('exact_built_versions_required') is True,'consumer runtime policy')
 expected={'kwindowsystem':(104640833059,10428130399,'9c35d5e228d3f8b71fb1e84863fac030bfd26a8e3c528ae718e788708db01272','6.30.0-0supralinux4','14/14 PASS','libKF6WindowSystem.so.6'),'solid':(104640833295,10427653865,'cff267d012a3e103b53bd6e19757e6c3b0af7dc873f4cd166a4505f58aee8389','6.30.0-0supralinux2','5/5 PASS','libKF6Solid.so.6')}
 for n,(job,art,digest,ver,tests,soname) in expected.items():
@@ -25,4 +25,4 @@ if errs:
  raise SystemExit(1)
 print('KDE Tier 1 Batch 6 canonical closure: PASS')
 print('KWindowSystem and Solid are canonical hosted-preflight PASS/downstream-eligible.')
-print('Canonical Tier 1 current state: 22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED; Batch 6 historical closure remains 18/11')
+print('Canonical Tier 1 current state: 25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED; Batch 6 historical closure remains 18/11')

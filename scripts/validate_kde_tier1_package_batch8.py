@@ -184,7 +184,7 @@ for token in ("KCOREADDONS_ARTIFACT_DIR", "kcoreaddons_build_dependency=no", "li
 require("manifests/kde-tier1-package-campaign-batch8.json" in scope, "Batch 8 scope selector must fingerprint the campaign")
 require("packages/kde/kguiaddons/" in scope, "Batch 8 scope selector must track package metadata")
 require("Batch 8 scope selector: PASS" in scope_test, "Batch 8 scope functional test must emit PASS")
-require("KGuiAddons" in doc and "KCoreAddons" in doc and "Tier 1" in doc and "6.29.0" in doc and "libkf6coreaddons-data" in doc and "35185562846" in doc and "22 PASS / 7 pending" in doc, "Batch 8 documentation must explain the retained PASS, symbols-overlay evidence and canonical promotion")
+require("KGuiAddons" in doc and "KCoreAddons" in doc and "Tier 1" in doc and "6.29.0" in doc and "libkf6coreaddons-data" in doc and "35185562846" in doc and "22 PASS / 7 pending" in doc and "25 PASS / 4 pending" in doc, "Batch 8 documentation must preserve its historical closure and identify the current post-Batch9 state")
 
 if errors:
     for error in errors:

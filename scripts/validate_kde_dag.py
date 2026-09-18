@@ -105,6 +105,55 @@ if kgui_passes:
     require(item.get("artifact_id") == 10482007092 and item.get("artifact_sha256") == "71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca", "KGuiAddons DAG PASS artifact mismatch")
     require(item.get("tests") == "9/9 PASS" and item.get("lintian") == "PASS-errors", "KGuiAddons DAG build/test gate mismatch")
 require(kgui.get("pass_files", {}).get("rootfs_sha256") == "c68681aacfd32976c6e0bf471ec1928179fd80e402faf2293706e53f88ad25c6", "KGuiAddons DAG rootfs evidence mismatch")
+require(len(nodes) == 26, "Canonical DAG must contain ECM plus 25 promoted Tier 1 PASS nodes after Batch 9")
+
+batch9_expected = {
+    "kconfig": {
+        "version":"6.30.0-0supralinux4","sha":"0e98bac324cd716849202d4b246a948e363d6792a8eb09c78417cdde9559f56e",
+        "run":35360530830,"job":105650448776,"commit":"bfb02cdc6f6086ed41092cc900563dfa3be86e64",
+        "artifact":10554715051,"digest":"bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e",
+        "tests":"90/90 PASS","rootfs":"cf14256f216dd3ec9a67a7bca3bd46e8624391ffe40b2c08567dc1fe90a4b9e3",
+        "sonames":["libKF6ConfigCore.so.6","libKF6ConfigGui.so.6","libKF6ConfigQml.so.6"],
+        "binaries":["libkf6config-bin","libkf6config-data","libkf6config-dev","libkf6config-dev-bin","libkf6config-doc","libkf6configcore6","libkf6configgui6","libkf6configqml6","qml6-module-org-kde-config"],
+    },
+    "ki18n": {
+        "version":"6.30.0-0supralinux1","sha":"dfbfc8af89b3bc68810b094bf87746db87c3eeb35b75caeb1882681ebed563bd",
+        "run":35358920602,"job":105645094825,"commit":"1048fd52df303957d2db82c29988c8170b6fd656",
+        "artifact":10553916882,"digest":"2a0d66f2760c49ba1128b8b51c741173a72e6f3ab51f3eb17c3584896d30a678",
+        "tests":"17/17 PASS","rootfs":"c3a542cadce65b491d0997f7fa61cfabc2b44188a2021c151858349766fd148d",
+        "sonames":["libKF6I18n.so.6","libKF6I18nLocaleData.so.6","libKF6I18nQml.so.6"],
+        "binaries":["libkf6i18n-data","libkf6i18n-dev","libkf6i18n-doc","libkf6i18n6","libkf6i18nlocaledata6","libkf6i18nqml6","qml6-module-org-kde-i18n-localedata","qml6-module-org-kde-ki18n"],
+    },
+    "sonnet": {
+        "version":"6.30.0-0supralinux3","sha":"1574ef5c17f38e315de104b94580ccc1b7ec1db2650cb4bace2e14159bf61e10",
+        "run":35358920602,"job":105645094787,"commit":"1048fd52df303957d2db82c29988c8170b6fd656",
+        "artifact":10554216487,"digest":"ae5a33cf8699b96b7b7b8c1a83bc4d37a484878029818c1885b4f4f44f15b431",
+        "tests":"8/8 PASS","rootfs":"38f9fcd9dd6cb379bd5ba1fbfb5c93f57b49db71c166615415ff663366fc54bb",
+        "sonames":["libKF6SonnetCore.so.6","libKF6SonnetUi.so.6"],
+        "binaries":["sonnet6-plugins","libkf6sonnet-data","libkf6sonnet-dev","libkf6sonnet-dev-bin","libkf6sonnet-doc","libkf6sonnetcore6","libkf6sonnetui6","qml6-module-org-kde-sonnet"],
+    },
+}
+for node_id, expected in batch9_expected.items():
+    node = nodes.get(node_id, {})
+    require(node.get("tier") == 1 and node.get("upstream_version") == "6.30.0", f"{node_id}: promoted Tier 1 identity mismatch")
+    require(node.get("source_sha256") == expected["sha"], f"{node_id}: DAG source SHA mismatch")
+    require(node.get("depends_on") == ["extra-cmake-modules"], f"{node_id}: DAG dependency must remain ECM-only")
+    require(node.get("state") == "PASS" and node.get("downstream_eligible") is True, f"{node_id}: DAG must be PASS/downstream-eligible")
+    require(node.get("package_version") == expected["version"], f"{node_id}: DAG package version mismatch")
+    require(node.get("attempt_ledger") == "manifests/kde-tier1-package-batch9-attempts.json", f"{node_id}: DAG attempt ledger mismatch")
+    require(node.get("binary_packages") == expected["binaries"], f"{node_id}: DAG binary package split mismatch")
+    require(node.get("abi_sonames") == expected["sonames"], f"{node_id}: DAG multi-ABI SONAME set mismatch")
+    passes = [item for item in node.get("evidence", []) if isinstance(item, dict) and item.get("result") == "PASS"]
+    require(len(passes) == 1, f"{node_id}: DAG requires exactly one retained current PASS")
+    if passes:
+        item = passes[0]
+        require(item.get("workflow_run") == expected["run"] and item.get("job_id") == expected["job"], f"{node_id}: DAG PASS run/job mismatch")
+        require(item.get("commit") == expected["commit"], f"{node_id}: DAG PASS commit mismatch")
+        require(item.get("artifact_id") == expected["artifact"] and item.get("artifact_sha256") == expected["digest"], f"{node_id}: DAG PASS artifact mismatch")
+        require(item.get("tests") == expected["tests"] and item.get("lintian") == "PASS-errors", f"{node_id}: DAG test/Lintian gate mismatch")
+        require(item.get("consumer_smoke") == "PASS" and item.get("apt_check") == "PASS" and item.get("qml_import_smoke") == "PASS", f"{node_id}: DAG runtime/QML gates mismatch")
+        require(item.get("abi_sonames") == expected["sonames"], f"{node_id}: DAG PASS ABI SONAME evidence mismatch")
+    require(node.get("pass_files", {}).get("rootfs_sha256") == expected["rootfs"], f"{node_id}: DAG rootfs evidence mismatch")
 
 if ecm.get("state") in {"PASS", "FAIL"}:
     evidence = ecm.get("evidence", [])

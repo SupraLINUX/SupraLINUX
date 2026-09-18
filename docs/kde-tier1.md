@@ -107,8 +107,8 @@ Repository Policy run `34945979830` exposed such an infrastructure-only issue: t
 
 ## Current state
 
-- PASS: **22**;
-- pending: **7**;
+- PASS: **25**;
+- pending: **4**;
 - current FAIL: **0**;
 - BLOCKED: **0**.
 
@@ -118,6 +118,6 @@ Only retained PASS artifacts may feed downstream nodes.
 
 Batch 8 canonically promotes KGuiAddons `6.30.0-0supralinux2` from run `35185562846`, job `105086774400`, artifact `10482007092`, ZIP SHA-256 `71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca`; tests are `9/9 PASS`, Lintian passes the error gate, Python import/APT closure/consumer smoke pass, and the runtime SONAME is `libKF6GuiAddons.so.6`. KCoreAddons remains a public-header/consumer provider only, not a KGuiAddons Framework build dependency.
 
-The seven canonical pending nodes remain `kconfig`, `ki18n`, `sonnet`, `kirigami`, `kquickcharts`, `kuserfeedback` and `prison` until the separate promotion commit. Batch 9 package work is now 3/3 retained PASS: KConfig `6.30.0-0supralinux4`, KI18n `6.30.0-0supralinux1` and Sonnet `6.30.0-0supralinux3`. KConfig final evidence is run `35360530830`, job `105650448776`, artifact `10554715051`, SHA-256 `bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e`, with `90/90 PASS`, Lintian, architecture-aware ABI, APT, QML and consumer smoke PASS. The earlier source run `35138333645` remains DIAG_PASS only. Canonical state remains 22/7 until the dedicated promotion commit.
+Batch 9 is now canonically promoted 3/3: KConfig `6.30.0-0supralinux4`, KI18n `6.30.0-0supralinux1` and Sonnet `6.30.0-0supralinux3` are PASS/downstream-eligible in both Tier 1 and the package DAG. KConfig final evidence is run `35360530830`, job `105650448776`, artifact `10554715051`, SHA-256 `bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e`, with `90/90 PASS`, Lintian, architecture-aware ABI, APT, QML and consumer smoke PASS. Final promotion precheck Repository Policy run `35365719747` passed and all three Batch 9 jobs scope-skipped, proving no rebuild was needed for promotion. Four canonical pending nodes remain: `kirigami`, `kquickcharts`, `kuserfeedback` and `prison`. The earlier source run `35138333645` remains DIAG_PASS only.
 
 PR #1 remains Draft. No merge is authorized.

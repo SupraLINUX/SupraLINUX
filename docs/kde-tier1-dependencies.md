@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 Tier 1 — dependency resolution
 
-Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping validated; canonical Tier 1 22 PASS / 7 pending after Batch 8 promotion**
+Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping validated; canonical Tier 1 25 PASS / 4 pending after Batch 9 promotion**
 
 Last reviewed: **2026-09-18**
 
@@ -106,7 +106,7 @@ This does not introduce a KCoreAddons build edge. KGuiAddons' KDE Framework buil
 - upstream dependency resolution: **resolved**;
 - Ubuntu Resolute package-name/provider mapping: **resolved for the current selected profiles**;
 - hosted provider evidence: **PASS where recorded**;
-- canonical Tier 1 package state: **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**;
+- canonical Tier 1 package state: **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**;
 - Batch 7 retained package evidence: **3/3 PASS and canonically promoted**;
 - KGuiAddons: **PASS and canonically promoted**; local-predecessor lane completed without adding a Framework build dependency;
 - final Qt provider certification: **pending**.
@@ -114,13 +114,13 @@ This does not introduce a KCoreAddons build edge. KGuiAddons' KDE Framework buil
 Provider evidence alone never promotes a Framework. Only retained package PASS artifacts may feed dependents.
 
 
-## Batch 9 multi-ABI readiness
+## Batch 9 multi-ABI closure
 
-KConfig, KI18n and Sonnet remain Tier 1 pending nodes with no KDE Framework build predecessor beyond retained ECM. The Batch 9 multi-ABI runner is now implemented and all three are independently runnable in parallel. Public/runtime surfaces are validated after build; they do not create undocumented Framework build edges.
+KConfig, KI18n and Sonnet are canonical Tier 1 PASS nodes with no KDE Framework build predecessor beyond retained ECM. The Batch 9 multi-ABI runner validated their public/runtime surfaces without introducing undocumented Framework build edges.
 
-KConfig preserves GUI/QML/DBus defaults and validates three runtime ABIs. KI18n preserves QML and upstream tests with the validated locale providers `iso-codes`, `language-pack-fr-base` and `locales-all`. Sonnet preserves Widgets, QML, Designer and spelling backends and validates two runtime ABIs plus a packaged backend plugin. Debian 6.28 symbol files remain hash-pinned technical baselines only and are materialized ephemerally during clean builds.
+KConfig preserves GUI/QML/DBus defaults and validates three runtime ABIs. KI18n preserves QML and upstream tests with the validated locale providers `iso-codes`, `language-pack-fr-base` and `locales-all`. Sonnet preserves Widgets, QML, Designer and spelling backends and validates two runtime ABIs plus a packaged backend plugin. Debian 6.28 symbol files remain hash-pinned technical baselines only and were materialized ephemerally during clean builds.
 
-Source diagnostic run `35138333645` is non-promoting DIAG_PASS evidence. Canonical Tier 1 therefore remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until real Batch 9 package attempts pass their full gates.
+Source diagnostic run `35138333645` remains non-promoting DIAG_PASS evidence; canonical promotion is based on retained real package PASS artifacts. Final promotion precheck Repository Policy run `35365719747` passed and all three package jobs scope-skipped. Canonical Tier 1 is **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.
 
 
 ## Batch 9 KConfig exported Qt QML development contract
@@ -133,3 +133,14 @@ Ubuntu 26.04 Resolute provides the needed development CMake/QML surface through 
 
 
 Final proof: KConfig `6.30.0-0supralinux4` passed run `35360530830`, job `105650448776`, artifact `10554715051` after the binary development dependency was added. The clean external consumer configure/build/run gate passed, so the `Qt6Qml >= 6.9.0` provider mapping is validated rather than merely inferred.
+
+
+## Batch 9 technical closure
+
+The multi-ABI lane is complete and canonically promoted:
+
+- KConfig `6.30.0-0supralinux4`: run `35360530830`, job `105650448776`, artifact `10554715051`, SHA-256 `bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e`, `90/90 PASS`;
+- KI18n `6.30.0-0supralinux1`: run `35358920602`, job `105645094825`, artifact `10553916882`, SHA-256 `2a0d66f2760c49ba1128b8b51c741173a72e6f3ab51f3eb17c3584896d30a678`, `17/17 PASS`;
+- Sonnet `6.30.0-0supralinux3`: run `35358920602`, job `105645094787`, artifact `10554216487`, SHA-256 `ae5a33cf8699b96b7b7b8c1a83bc4d37a484878029818c1885b4f4f44f15b431`, `8/8 PASS`.
+
+All three pass Lintian, exact local-package APT closure, QML import scanning and C++ consumer validation. The remaining provider work belongs to the four unpromoted Tier 1 nodes; provider availability does not alter KDE authority.

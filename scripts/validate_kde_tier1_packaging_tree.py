@@ -38,6 +38,7 @@ PASS_NODES = {
     "kitemmodels", "bluez-qt", "kplotting", "kitemviews", "kglobalaccel", "syntax-highlighting",
     "kidletime", "modemmanager-qt", "networkmanager-qt", "kwindowsystem", "solid",
     "kcalendarcore", "kcoreaddons", "kwidgetsaddons", "kguiaddons",
+    "kconfig", "ki18n", "sonnet",
 }
 errors: list[str] = []
 
@@ -132,12 +133,12 @@ for node in nodes:
         require(node.get("state") == "PASS", f"{node_id}: later real package PASS must remain intact")
     else:
         require(node.get("state") == "pending", f"{node_id}: reference-tree work must not promote unattempted package state")
-require(sum(1 for node in nodes if node.get("state") == "PASS") == 22, "Packaging-tree validator expects 22 actual package PASS nodes")
-require(sum(1 for node in nodes if node.get("state") == "pending") == 7, "Packaging-tree validator expects 7 pending nodes")
+require(sum(1 for node in nodes if node.get("state") == "PASS") == 25, "Packaging-tree validator expects 25 actual package PASS nodes")
+require(sum(1 for node in nodes if node.get("state") == "pending") == 4, "Packaging-tree validator expects 4 pending nodes")
 if errors:
     for error in errors:
         print(f"ERROR: {error}", file=sys.stderr)
     raise SystemExit(1)
 print("KDE Tier 1 packaging-tree policy validation: PASS")
 print("Capture evidence remains run 34708030450 / artifact 10301938362 / 58 trees")
-print("Reference work has no state authority; current real package state is 22 PASS / 7 pending")
+print("Reference work has no state authority; current real package state is 25 PASS / 4 pending")

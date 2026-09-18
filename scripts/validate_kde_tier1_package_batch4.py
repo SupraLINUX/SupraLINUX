@@ -191,8 +191,8 @@ for node, expected in EXPECTED.items():
     req(expected["cmake"] in consumer and expected["target"] in consumer, f"{node}: CMake consumer")
     req(expected["soname"] in main and "dlopen" in main, f"{node}: runtime consumer")
 
-req(sum(1 for n in tier1.values() if n.get("state") == "PASS") == 22, "Current Tier 1 PASS count must be 22 after Batch 8 closure")
-req(sum(1 for n in tier1.values() if n.get("state") == "pending") == 7, "Current Tier 1 pending count must be 7 after Batch 8 closure")
+req(sum(1 for n in tier1.values() if n.get("state") == "PASS") == 25, "Current Tier 1 PASS count must be 25 after Batch 9 closure")
+req(sum(1 for n in tier1.values() if n.get("state") == "pending") == 4, "Current Tier 1 pending count must be 4 after Batch 9 closure")
 
 kg_control = (ROOT / "packages/kde/kglobalaccel/debian/control").read_text()
 syntax_control = (ROOT / "packages/kde/syntax-highlighting/debian/control").read_text()
@@ -216,7 +216,7 @@ req("validate_kde_tier1_package_batch4.py" in policy, "Repository Policy Batch 4
 for token in ["3/3 PASS", "13 PASS / 16 pending / 0 current FAIL / 0 BLOCKED", "35006477086", "10412320520", "10411888269", "qt6-tools-dev", "LinguistTools"]:
     req(token.lower() in doc.lower(), f"Batch 4 documentation missing {token}")
     req(token.lower() in status_doc.lower() or token == "3/3 PASS", f"Batch 4 status documentation missing {token}")
-req("22 PASS / 7 pending" in depdoc, "dependency documentation current canonical count")
+req("25 PASS / 4 pending" in depdoc, "dependency documentation current canonical count")
 
 if errors:
     for error in errors:
@@ -225,4 +225,4 @@ if errors:
 
 print("KDE Tier 1 Batch 4 canonical closure: PASS")
 print("KItemViews, KGlobalAccel and KSyntaxHighlighting = 3/3 PASS/downstream-eligible")
-print("Current canonical Tier 1: 22 PASS / 7 pending / 0 FAIL / 0 BLOCKED; Batch 4 historical closure remains 13/16")
+print("Current canonical Tier 1: 25 PASS / 4 pending / 0 FAIL / 0 BLOCKED; Batch 4 historical closure remains 13/16")

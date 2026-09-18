@@ -380,9 +380,60 @@
         "node": "kconfig"
       },
       "packaging": {
-        "state": "pending"
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux4",
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "downstream_eligible": true,
+        "attempt_ledger": "manifests/kde-tier1-package-batch9-attempts.json",
+        "evidence": [
+          {
+            "result": "PASS",
+            "workflow_run": 35360530830,
+            "job_id": 105650448776,
+            "commit": "bfb02cdc6f6086ed41092cc900563dfa3be86e64",
+            "attempted_package_version": "6.30.0-0supralinux4",
+            "artifact_id": 10554715051,
+            "artifact_sha256": "bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e",
+            "stage": "complete",
+            "tests": "90/90 PASS",
+            "lintian": "PASS-errors",
+            "consumer_smoke": "PASS",
+            "apt_check": "PASS",
+            "qml_import_smoke": "PASS",
+            "abi_sonames": [
+              "libKF6ConfigCore.so.6",
+              "libKF6ConfigGui.so.6",
+              "libKF6ConfigQml.so.6"
+            ],
+            "abi_exports": {
+              "ConfigCore": 640,
+              "ConfigGui": 171,
+              "ConfigQml": 22
+            },
+            "ecm_predecessor": "6.30.0-0supralinux3",
+            "downstream_eligible": true,
+            "files": {
+              "libkf6config_bin_deb_sha256": "a5a2bfe058aaffd899a3c704fea9794a4c1e86daa2a75695b9a1847b348f3de9",
+              "libkf6config_data_deb_sha256": "fae22d6df5777929f730211047c0fbd47ca5e39ece62398782ddcd32e6e69e60",
+              "libkf6config_dev_bin_deb_sha256": "1bb3c373b3fdd212de33c3fd4a1874e75c86684366c74f6bf7b105454f568286",
+              "libkf6config_dev_deb_sha256": "71940050496c4baca03102dd1d131dbcd675c7d2e9ee60e887dfc548555422f9",
+              "libkf6config_doc_deb_sha256": "207a6075b1151d354316433f934d6952d0d304235373a864e930b09b5305b162",
+              "libkf6configcore6_deb_sha256": "998262610e611e8cebe8630dbe3d13de4daa059ead9c9924287b2bfe994c4b33",
+              "libkf6configgui6_deb_sha256": "2ed506a790a662b0681a040cd10ae39177e5acbe6ada849947adfe387c390729",
+              "libkf6configqml6_deb_sha256": "5d951cf7b3498f02197c5c539d665439b7f9a5d64813c3faf47325afb6be0b24",
+              "qml6_module_org_kde_config_deb_sha256": "b514993f60fe1f55ac7803ceab42ba0ef8a89dc58ab5d38463bfb63c9601bfd6",
+              "changes_sha256": "517cf586eaaccb6b70f59d0b57dc49031c7a4816a6893d076659ff005560c8a8",
+              "buildinfo_sha256": "6495cabccb924159b809c400ed3350fbef54fdbdea981b4349f975e5dadfe186",
+              "dsc_sha256": "22c26f2d00406f4e3769ce939ce650b782ece8ce2950bd5c747810dee4133245",
+              "orig_tar_sha256": "0e98bac324cd716849202d4b246a948e363d6792a8eb09c78417cdde9559f56e",
+              "debian_tar_sha256": "679fa57dcc44c24dd6d949a299ddf17b2dd0b5659b4563366fcb08a3f228b0fe",
+              "rootfs_sha256": "cf14256f216dd3ec9a67a7bca3bd46e8624391ffe40b2c08567dc1fe90a4b9e3"
+            }
+          }
+        ]
       },
-      "state": "pending"
+      "state": "PASS"
     },
     {
       "id": "kcoreaddons",
@@ -734,9 +785,59 @@
         "node": "ki18n"
       },
       "packaging": {
-        "state": "pending"
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux1",
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "downstream_eligible": true,
+        "attempt_ledger": "manifests/kde-tier1-package-batch9-attempts.json",
+        "evidence": [
+          {
+            "result": "PASS",
+            "workflow_run": 35358920602,
+            "job_id": 105645094825,
+            "commit": "1048fd52df303957d2db82c29988c8170b6fd656",
+            "attempted_package_version": "6.30.0-0supralinux1",
+            "artifact_id": 10553916882,
+            "artifact_sha256": "2a0d66f2760c49ba1128b8b51c741173a72e6f3ab51f3eb17c3584896d30a678",
+            "stage": "complete",
+            "tests": "17/17 PASS",
+            "lintian": "PASS-errors",
+            "consumer_smoke": "PASS",
+            "apt_check": "PASS",
+            "qml_import_smoke": "PASS",
+            "abi_sonames": [
+              "libKF6I18n.so.6",
+              "libKF6I18nLocaleData.so.6",
+              "libKF6I18nQml.so.6"
+            ],
+            "abi_exports": {
+              "I18n": 122,
+              "I18nLocaleData": 58,
+              "I18nQml": 33
+            },
+            "ecm_predecessor": "6.30.0-0supralinux3",
+            "downstream_eligible": true,
+            "files": {
+              "libkf6i18n_data_deb_sha256": "3df2300d5aca640c8968859367ac3cd606a31a87e875ca207a71eeda6d03f45a",
+              "libkf6i18n_dev_deb_sha256": "a9485f9fdb874cc6a61064a824d66567306122c39677ccf92f8adb3b0db14870",
+              "libkf6i18n_doc_deb_sha256": "72e312ee1a7f0a7f0be4fc0e6e8b338ebaa92c1a5b6c2e7c225bc168ed85754f",
+              "libkf6i18n6_deb_sha256": "fa60bd16ffb35ae90eb1ab324386961d973a9b0dd31a4947351d3afc652b6e58",
+              "libkf6i18nlocaledata6_deb_sha256": "19a6b680b3f85fe04901d53fa6193dd773d72fc02c9337387776ec779f5c285a",
+              "libkf6i18nqml6_deb_sha256": "0297393117c5b4b0fd284d32aa9040c5afbe91aa0da73b2f83d1b181a812f91c",
+              "qml6_module_org_kde_i18n_localedata_deb_sha256": "147a716c4794a50a63160928228afd25c406a02af2b3d00637bed289027f6001",
+              "qml6_module_org_kde_ki18n_deb_sha256": "07960032b6582476f0844b72d4f74884240c592e55eb0613390f0191dbd98299",
+              "changes_sha256": "9454c4db9f51823b9cf70548dba782810da27f1de8a180ad06e46cdccf93ae5c",
+              "buildinfo_sha256": "e14f1d9ad0b1082089ab5324cffad8b5895855ddaa72866e7eda79c6d8eae28b",
+              "dsc_sha256": "a470d6a1bc1ad914298afd546cd50248962047d14a67f193306f1a1ec213db57",
+              "orig_tar_sha256": "dfbfc8af89b3bc68810b094bf87746db87c3eeb35b75caeb1882681ebed563bd",
+              "debian_tar_sha256": "582abd2914958813d7d4dfc417f5ca88d292e9645bfebf34eb71a44f9262a5f6",
+              "rootfs_sha256": "c3a542cadce65b491d0997f7fa61cfabc2b44188a2021c151858349766fd148d"
+            }
+          }
+        ]
       },
-      "state": "pending"
+      "state": "PASS"
     },
     {
       "id": "kidletime",
@@ -1596,9 +1697,57 @@
         "node": "sonnet"
       },
       "packaging": {
-        "state": "pending"
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux3",
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "downstream_eligible": true,
+        "attempt_ledger": "manifests/kde-tier1-package-batch9-attempts.json",
+        "evidence": [
+          {
+            "result": "PASS",
+            "workflow_run": 35358920602,
+            "job_id": 105645094787,
+            "commit": "1048fd52df303957d2db82c29988c8170b6fd656",
+            "attempted_package_version": "6.30.0-0supralinux3",
+            "artifact_id": 10554216487,
+            "artifact_sha256": "ae5a33cf8699b96b7b7b8c1a83bc4d37a484878029818c1885b4f4f44f15b431",
+            "stage": "complete",
+            "tests": "8/8 PASS",
+            "lintian": "PASS-errors",
+            "consumer_smoke": "PASS",
+            "apt_check": "PASS",
+            "qml_import_smoke": "PASS",
+            "abi_sonames": [
+              "libKF6SonnetCore.so.6",
+              "libKF6SonnetUi.so.6"
+            ],
+            "abi_exports": {
+              "SonnetCore": 255,
+              "SonnetUi": 179
+            },
+            "ecm_predecessor": "6.30.0-0supralinux3",
+            "downstream_eligible": true,
+            "files": {
+              "libkf6sonnet_data_deb_sha256": "4e345ddcc8ecfe0b440562094a9e0e7512bb08c4d2d298f40197f0d0ff9dcdbc",
+              "libkf6sonnet_dev_bin_deb_sha256": "a0d3924e2271920eff45a9202ac57a1264a6c822339795fa57226ae8aaa9bb79",
+              "libkf6sonnet_dev_deb_sha256": "accbc91f53c9c93ce5e5c061a187940d1abd23eb9a3929a8b8f0d417d2f2e69b",
+              "libkf6sonnet_doc_deb_sha256": "7f38d8477921e9c2f49b2eb74c5b38748608e8c8f16150acf253ba934516ca03",
+              "libkf6sonnetcore6_deb_sha256": "1442bcebe8df0e1989f97830c61a85cd254185d76a93de1cf943095ea99fcb6f",
+              "libkf6sonnetui6_deb_sha256": "4d2412ccf53a02dbd7f39cf941884d50522dc99645199da637ec2976ec01b46f",
+              "qml6_module_org_kde_sonnet_deb_sha256": "c0662e7e74c4e2f9c7d733ff9d7db2a397df728bdde4283b0178418e81dc5558",
+              "sonnet6_plugins_deb_sha256": "9eeaee8aa871b7d81e75104ab8342253ac7ef3ccdf010d4f4f05f6577536c125",
+              "changes_sha256": "c188691e1003470fdedcec664878f6a378d9e97ba2a773b15731343e5c422333",
+              "buildinfo_sha256": "1a235b35831e8002041f4f6dbb5b706e9745e2e3e99a33cedaeb1878f670f001",
+              "dsc_sha256": "a2286fbd9297bb194933d92423aa5e0c801c668753cb5c3158074d7481523f1c",
+              "orig_tar_sha256": "1574ef5c17f38e315de104b94580ccc1b7ec1db2650cb4bace2e14159bf61e10",
+              "debian_tar_sha256": "cf401974acf03e5902b653cc0d034487bca6f24da5d1cdf0d06be05a3878ad48",
+              "rootfs_sha256": "38f9fcd9dd6cb379bd5ba1fbfb5c93f57b49db71c166615415ff663366fc54bb"
+            }
+          }
+        ]
       },
-      "state": "pending"
+      "state": "PASS"
     },
     {
       "id": "threadweaver",
