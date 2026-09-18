@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 1 — Batch 9 multi-ABI
 
-Status: **implementation ready; package state not promoted**
+Status: **attempt 1 complete; remediation prepared; canonical package state not promoted**
 
 Last reviewed: **2026-09-18**
 
@@ -10,7 +10,7 @@ Batch 9 covers the independent Tier 1 nodes `kconfig`, `ki18n` and `sonnet`. KDE
 
 Canonical Tier 1 remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until real package evidence is promoted separately.
 
-All three packages start at `6.30.0-0supralinux1` and consume the retained ECM PASS `6.30.0-0supralinux3`.
+Attempt 1 used `6.30.0-0supralinux1` for all three packages. KI18n retains that PASS revision; KConfig and Sonnet move to `6.30.0-0supralinux2` for reviewed ABI-symbol remediation. All consume the retained ECM PASS `6.30.0-0supralinux3`.
 
 ## Retained non-promoting discovery evidence
 
@@ -60,3 +60,20 @@ Each node independently validates source and retained-input hashes, a fresh Reso
 A real attempted node may become PASS or FAIL. BLOCKED is reserved for a predecessor FAIL; these three nodes depend only on the retained ECM PASS, so one peer failing does not block either of the other two. Independent PASS results are retained while only real FAIL nodes are remediated.
 
 Promotion remains a separate commit after retained real PASS evidence exists.
+
+
+## Attempt 1 — real package results
+
+PR CI run `35348130023` on commit `958d9990f0c5c6e85ade45faf8b7fa1a62c0c3af` produced three independent real package attempts:
+
+- KConfig `6.30.0-0supralinux1`: **FAIL**, job `105609530611`, artifact `10549115856`, ZIP SHA-256 `6579cc838436e1390c950da9037997ae4646fb4fb40d5e69290377c16f385b6c`, rootfs `79fe82c1adfffb5050106b07157c423ed7c9c7c0a4a2608ace84899d5ae1184e`. Upstream tests were `90/90 PASS`; the package build itself completed, then Lintian rejected `_ZN16KStandardActions16staticMetaObjectE@Base` because `dpkg-gensymbols` assigned the current Debian revision. KDE Frameworks 6.29.0 introduced `StandardAction` as `Q_ENUM_NS`, so the reviewed public ABI minimum is `6.29.0`.
+- KI18n `6.30.0-0supralinux1`: **PASS**, job `105609530707`, artifact `10548710619`, ZIP SHA-256 `d213147477242b08a1dac78611b30eacb60f9bd727abb1313d5a2c8bc7c24cf4`, rootfs `f3849a2ceb003aeb1de899fe3b56dec59b3b29da6589f79da9b7dc3685c52b4d`. Tests `17/17 PASS`; ABI exports remain exactly `122/58/33`; Lintian, QML imports, exact APT closure and consumer smoke pass. It is retained PASS and downstream-eligible.
+- Sonnet `6.30.0-0supralinux1`: **FAIL**, job `105609530666`, artifact `10549100349`, ZIP SHA-256 `d01d279dc2645efd9ecc01506e17c0f99aecadda761bc12236af7ae1341a3fc6`, rootfs `300d410c9e584cd0bc8dee75578db2ac940363e20440a289c2a31142b64d7d09`. Upstream tests were `8/8 PASS`; the package build itself completed, then Lintian rejected `_ZN6Sonnet8Settings22defaultSkipRunTogetherEv@Base` at the current Debian revision. KDE Frameworks 6.30.0 fixes the historic function-name typo and adds `Settings::defaultSkipRunTogether()`, so the reviewed public ABI minimum is `6.30.0`.
+
+The missing `optional=templinst` exports reported for Sonnet are optional toolchain/template-instantiation baseline entries and are not the cause of the package failure. Neither KConfig nor Sonnet is BLOCKED; each was attempted and failed for its own symbols-contract cause. KI18n PASS remains retained independently.
+
+## Attempt 1 remediation
+
+KConfig and Sonnet move to `6.30.0-0supralinux2`. Each uses the established SupraLINUX deterministic symbols-delta pattern immediately before `dh_makeshlibs`: verify the retained Debian 6.28 baseline SHA-256, insert exactly one reviewed public symbol at an exact anchor, verify the complete transformed symbols-file SHA-256, then invoke `dh_makeshlibs` normally. KConfig's transformed ConfigGui symbols SHA-256 is `8a8220263cd60e88208e68138cb0f7288a4d99d3a99c0349e62be314d9d1fd04`; SonnetCore's is `e75af49fd74700ef8a2c21ce55decaf96439479223770c63654410f3c3f956bb`.
+
+Repository Policy run `35348129610`, job `105609486001`, independently exposed ShellCheck `SC2100` on the diagnostic `STAGE` string labels `qml-package-contract` and `qml-import-smoke`. This is infrastructure-only and has no package-state effect. The remediation quotes those two string assignments only and leaves every build/test/ABI/runtime gate unchanged. Because the shared runner changes, Batch 9's semantic selector correctly revalidates all three nodes on the next campaign run.

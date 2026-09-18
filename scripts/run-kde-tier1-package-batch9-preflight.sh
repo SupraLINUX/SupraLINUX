@@ -218,7 +218,7 @@ for abi in n['abi_contracts']:
 (evidence/'abi-contracts.txt').write_text('\n'.join(summary)+'\n')
 PY2
 
-STAGE=qml-package-contract
+STAGE='qml-package-contract'
 python3 - "${CAMPAIGN}" "${NODE}" "${OUT_DIR}" "${EVIDENCE_DIR}" <<'PY2'
 import json,subprocess,sys,tempfile
 from pathlib import Path
@@ -250,7 +250,7 @@ sudo apt-get check |& tee "${EVIDENCE_DIR}/consumer-runtime-check.log"
 : > "${EVIDENCE_DIR}/consumer-runtime-packages.txt"
 for p in "${EXPECTED_PACKAGES[@]}"; do v="$(dpkg-query -W -f='${Version}' "${p}")"; [[ "${v}" == "${DEBIAN_VERSION}" ]]; printf '%s=%s\n' "${p}" "${v}" >> "${EVIDENCE_DIR}/consumer-runtime-packages.txt"; done
 
-STAGE=qml-import-smoke
+STAGE='qml-import-smoke'
 python3 - "${CAMPAIGN}" "${NODE}" "${WORK_DIR}" <<'PY2'
 import json,sys
 from pathlib import Path

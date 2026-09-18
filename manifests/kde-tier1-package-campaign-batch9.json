@@ -6,7 +6,7 @@
   "provider_platform": "ubuntu-resolute",
   "batch": "tier1-batch-9",
   "lane": "multi-abi",
-  "state": "prepared-pending-build",
+  "state": "remediation-pending-build",
   "attempt_ledger": "manifests/kde-tier1-package-batch9-attempts.json",
   "canonical_snapshot": {
     "state": "pre-batch-9",
@@ -54,7 +54,7 @@
       "name": "KConfig",
       "upstream_version": "6.30.0",
       "source_package": "kf6-kconfig",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kconfig-6.30.0.tar.xz",
       "source_sha256": "0e98bac324cd716849202d4b246a948e363d6792a8eb09c78417cdde9559f56e",
       "kde_framework_build_dependencies": [],
@@ -173,15 +173,27 @@
       "copyright": {
         "reference_sha256": "093a0643bf4b9cea796f8179474228686c4dce93e13e5b079a8101c32ca56594"
       },
-      "state": "prepared-pending-build",
-      "last_result": null,
+      "state": "remediation-pending-build",
+      "last_result": "FAIL",
       "downstream_eligible": false,
       "diagnostic_provider_packages": [
         "qt6-base-dev",
         "qt6-base-private-dev",
         "qt6-declarative-dev",
         "qt6-tools-dev"
-      ]
+      ],
+      "last_failure_evidence": {
+        "workflow_run": 35348130023,
+        "job_id": 105609530611,
+        "artifact_id": 10549115856,
+        "artifact_sha256": "6579cc838436e1390c950da9037997ae4646fb4fb40d5e69290377c16f385b6c",
+        "rootfs_sha256": "79fe82c1adfffb5050106b07157c423ed7c9c7c0a4a2608ace84899d5ae1184e",
+        "tests": "90/90 PASS",
+        "stage": "sbuild",
+        "cause": "lintian-symbols-current-debian-revision",
+        "symbol": "_ZN16KStandardActions16staticMetaObjectE@Base",
+        "reviewed_upstream_minimum": "6.29.0"
+      }
     },
     "ki18n": {
       "name": "KI18n",
@@ -298,9 +310,9 @@
       "copyright": {
         "reference_sha256": "07ca7817e9c55ccfd19a980b21b40e9eb2cf64d87663e1d8d3641d8b9d034ba7"
       },
-      "state": "prepared-pending-build",
-      "last_result": null,
-      "downstream_eligible": false,
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
       "required_locales": [
         "en_US.UTF-8",
         "fr_CH.UTF-8"
@@ -316,13 +328,30 @@
         "qt6-base-dev",
         "qt6-declarative-dev",
         "qt6-tools-dev"
-      ]
+      ],
+      "pass_evidence": {
+        "workflow_run": 35348130023,
+        "job_id": 105609530707,
+        "artifact_id": 10548710619,
+        "artifact_sha256": "d213147477242b08a1dac78611b30eacb60f9bd727abb1313d5a2c8bc7c24cf4",
+        "rootfs_sha256": "f3849a2ceb003aeb1de899fe3b56dec59b3b29da6589f79da9b7dc3685c52b4d",
+        "tests": "17/17 PASS",
+        "lintian": "PASS-errors",
+        "apt_check": "PASS",
+        "consumer_smoke": "PASS",
+        "qml_import_smoke": "PASS",
+        "abi_exports": {
+          "I18n": 122,
+          "I18nLocaleData": 58,
+          "I18nQml": 33
+        }
+      }
     },
     "sonnet": {
       "name": "Sonnet",
       "upstream_version": "6.30.0",
       "source_package": "kf6-sonnet",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/sonnet-6.30.0.tar.xz",
       "source_sha256": "1574ef5c17f38e315de104b94580ccc1b7ec1db2650cb4bace2e14159bf61e10",
       "kde_framework_build_dependencies": [],
@@ -424,8 +453,8 @@
       "copyright": {
         "reference_sha256": "e388d91555caea05b5aec02ff0709b019ec2073a4a615dc4a422903f7e9a0fd0"
       },
-      "state": "prepared-pending-build",
-      "last_result": null,
+      "state": "remediation-pending-build",
+      "last_result": "FAIL",
       "downstream_eligible": false,
       "backend_contract": {
         "provider_packages": [
@@ -444,7 +473,19 @@
         "qt6-base-dev",
         "qt6-declarative-dev",
         "qt6-tools-dev"
-      ]
+      ],
+      "last_failure_evidence": {
+        "workflow_run": 35348130023,
+        "job_id": 105609530666,
+        "artifact_id": 10549100349,
+        "artifact_sha256": "d01d279dc2645efd9ecc01506e17c0f99aecadda761bc12236af7ae1341a3fc6",
+        "rootfs_sha256": "300d410c9e584cd0bc8dee75578db2ac940363e20440a289c2a31142b64d7d09",
+        "tests": "8/8 PASS",
+        "stage": "sbuild",
+        "cause": "lintian-symbols-current-debian-revision",
+        "symbol": "_ZN6Sonnet8Settings22defaultSkipRunTogetherEv@Base",
+        "reviewed_upstream_minimum": "6.30.0"
+      }
     }
   }
 }

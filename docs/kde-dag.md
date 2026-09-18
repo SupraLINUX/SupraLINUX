@@ -352,3 +352,8 @@ Canonical Tier 1 is now **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**. Th
 KConfig, KI18n and Sonnet are independently runnable peers and have no local KDE Framework predecessor beyond retained ECM. Their source diagnostic run `35138333645` remains non-promoting DIAG_PASS evidence. The Batch 9 workflow may therefore attempt all three in parallel; a real FAIL is local to that node and does not make either peer BLOCKED.
 
 Canonical Tier 1 remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** before the first Batch 9 package attempt. Promotion is a separate step after retained real PASS evidence.
+
+
+### Batch 9 attempt 1 campaign state
+
+Run `35348130023` attempted all three independent multi-ABI peers. KI18n is retained PASS; KConfig and Sonnet are real FAILs caused by reviewed ABI-symbol metadata, not predecessor failure. Therefore neither FAIL is BLOCKED and neither invalidates the KI18n PASS. KConfig/Sonnet move to `6.30.0-0supralinux2` for deterministic symbols-delta remediation. The shared runner ShellCheck-only fix causes semantic scope to revalidate all three nodes on the next run. Canonical Tier 1 remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until separate promotion.

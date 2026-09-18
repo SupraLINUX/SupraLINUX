@@ -1,3 +1,11 @@
+kf6-sonnet (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Record the real Batch 9 attempt-1 Lintian/symbols failure.
+  * Add the reviewed Settings::defaultSkipRunTogether ABI delta with its
+    KDE upstream introduction minimum 6.30.0.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Fri, 18 Sep 2026 13:15:39 +0000
+
 kf6-sonnet (6.30.0-0supralinux1) resolute; urgency=medium
 
   * Package KDE upstream Sonnet 6.30.0 for SupraLINUX.

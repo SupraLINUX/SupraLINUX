@@ -118,6 +118,6 @@ Only retained PASS artifacts may feed downstream nodes.
 
 Batch 8 canonically promotes KGuiAddons `6.30.0-0supralinux2` from run `35185562846`, job `105086774400`, artifact `10482007092`, ZIP SHA-256 `71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca`; tests are `9/9 PASS`, Lintian passes the error gate, Python import/APT closure/consumer smoke pass, and the runtime SONAME is `libKF6GuiAddons.so.6`. KCoreAddons remains a public-header/consumer provider only, not a KGuiAddons Framework build dependency.
 
-The seven pending nodes remain `kconfig`, `ki18n`, `sonnet`, `kirigami`, `kquickcharts`, `kuserfeedback` and `prison`. The multi-ABI Batch 9 implementation for `kconfig`, `ki18n` and `sonnet` is now ready: real package trees, retained ABI baselines, semantic scope selection and a three-way clean `sbuild` matrix are wired into PR CI. The earlier source run `35138333645` is DIAG_PASS only; none of the three nodes is promoted until real package PASS evidence is retained.
+The seven canonical pending nodes remain `kconfig`, `ki18n`, `sonnet`, `kirigami`, `kquickcharts`, `kuserfeedback` and `prison`. Batch 9 attempt 1 is complete: KI18n `6.30.0-0supralinux1` is retained package PASS, while KConfig and Sonnet are real independent symbols/Lintian FAILs now remediated as `6.30.0-0supralinux2`. The earlier source run `35138333645` remains DIAG_PASS only. No Batch 9 result is canonically promoted until the remediation run completes and a separate promotion commit is made.
 
 PR #1 remains Draft. No merge is authorized.

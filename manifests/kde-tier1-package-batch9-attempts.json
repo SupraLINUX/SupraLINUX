@@ -3,8 +3,53 @@
   "as_of": "2026-09-18",
   "batch": "tier1-batch-9",
   "attempts": {
-    "kconfig": [],
-    "ki18n": [],
-    "sonnet": []
+    "kconfig": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "958d9990f0c5c6e85ade45faf8b7fa1a62c0c3af",
+        "workflow_run": 35348130023,
+        "job_id": 105609530611,
+        "artifact_id": 10549115856,
+        "artifact_sha256": "6579cc838436e1390c950da9037997ae4646fb4fb40d5e69290377c16f385b6c",
+        "rootfs_sha256": "79fe82c1adfffb5050106b07157c423ed7c9c7c0a4a2608ace84899d5ae1184e",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "90/90 PASS",
+        "cause": "Lintian rejected _ZN16KStandardActions16staticMetaObjectE@Base at 6.30.0-0supralinux1; upstream introduction reviewed as KDE Frameworks 6.29.0."
+      }
+    ],
+    "ki18n": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "958d9990f0c5c6e85ade45faf8b7fa1a62c0c3af",
+        "workflow_run": 35348130023,
+        "job_id": 105609530707,
+        "artifact_id": 10548710619,
+        "artifact_sha256": "d213147477242b08a1dac78611b30eacb60f9bd727abb1313d5a2c8bc7c24cf4",
+        "rootfs_sha256": "f3849a2ceb003aeb1de899fe3b56dec59b3b29da6589f79da9b7dc3685c52b4d",
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "17/17 PASS",
+        "downstream_eligible": true
+      }
+    ],
+    "sonnet": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "958d9990f0c5c6e85ade45faf8b7fa1a62c0c3af",
+        "workflow_run": 35348130023,
+        "job_id": 105609530666,
+        "artifact_id": 10549100349,
+        "artifact_sha256": "d01d279dc2645efd9ecc01506e17c0f99aecadda761bc12236af7ae1341a3fc6",
+        "rootfs_sha256": "300d410c9e584cd0bc8dee75578db2ac940363e20440a289c2a31142b64d7d09",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "8/8 PASS",
+        "cause": "Lintian rejected _ZN6Sonnet8Settings22defaultSkipRunTogetherEv@Base at 6.30.0-0supralinux1; upstream introduction reviewed as KDE Frameworks 6.30.0."
+      }
+    ]
   }
 }

@@ -24,13 +24,13 @@ pt=s.get('packaging_trees',{}); req(pt.get('workflow_run')==34708030450 and pt.g
 bc=s.get('binary_contracts',{}); req(bc.get('workflow_run')==34704117024 and bc.get('artifact_id')==10301282501 and bc.get('artifact_sha256')=='9441b2f2957b350a46026b0df3bd5eb3578e1578671aab3b7afc7a0929ce1a97' and bc.get('contracts_json_sha256')=='e44507d0dd73db913a91bd4852c452f783618aab0bd6a3790e4c4f4c40707b7b','binary-contract reference evidence mismatch')
 sd=s.get('source_diagnostic',{}); req(sd.get('workflow_run')==35138333645 and sd.get('commit')=='6b3a8b9f408c5fff4bceec81ac9ffb3e47a4dbd3' and sd.get('promotes_package_state') is False,'source diagnostic must remain non-promoting')
 expected={
-'kconfig':('kf6-kconfig','0e98bac324cd716849202d4b246a948e363d6792a8eb09c78417cdde9559f56e',9,3,104936243505,10464074545,'9f05b0e368c4d1a7eb3dbec441680b423fd3f8b4a7fc2a0cdcbf9edbb3ca6e68'),
-'ki18n':('kf6-ki18n','dfbfc8af89b3bc68810b094bf87746db87c3eeb35b75caeb1882681ebed563bd',8,3,104936243967,10463404553,'86b5f05313d164358ac36e1cc4982b72fad90bad3175114d2b2b493691a6bec3'),
-'sonnet':('kf6-sonnet','1574ef5c17f38e315de104b94580ccc1b7ec1db2650cb4bace2e14159bf61e10',8,2,104936243844,10464073832,'6b17c7f02213282a520f4127feb010e9a37dbbafce9c8ab17d7f76164b22d7b6')}
+'kconfig':('kf6-kconfig','0e98bac324cd716849202d4b246a948e363d6792a8eb09c78417cdde9559f56e','6.30.0-0supralinux2',9,3,104936243505,10464074545,'9f05b0e368c4d1a7eb3dbec441680b423fd3f8b4a7fc2a0cdcbf9edbb3ca6e68'),
+'ki18n':('kf6-ki18n','dfbfc8af89b3bc68810b094bf87746db87c3eeb35b75caeb1882681ebed563bd','6.30.0-0supralinux1',8,3,104936243967,10463404553,'86b5f05313d164358ac36e1cc4982b72fad90bad3175114d2b2b493691a6bec3'),
+'sonnet':('kf6-sonnet','1574ef5c17f38e315de104b94580ccc1b7ec1db2650cb4bace2e14159bf61e10','6.30.0-0supralinux2',8,2,104936243844,10464073832,'6b17c7f02213282a520f4127feb010e9a37dbbafce9c8ab17d7f76164b22d7b6')}
 canonical={x['id']:x for x in t.get('nodes',[])}
-for node,(source,sha,nbin,nabi,job,artifact,digest) in expected.items():
+for node,(source,sha,package_version,nbin,nabi,job,artifact,digest) in expected.items():
  n=c.get('nodes',{}).get(node,{}); pkg=ROOT/'packages/kde'/node/'debian'; cons=ROOT/'packages/kde'/node/'consumer'
- req(n.get('upstream_version')=='6.30.0' and n.get('source_package')==source and n.get('package_version')=='6.30.0-0supralinux1' and n.get('source_sha256')==sha,f'{node}: source/package pin mismatch')
+ req(n.get('upstream_version')=='6.30.0' and n.get('source_package')==source and n.get('package_version')==package_version and n.get('source_sha256')==sha,f'{node}: source/package pin mismatch')
  req(n.get('kde_framework_build_dependencies')==[],f'{node}: Tier 1 build dependency regression')
  req(n.get('upstream_defaults',{}).get('BUILD_TESTING')=='ON',f'{node}: BUILD_TESTING must be ON')
  req(n.get('qch_profile')=='OFF-common-supralinux-frameworks',f'{node}: QCH profile mismatch')
@@ -65,13 +65,44 @@ req('env -u LC_ALL -u LC_COLLATE -u LC_CTYPE LANG=en_US.UTF-8' in ki_rules,'KI18
 kpol=c['nodes']['kconfig']['patch_policy']; req(kpol.get('retained')==['Allow-packagers-set-kconfig_compiler-install-dir.patch'] and len(kpol.get('excluded',[]))==2,'KConfig patch policy mismatch')
 req((ROOT/'packages/kde/kconfig/debian/patches/series').read_text().strip()=='Allow-packagers-set-kconfig_compiler-install-dir.patch','KConfig series must contain only technical layout patch')
 req(c['nodes']['sonnet']['patch_policy'].get('excluded')==['cross.patch'],'Sonnet cross.patch exclusion must be explicit')
-# Attempt ledger is append-only and may be empty before first real run.
+req(c.get('state')=='remediation-pending-build','Batch 9 campaign must record attempt-1 remediation state')
+# Reviewed ABI deltas are deterministic, hash-guarded, and run immediately before dh_makeshlibs.
+deltas={
+ 'kconfig':{
+  'script':'packages/kde/kconfig/debian/apply-symbols-delta.py',
+  'base':'c131c44659cce576fbc0754a2a55fd470aa9c065f3efc7d92b49c0042dc758ea',
+  'result':'8a8220263cd60e88208e68138cb0f7288a4d99d3a99c0349e62be314d9d1fd04',
+  'symbol':'_ZN16KStandardActions16staticMetaObjectE@Base 6.29.0'},
+ 'sonnet':{
+  'script':'packages/kde/sonnet/debian/apply-symbols-delta.py',
+  'base':'da300d1551304beac95a201ecd5c27fbf1286fe1e2ef7ab893b959e5e656f2b6',
+  'result':'e75af49fd74700ef8a2c21ce55decaf96439479223770c63654410f3c3f956bb',
+  'symbol':'_ZN6Sonnet8Settings22defaultSkipRunTogetherEv@Base 6.30.0'}}
+for node,meta in deltas.items():
+ delta=text(ROOT/meta['script']); rules=text(ROOT/'packages/kde'/node/'debian/rules')
+ req(meta['base'] in delta and meta['result'] in delta and meta['symbol'] in delta,f'{node}: reviewed symbols delta mismatch')
+ req('override_dh_makeshlibs:' in rules and '\tpython3 debian/apply-symbols-delta.py' in rules and '\tdh_makeshlibs' in rules and rules.index('\tpython3 debian/apply-symbols-delta.py') < rules.index('\tdh_makeshlibs'),f'{node}: symbols delta must execute before dh_makeshlibs')
+req(c['nodes']['kconfig'].get('last_failure_evidence',{}).get('reviewed_upstream_minimum')=='6.29.0','KConfig reviewed ABI minimum mismatch')
+req(c['nodes']['sonnet'].get('last_failure_evidence',{}).get('reviewed_upstream_minimum')=='6.30.0','Sonnet reviewed ABI minimum mismatch')
+ki_pass=c['nodes']['ki18n'].get('pass_evidence',{})
+req(c['nodes']['ki18n'].get('state')=='PASS' and c['nodes']['ki18n'].get('downstream_eligible') is True and ki_pass.get('artifact_id')==10548710619 and ki_pass.get('artifact_sha256')=='d213147477242b08a1dac78611b30eacb60f9bd727abb1313d5a2c8bc7c24cf4' and ki_pass.get('tests')=='17/17 PASS','KI18n retained attempt-1 PASS evidence mismatch')
+# Attempt ledger is append-only and now records the three real attempt-1 results.
 req(a.get('schema')==1 and a.get('batch')=='tier1-batch-9','Batch 9 attempts identity mismatch')
 for node in expected:
  hist=a.get('attempts',{}).get(node); req(isinstance(hist,list),f'{node}: attempts list missing')
  if isinstance(hist,list):
   req([x.get('attempt') for x in hist]==list(range(1,len(hist)+1)),f'{node}: attempt numbers not append-only/sequential')
   req(all(x.get('result') in {'PASS','FAIL'} for x in hist),f'{node}: attempt result must be PASS/FAIL only')
+attempt1_expected={
+ 'kconfig':(105609530611,10549115856,'6579cc838436e1390c950da9037997ae4646fb4fb40d5e69290377c16f385b6c','FAIL','90/90 PASS'),
+ 'ki18n':(105609530707,10548710619,'d213147477242b08a1dac78611b30eacb60f9bd727abb1313d5a2c8bc7c24cf4','PASS','17/17 PASS'),
+ 'sonnet':(105609530666,10549100349,'d01d279dc2645efd9ecc01506e17c0f99aecadda761bc12236af7ae1341a3fc6','FAIL','8/8 PASS')}
+for node,(job,artifact,digest,result,tests) in attempt1_expected.items():
+ hist=a['attempts'][node]
+ req(len(hist)>=1,f'{node}: attempt 1 evidence missing')
+ if hist:
+  x=hist[0]
+  req(x.get('attempt')==1 and x.get('commit')=='958d9990f0c5c6e85ade45faf8b7fa1a62c0c3af' and x.get('workflow_run')==35348130023 and x.get('job_id')==job and x.get('artifact_id')==artifact and x.get('artifact_sha256')==digest and x.get('result')==result and x.get('tests')==tests,f'{node}: attempt 1 retained evidence mismatch')
 # Discovery exposes exactly these three as independently runnable; no BLOCKED.
 for node in expected: req(g.get('nodes',{}).get(node,{}).get('readiness')=='runnable',f'{node}: must be runnable in global discovery')
 req(g.get('lanes',{}).get('multi-abi',{}).get('status')=='implementation-ready','multi-ABI lane must be implementation-ready')
@@ -80,7 +111,7 @@ for token in ('fail-fast: false','max-parallel: 3','node: [kconfig, ki18n, sonne
  req(token in workflow,f'Batch 9 workflow missing {token}')
 req('uses: ./.github/workflows/kde-tier1-package-batch9.yml' in router,'PR router must invoke Batch 9')
 req('Test KDE Tier 1 Batch 9 package scope' in policy and 'Validate KDE Tier 1 batch 9 preparation' in policy,'Repository Policy must test/validate Batch 9')
-for token in ('abi-contract','qml-import-smoke','consumer-runtime-closure','lintian --fail-on error','0supralinux','DDEBS','sbuild --verbose'):
+for token in ('abi-contract',"STAGE='qml-import-smoke'","STAGE='qml-package-contract'",'consumer-runtime-closure','lintian --fail-on error','0supralinux','DDEBS','sbuild --verbose'):
  req(token in runner,f'Batch 9 runner gate missing {token}')
 req('manifests/kde-tier1-package-campaign-batch9.json' in scope and 'packages/kde/${NODE}/' in scope,'Batch 9 scope selector contract missing')
 req('KDE Tier 1 Batch 9 scope selector: PASS' in scope_test,'Batch 9 scope test marker missing')

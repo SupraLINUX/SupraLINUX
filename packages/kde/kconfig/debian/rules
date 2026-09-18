@@ -9,3 +9,7 @@ override_dh_auto_configure:
 
 override_dh_auto_test:
 	LANG=C.UTF-8 LC_ALL=C.UTF-8 xvfb-run -a dbus-run-session dh_auto_test --no-parallel
+
+override_dh_makeshlibs:
+	python3 debian/apply-symbols-delta.py
+	dh_makeshlibs
