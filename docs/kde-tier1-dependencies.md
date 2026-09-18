@@ -151,3 +151,7 @@ All three pass Lintian, exact local-package APT closure, QML import scanning and
 Kirigami and KQuickCharts remain Tier 1 at the KDE Framework build-DAG level: both have `kde_framework_build_dependencies=[]`, and the retained 6.30 source diagnostic compiled KQuickCharts with its Qt provider set without introducing a Kirigami build edge.
 
 The packaged KQuickCharts QML surface is different: `qml6-module-org-kde-quickcharts` requires the `org.kde.kirigami` QML runtime surface. SupraLINUX therefore models Kirigami as a **package-validation predecessor** only. KQuickCharts full APT/QML/consumer validation consumes a retained SupraLINUX Kirigami PASS artifact and verifies the installed Kirigami QML package at the exact campaign version. Ubuntu's KDE package must not silently satisfy that closure.
+
+### Batch 10 cycle 1 evidence
+
+PR CI `35389030840` exercised the package-validation edge exactly as designed: Kirigami was attempted and failed its own Lintian symbols contract; KQuickCharts was not attempted and was recorded BLOCKED by Kirigami. This remains a package-validation ordering relation only and does not create a `KQuickCharts -> Kirigami` KDE Framework build dependency.

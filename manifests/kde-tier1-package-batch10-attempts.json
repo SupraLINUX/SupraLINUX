@@ -3,7 +3,23 @@
   "as_of": "2026-09-18",
   "batch": "tier1-batch-10",
   "attempts": {
-    "kirigami": [],
+    "kirigami": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "67a6558513a82d4a1b4426a9b705eafdadbd3bf4",
+        "workflow_run": 35389030840,
+        "job_id": 105742841430,
+        "artifact_id": 10565625878,
+        "artifact_sha256": "58b5bc72f81cdd26ea368cf810d1e1727fbdfc521203fe889bca005aa2f9aca8",
+        "rootfs_sha256": "445ce98267d53ec58a98bed3ee74343f04f2465bdccf258efa95e709551ff7b1",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "44/44 PASS",
+        "package_build": "successful",
+        "cause": "Lintian rejected 38 generated Qt/libstdc++ template-instantiation symbols carrying the current Debian revision across five Kirigami runtime symbol files."
+      }
+    ],
     "kquickcharts": []
   },
   "validation_incidents": {
@@ -41,5 +57,24 @@
       "node": "kirigami",
       "cause": "Runner recursively scanned all debian metadata and matched documentation of rejected BUILD_QCH/QT_QML_NO_CACHEGEN overrides (and could also match legitimate fixture cleanup '|| true') before source/rootfs build."
     }
-  ]
+  ],
+  "blocked_events": {
+    "kirigami": [],
+    "kquickcharts": [
+      {
+        "validation_cycle": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "67a6558513a82d4a1b4426a9b705eafdadbd3bf4",
+        "workflow_run": 35389030840,
+        "job_id": 105745672521,
+        "artifact_id": 10565780756,
+        "artifact_sha256": "118afc6b702b4ec9fee050898fcbc381f5beaf2131013b619973c85e81f27ef8",
+        "result": "BLOCKED",
+        "stage": "package-validation-predecessor",
+        "blocked_by": "kirigami",
+        "package_attempted": false,
+        "cause": "Kirigami package validation did not PASS; KQuickCharts full package validation was not attempted."
+      }
+    ]
+  }
 }

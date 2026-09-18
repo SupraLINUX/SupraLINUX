@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 1 — Batch 10 QML/multisurface package campaign
 
-Status: **implementation ready; package state not promoted**
+Status: **attempt 1 recorded; Kirigami remediation pending; package state not promoted**
 
 As of 2026-09-18, KDE Frameworks 6.30.0 remains the selected upstream stable series. Batch 10 covers the remaining Tier 1 QML-heavy pair: Kirigami and KQuickCharts. Canonical Tier 1 before this campaign is **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.
 
@@ -67,9 +67,43 @@ Batch 10 requires, per attempted node:
 
 Kirigami's consumer uses the upstream-supported `KF6::KirigamiPlatform` target. QuickCharts consumer validation requires the exported `KF6::QuickCharts` and `KF6::QuickChartsControls` targets and invokes both QML registration symbols.
 
-## Current state
+## Attempt 1 — Kirigami real FAIL, KQuickCharts BLOCKED
 
-The Batch 10 attempt ledger is intentionally empty before the first real package run. No node is promoted by this preparation commit. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.
+Repository Policy run `35389029819` passed completely. PR CI run `35389030840` then executed the first real Batch 10 package cycle on commit `67a6558513a82d4a1b4426a9b705eafdadbd3bf4`.
+
+Kirigami `6.30.0-0supralinux1` is a real **FAIL**:
+
+- job `105742841430`;
+- artifact `10565625878`;
+- artifact ZIP SHA-256 `58b5bc72f81cdd26ea368cf810d1e1727fbdfc521203fe889bca005aa2f9aca8`;
+- rootfs SHA-256 `445ce98267d53ec58a98bed3ee74343f04f2465bdccf258efa95e709551ff7b1`;
+- package build successful;
+- upstream tests `44/44 PASS`;
+- failure stage: Lintian inside `sbuild`.
+
+Lintian rejected 38 newly emitted symbols across `libkirigamicontrols6`, `libkirigamidelegates6`, `libkirigamiformsprivatecards6`, `libkirigamiformsprivateflat6` and `libkirigamitemplates6` because `dpkg-gensymbols` assigned the current Debian revision. This is packaging/ABI metadata failure, not infrastructure.
+
+KQuickCharts was **not attempted**. Job `105745672521` recorded **BLOCKED** with artifact `10565780756`, SHA-256 `118afc6b702b4ec9fee050898fcbc381f5beaf2131013b619973c85e81f27ef8`, `blocked_by=kirigami`. It is not a KQuickCharts FAIL.
+
+## Attempt 1 remediation — Kirigami 6.30.0-0supralinux2
+
+The 38 exports are C++ template-instantiation/toolchain ABI noise, not new public Kirigami APIs. KDE bug 519452 documents the exact nine QMetaType/QMetaSequence symbols as dependent on build parallelism and recommends `optional=templinst`; Debian `dpkg-gensymbols` policy likewise supports optional tags for private template instantiations. The two `std::_Rb_tree<QString,QVariant>` exports are handled as template instantiations for the same reason.
+
+Revision `6.30.0-0supralinux2` uses a deterministic `debian/apply-symbols-delta.py` immediately before `dh_makeshlibs`. It verifies each retained Debian 6.28 baseline hash, inserts only the reviewed optional symbols at an exact anchor, then verifies the complete transformed file hash. No active `.symbols` file is committed.
+
+| Symbols surface | Added optional symbols | Minimum used | Transformed SHA-256 |
+| --- | ---: | --- | --- |
+| Controls | 9 | 6.30.0 (first observed here) | `71cc0b7a2622f7b9b98c9d87dfa5e7824743025ff8960fdb5ef28da9ffe67f38` |
+| Delegates | 9 | 6.23.0 (KDE bug 519452 exact set) | `7b2f50807ea409c91094e36605a37cf8190910e0be23f8e472a051d9bcbb9954` |
+| FormsPrivateCards | 9 | 6.30.0 (first observed here) | `4483ccb4b6cc376bb28e5ac408147b8cf3f190b9a394f1b38326d7500671925f` |
+| FormsPrivateFlat | 9 | 6.30.0 (first observed here) | `75c25d52c7415502d200b57f4dea7d9a8405aa3df20a2d5ea03349d5812fcc61` |
+| Templates | 2 | 6.30.0 (first observed here) | `b60af9408ad63c919775ce099d040a5207069dd972e5daee98c974336e038582` |
+
+Only Delegates claims the externally documented 6.23.0 minimum. For the other affected libraries SupraLINUX deliberately uses 6.30.0 as the conservative first-observed package minimum rather than inventing an earlier per-library introduction. `python3:any` is added to Build-Depends because `debian/rules` executes the delta helper.
+
+Reference: https://bugs.kde.org/show_bug.cgi?id=519452
+
+Canonical Tier 1 is intentionally unchanged at **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until separate promotion. Operational Batch 10 history records Kirigami attempt 1 FAIL and KQuickCharts BLOCKED; the remediation candidate makes Kirigami runnable at `-2`, while KQuickCharts remains package-validation-dependent on a Kirigami PASS.
 
 
 ## Preparation infrastructure incident — scope-test ShellCheck

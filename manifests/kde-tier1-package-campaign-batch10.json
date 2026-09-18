@@ -6,7 +6,7 @@
   "provider_platform": "ubuntu-resolute",
   "batch": "tier1-batch-10",
   "lane": "qml-multisurface",
-  "state": "implementation-ready-pending-build",
+  "state": "remediation-pending-build",
   "attempt_ledger": "manifests/kde-tier1-package-batch10-attempts.json",
   "canonical_snapshot": {
     "state": "pre-batch-10",
@@ -55,13 +55,35 @@
       },
       "qch_profile": "OFF-common-supralinux-frameworks",
       "kde_framework_build_dependencies": [],
-      "state": "prepared-pending-build",
-      "last_result": null,
+      "state": "remediation-pending-build",
+      "last_result": "FAIL",
       "downstream_eligible": false,
+      "last_failure_evidence": {
+        "workflow_run": 35389030840,
+        "job_id": 105742841430,
+        "artifact_id": 10565625878,
+        "artifact_sha256": "58b5bc72f81cdd26ea368cf810d1e1727fbdfc521203fe889bca005aa2f9aca8",
+        "rootfs_sha256": "445ce98267d53ec58a98bed3ee74343f04f2465bdccf258efa95e709551ff7b1",
+        "tests": "44/44 PASS",
+        "package_build": "successful",
+        "stage": "sbuild",
+        "cause": "lintian-template-instantiation-symbols-current-debian-revision"
+      },
+      "symbols_remediation": {
+        "policy": "optional=templinst",
+        "rationale": "Nondeterministic Qt/libstdc++ C++ template instantiations are private/toolchain ABI noise, not public Kirigami API. KDE bug 519452 documents the exact QMetaType/QMetaSequence set as parallel-build dependent; Debian symbols policy permits optional template-instantiation tags.",
+        "files": [
+          {"symbols_file":"libkirigamicontrols6.symbols","baseline_sha256":"18a292f5b614aecb1f71d1f2335989dc6b7217e25dccf511e11b38c1d3206849","result_sha256":"71cc0b7a2622f7b9b98c9d87dfa5e7824743025ff8960fdb5ef28da9ffe67f38","added_optional_symbols":9,"minimum_version":"6.30.0","minimum_basis":"first-observed-in-SupraLINUX-6.30-build"},
+          {"symbols_file":"libkirigamidelegates6.symbols","baseline_sha256":"b58d788f8cae861b02fdc5a681d84a23adda77d65461b84da0e1368256bfee2f","result_sha256":"7b2f50807ea409c91094e36605a37cf8190910e0be23f8e472a051d9bcbb9954","added_optional_symbols":9,"minimum_version":"6.23.0","minimum_basis":"KDE-bug-519452-exact-symbol-set"},
+          {"symbols_file":"libkirigamiformsprivatecards6.symbols","baseline_sha256":"080732bf5305417218086c8849c77b08508a7315acfaca5e4e130161c3951614","result_sha256":"4483ccb4b6cc376bb28e5ac408147b8cf3f190b9a394f1b38326d7500671925f","added_optional_symbols":9,"minimum_version":"6.30.0","minimum_basis":"first-observed-in-SupraLINUX-6.30-build"},
+          {"symbols_file":"libkirigamiformsprivateflat6.symbols","baseline_sha256":"6b501c473adb47811bb556bfd3376e5300bfc9af678b09531a375ddd1870089b","result_sha256":"75c25d52c7415502d200b57f4dea7d9a8405aa3df20a2d5ea03349d5812fcc61","added_optional_symbols":9,"minimum_version":"6.30.0","minimum_basis":"first-observed-in-SupraLINUX-6.30-build"},
+          {"symbols_file":"libkirigamitemplates6.symbols","baseline_sha256":"c58094969b409f527c6fdcfc5af14ca42da6c604637cfd4b72bcc1f2c03f51e1","result_sha256":"b60af9408ad63c919775ce099d040a5207069dd972e5daee98c974336e038582","added_optional_symbols":2,"minimum_version":"6.30.0","minimum_basis":"first-observed-in-SupraLINUX-6.30-build"}
+        ]
+      },
       "name": "Kirigami",
       "upstream_version": "6.30.0",
       "source_package": "kf6-kirigami",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kirigami-6.30.0.tar.xz",
       "source_sha256": "6de811e559c20dc1086c0cf2c34bb98712dbe4d45f960c62c3c3f887332c95f8",
       "upstream_defaults": {
@@ -141,8 +163,18 @@
       "qch_profile": "OFF-common-supralinux-frameworks",
       "kde_framework_build_dependencies": [],
       "state": "prepared-pending-build",
-      "last_result": null,
+      "last_result": "BLOCKED",
       "downstream_eligible": false,
+      "last_blocked_evidence": {
+        "workflow_run": 35389030840,
+        "job_id": 105745672521,
+        "artifact_id": 10565780756,
+        "artifact_sha256": "118afc6b702b4ec9fee050898fcbc381f5beaf2131013b619973c85e81f27ef8",
+        "stage": "package-validation-predecessor",
+        "blocked_by": "kirigami",
+        "package_attempted": false,
+        "reason": "Kirigami package validation did not PASS; KQuickCharts full package validation was not attempted."
+      },
       "name": "KQuickCharts",
       "upstream_version": "6.30.0",
       "source_package": "kf6-kquickcharts",

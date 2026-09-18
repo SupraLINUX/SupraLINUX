@@ -126,3 +126,9 @@ PR #1 remains Draft. No merge is authorized.
 ### Batch 10 preparation
 
 The QML/multisurface lane is implementation-ready without changing canonical state: **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. Kirigami is runnable. KQuickCharts remains a Tier 1 source with no KDE Framework build dependency on Kirigami; however, its full package QML/runtime closure is ordered after a retained SupraLINUX Kirigami PASS. If Kirigami fails, KQuickCharts package validation is BLOCKED rather than recorded as a package FAIL.
+
+### Batch 10 attempt 1
+
+Repository Policy `35389029819` passed. PR CI `35389030840` produced a real Kirigami `6.30.0-0supralinux1` FAIL at Lintian after successful build and `44/44 PASS` tests (job `105742841430`, artifact `10565625878`, SHA-256 `58b5bc72f81cdd26ea368cf810d1e1727fbdfc521203fe889bca005aa2f9aca8`). KQuickCharts was not attempted and is recorded BLOCKED by Kirigami (job `105745672521`, artifact `10565780756`).
+
+Kirigami remediation `6.30.0-0supralinux2` classifies the 38 newly emitted Qt/libstdc++ template-instantiation symbols as deterministic hash-pinned `optional=templinst` entries before `dh_makeshlibs`; KDE bug 519452 documents the exact QMetaType/QMetaSequence set as parallel-build-dependent. Canonical Tier 1 remains 25 PASS / 4 pending until a separate promotion.

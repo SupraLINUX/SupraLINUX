@@ -1,3 +1,11 @@
+kf6-kirigami (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Classify nondeterministic Qt/libstdc++ template instantiations as
+    optional=templinst in five hash-pinned symbols baselines.
+  * Declare python3:any for the deterministic symbols-delta helper.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Fri, 18 Sep 2026 17:35:00 -0300
+
 kf6-kirigami (6.30.0-0supralinux1) resolute; urgency=medium
 
   * Package KDE Kirigami 6.30.0 from upstream stable.

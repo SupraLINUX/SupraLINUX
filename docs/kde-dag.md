@@ -399,3 +399,7 @@ Canonical Tier 1 is **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. Histor
 Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. Kirigami is the first runnable package node in Batch 10. KQuickCharts has no upstream KDE Framework build edge to Kirigami, but its complete package/QML runtime gate requires a retained Kirigami SupraLINUX PASS. This ordering is tracked separately from the KDE build DAG.
 
 If Kirigami is attempted and FAILs, KQuickCharts is not attempted and is recorded BLOCKED for package validation. If Kirigami passes, its artifact feeds KQuickCharts runtime/QML validation. Historical DIAG_PASS evidence remains non-promoting.
+
+### Batch 10 cycle 1
+
+PR CI `35389030840` confirms the DAG semantics in practice: Kirigami attempt 1 is a real package FAIL, while KQuickCharts is BLOCKED and unattempted because its package-validation predecessor did not PASS. The remediation changes only Kirigami packaging/evidence; no KDE Framework build edge or canonical DAG dependency changes. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until successful package evidence is separately promoted.

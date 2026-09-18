@@ -9,3 +9,7 @@ override_dh_auto_configure:
 
 override_dh_auto_test:
 	dbus-run-session -- xvfb-run -a -s "-screen 0 1920x1080x24" debian/run-tests-under-x.sh
+
+override_dh_makeshlibs:
+	python3 debian/apply-symbols-delta.py
+	dh_makeshlibs
