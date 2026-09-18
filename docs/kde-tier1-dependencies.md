@@ -155,3 +155,9 @@ The packaged KQuickCharts QML surface is different: `qml6-module-org-kde-quickch
 ### Batch 10 cycle 1 evidence
 
 PR CI `35389030840` exercised the package-validation edge exactly as designed: Kirigami was attempted and failed its own Lintian symbols contract; KQuickCharts was not attempted and was recorded BLOCKED by Kirigami. This remains a package-validation ordering relation only and does not create a `KQuickCharts -> Kirigami` KDE Framework build dependency.
+
+### Batch 10 cycle 2 consumer-package contract
+
+The built Kirigami development package proves the consumer-facing CMake contract directly: it installs `KF6KirigamiPlatformConfig.cmake`, which exports `KF6::KirigamiPlatform` and resolves Qt6 Core/Qml/Quick. The prior consumer test incorrectly searched for an umbrella `KF6Config.cmake` that Kirigami does not install.
+
+Correcting the consumer harness does not alter KDE Framework build dependencies, package-validation ordering or provider authority. KQuickCharts remains a package-validation dependent only.

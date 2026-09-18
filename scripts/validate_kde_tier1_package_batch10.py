@@ -54,7 +54,9 @@ req(quick.get('state')=='prepared-pending-build' and quick.get('last_result')=='
 lf=kir.get('last_failure_evidence',{})
 req(lf.get('workflow_run')==35389030840 and lf.get('job_id')==105742841430 and lf.get('artifact_id')==10565625878 and lf.get('artifact_sha256')=='58b5bc72f81cdd26ea368cf810d1e1727fbdfc521203fe889bca005aa2f9aca8' and lf.get('rootfs_sha256')=='445ce98267d53ec58a98bed3ee74343f04f2465bdccf258efa95e709551ff7b1' and lf.get('tests')=='44/44 PASS' and lf.get('stage')=='sbuild','Kirigami failure evidence mismatch')
 lb=quick.get('last_blocked_evidence',{})
-req(lb.get('workflow_run')==35389030840 and lb.get('job_id')==105745672521 and lb.get('artifact_id')==10565780756 and lb.get('artifact_sha256')=='118afc6b702b4ec9fee050898fcbc381f5beaf2131013b619973c85e81f27ef8' and lb.get('blocked_by')=='kirigami' and lb.get('package_attempted') is False,'KQuickCharts BLOCKED evidence mismatch')
+req(lb.get('validation_cycle')==2 and lb.get('workflow_run')==35392233659 and lb.get('job_id')==105755393521 and lb.get('artifact_id')==10566446188 and lb.get('artifact_sha256')=='23e45810ba579c997a6c6c3ab46e34d53fd8f2360713cc8f38dae353ea7f8e3d' and lb.get('blocked_by')=='kirigami' and lb.get('package_attempted') is False,'KQuickCharts latest BLOCKED evidence mismatch')
+vi=kir.get('last_validation_incident',{})
+req(vi.get('validation_cycle')==2 and vi.get('workflow_run')==35392233659 and vi.get('job_id')==105753009458 and vi.get('artifact_id')==10565524699 and vi.get('artifact_sha256')=='b5676f429fcc10d57676e8d489ab651e5aadafffebbaccd6febf7c97cad3c3f5' and vi.get('rootfs_sha256')=='93928deec54c2410944410c4bb52eaab8b70723fea50271f51aa3cc0b70d8384' and vi.get('classification')=='INFRA' and vi.get('package_state_effect')=='none' and vi.get('symbols_remediation')=='PASS','Kirigami latest validation incident mismatch')
 rem=kir.get('symbols_remediation',{})
 req(rem.get('policy')=='optional=templinst' and len(rem.get('files',[]))==5,'Kirigami symbols-remediation policy mismatch')
 rem_expected={
@@ -77,17 +79,23 @@ if c['nodes']['kquickcharts']['upstream_defaults']!={'BUILD_SHARED_LIBS':'ON','B
 kp=c['nodes']['kquickcharts'].get('package_validation_dependencies',[])
 req(len(kp)==1 and kp[0].get('node')=='kirigami' and kp[0].get('kind')=='qml-runtime-closure' and kp[0].get('not_kde_framework_build_dependency') is True,'QuickCharts Kirigami package-validation dependency mismatch')
 req(c['nodes']['kirigami'].get('package_validation_dependencies')==[],'Kirigami must have no package-validation predecessor')
-req(a.get('validation_incidents')=={'kirigami':[],'kquickcharts':[]},'Batch 10 validation-incident ledger mismatch')
+inc=a.get('validation_incidents',{}).get('kirigami',[])
+req(a.get('validation_incidents',{}).get('kquickcharts')==[] and len(inc)==1,'Batch 10 validation-incident ledger mismatch')
+if len(inc)==1:
+ x=inc[0]
+ req(x.get('validation_cycle')==2 and x.get('package_version')=='6.30.0-0supralinux2' and x.get('commit')=='b6adeee8259414fe6711b3b7143f735330a42f6a' and x.get('workflow_run')==35392233659 and x.get('job_id')==105753009458 and x.get('artifact_id')==10565524699 and x.get('artifact_sha256')=='b5676f429fcc10d57676e8d489ab651e5aadafffebbaccd6febf7c97cad3c3f5' and x.get('rootfs_sha256')=='93928deec54c2410944410c4bb52eaab8b70723fea50271f51aa3cc0b70d8384' and x.get('classification')=='INFRA' and x.get('package_state_effect')=='none' and x.get('stage')=='consumer-smoke' and x.get('tests')=='44/44 PASS' and x.get('lintian')=='PASS-errors' and x.get('symbols_remediation')=='PASS','Kirigami validation-cycle-2 infrastructure evidence mismatch')
 ka=a.get('attempts',{}).get('kirigami',[]); qa=a.get('attempts',{}).get('kquickcharts',[])
 req(len(ka)==1 and qa==[],'Batch 10 real-attempt ledger must contain only Kirigami attempt 1')
 if len(ka)==1:
  x=ka[0]
  req(x.get('attempt')==1 and x.get('package_version')=='6.30.0-0supralinux1' and x.get('commit')=='67a6558513a82d4a1b4426a9b705eafdadbd3bf4' and x.get('workflow_run')==35389030840 and x.get('job_id')==105742841430 and x.get('artifact_id')==10565625878 and x.get('artifact_sha256')=='58b5bc72f81cdd26ea368cf810d1e1727fbdfc521203fe889bca005aa2f9aca8' and x.get('rootfs_sha256')=='445ce98267d53ec58a98bed3ee74343f04f2465bdccf258efa95e709551ff7b1' and x.get('result')=='FAIL' and x.get('stage')=='sbuild' and x.get('tests')=='44/44 PASS','Kirigami attempt-1 evidence mismatch')
 blocked=a.get('blocked_events',{}).get('kquickcharts',[])
-req(a.get('blocked_events',{}).get('kirigami')==[] and len(blocked)==1,'Batch 10 BLOCKED ledger mismatch')
-if len(blocked)==1:
+req(a.get('blocked_events',{}).get('kirigami')==[] and len(blocked)==2,'Batch 10 BLOCKED ledger mismatch')
+if len(blocked)==2:
  x=blocked[0]
- req(x.get('validation_cycle')==1 and x.get('commit')=='67a6558513a82d4a1b4426a9b705eafdadbd3bf4' and x.get('workflow_run')==35389030840 and x.get('job_id')==105745672521 and x.get('artifact_id')==10565780756 and x.get('artifact_sha256')=='118afc6b702b4ec9fee050898fcbc381f5beaf2131013b619973c85e81f27ef8' and x.get('result')=='BLOCKED' and x.get('blocked_by')=='kirigami' and x.get('package_attempted') is False,'KQuickCharts BLOCKED evidence mismatch')
+ req(x.get('validation_cycle')==1 and x.get('commit')=='67a6558513a82d4a1b4426a9b705eafdadbd3bf4' and x.get('workflow_run')==35389030840 and x.get('job_id')==105745672521 and x.get('artifact_id')==10565780756 and x.get('artifact_sha256')=='118afc6b702b4ec9fee050898fcbc381f5beaf2131013b619973c85e81f27ef8' and x.get('result')=='BLOCKED' and x.get('blocked_by')=='kirigami' and x.get('package_attempted') is False,'KQuickCharts cycle-1 BLOCKED evidence mismatch')
+ x=blocked[1]
+ req(x.get('validation_cycle')==2 and x.get('commit')=='b6adeee8259414fe6711b3b7143f735330a42f6a' and x.get('workflow_run')==35392233659 and x.get('job_id')==105755393521 and x.get('artifact_id')==10566446188 and x.get('artifact_sha256')=='23e45810ba579c997a6c6c3ab46e34d53fd8f2360713cc8f38dae353ea7f8e3d' and x.get('result')=='BLOCKED' and x.get('blocked_by')=='kirigami' and x.get('package_attempted') is False,'KQuickCharts cycle-2 BLOCKED evidence mismatch')
 tier=js(ROOT/'manifests/kde-frameworks-tier1.json'); nodes={x['id']:x for x in tier['nodes']}
 for node in ('kirigami','kquickcharts'): req(nodes[node].get('state')=='pending' and nodes[node].get('packaging',{}).get('state')=='pending',f'{node}: canonical state promoted prematurely')
 runner=text(ROOT/'scripts/run-kde-tier1-package-batch10-preflight.sh'); scope=text(ROOT/'scripts/kde-tier1-package-batch10-needed.sh'); workflow=text(ROOT/'.github/workflows/kde-tier1-package-batch10.yml')
@@ -100,7 +108,9 @@ req('packages/kde/kirigami/*' in scope,'Batch10 selector must propagate Kirigami
 req('package_validation_dependencies' in json.dumps(c['nodes']['kquickcharts']),'Batch10 campaign must retain package-validation dependency metadata')
 for token in ('needs: kirigami-package',"state':'BLOCKED",'Download current-run Kirigami PASS artifact','Download retained Kirigami PASS artifact','needs.kirigami-package.outputs.built'):
  req(token in workflow,f'Batch10 workflow missing {token}')
-req('KF6::KirigamiPlatform' in text(ROOT/'packages/kde/kirigami/consumer/CMakeLists.txt'),'Kirigami official C++ target missing')
+kir_consumer=text(ROOT/'packages/kde/kirigami/consumer/CMakeLists.txt')
+req('find_package(KF6KirigamiPlatform 6.30 REQUIRED CONFIG)' in kir_consumer and 'KF6::KirigamiPlatform' in kir_consumer,'Kirigami consumer must use the installed KF6KirigamiPlatform package config and official target')
+req('find_package(KF6 6.30' not in kir_consumer,'Kirigami consumer must not request nonexistent KF6 umbrella config')
 qc_cmake=text(ROOT/'packages/kde/kquickcharts/consumer/CMakeLists.txt'); qc_cpp=text(ROOT/'packages/kde/kquickcharts/consumer/main.cpp')
 req('KF6::QuickCharts' in qc_cmake and 'KF6::QuickChartsControls' in qc_cmake and 'qml_register_types_org_kde_quickcharts' in qc_cpp and 'qml_register_types_org_kde_quickcharts_controls' in qc_cpp,'QuickCharts consumer contract incomplete')
 router=text(ROOT/'.github/workflows/pr-ci-router.yml'); policy=text(ROOT/'.github/workflows/repository-policy.yml')

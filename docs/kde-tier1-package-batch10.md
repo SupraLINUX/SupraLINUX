@@ -127,3 +127,27 @@ Repository Policy `35388829511` passed completely on commit `5b985ead70bef19dc37
 The shared runner recursively grepped all `debian/` metadata for forbidden downstream behavior tokens. That incorrectly matched the package documentation which explicitly records those rejected overrides and could also match legitimate `|| true` cleanup in the X fixture. Classification: **infrastructure / package_state_effect=none**; this is not Kirigami attempt 1 and does not create a package FAIL.
 
 The guard is narrowed to executable behavior only: forbidden feature flags are checked in `debian/rules`, and only a `dh_auto_test ... || true` suppression is rejected across the test command files. Documentation is no longer interpreted as executable policy.
+
+## Validation cycle 2 — consumer harness false negative
+
+Repository Policy run `35392233427`, job `105752975995`, passed all policy gates including the Batch 10 validator. PR CI run `35392233659` rebuilt Kirigami `6.30.0-0supralinux2`.
+
+Kirigami job `105753009458` reached the final consumer smoke after the package itself had already built successfully. Artifact `10565524699`, ZIP SHA-256 `b5676f429fcc10d57676e8d489ab651e5aadafffebbaccd6febf7c97cad3c3f5`, rootfs SHA-256 `93928deec54c2410944410c4bb52eaab8b70723fea50271f51aa3cc0b70d8384`.
+
+Validated before the false-negative abort:
+
+- upstream tests: `44/44 PASS`;
+- Lintian source+binary error gate: PASS;
+- reviewed `optional=templinst` symbols remediation: PASS;
+- architecture-aware ABI floors: PASS across all 15 runtime surfaces;
+- QML module/import validation: PASS;
+- exact local-package APT installation and `apt-get check`: PASS.
+
+The failure was in the repository consumer harness, not the package. `packages/kde/kirigami/consumer/CMakeLists.txt` requested `find_package(KF6 6.30 ...)`, which searches for a nonexistent umbrella `KF6Config.cmake`. The built `libkirigami-dev` correctly installs `KF6KirigamiPlatformConfig.cmake` and exports `KF6::KirigamiPlatform`; that config in turn declares the required Qt6 Core/Qml/Quick dependencies.
+
+Classification: **INFRA / package_state_effect=none**. This validation cycle is not appended as a Kirigami package FAIL and does not certify PASS because the consumer gate did not execute successfully. Kirigami remains at `6.30.0-0supralinux2`; only the consumer harness changes to `find_package(KF6KirigamiPlatform 6.30 REQUIRED CONFIG)`.
+
+KQuickCharts job `105755393521` was again not attempted. It recorded **BLOCKED** with artifact `10566446188`, SHA-256 `23e45810ba579c997a6c6c3ab46e34d53fd8f2360713cc8f38dae353ea7f8e3d`. This is a second BLOCKED validation event, not a KQuickCharts FAIL.
+
+Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until retained full package PASS evidence is separately promoted.
+

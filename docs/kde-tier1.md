@@ -132,3 +132,9 @@ The QML/multisurface lane is implementation-ready without changing canonical sta
 Repository Policy `35389029819` passed. PR CI `35389030840` produced a real Kirigami `6.30.0-0supralinux1` FAIL at Lintian after successful build and `44/44 PASS` tests (job `105742841430`, artifact `10565625878`, SHA-256 `58b5bc72f81cdd26ea368cf810d1e1727fbdfc521203fe889bca005aa2f9aca8`). KQuickCharts was not attempted and is recorded BLOCKED by Kirigami (job `105745672521`, artifact `10565780756`).
 
 Kirigami remediation `6.30.0-0supralinux2` classifies the 38 newly emitted Qt/libstdc++ template-instantiation symbols as deterministic hash-pinned `optional=templinst` entries before `dh_makeshlibs`; KDE bug 519452 documents the exact QMetaType/QMetaSequence set as parallel-build-dependent. Canonical Tier 1 remains 25 PASS / 4 pending until a separate promotion.
+
+### Batch 10 validation cycle 2
+
+Kirigami `6.30.0-0supralinux2` passed build, `44/44` tests, Lintian, the reviewed template-symbol remediation, ABI, QML and APT gates in run `35392233659`, then hit a repository consumer-harness false negative at `consumer-smoke`: the test requested nonexistent umbrella `KF6Config.cmake` instead of the installed `KF6KirigamiPlatformConfig.cmake`.
+
+This is retained as **INFRA / package_state_effect=none**, not a package FAIL. The package revision remains `-2`. KQuickCharts remained unattempted/BLOCKED. Canonical Tier 1 remains 25 PASS / 4 pending until a full PASS cycle and separate promotion.

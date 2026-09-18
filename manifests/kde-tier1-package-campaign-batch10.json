@@ -69,6 +69,24 @@
         "stage": "sbuild",
         "cause": "lintian-template-instantiation-symbols-current-debian-revision"
       },
+      "last_validation_incident": {
+        "validation_cycle": 2,
+        "workflow_run": 35392233659,
+        "job_id": 105753009458,
+        "artifact_id": 10565524699,
+        "artifact_sha256": "b5676f429fcc10d57676e8d489ab651e5aadafffebbaccd6febf7c97cad3c3f5",
+        "rootfs_sha256": "93928deec54c2410944410c4bb52eaab8b70723fea50271f51aa3cc0b70d8384",
+        "stage": "consumer-smoke",
+        "classification": "INFRA",
+        "package_state_effect": "none",
+        "package_build": "successful",
+        "lintian": "PASS-errors",
+        "tests": "44/44 PASS",
+        "apt_check": "PASS",
+        "qml_import_smoke": "PASS",
+        "symbols_remediation": "PASS",
+        "cause": "consumer-harness-requested-nonexistent-KF6-umbrella-config"
+      },
       "symbols_remediation": {
         "policy": "optional=templinst",
         "rationale": "Nondeterministic Qt/libstdc++ C++ template instantiations are private/toolchain ABI noise, not public Kirigami API. KDE bug 519452 documents the exact QMetaType/QMetaSequence set as parallel-build dependent; Debian symbols policy permits optional template-instantiation tags.",
@@ -166,14 +184,15 @@
       "last_result": "BLOCKED",
       "downstream_eligible": false,
       "last_blocked_evidence": {
-        "workflow_run": 35389030840,
-        "job_id": 105745672521,
-        "artifact_id": 10565780756,
-        "artifact_sha256": "118afc6b702b4ec9fee050898fcbc381f5beaf2131013b619973c85e81f27ef8",
+        "validation_cycle": 2,
+        "workflow_run": 35392233659,
+        "job_id": 105755393521,
+        "artifact_id": 10566446188,
+        "artifact_sha256": "23e45810ba579c997a6c6c3ab46e34d53fd8f2360713cc8f38dae353ea7f8e3d",
         "stage": "package-validation-predecessor",
         "blocked_by": "kirigami",
         "package_attempted": false,
-        "reason": "Kirigami package validation did not PASS; KQuickCharts full package validation was not attempted."
+        "reason": "Kirigami validation did not PASS because of a consumer-harness infrastructure false negative; KQuickCharts full package validation was not attempted."
       },
       "name": "KQuickCharts",
       "upstream_version": "6.30.0",

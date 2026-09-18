@@ -403,3 +403,9 @@ If Kirigami is attempted and FAILs, KQuickCharts is not attempted and is recorde
 ### Batch 10 cycle 1
 
 PR CI `35389030840` confirms the DAG semantics in practice: Kirigami attempt 1 is a real package FAIL, while KQuickCharts is BLOCKED and unattempted because its package-validation predecessor did not PASS. The remediation changes only Kirigami packaging/evidence; no KDE Framework build edge or canonical DAG dependency changes. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until successful package evidence is separately promoted.
+
+### Batch 10 cycle 2
+
+Run `35392233659` did not create a second Kirigami package FAIL. The package reached consumer validation after all earlier gates passed; the final failure came from a wrong CMake package name in the repository harness. It is an infrastructure validation incident with no package-state effect.
+
+KQuickCharts again remained BLOCKED/unattempted because the Kirigami validation job did not finish PASS. No DAG edge changes.

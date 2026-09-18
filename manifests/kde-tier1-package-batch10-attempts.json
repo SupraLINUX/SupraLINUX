@@ -23,7 +23,28 @@
     "kquickcharts": []
   },
   "validation_incidents": {
-    "kirigami": [],
+    "kirigami": [
+      {
+        "validation_cycle": 2,
+        "package_version": "6.30.0-0supralinux2",
+        "commit": "b6adeee8259414fe6711b3b7143f735330a42f6a",
+        "workflow_run": 35392233659,
+        "job_id": 105753009458,
+        "artifact_id": 10565524699,
+        "artifact_sha256": "b5676f429fcc10d57676e8d489ab651e5aadafffebbaccd6febf7c97cad3c3f5",
+        "rootfs_sha256": "93928deec54c2410944410c4bb52eaab8b70723fea50271f51aa3cc0b70d8384",
+        "stage": "consumer-smoke",
+        "classification": "INFRA",
+        "package_state_effect": "none",
+        "package_build": "successful",
+        "lintian": "PASS-errors",
+        "tests": "44/44 PASS",
+        "apt_check": "PASS",
+        "qml_import_smoke": "PASS",
+        "symbols_remediation": "PASS",
+        "cause": "False-negative consumer harness: CMake requested nonexistent umbrella package KF6Config.cmake via find_package(KF6 ...). The built libkirigami-dev correctly installs KF6KirigamiPlatformConfig.cmake and exports KF6::KirigamiPlatform."
+      }
+    ],
     "kquickcharts": []
   },
   "infrastructure_incidents": [
@@ -74,6 +95,20 @@
         "blocked_by": "kirigami",
         "package_attempted": false,
         "cause": "Kirigami package validation did not PASS; KQuickCharts full package validation was not attempted."
+      },
+      {
+        "validation_cycle": 2,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "b6adeee8259414fe6711b3b7143f735330a42f6a",
+        "workflow_run": 35392233659,
+        "job_id": 105755393521,
+        "artifact_id": 10566446188,
+        "artifact_sha256": "23e45810ba579c997a6c6c3ab46e34d53fd8f2360713cc8f38dae353ea7f8e3d",
+        "result": "BLOCKED",
+        "stage": "package-validation-predecessor",
+        "blocked_by": "kirigami",
+        "package_attempted": false,
+        "cause": "Kirigami validation job did not PASS because of a consumer-harness infrastructure false negative; KQuickCharts full package validation was not attempted."
       }
     ]
   }
