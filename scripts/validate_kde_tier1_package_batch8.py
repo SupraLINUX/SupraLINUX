@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CAMPAIGN = ROOT / "manifests" / "kde-tier1-package-campaign-batch8.json"
 TIER1 = ROOT / "manifests" / "kde-frameworks-tier1.json"
+ATTEMPTS = ROOT / "manifests" / "kde-tier1-package-batch8-attempts.json"
 PACKAGE = ROOT / "packages" / "kde" / "kguiaddons" / "debian"
 CONSUMER = ROOT / "packages" / "kde" / "kguiaddons" / "consumer"
 WORKFLOW = ROOT / ".github" / "workflows" / "kde-tier1-package-batch8.yml"
@@ -36,6 +37,7 @@ def text(path: Path) -> str:
 try:
     campaign = json.loads(CAMPAIGN.read_text(encoding="utf-8"))
     tier1 = json.loads(TIER1.read_text(encoding="utf-8"))
+    attempts = json.loads(ATTEMPTS.read_text(encoding="utf-8"))
 except Exception as exc:
     print(f"ERROR: cannot read Batch 8 manifests: {exc}", file=sys.stderr)
     raise SystemExit(1)
@@ -46,6 +48,10 @@ require(campaign.get("authority") == "kde-upstream", "Batch 8 authority must be 
 require(campaign.get("provider_platform") == "ubuntu-resolute", "Batch 8 provider platform must be Ubuntu Resolute")
 require(campaign.get("batch") == "tier1-batch-8", "Batch 8 identifier mismatch")
 require(campaign.get("selected_nodes") == ["kguiaddons"], "Batch 8 must select only KGuiAddons")
+require(campaign.get("canonical_snapshot") == {
+    "state": "pre-batch-8",
+    "tier1": "21 PASS / 8 pending / 0 current FAIL / 0 BLOCKED after Batch 7 canonical promotion",
+}, "Batch 8 historical pre-promotion snapshot must remain immutable")
 
 node = campaign.get("nodes", {}).get("kguiaddons", {})
 require(node.get("upstream_version") == "6.30.0", "KGuiAddons upstream version must be 6.30.0")
@@ -73,6 +79,27 @@ if isinstance(canonical, dict):
     require(canonical.get("source_sha256") == node.get("source_sha256"), "canonical KGuiAddons source hash mismatch")
     if node.get("state") != "PASS":
         require(canonical.get("state") == "pending", "canonical KGuiAddons must remain pending before a real PASS")
+    else:
+        require(campaign.get("state") == "PASS", "Batch 8 campaign must close PASS with a PASS node")
+        require(node.get("last_result") == "PASS" and node.get("downstream_eligible") is True, "Batch 8 PASS node must be downstream eligible")
+        require(canonical.get("state") == "PASS", "canonical KGuiAddons must be promoted after a real PASS")
+        packaging = canonical.get("packaging", {})
+        require(packaging.get("state") == "PASS" and packaging.get("package_version") == "6.30.0-0supralinux2", "canonical KGuiAddons packaging PASS mismatch")
+        require(packaging.get("downstream_eligible") is True, "canonical KGuiAddons PASS must be downstream eligible")
+        require(packaging.get("attempt_ledger") == "manifests/kde-tier1-package-batch8-attempts.json", "canonical KGuiAddons attempt ledger mismatch")
+        pass_evidence = node.get("pass_evidence", {})
+        require(pass_evidence.get("workflow_run") == 35185562846 and pass_evidence.get("job_id") == 105086774400, "Batch 8 PASS run/job mismatch")
+        require(pass_evidence.get("commit") == "de47462c5b6b21bc2c485f5dd2c39035a32f7f45", "Batch 8 PASS commit mismatch")
+        require(pass_evidence.get("artifact_id") == 10482007092 and pass_evidence.get("artifact_sha256") == "71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca", "Batch 8 PASS artifact mismatch")
+        require(pass_evidence.get("rootfs_sha256") == "c68681aacfd32976c6e0bf471ec1928179fd80e402faf2293706e53f88ad25c6", "Batch 8 PASS rootfs mismatch")
+        require(pass_evidence.get("tests") == "9/9 PASS" and pass_evidence.get("lintian") == "PASS-errors", "Batch 8 PASS build/test gate mismatch")
+        require(pass_evidence.get("consumer_smoke") == "PASS" and pass_evidence.get("python_import") == "PASS" and pass_evidence.get("apt_check") == "PASS", "Batch 8 PASS consumer/Python/APT gates mismatch")
+        history = attempts.get("attempts", {}).get("kguiaddons", [])
+        require([x.get("attempt") for x in history] == [1, 2, 3, 4, 5], "Batch 8 attempt history must remain append-only through attempt 5")
+        last = history[-1] if history else {}
+        require(last.get("result") == "PASS" and last.get("workflow_run") == 35185562846 and last.get("job_id") == 105086774400, "Batch 8 final ledger attempt must record the retained PASS")
+        require(last.get("head_sha") == "de47462c5b6b21bc2c485f5dd2c39035a32f7f45", "Batch 8 final ledger head SHA mismatch")
+        require(last.get("artifact_id") == 10482007092 and last.get("artifact_digest") == "sha256:71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca", "Batch 8 final ledger artifact mismatch")
 
 control = text(PACKAGE / "control")
 rules = text(PACKAGE / "rules")
@@ -157,14 +184,14 @@ for token in ("KCOREADDONS_ARTIFACT_DIR", "kcoreaddons_build_dependency=no", "li
 require("manifests/kde-tier1-package-campaign-batch8.json" in scope, "Batch 8 scope selector must fingerprint the campaign")
 require("packages/kde/kguiaddons/" in scope, "Batch 8 scope selector must track package metadata")
 require("Batch 8 scope selector: PASS" in scope_test, "Batch 8 scope functional test must emit PASS")
-require("KGuiAddons" in doc and "KCoreAddons" in doc and "Tier 1" in doc and "6.29.0" in doc and "libkf6coreaddons-data" in doc, "Batch 8 documentation must explain Tier 1, symbols-overlay evidence and retained consumer closure")
+require("KGuiAddons" in doc and "KCoreAddons" in doc and "Tier 1" in doc and "6.29.0" in doc and "libkf6coreaddons-data" in doc and "35185562846" in doc and "22 PASS / 7 pending" in doc, "Batch 8 documentation must explain the retained PASS, symbols-overlay evidence and canonical promotion")
 
 if errors:
     for error in errors:
         print(f"ERROR: {error}", file=sys.stderr)
     raise SystemExit(1)
 
-print("KDE Tier 1 Batch 8 preparation validation: PASS")
+print("KDE Tier 1 Batch 8 closure validation: PASS")
 print("Node: kguiaddons 6.30.0 / 6.30.0-0supralinux2")
 print("KCoreAddons role: consumer development surface only; not Build-Depends")
 print("Upstream defaults: Wayland/X11/DBus/geo/Python/tests ON")

@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 1 Batch 8 — KGuiAddons
 
-Status: **remediation pending after successful package build / consumer-harness closure FAIL**  
+Status: **PASS; canonically promoted**  
 Date: **2026-09-17**  
 Frameworks: **6.30.0**
 
@@ -88,17 +88,22 @@ The workflow now verifies the exact retained `libkf6coreaddons-data` package aga
 
 This remediation changes only the validation harness and retained consumer closure. It does not add KCoreAddons to KGuiAddons `Build-Depends`, does not rebuild KCoreAddons, and does not bump the KGuiAddons package revision.
 
+## Attempt 5 — PASS
+
+Head `de47462c5b6b21bc2c485f5dd2c39035a32f7f45`, router run `35185562846`, job `105086774400`, artifact `10482007092`, digest `sha256:71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca`.
+
+The unchanged package revision `6.30.0-0supralinux2` passes the complete Batch 8 gate: clean sbuild, CTest `9/9 PASS`, Lintian `PASS-errors`, Python import PASS, exact APT runtime/development closure, KImageCache consumer smoke PASS and SONAME `libKF6GuiAddons.so.6`. The retained rootfs SHA-256 is `c68681aacfd32976c6e0bf471ec1928179fd80e402faf2293706e53f88ad25c6`.
+
+This PASS confirms the dependency distinction: KCoreAddons remains absent from KGuiAddons `Build-Depends`; its retained artifacts are consumed only to validate the public development/consumer surface.
+
 ## Build/test gate
 
 A real PASS still requires exact source and retained-input hashes, clean Resolute `sbuild`, non-zero 100% CTest PASS, Lintian source+binary error gate, seven-package contract, SONAME, Python import, exact APT runtime/development closure, KImageCache consumer CMake smoke and proof that KCoreAddons did not enter KGuiAddons Build-Depends.
 
 ## Promotion rule
 
-Until a later Batch 8 run is a real PASS:
+Attempt 5 is the required real PASS. KGuiAddons is therefore promoted to canonical `PASS`, is downstream-eligible, and Batch 8 closes `PASS`.
 
-- canonical `manifests/kde-frameworks-tier1.json` remains `kguiaddons: pending`;
-- KGuiAddons is not downstream-eligible;
-- canonical Tier 1 remains `21 PASS / 8 pending / 0 current FAIL / 0 BLOCKED`;
-- Batch 8 remains `remediation-pending-build`.
+Canonical Tier 1 after promotion is **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**. The four earlier FAIL attempts remain append-only historical evidence in `manifests/kde-tier1-package-batch8-attempts.json`; they are not rewritten as PASS.
 
-Only a real PASS may promote KGuiAddons into the canonical Tier 1 manifest.
+The next development lane is multi-ABI: `kconfig`, `ki18n` and `sonnet`.

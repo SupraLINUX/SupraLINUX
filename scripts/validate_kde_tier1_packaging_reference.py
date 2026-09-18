@@ -67,6 +67,7 @@ PASS_NODES = {
     "kcalendarcore": ("6.30.0-0supralinux5", 35130213945, 10461386548, "6f191cad05620093d9e97e1df3fec78d82e9f9df74270ba8a6bc6b328c61e2f6"),
     "kcoreaddons": ("6.30.0-0supralinux4", 35122522242, 10457958023, "c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64"),
     "kwidgetsaddons": ("6.30.0-0supralinux7", 35145607543, 10467164025, "f40e8ed941fb603578e9ad6a0b82f652f05d9035975352a4edb601fda9100c3e"),
+    "kguiaddons": ("6.30.0-0supralinux2", 35185562846, 10482007092, "71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca"),
 }
 errors: list[str] = []
 
@@ -141,8 +142,8 @@ for node in source_nodes:
     else:
         require(node.get("packaging") == {"state":"pending"}, f"{node_id}: unattempted packaging must remain pending")
         require(node.get("state") == "pending", f"{node_id}: unattempted node must remain pending")
-require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 21, "Reference validator expects 21 actual package PASS nodes")
-require(sum(1 for node in source_nodes if node.get("state") == "pending") == 8, "Reference validator expects 8 pending nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 22, "Reference validator expects 22 actual package PASS nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "pending") == 7, "Reference validator expects 7 pending nodes")
 for token in ("manifests/kde-frameworks-tier1.json","manifests/kde-frameworks-tier1-packaging-reference.json","scripts/run-kde-tier1-packaging-reference-snapshot.sh","scripts/kde-tier1-packaging-reference-needed.sh",".github/workflows/kde-tier1-packaging-reference.yml"):
     require(token in scope, f"Packaging-reference scope must track input {token}")
 require("docs/" not in scope, "Packaging-reference snapshot must not rerun for documentation-only changes")
@@ -157,4 +158,4 @@ if errors:
     raise SystemExit(1)
 print("KDE Frameworks Tier 1 packaging-reference policy: PASS")
 print("Reference snapshots remain non-authoritative technical inputs")
-print("Actual package states: 21 PASS; 8 pending")
+print("Actual package states: 22 PASS; 7 pending")

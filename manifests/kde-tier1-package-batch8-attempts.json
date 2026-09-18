@@ -71,6 +71,27 @@
         "missing_retained_package_sha256": "f05f55e3c6486af9d3ff48aa38215784bbb347aae1cd5fb760f5513760364908",
         "classification": "validation-harness-retained-consumer-closure-incomplete-after-successful-package-build",
         "package_revision_change_required": false
+      },
+      {
+        "attempt": 5,
+        "head_sha": "de47462c5b6b21bc2c485f5dd2c39035a32f7f45",
+        "workflow_run": 35185562846,
+        "job_id": 105086774400,
+        "artifact_id": 10482007092,
+        "artifact_digest": "sha256:71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca",
+        "result": "PASS",
+        "stage": "complete",
+        "debian_version": "6.30.0-0supralinux2",
+        "source_package_created": true,
+        "binary_build_status": "successful",
+        "ctest": "9/9 PASS",
+        "lintian_status": "pass-with-warnings",
+        "consumer_smoke": "PASS",
+        "python_import": "PASS",
+        "apt_check": "PASS",
+        "abi_soname": "libKF6GuiAddons.so.6",
+        "classification": "package-pass",
+        "downstream_eligible": true
       }
     ]
   }

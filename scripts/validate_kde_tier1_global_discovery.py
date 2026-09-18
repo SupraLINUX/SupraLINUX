@@ -36,9 +36,9 @@ if c.get("policy") != required_policy:
     fail("global discovery policy changed")
 nodes = c.get("nodes", {})
 lanes = c.get("lanes", {})
-expected = {"kconfig", "ki18n", "sonnet", "kirigami", "kquickcharts", "kuserfeedback", "prison", "kguiaddons"}
+expected = {"kconfig", "ki18n", "sonnet", "kirigami", "kquickcharts", "kuserfeedback", "prison"}
 if set(nodes) != expected:
-    fail(f"unexpected post-Batch7 discovery set: {sorted(set(nodes) ^ expected)}")
+    fail(f"unexpected post-Batch8 discovery set: {sorted(set(nodes) ^ expected)}")
 allowed = {"runnable", "lane-pending", "dependency-blocked"}
 for node, meta in nodes.items():
     if meta.get("readiness") not in allowed:
@@ -53,10 +53,10 @@ tier_nodes = t.get("nodes", [])
 state_by_id = {n["id"]: n.get("state") for n in tier_nodes}
 nonpass = {n for n, state in state_by_id.items() if state != "PASS"}
 passed = {n for n, state in state_by_id.items() if state == "PASS"}
-if nonpass != expected or len(passed) != 21 or len(nonpass) != 8:
+if nonpass != expected or len(passed) != 22 or len(nonpass) != 7:
     fail(f"canonical promotion mismatch PASS={len(passed)} non-PASS={len(nonpass)}")
 snapshot = c.get("promoted_snapshot", {})
-if snapshot.get("pass") != 21 or snapshot.get("pending") != 8 or snapshot.get("current_fail") != 0 or snapshot.get("blocked") != 0:
+if snapshot.get("pass") != 22 or snapshot.get("pending") != 7 or snapshot.get("current_fail") != 0 or snapshot.get("blocked") != 0:
     fail("promoted snapshot mismatch")
 ready = {n for n, m in nodes.items() if m["readiness"] == "runnable"}
 blocked = {n for n, m in nodes.items() if m["readiness"] == "dependency-blocked"}
@@ -66,16 +66,16 @@ if ready:
 if blocked:
     fail(f"no discovery node should remain dependency-blocked after KCoreAddons PASS: {sorted(blocked)}")
 if lane_pending != expected:
-    fail("all eight remaining nodes must be lane-pending until their package runners exist")
-kgui = nodes["kguiaddons"]
-if kgui.get("local_predecessors") != ["kcoreaddons"] or kgui.get("lane") != "local-predecessor":
-    fail("KGuiAddons must retain its local KCoreAddons predecessor contract")
-if lanes["local-predecessor"].get("status") != "implementation-pending":
-    fail("KGuiAddons lane must remain implementation-pending until its runner exists")
+    fail("all seven remaining nodes must be lane-pending until their package runners exist")
+local_lane = lanes["local-predecessor"]
+if local_lane.get("status") != "completed" or local_lane.get("nodes") != []:
+    fail("KGuiAddons local-predecessor lane must be completed and empty after Batch 8 promotion")
+if local_lane.get("runner") != "scripts/run-kde-tier1-package-batch8-preflight.sh":
+    fail("KGuiAddons completed lane must retain its validated Batch 8 runner")
 if lanes["single-abi-python"].get("status") != "completed" or lanes["single-abi-python"].get("nodes") != []:
     fail("Batch 7 single-ABI Python lane must be closed after promotion")
 for lane in ("multi-abi", "qml-multisurface", "multi-surface-optional"):
     if lanes[lane].get("status") != "implementation-pending":
         fail(f"{lane}: must remain implementation-pending")
 print("KDE Tier 1 global discovery policy: PASS")
-print("promoted PASS=21; discovery nodes=8; runnable=0; lane-pending=8; dependency-blocked=0")
+print("promoted PASS=22; discovery nodes=7; runnable=0; lane-pending=7; dependency-blocked=0")

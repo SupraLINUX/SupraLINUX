@@ -1,8 +1,8 @@
 # KDE Frameworks 6.30 — Tier 1
 
-Status: **29-node source set fixed; 18 hosted package PASS; 11 package nodes pending; 0 current FAIL; 0 BLOCKED**
+Status: **29-node source set fixed; 22 hosted package PASS; 7 package nodes pending; 0 current FAIL; 0 BLOCKED**
 
-Last reviewed: **2026-09-16**
+Last reviewed: **2026-09-18**
 
 ## Authority and scope
 
@@ -107,8 +107,8 @@ Repository Policy run `34945979830` exposed such an infrastructure-only issue: t
 
 ## Current state
 
-- PASS: **18**;
-- pending: **11**;
+- PASS: **22**;
+- pending: **7**;
 - current FAIL: **0**;
 - BLOCKED: **0**.
 
@@ -116,6 +116,8 @@ Only retained PASS artifacts may feed downstream nodes.
 
 ## Next work
 
-The eleven pending nodes are `kcalendarcore`, `kconfig`, `kcoreaddons`, `kguiaddons`, `ki18n`, `kirigami`, `kquickcharts`, `kuserfeedback`, `kwidgetsaddons`, `prison` and `sonnet`. Revalidate the current KDE stable release metadata before Batch 7 selection, then choose the next independent group whose packaging contracts fit the available runner. Keep ABI contracts, upstream-default features and tests explicit; extend the runner for multi-library or binding-heavy Frameworks instead of weakening the model.
+Batch 8 canonically promotes KGuiAddons `6.30.0-0supralinux2` from run `35185562846`, job `105086774400`, artifact `10482007092`, ZIP SHA-256 `71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca`; tests are `9/9 PASS`, Lintian passes the error gate, Python import/APT closure/consumer smoke pass, and the runtime SONAME is `libKF6GuiAddons.so.6`. KCoreAddons remains a public-header/consumer provider only, not a KGuiAddons Framework build dependency.
+
+The seven pending nodes are `kconfig`, `ki18n`, `sonnet`, `kirigami`, `kquickcharts`, `kuserfeedback` and `prison`. The next implementation lane is multi-ABI: `kconfig`, `ki18n` and `sonnet` should be attempted in parallel once that runner preserves all ABI/package/test contracts.
 
 PR #1 remains Draft. No merge is authorized.

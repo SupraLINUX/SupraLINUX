@@ -88,6 +88,24 @@ require(ecm.get("depends_on") == [], "ECM root node must not depend on another K
 require(ecm.get("state") in {"pending", "PASS", "FAIL", "BLOCKED"}, "ECM DAG state is invalid")
 require(ecm.get("state") != "BLOCKED", "ECM root node cannot be BLOCKED because it has no KDE DAG dependencies")
 
+kgui = nodes.get("kguiaddons", {})
+require(kgui.get("tier") == 1, "KGuiAddons must be a promoted Tier 1 DAG node")
+require(kgui.get("upstream_version") == "6.30.0", "KGuiAddons DAG upstream version mismatch")
+require(kgui.get("source_sha256") == "e98864228d1c5e23f3428025eb9928697374fdc3eddebb3a9dec570de028a62d", "KGuiAddons DAG source SHA-256 mismatch")
+require(kgui.get("depends_on") == ["extra-cmake-modules"], "KGuiAddons DAG build dependency must remain ECM-only")
+require(kgui.get("state") == "PASS" and kgui.get("downstream_eligible") is True, "KGuiAddons DAG must be PASS/downstream-eligible")
+require(kgui.get("package_version") == "6.30.0-0supralinux2", "KGuiAddons DAG package version mismatch")
+require(kgui.get("attempt_ledger") == "manifests/kde-tier1-package-batch8-attempts.json", "KGuiAddons DAG attempt ledger mismatch")
+kgui_passes = [item for item in kgui.get("evidence", []) if isinstance(item, dict) and item.get("result") == "PASS"]
+require(len(kgui_passes) == 1, "KGuiAddons DAG requires exactly one retained PASS")
+if kgui_passes:
+    item = kgui_passes[0]
+    require(item.get("workflow_run") == 35185562846 and item.get("job_id") == 105086774400, "KGuiAddons DAG PASS run/job mismatch")
+    require(item.get("commit") == "de47462c5b6b21bc2c485f5dd2c39035a32f7f45", "KGuiAddons DAG PASS commit mismatch")
+    require(item.get("artifact_id") == 10482007092 and item.get("artifact_sha256") == "71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca", "KGuiAddons DAG PASS artifact mismatch")
+    require(item.get("tests") == "9/9 PASS" and item.get("lintian") == "PASS-errors", "KGuiAddons DAG build/test gate mismatch")
+require(kgui.get("pass_files", {}).get("rootfs_sha256") == "c68681aacfd32976c6e0bf471ec1928179fd80e402faf2293706e53f88ad25c6", "KGuiAddons DAG rootfs evidence mismatch")
+
 if ecm.get("state") in {"PASS", "FAIL"}:
     evidence = ecm.get("evidence", [])
     require(isinstance(evidence, list) and bool(evidence), f"{ecm.get('state')} ECM node requires retained evidence")

@@ -1,8 +1,8 @@
 # KDE Frameworks 6.30 Tier 1 — dependency resolution
 
-Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping validated; canonical Tier 1 21 PASS / 8 pending after Batch 7 promotion**
+Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping validated; canonical Tier 1 22 PASS / 7 pending after Batch 8 promotion**
 
-Last reviewed: **2026-09-16**
+Last reviewed: **2026-09-18**
 
 ## Contract
 
@@ -95,14 +95,20 @@ All three pass Lintian error gating, Python import where applicable, exact local
 
 Historical FAIL attempts remain retained in `manifests/kde-tier1-package-batch7-attempts.json`. BLOCKED remains distinct from FAIL.
 
+## Batch 8 technical closure
+
+KGuiAddons `6.30.0-0supralinux2` is a retained package PASS from run `35185562846`, job `105086774400`, artifact `10482007092`, SHA-256 `71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca`, with `9/9 PASS`, Lintian error gate PASS, Python import PASS, exact APT closure and consumer smoke PASS.
+
+This does not introduce a KCoreAddons build edge. KGuiAddons' KDE Framework build dependency list remains empty; `libkf6coreaddons-dev` is required by the public KImageCache development surface and is supplied from the retained SupraLINUX KCoreAddons PASS only for consumer validation.
+
 ## Current state
 
 - upstream dependency resolution: **resolved**;
 - Ubuntu Resolute package-name/provider mapping: **resolved for the current selected profiles**;
 - hosted provider evidence: **PASS where recorded**;
-- canonical Tier 1 package state: **21 PASS / 8 pending / 0 current FAIL / 0 BLOCKED**;
+- canonical Tier 1 package state: **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**;
 - Batch 7 retained package evidence: **3/3 PASS and canonically promoted**;
-- KGuiAddons: predecessor satisfied; local-predecessor package lane implementation is the next step;
+- KGuiAddons: **PASS and canonically promoted**; local-predecessor lane completed without adding a Framework build dependency;
 - final Qt provider certification: **pending**.
 
 Provider evidence alone never promotes a Framework. Only retained package PASS artifacts may feed dependents.

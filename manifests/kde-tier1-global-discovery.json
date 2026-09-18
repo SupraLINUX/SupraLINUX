@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-16",
+  "as_of": "2026-09-18",
   "scope": "kde-frameworks-tier1-6.30",
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
@@ -18,8 +18,8 @@
     "repeat_full_campaign_after_remediation_set": true
   },
   "promoted_snapshot": {
-    "pass": 21,
-    "pending": 8,
+    "pass": 22,
+    "pending": 7,
     "current_fail": 0,
     "blocked": 0,
     "note": "Promoted DAG state only. Historical failed package attempts remain retained separately and do not become promoted FAIL after a later PASS."
@@ -62,11 +62,10 @@
       "required_capability": "validate multiple libraries plus optional/provider-selected feature surfaces without silently disabling upstream defaults"
     },
     "local-predecessor": {
-      "status": "implementation-pending",
-      "nodes": [
-        "kguiaddons"
-      ],
-      "required_capability": "consume the retained local KCoreAddons PASS -dev/runtime artifacts rather than Ubuntu KDE packages"
+      "status": "completed",
+      "nodes": [],
+      "required_capability": "consume the retained local KCoreAddons PASS -dev/runtime artifacts rather than Ubuntu KDE packages",
+      "runner": "scripts/run-kde-tier1-package-batch8-preflight.sh"
     }
   },
   "nodes": {
@@ -104,17 +103,9 @@
       "readiness": "lane-pending",
       "lane": "multi-surface-optional",
       "local_predecessors": []
-    },
-    "kguiaddons": {
-      "readiness": "lane-pending",
-      "lane": "local-predecessor",
-      "local_predecessors": [
-        "kcoreaddons"
-      ]
     }
   },
   "next_actions": [
-    "implement the KGuiAddons local-predecessor lane and consume only the retained SupraLINUX KCoreAddons PASS artifacts",
     "implement the multi-ABI package lane and attempt kconfig, ki18n and sonnet in parallel",
     "implement QML/multisurface and optional-feature lanes, then attempt every newly runnable independent node",
     "retain DIAG_PASS as non-promoting discovery evidence; only package PASS may feed dependents",

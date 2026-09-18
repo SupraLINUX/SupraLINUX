@@ -1,8 +1,8 @@
 # KDE stable dependency DAG
 
-Status: **ECM root PASS; 21 Frameworks Tier 1 PASS; 8 Tier 1 pending; 0 current FAIL; 0 BLOCKED**
+Status: **ECM root PASS; 22 Frameworks Tier 1 PASS; 7 Tier 1 pending; 0 current FAIL; 0 BLOCKED**
 
-Last reviewed: **2026-09-16**
+Last reviewed: **2026-09-18**
 
 ## Authority
 
@@ -316,9 +316,9 @@ Hosted package-preflight sigue sin sustituir el futuro gate autoritativo KVM/JIT
 
 ## Próxima expansión
 
-KConfig sigue diferido hasta extender explícitamente el runner para su contrato ABI multi-library.
+La siguiente lane es **multi-ABI**: `kconfig`, `ki18n` y `sonnet`. El runner debe validar sus múltiples ABI/symbol files, splits de paquetes, tests y cierre APT sin reducir los defaults de KDE upstream.
 
-Los próximos nodos deben seleccionarse desde los 13 Tier 1 pendientes usando el mismo criterio DAG: construir todos los independientes posibles, conservar PASS, registrar FAIL reales y marcar BLOCKED sólo por predecesor FAIL.
+Tras Batch 8 quedan siete Tier 1 pendientes: `kconfig`, `ki18n`, `sonnet`, `kirigami`, `kquickcharts`, `kuserfeedback` y `prison`. Se mantiene la estrategia DAG: construir todos los independientes posibles, conservar PASS, registrar FAIL reales y marcar BLOCKED sólo por predecesor FAIL.
 
 PR #1 permanece Draft. No merge.
 
@@ -337,3 +337,11 @@ Canonical promotion completed on 2026-09-16.
 - KWidgetsAddons `6.30.0-0supralinux7`: run `35145607543`, job `104960718770`, artifact `10467164025`, 27/27 tests PASS.
 
 All three pass Lintian, exact APT runtime closure and consumer smoke; Python imports pass for their enabled bindings. Historical FAIL attempts remain retained in `manifests/kde-tier1-package-batch7-attempts.json`. Canonical Tier 1 is **21 PASS / 8 pending / 0 current FAIL / 0 BLOCKED**. KGuiAddons is no longer predecessor-blocked; its local-predecessor package runner remains to be implemented.
+
+### Batch 8 — KGuiAddons PASS
+
+Canonical promotion completed on 2026-09-18. KGuiAddons `6.30.0-0supralinux2` is PASS and downstream-eligible from workflow run `35185562846`, job `105086774400`, artifact `10482007092`, ZIP SHA-256 `71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca`. The retained package evidence records `9/9 PASS`, Lintian `PASS-errors`, consumer smoke PASS, Python import PASS, APT closure PASS and SONAME `libKF6GuiAddons.so.6`.
+
+The DAG edge remains only `extra-cmake-modules -> kguiaddons`. KCoreAddons is deliberately **not** a KGuiAddons Framework build dependency; it is retained only for the public KImageCache development/consumer surface. Historical Batch 8 attempts 1–4 remain FAIL evidence and attempt 5 is the retained PASS.
+
+Canonical Tier 1 is now **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**. The next implementation lane is multi-ABI: `kconfig`, `ki18n` and `sonnet`.
