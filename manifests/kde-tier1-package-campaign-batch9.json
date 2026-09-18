@@ -54,7 +54,7 @@
       "name": "KConfig",
       "upstream_version": "6.30.0",
       "source_package": "kf6-kconfig",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kconfig-6.30.0.tar.xz",
       "source_sha256": "0e98bac324cd716849202d4b246a948e363d6792a8eb09c78417cdde9559f56e",
       "kde_framework_build_dependencies": [],
@@ -183,15 +183,15 @@
         "qt6-tools-dev"
       ],
       "last_failure_evidence": {
-        "workflow_run": 35348130023,
-        "job_id": 105609530611,
-        "artifact_id": 10549115856,
-        "artifact_sha256": "6579cc838436e1390c950da9037997ae4646fb4fb40d5e69290377c16f385b6c",
-        "rootfs_sha256": "79fe82c1adfffb5050106b07157c423ed7c9c7c0a4a2608ace84899d5ae1184e",
+        "workflow_run": 35354088696,
+        "job_id": 105629086800,
+        "artifact_id": 10551565818,
+        "artifact_sha256": "44095dd2f16b7101c0f1dbe65fb561d79361b28a8b5f255151760e64a4ea09a3",
+        "rootfs_sha256": "a3ef32e90b7f8c734110becf63a327503855e3c5d495fb340668f944cb24b30c",
         "tests": "90/90 PASS",
         "stage": "sbuild",
-        "cause": "lintian-symbols-current-debian-revision",
-        "symbol": "_ZN16KStandardActions16staticMetaObjectE@Base",
+        "cause": "lintian-rules-require-build-prerequisite-python3",
+        "symbols_delta": "PASS",
         "reviewed_upstream_minimum": "6.29.0"
       }
     },
@@ -330,11 +330,11 @@
         "qt6-tools-dev"
       ],
       "pass_evidence": {
-        "workflow_run": 35348130023,
-        "job_id": 105609530707,
-        "artifact_id": 10548710619,
-        "artifact_sha256": "d213147477242b08a1dac78611b30eacb60f9bd727abb1313d5a2c8bc7c24cf4",
-        "rootfs_sha256": "f3849a2ceb003aeb1de899fe3b56dec59b3b29da6589f79da9b7dc3685c52b4d",
+        "workflow_run": 35354088696,
+        "job_id": 105629086722,
+        "artifact_id": 10550338682,
+        "artifact_sha256": "08271a40a392b0d947b05413c54c913230261d26bff1ed12d91d37a85400a3bd",
+        "rootfs_sha256": "2e45730952a04dc7b8ed5fe96c6e479427697a5d6fc0c840cc8817fe81c24974",
         "tests": "17/17 PASS",
         "lintian": "PASS-errors",
         "apt_check": "PASS",
@@ -351,7 +351,7 @@
       "name": "Sonnet",
       "upstream_version": "6.30.0",
       "source_package": "kf6-sonnet",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/sonnet-6.30.0.tar.xz",
       "source_sha256": "1574ef5c17f38e315de104b94580ccc1b7ec1db2650cb4bace2e14159bf61e10",
       "kde_framework_build_dependencies": [],
@@ -475,15 +475,15 @@
         "qt6-tools-dev"
       ],
       "last_failure_evidence": {
-        "workflow_run": 35348130023,
-        "job_id": 105609530666,
-        "artifact_id": 10549100349,
-        "artifact_sha256": "d01d279dc2645efd9ecc01506e17c0f99aecadda761bc12236af7ae1341a3fc6",
-        "rootfs_sha256": "300d410c9e584cd0bc8dee75578db2ac940363e20440a289c2a31142b64d7d09",
+        "workflow_run": 35354088696,
+        "job_id": 105629086871,
+        "artifact_id": 10551700066,
+        "artifact_sha256": "3d995b55c0e106554957bd7cfc2a1f63df19fc3c7b95a59be9fa0df51a9f6c23",
+        "rootfs_sha256": "bca53d5e3e2f5e536987ad3d8885ba44d814db9a2bd80b7ed07b006bc394b5f7",
         "tests": "8/8 PASS",
         "stage": "sbuild",
-        "cause": "lintian-symbols-current-debian-revision",
-        "symbol": "_ZN6Sonnet8Settings22defaultSkipRunTogetherEv@Base",
+        "cause": "lintian-rules-require-build-prerequisite-python3",
+        "symbols_delta": "PASS",
         "reviewed_upstream_minimum": "6.30.0"
       }
     }

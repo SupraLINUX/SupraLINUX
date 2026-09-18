@@ -24,9 +24,9 @@ pt=s.get('packaging_trees',{}); req(pt.get('workflow_run')==34708030450 and pt.g
 bc=s.get('binary_contracts',{}); req(bc.get('workflow_run')==34704117024 and bc.get('artifact_id')==10301282501 and bc.get('artifact_sha256')=='9441b2f2957b350a46026b0df3bd5eb3578e1578671aab3b7afc7a0929ce1a97' and bc.get('contracts_json_sha256')=='e44507d0dd73db913a91bd4852c452f783618aab0bd6a3790e4c4f4c40707b7b','binary-contract reference evidence mismatch')
 sd=s.get('source_diagnostic',{}); req(sd.get('workflow_run')==35138333645 and sd.get('commit')=='6b3a8b9f408c5fff4bceec81ac9ffb3e47a4dbd3' and sd.get('promotes_package_state') is False,'source diagnostic must remain non-promoting')
 expected={
-'kconfig':('kf6-kconfig','0e98bac324cd716849202d4b246a948e363d6792a8eb09c78417cdde9559f56e','6.30.0-0supralinux2',9,3,104936243505,10464074545,'9f05b0e368c4d1a7eb3dbec441680b423fd3f8b4a7fc2a0cdcbf9edbb3ca6e68'),
+'kconfig':('kf6-kconfig','0e98bac324cd716849202d4b246a948e363d6792a8eb09c78417cdde9559f56e','6.30.0-0supralinux3',9,3,104936243505,10464074545,'9f05b0e368c4d1a7eb3dbec441680b423fd3f8b4a7fc2a0cdcbf9edbb3ca6e68'),
 'ki18n':('kf6-ki18n','dfbfc8af89b3bc68810b094bf87746db87c3eeb35b75caeb1882681ebed563bd','6.30.0-0supralinux1',8,3,104936243967,10463404553,'86b5f05313d164358ac36e1cc4982b72fad90bad3175114d2b2b493691a6bec3'),
-'sonnet':('kf6-sonnet','1574ef5c17f38e315de104b94580ccc1b7ec1db2650cb4bace2e14159bf61e10','6.30.0-0supralinux2',8,2,104936243844,10464073832,'6b17c7f02213282a520f4127feb010e9a37dbbafce9c8ab17d7f76164b22d7b6')}
+'sonnet':('kf6-sonnet','1574ef5c17f38e315de104b94580ccc1b7ec1db2650cb4bace2e14159bf61e10','6.30.0-0supralinux3',8,2,104936243844,10464073832,'6b17c7f02213282a520f4127feb010e9a37dbbafce9c8ab17d7f76164b22d7b6')}
 canonical={x['id']:x for x in t.get('nodes',[])}
 for node,(source,sha,package_version,nbin,nabi,job,artifact,digest) in expected.items():
  n=c.get('nodes',{}).get(node,{}); pkg=ROOT/'packages/kde'/node/'debian'; cons=ROOT/'packages/kde'/node/'consumer'
@@ -65,7 +65,7 @@ req('env -u LC_ALL -u LC_COLLATE -u LC_CTYPE LANG=en_US.UTF-8' in ki_rules,'KI18
 kpol=c['nodes']['kconfig']['patch_policy']; req(kpol.get('retained')==['Allow-packagers-set-kconfig_compiler-install-dir.patch'] and len(kpol.get('excluded',[]))==2,'KConfig patch policy mismatch')
 req((ROOT/'packages/kde/kconfig/debian/patches/series').read_text().strip()=='Allow-packagers-set-kconfig_compiler-install-dir.patch','KConfig series must contain only technical layout patch')
 req(c['nodes']['sonnet']['patch_policy'].get('excluded')==['cross.patch'],'Sonnet cross.patch exclusion must be explicit')
-req(c.get('state')=='remediation-pending-build','Batch 9 campaign must record attempt-1 remediation state')
+req(c.get('state')=='remediation-pending-build','Batch 9 campaign must record attempt-2 remediation state')
 # Reviewed ABI deltas are deterministic, hash-guarded, and run immediately before dh_makeshlibs.
 deltas={
  'kconfig':{
@@ -84,8 +84,15 @@ for node,meta in deltas.items():
  req('override_dh_makeshlibs:' in rules and '\tpython3 debian/apply-symbols-delta.py' in rules and '\tdh_makeshlibs' in rules and rules.index('\tpython3 debian/apply-symbols-delta.py') < rules.index('\tdh_makeshlibs'),f'{node}: symbols delta must execute before dh_makeshlibs')
 req(c['nodes']['kconfig'].get('last_failure_evidence',{}).get('reviewed_upstream_minimum')=='6.29.0','KConfig reviewed ABI minimum mismatch')
 req(c['nodes']['sonnet'].get('last_failure_evidence',{}).get('reviewed_upstream_minimum')=='6.30.0','Sonnet reviewed ABI minimum mismatch')
+for node in ('kconfig','sonnet'):
+ control=text(ROOT/'packages/kde'/node/'debian/control')
+ readme=text(ROOT/'packages/kde'/node/'debian/README.source')
+ req('python3:any,' in control,f'{node}: python3:any build prerequisite missing')
+ req('attempt 2' in readme and 'python3:any' in readme,f'{node}: attempt-2 python3 remediation undocumented')
+ lf=c['nodes'][node].get('last_failure_evidence',{})
+ req(lf.get('workflow_run')==35354088696 and lf.get('cause')=='lintian-rules-require-build-prerequisite-python3' and lf.get('symbols_delta')=='PASS',f'{node}: attempt-2 failure classification mismatch')
 ki_pass=c['nodes']['ki18n'].get('pass_evidence',{})
-req(c['nodes']['ki18n'].get('state')=='PASS' and c['nodes']['ki18n'].get('downstream_eligible') is True and ki_pass.get('artifact_id')==10548710619 and ki_pass.get('artifact_sha256')=='d213147477242b08a1dac78611b30eacb60f9bd727abb1313d5a2c8bc7c24cf4' and ki_pass.get('tests')=='17/17 PASS','KI18n retained attempt-1 PASS evidence mismatch')
+req(c['nodes']['ki18n'].get('state')=='PASS' and c['nodes']['ki18n'].get('downstream_eligible') is True and ki_pass.get('workflow_run')==35354088696 and ki_pass.get('job_id')==105629086722 and ki_pass.get('artifact_id')==10550338682 and ki_pass.get('artifact_sha256')=='08271a40a392b0d947b05413c54c913230261d26bff1ed12d91d37a85400a3bd' and ki_pass.get('rootfs_sha256')=='2e45730952a04dc7b8ed5fe96c6e479427697a5d6fc0c840cc8817fe81c24974' and ki_pass.get('tests')=='17/17 PASS','KI18n retained attempt-2 PASS evidence mismatch')
 # Attempt ledger is append-only and now records the three real attempt-1 results.
 req(a.get('schema')==1 and a.get('batch')=='tier1-batch-9','Batch 9 attempts identity mismatch')
 for node in expected:
@@ -103,6 +110,16 @@ for node,(job,artifact,digest,result,tests) in attempt1_expected.items():
  if hist:
   x=hist[0]
   req(x.get('attempt')==1 and x.get('commit')=='958d9990f0c5c6e85ade45faf8b7fa1a62c0c3af' and x.get('workflow_run')==35348130023 and x.get('job_id')==job and x.get('artifact_id')==artifact and x.get('artifact_sha256')==digest and x.get('result')==result and x.get('tests')==tests,f'{node}: attempt 1 retained evidence mismatch')
+attempt2_expected={
+ 'kconfig':(105629086800,10551565818,'44095dd2f16b7101c0f1dbe65fb561d79361b28a8b5f255151760e64a4ea09a3','a3ef32e90b7f8c734110becf63a327503855e3c5d495fb340668f944cb24b30c','FAIL','90/90 PASS'),
+ 'ki18n':(105629086722,10550338682,'08271a40a392b0d947b05413c54c913230261d26bff1ed12d91d37a85400a3bd','2e45730952a04dc7b8ed5fe96c6e479427697a5d6fc0c840cc8817fe81c24974','PASS','17/17 PASS'),
+ 'sonnet':(105629086871,10551700066,'3d995b55c0e106554957bd7cfc2a1f63df19fc3c7b95a59be9fa0df51a9f6c23','bca53d5e3e2f5e536987ad3d8885ba44d814db9a2bd80b7ed07b006bc394b5f7','FAIL','8/8 PASS')}
+for node,(job,artifact,digest,rootfs,result,tests) in attempt2_expected.items():
+ hist=a['attempts'][node]
+ req(len(hist)>=2,f'{node}: attempt 2 evidence missing')
+ if len(hist)>=2:
+  x=hist[1]
+  req(x.get('attempt')==2 and x.get('commit')=='f23d5b995468d16189ef18e9b59b63ac3927736f' and x.get('workflow_run')==35354088696 and x.get('job_id')==job and x.get('artifact_id')==artifact and x.get('artifact_sha256')==digest and x.get('rootfs_sha256')==rootfs and x.get('result')==result and x.get('tests')==tests,f'{node}: attempt 2 retained evidence mismatch')
 # Discovery exposes exactly these three as independently runnable; no BLOCKED.
 for node in expected: req(g.get('nodes',{}).get(node,{}).get('readiness')=='runnable',f'{node}: must be runnable in global discovery')
 req(g.get('lanes',{}).get('multi-abi',{}).get('status')=='implementation-ready','multi-ABI lane must be implementation-ready')

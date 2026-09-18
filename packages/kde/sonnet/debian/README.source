@@ -8,3 +8,5 @@ This Batch 9 package targets KDE Frameworks 6.30.0, ECM 6.30.0-0supralinux3 and 
 No downstream patch is carried. The Debian cross.patch is deliberately excluded because it changes upstream cross-compilation behavior and is unnecessary for the native SupraLINUX build.
 
 ABI references remain in the retained, hash-pinned Debian 6.28 packaging-tree artifact and are materialized as active *.symbols only inside the clean runner. The campaign pins each reference file SHA-256 and export count. Any 6.30 ABI delta must be observed in real CI and documented before a SupraLINUX symbols overlay is added; no symbol versions are guessed in advance.
+
+Batch 9 attempt 1 established the reviewed ABI delta and attempt 2 proved that the delta itself is accepted by dpkg-gensymbols. Attempt 2 then failed only because debian/rules directly invokes python3 without declaring it as a build prerequisite. Revision -3 therefore adds python3:any to Build-Depends; the reviewed symbols delta and upstream KDE defaults are otherwise unchanged.

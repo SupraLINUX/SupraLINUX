@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 1 — Batch 9 multi-ABI
 
-Status: **attempt 1 complete; remediation prepared; canonical package state not promoted**
+Status: **attempt 2 complete; attempt 3 prepared; canonical package state not promoted**
 
 Last reviewed: **2026-09-18**
 
@@ -10,7 +10,7 @@ Batch 9 covers the independent Tier 1 nodes `kconfig`, `ki18n` and `sonnet`. KDE
 
 Canonical Tier 1 remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until real package evidence is promoted separately.
 
-Attempt 1 used `6.30.0-0supralinux1` for all three packages. KI18n retains that PASS revision; KConfig and Sonnet move to `6.30.0-0supralinux2` for reviewed ABI-symbol remediation. All consume the retained ECM PASS `6.30.0-0supralinux3`.
+Attempt 1 used `6.30.0-0supralinux1` for all three packages. KI18n retains that PASS revision. KConfig and Sonnet used `6.30.0-0supralinux2` in attempt 2 to validate the reviewed ABI-symbol deltas, and now move to `6.30.0-0supralinux3` solely to declare the `python3:any` build prerequisite required by those deterministic delta scripts. All consume the retained ECM PASS `6.30.0-0supralinux3`.
 
 ## Retained non-promoting discovery evidence
 
@@ -77,3 +77,20 @@ The missing `optional=templinst` exports reported for Sonnet are optional toolch
 KConfig and Sonnet move to `6.30.0-0supralinux2`. Each uses the established SupraLINUX deterministic symbols-delta pattern immediately before `dh_makeshlibs`: verify the retained Debian 6.28 baseline SHA-256, insert exactly one reviewed public symbol at an exact anchor, verify the complete transformed symbols-file SHA-256, then invoke `dh_makeshlibs` normally. KConfig's transformed ConfigGui symbols SHA-256 is `8a8220263cd60e88208e68138cb0f7288a4d99d3a99c0349e62be314d9d1fd04`; SonnetCore's is `e75af49fd74700ef8a2c21ce55decaf96439479223770c63654410f3c3f956bb`.
 
 Repository Policy run `35348129610`, job `105609486001`, independently exposed ShellCheck `SC2100` on the diagnostic `STAGE` string labels `qml-package-contract` and `qml-import-smoke`. This is infrastructure-only and has no package-state effect. The remediation quotes those two string assignments only and leaves every build/test/ABI/runtime gate unchanged. Because the shared runner changes, Batch 9's semantic selector correctly revalidates all three nodes on the next campaign run.
+
+
+## Attempt 2 — real package results
+
+PR CI run `35354088696` on commit `f23d5b995468d16189ef18e9b59b63ac3927736f` revalidated the lane after the reviewed ABI deltas and Repository Policy ShellCheck fix:
+
+- KConfig `6.30.0-0supralinux2`: **FAIL**, job `105629086800`, artifact `10551565818`, ZIP SHA-256 `44095dd2f16b7101c0f1dbe65fb561d79361b28a8b5f255151760e64a4ea09a3`, rootfs `a3ef32e90b7f8c734110becf63a327503855e3c5d495fb340668f944cb24b30c`. Tests remained `90/90 PASS`; the reviewed ConfigGui symbols delta executed before `dh_makeshlibs` and eliminated the attempt-1 symbol-version error. Lintian then rejected `debian/rules` because it invokes `python3` without declaring `python3:any` (or equivalent) as a build prerequisite.
+- KI18n `6.30.0-0supralinux1`: **PASS**, job `105629086722`, artifact `10550338682`, ZIP SHA-256 `08271a40a392b0d947b05413c54c913230261d26bff1ed12d91d37a85400a3bd`, rootfs `2e45730952a04dc7b8ed5fe96c6e479427697a5d6fc0c840cc8817fe81c24974`. This revalidates the retained KI18n PASS under the corrected shared runner.
+- Sonnet `6.30.0-0supralinux2`: **FAIL**, job `105629086871`, artifact `10551700066`, ZIP SHA-256 `3d995b55c0e106554957bd7cfc2a1f63df19fc3c7b95a59be9fa0df51a9f6c23`, rootfs `bca53d5e3e2f5e536987ad3d8885ba44d814db9a2bd80b7ed07b006bc394b5f7`. Tests remained `8/8 PASS`; the reviewed SonnetCore symbols delta executed successfully and eliminated the attempt-1 symbol-version error. Lintian then reported the same missing direct `python3` build prerequisite.
+
+Attempt 2 therefore proves that both reviewed ABI deltas are correct. The remaining KConfig/Sonnet failure is packaging metadata, not ABI, source, test, QML, runtime or predecessor failure.
+
+## Attempt 3 remediation
+
+KConfig and Sonnet move to `6.30.0-0supralinux3` and add exactly `python3:any` to `Build-Depends`, because `debian/rules` invokes `python3 debian/apply-symbols-delta.py` during the package build. No KDE feature/default, ABI minimum, downstream patch or symbols transformation changes from attempt 2.
+
+The semantic selector treats package-tree changes per node. Therefore attempt 3 must rebuild KConfig and Sonnet only. KI18n package inputs and per-node campaign build fingerprint are unchanged, so its retained attempt-2 PASS must scope-skip rather than rebuild.
