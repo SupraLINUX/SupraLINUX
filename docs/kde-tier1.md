@@ -146,3 +146,9 @@ Kirigami `6.30.0-0supralinux2` is retained PASS from run `35398956698`, job `105
 KQuickCharts then consumed the exact Kirigami PASS and produced its first real package FAIL at `dh_makeshlibs`: job `105776448807`, artifact `10570203712`, tests `8/8 PASS`. QuickCharts moves to `6.30.0-0supralinux2` with two private `std::_Sp_counted_ptr<QQuickItem *>` RTTI/vtable entries marked `optional=templinst|arch=!riscv64` by deterministic hash-verified transformation.
 
 Kirigami is campaign-downstream-eligible but remains canonical pending until Batch 10 promotion. Canonical Tier 1 stays 25 PASS / 4 pending.
+
+### Batch 10 validation cycle 4
+
+Repository Policy `35400585217` passed. PR CI `35400585402` reused retained Kirigami PASS evidence and attempted KQuickCharts `6.30.0-0supralinux2`. Job `105779442087` is a real package FAIL at `dh_qmldeps`, artifact `10570720119`, ZIP SHA-256 `edbcef8faf5801ae9a5c95b59270f7726a2abbbc1a5268d994816bf731eb7066`, rootfs `413b2fabd4248a9a11a4ec47792873c4c730a9c8c4aa15336f73be4acc79bec8`, with `8/8 PASS` tests and successful symbol remediation before the failure.
+
+KQuickCharts moves to `6.30.0-0supralinux3`. The added `qml6-module-org-kde-kirigami (>= 6.30.0~)` Build-Depends exists only so Debian `dh_qmldeps` can resolve the packaged QML import. No `libkirigami-dev` dependency is added and `kde_framework_build_dependencies=[]` remains unchanged. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until separate promotion.

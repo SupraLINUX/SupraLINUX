@@ -167,3 +167,9 @@ Correcting the consumer harness does not alter KDE Framework build dependencies,
 Run `35398956698` proved both sides of the package-validation relation. Kirigami `6.30.0-0supralinux2` completed every package gate and became a retained PASS. KQuickCharts job `105776448807` then downloaded that current-run artifact and verified all 19 Kirigami binary packages at exactly the SupraLINUX version before entering its own `sbuild`.
 
 The subsequent QuickCharts FAIL is therefore local to its own symbols metadata, not a predecessor/provider failure. The next QuickCharts-only remediation may reuse Kirigami through campaign `pass_evidence`; this still does not create a KDE Framework build dependency.
+
+## Batch 10 cycle 4 packaging-time QML dependency
+
+Run `35400585402` proves the retained-predecessor path: KQuickCharts consumed the retained Kirigami PASS package set, passed `8/8` upstream tests and the reviewed symbols remediation, then failed only when `dh_qmldeps` could not resolve `org.kde.kirigami` inside the package-build environment.
+
+For `6.30.0-0supralinux3`, `qml6-module-org-kde-kirigami (>= 6.30.0~)` is therefore a **Debian/QML packaging-time dependency**. It exists so `dh_qmldeps` can inspect the imported module while generating binary metadata. It is not a KDE Framework/CMake build dependency: KQuickCharts keeps `kde_framework_build_dependencies=[]`, does not add `libkirigami-dev`, and its upstream source-build dependency model is unchanged. The runner still enforces that Kirigami comes from retained/current SupraLINUX PASS evidence.

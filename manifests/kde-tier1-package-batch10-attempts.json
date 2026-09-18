@@ -55,6 +55,23 @@
         "tests": "8/8 PASS",
         "kirigami_predecessor_version": "6.30.0-0supralinux2",
         "cause": "dpkg-gensymbols rejected two retained Debian 6.28 std::_Sp_counted_ptr<QQuickItem *> RTTI/vtable template-instantiation symbols that are absent with the current amd64 toolchain; the third missing std::_Rb_tree::find symbol was already optional=templinst."
+      },
+      {
+        "attempt": 2,
+        "validation_cycle": 4,
+        "package_version": "6.30.0-0supralinux2",
+        "commit": "ecf2e73ff7bc65e0deb321974cec35fcb8190250",
+        "workflow_run": 35400585402,
+        "job_id": 105779442087,
+        "artifact_id": 10570720119,
+        "artifact_sha256": "edbcef8faf5801ae9a5c95b59270f7726a2abbbc1a5268d994816bf731eb7066",
+        "rootfs_sha256": "413b2fabd4248a9a11a4ec47792873c4c730a9c8c4aa15336f73be4acc79bec8",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "8/8 PASS",
+        "kirigami_predecessor_version": "6.30.0-0supralinux2",
+        "symbols_remediation": "PASS",
+        "cause": "dh_qmldeps could not resolve org.kde.kirigami because qml6-module-org-kde-kirigami was supplied to sbuild but absent from Build-Depends, so it was not installed in the build chroot."
       }
     ]
   },

@@ -20,3 +20,12 @@ ed06cd19136bc5a1bfb10fb7e5c93070fdb4f76ca81f8536243666297e8193e6
 
 Reviewed transformed SHA-256:
 f1ba9c4d179d7dc3638f82fe5879c6ecea43455f520eff686aad508c4e32702e
+
+Attempt-2 QML metadata remediation
+----------------------------------
+
+Revision 6.30.0-0supralinux2 consumed the retained Kirigami 6.30.0-0supralinux2 PASS artifact, passed 8/8 upstream tests, and passed the reviewed symbols transformation far enough for dh_makeshlibs to complete. Packaging then failed in dh_qmldeps because org.kde.kirigami was available to sbuild as a local extra package but was not installed in the build chroot: KQuickCharts did not declare the QML module as a package-build dependency.
+
+Revision 6.30.0-0supralinux3 therefore adds qml6-module-org-kde-kirigami (>= 6.30.0~) to Build-Depends. This is a Debian/QML metadata-generation dependency required while dh_qmldeps resolves packaged imports. It does not add libkirigami-dev, does not change upstream CMake requirements, and does not create a KDE Framework build-DAG edge.
+
+The Batch 10 runner continues to supply Kirigami only from a retained/current SupraLINUX PASS artifact and later verifies qml6-module-org-kde-kirigami at the exact campaign version. Ubuntu's older KDE package cannot satisfy the >= 6.30.0~ build floor.

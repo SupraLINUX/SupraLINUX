@@ -415,3 +415,9 @@ KQuickCharts again remained BLOCKED/unattempted because the Kirigami validation 
 Kirigami now has retained PASS evidence from run `35398956698`. KQuickCharts was therefore unblocked and attempted for the first time, then failed locally at its own retained symbols contract after `8/8` tests PASS.
 
 This changes operational campaign state only: Kirigami is retained PASS, KQuickCharts is remediation-pending-build at `6.30.0-0supralinux2`. The canonical DAG remains unchanged at **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until the separate Batch 10 promotion.
+
+### Batch 10 cycle 4 — QuickCharts package-build QML closure
+
+Repository Policy `35400585217` passed. In PR CI `35400585402`, Kirigami scope-skipped and its retained PASS artifact was reused successfully. KQuickCharts `6.30.0-0supralinux2` was actually attempted and is therefore a real **FAIL** at `dh_qmldeps`, after `8/8` tests and the symbols remediation passed.
+
+The `-3` correction declares `qml6-module-org-kde-kirigami (>= 6.30.0~)` for Debian QML metadata generation only. The KDE build DAG does not change: KQuickCharts still has no Framework build edge to Kirigami. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** pending a QuickCharts PASS and separate promotion.

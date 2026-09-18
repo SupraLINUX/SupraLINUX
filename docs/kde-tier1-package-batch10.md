@@ -192,3 +192,13 @@ The already-optional `std::_Rb_tree::find` line is deliberately unchanged. No ac
 Kirigami remains retained PASS and does not need a rebuild. The next semantic scope should skip Kirigami and make KQuickCharts resolve the retained Kirigami artifact through campaign `pass_evidence`.
 
 Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. Canonical promotion remains separate until both Batch 10 nodes have retained PASS evidence.
+
+## Validation cycle 4 — retained Kirigami reuse, KQuickCharts dh_qmldeps FAIL
+
+Repository Policy run `35400585217` passed. PR CI run `35400585402` scope-skipped Kirigami and correctly reused retained Kirigami PASS artifact `10569258322` from run `35398956698` for KQuickCharts.
+
+KQuickCharts `6.30.0-0supralinux2` was therefore attempted for the second time and is a real package **FAIL**, not BLOCKED: job `105779442087`, artifact `10570720119`, ZIP SHA-256 `edbcef8faf5801ae9a5c95b59270f7726a2abbbc1a5268d994816bf731eb7066`, rootfs SHA-256 `413b2fabd4248a9a11a4ec47792873c4c730a9c8c4aa15336f73be4acc79bec8`. Upstream tests are `8/8 PASS`; the reviewed symbols delta also completed. The later failure is `dh_qmldeps`: `org.kde.kirigami` was available through the retained local artifact but was not installed in the build chroot because the QML module was absent from `Build-Depends`.
+
+Revision `6.30.0-0supralinux3` adds only `qml6-module-org-kde-kirigami (>= 6.30.0~)` as a Debian/QML metadata-generation Build-Depends. It does not add `libkirigami-dev`, does not alter upstream CMake requirements, and does not create a KDE Framework build dependency. The runner continues to require retained/current SupraLINUX Kirigami PASS evidence and exact-version runtime provenance.
+
+Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until KQuickCharts obtains retained PASS evidence and Batch 10 is separately promoted.

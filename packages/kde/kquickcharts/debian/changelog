@@ -1,3 +1,12 @@
+kf6-kquickcharts (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Install the retained SupraLINUX Kirigami QML module in the package-build
+    environment so dh_qmldeps can resolve org.kde.kirigami.
+  * Keep Kirigami outside the KDE Framework/CMake build dependency DAG; this
+    dependency exists only for Debian QML metadata generation.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Fri, 18 Sep 2026 19:30:00 -0300
+
 kf6-kquickcharts (6.30.0-0supralinux2) resolute; urgency=medium
 
   * Mark two private std::shared_ptr<QQuickItem *> RTTI/vtable template
