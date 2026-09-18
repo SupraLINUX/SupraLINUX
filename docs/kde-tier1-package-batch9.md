@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 1 — Batch 9 multi-ABI
 
-Status: **validation cycle 3 classified as runner INFRA; ABI-gate remediation prepared; canonical package state not promoted**
+Status: **validation cycle 4 complete; KI18n/Sonnet PASS retained; KConfig consumer-closure remediation prepared; canonical package state not promoted**
 
 Last reviewed: **2026-09-18**
 
@@ -123,3 +123,20 @@ These events are recorded as validation infrastructure incidents with `package_s
 The runner now recomputes this partition directly from every retained hash-pinned Debian symbols file. It requires the computed total/optional/non-applicable/required counts to equal campaign metadata and uses only `reference_required_export_count_amd64` as the post-build numeric floor. `dpkg-gensymbols` remains the authoritative per-symbol missing-symbol check; the numeric gate remains an additional consistency guard.
 
 Because the shared runner changes, the next validation cycle revalidates KConfig, KI18n and Sonnet. Package revisions do not change: KConfig/Sonnet remain `6.30.0-0supralinux3`, KI18n remains `6.30.0-0supralinux1`.
+
+
+## Validation cycle 4 — architecture-aware ABI gate
+
+Repository Policy run `35358919925` passed the hardened Batch 9 policy. PR CI run `35358920602` on commit `1048fd52df303957d2db82c29988c8170b6fd656` revalidated all three nodes with the corrected architecture-aware ABI floor.
+
+- KI18n `6.30.0-0supralinux1`: **PASS**, job `105645094825`, artifact `10553916882`, ZIP SHA-256 `2a0d66f2760c49ba1128b8b51c741173a72e6f3ab51f3eb17c3584896d30a678`, rootfs `c3a542cadce65b491d0997f7fa61cfabc2b44188a2021c151858349766fd148d`, tests `17/17 PASS`. Generated ABI exports are `122/58/33` against required amd64 floors `121/56/33`; Lintian, exact APT closure, QML import and consumer smoke pass.
+- Sonnet `6.30.0-0supralinux3`: **PASS**, job `105645094787`, artifact `10554216487`, ZIP SHA-256 `ae5a33cf8699b96b7b7b8c1a83bc4d37a484878029818c1885b4f4f44f15b431`, rootfs `38f9fcd9dd6cb379bd5ba1fbfb5c93f57b49db71c166615415ff663366fc54bb`, tests `8/8 PASS`. Generated ABI exports are `255/179` against required amd64 floors `254/174`; Lintian, exact APT closure, QML import, consumer smoke and packaged backend-plugin gate pass.
+- KConfig `6.30.0-0supralinux3`: **FAIL**, job `105645094816`, artifact `10553307816`, ZIP SHA-256 `7bc04355d35d9bd86033ffaceb89a2addbb79e9e5d49ef14f59be58f2cfde312`, rootfs `3c863b17d63bf75492b41bcb774d6d40616ffe646ded3d0c50fb51562c17df57`. The package passed `90/90` tests, Lintian, ABI (`640/171/22` against required `634/168/22`), exact APT installation/check and QML import scanning. It then failed the C++ consumer configure because the installed `KF6ConfigConfig.cmake` executes `find_dependency(Qt6Qml "6.9.0")`, while `libkf6config-dev` did not depend on the development package that supplies that exported Qt CMake contract.
+
+### KConfig consumer-development closure
+
+The KConfig failure is a real package-contract failure, not infrastructure. KDE's exported CMake metadata determines that a consumer of the selected KConfig GUI/QML surface needs Qt6Qml >= 6.9.0. Ubuntu 26.04 Resolute is only the provider and currently supplies `qt6-declarative-dev 6.10.2+dfsg-3`.
+
+KConfig therefore moves to `6.30.0-0supralinux4` with `qt6-declarative-dev (>= 6.9.0~)` added to the binary `libkf6config-dev` Depends. The package already had the same provider in Build-Depends; the correction closes the exported downstream development contract. No KDE feature/default, ABI delta or source patch changes.
+
+Because only the KConfig package tree and its per-node campaign build fingerprint change, the next Batch 9 run must rebuild KConfig and scope-skip KI18n/Sonnet while retaining their cycle-4 PASS evidence.

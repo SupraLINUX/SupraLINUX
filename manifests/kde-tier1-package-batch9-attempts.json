@@ -31,6 +31,21 @@
         "stage": "sbuild",
         "tests": "90/90 PASS",
         "cause": "Reviewed symbols delta passed; Lintian rejected debian/rules because python3:any was not declared in Build-Depends."
+      },
+      {
+        "attempt": 3,
+        "validation_cycle": 4,
+        "package_version": "6.30.0-0supralinux3",
+        "commit": "1048fd52df303957d2db82c29988c8170b6fd656",
+        "workflow_run": 35358920602,
+        "job_id": 105645094816,
+        "artifact_id": 10553307816,
+        "artifact_sha256": "7bc04355d35d9bd86033ffaceb89a2addbb79e9e5d49ef14f59be58f2cfde312",
+        "rootfs_sha256": "3c863b17d63bf75492b41bcb774d6d40616ffe646ded3d0c50fb51562c17df57",
+        "result": "FAIL",
+        "stage": "consumer-smoke",
+        "tests": "90/90 PASS",
+        "cause": "Build/tests/Lintian/ABI/APT/QML import passed; consumer CMake failed because libkf6config-dev omitted qt6-declarative-dev although KF6ConfigConfig.cmake requires Qt6Qml >= 6.9.0."
       }
     ],
     "ki18n": [
@@ -57,6 +72,21 @@
         "artifact_id": 10550338682,
         "artifact_sha256": "08271a40a392b0d947b05413c54c913230261d26bff1ed12d91d37a85400a3bd",
         "rootfs_sha256": "2e45730952a04dc7b8ed5fe96c6e479427697a5d6fc0c840cc8817fe81c24974",
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "17/17 PASS",
+        "downstream_eligible": true
+      },
+      {
+        "attempt": 3,
+        "validation_cycle": 4,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "1048fd52df303957d2db82c29988c8170b6fd656",
+        "workflow_run": 35358920602,
+        "job_id": 105645094825,
+        "artifact_id": 10553916882,
+        "artifact_sha256": "2a0d66f2760c49ba1128b8b51c741173a72e6f3ab51f3eb17c3584896d30a678",
+        "rootfs_sha256": "c3a542cadce65b491d0997f7fa61cfabc2b44188a2021c151858349766fd148d",
         "result": "PASS",
         "stage": "complete",
         "tests": "17/17 PASS",
@@ -91,6 +121,21 @@
         "stage": "sbuild",
         "tests": "8/8 PASS",
         "cause": "Reviewed symbols delta passed; Lintian rejected debian/rules because python3:any was not declared in Build-Depends."
+      },
+      {
+        "attempt": 3,
+        "validation_cycle": 4,
+        "package_version": "6.30.0-0supralinux3",
+        "commit": "1048fd52df303957d2db82c29988c8170b6fd656",
+        "workflow_run": 35358920602,
+        "job_id": 105645094787,
+        "artifact_id": 10554216487,
+        "artifact_sha256": "ae5a33cf8699b96b7b7b8c1a83bc4d37a484878029818c1885b4f4f44f15b431",
+        "rootfs_sha256": "38f9fcd9dd6cb379bd5ba1fbfb5c93f57b49db71c166615415ff663366fc54bb",
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "8/8 PASS",
+        "downstream_eligible": true
       }
     ]
   },

@@ -121,3 +121,12 @@ KConfig, KI18n and Sonnet remain Tier 1 pending nodes with no KDE Framework buil
 KConfig preserves GUI/QML/DBus defaults and validates three runtime ABIs. KI18n preserves QML and upstream tests with the validated locale providers `iso-codes`, `language-pack-fr-base` and `locales-all`. Sonnet preserves Widgets, QML, Designer and spelling backends and validates two runtime ABIs plus a packaged backend plugin. Debian 6.28 symbol files remain hash-pinned technical baselines only and are materialized ephemerally during clean builds.
 
 Source diagnostic run `35138333645` is non-promoting DIAG_PASS evidence. Canonical Tier 1 therefore remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until real Batch 9 package attempts pass their full gates.
+
+
+## Batch 9 KConfig exported Qt QML development contract
+
+KConfig 6.30's selected GUI/QML surface exports `KF6ConfigConfig.cmake`, which directly executes `find_dependency(Qt6Qml "6.9.0")`. That consumer requirement is defined by the KDE/Qt build metadata; Ubuntu does not define whether the dependency exists.
+
+Validation cycle 4 (run `35358920602`, KConfig job `105645094816`) proved that the package itself builds, passes `90/90` upstream tests, Lintian, architecture-aware ABI checks, exact local-package APT closure and QML import scanning, but a clean external CMake consumer cannot configure when only the previous `libkf6config-dev` dependency set is installed.
+
+Ubuntu 26.04 Resolute provides the needed development CMake/QML surface through `qt6-declarative-dev 6.10.2+dfsg-3`. SupraLINUX therefore adds `qt6-declarative-dev (>= 6.9.0~)` to the binary `libkf6config-dev` Depends in revision `6.30.0-0supralinux4`. This is provider mapping for a KDE-exported requirement, not an Ubuntu-authored KDE dependency or a change to upstream defaults.

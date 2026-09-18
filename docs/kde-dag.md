@@ -369,3 +369,10 @@ Run `35354088696` revalidated all three peers because attempt 1 had changed the 
 Run `35355395436` is not a new package FAIL for KConfig or Sonnet. Both package builds completed tests and Lintian successfully, but the shared runner compared amd64-generated export counts with retained totals containing optional and/or architecture-inapplicable symbols. KConfig ConfigCore generated 640 exports against a required amd64 baseline of 634; SonnetCore generated 255 against a required baseline of 254. The resulting job failures are retained as **INFRA / package_state_effect=none**. They do not become PASS either, because the false-negative abort prevented later runtime/QML/consumer gates from completing.
 
 The corrected runner derives and validates the retained baseline partition and revalidates all three multi-ABI peers. Canonical Tier 1 remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until separate promotion.
+
+
+### Batch 9 validation cycle 4 package state
+
+Run `35358920602` validates the architecture-aware runner correction. KI18n and Sonnet are retained PASS and downstream-eligible inside the campaign. KConfig is a real package FAIL at `consumer-smoke`, after all predecessor, source, test, Lintian, ABI, package-install and QML-import gates passed. The failure is local to KConfig and does not BLOCK or invalidate either peer.
+
+The KConfig consumer failure shows that `libkf6config-dev` must pull the provider for the exported `Qt6Qml >= 6.9.0` CMake dependency. KConfig moves to `6.30.0-0supralinux4`; KI18n/Sonnet remain unchanged PASS. Canonical Tier 1 remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until separate promotion.
