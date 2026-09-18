@@ -194,7 +194,7 @@ for token in ('abi-contract','reference_required_export_count_amd64','reference_
 req('manifests/kde-tier1-package-campaign-batch9.json' in scope and 'packages/kde/${NODE}/' in scope,'Batch 9 scope selector contract missing')
 req('KDE Tier 1 Batch 9 scope selector: PASS' in scope_test,'Batch 9 scope test marker missing')
 for token in ('9441b2f2957b350a46026b0df3bd5eb3578e1578671aab3b7afc7a0929ce1a97','DIAG_PASS','QSKIP','cross.patch','22 PASS / 7 pending','6.30.0-0supralinux1','package_state_effect=none','634','254','reference_required_export_count_amd64','validation cycle 4','validation cycle 5','Qt6Qml','qt6-declarative-dev','10553307816','10553916882','10554216487','10554715051','bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e'):
- req(token in doc,f'Batch 9 documentation missing {token}')
+ req(token.lower() in doc.lower(),f'Batch 9 documentation missing {token}')
 if errors:
  for e in errors: print('ERROR:',e,file=sys.stderr)
  raise SystemExit(1)

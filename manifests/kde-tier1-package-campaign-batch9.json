@@ -673,5 +673,16 @@
         "result": "scope-skipped-retained-PASS"
       }
     }
-  }
+  },
+  "repository_policy_incidents": [
+    {
+      "workflow_run": 35365460369,
+      "job_id": 105666708183,
+      "commit": "6e95617016aa1c0b019e2ac7159da73000d21345",
+      "classification": "infrastructure-validator-documentation-case-sensitivity",
+      "package_state_effect": "none",
+      "cause": "Batch 9 validator searched lowercase validation cycle 4/5 tokens case-sensitively while the canonical documentation headings begin with uppercase Validation.",
+      "remediation": "Compare required documentation tokens case-insensitively; package evidence and canonical state are unchanged."
+    }
+  ]
 }

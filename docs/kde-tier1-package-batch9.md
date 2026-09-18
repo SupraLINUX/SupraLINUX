@@ -162,3 +162,10 @@ KConfig `6.30.0-0supralinux4` is **PASS**:
 The `qt6-declarative-dev (>= 6.9.0~)` binary development dependency therefore closes the exported `Qt6Qml >= 6.9.0` contract without reducing any KDE upstream feature/default.
 
 Batch 9 package state is now **3/3 retained PASS**: KConfig `6.30.0-0supralinux4`, KI18n `6.30.0-0supralinux1`, Sonnet `6.30.0-0supralinux3`. Historical FAIL attempts and cycle-3 infrastructure incidents remain preserved. Canonical Tier 1 remains **22 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until the separate promotion commit.
+
+
+## Repository Policy closure-validator incident
+
+Repository Policy run `35365460369`, job `105666708183`, reached the Batch 9 validator after every earlier policy validator had passed. It failed only because the documentation-token check searched lowercase `validation cycle 4` and `validation cycle 5` case-sensitively while the actual section headings begin with uppercase `Validation`.
+
+Classification: **infrastructure-validator-documentation-case-sensitivity**, `package_state_effect=none`. No package build, PASS evidence or canonical state changes. The validator now compares documentation tokens case-insensitively.
