@@ -297,3 +297,9 @@ The dedicated promotion preserves the historical real package-attempt ledger and
 Promotion precheck on `9051539d50e5a2ada41a6975add6c5a6497e6b3e` passed Repository Policy run `35440818501`, job `105891164984`, and PR CI run `35440818686`. That PR CI also rebuilt/revalidated both packages because the router itself had changed: Kirigami job `105891183786`, artifact `10583642308`, SHA-256 `a3fa47927d42dd605f78b4dc4913025311eed88ea807249da0b29653bd7ac0cb`; KQuickCharts job `105892252854`, artifact `10583429116`, SHA-256 `13a7d0ac50f03b9471305fd3b7f056ffaa5e0640a6332ed228bde2c087b87180`. These are infrastructure revalidations with `package_state_effect=none` and do not create package attempts.
 
 Kirigami and KQuickCharts are now canonical PASS/downstream-eligible in both Tier 1 and the package DAG. The `qml-multisurface` lane is completed. Canonical Tier 1 is **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**; KUserFeedback and Prison remain pending.
+
+## Promotion validation incident — preserved snapshot metadata
+
+Repository Policy run `35472599190`, job `105976179351`, failed only in the Batch 10 promotion validator after DAG, canonical Tier 1, global discovery and packaging-reference/tree validators had already passed. No package workflow ran because PR CI correctly classified the promotion as evidence-only.
+
+Classification: **INFRA / package_state_effect=none / package_attempted=false**. The validator compared the whole `promoted_snapshot` object to an exact dict and rejected the intentionally preserved historical-semantics `note`. The remediation compares the four state fields explicitly and also requires `promoted_snapshot.note` to remain present. No package state, package revision, retained PASS, FAIL/INFRA history or attempt count changes.

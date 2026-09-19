@@ -170,6 +170,13 @@ req(c.get('canonical_promotion')=={'status':'promoted','tier1':'27 PASS / 2 pend
 pre=c.get('promotion_precheck',{})
 req(pre.get('repository_policy',{}).get('workflow_run')==35440818501 and pre.get('repository_policy',{}).get('job_id')==105891164984 and pre.get('repository_policy',{}).get('result')=='PASS','Batch 10 promotion precheck Repository Policy mismatch')
 req(pre.get('pr_ci',{}).get('workflow_run')==35440818686 and pre.get('pr_ci',{}).get('commit')=='9051539d50e5a2ada41a6975add6c5a6497e6b3e' and pre.get('pr_ci',{}).get('result')=='PASS','Batch 10 promotion precheck PR CI mismatch')
+incidents=c.get('promotion_validation_incidents',[])
+req(len(incidents)==1,'Batch 10 promotion validation incident ledger mismatch')
+if len(incidents)==1:
+ inc=incidents[0]
+ req(inc.get('workflow_run')==35472599190 and inc.get('job_id')==105976179351 and inc.get('commit')=='3c7be6b7b3ea5853c483333f8c1b0fed25120413','Batch 10 promotion validation incident identity mismatch')
+ req(inc.get('classification')=='INFRA' and inc.get('package_state_effect')=='none' and inc.get('package_attempted') is False,'Batch 10 promotion validation incident semantics mismatch')
+ req(inc.get('cause')=='validator-exact-dict-rejected-preserved-promoted-snapshot-note','Batch 10 promotion validation incident cause mismatch')
 prv=pre.get('revalidation',{})
 req(prv.get('classification')=='infrastructure-revalidation' and prv.get('counts_as_package_attempt') is False and prv.get('package_state_effect')=='none','Batch 10 promotion revalidation semantics mismatch')
 req(prv.get('nodes',{}).get('kirigami',{}).get('job_id')==105891183786 and prv.get('nodes',{}).get('kirigami',{}).get('artifact_id')==10583642308 and prv.get('nodes',{}).get('kirigami',{}).get('artifact_sha256')=='a3fa47927d42dd605f78b4dc4913025311eed88ea807249da0b29653bd7ac0cb','Batch 10 promotion Kirigami revalidation mismatch')
@@ -205,9 +212,11 @@ req('test-kde-tier1-package-batch10-scope.sh' in policy and 'validate_kde_tier1_
 g=js(ROOT/'manifests/kde-tier1-global-discovery.json'); lane=g['lanes']['qml-multisurface']
 req(lane.get('status')=='completed' and lane.get('nodes')==[] and lane.get('runner')=='scripts/run-kde-tier1-package-batch10-preflight.sh' and lane.get('workflow')=='.github/workflows/kde-tier1-package-batch10.yml','global discovery Batch10 lane not completed')
 req(set(g.get('nodes',{}))=={'kuserfeedback','prison'},'post-Batch10 discovery set mismatch')
-req(g.get('promoted_snapshot')=={'pass':27,'pending':2,'current_fail':0,'blocked':0},'post-Batch10 promoted snapshot mismatch')
+snap=g.get('promoted_snapshot',{})
+req((snap.get('pass'),snap.get('pending'),snap.get('current_fail'),snap.get('blocked'))==(27,2,0,0),'post-Batch10 promoted snapshot mismatch')
+req(bool(snap.get('note')),'post-Batch10 promoted snapshot must preserve historical-semantics note')
 doc=text(ROOT/'docs/kde-tier1-package-batch10.md')
-for token in ('25 PASS / 4 pending','DIAG_PASS','10464419377','10463808939','package_validation_dependency','BLOCKED','35398956698','10569258322','10570203712','35400585402','10570720119','35403143944','10570704785','35403658149','10570804457','35406143858','10572841006','35407208676','10573097334','35409521508','35409521636','105806202814','10573605864','dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780','b1e79e0fbc11672c017acc812efa74116f1681a56596deb87f0f770b47e3d01d','6.30.0-0supralinux4','consumer-smoke','extra-cmake-modules','KF6QuickChartsConfig.cmake','effective_required_export_count_amd64','44/44 PASS','8/8 PASS','optional=templinst|arch=!riscv64','KF6::KirigamiPlatform','qml6-module-org-kde-kirigami','27 PASS / 2 pending','35440818501','35440818686','105891183786','105892252854'):
+for token in ('25 PASS / 4 pending','DIAG_PASS','10464419377','10463808939','package_validation_dependency','BLOCKED','35398956698','10569258322','10570203712','35400585402','10570720119','35403143944','10570704785','35403658149','10570804457','35406143858','10572841006','35407208676','10573097334','35409521508','35409521636','105806202814','10573605864','dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780','b1e79e0fbc11672c017acc812efa74116f1681a56596deb87f0f770b47e3d01d','6.30.0-0supralinux4','consumer-smoke','extra-cmake-modules','KF6QuickChartsConfig.cmake','effective_required_export_count_amd64','44/44 PASS','8/8 PASS','optional=templinst|arch=!riscv64','KF6::KirigamiPlatform','qml6-module-org-kde-kirigami','27 PASS / 2 pending','35440818501','35440818686','105891183786','105892252854','35472599190','105976179351','promoted_snapshot.note'):
  req(token in doc,f'Batch10 documentation missing {token}')
 if errors:
  print('\n'.join(f'ERROR: {e}' for e in errors),file=sys.stderr); raise SystemExit(1)

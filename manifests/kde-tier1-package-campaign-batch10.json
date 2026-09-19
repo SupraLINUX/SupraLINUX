@@ -408,6 +408,19 @@
       }
     }
   },
+  "promotion_validation_incidents": [
+    {
+      "workflow_run": 35472599190,
+      "job_id": 105976179351,
+      "commit": "3c7be6b7b3ea5853c483333f8c1b0fed25120413",
+      "classification": "INFRA",
+      "package_state_effect": "none",
+      "package_attempted": false,
+      "stage": "repository-policy/batch10-validator",
+      "cause": "validator-exact-dict-rejected-preserved-promoted-snapshot-note",
+      "remediation": "compare promoted state fields explicitly and require the historical-semantics note instead of rejecting extra metadata"
+    }
+  ],
   "closure_evidence": {
     "repository_policy": {
       "workflow_run": 35409521508,
