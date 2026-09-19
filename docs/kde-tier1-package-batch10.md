@@ -283,3 +283,9 @@ The Batch 10 failures exposed two classes of late-discovered contract errors, so
 The gate emits `source-development-contract.json` and `development-contract.json` into the retained evidence artifact. The contract remains upstream-derived; SupraLINUX only maps an observed upstream CMake dependency to its Debian provider.
 
 The Batch 10 scope selector treats changes to the shared audit helper as validation-input changes, so both nodes are revalidated when the gate itself changes. Result-only campaign metadata still scope-skips.
+
+## CI acceleration revalidation — 2026-09-19
+
+Commit `43e729ff573b15ac5dd97e50ecca6656f2b50576` revalidated the unchanged Batch 10 package candidates with the new source+artifact development-contract audit. Repository Policy run `35414683680` / job `105820857530` passed, and PR CI run `35414683979` passed. Kirigami rebuilt successfully in job `105820877778`, artifact `10574863862`, SHA-256 `712a4a0edeb388d510c93b1d20346282066063b2328e6b6bbd8b57784e5e8c93`; KQuickCharts rebuilt successfully in job `105822092851`, artifact `10575119063`, SHA-256 `63c9fdb60e2427a9437788b4f34d8757a5ff98e4f695a9b0c8042d55dbd2bfdd`. Both the pre-sbuild source contract gate and the built-artifact contract gate passed before each job could reach its final PASS.
+
+This is an **infrastructure revalidation**, not a fifth KQuickCharts package attempt and not a third Kirigami package attempt: package sources, packaging candidates and Debian versions were unchanged. Historical real-attempt ledgers remain unchanged.

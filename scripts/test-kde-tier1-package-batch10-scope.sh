@@ -19,9 +19,19 @@ PY
 git add .; git commit -qm result; R=$(git rev-parse HEAD)
 if bash "$SEL" kirigami "$BASE" "$R"; then echo "result-only campaign change rebuilt kirigami" >&2; exit 1; fi
 if bash "$SEL" kquickcharts "$BASE" "$R"; then echo "result-only campaign change rebuilt kquickcharts" >&2; exit 1; fi
+python3 - <<'PY'
+import json
+p='manifests/kde-tier1-package-campaign-batch10.json'; d=json.load(open(p))
+d['nodes']['kirigami']['last_validation_incident']={'classification':'INFRA','package_state_effect':'none'}
+d['nodes']['kquickcharts']['last_blocked_evidence']={'package_attempted':False,'blocked_by':'kirigami'}
+open(p,'w').write(json.dumps(d))
+PY
+git add .; git commit -qm historical-evidence; H=$(git rev-parse HEAD)
+if bash "$SEL" kirigami "$R" "$H"; then echo "historical validation evidence rebuilt kirigami" >&2; exit 1; fi
+if bash "$SEL" kquickcharts "$R" "$H"; then echo "historical BLOCKED evidence rebuilt kquickcharts" >&2; exit 1; fi
 echo c >> packages/kde/kquickcharts/b; git add .; git commit -qm qc; Q=$(git rev-parse HEAD)
-if bash "$SEL" kirigami "$R" "$Q"; then echo "QuickCharts-only change rebuilt kirigami" >&2; exit 1; fi
-bash "$SEL" kquickcharts "$R" "$Q"
+if bash "$SEL" kirigami "$H" "$Q"; then echo "QuickCharts-only change rebuilt kirigami" >&2; exit 1; fi
+bash "$SEL" kquickcharts "$H" "$Q"
 echo c >> packages/kde/kirigami/a; git add .; git commit -qm kir; K=$(git rev-parse HEAD)
 bash "$SEL" kirigami "$Q" "$K"; bash "$SEL" kquickcharts "$Q" "$K"
 echo '#x' >> scripts/run-kde-tier1-package-batch10-preflight.sh; git add .; git commit -qm shared; S=$(git rev-parse HEAD)

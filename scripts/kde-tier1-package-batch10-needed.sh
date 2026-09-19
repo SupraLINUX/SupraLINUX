@@ -26,7 +26,7 @@ import json,subprocess,sys
 node,before,after=sys.argv[1:]
 def load(ref): return json.loads(subprocess.check_output(['git','show',f'{ref}:manifests/kde-tier1-package-campaign-batch10.json'],text=True))
 def clean_node(n):
- ignore={'state','last_result','downstream_eligible','pass_evidence','last_failure_evidence','last_pass_files'}
+ ignore={'state','last_result','downstream_eligible','pass_evidence','last_failure_evidence','last_pass_files','last_validation_incident','last_blocked_evidence'}
  return {k:v for k,v in n.items() if k not in ignore}
 def fp(d):
  s=d['shared_predecessors']; n=d['nodes'][node]

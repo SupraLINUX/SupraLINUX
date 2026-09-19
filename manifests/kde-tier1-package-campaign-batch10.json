@@ -336,6 +336,42 @@
       "expected_test_count": 8
     }
   },
+  "ci_acceleration_revalidation": {
+    "commit": "43e729ff573b15ac5dd97e50ecca6656f2b50576",
+    "classification": "infrastructure-revalidation",
+    "counts_as_package_attempt": false,
+    "packages_built": true,
+    "package_state_effect": "none",
+    "repository_policy": {
+      "workflow_run": 35414683680,
+      "job_id": 105820857530,
+      "result": "PASS"
+    },
+    "pr_ci": {
+      "workflow_run": 35414683979,
+      "result": "PASS"
+    },
+    "nodes": {
+      "kirigami": {
+        "package_version": "6.30.0-0supralinux2",
+        "job_id": 105820877778,
+        "artifact_id": 10574863862,
+        "artifact_sha256": "712a4a0edeb388d510c93b1d20346282066063b2328e6b6bbd8b57784e5e8c93",
+        "source_contract_audit": "PASS",
+        "artifact_contract_audit": "PASS",
+        "result": "PASS"
+      },
+      "kquickcharts": {
+        "package_version": "6.30.0-0supralinux4",
+        "job_id": 105822092851,
+        "artifact_id": 10575119063,
+        "artifact_sha256": "63c9fdb60e2427a9437788b4f34d8757a5ff98e4f695a9b0c8042d55dbd2bfdd",
+        "source_contract_audit": "PASS",
+        "artifact_contract_audit": "PASS",
+        "result": "PASS"
+      }
+    }
+  },
   "closure_evidence": {
     "repository_policy": {
       "workflow_run": 35409521508,

@@ -93,3 +93,7 @@ The centralized router generalizes the scheduling side of that model while retai
 - A router/scope implementation error is a CI failure; it must not be reported as a package FAIL.
 - Skipping an unchanged node does not alter existing PASS/FAIL/BLOCKED evidence.
 - Authoritative labeled/KVM workflows retain their separate controlled admission model.
+
+## Canonical-promotion fast path — 2026-09-19
+
+Canonical state promotion is now classified semantically rather than by pathname alone. For `kde-frameworks-tier1.json`, source identity and dependency fields must remain identical after stripping only node `state` and `packaging`; source hash/version/dependency changes still request reusable hosted CI. The canonical DAG, global-discovery state, and packaging-tree evidence are state/evidence surfaces guarded by Repository Policy, so their promotion-only fields may advance without instantiating all package/reference/provider workflows. Any invariant-field change or unknown path falls back to heavy CI.
