@@ -174,3 +174,9 @@ PR CI `35406143858` confirms the effective ABI correction: KQuickCharts `6.30.0-
 The exported `KF6QuickChartsConfig.cmake` requires ECM 6.30, but `libquickcharts-dev` did not depend on `extra-cmake-modules`. KQuickCharts moves to `6.30.0-0supralinux4` with `extra-cmake-modules (>= 6.30.0~)` in the development package Depends. Consumer validation also installs and verifies the retained SupraLINUX ECM `6.30.0-0supralinux3` provider.
 
 This does not create a KDE Framework build edge. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.
+## Batch 10 technical closure
+
+Batch 10 is **2/2 retained PASS** before canonical promotion. Kirigami remains `6.30.0-0supralinux2`; KQuickCharts `6.30.0-0supralinux4` passed real attempt 4 in run `35409521636`, job `105806202814`, artifact `10573605864`, SHA-256 `dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780`, rootfs SHA-256 `b1e79e0fbc11672c017acc812efa74116f1681a56596deb87f0f770b47e3d01d`.
+
+This is retained campaign evidence only. The canonical Tier 1 manifest still reports **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**; Kirigami and KQuickCharts remain canonical pending until the separate promotion commit.
+

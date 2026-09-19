@@ -15,7 +15,7 @@ if not C.is_file() or not A.is_file():
 c=js(C); a=js(A)
 req(c.get('schema')==2 and c.get('batch')=='tier1-batch-10' and c.get('lane')=='qml-multisurface','Batch 10 identity mismatch')
 req(c.get('frameworks_series')=='6.30.0' and c.get('authority')=='kde-upstream' and c.get('provider_platform')=='ubuntu-resolute','authority/provider mismatch')
-req(c.get('state')=='remediation-pending-build','Batch 10 campaign must remain remediation-pending while QuickCharts is unresolved')
+req(c.get('state')=='PASS','Batch 10 campaign technical closure must be PASS before canonical promotion')
 req(c.get('canonical_snapshot',{}).get('tier1')=='25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED after Batch 9 canonical promotion','canonical pre-Batch10 snapshot mismatch')
 req(c.get('selected_nodes')==['kirigami','kquickcharts'],'selected node order mismatch')
 s=c.get('shared_predecessors',{})
@@ -39,7 +39,7 @@ for node,(source,sha,nbin,nabi,tests,job,artifact,digest) in expected.items():
  for abi in n.get('abi_contracts',[]):
   exp=abi_expected[node].get(abi.get('surface')); req(exp is not None,f'{node}: unexpected ABI {abi.get("surface")}')
   if exp: req((abi.get('reference_export_count'),abi.get('reference_optional_export_count'),abi.get('reference_nonoptional_inapplicable_amd64_count'),abi.get('reference_required_export_count_amd64'))==exp,f'{node}/{abi.get("surface")}: ABI partition mismatch')
- req(n.get('downstream_eligible') is (node=='kirigami'),f'{node}: downstream-eligibility mismatch for retained campaign state')
+ req(n.get('downstream_eligible') is True,f'{node}: retained campaign PASS must be downstream-eligible')
  for f in ('control','rules','changelog','README.source','copyright.reference','run-tests-under-x.sh','source/format','upstream/signing-key.asc'): req((pkg/f).is_file(),f'{node}: missing debian/{f}')
  req((consumer/'CMakeLists.txt').is_file() and (consumer/'main.cpp').is_file(),f'{node}: consumer missing')
  control=text(pkg/'control'); rules=text(pkg/'rules')
@@ -50,7 +50,7 @@ for node,(source,sha,nbin,nabi,tests,job,artifact,digest) in expected.items():
  req(not list(pkg.glob('*.symbols')) and not list(pkg.glob('*.symbols.reference')),f'{node}: retained symbols baseline must not be duplicated in git')
 kir=c['nodes']['kirigami']; quick=c['nodes']['kquickcharts']
 req(kir.get('state')=='PASS' and kir.get('last_result')=='PASS' and kir.get('downstream_eligible') is True,'Kirigami retained PASS state mismatch')
-req(quick.get('state')=='remediation-pending-build' and quick.get('last_result')=='FAIL' and quick.get('downstream_eligible') is False,'KQuickCharts remediation state mismatch')
+req(quick.get('state')=='PASS' and quick.get('last_result')=='PASS' and quick.get('downstream_eligible') is True,'KQuickCharts retained PASS state mismatch')
 lf=kir.get('last_failure_evidence',{})
 req(lf.get('workflow_run')==35389030840 and lf.get('job_id')==105742841430 and lf.get('artifact_id')==10565625878 and lf.get('artifact_sha256')=='58b5bc72f81cdd26ea368cf810d1e1727fbdfc521203fe889bca005aa2f9aca8' and lf.get('rootfs_sha256')=='445ce98267d53ec58a98bed3ee74343f04f2465bdccf258efa95e709551ff7b1' and lf.get('tests')=='44/44 PASS' and lf.get('stage')=='sbuild','Kirigami failure evidence mismatch')
 lb=quick.get('last_blocked_evidence',{})
@@ -63,6 +63,8 @@ qf=quick.get('last_failure_evidence',{})
 req(qf.get('validation_cycle')==7 and qf.get('workflow_run')==35406143858 and qf.get('job_id')==105797738652 and qf.get('artifact_id')==10572841006 and qf.get('artifact_sha256')=='87c84de4c44bcf7bf6dfad958e85ea755dd34ae014dd85508c250e596b4b4563' and qf.get('rootfs_sha256')=='bc109e0dd164e30611fa519db43aef659eba2346b1a3f3a1b8e5ce61a3aead92' and qf.get('tests')=='8/8 PASS' and qf.get('lintian')=='PASS-errors' and qf.get('dh_qmldeps')=='PASS' and qf.get('abi_contract')=='PASS' and qf.get('apt_check')=='PASS' and qf.get('qml_import_smoke')=='PASS' and qf.get('stage')=='consumer-smoke' and qf.get('kirigami_predecessor_version')=='6.30.0-0supralinux2' and qf.get('cause')=='libquickcharts-dev-missing-exported-ECM-development-dependency','KQuickCharts attempt-3 failure evidence mismatch')
 qvi=quick.get('last_validation_incident',{})
 req(qvi.get('validation_cycle')==8 and qvi.get('workflow_run')==35407208676 and qvi.get('job_id')==105800564563 and qvi.get('artifact_id')==10573097334 and qvi.get('artifact_sha256')=='e3a40dbc16fe346de109582dcec98ec5e2818f005288d2c7fbcedbfea4ada7da' and qvi.get('rootfs_sha256')=='db1fd86f47064825deb19738d30b339cb0032529be210e978a907fed2a5fc538' and qvi.get('classification')=='INFRA' and qvi.get('package_state_effect')=='none' and qvi.get('stage')=='consumer-smoke' and qvi.get('package_build')=='successful' and qvi.get('tests')=='8/8 PASS' and qvi.get('lintian')=='PASS-errors' and qvi.get('dh_qmldeps')=='PASS' and qvi.get('abi_contract')=='PASS' and qvi.get('apt_check')=='PASS' and qvi.get('qml_import_smoke')=='PASS' and qvi.get('kirigami_predecessor_version')=='6.30.0-0supralinux2' and qvi.get('ecm_predecessor_version')=='6.30.0-0supralinux3' and qvi.get('upstream_exported_cmake_targets')==['KF6::QuickCharts'] and qvi.get('cause')=='consumer-harness-required-nonexported-QuickChartsControls-CMake-target','KQuickCharts validation-cycle-8 infrastructure evidence mismatch')
+qp=quick.get('pass_evidence',{})
+req(qp.get('validation_cycle')==9 and qp.get('workflow_run')==35409521636 and qp.get('job_id')==105806202814 and qp.get('artifact_id')==10573605864 and qp.get('artifact_sha256')=='dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780' and qp.get('rootfs_sha256')=='b1e79e0fbc11672c017acc812efa74116f1681a56596deb87f0f770b47e3d01d' and qp.get('tests')=='8/8 PASS' and qp.get('lintian')=='PASS-errors' and qp.get('dh_qmldeps')=='PASS' and qp.get('abi_contract')=='PASS' and qp.get('apt_check')=='PASS' and qp.get('qml_import_smoke')=='PASS' and qp.get('consumer_smoke')=='PASS' and qp.get('kirigami_predecessor_version')=='6.30.0-0supralinux2' and qp.get('ecm_predecessor_version')=='6.30.0-0supralinux3' and qp.get('abi_exports')=={'QuickCharts':381,'QuickChartsControls':1},'KQuickCharts retained PASS evidence mismatch')
 qrem=quick.get('symbols_remediation',{})
 req(qrem.get('policy')=='optional=templinst|arch=!riscv64' and qrem.get('symbols_file')=='libquickcharts1.symbols' and qrem.get('baseline_sha256')=='ed06cd19136bc5a1bfb10fb7e5c93070fdb4f76ca81f8536243666297e8193e6' and qrem.get('result_sha256')=='f1ba9c4d179d7dc3638f82fe5879c6ecea43455f520eff686aad508c4e32702e' and qrem.get('changed_symbols')==2 and qrem.get('minimum_version')=='6.0.0','KQuickCharts symbols-remediation metadata mismatch')
 qabi={x.get('surface'):x for x in quick.get('abi_contracts',[])}
@@ -114,19 +116,21 @@ if len(qinc)==3:
  x=qinc[2]
  req(x.get('validation_cycle')==8 and x.get('package_version')=='6.30.0-0supralinux4' and x.get('commit')=='2694b415c0785418692223d6f7564c825f97eddd' and x.get('workflow_run')==35407208676 and x.get('job_id')==105800564563 and x.get('artifact_id')==10573097334 and x.get('artifact_sha256')=='e3a40dbc16fe346de109582dcec98ec5e2818f005288d2c7fbcedbfea4ada7da' and x.get('rootfs_sha256')=='db1fd86f47064825deb19738d30b339cb0032529be210e978a907fed2a5fc538' and x.get('classification')=='INFRA' and x.get('package_state_effect')=='none' and x.get('stage')=='consumer-smoke' and x.get('package_build')=='successful' and x.get('tests')=='8/8 PASS' and x.get('lintian')=='PASS-errors' and x.get('dh_qmldeps')=='PASS' and x.get('abi_contract')=='PASS' and x.get('apt_check')=='PASS' and x.get('qml_import_smoke')=='PASS' and x.get('kirigami_predecessor_version')=='6.30.0-0supralinux2' and x.get('ecm_predecessor_version')=='6.30.0-0supralinux3' and x.get('upstream_exported_cmake_targets')==['KF6::QuickCharts'],'KQuickCharts validation-cycle-8 infrastructure evidence mismatch')
 ka=a.get('attempts',{}).get('kirigami',[]); qa=a.get('attempts',{}).get('kquickcharts',[])
-req(len(ka)==2 and len(qa)==3,'Batch 10 real-attempt ledger count mismatch')
+req(len(ka)==2 and len(qa)==4,'Batch 10 real-attempt ledger count mismatch')
 if len(ka)==2:
  x=ka[0]
  req(x.get('attempt')==1 and x.get('package_version')=='6.30.0-0supralinux1' and x.get('commit')=='67a6558513a82d4a1b4426a9b705eafdadbd3bf4' and x.get('workflow_run')==35389030840 and x.get('job_id')==105742841430 and x.get('artifact_id')==10565625878 and x.get('artifact_sha256')=='58b5bc72f81cdd26ea368cf810d1e1727fbdfc521203fe889bca005aa2f9aca8' and x.get('rootfs_sha256')=='445ce98267d53ec58a98bed3ee74343f04f2465bdccf258efa95e709551ff7b1' and x.get('result')=='FAIL' and x.get('stage')=='sbuild' and x.get('tests')=='44/44 PASS','Kirigami attempt-1 evidence mismatch')
  x=ka[1]
  req(x.get('attempt')==2 and x.get('validation_cycle')==3 and x.get('package_version')=='6.30.0-0supralinux2' and x.get('commit')=='25af7164a76a925f27814aabe1986727a53d49bf' and x.get('workflow_run')==35398956698 and x.get('job_id')==105774229788 and x.get('artifact_id')==10569258322 and x.get('artifact_sha256')=='6a008366edda84f8c285e5cf0a6b18a4b1089fc88e530d6e61b0f4f885dd7e30' and x.get('rootfs_sha256')=='8a1e3d09d8788ad38c81cb7071f7149c114f3582ee3c59d489114c3b81497a35' and x.get('result')=='PASS' and x.get('stage')=='complete' and x.get('tests')=='44/44 PASS' and x.get('downstream_eligible') is True,'Kirigami attempt-2 PASS evidence mismatch')
-if len(qa)==3:
+if len(qa)==4:
  x=qa[0]
  req(x.get('attempt')==1 and x.get('validation_cycle')==3 and x.get('package_version')=='6.30.0-0supralinux1' and x.get('commit')=='25af7164a76a925f27814aabe1986727a53d49bf' and x.get('workflow_run')==35398956698 and x.get('job_id')==105776448807 and x.get('artifact_id')==10570203712 and x.get('artifact_sha256')=='1f4a4a65e3e534d000b0507ff583f8ef657eb5836d0db840ef405d5ab501f12e' and x.get('rootfs_sha256')=='7da69856573c2d320f7e8a345d53fff793c39e0e8fe1e0e144bed73fcf3765d2' and x.get('result')=='FAIL' and x.get('stage')=='sbuild' and x.get('tests')=='8/8 PASS' and x.get('kirigami_predecessor_version')=='6.30.0-0supralinux2','KQuickCharts attempt-1 evidence mismatch')
  x=qa[1]
  req(x.get('attempt')==2 and x.get('validation_cycle')==4 and x.get('package_version')=='6.30.0-0supralinux2' and x.get('commit')=='ecf2e73ff7bc65e0deb321974cec35fcb8190250' and x.get('workflow_run')==35400585402 and x.get('job_id')==105779442087 and x.get('artifact_id')==10570720119 and x.get('artifact_sha256')=='edbcef8faf5801ae9a5c95b59270f7726a2abbbc1a5268d994816bf731eb7066' and x.get('rootfs_sha256')=='413b2fabd4248a9a11a4ec47792873c4c730a9c8c4aa15336f73be4acc79bec8' and x.get('result')=='FAIL' and x.get('stage')=='sbuild' and x.get('tests')=='8/8 PASS' and x.get('kirigami_predecessor_version')=='6.30.0-0supralinux2' and x.get('symbols_remediation')=='PASS','KQuickCharts attempt-2 evidence mismatch')
  x=qa[2]
  req(x.get('attempt')==3 and x.get('validation_cycle')==7 and x.get('package_version')=='6.30.0-0supralinux3' and x.get('commit')=='bf3b3f856ef8844707bcaedba475a8fadafb46fe' and x.get('workflow_run')==35406143858 and x.get('job_id')==105797738652 and x.get('artifact_id')==10572841006 and x.get('artifact_sha256')=='87c84de4c44bcf7bf6dfad958e85ea755dd34ae014dd85508c250e596b4b4563' and x.get('rootfs_sha256')=='bc109e0dd164e30611fa519db43aef659eba2346b1a3f3a1b8e5ce61a3aead92' and x.get('result')=='FAIL' and x.get('stage')=='consumer-smoke' and x.get('tests')=='8/8 PASS' and x.get('lintian')=='PASS-errors' and x.get('dh_qmldeps')=='PASS' and x.get('abi_contract')=='PASS' and x.get('apt_check')=='PASS' and x.get('qml_import_smoke')=='PASS' and x.get('kirigami_predecessor_version')=='6.30.0-0supralinux2','KQuickCharts attempt-3 evidence mismatch')
+ x=qa[3]
+ req(x.get('attempt')==4 and x.get('validation_cycle')==9 and x.get('package_version')=='6.30.0-0supralinux4' and x.get('commit')=='43adf80f4a16a848f1ca7ea77fc608585ddb6345' and x.get('workflow_run')==35409521636 and x.get('job_id')==105806202814 and x.get('artifact_id')==10573605864 and x.get('artifact_sha256')=='dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780' and x.get('rootfs_sha256')=='b1e79e0fbc11672c017acc812efa74116f1681a56596deb87f0f770b47e3d01d' and x.get('result')=='PASS' and x.get('stage')=='complete' and x.get('tests')=='8/8 PASS' and x.get('lintian')=='PASS-errors' and x.get('dh_qmldeps')=='PASS' and x.get('abi_contract')=='PASS' and x.get('apt_check')=='PASS' and x.get('qml_import_smoke')=='PASS' and x.get('consumer_smoke')=='PASS' and x.get('kirigami_predecessor_version')=='6.30.0-0supralinux2' and x.get('ecm_predecessor_version')=='6.30.0-0supralinux3' and x.get('downstream_eligible') is True,'KQuickCharts attempt-4 PASS evidence mismatch')
 blocked=a.get('blocked_events',{}).get('kquickcharts',[])
 req(a.get('blocked_events',{}).get('kirigami')==[] and len(blocked)==2,'Batch 10 BLOCKED ledger mismatch')
 if len(blocked)==2:
@@ -135,6 +139,11 @@ if len(blocked)==2:
  x=blocked[1]
  req(x.get('validation_cycle')==2 and x.get('commit')=='b6adeee8259414fe6711b3b7143f735330a42f6a' and x.get('workflow_run')==35392233659 and x.get('job_id')==105755393521 and x.get('artifact_id')==10566446188 and x.get('artifact_sha256')=='23e45810ba579c997a6c6c3ab46e34d53fd8f2360713cc8f38dae353ea7f8e3d' and x.get('result')=='BLOCKED' and x.get('blocked_by')=='kirigami' and x.get('package_attempted') is False,'KQuickCharts cycle-2 BLOCKED evidence mismatch')
 tier=js(ROOT/'manifests/kde-frameworks-tier1.json'); nodes={x['id']:x for x in tier['nodes']}
+ce=c.get('closure_evidence',{})
+rp=ce.get('repository_policy',{}); pc=ce.get('pr_ci',{}); ss=ce.get('scope_skips',{}).get('kirigami',{})
+req(rp.get('workflow_run')==35409521508 and rp.get('job_id')==105806142849 and rp.get('result')=='PASS','Batch 10 closure Repository Policy evidence mismatch')
+req(pc.get('workflow_run')==35409521636 and pc.get('commit')=='43adf80f4a16a848f1ca7ea77fc608585ddb6345' and pc.get('result')=='PASS','Batch 10 closure PR CI evidence mismatch')
+req(ss.get('job_id')==105806169640 and ss.get('result')=='scope-skipped-retained-PASS','Batch 10 Kirigami closure scope-skip evidence mismatch')
 for node in ('kirigami','kquickcharts'): req(nodes[node].get('state')=='pending' and nodes[node].get('packaging',{}).get('state')=='pending',f'{node}: canonical state promoted prematurely')
 runner=text(ROOT/'scripts/run-kde-tier1-package-batch10-preflight.sh'); scope=text(ROOT/'scripts/kde-tier1-package-batch10-needed.sh'); workflow=text(ROOT/'.github/workflows/kde-tier1-package-batch10.yml')
 req("rglob(abi['soname'])" in runner and "rglob(abi['soname']+'.*')" not in runner,'Batch 10 ABI harness must resolve the exact packaged SONAME payload')
@@ -163,10 +172,10 @@ req(lane.get('status')=='implementation-ready' and lane.get('runner')=='scripts/
 req(g['nodes']['kirigami'].get('readiness')=='runnable','Kirigami global readiness mismatch')
 req(g['nodes']['kquickcharts'].get('readiness')=='package-validation-dependent','QuickCharts global readiness mismatch')
 doc=text(ROOT/'docs/kde-tier1-package-batch10.md')
-for token in ('25 PASS / 4 pending','DIAG_PASS','10464419377','10463808939','package_validation_dependency','BLOCKED','35398956698','10569258322','10570203712','35400585402','10570720119','35403143944','10570704785','35403658149','10570804457','35406143858','10572841006','35407208676','10573097334','6.30.0-0supralinux4','consumer-smoke','extra-cmake-modules','KF6QuickChartsConfig.cmake','effective_required_export_count_amd64','44/44 PASS','8/8 PASS','optional=templinst|arch=!riscv64','KF6::KirigamiPlatform','qml6-module-org-kde-kirigami'):
+for token in ('25 PASS / 4 pending','DIAG_PASS','10464419377','10463808939','package_validation_dependency','BLOCKED','35398956698','10569258322','10570203712','35400585402','10570720119','35403143944','10570704785','35403658149','10570804457','35406143858','10572841006','35407208676','10573097334','35409521508','35409521636','105806202814','10573605864','dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780','b1e79e0fbc11672c017acc812efa74116f1681a56596deb87f0f770b47e3d01d','6.30.0-0supralinux4','consumer-smoke','extra-cmake-modules','KF6QuickChartsConfig.cmake','effective_required_export_count_amd64','44/44 PASS','8/8 PASS','optional=templinst|arch=!riscv64','KF6::KirigamiPlatform','qml6-module-org-kde-kirigami'):
  req(token in doc,f'Batch10 documentation missing {token}')
 if errors:
  print('\n'.join(f'ERROR: {e}' for e in errors),file=sys.stderr); raise SystemExit(1)
-print('KDE Tier 1 Batch 10 remediation validation: PASS')
-print('Nodes: kirigami retained PASS; kquickcharts remediation-pending-build with retained Kirigami PASS available')
-print('Canonical state remains 25 PASS / 4 pending')
+print('KDE Tier 1 Batch 10 technical closure validation: PASS')
+print('Nodes: kirigami retained PASS; kquickcharts retained PASS; campaign 2/2 PASS')
+print('Canonical state remains 25 PASS / 4 pending until separate promotion')

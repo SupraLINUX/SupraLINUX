@@ -247,4 +247,25 @@ KQuickCharts built successfully and reached the final consumer gate with `8/8 PA
 The remaining failure was a repository consumer-harness false assumption. KDE KQuickCharts 6.30 exports `QuickCharts` through `KF6QuickChartsTargets`, yielding the public imported target `KF6::QuickCharts`. The upstream `controls/CMakeLists.txt` installs `QuickChartsControls` without adding it to that export set; the controls surface is delivered as the `org.kde.quickcharts.controls` QML module/runtime library. Requiring a nonexistent `KF6::QuickChartsControls` target therefore invented a downstream CMake contract that upstream does not provide.
 
 Classification: **INFRA / package_state_effect=none**. KQuickCharts remains `6.30.0-0supralinux4`, its real package-attempt count remains three, and its last real package result remains the cycle-7 FAIL already remediated by `-4`. The consumer now validates only upstream-exported `KF6::QuickCharts`; the controls surface remains covered by QML-module enumeration/import smoke and the `libQuickChartsControls.so.1` ABI contract. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** pending a clean `-4` revalidation.
+## Validation cycle 9 — KQuickCharts retained PASS; Batch 10 technical closure
+
+Repository Policy run `35409521508`, job `105806142849`, passed on commit `43adf80f4a16a848f1ca7ea77fc608585ddb6345`. PR CI run `35409521636` also completed successfully. Kirigami job `105806169640` correctly scope-skipped the already retained `6.30.0-0supralinux2` package; no new Kirigami package attempt was created.
+
+KQuickCharts `6.30.0-0supralinux4` is a retained **PASS** from real attempt 4 / validation cycle 9:
+
+- job `105806202814`;
+- artifact `10573605864`;
+- artifact ZIP SHA-256 `dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780`;
+- rootfs SHA-256 `b1e79e0fbc11672c017acc812efa74116f1681a56596deb87f0f770b47e3d01d`;
+- upstream tests `8/8 PASS`;
+- Lintian error gate PASS;
+- `dh_qmldeps` PASS;
+- ABI PASS: QuickCharts `381 >= 380` effective amd64 floor; QuickChartsControls `1/1`;
+- QML contracts PASS for `org.kde.quickcharts` and `org.kde.quickcharts.controls`;
+- exact local-package APT closure/check PASS;
+- retained Kirigami provider verified at `6.30.0-0supralinux2`;
+- retained ECM provider verified at `6.30.0-0supralinux3`;
+- upstream-exported `KF6::QuickCharts` consumer configure/build/run PASS.
+
+The three earlier QuickCharts real FAIL attempts and the cycle-5, cycle-6 and cycle-8 INFRA incidents remain append-only evidence. Batch 10 is now **2/2 retained PASS** and technically closed. This does **not** mutate the canonical Tier 1 manifest: it remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until the dedicated promotion commit.
 

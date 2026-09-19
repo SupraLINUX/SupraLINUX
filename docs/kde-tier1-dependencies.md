@@ -191,3 +191,11 @@ KQuickCharts remains free of KDE Framework build dependencies. Separately, its i
 Therefore `libquickcharts-dev` must depend on `extra-cmake-modules (>= 6.30.0~)`. This is a **binary development/consumer dependency**, not a `kde_framework_build_dependencies` edge. KDE's exported config defines the need; SupraLINUX supplies its retained ECM `6.30.0-0supralinux3` PASS package.
 
 Cycle 7 proved the omission in a clean consumer after all earlier gates passed. The Batch 10 consumer gate now includes the retained ECM package in the local install transaction and verifies the installed version exactly, so Ubuntu's older ECM cannot satisfy the contract.
+## Batch 10 technical closure — retained QML/multisurface providers
+
+Kirigami `6.30.0-0supralinux2` and KQuickCharts `6.30.0-0supralinux4` now both have retained full-package PASS evidence. KQuickCharts attempt 4 passed in PR CI run `35409521636`, job `105806202814`, artifact `10573605864`, SHA-256 `dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780`.
+
+The dependency model is unchanged: both remain Tier 1 with no KDE Framework build dependency. Kirigami is a KQuickCharts **package-validation/QML-runtime** predecessor for `dh_qmldeps` and consumer closure, not an upstream Framework build predecessor. `extra-cmake-modules >= 6.30` in `libquickcharts-dev` is an exported development-package dependency required by `KF6QuickChartsConfig.cmake`; retained SupraLINUX ECM `6.30.0-0supralinux3` supplies it.
+
+Batch 10 is technically **2/2 PASS** and ready for separate canonical promotion. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** in this commit.
+

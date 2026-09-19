@@ -441,3 +441,9 @@ KQuickCharts `6.30.0-0supralinux3` reached `consumer-smoke` in run `35406143858`
 This is a real package FAIL, not BLOCKED or INFRA. Revision `-4` adds the ECM requirement to the development package and uses retained SupraLINUX ECM for consumer validation. The KDE Framework DAG itself is unchanged: `kde_framework_build_dependencies=[]`; ECM remains the shared build/tooling predecessor and now also satisfies the exported development consumer contract.
 
 Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** pending QuickCharts PASS and separate promotion.
+## Batch 10 technical closure
+
+The QML/multisurface campaign now retains PASS artifacts for Kirigami `6.30.0-0supralinux2` and KQuickCharts `6.30.0-0supralinux4`. KQuickCharts final evidence is run `35409521636`, job `105806202814`, artifact `10573605864`, SHA-256 `dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780`.
+
+No new Framework build edge is introduced. The Kirigami relationship remains package-validation-only for QML metadata/runtime closure. The canonical DAG is intentionally unchanged at **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until the dedicated promotion step.
+

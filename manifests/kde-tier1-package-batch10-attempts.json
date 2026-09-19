@@ -93,6 +93,30 @@
         "qml_import_smoke": "PASS",
         "kirigami_predecessor_version": "6.30.0-0supralinux2",
         "cause": "The exported KF6QuickChartsConfig.cmake executes find_dependency(ECM 6.30.0), but libquickcharts-dev did not depend on extra-cmake-modules. All earlier package, ABI, QML and APT gates passed; consumer CMake configuration failed because the exported development dependency was absent."
+      },
+      {
+        "attempt": 4,
+        "validation_cycle": 9,
+        "package_version": "6.30.0-0supralinux4",
+        "commit": "43adf80f4a16a848f1ca7ea77fc608585ddb6345",
+        "workflow_run": 35409521636,
+        "job_id": 105806202814,
+        "artifact_id": 10573605864,
+        "artifact_sha256": "dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780",
+        "rootfs_sha256": "b1e79e0fbc11672c017acc812efa74116f1681a56596deb87f0f770b47e3d01d",
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "8/8 PASS",
+        "lintian": "PASS-errors",
+        "dh_qmldeps": "PASS",
+        "abi_contract": "PASS",
+        "apt_check": "PASS",
+        "qml_import_smoke": "PASS",
+        "consumer_smoke": "PASS",
+        "kirigami_predecessor_version": "6.30.0-0supralinux2",
+        "ecm_predecessor_version": "6.30.0-0supralinux3",
+        "downstream_eligible": true,
+        "cause": "The -4 development dependency and corrected upstream-target consumer contract passed the complete package, ABI, QML, exact APT closure and consumer validation gates."
       }
     ]
   },
