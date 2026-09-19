@@ -160,6 +160,32 @@
         "reference_required_export_count_amd64": 382,
         "effective_required_export_count_amd64": 380,
         "cause": "The ABI gate compared the generated symbols file against the retained pre-remediation required floor 382. The reviewed symbols overlay converts two existing required std::_Sp_counted_ptr<QQuickItem *> exports to optional, so the effective amd64 required floor is 380. The package generated 381 exports and therefore satisfies the remediated contract."
+      },
+      {
+        "validation_cycle": 8,
+        "package_version": "6.30.0-0supralinux4",
+        "commit": "2694b415c0785418692223d6f7564c825f97eddd",
+        "workflow_run": 35407208676,
+        "job_id": 105800564563,
+        "artifact_id": 10573097334,
+        "artifact_sha256": "e3a40dbc16fe346de109582dcec98ec5e2818f005288d2c7fbcedbfea4ada7da",
+        "rootfs_sha256": "db1fd86f47064825deb19738d30b339cb0032529be210e978a907fed2a5fc538",
+        "stage": "consumer-smoke",
+        "classification": "INFRA",
+        "package_state_effect": "none",
+        "package_build": "successful",
+        "lintian": "PASS-errors",
+        "tests": "8/8 PASS",
+        "dh_qmldeps": "PASS",
+        "abi_contract": "PASS",
+        "apt_check": "PASS",
+        "qml_import_smoke": "PASS",
+        "kirigami_predecessor_version": "6.30.0-0supralinux2",
+        "ecm_predecessor_version": "6.30.0-0supralinux3",
+        "upstream_exported_cmake_targets": [
+          "KF6::QuickCharts"
+        ],
+        "cause": "False-negative consumer harness: upstream KQuickCharts 6.30 exports only KF6::QuickCharts through KF6QuickChartsTargets. QuickChartsControls is installed without EXPORT and is validated as the org.kde.quickcharts.controls QML module plus its runtime ABI, so requiring KF6::QuickChartsControls invented a non-upstream CMake contract."
       }
     ]
   },
