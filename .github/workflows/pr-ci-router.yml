@@ -55,27 +55,22 @@ jobs:
             fi
           done
 
-          mapfile -t changed < <(git diff --name-only "${before}" "${after}" --)
-          printf 'PR event delta %s..%s contains %d changed path(s).\n' "${before}" "${after}" "${#changed[@]}"
-          printf '%s\n' "${changed[@]}"
-
-          run_ci=false
-          for path in "${changed[@]}"; do
-            case "${path}" in
-              docs/*|README.md)
-                ;;
-              *)
-                run_ci=true
-                break
-                ;;
-            esac
-          done
+          if bash scripts/pr-ci-router-needed.sh "${before}" "${after}"; then
+            run_ci=true
+          else
+            rc=$?
+            if [[ "${rc}" -eq 1 ]]; then
+              run_ci=false
+            else
+              exit "${rc}"
+            fi
+          fi
 
           echo "run_ci=${run_ci}" >> "${GITHUB_OUTPUT}"
           if [[ "${run_ci}" == "true" ]]; then
-            echo "Non-documentation input changed; invoking reusable CI lanes."
+            echo "Semantic build/reference/provider input changed; invoking reusable CI lanes."
           else
-            echo "Documentation-only event delta; reusable build/reference/provider lanes remain skipped."
+            echo "Evidence/policy-only event delta; Repository Policy remains authoritative and reusable hosted lanes are skipped."
           fi
 
   package-build-proof:

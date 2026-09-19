@@ -54,6 +54,14 @@ jobs:
         shell: bash
         run: scripts/test-check-golden-image-provenance.sh
 
+      - name: Test PR CI semantic evidence scope
+        shell: bash
+        run: scripts/test-pr-ci-router-scope.sh
+
+      - name: Test KDE development contract audit
+        shell: bash
+        run: scripts/test-kde-development-contract-audit.sh
+
       - name: Test KDE Tier 1 dependency preflight semantic scope
         shell: bash
         run: scripts/test-kde-tier1-dependency-preflight-scope.sh

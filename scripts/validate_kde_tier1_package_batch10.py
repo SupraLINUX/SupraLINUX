@@ -145,17 +145,22 @@ req(rp.get('workflow_run')==35409521508 and rp.get('job_id')==105806142849 and r
 req(pc.get('workflow_run')==35409521636 and pc.get('commit')=='43adf80f4a16a848f1ca7ea77fc608585ddb6345' and pc.get('result')=='PASS','Batch 10 closure PR CI evidence mismatch')
 req(ss.get('job_id')==105806169640 and ss.get('result')=='scope-skipped-retained-PASS','Batch 10 Kirigami closure scope-skip evidence mismatch')
 for node in ('kirigami','kquickcharts'): req(nodes[node].get('state')=='pending' and nodes[node].get('packaging',{}).get('state')=='pending',f'{node}: canonical state promoted prematurely')
-runner=text(ROOT/'scripts/run-kde-tier1-package-batch10-preflight.sh'); scope=text(ROOT/'scripts/kde-tier1-package-batch10-needed.sh'); workflow=text(ROOT/'.github/workflows/kde-tier1-package-batch10.yml')
+runner=text(ROOT/'scripts/run-kde-tier1-package-batch10-preflight.sh'); scope=text(ROOT/'scripts/kde-tier1-package-batch10-needed.sh'); workflow=text(ROOT/'.github/workflows/kde-tier1-package-batch10.yml'); audit=ROOT/'scripts/audit-kde-development-contract.py'
+req(audit.is_file(),'KDE development contract audit helper missing')
+audit_txt=text(audit)
+for token in ('find_dependency','*Targets.cmake','required_during_dh_qmldeps','known_provider_checks','packaged_cmake_targets','required_qml_modules'):
+ req(token in audit_txt,f'KDE development contract audit missing {token}')
 req("rglob(abi['soname'])" in runner and "rglob(abi['soname']+'.*')" not in runner,'Batch 10 ABI harness must resolve the exact packaged SONAME payload')
 req("abi.get('effective_required_export_count_amd64',abi['reference_required_export_count_amd64'])" in runner,'Batch 10 ABI harness must honor reviewed effective required-export floors')
 req('INSTALL_DEBS+=("${KIRIGAMI_DEBS[@]}" "${ECM_DEB}")' in runner,'KQuickCharts consumer closure must install retained ECM with local packages')
 req('QuickCharts resolved non-SupraLINUX ECM development provider' in runner and "dpkg-query -W -f='${Version}' extra-cmake-modules" in runner,'KQuickCharts consumer closure must verify exact retained ECM provider')
-for token in ('reference_required_export_count_amd64','abi-reference-counts.txt','0supralinux','qmlimportscanner','KIRIGAMI_ARTIFACT_DIR','qml6-module-org-kde-kirigami','consumer-smoke','sbuild --verbose'):
+for token in ('reference_required_export_count_amd64','abi-reference-counts.txt','0supralinux','qmlimportscanner','KIRIGAMI_ARTIFACT_DIR','qml6-module-org-kde-kirigami','source-development-contract','development-contract','audit-kde-development-contract.py','consumer-smoke','sbuild --verbose'):
  req(token in runner,f'Batch10 runner missing {token}')
 req("grep -R -Eq 'QT_QML_NO_CACHEGEN=ON|BUILD_QCH=ON" not in runner,'Batch10 runner must not recursively scan documentation for behavior overrides')
 req('dh_auto_test.*\\|\\|[[:space:]]*true' in runner,'Batch10 runner must explicitly guard test-command suppression')
 req('packages/kde/${NODE}/*' in scope,'Batch10 selector must rebuild the selected node package tree')
 req('packages/kde/kirigami/*' in scope,'Batch10 selector must propagate Kirigami package changes to KQuickCharts')
+req('scripts/audit-kde-development-contract.py' in scope,'Batch10 selector must revalidate nodes when the shared development-contract audit changes')
 req('package_validation_dependencies' in json.dumps(c['nodes']['kquickcharts']),'Batch10 campaign must retain package-validation dependency metadata')
 for token in ('needs: kirigami-package',"state':'BLOCKED",'Download current-run Kirigami PASS artifact','Download retained Kirigami PASS artifact','needs.kirigami-package.outputs.built'):
  req(token in workflow,f'Batch10 workflow missing {token}')

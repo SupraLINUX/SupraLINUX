@@ -114,6 +114,8 @@ require("scripts/test-qemu-kvm-required.sh" in repository_policy, "repository po
 require("scripts/test-verify-ubuntu-cloud-image-provenance.sh" in repository_policy, "repository policy must functionally test signed Ubuntu source-image verification")
 require("scripts/test-check-actions-runner-runtime.sh" in repository_policy, "repository policy must functionally test effective Actions runner provenance")
 require("scripts/test-check-golden-image-provenance.sh" in repository_policy, "repository policy must functionally test the golden-image provenance gate")
+require("scripts/test-pr-ci-router-scope.sh" in repository_policy, "repository policy must functionally test semantic PR evidence routing")
+require("scripts/test-kde-development-contract-audit.sh" in repository_policy, "repository policy must functionally test the KDE development contract audit")
 require("python3 scripts/validate_qt_provider.py" in repository_policy, "repository policy must execute the Qt provider invariant validator")
 require(bool(qt_provider_workflow), "missing Qt provider preflight workflow")
 
@@ -125,7 +127,7 @@ require(f"actions/checkout@{CHECKOUT_SHA}" in pr_ci_router, "PR CI router checko
 require("fetch-depth: 0" in pr_ci_router, "PR CI router must fetch comparison history")
 require("github.event.before" in pr_ci_router and "github.event.after" in pr_ci_router, "PR CI router must use synchronize before/after SHAs")
 require("github.event.pull_request.base.sha" in pr_ci_router and "github.event.pull_request.head.sha" in pr_ci_router, "PR CI router must support opened/reopened base/head comparison")
-require("docs/*|README.md" in pr_ci_router, "PR CI router must recognize documentation-only event deltas")
+require("scripts/pr-ci-router-needed.sh" in pr_ci_router, "PR CI router must delegate semantic evidence/build classification to the tested scope helper")
 require("cancel-in-progress: true" in pr_ci_router, "PR CI router must cancel superseded runs")
 require("pr-ci-router-${{ github.event.pull_request.number }}" in pr_ci_router, "PR CI router concurrency must be scoped to the PR number")
 

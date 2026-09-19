@@ -1,7 +1,7 @@
 # CI event-delta scope
 
 Status: **implemented and verified repository-wide for ordinary pull-request routing**  
-Last reviewed: **2026-09-17**
+Last reviewed: **2026-09-18**
 
 ## Purpose
 
@@ -17,10 +17,16 @@ For `pull_request/synchronize`, the router compares `${{ github.event.before }}`
 
 For `opened` and `reopened`, it compares the PR base SHA with the PR head SHA.
 
-The plan job classifies the changed paths before any reusable lane is invoked:
+The plan job delegates classification to `scripts/pr-ci-router-needed.sh` before any reusable lane is invoked.
 
-- if every changed path is under `docs/**` or is `README.md`, `run_ci=false`;
-- otherwise `run_ci=true` and the reusable lanes may be called.
+The classifier has a fail-closed exit contract: `0` means reusable hosted CI is required, `1` means Repository Policy is sufficient, and any other status fails the router. It can skip fan-out only when every changed path is proven non-build-affecting:
+
+- documentation and `README.md`;
+- append-only package attempt ledgers;
+- repository invariant validators/tests, which are executed by Repository Policy itself;
+- package campaign JSON changes only when that batch's own semantic node selector proves that every selected node's build fingerprint is unchanged.
+
+Any package tree, runner, workflow, selector, unknown manifest shape, selector error or semantic campaign-input change falls back to reusable CI. This makes the optimization conservative: uncertainty costs CI time rather than coverage.
 
 The 18 migrated workflows keep their own lane-specific event-delta checks. The router decides whether the general hosted CI family needs to be entered at all; each called lane still decides whether its own node/reference/provider inputs changed. This preserves fine-grained scope while eliminating unnecessary top-level workflow runs for documentation-only synchronizations.
 
@@ -79,7 +85,8 @@ The centralized router generalizes the scheduling side of that model while retai
 
 - Ordinary hosted PR CI is admitted through one centralized router.
 - `synchronize` scope uses the exact event `before -> after` delta, not the cumulative PR diff.
-- Documentation-only deltas do not invoke the 18 routed hosted lanes.
+- Documentation-only and proven evidence/policy-only deltas do not invoke the 18 routed hosted lanes.
+- Campaign JSON is skipped only after the batch's semantic selector confirms that no build fingerprint changed.
 - Relevant non-documentation deltas may invoke the reusable lanes; each lane retains its own precise scope decision.
 - `workflow_dispatch` remains an explicit way to force an individual reusable lane.
 - Superseded router runs for the same PR are cancelled.

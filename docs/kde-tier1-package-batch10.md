@@ -269,3 +269,17 @@ KQuickCharts `6.30.0-0supralinux4` is a retained **PASS** from real attempt 4 / 
 
 The three earlier QuickCharts real FAIL attempts and the cycle-5, cycle-6 and cycle-8 INFRA incidents remain append-only evidence. Batch 10 is now **2/2 retained PASS** and technically closed. This does **not** mutate the canonical Tier 1 manifest: it remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until the dedicated promotion commit.
 
+
+
+## Pipeline hardening after Batch 10 closure
+
+The Batch 10 failures exposed two classes of late-discovered contract errors, so the reusable package path now audits development contracts before consumer smoke.
+
+`scripts/audit-kde-development-contract.py` has two gates:
+
+1. **source-development-contract** runs before `dpkg-source`/sbuild. It reads upstream `*Config.cmake.in` / `*Config.cmake` metadata and the Debian control file, verifies known exported development providers such as `find_dependency(ECM)` -> `extra-cmake-modules`, and enforces any `required_during_dh_qmldeps` local QML package in Build-Depends.
+2. **development-contract** runs against the built `.deb` set. It derives packaged `*Config.cmake`, `find_dependency(...)`, `*Targets.cmake` exports and `qmldir` modules, verifies mapped providers in the actual development-package Depends, and rejects consumer targets/config packages that the built package does not export.
+
+The gate emits `source-development-contract.json` and `development-contract.json` into the retained evidence artifact. The contract remains upstream-derived; SupraLINUX only maps an observed upstream CMake dependency to its Debian provider.
+
+The Batch 10 scope selector treats changes to the shared audit helper as validation-input changes, so both nodes are revalidated when the gate itself changes. Result-only campaign metadata still scope-skips.

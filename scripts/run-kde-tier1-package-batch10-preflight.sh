@@ -207,6 +207,12 @@ for abi in n['abi_contracts']:
 PY2
 chmod +x "${SOURCE_DIR}/debian/rules" "${SOURCE_DIR}/debian/run-tests-under-x.sh"
 
+STAGE=source-development-contract
+python3 "${ROOT}/scripts/audit-kde-development-contract.py" source \
+  --node "${NODE}" --campaign "${CAMPAIGN}" --source-dir "${SOURCE_DIR}" \
+  --control "${SOURCE_DIR}/debian/control" \
+  --output "${EVIDENCE_DIR}/source-development-contract.json"
+
 STAGE=source-package
 pushd "${SOURCE_WORK}" >/dev/null; dpkg-source -b "$(basename "${SOURCE_DIR}")"; popd >/dev/null
 DSC="${SOURCE_WORK}/${SOURCE_PACKAGE}_${DEBIAN_VERSION}.dsc"; DEBIAN_TARBALL="${SOURCE_WORK}/${SOURCE_PACKAGE}_${DEBIAN_VERSION}.debian.tar.xz"
@@ -319,6 +325,12 @@ for m,p in mods:
  if m not in [x[0] for x in seen]: seen.append((m,p))
 (evidence/'qml-contracts.txt').write_text('\n'.join(f'{m}\t{p}' for m,p in seen)+'\n')
 PY2
+
+STAGE=development-contract
+python3 "${ROOT}/scripts/audit-kde-development-contract.py" artifact \
+  --node "${NODE}" --campaign "${CAMPAIGN}" --debs-dir "${OUT_DIR}" \
+  --consumer-cmake "${CONSUMER_META}/CMakeLists.txt" \
+  --output "${EVIDENCE_DIR}/development-contract.json"
 
 STAGE=artifact-capture
 sha256sum "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${ORIG_TARBALL}" "${DEBIAN_TARBALL}" > "${EVIDENCE_DIR}/artifact-sha256.txt"
