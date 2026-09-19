@@ -1,0 +1,6 @@
+usr/include/KF6/KCalendarCore/
+usr/include/PySide6/KCalendarCore/
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6CalendarCore/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6CalendarCore.so
+usr/lib/${DEB_HOST_MULTIARCH}/pkgconfig/KF6CalendarCore.pc
+usr/share/PySide6/typesystems/typesystem_kcalendarcore.xml

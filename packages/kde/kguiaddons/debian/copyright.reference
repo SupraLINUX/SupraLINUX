@@ -1,0 +1,6 @@
+provider=debian
+reference_version=6.28.0
+workflow_run=34708030450
+artifact_id=10301938362
+path=trees/debian/kguiaddons/debian/copyright
+sha256=682780cded94ed69804a179fd799d3085536c26055a3592cc3ab3a12757f0d74

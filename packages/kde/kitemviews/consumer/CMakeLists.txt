@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(kitemviews-consumer LANGUAGES CXX)
+find_package(KF6ItemViews 6.30 REQUIRED)
+add_executable(kitemviews-consumer main.cpp)
+target_compile_features(kitemviews-consumer PRIVATE cxx_std_17)
+target_link_libraries(kitemviews-consumer PRIVATE KF6::ItemViews ${CMAKE_DL_LIBS})

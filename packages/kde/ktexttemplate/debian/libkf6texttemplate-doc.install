@@ -1,0 +1,3 @@
+# Intentionally empty in the current build profile.
+# KDE Frameworks 6.30 does not generate QCH here.
+# Preserve this binary package name for Debian-family compatibility.

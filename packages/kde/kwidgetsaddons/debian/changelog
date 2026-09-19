@@ -1,0 +1,68 @@
+kf6-kwidgetsaddons (6.30.0-0supralinux7) resolute; urgency=medium
+
+  * Keep the now-validated 27/27 upstream test fixture unchanged.
+  * Consume ${shlibs:Depends} in libkf6widgetsaddons-dev because the packaged
+    Qt Designer plugin is a shared object with runtime libc dependencies.
+  * Add a reviewed ABI overlay: five KDE APIs introduced in 6.29.0 and the
+    libstdc++ piecewise_construct implementation symbol as optional=toolchain
+    at upstream minimum 6.30.0.
+  * Keep KDE 6.30.0 source, Python bindings and Designer plugin unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 17:20:00 -0300
+
+kf6-kwidgetsaddons (6.30.0-0supralinux6) resolute; urgency=medium
+
+  * Make the geometry-sensitive upstream test fixture deterministic by adding
+    DejaVu Sans and fontconfig as explicit nocheck build dependencies.
+  * Require generic sans-serif to resolve to DejaVu Sans before tests, while
+    preserving the complete 27-test inventory and the 25/2 Xvfb/Openbox split.
+  * Keep KDE 6.30.0 source, Python bindings and Designer plugin unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 15:55:00 -0300
+
+kf6-kwidgetsaddons (6.30.0-0supralinux5) resolute; urgency=medium
+
+  * Keep the complete 27-test upstream inventory but partition the test fixture:
+    run the 25 non-gesture suites under bare Xvfb, where they already passed,
+    then run only the two activation-dependent gesture suites under Openbox.
+  * Assert the CTest inventory is exactly 27 = 25 + 2 before running tests;
+    no upstream test is disabled, deleted or ignored.
+  * Keep KDE 6.30.0 source, Python bindings and Designer plugin unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 15:25:00 -0300
+
+kf6-kwidgetsaddons (6.30.0-0supralinux4) resolute; urgency=medium
+
+  * Keep all upstream tests enabled and provide a real Openbox window manager
+    inside Xvfb so activation-dependent gesture tests can run meaningfully.
+  * Verify EWMH window-manager readiness before executing the serial test suite.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 13:30:00 -0300
+
+kf6-kwidgetsaddons (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Add explicit python3-setuptools build dependency so ECM's
+    python3 -m build --wheel --no-isolation can import setuptools.build_meta.
+  * Keep the validated Clang/LLVM binding toolchain and KDE 6.30.0 source,
+    Python bindings, tests and Designer plugin unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 11:10:16 -0300
+
+kf6-kwidgetsaddons (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Add explicit clang, libclang-dev and llvm-dev build dependencies so
+    Shiboken/ApiExtractor can locate Clang's built-in headers in clean sbuild.
+  * Keep KDE 6.30.0 source, Python bindings, tests and Designer plugin unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 10:35:00 -0300
+
+kf6-kwidgetsaddons (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * SupraLINUX KDE Frameworks 6.30.0 Batch 7 clean package preflight.
+  * Preserve upstream Python bindings and test defaults; do not inherit
+    downstream BUILD_PYTHON_BINDINGS=OFF or BUILD_TESTING=OFF shortcuts.
+  * Install Python extension modules using Debian's deb_system sysconfig layout.
+  * Retain Debian 6.28 public symbols/copyright only as technical compatibility
+    baselines; KDE upstream 6.30.0 remains source and feature authority.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 09:45:00 -0300

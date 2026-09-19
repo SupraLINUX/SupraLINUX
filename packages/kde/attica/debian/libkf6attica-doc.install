@@ -1,0 +1,5 @@
+# Attica 6.30 exposes QDoc generation through explicit ECMGenerateQDoc targets.
+# The default package-build profile intentionally does not run those optional
+# targets. This package therefore keeps the Debian/Ubuntu documentation package
+# name as a compatibility contract while containing only debhelper-generated
+# package documentation.

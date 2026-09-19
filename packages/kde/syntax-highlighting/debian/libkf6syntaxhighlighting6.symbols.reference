@@ -1,0 +1,6 @@
+# Debian sid symbols baseline retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+node=syntax-highlighting
+path=trees/debian/syntax-highlighting/debian/libkf6syntaxhighlighting6.symbols
+sha256=3dd1d9e56a8fa8b802ffb6708ec65984cef422bcbe7660583c907a827aec47dd

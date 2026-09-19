@@ -1,0 +1,6 @@
+# Debian sid packaging copyright metadata retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+node=modemmanager-qt
+path=trees/debian/modemmanager-qt/debian/copyright
+sha256=6863209ef5575d5ac62b9e77d9ee6ee7a4c06e05622cb9671499686696c4605d

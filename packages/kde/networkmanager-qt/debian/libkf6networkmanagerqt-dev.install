@@ -1,0 +1,3 @@
+usr/include/KF6/NetworkManagerQt/
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6NetworkManagerQt/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6NetworkManagerQt.so

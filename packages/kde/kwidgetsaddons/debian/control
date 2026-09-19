@@ -1,0 +1,80 @@
+Source: kf6-kwidgetsaddons
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               dh-sequence-python3,
+               cmake (>= 3.29~),
+               extra-cmake-modules (>= 6.30.0~),
+               clang,
+               libclang-dev,
+               llvm-dev,
+               libpyside6-dev,
+               libshiboken6-dev,
+               python3-build,
+               python3-setuptools,
+               python3-dev (>= 3.9~),
+               qt6-base-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.9.0~),
+               libxkbcommon-dev,
+               fontconfig <!nocheck>,
+               fonts-dejavu-core <!nocheck>,
+               openbox <!nocheck>,
+               x11-utils <!nocheck>,
+               xauth <!nocheck>,
+               xvfb <!nocheck>,
+Standards-Version: 4.7.4
+Homepage: https://invent.kde.org/frameworks/kwidgetsaddons
+Rules-Requires-Root: no
+
+Package: libkf6widgetsaddons-data
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: KWidgetsAddons shared data
+ This package contains architecture-independent runtime data for KDE KWidgetsAddons.
+
+Package: libkf6widgetsaddons-dev
+Section: libdevel
+Architecture: any
+Depends: libkf6widgetsaddons6 (= ${binary:Version}),
+         qt6-base-dev (>= 6.9.0~),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: libkf6widgetsaddons-doc (= ${source:Version}),
+Description: development files for KDE KWidgetsAddons
+ This package contains headers, CMake metadata, the development symlink,
+ and the exported PySide/Shiboken binding development metadata.
+
+Package: libkf6widgetsaddons-doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Section: doc
+Description: KDE KWidgetsAddons documentation compatibility package
+ This package preserves the Debian-family documentation package name.
+ .
+ The current SupraLINUX common Frameworks profile does not ship QCH files.
+
+Package: libkf6widgetsaddons6
+Architecture: any
+Multi-Arch: same
+Depends: libkf6widgetsaddons-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: KDE KWidgetsAddons runtime library
+ This package contains the KDE Frameworks 6 KWidgetsAddons runtime library.
+
+Package: python3-kwidgetsaddons
+Section: python
+Architecture: any
+Depends: libkf6widgetsaddons6 (= ${binary:Version}),
+         python3-pyside6.qtwidgets,
+         ${misc:Depends},
+         ${python3:Depends},
+         ${shlibs:Depends},
+Description: Python 3 bindings for KDE KWidgetsAddons
+ This package contains the upstream KDE Frameworks 6 Python bindings for
+ KWidgetsAddons, generated with Shiboken6/PySide6.

@@ -1,0 +1,8 @@
+kf6-networkmanager-qt (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE Frameworks 6.30.0 for SupraLINUX.
+  * Keep the upstream QML module enabled and preserve its Debian-family package contract.
+  * Exclude only three tests that require a live NetworkManager service in isolated CI.
+  * Disable only QCH generation under the documented common Frameworks profile.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Tue, 15 Sep 2026 19:20:00 +0000

@@ -1,0 +1,6 @@
+# Debian sid packaging copyright metadata retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+node=bluez-qt
+path=trees/debian/bluez-qt/debian/copyright
+sha256=e31b43f516a2ac6700b0d72f2da53a9dfdf8acffa358f299afee181d9aa52302

@@ -1,0 +1,4 @@
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6ModemManagerQt.so.6
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6ModemManagerQt.so.6.*
+usr/share/qlogging-categories6/modemmanagerqt.categories
+usr/share/qlogging-categories6/modemmanagerqt.renamecategories

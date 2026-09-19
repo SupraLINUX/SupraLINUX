@@ -1,0 +1,6 @@
+# Debian sid packaging copyright metadata retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+node=syntax-highlighting
+path=trees/debian/syntax-highlighting/debian/copyright
+sha256=96abcf79db76923a43e841f4a22c41a2e81394a0ff074ce1f06009e962ba2d35

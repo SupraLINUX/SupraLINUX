@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.29)
+project(SupraLINUXThreadWeaverConsumer LANGUAGES CXX)
+find_package(KF6ThreadWeaver 6.30.0 REQUIRED CONFIG)
+add_executable(threadweaver-consumer main.cpp)
+target_link_libraries(threadweaver-consumer PRIVATE KF6::ThreadWeaver)

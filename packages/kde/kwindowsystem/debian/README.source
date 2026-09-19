@@ -1,0 +1,15 @@
+# SupraLINUX kwindowsystem source/package notes
+
+KDE upstream v6.30.0 is the authority for source and build requirements.
+Source: https://download.kde.org/stable/frameworks/6.30/kwindowsystem-6.30.0.tar.xz
+Source SHA-256: 639a501b877446b19905399d27e2be2b6ebb0bb481abe3209dc4d535a12e12ca
+Upstream root CMakeLists Git blob: e8317948e1df27330ceddf45bf418aa2a02bde5b
+
+Debian 6.28.0 baseline packaging is retained only as a technical compatibility reference.
+Packaging-tree evidence: run 34708030450, artifact 10301938362.
+Symbols baseline SHA-256: 8aa9d83d65633f470c6c6f0e8f7f00bd56750d904bfeb465e514fc9fa70aa595
+Copyright baseline SHA-256: 872a164a55eda5b800588294d0686a94843225ff88579b90451ce41ee515b8a4
+Retained signing-key bundle SHA-256: 5a0228357021204326d88472f29689b0ba25b29cd9ea4c97dab898a0aa4614d8
+Frameworks 6.30 signer fingerprint present in bundle: 90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1.
+
+SupraLINUX preserves upstream Linux defaults. QCH is disabled only under the already-established common Frameworks package profile; the documentation binary name remains as an empty compatibility package.
