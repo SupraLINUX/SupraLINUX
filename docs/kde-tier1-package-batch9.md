@@ -178,3 +178,7 @@ The final promotion precheck passed Repository Policy run `35365719747`, job `10
 KConfig `6.30.0-0supralinux4`, KI18n `6.30.0-0supralinux1` and Sonnet `6.30.0-0supralinux3` are now canonical `PASS`, downstream-eligible, and present in the canonical package DAG with the only Framework build predecessor `extra-cmake-modules`.
 
 Canonical Tier 1 after Batch 9 is **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. The remaining pending nodes are `kirigami`, `kquickcharts`, `kuserfeedback` and `prison`. The multi-ABI lane is completed. Historical real FAIL attempts and infrastructure incidents remain retained and are not rewritten.
+
+## Later canonical state after Batch 10
+
+Batch 9's promotion snapshot remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. Batch 10 subsequently promoted Kirigami and KQuickCharts, so the current canonical Tier 1 state is **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED** with only KUserFeedback and Prison pending.

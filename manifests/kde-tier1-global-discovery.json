@@ -18,8 +18,8 @@
     "repeat_full_campaign_after_remediation_set": true
   },
   "promoted_snapshot": {
-    "pass": 25,
-    "pending": 4,
+    "pass": 27,
+    "pending": 2,
     "current_fail": 0,
     "blocked": 0,
     "note": "Promoted DAG state only. Historical failed package attempts and infrastructure incidents remain retained separately and do not become promoted FAIL after a later PASS."
@@ -45,11 +45,8 @@
       "required_capability": "validate multiple runtime ABIs/symbol files and package splits in one source build"
     },
     "qml-multisurface": {
-      "status": "implementation-ready",
-      "nodes": [
-        "kirigami",
-        "kquickcharts"
-      ],
+      "status": "completed",
+      "nodes": [],
       "required_capability": "validate QML-heavy packages, multiple libraries, QML imports and runtime closure",
       "runner": "scripts/run-kde-tier1-package-batch10-preflight.sh",
       "workflow": ".github/workflows/kde-tier1-package-batch10.yml"
@@ -70,19 +67,6 @@
     }
   },
   "nodes": {
-    "kirigami": {
-      "readiness": "runnable",
-      "lane": "qml-multisurface",
-      "local_predecessors": []
-    },
-    "kquickcharts": {
-      "readiness": "package-validation-dependent",
-      "lane": "qml-multisurface",
-      "local_predecessors": [],
-      "package_validation_predecessors": [
-        "kirigami"
-      ]
-    },
     "kuserfeedback": {
       "readiness": "lane-pending",
       "lane": "multi-surface-optional",
@@ -95,9 +79,9 @@
     }
   },
   "next_actions": [
-    "attempt Kirigami in the QML/multisurface lane; retain its PASS artifact before KQuickCharts full package validation",
-    "validate KQuickCharts against the retained SupraLINUX Kirigami QML/runtime package surface without inventing a KDE Framework build edge",
-    "implement the multi-surface/optional-provider lane for kuserfeedback and prison while preserving every upstream-default feature whose provider exists",
-    "retain DIAG_PASS as non-promoting discovery evidence; only retained package PASS artifacts may feed dependents"
+    "Implement the multi-surface/optional package lane for kuserfeedback and prison.",
+    "Build every independently runnable node in that lane with fail-fast disabled.",
+    "Preserve real FAIL attempts and mark BLOCKED only when a required predecessor FAIL prevents an attempt.",
+    "Feed downstream work only from retained PASS artifacts."
   ]
 }

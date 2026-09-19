@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 1 — Batch 10 QML/multisurface package campaign
 
-Status: **Kirigami retained PASS; KQuickCharts remediation pending; canonical state not promoted**
+Status: **PASS; 2/2 canonically promoted**
 
 As of 2026-09-18, KDE Frameworks 6.30.0 remains the selected upstream stable series. Batch 10 covers the remaining Tier 1 QML-heavy pair: Kirigami and KQuickCharts. Canonical Tier 1 before this campaign is **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.
 
@@ -289,3 +289,11 @@ The Batch 10 scope selector treats changes to the shared audit helper as validat
 Commit `43e729ff573b15ac5dd97e50ecca6656f2b50576` revalidated the unchanged Batch 10 package candidates with the new source+artifact development-contract audit. Repository Policy run `35414683680` / job `105820857530` passed, and PR CI run `35414683979` passed. Kirigami rebuilt successfully in job `105820877778`, artifact `10574863862`, SHA-256 `712a4a0edeb388d510c93b1d20346282066063b2328e6b6bbd8b57784e5e8c93`; KQuickCharts rebuilt successfully in job `105822092851`, artifact `10575119063`, SHA-256 `63c9fdb60e2427a9437788b4f34d8757a5ff98e4f695a9b0c8042d55dbd2bfdd`. Both the pre-sbuild source contract gate and the built-artifact contract gate passed before each job could reach its final PASS.
 
 This is an **infrastructure revalidation**, not a fifth KQuickCharts package attempt and not a third Kirigami package attempt: package sources, packaging candidates and Debian versions were unchanged. Historical real-attempt ledgers remain unchanged.
+
+## Canonical promotion — Batch 10
+
+The dedicated promotion preserves the historical real package-attempt ledger and promotes only the retained PASS results: Kirigami attempt 2 / validation cycle 3 and KQuickCharts attempt 4 / validation cycle 9. The recovered Kirigami artifact manifest also pins every binary/source output hash; the artifact ZIP itself matches retained SHA-256 `6a008366edda84f8c285e5cf0a6b18a4b1089fc88e530d6e61b0f4f885dd7e30`.
+
+Promotion precheck on `9051539d50e5a2ada41a6975add6c5a6497e6b3e` passed Repository Policy run `35440818501`, job `105891164984`, and PR CI run `35440818686`. That PR CI also rebuilt/revalidated both packages because the router itself had changed: Kirigami job `105891183786`, artifact `10583642308`, SHA-256 `a3fa47927d42dd605f78b4dc4913025311eed88ea807249da0b29653bd7ac0cb`; KQuickCharts job `105892252854`, artifact `10583429116`, SHA-256 `13a7d0ac50f03b9471305fd3b7f056ffaa5e0640a6332ed228bde2c087b87180`. These are infrastructure revalidations with `package_state_effect=none` and do not create package attempts.
+
+Kirigami and KQuickCharts are now canonical PASS/downstream-eligible in both Tier 1 and the package DAG. The `qml-multisurface` lane is completed. Canonical Tier 1 is **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**; KUserFeedback and Prison remain pending.

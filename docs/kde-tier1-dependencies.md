@@ -1,8 +1,8 @@
 # KDE Frameworks 6.30 Tier 1 — dependency resolution
 
-Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping validated; canonical Tier 1 25 PASS / 4 pending after Batch 9 promotion**
+Status: **upstream dependency metadata resolved; Ubuntu Resolute provider mapping validated; canonical Tier 1 27 PASS / 2 pending after Batch 10 promotion**
 
-Last reviewed: **2026-09-18**
+Last reviewed: **2026-09-19**
 
 ## Contract
 
@@ -106,7 +106,7 @@ This does not introduce a KCoreAddons build edge. KGuiAddons' KDE Framework buil
 - upstream dependency resolution: **resolved**;
 - Ubuntu Resolute package-name/provider mapping: **resolved for the current selected profiles**;
 - hosted provider evidence: **PASS where recorded**;
-- canonical Tier 1 package state: **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**;
+- canonical Tier 1 package state: **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**;
 - Batch 7 retained package evidence: **3/3 PASS and canonically promoted**;
 - KGuiAddons: **PASS and canonically promoted**; local-predecessor lane completed without adding a Framework build dependency;
 - final Qt provider certification: **pending**.
@@ -199,3 +199,8 @@ The dependency model is unchanged: both remain Tier 1 with no KDE Framework buil
 
 Batch 10 is technically **2/2 PASS** and ready for separate canonical promotion. Canonical Tier 1 remains **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** in this commit.
 
+## Batch 10 canonical promotion
+
+Kirigami and KQuickCharts are canonical PASS/downstream-eligible from their retained Batch 10 package evidence. Their KDE Framework build dependency lists remain empty beyond the common ECM root: the Kirigami relationship used by KQuickCharts remains a Debian/QML package-validation/runtime closure, not an upstream Framework build edge.
+
+The `qml-multisurface` lane is completed. Current canonical Tier 1 is **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**; only KUserFeedback and Prison remain pending.

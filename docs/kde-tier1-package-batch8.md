@@ -111,3 +111,7 @@ At the Batch 8 closure, the next development lane was multi-ABI: `kconfig`, `ki1
 ## Current state after Batch 9
 
 Batch 9 later promoted KConfig, KI18n and Sonnet. The current canonical Tier 1 state is **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. Batch 8's **22 PASS / 7 pending** figure above remains the historical snapshot immediately after the KGuiAddons promotion.
+
+## Later canonical state after Batch 10
+
+Batch 10 later promoted Kirigami and KQuickCharts. The current canonical Tier 1 state is **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**. Batch 8's **22 PASS / 7 pending** and the later Batch 9 **25 PASS / 4 pending** figures remain historical snapshots.

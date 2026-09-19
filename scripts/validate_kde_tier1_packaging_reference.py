@@ -71,6 +71,8 @@ PASS_NODES = {
     "kconfig": ("6.30.0-0supralinux4", 35360530830, 10554715051, "bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e"),
     "ki18n": ("6.30.0-0supralinux1", 35358920602, 10553916882, "2a0d66f2760c49ba1128b8b51c741173a72e6f3ab51f3eb17c3584896d30a678"),
     "sonnet": ("6.30.0-0supralinux3", 35358920602, 10554216487, "ae5a33cf8699b96b7b7b8c1a83bc4d37a484878029818c1885b4f4f44f15b431"),
+    "kirigami": ("6.30.0-0supralinux2", 35398956698, 10569258322, "6a008366edda84f8c285e5cf0a6b18a4b1089fc88e530d6e61b0f4f885dd7e30"),
+    "kquickcharts": ("6.30.0-0supralinux4", 35409521636, 10573605864, "dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780"),
 }
 errors: list[str] = []
 
@@ -145,8 +147,8 @@ for node in source_nodes:
     else:
         require(node.get("packaging") == {"state":"pending"}, f"{node_id}: unattempted packaging must remain pending")
         require(node.get("state") == "pending", f"{node_id}: unattempted node must remain pending")
-require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 25, "Reference validator expects 25 actual package PASS nodes")
-require(sum(1 for node in source_nodes if node.get("state") == "pending") == 4, "Reference validator expects 4 pending nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 27, "Reference validator expects 27 actual package PASS nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "pending") == 2, "Reference validator expects 2 pending nodes")
 for token in ("manifests/kde-frameworks-tier1.json","manifests/kde-frameworks-tier1-packaging-reference.json","scripts/run-kde-tier1-packaging-reference-snapshot.sh","scripts/kde-tier1-packaging-reference-needed.sh",".github/workflows/kde-tier1-packaging-reference.yml"):
     require(token in scope, f"Packaging-reference scope must track input {token}")
 require("docs/" not in scope, "Packaging-reference snapshot must not rerun for documentation-only changes")
@@ -161,4 +163,4 @@ if errors:
     raise SystemExit(1)
 print("KDE Frameworks Tier 1 packaging-reference policy: PASS")
 print("Reference snapshots remain non-authoritative technical inputs")
-print("Actual package states: 25 PASS; 4 pending")
+print("Actual package states: 27 PASS; 2 pending")

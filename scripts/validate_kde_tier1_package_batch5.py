@@ -227,8 +227,8 @@ for node_id, expected in EXPECTED.items():
     req(f"find_package({expected['cmake']} 6.30 REQUIRED)" in consumer and expected["target"] in consumer, f"{node_id}: consumer CMake")
     req(expected["soname"] in main and "dlopen" in main, f"{node_id}: runtime consumer")
 
-req(sum(1 for n in tier.values() if n.get("state") == "PASS") == 25, "Tier1 current PASS count must be 25")
-req(sum(1 for n in tier.values() if n.get("state") == "pending") == 4, "Tier1 current pending count must be 4")
+req(sum(1 for n in tier.values() if n.get("state") == "PASS") == 27, "Tier1 current PASS count must be 27")
+req(sum(1 for n in tier.values() if n.get("state") == "pending") == 2, "Tier1 current pending count must be 2")
 req(not any(n.get("state") in {"FAIL", "BLOCKED"} for n in tier.values()), "Tier1 must have zero current FAIL/BLOCKED")
 
 # ModemManagerQt must retain both real FAIL attempts before the validated -3 PASS.
@@ -299,7 +299,7 @@ t = text(CURRENT_STATUS)
 req("18 PASS" in t and "11 pending" in t, f"{CURRENT_STATUS.name}: historical 2026-09-15 canonical count")
 for path in (DAG_DOC, DEPENDENCY_DOC):
     t = text(path)
-    req("25 PASS" in t and "4 pending" in t, f"{path.name}: current canonical count")
+    req("27 PASS" in t and "2 pending" in t, f"{path.name}: current canonical count")
 for path in (DOC, STATUS, PROVIDER_DOC, DEPENDENCY_DOC):
     t = text(path)
     req("35012023822" in t and "10414525047" in t and "db6868402b08bca82241d07980e158639a2f2fc64c4a5ab595fa58846361cb4a" in t, f"{path.name}: provider evidence")
@@ -315,4 +315,4 @@ if errors:
 
 print("KDE Tier 1 Batch 5 canonical closure: PASS")
 print("KIdleTime, ModemManagerQt and NetworkManagerQt = 3/3 PASS/downstream-eligible")
-print("Canonical Tier 1: 25 PASS / 4 pending / 0 FAIL / 0 BLOCKED")
+print("Canonical Tier 1: 27 PASS / 2 pending / 0 FAIL / 0 BLOCKED")

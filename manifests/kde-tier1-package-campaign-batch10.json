@@ -372,6 +372,42 @@
       }
     }
   },
+  "canonical_promotion": {
+    "status": "promoted",
+    "tier1": "27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED",
+    "dag_nodes": ["kirigami","kquickcharts"]
+  },
+  "promotion_precheck": {
+    "repository_policy": {
+      "workflow_run": 35440818501,
+      "job_id": 105891164984,
+      "result": "PASS"
+    },
+    "pr_ci": {
+      "workflow_run": 35440818686,
+      "commit": "9051539d50e5a2ada41a6975add6c5a6497e6b3e",
+      "result": "PASS"
+    },
+    "revalidation": {
+      "classification": "infrastructure-revalidation",
+      "counts_as_package_attempt": false,
+      "package_state_effect": "none",
+      "nodes": {
+        "kirigami": {
+          "job_id": 105891183786,
+          "artifact_id": 10583642308,
+          "artifact_sha256": "a3fa47927d42dd605f78b4dc4913025311eed88ea807249da0b29653bd7ac0cb",
+          "result": "PASS"
+        },
+        "kquickcharts": {
+          "job_id": 105892252854,
+          "artifact_id": 10583429116,
+          "artifact_sha256": "13a7d0ac50f03b9471305fd3b7f056ffaa5e0640a6332ed228bde2c087b87180",
+          "result": "PASS"
+        }
+      }
+    }
+  },
   "closure_evidence": {
     "repository_policy": {
       "workflow_run": 35409521508,

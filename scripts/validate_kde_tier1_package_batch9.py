@@ -198,12 +198,12 @@ for node,(job,artifact,digest,rootfs,tests,_,observed,total,required) in inciden
   x=hist[0]
   req(x.get('validation_cycle')==3 and x.get('classification')=='INFRA' and x.get('package_state_effect')=='none' and x.get('commit')=='97e4feb51df541501b027ba80c4b86907d8763c8' and x.get('workflow_run')==35355395436 and x.get('job_id')==job and x.get('artifact_id')==artifact and x.get('artifact_sha256')==digest and x.get('rootfs_sha256')==rootfs and x.get('tests')==tests,f'{node}: attempt ledger infrastructure incident mismatch')
 # After canonical promotion, Batch 9 leaves global discovery and the lane is completed.
-req(set(g.get('nodes',{}))=={'kirigami','kquickcharts','kuserfeedback','prison'},'post-Batch9 global discovery set mismatch')
+req(set(g.get('nodes',{}))=={'kuserfeedback','prison'},'current post-Batch10 global discovery set mismatch')
 for node in expected: req(node not in g.get('nodes',{}),f'{node}: promoted PASS must leave global discovery')
 ma=g.get('lanes',{}).get('multi-abi',{})
 req(ma.get('status')=='completed' and ma.get('nodes')==[],'multi-ABI lane must be completed after Batch 9 promotion')
 snap=g.get('promoted_snapshot',{})
-req((snap.get('pass'),snap.get('pending'),snap.get('current_fail'),snap.get('blocked'))==(25,4,0,0),'post-Batch9 promoted snapshot mismatch')
+req((snap.get('pass'),snap.get('pending'),snap.get('current_fail'),snap.get('blocked'))==(27,2,0,0),'current post-Batch10 promoted snapshot mismatch')
 workflow=text(WORKFLOW); router=text(ROUTER); policy=text(POLICY); runner=text(RUNNER); scope=text(SCOPE); scope_test=text(SCOPE_TEST); doc=text(DOC)
 for token in ('fail-fast: false','max-parallel: 3','node: [kconfig, ki18n, sonnet]','artifact-ids: \'10298635300\'','artifact-ids: \'10301938362\'','artifact-ids: \'10301282501\'','run-kde-tier1-package-batch9-preflight.sh'):
  req(token in workflow,f'Batch 9 workflow missing {token}')
@@ -213,11 +213,11 @@ for token in ('abi-contract','reference_required_export_count_amd64','reference_
  req(token in runner,f'Batch 9 runner gate missing {token}')
 req('manifests/kde-tier1-package-campaign-batch9.json' in scope and 'packages/kde/${NODE}/' in scope,'Batch 9 scope selector contract missing')
 req('KDE Tier 1 Batch 9 scope selector: PASS' in scope_test,'Batch 9 scope test marker missing')
-for token in ('9441b2f2957b350a46026b0df3bd5eb3578e1578671aab3b7afc7a0929ce1a97','DIAG_PASS','QSKIP','cross.patch','22 PASS / 7 pending','6.30.0-0supralinux1','package_state_effect=none','634','254','reference_required_export_count_amd64','validation cycle 4','validation cycle 5','Qt6Qml','qt6-declarative-dev','10553307816','10553916882','10554216487','10554715051','bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e','25 PASS / 4 pending','35365719747'):
+for token in ('9441b2f2957b350a46026b0df3bd5eb3578e1578671aab3b7afc7a0929ce1a97','DIAG_PASS','QSKIP','cross.patch','22 PASS / 7 pending','6.30.0-0supralinux1','package_state_effect=none','634','254','reference_required_export_count_amd64','validation cycle 4','validation cycle 5','Qt6Qml','qt6-declarative-dev','10553307816','10553916882','10554216487','10554715051','bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e','25 PASS / 4 pending','27 PASS / 2 pending','35365719747'):
  req(token.lower() in doc.lower(),f'Batch 9 documentation missing {token}')
 if errors:
  for e in errors: print('ERROR:',e,file=sys.stderr)
  raise SystemExit(1)
 print('KDE Tier 1 Batch 9 preparation validation: PASS')
-print('Batch 9 canonical closure: 3/3 PASS promoted; Tier 1 is 25 PASS / 4 pending / 0 FAIL / 0 BLOCKED')
-print('Lane: multi-ABI completed; remaining discovery nodes=4')
+print('Batch 9 historical canonical closure: 3/3 PASS promoted at 25 PASS / 4 pending; current Tier 1 is 27 PASS / 2 pending / 0 FAIL / 0 BLOCKED')
+print('Lane: multi-ABI completed; current remaining discovery nodes=2')

@@ -912,9 +912,95 @@
         "node": "kirigami"
       },
       "packaging": {
-        "state": "pending"
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux2",
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "downstream_eligible": true,
+        "attempt_ledger": "manifests/kde-tier1-package-batch10-attempts.json",
+        "evidence": [
+          {
+            "result": "PASS",
+            "workflow_run": 35398956698,
+            "job_id": 105774229788,
+            "commit": "25af7164a76a925f27814aabe1986727a53d49bf",
+            "attempted_package_version": "6.30.0-0supralinux2",
+            "artifact_id": 10569258322,
+            "artifact_sha256": "6a008366edda84f8c285e5cf0a6b18a4b1089fc88e530d6e61b0f4f885dd7e30",
+            "rootfs_sha256": "8a1e3d09d8788ad38c81cb7071f7149c114f3582ee3c59d489114c3b81497a35",
+            "stage": "complete",
+            "tests": "44/44 PASS",
+            "lintian": "PASS-errors",
+            "consumer_smoke": "PASS",
+            "apt_check": "PASS",
+            "qml_import_smoke": "PASS",
+            "abi_sonames": [
+              "libKirigami.so.6",
+              "libKirigamiControls.so.6",
+              "libKirigamiDelegates.so.6",
+              "libKirigamiDialogs.so.6",
+              "libKirigamiForms.so.6",
+              "libKirigamiFormsPrivateCards.so.6",
+              "libKirigamiFormsPrivateFlat.so.6",
+              "libKirigamiFormsPrivateTemplates.so.6",
+              "libKirigamiLayouts.so.6",
+              "libKirigamiLayoutsPrivate.so.6",
+              "libKirigamiPlatform.so.6",
+              "libKirigamiPolyfill.so.6",
+              "libKirigamiPrimitives.so.6",
+              "libKirigamiPrivate.so.6",
+              "libKirigamiTemplates.so.6"
+            ],
+            "abi_exports": {
+              "Kirigami": 12,
+              "KirigamiControls": 28,
+              "KirigamiDelegates": 10,
+              "KirigamiDialogs": 1,
+              "KirigamiForms": 1,
+              "KirigamiFormsPrivateCards": 10,
+              "KirigamiFormsPrivateFlat": 10,
+              "KirigamiFormsPrivateTemplates": 1,
+              "KirigamiLayouts": 26,
+              "KirigamiLayoutsPrivate": 1,
+              "KirigamiPlatform": 435,
+              "KirigamiPolyfill": 1,
+              "KirigamiPrimitives": 11,
+              "KirigamiPrivate": 10,
+              "KirigamiTemplates": 3
+            },
+            "ecm_predecessor": "6.30.0-0supralinux3",
+            "downstream_eligible": true,
+            "files": {
+              "libkirigami_data_deb_sha256": "b5b562ec5eca5322680513a6826c14f3723ef09223505a1c3b5f72ea26805190",
+              "libkirigami_dev_deb_sha256": "82063eebbba6969e3911c2ad3cf1b38cf1ea292d5209004fe497b1d9395ee71f",
+              "libkirigami_doc_deb_sha256": "c82631c94ebbdce816d9531d2ae070b2613bb7d689f4b12aa4f458f57ee361c3",
+              "libkirigami6_deb_sha256": "82cff85b63d034d16d5474f10841b6f35dd9ba87fec0af9f12f568c4f7e0c1fd",
+              "libkirigamicontrols6_deb_sha256": "9cc69b43e78bc2dbfd8fa734b9c4095f24034f0663b3c7d68c12915e3025ce3b",
+              "libkirigamidelegates6_deb_sha256": "6d7f5bb114737fa04c20cc9c41f846ae42ba0a2fe6bd422e6a5e8debe3c5afb3",
+              "libkirigamidialogs6_deb_sha256": "3bf60ff704e65dc53f219de40ec92cfdf5ff88c09c28f7f242caab1642b21248",
+              "libkirigamiforms6_deb_sha256": "36122833c7c2850d705a1008e8b3d5141adb9bcce10392162324f6b4ebeac97b",
+              "libkirigamiformsprivatecards6_deb_sha256": "f63c1cc69bb3f20e3a6304eca884aef4589d3e65f5ceaa3824782ec4da866626",
+              "libkirigamiformsprivateflat6_deb_sha256": "06141aa2d29470ebc58026cb2c7804cab1fac079375899c1691d418ae0154184",
+              "libkirigamiformsprivatetemplates6_deb_sha256": "f553e430685573222db48a146acac43f9e03a53a722dfaa33315dc14baf3616a",
+              "libkirigamilayouts6_deb_sha256": "b8aabf3d2f50554ad4a0e1b8829ba7b663e0f415cf2a8e8d956fa4eb880b0c5c",
+              "libkirigamilayoutsprivate6_deb_sha256": "175062720dea56b9faaf912f713ff0e848622188cc549ff87bbe45cc2d83558a",
+              "libkirigamiplatform6_deb_sha256": "889edfa58dca19abf854eb841b47592dba71135f05d431bdfe45fc78254911eb",
+              "libkirigamipolyfill6_deb_sha256": "7f1dda5a5a61117ca59b3f20cd4372e1cabbab937b02b9e823c0a1e375e36173",
+              "libkirigamiprimitives6_deb_sha256": "0357974fb820b1d59e7ed4fa9f81943192eb9920f810a9914109452c930604fa",
+              "libkirigamiprivate6_deb_sha256": "5d2a9916ddc9901c476aa6810b655b76ada87931ca4ce0a6dab9dc8bb4e49b97",
+              "libkirigamitemplates6_deb_sha256": "2f0d53b1bd6020d3209a5d88e2a2c97df9ddade4719600e80e94e986a1e75691",
+              "qml6_module_org_kde_kirigami_deb_sha256": "bb13d6069d4e3ca3edee4eaffbb0612127e3b2a0459742b3c0a5c9350060de85",
+              "changes_sha256": "5cca9023eec7e00eb6f5d8ee82502cfe797708ee21986b4ae01f0f7e6e2dacc5",
+              "buildinfo_sha256": "d5060d1613d7ded1301d02eb3669af94e31483073cd4a8d3e69a827205838324",
+              "dsc_sha256": "74fe0a3764294ccb054702cd8ff31915c58f1e6646e582fb2864f0f6fc68258b",
+              "orig_tar_sha256": "6de811e559c20dc1086c0cf2c34bb98712dbe4d45f960c62c3c3f887332c95f8",
+              "debian_tar_sha256": "46ab17a0709e7b1ab2b0fff924718152bb5126255ad5399d88189b4d14b4855e",
+              "rootfs_sha256": "8a1e3d09d8788ad38c81cb7071f7149c114f3582ee3c59d489114c3b81497a35"
+            }
+          }
+        ]
       },
-      "state": "pending"
+      "state": "PASS"
     },
     {
       "id": "kitemmodels",
@@ -1097,9 +1183,61 @@
         "node": "kquickcharts"
       },
       "packaging": {
-        "state": "pending"
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux4",
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "downstream_eligible": true,
+        "attempt_ledger": "manifests/kde-tier1-package-batch10-attempts.json",
+        "evidence": [
+          {
+            "result": "PASS",
+            "workflow_run": 35409521636,
+            "job_id": 105806202814,
+            "commit": "43adf80f4a16a848f1ca7ea77fc608585ddb6345",
+            "attempted_package_version": "6.30.0-0supralinux4",
+            "artifact_id": 10573605864,
+            "artifact_sha256": "dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780",
+            "rootfs_sha256": "b1e79e0fbc11672c017acc812efa74116f1681a56596deb87f0f770b47e3d01d",
+            "stage": "complete",
+            "tests": "8/8 PASS",
+            "lintian": "PASS-errors",
+            "dh_qmldeps": "PASS",
+            "abi_contract": "PASS",
+            "consumer_smoke": "PASS",
+            "apt_check": "PASS",
+            "qml_import_smoke": "PASS",
+            "abi_sonames": [
+              "libQuickCharts.so.1",
+              "libQuickChartsControls.so.1"
+            ],
+            "abi_exports": {
+              "QuickCharts": 381,
+              "QuickChartsControls": 1
+            },
+            "qml_modules": [
+              "org.kde.quickcharts",
+              "org.kde.quickcharts.controls"
+            ],
+            "kirigami_predecessor_version": "6.30.0-0supralinux2",
+            "ecm_predecessor": "6.30.0-0supralinux3",
+            "downstream_eligible": true,
+            "files": {
+              "libquickcharts_dev_deb_sha256": "a4aa67d6d1f944452a4f53468f0a29fc3bc7fbc1b728d3a06c541a4ddf6048bf",
+              "libquickcharts1_deb_sha256": "d7561f0b2c0fada30f8855f3839fa28647c3b18823dce88fb9d033a8c72e004a",
+              "libquickchartscontrols1_deb_sha256": "e9541f20a26d8b1833dac47693bf285eb8b73c339e855a693bc56b98c83a5626",
+              "qml6_module_org_kde_quickcharts_deb_sha256": "b92da98e7ff648a668060fbdf51f8e49b8893838dc9636eae6135aa149467974",
+              "changes_sha256": "fedddb0edd6ace29d63ffae1614dc0443ff876e14f5c405b4f9f374ea9baaac9",
+              "buildinfo_sha256": "467ff6db0886d01ac85ad178ea5422750206fd0c0a383c77cbf083d790e35ca7",
+              "dsc_sha256": "6c2809428100a06eb09807a17fa2ef4fad9c4904ab4ab24027a571b092ffb639",
+              "orig_tar_sha256": "9fe8c0c78ffd23ccfb99cc36477550a229c114ad057def938f38cdec35f82ab1",
+              "debian_tar_sha256": "7cb634f5017a220b3dbc419e7e1914b156ede80511e854348f862904d00947e5",
+              "rootfs_sha256": "b1e79e0fbc11672c017acc812efa74116f1681a56596deb87f0f770b47e3d01d"
+            }
+          }
+        ]
       },
-      "state": "pending"
+      "state": "PASS"
     },
     {
       "id": "syntax-highlighting",

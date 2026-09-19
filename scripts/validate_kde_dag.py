@@ -105,7 +105,7 @@ if kgui_passes:
     require(item.get("artifact_id") == 10482007092 and item.get("artifact_sha256") == "71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca", "KGuiAddons DAG PASS artifact mismatch")
     require(item.get("tests") == "9/9 PASS" and item.get("lintian") == "PASS-errors", "KGuiAddons DAG build/test gate mismatch")
 require(kgui.get("pass_files", {}).get("rootfs_sha256") == "c68681aacfd32976c6e0bf471ec1928179fd80e402faf2293706e53f88ad25c6", "KGuiAddons DAG rootfs evidence mismatch")
-require(len(nodes) == 26, "Canonical DAG must contain ECM plus 25 promoted Tier 1 PASS nodes after Batch 9")
+require(len(nodes) == 28, "Canonical DAG must contain ECM plus 27 promoted Tier 1 PASS nodes after Batch 10")
 
 batch9_expected = {
     "kconfig": {
@@ -154,6 +154,47 @@ for node_id, expected in batch9_expected.items():
         require(item.get("consumer_smoke") == "PASS" and item.get("apt_check") == "PASS" and item.get("qml_import_smoke") == "PASS", f"{node_id}: DAG runtime/QML gates mismatch")
         require(item.get("abi_sonames") == expected["sonames"], f"{node_id}: DAG PASS ABI SONAME evidence mismatch")
     require(node.get("pass_files", {}).get("rootfs_sha256") == expected["rootfs"], f"{node_id}: DAG rootfs evidence mismatch")
+
+batch10_expected = {
+    "kirigami": {
+        "version":"6.30.0-0supralinux2","sha":"6de811e559c20dc1086c0cf2c34bb98712dbe4d45f960c62c3c3f887332c95f8",
+        "run":35398956698,"job":105774229788,"commit":"25af7164a76a925f27814aabe1986727a53d49bf",
+        "artifact":10569258322,"digest":"6a008366edda84f8c285e5cf0a6b18a4b1089fc88e530d6e61b0f4f885dd7e30",
+        "tests":"44/44 PASS","rootfs":"8a1e3d09d8788ad38c81cb7071f7149c114f3582ee3c59d489114c3b81497a35",
+        "sonames":["libKirigami.so.6","libKirigamiControls.so.6","libKirigamiDelegates.so.6","libKirigamiDialogs.so.6","libKirigamiForms.so.6","libKirigamiFormsPrivateCards.so.6","libKirigamiFormsPrivateFlat.so.6","libKirigamiFormsPrivateTemplates.so.6","libKirigamiLayouts.so.6","libKirigamiLayoutsPrivate.so.6","libKirigamiPlatform.so.6","libKirigamiPolyfill.so.6","libKirigamiPrimitives.so.6","libKirigamiPrivate.so.6","libKirigamiTemplates.so.6"],
+        "binaries":["libkirigami-data","libkirigami-dev","libkirigami-doc","libkirigami6","libkirigamicontrols6","libkirigamidelegates6","libkirigamidialogs6","libkirigamiforms6","libkirigamiformsprivatecards6","libkirigamiformsprivateflat6","libkirigamiformsprivatetemplates6","libkirigamilayouts6","libkirigamilayoutsprivate6","libkirigamiplatform6","libkirigamipolyfill6","libkirigamiprimitives6","libkirigamiprivate6","libkirigamitemplates6","qml6-module-org-kde-kirigami"],
+    },
+    "kquickcharts": {
+        "version":"6.30.0-0supralinux4","sha":"9fe8c0c78ffd23ccfb99cc36477550a229c114ad057def938f38cdec35f82ab1",
+        "run":35409521636,"job":105806202814,"commit":"43adf80f4a16a848f1ca7ea77fc608585ddb6345",
+        "artifact":10573605864,"digest":"dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780",
+        "tests":"8/8 PASS","rootfs":"b1e79e0fbc11672c017acc812efa74116f1681a56596deb87f0f770b47e3d01d",
+        "sonames":["libQuickCharts.so.1","libQuickChartsControls.so.1"],
+        "binaries":["libquickcharts-dev","libquickcharts1","libquickchartscontrols1","qml6-module-org-kde-quickcharts"],
+    },
+}
+for node_id, expected in batch10_expected.items():
+    node = nodes.get(node_id, {})
+    require(node.get("tier") == 1 and node.get("upstream_version") == "6.30.0", f"{node_id}: Batch 10 promoted Tier 1 identity mismatch")
+    require(node.get("source_sha256") == expected["sha"], f"{node_id}: Batch 10 DAG source SHA mismatch")
+    require(node.get("depends_on") == ["extra-cmake-modules"], f"{node_id}: Batch 10 DAG dependency must remain ECM-only")
+    require(node.get("state") == "PASS" and node.get("downstream_eligible") is True, f"{node_id}: Batch 10 DAG must be PASS/downstream-eligible")
+    require(node.get("package_version") == expected["version"], f"{node_id}: Batch 10 DAG package version mismatch")
+    require(node.get("attempt_ledger") == "manifests/kde-tier1-package-batch10-attempts.json", f"{node_id}: Batch 10 DAG attempt ledger mismatch")
+    require(node.get("binary_packages") == expected["binaries"], f"{node_id}: Batch 10 DAG binary package split mismatch")
+    require(node.get("abi_sonames") == expected["sonames"], f"{node_id}: Batch 10 DAG ABI SONAME set mismatch")
+    passes = [item for item in node.get("evidence", []) if isinstance(item, dict) and item.get("result") == "PASS"]
+    require(len(passes) == 1, f"{node_id}: Batch 10 DAG requires exactly one retained current PASS")
+    if passes:
+        item = passes[0]
+        require(item.get("workflow_run") == expected["run"] and item.get("job_id") == expected["job"], f"{node_id}: Batch 10 DAG PASS run/job mismatch")
+        require(item.get("commit") == expected["commit"], f"{node_id}: Batch 10 DAG PASS commit mismatch")
+        require(item.get("artifact_id") == expected["artifact"] and item.get("artifact_sha256") == expected["digest"], f"{node_id}: Batch 10 DAG PASS artifact mismatch")
+        require(item.get("tests") == expected["tests"] and item.get("lintian") == "PASS-errors", f"{node_id}: Batch 10 DAG test/Lintian gate mismatch")
+        require(item.get("consumer_smoke") == "PASS" and item.get("apt_check") == "PASS" and item.get("qml_import_smoke") == "PASS", f"{node_id}: Batch 10 DAG runtime/QML gates mismatch")
+        require(item.get("abi_sonames") == expected["sonames"], f"{node_id}: Batch 10 DAG PASS ABI SONAME evidence mismatch")
+        require(item.get("ecm_predecessor") == "6.30.0-0supralinux3", f"{node_id}: Batch 10 ECM predecessor mismatch")
+    require(node.get("pass_files", {}).get("rootfs_sha256") == expected["rootfs"], f"{node_id}: Batch 10 DAG rootfs evidence mismatch")
 
 if ecm.get("state") in {"PASS", "FAIL"}:
     evidence = ecm.get("evidence", [])

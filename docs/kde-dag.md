@@ -447,3 +447,8 @@ The QML/multisurface campaign now retains PASS artifacts for Kirigami `6.30.0-0s
 
 No new Framework build edge is introduced. The Kirigami relationship remains package-validation-only for QML metadata/runtime closure. The canonical DAG is intentionally unchanged at **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until the dedicated promotion step.
 
+### Batch 10 — canonical closure
+
+Kirigami `6.30.0-0supralinux2` and KQuickCharts `6.30.0-0supralinux4` are now canonical PASS/downstream-eligible DAG nodes. Both retain `depends_on=["extra-cmake-modules"]`; no KQuickCharts -> Kirigami Framework build edge is introduced. The Kirigami ordering used during KQuickCharts validation remains package-validation/QML-runtime metadata only.
+
+The QML/multisurface lane is completed and leaves global discovery. Canonical Tier 1 is **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**. Remaining discovery nodes are `kuserfeedback` and `prison`.

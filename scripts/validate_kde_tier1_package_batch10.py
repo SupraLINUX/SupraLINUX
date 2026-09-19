@@ -152,7 +152,28 @@ req(rv.get('pr_ci',{}).get('workflow_run')==35414683979 and rv.get('pr_ci',{}).g
 rkn=rv.get('nodes',{}).get('kirigami',{}); rqn=rv.get('nodes',{}).get('kquickcharts',{})
 req(rkn.get('job_id')==105820877778 and rkn.get('artifact_id')==10574863862 and rkn.get('artifact_sha256')=='712a4a0edeb388d510c93b1d20346282066063b2328e6b6bbd8b57784e5e8c93' and rkn.get('source_contract_audit')=='PASS' and rkn.get('artifact_contract_audit')=='PASS','Kirigami contract-audit revalidation evidence mismatch')
 req(rqn.get('job_id')==105822092851 and rqn.get('artifact_id')==10575119063 and rqn.get('artifact_sha256')=='63c9fdb60e2427a9437788b4f34d8757a5ff98e4f695a9b0c8042d55dbd2bfdd' and rqn.get('source_contract_audit')=='PASS' and rqn.get('artifact_contract_audit')=='PASS','KQuickCharts contract-audit revalidation evidence mismatch')
-for node in ('kirigami','kquickcharts'): req(nodes[node].get('state')=='pending' and nodes[node].get('packaging',{}).get('state')=='pending',f'{node}: canonical state promoted prematurely')
+for node in ('kirigami','kquickcharts'):
+ can=nodes[node]; pkgcan=can.get('packaging',{}); camp=c['nodes'][node]; pe=camp.get('pass_evidence',{})
+ req(can.get('state')=='PASS' and pkgcan.get('state')=='PASS',f'{node}: canonical state must be promoted PASS')
+ req(pkgcan.get('package_version')==camp.get('package_version') and pkgcan.get('downstream_eligible') is True and pkgcan.get('attempt_ledger')=='manifests/kde-tier1-package-batch10-attempts.json',f'{node}: canonical packaging promotion mismatch')
+ req(pkgcan.get('claim')=='hosted-clean-package-preflight' and pkgcan.get('authoritative') is False,f'{node}: canonical hosted PASS claim mismatch')
+ canon_passes=[x for x in pkgcan.get('evidence',[]) if isinstance(x,dict) and x.get('result')=='PASS']
+ req(len(canon_passes)==1,f'{node}: canonical promotion must retain exactly one current PASS')
+ if canon_passes:
+  cp=canon_passes[0]
+  req(cp.get('workflow_run')==pe.get('workflow_run') and cp.get('job_id')==pe.get('job_id') and cp.get('artifact_id')==pe.get('artifact_id') and cp.get('artifact_sha256')==pe.get('artifact_sha256') and cp.get('tests')==pe.get('tests'),f'{node}: canonical retained PASS evidence mismatch')
+  req(cp.get('lintian')=='PASS-errors' and cp.get('consumer_smoke')=='PASS' and cp.get('apt_check')=='PASS' and cp.get('qml_import_smoke')=='PASS',f'{node}: canonical PASS gates mismatch')
+  req(cp.get('abi_sonames')==[a['soname'] for a in camp.get('abi_contracts',[])],f'{node}: canonical ABI SONAME evidence mismatch')
+  req(cp.get('ecm_predecessor')=='6.30.0-0supralinux3',f'{node}: canonical ECM predecessor mismatch')
+  req(isinstance(cp.get('files'),dict) and cp.get('files') and cp.get('files',{}).get('rootfs_sha256')==pe.get('rootfs_sha256'),f'{node}: canonical retained file/rootfs hashes missing')
+req(c.get('canonical_promotion')=={'status':'promoted','tier1':'27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED','dag_nodes':['kirigami','kquickcharts']},'Batch 10 canonical promotion snapshot mismatch')
+pre=c.get('promotion_precheck',{})
+req(pre.get('repository_policy',{}).get('workflow_run')==35440818501 and pre.get('repository_policy',{}).get('job_id')==105891164984 and pre.get('repository_policy',{}).get('result')=='PASS','Batch 10 promotion precheck Repository Policy mismatch')
+req(pre.get('pr_ci',{}).get('workflow_run')==35440818686 and pre.get('pr_ci',{}).get('commit')=='9051539d50e5a2ada41a6975add6c5a6497e6b3e' and pre.get('pr_ci',{}).get('result')=='PASS','Batch 10 promotion precheck PR CI mismatch')
+prv=pre.get('revalidation',{})
+req(prv.get('classification')=='infrastructure-revalidation' and prv.get('counts_as_package_attempt') is False and prv.get('package_state_effect')=='none','Batch 10 promotion revalidation semantics mismatch')
+req(prv.get('nodes',{}).get('kirigami',{}).get('job_id')==105891183786 and prv.get('nodes',{}).get('kirigami',{}).get('artifact_id')==10583642308 and prv.get('nodes',{}).get('kirigami',{}).get('artifact_sha256')=='a3fa47927d42dd605f78b4dc4913025311eed88ea807249da0b29653bd7ac0cb','Batch 10 promotion Kirigami revalidation mismatch')
+req(prv.get('nodes',{}).get('kquickcharts',{}).get('job_id')==105892252854 and prv.get('nodes',{}).get('kquickcharts',{}).get('artifact_id')==10583429116 and prv.get('nodes',{}).get('kquickcharts',{}).get('artifact_sha256')=='13a7d0ac50f03b9471305fd3b7f056ffaa5e0640a6332ed228bde2c087b87180','Batch 10 promotion KQuickCharts revalidation mismatch')
 runner=text(ROOT/'scripts/run-kde-tier1-package-batch10-preflight.sh'); scope=text(ROOT/'scripts/kde-tier1-package-batch10-needed.sh'); workflow=text(ROOT/'.github/workflows/kde-tier1-package-batch10.yml'); audit=ROOT/'scripts/audit-kde-development-contract.py'
 req(audit.is_file(),'KDE development contract audit helper missing')
 audit_txt=text(audit)
@@ -182,14 +203,14 @@ router=text(ROOT/'.github/workflows/pr-ci-router.yml'); policy=text(ROOT/'.githu
 req('kde-tier1-package-batch10.yml' in router,'PR CI router missing Batch10 reusable workflow')
 req('test-kde-tier1-package-batch10-scope.sh' in policy and 'validate_kde_tier1_package_batch10.py' in policy,'Repository Policy missing Batch10 checks')
 g=js(ROOT/'manifests/kde-tier1-global-discovery.json'); lane=g['lanes']['qml-multisurface']
-req(lane.get('status')=='implementation-ready' and lane.get('runner')=='scripts/run-kde-tier1-package-batch10-preflight.sh' and lane.get('workflow')=='.github/workflows/kde-tier1-package-batch10.yml','global discovery Batch10 lane not implementation-ready')
-req(g['nodes']['kirigami'].get('readiness')=='runnable','Kirigami global readiness mismatch')
-req(g['nodes']['kquickcharts'].get('readiness')=='package-validation-dependent','QuickCharts global readiness mismatch')
+req(lane.get('status')=='completed' and lane.get('nodes')==[] and lane.get('runner')=='scripts/run-kde-tier1-package-batch10-preflight.sh' and lane.get('workflow')=='.github/workflows/kde-tier1-package-batch10.yml','global discovery Batch10 lane not completed')
+req(set(g.get('nodes',{}))=={'kuserfeedback','prison'},'post-Batch10 discovery set mismatch')
+req(g.get('promoted_snapshot')=={'pass':27,'pending':2,'current_fail':0,'blocked':0},'post-Batch10 promoted snapshot mismatch')
 doc=text(ROOT/'docs/kde-tier1-package-batch10.md')
-for token in ('25 PASS / 4 pending','DIAG_PASS','10464419377','10463808939','package_validation_dependency','BLOCKED','35398956698','10569258322','10570203712','35400585402','10570720119','35403143944','10570704785','35403658149','10570804457','35406143858','10572841006','35407208676','10573097334','35409521508','35409521636','105806202814','10573605864','dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780','b1e79e0fbc11672c017acc812efa74116f1681a56596deb87f0f770b47e3d01d','6.30.0-0supralinux4','consumer-smoke','extra-cmake-modules','KF6QuickChartsConfig.cmake','effective_required_export_count_amd64','44/44 PASS','8/8 PASS','optional=templinst|arch=!riscv64','KF6::KirigamiPlatform','qml6-module-org-kde-kirigami'):
+for token in ('25 PASS / 4 pending','DIAG_PASS','10464419377','10463808939','package_validation_dependency','BLOCKED','35398956698','10569258322','10570203712','35400585402','10570720119','35403143944','10570704785','35403658149','10570804457','35406143858','10572841006','35407208676','10573097334','35409521508','35409521636','105806202814','10573605864','dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780','b1e79e0fbc11672c017acc812efa74116f1681a56596deb87f0f770b47e3d01d','6.30.0-0supralinux4','consumer-smoke','extra-cmake-modules','KF6QuickChartsConfig.cmake','effective_required_export_count_amd64','44/44 PASS','8/8 PASS','optional=templinst|arch=!riscv64','KF6::KirigamiPlatform','qml6-module-org-kde-kirigami','27 PASS / 2 pending','35440818501','35440818686','105891183786','105892252854'):
  req(token in doc,f'Batch10 documentation missing {token}')
 if errors:
  print('\n'.join(f'ERROR: {e}' for e in errors),file=sys.stderr); raise SystemExit(1)
-print('KDE Tier 1 Batch 10 technical closure validation: PASS')
+print('KDE Tier 1 Batch 10 canonical closure validation: PASS')
 print('Nodes: kirigami retained PASS; kquickcharts retained PASS; campaign 2/2 PASS')
-print('Canonical state remains 25 PASS / 4 pending until separate promotion')
+print('Canonical state: 27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED; QML/multisurface lane completed')

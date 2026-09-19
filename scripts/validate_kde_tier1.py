@@ -48,6 +48,8 @@ EXPECTED_PASS = {
     'kconfig': {'version':'6.30.0-0supralinux4','run':35360530830,'job':105650448776,'artifact':10554715051,'digest':'bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e','tests':'90/90 PASS','sonames':['libKF6ConfigCore.so.6','libKF6ConfigGui.so.6','libKF6ConfigQml.so.6']},
     'ki18n': {'version':'6.30.0-0supralinux1','run':35358920602,'job':105645094825,'artifact':10553916882,'digest':'2a0d66f2760c49ba1128b8b51c741173a72e6f3ab51f3eb17c3584896d30a678','tests':'17/17 PASS','sonames':['libKF6I18n.so.6','libKF6I18nLocaleData.so.6','libKF6I18nQml.so.6']},
     'sonnet': {'version':'6.30.0-0supralinux3','run':35358920602,'job':105645094787,'artifact':10554216487,'digest':'ae5a33cf8699b96b7b7b8c1a83bc4d37a484878029818c1885b4f4f44f15b431','tests':'8/8 PASS','sonames':['libKF6SonnetCore.so.6','libKF6SonnetUi.so.6']},
+    'kirigami': {'version':'6.30.0-0supralinux2','run':35398956698,'job':105774229788,'artifact':10569258322,'digest':'6a008366edda84f8c285e5cf0a6b18a4b1089fc88e530d6e61b0f4f885dd7e30','tests':'44/44 PASS','sonames':['libKirigami.so.6','libKirigamiControls.so.6','libKirigamiDelegates.so.6','libKirigamiDialogs.so.6','libKirigamiForms.so.6','libKirigamiFormsPrivateCards.so.6','libKirigamiFormsPrivateFlat.so.6','libKirigamiFormsPrivateTemplates.so.6','libKirigamiLayouts.so.6','libKirigamiLayoutsPrivate.so.6','libKirigamiPlatform.so.6','libKirigamiPolyfill.so.6','libKirigamiPrimitives.so.6','libKirigamiPrivate.so.6','libKirigamiTemplates.so.6']},
+    'kquickcharts': {'version':'6.30.0-0supralinux4','run':35409521636,'job':105806202814,'artifact':10573605864,'digest':'dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780','tests':'8/8 PASS','sonames':['libQuickCharts.so.1','libQuickChartsControls.so.1']},
 }
 EXPECTED_PROVIDER_PREVIOUS_EVIDENCE = {'workflow_run':34700048774,'head_sha':'6ce61bc02c4aba146bcc33b16d17f56fb66f057a','artifact_id':10299608166,'artifact_sha256':'da6808c31554da4105713e060e328d4130253a100c628fef279d8d0a9cf8ceb3','authoritative':False,'claim':'provider-availability-only'}
 EXPECTED_PROVIDER_CURRENT_EVIDENCE = {'workflow_run':35087361837,'job_id':104765243282,'head_sha':'a60cf80e2adae2f40c994c8ca8e661d23822b0b6','artifact_id':10442512801,'artifact_sha256':'49f74d493dd18ed68ecee668f68549cf5f71279fcb96e2f481ceef0eaccf5fa9','manifest_sha256':'ccf4ff9fc8e4227787208fd4950812b0244552ab3463e58aae41df424842b2a8','authoritative':False,'claim':'provider-availability-only','python_build':{'package':'python3-build','package_version':'1.4.0-1','module':'build','module_version':'1.4.0','import_status':'PASS'},'qt_upstream':'6.10.2'}
@@ -146,9 +148,9 @@ for node in nodes:
     else:
         require(node.get('packaging') == {'state':'pending'}, f'{node_id}: unattempted packaging state must remain pending')
         require(node.get('state') == 'pending', f'{node_id}: unattempted node state must remain pending')
-require(sum(1 for n in nodes if n.get('state') == 'PASS') == 25, 'Tier 1 current PASS count must be 25')
-require(sum(1 for n in nodes if n.get('state') == 'pending') == 4, 'Tier 1 current pending count must be 4')
-require(not any(n.get('state') in {'FAIL','BLOCKED'} for n in nodes), 'Tier 1 must have no current FAIL/BLOCKED nodes after Batch 9 closure')
+require(sum(1 for n in nodes if n.get('state') == 'PASS') == 27, 'Tier 1 current PASS count must be 27')
+require(sum(1 for n in nodes if n.get('state') == 'pending') == 2, 'Tier 1 current pending count must be 2')
+require(not any(n.get('state') in {'FAIL','BLOCKED'} for n in nodes), 'Tier 1 must have no current FAIL/BLOCKED nodes after Batch 10 closure')
 require(deps.get('schema') == 1, 'Dependency manifest schema must be 1')
 require(deps.get('authority') == 'kde-upstream', 'Dependency authority must remain KDE upstream')
 require(deps.get('frameworks') == '6.30.0', 'Dependency manifest must target Frameworks 6.30.0')
@@ -195,5 +197,5 @@ if errors:
         print(f'ERROR: {error}', file=sys.stderr)
     raise SystemExit(1)
 print('KDE Frameworks 6.30 Tier 1 source/dependency validation: PASS')
-print('Tier 1 package states: 25 PASS/downstream-eligible; 4 pending; 0 FAIL; 0 BLOCKED')
+print('Tier 1 package states: 27 PASS/downstream-eligible; 2 pending; 0 FAIL; 0 BLOCKED')
 print('Ubuntu Resolute provider mapping: hosted preflight PASS; final certification pending')

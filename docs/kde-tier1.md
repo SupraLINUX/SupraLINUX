@@ -1,8 +1,8 @@
 # KDE Frameworks 6.30 — Tier 1
 
-Status: **29-node source set fixed; 22 hosted package PASS; 7 package nodes pending; 0 current FAIL; 0 BLOCKED**
+Status: **29-node source set fixed; 27 hosted package PASS; 2 package nodes pending; 0 current FAIL; 0 BLOCKED**
 
-Last reviewed: **2026-09-18**
+Last reviewed: **2026-09-19**
 
 ## Authority and scope
 
@@ -107,8 +107,8 @@ Repository Policy run `34945979830` exposed such an infrastructure-only issue: t
 
 ## Current state
 
-- PASS: **25**;
-- pending: **4**;
+- PASS: **27**;
+- pending: **2**;
 - current FAIL: **0**;
 - BLOCKED: **0**.
 
@@ -180,3 +180,10 @@ Batch 10 is **2/2 retained PASS** before canonical promotion. Kirigami remains `
 
 This is retained campaign evidence only. The canonical Tier 1 manifest still reports **25 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**; Kirigami and KQuickCharts remain canonical pending until the separate promotion commit.
 
+### Batch 10 canonical promotion
+
+Kirigami `6.30.0-0supralinux2` and KQuickCharts `6.30.0-0supralinux4` are now canonical PASS/downstream-eligible. Promotion uses their retained real package PASS evidence; the later CI rebuilds remain infrastructure revalidation and do not increment package-attempt ledgers.
+
+Promotion precheck on parent `9051539d50e5a2ada41a6975add6c5a6497e6b3e`: Repository Policy run `35440818501`, job `105891164984`, PASS; PR CI run `35440818686`, PASS. The same run revalidated Kirigami in job `105891183786`, artifact `10583642308`, SHA-256 `a3fa47927d42dd605f78b4dc4913025311eed88ea807249da0b29653bd7ac0cb`, and KQuickCharts in job `105892252854`, artifact `10583429116`, SHA-256 `13a7d0ac50f03b9471305fd3b7f056ffaa5e0640a6332ed228bde2c087b87180`.
+
+Canonical Tier 1 is **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**. Remaining nodes are `kuserfeedback` and `prison`. PR #1 remains Draft; promotion does not authorize merge.
