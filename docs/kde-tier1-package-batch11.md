@@ -135,3 +135,12 @@ Commit `aa11a9492e5ea2cee9bc6e62703aaa449988494a` validates the post-closure che
 - Package rebuilds: **0**.
 - Package-attempt/state effect: **none**.
 - Canonical Tier 1 remains **29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+## Post-Tier2 DAG validator incident
+
+After KAuth Tier 2 was promoted, Repository Policy run `35498008522`, job `106044531247`, failed only in the historical Batch 11 validator. The validator incorrectly required the entire canonical DAG to contain exactly 30 nodes (ECM + 29 Tier 1), so the valid addition of KAuth as a Tier 2 PASS node made that historical cardinality assertion false.
+
+Classification: **INFRA**, `package_attempted=false`, `package_state_effect=none`. No Tier 1 package, retained PASS evidence, dependency edge or canonical Tier 1 state changed.
+
+The validator now checks the invariant owned by Batch 11 instead: the canonical DAG must contain the ECM PASS root and the exact 29 Tier 1 nodes as PASS, while permitting later Tier 2+ nodes to extend the DAG. This avoids coupling a closed historical batch to future DAG growth.
