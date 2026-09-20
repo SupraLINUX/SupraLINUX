@@ -15,6 +15,13 @@ req(c.get('schema')==2 and c.get('batch')=='tier1-batch-11' and c.get('lane')=='
 req(c.get('state')=='PASS','Batch11 campaign must be PASS')
 req(c.get('canonical_snapshot',{}).get('tier1')=='27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED after Batch 10 canonical promotion','historical pre-Batch11 snapshot')
 req(c.get('canonical_promotion')=={'status':'promoted','tier1':'29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED','dag_nodes':['kuserfeedback','prison']},'Batch11 canonical promotion')
+incidents=c.get('promotion_validation_incidents',[])
+req(len(incidents)==1,'Batch11 promotion validation incident ledger must contain exactly one incident')
+if incidents:
+    inc=incidents[0]
+    req(inc.get('workflow_run')==35491700804 and inc.get('job_id')==106027643479 and inc.get('commit')=='4385e7193d75bf158b7a2798d644d8c3f726671e','Batch11 promotion validation incident identity mismatch')
+    req(inc.get('classification')=='INFRA' and inc.get('package_state_effect')=='none' and inc.get('package_attempted') is False,'Batch11 promotion validation incident semantics mismatch')
+    req(inc.get('failed_gate')=='validate_kde_tier1_packaging_reference.py','Batch11 promotion validation failed gate mismatch')
 pre=c.get('promotion_precheck',{})
 req(pre.get('repository_policy')=={'workflow_run':35489771248,'job_id':106022596719,'result':'PASS'},'promotion Repository Policy evidence')
 req(pre.get('pr_ci')=={'workflow_run':35489771315,'commit':'69d271891f96f75ada404623611ffa42bc061090','result':'PASS'},'promotion PR CI evidence')

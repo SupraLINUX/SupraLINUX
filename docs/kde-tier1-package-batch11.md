@@ -118,3 +118,9 @@ The promotion-validator remediation is validated on commit `d0c3c66dac717ebc82d6
 - Package-attempt ledger effect: **none**.
 - Canonical state remains **29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**.
 - PR #1 remains OPEN + DRAFT and no APT `stable` publication is part of this closure.
+
+## Post-closure validator hardening
+
+After the successful promotion validation, the final global-discovery validator was tightened to compare the complete DAG policy object exactly. This closes a validation gap where the `rerun_affected_nodes_after_remediation` key could escape checking because of a stale validator key spelling. The Batch 11 validator also now requires the recorded promotion-validation INFRA incident and its no-package-state-effect semantics.
+
+This is validator-only hardening: no package inputs, package revisions, retained PASS evidence, DAG state or APT publication state change.

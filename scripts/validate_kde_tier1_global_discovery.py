@@ -9,10 +9,8 @@ g=json.loads((ROOT/'manifests/kde-tier1-global-discovery.json').read_text())
 t=json.loads((ROOT/'manifests/kde-frameworks-tier1.json').read_text())
 req(g.get('schema')==1,'global discovery schema')
 req(g.get('authority')=='kde-upstream' and g.get('provider_platform')=='ubuntu-resolute','authority/provider')
-required_policy={'build_every_runnable_node_per_topological_level':True,'parallelize_independent_nodes':True,'fail_fast':False,'continue_after_independent_failures':True,'blocked_is_not_fail':True,'only_pass_artifacts_feed_dependents':True,'preserve_every_real_attempt':True,'rerun_affected_nodes_after_remediation_set':True,'repeat_full_campaign_after_remediation_set':True}
-# Preserve legacy key spelling from the manifest while validating all actual policy fields.
-for k,v in g.get('policy',{}).items():
-    if k in required_policy: req(v==required_policy[k],f'policy {k}')
+required_policy={'build_every_runnable_node_per_topological_level':True,'parallelize_independent_nodes':True,'fail_fast':False,'continue_after_independent_failures':True,'blocked_is_not_fail':True,'only_pass_artifacts_feed_dependents':True,'preserve_every_real_attempt':True,'rerun_affected_nodes_after_remediation':True,'repeat_full_campaign_after_remediation_set':True}
+req(g.get('policy')==required_policy,'global discovery DAG policy changed')
 nodes=t.get('nodes',[])
 req(len(nodes)==29,'Tier1 node count')
 req(sum(n.get('state')=='PASS' for n in nodes)==29,'all Tier1 nodes must be PASS')
