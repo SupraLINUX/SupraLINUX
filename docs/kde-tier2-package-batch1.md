@@ -3,7 +3,7 @@
 Status: **KAuth PASS; canonical promotion candidate**  
 Date: **2026-09-20**
 
-Batch 1 deliberately contains only KAuth. KMime remains independently gated by ADR-0002 and does not block this runnable DAG node.
+Batch 1 deliberately contains only KAuth. At the time this batch was prepared, the Tier 2 inventory was incorrectly limited to KAuth + KMime. That discovery error was corrected later to the full 15-node upstream Tier 2 set; KAuth's retained build evidence remains valid and the additional 13 non-KMime nodes are independent pending work. KMime remains gated by ADR-0002.
 
 ## Selected profile
 
@@ -77,6 +77,15 @@ Artifact: `10601382235`; ZIP SHA-256 `443a47a67188a52faae6c20b03c2c53203d5a9386d
 
 Final gates: **6/6 CTest PASS**, Lintian error gate PASS, `libKF6AuthCore.so.6` with 118 exported symbols, PolkitQt6-1 backend, DBus helper, development-contract PASS, exact APT closure PASS and external `KF6::AuthCore` consumer PASS. The adjusted symbols template SHA-256 is `b8cf2fa877c94255f015cee08b89816d538cba23f1064d0360a329189fee0b78`; only the two implementation-private RTTI/vtable entries are optional.
 
-KAuth is therefore downstream-eligible and the Tier 2 canonical package state becomes **1 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**. KMime is the sole pending Tier 2 node and remains decision-gated by ADR-0002.
+KAuth is therefore downstream-eligible. The original Batch 1 promotion record captured **1 PASS / 1 pending** because the then-current discovery contained only KAuth + KMime. After correcting the upstream Tier 2 inventory to 15 nodes, the current canonical package state is **1 PASS / 14 pending / 0 current FAIL / 0 BLOCKED**. Thirteen newly discovered non-KMime nodes are package-lane-pending; KMime remains decision-gated by ADR-0002.
 
 Repository Policy run `35497460988` failed independently in the scope-test fixture because an empty `docs/` directory vanished after `git reset --hard`. The real KAuth package job still completed PASS. The promotion candidate fixes that fixture without rebuilding KAuth.
+
+
+## Post-Batch inventory correction
+
+KDE upstream discovery was revalidated after KAuth promotion and exposed that the original Tier 2 scope was incomplete: Tier 2 contains 15 Frameworks, not two. This is a metadata/discovery correction and has **no package-state effect** on KAuth.
+
+The KAuth attempt ledger, package version, hashes, test results, ABI evidence and downstream eligibility remain unchanged. The Batch 1 historical `0 PASS / 2 pending` and `1 PASS / 1 pending` snapshots are retained as the state recorded under the incomplete inventory; they must not be interpreted as the current global Tier 2 inventory.
+
+Current Tier 2 state: **1 PASS / 14 pending / 0 current FAIL / 0 BLOCKED**.
