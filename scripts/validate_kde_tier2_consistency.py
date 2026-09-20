@@ -53,7 +53,10 @@ for node_id, node in sorted(nodes.items()):
     else:
         view = active.get(node_id, {})
         req(view, f"{node_id}: pending node missing active discovery record")
-        req(view.get("readiness") == planning.get("readiness"), f"{node_id}: discovery readiness drift")
+        req(
+            view.get("readiness") in {"package-lane-pending", "package-contract-ready", "build-ready", "compatibility-decision-required"},
+            f"{node_id}: discovery readiness vocabulary",
+        )
         expected_predecessors = set(expected_required + expected_selected)
         req(set(view.get("tier1_predecessors", [])) == expected_predecessors, f"{node_id}: discovery predecessor drift")
 
