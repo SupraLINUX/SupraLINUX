@@ -28,7 +28,11 @@ req(audit.get("provider_platform") == "ubuntu-resolute", "Tier 2 provider platfo
 req(audit.get("source_authority") == "kde-upstream-v6.30.0", "Tier 2 source authority")
 req(audit.get("authoritative_package_build") is False, "provider audit must not claim package build certification")
 if audit.get("status") == "pending-ci":
-    req(batch == plan.get("next_provider_audit_batch"), "pending provider-audit batch must equal generated campaign next batch")
+    if audit.get("mode") == "remediation-revalidation":
+        req(batch == ["knotifications","kstatusnotifieritem","kunitconversion"], "remediation provider revalidation node set")
+        req(audit.get("previous_pass",{}).get("status")=="PASS", "previous provider-audit PASS retained")
+    else:
+        req(batch == plan.get("next_provider_audit_batch"), "pending provider-audit batch must equal generated campaign next batch")
 elif audit.get("status") == "PASS":
     downstream_ready=set(plan.get("package_contract_ready", [])) | set(plan.get("build_queue", []))
     req(set(batch) <= downstream_ready, "PASS provider-audit nodes must remain contract/build-ready")
@@ -62,7 +66,7 @@ for node_id in ("knotifications", "kstatusnotifieritem", "kunitconversion"):
     node = nodes[node_id]
     req(node.get("selected_linux_profile", {}).get("BUILD_PYTHON_BINDINGS") is True, f"{node_id}: Python bindings selected")
     ext = set(node.get("external", {}).get("default_enabled", []))
-    req({"python-dev", "shiboken6", "pyside6", "python-build"} <= ext, f"{node_id}: Python binding provider closure")
+    req({"python-dev", "shiboken6", "pyside6", "python-build", "shiboken-clang-tooling"} <= ext, f"{node_id}: Python binding provider closure")
 
 req(nodes["kcrash"].get("selected_linux_profile", {}).get("WITH_X11") is True, "KCrash X11 selected")
 req("x11" in nodes["kcrash"].get("external", {}).get("provider_selected", []), "KCrash X11 provider")
@@ -70,6 +74,9 @@ req(nodes["knotifications"].get("selected_linux_profile", {}).get("USE_DBUS") is
 req("canberra" in nodes["knotifications"].get("external", {}).get("required", []), "KNotifications Canberra required")
 req(nodes["kstatusnotifieritem"].get("selected_linux_profile", {}).get("WITHOUT_X11") is False, "KStatusNotifierItem X11 not disabled")
 req(nodes["kstatusnotifieritem"].get("selected_linux_profile", {}).get("USE_DBUS") is True, "KStatusNotifierItem DBus selected")
+clang=registry.get("additions",{}).get("shiboken-clang-tooling",{})
+req(clang.get("packages")==["llvm-dev","libclang-common-21-dev"], "Shiboken Clang provider package closure")
+req(clang.get("required_probe")=="/usr/lib/llvm-21/lib/clang/21/include/stddef.h", "Shiboken Clang builtin header probe")
 
 doc = (ROOT / "docs/kde-tier2-provider-audit.md").read_text()
 for token in ("KCrash", "KNotifications", "KStatusNotifierItem", "KUnitConversion", "Syndication", "provider audit", "not a package PASS"):

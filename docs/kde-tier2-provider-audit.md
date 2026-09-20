@@ -1,6 +1,6 @@
 # KDE Tier 2 provider audit
 
-Status: **first batch PASS; package contracts not yet materialized**  
+Status: **Python/Clang provider revalidation pending; previous batch PASS retained**  
 Reviewed: **2026-09-20**
 
 ## Scope
@@ -48,3 +48,10 @@ Ubuntu Resolute provider audit run `35524034558`, job `106112947247`: **PASS**.
 - package state effect: **none**
 
 KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication are now **package-contract-ready**. All five remain package-state `pending`.
+
+
+## Supplemental Shiboken/Clang provider revalidation
+
+The clean Batch 2 run proved that `llvm-dev` alone is insufficient for Shiboken: `llvm-config` becomes visible, but `/usr/lib/llvm-21/lib/clang` has no versioned builtin-resource directory. Resolute's provider closure is extended with `libclang-common-21-dev`.
+
+The revalidation scope is only KNotifications, KStatusNotifierItem and KUnitConversion. CI must prove both `llvm-config` and `/usr/lib/llvm-21/lib/clang/21/include/stddef.h`. KDE's `BUILD_PYTHON_BINDINGS=ON` remains unchanged.

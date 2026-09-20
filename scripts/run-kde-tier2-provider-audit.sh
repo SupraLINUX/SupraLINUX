@@ -41,7 +41,11 @@ out = pathlib.Path(sys.argv[5])
 batch = deps["provider_audit"]["nodes"]
 audit_status = deps["provider_audit"].get("status")
 if audit_status == "pending-ci":
-    if batch != plan["next_provider_audit_batch"]:
+    if deps["provider_audit"].get("mode") == "remediation-revalidation":
+        expected={"knotifications","kstatusnotifieritem","kunitconversion"}
+        if set(batch) != expected:
+            raise SystemExit("remediation provider revalidation node set drift")
+    elif batch != plan["next_provider_audit_batch"]:
         raise SystemExit("pending provider-audit batch differs from generated campaign plan")
 elif audit_status == "PASS":
     if not set(batch) <= set(plan.get("package_contract_ready", [])):
@@ -138,8 +142,17 @@ for package_name in libshiboken6-dev libpyside6-dev; do
     fi
 done
 
-pkg-config --exists libcanberra
-printf 'libcanberra\t%s\n' "$(pkg-config --modversion libcanberra)" > "${EVIDENCE}/pkg-config-versions.tsv"
+if grep -qx 'llvm-dev' "${EVIDENCE}/mandatory-packages.txt"; then
+    command -v llvm-config | tee "${EVIDENCE}/llvm-config-path.txt"
+    llvm-config --version | tee "${EVIDENCE}/llvm-config-version.txt"
+    test -f /usr/lib/llvm-21/lib/clang/21/include/stddef.h
+    sha256sum /usr/lib/llvm-21/lib/clang/21/include/stddef.h > "${EVIDENCE}/clang-resource-header.sha256"
+fi
+
+if grep -qx 'libcanberra-dev' "${EVIDENCE}/mandatory-packages.txt"; then
+    pkg-config --exists libcanberra
+    printf 'libcanberra\t%s\n' "$(pkg-config --modversion libcanberra)" > "${EVIDENCE}/pkg-config-versions.tsv"
+fi
 
 python3 - <<'PY' > "${EVIDENCE}/python-binding-providers.txt"
 import build

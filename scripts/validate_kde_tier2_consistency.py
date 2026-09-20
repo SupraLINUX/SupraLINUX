@@ -66,10 +66,13 @@ for node_id, node in sorted(nodes.items()):
                 f"{node_id}: provider audit state drift",
             )
         elif planning.get("provider_audit") == "complete":
-            req(
-                dep.get("provider_audit") == "PASS",
-                f"{node_id}: completed provider audit lacks PASS evidence state",
-            )
+            if dep.get("provider_audit") == "pending-ci":
+                audit=dependencies.get("provider_audit",{})
+                req(audit.get("mode")=="remediation-revalidation" and node_id in audit.get("nodes",[]),
+                    f"{node_id}: supplemental provider revalidation state drift")
+            else:
+                req(dep.get("provider_audit") == "PASS",
+                    f"{node_id}: completed provider audit lacks PASS evidence state")
 
 snapshot = discovery.get("promoted_snapshot", {})
 expected_snapshot = {

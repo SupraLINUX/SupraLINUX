@@ -324,7 +324,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "PASS",
+      "provider_audit": "pending-ci",
       "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
       "qt": {
         "required": [
@@ -348,7 +348,8 @@
           "python-dev",
           "shiboken6",
           "pyside6",
-          "python-build"
+          "python-build",
+          "shiboken-clang-tooling"
         ]
       },
       "selected_linux_profile": {
@@ -400,7 +401,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "PASS",
+      "provider_audit": "pending-ci",
       "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
       "qt": {
         "required": [
@@ -416,7 +417,8 @@
           "python-dev",
           "shiboken6",
           "pyside6",
-          "python-build"
+          "python-build",
+          "shiboken-clang-tooling"
         ]
       },
       "selected_linux_profile": {
@@ -434,7 +436,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "PASS",
+      "provider_audit": "pending-ci",
       "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
       "qt": {
         "required": [
@@ -450,7 +452,8 @@
           "python-dev",
           "shiboken6",
           "pyside6",
-          "python-build"
+          "python-build",
+          "shiboken-clang-tooling"
         ]
       },
       "selected_linux_profile": {
@@ -507,40 +510,68 @@
         ],
         "provider_status": "resolute-candidate-verified",
         "observed_version": "0.30-18ubuntu3"
+      },
+      "shiboken-clang-tooling": {
+        "name": "Clang resource headers for Shiboken ApiExtractor",
+        "packages": [
+          "llvm-dev",
+          "libclang-common-21-dev"
+        ],
+        "provider_status": "resolute-candidate-verified",
+        "observed_versions": {
+          "llvm-dev": "1:21.1.6-71",
+          "libclang-common-21-dev": "1:21.1.8-6ubuntu1"
+        },
+        "required_probe": "/usr/lib/llvm-21/lib/clang/21/include/stddef.h"
       }
     }
   },
   "provider_audit": {
     "schema": 1,
     "batch": "tier2-provider-audit-1",
-    "status": "PASS",
+    "mode": "remediation-revalidation",
+    "status": "pending-ci",
     "nodes": [
-      "kcrash",
       "knotifications",
       "kstatusnotifieritem",
-      "kunitconversion",
-      "syndication"
+      "kunitconversion"
     ],
     "source_authority": "kde-upstream-v6.30.0",
     "provider_platform": "ubuntu-resolute",
     "claim": "provider-availability-and-selected-profile-only",
     "authoritative_package_build": false,
-    "evidence": {
-      "workflow_run": 35524034558,
-      "job_id": 106112947247,
-      "commit": "b47c5ab6ea654cc79a9c13ebc08c8719e585183f",
-      "artifact_id": 10609298463,
-      "artifact_sha256": "8418ca46593df82cdfb6ac306bcebbf97cde44f79db133f704b09e525f01a63d",
+    "previous_pass": {
+      "schema": 1,
+      "batch": "tier2-provider-audit-1",
+      "status": "PASS",
+      "nodes": [
+        "kcrash",
+        "knotifications",
+        "kstatusnotifieritem",
+        "kunitconversion",
+        "syndication"
+      ],
+      "source_authority": "kde-upstream-v6.30.0",
+      "provider_platform": "ubuntu-resolute",
       "claim": "provider-availability-and-selected-profile-only",
-      "package_state_effect": "none",
-      "result": "PASS",
-      "observed_providers": {
-        "qt6_base_dev": "6.10.2+dfsg-7",
-        "libpyside6_dev": "6.10.2-6ubuntu1",
-        "libshiboken6_dev": "6.10.2-6ubuntu1",
-        "libx11_dev": "2:1.8.13-1",
-        "libcanberra_dev": "0.30-18ubuntu3",
-        "python3_build": "1.4.0-1"
+      "authoritative_package_build": false,
+      "evidence": {
+        "workflow_run": 35524034558,
+        "job_id": 106112947247,
+        "commit": "b47c5ab6ea654cc79a9c13ebc08c8719e585183f",
+        "artifact_id": 10609298463,
+        "artifact_sha256": "8418ca46593df82cdfb6ac306bcebbf97cde44f79db133f704b09e525f01a63d",
+        "claim": "provider-availability-and-selected-profile-only",
+        "package_state_effect": "none",
+        "result": "PASS",
+        "observed_providers": {
+          "qt6_base_dev": "6.10.2+dfsg-7",
+          "libpyside6_dev": "6.10.2-6ubuntu1",
+          "libshiboken6_dev": "6.10.2-6ubuntu1",
+          "libx11_dev": "2:1.8.13-1",
+          "libcanberra_dev": "0.30-18ubuntu3",
+          "python3_build": "1.4.0-1"
+        }
       }
     }
   }
