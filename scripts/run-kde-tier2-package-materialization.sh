@@ -25,7 +25,11 @@ write_result() {
 import json,sys
 from pathlib import Path
 path,node,state,rc,stage=sys.argv[1:]
-Path(path).write_text(json.dumps({
+p=Path(path)
+data={}
+if p.exists() and p.stat().st_size:
+    data=json.loads(p.read_text())
+data.update({
     "schema":1,
     "node":node,
     "result":state,
@@ -34,7 +38,8 @@ Path(path).write_text(json.dumps({
     "claim":"deterministic-package-tree-materialization",
     "package_attempted":False,
     "package_state_effect":"none",
-},indent=2)+"\n")
+})
+p.write_text(json.dumps(data,indent=2)+"\n")
 PY
 }
 trap write_result EXIT
@@ -194,16 +199,17 @@ python3 - "${EVIDENCE}" "${NODE}" "${SOURCE_PACKAGE}" "${PACKAGE_VERSION}" <<'PY
 import json,sys
 from pathlib import Path
 out=Path(sys.argv[1])
-result=json.loads((out/"result.json").read_text())
+result={}
+result_path=out/"result.json"
+if result_path.exists() and result_path.stat().st_size:
+    result=json.loads(result_path.read_text())
 result.update({
-  "result":"PASS",
-  "stage":"complete",
   "source_package":sys.argv[3],
   "package_version":sys.argv[4],
   "tree_sha256":(out/"tree.sha256").read_text().strip(),
   "debian_tree_sha256":(out/"debian-tree.sha256").read_text().strip(),
 })
-(out/"result.json").write_text(json.dumps(result,indent=2)+"\n")
+result_path.write_text(json.dumps(result,indent=2)+"\n")
 PY
 
 STATE=PASS
