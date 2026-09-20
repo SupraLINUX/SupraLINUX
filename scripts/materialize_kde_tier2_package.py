@@ -95,11 +95,13 @@ def modify_control(path: Path, node: dict):
     original_maintainer = field_value(source_lines, "Maintainer")
     if not original_maintainer:
         raise SystemExit("debian/control lacks Maintainer")
-    set_field(source_lines, "Maintainer", CI_MAINTAINER)
-    set_field(source_lines, "XSBC-Original-Maintainer", original_maintainer)
     remove_field(source_lines, "Uploaders")
+    set_field(source_lines, "Maintainer", CI_MAINTAINER)
     set_field(source_lines, "Vcs-Git", VCS_GIT)
     set_field(source_lines, "Vcs-Browser", VCS_BROWSER)
+    # Add this last so no later source-field rewrite can consume it as part of
+    # a preceding multi-line field span.
+    set_field(source_lines, "XSBC-Original-Maintainer", original_maintainer)
 
     python_module = node.get("python_module")
     if python_module:
