@@ -105,7 +105,7 @@ if kgui_passes:
     require(item.get("artifact_id") == 10482007092 and item.get("artifact_sha256") == "71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca", "KGuiAddons DAG PASS artifact mismatch")
     require(item.get("tests") == "9/9 PASS" and item.get("lintian") == "PASS-errors", "KGuiAddons DAG build/test gate mismatch")
 require(kgui.get("pass_files", {}).get("rootfs_sha256") == "c68681aacfd32976c6e0bf471ec1928179fd80e402faf2293706e53f88ad25c6", "KGuiAddons DAG rootfs evidence mismatch")
-require(len(nodes) == 28, "Canonical DAG must contain ECM plus 27 promoted Tier 1 PASS nodes after Batch 10")
+require(len(nodes) == 30, "Canonical DAG must contain ECM plus all 29 promoted Tier 1 PASS nodes after Batch 11")
 
 batch9_expected = {
     "kconfig": {
@@ -195,6 +195,47 @@ for node_id, expected in batch10_expected.items():
         require(item.get("abi_sonames") == expected["sonames"], f"{node_id}: Batch 10 DAG PASS ABI SONAME evidence mismatch")
         require(item.get("ecm_predecessor") == "6.30.0-0supralinux3", f"{node_id}: Batch 10 ECM predecessor mismatch")
     require(node.get("pass_files", {}).get("rootfs_sha256") == expected["rootfs"], f"{node_id}: Batch 10 DAG rootfs evidence mismatch")
+
+
+batch11_expected = {
+    "kuserfeedback": {
+        "version":"6.30.0-0supralinux5","sha":"c8a463c8e570f6d532cbe150732220575c6385df97c91399b6c84450691771ca",
+        "run":35489771315,"job":106022610412,"commit":"69d271891f96f75ada404623611ffa42bc061090",
+        "artifact":10597923863,"digest":"0a057d591a198f74cf6eee24d3b1ef4355f2a0d6073d48de8e220ac37f0a38b7",
+        "tests":"15/15 PASS","rootfs":"8b5518bea1704ffb9830b4d9a3259e2655ca69efb6dff108b9a9709e66d87e39",
+        "sonames":["libKF6UserFeedbackCore.so.6","libKF6UserFeedbackWidgets.so.6"],
+        "binaries":["libkf6userfeedback-data","libkf6userfeedback-dev","libkf6userfeedback-doc","libkf6userfeedbackcore6","libkf6userfeedbackwidgets6","qml6-module-org-kde-userfeedback"],
+    },
+    "prison": {
+        "version":"6.30.0-0supralinux1","sha":"2cdb0a2689ab45b907c76c9a01c1dc14855b8e5329ad0a9cf65c1ad64e5fed1b",
+        "run":35488901554,"job":106020266290,"commit":"7f4a42af54c4d3a1603f9b7cca95a5b45786ff58",
+        "artifact":10597829797,"digest":"f0074c8da29cfda08018fa568fce9cabbf6fc23669416caf20c714c25ff7773f",
+        "tests":"9/9 PASS","rootfs":"a1ae6cb653ec18a6dba7142f4ee5acd94210076a9adba23d9d67d03ac03885e7",
+        "sonames":["libKF6Prison.so.6","libKF6PrisonScanner.so.6"],
+        "binaries":["libkf6prison-dev","libkf6prison-doc","libkf6prison6","libkf6prisonscanner6","qml6-module-org-kde-prison"],
+    },
+}
+for node_id, expected in batch11_expected.items():
+    node = nodes.get(node_id, {})
+    require(node.get("tier") == 1 and node.get("upstream_version") == "6.30.0", f"{node_id}: Batch 11 promoted Tier 1 identity mismatch")
+    require(node.get("source_sha256") == expected["sha"], f"{node_id}: Batch 11 DAG source SHA mismatch")
+    require(node.get("depends_on") == ["extra-cmake-modules"], f"{node_id}: Batch 11 DAG dependency must remain ECM-only")
+    require(node.get("state") == "PASS" and node.get("downstream_eligible") is True, f"{node_id}: Batch 11 DAG must be PASS/downstream-eligible")
+    require(node.get("package_version") == expected["version"], f"{node_id}: Batch 11 DAG package version mismatch")
+    require(node.get("attempt_ledger") == "manifests/kde-tier1-package-batch11-attempts.json", f"{node_id}: Batch 11 DAG attempt ledger mismatch")
+    require(node.get("binary_packages") == expected["binaries"], f"{node_id}: Batch 11 DAG binary package split mismatch")
+    require(node.get("abi_sonames") == expected["sonames"], f"{node_id}: Batch 11 DAG ABI SONAME set mismatch")
+    passes = [item for item in node.get("evidence", []) if isinstance(item, dict) and item.get("result") == "PASS"]
+    require(len(passes) == 1, f"{node_id}: Batch 11 DAG requires exactly one retained PASS")
+    if passes:
+        item = passes[0]
+        require(item.get("workflow_run") == expected["run"] and item.get("job_id") == expected["job"], f"{node_id}: Batch 11 DAG PASS run/job mismatch")
+        require(item.get("commit") == expected["commit"], f"{node_id}: Batch 11 DAG PASS commit mismatch")
+        require(item.get("artifact_id") == expected["artifact"] and item.get("artifact_sha256") == expected["digest"], f"{node_id}: Batch 11 DAG PASS artifact mismatch")
+        require(item.get("tests") == expected["tests"] and item.get("lintian") == "PASS-errors", f"{node_id}: Batch 11 test/Lintian gate mismatch")
+        require(item.get("consumer_smoke") == "PASS" and item.get("apt_check") == "PASS" and item.get("qml_import_smoke") == "PASS" and item.get("development_contract") == "PASS", f"{node_id}: Batch 11 runtime/QML/development gates mismatch")
+        require(item.get("abi_sonames") == expected["sonames"], f"{node_id}: Batch 11 PASS ABI SONAME evidence mismatch")
+    require(node.get("pass_files", {}).get("rootfs_sha256") == expected["rootfs"], f"{node_id}: Batch 11 DAG rootfs evidence mismatch")
 
 if ecm.get("state") in {"PASS", "FAIL"}:
     evidence = ecm.get("evidence", [])

@@ -128,9 +128,9 @@
       "signing_key": {
         "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"
       },
-      "state": "remediation-pending-build",
-      "last_result": "FAIL",
-      "downstream_eligible": false,
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
       "last_failure_evidence": {
         "workflow_run": 35489499984,
         "job_id": 106021890875,
@@ -140,6 +140,21 @@
         "stage": "sbuild",
         "tests": "15/15 CTest PASS",
         "cause": "All upstream tests pass; dh_missing rejected the ENABLE_DOCS UserFeedbackConsole QCH manual because libkf6userfeedback-doc did not yet install it."
+      },
+      "pass_evidence": {
+        "workflow_run": 35489771315,
+        "job_id": 106022610412,
+        "artifact_id": 10597923863,
+        "artifact_sha256": "0a057d591a198f74cf6eee24d3b1ef4355f2a0d6073d48de8e220ac37f0a38b7",
+        "rootfs_sha256": "8b5518bea1704ffb9830b4d9a3259e2655ca69efb6dff108b9a9709e66d87e39",
+        "package_version": "6.30.0-0supralinux5",
+        "tests": "15/15 PASS",
+        "lintian": "PASS-errors",
+        "abi_contract": "PASS",
+        "apt_check": "PASS",
+        "qml_import_smoke": "PASS",
+        "consumer_smoke": "PASS",
+        "development_contract": "PASS"
       }
     },
     "prison": {
@@ -259,6 +274,49 @@
         "consumer_smoke": "PASS",
         "development_contract": "PASS"
       }
+    }
+  },
+  "as_of": "2026-09-20",
+  "state": "PASS",
+  "attempt_ledger": "manifests/kde-tier1-package-batch11-attempts.json",
+  "canonical_promotion": {
+    "status": "promoted",
+    "tier1": "29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED",
+    "dag_nodes": [
+      "kuserfeedback",
+      "prison"
+    ]
+  },
+  "promotion_precheck": {
+    "repository_policy": {
+      "workflow_run": 35489771248,
+      "job_id": 106022596719,
+      "result": "PASS"
+    },
+    "pr_ci": {
+      "workflow_run": 35489771315,
+      "commit": "69d271891f96f75ada404623611ffa42bc061090",
+      "result": "PASS"
+    }
+  },
+  "closure_evidence": {
+    "kuserfeedback": {
+      "workflow_run": 35489771315,
+      "job_id": 106022610412,
+      "artifact_id": 10597923863,
+      "artifact_sha256": "0a057d591a198f74cf6eee24d3b1ef4355f2a0d6073d48de8e220ac37f0a38b7",
+      "rootfs_sha256": "8b5518bea1704ffb9830b4d9a3259e2655ca69efb6dff108b9a9709e66d87e39",
+      "package_version": "6.30.0-0supralinux5",
+      "tests": "15/15 PASS"
+    },
+    "prison": {
+      "workflow_run": 35488901554,
+      "job_id": 106020266290,
+      "artifact_id": 10597829797,
+      "artifact_sha256": "f0074c8da29cfda08018fa568fce9cabbf6fc23669416caf20c714c25ff7773f",
+      "rootfs_sha256": "a1ae6cb653ec18a6dba7142f4ee5acd94210076a9adba23d9d67d03ac03885e7",
+      "package_version": "6.30.0-0supralinux1",
+      "tests": "9/9 PASS"
     }
   }
 }

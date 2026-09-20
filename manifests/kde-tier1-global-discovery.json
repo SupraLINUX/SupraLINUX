@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-19",
+  "as_of": "2026-09-20",
   "scope": "kde-frameworks-tier1-6.30",
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
@@ -18,8 +18,8 @@
     "repeat_full_campaign_after_remediation_set": true
   },
   "promoted_snapshot": {
-    "pass": 27,
-    "pending": 2,
+    "pass": 29,
+    "pending": 0,
     "current_fail": 0,
     "blocked": 0,
     "note": "Promoted DAG state only. Historical failed package attempts and infrastructure incidents remain retained separately and do not become promoted FAIL after a later PASS."
@@ -52,11 +52,8 @@
       "workflow": ".github/workflows/kde-tier1-package-batch10.yml"
     },
     "multi-surface-optional": {
-      "status": "implemented",
-      "nodes": [
-        "kuserfeedback",
-        "prison"
-      ],
+      "status": "completed",
+      "nodes": [],
       "required_capability": "validate multiple libraries plus optional/provider-selected feature surfaces without silently disabling upstream defaults",
       "runner": "scripts/run-kde-tier1-package-batch11-preflight.sh",
       "workflow": ".github/workflows/kde-tier1-package-batch11.yml"
@@ -68,22 +65,11 @@
       "runner": "scripts/run-kde-tier1-package-batch8-preflight.sh"
     }
   },
-  "nodes": {
-    "kuserfeedback": {
-      "readiness": "runnable",
-      "lane": "multi-surface-optional",
-      "local_predecessors": []
-    },
-    "prison": {
-      "readiness": "runnable",
-      "lane": "multi-surface-optional",
-      "local_predecessors": []
-    }
-  },
+  "nodes": {},
   "next_actions": [
-    "Run Batch 11 for kuserfeedback and prison in parallel with fail-fast disabled.",
-    "Preserve every real FAIL attempt independently; do not BLOCK the peer because the nodes have no predecessor relation.",
-    "Feed later work only from retained PASS artifacts.",
-    "After both nodes retain PASS, perform a separate canonical Tier 1 promotion."
+    "Freeze the KDE Frameworks 6.30 Tier 1 baseline at 29/29 canonical PASS nodes.",
+    "Preserve retained package artifacts and historical FAIL/INFRA evidence.",
+    "Use only retained PASS artifacts as local predecessors for later dependency tiers.",
+    "Begin the next KDE dependency-tier discovery without changing the completed Tier 1 state."
   ]
 }

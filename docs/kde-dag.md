@@ -452,3 +452,11 @@ No new Framework build edge is introduced. The Kirigami relationship remains pac
 Kirigami `6.30.0-0supralinux2` and KQuickCharts `6.30.0-0supralinux4` are now canonical PASS/downstream-eligible DAG nodes. Both retain `depends_on=["extra-cmake-modules"]`; no KQuickCharts -> Kirigami Framework build edge is introduced. The Kirigami ordering used during KQuickCharts validation remains package-validation/QML-runtime metadata only.
 
 The QML/multisurface lane is completed and leaves global discovery. Canonical Tier 1 is **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**. Remaining discovery nodes are `kuserfeedback` and `prison`.
+
+## Batch 11 canonical Tier 1 closure
+
+KUserFeedback `6.30.0-0supralinux5` and Prison `6.30.0-0supralinux1` are canonical PASS/downstream-eligible nodes. Their Framework build dependency remains only retained ECM `6.30.0-0supralinux3`.
+
+Final retained package evidence: KUserFeedback run `35489771315`, job `106022610412`, artifact `10597923863`; Prison run `35488901554`, job `106020266290`, artifact `10597829797`.
+
+Canonical KDE Frameworks Tier 1 is **29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**. The Batch 11 lane is completed and global discovery contains no remaining Tier 1 node.

@@ -147,8 +147,8 @@ for node in source_nodes:
     else:
         require(node.get("packaging") == {"state":"pending"}, f"{node_id}: unattempted packaging must remain pending")
         require(node.get("state") == "pending", f"{node_id}: unattempted node must remain pending")
-require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 27, "Reference validator expects 27 actual package PASS nodes")
-require(sum(1 for node in source_nodes if node.get("state") == "pending") == 2, "Reference validator expects 2 pending nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "PASS") == 29, "Reference validator expects 29 actual package PASS nodes")
+require(sum(1 for node in source_nodes if node.get("state") == "pending") == 0, "Reference validator expects 0 pending nodes")
 for token in ("manifests/kde-frameworks-tier1.json","manifests/kde-frameworks-tier1-packaging-reference.json","scripts/run-kde-tier1-packaging-reference-snapshot.sh","scripts/kde-tier1-packaging-reference-needed.sh",".github/workflows/kde-tier1-packaging-reference.yml"):
     require(token in scope, f"Packaging-reference scope must track input {token}")
 require("docs/" not in scope, "Packaging-reference snapshot must not rerun for documentation-only changes")
@@ -163,4 +163,4 @@ if errors:
     raise SystemExit(1)
 print("KDE Frameworks Tier 1 packaging-reference policy: PASS")
 print("Reference snapshots remain non-authoritative technical inputs")
-print("Actual package states: 27 PASS; 2 pending")
+print("Actual package states: 29 PASS; 0 pending")

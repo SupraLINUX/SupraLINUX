@@ -198,12 +198,12 @@ for node,(job,artifact,digest,rootfs,tests,_,observed,total,required) in inciden
   x=hist[0]
   req(x.get('validation_cycle')==3 and x.get('classification')=='INFRA' and x.get('package_state_effect')=='none' and x.get('commit')=='97e4feb51df541501b027ba80c4b86907d8763c8' and x.get('workflow_run')==35355395436 and x.get('job_id')==job and x.get('artifact_id')==artifact and x.get('artifact_sha256')==digest and x.get('rootfs_sha256')==rootfs and x.get('tests')==tests,f'{node}: attempt ledger infrastructure incident mismatch')
 # After canonical promotion, Batch 9 leaves global discovery and the lane is completed.
-req(set(g.get('nodes',{}))=={'kuserfeedback','prison'},'current post-Batch10 global discovery set mismatch')
+req(g.get('nodes',{})=={},'current post-Batch11 global discovery must be empty')
 for node in expected: req(node not in g.get('nodes',{}),f'{node}: promoted PASS must leave global discovery')
 ma=g.get('lanes',{}).get('multi-abi',{})
 req(ma.get('status')=='completed' and ma.get('nodes')==[],'multi-ABI lane must be completed after Batch 9 promotion')
 snap=g.get('promoted_snapshot',{})
-req((snap.get('pass'),snap.get('pending'),snap.get('current_fail'),snap.get('blocked'))==(27,2,0,0),'current post-Batch10 promoted snapshot mismatch')
+req((snap.get('pass'),snap.get('pending'),snap.get('current_fail'),snap.get('blocked'))==(29,0,0,0),'current post-Batch11 promoted snapshot mismatch')
 workflow=text(WORKFLOW); router=text(ROUTER); policy=text(POLICY); runner=text(RUNNER); scope=text(SCOPE); scope_test=text(SCOPE_TEST); doc=text(DOC)
 for token in ('fail-fast: false','max-parallel: 3','node: [kconfig, ki18n, sonnet]','artifact-ids: \'10298635300\'','artifact-ids: \'10301938362\'','artifact-ids: \'10301282501\'','run-kde-tier1-package-batch9-preflight.sh'):
  req(token in workflow,f'Batch 9 workflow missing {token}')
@@ -219,5 +219,5 @@ if errors:
  for e in errors: print('ERROR:',e,file=sys.stderr)
  raise SystemExit(1)
 print('KDE Tier 1 Batch 9 preparation validation: PASS')
-print('Batch 9 historical canonical closure: 3/3 PASS promoted at 25 PASS / 4 pending; current Tier 1 is 27 PASS / 2 pending / 0 FAIL / 0 BLOCKED')
+print('Batch 9 historical canonical closure: 3/3 PASS promoted at 25 PASS / 4 pending; current Tier 1 is 29 PASS / 0 pending / 0 FAIL / 0 BLOCKED')
 print('Lane: multi-ABI completed; current remaining discovery nodes=2')

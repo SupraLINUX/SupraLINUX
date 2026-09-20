@@ -211,9 +211,9 @@ req('kde-tier1-package-batch10.yml' in router,'PR CI router missing Batch10 reus
 req('test-kde-tier1-package-batch10-scope.sh' in policy and 'validate_kde_tier1_package_batch10.py' in policy,'Repository Policy missing Batch10 checks')
 g=js(ROOT/'manifests/kde-tier1-global-discovery.json'); lane=g['lanes']['qml-multisurface']
 req(lane.get('status')=='completed' and lane.get('nodes')==[] and lane.get('runner')=='scripts/run-kde-tier1-package-batch10-preflight.sh' and lane.get('workflow')=='.github/workflows/kde-tier1-package-batch10.yml','global discovery Batch10 lane not completed')
-req(set(g.get('nodes',{}))=={'kuserfeedback','prison'},'post-Batch10 discovery set mismatch')
+req(g.get('nodes',{})=={},'post-Batch11 discovery must be empty')
 snap=g.get('promoted_snapshot',{})
-req((snap.get('pass'),snap.get('pending'),snap.get('current_fail'),snap.get('blocked'))==(27,2,0,0),'post-Batch10 promoted snapshot mismatch')
+req((snap.get('pass'),snap.get('pending'),snap.get('current_fail'),snap.get('blocked'))==(29,0,0,0),'post-Batch11 promoted snapshot mismatch')
 req(bool(snap.get('note')),'post-Batch10 promoted snapshot must preserve historical-semantics note')
 doc=text(ROOT/'docs/kde-tier1-package-batch10.md')
 for token in ('25 PASS / 4 pending','DIAG_PASS','10464419377','10463808939','package_validation_dependency','BLOCKED','35398956698','10569258322','10570203712','35400585402','10570720119','35403143944','10570704785','35403658149','10570804457','35406143858','10572841006','35407208676','10573097334','35409521508','35409521636','105806202814','10573605864','dc233607ea647780580405b49e8b12855af5aaaf3b2d2bfea50c75fe7ed91780','b1e79e0fbc11672c017acc812efa74116f1681a56596deb87f0f770b47e3d01d','6.30.0-0supralinux4','consumer-smoke','extra-cmake-modules','KF6QuickChartsConfig.cmake','effective_required_export_count_amd64','44/44 PASS','8/8 PASS','optional=templinst|arch=!riscv64','KF6::KirigamiPlatform','qml6-module-org-kde-kirigami','27 PASS / 2 pending','35440818501','35440818686','105891183786','105892252854','35472599190','105976179351','promoted_snapshot.note'):
@@ -222,4 +222,4 @@ if errors:
  print('\n'.join(f'ERROR: {e}' for e in errors),file=sys.stderr); raise SystemExit(1)
 print('KDE Tier 1 Batch 10 canonical closure validation: PASS')
 print('Nodes: kirigami retained PASS; kquickcharts retained PASS; campaign 2/2 PASS')
-print('Canonical state: 27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED; QML/multisurface lane completed')
+print('Canonical state: 29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED; QML/multisurface and Batch 11 lanes completed')

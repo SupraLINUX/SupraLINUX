@@ -187,3 +187,11 @@ Kirigami `6.30.0-0supralinux2` and KQuickCharts `6.30.0-0supralinux4` are now ca
 Promotion precheck on parent `9051539d50e5a2ada41a6975add6c5a6497e6b3e`: Repository Policy run `35440818501`, job `105891164984`, PASS; PR CI run `35440818686`, PASS. The same run revalidated Kirigami in job `105891183786`, artifact `10583642308`, SHA-256 `a3fa47927d42dd605f78b4dc4913025311eed88ea807249da0b29653bd7ac0cb`, and KQuickCharts in job `105892252854`, artifact `10583429116`, SHA-256 `13a7d0ac50f03b9471305fd3b7f056ffaa5e0640a6332ed228bde2c087b87180`.
 
 Canonical Tier 1 is **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**. Remaining nodes are `kuserfeedback` and `prison`. PR #1 remains Draft; promotion does not authorize merge.
+
+## Batch 11 canonical Tier 1 closure
+
+KUserFeedback `6.30.0-0supralinux5` and Prison `6.30.0-0supralinux1` are canonical PASS/downstream-eligible nodes. Their Framework build dependency remains only retained ECM `6.30.0-0supralinux3`.
+
+Final retained package evidence: KUserFeedback run `35489771315`, job `106022610412`, artifact `10597923863`; Prison run `35488901554`, job `106020266290`, artifact `10597829797`.
+
+Canonical KDE Frameworks Tier 1 is **29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**. The Batch 11 lane is completed and global discovery contains no remaining Tier 1 node.

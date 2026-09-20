@@ -133,12 +133,12 @@ for node in nodes:
         require(node.get("state") == "PASS", f"{node_id}: later real package PASS must remain intact")
     else:
         require(node.get("state") == "pending", f"{node_id}: reference-tree work must not promote unattempted package state")
-require(sum(1 for node in nodes if node.get("state") == "PASS") == 27, "Packaging-tree validator expects 27 actual package PASS nodes")
-require(sum(1 for node in nodes if node.get("state") == "pending") == 2, "Packaging-tree validator expects 2 pending nodes")
+require(sum(1 for node in nodes if node.get("state") == "PASS") == 29, "Packaging-tree validator expects 29 actual package PASS nodes")
+require(sum(1 for node in nodes if node.get("state") == "pending") == 0, "Packaging-tree validator expects 0 pending nodes")
 if errors:
     for error in errors:
         print(f"ERROR: {error}", file=sys.stderr)
     raise SystemExit(1)
 print("KDE Tier 1 packaging-tree policy validation: PASS")
 print("Capture evidence remains run 34708030450 / artifact 10301938362 / 58 trees")
-print("Reference work has no state authority; current real package state is 27 PASS / 2 pending")
+print("Reference work has no state authority; current real package state is 29 PASS / 0 pending")

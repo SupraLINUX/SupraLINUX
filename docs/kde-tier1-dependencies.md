@@ -214,3 +214,11 @@ KUserFeedback keeps its upstream-enabled survey-expression, PHP/PHPUnit and docu
 Prison keeps all four upstream default-enabled switches ON: DMTX, ZXing, Quick and Multimedia. Resolute supplies `libdmtx-dev`, `libqrencode-dev`, `libzxing-dev`, `qt6-declarative-dev` and `qt6-multimedia-dev`. Provider availability does not redefine those upstream defaults.
 
 Batch 11 preparation changes readiness only. Canonical package state remains **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED** until retained package PASS evidence is separately promoted.
+
+## Batch 11 canonical Tier 1 closure
+
+KUserFeedback `6.30.0-0supralinux5` and Prison `6.30.0-0supralinux1` are canonical PASS/downstream-eligible nodes. Their Framework build dependency remains only retained ECM `6.30.0-0supralinux3`.
+
+Final retained package evidence: KUserFeedback run `35489771315`, job `106022610412`, artifact `10597923863`; Prison run `35488901554`, job `106020266290`, artifact `10597829797`.
+
+Canonical KDE Frameworks Tier 1 is **29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**. The Batch 11 lane is completed and global discovery contains no remaining Tier 1 node.

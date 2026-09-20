@@ -67,6 +67,27 @@
         "stage": "sbuild",
         "tests": "15/15 CTest PASS",
         "cause": "PHPUnit 13 compatibility is complete; dh_missing found the upstream ENABLE_DOCS UserFeedbackConsole QCH manual unassigned to a binary package."
+      },
+      {
+        "attempt": 5,
+        "package_version": "6.30.0-0supralinux5",
+        "commit": "69d271891f96f75ada404623611ffa42bc061090",
+        "workflow_run": 35489771315,
+        "job_id": 106022610412,
+        "artifact_id": 10597923863,
+        "artifact_sha256": "0a057d591a198f74cf6eee24d3b1ef4355f2a0d6073d48de8e220ac37f0a38b7",
+        "rootfs_sha256": "8b5518bea1704ffb9830b4d9a3259e2655ca69efb6dff108b9a9709e66d87e39",
+        "package_attempted": true,
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "15/15 PASS",
+        "lintian": "PASS-errors",
+        "abi_contract": "PASS",
+        "apt_check": "PASS",
+        "qml_import_smoke": "PASS",
+        "consumer_smoke": "PASS",
+        "development_contract": "PASS",
+        "downstream_eligible": true
       }
     ],
     "prison": [

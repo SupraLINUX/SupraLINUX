@@ -90,3 +90,14 @@ Run `35489499984`, job `106021890875`, artifact `10598313568`, SHA-256 `15458a33
 KUserFeedback `6.30.0-0supralinux4` reaches **15/15 CTest PASS**: the PHPUnit 13 compatibility work is complete. Packaging then fails at `dh_missing` because `ENABLE_DOCS=ON` emits `usr/share/KDE/UserFeedbackConsole/user-feedback-manual.qch` and the initial doc split did not install it.
 
 Revision `-5` assigns that upstream manual to `libkf6userfeedback-doc`. This does not re-enable Framework API QCH: `BUILD_QCH=OFF` remains unchanged.
+
+## Canonical closure
+
+Batch 11 is now **2/2 PASS retained and promoted**.
+
+- KUserFeedback `6.30.0-0supralinux5`: run `35489771315`, job `106022610412`, artifact `10597923863`, ZIP SHA-256 `0a057d591a198f74cf6eee24d3b1ef4355f2a0d6073d48de8e220ac37f0a38b7`, rootfs `8b5518bea1704ffb9830b4d9a3259e2655ca69efb6dff108b9a9709e66d87e39`; 15/15 tests plus Lintian, ABI, APT, QML, development-contract and consumer gates PASS.
+- Prison `6.30.0-0supralinux1`: run `35488901554`, job `106020266290`, artifact `10597829797`, ZIP SHA-256 `f0074c8da29cfda08018fa568fce9cabbf6fc23669416caf20c714c25ff7773f`, rootfs `a1ae6cb653ec18a6dba7142f4ee5acd94210076a9adba23d9d67d03ac03885e7`; 9/9 tests plus Lintian, ABI, APT, QML, development-contract and consumer gates PASS.
+
+Both nodes retain only the ECM Framework build edge. The `multi-surface-optional` lane is completed and leaves global discovery. Canonical KDE Frameworks Tier 1 is now **29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**. Historical real FAILs and INFRA incidents remain in the Batch 11 ledger.
+
+This canonical promotion does not publish packages to the APT `stable` channel.

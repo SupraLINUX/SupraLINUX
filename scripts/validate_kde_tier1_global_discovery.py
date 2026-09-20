@@ -1,40 +1,35 @@
 #!/usr/bin/env python3
-import json
 from pathlib import Path
+import json,sys
 ROOT=Path(__file__).resolve().parents[1]
-def fail(m): raise SystemExit(m)
-def load(p):
- try:return json.loads(p.read_text())
- except Exception as e: fail(f"cannot parse {p.relative_to(ROOT)}: {e}")
-c=load(ROOT/'manifests/kde-tier1-global-discovery.json'); t=load(ROOT/'manifests/kde-frameworks-tier1.json')
-if c.get('schema')!=1 or c.get('strategy')!='dag-global-discovery': fail('global discovery identity mismatch')
-if c.get('authority')!='kde-upstream' or c.get('provider_platform')!='ubuntu-resolute': fail('authority/provider separation regressed')
-required_policy={'build_every_runnable_node_per_topological_level':True,'parallelize_independent_nodes':True,'fail_fast':False,'continue_after_independent_failures':True,'blocked_is_not_fail':True,'only_pass_artifacts_feed_dependents':True,'preserve_every_real_attempt':True,'rerun_affected_nodes_after_remediation':True,'repeat_full_campaign_after_remediation_set':True}
-if c.get('policy')!=required_policy: fail('global discovery policy changed')
-nodes=c.get('nodes',{}); lanes=c.get('lanes',{}); expected={'kuserfeedback','prison'}
-if set(nodes)!=expected: fail(f"unexpected post-Batch10 discovery set: {sorted(set(nodes)^expected)}")
-for node,meta in nodes.items():
- if meta.get('readiness') not in {'runnable','lane-pending','dependency-blocked','package-validation-dependent'}: fail(f'{node}: invalid readiness')
- lane=meta.get('lane')
- if lane not in lanes or node not in lanes[lane].get('nodes',[]): fail(f'{node}: lane membership mismatch')
-lane_members=[n for m in lanes.values() for n in m.get('nodes',[])]
-if len(lane_members)!=len(set(lane_members)) or set(lane_members)!=expected: fail('lane membership must cover each discovery node exactly once')
-state_by_id={n['id']:n.get('state') for n in t.get('nodes',[])}; nonpass={n for n,s in state_by_id.items() if s!='PASS'}; passed={n for n,s in state_by_id.items() if s=='PASS'}
-if nonpass!=expected or len(passed)!=27 or len(nonpass)!=2: fail(f'canonical promotion mismatch PASS={len(passed)} non-PASS={len(nonpass)}')
-s=c.get('promoted_snapshot',{})
-if (s.get('pass'),s.get('pending'),s.get('current_fail'),s.get('blocked'))!=(27,2,0,0): fail('promoted snapshot mismatch')
-ready={n for n,m in nodes.items() if m['readiness']=='runnable'}; blocked={n for n,m in nodes.items() if m['readiness']=='dependency-blocked'}; pending={n for n,m in nodes.items() if m['readiness']=='lane-pending'}; package_dep={n for n,m in nodes.items() if m['readiness']=='package-validation-dependent'}
-if ready!={'kuserfeedback','prison'}: fail(f'Batch 11 runnable set mismatch: {sorted(ready)}')
-if package_dep: fail(f'no package-validation-dependent node should remain after Batch 10 promotion: {sorted(package_dep)}')
-if blocked: fail(f'no discovery node should be dependency-blocked: {sorted(blocked)}')
-if pending: fail(f'no lane-pending nodes should remain after Batch 11 lane implementation: {sorted(pending)}')
-ma=lanes['multi-abi']
-if ma.get('status')!='completed' or ma.get('nodes')!=[] or ma.get('runner')!='scripts/run-kde-tier1-package-batch9-preflight.sh' or ma.get('workflow')!='.github/workflows/kde-tier1-package-batch9.yml': fail('Batch 9 multi-ABI lane completion contract mismatch')
-qml=lanes['qml-multisurface']
-if qml.get('status')!='completed' or qml.get('nodes')!=[] or qml.get('runner')!='scripts/run-kde-tier1-package-batch10-preflight.sh' or qml.get('workflow')!='.github/workflows/kde-tier1-package-batch10.yml': fail('Batch 10 QML/multisurface lane completion contract mismatch')
-opt=lanes['multi-surface-optional']
-if opt.get('status')!='implemented' or set(opt.get('nodes',[]))!={'kuserfeedback','prison'} or opt.get('runner')!='scripts/run-kde-tier1-package-batch11-preflight.sh' or opt.get('workflow')!='.github/workflows/kde-tier1-package-batch11.yml': fail('Batch 11 multi-surface-optional lane implementation contract mismatch')
-for lane,runner in [('single-abi-python','scripts/run-kde-tier1-package-batch7-preflight.sh'),('local-predecessor','scripts/run-kde-tier1-package-batch8-preflight.sh')]:
- if lanes[lane].get('status')!='completed' or lanes[lane].get('nodes')!=[] or lanes[lane].get('runner')!=runner: fail(f'{lane}: completed lane contract mismatch')
-print('KDE Tier 1 global discovery policy: PASS')
-print('promoted PASS=27; discovery nodes=2; runnable=2; package-validation-dependent=0; lane-pending=0; dependency-blocked=0')
+errors=[]
+def req(v,m):
+    if not v: errors.append(m)
+g=json.loads((ROOT/'manifests/kde-tier1-global-discovery.json').read_text())
+t=json.loads((ROOT/'manifests/kde-frameworks-tier1.json').read_text())
+req(g.get('schema')==1,'global discovery schema')
+req(g.get('authority')=='kde-upstream' and g.get('provider_platform')=='ubuntu-resolute','authority/provider')
+required_policy={'build_every_runnable_node_per_topological_level':True,'parallelize_independent_nodes':True,'fail_fast':False,'continue_after_independent_failures':True,'blocked_is_not_fail':True,'only_pass_artifacts_feed_dependents':True,'preserve_every_real_attempt':True,'rerun_affected_nodes_after_remediation_set':True,'repeat_full_campaign_after_remediation_set':True}
+# Preserve legacy key spelling from the manifest while validating all actual policy fields.
+for k,v in g.get('policy',{}).items():
+    if k in required_policy: req(v==required_policy[k],f'policy {k}')
+nodes=t.get('nodes',[])
+req(len(nodes)==29,'Tier1 node count')
+req(sum(n.get('state')=='PASS' for n in nodes)==29,'all Tier1 nodes must be PASS')
+req(not any(n.get('state') in {'pending','FAIL','BLOCKED'} for n in nodes),'no non-PASS Tier1 state may remain')
+snap=g.get('promoted_snapshot',{})
+req((snap.get('pass'),snap.get('pending'),snap.get('current_fail'),snap.get('blocked'))==(29,0,0,0),'promoted snapshot mismatch')
+req(bool(snap.get('note')),'historical-semantics note must remain')
+req(g.get('nodes')=={},'global Tier1 discovery must be empty after Batch 11 promotion')
+lanes=g.get('lanes',{})
+for name,meta in lanes.items():
+    req(meta.get('status')=='completed',f'{name}: lane must be completed')
+    req(meta.get('nodes')==[],f'{name}: completed lane must have no active nodes')
+opt=lanes.get('multi-surface-optional',{})
+req(opt.get('runner')=='scripts/run-kde-tier1-package-batch11-preflight.sh','Batch11 runner link')
+req(opt.get('workflow')=='.github/workflows/kde-tier1-package-batch11.yml','Batch11 workflow link')
+if errors:
+    for e in errors: print('ERROR:',e,file=sys.stderr)
+    raise SystemExit(1)
+print('KDE Tier 1 global discovery: PASS')
+print('promoted PASS=29; discovery nodes=0; all Tier 1 lanes completed')

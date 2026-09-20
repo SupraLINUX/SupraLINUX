@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-18",
+  "as_of": "2026-09-20",
   "authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "tier": 1,
@@ -1385,9 +1385,63 @@
         "node": "kuserfeedback"
       },
       "packaging": {
-        "state": "pending"
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux5",
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "downstream_eligible": true,
+        "attempt_ledger": "manifests/kde-tier1-package-batch11-attempts.json",
+        "evidence": [
+          {
+            "result": "PASS",
+            "workflow_run": 35489771315,
+            "job_id": 106022610412,
+            "commit": "69d271891f96f75ada404623611ffa42bc061090",
+            "attempted_package_version": "6.30.0-0supralinux5",
+            "artifact_id": 10597923863,
+            "artifact_sha256": "0a057d591a198f74cf6eee24d3b1ef4355f2a0d6073d48de8e220ac37f0a38b7",
+            "rootfs_sha256": "8b5518bea1704ffb9830b4d9a3259e2655ca69efb6dff108b9a9709e66d87e39",
+            "stage": "complete",
+            "tests": "15/15 PASS",
+            "lintian": "PASS-errors",
+            "consumer_smoke": "PASS",
+            "apt_check": "PASS",
+            "qml_import_smoke": "PASS",
+            "development_contract": "PASS",
+            "abi_sonames": [
+              "libKF6UserFeedbackCore.so.6",
+              "libKF6UserFeedbackWidgets.so.6"
+            ],
+            "abi_exports": {
+              "UserFeedbackCore": 254,
+              "UserFeedbackWidgets": 61
+            },
+            "qml_modules": [
+              "org.kde.userfeedback"
+            ],
+            "ecm_predecessor": "6.30.0-0supralinux3",
+            "downstream_eligible": true,
+            "files": {
+              "libkf6userfeedback_data_deb_sha256": "daea03e0cbfb7d59e81d6b41461d1618b0f5832ac5d8ef3d7cd9455753aec6a9",
+              "libkf6userfeedback_dev_deb_sha256": "79ec41add8d9fd99c6f68883d45bcd3e80e4e86b14d73f896f9785c93537028a",
+              "libkf6userfeedback_doc_deb_sha256": "3965b5669dba6e7b0f21f6f7f79f4e23df65e201f84d592936d85b7cc9658895",
+              "libkf6userfeedbackcore6_deb_sha256": "d9764a9fe2be2600dadc98792c8ca2d735922347a570709a8f77032ee979062e",
+              "libkf6userfeedbackwidgets6_deb_sha256": "3c81cebc3c6eab989b33f7de67b9c9d295929e068ad46199ef74b99bb1279eb5",
+              "qml6_module_org_kde_userfeedback_deb_sha256": "46ca09a8971615403d1e70d71f4b1719984db6fa68e03db3d7d0a32b531ad8f7",
+              "libkf6userfeedbackcore6_dbgsym_ddeb_sha256": "60f58b5156ceaca18f767ac19e06e7311a0472378afb10c3095fd1dd0682b4ae",
+              "libkf6userfeedbackwidgets6_dbgsym_ddeb_sha256": "8ce5a1df78403b97f186808679537bfa7e1dfd5d41a33159c99b8a0e07a55124",
+              "qml6_module_org_kde_userfeedback_dbgsym_ddeb_sha256": "b482a602431785bcbd7b977d84a5ea2d1a95cef4fceb9b54101c95d79a58ba21",
+              "changes_sha256": "80de1776fef368b25628a6c2e8b944f88435b41cf2fd0e60583f26932ea6b221",
+              "buildinfo_sha256": "985a7cef0991dbeb3d7f052e206c9759e78ea0930043c359ef6c7490d1bbb364",
+              "dsc_sha256": "eab1614ea718ad14c7f56b1a27a27cacbedd7e82b9d6252e6df6a910cc050211",
+              "orig_tar_sha256": "c8a463c8e570f6d532cbe150732220575c6385df97c91399b6c84450691771ca",
+              "debian_tar_sha256": "12a8ba993a47d9c12cda2669e6c0017c871147ac836a6a2679c9679401168e37",
+              "rootfs_sha256": "8b5518bea1704ffb9830b4d9a3259e2655ca69efb6dff108b9a9709e66d87e39"
+            }
+          }
+        ]
       },
-      "state": "pending"
+      "state": "PASS"
     },
     {
       "id": "kwidgetsaddons",
@@ -1724,9 +1778,63 @@
         "node": "prison"
       },
       "packaging": {
-        "state": "pending"
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux1",
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "downstream_eligible": true,
+        "attempt_ledger": "manifests/kde-tier1-package-batch11-attempts.json",
+        "evidence": [
+          {
+            "result": "PASS",
+            "workflow_run": 35488901554,
+            "job_id": 106020266290,
+            "commit": "7f4a42af54c4d3a1603f9b7cca95a5b45786ff58",
+            "attempted_package_version": "6.30.0-0supralinux1",
+            "artifact_id": 10597829797,
+            "artifact_sha256": "f0074c8da29cfda08018fa568fce9cabbf6fc23669416caf20c714c25ff7773f",
+            "rootfs_sha256": "a1ae6cb653ec18a6dba7142f4ee5acd94210076a9adba23d9d67d03ac03885e7",
+            "stage": "complete",
+            "tests": "9/9 PASS",
+            "lintian": "PASS-errors",
+            "consumer_smoke": "PASS",
+            "apt_check": "PASS",
+            "qml_import_smoke": "PASS",
+            "development_contract": "PASS",
+            "abi_sonames": [
+              "libKF6Prison.so.6",
+              "libKF6PrisonScanner.so.6"
+            ],
+            "abi_exports": {
+              "Prison": 34,
+              "PrisonScanner": 40
+            },
+            "qml_modules": [
+              "org.kde.prison",
+              "org.kde.prison.scanner"
+            ],
+            "ecm_predecessor": "6.30.0-0supralinux3",
+            "downstream_eligible": true,
+            "files": {
+              "libkf6prison_dev_deb_sha256": "b6cc3d54505dfc4c41ff8aab00681a9f3589863ebd515c9ab4a7e643a257f2bc",
+              "libkf6prison_doc_deb_sha256": "ee19117a75501cbb6f9efd1450c042baab388dcfa378312bf9c18620b6cf2dc7",
+              "libkf6prison6_deb_sha256": "b094df03cc9a0b0c5784e55a3178709987cde68fb41a28e5f7112ff8ba34055e",
+              "libkf6prisonscanner6_deb_sha256": "02d084237a2c339b954607da2ea796e7e788f74880cedc91f42972dab82b3768",
+              "qml6_module_org_kde_prison_deb_sha256": "8d5a157e61f746b76af8d9300e0f310dc4e331178ea580f770179e5cec650650",
+              "libkf6prison6_dbgsym_ddeb_sha256": "f9e5a1084f1e9d2c528739e671b5b652fbf1de9a1974e05d7691ec5ef644daec",
+              "libkf6prisonscanner6_dbgsym_ddeb_sha256": "6aeabc65fd0cecd6ab7d370bf9ddd7d48d3eff74b1b26666b215d8af24a9ac2a",
+              "qml6_module_org_kde_prison_dbgsym_ddeb_sha256": "d60707c8e8b68ceba9b1e7af49d3159afc48925800081dc35f5e1a597e563dcb",
+              "changes_sha256": "205b2af4cabe4b299adcce9cfba84c0e7c783fa44b608c944f3d992f5eae464c",
+              "buildinfo_sha256": "43915c9f6736b5a7999e14e7f9c3f3f551b83014f8401f215bcc324a37aece48",
+              "dsc_sha256": "1cf3b1e63153bcebdd2e462f99ab678d6135b8179c37960fcbb9629f349d7150",
+              "orig_tar_sha256": "2cdb0a2689ab45b907c76c9a01c1dc14855b8e5329ad0a9cf65c1ad64e5fed1b",
+              "debian_tar_sha256": "f76a7a74c17bf73a4277f0e63be52818ed80a3ee293c067653b9f82117a10812",
+              "rootfs_sha256": "a1ae6cb653ec18a6dba7142f4ee5acd94210076a9adba23d9d67d03ac03885e7"
+            }
+          }
+        ]
       },
-      "state": "pending"
+      "state": "PASS"
     },
     {
       "id": "solid",
