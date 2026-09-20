@@ -20,6 +20,115 @@
     "note": "These are planning/readiness states, not package FAIL/BLOCKED results."
   },
   "nodes": {
+    "kcolorscheme": {
+      "readiness": "package-lane-pending",
+      "tier1_predecessors": [
+        "kconfig",
+        "kguiaddons",
+        "ki18n"
+      ]
+    },
+    "kcompletion": {
+      "readiness": "package-lane-pending",
+      "tier1_predecessors": [
+        "kcodecs",
+        "kconfig",
+        "kwidgetsaddons"
+      ]
+    },
+    "kcontacts": {
+      "readiness": "package-lane-pending",
+      "tier1_predecessors": [
+        "ki18n",
+        "kconfig",
+        "kcodecs"
+      ]
+    },
+    "kcrash": {
+      "readiness": "package-lane-pending",
+      "tier1_predecessors": [
+        "kcoreaddons"
+      ]
+    },
+    "kdeclarative": {
+      "readiness": "package-lane-pending",
+      "tier1_predecessors": [
+        "ki18n",
+        "kconfig",
+        "kguiaddons"
+      ],
+      "conditional_tier1": [
+        "kglobalaccel",
+        "kwidgetsaddons"
+      ],
+      "provider_audit": "required-before-materialization"
+    },
+    "kfilemetadata": {
+      "readiness": "package-lane-pending",
+      "tier1_predecessors": [
+        "ki18n"
+      ],
+      "conditional_tier1": [
+        "karchive",
+        "kcoreaddons",
+        "kconfig",
+        "kcodecs"
+      ],
+      "provider_audit": "required-before-materialization"
+    },
+    "knotifications": {
+      "readiness": "package-lane-pending",
+      "tier1_predecessors": [
+        "kconfig"
+      ]
+    },
+    "kpackage": {
+      "readiness": "package-lane-pending",
+      "tier1_predecessors": [
+        "karchive",
+        "ki18n",
+        "kcoreaddons"
+      ],
+      "optional_higher_tier": [
+        "kdoctools"
+      ]
+    },
+    "kpty": {
+      "readiness": "package-lane-pending",
+      "tier1_predecessors": [
+        "kcoreaddons",
+        "ki18n"
+      ]
+    },
+    "kservice": {
+      "readiness": "package-lane-pending",
+      "tier1_predecessors": [
+        "kconfig",
+        "kcoreaddons",
+        "ki18n"
+      ],
+      "optional_higher_tier": [
+        "kdoctools"
+      ]
+    },
+    "kstatusnotifieritem": {
+      "readiness": "package-lane-pending",
+      "tier1_predecessors": [
+        "kwindowsystem"
+      ]
+    },
+    "kunitconversion": {
+      "readiness": "package-lane-pending",
+      "tier1_predecessors": [
+        "ki18n"
+      ]
+    },
+    "syndication": {
+      "readiness": "package-lane-pending",
+      "tier1_predecessors": [
+        "kcodecs"
+      ]
+    },
     "kmime": {
       "readiness": "compatibility-decision-required",
       "tier1_predecessors": [
@@ -30,13 +139,14 @@
     }
   },
   "next_actions": [
+    "Materialize package contracts for the 13 non-KMime pending Tier 2 nodes in DAG-friendly batches, starting with simple single-predecessor nodes.",
+    "Audit conditional/provider-selected surfaces before materializing KDeclarative and KFileMetaData.",
     "Keep retained KAuth PASS artifacts available to later dependency tiers.",
-    "Do not attempt KMime packaging until ADR-0002 selects a compatibility transition preserving Ubuntu application contracts.",
-    "After the KMime architecture decision, materialize only its approved package contract and validate legacy-Ubuntu plus KF6Mime consumers."
+    "Do not attempt KMime packaging until ADR-0002 selects a compatibility transition preserving Ubuntu application contracts."
   ],
   "promoted_snapshot": {
     "pass": 1,
-    "pending": 1,
+    "pending": 14,
     "current_fail": 0,
     "blocked": 0
   },
@@ -57,5 +167,14 @@
       ],
       "downstream_eligible": true
     }
+  },
+  "inventory_correction": {
+    "date": "2026-09-20",
+    "previous_incorrect_scope": "KAuth + KMime only",
+    "corrected_upstream_tier2_count": 15,
+    "evidence": [
+      "https://api.kde.org/",
+      "https://kde.org/info/kde-frameworks-6.30.0/"
+    ]
   }
 }
