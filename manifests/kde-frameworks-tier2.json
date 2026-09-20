@@ -150,7 +150,8 @@
       "planning": {
         "readiness": "package-lane-pending",
         "provider_audit": "required-before-materialization",
-        "package_contract": "not-materialized"
+        "package_contract": "not-materialized",
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
       }
     },
     {
@@ -191,7 +192,8 @@
       "planning": {
         "readiness": "package-lane-pending",
         "provider_audit": "required-before-materialization",
-        "package_contract": "not-materialized"
+        "package_contract": "not-materialized",
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
       }
     },
     {
@@ -232,7 +234,8 @@
       "planning": {
         "readiness": "package-lane-pending",
         "provider_audit": "required-before-materialization",
-        "package_contract": "not-materialized"
+        "package_contract": "not-materialized",
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
       }
     },
     {
@@ -269,7 +272,8 @@
       "planning": {
         "readiness": "package-lane-pending",
         "provider_audit": "required-before-materialization",
-        "package_contract": "not-materialized"
+        "package_contract": "not-materialized",
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
       }
     },
     {
@@ -313,7 +317,8 @@
       "planning": {
         "readiness": "package-lane-pending",
         "provider_audit": "required-before-materialization",
-        "package_contract": "not-materialized"
+        "package_contract": "not-materialized",
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
       }
     },
     {
@@ -355,7 +360,8 @@
       "planning": {
         "readiness": "package-lane-pending",
         "provider_audit": "required-before-materialization",
-        "package_contract": "not-materialized"
+        "package_contract": "not-materialized",
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
       }
     },
     {
@@ -392,7 +398,8 @@
       "planning": {
         "readiness": "package-lane-pending",
         "provider_audit": "required-before-materialization",
-        "package_contract": "not-materialized"
+        "package_contract": "not-materialized",
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
       }
     },
     {
@@ -433,7 +440,8 @@
       "planning": {
         "readiness": "package-lane-pending",
         "provider_audit": "required-before-materialization",
-        "package_contract": "not-materialized"
+        "package_contract": "not-materialized",
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
       }
     },
     {
@@ -472,7 +480,8 @@
       "planning": {
         "readiness": "package-lane-pending",
         "provider_audit": "required-before-materialization",
-        "package_contract": "not-materialized"
+        "package_contract": "not-materialized",
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
       }
     },
     {
@@ -513,7 +522,8 @@
       "planning": {
         "readiness": "package-lane-pending",
         "provider_audit": "required-before-materialization",
-        "package_contract": "not-materialized"
+        "package_contract": "not-materialized",
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
       }
     },
     {
@@ -550,7 +560,8 @@
       "planning": {
         "readiness": "package-lane-pending",
         "provider_audit": "required-before-materialization",
-        "package_contract": "not-materialized"
+        "package_contract": "not-materialized",
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
       }
     },
     {
@@ -587,7 +598,8 @@
       "planning": {
         "readiness": "package-lane-pending",
         "provider_audit": "required-before-materialization",
-        "package_contract": "not-materialized"
+        "package_contract": "not-materialized",
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
       }
     },
     {
@@ -624,7 +636,8 @@
       "planning": {
         "readiness": "package-lane-pending",
         "provider_audit": "required-before-materialization",
-        "package_contract": "not-materialized"
+        "package_contract": "not-materialized",
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
       }
     },
     {
