@@ -27,7 +27,15 @@ req(audit.get("status") in {"pending-ci", "PASS"}, "Tier 2 provider-audit status
 req(audit.get("provider_platform") == "ubuntu-resolute", "Tier 2 provider platform")
 req(audit.get("source_authority") == "kde-upstream-v6.30.0", "Tier 2 source authority")
 req(audit.get("authoritative_package_build") is False, "provider audit must not claim package build certification")
-req(batch == plan.get("next_provider_audit_batch"), "provider-audit batch must equal generated campaign next batch")
+if audit.get("status") == "pending-ci":
+    req(batch == plan.get("next_provider_audit_batch"), "pending provider-audit batch must equal generated campaign next batch")
+elif audit.get("status") == "PASS":
+    req(set(batch) <= set(plan.get("package_contract_ready", [])), "PASS provider-audit nodes must be package-contract-ready")
+    evidence = audit.get("evidence", {})
+    req(evidence.get("result") == "PASS", "provider-audit PASS evidence result")
+    req(evidence.get("package_state_effect") == "none", "provider-audit must not alter package state")
+    req(isinstance(evidence.get("artifact_id"), int), "provider-audit artifact evidence")
+    req(len(evidence.get("artifact_sha256", "")) == 64, "provider-audit artifact SHA-256")
 
 req(registry.get("inherited_from") == "manifests/kde-frameworks-tier1-dependencies.json", "provider registry inheritance")
 req(set(registry.get("inherited_sections", [])) == {"qt_provider_packages", "requirements"}, "provider registry inherited sections")
@@ -40,7 +48,8 @@ nodes = deps.get("nodes", {})
 for node_id in batch:
     node = nodes.get(node_id, {})
     req(node, f"{node_id}: dependency node exists")
-    req(node.get("provider_audit") in {"pending-ci", "PASS"}, f"{node_id}: provider audit state")
+    expected_audit_state = "PASS" if audit.get("status") == "PASS" else "pending-ci"
+    req(node.get("provider_audit") == expected_audit_state, f"{node_id}: provider audit state")
     req(node.get("selected_linux_profile", {}).get("BUILD_TESTING") is True, f"{node_id}: BUILD_TESTING selected")
     for category in ("required", "provider_selected", "default_enabled", "test", "optional"):
         for component in node.get("qt", {}).get(category, []):

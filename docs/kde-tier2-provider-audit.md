@@ -1,6 +1,6 @@
 # KDE Tier 2 provider audit
 
-Status: **first batch prepared; CI provider evidence pending**  
+Status: **first batch PASS; package contracts not yet materialized**  
 Reviewed: **2026-09-20**
 
 ## Scope
@@ -32,3 +32,19 @@ Qt and common external provider mappings are inherited from the already validate
 The hosted Ubuntu 26.04 audit records manifest/input SHA-256 values, apt candidate and installed versions, selected Linux profiles and retained Tier 1 predecessors, Qt/PySide alignment, Canberra discovery, Python build providers, a CMake discovery probe, and `result.json` with `package_state_effect=none`.
 
 Only after this provider audit is PASS may these nodes become package-contract-ready. A later real clean package build is still required for PASS.
+
+
+## Batch 1 PASS evidence
+
+Ubuntu Resolute provider audit run `35524034558`, job `106112947247`: **PASS**.
+
+- artifact: `10609298463`
+- artifact SHA-256: `8418ca46593df82cdfb6ac306bcebbf97cde44f79db133f704b09e525f01a63d`
+- Qt: `6.10.2`
+- PySide6/Shiboken6: `6.10.2`
+- X11 provider: `libx11-dev 2:1.8.13-1`
+- Canberra provider: `libcanberra-dev 0.30-18ubuntu3`
+- optional Qt QML provider was available but remained optional
+- package state effect: **none**
+
+KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication are now **package-contract-ready**. All five remain package-state `pending`.

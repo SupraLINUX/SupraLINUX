@@ -59,8 +59,13 @@ for node_id, node in sorted(nodes.items()):
 
         if planning.get("provider_audit") == "required-before-materialization":
             req(
-                dep.get("provider_audit") == "pending-package-profile-audit",
+                dep.get("provider_audit") in {"pending-package-profile-audit", "pending-ci"},
                 f"{node_id}: provider audit state drift",
+            )
+        elif planning.get("provider_audit") == "complete":
+            req(
+                dep.get("provider_audit") == "PASS",
+                f"{node_id}: completed provider audit lacks PASS evidence state",
             )
 
 snapshot = discovery.get("promoted_snapshot", {})

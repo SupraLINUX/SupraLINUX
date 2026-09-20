@@ -264,7 +264,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
       "qt": {
         "required": [
@@ -324,7 +324,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
       "qt": {
         "required": [
@@ -400,7 +400,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
       "qt": {
         "required": [
@@ -434,7 +434,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
       "qt": {
         "required": [
@@ -466,7 +466,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
       "qt": {
         "required": [
@@ -513,7 +513,7 @@
   "provider_audit": {
     "schema": 1,
     "batch": "tier2-provider-audit-1",
-    "status": "pending-ci",
+    "status": "PASS",
     "nodes": [
       "kcrash",
       "knotifications",
@@ -524,6 +524,24 @@
     "source_authority": "kde-upstream-v6.30.0",
     "provider_platform": "ubuntu-resolute",
     "claim": "provider-availability-and-selected-profile-only",
-    "authoritative_package_build": false
+    "authoritative_package_build": false,
+    "evidence": {
+      "workflow_run": 35524034558,
+      "job_id": 106112947247,
+      "commit": "b47c5ab6ea654cc79a9c13ebc08c8719e585183f",
+      "artifact_id": 10609298463,
+      "artifact_sha256": "8418ca46593df82cdfb6ac306bcebbf97cde44f79db133f704b09e525f01a63d",
+      "claim": "provider-availability-and-selected-profile-only",
+      "package_state_effect": "none",
+      "result": "PASS",
+      "observed_providers": {
+        "qt6_base_dev": "6.10.2+dfsg-7",
+        "libpyside6_dev": "6.10.2-6ubuntu1",
+        "libshiboken6_dev": "6.10.2-6ubuntu1",
+        "libx11_dev": "2:1.8.13-1",
+        "libcanberra_dev": "0.30-18ubuntu3",
+        "python3_build": "1.4.0-1"
+      }
+    }
   }
 }

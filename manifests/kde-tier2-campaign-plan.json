@@ -14,46 +14,6 @@
   ],
   "provider_audit_required": [
     {
-      "node": "kcrash",
-      "required_predecessors": [
-        "kcoreaddons"
-      ],
-      "conditional_frameworks": [],
-      "selected_profile": []
-    },
-    {
-      "node": "knotifications",
-      "required_predecessors": [
-        "kconfig"
-      ],
-      "conditional_frameworks": [],
-      "selected_profile": []
-    },
-    {
-      "node": "kstatusnotifieritem",
-      "required_predecessors": [
-        "kwindowsystem"
-      ],
-      "conditional_frameworks": [],
-      "selected_profile": []
-    },
-    {
-      "node": "kunitconversion",
-      "required_predecessors": [
-        "ki18n"
-      ],
-      "conditional_frameworks": [],
-      "selected_profile": []
-    },
-    {
-      "node": "syndication",
-      "required_predecessors": [
-        "kcodecs"
-      ],
-      "conditional_frameworks": [],
-      "selected_profile": []
-    },
-    {
       "node": "kpty",
       "required_predecessors": [
         "kcoreaddons",
@@ -139,7 +99,13 @@
       "selected_profile": []
     }
   ],
-  "package_contract_ready": [],
+  "package_contract_ready": [
+    "kcrash",
+    "knotifications",
+    "kstatusnotifieritem",
+    "kunitconversion",
+    "syndication"
+  ],
   "human_decision_required": [
     {
       "node": "kmime",
@@ -149,11 +115,11 @@
   "build_queue": [],
   "audit_batch_size": 5,
   "next_provider_audit_batch": [
-    "kcrash",
-    "knotifications",
-    "kstatusnotifieritem",
-    "kunitconversion",
-    "syndication"
+    "kpty",
+    "kcolorscheme",
+    "kcompletion",
+    "kcontacts",
+    "kpackage"
   ],
   "policy": {
     "canonical_manifest_is_source_of_truth": true,

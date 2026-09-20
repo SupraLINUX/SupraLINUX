@@ -270,10 +270,19 @@
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-lane-pending",
-        "provider_audit": "required-before-materialization",
+        "readiness": "package-contract-ready",
+        "provider_audit": "complete",
         "package_contract": "not-materialized",
-        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
+        "provider_audit_evidence": {
+          "workflow_run": 35524034558,
+          "job_id": 106112947247,
+          "commit": "b47c5ab6ea654cc79a9c13ebc08c8719e585183f",
+          "artifact_id": 10609298463,
+          "artifact_sha256": "8418ca46593df82cdfb6ac306bcebbf97cde44f79db133f704b09e525f01a63d",
+          "claim": "provider-availability-and-selected-profile-only",
+          "package_state_effect": "none"
+        }
       }
     },
     {
@@ -396,10 +405,19 @@
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-lane-pending",
-        "provider_audit": "required-before-materialization",
+        "readiness": "package-contract-ready",
+        "provider_audit": "complete",
         "package_contract": "not-materialized",
-        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
+        "provider_audit_evidence": {
+          "workflow_run": 35524034558,
+          "job_id": 106112947247,
+          "commit": "b47c5ab6ea654cc79a9c13ebc08c8719e585183f",
+          "artifact_id": 10609298463,
+          "artifact_sha256": "8418ca46593df82cdfb6ac306bcebbf97cde44f79db133f704b09e525f01a63d",
+          "claim": "provider-availability-and-selected-profile-only",
+          "package_state_effect": "none"
+        }
       }
     },
     {
@@ -558,10 +576,19 @@
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-lane-pending",
-        "provider_audit": "required-before-materialization",
+        "readiness": "package-contract-ready",
+        "provider_audit": "complete",
         "package_contract": "not-materialized",
-        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
+        "provider_audit_evidence": {
+          "workflow_run": 35524034558,
+          "job_id": 106112947247,
+          "commit": "b47c5ab6ea654cc79a9c13ebc08c8719e585183f",
+          "artifact_id": 10609298463,
+          "artifact_sha256": "8418ca46593df82cdfb6ac306bcebbf97cde44f79db133f704b09e525f01a63d",
+          "claim": "provider-availability-and-selected-profile-only",
+          "package_state_effect": "none"
+        }
       }
     },
     {
@@ -596,10 +623,19 @@
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-lane-pending",
-        "provider_audit": "required-before-materialization",
+        "readiness": "package-contract-ready",
+        "provider_audit": "complete",
         "package_contract": "not-materialized",
-        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
+        "provider_audit_evidence": {
+          "workflow_run": 35524034558,
+          "job_id": 106112947247,
+          "commit": "b47c5ab6ea654cc79a9c13ebc08c8719e585183f",
+          "artifact_id": 10609298463,
+          "artifact_sha256": "8418ca46593df82cdfb6ac306bcebbf97cde44f79db133f704b09e525f01a63d",
+          "claim": "provider-availability-and-selected-profile-only",
+          "package_state_effect": "none"
+        }
       }
     },
     {
@@ -634,10 +670,19 @@
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-lane-pending",
-        "provider_audit": "required-before-materialization",
+        "readiness": "package-contract-ready",
+        "provider_audit": "complete",
         "package_contract": "not-materialized",
-        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
+        "provider_audit_evidence": {
+          "workflow_run": 35524034558,
+          "job_id": 106112947247,
+          "commit": "b47c5ab6ea654cc79a9c13ebc08c8719e585183f",
+          "artifact_id": 10609298463,
+          "artifact_sha256": "8418ca46593df82cdfb6ac306bcebbf97cde44f79db133f704b09e525f01a63d",
+          "claim": "provider-availability-and-selected-profile-only",
+          "package_state_effect": "none"
+        }
       }
     },
     {

@@ -57,12 +57,12 @@ The validator intentionally does not embed a second copy of Tier 2 source hashes
 ## Current generated state
 
 - retained PASS: KAuth;
-- provider audit required before materialization: 13 nodes;
+- provider audit required before materialization: 8 nodes;
 - human decision required: KMime / ADR-0002;
-- package-contract-ready: none;
+- package-contract-ready: KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication;
 - build queue: none.
 
-The first deterministic provider-audit batch is KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication. This ordering is an audit scheduling heuristic, not a claim that those packages are already build-ready.
+Provider-audit batch 1 is PASS. The next deterministic provider-audit batch is KPty, KColorScheme, KCompletion, KContacts and KPackage. Package-contract-ready is still a pending readiness state; package PASS requires a real clean build.
 
 ## Publication policy
 
