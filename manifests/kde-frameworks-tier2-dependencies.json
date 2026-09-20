@@ -264,8 +264,28 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-package-profile-audit",
-      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package."
+      "provider_audit": "pending-ci",
+      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
+      "qt": {
+        "required": [
+          "Core",
+          "Gui",
+          "Test"
+        ],
+        "test": [
+          "Widgets"
+        ]
+      },
+      "external": {
+        "provider_selected": [
+          "x11"
+        ]
+      },
+      "selected_linux_profile": {
+        "WITH_X11": true,
+        "BUILD_TESTING": true,
+        "reason": "Upstream v6.30.0 enables WITH_X11 by default on Linux and requires X11 when selected."
+      }
     },
     "kdeclarative": {
       "frameworks": {
@@ -304,8 +324,39 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-package-profile-audit",
-      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package."
+      "provider_audit": "pending-ci",
+      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
+      "qt": {
+        "required": [
+          "Gui"
+        ],
+        "provider_selected": [
+          "DBus"
+        ],
+        "optional": [
+          "Qml"
+        ],
+        "test": [
+          "Test"
+        ]
+      },
+      "external": {
+        "required": [
+          "canberra"
+        ],
+        "default_enabled": [
+          "python-dev",
+          "shiboken6",
+          "pyside6",
+          "python-build"
+        ]
+      },
+      "selected_linux_profile": {
+        "USE_DBUS": true,
+        "BUILD_PYTHON_BINDINGS": true,
+        "BUILD_TESTING": true,
+        "reason": "Upstream v6.30.0 defaults DBus and Python bindings ON on Linux; Canberra is required on the Linux profile."
+      }
     },
     "kpackage": {
       "frameworks": {
@@ -349,8 +400,32 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-package-profile-audit",
-      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package."
+      "provider_audit": "pending-ci",
+      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
+      "qt": {
+        "required": [
+          "Widgets"
+        ],
+        "provider_selected": [
+          "DBus"
+        ]
+      },
+      "external": {
+        "default_enabled": [
+          "x11",
+          "python-dev",
+          "shiboken6",
+          "pyside6",
+          "python-build"
+        ]
+      },
+      "selected_linux_profile": {
+        "WITHOUT_X11": false,
+        "USE_DBUS": true,
+        "BUILD_PYTHON_BINDINGS": true,
+        "BUILD_TESTING": true,
+        "reason": "Upstream v6.30.0 defaults DBus and Python bindings ON and does not disable X11 on Linux."
+      }
     },
     "kunitconversion": {
       "frameworks": {
@@ -359,8 +434,30 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-package-profile-audit",
-      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package."
+      "provider_audit": "pending-ci",
+      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
+      "qt": {
+        "required": [
+          "Core",
+          "Network"
+        ],
+        "test": [
+          "Test"
+        ]
+      },
+      "external": {
+        "default_enabled": [
+          "python-dev",
+          "shiboken6",
+          "pyside6",
+          "python-build"
+        ]
+      },
+      "selected_linux_profile": {
+        "BUILD_PYTHON_BINDINGS": true,
+        "BUILD_TESTING": true,
+        "reason": "Upstream v6.30.0 defaults Python bindings ON on Linux."
+      }
     },
     "syndication": {
       "frameworks": {
@@ -369,8 +466,22 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-package-profile-audit",
-      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package."
+      "provider_audit": "pending-ci",
+      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
+      "qt": {
+        "required": [
+          "Xml"
+        ],
+        "test": [
+          "Test",
+          "Network"
+        ]
+      },
+      "external": {},
+      "selected_linux_profile": {
+        "BUILD_TESTING": true,
+        "reason": "SupraLINUX package certification keeps upstream tests enabled; v6.30.0 autotests/tests require Qt Test and Network."
+      }
     }
   },
   "inventory_correction": {
@@ -381,5 +492,38 @@
       "kauth"
     ],
     "pending_nodes": 14
+  },
+  "provider_registry": {
+    "inherited_from": "manifests/kde-frameworks-tier1-dependencies.json",
+    "inherited_sections": [
+      "qt_provider_packages",
+      "requirements"
+    ],
+    "additions": {
+      "canberra": {
+        "name": "Canberra",
+        "packages": [
+          "libcanberra-dev"
+        ],
+        "provider_status": "resolute-candidate-verified",
+        "observed_version": "0.30-18ubuntu3"
+      }
+    }
+  },
+  "provider_audit": {
+    "schema": 1,
+    "batch": "tier2-provider-audit-1",
+    "status": "pending-ci",
+    "nodes": [
+      "kcrash",
+      "knotifications",
+      "kstatusnotifieritem",
+      "kunitconversion",
+      "syndication"
+    ],
+    "source_authority": "kde-upstream-v6.30.0",
+    "provider_platform": "ubuntu-resolute",
+    "claim": "provider-availability-and-selected-profile-only",
+    "authoritative_package_build": false
   }
 }

@@ -90,6 +90,10 @@ jobs:
         shell: bash
         run: scripts/test-kde-tier2-package-batch1-scope.sh
 
+      - name: Test KDE Tier 2 provider-audit semantic scope
+        shell: bash
+        run: scripts/test-kde-tier2-provider-audit-scope.sh
+
       - name: Test KDE Tier 1 global source diagnostic scope
         shell: bash
         run: scripts/test-kde-tier1-source-diagnostic-scope.sh
@@ -159,6 +163,9 @@ jobs:
 
       - name: Validate generated KDE Tier 2 campaign plan
         run: python3 scripts/compile_kde_tier2_campaign.py --check
+
+      - name: Validate KDE Tier 2 provider-audit definition
+        run: python3 scripts/validate_kde_tier2_provider_audit.py
 
       - name: Validate KDE Tier 2 Batch 1 KAuth preparation
         run: python3 scripts/validate_kde_tier2_package_batch1.py

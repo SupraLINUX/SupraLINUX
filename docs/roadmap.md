@@ -73,3 +73,8 @@ Current implementation status: KDE Frameworks 6.30 Tier 1 is canonically 29/29 P
 - Multi-Arch cases;
 - upgrade from previous SupraLINUX release state;
 - ABI/shlibs/symbols regression checks for replaced libraries.
+
+
+### Tier 2 provider-audit gate
+
+The generated Tier 2 campaign feeds a cheap Ubuntu Resolute provider audit before package-contract materialization. The first batch is KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication. Provider-audit PASS is only a readiness gate; package PASS still requires a real clean build and retained evidence.
