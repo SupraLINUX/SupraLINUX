@@ -466,3 +466,10 @@ Canonical KDE Frameworks Tier 1 is **29 PASS / 0 pending / 0 current FAIL / 0 BL
 KAuth `6.30.0-0supralinux3` is the first promoted Tier 2 node. Its DAG predecessors are ECM, KCoreAddons and KWindowSystem, all retained PASS. Run `35497461178`, job `106043001431`, artifact `10601382235` passed 6/6 tests, symbols/ABI, Lintian error gate, development-contract, APT closure and external consumer checks.
 
 The canonical DAG now contains ECM + 29 Tier 1 nodes + KAuth Tier 2. KMime remains outside the canonical DAG until ADR-0002 is resolved and a package reaches PASS.
+
+
+## Tier 2 Syndication canonical promotion and DAG validator generalization
+
+Syndication `6.30.0-0supralinux1` is now a canonical PASS/downstream-eligible Tier 2 node. Its selected DAG predecessors are retained ECM plus KCodecs; the package PASS is run `35543268413`, job `106164765409`, artifact `10615910224`.
+
+The canonical DAG now contains ECM, all 29 Tier 1 PASS nodes, and the current Tier 2 PASS set (KAuth, KCrash, Syndication). Repository validation no longer hard-codes a fixed DAG node count or a single promoted Tier 2 node. It derives the expected DAG set from the canonical Tier 1/Tier 2 manifests by selecting nodes with `state=PASS` and `downstream_eligible=true`, then requires exact set equality. This removes a validator edit from every future Tier 2 promotion while preserving strict canonical ownership.

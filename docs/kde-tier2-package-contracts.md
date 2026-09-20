@@ -70,3 +70,20 @@ The package state is unchanged. KCrash, KNotifications, KStatusNotifierItem, KUn
 KCrash is now a retained package PASS and is excluded from later materialization targets. Package-contract materialization may therefore be partial: only pending nodes whose previous generated tree was invalidated are regenerated.
 
 Syndication keeps KDE Frameworks 6.30.0 as source/version authority, but its distributable orig requires a verified `Files-Excluded` repack. The pinned Debian orig is accepted only if CI proves its extracted contents equal KDE's official source minus exactly the paths declared by the pinned Debian copyright metadata. Debian remains a technical reference/provider, not the authority over Syndication.
+
+
+## Python binding runtime-provider contracts and KStatus symbols revision
+
+Clean-build run `35543268413` proved that build-time Shiboken/Clang closure is now correct: all three Python bindings generated successfully. It also exposed the separate runtime-provider contract of the generated Python packages.
+
+The package contracts now retain the upstream PySide typesystem basis and the minimal Ubuntu Resolute provider closure:
+
+- KNotifications loads QtGui → `python3-pyside6.qtgui` (which depends on QtCore).
+- KUnitConversion loads QtCore → `python3-pyside6.qtcore`.
+- KStatusNotifierItem loads QtCore + QtGui + QtWidgets → `python3-pyside6.qtwidgets` (which depends on QtGui and QtCore).
+
+These dependencies are provider mappings for KDE-selected bindings; they do not make Ubuntu authoritative over the feature profile.
+
+KStatusNotifierItem also has one reviewed symbols overlay after its real package FAIL: `_ZSt19piecewise_construct@Base` is recorded as `optional=templinst` at upstream floor `6.30.0`. The previous build let `dpkg-gensymbols` add the current Debian revision automatically, which Lintian correctly rejects. Its next package candidate is therefore `6.30.0-0supralinux2`.
+
+Syndication is no longer a pending materialization target: its verified distribution repack passed the full clean package gate and is retained as package PASS. Current rematerialization targets are only KNotifications, KStatusNotifierItem and KUnitConversion.

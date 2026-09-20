@@ -99,3 +99,12 @@ KMime remains independent and decision-gated; it does not stop the rest of Tier 
 ## KCrash package PASS
 
 KCrash `6.30.0-0supralinux1` is the second retained Tier 2 package PASS. Clean-build run `35535289692`, job `106143242223`, artifact `10613480229` passed 4/4 upstream CTest tests, Lintian error gate, SONAME/export validation, APT runtime closure and external CMake consumer smoke. KCrash is downstream-eligible; the remaining four Batch 2 nodes stay pending.
+
+
+## Current canonical state — Syndication promoted
+
+Tier 2 is now **3 PASS / 12 pending / 0 current FAIL / 0 BLOCKED**. The retained PASS/downstream-eligible nodes are KAuth, KCrash and Syndication. Syndication `6.30.0-0supralinux1` passed run `35543268413`, job `106164765409`, artifact `10615910224`, after its distribution source was verified as the KDE 6.30 authority content minus exactly the pinned `Files-Excluded` set.
+
+KNotifications, KStatusNotifierItem and KUnitConversion remain pending. Their upstream Python bindings stay enabled. The remaining work is package integration only: explicit PySide6 runtime-provider Depends for the generated Python binary packages, plus one reviewed KStatusNotifierItem symbols adjustment. KMime remains `compatibility-decision-required` under ADR-0002.
+
+Ubuntu Resolute remains provider, not KDE authority. KDE upstream still determines the Framework version and feature profile.

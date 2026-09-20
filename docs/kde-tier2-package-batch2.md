@@ -55,3 +55,18 @@ KCrash `6.30.0-0supralinux1` is now **PASS/downstream-eligible**: run `355352896
 The other four jobs are not canonical FAILs. KNotifications, KStatusNotifierItem and KUnitConversion share a Shiboken/Clang resource-header provider gap. Syndication builds and passes 4/4 tests but requires a distribution source repack matching its declared `Files-Excluded`. They are removed from the build queue until corrected materializations exist.
 
 The Batch remains `fail-fast: false`; `package_attempted=true` evidence is retained for every real execution. Promotion to `stable` still requires explicit user approval.
+
+
+## Four-node remediation campaign — partial PASS and three-node isolation
+
+Run `35543268413` used shared Resolute rootfs artifact `10615518322` (artifact SHA-256 `bb95b71c2b572183e86f5c7d4b9364f5d270cb92fe3332ababc378ed0d693058`; rootfs content SHA-256 `0943ab94eb5f4d0cbbf64bb0d69ccf36ad48309cbafc1c73e8745d3925a4b734`). All four package jobs had `package_attempted=true`; `fail-fast: false` remained in force.
+
+**Syndication PASS:** job `106164765409`, artifact `10615910224`, SHA-256 `729dc8301377ba6e7d0a29cf65552542e0df85d76b19a24270bd328be13c9d7c`. It passed 4/4 tests, Lintian errors gate, SONAME/ABI validation, APT closure and external consumer smoke. The verified `Files-Excluded` repack is therefore validated by a real clean build and Syndication is retained PASS/downstream-eligible.
+
+KNotifications and KUnitConversion built successfully, passed tests, Lintian, APT closure and the external C++ consumer, then failed only at Python import because their generated Python packages lacked the PySide6 module packages loaded by the KDE upstream binding typesystems. The package contract now maps those upstream typesystems to minimal Resolute providers: KNotifications → `python3-pyside6.qtgui`; KUnitConversion → `python3-pyside6.qtcore`.
+
+KStatusNotifierItem built its Python binding and passed 1/1 tests, then failed its Lintian gate because `dpkg-gensymbols` auto-added `_ZSt19piecewise_construct@Base` with the full Debian revision. This is retained as a node-owned historical package FAIL. Candidate revision `6.30.0-0supralinux2` records the reviewed export as `optional=templinst` with upstream version floor `6.30.0`; Lintian requires Debian revisions to be stripped from symbols versions.
+
+KStatusNotifierItem's upstream binding loads QtCore, QtGui and QtWidgets typesystems. Its minimal Resolute runtime provider is `python3-pyside6.qtwidgets`, which already depends on the QtGui and QtCore PySide6 packages.
+
+The next materialization/build cycle contains only KNotifications, KStatusNotifierItem and KUnitConversion. KCrash and Syndication are retained PASS and excluded. No promotion to `stable` is authorized.
