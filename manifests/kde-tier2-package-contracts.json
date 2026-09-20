@@ -223,15 +223,24 @@
   },
   "reference_evidence": {
     "result": "PASS",
-    "workflow_run": 35525532348,
-    "job_id": 106116905607,
-    "commit": "5f1d04379ee256835e237b6cf5eb1946577a5650",
-    "artifact_id": 10609796320,
-    "artifact_sha256": "0d5d1f961e0189190505545aedca169dc0180ed1d9e189a5eca021267a8385e3",
+    "workflow_run": 35525757861,
+    "job_id": 106117497527,
+    "commit": "d0063439374a4ce66301c206b64c559e092494d4",
+    "artifact_id": 10610520138,
+    "artifact_sha256": "987ca77884695296ee6d21a841f428f16ed49fb8b103b84a84db8c735ceac9e9",
     "snapshot_sha256": "5bfdf1238cedc31ccda2a3f3c93459911709b3e7650eb40c129354f42d0286e9",
     "versions_sha256": "adc9d4eda684acaaa77a05a4089fa975ca3e894acdd9bd18190d41cbdb062d74",
     "result_json_sha256": "5fd85f5d9365a658497bd104007f666304c3f88da2366d32b2bf5b629bf6b14f",
     "claim": "packaging-reference-snapshot-only",
-    "package_state_effect": "none"
+    "package_state_effect": "none",
+    "previous": {
+      "workflow_run": 35525532348,
+      "job_id": 106116905607,
+      "commit": "5f1d04379ee256835e237b6cf5eb1946577a5650",
+      "artifact_id": 10609796320,
+      "artifact_sha256": "0d5d1f961e0189190505545aedca169dc0180ed1d9e189a5eca021267a8385e3",
+      "reason": "initial PASS before mismatch-policy revalidation"
+    },
+    "revalidation": "snapshot-identical-after-source-mismatch-policy"
   }
 }
