@@ -40,4 +40,17 @@ git -C "${TMP}" add .; git -C "${TMP}" commit -qm semantic
 SEM="$(git -C "${TMP}" rev-parse HEAD)"
 expect_rc 0 "${EVIDENCE}" "${SEM}" semantic
 
+python3 - "${TMP}/manifests/kde-tier2-package-contracts.json" <<'PY'
+import json,sys
+p=sys.argv[1]; d=json.load(open(p))
+d["state"]="reference-capture-pass"
+d["materialization"]={"status":"pending-ci","targets":["knotifications"],"package_state_effect":"none","package_attempted":False}
+open(p,"w").write(json.dumps(d)+"\n")
+PY
+git -C "${TMP}" add .; git -C "${TMP}" commit -qm pending-rescue
+PENDING="$(git -C "${TMP}" rev-parse HEAD)"
+echo more >> "${TMP}/docs/x.md"; git -C "${TMP}" add .; git -C "${TMP}" commit -qm pending-docs
+PENDING_DOCS="$(git -C "${TMP}" rev-parse HEAD)"
+expect_rc 0 "${PENDING}" "${PENDING_DOCS}" pending_rescue
+
 echo "KDE Tier 2 materialization semantic scope: PASS"
