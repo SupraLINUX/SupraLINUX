@@ -82,7 +82,7 @@ def artifact_mode(args):
                     line=line.strip()
                     if line.startswith("module "): qml.append({"module":line.split(None,1)[1].strip(),"package":package})
             if not package.endswith("-dev"): continue
-            configs=sorted(extract.rglob("*Config.cmake")); targets=sorted(extract.rglob("*Targets.cmake"))
+            configs=sorted(extract.rglob("*Config.cmake")); targets=sorted(set(extract.rglob("*Target.cmake")) | set(extract.rglob("*Targets.cmake")))
             dep_map=cmake_dependencies(configs)
             exported=sorted({t for path in targets for t in TARGET_RE.findall(path.read_text(errors="replace"))})
             all_targets.update(exported); all_configs.update(path.name for path in configs); checks=[]

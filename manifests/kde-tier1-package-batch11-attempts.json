@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "batch": "tier1-batch-11",
+  "lane": "multi-surface-optional",
+  "nodes": [
+    "kuserfeedback",
+    "prison"
+  ],
+  "real_attempts": {
+    "kuserfeedback": [],
+    "prison": []
+  },
+  "validation_incidents": {
+    "kuserfeedback": [],
+    "prison": []
+  },
+  "infrastructure_incidents": [],
+  "blocked_events": {
+    "kuserfeedback": [],
+    "prison": []
+  }
+}

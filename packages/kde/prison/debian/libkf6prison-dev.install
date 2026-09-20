@@ -1,0 +1,5 @@
+usr/include/KF6/Prison
+usr/include/KF6/PrisonScanner
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6Prison
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6Prison.so
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6PrisonScanner.so

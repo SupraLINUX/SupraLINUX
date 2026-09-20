@@ -100,6 +100,10 @@ routed_pr_workflows = (
     "kde-tier1-package-batch5.yml",
     "kde-tier1-package-batch6.yml",
     "kde-tier1-package-batch7.yml",
+    "kde-tier1-package-batch8.yml",
+    "kde-tier1-package-batch9.yml",
+    "kde-tier1-package-batch10.yml",
+    "kde-tier1-package-batch11.yml",
     "kde-tier1-source-diagnostic.yml",
     "qt-provider-preflight.yml",
 )

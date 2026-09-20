@@ -97,3 +97,9 @@ The centralized router generalizes the scheduling side of that model while retai
 ## Canonical-promotion fast path — 2026-09-19
 
 Canonical state promotion is now classified semantically rather than by pathname alone. For `kde-frameworks-tier1.json`, source identity and dependency fields must remain identical after stripping only node `state` and `packaging`; source hash/version/dependency changes still request reusable hosted CI. The canonical DAG, global-discovery state, and packaging-tree evidence are state/evidence surfaces guarded by Repository Policy, so their promotion-only fields may advance without instantiating all package/reference/provider workflows. Any invariant-field change or unknown path falls back to heavy CI.
+
+## Batch 11 final Tier 1 lane
+
+`kde-tier1-package-batch11-needed.sh` scopes KUserFeedback and Prison independently. A package-tree change rebuilds only that node; shared runner, development-contract-audit or workflow changes revalidate both. Result/evidence-only campaign updates remain eligible for the PR router fast path.
+
+This preserves the DAG rule that independent work continues after an unrelated FAIL and avoids inventing a predecessor/BLOCKED relation between KUserFeedback and Prison.

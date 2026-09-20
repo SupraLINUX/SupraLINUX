@@ -1,0 +1,7 @@
+kf6-kuserfeedback (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE KUserFeedback 6.30.0 from upstream stable.
+  * Preserve upstream default feature profile and full upstream tests.
+  * Validate Core/Widgets ABIs, QML import closure and external consumer use.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 19 Sep 2026 18:30:00 -0300

@@ -1,0 +1,9 @@
+SupraLINUX KUserFeedback packaging notes
+
+Authority is KDE Frameworks upstream stable 6.30.0. Ubuntu 26.04 Resolute is the provider platform. Debian packaging is a technical reference only.
+
+Batch 11 preserves upstream KUserFeedback defaults: survey targeting expressions, PHP validation, PHP unit tests, documentation, Widgets and QML remain available; the upstream console stays OFF because that is the upstream default. BUILD_QCH remains OFF under the common SupraLINUX Frameworks profile.
+
+The retained Debian packaging-tree artifact 10301938362 supplies copyright and symbols metadata only after the entire retained tree manifest has been hash-verified. Those files do not select the KDE version or feature profile.
+
+No downstream behavior patch or test suppression is retained. Real package attempts are recorded separately from infrastructure incidents.

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-18",
+  "as_of": "2026-09-19",
   "scope": "kde-frameworks-tier1-6.30",
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
@@ -52,12 +52,14 @@
       "workflow": ".github/workflows/kde-tier1-package-batch10.yml"
     },
     "multi-surface-optional": {
-      "status": "implementation-pending",
+      "status": "implemented",
       "nodes": [
         "kuserfeedback",
         "prison"
       ],
-      "required_capability": "validate multiple libraries plus optional/provider-selected feature surfaces without silently disabling upstream defaults"
+      "required_capability": "validate multiple libraries plus optional/provider-selected feature surfaces without silently disabling upstream defaults",
+      "runner": "scripts/run-kde-tier1-package-batch11-preflight.sh",
+      "workflow": ".github/workflows/kde-tier1-package-batch11.yml"
     },
     "local-predecessor": {
       "status": "completed",
@@ -68,20 +70,20 @@
   },
   "nodes": {
     "kuserfeedback": {
-      "readiness": "lane-pending",
+      "readiness": "runnable",
       "lane": "multi-surface-optional",
       "local_predecessors": []
     },
     "prison": {
-      "readiness": "lane-pending",
+      "readiness": "runnable",
       "lane": "multi-surface-optional",
       "local_predecessors": []
     }
   },
   "next_actions": [
-    "Implement the multi-surface/optional package lane for kuserfeedback and prison.",
-    "Build every independently runnable node in that lane with fail-fast disabled.",
-    "Preserve real FAIL attempts and mark BLOCKED only when a required predecessor FAIL prevents an attempt.",
-    "Feed downstream work only from retained PASS artifacts."
+    "Run Batch 11 for kuserfeedback and prison in parallel with fail-fast disabled.",
+    "Preserve every real FAIL attempt independently; do not BLOCK the peer because the nodes have no predecessor relation.",
+    "Feed later work only from retained PASS artifacts.",
+    "After both nodes retain PASS, perform a separate canonical Tier 1 promotion."
   ]
 }

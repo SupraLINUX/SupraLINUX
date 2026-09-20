@@ -37,9 +37,9 @@ EOF
 cat > "${TMP}/pkg-dev/usr/lib/x86_64-linux-gnu/cmake/KF6Foo/KF6FooConfig.cmake" <<'EOF'
 include(CMakeFindDependencyMacro)
 find_dependency(ECM 6.30.0)
-include(${CMAKE_CURRENT_LIST_DIR}/KF6FooTargets.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/KF6FooTarget.cmake)
 EOF
-cat > "${TMP}/pkg-dev/usr/lib/x86_64-linux-gnu/cmake/KF6Foo/KF6FooTargets.cmake" <<'EOF'
+cat > "${TMP}/pkg-dev/usr/lib/x86_64-linux-gnu/cmake/KF6Foo/KF6FooTarget.cmake" <<'EOF'
 add_library(KF6::Foo SHARED IMPORTED)
 EOF
 cat > "${TMP}/pkg-qml/DEBIAN/control" <<'EOF'

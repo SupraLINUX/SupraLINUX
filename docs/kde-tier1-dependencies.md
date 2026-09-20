@@ -204,3 +204,13 @@ Batch 10 is technically **2/2 PASS** and ready for separate canonical promotion.
 Kirigami and KQuickCharts are canonical PASS/downstream-eligible from their retained Batch 10 package evidence. Their KDE Framework build dependency lists remain empty beyond the common ECM root: the Kirigami relationship used by KQuickCharts remains a Debian/QML package-validation/runtime closure, not an upstream Framework build edge.
 
 The `qml-multisurface` lane is completed. Current canonical Tier 1 is **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**; only KUserFeedback and Prison remain pending.
+
+## Batch 11 provider mapping
+
+KUserFeedback and Prison remain Tier 1 Frameworks with no KDE Framework build predecessors beyond ECM. Batch 11 therefore runs them independently.
+
+KUserFeedback keeps its upstream-enabled survey-expression, PHP/PHPUnit and documentation paths plus provider-selected Widgets and QML surfaces. Resolute supplies Flex, Bison, PHP/PHPUnit, Qt Base, Qt Charts, Qt Declarative and Qt Tools. The console remains OFF because that is the KDE upstream default.
+
+Prison keeps all four upstream default-enabled switches ON: DMTX, ZXing, Quick and Multimedia. Resolute supplies `libdmtx-dev`, `libqrencode-dev`, `libzxing-dev`, `qt6-declarative-dev` and `qt6-multimedia-dev`. Provider availability does not redefine those upstream defaults.
+
+Batch 11 preparation changes readiness only. Canonical package state remains **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED** until retained package PASS evidence is separately promoted.

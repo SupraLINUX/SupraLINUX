@@ -24,16 +24,17 @@ if nonpass!=expected or len(passed)!=27 or len(nonpass)!=2: fail(f'canonical pro
 s=c.get('promoted_snapshot',{})
 if (s.get('pass'),s.get('pending'),s.get('current_fail'),s.get('blocked'))!=(27,2,0,0): fail('promoted snapshot mismatch')
 ready={n for n,m in nodes.items() if m['readiness']=='runnable'}; blocked={n for n,m in nodes.items() if m['readiness']=='dependency-blocked'}; pending={n for n,m in nodes.items() if m['readiness']=='lane-pending'}; package_dep={n for n,m in nodes.items() if m['readiness']=='package-validation-dependent'}
-if ready: fail(f'no discovery node is runnable before the remaining lane is implemented: {sorted(ready)}')
+if ready!={'kuserfeedback','prison'}: fail(f'Batch 11 runnable set mismatch: {sorted(ready)}')
 if package_dep: fail(f'no package-validation-dependent node should remain after Batch 10 promotion: {sorted(package_dep)}')
 if blocked: fail(f'no discovery node should be dependency-blocked: {sorted(blocked)}')
-if pending!={'kuserfeedback','prison'}: fail(f'lane-pending set mismatch: {sorted(pending)}')
+if pending: fail(f'no lane-pending nodes should remain after Batch 11 lane implementation: {sorted(pending)}')
 ma=lanes['multi-abi']
 if ma.get('status')!='completed' or ma.get('nodes')!=[] or ma.get('runner')!='scripts/run-kde-tier1-package-batch9-preflight.sh' or ma.get('workflow')!='.github/workflows/kde-tier1-package-batch9.yml': fail('Batch 9 multi-ABI lane completion contract mismatch')
 qml=lanes['qml-multisurface']
 if qml.get('status')!='completed' or qml.get('nodes')!=[] or qml.get('runner')!='scripts/run-kde-tier1-package-batch10-preflight.sh' or qml.get('workflow')!='.github/workflows/kde-tier1-package-batch10.yml': fail('Batch 10 QML/multisurface lane completion contract mismatch')
-if lanes['multi-surface-optional'].get('status')!='implementation-pending': fail('multi-surface-optional: must remain implementation-pending')
+opt=lanes['multi-surface-optional']
+if opt.get('status')!='implemented' or set(opt.get('nodes',[]))!={'kuserfeedback','prison'} or opt.get('runner')!='scripts/run-kde-tier1-package-batch11-preflight.sh' or opt.get('workflow')!='.github/workflows/kde-tier1-package-batch11.yml': fail('Batch 11 multi-surface-optional lane implementation contract mismatch')
 for lane,runner in [('single-abi-python','scripts/run-kde-tier1-package-batch7-preflight.sh'),('local-predecessor','scripts/run-kde-tier1-package-batch8-preflight.sh')]:
  if lanes[lane].get('status')!='completed' or lanes[lane].get('nodes')!=[] or lanes[lane].get('runner')!=runner: fail(f'{lane}: completed lane contract mismatch')
 print('KDE Tier 1 global discovery policy: PASS')
-print('promoted PASS=27; discovery nodes=2; runnable=0; package-validation-dependent=0; lane-pending=2; dependency-blocked=0')
+print('promoted PASS=27; discovery nodes=2; runnable=2; package-validation-dependent=0; lane-pending=0; dependency-blocked=0')
