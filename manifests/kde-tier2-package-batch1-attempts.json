@@ -57,6 +57,17 @@
       "failed_gate": "validate_kde_tier2.py",
       "cause": "Tier 2 discovery validator still hardcoded KAuth package_version_candidate 6.30.0-0supralinux1 after the campaign advanced to revision -3.",
       "remediation": "Require package_version_candidate to equal the current packaging.package_version instead of hardcoding a revision."
+    },
+    {
+      "phase": "attempt-3-superseded-queued-job",
+      "workflow_run": 35497248610,
+      "job_id": 106042424661,
+      "commit": "75964ab981a7d853f4c309419964b84d8cf6686e",
+      "classification": "superseded-run-cancelled",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "cause": "KAuth revision -3 was queued but never entered retained-input download or Build and validate before the validator-fix push superseded the PR run.",
+      "remediation": "Scope selector now keeps any prepared/remediation package revision runnable until that exact revision has package_attempted=true in the real-attempt ledger."
     }
   ],
   "blocked_events": {

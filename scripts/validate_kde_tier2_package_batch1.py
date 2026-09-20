@@ -58,6 +58,7 @@ req("uses: ./.github/workflows/kde-tier2-package-batch1.yml" in router,"PR route
 for token in ("--extra-package","POLKITQT6-1","development-contract-artifact","consumer-runtime-closure","libkf6authcore6.symbols","DEBIAN_REF_SHA","DEBIAN_SYMBOLS_SHA","optional=private","abi-exports.txt"):
     req(token in runner,f"KAuth runner missing {token}")
 req("packages/kde/kauth/*" in scope and "kde-tier2-package-campaign-batch1.json" in scope,"KAuth scope inputs")
+req("kde-tier2-package-batch1-attempts.json" in scope and "package_attempted" in scope and "remediation-pending-build" in scope,"KAuth scope must rescue an unattempted current revision after supersession")
 req("KDE Tier 2 Batch 1 scope selector: PASS" in scope_test,"KAuth scope test marker")
 
 history=a.get("real_attempts",{}).get("kauth",[])

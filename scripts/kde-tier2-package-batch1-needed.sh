@@ -14,6 +14,37 @@ for p in "${changed[@]}"; do
   esac
 done
 CAMPAIGN="manifests/kde-tier2-package-campaign-batch1.json"
+ATTEMPTS="manifests/kde-tier2-package-batch1-attempts.json"
+
+# A superseded/cancelled run must not strand the current package revision.
+# While the current prepared/remediation revision has no real attempt in the
+# ledger, keep the node runnable even if the newest event delta is metadata-only.
+if git cat-file -e "${AFTER}:${CAMPAIGN}" 2>/dev/null && git cat-file -e "${AFTER}:${ATTEMPTS}" 2>/dev/null; then
+  if python3 - "${AFTER}" <<'PY'
+import json,subprocess,sys
+ref=sys.argv[1]
+def load(path):
+    return json.loads(subprocess.check_output(["git","show",f"{ref}:{path}"],text=True))
+campaign=load("manifests/kde-tier2-package-campaign-batch1.json")
+attempts=load("manifests/kde-tier2-package-batch1-attempts.json")
+node=campaign["nodes"]["kauth"]
+version=node["package_version"]
+attempted={
+    item.get("package_version")
+    for item in attempts.get("real_attempts",{}).get("kauth",[])
+    if item.get("package_attempted") is True
+}
+runnable=node.get("state") in {"prepared-pending-build","remediation-pending-build"}
+raise SystemExit(0 if runnable and version not in attempted else 1)
+PY
+  then
+    exit 0
+  else
+    rc=$?
+    [[ "${rc}" -eq 1 ]] || exit "${rc}"
+  fi
+fi
+
 if printf '%s\n' "${changed[@]}" | grep -Fxq "${CAMPAIGN}"; then
   git cat-file -e "${BEFORE}:${CAMPAIGN}" 2>/dev/null || exit 0
   if ! python3 - "${BEFORE}" "${AFTER}" <<'PY'

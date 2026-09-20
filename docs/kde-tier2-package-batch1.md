@@ -62,3 +62,9 @@ Revision `6.30.0-0supralinux3` keeps the complete Debian 6.30 symbols baseline a
 Repository Policy run `35497248424`, job `106042393365`, failed before the queued KAuth build started. The Tier 2 discovery validator still hardcoded the original `6.30.0-0supralinux1` candidate even though the remediation revision is `6.30.0-0supralinux3`.
 
 Classification: **INFRA**, `package_attempted=false`, `package_state_effect=none`. The validator now checks that package identity and current packaging revision agree, rather than encoding a specific remediation number.
+
+## Superseded-run scope hardening
+
+PR CI run `35497248610`, KAuth job `106042424661`, was cancelled while still queued when the validator remediation advanced the branch. It never downloaded predecessors or entered `Build and validate`; therefore it is not attempt 3.
+
+The semantic scope selector now treats the current prepared/remediation revision as runnable until that exact package version appears in the real-attempt ledger with `package_attempted=true`. This prevents a superseded run from stranding a remediation merely because the subsequent commit is metadata-only. Once an attempt exists for that revision, ordinary event-delta fingerprinting resumes.
