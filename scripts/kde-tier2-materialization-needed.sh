@@ -31,7 +31,7 @@ for path in "${changed[@]}"; do
         echo "Tier 2 materialization inputs changed."; exit 0
       fi
       ;;
-    scripts/materialize_kde_tier2_package.py|scripts/run-kde-tier2-package-materialization.sh|scripts/kde-tier2-materialization-needed.sh|.github/workflows/kde-tier2-package-materialization.yml)
+    scripts/materialize_kde_tier2_package.py|scripts/run-kde-tier2-package-materialization.sh|scripts/kde-tier2-materialization-needed.sh|scripts/plan-kde-tier2-materialization.py|.github/workflows/kde-tier2-package-materialization.yml)
       echo "${path}: materializer implementation changed."; exit 0 ;;
   esac
 done

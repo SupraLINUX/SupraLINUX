@@ -7,6 +7,7 @@ on:
       - scripts/materialize_kde_tier2_package.py
       - scripts/run-kde-tier2-package-materialization.sh
       - scripts/kde-tier2-materialization-needed.sh
+      - scripts/plan-kde-tier2-materialization.py
       - .github/workflows/kde-tier2-package-materialization.yml
   workflow_dispatch:
 
@@ -18,8 +19,8 @@ jobs:
     name: Plan Tier 2 materialization
     runs-on: ubuntu-26.04
     outputs:
-      run: ${{ steps.scope.outputs.run }}
-      matrix: ${{ steps.matrix.outputs.matrix }}
+      run: ${{ steps.final.outputs.run }}
+      matrix: ${{ steps.final.outputs.matrix }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -51,11 +52,19 @@ jobs:
           else
             rc=$?; [[ "${rc}" -eq 1 ]] || exit "${rc}"; echo "run=false" >> "${GITHUB_OUTPUT}"
           fi
-      - name: Build matrix from canonical contract
+      - name: Build matrix from canonical pending targets
         id: matrix
+        run: python3 scripts/plan-kde-tier2-materialization.py --github-output "${GITHUB_OUTPUT}"
+      - name: Finalize materialization plan
+        id: final
+        shell: bash
         run: |
-          matrix="$(python3 -c 'import json; print(json.dumps({"node": json.load(open("manifests/kde-tier2-package-contracts.json"))["selected_nodes"]}, separators=(",",":")))' )"
-          echo "matrix=${matrix}" >> "${GITHUB_OUTPUT}"
+          if [[ "${{ steps.scope.outputs.run }}" == true && "${{ steps.matrix.outputs.run }}" == true ]]; then
+            echo "run=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "run=false" >> "${GITHUB_OUTPUT}"
+          fi
+          echo 'matrix=${{ steps.matrix.outputs.matrix }}' >> "${GITHUB_OUTPUT}"
 
   materialize:
     name: Materialize ${{ matrix.node }}

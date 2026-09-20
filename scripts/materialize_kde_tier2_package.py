@@ -115,10 +115,10 @@ def modify_control(path: Path, node: dict, debhelper_compat: dict, shiboken_prov
 
     python_module = node.get("python_module")
     if python_module:
-        provider_package = shiboken_provider.get("provider_package")
-        if not provider_package:
-            raise SystemExit("missing Shiboken Clang-discovery provider package")
-        set_build_depends(source_lines, [*PYTHON_BUILD_DEPS, provider_package])
+        provider_packages = shiboken_provider.get("provider_packages", [])
+        if not provider_packages:
+            raise SystemExit("missing Shiboken Clang-discovery provider package closure")
+        set_build_depends(source_lines, [*PYTHON_BUILD_DEPS, *provider_packages])
 
     paragraphs[0] = "\n".join(source_lines)
     if python_module:
@@ -280,6 +280,7 @@ def main() -> int:
         "package_version": node["package_version_candidate"],
         "selected_profile": node["selected_profile"],
         "python_module": node.get("python_module"),
+        "source_distribution": node.get("source_distribution", {"mode": "upstream-orig"}),
         "generated_maintainer": CI_MAINTAINER,
         "provider_adaptations": {
             "debhelper_compat": debhelper_compat,

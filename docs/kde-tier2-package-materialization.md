@@ -5,7 +5,7 @@ Date: **2026-09-20**
 
 The package tree is generated, not copied manually. The source side is always the official **KDE upstream** Frameworks 6.30.0 tarball verified against the canonical SHA-256. The Debian `debian.tar.xz` is downloaded at its exact pinned 6.30.0-1 version and SHA-256 and is used only as a technical packaging reference.
 
-This deliberately separates authority from provider/reference. The Debian orig tarball is never the source authority; for Syndication it is explicitly rejected because its hash differs from KDE's official source.
+This deliberately separates authority from provider/reference. KDE remains the source/version authority. When a distribution source must exclude non-redistributable material, a repacked orig may be used only after CI proves its extracted content equals the KDE-authority tree minus exactly the pinned `Files-Excluded` paths.
 
 The deterministic SupraLINUX overlay:
 
@@ -36,3 +36,14 @@ The campaign build queue is now these five nodes. A package PASS requires the ne
 Materialization explicitly writes the new SupraLINUX changelog entry for distribution `resolute`; generated package trees must not use `UNRELEASED` for clean-build candidates because that fails the Lintian error gate.
 
 When a selected Framework keeps KDE upstream Python bindings enabled, the materializer also adds `llvm-dev` as the Ubuntu Resolute build-tool provider. Its purpose is to expose the default LLVM/Clang discovery surface, including `/usr/bin/llvm-config`, to Shiboken ApiExtractor. This is provider plumbing only: `BUILD_PYTHON_BINDINGS=ON` remains a KDE-owned profile decision.
+
+
+## Incremental rematerialization
+
+Materialization now derives its matrix from canonical package state plus `materialization.targets`. Retained package PASS nodes are never regenerated merely because a generic materializer implementation changes. For the current remediation KCrash is excluded and only KNotifications, KStatusNotifierItem, KUnitConversion and Syndication are eligible.
+
+## Syndication verified source repack
+
+Syndication is the first verified-repack case. CI downloads both the KDE-authority tarball and the SHA-256-pinned Debian 6.30 orig, reads `Files-Excluded` from the pinned Debian copyright metadata, and compares extracted file/symlink manifests. The repack is accepted only if every content difference is exactly covered by those exclusions. KDE's original SHA-256 remains recorded as authority; the verified repack is only the distributable source artifact used by `dpkg-source`.
+
+The declared exclusions are `autotests/rss2/stefandecker.org.xml` and `autotests/rss2/stefandecker.org.xml.expected`.

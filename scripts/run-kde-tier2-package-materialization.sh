@@ -67,7 +67,7 @@ vals={
  "ORIG_MATCHES":str(node["technical_references"]["debian"].get("orig_matches_kde_authority",False)).lower(),
  "DEBHELPER_COMPAT_LEVEL":contracts["provider_adaptations"]["ubuntu-resolute"]["debhelper_compat"]["selected_level"],
  "CHANGELOG_DISTRIBUTION":contracts["provider_adaptations"]["ubuntu-resolute"]["changelog_distribution"]["selected"],
- "SHIBOKEN_LLVM_PROVIDER":contracts["provider_adaptations"]["ubuntu-resolute"]["shiboken_clang_discovery"]["provider_package"],
+ "SHIBOKEN_PROVIDER_PACKAGES":" ".join(contracts["provider_adaptations"]["ubuntu-resolute"]["shiboken_clang_discovery"]["provider_packages"]),
 }
 for k,v in vals.items():
     print(f"{k}={shlex.quote(str(v))}")
@@ -108,11 +108,79 @@ else
 fi
 
 STAGE=authority-source
-AUTH_ORIG="${BUILD}/${SOURCE_PACKAGE}_${UPSTREAM_VERSION}.orig.tar.xz"
-curl -LfsS "${SOURCE_URL}" -o "${AUTH_ORIG}"
-echo "${SOURCE_SHA}  ${AUTH_ORIG}" | sha256sum -c -
+AUTHORITY_ORIG="${WORK}/${SOURCE_PACKAGE}_${UPSTREAM_VERSION}.kde-authority.tar.xz"
+PACKAGE_ORIG="${BUILD}/${SOURCE_PACKAGE}_${UPSTREAM_VERSION}.orig.tar.xz"
+curl -LfsS "${SOURCE_URL}" -o "${AUTHORITY_ORIG}"
+echo "${SOURCE_SHA}  ${AUTHORITY_ORIG}" | sha256sum -c -
+
+if [[ "${ORIG_MATCHES}" == "true" ]]; then
+    cp "${AUTHORITY_ORIG}" "${PACKAGE_ORIG}"
+else
+    STAGE=verified-files-excluded-repack
+    AUTH_TREE="${WORK}/authority-tree"
+    REF_TREE="${WORK}/reference-orig-tree"
+    REF_META="${WORK}/reference-packaging"
+    mkdir -p "${AUTH_TREE}" "${REF_TREE}" "${REF_META}"
+    tar -xf "${AUTHORITY_ORIG}" -C "${AUTH_TREE}" --strip-components=1
+    tar -xf "${DEBORIG}" -C "${REF_TREE}" --strip-components=1
+    tar -xf "${DEBTAR}" -C "${REF_META}"
+    python3 - "${AUTH_TREE}" "${REF_TREE}" "${REF_META}/debian/copyright" "${EVIDENCE}/repack-verification.json" <<'PY'
+import fnmatch,hashlib,json,os,stat,sys
+from pathlib import Path
+
+authority=Path(sys.argv[1]); reference=Path(sys.argv[2]); copyright_path=Path(sys.argv[3]); output=Path(sys.argv[4])
+lines=copyright_path.read_text().splitlines()
+fields={}; current=None
+for line in lines:
+    if not line.strip(): break
+    if line[:1].isspace() and current:
+        fields[current]+=" "+line.strip()
+    elif ":" in line:
+        current,value=line.split(":",1); current=current.strip(); fields[current]=value.strip()
+patterns=fields.get("Files-Excluded","").split()
+if not patterns:
+    raise SystemExit("reference orig differs from KDE authority but Files-Excluded is empty")
+
+def entry_manifest(root):
+    out={}
+    for p in sorted(root.rglob("*")):
+        rel=p.relative_to(root).as_posix()
+        st=p.lstat()
+        if p.is_symlink():
+            out[rel]={"type":"symlink","target":os.readlink(p)}
+        elif p.is_file():
+            out[rel]={"type":"file","sha256":hashlib.sha256(p.read_bytes()).hexdigest(),"executable":bool(st.st_mode & stat.S_IXUSR)}
+    return out
+
+def excluded(path):
+    for pattern in patterns:
+        base=pattern.rstrip("/")
+        if fnmatch.fnmatch(path,pattern) or path==base or path.startswith(base+"/"):
+            return True
+    return False
+
+auth=entry_manifest(authority)
+ref=entry_manifest(reference)
+matched=sorted(path for path in auth if excluded(path))
+if not matched:
+    raise SystemExit("Files-Excluded matched no KDE-authority files")
+if any(excluded(path) for path in ref):
+    raise SystemExit("reference repack still contains a Files-Excluded path")
+filtered={path:value for path,value in auth.items() if not excluded(path)}
+if filtered != ref:
+    missing=sorted(set(filtered)-set(ref))
+    extra=sorted(set(ref)-set(filtered))
+    changed=sorted(path for path in set(filtered)&set(ref) if filtered[path]!=ref[path])
+    raise SystemExit(f"reference orig differs beyond Files-Excluded: missing={missing[:20]} extra={extra[:20]} changed={changed[:20]}")
+payload={"result":"PASS","policy":"verified-files-excluded-repack","patterns":patterns,"excluded_paths":matched,
+         "authority_entries":len(auth),"distribution_entries":len(ref)}
+output.write_text(json.dumps(payload,indent=2)+"\n")
+PY
+    cp "${DEBORIG}" "${PACKAGE_ORIG}"
+fi
+
 mkdir -p "${SRC}"
-tar -xf "${AUTH_ORIG}" -C "${SRC}" --strip-components=1
+tar -xf "${PACKAGE_ORIG}" -C "${SRC}" --strip-components=1
 tar -xf "${DEBTAR}" -C "${SRC}"
 
 STAGE=supralinux-overlay
@@ -196,6 +264,7 @@ changelog_version="$(dpkg-parsechangelog -l"${SRC}/debian/changelog" -S Version)
 changelog_distribution="$(dpkg-parsechangelog -l"${SRC}/debian/changelog" -S Distribution)"
 require_eq "changelog-source" "${SOURCE_PACKAGE}" "${changelog_source}"
 require_eq "changelog-version" "${PACKAGE_VERSION}" "${changelog_version}"
+# shellcheck disable=SC2153 -- value is assigned by the validated Python-to-eval map above.
 require_eq "changelog-distribution" "${CHANGELOG_DISTRIBUTION}" "${changelog_distribution}"
 require_contains "maintainer" 'Maintainer: SupraLINUX Build System <build@supralinux.invalid>' "${SRC}/debian/control"
 require_contains "original-maintainer" 'XSBC-Original-Maintainer:' "${SRC}/debian/control"
@@ -210,7 +279,11 @@ then
     PY_MODULE="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["nodes"][sys.argv[2]]["python_module"])' "${CONTRACTS}" "${NODE}")"
     PY_PACKAGE="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["nodes"][sys.argv[2]]["supralinux_additional_binary_packages"][0])' "${CONTRACTS}" "${NODE}")"
     require_contains "python-binding-cmake-profile" '-DBUILD_PYTHON_BINDINGS=ON' "${SRC}/debian/rules"
-    require_contains "python-shiboken-clang-provider" "${SHIBOKEN_LLVM_PROVIDER}" "${SRC}/debian/control"
+    # shellcheck disable=SC2153 -- value is assigned by the validated Python-to-eval map above.
+    read -r -a shiboken_provider_packages <<< "${SHIBOKEN_PROVIDER_PACKAGES}"
+    for provider_package in "${shiboken_provider_packages[@]}"; do
+        require_contains "python-shiboken-clang-provider-${provider_package}" "${provider_package}" "${SRC}/debian/control"
+    done
     require_contains "python-binary-package" "Package: ${PY_PACKAGE}" "${SRC}/debian/control"
     require_contains "python-install-module" "${PY_MODULE}" "${SRC}/debian/${PY_PACKAGE}.install"
 fi
@@ -220,7 +293,7 @@ STAGE=source-package
   cd "${SRC}"
   dpkg-source -b .
 )
-cp "${BUILD}/"*.dsc "${BUILD}/"*.debian.tar.* "${AUTH_ORIG}" "${EVIDENCE}/source-package/"
+cp "${BUILD}/"*.dsc "${BUILD}/"*.debian.tar.* "${PACKAGE_ORIG}" "${EVIDENCE}/source-package/"
 sha256sum "${EVIDENCE}/source-package/"* > "${EVIDENCE}/source-package.sha256"
 
 python3 - "${EVIDENCE}" "${NODE}" "${SOURCE_PACKAGE}" "${PACKAGE_VERSION}" <<'PY'
