@@ -219,5 +219,17 @@
     "result": "PASS",
     "artifact_id": 10601382235,
     "artifact_sha256": "443a47a67188a52faae6c20b03c2c53203d5a9386dbbb5765af4f69e0cd1744b"
+  },
+  "inventory_context": {
+    "status": "historical-incomplete-inventory",
+    "note": "Batch 1 was prepared and promoted while the Tier 2 discovery incorrectly contained only KAuth and KMime. The KAuth build/PASS evidence remains valid; the global Tier 2 inventory was later corrected to 15 upstream nodes.",
+    "corrected_inventory_count": 15,
+    "corrected_current_state": "1 PASS / 14 pending / 0 current FAIL / 0 BLOCKED"
+  },
+  "post_campaign_inventory_correction": {
+    "kAuth_pass_unchanged": true,
+    "additional_pending_nodes": 13,
+    "kmime_state": "compatibility-decision-required",
+    "package_state_effect": "none"
   }
 }
