@@ -51,8 +51,12 @@
         ]
       },
       "packaging": {
-        "state": "pending",
-        "reason": "package-lane-not-implemented"
+        "state": "prepared-pending-build",
+        "package_version": "6.30.0-0supralinux1",
+        "claim": "no-package-attempt-yet",
+        "downstream_eligible": false,
+        "attempt_ledger": "manifests/kde-tier2-package-batch1-attempts.json",
+        "campaign": "manifests/kde-tier2-package-campaign-batch1.json"
       },
       "state": "pending"
     },

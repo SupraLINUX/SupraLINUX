@@ -1,0 +1,22 @@
+KAuth 6.30.0 is copyright its KDE contributors.
+
+The authoritative copyright and license information is carried by the
+SPDX-FileCopyrightText and SPDX-License-Identifier declarations in the
+upstream source tree and by the upstream LICENSES/ directory.
+
+Upstream source:
+  https://invent.kde.org/frameworks/kauth
+  https://download.kde.org/stable/frameworks/6.30/kauth-6.30.0.tar.xz
+
+SupraLINUX packaging additions:
+  Copyright (C) 2026 SupraLINUX Project
+  SPDX-License-Identifier: MIT
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of the SupraLINUX packaging additions to deal in those additions without
+restriction, including without limitation the rights to use, copy, modify,
+merge, publish, distribute, sublicense, and/or sell copies, subject to
+including this copyright and permission notice.
+
+The upstream software remains under its upstream licenses; this packaging
+notice does not relicense upstream KAuth.

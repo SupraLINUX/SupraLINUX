@@ -104,6 +104,7 @@ routed_pr_workflows = (
     "kde-tier1-package-batch9.yml",
     "kde-tier1-package-batch10.yml",
     "kde-tier1-package-batch11.yml",
+    "kde-tier2-package-batch1.yml",
     "kde-tier1-source-diagnostic.yml",
     "qt-provider-preflight.yml",
 )
@@ -119,6 +120,9 @@ require("scripts/test-verify-ubuntu-cloud-image-provenance.sh" in repository_pol
 require("scripts/test-check-actions-runner-runtime.sh" in repository_policy, "repository policy must functionally test effective Actions runner provenance")
 require("scripts/test-check-golden-image-provenance.sh" in repository_policy, "repository policy must functionally test the golden-image provenance gate")
 require("scripts/test-pr-ci-router-scope.sh" in repository_policy, "repository policy must functionally test semantic PR evidence routing")
+require("scripts/test-kde-tier2-package-batch1-scope.sh" in repository_policy, "repository policy must test KDE Tier 2 Batch 1 scope")
+require("python3 scripts/validate_kde-tier2-package-batch1.py" not in repository_policy, "repository policy must not contain a misspelled Tier 2 validator path")
+require("python3 scripts/validate_kde_tier2_package_batch1.py" in repository_policy, "repository policy must execute KDE Tier 2 Batch 1 validator")
 require("scripts/test-kde-development-contract-audit.sh" in repository_policy, "repository policy must functionally test the KDE development contract audit")
 require("python3 scripts/validate_qt_provider.py" in repository_policy, "repository policy must execute the Qt provider invariant validator")
 require("python3 scripts/validate_kde_tier2.py" in repository_policy, "repository policy must execute the KDE Tier 2 discovery validator")

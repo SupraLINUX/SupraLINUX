@@ -1,0 +1,70 @@
+Source: kf6-kauth
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               cmake (>= 3.29~),
+               dbus-daemon <!nocheck>,
+               doxygen,
+               extra-cmake-modules (>= 6.30.0~),
+               libkf6coreaddons-dev (>= 6.30.0~),
+               libkf6windowsystem-dev (>= 6.30.0~),
+               libpolkit-qt6-1-dev (>= 0.200.0-2~),
+               libxkbcommon-dev,
+               pkgconf,
+               qt6-base-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.9.0~),
+               xauth <!nocheck>,
+               xvfb <!nocheck>
+Standards-Version: 4.7.4
+Rules-Requires-Root: no
+Homepage: https://invent.kde.org/frameworks/kauth
+
+Package: libkf6auth-data
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Description: KAuth 6 shared data
+ KAuth is the KDE Framework for executing privileged actions.
+ This package contains shared data and D-Bus policy files.
+
+Package: libkf6auth-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libkf6auth-dev-bin (= ${binary:Version}),
+         libkf6authcore6 (= ${binary:Version}),
+         libkf6coreaddons-dev (>= 6.30.0~),
+         ${misc:Depends}
+Recommends: libkf6auth-doc (= ${source:Version})
+Description: KAuth 6 development files
+ Development headers and CMake integration for KDE Frameworks KAuth.
+
+Package: libkf6auth-dev-bin
+Section: libdevel
+Architecture: any
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Description: KAuth 6 development helper
+ Contains the KAuth policy generator used by build-time CMake integration.
+
+Package: libkf6auth-doc
+Section: doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Description: KAuth 6 documentation package
+ Documentation split retained for Debian/Ubuntu package compatibility.
+
+Package: libkf6authcore6
+Architecture: any
+Multi-Arch: same
+Depends: libkf6auth-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends}
+Recommends: libkf6auth-doc (= ${source:Version})
+Description: KAuth 6 runtime library
+ Runtime library and Linux authorization/helper backend plugins for KAuth.

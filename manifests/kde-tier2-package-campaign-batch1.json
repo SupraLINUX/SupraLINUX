@@ -1,0 +1,143 @@
+{
+  "schema": 2,
+  "as_of": "2026-09-20",
+  "frameworks_series": "6.30.0",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "batch": "tier2-batch-1",
+  "lane": "core-authorization",
+  "state": "prepared-pending-build",
+  "attempt_ledger": "manifests/kde-tier2-package-batch1-attempts.json",
+  "canonical_snapshot": {
+    "tier1": "29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED",
+    "tier2": "0 PASS / 2 pending / 0 current FAIL / 0 BLOCKED"
+  },
+  "selected_nodes": [
+    "kauth"
+  ],
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+    },
+    "kcoreaddons": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux4",
+      "workflow_run": 35122522242,
+      "job_id": 104883541991,
+      "artifact_id": 10457958023,
+      "artifact_sha256": "c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64",
+      "files": {
+        "data": "f05f55e3c6486af9d3ff48aa38215784bbb347aae1cd5fb760f5513760364908",
+        "dev": "9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636",
+        "runtime": "015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb"
+      }
+    },
+    "kwindowsystem": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux4",
+      "workflow_run": 35047623320,
+      "job_id": 104640833059,
+      "artifact_id": 10428130399,
+      "artifact_sha256": "9c35d5e228d3f8b71fb1e84863fac030bfd26a8e3c528ae718e788708db01272",
+      "files": {
+        "data": "f6c55bec9b08ccbf002bb52016f080c0804e3161576f01acccd608900a662200",
+        "dev": "d3a7f2fb13af68faf8bf36c048f039ff4aeaa50a90e44c5afb13f53bd7711e5c",
+        "runtime": "fd5245b8b292f94e6dce9be56e0ca721e7b4d007a8a85be9dd98fcbcd4671acc"
+      }
+    }
+  },
+  "technical_references": {
+    "debian_6_30": {
+      "role": "technical-packaging-reference-only",
+      "version": "6.30.0-1",
+      "debian_tar_url": "https://deb.debian.org/debian/pool/main/k/kf6-kauth/kf6-kauth_6.30.0-1.debian.tar.xz",
+      "debian_tar_sha256": "f304bd772cf958ca9dccab78ad33e12f8e2f7bf0b038999e629cf270bb068fc3",
+      "dsc_sha256": "21b8c054d7d9f7b80e4f4447871b8a4d1e176a179e155c186dbb5296a6054cf0",
+      "imported_file": "debian/libkf6authcore6.symbols"
+    }
+  },
+  "nodes": {
+    "kauth": {
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-kauth",
+      "package_version": "6.30.0-0supralinux1",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kauth-6.30.0.tar.xz",
+      "source_sha256": "60b75e02abc2bfbb247c586e3ab94def7ecd7b4e1ddb8260358951d84d9ea8c9",
+      "signing_key": {
+        "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"
+      },
+      "kde_framework_build_dependencies": [
+        "KCoreAddons",
+        "KWindowSystem"
+      ],
+      "external_build_dependencies": [
+        {
+          "name": "PolkitQt6-1",
+          "minimum": "0.112.0",
+          "provider_package": "libpolkit-qt6-1-dev",
+          "selected_provider_minimum": "0.200.0-2~"
+        }
+      ],
+      "backend_profile": {
+        "KAUTH_BACKEND_NAME": "POLKITQT6-1",
+        "KAUTH_HELPER_BACKEND_NAME": "DBUS",
+        "fake_backend_allowed": false
+      },
+      "runtime_package": "libkf6authcore6",
+      "soname": "libKF6AuthCore.so.6",
+      "binary_contracts": [
+        {
+          "name": "libkf6auth-data",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6auth-dev",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6auth-dev-bin",
+          "architecture": "amd64",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6auth-doc",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6authcore6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        }
+      ],
+      "dependency_contracts": {
+        "libkf6auth-dev": [
+          "libkf6auth-dev-bin (= 6.30.0-0supralinux1)",
+          "libkf6authcore6 (= 6.30.0-0supralinux1)",
+          "libkf6coreaddons-dev (>= 6.30.0~)"
+        ],
+        "libkf6authcore6": [
+          "libkf6auth-data (= 6.30.0-0supralinux1)"
+        ]
+      },
+      "required_artifact_contracts": [
+        "polkit-backend-plugin",
+        "dbus-helper-plugin",
+        "kauth-policy-gen",
+        "KF6AuthConfig.cmake",
+        "symbols-contract",
+        "consumer-smoke",
+        "apt-runtime-closure"
+      ],
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false
+    }
+  }
+}

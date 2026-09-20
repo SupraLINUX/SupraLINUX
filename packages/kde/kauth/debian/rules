@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all reproducible=-fixfilepath
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DBUILD_TESTING=ON -DBUILD_SHARED_LIBS=ON -DKAUTH_BACKEND_NAME=POLKITQT6-1 -DKAUTH_HELPER_BACKEND_NAME=DBUS -DKAUTH_HELPER_INSTALL_DIR=lib/kf6/kauth/libexec
+
+override_dh_auto_test:
+	xvfb-run -a dbus-run-session dh_auto_test --no-parallel

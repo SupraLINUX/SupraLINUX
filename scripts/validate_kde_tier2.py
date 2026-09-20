@@ -32,7 +32,10 @@ for node,sha in expected_hashes.items():
     n=nodes[node]
     req(n.get("upstream_version")=="6.30.0",f"{node}: upstream version")
     req(n.get("source_sha256")==sha,f"{node}: source SHA")
-    req(n.get("state")=="pending" and n.get("packaging",{}).get("state")=="pending",f"{node}: discovery must not promote package state")
+    req(n.get("state")=="pending",f"{node}: discovery must not promote canonical package state")
+req(nodes["kauth"].get("packaging",{}).get("state")=="prepared-pending-build","KAuth packaging readiness")
+req(nodes["kauth"].get("packaging",{}).get("package_version")=="6.30.0-0supralinux1","KAuth prepared package revision")
+req(nodes["kmime"].get("packaging",{}).get("state")=="pending","KMime packaging must remain pending")
 
 req(nodes["kauth"].get("depends_on")==["extra-cmake-modules","kcoreaddons","kwindowsystem"],"KAuth selected DAG predecessors")
 req(nodes["kmime"].get("depends_on")==["extra-cmake-modules","kcodecs"],"KMime DAG predecessors")
@@ -58,7 +61,7 @@ for node,(version,artifact,digest) in expected_pred.items():
 req(sum(n.get("state")=="PASS" for n in tier1.get("nodes",[]))==29,"Tier2 requires 29/29 Tier1 PASS")
 req(not any(n.get("state")!="PASS" for n in tier1.get("nodes",[])),"Tier2 requires no non-PASS Tier1 nodes")
 
-req(discovery.get("nodes",{}).get("kauth",{}).get("readiness")=="package-lane-pending","KAuth discovery readiness")
+req(discovery.get("nodes",{}).get("kauth",{}).get("readiness")=="prepared-pending-build","KAuth discovery readiness")
 req(discovery.get("nodes",{}).get("kmime",{}).get("readiness")=="compatibility-decision-required","KMime must remain decision-gated")
 req(discovery.get("state_model",{}).get("note","").startswith("These are planning/readiness states"),"readiness must not be confused with package BLOCKED")
 
@@ -85,5 +88,5 @@ if errors:
     raise SystemExit(1)
 
 print("KDE Frameworks 6.30 Tier 2 discovery validation: PASS")
-print("Nodes: KAuth package-lane-pending; KMime compatibility-decision-required")
+print("Nodes: KAuth prepared-pending-build; KMime compatibility-decision-required")
 print("Canonical package state: 0 PASS / 2 pending / 0 FAIL / 0 BLOCKED")

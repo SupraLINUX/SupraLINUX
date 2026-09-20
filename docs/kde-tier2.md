@@ -18,7 +18,7 @@ SupraLINUX therefore selects:
 - `DBUS` helper backend;
 - no silent Fake-backend fallback.
 
-KAuth is **package-lane-pending**, not package FAIL/BLOCKED. Its package tree/runner does not exist yet.
+KAuth is **prepared-pending-build**, not package FAIL/BLOCKED. Package tree, runner, semantic scope selector and reusable workflow now exist; no real package attempt has been recorded yet.
 
 ## KMime
 
@@ -33,3 +33,9 @@ Therefore KMime is **compatibility-decision-required** under ADR-0002. No packag
 ## Authority/provider boundary
 
 KDE upstream selects KAuth/KMime 6.30.0 and their dependencies. Ubuntu may supply PolkitQt/Qt and remains the compatibility reference for Debian package contracts; Ubuntu's older KDE/PIM versions do not select the SupraLINUX KDE version.
+
+## KAuth Batch 1 preparation
+
+KAuth is prepared as `kf6-kauth 6.30.0-0supralinux1`. The clean Resolute build consumes retained ECM, KCoreAddons and KWindowSystem PASS artifacts as explicit local sbuild inputs and uses the real PolkitQt6-1 + DBus backend profile.
+
+The source package imports only the `libkf6authcore6.symbols` contract from Debian `6.30.0-1` after verifying the complete Debian tarball SHA-256. This is technical-reference use, not authority transfer.

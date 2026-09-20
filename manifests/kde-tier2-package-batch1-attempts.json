@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "batch": "tier2-batch-1",
+  "lane": "core-authorization",
+  "nodes": [
+    "kauth"
+  ],
+  "real_attempts": {
+    "kauth": []
+  },
+  "validation_incidents": {
+    "kauth": []
+  },
+  "infrastructure_incidents": [],
+  "blocked_events": {
+    "kauth": []
+  }
+}

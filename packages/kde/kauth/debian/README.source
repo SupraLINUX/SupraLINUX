@@ -1,0 +1,29 @@
+SupraLINUX KAuth packaging
+===========================
+
+Authority:
+- KDE upstream 6.30.0 selects KAuth source, behavior and dependencies.
+- Ubuntu 26.04/Resolute is the platform/provider and Debian-package compatibility baseline.
+- Debian packaging is a technical reference only.
+
+Linux backend profile:
+- KAUTH_BACKEND_NAME=POLKITQT6-1
+- KAUTH_HELPER_BACKEND_NAME=DBUS
+- Fake backend fallback is not accepted when the selected Polkit provider is available.
+
+Retained Framework predecessors:
+- Extra CMake Modules 6.30.0-0supralinux3
+- KCoreAddons 6.30.0-0supralinux4
+- KWindowSystem 6.30.0-0supralinux4
+
+The build runner supplies the exact retained PASS .deb artifacts to sbuild.
+Ubuntu must not silently replace those Framework predecessors.
+
+Symbols:
+The libKF6AuthCore.so.6 symbols file is imported at source-package assembly
+from Debian kf6-kauth 6.30.0-1's debian.tar.xz, whose complete tarball SHA-256
+is pinned in the campaign manifest. This avoids inventing a symbols baseline
+while keeping Debian as a non-authoritative technical packaging reference.
+
+The helper-install-dir patch preserves the Debian-family helper layout while
+keeping upstream KAuth behavior intact.

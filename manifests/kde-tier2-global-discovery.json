@@ -21,14 +21,16 @@
   },
   "nodes": {
     "kauth": {
-      "readiness": "package-lane-pending",
+      "readiness": "prepared-pending-build",
       "tier1_predecessors": [
         "kcoreaddons",
         "kwindowsystem"
       ],
       "external_provider": "libpolkit-qt6-1-dev 0.200.0-4ubuntu1",
       "selected_backend": "POLKITQT6-1",
-      "blocker": "package-tree-and-runner-not-yet-implemented"
+      "blocker": "none",
+      "runner": "scripts/run-kde-tier2-package-batch1-preflight.sh",
+      "workflow": ".github/workflows/kde-tier2-package-batch1.yml"
     },
     "kmime": {
       "readiness": "compatibility-decision-required",
@@ -40,8 +42,9 @@
     }
   },
   "next_actions": [
-    "Implement and validate KAuth packaging independently using retained KCoreAddons and KWindowSystem PASS artifacts plus Ubuntu PolkitQt6-1 provider.",
+    "Run KAuth Tier 2 Batch 1 using retained ECM, KCoreAddons and KWindowSystem PASS artifacts plus Resolute PolkitQt6-1.",
+    "Preserve every real KAuth package attempt and continue independently of KMime.",
     "Do not attempt KMime packaging until ADR-0002 selects a compatibility transition preserving Ubuntu application contracts.",
-    "Once KMime transition is approved, implement its package lane and validate both legacy-Ubuntu compatibility and new KF6Mime consumers."
+    "If KAuth reaches retained PASS, promote only KAuth while KMime remains pending/decision-gated."
   ]
 }
