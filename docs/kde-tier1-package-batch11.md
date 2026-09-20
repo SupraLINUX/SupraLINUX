@@ -124,3 +124,14 @@ The promotion-validator remediation is validated on commit `d0c3c66dac717ebc82d6
 After the successful promotion validation, the final global-discovery validator was tightened to compare the complete DAG policy object exactly. This closes a validation gap where the `rerun_affected_nodes_after_remediation` key could escape checking because of a stale validator key spelling. The Batch 11 validator also now requires the recorded promotion-validation INFRA incident and its no-package-state-effect semantics.
 
 This is validator-only hardening: no package inputs, package revisions, retained PASS evidence, DAG state or APT publication state change.
+
+### Hardening validation evidence
+
+Commit `aa11a9492e5ea2cee9bc6e62703aaa449988494a` validates the post-closure checks.
+
+- Repository Policy run `35492890627`, job `106030747044`: **PASS**.
+- PR CI run `35492890731`: **PASS**.
+- All heavy reusable workflows were scope-skipped, including Batch 11.
+- Package rebuilds: **0**.
+- Package-attempt/state effect: **none**.
+- Canonical Tier 1 remains **29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**.
