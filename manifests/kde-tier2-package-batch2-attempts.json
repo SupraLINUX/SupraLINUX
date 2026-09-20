@@ -43,6 +43,40 @@
         "stage": "sbuild-lintian-policy",
         "package_state_effect": "none",
         "cause": "The package compiled and emitted binary packages, but the SupraLINUX-generated changelog used distribution UNRELEASED; the clean build's Lintian gate rejected this as unreleased-changes. The same generated-packaging defect affected both non-Python nodes."
+      },
+      {
+        "attempt": 3,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "ebfe93e74b4c0f7daac47242e8698f19518c8a26",
+        "workflow_run": 35535289692,
+        "job_id": 106143242223,
+        "artifact_id": 10613480229,
+        "artifact_sha256": "1f97e3cbcba2ed1d6b33af69cae1920726c2d5efab2382c3b21083a2e29d30d9",
+        "rootfs_artifact_id": 10612571276,
+        "rootfs_sha256": "db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "4/4 PASS",
+        "lintian": "PASS-errors",
+        "abi_soname": "libKF6Crash.so.6",
+        "abi_export_count": 13,
+        "apt_check": "PASS",
+        "consumer_smoke": "PASS",
+        "downstream_eligible": true,
+        "files": {
+          "libkf6crash-dev_6.30.0-0supralinux1_amd64.deb": "61ccf102680ad372b846d01d6277e6264abd9131e449c86d6a3a85677dee4ed9",
+          "libkf6crash-doc_6.30.0-0supralinux1_all.deb": "19245b5c0659b85d9f593b257fca54aa85cf876aed5e6798d7ce9f22fd836481",
+          "libkf6crash6_6.30.0-0supralinux1_amd64.deb": "1ffc3b0ed03c8f5c35c0ad82014de1b0f62cd5b57149e106ace0a68506b56215",
+          "libkf6crash6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "d2bc239c2bd1c96e12ef1aa4df0857de949828edc4346bf4e226a9e92bd84c05",
+          "changes_sha256": "36e7769017e50b01d2617b9d65b26d6dd41545719cb876ed8559ed618f41eb7f",
+          "buildinfo_sha256": "a66b6b6311a13685b8b23e1adb36a3fa632d26e9d10a7b9626212e72a6e3d1b3",
+          "dsc_sha256": "c586f512ee573c893a093562b8351ff2165ead7a0c50e9610c4b3b57e061ce6b",
+          "orig_tar_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+          "debian_tar_sha256": "1330eaa16e7d8acbc6244cb4c1730cbe33d06972dc5c29ecfe482e7168fb9f2d",
+          "rootfs_sha256": "db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f"
+        }
       }
     ],
     "knotifications": [
@@ -79,6 +113,23 @@
         "stage": "sbuild-build",
         "package_state_effect": "none",
         "cause": "KDE upstream Python bindings were preserved, but Shiboken ApiExtractor could not locate Clang's built-in include directory because the clean Resolute build environment lacked the default LLVM provider exposing /usr/bin/llvm-config; parsing then failed at C++ cstddef -> stddef.h. The same provider-discovery failure affected all three Python-binding nodes."
+      },
+      {
+        "attempt": 3,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "ebfe93e74b4c0f7daac47242e8698f19518c8a26",
+        "workflow_run": 35535289692,
+        "job_id": 106143242228,
+        "artifact_id": 10612715557,
+        "artifact_sha256": "4aa8a1e51e4dc119e569b75007029b330d7c791ff514dc735ea27b140f379620",
+        "rootfs_artifact_id": 10612571276,
+        "rootfs_sha256": "db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "sbuild-build",
+        "package_state_effect": "none",
+        "cause": "Shiboken now finds /usr/bin/llvm-config, but the clean Resolute environment has no versioned Clang resource-header directory under /usr/lib/llvm-21/lib/clang; ApiExtractor then fails at cstddef -> stddef.h. This is a shared provider-closure gap for the three KDE-upstream Python-binding nodes."
       }
     ],
     "kstatusnotifieritem": [
@@ -115,6 +166,23 @@
         "stage": "sbuild-build",
         "package_state_effect": "none",
         "cause": "KDE upstream Python bindings were preserved, but Shiboken ApiExtractor could not locate Clang's built-in include directory because the clean Resolute build environment lacked the default LLVM provider exposing /usr/bin/llvm-config; parsing then failed at C++ cstddef -> stddef.h. The same provider-discovery failure affected all three Python-binding nodes."
+      },
+      {
+        "attempt": 3,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "ebfe93e74b4c0f7daac47242e8698f19518c8a26",
+        "workflow_run": 35535289692,
+        "job_id": 106143242193,
+        "artifact_id": 10612555856,
+        "artifact_sha256": "d3a7a2c5c6f3272b74884a1f8a71dd9a76f211663a344abfbb1863f8d78d0778",
+        "rootfs_artifact_id": 10612571276,
+        "rootfs_sha256": "db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "sbuild-build",
+        "package_state_effect": "none",
+        "cause": "Shiboken now finds /usr/bin/llvm-config, but the clean Resolute environment has no versioned Clang resource-header directory under /usr/lib/llvm-21/lib/clang; ApiExtractor then fails at cstddef -> stddef.h. This is a shared provider-closure gap for the three KDE-upstream Python-binding nodes."
       }
     ],
     "kunitconversion": [
@@ -134,6 +202,23 @@
         "stage": "sbuild-build",
         "package_state_effect": "none",
         "cause": "KDE upstream Python bindings were preserved, but Shiboken ApiExtractor could not locate Clang's built-in include directory because the clean Resolute build environment lacked the default LLVM provider exposing /usr/bin/llvm-config; parsing then failed at C++ cstddef -> stddef.h. The same provider-discovery failure affected all three Python-binding nodes."
+      },
+      {
+        "attempt": 2,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "ebfe93e74b4c0f7daac47242e8698f19518c8a26",
+        "workflow_run": 35535289692,
+        "job_id": 106143242231,
+        "artifact_id": 10613315371,
+        "artifact_sha256": "f7f8e8b2021a41d994e62753c59d980d6f7660848a006718a86f3419688c0ce8",
+        "rootfs_artifact_id": 10612571276,
+        "rootfs_sha256": "db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "sbuild-build",
+        "package_state_effect": "none",
+        "cause": "Shiboken now finds /usr/bin/llvm-config, but the clean Resolute environment has no versioned Clang resource-header directory under /usr/lib/llvm-21/lib/clang; ApiExtractor then fails at cstddef -> stddef.h. This is a shared provider-closure gap for the three KDE-upstream Python-binding nodes."
       }
     ],
     "syndication": [
@@ -170,6 +255,24 @@
         "stage": "sbuild-lintian-policy",
         "package_state_effect": "none",
         "cause": "The package compiled and emitted binary packages, but the SupraLINUX-generated changelog used distribution UNRELEASED; the clean build's Lintian gate rejected this as unreleased-changes. The same generated-packaging defect affected both non-Python nodes."
+      },
+      {
+        "attempt": 3,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "ebfe93e74b4c0f7daac47242e8698f19518c8a26",
+        "workflow_run": 35535289692,
+        "job_id": 106143242211,
+        "artifact_id": 10612995797,
+        "artifact_sha256": "6add74a739f9838338c8ddc70d8fc7d54054b0c02c99070f9613f37fd4d6523e",
+        "rootfs_artifact_id": 10612571276,
+        "rootfs_sha256": "db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "lintian-source-binary",
+        "package_state_effect": "none",
+        "tests": "4/4 PASS",
+        "cause": "The package builds and tests PASS, but Debian's pinned copyright metadata declares two non-DFSG test fixtures in Files-Excluded while the raw KDE authority tarball still contains them. Lintian correctly rejects source-ships-excluded-file. SupraLINUX needs a verified distribution repack, not a suppressed Lintian error."
       }
     ]
   },
@@ -235,6 +338,36 @@
       "failed_gate": "sbuild-build",
       "cause": "Shiboken ApiExtractor warned that it could not locate Clang's built-in include directory via LLVM_INSTALL_DIR, CLANG_INSTALL_DIR or llvm-config; the environment lacked the default llvm provider and parsing failed at /usr/include/c++/15/cstddef -> stddef.h.",
       "remediation": "Add Ubuntu Resolute llvm-dev as a build-tool provider for Python-binding package trees so /usr/bin/llvm-config and the matching LLVM 21 development surface are available, without changing KDE's BUILD_PYTHON_BINDINGS=ON profile."
+    },
+    {
+      "phase": "batch2-remediation-2-shiboken-resource-headers",
+      "workflow_run": 35535289692,
+      "commit": "ebfe93e74b4c0f7daac47242e8698f19518c8a26",
+      "affected_nodes": [
+        "knotifications",
+        "kstatusnotifieritem",
+        "kunitconversion"
+      ],
+      "classification": "shared-python-binding-provider-closure-gap",
+      "package_attempted": true,
+      "package_state_effect": "none",
+      "failed_gate": "sbuild-build",
+      "cause": "llvm-config is now present, but Shiboken reports no subdirectories under /usr/lib/llvm-21/lib/clang and cannot find stddef.h.",
+      "remediation": "Extend the Resolute Shiboken provider closure with libclang-common-21-dev and verify the Clang 21 builtin resource header before package promotion."
+    },
+    {
+      "phase": "batch2-remediation-2-syndication-source-repack",
+      "workflow_run": 35535289692,
+      "commit": "ebfe93e74b4c0f7daac47242e8698f19518c8a26",
+      "affected_nodes": [
+        "syndication"
+      ],
+      "classification": "source-distribution-repack-policy-gap",
+      "package_attempted": true,
+      "package_state_effect": "none",
+      "failed_gate": "lintian-source-binary",
+      "cause": "Debian copyright Files-Excluded names autotests/rss2/stefandecker.org.xml and .expected, but the raw KDE authority orig still ships both; Lintian emits source-ships-excluded-file.",
+      "remediation": "Verify the Debian repacked orig differs from KDE authority only by declared Files-Excluded, then use that repack as distribution source artifact while retaining KDE as source/version authority."
     }
   ],
   "blocked_events": {

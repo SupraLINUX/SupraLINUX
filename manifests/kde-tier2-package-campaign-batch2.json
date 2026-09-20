@@ -5,8 +5,8 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "frameworks_series": "6.30.0",
-  "state": "remediation-pending-build",
-  "canonical_snapshot": "1 PASS / 14 pending / 0 current FAIL / 0 BLOCKED",
+  "state": "partial-pass-rematerialization-pending",
+  "canonical_snapshot": "2 PASS / 13 pending / 0 current FAIL / 0 BLOCKED",
   "selected_nodes": [
     "kcrash",
     "knotifications",
@@ -100,20 +100,60 @@
           "qml6-module-org-kde-coreaddons": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
         }
       },
-      "state": "remediation-pending-build",
+      "state": "PASS",
       "last_result": {
-        "result": "INFRA",
-        "workflow_run": 35534595946,
-        "job_id": 106141376559,
-        "artifact_id": 10611689289,
-        "artifact_sha256": "0a305c66059134f0b409adbe50e050c56ce8fb62abddbc2cb890170521eb28a9",
-        "stage": "sbuild-lintian-policy",
-        "classification": "shared-generated-changelog-distribution",
+        "result": "PASS",
+        "workflow_run": 35535289692,
+        "job_id": 106143242223,
+        "artifact_id": 10613480229,
+        "artifact_sha256": "1f97e3cbcba2ed1d6b33af69cae1920726c2d5efab2382c3b21083a2e29d30d9",
         "package_attempted": true,
-        "package_state_effect": "none"
+        "stage": "complete",
+        "package_state_effect": "PASS"
       },
-      "downstream_eligible": false,
-      "materialization_status": "active"
+      "downstream_eligible": true,
+      "materialization_status": "retained-pass",
+      "pass_evidence": {
+        "result": "PASS",
+        "workflow_run": 35535289692,
+        "job_id": 106143242223,
+        "commit": "ebfe93e74b4c0f7daac47242e8698f19518c8a26",
+        "attempted_package_version": "6.30.0-0supralinux1",
+        "artifact_id": 10613480229,
+        "artifact_sha256": "1f97e3cbcba2ed1d6b33af69cae1920726c2d5efab2382c3b21083a2e29d30d9",
+        "rootfs_artifact_id": 10612571276,
+        "rootfs_artifact_sha256": "d5e33858cfa1b30ed2fc85e0f0cb40b3b5891643272fa6f3c5e432cdb0ecb7f5",
+        "rootfs_sha256": "db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f",
+        "stage": "complete",
+        "tests": "4/4 PASS",
+        "lintian": "PASS-errors",
+        "abi_soname": "libKF6Crash.so.6",
+        "abi_export_count": 13,
+        "consumer_smoke": "PASS",
+        "apt_check": "PASS",
+        "materialization": {
+          "workflow_run": 35535155799,
+          "artifact_id": 10612224837,
+          "artifact_sha256": "37c45ad18a9587a5e8b950e3f1d7e33092b31d502c5093b36c42992f5f14cac6"
+        },
+        "retained_predecessors": {
+          "extra_cmake_modules": "6.30.0-0supralinux3",
+          "kcoreaddons": "6.30.0-0supralinux4"
+        },
+        "downstream_eligible": true,
+        "files": {
+          "libkf6crash-dev_6.30.0-0supralinux1_amd64.deb": "61ccf102680ad372b846d01d6277e6264abd9131e449c86d6a3a85677dee4ed9",
+          "libkf6crash-doc_6.30.0-0supralinux1_all.deb": "19245b5c0659b85d9f593b257fca54aa85cf876aed5e6798d7ce9f22fd836481",
+          "libkf6crash6_6.30.0-0supralinux1_amd64.deb": "1ffc3b0ed03c8f5c35c0ad82014de1b0f62cd5b57149e106ace0a68506b56215",
+          "libkf6crash6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "d2bc239c2bd1c96e12ef1aa4df0857de949828edc4346bf4e226a9e92bd84c05",
+          "changes_sha256": "36e7769017e50b01d2617b9d65b26d6dd41545719cb876ed8559ed618f41eb7f",
+          "buildinfo_sha256": "a66b6b6311a13685b8b23e1adb36a3fa632d26e9d10a7b9626212e72a6e3d1b3",
+          "dsc_sha256": "c586f512ee573c893a093562b8351ff2165ead7a0c50e9610c4b3b57e061ce6b",
+          "orig_tar_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+          "debian_tar_sha256": "1330eaa16e7d8acbc6244cb4c1730cbe33d06972dc5c29ecfe482e7168fb9f2d",
+          "rootfs_sha256": "db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f"
+        }
+      }
     },
     "knotifications": {
       "source_package": "kf6-knotifications",
@@ -164,20 +204,20 @@
           "qml6-module-org-kde-config": "b514993f60fe1f55ac7803ceab42ba0ef8a89dc58ab5d38463bfb63c9601bfd6"
         }
       },
-      "state": "remediation-pending-build",
+      "state": "rematerialization-pending",
       "last_result": {
         "result": "INFRA",
-        "workflow_run": 35534595946,
-        "job_id": 106141376510,
-        "artifact_id": 10611644357,
-        "artifact_sha256": "ecd6654b0744852db24f1914dc405a9027f69d37ad8b158778cf1ffa25d39e32",
-        "stage": "sbuild-build",
-        "classification": "shared-shiboken-clang-provider-discovery",
+        "workflow_run": 35535289692,
+        "job_id": 106143242228,
+        "artifact_id": 10612715557,
+        "artifact_sha256": "4aa8a1e51e4dc119e569b75007029b330d7c791ff514dc735ea27b140f379620",
         "package_attempted": true,
+        "stage": "sbuild-build",
+        "classification": "shiboken-clang-resource-provider-gap",
         "package_state_effect": "none"
       },
       "downstream_eligible": false,
-      "materialization_status": "active"
+      "materialization_status": "superseded-rematerialization-required"
     },
     "kstatusnotifieritem": {
       "source_package": "kf6-kstatusnotifieritem",
@@ -223,20 +263,20 @@
           "qml6-module-org-kde-kwindowsystem": "07d4f715ea2783ae3b8daf88b907edf4cb62ae44760d190e8a8ddea908594b01"
         }
       },
-      "state": "remediation-pending-build",
+      "state": "rematerialization-pending",
       "last_result": {
         "result": "INFRA",
-        "workflow_run": 35534595946,
-        "job_id": 106141376562,
-        "artifact_id": 10612114359,
-        "artifact_sha256": "131b9dea0188d7f4330d1ee65f7491cd003607c822e59affba2b95d77b115459",
-        "stage": "sbuild-build",
-        "classification": "shared-shiboken-clang-provider-discovery",
+        "workflow_run": 35535289692,
+        "job_id": 106143242193,
+        "artifact_id": 10612555856,
+        "artifact_sha256": "d3a7a2c5c6f3272b74884a1f8a71dd9a76f211663a344abfbb1863f8d78d0778",
         "package_attempted": true,
+        "stage": "sbuild-build",
+        "classification": "shiboken-clang-resource-provider-gap",
         "package_state_effect": "none"
       },
       "downstream_eligible": false,
-      "materialization_status": "active"
+      "materialization_status": "superseded-rematerialization-required"
     },
     "kunitconversion": {
       "source_package": "kf6-kunitconversion",
@@ -285,20 +325,20 @@
           "qml6-module-org-kde-ki18n": "07960032b6582476f0844b72d4f74884240c592e55eb0613390f0191dbd98299"
         }
       },
-      "state": "remediation-pending-build",
+      "state": "rematerialization-pending",
       "last_result": {
         "result": "INFRA",
-        "workflow_run": 35534595946,
-        "job_id": 106141376518,
-        "artifact_id": 10611934477,
-        "artifact_sha256": "3bfc734d7a030921d9a5ad6e7d4d385ffda8666b4084aa0b120a7c5de434ed16",
-        "stage": "sbuild-build",
-        "classification": "shared-shiboken-clang-provider-discovery",
+        "workflow_run": 35535289692,
+        "job_id": 106143242231,
+        "artifact_id": 10613315371,
+        "artifact_sha256": "f7f8e8b2021a41d994e62753c59d980d6f7660848a006718a86f3419688c0ce8",
         "package_attempted": true,
+        "stage": "sbuild-build",
+        "classification": "shiboken-clang-resource-provider-gap",
         "package_state_effect": "none"
       },
       "downstream_eligible": false,
-      "materialization_status": "active"
+      "materialization_status": "superseded-rematerialization-required"
     },
     "syndication": {
       "source_package": "kf6-syndication",
@@ -341,20 +381,20 @@
           "libkf6codecs6": "66b34b1ec140e1942d906c4e8537661bd540f959277e41de9a772e1e0956be13"
         }
       },
-      "state": "remediation-pending-build",
+      "state": "rematerialization-pending",
       "last_result": {
         "result": "INFRA",
-        "workflow_run": 35534595946,
-        "job_id": 106141376557,
-        "artifact_id": 10612224263,
-        "artifact_sha256": "2ba6359eabc622c0a87bf5161119e13a53a98b4b137ee2c1b5eedbcd6863371b",
-        "stage": "sbuild-lintian-policy",
-        "classification": "shared-generated-changelog-distribution",
+        "workflow_run": 35535289692,
+        "job_id": 106143242211,
+        "artifact_id": 10612995797,
+        "artifact_sha256": "6add74a739f9838338c8ddc70d8fc7d54054b0c02c99070f9613f37fd4d6523e",
         "package_attempted": true,
+        "stage": "lintian-source-binary",
+        "classification": "source-repack-policy-gap",
         "package_state_effect": "none"
       },
       "downstream_eligible": false,
-      "materialization_status": "active"
+      "materialization_status": "superseded-rematerialization-required"
     }
   }
 }

@@ -2555,6 +2555,90 @@
         "debian_tar_sha256": "9b4f362ea681172ac197f7c26c17334a1513ea4872d76e4220dcb238a8fdd8ed",
         "rootfs_sha256": "15113b108b939e2575758c6696fc34808dfa925fa2dd3cc5e6c13e65e7be4668"
       }
+    },
+    "kcrash": {
+      "tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kcrash-6.30.0.tar.xz",
+      "source_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-kcrash",
+      "binary_packages": [
+        "libkf6crash-dev",
+        "libkf6crash-doc",
+        "libkf6crash6"
+      ],
+      "package_version": "6.30.0-0supralinux1",
+      "ubuntu_reference_version": "6.24.0-0ubuntu1",
+      "depends_on": [
+        "extra-cmake-modules",
+        "kcoreaddons"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "attempt_ledger": "manifests/kde-tier2-package-batch2-attempts.json",
+      "abi_sonames": [
+        "libKF6Crash.so.6"
+      ],
+      "evidence": [
+        {
+          "result": "PASS",
+          "workflow_run": 35535289692,
+          "job_id": 106143242223,
+          "commit": "ebfe93e74b4c0f7daac47242e8698f19518c8a26",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10613480229,
+          "artifact_sha256": "1f97e3cbcba2ed1d6b33af69cae1920726c2d5efab2382c3b21083a2e29d30d9",
+          "rootfs_artifact_id": 10612571276,
+          "rootfs_artifact_sha256": "d5e33858cfa1b30ed2fc85e0f0cb40b3b5891643272fa6f3c5e432cdb0ecb7f5",
+          "rootfs_sha256": "db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f",
+          "stage": "complete",
+          "tests": "4/4 PASS",
+          "lintian": "PASS-errors",
+          "abi_soname": "libKF6Crash.so.6",
+          "abi_export_count": 13,
+          "consumer_smoke": "PASS",
+          "apt_check": "PASS",
+          "materialization": {
+            "workflow_run": 35535155799,
+            "artifact_id": 10612224837,
+            "artifact_sha256": "37c45ad18a9587a5e8b950e3f1d7e33092b31d502c5093b36c42992f5f14cac6"
+          },
+          "retained_predecessors": {
+            "extra_cmake_modules": "6.30.0-0supralinux3",
+            "kcoreaddons": "6.30.0-0supralinux4"
+          },
+          "downstream_eligible": true,
+          "files": {
+            "libkf6crash-dev_6.30.0-0supralinux1_amd64.deb": "61ccf102680ad372b846d01d6277e6264abd9131e449c86d6a3a85677dee4ed9",
+            "libkf6crash-doc_6.30.0-0supralinux1_all.deb": "19245b5c0659b85d9f593b257fca54aa85cf876aed5e6798d7ce9f22fd836481",
+            "libkf6crash6_6.30.0-0supralinux1_amd64.deb": "1ffc3b0ed03c8f5c35c0ad82014de1b0f62cd5b57149e106ace0a68506b56215",
+            "libkf6crash6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "d2bc239c2bd1c96e12ef1aa4df0857de949828edc4346bf4e226a9e92bd84c05",
+            "changes_sha256": "36e7769017e50b01d2617b9d65b26d6dd41545719cb876ed8559ed618f41eb7f",
+            "buildinfo_sha256": "a66b6b6311a13685b8b23e1adb36a3fa632d26e9d10a7b9626212e72a6e3d1b3",
+            "dsc_sha256": "c586f512ee573c893a093562b8351ff2165ead7a0c50e9610c4b3b57e061ce6b",
+            "orig_tar_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+            "debian_tar_sha256": "1330eaa16e7d8acbc6244cb4c1730cbe33d06972dc5c29ecfe482e7168fb9f2d",
+            "rootfs_sha256": "db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f"
+          }
+        }
+      ],
+      "pass_files": {
+        "libkf6crash-dev_6.30.0-0supralinux1_amd64.deb": "61ccf102680ad372b846d01d6277e6264abd9131e449c86d6a3a85677dee4ed9",
+        "libkf6crash-doc_6.30.0-0supralinux1_all.deb": "19245b5c0659b85d9f593b257fca54aa85cf876aed5e6798d7ce9f22fd836481",
+        "libkf6crash6_6.30.0-0supralinux1_amd64.deb": "1ffc3b0ed03c8f5c35c0ad82014de1b0f62cd5b57149e106ace0a68506b56215",
+        "libkf6crash6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "d2bc239c2bd1c96e12ef1aa4df0857de949828edc4346bf4e226a9e92bd84c05",
+        "changes_sha256": "36e7769017e50b01d2617b9d65b26d6dd41545719cb876ed8559ed618f41eb7f",
+        "buildinfo_sha256": "a66b6b6311a13685b8b23e1adb36a3fa632d26e9d10a7b9626212e72a6e3d1b3",
+        "dsc_sha256": "c586f512ee573c893a093562b8351ff2165ead7a0c50e9610c4b3b57e061ce6b",
+        "orig_tar_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+        "debian_tar_sha256": "1330eaa16e7d8acbc6244cb4c1730cbe33d06972dc5c29ecfe482e7168fb9f2d",
+        "rootfs_sha256": "db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f"
+      }
     }
   },
   "ci_scope_incidents": [

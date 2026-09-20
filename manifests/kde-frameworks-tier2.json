@@ -265,52 +265,62 @@
         "status": "materialized"
       },
       "packaging": {
-        "state": "pending",
-        "reason": "package-contract-materialized-awaiting-clean-build",
-        "previous_materialization": {
-          "workflow_run": 35527533481,
-          "job_id": 106122236790,
-          "artifact_id": 10609867532,
-          "artifact_sha256": "71182044053fb13567670b9f51321e7a3f85ae2b9cc70de19c789fad70174353",
-          "tree_sha256": "7058399d53a61c45041493ea3d624288ae3ba59e66ed9508fd22ddbae2912aa3",
-          "debian_tree_sha256": "4fabfae3449ab5c8eb253bc6b0b505b460a1fc91f87825cf5f5d93112868d067",
-          "package_attempted": false,
-          "package_state_effect": "none"
-        },
-        "remediation": {
-          "classification": "shared-integration-provider-remediation",
-          "workflow_run": 35534595946,
-          "issues": [
-            "generated-changelog-distribution-unreleased"
-          ],
-          "package_state_effect": "none"
-        },
-        "superseded_materialization": {
-          "workflow_run": 35534384634,
-          "job_id": 106140683997,
-          "artifact_id": 10611834586,
-          "artifact_sha256": "96d776e28bd474511a3318e6ef2a56f5e399cbed23b1578593cd54fafff7c577",
-          "tree_sha256": "f1da18905165b0f43920269cfd3246bf313b321c37e8f3dd5e909fa3a3a9ea53",
-          "debian_tree_sha256": "522254915036f84c18ae986da6a946d028570923cfa6181f01650572f33d1948",
-          "package_attempted": false,
-          "package_state_effect": "none"
-        },
-        "materialization": {
-          "workflow_run": 35535155799,
-          "job_id": 106142770257,
-          "artifact_id": 10612224837,
-          "artifact_sha256": "37c45ad18a9587a5e8b950e3f1d7e33092b31d502c5093b36c42992f5f14cac6",
-          "tree_sha256": "302cc71f478e01c2b2fab20c6401286824f54d4772a59446cb32fce2d5a5d938",
-          "debian_tree_sha256": "5f5256b619f3e43cba2930debaee545ab773ee813bb1728031e9b7ee8a274a92",
-          "package_attempted": false,
-          "package_state_effect": "none"
-        }
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux1",
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "downstream_eligible": true,
+        "attempt_ledger": "manifests/kde-tier2-package-batch2-attempts.json",
+        "campaign": "manifests/kde-tier2-package-campaign-batch2.json",
+        "evidence": [
+          {
+            "result": "PASS",
+            "workflow_run": 35535289692,
+            "job_id": 106143242223,
+            "commit": "ebfe93e74b4c0f7daac47242e8698f19518c8a26",
+            "attempted_package_version": "6.30.0-0supralinux1",
+            "artifact_id": 10613480229,
+            "artifact_sha256": "1f97e3cbcba2ed1d6b33af69cae1920726c2d5efab2382c3b21083a2e29d30d9",
+            "rootfs_artifact_id": 10612571276,
+            "rootfs_artifact_sha256": "d5e33858cfa1b30ed2fc85e0f0cb40b3b5891643272fa6f3c5e432cdb0ecb7f5",
+            "rootfs_sha256": "db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f",
+            "stage": "complete",
+            "tests": "4/4 PASS",
+            "lintian": "PASS-errors",
+            "abi_soname": "libKF6Crash.so.6",
+            "abi_export_count": 13,
+            "consumer_smoke": "PASS",
+            "apt_check": "PASS",
+            "materialization": {
+              "workflow_run": 35535155799,
+              "artifact_id": 10612224837,
+              "artifact_sha256": "37c45ad18a9587a5e8b950e3f1d7e33092b31d502c5093b36c42992f5f14cac6"
+            },
+            "retained_predecessors": {
+              "extra_cmake_modules": "6.30.0-0supralinux3",
+              "kcoreaddons": "6.30.0-0supralinux4"
+            },
+            "downstream_eligible": true,
+            "files": {
+              "libkf6crash-dev_6.30.0-0supralinux1_amd64.deb": "61ccf102680ad372b846d01d6277e6264abd9131e449c86d6a3a85677dee4ed9",
+              "libkf6crash-doc_6.30.0-0supralinux1_all.deb": "19245b5c0659b85d9f593b257fca54aa85cf876aed5e6798d7ce9f22fd836481",
+              "libkf6crash6_6.30.0-0supralinux1_amd64.deb": "1ffc3b0ed03c8f5c35c0ad82014de1b0f62cd5b57149e106ace0a68506b56215",
+              "libkf6crash6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "d2bc239c2bd1c96e12ef1aa4df0857de949828edc4346bf4e226a9e92bd84c05",
+              "changes_sha256": "36e7769017e50b01d2617b9d65b26d6dd41545719cb876ed8559ed618f41eb7f",
+              "buildinfo_sha256": "a66b6b6311a13685b8b23e1adb36a3fa632d26e9d10a7b9626212e72a6e3d1b3",
+              "dsc_sha256": "c586f512ee573c893a093562b8351ff2165ead7a0c50e9610c4b3b57e061ce6b",
+              "orig_tar_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+              "debian_tar_sha256": "1330eaa16e7d8acbc6244cb4c1730cbe33d06972dc5c29ecfe482e7168fb9f2d",
+              "rootfs_sha256": "db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f"
+            }
+          }
+        ]
       },
-      "state": "pending",
+      "state": "PASS",
       "planning": {
-        "readiness": "build-ready",
+        "readiness": "retained-pass",
         "provider_audit": "complete",
-        "package_contract": "materialized",
+        "package_contract": "retained-pass",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35524034558,
@@ -435,11 +445,11 @@
       "package_identity": {
         "source_package": "kf6-knotifications",
         "package_version_candidate": "6.30.0-0supralinux1",
-        "status": "materialized"
+        "status": "not-materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-contract-materialized-awaiting-clean-build",
+        "reason": "rematerialization-required-after-clean-build-diagnostic",
         "previous_materialization": {
           "workflow_run": 35527533481,
           "job_id": 106122236813,
@@ -451,24 +461,11 @@
           "package_state_effect": "none"
         },
         "remediation": {
-          "classification": "shared-integration-provider-remediation",
-          "workflow_run": 35534595946,
-          "issues": [
-            "shiboken-clang-provider-discovery"
-          ],
+          "workflow_run": 35535289692,
+          "classification": "shiboken-clang-resource-provider-gap",
           "package_state_effect": "none"
         },
         "superseded_materialization": {
-          "workflow_run": 35534384634,
-          "job_id": 106140683897,
-          "artifact_id": 10612293440,
-          "artifact_sha256": "bf14082d63bd8967dd30e6db8797fa48264ee8a2d2d13c88ec47e76e13d43573",
-          "tree_sha256": "3f6fa52d2ad2639005b90976af5195e21ff4db813d80edd4a939f3a319780ccd",
-          "debian_tree_sha256": "3b0df536c2c1e70b28d959979d68472c16829659fb66fbda2067a3839912e2ea",
-          "package_attempted": false,
-          "package_state_effect": "none"
-        },
-        "materialization": {
           "workflow_run": 35535155799,
           "job_id": 106142770287,
           "artifact_id": 10611504990,
@@ -481,9 +478,9 @@
       },
       "state": "pending",
       "planning": {
-        "readiness": "build-ready",
+        "readiness": "package-contract-ready",
         "provider_audit": "complete",
-        "package_contract": "materialized",
+        "package_contract": "not-materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35524034558,
@@ -644,11 +641,11 @@
       "package_identity": {
         "source_package": "kf6-kstatusnotifieritem",
         "package_version_candidate": "6.30.0-0supralinux1",
-        "status": "materialized"
+        "status": "not-materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-contract-materialized-awaiting-clean-build",
+        "reason": "rematerialization-required-after-clean-build-diagnostic",
         "previous_materialization": {
           "workflow_run": 35527533481,
           "job_id": 106122236810,
@@ -660,24 +657,11 @@
           "package_state_effect": "none"
         },
         "remediation": {
-          "classification": "shared-integration-provider-remediation",
-          "workflow_run": 35534595946,
-          "issues": [
-            "shiboken-clang-provider-discovery"
-          ],
+          "workflow_run": 35535289692,
+          "classification": "shiboken-clang-resource-provider-gap",
           "package_state_effect": "none"
         },
         "superseded_materialization": {
-          "workflow_run": 35534384634,
-          "job_id": 106140683947,
-          "artifact_id": 10611879452,
-          "artifact_sha256": "37873531a138bb5ed0b22219d06b69ae7cf6ec0db057a85251d87865e18c0da9",
-          "tree_sha256": "818b83ec53172d7f57a7ebd093cbb712b4a7a1921152da10a08bb3de7f159572",
-          "debian_tree_sha256": "b1a56133304c57ef312f67594c949dd5e7ea206547b1a9345f640ef89fcdf788",
-          "package_attempted": false,
-          "package_state_effect": "none"
-        },
-        "materialization": {
           "workflow_run": 35535155799,
           "job_id": 106142770232,
           "artifact_id": 10613175026,
@@ -690,9 +674,9 @@
       },
       "state": "pending",
       "planning": {
-        "readiness": "build-ready",
+        "readiness": "package-contract-ready",
         "provider_audit": "complete",
-        "package_contract": "materialized",
+        "package_contract": "not-materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35524034558,
@@ -729,11 +713,11 @@
       "package_identity": {
         "source_package": "kf6-kunitconversion",
         "package_version_candidate": "6.30.0-0supralinux1",
-        "status": "materialized"
+        "status": "not-materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-contract-materialized-awaiting-clean-build",
+        "reason": "rematerialization-required-after-clean-build-diagnostic",
         "previous_materialization": {
           "workflow_run": 35527533481,
           "job_id": 106122236748,
@@ -745,24 +729,11 @@
           "package_state_effect": "none"
         },
         "remediation": {
-          "classification": "shared-integration-provider-remediation",
-          "workflow_run": 35534595946,
-          "issues": [
-            "shiboken-clang-provider-discovery"
-          ],
+          "workflow_run": 35535289692,
+          "classification": "shiboken-clang-resource-provider-gap",
           "package_state_effect": "none"
         },
         "superseded_materialization": {
-          "workflow_run": 35534384634,
-          "job_id": 106140683957,
-          "artifact_id": 10612467659,
-          "artifact_sha256": "0afef762199e72b0dfcd5a6fc35b2791f689726684d6be08ee653a428e6cf868",
-          "tree_sha256": "4f2e8cff662df6d954c20a088cfbe228de3c7a1871273e27b996c198fc68a25c",
-          "debian_tree_sha256": "fffb460602d985dda1d6ac426948923020504e2523c9d56cfe69447600b5e30a",
-          "package_attempted": false,
-          "package_state_effect": "none"
-        },
-        "materialization": {
           "workflow_run": 35535155799,
           "job_id": 106142770262,
           "artifact_id": 10612498422,
@@ -775,9 +746,9 @@
       },
       "state": "pending",
       "planning": {
-        "readiness": "build-ready",
+        "readiness": "package-contract-ready",
         "provider_audit": "complete",
-        "package_contract": "materialized",
+        "package_contract": "not-materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35524034558,
@@ -814,11 +785,11 @@
       "package_identity": {
         "source_package": "kf6-syndication",
         "package_version_candidate": "6.30.0-0supralinux1",
-        "status": "materialized"
+        "status": "not-materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-contract-materialized-awaiting-clean-build",
+        "reason": "rematerialization-required-after-clean-build-diagnostic",
         "previous_materialization": {
           "workflow_run": 35527533481,
           "job_id": 106122236787,
@@ -830,24 +801,11 @@
           "package_state_effect": "none"
         },
         "remediation": {
-          "classification": "shared-integration-provider-remediation",
-          "workflow_run": 35534595946,
-          "issues": [
-            "generated-changelog-distribution-unreleased"
-          ],
+          "workflow_run": 35535289692,
+          "classification": "source-repack-policy-gap",
           "package_state_effect": "none"
         },
         "superseded_materialization": {
-          "workflow_run": 35534384634,
-          "job_id": 106140683962,
-          "artifact_id": 10612213475,
-          "artifact_sha256": "77c8d4e621fac3bd0cc01505f06a1874d73582cc34776181ba0298293d7ffef2",
-          "tree_sha256": "4daf4fada75f2b8acc38e4ff70aa17f0591991fdcd3502dcf73f46ece131dc9b",
-          "debian_tree_sha256": "da62a1fe01863d9e204b95f800fa52ccc89e793ebaf14101b12c6d72ffec8067",
-          "package_attempted": false,
-          "package_state_effect": "none"
-        },
-        "materialization": {
           "workflow_run": 35535155799,
           "job_id": 106142770252,
           "artifact_id": 10612304550,
@@ -860,9 +818,9 @@
       },
       "state": "pending",
       "planning": {
-        "readiness": "build-ready",
+        "readiness": "package-contract-ready",
         "provider_audit": "complete",
-        "package_contract": "materialized",
+        "package_contract": "not-materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35524034558,
