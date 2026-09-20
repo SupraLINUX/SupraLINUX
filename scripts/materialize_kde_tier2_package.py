@@ -56,7 +56,7 @@ def set_field(lines: list[str], name: str, value: str):
         start, end = mapping[name]
         lines[start:end] = replacement
     else:
-        lines.append(replacement)
+        lines.extend(replacement)
 
 
 def remove_field(lines: list[str], name: str):
