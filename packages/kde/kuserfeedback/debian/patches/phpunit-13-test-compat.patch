@@ -1344,9 +1344,9 @@ diff --git a/autotests/sampletest.php b/autotests/sampletest.php
 +        $this->assertTrue(is_array($data));
 +        $this->assertCount(2, $data);
 +        $d0 = $data[0];
-+        $this->assertObjectHasAttribute('timestamp', $d0);
-+        $this->assertObjectHasAttribute('entry1', $d0);
-+        $this->assertObjectHasAttribute('entry2', $d0);
++        $this->assertObjectHasProperty('timestamp', $d0);
++        $this->assertObjectHasProperty('entry1', $d0);
++        $this->assertObjectHasProperty('entry2', $d0);
 +        $d01 = $d0->{'entry2'};
 +        $this->assertCount(2, $d01);
 +    }
@@ -1379,12 +1379,12 @@ diff --git a/autotests/sampletest.php b/autotests/sampletest.php
 +        $this->assertTrue(is_array($data));
 +        $this->assertCount(1, $data);
 +        $d0 = $data[0];
-+        $this->assertObjectHasAttribute('timestamp', $d0);
-+        $this->assertObjectHasAttribute('entry1', $d0);
-+        $this->assertObjectHasAttribute('entry2', $d0);
++        $this->assertObjectHasProperty('timestamp', $d0);
++        $this->assertObjectHasProperty('entry1', $d0);
++        $this->assertObjectHasProperty('entry2', $d0);
 +        $d01 = $d0->{'entry2'};
-+        $this->assertObjectHasAttribute('key1', $d01);
-+        $this->assertObjectHasAttribute('key2', $d01);
++        $this->assertObjectHasProperty('key1', $d01);
++        $this->assertObjectHasProperty('key2', $d01);
 +    }
 +
 +    public function testEmptyInsert()
@@ -1406,9 +1406,9 @@ diff --git a/autotests/sampletest.php b/autotests/sampletest.php
 +        $this->assertTrue(is_array($data));
 +        $this->assertCount(1, $data);
 +        $d0 = $data[0];
-+        $this->assertObjectHasAttribute('timestamp', $d0);
-+        $this->assertObjectNotHasAttribute('entry1', $d0);
-+        $this->assertObjectNotHasAttribute('someRandomStuff', $d0);
++        $this->assertObjectHasProperty('timestamp', $d0);
++        $this->assertObjectNotHasProperty('entry1', $d0);
++        $this->assertObjectNotHasProperty('someRandomStuff', $d0);
 +    }
 +
 +    public static function invalidInsert_data()

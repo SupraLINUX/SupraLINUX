@@ -1,3 +1,11 @@
+kf6-kuserfeedback (6.30.0-0supralinux4) resolute; urgency=medium
+
+  * Complete SampleTest compatibility with PHPUnit 13 object assertions.
+  * Replace removed object-attribute assertions with property assertions.
+  * Keep all 15 upstream CTest entries enabled.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sun, 20 Sep 2026 01:34:00 -0300
+
 kf6-kuserfeedback (6.30.0-0supralinux3) resolute; urgency=medium
 
   * Complete PHPUnit 13 test compatibility for SampleTest output capture.

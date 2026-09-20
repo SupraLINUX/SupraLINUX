@@ -22,3 +22,8 @@ The second validation cycle exposed one additional PHPUnit 13 API removal:
 SampleTest used TestCase::getActualOutput(). The compatibility patch captures
 the same dynamically emitted JSON with nested PHP output buffering instead.
 No production source or expected test behavior is changed.
+
+The third validation cycle exposed the final legacy PHPUnit object assertions
+used by SampleTest. PHPUnit 13 provides assertObjectHasProperty() and
+assertObjectNotHasProperty(); the test-only compatibility patch maps the old
+attribute assertions to those property assertions. Production code is unchanged.

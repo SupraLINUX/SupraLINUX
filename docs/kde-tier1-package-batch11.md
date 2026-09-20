@@ -74,3 +74,11 @@ Run `35488901554` validates the first remediation.
 - KUserFeedback `6.30.0-0supralinux2`: real FAIL in job `106020266302`; **14/15 CTest PASS**. DataProvider metadata, scoped globals and SQLite provider are fixed. The only remaining failure is SampleTest's use of removed PHPUnit 13 `TestCase::getActualOutput()`. Revision `-3` replaces those four reads with scoped `ob_start()/ob_get_clean()` capture while preserving the same JSON assertions.
 
 Prison is technically downstream-eligible, but canonical Tier 1 remains unchanged until Batch 11 promotion is performed separately.
+
+## Cycle 3
+
+Run `35489184465`, job `106021045629`, artifact `10598602563`, SHA-256 `e70ed24da8adcd0cedf6b28f9281bbc7d8e5f891337ec953d767a1de68b37a9a`.
+
+KUserFeedback `6.30.0-0supralinux3` again reaches **14/15 CTest PASS**. The output-capture remediation works. The only remaining failing CTest is SampleTest because PHPUnit 13 removed `assertObjectHasAttribute()` and `assertObjectNotHasAttribute()`. Revision `-4` maps them to PHPUnit 13's `assertObjectHasProperty()` and `assertObjectNotHasProperty()`. All other PHP/C++ tests pass.
+
+Prison remains retained PASS and was correctly scope-skipped in this cycle.

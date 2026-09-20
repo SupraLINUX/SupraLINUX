@@ -36,7 +36,7 @@
       "name": "KUserFeedback",
       "upstream_version": "6.30.0",
       "source_package": "kf6-kuserfeedback",
-      "package_version": "6.30.0-0supralinux3",
+      "package_version": "6.30.0-0supralinux4",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kuserfeedback-6.30.0.tar.xz",
       "source_sha256": "c8a463c8e570f6d532cbe150732220575c6385df97c91399b6c84450691771ca",
       "kde_framework_build_dependencies": [],
@@ -132,14 +132,14 @@
       "last_result": "FAIL",
       "downstream_eligible": false,
       "last_failure_evidence": {
-        "workflow_run": 35488901554,
-        "job_id": 106020266302,
-        "artifact_id": 10597719819,
-        "artifact_sha256": "9c3ff5ccb61cc6ea9e55b4443ccbcf672580861e334316b9bf946612b4ff4f0d",
-        "rootfs_sha256": "03a77efc61c2447913a1d2be1484807e8ac3dc67ae859ab5f4525cbb486f8bf6",
+        "workflow_run": 35489184465,
+        "job_id": 106021045629,
+        "artifact_id": 10598602563,
+        "artifact_sha256": "e70ed24da8adcd0cedf6b28f9281bbc7d8e5f891337ec953d767a1de68b37a9a",
+        "rootfs_sha256": "11648ec215e367b6e152b820c0d617f970395b27434041352225ecd07c2e7139",
         "stage": "sbuild",
         "tests": "14/15 CTest PASS",
-        "cause": "After DataProvider/global-scope remediation, only SampleTest fails because PHPUnit 13 removed TestCase::getActualOutput()."
+        "cause": "SampleTest output capture is fixed; the sole remaining incompatibility is PHPUnit 13 removal of assertObjectHasAttribute/assertObjectNotHasAttribute."
       }
     },
     "prison": {
