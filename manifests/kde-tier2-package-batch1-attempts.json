@@ -20,6 +20,25 @@
         "stage": "source-package",
         "sbuild_started": false,
         "cause": "Malformed helper-install-dir-cache.patch: the hunk header declared 7 lines but the patch ended after 6, so dpkg-source rejected it before sbuild."
+      },
+      {
+        "attempt": 2,
+        "package_version": "6.30.0-0supralinux2",
+        "commit": "9e047034553f9889f6b734f21dd22b5e7ac12e39",
+        "workflow_run": 35496445770,
+        "job_id": 106040197856,
+        "artifact_id": 10601410551,
+        "artifact_sha256": "4ea7588f1749ce7588cc06fc6bc9dc80350d7fc270bb30688ef173ee6262cfc9",
+        "rootfs_sha256": "bf90d45c1b750369d482757a4521ea3578a5ef8e10835bf008b258ffad49cbcf",
+        "package_attempted": true,
+        "result": "FAIL",
+        "stage": "sbuild-dh_makeshlibs",
+        "sbuild_started": true,
+        "source_package": "PASS",
+        "tests": "6/6 PASS",
+        "backend_profile": "POLKITQT6-1 + DBUS",
+        "technical_reference_symbols_sha256": "77ab200ea8f5e9335831ef021dd2e446598b95d886d13237e91ea69e25812259",
+        "cause": "dpkg-gensymbols rejected two non-optional RTTI/vtable symbols for implementation-private AuthBackend::Private; two other missing templinst symbols were already optional and not causal."
       }
     ]
   },

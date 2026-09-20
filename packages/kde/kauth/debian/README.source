@@ -27,3 +27,17 @@ while keeping Debian as a non-authoritative technical packaging reference.
 
 The helper-install-dir patch preserves the Debian-family helper layout while
 keeping upstream KAuth behavior intact.
+
+Symbols portability adjustment
+------------------------------
+
+The second real build passed all 6 CTest entries and reached dh_makeshlibs.
+Resolute's compiler/LTO combination does not emit two RTTI/vtable symbols for
+KAuth::AuthBackend::Private that Debian's 6.30.0-1 symbols template records as
+mandatory. The class is defined only in src/AuthBackend.cpp and is not public
+header API.
+
+SupraLINUX keeps Debian's complete 6.30 symbols template as the baseline, pins
+its SHA-256, and changes only those two implementation-private symbols to
+(optional=private). Existing optional=templinst entries remain untouched. No
+public KAuth symbol is deleted, renamed, version-weakened or made optional.

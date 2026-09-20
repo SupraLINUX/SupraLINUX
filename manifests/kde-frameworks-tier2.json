@@ -39,7 +39,7 @@
       },
       "package_identity": {
         "source_package": "kf6-kauth",
-        "package_version_candidate": "6.30.0-0supralinux1",
+        "package_version_candidate": "6.30.0-0supralinux3",
         "compatibility_reference_provider": "ubuntu-resolute",
         "compatibility_reference_version": "6.24.0-0ubuntu1",
         "reference_binary_packages": [
@@ -52,7 +52,7 @@
       },
       "packaging": {
         "state": "remediation-pending-build",
-        "package_version": "6.30.0-0supralinux2",
+        "package_version": "6.30.0-0supralinux3",
         "claim": "no-package-attempt-yet",
         "downstream_eligible": false,
         "attempt_ledger": "manifests/kde-tier2-package-batch1-attempts.json",

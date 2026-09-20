@@ -34,7 +34,7 @@ for node,sha in expected_hashes.items():
     req(n.get("source_sha256")==sha,f"{node}: source SHA")
     req(n.get("state")=="pending",f"{node}: discovery must not promote canonical package state")
 req(nodes["kauth"].get("packaging",{}).get("state") in {"prepared-pending-build","remediation-pending-build","PASS"},"KAuth packaging readiness")
-req(nodes["kauth"].get("packaging",{}).get("package_version")=="6.30.0-0supralinux2","KAuth current package revision")
+req(nodes["kauth"].get("packaging",{}).get("package_version")=="6.30.0-0supralinux3","KAuth current package revision")
 req(nodes["kmime"].get("packaging",{}).get("state")=="pending","KMime packaging must remain pending")
 
 req(nodes["kauth"].get("depends_on")==["extra-cmake-modules","kcoreaddons","kwindowsystem"],"KAuth selected DAG predecessors")

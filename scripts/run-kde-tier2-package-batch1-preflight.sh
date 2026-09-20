@@ -13,7 +13,7 @@ vals={
 "ECM_VERSION":s["extra_cmake_modules"]["version"],"ECM_DEB_SHA256":s["extra_cmake_modules"]["deb_sha256"],
 "KCORE_VERSION":s["kcoreaddons"]["version"],"KCORE_DATA_SHA":s["kcoreaddons"]["files"]["data"],"KCORE_DEV_SHA":s["kcoreaddons"]["files"]["dev"],"KCORE_RUNTIME_SHA":s["kcoreaddons"]["files"]["runtime"],
 "KWINDOW_VERSION":s["kwindowsystem"]["version"],"KWINDOW_DATA_SHA":s["kwindowsystem"]["files"]["data"],"KWINDOW_DEV_SHA":s["kwindowsystem"]["files"]["dev"],"KWINDOW_RUNTIME_SHA":s["kwindowsystem"]["files"]["runtime"],
-"DEBIAN_REF_URL":r["debian_tar_url"],"DEBIAN_REF_SHA":r["debian_tar_sha256"]}
+"DEBIAN_REF_URL":r["debian_tar_url"],"DEBIAN_REF_SHA":r["debian_tar_sha256"],"DEBIAN_SYMBOLS_SHA":r["imported_file_sha256"]}
 for k,v in vals.items(): print(f"{k}={shlex.quote(str(v))}")
 PY
 )"
@@ -124,6 +124,7 @@ printf '%s  %s\n' "${DEBIAN_REF_SHA}" "${DEBIAN_REF_TAR}" | sha256sum --check --
 tar -xJf "${DEBIAN_REF_TAR}" -C "${REFERENCE_DIR}"
 SYMBOLS_REFERENCE="${REFERENCE_DIR}/debian/libkf6authcore6.symbols"
 test -s "${SYMBOLS_REFERENCE}"
+printf '%s  %s\n' "${DEBIAN_SYMBOLS_SHA}" "${SYMBOLS_REFERENCE}" | sha256sum --check --strict
 sha256sum "${DEBIAN_REF_TAR}" "${SYMBOLS_REFERENCE}" > "${EVIDENCE_DIR}/technical-reference-sha256.txt"
 
 STAGE="upstream-source"
@@ -136,6 +137,42 @@ SOURCE_DIR="${SOURCE_WORK}/${SOURCE_PACKAGE}-${UPSTREAM_VERSION}"
 test -d "${EXTRACTED}"; mv "${EXTRACTED}" "${SOURCE_DIR}"
 cp -a "${PACKAGE_META}" "${SOURCE_DIR}/debian"
 cp -a "${SYMBOLS_REFERENCE}" "${SOURCE_DIR}/debian/libkf6authcore6.symbols"
+python3 - "${SOURCE_DIR}/debian/libkf6authcore6.symbols" "${EVIDENCE_DIR}/symbols-adjustment.json" <<'PY'
+from pathlib import Path
+import hashlib,json,sys
+p=Path(sys.argv[1]); evidence=Path(sys.argv[2])
+before=p.read_bytes()
+text=before.decode()
+private_symbols=[
+    "_ZTIN5KAuth11AuthBackend7PrivateE@Base 6.23.0",
+    "_ZTVN5KAuth11AuthBackend7PrivateE@Base 6.23.0",
+]
+lines=text.splitlines()
+seen=[]
+out=[]
+for line in lines:
+    stripped=line.strip()
+    if stripped in private_symbols:
+        indent=line[:len(line)-len(line.lstrip())]
+        out.append(f"{indent}(optional=private){stripped}")
+        seen.append(stripped)
+    else:
+        out.append(line)
+if seen != private_symbols:
+    raise SystemExit(f"unexpected private-symbol reference set: {seen!r}")
+adjusted="\n".join(out)+"\n"
+if "(optional=templinst)_ZNSt8_Rb_treeI7QString" not in adjusted:
+    raise SystemExit("Debian templinst optional symbols unexpectedly absent")
+p.write_text(adjusted)
+evidence.write_text(json.dumps({
+    "schema":1,
+    "reference_sha256":hashlib.sha256(before).hexdigest(),
+    "adjusted_sha256":hashlib.sha256(adjusted.encode()).hexdigest(),
+    "adjusted_symbols":private_symbols,
+    "tag":"optional=private",
+    "reason":"AuthBackend::Private is implementation-only and defined in src/AuthBackend.cpp; only its RTTI/vtable portability is relaxed."
+},indent=2)+"\n")
+PY
 chmod +x "${SOURCE_DIR}/debian/rules"
 
 STAGE="development-contract-source"

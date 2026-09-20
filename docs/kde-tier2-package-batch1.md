@@ -46,3 +46,13 @@ Run `35496293561`, job `106039776267`, artifact `10600690671`, SHA-256 `8387279d
 The attempt failed in `dpkg-source` before sbuild. The helper-install-dir patch declared a seven-line hunk but ended after six context lines, so quilt rejected it as malformed. Retained predecessor artifacts, source SHA, backend profile and Debian symbols reference all validated before this failure.
 
 Classification: **real package FAIL**, `package_attempted=true`, stage `source-package`, `sbuild_started=false`. Revision `6.30.0-0supralinux2` fixes only the quilt hunk structure.
+
+## Attempt 2 — symbols contract FAIL after tests PASS
+
+Run `35496445770`, job `106040197856`, artifact `10601410551`, ZIP SHA-256 `4ea7588f1749ce7588cc06fc6bc9dc80350d7fc270bb30688ef173ee6262cfc9`, rootfs SHA-256 `bf90d45c1b750369d482757a4521ea3578a5ef8e10835bf008b258ffad49cbcf`.
+
+The corrected source package built through configuration/compilation and upstream CTest reported **6/6 PASS**. Both selected plugins were installed: PolkitQt6-1 authorization backend and DBus helper backend. Packaging then failed in `dh_makeshlibs`.
+
+The pinned Debian 6.30 symbols template SHA-256 is `77ab200ea8f5e9335831ef021dd2e446598b95d886d13237e91ea69e25812259`. Two missing C++ template instantiations were already tagged `optional=templinst` and were not causal. The only mandatory missing entries were RTTI/vtable symbols for `KAuth::AuthBackend::Private`, which is defined only in `src/AuthBackend.cpp`.
+
+Revision `6.30.0-0supralinux3` keeps the complete Debian 6.30 symbols baseline and changes exactly those two implementation-private entries to `optional=private`. No public ABI symbol is weakened.

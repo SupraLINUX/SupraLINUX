@@ -57,14 +57,23 @@
       "debian_tar_url": "https://deb.debian.org/debian/pool/main/k/kf6-kauth/kf6-kauth_6.30.0-1.debian.tar.xz",
       "debian_tar_sha256": "f304bd772cf958ca9dccab78ad33e12f8e2f7bf0b038999e629cf270bb068fc3",
       "dsc_sha256": "21b8c054d7d9f7b80e4f4447871b8a4d1e176a179e155c186dbb5296a6054cf0",
-      "imported_file": "debian/libkf6authcore6.symbols"
+      "imported_file": "debian/libkf6authcore6.symbols",
+      "imported_file_sha256": "77ab200ea8f5e9335831ef021dd2e446598b95d886d13237e91ea69e25812259",
+      "symbols_adjustment": {
+        "tag": "optional=private",
+        "symbols": [
+          "_ZTIN5KAuth11AuthBackend7PrivateE@Base 6.23.0",
+          "_ZTVN5KAuth11AuthBackend7PrivateE@Base 6.23.0"
+        ],
+        "rationale": "AuthBackend::Private is implementation-only in src/AuthBackend.cpp; Resolute does not emit its RTTI/vtable while all public ABI remains present."
+      }
     }
   },
   "nodes": {
     "kauth": {
       "upstream_version": "6.30.0",
       "source_package": "kf6-kauth",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kauth-6.30.0.tar.xz",
       "source_sha256": "60b75e02abc2bfbb247c586e3ab94def7ecd7b4e1ddb8260358951d84d9ea8c9",
       "signing_key": {
@@ -118,12 +127,12 @@
       ],
       "dependency_contracts": {
         "libkf6auth-dev": [
-          "libkf6auth-dev-bin (= 6.30.0-0supralinux2)",
-          "libkf6authcore6 (= 6.30.0-0supralinux2)",
+          "libkf6auth-dev-bin (= 6.30.0-0supralinux3)",
+          "libkf6authcore6 (= 6.30.0-0supralinux3)",
           "libkf6coreaddons-dev (>= 6.30.0~)"
         ],
         "libkf6authcore6": [
-          "libkf6auth-data (= 6.30.0-0supralinux2)"
+          "libkf6auth-data (= 6.30.0-0supralinux3)"
         ]
       },
       "required_artifact_contracts": [
@@ -139,13 +148,17 @@
       "last_result": "FAIL",
       "downstream_eligible": false,
       "last_failure_evidence": {
-        "workflow_run": 35496293561,
-        "job_id": 106039776267,
-        "artifact_id": 10600690671,
-        "artifact_sha256": "8387279d8cdadd05cf73c2c16177f1d2635a331648638ca3397cef77d04c1ac3",
-        "stage": "source-package",
-        "sbuild_started": false,
-        "cause": "helper-install-dir-cache.patch declared a 7-line hunk but contained only 6 old/new context lines; dpkg-source rejected the malformed quilt patch before sbuild."
+        "workflow_run": 35496445770,
+        "job_id": 106040197856,
+        "artifact_id": 10601410551,
+        "artifact_sha256": "4ea7588f1749ce7588cc06fc6bc9dc80350d7fc270bb30688ef173ee6262cfc9",
+        "rootfs_sha256": "bf90d45c1b750369d482757a4521ea3578a5ef8e10835bf008b258ffad49cbcf",
+        "stage": "sbuild-dh_makeshlibs",
+        "sbuild_started": true,
+        "tests": "6/6 PASS",
+        "source_package": "PASS",
+        "backend_profile": "POLKITQT6-1 + DBUS",
+        "cause": "Debian 6.30 symbols baseline contains two mandatory RTTI/vtable symbols for implementation-private KAuth::AuthBackend::Private that Resolute does not emit; existing missing templinst symbols were already optional."
       }
     }
   }
