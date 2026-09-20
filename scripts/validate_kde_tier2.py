@@ -116,7 +116,8 @@ req(sum(n.get("state")=="PASS" for n in tier1.get("nodes",[]))==29 and not any(n
 active=discovery.get("nodes",{})
 req(set(active)==pending_ids,"Tier2 active discovery must contain all 14 pending nodes")
 for node in sorted(pending_ids-{"kmime"}):
-    req(active[node].get("readiness")=="package-lane-pending",f"{node}: package-lane readiness")
+    canonical_readiness=nodes[node].get("planning",{}).get("readiness")
+    req(active[node].get("readiness")==canonical_readiness,f"{node}: discovery readiness must match canonical planning state")
 req(active["kmime"].get("readiness")=="compatibility-decision-required" and active["kmime"].get("blocker")=="ADR-0002","KMime decision gate")
 snap=discovery.get("promoted_snapshot",{})
 req((snap.get("pass"),snap.get("pending"),snap.get("current_fail"),snap.get("blocked"))==(1,14,0,0),"Tier2 promoted snapshot")
@@ -142,4 +143,6 @@ if errors:
     raise SystemExit(1)
 print("KDE Frameworks 6.30 Tier 2 discovery validation: PASS")
 print("Canonical Tier 2: 1 PASS / 14 pending / 0 FAIL / 0 BLOCKED")
-print("KAuth PASS/downstream-eligible; 13 package-lane pending; KMime compatibility-decision-required")
+ready=sum(active[n].get("readiness")=="package-contract-ready" for n in pending_ids-{"kmime"})
+audit_pending=sum(active[n].get("readiness")=="package-lane-pending" for n in pending_ids-{"kmime"})
+print(f"KAuth PASS/downstream-eligible; {ready} package-contract-ready; {audit_pending} provider-audit pending; KMime compatibility-decision-required")

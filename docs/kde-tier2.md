@@ -71,7 +71,9 @@ KDeclarative additionally has conditional KGlobalAccel/KWidgetsAddons surfaces. 
 
 KPackage and KService can optionally use KDocTools; that optional higher-tier documentation edge must not be confused with a required Tier 2 build predecessor.
 
-All 13 are currently **package-lane-pending**, not FAIL and not BLOCKED.
+Provider-audit batch 1 is PASS for **KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication**. Those five are now **package-contract-ready** but remain package-state `pending`; no package build has been attempted for them.
+
+The remaining **8** non-KMime nodes — KColorScheme, KCompletion, KContacts, KDeclarative, KFileMetaData, KPackage, KPty and KService — remain **package-lane-pending** awaiting provider/profile audit. None of the 13 is FAIL or BLOCKED.
 
 ## KMime — architecture decision required
 
@@ -89,6 +91,6 @@ KDE upstream defines the Tier 2 inventory, versions, dependencies and feature co
 
 ## Next non-blocked work
 
-Materialize package contracts for the 13 non-KMime pending nodes in DAG-friendly batches. Prefer simple nodes with already retained Tier 1 predecessors first, while provider-heavy/conditional nodes receive a profile audit before packaging.
+Materialize package contracts for the five package-contract-ready nodes in a generated DAG-friendly batch, while continuing provider audit for the remaining eight non-KMime nodes. The next generated provider-audit batch is KPty, KColorScheme, KCompletion, KContacts and KPackage.
 
 KMime remains independent and decision-gated; it does not stop the rest of Tier 2.
