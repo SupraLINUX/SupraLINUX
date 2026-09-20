@@ -70,3 +70,14 @@ KStatusNotifierItem built its Python binding and passed 1/1 tests, then failed i
 KStatusNotifierItem's upstream binding loads QtCore, QtGui and QtWidgets typesystems. Its minimal Resolute runtime provider is `python3-pyside6.qtwidgets`, which already depends on the QtGui and QtCore PySide6 packages.
 
 The next materialization/build cycle contains only KNotifications, KStatusNotifierItem and KUnitConversion. KCrash and Syndication are retained PASS and excluded. No promotion to `stable` is authorized.
+
+
+## Three-node corrected materialization PASS
+
+Materialization run `35543959765` on commit `4cf3d9f9e6f28ac6f759b3c2d9ca75c4698d6e09` completed **3/3 PASS** for KNotifications, KStatusNotifierItem and KUnitConversion. KCrash and Syndication were correctly excluded as retained package PASS nodes.
+
+- KNotifications: artifact `10616275343`, SHA-256 `5dc140d99a91bdd0ccd3ed3564f5d336a6b820acd57dd2317f8c7a5cbf3f1d15`.
+- KStatusNotifierItem `6.30.0-0supralinux2`: artifact `10615805884`, SHA-256 `866f5c704761061d7199c9dcc0edf1c56667c32f65cacfb0ee7320527a131862`.
+- KUnitConversion: artifact `10615638692`, SHA-256 `e9578b08cd2fa5ecd98b3b84e4bd80cc1031118da71929597a0179648277e1a4`.
+
+The generated trees enforce the explicit PySide6 runtime-provider Depends; KStatusNotifierItem additionally contains the reviewed `optional=templinst` symbols entry. These three nodes return to `build-ready`; the next clean-build matrix contains exactly these three.

@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "as_of": "2026-09-20",
-  "state": "reference-capture-pass",
+  "state": "materialized",
   "source_authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "packaging_authority": "supralinux",
@@ -301,23 +301,21 @@
     "revalidation": "snapshot-identical-after-source-mismatch-policy"
   },
   "materialization": {
-    "status": "pending-ci",
+    "status": "PASS",
     "method": "kde-authority-source-plus-pinned-debian-tree",
     "package_state_effect": "none",
     "package_attempted": false,
     "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
     "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
     "reason": "python-runtime-provider-closure-and-kstatus-symbols-remediation",
-    "result": "pending",
-    "targets": [
-      "knotifications",
-      "kstatusnotifieritem",
-      "kunitconversion"
-    ],
+    "result": "PASS",
+    "targets": [],
     "retained_package_pass": [
       "kcrash",
       "syndication"
     ],
+    "workflow_run": 35543959765,
+    "commit": "4cf3d9f9e6f28ac6f759b3c2d9ca75c4698d6e09",
     "previous_pass": {
       "status": "PASS",
       "method": "kde-authority-source-plus-pinned-debian-tree",
@@ -686,6 +684,90 @@
       "activation_requires": {
         "provider_audit_run": 35543178504,
         "provider_audit_result": "PASS"
+      }
+    },
+    "evidence": {
+      "knotifications": {
+        "job_id": 106166484062,
+        "artifact_id": 10616275343,
+        "artifact_sha256": "5dc140d99a91bdd0ccd3ed3564f5d336a6b820acd57dd2317f8c7a5cbf3f1d15",
+        "tree_sha256": "778ccf3cf50b1c6549b11a3fb073191e1da82a57bf58d3552e98c67379486b1b",
+        "debian_tree_sha256": "596267eb543e2bfc59b912c63e2e82cf2cfb2e8db364d9d4d736e93a3f7e0d79",
+        "debian_tar_sha256": "bbc9ea094563f86afce2670e941f69c5e5d77a48bff4d428b68f7983afb59783",
+        "dsc_sha256": "7ecaf3bae26c58074c677fafeae7fa7736666863fc642020f9b300ebfb66a2fa",
+        "orig_tar_sha256": "09ad50570b26aada0408bb9ccfaabf629c56ec89a9972c8b0e155ab780f577cf",
+        "package_version": "6.30.0-0supralinux1",
+        "source_package": "kf6-knotifications",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "workflow_run": 35543959765
+      },
+      "kstatusnotifieritem": {
+        "job_id": 106166483875,
+        "artifact_id": 10615805884,
+        "artifact_sha256": "866f5c704761061d7199c9dcc0edf1c56667c32f65cacfb0ee7320527a131862",
+        "tree_sha256": "7cdb62ae6b3a992f9531514ec7942a9b74a88a6a199afd6687c86d3f2eb41978",
+        "debian_tree_sha256": "07bc9037bea5d066f30c709a2f014f931742fbbcdcafdf48dbdb52ca80ddea46",
+        "debian_tar_sha256": "365d1c606c0a89436db6810915e443cdeb7416b66ca1724e91a7d9a391bfc858",
+        "dsc_sha256": "570793c572ea2ff973cab4eac1fdfe4c38fb366377b3b06188296af07ddd9fc0",
+        "orig_tar_sha256": "373fb23fe6a5c0c5c755c473e7cf272796ea59891c05157c3a7e9607a4c4af4f",
+        "package_version": "6.30.0-0supralinux2",
+        "source_package": "kf6-kstatusnotifieritem",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "workflow_run": 35543959765
+      },
+      "kunitconversion": {
+        "job_id": 106166483885,
+        "artifact_id": 10615638692,
+        "artifact_sha256": "e9578b08cd2fa5ecd98b3b84e4bd80cc1031118da71929597a0179648277e1a4",
+        "tree_sha256": "2ce4c5f43e7d439b86c9d4d01e985345474daa45b86448925c4ce74348498f4e",
+        "debian_tree_sha256": "63af6f93220b7fa442dd5001aaa91bd6981836eaa05c91853314dbfed0dcaf48",
+        "debian_tar_sha256": "374b5ac407ba8d24f081baf8ad3bbb49017539ced26be39a2bf6a71e5ff01f20",
+        "dsc_sha256": "b23814d4305cba21f867ee5536e3577249418546603bb71dbae04efcec5d12cb",
+        "orig_tar_sha256": "3dcaa45875bab5a2dcadc34cf57cf06689b8d86ff40e20fee01ca2b18987175f",
+        "package_version": "6.30.0-0supralinux1",
+        "source_package": "kf6-kunitconversion",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "workflow_run": 35543959765
+      },
+      "syndication": {
+        "job_id": 106164132706,
+        "artifact_id": 10615288297,
+        "artifact_sha256": "6c7782f8362b8b4195f9dda177dead382d4493852d10348e9f41f086d83d9c8e",
+        "tree_sha256": "496dc0b37c74c3a392979abb25c48c06b55c7cf9d20d16a203de71ddbe7867f0",
+        "debian_tree_sha256": "6f1dcd16768bae36a736586a51c5e3044fbafa88d9bf21d976414b63ab492924",
+        "debian_tar_sha256": "a40be4c22e28b7254ce4688d43b30dad5314ff4b1f788386e05b0ce1a13c9e96",
+        "dsc_sha256": "99151b4fed75d13781ee4275238d17fe751d35afde7c42dc855e60f5700f21d2",
+        "orig_tar_sha256": "fb46986bd539f49dc39c79553c4e8e9eaeb5953efa8cba1b47d3b139ee54f5af",
+        "authority_source_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+        "repack_verification": "PASS-exact-Files-Excluded-diff",
+        "package_version": "6.30.0-0supralinux1",
+        "source_package": "kf6-syndication",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "workflow_run": 35543068531
+      },
+      "kcrash": {
+        "workflow_run": 35535155799,
+        "job_id": 106142770257,
+        "artifact_id": 10612224837,
+        "artifact_sha256": "37c45ad18a9587a5e8b950e3f1d7e33092b31d502c5093b36c42992f5f14cac6",
+        "tree_sha256": "302cc71f478e01c2b2fab20c6401286824f54d4772a59446cb32fce2d5a5d938",
+        "debian_tree_sha256": "5f5256b619f3e43cba2930debaee545ab773ee813bb1728031e9b7ee8a274a92",
+        "debian_tar_sha256": "1330eaa16e7d8acbc6244cb4c1730cbe33d06972dc5c29ecfe482e7168fb9f2d",
+        "dsc_sha256": "c586f512ee573c893a093562b8351ff2165ead7a0c50e9610c4b3b57e061ce6b",
+        "orig_tar_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+        "package_version": "6.30.0-0supralinux1",
+        "source_package": "kf6-kcrash",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none"
       }
     }
   },

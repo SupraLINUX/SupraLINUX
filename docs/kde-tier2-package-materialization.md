@@ -58,3 +58,10 @@ For each Python-binding node, the generated Python binary package now receives e
 KStatusNotifierItem additionally applies one exact, reviewed symbols overlay before source-package creation. Materialization fails closed if the baseline unexpectedly already contains the symbol or if the generated symbols file does not contain the exact reviewed line. This keeps the remediation reproducible and auditable rather than accepting arbitrary `dpkg-gensymbols` output.
 
 Materialization remains **not a package PASS**: all corrected trees must still pass clean `sbuild`, upstream tests, Lintian, ABI, APT closure, external consumer and Python-import gates.
+
+
+### Runtime/symbol remediation materialization evidence
+
+Run `35543959765` completed 3/3 PASS. Exact source-tree and Debian-tree hashes are pinned in `manifests/kde-tier2-package-contracts.json`. The materialization planner excluded retained package PASS nodes KCrash and Syndication, and Batch 2 remained intentionally skipped until this evidence was promoted.
+
+After promotion, the build queue reopens only for KNotifications, KStatusNotifierItem and KUnitConversion.

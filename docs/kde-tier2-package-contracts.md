@@ -87,3 +87,10 @@ These dependencies are provider mappings for KDE-selected bindings; they do not 
 KStatusNotifierItem also has one reviewed symbols overlay after its real package FAIL: `_ZSt19piecewise_construct@Base` is recorded as `optional=templinst` at upstream floor `6.30.0`. The previous build let `dpkg-gensymbols` add the current Debian revision automatically, which Lintian correctly rejects. Its next package candidate is therefore `6.30.0-0supralinux2`.
 
 Syndication is no longer a pending materialization target: its verified distribution repack passed the full clean package gate and is retained as package PASS. Current rematerialization targets are only KNotifications, KStatusNotifierItem and KUnitConversion.
+
+
+### Runtime/symbol remediation materialized
+
+Run `35543959765` produced PASS materializations for all three pending Python nodes. The materialized contract now pins KNotifications' QtGui provider, KUnitConversion's QtCore provider and KStatusNotifierItem's QtWidgets provider. KStatusNotifierItem is revision `6.30.0-0supralinux2` and the exact reviewed `_ZSt19piecewise_construct@Base 6.30.0` optional entry is part of its deterministic Debian tree.
+
+This is still package-contract readiness, not package PASS. Clean package validation remains mandatory.
