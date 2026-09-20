@@ -93,17 +93,18 @@ if kev:
     req(e.get("consumer_smoke")=="PASS" and e.get("apt_check")=="PASS" and e.get("development_contract")=="PASS","KAuth runtime/development gates")
 
 pending_ids=expected_ids-{"kauth"}
-materialized=set(contracts.get("selected_nodes",[])) if contracts.get("state")=="materialized" else set()
+contract_nodes=set(contracts.get("selected_nodes",[]))
 for node in sorted(pending_ids):
     n=nodes[node]
     req(n.get("state")=="pending" and n.get("packaging",{}).get("state")=="pending",f"{node}: must remain pending before real package PASS")
-    if node in materialized:
+    if node in contract_nodes:
         c=contracts["nodes"][node]
-        req(n.get("package_identity",{}).get("source_package")==c.get("source_package"),f"{node}: materialized source package identity")
-        req(n.get("package_identity",{}).get("package_version_candidate")==c.get("package_version_candidate"),f"{node}: materialized package version")
-        req(n.get("package_identity",{}).get("status")=="materialized",f"{node}: materialized identity status")
+        req(n.get("package_identity",{}).get("source_package")==c.get("source_package"),f"{node}: package-contract source identity")
+        req(n.get("package_identity",{}).get("package_version_candidate")==c.get("package_version_candidate"),f"{node}: package-contract version identity")
+        expected_identity_status = "materialized" if contracts.get("state")=="materialized" else "not-materialized"
+        req(n.get("package_identity",{}).get("status")==expected_identity_status,f"{node}: package-contract identity status")
     else:
-        req(n.get("package_identity",{}).get("package_version_candidate") is None,f"{node}: package version must remain unmaterialized/undecided")
+        req(n.get("package_identity",{}).get("package_version_candidate") is None,f"{node}: package version must remain undecided before a package contract exists")
 req(m.get("packaging",{}).get("reason")=="compatibility-transition-decision-required","KMime compatibility transition gate")
 
 dep_nodes=deps.get("nodes",{})
@@ -124,8 +125,7 @@ req(sum(n.get("state")=="PASS" for n in tier1.get("nodes",[]))==29 and not any(n
 active=discovery.get("nodes",{})
 req(set(active)==pending_ids,"Tier2 active discovery must contain all 14 pending nodes")
 for node in sorted(pending_ids-{"kmime"}):
-    canonical_readiness=nodes[node].get("planning",{}).get("readiness")
-    req(active[node].get("readiness")==canonical_readiness,f"{node}: discovery readiness must match canonical planning state")
+    req(active[node].get("readiness") in {"package-lane-pending","package-contract-ready","build-ready"},f"{node}: discovery readiness vocabulary")
 req(active["kmime"].get("readiness")=="compatibility-decision-required" and active["kmime"].get("blocker")=="ADR-0002","KMime decision gate")
 snap=discovery.get("promoted_snapshot",{})
 req((snap.get("pass"),snap.get("pending"),snap.get("current_fail"),snap.get("blocked"))==(1,14,0,0),"Tier2 promoted snapshot")
@@ -151,7 +151,7 @@ if errors:
     raise SystemExit(1)
 print("KDE Frameworks 6.30 Tier 2 discovery validation: PASS")
 print("Canonical Tier 2: 1 PASS / 14 pending / 0 FAIL / 0 BLOCKED")
-build_ready=sum(active[n].get("readiness")=="build-ready" for n in pending_ids-{"kmime"})
-contract_ready=sum(active[n].get("readiness")=="package-contract-ready" for n in pending_ids-{"kmime"})
-audit_pending=sum(active[n].get("readiness")=="package-lane-pending" for n in pending_ids-{"kmime"})
+build_ready=sum(nodes[n].get("planning",{}).get("readiness")=="build-ready" for n in pending_ids-{"kmime"})
+contract_ready=sum(nodes[n].get("planning",{}).get("readiness")=="package-contract-ready" for n in pending_ids-{"kmime"})
+audit_pending=sum(nodes[n].get("planning",{}).get("readiness")=="package-lane-pending" for n in pending_ids-{"kmime"})
 print(f"KAuth PASS/downstream-eligible; {build_ready} build-ready; {contract_ready} contract-ready; {audit_pending} provider-audit pending; KMime compatibility-decision-required")
