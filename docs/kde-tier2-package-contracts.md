@@ -63,3 +63,10 @@ Both adaptations are machine-readable under `provider_adaptations.ubuntu-resolut
 Run `35535155799` on commit `e03516fab151d3ea5ec6443ad65d5c4961aa6e68` completed **5/5 PASS** with the Resolute changelog target and Shiboken LLVM provider encoded in the generated trees. This materialization supersedes run `35534384634` for build consumption; both remain historical evidence.
 
 The package state is unchanged. KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication are again `build-ready` but remain `pending` until a real clean-build PASS satisfies the complete Batch 2 gates.
+
+
+## Partial PASS and distribution-source repack
+
+KCrash is now a retained package PASS and is excluded from later materialization targets. Package-contract materialization may therefore be partial: only pending nodes whose previous generated tree was invalidated are regenerated.
+
+Syndication keeps KDE Frameworks 6.30.0 as source/version authority, but its distributable orig requires a verified `Files-Excluded` repack. The pinned Debian orig is accepted only if CI proves its extracted contents equal KDE's official source minus exactly the paths declared by the pinned Debian copyright metadata. Debian remains a technical reference/provider, not the authority over Syndication.

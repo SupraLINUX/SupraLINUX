@@ -21,11 +21,15 @@ req(mat.get("maintainer_during_ci")=="SupraLINUX Build System <build@supralinux.
 req(mat.get("publication_blocker")=="replace-ci-maintainer-with-approved-project-contact","publication blocker")
 provider=contracts.get("provider_adaptations",{}).get("ubuntu-resolute",{})
 req(provider.get("changelog_distribution",{}).get("selected")=="resolute","materialization target distribution")
-req(provider.get("shiboken_clang_discovery",{}).get("provider_package")=="llvm-dev","materialization Shiboken provider")
+req(provider.get("shiboken_clang_discovery",{}).get("provider_packages")==["llvm-dev","libclang-common-21-dev"],"materialization Shiboken provider closure")
 req(provider.get("shiboken_clang_discovery",{}).get("tool_path")=="/usr/bin/llvm-config","materialization Shiboken discovery tool")
+req(provider.get("shiboken_clang_discovery",{}).get("resource_header")=="/usr/lib/llvm-21/lib/clang/21/include/stddef.h","materialization Shiboken resource header")
 if mat.get("status") == "PASS":
     req(mat.get("result")=="PASS","materialization result")
-    req(set(mat.get("evidence",{}))==set(expected),"materialization evidence must cover selected nodes")
+    req(set(mat.get("evidence",{})) <= set(expected),"materialization evidence nodes must be selected")
+else:
+    req(set(mat.get("targets",[]))=={"knotifications","kstatusnotifieritem","kunitconversion","syndication"},"current rematerialization target set")
+    req(mat.get("retained_package_pass")==["kcrash"],"KCrash retained package PASS excluded from rematerialization")
 
 canonical={n["id"]:n for n in tier2["nodes"]}
 for node_id in expected:
@@ -49,6 +53,7 @@ for path in (
   "scripts/materialize_kde_tier2_package.py",
   "scripts/run-kde-tier2-package-materialization.sh",
   "scripts/kde-tier2-materialization-needed.sh",
+  "scripts/plan-kde-tier2-materialization.py",
   "scripts/test-kde-tier2-materialization-scope.sh",
   ".github/workflows/kde-tier2-package-materialization.yml",
 ):

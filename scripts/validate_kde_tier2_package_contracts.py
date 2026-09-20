@@ -40,8 +40,9 @@ changelog=provider.get("changelog_distribution",{})
 req(changelog.get("selected")=="resolute","Resolute changelog distribution")
 req(changelog.get("kde_feature_effect")=="none","changelog integration must not change KDE feature profile")
 shiboken=provider.get("shiboken_clang_discovery",{})
-req(shiboken.get("provider_package")=="llvm-dev","Shiboken LLVM provider package")
+req(shiboken.get("provider_packages")==["llvm-dev","libclang-common-21-dev"],"Shiboken LLVM/Clang provider closure")
 req(shiboken.get("tool_path")=="/usr/bin/llvm-config","Shiboken llvm-config provider path")
+req(shiboken.get("resource_header")=="/usr/lib/llvm-21/lib/clang/21/include/stddef.h","Shiboken builtin Clang resource header")
 req(shiboken.get("llvm_major")==21,"Shiboken LLVM major")
 req(shiboken.get("applies_to")==["knotifications","kstatusnotifieritem","kunitconversion"],"Shiboken provider scope")
 req(shiboken.get("kde_feature_effect")=="none","Shiboken provider must not change KDE feature profile")
@@ -74,7 +75,12 @@ for node_id in expected:
     req(c.get("package_version_candidate")=="6.30.0-0supralinux1",f"{node_id}: first candidate revision")
     req(c.get("cmake_target","").startswith("KF6::"),f"{node_id}: CMake target")
     req(c.get("soname","").endswith(".so.6"),f"{node_id}: SONAME")
-    req(dep_nodes[node_id].get("provider_audit")=="PASS",f"{node_id}: provider audit PASS")
+    provider_state=dep_nodes[node_id].get("provider_audit")
+    if provider_state=="pending-ci":
+        audit=deps.get("provider_audit",{})
+        req(audit.get("mode")=="remediation-revalidation" and node_id in audit.get("nodes",[]),f"{node_id}: supplemental provider revalidation")
+    else:
+        req(provider_state=="PASS",f"{node_id}: provider audit PASS")
     req(c.get("compatibility_binary_packages"),f"{node_id}: compatibility binary package set")
     if contracts.get("state") in {"reference-capture-pass","materialized"}:
         refs=c.get("technical_references",{})
@@ -100,7 +106,10 @@ if contracts.get("state") in {"reference-capture-pass","materialized"}:
     synd=contracts["nodes"]["syndication"]["technical_references"]["debian"]
     req(synd.get("orig_matches_kde_authority") is False,"Syndication Debian orig mismatch retained")
     req(synd.get("authority_source_sha256")==contracts["nodes"]["syndication"]["source_sha256"],"Syndication KDE authority source retained")
-    req(synd.get("policy")=="debian-orig-rejected-use-kde-upstream-source","Syndication mismatch policy")
+    req(synd.get("policy")=="verified-files-excluded-repack-required","Syndication mismatch/repack policy")
+    dist=contracts["nodes"]["syndication"].get("source_distribution",{})
+    req(dist.get("mode")=="verified-files-excluded-repack" and dist.get("authority")=="kde-upstream","Syndication source authority/repack split")
+    req(dist.get("repack_orig_sha256")==synd.get("orig_tar_sha256"),"Syndication repack orig pin")
 
 doc=(ROOT/"docs/kde-tier2-package-contracts.md").read_text()
 for token in ("technical reference","python3-kf6notifications","python3-kf6statusnotifieritem","python3-kf6unitconversion","not a package PASS"):
