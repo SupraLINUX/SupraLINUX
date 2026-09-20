@@ -140,10 +140,34 @@ ddigest,dblob=make_manifest(root/"debian")
 (out/"debian-tree.sha256").write_text(ddigest+"\n")
 PY
 
-[[ "$(dpkg-parsechangelog -l"${SRC}/debian/changelog" -S Source)" == "${SOURCE_PACKAGE}" ]]
-[[ "$(dpkg-parsechangelog -l"${SRC}/debian/changelog" -S Version)" == "${PACKAGE_VERSION}" ]]
-grep -Fq 'Maintainer: SupraLINUX Build System <build@supralinux.invalid>' "${SRC}/debian/control"
-grep -Fq 'XSBC-Original-Maintainer:' "${SRC}/debian/control"
+mkdir -p "${EVIDENCE}/packaging-snippets"
+cp "${SRC}/debian/control" "${SRC}/debian/rules" "${SRC}/debian/supralinux-materialization.json" "${EVIDENCE}/packaging-snippets/"
+sed -n '1,24p' "${SRC}/debian/changelog" > "${EVIDENCE}/packaging-snippets/changelog-head.txt"
+
+require_eq() {
+    local label="$1" expected="$2" actual="$3"
+    if [[ "${actual}" != "${expected}" ]]; then
+        printf 'tree-contract FAIL: %s expected=%q actual=%q\n' "${label}" "${expected}" "${actual}" >&2
+        return 1
+    fi
+    printf 'tree-contract PASS: %s=%q\n' "${label}" "${actual}"
+}
+
+require_contains() {
+    local label="$1" needle="$2" file="$3"
+    if ! grep -Fq -- "${needle}" "${file}"; then
+        printf 'tree-contract FAIL: %s missing %q in %s\n' "${label}" "${needle}" "${file}" >&2
+        return 1
+    fi
+    printf 'tree-contract PASS: %s\n' "${label}"
+}
+
+changelog_source="$(dpkg-parsechangelog -l"${SRC}/debian/changelog" -S Source)"
+changelog_version="$(dpkg-parsechangelog -l"${SRC}/debian/changelog" -S Version)"
+require_eq "changelog-source" "${SOURCE_PACKAGE}" "${changelog_source}"
+require_eq "changelog-version" "${PACKAGE_VERSION}" "${changelog_version}"
+require_contains "maintainer" 'Maintainer: SupraLINUX Build System <build@supralinux.invalid>' "${SRC}/debian/control"
+require_contains "original-maintainer" 'XSBC-Original-Maintainer:' "${SRC}/debian/control"
 
 if python3 - "${CONTRACTS}" "${NODE}" <<'PY'
 import json,sys
@@ -153,9 +177,9 @@ PY
 then
     PY_MODULE="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["nodes"][sys.argv[2]]["python_module"])' "${CONTRACTS}" "${NODE}")"
     PY_PACKAGE="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["nodes"][sys.argv[2]]["supralinux_additional_binary_packages"][0])' "${CONTRACTS}" "${NODE}")"
-    grep -Fq -- '-DBUILD_PYTHON_BINDINGS=ON' "${SRC}/debian/rules"
-    grep -Fq "Package: ${PY_PACKAGE}" "${SRC}/debian/control"
-    grep -Fq "${PY_MODULE}" "${SRC}/debian/${PY_PACKAGE}.install"
+    require_contains "python-binding-cmake-profile" '-DBUILD_PYTHON_BINDINGS=ON' "${SRC}/debian/rules"
+    require_contains "python-binary-package" "Package: ${PY_PACKAGE}" "${SRC}/debian/control"
+    require_contains "python-install-module" "${PY_MODULE}" "${SRC}/debian/${PY_PACKAGE}.install"
 fi
 
 STAGE=source-package
