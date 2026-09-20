@@ -56,6 +56,9 @@ conditional={
  "kdeclarative":["kglobalaccel","kwidgetsaddons"],
  "kfilemetadata":["karchive","kcoreaddons","kconfig","kcodecs"],
 }
+selected={
+ "kauth":["kwindowsystem"],
+}
 
 req(tier2.get("schema")==1 and tier2.get("authority")=="kde-upstream","Tier2 identity/authority")
 req(tier2.get("frameworks_series")=="6.30.0" and tier2.get("tier")==2,"Tier2 series/tier")
@@ -67,10 +70,11 @@ for node in sorted(expected_ids):
     req(n.get("source_sha256")==source_sha[node],f"{node}: source SHA")
     req(n.get("upstream_ref")=="v6.30.0" and n.get("upstream_commit"),f"{node}: upstream tag/commit")
     req(n.get("root_cmake_blob"),f"{node}: root CMake blob")
-    req(n.get("depends_on")==["extra-cmake-modules",*required[node]],f"{node}: required DAG predecessors")
+    req(n.get("depends_on")==["extra-cmake-modules",*required[node],*selected.get(node,[])],f"{node}: selected DAG predecessors")
     kd=n.get("kde_framework_dependencies",{})
     req(kd.get("required")==required[node],f"{node}: required Framework dependency metadata")
     req(kd.get("conditional",[])==conditional.get(node,[]),f"{node}: conditional Framework dependency metadata")
+    req(kd.get("selected_profile",[])==selected.get(node,[]),f"{node}: selected Framework dependency metadata")
 
 k=nodes["kauth"]; m=nodes["kmime"]
 req(k.get("state")=="PASS","KAuth canonical PASS")
@@ -100,6 +104,7 @@ for node in sorted(expected_ids):
     dn=dep_nodes.get(node,{})
     req(dn.get("frameworks",{}).get("required")==required[node],f"{node}: dependency manifest required edges")
     req(dn.get("frameworks",{}).get("conditional",[])==conditional.get(node,[]),f"{node}: dependency manifest conditional edges")
+    req(dn.get("frameworks",{}).get("provider_selected",[])==selected.get(node,[]),f"{node}: dependency manifest selected edges")
 meta=deps.get("metadata",{})
 for node in sorted(expected_ids):
     md=meta.get(node,{})
