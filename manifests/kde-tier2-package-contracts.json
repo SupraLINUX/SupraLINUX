@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-20",
+  "state": "reference-capture-pending",
+  "source_authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "packaging_authority": "supralinux",
+  "compatibility_reference": {
+    "ubuntu": {
+      "series": "resolute",
+      "role": "technical-reference-only"
+    },
+    "debian": {
+      "series": "sid",
+      "role": "technical-reference-only"
+    }
+  },
+  "policy": {
+    "preserve_ubuntu_binary_names": true,
+    "upstream_features_must_not_be_silently_disabled": true,
+    "python_bindings_follow_upstream_defaults": true,
+    "reference_packaging_is_not_authoritative": true,
+    "package_pass_requires_real_clean_build": true
+  },
+  "selected_nodes": [
+    "kcrash",
+    "knotifications",
+    "kstatusnotifieritem",
+    "kunitconversion",
+    "syndication"
+  ],
+  "nodes": {
+    "kcrash": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+      "source_package": "kf6-kcrash",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkf6crash-dev",
+        "libkf6crash-doc",
+        "libkf6crash6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "cmake_package": "KF6Crash",
+      "cmake_target": "KF6::Crash",
+      "soname": "libKF6Crash.so.6",
+      "selected_profile": {
+        "WITH_X11": true,
+        "BUILD_TESTING": true
+      }
+    },
+    "knotifications": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "09ad50570b26aada0408bb9ccfaabf629c56ec89a9972c8b0e155ab780f577cf",
+      "source_package": "kf6-knotifications",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkf6notifications-data",
+        "libkf6notifications-dev",
+        "libkf6notifications-doc",
+        "libkf6notifications6",
+        "qml6-module-org-kde-notifications"
+      ],
+      "supralinux_additional_binary_packages": [
+        "python3-kf6notifications"
+      ],
+      "cmake_package": "KF6Notifications",
+      "cmake_target": "KF6::Notifications",
+      "soname": "libKF6Notifications.so.6",
+      "python_module": "KNotifications",
+      "selected_profile": {
+        "USE_DBUS": true,
+        "BUILD_PYTHON_BINDINGS": true,
+        "BUILD_TESTING": true,
+        "BUILD_QML_IF_PROVIDER_AVAILABLE": true
+      }
+    },
+    "kstatusnotifieritem": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "373fb23fe6a5c0c5c755c473e7cf272796ea59891c05157c3a7e9607a4c4af4f",
+      "source_package": "kf6-kstatusnotifieritem",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkf6statusnotifieritem-data",
+        "libkf6statusnotifieritem-dev",
+        "libkf6statusnotifieritem-doc",
+        "libkf6statusnotifieritem6"
+      ],
+      "supralinux_additional_binary_packages": [
+        "python3-kf6statusnotifieritem"
+      ],
+      "cmake_package": "KF6StatusNotifierItem",
+      "cmake_target": "KF6::StatusNotifierItem",
+      "soname": "libKF6StatusNotifierItem.so.6",
+      "python_module": "KStatusNotifierItem",
+      "selected_profile": {
+        "WITHOUT_X11": false,
+        "USE_DBUS": true,
+        "BUILD_PYTHON_BINDINGS": true,
+        "BUILD_TESTING": true
+      }
+    },
+    "kunitconversion": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "3dcaa45875bab5a2dcadc34cf57cf06689b8d86ff40e20fee01ca2b18987175f",
+      "source_package": "kf6-kunitconversion",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkf6unitconversion-data",
+        "libkf6unitconversion-dev",
+        "libkf6unitconversion-doc",
+        "libkf6unitconversion6"
+      ],
+      "supralinux_additional_binary_packages": [
+        "python3-kf6unitconversion"
+      ],
+      "cmake_package": "KF6UnitConversion",
+      "cmake_target": "KF6::UnitConversion",
+      "soname": "libKF6UnitConversion.so.6",
+      "python_module": "KUnitConversion",
+      "selected_profile": {
+        "BUILD_PYTHON_BINDINGS": true,
+        "BUILD_TESTING": true
+      }
+    },
+    "syndication": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+      "source_package": "kf6-syndication",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkf6syndication-dev",
+        "libkf6syndication-doc",
+        "libkf6syndication6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "cmake_package": "KF6Syndication",
+      "cmake_target": "KF6::Syndication",
+      "soname": "libKF6Syndication.so.6",
+      "selected_profile": {
+        "BUILD_TESTING": true
+      }
+    }
+  }
+}

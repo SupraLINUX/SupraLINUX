@@ -122,6 +122,8 @@ for path in "${changed[@]}"; do
       echo "${path}: materialized/retained Tier 2 dependency input changed; reusable hosted CI required."; exit 0 ;;
     .github/workflows/kde-tier2-provider-audit.yml|scripts/run-kde-tier2-provider-audit.sh|scripts/kde-tier2-provider-audit-needed.sh)
       continue ;;
+    .github/workflows/kde-tier2-contract-reference.yml|scripts/run-kde-tier2-contract-reference-snapshot.sh|scripts/kde-tier2-contract-reference-needed.sh|manifests/kde-tier2-package-contracts.json)
+      continue ;;
     manifests/kde-tier1-package-campaign-batch*.json)
       if campaign_is_evidence_only "${path}"; then continue; fi
       echo "${path}: semantic package input changed; reusable hosted CI required."; exit 0 ;;
