@@ -18,7 +18,8 @@
     "package-lane-pending": "Upstream/dependency discovery is complete, but no package attempt is valid until a package runner/tree exists.",
     "compatibility-decision-required": "A compatibility/packaging architecture decision is required before materializing the package.",
     "note": "These are planning/readiness states, not package FAIL/BLOCKED results.",
-    "package-contract-ready": "Provider audit is PASS; package contract/tree may now be materialized. Package state remains pending until a real build attempt."
+    "package-contract-ready": "Provider audit is PASS; package contract/tree may now be materialized. Package state remains pending until a real build attempt.",
+    "build-ready": "Provider audit and deterministic package materialization are PASS; node may enter a real clean build. Package state remains pending until that build finishes."
   },
   "nodes": {
     "kcolorscheme": {
@@ -46,7 +47,7 @@
       ]
     },
     "kcrash": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "kcoreaddons"
       ]
@@ -78,7 +79,7 @@
       "provider_audit": "required-before-materialization"
     },
     "knotifications": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "kconfig"
       ]
@@ -113,19 +114,19 @@
       ]
     },
     "kstatusnotifieritem": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "kwindowsystem"
       ]
     },
     "kunitconversion": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "ki18n"
       ]
     },
     "syndication": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "kcodecs"
       ]
@@ -140,10 +141,10 @@
     }
   },
   "next_actions": [
-    "Materialize package contracts for KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication without changing their pending package state.",
-    "Continue provider/profile audit with the next generated batch: KPty, KColorScheme, KCompletion, KContacts and KPackage.",
-    "Keep retained KAuth PASS artifacts available to later dependency tiers.",
-    "Do not attempt KMime packaging until ADR-0002 selects a compatibility transition preserving Ubuntu application contracts."
+    "Run the generated clean-build queue for KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication using retained PASS predecessor artifacts.",
+    "Continue provider/profile audit with KPty, KColorScheme, KCompletion, KContacts and KPackage independently of the build batch.",
+    "Keep KAuth retained PASS/downstream-eligible.",
+    "Do not attempt KMime until ADR-0002 is resolved."
   ],
   "promoted_snapshot": {
     "pass": 1,

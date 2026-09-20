@@ -1,6 +1,6 @@
 # KDE Tier 2 package materialization
 
-Status: **first five nodes pending CI materialization**  
+Status: **first five package contracts materialized; clean builds pending**  
 Date: **2026-09-20**
 
 The package tree is generated, not copied manually. The source side is always the official **KDE upstream** Frameworks 6.30.0 tarball verified against the canonical SHA-256. The Debian `debian.tar.xz` is downloaded at its exact pinned 6.30.0-1 version and SHA-256 and is used only as a technical packaging reference.
@@ -20,3 +20,12 @@ The deterministic SupraLINUX overlay:
 The `.invalid` maintainer address is intentionally non-routable. Replacing it with an approved project contact is a publication blocker, not a build blocker.
 
 Materialization runs `dpkg-source -b`, records content-based full-tree and `debian/` tree digests, and uploads the generated source package. A materialization PASS is **not a package PASS**: no clean binary build has happened and package state remains pending.
+
+
+## Materialization PASS evidence
+
+Run `35527533481` completed **5/5 PASS** for KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication. Each artifact contains the authoritative KDE orig tarball, generated SupraLINUX `.dsc` / `.debian.tar.xz`, full-tree digest and Debian-tree digest.
+
+This promotion changes readiness from `package-contract-ready` to `build-ready`. It does **not** change package state: all five remain `pending` and `package_attempted=false`.
+
+The campaign build queue is now these five nodes. A package PASS requires the next clean sbuild/test/Lintian/ABI/runtime/consumer stage.

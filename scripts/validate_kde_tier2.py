@@ -12,6 +12,7 @@ deps=load("manifests/kde-frameworks-tier2-dependencies.json")
 discovery=load("manifests/kde-tier2-global-discovery.json")
 tier1=load("manifests/kde-frameworks-tier1.json")
 dag=load("manifests/kde-dag.json")
+contracts=load("manifests/kde-tier2-package-contracts.json")
 
 expected_ids={
  "kauth","kcolorscheme","kcompletion","kcontacts","kcrash","kdeclarative",
@@ -92,10 +93,17 @@ if kev:
     req(e.get("consumer_smoke")=="PASS" and e.get("apt_check")=="PASS" and e.get("development_contract")=="PASS","KAuth runtime/development gates")
 
 pending_ids=expected_ids-{"kauth"}
+materialized=set(contracts.get("selected_nodes",[])) if contracts.get("state")=="materialized" else set()
 for node in sorted(pending_ids):
     n=nodes[node]
     req(n.get("state")=="pending" and n.get("packaging",{}).get("state")=="pending",f"{node}: must remain pending before real package PASS")
-    req(n.get("package_identity",{}).get("package_version_candidate") is None,f"{node}: package version must remain unmaterialized/undecided")
+    if node in materialized:
+        c=contracts["nodes"][node]
+        req(n.get("package_identity",{}).get("source_package")==c.get("source_package"),f"{node}: materialized source package identity")
+        req(n.get("package_identity",{}).get("package_version_candidate")==c.get("package_version_candidate"),f"{node}: materialized package version")
+        req(n.get("package_identity",{}).get("status")=="materialized",f"{node}: materialized identity status")
+    else:
+        req(n.get("package_identity",{}).get("package_version_candidate") is None,f"{node}: package version must remain unmaterialized/undecided")
 req(m.get("packaging",{}).get("reason")=="compatibility-transition-decision-required","KMime compatibility transition gate")
 
 dep_nodes=deps.get("nodes",{})
@@ -143,6 +151,7 @@ if errors:
     raise SystemExit(1)
 print("KDE Frameworks 6.30 Tier 2 discovery validation: PASS")
 print("Canonical Tier 2: 1 PASS / 14 pending / 0 FAIL / 0 BLOCKED")
-ready=sum(active[n].get("readiness")=="package-contract-ready" for n in pending_ids-{"kmime"})
+build_ready=sum(active[n].get("readiness")=="build-ready" for n in pending_ids-{"kmime"})
+contract_ready=sum(active[n].get("readiness")=="package-contract-ready" for n in pending_ids-{"kmime"})
 audit_pending=sum(active[n].get("readiness")=="package-lane-pending" for n in pending_ids-{"kmime"})
-print(f"KAuth PASS/downstream-eligible; {ready} package-contract-ready; {audit_pending} provider-audit pending; KMime compatibility-decision-required")
+print(f"KAuth PASS/downstream-eligible; {build_ready} build-ready; {contract_ready} contract-ready; {audit_pending} provider-audit pending; KMime compatibility-decision-required")

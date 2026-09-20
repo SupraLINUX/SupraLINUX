@@ -56,6 +56,9 @@ def norm(data):
     data.pop('as_of',None)
     for node in data.get('nodes',[]):
         node.pop('planning',None)
+        if node.get('state') != 'PASS':
+            node.pop('package_identity',None)
+            node.pop('packaging',None)
     return data
 raise SystemExit(0 if norm(load(before))==norm(load(after)) else 1)
 PY

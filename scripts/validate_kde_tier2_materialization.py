@@ -12,21 +12,26 @@ def load(p): return json.loads((ROOT/p).read_text())
 contracts=load("manifests/kde-tier2-package-contracts.json")
 tier2=load("manifests/kde-frameworks-tier2.json")
 expected=contracts.get("selected_nodes",[])
-req(contracts.get("state")=="reference-capture-pass","reference capture must be PASS before materialization")
+req(contracts.get("state") in {"reference-capture-pass","materialized"},"reference/materialization state")
 mat=contracts.get("materialization",{})
 req(mat.get("status") in {"pending-ci","PASS"},"materialization status")
 req(mat.get("method")=="kde-authority-source-plus-pinned-debian-tree","materialization method")
 req(mat.get("package_state_effect")=="none" and mat.get("package_attempted") is False,"materialization package-state semantics")
 req(mat.get("maintainer_during_ci")=="SupraLINUX Build System <build@supralinux.invalid>","CI maintainer marker")
 req(mat.get("publication_blocker")=="replace-ci-maintainer-with-approved-project-contact","publication blocker")
+if mat.get("status") == "PASS":
+    req(mat.get("result")=="PASS","materialization result")
+    req(set(mat.get("evidence",{}))==set(expected),"materialization evidence must cover selected nodes")
 
 canonical={n["id"]:n for n in tier2["nodes"]}
 for node_id in expected:
     n=canonical[node_id]
     c=contracts["nodes"][node_id]
     req(n.get("state")=="pending",f"{node_id}: materialization does not promote package state")
-    req(n.get("planning",{}).get("readiness")=="package-contract-ready",f"{node_id}: readiness")
-    req(n.get("planning",{}).get("package_contract")=="not-materialized",f"{node_id}: contract not promoted before materialization PASS")
+    expected_readiness = "build-ready" if mat.get("status") == "PASS" else "package-contract-ready"
+    expected_contract = "materialized" if mat.get("status") == "PASS" else "not-materialized"
+    req(n.get("planning",{}).get("readiness")==expected_readiness,f"{node_id}: readiness")
+    req(n.get("planning",{}).get("package_contract")==expected_contract,f"{node_id}: package contract state")
     req(c.get("technical_references",{}).get("debian",{}).get("version")=="6.30.0-1",f"{node_id}: Debian 6.30 packaging reference")
     req(len(c.get("technical_references",{}).get("debian",{}).get("debian_tar_sha256",""))==64,f"{node_id}: pinned Debian tree digest")
 

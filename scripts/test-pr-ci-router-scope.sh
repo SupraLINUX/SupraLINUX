@@ -55,10 +55,16 @@ git add .; git commit -qm tier2-planning; TP=$(git rev-parse HEAD)
 if bash scripts/pr-ci-router-needed.sh "$GP" "$TP"; then echo "Tier2 planning-only delta unexpectedly requested reusable CI" >&2; exit 1; fi
 python3 - <<'PY'
 import json
+p='manifests/kde-frameworks-tier2.json'; d=json.load(open(p)); n=d['nodes'][0]; n['package_identity']={'source_package':'kf6-kcrash','package_version_candidate':'6.30.0-0supralinux1','status':'materialized'}; n['packaging']={'state':'pending','reason':'awaiting-build'}; open(p,'w').write(json.dumps(d))
+PY
+git add .; git commit -qm tier2-materialized-identity; TMI=$(git rev-parse HEAD)
+if bash scripts/pr-ci-router-needed.sh "$TP" "$TMI"; then echo "pending Tier2 materialized identity unexpectedly requested legacy reusable CI" >&2; exit 1; fi
+python3 - <<'PY'
+import json
 p='manifests/kde-frameworks-tier2-dependencies.json'; d=json.load(open(p)); d['nodes']['kcrash']['qt']['test']=['Test']; open(p,'w').write(json.dumps(d))
 PY
 git add .; git commit -qm tier2-provider-profile; TDP=$(git rev-parse HEAD)
-if bash scripts/pr-ci-router-needed.sh "$TP" "$TDP"; then echo "unmaterialized Tier2 dependency profile unexpectedly requested reusable CI" >&2; exit 1; fi
+if bash scripts/pr-ci-router-needed.sh "$TMI" "$TDP"; then echo "unmaterialized Tier2 dependency profile unexpectedly requested reusable CI" >&2; exit 1; fi
 echo '# audit workflow maintenance' >> .github/workflows/kde-tier2-provider-audit.yml
 git add .; git commit -qm tier2-audit-workflow; TAW=$(git rev-parse HEAD)
 if bash scripts/pr-ci-router-needed.sh "$TDP" "$TAW"; then echo "Tier2 provider-audit workflow unexpectedly requested reusable CI" >&2; exit 1; fi

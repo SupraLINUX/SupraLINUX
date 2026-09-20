@@ -30,7 +30,8 @@ req(audit.get("authoritative_package_build") is False, "provider audit must not 
 if audit.get("status") == "pending-ci":
     req(batch == plan.get("next_provider_audit_batch"), "pending provider-audit batch must equal generated campaign next batch")
 elif audit.get("status") == "PASS":
-    req(set(batch) <= set(plan.get("package_contract_ready", [])), "PASS provider-audit nodes must be package-contract-ready")
+    downstream_ready=set(plan.get("package_contract_ready", [])) | set(plan.get("build_queue", []))
+    req(set(batch) <= downstream_ready, "PASS provider-audit nodes must remain contract/build-ready")
     evidence = audit.get("evidence", {})
     req(evidence.get("result") == "PASS", "provider-audit PASS evidence result")
     req(evidence.get("package_state_effect") == "none", "provider-audit must not alter package state")

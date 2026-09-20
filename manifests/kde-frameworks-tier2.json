@@ -260,19 +260,29 @@
         "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
       },
       "package_identity": {
-        "source_package": null,
-        "package_version_candidate": null,
-        "status": "not-materialized"
+        "source_package": "kf6-kcrash",
+        "package_version_candidate": "6.30.0-0supralinux1",
+        "status": "materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-lane-not-materialized"
+        "reason": "package-contract-materialized-awaiting-clean-build",
+        "materialization": {
+          "workflow_run": 35527533481,
+          "job_id": 106122236790,
+          "artifact_id": 10609867532,
+          "artifact_sha256": "71182044053fb13567670b9f51321e7a3f85ae2b9cc70de19c789fad70174353",
+          "tree_sha256": "7058399d53a61c45041493ea3d624288ae3ba59e66ed9508fd22ddbae2912aa3",
+          "debian_tree_sha256": "4fabfae3449ab5c8eb253bc6b0b505b460a1fc91f87825cf5f5d93112868d067",
+          "package_attempted": false,
+          "package_state_effect": "none"
+        }
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "build-ready",
         "provider_audit": "complete",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35524034558,
@@ -395,19 +405,29 @@
         "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
       },
       "package_identity": {
-        "source_package": null,
-        "package_version_candidate": null,
-        "status": "not-materialized"
+        "source_package": "kf6-knotifications",
+        "package_version_candidate": "6.30.0-0supralinux1",
+        "status": "materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-lane-not-materialized"
+        "reason": "package-contract-materialized-awaiting-clean-build",
+        "materialization": {
+          "workflow_run": 35527533481,
+          "job_id": 106122236813,
+          "artifact_id": 10609449652,
+          "artifact_sha256": "7d71bcf8ddcc1a12d701ca637cc8aaf996b117395345d607ae8bf5445cc57517",
+          "tree_sha256": "ce14ec010c80301c4ff88a242575d12e11731493e322b9ad631e42329367df63",
+          "debian_tree_sha256": "f62adddbe1a6fa91b252db132a1078e39c6e9c0336c14c246c77a48445417443",
+          "package_attempted": false,
+          "package_state_effect": "none"
+        }
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "build-ready",
         "provider_audit": "complete",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35524034558,
@@ -566,19 +586,29 @@
         "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
       },
       "package_identity": {
-        "source_package": null,
-        "package_version_candidate": null,
-        "status": "not-materialized"
+        "source_package": "kf6-kstatusnotifieritem",
+        "package_version_candidate": "6.30.0-0supralinux1",
+        "status": "materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-lane-not-materialized"
+        "reason": "package-contract-materialized-awaiting-clean-build",
+        "materialization": {
+          "workflow_run": 35527533481,
+          "job_id": 106122236810,
+          "artifact_id": 10610122358,
+          "artifact_sha256": "f8db3f903861d68d0170e2b0a709fda3c69336ec45a5e1d7e26756830a3b2f1a",
+          "tree_sha256": "0dffc2d5094daad0cafc15e483bbbb56c487c04f8448dab6b84538593f4c2836",
+          "debian_tree_sha256": "96acbf99467e3694343c42b28ec05889331ece96ce6cbb8fc2449a10d869fd8d",
+          "package_attempted": false,
+          "package_state_effect": "none"
+        }
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "build-ready",
         "provider_audit": "complete",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35524034558,
@@ -613,19 +643,29 @@
         "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
       },
       "package_identity": {
-        "source_package": null,
-        "package_version_candidate": null,
-        "status": "not-materialized"
+        "source_package": "kf6-kunitconversion",
+        "package_version_candidate": "6.30.0-0supralinux1",
+        "status": "materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-lane-not-materialized"
+        "reason": "package-contract-materialized-awaiting-clean-build",
+        "materialization": {
+          "workflow_run": 35527533481,
+          "job_id": 106122236748,
+          "artifact_id": 10610347022,
+          "artifact_sha256": "a1a753831cb5f075051c8d9f56e496ad3f74599f6657ca4118ad1652be77816c",
+          "tree_sha256": "cc19efb0ae58bbfe2b525cefc5f9174513e5a6cd34b9b15af820f95afa3f8556",
+          "debian_tree_sha256": "a158409744e939f922c85111c238df4fd5fe46e590c61814f8842e1b803bd584",
+          "package_attempted": false,
+          "package_state_effect": "none"
+        }
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "build-ready",
         "provider_audit": "complete",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35524034558,
@@ -660,19 +700,29 @@
         "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
       },
       "package_identity": {
-        "source_package": null,
-        "package_version_candidate": null,
-        "status": "not-materialized"
+        "source_package": "kf6-syndication",
+        "package_version_candidate": "6.30.0-0supralinux1",
+        "status": "materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-lane-not-materialized"
+        "reason": "package-contract-materialized-awaiting-clean-build",
+        "materialization": {
+          "workflow_run": 35527533481,
+          "job_id": 106122236787,
+          "artifact_id": 10610143584,
+          "artifact_sha256": "a9cbb7cc6edea7a896bfc8d04a5653272abce80584ff6420334ebc054e32be8e",
+          "tree_sha256": "0c24bbbcd0575a5151b40b86546e2b58f0ed4e446f4eba7ef01090350f5cdf11",
+          "debian_tree_sha256": "21bc2ba2e37f324f69aec3ccb6a5267e2b2d8348770d167ec1c834d9caf6caad",
+          "package_attempted": false,
+          "package_state_effect": "none"
+        }
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "build-ready",
         "provider_audit": "complete",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35524034558,

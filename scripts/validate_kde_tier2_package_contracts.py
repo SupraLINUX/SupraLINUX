@@ -31,6 +31,16 @@ req(contracts.get("frameworks_series")=="6.30.0","Frameworks series")
 req(contracts.get("selected_nodes")==expected,"selected contract node order")
 req(contracts.get("compatibility_reference",{}).get("ubuntu",{}).get("role")=="technical-reference-only","Ubuntu reference role")
 req(contracts.get("compatibility_reference",{}).get("debian",{}).get("role")=="technical-reference-only","Debian reference role")
+if contracts.get("state") == "materialized":
+    mat=contracts.get("materialization",{})
+    req(mat.get("status")=="PASS" and mat.get("result")=="PASS","materialization PASS state")
+    req(isinstance(mat.get("workflow_run"),int) and mat.get("workflow_run")>0,"materialization workflow identity")
+    req(len(mat.get("evidence",{}))==5,"materialization evidence node set")
+    for node_id, evidence in mat.get("evidence",{}).items():
+        req(evidence.get("result")=="PASS" and evidence.get("package_attempted") is False and evidence.get("package_state_effect")=="none",f"{node_id}: materialization semantics")
+        req(isinstance(evidence.get("artifact_id"),int) and evidence.get("artifact_id")>0,f"{node_id}: materialization evidence artifact")
+        for key in ("artifact_sha256","tree_sha256","debian_tree_sha256","debian_tar_sha256","dsc_sha256","orig_tar_sha256"):
+            req(len(evidence.get(key,""))==64,f"{node_id}: {key}")
 
 canonical={n["id"]:n for n in tier2["nodes"]}
 dep_nodes=deps["nodes"]
@@ -38,8 +48,10 @@ for node_id in expected:
     c=contracts["nodes"].get(node_id,{})
     n=canonical[node_id]
     req(n.get("state")=="pending","contract node must remain package-state pending")
-    req(n.get("planning",{}).get("readiness")=="package-contract-ready",f"{node_id}: canonical readiness")
-    req(n.get("planning",{}).get("package_contract")=="not-materialized",f"{node_id}: package contract not yet promoted")
+    expected_readiness = "build-ready" if contracts.get("state") == "materialized" else "package-contract-ready"
+    expected_contract = "materialized" if contracts.get("state") == "materialized" else "not-materialized"
+    req(n.get("planning",{}).get("readiness")==expected_readiness,f"{node_id}: canonical readiness")
+    req(n.get("planning",{}).get("package_contract")==expected_contract,f"{node_id}: package contract state")
     req(c.get("upstream_version")=="6.30.0",f"{node_id}: version")
     req(c.get("source_sha256")==n.get("source_sha256"),f"{node_id}: source SHA")
     req(c.get("source_package")==f"kf6-{node_id}",f"{node_id}: Ubuntu-compatible source package")
