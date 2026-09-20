@@ -15,8 +15,8 @@ d=json.load(sys.stdin)
 d.pop("state",None)
 d.pop("reference_evidence",None)
 m=d.get("materialization",{})
-m.pop("status",None)
-m.pop("evidence",None)
+for key in ("status","workflow_run","commit","result","evidence"):
+    m.pop(key,None)
 print(hashlib.sha256(json.dumps(d,sort_keys=True,separators=(",",":")).encode()).hexdigest())'
 }
 

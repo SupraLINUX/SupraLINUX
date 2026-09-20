@@ -145,6 +145,27 @@ ddigest,dblob=make_manifest(root/"debian")
 (out/"debian-tree.sha256").write_text(ddigest+"\n")
 PY
 
+if [[ "$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("materialization",{}).get("status",""))' "${CONTRACTS}")" == "PASS" ]]; then
+    STAGE=materialization-revalidation
+    python3 - "${CONTRACTS}" "${NODE}" "${EVIDENCE}/tree.sha256" "${EVIDENCE}/debian-tree.sha256" <<'PY'
+import json,sys
+contracts_path,node,tree_path,debian_tree_path=sys.argv[1:]
+contracts=json.load(open(contracts_path))
+expected=contracts.get("materialization",{}).get("evidence",{}).get(node,{})
+actual_tree=open(tree_path).read().strip()
+actual_debian=open(debian_tree_path).read().strip()
+if expected.get("result") != "PASS":
+    raise SystemExit(f"{node}: pinned materialization evidence is not PASS")
+if expected.get("tree_sha256") != actual_tree:
+    raise SystemExit(f"{node}: full-tree content drift: expected {expected.get('tree_sha256')} actual {actual_tree}")
+if expected.get("debian_tree_sha256") != actual_debian:
+    raise SystemExit(f"{node}: Debian-tree content drift: expected {expected.get('debian_tree_sha256')} actual {actual_debian}")
+print(f"materialization revalidation PASS: {node}")
+print(f"tree_sha256={actual_tree}")
+print(f"debian_tree_sha256={actual_debian}")
+PY
+fi
+
 mkdir -p "${EVIDENCE}/packaging-snippets"
 cp "${SRC}/debian/control" "${SRC}/debian/rules" "${SRC}/debian/supralinux-materialization.json" "${EVIDENCE}/packaging-snippets/"
 sed -n '1,24p' "${SRC}/debian/changelog" > "${EVIDENCE}/packaging-snippets/changelog-head.txt"

@@ -26,7 +26,7 @@ expect_rc 1 "${BASE}" "${DOCS}" docs
 
 python3 - "${TMP}/manifests/kde-tier2-package-contracts.json" <<'PY'
 import json,sys
-p=sys.argv[1]; d=json.load(open(p)); d["materialization"]["status"]="PASS"; d["materialization"]["evidence"]={"artifact":1}; d["state"]="materialized"; open(p,"w").write(json.dumps(d)+"\n")
+p=sys.argv[1]; d=json.load(open(p)); d["materialization"].update({"status":"PASS","workflow_run":99,"commit":"deadbeef","result":"PASS","evidence":{"kcrash":{"artifact_id":1,"tree_sha256":"x","debian_tree_sha256":"y"}}}); d["state"]="materialized"; open(p,"w").write(json.dumps(d)+"\n")
 PY
 git -C "${TMP}" add .; git -C "${TMP}" commit -qm evidence
 EVIDENCE="$(git -C "${TMP}" rev-parse HEAD)"

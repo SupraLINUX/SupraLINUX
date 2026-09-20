@@ -213,8 +213,8 @@ def main() -> int:
 
     contracts = load(CONTRACTS)
     tier2 = load(TIER2)
-    if contracts.get("state") != "reference-capture-pass":
-        raise SystemExit("package-contract reference capture is not PASS")
+    if contracts.get("state") not in {"reference-capture-pass", "materialized"}:
+        raise SystemExit("package-contract state is not materializable")
     if contracts.get("materialization", {}).get("status") not in {"pending-ci", "PASS"}:
         raise SystemExit("unsupported materialization state")
     if args.node not in contracts.get("selected_nodes", []):
@@ -224,8 +224,10 @@ def main() -> int:
     canonical = {n["id"]: n for n in tier2["nodes"]}[args.node]
     if canonical.get("source_sha256") != node.get("source_sha256"):
         raise SystemExit("source authority SHA drift")
-    if canonical.get("planning", {}).get("readiness") != "package-contract-ready":
-        raise SystemExit("node is not package-contract-ready")
+    if canonical.get("planning", {}).get("readiness") not in {"package-contract-ready", "build-ready"}:
+        raise SystemExit("node is not materialization/build ready")
+    if canonical.get("planning", {}).get("package_contract") not in {"not-materialized", "materialized"}:
+        raise SystemExit("node package-contract state is not compatible with materialization")
 
     root = Path(args.source_root)
     debian = root / "debian"
