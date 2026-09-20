@@ -39,7 +39,7 @@ expect_rc() {
 echo docs >> "${TMP}/docs/x.md"
 git -C "${TMP}" add . && git -C "${TMP}" commit -qm docs
 DOCS="$(git -C "${TMP}" rev-parse HEAD)"
-expect_rc 1 "${BASE}" "${DOCS}" docs
+expect_rc 0 "${BASE}" "${DOCS}" docs
 
 python3 - "${TMP}/manifests/kde-frameworks-tier2-dependencies.json" "${TMP}/manifests/kde-tier2-campaign-plan.json" <<'PY'
 import json,sys

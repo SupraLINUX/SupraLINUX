@@ -324,7 +324,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
       "qt": {
         "required": [
@@ -401,7 +401,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
       "qt": {
         "required": [
@@ -436,7 +436,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package.",
       "qt": {
         "required": [
@@ -530,7 +530,7 @@
     "schema": 1,
     "batch": "tier2-provider-audit-1",
     "mode": "remediation-revalidation",
-    "status": "pending-ci",
+    "status": "PASS",
     "nodes": [
       "knotifications",
       "kstatusnotifieritem",
@@ -572,6 +572,22 @@
           "libcanberra_dev": "0.30-18ubuntu3",
           "python3_build": "1.4.0-1"
         }
+      }
+    },
+    "evidence": {
+      "result": "PASS",
+      "workflow_run": 35543178504,
+      "job_id": 106164408170,
+      "commit": "95910856c5ede2a8c06de9fc0c19978f2cbf7d1c",
+      "artifact_id": 10615567800,
+      "artifact_sha256": "b758da80b86835d5d9471f9cf052d85b449ee8851406585f5bb3226a0f2d7c5c",
+      "claim": "provider-availability-and-selected-profile-only",
+      "package_state_effect": "none",
+      "observed_providers": {
+        "llvm-dev": "1:21.1.6-71",
+        "libclang-common-21-dev": "1:21.1.8-6ubuntu1",
+        "llvm-config": "21.1.8",
+        "clang_resource_header": "/usr/lib/llvm-21/lib/clang/21/include/stddef.h"
       }
     }
   }

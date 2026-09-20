@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "as_of": "2026-09-20",
-  "state": "reference-capture-pass",
+  "state": "materialized",
   "source_authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "packaging_authority": "supralinux",
@@ -552,7 +552,8 @@
         "source_package": "kf6-knotifications",
         "result": "PASS",
         "package_attempted": false,
-        "package_state_effect": "none"
+        "package_state_effect": "none",
+        "workflow_run": 35543068531
       },
       "kstatusnotifieritem": {
         "job_id": 106164132693,
@@ -567,7 +568,8 @@
         "source_package": "kf6-kstatusnotifieritem",
         "result": "PASS",
         "package_attempted": false,
-        "package_state_effect": "none"
+        "package_state_effect": "none",
+        "workflow_run": 35543068531
       },
       "kunitconversion": {
         "job_id": 106164132804,
@@ -582,7 +584,8 @@
         "source_package": "kf6-kunitconversion",
         "result": "PASS",
         "package_attempted": false,
-        "package_state_effect": "none"
+        "package_state_effect": "none",
+        "workflow_run": 35543068531
       },
       "syndication": {
         "job_id": 106164132706,
@@ -599,8 +602,29 @@
         "source_package": "kf6-syndication",
         "result": "PASS",
         "package_attempted": false,
+        "package_state_effect": "none",
+        "workflow_run": 35543068531
+      },
+      "kcrash": {
+        "workflow_run": 35535155799,
+        "job_id": 106142770257,
+        "artifact_id": 10612224837,
+        "artifact_sha256": "37c45ad18a9587a5e8b950e3f1d7e33092b31d502c5093b36c42992f5f14cac6",
+        "tree_sha256": "302cc71f478e01c2b2fab20c6401286824f54d4772a59446cb32fce2d5a5d938",
+        "debian_tree_sha256": "5f5256b619f3e43cba2930debaee545ab773ee813bb1728031e9b7ee8a274a92",
+        "debian_tar_sha256": "1330eaa16e7d8acbc6244cb4c1730cbe33d06972dc5c29ecfe482e7168fb9f2d",
+        "dsc_sha256": "c586f512ee573c893a093562b8351ff2165ead7a0c50e9610c4b3b57e061ce6b",
+        "orig_tar_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+        "package_version": "6.30.0-0supralinux1",
+        "source_package": "kf6-kcrash",
+        "result": "PASS",
+        "package_attempted": false,
         "package_state_effect": "none"
       }
+    },
+    "activation_requires": {
+      "provider_audit_run": 35543178504,
+      "provider_audit_result": "PASS"
     }
   },
   "provider_adaptations": {
