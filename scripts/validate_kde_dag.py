@@ -105,7 +105,30 @@ if kgui_passes:
     require(item.get("artifact_id") == 10482007092 and item.get("artifact_sha256") == "71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca", "KGuiAddons DAG PASS artifact mismatch")
     require(item.get("tests") == "9/9 PASS" and item.get("lintian") == "PASS-errors", "KGuiAddons DAG build/test gate mismatch")
 require(kgui.get("pass_files", {}).get("rootfs_sha256") == "c68681aacfd32976c6e0bf471ec1928179fd80e402faf2293706e53f88ad25c6", "KGuiAddons DAG rootfs evidence mismatch")
-require(len(nodes) == 30, "Canonical DAG must contain ECM plus all 29 promoted Tier 1 PASS nodes after Batch 11")
+require(len(nodes) == 31, "Canonical DAG must contain ECM + 29 Tier 1 PASS nodes + promoted KAuth Tier 2")
+
+kauth = nodes.get("kauth", {})
+require(kauth.get("tier") == 2 and kauth.get("upstream_version") == "6.30.0", "KAuth promoted Tier 2 identity mismatch")
+require(kauth.get("source_sha256") == "60b75e02abc2bfbb247c586e3ab94def7ecd7b4e1ddb8260358951d84d9ea8c9", "KAuth DAG source SHA mismatch")
+require(kauth.get("depends_on") == ["extra-cmake-modules","kcoreaddons","kwindowsystem"], "KAuth DAG predecessor set mismatch")
+require(kauth.get("state") == "PASS" and kauth.get("downstream_eligible") is True, "KAuth DAG must be PASS/downstream-eligible")
+require(kauth.get("package_version") == "6.30.0-0supralinux3", "KAuth DAG package version mismatch")
+require(kauth.get("attempt_ledger") == "manifests/kde-tier2-package-batch1-attempts.json", "KAuth DAG attempt ledger mismatch")
+require(kauth.get("binary_packages") == ["libkf6auth-data","libkf6auth-dev","libkf6auth-dev-bin","libkf6auth-doc","libkf6authcore6"], "KAuth DAG binary package split mismatch")
+require(kauth.get("abi_sonames") == ["libKF6AuthCore.so.6"], "KAuth DAG SONAME mismatch")
+require(kauth.get("backend_profile") == {"KAUTH_BACKEND_NAME":"POLKITQT6-1","KAUTH_HELPER_BACKEND_NAME":"DBUS"}, "KAuth DAG backend profile mismatch")
+kauth_passes = [item for item in kauth.get("evidence", []) if isinstance(item, dict) and item.get("result") == "PASS"]
+require(len(kauth_passes) == 1, "KAuth DAG requires exactly one retained PASS")
+if kauth_passes:
+    item = kauth_passes[0]
+    require(item.get("workflow_run") == 35497461178 and item.get("job_id") == 106043001431, "KAuth DAG PASS run/job mismatch")
+    require(item.get("commit") == "3f67c5446e56d3029551bb5e481882ad3e208cfa", "KAuth DAG PASS commit mismatch")
+    require(item.get("artifact_id") == 10601382235 and item.get("artifact_sha256") == "443a47a67188a52faae6c20b03c2c53203d5a9386dbbb5765af4f69e0cd1744b", "KAuth DAG PASS artifact mismatch")
+    require(item.get("tests") == "6/6 PASS" and item.get("lintian") == "PASS-errors", "KAuth DAG test/Lintian gate mismatch")
+    require(item.get("consumer_smoke") == "PASS" and item.get("apt_check") == "PASS" and item.get("development_contract") == "PASS", "KAuth DAG consumer/APT/development gates mismatch")
+    require(item.get("backend") == "POLKITQT6-1" and item.get("helper_backend") == "DBUS", "KAuth DAG backend evidence mismatch")
+    require(item.get("symbols_adjusted_sha256") == "b8cf2fa877c94255f015cee08b89816d538cba23f1064d0360a329189fee0b78", "KAuth DAG adjusted symbols evidence mismatch")
+require(kauth.get("pass_files", {}).get("rootfs_sha256") == "15113b108b939e2575758c6696fc34808dfa925fa2dd3cc5e6c13e65e7be4668", "KAuth DAG rootfs evidence mismatch")
 
 batch9_expected = {
     "kconfig": {

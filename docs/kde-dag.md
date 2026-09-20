@@ -460,3 +460,9 @@ KUserFeedback `6.30.0-0supralinux5` and Prison `6.30.0-0supralinux1` are canonic
 Final retained package evidence: KUserFeedback run `35489771315`, job `106022610412`, artifact `10597923863`; Prison run `35488901554`, job `106020266290`, artifact `10597829797`.
 
 Canonical KDE Frameworks Tier 1 is **29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**. The Batch 11 lane is completed and global discovery contains no remaining Tier 1 node.
+
+## Tier 2 KAuth promotion — 2026-09-20
+
+KAuth `6.30.0-0supralinux3` is the first promoted Tier 2 node. Its DAG predecessors are ECM, KCoreAddons and KWindowSystem, all retained PASS. Run `35497461178`, job `106043001431`, artifact `10601382235` passed 6/6 tests, symbols/ABI, Lintian error gate, development-contract, APT closure and external consumer checks.
+
+The canonical DAG now contains ECM + 29 Tier 1 nodes + KAuth Tier 2. KMime remains outside the canonical DAG until ADR-0002 is resolved and a package reaches PASS.

@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 2 Batch 1 (KAuth)
 
-Status: **prepared; first package attempt pending**  
+Status: **KAuth PASS; canonical promotion candidate**  
 Date: **2026-09-20**
 
 Batch 1 deliberately contains only KAuth. KMime remains independently gated by ADR-0002 and does not block this runnable DAG node.
@@ -37,7 +37,7 @@ A PASS requires:
 - exact APT runtime closure using built packages plus retained predecessor packages;
 - external CMake consumer compile/run.
 
-No PASS evidence exists yet; this document is preparation state only.
+PASS evidence is recorded below; the retained FAIL/INFRA history remains part of the campaign evidence.
 
 ## Attempt 1 — source-package FAIL
 
@@ -68,3 +68,15 @@ Classification: **INFRA**, `package_attempted=false`, `package_state_effect=none
 PR CI run `35497248610`, KAuth job `106042424661`, was cancelled while still queued when the validator remediation advanced the branch. It never downloaded predecessors or entered `Build and validate`; therefore it is not attempt 3.
 
 The semantic scope selector now treats the current prepared/remediation revision as runnable until that exact package version appears in the real-attempt ledger with `package_attempted=true`. This prevents a superseded run from stranding a remediation merely because the subsequent commit is metadata-only. Once an attempt exists for that revision, ordinary event-delta fingerprinting resumes.
+
+## Attempt 3 — PASS
+
+KAuth `6.30.0-0supralinux3` completed successfully in PR CI run `35497461178`, job `106043001431`.
+
+Artifact: `10601382235`; ZIP SHA-256 `443a47a67188a52faae6c20b03c2c53203d5a9386dbbb5765af4f69e0cd1744b`; rootfs SHA-256 `15113b108b939e2575758c6696fc34808dfa925fa2dd3cc5e6c13e65e7be4668`.
+
+Final gates: **6/6 CTest PASS**, Lintian error gate PASS, `libKF6AuthCore.so.6` with 118 exported symbols, PolkitQt6-1 backend, DBus helper, development-contract PASS, exact APT closure PASS and external `KF6::AuthCore` consumer PASS. The adjusted symbols template SHA-256 is `b8cf2fa877c94255f015cee08b89816d538cba23f1064d0360a329189fee0b78`; only the two implementation-private RTTI/vtable entries are optional.
+
+KAuth is therefore downstream-eligible and the Tier 2 canonical package state becomes **1 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**. KMime is the sole pending Tier 2 node and remains decision-gated by ADR-0002.
+
+Repository Policy run `35497460988` failed independently in the scope-test fixture because an empty `docs/` directory vanished after `git reset --hard`. The real KAuth package job still completed PASS. The promotion candidate fixes that fixture without rebuilding KAuth.

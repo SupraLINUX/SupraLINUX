@@ -39,6 +39,30 @@
         "backend_profile": "POLKITQT6-1 + DBUS",
         "technical_reference_symbols_sha256": "77ab200ea8f5e9335831ef021dd2e446598b95d886d13237e91ea69e25812259",
         "cause": "dpkg-gensymbols rejected two non-optional RTTI/vtable symbols for implementation-private AuthBackend::Private; two other missing templinst symbols were already optional and not causal."
+      },
+      {
+        "attempt": 3,
+        "package_version": "6.30.0-0supralinux3",
+        "commit": "3f67c5446e56d3029551bb5e481882ad3e208cfa",
+        "workflow_run": 35497461178,
+        "job_id": 106043001431,
+        "artifact_id": 10601382235,
+        "artifact_sha256": "443a47a67188a52faae6c20b03c2c53203d5a9386dbbb5765af4f69e0cd1744b",
+        "rootfs_sha256": "15113b108b939e2575758c6696fc34808dfa925fa2dd3cc5e6c13e65e7be4668",
+        "package_attempted": true,
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "6/6 PASS",
+        "lintian": "PASS-errors",
+        "abi_soname": "libKF6AuthCore.so.6",
+        "abi_export_count": 118,
+        "backend_profile": "POLKITQT6-1 + DBUS",
+        "symbols_reference_sha256": "77ab200ea8f5e9335831ef021dd2e446598b95d886d13237e91ea69e25812259",
+        "symbols_adjusted_sha256": "b8cf2fa877c94255f015cee08b89816d538cba23f1064d0360a329189fee0b78",
+        "consumer_smoke": "PASS",
+        "apt_check": "PASS",
+        "development_contract": "PASS",
+        "downstream_eligible": true
       }
     ]
   },
@@ -68,6 +92,18 @@
       "package_state_effect": "none",
       "cause": "KAuth revision -3 was queued but never entered retained-input download or Build and validate before the validator-fix push superseded the PR run.",
       "remediation": "Scope selector now keeps any prepared/remediation package revision runnable until that exact revision has package_attempted=true in the real-attempt ledger."
+    },
+    {
+      "phase": "attempt-3-scope-test-validation",
+      "workflow_run": 35497460988,
+      "job_id": 106042987055,
+      "commit": "3f67c5446e56d3029551bb5e481882ad3e208cfa",
+      "classification": "infrastructure-scope-test-fixture",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "failed_gate": "test-kde-tier2-package-batch1-scope.sh",
+      "cause": "The scope test reset to a commit where the empty docs directory was not tracked, then wrote docs/attempted.md without recreating the directory.",
+      "remediation": "Make the scope test self-contained: synthesize an unattempted remediation baseline, then mkdir -p docs before docs-only assertions."
     }
   ],
   "blocked_events": {

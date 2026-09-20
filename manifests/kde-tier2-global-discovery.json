@@ -20,18 +20,6 @@
     "note": "These are planning/readiness states, not package FAIL/BLOCKED results."
   },
   "nodes": {
-    "kauth": {
-      "readiness": "remediation-pending-build",
-      "tier1_predecessors": [
-        "kcoreaddons",
-        "kwindowsystem"
-      ],
-      "external_provider": "libpolkit-qt6-1-dev 0.200.0-4ubuntu1",
-      "selected_backend": "POLKITQT6-1",
-      "blocker": "none",
-      "runner": "scripts/run-kde-tier2-package-batch1-preflight.sh",
-      "workflow": ".github/workflows/kde-tier2-package-batch1.yml"
-    },
     "kmime": {
       "readiness": "compatibility-decision-required",
       "tier1_predecessors": [
@@ -42,9 +30,32 @@
     }
   },
   "next_actions": [
-    "Run KAuth Tier 2 Batch 1 using retained ECM, KCoreAddons and KWindowSystem PASS artifacts plus Resolute PolkitQt6-1.",
-    "Preserve every real KAuth package attempt and continue independently of KMime.",
+    "Keep retained KAuth PASS artifacts available to later dependency tiers.",
     "Do not attempt KMime packaging until ADR-0002 selects a compatibility transition preserving Ubuntu application contracts.",
-    "If KAuth reaches retained PASS, promote only KAuth while KMime remains pending/decision-gated."
-  ]
+    "After the KMime architecture decision, materialize only its approved package contract and validate legacy-Ubuntu plus KF6Mime consumers."
+  ],
+  "promoted_snapshot": {
+    "pass": 1,
+    "pending": 1,
+    "current_fail": 0,
+    "blocked": 0
+  },
+  "completed_nodes": {
+    "kauth": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux3",
+      "workflow_run": 35497461178,
+      "job_id": 106043001431,
+      "artifact_id": 10601382235,
+      "artifact_sha256": "443a47a67188a52faae6c20b03c2c53203d5a9386dbbb5765af4f69e0cd1744b",
+      "rootfs_sha256": "15113b108b939e2575758c6696fc34808dfa925fa2dd3cc5e6c13e65e7be4668",
+      "backend": "POLKITQT6-1",
+      "helper_backend": "DBUS",
+      "tier1_predecessors": [
+        "kcoreaddons",
+        "kwindowsystem"
+      ],
+      "downstream_eligible": true
+    }
+  }
 }

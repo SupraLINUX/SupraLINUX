@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 2 discovery
 
-Status: **discovery complete; packaging not started**  
+Status: **KAuth PASS; KMime compatibility decision pending**  
 Date: **2026-09-20**
 
 KDE API classifies exactly two current Tier 2 Frameworks: **KAuth** and **KMime**. Tier 2 may depend on Tier 1 Frameworks. SupraLINUX starts this phase only after the canonical Tier 1 closure at **29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**.
@@ -18,7 +18,7 @@ SupraLINUX therefore selects:
 - `DBUS` helper backend;
 - no silent Fake-backend fallback.
 
-KAuth is **prepared-pending-build**, not package FAIL/BLOCKED. Package tree, runner, semantic scope selector and reusable workflow now exist; no real package attempt has been recorded yet.
+KAuth is **PASS/downstream-eligible** as `6.30.0-0supralinux3`. The retained package evidence is run `35497461178`, job `106043001431`, artifact `10601382235`: 6/6 tests, Lintian error gate, ABI, APT closure, development contract and external consumer all pass.
 
 ## KMime
 
@@ -36,6 +36,12 @@ KDE upstream selects KAuth/KMime 6.30.0 and their dependencies. Ubuntu may suppl
 
 ## KAuth Batch 1 preparation
 
-KAuth is prepared as `kf6-kauth 6.30.0-0supralinux1`. The clean Resolute build consumes retained ECM, KCoreAddons and KWindowSystem PASS artifacts as explicit local sbuild inputs and uses the real PolkitQt6-1 + DBus backend profile.
+KAuth's retained PASS package is `kf6-kauth 6.30.0-0supralinux3`. The clean Resolute build consumes retained ECM, KCoreAddons and KWindowSystem PASS artifacts as explicit local sbuild inputs and uses the real PolkitQt6-1 + DBus backend profile.
 
 The source package imports only the `libkf6authcore6.symbols` contract from Debian `6.30.0-1` after verifying the complete Debian tarball SHA-256. This is technical-reference use, not authority transfer.
+
+## Current Tier 2 canonical state
+
+**1 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**.
+
+KAuth is now present in the canonical KDE DAG and can feed later dependency tiers. KMime remains pending because ADR-0002 requires a compatibility architecture decision; it is not BLOCKED by a failed predecessor.

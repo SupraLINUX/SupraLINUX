@@ -2457,6 +2457,104 @@
         "debian_tar_sha256": "f76a7a74c17bf73a4277f0e63be52818ed80a3ee293c067653b9f82117a10812",
         "rootfs_sha256": "a1ae6cb653ec18a6dba7142f4ee5acd94210076a9adba23d9d67d03ac03885e7"
       }
+    },
+    "kauth": {
+      "tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kauth-6.30.0.tar.xz",
+      "source_sha256": "60b75e02abc2bfbb247c586e3ab94def7ecd7b4e1ddb8260358951d84d9ea8c9",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-kauth",
+      "binary_packages": [
+        "libkf6auth-data",
+        "libkf6auth-dev",
+        "libkf6auth-dev-bin",
+        "libkf6auth-doc",
+        "libkf6authcore6"
+      ],
+      "package_version": "6.30.0-0supralinux3",
+      "ubuntu_reference_version": "6.24.0-0ubuntu1",
+      "depends_on": [
+        "extra-cmake-modules",
+        "kcoreaddons",
+        "kwindowsystem"
+      ],
+      "external_provider": "libpolkit-qt6-1-dev 0.200.0-4ubuntu1",
+      "backend_profile": {
+        "KAUTH_BACKEND_NAME": "POLKITQT6-1",
+        "KAUTH_HELPER_BACKEND_NAME": "DBUS"
+      },
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "attempt_ledger": "manifests/kde-tier2-package-batch1-attempts.json",
+      "abi_sonames": [
+        "libKF6AuthCore.so.6"
+      ],
+      "evidence": [
+        {
+          "result": "PASS",
+          "workflow_run": 35497461178,
+          "job_id": 106043001431,
+          "commit": "3f67c5446e56d3029551bb5e481882ad3e208cfa",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10601382235,
+          "artifact_sha256": "443a47a67188a52faae6c20b03c2c53203d5a9386dbbb5765af4f69e0cd1744b",
+          "rootfs_sha256": "15113b108b939e2575758c6696fc34808dfa925fa2dd3cc5e6c13e65e7be4668",
+          "stage": "complete",
+          "tests": "6/6 PASS",
+          "lintian": "PASS-errors",
+          "abi_soname": "libKF6AuthCore.so.6",
+          "abi_export_count": 118,
+          "backend": "POLKITQT6-1",
+          "helper_backend": "DBUS",
+          "symbols_reference_sha256": "77ab200ea8f5e9335831ef021dd2e446598b95d886d13237e91ea69e25812259",
+          "symbols_adjusted_sha256": "b8cf2fa877c94255f015cee08b89816d538cba23f1064d0360a329189fee0b78",
+          "consumer_smoke": "PASS",
+          "apt_check": "PASS",
+          "development_contract": "PASS",
+          "source_development_contract": "PASS",
+          "retained_predecessors": {
+            "extra-cmake-modules": "6.30.0-0supralinux3",
+            "kcoreaddons": "6.30.0-0supralinux4",
+            "kwindowsystem": "6.30.0-0supralinux4"
+          },
+          "downstream_eligible": true,
+          "files": {
+            "libkf6auth_data_deb_sha256": "c732bf3f06ec9763f74f7cc289cbd33869156c2842e755bd896f73fddb462604",
+            "libkf6auth_dev_bin_deb_sha256": "8552b1e1bca4b77255e9f93ddb342d8e0457366438968ad650a7b62191d0bb77",
+            "libkf6auth_dev_deb_sha256": "4e6d525cb30999861fe8a0ef6f643d0838240953ee97277803e7d28fe3806564",
+            "libkf6auth_doc_deb_sha256": "588fb69861abfad2a12066e275060600a741a915d03a3bd988b1076bb4735c3b",
+            "libkf6authcore6_deb_sha256": "924d9b02d46d59537fdef12603ddb3cb649770b8f1748b32203f593ae559a7ea",
+            "libkf6auth_dev_bin_dbgsym_ddeb_sha256": "3bbfc7ced79311449464282acbbef9bba7acd80d9fef17c308f6cc8365182a61",
+            "libkf6authcore6_dbgsym_ddeb_sha256": "020291579d0c8a7ed87f01a01400a2d0177ddb720b8ce61d1eeb87f6d226ed74",
+            "changes_sha256": "8672c31b1ffe5b7aae575395647251ae492434abda6056e7ea794748e6364eb6",
+            "buildinfo_sha256": "0cdf3239299f1877d255cec440e2f4b441733622164d43412d8425f3a820cd1d",
+            "dsc_sha256": "c824afdec24a383052cdaefc0ac89a1b900ae0c35b2e4c8e43448f0dcf7454d7",
+            "orig_tar_sha256": "60b75e02abc2bfbb247c586e3ab94def7ecd7b4e1ddb8260358951d84d9ea8c9",
+            "debian_tar_sha256": "9b4f362ea681172ac197f7c26c17334a1513ea4872d76e4220dcb238a8fdd8ed",
+            "rootfs_sha256": "15113b108b939e2575758c6696fc34808dfa925fa2dd3cc5e6c13e65e7be4668"
+          }
+        }
+      ],
+      "pass_files": {
+        "libkf6auth_data_deb_sha256": "c732bf3f06ec9763f74f7cc289cbd33869156c2842e755bd896f73fddb462604",
+        "libkf6auth_dev_bin_deb_sha256": "8552b1e1bca4b77255e9f93ddb342d8e0457366438968ad650a7b62191d0bb77",
+        "libkf6auth_dev_deb_sha256": "4e6d525cb30999861fe8a0ef6f643d0838240953ee97277803e7d28fe3806564",
+        "libkf6auth_doc_deb_sha256": "588fb69861abfad2a12066e275060600a741a915d03a3bd988b1076bb4735c3b",
+        "libkf6authcore6_deb_sha256": "924d9b02d46d59537fdef12603ddb3cb649770b8f1748b32203f593ae559a7ea",
+        "libkf6auth_dev_bin_dbgsym_ddeb_sha256": "3bbfc7ced79311449464282acbbef9bba7acd80d9fef17c308f6cc8365182a61",
+        "libkf6authcore6_dbgsym_ddeb_sha256": "020291579d0c8a7ed87f01a01400a2d0177ddb720b8ce61d1eeb87f6d226ed74",
+        "changes_sha256": "8672c31b1ffe5b7aae575395647251ae492434abda6056e7ea794748e6364eb6",
+        "buildinfo_sha256": "0cdf3239299f1877d255cec440e2f4b441733622164d43412d8425f3a820cd1d",
+        "dsc_sha256": "c824afdec24a383052cdaefc0ac89a1b900ae0c35b2e4c8e43448f0dcf7454d7",
+        "orig_tar_sha256": "60b75e02abc2bfbb247c586e3ab94def7ecd7b4e1ddb8260358951d84d9ea8c9",
+        "debian_tar_sha256": "9b4f362ea681172ac197f7c26c17334a1513ea4872d76e4220dcb238a8fdd8ed",
+        "rootfs_sha256": "15113b108b939e2575758c6696fc34808dfa925fa2dd3cc5e6c13e65e7be4668"
+      }
     }
   },
   "ci_scope_incidents": [

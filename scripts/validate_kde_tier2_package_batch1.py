@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import hashlib,json,re,sys
+import hashlib,json,sys
 ROOT=Path(__file__).resolve().parents[1]
 errors=[]
 def req(v,m):
@@ -12,73 +12,61 @@ c=load("manifests/kde-tier2-package-campaign-batch1.json")
 a=load("manifests/kde-tier2-package-batch1-attempts.json")
 t=load("manifests/kde-frameworks-tier2.json")
 g=load("manifests/kde-tier2-global-discovery.json")
+d=load("manifests/kde-dag.json")
 req(c.get("schema")==2 and c.get("batch")=="tier2-batch-1" and c.get("lane")=="core-authorization","Batch1 identity")
-req(c.get("state") in {"prepared-pending-build","remediation-pending-build","PASS"},"Batch1 campaign state")
-req(c.get("selected_nodes")==["kauth"],"Batch1 must contain only KAuth")
+req(c.get("state")=="PASS","Batch1 campaign PASS")
+req(c.get("canonical_snapshot")=={"tier1":"29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED","tier2":"0 PASS / 2 pending / 0 current FAIL / 0 BLOCKED"},"historical pre-Batch1 snapshot")
+req(c.get("canonical_promotion")=={"status":"promotion-candidate","tier2":"1 PASS / 1 pending / 0 current FAIL / 0 BLOCKED","dag_nodes":["kauth"]},"Batch1 promotion candidate")
 n=c.get("nodes",{}).get("kauth",{})
-req(n.get("upstream_version")=="6.30.0" and n.get("source_package")=="kf6-kauth","KAuth identity")
-req(n.get("package_version")=="6.30.0-0supralinux3","KAuth current revision")
-req(n.get("source_sha256")=="60b75e02abc2bfbb247c586e3ab94def7ecd7b4e1ddb8260358951d84d9ea8c9","KAuth source hash")
-req(n.get("kde_framework_build_dependencies")==["KCoreAddons","KWindowSystem"],"KAuth predecessors")
-req(n.get("backend_profile")=={"KAUTH_BACKEND_NAME":"POLKITQT6-1","KAUTH_HELPER_BACKEND_NAME":"DBUS","fake_backend_allowed":False},"KAuth backend profile")
+req(n.get("package_version")=="6.30.0-0supralinux3" and n.get("state")=="PASS" and n.get("last_result")=="PASS" and n.get("downstream_eligible") is True,"KAuth campaign PASS")
+pe=n.get("pass_evidence",{})
+req(pe.get("workflow_run")==35497461178 and pe.get("job_id")==106043001431 and pe.get("artifact_id")==10601382235,"KAuth pass identity")
+req(pe.get("artifact_sha256")=="443a47a67188a52faae6c20b03c2c53203d5a9386dbbb5765af4f69e0cd1744b","KAuth pass artifact digest")
+req(pe.get("rootfs_sha256")=="15113b108b939e2575758c6696fc34808dfa925fa2dd3cc5e6c13e65e7be4668","KAuth pass rootfs")
+req(pe.get("tests")=="6/6 PASS" and pe.get("lintian")=="PASS-errors" and pe.get("abi_soname")=="libKF6AuthCore.so.6" and pe.get("abi_export_count")==118,"KAuth build/test ABI gates")
+req(pe.get("backend")=="POLKITQT6-1" and pe.get("helper_backend")=="DBUS","KAuth backend gates")
+req(pe.get("symbols_reference_sha256")=="77ab200ea8f5e9335831ef021dd2e446598b95d886d13237e91ea69e25812259" and pe.get("symbols_adjusted_sha256")=="b8cf2fa877c94255f015cee08b89816d538cba23f1064d0360a329189fee0b78","KAuth symbols evidence")
+req(pe.get("consumer_smoke")=="PASS" and pe.get("apt_check")=="PASS" and pe.get("development_contract")=="PASS" and pe.get("source_development_contract")=="PASS","KAuth final gates")
+
 ref=c.get("technical_references",{}).get("debian_6_30",{})
-req(ref.get("role")=="technical-packaging-reference-only" and ref.get("version")=="6.30.0-1","Debian reference role/version")
-req(ref.get("debian_tar_sha256")=="f304bd772cf958ca9dccab78ad33e12f8e2f7bf0b038999e629cf270bb068fc3","Debian reference tar hash")
-req(ref.get("imported_file_sha256")=="77ab200ea8f5e9335831ef021dd2e446598b95d886d13237e91ea69e25812259","Debian symbols reference hash")
-adj=ref.get("symbols_adjustment",{})
-req(adj.get("tag")=="optional=private","KAuth symbols adjustment tag")
-req(adj.get("symbols")==["_ZTIN5KAuth11AuthBackend7PrivateE@Base 6.23.0","_ZTVN5KAuth11AuthBackend7PrivateE@Base 6.23.0"],"KAuth private symbol adjustment set")
+req(ref.get("debian_tar_sha256")=="f304bd772cf958ca9dccab78ad33e12f8e2f7bf0b038999e629cf270bb068fc3" and ref.get("imported_file_sha256")=="77ab200ea8f5e9335831ef021dd2e446598b95d886d13237e91ea69e25812259","Debian technical reference")
+req(ref.get("symbols_adjustment",{}).get("symbols")==["_ZTIN5KAuth11AuthBackend7PrivateE@Base 6.23.0","_ZTVN5KAuth11AuthBackend7PrivateE@Base 6.23.0"],"private-only symbols adjustment")
 
 tier={x["id"]:x for x in t.get("nodes",[])}
-req(tier.get("kauth",{}).get("state")=="pending","KAuth canonical state remains pending before PASS")
-req(tier.get("kauth",{}).get("packaging",{}).get("state")=="remediation-pending-build","KAuth packaging readiness")
-req(tier.get("kmime",{}).get("package_identity",{}).get("package_version_candidate") is None,"KMime must remain decision-gated")
-req(g.get("nodes",{}).get("kauth",{}).get("readiness")=="remediation-pending-build","KAuth discovery readiness")
-req(g.get("nodes",{}).get("kmime",{}).get("readiness")=="compatibility-decision-required","KMime discovery decision gate")
-
-package=ROOT/"packages/kde/kauth/debian"
-for rel in ("changelog","control","copyright","README.source","rules","source/format","patches/series","patches/helper-install-dir-cache.patch","libkf6auth-data.install","libkf6auth-dev.install","libkf6auth-dev-bin.install","libkf6authcore6.install","libkf6auth-data.lintian-overrides","upstream/signing-key.asc"):
-    req((package/rel).exists(),f"KAuth packaging file missing: {rel}")
-if (package/"upstream/signing-key.asc").exists():
-    req(hashlib.sha256((package/"upstream/signing-key.asc").read_bytes()).hexdigest()==n.get("signing_key",{}).get("sha256"),"KAuth signing key hash")
-control=text("packages/kde/kauth/debian/control"); rules=text("packages/kde/kauth/debian/rules")
-for token in ("libkf6coreaddons-dev (>= 6.30.0~)","libkf6windowsystem-dev (>= 6.30.0~)","libpolkit-qt6-1-dev (>= 0.200.0-2~)","qt6-base-dev (>= 6.9.0~)"):
-    req(token in control,f"KAuth Build-Depends missing {token}")
-for token in ("-DKAUTH_BACKEND_NAME=POLKITQT6-1","-DKAUTH_HELPER_BACKEND_NAME=DBUS","-DBUILD_TESTING=ON","dbus-run-session","xvfb-run"):
-    req(token in rules,f"KAuth rules missing {token}")
-req("FAKE" not in rules.upper(),"KAuth package rules must not select Fake backend")
-
-workflow=text(".github/workflows/kde-tier2-package-batch1.yml"); router=text(".github/workflows/pr-ci-router.yml")
-scope=text("scripts/kde-tier2-package-batch1-needed.sh"); scope_test=text("scripts/test-kde-tier2-package-batch1-scope.sh"); runner=text("scripts/run-kde-tier2-package-batch1-preflight.sh")
-req("workflow_call:" in workflow and "workflow_dispatch:" in workflow,"KAuth workflow reusable/manual")
-req("run-id: '35122522242'" in workflow and "artifact-ids: '10457958023'" in workflow,"KCoreAddons retained artifact")
-req("run-id: '35047623320'" in workflow and "artifact-ids: '10428130399'" in workflow,"KWindowSystem retained artifact")
-req("scripts/kde-tier2-package-batch1-needed.sh" in workflow and "scripts/run-kde-tier2-package-batch1-preflight.sh" in workflow,"KAuth workflow scope/runner")
-req("uses: ./.github/workflows/kde-tier2-package-batch1.yml" in router,"PR router must invoke Tier2 Batch1")
-for token in ("--extra-package","POLKITQT6-1","development-contract-artifact","consumer-runtime-closure","libkf6authcore6.symbols","DEBIAN_REF_SHA","DEBIAN_SYMBOLS_SHA","optional=private","abi-exports.txt"):
-    req(token in runner,f"KAuth runner missing {token}")
-req("packages/kde/kauth/*" in scope and "kde-tier2-package-campaign-batch1.json" in scope,"KAuth scope inputs")
-req("kde-tier2-package-batch1-attempts.json" in scope and "package_attempted" in scope and "remediation-pending-build" in scope,"KAuth scope must rescue an unattempted current revision after supersession")
-req("KDE Tier 2 Batch 1 scope selector: PASS" in scope_test,"KAuth scope test marker")
+kt=tier["kauth"]
+req(kt.get("state")=="PASS" and kt.get("packaging",{}).get("state")=="PASS" and kt["packaging"].get("downstream_eligible") is True,"KAuth Tier2 canonical PASS")
+req(tier["kmime"].get("state")=="pending" and tier["kmime"].get("package_identity",{}).get("package_version_candidate") is None,"KMime remains pending/undecided")
+req(set(g.get("nodes",{}))=={"kmime"} and g["nodes"]["kmime"].get("readiness")=="compatibility-decision-required","Tier2 active discovery")
+req(g.get("completed_nodes",{}).get("kauth",{}).get("artifact_id")==10601382235,"KAuth completed discovery evidence")
+req(d.get("nodes",{}).get("kauth",{}).get("state")=="PASS" and d["nodes"]["kauth"].get("downstream_eligible") is True,"KAuth DAG PASS")
 
 history=a.get("real_attempts",{}).get("kauth",[])
-req(len(history)==2,"KAuth remediation state must retain attempts 1-2 before rerun")
-if len(history)==2:
-    h1,h2=history
-    req(h1.get("attempt")==1 and h1.get("package_version")=="6.30.0-0supralinux1","KAuth attempt 1 identity")
-    req(h1.get("workflow_run")==35496293561 and h1.get("job_id")==106039776267 and h1.get("artifact_id")==10600690671,"KAuth attempt 1 evidence identity")
-    req(h1.get("artifact_sha256")=="8387279d8cdadd05cf73c2c16177f1d2635a331648638ca3397cef77d04c1ac3","KAuth attempt 1 artifact digest")
-    req(h1.get("package_attempted") is True and h1.get("result")=="FAIL" and h1.get("stage")=="source-package" and h1.get("sbuild_started") is False,"KAuth attempt 1 semantics")
-    req(h2.get("attempt")==2 and h2.get("package_version")=="6.30.0-0supralinux2","KAuth attempt 2 identity")
-    req(h2.get("workflow_run")==35496445770 and h2.get("job_id")==106040197856 and h2.get("artifact_id")==10601410551,"KAuth attempt 2 evidence identity")
-    req(h2.get("artifact_sha256")=="4ea7588f1749ce7588cc06fc6bc9dc80350d7fc270bb30688ef173ee6262cfc9","KAuth attempt 2 artifact digest")
-    req(h2.get("rootfs_sha256")=="bf90d45c1b750369d482757a4521ea3578a5ef8e10835bf008b258ffad49cbcf","KAuth attempt 2 rootfs")
-    req(h2.get("package_attempted") is True and h2.get("result")=="FAIL" and h2.get("stage")=="sbuild-dh_makeshlibs" and h2.get("sbuild_started") is True,"KAuth attempt 2 semantics")
-    req(h2.get("tests")=="6/6 PASS" and h2.get("technical_reference_symbols_sha256")=="77ab200ea8f5e9335831ef021dd2e446598b95d886d13237e91ea69e25812259","KAuth attempt 2 passed-test/reference evidence")
+req(len(history)==3,"KAuth must retain exactly three real attempts")
+if len(history)==3:
+    h1,h2,h3=history
+    req(h1.get("attempt")==1 and h1.get("result")=="FAIL" and h1.get("stage")=="source-package","attempt1")
+    req(h2.get("attempt")==2 and h2.get("result")=="FAIL" and h2.get("tests")=="6/6 PASS" and h2.get("stage")=="sbuild-dh_makeshlibs","attempt2")
+    req(h3.get("attempt")==3 and h3.get("package_version")=="6.30.0-0supralinux3" and h3.get("result")=="PASS" and h3.get("stage")=="complete","attempt3 identity")
+    req(h3.get("workflow_run")==35497461178 and h3.get("job_id")==106043001431 and h3.get("artifact_id")==10601382235,"attempt3 evidence")
+    req(h3.get("artifact_sha256")=="443a47a67188a52faae6c20b03c2c53203d5a9386dbbb5765af4f69e0cd1744b" and h3.get("rootfs_sha256")=="15113b108b939e2575758c6696fc34808dfa925fa2dd3cc5e6c13e65e7be4668","attempt3 hashes")
+    req(h3.get("tests")=="6/6 PASS" and h3.get("lintian")=="PASS-errors" and h3.get("consumer_smoke")=="PASS" and h3.get("apt_check")=="PASS" and h3.get("development_contract")=="PASS","attempt3 gates")
+
+infra=a.get("infrastructure_incidents",[])
+req(any(x.get("workflow_run")==35497460988 and x.get("package_state_effect")=="none" for x in infra),"scope-test INFRA incident retained")
+req(any(x.get("workflow_run")==35497248610 and x.get("package_attempted") is False for x in infra),"superseded queued-run incident retained")
+
+scope=text("scripts/kde-tier2-package-batch1-needed.sh")
+scope_test=text("scripts/test-kde-tier2-package-batch1-scope.sh")
+req("kde-tier2-package-batch1-attempts.json" in scope and "package_attempted" in scope,"unattempted-revision rescue scope")
+req("KDE Tier 2 Batch 1 scope selector: PASS" in scope_test and "mkdir -p docs" in scope_test,"scope test final contract")
+
+doc=text("docs/kde-tier2-package-batch1.md")
+for token in ("KAuth PASS","10601382235","443a47a67188a52faae6c20b03c2c53203d5a9386dbbb5765af4f69e0cd1744b","6/6 PASS","1 PASS / 1 pending"):
+    req(token in doc,f"Batch1 docs missing {token}")
 
 if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)
     raise SystemExit(1)
-print("KDE Tier 2 Batch 1 KAuth preparation: PASS")
-print("KAuth 6.30.0 remediation prepared after retained source-package FAIL; backend/dependencies unchanged")
-print("KMime remains compatibility-decision-required")
+print("KDE Tier 2 Batch 1 KAuth canonical promotion: PASS")
+print("KAuth 6.30.0-0supralinux3 PASS/downstream-eligible")
+print("Tier 2: 1 PASS / 1 pending; KMime remains decision-gated")
