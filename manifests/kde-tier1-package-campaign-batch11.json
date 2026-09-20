@@ -331,5 +331,22 @@
       "cause": "Packaging-reference/tree historical PASS_NODES registries were not extended to the two newly promoted Batch 11 nodes, so the validator falsely treated KUserFeedback and Prison as unattempted pending nodes.",
       "remediation": "Add KUserFeedback and Prison to the packaging-reference/tree PASS registries; canonical Tier 1/DAG state and package evidence remain unchanged."
     }
-  ]
+  ],
+  "promotion_validation": {
+    "status": "PASS",
+    "commit": "d0c3c66dac717ebc82d6d00632e82e54d43c1dc5",
+    "repository_policy": {
+      "workflow_run": 35491774160,
+      "job_id": 106027831625,
+      "result": "PASS"
+    },
+    "pr_ci": {
+      "workflow_run": 35491774999,
+      "result": "PASS",
+      "heavy_workflows": "scope-skipped"
+    },
+    "package_rebuilds": 0,
+    "package_attempt_ledger_effect": "none",
+    "canonical_state": "29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
+  }
 }
