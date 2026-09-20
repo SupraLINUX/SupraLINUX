@@ -288,7 +288,36 @@ then
     done
     require_contains "python-binary-package" "Package: ${PY_PACKAGE}" "${SRC}/debian/control"
     require_contains "python-install-module" "${PY_MODULE}" "${SRC}/debian/${PY_PACKAGE}.install"
+    python3 - "${CONTRACTS}" "${NODE}" "${SRC}/debian/control" <<'PY'
+import json,sys
+contracts,node,control_path=sys.argv[1:]
+d=json.load(open(contracts)); c=d["nodes"][node]; control=open(control_path).read()
+runtime=c.get("python_runtime_contract",{})
+providers=runtime.get("provider_packages",[])
+if not providers:
+    raise SystemExit(f"{node}: missing python runtime provider contract")
+for package in providers:
+    if package not in control:
+        raise SystemExit(f"{node}: generated Python package lacks runtime provider {package}")
+print(f"python-runtime-provider-contract PASS: {node} -> {providers}")
+PY
 fi
+
+python3 - "${CONTRACTS}" "${NODE}" "${SRC}/debian" <<'PY'
+import json,sys
+from pathlib import Path
+contracts,node,debian=sys.argv[1:]
+c=json.load(open(contracts))["nodes"][node]
+root=Path(debian)
+for adjustment in c.get("symbols_adjustments",[]):
+    path=root/adjustment["file"]
+    rendered=(f" ({adjustment['tag']}){adjustment['symbol']} {adjustment['version']}"
+              if adjustment.get("tag") else f" {adjustment['symbol']} {adjustment['version']}")
+    lines=path.read_text().splitlines()
+    if lines.count(rendered)!=1:
+        raise SystemExit(f"{node}: reviewed symbols adjustment missing or duplicated: {rendered}")
+    print(f"symbols-adjustment-contract PASS: {node} {rendered.strip()}")
+PY
 
 STAGE=source-package
 (

@@ -28,8 +28,8 @@ if mat.get("status") == "PASS":
     req(mat.get("result")=="PASS","materialization result")
     req(set(mat.get("evidence",{})) <= set(expected),"materialization evidence nodes must be selected")
 else:
-    req(set(mat.get("targets",[]))=={"knotifications","kstatusnotifieritem","kunitconversion","syndication"},"current rematerialization target set")
-    req(mat.get("retained_package_pass")==["kcrash"],"KCrash retained package PASS excluded from rematerialization")
+    req(set(mat.get("targets",[]))=={"knotifications","kstatusnotifieritem","kunitconversion"},"current rematerialization target set")
+    req(mat.get("retained_package_pass")==["kcrash","syndication"],"retained package PASS nodes excluded from rematerialization")
 
 canonical={n["id"]:n for n in tier2["nodes"]}
 for node_id in expected:
@@ -48,6 +48,10 @@ for node_id in ("knotifications","kstatusnotifieritem","kunitconversion"):
     c=contracts["nodes"][node_id]
     req(c.get("python_runtime_package"),f"{node_id}: Python runtime package mapping")
     req(c.get("selected_profile",{}).get("BUILD_PYTHON_BINDINGS") is True,f"{node_id}: upstream Python binding profile")
+    req(bool(c.get("python_runtime_contract",{}).get("provider_packages")),f"{node_id}: Python runtime provider closure")
+
+adj=contracts["nodes"]["kstatusnotifieritem"].get("symbols_adjustments",[])
+req(len(adj)==1 and adj[0].get("symbol")=="_ZSt19piecewise_construct@Base" and adj[0].get("version")=="6.30.0","KStatus reviewed symbols adjustment")
 
 for path in (
   "scripts/materialize_kde_tier2_package.py",

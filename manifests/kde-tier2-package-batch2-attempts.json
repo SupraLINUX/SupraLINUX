@@ -130,6 +130,28 @@
         "stage": "sbuild-build",
         "package_state_effect": "none",
         "cause": "Shiboken now finds /usr/bin/llvm-config, but the clean Resolute environment has no versioned Clang resource-header directory under /usr/lib/llvm-21/lib/clang; ApiExtractor then fails at cstddef -> stddef.h. This is a shared provider-closure gap for the three KDE-upstream Python-binding nodes."
+      },
+      {
+        "attempt": 4,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "b38f2f5cb185e6d50641079484727d62922f36c6",
+        "workflow_run": 35543268413,
+        "job_id": 106164765377,
+        "artifact_id": 10615109321,
+        "artifact_sha256": "93ddacb8b2f40f57691d3fd3dab266b7a5bcf731559de577de7a977928420280",
+        "rootfs_artifact_id": 10615518322,
+        "rootfs_artifact_sha256": "bb95b71c2b572183e86f5c7d4b9364f5d270cb92fe3332ababc378ed0d693058",
+        "rootfs_sha256": "0943ab94eb5f4d0cbbf64bb0d69ccf36ad48309cbafc1c73e8745d3925a4b734",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "python-import-smoke",
+        "tests": "1/1 PASS",
+        "lintian": "PASS-errors",
+        "apt_check": "PASS",
+        "consumer_smoke": "PASS",
+        "package_state_effect": "none",
+        "cause": "The package built, tested, passed Lintian, APT closure and the C++ consumer, but the generated Python binary package did not declare the PySide6 QtGui runtime provider required by the upstream binding typesystem; import KNotifications failed at PySide6.QtGui. This is a shared materializer runtime-dependency contract gap."
       }
     ],
     "kstatusnotifieritem": [
@@ -183,6 +205,25 @@
         "stage": "sbuild-build",
         "package_state_effect": "none",
         "cause": "Shiboken now finds /usr/bin/llvm-config, but the clean Resolute environment has no versioned Clang resource-header directory under /usr/lib/llvm-21/lib/clang; ApiExtractor then fails at cstddef -> stddef.h. This is a shared provider-closure gap for the three KDE-upstream Python-binding nodes."
+      },
+      {
+        "attempt": 4,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "b38f2f5cb185e6d50641079484727d62922f36c6",
+        "workflow_run": 35543268413,
+        "job_id": 106164765396,
+        "artifact_id": 10614939181,
+        "artifact_sha256": "3530bd1cdf4df3f5495238589538345a559283ccc2324ea1f474a76d15afe656",
+        "rootfs_artifact_id": 10615518322,
+        "rootfs_artifact_sha256": "bb95b71c2b572183e86f5c7d4b9364f5d270cb92fe3332ababc378ed0d693058",
+        "rootfs_sha256": "0943ab94eb5f4d0cbbf64bb0d69ccf36ad48309cbafc1c73e8745d3925a4b734",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "FAIL",
+        "stage": "lintian-source-binary",
+        "tests": "1/1 PASS",
+        "package_state_effect": "none",
+        "cause": "The framework and Python binding built and tests passed, but dpkg-gensymbols discovered _ZSt19piecewise_construct@Base and auto-recorded the full 6.30.0-0supralinux1 version. Lintian correctly rejects a symbols dependency carrying the current Debian revision. This is a node-owned symbols-contract packaging failure; revision -2 adds the reviewed optional toolchain/template export at upstream floor 6.30.0."
       }
     ],
     "kunitconversion": [
@@ -219,6 +260,28 @@
         "stage": "sbuild-build",
         "package_state_effect": "none",
         "cause": "Shiboken now finds /usr/bin/llvm-config, but the clean Resolute environment has no versioned Clang resource-header directory under /usr/lib/llvm-21/lib/clang; ApiExtractor then fails at cstddef -> stddef.h. This is a shared provider-closure gap for the three KDE-upstream Python-binding nodes."
+      },
+      {
+        "attempt": 3,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "b38f2f5cb185e6d50641079484727d62922f36c6",
+        "workflow_run": 35543268413,
+        "job_id": 106164765363,
+        "artifact_id": 10615169450,
+        "artifact_sha256": "4c4837077db0e23b0d783847af4672d39e6ea8471bd65fafda0b6dc774b188a0",
+        "rootfs_artifact_id": 10615518322,
+        "rootfs_artifact_sha256": "bb95b71c2b572183e86f5c7d4b9364f5d270cb92fe3332ababc378ed0d693058",
+        "rootfs_sha256": "0943ab94eb5f4d0cbbf64bb0d69ccf36ad48309cbafc1c73e8745d3925a4b734",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "python-import-smoke",
+        "tests": "3/3 PASS",
+        "lintian": "PASS-errors",
+        "apt_check": "PASS",
+        "consumer_smoke": "PASS",
+        "package_state_effect": "none",
+        "cause": "The package built, tested, passed Lintian, APT closure and the C++ consumer, but the generated Python binary package did not declare the PySide6 QtCore runtime provider required by the upstream binding typesystem; import KUnitConversion failed at PySide6.QtCore. This is the same shared materializer runtime-dependency contract gap."
       }
     ],
     "syndication": [
@@ -273,6 +336,42 @@
         "package_state_effect": "none",
         "tests": "4/4 PASS",
         "cause": "The package builds and tests PASS, but Debian's pinned copyright metadata declares two non-DFSG test fixtures in Files-Excluded while the raw KDE authority tarball still contains them. Lintian correctly rejects source-ships-excluded-file. SupraLINUX needs a verified distribution repack, not a suppressed Lintian error."
+      },
+      {
+        "attempt": 4,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "b38f2f5cb185e6d50641079484727d62922f36c6",
+        "workflow_run": 35543268413,
+        "job_id": 106164765409,
+        "artifact_id": 10615910224,
+        "artifact_sha256": "729dc8301377ba6e7d0a29cf65552542e0df85d76b19a24270bd328be13c9d7c",
+        "rootfs_artifact_id": 10615518322,
+        "rootfs_artifact_sha256": "bb95b71c2b572183e86f5c7d4b9364f5d270cb92fe3332ababc378ed0d693058",
+        "rootfs_sha256": "0943ab94eb5f4d0cbbf64bb0d69ccf36ad48309cbafc1c73e8745d3925a4b734",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "4/4 PASS",
+        "lintian": "PASS-errors",
+        "abi_soname": "libKF6Syndication.so.6",
+        "abi_export_count": 363,
+        "apt_check": "PASS",
+        "consumer_smoke": "PASS",
+        "downstream_eligible": true,
+        "files": {
+          "libkf6syndication-dev_6.30.0-0supralinux1_amd64.deb": "44a7b637c8f213fb921ed1290e8de7f44efa303ba77e1e278dc6d1a1670f4eae",
+          "libkf6syndication-doc_6.30.0-0supralinux1_all.deb": "39e28509b983108e14a7097f02e390de620e742657db341d236939ae397d71e8",
+          "libkf6syndication6_6.30.0-0supralinux1_amd64.deb": "32752efd9e5c27fc56f3c32b7107eae5bea971671261826c5e04ec6634a3c174",
+          "libkf6syndication6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "3e71538b771e53d465cabd1bc72b928a25a8602e77cc4137517da403cc234612",
+          "changes_sha256": "72b91ee1dda3ebcc5a17b3f13e6e91aa4cca7c3c7f26afa5970f3b0025840467",
+          "buildinfo_sha256": "de97698573a4b939b836a4e4934d7e1f6120286336a4a568043edfcae2d271db",
+          "dsc_sha256": "99151b4fed75d13781ee4275238d17fe751d35afde7c42dc855e60f5700f21d2",
+          "orig_tar_sha256": "fb46986bd539f49dc39c79553c4e8e9eaeb5953efa8cba1b47d3b139ee54f5af",
+          "authority_source_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+          "debian_tar_sha256": "a40be4c22e28b7254ce4688d43b30dad5314ff4b1f788386e05b0ce1a13c9e96",
+          "rootfs_sha256": "0943ab94eb5f4d0cbbf64bb0d69ccf36ad48309cbafc1c73e8745d3925a4b734"
+        }
       }
     ]
   },
@@ -368,6 +467,24 @@
       "failed_gate": "lintian-source-binary",
       "cause": "Debian copyright Files-Excluded names autotests/rss2/stefandecker.org.xml and .expected, but the raw KDE authority orig still ships both; Lintian emits source-ships-excluded-file.",
       "remediation": "Verify the Debian repacked orig differs from KDE authority only by declared Files-Excluded, then use that repack as distribution source artifact while retaining KDE as source/version authority."
+    },
+    {
+      "phase": "batch2-remediation-3-python-runtime-provider-closure",
+      "workflow_run": 35543268413,
+      "commit": "b38f2f5cb185e6d50641079484727d62922f36c6",
+      "affected_nodes": [
+        "knotifications",
+        "kunitconversion"
+      ],
+      "proactive_contract_node": [
+        "kstatusnotifieritem"
+      ],
+      "classification": "shared-generated-python-runtime-dependency-gap",
+      "package_attempted": true,
+      "package_state_effect": "none",
+      "failed_gate": "python-import-smoke",
+      "cause": "The generated Python binary packages relied on shlibs/python substvars but did not declare the PySide6 module packages loaded by KDE upstream binding typesystems.",
+      "remediation": "Encode the upstream typesystem-to-Resolute-provider mapping in the package contract and generated Python Depends. KNotifications -> python3-pyside6.qtgui, KUnitConversion -> python3-pyside6.qtcore, KStatusNotifierItem -> python3-pyside6.qtwidgets (which pulls QtGui and QtCore on Resolute)."
     }
   ],
   "blocked_events": {

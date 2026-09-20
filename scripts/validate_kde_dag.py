@@ -8,6 +8,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "manifests" / "kde-dag.json"
+TIER1_MANIFEST = ROOT / "manifests" / "kde-frameworks-tier1.json"
+TIER2_MANIFEST = ROOT / "manifests" / "kde-frameworks-tier2.json"
 WORKFLOW = ROOT / ".github" / "workflows" / "kde-ecm-package-preflight.yml"
 RUNNER = ROOT / "scripts" / "run-kde-ecm-package-preflight.sh"
 DELTA = ROOT / "scripts" / "kde-ecm-preflight-needed.sh"
@@ -73,6 +75,18 @@ require(data.get("authority") == "kde-upstream", "KDE DAG authority must remain 
 require(data.get("states") == ["PASS", "FAIL", "BLOCKED", "pending"], "KDE DAG states must preserve PASS/FAIL/BLOCKED/pending semantics")
 
 nodes = data.get("nodes", {})
+tier1_canonical = json.loads(TIER1_MANIFEST.read_text(encoding="utf-8"))
+tier2_canonical = json.loads(TIER2_MANIFEST.read_text(encoding="utf-8"))
+expected_promoted = {"extra-cmake-modules"}
+expected_promoted |= {
+    node["id"] for node in tier1_canonical.get("nodes", [])
+    if node.get("state") == "PASS" and node.get("packaging", {}).get("downstream_eligible") is True
+}
+expected_promoted |= {
+    node["id"] for node in tier2_canonical.get("nodes", [])
+    if node.get("state") == "PASS" and node.get("packaging", {}).get("downstream_eligible") is True
+}
+require(set(nodes) == expected_promoted, "Canonical DAG must equal ECM plus all canonical PASS/downstream-eligible Framework nodes")
 ecm = nodes.get("extra-cmake-modules", {})
 require(ecm.get("tier") == "build-system-root", "ECM must be the build-system-root node")
 require(ecm.get("upstream_version") == "6.30.0", "ECM upstream version must be 6.30.0")
@@ -105,7 +119,7 @@ if kgui_passes:
     require(item.get("artifact_id") == 10482007092 and item.get("artifact_sha256") == "71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca", "KGuiAddons DAG PASS artifact mismatch")
     require(item.get("tests") == "9/9 PASS" and item.get("lintian") == "PASS-errors", "KGuiAddons DAG build/test gate mismatch")
 require(kgui.get("pass_files", {}).get("rootfs_sha256") == "c68681aacfd32976c6e0bf471ec1928179fd80e402faf2293706e53f88ad25c6", "KGuiAddons DAG rootfs evidence mismatch")
-require(len(nodes) == 31, "Canonical DAG must contain ECM + 29 Tier 1 PASS nodes + promoted KAuth Tier 2")
+require(len(nodes) == len(expected_promoted), "Canonical DAG node count must match canonical promoted set")
 
 kauth = nodes.get("kauth", {})
 require(kauth.get("tier") == 2 and kauth.get("upstream_version") == "6.30.0", "KAuth promoted Tier 2 identity mismatch")

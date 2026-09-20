@@ -59,6 +59,13 @@ if contracts.get("state") == "materialized":
 
 canonical={n["id"]:n for n in tier2["nodes"]}
 dep_nodes=deps["nodes"]
+expected_versions={
+    "kcrash":"6.30.0-0supralinux1",
+    "knotifications":"6.30.0-0supralinux1",
+    "kstatusnotifieritem":"6.30.0-0supralinux2",
+    "kunitconversion":"6.30.0-0supralinux1",
+    "syndication":"6.30.0-0supralinux1",
+}
 for node_id in expected:
     c=contracts["nodes"].get(node_id,{})
     n=canonical[node_id]
@@ -72,7 +79,7 @@ for node_id in expected:
     req(c.get("upstream_version")=="6.30.0",f"{node_id}: version")
     req(c.get("source_sha256")==n.get("source_sha256"),f"{node_id}: source SHA")
     req(c.get("source_package")==f"kf6-{node_id}",f"{node_id}: Ubuntu-compatible source package")
-    req(c.get("package_version_candidate")=="6.30.0-0supralinux1",f"{node_id}: first candidate revision")
+    req(c.get("package_version_candidate")==expected_versions[node_id],f"{node_id}: current package candidate revision")
     req(c.get("cmake_target","").startswith("KF6::"),f"{node_id}: CMake target")
     req(c.get("soname","").endswith(".so.6"),f"{node_id}: SONAME")
     provider_state=dep_nodes[node_id].get("provider_audit")
@@ -98,8 +105,19 @@ for node_id,module,pkg in (
     req(c.get("python_module")==module,f"{node_id}: upstream Python module")
     req(c.get("selected_profile",{}).get("BUILD_PYTHON_BINDINGS") is True,f"{node_id}: Python bindings selected")
     req(pkg in c.get("supralinux_additional_binary_packages",[]),f"{node_id}: Python binary split")
+    runtime=c.get("python_runtime_contract",{})
+    req(runtime.get("provider_platform")=="ubuntu-resolute",f"{node_id}: Python runtime provider platform")
+    req(bool(runtime.get("upstream_typesystems")),f"{node_id}: upstream PySide typesystem basis")
+    req(bool(runtime.get("provider_packages")),f"{node_id}: PySide runtime provider closure")
 
 req(contracts["nodes"]["knotifications"]["selected_profile"].get("BUILD_QML_IF_PROVIDER_AVAILABLE") is True,"KNotifications QML capability preserved")
+req(contracts["nodes"]["knotifications"]["python_runtime_contract"].get("provider_packages")==["python3-pyside6.qtgui"],"KNotifications PySide runtime provider")
+req(contracts["nodes"]["kunitconversion"]["python_runtime_contract"].get("provider_packages")==["python3-pyside6.qtcore"],"KUnitConversion PySide runtime provider")
+req(contracts["nodes"]["kstatusnotifieritem"]["python_runtime_contract"].get("provider_packages")==["python3-pyside6.qtwidgets"],"KStatusNotifierItem PySide runtime provider")
+adj=contracts["nodes"]["kstatusnotifieritem"].get("symbols_adjustments",[])
+req(len(adj)==1 and adj[0].get("file")=="libkf6statusnotifieritem6.symbols","KStatusNotifierItem reviewed symbols adjustment target")
+if len(adj)==1:
+    req(adj[0].get("symbol")=="_ZSt19piecewise_construct@Base" and adj[0].get("tag")=="optional=templinst" and adj[0].get("version")=="6.30.0","KStatusNotifierItem reviewed toolchain symbol")
 if contracts.get("state") in {"reference-capture-pass","materialized"}:
     for node_id in ("kcrash","knotifications","kstatusnotifieritem","kunitconversion"):
         req(contracts["nodes"][node_id]["technical_references"]["debian"].get("orig_matches_kde_authority") is True,f"{node_id}: Debian 6.30 orig matches KDE authority")

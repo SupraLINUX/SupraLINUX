@@ -119,12 +119,6 @@
         "ki18n"
       ]
     },
-    "syndication": {
-      "readiness": "build-ready",
-      "tier1_predecessors": [
-        "kcodecs"
-      ]
-    },
     "kmime": {
       "readiness": "compatibility-decision-required",
       "tier1_predecessors": [
@@ -141,8 +135,8 @@
     "Do not attempt KMime until ADR-0002 is resolved."
   ],
   "promoted_snapshot": {
-    "pass": 2,
-    "pending": 13,
+    "pass": 3,
+    "pending": 12,
     "current_fail": 0,
     "blocked": 0
   },
@@ -179,6 +173,25 @@
       "apt_check": "PASS",
       "tier1_predecessors": [
         "kcoreaddons"
+      ],
+      "downstream_eligible": true
+    },
+    "syndication": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35543268413,
+      "job_id": 106164765409,
+      "artifact_id": 10615910224,
+      "artifact_sha256": "729dc8301377ba6e7d0a29cf65552542e0df85d76b19a24270bd328be13c9d7c",
+      "rootfs_sha256": "0943ab94eb5f4d0cbbf64bb0d69ccf36ad48309cbafc1c73e8745d3925a4b734",
+      "tests": "4/4 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6Syndication.so.6",
+      "abi_export_count": 363,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "tier1_predecessors": [
+        "kcodecs"
       ],
       "downstream_eligible": true
     }

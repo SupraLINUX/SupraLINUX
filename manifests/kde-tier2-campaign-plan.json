@@ -4,14 +4,15 @@
   "frameworks_series": "6.30.0",
   "tier": 2,
   "canonical_snapshot": {
-    "pass": 2,
-    "pending": 13,
+    "pass": 3,
+    "pending": 12,
     "current_fail": 0,
     "blocked": 0
   },
   "retained_pass": [
     "kauth",
-    "kcrash"
+    "kcrash",
+    "syndication"
   ],
   "provider_audit_required": [
     {
@@ -100,19 +101,18 @@
       "selected_profile": []
     }
   ],
-  "package_contract_ready": [],
+  "package_contract_ready": [
+    "knotifications",
+    "kstatusnotifieritem",
+    "kunitconversion"
+  ],
   "human_decision_required": [
     {
       "node": "kmime",
       "blocker": "ADR-0002"
     }
   ],
-  "build_queue": [
-    "knotifications",
-    "kstatusnotifieritem",
-    "kunitconversion",
-    "syndication"
-  ],
+  "build_queue": [],
   "audit_batch_size": 5,
   "next_provider_audit_batch": [
     "kpty",

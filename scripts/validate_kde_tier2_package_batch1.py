@@ -52,8 +52,10 @@ for node in sorted(current_pending-{"kmime"}):
 expected_snapshot={"pass":len(current_pass),"pending":len(current_pending),"current_fail":0,"blocked":0}
 req(g.get("promoted_snapshot")==expected_snapshot,"current Tier2 snapshot")
 req(g.get("completed_nodes",{}).get("kauth",{}).get("artifact_id")==10601382235,"KAuth completed discovery evidence")
-req(d.get("nodes",{}).get("kauth",{}).get("state")=="PASS" and d["nodes"]["kauth"].get("downstream_eligible") is True,"KAuth DAG PASS")
-req("kcrash" in current_pass and g.get("completed_nodes",{}).get("kcrash",{}).get("artifact_id")==10613480229,"later KCrash promotion may extend current Tier2 PASS set")
+for node_id in sorted(current_pass):
+    req(g.get("completed_nodes",{}).get(node_id,{}).get("state")=="PASS",f"{node_id}: later/current completed discovery PASS")
+    req(d.get("nodes",{}).get(node_id,{}).get("state")=="PASS" and d["nodes"][node_id].get("downstream_eligible") is True,f"{node_id}: later/current DAG PASS")
+req("kcrash" in current_pass and g.get("completed_nodes",{}).get("kcrash",{}).get("artifact_id")==10613480229,"later KCrash promotion retained")
 
 history=a.get("real_attempts",{}).get("kauth",[])
 req(len(history)==3,"KAuth must retain exactly three real attempts")
@@ -84,4 +86,4 @@ if errors:
     raise SystemExit(1)
 print("KDE Tier 2 Batch 1 KAuth canonical promotion: PASS")
 print("KAuth 6.30.0-0supralinux3 PASS/downstream-eligible")
-print("Tier 2 current inventory: 1 PASS / 14 pending; KAuth evidence unchanged")
+print(f"Tier 2 current inventory: {len(current_pass)} PASS / {len(current_pending)} pending; historical KAuth evidence unchanged")

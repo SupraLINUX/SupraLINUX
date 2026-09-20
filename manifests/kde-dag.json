@@ -2639,6 +2639,97 @@
         "debian_tar_sha256": "1330eaa16e7d8acbc6244cb4c1730cbe33d06972dc5c29ecfe482e7168fb9f2d",
         "rootfs_sha256": "db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f"
       }
+    },
+    "syndication": {
+      "tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/syndication-6.30.0.tar.xz",
+      "source_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-syndication",
+      "binary_packages": [
+        "libkf6syndication-dev",
+        "libkf6syndication-doc",
+        "libkf6syndication6"
+      ],
+      "package_version": "6.30.0-0supralinux1",
+      "ubuntu_reference_version": "6.24.0-0ubuntu1",
+      "depends_on": [
+        "extra-cmake-modules",
+        "kcodecs"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "attempt_ledger": "manifests/kde-tier2-package-batch2-attempts.json",
+      "abi_sonames": [
+        "libKF6Syndication.so.6"
+      ],
+      "evidence": [
+        {
+          "result": "PASS",
+          "workflow_run": 35543268413,
+          "job_id": 106164765409,
+          "commit": "b38f2f5cb185e6d50641079484727d62922f36c6",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10615910224,
+          "artifact_sha256": "729dc8301377ba6e7d0a29cf65552542e0df85d76b19a24270bd328be13c9d7c",
+          "rootfs_artifact_id": 10615518322,
+          "rootfs_artifact_sha256": "bb95b71c2b572183e86f5c7d4b9364f5d270cb92fe3332ababc378ed0d693058",
+          "rootfs_sha256": "0943ab94eb5f4d0cbbf64bb0d69ccf36ad48309cbafc1c73e8745d3925a4b734",
+          "stage": "complete",
+          "tests": "4/4 PASS",
+          "lintian": "PASS-errors",
+          "abi_soname": "libKF6Syndication.so.6",
+          "abi_export_count": 363,
+          "consumer_smoke": "PASS",
+          "apt_check": "PASS",
+          "materialization": {
+            "workflow_run": 35543068531,
+            "artifact_id": 10615288297,
+            "artifact_sha256": "6c7782f8362b8b4195f9dda177dead382d4493852d10348e9f41f086d83d9c8e"
+          },
+          "retained_predecessors": {
+            "extra_cmake_modules": "6.30.0-0supralinux3",
+            "kcodecs": "6.30.0-0supralinux4"
+          },
+          "downstream_eligible": true,
+          "files": {
+            "libkf6syndication-dev_6.30.0-0supralinux1_amd64.deb": "44a7b637c8f213fb921ed1290e8de7f44efa303ba77e1e278dc6d1a1670f4eae",
+            "libkf6syndication-doc_6.30.0-0supralinux1_all.deb": "39e28509b983108e14a7097f02e390de620e742657db341d236939ae397d71e8",
+            "libkf6syndication6_6.30.0-0supralinux1_amd64.deb": "32752efd9e5c27fc56f3c32b7107eae5bea971671261826c5e04ec6634a3c174",
+            "libkf6syndication6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "3e71538b771e53d465cabd1bc72b928a25a8602e77cc4137517da403cc234612",
+            "changes_sha256": "72b91ee1dda3ebcc5a17b3f13e6e91aa4cca7c3c7f26afa5970f3b0025840467",
+            "buildinfo_sha256": "de97698573a4b939b836a4e4934d7e1f6120286336a4a568043edfcae2d271db",
+            "dsc_sha256": "99151b4fed75d13781ee4275238d17fe751d35afde7c42dc855e60f5700f21d2",
+            "orig_tar_sha256": "fb46986bd539f49dc39c79553c4e8e9eaeb5953efa8cba1b47d3b139ee54f5af",
+            "authority_source_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+            "debian_tar_sha256": "a40be4c22e28b7254ce4688d43b30dad5314ff4b1f788386e05b0ce1a13c9e96",
+            "rootfs_sha256": "0943ab94eb5f4d0cbbf64bb0d69ccf36ad48309cbafc1c73e8745d3925a4b734"
+          }
+        }
+      ],
+      "pass_files": {
+        "libkf6syndication-dev_6.30.0-0supralinux1_amd64.deb": "44a7b637c8f213fb921ed1290e8de7f44efa303ba77e1e278dc6d1a1670f4eae",
+        "libkf6syndication-doc_6.30.0-0supralinux1_all.deb": "39e28509b983108e14a7097f02e390de620e742657db341d236939ae397d71e8",
+        "libkf6syndication6_6.30.0-0supralinux1_amd64.deb": "32752efd9e5c27fc56f3c32b7107eae5bea971671261826c5e04ec6634a3c174",
+        "libkf6syndication6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "3e71538b771e53d465cabd1bc72b928a25a8602e77cc4137517da403cc234612",
+        "changes_sha256": "72b91ee1dda3ebcc5a17b3f13e6e91aa4cca7c3c7f26afa5970f3b0025840467",
+        "buildinfo_sha256": "de97698573a4b939b836a4e4934d7e1f6120286336a4a568043edfcae2d271db",
+        "dsc_sha256": "99151b4fed75d13781ee4275238d17fe751d35afde7c42dc855e60f5700f21d2",
+        "orig_tar_sha256": "fb46986bd539f49dc39c79553c4e8e9eaeb5953efa8cba1b47d3b139ee54f5af",
+        "authority_source_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+        "debian_tar_sha256": "a40be4c22e28b7254ce4688d43b30dad5314ff4b1f788386e05b0ce1a13c9e96",
+        "rootfs_sha256": "0943ab94eb5f4d0cbbf64bb0d69ccf36ad48309cbafc1c73e8745d3925a4b734"
+      },
+      "source_distribution": {
+        "authority_source_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+        "distribution_orig_sha256": "fb46986bd539f49dc39c79553c4e8e9eaeb5953efa8cba1b47d3b139ee54f5af",
+        "policy": "verified-files-excluded-repack"
+      }
     }
   },
   "ci_scope_incidents": [
