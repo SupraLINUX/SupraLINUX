@@ -108,6 +108,456 @@
       "state": "PASS"
     },
     {
+      "id": "kcolorscheme",
+      "name": "KColorScheme",
+      "upstream_tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kcolorscheme-6.30.0.tar.xz",
+      "source_sha256": "a4128e82e47cd474c777754c4dd8af28a00a57ecf388da1a62f8173d898890d0",
+      "upstream_ref": "v6.30.0",
+      "upstream_commit": "27066d471c93629efee8459d9f69490caa92b7c4",
+      "root_cmake_blob": "54b186f2972ebc93d808891205400fcae8973825",
+      "depends_on": [
+        "extra-cmake-modules",
+        "kconfig",
+        "kguiaddons",
+        "ki18n"
+      ],
+      "kde_framework_dependencies": {
+        "required": [
+          "kconfig",
+          "kguiaddons",
+          "ki18n"
+        ],
+        "conditional": [],
+        "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
+      },
+      "package_identity": {
+        "source_package": null,
+        "package_version_candidate": null,
+        "status": "not-materialized"
+      },
+      "packaging": {
+        "state": "pending",
+        "reason": "package-lane-not-materialized"
+      },
+      "state": "pending"
+    },
+    {
+      "id": "kcompletion",
+      "name": "KCompletion",
+      "upstream_tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kcompletion-6.30.0.tar.xz",
+      "source_sha256": "96ad9c429ca53b830359c45614ca4c32ed6b759f3023f1b3db1650ba1c19bd58",
+      "upstream_ref": "v6.30.0",
+      "upstream_commit": "e4096474b7c524ba6c92450e1e839613e997e2c8",
+      "root_cmake_blob": "ccbb065a492840940eecab2db697a18fb448bcdd",
+      "depends_on": [
+        "extra-cmake-modules",
+        "kcodecs",
+        "kconfig",
+        "kwidgetsaddons"
+      ],
+      "kde_framework_dependencies": {
+        "required": [
+          "kcodecs",
+          "kconfig",
+          "kwidgetsaddons"
+        ],
+        "conditional": [],
+        "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
+      },
+      "package_identity": {
+        "source_package": null,
+        "package_version_candidate": null,
+        "status": "not-materialized"
+      },
+      "packaging": {
+        "state": "pending",
+        "reason": "package-lane-not-materialized"
+      },
+      "state": "pending"
+    },
+    {
+      "id": "kcontacts",
+      "name": "KContacts",
+      "upstream_tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kcontacts-6.30.0.tar.xz",
+      "source_sha256": "170b51a41ac132968ea03d5f1ce8c585777155bbdc57e819a0562b1f8d03b7a5",
+      "upstream_ref": "v6.30.0",
+      "upstream_commit": "f8d0b9eba43eabd2e72923e0786051b0f78b71c6",
+      "root_cmake_blob": "012cf777ddcf707ab0501f9f93cb87e629017a32",
+      "depends_on": [
+        "extra-cmake-modules",
+        "ki18n",
+        "kconfig",
+        "kcodecs"
+      ],
+      "kde_framework_dependencies": {
+        "required": [
+          "ki18n",
+          "kconfig",
+          "kcodecs"
+        ],
+        "conditional": [],
+        "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
+      },
+      "package_identity": {
+        "source_package": null,
+        "package_version_candidate": null,
+        "status": "not-materialized"
+      },
+      "packaging": {
+        "state": "pending",
+        "reason": "package-lane-not-materialized"
+      },
+      "state": "pending"
+    },
+    {
+      "id": "kcrash",
+      "name": "KCrash",
+      "upstream_tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kcrash-6.30.0.tar.xz",
+      "source_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+      "upstream_ref": "v6.30.0",
+      "upstream_commit": "bafdadc4aafe104aac970edd93ce364f9e14ac74",
+      "root_cmake_blob": "9fc9f440ebde4a8446767030c9eaae1c16034143",
+      "depends_on": [
+        "extra-cmake-modules",
+        "kcoreaddons"
+      ],
+      "kde_framework_dependencies": {
+        "required": [
+          "kcoreaddons"
+        ],
+        "conditional": [],
+        "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
+      },
+      "package_identity": {
+        "source_package": null,
+        "package_version_candidate": null,
+        "status": "not-materialized"
+      },
+      "packaging": {
+        "state": "pending",
+        "reason": "package-lane-not-materialized"
+      },
+      "state": "pending"
+    },
+    {
+      "id": "kdeclarative",
+      "name": "KDeclarative",
+      "upstream_tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kdeclarative-6.30.0.tar.xz",
+      "source_sha256": "7ec3583a2cf2cd7143e39936ffb39e22d20563f4c87a8462e0e9d12c59ea89a6",
+      "upstream_ref": "v6.30.0",
+      "upstream_commit": "4d73af0ab42af87a0b8a23c74f357ed8a7786526",
+      "root_cmake_blob": "592bc4b1fd00cf4679dccd3ad3a2cbe4d0c95b29",
+      "depends_on": [
+        "extra-cmake-modules",
+        "ki18n",
+        "kconfig",
+        "kguiaddons"
+      ],
+      "kde_framework_dependencies": {
+        "required": [
+          "ki18n",
+          "kconfig",
+          "kguiaddons"
+        ],
+        "conditional": [
+          "kglobalaccel",
+          "kwidgetsaddons"
+        ],
+        "note": "Conditional/optional Framework dependencies are recorded from upstream v6.30.0 CMake and require package-profile/provider audit before materialization."
+      },
+      "package_identity": {
+        "source_package": null,
+        "package_version_candidate": null,
+        "status": "not-materialized"
+      },
+      "packaging": {
+        "state": "pending",
+        "reason": "package-lane-not-materialized"
+      },
+      "state": "pending"
+    },
+    {
+      "id": "kfilemetadata",
+      "name": "KFileMetaData",
+      "upstream_tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kfilemetadata-6.30.0.tar.xz",
+      "source_sha256": "5e14cd8e395e927042cb3eb7cff47e0effda5e8bf2520cf18d1082a9403b2e62",
+      "upstream_ref": "v6.30.0",
+      "upstream_commit": "70a35b021b91d2bbd10893b20a597032086660bf",
+      "root_cmake_blob": "0aacf4e46689f2321262698f97e76ba818c41d70",
+      "depends_on": [
+        "extra-cmake-modules",
+        "ki18n"
+      ],
+      "kde_framework_dependencies": {
+        "required": [
+          "ki18n"
+        ],
+        "conditional": [
+          "karchive",
+          "kcoreaddons",
+          "kconfig",
+          "kcodecs"
+        ],
+        "note": "Conditional/optional Framework dependencies are recorded from upstream v6.30.0 CMake and require package-profile/provider audit before materialization."
+      },
+      "package_identity": {
+        "source_package": null,
+        "package_version_candidate": null,
+        "status": "not-materialized"
+      },
+      "packaging": {
+        "state": "pending",
+        "reason": "package-lane-not-materialized"
+      },
+      "state": "pending"
+    },
+    {
+      "id": "knotifications",
+      "name": "KNotifications",
+      "upstream_tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/knotifications-6.30.0.tar.xz",
+      "source_sha256": "09ad50570b26aada0408bb9ccfaabf629c56ec89a9972c8b0e155ab780f577cf",
+      "upstream_ref": "v6.30.0",
+      "upstream_commit": "dc40cad13390ebec9ca81bd52847706bba98880d",
+      "root_cmake_blob": "829872e81d622fe3b90b5925f9a83220c08a6add",
+      "depends_on": [
+        "extra-cmake-modules",
+        "kconfig"
+      ],
+      "kde_framework_dependencies": {
+        "required": [
+          "kconfig"
+        ],
+        "conditional": [],
+        "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
+      },
+      "package_identity": {
+        "source_package": null,
+        "package_version_candidate": null,
+        "status": "not-materialized"
+      },
+      "packaging": {
+        "state": "pending",
+        "reason": "package-lane-not-materialized"
+      },
+      "state": "pending"
+    },
+    {
+      "id": "kpackage",
+      "name": "KPackage",
+      "upstream_tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kpackage-6.30.0.tar.xz",
+      "source_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
+      "upstream_ref": "v6.30.0",
+      "upstream_commit": "369789b7f36f4685fcbaf995531acd68583cfb2c",
+      "root_cmake_blob": "405d361968ef8f65385d5ef5a293716de43ef670",
+      "depends_on": [
+        "extra-cmake-modules",
+        "karchive",
+        "ki18n",
+        "kcoreaddons"
+      ],
+      "kde_framework_dependencies": {
+        "required": [
+          "karchive",
+          "ki18n",
+          "kcoreaddons"
+        ],
+        "conditional": [],
+        "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
+      },
+      "package_identity": {
+        "source_package": null,
+        "package_version_candidate": null,
+        "status": "not-materialized"
+      },
+      "packaging": {
+        "state": "pending",
+        "reason": "package-lane-not-materialized"
+      },
+      "state": "pending"
+    },
+    {
+      "id": "kpty",
+      "name": "KPty",
+      "upstream_tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kpty-6.30.0.tar.xz",
+      "source_sha256": "ad66149c20470de29d483f0ccdcb057d42ccf778f3f8cc8e68aefca5380bace7",
+      "upstream_ref": "v6.30.0",
+      "upstream_commit": "c3011340d24ee1f6b83debc5822e98c516ee669e",
+      "root_cmake_blob": "4ae52ab805a266eca52d12e995218f5907f170c5",
+      "depends_on": [
+        "extra-cmake-modules",
+        "kcoreaddons",
+        "ki18n"
+      ],
+      "kde_framework_dependencies": {
+        "required": [
+          "kcoreaddons",
+          "ki18n"
+        ],
+        "conditional": [],
+        "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
+      },
+      "package_identity": {
+        "source_package": null,
+        "package_version_candidate": null,
+        "status": "not-materialized"
+      },
+      "packaging": {
+        "state": "pending",
+        "reason": "package-lane-not-materialized"
+      },
+      "state": "pending"
+    },
+    {
+      "id": "kservice",
+      "name": "KService",
+      "upstream_tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kservice-6.30.0.tar.xz",
+      "source_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
+      "upstream_ref": "v6.30.0",
+      "upstream_commit": "430ee0c981446550f6a3996f1fecee6240824942",
+      "root_cmake_blob": "fe7e7baa593f1d8266e9656c7ad05ab2cc08dec2",
+      "depends_on": [
+        "extra-cmake-modules",
+        "kconfig",
+        "kcoreaddons",
+        "ki18n"
+      ],
+      "kde_framework_dependencies": {
+        "required": [
+          "kconfig",
+          "kcoreaddons",
+          "ki18n"
+        ],
+        "conditional": [],
+        "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
+      },
+      "package_identity": {
+        "source_package": null,
+        "package_version_candidate": null,
+        "status": "not-materialized"
+      },
+      "packaging": {
+        "state": "pending",
+        "reason": "package-lane-not-materialized"
+      },
+      "state": "pending"
+    },
+    {
+      "id": "kstatusnotifieritem",
+      "name": "KStatusNotifierItem",
+      "upstream_tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kstatusnotifieritem-6.30.0.tar.xz",
+      "source_sha256": "373fb23fe6a5c0c5c755c473e7cf272796ea59891c05157c3a7e9607a4c4af4f",
+      "upstream_ref": "v6.30.0",
+      "upstream_commit": "e58f6938e7dc7072d354a89941021eb8ce1063c8",
+      "root_cmake_blob": "e5bb1b22b12de1e2c525a29bfb85289d2b6bde56",
+      "depends_on": [
+        "extra-cmake-modules",
+        "kwindowsystem"
+      ],
+      "kde_framework_dependencies": {
+        "required": [
+          "kwindowsystem"
+        ],
+        "conditional": [],
+        "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
+      },
+      "package_identity": {
+        "source_package": null,
+        "package_version_candidate": null,
+        "status": "not-materialized"
+      },
+      "packaging": {
+        "state": "pending",
+        "reason": "package-lane-not-materialized"
+      },
+      "state": "pending"
+    },
+    {
+      "id": "kunitconversion",
+      "name": "KUnitConversion",
+      "upstream_tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kunitconversion-6.30.0.tar.xz",
+      "source_sha256": "3dcaa45875bab5a2dcadc34cf57cf06689b8d86ff40e20fee01ca2b18987175f",
+      "upstream_ref": "v6.30.0",
+      "upstream_commit": "9763116523144f4c0aea2f0672295d1d34e13cb9",
+      "root_cmake_blob": "10d979c0e79fecba7bed0058af23d66102655de6",
+      "depends_on": [
+        "extra-cmake-modules",
+        "ki18n"
+      ],
+      "kde_framework_dependencies": {
+        "required": [
+          "ki18n"
+        ],
+        "conditional": [],
+        "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
+      },
+      "package_identity": {
+        "source_package": null,
+        "package_version_candidate": null,
+        "status": "not-materialized"
+      },
+      "packaging": {
+        "state": "pending",
+        "reason": "package-lane-not-materialized"
+      },
+      "state": "pending"
+    },
+    {
+      "id": "syndication",
+      "name": "Syndication",
+      "upstream_tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/syndication-6.30.0.tar.xz",
+      "source_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+      "upstream_ref": "v6.30.0",
+      "upstream_commit": "ce7d6be97ab74e1e3d5be00cb100f24c7a70d914",
+      "root_cmake_blob": "681e8a66ac64ecea4ca7736e7eac67e5a42a635f",
+      "depends_on": [
+        "extra-cmake-modules",
+        "kcodecs"
+      ],
+      "kde_framework_dependencies": {
+        "required": [
+          "kcodecs"
+        ],
+        "conditional": [],
+        "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
+      },
+      "package_identity": {
+        "source_package": null,
+        "package_version_candidate": null,
+        "status": "not-materialized"
+      },
+      "packaging": {
+        "state": "pending",
+        "reason": "package-lane-not-materialized"
+      },
+      "state": "pending"
+    },
+    {
       "id": "kmime",
       "name": "KMime",
       "upstream_tier": 2,
@@ -145,5 +595,12 @@
       },
       "state": "pending"
     }
-  ]
+  ],
+  "discovery_correction": {
+    "status": "corrected",
+    "date": "2026-09-20",
+    "reason": "The initial Tier 2 discovery incorrectly materialized only KAuth and KMime. KDE API classifies 15 current Tier 2 Frameworks.",
+    "upstream_tier_reference": "https://api.kde.org/",
+    "release_reference": "https://kde.org/info/kde-frameworks-6.30.0/"
+  }
 }
