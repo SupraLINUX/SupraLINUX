@@ -14,7 +14,19 @@
     "kuserfeedback": [],
     "prison": []
   },
-  "infrastructure_incidents": [],
+  "infrastructure_incidents": [
+    {
+      "phase": "preparation",
+      "workflow_run": 35485140225,
+      "job_id": 106010004365,
+      "stage": "repository-policy-shellcheck",
+      "classification": "infrastructure-shellcheck",
+      "package_state_effect": "none",
+      "package_attempted": false,
+      "cause": "ShellCheck SC2100 rejected unquoted hyphenated STAGE labels in the new Batch 11 runner after bash syntax validation had passed; no package state was evaluated.",
+      "remediation": "Quote literal STAGE labels; package inputs, feature profile, revisions and attempt counters remain unchanged."
+    }
+  ],
   "blocked_events": {
     "kuserfeedback": [],
     "prison": []

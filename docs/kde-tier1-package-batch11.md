@@ -50,3 +50,9 @@ The shared development-contract audit runs before source packaging and again aga
 ## Promotion boundary
 
 Preparation does not promote either Framework. Real package attempts are preserved in `manifests/kde-tier1-package-batch11-attempts.json`. If both nodes later retain full package PASS evidence, canonical Tier 1 promotion remains a separate evidence/state change.
+
+## Preparation infrastructure incident
+
+Repository Policy run `35485140225`, job `106010004365`, failed at ShellCheck before package-policy validators ran. Bash syntax had already passed. ShellCheck SC2100 treated two unquoted hyphenated `STAGE` labels as arithmetic-like assignments.
+
+Classification: **INFRA**, `package_attempted=false`, `package_state_effect=none`. The remediation quotes all literal stage labels in the Batch 11 runner. No package version, feature profile, dependency contract or canonical state changes.

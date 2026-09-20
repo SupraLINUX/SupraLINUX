@@ -48,7 +48,7 @@ MIRROR="${SBUILD_MIRROR:-http://azure.archive.ubuntu.com/ubuntu}"
 : "${TIER1_REFERENCE_DIR:?TIER1_REFERENCE_DIR must point at retained Tier 1 packaging-tree artifact}"
 
 STATE=FAIL
-STAGE=initialization
+STAGE='initialization'
 STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 rm -rf "${WORK_DIR}" "${EVIDENCE_DIR}"
 mkdir -p "${SOURCE_WORK}" "${OUT_DIR}" "${EVIDENCE_DIR}" "$(dirname "${CHROOT_TARBALL}")"
@@ -85,7 +85,7 @@ exec > >(tee -a "${EVIDENCE_DIR}/pipeline.log") 2>&1
 
 echo "=== SupraLINUX KDE Tier 1 Batch 11: ${NODE} ${UPSTREAM_VERSION} (${DEBIAN_VERSION}) ==="
 
-STAGE=campaign-validation
+STAGE='campaign-validation'
 python3 - "${CAMPAIGN}" "${NODE}" "${PACKAGE_META}/rules" "${PACKAGE_META}/control" <<'PY'
 import json,re,sys
 from pathlib import Path
@@ -122,7 +122,7 @@ test -s "${CONSUMER_META}/CMakeLists.txt"
 test -s "${CONSUMER_META}/main.cpp"
 printf '%s  %s\n' "${SIGNING_KEY_SHA256}" "${PACKAGE_META}/upstream/signing-key.asc" | sha256sum --check --strict
 
-STAGE=retained-input-validation
+STAGE='retained-input-validation'
 ECM_DEB="$(find "${ECM_ARTIFACT_DIR}" -maxdepth 2 -type f -name "extra-cmake-modules_${ECM_VERSION}_all.deb" -print -quit)"
 [[ -n "${ECM_DEB}" && -s "${ECM_DEB}" ]] || { echo "Retained ECM PASS .deb missing" >&2; exit 1; }
 printf '%s  %s\n' "${ECM_DEB_SHA256}" "${ECM_DEB}" | sha256sum --check --strict
@@ -145,7 +145,7 @@ printf '%s  %s\n' "${EXPECTED_TREE_MANIFEST_SHA}" "${TREE_ROOT}/tree-files.sha25
 (cd "${TREE_ROOT}" && sha256sum --check --strict tree-files.sha256)
 printf '%s\n' "${EXPECTED_TREE_MANIFEST_SHA}" > "${EVIDENCE_DIR}/retained-tree-manifest-sha256.txt"
 
-STAGE=host-validation
+STAGE='host-validation'
 . /etc/os-release
 [[ "${ID}" == ubuntu && "${VERSION_ID}" == 26.04 ]] || { echo "Expected Ubuntu 26.04" >&2; exit 1; }
 sudo apt-get update
@@ -155,7 +155,7 @@ if ! grep -q "^${USER}:" /etc/subgid; then sudo usermod --add-subgids 100000-165
 unshare --user --map-auto true
 { cat /etc/os-release; uname -a; python3 --version; sbuild --version; mmdebstrap --version; lintian --version; } > "${EVIDENCE_DIR}/host.txt"
 
-STAGE=upstream-source
+STAGE='upstream-source'
 ORIG_TARBALL="${SOURCE_WORK}/${SOURCE_PACKAGE}_${UPSTREAM_VERSION}.orig.tar.xz"
 curl --fail --location --retry 3 --retry-delay 2 --output "${ORIG_TARBALL}" "${UPSTREAM_URL}"
 printf '%s  %s\n' "${UPSTREAM_SHA256}" "${ORIG_TARBALL}" | sha256sum --check --strict
@@ -226,10 +226,10 @@ PY
 chmod +x "${SOURCE_DIR}/debian/rules"
 if [[ -e "${SOURCE_DIR}/debian/run-tests-under-x.sh" ]]; then chmod +x "${SOURCE_DIR}/debian/run-tests-under-x.sh"; fi
 
-STAGE=source-development-contract
+STAGE='source-development-contract'
 python3 "${ROOT}/scripts/audit-kde-development-contract.py" source   --node "${NODE}" --campaign "${CAMPAIGN}" --source-dir "${SOURCE_DIR}"   --control "${SOURCE_DIR}/debian/control"   --output "${EVIDENCE_DIR}/source-development-contract.json"
 
-STAGE=source-package
+STAGE='source-package'
 pushd "${SOURCE_WORK}" >/dev/null
 dpkg-source -b "$(basename "${SOURCE_DIR}")"
 popd >/dev/null
@@ -239,13 +239,13 @@ test -s "${DSC}"
 test -s "${DEBIAN_TARBALL}"
 sha256sum "${DSC}" "${ORIG_TARBALL}" "${DEBIAN_TARBALL}" > "${EVIDENCE_DIR}/source-package-sha256.txt"
 
-STAGE=sbuild-rootfs
+STAGE='sbuild-rootfs'
 rm -f "${CHROOT_TARBALL}"
 mmdebstrap --mode=unshare --variant=buildd --architectures=amd64 --components=main,universe   --skip=output/mknod --format=tar resolute "${CHROOT_TARBALL}" "${MIRROR}" |& tee "${EVIDENCE_DIR}/rootfs.log"
 test -s "${CHROOT_TARBALL}"
 sha256sum "${CHROOT_TARBALL}" > "${EVIDENCE_DIR}/rootfs-sha256.txt"
 
-STAGE=sbuild
+STAGE='sbuild'
 sbuild --verbose --chroot-mode=unshare --dist=resolute --arch=amd64 --arch-all   --extra-package="${ECM_DEB}" --build-dir="${OUT_DIR}" "${DSC}" |& tee "${EVIDENCE_DIR}/sbuild.log"
 if grep -Eq '^Lintian:[[:space:]]+fail[[:space:]]*$' "${EVIDENCE_DIR}/sbuild.log"; then
   echo "sbuild reported Lintian failure" >&2
@@ -284,7 +284,7 @@ for package in n.get("feature_required_build_providers",[]):
 open(sys.argv[4],"w").write("\n".join(out)+"\n")
 PY
 
-STAGE=artifact-contract
+STAGE='artifact-contract'
 declare -A DEB_BY_PACKAGE=()
 for deb in "${DEBS[@]}"; do
   p="$(dpkg-deb -f "${deb}" Package)"
@@ -327,7 +327,7 @@ for ddeb in "${DDEBS[@]}"; do
   printf '%s %s Depends: %s\n' "${dbgpkg}" "${dbgver}" "${dbgdep}" >> "${EVIDENCE_DIR}/dbgsym-contracts.txt"
 done
 
-STAGE=abi-contract
+STAGE='abi-contract'
 python3 - "${CAMPAIGN}" "${NODE}" "${OUT_DIR}" "${EVIDENCE_DIR}/abi-reference-counts.txt" "${EVIDENCE_DIR}/abi-generated-counts.txt" <<'PY'
 import json,re,subprocess,sys,tempfile
 from pathlib import Path
@@ -365,7 +365,7 @@ for abi in n["abi_contracts"]:
 ev.write_text("\n".join(rows)+"\n")
 PY
 
-STAGE=qml-contract
+STAGE='qml-contract'
 python3 - "${CAMPAIGN}" "${NODE}" "${OUT_DIR}" "${EVIDENCE_DIR}/qml-contracts.txt" <<'PY'
 import json,subprocess,sys,tempfile
 from pathlib import Path
@@ -391,17 +391,17 @@ for c in n.get("qml_contracts",[]):
 evidence.write_text("\n".join(f"{m}\t{p}" for m,p in seen)+"\n")
 PY
 
-STAGE=development-contract
+STAGE='development-contract'
 python3 "${ROOT}/scripts/audit-kde-development-contract.py" artifact   --node "${NODE}" --campaign "${CAMPAIGN}" --debs-dir "${OUT_DIR}"   --consumer-cmake "${CONSUMER_META}/CMakeLists.txt"   --output "${EVIDENCE_DIR}/development-contract.json"
 
-STAGE=artifact-capture
+STAGE='artifact-capture'
 sha256sum "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${ORIG_TARBALL}" "${DEBIAN_TARBALL}" > "${EVIDENCE_DIR}/artifact-sha256.txt"
 cp -a "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${ORIG_TARBALL}" "${DEBIAN_TARBALL}" "${EVIDENCE_DIR}/"
 
-STAGE=lintian-source-binary
+STAGE='lintian-source-binary'
 lintian --fail-on error "${DSC}" "${CHANGES[0]}" |& tee "${EVIDENCE_DIR}/lintian-source-binary.log"
 
-STAGE=consumer-runtime-closure
+STAGE='consumer-runtime-closure'
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${DEBS[@]}" |& tee "${EVIDENCE_DIR}/consumer-runtime-install.log"
 sudo apt-get check |& tee "${EVIDENCE_DIR}/consumer-runtime-check.log"
 : > "${EVIDENCE_DIR}/consumer-runtime-packages.txt"
@@ -411,7 +411,7 @@ for p in "${EXPECTED_PACKAGES[@]}"; do
   printf '%s=%s\n' "${p}" "${v}" >> "${EVIDENCE_DIR}/consumer-runtime-packages.txt"
 done
 
-STAGE=qml-import-smoke
+STAGE='qml-import-smoke'
 QML_ROOT="${WORK_DIR}/qml-smoke"
 mkdir -p "${QML_ROOT}"
 idx=0
@@ -431,13 +431,13 @@ PY
 done < "${EVIDENCE_DIR}/qml-contracts.txt"
 (( idx > 0 ))
 
-STAGE=consumer-smoke
+STAGE='consumer-smoke'
 CONSUMER_BUILD="${WORK_DIR}/consumer-build"
 cmake -S "${CONSUMER_META}" -B "${CONSUMER_BUILD}" -GNinja -DCMAKE_BUILD_TYPE=Release |& tee "${EVIDENCE_DIR}/consumer-configure.log"
 cmake --build "${CONSUMER_BUILD}" --verbose |& tee "${EVIDENCE_DIR}/consumer-build.log"
 QT_QPA_PLATFORM=offscreen "${CONSUMER_BUILD}/${NODE}-consumer" |& tee "${EVIDENCE_DIR}/consumer-run.log"
 
-STAGE=dag-pass-evidence
+STAGE='dag-pass-evidence'
 python3 - "${CAMPAIGN}" "${NODE}" "${EVIDENCE_DIR}/dag-node.txt" <<'PY'
 import json,sys
 from pathlib import Path
@@ -464,5 +464,5 @@ Path(sys.argv[3]).write_text("\n".join(lines)+"\n")
 PY
 
 STATE=PASS
-STAGE=complete
+STAGE='complete'
 echo "KDE Tier 1 Batch 11 node ${NODE}: PASS"
