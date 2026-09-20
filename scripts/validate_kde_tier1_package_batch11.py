@@ -46,6 +46,8 @@ for node in ("kuserfeedback","prison"):
     req(n.get("state") in {"prepared-pending-build","remediation-pending-build","FAIL","PASS"},f"{node}: invalid campaign state")
     req(len(n.get("abi_contracts",[]))==2,f"{node}: expected two runtime ABI surfaces")
     req(n.get("expected_test_count",0)>0,f"{node}: exact upstream test count missing")
+    if node=="kuserfeedback": req(n.get("expected_test_count")==15,f"{node}: expected CTest count must be 15")
+    if node=="prison": req(n.get("expected_test_count")==9,f"{node}: expected CTest count must be 9")
     if n.get("state")=="PASS":
         req(isinstance(n.get("pass_evidence"),dict),f"{node}: PASS requires pass_evidence")
         req(n.get("downstream_eligible") is True,f"{node}: PASS must be downstream eligible")
@@ -68,6 +70,8 @@ req(c["nodes"]["prison"].get("upstream_defaults")=={
     "BUILD_TESTING":"ON",
 },"Prison upstream defaults mismatch")
 req({x.get("required_root_module") for x in c["nodes"]["kuserfeedback"].get("qml_contracts",[])}=={"org.kde.userfeedback"},"KUserFeedback QML surface mismatch")
+req((ROOT/"packages/kde/kuserfeedback/debian/patches/phpunit-13-test-compat.patch").is_file(),"KUserFeedback PHPUnit 13 compatibility patch missing")
+req((ROOT/"packages/kde/kuserfeedback/debian/patches/series").read_text().strip()=="phpunit-13-test-compat.patch","KUserFeedback patch series mismatch")
 req({x.get("required_root_module") for x in c["nodes"]["prison"].get("qml_contracts",[])}=={"org.kde.prison","org.kde.prison.scanner"},"Prison QML surface mismatch")
 
 req(a.get("schema")==1 and a.get("batch")=="tier1-batch-11" and a.get("lane")=="multi-surface-optional","Batch 11 attempts ledger identity mismatch")
@@ -79,7 +83,7 @@ for incident in a.get("infrastructure_incidents",[]):
     req(incident.get("package_state_effect")=="none","infrastructure incident must not alter package state")
 
 provider_sets={
-    "kuserfeedback":("bison","flex","php","phpunit","qt6-base-dev","qt6-charts-dev","qt6-declarative-dev","qt6-tools-dev"),
+    "kuserfeedback":("bison","flex","php","phpunit","php-sqlite3","qt6-base-dev","qt6-charts-dev","qt6-declarative-dev","qt6-tools-dev"),
     "prison":("libdmtx-dev","libqrencode-dev","libzxing-dev","qt6-base-dev","qt6-declarative-dev","qt6-multimedia-dev"),
 }
 for node,providers in provider_sets.items():

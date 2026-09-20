@@ -56,3 +56,12 @@ Preparation does not promote either Framework. Real package attempts are preserv
 Repository Policy run `35485140225`, job `106010004365`, failed at ShellCheck before package-policy validators ran. Bash syntax had already passed. ShellCheck SC2100 treated two unquoted hyphenated `STAGE` labels as arithmetic-like assignments.
 
 Classification: **INFRA**, `package_attempted=false`, `package_state_effect=none`. The remediation quotes all literal stage labels in the Batch 11 runner. No package version, feature profile, dependency contract or canonical state changes.
+
+## Cycle 1 results and remediation
+
+Run `35485199667` exercised both nodes independently.
+
+- **Prison** job `106010235300`: the source package built successfully, Lintian passed and upstream CTest reported **9/9 PASS**. The runner then failed because campaign metadata incorrectly expected 8 tests. This is **INFRA/validation**, not a package FAIL. Artifact `10596344285`, SHA-256 `67803dee1fc950cd960bfd836de516e3e397b7132f02338df00703c4f611c779`.
+- **KUserFeedback** job `106010235329`: real FAIL during `sbuild` tests. Resolute provides PHPUnit 13.0.0; KDE 6.30's PHP tests still use legacy `@dataProvider` metadata and a fixture whose database variables depend on global include scope. The remediation keeps `ENABLE_PHP_UNIT=ON`, ports the test metadata to PHPUnit 13 attributes, puts fixture variables in `$GLOBALS`, and adds `php-sqlite3` for the upstream SQLite PDO fixture. Artifact `10596274248`, SHA-256 `a8db3c3c85e0645f64b62ba4ee0fe0d6c9b50a85a446680b0da1b0bb9fc44b6d`.
+
+The corrected exact CTest counts are KUserFeedback **15** and Prison **9**. Canonical Tier 1 remains **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED** until a complete retained PASS exists.

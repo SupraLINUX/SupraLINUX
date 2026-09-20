@@ -36,7 +36,7 @@
       "name": "KUserFeedback",
       "upstream_version": "6.30.0",
       "source_package": "kf6-kuserfeedback",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kuserfeedback-6.30.0.tar.xz",
       "source_sha256": "c8a463c8e570f6d532cbe150732220575c6385df97c91399b6c84450691771ca",
       "kde_framework_build_dependencies": [],
@@ -63,12 +63,13 @@
         "flex",
         "php",
         "phpunit",
+        "php-sqlite3",
         "qt6-base-dev",
         "qt6-charts-dev",
         "qt6-declarative-dev",
         "qt6-tools-dev"
       ],
-      "expected_test_count": 14,
+      "expected_test_count": 15,
       "binary_contracts": [
         {
           "name": "libkf6userfeedback-data",
@@ -127,9 +128,18 @@
       "signing_key": {
         "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"
       },
-      "state": "prepared-pending-build",
-      "last_result": null,
-      "downstream_eligible": false
+      "state": "remediation-pending-build",
+      "last_result": "FAIL",
+      "downstream_eligible": false,
+      "last_failure_evidence": {
+        "workflow_run": 35485199667,
+        "job_id": 106010235329,
+        "artifact_id": 10596274248,
+        "artifact_sha256": "a8db3c3c85e0645f64b62ba4ee0fe0d6c9b50a85a446680b0da1b0bb9fc44b6d",
+        "rootfs_sha256": "5052240705cf505e2642ffd75badc99317e56d7ef27c84f2f6f6efa015787b4e",
+        "stage": "sbuild",
+        "cause": "KUserFeedback 6.30 PHP autotests are not compatible with Resolute PHPUnit 13 test discovery: legacy @dataProvider metadata is ignored and the SQLite fixture variables are not in $GLOBALS under the current loader scope."
+      }
     },
     "prison": {
       "name": "Prison",
@@ -162,7 +172,7 @@
         "qt6-declarative-dev",
         "qt6-multimedia-dev"
       ],
-      "expected_test_count": 8,
+      "expected_test_count": 9,
       "binary_contracts": [
         {
           "name": "libkf6prison-dev",
@@ -221,9 +231,18 @@
       "signing_key": {
         "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"
       },
-      "state": "prepared-pending-build",
+      "state": "remediation-pending-build",
       "last_result": null,
-      "downstream_eligible": false
+      "downstream_eligible": false,
+      "last_validation_incident": {
+        "workflow_run": 35485199667,
+        "job_id": 106010235300,
+        "artifact_id": 10596344285,
+        "artifact_sha256": "67803dee1fc950cd960bfd836de516e3e397b7132f02338df00703c4f611c779",
+        "rootfs_sha256": "6b8a9abdf3720fe8e291209b7bab8ba98d812e5df573c2b0ccfce9a53d70c500",
+        "stage": "sbuild-postcheck",
+        "cause": "Runner expected 8 CTest entries, while Prison 6.30 executed 9/9 PASS. sbuild and Lintian succeeded; the exact-count assertion was wrong."
+      }
     }
   }
 }

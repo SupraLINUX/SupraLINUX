@@ -7,12 +7,46 @@
     "prison"
   ],
   "real_attempts": {
-    "kuserfeedback": [],
+    "kuserfeedback": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "c27404f7778f96d20fd63ddaa993b8d36ae81295",
+        "workflow_run": 35485199667,
+        "job_id": 106010235329,
+        "artifact_id": 10596274248,
+        "artifact_sha256": "a8db3c3c85e0645f64b62ba4ee0fe0d6c9b50a85a446680b0da1b0bb9fc44b6d",
+        "rootfs_sha256": "5052240705cf505e2642ffd75badc99317e56d7ef27c84f2f6f6efa015787b4e",
+        "package_attempted": true,
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "8/15 CTest PASS",
+        "cause": "PHPUnit 13 ignored legacy @dataProvider metadata and scoped loading left the SQLite fixture configuration outside $GLOBALS; upstream PHP tests failed while PHP/PHPUnit remained enabled."
+      }
+    ],
     "prison": []
   },
   "validation_incidents": {
     "kuserfeedback": [],
-    "prison": []
+    "prison": [
+      {
+        "validation_cycle": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "c27404f7778f96d20fd63ddaa993b8d36ae81295",
+        "workflow_run": 35485199667,
+        "job_id": 106010235300,
+        "artifact_id": 10596344285,
+        "artifact_sha256": "67803dee1fc950cd960bfd836de516e3e397b7132f02338df00703c4f611c779",
+        "rootfs_sha256": "6b8a9abdf3720fe8e291209b7bab8ba98d812e5df573c2b0ccfce9a53d70c500",
+        "stage": "sbuild-postcheck",
+        "classification": "INFRA",
+        "package_state_effect": "none",
+        "package_build": "successful",
+        "lintian": "PASS-errors",
+        "tests": "9/9 PASS",
+        "cause": "False-negative exact CTest count: campaign expected 8, but Prison 6.30 has 9 CTest entries and all 9 passed."
+      }
+    ]
   },
   "infrastructure_incidents": [
     {
@@ -25,6 +59,19 @@
       "package_attempted": false,
       "cause": "ShellCheck SC2100 rejected unquoted hyphenated STAGE labels in the new Batch 11 runner after bash syntax validation had passed; no package state was evaluated.",
       "remediation": "Quote literal STAGE labels; package inputs, feature profile, revisions and attempt counters remain unchanged."
+    },
+    {
+      "phase": "batch11-cycle-1-superseded",
+      "workflow_run": 35485140362,
+      "job_ids": [
+        106010025659,
+        106010025725
+      ],
+      "stage": "build-and-validate",
+      "classification": "superseded-run-cancelled",
+      "package_state_effect": "none",
+      "package_attempted": false,
+      "cause": "The first Batch 11 PR run was superseded by the ShellCheck remediation push; both in-progress package jobs were cancelled and are not package results."
     }
   ],
   "blocked_events": {

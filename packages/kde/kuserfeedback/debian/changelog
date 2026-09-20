@@ -1,3 +1,12 @@
+kf6-kuserfeedback (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Keep PHP/PHPUnit tests enabled on Ubuntu Resolute.
+  * Adapt upstream PHP autotests to PHPUnit 13 DataProvider attributes.
+  * Make the SQLite test fixture robust to scoped PHPUnit file loading.
+  * Add the PDO SQLite provider required by the upstream database tests.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sun, 20 Sep 2026 01:20:00 -0300
+
 kf6-kuserfeedback (6.30.0-0supralinux1) resolute; urgency=medium
 
   * Package KDE KUserFeedback 6.30.0 from upstream stable.

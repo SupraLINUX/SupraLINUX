@@ -7,3 +7,13 @@ Batch 11 preserves upstream KUserFeedback defaults: survey targeting expressions
 The retained Debian packaging-tree artifact 10301938362 supplies copyright and symbols metadata only after the entire retained tree manifest has been hash-verified. Those files do not select the KDE version or feature profile.
 
 No downstream behavior patch or test suppression is retained. Real package attempts are recorded separately from infrastructure incidents.
+
+PHPUnit 13 integration
+----------------------
+
+Ubuntu 26.04 Resolute provides PHPUnit 13. KDE KUserFeedback 6.30 still uses
+legacy @dataProvider metadata in its PHP autotests, and its SQLite fixture
+assigns configuration variables in the including file scope. SupraLINUX keeps
+ENABLE_PHP_UNIT=ON and carries a test-only compatibility patch: DataProvider
+attributes plus static providers, explicit $GLOBALS fixture configuration, and
+the php-sqlite3 provider. Product/runtime source behavior is unchanged.
