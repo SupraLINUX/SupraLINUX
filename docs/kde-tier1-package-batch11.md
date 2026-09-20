@@ -101,3 +101,9 @@ Batch 11 is now **2/2 PASS retained and promoted**.
 Both nodes retain only the ECM Framework build edge. The `multi-surface-optional` lane is completed and leaves global discovery. Canonical KDE Frameworks Tier 1 is now **29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**. Historical real FAILs and INFRA incidents remain in the Batch 11 ledger.
 
 This canonical promotion does not publish packages to the APT `stable` channel.
+
+## Promotion validator incident
+
+Repository Policy run `35491700804`, job `106027643479`, failed only in the historical packaging-reference validator after DAG, Tier 1 and global-discovery validation had already passed. PR CI run `35491700905` passed and scope-skipped all heavy workflows, including Batch 11.
+
+Classification: **INFRA**, `package_attempted=false`, `package_state_effect=none`. Cause: the packaging-reference/tree validators still listed only the previous 27 PASS nodes. The remediation extends those non-authoritative reference validators to KUserFeedback and Prison. Canonical state remains **29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**.

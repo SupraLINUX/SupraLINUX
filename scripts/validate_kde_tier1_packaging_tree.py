@@ -38,7 +38,7 @@ PASS_NODES = {
     "kitemmodels", "bluez-qt", "kplotting", "kitemviews", "kglobalaccel", "syntax-highlighting",
     "kidletime", "modemmanager-qt", "networkmanager-qt", "kwindowsystem", "solid",
     "kcalendarcore", "kcoreaddons", "kwidgetsaddons", "kguiaddons",
-    "kconfig", "ki18n", "sonnet", "kirigami", "kquickcharts",
+    "kconfig", "ki18n", "sonnet", "kirigami", "kquickcharts", "kuserfeedback", "prison",
 }
 errors: list[str] = []
 

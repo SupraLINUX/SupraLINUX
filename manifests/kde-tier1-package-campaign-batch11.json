@@ -318,5 +318,18 @@
       "package_version": "6.30.0-0supralinux1",
       "tests": "9/9 PASS"
     }
-  }
+  },
+  "promotion_validation_incidents": [
+    {
+      "workflow_run": 35491700804,
+      "job_id": 106027643479,
+      "commit": "4385e7193d75bf158b7a2798d644d8c3f726671e",
+      "classification": "INFRA",
+      "package_state_effect": "none",
+      "package_attempted": false,
+      "failed_gate": "validate_kde_tier1_packaging_reference.py",
+      "cause": "Packaging-reference/tree historical PASS_NODES registries were not extended to the two newly promoted Batch 11 nodes, so the validator falsely treated KUserFeedback and Prison as unattempted pending nodes.",
+      "remediation": "Add KUserFeedback and Prison to the packaging-reference/tree PASS registries; canonical Tier 1/DAG state and package evidence remain unchanged."
+    }
+  ]
 }
