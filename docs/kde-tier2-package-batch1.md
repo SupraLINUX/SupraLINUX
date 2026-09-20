@@ -56,3 +56,9 @@ The corrected source package built through configuration/compilation and upstrea
 The pinned Debian 6.30 symbols template SHA-256 is `77ab200ea8f5e9335831ef021dd2e446598b95d886d13237e91ea69e25812259`. Two missing C++ template instantiations were already tagged `optional=templinst` and were not causal. The only mandatory missing entries were RTTI/vtable symbols for `KAuth::AuthBackend::Private`, which is defined only in `src/AuthBackend.cpp`.
 
 Revision `6.30.0-0supralinux3` keeps the complete Debian 6.30 symbols baseline and changes exactly those two implementation-private entries to `optional=private`. No public ABI symbol is weakened.
+
+## Attempt 3 preflight validator incident
+
+Repository Policy run `35497248424`, job `106042393365`, failed before the queued KAuth build started. The Tier 2 discovery validator still hardcoded the original `6.30.0-0supralinux1` candidate even though the remediation revision is `6.30.0-0supralinux3`.
+
+Classification: **INFRA**, `package_attempted=false`, `package_state_effect=none`. The validator now checks that package identity and current packaging revision agree, rather than encoding a specific remediation number.

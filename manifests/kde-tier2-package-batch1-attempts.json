@@ -45,7 +45,20 @@
   "validation_incidents": {
     "kauth": []
   },
-  "infrastructure_incidents": [],
+  "infrastructure_incidents": [
+    {
+      "phase": "attempt-3-preflight",
+      "workflow_run": 35497248424,
+      "job_id": 106042393365,
+      "commit": "75964ab981a7d853f4c309419964b84d8cf6686e",
+      "classification": "infrastructure-validator-stale-revision",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "failed_gate": "validate_kde_tier2.py",
+      "cause": "Tier 2 discovery validator still hardcoded KAuth package_version_candidate 6.30.0-0supralinux1 after the campaign advanced to revision -3.",
+      "remediation": "Require package_version_candidate to equal the current packaging.package_version instead of hardcoding a revision."
+    }
+  ],
   "blocked_events": {
     "kauth": []
   }

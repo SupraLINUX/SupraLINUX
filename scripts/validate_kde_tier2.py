@@ -39,7 +39,7 @@ req(nodes["kmime"].get("packaging",{}).get("state")=="pending","KMime packaging 
 
 req(nodes["kauth"].get("depends_on")==["extra-cmake-modules","kcoreaddons","kwindowsystem"],"KAuth selected DAG predecessors")
 req(nodes["kmime"].get("depends_on")==["extra-cmake-modules","kcodecs"],"KMime DAG predecessors")
-req(nodes["kauth"]["package_identity"].get("package_version_candidate")=="6.30.0-0supralinux1","KAuth candidate revision")
+req(nodes["kauth"]["package_identity"].get("package_version_candidate")==nodes["kauth"].get("packaging",{}).get("package_version"),"KAuth package identity/current packaging revision mismatch")
 req(nodes["kmime"]["package_identity"].get("package_version_candidate") is None,"KMime Debian revision must remain undecided")
 
 req(deps.get("schema")==1 and deps.get("frameworks")=="6.30.0" and deps.get("tier")==2,"Tier2 dependency manifest identity")
