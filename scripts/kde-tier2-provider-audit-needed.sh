@@ -36,8 +36,13 @@ v={
 print(hashlib.sha256(json.dumps(v,sort_keys=True,separators=(",",":")).encode()).hexdigest())'
 }
 
-mapfile -t changed < <(git -C "${ROOT}" diff --name-only "${BEFORE}" "${AFTER}" --)
 after_status="$(audit_status "${AFTER}")"
+if [[ "${after_status}" == "pending-ci" ]]; then
+    echo "Tier 2 provider audit is pending-ci and remains runnable until PASS evidence is promoted."
+    exit 0
+fi
+
+mapfile -t changed < <(git -C "${ROOT}" diff --name-only "${BEFORE}" "${AFTER}" --)
 
 for path in "${changed[@]}"; do
     case "${path}" in

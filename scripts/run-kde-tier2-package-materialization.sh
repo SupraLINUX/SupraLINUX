@@ -264,7 +264,8 @@ changelog_version="$(dpkg-parsechangelog -l"${SRC}/debian/changelog" -S Version)
 changelog_distribution="$(dpkg-parsechangelog -l"${SRC}/debian/changelog" -S Distribution)"
 require_eq "changelog-source" "${SOURCE_PACKAGE}" "${changelog_source}"
 require_eq "changelog-version" "${PACKAGE_VERSION}" "${changelog_version}"
-# shellcheck disable=SC2153 -- value is assigned by the validated Python-to-eval map above.
+# Value is assigned by the validated Python-to-eval map above.
+# shellcheck disable=SC2153
 require_eq "changelog-distribution" "${CHANGELOG_DISTRIBUTION}" "${changelog_distribution}"
 require_contains "maintainer" 'Maintainer: SupraLINUX Build System <build@supralinux.invalid>' "${SRC}/debian/control"
 require_contains "original-maintainer" 'XSBC-Original-Maintainer:' "${SRC}/debian/control"
@@ -279,7 +280,8 @@ then
     PY_MODULE="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["nodes"][sys.argv[2]]["python_module"])' "${CONTRACTS}" "${NODE}")"
     PY_PACKAGE="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["nodes"][sys.argv[2]]["supralinux_additional_binary_packages"][0])' "${CONTRACTS}" "${NODE}")"
     require_contains "python-binding-cmake-profile" '-DBUILD_PYTHON_BINDINGS=ON' "${SRC}/debian/rules"
-    # shellcheck disable=SC2153 -- value is assigned by the validated Python-to-eval map above.
+    # Value is assigned by the validated Python-to-eval map above.
+    # shellcheck disable=SC2153
     read -r -a shiboken_provider_packages <<< "${SHIBOKEN_PROVIDER_PACKAGES}"
     for provider_package in "${shiboken_provider_packages[@]}"; do
         require_contains "python-shiboken-clang-provider-${provider_package}" "${provider_package}" "${SRC}/debian/control"

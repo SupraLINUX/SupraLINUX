@@ -72,4 +72,9 @@ git -C "${TMP}" add . && git -C "${TMP}" commit -qm active-runner
 ACTIVE_RUNNER="$(git -C "${TMP}" rev-parse HEAD)"
 expect_rc 0 "${ACTIVE}" "${ACTIVE_RUNNER}" active_runner
 
+echo docs2 >> "${TMP}/docs/x.md"
+git -C "${TMP}" add . && git -C "${TMP}" commit -qm pending-docs-rescue
+PENDING_DOCS="$(git -C "${TMP}" rev-parse HEAD)"
+expect_rc 0 "${ACTIVE_RUNNER}" "${PENDING_DOCS}" pending_rescue
+
 echo "KDE Tier 2 provider-audit semantic scope: PASS"
