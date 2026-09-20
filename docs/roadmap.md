@@ -40,6 +40,7 @@ Current implementation status: KDE Frameworks 6.30 Tier 1 is canonically 29/29 P
 - record source URLs, versions, tags and SHA-256 values from real downloads;
 - derive package/component dependency relationships;
 - topological campaign scheduler and status reporting.
+- canonical Tier 2 manifest -> generated campaign plan, with provider-audit and package-contract gates before any build attempt.
 
 ## Phase 4 — Qt provider certification
 

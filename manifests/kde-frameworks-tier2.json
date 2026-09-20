@@ -105,7 +105,12 @@
           }
         ]
       },
-      "state": "PASS"
+      "state": "PASS",
+      "planning": {
+        "readiness": "retained-pass",
+        "provider_audit": "complete",
+        "package_contract": "retained-pass"
+      }
     },
     {
       "id": "kcolorscheme",
@@ -141,7 +146,12 @@
         "state": "pending",
         "reason": "package-lane-not-materialized"
       },
-      "state": "pending"
+      "state": "pending",
+      "planning": {
+        "readiness": "package-lane-pending",
+        "provider_audit": "required-before-materialization",
+        "package_contract": "not-materialized"
+      }
     },
     {
       "id": "kcompletion",
@@ -177,7 +187,12 @@
         "state": "pending",
         "reason": "package-lane-not-materialized"
       },
-      "state": "pending"
+      "state": "pending",
+      "planning": {
+        "readiness": "package-lane-pending",
+        "provider_audit": "required-before-materialization",
+        "package_contract": "not-materialized"
+      }
     },
     {
       "id": "kcontacts",
@@ -213,7 +228,12 @@
         "state": "pending",
         "reason": "package-lane-not-materialized"
       },
-      "state": "pending"
+      "state": "pending",
+      "planning": {
+        "readiness": "package-lane-pending",
+        "provider_audit": "required-before-materialization",
+        "package_contract": "not-materialized"
+      }
     },
     {
       "id": "kcrash",
@@ -245,7 +265,12 @@
         "state": "pending",
         "reason": "package-lane-not-materialized"
       },
-      "state": "pending"
+      "state": "pending",
+      "planning": {
+        "readiness": "package-lane-pending",
+        "provider_audit": "required-before-materialization",
+        "package_contract": "not-materialized"
+      }
     },
     {
       "id": "kdeclarative",
@@ -284,7 +309,12 @@
         "state": "pending",
         "reason": "package-lane-not-materialized"
       },
-      "state": "pending"
+      "state": "pending",
+      "planning": {
+        "readiness": "package-lane-pending",
+        "provider_audit": "required-before-materialization",
+        "package_contract": "not-materialized"
+      }
     },
     {
       "id": "kfilemetadata",
@@ -321,7 +351,12 @@
         "state": "pending",
         "reason": "package-lane-not-materialized"
       },
-      "state": "pending"
+      "state": "pending",
+      "planning": {
+        "readiness": "package-lane-pending",
+        "provider_audit": "required-before-materialization",
+        "package_contract": "not-materialized"
+      }
     },
     {
       "id": "knotifications",
@@ -353,7 +388,12 @@
         "state": "pending",
         "reason": "package-lane-not-materialized"
       },
-      "state": "pending"
+      "state": "pending",
+      "planning": {
+        "readiness": "package-lane-pending",
+        "provider_audit": "required-before-materialization",
+        "package_contract": "not-materialized"
+      }
     },
     {
       "id": "kpackage",
@@ -389,7 +429,12 @@
         "state": "pending",
         "reason": "package-lane-not-materialized"
       },
-      "state": "pending"
+      "state": "pending",
+      "planning": {
+        "readiness": "package-lane-pending",
+        "provider_audit": "required-before-materialization",
+        "package_contract": "not-materialized"
+      }
     },
     {
       "id": "kpty",
@@ -423,7 +468,12 @@
         "state": "pending",
         "reason": "package-lane-not-materialized"
       },
-      "state": "pending"
+      "state": "pending",
+      "planning": {
+        "readiness": "package-lane-pending",
+        "provider_audit": "required-before-materialization",
+        "package_contract": "not-materialized"
+      }
     },
     {
       "id": "kservice",
@@ -459,7 +509,12 @@
         "state": "pending",
         "reason": "package-lane-not-materialized"
       },
-      "state": "pending"
+      "state": "pending",
+      "planning": {
+        "readiness": "package-lane-pending",
+        "provider_audit": "required-before-materialization",
+        "package_contract": "not-materialized"
+      }
     },
     {
       "id": "kstatusnotifieritem",
@@ -491,7 +546,12 @@
         "state": "pending",
         "reason": "package-lane-not-materialized"
       },
-      "state": "pending"
+      "state": "pending",
+      "planning": {
+        "readiness": "package-lane-pending",
+        "provider_audit": "required-before-materialization",
+        "package_contract": "not-materialized"
+      }
     },
     {
       "id": "kunitconversion",
@@ -523,7 +583,12 @@
         "state": "pending",
         "reason": "package-lane-not-materialized"
       },
-      "state": "pending"
+      "state": "pending",
+      "planning": {
+        "readiness": "package-lane-pending",
+        "provider_audit": "required-before-materialization",
+        "package_contract": "not-materialized"
+      }
     },
     {
       "id": "syndication",
@@ -555,7 +620,12 @@
         "state": "pending",
         "reason": "package-lane-not-materialized"
       },
-      "state": "pending"
+      "state": "pending",
+      "planning": {
+        "readiness": "package-lane-pending",
+        "provider_audit": "required-before-materialization",
+        "package_contract": "not-materialized"
+      }
     },
     {
       "id": "kmime",
@@ -593,7 +663,13 @@
         "state": "pending",
         "reason": "compatibility-transition-decision-required"
       },
-      "state": "pending"
+      "state": "pending",
+      "planning": {
+        "readiness": "compatibility-decision-required",
+        "provider_audit": "blocked-by-compatibility-decision",
+        "package_contract": "not-materialized",
+        "human_blocker": "ADR-0002"
+      }
     }
   ],
   "discovery_correction": {
