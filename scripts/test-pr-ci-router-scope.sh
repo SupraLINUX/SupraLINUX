@@ -119,4 +119,13 @@ import json
 p='manifests/kde-tier1-package-campaign-batch10.json'; d=json.load(open(p)); d['nodes']['kquickcharts']['package_version']='2'; open(p,'w').write(json.dumps(d))
 PY
 git add .; git commit -qm input; I=$(git rev-parse HEAD); bash scripts/pr-ci-router-needed.sh "$P" "$I"
+mkdir -p .github/workflows
+echo 'name: batch2' > .github/workflows/kde-tier2-package-batch2.yml
+echo '#!/usr/bin/env bash' > scripts/run-kde-tier2-package-batch2.sh
+echo 'print("batch2")' > scripts/plan-kde-tier2-package-batch2.py
+echo '#!/usr/bin/env bash' > scripts/kde-tier2-package-batch2-needed.sh
+echo '{"schema":1}' > manifests/kde-tier2-package-campaign-batch2.json
+echo '{"schema":1}' > manifests/kde-tier2-package-batch2-attempts.json
+git add .; git commit -qm tier2-batch2-dedicated; B2=$(git rev-parse HEAD)
+if bash scripts/pr-ci-router-needed.sh "$I" "$B2"; then echo "dedicated Tier2 Batch2 inputs unexpectedly requested legacy reusable CI" >&2; exit 1; fi
 echo "PR CI semantic evidence router: PASS"

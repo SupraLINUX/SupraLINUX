@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "batch": "tier2-batch-2",
+  "selected_nodes": [
+    "kcrash",
+    "knotifications",
+    "kstatusnotifieritem",
+    "kunitconversion",
+    "syndication"
+  ],
+  "real_attempts": {
+    "kcrash": [],
+    "knotifications": [],
+    "kstatusnotifieritem": [],
+    "kunitconversion": [],
+    "syndication": []
+  },
+  "infrastructure_incidents": [],
+  "blocked_events": {
+    "kcrash": [],
+    "knotifications": [],
+    "kstatusnotifieritem": [],
+    "kunitconversion": [],
+    "syndication": []
+  },
+  "note": "A real package attempt is recorded only after the runner crosses the sbuild boundary."
+}

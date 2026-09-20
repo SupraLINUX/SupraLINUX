@@ -78,3 +78,8 @@ Current implementation status: KDE Frameworks 6.30 Tier 1 is canonically 29/29 P
 ### Tier 2 provider-audit gate
 
 The generated Tier 2 campaign feeds a cheap Ubuntu Resolute provider audit before package-contract materialization. The first batch is KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication. Provider-audit PASS is only a readiness gate; package PASS still requires a real clean build and retained evidence.
+
+
+### Tier 2 Batch 2 clean build
+
+KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication are now queued for a parallel clean-build campaign using one shared Resolute rootfs and retained PASS predecessor artifacts. Results will be promoted independently: PASS can feed downstream; a real FAIL affects only that node; independent peers continue. No automatic stable publication is permitted.
