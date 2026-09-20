@@ -65,3 +65,12 @@ Run `35485199667` exercised both nodes independently.
 - **KUserFeedback** job `106010235329`: real FAIL during `sbuild` tests. Resolute provides PHPUnit 13.0.0; KDE 6.30's PHP tests still use legacy `@dataProvider` metadata and a fixture whose database variables depend on global include scope. The remediation keeps `ENABLE_PHP_UNIT=ON`, ports the test metadata to PHPUnit 13 attributes, puts fixture variables in `$GLOBALS`, and adds `php-sqlite3` for the upstream SQLite PDO fixture. Artifact `10596274248`, SHA-256 `a8db3c3c85e0645f64b62ba4ee0fe0d6c9b50a85a446680b0da1b0bb9fc44b6d`.
 
 The corrected exact CTest counts are KUserFeedback **15** and Prison **9**. Canonical Tier 1 remains **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED** until a complete retained PASS exists.
+
+## Cycle 2
+
+Run `35488901554` validates the first remediation.
+
+- Prison `6.30.0-0supralinux1`: **PASS** in job `106020266290`; artifact `10597829797`, SHA-256 `f0074c8da29cfda08018fa568fce9cabbf6fc23669416caf20c714c25ff7773f`. Gates: 9/9 CTest, Lintian, both ABI surfaces, both QML roots, exact APT closure, development contract and consumer smoke.
+- KUserFeedback `6.30.0-0supralinux2`: real FAIL in job `106020266302`; **14/15 CTest PASS**. DataProvider metadata, scoped globals and SQLite provider are fixed. The only remaining failure is SampleTest's use of removed PHPUnit 13 `TestCase::getActualOutput()`. Revision `-3` replaces those four reads with scoped `ob_start()/ob_get_clean()` capture while preserving the same JSON assertions.
+
+Prison is technically downstream-eligible, but canonical Tier 1 remains unchanged until Batch 11 promotion is performed separately.

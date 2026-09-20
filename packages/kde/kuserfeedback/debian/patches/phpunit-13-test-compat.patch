@@ -3,7 +3,6 @@ Author: SupraLINUX Project <packages@supralinux.invalid>
 Forwarded: not-yet
 Last-Update: 2026-09-20
 Origin: SupraLINUX
-Bug: https://invent.kde.org/frameworks/kuserfeedback
 ---
 diff --git a/autotests/utilstest.php b/autotests/utilstest.php
 --- a/autotests/utilstest.php
@@ -1114,7 +1113,7 @@ diff --git a/autotests/producttest.php b/autotests/producttest.php
 diff --git a/autotests/sampletest.php b/autotests/sampletest.php
 --- a/autotests/sampletest.php
 +++ b/autotests/sampletest.php
-@@ -1,183 +1,179 @@
+@@ -1,183 +1,183 @@
 -<?php
 -/*
 -    SPDX-FileCopyrightText: 2016 Volker Krause <vkrause@kde.org>
@@ -1339,8 +1338,9 @@ diff --git a/autotests/sampletest.php b/autotests/sampletest.php
 +        Sample::insert(self::$db, $sample, $p);
 +        Sample::insert(self::$db, $sample, $p);
 +
++        ob_start();
 +        Sample::echoDataAsJson(self::$db, $p);
-+        $data = json_decode($this->getActualOutput(), false);
++        $data = json_decode(ob_get_clean(), false);
 +        $this->assertTrue(is_array($data));
 +        $this->assertCount(2, $data);
 +        $d0 = $data[0];
@@ -1372,8 +1372,9 @@ diff --git a/autotests/sampletest.php b/autotests/sampletest.php
 +
 +        Sample::insert(self::$db, $sample, $p);
 +
++        ob_start();
 +        Sample::echoDataAsJson(self::$db, $p);
-+        $data = json_decode($this->getActualOutput(), false);
++        $data = json_decode(ob_get_clean(), false);
 +
 +        $this->assertTrue(is_array($data));
 +        $this->assertCount(1, $data);
@@ -1399,8 +1400,9 @@ diff --git a/autotests/sampletest.php b/autotests/sampletest.php
 +        }';
 +
 +        Sample::insert(self::$db, $sample, $p);
++        ob_start();
 +        Sample::echoDataAsJson(self::$db, $p);
-+        $data = json_decode($this->getActualOutput(), false);
++        $data = json_decode(ob_get_clean(), false);
 +        $this->assertTrue(is_array($data));
 +        $this->assertCount(1, $data);
 +        $d0 = $data[0];
@@ -1448,8 +1450,9 @@ diff --git a/autotests/sampletest.php b/autotests/sampletest.php
 +        }]';
 +        Sample::import(self::$db, $input, $p);
 +
++        ob_start();
 +        Sample::echoDataAsJson(self::$db, $p);
-+        $jsonOutput = json_decode($this->getActualOutput(), true);
++        $jsonOutput = json_decode(ob_get_clean(), true);
 +        unset($jsonOutput[0]['id']);
 +        unset($jsonOutput[1]['id']);
 +        $this->assertJsonStringEqualsJsonString($input, json_encode($jsonOutput));

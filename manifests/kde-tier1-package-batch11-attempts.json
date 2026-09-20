@@ -22,9 +22,46 @@
         "stage": "sbuild",
         "tests": "8/15 CTest PASS",
         "cause": "PHPUnit 13 ignored legacy @dataProvider metadata and scoped loading left the SQLite fixture configuration outside $GLOBALS; upstream PHP tests failed while PHP/PHPUnit remained enabled."
+      },
+      {
+        "attempt": 2,
+        "package_version": "6.30.0-0supralinux2",
+        "commit": "7f4a42af54c4d3a1603f9b7cca95a5b45786ff58",
+        "workflow_run": 35488901554,
+        "job_id": 106020266302,
+        "artifact_id": 10597719819,
+        "artifact_sha256": "9c3ff5ccb61cc6ea9e55b4443ccbcf672580861e334316b9bf946612b4ff4f0d",
+        "rootfs_sha256": "03a77efc61c2447913a1d2be1484807e8ac3dc67ae859ab5f4525cbb486f8bf6",
+        "package_attempted": true,
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "14/15 CTest PASS",
+        "cause": "The PHPUnit 13 DataProvider and SQLite fixture remediation worked; SampleTest alone still used removed TestCase::getActualOutput(), causing four errors in one CTest entry."
       }
     ],
-    "prison": []
+    "prison": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "7f4a42af54c4d3a1603f9b7cca95a5b45786ff58",
+        "workflow_run": 35488901554,
+        "job_id": 106020266290,
+        "artifact_id": 10597829797,
+        "artifact_sha256": "f0074c8da29cfda08018fa568fce9cabbf6fc23669416caf20c714c25ff7773f",
+        "rootfs_sha256": "a1ae6cb653ec18a6dba7142f4ee5acd94210076a9adba23d9d67d03ac03885e7",
+        "package_attempted": true,
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "9/9 PASS",
+        "lintian": "PASS-errors",
+        "abi_contract": "PASS",
+        "apt_check": "PASS",
+        "qml_import_smoke": "PASS",
+        "consumer_smoke": "PASS",
+        "development_contract": "PASS",
+        "downstream_eligible": true
+      }
+    ]
   },
   "validation_incidents": {
     "kuserfeedback": [],

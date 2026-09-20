@@ -1,3 +1,11 @@
+kf6-kuserfeedback (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Complete PHPUnit 13 test compatibility for SampleTest output capture.
+  * Replace removed TestCase::getActualOutput() with scoped PHP buffering.
+  * Keep all 15 upstream CTest entries enabled.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sun, 20 Sep 2026 01:26:00 -0300
+
 kf6-kuserfeedback (6.30.0-0supralinux2) resolute; urgency=medium
 
   * Keep PHP/PHPUnit tests enabled on Ubuntu Resolute.
