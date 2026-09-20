@@ -99,20 +99,20 @@
       "selected_profile": []
     }
   ],
-  "package_contract_ready": [],
-  "human_decision_required": [
-    {
-      "node": "kmime",
-      "blocker": "ADR-0002"
-    }
-  ],
-  "build_queue": [
+  "package_contract_ready": [
     "kcrash",
     "knotifications",
     "kstatusnotifieritem",
     "kunitconversion",
     "syndication"
   ],
+  "human_decision_required": [
+    {
+      "node": "kmime",
+      "blocker": "ADR-0002"
+    }
+  ],
+  "build_queue": [],
   "audit_batch_size": 5,
   "next_provider_audit_batch": [
     "kpty",

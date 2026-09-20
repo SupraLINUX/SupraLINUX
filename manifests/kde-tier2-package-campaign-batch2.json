@@ -5,7 +5,7 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "frameworks_series": "6.30.0",
-  "state": "remediation-pending-build",
+  "state": "rematerialization-pending",
   "canonical_snapshot": "1 PASS / 14 pending / 0 current FAIL / 0 BLOCKED",
   "selected_nodes": [
     "kcrash",
@@ -100,20 +100,20 @@
           "qml6-module-org-kde-coreaddons": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
         }
       },
-      "state": "remediation-pending-build",
+      "state": "rematerialization-pending",
       "last_result": {
         "result": "INFRA",
-        "workflow_run": 35530953084,
-        "job_id": 106131492912,
-        "artifact_id": 10610968923,
-        "artifact_sha256": "1e4b384b8213e7b968586f736459bf57b7f73b0b68aa90dcab71f035541ec7e2",
+        "workflow_run": 35534595946,
+        "job_id": 106141376559,
+        "artifact_id": 10611689289,
+        "artifact_sha256": "0a305c66059134f0b409adbe50e050c56ce8fb62abddbc2cb890170521eb28a9",
+        "stage": "sbuild-lintian-policy",
+        "classification": "shared-generated-changelog-distribution",
         "package_attempted": true,
-        "stage": "sbuild-install-deps",
-        "classification": "shared-provider-packaging-tooling-incompatibility",
         "package_state_effect": "none"
       },
       "downstream_eligible": false,
-      "materialization_status": "active"
+      "materialization_status": "superseded-pending-rematerialization"
     },
     "knotifications": {
       "source_package": "kf6-knotifications",
@@ -164,20 +164,20 @@
           "qml6-module-org-kde-config": "b514993f60fe1f55ac7803ceab42ba0ef8a89dc58ab5d38463bfb63c9601bfd6"
         }
       },
-      "state": "remediation-pending-build",
+      "state": "rematerialization-pending",
       "last_result": {
         "result": "INFRA",
-        "workflow_run": 35530953084,
-        "job_id": 106131492935,
-        "artifact_id": 10611490664,
-        "artifact_sha256": "e70e6ad553a756cc592483ca13df747b46acd347100a73bf9c0c36db79a7b5ef",
+        "workflow_run": 35534595946,
+        "job_id": 106141376510,
+        "artifact_id": 10611644357,
+        "artifact_sha256": "ecd6654b0744852db24f1914dc405a9027f69d37ad8b158778cf1ffa25d39e32",
+        "stage": "sbuild-build",
+        "classification": "shared-shiboken-clang-provider-discovery",
         "package_attempted": true,
-        "stage": "sbuild-install-deps",
-        "classification": "shared-provider-packaging-tooling-incompatibility",
         "package_state_effect": "none"
       },
       "downstream_eligible": false,
-      "materialization_status": "active"
+      "materialization_status": "superseded-pending-rematerialization"
     },
     "kstatusnotifieritem": {
       "source_package": "kf6-kstatusnotifieritem",
@@ -223,20 +223,20 @@
           "qml6-module-org-kde-kwindowsystem": "07d4f715ea2783ae3b8daf88b907edf4cb62ae44760d190e8a8ddea908594b01"
         }
       },
-      "state": "remediation-pending-build",
+      "state": "rematerialization-pending",
       "last_result": {
         "result": "INFRA",
-        "workflow_run": 35530953084,
-        "job_id": 106131492962,
-        "artifact_id": 10611555771,
-        "artifact_sha256": "d8b5b98d66c1cc14bb46b2184679ff0d1f658a9a2475978001f3170ce5ca3c78",
+        "workflow_run": 35534595946,
+        "job_id": 106141376562,
+        "artifact_id": 10612114359,
+        "artifact_sha256": "131b9dea0188d7f4330d1ee65f7491cd003607c822e59affba2b95d77b115459",
+        "stage": "sbuild-build",
+        "classification": "shared-shiboken-clang-provider-discovery",
         "package_attempted": true,
-        "stage": "sbuild-install-deps",
-        "classification": "shared-provider-packaging-tooling-incompatibility",
         "package_state_effect": "none"
       },
       "downstream_eligible": false,
-      "materialization_status": "active"
+      "materialization_status": "superseded-pending-rematerialization"
     },
     "kunitconversion": {
       "source_package": "kf6-kunitconversion",
@@ -285,20 +285,20 @@
           "qml6-module-org-kde-ki18n": "07960032b6582476f0844b72d4f74884240c592e55eb0613390f0191dbd98299"
         }
       },
-      "state": "remediation-pending-build",
+      "state": "rematerialization-pending",
       "last_result": {
         "result": "INFRA",
-        "workflow_run": 35530953084,
-        "job_id": 106131492939,
-        "artifact_id": 10611650475,
-        "artifact_sha256": "f7e041112841909095ae235fe1bad6b8949fbf5f02bc50445f39aba768196e59",
-        "package_attempted": false,
-        "stage": "campaign-and-input-validation",
-        "classification": "pre-attempt-manifest-pin-mismatch",
+        "workflow_run": 35534595946,
+        "job_id": 106141376518,
+        "artifact_id": 10611934477,
+        "artifact_sha256": "3bfc734d7a030921d9a5ad6e7d4d385ffda8666b4084aa0b120a7c5de434ed16",
+        "stage": "sbuild-build",
+        "classification": "shared-shiboken-clang-provider-discovery",
+        "package_attempted": true,
         "package_state_effect": "none"
       },
       "downstream_eligible": false,
-      "materialization_status": "active"
+      "materialization_status": "superseded-pending-rematerialization"
     },
     "syndication": {
       "source_package": "kf6-syndication",
@@ -341,20 +341,20 @@
           "libkf6codecs6": "66b34b1ec140e1942d906c4e8537661bd540f959277e41de9a772e1e0956be13"
         }
       },
-      "state": "remediation-pending-build",
+      "state": "rematerialization-pending",
       "last_result": {
         "result": "INFRA",
-        "workflow_run": 35530953084,
-        "job_id": 106131492929,
-        "artifact_id": 10610829184,
-        "artifact_sha256": "cb257a4351698aac7f1f218b77f15b545f0c733a37014e47a56271368f7eb35d",
+        "workflow_run": 35534595946,
+        "job_id": 106141376557,
+        "artifact_id": 10612224263,
+        "artifact_sha256": "2ba6359eabc622c0a87bf5161119e13a53a98b4b137ee2c1b5eedbcd6863371b",
+        "stage": "sbuild-lintian-policy",
+        "classification": "shared-generated-changelog-distribution",
         "package_attempted": true,
-        "stage": "sbuild-install-deps",
-        "classification": "shared-provider-packaging-tooling-incompatibility",
         "package_state_effect": "none"
       },
       "downstream_eligible": false,
-      "materialization_status": "active"
+      "materialization_status": "superseded-pending-rematerialization"
     }
   }
 }

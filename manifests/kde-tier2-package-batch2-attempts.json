@@ -26,6 +26,23 @@
         "stage": "sbuild-install-deps",
         "package_state_effect": "none",
         "cause": "The Debian 6.30 technical-reference packaging requested debhelper-compat (= 14), while the Ubuntu 26.04 Resolute provider used by the clean build does not satisfy compatibility level 14. The same install-deps failure affected four independent nodes, so it is classified as a shared packaging-tooling/provider incompatibility rather than a node-owned package FAIL."
+      },
+      {
+        "attempt": 2,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "f77e8c949298314ef66d24762e6d7b5117b50f1a",
+        "workflow_run": 35534595946,
+        "job_id": 106141376559,
+        "artifact_id": 10611689289,
+        "artifact_sha256": "0a305c66059134f0b409adbe50e050c56ce8fb62abddbc2cb890170521eb28a9",
+        "rootfs_artifact_id": 10612413376,
+        "rootfs_sha256": "6f983685852266dbe08e4401cb9a1ec2cf1804b403ab97b916db43732f8d3a8c",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "sbuild-lintian-policy",
+        "package_state_effect": "none",
+        "cause": "The package compiled and emitted binary packages, but the SupraLINUX-generated changelog used distribution UNRELEASED; the clean build's Lintian gate rejected this as unreleased-changes. The same generated-packaging defect affected both non-Python nodes."
       }
     ],
     "knotifications": [
@@ -45,6 +62,23 @@
         "stage": "sbuild-install-deps",
         "package_state_effect": "none",
         "cause": "The Debian 6.30 technical-reference packaging requested debhelper-compat (= 14), while the Ubuntu 26.04 Resolute provider used by the clean build does not satisfy compatibility level 14. The same install-deps failure affected four independent nodes, so it is classified as a shared packaging-tooling/provider incompatibility rather than a node-owned package FAIL."
+      },
+      {
+        "attempt": 2,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "f77e8c949298314ef66d24762e6d7b5117b50f1a",
+        "workflow_run": 35534595946,
+        "job_id": 106141376510,
+        "artifact_id": 10611644357,
+        "artifact_sha256": "ecd6654b0744852db24f1914dc405a9027f69d37ad8b158778cf1ffa25d39e32",
+        "rootfs_artifact_id": 10612413376,
+        "rootfs_sha256": "6f983685852266dbe08e4401cb9a1ec2cf1804b403ab97b916db43732f8d3a8c",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "sbuild-build",
+        "package_state_effect": "none",
+        "cause": "KDE upstream Python bindings were preserved, but Shiboken ApiExtractor could not locate Clang's built-in include directory because the clean Resolute build environment lacked the default LLVM provider exposing /usr/bin/llvm-config; parsing then failed at C++ cstddef -> stddef.h. The same provider-discovery failure affected all three Python-binding nodes."
       }
     ],
     "kstatusnotifieritem": [
@@ -64,9 +98,44 @@
         "stage": "sbuild-install-deps",
         "package_state_effect": "none",
         "cause": "The Debian 6.30 technical-reference packaging requested debhelper-compat (= 14), while the Ubuntu 26.04 Resolute provider used by the clean build does not satisfy compatibility level 14. The same install-deps failure affected four independent nodes, so it is classified as a shared packaging-tooling/provider incompatibility rather than a node-owned package FAIL."
+      },
+      {
+        "attempt": 2,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "f77e8c949298314ef66d24762e6d7b5117b50f1a",
+        "workflow_run": 35534595946,
+        "job_id": 106141376562,
+        "artifact_id": 10612114359,
+        "artifact_sha256": "131b9dea0188d7f4330d1ee65f7491cd003607c822e59affba2b95d77b115459",
+        "rootfs_artifact_id": 10612413376,
+        "rootfs_sha256": "6f983685852266dbe08e4401cb9a1ec2cf1804b403ab97b916db43732f8d3a8c",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "sbuild-build",
+        "package_state_effect": "none",
+        "cause": "KDE upstream Python bindings were preserved, but Shiboken ApiExtractor could not locate Clang's built-in include directory because the clean Resolute build environment lacked the default LLVM provider exposing /usr/bin/llvm-config; parsing then failed at C++ cstddef -> stddef.h. The same provider-discovery failure affected all three Python-binding nodes."
       }
     ],
-    "kunitconversion": [],
+    "kunitconversion": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "f77e8c949298314ef66d24762e6d7b5117b50f1a",
+        "workflow_run": 35534595946,
+        "job_id": 106141376518,
+        "artifact_id": 10611934477,
+        "artifact_sha256": "3bfc734d7a030921d9a5ad6e7d4d385ffda8666b4084aa0b120a7c5de434ed16",
+        "rootfs_artifact_id": 10612413376,
+        "rootfs_sha256": "6f983685852266dbe08e4401cb9a1ec2cf1804b403ab97b916db43732f8d3a8c",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "sbuild-build",
+        "package_state_effect": "none",
+        "cause": "KDE upstream Python bindings were preserved, but Shiboken ApiExtractor could not locate Clang's built-in include directory because the clean Resolute build environment lacked the default LLVM provider exposing /usr/bin/llvm-config; parsing then failed at C++ cstddef -> stddef.h. The same provider-discovery failure affected all three Python-binding nodes."
+      }
+    ],
     "syndication": [
       {
         "attempt": 1,
@@ -84,6 +153,23 @@
         "stage": "sbuild-install-deps",
         "package_state_effect": "none",
         "cause": "The Debian 6.30 technical-reference packaging requested debhelper-compat (= 14), while the Ubuntu 26.04 Resolute provider used by the clean build does not satisfy compatibility level 14. The same install-deps failure affected four independent nodes, so it is classified as a shared packaging-tooling/provider incompatibility rather than a node-owned package FAIL."
+      },
+      {
+        "attempt": 2,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "f77e8c949298314ef66d24762e6d7b5117b50f1a",
+        "workflow_run": 35534595946,
+        "job_id": 106141376557,
+        "artifact_id": 10612224263,
+        "artifact_sha256": "2ba6359eabc622c0a87bf5161119e13a53a98b4b137ee2c1b5eedbcd6863371b",
+        "rootfs_artifact_id": 10612413376,
+        "rootfs_sha256": "6f983685852266dbe08e4401cb9a1ec2cf1804b403ab97b916db43732f8d3a8c",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "sbuild-lintian-policy",
+        "package_state_effect": "none",
+        "cause": "The package compiled and emitted binary packages, but the SupraLINUX-generated changelog used distribution UNRELEASED; the clean build's Lintian gate rejected this as unreleased-changes. The same generated-packaging defect affected both non-Python nodes."
       }
     ]
   },
@@ -118,6 +204,37 @@
       "failed_gate": "predecessor-deb-hash-validation",
       "cause": "The campaign pinned libkf6i18n-data as 3df2300d5aca640c8968859367ac3cd606a31e87e875ca207a71eeda6d03f45a, while retained KI18n artifact 10553916882 contains 3df2300d5aca640c8968859367ac3cd606a31a87e875ca207a71eeda6d03f45a.",
       "remediation": "Correct the campaign pin to the SHA-256 verified from the retained artifact before the next clean-build campaign."
+    },
+    {
+      "phase": "batch2-remediation-attempt-generated-changelog-distribution",
+      "workflow_run": 35534595946,
+      "commit": "f77e8c949298314ef66d24762e6d7b5117b50f1a",
+      "affected_nodes": [
+        "kcrash",
+        "syndication"
+      ],
+      "classification": "shared-generated-packaging-integration-defect",
+      "package_attempted": true,
+      "package_state_effect": "none",
+      "failed_gate": "sbuild-lintian-policy",
+      "cause": "The deterministic materializer generated a top changelog entry with distribution UNRELEASED. Both nodes compiled and produced .deb files, then Lintian rejected unreleased-changes.",
+      "remediation": "Generate the SupraLINUX changelog entry for the Ubuntu 26.04 base target as resolute and rematerialize before rebuilding."
+    },
+    {
+      "phase": "batch2-remediation-attempt-shiboken-clang-discovery",
+      "workflow_run": 35534595946,
+      "commit": "f77e8c949298314ef66d24762e6d7b5117b50f1a",
+      "affected_nodes": [
+        "knotifications",
+        "kstatusnotifieritem",
+        "kunitconversion"
+      ],
+      "classification": "shared-python-binding-build-tool-provider-incompatibility",
+      "package_attempted": true,
+      "package_state_effect": "none",
+      "failed_gate": "sbuild-build",
+      "cause": "Shiboken ApiExtractor warned that it could not locate Clang's built-in include directory via LLVM_INSTALL_DIR, CLANG_INSTALL_DIR or llvm-config; the environment lacked the default llvm provider and parsing failed at /usr/include/c++/15/cstddef -> stddef.h.",
+      "remediation": "Add Ubuntu Resolute llvm-dev as a build-tool provider for Python-binding package trees so /usr/bin/llvm-config and the matching LLVM 21 development surface are available, without changing KDE's BUILD_PYTHON_BINDINGS=ON profile."
     }
   ],
   "blocked_events": {

@@ -27,3 +27,15 @@ Materialization run `35534384634` completed **5/5 PASS** using the explicit Reso
 The five nodes return to `build-ready`; Batch 2 resumes as `remediation-pending-build` with `fail-fast: false`. The corrected KI18n predecessor hash is part of the campaign input.
 
 Raw runner evidence now uses `ATTEMPT_FAILURE` for a post-`sbuild` failure until root-cause classification is complete. Only a node-owned cause may be promoted to canonical `FAIL`.
+
+
+## Clean-build remediation attempt — run 35534595946
+
+The campaign used one **shared Resolute rootfs**, artifact `10612413376`, SHA-256 `6f983685852266dbe08e4401cb9a1ec2cf1804b403ab97b916db43732f8d3a8c`. All five jobs crossed the clean-`sbuild` boundary, so their evidence records `package_attempted=true`; root-cause classification remains separate from canonical package state.
+
+Two shared integration causes were identified:
+
+- KCrash and Syndication compiled and emitted binary packages, then failed the Lintian error gate because the generated SupraLINUX changelog used distribution `UNRELEASED`. The materializer now targets `resolute`.
+- KNotifications, KStatusNotifierItem and KUnitConversion preserved KDE's `BUILD_PYTHON_BINDINGS=ON`, but Shiboken ApiExtractor could not locate Clang's built-in include directory and reported the absence of `llvm-config`; parsing then failed at `cstddef -> stddef.h`. Their materialized Build-Depends now add the Ubuntu Resolute `llvm-dev` provider, which supplies the default LLVM toolchain surface and `/usr/bin/llvm-config`.
+
+Both are classified **INFRA / shared integration-provider causes**, with `package_state_effect=none`. None of the five becomes canonical FAIL. The current materialized trees are superseded for build consumption until the corrected deterministic rematerialization is PASS and pinned.

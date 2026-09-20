@@ -86,7 +86,7 @@ def set_build_depends(lines: list[str], additions: list[str]):
     lines[start:end] = rendered.splitlines()
 
 
-def modify_control(path: Path, node: dict, debhelper_compat: dict):
+def modify_control(path: Path, node: dict, debhelper_compat: dict, shiboken_provider: dict):
     text = path.read_text()
     reference_level = int(debhelper_compat["technical_reference_level"])
     selected_level = int(debhelper_compat["selected_level"])
@@ -115,7 +115,10 @@ def modify_control(path: Path, node: dict, debhelper_compat: dict):
 
     python_module = node.get("python_module")
     if python_module:
-        set_build_depends(source_lines, PYTHON_BUILD_DEPS)
+        provider_package = shiboken_provider.get("provider_package")
+        if not provider_package:
+            raise SystemExit("missing Shiboken Clang-discovery provider package")
+        set_build_depends(source_lines, [*PYTHON_BUILD_DEPS, provider_package])
 
     paragraphs[0] = "\n".join(source_lines)
     if python_module:
@@ -185,10 +188,10 @@ def modify_rules(path: Path, profile: dict):
     path.write_text(text)
 
 
-def prepend_changelog(path: Path, source_package: str, version: str):
+def prepend_changelog(path: Path, source_package: str, version: str, distribution: str):
     old = path.read_text()
     entry = (
-        f"{source_package} ({version}) UNRELEASED; urgency=medium\n\n"
+        f"{source_package} ({version}) {distribution}; urgency=medium\n\n"
         "  * Materialize SupraLINUX packaging from KDE upstream source and the\n"
         "    pinned Debian packaging tree used only as a technical reference.\n"
         "  * Preserve upstream-selected Linux features.\n\n"
@@ -245,18 +248,22 @@ def main() -> int:
         if not required.exists():
             raise SystemExit(f"missing technical reference file: {required}")
 
-    debhelper_compat = (
-        contracts.get("provider_adaptations", {})
-        .get("ubuntu-resolute", {})
-        .get("debhelper_compat")
-    )
-    if not debhelper_compat:
-        raise SystemExit("missing Ubuntu Resolute debhelper compatibility adaptation")
-    if debhelper_compat.get("kde_feature_effect") != "none":
-        raise SystemExit("debhelper adaptation must not alter the KDE feature profile")
-    modify_control(debian / "control", node, debhelper_compat)
+    provider_adaptations = contracts.get("provider_adaptations", {}).get("ubuntu-resolute", {})
+    debhelper_compat = provider_adaptations.get("debhelper_compat")
+    changelog_distribution = provider_adaptations.get("changelog_distribution")
+    shiboken_provider = provider_adaptations.get("shiboken_clang_discovery")
+    if not debhelper_compat or not changelog_distribution or not shiboken_provider:
+        raise SystemExit("missing Ubuntu Resolute packaging/provider adaptations")
+    if any(x.get("kde_feature_effect") != "none" for x in (debhelper_compat, changelog_distribution, shiboken_provider)):
+        raise SystemExit("provider adaptations must not alter the KDE feature profile")
+    if node.get("python_module") and args.node not in shiboken_provider.get("applies_to", []):
+        raise SystemExit("Python-binding node missing from Shiboken provider adaptation scope")
+    distribution = changelog_distribution.get("selected")
+    if distribution != "resolute":
+        raise SystemExit("unexpected SupraLINUX changelog distribution")
+    modify_control(debian / "control", node, debhelper_compat, shiboken_provider)
     modify_rules(debian / "rules", node["selected_profile"])
-    prepend_changelog(debian / "changelog", node["source_package"], node["package_version_candidate"])
+    prepend_changelog(debian / "changelog", node["source_package"], node["package_version_candidate"], distribution)
     append_readme(debian / "README.source")
 
     metadata = {
@@ -274,7 +281,11 @@ def main() -> int:
         "selected_profile": node["selected_profile"],
         "python_module": node.get("python_module"),
         "generated_maintainer": CI_MAINTAINER,
-        "provider_adaptations": {"debhelper_compat": debhelper_compat},
+        "provider_adaptations": {
+            "debhelper_compat": debhelper_compat,
+            "changelog_distribution": changelog_distribution,
+            **({"shiboken_clang_discovery": shiboken_provider} if node.get("python_module") else {}),
+        },
         "package_state_effect": "none",
     }
     (debian / "supralinux-materialization.json").write_text(json.dumps(metadata, indent=2) + "\n")

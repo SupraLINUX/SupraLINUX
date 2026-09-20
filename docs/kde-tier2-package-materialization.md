@@ -29,3 +29,10 @@ Run `35527533481` completed **5/5 PASS** for KCrash, KNotifications, KStatusNoti
 This promotion changes readiness from `package-contract-ready` to `build-ready`. It does **not** change package state: all five remain `pending` and `package_attempted=false`.
 
 The campaign build queue is now these five nodes. A package PASS requires the next clean sbuild/test/Lintian/ABI/runtime/consumer stage.
+
+
+## Resolute release target and Shiboken provider
+
+Materialization explicitly writes the new SupraLINUX changelog entry for distribution `resolute`; generated package trees must not use `UNRELEASED` for clean-build candidates because that fails the Lintian error gate.
+
+When a selected Framework keeps KDE upstream Python bindings enabled, the materializer also adds `llvm-dev` as the Ubuntu Resolute build-tool provider. Its purpose is to expose the default LLVM/Clang discovery surface, including `/usr/bin/llvm-config`, to Shiboken ApiExtractor. This is provider plumbing only: `BUILD_PYTHON_BINDINGS=ON` remains a KDE-owned profile decision.

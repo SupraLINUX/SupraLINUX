@@ -66,6 +66,8 @@ vals={
  "DEBIAN_ORIG_SHA":node["technical_references"]["debian"]["orig_tar_sha256"],
  "ORIG_MATCHES":str(node["technical_references"]["debian"].get("orig_matches_kde_authority",False)).lower(),
  "DEBHELPER_COMPAT_LEVEL":contracts["provider_adaptations"]["ubuntu-resolute"]["debhelper_compat"]["selected_level"],
+ "CHANGELOG_DISTRIBUTION":contracts["provider_adaptations"]["ubuntu-resolute"]["changelog_distribution"]["selected"],
+ "SHIBOKEN_LLVM_PROVIDER":contracts["provider_adaptations"]["ubuntu-resolute"]["shiboken_clang_discovery"]["provider_package"],
 }
 for k,v in vals.items():
     print(f"{k}={shlex.quote(str(v))}")
@@ -191,8 +193,10 @@ require_contains() {
 
 changelog_source="$(dpkg-parsechangelog -l"${SRC}/debian/changelog" -S Source)"
 changelog_version="$(dpkg-parsechangelog -l"${SRC}/debian/changelog" -S Version)"
+changelog_distribution="$(dpkg-parsechangelog -l"${SRC}/debian/changelog" -S Distribution)"
 require_eq "changelog-source" "${SOURCE_PACKAGE}" "${changelog_source}"
 require_eq "changelog-version" "${PACKAGE_VERSION}" "${changelog_version}"
+require_eq "changelog-distribution" "${CHANGELOG_DISTRIBUTION}" "${changelog_distribution}"
 require_contains "maintainer" 'Maintainer: SupraLINUX Build System <build@supralinux.invalid>' "${SRC}/debian/control"
 require_contains "original-maintainer" 'XSBC-Original-Maintainer:' "${SRC}/debian/control"
 require_contains "debhelper-compat-provider-level" "debhelper-compat (= ${DEBHELPER_COMPAT_LEVEL})" "${SRC}/debian/control"
@@ -206,6 +210,7 @@ then
     PY_MODULE="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["nodes"][sys.argv[2]]["python_module"])' "${CONTRACTS}" "${NODE}")"
     PY_PACKAGE="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["nodes"][sys.argv[2]]["supralinux_additional_binary_packages"][0])' "${CONTRACTS}" "${NODE}")"
     require_contains "python-binding-cmake-profile" '-DBUILD_PYTHON_BINDINGS=ON' "${SRC}/debian/rules"
+    require_contains "python-shiboken-clang-provider" "${SHIBOKEN_LLVM_PROVIDER}" "${SRC}/debian/control"
     require_contains "python-binary-package" "Package: ${PY_PACKAGE}" "${SRC}/debian/control"
     require_contains "python-install-module" "${PY_MODULE}" "${SRC}/debian/${PY_PACKAGE}.install"
 fi

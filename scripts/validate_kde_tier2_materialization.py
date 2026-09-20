@@ -19,6 +19,10 @@ req(mat.get("method")=="kde-authority-source-plus-pinned-debian-tree","materiali
 req(mat.get("package_state_effect")=="none" and mat.get("package_attempted") is False,"materialization package-state semantics")
 req(mat.get("maintainer_during_ci")=="SupraLINUX Build System <build@supralinux.invalid>","CI maintainer marker")
 req(mat.get("publication_blocker")=="replace-ci-maintainer-with-approved-project-contact","publication blocker")
+provider=contracts.get("provider_adaptations",{}).get("ubuntu-resolute",{})
+req(provider.get("changelog_distribution",{}).get("selected")=="resolute","materialization target distribution")
+req(provider.get("shiboken_clang_discovery",{}).get("provider_package")=="llvm-dev","materialization Shiboken provider")
+req(provider.get("shiboken_clang_discovery",{}).get("tool_path")=="/usr/bin/llvm-config","materialization Shiboken discovery tool")
 if mat.get("status") == "PASS":
     req(mat.get("result")=="PASS","materialization result")
     req(set(mat.get("evidence",{}))==set(expected),"materialization evidence must cover selected nodes")

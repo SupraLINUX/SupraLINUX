@@ -45,3 +45,14 @@ The prior 5/5 materialization PASS from run `35527533481` remains preserved as h
 Run `35534384634` on commit `f2927e550d113369a33011d7737136a0bb91f272` completed **PASS for all five nodes**. Every generated `debian/control` passed the explicit `debhelper-compat (= 13)` tree contract while preserving the KDE-selected feature profile. Exact artifact, full-tree, Debian-tree, `.dsc`, generated `.debian.tar.xz` and authoritative orig SHA-256 values are pinned in `manifests/kde-tier2-package-contracts.json`.
 
 This supersedes the old materialized trees for build consumption. It remains a materialization/readiness PASS, not a package PASS.
+
+
+## Batch 2 provider/integration remediation
+
+Clean-build run `35534595946` exposed two additional packaging/provider requirements after the debhelper compatibility adaptation had succeeded.
+
+The generated SupraLINUX changelog must name the Ubuntu base release target, so deterministic materialization now writes `resolute` instead of `UNRELEASED`. This is a release-target integration choice, not a KDE feature choice.
+
+For the three upstream Python-binding nodes, Shiboken's generator must be able to discover the matching Clang resource/include surface. Resolute's `libshiboken6-dev` installation did not by itself make `llvm-config` available in the clean build. SupraLINUX therefore adds the Resolute `llvm-dev` provider for KNotifications, KStatusNotifierItem and KUnitConversion. This preserves `BUILD_PYTHON_BINDINGS=ON`; it does not weaken or replace KDE upstream defaults.
+
+Both adaptations are machine-readable under `provider_adaptations.ubuntu-resolute` and require fresh deterministic materialization plus clean-build validation. The previous materialization remains historical evidence and is no longer build-consumable.
