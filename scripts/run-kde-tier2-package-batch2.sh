@@ -137,7 +137,7 @@ ln -sfn "${CHROOT_TARBALL}" "${SBUILD_CACHE}/resolute-amd64.tar"
 
 STAGE=sbuild
 PACKAGE_ATTEMPTED=true
-STATE=FAIL
+STATE=ATTEMPT_FAILURE
 EXTRA_ARGS=(--extra-package="${ECM_DEB}")
 for deb in "${PREDECESSOR_DEBS[@]}"; do EXTRA_ARGS+=(--extra-package="${deb}"); done
 sbuild --verbose --chroot-mode=unshare --dist=resolute --arch=amd64 --arch-all \

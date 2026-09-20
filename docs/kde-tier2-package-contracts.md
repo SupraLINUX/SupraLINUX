@@ -1,6 +1,6 @@
 # KDE Tier 2 package contracts
 
-Status: **reference capture PASS; deterministic rematerialization pending**  
+Status: **provider-adapted materialization PASS; clean build pending**  
 Date: **2026-09-20**
 
 The first contract batch contains KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication. All five already passed the Ubuntu Resolute provider audit and remain package-state `pending`.
@@ -38,3 +38,10 @@ The first clean-build Batch 2 run, `35530953084`, exposed a shared provider/tool
 Because Debian is a technical reference rather than packaging authority, SupraLINUX now normalizes this field to `debhelper-compat (= 13)` during deterministic materialization. The transformation is explicit in the contract manifest and generated materialization metadata. It does not change KDE-selected CMake options, Python bindings, QML surfaces, X11/DBus choices, tests, ABI targets, or any other KDE feature decision.
 
 The prior 5/5 materialization PASS from run `35527533481` remains preserved as historical evidence, but its trees are superseded for build consumption. The five package contracts return temporarily to `package-contract-ready` until CI produces and pins replacement source trees. This transition does not alter package state: all five remain `pending`.
+
+
+### Provider-adapted materialization evidence
+
+Run `35534384634` on commit `f2927e550d113369a33011d7737136a0bb91f272` completed **PASS for all five nodes**. Every generated `debian/control` passed the explicit `debhelper-compat (= 13)` tree contract while preserving the KDE-selected feature profile. Exact artifact, full-tree, Debian-tree, `.dsc`, generated `.debian.tar.xz` and authoritative orig SHA-256 values are pinned in `manifests/kde-tier2-package-contracts.json`.
+
+This supersedes the old materialized trees for build consumption. It remains a materialization/readiness PASS, not a package PASS.

@@ -262,11 +262,11 @@
       "package_identity": {
         "source_package": "kf6-kcrash",
         "package_version_candidate": "6.30.0-0supralinux1",
-        "status": "not-materialized"
+        "status": "materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-contract-rematerialization-pending",
+        "reason": "package-contract-materialized-awaiting-clean-build",
         "previous_materialization": {
           "workflow_run": 35527533481,
           "job_id": 106122236790,
@@ -282,13 +282,23 @@
           "workflow_run": 35530953084,
           "provider_adaptation": "debhelper-compat-14-to-13",
           "package_state_effect": "none"
+        },
+        "materialization": {
+          "workflow_run": 35534384634,
+          "job_id": 106140683997,
+          "artifact_id": 10611834586,
+          "artifact_sha256": "96d776e28bd474511a3318e6ef2a56f5e399cbed23b1578593cd54fafff7c577",
+          "tree_sha256": "f1da18905165b0f43920269cfd3246bf313b321c37e8f3dd5e909fa3a3a9ea53",
+          "debian_tree_sha256": "522254915036f84c18ae986da6a946d028570923cfa6181f01650572f33d1948",
+          "package_attempted": false,
+          "package_state_effect": "none"
         }
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "build-ready",
         "provider_audit": "complete",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35524034558,
@@ -413,11 +423,11 @@
       "package_identity": {
         "source_package": "kf6-knotifications",
         "package_version_candidate": "6.30.0-0supralinux1",
-        "status": "not-materialized"
+        "status": "materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-contract-rematerialization-pending",
+        "reason": "package-contract-materialized-awaiting-clean-build",
         "previous_materialization": {
           "workflow_run": 35527533481,
           "job_id": 106122236813,
@@ -433,13 +443,23 @@
           "workflow_run": 35530953084,
           "provider_adaptation": "debhelper-compat-14-to-13",
           "package_state_effect": "none"
+        },
+        "materialization": {
+          "workflow_run": 35534384634,
+          "job_id": 106140683897,
+          "artifact_id": 10612293440,
+          "artifact_sha256": "bf14082d63bd8967dd30e6db8797fa48264ee8a2d2d13c88ec47e76e13d43573",
+          "tree_sha256": "3f6fa52d2ad2639005b90976af5195e21ff4db813d80edd4a939f3a319780ccd",
+          "debian_tree_sha256": "3b0df536c2c1e70b28d959979d68472c16829659fb66fbda2067a3839912e2ea",
+          "package_attempted": false,
+          "package_state_effect": "none"
         }
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "build-ready",
         "provider_audit": "complete",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35524034558,
@@ -600,11 +620,11 @@
       "package_identity": {
         "source_package": "kf6-kstatusnotifieritem",
         "package_version_candidate": "6.30.0-0supralinux1",
-        "status": "not-materialized"
+        "status": "materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-contract-rematerialization-pending",
+        "reason": "package-contract-materialized-awaiting-clean-build",
         "previous_materialization": {
           "workflow_run": 35527533481,
           "job_id": 106122236810,
@@ -620,13 +640,23 @@
           "workflow_run": 35530953084,
           "provider_adaptation": "debhelper-compat-14-to-13",
           "package_state_effect": "none"
+        },
+        "materialization": {
+          "workflow_run": 35534384634,
+          "job_id": 106140683947,
+          "artifact_id": 10611879452,
+          "artifact_sha256": "37873531a138bb5ed0b22219d06b69ae7cf6ec0db057a85251d87865e18c0da9",
+          "tree_sha256": "818b83ec53172d7f57a7ebd093cbb712b4a7a1921152da10a08bb3de7f159572",
+          "debian_tree_sha256": "b1a56133304c57ef312f67594c949dd5e7ea206547b1a9345f640ef89fcdf788",
+          "package_attempted": false,
+          "package_state_effect": "none"
         }
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "build-ready",
         "provider_audit": "complete",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35524034558,
@@ -663,11 +693,11 @@
       "package_identity": {
         "source_package": "kf6-kunitconversion",
         "package_version_candidate": "6.30.0-0supralinux1",
-        "status": "not-materialized"
+        "status": "materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-contract-rematerialization-pending",
+        "reason": "package-contract-materialized-awaiting-clean-build",
         "previous_materialization": {
           "workflow_run": 35527533481,
           "job_id": 106122236748,
@@ -683,13 +713,23 @@
           "workflow_run": 35530953084,
           "provider_adaptation": "debhelper-compat-14-to-13",
           "package_state_effect": "none"
+        },
+        "materialization": {
+          "workflow_run": 35534384634,
+          "job_id": 106140683957,
+          "artifact_id": 10612467659,
+          "artifact_sha256": "0afef762199e72b0dfcd5a6fc35b2791f689726684d6be08ee653a428e6cf868",
+          "tree_sha256": "4f2e8cff662df6d954c20a088cfbe228de3c7a1871273e27b996c198fc68a25c",
+          "debian_tree_sha256": "fffb460602d985dda1d6ac426948923020504e2523c9d56cfe69447600b5e30a",
+          "package_attempted": false,
+          "package_state_effect": "none"
         }
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "build-ready",
         "provider_audit": "complete",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35524034558,
@@ -726,11 +766,11 @@
       "package_identity": {
         "source_package": "kf6-syndication",
         "package_version_candidate": "6.30.0-0supralinux1",
-        "status": "not-materialized"
+        "status": "materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-contract-rematerialization-pending",
+        "reason": "package-contract-materialized-awaiting-clean-build",
         "previous_materialization": {
           "workflow_run": 35527533481,
           "job_id": 106122236787,
@@ -746,13 +786,23 @@
           "workflow_run": 35530953084,
           "provider_adaptation": "debhelper-compat-14-to-13",
           "package_state_effect": "none"
+        },
+        "materialization": {
+          "workflow_run": 35534384634,
+          "job_id": 106140683962,
+          "artifact_id": 10612213475,
+          "artifact_sha256": "77c8d4e621fac3bd0cc01505f06a1874d73582cc34776181ba0298293d7ffef2",
+          "tree_sha256": "4daf4fada75f2b8acc38e4ff70aa17f0591991fdcd3502dcf73f46ece131dc9b",
+          "debian_tree_sha256": "da62a1fe01863d9e204b95f800fa52ccc89e793ebaf14101b12c6d72ffec8067",
+          "package_attempted": false,
+          "package_state_effect": "none"
         }
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "build-ready",
         "provider_audit": "complete",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35524034558,
