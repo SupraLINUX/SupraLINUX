@@ -42,6 +42,25 @@ raise SystemExit(0 if norm(load(before))==norm(load(after)) else 1)
 PY
 }
 
+canonical_tier2_is_planning_only() {
+  local path="manifests/kde-frameworks-tier2.json"
+  git cat-file -e "${BEFORE}:${path}" 2>/dev/null || return 1
+  git cat-file -e "${AFTER}:${path}" 2>/dev/null || return 1
+  python3 - "${BEFORE}" "${AFTER}" "${path}" <<'PY'
+import copy,json,subprocess,sys
+before,after,path=sys.argv[1:]
+def load(ref):
+    return json.loads(subprocess.check_output(['git','show',f'{ref}:{path}'],text=True))
+def norm(data):
+    data=copy.deepcopy(data)
+    data.pop('as_of',None)
+    for node in data.get('nodes',[]):
+        node.pop('planning',None)
+    return data
+raise SystemExit(0 if norm(load(before))==norm(load(after)) else 1)
+PY
+}
+
 campaign_is_evidence_only() {
   local path="$1" batch selector rc node
   local -a nodes=()
@@ -67,7 +86,10 @@ PY
 
 for path in "${changed[@]}"; do
   case "${path}" in
-    docs/*|README.md|scripts/validate_*.py|scripts/test-*.sh|manifests/kde-tier1-package-batch*-attempts.json) continue ;;
+    docs/*|README.md|scripts/validate_*.py|scripts/test-*.sh|scripts/compile_kde_tier2_campaign.py|manifests/kde-tier1-package-batch*-attempts.json|manifests/kde-tier2-campaign-plan.json|.github/workflows/repository-policy.yml) continue ;;
+    manifests/kde-frameworks-tier2.json)
+      if canonical_tier2_is_planning_only; then continue; fi
+      echo "${path}: canonical Tier 2 build identity changed; reusable hosted CI required."; exit 0 ;;
     manifests/kde-tier1-package-campaign-batch*.json)
       if campaign_is_evidence_only "${path}"; then continue; fi
       echo "${path}: semantic package input changed; reusable hosted CI required."; exit 0 ;;

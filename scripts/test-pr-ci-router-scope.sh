@@ -23,18 +23,42 @@ cat > manifests/kde-frameworks-tier1-packaging-tree-evidence.json <<'JSON'
 {"schema":1,"authority":"technical-reference-only","role":"reference","selected_kde":"6.30.0","status":"PASS","evidence":{"artifact_id":1}}
 JSON
 echo '{"schema":1,"nodes":{"kirigami":{"qt":{"required":["Core"]}}}}' > manifests/kde-frameworks-tier1-dependencies.json
+cat > manifests/kde-frameworks-tier2.json <<'JSON'
+{"schema":1,"frameworks_series":"6.30.0","tier":2,"nodes":[{"id":"kcrash","source_sha256":"src","kde_framework_dependencies":{"required":["kcoreaddons"]},"state":"pending","planning":{"readiness":"package-lane-pending","provider_audit":"required-before-materialization","package_contract":"not-materialized"}}]}
+JSON
+echo '{"schema":1}' > manifests/kde-tier2-campaign-plan.json
+echo 'name: Repository policy' > .github/workflows/repository-policy.yml
+echo 'print("compiler")' > scripts/compile_kde_tier2_campaign.py
 echo a > packages/kde/kirigami/a; echo b > packages/kde/kquickcharts/b; echo doc > docs/x.md; echo 'print(1)' > scripts/validate_x.py
 git add .; git commit -qm base; BASE=$(git rev-parse HEAD)
 echo more >> docs/x.md; git add .; git commit -qm docs; D=$(git rev-parse HEAD)
 if bash scripts/pr-ci-router-needed.sh "$BASE" "$D"; then echo "docs delta unexpectedly requested reusable CI" >&2; exit 1; fi
 echo '# validator' >> scripts/validate_x.py; git add .; git commit -qm validator; V=$(git rev-parse HEAD)
 if bash scripts/pr-ci-router-needed.sh "$D" "$V"; then echo "validator-only delta unexpectedly requested reusable CI" >&2; exit 1; fi
+echo '# policy' >> .github/workflows/repository-policy.yml; git add .; git commit -qm policy; RP=$(git rev-parse HEAD)
+if bash scripts/pr-ci-router-needed.sh "$V" "$RP"; then echo "repository-policy-only delta unexpectedly requested reusable CI" >&2; exit 1; fi
+echo '# compiler' >> scripts/compile_kde_tier2_campaign.py; git add .; git commit -qm compiler; CP=$(git rev-parse HEAD)
+if bash scripts/pr-ci-router-needed.sh "$RP" "$CP"; then echo "Tier2 compiler-only delta unexpectedly requested reusable CI" >&2; exit 1; fi
+echo '{"schema":1,"generated":true}' > manifests/kde-tier2-campaign-plan.json; git add .; git commit -qm generated-plan; GP=$(git rev-parse HEAD)
+if bash scripts/pr-ci-router-needed.sh "$CP" "$GP"; then echo "generated Tier2 plan unexpectedly requested reusable CI" >&2; exit 1; fi
+python3 - <<'PY'
+import json
+p='manifests/kde-frameworks-tier2.json'; d=json.load(open(p)); d['nodes'][0]['planning']['note']='planning-only'; open(p,'w').write(json.dumps(d))
+PY
+git add .; git commit -qm tier2-planning; TP=$(git rev-parse HEAD)
+if bash scripts/pr-ci-router-needed.sh "$GP" "$TP"; then echo "Tier2 planning-only delta unexpectedly requested reusable CI" >&2; exit 1; fi
+python3 - <<'PY'
+import json
+p='manifests/kde-frameworks-tier2.json'; d=json.load(open(p)); d['nodes'][0]['source_sha256']='changed'; open(p,'w').write(json.dumps(d))
+PY
+git add .; git commit -qm tier2-build-input; TBI=$(git rev-parse HEAD)
+bash scripts/pr-ci-router-needed.sh "$TP" "$TBI"
 python3 - <<'PY'
 import json
 p='manifests/kde-tier1-package-batch10-attempts.json'; d=json.load(open(p)); d['attempts']['x']=1; open(p,'w').write(json.dumps(d))
 PY
 git add .; git commit -qm ledger; L=$(git rev-parse HEAD)
-if bash scripts/pr-ci-router-needed.sh "$V" "$L"; then echo "attempt-ledger delta unexpectedly requested reusable CI" >&2; exit 1; fi
+if bash scripts/pr-ci-router-needed.sh "$TBI" "$L"; then echo "attempt-ledger delta unexpectedly requested reusable CI" >&2; exit 1; fi
 python3 - <<'PY'
 import json
 p='manifests/kde-tier1-package-campaign-batch10.json'; d=json.load(open(p)); d['nodes']['kirigami']['state']='PASS'; d['nodes']['kirigami']['pass_evidence']={'artifact_id':1}; open(p,'w').write(json.dumps(d))
