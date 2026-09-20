@@ -45,7 +45,8 @@ req(tier["kmime"].get("state")=="pending" and tier["kmime"].get("package_identit
 active=g.get("nodes",{})
 req(set(active)==expected_ids-{"kauth"},"current Tier2 active discovery must contain 14 pending nodes")
 req(active["kmime"].get("readiness")=="compatibility-decision-required","KMime decision gate")
-req(all(active[node].get("readiness")=="package-lane-pending" for node in expected_ids-{"kauth","kmime"}),"13 non-KMime pending nodes must remain package-lane-pending")
+for node in sorted(expected_ids-{"kauth","kmime"}):
+    req(active[node].get("readiness")==tier[node].get("planning",{}).get("readiness"),f"{node}: later readiness must match canonical Tier2 planning")
 req(g.get("promoted_snapshot")=={"pass":1,"pending":14,"current_fail":0,"blocked":0},"current Tier2 snapshot")
 req(g.get("completed_nodes",{}).get("kauth",{}).get("artifact_id")==10601382235,"KAuth completed discovery evidence")
 req(d.get("nodes",{}).get("kauth",{}).get("state")=="PASS" and d["nodes"]["kauth"].get("downstream_eligible") is True,"KAuth DAG PASS")
