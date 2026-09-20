@@ -34,7 +34,7 @@ The phases are gates, not calendar promises. A later phase may be prepared in pa
 
 ## Phase 3 — KDE metadata and DAG
 
-Current implementation status: KDE Frameworks 6.30 Tier 1 is canonically 29/29 PASS. Tier 2 is 1/2 canonical PASS: KAuth is retained PASS/downstream-eligible; KMime remains decision-gated by ADR-0002 because its move from PIM to Frameworks changes both Debian version ordering and the runtime/development namespace.
+Current implementation status: KDE Frameworks 6.30 Tier 1 is canonically 29/29 PASS. Tier 2 upstream inventory is 15 nodes and currently stands at **1 PASS / 14 pending / 0 current FAIL / 0 BLOCKED**: KAuth is retained PASS/downstream-eligible; 13 non-KMime nodes are package-lane-pending with Tier 1 predecessors available; KMime remains decision-gated by ADR-0002 because its move from PIM to Frameworks changes both Debian version ordering and the runtime/development namespace.
 
 - ingest official KDE stable source metadata;
 - record source URLs, versions, tags and SHA-256 values from real downloads;
