@@ -61,6 +61,33 @@ raise SystemExit(0 if norm(load(before))==norm(load(after)) else 1)
 PY
 }
 
+tier2_dependencies_are_unmaterialized_only() {
+  local deps_path="manifests/kde-frameworks-tier2-dependencies.json"
+  local tier_path="manifests/kde-frameworks-tier2.json"
+  for ref in "${BEFORE}" "${AFTER}"; do
+    git cat-file -e "${ref}:${deps_path}" 2>/dev/null || return 1
+    git cat-file -e "${ref}:${tier_path}" 2>/dev/null || return 1
+  done
+  python3 - "${BEFORE}" "${AFTER}" "${deps_path}" "${tier_path}" <<'PY'
+import json,subprocess,sys
+before,after,deps_path,tier_path=sys.argv[1:]
+def load(ref,path):
+    return json.loads(subprocess.check_output(['git','show',f'{ref}:{path}'],text=True))
+def active_ids(ref):
+    tier=load(ref,tier_path)
+    ids=set()
+    for node in tier.get('nodes',[]):
+        planning=node.get('planning',{})
+        if node.get('state') == 'PASS' or planning.get('package_contract') not in (None,'not-materialized'):
+            ids.add(node['id'])
+    return ids
+ids=active_ids(before)|active_ids(after)
+bd=load(before,deps_path).get('nodes',{})
+ad=load(after,deps_path).get('nodes',{})
+raise SystemExit(0 if {i:bd.get(i) for i in ids} == {i:ad.get(i) for i in ids} else 1)
+PY
+}
+
 campaign_is_evidence_only() {
   local path="$1" batch selector rc node
   local -a nodes=()
@@ -90,6 +117,11 @@ for path in "${changed[@]}"; do
     manifests/kde-frameworks-tier2.json)
       if canonical_tier2_is_planning_only; then continue; fi
       echo "${path}: canonical Tier 2 build identity changed; reusable hosted CI required."; exit 0 ;;
+    manifests/kde-frameworks-tier2-dependencies.json)
+      if tier2_dependencies_are_unmaterialized_only; then continue; fi
+      echo "${path}: materialized/retained Tier 2 dependency input changed; reusable hosted CI required."; exit 0 ;;
+    .github/workflows/kde-tier2-provider-audit.yml|scripts/run-kde-tier2-provider-audit.sh|scripts/kde-tier2-provider-audit-needed.sh)
+      continue ;;
     manifests/kde-tier1-package-campaign-batch*.json)
       if campaign_is_evidence_only "${path}"; then continue; fi
       echo "${path}: semantic package input changed; reusable hosted CI required."; exit 0 ;;

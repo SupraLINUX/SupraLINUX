@@ -26,6 +26,12 @@ echo '{"schema":1,"nodes":{"kirigami":{"qt":{"required":["Core"]}}}}' > manifest
 cat > manifests/kde-frameworks-tier2.json <<'JSON'
 {"schema":1,"frameworks_series":"6.30.0","tier":2,"nodes":[{"id":"kcrash","source_sha256":"src","kde_framework_dependencies":{"required":["kcoreaddons"]},"state":"pending","planning":{"readiness":"package-lane-pending","provider_audit":"required-before-materialization","package_contract":"not-materialized"}}]}
 JSON
+cat > manifests/kde-frameworks-tier2-dependencies.json <<'JSON'
+{"schema":1,"nodes":{"kcrash":{"frameworks":{"required":["kcoreaddons"]},"qt":{"required":["Core"]},"provider_audit":"pending-ci"}}}
+JSON
+echo 'name: Tier2 provider audit' > .github/workflows/kde-tier2-provider-audit.yml
+echo '#!/usr/bin/env bash' > scripts/run-kde-tier2-provider-audit.sh
+echo '#!/usr/bin/env bash' > scripts/kde-tier2-provider-audit-needed.sh
 echo '{"schema":1}' > manifests/kde-tier2-campaign-plan.json
 echo 'name: Repository policy' > .github/workflows/repository-policy.yml
 echo 'print("compiler")' > scripts/compile_kde_tier2_campaign.py
@@ -49,10 +55,31 @@ git add .; git commit -qm tier2-planning; TP=$(git rev-parse HEAD)
 if bash scripts/pr-ci-router-needed.sh "$GP" "$TP"; then echo "Tier2 planning-only delta unexpectedly requested reusable CI" >&2; exit 1; fi
 python3 - <<'PY'
 import json
+p='manifests/kde-frameworks-tier2-dependencies.json'; d=json.load(open(p)); d['nodes']['kcrash']['qt']['test']=['Test']; open(p,'w').write(json.dumps(d))
+PY
+git add .; git commit -qm tier2-provider-profile; TDP=$(git rev-parse HEAD)
+if bash scripts/pr-ci-router-needed.sh "$TP" "$TDP"; then echo "unmaterialized Tier2 dependency profile unexpectedly requested reusable CI" >&2; exit 1; fi
+echo '# audit workflow maintenance' >> .github/workflows/kde-tier2-provider-audit.yml
+git add .; git commit -qm tier2-audit-workflow; TAW=$(git rev-parse HEAD)
+if bash scripts/pr-ci-router-needed.sh "$TDP" "$TAW"; then echo "Tier2 provider-audit workflow unexpectedly requested reusable CI" >&2; exit 1; fi
+python3 - <<'PY'
+import json
+p='manifests/kde-frameworks-tier2.json'; d=json.load(open(p)); d['nodes'][0]['planning']['package_contract']='materialized'; open(p,'w').write(json.dumps(d))
+PY
+git add .; git commit -qm tier2-contract; TCM=$(git rev-parse HEAD)
+if bash scripts/pr-ci-router-needed.sh "$TAW" "$TCM"; then echo "Tier2 contract-state-only delta unexpectedly requested reusable CI" >&2; exit 1; fi
+python3 - <<'PY'
+import json
+p='manifests/kde-frameworks-tier2-dependencies.json'; d=json.load(open(p)); d['nodes']['kcrash']['qt']['test']=['Test','Widgets']; open(p,'w').write(json.dumps(d))
+PY
+git add .; git commit -qm tier2-materialized-provider; TMP=$(git rev-parse HEAD)
+bash scripts/pr-ci-router-needed.sh "$TCM" "$TMP"
+python3 - <<'PY'
+import json
 p='manifests/kde-frameworks-tier2.json'; d=json.load(open(p)); d['nodes'][0]['source_sha256']='changed'; open(p,'w').write(json.dumps(d))
 PY
 git add .; git commit -qm tier2-build-input; TBI=$(git rev-parse HEAD)
-bash scripts/pr-ci-router-needed.sh "$TP" "$TBI"
+bash scripts/pr-ci-router-needed.sh "$TMP" "$TBI"
 python3 - <<'PY'
 import json
 p='manifests/kde-tier1-package-batch10-attempts.json'; d=json.load(open(p)); d['attempts']['x']=1; open(p,'w').write(json.dumps(d))
