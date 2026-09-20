@@ -5,7 +5,7 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "frameworks_series": "6.30.0",
-  "state": "rematerialization-pending",
+  "state": "remediation-pending-build",
   "canonical_snapshot": "1 PASS / 14 pending / 0 current FAIL / 0 BLOCKED",
   "selected_nodes": [
     "kcrash",
@@ -52,8 +52,8 @@
   },
   "materialization_source": {
     "status": "PASS",
-    "workflow_run": 35534384634,
-    "commit": "f2927e550d113369a33011d7737136a0bb91f272",
+    "workflow_run": 35535155799,
+    "commit": "e03516fab151d3ea5ec6443ad65d5c4961aa6e68",
     "claim": "deterministic-package-tree-materialization"
   },
   "nodes": {
@@ -75,13 +75,13 @@
         "libkf6crash6"
       ],
       "materialization": {
-        "workflow_run": 35534384634,
-        "artifact_id": 10611834586,
-        "artifact_sha256": "96d776e28bd474511a3318e6ef2a56f5e399cbed23b1578593cd54fafff7c577",
-        "tree_sha256": "f1da18905165b0f43920269cfd3246bf313b321c37e8f3dd5e909fa3a3a9ea53",
-        "debian_tree_sha256": "522254915036f84c18ae986da6a946d028570923cfa6181f01650572f33d1948",
-        "dsc_sha256": "95d6a4348cab22796cbcfdc541d81c8e387f3d2f4b9b4232ceb895c4931e4bd2",
-        "debian_tar_sha256": "55419fedd40cc91e4b7443d01f7f37f4908bf41310af797eef9006d65d29f1fb",
+        "workflow_run": 35535155799,
+        "artifact_id": 10612224837,
+        "artifact_sha256": "37c45ad18a9587a5e8b950e3f1d7e33092b31d502c5093b36c42992f5f14cac6",
+        "tree_sha256": "302cc71f478e01c2b2fab20c6401286824f54d4772a59446cb32fce2d5a5d938",
+        "debian_tree_sha256": "5f5256b619f3e43cba2930debaee545ab773ee813bb1728031e9b7ee8a274a92",
+        "dsc_sha256": "c586f512ee573c893a093562b8351ff2165ead7a0c50e9610c4b3b57e061ce6b",
+        "debian_tar_sha256": "1330eaa16e7d8acbc6244cb4c1730cbe33d06972dc5c29ecfe482e7168fb9f2d",
         "orig_tar_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49"
       },
       "predecessor": {
@@ -100,7 +100,7 @@
           "qml6-module-org-kde-coreaddons": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
         }
       },
-      "state": "rematerialization-pending",
+      "state": "remediation-pending-build",
       "last_result": {
         "result": "INFRA",
         "workflow_run": 35534595946,
@@ -113,7 +113,7 @@
         "package_state_effect": "none"
       },
       "downstream_eligible": false,
-      "materialization_status": "superseded-pending-rematerialization"
+      "materialization_status": "active"
     },
     "knotifications": {
       "source_package": "kf6-knotifications",
@@ -136,13 +136,13 @@
         "qml6-module-org-kde-notifications"
       ],
       "materialization": {
-        "workflow_run": 35534384634,
-        "artifact_id": 10612293440,
-        "artifact_sha256": "bf14082d63bd8967dd30e6db8797fa48264ee8a2d2d13c88ec47e76e13d43573",
-        "tree_sha256": "3f6fa52d2ad2639005b90976af5195e21ff4db813d80edd4a939f3a319780ccd",
-        "debian_tree_sha256": "3b0df536c2c1e70b28d959979d68472c16829659fb66fbda2067a3839912e2ea",
-        "dsc_sha256": "429ef2bd4f3a9e8c07ca3ab987d123aad4f79ad19e698f108ac434ed35822315",
-        "debian_tar_sha256": "07c26121f174ac4598b759aa01f97c4e674f46cafd03f8b9fbffc597ccb55bdb",
+        "workflow_run": 35535155799,
+        "artifact_id": 10611504990,
+        "artifact_sha256": "fcc7249930292ed35f958395fa398a3e72c34856b8c579650222298e0ae0d936",
+        "tree_sha256": "4be011bc2433ebdc4942ca80c65cad24d801907c413bcb8b0a13a0cc17f0daea",
+        "debian_tree_sha256": "5289935cfa382ee6fd3be88841321d068d351c6ae5bcdde9a740e4afbec33cd6",
+        "dsc_sha256": "365527190baff9954c28653458191e74de96316937bfd55f17b9796928021d5a",
+        "debian_tar_sha256": "4992a020ced43ebca3361f06a75860fb4afa51f5685db5b993083e8dcd1c7f17",
         "orig_tar_sha256": "09ad50570b26aada0408bb9ccfaabf629c56ec89a9972c8b0e155ab780f577cf"
       },
       "predecessor": {
@@ -164,7 +164,7 @@
           "qml6-module-org-kde-config": "b514993f60fe1f55ac7803ceab42ba0ef8a89dc58ab5d38463bfb63c9601bfd6"
         }
       },
-      "state": "rematerialization-pending",
+      "state": "remediation-pending-build",
       "last_result": {
         "result": "INFRA",
         "workflow_run": 35534595946,
@@ -177,7 +177,7 @@
         "package_state_effect": "none"
       },
       "downstream_eligible": false,
-      "materialization_status": "superseded-pending-rematerialization"
+      "materialization_status": "active"
     },
     "kstatusnotifieritem": {
       "source_package": "kf6-kstatusnotifieritem",
@@ -199,13 +199,13 @@
         "python3-kf6statusnotifieritem"
       ],
       "materialization": {
-        "workflow_run": 35534384634,
-        "artifact_id": 10611879452,
-        "artifact_sha256": "37873531a138bb5ed0b22219d06b69ae7cf6ec0db057a85251d87865e18c0da9",
-        "tree_sha256": "818b83ec53172d7f57a7ebd093cbb712b4a7a1921152da10a08bb3de7f159572",
-        "debian_tree_sha256": "b1a56133304c57ef312f67594c949dd5e7ea206547b1a9345f640ef89fcdf788",
-        "dsc_sha256": "f3143376d9fbfa24cbf36efed031eefb81f63fffb60b7888776c1165048f0656",
-        "debian_tar_sha256": "cea3f8be21d461e6b259af8a9b3b45dd1967e20f3dc495a2f1111cf87292ea95",
+        "workflow_run": 35535155799,
+        "artifact_id": 10613175026,
+        "artifact_sha256": "241a8bf8477441d0de45b37f413e965285abea0c6e12491e8aa0cc6c1670014d",
+        "tree_sha256": "5b33a62c435ac32b89f093d3dddec83737e774b0b8d0ad87d220e2fda442ee2d",
+        "debian_tree_sha256": "6e763e0dc9fb2c66217839dd6f786d897ebc55861ca2526405b5796755123dfc",
+        "dsc_sha256": "2c60ba115281822fc2f62c4a2d8064c0338233070600dbc984af7e1d26dbe8a2",
+        "debian_tar_sha256": "be62f8b0b34a07c4d13e535bf0c4b8d9da10728ab96cabaa276c83107d4b378a",
         "orig_tar_sha256": "373fb23fe6a5c0c5c755c473e7cf272796ea59891c05157c3a7e9607a4c4af4f"
       },
       "predecessor": {
@@ -223,7 +223,7 @@
           "qml6-module-org-kde-kwindowsystem": "07d4f715ea2783ae3b8daf88b907edf4cb62ae44760d190e8a8ddea908594b01"
         }
       },
-      "state": "rematerialization-pending",
+      "state": "remediation-pending-build",
       "last_result": {
         "result": "INFRA",
         "workflow_run": 35534595946,
@@ -236,7 +236,7 @@
         "package_state_effect": "none"
       },
       "downstream_eligible": false,
-      "materialization_status": "superseded-pending-rematerialization"
+      "materialization_status": "active"
     },
     "kunitconversion": {
       "source_package": "kf6-kunitconversion",
@@ -258,13 +258,13 @@
         "python3-kf6unitconversion"
       ],
       "materialization": {
-        "workflow_run": 35534384634,
-        "artifact_id": 10612467659,
-        "artifact_sha256": "0afef762199e72b0dfcd5a6fc35b2791f689726684d6be08ee653a428e6cf868",
-        "tree_sha256": "4f2e8cff662df6d954c20a088cfbe228de3c7a1871273e27b996c198fc68a25c",
-        "debian_tree_sha256": "fffb460602d985dda1d6ac426948923020504e2523c9d56cfe69447600b5e30a",
-        "dsc_sha256": "89c730a8022fa4f564edf0f39cce12cbe15d764532fe189a7f530f357937bc78",
-        "debian_tar_sha256": "2be6cf0ba33f862e740944f412fa0bac9ffc795ba954ded8cc6cdf5ed7561746",
+        "workflow_run": 35535155799,
+        "artifact_id": 10612498422,
+        "artifact_sha256": "a43bb38340fac941a2a58bd4e8a66cd6270742430fd7309d33d4bc615a4fc1c8",
+        "tree_sha256": "d0a136e856a0151c8f3d204df7bee85a48dff7de3caa5704a30fe68ae375b3c0",
+        "debian_tree_sha256": "9cd86534deb798a309f219fd077a85014b262d92aceed77fead8a172a739d7de",
+        "dsc_sha256": "8918cb1064d049823ad3bfc79cbb3078c301327a11af67336da356429b1b99a3",
+        "debian_tar_sha256": "87bf671f953cc43bf29229e59f982d8e8dbd281c8f4ae36a5a4617070a3db5d7",
         "orig_tar_sha256": "3dcaa45875bab5a2dcadc34cf57cf06689b8d86ff40e20fee01ca2b18987175f"
       },
       "predecessor": {
@@ -285,7 +285,7 @@
           "qml6-module-org-kde-ki18n": "07960032b6582476f0844b72d4f74884240c592e55eb0613390f0191dbd98299"
         }
       },
-      "state": "rematerialization-pending",
+      "state": "remediation-pending-build",
       "last_result": {
         "result": "INFRA",
         "workflow_run": 35534595946,
@@ -298,7 +298,7 @@
         "package_state_effect": "none"
       },
       "downstream_eligible": false,
-      "materialization_status": "superseded-pending-rematerialization"
+      "materialization_status": "active"
     },
     "syndication": {
       "source_package": "kf6-syndication",
@@ -318,13 +318,13 @@
         "libkf6syndication6"
       ],
       "materialization": {
-        "workflow_run": 35534384634,
-        "artifact_id": 10612213475,
-        "artifact_sha256": "77c8d4e621fac3bd0cc01505f06a1874d73582cc34776181ba0298293d7ffef2",
-        "tree_sha256": "4daf4fada75f2b8acc38e4ff70aa17f0591991fdcd3502dcf73f46ece131dc9b",
-        "debian_tree_sha256": "da62a1fe01863d9e204b95f800fa52ccc89e793ebaf14101b12c6d72ffec8067",
-        "dsc_sha256": "2dc66df6cc56f745b4de1794a1c5391da9a44615c5f2190330520c7ce385869b",
-        "debian_tar_sha256": "1ba25cd520c3aee5262ca5e28f9f62ccbae93408f1c908ef0376cd1fb4fb7b4a",
+        "workflow_run": 35535155799,
+        "artifact_id": 10612304550,
+        "artifact_sha256": "df41b96ba2d550faa4293228ff401d6aba4d5e2c2f11dcd01b855dbaf96963e6",
+        "tree_sha256": "8fa51ee205599b18e3d507f5d39c782386bd6da26267611bf2a151c8db042992",
+        "debian_tree_sha256": "93ec08321fdfb8152ab2b58e48c1a1a2b8087ca487d134835118d718c267105a",
+        "dsc_sha256": "c26aa6ad7e13103d8c58a9ba3203de13d2c65530a90f28ce0d596995811ef2db",
+        "debian_tar_sha256": "84e75fd68013887a612ac1881b72a0f07dcd6e9c8ec3f65dfc2923af939649cc",
         "orig_tar_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee"
       },
       "predecessor": {
@@ -341,7 +341,7 @@
           "libkf6codecs6": "66b34b1ec140e1942d906c4e8537661bd540f959277e41de9a772e1e0956be13"
         }
       },
-      "state": "rematerialization-pending",
+      "state": "remediation-pending-build",
       "last_result": {
         "result": "INFRA",
         "workflow_run": 35534595946,
@@ -354,7 +354,7 @@
         "package_state_effect": "none"
       },
       "downstream_eligible": false,
-      "materialization_status": "superseded-pending-rematerialization"
+      "materialization_status": "active"
     }
   }
 }

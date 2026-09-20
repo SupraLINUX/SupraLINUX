@@ -39,3 +39,10 @@ Two shared integration causes were identified:
 - KNotifications, KStatusNotifierItem and KUnitConversion preserved KDE's `BUILD_PYTHON_BINDINGS=ON`, but Shiboken ApiExtractor could not locate Clang's built-in include directory and reported the absence of `llvm-config`; parsing then failed at `cstddef -> stddef.h`. Their materialized Build-Depends now add the Ubuntu Resolute `llvm-dev` provider, which supplies the default LLVM toolchain surface and `/usr/bin/llvm-config`.
 
 Both are classified **INFRA / shared integration-provider causes**, with `package_state_effect=none`. None of the five becomes canonical FAIL. The current materialized trees are superseded for build consumption until the corrected deterministic rematerialization is PASS and pinned.
+
+
+## Second corrected materialization PASS
+
+Run `35535155799` completed **5/5 PASS** after applying both shared remediations: changelog distribution `resolute` and the `llvm-dev` provider for the three Shiboken/Python-binding nodes. Exact artifact and source-tree hashes are pinned in the contracts and campaign manifests.
+
+The five package nodes return to `build-ready`; Batch 2 is again `remediation-pending-build`. The next campaign must use the corrected materialization and retain `fail-fast: false`.

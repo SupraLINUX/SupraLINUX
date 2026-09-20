@@ -56,3 +56,10 @@ The generated SupraLINUX changelog must name the Ubuntu base release target, so 
 For the three upstream Python-binding nodes, Shiboken's generator must be able to discover the matching Clang resource/include surface. Resolute's `libshiboken6-dev` installation did not by itself make `llvm-config` available in the clean build. SupraLINUX therefore adds the Resolute `llvm-dev` provider for KNotifications, KStatusNotifierItem and KUnitConversion. This preserves `BUILD_PYTHON_BINDINGS=ON`; it does not weaken or replace KDE upstream defaults.
 
 Both adaptations are machine-readable under `provider_adaptations.ubuntu-resolute` and require fresh deterministic materialization plus clean-build validation. The previous materialization remains historical evidence and is no longer build-consumable.
+
+
+### Corrected materialization evidence
+
+Run `35535155799` on commit `e03516fab151d3ea5ec6443ad65d5c4961aa6e68` completed **5/5 PASS** with the Resolute changelog target and Shiboken LLVM provider encoded in the generated trees. This materialization supersedes run `35534384634` for build consumption; both remain historical evidence.
+
+The package state is unchanged. KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication are again `build-ready` but remain `pending` until a real clean-build PASS satisfies the complete Batch 2 gates.

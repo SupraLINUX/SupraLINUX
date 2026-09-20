@@ -36,7 +36,12 @@ jobs:
 
       - name: Lint shell scripts
         shell: bash
-        run: shellcheck -e SC1091 scripts/*.sh
+        run: |
+          mapfile -d '' shell_scripts < <(find scripts -maxdepth 1 -type f -name '*.sh' ! -name 'run-kde-tier2-package-materialization.sh' -print0)
+          shellcheck -e SC1091 "${shell_scripts[@]}"
+          # CHANGELOG_DISTRIBUTION is assigned through a validated Python->eval map;
+          # SC2153 cannot see that dynamic assignment, so suppress it for this runner only.
+          shellcheck -e SC1091,SC2153 scripts/run-kde-tier2-package-materialization.sh
 
       - name: Test KVM-required QEMU wrapper
         shell: bash
