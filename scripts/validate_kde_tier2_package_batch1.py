@@ -16,7 +16,11 @@ d=load("manifests/kde-dag.json")
 req(c.get("schema")==2 and c.get("batch")=="tier2-batch-1" and c.get("lane")=="core-authorization","Batch1 identity")
 req(c.get("state")=="PASS","Batch1 campaign PASS")
 req(c.get("canonical_snapshot")=={"tier1":"29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED","tier2":"0 PASS / 2 pending / 0 current FAIL / 0 BLOCKED"},"historical pre-Batch1 snapshot")
-req(c.get("canonical_promotion")=={"status":"promotion-candidate","tier2":"1 PASS / 1 pending / 0 current FAIL / 0 BLOCKED","dag_nodes":["kauth"]},"Batch1 promotion candidate")
+req(c.get("canonical_promotion")=={"status":"promotion-candidate","tier2":"1 PASS / 1 pending / 0 current FAIL / 0 BLOCKED","dag_nodes":["kauth"]},"Batch1 historical promotion record")
+ctx=c.get("inventory_context",{})
+req(ctx.get("status")=="historical-incomplete-inventory" and ctx.get("corrected_inventory_count")==15 and ctx.get("corrected_current_state")=="1 PASS / 14 pending / 0 current FAIL / 0 BLOCKED","Batch1 inventory correction context")
+post=c.get("post_campaign_inventory_correction",{})
+req(post.get("kAuth_pass_unchanged") is True and post.get("additional_pending_nodes")==13 and post.get("kmime_state")=="compatibility-decision-required" and post.get("package_state_effect")=="none","Batch1 post-campaign correction semantics")
 n=c.get("nodes",{}).get("kauth",{})
 req(n.get("package_version")=="6.30.0-0supralinux3" and n.get("state")=="PASS" and n.get("last_result")=="PASS" and n.get("downstream_eligible") is True,"KAuth campaign PASS")
 pe=n.get("pass_evidence",{})
@@ -33,10 +37,16 @@ req(ref.get("debian_tar_sha256")=="f304bd772cf958ca9dccab78ad33e12f8e2f7bf0b0389
 req(ref.get("symbols_adjustment",{}).get("symbols")==["_ZTIN5KAuth11AuthBackend7PrivateE@Base 6.23.0","_ZTVN5KAuth11AuthBackend7PrivateE@Base 6.23.0"],"private-only symbols adjustment")
 
 tier={x["id"]:x for x in t.get("nodes",[])}
+expected_ids={"kauth","kcolorscheme","kcompletion","kcontacts","kcrash","kdeclarative","kfilemetadata","knotifications","kpackage","kpty","kservice","kstatusnotifieritem","kunitconversion","syndication","kmime"}
+req(set(tier)==expected_ids,"current Tier2 inventory must contain 15 upstream nodes")
 kt=tier["kauth"]
 req(kt.get("state")=="PASS" and kt.get("packaging",{}).get("state")=="PASS" and kt["packaging"].get("downstream_eligible") is True,"KAuth Tier2 canonical PASS")
 req(tier["kmime"].get("state")=="pending" and tier["kmime"].get("package_identity",{}).get("package_version_candidate") is None,"KMime remains pending/undecided")
-req(set(g.get("nodes",{}))=={"kmime"} and g["nodes"]["kmime"].get("readiness")=="compatibility-decision-required","Tier2 active discovery")
+active=g.get("nodes",{})
+req(set(active)==expected_ids-{"kauth"},"current Tier2 active discovery must contain 14 pending nodes")
+req(active["kmime"].get("readiness")=="compatibility-decision-required","KMime decision gate")
+req(all(active[node].get("readiness")=="package-lane-pending" for node in expected_ids-{"kauth","kmime"}),"13 non-KMime pending nodes must remain package-lane-pending")
+req(g.get("promoted_snapshot")=={"pass":1,"pending":14,"current_fail":0,"blocked":0},"current Tier2 snapshot")
 req(g.get("completed_nodes",{}).get("kauth",{}).get("artifact_id")==10601382235,"KAuth completed discovery evidence")
 req(d.get("nodes",{}).get("kauth",{}).get("state")=="PASS" and d["nodes"]["kauth"].get("downstream_eligible") is True,"KAuth DAG PASS")
 
@@ -61,7 +71,7 @@ req("kde-tier2-package-batch1-attempts.json" in scope and "package_attempted" in
 req("KDE Tier 2 Batch 1 scope selector: PASS" in scope_test and "mkdir -p docs" in scope_test,"scope test final contract")
 
 doc=text("docs/kde-tier2-package-batch1.md")
-for token in ("KAuth PASS","10601382235","443a47a67188a52faae6c20b03c2c53203d5a9386dbbb5765af4f69e0cd1744b","6/6 PASS","1 PASS / 1 pending"):
+for token in ("KAuth PASS","10601382235","443a47a67188a52faae6c20b03c2c53203d5a9386dbbb5765af4f69e0cd1744b","6/6 PASS","1 PASS / 14 pending"):
     req(token in doc,f"Batch1 docs missing {token}")
 
 if errors:
@@ -69,4 +79,4 @@ if errors:
     raise SystemExit(1)
 print("KDE Tier 2 Batch 1 KAuth canonical promotion: PASS")
 print("KAuth 6.30.0-0supralinux3 PASS/downstream-eligible")
-print("Tier 2: 1 PASS / 1 pending; KMime remains decision-gated")
+print("Tier 2 current inventory: 1 PASS / 14 pending; KAuth evidence unchanged")
