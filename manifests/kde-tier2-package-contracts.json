@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "as_of": "2026-09-20",
-  "state": "reference-capture-pending",
+  "state": "reference-capture-pass",
   "source_authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "packaging_authority": "supralinux",
@@ -20,7 +20,9 @@
     "upstream_features_must_not_be_silently_disabled": true,
     "python_bindings_follow_upstream_defaults": true,
     "reference_packaging_is_not_authoritative": true,
-    "package_pass_requires_real_clean_build": true
+    "package_pass_requires_real_clean_build": true,
+    "reference_orig_must_match_kde_authority_when_same_upstream_version": true,
+    "reference_debian_tree_may_be_used_when_reference_orig_mismatches": true
   },
   "selected_nodes": [
     "kcrash",
@@ -47,6 +49,21 @@
       "selected_profile": {
         "WITH_X11": true,
         "BUILD_TESTING": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "9dce3b857735cb3c888cf6c59ecf51e081d2889be0d3229a508cd2911cdb692a",
+          "debian_tar_sha256": "c33139da1ce93431905aa981f21613cdbab3f08f4931cd160991b30597894897",
+          "orig_tar_sha256": "4544428c3c96587e46342daf5b1f083dd7950c7bc940d7bc7921300600ef8074"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "7fb5b51a0661cd0816cc26228a452c750cefdd290c5d1a9aa4eff55df993dedb",
+          "debian_tar_sha256": "03d0455ee72054bb623685558b608a7cc6f9c8a1912a6a292c35f145d22393e3",
+          "orig_tar_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+          "orig_matches_kde_authority": true
+        }
       }
     },
     "knotifications": {
@@ -73,6 +90,21 @@
         "BUILD_PYTHON_BINDINGS": true,
         "BUILD_TESTING": true,
         "BUILD_QML_IF_PROVIDER_AVAILABLE": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "c1adffdf826fa5abc60c72c99c7b0f1a72576d72ed97db5762e85ee259e2f99a",
+          "debian_tar_sha256": "da8c7b44f42c69d284137dffa158d5bf603a241f03ce41962c00169e73ae32cc",
+          "orig_tar_sha256": "12bb0b34ac9ae39b96d189cc0b29f526ae12a9014d0aad3721cacc9148e42940"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "88b7f33bf9dc8df25328de7e221fbd024ecefcde6a34c26c8c303c5d79ee1655",
+          "debian_tar_sha256": "08faad896e5926d6259695cfad25a220272eee7561447a9899ccc7ff0e98ef9d",
+          "orig_tar_sha256": "09ad50570b26aada0408bb9ccfaabf629c56ec89a9972c8b0e155ab780f577cf",
+          "orig_matches_kde_authority": true
+        }
       }
     },
     "kstatusnotifieritem": {
@@ -98,6 +130,21 @@
         "USE_DBUS": true,
         "BUILD_PYTHON_BINDINGS": true,
         "BUILD_TESTING": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "9c4b959a4e3e0ba1068b11e6f8d206a7cf83185bdc7b0d59045be58a81621727",
+          "debian_tar_sha256": "be9400b7fa68d5c3681d67bad760c3cfd67f3c3758cd1414454647c9adecbf66",
+          "orig_tar_sha256": "f76c77dcc27a60007330329a6d6c60298c11ddddba82f710a90715ec81f886ff"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "2f622db13cb79283ff267fdda684eba0c6e2a5b137cded4118ee4e823af5dcb8",
+          "debian_tar_sha256": "e25660593cdc52e72a37ebcefc698b8bdb33ec5cd00ed3c9d1295498f6eecbe6",
+          "orig_tar_sha256": "373fb23fe6a5c0c5c755c473e7cf272796ea59891c05157c3a7e9607a4c4af4f",
+          "orig_matches_kde_authority": true
+        }
       }
     },
     "kunitconversion": {
@@ -121,6 +168,21 @@
       "selected_profile": {
         "BUILD_PYTHON_BINDINGS": true,
         "BUILD_TESTING": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "5dd8e5bb88f745e43b62327585b9275406b82376130f30305f6ede4773584d3e",
+          "debian_tar_sha256": "61018a38a76c44a907aa36099e2ff4f819f3b7bd256865ce3496c8118b93ef5b",
+          "orig_tar_sha256": "a0cd582e48c302d56b5ebcea560b5590f94b8615dbd54bc67bcd165714979fa6"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "80cbc8f12a339d62623a95f06649f26d71bccb799a8eed92699f6f23bdd24898",
+          "debian_tar_sha256": "1180130c838da3d81bec14f5a00bcadef4975240da9c8ff90a8705b122fdd268",
+          "orig_tar_sha256": "3dcaa45875bab5a2dcadc34cf57cf06689b8d86ff40e20fee01ca2b18987175f",
+          "orig_matches_kde_authority": true
+        }
       }
     },
     "syndication": {
@@ -139,7 +201,37 @@
       "soname": "libKF6Syndication.so.6",
       "selected_profile": {
         "BUILD_TESTING": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "7d0dd92d9937d2161b32e42229e07b9ec845df647d082f7a4bf16a6a27789009",
+          "debian_tar_sha256": "7817265b0e57e50d902e35404a8be88f86a9b3229f58b0ee6e0c27169153a4fb",
+          "orig_tar_sha256": "99e282bf23a0398dd9a22ce94168a8228bbf1b72aaaf9c52154b70b8a768a05c"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "4c57c6c871c8973f435d0d7515acdeb757e9c37b1b3293d8bb6989acc32ecd4d",
+          "debian_tar_sha256": "d8602d238d2416e565e79394ea4806348d955492bc25751825c9f796ffd46bac",
+          "orig_tar_sha256": "fb46986bd539f49dc39c79553c4e8e9eaeb5953efa8cba1b47d3b139ee54f5af",
+          "orig_matches_kde_authority": false,
+          "authority_source_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+          "policy": "debian-orig-rejected-use-kde-upstream-source"
+        }
       }
     }
+  },
+  "reference_evidence": {
+    "result": "PASS",
+    "workflow_run": 35525532348,
+    "job_id": 106116905607,
+    "commit": "5f1d04379ee256835e237b6cf5eb1946577a5650",
+    "artifact_id": 10609796320,
+    "artifact_sha256": "0d5d1f961e0189190505545aedca169dc0180ed1d9e189a5eca021267a8385e3",
+    "snapshot_sha256": "5bfdf1238cedc31ccda2a3f3c93459911709b3e7650eb40c129354f42d0286e9",
+    "versions_sha256": "adc9d4eda684acaaa77a05a4089fa975ca3e894acdd9bd18190d41cbdb062d74",
+    "result_json_sha256": "5fd85f5d9365a658497bd104007f666304c3f88da2366d32b2bf5b629bf6b14f",
+    "claim": "packaging-reference-snapshot-only",
+    "package_state_effect": "none"
   }
 }

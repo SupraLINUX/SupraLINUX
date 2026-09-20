@@ -16,6 +16,12 @@ deps=load("manifests/kde-frameworks-tier2-dependencies.json")
 expected=["kcrash","knotifications","kstatusnotifieritem","kunitconversion","syndication"]
 req(contracts.get("schema")==1,"contract schema")
 req(contracts.get("state") in {"reference-capture-pending","reference-capture-pass","materialized"},"contract state")
+if contracts.get("state") in {"reference-capture-pass","materialized"}:
+    ev=contracts.get("reference_evidence",{})
+    req(ev.get("result")=="PASS" and ev.get("package_state_effect")=="none","reference capture PASS evidence")
+    req(ev.get("workflow_run")==35525532348 and ev.get("job_id")==106116905607 and ev.get("artifact_id")==10609796320,"reference capture identity")
+    req(ev.get("artifact_sha256")=="0d5d1f961e0189190505545aedca169dc0180ed1d9e189a5eca021267a8385e3","reference artifact digest")
+    req(ev.get("snapshot_sha256")=="5bfdf1238cedc31ccda2a3f3c93459911709b3e7650eb40c129354f42d0286e9","reference snapshot digest")
 req(contracts.get("source_authority")=="kde-upstream" and contracts.get("packaging_authority")=="supralinux","authority split")
 req(contracts.get("frameworks_series")=="6.30.0","Frameworks series")
 req(contracts.get("selected_nodes")==expected,"selected contract node order")
@@ -38,6 +44,12 @@ for node_id in expected:
     req(c.get("soname","").endswith(".so.6"),f"{node_id}: SONAME")
     req(dep_nodes[node_id].get("provider_audit")=="PASS",f"{node_id}: provider audit PASS")
     req(c.get("compatibility_binary_packages"),f"{node_id}: compatibility binary package set")
+    if contracts.get("state") in {"reference-capture-pass","materialized"}:
+        refs=c.get("technical_references",{})
+        req(refs.get("ubuntu",{}).get("version")=="6.24.0-0ubuntu1",f"{node_id}: pinned Ubuntu reference")
+        req(refs.get("debian",{}).get("version")=="6.30.0-1",f"{node_id}: pinned Debian reference")
+        req(len(refs.get("ubuntu",{}).get("debian_tar_sha256",""))==64,f"{node_id}: Ubuntu debian.tar SHA")
+        req(len(refs.get("debian",{}).get("debian_tar_sha256",""))==64,f"{node_id}: Debian debian.tar SHA")
 
 for node_id,module,pkg in (
     ("knotifications","KNotifications","python3-kf6notifications"),
@@ -50,6 +62,13 @@ for node_id,module,pkg in (
     req(pkg in c.get("supralinux_additional_binary_packages",[]),f"{node_id}: Python binary split")
 
 req(contracts["nodes"]["knotifications"]["selected_profile"].get("BUILD_QML_IF_PROVIDER_AVAILABLE") is True,"KNotifications QML capability preserved")
+if contracts.get("state") in {"reference-capture-pass","materialized"}:
+    for node_id in ("kcrash","knotifications","kstatusnotifieritem","kunitconversion"):
+        req(contracts["nodes"][node_id]["technical_references"]["debian"].get("orig_matches_kde_authority") is True,f"{node_id}: Debian 6.30 orig matches KDE authority")
+    synd=contracts["nodes"]["syndication"]["technical_references"]["debian"]
+    req(synd.get("orig_matches_kde_authority") is False,"Syndication Debian orig mismatch retained")
+    req(synd.get("authority_source_sha256")==contracts["nodes"]["syndication"]["source_sha256"],"Syndication KDE authority source retained")
+    req(synd.get("policy")=="debian-orig-rejected-use-kde-upstream-source","Syndication mismatch policy")
 
 doc=(ROOT/"docs/kde-tier2-package-contracts.md").read_text()
 for token in ("technical reference","python3-kf6notifications","python3-kf6statusnotifieritem","python3-kf6unitconversion","not a package PASS"):
@@ -59,4 +78,4 @@ if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)
     raise SystemExit(1)
 print("KDE Tier 2 package-contract draft: PASS")
-print("nodes=5; reference capture pending; package state unchanged")
+print(f"nodes=5; reference state={contracts.get('state')}; package state unchanged")

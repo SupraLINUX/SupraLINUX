@@ -56,7 +56,7 @@ debian_apt=(-o "Dir::Etc::sourcelist=${DEBIAN_LIST}" -o "Dir::Etc::sourceparts=-
 sudo apt-get "${ubuntu_apt[@]}" update
 sudo apt-get "${debian_apt[@]}" update
 
-STAGE=source-record-capture
+STAGE="source-record-capture"
 mapfile -t rows < <(python3 - "${MANIFEST}" <<'PY'
 import json,sys
 m=json.load(open(sys.argv[1]))
@@ -71,7 +71,7 @@ for row in "${rows[@]}"; do
   [[ -s "${EVIDENCE}/source-records/ubuntu/${node}.txt" && -s "${EVIDENCE}/source-records/debian/${node}.txt" ]] || exit 1
 done
 
-STAGE=normalization
+STAGE="normalization"
 python3 - "${MANIFEST}" "${EVIDENCE}" <<'PY'
 import functools,json,subprocess,sys
 from pathlib import Path
