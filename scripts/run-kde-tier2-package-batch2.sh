@@ -132,13 +132,17 @@ expected_rootfs="$(awk '{print $1}' "${ROOTFS_SHA_FILE}")"
 actual_rootfs="$(sha256sum "${CHROOT_TARBALL}" | awk '{print $1}')"
 [[ "${expected_rootfs}" == "${actual_rootfs}" ]]
 printf '%s\n' "${actual_rootfs}" > "${EVIDENCE}/rootfs.sha256"
+SBUILD_CACHE="${HOME}/.cache/sbuild"
+mkdir -p "${SBUILD_CACHE}"
+ln -sfn "${CHROOT_TARBALL}" "${SBUILD_CACHE}/resolute-amd64.tar"
 
 STAGE=sbuild
 PACKAGE_ATTEMPTED=true
 STATE=FAIL
 EXTRA_ARGS=(--extra-package="${ECM_DEB}")
 for deb in "${PREDECESSOR_DEBS[@]}"; do EXTRA_ARGS+=(--extra-package="${deb}"); done
-sbuild --verbose --chroot-mode=unshare --chroot="@{CHROOT_TARBALL}" --dist=resolute --arch=amd64 --arch-all   "${EXTRA_ARGS[@]}" --build-dir="${OUT}" "${DSC}" |& tee "${EVIDENCE}/sbuild.log"
+sbuild --verbose --chroot-mode=unshare --dist=resolute --arch=amd64 --arch-all \
+  "${EXTRA_ARGS[@]}" --build-dir="${OUT}" "${DSC}" |& tee "${EVIDENCE}/sbuild.log"
 
 grep -Eq '100% tests passed, 0 tests failed out of [1-9][0-9]*' "${EVIDENCE}/sbuild.log" || {
   echo "No positive non-zero CTest PASS summary found" >&2; exit 1;
@@ -168,7 +172,6 @@ if set(debs)!=expected:
 (ev/"built-debs.json").write_text(json.dumps(debs,indent=2)+"\n")
 PY
 
-grep -F "extra-cmake-modules (= ${campaign.shared_predecessors?.extra_cmake_modules?.version || ''})" /dev/null >/dev/null 2>&1 || true
 ECM_VERSION="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["shared_predecessors"]["extra_cmake_modules"]["version"])' "${CAMPAIGN}")"
 grep -F "extra-cmake-modules (= ${ECM_VERSION})" "${BUILDINFO[0]}" > "${EVIDENCE}/ecm-buildinfo-proof.txt"
 grep -F "${PREDECESSOR_DEV_PACKAGE} (= ${PREDECESSOR_VERSION})" "${BUILDINFO[0]}" > "${EVIDENCE}/predecessor-buildinfo-proof.txt"
