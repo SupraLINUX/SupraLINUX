@@ -82,3 +82,11 @@ Run `35489184465`, job `106021045629`, artifact `10598602563`, SHA-256 `e70ed24d
 KUserFeedback `6.30.0-0supralinux3` again reaches **14/15 CTest PASS**. The output-capture remediation works. The only remaining failing CTest is SampleTest because PHPUnit 13 removed `assertObjectHasAttribute()` and `assertObjectNotHasAttribute()`. Revision `-4` maps them to PHPUnit 13's `assertObjectHasProperty()` and `assertObjectNotHasProperty()`. All other PHP/C++ tests pass.
 
 Prison remains retained PASS and was correctly scope-skipped in this cycle.
+
+## Cycle 4
+
+Run `35489499984`, job `106021890875`, artifact `10598313568`, SHA-256 `15458a33a3b4091bab61523097c23d7caeb46b188ba78188a92afec9f582dec5`.
+
+KUserFeedback `6.30.0-0supralinux4` reaches **15/15 CTest PASS**: the PHPUnit 13 compatibility work is complete. Packaging then fails at `dh_missing` because `ENABLE_DOCS=ON` emits `usr/share/KDE/UserFeedbackConsole/user-feedback-manual.qch` and the initial doc split did not install it.
+
+Revision `-5` assigns that upstream manual to `libkf6userfeedback-doc`. This does not re-enable Framework API QCH: `BUILD_QCH=OFF` remains unchanged.

@@ -52,6 +52,21 @@
         "stage": "sbuild",
         "tests": "14/15 CTest PASS",
         "cause": "SampleTest no longer uses getActualOutput(), but PHPUnit 13 has also removed assertObjectHasAttribute/assertObjectNotHasAttribute; three SampleTest errors remain."
+      },
+      {
+        "attempt": 4,
+        "package_version": "6.30.0-0supralinux4",
+        "commit": "44e78d30572a1aaecbbd77de99f4c8a0e6a51b9a",
+        "workflow_run": 35489499984,
+        "job_id": 106021890875,
+        "artifact_id": 10598313568,
+        "artifact_sha256": "15458a33a3b4091bab61523097c23d7caeb46b188ba78188a92afec9f582dec5",
+        "rootfs_sha256": "caddb55927435be40069ab9a3d8429f8997b10eb126a839c4fa4c03f84529dce",
+        "package_attempted": true,
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "15/15 CTest PASS",
+        "cause": "PHPUnit 13 compatibility is complete; dh_missing found the upstream ENABLE_DOCS UserFeedbackConsole QCH manual unassigned to a binary package."
       }
     ],
     "prison": [

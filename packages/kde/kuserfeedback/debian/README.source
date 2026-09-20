@@ -27,3 +27,11 @@ The third validation cycle exposed the final legacy PHPUnit object assertions
 used by SampleTest. PHPUnit 13 provides assertObjectHasProperty() and
 assertObjectNotHasProperty(); the test-only compatibility patch maps the old
 attribute assertions to those property assertions. Production code is unchanged.
+
+Documentation output
+--------------------
+
+KUserFeedback's ENABLE_DOCS=ON installs the UserFeedbackConsole manual as
+/usr/share/KDE/UserFeedbackConsole/user-feedback-manual.qch independently of
+the Framework API documentation BUILD_QCH switch. SupraLINUX packages that
+upstream manual in libkf6userfeedback-doc rather than dropping it.
