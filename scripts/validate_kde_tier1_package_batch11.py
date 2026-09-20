@@ -44,7 +44,10 @@ for node,(ver,run,job,artifact,digest,rootfs,tests,sonames) in expected.items():
     req(dn.get('state')=='PASS' and dn.get('package_version')==ver and dn.get('downstream_eligible') is True and dn.get('abi_sonames')==sonames,f'{node}: DAG promotion')
     req(dn.get('pass_files',{}).get('rootfs_sha256')==rootfs,f'{node}: DAG rootfs')
 req(sum(x.get('state')=='PASS' for x in t['nodes'])==29 and sum(x.get('state')=='pending' for x in t['nodes'])==0,'canonical Tier1 counts')
-req(len(d.get('nodes',{}))==30,'canonical DAG must contain ECM + 29 Tier1')
+dag_nodes=d.get('nodes',{})
+tier1_dag={node_id:node for node_id,node in dag_nodes.items() if node.get('tier')==1}
+req(len(tier1_dag)==29 and set(tier1_dag)==set(tier) and all(node.get('state')=='PASS' for node in tier1_dag.values()),'canonical DAG must contain all 29 Tier1 PASS nodes')
+req(dag_nodes.get('extra-cmake-modules',{}).get('state')=='PASS','canonical DAG must contain ECM PASS root')
 req(g.get('nodes')=={},'global discovery must be empty')
 req(g.get('lanes',{}).get('multi-surface-optional',{}).get('status')=='completed','Batch11 lane must be completed')
 req((g.get('promoted_snapshot',{}).get('pass'),g.get('promoted_snapshot',{}).get('pending'))==(29,0),'global promoted snapshot')
