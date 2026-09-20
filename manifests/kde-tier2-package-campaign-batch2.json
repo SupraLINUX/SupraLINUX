@@ -5,7 +5,7 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "frameworks_series": "6.30.0",
-  "state": "prepared-pending-build",
+  "state": "rematerialization-pending",
   "canonical_snapshot": "1 PASS / 14 pending / 0 current FAIL / 0 BLOCKED",
   "selected_nodes": [
     "kcrash",
@@ -23,7 +23,6 @@
   "semantics": {
     "pre_sbuild_failure": "INFRA",
     "package_attempt_begins": "immediately-before-sbuild",
-    "attempted_build_failure": "FAIL",
     "blocked_is_not_fail": true,
     "pass_requires": [
       "clean-sbuild",
@@ -36,7 +35,9 @@
     ],
     "python_nodes_also_require": "python-import-smoke",
     "qml_nodes_also_require": "qml-payload-smoke",
-    "stable_promotion_requires_explicit_user_approval": true
+    "stable_promotion_requires_explicit_user_approval": true,
+    "post_sbuild_failure": "root-cause-classification-required",
+    "fail_requires": "node-owned-root-cause"
   },
   "shared_predecessors": {
     "extra_cmake_modules": {
@@ -99,9 +100,20 @@
           "qml6-module-org-kde-coreaddons": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
         }
       },
-      "state": "prepared-pending-build",
-      "last_result": null,
-      "downstream_eligible": false
+      "state": "rematerialization-pending",
+      "last_result": {
+        "result": "INFRA",
+        "workflow_run": 35530953084,
+        "job_id": 106131492912,
+        "artifact_id": 10610968923,
+        "artifact_sha256": "1e4b384b8213e7b968586f736459bf57b7f73b0b68aa90dcab71f035541ec7e2",
+        "package_attempted": true,
+        "stage": "sbuild-install-deps",
+        "classification": "shared-provider-packaging-tooling-incompatibility",
+        "package_state_effect": "none"
+      },
+      "downstream_eligible": false,
+      "materialization_status": "superseded-pending-rematerialization"
     },
     "knotifications": {
       "source_package": "kf6-knotifications",
@@ -152,9 +164,20 @@
           "qml6-module-org-kde-config": "b514993f60fe1f55ac7803ceab42ba0ef8a89dc58ab5d38463bfb63c9601bfd6"
         }
       },
-      "state": "prepared-pending-build",
-      "last_result": null,
-      "downstream_eligible": false
+      "state": "rematerialization-pending",
+      "last_result": {
+        "result": "INFRA",
+        "workflow_run": 35530953084,
+        "job_id": 106131492935,
+        "artifact_id": 10611490664,
+        "artifact_sha256": "e70e6ad553a756cc592483ca13df747b46acd347100a73bf9c0c36db79a7b5ef",
+        "package_attempted": true,
+        "stage": "sbuild-install-deps",
+        "classification": "shared-provider-packaging-tooling-incompatibility",
+        "package_state_effect": "none"
+      },
+      "downstream_eligible": false,
+      "materialization_status": "superseded-pending-rematerialization"
     },
     "kstatusnotifieritem": {
       "source_package": "kf6-kstatusnotifieritem",
@@ -200,9 +223,20 @@
           "qml6-module-org-kde-kwindowsystem": "07d4f715ea2783ae3b8daf88b907edf4cb62ae44760d190e8a8ddea908594b01"
         }
       },
-      "state": "prepared-pending-build",
-      "last_result": null,
-      "downstream_eligible": false
+      "state": "rematerialization-pending",
+      "last_result": {
+        "result": "INFRA",
+        "workflow_run": 35530953084,
+        "job_id": 106131492962,
+        "artifact_id": 10611555771,
+        "artifact_sha256": "d8b5b98d66c1cc14bb46b2184679ff0d1f658a9a2475978001f3170ce5ca3c78",
+        "package_attempted": true,
+        "stage": "sbuild-install-deps",
+        "classification": "shared-provider-packaging-tooling-incompatibility",
+        "package_state_effect": "none"
+      },
+      "downstream_eligible": false,
+      "materialization_status": "superseded-pending-rematerialization"
     },
     "kunitconversion": {
       "source_package": "kf6-kunitconversion",
@@ -241,7 +275,7 @@
         "artifact_sha256": "2a0d66f2760c49ba1128b8b51c741173a72e6f3ab51f3eb17c3584896d30a678",
         "dev_package": "libkf6i18n-dev",
         "debs": {
-          "libkf6i18n-data": "3df2300d5aca640c8968859367ac3cd606a31e87e875ca207a71eeda6d03f45a",
+          "libkf6i18n-data": "3df2300d5aca640c8968859367ac3cd606a31a87e875ca207a71eeda6d03f45a",
           "libkf6i18n-dev": "a9485f9fdb874cc6a61064a824d66567306122c39677ccf92f8adb3b0db14870",
           "libkf6i18n-doc": "72e312ee1a7f0a7f0be4fc0e6e8b338ebaa92c1a5b6c2e7c225bc168ed85754f",
           "libkf6i18n6": "fa60bd16ffb35ae90eb1ab324386961d973a9b0dd31a4947351d3afc652b6e58",
@@ -251,9 +285,20 @@
           "qml6-module-org-kde-ki18n": "07960032b6582476f0844b72d4f74884240c592e55eb0613390f0191dbd98299"
         }
       },
-      "state": "prepared-pending-build",
-      "last_result": null,
-      "downstream_eligible": false
+      "state": "rematerialization-pending",
+      "last_result": {
+        "result": "INFRA",
+        "workflow_run": 35530953084,
+        "job_id": 106131492939,
+        "artifact_id": 10611650475,
+        "artifact_sha256": "f7e041112841909095ae235fe1bad6b8949fbf5f02bc50445f39aba768196e59",
+        "package_attempted": false,
+        "stage": "campaign-and-input-validation",
+        "classification": "pre-attempt-manifest-pin-mismatch",
+        "package_state_effect": "none"
+      },
+      "downstream_eligible": false,
+      "materialization_status": "superseded-pending-rematerialization"
     },
     "syndication": {
       "source_package": "kf6-syndication",
@@ -296,9 +341,20 @@
           "libkf6codecs6": "66b34b1ec140e1942d906c4e8537661bd540f959277e41de9a772e1e0956be13"
         }
       },
-      "state": "prepared-pending-build",
-      "last_result": null,
-      "downstream_eligible": false
+      "state": "rematerialization-pending",
+      "last_result": {
+        "result": "INFRA",
+        "workflow_run": 35530953084,
+        "job_id": 106131492929,
+        "artifact_id": 10610829184,
+        "artifact_sha256": "cb257a4351698aac7f1f218b77f15b545f0c733a37014e47a56271368f7eb35d",
+        "package_attempted": true,
+        "stage": "sbuild-install-deps",
+        "classification": "shared-provider-packaging-tooling-incompatibility",
+        "package_state_effect": "none"
+      },
+      "downstream_eligible": false,
+      "materialization_status": "superseded-pending-rematerialization"
     }
   }
 }

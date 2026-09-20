@@ -65,6 +65,7 @@ vals={
  "DEBIAN_TAR_SHA":node["technical_references"]["debian"]["debian_tar_sha256"],
  "DEBIAN_ORIG_SHA":node["technical_references"]["debian"]["orig_tar_sha256"],
  "ORIG_MATCHES":str(node["technical_references"]["debian"].get("orig_matches_kde_authority",False)).lower(),
+ "DEBHELPER_COMPAT_LEVEL":contracts["provider_adaptations"]["ubuntu-resolute"]["debhelper_compat"]["selected_level"],
 }
 for k,v in vals.items():
     print(f"{k}={shlex.quote(str(v))}")
@@ -194,6 +195,7 @@ require_eq "changelog-source" "${SOURCE_PACKAGE}" "${changelog_source}"
 require_eq "changelog-version" "${PACKAGE_VERSION}" "${changelog_version}"
 require_contains "maintainer" 'Maintainer: SupraLINUX Build System <build@supralinux.invalid>' "${SRC}/debian/control"
 require_contains "original-maintainer" 'XSBC-Original-Maintainer:' "${SRC}/debian/control"
+require_contains "debhelper-compat-provider-level" "debhelper-compat (= ${DEBHELPER_COMPAT_LEVEL})" "${SRC}/debian/control"
 
 if python3 - "${CONTRACTS}" "${NODE}" <<'PY'
 import json,sys
@@ -233,6 +235,10 @@ result.update({
 result_path.write_text(json.dumps(result,indent=2)+"\n")
 PY
 
+echo "tree_sha256=$(cat "${EVIDENCE}/tree.sha256")"
+echo "debian_tree_sha256=$(cat "${EVIDENCE}/debian-tree.sha256")"
+echo "source_package_sha256:"
+cat "${EVIDENCE}/source-package.sha256"
 STATE=PASS
 STAGE=complete
 echo "KDE Tier 2 package materialization: PASS (${NODE})"

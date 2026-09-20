@@ -1,6 +1,6 @@
 # KDE Tier 2 package contracts
 
-Status: **technical reference capture PASS; package trees not yet materialized**  
+Status: **reference capture PASS; deterministic rematerialization pending**  
 Date: **2026-09-20**
 
 The first contract batch contains KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication. All five already passed the Ubuntu Resolute provider audit and remain package-state `pending`.
@@ -29,3 +29,12 @@ Four Debian 6.30 orig tarballs match the KDE upstream source SHA exactly. Syndic
 ### Reference-gate revalidation
 
 After pinning the source-authority mismatch policy, run `35525757861`, job `106117497527`, revalidated the reference capture as **PASS**. Artifact `10610520138`, SHA-256 `987ca77884695296ee6d21a841f428f16ed49fb8b103b84a84db8c735ceac9e9`. Its normalized `snapshot.json` and `versions.tsv` are byte-identical to the initial PASS snapshot, so this second run is the canonical current evidence.
+
+
+## Resolute packaging-tooling adaptation
+
+The first clean-build Batch 2 run, `35530953084`, exposed a shared provider/tooling incompatibility before any of the four affected Frameworks compiled: Debian's 6.30 technical-reference trees request `debhelper-compat (= 14)`, while Ubuntu 26.04 Resolute provides the debhelper 13 compatibility surface used by the SupraLINUX base.
+
+Because Debian is a technical reference rather than packaging authority, SupraLINUX now normalizes this field to `debhelper-compat (= 13)` during deterministic materialization. The transformation is explicit in the contract manifest and generated materialization metadata. It does not change KDE-selected CMake options, Python bindings, QML surfaces, X11/DBus choices, tests, ABI targets, or any other KDE feature decision.
+
+The prior 5/5 materialization PASS from run `35527533481` remains preserved as historical evidence, but its trees are superseded for build consumption. The five package contracts return temporarily to `package-contract-ready` until CI produces and pins replacement source trees. This transition does not alter package state: all five remain `pending`.

@@ -9,13 +9,117 @@
     "syndication"
   ],
   "real_attempts": {
-    "kcrash": [],
-    "knotifications": [],
-    "kstatusnotifieritem": [],
+    "kcrash": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "8f478b8293aa3adb1411b0dd9c18f21c49b590f1",
+        "workflow_run": 35530953084,
+        "job_id": 106131492912,
+        "artifact_id": 10610968923,
+        "artifact_sha256": "1e4b384b8213e7b968586f736459bf57b7f73b0b68aa90dcab71f035541ec7e2",
+        "rootfs_artifact_id": 10611208232,
+        "rootfs_sha256": "eda2af33ba8d468bd2a13c461d838a89ed80e6f3c48434a27686b548d2f87b2b",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "sbuild-install-deps",
+        "package_state_effect": "none",
+        "cause": "The Debian 6.30 technical-reference packaging requested debhelper-compat (= 14), while the Ubuntu 26.04 Resolute provider used by the clean build does not satisfy compatibility level 14. The same install-deps failure affected four independent nodes, so it is classified as a shared packaging-tooling/provider incompatibility rather than a node-owned package FAIL."
+      }
+    ],
+    "knotifications": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "8f478b8293aa3adb1411b0dd9c18f21c49b590f1",
+        "workflow_run": 35530953084,
+        "job_id": 106131492935,
+        "artifact_id": 10611490664,
+        "artifact_sha256": "e70e6ad553a756cc592483ca13df747b46acd347100a73bf9c0c36db79a7b5ef",
+        "rootfs_artifact_id": 10611208232,
+        "rootfs_sha256": "eda2af33ba8d468bd2a13c461d838a89ed80e6f3c48434a27686b548d2f87b2b",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "sbuild-install-deps",
+        "package_state_effect": "none",
+        "cause": "The Debian 6.30 technical-reference packaging requested debhelper-compat (= 14), while the Ubuntu 26.04 Resolute provider used by the clean build does not satisfy compatibility level 14. The same install-deps failure affected four independent nodes, so it is classified as a shared packaging-tooling/provider incompatibility rather than a node-owned package FAIL."
+      }
+    ],
+    "kstatusnotifieritem": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "8f478b8293aa3adb1411b0dd9c18f21c49b590f1",
+        "workflow_run": 35530953084,
+        "job_id": 106131492962,
+        "artifact_id": 10611555771,
+        "artifact_sha256": "d8b5b98d66c1cc14bb46b2184679ff0d1f658a9a2475978001f3170ce5ca3c78",
+        "rootfs_artifact_id": 10611208232,
+        "rootfs_sha256": "eda2af33ba8d468bd2a13c461d838a89ed80e6f3c48434a27686b548d2f87b2b",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "sbuild-install-deps",
+        "package_state_effect": "none",
+        "cause": "The Debian 6.30 technical-reference packaging requested debhelper-compat (= 14), while the Ubuntu 26.04 Resolute provider used by the clean build does not satisfy compatibility level 14. The same install-deps failure affected four independent nodes, so it is classified as a shared packaging-tooling/provider incompatibility rather than a node-owned package FAIL."
+      }
+    ],
     "kunitconversion": [],
-    "syndication": []
+    "syndication": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "8f478b8293aa3adb1411b0dd9c18f21c49b590f1",
+        "workflow_run": 35530953084,
+        "job_id": 106131492929,
+        "artifact_id": 10610829184,
+        "artifact_sha256": "cb257a4351698aac7f1f218b77f15b545f0c733a37014e47a56271368f7eb35d",
+        "rootfs_artifact_id": 10611208232,
+        "rootfs_sha256": "eda2af33ba8d468bd2a13c461d838a89ed80e6f3c48434a27686b548d2f87b2b",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "sbuild-install-deps",
+        "package_state_effect": "none",
+        "cause": "The Debian 6.30 technical-reference packaging requested debhelper-compat (= 14), while the Ubuntu 26.04 Resolute provider used by the clean build does not satisfy compatibility level 14. The same install-deps failure affected four independent nodes, so it is classified as a shared packaging-tooling/provider incompatibility rather than a node-owned package FAIL."
+      }
+    ]
   },
-  "infrastructure_incidents": [],
+  "infrastructure_incidents": [
+    {
+      "phase": "batch2-attempt-1-common-install-deps",
+      "workflow_run": 35530953084,
+      "commit": "8f478b8293aa3adb1411b0dd9c18f21c49b590f1",
+      "affected_nodes": [
+        "kcrash",
+        "knotifications",
+        "kstatusnotifieritem",
+        "syndication"
+      ],
+      "classification": "shared-provider-packaging-tooling-incompatibility",
+      "package_attempted": true,
+      "package_state_effect": "none",
+      "failed_gate": "sbuild-install-deps",
+      "cause": "All four clean builds converged on unsatisfied debhelper-compat (= 14) before compilation.",
+      "remediation": "Rematerialize the SupraLINUX package trees with an explicit Ubuntu Resolute packaging-tooling adaptation to debhelper compatibility level 13, without changing the KDE upstream feature profile, then repeat clean builds."
+    },
+    {
+      "phase": "batch2-attempt-1-kunitconversion-input-validation",
+      "workflow_run": 35530953084,
+      "job_id": 106131492939,
+      "artifact_id": 10611650475,
+      "artifact_sha256": "f7e041112841909095ae235fe1bad6b8949fbf5f02bc50445f39aba768196e59",
+      "commit": "8f478b8293aa3adb1411b0dd9c18f21c49b590f1",
+      "classification": "pre-attempt-manifest-pin-mismatch",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "failed_gate": "predecessor-deb-hash-validation",
+      "cause": "The campaign pinned libkf6i18n-data as 3df2300d5aca640c8968859367ac3cd606a31e87e875ca207a71eeda6d03f45a, while retained KI18n artifact 10553916882 contains 3df2300d5aca640c8968859367ac3cd606a31a87e875ca207a71eeda6d03f45a.",
+      "remediation": "Correct the campaign pin to the SHA-256 verified from the retained artifact before the next clean-build campaign."
+    }
+  ],
   "blocked_events": {
     "kcrash": [],
     "knotifications": [],
@@ -23,5 +127,5 @@
     "kunitconversion": [],
     "syndication": []
   },
-  "note": "A real package attempt is recorded only after the runner crosses the sbuild boundary."
+  "note": "Crossing the sbuild boundary records a real execution. Canonical FAIL still requires a node-owned root cause; shared infrastructure/provider failures remain INFRA with package_state_effect=none. Pre-sbuild failures are infrastructure incidents, not real package attempts."
 }

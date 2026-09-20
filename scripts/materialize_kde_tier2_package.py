@@ -86,8 +86,18 @@ def set_build_depends(lines: list[str], additions: list[str]):
     lines[start:end] = rendered.splitlines()
 
 
-def modify_control(path: Path, node: dict):
+def modify_control(path: Path, node: dict, debhelper_compat: dict):
     text = path.read_text()
+    reference_level = int(debhelper_compat["technical_reference_level"])
+    selected_level = int(debhelper_compat["selected_level"])
+    pattern = re.compile(rf"debhelper-compat\s*\(=\s*{reference_level}\s*\)")
+    matches = pattern.findall(text)
+    if len(matches) != 1:
+        raise SystemExit(
+            f"expected exactly one debhelper-compat (= {reference_level}) in technical reference, "
+            f"found {len(matches)}"
+        )
+    text = pattern.sub(f"debhelper-compat (= {selected_level})", text, count=1)
     paragraphs = re.split(r"\n\s*\n", text.strip())
     if not paragraphs:
         raise SystemExit("empty debian/control")
@@ -235,7 +245,16 @@ def main() -> int:
         if not required.exists():
             raise SystemExit(f"missing technical reference file: {required}")
 
-    modify_control(debian / "control", node)
+    debhelper_compat = (
+        contracts.get("provider_adaptations", {})
+        .get("ubuntu-resolute", {})
+        .get("debhelper_compat")
+    )
+    if not debhelper_compat:
+        raise SystemExit("missing Ubuntu Resolute debhelper compatibility adaptation")
+    if debhelper_compat.get("kde_feature_effect") != "none":
+        raise SystemExit("debhelper adaptation must not alter the KDE feature profile")
+    modify_control(debian / "control", node, debhelper_compat)
     modify_rules(debian / "rules", node["selected_profile"])
     prepend_changelog(debian / "changelog", node["source_package"], node["package_version_candidate"])
     append_readme(debian / "README.source")
@@ -255,6 +274,7 @@ def main() -> int:
         "selected_profile": node["selected_profile"],
         "python_module": node.get("python_module"),
         "generated_maintainer": CI_MAINTAINER,
+        "provider_adaptations": {"debhelper_compat": debhelper_compat},
         "package_state_effect": "none",
     }
     (debian / "supralinux-materialization.json").write_text(json.dumps(metadata, indent=2) + "\n")

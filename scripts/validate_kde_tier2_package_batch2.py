@@ -21,12 +21,18 @@ req(c.get("schema")==1 and c.get("batch")=="tier2-batch-2","Batch2 identity")
 req(c.get("lane")=="build-ready-independent","Batch2 lane")
 req(c.get("authority")=="kde-upstream" and c.get("provider_platform")=="ubuntu-resolute","authority/provider split")
 req(c.get("selected_nodes")==expected,"Batch2 selected nodes")
-req(plan.get("build_queue")==expected,"Batch2 must equal generated build queue")
+rematerializing = c.get("state") == "rematerialization-pending"
+if rematerializing:
+    req(plan.get("build_queue")==[],"Batch2 build queue must be empty while rematerialization is pending")
+    req(plan.get("package_contract_ready")==expected,"rematerialization nodes must return to package-contract-ready")
+else:
+    req(plan.get("build_queue")==expected,"Batch2 must equal generated build queue")
 req(c.get("scheduling",{}).get("fail_fast") is False and c["scheduling"].get("independent_nodes") is True,"DAG matrix policy")
 req(c.get("scheduling",{}).get("shared_resolute_rootfs") is True,"shared rootfs policy")
 req(c.get("semantics",{}).get("package_attempt_begins")=="immediately-before-sbuild","attempt boundary")
 req(c.get("semantics",{}).get("pre_sbuild_failure")=="INFRA","pre-sbuild classification")
-req(c.get("semantics",{}).get("attempted_build_failure")=="FAIL","attempted failure classification")
+req(c.get("semantics",{}).get("post_sbuild_failure")=="root-cause-classification-required","post-sbuild classification")
+req(c.get("semantics",{}).get("fail_requires")=="node-owned-root-cause","FAIL root-cause ownership")
 req(c.get("semantics",{}).get("stable_promotion_requires_explicit_user_approval") is True,"stable promotion policy")
 
 ecm=dag["nodes"]["extra-cmake-modules"]
@@ -39,15 +45,25 @@ t1={n["id"]:n for n in tier1["nodes"]}; t2={n["id"]:n for n in tier2["nodes"]}
 for node_id in expected:
     n=c["nodes"][node_id]; canon=t2[node_id]; contract=contracts["nodes"][node_id]
     req(canon.get("state")=="pending","Batch2 nodes must remain pending before real result promotion")
-    req(canon.get("planning",{}).get("readiness")=="build-ready",f"{node_id}: build-ready")
-    req(canon.get("planning",{}).get("package_contract")=="materialized",f"{node_id}: materialized contract")
-    req(n.get("state") in {"prepared-pending-build","remediation-pending-build","PASS","FAIL"},f"{node_id}: campaign state")
+    if rematerializing:
+        req(canon.get("planning",{}).get("readiness")=="package-contract-ready",f"{node_id}: package-contract-ready during rematerialization")
+        req(canon.get("planning",{}).get("package_contract")=="not-materialized",f"{node_id}: active materialization invalidated")
+        req(n.get("state")=="rematerialization-pending",f"{node_id}: campaign rematerialization state")
+    else:
+        req(canon.get("planning",{}).get("readiness")=="build-ready",f"{node_id}: build-ready")
+        req(canon.get("planning",{}).get("package_contract")=="materialized",f"{node_id}: materialized contract")
+        req(n.get("state") in {"prepared-pending-build","remediation-pending-build","PASS","FAIL"},f"{node_id}: campaign state")
     req(n.get("source_sha256")==contract.get("source_sha256"),f"{node_id}: source SHA")
     req(n.get("package_version")==contract.get("package_version_candidate"),f"{node_id}: package version")
     req(sorted(n.get("expected_binary_packages",[]))==sorted(contract.get("compatibility_binary_packages",[])+contract.get("supralinux_additional_binary_packages",[])),f"{node_id}: binary package set")
-    me=contracts["materialization"]["evidence"][node_id]; cm=n["materialization"]
-    for key in ("artifact_id","artifact_sha256","tree_sha256","debian_tree_sha256","dsc_sha256","debian_tar_sha256","orig_tar_sha256"):
-        req(cm.get(key)==me.get(key),f"{node_id}: materialization {key}")
+    cm=n["materialization"]
+    if rematerializing:
+        req(n.get("materialization_status")=="superseded-pending-rematerialization",f"{node_id}: stale materialization must not be consumable")
+        req(contracts.get("materialization",{}).get("status")=="pending-ci",f"{node_id}: contract rematerialization pending")
+    else:
+        me=contracts["materialization"]["evidence"][node_id]
+        for key in ("artifact_id","artifact_sha256","tree_sha256","debian_tree_sha256","dsc_sha256","debian_tar_sha256","orig_tar_sha256"):
+            req(cm.get(key)==me.get(key),f"{node_id}: materialization {key}")
     pred=n["predecessor"]; p=t1[pred["id"]]
     pe=[x for x in p.get("packaging",{}).get("evidence",[]) if x.get("result")=="PASS"][-1]
     req(p.get("state")=="PASS" and p.get("packaging",{}).get("downstream_eligible") is True,f"{node_id}: predecessor PASS")
