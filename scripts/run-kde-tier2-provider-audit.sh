@@ -39,8 +39,15 @@ registry = json.loads(pathlib.Path(sys.argv[3]).read_text())
 tier1 = json.loads(pathlib.Path(sys.argv[4]).read_text())
 out = pathlib.Path(sys.argv[5])
 batch = deps["provider_audit"]["nodes"]
-if batch != plan["next_provider_audit_batch"]:
-    raise SystemExit("provider-audit batch differs from generated campaign plan")
+audit_status = deps["provider_audit"].get("status")
+if audit_status == "pending-ci":
+    if batch != plan["next_provider_audit_batch"]:
+        raise SystemExit("pending provider-audit batch differs from generated campaign plan")
+elif audit_status == "PASS":
+    if not set(batch) <= set(plan.get("package_contract_ready", [])):
+        raise SystemExit("PASS provider-audit batch is not fully package-contract-ready")
+else:
+    raise SystemExit(f"unsupported provider-audit status: {audit_status}")
 tier1_nodes = {n["id"]: n for n in tier1["nodes"]}
 qt_map = registry["qt_provider_packages"]
 ext = dict(registry["requirements"])
