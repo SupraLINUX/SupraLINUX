@@ -170,6 +170,13 @@ jobs:
       - name: Validate KDE Tier 2 package-contract draft
         run: python3 scripts/validate_kde_tier2_package_contracts.py
 
+      - name: Validate KDE Tier 2 materialization definition
+        run: python3 scripts/validate_kde_tier2_materialization.py
+
+      - name: Test KDE Tier 2 materialization semantic scope
+        shell: bash
+        run: scripts/test-kde-tier2-materialization-scope.sh
+
       - name: Validate KDE Tier 2 Batch 1 KAuth preparation
         run: python3 scripts/validate_kde_tier2_package_batch1.py
 

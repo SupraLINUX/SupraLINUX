@@ -105,7 +105,8 @@
           "orig_tar_sha256": "09ad50570b26aada0408bb9ccfaabf629c56ec89a9972c8b0e155ab780f577cf",
           "orig_matches_kde_authority": true
         }
-      }
+      },
+      "python_runtime_package": "libkf6notifications6"
     },
     "kstatusnotifieritem": {
       "upstream_version": "6.30.0",
@@ -145,7 +146,8 @@
           "orig_tar_sha256": "373fb23fe6a5c0c5c755c473e7cf272796ea59891c05157c3a7e9607a4c4af4f",
           "orig_matches_kde_authority": true
         }
-      }
+      },
+      "python_runtime_package": "libkf6statusnotifieritem6"
     },
     "kunitconversion": {
       "upstream_version": "6.30.0",
@@ -183,7 +185,8 @@
           "orig_tar_sha256": "3dcaa45875bab5a2dcadc34cf57cf06689b8d86ff40e20fee01ca2b18987175f",
           "orig_matches_kde_authority": true
         }
-      }
+      },
+      "python_runtime_package": "libkf6unitconversion6"
     },
     "syndication": {
       "upstream_version": "6.30.0",
@@ -242,5 +245,13 @@
       "reason": "initial PASS before mismatch-policy revalidation"
     },
     "revalidation": "snapshot-identical-after-source-mismatch-policy"
+  },
+  "materialization": {
+    "status": "pending-ci",
+    "method": "kde-authority-source-plus-pinned-debian-tree",
+    "package_state_effect": "none",
+    "package_attempted": false,
+    "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
+    "publication_blocker": "replace-ci-maintainer-with-approved-project-contact"
   }
 }

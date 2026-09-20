@@ -124,6 +124,8 @@ for path in "${changed[@]}"; do
       continue ;;
     .github/workflows/kde-tier2-contract-reference.yml|scripts/run-kde-tier2-contract-reference-snapshot.sh|scripts/kde-tier2-contract-reference-needed.sh|manifests/kde-tier2-package-contracts.json)
       continue ;;
+    .github/workflows/kde-tier2-package-materialization.yml|scripts/materialize_kde_tier2_package.py|scripts/run-kde-tier2-package-materialization.sh|scripts/kde-tier2-materialization-needed.sh)
+      continue ;;
     manifests/kde-tier1-package-campaign-batch*.json)
       if campaign_is_evidence_only "${path}"; then continue; fi
       echo "${path}: semantic package input changed; reusable hosted CI required."; exit 0 ;;
