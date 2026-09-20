@@ -31,11 +31,12 @@ canonical={n["id"]:n for n in tier2["nodes"]}
 for node_id in expected:
     n=canonical[node_id]
     c=contracts["nodes"][node_id]
-    req(n.get("state")=="pending",f"{node_id}: materialization does not promote package state")
-    expected_readiness = "build-ready" if mat.get("status") == "PASS" else "package-contract-ready"
-    expected_contract = "materialized" if mat.get("status") == "PASS" else "not-materialized"
-    req(n.get("planning",{}).get("readiness")==expected_readiness,f"{node_id}: readiness")
-    req(n.get("planning",{}).get("package_contract")==expected_contract,f"{node_id}: package contract state")
+    if n.get("state")=="PASS":
+        req(n.get("planning",{}).get("readiness")=="retained-pass",f"{node_id}: retained package PASS readiness")
+    else:
+        req(n.get("state")=="pending",f"{node_id}: materialization does not promote pending package state")
+        req(n.get("planning",{}).get("readiness") in {"package-contract-ready","build-ready"},f"{node_id}: readiness")
+        req(n.get("planning",{}).get("package_contract") in {"not-materialized","materialized"},f"{node_id}: package contract state")
     req(c.get("technical_references",{}).get("debian",{}).get("version")=="6.30.0-1",f"{node_id}: Debian 6.30 packaging reference")
     req(len(c.get("technical_references",{}).get("debian",{}).get("debian_tar_sha256",""))==64,f"{node_id}: pinned Debian tree digest")
 

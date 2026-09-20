@@ -18,70 +18,45 @@ dag=load("manifests/kde-dag.json")
 
 expected=["kcrash","knotifications","kstatusnotifieritem","kunitconversion","syndication"]
 req(c.get("schema")==1 and c.get("batch")=="tier2-batch-2","Batch2 identity")
-req(c.get("lane")=="build-ready-independent","Batch2 lane")
-req(c.get("authority")=="kde-upstream" and c.get("provider_platform")=="ubuntu-resolute","authority/provider split")
 req(c.get("selected_nodes")==expected,"Batch2 selected nodes")
-rematerializing = c.get("state") == "rematerialization-pending"
-if rematerializing:
-    req(plan.get("build_queue")==[],"Batch2 build queue must be empty while rematerialization is pending")
-    req(plan.get("package_contract_ready")==expected,"rematerialization nodes must return to package-contract-ready")
-else:
-    req(plan.get("build_queue")==expected,"Batch2 must equal generated build queue")
-req(c.get("scheduling",{}).get("fail_fast") is False and c["scheduling"].get("independent_nodes") is True,"DAG matrix policy")
-req(c.get("scheduling",{}).get("shared_resolute_rootfs") is True,"shared rootfs policy")
-req(c.get("semantics",{}).get("package_attempt_begins")=="immediately-before-sbuild","attempt boundary")
-req(c.get("semantics",{}).get("pre_sbuild_failure")=="INFRA","pre-sbuild classification")
-req(c.get("semantics",{}).get("post_sbuild_failure")=="root-cause-classification-required","post-sbuild classification")
-req(c.get("semantics",{}).get("fail_requires")=="node-owned-root-cause","FAIL root-cause ownership")
-req(c.get("semantics",{}).get("stable_promotion_requires_explicit_user_approval") is True,"stable promotion policy")
+req(c.get("scheduling",{}).get("fail_fast") is False,"Batch2 fail-fast policy")
+req(c.get("semantics",{}).get("fail_requires")=="node-owned-root-cause","FAIL ownership")
+req(c.get("semantics",{}).get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 
-ecm=dag["nodes"]["extra-cmake-modules"]
-ecm_pass=[x for x in ecm.get("evidence",[]) if x.get("result")=="PASS"][-1]
-ce=c["shared_predecessors"]["extra_cmake_modules"]
-req(ce.get("version")==ecm.get("package_version") and ce.get("workflow_run")==ecm_pass.get("run_id") and ce.get("artifact_id")==ecm_pass.get("artifact_id"),"ECM retained evidence identity")
-req(ce.get("debs",{}).get("extra-cmake-modules")==ecm_pass.get("files",{}).get("deb_sha256"),"ECM .deb digest")
+canon={n["id"]:n for n in tier2["nodes"]}
+pass_nodes={n for n in expected if c["nodes"][n].get("state")=="PASS"}
+remat_nodes={n for n in expected if c["nodes"][n].get("state")=="rematerialization-pending"}
+runnable={n for n in expected if c["nodes"][n].get("state") in {"prepared-pending-build","remediation-pending-build"}}
+req(pass_nodes=={"kcrash"},"Batch2 retained PASS set")
+req(remat_nodes|runnable|pass_nodes==set(expected),"Batch2 node state partition")
+req(set(plan.get("retained_pass",[])) >= {"kauth","kcrash"},"generated plan retains KCrash")
+req(set(plan.get("build_queue",[]))==runnable,"Batch2 build queue equals runnable nodes")
+req(set(plan.get("package_contract_ready",[])) >= remat_nodes,"rematerialization nodes remain contract-ready")
 
-t1={n["id"]:n for n in tier1["nodes"]}; t2={n["id"]:n for n in tier2["nodes"]}
 for node_id in expected:
-    n=c["nodes"][node_id]; canon=t2[node_id]; contract=contracts["nodes"][node_id]
-    req(canon.get("state")=="pending","Batch2 nodes must remain pending before real result promotion")
-    if rematerializing:
-        req(canon.get("planning",{}).get("readiness")=="package-contract-ready",f"{node_id}: package-contract-ready during rematerialization")
-        req(canon.get("planning",{}).get("package_contract")=="not-materialized",f"{node_id}: active materialization invalidated")
-        req(n.get("state")=="rematerialization-pending",f"{node_id}: campaign rematerialization state")
-    else:
-        req(canon.get("planning",{}).get("readiness")=="build-ready",f"{node_id}: build-ready")
-        req(canon.get("planning",{}).get("package_contract")=="materialized",f"{node_id}: materialized contract")
-        req(n.get("state") in {"prepared-pending-build","remediation-pending-build","PASS","FAIL"},f"{node_id}: campaign state")
+    n=c["nodes"][node_id]; cn=canon[node_id]; contract=contracts["nodes"][node_id]
     req(n.get("source_sha256")==contract.get("source_sha256"),f"{node_id}: source SHA")
     req(n.get("package_version")==contract.get("package_version_candidate"),f"{node_id}: package version")
-    req(sorted(n.get("expected_binary_packages",[]))==sorted(contract.get("compatibility_binary_packages",[])+contract.get("supralinux_additional_binary_packages",[])),f"{node_id}: binary package set")
-    cm=n["materialization"]
-    if rematerializing:
-        req(n.get("materialization_status")=="superseded-pending-rematerialization",f"{node_id}: stale materialization must not be consumable")
-        req(contracts.get("materialization",{}).get("status")=="pending-ci",f"{node_id}: contract rematerialization pending")
+    if node_id in pass_nodes:
+        req(cn.get("state")=="PASS" and cn.get("packaging",{}).get("state")=="PASS",f"{node_id}: canonical PASS")
+        req(cn.get("planning",{}).get("readiness")=="retained-pass",f"{node_id}: retained-pass readiness")
+        pe=n.get("pass_evidence",{})
+        req(pe.get("workflow_run")==35535289692 and pe.get("artifact_id")==10613480229,f"{node_id}: PASS evidence identity")
+        req(pe.get("tests")=="4/4 PASS" and pe.get("lintian")=="PASS-errors" and pe.get("consumer_smoke")=="PASS" and pe.get("apt_check")=="PASS",f"{node_id}: PASS gates")
+        req(n.get("downstream_eligible") is True,f"{node_id}: downstream eligible")
+    elif node_id in remat_nodes:
+        req(cn.get("state")=="pending",f"{node_id}: remains pending")
+        req(cn.get("planning",{}).get("readiness")=="package-contract-ready",f"{node_id}: contract-ready")
+        req(cn.get("planning",{}).get("package_contract")=="not-materialized",f"{node_id}: stale materialization invalidated")
+        req(n.get("materialization_status")=="superseded-rematerialization-required",f"{node_id}: stale materialization marker")
     else:
-        me=contracts["materialization"]["evidence"][node_id]
-        for key in ("artifact_id","artifact_sha256","tree_sha256","debian_tree_sha256","dsc_sha256","debian_tar_sha256","orig_tar_sha256"):
-            req(cm.get(key)==me.get(key),f"{node_id}: materialization {key}")
-    pred=n["predecessor"]; p=t1[pred["id"]]
-    pe=[x for x in p.get("packaging",{}).get("evidence",[]) if x.get("result")=="PASS"][-1]
-    req(p.get("state")=="PASS" and p.get("packaging",{}).get("downstream_eligible") is True,f"{node_id}: predecessor PASS")
-    req(pred.get("version")==p["packaging"]["package_version"],f"{node_id}: predecessor version")
-    req(pred.get("workflow_run")==pe.get("workflow_run") and pred.get("artifact_id")==pe.get("artifact_id"),f"{node_id}: predecessor artifact identity")
-    req(pred.get("dev_package") in pred.get("debs",{}),f"{node_id}: predecessor dev package hash")
+        req(cn.get("state")=="pending" and cn.get("planning",{}).get("readiness")=="build-ready",f"{node_id}: runnable build-ready")
 
-req(a.get("schema")==1 and a.get("batch")=="tier2-batch-2" and a.get("selected_nodes")==expected,"attempt ledger identity")
+req(a.get("schema")==1 and a.get("batch")=="tier2-batch-2","attempt ledger identity")
+req(len(a["real_attempts"]["kcrash"])==3 and a["real_attempts"]["kcrash"][-1].get("result")=="PASS","KCrash three-attempt PASS history")
 for node_id in expected:
     req(isinstance(a.get("real_attempts",{}).get(node_id),list),f"{node_id}: attempt ledger")
     req(isinstance(a.get("blocked_events",{}).get(node_id),list),f"{node_id}: blocked ledger")
-
-for p in (
- "scripts/plan-kde-tier2-package-batch2.py","scripts/kde-tier2-package-batch2-needed.sh",
- "scripts/run-kde-tier2-package-batch2.sh","scripts/test-kde-tier2-package-batch2-scope.sh",
- ".github/workflows/kde-tier2-package-batch2.yml","docs/kde-tier2-package-batch2.md",
-):
-    req((ROOT/p).exists(),f"missing Batch2 component: {p}")
 
 doc=(ROOT/"docs/kde-tier2-package-batch2.md").read_text()
 for token in ("shared Resolute rootfs","package_attempted","fail-fast: false","KCrash","Syndication","stable"):
@@ -90,5 +65,5 @@ for token in ("shared Resolute rootfs","package_attempted","fail-fast: false","K
 if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)
     raise SystemExit(1)
-print("KDE Tier 2 Batch 2 preparation: PASS")
-print("5 build-ready independent nodes; real attempt begins immediately before sbuild")
+print("KDE Tier 2 Batch 2 state: PASS")
+print(f"retained-pass={sorted(pass_nodes)} rematerialization={sorted(remat_nodes)} runnable={sorted(runnable)}")

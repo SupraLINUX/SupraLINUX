@@ -84,6 +84,16 @@ req(kp.get("state")=="PASS" and kp.get("package_version")=="6.30.0-0supralinux3"
 req(k["package_identity"].get("package_version_candidate")==kp.get("package_version"),"KAuth package identity/current revision")
 kev=[x for x in kp.get("evidence",[]) if x.get("result")=="PASS"]
 req(len(kev)==1,"KAuth exactly one retained PASS")
+cr=nodes["kcrash"]; crp=cr.get("packaging",{})
+req(cr.get("state")=="PASS" and crp.get("state")=="PASS" and crp.get("package_version")=="6.30.0-0supralinux1" and crp.get("downstream_eligible") is True,"KCrash packaging PASS")
+crev=[x for x in crp.get("evidence",[]) if x.get("result")=="PASS"]
+req(len(crev)==1,"KCrash exactly one retained PASS")
+if crev:
+    ce=crev[0]
+    req(ce.get("workflow_run")==35535289692 and ce.get("job_id")==106143242223 and ce.get("artifact_id")==10613480229,"KCrash PASS identity")
+    req(ce.get("artifact_sha256")=="1f97e3cbcba2ed1d6b33af69cae1920726c2d5efab2382c3b21083a2e29d30d9","KCrash PASS artifact digest")
+    req(ce.get("tests")=="4/4 PASS" and ce.get("lintian")=="PASS-errors" and ce.get("abi_soname")=="libKF6Crash.so.6" and ce.get("abi_export_count")==13,"KCrash tests/Lintian/ABI")
+    req(ce.get("consumer_smoke")=="PASS" and ce.get("apt_check")=="PASS","KCrash runtime/consumer gates")
 if kev:
     e=kev[0]
     req(e.get("workflow_run")==35497461178 and e.get("job_id")==106043001431 and e.get("artifact_id")==10601382235,"KAuth PASS run/job/artifact")
@@ -92,7 +102,10 @@ if kev:
     req(e.get("tests")=="6/6 PASS" and e.get("lintian")=="PASS-errors" and e.get("abi_soname")=="libKF6AuthCore.so.6" and e.get("abi_export_count")==118,"KAuth tests/Lintian/ABI")
     req(e.get("consumer_smoke")=="PASS" and e.get("apt_check")=="PASS" and e.get("development_contract")=="PASS","KAuth runtime/development gates")
 
-pending_ids=expected_ids-{"kauth"}
+pass_ids={node_id for node_id,node in nodes.items() if node.get("state")=="PASS"}
+pending_ids={node_id for node_id,node in nodes.items() if node.get("state")=="pending"}
+req(pass_ids=={"kauth","kcrash"},"Tier2 current PASS set")
+req(len(pending_ids)==13,"Tier2 current pending count")
 contract_nodes=set(contracts.get("selected_nodes",[]))
 for node in sorted(pending_ids):
     n=nodes[node]
@@ -123,17 +136,21 @@ req(p.get("provider_version")=="0.200.0-4ubuntu1","Polkit provider")
 req(sum(n.get("state")=="PASS" for n in tier1.get("nodes",[]))==29 and not any(n.get("state")!="PASS" for n in tier1.get("nodes",[])),"Tier1 precondition")
 
 active=discovery.get("nodes",{})
-req(set(active)==pending_ids,"Tier2 active discovery must contain all 14 pending nodes")
+req(set(active)==pending_ids,"Tier2 active discovery must contain exactly current pending nodes")
 for node in sorted(pending_ids-{"kmime"}):
     req(active[node].get("readiness") in {"package-lane-pending","package-contract-ready","build-ready"},f"{node}: discovery readiness vocabulary")
 req(active["kmime"].get("readiness")=="compatibility-decision-required" and active["kmime"].get("blocker")=="ADR-0002","KMime decision gate")
 snap=discovery.get("promoted_snapshot",{})
-req((snap.get("pass"),snap.get("pending"),snap.get("current_fail"),snap.get("blocked"))==(1,14,0,0),"Tier2 promoted snapshot")
-done=discovery.get("completed_nodes",{}).get("kauth",{})
-req(done.get("state")=="PASS" and done.get("package_version")=="6.30.0-0supralinux3" and done.get("artifact_id")==10601382235 and done.get("downstream_eligible") is True,"KAuth completed discovery record")
+req((snap.get("pass"),snap.get("pending"),snap.get("current_fail"),snap.get("blocked"))==(2,13,0,0),"Tier2 promoted snapshot")
+done=discovery.get("completed_nodes",{})
+kauth_done=done.get("kauth",{})
+req(kauth_done.get("state")=="PASS" and kauth_done.get("package_version")=="6.30.0-0supralinux3" and kauth_done.get("artifact_id")==10601382235 and kauth_done.get("downstream_eligible") is True,"KAuth completed discovery record")
+kcrash_done=done.get("kcrash",{})
+req(kcrash_done.get("state")=="PASS" and kcrash_done.get("package_version")=="6.30.0-0supralinux1" and kcrash_done.get("artifact_id")==10613480229 and kcrash_done.get("downstream_eligible") is True,"KCrash completed discovery record")
 
-kd=dag.get("nodes",{}).get("kauth",{})
-req(kd.get("tier")==2 and kd.get("state")=="PASS" and kd.get("package_version")=="6.30.0-0supralinux3" and kd.get("downstream_eligible") is True,"KAuth canonical DAG promotion")
+kd=dag.get("nodes",{})
+req(kd.get("kauth",{}).get("tier")==2 and kd["kauth"].get("state")=="PASS" and kd["kauth"].get("downstream_eligible") is True,"KAuth canonical DAG promotion")
+req(kd.get("kcrash",{}).get("tier")==2 and kd["kcrash"].get("state")=="PASS" and kd["kcrash"].get("package_version")=="6.30.0-0supralinux1" and kd["kcrash"].get("downstream_eligible") is True,"KCrash canonical DAG promotion")
 
 cmp=subprocess.run(["dpkg","--compare-versions","6.30.0-0supralinux1","lt","25.12.3-0ubuntu1"])
 req(cmp.returncode==0,"KMime naive Frameworks version ordering fact")
@@ -141,7 +158,7 @@ adr=(ROOT/"docs/decisions/ADR-0002-kmime-frameworks-transition.md").read_text()
 for token in ("decision required","KPim6::Mime","KF6::Mime","libKPim6Mime.so.6","libKF6Mime.so.6","Pending human approval"):
     req(token in adr,f"KMime ADR missing {token}")
 doc=(ROOT/"docs/kde-tier2.md").read_text()
-for token in ("15","KAuth","KMime","1 PASS / 14 pending","POLKITQT6-1","compatibility-decision-required"):
+for token in ("15","KAuth","KCrash","KMime","2 PASS / 13 pending","POLKITQT6-1","compatibility-decision-required"):
     req(token in doc,f"Tier2 doc missing {token}")
 policy=(ROOT/".github/workflows/repository-policy.yml").read_text()
 req("python3 scripts/validate_kde_tier2.py" in policy,"Repository Policy Tier2 gate")
@@ -150,8 +167,8 @@ if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)
     raise SystemExit(1)
 print("KDE Frameworks 6.30 Tier 2 discovery validation: PASS")
-print("Canonical Tier 2: 1 PASS / 14 pending / 0 FAIL / 0 BLOCKED")
+print("Canonical Tier 2: 2 PASS / 13 pending / 0 FAIL / 0 BLOCKED")
 build_ready=sum(nodes[n].get("planning",{}).get("readiness")=="build-ready" for n in pending_ids-{"kmime"})
 contract_ready=sum(nodes[n].get("planning",{}).get("readiness")=="package-contract-ready" for n in pending_ids-{"kmime"})
 audit_pending=sum(nodes[n].get("planning",{}).get("readiness")=="package-lane-pending" for n in pending_ids-{"kmime"})
-print(f"KAuth PASS/downstream-eligible; {build_ready} build-ready; {contract_ready} contract-ready; {audit_pending} provider-audit pending; KMime compatibility-decision-required")
+print(f"KAuth+KCrash PASS/downstream-eligible; {build_ready} build-ready; {contract_ready} contract-ready; {audit_pending} provider-audit pending; KMime compatibility-decision-required")

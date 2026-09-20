@@ -46,3 +46,12 @@ Both are classified **INFRA / shared integration-provider causes**, with `packag
 Run `35535155799` completed **5/5 PASS** after applying both shared remediations: changelog distribution `resolute` and the `llvm-dev` provider for the three Shiboken/Python-binding nodes. Exact artifact and source-tree hashes are pinned in the contracts and campaign manifests.
 
 The five package nodes return to `build-ready`; Batch 2 is again `remediation-pending-build`. The next campaign must use the corrected materialization and retain `fail-fast: false`.
+
+
+## Partial promotion after run 35535289692
+
+KCrash `6.30.0-0supralinux1` is now **PASS/downstream-eligible**: run `35535289692`, job `106143242223`, artifact `10613480229`, artifact SHA-256 `1f97e3cbcba2ed1d6b33af69cae1920726c2d5efab2382c3b21083a2e29d30d9`, rootfs content SHA-256 `db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f`, **4/4 tests PASS**, Lintian PASS-errors, SONAME `libKF6Crash.so.6`, 13 exports, APT closure PASS and consumer smoke PASS.
+
+The other four jobs are not canonical FAILs. KNotifications, KStatusNotifierItem and KUnitConversion share a Shiboken/Clang resource-header provider gap. Syndication builds and passes 4/4 tests but requires a distribution source repack matching its declared `Files-Excluded`. They are removed from the build queue until corrected materializations exist.
+
+The Batch remains `fail-fast: false`; `package_attempted=true` evidence is retained for every real execution. Promotion to `stable` still requires explicit user approval.

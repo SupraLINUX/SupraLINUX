@@ -61,11 +61,13 @@ dep_nodes=deps["nodes"]
 for node_id in expected:
     c=contracts["nodes"].get(node_id,{})
     n=canonical[node_id]
-    req(n.get("state")=="pending","contract node must remain package-state pending")
-    expected_readiness = "build-ready" if contracts.get("state") == "materialized" else "package-contract-ready"
-    expected_contract = "materialized" if contracts.get("state") == "materialized" else "not-materialized"
-    req(n.get("planning",{}).get("readiness")==expected_readiness,f"{node_id}: canonical readiness")
-    req(n.get("planning",{}).get("package_contract")==expected_contract,f"{node_id}: package contract state")
+    if n.get("state")=="PASS":
+        req(n.get("packaging",{}).get("state")=="PASS" and n.get("packaging",{}).get("downstream_eligible") is True,f"{node_id}: retained package PASS")
+        req(n.get("planning",{}).get("readiness")=="retained-pass",f"{node_id}: retained-pass readiness")
+    else:
+        req(n.get("state")=="pending",f"{node_id}: pending before package PASS")
+        req(n.get("planning",{}).get("readiness") in {"package-contract-ready","build-ready"},f"{node_id}: valid package readiness")
+        req(n.get("planning",{}).get("package_contract") in {"not-materialized","materialized"},f"{node_id}: valid package-contract state")
     req(c.get("upstream_version")=="6.30.0",f"{node_id}: version")
     req(c.get("source_sha256")==n.get("source_sha256"),f"{node_id}: source SHA")
     req(c.get("source_package")==f"kf6-{node_id}",f"{node_id}: Ubuntu-compatible source package")

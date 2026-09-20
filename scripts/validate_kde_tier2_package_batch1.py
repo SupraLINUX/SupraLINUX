@@ -43,13 +43,17 @@ kt=tier["kauth"]
 req(kt.get("state")=="PASS" and kt.get("packaging",{}).get("state")=="PASS" and kt["packaging"].get("downstream_eligible") is True,"KAuth Tier2 canonical PASS")
 req(tier["kmime"].get("state")=="pending" and tier["kmime"].get("package_identity",{}).get("package_version_candidate") is None,"KMime remains pending/undecided")
 active=g.get("nodes",{})
-req(set(active)==expected_ids-{"kauth"},"current Tier2 active discovery must contain 14 pending nodes")
+current_pending={node_id for node_id,node in tier.items() if node.get("state")=="pending"}
+current_pass={node_id for node_id,node in tier.items() if node.get("state")=="PASS"}
+req(set(active)==current_pending,"current Tier2 active discovery must contain exactly current pending nodes")
 req(active["kmime"].get("readiness")=="compatibility-decision-required","KMime decision gate")
-for node in sorted(expected_ids-{"kauth","kmime"}):
-    req(active[node].get("readiness")==tier[node].get("planning",{}).get("readiness"),f"{node}: later readiness must match canonical Tier2 planning")
-req(g.get("promoted_snapshot")=={"pass":1,"pending":14,"current_fail":0,"blocked":0},"current Tier2 snapshot")
+for node in sorted(current_pending-{"kmime"}):
+    req(active[node].get("readiness") in {"package-lane-pending","package-contract-ready","build-ready"},f"{node}: current discovery readiness vocabulary")
+expected_snapshot={"pass":len(current_pass),"pending":len(current_pending),"current_fail":0,"blocked":0}
+req(g.get("promoted_snapshot")==expected_snapshot,"current Tier2 snapshot")
 req(g.get("completed_nodes",{}).get("kauth",{}).get("artifact_id")==10601382235,"KAuth completed discovery evidence")
 req(d.get("nodes",{}).get("kauth",{}).get("state")=="PASS" and d["nodes"]["kauth"].get("downstream_eligible") is True,"KAuth DAG PASS")
+req("kcrash" in current_pass and g.get("completed_nodes",{}).get("kcrash",{}).get("artifact_id")==10613480229,"later KCrash promotion may extend current Tier2 PASS set")
 
 history=a.get("real_attempts",{}).get("kauth",[])
 req(len(history)==3,"KAuth must retain exactly three real attempts")

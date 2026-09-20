@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 2 discovery
 
-Status: **1 PASS / 14 pending / 0 current FAIL / 0 BLOCKED**  
+Status: **2 PASS / 13 pending / 0 current FAIL / 0 BLOCKED**  
 Date: **2026-09-20**
 
 KDE upstream classifies **15** Frameworks in Tier 2 for the current Frameworks API set:
@@ -27,7 +27,7 @@ Tier 2 may depend on Tier 1 Frameworks. SupraLINUX entered this phase only after
 
 The first Tier 2 discovery incorrectly materialized only KAuth and KMime. That was an inventory error: KDE upstream currently lists 15 Tier 2 Frameworks.
 
-The correction does not invalidate KAuth's retained PASS. It adds 13 previously omitted nodes as **pending** and changes the current canonical Tier 2 package state from the incomplete **1 PASS / 1 pending** view to **1 PASS / 14 pending / 0 current FAIL / 0 BLOCKED**.
+The correction does not invalidate KAuth's retained PASS. It adds 13 previously omitted nodes as **pending** and changes the current canonical Tier 2 package state from the incomplete **1 PASS / 1 pending** view to **2 PASS / 13 pending / 0 current FAIL / 0 BLOCKED**.
 
 No newly discovered node has been assigned a package version or package PASS/FAIL result. Their source identities and upstream v6.30.0 dependency edges are discovery evidence only until a package contract and real build lane are materialized.
 
@@ -94,3 +94,8 @@ KDE upstream defines the Tier 2 inventory, versions, dependencies and feature co
 Materialize package contracts for the five package-contract-ready nodes in a generated DAG-friendly batch, while continuing provider audit for the remaining eight non-KMime nodes. The next generated provider-audit batch is KPty, KColorScheme, KCompletion, KContacts and KPackage.
 
 KMime remains independent and decision-gated; it does not stop the rest of Tier 2.
+
+
+## KCrash package PASS
+
+KCrash `6.30.0-0supralinux1` is the second retained Tier 2 package PASS. Clean-build run `35535289692`, job `106143242223`, artifact `10613480229` passed 4/4 upstream CTest tests, Lintian error gate, SONAME/export validation, APT runtime closure and external CMake consumer smoke. KCrash is downstream-eligible; the remaining four Batch 2 nodes stay pending.
