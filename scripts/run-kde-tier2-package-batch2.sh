@@ -113,7 +113,6 @@ env={
 PY
 source "${EVIDENCE}/input-env.sh"
 mapfile -t PREDECESSOR_DEBS < "${EVIDENCE}/predecessor-debs.txt"
-mapfile -t EXPECTED_BINARIES < "${EVIDENCE}/expected-binaries.txt"
 
 STAGE=host-validation
 . /etc/os-release
