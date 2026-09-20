@@ -6,7 +6,7 @@
   "provider_platform": "ubuntu-resolute",
   "batch": "tier2-batch-1",
   "lane": "core-authorization",
-  "state": "prepared-pending-build",
+  "state": "remediation-pending-build",
   "attempt_ledger": "manifests/kde-tier2-package-batch1-attempts.json",
   "canonical_snapshot": {
     "tier1": "29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED",
@@ -64,7 +64,7 @@
     "kauth": {
       "upstream_version": "6.30.0",
       "source_package": "kf6-kauth",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kauth-6.30.0.tar.xz",
       "source_sha256": "60b75e02abc2bfbb247c586e3ab94def7ecd7b4e1ddb8260358951d84d9ea8c9",
       "signing_key": {
@@ -118,12 +118,12 @@
       ],
       "dependency_contracts": {
         "libkf6auth-dev": [
-          "libkf6auth-dev-bin (= 6.30.0-0supralinux1)",
-          "libkf6authcore6 (= 6.30.0-0supralinux1)",
+          "libkf6auth-dev-bin (= 6.30.0-0supralinux2)",
+          "libkf6authcore6 (= 6.30.0-0supralinux2)",
           "libkf6coreaddons-dev (>= 6.30.0~)"
         ],
         "libkf6authcore6": [
-          "libkf6auth-data (= 6.30.0-0supralinux1)"
+          "libkf6auth-data (= 6.30.0-0supralinux2)"
         ]
       },
       "required_artifact_contracts": [
@@ -135,9 +135,18 @@
         "consumer-smoke",
         "apt-runtime-closure"
       ],
-      "state": "prepared-pending-build",
-      "last_result": null,
-      "downstream_eligible": false
+      "state": "remediation-pending-build",
+      "last_result": "FAIL",
+      "downstream_eligible": false,
+      "last_failure_evidence": {
+        "workflow_run": 35496293561,
+        "job_id": 106039776267,
+        "artifact_id": 10600690671,
+        "artifact_sha256": "8387279d8cdadd05cf73c2c16177f1d2635a331648638ca3397cef77d04c1ac3",
+        "stage": "source-package",
+        "sbuild_started": false,
+        "cause": "helper-install-dir-cache.patch declared a 7-line hunk but contained only 6 old/new context lines; dpkg-source rejected the malformed quilt patch before sbuild."
+      }
     }
   }
 }

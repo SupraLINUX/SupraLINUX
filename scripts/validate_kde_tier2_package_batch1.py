@@ -17,7 +17,7 @@ req(c.get("state") in {"prepared-pending-build","remediation-pending-build","PAS
 req(c.get("selected_nodes")==["kauth"],"Batch1 must contain only KAuth")
 n=c.get("nodes",{}).get("kauth",{})
 req(n.get("upstream_version")=="6.30.0" and n.get("source_package")=="kf6-kauth","KAuth identity")
-req(n.get("package_version")=="6.30.0-0supralinux1","KAuth initial revision")
+req(n.get("package_version")=="6.30.0-0supralinux2","KAuth current revision")
 req(n.get("source_sha256")=="60b75e02abc2bfbb247c586e3ab94def7ecd7b4e1ddb8260358951d84d9ea8c9","KAuth source hash")
 req(n.get("kde_framework_build_dependencies")==["KCoreAddons","KWindowSystem"],"KAuth predecessors")
 req(n.get("backend_profile")=={"KAUTH_BACKEND_NAME":"POLKITQT6-1","KAUTH_HELPER_BACKEND_NAME":"DBUS","fake_backend_allowed":False},"KAuth backend profile")
@@ -27,9 +27,9 @@ req(ref.get("debian_tar_sha256")=="f304bd772cf958ca9dccab78ad33e12f8e2f7bf0b0389
 
 tier={x["id"]:x for x in t.get("nodes",[])}
 req(tier.get("kauth",{}).get("state")=="pending","KAuth canonical state remains pending before PASS")
-req(tier.get("kauth",{}).get("packaging",{}).get("state")=="prepared-pending-build","KAuth packaging readiness")
+req(tier.get("kauth",{}).get("packaging",{}).get("state")=="remediation-pending-build","KAuth packaging readiness")
 req(tier.get("kmime",{}).get("package_identity",{}).get("package_version_candidate") is None,"KMime must remain decision-gated")
-req(g.get("nodes",{}).get("kauth",{}).get("readiness")=="prepared-pending-build","KAuth discovery readiness")
+req(g.get("nodes",{}).get("kauth",{}).get("readiness")=="remediation-pending-build","KAuth discovery readiness")
 req(g.get("nodes",{}).get("kmime",{}).get("readiness")=="compatibility-decision-required","KMime discovery decision gate")
 
 package=ROOT/"packages/kde/kauth/debian"
@@ -57,14 +57,17 @@ req("packages/kde/kauth/*" in scope and "kde-tier2-package-campaign-batch1.json"
 req("KDE Tier 2 Batch 1 scope selector: PASS" in scope_test,"KAuth scope test marker")
 
 history=a.get("real_attempts",{}).get("kauth",[])
-if n.get("state")!="PASS":
-    req(history==[],"No real KAuth attempt may be recorded before first build")
-else:
-    req(bool(history) and history[-1].get("result")=="PASS","KAuth PASS requires retained attempt evidence")
+req(len(history)==1,"KAuth remediation state must retain exactly attempt 1 before rerun")
+if history:
+    h=history[0]
+    req(h.get("attempt")==1 and h.get("package_version")=="6.30.0-0supralinux1","KAuth attempt 1 identity")
+    req(h.get("workflow_run")==35496293561 and h.get("job_id")==106039776267 and h.get("artifact_id")==10600690671,"KAuth attempt 1 evidence identity")
+    req(h.get("artifact_sha256")=="8387279d8cdadd05cf73c2c16177f1d2635a331648638ca3397cef77d04c1ac3","KAuth attempt 1 artifact digest")
+    req(h.get("package_attempted") is True and h.get("result")=="FAIL" and h.get("stage")=="source-package" and h.get("sbuild_started") is False,"KAuth attempt 1 semantics")
 
 if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)
     raise SystemExit(1)
 print("KDE Tier 2 Batch 1 KAuth preparation: PASS")
-print("KAuth 6.30.0 prepared with retained KCoreAddons/KWindowSystem and POLKITQT6-1")
+print("KAuth 6.30.0 remediation prepared after retained source-package FAIL; backend/dependencies unchanged")
 print("KMime remains compatibility-decision-required")

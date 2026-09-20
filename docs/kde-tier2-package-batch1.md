@@ -38,3 +38,11 @@ A PASS requires:
 - external CMake consumer compile/run.
 
 No PASS evidence exists yet; this document is preparation state only.
+
+## Attempt 1 — source-package FAIL
+
+Run `35496293561`, job `106039776267`, artifact `10600690671`, SHA-256 `8387279d8cdadd05cf73c2c16177f1d2635a331648638ca3397cef77d04c1ac3`.
+
+The attempt failed in `dpkg-source` before sbuild. The helper-install-dir patch declared a seven-line hunk but ended after six context lines, so quilt rejected it as malformed. Retained predecessor artifacts, source SHA, backend profile and Debian symbols reference all validated before this failure.
+
+Classification: **real package FAIL**, `package_attempted=true`, stage `source-package`, `sbuild_started=false`. Revision `6.30.0-0supralinux2` fixes only the quilt hunk structure.

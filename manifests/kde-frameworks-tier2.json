@@ -51,8 +51,8 @@
         ]
       },
       "packaging": {
-        "state": "prepared-pending-build",
-        "package_version": "6.30.0-0supralinux1",
+        "state": "remediation-pending-build",
+        "package_version": "6.30.0-0supralinux2",
         "claim": "no-package-attempt-yet",
         "downstream_eligible": false,
         "attempt_ledger": "manifests/kde-tier2-package-batch1-attempts.json",

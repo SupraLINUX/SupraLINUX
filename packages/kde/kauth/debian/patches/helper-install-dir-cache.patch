@@ -6,7 +6,7 @@ Last-Update: 2026-09-20
 ---
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -42,7 +42,7 @@ ecm_setup_version(PROJECT VARIABLE_PREF
+@@ -47,7 +47,7 @@
  find_package(KF6CoreAddons ${KF_DEP_VERSION} REQUIRED)
  
 -set(KAUTH_HELPER_INSTALL_DIR "${KDE_INSTALL_LIBEXECDIR_KF}/kauth")
@@ -14,3 +14,4 @@ Last-Update: 2026-09-20
  
  if(IS_ABSOLUTE ${KAUTH_HELPER_INSTALL_DIR})
      set(KAUTH_HELPER_INSTALL_ABSOLUTE_DIR ${KAUTH_HELPER_INSTALL_DIR})
+ else()

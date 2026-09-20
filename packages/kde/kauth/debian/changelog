@@ -1,3 +1,10 @@
+kf6-kauth (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Fix malformed helper-install-dir-cache quilt hunk.
+  * Preserve the same upstream source, backend profile and dependency set.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sun, 20 Sep 2026 04:18:00 -0300
+
 kf6-kauth (6.30.0-0supralinux1) resolute; urgency=medium
 
   * Package KDE Frameworks KAuth 6.30.0 upstream stable.

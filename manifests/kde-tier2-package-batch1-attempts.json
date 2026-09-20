@@ -6,7 +6,22 @@
     "kauth"
   ],
   "real_attempts": {
-    "kauth": []
+    "kauth": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "a1b3fc1b05c29d87d60911d4be020072efda95aa",
+        "workflow_run": 35496293561,
+        "job_id": 106039776267,
+        "artifact_id": 10600690671,
+        "artifact_sha256": "8387279d8cdadd05cf73c2c16177f1d2635a331648638ca3397cef77d04c1ac3",
+        "package_attempted": true,
+        "result": "FAIL",
+        "stage": "source-package",
+        "sbuild_started": false,
+        "cause": "Malformed helper-install-dir-cache.patch: the hunk header declared 7 lines but the patch ended after 6, so dpkg-source rejected it before sbuild."
+      }
+    ]
   },
   "validation_incidents": {
     "kauth": []

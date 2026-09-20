@@ -21,7 +21,7 @@
   },
   "nodes": {
     "kauth": {
-      "readiness": "prepared-pending-build",
+      "readiness": "remediation-pending-build",
       "tier1_predecessors": [
         "kcoreaddons",
         "kwindowsystem"
