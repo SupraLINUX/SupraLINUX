@@ -303,3 +303,12 @@ Kirigami and KQuickCharts are now canonical PASS/downstream-eligible in both Tie
 Repository Policy run `35472599190`, job `105976179351`, failed only in the Batch 10 promotion validator after DAG, canonical Tier 1, global discovery and packaging-reference/tree validators had already passed. No package workflow ran because PR CI correctly classified the promotion as evidence-only.
 
 Classification: **INFRA / package_state_effect=none / package_attempted=false**. The validator compared the whole `promoted_snapshot` object to an exact dict and rejected the intentionally preserved historical-semantics `note`. The remediation compares the four state fields explicitly and also requires `promoted_snapshot.note` to remain present. No package state, package revision, retained PASS, FAIL/INFRA history or attempt count changes.
+
+
+## Promotion validator remediation — final PASS
+
+Commit `798b41c71b1f0c7e81871c45953a73468031d200` preserves the historical-semantics `promoted_snapshot.note` and fixes only the validator comparison. Repository Policy run `35472738627`, job `105976569497`, is PASS, including the Batch 10 canonical closure validator and all repository invariant gates.
+
+PR CI router run `35472738820` is also PASS. The delta was classified as evidence/policy-only and every heavy reusable workflow, including Batch 10, was skipped. Therefore no Kirigami or KQuickCharts rebuild occurred, no package revision changed and no package-attempt ledger entry was added.
+
+Final canonical state remains **27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**, with only KUserFeedback and Prison pending.
