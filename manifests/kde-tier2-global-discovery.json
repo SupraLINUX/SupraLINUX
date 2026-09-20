@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-20",
+  "scope": "kde-frameworks-tier2-6.30",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "strategy": "dag-global-discovery",
+  "canonical_tier1_precondition": "29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED",
+  "policy": {
+    "parallelize_independent_nodes": true,
+    "continue_after_independent_failures": true,
+    "blocked_is_not_fail": true,
+    "only_pass_artifacts_feed_dependents": true,
+    "preserve_every_real_attempt": true,
+    "no_package_attempt_before_packaging_contract": true
+  },
+  "state_model": {
+    "package-lane-pending": "Upstream/dependency discovery is complete, but no package attempt is valid until a package runner/tree exists.",
+    "compatibility-decision-required": "A compatibility/packaging architecture decision is required before materializing the package.",
+    "note": "These are planning/readiness states, not package FAIL/BLOCKED results."
+  },
+  "nodes": {
+    "kauth": {
+      "readiness": "package-lane-pending",
+      "tier1_predecessors": [
+        "kcoreaddons",
+        "kwindowsystem"
+      ],
+      "external_provider": "libpolkit-qt6-1-dev 0.200.0-4ubuntu1",
+      "selected_backend": "POLKITQT6-1",
+      "blocker": "package-tree-and-runner-not-yet-implemented"
+    },
+    "kmime": {
+      "readiness": "compatibility-decision-required",
+      "tier1_predecessors": [
+        "kcodecs"
+      ],
+      "blocker": "ADR-0002",
+      "issue": "Frameworks KMime changes version line, CMake package/target namespace and ELF library basename relative to Ubuntu 26.04's PIM KMime."
+    }
+  },
+  "next_actions": [
+    "Implement and validate KAuth packaging independently using retained KCoreAddons and KWindowSystem PASS artifacts plus Ubuntu PolkitQt6-1 provider.",
+    "Do not attempt KMime packaging until ADR-0002 selects a compatibility transition preserving Ubuntu application contracts.",
+    "Once KMime transition is approved, implement its package lane and validate both legacy-Ubuntu compatibility and new KF6Mime consumers."
+  ]
+}

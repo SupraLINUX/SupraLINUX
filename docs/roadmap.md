@@ -1,7 +1,7 @@
 # Development roadmap
 
 Status: **planning document**  
-Last reviewed: **2026-09-11**
+Last reviewed: **2026-09-20**
 
 The phases are gates, not calendar promises. A later phase may be prepared in parallel, but it is not promoted as complete until its evidence exists.
 
@@ -33,6 +33,8 @@ The phases are gates, not calendar promises. A later phase may be prepared in pa
 - repository integrity verification.
 
 ## Phase 3 — KDE metadata and DAG
+
+Current implementation status: KDE Frameworks 6.30 Tier 1 is canonically 29/29 PASS. Tier 2 discovery is active for KAuth and KMime; KMime packaging is decision-gated by ADR-0002 because its move from PIM to Frameworks changes both Debian version ordering and the runtime/development namespace.
 
 - ingest official KDE stable source metadata;
 - record source URLs, versions, tags and SHA-256 values from real downloads;

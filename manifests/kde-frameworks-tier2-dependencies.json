@@ -1,0 +1,147 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-20",
+  "authority": "kde-upstream",
+  "frameworks": "6.30.0",
+  "tier": 2,
+  "target": "linux",
+  "common": {
+    "cmake_minimum": "3.29",
+    "ecm": "6.30.0",
+    "qt_minimum": "6.9.0"
+  },
+  "provider_platform": "ubuntu-resolute",
+  "qt_provider_packages": {
+    "Core": [
+      "qt6-base-dev"
+    ],
+    "Gui": [
+      "qt6-base-dev"
+    ],
+    "DBus": [
+      "qt6-base-dev"
+    ],
+    "Test": [
+      "qt6-base-dev"
+    ]
+  },
+  "external_requirements": {
+    "polkitqt6-1": {
+      "upstream_name": "PolkitQt6-1",
+      "minimum": "0.112.0",
+      "provider_packages": [
+        "libpolkit-qt6-1-dev"
+      ],
+      "provider_version": "0.200.0-4ubuntu1",
+      "provider_status": "available-satisfies-upstream"
+    }
+  },
+  "retained_predecessors": {
+    "extra_cmake_modules": {
+      "version": "6.30.0-0supralinux3",
+      "state": "PASS",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+    },
+    "kcoreaddons": {
+      "version": "6.30.0-0supralinux4",
+      "state": "PASS",
+      "workflow_run": 35122522242,
+      "job_id": 104883541991,
+      "artifact_id": 10457958023,
+      "artifact_sha256": "c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64",
+      "rootfs_sha256": "dd7762ba1cdc25dd57b05e8203b3d5d4d448d9ee7131ac0b99d1d85989854794"
+    },
+    "kwindowsystem": {
+      "version": "6.30.0-0supralinux4",
+      "state": "PASS",
+      "workflow_run": 35047623320,
+      "job_id": 104640833059,
+      "artifact_id": 10428130399,
+      "artifact_sha256": "9c35d5e228d3f8b71fb1e84863fac030bfd26a8e3c528ae718e788708db01272",
+      "rootfs_sha256": "c9b726402226ff31d1117fbf6db2a2d9497debd4efc7cd4d91494fcf6de55215"
+    },
+    "kcodecs": {
+      "version": "6.30.0-0supralinux4",
+      "state": "PASS",
+      "workflow_run": 34716761551,
+      "job_id": 103615297758,
+      "artifact_id": 10305050385,
+      "artifact_sha256": "d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45",
+      "rootfs_sha256": "b0bcb87ff643d730940cbd267745cf18e868e01f64e7270d0ddeb2e348c950cf"
+    }
+  },
+  "metadata": {
+    "kauth": {
+      "repo": "KDE/kauth",
+      "ref": "v6.30.0",
+      "commit": "6755319d08f378d6ced1ee559ac6780716e19c0b",
+      "root_cmake_blob": "60963f3aebee86e20c93f48c0f57f0db8f2be6be",
+      "extra": {
+        "src/ConfigureChecks.cmake": "1f462c2b65877f53c1ec5eaa0e734ff936d2e647",
+        "KF6AuthConfig.cmake.in": "d7fb222c51d21e18a8a57f9bbf341fb33f1c8cc3",
+        "autotests/CMakeLists.txt": "4b270e6668fe27774e5e85894c288b6236b91e2f"
+      }
+    },
+    "kmime": {
+      "repo": "KDE/kmime",
+      "ref": "v6.30.0",
+      "commit": "85a71916dd1290f1e0382c96346be2fa5816107e",
+      "root_cmake_blob": "3b91ee27162caa13b7e21593217e5fd543f9d8b1",
+      "extra": {
+        "autotests/CMakeLists.txt": "fcd455aa42eb1fddb5bdc71c254cf809dc33a2d4"
+      }
+    }
+  },
+  "nodes": {
+    "kauth": {
+      "qt": {
+        "required": [
+          "Gui",
+          "DBus"
+        ],
+        "test": [
+          "Test"
+        ]
+      },
+      "frameworks": {
+        "required": [
+          "kcoreaddons"
+        ],
+        "provider_selected": [
+          "kwindowsystem"
+        ]
+      },
+      "external": {
+        "provider_selected": [
+          "polkitqt6-1"
+        ]
+      },
+      "selected_linux_profile": {
+        "auth_backend": "POLKITQT6-1",
+        "helper_backend": "DBUS",
+        "fake_backend_allowed": false,
+        "reason": "PolkitQt6-1 provider is available and upstream states the Fake backend will not work properly."
+      }
+    },
+    "kmime": {
+      "qt": {
+        "required": [
+          "Core"
+        ],
+        "test": [
+          "Test"
+        ]
+      },
+      "frameworks": {
+        "required": [
+          "kcodecs"
+        ],
+        "provider_selected": []
+      },
+      "external": {},
+      "shared_build_note": "KF6Codecs is a private shared-library dependency in the 6.30 target but remains a required build dependency."
+    }
+  }
+}

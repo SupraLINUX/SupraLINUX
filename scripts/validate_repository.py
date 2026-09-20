@@ -121,6 +121,7 @@ require("scripts/test-check-golden-image-provenance.sh" in repository_policy, "r
 require("scripts/test-pr-ci-router-scope.sh" in repository_policy, "repository policy must functionally test semantic PR evidence routing")
 require("scripts/test-kde-development-contract-audit.sh" in repository_policy, "repository policy must functionally test the KDE development contract audit")
 require("python3 scripts/validate_qt_provider.py" in repository_policy, "repository policy must execute the Qt provider invariant validator")
+require("python3 scripts/validate_kde_tier2.py" in repository_policy, "repository policy must execute the KDE Tier 2 discovery validator")
 require(bool(qt_provider_workflow), "missing Qt provider preflight workflow")
 
 # Ordinary pull-request work is admitted through one router. The package/reference/provider
@@ -199,6 +200,13 @@ required_files = [
     "scripts/run-kvm-jit-gate.sh",
     "scripts/run-kvm-jit-gate-core.sh",
     "scripts/run-authoritative-package-proof.sh",
+    "manifests/kde-frameworks-tier2.json",
+    "manifests/kde-frameworks-tier2-dependencies.json",
+    "manifests/kde-tier2-global-discovery.json",
+    "scripts/validate_kde_tier2.py",
+    "docs/kde-tier2.md",
+    "docs/kde-tier2-dependencies.md",
+    "docs/decisions/ADR-0002-kmime-frameworks-transition.md",
 ]
 for relative in required_files:
     require((ROOT / relative).exists(), f"required architecture/runner file missing: {relative}")

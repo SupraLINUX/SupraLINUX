@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-20",
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "tier": 2,
+  "tier_definition": "May depend on Tier 1 KDE Frameworks while retaining manageable dependencies.",
+  "tier_reference": "https://api.kde.org/",
+  "release_reference": "https://kde.org/info/kde-frameworks-6.30.0/",
+  "canonical_tier1_precondition": {
+    "manifest": "manifests/kde-frameworks-tier1.json",
+    "required_state": "29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
+  },
+  "dependency_manifest": "manifests/kde-frameworks-tier2-dependencies.json",
+  "nodes": [
+    {
+      "id": "kauth",
+      "name": "KAuth",
+      "upstream_tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kauth-6.30.0.tar.xz",
+      "source_sha256": "60b75e02abc2bfbb247c586e3ab94def7ecd7b4e1ddb8260358951d84d9ea8c9",
+      "upstream_ref": "v6.30.0",
+      "upstream_commit": "6755319d08f378d6ced1ee559ac6780716e19c0b",
+      "root_cmake_blob": "60963f3aebee86e20c93f48c0f57f0db8f2be6be",
+      "depends_on": [
+        "extra-cmake-modules",
+        "kcoreaddons",
+        "kwindowsystem"
+      ],
+      "kde_framework_dependencies": {
+        "required": [
+          "kcoreaddons"
+        ],
+        "selected_profile": [
+          "kwindowsystem"
+        ],
+        "note": "KWindowSystem is selected because the Linux production profile must use the upstream PolkitQt6-1 backend rather than silently falling back to Fake."
+      },
+      "package_identity": {
+        "source_package": "kf6-kauth",
+        "package_version_candidate": "6.30.0-0supralinux1",
+        "compatibility_reference_provider": "ubuntu-resolute",
+        "compatibility_reference_version": "6.24.0-0ubuntu1",
+        "reference_binary_packages": [
+          "libkf6auth-data",
+          "libkf6auth-dev",
+          "libkf6auth-dev-bin",
+          "libkf6auth-doc",
+          "libkf6authcore6"
+        ]
+      },
+      "packaging": {
+        "state": "pending",
+        "reason": "package-lane-not-implemented"
+      },
+      "state": "pending"
+    },
+    {
+      "id": "kmime",
+      "name": "KMime",
+      "upstream_tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kmime-6.30.0.tar.xz",
+      "source_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+      "upstream_ref": "v6.30.0",
+      "upstream_commit": "85a71916dd1290f1e0382c96346be2fa5816107e",
+      "root_cmake_blob": "3b91ee27162caa13b7e21593217e5fd543f9d8b1",
+      "depends_on": [
+        "extra-cmake-modules",
+        "kcodecs"
+      ],
+      "kde_framework_dependencies": {
+        "required": [
+          "kcodecs"
+        ],
+        "selected_profile": []
+      },
+      "package_identity": {
+        "source_package": "kmime",
+        "package_version_candidate": null,
+        "compatibility_reference_provider": "ubuntu-resolute",
+        "compatibility_reference_version": "25.12.3-0ubuntu1",
+        "reference_binary_packages": [
+          "libkmime-data",
+          "libkmime-dev",
+          "libkpim6mime6"
+        ],
+        "decision_required": "KMime moved from the PIM/25.12 line to Frameworks 6.30 and changed its CMake/library namespace; a Debian compatibility/version-transition strategy must be approved before packaging."
+      },
+      "packaging": {
+        "state": "pending",
+        "reason": "compatibility-transition-decision-required"
+      },
+      "state": "pending"
+    }
+  ]
+}
