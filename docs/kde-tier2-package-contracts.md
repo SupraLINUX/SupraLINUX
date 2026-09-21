@@ -157,3 +157,19 @@ Batch 3 distinguishes two dependency classes explicitly:
 The distinction was required by KColorScheme: upstream requires KGuiAddons but not KCoreAddons, while SupraLINUX `libkf6guiaddons-dev` correctly carries a package dependency on `libkf6coreaddons-dev`. The resulting KCoreAddons input is therefore package closure only and must never be promoted into the KDE DAG.
 
 Both classes must come from retained PASS artifacts. When package closure is non-empty, its development-package version is separately proven in `.buildinfo` and in the post-build consumer environment.
+
+
+## KPackage AppStream offline validation contract
+
+Batch 3 run `35627389046` established that KPackage's restored upstream tests are functional: 9/10 passed, while `testpackage-appstream` failed only on AppStream remote URL reachability in the isolated build. The provider observed in Ubuntu Resolute is `appstream 1.1.2-1`.
+
+AppStream v1.1.2 is the authority for this validator behavior. Its manual explicitly defines `--no-net` as “do not access the network when validating metadata” and states that `AS_VALIDATE_NONET` has the same effect. SupraLINUX therefore records an explicit provider/test-environment adaptation:
+
+- tool: `appstreamcli`
+- provider: Ubuntu Resolute `1.1.2-1`
+- setting: `AS_VALIDATE_NONET=1`
+- scope: `dh_auto_test` only
+- KDE feature effect: none
+- upstream AppStream reference: `https://github.com/ximion/appstream/blob/v1.1.2/docs/xml/man/appstreamcli.1.xml`.
+
+The KPackage upstream test is not deleted, filtered or marked flaky. The full test suite remains mandatory. Only external URL reachability is removed from the isolated build contract. Any structural AppStream error or other KDE test failure still fails the package attempt.

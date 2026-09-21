@@ -458,7 +458,7 @@
             "usr/share/man/man1/kpackagetool6.1"
           ]
         },
-        "restored_auto_test": "xvfb-run -a --server-args=\"-screen 0 1024x768x24+32\" dh_auto_test --buildsystem=kf6 -O--buildsystem=kf6 --no-parallel",
+        "restored_auto_test": "AS_VALIDATE_NONET=1 xvfb-run -a --server-args=\"-screen 0 1024x768x24+32\" dh_auto_test --buildsystem=kf6 -O--buildsystem=kf6 --no-parallel",
         "validation": "fresh-materialization-and-clean-build-required"
       },
       "install_entries_remove": {
@@ -467,7 +467,20 @@
           "usr/share/man/man1/kpackagetool6.1"
         ]
       },
-      "rules_auto_test_command": "xvfb-run -a --server-args=\"-screen 0 1024x768x24+32\" dh_auto_test --buildsystem=kf6 -O--buildsystem=kf6 --no-parallel"
+      "rules_auto_test_command": "AS_VALIDATE_NONET=1 xvfb-run -a --server-args=\"-screen 0 1024x768x24+32\" dh_auto_test --buildsystem=kf6 -O--buildsystem=kf6 --no-parallel",
+      "test_environment_adaptation": {
+        "classification": "provider-validator-network-isolation",
+        "tool": "appstreamcli",
+        "observed_provider_version": "1.1.2-1",
+        "upstream_tool_release": "v1.1.2",
+        "upstream_tool_reference": "https://github.com/ximion/appstream/blob/v1.1.2/docs/xml/man/appstreamcli.1.xml",
+        "setting": "AS_VALIDATE_NONET=1",
+        "upstream_tool_basis": "AppStream v1.1.2 documents AS_VALIDATE_NONET as equivalent to --no-net when validating metadata.",
+        "scope": "dh_auto_test-only",
+        "validation_effect": "Disable remote URL reachability checks while keeping AppStream metadata validation and KDE upstream CTest enabled.",
+        "kde_feature_effect": "none",
+        "validation": "fresh-materialization-and-clean-build-required"
+      }
     },
     "kpty": {
       "upstream_version": "6.30.0",
@@ -518,19 +531,25 @@
     "package_state_effect": "none"
   },
   "materialization": {
-    "status": "PASS",
+    "status": "pending-ci",
     "method": "kde-authority-source-plus-pinned-debian-tree",
     "package_state_effect": "none",
     "package_attempted": false,
     "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
     "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
-    "reason": "tier2-package-contract-2-selective-rematerialization-pass",
-    "result": "PASS",
-    "targets": [],
+    "reason": "tier2-package-contract-2-kpackage-appstream-offline-rematerialization",
+    "result": "pending",
+    "targets": [
+      "kpackage"
+    ],
     "retained_package_pass": [
       "kauth",
+      "kcolorscheme",
+      "kcompletion",
+      "kcontacts",
       "kcrash",
       "knotifications",
+      "kpty",
       "kstatusnotifieritem",
       "kunitconversion",
       "syndication"
@@ -600,7 +619,9 @@
         "package_attempted": false,
         "package_state_effect": "none",
         "workflow_run": 35623204805,
-        "commit": "ec4091371846d287e2d169c4cad171adcdfd1144"
+        "commit": "ec4091371846d287e2d169c4cad171adcdfd1144",
+        "superseded_for_build": true,
+        "superseded_reason": "AppStream 1.1.2 URL reachability checks require AS_VALIDATE_NONET in isolated clean-build tests"
       },
       "kpty": {
         "job_id": 106362494052,
@@ -625,8 +646,6 @@
       "commit": "42bf5f9b5672e59df3ce037f9ffd25412a29049e",
       "note": "Initial 5/5 materialization retained historically; KContacts and KPackage trees are superseded for build consumption after Batch 3 diagnostics."
     },
-    "workflow_run": 35623204805,
-    "commit": "ec4091371846d287e2d169c4cad171adcdfd1144",
     "history": [
       {
         "node": "kcontacts",
@@ -665,6 +684,26 @@
         "workflow_run": 35608790364,
         "superseded_for_build": true,
         "status": "superseded"
+      },
+      {
+        "node": "kpackage",
+        "job_id": 106411141243,
+        "artifact_id": 10649014863,
+        "artifact_sha256": "7d805f24f4bba2b9e9f4d383252b04ef6efe7dbdba64c72aa10e50382a148188",
+        "tree_sha256": "cd5bb495c9d621f2127653d0dbcc46e179a66901c8b13c67fd4c07c49307b559",
+        "debian_tree_sha256": "7fe53af6606ff304839ed1195a7df70b9b897872493b6faccdcb9924edd87c91",
+        "debian_tar_sha256": "5240389bc1bc5170f8908de40568dccd445edf4ebe4ada38a5f32ab611ad083e",
+        "dsc_sha256": "15b5e6cfe6a65d9bda3ed173dfedcc6fc12d513ae46107d4a62702663c6a2e4f",
+        "orig_tar_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
+        "package_version": "6.30.0-0supralinux1",
+        "source_package": "kf6-kpackage",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "workflow_run": 35623204805,
+        "commit": "ec4091371846d287e2d169c4cad171adcdfd1144",
+        "status": "superseded",
+        "superseded_reason": "AppStream 1.1.2 URL reachability checks require an explicit offline validation environment inside isolated clean builds"
       }
     ]
   },

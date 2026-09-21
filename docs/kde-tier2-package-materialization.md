@@ -124,3 +124,20 @@ KPackage replacement evidence:
 - Debian tree SHA-256 `7fe53af6606ff304839ed1195a7df70b9b897872493b6faccdcb9924edd87c91`.
 
 Both replacement trees remain materialization-only evidence with `package_attempted=false`. They are now eligible for the next clean-build campaign, not package PASS and not APT stable publication.
+
+
+## KPackage second selective rematerialization
+
+After KColorScheme and KContacts PASS in run `35627389046`, only KPackage requires replacement materialization.
+
+The previous KPackage materialization remains retained as historical evidence but is superseded for build consumption because its restored `dh_auto_test` environment permitted AppStream 1.1.2 to attempt remote URL reachability. The replacement tree changes only the test environment command by prefixing `AS_VALIDATE_NONET=1`.
+
+This is a provider/test-environment adaptation, not a KDE source or feature change:
+- KDE source remains Frameworks 6.30.0 with the same upstream SHA-256.
+- `BUILD_TESTING=ON` remains selected.
+- all upstream CTest tests remain enabled.
+- KDocTools remains intentionally disabled until a matching SupraLINUX provider exists.
+- AppStream metadata validation remains enabled; only network URL reachability is disabled.
+- materialization remains `package_attempted=false`.
+
+The only active materialization target is KPackage. Canonical package state while it is rematerialized is **10 PASS / 5 pending / 0 current FAIL / 0 BLOCKED**.

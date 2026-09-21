@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 2 discovery
 
-Status: **8 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**  
+Status: **10 PASS / 5 pending / 0 current FAIL / 0 BLOCKED**  
 Date: **2026-09-21**
 
 KDE upstream classifies **15** Frameworks in Tier 2 for the current Frameworks API set:
@@ -27,7 +27,7 @@ Tier 2 may depend on Tier 1 Frameworks. SupraLINUX entered this phase only after
 
 The first Tier 2 discovery incorrectly materialized only KAuth and KMime. That was an inventory error: KDE upstream currently lists 15 Tier 2 Frameworks.
 
-Historically, that correction retained KAuth PASS and expanded the inventory from the incomplete **1 PASS / 1 pending** view to **2 PASS / 13 pending / 0 current FAIL / 0 BLOCKED**. Subsequent package campaigns advanced the canonical state to the current **6 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.
+Historically, that correction retained KAuth PASS and expanded the inventory from the incomplete **1 PASS / 1 pending** view to **2 PASS / 13 pending / 0 current FAIL / 0 BLOCKED**. Later package campaigns advanced the canonical state further; the status at the top of this document and the latest section below are authoritative for the current snapshot.
 
 No newly discovered node has been assigned a package version or package PASS/FAIL result. Their source identities and upstream v6.30.0 dependency edges are discovery evidence only until a package contract and real build lane are materialized.
 
@@ -170,3 +170,17 @@ The second KColorScheme attempt in run `35623204812`, job `106411496226`, reache
 This does **not** add KCoreAddons to KColorScheme's KDE DAG. Batch 3 now records a separate `package_dependency_closure`; KColorScheme has `["kcoreaddons"]`. The runner injects that retained PASS artifact alongside direct predecessors and proves the exact development-package revision in `.buildinfo` and the consumer environment.
 
 The selective replacement materialization run `35623204805` is complete and PASS for KContacts and KPackage. Both are build-ready again. Canonical package state remains **8 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until new clean-build evidence is promoted.
+
+
+## Current canonical state — KColorScheme and KContacts promoted
+
+Batch 3 remediation run `35627389046` on commit `711827a648046ce3e80d4947234c6bb9ea26c193` promoted two more Tier 2 Frameworks:
+
+- KColorScheme `6.30.0-0supralinux1`: job `106425601911`, artifact `10651864741`, artifact SHA-256 `d52b7bbc99d1e211600f648152781b6dc1b958c51972fdb206099c1e860e88f3`; 2/2 tests, Lintian error gate, SONAME `libKF6ColorScheme.so.6` with 69 exports, APT closure and consumer smoke PASS. Its direct KDE predecessors remain KConfig, KGuiAddons and KI18n; retained KCoreAddons is proven separately as package-level dependency closure and is not a KDE DAG edge.
+- KContacts `6.30.0-0supralinux1`: job `106425601953`, artifact `10653450027`, artifact SHA-256 `369ccd7e71ee00120b78d711c5782363996d401703dacd43d57839861a3710e0`; 33/33 tests, Lintian error gate, SONAME `libKF6Contacts.so.6` with 973 exports, QML payload, APT closure and consumer smoke PASS.
+
+Canonical Tier 2 is therefore **10 PASS / 5 pending / 0 current FAIL / 0 BLOCKED**. The ordinary pending nodes are KDeclarative, KFileMetaData, KPackage and KService; KMime remains the independent ADR-0002 compatibility-decision case.
+
+KPackage did not become FAIL. Its second remediation attempt compiled successfully and passed 9/10 upstream tests; the remaining `testpackage-appstream` test failed because AppStream 1.1.2 attempted remote URL reachability checks inside the isolated clean build. AppStream v1.1.2 officially defines `AS_VALIDATE_NONET` as equivalent to `--no-net` for metadata validation. SupraLINUX therefore keeps the KDE test enabled and rematerializes only KPackage with `AS_VALIDATE_NONET=1` scoped to `dh_auto_test`. Structural AppStream validation remains active and KDE feature selection is unchanged.
+
+No package promotion to the stable APT channel is authorized by this state change.

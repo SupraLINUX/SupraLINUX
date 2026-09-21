@@ -143,14 +143,71 @@
         "status": "materialized"
       },
       "packaging": {
-        "state": "pending",
-        "reason": "corrected-materialization-evidence-clean-build-retry"
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux1",
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "downstream_eligible": true,
+        "attempt_ledger": "manifests/kde-tier2-package-batch3-attempts.json",
+        "campaign": "manifests/kde-tier2-package-campaign-batch3.json",
+        "evidence": [
+          {
+            "result": "PASS",
+            "workflow_run": 35627389046,
+            "run_attempt": 1,
+            "job_id": 106425601911,
+            "commit": "711827a648046ce3e80d4947234c6bb9ea26c193",
+            "attempted_package_version": "6.30.0-0supralinux1",
+            "artifact_id": 10651864741,
+            "artifact_sha256": "d52b7bbc99d1e211600f648152781b6dc1b958c51972fdb206099c1e860e88f3",
+            "rootfs_artifact_id": 10651834404,
+            "rootfs_artifact_sha256": "56f55edf755b2a599280f85675fe209a41062cf2463a1ee501f056a5e85378d1",
+            "rootfs_sha256": "4d53ff1b4b933010a4aeef39131983a698a787c4f49f32f65a3169f376b48d12",
+            "stage": "complete",
+            "tests": "2/2 PASS",
+            "lintian": "PASS-errors",
+            "abi_soname": "libKF6ColorScheme.so.6",
+            "abi_export_count": 69,
+            "apt_check": "PASS",
+            "consumer_smoke": "PASS",
+            "predecessor_buildinfo_proof": "PASS",
+            "package_dependency_closure_buildinfo_proof": "PASS",
+            "materialization": {
+              "workflow_run": 35608790364,
+              "artifact_id": 10642908326,
+              "artifact_sha256": "c68b71a9e1dceab3cc801528caeaf32fb4732fefcfd0d34d8d161b0dfac02b77"
+            },
+            "retained_predecessors": {
+              "extra_cmake_modules": "6.30.0-0supralinux3",
+              "kconfig": "6.30.0-0supralinux4",
+              "kguiaddons": "6.30.0-0supralinux2",
+              "ki18n": "6.30.0-0supralinux1"
+            },
+            "package_dependency_closure": {
+              "kcoreaddons": "6.30.0-0supralinux4"
+            },
+            "downstream_eligible": true,
+            "files": {
+              "libkf6colorscheme-data_6.30.0-0supralinux1_all.deb": "2eefe82e3ca4f60a02772e3dcc6490aa8f61f0a087663445b3b25ab1128645e2",
+              "libkf6colorscheme-dev_6.30.0-0supralinux1_amd64.deb": "fa23ab62d32a4e10aa9f152372b00dbc147d1e0413e1fb2da854a071b95fecb2",
+              "libkf6colorscheme-doc_6.30.0-0supralinux1_all.deb": "99aace09df5bcafb94a6a3cb813a360471c5e9d867cab1612e639fecaa63c87e",
+              "libkf6colorscheme6_6.30.0-0supralinux1_amd64.deb": "b6d93e52966d567713270f041a2c82ef88db13baf5e6f87141cf945cdb9d800f",
+              "libkf6colorscheme6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "023b2faf4c39b398f343d5098aab0eac2bb4cbf96c969e17ae2ba1f718013684",
+              "changes_sha256": "ad7cf89dd03ddcc261fa06f1e13cc42ec9ed3c4e9bdf3e89b59ed172a4656713",
+              "buildinfo_sha256": "93998e8d76b47c0168f445b955a23283ea83beecc1db3ab4bf3a4c60844e997f",
+              "dsc_sha256": "15d0c6abc1c3ec767e3299e422b1852578dc8a699f130692df94f75e8934607c",
+              "orig_tar_sha256": "a4128e82e47cd474c777754c4dd8af28a00a57ecf388da1a62f8173d898890d0",
+              "debian_tar_sha256": "fa5d7f65b2b0d1281cfc762dbd083d5776eabeb0dfa14e8c51a3d681a58195b2",
+              "rootfs_sha256": "4d53ff1b4b933010a4aeef39131983a698a787c4f49f32f65a3169f376b48d12"
+            }
+          }
+        ]
       },
-      "state": "pending",
+      "state": "PASS",
       "planning": {
-        "readiness": "build-ready",
+        "readiness": "retained-pass",
         "provider_audit": "complete",
-        "package_contract": "materialized",
+        "package_contract": "retained-pass",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "result": "PASS",
@@ -378,14 +435,72 @@
         "status": "materialized"
       },
       "packaging": {
-        "state": "pending",
-        "reason": "replacement-materialized-clean-build-pending"
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux1",
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "downstream_eligible": true,
+        "attempt_ledger": "manifests/kde-tier2-package-batch3-attempts.json",
+        "campaign": "manifests/kde-tier2-package-campaign-batch3.json",
+        "evidence": [
+          {
+            "result": "PASS",
+            "workflow_run": 35627389046,
+            "run_attempt": 1,
+            "job_id": 106425601953,
+            "commit": "711827a648046ce3e80d4947234c6bb9ea26c193",
+            "attempted_package_version": "6.30.0-0supralinux1",
+            "artifact_id": 10653450027,
+            "artifact_sha256": "369ccd7e71ee00120b78d711c5782363996d401703dacd43d57839861a3710e0",
+            "rootfs_artifact_id": 10651834404,
+            "rootfs_artifact_sha256": "56f55edf755b2a599280f85675fe209a41062cf2463a1ee501f056a5e85378d1",
+            "rootfs_sha256": "4d53ff1b4b933010a4aeef39131983a698a787c4f49f32f65a3169f376b48d12",
+            "stage": "complete",
+            "tests": "33/33 PASS",
+            "lintian": "PASS-errors",
+            "abi_soname": "libKF6Contacts.so.6",
+            "abi_export_count": 973,
+            "apt_check": "PASS",
+            "consumer_smoke": "PASS",
+            "predecessor_buildinfo_proof": "PASS",
+            "package_dependency_closure_buildinfo_proof": "PASS",
+            "materialization": {
+              "workflow_run": 35623204805,
+              "artifact_id": 10649784091,
+              "artifact_sha256": "bf0ea0c660da42ab84ff2e92d6196c90e65a274c40fafed1cc16a5c05f1dd432"
+            },
+            "retained_predecessors": {
+              "extra_cmake_modules": "6.30.0-0supralinux3",
+              "ki18n": "6.30.0-0supralinux1",
+              "kconfig": "6.30.0-0supralinux4",
+              "kcodecs": "6.30.0-0supralinux4"
+            },
+            "package_dependency_closure": {},
+            "downstream_eligible": true,
+            "files": {
+              "libkf6contacts-data_6.30.0-0supralinux1_all.deb": "cb7439c90768202777ab733e78cbcdfa6681a039e9ddf499b823cdf211b06563",
+              "libkf6contacts-dev_6.30.0-0supralinux1_amd64.deb": "77251b058f837e934b1c43b4e7b82f21b403865c6c98e90c6ffe4c47fc8496df",
+              "libkf6contacts-doc_6.30.0-0supralinux1_all.deb": "cff978de6236d220352870d79d86f72b646909f6c26b6f66864e9f12c400a94f",
+              "libkf6contacts6_6.30.0-0supralinux1_amd64.deb": "d00992d7b5aa659543bb3551a0c1220c095bd2e90dda3815cfc522c743b0ab07",
+              "qml6-module-org-kde-contacts_6.30.0-0supralinux1_amd64.deb": "6c8dcbd12f49226b788c377b65f409e593e36e5ca1579a0b0ef75a0e1048a609",
+              "libkf6contacts6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "8bdac54878fbd7e27fabb49e7844ba62f96d1410136f6b0ae6250225e675a2e5",
+              "qml6-module-org-kde-contacts-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "a1f2b5fd7441d68c8eff87a335f837157016a4638d9aefac04c7962de62b7832",
+              "changes_sha256": "5bd3bd0081a01745a17b8962c07263181193f7785c50c58fb07284aa5150eec5",
+              "buildinfo_sha256": "66d6c91253891773b8ec74e49e4984dad38adf1f5453e167ced9c1ad8234351d",
+              "dsc_sha256": "d6e8de6fe653bfa6d477c95fbf0ba225e2adea42a8cc2db8dc59655ec19de4f8",
+              "orig_tar_sha256": "170b51a41ac132968ea03d5f1ce8c585777155bbdc57e819a0562b1f8d03b7a5",
+              "debian_tar_sha256": "1c7b2809563707a9c5d60ba283c71a36a3437730d15b30dce8b2a1445a0dc77d",
+              "rootfs_sha256": "4d53ff1b4b933010a4aeef39131983a698a787c4f49f32f65a3169f376b48d12"
+            },
+            "qml_payload_smoke": "PASS"
+          }
+        ]
       },
-      "state": "pending",
+      "state": "PASS",
       "planning": {
-        "readiness": "build-ready",
+        "readiness": "retained-pass",
         "provider_audit": "complete",
-        "package_contract": "materialized",
+        "package_contract": "retained-pass",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "result": "PASS",
@@ -803,17 +918,17 @@
       "package_identity": {
         "source_package": "kf6-kpackage",
         "package_version_candidate": "6.30.0-0supralinux1",
-        "status": "materialized"
+        "status": "not-materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "replacement-materialized-clean-build-pending"
+        "reason": "appstream-offline-validation-rematerialization-required"
       },
       "state": "pending",
       "planning": {
-        "readiness": "build-ready",
+        "readiness": "package-contract-ready",
         "provider_audit": "complete",
-        "package_contract": "materialized",
+        "package_contract": "not-materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "result": "PASS",
@@ -862,7 +977,9 @@
           "dsc_sha256": "15b5e6cfe6a65d9bda3ed173dfedcc6fc12d513ae46107d4a62702663c6a2e4f",
           "orig_tar_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
           "package_attempted": false,
-          "package_state_effect": "none"
+          "package_state_effect": "none",
+          "superseded_for_build": true,
+          "superseded_reason": "AppStream URL reachability validation requires offline test-environment adaptation"
         },
         "materialization_history": [
           {

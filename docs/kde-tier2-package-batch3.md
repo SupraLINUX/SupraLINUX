@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 2 — package Batch 3
 
-Status: **partial PASS; KColorScheme retry + KContacts/KPackage rematerialization queued**  
+Status: **4/5 PASS; KPackage offline AppStream rematerialization pending**  
 Date: **2026-09-21**
 
 Batch 3 covers KColorScheme, KCompletion, KContacts, KPackage and KPty. All five are package-state `pending` and `build-ready` from materialization run `35608790364`; this lane is the first real package attempt for this group.
@@ -67,3 +67,44 @@ Selective materialization run `35623204805` completed PASS:
 - KPackage: job `106411141243`, artifact `10649014863`, artifact SHA-256 `7d805f24f4bba2b9e9f4d383252b04ef6efe7dbdba64c72aa10e50382a148188`.
 
 The next clean-build matrix is exactly **KColorScheme + KContacts + KPackage**. KCompletion and KPty remain retained PASS and are not rebuilt. No stable promotion is authorized.
+
+
+## Remediation run 35627389046 — four retained PASS
+
+The closure-aware clean-build run `35627389046` used shared rootfs artifact `10651834404` (artifact SHA-256 `56f55edf755b2a599280f85675fe209a41062cf2463a1ee501f056a5e85378d1`, rootfs content SHA-256 `4d53ff1b4b933010a4aeef39131983a698a787c4f49f32f65a3169f376b48d12`).
+
+KColorScheme is now PASS:
+- job `106425601911`
+- artifact `10651864741`
+- artifact SHA-256 `d52b7bbc99d1e211600f648152781b6dc1b958c51972fdb206099c1e860e88f3`
+- 2/2 tests PASS
+- Lintian PASS-errors
+- `libKF6ColorScheme.so.6`, 69 exports
+- APT closure + external consumer PASS
+- exact KConfig/KGuiAddons/KI18n buildinfo proof PASS
+- exact package closure KCoreAddons `6.30.0-0supralinux4` buildinfo proof PASS.
+
+KContacts is now PASS:
+- job `106425601953`
+- artifact `10653450027`
+- artifact SHA-256 `369ccd7e71ee00120b78d711c5782363996d401703dacd43d57839861a3710e0`
+- 33/33 tests PASS
+- Lintian PASS-errors
+- `libKF6Contacts.so.6`, 973 exports
+- QML payload, APT closure and external consumer PASS
+- exact KI18n/KConfig/KCodecs buildinfo proof PASS.
+
+Together with retained KCompletion and KPty, Batch 3 is **4/5 PASS** and canonical Tier 2 is **10 PASS / 5 pending / 0 current FAIL / 0 BLOCKED**.
+
+### KPackage AppStream test-environment incident
+
+KPackage job `106425602113`, artifact `10651894789` (SHA-256 `41830724340037e0f8b16526c9ea887adc162fff00572c7e1d6b49242b44230c`) compiled and entered the restored upstream test suite. Nine of ten tests passed. `testpackage-appstream` failed because Ubuntu Resolute's AppStream `1.1.2-1` performed remote URL reachability checks against `kde.org` from the isolated build environment, where DNS/network access was unavailable.
+
+This is classified INFRA/integration with package-state effect `none`, not a KPackage code FAIL. AppStream v1.1.2 documents `--no-net` and the equivalent `AS_VALIDATE_NONET` environment variable specifically for metadata validation without network access:
+`https://github.com/ximion/appstream/blob/v1.1.2/docs/xml/man/appstreamcli.1.xml`.
+
+SupraLINUX does not patch out or skip the KDE test. The reviewed KPackage test command becomes:
+
+`AS_VALIDATE_NONET=1 xvfb-run -a --server-args="-screen 0 1024x768x24+32" dh_auto_test --buildsystem=kf6 -O--buildsystem=kf6 --no-parallel`
+
+The setting is scoped to `dh_auto_test`. It disables remote URL reachability only; AppStream metadata validation and the complete KDE CTest suite remain enabled. KPackage alone returns to deterministic materialization before its next clean-build attempt. No stable APT promotion is authorized.

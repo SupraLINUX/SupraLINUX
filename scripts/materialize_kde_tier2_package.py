@@ -437,6 +437,7 @@ def main() -> int:
         "binary_depends_remove": node.get("binary_depends_remove", {}),
         "install_entries_remove": node.get("install_entries_remove", {}),
         "rules_auto_test_command": node.get("rules_auto_test_command"),
+        "test_environment_adaptation": node.get("test_environment_adaptation"),
         "package_state_effect": "none",
     }
     (debian / "supralinux-materialization.json").write_text(json.dumps(metadata, indent=2) + "\n")

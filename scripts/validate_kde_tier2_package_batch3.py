@@ -30,28 +30,38 @@ expected_package_closure={
  "kpackage":[],
  "kpty":[],
 }
+expected_pass_run={
+ "kcolorscheme":35627389046,
+ "kcompletion":35620923130,
+ "kcontacts":35627389046,
+ "kpty":35620923130,
+}
 
 req(c.get("schema")==1 and c.get("batch")=="tier2-batch-3","Batch3 identity")
+req(c.get("state")=="partial-pass-kpackage-rematerialization-pending","Batch3 partial closure state")
+req(c.get("canonical_snapshot")=="10 PASS / 5 pending / 0 current FAIL / 0 BLOCKED","Batch3 canonical snapshot")
 req(c.get("selected_nodes")==expected,"Batch3 selected nodes/order")
 req(c.get("scheduling",{}).get("fail_fast") is False,"Batch3 fail-fast policy")
 req(c.get("semantics",{}).get("fail_requires")=="node-owned-root-cause","FAIL ownership")
 req(c.get("semantics",{}).get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 req("package-level transitive closure" in c.get("semantics",{}).get("package_dependency_closure",""),"package closure semantics")
-req(contracts.get("materialization",{}).get("status")=="PASS","selective replacement materialization PASS")
-req(contracts.get("materialization",{}).get("targets")==[],"no rematerialization targets remain")
+mat=contracts.get("materialization",{})
+req(mat.get("status")=="pending-ci" and mat.get("result")=="pending","KPackage rematerialization pending")
+req(mat.get("targets")==["kpackage"],"KPackage only rematerialization target")
 
 canon={n["id"]:n for n in tier2["nodes"]}
 t1={n["id"]:n for n in tier1["nodes"]}
 contract_nodes=contracts.get("nodes",{})
-mat_evidence=contracts.get("materialization",{}).get("evidence",{})
+mat_evidence=mat.get("evidence",{})
 runnable={n for n in expected if c["nodes"][n].get("state") in {"prepared-pending-build","remediation-pending-build"}}
 rematerialization={n for n in expected if c["nodes"][n].get("state")=="rematerialization-pending"}
 pass_nodes={n for n in expected if c["nodes"][n].get("state")=="PASS"}
-req(runnable=={"kcolorscheme","kcontacts","kpackage"},"Batch3 remediation runnable set")
-req(rematerialization==set(),"Batch3 rematerialization queue must be empty")
-req(pass_nodes=={"kcompletion","kpty"},"Batch3 retained PASS set")
-req(runnable <= set(plan.get("build_queue",[])),"runnable Batch3 nodes are in generated build queue")
-req(set(plan.get("build_queue",[])).isdisjoint(pass_nodes),"retained Batch3 PASS nodes absent from build queue")
+req(runnable==set(),"no Batch3 build may run before KPackage rematerialization")
+req(rematerialization=={"kpackage"},"KPackage rematerialization set")
+req(pass_nodes=={"kcolorscheme","kcompletion","kcontacts","kpty"},"Batch3 retained PASS set")
+req(set(plan.get("build_queue",[]))==set(),"build queue closed during rematerialization")
+req("kpackage" in plan.get("package_contract_ready",[]),"KPackage returned to package-contract-ready")
+req(pass_nodes <= set(plan.get("retained_pass",[])),"Batch3 PASS nodes retained globally")
 
 used=set()
 for node_id in expected:
@@ -70,22 +80,34 @@ for node_id in expected:
     if node_id in pass_nodes:
         req(cn.get("state")=="PASS" and cn.get("planning",{}).get("readiness")=="retained-pass",f"{node_id}: canonical retained PASS")
         pe=n.get("pass_evidence",{})
-        req(pe.get("workflow_run")==35620923130 and pe.get("run_attempt")==2,f"{node_id}: PASS run identity")
+        req(pe.get("workflow_run")==expected_pass_run[node_id],f"{node_id}: PASS run identity")
         req(pe.get("lintian")=="PASS-errors" and pe.get("consumer_smoke")=="PASS" and pe.get("apt_check")=="PASS",f"{node_id}: PASS gates")
         req(pe.get("predecessor_buildinfo_proof")=="PASS",f"{node_id}: predecessor buildinfo proof")
         req(n.get("downstream_eligible") is True,f"{node_id}: downstream eligible")
+        if node_id=="kcolorscheme":
+            req(pe.get("package_dependency_closure_buildinfo_proof")=="PASS", "KColorScheme closure buildinfo proof")
+            req(pe.get("package_dependency_closure",{}).get("kcoreaddons")=="6.30.0-0supralinux4","KColorScheme retained KCoreAddons closure")
+        if node_id=="kcontacts":
+            req(pe.get("qml_payload_smoke")=="PASS","KContacts QML payload smoke")
     else:
-        req(cn.get("state")=="pending" and cn.get("planning",{}).get("readiness")=="build-ready",f"{node_id}: build-ready pending")
-        req(cn.get("planning",{}).get("package_contract")=="materialized",f"{node_id}: materialized package contract")
-        req(n.get("materialization_status") in {"retained-pass-corrected-evidence","replacement-pass"},f"{node_id}: runnable materialization status")
+        req(node_id=="kpackage","only KPackage may remain pending in Batch3")
+        req(cn.get("state")=="pending" and cn.get("planning",{}).get("readiness")=="package-contract-ready","KPackage rematerialization readiness")
+        req(cn.get("planning",{}).get("package_contract")=="not-materialized","KPackage materialization invalidated")
+        req(n.get("materialization_status")=="superseded-rematerialization-required","KPackage superseded materialization marker")
+        lf=n.get("last_failure_evidence",{})
+        req(lf.get("workflow_run")==35627389046 and lf.get("tests")=="9/10 PASS","KPackage network-test failure evidence")
+        req(lf.get("root_cause")=="appstream-network-reachability-in-isolated-build","KPackage root-cause classification")
 
     m=n.get("materialization",{}); me=mat_evidence.get(node_id,{})
     req(m.get("artifact_id")==me.get("artifact_id"),f"{node_id}: materialization artifact identity")
     for key in ("artifact_sha256","tree_sha256","debian_tree_sha256","dsc_sha256","debian_tar_sha256","orig_tar_sha256"):
         req(m.get(key)==me.get(key),f"{node_id}: materialization {key}")
 
-req(c["nodes"]["kcolorscheme"]["package_dependency_closure"]==["kcoreaddons"],"KColorScheme package closure must include KCoreAddons")
-req("kcoreaddons" not in c["nodes"]["kcolorscheme"]["predecessors"],"KCoreAddons must not become a KDE KColorScheme DAG edge")
+kp=contracts["nodes"]["kpackage"]
+req(kp.get("rules_auto_test_command","").startswith("AS_VALIDATE_NONET=1 xvfb-run "),"KPackage offline AppStream test command")
+tea=kp.get("test_environment_adaptation",{})
+req(tea.get("observed_provider_version")=="1.1.2-1" and tea.get("setting")=="AS_VALIDATE_NONET=1","KPackage AppStream 1.1.2 offline contract")
+req(tea.get("kde_feature_effect")=="none","KPackage offline contract feature neutrality")
 
 pool=c.get("retained_predecessors",{})
 req(set(pool)==used,"retained predecessor pool exactly covers Batch3 KDE plus package closure inputs")
@@ -100,20 +122,21 @@ for pred_id,cfg in pool.items():
 req(a.get("schema")==1 and a.get("batch")=="tier2-batch-3","attempt ledger identity")
 req(len(a["real_attempts"]["kcompletion"])==1 and a["real_attempts"]["kcompletion"][-1].get("result")=="PASS","KCompletion PASS attempt")
 req(len(a["real_attempts"]["kpty"])==1 and a["real_attempts"]["kpty"][-1].get("result")=="PASS","KPty PASS attempt")
-req(len(a["real_attempts"]["kcontacts"])==1 and a["real_attempts"]["kcontacts"][-1].get("result")=="INFRA","KContacts integration attempt retained")
-req(len(a["real_attempts"]["kpackage"])==1 and a["real_attempts"]["kpackage"][-1].get("result")=="INFRA","KPackage integration attempt retained")
-req(len(a["real_attempts"]["kcolorscheme"])==1 and a["real_attempts"]["kcolorscheme"][-1].get("result")=="INFRA","KColorScheme package-closure incident retained")
-req(a["real_attempts"]["kcolorscheme"][-1].get("stage")=="sbuild-install-deps","KColorScheme closure incident stage")
+req(len(a["real_attempts"]["kcolorscheme"])==2 and a["real_attempts"]["kcolorscheme"][-1].get("result")=="PASS","KColorScheme closure remediation PASS")
+req(len(a["real_attempts"]["kcontacts"])==2 and a["real_attempts"]["kcontacts"][-1].get("result")=="PASS","KContacts remediation PASS")
+req(len(a["real_attempts"]["kpackage"])==2 and a["real_attempts"]["kpackage"][-1].get("result")=="INFRA","KPackage AppStream integration attempt")
+req(a["real_attempts"]["kpackage"][-1].get("tests")=="9/10 PASS","KPackage upstream test count retained")
+req(a["real_attempts"]["kpackage"][-1].get("observed_provider",{}).get("appstream")=="1.1.2-1","KPackage AppStream provider evidence")
 req(any(x.get("node")=="kcolorscheme" and x.get("package_attempted") is False for x in a.get("infrastructure_incidents",[])),"KColorScheme pre-sbuild hash incident retained")
 for node_id in expected:
     req(isinstance(a.get("blocked_events",{}).get(node_id),list),f"{node_id}: blocked ledger")
 
 doc=(ROOT/"docs/kde-tier2-package-batch3.md").read_text()
-for token in ("multi-predecessor","shared retained input","package_attempted","package_dependency_closure","35623204812","stable"):
+for token in ("package_dependency_closure","35627389046","AS_VALIDATE_NONET","10 PASS / 5 pending","stable"):
     req(token.casefold() in doc.casefold(),f"Batch3 docs missing {token}")
 
 if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)
     raise SystemExit(1)
-print("KDE Tier 2 Batch 3 remediation preparation: PASS")
-print("retained-pass=['kcompletion','kpty'] runnable=['kcolorscheme','kcontacts','kpackage'] package-closure={'kcolorscheme':['kcoreaddons']}")
+print("KDE Tier 2 Batch 3 partial closure: PASS")
+print("retained-pass=['kcolorscheme','kcompletion','kcontacts','kpty'] rematerialization=['kpackage']")

@@ -293,6 +293,9 @@ for key,value in c.get("selected_profile",{}).items():
     flag=f"-D{key}={'ON' if value else 'OFF'}"
     if flag not in rules:
         raise SystemExit(f"{node}: selected profile flag missing from generated rules: {flag}")
+test_command=c.get("rules_auto_test_command")
+if test_command and ("\t"+test_command) not in rules:
+    raise SystemExit(f"{node}: reviewed dh_auto_test command missing from generated rules")
 print(f"generic-package-adaptation-contract PASS: {node}")
 PY
 

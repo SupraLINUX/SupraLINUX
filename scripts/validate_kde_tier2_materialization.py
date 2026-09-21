@@ -46,7 +46,12 @@ if "kpackage" in selected:
     req(kp.get("build_depends_remove")==["libkf6doctools-dev"],"KPackage DocTools Build-Depends removal")
     req(kp.get("selected_profile",{}).get("CMAKE_DISABLE_FIND_PACKAGE_KF6DocTools") is True,"KPackage DocTools CMake disable")
     req(bool(kp.get("install_entries_remove",{}).get("kpackagetool6.install")),"KPackage DocTools-only install entries removed")
-    req(bool(kp.get("rules_auto_test_command")),"KPackage tests restored")
+    cmd=kp.get("rules_auto_test_command","")
+    req(cmd.startswith("AS_VALIDATE_NONET=1 xvfb-run ") and "dh_auto_test" in cmd,"KPackage tests restored with offline AppStream validation")
+    tea=kp.get("test_environment_adaptation",{})
+    req(tea.get("tool")=="appstreamcli" and tea.get("observed_provider_version")=="1.1.2-1","KPackage AppStream provider pin")
+    req(tea.get("setting")=="AS_VALIDATE_NONET=1" and tea.get("scope")=="dh_auto_test-only","KPackage AppStream offline materialization scope")
+    req(tea.get("kde_feature_effect")=="none","KPackage AppStream adaptation feature neutrality")
 
 targets=set(mat.get("targets",[]))
 for node_id in selected:
