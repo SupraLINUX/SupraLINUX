@@ -96,3 +96,8 @@ KUnitConversion `6.30.0-0supralinux1`: job `106166898551`, artifact `10616255861
 Shared rootfs artifact `10615785991` has artifact SHA-256 `a90862d653fcb886a11f37116869dd32f7fee425982cc9995271db60c70a45df`; rootfs content SHA-256 is `0438cb6edfece79dcb08b47bdb6a15565919d8e41d831a26e1ca094d1f329576`.
 
 Batch 2 is now **5/5 PASS** and all five selected nodes are downstream-eligible. This closure does not publish to APT and does not authorize any stable promotion.
+
+
+## Global build-queue ownership
+
+Batch 2 validation is historical and node-scoped. Once all five Batch 2 nodes are retained PASS, the generated global Tier 2 `build_queue` may legitimately contain later batches. The Batch 2 validator therefore requires only that any Batch 2 runnable node be present in the global queue and that retained Batch 2 PASS nodes be absent; it must not require equality with the entire global queue.
