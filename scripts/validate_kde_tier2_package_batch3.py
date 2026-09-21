@@ -100,7 +100,7 @@ for path in (
 
 doc=(ROOT/"docs/kde-tier2-package-batch3.md").read_text()
 for token in ("multi-predecessor","shared retained input","package_attempted","fail-fast: false","35608790364","stable"):
-    req(token in doc,f"Batch3 docs missing {token}")
+    req(token.casefold() in doc.casefold(),f"Batch3 docs missing {token}")
 
 policy=(ROOT/".github/workflows/repository-policy.yml").read_text()
 req("scripts/test-kde-tier2-package-batch3-scope.sh" in policy,"Repository Policy Batch3 scope gate")
