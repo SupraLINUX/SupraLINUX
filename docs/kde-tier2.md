@@ -212,3 +212,16 @@ Evidence:
 The AppStream adaptation is validated without weakening KDE: `AS_VALIDATE_NONET=1` remains scoped to `dh_auto_test`, and all ten upstream tests execute successfully.
 
 Batch 3 is therefore **5/5 PASS**. Canonical Tier 2 is now **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. The remaining non-decision-gated nodes are KDeclarative, KFileMetaData and KService; KMime remains under ADR-0002. No stable APT promotion is authorized.
+
+
+## Package-contract batch 3 activated
+
+With Batch 3 clean-build closure complete at **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**, the next ordinary lane is exactly **KDeclarative + KFileMetaData + KService**. KMime remains outside this lane under ADR-0002.
+
+The three nodes already passed provider/profile audit. Their packaging identities are now declared only far enough to capture technical Ubuntu Resolute and Debian sid references:
+
+- KDeclarative: source `kf6-kdeclarative`, candidate `6.30.0-0supralinux1`. KDE v6.30.0 exports CMake package `KF6Declarative` and the C++ library target `KF6::CalendarEvents` with SONAME `libKF6CalendarEvents.so.6`; there is no `KF6::Declarative` library target. The selected Linux profile keeps KGlobalAccel and KWidgetsAddons required as upstream specifies.
+- KFileMetaData: source `kf6-kfilemetadata`, candidate `6.30.0-0supralinux1`, target `KF6::FileMetaData`, SONAME `libKF6FileMetaData.so.3`. KArchive and KConfig remain selected optional Framework surfaces; supported external extractors are not silently disabled.
+- KService: source `kf6-kservice`, candidate `6.30.0-0supralinux1`, target `KF6::Service`, SONAME `libKF6Service.so.6`. KDocTools is optional upstream and remains deliberately disabled until a matching SupraLINUX provider exists.
+
+State is `reference-capture-pending`. Materialization is fail-closed until current Ubuntu/Debian source records, binary sets, versions and SHA-256 evidence are captured and promoted. Package state remains unchanged.

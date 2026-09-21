@@ -162,3 +162,10 @@ The active materialization target set is empty again. KPackage returns to `build
 The offline AppStream replacement materialization from run `35629129797` was consumed by final clean-build run `35631458583`. KPackage passed **10/10** upstream tests plus the complete package gates.
 
 This closes the second selective rematerialization cycle. The materialization remains reproducibility evidence; package PASS authority is the final clean-build artifact `10653599787`. There are no active materialization targets from package-contract batch 2.
+
+
+## Package-contract batch 3 blocked on reference capture
+
+KDeclarative, KFileMetaData and KService are the only active materialization targets, but their materialization status is `blocked-reference-capture`.
+
+This is intentional fail-closed behavior: the materializer may not reuse the previous five-node Debian packaging trees or invent reference hashes for the new nodes. The technical reference workflow must first capture current Ubuntu Resolute and Debian sid source records and pin the exact packaging source artifacts. Canonical package state remains **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.

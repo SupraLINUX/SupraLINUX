@@ -183,3 +183,16 @@ All five package-contract batch 2 nodes are now retained package PASS:
 KColorScheme, KCompletion, KContacts, KPackage and KPty.
 
 The next ordinary package-contract-ready set is KDeclarative, KFileMetaData and KService. KMime remains outside that lane under ADR-0002. No stable promotion is authorized by package PASS alone.
+
+
+## Package-contract batch 3 — reference capture gate
+
+Active selected nodes are KDeclarative, KFileMetaData and KService. Their source authority remains KDE Frameworks 6.30.0. Ubuntu Resolute and Debian sid are technical packaging references only.
+
+The declared Ubuntu-compatible binary surfaces are:
+
+- KDeclarative: `libkf6calendarevents6`, `libkf6declarative-data`, `libkf6declarative-dev`, `libkf6declarative-doc`, `libkquickcontrolsprivate0`, and the four QML modules `org-kde-draganddrop`, `graphicaleffects`, `kquickcontrols`, `kquickcontrolsaddons`.
+- KFileMetaData: `libkf6filemetadata-bin`, `-data`, `-dev`, `-dev-tools`, `-doc`, and ABI package `libkf6filemetadata3`.
+- KService: `libkf6service-bin`, `-data`, `-dev`, `-doc`, and `libkf6service6`.
+
+No Debian tree or Ubuntu tree is accepted yet. The contract-reference workflow must capture and hash current source records first. Until that PASS is promoted, deterministic materialization is blocked and `package_attempted=false`.

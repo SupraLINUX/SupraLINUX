@@ -703,8 +703,8 @@
         "note": "KGlobalAccel is required on Linux desktop platforms and KWidgetsAddons is required on non-Android builds by KDE upstream v6.30.0; both are selected in the SupraLINUX Linux profile."
       },
       "package_identity": {
-        "source_package": null,
-        "package_version_candidate": null,
+        "source_package": "kf6-kdeclarative",
+        "package_version_candidate": "6.30.0-0supralinux1",
         "status": "not-materialized"
       },
       "packaging": {
@@ -763,8 +763,8 @@
         "note": "KCoreAddons and KCodecs are marked REQUIRED by upstream feature summary. KArchive and KConfig are optional upstream integrations and are selected because compatible retained SupraLINUX providers are available."
       },
       "package_identity": {
-        "source_package": null,
-        "package_version_candidate": null,
+        "source_package": "kf6-kfilemetadata",
+        "package_version_candidate": "6.30.0-0supralinux1",
         "status": "not-materialized"
       },
       "packaging": {
@@ -1243,8 +1243,8 @@
         "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
       },
       "package_identity": {
-        "source_package": null,
-        "package_version_candidate": null,
+        "source_package": "kf6-kservice",
+        "package_version_candidate": "6.30.0-0supralinux1",
         "status": "not-materialized"
       },
       "packaging": {
