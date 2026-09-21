@@ -47,10 +47,12 @@ req(c.get("semantics",{}).get("fail_requires")=="node-owned-root-cause","FAIL ow
 req(c.get("semantics",{}).get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 req("package-level transitive closure" in c.get("semantics",{}).get("package_dependency_closure",""),"package closure semantics")
 
-mat=contracts.get("materialization",{})
-req(mat.get("status")=="PASS" and mat.get("result")=="PASS","materialization PASS")
-req(mat.get("targets")==[],"materialization queue empty")
-req(mat.get("workflow_run")==35629129797 and mat.get("commit")=="5fa15910b91e5693395d04ef7555af94dfa7fe13","KPackage rematerialization identity")
+contract2_history=[h for h in contracts.get("history",[]) if h.get("batch")=="tier2-package-contract-2"]
+req(len(contract2_history)==1,"historical package-contract-2 snapshot")
+mat=contract2_history[0].get("materialization",{}) if contract2_history else {}
+req(mat.get("status")=="PASS" and mat.get("result")=="PASS","historical Batch3 materialization PASS")
+req(mat.get("targets")==[],"historical Batch3 materialization queue empty")
+req(mat.get("workflow_run")==35629129797 and mat.get("commit")=="5fa15910b91e5693395d04ef7555af94dfa7fe13","historical KPackage rematerialization identity")
 
 canon={n["id"]:n for n in tier2["nodes"]}
 t1={n["id"]:n for n in tier1["nodes"]}
