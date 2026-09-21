@@ -71,3 +71,12 @@ No KMime packaging is authorized until that architecture decision is approved.
 Tier 2 is **1 PASS / 14 pending / 0 current FAIL / 0 BLOCKED**.
 
 KAuth is the sole promoted Tier 2 node. Thirteen additional non-KMime nodes are package-lane-pending, and KMime is compatibility-decision-required.
+
+
+## Provider profiles for audit batch 2
+
+The next audit batch now has explicit upstream-derived provider profiles rather than placeholder Framework edges. The selected Linux profile preserves BUILD_TESTING for all five nodes; selects KPty UTEMPTER, KCompletion's native designer plugin, KContacts QML, and KPackage DBus; and follows KColorScheme's Qt 6.10+ GuiPrivate branch.
+
+Ubuntu remains only the provider. In particular, KPackage's optional KF6DocTools probe is not allowed to pull an older Ubuntu KDE Framework into the 6.30 stack; the optional documentation path remains off until SupraLINUX has a compatible KDE-upstream provider.
+
+The audit failure in run `35597828609` is classified as a pre-provider profile-definition incident with `package_state_effect=none`; no package and no provider availability claim was produced.

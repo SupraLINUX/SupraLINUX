@@ -64,3 +64,18 @@ After Batch 2 package closure, the next generated provider-audit batch is `kpty`
 KDE Frameworks 6.30.0 remains the current upstream stable series as checked against KDE's official announcements and stable download index on 2026-09-21. The batch is recorded as `tier2-provider-audit-2`; provider-audit batch identifiers are now sequential instead of being hard-coded to the first batch.
 
 A provider-audit PASS remains valid after a node later moves from package-contract/build-ready to retained package PASS. This fixes ownership of historical provider evidence without weakening the requirement that every currently audited node be in the generated campaign path.
+
+
+### Batch 2 profile materialization correction
+
+Provider-audit run `35597828609` did **not** prove a provider failure. It stopped in definition validation before APT probing because the five newly selected nodes still had only Framework dependency edges and no materialized Qt/external Linux profile.
+
+The profile is now taken directly from KDE upstream v6.30.0 CMake:
+
+- KPty: Qt Core; Qt Test for tests; UTEMPTER selected on Linux.
+- KColorScheme: Qt Gui; Qt GuiPrivate selected because the Resolute provider is Qt 6.10.x; Qt Test for tests.
+- KCompletion: Qt Widgets; native `BUILD_DESIGNERPLUGIN=ON` with Qt UiPlugin available; Qt Test for tests.
+- KContacts: Qt Gui + Qml, upstream `USE_QML=ON`, QtQuick selected for the QML module dependency/integration surface, Qt Test for tests.
+- KPackage: Qt Core, Linux-default `USE_DBUS=ON`, Qt Test for tests. Optional KF6DocTools is deliberately not supplied by an older Ubuntu KDE package.
+
+The provider runner now generates its CMake probe from the active batch's mandatory Qt component set instead of probing a fixed first-batch component list. Private Qt components are checked through their dedicated CMake packages. KPty additionally probes the selected UTEMPTER header and library.

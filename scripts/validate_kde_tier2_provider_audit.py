@@ -65,6 +65,21 @@ for node_id in batch:
         for key in node.get("external", {}).get(category, []):
             req(key in ext_registry, f"{node_id}: external provider mapping exists for {key}")
 
+if set(batch) & {"kpty","kcolorscheme","kcompletion","kcontacts","kpackage"}:
+    req(nodes["kpty"].get("qt",{}).get("required")==["Core"], "KPty Qt Core requirement")
+    req("Test" in nodes["kpty"].get("qt",{}).get("test",[]), "KPty Qt Test provider")
+    req("utempter" in nodes["kpty"].get("external",{}).get("provider_selected",[]), "KPty UTEMPTER selected provider")
+    req(nodes["kcolorscheme"].get("qt",{}).get("required")==["Gui"], "KColorScheme Qt Gui requirement")
+    req("GuiPrivate" in nodes["kcolorscheme"].get("qt",{}).get("provider_selected",[]), "KColorScheme Qt 6.10 GuiPrivate path")
+    req(nodes["kcompletion"].get("selected_linux_profile",{}).get("BUILD_DESIGNERPLUGIN") is True, "KCompletion designer plugin selected")
+    req("UiPlugin" in nodes["kcompletion"].get("qt",{}).get("provider_selected",[]), "KCompletion UiPlugin provider")
+    req(nodes["kcontacts"].get("selected_linux_profile",{}).get("USE_QML") is True, "KContacts USE_QML selected")
+    req({"Gui","Qml"} <= set(nodes["kcontacts"].get("qt",{}).get("required",[])), "KContacts Qt Gui/Qml requirements")
+    req("Quick" in nodes["kcontacts"].get("qt",{}).get("provider_selected",[]), "KContacts QtQuick QML dependency provider")
+    req(nodes["kpackage"].get("selected_linux_profile",{}).get("USE_DBUS") is True, "KPackage Linux DBus default selected")
+    req("DBus" in nodes["kpackage"].get("qt",{}).get("provider_selected",[]), "KPackage DBus provider")
+    req(registry.get("additions",{}).get("utempter",{}).get("packages")==["libutempter-dev"], "KPty UTEMPTER provider mapping")
+
 for node_id in ("knotifications", "kstatusnotifieritem", "kunitconversion"):
     node = nodes[node_id]
     req(node.get("selected_linux_profile", {}).get("BUILD_PYTHON_BINDINGS") is True, f"{node_id}: Python bindings selected")

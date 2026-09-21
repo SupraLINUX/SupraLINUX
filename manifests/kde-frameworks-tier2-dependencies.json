@@ -231,7 +231,24 @@
         "conditional": []
       },
       "provider_audit": "pending-ci",
-      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package."
+      "note": "Upstream v6.30.0 requires Qt Gui and, with the selected Qt 6.10 provider, Qt GuiPrivate; Qt Test is required by autotests.",
+      "qt": {
+        "required": [
+          "Gui"
+        ],
+        "provider_selected": [
+          "GuiPrivate"
+        ],
+        "test": [
+          "Test"
+        ]
+      },
+      "external": {},
+      "selected_linux_profile": {
+        "BUILD_TESTING": true,
+        "QT_GUI_PRIVATE": true,
+        "reason": "Qt 6.10+ upstream path requires GuiPrivate; Resolute Qt 6.10.2 selects that path."
+      }
     },
     "kcompletion": {
       "frameworks": {
@@ -243,7 +260,24 @@
         "conditional": []
       },
       "provider_audit": "pending-ci",
-      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package."
+      "note": "Upstream v6.30.0 requires Qt Widgets. BUILD_DESIGNERPLUGIN defaults ON on native builds and ECM uses Qt UiPlugin when available; tests use Qt Test.",
+      "qt": {
+        "required": [
+          "Widgets"
+        ],
+        "provider_selected": [
+          "UiPlugin"
+        ],
+        "test": [
+          "Test"
+        ]
+      },
+      "external": {},
+      "selected_linux_profile": {
+        "BUILD_TESTING": true,
+        "BUILD_DESIGNERPLUGIN": true,
+        "reason": "Native SupraLINUX builds preserve the upstream designer-plugin default and full test surface."
+      }
     },
     "kcontacts": {
       "frameworks": {
@@ -255,7 +289,25 @@
         "conditional": []
       },
       "provider_audit": "pending-ci",
-      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package."
+      "note": "Upstream v6.30.0 requires Qt Gui, enables USE_QML by default and then requires Qt Qml; the QML module declares a QtQuick dependency. Tests require Qt Test and probe Quick integration.",
+      "qt": {
+        "required": [
+          "Gui",
+          "Qml"
+        ],
+        "provider_selected": [
+          "Quick"
+        ],
+        "test": [
+          "Test"
+        ]
+      },
+      "external": {},
+      "selected_linux_profile": {
+        "BUILD_TESTING": true,
+        "USE_QML": true,
+        "reason": "Preserve the upstream QML plugin default and provide QtQuick for its declared QML dependency and integration-test surface."
+      }
     },
     "kcrash": {
       "frameworks": {
@@ -369,7 +421,25 @@
         "conditional": []
       },
       "provider_audit": "pending-ci",
-      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package."
+      "note": "Upstream v6.30.0 requires Qt Core and enables USE_DBUS by default on Linux; tests require Qt Test. KF6DocTools is optional upstream and is not substituted from Ubuntu while SupraLINUX lacks a matching 6.30 provider.",
+      "qt": {
+        "required": [
+          "Core"
+        ],
+        "provider_selected": [
+          "DBus"
+        ],
+        "test": [
+          "Test"
+        ]
+      },
+      "external": {},
+      "selected_linux_profile": {
+        "BUILD_TESTING": true,
+        "USE_DBUS": true,
+        "KF6DocTools": false,
+        "reason": "Preserve upstream Linux DBus default and tests; do not consume an older distro KDE DocTools provider."
+      }
     },
     "kpty": {
       "frameworks": {
@@ -380,7 +450,25 @@
         "conditional": []
       },
       "provider_audit": "pending-ci",
-      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package."
+      "note": "Upstream v6.30.0 requires Qt Core, KCoreAddons and KI18n; Qt Test is required when BUILD_TESTING is enabled. UTEMPTER is optional upstream and selected for the SupraLINUX Linux profile because Resolute provides it.",
+      "qt": {
+        "required": [
+          "Core"
+        ],
+        "test": [
+          "Test"
+        ]
+      },
+      "external": {
+        "provider_selected": [
+          "utempter"
+        ]
+      },
+      "selected_linux_profile": {
+        "BUILD_TESTING": true,
+        "UTEMPTER": true,
+        "reason": "Preserve upstream tests and select the available Linux UTMP integration provider."
+      }
     },
     "kservice": {
       "frameworks": {
@@ -523,6 +611,14 @@
           "libclang-common-21-dev": "1:21.1.8-6ubuntu1"
         },
         "required_probe": "/usr/lib/llvm-21/lib/clang/21/include/stddef.h"
+      },
+      "utempter": {
+        "name": "UTEMPTER",
+        "packages": [
+          "libutempter-dev"
+        ],
+        "provider_status": "resolute-candidate-to-verify",
+        "upstream_role": "optional auto-detected KPty Linux integration selected by SupraLINUX when provider is available"
       }
     }
   },
@@ -605,6 +701,17 @@
           "clang_resource_header": "/usr/lib/llvm-21/lib/clang/21/include/stddef.h"
         }
       }
+    },
+    "activation_incident": {
+      "workflow_run": 35597828609,
+      "job_id": 106326647774,
+      "commit": "fe29f6bc7851b0f11c2cd040dbc9b66af6a6319b",
+      "classification": "provider-profile-not-materialized",
+      "stage": "definition-validation",
+      "provider_checks_started": false,
+      "package_state_effect": "none",
+      "cause": "The five newly selected nodes lacked qt/external/selected_linux_profile data, so the audit stopped before APT/provider probing.",
+      "remediation": "Materialize the v6.30.0 upstream-selected provider profiles and rerun the same pending-ci batch."
     }
   }
 }

@@ -57,6 +57,7 @@ qt_map = registry["qt_provider_packages"]
 ext = dict(registry["requirements"])
 ext.update(deps["provider_registry"]["additions"])
 mandatory = {"cmake", "g++", "ninja-build", "pkgconf", "python3", "python3-setuptools"}
+mandatory_qt = set()
 optional = set()
 per_node = {}
 for node_id in batch:
@@ -71,6 +72,7 @@ for node_id in batch:
     for category in ("required", "provider_selected", "default_enabled", "test"):
         for component in qt.get(category, []):
             mandatory.update(qt_map[component])
+            mandatory_qt.add(component)
     for component in qt.get("optional", []):
         optional.update(qt_map[component])
     external = node.get("external", {})
@@ -87,6 +89,7 @@ for node_id in batch:
     }
 optional -= mandatory
 (out / "mandatory-packages.txt").write_text("".join(f"{p}\n" for p in sorted(mandatory)))
+(out / "mandatory-qt-components.txt").write_text("".join(f"{p}\n" for p in sorted(mandatory_qt)))
 (out / "optional-packages.txt").write_text("".join(f"{p}\n" for p in sorted(optional)))
 (out / "selected-profiles.json").write_text(json.dumps(per_node, indent=2) + "\n")
 PY
@@ -166,16 +169,34 @@ PY
 
 probe="$(mktemp -d)"
 trap 'rm -rf "${probe}"' EXIT
+mapfile -t qt_components < "${EVIDENCE}/mandatory-qt-components.txt"
+declare -a qt_public=()
+declare -a qt_private=()
+for component in "${qt_components[@]}"; do
+    if [[ "${component}" == *Private ]]; then
+        qt_private+=("${component}")
+    else
+        qt_public+=("${component}")
+    fi
+done
 cat > "${probe}/CMakeLists.txt" <<'CMAKE'
 cmake_minimum_required(VERSION 3.29)
 project(SupraLINUXTier2ProviderAudit LANGUAGES CXX)
-find_package(Qt6 6.9 REQUIRED COMPONENTS Core Gui Test Widgets DBus Network Xml)
-find_package(X11 REQUIRED)
-find_package(Python3 3.9 REQUIRED COMPONENTS Interpreter Development)
-find_package(Shiboken6 REQUIRED CONFIG)
-find_package(PySide6 REQUIRED CONFIG)
 CMAKE
+if (("${#qt_public[@]}" > 0)); then
+    printf 'find_package(Qt6 6.9 REQUIRED COMPONENTS %s)\n' "${qt_public[*]}" >> "${probe}/CMakeLists.txt"
+fi
+for component in "${qt_private[@]}"; do
+    printf 'find_package(Qt6%s 6.9 REQUIRED NO_MODULE)\n' "${component}" >> "${probe}/CMakeLists.txt"
+done
 cmake -S "${probe}" -B "${probe}/build" -GNinja 2>&1 | tee "${EVIDENCE}/cmake-provider-probe.log"
+
+if grep -qx 'libutempter-dev' "${EVIDENCE}/mandatory-packages.txt"; then
+    test -f /usr/include/utempter.h
+    multiarch="$(dpkg-architecture -qDEB_HOST_MULTIARCH)"
+    test -e "/usr/lib/${multiarch}/libutempter.so"
+    printf 'utempter_header=PASS\nutempter_library=PASS\n' > "${EVIDENCE}/utempter-provider.txt"
+fi
 
 python3 - "${DEPS}" "${PLAN}" "${EVIDENCE}" "${VERSION_ID}" "${qt_version}" <<'PY'
 import json
