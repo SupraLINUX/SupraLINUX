@@ -48,8 +48,11 @@ if audit_status == "pending-ci":
     elif batch != plan["next_provider_audit_batch"]:
         raise SystemExit("pending provider-audit batch differs from generated campaign plan")
 elif audit_status == "PASS":
-    if not set(batch) <= set(plan.get("package_contract_ready", [])):
-        raise SystemExit("PASS provider-audit batch is not fully package-contract-ready")
+    downstream_ready=(set(plan.get("package_contract_ready", [])) |
+                      set(plan.get("build_queue", [])) |
+                      set(plan.get("retained_pass", [])))
+    if not set(batch) <= downstream_ready:
+        raise SystemExit("PASS provider-audit batch is not in a valid downstream lifecycle state")
 else:
     raise SystemExit(f"unsupported provider-audit status: {audit_status}")
 tier1_nodes = {n["id"]: n for n in tier1["nodes"]}
@@ -138,10 +141,12 @@ case "${qt_version}" in
 esac
 
 for package_name in libshiboken6-dev libpyside6-dev; do
-    version="$(dpkg-query -W -f='${Version}' "${package_name}" | sed -E 's/^[0-9]+://' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
-    if [[ "${version}" != "${qt_version}" ]]; then
-        echo "Qt/PySide provider skew: ${package_name}=${version}, qt6-base-dev=${qt_version}" >&2
-        exit 1
+    if grep -qx "${package_name}" "${EVIDENCE}/mandatory-packages.txt"; then
+        version="$(dpkg-query -W -f='${Version}' "${package_name}" | sed -E 's/^[0-9]+://' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+        if [[ "${version}" != "${qt_version}" ]]; then
+            echo "Qt/PySide provider skew: ${package_name}=${version}, qt6-base-dev=${qt_version}" >&2
+            exit 1
+        fi
     fi
 done
 
@@ -157,7 +162,8 @@ if grep -qx 'libcanberra-dev' "${EVIDENCE}/mandatory-packages.txt"; then
     printf 'libcanberra\t%s\n' "$(pkg-config --modversion libcanberra)" > "${EVIDENCE}/pkg-config-versions.tsv"
 fi
 
-python3 - <<'PY' > "${EVIDENCE}/python-binding-providers.txt"
+if grep -qx 'python3-build' "${EVIDENCE}/mandatory-packages.txt"; then
+    python3 - <<'PY' > "${EVIDENCE}/python-binding-providers.txt"
 import build
 import importlib.metadata
 import setuptools.build_meta
@@ -166,6 +172,9 @@ print("build_version=" + getattr(build, "__version__", "unknown"))
 print("setuptools_backend=PASS")
 print("setuptools_version=" + importlib.metadata.version("setuptools"))
 PY
+else
+    printf 'python-binding-provider-check=not-required-for-active-batch\n' > "${EVIDENCE}/python-binding-providers.txt"
+fi
 
 probe="$(mktemp -d)"
 trap 'rm -rf "${probe}"' EXIT

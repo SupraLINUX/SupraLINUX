@@ -79,3 +79,12 @@ The profile is now taken directly from KDE upstream v6.30.0 CMake:
 - KPackage: Qt Core, Linux-default `USE_DBUS=ON`, Qt Test for tests. Optional KF6DocTools is deliberately not supplied by an older Ubuntu KDE package.
 
 The provider runner now generates its CMake probe from the active batch's mandatory Qt component set instead of probing a fixed first-batch component list. Private Qt components are checked through their dedicated CMake packages. KPty additionally probes the selected UTEMPTER header and library.
+
+
+### Batch 2 active-profile rerun — runner optional-probe correction
+
+Provider-audit run `35598315301`, job `106328176979`, reached real APT provider installation. The selected batch providers were available and installed, including `libutempter-dev 1.2.1-4build1`, Qt DBus/QML/Quick/Designer development surfaces and the Qt 6.10 private-Gui provider.
+
+The run then failed in a stale first-batch-only runner assertion: it unconditionally queried `libshiboken6-dev` and `libpyside6-dev` even though neither package is part of this non-Python batch. This is **INFRA / audit-runner optional-probe leakage**, not a provider failure; `package_state_effect=none`.
+
+Provider-specific probes are now conditional on membership in the active batch's generated `mandatory-packages.txt`. The same applies to the Python `build`/setuptools binding probe. This keeps the audit generic across later Tier 2 batches instead of carrying hidden requirements from the first Python-binding batch.
