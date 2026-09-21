@@ -918,17 +918,17 @@
       "package_identity": {
         "source_package": "kf6-kpackage",
         "package_version_candidate": "6.30.0-0supralinux1",
-        "status": "not-materialized"
+        "status": "materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "appstream-offline-validation-rematerialization-required"
+        "reason": "offline-appstream-rematerialized-clean-build-pending"
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "build-ready",
         "provider_audit": "complete",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "result": "PASS",
@@ -966,20 +966,18 @@
         },
         "materialization_evidence": {
           "result": "PASS",
-          "workflow_run": 35623204805,
-          "job_id": 106411141243,
-          "commit": "ec4091371846d287e2d169c4cad171adcdfd1144",
-          "artifact_id": 10649014863,
-          "artifact_sha256": "7d805f24f4bba2b9e9f4d383252b04ef6efe7dbdba64c72aa10e50382a148188",
-          "tree_sha256": "cd5bb495c9d621f2127653d0dbcc46e179a66901c8b13c67fd4c07c49307b559",
-          "debian_tree_sha256": "7fe53af6606ff304839ed1195a7df70b9b897872493b6faccdcb9924edd87c91",
-          "debian_tar_sha256": "5240389bc1bc5170f8908de40568dccd445edf4ebe4ada38a5f32ab611ad083e",
-          "dsc_sha256": "15b5e6cfe6a65d9bda3ed173dfedcc6fc12d513ae46107d4a62702663c6a2e4f",
+          "workflow_run": 35629129797,
+          "job_id": 106430800639,
+          "commit": "5fa15910b91e5693395d04ef7555af94dfa7fe13",
+          "artifact_id": 10653266498,
+          "artifact_sha256": "b956d399879174a0c959e7eadf0baf1bc767cfc739390354212855daf95fe71c",
+          "tree_sha256": "d80ad88ba49eb0949b1be8375379525dba3da1f1bba2082843598bc0c042b7c1",
+          "debian_tree_sha256": "31d9156d7ecbda1cc9aefd706e629938217c45f6b66ac69520fc2af8814ed4dd",
+          "debian_tar_sha256": "dd3b83e83d91078a50bdbb9c4ef9e28d12efd26f505dd274029110bdb9dd976e",
+          "dsc_sha256": "f30185c49f28399330d2934287ee7da5f0d6c2d577bb2c682b4e5a59293bae75",
           "orig_tar_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
           "package_attempted": false,
-          "package_state_effect": "none",
-          "superseded_for_build": true,
-          "superseded_reason": "AppStream URL reachability validation requires offline test-environment adaptation"
+          "package_state_effect": "none"
         },
         "materialization_history": [
           {
@@ -998,6 +996,24 @@
             "package_state_effect": "none",
             "superseded_for_build": true,
             "superseded_reason": "technical-reference-doctools-manpage-payload-and-disabled-tests",
+            "status": "superseded"
+          },
+          {
+            "result": "PASS",
+            "workflow_run": 35623204805,
+            "job_id": 106411141243,
+            "commit": "ec4091371846d287e2d169c4cad171adcdfd1144",
+            "artifact_id": 10649014863,
+            "artifact_sha256": "7d805f24f4bba2b9e9f4d383252b04ef6efe7dbdba64c72aa10e50382a148188",
+            "tree_sha256": "cd5bb495c9d621f2127653d0dbcc46e179a66901c8b13c67fd4c07c49307b559",
+            "debian_tree_sha256": "7fe53af6606ff304839ed1195a7df70b9b897872493b6faccdcb9924edd87c91",
+            "debian_tar_sha256": "5240389bc1bc5170f8908de40568dccd445edf4ebe4ada38a5f32ab611ad083e",
+            "dsc_sha256": "15b5e6cfe6a65d9bda3ed173dfedcc6fc12d513ae46107d4a62702663c6a2e4f",
+            "orig_tar_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "superseded_for_build": true,
+            "superseded_reason": "AppStream URL reachability validation requires offline test-environment adaptation",
             "status": "superseded"
           }
         ]

@@ -65,7 +65,7 @@
       }
     },
     "kpackage": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "karchive",
         "ki18n",
@@ -83,14 +83,12 @@
       },
       "materialization_evidence": {
         "result": "PASS",
-        "workflow_run": 35623204805,
-        "job_id": 106411141243,
-        "commit": "ec4091371846d287e2d169c4cad171adcdfd1144",
-        "artifact_id": 10649014863,
-        "artifact_sha256": "7d805f24f4bba2b9e9f4d383252b04ef6efe7dbdba64c72aa10e50382a148188",
-        "package_state_effect": "none",
-        "superseded_for_build": true,
-        "superseded_reason": "AppStream URL reachability validation requires offline test-environment adaptation"
+        "workflow_run": 35629129797,
+        "job_id": 106430800639,
+        "commit": "5fa15910b91e5693395d04ef7555af94dfa7fe13",
+        "artifact_id": 10653266498,
+        "artifact_sha256": "b956d399879174a0c959e7eadf0baf1bc767cfc739390354212855daf95fe71c",
+        "package_state_effect": "none"
       },
       "materialization_history": [
         {
@@ -101,6 +99,18 @@
           "artifact_sha256": "0e2281fca63b84a0a7c96e6c5256f98365509ef329790c70f91730637a5bd924",
           "package_state_effect": "none",
           "superseded_for_build": true,
+          "status": "superseded"
+        },
+        {
+          "result": "PASS",
+          "workflow_run": 35623204805,
+          "job_id": 106411141243,
+          "commit": "ec4091371846d287e2d169c4cad171adcdfd1144",
+          "artifact_id": 10649014863,
+          "artifact_sha256": "7d805f24f4bba2b9e9f4d383252b04ef6efe7dbdba64c72aa10e50382a148188",
+          "package_state_effect": "none",
+          "superseded_for_build": true,
+          "superseded_reason": "AppStream URL reachability validation requires offline test-environment adaptation",
           "status": "superseded"
         }
       ]

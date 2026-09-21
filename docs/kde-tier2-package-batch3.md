@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 2 — package Batch 3
 
-Status: **4/5 PASS; KPackage offline AppStream rematerialization pending**  
+Status: **4/5 PASS; KPackage clean-build retry pending**  
 Date: **2026-09-21**
 
 Batch 3 covers KColorScheme, KCompletion, KContacts, KPackage and KPty. All five are package-state `pending` and `build-ready` from materialization run `35608790364`; this lane is the first real package attempt for this group.
@@ -108,3 +108,21 @@ SupraLINUX does not patch out or skip the KDE test. The reviewed KPackage test c
 `AS_VALIDATE_NONET=1 xvfb-run -a --server-args="-screen 0 1024x768x24+32" dh_auto_test --buildsystem=kf6 -O--buildsystem=kf6 --no-parallel`
 
 The setting is scoped to `dh_auto_test`. It disables remote URL reachability only; AppStream metadata validation and the complete KDE CTest suite remain enabled. KPackage alone returns to deterministic materialization before its next clean-build attempt. No stable APT promotion is authorized.
+
+
+## KPackage offline rematerialization PASS
+
+Selective materialization run `35629129797` on commit `5fa15910b91e5693395d04ef7555af94dfa7fe13` completed PASS for KPackage only. Repository Policy for the same commit also passed completely.
+
+Replacement evidence:
+- job `106430800639`
+- artifact `10653266498`
+- artifact SHA-256 `b956d399879174a0c959e7eadf0baf1bc767cfc739390354212855daf95fe71c`
+- tree SHA-256 `d80ad88ba49eb0949b1be8375379525dba3da1f1bba2082843598bc0c042b7c1`
+- Debian tree SHA-256 `31d9156d7ecbda1cc9aefd706e629938217c45f6b66ac69520fc2af8814ed4dd`
+- Debian tar SHA-256 `dd3b83e83d91078a50bdbb9c4ef9e28d12efd26f505dd274029110bdb9dd976e`
+- source/orig SHA-256 remains `58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019`.
+
+Artifact inspection confirms `BUILD_TESTING=ON` remains selected and `AS_VALIDATE_NONET=1` appears only in the restored `override_dh_auto_test` command. The KDE test suite and AppStream metadata validation remain enabled.
+
+Batch 3 therefore reopens exactly **one runnable node: KPackage**. KColorScheme, KCompletion, KContacts and KPty remain retained PASS and must not be rebuilt. Canonical Tier 2 remains **10 PASS / 5 pending / 0 current FAIL / 0 BLOCKED** until the KPackage clean-build retry completes. No stable promotion is authorized.

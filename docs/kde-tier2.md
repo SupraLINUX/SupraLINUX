@@ -184,3 +184,10 @@ Canonical Tier 2 is therefore **10 PASS / 5 pending / 0 current FAIL / 0 BLOCKED
 KPackage did not become FAIL. Its second remediation attempt compiled successfully and passed 9/10 upstream tests; the remaining `testpackage-appstream` test failed because AppStream 1.1.2 attempted remote URL reachability checks inside the isolated clean build. AppStream v1.1.2 officially defines `AS_VALIDATE_NONET` as equivalent to `--no-net` for metadata validation. SupraLINUX therefore keeps the KDE test enabled and rematerializes only KPackage with `AS_VALIDATE_NONET=1` scoped to `dh_auto_test`. Structural AppStream validation remains active and KDE feature selection is unchanged.
 
 No package promotion to the stable APT channel is authorized by this state change.
+
+
+## KPackage ready for isolated retry
+
+The AppStream-offline replacement materialization passed in run `35629129797`, job `106430800639`, artifact `10653266498`. The package remains pending; canonical Tier 2 stays **10 PASS / 5 pending / 0 current FAIL / 0 BLOCKED**.
+
+Only KPackage returns to the clean-build queue. The four other Batch 3 nodes remain retained PASS. The retry keeps the full upstream KDE test suite active and scopes `AS_VALIDATE_NONET=1` only to the test environment.

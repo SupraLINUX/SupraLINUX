@@ -141,3 +141,17 @@ This is a provider/test-environment adaptation, not a KDE source or feature chan
 - materialization remains `package_attempted=false`.
 
 The only active materialization target is KPackage. Canonical package state while it is rematerialized is **10 PASS / 5 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+## KPackage offline rematerialization evidence
+
+Run `35629129797`, job `106430800639`, completed the KPackage-only replacement materialization after the AppStream network-isolation finding.
+
+- artifact `10653266498`
+- artifact SHA-256 `b956d399879174a0c959e7eadf0baf1bc767cfc739390354212855daf95fe71c`
+- tree SHA-256 `d80ad88ba49eb0949b1be8375379525dba3da1f1bba2082843598bc0c042b7c1`
+- Debian tree SHA-256 `31d9156d7ecbda1cc9aefd706e629938217c45f6b66ac69520fc2af8814ed4dd`
+- Debian tar SHA-256 `dd3b83e83d91078a50bdbb9c4ef9e28d12efd26f505dd274029110bdb9dd976e`
+- DSC SHA-256 `f30185c49f28399330d2934287ee7da5f0d6c2d577bb2c682b4e5a59293bae75`.
+
+The active materialization target set is empty again. KPackage returns to `build-ready`; its next action is a clean package build consuming retained KArchive, KI18n and KCoreAddons PASS artifacts. Materialization itself is not package PASS.

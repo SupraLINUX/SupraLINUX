@@ -531,17 +531,15 @@
     "package_state_effect": "none"
   },
   "materialization": {
-    "status": "pending-ci",
+    "status": "PASS",
     "method": "kde-authority-source-plus-pinned-debian-tree",
     "package_state_effect": "none",
     "package_attempted": false,
     "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
     "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
-    "reason": "tier2-package-contract-2-kpackage-appstream-offline-rematerialization",
-    "result": "pending",
-    "targets": [
-      "kpackage"
-    ],
+    "reason": "tier2-package-contract-2-kpackage-appstream-offline-rematerialization-pass",
+    "result": "PASS",
+    "targets": [],
     "retained_package_pass": [
       "kauth",
       "kcolorscheme",
@@ -605,23 +603,21 @@
         "commit": "ec4091371846d287e2d169c4cad171adcdfd1144"
       },
       "kpackage": {
-        "job_id": 106411141243,
-        "artifact_id": 10649014863,
-        "artifact_sha256": "7d805f24f4bba2b9e9f4d383252b04ef6efe7dbdba64c72aa10e50382a148188",
-        "tree_sha256": "cd5bb495c9d621f2127653d0dbcc46e179a66901c8b13c67fd4c07c49307b559",
-        "debian_tree_sha256": "7fe53af6606ff304839ed1195a7df70b9b897872493b6faccdcb9924edd87c91",
-        "debian_tar_sha256": "5240389bc1bc5170f8908de40568dccd445edf4ebe4ada38a5f32ab611ad083e",
-        "dsc_sha256": "15b5e6cfe6a65d9bda3ed173dfedcc6fc12d513ae46107d4a62702663c6a2e4f",
+        "job_id": 106430800639,
+        "artifact_id": 10653266498,
+        "artifact_sha256": "b956d399879174a0c959e7eadf0baf1bc767cfc739390354212855daf95fe71c",
+        "tree_sha256": "d80ad88ba49eb0949b1be8375379525dba3da1f1bba2082843598bc0c042b7c1",
+        "debian_tree_sha256": "31d9156d7ecbda1cc9aefd706e629938217c45f6b66ac69520fc2af8814ed4dd",
+        "debian_tar_sha256": "dd3b83e83d91078a50bdbb9c4ef9e28d12efd26f505dd274029110bdb9dd976e",
+        "dsc_sha256": "f30185c49f28399330d2934287ee7da5f0d6c2d577bb2c682b4e5a59293bae75",
         "orig_tar_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
         "package_version": "6.30.0-0supralinux1",
         "source_package": "kf6-kpackage",
         "result": "PASS",
         "package_attempted": false,
         "package_state_effect": "none",
-        "workflow_run": 35623204805,
-        "commit": "ec4091371846d287e2d169c4cad171adcdfd1144",
-        "superseded_for_build": true,
-        "superseded_reason": "AppStream 1.1.2 URL reachability checks require AS_VALIDATE_NONET in isolated clean-build tests"
+        "workflow_run": 35629129797,
+        "commit": "5fa15910b91e5693395d04ef7555af94dfa7fe13"
       },
       "kpty": {
         "job_id": 106362494052,
@@ -705,7 +701,9 @@
         "status": "superseded",
         "superseded_reason": "AppStream 1.1.2 URL reachability checks require an explicit offline validation environment inside isolated clean builds"
       }
-    ]
+    ],
+    "workflow_run": 35629129797,
+    "commit": "5fa15910b91e5693395d04ef7555af94dfa7fe13"
   },
   "provider_adaptations": {
     "ubuntu-resolute": {
