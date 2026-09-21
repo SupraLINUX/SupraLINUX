@@ -22,7 +22,8 @@ registry = deps.get("provider_registry", {})
 batch = audit.get("nodes", [])
 
 req(audit.get("schema") == 1, "Tier 2 provider-audit schema")
-req(audit.get("batch") == "tier2-provider-audit-1", "Tier 2 provider-audit batch id")
+batch_id=audit.get("batch","")
+req(batch_id.startswith("tier2-provider-audit-") and batch_id.removeprefix("tier2-provider-audit-").isdigit(), "Tier 2 provider-audit batch id")
 req(audit.get("status") in {"pending-ci", "PASS"}, "Tier 2 provider-audit status")
 req(audit.get("provider_platform") == "ubuntu-resolute", "Tier 2 provider platform")
 req(audit.get("source_authority") == "kde-upstream-v6.30.0", "Tier 2 source authority")
@@ -34,8 +35,10 @@ if audit.get("status") == "pending-ci":
     else:
         req(batch == plan.get("next_provider_audit_batch"), "pending provider-audit batch must equal generated campaign next batch")
 elif audit.get("status") == "PASS":
-    downstream_ready=set(plan.get("package_contract_ready", [])) | set(plan.get("build_queue", []))
-    req(set(batch) <= downstream_ready, "PASS provider-audit nodes must remain contract/build-ready")
+    downstream_ready=(set(plan.get("package_contract_ready", [])) |
+                      set(plan.get("build_queue", [])) |
+                      set(plan.get("retained_pass", [])))
+    req(set(batch) <= downstream_ready, "PASS provider-audit nodes must remain contract/build-ready or retained PASS")
     evidence = audit.get("evidence", {})
     req(evidence.get("result") == "PASS", "provider-audit PASS evidence result")
     req(evidence.get("package_state_effect") == "none", "provider-audit must not alter package state")

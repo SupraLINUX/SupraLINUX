@@ -204,7 +204,7 @@ PY
     echo "claim=provider-availability-and-selected-profile-only"
     echo "package_state_effect=none"
     echo "qt_upstream=${qt_version}"
-    echo "batch=tier2-provider-audit-1"
+    echo "batch=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["provider_audit"]["batch"])' "${DEPS}")"
 } > "${EVIDENCE}/summary.env"
 
 echo "KDE Tier 2 provider audit: PASS"

@@ -55,3 +55,12 @@ KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication are
 The clean Batch 2 run proved that `llvm-dev` alone is insufficient for Shiboken: `llvm-config` becomes visible, but `/usr/lib/llvm-21/lib/clang` has no versioned builtin-resource directory. Resolute's provider closure is extended with `libclang-common-21-dev`.
 
 The revalidation scope is only KNotifications, KStatusNotifierItem and KUnitConversion. CI must prove both `llvm-config` and `/usr/lib/llvm-21/lib/clang/21/include/stddef.h`. KDE's `BUILD_PYTHON_BINDINGS=ON` remains unchanged.
+
+
+## Provider audit batch 2 — next five pending Tier 2 nodes
+
+After Batch 2 package closure, the next generated provider-audit batch is `kpty`, `kcolorscheme`, `kcompletion`, `kcontacts` and `kpackage`. The audit remains provider/profile validation only: it verifies Ubuntu 26.04 Resolute can supply the Qt/external packages selected by KDE upstream 6.30.0 and that all retained Tier 1 predecessors are downstream-eligible PASS.
+
+KDE Frameworks 6.30.0 remains the current upstream stable series as checked against KDE's official announcements and stable download index on 2026-09-21. The batch is recorded as `tier2-provider-audit-2`; provider-audit batch identifiers are now sequential instead of being hard-coded to the first batch.
+
+A provider-audit PASS remains valid after a node later moves from package-contract/build-ready to retained package PASS. This fixes ownership of historical provider evidence without weakening the requirement that every currently audited node be in the generated campaign path.
