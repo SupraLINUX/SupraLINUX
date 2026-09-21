@@ -234,3 +234,12 @@ The KDeclarative/KFileMetaData/KService packaging reference snapshot from run `3
 KDeclarative records a compatibility adaptation: Ubuntu 26.04's `libkquickcontrolsprivate0` binary-package contract is preserved even though Debian 6.30 merged that payload, because KDE 6.30 continues to build the SOVERSION-0 private library. KService retains upstream's optional KDocTools behavior rather than accepting Debian's Build-Depends as authority.
 
 Canonical package state remains **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+## Contract batch 3 selective rematerialization
+
+The first deterministic materialization run `35635818815` produced three source packages, but artifact inspection identified integration corrections before clean builds.
+
+KFileMetaData is retained build-ready. KDeclarative is rematerialized so the Ubuntu-compatible `libkquickcontrolsprivate0` owns both the SONAME symlink and versioned private library rather than splitting them across two packages. KService is rematerialized so optional KDocTools is absent from both source Build-Depends and `libkf6service-dev` Depends.
+
+These are packaging-integration corrections with `package_attempted=false`; canonical Tier 2 remains **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. KMime remains independently gated by ADR-0002.

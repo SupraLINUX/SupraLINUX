@@ -709,7 +709,7 @@
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-lane-not-materialized"
+        "reason": "integration-rematerialization-required"
       },
       "state": "pending",
       "planning": {
@@ -725,7 +725,25 @@
           "artifact_sha256": "ced417aa88fffb9de0762423ffeef72533c6795c07131a2e4d7911ba5b62edab",
           "claim": "provider-availability-and-selected-profile-only",
           "package_state_effect": "none"
-        }
+        },
+        "materialization_history": [
+          {
+            "result": "PASS",
+            "workflow_run": 35635818815,
+            "job_id": 106452910479,
+            "commit": "40d51b2282660c19032c8194aa43467d73c68cf7",
+            "artifact_id": 10656151887,
+            "artifact_sha256": "1471fc0173d7abf6ee3711a48f071b7743a1637030c3924304bd76ea023785e2",
+            "tree_sha256": "de3e2c4aa13b23794b077a586210ee2da2daf8a8a3040e4d7307da79e53f1083",
+            "debian_tree_sha256": "6141279580581890f54905f4fd74806b317d3e92cfe9eed9b6c13f12bad39c7b",
+            "dsc_sha256": "d02784538b7ec7a2af3ac4ab363b306128206c5444d57d0c399908cc765db4fe",
+            "debian_tar_sha256": "6e2b2fba313cb20c3a7bc64f7d58edf47f718ef65a878e02689534acc0abdbec",
+            "orig_tar_sha256": "7ec3583a2cf2cd7143e39936ffb39e22d20563f4c87a8462e0e9d12c59ea89a6",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "status": "superseded-for-integration"
+          }
+        ]
       }
     },
     {
@@ -765,17 +783,17 @@
       "package_identity": {
         "source_package": "kf6-kfilemetadata",
         "package_version_candidate": "6.30.0-0supralinux1",
-        "status": "not-materialized"
+        "status": "materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-lane-not-materialized"
+        "reason": "materialized-clean-build-pending"
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "build-ready",
         "provider_audit": "complete",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
           "workflow_run": 35607692129,
@@ -784,6 +802,21 @@
           "artifact_id": 10642947552,
           "artifact_sha256": "ced417aa88fffb9de0762423ffeef72533c6795c07131a2e4d7911ba5b62edab",
           "claim": "provider-availability-and-selected-profile-only",
+          "package_state_effect": "none"
+        },
+        "materialization_evidence": {
+          "result": "PASS",
+          "workflow_run": 35635818815,
+          "job_id": 106452910488,
+          "commit": "40d51b2282660c19032c8194aa43467d73c68cf7",
+          "artifact_id": 10656246928,
+          "artifact_sha256": "f5a31635efaf6aa9b8c9b8aa378f3c48a011ea4360a06edd9bafe26f7546361e",
+          "tree_sha256": "ab84c9dbcfe0efc2b50a663bb1e5c6b893548f31c596215ae06df266846c90e5",
+          "debian_tree_sha256": "221b6a05b2a48fb06d2662548f2997fb59f208ddec962108e539808b48d4709a",
+          "dsc_sha256": "6e27345975ce7a591e0d06c0169da33643604d64cb3a6271c04cb3de98cac8ce",
+          "debian_tar_sha256": "5e5294547267f887fc198620195275c153fc553f5a0ee2c58b69d27fcf98ac2f",
+          "orig_tar_sha256": "5e14cd8e395e927042cb3eb7cff47e0effda5e8bf2520cf18d1082a9403b2e62",
+          "package_attempted": false,
           "package_state_effect": "none"
         }
       }
@@ -1249,7 +1282,7 @@
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-lane-not-materialized"
+        "reason": "integration-rematerialization-required"
       },
       "state": "pending",
       "planning": {
@@ -1265,7 +1298,25 @@
           "artifact_sha256": "ced417aa88fffb9de0762423ffeef72533c6795c07131a2e4d7911ba5b62edab",
           "claim": "provider-availability-and-selected-profile-only",
           "package_state_effect": "none"
-        }
+        },
+        "materialization_history": [
+          {
+            "result": "PASS",
+            "workflow_run": 35635818815,
+            "job_id": 106452910663,
+            "commit": "40d51b2282660c19032c8194aa43467d73c68cf7",
+            "artifact_id": 10656446848,
+            "artifact_sha256": "c605d6301701c57462c66b71859c17f44cadbfdf649cf41b50c9374716e12ff7",
+            "tree_sha256": "f2a5fb8b44f2d242011edc694730eddfab68813c9c8a023de2b5b030ba931e36",
+            "debian_tree_sha256": "55bf951eafa273e8ad47131e788aea17138e28b39f0f1fc394003f97a76d470a",
+            "dsc_sha256": "151cbe84b5d7f23eae2b89bcaf481f461eb5007faacbbb08f110f861d4a6af41",
+            "debian_tar_sha256": "bffeae57217b7eca41bd71947fd018d6606c6f6aa466fc7d7a0e22f9582be84b",
+            "orig_tar_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "status": "superseded-for-integration"
+          }
+        ]
       }
     },
     {

@@ -55,12 +55,16 @@ if "kpackage" in selected:
 
 if "kdeclarative" in selected:
     kd=contracts["nodes"]["kdeclarative"]
-    req(len(kd.get("binary_package_splits",[]))==1 and kd["binary_package_splits"][0].get("package")=="libkquickcontrolsprivate0","KDeclarative Ubuntu binary split")
+    splits=kd.get("binary_package_splits",[])
+    req(len(splits)==1 and splits[0].get("package")=="libkquickcontrolsprivate0","KDeclarative Ubuntu binary split")
+    req(splits[0].get("source_match_substrings")==["libkquickcontrolsprivate.so.0","libkquickcontrolsprivate.so.6."],"KDeclarative complete private-library payload split")
+    req(kd.get("provider_adaptation",{}).get("payload_contract")==["libkquickcontrolsprivate.so.0","libkquickcontrolsprivate.so.6.30.0"],"KDeclarative private-library payload contract")
     req(kd.get("provider_adaptation",{}).get("kde_feature_effect")=="none","KDeclarative split feature neutrality")
 
 if "kservice" in selected:
     ks=contracts["nodes"]["kservice"]
     req(ks.get("build_depends_remove")==["libkf6doctools-dev"],"KService optional DocTools Build-Depends removal")
+    req(ks.get("binary_depends_remove",{}).get("libkf6service-dev")==["libkf6doctools-dev"],"KService optional DocTools dev Depends removal")
     req(bool(ks.get("install_entries_remove",{}).get("libkf6service-bin.install")),"KService DocTools-only manpage entries removed")
 
 targets=set(mat.get("targets",[]))

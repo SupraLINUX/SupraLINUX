@@ -588,7 +588,10 @@
       "binary_package_splits": [
         {
           "package": "libkquickcontrolsprivate0",
-          "source_match_substring": "libkquickcontrolsprivate.so.0",
+          "source_match_substrings": [
+            "libkquickcontrolsprivate.so.0",
+            "libkquickcontrolsprivate.so.6."
+          ],
           "section": "libs",
           "architecture": "any",
           "multi_arch": "same",
@@ -608,7 +611,11 @@
         "upstream_basis": "KDE KDeclarative v6.30.0 still builds and installs kquickcontrolsprivate with SOVERSION 0.",
         "compatibility_basis": "Ubuntu 26.04 publishes libkquickcontrolsprivate0 and qml6-module-org-kde-kquickcontrols depends on it.",
         "kde_feature_effect": "none",
-        "validation": "fresh-materialization-and-clean-build-required"
+        "validation": "fresh-materialization-and-clean-build-required",
+        "payload_contract": [
+          "libkquickcontrolsprivate.so.0",
+          "libkquickcontrolsprivate.so.6.30.0"
+        ]
       }
     },
     "kfilemetadata": {
@@ -774,7 +781,17 @@
         },
         "upstream_basis": "KService v6.30.0 finds KF6DocTools optionally and only adds docs/manpages when KF6DocTools_FOUND.",
         "kde_feature_effect": "optional-documentation-integration-disabled-until-matching-supralinux-provider",
-        "validation": "fresh-materialization-and-clean-build-required"
+        "validation": "fresh-materialization-and-clean-build-required",
+        "removed_binary_depends": {
+          "libkf6service-dev": [
+            "libkf6doctools-dev"
+          ]
+        }
+      },
+      "binary_depends_remove": {
+        "libkf6service-dev": [
+          "libkf6doctools-dev"
+        ]
       }
     }
   },
@@ -798,11 +815,10 @@
     "package_attempted": false,
     "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
     "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
-    "reason": "tier2-package-contract-3-reference-capture-pass",
+    "reason": "tier2-package-contract-3-selective-rematerialization-kdeclarative-kservice",
     "result": "pending",
     "targets": [
       "kdeclarative",
-      "kfilemetadata",
       "kservice"
     ],
     "retained_package_pass": [
@@ -817,6 +833,65 @@
       "kstatusnotifieritem",
       "kunitconversion",
       "syndication"
+    ],
+    "workflow_run": 35635818815,
+    "commit": "40d51b2282660c19032c8194aa43467d73c68cf7",
+    "evidence": {
+      "kfilemetadata": {
+        "job_id": 106452910488,
+        "artifact_id": 10656246928,
+        "artifact_sha256": "f5a31635efaf6aa9b8c9b8aa378f3c48a011ea4360a06edd9bafe26f7546361e",
+        "tree_sha256": "ab84c9dbcfe0efc2b50a663bb1e5c6b893548f31c596215ae06df266846c90e5",
+        "debian_tree_sha256": "221b6a05b2a48fb06d2662548f2997fb59f208ddec962108e539808b48d4709a",
+        "dsc_sha256": "6e27345975ce7a591e0d06c0169da33643604d64cb3a6271c04cb3de98cac8ce",
+        "debian_tar_sha256": "5e5294547267f887fc198620195275c153fc553f5a0ee2c58b69d27fcf98ac2f",
+        "orig_tar_sha256": "5e14cd8e395e927042cb3eb7cff47e0effda5e8bf2520cf18d1082a9403b2e62",
+        "package_version": "6.30.0-0supralinux1",
+        "source_package": "kf6-kfilemetadata",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "workflow_run": 35635818815,
+        "commit": "40d51b2282660c19032c8194aa43467d73c68cf7"
+      }
+    },
+    "history": [
+      {
+        "node": "kdeclarative",
+        "job_id": 106452910479,
+        "artifact_id": 10656151887,
+        "artifact_sha256": "1471fc0173d7abf6ee3711a48f071b7743a1637030c3924304bd76ea023785e2",
+        "tree_sha256": "de3e2c4aa13b23794b077a586210ee2da2daf8a8a3040e4d7307da79e53f1083",
+        "debian_tree_sha256": "6141279580581890f54905f4fd74806b317d3e92cfe9eed9b6c13f12bad39c7b",
+        "dsc_sha256": "d02784538b7ec7a2af3ac4ab363b306128206c5444d57d0c399908cc765db4fe",
+        "debian_tar_sha256": "6e2b2fba313cb20c3a7bc64f7d58edf47f718ef65a878e02689534acc0abdbec",
+        "orig_tar_sha256": "7ec3583a2cf2cd7143e39936ffb39e22d20563f4c87a8462e0e9d12c59ea89a6",
+        "workflow_run": 35635818815,
+        "commit": "40d51b2282660c19032c8194aa43467d73c68cf7",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "status": "superseded-for-integration",
+        "superseded_reason": "Initial Ubuntu compatibility split moved only SONAME symlink; runtime package must own both libkquickcontrolsprivate.so.0 and the versioned library payload."
+      },
+      {
+        "node": "kservice",
+        "job_id": 106452910663,
+        "artifact_id": 10656446848,
+        "artifact_sha256": "c605d6301701c57462c66b71859c17f44cadbfdf649cf41b50c9374716e12ff7",
+        "tree_sha256": "f2a5fb8b44f2d242011edc694730eddfab68813c9c8a023de2b5b030ba931e36",
+        "debian_tree_sha256": "55bf951eafa273e8ad47131e788aea17138e28b39f0f1fc394003f97a76d470a",
+        "dsc_sha256": "151cbe84b5d7f23eae2b89bcaf481f461eb5007faacbbb08f110f861d4a6af41",
+        "debian_tar_sha256": "bffeae57217b7eca41bd71947fd018d6606c6f6aa466fc7d7a0e22f9582be84b",
+        "orig_tar_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
+        "workflow_run": 35635818815,
+        "commit": "40d51b2282660c19032c8194aa43467d73c68cf7",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "status": "superseded-for-integration",
+        "superseded_reason": "Source Build-Depends removed optional KDocTools, but libkf6service-dev still retained a technical-reference Depends on libkf6doctools-dev."
+      }
     ]
   },
   "provider_adaptations": {

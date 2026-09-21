@@ -101,15 +101,18 @@ if "kdeclarative" in selected:
     req("libkquickcontrolsprivate0" not in kd.get("technical_references",{}).get("debian",{}).get("binary_packages",[]),"KDeclarative Debian 6.30 split difference recorded")
     splits=kd.get("binary_package_splits",[])
     req(len(splits)==1 and splits[0].get("package")=="libkquickcontrolsprivate0","KDeclarative private-library split contract")
-    req(splits[0].get("source_match_substring")=="libkquickcontrolsprivate.so.0","KDeclarative split payload identity")
+    req(splits[0].get("source_match_substrings")==["libkquickcontrolsprivate.so.0","libkquickcontrolsprivate.so.6."],"KDeclarative split payload identity")
+    req(kd.get("provider_adaptation",{}).get("payload_contract")==["libkquickcontrolsprivate.so.0","libkquickcontrolsprivate.so.6.30.0"],"KDeclarative runtime payload contract")
     req(kd.get("provider_adaptation",{}).get("classification")=="ubuntu-binary-contract-preservation","KDeclarative compatibility adaptation")
     req(kd.get("provider_adaptation",{}).get("kde_feature_effect")=="none","KDeclarative split KDE feature neutrality")
 
 if "kservice" in selected:
     ks=contracts["nodes"]["kservice"]
     req(ks.get("build_depends_remove")==["libkf6doctools-dev"],"KService optional DocTools Build-Depends removal")
+    req(ks.get("binary_depends_remove",{}).get("libkf6service-dev")==["libkf6doctools-dev"],"KService dev Depends optional DocTools removal")
     req(ks.get("selected_profile",{}).get("CMAKE_DISABLE_FIND_PACKAGE_KF6DocTools") is True,"KService optional DocTools disabled")
     req(ks.get("install_entries_remove",{}).get("libkf6service-bin.install")==["usr/share/man/*/man8/kbuildsycoca6.8","usr/share/man/man8/kbuildsycoca6.8"],"KService DocTools-only manpage entries removed")
+    req(ks.get("provider_adaptation",{}).get("removed_binary_depends",{}).get("libkf6service-dev")==["libkf6doctools-dev"],"KService provider adaptation dev Depends removal")
     req(ks.get("provider_adaptation",{}).get("classification")=="technical-reference-optional-provider-removal","KService optional-provider classification")
 
 history=contracts.get("history",[])

@@ -207,3 +207,14 @@ All three technical references resolve to Ubuntu Resolute `6.24.0-0ubuntu1` and 
 KDeclarative preserves Ubuntu 26.04's separate `libkquickcontrolsprivate0` runtime package. Debian 6.30 no longer lists that binary package, but KDE v6.30.0 still builds and installs `kquickcontrolsprivate` with SOVERSION 0. SupraLINUX therefore splits that library back into the Ubuntu-compatible package without changing the KDE feature profile.
 
 KService continues to disable optional KDocTools until a matching SupraLINUX provider exists. Because upstream only adds documentation/manpages when `KF6DocTools_FOUND`, the Debian-reference KDocTools Build-Depends and only the corresponding `kbuildsycoca6.8` manpage install entries are removed.
+
+
+## Contract batch 3 integration feedback
+
+Inspection of materialization run `35635818815` refined two package contracts without changing KDE authority.
+
+**KDeclarative:** Ubuntu's `libkquickcontrolsprivate0` contract represents the complete SOVERSION-0 runtime library. KDE 6.30 installs both `libkquickcontrolsprivate.so.0` and the versioned `libkquickcontrolsprivate.so.6.30.0`. The SupraLINUX split therefore owns both entries. The QML package keeps only QML/plugin payload and must not duplicate either library entry.
+
+**KService:** KDocTools is optional upstream. Removing it only from source Build-Depends was insufficient because the Debian technical reference also propagated `libkf6doctools-dev` into `libkf6service-dev` Depends. SupraLINUX removes that binary Depends as the same optional-provider overconstraint.
+
+KFileMetaData's first materialization needs no remediation and remains retained PASS materialization evidence. No package state changes occur during these corrections.

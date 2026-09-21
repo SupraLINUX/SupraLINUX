@@ -41,10 +41,21 @@
         "job_id": 106358717091,
         "artifact_id": 10642947552,
         "artifact_sha256": "ced417aa88fffb9de0762423ffeef72533c6795c07131a2e4d7911ba5b62edab"
-      }
+      },
+      "materialization_history": [
+        {
+          "result": "PASS",
+          "workflow_run": 35635818815,
+          "job_id": 106452910479,
+          "artifact_id": 10656151887,
+          "artifact_sha256": "1471fc0173d7abf6ee3711a48f071b7743a1637030c3924304bd76ea023785e2",
+          "status": "superseded-for-integration",
+          "package_state_effect": "none"
+        }
+      ]
     },
     "kfilemetadata": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "ki18n",
         "kcoreaddons",
@@ -62,6 +73,15 @@
         "job_id": 106358717091,
         "artifact_id": 10642947552,
         "artifact_sha256": "ced417aa88fffb9de0762423ffeef72533c6795c07131a2e4d7911ba5b62edab"
+      },
+      "materialization_evidence": {
+        "result": "PASS",
+        "workflow_run": 35635818815,
+        "job_id": 106452910488,
+        "commit": "40d51b2282660c19032c8194aa43467d73c68cf7",
+        "artifact_id": 10656246928,
+        "artifact_sha256": "f5a31635efaf6aa9b8c9b8aa378f3c48a011ea4360a06edd9bafe26f7546361e",
+        "package_state_effect": "none"
       }
     },
     "kservice": {
@@ -80,7 +100,18 @@
         "job_id": 106358717091,
         "artifact_id": 10642947552,
         "artifact_sha256": "ced417aa88fffb9de0762423ffeef72533c6795c07131a2e4d7911ba5b62edab"
-      }
+      },
+      "materialization_history": [
+        {
+          "result": "PASS",
+          "workflow_run": 35635818815,
+          "job_id": 106452910663,
+          "artifact_id": 10656446848,
+          "artifact_sha256": "c605d6301701c57462c66b71859c17f44cadbfdf649cf41b50c9374716e12ff7",
+          "status": "superseded-for-integration",
+          "package_state_effect": "none"
+        }
+      ]
     },
     "kmime": {
       "readiness": "compatibility-decision-required",

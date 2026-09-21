@@ -346,16 +346,29 @@ root=Path(debian)
 
 for spec in c.get("binary_package_splits",[]):
     package=spec["package"]
+    needles=spec.get("source_match_substrings")
+    if needles is None:
+        legacy=spec.get("source_match_substring")
+        needles=[legacy] if legacy else []
     install=root/f"{package}.install"
     if not install.exists():
         raise SystemExit(f"{node}: split install file missing for {package}")
     lines=[line for line in install.read_text().splitlines() if line.strip() and not line.lstrip().startswith("#")]
-    if len(lines)!=1 or spec["source_match_substring"] not in lines[0]:
-        raise SystemExit(f"{node}: split install payload mismatch for {package}: {lines}")
+    if len(lines)!=len(needles):
+        raise SystemExit(f"{node}: split install payload count mismatch for {package}: expected={len(needles)} actual={lines}")
+    for needle in needles:
+        matching=[line for line in lines if needle in line]
+        if len(matching)!=1:
+            raise SystemExit(f"{node}: split install payload mismatch for {package} needle={needle!r}: {lines}")
+        for other in root.glob("*.install"):
+            if other==install:
+                continue
+            if any(needle in line for line in other.read_text().splitlines() if line.strip() and not line.lstrip().startswith("#")):
+                raise SystemExit(f"{node}: split payload {needle!r} still duplicated in {other.name}")
     control=(root/"control").read_text()
     if f"Package: {package}\n" not in control:
         raise SystemExit(f"{node}: split control stanza missing for {package}")
-    print(f"binary-split-contract PASS: {node} {package} -> {lines[0]}")
+    print(f"binary-split-contract PASS: {node} {package} -> {lines}")
 
 for adjustment in c.get("symbols_adjustments",[]):
     path=root/adjustment["file"]

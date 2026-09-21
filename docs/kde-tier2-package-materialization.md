@@ -178,3 +178,23 @@ The Ubuntu/Debian technical reference snapshot is PASS and SHA-256 pinned. KDecl
 Materialization now enforces the exact declared binary package set. KDeclarative must produce the Ubuntu-compatible `libkquickcontrolsprivate0` split from the KDE 6.30 SOVERSION-0 private library. KService must not reintroduce optional KDocTools or require manpages that cannot exist with that provider disabled.
 
 Package state remains **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**; this phase remains `package_attempted=false`.
+
+
+## Contract batch 3 first materialization — partial retention
+
+Run `35635818815` completed materialization 3/3 at the workflow level. Artifact inspection then found two integration-contract defects before any package build was attempted.
+
+KFileMetaData is retained as valid materialization:
+- job `106452910488`
+- artifact `10656246928`
+- artifact SHA-256 `f5a31635efaf6aa9b8c9b8aa378f3c48a011ea4360a06edd9bafe26f7546361e`
+- tree SHA-256 `ab84c9dbcfe0efc2b50a663bb1e5c6b893548f31c596215ae06df266846c90e5`
+- Debian tree SHA-256 `221b6a05b2a48fb06d2662548f2997fb59f208ddec962108e539808b48d4709a`.
+
+KDeclarative and KService first materializations are retained historically but superseded for build consumption. They remain `package_attempted=false`, so neither is a package FAIL.
+
+For KDeclarative, the first Ubuntu-compatibility split moved only the SONAME symlink `libkquickcontrolsprivate.so.0`; the actual versioned library remained in the Debian QML package. A valid runtime split must move both the SONAME symlink and the versioned `libkquickcontrolsprivate.so.6.*` payload into `libkquickcontrolsprivate0`. The materializer now supports an explicit multi-entry split and fails if any selected payload remains duplicated in another `.install` file.
+
+For KService, source Build-Depends already removed optional KDocTools correctly, but `libkf6service-dev` still retained the Debian-reference `libkf6doctools-dev` Depends. Because KService upstream treats KDocTools as optional, that binary-development overconstraint is removed too.
+
+Only KDeclarative and KService are rematerialized. KFileMetaData is build-ready. Canonical package state remains **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.

@@ -172,27 +172,38 @@ def remove_install_entries(debian: Path, removals_by_file: dict[str, list[str]])
 def split_binary_packages(debian: Path, paragraphs: list[str], specs: list[dict]):
     for spec in specs:
         package = spec["package"]
-        needle = spec["source_match_substring"]
+        needles = spec.get("source_match_substrings")
+        if needles is None:
+            legacy = spec.get("source_match_substring")
+            needles = [legacy] if legacy else []
+        if not needles or len(needles) != len(set(needles)):
+            raise SystemExit(f"{package}: split requires a non-empty unique source_match_substrings contract")
         target_install = debian / f"{package}.install"
         if target_install.exists():
             raise SystemExit(f"{package}: split target install file already exists in technical reference")
 
-        matches = []
-        for path in sorted(debian.glob("*.install")):
-            lines = path.read_text().splitlines()
-            for index, line in enumerate(lines):
-                if needle in line and line.strip() and not line.lstrip().startswith("#"):
-                    matches.append((path, index, line))
-        if len(matches) != 1:
-            raise SystemExit(f"{package}: expected exactly one install entry containing {needle!r}, found {len(matches)}")
+        selected = []
+        removals = {}
+        for needle in needles:
+            matches = []
+            for path in sorted(debian.glob("*.install")):
+                lines = path.read_text().splitlines()
+                for index, line in enumerate(lines):
+                    if needle in line and line.strip() and not line.lstrip().startswith("#"):
+                        matches.append((path, index, line))
+            if len(matches) != 1:
+                raise SystemExit(f"{package}: expected exactly one install entry containing {needle!r}, found {len(matches)}")
+            path, index, line = matches[0]
+            selected.append(line)
+            removals.setdefault(path, set()).add(index)
 
-        source_path, index, entry = matches[0]
-        lines = source_path.read_text().splitlines()
-        del lines[index]
-        if not any(line.strip() and not line.lstrip().startswith("#") for line in lines):
-            raise SystemExit(f"{package}: split would empty source install file {source_path.name}")
-        source_path.write_text("\n".join(lines) + "\n")
-        target_install.write_text(entry + "\n")
+        for source_path, indexes in removals.items():
+            lines = source_path.read_text().splitlines()
+            kept = [line for index, line in enumerate(lines) if index not in indexes]
+            if not any(line.strip() and not line.lstrip().startswith("#") for line in kept):
+                raise SystemExit(f"{package}: split would empty source install file {source_path.name}")
+            source_path.write_text("\n".join(kept) + "\n")
+        target_install.write_text("\n".join(selected) + "\n")
 
         if any(field_value(paragraph.splitlines(), "Package") == package for paragraph in paragraphs[1:]):
             raise SystemExit(f"{package}: split package already exists in technical reference")

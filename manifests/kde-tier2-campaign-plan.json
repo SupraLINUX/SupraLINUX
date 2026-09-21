@@ -25,7 +25,6 @@
   "provider_audit_required": [],
   "package_contract_ready": [
     "kdeclarative",
-    "kfilemetadata",
     "kservice"
   ],
   "human_decision_required": [
@@ -34,7 +33,9 @@
       "blocker": "ADR-0002"
     }
   ],
-  "build_queue": [],
+  "build_queue": [
+    "kfilemetadata"
+  ],
   "audit_batch_size": 5,
   "next_provider_audit_batch": [],
   "policy": {
