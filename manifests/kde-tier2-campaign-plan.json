@@ -4,23 +4,27 @@
   "frameworks_series": "6.30.0",
   "tier": 2,
   "canonical_snapshot": {
-    "pass": 6,
-    "pending": 9,
+    "pass": 8,
+    "pending": 7,
     "current_fail": 0,
     "blocked": 0
   },
   "retained_pass": [
     "kauth",
+    "kcompletion",
     "kcrash",
     "knotifications",
+    "kpty",
     "kstatusnotifieritem",
     "kunitconversion",
     "syndication"
   ],
   "provider_audit_required": [],
   "package_contract_ready": [
+    "kcontacts",
     "kdeclarative",
     "kfilemetadata",
+    "kpackage",
     "kservice"
   ],
   "human_decision_required": [
@@ -30,11 +34,7 @@
     }
   ],
   "build_queue": [
-    "kcolorscheme",
-    "kcompletion",
-    "kcontacts",
-    "kpackage",
-    "kpty"
+    "kcolorscheme"
   ],
   "audit_batch_size": 5,
   "next_provider_audit_batch": [],

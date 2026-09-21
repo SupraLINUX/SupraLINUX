@@ -380,6 +380,30 @@
           "orig_tar_sha256": "170b51a41ac132968ea03d5f1ce8c585777155bbdc57e819a0562b1f8d03b7a5",
           "orig_matches_kde_authority": true
         }
+      },
+      "build_depends_remove": [
+        "libkf6coreaddons-dev"
+      ],
+      "binary_depends_remove": {
+        "libkf6contacts-dev": [
+          "libkf6coreaddons-dev"
+        ]
+      },
+      "rules_auto_test_command": "xvfb-run -- dh_auto_test --no-parallel",
+      "provider_adaptation": {
+        "classification": "technical-reference-overconstraint-removal",
+        "removed_build_depends": [
+          "libkf6coreaddons-dev"
+        ],
+        "removed_binary_depends": {
+          "libkf6contacts-dev": [
+            "libkf6coreaddons-dev"
+          ]
+        },
+        "restored_auto_test": "xvfb-run -- dh_auto_test --no-parallel",
+        "upstream_basis": "KContacts v6.30.0 requires KF6 I18n, Config and Codecs; KDE upstream source/CMake has no KCoreAddons dependency.",
+        "kde_feature_effect": "none",
+        "validation": "fresh-materialization-and-clean-build-required"
       }
     },
     "kpackage": {
@@ -426,9 +450,24 @@
         "removed_build_depends": [
           "libkf6doctools-dev"
         ],
-        "upstream_basis": "KF6DocTools is optional in KDE KPackage v6.30.0",
-        "kde_feature_effect": "optional-documentation-integration-disabled-until-matching-supralinux-provider"
-      }
+        "upstream_basis": "KF6DocTools is optional in KDE KPackage v6.30.0. With that optional integration disabled, Debian-reference manpage install entries generated only by KDocTools must also be removed.",
+        "kde_feature_effect": "optional-documentation-integration-disabled-until-matching-supralinux-provider",
+        "removed_install_entries": {
+          "kpackagetool6.install": [
+            "usr/share/man/*/man1/kpackagetool6.1",
+            "usr/share/man/man1/kpackagetool6.1"
+          ]
+        },
+        "restored_auto_test": "xvfb-run -a --server-args=\"-screen 0 1024x768x24+32\" dh_auto_test --buildsystem=kf6 -O--buildsystem=kf6 --no-parallel",
+        "validation": "fresh-materialization-and-clean-build-required"
+      },
+      "install_entries_remove": {
+        "kpackagetool6.install": [
+          "usr/share/man/*/man1/kpackagetool6.1",
+          "usr/share/man/man1/kpackagetool6.1"
+        ]
+      },
+      "rules_auto_test_command": "xvfb-run -a --server-args=\"-screen 0 1024x768x24+32\" dh_auto_test --buildsystem=kf6 -O--buildsystem=kf6 --no-parallel"
     },
     "kpty": {
       "upstream_version": "6.30.0",
@@ -479,15 +518,18 @@
     "package_state_effect": "none"
   },
   "materialization": {
-    "status": "PASS",
+    "status": "pending-ci",
     "method": "kde-authority-source-plus-pinned-debian-tree",
     "package_state_effect": "none",
     "package_attempted": false,
     "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
     "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
-    "reason": "tier2-package-contract-2-initial-materialization",
-    "result": "PASS",
-    "targets": [],
+    "reason": "tier2-package-contract-2-remediation-kcontacts-kpackage",
+    "result": "pending",
+    "targets": [
+      "kcontacts",
+      "kpackage"
+    ],
     "retained_package_pass": [
       "kauth",
       "kcrash",
@@ -496,8 +538,6 @@
       "kunitconversion",
       "syndication"
     ],
-    "workflow_run": 35608790364,
-    "commit": "42bf5f9b5672e59df3ce037f9ffd25412a29049e",
     "evidence": {
       "kcolorscheme": {
         "job_id": 106362493777,
@@ -505,7 +545,7 @@
         "artifact_sha256": "c68b71a9e1dceab3cc801528caeaf32fb4732fefcfd0d34d8d161b0dfac02b77",
         "tree_sha256": "c1828077f27cfcfe06bf9dfe2f43a0514c878f35e19ad36591eae2abc3e1d176",
         "debian_tree_sha256": "ea5f8a76cc314b9b668e7994ff244762e47d2f9f6afafceb46051080575e6ca2",
-        "debian_tar_sha256": "fa5d7f65b2b0d1281cfc762dbd083d5776eab0dfa14e8c51a3d681a58195b2",
+        "debian_tar_sha256": "fa5d7f65b2b0d1281cfc762dbd083d5776eabeb0dfa14e8c51a3d681a58195b2",
         "dsc_sha256": "15d0c6abc1c3ec767e3299e422b1852578dc8a699f130692df94f75e8934607c",
         "orig_tar_sha256": "a4128e82e47cd474c777754c4dd8af28a00a57ecf388da1a62f8173d898890d0",
         "package_version": "6.30.0-0supralinux1",
@@ -545,7 +585,8 @@
         "result": "PASS",
         "package_attempted": false,
         "package_state_effect": "none",
-        "workflow_run": 35608790364
+        "workflow_run": 35608790364,
+        "superseded_for_build": true
       },
       "kpackage": {
         "job_id": 106362493754,
@@ -561,7 +602,8 @@
         "result": "PASS",
         "package_attempted": false,
         "package_state_effect": "none",
-        "workflow_run": 35608790364
+        "workflow_run": 35608790364,
+        "superseded_for_build": true
       },
       "kpty": {
         "job_id": 106362494052,
@@ -579,6 +621,12 @@
         "package_state_effect": "none",
         "workflow_run": 35608790364
       }
+    },
+    "previous_pass": {
+      "result": "PASS",
+      "workflow_run": 35608790364,
+      "commit": "42bf5f9b5672e59df3ce037f9ffd25412a29049e",
+      "note": "Initial 5/5 materialization retained historically; KContacts and KPackage trees are superseded for build consumption after Batch 3 diagnostics."
     }
   },
   "provider_adaptations": {

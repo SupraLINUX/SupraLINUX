@@ -94,3 +94,12 @@ Run `35608790364` on commit `42bf5f9b5672e59df3ce037f9ffd25412a29049e` completed
 - KPty: job `106362494052`, artifact `10643865040`, artifact SHA-256 `4b2e6e5684da32fdd5f15fc86b1310a8ee7989a2d4789a1959231692f63056c8`, tree `1b6c5d0e54ce12bce779c5a31fa38e02a879c0611939c8279c2de0171eedc4d2`, Debian tree `1b60a275866d00060527c3fbc0aa053d1e6de2c1b60d3599446a7c16927ce8ba`.
 
 The active materialization target set is now empty. Provider audit, contract reference and this materialization must not be repeated unless a semantic input changes. The next lane is a clean-build campaign that consumes all retained PASS predecessors required by each node. No APT publication or stable promotion is implied.
+
+
+## Selective replacement materialization after Batch 3
+
+Run `35620923130` did not invalidate the whole five-node materialization batch. KCompletion and KPty passed clean package validation; KColorScheme only exposed a promoted evidence typo and keeps its original tree.
+
+Replacement materialization targets are exactly **KContacts and KPackage**. KContacts removes a Debian-only KCoreAddons source/development dependency and restores tests. KPackage removes KDocTools-only manpage install entries and restores tests while preserving `CMAKE_DISABLE_FIND_PACKAGE_KF6DocTools=ON`.
+
+This replacement remains `package_attempted=false` materialization work. It does not change package state and does not authorize APT publication.

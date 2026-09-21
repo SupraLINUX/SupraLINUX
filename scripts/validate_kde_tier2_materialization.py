@@ -35,15 +35,30 @@ else:
         req(mat.get("result")=="PASS","materialization result")
         req(set(mat.get("evidence",{})) <= set(selected),"materialization evidence selected")
 
+if "kcontacts" in selected:
+    kc=contracts["nodes"]["kcontacts"]
+    req(kc.get("build_depends_remove")==["libkf6coreaddons-dev"],"KContacts KCoreAddons Build-Depends overconstraint removal")
+    req(kc.get("binary_depends_remove",{}).get("libkf6contacts-dev")==["libkf6coreaddons-dev"],"KContacts binary Depends overconstraint removal")
+    req(bool(kc.get("rules_auto_test_command")),"KContacts tests restored")
+
 if "kpackage" in selected:
     kp=contracts["nodes"]["kpackage"]
     req(kp.get("build_depends_remove")==["libkf6doctools-dev"],"KPackage DocTools Build-Depends removal")
     req(kp.get("selected_profile",{}).get("CMAKE_DISABLE_FIND_PACKAGE_KF6DocTools") is True,"KPackage DocTools CMake disable")
+    req(bool(kp.get("install_entries_remove",{}).get("kpackagetool6.install")),"KPackage DocTools-only install entries removed")
+    req(bool(kp.get("rules_auto_test_command")),"KPackage tests restored")
 
+targets=set(mat.get("targets",[]))
 for node_id in selected:
     n=canonical[node_id]
-    req(n.get("state")=="pending",f"{node_id}: materialization never promotes package state")
-    req(n.get("planning",{}).get("readiness") in {"package-contract-ready","build-ready"},f"{node_id}: readiness")
+    req(n.get("state") in {"pending","PASS"},f"{node_id}: materialization/package state vocabulary")
+    if n.get("state")=="PASS":
+        req(n.get("planning",{}).get("readiness")=="retained-pass",f"{node_id}: retained PASS readiness")
+    elif node_id in targets:
+        req(n.get("planning",{}).get("readiness")=="package-contract-ready",f"{node_id}: rematerialization readiness")
+        req(n.get("planning",{}).get("package_contract")=="not-materialized",f"{node_id}: rematerialization contract state")
+    else:
+        req(n.get("planning",{}).get("readiness") in {"package-contract-ready","build-ready"},f"{node_id}: readiness")
 
 for path in (
   "scripts/materialize_kde_tier2_package.py",

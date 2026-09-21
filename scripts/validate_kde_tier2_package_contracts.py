@@ -25,7 +25,7 @@ req(0 < len(selected) <= 5 and len(selected)==len(set(selected)),"selected contr
 canonical={n["id"]:n for n in tier2["nodes"]}
 dep_nodes=deps.get("nodes",{})
 req(set(selected) <= set(canonical),"selected nodes must exist canonically")
-req(set(selected) <= set(plan.get("package_contract_ready",[])) | set(plan.get("build_queue",[])),"selected nodes must be contract/build ready")
+req(set(selected) <= set(plan.get("package_contract_ready",[])) | set(plan.get("build_queue",[])) | set(plan.get("retained_pass",[])),"selected nodes must be contract/build/PASS ready")
 
 provider=contracts.get("provider_adaptations",{}).get("ubuntu-resolute",{})
 adapt=provider.get("debhelper_compat",{})
@@ -35,9 +35,12 @@ req(provider.get("changelog_distribution",{}).get("selected")=="resolute","Resol
 for node_id in selected:
     c=contracts.get("nodes",{}).get(node_id,{})
     n=canonical[node_id]
-    req(n.get("state")=="pending",f"{node_id}: contract batch node must remain pending")
+    req(n.get("state") in {"pending","PASS"},f"{node_id}: contract batch package-state vocabulary")
     req(n.get("planning",{}).get("provider_audit")=="complete",f"{node_id}: provider audit complete")
-    req(n.get("planning",{}).get("readiness") in {"package-contract-ready","build-ready"},f"{node_id}: valid package readiness")
+    if n.get("state")=="PASS":
+        req(n.get("planning",{}).get("readiness")=="retained-pass",f"{node_id}: retained PASS readiness")
+    else:
+        req(n.get("planning",{}).get("readiness") in {"package-contract-ready","build-ready"},f"{node_id}: valid package readiness")
     req(c.get("upstream_version")=="6.30.0",f"{node_id}: upstream version")
     req(c.get("source_sha256")==n.get("source_sha256"),f"{node_id}: source authority SHA")
     req(c.get("source_package")==n.get("package_identity",{}).get("source_package"),f"{node_id}: source package identity")
@@ -67,10 +70,19 @@ else:
         req(contracts["nodes"][node_id]["technical_references"]["ubuntu"].get("version")=="6.24.0-0ubuntu1",f"{node_id}: Resolute KDE reference")
         req(contracts["nodes"][node_id]["technical_references"]["debian"].get("version")=="6.30.0-1",f"{node_id}: Debian KDE 6.30 reference")
 
+if "kcontacts" in selected:
+    kc=contracts["nodes"]["kcontacts"]
+    req(kc.get("build_depends_remove")==["libkf6coreaddons-dev"],"KContacts reference-only KCoreAddons Build-Depends removal")
+    req(kc.get("binary_depends_remove",{}).get("libkf6contacts-dev")==["libkf6coreaddons-dev"],"KContacts dev Depends overconstraint removal")
+    req(bool(kc.get("rules_auto_test_command")),"KContacts reference-disabled tests restored")
+    req(kc.get("provider_adaptation",{}).get("classification")=="technical-reference-overconstraint-removal","KContacts overconstraint classification")
+
 if "kpackage" in selected:
     kp=contracts["nodes"]["kpackage"]
     req(kp.get("build_depends_remove")==["libkf6doctools-dev"],"KPackage technical-reference DocTools Build-Depends removal")
     req(kp.get("selected_profile",{}).get("CMAKE_DISABLE_FIND_PACKAGE_KF6DocTools") is True,"KPackage optional DocTools disabled without matching SupraLINUX provider")
+    req(kp.get("install_entries_remove",{}).get("kpackagetool6.install")==["usr/share/man/*/man1/kpackagetool6.1","usr/share/man/man1/kpackagetool6.1"],"KPackage stale DocTools manpage install entries removed")
+    req(bool(kp.get("rules_auto_test_command")),"KPackage reference-disabled tests restored")
     req(kp.get("provider_adaptation",{}).get("classification")=="technical-reference-overconstraint-removal","KPackage reference-overconstraint classification")
 
 history=contracts.get("history",[])

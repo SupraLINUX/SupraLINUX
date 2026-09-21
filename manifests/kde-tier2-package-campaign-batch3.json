@@ -5,8 +5,8 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "frameworks_series": "6.30.0",
-  "state": "prepared-pending-build",
-  "canonical_snapshot": "6 PASS / 9 pending / 0 current FAIL / 0 BLOCKED",
+  "state": "partial-pass-rematerialization-pending",
+  "canonical_snapshot": "8 PASS / 7 pending / 0 current FAIL / 0 BLOCKED",
   "selected_nodes": [
     "kcolorscheme",
     "kcompletion",
@@ -192,7 +192,7 @@
         "tree_sha256": "c1828077f27cfcfe06bf9dfe2f43a0514c878f35e19ad36591eae2abc3e1d176",
         "debian_tree_sha256": "ea5f8a76cc314b9b668e7994ff244762e47d2f9f6afafceb46051080575e6ca2",
         "dsc_sha256": "15d0c6abc1c3ec767e3299e422b1852578dc8a699f130692df94f75e8934607c",
-        "debian_tar_sha256": "fa5d7f65b2b0d1281cfc762dbd083d5776eab0dfa14e8c51a3d681a58195b2",
+        "debian_tar_sha256": "fa5d7f65b2b0d1281cfc762dbd083d5776eabeb0dfa14e8c51a3d681a58195b2",
         "orig_tar_sha256": "a4128e82e47cd474c777754c4dd8af28a00a57ecf388da1a62f8173d898890d0"
       },
       "predecessors": [
@@ -200,10 +200,10 @@
         "kguiaddons",
         "ki18n"
       ],
-      "state": "prepared-pending-build",
-      "last_result": null,
+      "state": "remediation-pending-build",
+      "last_result": "INFRA",
       "downstream_eligible": false,
-      "materialization_status": "retained-pass"
+      "materialization_status": "retained-pass-corrected-evidence"
     },
     "kcompletion": {
       "source_package": "kf6-kcompletion",
@@ -238,10 +238,56 @@
         "kconfig",
         "kwidgetsaddons"
       ],
-      "state": "prepared-pending-build",
-      "last_result": null,
-      "downstream_eligible": false,
-      "materialization_status": "retained-pass"
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "materialization_status": "retained-pass",
+      "pass_evidence": {
+        "result": "PASS",
+        "workflow_run": 35620923130,
+        "run_attempt": 2,
+        "job_id": 106404917964,
+        "commit": "3cf056a07c11c6eb4c47152ffe75abe47556622e",
+        "attempted_package_version": "6.30.0-0supralinux1",
+        "artifact_id": 10649102710,
+        "artifact_sha256": "02e2dd47d4be5d0898130abd111048ac85ed1a2b45e8b895c0b611c9c1e628f0",
+        "rootfs_artifact_id": 10649790827,
+        "rootfs_artifact_sha256": "83d2e99fa9dfcc9a6ccca73a86a9c99f3c574bcb209b07a47ed209b155a677e9",
+        "rootfs_sha256": "2ec1afc0318c4a3cf33a77b88f48f92e4a4ddafb8434382bf9c488987bb4aa9b",
+        "stage": "complete",
+        "tests": "6/6 PASS",
+        "lintian": "PASS-errors",
+        "abi_soname": "libKF6Completion.so.6",
+        "abi_export_count": 297,
+        "apt_check": "PASS",
+        "consumer_smoke": "PASS",
+        "predecessor_buildinfo_proof": "PASS",
+        "materialization": {
+          "workflow_run": 35608790364,
+          "artifact_id": 10642138572,
+          "artifact_sha256": "846589674b46bcda78064bb6765e3e5ddd6f6ac3d98907aa3fe5a428f3f3cb29"
+        },
+        "retained_predecessors": {
+          "extra_cmake_modules": "6.30.0-0supralinux3",
+          "kcodecs": "6.30.0-0supralinux4",
+          "kconfig": "6.30.0-0supralinux4",
+          "kwidgetsaddons": "6.30.0-0supralinux7"
+        },
+        "downstream_eligible": true,
+        "files": {
+          "libkf6completion-data_6.30.0-0supralinux1_all.deb": "a6dc4984433bcc2745aa40bd3f3612bc936e0e666f6f5fd6813c7627d27a1160",
+          "libkf6completion-dev_6.30.0-0supralinux1_amd64.deb": "15b9e17077bc8122046fcfc1591a82008be5c7916ffd9d3e3bf5bc08e5a76b28",
+          "libkf6completion-doc_6.30.0-0supralinux1_all.deb": "f391bd13bbd7d6753ffa61b046b13123ea73fc3517251b695a87f100ea9d27d1",
+          "libkf6completion6_6.30.0-0supralinux1_amd64.deb": "d107919248782c1f3a299c62a938a7fef18cf32bcf293a38d4196920a0ed0a83",
+          "libkf6completion6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "b4adbe519e42b60ca9ab23be7b2d528fff5fdf263ae716f1eb3a73e800e4bdf2",
+          "changes_sha256": "0e5d692ed39306aadf638527922c59bae2779b74e2edcf7807c17af1d0a2c358",
+          "buildinfo_sha256": "d320109a24d99c044be794534ad9064a2b9595f038433a92f4ae30ebbed47fba",
+          "dsc_sha256": "b3c48503ee6d3955edf69fc934ffc922c53c3a2f5a9290fbb076c8d185b6c60b",
+          "orig_tar_sha256": "96ad9c429ca53b830359c45614ca4c32ed6b759f3023f1b3db1650ba1c19bd58",
+          "debian_tar_sha256": "d5442ed902e511748980ff12d4ef52be511b436c2dada3d185f062cf21de16e7",
+          "rootfs_sha256": "2ec1afc0318c4a3cf33a77b88f48f92e4a4ddafb8434382bf9c488987bb4aa9b"
+        }
+      }
     },
     "kcontacts": {
       "source_package": "kf6-kcontacts",
@@ -277,10 +323,10 @@
         "kconfig",
         "kcodecs"
       ],
-      "state": "prepared-pending-build",
-      "last_result": null,
+      "state": "rematerialization-pending",
+      "last_result": "INFRA",
       "downstream_eligible": false,
-      "materialization_status": "retained-pass"
+      "materialization_status": "superseded-rematerialization-required"
     },
     "kpackage": {
       "source_package": "kf6-kpackage",
@@ -316,10 +362,10 @@
         "ki18n",
         "kcoreaddons"
       ],
-      "state": "prepared-pending-build",
-      "last_result": null,
+      "state": "rematerialization-pending",
+      "last_result": "INFRA",
       "downstream_eligible": false,
-      "materialization_status": "retained-pass"
+      "materialization_status": "superseded-rematerialization-required"
     },
     "kpty": {
       "source_package": "kf6-kpty",
@@ -353,10 +399,55 @@
         "kcoreaddons",
         "ki18n"
       ],
-      "state": "prepared-pending-build",
-      "last_result": null,
-      "downstream_eligible": false,
-      "materialization_status": "retained-pass"
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "materialization_status": "retained-pass",
+      "pass_evidence": {
+        "result": "PASS",
+        "workflow_run": 35620923130,
+        "run_attempt": 2,
+        "job_id": 106404918040,
+        "commit": "3cf056a07c11c6eb4c47152ffe75abe47556622e",
+        "attempted_package_version": "6.30.0-0supralinux1",
+        "artifact_id": 10649911201,
+        "artifact_sha256": "b2ab1931be5d21f0395f6666f9da119856d3a31cbf0889a444d82f09c735caeb",
+        "rootfs_artifact_id": 10649790827,
+        "rootfs_artifact_sha256": "83d2e99fa9dfcc9a6ccca73a86a9c99f3c574bcb209b07a47ed209b155a677e9",
+        "rootfs_sha256": "2ec1afc0318c4a3cf33a77b88f48f92e4a4ddafb8434382bf9c488987bb4aa9b",
+        "stage": "complete",
+        "tests": "2/2 PASS",
+        "lintian": "PASS-errors",
+        "abi_soname": "libKF6Pty.so.6",
+        "abi_export_count": 70,
+        "apt_check": "PASS",
+        "consumer_smoke": "PASS",
+        "predecessor_buildinfo_proof": "PASS",
+        "materialization": {
+          "workflow_run": 35608790364,
+          "artifact_id": 10643865040,
+          "artifact_sha256": "4b2e6e5684da32fdd5f15fc86b1310a8ee7989a2d4789a1959231692f63056c8"
+        },
+        "retained_predecessors": {
+          "extra_cmake_modules": "6.30.0-0supralinux3",
+          "kcoreaddons": "6.30.0-0supralinux4",
+          "ki18n": "6.30.0-0supralinux1"
+        },
+        "downstream_eligible": true,
+        "files": {
+          "libkf6pty-data_6.30.0-0supralinux1_all.deb": "7d0d7e7afd8b94dfa8b3402b59959e564296f22b44a6ce98ba183321dd4bd295",
+          "libkf6pty-dev_6.30.0-0supralinux1_amd64.deb": "1ffe0ba695d95a0dd2fdd3642bc6c30dc728001ff85dd2544dcdd00284f91e1a",
+          "libkf6pty-doc_6.30.0-0supralinux1_all.deb": "bd682eadb570ebfc56d2e4969e23be05a5d6597500ebade80ae64284c5771218",
+          "libkf6pty6_6.30.0-0supralinux1_amd64.deb": "56ba6fe643f292dcb484e8d3583559593f7e39313efd1b43732987661dac9830",
+          "libkf6pty6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "b7d3b1b565d431e0d07e4081f0fe51dd899538000828146c451cb757971cccee",
+          "changes_sha256": "2fe175a4a9e8ae88662844c2be96feb3646dee7d9666e59334c0516541801fed",
+          "buildinfo_sha256": "b077ad8fc8da5efe3eb43e26db21a23b27e597d7ac2f73631c21da9ec7a44993",
+          "dsc_sha256": "7adcb21b4697e3d9c3a9ef8033f0bc0f76c420ca696adbffe7c52757e554b349",
+          "orig_tar_sha256": "ad66149c20470de29d483f0ccdcb057d42ccf778f3f8cc8e68aefca5380bace7",
+          "debian_tar_sha256": "05e6e39f4053112e4f62e93d09d9a278389a933b424ae244e72953508de81d2f",
+          "rootfs_sha256": "2ec1afc0318c4a3cf33a77b88f48f92e4a4ddafb8434382bf9c488987bb4aa9b"
+        }
+      }
     }
   }
 }

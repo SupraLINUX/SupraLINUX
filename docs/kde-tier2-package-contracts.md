@@ -132,3 +132,16 @@ Materialization run `35608790364` is the retained PASS for KColorScheme, KComple
 The contract state is now `materialized`; all five canonical nodes are `build-ready` while their package state remains `pending`. The generated Tier 2 plan therefore moves these five nodes from `package_contract_ready` to `build_queue`. KDeclarative, KFileMetaData and KService remain package-contract-ready for a later contract batch, and KMime remains decision-gated by ADR-0002.
 
 This promotion does not rerun or supersede the already-PASS provider/reference lanes and does not authorize publication to `stable`.
+
+
+## Batch 3 feedback — selective contract remediation
+
+Clean-build run `35620923130` proved two Debian-reference assumptions that SupraLINUX must not inherit.
+
+KContacts 6.30.0 authoritative CMake requires KF6 I18n, Config and Codecs and contains no KCoreAddons dependency. The Debian 6.30 reference nevertheless adds `libkf6coreaddons-dev` to source Build-Depends and `libkf6contacts-dev` Depends. Both reference-only overconstraints are removed during materialization.
+
+KPackage's optional KDocTools integration remains disabled until a matching SupraLINUX provider exists. The Debian reference's `kpackagetool6.install` still requested two manpage paths generated only by KDocTools, so those stale payload entries are removed as part of the same explicit adaptation.
+
+The Debian reference also disables `dh_auto_test` for both KContacts and KPackage. SupraLINUX restores those test invocations because reference-distribution test skips are not authoritative over KDE's selected `BUILD_TESTING=ON` profile.
+
+Only KContacts and KPackage require replacement materialization. KColorScheme's tree remains valid; only a promoted hash transcription is corrected. KCompletion and KPty are now package PASS.

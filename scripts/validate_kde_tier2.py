@@ -117,7 +117,8 @@ for node in sorted(pending_ids):
         c=contracts["nodes"][node]
         req(n.get("package_identity",{}).get("source_package")==c.get("source_package"),f"{node}: package-contract source identity")
         req(n.get("package_identity",{}).get("package_version_candidate")==c.get("package_version_candidate"),f"{node}: package-contract version identity")
-        expected_identity_status = "materialized" if contracts.get("state")=="materialized" else "not-materialized"
+        contract_state=n.get("planning",{}).get("package_contract")
+        expected_identity_status = "materialized" if contract_state=="materialized" else "not-materialized"
         req(n.get("package_identity",{}).get("status")==expected_identity_status,f"{node}: package-contract identity status")
     else:
         req(n.get("package_identity",{}).get("package_version_candidate") is None,f"{node}: package version must remain undecided before a package contract exists")

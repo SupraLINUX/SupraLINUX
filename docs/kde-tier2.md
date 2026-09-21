@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 2 discovery
 
-Status: **6 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**  
+Status: **8 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**  
 Date: **2026-09-21**
 
 KDE upstream classifies **15** Frameworks in Tier 2 for the current Frameworks API set:
@@ -150,3 +150,14 @@ Batch 3 consumes the complete retained Tier 1 predecessor set for every node and
 To avoid redundant artifact work, ECM plus the seven distinct Tier 1 predecessor artifacts are downloaded and SHA-256/version validated once into a shared retained-input bundle. Five independent package jobs then consume only their declared predecessor subsets. The package matrix remains `fail-fast: false`; shared rootfs/input failures are INFRA rather than replicated package FAILs.
 
 Canonical Tier 2 remains **6 PASS / 9 pending / 0 current FAIL / 0 BLOCKED** until clean-build evidence is promoted. No APT stable promotion is authorized.
+
+
+## Batch 3 first clean-build campaign — partial closure
+
+Run `35620923130`, attempt 2, validated the new multi-predecessor lane. KCompletion `6.30.0-0supralinux1` and KPty `6.30.0-0supralinux1` are retained **PASS/downstream-eligible**, moving canonical Tier 2 to **8 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**.
+
+KColorScheme never reached `sbuild`: a single SHA-256 value for its already-valid materialized `.debian.tar.xz` had been transcribed incorrectly during promotion. The canonical evidence is corrected; no rematerialization is required.
+
+KContacts reached clean `sbuild` but the Debian 6.30 technical-reference packaging imposed `libkf6coreaddons-dev`, which KDE upstream KContacts 6.30.0 does not require. That technical-reference overconstraint is removed from both source Build-Depends and the development binary Depends. KPackage built its KDE payload but the Debian-reference install list still required manpages produced only by the optional KDocTools integration that SupraLINUX intentionally disabled. Those stale install entries are removed.
+
+Both Debian reference trees also disabled their upstream test invocation. SupraLINUX restores the test commands rather than inheriting those skips. KContacts and KPackage therefore return to fresh deterministic materialization before another package attempt. None of these integration findings is a canonical package FAIL.

@@ -112,6 +112,82 @@ def set_build_depends(lines: list[str], additions: list[str]):
     render_build_depends(lines, deps)
 
 
+def render_dependency_field(lines: list[str], name: str, deps: list[str]):
+    if not deps:
+        raise SystemExit(f"{name} cannot become empty")
+    rendered = f"{name}: " + deps[0]
+    if len(deps) > 1:
+        indent = " " * (len(name) + 2)
+        rendered += ",\n" + "\n".join(
+            indent + dep + ("," if i < len(deps) - 1 else "")
+            for i, dep in enumerate(deps[1:], start=1)
+        )
+    mapping = spans(lines)
+    if name not in mapping:
+        raise SystemExit(f"binary stanza lacks {name}")
+    start, end = mapping[name]
+    lines[start:end] = rendered.splitlines()
+
+
+def remove_binary_depends(paragraphs: list[str], removals_by_package: dict[str, list[str]]):
+    for package, removals in removals_by_package.items():
+        matches = []
+        for i, paragraph in enumerate(paragraphs[1:], start=1):
+            lines = paragraph.splitlines()
+            if field_value(lines, "Package") == package:
+                matches.append((i, lines))
+        if len(matches) != 1:
+            raise SystemExit(f"expected exactly one binary stanza for {package}, found {len(matches)}")
+        index, lines = matches[0]
+        current = field_value(lines, "Depends")
+        if current is None:
+            raise SystemExit(f"{package}: technical reference lacks Depends")
+        deps = [x.strip() for x in current.split(",") if x.strip()]
+        names = {dependency_name(dep) for dep in deps}
+        missing = sorted(set(removals) - names)
+        if missing:
+            raise SystemExit(f"{package}: technical reference missing expected removable Depends: {missing}")
+        removal_set = set(removals)
+        kept = [dep for dep in deps if dependency_name(dep) not in removal_set]
+        render_dependency_field(lines, "Depends", kept)
+        paragraphs[index] = "\n".join(lines)
+
+
+def remove_install_entries(debian: Path, removals_by_file: dict[str, list[str]]):
+    for filename, removals in removals_by_file.items():
+        path = debian / filename
+        if not path.exists():
+            raise SystemExit(f"install-entry removal target missing: {path}")
+        lines = path.read_text().splitlines()
+        missing = [entry for entry in removals if entry not in lines]
+        if missing:
+            raise SystemExit(f"{filename}: technical reference missing expected removable install entries: {missing}")
+        removal_set = set(removals)
+        kept = [line for line in lines if line not in removal_set]
+        if not any(line.strip() and not line.lstrip().startswith("#") for line in kept):
+            raise SystemExit(f"{filename}: install-entry removal would empty package payload")
+        path.write_text("\n".join(kept) + "\n")
+
+
+def set_auto_test_override(path: Path, command: str | None):
+    if not command:
+        return
+    lines = path.read_text().splitlines()
+    starts = [i for i, line in enumerate(lines) if line.strip() == "override_dh_auto_test:"]
+    if len(starts) != 1:
+        raise SystemExit(f"expected exactly one override_dh_auto_test block, found {len(starts)}")
+    start = starts[0]
+    end = start + 1
+    while end < len(lines):
+        line = lines[end]
+        if line.startswith(("\t", " ")) or not line.strip():
+            end += 1
+            continue
+        break
+    lines[start:end] = ["override_dh_auto_test:", "\t" + command, ""]
+    path.write_text("\n".join(lines).rstrip() + "\n")
+
+
 
 def modify_control(path: Path, node: dict, debhelper_compat: dict, shiboken_provider: dict):
     text = path.read_text()
@@ -149,6 +225,7 @@ def modify_control(path: Path, node: dict, debhelper_compat: dict, shiboken_prov
         set_build_depends(source_lines, [*PYTHON_BUILD_DEPS, *provider_packages])
 
     paragraphs[0] = "\n".join(source_lines)
+    remove_binary_depends(paragraphs, node.get("binary_depends_remove", {}))
     if python_module:
         pkg = node["supralinux_additional_binary_packages"][0]
         runtime = node["python_runtime_package"]
@@ -326,8 +403,10 @@ def main() -> int:
     if distribution != "resolute":
         raise SystemExit("unexpected SupraLINUX changelog distribution")
     modify_control(debian / "control", node, debhelper_compat, shiboken_provider)
+    remove_install_entries(debian, node.get("install_entries_remove", {}))
     apply_symbols_adjustments(debian, node)
     modify_rules(debian / "rules", node["selected_profile"])
+    set_auto_test_override(debian / "rules", node.get("rules_auto_test_command"))
     prepend_changelog(debian / "changelog", node["source_package"], node["package_version_candidate"], distribution)
     append_readme(debian / "README.source")
 
@@ -355,6 +434,9 @@ def main() -> int:
         "python_runtime_contract": node.get("python_runtime_contract"),
         "symbols_adjustments": node.get("symbols_adjustments", []),
         "build_depends_remove": node.get("build_depends_remove", []),
+        "binary_depends_remove": node.get("binary_depends_remove", {}),
+        "install_entries_remove": node.get("install_entries_remove", {}),
+        "rules_auto_test_command": node.get("rules_auto_test_command"),
         "package_state_effect": "none",
     }
     (debian / "supralinux-materialization.json").write_text(json.dumps(metadata, indent=2) + "\n")
