@@ -135,7 +135,7 @@ req(closure.get("result")=="PASS" and closure.get("workflow_run")==35631458583,"
 req(closure.get("canonical_snapshot")=="11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED","Batch3 closure snapshot")
 
 doc=(ROOT/"docs/kde-tier2-package-batch3.md").read_text()
-for token in ("5/5 PASS","35631458583","10/10 tests","11 PASS / 4 pending","AS_VALIDATE_NONET","stable"):
+for token in ("5/5 PASS","35631458583","10/10 upstream tests","11 PASS / 4 pending","AS_VALIDATE_NONET","stable"):
     req(token.casefold() in doc.casefold(),f"Batch3 docs missing {token}")
 
 if errors:
