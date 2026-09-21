@@ -47,3 +47,23 @@ KContacts was attempted but given back at `sbuild install-deps`: Debian's refere
 KPackage compiled, then `dh_install` failed because `kpackagetool6.install` still requested KDocTools-generated manpages after SupraLINUX had correctly disabled optional KDocTools. Those stale install entries are removed and the disabled test override is restored.
 
 KContacts and KPackage are integration/rematerialization cases with package-state effect `none`, not canonical FAIL. KColorScheme remains build-ready. No stable promotion is authorized.
+
+
+## Package dependency closure and remediation build set
+
+Run `35623204812` isolated KColorScheme after the corrected materialization hash. Its artifact validation passed, but `sbuild` stopped at `install-deps`: `libkf6guiaddons-dev 6.30.0-0supralinux2` requires `libkf6coreaddons-dev (>= 6.30.0~)`. KCoreAddons is not an upstream KColorScheme Framework dependency, so adding it to `predecessors` or to the KDE DAG would be incorrect.
+
+Batch 3 therefore adds a separate `package_dependency_closure` contract. KColorScheme keeps KDE predecessors `kconfig + kguiaddons + ki18n` and adds only package closure `kcoreaddons`. The runner validates and injects the full retained KCoreAddons package set, verifies its development package at the retained SupraLINUX revision in the generated `.buildinfo`, and verifies the same revision in the consumer environment.
+
+The KColorScheme run is retained as a real package attempt with result INFRA and package-state effect none:
+- run `35623204812`
+- job `106411496226`
+- artifact `10649414890`
+- artifact SHA-256 `2787ce2e14de33afae8c0c711554c9db8afabb552f6a41889e7185f073e6dc84`
+- rootfs content SHA-256 `a7ba0a25cb68895c0cd0e7ddd2c3165d0133de1c77199a41c6e44e94a2850908`
+
+Selective materialization run `35623204805` completed PASS:
+- KContacts: job `106411141167`, artifact `10649784091`, artifact SHA-256 `bf0ea0c660da42ab84ff2e92d6196c90e65a274c40fafed1cc16a5c05f1dd432`.
+- KPackage: job `106411141243`, artifact `10649014863`, artifact SHA-256 `7d805f24f4bba2b9e9f4d383252b04ef6efe7dbdba64c72aa10e50382a148188`.
+
+The next clean-build matrix is exactly **KColorScheme + KContacts + KPackage**. KCompletion and KPty remain retained PASS and are not rebuilt. No stable promotion is authorized.

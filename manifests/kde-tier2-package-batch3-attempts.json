@@ -3,7 +3,26 @@
   "batch": "tier2-batch-3",
   "as_of": "2026-09-21",
   "real_attempts": {
-    "kcolorscheme": [],
+    "kcolorscheme": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "ec4091371846d287e2d169c4cad171adcdfd1144",
+        "workflow_run": 35623204812,
+        "job_id": 106411496226,
+        "artifact_id": 10649414890,
+        "artifact_sha256": "2787ce2e14de33afae8c0c711554c9db8afabb552f6a41889e7185f073e6dc84",
+        "rootfs_artifact_id": 10650173951,
+        "rootfs_artifact_sha256": "3616044e366c292f4615a6d666129ddf3f10dfa47704caa25af640f7181fbf38",
+        "rootfs_sha256": "a7ba0a25cb68895c0cd0e7ddd2c3165d0133de1c77199a41c6e44e94a2850908",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "sbuild-install-deps",
+        "package_state_effect": "none",
+        "cause": "KColorScheme direct KDE predecessors were complete, but retained libkf6guiaddons-dev depends on retained libkf6coreaddons-dev. The Batch 3 runner modeled only direct KDE predecessors and omitted this package-level transitive closure. KCoreAddons is therefore added only to package_dependency_closure, not to the KDE upstream DAG."
+      }
+    ],
     "kcompletion": [
       {
         "attempt": 1,

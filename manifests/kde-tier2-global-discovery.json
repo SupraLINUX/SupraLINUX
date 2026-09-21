@@ -47,7 +47,7 @@
       }
     },
     "kcontacts": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "ki18n",
         "kconfig",
@@ -62,13 +62,25 @@
       },
       "materialization_evidence": {
         "result": "PASS",
-        "workflow_run": 35608790364,
-        "job_id": 106362493851,
-        "artifact_id": 10642848344,
-        "artifact_sha256": "0c16947ba76fa61fc100721f65d1c527492e31a474db9dee20da79c3c13333ca",
-        "package_state_effect": "none",
-        "superseded_for_build": true
-      }
+        "workflow_run": 35623204805,
+        "job_id": 106411141167,
+        "commit": "ec4091371846d287e2d169c4cad171adcdfd1144",
+        "artifact_id": 10649784091,
+        "artifact_sha256": "bf0ea0c660da42ab84ff2e92d6196c90e65a274c40fafed1cc16a5c05f1dd432",
+        "package_state_effect": "none"
+      },
+      "materialization_history": [
+        {
+          "result": "PASS",
+          "workflow_run": 35608790364,
+          "job_id": 106362493851,
+          "artifact_id": 10642848344,
+          "artifact_sha256": "0c16947ba76fa61fc100721f65d1c527492e31a474db9dee20da79c3c13333ca",
+          "package_state_effect": "none",
+          "superseded_for_build": true,
+          "status": "superseded"
+        }
+      ]
     },
     "kdeclarative": {
       "readiness": "package-contract-ready",
@@ -113,7 +125,7 @@
       }
     },
     "kpackage": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "karchive",
         "ki18n",
@@ -131,13 +143,25 @@
       },
       "materialization_evidence": {
         "result": "PASS",
-        "workflow_run": 35608790364,
-        "job_id": 106362493754,
-        "artifact_id": 10643670033,
-        "artifact_sha256": "0e2281fca63b84a0a7c96e6c5256f98365509ef329790c70f91730637a5bd924",
-        "package_state_effect": "none",
-        "superseded_for_build": true
-      }
+        "workflow_run": 35623204805,
+        "job_id": 106411141243,
+        "commit": "ec4091371846d287e2d169c4cad171adcdfd1144",
+        "artifact_id": 10649014863,
+        "artifact_sha256": "7d805f24f4bba2b9e9f4d383252b04ef6efe7dbdba64c72aa10e50382a148188",
+        "package_state_effect": "none"
+      },
+      "materialization_history": [
+        {
+          "result": "PASS",
+          "workflow_run": 35608790364,
+          "job_id": 106362493754,
+          "artifact_id": 10643670033,
+          "artifact_sha256": "0e2281fca63b84a0a7c96e6c5256f98365509ef329790c70f91730637a5bd924",
+          "package_state_effect": "none",
+          "superseded_for_build": true,
+          "status": "superseded"
+        }
+      ]
     },
     "kservice": {
       "readiness": "package-contract-ready",

@@ -518,18 +518,15 @@
     "package_state_effect": "none"
   },
   "materialization": {
-    "status": "pending-ci",
+    "status": "PASS",
     "method": "kde-authority-source-plus-pinned-debian-tree",
     "package_state_effect": "none",
     "package_attempted": false,
     "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
     "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
-    "reason": "tier2-package-contract-2-remediation-kcontacts-kpackage",
-    "result": "pending",
-    "targets": [
-      "kcontacts",
-      "kpackage"
-    ],
+    "reason": "tier2-package-contract-2-selective-rematerialization-pass",
+    "result": "PASS",
+    "targets": [],
     "retained_package_pass": [
       "kauth",
       "kcrash",
@@ -572,38 +569,38 @@
         "workflow_run": 35608790364
       },
       "kcontacts": {
-        "job_id": 106362493851,
-        "artifact_id": 10642848344,
-        "artifact_sha256": "0c16947ba76fa61fc100721f65d1c527492e31a474db9dee20da79c3c13333ca",
-        "tree_sha256": "9fbcd6ce0076d40427b0a12c26c222e3bf61f9f49501ca591e3466f794518a8b",
-        "debian_tree_sha256": "3752c72cfc505649eee8bc349bb0159a3a2bf028129d9cb2be11ce0e247804d7",
-        "debian_tar_sha256": "44ddda241239e7563808f0d7ca84c9673fea6b8b8ab224e8034bee6ec5f870da",
-        "dsc_sha256": "bcef4d94d4ed80b2fbb0d22b688b8e9f74410c59c7bb9d9443c86363a84ff9dc",
+        "job_id": 106411141167,
+        "artifact_id": 10649784091,
+        "artifact_sha256": "bf0ea0c660da42ab84ff2e92d6196c90e65a274c40fafed1cc16a5c05f1dd432",
+        "tree_sha256": "2c19a5963c900f03f77a270029c04516d3aa3c4a2655fbdeff1af6e1769cc9f5",
+        "debian_tree_sha256": "fc5cae5f5ec04bd5a5be80acdcf0dbcde6610e2d07ddce35cfcd0217e030d835",
+        "debian_tar_sha256": "1c7b2809563707a9c5d60ba283c71a36a3437730d15b30dce8b2a1445a0dc77d",
+        "dsc_sha256": "d6e8de6fe653bfa6d477c95fbf0ba225e2adea42a8cc2db8dc59655ec19de4f8",
         "orig_tar_sha256": "170b51a41ac132968ea03d5f1ce8c585777155bbdc57e819a0562b1f8d03b7a5",
         "package_version": "6.30.0-0supralinux1",
         "source_package": "kf6-kcontacts",
         "result": "PASS",
         "package_attempted": false,
         "package_state_effect": "none",
-        "workflow_run": 35608790364,
-        "superseded_for_build": true
+        "workflow_run": 35623204805,
+        "commit": "ec4091371846d287e2d169c4cad171adcdfd1144"
       },
       "kpackage": {
-        "job_id": 106362493754,
-        "artifact_id": 10643670033,
-        "artifact_sha256": "0e2281fca63b84a0a7c96e6c5256f98365509ef329790c70f91730637a5bd924",
-        "tree_sha256": "f21367663463b5732594a4220d23c21dd50d8d9b1989c3f7a2cbe450c4a1d886",
-        "debian_tree_sha256": "e67157e73ede9401529f4d47165061351c520eda6d8b27b4a3eec3ec3b7b396f",
-        "debian_tar_sha256": "b411f5c20bd4f2f7273d2fd36298ee4283bb4f92b3163e034aafc5d103fbbea9",
-        "dsc_sha256": "901d52b71e82e1d74d8786a6d699d38eaa89e5a127885ea7ee05b1e8a69392b6",
+        "job_id": 106411141243,
+        "artifact_id": 10649014863,
+        "artifact_sha256": "7d805f24f4bba2b9e9f4d383252b04ef6efe7dbdba64c72aa10e50382a148188",
+        "tree_sha256": "cd5bb495c9d621f2127653d0dbcc46e179a66901c8b13c67fd4c07c49307b559",
+        "debian_tree_sha256": "7fe53af6606ff304839ed1195a7df70b9b897872493b6faccdcb9924edd87c91",
+        "debian_tar_sha256": "5240389bc1bc5170f8908de40568dccd445edf4ebe4ada38a5f32ab611ad083e",
+        "dsc_sha256": "15b5e6cfe6a65d9bda3ed173dfedcc6fc12d513ae46107d4a62702663c6a2e4f",
         "orig_tar_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
         "package_version": "6.30.0-0supralinux1",
         "source_package": "kf6-kpackage",
         "result": "PASS",
         "package_attempted": false,
         "package_state_effect": "none",
-        "workflow_run": 35608790364,
-        "superseded_for_build": true
+        "workflow_run": 35623204805,
+        "commit": "ec4091371846d287e2d169c4cad171adcdfd1144"
       },
       "kpty": {
         "job_id": 106362494052,
@@ -627,7 +624,49 @@
       "workflow_run": 35608790364,
       "commit": "42bf5f9b5672e59df3ce037f9ffd25412a29049e",
       "note": "Initial 5/5 materialization retained historically; KContacts and KPackage trees are superseded for build consumption after Batch 3 diagnostics."
-    }
+    },
+    "workflow_run": 35623204805,
+    "commit": "ec4091371846d287e2d169c4cad171adcdfd1144",
+    "history": [
+      {
+        "node": "kcontacts",
+        "job_id": 106362493851,
+        "artifact_id": 10642848344,
+        "artifact_sha256": "0c16947ba76fa61fc100721f65d1c527492e31a474db9dee20da79c3c13333ca",
+        "tree_sha256": "9fbcd6ce0076d40427b0a12c26c222e3bf61f9f49501ca591e3466f794518a8b",
+        "debian_tree_sha256": "3752c72cfc505649eee8bc349bb0159a3a2bf028129d9cb2be11ce0e247804d7",
+        "debian_tar_sha256": "44ddda241239e7563808f0d7ca84c9673fea6b8b8ab224e8034bee6ec5f870da",
+        "dsc_sha256": "bcef4d94d4ed80b2fbb0d22b688b8e9f74410c59c7bb9d9443c86363a84ff9dc",
+        "orig_tar_sha256": "170b51a41ac132968ea03d5f1ce8c585777155bbdc57e819a0562b1f8d03b7a5",
+        "package_version": "6.30.0-0supralinux1",
+        "source_package": "kf6-kcontacts",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "workflow_run": 35608790364,
+        "superseded_for_build": true,
+        "status": "superseded"
+      },
+      {
+        "node": "kpackage",
+        "job_id": 106362493754,
+        "artifact_id": 10643670033,
+        "artifact_sha256": "0e2281fca63b84a0a7c96e6c5256f98365509ef329790c70f91730637a5bd924",
+        "tree_sha256": "f21367663463b5732594a4220d23c21dd50d8d9b1989c3f7a2cbe450c4a1d886",
+        "debian_tree_sha256": "e67157e73ede9401529f4d47165061351c520eda6d8b27b4a3eec3ec3b7b396f",
+        "debian_tar_sha256": "b411f5c20bd4f2f7273d2fd36298ee4283bb4f92b3163e034aafc5d103fbbea9",
+        "dsc_sha256": "901d52b71e82e1d74d8786a6d699d38eaa89e5a127885ea7ee05b1e8a69392b6",
+        "orig_tar_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
+        "package_version": "6.30.0-0supralinux1",
+        "source_package": "kf6-kpackage",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "workflow_run": 35608790364,
+        "superseded_for_build": true,
+        "status": "superseded"
+      }
+    ]
   },
   "provider_adaptations": {
     "ubuntu-resolute": {

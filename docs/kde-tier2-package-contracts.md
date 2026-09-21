@@ -145,3 +145,15 @@ KPackage's optional KDocTools integration remains disabled until a matching Supr
 The Debian reference also disables `dh_auto_test` for both KContacts and KPackage. SupraLINUX restores those test invocations because reference-distribution test skips are not authoritative over KDE's selected `BUILD_TESTING=ON` profile.
 
 Only KContacts and KPackage require replacement materialization. KColorScheme's tree remains valid; only a promoted hash transcription is corrected. KCompletion and KPty are now package PASS.
+
+
+## Package closure is not KDE dependency authority
+
+Batch 3 distinguishes two dependency classes explicitly:
+
+- `predecessors`: KDE Framework dependencies determined by authoritative KDE upstream CMake.
+- `package_dependency_closure`: transitive Debian/SupraLINUX package contracts needed to install those retained predecessor development packages.
+
+The distinction was required by KColorScheme: upstream requires KGuiAddons but not KCoreAddons, while SupraLINUX `libkf6guiaddons-dev` correctly carries a package dependency on `libkf6coreaddons-dev`. The resulting KCoreAddons input is therefore package closure only and must never be promoted into the KDE DAG.
+
+Both classes must come from retained PASS artifacts. When package closure is non-empty, its development-package version is separately proven in `.buildinfo` and in the post-build consumer environment.

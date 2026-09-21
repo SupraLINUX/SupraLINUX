@@ -5,7 +5,7 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "frameworks_series": "6.30.0",
-  "state": "partial-pass-rematerialization-pending",
+  "state": "remediation-clean-build-pending",
   "canonical_snapshot": "8 PASS / 7 pending / 0 current FAIL / 0 BLOCKED",
   "selected_nodes": [
     "kcolorscheme",
@@ -33,13 +33,15 @@
       "abi-soname",
       "apt-runtime-closure",
       "cmake-consumer-smoke",
-      "all-predecessor-buildinfo-proof"
+      "all-predecessor-buildinfo-proof",
+      "package-dependency-closure-buildinfo-proof-when-nonempty"
     ],
     "python_nodes_also_require": "python-import-smoke",
     "qml_nodes_also_require": "qml-payload-smoke",
     "stable_promotion_requires_explicit_user_approval": true,
     "post_sbuild_failure": "root-cause-classification-required",
-    "fail_requires": "node-owned-root-cause"
+    "fail_requires": "node-owned-root-cause",
+    "package_dependency_closure": "Debian/SupraLINUX package-level transitive closure; separate from KDE upstream DAG dependencies"
   },
   "shared_predecessors": {
     "extra_cmake_modules": {
@@ -162,9 +164,10 @@
   },
   "materialization_source": {
     "status": "PASS",
-    "workflow_run": 35608790364,
-    "commit": "42bf5f9b5672e59df3ce037f9ffd25412a29049e",
-    "claim": "deterministic-package-tree-materialization"
+    "initial_workflow_run": 35608790364,
+    "replacement_workflow_run": 35623204805,
+    "replacement_commit": "ec4091371846d287e2d169c4cad171adcdfd1144",
+    "claim": "deterministic-package-tree-materialization-with-selective-replacement"
   },
   "nodes": {
     "kcolorscheme": {
@@ -203,7 +206,20 @@
       "state": "remediation-pending-build",
       "last_result": "INFRA",
       "downstream_eligible": false,
-      "materialization_status": "retained-pass-corrected-evidence"
+      "materialization_status": "retained-pass-corrected-evidence",
+      "package_dependency_closure": [
+        "kcoreaddons"
+      ],
+      "last_failure_evidence": {
+        "workflow_run": 35623204812,
+        "job_id": 106411496226,
+        "artifact_id": 10649414890,
+        "artifact_sha256": "2787ce2e14de33afae8c0c711554c9db8afabb552f6a41889e7185f073e6dc84",
+        "stage": "sbuild-install-deps",
+        "package_attempted": true,
+        "root_cause": "missing-package-dependency-closure",
+        "package_state_effect": "none"
+      }
     },
     "kcompletion": {
       "source_package": "kf6-kcompletion",
@@ -287,7 +303,8 @@
           "debian_tar_sha256": "d5442ed902e511748980ff12d4ef52be511b436c2dada3d185f062cf21de16e7",
           "rootfs_sha256": "2ec1afc0318c4a3cf33a77b88f48f92e4a4ddafb8434382bf9c488987bb4aa9b"
         }
-      }
+      },
+      "package_dependency_closure": []
     },
     "kcontacts": {
       "source_package": "kf6-kcontacts",
@@ -309,13 +326,13 @@
         "qml6-module-org-kde-contacts"
       ],
       "materialization": {
-        "workflow_run": 35608790364,
-        "artifact_id": 10642848344,
-        "artifact_sha256": "0c16947ba76fa61fc100721f65d1c527492e31a474db9dee20da79c3c13333ca",
-        "tree_sha256": "9fbcd6ce0076d40427b0a12c26c222e3bf61f9f49501ca591e3466f794518a8b",
-        "debian_tree_sha256": "3752c72cfc505649eee8bc349bb0159a3a2bf028129d9cb2be11ce0e247804d7",
-        "dsc_sha256": "bcef4d94d4ed80b2fbb0d22b688b8e9f74410c59c7bb9d9443c86363a84ff9dc",
-        "debian_tar_sha256": "44ddda241239e7563808f0d7ca84c9673fea6b8b8ab224e8034bee6ec5f870da",
+        "workflow_run": 35623204805,
+        "artifact_id": 10649784091,
+        "artifact_sha256": "bf0ea0c660da42ab84ff2e92d6196c90e65a274c40fafed1cc16a5c05f1dd432",
+        "tree_sha256": "2c19a5963c900f03f77a270029c04516d3aa3c4a2655fbdeff1af6e1769cc9f5",
+        "debian_tree_sha256": "fc5cae5f5ec04bd5a5be80acdcf0dbcde6610e2d07ddce35cfcd0217e030d835",
+        "dsc_sha256": "d6e8de6fe653bfa6d477c95fbf0ba225e2adea42a8cc2db8dc59655ec19de4f8",
+        "debian_tar_sha256": "1c7b2809563707a9c5d60ba283c71a36a3437730d15b30dce8b2a1445a0dc77d",
         "orig_tar_sha256": "170b51a41ac132968ea03d5f1ce8c585777155bbdc57e819a0562b1f8d03b7a5"
       },
       "predecessors": [
@@ -323,10 +340,24 @@
         "kconfig",
         "kcodecs"
       ],
-      "state": "rematerialization-pending",
+      "state": "remediation-pending-build",
       "last_result": "INFRA",
       "downstream_eligible": false,
-      "materialization_status": "superseded-rematerialization-required"
+      "materialization_status": "replacement-pass",
+      "package_dependency_closure": [],
+      "materialization_history": [
+        {
+          "workflow_run": 35608790364,
+          "artifact_id": 10642848344,
+          "artifact_sha256": "0c16947ba76fa61fc100721f65d1c527492e31a474db9dee20da79c3c13333ca",
+          "tree_sha256": "9fbcd6ce0076d40427b0a12c26c222e3bf61f9f49501ca591e3466f794518a8b",
+          "debian_tree_sha256": "3752c72cfc505649eee8bc349bb0159a3a2bf028129d9cb2be11ce0e247804d7",
+          "dsc_sha256": "bcef4d94d4ed80b2fbb0d22b688b8e9f74410c59c7bb9d9443c86363a84ff9dc",
+          "debian_tar_sha256": "44ddda241239e7563808f0d7ca84c9673fea6b8b8ab224e8034bee6ec5f870da",
+          "orig_tar_sha256": "170b51a41ac132968ea03d5f1ce8c585777155bbdc57e819a0562b1f8d03b7a5",
+          "status": "superseded"
+        }
+      ]
     },
     "kpackage": {
       "source_package": "kf6-kpackage",
@@ -348,13 +379,13 @@
         "libkf6package6"
       ],
       "materialization": {
-        "workflow_run": 35608790364,
-        "artifact_id": 10643670033,
-        "artifact_sha256": "0e2281fca63b84a0a7c96e6c5256f98365509ef329790c70f91730637a5bd924",
-        "tree_sha256": "f21367663463b5732594a4220d23c21dd50d8d9b1989c3f7a2cbe450c4a1d886",
-        "debian_tree_sha256": "e67157e73ede9401529f4d47165061351c520eda6d8b27b4a3eec3ec3b7b396f",
-        "dsc_sha256": "901d52b71e82e1d74d8786a6d699d38eaa89e5a127885ea7ee05b1e8a69392b6",
-        "debian_tar_sha256": "b411f5c20bd4f2f7273d2fd36298ee4283bb4f92b3163e034aafc5d103fbbea9",
+        "workflow_run": 35623204805,
+        "artifact_id": 10649014863,
+        "artifact_sha256": "7d805f24f4bba2b9e9f4d383252b04ef6efe7dbdba64c72aa10e50382a148188",
+        "tree_sha256": "cd5bb495c9d621f2127653d0dbcc46e179a66901c8b13c67fd4c07c49307b559",
+        "debian_tree_sha256": "7fe53af6606ff304839ed1195a7df70b9b897872493b6faccdcb9924edd87c91",
+        "dsc_sha256": "15b5e6cfe6a65d9bda3ed173dfedcc6fc12d513ae46107d4a62702663c6a2e4f",
+        "debian_tar_sha256": "5240389bc1bc5170f8908de40568dccd445edf4ebe4ada38a5f32ab611ad083e",
         "orig_tar_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019"
       },
       "predecessors": [
@@ -362,10 +393,24 @@
         "ki18n",
         "kcoreaddons"
       ],
-      "state": "rematerialization-pending",
+      "state": "remediation-pending-build",
       "last_result": "INFRA",
       "downstream_eligible": false,
-      "materialization_status": "superseded-rematerialization-required"
+      "materialization_status": "replacement-pass",
+      "package_dependency_closure": [],
+      "materialization_history": [
+        {
+          "workflow_run": 35608790364,
+          "artifact_id": 10643670033,
+          "artifact_sha256": "0e2281fca63b84a0a7c96e6c5256f98365509ef329790c70f91730637a5bd924",
+          "tree_sha256": "f21367663463b5732594a4220d23c21dd50d8d9b1989c3f7a2cbe450c4a1d886",
+          "debian_tree_sha256": "e67157e73ede9401529f4d47165061351c520eda6d8b27b4a3eec3ec3b7b396f",
+          "dsc_sha256": "901d52b71e82e1d74d8786a6d699d38eaa89e5a127885ea7ee05b1e8a69392b6",
+          "debian_tar_sha256": "b411f5c20bd4f2f7273d2fd36298ee4283bb4f92b3163e034aafc5d103fbbea9",
+          "orig_tar_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
+          "status": "superseded"
+        }
+      ]
     },
     "kpty": {
       "source_package": "kf6-kpty",
@@ -447,7 +492,8 @@
           "debian_tar_sha256": "05e6e39f4053112e4f62e93d09d9a278389a933b424ae244e72953508de81d2f",
           "rootfs_sha256": "2ec1afc0318c4a3cf33a77b88f48f92e4a4ddafb8434382bf9c488987bb4aa9b"
         }
-      }
+      },
+      "package_dependency_closure": []
     }
   }
 }

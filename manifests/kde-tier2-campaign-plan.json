@@ -21,10 +21,8 @@
   ],
   "provider_audit_required": [],
   "package_contract_ready": [
-    "kcontacts",
     "kdeclarative",
     "kfilemetadata",
-    "kpackage",
     "kservice"
   ],
   "human_decision_required": [
@@ -34,7 +32,9 @@
     }
   ],
   "build_queue": [
-    "kcolorscheme"
+    "kcolorscheme",
+    "kcontacts",
+    "kpackage"
   ],
   "audit_batch_size": 5,
   "next_provider_audit_batch": [],

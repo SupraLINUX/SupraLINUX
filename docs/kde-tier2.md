@@ -161,3 +161,12 @@ KColorScheme never reached `sbuild`: a single SHA-256 value for its already-vali
 KContacts reached clean `sbuild` but the Debian 6.30 technical-reference packaging imposed `libkf6coreaddons-dev`, which KDE upstream KContacts 6.30.0 does not require. That technical-reference overconstraint is removed from both source Build-Depends and the development binary Depends. KPackage built its KDE payload but the Debian-reference install list still required manpages produced only by the optional KDocTools integration that SupraLINUX intentionally disabled. Those stale install entries are removed.
 
 Both Debian reference trees also disabled their upstream test invocation. SupraLINUX restores the test commands rather than inheriting those skips. KContacts and KPackage therefore return to fresh deterministic materialization before another package attempt. None of these integration findings is a canonical package FAIL.
+
+
+## Batch 3 package dependency closure
+
+The second KColorScheme attempt in run `35623204812`, job `106411496226`, reached real `sbuild` and was given back at dependency installation. The authoritative KDE dependency set was already complete: KConfig, KGuiAddons and KI18n. The missing input was instead a **package-level transitive dependency**: retained `libkf6guiaddons-dev 6.30.0-0supralinux2` depends on retained `libkf6coreaddons-dev (>= 6.30.0~)`.
+
+This does **not** add KCoreAddons to KColorScheme's KDE DAG. Batch 3 now records a separate `package_dependency_closure`; KColorScheme has `["kcoreaddons"]`. The runner injects that retained PASS artifact alongside direct predecessors and proves the exact development-package revision in `.buildinfo` and the consumer environment.
+
+The selective replacement materialization run `35623204805` is complete and PASS for KContacts and KPackage. Both are build-ready again. Canonical package state remains **8 PASS / 7 pending / 0 current FAIL / 0 BLOCKED** until new clean-build evidence is promoted.

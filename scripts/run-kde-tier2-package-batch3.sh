@@ -99,19 +99,30 @@ if set(ecm_paths)!={"extra-cmake-modules"}:
     raise SystemExit(f"{node_id}: ECM package set mismatch")
 ecm_deb=Path(ecm_paths["extra-cmake-modules"])
 
-all_paths=[]; dev_contracts=[]; retained_cfg={}; seen_packages=set()
-for pred_id in n["predecessors"]:
-    cfg=c["retained_predecessors"][pred_id]
-    paths=validate_deb_dir(retained/pred_id,cfg,pred_id)
+direct_ids=list(n["predecessors"])
+closure_ids=list(n.get("package_dependency_closure",[]))
+overlap_ids=set(direct_ids).intersection(closure_ids)
+if overlap_ids:
+    raise SystemExit(f"{node_id}: package dependency closure duplicates KDE predecessors: {sorted(overlap_ids)}")
+
+all_paths=[]; dev_contracts=[]; closure_contracts=[]; retained_cfg={}; closure_cfg={}; seen_packages=set()
+def consume(input_id,contracts,cfg_out,kind):
+    cfg=c["retained_predecessors"][input_id]
+    paths=validate_deb_dir(retained/input_id,cfg,f"{kind}:{input_id}")
     if cfg["dev_package"] not in paths:
-        raise SystemExit(f"{node_id}: {pred_id} dev package absent")
+        raise SystemExit(f"{node_id}: {kind} {input_id} dev package absent")
     overlap=seen_packages.intersection(paths)
     if overlap:
-        raise SystemExit(f"{node_id}: duplicate package names across predecessors: {sorted(overlap)}")
+        raise SystemExit(f"{node_id}: duplicate package names across retained inputs: {sorted(overlap)}")
     seen_packages.update(paths)
     all_paths.extend(paths[p] for p in sorted(paths))
-    dev_contracts.append((pred_id,cfg["dev_package"],cfg["version"]))
-    retained_cfg[pred_id]=cfg
+    contracts.append((input_id,cfg["dev_package"],cfg["version"]))
+    cfg_out[input_id]=cfg
+
+for pred_id in direct_ids:
+    consume(pred_id,dev_contracts,retained_cfg,"kde-predecessor")
+for closure_id in closure_ids:
+    consume(closure_id,closure_contracts,closure_cfg,"package-closure")
 
 env={
  "SOURCE_PACKAGE":source_pkg,"PACKAGE_VERSION":version,"UPSTREAM_VERSION":upstream,
@@ -123,8 +134,14 @@ env={
 (out/"input-env.sh").write_text("\n".join(f"{k}={shlex.quote(v)}" for k,v in env.items())+"\n")
 (out/"predecessor-debs.txt").write_text("\n".join(all_paths)+"\n")
 (out/"predecessor-dev-contracts.tsv").write_text("\n".join("\t".join(x) for x in dev_contracts)+"\n")
+(out/"package-closure-dev-contracts.tsv").write_text("\n".join("\t".join(x) for x in closure_contracts)+"\n")
 (out/"expected-binaries.txt").write_text("\n".join(n["expected_binary_packages"])+"\n")
-(out/"retained-inputs.json").write_text(json.dumps({"materialization":m,"ecm":ecm_cfg,"predecessors":retained_cfg},indent=2)+"\n")
+(out/"retained-inputs.json").write_text(json.dumps({
+    "materialization":m,
+    "ecm":ecm_cfg,
+    "predecessors":retained_cfg,
+    "package_dependency_closure":closure_cfg,
+},indent=2)+"\n")
 PY
 
 source "${EVIDENCE}/input-env.sh"
@@ -197,10 +214,905 @@ ECM_VERSION="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["
 grep -F "extra-cmake-modules (= ${ECM_VERSION})" "${BUILDINFO[0]}" > "${EVIDENCE}/ecm-buildinfo-proof.txt"
 : > "${EVIDENCE}/predecessor-buildinfo-proof.txt"
 : > "${EVIDENCE}/predecessor-buildinfo-contracts.tsv"
-while IFS=$'\t' read -r pred_id dev_pkg pred_ver; do
+while IFS=
+STAGE=abi-contract
+RUNTIME_DEB="$(python3 - "${EVIDENCE}/built-debs.json" "${RUNTIME_PACKAGE}" <<'PY'
+import json,sys
+print(json.load(open(sys.argv[1]))[sys.argv[2]])
+PY
+)"
+RUNTIME_ROOT="${WORK}/runtime-root"
+mkdir -p "${RUNTIME_ROOT}"
+dpkg-deb -x "${RUNTIME_DEB}" "${RUNTIME_ROOT}"
+python3 - "${RUNTIME_ROOT}" "${SONAME}" "${EVIDENCE}" <<'PY'
+import subprocess,sys
+from pathlib import Path
+root=Path(sys.argv[1]); soname=sys.argv[2]; out=Path(sys.argv[3])
+match=None
+for p in root.rglob("*.so*"):
+    if not p.is_file():
+        continue
+    r=subprocess.run(["readelf","-d",str(p)],text=True,capture_output=True)
+    if r.returncode==0 and f"Library soname: [{soname}]" in r.stdout:
+        match=p
+        (out/"readelf-dynamic.txt").write_text(r.stdout)
+        break
+if match is None:
+    raise SystemExit(f"SONAME {soname} not found in runtime package")
+nm=subprocess.check_output(["nm","-D","--defined-only",str(match)],text=True)
+exports=[x for x in nm.splitlines() if x.strip()]
+if not exports:
+    raise SystemExit("runtime library exports are empty")
+(out/"abi-library.txt").write_text(str(match)+"\n")
+(out/"abi-exports.txt").write_text("\n".join(exports)+"\n")
+(out/"abi-export-count.txt").write_text(str(len(exports))+"\n")
+PY
+
+STAGE=artifact-capture
+sha256sum "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${ORIG}" "${DEBIAN_TAR}" > "${EVIDENCE}/artifact-sha256.txt"
+cp -a "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${ORIG}" "${DEBIAN_TAR}" "${EVIDENCE}/"
+
+STAGE=lintian-source-binary
+lintian --fail-on error "${DSC}" "${CHANGES[0]}" |& tee "${EVIDENCE}/lintian-source-binary.log"
+
+STAGE=consumer-runtime-closure
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+  "${ECM_DEB}" "${PREDECESSOR_DEBS[@]}" "${DEBS[@]}" |& tee "${EVIDENCE}/consumer-runtime-install.log"
+sudo apt-get check |& tee "${EVIDENCE}/consumer-runtime-check.log"
+while IFS=
+STAGE=consumer-smoke
+CONSUMER="${WORK}/consumer"
+mkdir -p "${CONSUMER}"
+cat > "${CONSUMER}/main.cpp" <<'CPP'
+int main() { return 0; }
+CPP
+cat > "${CONSUMER}/CMakeLists.txt" <<EOF
+cmake_minimum_required(VERSION 3.29)
+project(SupraLINUXTier2Consumer LANGUAGES CXX)
+find_package(${CMAKE_PACKAGE} 6.30 REQUIRED)
+add_executable(consumer main.cpp)
+target_link_libraries(consumer PRIVATE ${CMAKE_TARGET})
+EOF
+cmake -S "${CONSUMER}" -B "${CONSUMER}/build" -GNinja -DCMAKE_BUILD_TYPE=Release |& tee "${EVIDENCE}/consumer-configure.log"
+cmake --build "${CONSUMER}/build" --verbose |& tee "${EVIDENCE}/consumer-build.log"
+"${CONSUMER}/build/consumer" |& tee "${EVIDENCE}/consumer-run.log"
+
+if [[ -n "${PYTHON_MODULE}" ]]; then
+  STAGE=python-import-smoke
+  python3 -c "import ${PYTHON_MODULE}; print('python-import=PASS module=${PYTHON_MODULE}')" | tee "${EVIDENCE}/python-import.log"
+fi
+
+if [[ -n "${QML_PACKAGE}" ]]; then
+  STAGE=qml-payload-smoke
+  QML_DEB="$(python3 - "${EVIDENCE}/built-debs.json" "${QML_PACKAGE}" <<'PY'
+import json,sys
+print(json.load(open(sys.argv[1]))[sys.argv[2]])
+PY
+)"
+  QML_ROOT="${WORK}/qml-root"
+  mkdir -p "${QML_ROOT}"
+  dpkg-deb -x "${QML_DEB}" "${QML_ROOT}"
+  find "${QML_ROOT}" -type f -name qmldir -print | tee "${EVIDENCE}/qml-qmldir.txt"
+  test -s "${EVIDENCE}/qml-qmldir.txt"
+fi
+
+STAGE=pass-evidence
+python3 - "${RESULT}" "${EVIDENCE}" "${NODE}" "${PACKAGE_VERSION}" "${SONAME}" <<'PY'
+import json,re,sys
+from pathlib import Path
+result_path=Path(sys.argv[1]); ev=Path(sys.argv[2]); node=sys.argv[3]
+data={}
+if result_path.exists() and result_path.stat().st_size:
+    data=json.loads(result_path.read_text())
+tests=re.search(r"100% tests passed, 0 tests failed out of ([1-9][0-9]*)",(ev/"sbuild.log").read_text())
+retained={}
+for line in (ev/"predecessor-dev-contracts.tsv").read_text().splitlines():
+    if not line.strip():
+        continue
+    pred,dev,ver=line.split("\t")
+    retained[pred]={"dev_package":dev,"version":ver}
+closure={}
+for line in (ev/"package-closure-dev-contracts.tsv").read_text().splitlines():
+    if not line.strip():
+        continue
+    item,dev,ver=line.split("\t")
+    closure[item]={"dev_package":dev,"version":ver}
+data.update({
+ "node":node,"package_version":sys.argv[4],"abi_soname":sys.argv[5],
+ "tests":f"{tests.group(1)}/{tests.group(1)} PASS" if tests else "PASS",
+ "abi_export_count":int((ev/"abi-export-count.txt").read_text().strip()),
+ "lintian":"PASS-errors","apt_check":"PASS","consumer_smoke":"PASS",
+ "predecessor_buildinfo_proof":"PASS",
+ "package_dependency_closure_buildinfo_proof":"PASS",
+ "retained_predecessors":retained,
+ "package_dependency_closure":closure,
+})
+if (ev/"python-import.log").exists():
+    data["python_import"]="PASS"
+if (ev/"qml-qmldir.txt").exists():
+    data["qml_payload_smoke"]="PASS"
+result_path.write_text(json.dumps(data,indent=2)+"\n")
+PY
+
+STATE=PASS
+STAGE=complete
+echo "KDE Tier 2 Batch 3 ${NODE}: PASS"
+\t' read -r pred_id dev_pkg pred_ver; do
+  [[ -z "${pred_id}" ]] && continue
   grep -F "${dev_pkg} (= ${pred_ver})" "${BUILDINFO[0]}" >> "${EVIDENCE}/predecessor-buildinfo-proof.txt"
   printf '%s\t%s\t%s\n' "${pred_id}" "${dev_pkg}" "${pred_ver}" >> "${EVIDENCE}/predecessor-buildinfo-contracts.tsv"
 done < "${EVIDENCE}/predecessor-dev-contracts.tsv"
+
+: > "${EVIDENCE}/package-closure-buildinfo-proof.txt"
+: > "${EVIDENCE}/package-closure-buildinfo-contracts.tsv"
+while IFS=
+STAGE=abi-contract
+RUNTIME_DEB="$(python3 - "${EVIDENCE}/built-debs.json" "${RUNTIME_PACKAGE}" <<'PY'
+import json,sys
+print(json.load(open(sys.argv[1]))[sys.argv[2]])
+PY
+)"
+RUNTIME_ROOT="${WORK}/runtime-root"
+mkdir -p "${RUNTIME_ROOT}"
+dpkg-deb -x "${RUNTIME_DEB}" "${RUNTIME_ROOT}"
+python3 - "${RUNTIME_ROOT}" "${SONAME}" "${EVIDENCE}" <<'PY'
+import subprocess,sys
+from pathlib import Path
+root=Path(sys.argv[1]); soname=sys.argv[2]; out=Path(sys.argv[3])
+match=None
+for p in root.rglob("*.so*"):
+    if not p.is_file():
+        continue
+    r=subprocess.run(["readelf","-d",str(p)],text=True,capture_output=True)
+    if r.returncode==0 and f"Library soname: [{soname}]" in r.stdout:
+        match=p
+        (out/"readelf-dynamic.txt").write_text(r.stdout)
+        break
+if match is None:
+    raise SystemExit(f"SONAME {soname} not found in runtime package")
+nm=subprocess.check_output(["nm","-D","--defined-only",str(match)],text=True)
+exports=[x for x in nm.splitlines() if x.strip()]
+if not exports:
+    raise SystemExit("runtime library exports are empty")
+(out/"abi-library.txt").write_text(str(match)+"\n")
+(out/"abi-exports.txt").write_text("\n".join(exports)+"\n")
+(out/"abi-export-count.txt").write_text(str(len(exports))+"\n")
+PY
+
+STAGE=artifact-capture
+sha256sum "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${ORIG}" "${DEBIAN_TAR}" > "${EVIDENCE}/artifact-sha256.txt"
+cp -a "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${ORIG}" "${DEBIAN_TAR}" "${EVIDENCE}/"
+
+STAGE=lintian-source-binary
+lintian --fail-on error "${DSC}" "${CHANGES[0]}" |& tee "${EVIDENCE}/lintian-source-binary.log"
+
+STAGE=consumer-runtime-closure
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+  "${ECM_DEB}" "${PREDECESSOR_DEBS[@]}" "${DEBS[@]}" |& tee "${EVIDENCE}/consumer-runtime-install.log"
+sudo apt-get check |& tee "${EVIDENCE}/consumer-runtime-check.log"
+while IFS=$'\t' read -r _pred_id dev_pkg pred_ver; do
+  [[ "$(dpkg-query -W -f='${Version}' "${dev_pkg}")" == "${pred_ver}" ]]
+done < "${EVIDENCE}/predecessor-dev-contracts.tsv"
+[[ "$(dpkg-query -W -f='${Version}' "${RUNTIME_PACKAGE}")" == "${PACKAGE_VERSION}" ]]
+
+STAGE=consumer-smoke
+CONSUMER="${WORK}/consumer"
+mkdir -p "${CONSUMER}"
+cat > "${CONSUMER}/main.cpp" <<'CPP'
+int main() { return 0; }
+CPP
+cat > "${CONSUMER}/CMakeLists.txt" <<EOF
+cmake_minimum_required(VERSION 3.29)
+project(SupraLINUXTier2Consumer LANGUAGES CXX)
+find_package(${CMAKE_PACKAGE} 6.30 REQUIRED)
+add_executable(consumer main.cpp)
+target_link_libraries(consumer PRIVATE ${CMAKE_TARGET})
+EOF
+cmake -S "${CONSUMER}" -B "${CONSUMER}/build" -GNinja -DCMAKE_BUILD_TYPE=Release |& tee "${EVIDENCE}/consumer-configure.log"
+cmake --build "${CONSUMER}/build" --verbose |& tee "${EVIDENCE}/consumer-build.log"
+"${CONSUMER}/build/consumer" |& tee "${EVIDENCE}/consumer-run.log"
+
+if [[ -n "${PYTHON_MODULE}" ]]; then
+  STAGE=python-import-smoke
+  python3 -c "import ${PYTHON_MODULE}; print('python-import=PASS module=${PYTHON_MODULE}')" | tee "${EVIDENCE}/python-import.log"
+fi
+
+if [[ -n "${QML_PACKAGE}" ]]; then
+  STAGE=qml-payload-smoke
+  QML_DEB="$(python3 - "${EVIDENCE}/built-debs.json" "${QML_PACKAGE}" <<'PY'
+import json,sys
+print(json.load(open(sys.argv[1]))[sys.argv[2]])
+PY
+)"
+  QML_ROOT="${WORK}/qml-root"
+  mkdir -p "${QML_ROOT}"
+  dpkg-deb -x "${QML_DEB}" "${QML_ROOT}"
+  find "${QML_ROOT}" -type f -name qmldir -print | tee "${EVIDENCE}/qml-qmldir.txt"
+  test -s "${EVIDENCE}/qml-qmldir.txt"
+fi
+
+STAGE=pass-evidence
+python3 - "${RESULT}" "${EVIDENCE}" "${NODE}" "${PACKAGE_VERSION}" "${SONAME}" <<'PY'
+import json,re,sys
+from pathlib import Path
+result_path=Path(sys.argv[1]); ev=Path(sys.argv[2]); node=sys.argv[3]
+data={}
+if result_path.exists() and result_path.stat().st_size:
+    data=json.loads(result_path.read_text())
+tests=re.search(r"100% tests passed, 0 tests failed out of ([1-9][0-9]*)",(ev/"sbuild.log").read_text())
+retained={}
+for line in (ev/"predecessor-dev-contracts.tsv").read_text().splitlines():
+    if not line.strip():
+        continue
+    pred,dev,ver=line.split("\t")
+    retained[pred]={"dev_package":dev,"version":ver}
+data.update({
+ "node":node,"package_version":sys.argv[4],"abi_soname":sys.argv[5],
+ "tests":f"{tests.group(1)}/{tests.group(1)} PASS" if tests else "PASS",
+ "abi_export_count":int((ev/"abi-export-count.txt").read_text().strip()),
+ "lintian":"PASS-errors","apt_check":"PASS","consumer_smoke":"PASS",
+ "predecessor_buildinfo_proof":"PASS","retained_predecessors":retained,
+})
+if (ev/"python-import.log").exists():
+    data["python_import"]="PASS"
+if (ev/"qml-qmldir.txt").exists():
+    data["qml_payload_smoke"]="PASS"
+result_path.write_text(json.dumps(data,indent=2)+"\n")
+PY
+
+STATE=PASS
+STAGE=complete
+echo "KDE Tier 2 Batch 3 ${NODE}: PASS"
+\t' read -r closure_id dev_pkg pred_ver; do
+  [[ -z "${closure_id}" ]] && continue
+  grep -F "${dev_pkg} (= ${pred_ver})" "${BUILDINFO[0]}" >> "${EVIDENCE}/package-closure-buildinfo-proof.txt"
+  printf '%s\t%s\t%s\n' "${closure_id}" "${dev_pkg}" "${pred_ver}" >> "${EVIDENCE}/package-closure-buildinfo-contracts.tsv"
+done < "${EVIDENCE}/package-closure-dev-contracts.tsv"
+
+STAGE=abi-contract
+RUNTIME_DEB="$(python3 - "${EVIDENCE}/built-debs.json" "${RUNTIME_PACKAGE}" <<'PY'
+import json,sys
+print(json.load(open(sys.argv[1]))[sys.argv[2]])
+PY
+)"
+RUNTIME_ROOT="${WORK}/runtime-root"
+mkdir -p "${RUNTIME_ROOT}"
+dpkg-deb -x "${RUNTIME_DEB}" "${RUNTIME_ROOT}"
+python3 - "${RUNTIME_ROOT}" "${SONAME}" "${EVIDENCE}" <<'PY'
+import subprocess,sys
+from pathlib import Path
+root=Path(sys.argv[1]); soname=sys.argv[2]; out=Path(sys.argv[3])
+match=None
+for p in root.rglob("*.so*"):
+    if not p.is_file():
+        continue
+    r=subprocess.run(["readelf","-d",str(p)],text=True,capture_output=True)
+    if r.returncode==0 and f"Library soname: [{soname}]" in r.stdout:
+        match=p
+        (out/"readelf-dynamic.txt").write_text(r.stdout)
+        break
+if match is None:
+    raise SystemExit(f"SONAME {soname} not found in runtime package")
+nm=subprocess.check_output(["nm","-D","--defined-only",str(match)],text=True)
+exports=[x for x in nm.splitlines() if x.strip()]
+if not exports:
+    raise SystemExit("runtime library exports are empty")
+(out/"abi-library.txt").write_text(str(match)+"\n")
+(out/"abi-exports.txt").write_text("\n".join(exports)+"\n")
+(out/"abi-export-count.txt").write_text(str(len(exports))+"\n")
+PY
+
+STAGE=artifact-capture
+sha256sum "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${ORIG}" "${DEBIAN_TAR}" > "${EVIDENCE}/artifact-sha256.txt"
+cp -a "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${ORIG}" "${DEBIAN_TAR}" "${EVIDENCE}/"
+
+STAGE=lintian-source-binary
+lintian --fail-on error "${DSC}" "${CHANGES[0]}" |& tee "${EVIDENCE}/lintian-source-binary.log"
+
+STAGE=consumer-runtime-closure
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+  "${ECM_DEB}" "${PREDECESSOR_DEBS[@]}" "${DEBS[@]}" |& tee "${EVIDENCE}/consumer-runtime-install.log"
+sudo apt-get check |& tee "${EVIDENCE}/consumer-runtime-check.log"
+while IFS=$'\t' read -r _pred_id dev_pkg pred_ver; do
+  [[ "$(dpkg-query -W -f='${Version}' "${dev_pkg}")" == "${pred_ver}" ]]
+done < "${EVIDENCE}/predecessor-dev-contracts.tsv"
+[[ "$(dpkg-query -W -f='${Version}' "${RUNTIME_PACKAGE}")" == "${PACKAGE_VERSION}" ]]
+
+STAGE=consumer-smoke
+CONSUMER="${WORK}/consumer"
+mkdir -p "${CONSUMER}"
+cat > "${CONSUMER}/main.cpp" <<'CPP'
+int main() { return 0; }
+CPP
+cat > "${CONSUMER}/CMakeLists.txt" <<EOF
+cmake_minimum_required(VERSION 3.29)
+project(SupraLINUXTier2Consumer LANGUAGES CXX)
+find_package(${CMAKE_PACKAGE} 6.30 REQUIRED)
+add_executable(consumer main.cpp)
+target_link_libraries(consumer PRIVATE ${CMAKE_TARGET})
+EOF
+cmake -S "${CONSUMER}" -B "${CONSUMER}/build" -GNinja -DCMAKE_BUILD_TYPE=Release |& tee "${EVIDENCE}/consumer-configure.log"
+cmake --build "${CONSUMER}/build" --verbose |& tee "${EVIDENCE}/consumer-build.log"
+"${CONSUMER}/build/consumer" |& tee "${EVIDENCE}/consumer-run.log"
+
+if [[ -n "${PYTHON_MODULE}" ]]; then
+  STAGE=python-import-smoke
+  python3 -c "import ${PYTHON_MODULE}; print('python-import=PASS module=${PYTHON_MODULE}')" | tee "${EVIDENCE}/python-import.log"
+fi
+
+if [[ -n "${QML_PACKAGE}" ]]; then
+  STAGE=qml-payload-smoke
+  QML_DEB="$(python3 - "${EVIDENCE}/built-debs.json" "${QML_PACKAGE}" <<'PY'
+import json,sys
+print(json.load(open(sys.argv[1]))[sys.argv[2]])
+PY
+)"
+  QML_ROOT="${WORK}/qml-root"
+  mkdir -p "${QML_ROOT}"
+  dpkg-deb -x "${QML_DEB}" "${QML_ROOT}"
+  find "${QML_ROOT}" -type f -name qmldir -print | tee "${EVIDENCE}/qml-qmldir.txt"
+  test -s "${EVIDENCE}/qml-qmldir.txt"
+fi
+
+STAGE=pass-evidence
+python3 - "${RESULT}" "${EVIDENCE}" "${NODE}" "${PACKAGE_VERSION}" "${SONAME}" <<'PY'
+import json,re,sys
+from pathlib import Path
+result_path=Path(sys.argv[1]); ev=Path(sys.argv[2]); node=sys.argv[3]
+data={}
+if result_path.exists() and result_path.stat().st_size:
+    data=json.loads(result_path.read_text())
+tests=re.search(r"100% tests passed, 0 tests failed out of ([1-9][0-9]*)",(ev/"sbuild.log").read_text())
+retained={}
+for line in (ev/"predecessor-dev-contracts.tsv").read_text().splitlines():
+    if not line.strip():
+        continue
+    pred,dev,ver=line.split("\t")
+    retained[pred]={"dev_package":dev,"version":ver}
+data.update({
+ "node":node,"package_version":sys.argv[4],"abi_soname":sys.argv[5],
+ "tests":f"{tests.group(1)}/{tests.group(1)} PASS" if tests else "PASS",
+ "abi_export_count":int((ev/"abi-export-count.txt").read_text().strip()),
+ "lintian":"PASS-errors","apt_check":"PASS","consumer_smoke":"PASS",
+ "predecessor_buildinfo_proof":"PASS","retained_predecessors":retained,
+})
+if (ev/"python-import.log").exists():
+    data["python_import"]="PASS"
+if (ev/"qml-qmldir.txt").exists():
+    data["qml_payload_smoke"]="PASS"
+result_path.write_text(json.dumps(data,indent=2)+"\n")
+PY
+
+STATE=PASS
+STAGE=complete
+echo "KDE Tier 2 Batch 3 ${NODE}: PASS"
+\t' read -r _pred_id dev_pkg pred_ver; do
+  [[ -z "${dev_pkg}" ]] && continue
+  [[ "$(dpkg-query -W -f='${Version}' "${dev_pkg}")" == "${pred_ver}" ]]
+done < "${EVIDENCE}/predecessor-dev-contracts.tsv"
+while IFS=
+STAGE=consumer-smoke
+CONSUMER="${WORK}/consumer"
+mkdir -p "${CONSUMER}"
+cat > "${CONSUMER}/main.cpp" <<'CPP'
+int main() { return 0; }
+CPP
+cat > "${CONSUMER}/CMakeLists.txt" <<EOF
+cmake_minimum_required(VERSION 3.29)
+project(SupraLINUXTier2Consumer LANGUAGES CXX)
+find_package(${CMAKE_PACKAGE} 6.30 REQUIRED)
+add_executable(consumer main.cpp)
+target_link_libraries(consumer PRIVATE ${CMAKE_TARGET})
+EOF
+cmake -S "${CONSUMER}" -B "${CONSUMER}/build" -GNinja -DCMAKE_BUILD_TYPE=Release |& tee "${EVIDENCE}/consumer-configure.log"
+cmake --build "${CONSUMER}/build" --verbose |& tee "${EVIDENCE}/consumer-build.log"
+"${CONSUMER}/build/consumer" |& tee "${EVIDENCE}/consumer-run.log"
+
+if [[ -n "${PYTHON_MODULE}" ]]; then
+  STAGE=python-import-smoke
+  python3 -c "import ${PYTHON_MODULE}; print('python-import=PASS module=${PYTHON_MODULE}')" | tee "${EVIDENCE}/python-import.log"
+fi
+
+if [[ -n "${QML_PACKAGE}" ]]; then
+  STAGE=qml-payload-smoke
+  QML_DEB="$(python3 - "${EVIDENCE}/built-debs.json" "${QML_PACKAGE}" <<'PY'
+import json,sys
+print(json.load(open(sys.argv[1]))[sys.argv[2]])
+PY
+)"
+  QML_ROOT="${WORK}/qml-root"
+  mkdir -p "${QML_ROOT}"
+  dpkg-deb -x "${QML_DEB}" "${QML_ROOT}"
+  find "${QML_ROOT}" -type f -name qmldir -print | tee "${EVIDENCE}/qml-qmldir.txt"
+  test -s "${EVIDENCE}/qml-qmldir.txt"
+fi
+
+STAGE=pass-evidence
+python3 - "${RESULT}" "${EVIDENCE}" "${NODE}" "${PACKAGE_VERSION}" "${SONAME}" <<'PY'
+import json,re,sys
+from pathlib import Path
+result_path=Path(sys.argv[1]); ev=Path(sys.argv[2]); node=sys.argv[3]
+data={}
+if result_path.exists() and result_path.stat().st_size:
+    data=json.loads(result_path.read_text())
+tests=re.search(r"100% tests passed, 0 tests failed out of ([1-9][0-9]*)",(ev/"sbuild.log").read_text())
+retained={}
+for line in (ev/"predecessor-dev-contracts.tsv").read_text().splitlines():
+    if not line.strip():
+        continue
+    pred,dev,ver=line.split("\t")
+    retained[pred]={"dev_package":dev,"version":ver}
+data.update({
+ "node":node,"package_version":sys.argv[4],"abi_soname":sys.argv[5],
+ "tests":f"{tests.group(1)}/{tests.group(1)} PASS" if tests else "PASS",
+ "abi_export_count":int((ev/"abi-export-count.txt").read_text().strip()),
+ "lintian":"PASS-errors","apt_check":"PASS","consumer_smoke":"PASS",
+ "predecessor_buildinfo_proof":"PASS","retained_predecessors":retained,
+})
+if (ev/"python-import.log").exists():
+    data["python_import"]="PASS"
+if (ev/"qml-qmldir.txt").exists():
+    data["qml_payload_smoke"]="PASS"
+result_path.write_text(json.dumps(data,indent=2)+"\n")
+PY
+
+STATE=PASS
+STAGE=complete
+echo "KDE Tier 2 Batch 3 ${NODE}: PASS"
+\t' read -r pred_id dev_pkg pred_ver; do
+  [[ -z "${pred_id}" ]] && continue
+  grep -F "${dev_pkg} (= ${pred_ver})" "${BUILDINFO[0]}" >> "${EVIDENCE}/predecessor-buildinfo-proof.txt"
+  printf '%s\t%s\t%s\n' "${pred_id}" "${dev_pkg}" "${pred_ver}" >> "${EVIDENCE}/predecessor-buildinfo-contracts.tsv"
+done < "${EVIDENCE}/predecessor-dev-contracts.tsv"
+
+: > "${EVIDENCE}/package-closure-buildinfo-proof.txt"
+: > "${EVIDENCE}/package-closure-buildinfo-contracts.tsv"
+while IFS=
+STAGE=abi-contract
+RUNTIME_DEB="$(python3 - "${EVIDENCE}/built-debs.json" "${RUNTIME_PACKAGE}" <<'PY'
+import json,sys
+print(json.load(open(sys.argv[1]))[sys.argv[2]])
+PY
+)"
+RUNTIME_ROOT="${WORK}/runtime-root"
+mkdir -p "${RUNTIME_ROOT}"
+dpkg-deb -x "${RUNTIME_DEB}" "${RUNTIME_ROOT}"
+python3 - "${RUNTIME_ROOT}" "${SONAME}" "${EVIDENCE}" <<'PY'
+import subprocess,sys
+from pathlib import Path
+root=Path(sys.argv[1]); soname=sys.argv[2]; out=Path(sys.argv[3])
+match=None
+for p in root.rglob("*.so*"):
+    if not p.is_file():
+        continue
+    r=subprocess.run(["readelf","-d",str(p)],text=True,capture_output=True)
+    if r.returncode==0 and f"Library soname: [{soname}]" in r.stdout:
+        match=p
+        (out/"readelf-dynamic.txt").write_text(r.stdout)
+        break
+if match is None:
+    raise SystemExit(f"SONAME {soname} not found in runtime package")
+nm=subprocess.check_output(["nm","-D","--defined-only",str(match)],text=True)
+exports=[x for x in nm.splitlines() if x.strip()]
+if not exports:
+    raise SystemExit("runtime library exports are empty")
+(out/"abi-library.txt").write_text(str(match)+"\n")
+(out/"abi-exports.txt").write_text("\n".join(exports)+"\n")
+(out/"abi-export-count.txt").write_text(str(len(exports))+"\n")
+PY
+
+STAGE=artifact-capture
+sha256sum "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${ORIG}" "${DEBIAN_TAR}" > "${EVIDENCE}/artifact-sha256.txt"
+cp -a "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${ORIG}" "${DEBIAN_TAR}" "${EVIDENCE}/"
+
+STAGE=lintian-source-binary
+lintian --fail-on error "${DSC}" "${CHANGES[0]}" |& tee "${EVIDENCE}/lintian-source-binary.log"
+
+STAGE=consumer-runtime-closure
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+  "${ECM_DEB}" "${PREDECESSOR_DEBS[@]}" "${DEBS[@]}" |& tee "${EVIDENCE}/consumer-runtime-install.log"
+sudo apt-get check |& tee "${EVIDENCE}/consumer-runtime-check.log"
+while IFS=$'\t' read -r _pred_id dev_pkg pred_ver; do
+  [[ "$(dpkg-query -W -f='${Version}' "${dev_pkg}")" == "${pred_ver}" ]]
+done < "${EVIDENCE}/predecessor-dev-contracts.tsv"
+[[ "$(dpkg-query -W -f='${Version}' "${RUNTIME_PACKAGE}")" == "${PACKAGE_VERSION}" ]]
+
+STAGE=consumer-smoke
+CONSUMER="${WORK}/consumer"
+mkdir -p "${CONSUMER}"
+cat > "${CONSUMER}/main.cpp" <<'CPP'
+int main() { return 0; }
+CPP
+cat > "${CONSUMER}/CMakeLists.txt" <<EOF
+cmake_minimum_required(VERSION 3.29)
+project(SupraLINUXTier2Consumer LANGUAGES CXX)
+find_package(${CMAKE_PACKAGE} 6.30 REQUIRED)
+add_executable(consumer main.cpp)
+target_link_libraries(consumer PRIVATE ${CMAKE_TARGET})
+EOF
+cmake -S "${CONSUMER}" -B "${CONSUMER}/build" -GNinja -DCMAKE_BUILD_TYPE=Release |& tee "${EVIDENCE}/consumer-configure.log"
+cmake --build "${CONSUMER}/build" --verbose |& tee "${EVIDENCE}/consumer-build.log"
+"${CONSUMER}/build/consumer" |& tee "${EVIDENCE}/consumer-run.log"
+
+if [[ -n "${PYTHON_MODULE}" ]]; then
+  STAGE=python-import-smoke
+  python3 -c "import ${PYTHON_MODULE}; print('python-import=PASS module=${PYTHON_MODULE}')" | tee "${EVIDENCE}/python-import.log"
+fi
+
+if [[ -n "${QML_PACKAGE}" ]]; then
+  STAGE=qml-payload-smoke
+  QML_DEB="$(python3 - "${EVIDENCE}/built-debs.json" "${QML_PACKAGE}" <<'PY'
+import json,sys
+print(json.load(open(sys.argv[1]))[sys.argv[2]])
+PY
+)"
+  QML_ROOT="${WORK}/qml-root"
+  mkdir -p "${QML_ROOT}"
+  dpkg-deb -x "${QML_DEB}" "${QML_ROOT}"
+  find "${QML_ROOT}" -type f -name qmldir -print | tee "${EVIDENCE}/qml-qmldir.txt"
+  test -s "${EVIDENCE}/qml-qmldir.txt"
+fi
+
+STAGE=pass-evidence
+python3 - "${RESULT}" "${EVIDENCE}" "${NODE}" "${PACKAGE_VERSION}" "${SONAME}" <<'PY'
+import json,re,sys
+from pathlib import Path
+result_path=Path(sys.argv[1]); ev=Path(sys.argv[2]); node=sys.argv[3]
+data={}
+if result_path.exists() and result_path.stat().st_size:
+    data=json.loads(result_path.read_text())
+tests=re.search(r"100% tests passed, 0 tests failed out of ([1-9][0-9]*)",(ev/"sbuild.log").read_text())
+retained={}
+for line in (ev/"predecessor-dev-contracts.tsv").read_text().splitlines():
+    if not line.strip():
+        continue
+    pred,dev,ver=line.split("\t")
+    retained[pred]={"dev_package":dev,"version":ver}
+data.update({
+ "node":node,"package_version":sys.argv[4],"abi_soname":sys.argv[5],
+ "tests":f"{tests.group(1)}/{tests.group(1)} PASS" if tests else "PASS",
+ "abi_export_count":int((ev/"abi-export-count.txt").read_text().strip()),
+ "lintian":"PASS-errors","apt_check":"PASS","consumer_smoke":"PASS",
+ "predecessor_buildinfo_proof":"PASS","retained_predecessors":retained,
+})
+if (ev/"python-import.log").exists():
+    data["python_import"]="PASS"
+if (ev/"qml-qmldir.txt").exists():
+    data["qml_payload_smoke"]="PASS"
+result_path.write_text(json.dumps(data,indent=2)+"\n")
+PY
+
+STATE=PASS
+STAGE=complete
+echo "KDE Tier 2 Batch 3 ${NODE}: PASS"
+\t' read -r closure_id dev_pkg pred_ver; do
+  [[ -z "${closure_id}" ]] && continue
+  grep -F "${dev_pkg} (= ${pred_ver})" "${BUILDINFO[0]}" >> "${EVIDENCE}/package-closure-buildinfo-proof.txt"
+  printf '%s\t%s\t%s\n' "${closure_id}" "${dev_pkg}" "${pred_ver}" >> "${EVIDENCE}/package-closure-buildinfo-contracts.tsv"
+done < "${EVIDENCE}/package-closure-dev-contracts.tsv"
+
+STAGE=abi-contract
+RUNTIME_DEB="$(python3 - "${EVIDENCE}/built-debs.json" "${RUNTIME_PACKAGE}" <<'PY'
+import json,sys
+print(json.load(open(sys.argv[1]))[sys.argv[2]])
+PY
+)"
+RUNTIME_ROOT="${WORK}/runtime-root"
+mkdir -p "${RUNTIME_ROOT}"
+dpkg-deb -x "${RUNTIME_DEB}" "${RUNTIME_ROOT}"
+python3 - "${RUNTIME_ROOT}" "${SONAME}" "${EVIDENCE}" <<'PY'
+import subprocess,sys
+from pathlib import Path
+root=Path(sys.argv[1]); soname=sys.argv[2]; out=Path(sys.argv[3])
+match=None
+for p in root.rglob("*.so*"):
+    if not p.is_file():
+        continue
+    r=subprocess.run(["readelf","-d",str(p)],text=True,capture_output=True)
+    if r.returncode==0 and f"Library soname: [{soname}]" in r.stdout:
+        match=p
+        (out/"readelf-dynamic.txt").write_text(r.stdout)
+        break
+if match is None:
+    raise SystemExit(f"SONAME {soname} not found in runtime package")
+nm=subprocess.check_output(["nm","-D","--defined-only",str(match)],text=True)
+exports=[x for x in nm.splitlines() if x.strip()]
+if not exports:
+    raise SystemExit("runtime library exports are empty")
+(out/"abi-library.txt").write_text(str(match)+"\n")
+(out/"abi-exports.txt").write_text("\n".join(exports)+"\n")
+(out/"abi-export-count.txt").write_text(str(len(exports))+"\n")
+PY
+
+STAGE=artifact-capture
+sha256sum "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${ORIG}" "${DEBIAN_TAR}" > "${EVIDENCE}/artifact-sha256.txt"
+cp -a "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${ORIG}" "${DEBIAN_TAR}" "${EVIDENCE}/"
+
+STAGE=lintian-source-binary
+lintian --fail-on error "${DSC}" "${CHANGES[0]}" |& tee "${EVIDENCE}/lintian-source-binary.log"
+
+STAGE=consumer-runtime-closure
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+  "${ECM_DEB}" "${PREDECESSOR_DEBS[@]}" "${DEBS[@]}" |& tee "${EVIDENCE}/consumer-runtime-install.log"
+sudo apt-get check |& tee "${EVIDENCE}/consumer-runtime-check.log"
+while IFS=$'\t' read -r _pred_id dev_pkg pred_ver; do
+  [[ "$(dpkg-query -W -f='${Version}' "${dev_pkg}")" == "${pred_ver}" ]]
+done < "${EVIDENCE}/predecessor-dev-contracts.tsv"
+[[ "$(dpkg-query -W -f='${Version}' "${RUNTIME_PACKAGE}")" == "${PACKAGE_VERSION}" ]]
+
+STAGE=consumer-smoke
+CONSUMER="${WORK}/consumer"
+mkdir -p "${CONSUMER}"
+cat > "${CONSUMER}/main.cpp" <<'CPP'
+int main() { return 0; }
+CPP
+cat > "${CONSUMER}/CMakeLists.txt" <<EOF
+cmake_minimum_required(VERSION 3.29)
+project(SupraLINUXTier2Consumer LANGUAGES CXX)
+find_package(${CMAKE_PACKAGE} 6.30 REQUIRED)
+add_executable(consumer main.cpp)
+target_link_libraries(consumer PRIVATE ${CMAKE_TARGET})
+EOF
+cmake -S "${CONSUMER}" -B "${CONSUMER}/build" -GNinja -DCMAKE_BUILD_TYPE=Release |& tee "${EVIDENCE}/consumer-configure.log"
+cmake --build "${CONSUMER}/build" --verbose |& tee "${EVIDENCE}/consumer-build.log"
+"${CONSUMER}/build/consumer" |& tee "${EVIDENCE}/consumer-run.log"
+
+if [[ -n "${PYTHON_MODULE}" ]]; then
+  STAGE=python-import-smoke
+  python3 -c "import ${PYTHON_MODULE}; print('python-import=PASS module=${PYTHON_MODULE}')" | tee "${EVIDENCE}/python-import.log"
+fi
+
+if [[ -n "${QML_PACKAGE}" ]]; then
+  STAGE=qml-payload-smoke
+  QML_DEB="$(python3 - "${EVIDENCE}/built-debs.json" "${QML_PACKAGE}" <<'PY'
+import json,sys
+print(json.load(open(sys.argv[1]))[sys.argv[2]])
+PY
+)"
+  QML_ROOT="${WORK}/qml-root"
+  mkdir -p "${QML_ROOT}"
+  dpkg-deb -x "${QML_DEB}" "${QML_ROOT}"
+  find "${QML_ROOT}" -type f -name qmldir -print | tee "${EVIDENCE}/qml-qmldir.txt"
+  test -s "${EVIDENCE}/qml-qmldir.txt"
+fi
+
+STAGE=pass-evidence
+python3 - "${RESULT}" "${EVIDENCE}" "${NODE}" "${PACKAGE_VERSION}" "${SONAME}" <<'PY'
+import json,re,sys
+from pathlib import Path
+result_path=Path(sys.argv[1]); ev=Path(sys.argv[2]); node=sys.argv[3]
+data={}
+if result_path.exists() and result_path.stat().st_size:
+    data=json.loads(result_path.read_text())
+tests=re.search(r"100% tests passed, 0 tests failed out of ([1-9][0-9]*)",(ev/"sbuild.log").read_text())
+retained={}
+for line in (ev/"predecessor-dev-contracts.tsv").read_text().splitlines():
+    if not line.strip():
+        continue
+    pred,dev,ver=line.split("\t")
+    retained[pred]={"dev_package":dev,"version":ver}
+data.update({
+ "node":node,"package_version":sys.argv[4],"abi_soname":sys.argv[5],
+ "tests":f"{tests.group(1)}/{tests.group(1)} PASS" if tests else "PASS",
+ "abi_export_count":int((ev/"abi-export-count.txt").read_text().strip()),
+ "lintian":"PASS-errors","apt_check":"PASS","consumer_smoke":"PASS",
+ "predecessor_buildinfo_proof":"PASS","retained_predecessors":retained,
+})
+if (ev/"python-import.log").exists():
+    data["python_import"]="PASS"
+if (ev/"qml-qmldir.txt").exists():
+    data["qml_payload_smoke"]="PASS"
+result_path.write_text(json.dumps(data,indent=2)+"\n")
+PY
+
+STATE=PASS
+STAGE=complete
+echo "KDE Tier 2 Batch 3 ${NODE}: PASS"
+\t' read -r _closure_id dev_pkg pred_ver; do
+  [[ -z "${dev_pkg}" ]] && continue
+  [[ "$(dpkg-query -W -f='${Version}' "${dev_pkg}")" == "${pred_ver}" ]]
+done < "${EVIDENCE}/package-closure-dev-contracts.tsv"
+[[ "$(dpkg-query -W -f='${Version}' "${RUNTIME_PACKAGE}")" == "${PACKAGE_VERSION}" ]]
+
+STAGE=consumer-smoke
+CONSUMER="${WORK}/consumer"
+mkdir -p "${CONSUMER}"
+cat > "${CONSUMER}/main.cpp" <<'CPP'
+int main() { return 0; }
+CPP
+cat > "${CONSUMER}/CMakeLists.txt" <<EOF
+cmake_minimum_required(VERSION 3.29)
+project(SupraLINUXTier2Consumer LANGUAGES CXX)
+find_package(${CMAKE_PACKAGE} 6.30 REQUIRED)
+add_executable(consumer main.cpp)
+target_link_libraries(consumer PRIVATE ${CMAKE_TARGET})
+EOF
+cmake -S "${CONSUMER}" -B "${CONSUMER}/build" -GNinja -DCMAKE_BUILD_TYPE=Release |& tee "${EVIDENCE}/consumer-configure.log"
+cmake --build "${CONSUMER}/build" --verbose |& tee "${EVIDENCE}/consumer-build.log"
+"${CONSUMER}/build/consumer" |& tee "${EVIDENCE}/consumer-run.log"
+
+if [[ -n "${PYTHON_MODULE}" ]]; then
+  STAGE=python-import-smoke
+  python3 -c "import ${PYTHON_MODULE}; print('python-import=PASS module=${PYTHON_MODULE}')" | tee "${EVIDENCE}/python-import.log"
+fi
+
+if [[ -n "${QML_PACKAGE}" ]]; then
+  STAGE=qml-payload-smoke
+  QML_DEB="$(python3 - "${EVIDENCE}/built-debs.json" "${QML_PACKAGE}" <<'PY'
+import json,sys
+print(json.load(open(sys.argv[1]))[sys.argv[2]])
+PY
+)"
+  QML_ROOT="${WORK}/qml-root"
+  mkdir -p "${QML_ROOT}"
+  dpkg-deb -x "${QML_DEB}" "${QML_ROOT}"
+  find "${QML_ROOT}" -type f -name qmldir -print | tee "${EVIDENCE}/qml-qmldir.txt"
+  test -s "${EVIDENCE}/qml-qmldir.txt"
+fi
+
+STAGE=pass-evidence
+python3 - "${RESULT}" "${EVIDENCE}" "${NODE}" "${PACKAGE_VERSION}" "${SONAME}" <<'PY'
+import json,re,sys
+from pathlib import Path
+result_path=Path(sys.argv[1]); ev=Path(sys.argv[2]); node=sys.argv[3]
+data={}
+if result_path.exists() and result_path.stat().st_size:
+    data=json.loads(result_path.read_text())
+tests=re.search(r"100% tests passed, 0 tests failed out of ([1-9][0-9]*)",(ev/"sbuild.log").read_text())
+retained={}
+for line in (ev/"predecessor-dev-contracts.tsv").read_text().splitlines():
+    if not line.strip():
+        continue
+    pred,dev,ver=line.split("\t")
+    retained[pred]={"dev_package":dev,"version":ver}
+data.update({
+ "node":node,"package_version":sys.argv[4],"abi_soname":sys.argv[5],
+ "tests":f"{tests.group(1)}/{tests.group(1)} PASS" if tests else "PASS",
+ "abi_export_count":int((ev/"abi-export-count.txt").read_text().strip()),
+ "lintian":"PASS-errors","apt_check":"PASS","consumer_smoke":"PASS",
+ "predecessor_buildinfo_proof":"PASS","retained_predecessors":retained,
+})
+if (ev/"python-import.log").exists():
+    data["python_import"]="PASS"
+if (ev/"qml-qmldir.txt").exists():
+    data["qml_payload_smoke"]="PASS"
+result_path.write_text(json.dumps(data,indent=2)+"\n")
+PY
+
+STATE=PASS
+STAGE=complete
+echo "KDE Tier 2 Batch 3 ${NODE}: PASS"
+\t' read -r pred_id dev_pkg pred_ver; do
+  [[ -z "${pred_id}" ]] && continue
+  grep -F "${dev_pkg} (= ${pred_ver})" "${BUILDINFO[0]}" >> "${EVIDENCE}/predecessor-buildinfo-proof.txt"
+  printf '%s\t%s\t%s\n' "${pred_id}" "${dev_pkg}" "${pred_ver}" >> "${EVIDENCE}/predecessor-buildinfo-contracts.tsv"
+done < "${EVIDENCE}/predecessor-dev-contracts.tsv"
+
+: > "${EVIDENCE}/package-closure-buildinfo-proof.txt"
+: > "${EVIDENCE}/package-closure-buildinfo-contracts.tsv"
+while IFS=
+STAGE=abi-contract
+RUNTIME_DEB="$(python3 - "${EVIDENCE}/built-debs.json" "${RUNTIME_PACKAGE}" <<'PY'
+import json,sys
+print(json.load(open(sys.argv[1]))[sys.argv[2]])
+PY
+)"
+RUNTIME_ROOT="${WORK}/runtime-root"
+mkdir -p "${RUNTIME_ROOT}"
+dpkg-deb -x "${RUNTIME_DEB}" "${RUNTIME_ROOT}"
+python3 - "${RUNTIME_ROOT}" "${SONAME}" "${EVIDENCE}" <<'PY'
+import subprocess,sys
+from pathlib import Path
+root=Path(sys.argv[1]); soname=sys.argv[2]; out=Path(sys.argv[3])
+match=None
+for p in root.rglob("*.so*"):
+    if not p.is_file():
+        continue
+    r=subprocess.run(["readelf","-d",str(p)],text=True,capture_output=True)
+    if r.returncode==0 and f"Library soname: [{soname}]" in r.stdout:
+        match=p
+        (out/"readelf-dynamic.txt").write_text(r.stdout)
+        break
+if match is None:
+    raise SystemExit(f"SONAME {soname} not found in runtime package")
+nm=subprocess.check_output(["nm","-D","--defined-only",str(match)],text=True)
+exports=[x for x in nm.splitlines() if x.strip()]
+if not exports:
+    raise SystemExit("runtime library exports are empty")
+(out/"abi-library.txt").write_text(str(match)+"\n")
+(out/"abi-exports.txt").write_text("\n".join(exports)+"\n")
+(out/"abi-export-count.txt").write_text(str(len(exports))+"\n")
+PY
+
+STAGE=artifact-capture
+sha256sum "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${ORIG}" "${DEBIAN_TAR}" > "${EVIDENCE}/artifact-sha256.txt"
+cp -a "${DEBS[@]}" "${DDEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${DSC}" "${ORIG}" "${DEBIAN_TAR}" "${EVIDENCE}/"
+
+STAGE=lintian-source-binary
+lintian --fail-on error "${DSC}" "${CHANGES[0]}" |& tee "${EVIDENCE}/lintian-source-binary.log"
+
+STAGE=consumer-runtime-closure
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+  "${ECM_DEB}" "${PREDECESSOR_DEBS[@]}" "${DEBS[@]}" |& tee "${EVIDENCE}/consumer-runtime-install.log"
+sudo apt-get check |& tee "${EVIDENCE}/consumer-runtime-check.log"
+while IFS=$'\t' read -r _pred_id dev_pkg pred_ver; do
+  [[ "$(dpkg-query -W -f='${Version}' "${dev_pkg}")" == "${pred_ver}" ]]
+done < "${EVIDENCE}/predecessor-dev-contracts.tsv"
+[[ "$(dpkg-query -W -f='${Version}' "${RUNTIME_PACKAGE}")" == "${PACKAGE_VERSION}" ]]
+
+STAGE=consumer-smoke
+CONSUMER="${WORK}/consumer"
+mkdir -p "${CONSUMER}"
+cat > "${CONSUMER}/main.cpp" <<'CPP'
+int main() { return 0; }
+CPP
+cat > "${CONSUMER}/CMakeLists.txt" <<EOF
+cmake_minimum_required(VERSION 3.29)
+project(SupraLINUXTier2Consumer LANGUAGES CXX)
+find_package(${CMAKE_PACKAGE} 6.30 REQUIRED)
+add_executable(consumer main.cpp)
+target_link_libraries(consumer PRIVATE ${CMAKE_TARGET})
+EOF
+cmake -S "${CONSUMER}" -B "${CONSUMER}/build" -GNinja -DCMAKE_BUILD_TYPE=Release |& tee "${EVIDENCE}/consumer-configure.log"
+cmake --build "${CONSUMER}/build" --verbose |& tee "${EVIDENCE}/consumer-build.log"
+"${CONSUMER}/build/consumer" |& tee "${EVIDENCE}/consumer-run.log"
+
+if [[ -n "${PYTHON_MODULE}" ]]; then
+  STAGE=python-import-smoke
+  python3 -c "import ${PYTHON_MODULE}; print('python-import=PASS module=${PYTHON_MODULE}')" | tee "${EVIDENCE}/python-import.log"
+fi
+
+if [[ -n "${QML_PACKAGE}" ]]; then
+  STAGE=qml-payload-smoke
+  QML_DEB="$(python3 - "${EVIDENCE}/built-debs.json" "${QML_PACKAGE}" <<'PY'
+import json,sys
+print(json.load(open(sys.argv[1]))[sys.argv[2]])
+PY
+)"
+  QML_ROOT="${WORK}/qml-root"
+  mkdir -p "${QML_ROOT}"
+  dpkg-deb -x "${QML_DEB}" "${QML_ROOT}"
+  find "${QML_ROOT}" -type f -name qmldir -print | tee "${EVIDENCE}/qml-qmldir.txt"
+  test -s "${EVIDENCE}/qml-qmldir.txt"
+fi
+
+STAGE=pass-evidence
+python3 - "${RESULT}" "${EVIDENCE}" "${NODE}" "${PACKAGE_VERSION}" "${SONAME}" <<'PY'
+import json,re,sys
+from pathlib import Path
+result_path=Path(sys.argv[1]); ev=Path(sys.argv[2]); node=sys.argv[3]
+data={}
+if result_path.exists() and result_path.stat().st_size:
+    data=json.loads(result_path.read_text())
+tests=re.search(r"100% tests passed, 0 tests failed out of ([1-9][0-9]*)",(ev/"sbuild.log").read_text())
+retained={}
+for line in (ev/"predecessor-dev-contracts.tsv").read_text().splitlines():
+    if not line.strip():
+        continue
+    pred,dev,ver=line.split("\t")
+    retained[pred]={"dev_package":dev,"version":ver}
+data.update({
+ "node":node,"package_version":sys.argv[4],"abi_soname":sys.argv[5],
+ "tests":f"{tests.group(1)}/{tests.group(1)} PASS" if tests else "PASS",
+ "abi_export_count":int((ev/"abi-export-count.txt").read_text().strip()),
+ "lintian":"PASS-errors","apt_check":"PASS","consumer_smoke":"PASS",
+ "predecessor_buildinfo_proof":"PASS","retained_predecessors":retained,
+})
+if (ev/"python-import.log").exists():
+    data["python_import"]="PASS"
+if (ev/"qml-qmldir.txt").exists():
+    data["qml_payload_smoke"]="PASS"
+result_path.write_text(json.dumps(data,indent=2)+"\n")
+PY
+
+STATE=PASS
+STAGE=complete
+echo "KDE Tier 2 Batch 3 ${NODE}: PASS"
+\t' read -r closure_id dev_pkg pred_ver; do
+  [[ -z "${closure_id}" ]] && continue
+  grep -F "${dev_pkg} (= ${pred_ver})" "${BUILDINFO[0]}" >> "${EVIDENCE}/package-closure-buildinfo-proof.txt"
+  printf '%s\t%s\t%s\n' "${closure_id}" "${dev_pkg}" "${pred_ver}" >> "${EVIDENCE}/package-closure-buildinfo-contracts.tsv"
+done < "${EVIDENCE}/package-closure-dev-contracts.tsv"
 
 STAGE=abi-contract
 RUNTIME_DEB="$(python3 - "${EVIDENCE}/built-debs.json" "${RUNTIME_PACKAGE}" <<'PY'

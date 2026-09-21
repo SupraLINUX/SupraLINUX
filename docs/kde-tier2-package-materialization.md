@@ -103,3 +103,24 @@ Run `35620923130` did not invalidate the whole five-node materialization batch. 
 Replacement materialization targets are exactly **KContacts and KPackage**. KContacts removes a Debian-only KCoreAddons source/development dependency and restores tests. KPackage removes KDocTools-only manpage install entries and restores tests while preserving `CMAKE_DISABLE_FIND_PACKAGE_KF6DocTools=ON`.
 
 This replacement remains `package_attempted=false` materialization work. It does not change package state and does not authorize APT publication.
+
+
+## Replacement materialization PASS
+
+Selective run `35623204805` completed the replacement materialization requested after the first Batch 3 campaign.
+
+KContacts replacement evidence:
+- job `106411141167`
+- artifact `10649784091`
+- artifact SHA-256 `bf0ea0c660da42ab84ff2e92d6196c90e65a274c40fafed1cc16a5c05f1dd432`
+- tree SHA-256 `2c19a5963c900f03f77a270029c04516d3aa3c4a2655fbdeff1af6e1769cc9f5`
+- Debian tree SHA-256 `fc5cae5f5ec04bd5a5be80acdcf0dbcde6610e2d07ddce35cfcd0217e030d835`.
+
+KPackage replacement evidence:
+- job `106411141243`
+- artifact `10649014863`
+- artifact SHA-256 `7d805f24f4bba2b9e9f4d383252b04ef6efe7dbdba64c72aa10e50382a148188`
+- tree SHA-256 `cd5bb495c9d621f2127653d0dbcc46e179a66901c8b13c67fd4c07c49307b559`
+- Debian tree SHA-256 `7fe53af6606ff304839ed1195a7df70b9b897872493b6faccdcb9924edd87c91`.
+
+Both replacement trees remain materialization-only evidence with `package_attempted=false`. They are now eligible for the next clean-build campaign, not package PASS and not APT stable publication.
