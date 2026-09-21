@@ -16,9 +16,19 @@ fingerprint_at() {
   git show "$1:manifests/kde-tier2-package-contracts.json" |
     python3 -c 'import hashlib,json,sys
 d=json.load(sys.stdin)
-d.pop("state",None); d.pop("reference_evidence",None)
-for n in d.get("nodes",{}).values(): n.pop("technical_references",None)
-print(hashlib.sha256(json.dumps(d,sort_keys=True,separators=(",",":")).encode()).hexdigest())'
+selected=d.get("selected_nodes",[])
+projection={
+ "selected_nodes":selected,
+ "compatibility_reference":d.get("compatibility_reference",{}),
+ "nodes":{
+   node:{
+     "source_package":d.get("nodes",{}).get(node,{}).get("source_package"),
+     "compatibility_binary_packages":d.get("nodes",{}).get(node,{}).get("compatibility_binary_packages",[]),
+   }
+   for node in selected
+ },
+}
+print(hashlib.sha256(json.dumps(projection,sort_keys=True,separators=(",",":")).encode()).hexdigest())'
 }
 
 mapfile -t changed < <(git diff --name-only "${BEFORE}" "${AFTER}" --)

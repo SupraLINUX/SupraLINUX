@@ -17,60 +17,16 @@
     "kunitconversion",
     "syndication"
   ],
-  "provider_audit_required": [
-    {
-      "node": "kservice",
-      "required_predecessors": [
-        "kconfig",
-        "kcoreaddons",
-        "ki18n"
-      ],
-      "conditional_frameworks": [],
-      "selected_profile": []
-    },
-    {
-      "node": "kdeclarative",
-      "required_predecessors": [
-        "ki18n",
-        "kconfig",
-        "kguiaddons",
-        "kglobalaccel",
-        "kwidgetsaddons"
-      ],
-      "conditional_frameworks": [
-        "kglobalaccel",
-        "kwidgetsaddons"
-      ],
-      "selected_profile": [
-        "kglobalaccel",
-        "kwidgetsaddons"
-      ]
-    },
-    {
-      "node": "kfilemetadata",
-      "required_predecessors": [
-        "ki18n",
-        "kcoreaddons",
-        "kcodecs",
-        "karchive",
-        "kconfig"
-      ],
-      "conditional_frameworks": [
-        "karchive",
-        "kconfig"
-      ],
-      "selected_profile": [
-        "karchive",
-        "kconfig"
-      ]
-    }
-  ],
+  "provider_audit_required": [],
   "package_contract_ready": [
     "kcolorscheme",
     "kcompletion",
     "kcontacts",
+    "kdeclarative",
+    "kfilemetadata",
     "kpackage",
-    "kpty"
+    "kpty",
+    "kservice"
   ],
   "human_decision_required": [
     {
@@ -80,11 +36,7 @@
   ],
   "build_queue": [],
   "audit_batch_size": 5,
-  "next_provider_audit_batch": [
-    "kservice",
-    "kdeclarative",
-    "kfilemetadata"
-  ],
+  "next_provider_audit_batch": [],
   "policy": {
     "canonical_manifest_is_source_of_truth": true,
     "provider_audit_precedes_package_contract": true,

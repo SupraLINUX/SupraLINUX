@@ -66,15 +66,13 @@ def remove_field(lines: list[str], name: str):
         del lines[start:end]
 
 
-def set_build_depends(lines: list[str], additions: list[str]):
-    current = field_value(lines, "Build-Depends")
-    if current is None:
-        raise SystemExit("debian/control lacks Build-Depends")
-    deps = [x.strip() for x in current.split(",") if x.strip()]
-    present_names = {re.split(r"\s|\(", dep, maxsplit=1)[0] for dep in deps}
-    for dep in additions:
-        if dep not in present_names:
-            deps.append(dep)
+def dependency_name(dep: str) -> str:
+    return re.split(r"\s|\(", dep, maxsplit=1)[0]
+
+
+def render_build_depends(lines: list[str], deps: list[str]):
+    if not deps:
+        raise SystemExit("Build-Depends cannot become empty")
     rendered = "Build-Depends: " + deps[0]
     if len(deps) > 1:
         rendered += ",\n" + "\n".join(
@@ -84,6 +82,35 @@ def set_build_depends(lines: list[str], additions: list[str]):
     mapping = spans(lines)
     start, end = mapping["Build-Depends"]
     lines[start:end] = rendered.splitlines()
+
+
+def remove_build_depends(lines: list[str], removals: list[str]):
+    if not removals:
+        return
+    current = field_value(lines, "Build-Depends")
+    if current is None:
+        raise SystemExit("debian/control lacks Build-Depends")
+    deps = [x.strip() for x in current.split(",") if x.strip()]
+    names = {dependency_name(dep) for dep in deps}
+    missing = sorted(set(removals) - names)
+    if missing:
+        raise SystemExit(f"technical reference missing expected removable Build-Depends: {missing}")
+    removal_set = set(removals)
+    kept = [dep for dep in deps if dependency_name(dep) not in removal_set]
+    render_build_depends(lines, kept)
+
+
+def set_build_depends(lines: list[str], additions: list[str]):
+    current = field_value(lines, "Build-Depends")
+    if current is None:
+        raise SystemExit("debian/control lacks Build-Depends")
+    deps = [x.strip() for x in current.split(",") if x.strip()]
+    present_names = {dependency_name(dep) for dep in deps}
+    for dep in additions:
+        if dep not in present_names:
+            deps.append(dep)
+    render_build_depends(lines, deps)
+
 
 
 def modify_control(path: Path, node: dict, debhelper_compat: dict, shiboken_provider: dict):
@@ -112,6 +139,7 @@ def modify_control(path: Path, node: dict, debhelper_compat: dict, shiboken_prov
     # Add this last so no later source-field rewrite can consume it as part of
     # a preceding multi-line field span.
     set_field(source_lines, "XSBC-Original-Maintainer", original_maintainer)
+    remove_build_depends(source_lines, node.get("build_depends_remove", []))
 
     python_module = node.get("python_module")
     if python_module:
@@ -326,6 +354,7 @@ def main() -> int:
         },
         "python_runtime_contract": node.get("python_runtime_contract"),
         "symbols_adjustments": node.get("symbols_adjustments", []),
+        "build_depends_remove": node.get("build_depends_remove", []),
         "package_state_effect": "none",
     }
     (debian / "supralinux-materialization.json").write_text(json.dumps(metadata, indent=2) + "\n")

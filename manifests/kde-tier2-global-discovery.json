@@ -68,7 +68,7 @@
       }
     },
     "kdeclarative": {
-      "readiness": "package-lane-pending",
+      "readiness": "package-contract-ready",
       "tier1_predecessors": [
         "ki18n",
         "kconfig",
@@ -80,10 +80,16 @@
         "kglobalaccel",
         "kwidgetsaddons"
       ],
-      "provider_audit": "required-before-materialization"
+      "provider_audit": "complete",
+      "provider_audit_evidence": {
+        "workflow_run": 35607692129,
+        "job_id": 106358717091,
+        "artifact_id": 10642947552,
+        "artifact_sha256": "ced417aa88fffb9de0762423ffeef72533c6795c07131a2e4d7911ba5b62edab"
+      }
     },
     "kfilemetadata": {
-      "readiness": "package-lane-pending",
+      "readiness": "package-contract-ready",
       "tier1_predecessors": [
         "ki18n",
         "kcoreaddons",
@@ -95,7 +101,13 @@
         "karchive",
         "kconfig"
       ],
-      "provider_audit": "required-before-materialization"
+      "provider_audit": "complete",
+      "provider_audit_evidence": {
+        "workflow_run": 35607692129,
+        "job_id": 106358717091,
+        "artifact_id": 10642947552,
+        "artifact_sha256": "ced417aa88fffb9de0762423ffeef72533c6795c07131a2e4d7911ba5b62edab"
+      }
     },
     "kpackage": {
       "readiness": "package-contract-ready",
@@ -130,7 +142,7 @@
       }
     },
     "kservice": {
-      "readiness": "package-lane-pending",
+      "readiness": "package-contract-ready",
       "tier1_predecessors": [
         "kconfig",
         "kcoreaddons",
@@ -138,7 +150,14 @@
       ],
       "optional_higher_tier": [
         "kdoctools"
-      ]
+      ],
+      "provider_audit": "complete",
+      "provider_audit_evidence": {
+        "workflow_run": 35607692129,
+        "job_id": 106358717091,
+        "artifact_id": 10642947552,
+        "artifact_sha256": "ced417aa88fffb9de0762423ffeef72533c6795c07131a2e4d7911ba5b62edab"
+      }
     },
     "kmime": {
       "readiness": "compatibility-decision-required",

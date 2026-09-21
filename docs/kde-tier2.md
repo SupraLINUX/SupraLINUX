@@ -124,3 +124,12 @@ Remaining pending nodes are KColorscheme, KCompletion, KContacts, KDeclarative, 
 KPty, KColorScheme, KCompletion, KContacts and KPackage have passed their Ubuntu Resolute provider/profile audit and advance from `package-lane-pending` to `package-contract-ready`. Canonical package state is unchanged at **6 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.
 
 The remaining unaudited package-lane nodes are KService, KDeclarative and KFileMetadata; KMime remains the separate compatibility-decision case.
+
+
+## Ordinary provider-audit lane complete
+
+KService, KDeclarative and KFileMetaData passed provider audit batch 3 and are now package-contract-ready. The generated ordinary provider-audit queue is empty.
+
+There are now eight package-contract-ready pending nodes: KColorScheme, KCompletion, KContacts, KDeclarative, KFileMetaData, KPackage, KPty and KService. KMime remains the only pending Tier 2 node outside that lane because ADR-0002 requires a compatibility decision.
+
+Canonical package state remains **6 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.

@@ -35,6 +35,11 @@ else:
         req(mat.get("result")=="PASS","materialization result")
         req(set(mat.get("evidence",{})) <= set(selected),"materialization evidence selected")
 
+if "kpackage" in selected:
+    kp=contracts["nodes"]["kpackage"]
+    req(kp.get("build_depends_remove")==["libkf6doctools-dev"],"KPackage DocTools Build-Depends removal")
+    req(kp.get("selected_profile",{}).get("CMAKE_DISABLE_FIND_PACKAGE_KF6DocTools") is True,"KPackage DocTools CMake disable")
+
 for node_id in selected:
     n=canonical[node_id]
     req(n.get("state")=="pending",f"{node_id}: materialization never promotes package state")

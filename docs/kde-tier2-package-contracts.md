@@ -112,3 +112,14 @@ Ubuntu Resolute remains only a compatibility/packaging reference. The current Ub
 The previous KCrash/KNotifications/KStatusNotifierItem/KUnitConversion/Syndication contract evidence and materialization history is retained under the manifest history and canonical package evidence; it is not overwritten by the new active batch.
 
 Materialization is explicitly blocked while the new technical-reference snapshot is pending.
+
+
+## Package-contract batch 2 reference capture PASS
+
+Run `35607692121`, job `106358716421`, artifact `10642218003`, artifact SHA-256 `d683cade7450654d599e467486f0956632044bedbfc880fdc92ece091add61fe`: **PASS** for KColorScheme, KCompletion, KContacts, KPackage and KPty.
+
+Ubuntu Resolute references are `6.24.0-0ubuntu1`; Debian sid references are `6.30.0-1`. The Debian orig tarballs for all five match the KDE-authoritative 6.30.0 source SHA-256 values, so no source repack policy is required for this batch.
+
+KPackage exposes a deliberate authority/provider split. KDE upstream declares KF6DocTools optional, while the Debian technical-reference packaging makes `libkf6doctools-dev` mandatory. SupraLINUX removes that technical-reference Build-Depends and materializes `-DCMAKE_DISABLE_FIND_PACKAGE_KF6DocTools=ON` until a matching SupraLINUX KDE 6.30 DocTools provider exists. This avoids importing an older distro KDE Framework solely because the reference packaging chose it.
+
+Reference snapshot SHA-256 is `703ec8233c2694bad11b9b41545bc5828f45b8e070706bac35a470c7d7af139a`; versions TSV SHA-256 is `5b135cfaedd0b6a4d1d2bbd6648a943fb351e54f9d2294114b75ef99c2d2c861`.

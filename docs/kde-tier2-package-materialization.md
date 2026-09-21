@@ -72,3 +72,12 @@ After promotion, the build queue reopens only for KNotifications, KStatusNotifie
 The materialization planner now refuses to emit any matrix while the active contract state is `reference-capture-pending` or materialization status is `blocked-reference-capture`. A semantic contract change may trigger the workflow, but it produces an intentional zero-node skip until the pinned technical references are promoted.
 
 This prevents a package-contract-ready node from accidentally consuming stale packaging evidence from the previous batch.
+
+
+## Batch 2 materialization activated
+
+After reference capture PASS, KColorScheme, KCompletion, KContacts, KPackage and KPty are the only active materialization targets.
+
+The materializer can now remove explicitly reviewed Build-Depends that belong to the technical packaging reference rather than KDE's upstream feature requirements. Removal is fail-closed: every declared package must actually exist in the reference Build-Depends before it can be removed, and the generated tree contract verifies that it is absent afterwards.
+
+For KPackage this applies only to `libkf6doctools-dev`, paired with `CMAKE_DISABLE_FIND_PACKAGE_KF6DocTools=ON`. All boolean selected-profile CMake flags are now validated generically in the generated `debian/rules`.

@@ -271,6 +271,31 @@ require_contains "maintainer" 'Maintainer: SupraLINUX Build System <build@supral
 require_contains "original-maintainer" 'XSBC-Original-Maintainer:' "${SRC}/debian/control"
 require_contains "debhelper-compat-provider-level" "debhelper-compat (= ${DEBHELPER_COMPAT_LEVEL})" "${SRC}/debian/control"
 
+python3 - "${CONTRACTS}" "${NODE}" "${SRC}/debian/control" "${SRC}/debian/rules" <<'PY'
+import json,re,sys
+contracts,node,control_path,rules_path=sys.argv[1:]
+c=json.load(open(contracts))["nodes"][node]
+control=open(control_path).read()
+source=control.split("\n\n",1)[0]
+match=re.search(r"^Build-Depends:\s*(.*(?:\n[ \t].*)*)",source,re.M)
+if not match:
+    raise SystemExit(f"{node}: generated control lacks Build-Depends")
+field=" ".join(line.strip() for line in match.group(1).splitlines())
+deps=[x.strip() for x in field.split(",") if x.strip()]
+names={re.split(r"\s|\(",dep,maxsplit=1)[0] for dep in deps}
+for removed in c.get("build_depends_remove",[]):
+    if removed in names:
+        raise SystemExit(f"{node}: removed technical-reference Build-Depends still present: {removed}")
+rules=open(rules_path).read()
+for key,value in c.get("selected_profile",{}).items():
+    if key=="BUILD_QML_IF_PROVIDER_AVAILABLE" or not isinstance(value,bool):
+        continue
+    flag=f"-D{key}={'ON' if value else 'OFF'}"
+    if flag not in rules:
+        raise SystemExit(f"{node}: selected profile flag missing from generated rules: {flag}")
+print(f"generic-package-adaptation-contract PASS: {node}")
+PY
+
 if python3 - "${CONTRACTS}" "${NODE}" <<'PY'
 import json,sys
 d=json.load(open(sys.argv[1]))

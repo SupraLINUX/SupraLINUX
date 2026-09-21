@@ -108,3 +108,12 @@ The final ordinary provider-audit batch is KService, KDeclarative and KFileMetaD
 KDeclarative's Linux-selected Framework edges now include KGlobalAccel and KWidgetsAddons. KFileMetaData's corrected required Framework set includes KCoreAddons and KCodecs, while KArchive/KConfig are selected optional integrations backed by retained SupraLINUX 6.30 providers.
 
 KFileMetaData requires Linux Xattr and records its metadata extractors as optional upstream integrations. The audit must report candidate availability without silently converting those optional providers into mandatory package-state requirements.
+
+
+## Provider audit batch 3 PASS
+
+Run `35607692129`, job `106358717091`, artifact `10642947552`, SHA-256 `ced417aa88fffb9de0762423ffeef72533c6795c07131a2e4d7911ba5b62edab`: **PASS** for KService, KDeclarative and KFileMetaData.
+
+Required providers include Linux Xattr `libattr1-dev 1:2.5.2-4ubuntu0.1`, Qt base `6.10.2+dfsg-7` and Qt declarative `6.10.2+dfsg-3`. All audited optional KFileMetaData extractor candidates were present in Resolute, including Poppler Qt6, TagLib, Exiv2, FFmpeg, EPub, CatDoc, QMobipocket6 and libappimage.
+
+These three nodes advance to package-contract-ready. Provider audit changes no package state.

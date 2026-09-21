@@ -355,7 +355,7 @@
           "kwidgetsaddons"
         ]
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Upstream v6.30.0 requires Qt Qml/Quick/Gui. On Linux it requires KGlobalAccel; on non-Android it requires KWidgetsAddons. Tests require Qt Test.",
       "qt": {
         "required": [
@@ -391,7 +391,7 @@
           "kconfig"
         ]
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Upstream v6.30.0 requires Qt Xml, KCoreAddons, KI18n, KCodecs and Linux Xattr. Qt Gui is effectively required by the always-built dump utility. Archive/Config and metadata extractor libraries are optional upstream integrations.",
       "qt": {
         "required": [
@@ -537,7 +537,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Upstream v6.30.0 requires Qt Xml and, with BUILD_TESTING enabled, Qt Concurrent and Test. KF6DocTools is optional and is not substituted from an older distro Framework.",
       "qt": {
         "required": [
@@ -770,7 +770,7 @@
   "provider_audit": {
     "schema": 1,
     "batch": "tier2-provider-audit-3",
-    "status": "pending-ci",
+    "status": "PASS",
     "nodes": [
       "kservice",
       "kdeclarative",
@@ -904,6 +904,35 @@
           "header": "PASS",
           "library": "PASS"
         }
+      }
+    },
+    "evidence": {
+      "result": "PASS",
+      "workflow_run": 35607692129,
+      "job_id": 106358717091,
+      "commit": "bae9a4d107fdc8b7387f1adf3dd8df21e7dba4ee",
+      "artifact_id": 10642947552,
+      "artifact_sha256": "ced417aa88fffb9de0762423ffeef72533c6795c07131a2e4d7911ba5b62edab",
+      "claim": "provider-availability-and-selected-profile-only",
+      "package_state_effect": "none",
+      "ubuntu_version": "26.04",
+      "qt_upstream": "6.10.2",
+      "observed_providers": {
+        "libattr1-dev": "1:2.5.2-4ubuntu0.1",
+        "qt6-base-dev": "6.10.2+dfsg-7",
+        "qt6-declarative-dev": "6.10.2+dfsg-3"
+      },
+      "optional_candidates": {
+        "catdoc": "1:0.95-6build1",
+        "libappimage-dev": "1.0.4-5-7build1",
+        "libavcodec-dev": "7:8.0.1-3ubuntu2",
+        "libavformat-dev": "7:8.0.1-3ubuntu2",
+        "libavutil-dev": "7:8.0.1-3ubuntu2",
+        "libepub-dev": "0.2.2-8",
+        "libexiv2-dev": "0.28.8+dfsg-1",
+        "libpoppler-qt6-dev": "26.01.0-2ubuntu0.1",
+        "libqmobipocket6-dev": "4:25.12.3-0ubuntu1",
+        "libtag-dev": "2.2.1-3"
       }
     }
   }

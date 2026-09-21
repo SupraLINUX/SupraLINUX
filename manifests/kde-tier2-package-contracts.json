@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "as_of": "2026-09-21",
-  "state": "reference-capture-pending",
+  "state": "reference-capture-pass",
   "source_authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "packaging_authority": "supralinux",
@@ -294,6 +294,21 @@
       "soname": "libKF6ColorScheme.so.6",
       "selected_profile": {
         "BUILD_TESTING": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "9f27ec0d90b0d408b92105c25a2daade70fafafa59f8849beefb93df288e5d99",
+          "debian_tar_sha256": "714ed15d93745425bed0f6040eee3a2d0534b91e89611cfa19be350a66f3ec9f",
+          "orig_tar_sha256": "e9c9e0155e9b8049ad8588049645c998494b91145648467ddcbef178e31e84c5"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "2bc45fa48ca9bef036dedcef2483f7729abf82ff3ddf3e9e6b997d7d7c2129f6",
+          "debian_tar_sha256": "160d5e927400f8a16d2dd51affe0f1cc66ab273f93f4a365109cff5ef9914c9f",
+          "orig_tar_sha256": "a4128e82e47cd474c777754c4dd8af28a00a57ecf388da1a62f8173d898890d0",
+          "orig_matches_kde_authority": true
+        }
       }
     },
     "kcompletion": {
@@ -314,6 +329,21 @@
       "selected_profile": {
         "BUILD_TESTING": true,
         "BUILD_DESIGNERPLUGIN": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "a3c6da82683645d0072dcbbd36707f3d42d25acf2ffa0c73f3ec90adf557aef3",
+          "debian_tar_sha256": "e7aef369fe95c8a21f3828a344c535c451921c7e754c62b79b5668bc58dad2d3",
+          "orig_tar_sha256": "1bdfb8f2dcb8da558d7210d7f21f054c4f0d934d69e86aed36675755ded370d5"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "91d1174f6ded6556a642e724e1ffb7c19943ee783cc3945c9a6acb29fb7b8c7d",
+          "debian_tar_sha256": "94f5e30fa94adbd8a717e03167686738818ffc0028a951178723442ed5ae1aa5",
+          "orig_tar_sha256": "96ad9c429ca53b830359c45614ca4c32ed6b759f3023f1b3db1650ba1c19bd58",
+          "orig_matches_kde_authority": true
+        }
       }
     },
     "kcontacts": {
@@ -335,6 +365,21 @@
       "selected_profile": {
         "BUILD_TESTING": true,
         "USE_QML": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "85264d2c2bc23cd05fc8e81f78a119c3dbe90edaf2910efa7301ada13a024463",
+          "debian_tar_sha256": "1a1b633ec10f11ec3b09ca8f7654d012b985943d7712a83b3b1e0b799d4879b5",
+          "orig_tar_sha256": "7ffc5c0e6c7966d47c996dd778a47d2cd1bb711baa4b63be441c941a334ab48b"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "6643bd579d89428d7526809f8fadaad5949d9141e7212e3c821a13e6c891df98",
+          "debian_tar_sha256": "770640bfd5cd78b325c4e9b2d43769aee466174ec788767656e4c7a7201c8037",
+          "orig_tar_sha256": "170b51a41ac132968ea03d5f1ce8c585777155bbdc57e819a0562b1f8d03b7a5",
+          "orig_matches_kde_authority": true
+        }
       }
     },
     "kpackage": {
@@ -355,7 +400,34 @@
       "soname": "libKF6Package.so.6",
       "selected_profile": {
         "BUILD_TESTING": true,
-        "USE_DBUS": true
+        "USE_DBUS": true,
+        "CMAKE_DISABLE_FIND_PACKAGE_KF6DocTools": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "e027ffb8d90a2cb676b38f15e75c2bfb9ecd0be079240f628119269e24a5f425",
+          "debian_tar_sha256": "3bc48f86e7068737a689a8b82ea48fc9b894de8880ee823875471a1f03585256",
+          "orig_tar_sha256": "50e0c35f61a764f8568760948f4027c51c476701e3ddc529360abd78fe3cc074"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "4be44b0eae95687f2803ca2c2721e056400f99b308e275f95b7a07ba1f0914a9",
+          "debian_tar_sha256": "b108c8d6d0bae8a9a00622786481b16d3fae47ea7cc5093674161ce739f20fca",
+          "orig_tar_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
+          "orig_matches_kde_authority": true
+        }
+      },
+      "build_depends_remove": [
+        "libkf6doctools-dev"
+      ],
+      "provider_adaptation": {
+        "classification": "technical-reference-overconstraint-removal",
+        "removed_build_depends": [
+          "libkf6doctools-dev"
+        ],
+        "upstream_basis": "KF6DocTools is optional in KDE KPackage v6.30.0",
+        "kde_feature_effect": "optional-documentation-integration-disabled-until-matching-supralinux-provider"
       }
     },
     "kpty": {
@@ -375,22 +447,45 @@
       "soname": "libKF6Pty.so.6",
       "selected_profile": {
         "BUILD_TESTING": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "b68a6d98156e5b58851528f9e9d7e9710ac7ad656440f9a1c561bd132596387f",
+          "debian_tar_sha256": "11737659362e2df8d4be737a078c79cb8ae9eb8f2e457949bf7d36a7c8954a2a",
+          "orig_tar_sha256": "27aff14f8211a8873008fd528998727523d98bb5d5018f48a0509ef5792b8319"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "66f776d8c1d8931c442722505a30ff04ebe53841e7a48ec693dcbc176c1b264f",
+          "debian_tar_sha256": "cee27a5e509fd860b3e74098122d020665b46859f3d7a1cb6071f7dea1e46795",
+          "orig_tar_sha256": "ad66149c20470de29d483f0ccdcb057d42ccf778f3f8cc8e68aefca5380bace7",
+          "orig_matches_kde_authority": true
+        }
       }
     }
   },
   "reference_evidence": {
-    "result": "pending",
+    "result": "PASS",
+    "workflow_run": 35607692121,
+    "job_id": 106358716421,
+    "commit": "bae9a4d107fdc8b7387f1adf3dd8df21e7dba4ee",
+    "artifact_id": 10642218003,
+    "artifact_sha256": "d683cade7450654d599e467486f0956632044bedbfc880fdc92ece091add61fe",
+    "snapshot_sha256": "703ec8233c2694bad11b9b41545bc5828f45b8e070706bac35a470c7d7af139a",
+    "versions_sha256": "5b135cfaedd0b6a4d1d2bbd6648a943fb351e54f9d2294114b75ef99c2d2c861",
+    "result_json_sha256": "5fd85f5d9365a658497bd104007f666304c3f88da2366d32b2bf5b629bf6b14f",
     "claim": "packaging-reference-snapshot-only",
     "package_state_effect": "none"
   },
   "materialization": {
-    "status": "blocked-reference-capture",
+    "status": "pending-ci",
     "method": "kde-authority-source-plus-pinned-debian-tree",
     "package_state_effect": "none",
     "package_attempted": false,
     "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
     "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
-    "reason": "awaiting-tier2-package-contract-2-reference-capture",
+    "reason": "tier2-package-contract-2-initial-materialization",
     "result": "pending",
     "targets": [
       "kcolorscheme",

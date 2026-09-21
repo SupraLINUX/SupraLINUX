@@ -67,6 +67,12 @@ else:
         req(contracts["nodes"][node_id]["technical_references"]["ubuntu"].get("version")=="6.24.0-0ubuntu1",f"{node_id}: Resolute KDE reference")
         req(contracts["nodes"][node_id]["technical_references"]["debian"].get("version")=="6.30.0-1",f"{node_id}: Debian KDE 6.30 reference")
 
+if "kpackage" in selected:
+    kp=contracts["nodes"]["kpackage"]
+    req(kp.get("build_depends_remove")==["libkf6doctools-dev"],"KPackage technical-reference DocTools Build-Depends removal")
+    req(kp.get("selected_profile",{}).get("CMAKE_DISABLE_FIND_PACKAGE_KF6DocTools") is True,"KPackage optional DocTools disabled without matching SupraLINUX provider")
+    req(kp.get("provider_adaptation",{}).get("classification")=="technical-reference-overconstraint-removal","KPackage reference-overconstraint classification")
+
 history=contracts.get("history",[])
 req(any(h.get("batch")=="tier2-package-contract-1" for h in history),"historical Batch 1 contract evidence retained")
 
