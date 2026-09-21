@@ -30,7 +30,8 @@ runnable={n for n in expected if c["nodes"][n].get("state") in {"prepared-pendin
 req(pass_nodes==set(expected),"Batch2 final PASS set")
 req(remat_nodes|runnable|pass_nodes==set(expected),"Batch2 node state partition")
 req(set(plan.get("retained_pass",[])) >= {"kauth","kcrash"},"generated plan retains KCrash")
-req(runnable <= set(plan.get("build_queue",[])),"Batch2 runnable nodes must be present in the global build queue")\nreq(set(plan.get("build_queue",[])).isdisjoint(pass_nodes),"Batch2 retained PASS nodes must be absent from the global build queue")
+req(runnable <= set(plan.get("build_queue",[])),"Batch2 runnable nodes must be present in the global build queue")
+req(set(plan.get("build_queue",[])).isdisjoint(pass_nodes),"Batch2 retained PASS nodes must be absent from the global build queue")
 req(set(plan.get("package_contract_ready",[])) >= remat_nodes,"rematerialization nodes remain contract-ready")
 
 for node_id in expected:
