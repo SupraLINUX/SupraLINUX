@@ -64,8 +64,8 @@ pass_nodes={n for n in expected if c["nodes"][n].get("state")=="PASS"}
 req(runnable==set(),"Batch3 runnable queue empty")
 req(rematerialization==set(),"Batch3 rematerialization queue empty")
 req(pass_nodes==set(expected),"Batch3 five-node PASS closure")
-req(plan.get("build_queue")==[],"generated build queue empty after Batch3 closure")
-req(set(plan.get("package_contract_ready",[]))=={"kdeclarative","kfilemetadata","kservice"},"next package-contract-ready set")
+req(set(expected).isdisjoint(set(plan.get("build_queue",[]))),"Batch3 retained PASS nodes absent from current build queue")
+req(set(expected).isdisjoint(set(plan.get("package_contract_ready",[]))),"Batch3 retained PASS nodes absent from current package-contract queue")
 req(set(expected) <= set(plan.get("retained_pass",[])),"all Batch3 nodes retained globally")
 
 used=set()

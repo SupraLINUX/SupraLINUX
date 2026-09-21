@@ -198,3 +198,17 @@ For KDeclarative, the first Ubuntu-compatibility split moved only the SONAME sym
 For KService, source Build-Depends already removed optional KDocTools correctly, but `libkf6service-dev` still retained the Debian-reference `libkf6doctools-dev` Depends. Because KService upstream treats KDocTools as optional, that binary-development overconstraint is removed too.
 
 Only KDeclarative and KService are rematerialized. KFileMetaData is build-ready. Canonical package state remains **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+## Contract batch 3 materialization closed 3/3 PASS
+
+Selective remediation run `35636800957` completed PASS for KDeclarative and KService; retained KFileMetaData evidence from run `35635818815` remains valid.
+
+Final materialization evidence:
+- KDeclarative: job `106456174035`, artifact `10656343343`, artifact SHA-256 `0db6c87b3c7f5a9beb81a0e919270d69e23533080b256659d2d439ac5ddf7233`, tree SHA-256 `0fd4cf10600c3d07cbbdbf0459751614ed20618da409cd36f39f63880e3e4c85`, Debian tree SHA-256 `4a6a33bcb2e661159d76d9ca09d42b8b67b7deeeec26cab343b52971e9c63eb0`.
+- KFileMetaData: job `106452910488`, artifact `10656246928`, artifact SHA-256 `f5a31635efaf6aa9b8c9b8aa378f3c48a011ea4360a06edd9bafe26f7546361e`, tree SHA-256 `ab84c9dbcfe0efc2b50a663bb1e5c6b893548f31c596215ae06df266846c90e5`, Debian tree SHA-256 `221b6a05b2a48fb06d2662548f2997fb59f208ddec962108e539808b48d4709a`.
+- KService: job `106456174118`, artifact `10657011134`, artifact SHA-256 `485b92ac6c739aebf51259b1a3fd85d6dc04f135c53666faa37489bc0756dc61`, tree SHA-256 `d3c844418c1fb5a02705da4cffde44aba02b2300ffccfed9a5ee8e73af929591`, Debian tree SHA-256 `4100351a0222d1f5a1fd17768c84e160b58cebcd4149ef4fa734fb71af99a3b5`.
+
+Artifact inspection confirms KDeclarative's `libkquickcontrolsprivate0.install` now owns both `libkquickcontrolsprivate.so.0` and `libkquickcontrolsprivate.so.6.*`, while the QML package retains only QML module payload. KService contains no KDocTools source Build-Depends and no `libkf6doctools-dev` dependency in `libkf6service-dev`.
+
+All three nodes are now `build-ready`. Materialization remains `package_attempted=false`; package PASS still requires clean sbuild evidence.

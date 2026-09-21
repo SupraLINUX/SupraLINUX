@@ -23,7 +23,7 @@
   },
   "nodes": {
     "kdeclarative": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "ki18n",
         "kconfig",
@@ -52,7 +52,16 @@
           "status": "superseded-for-integration",
           "package_state_effect": "none"
         }
-      ]
+      ],
+      "materialization_evidence": {
+        "result": "PASS",
+        "workflow_run": 35636800957,
+        "job_id": 106456174035,
+        "commit": "e193ebe8b2a0b80129d2b064306b5d68bf8e91b7",
+        "artifact_id": 10656343343,
+        "artifact_sha256": "0db6c87b3c7f5a9beb81a0e919270d69e23533080b256659d2d439ac5ddf7233",
+        "package_state_effect": "none"
+      }
     },
     "kfilemetadata": {
       "readiness": "build-ready",
@@ -85,7 +94,7 @@
       }
     },
     "kservice": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "kconfig",
         "kcoreaddons",
@@ -111,7 +120,16 @@
           "status": "superseded-for-integration",
           "package_state_effect": "none"
         }
-      ]
+      ],
+      "materialization_evidence": {
+        "result": "PASS",
+        "workflow_run": 35636800957,
+        "job_id": 106456174118,
+        "commit": "e193ebe8b2a0b80129d2b064306b5d68bf8e91b7",
+        "artifact_id": 10657011134,
+        "artifact_sha256": "485b92ac6c739aebf51259b1a3fd85d6dc04f135c53666faa37489bc0756dc61",
+        "package_state_effect": "none"
+      }
     },
     "kmime": {
       "readiness": "compatibility-decision-required",

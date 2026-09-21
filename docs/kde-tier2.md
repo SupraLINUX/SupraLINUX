@@ -243,3 +243,12 @@ The first deterministic materialization run `35635818815` produced three source 
 KFileMetaData is retained build-ready. KDeclarative is rematerialized so the Ubuntu-compatible `libkquickcontrolsprivate0` owns both the SONAME symlink and versioned private library rather than splitting them across two packages. KService is rematerialized so optional KDocTools is absent from both source Build-Depends and `libkf6service-dev` Depends.
 
 These are packaging-integration corrections with `package_attempted=false`; canonical Tier 2 remains **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. KMime remains independently gated by ADR-0002.
+
+
+## KDeclarative/KFileMetaData/KService build-ready
+
+Contract batch 3 deterministic materialization is now **3/3 PASS**. KDeclarative, KFileMetaData and KService are all build-ready for the next clean package campaign.
+
+The final materialized KDeclarative tree preserves Ubuntu's `libkquickcontrolsprivate0` contract with the complete SOVERSION-0 library payload. KService contains no mandatory KDocTools dependency after applying upstream's optional-provider semantics. KFileMetaData retained its first valid materialization without redundant rebuilding.
+
+Canonical package state is still **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until clean-build evidence promotes these nodes.

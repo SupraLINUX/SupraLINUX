@@ -218,3 +218,12 @@ Inspection of materialization run `35635818815` refined two package contracts wi
 **KService:** KDocTools is optional upstream. Removing it only from source Build-Depends was insufficient because the Debian technical reference also propagated `libkf6doctools-dev` into `libkf6service-dev` Depends. SupraLINUX removes that binary Depends as the same optional-provider overconstraint.
 
 KFileMetaData's first materialization needs no remediation and remains retained PASS materialization evidence. No package state changes occur during these corrections.
+
+
+## Contract batch 3 materialization contract validated
+
+The corrected KDeclarative and KService trees passed deterministic rematerialization in run `35636800957`. Together with retained KFileMetaData, the contract batch is now 3/3 materialized.
+
+The KDeclarative binary split is now fail-closed for the complete private-library runtime payload: both SONAME symlink and versioned library must move together, and neither may remain duplicated in another binary package install list.
+
+KService's optional KDocTools adaptation is complete across both source and development binary dependency contracts. This preserves upstream's optional dependency semantics while keeping Ubuntu/Debian package compatibility where technically applicable.

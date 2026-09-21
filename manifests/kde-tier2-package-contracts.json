@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "as_of": "2026-09-21",
-  "state": "reference-capture-pass",
+  "state": "materialized",
   "source_authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "packaging_authority": "supralinux",
@@ -809,18 +809,15 @@
     "input_manifest_sha256": "20c12e82242a51005d4b72d080e77c305e213d6d1a12b6367b310332fec73fde"
   },
   "materialization": {
-    "status": "pending-ci",
+    "status": "PASS",
     "method": "kde-authority-source-plus-pinned-debian-tree",
     "package_state_effect": "none",
     "package_attempted": false,
     "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
     "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
-    "reason": "tier2-package-contract-3-selective-rematerialization-kdeclarative-kservice",
-    "result": "pending",
-    "targets": [
-      "kdeclarative",
-      "kservice"
-    ],
+    "reason": "tier2-package-contract-3-materialization-pass",
+    "result": "PASS",
+    "targets": [],
     "retained_package_pass": [
       "kauth",
       "kcolorscheme",
@@ -834,11 +831,30 @@
       "kunitconversion",
       "syndication"
     ],
-    "workflow_run": 35635818815,
-    "commit": "40d51b2282660c19032c8194aa43467d73c68cf7",
+    "workflow_run": 35636800957,
+    "commit": "e193ebe8b2a0b80129d2b064306b5d68bf8e91b7",
     "evidence": {
+      "kdeclarative": {
+        "workflow_run": 35636800957,
+        "job_id": 106456174035,
+        "commit": "e193ebe8b2a0b80129d2b064306b5d68bf8e91b7",
+        "artifact_id": 10656343343,
+        "artifact_sha256": "0db6c87b3c7f5a9beb81a0e919270d69e23533080b256659d2d439ac5ddf7233",
+        "tree_sha256": "0fd4cf10600c3d07cbbdbf0459751614ed20618da409cd36f39f63880e3e4c85",
+        "debian_tree_sha256": "4a6a33bcb2e661159d76d9ca09d42b8b67b7deeeec26cab343b52971e9c63eb0",
+        "dsc_sha256": "b4ed483a8e1f548c82461271e21ab582240a6e739f353c9034eac3e108a95ee7",
+        "debian_tar_sha256": "2f32d407bc0c8abeb110e68e62425a0d80030d4043b25c1e01a1f19f747b63e4",
+        "orig_tar_sha256": "7ec3583a2cf2cd7143e39936ffb39e22d20563f4c87a8462e0e9d12c59ea89a6",
+        "package_version": "6.30.0-0supralinux1",
+        "source_package": "kf6-kdeclarative",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none"
+      },
       "kfilemetadata": {
+        "workflow_run": 35635818815,
         "job_id": 106452910488,
+        "commit": "40d51b2282660c19032c8194aa43467d73c68cf7",
         "artifact_id": 10656246928,
         "artifact_sha256": "f5a31635efaf6aa9b8c9b8aa378f3c48a011ea4360a06edd9bafe26f7546361e",
         "tree_sha256": "ab84c9dbcfe0efc2b50a663bb1e5c6b893548f31c596215ae06df266846c90e5",
@@ -850,9 +866,24 @@
         "source_package": "kf6-kfilemetadata",
         "result": "PASS",
         "package_attempted": false,
-        "package_state_effect": "none",
-        "workflow_run": 35635818815,
-        "commit": "40d51b2282660c19032c8194aa43467d73c68cf7"
+        "package_state_effect": "none"
+      },
+      "kservice": {
+        "workflow_run": 35636800957,
+        "job_id": 106456174118,
+        "commit": "e193ebe8b2a0b80129d2b064306b5d68bf8e91b7",
+        "artifact_id": 10657011134,
+        "artifact_sha256": "485b92ac6c739aebf51259b1a3fd85d6dc04f135c53666faa37489bc0756dc61",
+        "tree_sha256": "d3c844418c1fb5a02705da4cffde44aba02b2300ffccfed9a5ee8e73af929591",
+        "debian_tree_sha256": "4100351a0222d1f5a1fd17768c84e160b58cebcd4149ef4fa734fb71af99a3b5",
+        "dsc_sha256": "f7cc4bbc2292888ca282a4358dc2de4b472a9858a6c41749f07d573de758f1b9",
+        "debian_tar_sha256": "af74952199c62ffa8f0a2a163947cf7d26323b0a3584fa021a6c6f49085db7ef",
+        "orig_tar_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
+        "package_version": "6.30.0-0supralinux1",
+        "source_package": "kf6-kservice",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none"
       }
     },
     "history": [
