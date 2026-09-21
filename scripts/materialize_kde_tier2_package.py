@@ -169,6 +169,53 @@ def remove_install_entries(debian: Path, removals_by_file: dict[str, list[str]])
         path.write_text("\n".join(kept) + "\n")
 
 
+def split_binary_packages(debian: Path, paragraphs: list[str], specs: list[dict]):
+    for spec in specs:
+        package = spec["package"]
+        needle = spec["source_match_substring"]
+        target_install = debian / f"{package}.install"
+        if target_install.exists():
+            raise SystemExit(f"{package}: split target install file already exists in technical reference")
+
+        matches = []
+        for path in sorted(debian.glob("*.install")):
+            lines = path.read_text().splitlines()
+            for index, line in enumerate(lines):
+                if needle in line and line.strip() and not line.lstrip().startswith("#"):
+                    matches.append((path, index, line))
+        if len(matches) != 1:
+            raise SystemExit(f"{package}: expected exactly one install entry containing {needle!r}, found {len(matches)}")
+
+        source_path, index, entry = matches[0]
+        lines = source_path.read_text().splitlines()
+        del lines[index]
+        if not any(line.strip() and not line.lstrip().startswith("#") for line in lines):
+            raise SystemExit(f"{package}: split would empty source install file {source_path.name}")
+        source_path.write_text("\n".join(lines) + "\n")
+        target_install.write_text(entry + "\n")
+
+        if any(field_value(paragraph.splitlines(), "Package") == package for paragraph in paragraphs[1:]):
+            raise SystemExit(f"{package}: split package already exists in technical reference")
+
+        stanza = [
+            f"Package: {package}",
+            f"Section: {spec.get('section', 'libs')}",
+            f"Architecture: {spec.get('architecture', 'any')}",
+        ]
+        if spec.get("multi_arch"):
+            stanza.append(f"Multi-Arch: {spec['multi_arch']}")
+        deps = spec.get("depends", [])
+        if deps:
+            stanza.append("Depends: " + deps[0] + ("," if len(deps) > 1 else ""))
+            for i, dep in enumerate(deps[1:], start=1):
+                stanza.append("         " + dep + ("," if i < len(deps) - 1 else ""))
+        stanza.extend([
+            f"Description: {spec['description_short']}",
+            f" {spec['description_long']}",
+        ])
+        paragraphs.append("\n".join(stanza))
+
+
 def set_auto_test_override(path: Path, command: str | None):
     if not command:
         return
@@ -226,6 +273,7 @@ def modify_control(path: Path, node: dict, debhelper_compat: dict, shiboken_prov
 
     paragraphs[0] = "\n".join(source_lines)
     remove_binary_depends(paragraphs, node.get("binary_depends_remove", {}))
+    split_binary_packages(path.parent, paragraphs, node.get("binary_package_splits", []))
     if python_module:
         pkg = node["supralinux_additional_binary_packages"][0]
         runtime = node["python_runtime_package"]
@@ -436,6 +484,7 @@ def main() -> int:
         "build_depends_remove": node.get("build_depends_remove", []),
         "binary_depends_remove": node.get("binary_depends_remove", {}),
         "install_entries_remove": node.get("install_entries_remove", {}),
+        "binary_package_splits": node.get("binary_package_splits", []),
         "rules_auto_test_command": node.get("rules_auto_test_command"),
         "test_environment_adaptation": node.get("test_environment_adaptation"),
         "package_state_effect": "none",

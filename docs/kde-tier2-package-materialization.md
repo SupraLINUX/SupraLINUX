@@ -169,3 +169,12 @@ This closes the second selective rematerialization cycle. The materialization re
 KDeclarative, KFileMetaData and KService are the only active materialization targets, but their materialization status is `blocked-reference-capture`.
 
 This is intentional fail-closed behavior: the materializer may not reuse the previous five-node Debian packaging trees or invent reference hashes for the new nodes. The technical reference workflow must first capture current Ubuntu Resolute and Debian sid source records and pin the exact packaging source artifacts. Canonical package state remains **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+## Contract batch 3 materialization authorized
+
+The Ubuntu/Debian technical reference snapshot is PASS and SHA-256 pinned. KDeclarative, KFileMetaData and KService move from `blocked-reference-capture` to `pending-ci` materialization.
+
+Materialization now enforces the exact declared binary package set. KDeclarative must produce the Ubuntu-compatible `libkquickcontrolsprivate0` split from the KDE 6.30 SOVERSION-0 private library. KService must not reintroduce optional KDocTools or require manpages that cannot exist with that provider disabled.
+
+Package state remains **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**; this phase remains `package_attempted=false`.

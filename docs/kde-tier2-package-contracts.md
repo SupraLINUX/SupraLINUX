@@ -196,3 +196,14 @@ The declared Ubuntu-compatible binary surfaces are:
 - KService: `libkf6service-bin`, `-data`, `-dev`, `-doc`, and `libkf6service6`.
 
 No Debian tree or Ubuntu tree is accepted yet. The contract-reference workflow must capture and hash current source records first. Until that PASS is promoted, deterministic materialization is blocked and `package_attempted=false`.
+
+
+## Contract batch 3 reference capture PASS
+
+Reference run `35633777318`, job `106446066768`, artifact `10655657085` completed PASS. Artifact SHA-256 is `14cc5e7684149844cd39df66bd0f69d7415428c4a4e2b194dbe7505c181f5fe4`; normalized snapshot SHA-256 is `398da3131d1711d8401a75c915b2958c2469b74e89d23a638031a678304f6652`.
+
+All three technical references resolve to Ubuntu Resolute `6.24.0-0ubuntu1` and Debian sid `6.30.0-1`. Debian 6.30 upstream orig tarballs exactly match the KDE-authority SHA-256 for KDeclarative, KFileMetaData and KService.
+
+KDeclarative preserves Ubuntu 26.04's separate `libkquickcontrolsprivate0` runtime package. Debian 6.30 no longer lists that binary package, but KDE v6.30.0 still builds and installs `kquickcontrolsprivate` with SOVERSION 0. SupraLINUX therefore splits that library back into the Ubuntu-compatible package without changing the KDE feature profile.
+
+KService continues to disable optional KDocTools until a matching SupraLINUX provider exists. Because upstream only adds documentation/manpages when `KF6DocTools_FOUND`, the Debian-reference KDocTools Build-Depends and only the corresponding `kbuildsycoca6.8` manpage install entries are removed.

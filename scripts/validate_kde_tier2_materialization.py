@@ -53,6 +53,16 @@ if "kpackage" in selected:
     req(tea.get("setting")=="AS_VALIDATE_NONET=1" and tea.get("scope")=="dh_auto_test-only","KPackage AppStream offline materialization scope")
     req(tea.get("kde_feature_effect")=="none","KPackage AppStream adaptation feature neutrality")
 
+if "kdeclarative" in selected:
+    kd=contracts["nodes"]["kdeclarative"]
+    req(len(kd.get("binary_package_splits",[]))==1 and kd["binary_package_splits"][0].get("package")=="libkquickcontrolsprivate0","KDeclarative Ubuntu binary split")
+    req(kd.get("provider_adaptation",{}).get("kde_feature_effect")=="none","KDeclarative split feature neutrality")
+
+if "kservice" in selected:
+    ks=contracts["nodes"]["kservice"]
+    req(ks.get("build_depends_remove")==["libkf6doctools-dev"],"KService optional DocTools Build-Depends removal")
+    req(bool(ks.get("install_entries_remove",{}).get("libkf6service-bin.install")),"KService DocTools-only manpage entries removed")
+
 targets=set(mat.get("targets",[]))
 for node_id in selected:
     n=canonical[node_id]

@@ -225,3 +225,12 @@ The three nodes already passed provider/profile audit. Their packaging identitie
 - KService: source `kf6-kservice`, candidate `6.30.0-0supralinux1`, target `KF6::Service`, SONAME `libKF6Service.so.6`. KDocTools is optional upstream and remains deliberately disabled until a matching SupraLINUX provider exists.
 
 State is `reference-capture-pending`. Materialization is fail-closed until current Ubuntu/Debian source records, binary sets, versions and SHA-256 evidence are captured and promoted. Package state remains unchanged.
+
+
+## Contract batch 3 reference evidence promoted
+
+The KDeclarative/KFileMetaData/KService packaging reference snapshot from run `35633777318` is PASS and pinned. Materialization is authorized for exactly those three nodes.
+
+KDeclarative records a compatibility adaptation: Ubuntu 26.04's `libkquickcontrolsprivate0` binary-package contract is preserved even though Debian 6.30 merged that payload, because KDE 6.30 continues to build the SOVERSION-0 private library. KService retains upstream's optional KDocTools behavior rather than accepting Debian's Build-Depends as authority.
+
+Canonical package state remains **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**.

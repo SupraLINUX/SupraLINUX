@@ -296,6 +296,12 @@ for key,value in c.get("selected_profile",{}).items():
 test_command=c.get("rules_auto_test_command")
 if test_command and ("\t"+test_command) not in rules:
     raise SystemExit(f"{node}: reviewed dh_auto_test command missing from generated rules")
+
+packages=set(re.findall(r"^Package:\s*(\S+)\s*$",control,re.M))
+expected=set(c.get("compatibility_binary_packages",[])) | set(c.get("supralinux_additional_binary_packages",[]))
+if packages!=expected:
+    raise SystemExit(f"{node}: generated binary package set mismatch expected={sorted(expected)} actual={sorted(packages)}")
+print(f"binary-package-contract PASS: {node} -> {sorted(packages)}")
 print(f"generic-package-adaptation-contract PASS: {node}")
 PY
 
@@ -337,6 +343,20 @@ from pathlib import Path
 contracts,node,debian=sys.argv[1:]
 c=json.load(open(contracts))["nodes"][node]
 root=Path(debian)
+
+for spec in c.get("binary_package_splits",[]):
+    package=spec["package"]
+    install=root/f"{package}.install"
+    if not install.exists():
+        raise SystemExit(f"{node}: split install file missing for {package}")
+    lines=[line for line in install.read_text().splitlines() if line.strip() and not line.lstrip().startswith("#")]
+    if len(lines)!=1 or spec["source_match_substring"] not in lines[0]:
+        raise SystemExit(f"{node}: split install payload mismatch for {package}: {lines}")
+    control=(root/"control").read_text()
+    if f"Package: {package}\n" not in control:
+        raise SystemExit(f"{node}: split control stanza missing for {package}")
+    print(f"binary-split-contract PASS: {node} {package} -> {lines[0]}")
+
 for adjustment in c.get("symbols_adjustments",[]):
     path=root/adjustment["file"]
     rendered=(f" ({adjustment['tag']}){adjustment['symbol']} {adjustment['version']}"

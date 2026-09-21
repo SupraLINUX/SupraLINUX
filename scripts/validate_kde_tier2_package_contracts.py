@@ -69,6 +69,7 @@ else:
             req(len(r.get("debian_tar_sha256",""))==64,f"{node_id}: {provider_name} debian.tar SHA")
         req(contracts["nodes"][node_id]["technical_references"]["ubuntu"].get("version")=="6.24.0-0ubuntu1",f"{node_id}: Resolute KDE reference")
         req(contracts["nodes"][node_id]["technical_references"]["debian"].get("version")=="6.30.0-1",f"{node_id}: Debian KDE 6.30 reference")
+        req(contracts["nodes"][node_id]["technical_references"]["debian"].get("orig_matches_kde_authority") is True,f"{node_id}: Debian orig matches KDE authority")
 
 if "kcontacts" in selected:
     kc=contracts["nodes"]["kcontacts"]
@@ -92,6 +93,24 @@ if "kpackage" in selected:
     req(tea.get("kde_feature_effect")=="none","KPackage AppStream adaptation KDE feature effect")
     req("v1.1.2" in tea.get("upstream_tool_reference",""),"KPackage AppStream upstream reference")
     req(kp.get("provider_adaptation",{}).get("classification")=="technical-reference-overconstraint-removal","KPackage reference-overconstraint classification")
+
+if "kdeclarative" in selected:
+    kd=contracts["nodes"]["kdeclarative"]
+    req("libkquickcontrolsprivate0" in kd.get("compatibility_binary_packages",[]),"KDeclarative Ubuntu private-library package preserved")
+    req(kd.get("technical_references",{}).get("ubuntu",{}).get("binary_packages")==kd.get("compatibility_binary_packages"),"KDeclarative Ubuntu binary contract exact")
+    req("libkquickcontrolsprivate0" not in kd.get("technical_references",{}).get("debian",{}).get("binary_packages",[]),"KDeclarative Debian 6.30 split difference recorded")
+    splits=kd.get("binary_package_splits",[])
+    req(len(splits)==1 and splits[0].get("package")=="libkquickcontrolsprivate0","KDeclarative private-library split contract")
+    req(splits[0].get("source_match_substring")=="libkquickcontrolsprivate.so.0","KDeclarative split payload identity")
+    req(kd.get("provider_adaptation",{}).get("classification")=="ubuntu-binary-contract-preservation","KDeclarative compatibility adaptation")
+    req(kd.get("provider_adaptation",{}).get("kde_feature_effect")=="none","KDeclarative split KDE feature neutrality")
+
+if "kservice" in selected:
+    ks=contracts["nodes"]["kservice"]
+    req(ks.get("build_depends_remove")==["libkf6doctools-dev"],"KService optional DocTools Build-Depends removal")
+    req(ks.get("selected_profile",{}).get("CMAKE_DISABLE_FIND_PACKAGE_KF6DocTools") is True,"KService optional DocTools disabled")
+    req(ks.get("install_entries_remove",{}).get("libkf6service-bin.install")==["usr/share/man/*/man8/kbuildsycoca6.8","usr/share/man/man8/kbuildsycoca6.8"],"KService DocTools-only manpage entries removed")
+    req(ks.get("provider_adaptation",{}).get("classification")=="technical-reference-optional-provider-removal","KService optional-provider classification")
 
 history=contracts.get("history",[])
 req(any(h.get("batch")=="tier2-package-contract-1" for h in history),"historical Batch 1 contract evidence retained")
