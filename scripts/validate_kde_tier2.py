@@ -106,7 +106,7 @@ pass_ids={node_id for node_id,node in nodes.items() if node.get("state")=="PASS"
 pending_ids={node_id for node_id,node in nodes.items() if node.get("state")=="pending"}
 done=discovery.get("completed_nodes",{})
 req(pass_ids==set(done),"Tier2 current PASS set must equal completed discovery nodes")
-req(len(pass_ids)==3 and len(pending_ids)==12,"Tier2 current PASS/pending counts")
+req(pass_ids | pending_ids == expected_ids and pass_ids.isdisjoint(pending_ids),"Tier2 current PASS/pending partition")
 contract_nodes=set(contracts.get("selected_nodes",[]))
 for node in sorted(pending_ids):
     n=nodes[node]
@@ -161,7 +161,8 @@ adr=(ROOT/"docs/decisions/ADR-0002-kmime-frameworks-transition.md").read_text()
 for token in ("decision required","KPim6::Mime","KF6::Mime","libKPim6Mime.so.6","libKF6Mime.so.6","Pending human approval"):
     req(token in adr,f"KMime ADR missing {token}")
 doc=(ROOT/"docs/kde-tier2.md").read_text()
-for token in ("15","KAuth","KCrash","Syndication","KMime","3 PASS / 12 pending","POLKITQT6-1","compatibility-decision-required"):
+state_token=f"{len(pass_ids)} PASS / {len(pending_ids)} pending"
+for token in ("15","KAuth","KCrash","Syndication","KMime",state_token,"POLKITQT6-1","compatibility-decision-required"):
     req(token in doc,f"Tier2 doc missing {token}")
 policy=(ROOT/".github/workflows/repository-policy.yml").read_text()
 req("python3 scripts/validate_kde_tier2.py" in policy,"Repository Policy Tier2 gate")
@@ -170,7 +171,7 @@ if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)
     raise SystemExit(1)
 print("KDE Frameworks 6.30 Tier 2 discovery validation: PASS")
-print("Canonical Tier 2: 3 PASS / 12 pending / 0 FAIL / 0 BLOCKED")
+print(f"Canonical Tier 2: {len(pass_ids)} PASS / {len(pending_ids)} pending / 0 FAIL / 0 BLOCKED")
 build_ready=sum(nodes[n].get("planning",{}).get("readiness")=="build-ready" for n in pending_ids-{"kmime"})
 contract_ready=sum(nodes[n].get("planning",{}).get("readiness")=="package-contract-ready" for n in pending_ids-{"kmime"})
 audit_pending=sum(nodes[n].get("planning",{}).get("readiness")=="package-lane-pending" for n in pending_ids-{"kmime"})

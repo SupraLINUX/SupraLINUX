@@ -473,3 +473,10 @@ The canonical DAG now contains ECM + 29 Tier 1 nodes + KAuth Tier 2. KMime remai
 Syndication `6.30.0-0supralinux1` is now a canonical PASS/downstream-eligible Tier 2 node. Its selected DAG predecessors are retained ECM plus KCodecs; the package PASS is run `35543268413`, job `106164765409`, artifact `10615910224`.
 
 The canonical DAG now contains ECM, all 29 Tier 1 PASS nodes, and the current Tier 2 PASS set (KAuth, KCrash, Syndication). Repository validation no longer hard-codes a fixed DAG node count or a single promoted Tier 2 node. It derives the expected DAG set from the canonical Tier 1/Tier 2 manifests by selecting nodes with `state=PASS` and `downstream_eligible=true`, then requires exact set equality. This removes a validator edit from every future Tier 2 promotion while preserving strict canonical ownership.
+
+
+## Tier 2 Batch 2 final promotion
+
+KNotifications, KStatusNotifierItem and KUnitConversion are now canonical Tier 2 PASS/downstream-eligible nodes from run `35544063879`. Their selected Framework predecessors remain exactly the upstream-derived edges: KNotifications → KConfig, KStatusNotifierItem → KWindowSystem, KUnitConversion → KI18n, plus the shared ECM build-system root.
+
+The canonical DAG therefore contains ECM + 29 Tier 1 PASS nodes + 6 Tier 2 PASS nodes. The validator still derives this set dynamically from canonical PASS/downstream-eligible manifests; no fixed node-count update was required for this promotion.

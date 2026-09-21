@@ -108,3 +108,12 @@ Tier 2 is now **3 PASS / 12 pending / 0 current FAIL / 0 BLOCKED**. The retained
 KNotifications, KStatusNotifierItem and KUnitConversion remain pending. Their upstream Python bindings stay enabled. The remaining work is package integration only: explicit PySide6 runtime-provider Depends for the generated Python binary packages, plus one reviewed KStatusNotifierItem symbols adjustment. KMime remains `compatibility-decision-required` under ADR-0002.
 
 Ubuntu Resolute remains provider, not KDE authority. KDE upstream still determines the Framework version and feature profile.
+
+
+## Batch 2 canonical closure — six Tier 2 PASS
+
+Clean-build run `35544063879` completed PASS for KNotifications `6.30.0-0supralinux1`, KStatusNotifierItem `6.30.0-0supralinux2` and KUnitConversion `6.30.0-0supralinux1`. Together with retained KAuth, KCrash and Syndication, canonical Tier 2 is now **6 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.
+
+All three final Python-binding packages passed clean sbuild, upstream tests, Lintian error policy, ABI/SONAME checks, APT closure, external CMake consumer validation and Python import. KNotifications also passed its QML payload smoke. The PySide6 provider mappings remain packaging/provider integration only; KDE upstream continues to define the enabled binding feature profile.
+
+Remaining pending nodes are KColorscheme, KCompletion, KContacts, KDeclarative, KFileMetadata, KPackage, KPty, KService and KMime. KMime remains blocked only by the explicit compatibility decision in ADR-0002; it is pending, not FAIL or BLOCKED in the build DAG.

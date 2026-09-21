@@ -72,12 +72,6 @@
       ],
       "provider_audit": "required-before-materialization"
     },
-    "knotifications": {
-      "readiness": "build-ready",
-      "tier1_predecessors": [
-        "kconfig"
-      ]
-    },
     "kpackage": {
       "readiness": "package-lane-pending",
       "tier1_predecessors": [
@@ -107,18 +101,6 @@
         "kdoctools"
       ]
     },
-    "kstatusnotifieritem": {
-      "readiness": "build-ready",
-      "tier1_predecessors": [
-        "kwindowsystem"
-      ]
-    },
-    "kunitconversion": {
-      "readiness": "build-ready",
-      "tier1_predecessors": [
-        "ki18n"
-      ]
-    },
     "kmime": {
       "readiness": "compatibility-decision-required",
       "tier1_predecessors": [
@@ -135,8 +117,8 @@
     "Do not attempt KMime until ADR-0002 is resolved."
   ],
   "promoted_snapshot": {
-    "pass": 3,
-    "pending": 12,
+    "pass": 6,
+    "pending": 9,
     "current_fail": 0,
     "blocked": 0
   },
@@ -192,6 +174,67 @@
       "apt_check": "PASS",
       "tier1_predecessors": [
         "kcodecs"
+      ],
+      "downstream_eligible": true
+    },
+    "knotifications": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35544063879,
+      "job_id": 106166898618,
+      "artifact_id": 10616445435,
+      "artifact_sha256": "09ede9c6f1f07333e1ea54291232a855c6dca9f9cf9679a38d37b1ec69eb6135",
+      "rootfs_sha256": "0438cb6edfece79dcb08b47bdb6a15565919d8e41d831a26e1ca094d1f329576",
+      "tests": "1/1 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6Notifications.so.6",
+      "abi_export_count": 162,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "python_import": "PASS",
+      "tier1_predecessors": [
+        "kconfig"
+      ],
+      "downstream_eligible": true,
+      "qml_payload_smoke": "PASS"
+    },
+    "kstatusnotifieritem": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux2",
+      "workflow_run": 35544063879,
+      "job_id": 106166898613,
+      "artifact_id": 10616011544,
+      "artifact_sha256": "542bebf07f51d20c0dccf21c06123418e025e8904b1864bd21692c9af0cfe552",
+      "rootfs_sha256": "0438cb6edfece79dcb08b47bdb6a15565919d8e41d831a26e1ca094d1f329576",
+      "tests": "1/1 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6StatusNotifierItem.so.6",
+      "abi_export_count": 113,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "python_import": "PASS",
+      "tier1_predecessors": [
+        "kwindowsystem"
+      ],
+      "downstream_eligible": true
+    },
+    "kunitconversion": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35544063879,
+      "job_id": 106166898551,
+      "artifact_id": 10616255861,
+      "artifact_sha256": "86edb104be7febf657345de21c238555bc5367d975b916dfe0552aff9beaea57",
+      "rootfs_sha256": "0438cb6edfece79dcb08b47bdb6a15565919d8e41d831a26e1ca094d1f329576",
+      "tests": "3/3 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6UnitConversion.so.6",
+      "abi_export_count": 105,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "python_import": "PASS",
+      "tier1_predecessors": [
+        "ki18n"
       ],
       "downstream_eligible": true
     }

@@ -81,3 +81,18 @@ Materialization run `35543959765` on commit `4cf3d9f9e6f28ac6f759b3c2d9ca75c4698
 - KUnitConversion: artifact `10615638692`, SHA-256 `e9578b08cd2fa5ecd98b3b84e4bd80cc1031118da71929597a0179648277e1a4`.
 
 The generated trees enforce the explicit PySide6 runtime-provider Depends; KStatusNotifierItem additionally contains the reviewed `optional=templinst` symbols entry. These three nodes return to `build-ready`; the next clean-build matrix contains exactly these three.
+
+
+## Batch 2 final clean-build closure — 5/5 PASS
+
+Run `35544063879` on commit `3636723999d604e5110621fc13d7aed778ec2d51` completed **SUCCESS** with one shared Resolute rootfs and exactly the three remaining package jobs. Retained KCrash and Syndication were not rebuilt.
+
+KNotifications `6.30.0-0supralinux1`: job `106166898618`, artifact `10616445435`, artifact SHA-256 `09ede9c6f1f07333e1ea54291232a855c6dca9f9cf9679a38d37b1ec69eb6135`; 1/1 tests, Lintian PASS-errors, 162 ABI exports, APT closure, consumer smoke, Python import and QML payload smoke all PASS.
+
+KStatusNotifierItem `6.30.0-0supralinux2`: job `106166898613`, artifact `10616011544`, artifact SHA-256 `542bebf07f51d20c0dccf21c06123418e025e8904b1864bd21692c9af0cfe552`; 1/1 tests, Lintian PASS-errors, 113 ABI exports, APT closure, consumer smoke and Python import all PASS. The historical revision-`-1` symbols FAIL remains preserved in the attempts ledger.
+
+KUnitConversion `6.30.0-0supralinux1`: job `106166898551`, artifact `10616255861`, artifact SHA-256 `86edb104be7febf657345de21c238555bc5367d975b916dfe0552aff9beaea57`; 3/3 tests, Lintian PASS-errors, 105 ABI exports, APT closure, consumer smoke and Python import all PASS.
+
+Shared rootfs artifact `10615785991` has artifact SHA-256 `a90862d653fcb886a11f37116869dd32f7fee425982cc9995271db60c70a45df`; rootfs content SHA-256 is `0438cb6edfece79dcb08b47bdb6a15565919d8e41d831a26e1ca094d1f329576`.
+
+Batch 2 is now **5/5 PASS** and all five selected nodes are downstream-eligible. This closure does not publish to APT and does not authorize any stable promotion.

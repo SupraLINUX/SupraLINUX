@@ -4,14 +4,17 @@
   "frameworks_series": "6.30.0",
   "tier": 2,
   "canonical_snapshot": {
-    "pass": 3,
-    "pending": 12,
+    "pass": 6,
+    "pending": 9,
     "current_fail": 0,
     "blocked": 0
   },
   "retained_pass": [
     "kauth",
     "kcrash",
+    "knotifications",
+    "kstatusnotifieritem",
+    "kunitconversion",
     "syndication"
   ],
   "provider_audit_required": [
@@ -108,11 +111,7 @@
       "blocker": "ADR-0002"
     }
   ],
-  "build_queue": [
-    "knotifications",
-    "kstatusnotifieritem",
-    "kunitconversion"
-  ],
+  "build_queue": [],
   "audit_batch_size": 5,
   "next_provider_audit_batch": [
     "kpty",

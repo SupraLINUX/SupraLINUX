@@ -27,7 +27,7 @@ canon={n["id"]:n for n in tier2["nodes"]}
 pass_nodes={n for n in expected if c["nodes"][n].get("state")=="PASS"}
 remat_nodes={n for n in expected if c["nodes"][n].get("state")=="rematerialization-pending"}
 runnable={n for n in expected if c["nodes"][n].get("state") in {"prepared-pending-build","remediation-pending-build"}}
-req(pass_nodes=={"kcrash","syndication"},"Batch2 retained PASS set")
+req(pass_nodes==set(expected),"Batch2 final PASS set")
 req(remat_nodes|runnable|pass_nodes==set(expected),"Batch2 node state partition")
 req(set(plan.get("retained_pass",[])) >= {"kauth","kcrash"},"generated plan retains KCrash")
 req(set(plan.get("build_queue",[]))==runnable,"Batch2 build queue equals runnable nodes")
@@ -43,10 +43,17 @@ for node_id in expected:
         pe=n.get("pass_evidence",{})
         expected_pass={
             "kcrash":{"run":35535289692,"artifact":10613480229,"tests":"4/4 PASS"},
+            "knotifications":{"run":35544063879,"artifact":10616445435,"tests":"1/1 PASS"},
+            "kstatusnotifieritem":{"run":35544063879,"artifact":10616011544,"tests":"1/1 PASS"},
+            "kunitconversion":{"run":35544063879,"artifact":10616255861,"tests":"3/3 PASS"},
             "syndication":{"run":35543268413,"artifact":10615910224,"tests":"4/4 PASS"},
         }[node_id]
         req(pe.get("workflow_run")==expected_pass["run"] and pe.get("artifact_id")==expected_pass["artifact"],f"{node_id}: PASS evidence identity")
         req(pe.get("tests")==expected_pass["tests"] and pe.get("lintian")=="PASS-errors" and pe.get("consumer_smoke")=="PASS" and pe.get("apt_check")=="PASS",f"{node_id}: PASS gates")
+        if contract.get("python_module"):
+            req(pe.get("python_import")=="PASS",f"{node_id}: Python import gate")
+        if n.get("qml_package"):
+            req(pe.get("qml_payload_smoke")=="PASS",f"{node_id}: QML payload gate")
         req(n.get("downstream_eligible") is True,f"{node_id}: downstream eligible")
     elif node_id in remat_nodes:
         req(cn.get("state")=="pending",f"{node_id}: remains pending")
@@ -57,9 +64,10 @@ for node_id in expected:
         req(cn.get("state")=="pending" and cn.get("planning",{}).get("readiness")=="build-ready",f"{node_id}: runnable build-ready")
 
 req(a.get("schema")==1 and a.get("batch")=="tier2-batch-2","attempt ledger identity")
-req(len(a["real_attempts"]["kcrash"])==3 and a["real_attempts"]["kcrash"][-1].get("result")=="PASS","KCrash three-attempt PASS history")
-req(len(a["real_attempts"]["syndication"])==4 and a["real_attempts"]["syndication"][-1].get("result")=="PASS","Syndication four-attempt PASS history")
-req(a["real_attempts"]["kstatusnotifieritem"][-1].get("result")=="FAIL" and a["real_attempts"]["kstatusnotifieritem"][-1].get("stage")=="lintian-source-binary","KStatusNotifierItem node-owned symbols FAIL retained")
+expected_attempt_counts={"kcrash":3,"knotifications":5,"kstatusnotifieritem":5,"kunitconversion":4,"syndication":4}
+for node_id,count in expected_attempt_counts.items():
+    req(len(a["real_attempts"][node_id])==count and a["real_attempts"][node_id][-1].get("result")=="PASS",f"{node_id}: final PASS attempt history")
+req(any(x.get("result")=="FAIL" and x.get("stage")=="lintian-source-binary" for x in a["real_attempts"]["kstatusnotifieritem"]),"KStatusNotifierItem historical node-owned symbols FAIL retained")
 for node_id in expected:
     req(isinstance(a.get("real_attempts",{}).get(node_id),list),f"{node_id}: attempt ledger")
     req(isinstance(a.get("blocked_events",{}).get(node_id),list),f"{node_id}: blocked ledger")

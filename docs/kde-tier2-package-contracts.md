@@ -94,3 +94,10 @@ Syndication is no longer a pending materialization target: its verified distribu
 Run `35543959765` produced PASS materializations for all three pending Python nodes. The materialized contract now pins KNotifications' QtGui provider, KUnitConversion's QtCore provider and KStatusNotifierItem's QtWidgets provider. KStatusNotifierItem is revision `6.30.0-0supralinux2` and the exact reviewed `_ZSt19piecewise_construct@Base 6.30.0` optional entry is part of its deterministic Debian tree.
 
 This is still package-contract readiness, not package PASS. Clean package validation remains mandatory.
+
+
+## Batch 2 runtime contracts validated by clean packages
+
+Run `35544063879` validated the previously materialized PySide6 runtime-provider contracts in real clean packages: KNotifications imports successfully with the QtGui provider, KStatusNotifierItem with QtWidgets, and KUnitConversion with QtCore. KStatusNotifierItem's reviewed optional template-symbol entry also passed Lintian and ABI validation in revision `6.30.0-0supralinux2`.
+
+The materialization contracts remain reproducibility inputs; the package PASS authority is the clean-build evidence retained in the Batch 2 campaign and canonical Tier 2 manifest.
