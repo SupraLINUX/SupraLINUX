@@ -547,6 +547,7 @@
       "kcontacts",
       "kcrash",
       "knotifications",
+      "kpackage",
       "kpty",
       "kstatusnotifieritem",
       "kunitconversion",
@@ -703,7 +704,21 @@
       }
     ],
     "workflow_run": 35629129797,
-    "commit": "5fa15910b91e5693395d04ef7555af94dfa7fe13"
+    "commit": "5fa15910b91e5693395d04ef7555af94dfa7fe13",
+    "last_clean_build": {
+      "node": "kpackage",
+      "result": "PASS",
+      "workflow_run": 35631458583,
+      "job_id": 106439193430,
+      "commit": "cfaad11660a827f26092b927645413e7dbf62743",
+      "artifact_id": 10653599787,
+      "artifact_sha256": "8b55260a3b9f4653c3e5c6589034c1fa96daa5ca000e8669c2a39f8c64288faf",
+      "tests": "10/10 PASS",
+      "abi_soname": "libKF6Package.so.6",
+      "abi_export_count": 86,
+      "apt_check": "PASS",
+      "consumer_smoke": "PASS"
+    }
   },
   "provider_adaptations": {
     "ubuntu-resolute": {

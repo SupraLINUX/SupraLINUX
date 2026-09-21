@@ -64,57 +64,6 @@
         "artifact_sha256": "ced417aa88fffb9de0762423ffeef72533c6795c07131a2e4d7911ba5b62edab"
       }
     },
-    "kpackage": {
-      "readiness": "build-ready",
-      "tier1_predecessors": [
-        "karchive",
-        "ki18n",
-        "kcoreaddons"
-      ],
-      "optional_higher_tier": [
-        "kdoctools"
-      ],
-      "provider_audit": "complete",
-      "provider_audit_evidence": {
-        "workflow_run": 35605754366,
-        "job_id": 106352296102,
-        "artifact_id": 10641708858,
-        "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8"
-      },
-      "materialization_evidence": {
-        "result": "PASS",
-        "workflow_run": 35629129797,
-        "job_id": 106430800639,
-        "commit": "5fa15910b91e5693395d04ef7555af94dfa7fe13",
-        "artifact_id": 10653266498,
-        "artifact_sha256": "b956d399879174a0c959e7eadf0baf1bc767cfc739390354212855daf95fe71c",
-        "package_state_effect": "none"
-      },
-      "materialization_history": [
-        {
-          "result": "PASS",
-          "workflow_run": 35608790364,
-          "job_id": 106362493754,
-          "artifact_id": 10643670033,
-          "artifact_sha256": "0e2281fca63b84a0a7c96e6c5256f98365509ef329790c70f91730637a5bd924",
-          "package_state_effect": "none",
-          "superseded_for_build": true,
-          "status": "superseded"
-        },
-        {
-          "result": "PASS",
-          "workflow_run": 35623204805,
-          "job_id": 106411141243,
-          "commit": "ec4091371846d287e2d169c4cad171adcdfd1144",
-          "artifact_id": 10649014863,
-          "artifact_sha256": "7d805f24f4bba2b9e9f4d383252b04ef6efe7dbdba64c72aa10e50382a148188",
-          "package_state_effect": "none",
-          "superseded_for_build": true,
-          "superseded_reason": "AppStream URL reachability validation requires offline test-environment adaptation",
-          "status": "superseded"
-        }
-      ]
-    },
     "kservice": {
       "readiness": "package-contract-ready",
       "tier1_predecessors": [
@@ -149,8 +98,8 @@
     "Do not attempt KMime until ADR-0002 is resolved."
   ],
   "promoted_snapshot": {
-    "pass": 10,
-    "pending": 5,
+    "pass": 11,
+    "pending": 4,
     "current_fail": 0,
     "blocked": 0
   },
@@ -367,6 +316,31 @@
       "package_dependency_closure": {},
       "downstream_eligible": true,
       "qml_payload_smoke": "PASS"
+    },
+    "kpackage": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35631458583,
+      "run_attempt": 1,
+      "job_id": 106439193430,
+      "artifact_id": 10653599787,
+      "artifact_sha256": "8b55260a3b9f4653c3e5c6589034c1fa96daa5ca000e8669c2a39f8c64288faf",
+      "rootfs_sha256": "af1bbbf06929caef42b87b39b26c2b12b7ffdc5c058e747a6fa8eb64be63b2a8",
+      "tests": "10/10 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6Package.so.6",
+      "abi_export_count": 86,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "predecessor_buildinfo_proof": "PASS",
+      "package_dependency_closure_buildinfo_proof": "PASS",
+      "tier1_predecessors": [
+        "karchive",
+        "ki18n",
+        "kcoreaddons"
+      ],
+      "selected_conditional_predecessors": [],
+      "downstream_eligible": true
     }
   },
   "inventory_correction": {

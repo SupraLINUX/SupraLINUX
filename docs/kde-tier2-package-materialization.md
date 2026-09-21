@@ -155,3 +155,10 @@ Run `35629129797`, job `106430800639`, completed the KPackage-only replacement m
 - DSC SHA-256 `f30185c49f28399330d2934287ee7da5f0d6c2d577bb2c682b4e5a59293bae75`.
 
 The active materialization target set is empty again. KPackage returns to `build-ready`; its next action is a clean package build consuming retained KArchive, KI18n and KCoreAddons PASS artifacts. Materialization itself is not package PASS.
+
+
+## KPackage materialization validated by package PASS
+
+The offline AppStream replacement materialization from run `35629129797` was consumed by final clean-build run `35631458583`. KPackage passed **10/10** upstream tests plus the complete package gates.
+
+This closes the second selective rematerialization cycle. The materialization remains reproducibility evidence; package PASS authority is the final clean-build artifact `10653599787`. There are no active materialization targets from package-contract batch 2.

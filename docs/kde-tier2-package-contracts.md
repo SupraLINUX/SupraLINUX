@@ -173,3 +173,13 @@ AppStream v1.1.2 is the authority for this validator behavior. Its manual explic
 - upstream AppStream reference: `https://github.com/ximion/appstream/blob/v1.1.2/docs/xml/man/appstreamcli.1.xml`.
 
 The KPackage upstream test is not deleted, filtered or marked flaky. The full test suite remains mandatory. Only external URL reachability is removed from the isolated build contract. Any structural AppStream error or other KDE test failure still fails the package attempt.
+
+
+## Package-contract batch 2 fully validated
+
+Final KPackage run `35631458583`, job `106439193430`, validated the AppStream offline test-environment contract in a real clean package build: **10/10 upstream tests PASS**, Lintian, ABI, APT closure and external consumer all PASS.
+
+All five package-contract batch 2 nodes are now retained package PASS:
+KColorScheme, KCompletion, KContacts, KPackage and KPty.
+
+The next ordinary package-contract-ready set is KDeclarative, KFileMetaData and KService. KMime remains outside that lane under ADR-0002. No stable promotion is authorized by package PASS alone.

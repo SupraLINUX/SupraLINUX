@@ -4,8 +4,8 @@
   "frameworks_series": "6.30.0",
   "tier": 2,
   "canonical_snapshot": {
-    "pass": 10,
-    "pending": 5,
+    "pass": 11,
+    "pending": 4,
     "current_fail": 0,
     "blocked": 0
   },
@@ -16,6 +16,7 @@
     "kcontacts",
     "kcrash",
     "knotifications",
+    "kpackage",
     "kpty",
     "kstatusnotifieritem",
     "kunitconversion",
@@ -33,9 +34,7 @@
       "blocker": "ADR-0002"
     }
   ],
-  "build_queue": [
-    "kpackage"
-  ],
+  "build_queue": [],
   "audit_batch_size": 5,
   "next_provider_audit_batch": [],
   "policy": {

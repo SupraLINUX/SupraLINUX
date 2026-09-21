@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 2 discovery
 
-Status: **10 PASS / 5 pending / 0 current FAIL / 0 BLOCKED**  
+Status: **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**  
 Date: **2026-09-21**
 
 KDE upstream classifies **15** Frameworks in Tier 2 for the current Frameworks API set:
@@ -191,3 +191,24 @@ No package promotion to the stable APT channel is authorized by this state chang
 The AppStream-offline replacement materialization passed in run `35629129797`, job `106430800639`, artifact `10653266498`. The package remains pending; canonical Tier 2 stays **10 PASS / 5 pending / 0 current FAIL / 0 BLOCKED**.
 
 Only KPackage returns to the clean-build queue. The four other Batch 3 nodes remain retained PASS. The retry keeps the full upstream KDE test suite active and scopes `AS_VALIDATE_NONET=1` only to the test environment.
+
+
+## Batch 3 closed — KPackage PASS
+
+KPackage `6.30.0-0supralinux1` passed the final isolated retry in run `35631458583`, job `106439193430`, on commit `cfaad11660a827f26092b927645413e7dbf62743`.
+
+Evidence:
+- artifact `10653599787`
+- artifact SHA-256 `8b55260a3b9f4653c3e5c6589034c1fa96daa5ca000e8669c2a39f8c64288faf`
+- shared rootfs artifact `10654945172`, artifact SHA-256 `d92e6869c5e234a99e1577cf9ae231d8c339c9513224736792fce6d874c675e6`
+- rootfs content SHA-256 `af1bbbf06929caef42b87b39b26c2b12b7ffdc5c058e747a6fa8eb64be63b2a8`
+- **10/10 upstream tests PASS**
+- Lintian PASS-errors
+- SONAME `libKF6Package.so.6`, 86 exports
+- APT runtime closure PASS
+- external CMake consumer PASS
+- exact retained KArchive `6.30.0-0supralinux4`, KI18n `6.30.0-0supralinux1` and KCoreAddons `6.30.0-0supralinux4` buildinfo proof PASS.
+
+The AppStream adaptation is validated without weakening KDE: `AS_VALIDATE_NONET=1` remains scoped to `dh_auto_test`, and all ten upstream tests execute successfully.
+
+Batch 3 is therefore **5/5 PASS**. Canonical Tier 2 is now **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. The remaining non-decision-gated nodes are KDeclarative, KFileMetaData and KService; KMime remains under ADR-0002. No stable APT promotion is authorized.

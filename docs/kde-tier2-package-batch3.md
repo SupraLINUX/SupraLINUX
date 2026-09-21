@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 2 — package Batch 3
 
-Status: **4/5 PASS; KPackage clean-build retry pending**  
+Status: **5/5 PASS; closed**  
 Date: **2026-09-21**
 
 Batch 3 covers KColorScheme, KCompletion, KContacts, KPackage and KPty. All five are package-state `pending` and `build-ready` from materialization run `35608790364`; this lane is the first real package attempt for this group.
@@ -126,3 +126,21 @@ Replacement evidence:
 Artifact inspection confirms `BUILD_TESTING=ON` remains selected and `AS_VALIDATE_NONET=1` appears only in the restored `override_dh_auto_test` command. The KDE test suite and AppStream metadata validation remain enabled.
 
 Batch 3 therefore reopens exactly **one runnable node: KPackage**. KColorScheme, KCompletion, KContacts and KPty remain retained PASS and must not be rebuilt. Canonical Tier 2 remains **10 PASS / 5 pending / 0 current FAIL / 0 BLOCKED** until the KPackage clean-build retry completes. No stable promotion is authorized.
+
+
+## Final KPackage retry PASS and Batch 3 closure
+
+Run `35631458583` executed exactly one package node: KPackage. The clean build completed PASS in job `106439193430` and uploaded artifact `10653599787` with SHA-256 `8b55260a3b9f4653c3e5c6589034c1fa96daa5ca000e8669c2a39f8c64288faf`.
+
+The final test suite is **10/10 PASS**, confirming that the prior AppStream failure was network-environment integration rather than a KDE code failure. Lintian, ABI/SONAME, APT closure, external consumer and exact predecessor buildinfo proofs all pass.
+
+KPackage output package SHA-256 values are pinned in the campaign/attempt ledgers. The final rootfs content SHA-256 is `af1bbbf06929caef42b87b39b26c2b12b7ffdc5c058e747a6fa8eb64be63b2a8`.
+
+Batch 3 is now **5/5 PASS**:
+- KColorScheme PASS
+- KCompletion PASS
+- KContacts PASS
+- KPackage PASS
+- KPty PASS.
+
+Canonical Tier 2 is **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**. No node is runnable in Batch 3 anymore, and no promotion to the stable APT channel is implied.

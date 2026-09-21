@@ -5,8 +5,8 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "frameworks_series": "6.30.0",
-  "state": "kpackage-clean-build-retry-pending",
-  "canonical_snapshot": "10 PASS / 5 pending / 0 current FAIL / 0 BLOCKED",
+  "state": "PASS",
+  "canonical_snapshot": "11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED",
   "selected_nodes": [
     "kcolorscheme",
     "kcompletion",
@@ -494,9 +494,9 @@
         "ki18n",
         "kcoreaddons"
       ],
-      "state": "remediation-pending-build",
-      "last_result": "INFRA",
-      "downstream_eligible": false,
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
       "materialization_status": "replacement-pass",
       "package_dependency_closure": [],
       "materialization_history": [
@@ -536,6 +536,56 @@
         "package_state_effect": "none",
         "observed_appstream_version": "1.1.2-1",
         "remediation": "AS_VALIDATE_NONET=1 in restored upstream test environment"
+      },
+      "pass_evidence": {
+        "result": "PASS",
+        "workflow_run": 35631458583,
+        "run_attempt": 1,
+        "job_id": 106439193430,
+        "commit": "cfaad11660a827f26092b927645413e7dbf62743",
+        "attempted_package_version": "6.30.0-0supralinux1",
+        "artifact_id": 10653599787,
+        "artifact_sha256": "8b55260a3b9f4653c3e5c6589034c1fa96daa5ca000e8669c2a39f8c64288faf",
+        "rootfs_artifact_id": 10654945172,
+        "rootfs_artifact_sha256": "d92e6869c5e234a99e1577cf9ae231d8c339c9513224736792fce6d874c675e6",
+        "rootfs_sha256": "af1bbbf06929caef42b87b39b26c2b12b7ffdc5c058e747a6fa8eb64be63b2a8",
+        "stage": "complete",
+        "tests": "10/10 PASS",
+        "lintian": "PASS-errors",
+        "abi_soname": "libKF6Package.so.6",
+        "abi_export_count": 86,
+        "apt_check": "PASS",
+        "consumer_smoke": "PASS",
+        "predecessor_buildinfo_proof": "PASS",
+        "package_dependency_closure_buildinfo_proof": "PASS",
+        "materialization": {
+          "workflow_run": 35629129797,
+          "artifact_id": 10653266498,
+          "artifact_sha256": "b956d399879174a0c959e7eadf0baf1bc767cfc739390354212855daf95fe71c"
+        },
+        "retained_predecessors": {
+          "extra_cmake_modules": "6.30.0-0supralinux3",
+          "karchive": "6.30.0-0supralinux4",
+          "ki18n": "6.30.0-0supralinux1",
+          "kcoreaddons": "6.30.0-0supralinux4"
+        },
+        "package_dependency_closure": {},
+        "downstream_eligible": true,
+        "files": {
+          "kpackagetool6_6.30.0-0supralinux1_amd64.deb": "2c656566c044235633a792e7f09d2e2ebbb2a7674f65a66ac425acf99a0c0bbe",
+          "libkf6package-data_6.30.0-0supralinux1_all.deb": "047cc508f5bcffe47e4e5735aa117414e278ad1c222d1de6d5353240242a33d2",
+          "libkf6package-dev_6.30.0-0supralinux1_amd64.deb": "2cc9cab5c74763675bfc56bcb8c57263b30e9e9957de33046a3d1bb6ccfc4de7",
+          "libkf6package-doc_6.30.0-0supralinux1_all.deb": "53581073c72501fdaf7abe76d17fc50712407afaa37ae3873a8fcadf0aff032f",
+          "libkf6package6_6.30.0-0supralinux1_amd64.deb": "c02a4260a0c03390d11371e75f8afe20cfb4ca17a113a4eca179298f6f00304a",
+          "kpackagetool6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "60cb95a7ad04a8d267ea630cc79e260457947908e9b107b96de35f9ebd21acfa",
+          "libkf6package6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "a8534c1915f9c41227ea1a8b9c766010bd8d11d372a6ca00b148df5682a734c0",
+          "changes_sha256": "7b4f53bad9b1a46fd868236ae02872dfa4a18321d092836071cf0b58daf15dc5",
+          "buildinfo_sha256": "136fb880c696ac4746ecc6903d4cab4c674c0cdc2ff8eec5652c8c4dcd784668",
+          "dsc_sha256": "f30185c49f28399330d2934287ee7da5f0d6c2d577bb2c682b4e5a59293bae75",
+          "orig_tar_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
+          "debian_tar_sha256": "dd3b83e83d91078a50bdbb9c4ef9e28d12efd26f505dd274029110bdb9dd976e",
+          "rootfs_sha256": "af1bbbf06929caef42b87b39b26c2b12b7ffdc5c058e747a6fa8eb64be63b2a8"
+        }
       }
     },
     "kpty": {
@@ -621,5 +671,19 @@
       },
       "package_dependency_closure": []
     }
+  },
+  "closure": {
+    "result": "PASS",
+    "workflow_run": 35631458583,
+    "commit": "cfaad11660a827f26092b927645413e7dbf62743",
+    "retained_pass": [
+      "kcolorscheme",
+      "kcompletion",
+      "kcontacts",
+      "kpackage",
+      "kpty"
+    ],
+    "package_state_effect": "promote-kpackage-pass",
+    "canonical_snapshot": "11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED"
   }
 }
