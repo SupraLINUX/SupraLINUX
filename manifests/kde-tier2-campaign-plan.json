@@ -33,26 +33,36 @@
       "required_predecessors": [
         "ki18n",
         "kconfig",
-        "kguiaddons"
+        "kguiaddons",
+        "kglobalaccel",
+        "kwidgetsaddons"
       ],
       "conditional_frameworks": [
         "kglobalaccel",
         "kwidgetsaddons"
       ],
-      "selected_profile": []
+      "selected_profile": [
+        "kglobalaccel",
+        "kwidgetsaddons"
+      ]
     },
     {
       "node": "kfilemetadata",
       "required_predecessors": [
-        "ki18n"
+        "ki18n",
+        "kcoreaddons",
+        "kcodecs",
+        "karchive",
+        "kconfig"
       ],
       "conditional_frameworks": [
         "karchive",
-        "kcoreaddons",
-        "kconfig",
-        "kcodecs"
+        "kconfig"
       ],
-      "selected_profile": []
+      "selected_profile": [
+        "karchive",
+        "kconfig"
+      ]
     }
   ],
   "package_contract_ready": [

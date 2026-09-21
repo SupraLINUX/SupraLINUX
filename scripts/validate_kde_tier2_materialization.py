@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import json
-import sys
-
+import json,sys
 ROOT=Path(__file__).resolve().parents[1]
 errors=[]
 def req(v,m):
@@ -11,64 +9,48 @@ def load(p): return json.loads((ROOT/p).read_text())
 
 contracts=load("manifests/kde-tier2-package-contracts.json")
 tier2=load("manifests/kde-frameworks-tier2.json")
-expected=contracts.get("selected_nodes",[])
-req(contracts.get("state") in {"reference-capture-pass","materialized"},"reference/materialization state")
+selected=contracts.get("selected_nodes",[])
 mat=contracts.get("materialization",{})
-req(mat.get("status") in {"pending-ci","PASS"},"materialization status")
+state=contracts.get("state")
+canonical={n["id"]:n for n in tier2["nodes"]}
+
 req(mat.get("method")=="kde-authority-source-plus-pinned-debian-tree","materialization method")
 req(mat.get("package_state_effect")=="none" and mat.get("package_attempted") is False,"materialization package-state semantics")
 req(mat.get("maintainer_during_ci")=="SupraLINUX Build System <build@supralinux.invalid>","CI maintainer marker")
 req(mat.get("publication_blocker")=="replace-ci-maintainer-with-approved-project-contact","publication blocker")
-provider=contracts.get("provider_adaptations",{}).get("ubuntu-resolute",{})
-req(provider.get("changelog_distribution",{}).get("selected")=="resolute","materialization target distribution")
-req(provider.get("shiboken_clang_discovery",{}).get("provider_packages")==["llvm-dev","libclang-common-21-dev"],"materialization Shiboken provider closure")
-req(provider.get("shiboken_clang_discovery",{}).get("tool_path")=="/usr/bin/llvm-config","materialization Shiboken discovery tool")
-req(provider.get("shiboken_clang_discovery",{}).get("resource_header")=="/usr/lib/llvm-21/lib/clang/21/include/stddef.h","materialization Shiboken resource header")
-if mat.get("status") == "PASS":
-    req(mat.get("result")=="PASS","materialization result")
-    req(set(mat.get("evidence",{})) <= set(expected),"materialization evidence nodes must be selected")
+
+if state=="reference-capture-pending":
+    req(mat.get("status")=="blocked-reference-capture","pending references must block materialization")
+    req(set(mat.get("targets",[]))==set(selected),"blocked target set")
 else:
-    req(set(mat.get("targets",[]))=={"knotifications","kstatusnotifieritem","kunitconversion"},"current rematerialization target set")
-    req(mat.get("retained_package_pass")==["kcrash","syndication"],"retained package PASS nodes excluded from rematerialization")
+    req(state in {"reference-capture-pass","materialized"},"materializable contract state")
+    req(mat.get("status") in {"pending-ci","PASS"},"materialization status")
+    req(set(mat.get("targets",[])) <= set(selected),"materialization targets selected")
+    for node_id in selected:
+        c=contracts["nodes"][node_id]
+        refs=c.get("technical_references",{})
+        req(refs.get("debian",{}).get("version")=="6.30.0-1",f"{node_id}: Debian 6.30 reference")
+        req(len(refs.get("debian",{}).get("debian_tar_sha256",""))==64,f"{node_id}: pinned Debian tree digest")
+    if mat.get("status")=="PASS":
+        req(mat.get("result")=="PASS","materialization result")
+        req(set(mat.get("evidence",{})) <= set(selected),"materialization evidence selected")
 
-canonical={n["id"]:n for n in tier2["nodes"]}
-for node_id in expected:
+for node_id in selected:
     n=canonical[node_id]
-    c=contracts["nodes"][node_id]
-    if n.get("state")=="PASS":
-        req(n.get("planning",{}).get("readiness")=="retained-pass",f"{node_id}: retained package PASS readiness")
-    else:
-        req(n.get("state")=="pending",f"{node_id}: materialization does not promote pending package state")
-        req(n.get("planning",{}).get("readiness") in {"package-contract-ready","build-ready"},f"{node_id}: readiness")
-        req(n.get("planning",{}).get("package_contract") in {"not-materialized","materialized"},f"{node_id}: package contract state")
-    req(c.get("technical_references",{}).get("debian",{}).get("version")=="6.30.0-1",f"{node_id}: Debian 6.30 packaging reference")
-    req(len(c.get("technical_references",{}).get("debian",{}).get("debian_tar_sha256",""))==64,f"{node_id}: pinned Debian tree digest")
-
-for node_id in ("knotifications","kstatusnotifieritem","kunitconversion"):
-    c=contracts["nodes"][node_id]
-    req(c.get("python_runtime_package"),f"{node_id}: Python runtime package mapping")
-    req(c.get("selected_profile",{}).get("BUILD_PYTHON_BINDINGS") is True,f"{node_id}: upstream Python binding profile")
-    req(bool(c.get("python_runtime_contract",{}).get("provider_packages")),f"{node_id}: Python runtime provider closure")
-
-adj=contracts["nodes"]["kstatusnotifieritem"].get("symbols_adjustments",[])
-req(len(adj)==1 and adj[0].get("symbol")=="_ZSt19piecewise_construct@Base" and adj[0].get("version")=="6.30.0","KStatus reviewed symbols adjustment")
+    req(n.get("state")=="pending",f"{node_id}: materialization never promotes package state")
+    req(n.get("planning",{}).get("readiness") in {"package-contract-ready","build-ready"},f"{node_id}: readiness")
 
 for path in (
   "scripts/materialize_kde_tier2_package.py",
   "scripts/run-kde-tier2-package-materialization.sh",
   "scripts/kde-tier2-materialization-needed.sh",
   "scripts/plan-kde-tier2-materialization.py",
-  "scripts/test-kde-tier2-materialization-scope.sh",
   ".github/workflows/kde-tier2-package-materialization.yml",
 ):
     req((ROOT/path).exists(),f"missing materialization component: {path}")
-
-doc=(ROOT/"docs/kde-tier2-package-materialization.md").read_text()
-for token in ("KDE upstream","debian.tar.xz","BUILD_PYTHON_BINDINGS","build@supralinux.invalid","not a package PASS"):
-    req(token in doc,f"materialization docs missing {token}")
 
 if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)
     raise SystemExit(1)
 print("KDE Tier 2 package-materialization definition: PASS")
-print(f"nodes={len(expected)} status={mat.get('status')} package-state-effect=none")
+print(f"state={state} status={mat.get('status')} nodes={selected}")

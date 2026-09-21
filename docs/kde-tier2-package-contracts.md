@@ -101,3 +101,14 @@ This is still package-contract readiness, not package PASS. Clean package valida
 Run `35544063879` validated the previously materialized PySide6 runtime-provider contracts in real clean packages: KNotifications imports successfully with the QtGui provider, KStatusNotifierItem with QtWidgets, and KUnitConversion with QtCore. KStatusNotifierItem's reviewed optional template-symbol entry also passed Lintian and ABI validation in revision `6.30.0-0supralinux2`.
 
 The materialization contracts remain reproducibility inputs; the package PASS authority is the clean-build evidence retained in the Batch 2 campaign and canonical Tier 2 manifest.
+
+
+## Tier 2 package-contract batch 2 activated
+
+The active contract batch is KColorScheme, KCompletion, KContacts, KPackage and KPty. All five already passed provider audit and are package-contract-ready.
+
+Ubuntu Resolute remains only a compatibility/packaging reference. The current Ubuntu 26.04 source package names and binary compatibility surfaces are recorded, but KDE 6.30.0 remains source/feature authority. Debian sid is used only to capture the matching 6.30 packaging tree.
+
+The previous KCrash/KNotifications/KStatusNotifierItem/KUnitConversion/Syndication contract evidence and materialization history is retained under the manifest history and canonical package evidence; it is not overwritten by the new active batch.
+
+Materialization is explicitly blocked while the new technical-reference snapshot is pending.

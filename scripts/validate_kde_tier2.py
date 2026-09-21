@@ -43,7 +43,7 @@ required={
  "kcontacts":["ki18n","kconfig","kcodecs"],
  "kcrash":["kcoreaddons"],
  "kdeclarative":["ki18n","kconfig","kguiaddons"],
- "kfilemetadata":["ki18n"],
+ "kfilemetadata":["ki18n","kcoreaddons","kcodecs"],
  "knotifications":["kconfig"],
  "kpackage":["karchive","ki18n","kcoreaddons"],
  "kpty":["kcoreaddons","ki18n"],
@@ -55,10 +55,12 @@ required={
 }
 conditional={
  "kdeclarative":["kglobalaccel","kwidgetsaddons"],
- "kfilemetadata":["karchive","kcoreaddons","kconfig","kcodecs"],
+ "kfilemetadata":["karchive","kconfig"],
 }
 selected={
  "kauth":["kwindowsystem"],
+ "kdeclarative":["kglobalaccel","kwidgetsaddons"],
+ "kfilemetadata":["karchive","kconfig"],
 }
 
 req(tier2.get("schema")==1 and tier2.get("authority")=="kde-upstream","Tier2 identity/authority")

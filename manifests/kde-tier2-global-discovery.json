@@ -72,7 +72,9 @@
       "tier1_predecessors": [
         "ki18n",
         "kconfig",
-        "kguiaddons"
+        "kguiaddons",
+        "kglobalaccel",
+        "kwidgetsaddons"
       ],
       "conditional_tier1": [
         "kglobalaccel",
@@ -83,13 +85,15 @@
     "kfilemetadata": {
       "readiness": "package-lane-pending",
       "tier1_predecessors": [
-        "ki18n"
+        "ki18n",
+        "kcoreaddons",
+        "kcodecs",
+        "karchive",
+        "kconfig"
       ],
       "conditional_tier1": [
         "karchive",
-        "kcoreaddons",
-        "kconfig",
-        "kcodecs"
+        "kconfig"
       ],
       "provider_audit": "required-before-materialization"
     },

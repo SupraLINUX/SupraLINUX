@@ -144,7 +144,7 @@ sha256sum "${EVIDENCE}/snapshot.json" "${EVIDENCE}/versions.tsv" > "${EVIDENCE}/
  echo "status=PASS"
  echo "authority=false"
  echo "role=packaging-reference-only"
- echo "nodes=5"
+ echo "nodes=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["selected_nodes"]))' "${MANIFEST}")"
  echo "package_state_effect=none"
 } > "${EVIDENCE}/summary.env"
 STATE=PASS

@@ -138,13 +138,13 @@
         "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
       },
       "package_identity": {
-        "source_package": null,
-        "package_version_candidate": null,
+        "source_package": "kf6-kcolorscheme",
+        "package_version_candidate": "6.30.0-0supralinux1",
         "status": "not-materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-lane-not-materialized"
+        "reason": "package-contract-reference-capture-pending"
       },
       "state": "pending",
       "planning": {
@@ -214,13 +214,13 @@
         "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
       },
       "package_identity": {
-        "source_package": null,
-        "package_version_candidate": null,
+        "source_package": "kf6-kcompletion",
+        "package_version_candidate": "6.30.0-0supralinux1",
         "status": "not-materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-lane-not-materialized"
+        "reason": "package-contract-reference-capture-pending"
       },
       "state": "pending",
       "planning": {
@@ -290,13 +290,13 @@
         "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
       },
       "package_identity": {
-        "source_package": null,
-        "package_version_candidate": null,
+        "source_package": "kf6-kcontacts",
+        "package_version_candidate": "6.30.0-0supralinux1",
         "status": "not-materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-lane-not-materialized"
+        "reason": "package-contract-reference-capture-pending"
       },
       "state": "pending",
       "planning": {
@@ -449,7 +449,9 @@
         "extra-cmake-modules",
         "ki18n",
         "kconfig",
-        "kguiaddons"
+        "kguiaddons",
+        "kglobalaccel",
+        "kwidgetsaddons"
       ],
       "kde_framework_dependencies": {
         "required": [
@@ -461,7 +463,11 @@
           "kglobalaccel",
           "kwidgetsaddons"
         ],
-        "note": "Conditional/optional Framework dependencies are recorded from upstream v6.30.0 CMake and require package-profile/provider audit before materialization."
+        "selected_profile": [
+          "kglobalaccel",
+          "kwidgetsaddons"
+        ],
+        "note": "KGlobalAccel is required on Linux desktop platforms and KWidgetsAddons is required on non-Android builds by KDE upstream v6.30.0; both are selected in the SupraLINUX Linux profile."
       },
       "package_identity": {
         "source_package": null,
@@ -492,19 +498,27 @@
       "root_cmake_blob": "0aacf4e46689f2321262698f97e76ba818c41d70",
       "depends_on": [
         "extra-cmake-modules",
-        "ki18n"
+        "ki18n",
+        "kcoreaddons",
+        "kcodecs",
+        "karchive",
+        "kconfig"
       ],
       "kde_framework_dependencies": {
         "required": [
-          "ki18n"
+          "ki18n",
+          "kcoreaddons",
+          "kcodecs"
         ],
         "conditional": [
           "karchive",
-          "kcoreaddons",
-          "kconfig",
-          "kcodecs"
+          "kconfig"
         ],
-        "note": "Conditional/optional Framework dependencies are recorded from upstream v6.30.0 CMake and require package-profile/provider audit before materialization."
+        "selected_profile": [
+          "karchive",
+          "kconfig"
+        ],
+        "note": "KCoreAddons and KCodecs are marked REQUIRED by upstream feature summary. KArchive and KConfig are optional upstream integrations and are selected because compatible retained SupraLINUX providers are available."
       },
       "package_identity": {
         "source_package": null,
@@ -651,13 +665,13 @@
         "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
       },
       "package_identity": {
-        "source_package": null,
-        "package_version_candidate": null,
+        "source_package": "kf6-kpackage",
+        "package_version_candidate": "6.30.0-0supralinux1",
         "status": "not-materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-lane-not-materialized"
+        "reason": "package-contract-reference-capture-pending"
       },
       "state": "pending",
       "planning": {
@@ -725,13 +739,13 @@
         "note": "Required Framework dependencies are recorded from upstream v6.30.0 CMake."
       },
       "package_identity": {
-        "source_package": null,
-        "package_version_candidate": null,
+        "source_package": "kf6-kpty",
+        "package_version_candidate": "6.30.0-0supralinux1",
         "status": "not-materialized"
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-lane-not-materialized"
+        "reason": "package-contract-reference-capture-pending"
       },
       "state": "pending",
       "planning": {

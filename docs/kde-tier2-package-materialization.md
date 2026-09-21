@@ -65,3 +65,10 @@ Materialization remains **not a package PASS**: all corrected trees must still p
 Run `35543959765` completed 3/3 PASS. Exact source-tree and Debian-tree hashes are pinned in `manifests/kde-tier2-package-contracts.json`. The materialization planner excluded retained package PASS nodes KCrash and Syndication, and Batch 2 remained intentionally skipped until this evidence was promoted.
 
 After promotion, the build queue reopens only for KNotifications, KStatusNotifierItem and KUnitConversion.
+
+
+## Reference-capture fail-closed planner
+
+The materialization planner now refuses to emit any matrix while the active contract state is `reference-capture-pending` or materialization status is `blocked-reference-capture`. A semantic contract change may trigger the workflow, but it produces an intentional zero-node skip until the pinned technical references are promoted.
+
+This prevents a package-contract-ready node from accidentally consuming stale packaging evidence from the previous batch.

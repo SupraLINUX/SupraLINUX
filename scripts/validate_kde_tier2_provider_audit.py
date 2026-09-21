@@ -80,6 +80,19 @@ if set(batch) & {"kpty","kcolorscheme","kcompletion","kcontacts","kpackage"}:
     req("DBus" in nodes["kpackage"].get("qt",{}).get("provider_selected",[]), "KPackage DBus provider")
     req(registry.get("additions",{}).get("utempter",{}).get("packages")==["libutempter-dev"], "KPty UTEMPTER provider mapping")
 
+if set(batch) & {"kservice","kdeclarative","kfilemetadata"}:
+    req(nodes["kservice"].get("qt",{}).get("required")==["Xml"], "KService Qt Xml requirement")
+    req({"Concurrent","Test"} <= set(nodes["kservice"].get("qt",{}).get("test",[])), "KService test Qt providers")
+    req(nodes["kservice"].get("selected_linux_profile",{}).get("KF6DocTools") is False, "KService old DocTools provider excluded")
+    req({"Qml","Quick","Gui"} <= set(nodes["kdeclarative"].get("qt",{}).get("required",[])), "KDeclarative Qt Qml/Quick/Gui requirements")
+    req(set(nodes["kdeclarative"].get("frameworks",{}).get("provider_selected",[]))=={"kglobalaccel","kwidgetsaddons"}, "KDeclarative Linux Framework selection")
+    req(nodes["kfilemetadata"].get("qt",{}).get("required")==["Xml"], "KFileMetaData Qt Xml requirement")
+    req("Gui" in nodes["kfilemetadata"].get("qt",{}).get("provider_selected",[]), "KFileMetaData Qt Gui selected provider")
+    req("xattr" in nodes["kfilemetadata"].get("external",{}).get("required",[]), "KFileMetaData Linux Xattr provider")
+    req(set(nodes["kfilemetadata"].get("frameworks",{}).get("required",[]))=={"ki18n","kcoreaddons","kcodecs"}, "KFileMetaData required Frameworks")
+    req(set(nodes["kfilemetadata"].get("frameworks",{}).get("provider_selected",[]))=={"karchive","kconfig"}, "KFileMetaData selected optional Frameworks")
+    req(registry.get("additions",{}).get("xattr",{}).get("packages")==["libattr1-dev"], "KFileMetaData Xattr provider mapping")
+
 for node_id in ("knotifications", "kstatusnotifieritem", "kunitconversion"):
     node = nodes[node_id]
     req(node.get("selected_linux_profile", {}).get("BUILD_PYTHON_BINDINGS") is True, f"{node_id}: Python bindings selected")

@@ -99,3 +99,12 @@ Observed Resolute providers include Qt `6.10.2`, `qt6-base-dev 6.10.2+dfsg-7`, `
 KPty, KColorScheme, KCompletion, KContacts and KPackage are now **package-contract-ready**. This audit has `package_state_effect=none`: all five remain canonical package-state pending until real package materialization and clean build evidence exist.
 
 The next generated provider-audit queue is KService, KDeclarative and KFileMetadata.
+
+
+## Provider audit batch 3 activated
+
+The final ordinary provider-audit batch is KService, KDeclarative and KFileMetaData. It runs independently from the package-contract reference lane for the five nodes that already passed batch 2.
+
+KDeclarative's Linux-selected Framework edges now include KGlobalAccel and KWidgetsAddons. KFileMetaData's corrected required Framework set includes KCoreAddons and KCodecs, while KArchive/KConfig are selected optional integrations backed by retained SupraLINUX 6.30 providers.
+
+KFileMetaData requires Linux Xattr and records its metadata extractors as optional upstream integrations. The audit must report candidate availability without silently converting those optional providers into mandatory package-state requirements.

@@ -349,25 +349,83 @@
         "conditional": [
           "kglobalaccel",
           "kwidgetsaddons"
+        ],
+        "provider_selected": [
+          "kglobalaccel",
+          "kwidgetsaddons"
         ]
       },
-      "provider_audit": "pending-package-profile-audit",
-      "note": "Required and conditional Framework dependencies are taken from upstream v6.30.0 CMake. Conditional/provider-selected surfaces must be resolved before package materialization."
+      "provider_audit": "pending-ci",
+      "note": "Upstream v6.30.0 requires Qt Qml/Quick/Gui. On Linux it requires KGlobalAccel; on non-Android it requires KWidgetsAddons. Tests require Qt Test.",
+      "qt": {
+        "required": [
+          "Qml",
+          "Quick",
+          "Gui"
+        ],
+        "test": [
+          "Test"
+        ]
+      },
+      "external": {},
+      "selected_linux_profile": {
+        "BUILD_TESTING": true,
+        "BUILD_EXAMPLES": false,
+        "platform": "linux-desktop",
+        "reason": "Preserve the upstream Linux desktop dependency path and default BUILD_EXAMPLES=OFF."
+      }
     },
     "kfilemetadata": {
       "frameworks": {
         "required": [
-          "ki18n"
+          "ki18n",
+          "kcoreaddons",
+          "kcodecs"
         ],
         "conditional": [
           "karchive",
-          "kcoreaddons",
-          "kconfig",
-          "kcodecs"
+          "kconfig"
+        ],
+        "provider_selected": [
+          "karchive",
+          "kconfig"
         ]
       },
-      "provider_audit": "pending-package-profile-audit",
-      "note": "Required and conditional Framework dependencies are taken from upstream v6.30.0 CMake. Conditional/provider-selected surfaces must be resolved before package materialization."
+      "provider_audit": "pending-ci",
+      "note": "Upstream v6.30.0 requires Qt Xml, KCoreAddons, KI18n, KCodecs and Linux Xattr. Qt Gui is effectively required by the always-built dump utility. Archive/Config and metadata extractor libraries are optional upstream integrations.",
+      "qt": {
+        "required": [
+          "Xml"
+        ],
+        "provider_selected": [
+          "Gui"
+        ],
+        "test": [
+          "Test"
+        ]
+      },
+      "external": {
+        "required": [
+          "xattr"
+        ],
+        "optional": [
+          "poppler-qt6",
+          "taglib",
+          "exiv2",
+          "ffmpeg",
+          "epub",
+          "catdoc",
+          "qmobipocket6",
+          "libappimage"
+        ]
+      },
+      "selected_linux_profile": {
+        "BUILD_TESTING": true,
+        "BUILD_FUZZERS": false,
+        "FUZZERS_USE_QT_MINIMAL_INTEGRATION_PLUGIN": false,
+        "ENABLE_MOBIPOCKET_TEXT_EXTRACTION": false,
+        "reason": "Preserve upstream defaults, required Linux Xattr, and audit all optional metadata extractor providers without making them mandatory before evidence."
+      }
     },
     "knotifications": {
       "frameworks": {
@@ -479,8 +537,23 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-package-profile-audit",
-      "note": "Required Framework dependencies are taken from upstream v6.30.0 CMake. Qt/external provider mapping remains to be materialized per package."
+      "provider_audit": "pending-ci",
+      "note": "Upstream v6.30.0 requires Qt Xml and, with BUILD_TESTING enabled, Qt Concurrent and Test. KF6DocTools is optional and is not substituted from an older distro Framework.",
+      "qt": {
+        "required": [
+          "Xml"
+        ],
+        "test": [
+          "Concurrent",
+          "Test"
+        ]
+      },
+      "external": {},
+      "selected_linux_profile": {
+        "BUILD_TESTING": true,
+        "KF6DocTools": false,
+        "reason": "Preserve upstream tests while refusing an older distro KDE DocTools provider."
+      }
     },
     "kstatusnotifieritem": {
       "frameworks": {
@@ -619,19 +692,89 @@
         ],
         "provider_status": "resolute-candidate-to-verify",
         "upstream_role": "optional auto-detected KPty Linux integration selected by SupraLINUX when provider is available"
+      },
+      "xattr": {
+        "name": "Xattr",
+        "packages": [
+          "libattr1-dev"
+        ],
+        "provider_status": "resolute-candidate-to-verify",
+        "upstream_role": "required Linux extended-attribute provider for KFileMetaData"
+      },
+      "poppler-qt6": {
+        "name": "Poppler Qt6",
+        "packages": [
+          "libpoppler-qt6-dev"
+        ],
+        "minimum": "0.12.1",
+        "provider_status": "resolute-candidate-to-verify"
+      },
+      "taglib": {
+        "name": "TagLib",
+        "packages": [
+          "libtag-dev"
+        ],
+        "minimum": "1.12",
+        "provider_status": "resolute-candidate-to-verify"
+      },
+      "exiv2": {
+        "name": "Exiv2",
+        "packages": [
+          "libexiv2-dev"
+        ],
+        "minimum": "0.27.4",
+        "provider_status": "resolute-candidate-to-verify"
+      },
+      "ffmpeg": {
+        "name": "FFmpeg metadata stack",
+        "packages": [
+          "libavcodec-dev",
+          "libavformat-dev",
+          "libavutil-dev"
+        ],
+        "provider_status": "resolute-candidate-to-verify"
+      },
+      "epub": {
+        "name": "EPub",
+        "packages": [
+          "libepub-dev"
+        ],
+        "provider_status": "resolute-candidate-to-verify"
+      },
+      "catdoc": {
+        "name": "CatDoc",
+        "packages": [
+          "catdoc"
+        ],
+        "provider_status": "resolute-candidate-to-verify",
+        "upstream_role": "runtime optional extractor"
+      },
+      "qmobipocket6": {
+        "name": "QMobipocket6",
+        "packages": [
+          "libqmobipocket6-dev"
+        ],
+        "minimum": "2.1",
+        "provider_status": "resolute-candidate-to-verify"
+      },
+      "libappimage": {
+        "name": "libappimage",
+        "packages": [
+          "libappimage-dev"
+        ],
+        "minimum": "0.1.10",
+        "provider_status": "resolute-candidate-to-verify"
       }
     }
   },
   "provider_audit": {
     "schema": 1,
-    "batch": "tier2-provider-audit-2",
-    "status": "PASS",
+    "batch": "tier2-provider-audit-3",
+    "status": "pending-ci",
     "nodes": [
-      "kpty",
-      "kcolorscheme",
-      "kcompletion",
-      "kcontacts",
-      "kpackage"
+      "kservice",
+      "kdeclarative",
+      "kfilemetadata"
     ],
     "source_authority": "kde-upstream-v6.30.0",
     "provider_platform": "ubuntu-resolute",
@@ -639,13 +782,14 @@
     "authoritative_package_build": false,
     "previous_pass": {
       "schema": 1,
-      "batch": "tier2-provider-audit-1",
-      "mode": "remediation-revalidation",
+      "batch": "tier2-provider-audit-2",
       "status": "PASS",
       "nodes": [
-        "knotifications",
-        "kstatusnotifieritem",
-        "kunitconversion"
+        "kpty",
+        "kcolorscheme",
+        "kcompletion",
+        "kcontacts",
+        "kpackage"
       ],
       "source_authority": "kde-upstream-v6.30.0",
       "provider_platform": "ubuntu-resolute",
@@ -654,97 +798,112 @@
       "previous_pass": {
         "schema": 1,
         "batch": "tier2-provider-audit-1",
+        "mode": "remediation-revalidation",
         "status": "PASS",
         "nodes": [
-          "kcrash",
           "knotifications",
           "kstatusnotifieritem",
-          "kunitconversion",
-          "syndication"
+          "kunitconversion"
         ],
         "source_authority": "kde-upstream-v6.30.0",
         "provider_platform": "ubuntu-resolute",
         "claim": "provider-availability-and-selected-profile-only",
         "authoritative_package_build": false,
+        "previous_pass": {
+          "schema": 1,
+          "batch": "tier2-provider-audit-1",
+          "status": "PASS",
+          "nodes": [
+            "kcrash",
+            "knotifications",
+            "kstatusnotifieritem",
+            "kunitconversion",
+            "syndication"
+          ],
+          "source_authority": "kde-upstream-v6.30.0",
+          "provider_platform": "ubuntu-resolute",
+          "claim": "provider-availability-and-selected-profile-only",
+          "authoritative_package_build": false,
+          "evidence": {
+            "workflow_run": 35524034558,
+            "job_id": 106112947247,
+            "commit": "b47c5ab6ea654cc79a9c13ebc08c8719e585183f",
+            "artifact_id": 10609298463,
+            "artifact_sha256": "8418ca46593df82cdfb6ac306bcebbf97cde44f79db133f704b09e525f01a63d",
+            "claim": "provider-availability-and-selected-profile-only",
+            "package_state_effect": "none",
+            "result": "PASS",
+            "observed_providers": {
+              "qt6_base_dev": "6.10.2+dfsg-7",
+              "libpyside6_dev": "6.10.2-6ubuntu1",
+              "libshiboken6_dev": "6.10.2-6ubuntu1",
+              "libx11_dev": "2:1.8.13-1",
+              "libcanberra_dev": "0.30-18ubuntu3",
+              "python3_build": "1.4.0-1"
+            }
+          }
+        },
         "evidence": {
-          "workflow_run": 35524034558,
-          "job_id": 106112947247,
-          "commit": "b47c5ab6ea654cc79a9c13ebc08c8719e585183f",
-          "artifact_id": 10609298463,
-          "artifact_sha256": "8418ca46593df82cdfb6ac306bcebbf97cde44f79db133f704b09e525f01a63d",
+          "result": "PASS",
+          "workflow_run": 35543178504,
+          "job_id": 106164408170,
+          "commit": "95910856c5ede2a8c06de9fc0c19978f2cbf7d1c",
+          "artifact_id": 10615567800,
+          "artifact_sha256": "b758da80b86835d5d9471f9cf052d85b449ee8851406585f5bb3226a0f2d7c5c",
           "claim": "provider-availability-and-selected-profile-only",
           "package_state_effect": "none",
-          "result": "PASS",
           "observed_providers": {
-            "qt6_base_dev": "6.10.2+dfsg-7",
-            "libpyside6_dev": "6.10.2-6ubuntu1",
-            "libshiboken6_dev": "6.10.2-6ubuntu1",
-            "libx11_dev": "2:1.8.13-1",
-            "libcanberra_dev": "0.30-18ubuntu3",
-            "python3_build": "1.4.0-1"
+            "llvm-dev": "1:21.1.6-71",
+            "libclang-common-21-dev": "1:21.1.8-6ubuntu1",
+            "llvm-config": "21.1.8",
+            "clang_resource_header": "/usr/lib/llvm-21/lib/clang/21/include/stddef.h"
           }
         }
       },
+      "activation_incident": {
+        "workflow_run": 35597828609,
+        "job_id": 106326647774,
+        "commit": "fe29f6bc7851b0f11c2cd040dbc9b66af6a6319b",
+        "classification": "provider-profile-not-materialized",
+        "stage": "definition-validation",
+        "provider_checks_started": false,
+        "package_state_effect": "none",
+        "cause": "The five newly selected nodes lacked qt/external/selected_linux_profile data, so the audit stopped before APT/provider probing.",
+        "remediation": "Materialize the v6.30.0 upstream-selected provider profiles and rerun the same pending-ci batch."
+      },
       "evidence": {
         "result": "PASS",
-        "workflow_run": 35543178504,
-        "job_id": 106164408170,
-        "commit": "95910856c5ede2a8c06de9fc0c19978f2cbf7d1c",
-        "artifact_id": 10615567800,
-        "artifact_sha256": "b758da80b86835d5d9471f9cf052d85b449ee8851406585f5bb3226a0f2d7c5c",
+        "workflow_run": 35605754366,
+        "job_id": 106352296102,
+        "commit": "25bb547be4110e15adaefd89f742dbbeb3104791",
+        "artifact_id": 10641708858,
+        "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8",
         "claim": "provider-availability-and-selected-profile-only",
         "package_state_effect": "none",
+        "ubuntu_version": "26.04",
+        "qt_upstream": "6.10.2",
         "observed_providers": {
-          "llvm-dev": "1:21.1.6-71",
-          "libclang-common-21-dev": "1:21.1.8-6ubuntu1",
-          "llvm-config": "21.1.8",
-          "clang_resource_header": "/usr/lib/llvm-21/lib/clang/21/include/stddef.h"
+          "qt6-base-dev": "6.10.2+dfsg-7",
+          "qt6-base-private-dev": "6.10.2+dfsg-7",
+          "qt6-declarative-dev": "6.10.2+dfsg-3",
+          "qt6-tools-dev": "6.10.2-1",
+          "libutempter-dev": "1.2.1-4build1"
+        },
+        "mandatory_qt_components": [
+          "Core",
+          "DBus",
+          "Gui",
+          "GuiPrivate",
+          "Qml",
+          "Quick",
+          "Test",
+          "UiPlugin",
+          "Widgets"
+        ],
+        "utempter_probe": {
+          "header": "PASS",
+          "library": "PASS"
         }
-      }
-    },
-    "activation_incident": {
-      "workflow_run": 35597828609,
-      "job_id": 106326647774,
-      "commit": "fe29f6bc7851b0f11c2cd040dbc9b66af6a6319b",
-      "classification": "provider-profile-not-materialized",
-      "stage": "definition-validation",
-      "provider_checks_started": false,
-      "package_state_effect": "none",
-      "cause": "The five newly selected nodes lacked qt/external/selected_linux_profile data, so the audit stopped before APT/provider probing.",
-      "remediation": "Materialize the v6.30.0 upstream-selected provider profiles and rerun the same pending-ci batch."
-    },
-    "evidence": {
-      "result": "PASS",
-      "workflow_run": 35605754366,
-      "job_id": 106352296102,
-      "commit": "25bb547be4110e15adaefd89f742dbbeb3104791",
-      "artifact_id": 10641708858,
-      "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8",
-      "claim": "provider-availability-and-selected-profile-only",
-      "package_state_effect": "none",
-      "ubuntu_version": "26.04",
-      "qt_upstream": "6.10.2",
-      "observed_providers": {
-        "qt6-base-dev": "6.10.2+dfsg-7",
-        "qt6-base-private-dev": "6.10.2+dfsg-7",
-        "qt6-declarative-dev": "6.10.2+dfsg-3",
-        "qt6-tools-dev": "6.10.2-1",
-        "libutempter-dev": "1.2.1-4build1"
-      },
-      "mandatory_qt_components": [
-        "Core",
-        "DBus",
-        "Gui",
-        "GuiPrivate",
-        "Qml",
-        "Quick",
-        "Test",
-        "UiPlugin",
-        "Widgets"
-      ],
-      "utempter_probe": {
-        "header": "PASS",
-        "library": "PASS"
       }
     }
   }

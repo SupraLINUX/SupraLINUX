@@ -80,3 +80,13 @@ The next audit batch now has explicit upstream-derived provider profiles rather 
 Ubuntu remains only the provider. In particular, KPackage's optional KF6DocTools probe is not allowed to pull an older Ubuntu KDE Framework into the 6.30 stack; the optional documentation path remains off until SupraLINUX has a compatible KDE-upstream provider.
 
 The audit failure in run `35597828609` is classified as a pre-provider profile-definition incident with `package_state_effect=none`; no package and no provider availability claim was produced.
+
+
+## 2026-09-21 — final provider-audit batch profile corrections
+
+Upstream v6.30.0 was re-read before the final provider audit. Two dependency classifications are corrected:
+
+- KDeclarative requires KGlobalAccel on Linux desktop platforms and KWidgetsAddons on non-Android builds; SupraLINUX selects both retained 6.30 providers.
+- KFileMetaData marks KCoreAddons and KCodecs REQUIRED through its upstream feature summary. KArchive and KConfig remain optional upstream, but SupraLINUX selects them because compatible retained 6.30 providers are already available.
+
+Provider audit batch 3 is KService + KDeclarative + KFileMetaData. KService audits Qt Xml/Concurrent/Test while refusing an older distro KDocTools provider. KDeclarative audits Qml/Quick/Gui/Test. KFileMetaData audits required Linux Xattr plus optional Poppler Qt6, TagLib, Exiv2, FFmpeg, EPub, CatDoc, QMobipocket6 and libappimage candidates. Optional extractor candidates remain optional until provider evidence exists.
