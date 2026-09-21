@@ -230,7 +230,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Upstream v6.30.0 requires Qt Gui and, with the selected Qt 6.10 provider, Qt GuiPrivate; Qt Test is required by autotests.",
       "qt": {
         "required": [
@@ -259,7 +259,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Upstream v6.30.0 requires Qt Widgets. BUILD_DESIGNERPLUGIN defaults ON on native builds and ECM uses Qt UiPlugin when available; tests use Qt Test.",
       "qt": {
         "required": [
@@ -288,7 +288,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Upstream v6.30.0 requires Qt Gui, enables USE_QML by default and then requires Qt Qml; the QML module declares a QtQuick dependency. Tests require Qt Test and probe Quick integration.",
       "qt": {
         "required": [
@@ -420,7 +420,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Upstream v6.30.0 requires Qt Core and enables USE_DBUS by default on Linux; tests require Qt Test. KF6DocTools is optional upstream and is not substituted from Ubuntu while SupraLINUX lacks a matching 6.30 provider.",
       "qt": {
         "required": [
@@ -449,7 +449,7 @@
         ],
         "conditional": []
       },
-      "provider_audit": "pending-ci",
+      "provider_audit": "PASS",
       "note": "Upstream v6.30.0 requires Qt Core, KCoreAddons and KI18n; Qt Test is required when BUILD_TESTING is enabled. UTEMPTER is optional upstream and selected for the SupraLINUX Linux profile because Resolute provides it.",
       "qt": {
         "required": [
@@ -625,7 +625,7 @@
   "provider_audit": {
     "schema": 1,
     "batch": "tier2-provider-audit-2",
-    "status": "pending-ci",
+    "status": "PASS",
     "nodes": [
       "kpty",
       "kcolorscheme",
@@ -712,6 +712,40 @@
       "package_state_effect": "none",
       "cause": "The five newly selected nodes lacked qt/external/selected_linux_profile data, so the audit stopped before APT/provider probing.",
       "remediation": "Materialize the v6.30.0 upstream-selected provider profiles and rerun the same pending-ci batch."
+    },
+    "evidence": {
+      "result": "PASS",
+      "workflow_run": 35605754366,
+      "job_id": 106352296102,
+      "commit": "25bb547be4110e15adaefd89f742dbbeb3104791",
+      "artifact_id": 10641708858,
+      "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8",
+      "claim": "provider-availability-and-selected-profile-only",
+      "package_state_effect": "none",
+      "ubuntu_version": "26.04",
+      "qt_upstream": "6.10.2",
+      "observed_providers": {
+        "qt6-base-dev": "6.10.2+dfsg-7",
+        "qt6-base-private-dev": "6.10.2+dfsg-7",
+        "qt6-declarative-dev": "6.10.2+dfsg-3",
+        "qt6-tools-dev": "6.10.2-1",
+        "libutempter-dev": "1.2.1-4build1"
+      },
+      "mandatory_qt_components": [
+        "Core",
+        "DBus",
+        "Gui",
+        "GuiPrivate",
+        "Qml",
+        "Quick",
+        "Test",
+        "UiPlugin",
+        "Widgets"
+      ],
+      "utempter_probe": {
+        "header": "PASS",
+        "library": "PASS"
+      }
     }
   }
 }

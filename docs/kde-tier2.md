@@ -117,3 +117,10 @@ Clean-build run `35544063879` completed PASS for KNotifications `6.30.0-0suprali
 All three final Python-binding packages passed clean sbuild, upstream tests, Lintian error policy, ABI/SONAME checks, APT closure, external CMake consumer validation and Python import. KNotifications also passed its QML payload smoke. The PySide6 provider mappings remain packaging/provider integration only; KDE upstream continues to define the enabled binding feature profile.
 
 Remaining pending nodes are KColorscheme, KCompletion, KContacts, KDeclarative, KFileMetadata, KPackage, KPty, KService and KMime. KMime remains blocked only by the explicit compatibility decision in ADR-0002; it is pending, not FAIL or BLOCKED in the build DAG.
+
+
+## Provider audit batch 2 promoted
+
+KPty, KColorScheme, KCompletion, KContacts and KPackage have passed their Ubuntu Resolute provider/profile audit and advance from `package-lane-pending` to `package-contract-ready`. Canonical package state is unchanged at **6 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.
+
+The remaining unaudited package-lane nodes are KService, KDeclarative and KFileMetadata; KMime remains the separate compatibility-decision case.

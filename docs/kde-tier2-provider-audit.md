@@ -88,3 +88,14 @@ Provider-audit run `35598315301`, job `106328176979`, reached real APT provider 
 The run then failed in a stale first-batch-only runner assertion: it unconditionally queried `libshiboken6-dev` and `libpyside6-dev` even though neither package is part of this non-Python batch. This is **INFRA / audit-runner optional-probe leakage**, not a provider failure; `package_state_effect=none`.
 
 Provider-specific probes are now conditional on membership in the active batch's generated `mandatory-packages.txt`. The same applies to the Python `build`/setuptools binding probe. This keeps the audit generic across later Tier 2 batches instead of carrying hidden requirements from the first Python-binding batch.
+
+
+## Provider audit batch 2 PASS
+
+Run `35605754366`, job `106352296102`, artifact `10641708858`, SHA-256 `d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8`: **PASS**.
+
+Observed Resolute providers include Qt `6.10.2`, `qt6-base-dev 6.10.2+dfsg-7`, `qt6-base-private-dev 6.10.2+dfsg-7`, `qt6-declarative-dev 6.10.2+dfsg-3`, `qt6-tools-dev 6.10.2-1`, and `libutempter-dev 1.2.1-4build1`. The generated CMake probe validated Core, DBus, Gui, GuiPrivate, Qml, Quick, Test, UiPlugin and Widgets; the UTEMPTER header and library probes both passed.
+
+KPty, KColorScheme, KCompletion, KContacts and KPackage are now **package-contract-ready**. This audit has `package_state_effect=none`: all five remain canonical package-state pending until real package materialization and clean build evidence exist.
+
+The next generated provider-audit queue is KService, KDeclarative and KFileMetadata.

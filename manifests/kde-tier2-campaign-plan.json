@@ -19,55 +19,6 @@
   ],
   "provider_audit_required": [
     {
-      "node": "kpty",
-      "required_predecessors": [
-        "kcoreaddons",
-        "ki18n"
-      ],
-      "conditional_frameworks": [],
-      "selected_profile": []
-    },
-    {
-      "node": "kcolorscheme",
-      "required_predecessors": [
-        "kconfig",
-        "kguiaddons",
-        "ki18n"
-      ],
-      "conditional_frameworks": [],
-      "selected_profile": []
-    },
-    {
-      "node": "kcompletion",
-      "required_predecessors": [
-        "kcodecs",
-        "kconfig",
-        "kwidgetsaddons"
-      ],
-      "conditional_frameworks": [],
-      "selected_profile": []
-    },
-    {
-      "node": "kcontacts",
-      "required_predecessors": [
-        "ki18n",
-        "kconfig",
-        "kcodecs"
-      ],
-      "conditional_frameworks": [],
-      "selected_profile": []
-    },
-    {
-      "node": "kpackage",
-      "required_predecessors": [
-        "karchive",
-        "ki18n",
-        "kcoreaddons"
-      ],
-      "conditional_frameworks": [],
-      "selected_profile": []
-    },
-    {
       "node": "kservice",
       "required_predecessors": [
         "kconfig",
@@ -104,7 +55,13 @@
       "selected_profile": []
     }
   ],
-  "package_contract_ready": [],
+  "package_contract_ready": [
+    "kcolorscheme",
+    "kcompletion",
+    "kcontacts",
+    "kpackage",
+    "kpty"
+  ],
   "human_decision_required": [
     {
       "node": "kmime",
@@ -114,11 +71,9 @@
   "build_queue": [],
   "audit_batch_size": 5,
   "next_provider_audit_batch": [
-    "kpty",
-    "kcolorscheme",
-    "kcompletion",
-    "kcontacts",
-    "kpackage"
+    "kservice",
+    "kdeclarative",
+    "kfilemetadata"
   ],
   "policy": {
     "canonical_manifest_is_source_of_truth": true,

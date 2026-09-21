@@ -23,28 +23,49 @@
   },
   "nodes": {
     "kcolorscheme": {
-      "readiness": "package-lane-pending",
+      "readiness": "package-contract-ready",
       "tier1_predecessors": [
         "kconfig",
         "kguiaddons",
         "ki18n"
-      ]
+      ],
+      "provider_audit": "complete",
+      "provider_audit_evidence": {
+        "workflow_run": 35605754366,
+        "job_id": 106352296102,
+        "artifact_id": 10641708858,
+        "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8"
+      }
     },
     "kcompletion": {
-      "readiness": "package-lane-pending",
+      "readiness": "package-contract-ready",
       "tier1_predecessors": [
         "kcodecs",
         "kconfig",
         "kwidgetsaddons"
-      ]
+      ],
+      "provider_audit": "complete",
+      "provider_audit_evidence": {
+        "workflow_run": 35605754366,
+        "job_id": 106352296102,
+        "artifact_id": 10641708858,
+        "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8"
+      }
     },
     "kcontacts": {
-      "readiness": "package-lane-pending",
+      "readiness": "package-contract-ready",
       "tier1_predecessors": [
         "ki18n",
         "kconfig",
         "kcodecs"
-      ]
+      ],
+      "provider_audit": "complete",
+      "provider_audit_evidence": {
+        "workflow_run": 35605754366,
+        "job_id": 106352296102,
+        "artifact_id": 10641708858,
+        "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8"
+      }
     },
     "kdeclarative": {
       "readiness": "package-lane-pending",
@@ -73,7 +94,7 @@
       "provider_audit": "required-before-materialization"
     },
     "kpackage": {
-      "readiness": "package-lane-pending",
+      "readiness": "package-contract-ready",
       "tier1_predecessors": [
         "karchive",
         "ki18n",
@@ -81,14 +102,28 @@
       ],
       "optional_higher_tier": [
         "kdoctools"
-      ]
+      ],
+      "provider_audit": "complete",
+      "provider_audit_evidence": {
+        "workflow_run": 35605754366,
+        "job_id": 106352296102,
+        "artifact_id": 10641708858,
+        "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8"
+      }
     },
     "kpty": {
-      "readiness": "package-lane-pending",
+      "readiness": "package-contract-ready",
       "tier1_predecessors": [
         "kcoreaddons",
         "ki18n"
-      ]
+      ],
+      "provider_audit": "complete",
+      "provider_audit_evidence": {
+        "workflow_run": 35605754366,
+        "job_id": 106352296102,
+        "artifact_id": 10641708858,
+        "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8"
+      }
     },
     "kservice": {
       "readiness": "package-lane-pending",

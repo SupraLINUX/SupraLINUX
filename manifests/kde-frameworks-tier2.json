@@ -148,10 +148,44 @@
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-lane-pending",
-        "provider_audit": "required-before-materialization",
+        "readiness": "package-contract-ready",
+        "provider_audit": "complete",
         "package_contract": "not-materialized",
-        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
+        "provider_audit_evidence": {
+          "result": "PASS",
+          "workflow_run": 35605754366,
+          "job_id": 106352296102,
+          "commit": "25bb547be4110e15adaefd89f742dbbeb3104791",
+          "artifact_id": 10641708858,
+          "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8",
+          "claim": "provider-availability-and-selected-profile-only",
+          "package_state_effect": "none",
+          "ubuntu_version": "26.04",
+          "qt_upstream": "6.10.2",
+          "observed_providers": {
+            "qt6-base-dev": "6.10.2+dfsg-7",
+            "qt6-base-private-dev": "6.10.2+dfsg-7",
+            "qt6-declarative-dev": "6.10.2+dfsg-3",
+            "qt6-tools-dev": "6.10.2-1",
+            "libutempter-dev": "1.2.1-4build1"
+          },
+          "mandatory_qt_components": [
+            "Core",
+            "DBus",
+            "Gui",
+            "GuiPrivate",
+            "Qml",
+            "Quick",
+            "Test",
+            "UiPlugin",
+            "Widgets"
+          ],
+          "utempter_probe": {
+            "header": "PASS",
+            "library": "PASS"
+          }
+        }
       }
     },
     {
@@ -190,10 +224,44 @@
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-lane-pending",
-        "provider_audit": "required-before-materialization",
+        "readiness": "package-contract-ready",
+        "provider_audit": "complete",
         "package_contract": "not-materialized",
-        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
+        "provider_audit_evidence": {
+          "result": "PASS",
+          "workflow_run": 35605754366,
+          "job_id": 106352296102,
+          "commit": "25bb547be4110e15adaefd89f742dbbeb3104791",
+          "artifact_id": 10641708858,
+          "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8",
+          "claim": "provider-availability-and-selected-profile-only",
+          "package_state_effect": "none",
+          "ubuntu_version": "26.04",
+          "qt_upstream": "6.10.2",
+          "observed_providers": {
+            "qt6-base-dev": "6.10.2+dfsg-7",
+            "qt6-base-private-dev": "6.10.2+dfsg-7",
+            "qt6-declarative-dev": "6.10.2+dfsg-3",
+            "qt6-tools-dev": "6.10.2-1",
+            "libutempter-dev": "1.2.1-4build1"
+          },
+          "mandatory_qt_components": [
+            "Core",
+            "DBus",
+            "Gui",
+            "GuiPrivate",
+            "Qml",
+            "Quick",
+            "Test",
+            "UiPlugin",
+            "Widgets"
+          ],
+          "utempter_probe": {
+            "header": "PASS",
+            "library": "PASS"
+          }
+        }
       }
     },
     {
@@ -232,10 +300,44 @@
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-lane-pending",
-        "provider_audit": "required-before-materialization",
+        "readiness": "package-contract-ready",
+        "provider_audit": "complete",
         "package_contract": "not-materialized",
-        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
+        "provider_audit_evidence": {
+          "result": "PASS",
+          "workflow_run": 35605754366,
+          "job_id": 106352296102,
+          "commit": "25bb547be4110e15adaefd89f742dbbeb3104791",
+          "artifact_id": 10641708858,
+          "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8",
+          "claim": "provider-availability-and-selected-profile-only",
+          "package_state_effect": "none",
+          "ubuntu_version": "26.04",
+          "qt_upstream": "6.10.2",
+          "observed_providers": {
+            "qt6-base-dev": "6.10.2+dfsg-7",
+            "qt6-base-private-dev": "6.10.2+dfsg-7",
+            "qt6-declarative-dev": "6.10.2+dfsg-3",
+            "qt6-tools-dev": "6.10.2-1",
+            "libutempter-dev": "1.2.1-4build1"
+          },
+          "mandatory_qt_components": [
+            "Core",
+            "DBus",
+            "Gui",
+            "GuiPrivate",
+            "Qml",
+            "Quick",
+            "Test",
+            "UiPlugin",
+            "Widgets"
+          ],
+          "utempter_probe": {
+            "header": "PASS",
+            "library": "PASS"
+          }
+        }
       }
     },
     {
@@ -559,10 +661,44 @@
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-lane-pending",
-        "provider_audit": "required-before-materialization",
+        "readiness": "package-contract-ready",
+        "provider_audit": "complete",
         "package_contract": "not-materialized",
-        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
+        "provider_audit_evidence": {
+          "result": "PASS",
+          "workflow_run": 35605754366,
+          "job_id": 106352296102,
+          "commit": "25bb547be4110e15adaefd89f742dbbeb3104791",
+          "artifact_id": 10641708858,
+          "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8",
+          "claim": "provider-availability-and-selected-profile-only",
+          "package_state_effect": "none",
+          "ubuntu_version": "26.04",
+          "qt_upstream": "6.10.2",
+          "observed_providers": {
+            "qt6-base-dev": "6.10.2+dfsg-7",
+            "qt6-base-private-dev": "6.10.2+dfsg-7",
+            "qt6-declarative-dev": "6.10.2+dfsg-3",
+            "qt6-tools-dev": "6.10.2-1",
+            "libutempter-dev": "1.2.1-4build1"
+          },
+          "mandatory_qt_components": [
+            "Core",
+            "DBus",
+            "Gui",
+            "GuiPrivate",
+            "Qml",
+            "Quick",
+            "Test",
+            "UiPlugin",
+            "Widgets"
+          ],
+          "utempter_probe": {
+            "header": "PASS",
+            "library": "PASS"
+          }
+        }
       }
     },
     {
@@ -599,10 +735,44 @@
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-lane-pending",
-        "provider_audit": "required-before-materialization",
+        "readiness": "package-contract-ready",
+        "provider_audit": "complete",
         "package_contract": "not-materialized",
-        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight"
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
+        "provider_audit_evidence": {
+          "result": "PASS",
+          "workflow_run": 35605754366,
+          "job_id": 106352296102,
+          "commit": "25bb547be4110e15adaefd89f742dbbeb3104791",
+          "artifact_id": 10641708858,
+          "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8",
+          "claim": "provider-availability-and-selected-profile-only",
+          "package_state_effect": "none",
+          "ubuntu_version": "26.04",
+          "qt_upstream": "6.10.2",
+          "observed_providers": {
+            "qt6-base-dev": "6.10.2+dfsg-7",
+            "qt6-base-private-dev": "6.10.2+dfsg-7",
+            "qt6-declarative-dev": "6.10.2+dfsg-3",
+            "qt6-tools-dev": "6.10.2-1",
+            "libutempter-dev": "1.2.1-4build1"
+          },
+          "mandatory_qt_components": [
+            "Core",
+            "DBus",
+            "Gui",
+            "GuiPrivate",
+            "Qml",
+            "Quick",
+            "Test",
+            "UiPlugin",
+            "Widgets"
+          ],
+          "utempter_probe": {
+            "header": "PASS",
+            "library": "PASS"
+          }
+        }
       }
     },
     {
