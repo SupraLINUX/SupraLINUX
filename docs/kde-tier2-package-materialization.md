@@ -1,7 +1,7 @@
 # KDE Tier 2 package materialization
 
-Status: **first five package contracts materialized; clean builds pending**  
-Date: **2026-09-20**
+Status: **package-contract batch 2 materialized 5/5; clean builds pending**  
+Date: **2026-09-21**
 
 The package tree is generated, not copied manually. The source side is always the official **KDE upstream** Frameworks 6.30.0 tarball verified against the canonical SHA-256. The Debian `debian.tar.xz` is downloaded at its exact pinned 6.30.0-1 version and SHA-256 and is used only as a technical packaging reference.
 
@@ -81,3 +81,16 @@ After reference capture PASS, KColorScheme, KCompletion, KContacts, KPackage and
 The materializer can now remove explicitly reviewed Build-Depends that belong to the technical packaging reference rather than KDE's upstream feature requirements. Removal is fail-closed: every declared package must actually exist in the reference Build-Depends before it can be removed, and the generated tree contract verifies that it is absent afterwards.
 
 For KPackage this applies only to `libkf6doctools-dev`, paired with `CMAKE_DISABLE_FIND_PACKAGE_KF6DocTools=ON`. All boolean selected-profile CMake flags are now validated generically in the generated `debian/rules`.
+
+
+## Package-contract batch 2 materialization PASS
+
+Run `35608790364` on commit `42bf5f9b5672e59df3ce037f9ffd25412a29049e` completed **5/5 PASS** for KColorScheme, KCompletion, KContacts, KPackage and KPty. This is deterministic source/package-tree materialization only: `package_attempted=false`, package state remains `pending`, and the five nodes advance to `build-ready`.
+
+- KColorScheme: job `106362493777`, artifact `10642908326`, artifact SHA-256 `c68b71a9e1dceab3cc801528caeaf32fb4732fefcfd0d34d8d161b0dfac02b77`, tree `c1828077f27cfcfe06bf9dfe2f43a0514c878f35e19ad36591eae2abc3e1d176`, Debian tree `ea5f8a76cc314b9b668e7994ff244762e47d2f9f6afafceb46051080575e6ca2`.
+- KCompletion: job `106362493855`, artifact `10642138572`, artifact SHA-256 `846589674b46bcda78064bb6765e3e5ddd6f6ac3d98907aa3fe5a428f3f3cb29`, tree `eaa960fcc648a5b25b7a6692725b9a156393479c5f7a39941fb3586209d89ec7`, Debian tree `9f683f30b8861e996bb17d10650cae9b37cca62e8598849630eaa44ab36b2b82`.
+- KContacts: job `106362493851`, artifact `10642848344`, artifact SHA-256 `0c16947ba76fa61fc100721f65d1c527492e31a474db9dee20da79c3c13333ca`, tree `9fbcd6ce0076d40427b0a12c26c222e3bf61f9f49501ca591e3466f794518a8b`, Debian tree `3752c72cfc505649eee8bc349bb0159a3a2bf028129d9cb2be11ce0e247804d7`.
+- KPackage: job `106362493754`, artifact `10643670033`, artifact SHA-256 `0e2281fca63b84a0a7c96e6c5256f98365509ef329790c70f91730637a5bd924`, tree `f21367663463b5732594a4220d23c21dd50d8d9b1989c3f7a2cbe450c4a1d886`, Debian tree `e67157e73ede9401529f4d47165061351c520eda6d8b27b4a3eec3ec3b7b396f`. The reviewed KDocTools overconstraint removal is present in this materialized tree.
+- KPty: job `106362494052`, artifact `10643865040`, artifact SHA-256 `4b2e6e5684da32fdd5f15fc86b1310a8ee7989a2d4789a1959231692f63056c8`, tree `1b6c5d0e54ce12bce779c5a31fa38e02a879c0611939c8279c2de0171eedc4d2`, Debian tree `1b60a275866d00060527c3fbc0aa053d1e6de2c1b60d3599446a7c16927ce8ba`.
+
+The active materialization target set is now empty. Provider audit, contract reference and this materialization must not be repeated unless a semantic input changes. The next lane is a clean-build campaign that consumes all retained PASS predecessors required by each node. No APT publication or stable promotion is implied.

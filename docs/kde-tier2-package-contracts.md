@@ -1,7 +1,7 @@
 # KDE Tier 2 package contracts
 
-Status: **provider-adapted materialization PASS; clean build pending**  
-Date: **2026-09-20**
+Status: **package-contract batch 2 materialized 5/5; clean build pending**  
+Date: **2026-09-21**
 
 The first contract batch contains KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication. All five already passed the Ubuntu Resolute provider audit and remain package-state `pending`.
 
@@ -123,3 +123,12 @@ Ubuntu Resolute references are `6.24.0-0ubuntu1`; Debian sid references are `6.3
 KPackage exposes a deliberate authority/provider split. KDE upstream declares KF6DocTools optional, while the Debian technical-reference packaging makes `libkf6doctools-dev` mandatory. SupraLINUX removes that technical-reference Build-Depends and materializes `-DCMAKE_DISABLE_FIND_PACKAGE_KF6DocTools=ON` until a matching SupraLINUX KDE 6.30 DocTools provider exists. This avoids importing an older distro KDE Framework solely because the reference packaging chose it.
 
 Reference snapshot SHA-256 is `703ec8233c2694bad11b9b41545bc5828f45b8e070706bac35a470c7d7af139a`; versions TSV SHA-256 is `5b135cfaedd0b6a4d1d2bbd6648a943fb351e54f9d2294114b75ef99c2d2c861`.
+
+
+## Package-contract batch 2 materialization promoted
+
+Materialization run `35608790364` is the retained PASS for KColorScheme, KCompletion, KContacts, KPackage and KPty. Exact artifact, full-tree, Debian-tree, `.dsc`, `.debian.tar.xz` and authoritative orig SHA-256 values are now canonical in `manifests/kde-tier2-package-contracts.json`.
+
+The contract state is now `materialized`; all five canonical nodes are `build-ready` while their package state remains `pending`. The generated Tier 2 plan therefore moves these five nodes from `package_contract_ready` to `build_queue`. KDeclarative, KFileMetaData and KService remain package-contract-ready for a later contract batch, and KMime remains decision-gated by ADR-0002.
+
+This promotion does not rerun or supersede the already-PASS provider/reference lanes and does not authorize publication to `stable`.

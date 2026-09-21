@@ -1,7 +1,7 @@
 # KDE Frameworks 6.30 — Tier 2 discovery
 
-Status: **2 PASS / 13 pending / 0 current FAIL / 0 BLOCKED**  
-Date: **2026-09-20**
+Status: **6 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**  
+Date: **2026-09-21**
 
 KDE upstream classifies **15** Frameworks in Tier 2 for the current Frameworks API set:
 
@@ -27,7 +27,7 @@ Tier 2 may depend on Tier 1 Frameworks. SupraLINUX entered this phase only after
 
 The first Tier 2 discovery incorrectly materialized only KAuth and KMime. That was an inventory error: KDE upstream currently lists 15 Tier 2 Frameworks.
 
-The correction does not invalidate KAuth's retained PASS. It adds 13 previously omitted nodes as **pending** and changes the current canonical Tier 2 package state from the incomplete **1 PASS / 1 pending** view to **2 PASS / 13 pending / 0 current FAIL / 0 BLOCKED**.
+Historically, that correction retained KAuth PASS and expanded the inventory from the incomplete **1 PASS / 1 pending** view to **2 PASS / 13 pending / 0 current FAIL / 0 BLOCKED**. Subsequent package campaigns advanced the canonical state to the current **6 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.
 
 No newly discovered node has been assigned a package version or package PASS/FAIL result. Their source identities and upstream v6.30.0 dependency edges are discovery evidence only until a package contract and real build lane are materialized.
 
@@ -91,9 +91,9 @@ KDE upstream defines the Tier 2 inventory, versions, dependencies and feature co
 
 ## Next non-blocked work
 
-Materialize package contracts for the five package-contract-ready nodes in a generated DAG-friendly batch, while continuing provider audit for the remaining eight non-KMime nodes. The next generated provider-audit batch is KPty, KColorScheme, KCompletion, KContacts and KPackage.
+Run the clean-build campaign for the five newly materialized nodes: KColorScheme, KCompletion, KContacts, KPackage and KPty. Each build must consume every required retained Tier 1 PASS predecessor rather than a single representative predecessor.
 
-KMime remains independent and decision-gated; it does not stop the rest of Tier 2.
+KDeclarative, KFileMetaData and KService remain package-contract-ready for the following contract/materialization lane. KMime remains independent and decision-gated under ADR-0002; it does not stop the rest of Tier 2.
 
 
 ## KCrash package PASS
@@ -133,3 +133,10 @@ KService, KDeclarative and KFileMetaData passed provider audit batch 3 and are n
 There are now eight package-contract-ready pending nodes: KColorScheme, KCompletion, KContacts, KDeclarative, KFileMetaData, KPackage, KPty and KService. KMime remains the only pending Tier 2 node outside that lane because ADR-0002 requires a compatibility decision.
 
 Canonical package state remains **6 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+## Package-contract batch 2 materialized
+
+Run `35608790364` completed **5/5 materialization PASS** for KColorScheme, KCompletion, KContacts, KPackage and KPty. The five remain package-state `pending`, but are now `build-ready`; no clean package build has yet been claimed from this evidence.
+
+The ordinary provider-audit queue remains empty. The generated clean-build queue is exactly these five nodes, while KDeclarative, KFileMetaData and KService remain package-contract-ready. Canonical package state remains **6 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.

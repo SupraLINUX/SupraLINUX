@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-20",
+  "as_of": "2026-09-21",
   "scope": "kde-frameworks-tier2-6.30",
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
@@ -23,7 +23,7 @@
   },
   "nodes": {
     "kcolorscheme": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "kconfig",
         "kguiaddons",
@@ -35,10 +35,18 @@
         "job_id": 106352296102,
         "artifact_id": 10641708858,
         "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8"
+      },
+      "materialization_evidence": {
+        "result": "PASS",
+        "workflow_run": 35608790364,
+        "job_id": 106362493777,
+        "artifact_id": 10642908326,
+        "artifact_sha256": "c68b71a9e1dceab3cc801528caeaf32fb4732fefcfd0d34d8d161b0dfac02b77",
+        "package_state_effect": "none"
       }
     },
     "kcompletion": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "kcodecs",
         "kconfig",
@@ -50,10 +58,18 @@
         "job_id": 106352296102,
         "artifact_id": 10641708858,
         "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8"
+      },
+      "materialization_evidence": {
+        "result": "PASS",
+        "workflow_run": 35608790364,
+        "job_id": 106362493855,
+        "artifact_id": 10642138572,
+        "artifact_sha256": "846589674b46bcda78064bb6765e3e5ddd6f6ac3d98907aa3fe5a428f3f3cb29",
+        "package_state_effect": "none"
       }
     },
     "kcontacts": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "ki18n",
         "kconfig",
@@ -65,6 +81,14 @@
         "job_id": 106352296102,
         "artifact_id": 10641708858,
         "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8"
+      },
+      "materialization_evidence": {
+        "result": "PASS",
+        "workflow_run": 35608790364,
+        "job_id": 106362493851,
+        "artifact_id": 10642848344,
+        "artifact_sha256": "0c16947ba76fa61fc100721f65d1c527492e31a474db9dee20da79c3c13333ca",
+        "package_state_effect": "none"
       }
     },
     "kdeclarative": {
@@ -110,7 +134,7 @@
       }
     },
     "kpackage": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "karchive",
         "ki18n",
@@ -125,10 +149,18 @@
         "job_id": 106352296102,
         "artifact_id": 10641708858,
         "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8"
+      },
+      "materialization_evidence": {
+        "result": "PASS",
+        "workflow_run": 35608790364,
+        "job_id": 106362493754,
+        "artifact_id": 10643670033,
+        "artifact_sha256": "0e2281fca63b84a0a7c96e6c5256f98365509ef329790c70f91730637a5bd924",
+        "package_state_effect": "none"
       }
     },
     "kpty": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "kcoreaddons",
         "ki18n"
@@ -139,6 +171,14 @@
         "job_id": 106352296102,
         "artifact_id": 10641708858,
         "artifact_sha256": "d77732753fd7801b4e3525391636a61a11d5b4f40e8c43d461da08dbc5be7bb8"
+      },
+      "materialization_evidence": {
+        "result": "PASS",
+        "workflow_run": 35608790364,
+        "job_id": 106362494052,
+        "artifact_id": 10643865040,
+        "artifact_sha256": "4b2e6e5684da32fdd5f15fc86b1310a8ee7989a2d4789a1959231692f63056c8",
+        "package_state_effect": "none"
       }
     },
     "kservice": {
