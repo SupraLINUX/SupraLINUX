@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "batch": "tier2-batch-3",
+  "as_of": "2026-09-21",
+  "real_attempts": {
+    "kcolorscheme": [],
+    "kcompletion": [],
+    "kcontacts": [],
+    "kpackage": [],
+    "kpty": []
+  },
+  "infrastructure_incidents": [],
+  "blocked_events": {
+    "kcolorscheme": [],
+    "kcompletion": [],
+    "kcontacts": [],
+    "kpackage": [],
+    "kpty": []
+  },
+  "note": "A real attempt begins immediately before sbuild. Pre-sbuild retained-input/rootfs/materialization failures are INFRA and do not change package state. BLOCKED is never FAIL."
+}

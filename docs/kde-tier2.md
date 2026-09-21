@@ -140,3 +140,13 @@ Canonical package state remains **6 PASS / 9 pending / 0 current FAIL / 0 BLOCKE
 Run `35608790364` completed **5/5 materialization PASS** for KColorScheme, KCompletion, KContacts, KPackage and KPty. The five remain package-state `pending`, but are now `build-ready`; no clean package build has yet been claimed from this evidence.
 
 The ordinary provider-audit queue remains empty. The generated clean-build queue is exactly these five nodes, while KDeclarative, KFileMetaData and KService remain package-contract-ready. Canonical package state remains **6 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.
+
+## Tier 2 package Batch 3 — multi-predecessor clean-build lane
+
+KColorScheme, KCompletion, KContacts, KPackage and KPty now enter the clean-build lane backed by materialization run `35608790364`. Their package state remains `pending` until real package PASS evidence is promoted.
+
+Batch 3 consumes the complete retained Tier 1 predecessor set for every node and requires the generated `.buildinfo` to prove the exact SupraLINUX development-package revisions. Ubuntu KDE packages are not accepted as substitutes for missing campaign inputs.
+
+To avoid redundant artifact work, ECM plus the seven distinct Tier 1 predecessor artifacts are downloaded and SHA-256/version validated once into a shared retained-input bundle. Five independent package jobs then consume only their declared predecessor subsets. The package matrix remains `fail-fast: false`; shared rootfs/input failures are INFRA rather than replicated package FAILs.
+
+Canonical Tier 2 remains **6 PASS / 9 pending / 0 current FAIL / 0 BLOCKED** until clean-build evidence is promoted. No APT stable promotion is authorized.
