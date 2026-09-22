@@ -260,5 +260,21 @@
         ]
       }
     }
+  },
+  "packaging_tree_capture": {
+    "status": "pending-ci",
+    "claim": "technical-packaging-tree-only",
+    "authoritative": false,
+    "package_state_effect": "none",
+    "selected_components": [
+      "breeze-icons",
+      "kdoctools",
+      "kded"
+    ],
+    "selected_sides": [
+      "ubuntu",
+      "debian"
+    ],
+    "evidence": null
   }
 }
