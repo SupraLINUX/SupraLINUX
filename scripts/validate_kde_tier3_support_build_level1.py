@@ -86,6 +86,15 @@ for i,attempt in enumerate(attempts,1):
 if c.get("state")=="PASS":
     req(len(attempts)>=1 and attempts[-1].get("result")=="PASS","KDED terminal PASS attempt")
     req(sum(1 for x in attempts if x.get("result")=="PASS")==1,"KDED exactly one PASS attempt")
+    req(n.get("state")=="PASS" and n.get("downstream_eligible") is True,"KDED terminal PASS state")
+    req(c.get("evidence_summary",{}).get("workflow_run")==35721085911,"KDED campaign PASS summary")
+    request=c.get("execution_request",{})
+    req(request.get("status")=="consumed","KDED terminal execution request consumed")
+    req(request.get("consumed_by",{}).get("artifact_id")==10691372157,"KDED execution-request PASS evidence")
+    history=n.get("failure_history",[])
+    req([x.get("attempt") for x in history]==[1,2,3],"KDED historical FAIL sequence")
+    req(all(x.get("result")=="FAIL" for x in history),"KDED historical FAIL results")
+    req(n.get("previous_failure",{}).get("attempt")==3,"KDED previous failure points to attempt 3")
 req(tier3.get("support_components",{}).get("next_gate") in {"support-build-level1","tier3-provider-audit","tier3-package-contracts","tier3-build"},"canonical level1 gate")
 req(c.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 
