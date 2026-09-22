@@ -157,7 +157,7 @@ required=[
 ]
 for rel in required:
     if not (runtime/rel).is_file(): raise SystemExit(f"KDED payload missing: {rel}")
-if not next(runtime.rglob("kded6.8"),None): raise SystemExit("KDED manpage missing; KDocTools documentation profile was not produced")
+if not next(runtime.rglob("kded6.8.gz"),None): raise SystemExit("KDED compressed manpage missing; KDocTools documentation profile was not produced")
 if not next(runtime.rglob("kded.categories"),None): raise SystemExit("KDED logging categories missing")
 elf=runtime/"usr/bin/kded6"
 r=subprocess.run(["readelf","-h",str(elf)],text=True,capture_output=True)
