@@ -33,8 +33,8 @@
       "commit": "ac9c67bf20ba6b100d037f07b873e7053467334c",
       "root_cmake_blob": "4482a5fa712f27feec0ee3ec4c5c7bcc07a660d3",
       "kde_ci_blob": "dcbc4346e295b14915ea43343228fd419decd0a1",
-      "state": "pending",
-      "readiness": "materialized",
+      "state": "PASS",
+      "readiness": "PASS",
       "provider": "supralinux",
       "provider_audit": {
         "status": "PASS",
@@ -59,6 +59,23 @@
         "artifact_id": 10680459412,
         "artifact_sha256": "80955df1f6e90b6ad519b2f91cadbf1e4b56278e69a9827cdfa0b498a960fdb1",
         "package_state_effect": "none"
+      },
+      "packaging": {
+        "state": "PASS",
+        "package_version": "4:6.30.0-0supralinux1",
+        "downstream_eligible": true,
+        "evidence": {
+          "workflow_run": 35700002095,
+          "job_id": 106656021938,
+          "artifact_id": 10682012012,
+          "artifact_sha256": "daaa5abda5a8f824c6fa509142d7cd9132de213d782cb32e0561873f427aa577",
+          "rootfs_sha256": "e649388bcf5e02372714f59dde3579cf0c9c9f2e42a2f94bd4a358f9a8a8811e",
+          "tests": "4/4 PASS",
+          "lintian": "PASS-errors",
+          "apt_check": "PASS",
+          "consumer_smoke": "PASS",
+          "payload_contract": "PASS"
+        }
       }
     },
     "kdoctools": {
@@ -82,8 +99,8 @@
           "ki18n"
         ]
       },
-      "state": "pending",
-      "readiness": "materialized",
+      "state": "PASS",
+      "readiness": "PASS",
       "provider": "supralinux",
       "provider_audit": {
         "status": "PASS",
@@ -108,6 +125,23 @@
         "artifact_id": 10680938435,
         "artifact_sha256": "cf5c18889e9de6582ca05b4e8290686948942493aeaf54a318a2b4f4925cf5ac",
         "package_state_effect": "none"
+      },
+      "packaging": {
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux1",
+        "downstream_eligible": true,
+        "evidence": {
+          "workflow_run": 35700002095,
+          "job_id": 106656022342,
+          "artifact_id": 10682066198,
+          "artifact_sha256": "6daeb6beed63ba7b7e441dba4dfd356be3ad48a9f3ae75acddae0945c36a683d",
+          "rootfs_sha256": "e649388bcf5e02372714f59dde3579cf0c9c9f2e42a2f94bd4a358f9a8a8811e",
+          "tests": "3/3 PASS",
+          "lintian": "PASS-errors",
+          "apt_check": "PASS",
+          "consumer_smoke": "PASS",
+          "payload_contract": "PASS"
+        }
       }
     },
     "kded": {
@@ -135,7 +169,7 @@
         ]
       },
       "state": "pending",
-      "readiness": "materialized",
+      "readiness": "build-level1-ready",
       "provider": "supralinux",
       "provider_audit": {
         "status": "PASS",
@@ -160,6 +194,12 @@
         "artifact_id": 10680629132,
         "artifact_sha256": "680ec2d408e1dd021b091c7adfe1d63a3077144bf54516da3164191d427efa99",
         "package_state_effect": "none"
+      },
+      "build_gate": {
+        "state": "READY",
+        "unblocked_by": "kdoctools",
+        "predecessor_artifact_id": 10682066198,
+        "predecessor_artifact_sha256": "6daeb6beed63ba7b7e441dba4dfd356be3ad48a9f3ae75acddae0945c36a683d"
       }
     }
   },
@@ -1118,7 +1158,10 @@
         "kded"
       ],
       "rule": "KDED binary build is blocked until KDocTools has a real PASS build artifact.",
-      "manifest": "manifests/kde-tier3-support-build-level0.json"
+      "manifest": "manifests/kde-tier3-support-build-level0.json",
+      "level0_status": "PASS",
+      "level1_status": "ready",
+      "kdoctools_pass_artifact_id": 10682066198
     }
   }
 }
