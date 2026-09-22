@@ -186,20 +186,21 @@
       ],
       "downstream_eligible": false,
       "previous_failure": {
-        "attempt": 2,
+        "attempt": 3,
         "result": "FAIL",
-        "workflow_run": 35719952518,
-        "job_id": 106720898661,
-        "commit": "747c49cd49eefd8ac1c67e3d5c61d0fa7a2e2eb5",
-        "artifact_id": 10691217831,
-        "artifact_sha256": "5bd6bd478ec4c0aa58eb6a8042cb9b62ca16818f2bff166d304e9fc4d5c92c72",
-        "rootfs_artifact_id": 10690424886,
-        "rootfs_artifact_sha256": "f18aef1743c0250a0e9332f03eea28077d58847cfea7663e36deadfd0c03ebfc",
-        "failure_stage": "executable-smoke",
+        "workflow_run": 35720612123,
+        "job_id": 106722644773,
+        "commit": "fedefe8c0ef039a965c94e8febb550da2a0b7464",
+        "artifact_id": 10691611217,
+        "artifact_sha256": "32b194f758467d9a6dcd91971508b6a078c9bb80d2e7f2e52645c6d6580324fc",
+        "rootfs_artifact_id": 10691445957,
+        "rootfs_artifact_sha256": "ff1a5b5f6e6fd98706c2d756e343df6f6d5d23a79d2fb66b24d2367add577ec3",
+        "failure_stage": "cmake-consumer",
         "package_attempted": true,
         "sbuild_result": "successful",
-        "cause": "kded6 --version initialized Qt on a headless runner and attempted the xcb platform plugin without a display.",
-        "remediation": "Run the version smoke with QT_QPA_PLATFORM=offscreen; package contents are unchanged.",
+        "executable_smoke": "PASS",
+        "cause": "The consumer project used project(... NONE), so CMake did not initialize the multiarch library architecture search path and failed to discover the installed KF6KDED config under /usr/lib/x86_64-linux-gnu/cmake/KF6KDED.",
+        "remediation": "Enable CXX in the consumer project so standard Debian multiarch CMake package discovery is exercised.",
         "package_version_unchanged": true
       }
     }
@@ -207,7 +208,7 @@
   "stable_promotion_requires_explicit_user_approval": true,
   "execution_request": {
     "status": "remediation-requested",
-    "reason": "Retry KDED with a headless-safe Qt executable smoke using QT_QPA_PLATFORM=offscreen.",
+    "reason": "Retry KDED with a realistic CMake consumer that enables CXX and therefore standard Debian multiarch package discovery.",
     "package_state_effect": "none"
   }
 }
