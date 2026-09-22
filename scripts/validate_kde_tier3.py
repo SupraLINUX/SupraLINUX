@@ -43,7 +43,8 @@ req(tier3.get("frameworks_series")=="6.30.0" and tier3.get("tier")==3,"Tier3 ser
 req(tier3.get("tier_reference")=="https://api.kde.org/","Tier3 tier reference")
 req(tier3.get("release_reference")=="https://kde.org/info/kde-frameworks-6.30.0/","Tier3 release reference")
 req(tier3.get("dependency_manifest")=="manifests/kde-frameworks-tier3-dependencies.json","Tier3 dependency manifest reference")
-req(tier3.get("support_components",{}).get("pending")==["kded"],"Tier3 support-component pending queue")\nreq(tier3.get("support_components",{}).get("pass")==["breeze-icons","kdoctools"],"Tier3 support-component PASS set")
+req(tier3.get("support_components",{}).get("pending")==["kded"],"Tier3 support-component pending queue")
+req(tier3.get("support_components",{}).get("pass")==["breeze-icons","kdoctools"],"Tier3 support-component PASS set")
 pre=tier3.get("canonical_tier2_precondition",{})
 req(pre.get("required_state")=="15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED","Tier3 Tier2 precondition declaration")
 
@@ -80,7 +81,9 @@ req(support.get("package_contract_manifest")=="manifests/kde-tier3-support-packa
 req(support.get("materialization_manifest")=="manifests/kde-tier3-support-materialization.json","Tier3 support materialization manifest")
 req(support.get("materialization")=="PASS","Tier3 support materialization state")
 req(support.get("build_level0_manifest")=="manifests/kde-tier3-support-build-level0.json","Tier3 support level0 manifest")
-req(support.get("build_level0")=="PASS","Tier3 support level0 state")\nreq(support.get("build_level1_manifest")=="manifests/kde-tier3-support-build-level1.json","Tier3 support level1 manifest")\nreq(support.get("next_gate")=="support-build-level1","Tier3 support next gate")
+req(support.get("build_level0")=="PASS","Tier3 support level0 state")
+req(support.get("build_level1_manifest")=="manifests/kde-tier3-support-build-level1.json","Tier3 support level1 manifest")
+req(support.get("next_gate")=="support-build-level1","Tier3 support next gate")
 
 doc=(ROOT/"docs/kde-tier3.md").read_text()
 req("0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED" in doc,"Tier3 docs canonical snapshot")
