@@ -61,7 +61,13 @@ else:
             req(rr.get("source_package")==f"kf6-{node}",f"{node}/{side}: source identity")
             req(isinstance(rr.get("version"),str) and rr.get("version"),f"{node}/{side}: version")
             req(isinstance(rr.get("binary_packages"),list) and rr.get("binary_packages"),f"{node}/{side}: binary packages")
-            req(isinstance(rr.get("checksums_sha256"),list) and rr.get("checksums_sha256"),f"{node}/{side}: source checksums")
+            for prefix in ("dsc","debian_tar","orig_tar"):
+                req(isinstance(rr.get(prefix+"_file"),str) and rr.get(prefix+"_file"),f"{node}/{side}: {prefix} file pin")
+                req(len(rr.get(prefix+"_sha256",""))==64,f"{node}/{side}: {prefix} SHA-256 pin")
+        req(tr["ubuntu"]["binary_packages"]==tr["debian"]["binary_packages"],f"{node}: Ubuntu/Debian binary package identity")
+        req(tr["debian"].get("upstream_version")=="6.30.0",f"{node}: exact Debian KDE 6.30 reference")
+        req(tr["debian"].get("orig_tar_sha256")==x.get("source_sha256"),f"{node}: Debian orig matches KDE authority")
+    req(rc.get("evidence",{}).get("debian_exact_selected_kde")==20,"all Debian references exact KDE 6.30")
     req(c.get("execution_request",{}).get("status")=="consumed","reference execution request consumed")
 
 req(c.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
