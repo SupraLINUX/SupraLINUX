@@ -181,7 +181,19 @@ for pkg,items in paths_by_pkg.items():
 print("metadata/payload audit: PASS")
 print("classification="+classification)
 print("relation_edges="+str(len(relation_edges)))
+for edge in relation_edges:
+    print("relation="+json.dumps(edge,sort_keys=True))
 print("overlap_pairs="+str(len(overlaps)))
+for item in overlaps:
+    concise={
+        "framework_package":item["framework_package"],
+        "legacy_package":item["legacy_package"],
+        "count":item["count"],
+        "identical_count":item["identical_count"],
+        "different_count":item["different_count"],
+        "paths":[x["path"] for x in item["files"]],
+    }
+    print("overlap="+json.dumps(concise,sort_keys=True))
 PY
 
 mapfile -t FRAMEWORK_DEBS < <(find "$WORK/framework" -maxdepth 1 -type f -name '*.deb' -print | sort)

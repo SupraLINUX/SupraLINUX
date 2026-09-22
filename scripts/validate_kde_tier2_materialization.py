@@ -78,7 +78,7 @@ for node_id in selected:
         req(n.get("planning",{}).get("readiness")=="package-contract-ready",f"{node_id}: rematerialization readiness")
         req(n.get("planning",{}).get("package_contract")=="not-materialized",f"{node_id}: rematerialization contract state")
     else:
-        req(n.get("planning",{}).get("readiness") in {"package-contract-ready","build-ready"},f"{node_id}: readiness")
+        req(n.get("planning",{}).get("readiness") in {"package-contract-ready","build-ready","compatibility-provider-required"},f"{node_id}: readiness")
 
 for path in (
   "scripts/materialize_kde_tier2_package.py",
