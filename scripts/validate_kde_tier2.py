@@ -122,7 +122,7 @@ for node in sorted(pending_ids):
         req(n.get("package_identity",{}).get("status")==expected_identity_status,f"{node}: package-contract identity status")
     else:
         req(n.get("package_identity",{}).get("package_version_candidate") is None,f"{node}: package version must remain undecided before a package contract exists")
-req(m.get("packaging",{}).get("reason")=="provider-audit-required-after-ADR-0002","KMime accepted transition enters provider audit")
+req(m.get("packaging",{}).get("state")=="pending" and m.get("packaging",{}).get("compatibility_policy")=="kf6mime-authoritative-legacy-kpim6mime-on-demand","KMime accepted compatibility/package lifecycle policy")
 req(m.get("package_identity",{}).get("source_package")=="kf6-kmime","KMime Framework source package identity")
 req(m.get("package_identity",{}).get("ubuntu_legacy_source_package")=="kmime","KMime legacy Ubuntu source identity")
 

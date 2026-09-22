@@ -254,3 +254,26 @@ The KService adaptation was validated by the final clean package build in run `3
 - APT and consumer smoke PASS.
 
 The selected `optional=toolchain` entry therefore remains the canonical SupraLINUX symbols treatment for `std::piecewise_construct` on the Resolute toolchain. It does not change KDE feature selection or upstream API authority.
+
+
+## Package-contract batch 4 — KMime
+
+ADR-0002 is accepted and provider audit batch 4 is PASS. The active package-contract batch now contains only **KMime**.
+
+Authority and outputs:
+
+- KDE authority source: `kmime-6.30.0`;
+- SupraLINUX source-package identity: `kf6-kmime`;
+- candidate: `6.30.0-0supralinux1`;
+- target binaries: `libkf6mime-data`, `libkf6mime-dev`, `libkf6mime6`;
+- CMake: `KF6Mime` / `KF6::Mime`;
+- ABI target: `libKF6Mime.so.6`.
+
+Reference capture is intentionally split:
+
+- Ubuntu Resolute: source `kmime` from the legacy PIM line, expected `libkmime-data`, `libkmime-dev`, `libkpim6mime6`;
+- Debian sid: source `kf6-kmime` from Frameworks 6.30, expected `libkf6mime-data`, `libkf6mime-dev`, `libkf6mime6`.
+
+The Ubuntu version line is allowed to differ because it is a **legacy compatibility contract**, not the selected KDE source. This exception is explicit and node-local; normal Tier 2 reference captures retain the selected-KDE upper-bound rule.
+
+No fake `Provides/Replaces`, SONAME shim, or ABI equivalence is authorized. Materialization remains blocked until reference capture passes.
