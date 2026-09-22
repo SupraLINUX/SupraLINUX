@@ -7,13 +7,13 @@
   "claim": "provider-selection-only",
   "authoritative_package_build": false,
   "package_state_effect": "none",
-  "status": "pending-ci",
+  "status": "PASS",
   "components": {
     "breeze-icons": {
       "role": "selected-build-predecessor",
       "required_upstream_version": "6.30.0",
       "ubuntu_probe_package": "kf6-breeze-icon-theme",
-      "provider_decision": "pending-ci",
+      "provider_decision": "supralinux-required",
       "retained_kde_predecessors": [
         "extra-cmake-modules"
       ],
@@ -27,7 +27,7 @@
       "role": "ci-documentation-predecessor",
       "required_upstream_version": "6.30.0",
       "ubuntu_probe_package": "kdoctools6",
-      "provider_decision": "pending-ci",
+      "provider_decision": "supralinux-required",
       "retained_kde_predecessors": [
         "extra-cmake-modules",
         "karchive",
@@ -46,7 +46,7 @@
       "role": "runtime-predecessor",
       "required_upstream_version": "6.30.0",
       "ubuntu_probe_package": "kded6",
-      "provider_decision": "pending-ci",
+      "provider_decision": "supralinux-required",
       "retained_kde_predecessors": [
         "extra-cmake-modules",
         "kconfig",
@@ -63,6 +63,27 @@
       ]
     }
   },
-  "evidence": null,
+  "evidence": {
+    "result": "PASS",
+    "workflow_run": 35696178617,
+    "job_id": 106643431065,
+    "commit": "577d5bdebae5fc4366df93356cf47f9a64a4a567",
+    "artifact_id": 10680368525,
+    "artifact_sha256": "419bc312852ff7a2a9b98f632b47037fce7960c620396dab51208fd3af78bf7a",
+    "package_state_effect": "none",
+    "ubuntu_candidates": {
+      "breeze-icons": "6.24.0-0ubuntu1",
+      "kdoctools": "6.24.0-0ubuntu1",
+      "kded": "6.24.0-0ubuntu1"
+    },
+    "required_upstream_version": "6.30.0",
+    "platform_providers": {
+      "qt": "6.10.2+dfsg-7",
+      "python3_lxml": "6.0.2-1build1",
+      "libxml2_utils": "2.15.2+dfsg-0.1ubuntu0.2",
+      "libxslt1_dev": "1.1.45-0.1",
+      "docbook_xml": "4.5-13build1"
+    }
+  },
   "stable_promotion_requires_explicit_user_approval": true
 }
