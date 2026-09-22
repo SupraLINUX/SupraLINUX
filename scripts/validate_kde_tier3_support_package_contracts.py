@@ -118,6 +118,14 @@ else:
         req(topo.get("level0")==["breeze-icons","kdoctools"] and topo.get("level1")==["kded"],"support build topology")
         req(m.get("materialization",{}).get("status") in {"authorized-pending-lane","pending-ci","PASS"},"support materialization lifecycle")
 
+        if m.get("state")=="materialized":
+            req(m.get("materialization",{}).get("status")=="PASS","materialized contracts require materialization PASS")
+            for node,c in components.items():
+                me=c.get("materialization_evidence",{})
+                req(isinstance(me.get("artifact_id"),int) and len(me.get("artifact_sha256",""))==64,f"{node}: materialization artifact link")
+                for key in ("dsc_sha256","debian_tar_sha256","adapted_control_sha256"):
+                    req(len(me.get(key,""))==64,f"{node}: materialization {key}")
+
 sc=tier3.get("support_components",{})
 req(sc.get("provider_audit")=="PASS","Tier3 canonical support provider audit")
 req(sc.get("next_gate") in {"support-package-contracts","support-contract-reference-capture","support-contract-tree-capture","support-contract-review","support-materialization"},"Tier3 support contract next gate")
