@@ -127,6 +127,11 @@ req(gate.get("kded_pass_artifact_id")==10691372157 and len(gate.get("kded_pass_a
 subdag=d.get("topology",{}).get("support_subdag",{})
 req(subdag.get("status")=="PASS" and subdag.get("pass")==["breeze-icons","kdoctools","kded"],"support sub-DAG PASS")
 req(subdag.get("pending")==[] and subdag.get("current_fail")==[] and subdag.get("blocked")==[],"support sub-DAG closed state")
+t3audit=d.get("topology",{}).get("tier3_provider_audit",{})
+req(t3audit.get("status")=="pending-ci","Tier3 provider audit topology state")
+req(t3audit.get("manifest")=="manifests/kde-tier3-provider-audit.json","Tier3 provider audit topology manifest")
+req(set(t3audit.get("selected_nodes",[]))==set(nodes),"Tier3 provider audit topology nodes")
+req(t3audit.get("package_state_effect")=="none","Tier3 provider audit topology package-state semantics")
 
 doc=(ROOT/"docs/kde-tier3.md").read_text()
 for token in ("Tier 3 dependency graph","Breeze Icons","KDocTools","KDED","4 topological"):
