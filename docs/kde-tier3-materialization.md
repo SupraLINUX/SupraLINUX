@@ -66,3 +66,5 @@ Materialization changed no package state: `package_attempted=false` and `package
 ## Promotion validation history
 
 Promotion-validation run `35748536747` is retained as a historical CI FAIL: materialization scope correctly skipped the 20-node matrix because semantic inputs were unchanged, but the promoted validator contained a literal `\\n` escape and failed Python parsing. This did not change or invalidate any materialized artifact or package state; the validator-only defect is corrected in the next commit.
+
+Repository Policy run `35748772874` is also retained as a historical lifecycle-validation FAIL: the promoted canonical next gate `tier3-build-campaign-planning` was correct, but five support-component validators still limited their accepted historical next-gate set to `tier3-materialization`. No support/package state changed; those lifecycle validators are widened in the next commit.
