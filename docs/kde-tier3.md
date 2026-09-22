@@ -4,6 +4,8 @@ Status: **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**
 
 Last reviewed: **2026-09-22**
 
+> Historical note: this document records the gate-by-gate progression of Tier 3. Earlier sections describe the state that was current at that point; the final **Current canonical state** section is authoritative for the present gate.
+
 ## Authority and precondition
 
 KDE upstream is the authority for the Frameworks inventory, release version and dependency graph. Ubuntu 26.04 is the platform/provider and compatibility target; Ubuntu packaging does not select or limit the KDE Frameworks version.
@@ -265,3 +267,11 @@ Canonical readiness is now `package-contract-review-pass`. Tier 3 remains **0 PA
 The contract-review evidence has been converted into explicit SupraLINUX decisions. Canonical readiness is now `package-contract-ready` and package contract state is `not-materialized`.
 
 Materialization is the active gate. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**; no package build is authorized until source-package materialization completes.
+## Current canonical state — Tier 3 materialization active
+
+As of 2026-09-22, package-contract reference, packaging-tree capture, contract review and contract decisions are all PASS. The 20 Frameworks remain **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** because no binary package build has been attempted.
+
+The active gate is now `tier3-materialization`, implemented by `manifests/kde-tier3-materialization.json` and `.github/workflows/kde-tier3-materialization.yml`. It verifies KDE 6.30 upstream source independently, reproduces the pinned Debian sid 6.30 packaging baseline before modification, applies only the approved SupraLINUX/Resolute adaptations, and emits reproducible source-package evidence for all 20 nodes in parallel.
+
+Materialization never changes package state: `package_attempted=false` and `package_state_effect=none`. Binary builds remain unauthorized until all materialization evidence is promoted and the subsequent `tier3-build-campaign-planning` gate is completed. Stable repository promotion continues to require explicit user approval.
+

@@ -663,5 +663,6 @@
     "support_subdag": "PASS"
   },
   "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
-  "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+  "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+  "materialization_manifest": "manifests/kde-tier3-materialization.json"
 }

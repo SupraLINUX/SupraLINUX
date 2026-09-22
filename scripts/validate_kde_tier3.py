@@ -45,6 +45,7 @@ req(tier3.get("release_reference")=="https://kde.org/info/kde-frameworks-6.30.0/
 req(tier3.get("dependency_manifest")=="manifests/kde-frameworks-tier3-dependencies.json","Tier3 dependency manifest reference")
 req(tier3.get("provider_audit_manifest")=="manifests/kde-tier3-provider-audit.json","Tier3 provider audit manifest reference")
 req(tier3.get("package_contract_manifest")=="manifests/kde-tier3-package-contracts.json","Tier3 package-contract manifest reference")
+req(tier3.get("materialization_manifest")=="manifests/kde-tier3-materialization.json","Tier3 materialization manifest reference")
 req(tier3.get("support_components",{}).get("pending")==[],"Tier3 support-component pending queue")
 req(tier3.get("support_components",{}).get("pass")==["breeze-icons","kdoctools","kded"],"Tier3 support-component PASS set")
 pre=tier3.get("canonical_tier2_precondition",{})

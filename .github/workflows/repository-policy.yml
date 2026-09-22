@@ -297,6 +297,13 @@ jobs:
       - name: Validate KDE Tier 3 package-contract decisions
         run: python3 scripts/validate_kde_tier3_contract_decisions.py
 
+      - name: Test KDE Tier 3 materialization semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier3-materialization-scope.sh
+
+      - name: Validate KDE Tier 3 materialization definition
+        run: python3 scripts/validate_kde_tier3_materialization.py
+
       - name: Validate KDE Attica 6.30 packaging preparation
         run: python3 scripts/validate_kde_attica_package.py
 

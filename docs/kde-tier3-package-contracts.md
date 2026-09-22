@@ -94,3 +94,7 @@ The review is not itself a contract choice: every node remains package-state `pe
 The reviewed deltas are now explicitly classified in `docs/kde-tier3-contract-decisions.md` and in this manifest's `contract_decision`/per-node contract records.
 
 All 20 nodes are `package-contract-ready` with package version candidate `6.30.0-0supralinux1`. Materialization is authorized; package builds remain unauthorized.
+## Materialization handoff
+
+The package-contract decision gate is closed and materialization is now implemented as a separate source-only gate. `manifests/kde-tier3-materialization.json` consumes these contracts without changing package PASS state. The materializer verifies the authoritative KDE tarball and exact Debian 6.30 packaging tree before applying the documented SupraLINUX overrides. Binary builds stay unauthorized until the promoted materialization evidence is followed by an explicit Tier 3 build-campaign planning gate.
+
