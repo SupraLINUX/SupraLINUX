@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **packaging-tree PASS — contract review pending CI**
+Status: **contract review PASS — explicit decisions required**
 
 Reviewed: **2026-09-22**
 
@@ -80,3 +80,10 @@ The contract-review lane consumes the promoted packaging-tree artifact and reval
 Canonical readiness is now `package-contract-review-pending`. The review captures Build-Depends, binary relationship, `debian/rules`, install-manifest, symbols and maintscript deltas alongside the KDE-upstream dependency classes.
 
 Differences are evidence, not automatic FAILs and not automatic contract decisions. Materialization and package builds remain explicitly unauthorized until the resulting review is promoted and each relevant delta is classified.
+
+
+## Contract review PASS
+
+Run `35730670337` captured and hashed the package-contract deltas for all 20 nodes. Canonical readiness is now `package-contract-review-pass`.
+
+The review is not itself a contract choice: every node remains package-state `pending`, and materialization/build are unauthorized until SupraLINUX classifies the recorded deltas against KDE-upstream requirements and the Ubuntu compatibility objective.
