@@ -267,14 +267,14 @@ Canonical readiness is now `package-contract-review-pass`. Tier 3 remains **0 PA
 The contract-review evidence has been converted into explicit SupraLINUX decisions. Canonical readiness is now `package-contract-ready` and package contract state is `not-materialized`.
 
 Materialization is the active gate. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**; no package build is authorized until source-package materialization completes.
-## Current canonical state — Tier 3 `build-level0` remediation
+## Current canonical state — Tier 3 `build-level0` attempt 2
 
-Level 0 attempt 1 remains retained as workflow run `35755924197`: 7 successful jobs and 5 real FAILs, with no canonical package promotion.
+The five Level 0 remediation source artifacts passed selective materialization and their promotion was validated by Repository Policy run `35769883615`.
 
-The five failed nodes — KIconThemes, KDAV, KWallet, KRunner and KJobWidgets — were corrected through explicit package-contract remediations and selectively rematerialized as `6.30.0-0supralinux2`. Materialization run `35759443440` completed **5/5 SUCCESS**. Those five new source artifacts are now the canonical materialization pins; the other 15 materializations remain unchanged.
+Level 0 is now reauthorized as **attempt 2**. All 12 independent Level 0 nodes are scheduled again: seven at their existing `6.30.0-0supralinux1` source revisions and the five remediated nodes — KIconThemes, KDAV, KWallet, KRunner and KJobWidgets — at `6.30.0-0supralinux2`.
 
-Canonical package state is still **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** because source materialization is not a package build. Level 0 remains paused until Repository Policy validates this evidence promotion. The next step is a separate Level 0 reactivation followed by a full rerun of all 12 Level 0 nodes.
+Canonical package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** until the attempt-2 evidence is reviewed and promoted. Historical attempt-1 FAIL/PASS evidence remains retained.
 
-KNewStuff retains its deferred runtime rule: even a successful Level 0 build remains `RUNTIME_PENDING` until KCMUtils passes Level 2 and the dedicated runtime gate closes.
+KNewStuff still cannot become canonical PASS from this build alone; a successful build remains `RUNTIME_PENDING` until KCMUtils passes Level 2 and the deferred runtime gate closes.
 
 Levels 1–3 remain unauthorized. Promotion to SupraLINUX `stable` always requires explicit user approval.

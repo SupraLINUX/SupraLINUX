@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 0
 
-Status: **remediation materialization PASS / Level 0 reactivation pending validation** as of 2026-09-22.
+Status: **Level 0 attempt 2 active / full 12-node rerun authorized** as of 2026-09-22.
 
 Level 0 is the first real binary-build campaign for the 20 canonical Tier 3 Frameworks. It contains **12 independent nodes**:
 
@@ -101,3 +101,12 @@ Selective materialization run `35759443440` completed **5/5 SUCCESS** from commi
 The five promoted materialization pins are now the inputs of the generated build campaign and Level 0 manifest. This promotion has `package_attempted=false` and does not change canonical package PASS state.
 
 Level 0 remains deliberately paused while this promotion commit is validated by Repository Policy. After that validation succeeds, a separate activation commit will set `execution_authorized=true` and rerun **all 12 Level 0 nodes**, not only the five remediated packages.
+
+
+## Level 0 attempt 2 activated
+
+Promotion validation passed in Repository Policy run `35769883615`. Level 0 is therefore reactivated as **attempt 2** with `execution_authorized=true`.
+
+All 12 Level 0 nodes run again. The five remediated nodes consume their promoted `6.30.0-0supralinux2` source artifacts; the seven nodes that succeeded in attempt 1 are intentionally rebuilt as full-campaign revalidation rather than being silently carried forward.
+
+The DAG semantics are unchanged: independent jobs continue after unrelated FAILs, KNewStuff still transitions only to `RUNTIME_PENDING` on build success, and no result is promoted until attempt 2 evidence is reviewed.

@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level0",
   "frameworks_series": "6.30.0",
-  "state": "remediation-materialized-pending-activation",
-  "execution_authorized": false,
+  "state": "active-pending-ci",
+  "execution_authorized": true,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -387,7 +387,7 @@
   },
   "nodes": {
     "kbookmarks": {
-      "state": "prepared-pending-revalidation",
+      "state": "prepared-pending-build",
       "source_package": "kf6-kbookmarks",
       "package_version": "6.30.0-0supralinux1",
       "expected_binary_packages": [
@@ -436,10 +436,11 @@
         "artifact_id": 10708731564,
         "artifact_sha256": "8ba79e74e0789578e2cf457e08aa938f29f3d0ade8f2c1cef3bf324c86610731",
         "result": "PASS"
-      }
+      },
+      "current_attempt": 2
     },
     "kconfigwidgets": {
-      "state": "prepared-pending-revalidation",
+      "state": "prepared-pending-build",
       "source_package": "kf6-kconfigwidgets",
       "package_version": "6.30.0-0supralinux1",
       "expected_binary_packages": [
@@ -499,7 +500,8 @@
         "artifact_id": 10708422082,
         "artifact_sha256": "d8aa92ae585807ac22f9078e00f1eb8ced984f879cdb76f6a0bdd79ae603ba0c",
         "result": "PASS"
-      }
+      },
+      "current_attempt": 2
     },
     "kdav": {
       "state": "remediation-pending-build",
@@ -554,10 +556,11 @@
         "job_id": 106810107917,
         "artifact_id": 10702499459,
         "artifact_sha256": "a55642fe89cda2cc5c78ba2bdc814c5e47570d325063813d515be7073cc3a3c6"
-      }
+      },
+      "current_attempt": 2
     },
     "kdesu": {
-      "state": "prepared-pending-revalidation",
+      "state": "prepared-pending-build",
       "source_package": "kf6-kdesu",
       "package_version": "6.30.0-0supralinux1",
       "expected_binary_packages": [
@@ -610,7 +613,8 @@
         "artifact_id": 10708301874,
         "artifact_sha256": "73486eb91f00884fd0090363aa8ee06d8eb0c7a2320fafefaf09694afcfe7bc7",
         "result": "PASS"
-      }
+      },
+      "current_attempt": 2
     },
     "kiconthemes": {
       "state": "remediation-pending-build",
@@ -685,7 +689,8 @@
         "job_id": 106810107884,
         "artifact_id": 10703820086,
         "artifact_sha256": "76c32c49e51b10b8f268c67ae74f710d36668e6bea480b44b6c6dc74850ca20c"
-      }
+      },
+      "current_attempt": 2
     },
     "kjobwidgets": {
       "state": "remediation-pending-build",
@@ -748,10 +753,11 @@
         "job_id": 106810107995,
         "artifact_id": 10702499485,
         "artifact_sha256": "4ff2537cab7257d72aaa3de0ad78ea8d9425bd3367614aa07ec2b22703a9bd2c"
-      }
+      },
+      "current_attempt": 2
     },
     "knewstuff": {
-      "state": "prepared-pending-revalidation",
+      "state": "prepared-pending-build",
       "source_package": "kf6-knewstuff",
       "package_version": "6.30.0-0supralinux1",
       "expected_binary_packages": [
@@ -825,10 +831,11 @@
         "artifact_id": 10707732468,
         "artifact_sha256": "e98f81b9d8b4e9a9ff96670f4f1843e2743e68c98e2df71f4d6166380fe325a0",
         "result": "RUNTIME_PENDING"
-      }
+      },
+      "current_attempt": 2
     },
     "kpeople": {
-      "state": "prepared-pending-revalidation",
+      "state": "prepared-pending-build",
       "source_package": "kf6-kpeople",
       "package_version": "6.30.0-0supralinux1",
       "expected_binary_packages": [
@@ -889,7 +896,8 @@
         "artifact_id": 10707822386,
         "artifact_sha256": "d8b85444847695e7aec309a6e39d5cec53d605dcf454f6331989aaf5b9e46239",
         "result": "PASS"
-      }
+      },
+      "current_attempt": 2
     },
     "krunner": {
       "state": "remediation-pending-build",
@@ -952,10 +960,11 @@
         "job_id": 106810107951,
         "artifact_id": 10702959832,
         "artifact_sha256": "81c2d69889b222c6d05e96067b3c86bc4e5241572bc35415b3ae4d98d3ca5299"
-      }
+      },
+      "current_attempt": 2
     },
     "ksvg": {
-      "state": "prepared-pending-revalidation",
+      "state": "prepared-pending-build",
       "source_package": "kf6-ksvg",
       "package_version": "6.30.0-0supralinux1",
       "expected_binary_packages": [
@@ -1015,10 +1024,11 @@
         "artifact_id": 10707996828,
         "artifact_sha256": "ea1253d7f18ef02a3bff68aa93234e233fc92479e98905f28c13aaf74ae1ef8c",
         "result": "PASS"
-      }
+      },
+      "current_attempt": 2
     },
     "ktextwidgets": {
-      "state": "prepared-pending-revalidation",
+      "state": "prepared-pending-build",
       "source_package": "kf6-ktextwidgets",
       "package_version": "6.30.0-0supralinux1",
       "expected_binary_packages": [
@@ -1073,7 +1083,8 @@
         "artifact_id": 10708496921,
         "artifact_sha256": "0e5839d2dcb3afa06eb21a6ac8ff575b4c04d7ca34d4cc1162d2a0110ae6a7ee",
         "result": "PASS"
-      }
+      },
+      "current_attempt": 2
     },
     "kwallet": {
       "state": "remediation-pending-build",
@@ -1152,7 +1163,8 @@
         "job_id": 106810108082,
         "artifact_id": 10702319999,
         "artifact_sha256": "eadcbbc8edfac7509e7930b68fcea78218840557f5b93ab379b74d223304960f"
-      }
+      },
+      "current_attempt": 2
     }
   },
   "semantics": {
@@ -1206,7 +1218,7 @@
     "policy": "retain evidence, rematerialize five changed packages, then rerun all 12 Level0 nodes"
   },
   "remediation": {
-    "status": "materialization-PASS-pending-activation",
+    "status": "level0-rerun-active",
     "materialization_manifest": "manifests/kde-tier3-materialization.json",
     "queue": [
       "kiconthemes",
@@ -1245,6 +1257,15 @@
         "artifact_id": 10710136148,
         "artifact_sha256": "5feaea71e99bb9ebe2be812deb9101cee440d6d065ab98354b47ee36114f3d5a"
       }
-    }
+    },
+    "activation_policy_workflow_run": 35769883615
+  },
+  "current_attempt": 2,
+  "activation": {
+    "status": "ACTIVE",
+    "promotion_validation_workflow_run": 35769883615,
+    "promotion_commit": "1c8a3e26715178bee5631aba863c2c6caf833171",
+    "scope": "full-level0-rerun-12-nodes",
+    "reason": "revalidate-complete-level0-after-five-source-remediations"
   }
 }

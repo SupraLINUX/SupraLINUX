@@ -120,6 +120,12 @@ if m.get("state")=="active-pending-ci":
     req(m.get("execution_authorized") is True,"active Level0 execution authorization")
     req(mat.get("state")=="PASS","active Level0 requires materialization PASS")
     req(all(m["nodes"][n].get("state") in {"prepared-pending-build","remediation-pending-build"} for n in expected),"active Level0 node readiness")
+    if m.get("current_attempt")==2:
+        req(m.get("activation",{}).get("status")=="ACTIVE","Level0 attempt2 activation status")
+        req(m.get("activation",{}).get("promotion_validation_workflow_run")==35769883615,"Level0 attempt2 promotion validation")
+        req(m.get("activation",{}).get("scope")=="full-level0-rerun-12-nodes","Level0 attempt2 full rerun scope")
+        req(m.get("remediation",{}).get("status")=="level0-rerun-active","Level0 attempt2 remediation state")
+        req(all(m["nodes"][n].get("current_attempt")==2 for n in expected),"Level0 attempt2 node markers")
 elif m.get("state")=="remediation-pending-materialization":
     req(m.get("execution_authorized") is False,"Level0 execution paused during source remediation")
     req(mat.get("state")=="remediation-pending-ci","Level0 remediation requires selective materialization")

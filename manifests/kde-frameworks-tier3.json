@@ -16,7 +16,7 @@
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level0-remediation-pending",
+    "package_builds": "tier3-level0-authorized",
     "remediation": "selective-source-rematerialization-5-nodes"
   },
   "nodes": [
@@ -821,12 +821,14 @@
       "kjobwidgets"
     ],
     "candidate_package_version": "6.30.0-0supralinux2",
-    "execution_authorized": false,
+    "execution_authorized": true,
     "full_level0_rerun_required": true,
-    "status": "materialization-PASS-pending-level0-reactivation",
+    "status": "level0-rerun-active",
     "materialization_workflow_run": 35759443440,
     "materialization_commit": "0c23204d90b8a40ebf078ba41667c2292673ea81",
     "materialization_promoted": true,
-    "next_gate": "tier3-build-level0-reactivation-validation"
+    "next_gate": "tier3-build-level0-attempt2",
+    "current_attempt": 2,
+    "activation_policy_workflow_run": 35769883615
   }
 }

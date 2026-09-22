@@ -102,6 +102,12 @@ if policy.get("package_builds")=="tier3-level0-remediation-pending":
     req(set(rem.get("nodes",[]))=={"kiconthemes","kdav","kwallet","krunner","kjobwidgets"},"Tier3 remediation nodes")
     req(rem.get("candidate_package_version")=="6.30.0-0supralinux2","Tier3 remediation package revision")
     req(rem.get("execution_authorized") is False and rem.get("full_level0_rerun_required") is True,"Tier3 remediation execution policy")
+elif policy.get("package_builds")=="tier3-level0-authorized" and tier3.get("active_remediation",{}).get("current_attempt")==2:
+    rem=tier3.get("active_remediation",{})
+    req(rem.get("status")=="level0-rerun-active","Tier3 attempt2 remediation status")
+    req(rem.get("execution_authorized") is True,"Tier3 attempt2 execution authorization")
+    req(rem.get("activation_policy_workflow_run")==35769883615,"Tier3 attempt2 activation validation")
+    req(rem.get("next_gate")=="tier3-build-level0-attempt2","Tier3 attempt2 next gate")
 
 doc=(ROOT/"docs/kde-tier3.md").read_text()
 req("0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED" in doc,"Tier3 docs canonical snapshot")
