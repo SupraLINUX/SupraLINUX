@@ -79,7 +79,7 @@ The graph keeps separate edge classes:
 - runtime-validation dependencies;
 - CI-environment requirements.
 
-This distinction matters. For example, KNotifyConfig needs KXMLGui for its test executable but not for the library build, while KIO's password server treats KWallet as optional in source and KDE's Linux CI explicitly selects it.
+This distinction matters. For example, KNotifyConfig needs KConfigWidgets and KXMLGui for its test executable but not for the library build, while KIO's password server treats KWallet as optional in source and KDE's Linux CI explicitly selects it.
 
 The resulting build+test graph is acyclic with **4 topological levels**:
 
