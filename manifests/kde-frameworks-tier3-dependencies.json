@@ -1194,6 +1194,33 @@
       "pending": [],
       "current_fail": [],
       "blocked": []
+    },
+    "tier3_provider_audit": {
+      "status": "pending-ci",
+      "manifest": "manifests/kde-tier3-provider-audit.json",
+      "selected_nodes": [
+        "baloo",
+        "kbookmarks",
+        "kcmutils",
+        "kconfigwidgets",
+        "kdav",
+        "kdesu",
+        "kiconthemes",
+        "kio",
+        "kjobwidgets",
+        "knewstuff",
+        "knotifyconfig",
+        "kparts",
+        "kpeople",
+        "krunner",
+        "ksvg",
+        "ktexteditor",
+        "ktextwidgets",
+        "kwallet",
+        "kxmlgui",
+        "purpose"
+      ],
+      "package_state_effect": "none"
     }
   }
 }
