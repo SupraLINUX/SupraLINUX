@@ -76,9 +76,16 @@ if n.get("state")=="PASS":
 
 req(a.get("schema")==1 and a.get("batch")=="tier3-support-build-level1","level1 attempt ledger")
 req(set(a.get("nodes",{}))=={"kded"},"level1 attempt ledger nodes")
+attempts=a.get("nodes",{}).get("kded",[])
+for i,attempt in enumerate(attempts,1):
+    req(attempt.get("attempt")==i,f"KDED attempt sequence {i}")
+    req(attempt.get("result") in {"PASS","FAIL"},f"KDED attempt {i} result")
+    req(attempt.get("package_version")=="6.30.0-0supralinux1",f"KDED attempt {i} package version")
+    req(isinstance(attempt.get("workflow_run"),int) and isinstance(attempt.get("job_id"),int),f"KDED attempt {i} run/job")
+    req(isinstance(attempt.get("artifact_id"),int) and len(attempt.get("artifact_sha256",""))==64,f"KDED attempt {i} artifact evidence")
 if c.get("state")=="PASS":
-    attempts=a.get("nodes",{}).get("kded",[])
-    req(len(attempts)==1 and attempts[0].get("result")=="PASS","KDED one PASS attempt")
+    req(len(attempts)>=1 and attempts[-1].get("result")=="PASS","KDED terminal PASS attempt")
+    req(sum(1 for x in attempts if x.get("result")=="PASS")==1,"KDED exactly one PASS attempt")
 req(tier3.get("support_components",{}).get("next_gate") in {"support-build-level1","tier3-package-contracts","tier3-build"},"canonical level1 gate")
 req(c.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 
