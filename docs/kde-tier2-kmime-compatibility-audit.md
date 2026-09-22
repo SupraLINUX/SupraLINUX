@@ -1,6 +1,6 @@
 # KMime legacy compatibility-provider audit
 
-Status: **pending CI**
+Status: **PASS**
 
 KMime from KDE Frameworks 6.30 remains the authoritative KDE implementation in SupraLINUX. Ubuntu Resolute's `kmime 25.12.3-0ubuntu1` is considered only as an on-demand compatibility provider for software that still requires the legacy `libKPim6Mime.so.6` ABI.
 
@@ -22,7 +22,7 @@ A successful audit means the evidence was captured and classified. It does **not
 
 ## Audit PASS — 2026-09-22
 
-Run `35690284355`, job `106625630885`, artifact `10678073973` completed the compatibility-provider audit. Artifact SHA-256: `7b0c9175b1e0f48eb1d18e9ceb1af03381c4de8d0b322bc619dd5af37ecbd41`.
+Run `35690284355`, job `106625630885`, artifact `10678073973` completed the compatibility-provider audit. Artifact SHA-256: `7b0c9175b1e0f48eb1d18e9ceb1af03381c4de8d0b322bc619dd7be224307c5b`.
 
 The failure is **not** a runtime ABI collision:
 
@@ -43,4 +43,13 @@ SupraLINUX will instead provide the real legacy runtime ABI as a separate compat
 
 This preserves `libKPim6Mime.so.6` for Ubuntu applications without pretending that KF6Mime implements that ABI and without duplicating the 72 shared data files.
 
-KMime remains canonical **pending** until that compatibility provider is built and the full co-installation/application gates pass.
+At the time of this audit KMime remained canonical **pending** until that compatibility provider was built and the full co-installation/application gates passed.
+
+
+## Compatibility-provider closure
+
+The selected remediation was subsequently implemented and validated. Provider workflow `35691309612` built the real legacy ABI package `kmime 25.12.3-0ubuntu1+supralinux1` without emitting `libkmime-data`.
+
+Final provider build job `106628834481`, artifact `10679420779`, SHA-256 `f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b` passed clean sbuild, Lintian, co-installation, APT closure and both `KPim6::Mime` and `KF6::Mime` consumers.
+
+The audit therefore remains PASS as diagnostic evidence, while the provider implementation closes the compatibility gate. No stock Ubuntu package is reclassified as compatible as packaged; the SupraLINUX compatibility provider is the tested bridge.
