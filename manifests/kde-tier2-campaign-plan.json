@@ -4,8 +4,8 @@
   "frameworks_series": "6.30.0",
   "tier": 2,
   "canonical_snapshot": {
-    "pass": 14,
-    "pending": 1,
+    "pass": 15,
+    "pending": 0,
     "current_fail": 0,
     "blocked": 0
   },
@@ -17,6 +17,7 @@
     "kcrash",
     "kdeclarative",
     "kfilemetadata",
+    "kmime",
     "knotifications",
     "kpackage",
     "kpty",
@@ -38,7 +39,5 @@
     "only_pass_artifacts_feed_dependents": true,
     "stable_promotion_requires_explicit_user_approval": true
   },
-  "compatibility_provider_required": [
-    "kmime"
-  ]
+  "compatibility_provider_required": []
 }
