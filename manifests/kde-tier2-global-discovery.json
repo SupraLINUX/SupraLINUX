@@ -22,33 +22,16 @@
     "build-ready": "Provider audit and deterministic package materialization are PASS; node may enter a real clean build. Package state remains pending until that build finishes.",
     "compatibility-provider-required": "The authoritative Frameworks package is materialized and has passed its own build gates, but an external compatibility provider must be adapted before the node can reach package PASS."
   },
-  "nodes": {
-    "kmime": {
-      "readiness": "compatibility-provider-required",
-      "tier1_predecessors": [
-        "kcodecs"
-      ],
-      "architecture_decision": "ADR-0002-accepted",
-      "provider_audit": "PASS",
-      "provider_audit_run": 35684076926,
-      "package_contract": "materialized",
-      "materialization_run": 35687009946,
-      "materialization_run_attempt": 2,
-      "materialization_artifact_id": 10677073138,
-      "compatibility_audit": "pending",
-      "stock_ubuntu_coinstall_result": "installing libkpim6mime6 + libkmime-data removes libkf6mime6/libkf6mime-dev/libkf6mime-data",
-      "compatibility_policy": "KF6Mime authoritative; legacy KPim6Mime must remain available on demand without replacing KF6Mime"
-    }
-  },
+  "nodes": {},
   "next_actions": [
-    "Audit Ubuntu Resolute kmime 25.12.3 binary metadata (Depends/Conflicts/Breaks/Replaces/Provides) and payload overlap against SupraLINUX KF6Mime.",
-    "Design the smallest SupraLINUX compatibility-provider adaptation that preserves libKPim6Mime.so.6 for Ubuntu software without replacing or constraining KF6Mime.",
-    "Do not rebuild KMime Frameworks while the compatibility-provider audit is pending; its second build already passed source/tests/Lintian/ABI/consumer gates.",
-    "Keep all 14 existing Tier 2 PASS nodes retained/downstream-eligible."
+    "Tier 2 package campaign is closed at 15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED.",
+    "Retain all 15 Tier 2 PASS artifacts as downstream-eligible inputs for later KDE DAG levels.",
+    "Keep the KMime legacy provider on-demand compatibility-only; it is not part of the default KDE desktop install.",
+    "Do not promote any package to stable without explicit user approval."
   ],
   "promoted_snapshot": {
-    "pass": 14,
-    "pending": 1,
+    "pass": 15,
+    "pending": 0,
     "current_fail": 0,
     "blocked": 0
   },
@@ -381,6 +364,36 @@
       "selected_conditional_predecessors": [],
       "package_dependency_closure": {},
       "toolchain_symbol_baseline": "optional=toolchain _ZSt19piecewise_construct@Base 6.30.0",
+      "downstream_eligible": true
+    },
+    "kmime": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "framework_workflow_run": 35687831684,
+      "framework_run_attempt": 2,
+      "framework_job_id": 106619132039,
+      "framework_artifact_id": 10677716050,
+      "framework_artifact_sha256": "ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36",
+      "tests": "17/17 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6Mime.so.6",
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "predecessor_buildinfo_proof": "PASS",
+      "compatibility_audit_run": 35690284355,
+      "compatibility_audit_artifact_id": 10678073973,
+      "compatibility_audit_artifact_sha256": "7b0c9175b1e0f48eb1d18e9ceb1af03381c4de8d0b322bc619dd7be224307c5b",
+      "compatibility_provider_version": "25.12.3-0ubuntu1+supralinux1",
+      "compatibility_provider_run": 35691309612,
+      "compatibility_provider_job_id": 106628834481,
+      "compatibility_provider_artifact_id": 10679420779,
+      "compatibility_provider_artifact_sha256": "f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b",
+      "legacy_provider_coinstallation": "PASS",
+      "legacy_consumer": "PASS",
+      "framework_consumer": "PASS",
+      "tier1_predecessors": [
+        "kcodecs"
+      ],
       "downstream_eligible": true
     }
   },
