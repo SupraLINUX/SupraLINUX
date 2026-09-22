@@ -19,7 +19,7 @@ req(capture.get("claim")=="technical-packaging-tree-only" and capture.get("autho
 req(capture.get("package_state_effect")=="none","packaging-tree package-state semantics")
 req(capture.get("selected_sides")==["ubuntu","debian"],"packaging-tree selected sides")
 req(t.get("package_contract_manifest")=="manifests/kde-tier3-package-contracts.json","canonical Tier3 package-contract manifest")
-req(t.get("discovery_policy",{}).get("phase") in {"package-contract-tree-capture","package-contract-tree-pass","package-contract-review","package-contract-decision"},"canonical Tier3 packaging-tree phase")
+req(t.get("discovery_policy",{}).get("phase") in {"package-contract-tree-capture","package-contract-tree-pass","package-contract-review","package-contract-decision","materialization"},"canonical Tier3 packaging-tree phase")
 req(t.get("support_components",{}).get("next_gate") in {"tier3-package-contract-tree-capture","tier3-package-contract-review","tier3-package-contract-decision","tier3-materialization"},"canonical Tier3 packaging-tree next gate")
 
 for node in selected:
