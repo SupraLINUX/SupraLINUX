@@ -54,7 +54,7 @@ req("breeze-icons" in nodes["kiconthemes"]["frameworks"]["selected_linux_profile
 req(nodes["kio"]["tier3_edges"]["selected_profile"]==["kwallet"],"KIO Linux CI profile selects KWallet")
 req("kded" in nodes["kio"]["frameworks"]["runtime_required"],"KIO KDED runtime gate")
 req("kdoctools" in nodes["kio"]["frameworks"]["ci_environment_required"],"KIO KDocTools CI/documentation profile")
-req(nodes["knotifyconfig"]["tier3_edges"]["test_required"]==["kxmlgui"],"KNotifyConfig KXMLGui test-only edge")
+req(nodes["knotifyconfig"]["tier3_edges"]["test_required"]==["kconfigwidgets","kxmlgui"],"KNotifyConfig Tier3 test-only edges")
 req(nodes["knewstuff"]["tier3_edges"]["runtime_validation"]==["kcmutils"],"KNewStuff KCMUtils runtime-validation edge")
 req(nodes["purpose"]["tier3_edges"]["qml_required"]==["kcmutils"],"Purpose KCMUtils required QML edge")
 
