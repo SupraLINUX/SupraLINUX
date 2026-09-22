@@ -196,3 +196,15 @@ The executable smoke is remediated with `QT_QPA_PLATFORM=offscreen`. This is a C
 KDED attempt 3 passed sbuild, payload, Lintian, apt closure and the headless executable smoke. It failed only in the CMake consumer because that test used `project(... NONE)`, which suppresses the compiler/multiarch initialization needed for normal discovery under `/usr/lib/x86_64-linux-gnu/cmake`.
 
 The built `kded6-dev` package does contain the correct `KF6KDEDConfig*.cmake` files. The consumer is corrected to enable CXX; package revision remains `6.30.0-0supralinux1`.
+
+
+## Support build level 1 PASS — support sub-DAG closed
+
+KDED attempt 4 in run `35721085911` completed all gates successfully at `6.30.0-0supralinux1`: 1/1 tests PASS, Lintian PASS-errors, apt closure PASS, executable/payload/CMake consumer PASS.
+
+The support components are now **3 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**:
+- Breeze Icons PASS;
+- KDocTools PASS;
+- KDED PASS.
+
+The 20 canonical Tier 3 Frameworks remain **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. Their next gate is now the **Tier 3 framework provider audit**. Package contracts and package builds for those 20 nodes remain unauthorized until that audit is complete.
