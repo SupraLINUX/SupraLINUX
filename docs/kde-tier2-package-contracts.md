@@ -277,3 +277,11 @@ Reference capture is intentionally split:
 The Ubuntu version line is allowed to differ because it is a **legacy compatibility contract**, not the selected KDE source. This exception is explicit and node-local; normal Tier 2 reference captures retain the selected-KDE upper-bound rule.
 
 No fake `Provides/Replaces`, SONAME shim, or ABI equivalence is authorized. Materialization remains blocked until reference capture passes.
+
+## Contract-reference capture INFRA correction — 2026-09-22
+
+The first KMime split-source reference-capture attempt, run `35684356602`, did not reach source normalization. A remote edit corrupted the shell row parser and duplicated the previous normalization tail, producing a Bash syntax error before any KMime reference result could be established. This is **INFRA/integration**, not a KMime FAIL, and its partial artifact is not promoted.
+
+The capture script is restored to a single fail-closed pipeline. It now reads Ubuntu and Debian source identities independently, permits a legacy Ubuntu version line only when the node contract declares it, validates provider-specific binary sets, and emits normalized versions/snapshot/SHA-256 evidence to both CI logs and artifacts.
+
+No package state changes from this correction.

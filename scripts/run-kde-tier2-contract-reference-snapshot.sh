@@ -67,8 +67,11 @@ for node in m["selected_nodes"]:
 PY
 )
 for row in "${rows[@]}"; do
-  IFS=
-
+  IFS=$'\t' read -r node ubuntu_source debian_source <<<"${row}"
+  apt-cache "${ubuntu_apt[@]}" showsrc "${ubuntu_source}" > "${EVIDENCE}/source-records/ubuntu/${node}.txt"
+  apt-cache "${debian_apt[@]}" showsrc "${debian_source}" > "${EVIDENCE}/source-records/debian/${node}.txt"
+  [[ -s "${EVIDENCE}/source-records/ubuntu/${node}.txt" && -s "${EVIDENCE}/source-records/debian/${node}.txt" ]] || exit 1
+done
 STAGE="normalization"
 python3 - "${MANIFEST}" "${EVIDENCE}" <<'PY'
 import functools,json,subprocess,sys
@@ -163,91 +166,12 @@ sha256sum "${EVIDENCE}/snapshot.json" "${EVIDENCE}/versions.tsv" > "${EVIDENCE}/
  echo "nodes=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["selected_nodes"]))' "${MANIFEST}")"
  echo "package_state_effect=none"
 } > "${EVIDENCE}/summary.env"
-STATE=PASS
-STAGE=complete
-echo "KDE Tier 2 contract reference snapshot: PASS"
-\t' read -r node ubuntu_source debian_source <<<"${row}"
-  apt-cache "${ubuntu_apt[@]}" showsrc "${ubuntu_source}" > "${EVIDENCE}/source-records/ubuntu/${node}.txt"
-  apt-cache "${debian_apt[@]}" showsrc "${debian_source}" > "${EVIDENCE}/source-records/debian/${node}.txt"
-  [[ -s "${EVIDENCE}/source-records/ubuntu/${node}.txt" && -s "${EVIDENCE}/source-records/debian/${node}.txt" ]] || exit 1
-done
-
-STAGE="normalization"
-python3 - "${MANIFEST}" "${EVIDENCE}" <<'PY'
-import functools,json,subprocess,sys
-from pathlib import Path
-manifest=json.load(open(sys.argv[1]))
-out=Path(sys.argv[2])
-
-def paragraphs(text):
-    result=[]; cur={}; key=None
-    for line in text.splitlines():
-        if not line.strip():
-            if cur: result.append(cur); cur={}; key=None
-            continue
-        if line[0].isspace() and key:
-            cur[key]+="\n"+line.strip(); continue
-        if ":" in line:
-            key,val=line.split(":",1); cur[key]=val.lstrip()
-    if cur: result.append(cur)
-    return result
-
-def cmp(a,b):
-    va,vb=a["Version"],b["Version"]
-    if subprocess.run(["dpkg","--compare-versions",va,"gt",vb]).returncode==0:return 1
-    if subprocess.run(["dpkg","--compare-versions",va,"lt",vb]).returncode==0:return -1
-    return 0
-
-def upstream(v):
-    v=v.split(":",1)[-1]
-    return v.rsplit("-",1)[0] if "-" in v else v
-
-def checksums(r):
-    out=[]
-    for line in r.get("Checksums-Sha256","").splitlines():
-        p=line.split()
-        if len(p)==3: out.append({"sha256":p[0],"size":int(p[1]),"file":p[2]})
-    return out
-
-def select(path,source):
-    rs=[r for r in paragraphs(path.read_text()) if r.get("Package")==source]
-    if not rs: raise SystemExit(f"missing source record {source}")
-    r=sorted(rs,key=functools.cmp_to_key(cmp))[-1]
-    up=upstream(r["Version"])
-    if subprocess.run(["dpkg","--compare-versions",up,"gt","6.30.0"]).returncode==0:
-        raise SystemExit(f"reference newer than selected KDE: {source} {r['Version']}")
-    return {
-      "source_package":source,"version":r["Version"],"upstream_version":up,
-      "binary_packages":[x.strip() for x in r.get("Binary","").split(",") if x.strip()],
-      "build_depends":" ".join(r.get("Build-Depends","").split()),
-      "build_depends_indep":" ".join(r.get("Build-Depends-Indep","").split()) or None,
-      "vcs_git":r.get("Vcs-Git"),"vcs_browser":r.get("Vcs-Browser"),
-      "checksums_sha256":checksums(r),
-    }
-
-snapshot={"schema":1,"authority":False,"role":"packaging-reference-only","selected_kde":"6.30.0","nodes":{}}
-rows=["node\tsource-package\tubuntu-version\tdebian-version"]
-for node in manifest["selected_nodes"]:
-    c=manifest["nodes"][node]; src=c["source_package"]
-    u=select(out/"source-records"/"ubuntu"/f"{node}.txt",src)
-    d=select(out/"source-records"/"debian"/f"{node}.txt",src)
-    missing=set(c["compatibility_binary_packages"])-set(u["binary_packages"])
-    if missing: raise SystemExit(f"{node}: Ubuntu reference missing expected binaries: {sorted(missing)}")
-    snapshot["nodes"][node]={"ubuntu":u,"debian":d}
-    rows.append("\t".join([node,src,u["version"],d["version"]]))
-(out/"snapshot.json").write_text(json.dumps(snapshot,indent=2,sort_keys=True)+"\n")
-(out/"versions.tsv").write_text("\n".join(rows)+"\n")
-PY
-
-sha256sum "${MANIFEST}" > "${EVIDENCE}/manifest.sha256"
-sha256sum "${EVIDENCE}/snapshot.json" "${EVIDENCE}/versions.tsv" > "${EVIDENCE}/snapshot.sha256"
-{
- echo "status=PASS"
- echo "authority=false"
- echo "role=packaging-reference-only"
- echo "nodes=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["selected_nodes"]))' "${MANIFEST}")"
- echo "package_state_effect=none"
-} > "${EVIDENCE}/summary.env"
+echo "Reference versions:"
+cat "${EVIDENCE}/versions.tsv"
+echo "Normalized reference snapshot:"
+cat "${EVIDENCE}/snapshot.json"
+echo "Reference evidence hashes:"
+cat "${EVIDENCE}/snapshot.sha256"
 STATE=PASS
 STAGE=complete
 echo "KDE Tier 2 contract reference snapshot: PASS"
