@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **reference capture PASS — packaging-tree review pending**
+Status: **reference capture PASS — packaging-tree capture pending**
 
 Reviewed: **2026-09-22**
 
@@ -49,3 +49,12 @@ Results:
 The matching binary names reduce compatibility churn, but do not finalize the SupraLINUX contracts. The next gate extracts the exact pinned Ubuntu and Debian `debian/` trees so relations, symbols, install files, rules, maintscripts and build profiles can be reviewed before package revisions are authorized.
 
 This phase changes no package state. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+## Packaging-tree capture activated
+
+The next gate now downloads the exact source files pinned by the promoted reference snapshot for all 20 Frameworks on both Ubuntu Resolute and Debian sid, verifies their SHA-256 values, extracts each `debian/` tree, and records deterministic tree/control/package-file hashes.
+
+The artifact retains all 40 extracted packaging trees so the subsequent contract review can inspect relations, install manifests, symbols, maintscripts, rules and compatibility deltas directly.
+
+State: `package-contract-tree-pending`. This remains a technical-reference operation with `package_state_effect=none`; no Tier 3 binary build is authorized.
