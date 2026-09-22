@@ -34,7 +34,20 @@
       "root_cmake_blob": "4482a5fa712f27feec0ee3ec4c5c7bcc07a660d3",
       "kde_ci_blob": "dcbc4346e295b14915ea43343228fd419decd0a1",
       "state": "pending",
-      "readiness": "provider-audit-required"
+      "readiness": "package-contract-required",
+      "provider": "supralinux",
+      "provider_audit": {
+        "status": "PASS",
+        "manifest": "manifests/kde-tier3-support-provider-audit.json",
+        "workflow_run": 35696178617,
+        "job_id": 106643431065,
+        "artifact_id": 10680368525,
+        "artifact_sha256": "419bc312852ff7a2a9b98f632b47037fce7960c620396dab51208fd3af78bf7a",
+        "ubuntu_candidate": "6.24.0-0ubuntu1",
+        "required_upstream_version": "6.30.0",
+        "decision": "supralinux-required",
+        "package_state_effect": "none"
+      }
     },
     "kdoctools": {
       "role": "ci-documentation-predecessor",
@@ -58,7 +71,20 @@
         ]
       },
       "state": "pending",
-      "readiness": "provider-audit-required"
+      "readiness": "package-contract-required",
+      "provider": "supralinux",
+      "provider_audit": {
+        "status": "PASS",
+        "manifest": "manifests/kde-tier3-support-provider-audit.json",
+        "workflow_run": 35696178617,
+        "job_id": 106643431065,
+        "artifact_id": 10680368525,
+        "artifact_sha256": "419bc312852ff7a2a9b98f632b47037fce7960c620396dab51208fd3af78bf7a",
+        "ubuntu_candidate": "6.24.0-0ubuntu1",
+        "required_upstream_version": "6.30.0",
+        "decision": "supralinux-required",
+        "package_state_effect": "none"
+      }
     },
     "kded": {
       "role": "runtime-predecessor",
@@ -85,7 +111,20 @@
         ]
       },
       "state": "pending",
-      "readiness": "provider-audit-required"
+      "readiness": "package-contract-required",
+      "provider": "supralinux",
+      "provider_audit": {
+        "status": "PASS",
+        "manifest": "manifests/kde-tier3-support-provider-audit.json",
+        "workflow_run": 35696178617,
+        "job_id": 106643431065,
+        "artifact_id": 10680368525,
+        "artifact_sha256": "419bc312852ff7a2a9b98f632b47037fce7960c620396dab51208fd3af78bf7a",
+        "ubuntu_candidate": "6.24.0-0ubuntu1",
+        "required_upstream_version": "6.30.0",
+        "decision": "supralinux-required",
+        "package_state_effect": "none"
+      }
     }
   },
   "nodes": {
@@ -1004,6 +1043,16 @@
         "kcmutils"
       ]
     },
-    "acyclic": true
+    "acyclic": true,
+    "support_provider_audit": {
+      "status": "PASS",
+      "selected_provider": "supralinux",
+      "components": [
+        "breeze-icons",
+        "kdoctools",
+        "kded"
+      ],
+      "package_state_effect": "none"
+    }
   }
 }
