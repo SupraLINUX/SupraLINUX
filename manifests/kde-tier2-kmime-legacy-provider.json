@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "provider": "kmime-legacy-runtime",
-  "state": "materialization-pending",
+  "state": "PASS",
   "role": "ubuntu-application-compatibility-only",
   "package_state_effect": "none",
   "authority": {
@@ -79,5 +79,47 @@
     "kf6mime-consumer-smoke",
     "kpim6mime-consumer-smoke"
   ],
-  "stable_promotion_requires_explicit_user_approval": true
+  "stable_promotion_requires_explicit_user_approval": true,
+  "materialization_evidence": {
+    "result": "PASS",
+    "workflow_run": 35691309612,
+    "job_id": 106628689878,
+    "commit": "76e4027308957b1ff0b89d812369bb3287a7b30c",
+    "artifact_id": 10678479790,
+    "artifact_sha256": "6fcfc4357efd8852134ab2b36b2b2509b726a6282354fb347d48b025ba0b161b",
+    "package_version": "25.12.3-0ubuntu1+supralinux1",
+    "dsc_sha256": "3a464e45ebd997e09341864e94b4a52c3e735071fb67f69562a14cddc1343360",
+    "debian_tar_sha256": "81df557ceea954be7036b236b8450a69a917fe6ba845af6ed29758e16e9265c7",
+    "orig_tar_sha256": "fce3c603cac3fec9a3f0e101c49785c32ace07b8f60b52739b638d329f43826d",
+    "package_attempted": false,
+    "package_state_effect": "none"
+  },
+  "build_evidence": {
+    "result": "PASS",
+    "workflow_run": 35691309612,
+    "job_id": 106628834481,
+    "commit": "76e4027308957b1ff0b89d812369bb3287a7b30c",
+    "artifact_id": 10679420779,
+    "artifact_sha256": "f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b",
+    "rootfs_artifact_id": 10679200063,
+    "rootfs_artifact_sha256": "e09e001bd03b1b4c1dc46184626ed6d5536e5c66f1878cf6e8ca89dca53f0040",
+    "package_version": "25.12.3-0ubuntu1+supralinux1",
+    "package_attempted": true,
+    "clean_sbuild": "PASS",
+    "lintian": "PASS-errors",
+    "binary_control_contract": "PASS",
+    "no_legacy_data_output": "PASS",
+    "runtime_soname": "libKPim6Mime.so.6",
+    "coinstallation": "PASS",
+    "apt_check": "PASS",
+    "legacy_consumer": "PASS",
+    "framework_consumer": "PASS",
+    "files": {
+      "libkmime-dev_25.12.3-0ubuntu1+supralinux1_amd64.deb": "22aa719c769f7d89191b11d91acff58cf883e058e36b88d96fb848b55db3ffa4",
+      "libkpim6mime6_25.12.3-0ubuntu1+supralinux1_amd64.deb": "bfb152e6d452439eddeb658ae9cde5e8cfe2ac9f2453c8b7321aabade85ea01a",
+      "libkpim6mime6-dbgsym_25.12.3-0ubuntu1+supralinux1_amd64.ddeb": "4f120b7e8b5494dd873b02e1eed7fc954ebdbc6f3fb1d3b72c167ca6818f0f55",
+      "buildinfo_sha256": "6237acdc6010fa8125a712d5d919ac30dbfd59c131ca8e7cf4451f191368d689"
+    },
+    "package_state_effect": "none"
+  }
 }
