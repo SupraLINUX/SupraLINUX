@@ -37,3 +37,14 @@ PASS requires:
 - CMake consumer `find_package(KF6KDED 6.30 REQUIRED)` and live `KDED_DBUS_INTERFACE` path validation.
 
 A KDED PASS closes the three-component support sub-DAG and allows Tier 3 package-contract/build planning to proceed. Stable publication remains gated by explicit user approval.
+
+
+## Attempt 1 — validation FAIL, package build successful
+
+Run `35702647931`, job `106664471166`, artifact `10683311200`, artifact SHA-256 `1f0cb0ae9609d9c1de732ef3d0c8b7bb80c24b031bc19128c929cc97880fa3ab`.
+
+The actual KDED package build completed successfully in sbuild and the upstream tests passed. The workflow then failed in the external `payload-contract` gate because the validator searched for an uncompressed `kded6.8` path. The generated Debian package correctly installs the manpage as `usr/share/man/man8/kded6.8.gz`.
+
+This is retained as a real historical **FAIL** because the package attempt reached a failing validation gate. It is not a KDED source/package defect.
+
+The remediation changes only the external validation rule to require `kded6.8.gz`. The source package and binary payload do not change, so the retry remains `6.30.0-0supralinux1` rather than creating a meaningless package revision bump.
