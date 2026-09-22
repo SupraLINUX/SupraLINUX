@@ -48,13 +48,13 @@ for node_id in canonical:
     req(c.get("provider_decision") in {"pending-ci","ubuntu-compatible","supralinux-required"},f"{node_id}: provider decision lifecycle")
     req(n.get("state")=="pending",f"{node_id}: provider audit must not alter package state")
     planning=n.get("planning",{})
-    req(planning.get("readiness") in {"dependency-graph-ready","package-contract-required","package-contract-reference-pending","package-contract-reference-pass","package-contract-ready","materialized","PASS"},f"{node_id}: provider-audit readiness lifecycle")
+    req(planning.get("readiness") in {"dependency-graph-ready","package-contract-required","package-contract-reference-pending","package-contract-reference-pass","package-contract-tree-pending","package-contract-tree-pass","package-contract-ready","materialized","PASS"},f"{node_id}: provider-audit readiness lifecycle")
     req(planning.get("package_contract") in {"not-authorized","required"},f"{node_id}: package contract lifecycle")
     req(planning.get("provider_audit") in {"pending-ci","PASS"},f"{node_id}: canonical provider audit lifecycle")
     if a.get("status")=="PASS":
-        req(planning.get("readiness") in {"package-contract-required","package-contract-reference-pending","package-contract-reference-pass","package-contract-ready","materialized","PASS"},f"{node_id}: post-audit readiness")
+        req(planning.get("readiness") in {"package-contract-required","package-contract-reference-pending","package-contract-reference-pass","package-contract-tree-pending","package-contract-tree-pass","package-contract-ready","materialized","PASS"},f"{node_id}: post-audit readiness")
         req(planning.get("package_contract")=="required",f"{node_id}: package contract required")
-        req(planning.get("provider")=="supralinux",f"{node_id}: SupraLINUX provider selection")\n        req(planning.get("package_contract") in {"required","reference-capture-pending","reference-capture-pass","ready","not-materialized","materialized","PASS"},f"{node_id}: post-audit package-contract lifecycle")
+        req(planning.get("provider")=="supralinux",f"{node_id}: SupraLINUX provider selection")\n        req(planning.get("package_contract") in {"required","reference-capture-pending","reference-capture-pass","packaging-tree-pending","packaging-tree-pass","ready","not-materialized","materialized","PASS"},f"{node_id}: post-audit package-contract lifecycle")
         pe=planning.get("provider_audit_evidence",{})
         req(pe.get("workflow_run")==35725458767 and pe.get("artifact_id")==10692912109,f"{node_id}: provider audit evidence linkage")
 
