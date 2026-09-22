@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **reference capture PASS — packaging-tree capture pending**
+Status: **packaging-tree PASS — contract review required**
 
 Reviewed: **2026-09-22**
 
@@ -58,3 +58,16 @@ The next gate now downloads the exact source files pinned by the promoted refere
 The artifact retains all 40 extracted packaging trees so the subsequent contract review can inspect relations, install manifests, symbols, maintscripts, rules and compatibility deltas directly.
 
 State: `package-contract-tree-pending`. This remains a technical-reference operation with `package_state_effect=none`; no Tier 3 binary build is authorized.
+
+
+## Packaging-tree capture PASS
+
+Run `35729077373`, job `106750146405`, artifact `10694324518`, artifact SHA-256 `43a1089660033d9a1a1ae785e348f0b1e8f17636f3085b4449fd9c65f0f2091a`: **PASS**.
+
+The normalized index SHA-256 is `3f975678343f872c8094b20425e76b4026a59d1c5f50c1d5b2c5c1b48a00c7fb`.
+
+All **40** pinned packaging trees (20 Frameworks × Ubuntu/Debian) were downloaded from the exact source versions recorded by the reference-capture PASS, source-file SHA-256 values were reverified, and each extracted `debian/` tree received deterministic tree, control-summary and packaging-file digests.
+
+This remains technical evidence only. No package version, adaptation, materialization or package PASS is implied.
+
+The next gate is **Tier 3 package-contract review**: compare KDE 6.30 upstream requirements against the exact Debian 6.30 tree and Ubuntu compatibility surface, then explicitly record any provider adaptation before materialization is authorized.
