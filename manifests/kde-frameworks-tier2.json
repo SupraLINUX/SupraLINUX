@@ -1934,7 +1934,12 @@
           "workflow_run": 35684824744,
           "job_id": 106609323687,
           "artifact_id": 10675444852,
-          "artifact_sha256": "ae47a46605bce3943e6abd3c1e713d189f41782adecab2dc02618f411427ff8b"
+          "artifact_sha256": "ae47a46605bce3943e6abd3c1e713d189f41782adecab2dc02618f411427ff8b",
+          "tree_sha256": "876e44ff9afd3cc6257046b86ac6d88de5b0f1e07308dace5fa6b653438cd0fc",
+          "debian_tree_sha256": "1b489be2fc5479e7ef1615aa5d0c3255a1726a27a4d3be3ced66c116bc9eb385",
+          "dsc_sha256": "0cd2c44451d2852bc5fe380ee5d9dc6e115fe657ccc79654da90c1e4a5c97716",
+          "debian_tar_sha256": "2372e83d87d7f2da1a61fe07c63cbd71da594c116d114a238c2a43848500b613",
+          "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc"
         }
       }
     }

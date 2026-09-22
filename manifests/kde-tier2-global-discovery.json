@@ -23,21 +23,24 @@
   },
   "nodes": {
     "kmime": {
-      "readiness": "package-contract-ready",
+      "readiness": "build-ready",
       "tier1_predecessors": [
         "kcodecs"
       ],
       "architecture_decision": "ADR-0002-accepted",
       "provider_audit": "PASS",
       "provider_audit_run": 35684076926,
+      "package_contract": "materialized",
+      "materialization_run": 35684824744,
+      "materialization_artifact_id": 10675444852,
       "compatibility_policy": "KF6Mime authoritative; Ubuntu KPim6Mime available on demand only"
     }
   },
   "next_actions": [
-    "Run the generated clean-build queue for KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication using retained PASS predecessor artifacts.",
-    "Continue provider/profile audit with KPty, KColorScheme, KCompletion, KContacts and KPackage independently of the build batch.",
-    "Keep KAuth retained PASS/downstream-eligible.",
-    "Do not attempt KMime until ADR-0002 is resolved."
+    "Run the KMime clean-build lane from deterministic materialization PASS.",
+    "Require clean sbuild, upstream tests, exact binary set, Lintian, ABI/SONAME, APT closure, CMake consumer, exact KCodecs buildinfo proof and legacy runtime co-installation.",
+    "Keep all 14 existing Tier 2 PASS nodes retained/downstream-eligible.",
+    "Do not promote any package to the stable APT channel without explicit user approval."
   ],
   "promoted_snapshot": {
     "pass": 14,

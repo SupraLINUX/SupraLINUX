@@ -303,3 +303,11 @@ No `Provides`, `Replaces`, SONAME shim or package rename may claim ABI equivalen
 Canonical Tier 2 remains **14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**. KMime is now `package-lane-pending` with provider audit required before package-contract reference capture. This is an architecture decision only; no KMime package PASS has been claimed.
 
 The governing rule remains: **KDE decides what KDE needs.** Ubuntu is the platform and compatibility provider, not the authority over the SupraLINUX desktop.
+
+## 2026-09-22 — KMime materialization PASS; clean build next
+
+KMime `kf6-kmime 6.30.0-0supralinux1` has deterministic materialization PASS from run `35684824744`, job `106609323687`, artifact `10675444852` (artifact SHA-256 `ae47a46605bce3943e6abd3c1e713d189f41782adecab2dc02618f411427ff8b`).
+
+The generated tree SHA-256 is `876e44ff9afd3cc6257046b86ac6d88de5b0f1e07308dace5fa6b653438cd0fc`; the generated Debian tree is `1b489be2fc5479e7ef1615aa5d0c3255a1726a27a4d3be3ced66c116bc9eb385`. The authoritative orig remains exactly KDE upstream SHA-256 `2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc`.
+
+KMime remains package-state `pending` and advances only to `build-ready`. The next gate is a real clean Ubuntu 26.04 sbuild plus compatibility/co-installation validation. Canonical Tier 2 remains **14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**.
