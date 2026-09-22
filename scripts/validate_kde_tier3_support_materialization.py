@@ -58,8 +58,12 @@ if m.get("state")=="pending-ci":
 else:
     req(all(n.get("state")=="materialized" for n in nodes.values()),"PASS materialization requires all nodes materialized")
 
+    summary=m.get("evidence_summary",{})
+    req(summary.get("result")=="PASS" and summary.get("workflow_run")==35698463205,"materialization summary evidence")
+    req(summary.get("package_attempted") is False and summary.get("package_state_effect")=="none","materialization summary semantics")
+
 support=tier3.get("support_components",{})
-req(support.get("next_gate") in {"support-materialization","support-build"},"canonical support materialization gate")
+req(support.get("next_gate") in {"support-materialization","support-build","support-build-level0"},"canonical support materialization gate")
 
 for path in (
  "scripts/materialize-kde-tier3-support-package.sh",
