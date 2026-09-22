@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "as_of": "2026-09-22",
-  "state": "reference-capture-pass",
+  "state": "packaging-tree-pending",
   "source_authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "packaging_authority": "supralinux",
@@ -1009,5 +1009,21 @@
     },
     "package_state_effect": "none"
   },
-  "stable_promotion_requires_explicit_user_approval": true
+  "stable_promotion_requires_explicit_user_approval": true,
+  "packaging_tree_capture": {
+    "status": "pending-ci",
+    "claim": "technical-packaging-tree-only",
+    "authoritative": false,
+    "package_state_effect": "none",
+    "selected_sides": [
+      "ubuntu",
+      "debian"
+    ],
+    "evidence": null,
+    "execution_request": {
+      "status": "requested",
+      "reason": "Capture the exact pinned Ubuntu 6.24 and Debian 6.30 debian/ trees for all 20 Tier 3 package contracts.",
+      "package_state_effect": "none"
+    }
+  }
 }
