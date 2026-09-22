@@ -187,5 +187,10 @@
       "downstream_eligible": false
     }
   },
-  "stable_promotion_requires_explicit_user_approval": true
+  "stable_promotion_requires_explicit_user_approval": true,
+  "execution_request": {
+    "status": "requested",
+    "reason": "Initial KDED level1 build is runnable and the attempt ledger is empty.",
+    "package_state_effect": "none"
+  }
 }
