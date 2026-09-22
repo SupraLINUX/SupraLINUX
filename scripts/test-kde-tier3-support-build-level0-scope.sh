@@ -11,6 +11,9 @@ JSON
 git -C "${TMP}" init -q
 git -C "${TMP}" config user.name test
 git -C "${TMP}" config user.email test@example.invalid
+cat > "${TMP}/manifests/kde-tier3-support-build-level0-attempts.json" <<'JSON'
+{"schema":1,"batch":"tier3-support-build-level0","nodes":{"x":[{"result":"PASS"}]}}
+JSON
 git -C "${TMP}" add .
 git -C "${TMP}" commit -qm base
 BASE="$(git -C "${TMP}" rev-parse HEAD)"
