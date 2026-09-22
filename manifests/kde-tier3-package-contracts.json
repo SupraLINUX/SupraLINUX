@@ -762,7 +762,46 @@
       "provider": "supralinux",
       "contract_state": "reference-capture-pending",
       "package_version_candidate": null,
-      "technical_references": null
+      "technical_references": {
+        "ubuntu": {
+          "source_package": "kf6-ktexteditor",
+          "version": "6.24.0-0ubuntu1",
+          "upstream_version": "6.24.0",
+          "binary_packages": [
+            "libkf6texteditor-data",
+            "libkf6texteditor-bin",
+            "libkf6texteditor-dev",
+            "libkf6texteditor-doc",
+            "libkf6texteditor-katepart",
+            "libkf6texteditor6"
+          ],
+          "dsc_file": "kf6-ktexteditor_6.24.0-0ubuntu1.dsc",
+          "dsc_sha256": "2e106be25a2113a75e8a92e9c3503de02ae69adb9f74b8fce30e135f137f3221",
+          "debian_tar_file": "kf6-ktexteditor_6.24.0-0ubuntu1.debian.tar.xz",
+          "debian_tar_sha256": "ead1475647992bf6ad3f64ff7a42e9289e070598703975d721f3df6c7d9aa6e5",
+          "orig_tar_file": "kf6-ktexteditor_6.24.0.orig.tar.xz",
+          "orig_tar_sha256": "fd703c777712ad0e20a849f837c3ad7880eb82c1beb50196608cb326373f78e3"
+        },
+        "debian": {
+          "source_package": "kf6-ktexteditor",
+          "version": "6.30.0-1",
+          "upstream_version": "6.30.0",
+          "binary_packages": [
+            "libkf6texteditor-data",
+            "libkf6texteditor-bin",
+            "libkf6texteditor-dev",
+            "libkf6texteditor-doc",
+            "libkf6texteditor-katepart",
+            "libkf6texteditor6"
+          ],
+          "dsc_file": "kf6-ktexteditor_6.30.0-1.dsc",
+          "dsc_sha256": "ed8894cb958eceaa366c6def514ce6735b947017f0fd4af5be54cea80b44a2a4",
+          "debian_tar_file": "kf6-ktexteditor_6.30.0-1.debian.tar.xz",
+          "debian_tar_sha256": "4cada62fe419b8ea3a043e60299d2643b1b88ec860143255508973393fef2cef",
+          "orig_tar_file": "kf6-ktexteditor_6.30.0.orig.tar.xz",
+          "orig_tar_sha256": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7"
+        }
+      }
     },
     "ktextwidgets": {
       "upstream_version": "6.30.0",
@@ -771,7 +810,42 @@
       "provider": "supralinux",
       "contract_state": "reference-capture-pending",
       "package_version_candidate": null,
-      "technical_references": null
+      "technical_references": {
+        "ubuntu": {
+          "source_package": "kf6-ktextwidgets",
+          "version": "6.24.0-0ubuntu1",
+          "upstream_version": "6.24.0",
+          "binary_packages": [
+            "libkf6textwidgets-data",
+            "libkf6textwidgets-dev",
+            "libkf6textwidgets-doc",
+            "libkf6textwidgets6"
+          ],
+          "dsc_file": "kf6-ktextwidgets_6.24.0-0ubuntu1.dsc",
+          "dsc_sha256": "6037e4c93f827093a056f1a614483e65996420865c9a250ff67b80d460897ed4",
+          "debian_tar_file": "kf6-ktextwidgets_6.24.0-0ubuntu1.debian.tar.xz",
+          "debian_tar_sha256": "be1657f69b06f10631d412fec009af1d6332bbceaca33b839f5b017ec54568da",
+          "orig_tar_file": "kf6-ktextwidgets_6.24.0.orig.tar.xz",
+          "orig_tar_sha256": "ba8f7d21014aabcdfa13e0cc1ff5a1db6c04761e080670caa76b7e4163086d15"
+        },
+        "debian": {
+          "source_package": "kf6-ktextwidgets",
+          "version": "6.30.0-1",
+          "upstream_version": "6.30.0",
+          "binary_packages": [
+            "libkf6textwidgets-data",
+            "libkf6textwidgets-dev",
+            "libkf6textwidgets-doc",
+            "libkf6textwidgets6"
+          ],
+          "dsc_file": "kf6-ktextwidgets_6.30.0-1.dsc",
+          "dsc_sha256": "16e2fdfa786530d165babd5b781bcb34648512f1bc0edccf6ab058bbfdb1b290",
+          "debian_tar_file": "kf6-ktextwidgets_6.30.0-1.debian.tar.xz",
+          "debian_tar_sha256": "5d20207b985eb7eb33c34b809617bbbe0a4400871c725c3f50b9df72195256fd",
+          "orig_tar_file": "kf6-ktextwidgets_6.30.0.orig.tar.xz",
+          "orig_tar_sha256": "b06b11bb727bf9c3578797b1e40daad5f48e10433e456a337f1c40b4082879c8"
+        }
+      }
     },
     "kwallet": {
       "upstream_version": "6.30.0",
@@ -780,7 +854,46 @@
       "provider": "supralinux",
       "contract_state": "reference-capture-pending",
       "package_version_candidate": null,
-      "technical_references": null
+      "technical_references": {
+        "ubuntu": {
+          "source_package": "kf6-kwallet",
+          "version": "6.24.0-0ubuntu1",
+          "upstream_version": "6.24.0",
+          "binary_packages": [
+            "kwallet6",
+            "libkf6wallet-data",
+            "libkf6wallet-dev",
+            "libkf6wallet-doc",
+            "libkf6wallet6",
+            "libkf6walletbackend6"
+          ],
+          "dsc_file": "kf6-kwallet_6.24.0-0ubuntu1.dsc",
+          "dsc_sha256": "1ef2754c3b1a1f752388e16d0255b8b3e85a4ce200a6958ac42082583a8ca41e",
+          "debian_tar_file": "kf6-kwallet_6.24.0-0ubuntu1.debian.tar.xz",
+          "debian_tar_sha256": "dd4c4aca4c41b786544829507b1cf393a7a9ac5f5f90e2ebb027a58aac15ab14",
+          "orig_tar_file": "kf6-kwallet_6.24.0.orig.tar.xz",
+          "orig_tar_sha256": "094a26ec24a2fc9ae73096c47da2d963799668ef9e0e4004162a0082e54f9520"
+        },
+        "debian": {
+          "source_package": "kf6-kwallet",
+          "version": "6.30.0-1",
+          "upstream_version": "6.30.0",
+          "binary_packages": [
+            "kwallet6",
+            "libkf6wallet-data",
+            "libkf6wallet-dev",
+            "libkf6wallet-doc",
+            "libkf6wallet6",
+            "libkf6walletbackend6"
+          ],
+          "dsc_file": "kf6-kwallet_6.30.0-1.dsc",
+          "dsc_sha256": "04e934af6615c51a9f2fb735d7fab2799fdd8450e762e4667bff5dcb84671efc",
+          "debian_tar_file": "kf6-kwallet_6.30.0-1.debian.tar.xz",
+          "debian_tar_sha256": "497ac73d57c5b71674963f53a26d6a112bdc2d5fbb4302c6eb80e5faff2467d0",
+          "orig_tar_file": "kf6-kwallet_6.30.0.orig.tar.xz",
+          "orig_tar_sha256": "93cb9c1df2630807c04bf8c30312e75ae3bb466c77dd9b29bb2c752e71d34a26"
+        }
+      }
     },
     "kxmlgui": {
       "upstream_version": "6.30.0",
@@ -789,7 +902,42 @@
       "provider": "supralinux",
       "contract_state": "reference-capture-pending",
       "package_version_candidate": null,
-      "technical_references": null
+      "technical_references": {
+        "ubuntu": {
+          "source_package": "kf6-kxmlgui",
+          "version": "6.24.0-0ubuntu1",
+          "upstream_version": "6.24.0",
+          "binary_packages": [
+            "libkf6xmlgui-data",
+            "libkf6xmlgui-dev",
+            "libkf6xmlgui-doc",
+            "libkf6xmlgui6"
+          ],
+          "dsc_file": "kf6-kxmlgui_6.24.0-0ubuntu1.dsc",
+          "dsc_sha256": "3edde12f4b8adedbc7c5b7fd60961f74af2f2672eca7bb1dccc06ee797e326df",
+          "debian_tar_file": "kf6-kxmlgui_6.24.0-0ubuntu1.debian.tar.xz",
+          "debian_tar_sha256": "22cd64ade6812fb8c50c16a03c3cae5f48067674019ce4327eedc98346d53ec5",
+          "orig_tar_file": "kf6-kxmlgui_6.24.0.orig.tar.xz",
+          "orig_tar_sha256": "f87f887323675d8b36ae9d157ce29848ac0eb1731ffd0c0aec9d79405e793616"
+        },
+        "debian": {
+          "source_package": "kf6-kxmlgui",
+          "version": "6.30.0-1",
+          "upstream_version": "6.30.0",
+          "binary_packages": [
+            "libkf6xmlgui-data",
+            "libkf6xmlgui-dev",
+            "libkf6xmlgui-doc",
+            "libkf6xmlgui6"
+          ],
+          "dsc_file": "kf6-kxmlgui_6.30.0-1.dsc",
+          "dsc_sha256": "4be5985b097b75c597891c65e3587f2d5988a5e77bf0d6b5d4e1311319779b6a",
+          "debian_tar_file": "kf6-kxmlgui_6.30.0-1.debian.tar.xz",
+          "debian_tar_sha256": "38e20282b23ec22351d93521b345df1320ea5cb5e2e1e5fe1eb686a4663d28b9",
+          "orig_tar_file": "kf6-kxmlgui_6.30.0.orig.tar.xz",
+          "orig_tar_sha256": "10fb8a0f7b874248ff60d9a8ee4e1f06a0efcf01b0d34d7635dfff86e848c352"
+        }
+      }
     },
     "purpose": {
       "upstream_version": "6.30.0",
@@ -798,7 +946,46 @@
       "provider": "supralinux",
       "contract_state": "reference-capture-pending",
       "package_version_candidate": null,
-      "technical_references": null
+      "technical_references": {
+        "ubuntu": {
+          "source_package": "kf6-purpose",
+          "version": "6.24.0-0ubuntu1",
+          "upstream_version": "6.24.0",
+          "binary_packages": [
+            "libkf6purpose-bin",
+            "libkf6purpose-data",
+            "libkf6purpose-dev",
+            "libkf6purpose6",
+            "libkf6purposewidgets6",
+            "qml6-module-org-kde-purpose"
+          ],
+          "dsc_file": "kf6-purpose_6.24.0-0ubuntu1.dsc",
+          "dsc_sha256": "d3626a81137a16c4d8031a6385397d76e40db16b66fda4cf9ce8c5cdc6d28346",
+          "debian_tar_file": "kf6-purpose_6.24.0-0ubuntu1.debian.tar.xz",
+          "debian_tar_sha256": "7255e2e8aaaf5fb21b9feb5f39a2e0f16685d8fcd79069f65b590ba4dd676b33",
+          "orig_tar_file": "kf6-purpose_6.24.0.orig.tar.xz",
+          "orig_tar_sha256": "e95dba236f79bf1655a0581e9f1c3ce64d342750135fde700d463dd205bebc47"
+        },
+        "debian": {
+          "source_package": "kf6-purpose",
+          "version": "6.30.0-1",
+          "upstream_version": "6.30.0",
+          "binary_packages": [
+            "libkf6purpose-bin",
+            "libkf6purpose-data",
+            "libkf6purpose-dev",
+            "libkf6purpose6",
+            "libkf6purposewidgets6",
+            "qml6-module-org-kde-purpose"
+          ],
+          "dsc_file": "kf6-purpose_6.30.0-1.dsc",
+          "dsc_sha256": "f58fed253e26df4cd238e7fd0d5911c6f0478c6f8efe5b534332730b0c880c5c",
+          "debian_tar_file": "kf6-purpose_6.30.0-1.debian.tar.xz",
+          "debian_tar_sha256": "2b07d96afbe20c49f1b0a9b7170deae8b542a518b61764b22c1625cbd100c82d",
+          "orig_tar_file": "kf6-purpose_6.30.0.orig.tar.xz",
+          "orig_tar_sha256": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862"
+        }
+      }
     }
   },
   "execution_request": {
