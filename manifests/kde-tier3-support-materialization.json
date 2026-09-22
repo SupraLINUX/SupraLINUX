@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-22",
+  "authority": "kde-upstream",
+  "role": "support-source-materialization",
+  "frameworks_series": "6.30.0",
+  "contract_manifest": "manifests/kde-tier3-support-package-contracts.json",
+  "state": "pending-ci",
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "selected_nodes": [
+    "breeze-icons",
+    "kdoctools",
+    "kded"
+  ],
+  "common_adaptations": {
+    "maintainer": "SupraLINUX Build System <build@supralinux.invalid>",
+    "remove_reference_uploaders": true,
+    "remove_reference_vcs_fields": true,
+    "debhelper_compat": {
+      "from": "debhelper-compat (= 14)",
+      "to": "debhelper-compat (= 13)",
+      "reason": "Ubuntu Resolute packaging-tool provider baseline; no KDE source/runtime behavior change."
+    }
+  },
+  "nodes": {
+    "breeze-icons": {
+      "state": "pending",
+      "source_package": "kf6-breeze-icons",
+      "upstream_version": "6.30.0",
+      "upstream_source_sha256": "93866c19791838fc9757b305e010e23bb38cb5f201e4ecc96cc8ef5f1173ebe6",
+      "packaging_reference_version": "4:6.30.0-1",
+      "packaging_reference_tree_sha256": "c0127864df0444373e3256559cd1b7d0f3e326d71630c2a4c1eab334ee81d416",
+      "package_version": "4:6.30.0-0supralinux1",
+      "expected_binary_packages": [
+        "breeze-icon-theme",
+        "breeze-icon-theme-rcc",
+        "kf6-breeze-icon-theme",
+        "kf6-breeze-icon-theme-rcc",
+        "libkf6breezeicons-dev",
+        "libkf6breezeicons6"
+      ]
+    },
+    "kdoctools": {
+      "state": "pending",
+      "source_package": "kf6-kdoctools",
+      "upstream_version": "6.30.0",
+      "upstream_source_sha256": "b90b42ab222a3034729e517d0c06258abf6bdc28591ec78ad56f24aebbaaed94",
+      "packaging_reference_version": "6.30.0-1",
+      "packaging_reference_tree_sha256": "208eebbad9c402e0b6803cfa0b20b2c9e3b843415f0a44c843a1c7c64c4ed3b5",
+      "package_version": "6.30.0-0supralinux1",
+      "expected_binary_packages": [
+        "kdoctools6",
+        "libkf6doctools-dev",
+        "libkf6doctools-doc",
+        "libkf6doctools6"
+      ]
+    },
+    "kded": {
+      "state": "pending",
+      "source_package": "kf6-kded",
+      "upstream_version": "6.30.0",
+      "upstream_source_sha256": "0adf6e22300cee74d57e790b5db844f03a1366a4d6315edbaa49174b12bf1861",
+      "packaging_reference_version": "6.30.0-1",
+      "packaging_reference_tree_sha256": "035f17f065f2d31e9650d979b51b0d79989ea142503436de30e93cc717c5fbdc",
+      "package_version": "6.30.0-0supralinux1",
+      "expected_binary_packages": [
+        "kded6",
+        "kded6-dev"
+      ]
+    }
+  },
+  "stable_promotion_requires_explicit_user_approval": true
+}
