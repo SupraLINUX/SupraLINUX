@@ -156,3 +156,15 @@ The first real support-package build campaign is now active.
 Breeze Icons and KDocTools are independent level-0 nodes and build in parallel from their promoted materialized source packages. The workflow injects only pinned downstream-eligible SupraLINUX KDE 6.30 predecessors and validates their exact versions/hashes before sbuild.
 
 KDED is explicitly **BLOCKED** by KDocTools at this stage. It is not attempted and is not counted as FAIL.
+
+
+## Support build level 0 PASS
+
+Run `35700002095` produced real downstream-eligible PASS artifacts for both level-0 support nodes:
+
+- Breeze Icons `4:6.30.0-0supralinux1`: 4/4 tests PASS, Lintian/apt/consumer/payload/ABI gates PASS.
+- KDocTools `6.30.0-0supralinux1`: 3/3 tests PASS, Lintian/apt/consumer/payload/ABI gates PASS, with KArchive and KI18n SupraLINUX 6.30 proven in buildinfo.
+
+The support sub-DAG is now **2 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**. KDED is no longer blocked and becomes the sole runnable node in support build level 1.
+
+The canonical Tier 3 Framework inventory itself remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**.
