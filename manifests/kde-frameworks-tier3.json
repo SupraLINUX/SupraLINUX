@@ -454,6 +454,7 @@
     "next_gate": "support-build-level0",
     "package_contract_manifest": "manifests/kde-tier3-support-package-contracts.json",
     "materialization_manifest": "manifests/kde-tier3-support-materialization.json",
-    "materialization": "PASS"
+    "materialization": "PASS",
+    "build_level0_manifest": "manifests/kde-tier3-support-build-level0.json"
   }
 }
