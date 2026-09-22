@@ -53,7 +53,7 @@ jobs:
           for sha in "${before}" "${after}"; do
             git cat-file -e "${sha}^{commit}" 2>/dev/null || git fetch --no-tags origin "${sha}"
           done
-          if scripts/kde-tier3-support-provider-audit-needed.sh "${before}" "${after}"; then
+          if bash scripts/kde-tier3-support-provider-audit-needed.sh "${before}" "${after}"; then
             echo "run=true" >> "${GITHUB_OUTPUT}"
           else
             rc=$?
@@ -62,7 +62,7 @@ jobs:
           fi
       - name: Run Tier 3 support provider audit
         if: steps.scope.outputs.run == 'true'
-        run: scripts/run-kde-tier3-support-provider-audit.sh
+        run: bash scripts/run-kde-tier3-support-provider-audit.sh
       - name: Upload provider-audit evidence
         if: always() && steps.scope.outputs.run == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
