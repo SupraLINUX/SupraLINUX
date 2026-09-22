@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "audit": "kmime-legacy-provider-coinstallation",
+  "state": "pending-ci",
+  "provider_platform": "ubuntu-resolute",
+  "frameworks_authority": "kde-upstream-6.30.0",
+  "package_state_effect": "none",
+  "framework_build_evidence": {
+    "workflow_run": 35687831684,
+    "run_attempt": 2,
+    "job_id": 106619132039,
+    "artifact_id": 10677716050,
+    "artifact_sha256": "ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36",
+    "package_version": "6.30.0-0supralinux1",
+    "binary_packages": [
+      "libkf6mime-data",
+      "libkf6mime-dev",
+      "libkf6mime6"
+    ],
+    "observed_gates": {
+      "clean_sbuild": "PASS",
+      "upstream_tests": "17/17 PASS",
+      "lintian_errors": "PASS",
+      "abi_soname": "PASS",
+      "apt_runtime_closure": "PASS",
+      "cmake_consumer": "PASS",
+      "legacy_abi_metadata": "PASS"
+    }
+  },
+  "legacy_reference": {
+    "source_package": "kmime",
+    "version": "25.12.3-0ubuntu1",
+    "binary_packages": [
+      "libkmime-data",
+      "libkmime-dev",
+      "libkpim6mime6"
+    ],
+    "runtime_install_set": [
+      "libkmime-data",
+      "libkpim6mime6"
+    ],
+    "runtime_soname": "libKPim6Mime.so.6"
+  },
+  "framework_contract": {
+    "source_package": "kf6-kmime",
+    "version": "6.30.0-0supralinux1",
+    "runtime_soname": "libKF6Mime.so.6",
+    "authoritative_for_kde": true
+  },
+  "trigger_observation": {
+    "requested_legacy_packages": [
+      "libkmime-data",
+      "libkpim6mime6"
+    ],
+    "removed_framework_packages": [
+      "libkf6mime-data",
+      "libkf6mime-dev",
+      "libkf6mime6"
+    ],
+    "conclusion": "stock-ubuntu-legacy-provider-not-coinstallable-as-packaged"
+  },
+  "required_checks": [
+    "exact-package-version-and-sha256",
+    "depends-conflicts-breaks-replaces-provides",
+    "pairwise-file-overlap",
+    "overlap-content-sha256",
+    "runtime-soname-separation",
+    "apt-solver-simulation"
+  ],
+  "result": {
+    "audit_result": "pending",
+    "stock_provider_coinstallation": "pending",
+    "classification": "pending"
+  }
+}
