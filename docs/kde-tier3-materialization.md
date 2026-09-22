@@ -62,3 +62,7 @@ Current state:
 Run `35746667704` materialized all **20/20** source packages successfully from commit `39fcab118709bcdb7e97524333d3f74d1b4edec4`. Repository Policy run `35746667671` also passed. Every promoted node records its job ID, artifact ID and GitHub artifact SHA-256; the artifact itself retains the complete `result.json`, source-package hashes, deterministic source-tree hash and adapted `debian/` payload.
 
 Materialization changed no package state: `package_attempted=false` and `package_state_effect=none`. The next state is `build-campaign-planning`, where the existing four-level KDE-upstream DAG will be converted into executable clean-build lanes. Binary package builds remain unauthorized until that campaign is reviewed and explicitly activated.
+
+## Promotion validation history
+
+Promotion-validation run `35748536747` is retained as a historical CI FAIL: materialization scope correctly skipped the 20-node matrix because semantic inputs were unchanged, but the promoted validator contained a literal `\\n` escape and failed Python parsing. This did not change or invalidate any materialized artifact or package state; the validator-only defect is corrected in the next commit.

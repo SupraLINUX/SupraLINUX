@@ -101,7 +101,8 @@ if m.get("state") == "pending-ci":
         req(planning.get("package_contract") == "not-materialized", f"{node}: pending package contract")
 else:
     req(all(m["nodes"][n].get("state") == "materialized" for n in selected), "PASS requires all materialization nodes materialized")
-    req(c.get("state") == "materialized", "PASS materialization contract lifecycle")\n    req(c.get("materialization", {}).get("status") == "PASS" and c.get("materialization", {}).get("workflow_run") == 35746667704, "promoted materialization evidence linkage")
+    req(c.get("state") == "materialized", "PASS materialization contract lifecycle")
+    req(c.get("materialization", {}).get("status") == "PASS" and c.get("materialization", {}).get("workflow_run") == 35746667704, "promoted materialization evidence linkage")
     req(t.get("discovery_policy", {}).get("phase") == "build-campaign-planning", "post-materialization phase")
     req(t.get("discovery_policy", {}).get("package_builds") == "not-authorized-before-tier3-build-campaign", "post-materialization binary build gate")
     req(t.get("support_components", {}).get("next_gate") == "tier3-build-campaign-planning", "post-materialization next gate")
