@@ -1,0 +1,88 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import json,sys
+
+ROOT=Path(__file__).resolve().parents[1]
+errors=[]
+def req(v,m):
+    if not v:
+        errors.append(m)
+def load(path):
+    return json.loads((ROOT/path).read_text())
+
+tier3=load("manifests/kde-frameworks-tier3.json")
+tier2=load("manifests/kde-frameworks-tier2.json")
+dag=load("manifests/kde-dag.json")
+
+expected={
+ "baloo":"a59d33a919bfa1d164c8f3a6f992c609edaf2131ac5f52ea4ecb77f6fbc53be1",
+ "kbookmarks":"680120f09929d51da0a65e96a1f7d20ffbbdd2795a165719b0d07e00475e77c4",
+ "kcmutils":"0159f80d030ac250b0b353113a55c013ed7e38cb0b678df44d2f0d0b2aca944c",
+ "kconfigwidgets":"6efd9fc7786a7e979b32904aeadf1d2d8e69a5da110f8ebd45f95ec02de41f77",
+ "kdav":"08d95cf546c941dbe21a76fbc8b88a466f276ab29e866600994f4f60d604c7f4",
+ "kdesu":"9bf244884b09ce38ad84d00e5879e798b02e1610ec8f3d9ee6c93e7502b356e2",
+ "kiconthemes":"c0c684823d0e087f35168cd79f1053fd358bb8fb47b27996a11c7d7ee3da6f4d",
+ "kio":"c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
+ "kjobwidgets":"bf36e3619df1c6ad3d900bd36433d97ab295be41c1cc401ff0e766380788bbae",
+ "knewstuff":"85408768b5c3f4b0b51ee6a14ae73fea263f451404e266e286c55e0c17e44037",
+ "knotifyconfig":"4a133decdb0d3731dbaa1d3625b30f057089e5c59c8326ff88a047cef35b2efb",
+ "kparts":"99f5a0e3a4da10e1a0fbfb505ae966cd87627f887dd07929a920afe41c862ac0",
+ "kpeople":"094868f11c8c46e57a077c2788a39c6ee0b0ebc2b64279c6f7c70a5152f518e7",
+ "krunner":"0885d0936aec6dc8553c673f1c685013e345b933a52812a07c5bddd1eebdb551",
+ "ksvg":"7b7aba4e9baa88bfb303977e139e8a105b5cd243443029ee773954307b51eb91",
+ "ktexteditor":"d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7",
+ "ktextwidgets":"b06b11bb727bf9c3578797b1e40daad5f48e10433e456a337f1c40b4082879c8",
+ "kwallet":"93cb9c1df2630807c04bf8c30312e75ae3bb466c77dd9b29bb2c752e71d34a26",
+ "kxmlgui":"10fb8a0f7b874248ff60d9a8ee4e1f06a0efcf01b0d34d7635dfff86e848c352",
+ "purpose":"4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862",
+}
+
+req(tier3.get("schema")==1,"Tier3 schema")
+req(tier3.get("authority")=="kde-upstream","Tier3 authority")
+req(tier3.get("frameworks_series")=="6.30.0" and tier3.get("tier")==3,"Tier3 series/tier")
+req(tier3.get("tier_reference")=="https://api.kde.org/","Tier3 tier reference")
+req(tier3.get("release_reference")=="https://kde.org/info/kde-frameworks-6.30.0/","Tier3 release reference")
+pre=tier3.get("canonical_tier2_precondition",{})
+req(pre.get("required_state")=="15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED","Tier3 Tier2 precondition declaration")
+
+tier2_nodes=tier2.get("nodes",[])
+req(len(tier2_nodes)==15 and all(n.get("state")=="PASS" for n in tier2_nodes),"Tier3 requires closed Tier2 15/15 PASS")
+
+nodes={n.get("id"):n for n in tier3.get("nodes",[])}
+req(set(nodes)==set(expected),"Tier3 node set must match KDE upstream 20-node inventory")
+for node_id,sha in expected.items():
+    n=nodes.get(node_id,{})
+    req(n.get("upstream_tier")==3 and n.get("upstream_version")=="6.30.0",f"{node_id}: upstream tier/version")
+    req(n.get("source_sha256")==sha,f"{node_id}: KDE release SHA-256")
+    req(n.get("source_url")==f"https://download.kde.org/stable/frameworks/6.30/{node_id}-6.30.0.tar.xz",f"{node_id}: source URL")
+    req(n.get("upstream_ref")=="v6.30.0",f"{node_id}: upstream ref")
+    req(n.get("state")=="pending",f"{node_id}: initial canonical state")
+    planning=n.get("planning",{})
+    req(planning.get("readiness")=="dependency-discovery-required",f"{node_id}: discovery readiness")
+    req(planning.get("dependency_authority")=="kde-upstream",f"{node_id}: dependency authority")
+    req(planning.get("package_contract")=="not-authorized",f"{node_id}: package contract must remain unauthorized")
+    packaging=n.get("packaging",{})
+    req(packaging.get("state")=="pending" and packaging.get("package_version") is None and packaging.get("downstream_eligible") is False,f"{node_id}: initial packaging state")
+    req(node_id not in dag.get("nodes",{}),f"{node_id}: pending Tier3 node must not be promoted into canonical DAG")
+
+policy=tier3.get("discovery_policy",{})
+req(policy.get("phase")=="source-inventory","Tier3 discovery phase")
+req(policy.get("dependencies")=="not-yet-materialized","Tier3 dependency state")
+req(policy.get("provider_audit")=="not-authorized-before-dependency-discovery","Tier3 provider audit gate")
+req(policy.get("package_contracts")=="not-authorized-before-dependency-discovery","Tier3 package-contract gate")
+req(policy.get("package_builds")=="not-authorized-before-dependency-discovery","Tier3 package-build gate")
+
+doc=(ROOT/"docs/kde-tier3.md").read_text()
+req("0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED" in doc,"Tier3 docs canonical snapshot")
+req("KDE upstream" in doc and "Ubuntu" in doc,"Tier3 docs authority/provider boundary")
+req("dependency-discovery-required" in doc,"Tier3 docs next gate")
+
+if errors:
+    for e in errors:
+        print("ERROR:",e,file=sys.stderr)
+    raise SystemExit(1)
+
+print("KDE Frameworks Tier 3 source inventory validation: PASS")
+print("Frameworks series: 6.30.0")
+print("Tier 3: 0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED")
+print("Next gate: KDE-upstream dependency discovery")
