@@ -44,6 +44,16 @@ if [[ "$(fingerprint "${BEFORE}")" != "$(fingerprint "${AFTER}")" ]]; then
   exit 0
 fi
 
+if [[ "$(has_runnable "${AFTER}")" == yes ]]; then
+  attempts="$(git -C "${ROOT}" show "${AFTER}:manifests/kde-tier3-support-build-level0-attempts.json" 2>/dev/null | python3 -c 'import json,sys
+d=json.load(sys.stdin)
+print(sum(len(v) for v in d.get("nodes",{}).values()))' || echo 0)"
+  if [[ "${attempts}" -eq 0 ]]; then
+    echo "Tier 3 support level0 has runnable nodes and no recorded attempt yet."
+    exit 0
+  fi
+fi
+
 mapfile -t changed < <(git -C "${ROOT}" diff --name-only "${BEFORE}" "${AFTER}" --)
 for path in "${changed[@]}"; do
   case "${path}" in
