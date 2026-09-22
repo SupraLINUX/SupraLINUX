@@ -1,0 +1,1009 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-22",
+  "authority": "kde-upstream",
+  "frameworks": "6.30.0",
+  "tier": 3,
+  "target": "linux",
+  "common": {
+    "cmake_minimum": "3.29",
+    "ecm": "6.30.0",
+    "qt_minimum": "6.9.0"
+  },
+  "evidence_policy": {
+    "source_required": "CMake find_package REQUIRED and selected default Linux code paths",
+    "ci_environment": ".kde-ci.yml require entries are retained separately and are not automatically converted into ABI/build edges",
+    "test_required": "dependencies required only by BUILD_TESTING paths",
+    "runtime_required": "runtime dependencies do not block compilation but do block the relevant runtime-validation gate"
+  },
+  "support_components": {
+    "breeze-icons": {
+      "role": "selected-build-predecessor",
+      "required_by": [
+        "kiconthemes"
+      ],
+      "ci_environment_for": [
+        "kiconthemes",
+        "ktexteditor"
+      ],
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/breeze-icons-6.30.0.tar.xz",
+      "source_sha256": "93866c19791838fc9757b305e010e23bb38cb5f201e4ecc96cc8ef5f1173ebe6",
+      "ref": "v6.30.0",
+      "commit": "ac9c67bf20ba6b100d037f07b873e7053467334c",
+      "root_cmake_blob": "4482a5fa712f27feec0ee3ec4c5c7bcc07a660d3",
+      "kde_ci_blob": "dcbc4346e295b14915ea43343228fd419decd0a1",
+      "state": "pending",
+      "readiness": "provider-audit-required"
+    },
+    "kdoctools": {
+      "role": "ci-documentation-predecessor",
+      "required_by_ci": [
+        "kio",
+        "kded"
+      ],
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kdoctools-6.30.0.tar.xz",
+      "source_sha256": "b90b42ab222a3034729e517d0c06258abf6bdc28591ec78ad56f24aebbaaed94",
+      "ref": "v6.30.0",
+      "commit": "8c35f49152f1f9152d51b94c94ced53d2600edbc",
+      "root_cmake_blob": "10e1c23c634c9a1221a857529d75ff2ebd3c77d3",
+      "kde_ci_blob": "09a5dd5a6cd2149d76939a6a2689b70688ba6981",
+      "framework_dependencies": {
+        "required": [
+          "karchive"
+        ],
+        "optional": [
+          "ki18n"
+        ]
+      },
+      "state": "pending",
+      "readiness": "provider-audit-required"
+    },
+    "kded": {
+      "role": "runtime-predecessor",
+      "runtime_for": [
+        "kio"
+      ],
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kded-6.30.0.tar.xz",
+      "source_sha256": "0adf6e22300cee74d57e790b5db844f03a1366a4d6315edbaa49174b12bf1861",
+      "ref": "v6.30.0",
+      "commit": "7e6e9ec17f197b34667210b4469d0988bdd48394",
+      "root_cmake_blob": "022991ffeb877a6704876f09cb0e5af5c348cd6f",
+      "kde_ci_blob": "f3f67f2257956987e086b120a899d8bc9bd11fef",
+      "framework_dependencies": {
+        "required": [
+          "kconfig",
+          "kcoreaddons",
+          "kcrash",
+          "kdbusaddons",
+          "kservice"
+        ],
+        "ci_documentation": [
+          "kdoctools"
+        ]
+      },
+      "state": "pending",
+      "readiness": "provider-audit-required"
+    }
+  },
+  "nodes": {
+    "baloo": {
+      "metadata": {
+        "repo": "KDE/baloo",
+        "ref": "v6.30.0",
+        "commit": "a5b829873849ce72eb35d2c1b48337b2d81a0593",
+        "root_cmake_blob": "f7b58bf4d1d9c1b076b42d8df5c3085d965d26de",
+        "kde_ci_blob": "7c598f06397acdc0d5ebab6cfb310a25c48cb1fb"
+      },
+      "frameworks": {
+        "source_required": [
+          "kcoreaddons",
+          "kconfig",
+          "kdbusaddons",
+          "ki18n",
+          "kidletime",
+          "solid",
+          "kfilemetadata",
+          "kcrash",
+          "kio"
+        ],
+        "selected_linux_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "kfilemetadata",
+          "kcoreaddons",
+          "kconfig",
+          "kdbusaddons",
+          "ki18n",
+          "kidletime",
+          "solid",
+          "kcrash",
+          "kio"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [
+          "kio"
+        ],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "kbookmarks": {
+      "metadata": {
+        "repo": "KDE/kbookmarks",
+        "ref": "v6.30.0",
+        "commit": "3cf6164fe97e94024a1cf54329264528aefc895e",
+        "root_cmake_blob": "037f959bea90fe8ee3b9de812a97c127a59bc31d",
+        "kde_ci_blob": "fc45c61f3d568d3446ab1b3fd3a09f0fbcb6c915"
+      },
+      "frameworks": {
+        "source_required": [
+          "kconfig",
+          "kcoreaddons",
+          "kwidgetsaddons"
+        ],
+        "selected_linux_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "kcoreaddons",
+          "kwidgetsaddons",
+          "kconfig"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "kcmutils": {
+      "metadata": {
+        "repo": "KDE/kcmutils",
+        "ref": "v6.30.0",
+        "commit": "59fcbdae35cd4974818c6861c30c88962f2fea14",
+        "root_cmake_blob": "5aefd9426e23b17a2087ffbfb9293a3fbeac76b8",
+        "kde_ci_blob": "a1b7e15a9fa73b986b1a0f11fadadd306c2a5f68"
+      },
+      "frameworks": {
+        "source_required": [
+          "kio",
+          "kitemviews",
+          "kconfigwidgets",
+          "kcoreaddons",
+          "kguiaddons",
+          "ki18n",
+          "kxmlgui",
+          "kwidgetsaddons"
+        ],
+        "selected_linux_profile": [],
+        "qml_required": [
+          "kirigami"
+        ],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "kitemviews",
+          "kcoreaddons",
+          "ki18n",
+          "kxmlgui",
+          "kirigami",
+          "kio"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [
+          "kio",
+          "kconfigwidgets",
+          "kxmlgui"
+        ],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "kconfigwidgets": {
+      "metadata": {
+        "repo": "KDE/kconfigwidgets",
+        "ref": "v6.30.0",
+        "commit": "9472c7dc63f76c4de7d98b9b6f7087ea9d461aae",
+        "root_cmake_blob": "d8d98970c9072885721847b21cf5ee728623acdd",
+        "kde_ci_blob": "6403c4312e55599178090d654f9c38f9d16d3b31"
+      },
+      "frameworks": {
+        "source_required": [
+          "kcoreaddons",
+          "kcodecs",
+          "kconfig",
+          "kguiaddons",
+          "ki18n",
+          "kwidgetsaddons",
+          "kcolorscheme"
+        ],
+        "selected_linux_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "kcoreaddons",
+          "kcodecs",
+          "kconfig",
+          "kguiaddons",
+          "ki18n",
+          "kwidgetsaddons",
+          "kcolorscheme"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "kdav": {
+      "metadata": {
+        "repo": "KDE/kdav",
+        "ref": "v6.30.0",
+        "commit": "bc388fe4f4b5f442e7efdfc743bdfaa2bcf28113",
+        "root_cmake_blob": "29d365d5847a45e62d3ebf3e4a655b7aa87e4b32",
+        "kde_ci_blob": "910e0525636d7097defbf2ba4c744e2ccff2424c"
+      },
+      "frameworks": {
+        "source_required": [
+          "kcoreaddons",
+          "ki18n"
+        ],
+        "selected_linux_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "ki18n",
+          "kcoreaddons"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "kdesu": {
+      "metadata": {
+        "repo": "KDE/kdesu",
+        "ref": "v6.30.0",
+        "commit": "c1ed93a0e42e73a0118a1679c4cca9c99b0484ea",
+        "root_cmake_blob": "14455a9354911d7bbf04feadc87d75140066a40b",
+        "kde_ci_blob": "2852dfbbad96def9d1276116ff80291a6d899590"
+      },
+      "frameworks": {
+        "source_required": [
+          "kconfig",
+          "kcoreaddons",
+          "ki18n",
+          "kpty"
+        ],
+        "selected_linux_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "kconfig",
+          "kcoreaddons",
+          "kpty"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "kiconthemes": {
+      "metadata": {
+        "repo": "KDE/kiconthemes",
+        "ref": "v6.30.0",
+        "commit": "6684c355f0cf36650c276b711badb918b2d1ffd2",
+        "root_cmake_blob": "252edc1c87f2b312801771c4e971740b71fdf01e",
+        "kde_ci_blob": "c37b13ccf3ca25eb35a2b8fa4f66dc652b1aa6f0"
+      },
+      "frameworks": {
+        "source_required": [
+          "karchive",
+          "ki18n",
+          "kwidgetsaddons",
+          "kcolorscheme"
+        ],
+        "selected_linux_profile": [
+          "breeze-icons"
+        ],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "ki18n",
+          "kconfig",
+          "kwidgetsaddons",
+          "karchive",
+          "kcolorscheme",
+          "breeze-icons"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "kio": {
+      "metadata": {
+        "repo": "KDE/kio",
+        "ref": "v6.30.0",
+        "commit": "9e623578249516599d6f5373bb7f4daefe2d59ac",
+        "root_cmake_blob": "2b655093491670009d9396b60159afbec5cc8385",
+        "kde_ci_blob": "f0d170b4527ad9ef53edf3e2dda06fbc21aab0eb",
+        "extra": {
+          "src/kpasswdserver/CMakeLists.txt": "3c0c71e45a6e37a4ec975e34f70fe51f673d85e1"
+        }
+      },
+      "frameworks": {
+        "source_required": [
+          "kconfig",
+          "kcoreaddons",
+          "ki18n",
+          "kservice",
+          "solid",
+          "kcrash",
+          "kwindowsystem",
+          "kbookmarks",
+          "kcolorscheme",
+          "kcompletion",
+          "kguiaddons",
+          "kiconthemes",
+          "kitemviews",
+          "kjobwidgets",
+          "kwidgetsaddons",
+          "kdbusaddons"
+        ],
+        "selected_linux_profile": [
+          "kwallet"
+        ],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [
+          "kded"
+        ],
+        "ci_environment_required": [
+          "ki18n",
+          "kguiaddons",
+          "kitemviews",
+          "kcoreaddons",
+          "kwidgetsaddons",
+          "kservice",
+          "karchive",
+          "solid",
+          "kjobwidgets",
+          "kiconthemes",
+          "kwindowsystem",
+          "kcompletion",
+          "kbookmarks",
+          "knotifications",
+          "kconfig",
+          "kcolorscheme",
+          "kcrash",
+          "kdoctools",
+          "kdbusaddons",
+          "kwallet"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [
+          "kbookmarks",
+          "kiconthemes",
+          "kjobwidgets"
+        ],
+        "selected_profile": [
+          "kwallet"
+        ],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "kjobwidgets": {
+      "metadata": {
+        "repo": "KDE/kjobwidgets",
+        "ref": "v6.30.0",
+        "commit": "4023ae8ba1bc403cf298d69ec7303a103046c702",
+        "root_cmake_blob": "79a60665199ccbb54ca094e25f84839aeecde040",
+        "kde_ci_blob": "de03a3716fcca5b3abbf52bc66e35ba9ae2427e3"
+      },
+      "frameworks": {
+        "source_required": [
+          "kcoreaddons",
+          "kwidgetsaddons",
+          "knotifications"
+        ],
+        "selected_linux_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "kcoreaddons",
+          "kwidgetsaddons",
+          "knotifications"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "knewstuff": {
+      "metadata": {
+        "repo": "KDE/knewstuff",
+        "ref": "v6.30.0",
+        "commit": "377cdf6de03ab9e9c4775b4e6f3126bb4ffb8464",
+        "root_cmake_blob": "aa0adc1585e7c37a1e0000007877eb55a5da34f3",
+        "kde_ci_blob": "52bcd2260464b1fccc44ae323e9b2abddb27dedf"
+      },
+      "frameworks": {
+        "source_required": [
+          "karchive",
+          "kconfig",
+          "kcoreaddons",
+          "ki18n",
+          "kpackage",
+          "kwidgetsaddons",
+          "attica"
+        ],
+        "selected_linux_profile": [
+          "syndication"
+        ],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [
+          "kirigami",
+          "kcmutils"
+        ],
+        "ci_environment_required": [
+          "kcoreaddons",
+          "attica",
+          "ki18n",
+          "kconfig",
+          "karchive",
+          "kirigami",
+          "kpackage",
+          "syndication",
+          "kwidgetsaddons"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": [
+          "kcmutils"
+        ]
+      }
+    },
+    "knotifyconfig": {
+      "metadata": {
+        "repo": "KDE/knotifyconfig",
+        "ref": "v6.30.0",
+        "commit": "20e54b27e0bba85301e39141be3e43e7523f975d",
+        "root_cmake_blob": "1edaf9fbaa83ccc5df90d563c0b406b359f2a043",
+        "kde_ci_blob": "b89edcf16035ed48a110821ddc87233c27e5f86c",
+        "extra": {
+          "tests/CMakeLists.txt": "d26cdbedcb273020d895d5380151596db286e79b"
+        }
+      },
+      "frameworks": {
+        "source_required": [
+          "kcompletion",
+          "kconfig",
+          "ki18n",
+          "kio"
+        ],
+        "selected_linux_profile": [],
+        "qml_required": [],
+        "test_required": [
+          "kconfigwidgets",
+          "knotifications",
+          "kwidgetsaddons",
+          "kxmlgui"
+        ],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "kio",
+          "ki18n",
+          "knotifications",
+          "kxmlgui"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [
+          "kio"
+        ],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [
+          "kconfigwidgets",
+          "kxmlgui"
+        ],
+        "runtime_validation": []
+      }
+    },
+    "kparts": {
+      "metadata": {
+        "repo": "KDE/kparts",
+        "ref": "v6.30.0",
+        "commit": "bab06760c06836d5b16e7ba52b1725146534b578",
+        "root_cmake_blob": "e328f93019c57dbd32717865305d017ae7091e01",
+        "kde_ci_blob": "4a76077207bf6f60a9aa8f333d79fa7c58139eb9"
+      },
+      "frameworks": {
+        "source_required": [
+          "kconfig",
+          "kcoreaddons",
+          "ki18n",
+          "kio",
+          "kjobwidgets",
+          "kservice",
+          "kwidgetsaddons",
+          "kxmlgui"
+        ],
+        "selected_linux_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "kio",
+          "kxmlgui",
+          "knotifications"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [
+          "kio",
+          "kjobwidgets",
+          "kxmlgui"
+        ],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "kpeople": {
+      "metadata": {
+        "repo": "KDE/kpeople",
+        "ref": "v6.30.0",
+        "commit": "01d4990759669c070381de7fbfadbf5e1f645429",
+        "root_cmake_blob": "8226ed8a95a72f313fdbd3018d50cd542c3920d4",
+        "kde_ci_blob": "572a61b4f891f608ec9cff792865823f7562bfb5"
+      },
+      "frameworks": {
+        "source_required": [
+          "kcoreaddons",
+          "kwidgetsaddons",
+          "ki18n",
+          "kitemviews",
+          "kcontacts"
+        ],
+        "selected_linux_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "kcoreaddons",
+          "kwidgetsaddons",
+          "ki18n",
+          "kitemviews",
+          "kcontacts"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "krunner": {
+      "metadata": {
+        "repo": "KDE/krunner",
+        "ref": "v6.30.0",
+        "commit": "0689156bdbcacf17d7a62dce9ee49391207c397e",
+        "root_cmake_blob": "8c292297d7255b11029bfbc5126a15513c08bf8f",
+        "kde_ci_blob": "3a4fa9e9516c376e7d7621de53d82afb02749ece"
+      },
+      "frameworks": {
+        "source_required": [
+          "kconfig",
+          "kcoreaddons",
+          "ki18n",
+          "kwindowsystem"
+        ],
+        "selected_linux_profile": [
+          "kitemmodels"
+        ],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "kconfig",
+          "kcoreaddons",
+          "threadweaver",
+          "ki18n",
+          "kitemmodels",
+          "kwindowsystem"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "ksvg": {
+      "metadata": {
+        "repo": "KDE/ksvg",
+        "ref": "v6.30.0",
+        "commit": "276ae435ec02ecf383d5dd3449ff6ac880b72ccc",
+        "root_cmake_blob": "38f3a87705b9ded3088f23b2c74c2faed95a5fe0",
+        "kde_ci_blob": "25a157c3b978b9f455145b7ca857573dbcd2182f"
+      },
+      "frameworks": {
+        "source_required": [
+          "karchive",
+          "kconfig",
+          "kcolorscheme",
+          "kcoreaddons",
+          "kguiaddons",
+          "kirigami"
+        ],
+        "selected_linux_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "karchive",
+          "kconfig",
+          "kcoreaddons",
+          "kguiaddons",
+          "kirigami",
+          "kcolorscheme"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "ktexteditor": {
+      "metadata": {
+        "repo": "KDE/ktexteditor",
+        "ref": "v6.30.0",
+        "commit": "fe956fbc80eb125cda947972b7ad46c101d3456b",
+        "root_cmake_blob": "d4aa1c78fb3ccf62f9148382bd1382d6804a3b32",
+        "kde_ci_blob": "0abe12fdf7d221be84249bda71a01b1b579fe1ec",
+        "extra": {
+          "src/CMakeLists.txt": "e4823dcd1b4bb3024e93e2e828f5d4beb6a0b8b0"
+        }
+      },
+      "frameworks": {
+        "source_required": [
+          "karchive",
+          "kconfig",
+          "kguiaddons",
+          "ki18n",
+          "kio",
+          "kparts",
+          "sonnet",
+          "syntax-highlighting",
+          "kcolorscheme"
+        ],
+        "selected_linux_profile": [
+          "kauth"
+        ],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "breeze-icons",
+          "karchive",
+          "kconfig",
+          "kguiaddons",
+          "ki18n",
+          "kjobwidgets",
+          "kio",
+          "kparts",
+          "sonnet",
+          "kxmlgui",
+          "kcolorscheme",
+          "syntax-highlighting",
+          "kauth"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [
+          "kio",
+          "kparts"
+        ],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "ktextwidgets": {
+      "metadata": {
+        "repo": "KDE/ktextwidgets",
+        "ref": "v6.30.0",
+        "commit": "2ac06f386eb2bdbb2b9a5da091f59b24521ba755",
+        "root_cmake_blob": "72b3a338710bf378219d8c512dfeefbd4be14ff1",
+        "kde_ci_blob": "239314cb204c84835562287d3e7c2d4b5cddb9d3"
+      },
+      "frameworks": {
+        "source_required": [
+          "kcompletion",
+          "kconfig",
+          "ki18n",
+          "kwidgetsaddons",
+          "sonnet"
+        ],
+        "selected_linux_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "kcompletion",
+          "kconfig",
+          "ki18n",
+          "kwidgetsaddons",
+          "sonnet"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "kwallet": {
+      "metadata": {
+        "repo": "KDE/kwallet",
+        "ref": "v6.30.0",
+        "commit": "2909c8b7d26686d3d4120ec8526274edb21f3634",
+        "root_cmake_blob": "68af886dc1797183fe631bcf6466e478b8db57d4",
+        "kde_ci_blob": "e7c1e57f3048338d85882bad52c4d14ddc32f01d",
+        "extra": {
+          "src/runtime/kwalletd/CMakeLists.txt": "59105299f732393a2c15804d5cba9076ef29c810",
+          "src/runtime/ksecretd/CMakeLists.txt": "f72a4304b3b5661b5d1265e13de59697754a9bbf",
+          "src/runtime/kwalletbackend/CMakeLists.txt": "76733058b8002cccb83841157e3a8d8593eea474"
+        }
+      },
+      "frameworks": {
+        "source_required": [
+          "kconfig",
+          "kwindowsystem",
+          "kcoreaddons",
+          "ki18n",
+          "kcolorscheme",
+          "kdbusaddons",
+          "knotifications",
+          "kwidgetsaddons",
+          "kcrash"
+        ],
+        "selected_linux_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "kcolorscheme",
+          "kconfig",
+          "kcoreaddons",
+          "kdbusaddons",
+          "kiconthemes",
+          "ki18n",
+          "knotifications",
+          "kwindowsystem",
+          "kwidgetsaddons",
+          "kcrash"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    },
+    "kxmlgui": {
+      "metadata": {
+        "repo": "KDE/kxmlgui",
+        "ref": "v6.30.0",
+        "commit": "226848f014f9c7181dda9f77f2abc487ff0abd8c",
+        "root_cmake_blob": "9db633199d697dee4b8730dd580c37ddb5c4a699",
+        "kde_ci_blob": "cfe8cb21e627e3afa77b801f4a6702ef9ace0161",
+        "extra": {
+          "tests/CMakeLists.txt": "7e70d2a9be547a6337d8cc789ba03ad95bf1f865"
+        }
+      },
+      "frameworks": {
+        "source_required": [
+          "kcoreaddons",
+          "kitemviews",
+          "kconfig",
+          "kconfigwidgets",
+          "kguiaddons",
+          "ki18n",
+          "kiconthemes",
+          "kwidgetsaddons"
+        ],
+        "selected_linux_profile": [
+          "kglobalaccel"
+        ],
+        "qml_required": [],
+        "test_required": [
+          "ktextwidgets"
+        ],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "kitemviews",
+          "kconfig",
+          "kconfigwidgets",
+          "ki18n",
+          "kiconthemes",
+          "ktextwidgets",
+          "kwidgetsaddons",
+          "kglobalaccel"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [
+          "kconfigwidgets",
+          "kiconthemes"
+        ],
+        "selected_profile": [],
+        "qml_required": [],
+        "test_required": [
+          "ktextwidgets"
+        ],
+        "runtime_validation": []
+      }
+    },
+    "purpose": {
+      "metadata": {
+        "repo": "KDE/purpose",
+        "ref": "v6.30.0",
+        "commit": "639e404ae3d868633d3be5ae66c007392d9dc6f1",
+        "root_cmake_blob": "903c0dff07bd84ec52eb0eccee5b445eb5e5e917",
+        "kde_ci_blob": "f95fd95074003478ee7eb1d712cea78113458ab5"
+      },
+      "frameworks": {
+        "source_required": [
+          "kcoreaddons",
+          "ki18n",
+          "kconfig",
+          "kirigami",
+          "knotifications",
+          "kio",
+          "kservice"
+        ],
+        "selected_linux_profile": [],
+        "qml_required": [
+          "prison",
+          "kitemmodels",
+          "kcmutils"
+        ],
+        "test_required": [],
+        "runtime_required": [],
+        "ci_environment_required": [
+          "kcoreaddons",
+          "kconfig",
+          "ki18n",
+          "kio",
+          "kirigami",
+          "kservice",
+          "kitemmodels",
+          "kcmutils",
+          "prison"
+        ]
+      },
+      "tier3_edges": {
+        "build_required": [
+          "kio"
+        ],
+        "selected_profile": [],
+        "qml_required": [
+          "kcmutils"
+        ],
+        "test_required": [],
+        "runtime_validation": []
+      }
+    }
+  },
+  "topology": {
+    "build_and_test_levels": [
+      [
+        "kbookmarks",
+        "kconfigwidgets",
+        "kdav",
+        "kdesu",
+        "kiconthemes",
+        "kjobwidgets",
+        "knewstuff",
+        "kpeople",
+        "krunner",
+        "ksvg",
+        "ktextwidgets",
+        "kwallet"
+      ],
+      [
+        "kio",
+        "kxmlgui"
+      ],
+      [
+        "baloo",
+        "kcmutils",
+        "knotifyconfig",
+        "kparts"
+      ],
+      [
+        "ktexteditor",
+        "purpose"
+      ]
+    ],
+    "support_preconditions": {
+      "kiconthemes": [
+        "breeze-icons"
+      ],
+      "kio_ci_profile": [
+        "kdoctools"
+      ],
+      "kio_runtime_validation": [
+        "kded"
+      ]
+    },
+    "deferred_runtime_validation": {
+      "knewstuff": [
+        "kcmutils"
+      ]
+    },
+    "acyclic": true
+  }
+}
