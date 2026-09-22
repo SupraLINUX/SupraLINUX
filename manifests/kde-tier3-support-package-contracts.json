@@ -14,7 +14,7 @@
     "required_status": "PASS",
     "selected_provider": "supralinux"
   },
-  "state": "contracts-ready",
+  "state": "materialized",
   "reference_capture": {
     "status": "PASS",
     "claim": "packaging-reference-snapshot-only",
@@ -44,7 +44,7 @@
         "ubuntu": "kf6-breeze-icons",
         "debian": "kf6-breeze-icons"
       },
-      "contract_state": "contract-ready",
+      "contract_state": "materialized",
       "contract": {
         "source_package": "kf6-breeze-icons",
         "package_version_candidate": "4:6.30.0-0supralinux1",
@@ -103,6 +103,13 @@
           "extra-cmake-modules"
         ],
         "symbols_reference_sha256": "2d21d0016bdce1d61b93468daee11d5c12d3903635e4e61a3616f7067e9e8225"
+      },
+      "materialization_evidence": {
+        "artifact_id": 10680459412,
+        "artifact_sha256": "80955df1f6e90b6ad519b2f91cadbf1e4b56278e69a9827cdfa0b498a960fdb1",
+        "dsc_sha256": "656cb25eeca440541c96dac702b77ea8007683ea8f4b40538fc8240a73add9fa",
+        "debian_tar_sha256": "373b83d55799bf8202986b761b0c91fd5cca2c981017971bb021db7b9a1d5879",
+        "adapted_control_sha256": "47c72187131e94569a80d0aa0abd41cbab247ccd99eb5e1a0e22be0b7237edb6"
       }
     },
     "kdoctools": {
@@ -113,7 +120,7 @@
         "ubuntu": "kf6-kdoctools",
         "debian": "kf6-kdoctools"
       },
-      "contract_state": "contract-ready",
+      "contract_state": "materialized",
       "contract": {
         "source_package": "kf6-kdoctools",
         "package_version_candidate": "6.30.0-0supralinux1",
@@ -154,6 +161,13 @@
           "qt6-tools-dev"
         ],
         "symbols_reference_sha256": "25f447ce3dddef13a7aefdf5b3689c1f95943f2bdb362361417f771079f181a6"
+      },
+      "materialization_evidence": {
+        "artifact_id": 10680938435,
+        "artifact_sha256": "cf5c18889e9de6582ca05b4e8290686948942493aeaf54a318a2b4f4925cf5ac",
+        "dsc_sha256": "677d1d29efc3b247750861bf8f22c86f20df03cd288403b4db92f7d5b8b7f4b5",
+        "debian_tar_sha256": "49880de46bf0dda23cecd1abd34393743f40efb35666718632528046298a8e94",
+        "adapted_control_sha256": "cf3a9a29051d1e050f20ac68b49b5f223780cc145dcbb079008dffd5df3e65ed"
       }
     },
     "kded": {
@@ -164,7 +178,7 @@
         "ubuntu": "kf6-kded",
         "debian": "kf6-kded"
       },
-      "contract_state": "contract-ready",
+      "contract_state": "materialized",
       "contract": {
         "source_package": "kf6-kded",
         "package_version_candidate": "6.30.0-0supralinux1",
@@ -199,15 +213,24 @@
         "external_requirements": [
           "qt6-base-dev"
         ]
+      },
+      "materialization_evidence": {
+        "artifact_id": 10680629132,
+        "artifact_sha256": "680ec2d408e1dd021b091c7adfe1d63a3077144bf54516da3164191d427efa99",
+        "dsc_sha256": "fe48627801159b62904c354794e7a980ecf8175a20c3c282d8a378f25083e4de",
+        "debian_tar_sha256": "5f971aa53129d6c1a70347b19876731addeca02fa3d21060af9a396aedd7be9d",
+        "adapted_control_sha256": "70fd370f87bb05e0ee69a63b48d6cdc18d4234fee6baf597e71987ddfb6857b5"
       }
     }
   },
   "materialization": {
-    "status": "pending-ci",
+    "status": "PASS",
     "method": "kde-authority-source-plus-pinned-debian-6.30-tree",
     "package_state_effect": "none",
     "package_attempted": false,
-    "manifest": "manifests/kde-tier3-support-materialization.json"
+    "manifest": "manifests/kde-tier3-support-materialization.json",
+    "workflow_run": 35698463205,
+    "commit": "080cdd5ddf75d46b914efb0baca85981deee0765"
   },
   "stable_promotion_requires_explicit_user_approval": true,
   "technical_references": {
