@@ -1,0 +1,138 @@
+name: KDE Frameworks Tier 2 KMime legacy compatibility provider
+
+on:
+  pull_request:
+    paths:
+      - manifests/kde-tier2-kmime-legacy-provider.json
+      - manifests/kde-tier2-kmime-compatibility-audit.json
+      - manifests/kde-frameworks-tier2.json
+      - scripts/materialize-kde-tier2-kmime-legacy-provider.sh
+      - scripts/run-kde-tier2-kmime-legacy-provider-build.sh
+      - scripts/validate_kde_tier2_kmime_legacy_provider.py
+      - docs/kde-tier2-kmime-legacy-provider.md
+      - .github/workflows/kde-tier2-kmime-legacy-provider.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: kde-tier2-kmime-legacy-provider-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    name: Materialize KMime legacy provider source
+    runs-on: ubuntu-26.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Materialize pinned legacy source
+        run: scripts/materialize-kde-tier2-kmime-legacy-provider.sh
+
+      - name: Upload materialized source evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kmime-legacy-provider-source-${{ github.run_id }}
+          path: evidence/kde-tier2-kmime-legacy-provider-materialization/
+          if-no-files-found: error
+          retention-days: 90
+
+  rootfs:
+    name: Build clean Resolute rootfs
+    runs-on: ubuntu-26.04
+    timeout-minutes: 25
+    steps:
+      - name: Create buildd rootfs
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends mmdebstrap uidmap
+          if ! grep -q "^${USER}:" /etc/subuid; then sudo usermod --add-subuids 100000-165535 "${USER}"; fi
+          if ! grep -q "^${USER}:" /etc/subgid; then sudo usermod --add-subgids 100000-165535 "${USER}"; fi
+          unshare --user --map-auto true
+          mkdir -p .work/rootfs
+          mmdebstrap --mode=unshare --variant=buildd --architectures=amd64 --components=main,universe \
+            --skip=output/mknod --format=tar resolute .work/rootfs/resolute-amd64.tar \
+            http://azure.archive.ubuntu.com/ubuntu
+          (cd .work/rootfs && sha256sum resolute-amd64.tar > rootfs.sha256)
+          { cat /etc/os-release; mmdebstrap --version; } > .work/rootfs/provenance.txt
+
+      - name: Upload clean rootfs
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kmime-legacy-provider-rootfs-${{ github.run_id }}
+          path: .work/rootfs/
+          compression-level: 0
+          retention-days: 7
+
+  build:
+    name: Build and validate KMime legacy provider
+    needs: [materialize, rootfs]
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Download materialized source
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: kmime-legacy-provider-source-${{ github.run_id }}
+          path: .work/materialization
+
+      - name: Download clean rootfs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: kmime-legacy-provider-rootfs-${{ github.run_id }}
+          path: .work/rootfs
+
+      - name: Download retained Extra CMake Modules
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10298635300'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34694951158'
+          path: .work/ecm
+
+      - name: Download retained KCodecs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10305050385'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34716761551'
+          path: .work/kcodecs
+
+      - name: Download validated KF6Mime build
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10677716050'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35687831684'
+          path: .work/kf6mime
+
+      - name: Build and validate compatibility provider
+        env:
+          MATERIALIZATION_DIR: ${{ github.workspace }}/.work/materialization
+          ROOTFS_ARTIFACT_DIR: ${{ github.workspace }}/.work/rootfs
+          ECM_ARTIFACT_DIR: ${{ github.workspace }}/.work/ecm
+          KCODECS_ARTIFACT_DIR: ${{ github.workspace }}/.work/kcodecs
+          FRAMEWORK_ARTIFACT_DIR: ${{ github.workspace }}/.work/kf6mime
+        run: scripts/run-kde-tier2-kmime-legacy-provider-build.sh
+
+      - name: Upload build evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kmime-legacy-provider-build-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-tier2-kmime-legacy-provider-build/
+          if-no-files-found: error
+          retention-days: 90
