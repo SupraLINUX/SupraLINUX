@@ -189,6 +189,9 @@ jobs:
       - name: Validate KDE Tier 2 KMime compatibility-provider audit
         run: python3 scripts/validate_kde_tier2_kmime_compatibility_audit.py
 
+      - name: Validate KDE Tier 2 KMime legacy compatibility provider
+        run: python3 scripts/validate_kde_tier2_kmime_legacy_provider.py
+
       - name: Validate KDE Tier 2 materialization definition
         run: python3 scripts/validate_kde_tier2_materialization.py
 
