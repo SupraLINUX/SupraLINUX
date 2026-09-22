@@ -493,3 +493,14 @@ Ubuntu compatibility is provided separately by the validated on-demand legacy ru
 The canonical Framework DAG now contains ECM + all **29 Tier 1 PASS** nodes + all **15 Tier 2 PASS** nodes. There are no pending, current FAIL or BLOCKED Framework nodes through Tier 2.
 
 This DAG promotion changes no APT stable state. PASS remains eligible for `testing`; `stable` requires explicit user approval.
+
+
+## Tier 3 discovery opened — 2026-09-22
+
+With Tier 2 closed at **15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**, the next Frameworks layer is now open for discovery.
+
+KDE's current API inventory classifies exactly **20** Frameworks as Tier 3. Their KDE Frameworks 6.30.0 release tarballs and official SHA-256 values are recorded in `manifests/kde-frameworks-tier3.json`.
+
+Canonical Tier 3 starts at **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. Every node is `dependency-discovery-required`; none is yet in the canonical PASS DAG.
+
+Because Tier 3 frameworks may depend on other Tier 3 frameworks, the next gate is global upstream dependency discovery followed by a topological partition. No provider audit, package contract or build is authorized until those edges are captured and validated.
