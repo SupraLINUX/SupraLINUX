@@ -23,7 +23,12 @@ req(c.get("state") in {"pending-ci","PARTIAL","PASS"},"support build level0 life
 req(c.get("selected_nodes")==["breeze-icons","kdoctools"],"support build level0 selected nodes")
 req(c.get("package_state_effect")=="real-package-build-on-PASS","support build package-state semantics")
 blocked=c.get("blocked_nodes",{}).get("kded",{})
-req(blocked.get("state")=="BLOCKED" and blocked.get("blocked_by")=="kdoctools","KDED must be BLOCKED by KDocTools")
+if c.get("state")=="PASS":
+    req(blocked.get("state")=="READY" and blocked.get("previously_blocked_by")=="kdoctools","KDED must be READY after KDocTools PASS")
+    req(blocked.get("unblocked_by",{}).get("artifact_id")==10682066198,"KDED unblock evidence")
+    req(blocked.get("next_gate")=="support-build-level1","KDED next support gate")
+else:
+    req(blocked.get("state")=="BLOCKED" and blocked.get("blocked_by")=="kdoctools","KDED must be BLOCKED by KDocTools before level0 PASS")
 req(c.get("materialization_manifest")=="manifests/kde-tier3-support-materialization.json","materialization manifest linkage")
 req(mat.get("state")=="PASS" and all(n.get("state")=="materialized" for n in mat.get("nodes",{}).values()),"level0 requires materialization PASS")
 
