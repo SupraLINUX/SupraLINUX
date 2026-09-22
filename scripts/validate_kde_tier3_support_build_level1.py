@@ -86,7 +86,7 @@ for i,attempt in enumerate(attempts,1):
 if c.get("state")=="PASS":
     req(len(attempts)>=1 and attempts[-1].get("result")=="PASS","KDED terminal PASS attempt")
     req(sum(1 for x in attempts if x.get("result")=="PASS")==1,"KDED exactly one PASS attempt")
-req(tier3.get("support_components",{}).get("next_gate") in {"support-build-level1","tier3-package-contracts","tier3-build"},"canonical level1 gate")
+req(tier3.get("support_components",{}).get("next_gate") in {"support-build-level1","tier3-provider-audit","tier3-package-contracts","tier3-build"},"canonical level1 gate")
 req(c.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 
 for path in (
