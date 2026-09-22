@@ -20,6 +20,23 @@
         "sbuild_result": "successful",
         "cause": "False-negative payload validation: installed manpage is kded6.8.gz, not an uncompressed kded6.8 file.",
         "remediation": "Fix validator only; keep identical package revision because source and Debian payload are unchanged."
+      },
+      {
+        "attempt": 2,
+        "result": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "workflow_run": 35719952518,
+        "job_id": 106720898661,
+        "commit": "747c49cd49eefd8ac1c67e3d5c61d0fa7a2e2eb5",
+        "artifact_id": 10691217831,
+        "artifact_sha256": "5bd6bd478ec4c0aa58eb6a8042cb9b62ca16818f2bff166d304e9fc4d5c92c72",
+        "rootfs_artifact_id": 10690424886,
+        "rootfs_artifact_sha256": "f18aef1743c0250a0e9332f03eea28077d58847cfea7663e36deadfd0c03ebfc",
+        "stage": "executable-smoke",
+        "package_attempted": true,
+        "sbuild_result": "successful",
+        "cause": "Headless Qt smoke used the default xcb platform and aborted without DISPLAY.",
+        "remediation": "Set QT_QPA_PLATFORM=offscreen for kded6 --version; keep the same package revision."
       }
     ]
   }
