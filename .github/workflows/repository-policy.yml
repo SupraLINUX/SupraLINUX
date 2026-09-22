@@ -304,6 +304,12 @@ jobs:
       - name: Validate KDE Tier 3 materialization definition
         run: python3 scripts/validate_kde_tier3_materialization.py
 
+      - name: Validate generated KDE Tier 3 build campaign plan
+        run: python3 scripts/compile_kde_tier3_build_campaign.py --check
+
+      - name: Validate KDE Tier 3 build campaign plan
+        run: python3 scripts/validate_kde_tier3_build_campaign.py
+
       - name: Validate KDE Attica 6.30 packaging preparation
         run: python3 scripts/validate_kde_attica_package.py
 

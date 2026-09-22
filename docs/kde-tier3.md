@@ -267,10 +267,10 @@ Canonical readiness is now `package-contract-review-pass`. Tier 3 remains **0 PA
 The contract-review evidence has been converted into explicit SupraLINUX decisions. Canonical readiness is now `package-contract-ready` and package contract state is `not-materialized`.
 
 Materialization is the active gate. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**; no package build is authorized until source-package materialization completes.
-## Current canonical state — Tier 3 materialization PASS
+## Current canonical state — Tier 3 build-campaign planning
 
-Run `35746667704` completed the source-materialization matrix at **20/20 PASS** from commit `39fcab118709bcdb7e97524333d3f74d1b4edec4`; Repository Policy run `35746667671` also passed. The promoted evidence records every materialization job/artifact and its GitHub SHA-256.
+Tier 3 source materialization remains closed at **20/20 PASS** from run `35746667704`; package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** because no Tier 3 binary build has been attempted.
 
-This does **not** make any Framework package PASS. Canonical package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**, every package remains `downstream_eligible=false`, and no binary build has yet been attempted.
+The four-level build/test topology is now encoded in the generated immutable plan `manifests/kde-tier3-build-campaign.json` and linked from the canonical Tier 3 manifest. Its levels are **12 / 2 / 4 / 2**, all retained Tier 1/Tier 2/ECM/support predecessors are pinned to real PASS artifacts, and the KNewStuff → KCMUtils runtime dependency remains a deferred validation gate rather than a false build edge.
 
-All 20 package contracts are now `materialized`. The canonical phase is `build-campaign-planning`; the next gate is `tier3-build-campaign-planning`. Binary builds remain unauthorized until the four-level KDE-upstream build/test DAG is compiled into an executable campaign with explicit predecessor artifact rules and PASS/FAIL/BLOCKED semantics. Stable publication still requires explicit user approval.
+The plan itself has `execution_authorized=false`. Repository Policy must prove that the committed plan exactly matches the canonical KDE dependency graph and promoted artifacts before any Level 0 execution manifest is introduced. Binary builds therefore remain unauthorized at this state. Stable repository promotion continues to require explicit user approval.
