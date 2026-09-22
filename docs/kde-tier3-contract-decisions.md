@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package-contract decisions
 
-Status: **PASS baseline — Level 0 remediation materialization pending**
+Status: **PASS — Level 0 remediation materialization promoted**
 
 Reviewed: **2026-09-22**
 
@@ -60,3 +60,6 @@ Run `35755924197` generated real build evidence and therefore supersedes several
 - KRunner: restore the Debian-QSKIP-suppressed upstream test and mark only the two observed libstdc++ template implementation symbols as optional template instantiations.
 
 These decisions do not weaken KDE tests or invent new KDE dependency edges. They remove distribution-reference assumptions that conflicted with the selected KDE 6.30 semantics.
+
+
+The five remediation contracts were materialized successfully in run `35759443440`. Their contract revisions remain `6.30.0-0supralinux2`; this closes the source-materialization part of the remediation but does not itself authorize or promote any binary package.

@@ -53,10 +53,7 @@ v={
   "source_policy":m.get("source_policy"),
   "selected_nodes":nodes,
   "common_adaptations":m.get("common_adaptations",{}),
-  "remediation_queue":m.get("remediation_queue",[]),
-  "remediation":m.get("remediation",{}),
   "contract_decision":c.get("contract_decision",{}),
-  "contract_remediation":c.get("remediation",{}),
   "provider_adaptations":c.get("provider_adaptations",{}),
   "contract_nodes":contract_nodes,
   "canonical_sources":canonical,
@@ -84,7 +81,7 @@ fi
 mapfile -t changed < <(git -C "${ROOT}" diff --name-only "${BEFORE}" "${AFTER}" --)
 for path in "${changed[@]}"; do
   case "${path}" in
-    scripts/materialize_kde_tier3_package.py|scripts/kde-tier3-materialization-needed.sh|.github/workflows/kde-tier3-materialization.yml)
+    scripts/materialize_kde_tier3_package.py|.github/workflows/kde-tier3-materialization.yml)
       echo "${path}: materialization execution input changed."
       exit 0
       ;;

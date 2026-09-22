@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **contracts retained — selective Level 0 remediation materialization pending**
+Status: **contracts retained — selective Level 0 remediation materialization PASS**
 
 Reviewed: **2026-09-22**
 
@@ -98,3 +98,6 @@ All 20 nodes originally entered materialization with candidate `6.30.0-0supralin
 
 The initial source-only materialization passed 20/20 in run `35746667704`. Level 0 was subsequently activated and run `35755924197` exposed five packaging/provider defects. Those five contracts now carry explicit remediation overrides and are selectively rematerialized before the complete Level 0 campaign is repeated. No attempt-1 result has been canonically promoted.
 
+
+
+Selective materialization run `35759443440` proved the five revised contracts at `6.30.0-0supralinux2`. The generated build plan now consumes those exact promoted source-artifact pins; Level 0 activation remains a separate step.

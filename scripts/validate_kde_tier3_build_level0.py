@@ -27,7 +27,7 @@ req(m.get("authority")=="kde-upstream","Tier3 level0 authority")
 req(m.get("provider_platform")=="ubuntu-resolute","Tier3 level0 provider platform")
 req(m.get("role")=="tier3-binary-build-level0","Tier3 level0 role")
 req(m.get("frameworks_series")=="6.30.0","Tier3 level0 series")
-req(m.get("state") in {"active-pending-ci","remediation-pending-materialization","PASS","PARTIAL"},"Tier3 level0 lifecycle")
+req(m.get("state") in {"active-pending-ci","remediation-pending-materialization","remediation-materialized-pending-activation","PASS","PARTIAL"},"Tier3 level0 lifecycle")
 req(m.get("package_state_effect")=="real-package-build-on-PASS","Tier3 level0 package-state effect")
 req(m.get("build_campaign_manifest")=="manifests/kde-tier3-build-campaign.json","Tier3 level0 campaign linkage")
 req(m.get("materialization_manifest")=="manifests/kde-tier3-materialization.json","Tier3 level0 materialization linkage")
@@ -78,7 +78,9 @@ for node_id in expected:
         "PASS","FAIL","runtime-validation-required"
     },f"{node_id}: level0 node lifecycle")
     req(n.get("source_package")==gp.get("source_package"),f"{node_id}: source package")
+    req(n.get("package_version")==gp.get("package_version"),f"{node_id}: package version")
     req(n.get("expected_binary_packages")==gp.get("expected_binary_packages"),f"{node_id}: binary package set")
+    req(n.get("materialization")==gp.get("materialization"),f"{node_id}: materialization pin")
     req(gp.get("blocking_predecessors")==[],f"{node_id}: level0 has no Tier3 blockers")
     req(n.get("direct_build_predecessors")==gp.get("external_build_inputs"),f"{node_id}: direct build predecessors")
     req(n.get("external_runtime_inputs")==gp.get("external_runtime_inputs"),f"{node_id}: external runtime inputs")
@@ -161,6 +163,23 @@ elif m.get("state")=="remediation-pending-materialization":
     req(a["nodes"]["knewstuff"][-1].get("downstream_eligible") is False,"KNewStuff attempt1 remains non-downstream-eligible")
     for n in remediation_nodes:
         req(isinstance(a["nodes"][n][-1].get("cause"),str) and isinstance(a["nodes"][n][-1].get("remediation"),str),f"{n}: root cause/remediation recorded")
+
+elif m.get("state")=="remediation-materialized-pending-activation":
+    req(m.get("execution_authorized") is False,"Level0 remains paused until remediation promotion validation")
+    req(mat.get("state")=="PASS","remediation materialization must be promoted PASS")
+    rem=m.get("remediation",{})
+    req(rem.get("status")=="materialization-PASS-pending-activation","Level0 remediation materialization promoted")
+    req(rem.get("materialization_workflow_run")==35759443440,"Level0 remediation materialization workflow")
+    req(rem.get("materialization_commit")=="0c23204d90b8a40ebf078ba41667c2292673ea81","Level0 remediation materialization commit")
+    req(rem.get("full_level0_rerun_required") is True,"Level0 full rerun still required")
+    req(all(m["nodes"][n].get("state")=="remediation-pending-build" for n in remediation_nodes),"remediated nodes ready for rebuild")
+    req(all(m["nodes"][n].get("state")=="prepared-pending-revalidation" for n in expected if n not in remediation_nodes),"attempt1 successes await revalidation")
+    for n in remediation_nodes:
+        node=m["nodes"][n]
+        req(node.get("package_version")=="6.30.0-0supralinux2",f"{n}: promoted remediation revision")
+        req(node.get("materialization",{}).get("workflow_run")==35759443440,f"{n}: promoted remediation materialization workflow")
+        req(node.get("materialization")==p["nodes"][n].get("materialization"),f"{n}: campaign/materialization pin refreshed")
+    req("kcoreaddons" in m["nodes"]["kiconthemes"].get("retained_input_ids",[]),"KIconThemes provider closure retains KCoreAddons")
 
 policy=t.get("discovery_policy",{})
 req(policy.get("phase")=="build-level0","canonical Tier3 Level0 phase")

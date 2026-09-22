@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 build campaign
 
-Status: **validated topology; Level 0 temporarily paused for source remediation** as of 2026-09-22.
+Status: **validated topology; remediation artifacts promoted, Level 0 reactivation pending validation** as of 2026-09-22.
 
 This document defines how the 20 materialized Tier 3 Frameworks will be built without changing the project-wide PASS / FAIL / BLOCKED semantics.
 
@@ -64,3 +64,6 @@ Both planning checks passed in Repository Policy before Level 0 activation. The 
 Level 0 attempt 1 exposed five source-package adaptations. While their selective rematerialization is pending, the generated campaign plan intentionally continues to validate against the **last promoted materialization PASS**. This preserves the validated 12 / 2 / 4 / 2 topology and previous artifact evidence without pretending that unbuilt remediation artifacts already exist.
 
 After the five `6.30.0-0supralinux2` materializations pass, the generated plan is refreshed with their real artifact IDs/digests before Level 0 is reauthorized. The per-level execution manifest remains the only build authority.
+
+
+The five remediated Level 0 nodes now point to the real source artifacts from materialization run `35759443440` at revision `6.30.0-0supralinux2`. The 12 / 2 / 4 / 2 topology is unchanged. Level 0 is still not authorized in this promotion step; reactivation is a separate gate after Repository Policy confirms the refreshed pins.

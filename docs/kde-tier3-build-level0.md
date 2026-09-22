@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 0
 
-Status: **remediation / selective rematerialization pending** as of 2026-09-22.
+Status: **remediation materialization PASS / Level 0 reactivation pending validation** as of 2026-09-22.
 
 Level 0 is the first real binary-build campaign for the 20 canonical Tier 3 Frameworks. It contains **12 independent nodes**:
 
@@ -92,3 +92,12 @@ Because these are packaging/source-package changes, the affected five revisions 
 Canonical Tier 3 package state therefore remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** while remediation is in progress. Historical attempt FAILs remain evidence; they are not converted into BLOCKED or erased.
 
 No package is promoted to `stable`; stable promotion always requires explicit user approval.
+
+
+## Remediation materialization PASS
+
+Selective materialization run `35759443440` completed **5/5 SUCCESS** from commit `0c23204d90b8a40ebf078ba41667c2292673ea81`. It produced new `6.30.0-0supralinux2` source artifacts for KIconThemes, KDAV, KWallet, KRunner and KJobWidgets. The other 15 Tier 3 source materializations remain unchanged.
+
+The five promoted materialization pins are now the inputs of the generated build campaign and Level 0 manifest. This promotion has `package_attempted=false` and does not change canonical package PASS state.
+
+Level 0 remains deliberately paused while this promotion commit is validated by Repository Policy. After that validation succeeds, a separate activation commit will set `execution_authorized=true` and rerun **all 12 Level 0 nodes**, not only the five remediated packages.

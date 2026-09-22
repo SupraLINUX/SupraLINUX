@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **PASS baseline retained; selective remediation materialization pending CI** as of 2026-09-22.
+Status: **PASS — 20 materialized nodes, including 5 promoted remediation artifacts** as of 2026-09-22.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -94,3 +94,12 @@ The new deterministic adaptations are contract-driven:
 The global build-campaign plan continues to validate against the last promoted materialization PASS while this selective materialization is pending. After all five new artifacts pass, their exact workflow/job/artifact IDs and SHA-256 digests will replace the old pins, the generated plan will be refreshed, and only then will Level 0 execution be reauthorized.
 
 Materialization still has `package_attempted=false` and cannot itself produce package PASS.
+
+
+## Remediation promotion evidence
+
+Run `35759443440` completed the selective remediation matrix with **5/5 SUCCESS**. The promoted source-artifact digests are recorded in `manifests/kde-tier3-materialization.json`, `manifests/kde-tier3-build-campaign.json` and the canonical Tier 3 inventory.
+
+The promoted nodes are KIconThemes, KDAV, KWallet, KRunner and KJobWidgets at `6.30.0-0supralinux2`. Their previous `-0supralinux1` materialization evidence remains retained as history.
+
+The materialization scope selector now hashes only inputs that can change the produced source package. Lifecycle/evidence promotion and selector-only changes do not trigger a new materialization; semantic contract changes, the materializer itself, and the workflow still do.
