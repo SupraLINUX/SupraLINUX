@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **contract review PASS — explicit decisions required**
+Status: **contracts ready — materialization authorized**
 
 Reviewed: **2026-09-22**
 
@@ -87,3 +87,10 @@ Differences are evidence, not automatic FAILs and not automatic contract decisio
 Run `35730670337` captured and hashed the package-contract deltas for all 20 nodes. Canonical readiness is now `package-contract-review-pass`.
 
 The review is not itself a contract choice: every node remains package-state `pending`, and materialization/build are unauthorized until SupraLINUX classifies the recorded deltas against KDE-upstream requirements and the Ubuntu compatibility objective.
+
+
+## Package-contract decisions PASS
+
+The reviewed deltas are now explicitly classified in `docs/kde-tier3-contract-decisions.md` and in this manifest's `contract_decision`/per-node contract records.
+
+All 20 nodes are `package-contract-ready` with package version candidate `6.30.0-0supralinux1`. Materialization is authorized; package builds remain unauthorized.
