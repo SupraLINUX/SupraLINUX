@@ -34,6 +34,19 @@ def dep_atoms(raw):
 def load_json(path):
     return json.loads(Path(path).read_text())
 
+def resolve_artifact_root(base):
+    direct=base/"index.json"
+    if direct.is_file() and (base/"result.json").is_file():
+        return base
+    candidates=sorted({
+        p.parent
+        for p in base.rglob("index.json")
+        if (p.parent/"result.json").is_file() and (p.parent/"trees").is_dir()
+    })
+    if len(candidates)!=1:
+        raise SystemExit(f"expected exactly one packaging-tree artifact root under {base}, got {len(candidates)}")
+    return candidates[0]
+
 def source_para(paras):
     xs=[p for p in paras if "Source" in p]
     if len(xs)!=1:
@@ -50,8 +63,10 @@ def subset_paths(paths,suffixes):
     return sorted(p for p in paths if p.endswith(suffixes))
 
 def main():
+    EVIDENCE.mkdir(parents=True,exist_ok=True)
     if not ART or not ART.is_dir():
         raise SystemExit("PACKAGING_TREE_ARTIFACT_DIR missing or invalid")
+    art=resolve_artifact_root(ART)
     m=load_json(MANIFEST)
     deps=load_json(DEPS)
     capture=m.get("packaging_tree_capture",{})
@@ -62,8 +77,8 @@ def main():
     if set(promoted)!=set(selected) or len(selected)!=20:
         raise SystemExit("promoted packaging-tree node set mismatch")
 
-    index_path=ART/"index.json"
-    result_path=ART/"result.json"
+    index_path=art/"index.json"
+    result_path=art/"result.json"
     if not index_path.is_file() or not result_path.is_file():
         raise SystemExit("packaging-tree artifact missing index/result")
     expected_index=capture.get("evidence",{}).get("index_sha256")
@@ -77,7 +92,6 @@ def main():
     if set(index.get("nodes",{}))!=set(selected):
         raise SystemExit("artifact index node set mismatch")
 
-    EVIDENCE.mkdir(parents=True,exist_ok=True)
     review={
       "schema":1,
       "authority":False,
@@ -111,8 +125,8 @@ def main():
             for key in PROMOTED_FIELDS:
                 if p.get(key)!=a.get(key):
                     raise SystemExit(f"{node}/{side}: promoted {key} drift")
-        ubase=ART/"trees"/"ubuntu"/node
-        dbase=ART/"trees"/"debian"/node
+        ubase=art/"trees"/"ubuntu"/node
+        dbase=art/"trees"/"debian"/node
         uctrl=load_json(ubase/"control-summary.json")
         dctrl=load_json(dbase/"control-summary.json")
         upkgs=binary_map(uctrl); dpkgs=binary_map(dctrl)
@@ -147,8 +161,8 @@ def main():
         added=sorted(set(dm)-set(um)); removed=sorted(set(um)-set(dm)); changed=sorted(p for p in set(um)&set(dm) if um[p]!=dm[p])
         packaging_delta={"added_in_debian":added,"removed_in_debian":removed,"changed":changed}
 
-        urules=ART/"trees"/"ubuntu"/node/"debian"/"rules"
-        drules=ART/"trees"/"debian"/node/"debian"/"rules"
+        urules=art/"trees"/"ubuntu"/node/"debian"/"rules"
+        drules=art/"trees"/"debian"/node/"debian"/"rules"
         rules_delta=(sha(urules)!=sha(drules))
         summary["rules_delta"]+=int(rules_delta)
 
@@ -214,4 +228,20 @@ def main():
     print("Differences require explicit contract decisions; no package state changed.")
 
 if __name__=="__main__":
-    main()
+    try:
+        main()
+    except BaseException as exc:
+        EVIDENCE.mkdir(parents=True,exist_ok=True)
+        result=EVIDENCE/"result.json"
+        if not result.exists():
+            result.write_text(json.dumps({
+              "result":"INFRA",
+              "stage":"contract-review-capture",
+              "exit_code":1,
+              "claim":"package-contract-delta-review-evidence",
+              "authoritative":False,
+              "decision_authority":"supralinux",
+              "package_state_effect":"none",
+              "error":str(exc),
+            },indent=2)+"\n")
+        raise
