@@ -54,7 +54,7 @@ else:
 
 support=tier3.get("support_components",{})
 req(support.get("package_contract_manifest")=="manifests/kde-tier3-support-package-contracts.json","canonical support contract manifest")
-req(support.get("next_gate") in {"support-contract-tree-capture","support-contract-review","support-materialization","support-build-level0","support-build-level1","tier3-provider-audit","tier3-package-contracts","tier3-package-contract-tree-capture","tier3-package-contract-review","tier3-materialization"},"canonical packaging-tree next gate")
+req(support.get("next_gate") in {"support-contract-tree-capture","support-contract-review","support-materialization","support-build-level0","support-build-level1","tier3-provider-audit","tier3-package-contracts","tier3-package-contract-tree-capture","tier3-package-contract-review","tier3-package-contract-decision","tier3-materialization"},"canonical packaging-tree next gate")
 
 for path in (
  "scripts/run-kde-tier3-support-packaging-tree-capture.sh",
