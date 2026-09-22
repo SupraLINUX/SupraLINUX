@@ -25,7 +25,7 @@ req(0 < len(selected) <= 5 and len(selected)==len(set(selected)),"selected contr
 canonical={n["id"]:n for n in tier2["nodes"]}
 dep_nodes=deps.get("nodes",{})
 req(set(selected) <= set(canonical),"selected nodes must exist canonically")
-req(set(selected) <= set(plan.get("package_contract_ready",[])) | set(plan.get("build_queue",[])) | set(plan.get("retained_pass",[])),"selected nodes must be contract/build/PASS ready")
+req(set(selected) <= set(plan.get("package_contract_ready",[])) | set(plan.get("build_queue",[])) | set(plan.get("compatibility_provider_required",[])) | set(plan.get("retained_pass",[])),"selected nodes must remain in a valid package lifecycle state")
 
 provider=contracts.get("provider_adaptations",{}).get("ubuntu-resolute",{})
 adapt=provider.get("debhelper_compat",{})
@@ -40,7 +40,7 @@ for node_id in selected:
     if n.get("state")=="PASS":
         req(n.get("planning",{}).get("readiness")=="retained-pass",f"{node_id}: retained PASS readiness")
     else:
-        req(n.get("planning",{}).get("readiness") in {"package-contract-ready","build-ready"},f"{node_id}: valid package readiness")
+        req(n.get("planning",{}).get("readiness") in {"package-contract-ready","build-ready","compatibility-provider-required"},f"{node_id}: valid package readiness")
     req(c.get("upstream_version")=="6.30.0",f"{node_id}: upstream version")
     req(c.get("source_sha256")==n.get("source_sha256"),f"{node_id}: source authority SHA")
     req(c.get("source_package")==n.get("package_identity",{}).get("source_package"),f"{node_id}: source package identity")
