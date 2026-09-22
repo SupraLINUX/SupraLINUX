@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "provider": "kmime-legacy-runtime",
+  "state": "materialization-pending",
+  "role": "ubuntu-application-compatibility-only",
+  "package_state_effect": "none",
+  "authority": {
+    "kde_frameworks": "kf6-kmime-6.30.0",
+    "compatibility_target": "ubuntu-resolute",
+    "legacy_source": "kde-pim-kmime-25.12.3-via-ubuntu-source-reference"
+  },
+  "source_reference": {
+    "source_package": "kmime",
+    "ubuntu_version": "25.12.3-0ubuntu1",
+    "upstream_version": "25.12.3",
+    "dsc_sha256": "b34f080ee832e9c22112c8e93110d6fa966d0b22d5dc62f9f84458148e970395",
+    "debian_tar_sha256": "cb97254e6d5b081d31e7aaba9e6733cbdd9866e2670edaf7a41f92e4a638a6ef",
+    "orig_tar_sha256": "fce3c603cac3fec9a3f0e101c49785c32ace07b8f60b52739b638d329f43826d"
+  },
+  "supralinux_package": {
+    "source_package": "kmime",
+    "package_version": "25.12.3-0ubuntu1+supralinux1",
+    "build_arch_all": false,
+    "expected_binary_packages": [
+      "libkmime-dev",
+      "libkpim6mime6"
+    ],
+    "excluded_binary_packages": [
+      "libkmime-data"
+    ],
+    "runtime_package": "libkpim6mime6",
+    "runtime_soname": "libKPim6Mime.so.6",
+    "versioned_provides": "libkpim6mime6-25.12",
+    "multi_arch": "same",
+    "development_package": "libkmime-dev",
+    "development_cmake_package": "KPim6Mime",
+    "development_cmake_target": "KPim6::Mime",
+    "default_install": false
+  },
+  "adaptation": {
+    "classification": "data-provider-alternative",
+    "old_dependency": "libkmime-data (= ${source:Version})",
+    "new_dependency": "libkmime-data (= 25.12.3-0ubuntu1) | libkf6mime-data (>= 6.30.0-0supralinux1)",
+    "framework_data_package": "libkf6mime-data",
+    "framework_package_changes": [],
+    "runtime_abi_changes": [],
+    "duplicated_data_payload": false,
+    "kde_feature_effect": "none"
+  },
+  "build_inputs": {
+    "extra_cmake_modules": {
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "version": "6.30.0-0supralinux3"
+    },
+    "kcodecs": {
+      "workflow_run": 34716761551,
+      "artifact_id": 10305050385,
+      "version": "6.30.0-0supralinux4"
+    },
+    "kf6mime": {
+      "workflow_run": 35687831684,
+      "artifact_id": 10677716050,
+      "artifact_sha256": "ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36",
+      "version": "6.30.0-0supralinux1"
+    }
+  },
+  "pass_requires": [
+    "exact-source-hash-verification",
+    "deterministic-source-materialization",
+    "clean-sbuild-arch-any",
+    "no-libkmime-data-output",
+    "runtime-soname-libKPim6Mime.so.6",
+    "versioned-provides-libkpim6mime6-25.12",
+    "data-provider-alternative-present",
+    "lintian-errors-pass",
+    "coinstall-with-kf6mime",
+    "apt-check",
+    "kf6mime-consumer-smoke",
+    "kpim6mime-consumer-smoke"
+  ],
+  "stable_promotion_requires_explicit_user_approval": true
+}
