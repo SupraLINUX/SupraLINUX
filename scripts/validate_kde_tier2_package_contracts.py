@@ -46,7 +46,8 @@ for node_id in selected:
     req(c.get("source_package")==n.get("package_identity",{}).get("source_package"),f"{node_id}: source package identity")
     req(c.get("package_version_candidate")==n.get("package_identity",{}).get("package_version_candidate"),f"{node_id}: package version identity")
     req(c.get("package_version_candidate","").startswith("6.30.0-0supralinux"),f"{node_id}: SupraLINUX package revision")
-    req(bool(c.get("compatibility_binary_packages")),f"{node_id}: compatibility binary package set")
+    target_packages=c.get("target_binary_packages",c.get("compatibility_binary_packages",[]))
+    req(bool(target_packages),f"{node_id}: target binary package set")
     req(c.get("cmake_target","").startswith("KF6::"),f"{node_id}: CMake target")
     req(c.get("soname","").startswith("libKF6") and ".so." in c.get("soname",""),f"{node_id}: SONAME")
     req(dep_nodes.get(node_id,{}).get("provider_audit")=="PASS",f"{node_id}: provider audit PASS")
@@ -67,9 +68,24 @@ else:
             r=refs.get(provider_name,{})
             req(bool(r.get("version")),f"{node_id}: {provider_name} reference version")
             req(len(r.get("debian_tar_sha256",""))==64,f"{node_id}: {provider_name} debian.tar SHA")
-        req(contracts["nodes"][node_id]["technical_references"]["ubuntu"].get("version")=="6.24.0-0ubuntu1",f"{node_id}: Resolute KDE reference")
-        req(contracts["nodes"][node_id]["technical_references"]["debian"].get("version")=="6.30.0-1",f"{node_id}: Debian KDE 6.30 reference")
+        expected_versions=contracts["nodes"][node_id].get("reference_expected_versions",{})
+        req(contracts["nodes"][node_id]["technical_references"]["ubuntu"].get("version")==expected_versions.get("ubuntu","6.24.0-0ubuntu1"),f"{node_id}: Resolute reference version")
+        req(contracts["nodes"][node_id]["technical_references"]["debian"].get("version")==expected_versions.get("debian","6.30.0-1"),f"{node_id}: Debian reference version")
         req(contracts["nodes"][node_id]["technical_references"]["debian"].get("orig_matches_kde_authority") is True,f"{node_id}: Debian orig matches KDE authority")
+
+if "kmime" in selected:
+    km=contracts["nodes"]["kmime"]
+    req(km.get("source_package")=="kf6-kmime","KMime Framework source package")
+    req(km.get("target_binary_packages")==["libkf6mime-data","libkf6mime-dev","libkf6mime6"],"KMime Framework binary contract")
+    req(km.get("reference_sources")=={"ubuntu":"kmime","debian":"kf6-kmime"},"KMime split reference sources")
+    expected=km.get("reference_expected_binary_packages",{})
+    req(expected.get("ubuntu")==["libkmime-data","libkmime-dev","libkpim6mime6"],"KMime Ubuntu legacy binary reference")
+    req(expected.get("debian")==["libkf6mime-data","libkf6mime-dev","libkf6mime6"],"KMime Debian Framework binary reference")
+    req(km.get("reference_version_policy",{}).get("ubuntu")=="legacy-line-allowed","KMime Ubuntu legacy version-line policy")
+    compat=km.get("compatibility_contract",{})
+    req(compat.get("legacy_install_policy")=="on-demand-only","KMime legacy install policy")
+    req(compat.get("runtime_abi_equivalent") is False,"KMime runtime ABI non-equivalence")
+    req(compat.get("fake_provides_replaces_for_runtime") is False,"KMime no fake runtime replacement")
 
 if "kcontacts" in selected:
     kc=contracts["nodes"]["kcontacts"]
