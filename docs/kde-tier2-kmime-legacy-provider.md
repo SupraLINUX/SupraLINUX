@@ -100,3 +100,15 @@ Retained binary hashes:
 - buildinfo SHA-256: `6237acdc6010fa8125a712d5d919ac30dbfd59c131ca8e7cf4451f191368d689`.
 
 This provider remains **on-demand compatibility only**. It does not become part of the default KDE desktop. PASS makes it eligible for `testing`; no promotion to `stable` is authorized without explicit user approval.
+
+
+## CI semantic rebuild scope
+
+The provider clean-build workflow now distinguishes package-consumed changes from state/evidence-only changes.
+
+A rebuild is required when:
+- the pinned source, package contract or dependency adaptation changes;
+- the materializer or provider build runner changes;
+- the materialize/rootfs/build semantics of the workflow change.
+
+A canonical state promotion, retained evidence update, validator change or documentation-only update does not rebuild the already validated provider. The selector is covered by a repository-policy scope test. Manual `workflow_dispatch` remains an explicit forced rebuild path.
