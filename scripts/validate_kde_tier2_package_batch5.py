@@ -17,7 +17,7 @@ RUNNABLE={"prepared-pending-build","remediation-pending-build"}
 
 req(c.get("schema")==1 and c.get("batch")=="tier2-batch-5","Batch5 identity")
 req(c.get("selected_nodes")==["kmime"],"Batch5 KMime-only scope")
-req(c.get("activation",{}).get("status") in {"armed","rematerialization-required","compatibility-provider-required"},"Batch5 activation")
+req(c.get("activation",{}).get("status") in {"armed","rematerialization-required","compatibility-provider-required","PASS"},"Batch5 activation")
 req(c.get("activation",{}).get("package_state_effect")=="none","Batch5 activation state semantics")
 req(c.get("frameworks_series")=="6.30.0","Batch5 Frameworks series")
 req(c.get("scheduling",{}).get("fail_fast") is False,"Batch5 fail-fast policy")
@@ -33,6 +33,7 @@ n=c["nodes"]["kmime"]; cn=canon["kmime"]; pc=contracts["nodes"]["kmime"]
 runnable=n.get("state") in RUNNABLE
 rematerialization=n.get("state")=="rematerialization-pending"
 compatibility_provider=n.get("state")=="compatibility-provider-required"
+pass_state=n.get("state")=="PASS"
 req(set(plan.get("build_queue",[])).intersection({"kmime"})==({"kmime"} if runnable else set()),"Batch5 scoped global build queue")
 req(set(plan.get("package_contract_ready",[])).intersection({"kmime"})==({"kmime"} if rematerialization else set()),"Batch5 scoped rematerialization queue")
 req(set(plan.get("compatibility_provider_required",[])).intersection({"kmime"})==({"kmime"} if compatibility_provider else set()),"Batch5 scoped compatibility-provider queue")
@@ -43,7 +44,7 @@ req(n.get("expected_binary_packages")==pc.get("target_binary_packages"),"KMime F
 req(n.get("runtime_package")=="libkf6mime6" and n.get("dev_package")=="libkf6mime-dev","KMime runtime/dev packages")
 req(n.get("soname")=="libKF6Mime.so.6" and n.get("cmake_package")=="KF6Mime" and n.get("cmake_target")=="KF6::Mime","KMime development/ABI contract")
 req(n.get("predecessors")==["kcodecs"] and n.get("package_dependency_closure")==[],"KMime predecessor contract")
-req(cn.get("state")=="pending","KMime canonical pending")
+req(cn.get("state")==("PASS" if pass_state else "pending"),"KMime canonical state must match Batch5 lifecycle")
 m=n.get("materialization",{})
 if runnable:
     req(cn.get("planning",{}).get("readiness")=="build-ready","KMime canonical build-ready")
@@ -60,9 +61,19 @@ elif compatibility_provider:
     req(cn.get("planning",{}).get("readiness")=="compatibility-provider-required","KMime compatibility-provider canonical readiness")
     req(cn.get("planning",{}).get("package_contract")=="materialized","KMime compatibility-provider keeps Frameworks materialization")
     req(n.get("last_result")=="INFRA","KMime compatibility-provider historical result")
-    req(n.get("compatibility",{}).get("audit_status")=="pending","KMime compatibility audit pending")
+    req(n.get("compatibility",{}).get("audit_status") in {"pending","PASS"},"KMime compatibility audit lifecycle")
 else:
-    req(n.get("state")=="PASS","KMime Batch5 state vocabulary")
+    req(pass_state,"KMime Batch5 state vocabulary")
+    req(cn.get("planning",{}).get("readiness")=="retained-pass","KMime Batch5 canonical PASS readiness")
+    req(n.get("last_result")=="PASS" and n.get("downstream_eligible") is True,"KMime Batch5 PASS result")
+    req(n.get("compatibility",{}).get("audit_status")=="PASS" and n.get("compatibility",{}).get("provider_status")=="PASS","KMime Batch5 compatibility closure")
+    pe=n.get("pass_evidence",{})
+    req(pe.get("result")=="PASS","KMime Batch5 PASS evidence")
+    fb=pe.get("framework_build",{})
+    req(fb.get("workflow_run")==35687831684 and fb.get("job_id")==106619132039 and fb.get("artifact_id")==10677716050,"KMime Batch5 Framework build evidence")
+    cp=pe.get("compatibility_provider",{})
+    req(cp.get("workflow_run")==35691309612 and cp.get("job_id")==106628834481 and cp.get("artifact_id")==10679420779,"KMime Batch5 compatibility provider evidence")
+    req(cp.get("coinstallation")=="PASS" and cp.get("legacy_consumer")=="PASS" and cp.get("framework_consumer")=="PASS","KMime Batch5 compatibility PASS gates")
 
 compat=n.get("compatibility",{})
 req(compat.get("legacy_runtime_package")=="libkpim6mime6","legacy runtime package")
