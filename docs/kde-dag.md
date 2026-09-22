@@ -1,8 +1,8 @@
 # KDE stable dependency DAG
 
-Status: **ECM root PASS; 22 Frameworks Tier 1 PASS; 7 Tier 1 pending; 0 current FAIL; 0 BLOCKED**
+Status: **ECM root PASS; Tier 1 29 PASS / 0 pending; Tier 2 15 PASS / 0 pending; 0 current FAIL; 0 BLOCKED**
 
-Last reviewed: **2026-09-18**
+Last reviewed: **2026-09-22**
 
 ## Authority
 
@@ -480,3 +480,16 @@ The canonical DAG now contains ECM, all 29 Tier 1 PASS nodes, and the current Ti
 KNotifications, KStatusNotifierItem and KUnitConversion are now canonical Tier 2 PASS/downstream-eligible nodes from run `35544063879`. Their selected Framework predecessors remain exactly the upstream-derived edges: KNotifications → KConfig, KStatusNotifierItem → KWindowSystem, KUnitConversion → KI18n, plus the shared ECM build-system root.
 
 The canonical DAG therefore contains ECM + 29 Tier 1 PASS nodes + 6 Tier 2 PASS nodes. The validator still derives this set dynamically from canonical PASS/downstream-eligible manifests; no fixed node-count update was required for this promotion.
+
+
+## Tier 2 complete — KMime canonical promotion
+
+KMime `6.30.0-0supralinux1` is now part of the canonical DAG as a Tier 2 PASS/downstream-eligible node. Its selected KDE predecessor is retained KCodecs plus the ECM build-system root.
+
+The Frameworks artifact remains `libKF6Mime.so.6` / `KF6::Mime`. Its retained build evidence is run `35687831684`, job `106619132039`, artifact `10677716050`, SHA-256 `ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36`, with 17/17 tests PASS.
+
+Ubuntu compatibility is provided separately by the validated on-demand legacy runtime `kmime 25.12.3-0ubuntu1+supralinux1`, proven in run `35691309612`, job `106628834481`, artifact `10679420779`, SHA-256 `f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b`. That compatibility provider does not add a KDE Framework build-DAG edge and does not replace the authoritative Frameworks runtime.
+
+The canonical Framework DAG now contains ECM + all **29 Tier 1 PASS** nodes + all **15 Tier 2 PASS** nodes. There are no pending, current FAIL or BLOCKED Framework nodes through Tier 2.
+
+This DAG promotion changes no APT stable state. PASS remains eligible for `testing`; `stable` requires explicit user approval.
