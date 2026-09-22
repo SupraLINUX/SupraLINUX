@@ -184,6 +184,10 @@ print("relation_edges="+str(len(relation_edges)))
 for edge in relation_edges:
     print("relation="+json.dumps(edge,sort_keys=True))
 print("overlap_pairs="+str(len(overlaps)))
+for pkg in ("libkpim6mime6","libkmime-data","libkf6mime-data"):
+    rec=records[pkg]
+    concise_meta={k:rec.get(k,"") for k in ("Package","Version","Architecture","Multi-Arch","Depends","Pre-Depends","Provides","Conflicts","Breaks","Replaces")}
+    print("metadata="+json.dumps(concise_meta,sort_keys=True))
 for item in overlaps:
     concise={
         "framework_package":item["framework_package"],
@@ -194,6 +198,8 @@ for item in overlaps:
         "paths":[x["path"] for x in item["files"]],
     }
     print("overlap="+json.dumps(concise,sort_keys=True))
+    differing=[x for x in item["files"] if not x["identical"]]
+    print("overlap_different="+json.dumps(differing,sort_keys=True))
 PY
 
 mapfile -t FRAMEWORK_DEBS < <(find "$WORK/framework" -maxdepth 1 -type f -name '*.deb' -print | sort)
