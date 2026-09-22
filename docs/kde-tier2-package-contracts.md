@@ -296,3 +296,9 @@ Run `35684604069`, job `106608642629`, artifact `10676511618`: **PASS**. Artifac
 - Snapshot SHA-256: `189e93364d4646e22ac39fe6917639a3c4381a9deb28ee647a69b4bb0452c0b1`; versions SHA-256: `e3a808b670ab34630380fd26afb65dd9cf3a68df5363e7250ccc5e886cf5a8d4`.
 
 This reference PASS changes no package state. It only authorizes deterministic materialization of `kf6-kmime 6.30.0-0supralinux1` from the KDE authority source plus the pinned Debian Frameworks packaging tree.
+
+## KMime materialization integration correction — 2026-09-22
+
+Materialization run `35684725091` reached and generated the expected Frameworks binary set (`libkf6mime-data`, `libkf6mime-dev`, `libkf6mime6`) from the pinned KDE source and Debian tree, but the post-generation tree gate still read only the historical `compatibility_binary_packages` field. Because KMime intentionally uses `target_binary_packages` for a non-equivalent namespace transition, the gate incorrectly compared the real set against an empty set.
+
+This is **integration/INFRA**, not a KMime package FAIL and not a source/package-tree defect. The materialization gate now prefers `target_binary_packages` and falls back to `compatibility_binary_packages` for older batches, preserving existing contracts while supporting KMime correctly.

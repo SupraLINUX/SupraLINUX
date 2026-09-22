@@ -298,7 +298,7 @@ if test_command and ("\t"+test_command) not in rules:
     raise SystemExit(f"{node}: reviewed dh_auto_test command missing from generated rules")
 
 packages=set(re.findall(r"^Package:\s*(\S+)\s*$",control,re.M))
-expected=set(c.get("compatibility_binary_packages",[])) | set(c.get("supralinux_additional_binary_packages",[]))
+expected=set(c.get("target_binary_packages",c.get("compatibility_binary_packages",[]))) | set(c.get("supralinux_additional_binary_packages",[]))
 if packages!=expected:
     raise SystemExit(f"{node}: generated binary package set mismatch expected={sorted(expected)} actual={sorted(packages)}")
 print(f"binary-package-contract PASS: {node} -> {sorted(packages)}")
