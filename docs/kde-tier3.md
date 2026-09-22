@@ -117,3 +117,10 @@ The provider audit has `package_state_effect=none`: success selects who must pro
 Run `35696178617` proved that Resolute carries Breeze Icons, KDocTools and KDED at `6.24.0-0ubuntu1`, below the selected KDE Frameworks `6.30.0` contract. All three support components therefore select **SupraLINUX** as provider.
 
 The audit itself changes no package state. The three support components remain pending and advance to `package-contract-required`. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+## Support package-contract reference capture activated
+
+The provider decision is closed. The active gate now captures signed Ubuntu Resolute and Debian sid source metadata for Breeze Icons, KDocTools and KDED.
+
+This capture is deliberately non-authoritative and has `package_state_effect=none`. It must finish before explicit SupraLINUX package contracts are reviewed or any support-component materialization/build is authorized.
