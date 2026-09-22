@@ -30,3 +30,12 @@ The review deliberately does not fail merely because Ubuntu and Debian differ. I
 All 20 canonical Tier 3 Frameworks remain pending. This gate does not authorize materialization, does not build packages and does not make any node downstream-eligible.
 
 After the evidence PASS is promoted, each delta must be classified into an explicit SupraLINUX package contract. Only then may materialization be authorized.
+
+
+## Initial CI integration correction
+
+The first review workflow run, `35730349511`, failed before any Framework was reviewed. `actions/download-artifact` correctly downloaded promoted artifact `10694324518`, but placed its contents under a single artifact-name subdirectory while the reviewer expected `index.json` at the requested parent path.
+
+This is an **INFRA/integration failure**, not a Tier 3 contract FAIL and not a package attempt. No package state changed and no contract decision was produced.
+
+The reviewer now discovers exactly one artifact root containing `index.json`, `result.json` and `trees/`, revalidates the promoted hashes there, and emits a diagnostic result artifact even when a pre-review integration error occurs.
