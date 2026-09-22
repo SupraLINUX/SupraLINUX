@@ -4,7 +4,7 @@
   "authority": "kde-upstream",
   "role": "support-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "pending-ci",
+  "state": "PASS",
   "package_state_effect": "real-package-build-on-PASS",
   "selected_nodes": [
     "kded"
@@ -146,7 +146,7 @@
   },
   "nodes": {
     "kded": {
-      "state": "remediation-pending-build",
+      "state": "PASS",
       "source_package": "kf6-kded",
       "upstream_version": "6.30.0",
       "package_version": "6.30.0-0supralinux1",
@@ -184,7 +184,7 @@
         "kio-runtime-validation",
         "kded-ci-consumers"
       ],
-      "downstream_eligible": false,
+      "downstream_eligible": true,
       "previous_failure": {
         "attempt": 3,
         "result": "FAIL",
@@ -202,13 +202,96 @@
         "cause": "The consumer project used project(... NONE), so CMake did not initialize the multiarch library architecture search path and failed to discover the installed KF6KDED config under /usr/lib/x86_64-linux-gnu/cmake/KF6KDED.",
         "remediation": "Enable CXX in the consumer project so standard Debian multiarch CMake package discovery is exercised.",
         "package_version_unchanged": true
+      },
+      "pass_evidence": {
+        "result": "PASS",
+        "workflow_run": 35721085911,
+        "run_attempt": 1,
+        "job_id": 106724304390,
+        "commit": "0d2a345af7be591b84807ae27b2d3b604f357d1a",
+        "attempted_package_version": "6.30.0-0supralinux1",
+        "artifact_id": 10691372157,
+        "artifact_sha256": "ff8756cf6efb4746568fa032cfb17cdf5c6b47bc31f532130936536aecb7c5c9",
+        "rootfs_artifact_id": 10691094492,
+        "rootfs_artifact_sha256": "e7033fbfb492bcf236705634af16bf9c046a7a2f6ed5552a20391f44b24f87ee",
+        "rootfs_sha256": "e7d055c5ffe173c81869f89084518c679636e98dba77f868944239625af50ab2",
+        "stage": "complete",
+        "package_attempted": true,
+        "tests": "1/1 PASS",
+        "lintian": "PASS-errors",
+        "apt_check": "PASS",
+        "executable_contract": "PASS",
+        "cmake_consumer": "PASS",
+        "payload_contract": "PASS",
+        "ecm_predecessor": "6.30.0-0supralinux3",
+        "direct_predecessors": {
+          "kconfig": {
+            "dev_package": "libkf6config-dev",
+            "version": "6.30.0-0supralinux4"
+          },
+          "kcoreaddons": {
+            "dev_package": "libkf6coreaddons-dev",
+            "version": "6.30.0-0supralinux4"
+          },
+          "kcrash": {
+            "dev_package": "libkf6crash-dev",
+            "version": "6.30.0-0supralinux1"
+          },
+          "kdbusaddons": {
+            "dev_package": "libkf6dbusaddons-dev",
+            "version": "6.30.0-0supralinux3"
+          },
+          "kservice": {
+            "dev_package": "libkf6service-dev",
+            "version": "6.30.0-0supralinux1"
+          },
+          "kdoctools": {
+            "dev_package": "libkf6doctools-dev",
+            "version": "6.30.0-0supralinux1"
+          }
+        },
+        "package_dependency_closure": {
+          "karchive": {
+            "dev_package": "libkf6archive-dev",
+            "version": "6.30.0-0supralinux4"
+          },
+          "ki18n": {
+            "dev_package": "libkf6i18n-dev",
+            "version": "6.30.0-0supralinux1"
+          }
+        },
+        "downstream_eligible": true,
+        "files": {
+          "kded6_6.30.0-0supralinux1_amd64.deb": "bb93a73c8f3056405cad73b56b618e7dac58d446104d3178eba91fd51ec4de1a",
+          "kded6-dev_6.30.0-0supralinux1_amd64.deb": "5242a02a6be2855f98145ee280e6ba58ed9a77268e101ef4268c5f37fe511860",
+          "kded6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "0458b17ccc5fb4fa65a79838c1483129ae48dd84823ab4f2dfff6d7504909208",
+          "changes_sha256": "b51856ff7bfe547f1d72ea4add17e851532aef7013c41bbb1780fe8e23e8673e",
+          "buildinfo_sha256": "f3038d8394729caf70cb81f3dd9e13eadc5926dec90c3b3fed206ab553646160",
+          "dsc_sha256": "fe48627801159b62904c354794e7a980ecf8175a20c3c282d8a378f25083e4de",
+          "orig_tar_sha256": "0adf6e22300cee74d57e790b5db844f03a1366a4d6315edbaa49174b12bf1861",
+          "debian_tar_sha256": "5f971aa53129d6c1a70347b19876731addeca02fa3d21060af9a396aedd7be9d"
+        }
       }
     }
   },
   "stable_promotion_requires_explicit_user_approval": true,
   "execution_request": {
-    "status": "remediation-requested",
-    "reason": "Retry KDED with a realistic CMake consumer that enables CXX and therefore standard Debian multiarch package discovery.",
-    "package_state_effect": "none"
+    "status": "consumed",
+    "consumed_by": {
+      "result": "PASS",
+      "workflow_run": 35721085911,
+      "job_id": 106724304390,
+      "artifact_id": 10691372157
+    },
+    "package_state_effect": "PASS"
+  },
+  "evidence_summary": {
+    "result": "PASS",
+    "workflow_run": 35721085911,
+    "commit": "0d2a345af7be591b84807ae27b2d3b604f357d1a",
+    "rootfs_artifact_id": 10691094492,
+    "rootfs_artifact_sha256": "e7033fbfb492bcf236705634af16bf9c046a7a2f6ed5552a20391f44b24f87ee",
+    "rootfs_sha256": "e7d055c5ffe173c81869f89084518c679636e98dba77f868944239625af50ab2",
+    "node": "kded"
   }
 }
