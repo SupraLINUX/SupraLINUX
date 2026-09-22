@@ -1,6 +1,6 @@
 # KDE Tier 3 support build level 1
 
-Status: **pending CI**
+Status: **PASS**
 
 Reviewed: **2026-09-22**
 
@@ -77,3 +77,26 @@ The package build, corrected payload gate, Lintian, package-install closure, `ap
 Inspection of the built `kded6-dev` package proves that `KF6KDEDConfig.cmake` and `KF6KDEDConfigVersion.cmake` are correctly installed under `/usr/lib/x86_64-linux-gnu/cmake/KF6KDED/`. The problem was the test project itself: it declared `project(... NONE)`, so CMake did not initialize the Debian multiarch library architecture search path.
 
 The remediation changes the consumer to `project(... LANGUAGES CXX)`, exercising normal multiarch `find_package(KF6KDED 6.30 REQUIRED)` behavior. The package payload remains unchanged, so the retry remains `6.30.0-0supralinux1`.
+
+
+## Attempt 4 — PASS
+
+Run `35721085911`, job `106724304390`, artifact `10691372157`, artifact SHA-256 `ff8756cf6efb4746568fa032cfb17cdf5c6b47bc31f532130936536aecb7c5c9`: **PASS**.
+
+The clean Resolute rootfs SHA-256 is `e7d055c5ffe173c81869f89084518c679636e98dba77f868944239625af50ab2`.
+
+Final gates:
+- upstream tests: **1/1 PASS**;
+- Lintian: **PASS-errors**;
+- `apt-get check`: **PASS**;
+- executable contract: **PASS** (`kded6 6.30.0`);
+- payload contract: **PASS**;
+- CMake consumer: **PASS**, resolving `KF6KDED` through normal Debian multiarch discovery and proving `KDED_DBUS_INTERFACE=/usr/share/dbus-1/interfaces/org.kde.kded6.xml`.
+
+Binary SHA-256:
+- `kded6_6.30.0-0supralinux1_amd64.deb`: `bb93a73c8f3056405cad73b56b618e7dac58d446104d3178eba91fd51ec4de1a`;
+- `kded6-dev_6.30.0-0supralinux1_amd64.deb`: `5242a02a6be2855f98145ee280e6ba58ed9a77268e101ef4268c5f37fe511860`.
+
+Attempts 1–3 remain preserved as historical validation FAILs. Attempt 4 is the single terminal PASS.
+
+The Tier 3 support sub-DAG is now closed: **3 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**.
