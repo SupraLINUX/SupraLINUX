@@ -34,7 +34,7 @@
       "root_cmake_blob": "4482a5fa712f27feec0ee3ec4c5c7bcc07a660d3",
       "kde_ci_blob": "dcbc4346e295b14915ea43343228fd419decd0a1",
       "state": "pending",
-      "readiness": "package-contract-required",
+      "readiness": "package-contract-ready",
       "provider": "supralinux",
       "provider_audit": {
         "status": "PASS",
@@ -47,6 +47,11 @@
         "required_upstream_version": "6.30.0",
         "decision": "supralinux-required",
         "package_state_effect": "none"
+      },
+      "package_contract": {
+        "status": "ready",
+        "manifest": "manifests/kde-tier3-support-package-contracts.json",
+        "package_version_candidate": "4:6.30.0-0supralinux1"
       }
     },
     "kdoctools": {
@@ -71,7 +76,7 @@
         ]
       },
       "state": "pending",
-      "readiness": "package-contract-required",
+      "readiness": "package-contract-ready",
       "provider": "supralinux",
       "provider_audit": {
         "status": "PASS",
@@ -84,6 +89,11 @@
         "required_upstream_version": "6.30.0",
         "decision": "supralinux-required",
         "package_state_effect": "none"
+      },
+      "package_contract": {
+        "status": "ready",
+        "manifest": "manifests/kde-tier3-support-package-contracts.json",
+        "package_version_candidate": "6.30.0-0supralinux1"
       }
     },
     "kded": {
@@ -111,7 +121,7 @@
         ]
       },
       "state": "pending",
-      "readiness": "package-contract-required",
+      "readiness": "package-contract-ready",
       "provider": "supralinux",
       "provider_audit": {
         "status": "PASS",
@@ -124,6 +134,11 @@
         "required_upstream_version": "6.30.0",
         "decision": "supralinux-required",
         "package_state_effect": "none"
+      },
+      "package_contract": {
+        "status": "ready",
+        "manifest": "manifests/kde-tier3-support-package-contracts.json",
+        "package_version_candidate": "6.30.0-0supralinux1"
       }
     }
   },
@@ -1052,6 +1067,20 @@
         "kdoctools",
         "kded"
       ],
+      "package_state_effect": "none"
+    },
+    "support_build_levels": [
+      [
+        "breeze-icons",
+        "kdoctools"
+      ],
+      [
+        "kded"
+      ]
+    ],
+    "support_contracts": {
+      "status": "ready",
+      "manifest": "manifests/kde-tier3-support-package-contracts.json",
       "package_state_effect": "none"
     }
   }
