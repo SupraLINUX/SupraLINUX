@@ -4,7 +4,7 @@
   "authority": "kde-upstream",
   "role": "support-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "PASS",
+  "state": "pending-ci",
   "package_state_effect": "real-package-build-on-PASS",
   "selected_nodes": [
     "kded"
@@ -146,7 +146,7 @@
   },
   "nodes": {
     "kded": {
-      "state": "PASS",
+      "state": "remediation-pending-build",
       "source_package": "kf6-kded",
       "upstream_version": "6.30.0",
       "package_version": "6.30.0-0supralinux1",
@@ -186,21 +186,23 @@
       ],
       "downstream_eligible": true,
       "previous_failure": {
-        "attempt": 3,
+        "attempt": 2,
         "result": "FAIL",
-        "workflow_run": 35720612123,
-        "job_id": 106722644773,
-        "commit": "fedefe8c0ef039a965c94e8febb550da2a0b7464",
-        "artifact_id": 10691611217,
-        "artifact_sha256": "32b194f758467d9a6dcd91971508b6a078c9bb80d2e7f2e52645c6d6580324fc",
-        "rootfs_artifact_id": 10691445957,
-        "rootfs_artifact_sha256": "ff1a5b5f6e6fd98706c2d756e343df6f6d5d23a79d2fb66b24d2367add577ec3",
-        "failure_stage": "cmake-consumer",
+        "workflow_run": 35719952518,
+        "job_id": 106720898661,
+        "commit": "747c49cd49eefd8ac1c67e3d5c61d0fa7a2e2eb5",
+        "artifact_id": 10691217831,
+        "artifact_sha256": "5bd6bd478ec4c0aa58eb6a8042cb9b62ca16818f2bff166d304e9fc4d5c92c72",
+        "rootfs_artifact_id": 10690424886,
+        "rootfs_artifact_sha256": "f18aef1743c0250a0e9332f03eea28077d58847cfea7663e36deadfd0c03ebfc",
+        "failure_stage": "executable-smoke",
         "package_attempted": true,
         "sbuild_result": "successful",
-        "executable_smoke": "PASS",
-        "cause": "The consumer project used project(... NONE), so CMake did not initialize the multiarch library architecture search path and failed to discover the installed KF6KDED config under /usr/lib/x86_64-linux-gnu/cmake/KF6KDED.",
-        "remediation": "Enable CXX in the consumer project so standard Debian multiarch CMake package discovery is exercised.",
+        "payload_contract": "PASS",
+        "lintian": "PASS-errors",
+        "apt_check": "PASS",
+        "cause": "kded6 --version was executed without a headless Qt platform; Qt attempted xcb on a runner with no display and aborted.",
+        "remediation": "Run the executable smoke with QT_QPA_PLATFORM=offscreen.",
         "package_version_unchanged": true
       },
       "pass_evidence": {
@@ -271,19 +273,54 @@
           "orig_tar_sha256": "0adf6e22300cee74d57e790b5db844f03a1366a4d6315edbaa49174b12bf1861",
           "debian_tar_sha256": "5f971aa53129d6c1a70347b19876731addeca02fa3d21060af9a396aedd7be9d"
         }
-      }
+      },
+      "failure_history": [
+        {
+          "attempt": 3,
+          "result": "FAIL",
+          "workflow_run": 35720612123,
+          "job_id": 106722644773,
+          "commit": "fedefe8c0ef039a965c94e8febb550da2a0b7464",
+          "artifact_id": 10691611217,
+          "artifact_sha256": "32b194f758467d9a6dcd91971508b6a078c9bb80d2e7f2e52645c6d6580324fc",
+          "rootfs_artifact_id": 10691445957,
+          "rootfs_artifact_sha256": "ff1a5b5f6e6fd98706c2d756e343df6f6d5d23a79d2fb66b24d2367add577ec3",
+          "failure_stage": "cmake-consumer",
+          "package_attempted": true,
+          "sbuild_result": "successful",
+          "executable_smoke": "PASS",
+          "cause": "The consumer project used project(... NONE), so CMake did not initialize the multiarch library architecture search path and failed to discover the installed KF6KDED config under /usr/lib/x86_64-linux-gnu/cmake/KF6KDED.",
+          "remediation": "Enable CXX in the consumer project so standard Debian multiarch CMake package discovery is exercised.",
+          "package_version_unchanged": true
+        },
+        {
+          "attempt": 2,
+          "result": "FAIL",
+          "workflow_run": 35719952518,
+          "job_id": 106720898661,
+          "commit": "747c49cd49eefd8ac1c67e3d5c61d0fa7a2e2eb5",
+          "artifact_id": 10691217831,
+          "artifact_sha256": "5bd6bd478ec4c0aa58eb6a8042cb9b62ca16818f2bff166d304e9fc4d5c92c72",
+          "rootfs_artifact_id": 10690424886,
+          "rootfs_artifact_sha256": "f18aef1743c0250a0e9332f03eea28077d58847cfea7663e36deadfd0c03ebfc",
+          "failure_stage": "executable-smoke",
+          "package_attempted": true,
+          "sbuild_result": "successful",
+          "payload_contract": "PASS",
+          "lintian": "PASS-errors",
+          "apt_check": "PASS",
+          "cause": "kded6 --version was executed without a headless Qt platform; Qt attempted xcb on a runner with no display and aborted.",
+          "remediation": "Run the executable smoke with QT_QPA_PLATFORM=offscreen.",
+          "package_version_unchanged": true
+        }
+      ]
     }
   },
   "stable_promotion_requires_explicit_user_approval": true,
   "execution_request": {
-    "status": "consumed",
-    "consumed_by": {
-      "result": "PASS",
-      "workflow_run": 35721085911,
-      "job_id": 106724304390,
-      "artifact_id": 10691372157
-    },
-    "package_state_effect": "PASS"
+    "status": "remediation-requested",
+    "reason": "Retry KDED with an explicit headless Qt platform for the executable smoke.",
+    "package_state_effect": "none"
   },
   "evidence_summary": {
     "result": "PASS",
