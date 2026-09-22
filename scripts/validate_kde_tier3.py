@@ -58,7 +58,7 @@ for node_id,sha in expected.items():
     req(n.get("upstream_ref")=="v6.30.0",f"{node_id}: upstream ref")
     req(n.get("state")=="pending",f"{node_id}: initial canonical state")
     planning=n.get("planning",{})
-    req(planning.get("readiness")=="dependency-discovery-required",f"{node_id}: discovery readiness")
+    req(planning.get("readiness")=="dependency-graph-ready",f"{node_id}: dependency-ready lifecycle")
     req(planning.get("dependency_authority")=="kde-upstream",f"{node_id}: dependency authority")
     req(planning.get("package_contract")=="not-authorized",f"{node_id}: package contract must remain unauthorized")
     packaging=n.get("packaging",{})
@@ -66,16 +66,16 @@ for node_id,sha in expected.items():
     req(node_id not in dag.get("nodes",{}),f"{node_id}: pending Tier3 node must not be promoted into canonical DAG")
 
 policy=tier3.get("discovery_policy",{})
-req(policy.get("phase")=="source-inventory","Tier3 discovery phase")
-req(policy.get("dependencies")=="not-yet-materialized","Tier3 dependency state")
-req(policy.get("provider_audit")=="not-authorized-before-dependency-discovery","Tier3 provider audit gate")
-req(policy.get("package_contracts")=="not-authorized-before-dependency-discovery","Tier3 package-contract gate")
-req(policy.get("package_builds")=="not-authorized-before-dependency-discovery","Tier3 package-build gate")
+req(policy.get("phase")=="dependency-graph-ready","Tier3 discovery phase")
+req(policy.get("dependencies")=="materialized-from-kde-upstream-v6.30.0","Tier3 dependency state")
+req(policy.get("provider_audit")=="support-components-first","Tier3 provider audit gate")
+req(policy.get("package_contracts")=="not-authorized-before-provider-audit","Tier3 package-contract gate")
+req(policy.get("package_builds")=="not-authorized-before-provider-audit","Tier3 package-build gate")
 
 doc=(ROOT/"docs/kde-tier3.md").read_text()
 req("0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED" in doc,"Tier3 docs canonical snapshot")
 req("KDE upstream" in doc and "Ubuntu" in doc,"Tier3 docs authority/provider boundary")
-req("dependency-discovery-required" in doc,"Tier3 docs next gate")
+req("dependency-graph-ready" in doc,"Tier3 docs lifecycle")
 
 if errors:
     for e in errors:
