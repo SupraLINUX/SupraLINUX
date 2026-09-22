@@ -80,6 +80,12 @@ if set(batch) & {"kpty","kcolorscheme","kcompletion","kcontacts","kpackage"}:
     req("DBus" in nodes["kpackage"].get("qt",{}).get("provider_selected",[]), "KPackage DBus provider")
     req(registry.get("additions",{}).get("utempter",{}).get("packages")==["libutempter-dev"], "KPty UTEMPTER provider mapping")
 
+if "kmime" in batch:
+    req(nodes["kmime"].get("qt",{}).get("required")==["Core"], "KMime Qt Core requirement")
+    req("Test" in nodes["kmime"].get("qt",{}).get("test",[]), "KMime Qt Test provider")
+    req(nodes["kmime"].get("frameworks",{}).get("required")==["kcodecs"], "KMime KCodecs predecessor")
+    req(nodes["kmime"].get("selected_linux_profile",{}).get("BUILD_TESTING") is True, "KMime upstream tests selected")
+
 if set(batch) & {"kservice","kdeclarative","kfilemetadata"}:
     req(nodes["kservice"].get("qt",{}).get("required")==["Xml"], "KService Qt Xml requirement")
     req({"Concurrent","Test"} <= set(nodes["kservice"].get("qt",{}).get("test",[])), "KService test Qt providers")

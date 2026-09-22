@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 2 discovery
 
-Status: **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED**  
+Status: **14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**  
 Date: **2026-09-21**
 
 KDE upstream classifies **15** Frameworks in Tier 2 for the current Frameworks API set:
@@ -292,3 +292,14 @@ KService `6.30.0-0supralinux1` passed its final clean build in run `35681046106`
 Batch 4 is **3/3 PASS** and canonical Tier 2 advances to **14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**.
 
 The only remaining Tier 2 node is **KMime**, intentionally held at `compatibility-decision-required` by ADR-0002. No package tree or version transition for KMime is authorized until that architecture/compatibility decision is approved.
+
+
+## 2026-09-22 — ADR-0002 accepted; KMime enters provider audit
+
+ADR-0002 accepted. SupraLINUX KDE uses **KF6Mime 6.30** as its authoritative KMime contract (`KF6::Mime`, `libKF6Mime.so.6`). Ubuntu's legacy PIM KMime (`KPim6::Mime`, `libKPim6Mime.so.6`) is not part of the SupraLINUX desktop stack and is not installed by default. It may still be installed from the Ubuntu base repositories when a prebuilt Ubuntu or third-party application explicitly requires that legacy ABI.
+
+No `Provides`, `Replaces`, SONAME shim or package rename may claim ABI equivalence between the two libraries. New SupraLINUX builds target KF6Mime. Co-installation and Ubuntu-application compatibility are explicit validation gates, not assumptions.
+
+Canonical Tier 2 remains **14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**. KMime is now `package-lane-pending` with provider audit required before package-contract reference capture. This is an architecture decision only; no KMime package PASS has been claimed.
+
+The governing rule remains: **KDE decides what KDE needs.** Ubuntu is the platform and compatibility provider, not the authority over the SupraLINUX desktop.
