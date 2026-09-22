@@ -12,11 +12,11 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "source-inventory",
-    "dependencies": "not-yet-materialized",
-    "provider_audit": "not-authorized-before-dependency-discovery",
-    "package_contracts": "not-authorized-before-dependency-discovery",
-    "package_builds": "not-authorized-before-dependency-discovery"
+    "phase": "dependency-graph-ready",
+    "dependencies": "materialized-from-kde-upstream-v6.30.0",
+    "provider_audit": "support-components-first",
+    "package_contracts": "not-authorized-before-provider-audit",
+    "package_builds": "not-authorized-before-provider-audit"
   },
   "nodes": [
     {
@@ -29,9 +29,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -49,9 +50,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -69,9 +71,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -89,9 +92,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -109,9 +113,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -129,9 +134,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -149,9 +155,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -169,9 +176,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -189,9 +197,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -209,9 +218,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -229,9 +239,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -249,9 +260,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -269,9 +281,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -289,9 +302,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -309,9 +323,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -329,9 +344,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -349,9 +365,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -369,9 +386,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -389,9 +407,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -409,9 +428,10 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-discovery-required",
+        "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized"
+        "package_contract": "not-authorized",
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
       },
       "packaging": {
         "state": "pending",
@@ -419,5 +439,15 @@
         "downstream_eligible": false
       }
     }
-  ]
+  ],
+  "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+  "support_components": {
+    "manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+    "pending": [
+      "breeze-icons",
+      "kdoctools",
+      "kded"
+    ],
+    "policy": "KDE upstream support components are separate from API tiers and retain their own build/runtime semantics."
+  }
 }
