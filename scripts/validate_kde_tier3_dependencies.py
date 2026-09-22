@@ -91,7 +91,7 @@ req(d.get("topology",{}).get("deferred_runtime_validation",{}).get("knewstuff")=
 
 for node in ("breeze-icons","kdoctools","kded"):
     c=support[node]
-    req(c.get("readiness") in {"package-contract-ready","materialized","PASS"},f"{node}: support lifecycle readiness")
+    req(c.get("readiness") in {"package-contract-ready","materialized","PASS","build-level1-ready"},f"{node}: support lifecycle readiness")
     pc=c.get("package_contract",{})
     req(pc.get("status")=="ready" and pc.get("manifest")=="manifests/kde-tier3-support-package-contracts.json",f"{node}: support contract linkage")
 req(d.get("topology",{}).get("support_build_levels")==[["breeze-icons","kdoctools"],["kded"]],"support build topology")
@@ -102,11 +102,21 @@ req(sm.get("status")=="PASS" and sm.get("manifest")=="manifests/kde-tier3-suppor
 for node in ("breeze-icons","kdoctools","kded"):
     c=support[node]
     mat=c.get("materialization",{})
-    req(c.get("readiness")=="materialized",f"{node}: materialized readiness")
     req(mat.get("status")=="PASS" and mat.get("package_state_effect")=="none",f"{node}: materialization evidence linkage")
+for node in ("breeze-icons","kdoctools"):
+    c=support[node]
+    req(c.get("state")=="PASS" and c.get("readiness")=="PASS",f"{node}: support package PASS readiness")
+    pkg=c.get("packaging",{})
+    req(pkg.get("state")=="PASS" and pkg.get("downstream_eligible") is True,f"{node}: downstream PASS packaging")
+    ev=pkg.get("evidence",{})
+    req(ev.get("workflow_run")==35700002095 and isinstance(ev.get("artifact_id"),int) and len(ev.get("artifact_sha256",""))==64,f"{node}: support PASS evidence")
+req(support["kded"].get("state")=="pending" and support["kded"].get("readiness")=="build-level1-ready","KDED level1 readiness")
+req(support["kded"].get("build_gate",{}).get("state")=="READY","KDED unblocked build gate")
 gate=d.get("topology",{}).get("support_build_gate",{})
 req(gate.get("level0")==["breeze-icons","kdoctools"] and gate.get("level1")==["kded"],"support binary-build gate")
 req(gate.get("manifest")=="manifests/kde-tier3-support-build-level0.json","support build level0 campaign link")
+req(gate.get("level0_status")=="PASS" and gate.get("level1_status")=="ready","support build level transition")
+req(gate.get("kdoctools_pass_artifact_id")==10682066198,"KDocTools level1 predecessor artifact")
 
 doc=(ROOT/"docs/kde-tier3.md").read_text()
 for token in ("Tier 3 dependency graph","Breeze Icons","KDocTools","KDED","4 topological"):
