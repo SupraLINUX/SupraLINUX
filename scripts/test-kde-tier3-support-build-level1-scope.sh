@@ -23,11 +23,28 @@ git -C "${TMP}" add . && git -C "${TMP}" commit -qm evidence
 EV="$(git -C "${TMP}" rev-parse HEAD)"
 set +e; bash "${TMP}/scripts/kde-tier3-support-build-level1-needed.sh" "${BASE}" "${EV}"; rc=$?; set -e
 [[ "${rc}" -eq 1 ]]
+
 python3 - "${TMP}/manifests/kde-tier3-support-build-level1.json" <<'PY'
 import json,sys
-p=sys.argv[1]; d=json.load(open(p)); d["nodes"]["kded"]["state"]="remediation-pending-build"; d["nodes"]["kded"]["package_version"]="2"; open(p,"w").write(json.dumps(d)+"\n")
+p=sys.argv[1]
+d=json.load(open(p))
+d["nodes"]["kded"]["state"]="remediation-pending-build"
+d["execution_request"]={"status":"remediation-requested","reason":"validator-only retry"}
+open(p,"w").write(json.dumps(d)+"\n")
+PY
+git -C "${TMP}" add . && git -C "${TMP}" commit -qm request
+REQ="$(git -C "${TMP}" rev-parse HEAD)"
+bash "${TMP}/scripts/kde-tier3-support-build-level1-needed.sh" "${EV}" "${REQ}"
+
+python3 - "${TMP}/manifests/kde-tier3-support-build-level1.json" <<'PY'
+import json,sys
+p=sys.argv[1]
+d=json.load(open(p))
+d["execution_request"]["status"]="consumed"
+d["nodes"]["kded"]["package_version"]="2"
+open(p,"w").write(json.dumps(d)+"\n")
 PY
 git -C "${TMP}" add . && git -C "${TMP}" commit -qm semantic
 SEM="$(git -C "${TMP}" rev-parse HEAD)"
-bash "${TMP}/scripts/kde-tier3-support-build-level1-needed.sh" "${EV}" "${SEM}"
+bash "${TMP}/scripts/kde-tier3-support-build-level1-needed.sh" "${REQ}" "${SEM}"
 echo "Tier 3 support level1 semantic scope: PASS"
