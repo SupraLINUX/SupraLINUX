@@ -48,3 +48,10 @@ The actual KDED package build completed successfully in sbuild and the upstream 
 This is retained as a real historical **FAIL** because the package attempt reached a failing validation gate. It is not a KDED source/package defect.
 
 The remediation changes only the external validation rule to require `kded6.8.gz`. The source package and binary payload do not change, so the retry remains `6.30.0-0supralinux1` rather than creating a meaningless package revision bump.
+
+
+## Execution-request guard
+
+A runnable level-1 node with `execution_request.status=requested` or `remediation-requested` must execute even when the latest PR commit changes only documentation or integration metadata. The request remains active across `cancel-in-progress` churn and is consumed only when the resulting attempt is promoted into the campaign/attempt ledger.
+
+This prevents a valid initial build or remediation retry from being silently skipped after rapid successive commits.
