@@ -332,7 +332,26 @@ def apply_symbols_adjustments(debian: Path, node: dict):
         symbol = adjustment["symbol"]
         version = adjustment["version"]
         tag = adjustment.get("tag")
+        mode = adjustment.get("mode", "add")
         lines = path.read_text().splitlines()
+
+        if mode == "retag":
+            expected_tag = adjustment.get("expected_tag")
+            expected = f"({expected_tag}){symbol} {version}" if expected_tag else f"{symbol} {version}"
+            matches = [i for i, line in enumerate(lines) if symbol in line]
+            if len(matches) != 1:
+                raise SystemExit(f"symbols retag expected exactly one baseline symbol {symbol}, found {len(matches)}")
+            index = matches[0]
+            if lines[index].strip() != expected:
+                raise SystemExit(
+                    f"symbols retag baseline drift for {symbol}: expected {expected!r}, got {lines[index].strip()!r}"
+                )
+            lines[index] = f" ({tag}){symbol} {version}" if tag else f" {symbol} {version}"
+            path.write_text("\n".join(lines) + "\n")
+            continue
+
+        if mode != "add":
+            raise SystemExit(f"unsupported symbols adjustment mode: {mode}")
         if any(symbol in line for line in lines):
             raise SystemExit(f"symbols baseline unexpectedly already contains reviewed symbol: {symbol}")
         rendered = f" ({tag}){symbol} {version}" if tag else f" {symbol} {version}"

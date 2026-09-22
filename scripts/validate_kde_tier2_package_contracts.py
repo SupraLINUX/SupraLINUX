@@ -86,6 +86,12 @@ if "kmime" in selected:
     req(compat.get("legacy_install_policy")=="on-demand-only","KMime legacy install policy")
     req(compat.get("runtime_abi_equivalent") is False,"KMime runtime ABI non-equivalence")
     req(compat.get("fake_provides_replaces_for_runtime") is False,"KMime no fake runtime replacement")
+    adj=km.get("symbols_adjustments",[])
+    req(len(adj)==3,"KMime reviewed symbols adjustment count")
+    req(sum(x.get("mode")=="retag" and x.get("tag")=="optional=templinst|arch=!riscv64" for x in adj)==2,"KMime templinst retag adjustments")
+    req(any(x.get("mode")=="add" and x.get("symbol")=="_ZSt19piecewise_construct@Base" and x.get("tag")=="optional=toolchain" and x.get("version")=="6.30.0" for x in adj),"KMime toolchain symbol addition")
+    tsa=km.get("toolchain_symbol_adaptation",{})
+    req(tsa.get("classification")=="resolute-toolchain-symbol-baseline" and tsa.get("kde_feature_effect")=="none","KMime toolchain-symbol classification")
 
 if "kcontacts" in selected:
     kc=contracts["nodes"]["kcontacts"]
