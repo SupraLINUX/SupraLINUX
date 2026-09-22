@@ -175,3 +175,10 @@ The canonical Tier 3 Framework inventory itself remains **0 PASS / 20 pending / 
 KDED is now the sole runnable support node. Its build consumes the real PASS KDocTools artifact from level 0 plus pinned KConfig, KCoreAddons, KCrash, KDBusAddons and KService artifacts; KArchive and KI18n remain explicitly modeled as package-install closure rather than invented direct KDED edges.
 
 Because upstream KDED exports no Framework library, this gate validates its executable, DBus/systemd payload and CMake config instead of fabricating a SONAME contract.
+
+
+## Support build level 1 — attempt 1 retained FAIL
+
+KDED attempt 1 in run `35702647931` compiled successfully, but the post-build payload gate produced a false negative by checking for `kded6.8` instead of the Debian-installed compressed manpage `kded6.8.gz`.
+
+The attempt is retained as historical FAIL at `payload-contract`. KDED remains pending in remediation, not PASS. No package revision is bumped because package contents are unchanged; only the CI validator is corrected.
