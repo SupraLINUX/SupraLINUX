@@ -47,8 +47,13 @@ req(a.get("duplicated_data_payload") is False and a.get("kde_feature_effect")=="
 req(audit.get("state")=="PASS","compatibility audit must be PASS")
 selected=audit.get("result",{}).get("selected_remediation",{})
 req(selected.get("strategy")=="supralinux-legacy-runtime-provider-with-framework-data-alternative","provider follows audit remediation")
-req(km.get("state")=="pending" and km.get("planning",{}).get("readiness")=="compatibility-provider-required","KMime remains pending until provider PASS")
 req(km.get("planning",{}).get("compatibility_audit",{}).get("status")=="PASS","canonical compatibility audit PASS")
+if km.get("state")=="PASS":
+    req(m.get("state")=="PASS","KMime cannot be PASS before compatibility provider PASS")
+    req(km.get("planning",{}).get("readiness")=="retained-pass","KMime PASS readiness")
+    req(km.get("planning",{}).get("compatibility_provider",{}).get("status")=="PASS","canonical compatibility provider PASS")
+else:
+    req(km.get("state")=="pending" and km.get("planning",{}).get("readiness")=="compatibility-provider-required","KMime remains pending until provider PASS")
 
 for path in (
     "scripts/materialize-kde-tier2-kmime-legacy-provider.sh",
