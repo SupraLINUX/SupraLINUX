@@ -1404,7 +1404,7 @@
     }
   },
   "contract_review": {
-    "status": "required",
+    "status": "pending-ci",
     "claim": "supralinux-package-contract-review",
     "authority": "supralinux",
     "source_authority": "kde-upstream",
@@ -1435,7 +1435,20 @@
       "kxmlgui",
       "purpose"
     ],
+    "packaging_tree_source": {
+      "workflow_run": 35729077373,
+      "job_id": 106750146405,
+      "artifact_id": 10694324518,
+      "artifact_sha256": "43a1089660033d9a1a1ae785e348f0b1e8f17636f3085b4449fd9c65f0f2091a",
+      "index_sha256": "3f975678343f872c8094b20425e76b4026a59d1c5f50c1d5b2c5c1b48a00c7fb"
+    },
     "materialization_authorized": false,
-    "package_build_authorized": false
+    "package_build_authorized": false,
+    "evidence": null,
+    "execution_request": {
+      "status": "requested",
+      "reason": "Capture and classify Ubuntu/Debian packaging deltas against KDE-upstream Tier 3 dependency contracts before authorizing materialization.",
+      "package_state_effect": "none"
+    }
   }
 }
