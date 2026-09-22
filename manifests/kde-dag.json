@@ -3844,6 +3844,67 @@
         "debian_tar_sha256": "a92c9aa510bfef21fd01659ad6064b9bff6dc29da791584adc0722b0c802a2b0",
         "rootfs_sha256": "5135c9e4142d6378f4f824b8cf206532b8ff223e9f549305cabd04c1f71b0c2b"
       }
+    },
+    "kmime": {
+      "tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kmime-6.30.0.tar.xz",
+      "source_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-kmime",
+      "binary_packages": [
+        "libkf6mime-data",
+        "libkf6mime-dev",
+        "libkf6mime6"
+      ],
+      "package_version": "6.30.0-0supralinux1",
+      "depends_on": [
+        "extra-cmake-modules",
+        "kcodecs"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight-plus-compatibility-provider",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "attempt_ledger": "manifests/kde-tier2-package-batch5-attempts.json",
+      "abi_sonames": [
+        "libKF6Mime.so.6"
+      ],
+      "compatibility_provider": "kmime 25.12.3-0ubuntu1+supralinux1 / libKPim6Mime.so.6 on-demand",
+      "evidence": [
+        {
+          "result": "PASS",
+          "workflow_run": 35687831684,
+          "run_attempt": 2,
+          "job_id": 106619132039,
+          "commit": "c7056cd8189ea1afe401ca30a97558075d0d746b",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10677716050,
+          "artifact_sha256": "ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36",
+          "rootfs_artifact_id": 10677870006,
+          "rootfs_artifact_sha256": "14bce5a6b91833dcbc0531492cbd7e46127c7baa9da8b58d16b3d4b7fa905dd5",
+          "stage": "complete-after-compatibility-provider",
+          "tests": "17/17 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "apt_check": "PASS",
+          "abi_sonames": [
+            "libKF6Mime.so.6"
+          ],
+          "predecessor_buildinfo_proof": "PASS",
+          "compatibility_audit": "PASS",
+          "compatibility_provider_run": 35691309612,
+          "compatibility_provider_job_id": 106628834481,
+          "compatibility_provider_artifact_id": 10679420779,
+          "compatibility_provider_artifact_sha256": "f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b",
+          "legacy_provider_coinstallation": "PASS",
+          "legacy_consumer": "PASS",
+          "framework_consumer": "PASS",
+          "downstream_eligible": true
+        }
+      ]
     }
   },
   "ci_scope_incidents": [
