@@ -1161,7 +1161,8 @@
       "manifest": "manifests/kde-tier3-support-build-level0.json",
       "level0_status": "PASS",
       "level1_status": "ready",
-      "kdoctools_pass_artifact_id": 10682066198
+      "kdoctools_pass_artifact_id": 10682066198,
+      "level1_manifest": "manifests/kde-tier3-support-build-level1.json"
     }
   }
 }
