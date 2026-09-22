@@ -1898,7 +1898,7 @@
       },
       "packaging": {
         "state": "pending",
-        "reason": "legacy-provider-coinstallation-remediation-required",
+        "reason": "legacy-compatibility-provider-package-contract-pending",
         "compatibility_policy": "kf6mime-authoritative-legacy-kpim6mime-on-demand"
       },
       "state": "pending",
@@ -1968,16 +1968,24 @@
           "package_state_effect": "none"
         },
         "compatibility_audit": {
-          "status": "pending",
-          "trigger": {
-            "workflow_run": 35687831684,
-            "run_attempt": 2,
-            "job_id": 106619132039,
-            "artifact_id": 10677716050,
-            "artifact_sha256": "ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36"
-          },
-          "observation": "Ubuntu Resolute libkpim6mime6 + libkmime-data installation removes libkf6mime6, libkf6mime-dev and libkf6mime-data.",
-          "package_state_effect": "none"
+          "status": "PASS",
+          "workflow_run": 35690284355,
+          "job_id": 106625630885,
+          "artifact_id": 10678073973,
+          "artifact_sha256": "7b0c9175b1e0f48eb1d18e9ceb1af03381c4de8d0b322bc619dd7be224307c5b",
+          "classification": "declared-relations-and-payload-overlap",
+          "stock_provider_coinstallation": "FAIL",
+          "package_state_effect": "none",
+          "selected_remediation": "supralinux-legacy-runtime-provider-with-framework-data-alternative"
+        },
+        "compatibility_provider": {
+          "status": "package-contract-pending",
+          "source_family": "kmime",
+          "compatibility_version": "25.12.3",
+          "target_runtime_package": "libkpim6mime6",
+          "target_runtime_soname": "libKPim6Mime.so.6",
+          "data_dependency_policy": "libkmime-data (= Ubuntu compatibility version) | libkf6mime-data",
+          "authoritative_kde_package_unchanged": true
         }
       }
     }
