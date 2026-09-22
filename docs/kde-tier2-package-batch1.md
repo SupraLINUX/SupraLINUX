@@ -89,3 +89,10 @@ KDE upstream discovery was revalidated after KAuth promotion and exposed that th
 The KAuth attempt ledger, package version, hashes, test results, ABI evidence and downstream eligibility remain unchanged. The Batch 1 historical `0 PASS / 2 pending` and `1 PASS / 1 pending` snapshots are retained as the state recorded under the incomplete inventory; they must not be interpreted as the current global Tier 2 inventory.
 
 Current Tier 2 state: **1 PASS / 14 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+## Validator scope correction — 2026-09-22
+
+The Batch 1 validator is historical and **node-scoped to KAuth**. It retains the original Batch 1 inventory/post-campaign facts as historical evidence, but it no longer asserts the current readiness or decision state of KMime or later Tier 2 nodes. Current global lifecycle state is owned by the canonical Tier 2 and consistency validators.
+
+This prevents a valid later transition—such as ADR-0002 moving KMime into provider audit—from invalidating already-closed KAuth evidence.

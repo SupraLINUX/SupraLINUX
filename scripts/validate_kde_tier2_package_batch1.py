@@ -41,21 +41,13 @@ expected_ids={"kauth","kcolorscheme","kcompletion","kcontacts","kcrash","kdeclar
 req(set(tier)==expected_ids,"current Tier2 inventory must contain 15 upstream nodes")
 kt=tier["kauth"]
 req(kt.get("state")=="PASS" and kt.get("packaging",{}).get("state")=="PASS" and kt["packaging"].get("downstream_eligible") is True,"KAuth Tier2 canonical PASS")
-req(tier["kmime"].get("state")=="pending" and tier["kmime"].get("package_identity",{}).get("package_version_candidate") is None,"KMime remains pending/undecided")
-active=g.get("nodes",{})
 current_pending={node_id for node_id,node in tier.items() if node.get("state")=="pending"}
 current_pass={node_id for node_id,node in tier.items() if node.get("state")=="PASS"}
-req(set(active)==current_pending,"current Tier2 active discovery must contain exactly current pending nodes")
-req(active["kmime"].get("readiness")=="compatibility-decision-required","KMime decision gate")
-for node in sorted(current_pending-{"kmime"}):
-    req(active[node].get("readiness") in {"package-lane-pending","package-contract-ready","build-ready"},f"{node}: current discovery readiness vocabulary")
-expected_snapshot={"pass":len(current_pass),"pending":len(current_pending),"current_fail":0,"blocked":0}
-req(g.get("promoted_snapshot")==expected_snapshot,"current Tier2 snapshot")
 req(g.get("completed_nodes",{}).get("kauth",{}).get("artifact_id")==10601382235,"KAuth completed discovery evidence")
-for node_id in sorted(current_pass):
-    req(g.get("completed_nodes",{}).get(node_id,{}).get("state")=="PASS",f"{node_id}: later/current completed discovery PASS")
-    req(d.get("nodes",{}).get(node_id,{}).get("state")=="PASS" and d["nodes"][node_id].get("downstream_eligible") is True,f"{node_id}: later/current DAG PASS")
-req("kcrash" in current_pass and g.get("completed_nodes",{}).get("kcrash",{}).get("artifact_id")==10613480229,"later KCrash promotion retained")
+req(g.get("completed_nodes",{}).get("kauth",{}).get("state")=="PASS","KAuth completed discovery state")
+req(d.get("nodes",{}).get("kauth",{}).get("state")=="PASS" and d["nodes"]["kauth"].get("downstream_eligible") is True,"KAuth current DAG PASS")
+# Historical Batch 1 validation is deliberately node-scoped. Current lifecycle/readiness
+# of KMime and later Tier 2 nodes belongs to the canonical/consistency validators.
 
 history=a.get("real_attempts",{}).get("kauth",[])
 req(len(history)==3,"KAuth must retain exactly three real attempts")
