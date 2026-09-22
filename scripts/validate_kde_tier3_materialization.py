@@ -103,9 +103,9 @@ else:
     req(all(m["nodes"][n].get("state") == "materialized" for n in selected), "PASS requires all materialization nodes materialized")
     req(c.get("state") == "materialized", "PASS materialization contract lifecycle")
     req(c.get("materialization", {}).get("status") == "PASS" and c.get("materialization", {}).get("workflow_run") == 35746667704, "promoted materialization evidence linkage")
-    req(t.get("discovery_policy", {}).get("phase") == "build-campaign-planning", "post-materialization phase")
-    req(t.get("discovery_policy", {}).get("package_builds") == "not-authorized-before-tier3-build-campaign", "post-materialization binary build gate")
-    req(t.get("support_components", {}).get("next_gate") == "tier3-build-campaign-planning", "post-materialization next gate")
+    req(t.get("discovery_policy", {}).get("phase") in {"build-campaign-planning","build-level0"}, "post-materialization phase")
+    req(t.get("discovery_policy", {}).get("package_builds") in {"not-authorized-before-tier3-build-campaign","tier3-level0-authorized"}, "post-materialization binary build gate")
+    req(t.get("support_components", {}).get("next_gate") in {"tier3-build-campaign-planning","tier3-build-level0"}, "post-materialization next gate")
     summary = m.get("evidence_summary", {})
     req(summary.get("result") == "PASS" and summary.get("package_attempted") is False and summary.get("package_state_effect") == "none", "materialization evidence summary")
     for node in selected:

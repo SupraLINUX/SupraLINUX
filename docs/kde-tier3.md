@@ -267,10 +267,12 @@ Canonical readiness is now `package-contract-review-pass`. Tier 3 remains **0 PA
 The contract-review evidence has been converted into explicit SupraLINUX decisions. Canonical readiness is now `package-contract-ready` and package contract state is `not-materialized`.
 
 Materialization is the active gate. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**; no package build is authorized until source-package materialization completes.
-## Current canonical state — Tier 3 `build-campaign-planning`
+## Current canonical state — Tier 3 `build-level0`
 
-Tier 3 source materialization remains closed at **20/20 PASS** from run `35746667704`; package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** because no Tier 3 binary build has been attempted.
+The immutable four-level build campaign has passed Repository Policy validation. Tier 3 now enters the first real binary-build campaign with **Level 0 authorized for 12 independent nodes**; Levels 1–3 remain unauthorized.
 
-The four-level build/test topology is now encoded in the generated immutable plan `manifests/kde-tier3-build-campaign.json` and linked from the canonical Tier 3 manifest. Its levels are **12 / 2 / 4 / 2**, all retained Tier 1/Tier 2/ECM/support predecessors are pinned to real PASS artifacts, and the KNewStuff → KCMUtils runtime dependency remains a deferred validation gate rather than a false build edge.
+Canonical package state is still **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** before this campaign executes. Source materialization remains 20/20 PASS and every Level 0 job consumes the exact promoted materialization artifact plus only pinned SupraLINUX PASS predecessors.
 
-The plan itself has `execution_authorized=false`. Repository Policy must prove that the committed plan exactly matches the canonical KDE dependency graph and promoted artifacts before any Level 0 execution manifest is introduced. Binary builds therefore remain unauthorized at this state. Stable repository promotion continues to require explicit user approval.
+Level 0 is defined by `manifests/kde-tier3-build-level0.json` and uses a shared clean Ubuntu 26.04 Resolute buildd rootfs. The matrix runs with `fail-fast=false`: an independent node continues even if another node fails. A real attempted node-owned failure is FAIL; BLOCKED means a node is not attempted because a required predecessor failed. Because Level 0 has no Tier 3 predecessors, no Level 0 node starts BLOCKED.
+
+KNewStuff retains the deliberate deferred runtime gate: a successful Level 0 build becomes `RUNTIME_PENDING`, not canonical PASS, until KCMUtils is PASS in Level 2 and their runtime validation closes. Promotion to the SupraLINUX `stable` repository remains impossible without explicit user approval.

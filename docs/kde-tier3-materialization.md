@@ -61,7 +61,7 @@ Current state:
 
 Run `35746667704` materialized all **20/20** source packages successfully from commit `39fcab118709bcdb7e97524333d3f74d1b4edec4`. Repository Policy run `35746667671` also passed. Every promoted node records its job ID, artifact ID and GitHub artifact SHA-256; the artifact itself retains the complete `result.json`, source-package hashes, deterministic source-tree hash and adapted `debian/` payload.
 
-Materialization changed no package state: `package_attempted=false` and `package_state_effect=none`. The next state is `build-campaign-planning`, where the existing four-level KDE-upstream DAG will be converted into executable clean-build lanes. Binary package builds remain unauthorized until that campaign is reviewed and explicitly activated.
+Materialization changed no package state: `package_attempted=false` and `package_state_effect=none`. The subsequent `build-campaign-planning` gate has since passed Repository Policy and Level 0 now has its own explicit execution manifest. This document remains the canonical materialization record; current build execution state is documented in `docs/kde-tier3-build-level0.md`.
 
 ## Promotion validation history
 

@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-22",
+  "role": "tier3-build-level0-attempt-ledger",
+  "nodes": {
+    "kbookmarks": [],
+    "kconfigwidgets": [],
+    "kdav": [],
+    "kdesu": [],
+    "kiconthemes": [],
+    "kjobwidgets": [],
+    "knewstuff": [],
+    "kpeople": [],
+    "krunner": [],
+    "ksvg": [],
+    "ktextwidgets": [],
+    "kwallet": []
+  }
+}

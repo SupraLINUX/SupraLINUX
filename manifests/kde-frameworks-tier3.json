@@ -12,11 +12,11 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-campaign-planning",
+    "phase": "build-level0",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "not-authorized-before-tier3-build-campaign"
+    "package_builds": "tier3-level0-authorized"
   },
   "nodes": [
     {
@@ -787,7 +787,7 @@
     "policy": "KDE upstream support components are separate from API tiers and retain their own build/runtime semantics.",
     "provider_audit_manifest": "manifests/kde-tier3-support-provider-audit.json",
     "provider_audit": "PASS",
-    "next_gate": "tier3-build-campaign-planning",
+    "next_gate": "tier3-build-level0",
     "package_contract_manifest": "manifests/kde-tier3-support-package-contracts.json",
     "materialization_manifest": "manifests/kde-tier3-support-materialization.json",
     "materialization": "PASS",
@@ -806,5 +806,6 @@
   "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
   "materialization_manifest": "manifests/kde-tier3-materialization.json",
   "materialization": "PASS",
-  "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json"
+  "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
+  "build_level0_manifest": "manifests/kde-tier3-build-level0.json"
 }

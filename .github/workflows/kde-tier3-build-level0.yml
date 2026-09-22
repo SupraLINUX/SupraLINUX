@@ -1,0 +1,108 @@
+name: KDE Frameworks Tier 3 build level 0
+
+on:
+  pull_request:
+    paths:
+      - manifests/kde-tier3-build-level0.json
+      - manifests/kde-tier3-build-level0-attempts.json
+      - manifests/kde-tier3-build-campaign.json
+      - manifests/kde-tier3-materialization.json
+      - manifests/kde-tier3-package-contracts.json
+      - manifests/kde-dag.json
+      - scripts/plan-kde-tier3-build-level0.py
+      - scripts/run-kde-tier3-build-level0.sh
+      - scripts/validate_kde_tier3_build_level0.py
+      - .github/workflows/kde-tier3-build-level0.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: kde-tier3-build-level0-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    name: Plan Tier 3 Level 0
+    runs-on: ubuntu-26.04
+    outputs:
+      run: ${{ steps.matrix.outputs.run }}
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Validate Level 0 definition
+        run: python3 scripts/validate_kde_tier3_build_level0.py
+      - name: Build runnable matrix
+        id: matrix
+        run: python3 scripts/plan-kde-tier3-build-level0.py --github-output "${GITHUB_OUTPUT}"
+
+  rootfs:
+    name: Build shared Resolute rootfs
+    needs: plan
+    if: needs.plan.outputs.run == 'true'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 25
+    steps:
+      - name: Create one clean buildd rootfs
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends mmdebstrap uidmap
+          if ! grep -q "^${USER}:" /etc/subuid; then sudo usermod --add-subuids 100000-165535 "${USER}"; fi
+          if ! grep -q "^${USER}:" /etc/subgid; then sudo usermod --add-subgids 100000-165535 "${USER}"; fi
+          unshare --user --map-auto true
+          mkdir -p .work/rootfs
+          mmdebstrap --mode=unshare --variant=buildd --architectures=amd64 --components=main,universe             --skip=output/mknod --format=tar resolute .work/rootfs/resolute-amd64.tar http://azure.archive.ubuntu.com/ubuntu
+          (cd .work/rootfs && sha256sum resolute-amd64.tar > rootfs.sha256)
+          { cat /etc/os-release; mmdebstrap --version; } > .work/rootfs/provenance.txt
+      - name: Upload shared rootfs
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-tier3-level0-rootfs-${{ github.run_id }}
+          path: .work/rootfs/
+          compression-level: 0
+          retention-days: 7
+
+  package:
+    name: Build ${{ matrix.node }}
+    needs: [plan, rootfs]
+    if: needs.plan.outputs.run == 'true'
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    runs-on: ubuntu-26.04
+    timeout-minutes: 100
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Download shared rootfs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: kde-tier3-level0-rootfs-${{ github.run_id }}
+          path: .work/rootfs
+      - name: Build and validate node
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ROOTFS_ARTIFACT_DIR: ${{ github.workspace }}/.work/rootfs
+        run: scripts/run-kde-tier3-build-level0.sh "${{ matrix.node }}"
+      - name: Upload package evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-tier3-level0-${{ matrix.node }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-tier3-build-level0/${{ matrix.node }}/
+          if-no-files-found: error
+          retention-days: 90
+
+  skip:
+    name: Report intentional Level 0 skip
+    needs: plan
+    if: needs.plan.outputs.run == 'false'
+    runs-on: ubuntu-26.04
+    steps:
+      - run: echo 'Tier 3 Level 0 intentionally skipped; no runnable Level 0 node remains.'

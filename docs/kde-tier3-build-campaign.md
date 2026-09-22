@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 build campaign
 
-Status: **planned; execution not authorized** as of 2026-09-22.
+Status: **validated; Level 0 execution authorized separately** as of 2026-09-22.
 
 This document defines how the 20 materialized Tier 3 Frameworks will be built without changing the project-wide PASS / FAIL / BLOCKED semantics.
 
@@ -56,4 +56,4 @@ Repository Policy checks both:
 - `python3 scripts/compile_kde_tier3_build_campaign.py --check`
 - `python3 scripts/validate_kde_tier3_build_campaign.py`
 
-Until those checks pass and Level 0 receives its own execution manifest, the canonical Tier 3 package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** and no Tier 3 binary build is authorized.
+Both planning checks passed in Repository Policy before Level 0 activation. The immutable plan itself remains `execution_authorized=false`; `manifests/kde-tier3-build-level0.json` is the separate execution authority for the 12 Level 0 nodes. Levels 1–3 remain unauthorized. Before Level 0 results are promoted, canonical Tier 3 package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**.

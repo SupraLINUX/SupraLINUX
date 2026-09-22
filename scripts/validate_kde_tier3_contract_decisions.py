@@ -94,10 +94,10 @@ req(any(q.get("action")=="preserve-ubuntu-optional-integration" and q.get("value
 req(set(d["nodes"]["purpose"]["frameworks"]["qml_required"])=={"prison","kitemmodels","kcmutils"},"Purpose upstream QML contract")
 
 canonical=t.get("discovery_policy",{})
-req(canonical.get("phase") in {"materialization","build-campaign-planning"},"Tier3 canonical materialization/build-planning phase")
+req(canonical.get("phase") in {"materialization","build-campaign-planning","build-level0"},"Tier3 canonical materialization/build-planning phase")
 req(canonical.get("package_contracts")=="PASS","Tier3 canonical contract PASS")
-req(canonical.get("package_builds") in {"not-authorized-before-tier3-materialization","not-authorized-before-tier3-build-campaign"},"Tier3 build gate")
-req(t.get("support_components",{}).get("next_gate") in {"tier3-materialization","tier3-build-campaign-planning"},"Tier3 next gate")
+req(canonical.get("package_builds") in {"not-authorized-before-tier3-materialization","not-authorized-before-tier3-build-campaign","tier3-level0-authorized"},"Tier3 build gate")
+req(t.get("support_components",{}).get("next_gate") in {"tier3-materialization","tier3-build-campaign-planning","tier3-build-level0"},"Tier3 next gate")
 req(c.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 
 for path in (

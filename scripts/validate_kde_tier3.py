@@ -46,6 +46,7 @@ req(tier3.get("dependency_manifest")=="manifests/kde-frameworks-tier3-dependenci
 req(tier3.get("provider_audit_manifest")=="manifests/kde-tier3-provider-audit.json","Tier3 provider audit manifest reference")
 req(tier3.get("package_contract_manifest")=="manifests/kde-tier3-package-contracts.json","Tier3 package-contract manifest reference")
 req(tier3.get("materialization_manifest")=="manifests/kde-tier3-materialization.json","Tier3 materialization manifest reference")
+req(tier3.get("build_level0_manifest")=="manifests/kde-tier3-build-level0.json","Tier3 Level0 manifest reference")
 req(tier3.get("support_components",{}).get("pending")==[],"Tier3 support-component pending queue")
 req(tier3.get("support_components",{}).get("pass")==["breeze-icons","kdoctools","kded"],"Tier3 support-component PASS set")
 pre=tier3.get("canonical_tier2_precondition",{})
@@ -78,11 +79,11 @@ for node_id,sha in expected.items():
     req(node_id not in dag.get("nodes",{}),f"{node_id}: pending Tier3 node must not be promoted into canonical DAG")
 
 policy=tier3.get("discovery_policy",{})
-req(policy.get("phase")=="build-campaign-planning","Tier3 discovery phase")
+req(policy.get("phase")=="build-level0","Tier3 discovery phase")
 req(policy.get("dependencies")=="materialized-from-kde-upstream-v6.30.0","Tier3 dependency state")
 req(policy.get("provider_audit")=="PASS","Tier3 provider audit gate")
 req(policy.get("package_contracts")=="PASS","Tier3 package-contract gate")
-req(policy.get("package_builds")=="not-authorized-before-tier3-build-campaign","Tier3 package-build gate")
+req(policy.get("package_builds")=="tier3-level0-authorized","Tier3 package-build gate")
 support=tier3.get("support_components",{})
 req(support.get("provider_audit_manifest")=="manifests/kde-tier3-support-provider-audit.json","Tier3 support provider-audit manifest")
 req(support.get("provider_audit")=="PASS","Tier3 support provider-audit state")
@@ -94,12 +95,12 @@ req(support.get("build_level0")=="PASS","Tier3 support level0 state")
 req(support.get("build_level1_manifest")=="manifests/kde-tier3-support-build-level1.json","Tier3 support level1 manifest")
 req(support.get("build_level1")=="PASS","Tier3 support level1 state")
 req(support.get("support_subdag")=="PASS","Tier3 support sub-DAG state")
-req(support.get("next_gate")=="tier3-build-campaign-planning","Tier3 support next gate")
+req(support.get("next_gate")=="tier3-build-level0","Tier3 support next gate")
 
 doc=(ROOT/"docs/kde-tier3.md").read_text()
 req("0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED" in doc,"Tier3 docs canonical snapshot")
 req("KDE upstream" in doc and "Ubuntu" in doc,"Tier3 docs authority/provider boundary")
-req("materialized" in doc and "build-campaign-planning" in doc,"Tier3 docs lifecycle")
+req("materialized" in doc and "build-level0" in doc,"Tier3 docs lifecycle")
 
 if errors:
     for e in errors:
@@ -109,4 +110,4 @@ if errors:
 print("KDE Frameworks Tier 3 source inventory validation: PASS")
 print("Frameworks series: 6.30.0")
 print("Tier 3: 0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED")
-print("Next gate: Tier 3 build-campaign planning")
+print("Next gate: Tier 3 build Level 0")
