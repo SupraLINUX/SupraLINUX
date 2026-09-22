@@ -203,10 +203,11 @@
     }
   },
   "materialization": {
-    "status": "authorized-pending-lane",
+    "status": "pending-ci",
     "method": "kde-authority-source-plus-pinned-debian-6.30-tree",
     "package_state_effect": "none",
-    "package_attempted": false
+    "package_attempted": false,
+    "manifest": "manifests/kde-tier3-support-materialization.json"
   },
   "stable_promotion_requires_explicit_user_approval": true,
   "technical_references": {
