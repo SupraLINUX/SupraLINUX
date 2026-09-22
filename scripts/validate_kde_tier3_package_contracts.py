@@ -14,7 +14,7 @@ canonical=[n["id"] for n in t["nodes"]]
 nodes={n["id"]:n for n in t["nodes"]}
 
 req(c.get("schema")==1,"Tier3 package-contract schema")
-req(c.get("state") in {"reference-capture-pending","reference-capture-pass","contracts-ready","materialized"},"Tier3 package-contract lifecycle")
+req(c.get("state") in {"reference-capture-pending","reference-capture-pass","packaging-tree-pending","packaging-tree-pass","contracts-ready","materialized"},"Tier3 package-contract lifecycle")
 req(c.get("source_authority")=="kde-upstream" and c.get("packaging_authority")=="supralinux","Tier3 contract authority boundary")
 req(c.get("frameworks_series")=="6.30.0","Tier3 contract Frameworks series")
 req(c.get("selected_nodes")==canonical and len(canonical)==20,"Tier3 contract canonical node set")
@@ -41,7 +41,7 @@ for node in canonical:
     req(n.get("packaging",{}).get("state")=="pending" and n.get("packaging",{}).get("downstream_eligible") is False,f"{node}: packaging remains pending")
     planning=n.get("planning",{})
     req(planning.get("provider_audit")=="PASS" and planning.get("provider")=="supralinux",f"{node}: provider audit canonical linkage")
-    req(planning.get("package_contract") in {"required","reference-capture-pending","reference-capture-pass","ready","not-materialized"},f"{node}: canonical package-contract lifecycle")
+    req(planning.get("package_contract") in {"required","reference-capture-pending","reference-capture-pass","packaging-tree-pending","packaging-tree-pass","ready","not-materialized"},f"{node}: canonical package-contract lifecycle")
 
 if c.get("state")=="reference-capture-pending":
     req(rc.get("status")=="pending-ci" and rc.get("evidence") is None,"pending reference capture state")
