@@ -237,3 +237,10 @@ Canonical planning readiness is now `package-contract-reference-pass`. The next 
 Canonical planning readiness is now `package-contract-tree-pending`. The capture consumes the exact promoted Ubuntu/Debian source pins for all 20 Frameworks, verifies every `.dsc`, `debian.tar` and orig tar, then retains both `debian/` trees with deterministic hashes and parsed control summaries.
 
 This is still contract evidence only. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**, and package builds remain unauthorized.
+
+
+## Tier 3 packaging-tree PASS
+
+The exact Ubuntu Resolute and Debian sid `debian/` trees for all 20 Tier 3 Frameworks passed capture in run `35729077373` (artifact `10694324518`, index SHA-256 `3f975678343f872c8094b20425e76b4026a59d1c5f50c1d5b2c5c1b48a00c7fb`).
+
+Canonical package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. Each node is now `package-contract-tree-pass`; the next gate is explicit package-contract review. Materialization and package builds remain unauthorized.
