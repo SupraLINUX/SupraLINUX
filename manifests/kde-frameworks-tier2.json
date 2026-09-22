@@ -1897,15 +1897,62 @@
         "compatibility_policy": "ubuntu-legacy-contract-available-on-demand-not-default"
       },
       "packaging": {
-        "state": "pending",
-        "reason": "legacy-compatibility-provider-package-contract-pending",
-        "compatibility_policy": "kf6mime-authoritative-legacy-kpim6mime-on-demand"
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux1",
+        "claim": "hosted-clean-package-preflight-plus-compatibility-provider",
+        "authoritative": false,
+        "downstream_eligible": true,
+        "attempt_ledger": "manifests/kde-tier2-package-batch5-attempts.json",
+        "campaign": "manifests/kde-tier2-package-campaign-batch5.json",
+        "compatibility_policy": "kf6mime-authoritative-legacy-kpim6mime-on-demand",
+        "evidence": [
+          {
+            "result": "PASS",
+            "workflow_run": 35687831684,
+            "run_attempt": 2,
+            "job_id": 106619132039,
+            "commit": "c7056cd8189ea1afe401ca30a97558075d0d746b",
+            "attempted_package_version": "6.30.0-0supralinux1",
+            "artifact_id": 10677716050,
+            "artifact_sha256": "ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36",
+            "rootfs_artifact_id": 10677870006,
+            "rootfs_artifact_sha256": "14bce5a6b91833dcbc0531492cbd7e46127c7baa9da8b58d16b3d4b7fa905dd5",
+            "stage": "complete-after-compatibility-provider",
+            "tests": "17/17 PASS",
+            "lintian": "PASS-errors",
+            "abi_soname": "libKF6Mime.so.6",
+            "apt_check": "PASS",
+            "consumer_smoke": "PASS",
+            "predecessor_buildinfo_proof": "PASS",
+            "legacy_abi_metadata": "PASS",
+            "compatibility_audit": {
+              "result": "PASS",
+              "workflow_run": 35690284355,
+              "job_id": 106625630885,
+              "artifact_id": 10678073973,
+              "artifact_sha256": "7b0c9175b1e0f48eb1d18e9ceb1af03381c4de8d0b322bc619dd7be224307c5b"
+            },
+            "compatibility_provider": {
+              "result": "PASS",
+              "manifest": "manifests/kde-tier2-kmime-legacy-provider.json",
+              "workflow_run": 35691309612,
+              "job_id": 106628834481,
+              "artifact_id": 10679420779,
+              "artifact_sha256": "f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b",
+              "coinstallation": "PASS",
+              "apt_check": "PASS",
+              "legacy_consumer": "PASS",
+              "framework_consumer": "PASS"
+            },
+            "downstream_eligible": true
+          }
+        ]
       },
-      "state": "pending",
+      "state": "PASS",
       "planning": {
-        "readiness": "compatibility-provider-required",
+        "readiness": "retained-pass",
         "provider_audit": "complete",
-        "package_contract": "materialized",
+        "package_contract": "retained-pass",
         "architecture_decision": "ADR-0002-accepted",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
@@ -1979,13 +2026,23 @@
           "selected_remediation": "supralinux-legacy-runtime-provider-with-framework-data-alternative"
         },
         "compatibility_provider": {
-          "status": "package-contract-pending",
+          "status": "PASS",
           "source_family": "kmime",
-          "compatibility_version": "25.12.3",
+          "compatibility_version": "25.12.3-0ubuntu1+supralinux1",
           "target_runtime_package": "libkpim6mime6",
           "target_runtime_soname": "libKPim6Mime.so.6",
-          "data_dependency_policy": "libkmime-data (= Ubuntu compatibility version) | libkf6mime-data",
-          "authoritative_kde_package_unchanged": true
+          "data_dependency_policy": "libkmime-data (= 25.12.3-0ubuntu1) | libkf6mime-data (>= 6.30.0-0supralinux1)",
+          "authoritative_kde_package_unchanged": true,
+          "manifest": "manifests/kde-tier2-kmime-legacy-provider.json",
+          "workflow_run": 35691309612,
+          "materialization_job_id": 106628689878,
+          "build_job_id": 106628834481,
+          "artifact_id": 10679420779,
+          "artifact_sha256": "f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b",
+          "coinstallation": "PASS",
+          "apt_check": "PASS",
+          "legacy_consumer": "PASS",
+          "framework_consumer": "PASS"
         }
       }
     }
