@@ -58,6 +58,8 @@ else:
 for path in (
     "scripts/materialize-kde-tier2-kmime-legacy-provider.sh",
     "scripts/run-kde-tier2-kmime-legacy-provider-build.sh",
+    "scripts/kde-tier2-kmime-legacy-provider-needed.sh",
+    "scripts/test-kde-tier2-kmime-legacy-provider-scope.sh",
     ".github/workflows/kde-tier2-kmime-legacy-provider.yml",
     "docs/kde-tier2-kmime-legacy-provider.md",
 ):
