@@ -218,6 +218,9 @@ jobs:
       - name: Validate KDE Tier 2 Batch 5 preparation
         run: python3 scripts/validate_kde_tier2_package_batch5.py
 
+      - name: Validate KDE Frameworks Tier 3 inventory
+        run: python3 scripts/validate_kde_tier3.py
+
       - name: Validate KDE Attica 6.30 packaging preparation
         run: python3 scripts/validate_kde_attica_package.py
 
