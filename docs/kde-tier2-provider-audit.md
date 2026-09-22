@@ -1,6 +1,6 @@
 # KDE Tier 2 provider audit
 
-Status: **Python/Clang provider revalidation pending; previous batch PASS retained**  
+Status: **provider audit batch 4 active — KMime**  
 Reviewed: **2026-09-20**
 
 ## Scope
@@ -117,3 +117,19 @@ Run `35607692129`, job `106358717091`, artifact `10642947552`, SHA-256 `ced417aa
 Required providers include Linux Xattr `libattr1-dev 1:2.5.2-4ubuntu0.1`, Qt base `6.10.2+dfsg-7` and Qt declarative `6.10.2+dfsg-3`. All audited optional KFileMetaData extractor candidates were present in Resolute, including Poppler Qt6, TagLib, Exiv2, FFmpeg, EPub, CatDoc, QMobipocket6 and libappimage.
 
 These three nodes advance to package-contract-ready. Provider audit changes no package state.
+
+
+## Provider audit batch 4 — KMime after ADR-0002
+
+ADR-0002 is accepted. KMime is no longer human-decision-gated and is the sole active provider-audit node.
+
+Selected upstream profile:
+
+- KDE source authority: KMime 6.30.0;
+- required retained Framework predecessor: KCodecs 6.30 PASS;
+- required Qt component: Core;
+- test provider: Qt Test;
+- `BUILD_TESTING=ON`;
+- no legacy `KPim6Mime` provider is required to build the Frameworks KMime target.
+
+This audit validates provider availability/profile only. It does **not** establish package PASS, ABI compatibility with legacy KMime, or co-installation compatibility.

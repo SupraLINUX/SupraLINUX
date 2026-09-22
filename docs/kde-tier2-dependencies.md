@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 2 dependency map
 
-Status: **inventory corrected; KAuth PASS; 14 nodes pending**  
+Status: **14 PASS / 1 pending; KMime provider audit active**  
 Series: **6.30.0**  
 Date: **2026-09-20**
 
@@ -90,3 +90,14 @@ Upstream v6.30.0 was re-read before the final provider audit. Two dependency cla
 - KFileMetaData marks KCoreAddons and KCodecs REQUIRED through its upstream feature summary. KArchive and KConfig remain optional upstream, but SupraLINUX selects them because compatible retained 6.30 providers are already available.
 
 Provider audit batch 3 is KService + KDeclarative + KFileMetaData. KService audits Qt Xml/Concurrent/Test while refusing an older distro KDocTools provider. KDeclarative audits Qml/Quick/Gui/Test. KFileMetaData audits required Linux Xattr plus optional Poppler Qt6, TagLib, Exiv2, FFmpeg, EPub, CatDoc, QMobipocket6 and libappimage candidates. Optional extractor candidates remain optional until provider evidence exists.
+
+
+## 2026-09-22 — KMime dependency gate unblocked
+
+ADR-0002 is accepted. The direct KDE build edge remains:
+
+`ECM -> KCodecs + Qt Core -> KF6Mime`.
+
+KCodecs is already a retained downstream-eligible PASS artifact. KMime therefore moves from `compatibility-decision-required` to the ordinary provider-audit lane. The Ubuntu PIM KMime family is compatibility-only and is not a KDE build predecessor.
+
+Current Tier 2 dependency state is **14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**.
