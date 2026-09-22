@@ -78,6 +78,14 @@ for node,e in expected.items():
 
 req(a.get("schema")==1 and a.get("batch")=="tier3-support-build-level0","level0 attempt ledger")
 req(set(a.get("nodes",{}))=={"breeze-icons","kdoctools"},"level0 attempt ledger nodes")
+if c.get("state")=="PASS":
+    summary=c.get("evidence_summary",{})
+    req(summary.get("result")=="PASS" and summary.get("workflow_run")==35700002095,"level0 PASS summary")
+    req(summary.get("rootfs_sha256")=="e649388bcf5e02372714f59dde3579cf0c9c9f2e42a2f94bd4a358f9a8a8811e","level0 rootfs SHA")
+    for node in ("breeze-icons","kdoctools"):
+        attempts=a.get("nodes",{}).get(node,[])
+        req(len(attempts)==1 and attempts[0].get("result")=="PASS",f"{node}: one recorded PASS attempt")
+        req(attempts[0].get("workflow_run")==35700002095,f"{node}: attempt workflow evidence")
 req(tier3.get("support_components",{}).get("next_gate") in {"support-build-level0","support-build-level1","tier3-build"},"canonical level0 gate")
 req(c.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 
