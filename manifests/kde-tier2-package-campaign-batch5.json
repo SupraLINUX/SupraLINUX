@@ -5,7 +5,7 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "frameworks_series": "6.30.0",
-  "state": "rematerialization-pending",
+  "state": "remediation-pending-build",
   "canonical_snapshot": "14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED",
   "selected_nodes": [
     "kmime"
@@ -65,7 +65,7 @@
   },
   "nodes": {
     "kmime": {
-      "state": "rematerialization-pending",
+      "state": "remediation-pending-build",
       "last_result": "INFRA",
       "downstream_eligible": false,
       "source_package": "kf6-kmime",
@@ -90,15 +90,19 @@
       ],
       "package_dependency_closure": [],
       "materialization": {
-        "workflow_run": 35684824744,
-        "job_id": 106609323687,
-        "artifact_id": 10675444852,
-        "artifact_sha256": "ae47a46605bce3943e6abd3c1e713d189f41782adecab2dc02618f411427ff8b",
-        "tree_sha256": "876e44ff9afd3cc6257046b86ac6d88de5b0f1e07308dace5fa6b653438cd0fc",
-        "debian_tree_sha256": "1b489be2fc5479e7ef1615aa5d0c3255a1726a27a4d3be3ced66c116bc9eb385",
-        "dsc_sha256": "0cd2c44451d2852bc5fe380ee5d9dc6e115fe657ccc79654da90c1e4a5c97716",
-        "debian_tar_sha256": "2372e83d87d7f2da1a61fe07c63cbd71da594c116d114a238c2a43848500b613",
-        "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc"
+        "workflow_run": 35687009946,
+        "run_attempt": 2,
+        "job_id": 106616152530,
+        "artifact_id": 10677073138,
+        "artifact_sha256": "539745b0f656efeed14c703f6cfb23670bfc8f79d07d270991dde5eafe2f6ea4",
+        "tree_sha256": "eecfc8d314ff8ff9715c561c7c9be1c2c4c5f239ca6c563214eeaee33bf50ba6",
+        "debian_tree_sha256": "65f384007ae703c2480b297cea68843fe32d11f5c6deb51eee9e2dc911559820",
+        "dsc_sha256": "f646a30a01e0bfce647cceb2869bb3316a2414f09a16c3d7c4f965690fd1a7b3",
+        "debian_tar_sha256": "fa598699697f8a835f69935aab534da3e664f1eec955e6d56273495c8be878f3",
+        "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+        "package_version": "6.30.0-0supralinux1",
+        "package_attempted": false,
+        "package_state_effect": "none"
       },
       "compatibility": {
         "legacy_runtime_package": "libkpim6mime6",
@@ -126,8 +130,9 @@
     }
   },
   "activation": {
-    "status": "rematerialization-required",
-    "reason": "resolute-toolchain-symbol-baseline",
+    "status": "armed",
+    "reason": "replacement-materialization-pass",
+    "canonical_head": "d81871da2eb6f28774b9ad9ef7c035e2e4e71481",
     "package_state_effect": "none"
   }
 }

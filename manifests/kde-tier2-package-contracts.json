@@ -941,7 +941,7 @@
           "add std::piecewise_construct as optional=toolchain at upstream version 6.30.0"
         ],
         "kde_feature_effect": "none",
-        "validation": "selective-rematerialization-and-clean-build-required"
+        "validation": "selective-rematerialization-pass; clean-build-retry-required"
       }
     }
   },
@@ -958,32 +958,15 @@
     "versions_sha256": "e3a808b670ab34630380fd26afb65dd9cf3a68df5363e7250ccc5e886cf5a8d4"
   },
   "materialization": {
-    "status": "pending-ci",
+    "status": "PASS",
+    "result": "PASS",
     "method": "kde-authority-source-plus-pinned-debian-tree",
     "package_state_effect": "none",
     "package_attempted": false,
     "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
     "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
-    "reason": "kmime-resolute-toolchain-symbol-rematerialization",
-    "targets": [
-      "kmime"
-    ],
-    "previous_pass": {
-      "result": "PASS",
-      "workflow_run": 35684824744,
-      "job_id": 106609323687,
-      "commit": "4d947df28a923ea37eeb351ebdd435f1a5f0fb69",
-      "artifact_id": 10675444852,
-      "artifact_sha256": "ae47a46605bce3943e6abd3c1e713d189f41782adecab2dc02618f411427ff8b",
-      "tree_sha256": "876e44ff9afd3cc6257046b86ac6d88de5b0f1e07308dace5fa6b653438cd0fc",
-      "debian_tree_sha256": "1b489be2fc5479e7ef1615aa5d0c3255a1726a27a4d3be3ced66c116bc9eb385",
-      "dsc_sha256": "0cd2c44451d2852bc5fe380ee5d9dc6e115fe657ccc79654da90c1e4a5c97716",
-      "debian_tar_sha256": "2372e83d87d7f2da1a61fe07c63cbd71da594c116d114a238c2a43848500b613",
-      "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
-      "package_version": "6.30.0-0supralinux1",
-      "package_attempted": false,
-      "package_state_effect": "none"
-    },
+    "reason": "kmime-resolute-toolchain-symbol-rematerialization-pass",
+    "targets": [],
     "retained_package_pass": [
       "kauth",
       "kcolorscheme",
@@ -999,6 +982,75 @@
       "kstatusnotifieritem",
       "kunitconversion",
       "syndication"
+    ],
+    "evidence": {
+      "kmime": {
+        "workflow_run": 35687009946,
+        "run_attempt": 2,
+        "job_id": 106616152530,
+        "artifact_id": 10677073138,
+        "artifact_sha256": "539745b0f656efeed14c703f6cfb23670bfc8f79d07d270991dde5eafe2f6ea4",
+        "tree_sha256": "eecfc8d314ff8ff9715c561c7c9be1c2c4c5f239ca6c563214eeaee33bf50ba6",
+        "debian_tree_sha256": "65f384007ae703c2480b297cea68843fe32d11f5c6deb51eee9e2dc911559820",
+        "dsc_sha256": "f646a30a01e0bfce647cceb2869bb3316a2414f09a16c3d7c4f965690fd1a7b3",
+        "debian_tar_sha256": "fa598699697f8a835f69935aab534da3e664f1eec955e6d56273495c8be878f3",
+        "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+        "package_version": "6.30.0-0supralinux1",
+        "package_attempted": false,
+        "package_state_effect": "none"
+      }
+    },
+    "history": [
+      {
+        "kind": "initial-materialization-pass",
+        "evidence": {
+          "result": "PASS",
+          "workflow_run": 35684824744,
+          "job_id": 106609323687,
+          "commit": "4d947df28a923ea37eeb351ebdd435f1a5f0fb69",
+          "artifact_id": 10675444852,
+          "artifact_sha256": "ae47a46605bce3943e6abd3c1e713d189f41782adecab2dc02618f411427ff8b",
+          "tree_sha256": "876e44ff9afd3cc6257046b86ac6d88de5b0f1e07308dace5fa6b653438cd0fc",
+          "debian_tree_sha256": "1b489be2fc5479e7ef1615aa5d0c3255a1726a27a4d3be3ced66c116bc9eb385",
+          "dsc_sha256": "0cd2c44451d2852bc5fe380ee5d9dc6e115fe657ccc79654da90c1e4a5c97716",
+          "debian_tar_sha256": "2372e83d87d7f2da1a61fe07c63cbd71da594c116d114a238c2a43848500b613",
+          "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+          "package_version": "6.30.0-0supralinux1",
+          "package_attempted": false,
+          "package_state_effect": "none"
+        }
+      },
+      {
+        "kind": "infrastructure-incident",
+        "result": "INFRA",
+        "workflow_run": 35687009946,
+        "run_attempt": 1,
+        "job_id": 106615915654,
+        "artifact_id": 10676748373,
+        "artifact_sha256": "ae975228a53ad826e56ede2102a868c25adcef995ee2554d503f8752b74133d4",
+        "stage": "authoritative-source-download",
+        "cause": "curl 35 Recv failure: Connection reset by peer",
+        "package_attempted": false,
+        "package_state_effect": "none"
+      },
+      {
+        "kind": "replacement-materialization-pass",
+        "evidence": {
+          "workflow_run": 35687009946,
+          "run_attempt": 2,
+          "job_id": 106616152530,
+          "artifact_id": 10677073138,
+          "artifact_sha256": "539745b0f656efeed14c703f6cfb23670bfc8f79d07d270991dde5eafe2f6ea4",
+          "tree_sha256": "eecfc8d314ff8ff9715c561c7c9be1c2c4c5f239ca6c563214eeaee33bf50ba6",
+          "debian_tree_sha256": "65f384007ae703c2480b297cea68843fe32d11f5c6deb51eee9e2dc911559820",
+          "dsc_sha256": "f646a30a01e0bfce647cceb2869bb3316a2414f09a16c3d7c4f965690fd1a7b3",
+          "debian_tar_sha256": "fa598699697f8a835f69935aab534da3e664f1eec955e6d56273495c8be878f3",
+          "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+          "package_version": "6.30.0-0supralinux1",
+          "package_attempted": false,
+          "package_state_effect": "none"
+        }
+      }
     ]
   },
   "provider_adaptations": {

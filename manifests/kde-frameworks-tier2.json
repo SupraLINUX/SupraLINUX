@@ -1881,7 +1881,7 @@
       "package_identity": {
         "source_package": "kf6-kmime",
         "package_version_candidate": "6.30.0-0supralinux1",
-        "status": "not-materialized",
+        "status": "materialized",
         "framework_binary_packages": [
           "libkf6mime-data",
           "libkf6mime-dev",
@@ -1898,14 +1898,14 @@
       },
       "packaging": {
         "state": "pending",
-        "reason": "toolchain-symbol-selective-rematerialization-pending",
+        "reason": "clean-build-remediation-pending",
         "compatibility_policy": "kf6mime-authoritative-legacy-kpim6mime-on-demand"
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "build-ready",
         "provider_audit": "complete",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "architecture_decision": "ADR-0002-accepted",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
@@ -1930,7 +1930,21 @@
             "kcodecs": "6.30.0-0supralinux1"
           }
         },
-        "materialization_evidence": null,
+        "materialization_evidence": {
+          "workflow_run": 35687009946,
+          "run_attempt": 2,
+          "job_id": 106616152530,
+          "artifact_id": 10677073138,
+          "artifact_sha256": "539745b0f656efeed14c703f6cfb23670bfc8f79d07d270991dde5eafe2f6ea4",
+          "tree_sha256": "eecfc8d314ff8ff9715c561c7c9be1c2c4c5f239ca6c563214eeaee33bf50ba6",
+          "debian_tree_sha256": "65f384007ae703c2480b297cea68843fe32d11f5c6deb51eee9e2dc911559820",
+          "dsc_sha256": "f646a30a01e0bfce647cceb2869bb3316a2414f09a16c3d7c4f965690fd1a7b3",
+          "debian_tar_sha256": "fa598699697f8a835f69935aab534da3e664f1eec955e6d56273495c8be878f3",
+          "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+          "package_version": "6.30.0-0supralinux1",
+          "package_attempted": false,
+          "package_state_effect": "none"
+        },
         "materialization_history": [
           {
             "workflow_run": 35684824744,
@@ -1948,6 +1962,9 @@
           "classification": "resolute-toolchain-symbol-baseline",
           "source_attempt_run": 35686463559,
           "source_attempt_job": 106614505106,
+          "status": "replacement-materialization-pass",
+          "replacement_materialization_run": 35687009946,
+          "replacement_materialization_job": 106616152530,
           "package_state_effect": "none"
         }
       }

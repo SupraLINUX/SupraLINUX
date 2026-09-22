@@ -26,11 +26,11 @@
     "syndication"
   ],
   "provider_audit_required": [],
-  "package_contract_ready": [
+  "package_contract_ready": [],
+  "human_decision_required": [],
+  "build_queue": [
     "kmime"
   ],
-  "human_decision_required": [],
-  "build_queue": [],
   "audit_batch_size": 5,
   "next_provider_audit_batch": [],
   "policy": {
