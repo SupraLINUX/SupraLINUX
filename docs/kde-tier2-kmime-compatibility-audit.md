@@ -1,0 +1,20 @@
+# KMime legacy compatibility-provider audit
+
+Status: **pending CI**
+
+KMime from KDE Frameworks 6.30 remains the authoritative KDE implementation in SupraLINUX. Ubuntu Resolute's `kmime 25.12.3-0ubuntu1` is considered only as an on-demand compatibility provider for software that still requires the legacy `libKPim6Mime.so.6` ABI.
+
+The second real KF6Mime build already established that the Frameworks package itself is healthy: clean `sbuild`, **17/17 upstream tests**, Lintian without errors, `libKF6Mime.so.6` ABI validation, APT runtime closure, external `KF6::Mime` consumer smoke and the no-fake-legacy-metadata gate all passed.
+
+The remaining blocker was observed only when Ubuntu's stock `libkpim6mime6 + libkmime-data` were requested: APT removed `libkf6mime6`, `libkf6mime-dev` and `libkf6mime-data`. This audit determines why.
+
+The audit is diagnostic and changes **no package state**. It consumes the real KF6Mime build artifact from run `35687831684`, artifact `10677716050`, and downloads the exact Resolute legacy binaries `25.12.3-0ubuntu1`. It records:
+
+- exact binary package versions and SHA-256;
+- `Depends`, `Pre-Depends`, `Provides`, `Conflicts`, `Breaks` and `Replaces`;
+- pairwise payload overlap between Frameworks and legacy packages;
+- SHA-256 comparison for every overlapping file;
+- proof that `libKF6Mime.so.6` and `libKPim6Mime.so.6` remain distinct runtime namespaces;
+- a non-destructive APT solver simulation.
+
+A successful audit means the evidence was captured and classified. It does **not** mean stock Ubuntu packages are compatible, does not make KMime PASS, and does not authorize publication. The next implementation must be the smallest compatibility-provider adaptation supported by this evidence; KDE Frameworks remains authoritative.
