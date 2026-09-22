@@ -11,3 +11,7 @@ Batch 5 uses the deterministic materialization PASS from run `35684824744`, arti
 PASS requires the standard clean-build gates plus the ADR-0002 compatibility gates. The built KF6Mime packages must not claim legacy `libkpim6mime6`, `libkmime-dev` or `libkmime-data` through fake `Provides`, `Replaces` or `Breaks`. After installing the built Frameworks packages, CI must install Ubuntu's legacy runtime `libkpim6mime6` + `libkmime-data` on demand and prove that both `libKF6Mime.so.6` and `libKPim6Mime.so.6` remain installed with a clean APT dependency state. The legacy development package is not installed by this runtime compatibility gate.
 
 A Batch 5 PASS makes KMime downstream-eligible and eligible for the SupraLINUX **testing** repository only. Promotion to **stable** always requires explicit user approval.
+
+## Activation
+
+Batch 5 is **armed** for the real KMime clean build. The required **co-installation** gate explicitly tests the Frameworks runtime beside Ubuntu legacy KPim6Mime without claiming ABI equivalence. Arming the lane changes no package state; KMime remains pending until real build evidence is promoted.

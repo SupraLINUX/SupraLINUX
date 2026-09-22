@@ -109,5 +109,11 @@
         "fake_abi_metadata_forbidden": true
       }
     }
+  },
+  "activation": {
+    "status": "armed",
+    "reason": "materialization-pass-and-policy-gates-ready",
+    "canonical_head": "3c7d6d266c07f90bde59312af334ea0eccafe351",
+    "package_state_effect": "none"
   }
 }

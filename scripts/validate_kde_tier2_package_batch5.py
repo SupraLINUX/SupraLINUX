@@ -17,6 +17,8 @@ RUNNABLE={"prepared-pending-build","remediation-pending-build"}
 
 req(c.get("schema")==1 and c.get("batch")=="tier2-batch-5","Batch5 identity")
 req(c.get("selected_nodes")==["kmime"],"Batch5 KMime-only scope")
+req(c.get("activation",{}).get("status")=="armed","Batch5 activation")
+req(c.get("activation",{}).get("package_state_effect")=="none","Batch5 activation state semantics")
 req(c.get("frameworks_series")=="6.30.0","Batch5 Frameworks series")
 req(c.get("scheduling",{}).get("fail_fast") is False,"Batch5 fail-fast policy")
 sem=c.get("semantics",{})
