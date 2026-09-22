@@ -231,6 +231,13 @@ jobs:
       - name: Validate KDE Tier 3 support provider audit
         run: python3 scripts/validate_kde_tier3_support_provider_audit.py
 
+      - name: Test KDE Tier 3 support contract-reference semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier3-support-contract-reference-scope.sh
+
+      - name: Validate KDE Tier 3 support package contracts
+        run: python3 scripts/validate_kde_tier3_support_package_contracts.py
+
       - name: Validate KDE Attica 6.30 packaging preparation
         run: python3 scripts/validate_kde_attica_package.py
 
