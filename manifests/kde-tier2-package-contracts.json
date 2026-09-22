@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "as_of": "2026-09-22",
-  "state": "reference-capture-pass",
+  "state": "materialized",
   "source_authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "packaging_authority": "supralinux",
@@ -920,16 +920,15 @@
     "versions_sha256": "e3a808b670ab34630380fd26afb65dd9cf3a68df5363e7250ccc5e886cf5a8d4"
   },
   "materialization": {
-    "status": "pending-ci",
+    "status": "PASS",
+    "result": "PASS",
     "method": "kde-authority-source-plus-pinned-debian-tree",
     "package_state_effect": "none",
     "package_attempted": false,
     "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
     "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
-    "reason": "tier2-package-contract-4-kmime-reference-capture-pass",
-    "targets": [
-      "kmime"
-    ],
+    "reason": "tier2-package-contract-4-kmime-materialization-pass",
+    "targets": [],
     "retained_package_pass": [
       "kauth",
       "kcolorscheme",
@@ -945,7 +944,25 @@
       "kstatusnotifieritem",
       "kunitconversion",
       "syndication"
-    ]
+    ],
+    "evidence": {
+      "kmime": {
+        "result": "PASS",
+        "workflow_run": 35684824744,
+        "job_id": 106609323687,
+        "commit": "4d947df28a923ea37eeb351ebdd435f1a5f0fb69",
+        "artifact_id": 10675444852,
+        "artifact_sha256": "ae47a46605bce3943e6abd3c1e713d189f41782adecab2dc02618f411427ff8b",
+        "tree_sha256": "876e44ff9afd3cc6257046b86ac6d88de5b0f1e07308dace5fa6b653438cd0fc",
+        "debian_tree_sha256": "1b489be2fc5479e7ef1615aa5d0c3255a1726a27a4d3be3ced66c116bc9eb385",
+        "dsc_sha256": "0cd2c44451d2852bc5fe380ee5d9dc6e115fe657ccc79654da90c1e4a5c97716",
+        "debian_tar_sha256": "2372e83d87d7f2da1a61fe07c63cbd71da594c116d114a238c2a43848500b613",
+        "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+        "package_version": "6.30.0-0supralinux1",
+        "package_attempted": false,
+        "package_state_effect": "none"
+      }
+    }
   },
   "provider_adaptations": {
     "ubuntu-resolute": {

@@ -1881,7 +1881,7 @@
       "package_identity": {
         "source_package": "kf6-kmime",
         "package_version_candidate": "6.30.0-0supralinux1",
-        "status": "not-materialized",
+        "status": "materialized",
         "framework_binary_packages": [
           "libkf6mime-data",
           "libkf6mime-dev",
@@ -1898,14 +1898,14 @@
       },
       "packaging": {
         "state": "pending",
-        "reason": "package-contract-reference-capture-pending",
+        "reason": "clean-build-pending",
         "compatibility_policy": "kf6mime-authoritative-legacy-kpim6mime-on-demand"
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "build-ready",
         "provider_audit": "complete",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "architecture_decision": "ADR-0002-accepted",
         "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
         "provider_audit_evidence": {
@@ -1929,6 +1929,12 @@
           "retained_predecessors": {
             "kcodecs": "6.30.0-0supralinux1"
           }
+        },
+        "materialization_evidence": {
+          "workflow_run": 35684824744,
+          "job_id": 106609323687,
+          "artifact_id": 10675444852,
+          "artifact_sha256": "ae47a46605bce3943e6abd3c1e713d189f41782adecab2dc02618f411427ff8b"
         }
       }
     }
