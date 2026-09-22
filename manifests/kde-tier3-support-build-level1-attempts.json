@@ -55,6 +55,27 @@
         "executable_smoke": "PASS",
         "cause": "Consumer used project(... NONE), preventing normal Debian multiarch CMake package discovery despite KF6KDEDConfig.cmake being present in kded6-dev.",
         "remediation": "Use project(... LANGUAGES CXX); keep the identical package revision."
+      },
+      {
+        "attempt": 4,
+        "result": "PASS",
+        "package_version": "6.30.0-0supralinux1",
+        "workflow_run": 35721085911,
+        "job_id": 106724304390,
+        "commit": "0d2a345af7be591b84807ae27b2d3b604f357d1a",
+        "artifact_id": 10691372157,
+        "artifact_sha256": "ff8756cf6efb4746568fa032cfb17cdf5c6b47bc31f532130936536aecb7c5c9",
+        "rootfs_artifact_id": 10691094492,
+        "rootfs_artifact_sha256": "e7033fbfb492bcf236705634af16bf9c046a7a2f6ed5552a20391f44b24f87ee",
+        "rootfs_sha256": "e7d055c5ffe173c81869f89084518c679636e98dba77f868944239625af50ab2",
+        "stage": "complete",
+        "package_attempted": true,
+        "tests": "1/1 PASS",
+        "lintian": "PASS-errors",
+        "apt_check": "PASS",
+        "executable_contract": "PASS",
+        "cmake_consumer": "PASS",
+        "payload_contract": "PASS"
       }
     ]
   }
