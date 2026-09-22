@@ -133,3 +133,10 @@ The exact Ubuntu/Debian packaging-tree comparison is complete and the three supp
 Breeze Icons uses the current primary `breeze-icon-theme*` packages plus Ubuntu-name transitionals, with epoch `4:` retained for correct historical upgrade ordering. KDocTools and KDED preserve their Ubuntu-visible binary identities.
 
 The active gate is now **support materialization**. No Tier 3 node or support package is PASS yet; Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+## Support materialization activated
+
+Breeze Icons, KDocTools and KDED now have finalized package contracts and enter source materialization in parallel.
+
+The materializer verifies the exact KDE 6.30 orig tar and pinned Debian 6.30 packaging tree, then applies only Resolute/SupraLINUX packaging metadata adaptations. Binary package builds remain blocked until all three materialization artifacts are promoted.
