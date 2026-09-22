@@ -174,3 +174,31 @@ The implementation is:
 6. validate the provider in a clean environment beside `libKF6Mime.so.6` before KMime can become PASS.
 
 This refinement implements the already accepted architecture; it does not change the authority decision.
+
+
+## Implementation closure — 2026-09-22
+
+The accepted architecture has now passed its implementation gates.
+
+The authoritative Frameworks package remains unchanged:
+- `kf6-kmime 6.30.0-0supralinux1`;
+- `libKF6Mime.so.6`;
+- `KF6Mime` / `KF6::Mime`;
+- Framework build evidence: run `35687831684`, attempt 2, job `106619132039`, artifact `10677716050`, SHA-256 `ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36`;
+- 17/17 tests, Lintian, ABI, APT closure and Framework consumer PASS.
+
+The audit run `35690284355` proved that the legacy and Framework runtime ABIs do not collide. The incompatibility was isolated to the data-package relationship.
+
+SupraLINUX then built the real compatibility provider `kmime 25.12.3-0ubuntu1+supralinux1`:
+- build run `35691309612`, job `106628834481`;
+- artifact `10679420779`, SHA-256 `f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b`;
+- real `libKPim6Mime.so.6` and `KPim6::Mime`;
+- no duplicate `libkmime-data`;
+- data dependency accepts `libkf6mime-data` as the alternative provider;
+- co-installation, APT closure and both legacy/Framework consumers PASS.
+
+No ABI shim, synthetic SONAME, fake `Provides`, or replacement of the Framework runtime was introduced.
+
+This closes ADR-0002's implementation gate and permits KMime to become canonical PASS. Tier 2 closes at **15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**.
+
+Repository eligibility remains `testing` only. No `stable` promotion is implied or authorized by this ADR closure.
