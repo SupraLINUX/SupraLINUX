@@ -63,7 +63,7 @@ else:
     req(summary.get("package_attempted") is False and summary.get("package_state_effect")=="none","materialization summary semantics")
 
 support=tier3.get("support_components",{})
-req(support.get("next_gate") in {"support-materialization","support-build","support-build-level0","support-build-level1","tier3-provider-audit"},"canonical support materialization gate")
+req(support.get("next_gate") in {"support-materialization","support-build","support-build-level0","support-build-level1","tier3-provider-audit","tier3-package-contracts"},"canonical support materialization gate")
 
 for path in (
  "scripts/materialize-kde-tier3-support-package.sh",
