@@ -189,3 +189,10 @@ The attempt is retained as historical FAIL at `payload-contract`. KDED remains p
 KDED attempt 2 in run `35719952518` passed the corrected payload validation, Lintian and package-install closure, then failed only because `kded6 --version` tried to initialize Qt's `xcb` platform on a headless runner.
 
 The executable smoke is remediated with `QT_QPA_PLATFORM=offscreen`. This is a CI-only execution environment fix, so KDED remains `6.30.0-0supralinux1`; the package payload is unchanged.
+
+
+## Support build level 1 — attempt 3 retained FAIL
+
+KDED attempt 3 passed sbuild, payload, Lintian, apt closure and the headless executable smoke. It failed only in the CMake consumer because that test used `project(... NONE)`, which suppresses the compiler/multiarch initialization needed for normal discovery under `/usr/lib/x86_64-linux-gnu/cmake`.
+
+The built `kded6-dev` package does contain the correct `KF6KDEDConfig*.cmake` files. The consumer is corrected to enable CXX; package revision remains `6.30.0-0supralinux1`.
