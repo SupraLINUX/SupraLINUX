@@ -17,7 +17,7 @@ RUNNABLE={"prepared-pending-build","remediation-pending-build"}
 
 req(c.get("schema")==1 and c.get("batch")=="tier2-batch-5","Batch5 identity")
 req(c.get("selected_nodes")==["kmime"],"Batch5 KMime-only scope")
-req(c.get("activation",{}).get("status")=="armed","Batch5 activation")
+req(c.get("activation",{}).get("status") in {"armed","rematerialization-required"},"Batch5 activation")
 req(c.get("activation",{}).get("package_state_effect")=="none","Batch5 activation state semantics")
 req(c.get("frameworks_series")=="6.30.0","Batch5 Frameworks series")
 req(c.get("scheduling",{}).get("fail_fast") is False,"Batch5 fail-fast policy")
@@ -31,7 +31,9 @@ canon={n["id"]:n for n in tier2["nodes"]}
 t1={n["id"]:n for n in tier1["nodes"]}
 n=c["nodes"]["kmime"]; cn=canon["kmime"]; pc=contracts["nodes"]["kmime"]
 runnable=n.get("state") in RUNNABLE
+rematerialization=n.get("state")=="rematerialization-pending"
 req(set(plan.get("build_queue",[])).intersection({"kmime"})==({"kmime"} if runnable else set()),"Batch5 scoped global build queue")
+req(set(plan.get("package_contract_ready",[])).intersection({"kmime"})==({"kmime"} if rematerialization else set()),"Batch5 scoped rematerialization queue")
 req(n.get("source_package")=="kf6-kmime"==pc.get("source_package"),"KMime source identity")
 req(n.get("source_sha256")==cn.get("source_sha256")==pc.get("source_sha256"),"KMime source SHA")
 req(n.get("package_version")==cn.get("package_identity",{}).get("package_version_candidate")==pc.get("package_version_candidate"),"KMime package version")
@@ -39,12 +41,21 @@ req(n.get("expected_binary_packages")==pc.get("target_binary_packages"),"KMime F
 req(n.get("runtime_package")=="libkf6mime6" and n.get("dev_package")=="libkf6mime-dev","KMime runtime/dev packages")
 req(n.get("soname")=="libKF6Mime.so.6" and n.get("cmake_package")=="KF6Mime" and n.get("cmake_target")=="KF6::Mime","KMime development/ABI contract")
 req(n.get("predecessors")==["kcodecs"] and n.get("package_dependency_closure")==[],"KMime predecessor contract")
-req(cn.get("state")=="pending" and cn.get("planning",{}).get("readiness")=="build-ready","KMime canonical build-ready")
-req(cn.get("planning",{}).get("package_contract")=="materialized","KMime canonical materialized")
-
-m=n.get("materialization",{}); cm=cn.get("planning",{}).get("materialization_evidence",{})
-for key in ("workflow_run","job_id","artifact_id","artifact_sha256","tree_sha256","debian_tree_sha256","dsc_sha256","debian_tar_sha256","orig_tar_sha256"):
-    req(m.get(key)==cm.get(key),f"KMime materialization {key}")
+req(cn.get("state")=="pending","KMime canonical pending")
+m=n.get("materialization",{})
+if runnable:
+    req(cn.get("planning",{}).get("readiness")=="build-ready","KMime canonical build-ready")
+    req(cn.get("planning",{}).get("package_contract")=="materialized","KMime canonical materialized")
+    cm=cn.get("planning",{}).get("materialization_evidence",{})
+    for key in ("workflow_run","job_id","artifact_id","artifact_sha256","tree_sha256","debian_tree_sha256","dsc_sha256","debian_tar_sha256","orig_tar_sha256"):
+        req(m.get(key)==cm.get(key),f"KMime materialization {key}")
+elif rematerialization:
+    req(cn.get("planning",{}).get("readiness")=="package-contract-ready","KMime rematerialization canonical readiness")
+    req(cn.get("planning",{}).get("package_contract")=="not-materialized","KMime rematerialization contract state")
+    history=cn.get("planning",{}).get("materialization_history",[])
+    req(any(x and x.get("artifact_id")==m.get("artifact_id") for x in history),"KMime previous materialization retained historically")
+else:
+    req(n.get("state")=="PASS","KMime Batch5 state vocabulary")
 
 compat=n.get("compatibility",{})
 req(compat.get("legacy_runtime_package")=="libkpim6mime6","legacy runtime package")

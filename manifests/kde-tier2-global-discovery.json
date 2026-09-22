@@ -23,24 +23,23 @@
   },
   "nodes": {
     "kmime": {
-      "readiness": "build-ready",
+      "readiness": "package-contract-ready",
       "tier1_predecessors": [
         "kcodecs"
       ],
       "architecture_decision": "ADR-0002-accepted",
       "provider_audit": "PASS",
       "provider_audit_run": 35684076926,
-      "package_contract": "materialized",
-      "materialization_run": 35684824744,
-      "materialization_artifact_id": 10675444852,
+      "package_contract": "not-materialized",
+      "remediation": "resolute-toolchain-symbol-baseline",
       "compatibility_policy": "KF6Mime authoritative; Ubuntu KPim6Mime available on demand only"
     }
   },
   "next_actions": [
-    "Run the KMime clean-build lane from deterministic materialization PASS.",
-    "Require clean sbuild, upstream tests, exact binary set, Lintian, ABI/SONAME, APT closure, CMake consumer, exact KCodecs buildinfo proof and legacy runtime co-installation.",
-    "Keep all 14 existing Tier 2 PASS nodes retained/downstream-eligible.",
-    "Do not promote any package to the stable APT channel without explicit user approval."
+    "Selectively rematerialize KMime with the reviewed Resolute symbols baseline.",
+    "Do not run Batch 5 until replacement materialization PASS is promoted.",
+    "Retain the first real KMime attempt as INFRA/post-sbuild evidence with 17/17 tests PASS.",
+    "Keep all 14 existing Tier 2 PASS nodes retained/downstream-eligible."
   ],
   "promoted_snapshot": {
     "pass": 14,
