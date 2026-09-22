@@ -29,6 +29,11 @@ runnable(){
     python3 -c 'import json,sys
 d=json.load(sys.stdin); print("yes" if any(d["nodes"][n].get("state") in {"prepared-pending-build","remediation-pending-build"} for n in d.get("selected_nodes",[])) else "no")'
 }
+execution_request(){
+  git -C "${ROOT}" show "$1:manifests/kde-tier3-support-build-level1.json" 2>/dev/null |
+    python3 -c 'import json,sys
+d=json.load(sys.stdin); print(d.get("execution_request",{}).get("status",""))'
+}
 if ! git -C "${ROOT}" cat-file -e "${BEFORE}:manifests/kde-tier3-support-build-level1.json" 2>/dev/null; then
   echo "Tier 3 support level1 campaign is new."; exit 0
 fi
@@ -36,6 +41,11 @@ if [[ "$(fingerprint "${BEFORE}")" != "$(fingerprint "${AFTER}")" ]]; then
   echo "Tier 3 support level1 semantic build input changed."; exit 0
 fi
 if [[ "$(runnable "${AFTER}")" == yes ]]; then
+  request="$(execution_request "${AFTER}")"
+  if [[ "${request}" == requested || "${request}" == remediation-requested ]]; then
+    echo "Tier 3 support level1 has an explicit pending execution request: ${request}."
+    exit 0
+  fi
   attempts="$(git -C "${ROOT}" show "${AFTER}:manifests/kde-tier3-support-build-level1-attempts.json" 2>/dev/null | python3 -c 'import json,sys; d=json.load(sys.stdin); print(sum(len(v) for v in d.get("nodes",{}).values()))' || echo 0)"
   if [[ "${attempts}" -eq 0 ]]; then
     echo "Tier 3 support level1 has runnable nodes and no recorded attempt yet."; exit 0
