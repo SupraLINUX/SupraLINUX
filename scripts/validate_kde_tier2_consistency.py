@@ -54,7 +54,7 @@ for node_id, node in sorted(nodes.items()):
         view = active.get(node_id, {})
         req(view, f"{node_id}: pending node missing active discovery record")
         req(
-            view.get("readiness") in {"package-lane-pending", "package-contract-ready", "build-ready", "compatibility-decision-required"},
+            view.get("readiness") in {"package-lane-pending", "package-contract-ready", "build-ready", "compatibility-decision-required", "compatibility-provider-required"},
             f"{node_id}: discovery readiness vocabulary",
         )
         expected_predecessors = set(expected_required + expected_selected)

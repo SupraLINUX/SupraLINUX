@@ -144,8 +144,8 @@ req(sum(n.get("state")=="PASS" for n in tier1.get("nodes",[]))==29 and not any(n
 active=discovery.get("nodes",{})
 req(set(active)==pending_ids,"Tier2 active discovery must contain exactly current pending nodes")
 for node in sorted(pending_ids):
-    req(active[node].get("readiness") in {"package-lane-pending","package-contract-ready","build-ready"},f"{node}: discovery readiness vocabulary")
-req(active["kmime"].get("readiness") in {"package-lane-pending","package-contract-ready","build-ready"} and active["kmime"].get("architecture_decision")=="ADR-0002-accepted","KMime accepted decision/lifecycle lane")
+    req(active[node].get("readiness") in {"package-lane-pending","package-contract-ready","build-ready","compatibility-provider-required"},f"{node}: discovery readiness vocabulary")
+req(active["kmime"].get("readiness") in {"package-lane-pending","package-contract-ready","build-ready","compatibility-provider-required"} and active["kmime"].get("architecture_decision")=="ADR-0002-accepted","KMime accepted decision/lifecycle lane")
 snap=discovery.get("promoted_snapshot",{})
 expected_snapshot={"pass":len(pass_ids),"pending":len(pending_ids),"current_fail":0,"blocked":0}
 req(snap==expected_snapshot,"Tier2 promoted snapshot")
@@ -180,4 +180,5 @@ print(f"Canonical Tier 2: {len(pass_ids)} PASS / {len(pending_ids)} pending / 0 
 build_ready=sum(nodes[n].get("planning",{}).get("readiness")=="build-ready" for n in pending_ids)
 contract_ready=sum(nodes[n].get("planning",{}).get("readiness")=="package-contract-ready" for n in pending_ids)
 audit_pending=sum(nodes[n].get("planning",{}).get("readiness")=="package-lane-pending" for n in pending_ids)
-print(f"Tier2 retained PASS={sorted(pass_ids)}; {build_ready} build-ready; {contract_ready} contract-ready; {audit_pending} provider-audit pending")
+compatibility_pending=sum(nodes[n].get("planning",{}).get("readiness")=="compatibility-provider-required" for n in pending_ids)
+print(f"Tier2 retained PASS={sorted(pass_ids)}; {build_ready} build-ready; {contract_ready} contract-ready; {audit_pending} provider-audit pending; {compatibility_pending} compatibility-provider pending")

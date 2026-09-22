@@ -31,6 +31,7 @@ def compile_plan(canonical: dict) -> dict:
     contract_ready = []
     build_queue = []
     decisions = []
+    compatibility_required = []
 
     nodes = canonical.get("nodes", [])
     for node in nodes:
@@ -47,6 +48,10 @@ def compile_plan(canonical: dict) -> dict:
                 "node": node_id,
                 "blocker": planning.get("human_blocker"),
             })
+            continue
+
+        if planning.get("readiness") == "compatibility-provider-required":
+            compatibility_required.append(node_id)
             continue
 
         if planning.get("provider_audit") == "required-before-materialization":
@@ -91,6 +96,7 @@ def compile_plan(canonical: dict) -> dict:
         "provider_audit_required": audits,
         "package_contract_ready": sorted(contract_ready),
         "human_decision_required": decisions,
+        "compatibility_provider_required": sorted(compatibility_required),
         "build_queue": sorted(build_queue),
         "audit_batch_size": 5,
         "next_provider_audit_batch": [entry["node"] for entry in audits[:5]],
@@ -128,6 +134,7 @@ def main() -> int:
             f"provider-audit={len(compiled['provider_audit_required'])} "
             f"contract-ready={len(compiled['package_contract_ready'])} "
             f"decision={len(compiled['human_decision_required'])} "
+            f"compatibility-provider={len(compiled['compatibility_provider_required'])} "
             f"build-queue={len(compiled['build_queue'])}"
         )
     elif not args.write:

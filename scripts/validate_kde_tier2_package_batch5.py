@@ -17,7 +17,7 @@ RUNNABLE={"prepared-pending-build","remediation-pending-build"}
 
 req(c.get("schema")==1 and c.get("batch")=="tier2-batch-5","Batch5 identity")
 req(c.get("selected_nodes")==["kmime"],"Batch5 KMime-only scope")
-req(c.get("activation",{}).get("status") in {"armed","rematerialization-required"},"Batch5 activation")
+req(c.get("activation",{}).get("status") in {"armed","rematerialization-required","compatibility-provider-required"},"Batch5 activation")
 req(c.get("activation",{}).get("package_state_effect")=="none","Batch5 activation state semantics")
 req(c.get("frameworks_series")=="6.30.0","Batch5 Frameworks series")
 req(c.get("scheduling",{}).get("fail_fast") is False,"Batch5 fail-fast policy")
@@ -32,8 +32,10 @@ t1={n["id"]:n for n in tier1["nodes"]}
 n=c["nodes"]["kmime"]; cn=canon["kmime"]; pc=contracts["nodes"]["kmime"]
 runnable=n.get("state") in RUNNABLE
 rematerialization=n.get("state")=="rematerialization-pending"
+compatibility_provider=n.get("state")=="compatibility-provider-required"
 req(set(plan.get("build_queue",[])).intersection({"kmime"})==({"kmime"} if runnable else set()),"Batch5 scoped global build queue")
 req(set(plan.get("package_contract_ready",[])).intersection({"kmime"})==({"kmime"} if rematerialization else set()),"Batch5 scoped rematerialization queue")
+req(set(plan.get("compatibility_provider_required",[])).intersection({"kmime"})==({"kmime"} if compatibility_provider else set()),"Batch5 scoped compatibility-provider queue")
 req(n.get("source_package")=="kf6-kmime"==pc.get("source_package"),"KMime source identity")
 req(n.get("source_sha256")==cn.get("source_sha256")==pc.get("source_sha256"),"KMime source SHA")
 req(n.get("package_version")==cn.get("package_identity",{}).get("package_version_candidate")==pc.get("package_version_candidate"),"KMime package version")
@@ -54,6 +56,11 @@ elif rematerialization:
     req(cn.get("planning",{}).get("package_contract")=="not-materialized","KMime rematerialization contract state")
     history=cn.get("planning",{}).get("materialization_history",[])
     req(any(x and x.get("artifact_id")==m.get("artifact_id") for x in history),"KMime previous materialization retained historically")
+elif compatibility_provider:
+    req(cn.get("planning",{}).get("readiness")=="compatibility-provider-required","KMime compatibility-provider canonical readiness")
+    req(cn.get("planning",{}).get("package_contract")=="materialized","KMime compatibility-provider keeps Frameworks materialization")
+    req(n.get("last_result")=="INFRA","KMime compatibility-provider historical result")
+    req(n.get("compatibility",{}).get("audit_status")=="pending","KMime compatibility audit pending")
 else:
     req(n.get("state")=="PASS","KMime Batch5 state vocabulary")
 
