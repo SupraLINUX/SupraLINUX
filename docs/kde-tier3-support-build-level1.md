@@ -66,3 +66,14 @@ The package again built successfully. The corrected payload gate passed, as did 
 The remediation sets `QT_QPA_PLATFORM=offscreen` only for this version smoke. This tests the executable without requiring a graphical session and does not alter KDED packaging or runtime defaults.
 
 Attempt 2 remains a historical **FAIL** at `executable-smoke`. The retry remains `6.30.0-0supralinux1` because no package content changed.
+
+
+## Attempt 3 — CMake consumer FAIL
+
+Run `35720612123`, job `106722644773`, artifact `10691611217`, artifact SHA-256 `32b194f758467d9a6dcd91971508b6a078c9bb80d2e7f2e52645c6d6580324fc`.
+
+The package build, corrected payload gate, Lintian, package-install closure, `apt-get check`, and the headless `kded6 --version` smoke all passed. The final CMake consumer failed to discover `KF6KDED`.
+
+Inspection of the built `kded6-dev` package proves that `KF6KDEDConfig.cmake` and `KF6KDEDConfigVersion.cmake` are correctly installed under `/usr/lib/x86_64-linux-gnu/cmake/KF6KDED/`. The problem was the test project itself: it declared `project(... NONE)`, so CMake did not initialize the Debian multiarch library architecture search path.
+
+The remediation changes the consumer to `project(... LANGUAGES CXX)`, exercising normal multiarch `find_package(KF6KDED 6.30 REQUIRED)` behavior. The package payload remains unchanged, so the retry remains `6.30.0-0supralinux1`.
