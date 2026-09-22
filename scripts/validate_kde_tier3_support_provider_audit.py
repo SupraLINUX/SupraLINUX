@@ -67,6 +67,13 @@ else:
     req(isinstance(ev.get("workflow_run"),int) and isinstance(ev.get("job_id"),int),"support audit run/job evidence")
     req(isinstance(ev.get("artifact_id"),int) and len(ev.get("artifact_sha256",""))==64,"support audit artifact evidence")
     req(all(c.get("provider_decision") in {"ubuntu-compatible","supralinux-required"} for c in components.values()),"final provider decisions")
+    for node,c in components.items():
+        dep=support.get(node,{})
+        req(dep.get("provider")==c.get("provider_decision").replace("-required","") if c.get("provider_decision")=="supralinux-required" else dep.get("provider") in {"ubuntu","supralinux"},f"{node}: selected provider reflected in dependency manifest")
+        req(dep.get("readiness")=="package-contract-required",f"{node}: support package-contract readiness")
+        pae=dep.get("provider_audit",{})
+        req(pae.get("status")=="PASS" and pae.get("decision")==c.get("provider_decision"),f"{node}: provider-audit promotion")
+        req(pae.get("artifact_id")==ev.get("artifact_id") and pae.get("artifact_sha256")==ev.get("artifact_sha256"),f"{node}: provider-audit evidence linkage")
     req(audit.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 
 doc=(ROOT/"docs/kde-tier3-support-provider-audit.md").read_text()
