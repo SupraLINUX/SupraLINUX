@@ -71,7 +71,6 @@ PY
 PACKAGE_VERSION="${cfg[0]}"
 RUNTIME_PACKAGE="${cfg[1]}"
 RUNTIME_SONAME="${cfg[2]}"
-VERSIONED_PROVIDES="${cfg[3]}"
 DEV_PACKAGE="${cfg[4]}"
 DEV_CMAKE_PACKAGE="${cfg[5]}"
 DEV_CMAKE_TARGET="${cfg[6]}"
