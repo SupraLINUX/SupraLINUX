@@ -154,3 +154,23 @@ The evidence strengthens **candidate 1 (co-install legacy compatibility + new Fr
 This evidence supported the accepted coexistence policy above. The architecture is now approved; exact Debian metadata still requires reference capture and clean validation before package PASS.
 
 Current project state when this evidence was recorded: **Tier 2 = 14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**, with KMime as the sole pending node.
+
+
+## Implementation refinement — compatibility-provider audit PASS
+
+The accepted coexistence strategy is now narrowed by real package evidence.
+
+Audit run `35690284355` proved that the old and new runtime libraries themselves do not conflict. The stock Resolute failure comes from the data-package transition: `libkf6mime-data` declares `Breaks/Replaces: libkmime-data`, while `libkpim6mime6 25.12.3-0ubuntu1` requires `libkmime-data (= 25.12.3-0ubuntu1)`.
+
+SupraLINUX therefore **does not** remove the Frameworks `Breaks/Replaces`, does not install two packages owning the same data files, and does not fake runtime ABI equivalence.
+
+The implementation is:
+
+1. keep `kf6-kmime 6.30.0` and `libkf6mime-data` unchanged as the authoritative KDE package family;
+2. provide a SupraLINUX compatibility build of the real PIM-line `libkpim6mime6` runtime for prebuilt Ubuntu consumers;
+3. make that compatibility runtime accept `libkf6mime-data` as the data provider alternative, following the already-recorded Debian coexistence precedent;
+4. do not publish a duplicate legacy `libkmime-data` into the SupraLINUX desktop stack;
+5. preserve `libKPim6Mime.so.6`, `libkpim6mime6-25.12`, Multi-Arch and the real legacy ABI rather than using a symlink or synthetic `Provides` from KF6Mime;
+6. validate the provider in a clean environment beside `libKF6Mime.so.6` before KMime can become PASS.
+
+This refinement implements the already accepted architecture; it does not change the authority decision.

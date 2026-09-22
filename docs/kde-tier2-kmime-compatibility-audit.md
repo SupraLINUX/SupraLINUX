@@ -18,3 +18,29 @@ The audit is diagnostic and changes **no package state**. It consumes the real K
 - a non-destructive APT solver simulation.
 
 A successful audit means the evidence was captured and classified. It does **not** mean stock Ubuntu packages are compatible, does not make KMime PASS, and does not authorize publication. The next implementation must be the smallest compatibility-provider adaptation supported by this evidence; KDE Frameworks remains authoritative.
+
+
+## Audit PASS — 2026-09-22
+
+Run `35690284355`, job `106625630885`, artifact `10678073973` completed the compatibility-provider audit. Artifact SHA-256: `7b0c9175b1e0f48eb1d18e9ceb1af03381c4de8d0b322bc619dd5af37ecbd41`.
+
+The failure is **not** a runtime ABI collision:
+
+- `libkpim6mime6` has no `Breaks`, `Conflicts` or `Replaces` against KF6Mime.
+- Its dependency is exactly `libkmime-data (= 25.12.3-0ubuntu1)` plus normal runtime libraries.
+- `libKF6Mime.so.6` and `libKPim6Mime.so.6` remain distinct and non-overlapping runtime payloads.
+- The package relation that forces the transition is on `libkf6mime-data`: `Breaks: libkmime-data` and `Replaces: libkmime-data`.
+
+The only payload overlap is data-to-data: `libkf6mime-data` vs `libkmime-data`, 72 shared paths. 68 are byte-identical. The four differing paths are three translations (`lt`, `sk`, `ug`) and `/usr/share/qlogging-categories6/kmime.categories`.
+
+### Selected remediation
+
+Do not install or republish a second legacy data owner beside `libkf6mime-data`. Keep the authoritative Frameworks data package unchanged.
+
+SupraLINUX will instead provide the real legacy runtime ABI as a separate compatibility package derived from the `kmime 25.12.3` compatibility source. Its runtime dependency will accept the authoritative Frameworks data package as an alternative:
+
+`libkmime-data (= Ubuntu compatibility version) | libkf6mime-data`
+
+This preserves `libKPim6Mime.so.6` for Ubuntu applications without pretending that KF6Mime implements that ABI and without duplicating the 72 shared data files.
+
+KMime remains canonical **pending** until that compatibility provider is built and the full co-installation/application gates pass.
