@@ -829,23 +829,22 @@
     "input_manifest_sha256": "20c12e82242a51005d4b72d080e77c305e213d6d1a12b6367b310332fec73fde"
   },
   "materialization": {
-    "status": "pending-ci",
+    "status": "PASS",
     "method": "kde-authority-source-plus-pinned-debian-tree",
     "package_state_effect": "none",
     "package_attempted": false,
     "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
     "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
-    "reason": "tier2-package-contract-3-kservice-toolchain-symbol-rematerialization",
-    "result": "pending",
-    "targets": [
-      "kservice"
-    ],
+    "reason": "tier2-package-contract-3-kservice-toolchain-symbol-materialization-pass",
+    "result": "PASS",
+    "targets": [],
     "retained_package_pass": [
       "kauth",
       "kcolorscheme",
       "kcompletion",
       "kcontacts",
       "kcrash",
+      "kdeclarative",
       "kfilemetadata",
       "knotifications",
       "kpackage",
@@ -854,8 +853,8 @@
       "kunitconversion",
       "syndication"
     ],
-    "workflow_run": 35636800957,
-    "commit": "e193ebe8b2a0b80129d2b064306b5d68bf8e91b7",
+    "workflow_run": 35677466559,
+    "commit": "4076738a6c93ddce271ab046fa57edc934e496ab",
     "evidence": {
       "kdeclarative": {
         "workflow_run": 35636800957,
@@ -888,6 +887,23 @@
         "package_version": "6.30.0-0supralinux1",
         "source_package": "kf6-kfilemetadata",
         "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none"
+      },
+      "kservice": {
+        "result": "PASS",
+        "workflow_run": 35677466559,
+        "job_id": 106586918751,
+        "commit": "4076738a6c93ddce271ab046fa57edc934e496ab",
+        "artifact_id": 10673841912,
+        "artifact_sha256": "c75ae3d4fd2960333fc9db6403282631140cbc9a81031934d04717092aeadf0b",
+        "tree_sha256": "155404d0851efdea82fc5ffb29c2fc69aabcb28271f8509735b4554424f34bac",
+        "debian_tree_sha256": "342e4afe16a3cacf918aa894a68b2b2876a3c82f09d430158d0dad4486b58b99",
+        "dsc_sha256": "89ecf2b6e8df503b2f5973f80ca82d7507f1cc88a407d222a63bb55dcfaf9374",
+        "debian_tar_sha256": "a92c9aa510bfef21fd01659ad6064b9bff6dc29da791584adc0722b0c802a2b0",
+        "orig_tar_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
+        "package_version": "6.30.0-0supralinux1",
+        "source_package": "kf6-kservice",
         "package_attempted": false,
         "package_state_effect": "none"
       }
@@ -950,16 +966,16 @@
       }
     ],
     "last_clean_build": {
-      "node": "kfilemetadata",
+      "node": "kdeclarative",
       "result": "PASS",
-      "workflow_run": 35676553259,
-      "job_id": 106584347249,
-      "commit": "cebe8e9b9ce5ce2451e765d9c6e6c6e8d3eb77a8",
-      "artifact_id": 10673811173,
-      "artifact_sha256": "1ecb8d7a94650ee810a6424d9eeffb9d176d0a30ad9b75ed6b3257538fa1ba30",
-      "tests": "31/31 PASS",
-      "abi_soname": "libKF6FileMetaData.so.3",
-      "abi_export_count": 193,
+      "workflow_run": 35677466571,
+      "job_id": 106587017706,
+      "commit": "4076738a6c93ddce271ab046fa57edc934e496ab",
+      "artifact_id": 10673008440,
+      "artifact_sha256": "8433514ef2032988d815a7577431395489d7a62ad57b250aefb90e0982acb44d",
+      "tests": "1/1 PASS",
+      "abi_soname": "libKF6CalendarEvents.so.6",
+      "abi_export_count": 50,
       "apt_check": "PASS",
       "consumer_smoke": "PASS"
     }

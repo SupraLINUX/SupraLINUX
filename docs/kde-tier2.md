@@ -274,3 +274,12 @@ KDeclarative's first clean build also compiled and passed its upstream test; its
 KService compiled and passed 7/7 tests but requires a deterministic symbols rematerialization for the Resolute-toolchain-only `std::piecewise_construct` export. The symbol is tagged `optional=toolchain` at version `6.30.0`; no KDE feature or ABI authority is changed.
 
 KMime remains independently decision-gated by ADR-0002.
+
+
+## KDeclarative promoted; KService ready for final clean build
+
+KDeclarative `6.30.0-0supralinux1` is PASS from Batch 4 remediation run `35677466571`. The corrected ABI validator proves the Ubuntu-compatible private contract `libkquickcontrolsprivate.so.0` without double-counting its symlink, and all four QML payloads are present.
+
+KService's selective symbols rematerialization is PASS from run `35677466559`. The active KService tree contains the reviewed `optional=toolchain` baseline for `std::piecewise_construct` and is queued for one final clean sbuild.
+
+Canonical Tier 2 is **13 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**: KService is build-ready and KMime remains blocked only by ADR-0002.

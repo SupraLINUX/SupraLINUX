@@ -3606,6 +3606,143 @@
         "debian_tar_sha256": "5e5294547267f887fc198620195275c153fc553f5a0ee2c58b69d27fcf98ac2f",
         "rootfs_sha256": "3146df833463c82141688d0d641a0359cd535a0246658832b6bf7f4049e4aac3"
       }
+    },
+    "kdeclarative": {
+      "tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kdeclarative-6.30.0.tar.xz",
+      "source_sha256": "7ec3583a2cf2cd7143e39936ffb39e22d20563f4c87a8462e0e9d12c59ea89a6",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-kdeclarative",
+      "binary_packages": [
+        "libkquickcontrolsprivate0",
+        "libkf6calendarevents6",
+        "libkf6declarative-data",
+        "libkf6declarative-dev",
+        "libkf6declarative-doc",
+        "qml6-module-org-kde-draganddrop",
+        "qml6-module-org-kde-graphicaleffects",
+        "qml6-module-org-kde-kquickcontrols",
+        "qml6-module-org-kde-kquickcontrolsaddons"
+      ],
+      "package_version": "6.30.0-0supralinux1",
+      "ubuntu_reference_version": "6.24.0-0ubuntu1",
+      "depends_on": [
+        "extra-cmake-modules",
+        "ki18n",
+        "kconfig",
+        "kguiaddons",
+        "kglobalaccel",
+        "kwidgetsaddons"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "attempt_ledger": "manifests/kde-tier2-package-batch4-attempts.json",
+      "abi_sonames": [
+        "libKF6CalendarEvents.so.6",
+        "libkquickcontrolsprivate.so.0"
+      ],
+      "evidence": [
+        {
+          "result": "PASS",
+          "workflow_run": 35677466571,
+          "run_attempt": 1,
+          "job_id": 106587017706,
+          "commit": "4076738a6c93ddce271ab046fa57edc934e496ab",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10673008440,
+          "artifact_sha256": "8433514ef2032988d815a7577431395489d7a62ad57b250aefb90e0982acb44d",
+          "rootfs_artifact_id": 10673572179,
+          "rootfs_artifact_sha256": "8d04c355a8311fedbfbce2e76119544bfcb630f05a0b737c562a274436c36086",
+          "rootfs_sha256": "e569d69be6070db9f157fed33b8535e9617d38be0250e1ca553c36be03ad3201",
+          "stage": "complete",
+          "tests": "1/1 PASS",
+          "lintian": "PASS-errors",
+          "abi_soname": "libKF6CalendarEvents.so.6",
+          "abi_export_count": 50,
+          "apt_check": "PASS",
+          "consumer_smoke": "PASS",
+          "predecessor_buildinfo_proof": "PASS",
+          "package_dependency_closure_buildinfo_proof": "PASS",
+          "qml_payload_smoke": "PASS",
+          "extra_abi_contracts": "PASS",
+          "extra_abi_evidence": [
+            {
+              "package": "libkquickcontrolsprivate0",
+              "soname": "libkquickcontrolsprivate.so.0",
+              "symlink_target": "libkquickcontrolsprivate.so.6.30.0",
+              "exports": 11
+            }
+          ],
+          "materialization": {
+            "workflow_run": 35636800957,
+            "artifact_id": 10656343343,
+            "artifact_sha256": "0db6c87b3c7f5a9beb81a0e919270d69e23533080b256659d2d439ac5ddf7233"
+          },
+          "retained_predecessors": {
+            "extra_cmake_modules": "6.30.0-0supralinux3",
+            "ki18n": "6.30.0-0supralinux1",
+            "kconfig": "6.30.0-0supralinux4",
+            "kguiaddons": "6.30.0-0supralinux2",
+            "kglobalaccel": "6.30.0-0supralinux2",
+            "kwidgetsaddons": "6.30.0-0supralinux7"
+          },
+          "package_dependency_closure": {
+            "kcoreaddons": "6.30.0-0supralinux4"
+          },
+          "downstream_eligible": true,
+          "files": {
+            "libkf6calendarevents6_6.30.0-0supralinux1_amd64.deb": "73e9eaf91979b390a6d11ae8457087bdbd17ec55540fbe9ee900a0226250929c",
+            "libkf6declarative-data_6.30.0-0supralinux1_all.deb": "737683d0ca5f149f5af419405b21af19ca920f6075572e5c3835acabf4f8621f",
+            "libkf6declarative-dev_6.30.0-0supralinux1_amd64.deb": "d867b7aa0aaf7223754764035013e6d076bbb3b62e8ccb77316fb3eef461ede3",
+            "libkf6declarative-doc_6.30.0-0supralinux1_all.deb": "4da22fe0d090950c0c9a550b89bc505510e61fe20a8de94cecb9090e7facee82",
+            "libkquickcontrolsprivate0_6.30.0-0supralinux1_amd64.deb": "38c69a182668e35cb5ed57462108710bf21bf9b1f1a0062fff917b6a8cd6c565",
+            "qml6-module-org-kde-draganddrop_6.30.0-0supralinux1_amd64.deb": "1b3013e17d8f5159902e7103937dd1b9baba4442d020ee856f329822e73a1e5f",
+            "qml6-module-org-kde-graphicaleffects_6.30.0-0supralinux1_amd64.deb": "1f73473ff240171bb2e260f5f9118503f5185e969131bf9ef6f9660c5a1e35ff",
+            "qml6-module-org-kde-kquickcontrols_6.30.0-0supralinux1_amd64.deb": "2c67761eb14aa3f896aadd6d44141535c55f517a1aaa8aefcde6e9fc3779b290",
+            "qml6-module-org-kde-kquickcontrolsaddons_6.30.0-0supralinux1_amd64.deb": "672dbceaf699377187c38ae24c45049512784873e465747997e377fd79a21ab2",
+            "libkf6calendarevents6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "680a6ce0701ab7d6e007cedce9d3e06b2169c3993d33a4a1df1ad42f51d266c0",
+            "libkquickcontrolsprivate0-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "08f67b1fd02d2b4e7c4aa737e2ee9606ea7e02b948eab91dc9b664955eea7209",
+            "qml6-module-org-kde-draganddrop-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "69f13d6cd94e9535ce8ca246755163ab61e5afc9dda2a906fdd1869d45949c37",
+            "qml6-module-org-kde-graphicaleffects-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "37221b2f0ecf9648ec57c1a100d4123cdab8ba9d3ffbca17f4c823bedce1db6b",
+            "qml6-module-org-kde-kquickcontrols-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "1f1b9bf74e606fc5126ce89b559f5adc98046330050e29e204281721f1d68f82",
+            "qml6-module-org-kde-kquickcontrolsaddons-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "6873cf1b56b48e8d880c664490e04b42e3bba6ab1c3449edf8773c105132ea78",
+            "changes_sha256": "85ce9beec182ee279a3b0cabf13a1a4aeedb67107c5d256ac4f33b83dd588374",
+            "buildinfo_sha256": "8aea655e75a80b46e61fd5cb6471e4ed36188b7b4844546df4bb59a4910235a6",
+            "dsc_sha256": "b4ed483a8e1f548c82461271e21ab582240a6e739f353c9034eac3e108a95ee7",
+            "orig_tar_sha256": "7ec3583a2cf2cd7143e39936ffb39e22d20563f4c87a8462e0e9d12c59ea89a6",
+            "debian_tar_sha256": "2f32d407bc0c8abeb110e68e62425a0d80030d4043b25c1e01a1f19f747b63e4",
+            "rootfs_sha256": "e569d69be6070db9f157fed33b8535e9617d38be0250e1ca553c36be03ad3201"
+          }
+        }
+      ],
+      "pass_files": {
+        "libkf6calendarevents6_6.30.0-0supralinux1_amd64.deb": "73e9eaf91979b390a6d11ae8457087bdbd17ec55540fbe9ee900a0226250929c",
+        "libkf6declarative-data_6.30.0-0supralinux1_all.deb": "737683d0ca5f149f5af419405b21af19ca920f6075572e5c3835acabf4f8621f",
+        "libkf6declarative-dev_6.30.0-0supralinux1_amd64.deb": "d867b7aa0aaf7223754764035013e6d076bbb3b62e8ccb77316fb3eef461ede3",
+        "libkf6declarative-doc_6.30.0-0supralinux1_all.deb": "4da22fe0d090950c0c9a550b89bc505510e61fe20a8de94cecb9090e7facee82",
+        "libkquickcontrolsprivate0_6.30.0-0supralinux1_amd64.deb": "38c69a182668e35cb5ed57462108710bf21bf9b1f1a0062fff917b6a8cd6c565",
+        "qml6-module-org-kde-draganddrop_6.30.0-0supralinux1_amd64.deb": "1b3013e17d8f5159902e7103937dd1b9baba4442d020ee856f329822e73a1e5f",
+        "qml6-module-org-kde-graphicaleffects_6.30.0-0supralinux1_amd64.deb": "1f73473ff240171bb2e260f5f9118503f5185e969131bf9ef6f9660c5a1e35ff",
+        "qml6-module-org-kde-kquickcontrols_6.30.0-0supralinux1_amd64.deb": "2c67761eb14aa3f896aadd6d44141535c55f517a1aaa8aefcde6e9fc3779b290",
+        "qml6-module-org-kde-kquickcontrolsaddons_6.30.0-0supralinux1_amd64.deb": "672dbceaf699377187c38ae24c45049512784873e465747997e377fd79a21ab2",
+        "libkf6calendarevents6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "680a6ce0701ab7d6e007cedce9d3e06b2169c3993d33a4a1df1ad42f51d266c0",
+        "libkquickcontrolsprivate0-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "08f67b1fd02d2b4e7c4aa737e2ee9606ea7e02b948eab91dc9b664955eea7209",
+        "qml6-module-org-kde-draganddrop-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "69f13d6cd94e9535ce8ca246755163ab61e5afc9dda2a906fdd1869d45949c37",
+        "qml6-module-org-kde-graphicaleffects-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "37221b2f0ecf9648ec57c1a100d4123cdab8ba9d3ffbca17f4c823bedce1db6b",
+        "qml6-module-org-kde-kquickcontrols-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "1f1b9bf74e606fc5126ce89b559f5adc98046330050e29e204281721f1d68f82",
+        "qml6-module-org-kde-kquickcontrolsaddons-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "6873cf1b56b48e8d880c664490e04b42e3bba6ab1c3449edf8773c105132ea78",
+        "changes_sha256": "85ce9beec182ee279a3b0cabf13a1a4aeedb67107c5d256ac4f33b83dd588374",
+        "buildinfo_sha256": "8aea655e75a80b46e61fd5cb6471e4ed36188b7b4844546df4bb59a4910235a6",
+        "dsc_sha256": "b4ed483a8e1f548c82461271e21ab582240a6e739f353c9034eac3e108a95ee7",
+        "orig_tar_sha256": "7ec3583a2cf2cd7143e39936ffb39e22d20563f4c87a8462e0e9d12c59ea89a6",
+        "debian_tar_sha256": "2f32d407bc0c8abeb110e68e62425a0d80030d4043b25c1e01a1f19f747b63e4",
+        "rootfs_sha256": "e569d69be6070db9f157fed33b8535e9617d38be0250e1ca553c36be03ad3201"
+      }
     }
   },
   "ci_scope_incidents": [

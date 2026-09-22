@@ -73,3 +73,24 @@ The remediation is explicit and narrow:
 This follows the already validated SupraLINUX policy used for toolchain-emitted libstdc++ symbols: the symbol is optional/toolchain-dependent and receives the upstream Frameworks version, never a Debian revision minimum. KService is rematerialized and rebuilt; no KDE feature is disabled.
 
 After promoting KFileMetaData, canonical Tier 2 is **12 PASS / 3 pending / 0 current FAIL / 0 BLOCKED**. Neither infrastructure/integration incident changes KDeclarative or KService to FAIL.
+
+
+## KDeclarative retry PASS and KService rematerialization PASS
+
+The corrected post-build ABI gate was exercised by run `35677466571`, job `106587017706`.
+
+KDeclarative `6.30.0-0supralinux1` is now **PASS**:
+- artifact `10673008440`
+- artifact SHA-256 `8433514ef2032988d815a7577431395489d7a62ad57b250aefb90e0982acb44d`
+- **1/1 upstream test PASS**
+- primary SONAME `libKF6CalendarEvents.so.6`, 50 exports
+- Lintian PASS-errors
+- APT closure and external CMake consumer PASS
+- exact direct-predecessor and KCoreAddons package-closure buildinfo proofs PASS
+- all four declared QML packages contain `qmldir`
+- `libkquickcontrolsprivate0` has SONAME symlink `libkquickcontrolsprivate.so.0 -> libkquickcontrolsprivate.so.6.30.0`
+- the real private ELF has SONAME `libkquickcontrolsprivate.so.0` and 11 exports.
+
+KService selective rematerialization also passed in run `35677466559`, job `106586918751`, artifact `10673841912`, SHA-256 `c75ae3d4fd2960333fc9db6403282631140cbc9a81031934d04717092aeadf0b`. The reviewed toolchain symbol baseline is now part of the deterministic Debian tree. No package attempt occurred during materialization.
+
+Canonical Tier 2 is therefore **13 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**. KService is build-ready; KMime remains decision-gated.

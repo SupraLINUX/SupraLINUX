@@ -219,3 +219,16 @@ All three nodes are now `build-ready`. Materialization remains `package_attempte
 KFileMetaData's materialization remains consumed by a clean-build PASS. KDeclarative's materialization is also retained unchanged because its package build succeeded and the failure was solely in a post-build validation implementation.
 
 Only KService re-enters materialization. Its prior materialization remains historical evidence, while the active tree adds the reviewed `optional=toolchain` symbols entry for `std::piecewise_construct`. Materialization remains `package_attempted=false`; the subsequent clean sbuild is the authority for package PASS.
+
+
+## KService toolchain-symbol rematerialization PASS
+
+Run `35677466559`, job `106586918751`, produced the corrected KService materialization:
+- artifact `10673841912`
+- artifact SHA-256 `c75ae3d4fd2960333fc9db6403282631140cbc9a81031934d04717092aeadf0b`
+- tree SHA-256 `155404d0851efdea82fc5ffb29c2fc69aabcb28271f8509735b4554424f34bac`
+- Debian tree SHA-256 `342e4afe16a3cacf918aa894a68b2b2876a3c82f09d430158d0dad4486b58b99`
+- `.dsc` SHA-256 `89ecf2b6e8df503b2f5973f80ca82d7507f1cc88a407d222a63bb55dcfaf9374`
+- Debian tar SHA-256 `a92c9aa510bfef21fd01659ad6064b9bff6dc29da791584adc0722b0c802a2b0`.
+
+Materialization remained `package_attempted=false`. The next authority step is a clean KService package build, not another materialization.
