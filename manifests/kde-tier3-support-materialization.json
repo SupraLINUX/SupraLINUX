@@ -5,7 +5,7 @@
   "role": "support-source-materialization",
   "frameworks_series": "6.30.0",
   "contract_manifest": "manifests/kde-tier3-support-package-contracts.json",
-  "state": "pending-ci",
+  "state": "PASS",
   "package_attempted": false,
   "package_state_effect": "none",
   "selected_nodes": [
@@ -25,7 +25,7 @@
   },
   "nodes": {
     "breeze-icons": {
-      "state": "pending",
+      "state": "materialized",
       "source_package": "kf6-breeze-icons",
       "upstream_version": "6.30.0",
       "upstream_source_sha256": "93866c19791838fc9757b305e010e23bb38cb5f201e4ecc96cc8ef5f1173ebe6",
@@ -39,10 +39,26 @@
         "kf6-breeze-icon-theme-rcc",
         "libkf6breezeicons-dev",
         "libkf6breezeicons6"
-      ]
+      ],
+      "evidence": {
+        "workflow_run": 35698463205,
+        "job_id": 106650704762,
+        "commit": "080cdd5ddf75d46b914efb0baca85981deee0765",
+        "artifact_id": 10680459412,
+        "artifact_sha256": "80955df1f6e90b6ad519b2f91cadbf1e4b56278e69a9827cdfa0b498a960fdb1",
+        "package_version": "4:6.30.0-0supralinux1",
+        "orig_tar_sha256": "93866c19791838fc9757b305e010e23bb38cb5f201e4ecc96cc8ef5f1173ebe6",
+        "dsc_sha256": "656cb25eeca440541c96dac702b77ea8007683ea8f4b40538fc8240a73add9fa",
+        "debian_tar_sha256": "373b83d55799bf8202986b761b0c91fd5cca2c981017971bb021db7b9a1d5879",
+        "adapted_control_sha256": "47c72187131e94569a80d0aa0abd41cbab247ccd99eb5e1a0e22be0b7237edb6",
+        "debhelper_compat": "13",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none"
+      }
     },
     "kdoctools": {
-      "state": "pending",
+      "state": "materialized",
       "source_package": "kf6-kdoctools",
       "upstream_version": "6.30.0",
       "upstream_source_sha256": "b90b42ab222a3034729e517d0c06258abf6bdc28591ec78ad56f24aebbaaed94",
@@ -54,10 +70,26 @@
         "libkf6doctools-dev",
         "libkf6doctools-doc",
         "libkf6doctools6"
-      ]
+      ],
+      "evidence": {
+        "workflow_run": 35698463205,
+        "job_id": 106650704804,
+        "commit": "080cdd5ddf75d46b914efb0baca85981deee0765",
+        "artifact_id": 10680938435,
+        "artifact_sha256": "cf5c18889e9de6582ca05b4e8290686948942493aeaf54a318a2b4f4925cf5ac",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "b90b42ab222a3034729e517d0c06258abf6bdc28591ec78ad56f24aebbaaed94",
+        "dsc_sha256": "677d1d29efc3b247750861bf8f22c86f20df03cd288403b4db92f7d5b8b7f4b5",
+        "debian_tar_sha256": "49880de46bf0dda23cecd1abd34393743f40efb35666718632528046298a8e94",
+        "adapted_control_sha256": "cf3a9a29051d1e050f20ac68b49b5f223780cc145dcbb079008dffd5df3e65ed",
+        "debhelper_compat": "13",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none"
+      }
     },
     "kded": {
-      "state": "pending",
+      "state": "materialized",
       "source_package": "kf6-kded",
       "upstream_version": "6.30.0",
       "upstream_source_sha256": "0adf6e22300cee74d57e790b5db844f03a1366a4d6315edbaa49174b12bf1861",
@@ -67,8 +99,36 @@
       "expected_binary_packages": [
         "kded6",
         "kded6-dev"
-      ]
+      ],
+      "evidence": {
+        "workflow_run": 35698463205,
+        "job_id": 106650704776,
+        "commit": "080cdd5ddf75d46b914efb0baca85981deee0765",
+        "artifact_id": 10680629132,
+        "artifact_sha256": "680ec2d408e1dd021b091c7adfe1d63a3077144bf54516da3164191d427efa99",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "0adf6e22300cee74d57e790b5db844f03a1366a4d6315edbaa49174b12bf1861",
+        "dsc_sha256": "fe48627801159b62904c354794e7a980ecf8175a20c3c282d8a378f25083e4de",
+        "debian_tar_sha256": "5f971aa53129d6c1a70347b19876731addeca02fa3d21060af9a396aedd7be9d",
+        "adapted_control_sha256": "70fd370f87bb05e0ee69a63b48d6cdc18d4234fee6baf597e71987ddfb6857b5",
+        "debhelper_compat": "13",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none"
+      }
     }
   },
-  "stable_promotion_requires_explicit_user_approval": true
+  "stable_promotion_requires_explicit_user_approval": true,
+  "evidence_summary": {
+    "result": "PASS",
+    "workflow_run": 35698463205,
+    "commit": "080cdd5ddf75d46b914efb0baca85981deee0765",
+    "package_attempted": false,
+    "package_state_effect": "none",
+    "nodes": [
+      "breeze-icons",
+      "kdoctools",
+      "kded"
+    ]
+  }
 }
