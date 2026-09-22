@@ -12,7 +12,7 @@ t=load("manifests/kde-frameworks-tier3.json")
 r=c.get("contract_review",{})
 selected=c.get("selected_nodes",[])
 
-req(c.get("state") in {"packaging-tree-pass","contracts-ready","materialized"},"Tier3 contract review requires packaging-tree PASS")
+req(c.get("state") in {"packaging-tree-pass","contract-review-pass","contracts-ready","materialized"},"Tier3 contract review requires packaging-tree PASS")
 req(c.get("packaging_tree_capture",{}).get("status")=="PASS","Tier3 contract review packaging-tree prerequisite")
 req(len(selected)==20,"Tier3 contract review node count")
 req(r.get("status") in {"pending-ci","PASS"},"Tier3 contract-review lifecycle")
