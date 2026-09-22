@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "as_of": "2026-09-22",
-  "state": "packaging-tree-pending",
+  "state": "packaging-tree-pass",
   "source_authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "packaging_authority": "supralinux",
@@ -74,7 +74,7 @@
       "source_sha256": "a59d33a919bfa1d164c8f3a6f992c609edaf2131ac5f52ea4ecb77f6fbc53be1",
       "source_package": "kf6-baloo",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -122,7 +122,7 @@
       "source_sha256": "680120f09929d51da0a65e96a1f7d20ffbbdd2795a165719b0d07e00475e77c4",
       "source_package": "kf6-kbookmarks",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -168,7 +168,7 @@
       "source_sha256": "0159f80d030ac250b0b353113a55c013ed7e38cb0b678df44d2f0d0b2aca944c",
       "source_package": "kf6-kcmutils",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -220,7 +220,7 @@
       "source_sha256": "6efd9fc7786a7e979b32904aeadf1d2d8e69a5da110f8ebd45f95ec02de41f77",
       "source_package": "kf6-kconfigwidgets",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -264,7 +264,7 @@
       "source_sha256": "08d95cf546c941dbe21a76fbc8b88a466f276ab29e866600994f4f60d604c7f4",
       "source_package": "kf6-kdav",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -308,7 +308,7 @@
       "source_sha256": "9bf244884b09ce38ad84d00e5879e798b02e1610ec8f3d9ee6c93e7502b356e2",
       "source_package": "kf6-kdesu",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -354,7 +354,7 @@
       "source_sha256": "c0c684823d0e087f35168cd79f1053fd358bb8fb47b27996a11c7d7ee3da6f4d",
       "source_package": "kf6-kiconthemes",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -404,7 +404,7 @@
       "source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
       "source_package": "kf6-kio",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -454,7 +454,7 @@
       "source_sha256": "bf36e3619df1c6ad3d900bd36433d97ab295be41c1cc401ff0e766380788bbae",
       "source_package": "kf6-kjobwidgets",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -498,7 +498,7 @@
       "source_sha256": "85408768b5c3f4b0b51ee6a14ae73fea263f451404e266e286c55e0c17e44037",
       "source_package": "kf6-knewstuff",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -548,7 +548,7 @@
       "source_sha256": "4a133decdb0d3731dbaa1d3625b30f057089e5c59c8326ff88a047cef35b2efb",
       "source_package": "kf6-knotifyconfig",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -592,7 +592,7 @@
       "source_sha256": "99f5a0e3a4da10e1a0fbfb505ae966cd87627f887dd07929a920afe41c862ac0",
       "source_package": "kf6-kparts",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -636,7 +636,7 @@
       "source_sha256": "094868f11c8c46e57a077c2788a39c6ee0b0ebc2b64279c6f7c70a5152f518e7",
       "source_package": "kf6-kpeople",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -686,7 +686,7 @@
       "source_sha256": "0885d0936aec6dc8553c673f1c685013e345b933a52812a07c5bddd1eebdb551",
       "source_package": "kf6-krunner",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -728,7 +728,7 @@
       "source_sha256": "7b7aba4e9baa88bfb303977e139e8a105b5cd243443029ee773954307b51eb91",
       "source_package": "kf6-ksvg",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -772,7 +772,7 @@
       "source_sha256": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7",
       "source_package": "kf6-ktexteditor",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -820,7 +820,7 @@
       "source_sha256": "b06b11bb727bf9c3578797b1e40daad5f48e10433e456a337f1c40b4082879c8",
       "source_package": "kf6-ktextwidgets",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -864,7 +864,7 @@
       "source_sha256": "93cb9c1df2630807c04bf8c30312e75ae3bb466c77dd9b29bb2c752e71d34a26",
       "source_package": "kf6-kwallet",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -912,7 +912,7 @@
       "source_sha256": "10fb8a0f7b874248ff60d9a8ee4e1f06a0efcf01b0d34d7635dfff86e848c352",
       "source_package": "kf6-kxmlgui",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -956,7 +956,7 @@
       "source_sha256": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862",
       "source_package": "kf6-purpose",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pass",
+      "contract_state": "packaging-tree-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -1011,7 +1011,7 @@
   },
   "stable_promotion_requires_explicit_user_approval": true,
   "packaging_tree_capture": {
-    "status": "pending-ci",
+    "status": "PASS",
     "claim": "technical-packaging-tree-only",
     "authoritative": false,
     "package_state_effect": "none",
@@ -1019,11 +1019,423 @@
       "ubuntu",
       "debian"
     ],
-    "evidence": null,
+    "evidence": {
+      "result": "PASS",
+      "workflow_run": 35729077373,
+      "job_id": 106750146405,
+      "commit": "6ad9815de4d0acbde2a9c9f0d9d377d5616138fe",
+      "artifact_id": 10694324518,
+      "artifact_sha256": "43a1089660033d9a1a1ae785e348f0b1e8f17636f3085b4449fd9c65f0f2091a",
+      "index_sha256": "3f975678343f872c8094b20425e76b4026a59d1c5f50c1d5b2c5c1b48a00c7fb",
+      "nodes": 20,
+      "sides": 40,
+      "package_state_effect": "none"
+    },
     "execution_request": {
-      "status": "requested",
-      "reason": "Capture the exact pinned Ubuntu 6.24 and Debian 6.30 debian/ trees for all 20 Tier 3 package contracts.",
+      "status": "consumed",
+      "consumed_by": {
+        "workflow_run": 35729077373,
+        "job_id": 106750146405,
+        "artifact_id": 10694324518
+      },
       "package_state_effect": "none"
     }
+  },
+  "packaging_trees": {
+    "baloo": {
+      "debian": {
+        "source_package": "kf6-baloo",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "d5e63be64936b478d3ec2a9d9c493d79d5a662639a48c105d9651c8e8cb3f78d",
+        "file_count": 21,
+        "control_summary_sha256": "a45264d739c2042e16e73fc4cf5bbc675ab3de889699cb2f91beff2d59d207da",
+        "packaging_files_sha256": "7f206b62f1e2b168898fb2dcb754e04a583625a3f41fd4dc8e6305043991173f"
+      },
+      "ubuntu": {
+        "source_package": "kf6-baloo",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "8883368cdce48bf8dbed8cf82e808e7d58f9d03aad960e5c88bf04994998c44e",
+        "file_count": 24,
+        "control_summary_sha256": "42026b5cdb8eaa9cf162cd06674c40094eaf7e763407b3973a1ba6ad8998e84f",
+        "packaging_files_sha256": "7bac29734bff16bea29550db429589815de7395ed5b76fc895bf47fbb7532dde"
+      }
+    },
+    "kbookmarks": {
+      "debian": {
+        "source_package": "kf6-kbookmarks",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "16797980fabab89ffb182589542f418f4f7278dafdd2a420cb3f35cd1163ad84",
+        "file_count": 16,
+        "control_summary_sha256": "fcb25224b03521d80c278a8e2e1ac5687aa8d5d29ea983bcf1c040b2e528ea97",
+        "packaging_files_sha256": "7b16e6af2a01d65d0218a01887369118c4cacdc118c22bd2818f161c38b924b0"
+      },
+      "ubuntu": {
+        "source_package": "kf6-kbookmarks",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "5edc6246da8f55cfc14a217339116f8c12300e9eef9b34d7de3b46001980eb1e",
+        "file_count": 21,
+        "control_summary_sha256": "352557aa2761b86330d36a1407ee58dd205f4161b3139e8896bfa57447e58cb0",
+        "packaging_files_sha256": "3460a4c5fdae3a5555d6c258dd0ab2820ff788ffb58430404a0dd70f475f0c7c"
+      }
+    },
+    "kcmutils": {
+      "debian": {
+        "source_package": "kf6-kcmutils",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "ed24fd11497ef4bf09ebc8a1f7ba6267c139f36ff2ddc54a0383ca90fabf11d6",
+        "file_count": 21,
+        "control_summary_sha256": "88deabb5373de7f56572f56a5cccfa50cc2df5d41896dd5413c76ebd7f5c1e0a",
+        "packaging_files_sha256": "dca093f71ad86a59fc5c3b179186165a9d4005d650eed99a252c40db00713900"
+      },
+      "ubuntu": {
+        "source_package": "kf6-kcmutils",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "56b7a01fa32bc0077e75d005f3149e2e75dc242f630be271baa6ed49bbae042f",
+        "file_count": 24,
+        "control_summary_sha256": "874284b5b396843454ea02df7c7652c40805552e6ce24fbf3cd8cc150a556b4d",
+        "packaging_files_sha256": "d2cec2f0562ed68afa7b38474248b09b382c5092bda2687e8f1c4458f62c3567"
+      }
+    },
+    "kconfigwidgets": {
+      "debian": {
+        "source_package": "kf6-kconfigwidgets",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "191c332881d177e2b3e8d66663772e004db8a4fbfdff74235f665f2b52f47109",
+        "file_count": 16,
+        "control_summary_sha256": "e97b6f91e37190c42f745a4da4dd9b865b3b3ac173d3213b2ebf54851c3d3998",
+        "packaging_files_sha256": "e7c2109de224bb911cd73ece1720532767758317ab0cb1579389d20ccc2f14d4"
+      },
+      "ubuntu": {
+        "source_package": "kf6-kconfigwidgets",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "64651a666becca415fb4a19f12073093ded6ac04f5fb3a3c98aa6e2c5c699183",
+        "file_count": 22,
+        "control_summary_sha256": "66d5968eb66326b1d0ecf0000be184c8fd7b9161c8363059240ac75a6048d707",
+        "packaging_files_sha256": "35da498f5eac2469fa18e2bc5eec60d0b4c6b79ef8ec1910fbca69767bcc3413"
+      }
+    },
+    "kdav": {
+      "debian": {
+        "source_package": "kf6-kdav",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "f9ae4cc1bb30a078c7ef5a37bdc7f9482afc84a501d1ef083425629a866ef06c",
+        "file_count": 14,
+        "control_summary_sha256": "c581c46262d23c6d6a2267412fe92dccf18279195a0f6fac6e4c711f57e01dd5",
+        "packaging_files_sha256": "36658f7d4b3f328b01d291dc43b843ea0b13532552ea6a0a05e20b2fbc882efb"
+      },
+      "ubuntu": {
+        "source_package": "kf6-kdav",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "9997d21574bfbd3a9e41df13686fd90673d12484cd860b88e050a09bd0b15fc7",
+        "file_count": 14,
+        "control_summary_sha256": "85c68a7c7e5189700a658c4393545996914337df8e8e3bf6c29e64bf6d9ba93d",
+        "packaging_files_sha256": "f6436eb0c3733d1af5e937c44cfd6ddc15e789ad48bddd21932d2e432c6c9508"
+      }
+    },
+    "kdesu": {
+      "debian": {
+        "source_package": "kf6-kdesu",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "d1efb700ac13cb1ddf0bc029e6b4a24f9b10da84ae185cd84812e3f17cf62ab3",
+        "file_count": 15,
+        "control_summary_sha256": "8717d2d8bfe425f540b6209c6dc5e95509b645a035a922e424d99c49d2bdff98",
+        "packaging_files_sha256": "ad614ffdba7744d94672511566eafdb1428eacc82b6e577d26c8e458726ac52d"
+      },
+      "ubuntu": {
+        "source_package": "kf6-kdesu",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "ac7715b524f86d18171c10898bac460bba84a0ba5807e854caa306a28e8745ab",
+        "file_count": 20,
+        "control_summary_sha256": "196e4068365b31c1fa4408d291f8889373133d1d09c1a9b616fbde8e7e0ab730",
+        "packaging_files_sha256": "06a684790ec23e884a464ef2920f1096e93167bba6716a9225a8ddfb9deb84fe"
+      }
+    },
+    "kiconthemes": {
+      "debian": {
+        "source_package": "kf6-kiconthemes",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "c39952329869c0deb4ffb5f3bf36ce5a89d1b8290f7a14fe135a4453c32ff210",
+        "file_count": 21,
+        "control_summary_sha256": "a8db68209868f8c9096a1c9cf60afccb9d838f583dc967c6435a725d3db24ae1",
+        "packaging_files_sha256": "0a6ed43c75679410637f0033c8ced077b7a210b4fbf5c29c79a8be34bafd44f6"
+      },
+      "ubuntu": {
+        "source_package": "kf6-kiconthemes",
+        "source_version": "6.24.0-0ubuntu2",
+        "tree_sha256": "4dfa306b0d93f13ed074038e064f237b51499463e0bbbe373537e0e73fe84173",
+        "file_count": 25,
+        "control_summary_sha256": "bfa7c1ca5047a500bfe49696f1b6b9ba97b38982405e26396fb70f5fca4499e8",
+        "packaging_files_sha256": "771779f9376a551845a4109b6325c81cca3aed9cfce2f8e1f028f4f3ce8166b7"
+      }
+    },
+    "kio": {
+      "debian": {
+        "source_package": "kf6-kio",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "50508b96984930b303c3d4467b464c8275de59ae68e210c8ad671e0832262e84",
+        "file_count": 28,
+        "control_summary_sha256": "9589cea7f46bf35fb22c18272a0ced56fbb060702c4e54e62e93fe5cf502c670",
+        "packaging_files_sha256": "6f46bc4b81d03ec80409f9d1e672641217992dfd16190c8fe1ea46e550c39f59"
+      },
+      "ubuntu": {
+        "source_package": "kf6-kio",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "cd64000b7db11f0d2a813782d1cc955135475f9cec447f34a650ff71343eef85",
+        "file_count": 28,
+        "control_summary_sha256": "2de344084cc442dfed286eeffb8e49407ba8ed9486818c078f07c0d2673de10b",
+        "packaging_files_sha256": "ff573bbb8f306359c028a192346f2d1cba4dafe2156fef40c14e33a436082236"
+      }
+    },
+    "kjobwidgets": {
+      "debian": {
+        "source_package": "kf6-kjobwidgets",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "f1fa1c6f41bbaaf140c65a6aa195a20ef791de09885a5b955252b9754c41e4f8",
+        "file_count": 14,
+        "control_summary_sha256": "ba19cc9e0c078fd79a1ef2ed87820e094d464dec6df73fcfd8996fab35270dc4",
+        "packaging_files_sha256": "80cc543cae6387ee918e84fbf42b90b56387300c824b200d747c9dfa1f82e521"
+      },
+      "ubuntu": {
+        "source_package": "kf6-kjobwidgets",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "cd3c58e24bf4a33c193cd940c5f1054a6d294ebeba8f3a5f0bfc7c414ce00bdb",
+        "file_count": 21,
+        "control_summary_sha256": "c43b0a94c7634bb02ace0ad19ded4623f2f2efae102699b0284d0957975e5030",
+        "packaging_files_sha256": "46d8f25d698daa6cbf6a7e19b8cacc16a9fe7de55b9fb64ee270934f79ad2740"
+      }
+    },
+    "knewstuff": {
+      "debian": {
+        "source_package": "kf6-knewstuff",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "24501881b98aec525d67bebc537e2d85853854a2344b095f8e63c73565bf5f8f",
+        "file_count": 22,
+        "control_summary_sha256": "e4c07fbcb9eb46fa08c9d65604bf71cc4eedb32ef6aac634a3627d48360658a5",
+        "packaging_files_sha256": "12d3f1511428e9390acc8d0bb09aeafd4e030cca7656cad7fb010cf055cffe72"
+      },
+      "ubuntu": {
+        "source_package": "kf6-knewstuff",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "1d956f4253d2cb18dc93ecd61544216fd91c3d10a6751366918f7a49c1f26562",
+        "file_count": 25,
+        "control_summary_sha256": "7b1447ced808057e4899991264b1801ec8e722a7768140f73bee965c08278f8c",
+        "packaging_files_sha256": "a3b3e263da2f4c2892d8d9bf279aa1fdfb1bc8815fc532c4129a26176e50d34f"
+      }
+    },
+    "knotifyconfig": {
+      "debian": {
+        "source_package": "kf6-knotifyconfig",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "6cdd919d7ddce6c9306370980f1cd14df5077b40fa01d81236b38d6a2a9ea649",
+        "file_count": 14,
+        "control_summary_sha256": "96b5095951393c1915c7d1de6f406f10e57f7332aefe65236040c54721a77b74",
+        "packaging_files_sha256": "fa8546735c9a5b895aeb31494fa3ce10be1caab538741644e1ca00ef4d0be548"
+      },
+      "ubuntu": {
+        "source_package": "kf6-knotifyconfig",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "4bb61d3c9b55531f1c3e4eabe81796ff487a8c2e4cb3ad9ec5ab9e5b9f07670f",
+        "file_count": 17,
+        "control_summary_sha256": "ccc3bcdcc6867952657fe6befd5185d933c2c4630a044b5a5a775f2d635b8063",
+        "packaging_files_sha256": "b5e9221ed8836ff02fd980f5599cf55cf4577aed5361fcd2c9ea7246ab68c425"
+      }
+    },
+    "kparts": {
+      "debian": {
+        "source_package": "kf6-kparts",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "67e9851badde0130f5afbf12713644dcc5e4f0f42ef606143a957fb65c318f27",
+        "file_count": 16,
+        "control_summary_sha256": "30e03cb631fdc7a38b5f7a5ecdabe5b34da74f28a4d7cfcf5146761dbfb3d919",
+        "packaging_files_sha256": "ebe6568c953b86408d39f7032c6c371cefcfa79ca71f8cfb8641ac27ffd52094"
+      },
+      "ubuntu": {
+        "source_package": "kf6-kparts",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "38ea61adb614ad8b6a9c48ae569fb840e2862dc63e93a562d8a08922bc02c5ca",
+        "file_count": 17,
+        "control_summary_sha256": "17ce01a999c2495d84c0011a13d1d40670d27afdc8861925c0c866b92bd37f0d",
+        "packaging_files_sha256": "adc6b82060a63d5624e0cd5288bde73f6c279da3ceab15bf912771c7bf8b76fd"
+      }
+    },
+    "kpeople": {
+      "debian": {
+        "source_package": "kf6-kpeople",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "27183cd75cb9995e47800fec55a2f8f482d41328fbf0e3422a2deb47e8d4b40d",
+        "file_count": 19,
+        "control_summary_sha256": "fb99edd494ddf285f921ea8171b71906304c5dd3a73f568bb70dbcfff97eb6c4",
+        "packaging_files_sha256": "6a701659a9c598452cdd4f5c194832006ecc26eac20d04530b27165c640d9156"
+      },
+      "ubuntu": {
+        "source_package": "kf6-kpeople",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "029c6d6648945c921a1614eae0a58425883ec247db25043bfdca5a7d94ba602d",
+        "file_count": 19,
+        "control_summary_sha256": "d830153eba41cd2607b1b66b41911cab5886df991254a2ecdf121b158c71e58d",
+        "packaging_files_sha256": "f9550d5edc14f2ea4775b1ec9a77afe3a73db09b999e991076a9e4d33ab1366a"
+      }
+    },
+    "krunner": {
+      "debian": {
+        "source_package": "kf6-krunner",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "949889c41a828d79ed9611762f8d750896cd49571c1c2bf4fbcb1663659c9f56",
+        "file_count": 15,
+        "control_summary_sha256": "5141a6a01992d76c0d0419f294177f08d8a5a3f97aa02441763f15a43278fb30",
+        "packaging_files_sha256": "4d13b4205c746fd1fab139764a7f10e27c3449c781d8d5ee117fcddff8fa0281"
+      },
+      "ubuntu": {
+        "source_package": "kf6-krunner",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "7806111d4733ce308b615b549191f83556d20be20db29ecb5a4d6eac5a4da59b",
+        "file_count": 18,
+        "control_summary_sha256": "bc61a6b1958d470ebd8249c34fec56ef649159bd8b9f27dfeeb7cd8736c854ec",
+        "packaging_files_sha256": "4c962734cd16c7935a9eed644d3575d1589b359e38f78dbec21591b7ebbf90a8"
+      }
+    },
+    "ksvg": {
+      "debian": {
+        "source_package": "kf6-ksvg",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "5a8658fb5f5a9f0144d8ab5cf6259913943c3dad3736974aaf0fde67257b7af2",
+        "file_count": 14,
+        "control_summary_sha256": "114198dc09b3f9b9a61a3dcc0c6b8dea008b303e38c44803022b4c172bf4e7cd",
+        "packaging_files_sha256": "2458fd370aa20eb94b239f83837724ea90ccb17e27dd93b3401ab96de84f3286"
+      },
+      "ubuntu": {
+        "source_package": "kf6-ksvg",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "8e19e23c05f80f06666ec5e40efcefa5c17b99f98effb34761fe797d1ab853df",
+        "file_count": 14,
+        "control_summary_sha256": "24e715b51f3ddcce4c73484694c2e3182f8d526c26a51c00f29a9601549d6907",
+        "packaging_files_sha256": "269a7521135c8c501e5a9f5410b8f1d1ac3cfb2589ff941a127be344c285ad8d"
+      }
+    },
+    "ktexteditor": {
+      "debian": {
+        "source_package": "kf6-ktexteditor",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "bb4beab892d545539937a1cd4292062c98ed355f05f1e4ea4c62cd4916a09fce",
+        "file_count": 20,
+        "control_summary_sha256": "16766002571f58ff5613203feb2e55800ea542dbfd4b4b022c6ad592b06fe5b8",
+        "packaging_files_sha256": "a444c111a15b7ae5ddc2151d359393b2f12187f41c78ef4a6e2f6dd34d70b3ec"
+      },
+      "ubuntu": {
+        "source_package": "kf6-ktexteditor",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "2cdedd2a180445a0bd91a477430f38bd3efd176e010fab70e5c1cb655f103118",
+        "file_count": 23,
+        "control_summary_sha256": "9310b9ab105f0920262cd759c3e5d57dfad21f4b0b01f453f0c0efd624dd7067",
+        "packaging_files_sha256": "aa11d7f8ef527113c750883421de01f0c1cecc35a080c5097c8408907ca2df5c"
+      }
+    },
+    "ktextwidgets": {
+      "debian": {
+        "source_package": "kf6-ktextwidgets",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "f270e09ea12025525657e20fd42f8e62c80faa54cfda84f150dcd768611a523d",
+        "file_count": 16,
+        "control_summary_sha256": "4798e0bece090f0a806fd93f539a186ddefaf039ab34675115bcceed73c525c9",
+        "packaging_files_sha256": "5bcbcb7839163b59c79ec239228f3f44afc0a38665a03d520d8dd9ed7fed93d5"
+      },
+      "ubuntu": {
+        "source_package": "kf6-ktextwidgets",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "8115c3425b5e5b3b8944a8bfb556f18a7ba7ece7b7d5cd152e3f7de3bbbb2c28",
+        "file_count": 21,
+        "control_summary_sha256": "625f295b894d20c1308d04a9779a98ac644e5e8155308e69280c9fb0f40232ad",
+        "packaging_files_sha256": "9880a972cf3b52ae91d96e0d0a68e2c88979ae04bca8101479700c5fabce2981"
+      }
+    },
+    "kwallet": {
+      "debian": {
+        "source_package": "kf6-kwallet",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "14828a62213875b9be1395f66ad4b4aa1f0349ed1ce9bf56a5b639d7089d6d2c",
+        "file_count": 23,
+        "control_summary_sha256": "b1a482895f3539feb384ad854fb93c745b8bf1232a374c66eb2ac6618af0e645",
+        "packaging_files_sha256": "1858182d4c332469571354f6960460b70135031ad348a5aaa9ea1f228833593b"
+      },
+      "ubuntu": {
+        "source_package": "kf6-kwallet",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "d0496145a56be87363553e3c7417a367a4806ca7782cd10179fbea75c9995414",
+        "file_count": 25,
+        "control_summary_sha256": "9760ed26a296e49ea20e22349aa46d07ae28aeda4ee748f6d20869da41779bd5",
+        "packaging_files_sha256": "a068398ec89e20f6976e179c6f2c150f7bd28f06ec6b48948d4a13465e76642d"
+      }
+    },
+    "kxmlgui": {
+      "debian": {
+        "source_package": "kf6-kxmlgui",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "3b271d78381bfde2e9bcd7607b36e889dcc4f0f7e27f1893c4dfc8bcb37c6812",
+        "file_count": 16,
+        "control_summary_sha256": "4351de508c9a37d46d82187f235a890c78e231feb824817b657ed46fa19cd8eb",
+        "packaging_files_sha256": "7250aa3e8bd196e12402387f1df6d38d4221c4aa3f7b807c221f67c311b41d65"
+      },
+      "ubuntu": {
+        "source_package": "kf6-kxmlgui",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "3de41784c5063874f75484592bf8d9991f3339c55d3c935bb7d27dd998e2c188",
+        "file_count": 19,
+        "control_summary_sha256": "e9872bb0e3dba0fa7fe3afd8ace6e3ffc6ee20d260a491f5e39babc4532a5baf",
+        "packaging_files_sha256": "0fd4b0e6c77d75b679fb18e2a7b07004eff66c602f9a757da06b534e3ec67411"
+      }
+    },
+    "purpose": {
+      "debian": {
+        "source_package": "kf6-purpose",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "f1ca6eba5179a1a682a9543a948d604cb994bf4030ead2b9cef9cc442d6d7743",
+        "file_count": 20,
+        "control_summary_sha256": "d44f64984202ba61c1841b9b03d7fdf9d93e39e5fad63a075abf12cec3bfac58",
+        "packaging_files_sha256": "a9ec684b22609d13c8645dc22a28e41dd6bf78b99dbe11a6499e9a49416478f9"
+      },
+      "ubuntu": {
+        "source_package": "kf6-purpose",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "d0298e16aa882121e2580eccc67de5c918a0ef2854564cfb36a91f5f3a5dd114",
+        "file_count": 22,
+        "control_summary_sha256": "72bf9c92e5d2cfa88d12da1aff41d2859f99db65d0c15097fa72f0a85027446a",
+        "packaging_files_sha256": "14e4b99f217725b0514e248297079eab7dad4dc223572579629aac1b0f8d9335"
+      }
+    }
+  },
+  "contract_review": {
+    "status": "required",
+    "claim": "supralinux-package-contract-review",
+    "authority": "supralinux",
+    "source_authority": "kde-upstream",
+    "technical_references": [
+      "ubuntu-resolute",
+      "debian-sid"
+    ],
+    "package_state_effect": "none",
+    "selected_nodes": [
+      "baloo",
+      "kbookmarks",
+      "kcmutils",
+      "kconfigwidgets",
+      "kdav",
+      "kdesu",
+      "kiconthemes",
+      "kio",
+      "kjobwidgets",
+      "knewstuff",
+      "knotifyconfig",
+      "kparts",
+      "kpeople",
+      "krunner",
+      "ksvg",
+      "ktexteditor",
+      "ktextwidgets",
+      "kwallet",
+      "kxmlgui",
+      "purpose"
+    ],
+    "materialization_authorized": false,
+    "package_build_authorized": false
   }
 }
