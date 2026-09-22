@@ -4,12 +4,9 @@ on:
   pull_request:
     paths:
       - manifests/kde-tier2-kmime-legacy-provider.json
-      - manifests/kde-tier2-kmime-compatibility-audit.json
-      - manifests/kde-frameworks-tier2.json
       - scripts/materialize-kde-tier2-kmime-legacy-provider.sh
       - scripts/run-kde-tier2-kmime-legacy-provider-build.sh
-      - scripts/validate_kde_tier2_kmime_legacy_provider.py
-      - docs/kde-tier2-kmime-legacy-provider.md
+      - scripts/kde-tier2-kmime-legacy-provider-needed.sh
       - .github/workflows/kde-tier2-kmime-legacy-provider.yml
   workflow_dispatch:
 
@@ -22,7 +19,54 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  plan:
+    name: Plan KMime legacy provider rebuild
+    runs-on: ubuntu-26.04
+    outputs:
+      run: ${{ steps.scope.outputs.run }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - name: Determine semantic scope
+        id: scope
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_ACTION: ${{ github.event.action }}
+          EVENT_BEFORE: ${{ github.event.before }}
+          EVENT_AFTER: ${{ github.event.after }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          if [[ "${EVENT_NAME}" == workflow_dispatch ]]; then
+            echo "run=true" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+          if [[ "${EVENT_ACTION}" == synchronize ]]; then
+            before="${EVENT_BEFORE}"
+            after="${EVENT_AFTER}"
+          else
+            before="${PR_BASE_SHA}"
+            after="${PR_HEAD_SHA}"
+          fi
+          for sha in "${before}" "${after}"; do
+            git cat-file -e "${sha}^{commit}" 2>/dev/null || git fetch --no-tags origin "${sha}"
+          done
+          if bash scripts/kde-tier2-kmime-legacy-provider-needed.sh "${before}" "${after}"; then
+            echo "run=true" >> "${GITHUB_OUTPUT}"
+          else
+            rc=$?
+            [[ "${rc}" -eq 1 ]] || exit "${rc}"
+            echo "run=false" >> "${GITHUB_OUTPUT}"
+          fi
+
   materialize:
+    needs: plan
+    if: needs.plan.outputs.run == 'true'
     name: Materialize KMime legacy provider source
     runs-on: ubuntu-26.04
     timeout-minutes: 25
@@ -43,6 +87,8 @@ jobs:
           retention-days: 90
 
   rootfs:
+    needs: plan
+    if: needs.plan.outputs.run == 'true'
     name: Build clean Resolute rootfs
     runs-on: ubuntu-26.04
     timeout-minutes: 25
@@ -73,7 +119,8 @@ jobs:
 
   build:
     name: Build and validate KMime legacy provider
-    needs: [materialize, rootfs]
+    needs: [plan, materialize, rootfs]
+    if: needs.plan.outputs.run == 'true'
     runs-on: ubuntu-26.04
     timeout-minutes: 90
     steps:
@@ -136,3 +183,11 @@ jobs:
           path: evidence/kde-tier2-kmime-legacy-provider-build/
           if-no-files-found: error
           retention-days: 90
+
+  report-skip:
+    name: Report intentional provider skip
+    needs: plan
+    if: needs.plan.outputs.run != 'true'
+    runs-on: ubuntu-26.04
+    steps:
+      - run: echo 'KMime legacy provider intentionally skipped; no package-consumed semantic input changed.'
