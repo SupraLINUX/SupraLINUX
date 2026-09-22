@@ -122,9 +122,27 @@ for node in sorted(pending_ids):
         req(n.get("package_identity",{}).get("status")==expected_identity_status,f"{node}: package-contract identity status")
     else:
         req(n.get("package_identity",{}).get("package_version_candidate") is None,f"{node}: package version must remain undecided before a package contract exists")
-req(m.get("packaging",{}).get("state")=="pending" and m.get("packaging",{}).get("compatibility_policy")=="kf6mime-authoritative-legacy-kpim6mime-on-demand","KMime accepted compatibility/package lifecycle policy")
+mp=m.get("packaging",{})
+req(mp.get("compatibility_policy")=="kf6mime-authoritative-legacy-kpim6mime-on-demand","KMime accepted compatibility/package lifecycle policy")
 req(m.get("package_identity",{}).get("source_package")=="kf6-kmime","KMime Framework source package identity")
 req(m.get("package_identity",{}).get("ubuntu_legacy_source_package")=="kmime","KMime legacy Ubuntu source identity")
+if m.get("state")=="PASS":
+    req(mp.get("state")=="PASS" and mp.get("package_version")=="6.30.0-0supralinux1" and mp.get("downstream_eligible") is True,"KMime packaging PASS")
+    req(m.get("planning",{}).get("readiness")=="retained-pass","KMime retained PASS readiness")
+    req(m.get("planning",{}).get("compatibility_provider",{}).get("status")=="PASS","KMime compatibility provider PASS")
+    mev=[x for x in mp.get("evidence",[]) if x.get("result")=="PASS"]
+    req(len(mev)==1,"KMime exactly one retained PASS")
+    if mev:
+        e=mev[0]
+        req(e.get("workflow_run")==35687831684 and e.get("job_id")==106619132039 and e.get("artifact_id")==10677716050,"KMime Framework build evidence identity")
+        req(e.get("artifact_sha256")=="ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36","KMime Framework artifact digest")
+        req(e.get("tests")=="17/17 PASS" and e.get("lintian")=="PASS-errors" and e.get("consumer_smoke")=="PASS","KMime Framework gates")
+        cp=e.get("compatibility_provider",{})
+        req(cp.get("workflow_run")==35691309612 and cp.get("job_id")==106628834481 and cp.get("artifact_id")==10679420779,"KMime compatibility provider evidence identity")
+        req(cp.get("artifact_sha256")=="f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b","KMime compatibility provider artifact digest")
+        req(cp.get("coinstallation")=="PASS" and cp.get("legacy_consumer")=="PASS" and cp.get("framework_consumer")=="PASS","KMime compatibility provider gates")
+else:
+    req(mp.get("state")=="pending","KMime must remain pending before compatibility closure PASS")
 
 dep_nodes=deps.get("nodes",{})
 req(set(dep_nodes)==expected_ids,"Tier2 dependency manifest node set")
@@ -145,7 +163,11 @@ active=discovery.get("nodes",{})
 req(set(active)==pending_ids,"Tier2 active discovery must contain exactly current pending nodes")
 for node in sorted(pending_ids):
     req(active[node].get("readiness") in {"package-lane-pending","package-contract-ready","build-ready","compatibility-provider-required"},f"{node}: discovery readiness vocabulary")
-req(active["kmime"].get("readiness") in {"package-lane-pending","package-contract-ready","build-ready","compatibility-provider-required"} and active["kmime"].get("architecture_decision")=="ADR-0002-accepted","KMime accepted decision/lifecycle lane")
+if m.get("state")=="pending":
+    req(active["kmime"].get("readiness") in {"package-lane-pending","package-contract-ready","build-ready","compatibility-provider-required"} and active["kmime"].get("architecture_decision")=="ADR-0002-accepted","KMime accepted decision/lifecycle lane")
+else:
+    kmime_done=done.get("kmime",{})
+    req(kmime_done.get("state")=="PASS" and kmime_done.get("downstream_eligible") is True,"KMime completed discovery PASS")
 snap=discovery.get("promoted_snapshot",{})
 expected_snapshot={"pass":len(pass_ids),"pending":len(pending_ids),"current_fail":0,"blocked":0}
 req(snap==expected_snapshot,"Tier2 promoted snapshot")
