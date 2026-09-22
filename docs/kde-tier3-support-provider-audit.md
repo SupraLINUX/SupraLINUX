@@ -1,6 +1,6 @@
 # KDE Tier 3 support provider audit
 
-Status: **pending CI**
+Status: **PASS**
 
 Reviewed: **2026-09-22**
 
@@ -32,3 +32,23 @@ The hosted Ubuntu 26.04 audit verifies:
 After CI evidence is promoted, each support component will advance either to `ubuntu-compatible` or `supralinux-required`. Package contracts remain a later gate.
 
 No promotion to `stable` is authorized by this audit.
+
+
+## PASS evidence — 2026-09-22
+
+Hosted Ubuntu 26.04 run `35696178617`, job `106643431065`: **PASS**.
+
+Evidence artifact:
+- ID `10680368525`
+- SHA-256 `419bc312852ff7a2a9b98f632b47037fce7960c620396dab51208fd3af78bf7a`
+
+Observed Resolute candidates:
+- Breeze Icons probe `kf6-breeze-icon-theme`: `6.24.0-0ubuntu1`
+- KDocTools probe `kdoctools6`: `6.24.0-0ubuntu1`
+- KDED probe `kded6`: `6.24.0-0ubuntu1`
+
+KDE upstream selected version for all three is `6.30.0`. Therefore the provider decision is **`supralinux-required`** for all three support components.
+
+The same audit proved the Ubuntu platform side needed for later builds: Qt 6.10.2, Python/lxml, libxml2, libxslt and DocBook providers were usable. Ubuntu remains provider for those general dependencies; it does not become authority for the KDE support components.
+
+This audit has `package_state_effect=none`. Breeze Icons, KDocTools and KDED remain pending and now advance only to **package-contract-required**. No Tier 3 framework has become PASS.
