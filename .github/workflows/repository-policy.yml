@@ -238,6 +238,13 @@ jobs:
       - name: Validate KDE Tier 3 support package contracts
         run: python3 scripts/validate_kde_tier3_support_package_contracts.py
 
+      - name: Test KDE Tier 3 support packaging-tree semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier3-support-packaging-tree-scope.sh
+
+      - name: Validate KDE Tier 3 support packaging-tree capture
+        run: python3 scripts/validate_kde_tier3_support_packaging_tree.py
+
       - name: Validate KDE Attica 6.30 packaging preparation
         run: python3 scripts/validate_kde_attica_package.py
 
