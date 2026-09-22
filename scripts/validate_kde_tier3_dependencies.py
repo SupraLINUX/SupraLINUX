@@ -116,7 +116,8 @@ gate=d.get("topology",{}).get("support_build_gate",{})
 req(gate.get("level0")==["breeze-icons","kdoctools"] and gate.get("level1")==["kded"],"support binary-build gate")
 req(gate.get("manifest")=="manifests/kde-tier3-support-build-level0.json","support build level0 campaign link")
 req(gate.get("level0_status")=="PASS" and gate.get("level1_status")=="ready","support build level transition")
-req(gate.get("kdoctools_pass_artifact_id")==10682066198,"KDocTools level1 predecessor artifact")\nreq(gate.get("level1_manifest")=="manifests/kde-tier3-support-build-level1.json","support build level1 campaign link")
+req(gate.get("kdoctools_pass_artifact_id")==10682066198,"KDocTools level1 predecessor artifact")
+req(gate.get("level1_manifest")=="manifests/kde-tier3-support-build-level1.json","support build level1 campaign link")
 
 doc=(ROOT/"docs/kde-tier3.md").read_text()
 for token in ("Tier 3 dependency graph","Breeze Icons","KDocTools","KDED","4 topological"):
