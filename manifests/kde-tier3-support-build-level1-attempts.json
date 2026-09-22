@@ -3,6 +3,24 @@
   "as_of": "2026-09-22",
   "batch": "tier3-support-build-level1",
   "nodes": {
-    "kded": []
+    "kded": [
+      {
+        "attempt": 1,
+        "result": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "workflow_run": 35702647931,
+        "job_id": 106664471166,
+        "commit": "63c64d80d9b87e1bc4f0fef21c99f754925b8802",
+        "artifact_id": 10683311200,
+        "artifact_sha256": "1f0cb0ae9609d9c1de732ef3d0c8b7bb80c24b031bc19128c929cc97880fa3ab",
+        "rootfs_artifact_id": 10683220855,
+        "rootfs_artifact_sha256": "20c64c923fccafdd0ff9b0ef9bad9d5c89ad77fabce86572d2f51844f284eec4",
+        "stage": "payload-contract",
+        "package_attempted": true,
+        "sbuild_result": "successful",
+        "cause": "False-negative payload validation: installed manpage is kded6.8.gz, not an uncompressed kded6.8 file.",
+        "remediation": "Fix validator only; keep identical package revision because source and Debian payload are unchanged."
+      }
+    ]
   }
 }
