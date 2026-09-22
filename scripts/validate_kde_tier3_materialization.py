@@ -135,7 +135,12 @@ elif m.get("state") == "PASS":
         req(summary.get("workflow_run") == 35759443440 and summary.get("promoted_remediation_materializations") == 5, "remediation materialization summary")
         req(remediation_contract.get("evidence", {}).get("workflow_run") == 35759443440, "contract remediation materialization evidence")
         req(set(remediation_contract.get("evidence", {}).get("promoted_nodes", [])) == remediation_nodes, "contract remediation promoted node set")
-        req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-remediation-pending", "Level0 remains paused after remediation materialization")
+        active_remediation = t.get("active_remediation", {})
+        if active_remediation.get("execution_authorized") is True:
+            req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-authorized", "Level0 authorized after validated remediation promotion")
+            req(active_remediation.get("current_attempt") == 2, "Level0 remediation rerun attempt")
+        else:
+            req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-remediation-pending", "Level0 remains paused before remediation reactivation")
     for node in selected:
         planning = canonical[node].get("planning", {})
         req(planning.get("readiness") == "materialized", f"{node}: materialized readiness")
