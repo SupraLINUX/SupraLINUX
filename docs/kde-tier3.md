@@ -215,3 +215,18 @@ The 20 canonical Tier 3 Frameworks remain **0 PASS / 20 pending / 0 current FAIL
 KDE Frameworks 6.30.0 remains the current stable upstream release and is the authority for all 20 Tier 3 versions. The hosted Ubuntu 26.04 audit now checks Resolute's actual `kf6-*` source candidates and records whether Ubuntu can provide the exact 6.30.0 Framework or SupraLINUX must provide it.
 
 This gate has `package_state_effect=none`. All 20 Tier 3 Frameworks remain **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. Package contracts and package builds remain unauthorized until the provider audit is promoted.
+
+
+## Tier 3 framework provider audit PASS
+
+Run `35725458767` proved that all 20 canonical Tier 3 Frameworks require SupraLINUX as provider: Resolute exposes KDE upstream 6.24.0 while the selected KDE authority is 6.30.0. Ubuntu remains the Qt provider at 6.10.2.
+
+All 20 Frameworks remain canonical pending; the provider decision itself changed no package state.
+
+## Tier 3 package-contract reference PASS
+
+Run `35726410174` captured signed Ubuntu Resolute and Debian sid source metadata for all 20 Frameworks. Debian provides an exact `6.30.0-1` technical reference for every node, and each Debian orig tar matches the KDE 6.30 authority source hash.
+
+Ubuntu and Debian expose identical binary-package names for all 20 nodes. This is evidence for compatibility, not authority.
+
+Canonical planning readiness is now `package-contract-reference-pass`. The next gate is **Tier 3 package-contract packaging-tree capture**. Binary builds remain unauthorized and the canonical state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**.
