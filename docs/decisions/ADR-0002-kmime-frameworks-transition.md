@@ -1,7 +1,7 @@
 # ADR-0002 — KMime transition from KDE PIM to KDE Frameworks
 
-Status: **decision required**  
-Date: **2026-09-20**
+Status: **Accepted**  
+Date: **2026-09-22**
 
 ## Context
 
@@ -51,7 +51,34 @@ Version epochs or synthetic Debian versions are secondary choices inside the sel
 
 ## Decision
 
-**Pending human approval.** No KMime package tree, Debian version, Provides/Replaces/Breaks set, or promotion is authorized by this ADR yet.
+**Accepted on 2026-09-22.**
+
+SupraLINUX adopts the KDE Frameworks 6.30 KMime contract as the authoritative KMime implementation for the SupraLINUX KDE stack:
+
+- source/package family: `kf6-kmime`;
+- runtime: `libkf6mime6` providing `libKF6Mime.so.6`;
+- development contract: `libkf6mime-dev`, CMake package `KF6Mime`, target `KF6::Mime`;
+- data package: `libkf6mime-data`.
+
+Ubuntu Resolute's PIM-line KMime is **not** part of the SupraLINUX desktop stack and is not installed by default merely for compatibility. It remains available from the Ubuntu base repositories on demand when a prebuilt Ubuntu or third-party application explicitly depends on the legacy contract:
+
+- source: `kmime`;
+- runtime: `libkpim6mime6` providing `libKPim6Mime.so.6`;
+- development contract: `libkmime-dev`, CMake package `KPim6Mime`, target `KPim6::Mime`;
+- data: `libkmime-data`.
+
+The two runtime families are deliberately treated as co-installable, non-equivalent contracts. SupraLINUX must **not** use `Provides`, `Replaces`, symlink shims or package renames to pretend that `libKF6Mime.so.6` satisfies binaries linked to `libKPim6Mime.so.6`.
+
+Compatibility policy:
+
+1. KDE upstream decides the KMime implementation used by SupraLINUX.
+2. The legacy Ubuntu runtime may be installed only when a real Ubuntu/third-party dependency requires it.
+3. Legacy development packages are not installed by default; new SupraLINUX builds target `KF6::Mime`.
+4. Co-installation must be tested before KMime can become package PASS.
+5. If legacy compatibility ever conflicts with or constrains current stable KDE, the KDE Frameworks contract wins; compatibility must be isolated or dropped rather than holding KDE back.
+6. PASS makes the new package eligible for the SupraLINUX `testing` repository only. Promotion to `stable` remains a separate manual decision requiring explicit user approval.
+
+This accepts the architecture only. It does not claim provider-audit, materialization, clean-build, ABI, co-installation or Ubuntu-application compatibility PASS before those gates produce real evidence.
 
 
 ## Evidence update — 2026-09-22
@@ -124,6 +151,6 @@ References:
 
 The evidence strengthens **candidate 1 (co-install legacy compatibility + new Frameworks KMime)** as a technically demonstrated packaging pattern: old PIM consumers can retain their old SONAME/CMake contract while the SupraLINUX KDE Framework stack receives the new `KF6Mime` contract.
 
-This section records evidence only. It does **not** authorize the candidate. Package names, source ownership, data-package relationships, version ordering and any Provides/Replaces/Breaks/Multi-Arch policy remain pending explicit human approval.
+This evidence supported the accepted coexistence policy above. The architecture is now approved; exact Debian metadata still requires reference capture and clean validation before package PASS.
 
 Current project state when this evidence was recorded: **Tier 2 = 14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**, with KMime as the sole pending node.

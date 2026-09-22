@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-21",
+  "as_of": "2026-09-22",
   "authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "tier": 2,
@@ -1879,27 +1879,34 @@
         "selected_profile": []
       },
       "package_identity": {
-        "source_package": "kmime",
+        "source_package": "kf6-kmime",
         "package_version_candidate": null,
-        "compatibility_reference_provider": "ubuntu-resolute",
-        "compatibility_reference_version": "25.12.3-0ubuntu1",
-        "reference_binary_packages": [
+        "status": "not-materialized",
+        "framework_binary_packages": [
+          "libkf6mime-data",
+          "libkf6mime-dev",
+          "libkf6mime6"
+        ],
+        "ubuntu_legacy_source_package": "kmime",
+        "ubuntu_legacy_reference_version": "25.12.3-0ubuntu1",
+        "ubuntu_legacy_binary_packages": [
           "libkmime-data",
           "libkmime-dev",
           "libkpim6mime6"
         ],
-        "decision_required": "KMime moved from the PIM/25.12 line to Frameworks 6.30 and changed its CMake/library namespace; a Debian compatibility/version-transition strategy must be approved before packaging."
+        "compatibility_policy": "ubuntu-legacy-contract-available-on-demand-not-default"
       },
       "packaging": {
         "state": "pending",
-        "reason": "compatibility-transition-decision-required"
+        "reason": "provider-audit-required-after-ADR-0002",
+        "compatibility_policy": "kf6mime-authoritative-legacy-kpim6mime-on-demand"
       },
       "state": "pending",
       "planning": {
-        "readiness": "compatibility-decision-required",
-        "provider_audit": "blocked-by-compatibility-decision",
+        "readiness": "package-lane-pending",
+        "provider_audit": "required-before-materialization",
         "package_contract": "not-materialized",
-        "human_blocker": "ADR-0002"
+        "architecture_decision": "ADR-0002-accepted"
       }
     }
   ],
