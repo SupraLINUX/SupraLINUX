@@ -12,9 +12,9 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "dependency-graph-ready",
+    "phase": "provider-audit-pending",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
-    "provider_audit": "tier3-frameworks-required",
+    "provider_audit": "tier3-frameworks-pending-ci",
     "package_contracts": "not-authorized-before-tier3-provider-audit",
     "package_builds": "not-authorized-before-tier3-provider-audit"
   },
@@ -32,7 +32,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -53,7 +55,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -74,7 +78,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -95,7 +101,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -116,7 +124,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -137,7 +147,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -158,7 +170,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -179,7 +193,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -200,7 +216,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -221,7 +239,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -242,7 +262,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -263,7 +285,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -284,7 +308,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -305,7 +331,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -326,7 +354,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -347,7 +377,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -368,7 +400,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -389,7 +423,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -410,7 +446,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -431,7 +469,9 @@
         "readiness": "dependency-graph-ready",
         "dependency_authority": "kde-upstream",
         "package_contract": "not-authorized",
-        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json"
+        "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
+        "provider_audit": "pending-ci",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
       },
       "packaging": {
         "state": "pending",
@@ -461,5 +501,6 @@
     "build_level1_manifest": "manifests/kde-tier3-support-build-level1.json",
     "build_level1": "PASS",
     "support_subdag": "PASS"
-  }
+  },
+  "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
 }
