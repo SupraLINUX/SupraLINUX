@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 provider audit
 
-Status: **pending CI**
+Status: **PASS**
 
 Reviewed: **2026-09-22**
 
@@ -38,3 +38,16 @@ The non-tiered support sub-DAG is already closed:
 The 20 canonical Tier 3 Frameworks themselves remain **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** until later package-build gates.
 
 Stable publication remains subject to explicit user approval.
+
+
+## PASS evidence
+
+Run `35725458767`, job `106737928285`, artifact `10692912109`, artifact SHA-256 `c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac`: **PASS**.
+
+Result SHA-256: `8b4b9ab701a4871d0e42831ed7f680acac74419f0ae5314e9ac1129fee608dd1`.
+
+All **20/20** Tier 3 Frameworks require SupraLINUX as provider. Resolute exposes KDE Frameworks upstream 6.24.0 for every audited source package; KIconThemes is packaged as `6.24.0-0ubuntu2`, while the other audited sources are `6.24.0-0ubuntu1`. KDE requires 6.30.0.
+
+Ubuntu remains the selected Qt provider: the runner proved Qt `6.10.2`, satisfying KDE's minimum `6.9.0`.
+
+This audit changed no package state. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. Every node now advances to `package-contract-required`; package builds remain unauthorized.
