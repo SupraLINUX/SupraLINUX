@@ -37,8 +37,9 @@ if audit.get("status") == "pending-ci":
 elif audit.get("status") == "PASS":
     downstream_ready=(set(plan.get("package_contract_ready", [])) |
                       set(plan.get("build_queue", [])) |
+                      set(plan.get("compatibility_provider_required", [])) |
                       set(plan.get("retained_pass", [])))
-    req(set(batch) <= downstream_ready, "PASS provider-audit nodes must remain contract/build-ready or retained PASS")
+    req(set(batch) <= downstream_ready, "PASS provider-audit nodes must remain in a valid downstream lifecycle state")
     evidence = audit.get("evidence", {})
     req(evidence.get("result") == "PASS", "provider-audit PASS evidence result")
     req(evidence.get("package_state_effect") == "none", "provider-audit must not alter package state")
