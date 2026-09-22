@@ -91,7 +91,7 @@ if c.get("state")=="PASS":
         attempts=a.get("nodes",{}).get(node,[])
         req(len(attempts)==1 and attempts[0].get("result")=="PASS",f"{node}: one recorded PASS attempt")
         req(attempts[0].get("workflow_run")==35700002095,f"{node}: attempt workflow evidence")
-req(tier3.get("support_components",{}).get("next_gate") in {"support-build-level0","support-build-level1","tier3-build"},"canonical level0 gate")
+req(tier3.get("support_components",{}).get("next_gate") in {"support-build-level0","support-build-level1","tier3-provider-audit","tier3-build"},"canonical level0 gate")
 req(c.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 
 for path in (
