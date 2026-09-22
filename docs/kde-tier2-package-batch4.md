@@ -1,6 +1,6 @@
 # KDE Tier 2 Package Batch 4
 
-Status: **1/3 PASS; KDeclarative validation retry and KService rematerialization pending**
+Status: **closed — 3/3 PASS**
 
 Batch 4 contains exactly **KDeclarative, KFileMetaData and KService** from KDE Frameworks 6.30.0. Canonical Tier 2 remains **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until clean-package evidence is promoted.
 
@@ -94,3 +94,24 @@ KDeclarative `6.30.0-0supralinux1` is now **PASS**:
 KService selective rematerialization also passed in run `35677466559`, job `106586918751`, artifact `10673841912`, SHA-256 `c75ae3d4fd2960333fc9db6403282631140cbc9a81031934d04717092aeadf0b`. The reviewed toolchain symbol baseline is now part of the deterministic Debian tree. No package attempt occurred during materialization.
 
 Canonical Tier 2 is therefore **13 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**. KService is build-ready; KMime remains decision-gated.
+
+
+## Final KService clean build — PASS
+
+Run `35681046106`, job `106598026738`, closes Batch 4.
+
+KService `6.30.0-0supralinux1`:
+- artifact `10674773768`
+- artifact SHA-256 `5777d006748c9560b2e0c0935d0e20a31226c79106f3bd28c523c4c8b39b8d0d`
+- rootfs artifact `10675063037`, artifact SHA-256 `e56a788c91b67ff196010f0c2affaf7af74ebabb8dab4d1f9210361a0758d432`
+- rootfs SHA-256 `5135c9e4142d6378f4f824b8cf206532b8ff223e9f549305cabd04c1f71b0c2b`
+- **7/7 upstream tests PASS**
+- SONAME `libKF6Service.so.6`, 299 exports
+- Lintian PASS-errors
+- APT closure and external CMake consumer PASS
+- exact KConfig `6.30.0-0supralinux4`, KCoreAddons `6.30.0-0supralinux4` and KI18n `6.30.0-0supralinux1` buildinfo proof PASS
+- the reviewed `(optional=toolchain)_ZSt19piecewise_construct@Base 6.30.0` symbols baseline is present in the built source tree.
+
+Batch 4 is therefore **3/3 PASS**: KDeclarative, KFileMetaData and KService are downstream-eligible. Their earlier INFRA events remain historical evidence and are not rewritten as package FAIL.
+
+Canonical Tier 2 is now **14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**. The sole pending node is KMime under ADR-0002.

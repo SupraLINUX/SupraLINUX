@@ -22,91 +22,6 @@
     "build-ready": "Provider audit and deterministic package materialization are PASS; node may enter a real clean build. Package state remains pending until that build finishes."
   },
   "nodes": {
-    "kservice": {
-      "readiness": "build-ready",
-      "tier1_predecessors": [
-        "kconfig",
-        "kcoreaddons",
-        "ki18n"
-      ],
-      "optional_higher_tier": [
-        "kdoctools"
-      ],
-      "provider_audit": "complete",
-      "provider_audit_evidence": {
-        "workflow_run": 35607692129,
-        "job_id": 106358717091,
-        "artifact_id": 10642947552,
-        "artifact_sha256": "ced417aa88fffb9de0762423ffeef72533c6795c07131a2e4d7911ba5b62edab"
-      },
-      "materialization_history": [
-        {
-          "result": "PASS",
-          "workflow_run": 35635818815,
-          "job_id": 106452910663,
-          "artifact_id": 10656446848,
-          "artifact_sha256": "c605d6301701c57462c66b71859c17f44cadbfdf649cf41b50c9374716e12ff7",
-          "status": "superseded-for-integration",
-          "package_state_effect": "none"
-        },
-        {
-          "result": "PASS",
-          "workflow_run": 35636800957,
-          "job_id": 106456174118,
-          "commit": "e193ebe8b2a0b80129d2b064306b5d68bf8e91b7",
-          "artifact_id": 10657011134,
-          "artifact_sha256": "485b92ac6c739aebf51259b1a3fd85d6dc04f135c53666faa37489bc0756dc61",
-          "package_state_effect": "none"
-        }
-      ],
-      "last_attempt": {
-        "attempt": 1,
-        "package_version": "6.30.0-0supralinux1",
-        "commit": "cebe8e9b9ce5ce2451e765d9c6e6c6e8d3eb77a8",
-        "workflow_run": 35676553259,
-        "run_attempt": 1,
-        "job_id": 106584347252,
-        "artifact_id": 10673725955,
-        "artifact_sha256": "edf47587cc3cbf21eacec0626775116ba4879aa3c3b03dd76af5c43571953c31",
-        "rootfs_artifact_id": 10673331784,
-        "rootfs_artifact_sha256": "0622750c9107e95c224bcac412c1843239349e8826765d873114b7b10a54ff27",
-        "rootfs_sha256": "3146df833463c82141688d0d641a0359cd535a0246658832b6bf7f4049e4aac3",
-        "package_attempted": true,
-        "sbuild_started": true,
-        "result": "INFRA",
-        "stage": "lintian-source-binary",
-        "package_state_effect": "none",
-        "tests": "7/7 PASS",
-        "abi_soname": "libKF6Service.so.6",
-        "abi_export_count": 299,
-        "predecessor_buildinfo_proof": "PASS",
-        "package_dependency_closure_buildinfo_proof": "PASS",
-        "cause": "Resolute's C++ toolchain emits std::piecewise_construct as an exported implementation symbol. It is absent from the Debian 6.30 symbols baseline, so dpkg-gensymbols assigned the current SupraLINUX Debian revision and Lintian rejected that revisioned minimum. The reviewed remediation adds this toolchain-dependent symbol as optional=toolchain at upstream version 6.30.0 and rematerializes KService.",
-        "remediation": {
-          "file": "libkf6service6.symbols",
-          "symbol": "_ZSt19piecewise_construct@Base",
-          "tag": "optional=toolchain",
-          "version": "6.30.0"
-        }
-      },
-      "materialization_evidence": {
-        "result": "PASS",
-        "workflow_run": 35677466559,
-        "job_id": 106586918751,
-        "commit": "4076738a6c93ddce271ab046fa57edc934e496ab",
-        "artifact_id": 10673841912,
-        "artifact_sha256": "c75ae3d4fd2960333fc9db6403282631140cbc9a81031934d04717092aeadf0b",
-        "tree_sha256": "155404d0851efdea82fc5ffb29c2fc69aabcb28271f8509735b4554424f34bac",
-        "debian_tree_sha256": "342e4afe16a3cacf918aa894a68b2b2876a3c82f09d430158d0dad4486b58b99",
-        "dsc_sha256": "89ecf2b6e8df503b2f5973f80ca82d7507f1cc88a407d222a63bb55dcfaf9374",
-        "debian_tar_sha256": "a92c9aa510bfef21fd01659ad6064b9bff6dc29da791584adc0722b0c802a2b0",
-        "orig_tar_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
-        "package_version": "6.30.0-0supralinux1",
-        "source_package": "kf6-kservice",
-        "package_attempted": false,
-        "package_state_effect": "none"
-      }
-    },
     "kmime": {
       "readiness": "compatibility-decision-required",
       "tier1_predecessors": [
@@ -123,8 +38,8 @@
     "Do not attempt KMime until ADR-0002 is resolved."
   ],
   "promoted_snapshot": {
-    "pass": 13,
-    "pending": 2,
+    "pass": 14,
+    "pending": 1,
     "current_fail": 0,
     "blocked": 0
   },
@@ -430,6 +345,33 @@
       "package_dependency_closure": {
         "kcoreaddons": "6.30.0-0supralinux4"
       },
+      "downstream_eligible": true
+    },
+    "kservice": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35681046106,
+      "run_attempt": 1,
+      "job_id": 106598026738,
+      "artifact_id": 10674773768,
+      "artifact_sha256": "5777d006748c9560b2e0c0935d0e20a31226c79106f3bd28c523c4c8b39b8d0d",
+      "rootfs_sha256": "5135c9e4142d6378f4f824b8cf206532b8ff223e9f549305cabd04c1f71b0c2b",
+      "tests": "7/7 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6Service.so.6",
+      "abi_export_count": 299,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "predecessor_buildinfo_proof": "PASS",
+      "package_dependency_closure_buildinfo_proof": "PASS",
+      "tier1_predecessors": [
+        "kconfig",
+        "kcoreaddons",
+        "ki18n"
+      ],
+      "selected_conditional_predecessors": [],
+      "package_dependency_closure": {},
+      "toolchain_symbol_baseline": "optional=toolchain _ZSt19piecewise_construct@Base 6.30.0",
       "downstream_eligible": true
     }
   },

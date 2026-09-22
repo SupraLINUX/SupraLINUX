@@ -849,6 +849,7 @@
       "knotifications",
       "kpackage",
       "kpty",
+      "kservice",
       "kstatusnotifieritem",
       "kunitconversion",
       "syndication"
@@ -966,18 +967,19 @@
       }
     ],
     "last_clean_build": {
-      "node": "kdeclarative",
+      "node": "kservice",
       "result": "PASS",
-      "workflow_run": 35677466571,
-      "job_id": 106587017706,
-      "commit": "4076738a6c93ddce271ab046fa57edc934e496ab",
-      "artifact_id": 10673008440,
-      "artifact_sha256": "8433514ef2032988d815a7577431395489d7a62ad57b250aefb90e0982acb44d",
-      "tests": "1/1 PASS",
-      "abi_soname": "libKF6CalendarEvents.so.6",
-      "abi_export_count": 50,
+      "workflow_run": 35681046106,
+      "job_id": 106598026738,
+      "commit": "e33a2142dd63efecf2efaa1dca571444edac73a6",
+      "artifact_id": 10674773768,
+      "artifact_sha256": "5777d006748c9560b2e0c0935d0e20a31226c79106f3bd28c523c4c8b39b8d0d",
+      "tests": "7/7 PASS",
+      "abi_soname": "libKF6Service.so.6",
+      "abi_export_count": 299,
       "apt_check": "PASS",
-      "consumer_smoke": "PASS"
+      "consumer_smoke": "PASS",
+      "toolchain_symbol_baseline": "PASS"
     }
   },
   "provider_adaptations": {

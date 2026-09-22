@@ -283,3 +283,12 @@ KDeclarative `6.30.0-0supralinux1` is PASS from Batch 4 remediation run `3567746
 KService's selective symbols rematerialization is PASS from run `35677466559`. The active KService tree contains the reviewed `optional=toolchain` baseline for `std::piecewise_construct` and is queued for one final clean sbuild.
 
 Canonical Tier 2 is **13 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**: KService is build-ready and KMime remains blocked only by ADR-0002.
+
+
+## Tier 2 Batch 4 closed
+
+KService `6.30.0-0supralinux1` passed its final clean build in run `35681046106`, job `106598026738`: 7/7 tests, Lintian, ABI/SONAME, exact predecessor buildinfo proof, APT closure and external consumer all pass. The reviewed Resolute toolchain-only symbol baseline also passed unchanged.
+
+Batch 4 is **3/3 PASS** and canonical Tier 2 advances to **14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**.
+
+The only remaining Tier 2 node is **KMime**, intentionally held at `compatibility-decision-required` by ADR-0002. No package tree or version transition for KMime is authorized until that architecture/compatibility decision is approved.

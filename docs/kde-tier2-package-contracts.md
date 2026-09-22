@@ -242,3 +242,15 @@ This is recorded as a toolchain integration adaptation, not an upstream KDE API 
 - KDE feature effect: none.
 
 The existing KDocTools optional-provider adaptation is unchanged. A fresh KService materialization and clean build are required before PASS.
+
+
+## KService toolchain-symbol adaptation validated
+
+The KService adaptation was validated by the final clean package build in run `35681046106`:
+- 7/7 upstream tests PASS;
+- Lintian PASS-errors;
+- `libKF6Service.so.6` with 299 exports;
+- exact retained Framework buildinfo proof PASS;
+- APT and consumer smoke PASS.
+
+The selected `optional=toolchain` entry therefore remains the canonical SupraLINUX symbols treatment for `std::piecewise_construct` on the Resolute toolchain. It does not change KDE feature selection or upstream API authority.

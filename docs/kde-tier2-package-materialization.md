@@ -232,3 +232,8 @@ Run `35677466559`, job `106586918751`, produced the corrected KService materiali
 - Debian tar SHA-256 `a92c9aa510bfef21fd01659ad6064b9bff6dc29da791584adc0722b0c802a2b0`.
 
 Materialization remained `package_attempted=false`. The next authority step is a clean KService package build, not another materialization.
+
+
+## KService rematerialization consumed by PASS
+
+The corrected KService materialization from run `35677466559` was consumed successfully by clean-build run `35681046106`. It is now retained evidence rather than an active materialization target. No further Batch 4 materialization is required.

@@ -3743,6 +3743,107 @@
         "debian_tar_sha256": "2f32d407bc0c8abeb110e68e62425a0d80030d4043b25c1e01a1f19f747b63e4",
         "rootfs_sha256": "e569d69be6070db9f157fed33b8535e9617d38be0250e1ca553c36be03ad3201"
       }
+    },
+    "kservice": {
+      "tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kservice-6.30.0.tar.xz",
+      "source_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-kservice",
+      "binary_packages": [
+        "libkf6service-bin",
+        "libkf6service-data",
+        "libkf6service-dev",
+        "libkf6service-doc",
+        "libkf6service6"
+      ],
+      "package_version": "6.30.0-0supralinux1",
+      "ubuntu_reference_version": "6.24.0-0ubuntu1",
+      "depends_on": [
+        "extra-cmake-modules",
+        "kconfig",
+        "kcoreaddons",
+        "ki18n"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "attempt_ledger": "manifests/kde-tier2-package-batch4-attempts.json",
+      "abi_sonames": [
+        "libKF6Service.so.6"
+      ],
+      "evidence": [
+        {
+          "result": "PASS",
+          "workflow_run": 35681046106,
+          "run_attempt": 1,
+          "job_id": 106598026738,
+          "commit": "e33a2142dd63efecf2efaa1dca571444edac73a6",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10674773768,
+          "artifact_sha256": "5777d006748c9560b2e0c0935d0e20a31226c79106f3bd28c523c4c8b39b8d0d",
+          "rootfs_artifact_id": 10675063037,
+          "rootfs_artifact_sha256": "e56a788c91b67ff196010f0c2affaf7af74ebabb8dab4d1f9210361a0758d432",
+          "rootfs_sha256": "5135c9e4142d6378f4f824b8cf206532b8ff223e9f549305cabd04c1f71b0c2b",
+          "stage": "complete",
+          "tests": "7/7 PASS",
+          "lintian": "PASS-errors",
+          "abi_soname": "libKF6Service.so.6",
+          "abi_export_count": 299,
+          "apt_check": "PASS",
+          "consumer_smoke": "PASS",
+          "predecessor_buildinfo_proof": "PASS",
+          "package_dependency_closure_buildinfo_proof": "PASS",
+          "materialization": {
+            "workflow_run": 35677466559,
+            "artifact_id": 10673841912,
+            "artifact_sha256": "c75ae3d4fd2960333fc9db6403282631140cbc9a81031934d04717092aeadf0b"
+          },
+          "retained_predecessors": {
+            "extra_cmake_modules": "6.30.0-0supralinux3",
+            "kconfig": "6.30.0-0supralinux4",
+            "kcoreaddons": "6.30.0-0supralinux4",
+            "ki18n": "6.30.0-0supralinux1"
+          },
+          "package_dependency_closure": {},
+          "toolchain_symbol_baseline": "PASS",
+          "downstream_eligible": true,
+          "files": {
+            "libkf6service-bin_6.30.0-0supralinux1_amd64.deb": "81c6f6aa1b105c73160a37d318c71d97bccf7db0db9dc68361855c32d7839164",
+            "libkf6service-data_6.30.0-0supralinux1_all.deb": "dddf9ee65536a4ec024f82c745ab1e538cb00f8876771222531e23cc1f57e30d",
+            "libkf6service-dev_6.30.0-0supralinux1_amd64.deb": "3cff97a07e7fd6d0acaadb266d0098c8c617ebaf7cbb7b6971e23158e7e7310c",
+            "libkf6service-doc_6.30.0-0supralinux1_all.deb": "fa898cb7f383d1f61496b0a65d0af4577af56d02d2d5cd6caab2bd8ee50599a2",
+            "libkf6service6_6.30.0-0supralinux1_amd64.deb": "ac2a9612afc35aa15addbb6f53f5d255b31410448eb63df7ef97fe535dd70eb6",
+            "libkf6service-bin-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "b38fed83a347c66b7f3e6a3a4823386997a469e094ea027b081b2996bf534a09",
+            "libkf6service6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "ffe91620a81f1e68600b76d88e30e0239fb25bef64f0cf9222bca5c090968e5b",
+            "changes_sha256": "d969dfe51cc9a518bcca7d34c2083e13ed697a68c9cdde548a803855e8985f7c",
+            "buildinfo_sha256": "ff1043e69bc5217be12ea667f03107669c054e4c3408547a843f1488107d687a",
+            "dsc_sha256": "89ecf2b6e8df503b2f5973f80ca82d7507f1cc88a407d222a63bb55dcfaf9374",
+            "orig_tar_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
+            "debian_tar_sha256": "a92c9aa510bfef21fd01659ad6064b9bff6dc29da791584adc0722b0c802a2b0",
+            "rootfs_sha256": "5135c9e4142d6378f4f824b8cf206532b8ff223e9f549305cabd04c1f71b0c2b"
+          }
+        }
+      ],
+      "pass_files": {
+        "libkf6service-bin_6.30.0-0supralinux1_amd64.deb": "81c6f6aa1b105c73160a37d318c71d97bccf7db0db9dc68361855c32d7839164",
+        "libkf6service-data_6.30.0-0supralinux1_all.deb": "dddf9ee65536a4ec024f82c745ab1e538cb00f8876771222531e23cc1f57e30d",
+        "libkf6service-dev_6.30.0-0supralinux1_amd64.deb": "3cff97a07e7fd6d0acaadb266d0098c8c617ebaf7cbb7b6971e23158e7e7310c",
+        "libkf6service-doc_6.30.0-0supralinux1_all.deb": "fa898cb7f383d1f61496b0a65d0af4577af56d02d2d5cd6caab2bd8ee50599a2",
+        "libkf6service6_6.30.0-0supralinux1_amd64.deb": "ac2a9612afc35aa15addbb6f53f5d255b31410448eb63df7ef97fe535dd70eb6",
+        "libkf6service-bin-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "b38fed83a347c66b7f3e6a3a4823386997a469e094ea027b081b2996bf534a09",
+        "libkf6service6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "ffe91620a81f1e68600b76d88e30e0239fb25bef64f0cf9222bca5c090968e5b",
+        "changes_sha256": "d969dfe51cc9a518bcca7d34c2083e13ed697a68c9cdde548a803855e8985f7c",
+        "buildinfo_sha256": "ff1043e69bc5217be12ea667f03107669c054e4c3408547a843f1488107d687a",
+        "dsc_sha256": "89ecf2b6e8df503b2f5973f80ca82d7507f1cc88a407d222a63bb55dcfaf9374",
+        "orig_tar_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
+        "debian_tar_sha256": "a92c9aa510bfef21fd01659ad6064b9bff6dc29da791584adc0722b0c802a2b0",
+        "rootfs_sha256": "5135c9e4142d6378f4f824b8cf206532b8ff223e9f549305cabd04c1f71b0c2b"
+      }
     }
   },
   "ci_scope_incidents": [
