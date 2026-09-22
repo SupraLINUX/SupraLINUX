@@ -140,3 +140,10 @@ The active gate is now **support materialization**. No Tier 3 node or support pa
 Breeze Icons, KDocTools and KDED now have finalized package contracts and enter source materialization in parallel.
 
 The materializer verifies the exact KDE 6.30 orig tar and pinned Debian 6.30 packaging tree, then applies only Resolute/SupraLINUX packaging metadata adaptations. Binary package builds remain blocked until all three materialization artifacts are promoted.
+
+
+## Support materialization PASS
+
+Breeze Icons, KDocTools and KDED source materialization completed successfully in run `35698463205`. Each artifact preserves the KDE 6.30 authoritative source hash and contains a Resolute-adapted source package; this phase did not build binary packages and therefore changed no package state.
+
+The active gate is now **support build level 0**: Breeze Icons and KDocTools may build independently. KDED remains deferred until KDocTools has a real PASS artifact that can feed its build.
