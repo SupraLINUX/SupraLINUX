@@ -37,7 +37,7 @@ req(plan.get("role") == "tier3-build-campaign-plan", "Tier3 build campaign role"
 req(plan.get("frameworks_series") == "6.30.0", "Tier3 build campaign Frameworks series")
 req(plan.get("state") == "planned", "Tier3 build campaign planning state")
 req(plan.get("execution_authorized") is False, "planning manifest must never authorize package builds")
-req(materialization.get("state") == "PASS", "Tier3 build campaign requires materialization PASS")
+req(materialization.get("state") in {"PASS", "remediation-pending-ci"}, "Tier3 build campaign requires a promoted materialization PASS baseline")
 req(canonical.get("materialization") == "PASS", "canonical Tier3 materialization PASS")
 req(canonical.get("build_campaign_manifest") == "manifests/kde-tier3-build-campaign.json", "canonical build-campaign manifest linkage")
 

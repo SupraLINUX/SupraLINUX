@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **contracts ready — materialization authorized**
+Status: **contracts retained — selective Level 0 remediation materialization pending**
 
 Reviewed: **2026-09-22**
 
@@ -93,8 +93,8 @@ The review is not itself a contract choice: every node remains package-state `pe
 
 The reviewed deltas are now explicitly classified in `docs/kde-tier3-contract-decisions.md` and in this manifest's `contract_decision`/per-node contract records.
 
-All 20 nodes are `package-contract-ready` with package version candidate `6.30.0-0supralinux1`. Materialization is authorized; package builds remain unauthorized.
+All 20 nodes originally entered materialization with candidate `6.30.0-0supralinux1`. Level 0 attempt 1 later produced evidence requiring source-packaging changes for KIconThemes, KDAV, KWallet, KRunner and KJobWidgets; only those five now use remediation candidate `6.30.0-0supralinux2`.
 ## Materialization handoff
 
-The package-contract decision gate is closed and the separate source-only materialization gate is now PASS (run `35746667704`, 20/20). `manifests/kde-tier3-materialization.json` consumes these contracts without changing package PASS state. The materializer verifies the authoritative KDE tarball and exact Debian 6.30 packaging tree before applying the documented SupraLINUX overrides. The promoted materialization evidence advances the project to `tier3-build-campaign-planning`. Binary builds remain unauthorized until that campaign is reviewed and explicitly activated.
+The initial source-only materialization passed 20/20 in run `35746667704`. Level 0 was subsequently activated and run `35755924197` exposed five packaging/provider defects. Those five contracts now carry explicit remediation overrides and are selectively rematerialized before the complete Level 0 campaign is repeated. No attempt-1 result has been canonically promoted.
 

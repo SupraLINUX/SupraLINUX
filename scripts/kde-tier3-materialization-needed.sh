@@ -39,6 +39,10 @@ for node in nodes:
       "binary_relation_overrides":x.get("binary_relation_overrides",[]),
       "python_module":x.get("python_module"),
       "python_runtime_contract":x.get("python_runtime_contract"),
+      "source_build_relation_overrides":x.get("source_build_relation_overrides",[]),
+      "reference_test_suppression_overrides":x.get("reference_test_suppression_overrides"),
+      "reference_patch_suppression_overrides":x.get("reference_patch_suppression_overrides"),
+      "symbol_template_overrides":x.get("symbol_template_overrides",[]),
       "debian_reference":x.get("technical_references",{}).get("debian",{}),
     }
 canonical={x.get("id"):{"source_url":x.get("source_url"),"source_sha256":x.get("source_sha256")} for x in t.get("nodes",[]) if x.get("id") in nodes}
@@ -49,7 +53,10 @@ v={
   "source_policy":m.get("source_policy"),
   "selected_nodes":nodes,
   "common_adaptations":m.get("common_adaptations",{}),
+  "remediation_queue":m.get("remediation_queue",[]),
+  "remediation":m.get("remediation",{}),
   "contract_decision":c.get("contract_decision",{}),
+  "contract_remediation":c.get("remediation",{}),
   "provider_adaptations":c.get("provider_adaptations",{}),
   "contract_nodes":contract_nodes,
   "canonical_sources":canonical,
@@ -64,8 +71,8 @@ if ! git -C "${ROOT}" cat-file -e "${BEFORE}:manifests/kde-tier3-materialization
 fi
 
 after_state="$(state_at "${AFTER}")"
-if [[ "${after_state}" == "pending-ci" ]]; then
-  echo "Tier 3 materialization remains pending."
+if [[ "${after_state}" == "pending-ci" || "${after_state}" == "remediation-pending-ci" ]]; then
+  echo "Tier 3 materialization requires CI: ${after_state}."
   exit 0
 fi
 

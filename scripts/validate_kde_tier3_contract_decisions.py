@@ -41,6 +41,10 @@ req(chg.get("selected")=="resolute","Tier3 changelog target")
 shi=adapt.get("shiboken_clang_discovery",{})
 req(shi.get("provider_packages")==["llvm-dev","libclang-common-21-dev"],"Tier3 Shiboken provider packages")
 req(shi.get("llvm_major")==21 and shi.get("applies_to")==["kjobwidgets","kxmlgui"],"Tier3 Shiboken provider contract")
+if c.get("remediation",{}).get("status")=="materialization-pending-ci":
+    pb=adapt.get("python_build_module",{})
+    req(pb.get("provider_package")=="python3-build" and pb.get("applies_to")==["kjobwidgets"],"Tier3 KJobWidgets Python build provider remediation")
+    req(set(c.get("remediation",{}).get("trigger",{}).get("failed_nodes",[]))=={"kiconthemes","kdav","kwallet","krunner","kjobwidgets"},"Tier3 Level0 remediation node set")
 
 python_nodes={
  "kjobwidgets":("python3-kf6jobwidgets","KJobWidgets",["python3-pyside6.qtwidgets","python3-kcoreaddons"],"79a60665199ccbb54ca094e25f84839aeecde040"),
@@ -51,7 +55,9 @@ for node_id in selected:
     x=c["nodes"][node_id]
     n=nodes[node_id]
     req(x.get("contract_state")=="contract-ready",f"{node_id}: contract-ready")
-    req(x.get("package_version_candidate")=="6.30.0-0supralinux1",f"{node_id}: package version")
+    remediation_nodes=set(c.get("remediation",{}).get("trigger",{}).get("failed_nodes",[]))
+    expected_version="6.30.0-0supralinux2" if node_id in remediation_nodes else "6.30.0-0supralinux1"
+    req(x.get("package_version_candidate")==expected_version,f"{node_id}: package version")
     tr=x.get("technical_references",{})
     req(x.get("compatibility_binary_packages")==tr.get("debian",{}).get("binary_packages"),f"{node_id}: compatibility binary identity")
     req(tr.get("ubuntu",{}).get("binary_packages")==tr.get("debian",{}).get("binary_packages"),f"{node_id}: Ubuntu/Debian binary identity")
@@ -96,7 +102,7 @@ req(set(d["nodes"]["purpose"]["frameworks"]["qml_required"])=={"prison","kitemmo
 canonical=t.get("discovery_policy",{})
 req(canonical.get("phase") in {"materialization","build-campaign-planning","build-level0"},"Tier3 canonical materialization/build-planning phase")
 req(canonical.get("package_contracts")=="PASS","Tier3 canonical contract PASS")
-req(canonical.get("package_builds") in {"not-authorized-before-tier3-materialization","not-authorized-before-tier3-build-campaign","tier3-level0-authorized"},"Tier3 build gate")
+req(canonical.get("package_builds") in {"not-authorized-before-tier3-materialization","not-authorized-before-tier3-build-campaign","tier3-level0-authorized","tier3-level0-remediation-pending"},"Tier3 build gate")
 req(t.get("support_components",{}).get("next_gate") in {"tier3-materialization","tier3-build-campaign-planning","tier3-build-level0"},"Tier3 next gate")
 req(c.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 

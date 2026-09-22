@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package-contract decisions
 
-Status: **PASS — materialization authorized**
+Status: **PASS baseline — Level 0 remediation materialization pending**
 
 Reviewed: **2026-09-22**
 
@@ -12,7 +12,7 @@ The reviewed Debian sid trees are used as the packaging baseline because all 20 
 
 ## Global decisions
 
-- package version candidate: `6.30.0-0supralinux1`;
+- initial package version candidate: `6.30.0-0supralinux1`; after Level 0 attempt 1, KIconThemes, KDAV, KWallet, KRunner and KJobWidgets advance to remediation candidate `6.30.0-0supralinux2` because their source packaging changes;
 - preserve all Ubuntu-visible binary package identities;
 - Debian 6.30 `debian/` tree is a technical baseline, not authority;
 - adapt `debhelper-compat (= 14)` to Resolute-supported level 13;
@@ -42,8 +42,21 @@ KDESu upstream defaults to `su`. SupraLINUX intentionally keeps `KDESU_USE_SUDO_
 
 ## State effect
 
-These decisions authorize **materialization only**. No Tier 3 package has been built or promoted:
+These original decisions authorized the first materialization. Level 0 attempt 1 has now built/attempted the 12 Level 0 nodes, but **nothing has been canonically promoted**:
 
 **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**.
 
-Package builds remain unauthorized until all materialized source packages pass the materialization gate. Stable publication remains subject to explicit user approval.
+Five Level 0 nodes are now in selective source-package remediation. Build execution is paused until those five `-0supralinux2` materializations pass. Stable publication remains subject to explicit user approval.
+
+
+## Level 0 remediation decisions
+
+Run `35755924197` generated real build evidence and therefore supersedes several assumptions inherited from the technical Debian baseline:
+
+- KIconThemes: remove Debian-only `libkf6configwidgets-dev` from both source Build-Depends and the `libkf6iconthemes-dev` public Depends because upstream exports no KConfigWidgets dependency; restore excluded upstream tests; complete the retained KCoreAddons provider closure.
+- KDAV: remove `kio6` and `libkf6kio-dev` because KDE upstream 6.30 does not define a KDAV → KIO build/test dependency.
+- KWallet: do not turn upstream's optional KDocTools documentation discovery into a mandatory Build-Depends.
+- KJobWidgets: add Resolute `python3-build` for the upstream-enabled Python binding generator.
+- KRunner: restore the Debian-QSKIP-suppressed upstream test and mark only the two observed libstdc++ template implementation symbols as optional template instantiations.
+
+These decisions do not weaken KDE tests or invent new KDE dependency edges. They remove distribution-reference assumptions that conflicted with the selected KDE 6.30 semantics.

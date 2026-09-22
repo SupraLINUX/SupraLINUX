@@ -6,7 +6,7 @@
   "frameworks_series": "6.30.0",
   "contract_manifest": "manifests/kde-tier3-package-contracts.json",
   "canonical_manifest": "manifests/kde-frameworks-tier3.json",
-  "state": "PASS",
+  "state": "remediation-pending-ci",
   "package_attempted": false,
   "package_state_effect": "none",
   "source_policy": "verify-kde-upstream-tarball-and-pinned-debian-6.30-packaging-before-adaptation",
@@ -124,10 +124,10 @@
       }
     },
     "kdav": {
-      "state": "materialized",
+      "state": "remediation-pending",
       "source_package": "kf6-kdav",
       "package_version": "6.30.0-0supralinux1",
-      "evidence": {
+      "previous_evidence": {
         "workflow_run": 35746667704,
         "job_id": 106810107917,
         "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
@@ -140,7 +140,8 @@
         "package_attempted": false,
         "package_state_effect": "none",
         "full_result_json_retained_in_artifact": true
-      }
+      },
+      "candidate_package_version": "6.30.0-0supralinux2"
     },
     "kdesu": {
       "state": "materialized",
@@ -162,10 +163,10 @@
       }
     },
     "kiconthemes": {
-      "state": "materialized",
+      "state": "remediation-pending",
       "source_package": "kf6-kiconthemes",
       "package_version": "6.30.0-0supralinux1",
-      "evidence": {
+      "previous_evidence": {
         "workflow_run": 35746667704,
         "job_id": 106810107884,
         "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
@@ -178,7 +179,8 @@
         "package_attempted": false,
         "package_state_effect": "none",
         "full_result_json_retained_in_artifact": true
-      }
+      },
+      "candidate_package_version": "6.30.0-0supralinux2"
     },
     "kio": {
       "state": "materialized",
@@ -200,10 +202,10 @@
       }
     },
     "kjobwidgets": {
-      "state": "materialized",
+      "state": "remediation-pending",
       "source_package": "kf6-kjobwidgets",
       "package_version": "6.30.0-0supralinux1",
-      "evidence": {
+      "previous_evidence": {
         "workflow_run": 35746667704,
         "job_id": 106810107995,
         "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
@@ -216,7 +218,8 @@
         "package_attempted": false,
         "package_state_effect": "none",
         "full_result_json_retained_in_artifact": true
-      }
+      },
+      "candidate_package_version": "6.30.0-0supralinux2"
     },
     "knewstuff": {
       "state": "materialized",
@@ -295,10 +298,10 @@
       }
     },
     "krunner": {
-      "state": "materialized",
+      "state": "remediation-pending",
       "source_package": "kf6-krunner",
       "package_version": "6.30.0-0supralinux1",
-      "evidence": {
+      "previous_evidence": {
         "workflow_run": 35746667704,
         "job_id": 106810107951,
         "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
@@ -311,7 +314,8 @@
         "package_attempted": false,
         "package_state_effect": "none",
         "full_result_json_retained_in_artifact": true
-      }
+      },
+      "candidate_package_version": "6.30.0-0supralinux2"
     },
     "ksvg": {
       "state": "materialized",
@@ -371,10 +375,10 @@
       }
     },
     "kwallet": {
-      "state": "materialized",
+      "state": "remediation-pending",
       "source_package": "kf6-kwallet",
       "package_version": "6.30.0-0supralinux1",
-      "evidence": {
+      "previous_evidence": {
         "workflow_run": 35746667704,
         "job_id": 106810108082,
         "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
@@ -387,7 +391,8 @@
         "package_attempted": false,
         "package_state_effect": "none",
         "full_result_json_retained_in_artifact": true
-      }
+      },
+      "candidate_package_version": "6.30.0-0supralinux2"
     },
     "kxmlgui": {
       "state": "materialized",
@@ -429,7 +434,21 @@
     }
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "evidence_summary": {
+  "remediation_queue": [
+    "kiconthemes",
+    "kdav",
+    "kwallet",
+    "krunner",
+    "kjobwidgets"
+  ],
+  "remediation": {
+    "trigger_workflow_run": 35755924197,
+    "trigger_commit": "d73a6b25ea7a9ecd1e5fa088db734b29d159d618",
+    "reason": "Tier3 Level0 attempt 1 exposed five package-owned packaging/provider defects.",
+    "policy": "rematerialize-only-changed-nodes-then-rerun-full-level0",
+    "package_revision": "6.30.0-0supralinux2"
+  },
+  "previous_evidence_summary": {
     "result": "PASS",
     "workflow_run": 35746667704,
     "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",

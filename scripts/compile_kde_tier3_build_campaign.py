@@ -80,8 +80,9 @@ def compile_plan() -> dict:
     support0 = load(SUPPORT0)
     support1 = load(SUPPORT1)
 
-    if materialization.get("state") != "PASS":
-        raise ValueError("Tier 3 materialization must be PASS before build planning")
+    materialization_state = materialization.get("state")
+    if materialization_state not in {"PASS", "remediation-pending-ci"}:
+        raise ValueError("Tier 3 materialization must have a promoted PASS baseline before build planning")
     if contracts.get("state") != "materialized":
         raise ValueError("Tier 3 package contracts must be materialized before build planning")
     if deps.get("topology", {}).get("acyclic") is not True:
@@ -146,16 +147,23 @@ def compile_plan() -> dict:
 
         contract = contracts["nodes"][node_id]
         mat = materialization["nodes"][node_id]
-        evidence = mat.get("evidence", {})
-        if mat.get("state") != "materialized" or evidence.get("result") != "PASS":
-            raise ValueError(f"{node_id}: materialization PASS evidence missing")
+        if mat.get("state") == "materialized":
+            evidence = mat.get("evidence", {})
+            planned_package_version = contract.get("package_version_candidate")
+        elif materialization_state == "remediation-pending-ci" and mat.get("state") == "remediation-pending":
+            evidence = mat.get("previous_evidence", {})
+            planned_package_version = evidence.get("package_version")
+        else:
+            raise ValueError(f"{node_id}: materialization PASS baseline evidence missing")
+        if evidence.get("result") != "PASS":
+            raise ValueError(f"{node_id}: materialization PASS baseline evidence missing")
 
         deferred = list(edges.get("runtime_validation", []))
         nodes[node_id] = {
             "level": level_by[node_id],
             "state": "planned",
             "source_package": contract.get("source_package"),
-            "package_version": contract.get("package_version_candidate"),
+            "package_version": planned_package_version,
             "expected_binary_packages": contract.get("target_binary_packages", []),
             "materialization": {
                 "workflow_run": evidence.get("workflow_run"),

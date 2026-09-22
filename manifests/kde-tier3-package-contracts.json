@@ -455,7 +455,7 @@
       "source_package": "kf6-kdav",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux1",
+      "package_version_candidate": "6.30.0-0supralinux2",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kdav",
@@ -535,6 +535,27 @@
           "classification": "test-environment-provider",
           "decision": "retain Debian kio6 build-time test provider without adding a KDAV→KIO build edge",
           "rationale": "KDE upstream source dependency graph does not require KIO for KDAV."
+        },
+        {
+          "classification": "level0-remediation",
+          "decision": "remove-debian-kio-build-providers",
+          "rationale": "Level0 attempt 1 was unsatisfiable because KIO is intentionally a later Tier3 node and KDE upstream does not declare KDAV→KIO."
+        }
+      ],
+      "source_build_relation_overrides": [
+        {
+          "field": "Build-Depends",
+          "action": "remove",
+          "package": "kio6",
+          "classification": "debian-test-provider-edge-removal",
+          "rationale": "KDE 6.30 KDAV CMake/autotests require CoreAddons and I18n, not KIO; the Debian nocheck provider must not force a false KDAV→KIO build edge."
+        },
+        {
+          "field": "Build-Depends",
+          "action": "remove",
+          "package": "libkf6kio-dev",
+          "classification": "debian-test-provider-edge-removal",
+          "rationale": "KDE 6.30 KDAV does not require KF6KIO; retaining this Debian Build-Depends makes upstream Level0 topology impossible."
         }
       ]
     },
@@ -640,7 +661,7 @@
       "source_package": "kf6-kiconthemes",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux1",
+      "package_version_candidate": "6.30.0-0supralinux2",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kiconthemes",
@@ -737,6 +758,37 @@
           "classification": "test-policy",
           "decision": "do-not-inherit-disabled-or-ignored-tests",
           "rationale": "SupraLINUX package PASS requires a real positive upstream test result; environment failures are remediated rather than hidden."
+        },
+        {
+          "classification": "level0-remediation",
+          "decision": "remove-false-kconfigwidgets-build-and-development-edges-and-test-exclusions",
+          "rationale": "Level0 attempt 1 failed before build on a Debian-only KConfigWidgets relation; upstream 6.30 declares no such dependency. The reference rules also excluded two upstream tests contrary to SupraLINUX policy."
+        }
+      ],
+      "source_build_relation_overrides": [
+        {
+          "field": "Build-Depends",
+          "action": "remove",
+          "package": "libkf6configwidgets-dev",
+          "classification": "debian-only-build-edge-removal",
+          "rationale": "KDE 6.30 KIconThemes CMake and autotests do not require KConfigWidgets; Debian's relation must not create a false Tier3 edge."
+        }
+      ],
+      "reference_test_suppression_overrides": {
+        "rules_remove_excluded_tests": [
+          "kiconloader_unittest",
+          "kiconengine_unittest"
+        ],
+        "rationale": "SupraLINUX requires the upstream test set; Debian EXCLUDED_TESTS/-E suppression is not adopted."
+      },
+      "binary_relation_overrides": [
+        {
+          "package": "libkf6iconthemes-dev",
+          "field": "Depends",
+          "action": "remove",
+          "relation": "libkf6configwidgets-dev",
+          "classification": "debian-only-development-edge-removal",
+          "rationale": "KF6IconThemesConfig.cmake.in in KDE 6.30 exports Archive, I18n, WidgetsAddons and ColorScheme but not KConfigWidgets; the Debian dev-package relation would recreate a false public dependency."
         }
       ]
     },
@@ -866,7 +918,7 @@
       "source_package": "kf6-kjobwidgets",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux1",
+      "package_version_candidate": "6.30.0-0supralinux2",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kjobwidgets",
@@ -956,6 +1008,11 @@
           "classification": "test-environment-provider",
           "decision": "retain current Debian xvfb/xauth/dbus test tooling where present",
           "rationale": "Test runner tooling is not a KDE ABI/build dependency edge."
+        },
+        {
+          "classification": "level0-remediation",
+          "decision": "add-python3-build-provider",
+          "rationale": "Level0 attempt 1 reached CMake with upstream Python bindings enabled and failed because ECMGeneratePythonBindings could not import the Python build module."
         }
       ],
       "python_module": "KJobWidgets",
@@ -971,7 +1028,16 @@
         ],
         "provider_platform": "ubuntu-resolute",
         "classification": "python-binding-runtime-provider-closure"
-      }
+      },
+      "source_build_relation_overrides": [
+        {
+          "field": "Build-Depends",
+          "action": "ensure",
+          "relation": "python3-build",
+          "classification": "python-binding-build-tool-provider",
+          "rationale": "ECMGeneratePythonBindings requires the Python 'build' module when BUILD_PYTHON_BINDINGS=ON; Ubuntu Resolute provides it via python3-build."
+        }
+      ]
     },
     "knewstuff": {
       "upstream_version": "6.30.0",
@@ -1349,7 +1415,7 @@
       "source_package": "kf6-krunner",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux1",
+      "package_version_candidate": "6.30.0-0supralinux2",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-krunner",
@@ -1425,8 +1491,45 @@
           "classification": "test-environment-provider",
           "decision": "retain current Debian xvfb/xauth/dbus test tooling where present",
           "rationale": "Test runner tooling is not a KDE ABI/build dependency edge."
+        },
+        {
+          "classification": "level0-remediation",
+          "decision": "optionalize-private-template-symbols-and-restore-upstream-test",
+          "rationale": "Level0 attempt 1 passed 8/8 executed tests then failed dpkg-gensymbols on two libstdc++ template implementation symbols; Debian's separate QSKIP patch is also removed so the next build executes the upstream test."
         }
-      ]
+      ],
+      "symbol_template_overrides": [
+        {
+          "package": "libkf6runner6",
+          "symbol": "_ZTISt15_Sp_counted_ptrIPSt3setI7QStringSt4lessIS1_ESaIS1_EELN9__gnu_cxx12_Lock_policyE2EE@Base",
+          "add_tags": [
+            "optional=templinst"
+          ],
+          "preserve_tags": [
+            "arch=!riscv64"
+          ],
+          "classification": "toolchain-dependent-private-template-symbol",
+          "rationale": "libstdc++ shared_ptr template implementation detail disappeared on Resolute amd64; marking it optional preserves the public KF6Runner ABI gate."
+        },
+        {
+          "package": "libkf6runner6",
+          "symbol": "_ZTVSt15_Sp_counted_ptrIPSt3setI7QStringSt4lessIS1_ESaIS1_EELN9__gnu_cxx12_Lock_policyE2EE@Base",
+          "add_tags": [
+            "optional=templinst"
+          ],
+          "preserve_tags": [
+            "arch=!riscv64"
+          ],
+          "classification": "toolchain-dependent-private-template-symbol",
+          "rationale": "libstdc++ shared_ptr template implementation detail disappeared on Resolute amd64; marking it optional preserves the public KF6Runner ABI gate."
+        }
+      ],
+      "reference_patch_suppression_overrides": {
+        "reverse_and_drop": [
+          "skip-flaky-test.patch"
+        ],
+        "rationale": "The Debian patch injects QSKIP into an upstream test. SupraLINUX does not suppress the test; a real failure must be observed and fixed."
+      }
     },
     "ksvg": {
       "upstream_version": "6.30.0",
@@ -1699,7 +1802,7 @@
       "source_package": "kf6-kwallet",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux1",
+      "package_version_candidate": "6.30.0-0supralinux2",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kwallet",
@@ -1792,6 +1895,20 @@
           "classification": "test-policy",
           "decision": "do-not-inherit-disabled-or-ignored-tests",
           "rationale": "SupraLINUX package PASS requires a real positive upstream test result; environment failures are remediated rather than hidden."
+        },
+        {
+          "classification": "level0-remediation",
+          "decision": "do-not-force-optional-kdoctools",
+          "rationale": "Level0 attempt 1 was unsatisfiable only because the Debian baseline made optional KF6DocTools mandatory."
+        }
+      ],
+      "source_build_relation_overrides": [
+        {
+          "field": "Build-Depends",
+          "action": "remove",
+          "package": "libkf6doctools-dev",
+          "classification": "optional-upstream-feature-not-forced",
+          "rationale": "KDE 6.30 KWallet uses non-REQUIRED find_package(KF6DocTools) only for optional docs under BUILD_KWALLET_QUERY; packaging must not turn it into a mandatory build edge."
         }
       ]
     },
@@ -2559,6 +2676,16 @@
         "classification": "python-binding-build-tool-provider-adaptation",
         "kde_feature_effect": "none",
         "validation": "clean-build-required"
+      },
+      "python_build_module": {
+        "provider_package": "python3-build",
+        "observed_provider_version": "1.4.0-1",
+        "applies_to": [
+          "kjobwidgets"
+        ],
+        "classification": "python-binding-build-tool-provider-adaptation",
+        "kde_feature_effect": "none",
+        "validation": "clean-build-required"
       }
     }
   },
@@ -2572,5 +2699,36 @@
     "package_attempted": false,
     "package_state_effect": "none",
     "next_gate": "tier3-build-campaign-planning"
+  },
+  "remediation": {
+    "status": "materialization-pending-ci",
+    "trigger": {
+      "workflow_run": 35755924197,
+      "commit": "d73a6b25ea7a9ecd1e5fa088db734b29d159d618",
+      "level0_result": "7 job SUCCESS / 5 FAIL",
+      "failed_nodes": [
+        "kiconthemes",
+        "kdav",
+        "kwallet",
+        "krunner",
+        "kjobwidgets"
+      ]
+    },
+    "previous_materialization_pass": {
+      "status": "PASS",
+      "manifest": "manifests/kde-tier3-materialization.json",
+      "workflow_run": 35746667704,
+      "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+      "nodes": 20,
+      "artifacts": 20,
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "next_gate": "tier3-build-campaign-planning"
+    },
+    "policy": {
+      "package_revision_bump_required_for_packaging_changes": true,
+      "rematerialize_only_changed_nodes": true,
+      "rerun_full_level0_after_remediation": true
+    }
   }
 }

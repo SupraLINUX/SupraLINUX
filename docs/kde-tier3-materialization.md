@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **PASS** as of 2026-09-22.
+Status: **PASS baseline retained; selective remediation materialization pending CI** as of 2026-09-22.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -54,9 +54,10 @@ Therefore **materialization PASS is not package PASS**.
 Current state:
 
 - Tier 3 packages: **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**;
-- materialization manifest: `PASS`;
-- binary builds: **not authorized**;
-- next gate: `tier3-build-campaign-planning`;
+- promoted materialization baseline: **20/20 PASS** from run `35746667704`;
+- current materialization manifest: `remediation-pending-ci` for 5 nodes;
+- Level 0 binary execution: **paused until remediation materialization is promoted**;
+- active gate: `tier3-build-level0` remediation;
 - stable publication: never automatic and always requires explicit user approval.
 
 Run `35746667704` materialized all **20/20** source packages successfully from commit `39fcab118709bcdb7e97524333d3f74d1b4edec4`. Repository Policy run `35746667671` also passed. Every promoted node records its job ID, artifact ID and GitHub artifact SHA-256; the artifact itself retains the complete `result.json`, source-package hashes, deterministic source-tree hash and adapted `debian/` payload.
@@ -68,3 +69,28 @@ Materialization changed no package state: `package_attempted=false` and `package
 Promotion-validation run `35748536747` is retained as a historical CI FAIL: materialization scope correctly skipped the 20-node matrix because semantic inputs were unchanged, but the promoted validator contained a literal `\\n` escape and failed Python parsing. This did not change or invalidate any materialized artifact or package state; the validator-only defect is corrected in the next commit.
 
 Repository Policy run `35748772874` is also retained as a historical lifecycle-validation FAIL: the promoted canonical next gate `tier3-build-campaign-planning` was correct, but five support-component validators still limited their accepted historical next-gate set to `tier3-materialization`. No support/package state changed; those lifecycle validators are widened in the next commit.
+
+
+## Selective rematerialization after Level 0 attempt 1
+
+Level 0 run `35755924197` exposed five package-owned packaging/provider defects. The previous 20/20 materialization PASS remains historical evidence, but exactly five source packages now require a new packaging revision and therefore new source artifacts:
+
+- KIconThemes `6.30.0-0supralinux2`;
+- KDAV `6.30.0-0supralinux2`;
+- KWallet `6.30.0-0supralinux2`;
+- KRunner `6.30.0-0supralinux2`;
+- KJobWidgets `6.30.0-0supralinux2`.
+
+The materialization matrix is intentionally restricted to this remediation queue. The other 15 source materializations remain unchanged and are not rebuilt.
+
+The new deterministic adaptations are contract-driven:
+
+- remove Debian-only mandatory source/binary dependency relations that contradict KDE upstream dependency semantics for KIconThemes, KDAV and KWallet;
+- add Resolute `python3-build` as the provider required by upstream-enabled KJobWidgets Python bindings;
+- remove KIconThemes' Debian `EXCLUDED_TESTS` suppression;
+- reverse/drop KRunner's Debian `skip-flaky-test.patch` so the upstream test actually executes;
+- mark only two toolchain-dependent KRunner libstdc++ template implementation symbols `optional=templinst`, retaining the existing architecture condition.
+
+The global build-campaign plan continues to validate against the last promoted materialization PASS while this selective materialization is pending. After all five new artifacts pass, their exact workflow/job/artifact IDs and SHA-256 digests will replace the old pins, the generated plan will be refreshed, and only then will Level 0 execution be reauthorized.
+
+Materialization still has `package_attempted=false` and cannot itself produce package PASS.

@@ -4,9 +4,13 @@ import json,sys
 
 ROOT=Path(__file__).resolve().parents[1]
 errors=[]
+
 def req(v,m):
-    if not v: errors.append(m)
-def load(p): return json.loads((ROOT/p).read_text())
+    if not v:
+        errors.append(m)
+
+def load(p):
+    return json.loads((ROOT/p).read_text())
 
 m=load("manifests/kde-tier3-build-level0.json")
 a=load("manifests/kde-tier3-build-level0-attempts.json")
@@ -16,13 +20,14 @@ mat=load("manifests/kde-tier3-materialization.json")
 dag=load("manifests/kde-dag.json")
 
 expected=p["levels"][0]["nodes"]
+remediation_nodes={"kiconthemes","kdav","kwallet","krunner","kjobwidgets"}
+
 req(m.get("schema")==1,"Tier3 level0 schema")
 req(m.get("authority")=="kde-upstream","Tier3 level0 authority")
 req(m.get("provider_platform")=="ubuntu-resolute","Tier3 level0 provider platform")
 req(m.get("role")=="tier3-binary-build-level0","Tier3 level0 role")
 req(m.get("frameworks_series")=="6.30.0","Tier3 level0 series")
-req(m.get("state") in {"active-pending-ci","PASS","PARTIAL"},"Tier3 level0 lifecycle")
-req(m.get("execution_authorized") is True,"Tier3 level0 execution authorization")
+req(m.get("state") in {"active-pending-ci","remediation-pending-materialization","PASS","PARTIAL"},"Tier3 level0 lifecycle")
 req(m.get("package_state_effect")=="real-package-build-on-PASS","Tier3 level0 package-state effect")
 req(m.get("build_campaign_manifest")=="manifests/kde-tier3-build-campaign.json","Tier3 level0 campaign linkage")
 req(m.get("materialization_manifest")=="manifests/kde-tier3-materialization.json","Tier3 level0 materialization linkage")
@@ -30,8 +35,7 @@ req(m.get("attempt_ledger")=="manifests/kde-tier3-build-level0-attempts.json","T
 req(m.get("selected_nodes")==expected and len(expected)==12,"Tier3 level0 exact node set")
 req(set(m.get("nodes",{}))==set(expected),"Tier3 level0 node map")
 req(set(a.get("nodes",{}))==set(expected),"Tier3 level0 attempt ledger node set")
-req(mat.get("state")=="PASS","Tier3 level0 requires materialization PASS")
-req(p.get("state")=="planned" and p.get("execution_authorized") is False,"global campaign plan remains immutable/non-executing")
+req(p.get("state")=="planned" and p.get("execution_authorized") is False,"global campaign plan remains non-executing")
 
 sched=m.get("scheduling",{})
 req(sched.get("fail_fast") is False,"Tier3 level0 fail-fast policy")
@@ -68,16 +72,19 @@ req(isinstance(breeze.get("artifact_id"),int) and len(breeze.get("artifact_sha25
 for node_id in expected:
     n=m["nodes"][node_id]
     gp=p["nodes"][node_id]
-    req(n.get("state") in {"prepared-pending-build","remediation-pending-build","PASS","FAIL","runtime-validation-required"},f"{node_id}: level0 node lifecycle")
+    req(n.get("state") in {
+        "prepared-pending-build","prepared-pending-revalidation",
+        "remediation-pending-build","remediation-pending-materialization",
+        "PASS","FAIL","runtime-validation-required"
+    },f"{node_id}: level0 node lifecycle")
     req(n.get("source_package")==gp.get("source_package"),f"{node_id}: source package")
-    req(n.get("package_version")==gp.get("package_version"),f"{node_id}: package version")
     req(n.get("expected_binary_packages")==gp.get("expected_binary_packages"),f"{node_id}: binary package set")
-    req(n.get("materialization")==gp.get("materialization"),f"{node_id}: materialization pin")
     req(gp.get("blocking_predecessors")==[],f"{node_id}: level0 has no Tier3 blockers")
     req(n.get("direct_build_predecessors")==gp.get("external_build_inputs"),f"{node_id}: direct build predecessors")
     req(n.get("external_runtime_inputs")==gp.get("external_runtime_inputs"),f"{node_id}: external runtime inputs")
     req(n.get("deferred_runtime_validation")==gp.get("deferred_runtime_validation"),f"{node_id}: deferred runtime linkage")
     req(n.get("success_transition")==gp.get("canonical_success_transition"),f"{node_id}: success transition")
+
     for pred in n.get("retained_input_ids",[]):
         req(pred in m.get("retained_predecessors",{}),f"{node_id}: retained input {pred} exists")
     for pred in n.get("direct_build_predecessors",[]):
@@ -86,10 +93,12 @@ for node_id in expected:
         req(pred in n.get("retained_input_ids",[]),f"{node_id}: runtime predecessor {pred} included in retained closure")
     for pkg in n.get("buildinfo_proof_packages",[]):
         req(any(cfg.get("dev_package")==pkg for cfg in m.get("retained_predecessors",{}).values()),f"{node_id}: buildinfo package {pkg} comes from retained PASS")
+
     if node_id=="kiconthemes":
         req(n.get("support_input_ids")==["breeze-icons"],"KIconThemes Breeze support input")
     else:
         req(n.get("support_input_ids")==[],f"{node_id}: unexpected support input")
+
     if node_id=="kjobwidgets":
         req(n.get("python_module")=="KJobWidgets","KJobWidgets Python module")
         req(n.get("extra_buildinfo_proof_packages")==["python3-kcoreaddons"],"KJobWidgets Python predecessor proof")
@@ -97,6 +106,7 @@ for node_id in expected:
     if node_id=="kdesu":
         req(n.get("profile_assertions",{}).get("KDESU_USE_SUDO_DEFAULT")=="ON","KDESu sudo profile")
     req(n.get("profile_assertions",{}).get("BUILD_TESTING")=="ON",f"{node_id}: BUILD_TESTING ON")
+
     if node_id=="knewstuff":
         req(n.get("deferred_runtime_validation")==["kcmutils"],"KNewStuff KCMUtils deferred validation")
         req(n.get("downstream_eligible_on_build_success") is False,"KNewStuff cannot be downstream-eligible after build only")
@@ -105,12 +115,59 @@ for node_id in expected:
         req(n.get("downstream_eligible_on_build_success") is True,f"{node_id}: build PASS downstream eligibility")
 
 if m.get("state")=="active-pending-ci":
-    req(all(m["nodes"][n].get("state")=="prepared-pending-build" for n in expected),"active level0 starts with all nodes prepared")
-    req(all(a["nodes"][n]==[] for n in expected),"active level0 attempt ledger starts empty")
+    req(m.get("execution_authorized") is True,"active Level0 execution authorization")
+    req(mat.get("state")=="PASS","active Level0 requires materialization PASS")
+    req(all(m["nodes"][n].get("state") in {"prepared-pending-build","remediation-pending-build"} for n in expected),"active Level0 node readiness")
+elif m.get("state")=="remediation-pending-materialization":
+    req(m.get("execution_authorized") is False,"Level0 execution paused during source remediation")
+    req(mat.get("state")=="remediation-pending-ci","Level0 remediation requires selective materialization")
+    rem=m.get("remediation",{})
+    req(set(rem.get("queue",[]))==remediation_nodes and len(rem.get("queue",[]))==5,"Level0 remediation queue")
+    req(rem.get("candidate_package_version")=="6.30.0-0supralinux2","Level0 remediation package revision")
+    req(rem.get("full_level0_rerun_required") is True,"Level0 full rerun policy")
+    req(all(m["nodes"][n].get("state")=="remediation-pending-materialization" for n in remediation_nodes),"failed nodes await rematerialization")
+    req(all(m["nodes"][n].get("state")=="prepared-pending-revalidation" for n in expected if n not in remediation_nodes),"successful attempt1 nodes await full revalidation")
+    for n in remediation_nodes:
+        node=m["nodes"][n]
+        req(node.get("previous_package_version")=="6.30.0-0supralinux1",f"{n}: previous package revision")
+        req(node.get("candidate_package_version")=="6.30.0-0supralinux2",f"{n}: remediation candidate revision")
+    req("kcoreaddons" in m["nodes"]["kiconthemes"].get("retained_input_ids",[]),"KIconThemes provider closure includes KCoreAddons")
+    req(m["nodes"]["kiconthemes"].get("package_closure_remediation",{}).get("added_retained_input")=="kcoreaddons","KIconThemes closure remediation documented")
+
+    summary=m.get("attempt1_summary",{})
+    req(summary.get("workflow_run")==35755924197,"Level0 attempt1 workflow")
+    req(summary.get("commit")=="d73a6b25ea7a9ecd1e5fa088db734b29d159d618","Level0 attempt1 commit")
+    req(summary.get("result")=="PARTIAL","Level0 attempt1 result")
+    req(set(summary.get("job_success",[]))=={"kbookmarks","kconfigwidgets","kdesu","knewstuff","kpeople","ksvg","ktextwidgets"},"Level0 attempt1 success set")
+    req(set(summary.get("job_fail",[]))==remediation_nodes,"Level0 attempt1 fail set")
+    req(summary.get("canonical_promotions")==0,"Level0 attempt1 promoted nothing")
+
+    history=a.get("campaign_history",[])
+    req(len(history)>=1 and history[-1].get("attempt")==1 and history[-1].get("workflow_run")==35755924197,"Level0 campaign history")
+    expected_results={
+        "kbookmarks":"PASS","kconfigwidgets":"PASS","kdav":"FAIL","kdesu":"PASS",
+        "kiconthemes":"FAIL","kjobwidgets":"FAIL","knewstuff":"RUNTIME_PENDING",
+        "kpeople":"PASS","krunner":"FAIL","ksvg":"PASS","ktextwidgets":"PASS","kwallet":"FAIL",
+    }
+    for node_id,result in expected_results.items():
+        entries=a["nodes"][node_id]
+        req(len(entries)>=1 and entries[-1].get("attempt")==1,f"{node_id}: attempt1 ledger entry")
+        if entries:
+            e=entries[-1]
+            req(e.get("workflow_run")==35755924197,f"{node_id}: attempt1 workflow")
+            req(e.get("package_attempted") is True,f"{node_id}: attempt1 real package attempt")
+            req(e.get("result")==result,f"{node_id}: attempt1 result")
+            req(isinstance(e.get("artifact_id"),int) and len(e.get("artifact_sha256",""))==64,f"{node_id}: attempt1 artifact evidence")
+    req(a["nodes"]["knewstuff"][-1].get("downstream_eligible") is False,"KNewStuff attempt1 remains non-downstream-eligible")
+    for n in remediation_nodes:
+        req(isinstance(a["nodes"][n][-1].get("cause"),str) and isinstance(a["nodes"][n][-1].get("remediation"),str),f"{n}: root cause/remediation recorded")
 
 policy=t.get("discovery_policy",{})
 req(policy.get("phase")=="build-level0","canonical Tier3 Level0 phase")
-req(policy.get("package_builds")=="tier3-level0-authorized","canonical Tier3 Level0 build authorization")
+if m.get("state")=="remediation-pending-materialization":
+    req(policy.get("package_builds")=="tier3-level0-remediation-pending","canonical Tier3 remediation build gate")
+else:
+    req(policy.get("package_builds") in {"tier3-level0-authorized","tier3-level0-remediation-pending"},"canonical Tier3 Level0 build gate")
 req(t.get("support_components",{}).get("next_gate")=="tier3-build-level0","canonical Tier3 Level0 next gate")
 req(t.get("build_level0_manifest")=="manifests/kde-tier3-build-level0.json","canonical Tier3 Level0 manifest linkage")
 
@@ -123,12 +180,14 @@ for path in (
     req((ROOT/path).exists(),f"missing Tier3 Level0 component: {path}")
 
 doc=(ROOT/"docs/kde-tier3-build-level0.md").read_text()
-for token in ("12","FAIL","BLOCKED","KNewStuff","KCMUtils","Breeze Icons","stable"):
+for token in ("12","FAIL","BLOCKED","KNewStuff","KCMUtils","Breeze Icons","remediation","35755924197","stable"):
     req(token in doc,f"Tier3 Level0 docs missing {token}")
 
 if errors:
-    for e in errors: print("ERROR:",e,file=sys.stderr)
+    for e in errors:
+        print("ERROR:",e,file=sys.stderr)
     raise SystemExit(1)
 print("KDE Tier 3 build Level 0 definition: PASS")
 print("nodes=12")
-print("execution_authorized=true")
+print("state="+m["state"])
+print("execution_authorized="+str(m.get("execution_authorized")).lower())

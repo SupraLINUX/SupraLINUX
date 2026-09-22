@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 0
 
-Status: **active / pending CI** as of 2026-09-22.
+Status: **remediation / selective rematerialization pending** as of 2026-09-22.
 
 Level 0 is the first real binary-build campaign for the 20 canonical Tier 3 Frameworks. It contains **12 independent nodes**:
 
@@ -17,7 +17,7 @@ Level 0 is the first real binary-build campaign for the 20 canonical Tier 3 Fram
 - KTextWidgets
 - KWallet
 
-The build topology and artifact inputs come from the validated immutable `manifests/kde-tier3-build-campaign.json`. Level 0 itself is authorized by `manifests/kde-tier3-build-level0.json`; later levels remain unauthorized.
+The build topology comes from the validated `manifests/kde-tier3-build-campaign.json`. Level 0 execution is controlled separately by `manifests/kde-tier3-build-level0.json`. After attempt 1, Level 0 is deliberately paused (`execution_authorized=false`) while five source packages are rematerialized; Levels 1–3 remain unauthorized.
 
 ## Build environment and retained inputs
 
@@ -71,3 +71,24 @@ This keeps runtime semantics accurate without inventing a false KNewStuff → KC
 The canonical Tier 3 package snapshot remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** until real Level 0 evidence is reviewed and promoted. No Level 1 node may consume a Level 0 package until that predecessor is promoted as PASS.
 
 PASS packages can later be published to the SupraLINUX `testing` repository under the project publication workflow. Promotion to `stable` is never automatic and always requires explicit user approval.
+
+
+## Attempt 1 — retained partial campaign
+
+Workflow run `35755924197` executed all 12 Level 0 nodes against the same clean Resolute rootfs (rootfs SHA-256 `9966d46bef42083aeecd9016cb002b64fc23d60fae3098a8849b70e977873f68`). Repository Policy passed. The matrix finished with **7 successful workflow jobs / 5 FAIL** and no canonical promotion.
+
+The successful build evidence is retained for KBookmarks (2/2 tests), KConfigWidgets (8/8), KDESu (3/3), KPeople (4/4), KSvg (5/5) and KTextWidgets (6/6). KNewStuff also completed its binary build with 5/5 tests, but correctly recorded `RUNTIME_PENDING` and `downstream_eligible=false` because KCMUtils has not yet passed its later Level 2 gate.
+
+The five real FAIL causes are:
+
+- **KIconThemes**: Debian's 6.30 packaging introduced `libkf6configwidgets-dev` as both a mandatory Build-Depends and a public `libkf6iconthemes-dev` dependency, although KDE upstream 6.30 neither requires nor exports KConfigWidgets. Its retained package-provider closure also lacked KCoreAddons needed by the selected 6.30 KGuiAddons package, and Debian rules excluded two upstream tests. Remediation removes the false edge, completes the package-provider closure and restores the full upstream tests.
+- **KDAV**: Debian's `kio6` / `libkf6kio-dev` test-provider Build-Depends created a false KDAV → KIO build edge. KDE upstream 6.30 CMake/autotests require CoreAddons and I18n, not KIO. Those relations are removed.
+- **KWallet**: Debian made `libkf6doctools-dev` mandatory, while KDE upstream uses a non-`REQUIRED` KDocTools lookup only for optional documentation. The mandatory packaging relation is removed.
+- **KJobWidgets**: upstream `BUILD_PYTHON_BINDINGS=ON` reached `ECMGeneratePythonBindings`, which requires the Python `build` module. Resolute's `python3-build` is added as the provider.
+- **KRunner**: compilation and 8/8 executed tests passed, then `dpkg-gensymbols` rejected two libstdc++ shared_ptr template implementation symbols that disappeared on Resolute amd64. Only those two entries become `optional=templinst`, preserving their existing architecture tag. Debian's separate `skip-flaky-test.patch`, which injected `QSKIP()`, is reversed and removed so the next campaign executes the upstream test rather than suppressing it.
+
+Because these are packaging/source-package changes, the affected five revisions advance to **`6.30.0-0supralinux2`**. Their source materialization is rerun selectively; the other 15 Tier 3 materializations remain retained. Once the five new materialization artifacts pass and are promoted, the complete 12-node Level 0 campaign is rerun, including the seven nodes that already produced successful attempt-1 evidence.
+
+Canonical Tier 3 package state therefore remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** while remediation is in progress. Historical attempt FAILs remain evidence; they are not converted into BLOCKED or erased.
+
+No package is promoted to `stable`; stable promotion always requires explicit user approval.

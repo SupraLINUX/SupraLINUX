@@ -83,7 +83,7 @@ req(policy.get("phase")=="build-level0","Tier3 discovery phase")
 req(policy.get("dependencies")=="materialized-from-kde-upstream-v6.30.0","Tier3 dependency state")
 req(policy.get("provider_audit")=="PASS","Tier3 provider audit gate")
 req(policy.get("package_contracts")=="PASS","Tier3 package-contract gate")
-req(policy.get("package_builds")=="tier3-level0-authorized","Tier3 package-build gate")
+req(policy.get("package_builds") in {"tier3-level0-authorized","tier3-level0-remediation-pending"},"Tier3 package-build gate")
 support=tier3.get("support_components",{})
 req(support.get("provider_audit_manifest")=="manifests/kde-tier3-support-provider-audit.json","Tier3 support provider-audit manifest")
 req(support.get("provider_audit")=="PASS","Tier3 support provider-audit state")
@@ -96,11 +96,17 @@ req(support.get("build_level1_manifest")=="manifests/kde-tier3-support-build-lev
 req(support.get("build_level1")=="PASS","Tier3 support level1 state")
 req(support.get("support_subdag")=="PASS","Tier3 support sub-DAG state")
 req(support.get("next_gate")=="tier3-build-level0","Tier3 support next gate")
+if policy.get("package_builds")=="tier3-level0-remediation-pending":
+    rem=tier3.get("active_remediation",{})
+    req(rem.get("trigger_workflow_run")==35755924197,"Tier3 remediation trigger")
+    req(set(rem.get("nodes",[]))=={"kiconthemes","kdav","kwallet","krunner","kjobwidgets"},"Tier3 remediation nodes")
+    req(rem.get("candidate_package_version")=="6.30.0-0supralinux2","Tier3 remediation package revision")
+    req(rem.get("execution_authorized") is False and rem.get("full_level0_rerun_required") is True,"Tier3 remediation execution policy")
 
 doc=(ROOT/"docs/kde-tier3.md").read_text()
 req("0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED" in doc,"Tier3 docs canonical snapshot")
 req("KDE upstream" in doc and "Ubuntu" in doc,"Tier3 docs authority/provider boundary")
-req("materialized" in doc and "build-level0" in doc,"Tier3 docs lifecycle")
+req("materialized" in doc and "build-level0" in doc and "remediation" in doc.lower(),"Tier3 docs lifecycle")
 
 if errors:
     for e in errors:

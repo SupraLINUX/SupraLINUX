@@ -74,7 +74,8 @@ jobs:
           python3 - <<'PY' >> "${GITHUB_OUTPUT}"
           import json
           m=json.load(open("manifests/kde-tier3-materialization.json"))
-          print("matrix="+json.dumps({"node":m["selected_nodes"]},separators=(",",":")))
+          nodes=m.get("remediation_queue",[]) if m.get("state")=="remediation-pending-ci" else m["selected_nodes"]
+          print("matrix="+json.dumps({"node":nodes},separators=(",",":")))
           PY
 
   materialize:
@@ -94,7 +95,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-            ca-certificates curl debian-archive-keyring dpkg-dev xz-utils
+            ca-certificates curl debian-archive-keyring dpkg-dev patch xz-utils
       - name: Materialize pinned KDE source and SupraLINUX packaging
         run: python3 scripts/materialize_kde_tier3_package.py "${{ matrix.node }}"
       - name: Upload materialization evidence

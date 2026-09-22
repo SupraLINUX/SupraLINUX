@@ -267,12 +267,16 @@ Canonical readiness is now `package-contract-review-pass`. Tier 3 remains **0 PA
 The contract-review evidence has been converted into explicit SupraLINUX decisions. Canonical readiness is now `package-contract-ready` and package contract state is `not-materialized`.
 
 Materialization is the active gate. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**; no package build is authorized until source-package materialization completes.
-## Current canonical state — Tier 3 `build-level0`
+## Current canonical state — Tier 3 `build-level0` remediation
 
-The immutable four-level build campaign has passed Repository Policy validation. Tier 3 now enters the first real binary-build campaign with **Level 0 authorized for 12 independent nodes**; Levels 1–3 remain unauthorized.
+Level 0 attempt 1 completed in workflow run `35755924197` against one shared clean Resolute rootfs. Repository Policy passed. The 12-node matrix produced **7 successful workflow jobs / 5 FAIL**.
 
-Canonical package state is still **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** before this campaign executes. Source materialization remains 20/20 PASS and every Level 0 job consumes the exact promoted materialization artifact plus only pinned SupraLINUX PASS predecessors.
+No attempt-1 result has been canonically promoted, so the canonical package snapshot remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. The attempt history is retained separately and the five FAILs are real attempted package failures, not BLOCKED nodes.
 
-Level 0 is defined by `manifests/kde-tier3-build-level0.json` and uses a shared clean Ubuntu 26.04 Resolute buildd rootfs. The matrix runs with `fail-fast=false`: an independent node continues even if another node fails. A real attempted node-owned failure is FAIL; BLOCKED means a node is not attempted because a required predecessor failed. Because Level 0 has no Tier 3 predecessors, no Level 0 node starts BLOCKED.
+Successful build evidence exists for KBookmarks, KConfigWidgets, KDESu, KPeople, KSvg and KTextWidgets. KNewStuff also built successfully but remains `RUNTIME_PENDING` and non-downstream-eligible until KCMUtils passes Level 2 and the deferred runtime-validation gate closes.
 
-KNewStuff retains the deliberate deferred runtime gate: a successful Level 0 build becomes `RUNTIME_PENDING`, not canonical PASS, until KCMUtils is PASS in Level 2 and their runtime validation closes. Promotion to the SupraLINUX `stable` repository remains impossible without explicit user approval.
+The five failed nodes are KIconThemes, KDAV, KWallet, KRunner and KJobWidgets. Their causes were traced to packaging/provider assumptions rather than a need to change KDE's upstream dependency authority: false mandatory Debian Build-Depends, one missing Resolute Python build-tool provider, two toolchain-dependent template symbols, and distribution test suppressions that SupraLINUX does not accept.
+
+Those five source packages advance to remediation candidate `6.30.0-0supralinux2` and enter **selective source rematerialization**. The other 15 Tier 3 materialization artifacts remain retained. Level 0 execution is paused while this gate is active; after the five new artifacts pass and their real IDs/digests are promoted, the generated plan is refreshed and the full 12-node Level 0 campaign is rerun.
+
+Levels 1–3 remain unauthorized. Promotion to SupraLINUX `stable` remains impossible without explicit user approval.

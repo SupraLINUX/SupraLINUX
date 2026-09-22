@@ -42,3 +42,51 @@ git -C "${TMP}" add . && git -C "${TMP}" commit -qm semantic
 SEM="$(git -C "${TMP}" rev-parse HEAD)"
 bash "${TMP}/scripts/kde-tier3-materialization-needed.sh" "${EV}" "${SEM}"
 echo "Tier 3 materialization semantic scope: PASS"
+
+# A selective remediation state is itself executable semantic scope.
+python3 - "${TMP}/manifests/kde-tier3-materialization.json" "${TMP}/manifests/kde-tier3-package-contracts.json" <<'PY'
+import json,sys
+mp,cp=sys.argv[1:]
+m=json.load(open(mp)); c=json.load(open(cp))
+m["state"]="remediation-pending-ci"
+m["remediation_queue"]=["x"]
+m["remediation"]={"reason":"test-remediation","package_revision":"6.30.0-0supralinux2"}
+m["nodes"]["x"]["state"]="remediation-pending"
+m["nodes"]["x"]["candidate_package_version"]="6.30.0-0supralinux2"
+c["nodes"]["x"]["package_version_candidate"]="6.30.0-0supralinux2"
+c["nodes"]["x"]["source_build_relation_overrides"]=[{"field":"Build-Depends","action":"ensure","relation":"python3-build"}]
+c["remediation"]={"status":"materialization-pending-ci"}
+open(mp,"w").write(json.dumps(m)+"\n")
+open(cp,"w").write(json.dumps(c)+"\n")
+PY
+git -C "${TMP}" add . && git -C "${TMP}" commit -qm remediation
+REM="$(git -C "${TMP}" rev-parse HEAD)"
+bash "${TMP}/scripts/kde-tier3-materialization-needed.sh" "${SEM}" "${REM}"
+
+# Once promoted back to PASS, a remediation-contract change must still alter
+# the semantic fingerprint and request a new materialization run.
+python3 - "${TMP}/manifests/kde-tier3-materialization.json" <<'PY'
+import json,sys
+p=sys.argv[1]; d=json.load(open(p))
+d["state"]="PASS"
+d.pop("remediation_queue",None)
+d.pop("remediation",None)
+d["nodes"]["x"]["state"]="materialized"
+d["nodes"]["x"].pop("candidate_package_version",None)
+open(p,"w").write(json.dumps(d)+"\n")
+PY
+git -C "${TMP}" add . && git -C "${TMP}" commit -qm remediation-pass
+PASS2="$(git -C "${TMP}" rev-parse HEAD)"
+
+python3 - "${TMP}/manifests/kde-tier3-package-contracts.json" <<'PY'
+import json,sys
+p=sys.argv[1]; d=json.load(open(p))
+d["nodes"]["x"]["source_build_relation_overrides"][0]["relation"]="python3-build (>= 1.0)"
+open(p,"w").write(json.dumps(d)+"\n")
+PY
+git -C "${TMP}" add . && git -C "${TMP}" commit -qm remediation-contract-change
+REMCHANGE="$(git -C "${TMP}" rev-parse HEAD)"
+bash "${TMP}/scripts/kde-tier3-materialization-needed.sh" "${PASS2}" "${REMCHANGE}"
+
+echo "Tier 3 materialization remediation scope: PASS"
+

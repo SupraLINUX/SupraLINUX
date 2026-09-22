@@ -253,18 +253,41 @@ def adapt_control(control: Path, node: str, contract: dict) -> None:
         for dep in build_deps:
             src = ensure_relation(src, "Build-Depends", dep)
 
+    for override in contract.get("source_build_relation_overrides", []):
+        field = override.get("field")
+        if field != "Build-Depends":
+            raise RuntimeError(f"{node}: unsupported source relation field: {field}")
+        action = override.get("action")
+        if action == "remove":
+            src = remove_relation(src, field, override["package"])
+        elif action == "ensure":
+            src = ensure_relation(src, field, override["relation"])
+        else:
+            raise RuntimeError(f"{node}: unsupported source relation action: {action}")
+
     parts[0] = src
 
     for override in contract.get("binary_relation_overrides", []):
         pkg = override["package"]
         idx, para = package_para(parts, pkg)
         action = override.get("action")
-        if node == "kio" and action == "ensure" and override.get("field") == "Depends":
-            para = ensure_relation(para, "Depends", override["value"])
+        field = override.get("field")
+        if action == "ensure" and field:
+            relation = override.get("relation", override.get("value"))
+            if not relation:
+                raise RuntimeError(f"{node}: binary ensure override missing relation/value for {pkg}")
+            para = ensure_relation(para, field, relation)
+        elif action == "remove" and field:
+            relation = override.get("relation", override.get("value"))
+            if not relation:
+                raise RuntimeError(f"{node}: binary remove override missing relation/value for {pkg}")
+            para = remove_relation(para, field, relation_name(relation))
         elif node == "purpose" and pkg == "qml6-module-org-kde-purpose" and action == "preserve-ubuntu-optional-integration":
             para = ensure_relation(para, "Suggests", "kdeconnect")
         elif node == "purpose" and pkg == "libkf6purpose-bin" and action == "do-not-add":
             para = remove_relation(para, "Recommends", "qml6-module-org-kde-kdeconnect")
+        else:
+            raise RuntimeError(f"{node}: unsupported binary relation override for {pkg}: {action}/{field}")
         parts[idx] = para
 
     additions = contract.get("supralinux_additional_binary_packages", [])
@@ -290,6 +313,128 @@ def adapt_control(control: Path, node: str, contract: dict) -> None:
     control.write_text("\n\n".join(p.rstrip() for p in parts) + "\n")
 
 
+def apply_reference_test_suppression_overrides(rules: str, node: str, contract: dict) -> str:
+    cfg = contract.get("reference_test_suppression_overrides")
+    if not cfg:
+        return rules
+
+    excluded = list(cfg.get("rules_remove_excluded_tests", []))
+    if excluded:
+        rules = re.sub(r"(?m)^\s*(?:export\s+)?EXCLUDED_TESTS\s*=.*\n?", "", rules)
+        cleaned = []
+        for line in rules.splitlines():
+            if "EXCLUDED_TESTS" in line and "dh_auto_test" in line:
+                line = re.sub(r"\s+--\s+ARGS\+=.*$", "", line)
+            cleaned.append(line)
+        rules = "\n".join(cleaned).rstrip() + "\n"
+        for test_name in excluded:
+            if test_name in rules:
+                raise RuntimeError(f"{node}: reference test exclusion remains in rules: {test_name}")
+        if "EXCLUDED_TESTS" in rules:
+            raise RuntimeError(f"{node}: EXCLUDED_TESTS suppression remains")
+    return rules
+
+
+def apply_reference_patch_suppressions(src: Path, debian: Path, node: str, contract: dict) -> None:
+    cfg = contract.get("reference_patch_suppression_overrides")
+    if not cfg:
+        return
+    names = list(cfg.get("reverse_and_drop", []))
+    if not names:
+        return
+    series = debian / "patches" / "series"
+    if not series.is_file():
+        raise RuntimeError(f"{node}: patch suppression requested but debian/patches/series is missing")
+    lines = series.read_text().splitlines()
+    for name in names:
+        patch = debian / "patches" / name
+        if not patch.is_file():
+            raise RuntimeError(f"{node}: reference suppression patch missing: {name}")
+        if not any(x.strip() == name for x in lines):
+            raise RuntimeError(f"{node}: reference suppression patch not active in series: {name}")
+        run(["patch", "-p1", "-R", "--batch", "--no-backup-if-mismatch", "-i", patch], cwd=src)
+        lines = [x for x in lines if x.strip() != name]
+        patch.unlink()
+    series.write_text("\n".join(lines).rstrip() + ("\n" if lines else ""))
+    active = [x.strip() for x in lines if x.strip() and not x.lstrip().startswith("#")]
+    if active:
+        raise RuntimeError(f"{node}: selective patch suppression currently requires no remaining active patches: {active}")
+    shutil.rmtree(src / ".pc", ignore_errors=True)
+
+
+def apply_symbol_template_overrides(debian: Path, node: str, contract: dict) -> None:
+    for override in contract.get("symbol_template_overrides", []):
+        package = override["package"]
+        symbol = override["symbol"]
+        path = debian / f"{package}.symbols"
+        if not path.is_file():
+            raise RuntimeError(f"{node}: symbols template missing for {package}")
+        lines = path.read_text().splitlines()
+        matches = [i for i, line in enumerate(lines) if symbol in line]
+        if len(matches) != 1:
+            raise RuntimeError(f"{node}: expected one symbols entry for {symbol}, got {len(matches)}")
+        i = matches[0]
+        line = lines[i]
+        leading = line[:len(line) - len(line.lstrip())]
+        body = line.strip()
+        pos = body.find(symbol)
+        prefix = body[:pos]
+        suffix = body[pos:]
+        tags = []
+        if prefix:
+            if not (prefix.startswith("(") and prefix.endswith(")")):
+                raise RuntimeError(f"{node}: unsupported symbols prefix for {symbol}: {prefix}")
+            tags = [x for x in prefix[1:-1].split("|") if x]
+        for required in override.get("preserve_tags", []):
+            if required not in tags:
+                raise RuntimeError(f"{node}: expected symbols tag missing for {symbol}: {required}")
+        for tag in override.get("add_tags", []):
+            if tag not in tags:
+                tags.insert(0, tag)
+        lines[i] = leading + "(" + "|".join(tags) + ")" + suffix
+        path.write_text("\n".join(lines) + "\n")
+
+
+def validate_remediation_overrides(control: Path, debian: Path, rules: str, node: str, contract: dict) -> None:
+    parts = paragraphs(control.read_text())
+    src = parts[0]
+    build_depends = field_value(src, "Build-Depends") or ""
+    relation_names = {relation_name(x) for x in split_relations(build_depends)}
+    for override in contract.get("source_build_relation_overrides", []):
+        action = override.get("action")
+        if action == "remove":
+            if override["package"] in relation_names:
+                raise RuntimeError(f"{node}: removed Build-Depends still present: {override['package']}")
+        elif action == "ensure":
+            wanted = relation_name(override["relation"])
+            if wanted not in relation_names:
+                raise RuntimeError(f"{node}: required Build-Depends missing: {wanted}")
+
+    test_cfg = contract.get("reference_test_suppression_overrides", {})
+    for test_name in test_cfg.get("rules_remove_excluded_tests", []):
+        if test_name in rules or "EXCLUDED_TESTS" in rules:
+            raise RuntimeError(f"{node}: reference test suppression remains: {test_name}")
+
+    patch_cfg = contract.get("reference_patch_suppression_overrides", {})
+    series = debian / "patches" / "series"
+    series_text = series.read_text() if series.is_file() else ""
+    for name in patch_cfg.get("reverse_and_drop", []):
+        if name in series_text or (debian / "patches" / name).exists():
+            raise RuntimeError(f"{node}: reference QSKIP patch remains: {name}")
+
+    for override in contract.get("symbol_template_overrides", []):
+        package = override["package"]
+        symbol = override["symbol"]
+        path = debian / f"{package}.symbols"
+        matches = [line for line in path.read_text().splitlines() if symbol in line]
+        if len(matches) != 1:
+            raise RuntimeError(f"{node}: symbols override validation mismatch for {symbol}")
+        line = matches[0]
+        for tag in override.get("add_tags", []) + override.get("preserve_tags", []):
+            if tag not in line:
+                raise RuntimeError(f"{node}: symbols override tag missing for {symbol}: {tag}")
+
+
 def validate_control(control: Path, node: str, contract: dict) -> None:
     parts = paragraphs(control.read_text())
     names = [field_value(p, "Package") for p in parts[1:] if field_value(p, "Package")]
@@ -305,6 +450,20 @@ def validate_control(control: Path, node: str, contract: dict) -> None:
     for f in ("Uploaders", "Vcs-Git", "Vcs-Browser"):
         if field_value(src, f) is not None:
             raise RuntimeError(f"reference metadata remains: {f}")
+
+    for override in contract.get("binary_relation_overrides", []):
+        pkg = override["package"]
+        idx, para = package_para(parts, pkg)
+        field = override.get("field")
+        action = override.get("action")
+        if action in {"ensure", "remove"} and field:
+            relation = override.get("relation", override.get("value"))
+            wanted = relation_name(relation)
+            present = any(relation_name(x) == wanted for x in split_relations(field_value(para, field)))
+            if action == "ensure" and not present:
+                raise RuntimeError(f"{node}: binary relation ensure failed for {pkg}: {field} {wanted}")
+            if action == "remove" and present:
+                raise RuntimeError(f"{node}: binary relation removal failed for {pkg}: {field} {wanted}")
 
     if node == "kio":
         _, p = package_para(parts, "kio6")
@@ -324,6 +483,8 @@ def validate_control(control: Path, node: str, contract: dict) -> None:
                 raise RuntimeError(f"{node}: Python binding build provider missing: {dep}")
         if node == "kjobwidgets" and "python3-kcoreaddons" not in src_bd:
             raise RuntimeError("kjobwidgets: KCoreAddons Python typesystem provider missing")
+        if node == "kjobwidgets" and "python3-build" not in src_bd:
+            raise RuntimeError("kjobwidgets: Python build module provider missing")
 
 
 def write_changelog(path: Path, source: str, version: str, node: str) -> None:
@@ -493,10 +654,13 @@ def main() -> None:
         rules = debian / "rules"
         changelog = debian / "changelog"
         adapt_control(control, NODE, contract)
+        apply_reference_patch_suppressions(src, debian, NODE, contract)
         rules_text = sanitize_test_suppression(rules.read_text())
+        rules_text = apply_reference_test_suppression_overrides(rules_text, NODE, contract)
         rules_text = cmake_flags(rules_text, contract.get("selected_profile", {}))
         validate_test_policy(rules_text)
         rules.write_text(rules_text)
+        apply_symbol_template_overrides(debian, NODE, contract)
         write_changelog(changelog, source_package, package_version, NODE)
 
         if NODE in {"kjobwidgets", "kxmlgui"}:
@@ -505,6 +669,7 @@ def main() -> None:
             (debian / f"{pkg}.install").write_text(f"usr/lib/python3/dist-packages/{module}*.so\n")
 
         validate_control(control, NODE, contract)
+        validate_remediation_overrides(control, debian, rules.read_text(), NODE, contract)
         if "-DBUILD_TESTING=OFF" in rules.read_text():
             raise RuntimeError("reference BUILD_TESTING=OFF suppression remains")
         for key, value in contract.get("selected_profile", {}).items():
@@ -552,6 +717,10 @@ def main() -> None:
             "adapted_rules_sha256": sha256(rules),
             "selected_profile": contract.get("selected_profile", {}),
             "target_binary_packages": contract["target_binary_packages"],
+            "source_build_relation_overrides": contract.get("source_build_relation_overrides", []),
+            "reference_test_suppression_overrides": contract.get("reference_test_suppression_overrides"),
+            "reference_patch_suppression_overrides": contract.get("reference_patch_suppression_overrides"),
+            "symbol_template_overrides": contract.get("symbol_template_overrides", []),
             "stable_promotion_requires_explicit_user_approval": True,
         }
         if evidence["orig_tar_sha256"] != upstream_sha:
