@@ -1,6 +1,6 @@
 # KDE Tier 2 Package Batch 4
 
-Status: **prepared for clean-build campaign**
+Status: **1/3 PASS; KDeclarative validation retry and KService rematerialization pending**
 
 Batch 4 contains exactly **KDeclarative, KFileMetaData and KService** from KDE Frameworks 6.30.0. Canonical Tier 2 remains **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until clean-package evidence is promoted.
 
@@ -38,3 +38,38 @@ KDeclarative has two additional gates:
 The campaign uses `fail-fast: false`. A pre-sbuild infrastructure failure is **INFRA**, not package FAIL. **BLOCKED is not FAIL**. Package FAIL requires a real sbuild attempt and a node-owned root cause.
 
 PASS only makes a package eligible for the testing repository. Promotion to the **stable** APT channel always requires explicit user approval.
+
+
+## First clean-build campaign — classification
+
+Run `35676553259` used one validated retained-input bundle and one shared clean Resolute rootfs.
+
+**KFileMetaData PASS**
+- job `106584347249`
+- artifact `10673811173`
+- artifact SHA-256 `1ecb8d7a94650ee810a6424d9eeffb9d176d0a30ad9b75ed6b3257538fa1ba30`
+- **31/31 upstream tests PASS**
+- SONAME `libKF6FileMetaData.so.3`, 193 exports
+- Lintian PASS-errors
+- APT closure and external CMake consumer PASS
+- exact KI18n, KCoreAddons, KCodecs, KArchive and KConfig buildinfo proof PASS.
+
+KFileMetaData is promoted immediately and downstream-eligible.
+
+**KDeclarative INFRA / package state unchanged**
+
+The clean package build itself succeeded, **1/1 upstream test passed**, Lintian had no errors, and exact predecessor plus KCoreAddons package-closure proofs passed. The post-build extra-ABI gate incorrectly followed the `libkquickcontrolsprivate.so.0` symlink and counted the symlink and its versioned target as two ELF files.
+
+The validator is corrected rather than changing the package: it now requires exactly one SONAME symlink, verifies that its target exists, skips symlinks during ELF scanning, and requires exactly one real ELF with SONAME `libkquickcontrolsprivate.so.0` and non-empty exports. KDeclarative is retried with the same deterministic materialization.
+
+**KService INFRA / selective rematerialization**
+
+The clean package build succeeded with **7/7 upstream tests PASS** and primary ABI `libKF6Service.so.6` with 299 exports. Lintian then rejected `_ZSt19piecewise_construct@Base` because the Resolute C++ toolchain emits this standard-library implementation symbol while the Debian 6.30 baseline does not list it; `dpkg-gensymbols` consequently assigned the current SupraLINUX Debian revision.
+
+The remediation is explicit and narrow:
+
+`(optional=toolchain)_ZSt19piecewise_construct@Base 6.30.0`
+
+This follows the already validated SupraLINUX policy used for toolchain-emitted libstdc++ symbols: the symbol is optional/toolchain-dependent and receives the upstream Frameworks version, never a Debian revision minimum. KService is rematerialized and rebuilt; no KDE feature is disabled.
+
+After promoting KFileMetaData, canonical Tier 2 is **12 PASS / 3 pending / 0 current FAIL / 0 BLOCKED**. Neither infrastructure/integration incident changes KDeclarative or KService to FAIL.

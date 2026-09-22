@@ -263,3 +263,14 @@ The lane consumes only retained SupraLINUX PASS Framework artifacts plus Ubuntu 
 KDeclarative also carries explicit compatibility gates for Ubuntu's `libkquickcontrolsprivate0`: the binary must be emitted, its private library SONAME must be `libkquickcontrolsprivate.so.0`, exports must be non-empty, and all four KDeclarative QML binary packages must contain their QML metadata payload.
 
 Batch 4 keeps `fail-fast: false`, a shared clean Resolute rootfs and one validated retained-input bundle. Pre-sbuild failures are infrastructure events; BLOCKED remains distinct from FAIL. Canonical Tier 2 remains **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until real package PASS evidence is promoted.
+
+
+## Batch 4 first campaign — KFileMetaData promoted
+
+KFileMetaData `6.30.0-0supralinux1` is PASS from run `35676553259`: 31/31 upstream tests, ABI, Lintian, APT closure, external consumer and exact retained-predecessor buildinfo proofs all pass. Canonical Tier 2 advances to **12 PASS / 3 pending / 0 current FAIL / 0 BLOCKED**.
+
+KDeclarative's first clean build also compiled and passed its upstream test; its result is classified INFRA because a new post-build ABI checker double-counted a SONAME symlink and target. The checker is repaired and KDeclarative is retried without rematerialization.
+
+KService compiled and passed 7/7 tests but requires a deterministic symbols rematerialization for the Resolute-toolchain-only `std::piecewise_construct` export. The symbol is tagged `optional=toolchain` at version `6.30.0`; no KDE feature or ABI authority is changed.
+
+KMime remains independently decision-gated by ADR-0002.

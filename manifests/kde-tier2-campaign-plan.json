@@ -4,8 +4,8 @@
   "frameworks_series": "6.30.0",
   "tier": 2,
   "canonical_snapshot": {
-    "pass": 11,
-    "pending": 4,
+    "pass": 12,
+    "pending": 3,
     "current_fail": 0,
     "blocked": 0
   },
@@ -15,6 +15,7 @@
     "kcompletion",
     "kcontacts",
     "kcrash",
+    "kfilemetadata",
     "knotifications",
     "kpackage",
     "kpty",
@@ -23,7 +24,9 @@
     "syndication"
   ],
   "provider_audit_required": [],
-  "package_contract_ready": [],
+  "package_contract_ready": [
+    "kservice"
+  ],
   "human_decision_required": [
     {
       "node": "kmime",
@@ -31,9 +34,7 @@
     }
   ],
   "build_queue": [
-    "kdeclarative",
-    "kfilemetadata",
-    "kservice"
+    "kdeclarative"
   ],
   "audit_batch_size": 5,
   "next_provider_audit_batch": [],

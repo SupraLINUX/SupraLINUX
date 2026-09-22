@@ -38,10 +38,11 @@ canon={n["id"]:n for n in tier2["nodes"]}
 t1={n["id"]:n for n in tier1["nodes"]}
 runnable={n for n in expected if c["nodes"][n].get("state") in RUNNABLE}
 pass_nodes={n for n in expected if c["nodes"][n].get("state")=="PASS"}
-req(runnable | pass_nodes == set(expected),"Batch4 node states cover selected set")
-req(runnable.isdisjoint(pass_nodes),"Batch4 runnable/PASS disjoint")
+rematerialization={n for n in expected if c["nodes"][n].get("state")=="rematerialization-pending"}
+req(runnable | pass_nodes | rematerialization == set(expected),"Batch4 node states cover selected set")
+req(runnable.isdisjoint(pass_nodes) and runnable.isdisjoint(rematerialization) and pass_nodes.isdisjoint(rematerialization),"Batch4 state sets disjoint")
 req(set(plan.get("build_queue",[])).intersection(expected)==runnable,"Batch4 scoped global build queue")
-req(set(plan.get("package_contract_ready",[])).isdisjoint(expected),"Batch4 nodes absent from package-contract queue")
+req(set(plan.get("package_contract_ready",[])).intersection(expected)==rematerialization,"Batch4 scoped package-contract/rematerialization queue")
 
 used=set()
 for node_id in expected:
@@ -52,16 +53,25 @@ for node_id in expected:
     req(n.get("source_sha256")==cn.get("source_sha256")==pc.get("source_sha256"),f"{node_id}: source SHA")
     req(n.get("package_version")==cn.get("package_identity",{}).get("package_version_candidate")==pc.get("package_version_candidate"),f"{node_id}: package version")
     req(n.get("expected_binary_packages")==pc.get("compatibility_binary_packages"),f"{node_id}: binary package contract")
-    m=n.get("materialization",{}); cm=cn.get("planning",{}).get("materialization_evidence",{})
-    for key in ("workflow_run","artifact_id","artifact_sha256","tree_sha256","debian_tree_sha256","dsc_sha256","debian_tar_sha256","orig_tar_sha256"):
-        req(m.get(key)==cm.get(key),f"{node_id}: materialization {key}")
-    req(cn.get("planning",{}).get("package_contract")=="materialized",f"{node_id}: canonical materialized")
+    m=n.get("materialization",{})
+    if n.get("state") in RUNNABLE or n.get("state")=="PASS":
+        cm=cn.get("planning",{}).get("materialization_evidence",{})
+        for key in ("workflow_run","artifact_id","artifact_sha256","tree_sha256","debian_tree_sha256","dsc_sha256","debian_tar_sha256","orig_tar_sha256"):
+            req(m.get(key)==cm.get(key),f"{node_id}: materialization {key}")
     if n.get("state") in RUNNABLE:
+        req(cn.get("planning",{}).get("package_contract")=="materialized",f"{node_id}: runnable canonical materialized")
         req(cn.get("state")=="pending" and cn.get("planning",{}).get("readiness")=="build-ready",f"{node_id}: runnable canonical state")
         req(n.get("downstream_eligible") is False,f"{node_id}: runnable not downstream eligible")
-    else:
+    elif n.get("state")=="PASS":
+        req(cn.get("planning",{}).get("package_contract")=="retained-pass",f"{node_id}: PASS canonical retained contract")
         req(cn.get("state")=="PASS" and cn.get("planning",{}).get("readiness")=="retained-pass",f"{node_id}: retained PASS canonical state")
         req(n.get("downstream_eligible") is True,f"{node_id}: PASS downstream eligible")
+    else:
+        req(cn.get("state")=="pending" and cn.get("planning",{}).get("readiness")=="package-contract-ready",f"{node_id}: rematerialization canonical readiness")
+        req(cn.get("planning",{}).get("package_contract")=="not-materialized",f"{node_id}: rematerialization canonical contract state")
+        history=cn.get("planning",{}).get("materialization_history",[])
+        req(any(x and x.get("artifact_id")==m.get("artifact_id") for x in history),f"{node_id}: previous materialization retained historically")
+        req(n.get("downstream_eligible") is False,f"{node_id}: rematerialization not downstream eligible")
     used.update(n.get("predecessors",[])); used.update(n.get("package_dependency_closure",[]))
 
 kd=c["nodes"]["kdeclarative"]
@@ -78,6 +88,7 @@ req("libkquickcontrolsprivate0" in kd.get("expected_binary_packages",[]),"KDecla
 ks=contracts["nodes"]["kservice"]
 req(ks.get("build_depends_remove")==["libkf6doctools-dev"],"KService optional KDocTools Build-Depends removal")
 req(ks.get("binary_depends_remove",{}).get("libkf6service-dev")==["libkf6doctools-dev"],"KService optional KDocTools dev Depends removal")
+req(ks.get("symbols_adjustments")==[{"file":"libkf6service6.symbols","symbol":"_ZSt19piecewise_construct@Base","version":"6.30.0","tag":"optional=toolchain"}],"KService toolchain symbol remediation")
 
 pool=c.get("retained_predecessors",{})
 req(set(pool)==used,"retained predecessor pool exactly covers Batch4 direct plus package closure inputs")
@@ -117,4 +128,4 @@ if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)
     raise SystemExit(1)
 print("KDE Tier 2 Batch 4 preparation: PASS")
-print(f"runnable={sorted(runnable)} retained-pass={sorted(pass_nodes)}")
+print(f"runnable={sorted(runnable)} rematerialization={sorted(rematerialization)} retained-pass={sorted(pass_nodes)}")

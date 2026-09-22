@@ -279,9 +279,16 @@ for index,item in enumerate(contracts):
     if root.exists(): shutil.rmtree(root)
     root.mkdir(parents=True)
     subprocess.check_call(["dpkg-deb","-x",built[package],str(root)])
+    links=[path for path in root.rglob(soname) if path.is_symlink()]
+    if len(links)!=1:
+        raise SystemExit(f"{package}: expected exactly one SONAME symlink {soname}, got {[str(x) for x in links]}")
+    link=links[0]
+    if not link.resolve().is_file():
+        raise SystemExit(f"{package}: SONAME symlink target is missing: {link} -> {link.readlink()}")
+
     matches=[]
     for path in root.rglob("*.so*"):
-        if not path.is_file():
+        if path.is_symlink() or not path.is_file():
             continue
         r=subprocess.run(["readelf","-d",str(path)],text=True,capture_output=True)
         if r.returncode==0 and f"Library soname: [{soname}]" in r.stdout:
@@ -291,8 +298,8 @@ for index,item in enumerate(contracts):
                 raise SystemExit(f"{package}: {soname} has empty exports")
             matches.append({"path":str(path),"exports":len(exports)})
     if len(matches)!=1:
-        raise SystemExit(f"{package}: expected exactly one ELF SONAME {soname}, got {matches}")
-    results.append({"package":package,"soname":soname,**matches[0]})
+        raise SystemExit(f"{package}: expected exactly one non-symlink ELF SONAME {soname}, got {matches}")
+    results.append({"package":package,"soname":soname,"symlink":str(link),"symlink_target":str(link.readlink()),**matches[0]})
 (out/"extra-abi-contracts.json").write_text(json.dumps(results,indent=2)+"\n")
 print(f"extra ABI contracts PASS: {results}")
 PY

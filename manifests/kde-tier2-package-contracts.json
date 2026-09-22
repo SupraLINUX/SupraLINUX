@@ -792,6 +792,26 @@
         "libkf6service-dev": [
           "libkf6doctools-dev"
         ]
+      },
+      "symbols_adjustments": [
+        {
+          "file": "libkf6service6.symbols",
+          "symbol": "_ZSt19piecewise_construct@Base",
+          "version": "6.30.0",
+          "tag": "optional=toolchain"
+        }
+      ],
+      "toolchain_symbol_adaptation": {
+        "classification": "resolute-toolchain-symbol-baseline",
+        "observed_workflow_run": 35676553259,
+        "observed_job_id": 106584347252,
+        "symbol": "_ZSt19piecewise_construct@Base",
+        "demangled": "std::piecewise_construct",
+        "rationale": "The symbol is emitted by the Resolute C++ toolchain but absent from the Debian 6.30 baseline. It is implementation/toolchain dependent and must not acquire a SupraLINUX Debian-revision minimum version.",
+        "selected_tag": "optional=toolchain",
+        "selected_minimum_version": "6.30.0",
+        "kde_feature_effect": "none",
+        "validation": "fresh-materialization-and-clean-build-required"
       }
     }
   },
@@ -809,21 +829,24 @@
     "input_manifest_sha256": "20c12e82242a51005d4b72d080e77c305e213d6d1a12b6367b310332fec73fde"
   },
   "materialization": {
-    "status": "PASS",
+    "status": "pending-ci",
     "method": "kde-authority-source-plus-pinned-debian-tree",
     "package_state_effect": "none",
     "package_attempted": false,
     "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
     "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
-    "reason": "tier2-package-contract-3-materialization-pass",
-    "result": "PASS",
-    "targets": [],
+    "reason": "tier2-package-contract-3-kservice-toolchain-symbol-rematerialization",
+    "result": "pending",
+    "targets": [
+      "kservice"
+    ],
     "retained_package_pass": [
       "kauth",
       "kcolorscheme",
       "kcompletion",
       "kcontacts",
       "kcrash",
+      "kfilemetadata",
       "knotifications",
       "kpackage",
       "kpty",
@@ -867,23 +890,6 @@
         "result": "PASS",
         "package_attempted": false,
         "package_state_effect": "none"
-      },
-      "kservice": {
-        "workflow_run": 35636800957,
-        "job_id": 106456174118,
-        "commit": "e193ebe8b2a0b80129d2b064306b5d68bf8e91b7",
-        "artifact_id": 10657011134,
-        "artifact_sha256": "485b92ac6c739aebf51259b1a3fd85d6dc04f135c53666faa37489bc0756dc61",
-        "tree_sha256": "d3c844418c1fb5a02705da4cffde44aba02b2300ffccfed9a5ee8e73af929591",
-        "debian_tree_sha256": "4100351a0222d1f5a1fd17768c84e160b58cebcd4149ef4fa734fb71af99a3b5",
-        "dsc_sha256": "f7cc4bbc2292888ca282a4358dc2de4b472a9858a6c41749f07d573de758f1b9",
-        "debian_tar_sha256": "af74952199c62ffa8f0a2a163947cf7d26323b0a3584fa021a6c6f49085db7ef",
-        "orig_tar_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
-        "package_version": "6.30.0-0supralinux1",
-        "source_package": "kf6-kservice",
-        "result": "PASS",
-        "package_attempted": false,
-        "package_state_effect": "none"
       }
     },
     "history": [
@@ -922,8 +928,41 @@
         "package_state_effect": "none",
         "status": "superseded-for-integration",
         "superseded_reason": "Source Build-Depends removed optional KDocTools, but libkf6service-dev still retained a technical-reference Depends on libkf6doctools-dev."
+      },
+      {
+        "node": "kservice",
+        "workflow_run": 35636800957,
+        "job_id": 106456174118,
+        "commit": "e193ebe8b2a0b80129d2b064306b5d68bf8e91b7",
+        "artifact_id": 10657011134,
+        "artifact_sha256": "485b92ac6c739aebf51259b1a3fd85d6dc04f135c53666faa37489bc0756dc61",
+        "tree_sha256": "d3c844418c1fb5a02705da4cffde44aba02b2300ffccfed9a5ee8e73af929591",
+        "debian_tree_sha256": "4100351a0222d1f5a1fd17768c84e160b58cebcd4149ef4fa734fb71af99a3b5",
+        "dsc_sha256": "f7cc4bbc2292888ca282a4358dc2de4b472a9858a6c41749f07d573de758f1b9",
+        "debian_tar_sha256": "af74952199c62ffa8f0a2a163947cf7d26323b0a3584fa021a6c6f49085db7ef",
+        "orig_tar_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
+        "package_version": "6.30.0-0supralinux1",
+        "source_package": "kf6-kservice",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "status": "superseded-for-toolchain-symbol-baseline"
       }
-    ]
+    ],
+    "last_clean_build": {
+      "node": "kfilemetadata",
+      "result": "PASS",
+      "workflow_run": 35676553259,
+      "job_id": 106584347249,
+      "commit": "cebe8e9b9ce5ce2451e765d9c6e6c6e8d3eb77a8",
+      "artifact_id": 10673811173,
+      "artifact_sha256": "1ecb8d7a94650ee810a6424d9eeffb9d176d0a30ad9b75ed6b3257538fa1ba30",
+      "tests": "31/31 PASS",
+      "abi_soname": "libKF6FileMetaData.so.3",
+      "abi_export_count": 193,
+      "apt_check": "PASS",
+      "consumer_smoke": "PASS"
+    }
   },
   "provider_adaptations": {
     "ubuntu-resolute": {

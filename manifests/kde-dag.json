@@ -3497,6 +3497,115 @@
         "debian_tar_sha256": "dd3b83e83d91078a50bdbb9c4ef9e28d12efd26f505dd274029110bdb9dd976e",
         "rootfs_sha256": "af1bbbf06929caef42b87b39b26c2b12b7ffdc5c058e747a6fa8eb64be63b2a8"
       }
+    },
+    "kfilemetadata": {
+      "tier": 2,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kfilemetadata-6.30.0.tar.xz",
+      "source_sha256": "5e14cd8e395e927042cb3eb7cff47e0effda5e8bf2520cf18d1082a9403b2e62",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-kfilemetadata",
+      "binary_packages": [
+        "libkf6filemetadata-bin",
+        "libkf6filemetadata-data",
+        "libkf6filemetadata-dev",
+        "libkf6filemetadata-dev-tools",
+        "libkf6filemetadata-doc",
+        "libkf6filemetadata3"
+      ],
+      "package_version": "6.30.0-0supralinux1",
+      "ubuntu_reference_version": "6.24.0-0ubuntu1",
+      "depends_on": [
+        "extra-cmake-modules",
+        "ki18n",
+        "kcoreaddons",
+        "kcodecs",
+        "karchive",
+        "kconfig"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "attempt_ledger": "manifests/kde-tier2-package-batch4-attempts.json",
+      "abi_sonames": [
+        "libKF6FileMetaData.so.3"
+      ],
+      "evidence": [
+        {
+          "result": "PASS",
+          "workflow_run": 35676553259,
+          "run_attempt": 1,
+          "job_id": 106584347249,
+          "commit": "cebe8e9b9ce5ce2451e765d9c6e6c6e8d3eb77a8",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10673811173,
+          "artifact_sha256": "1ecb8d7a94650ee810a6424d9eeffb9d176d0a30ad9b75ed6b3257538fa1ba30",
+          "rootfs_artifact_id": 10673331784,
+          "rootfs_artifact_sha256": "0622750c9107e95c224bcac412c1843239349e8826765d873114b7b10a54ff27",
+          "rootfs_sha256": "3146df833463c82141688d0d641a0359cd535a0246658832b6bf7f4049e4aac3",
+          "stage": "complete",
+          "tests": "31/31 PASS",
+          "lintian": "PASS-errors",
+          "abi_soname": "libKF6FileMetaData.so.3",
+          "abi_export_count": 193,
+          "apt_check": "PASS",
+          "consumer_smoke": "PASS",
+          "predecessor_buildinfo_proof": "PASS",
+          "package_dependency_closure_buildinfo_proof": "PASS",
+          "package_dependency_closure": {},
+          "materialization": {
+            "workflow_run": 35635818815,
+            "artifact_id": 10656246928,
+            "artifact_sha256": "f5a31635efaf6aa9b8c9b8aa378f3c48a011ea4360a06edd9bafe26f7546361e"
+          },
+          "retained_predecessors": {
+            "extra_cmake_modules": "6.30.0-0supralinux3",
+            "ki18n": "6.30.0-0supralinux1",
+            "kcoreaddons": "6.30.0-0supralinux4",
+            "kcodecs": "6.30.0-0supralinux4",
+            "karchive": "6.30.0-0supralinux4",
+            "kconfig": "6.30.0-0supralinux4"
+          },
+          "downstream_eligible": true,
+          "files": {
+            "libkf6filemetadata-bin_6.30.0-0supralinux1_amd64.deb": "c7c82dbfdf70c98d1bc8911d1669b253bb1d15dabc2357b4411c04e4b56b7875",
+            "libkf6filemetadata-data_6.30.0-0supralinux1_all.deb": "2b735e88268156b8c65478cd1b7d691209c01d84dfacb99f092cbbbee06c0951",
+            "libkf6filemetadata-dev-tools_6.30.0-0supralinux1_amd64.deb": "5d22f04a8906a124e5e4fdca3693afbd0f91d5cc04964455d9db9330686141f8",
+            "libkf6filemetadata-dev_6.30.0-0supralinux1_amd64.deb": "f7fdb01f521859ab5423d86146c67139384dfd1f9a42be57552a43e96407f842",
+            "libkf6filemetadata-doc_6.30.0-0supralinux1_all.deb": "f37f8d6cfc7a07833b6ffcc275357791319f517e27bf51fd0f5ecbf06a3a172c",
+            "libkf6filemetadata3_6.30.0-0supralinux1_amd64.deb": "a349d3c01e2ce4774dce0e76216746f9648d9ad9d7814933421ccdbd88d5bac7",
+            "libkf6filemetadata-bin-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "5f634416a620d6a462ceb383eec96d1ff57d58ab51cc767f6dc900dcd76f5e60",
+            "libkf6filemetadata-dev-tools-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "6b479e566ba0dce464c1e5c8915bd8851ad37ef0204ee6ff2d489d9fb784c229",
+            "libkf6filemetadata3-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "50354704f165ba5ebbe78e588c95fbe59dfdabe9474404872cb9d971d7e4945b",
+            "changes_sha256": "f2b8c43e978f691649238334996e27c03ad7189ecc97f5a7d763781aa04336de",
+            "buildinfo_sha256": "e18ef8e0123af678c0d6fd5456d197581f3de0655a229a113c3abe28c4fdaa48",
+            "dsc_sha256": "6e27345975ce7a591e0d06c0169da33643604d64cb3a6271c04cb3de98cac8ce",
+            "orig_tar_sha256": "5e14cd8e395e927042cb3eb7cff47e0effda5e8bf2520cf18d1082a9403b2e62",
+            "debian_tar_sha256": "5e5294547267f887fc198620195275c153fc553f5a0ee2c58b69d27fcf98ac2f",
+            "rootfs_sha256": "3146df833463c82141688d0d641a0359cd535a0246658832b6bf7f4049e4aac3"
+          }
+        }
+      ],
+      "pass_files": {
+        "libkf6filemetadata-bin_6.30.0-0supralinux1_amd64.deb": "c7c82dbfdf70c98d1bc8911d1669b253bb1d15dabc2357b4411c04e4b56b7875",
+        "libkf6filemetadata-data_6.30.0-0supralinux1_all.deb": "2b735e88268156b8c65478cd1b7d691209c01d84dfacb99f092cbbbee06c0951",
+        "libkf6filemetadata-dev-tools_6.30.0-0supralinux1_amd64.deb": "5d22f04a8906a124e5e4fdca3693afbd0f91d5cc04964455d9db9330686141f8",
+        "libkf6filemetadata-dev_6.30.0-0supralinux1_amd64.deb": "f7fdb01f521859ab5423d86146c67139384dfd1f9a42be57552a43e96407f842",
+        "libkf6filemetadata-doc_6.30.0-0supralinux1_all.deb": "f37f8d6cfc7a07833b6ffcc275357791319f517e27bf51fd0f5ecbf06a3a172c",
+        "libkf6filemetadata3_6.30.0-0supralinux1_amd64.deb": "a349d3c01e2ce4774dce0e76216746f9648d9ad9d7814933421ccdbd88d5bac7",
+        "libkf6filemetadata-bin-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "5f634416a620d6a462ceb383eec96d1ff57d58ab51cc767f6dc900dcd76f5e60",
+        "libkf6filemetadata-dev-tools-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "6b479e566ba0dce464c1e5c8915bd8851ad37ef0204ee6ff2d489d9fb784c229",
+        "libkf6filemetadata3-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "50354704f165ba5ebbe78e588c95fbe59dfdabe9474404872cb9d971d7e4945b",
+        "changes_sha256": "f2b8c43e978f691649238334996e27c03ad7189ecc97f5a7d763781aa04336de",
+        "buildinfo_sha256": "e18ef8e0123af678c0d6fd5456d197581f3de0655a229a113c3abe28c4fdaa48",
+        "dsc_sha256": "6e27345975ce7a591e0d06c0169da33643604d64cb3a6271c04cb3de98cac8ce",
+        "orig_tar_sha256": "5e14cd8e395e927042cb3eb7cff47e0effda5e8bf2520cf18d1082a9403b2e62",
+        "debian_tar_sha256": "5e5294547267f887fc198620195275c153fc553f5a0ee2c58b69d27fcf98ac2f",
+        "rootfs_sha256": "3146df833463c82141688d0d641a0359cd535a0246658832b6bf7f4049e4aac3"
+      }
     }
   },
   "ci_scope_incidents": [

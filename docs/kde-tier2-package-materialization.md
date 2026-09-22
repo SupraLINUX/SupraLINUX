@@ -212,3 +212,10 @@ Final materialization evidence:
 Artifact inspection confirms KDeclarative's `libkquickcontrolsprivate0.install` now owns both `libkquickcontrolsprivate.so.0` and `libkquickcontrolsprivate.so.6.*`, while the QML package retains only QML module payload. KService contains no KDocTools source Build-Depends and no `libkf6doctools-dev` dependency in `libkf6service-dev`.
 
 All three nodes are now `build-ready`. Materialization remains `package_attempted=false`; package PASS still requires clean sbuild evidence.
+
+
+## KService selective rematerialization after Batch 4
+
+KFileMetaData's materialization remains consumed by a clean-build PASS. KDeclarative's materialization is also retained unchanged because its package build succeeded and the failure was solely in a post-build validation implementation.
+
+Only KService re-enters materialization. Its prior materialization remains historical evidence, while the active tree adds the reviewed `optional=toolchain` symbols entry for `std::piecewise_construct`. Materialization remains `package_attempted=false`; the subsequent clean sbuild is the authority for package PASS.

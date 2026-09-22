@@ -66,6 +66,7 @@ if "kservice" in selected:
     req(ks.get("build_depends_remove")==["libkf6doctools-dev"],"KService optional DocTools Build-Depends removal")
     req(ks.get("binary_depends_remove",{}).get("libkf6service-dev")==["libkf6doctools-dev"],"KService optional DocTools dev Depends removal")
     req(bool(ks.get("install_entries_remove",{}).get("libkf6service-bin.install")),"KService DocTools-only manpage entries removed")
+    req(ks.get("symbols_adjustments")==[{"file":"libkf6service6.symbols","symbol":"_ZSt19piecewise_construct@Base","version":"6.30.0","tag":"optional=toolchain"}],"KService toolchain-dependent symbol baseline")
 
 targets=set(mat.get("targets",[]))
 for node_id in selected:

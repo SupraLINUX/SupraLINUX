@@ -114,6 +114,10 @@ if "kservice" in selected:
     req(ks.get("install_entries_remove",{}).get("libkf6service-bin.install")==["usr/share/man/*/man8/kbuildsycoca6.8","usr/share/man/man8/kbuildsycoca6.8"],"KService DocTools-only manpage entries removed")
     req(ks.get("provider_adaptation",{}).get("removed_binary_depends",{}).get("libkf6service-dev")==["libkf6doctools-dev"],"KService provider adaptation dev Depends removal")
     req(ks.get("provider_adaptation",{}).get("classification")=="technical-reference-optional-provider-removal","KService optional-provider classification")
+    req(ks.get("symbols_adjustments")==[{"file":"libkf6service6.symbols","symbol":"_ZSt19piecewise_construct@Base","version":"6.30.0","tag":"optional=toolchain"}],"KService Resolute toolchain symbols adjustment")
+    tsa=ks.get("toolchain_symbol_adaptation",{})
+    req(tsa.get("classification")=="resolute-toolchain-symbol-baseline" and tsa.get("kde_feature_effect")=="none","KService toolchain-symbol adaptation classification")
+    req(tsa.get("selected_tag")=="optional=toolchain" and tsa.get("selected_minimum_version")=="6.30.0","KService toolchain-symbol policy")
 
 history=contracts.get("history",[])
 req(any(h.get("batch")=="tier2-package-contract-1" for h in history),"historical Batch 1 contract evidence retained")

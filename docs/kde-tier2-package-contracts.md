@@ -227,3 +227,18 @@ The corrected KDeclarative and KService trees passed deterministic rematerializa
 The KDeclarative binary split is now fail-closed for the complete private-library runtime payload: both SONAME symlink and versioned library must move together, and neither may remain duplicated in another binary package install list.
 
 KService's optional KDocTools adaptation is complete across both source and development binary dependency contracts. This preserves upstream's optional dependency semantics while keeping Ubuntu/Debian package compatibility where technically applicable.
+
+
+## KService Resolute toolchain-symbol adaptation
+
+Batch 4 run `35676553259` showed that the Resolute C++ toolchain exports `_ZSt19piecewise_construct@Base` from `libKF6Service.so.6`. The symbol is absent from the pinned Debian 6.30 symbols baseline, causing `dpkg-gensymbols` to assign `6.30.0-0supralinux1` and Lintian to reject a current-version-with-Debian-revision symbol.
+
+This is recorded as a toolchain integration adaptation, not an upstream KDE API addition:
+
+- file: `libkf6service6.symbols`
+- symbol: `_ZSt19piecewise_construct@Base`
+- tag: `optional=toolchain`
+- minimum version: `6.30.0`
+- KDE feature effect: none.
+
+The existing KDocTools optional-provider adaptation is unchanged. A fresh KService materialization and clean build are required before PASS.
