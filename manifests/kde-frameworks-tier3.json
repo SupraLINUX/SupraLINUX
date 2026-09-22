@@ -14,9 +14,9 @@
   "discovery_policy": {
     "phase": "dependency-graph-ready",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
-    "provider_audit": "support-components-first",
-    "package_contracts": "not-authorized-before-provider-audit",
-    "package_builds": "not-authorized-before-provider-audit"
+    "provider_audit": "support-components-PASS",
+    "package_contracts": "support-components-authorized",
+    "package_builds": "not-authorized-before-support-package-contracts"
   },
   "nodes": [
     {
@@ -448,6 +448,9 @@
       "kdoctools",
       "kded"
     ],
-    "policy": "KDE upstream support components are separate from API tiers and retain their own build/runtime semantics."
+    "policy": "KDE upstream support components are separate from API tiers and retain their own build/runtime semantics.",
+    "provider_audit_manifest": "manifests/kde-tier3-support-provider-audit.json",
+    "provider_audit": "PASS",
+    "next_gate": "support-package-contracts"
   }
 }
