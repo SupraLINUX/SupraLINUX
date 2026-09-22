@@ -1,0 +1,94 @@
+name: KDE Frameworks Tier 3 contract review
+
+on:
+  pull_request:
+    paths:
+      - manifests/kde-tier3-package-contracts.json
+      - manifests/kde-frameworks-tier3.json
+      - manifests/kde-frameworks-tier3-dependencies.json
+      - scripts/review_kde_tier3_package_contracts.py
+      - scripts/kde-tier3-contract-review-needed.sh
+      - scripts/validate_kde_tier3_contract_review.py
+      - .github/workflows/kde-tier3-contract-review.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kde-tier3-contract-review-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    name: Review Tier 3 package-contract deltas
+    runs-on: ubuntu-26.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - name: Determine semantic scope
+        id: scope
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_ACTION: ${{ github.event.action }}
+          EVENT_BEFORE: ${{ github.event.before }}
+          EVENT_AFTER: ${{ github.event.after }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          if [[ "${EVENT_NAME}" == workflow_dispatch ]]; then
+            echo "run=true" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+          if [[ "${EVENT_ACTION}" == synchronize ]]; then
+            before="${EVENT_BEFORE}"
+            after="${EVENT_AFTER}"
+          else
+            before="${PR_BASE_SHA}"
+            after="${PR_HEAD_SHA}"
+          fi
+          for sha in "${before}" "${after}"; do
+            git cat-file -e "${sha}^{commit}" 2>/dev/null || git fetch --no-tags origin "${sha}"
+          done
+          if bash scripts/kde-tier3-contract-review-needed.sh "${before}" "${after}"; then
+            echo "run=true" >> "${GITHUB_OUTPUT}"
+          else
+            rc=$?
+            [[ "${rc}" -eq 1 ]] || exit "${rc}"
+            echo "run=false" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Download promoted packaging-tree evidence
+        if: steps.scope.outputs.run == 'true'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          artifact-ids: '10694324518'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35729077373'
+          path: .work/tier3-packaging-tree-artifact
+
+      - name: Review package-contract deltas
+        if: steps.scope.outputs.run == 'true'
+        env:
+          PACKAGING_TREE_ARTIFACT_DIR: .work/tier3-packaging-tree-artifact
+        run: python3 scripts/review_kde_tier3_package_contracts.py
+
+      - name: Upload contract-review evidence
+        if: always() && steps.scope.outputs.run == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-tier3-contract-review-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-tier3-contract-review/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Report intentional skip
+        if: steps.scope.outputs.run == 'false'
+        run: echo 'Tier 3 contract review intentionally skipped; semantic inputs are unchanged.'
