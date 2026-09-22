@@ -2,11 +2,55 @@
   "schema": 1,
   "batch": "tier2-batch-5",
   "real_attempts": {
-    "kmime": []
+    "kmime": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "c3b5aaae613f6899cd4aad452cdeb257aafcbae9",
+        "workflow_run": 35686463559,
+        "run_attempt": 1,
+        "job_id": 106614505106,
+        "artifact_id": 10676184483,
+        "artifact_sha256": "ab8027ff456dc8d7570fe17b90da2cfadec88d7763eeb04373d5ff8dcbdc4994",
+        "rootfs_artifact_id": 10676632838,
+        "rootfs_artifact_sha256": "3ef7c2ef0ce33dead1686293fa15003cda137001cd244d5fd527a31fe4737603",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "sbuild-dh_makeshlibs",
+        "package_state_effect": "none",
+        "tests": "17/17 PASS",
+        "cause": "Resolute GCC 15 symbol emission differs from the Debian 6.30 technical-reference symbols baseline. KDE compiled and passed all 17 tests; dh_makeshlibs then rejected two std::shared_ptr template-instantiation symbols that are absent on Resolute and one toolchain-emitted std::piecewise_construct symbol.",
+        "remediation": {
+          "classification": "resolute-toolchain-symbol-baseline",
+          "retagged_optional_templinst": 2,
+          "added_optional_toolchain": "_ZSt19piecewise_construct@Base 6.30.0",
+          "kde_feature_effect": "none",
+          "replacement_materialization_run": 35687009946,
+          "replacement_materialization_job": 106616152530
+        }
+      }
+    ]
   },
   "blocked_events": {
     "kmime": []
   },
-  "infrastructure_incidents": [],
+  "infrastructure_incidents": [
+    {
+      "scope": "kmime-selective-materialization",
+      "result": "INFRA",
+      "workflow_run": 35687009946,
+      "run_attempt": 1,
+      "job_id": 106615915654,
+      "artifact_id": 10676748373,
+      "artifact_sha256": "ae975228a53ad826e56ede2102a868c25adcef995ee2554d503f8752b74133d4",
+      "stage": "authoritative-source-download",
+      "cause": "curl 35 Recv failure: Connection reset by peer",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "retry_result": "PASS",
+      "retry_job_id": 106616152530
+    }
+  ],
   "note": "A real attempt begins immediately before sbuild. Pre-sbuild failures are INFRA. BLOCKED is distinct from FAIL."
 }

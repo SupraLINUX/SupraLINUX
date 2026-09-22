@@ -237,3 +237,18 @@ Materialization remained `package_attempted=false`. The next authority step is a
 ## KService rematerialization consumed by PASS
 
 The corrected KService materialization from run `35677466559` was consumed successfully by clean-build run `35681046106`. It is now retained evidence rather than an active materialization target. No further Batch 4 materialization is required.
+
+
+## KMime toolchain-symbol selective rematerialization — 2026-09-22
+
+The first KMime clean build compiled successfully and passed **17/17** upstream tests, then exposed a Resolute GCC 15 versus Debian symbols-baseline difference in `dh_makeshlibs`. The reviewed materialization change is restricted to compiler/template implementation symbols and changes no KDE feature or API policy.
+
+Run `35687009946` attempt 1 ended as network INFRA (`curl 35`) before transformation and is not promoted. Attempt 2, job `106616152530`, is the replacement materialization PASS:
+- artifact `10677073138`, SHA-256 `539745b0f656efeed14c703f6cfb23670bfc8f79d07d270991dde5eafe2f6ea4`;
+- tree `eecfc8d314ff8ff9715c561c7c9be1c2c4c5f239ca6c563214eeaee33bf50ba6`;
+- Debian tree `65f384007ae703c2480b297cea68843fe32d11f5c6deb51eee9e2dc911559820`;
+- `.dsc` `f646a30a01e0bfce647cceb2869bb3316a2414f09a16c3d7c4f965690fd1a7b3`;
+- Debian tar `fa598699697f8a835f69935aab534da3e664f1eec955e6d56273495c8be878f3`;
+- KDE authority orig `2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc`.
+
+Materialization remains `package_attempted=false`. Authority now returns to the clean-build lane.
