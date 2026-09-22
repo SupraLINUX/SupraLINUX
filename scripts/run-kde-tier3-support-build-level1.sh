@@ -192,7 +192,7 @@ STAGE="cmake-consumer"
 CONSUMER="${WORK}/consumer"; mkdir -p "${CONSUMER}"
 cat > "${CONSUMER}/CMakeLists.txt" <<'EOF'
 cmake_minimum_required(VERSION 3.29)
-project(SupraLINUXKDEDConsumer NONE)
+project(SupraLINUXKDEDConsumer LANGUAGES CXX)
 find_package(KF6KDED 6.30 REQUIRED)
 if(NOT DEFINED KDED_DBUS_INTERFACE)
   message(FATAL_ERROR "KDED_DBUS_INTERFACE missing")
