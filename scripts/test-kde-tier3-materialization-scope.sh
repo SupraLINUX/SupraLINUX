@@ -34,16 +34,6 @@ rc=$?
 set -e
 [[ "${rc}" -eq 1 ]]
 
-# Editing only the selector does not alter the materialized source package.
-echo "# selector-only-test" >> "${TMP}/scripts/kde-tier3-materialization-needed.sh"
-git -C "${TMP}" add . && git -C "${TMP}" commit -qm selector-only
-SELECTOR="$(git -C "${TMP}" rev-parse HEAD)"
-set +e
-bash "${TMP}/scripts/kde-tier3-materialization-needed.sh" "${PASS2}" "${SELECTOR}"
-rc=$?
-set -e
-[[ "${rc}" -eq 1 ]]
-
 python3 - "${TMP}/manifests/kde-tier3-package-contracts.json" <<'PY'
 import json,sys
 p=sys.argv[1]; d=json.load(open(p)); d["nodes"]["x"]["package_version_candidate"]="6.30.0-0supralinux2"; open(p,"w").write(json.dumps(d)+"\n")
@@ -92,6 +82,16 @@ PASS2="$(git -C "${TMP}" rev-parse HEAD)"
 # the package contracts and materialization inputs are unchanged.
 set +e
 bash "${TMP}/scripts/kde-tier3-materialization-needed.sh" "${REM}" "${PASS2}"
+rc=$?
+set -e
+[[ "${rc}" -eq 1 ]]
+
+# Editing only the selector does not alter the materialized source package.
+echo "# selector-only-test" >> "${TMP}/scripts/kde-tier3-materialization-needed.sh"
+git -C "${TMP}" add . && git -C "${TMP}" commit -qm selector-only
+SELECTOR="$(git -C "${TMP}" rev-parse HEAD)"
+set +e
+bash "${TMP}/scripts/kde-tier3-materialization-needed.sh" "${PASS2}" "${SELECTOR}"
 rc=$?
 set -e
 [[ "${rc}" -eq 1 ]]
