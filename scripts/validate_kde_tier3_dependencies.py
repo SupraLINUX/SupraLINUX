@@ -89,6 +89,14 @@ req(d.get("topology",{}).get("support_preconditions",{}).get("kio_ci_profile")==
 req(d.get("topology",{}).get("support_preconditions",{}).get("kio_runtime_validation")==["kded"],"KIO runtime support gate")
 req(d.get("topology",{}).get("deferred_runtime_validation",{}).get("knewstuff")==["kcmutils"],"KNewStuff deferred runtime gate")
 
+for node in ("breeze-icons","kdoctools","kded"):
+    c=support[node]
+    req(c.get("readiness")=="package-contract-ready",f"{node}: support contract readiness")
+    pc=c.get("package_contract",{})
+    req(pc.get("status")=="ready" and pc.get("manifest")=="manifests/kde-tier3-support-package-contracts.json",f"{node}: support contract linkage")
+req(d.get("topology",{}).get("support_build_levels")==[["breeze-icons","kdoctools"],["kded"]],"support build topology")
+req(d.get("topology",{}).get("support_contracts",{}).get("status")=="ready","support contract topology state")
+
 doc=(ROOT/"docs/kde-tier3.md").read_text()
 for token in ("Tier 3 dependency graph","Breeze Icons","KDocTools","KDED","4 topological"):
     req(token in doc,f"Tier3 docs token: {token}")
