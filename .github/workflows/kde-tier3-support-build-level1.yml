@@ -100,31 +100,76 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Download retained ECM
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-        with: {artifact-ids: '10298635300', github-token: ${{ github.token }}, repository: SupraLINUX/SupraLINUX, run-id: '34694951158', path: .work/retained-inputs/extra_cmake_modules}
+        with:
+          artifact-ids: '10298635300'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34694951158'
+          path: .work/retained-inputs/extra_cmake_modules
       - name: Download retained KConfig
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-        with: {artifact-ids: '10554715051', github-token: ${{ github.token }}, repository: SupraLINUX/SupraLINUX, run-id: '35360530830', path: .work/retained-inputs/kconfig}
+        with:
+          artifact-ids: '10554715051'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35360530830'
+          path: .work/retained-inputs/kconfig
       - name: Download retained KCoreAddons
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-        with: {artifact-ids: '10457958023', github-token: ${{ github.token }}, repository: SupraLINUX/SupraLINUX, run-id: '35122522242', path: .work/retained-inputs/kcoreaddons}
+        with:
+          artifact-ids: '10457958023'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35122522242'
+          path: .work/retained-inputs/kcoreaddons
       - name: Download retained KCrash
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-        with: {artifact-ids: '10613480229', github-token: ${{ github.token }}, repository: SupraLINUX/SupraLINUX, run-id: '35535289692', path: .work/retained-inputs/kcrash}
+        with:
+          artifact-ids: '10613480229'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35535289692'
+          path: .work/retained-inputs/kcrash
       - name: Download retained KDBusAddons
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-        with: {artifact-ids: '10304340428', github-token: ${{ github.token }}, repository: SupraLINUX/SupraLINUX, run-id: '34713034164', path: .work/retained-inputs/kdbusaddons}
+        with:
+          artifact-ids: '10304340428'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34713034164'
+          path: .work/retained-inputs/kdbusaddons
       - name: Download retained KService
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-        with: {artifact-ids: '10674773768', github-token: ${{ github.token }}, repository: SupraLINUX/SupraLINUX, run-id: '35681046106', path: .work/retained-inputs/kservice}
+        with:
+          artifact-ids: '10674773768'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35681046106'
+          path: .work/retained-inputs/kservice
       - name: Download retained KDocTools
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-        with: {artifact-ids: '10682066198', github-token: ${{ github.token }}, repository: SupraLINUX/SupraLINUX, run-id: '35700002095', path: .work/retained-inputs/kdoctools}
+        with:
+          artifact-ids: '10682066198'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35700002095'
+          path: .work/retained-inputs/kdoctools
       - name: Download closure KArchive
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-        with: {artifact-ids: '10364726750', github-token: ${{ github.token }}, repository: SupraLINUX/SupraLINUX, run-id: '34884764702', path: .work/retained-inputs/karchive}
+        with:
+          artifact-ids: '10364726750'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34884764702'
+          path: .work/retained-inputs/karchive
       - name: Download closure KI18n
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-        with: {artifact-ids: '10553916882', github-token: ${{ github.token }}, repository: SupraLINUX/SupraLINUX, run-id: '35358920602', path: .work/retained-inputs/ki18n}
+        with:
+          artifact-ids: '10553916882'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35358920602'
+          path: .work/retained-inputs/ki18n
       - name: Validate retained inputs
         run: python3 scripts/validate-kde-tier3-support-level1-retained-inputs.py --root .work/retained-inputs
       - name: Upload retained input bundle
@@ -157,10 +202,14 @@ jobs:
           path: .work/materialized-source
       - name: Download retained inputs
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-        with: {name: kde-tier3-support-level1-retained-inputs-${{ github.run_id }}, path: .work/retained-inputs}
+        with:
+          name: kde-tier3-support-level1-retained-inputs-${{ github.run_id }}
+          path: .work/retained-inputs
       - name: Download shared rootfs
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-        with: {name: kde-tier3-support-level1-rootfs-${{ github.run_id }}, path: .work/rootfs}
+        with:
+          name: kde-tier3-support-level1-rootfs-${{ github.run_id }}
+          path: .work/rootfs
       - name: Build and validate KDED
         env:
           MATERIALIZATION_ARTIFACT_DIR: ${{ github.workspace }}/.work/materialized-source
