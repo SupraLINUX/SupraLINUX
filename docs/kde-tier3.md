@@ -230,3 +230,10 @@ Run `35726410174` captured signed Ubuntu Resolute and Debian sid source metadata
 Ubuntu and Debian expose identical binary-package names for all 20 nodes. This is evidence for compatibility, not authority.
 
 Canonical planning readiness is now `package-contract-reference-pass`. The next gate is **Tier 3 package-contract packaging-tree capture**. Binary builds remain unauthorized and the canonical state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+## Tier 3 packaging-tree capture activated
+
+Canonical planning readiness is now `package-contract-tree-pending`. The capture consumes the exact promoted Ubuntu/Debian source pins for all 20 Frameworks, verifies every `.dsc`, `debian.tar` and orig tar, then retains both `debian/` trees with deterministic hashes and parsed control summaries.
+
+This is still contract evidence only. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**, and package builds remain unauthorized.
