@@ -5,7 +5,7 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "frameworks_series": "6.30.0",
-  "state": "prepared-pending-build",
+  "state": "rematerialization-pending",
   "canonical_snapshot": "14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED",
   "selected_nodes": [
     "kmime"
@@ -65,8 +65,8 @@
   },
   "nodes": {
     "kmime": {
-      "state": "prepared-pending-build",
-      "last_result": null,
+      "state": "rematerialization-pending",
+      "last_result": "INFRA",
       "downstream_eligible": false,
       "source_package": "kf6-kmime",
       "upstream_version": "6.30.0",
@@ -107,13 +107,27 @@
         "legacy_source_version": "25.12.3-0ubuntu1",
         "runtime_coinstallation_required": true,
         "fake_abi_metadata_forbidden": true
+      },
+      "last_failure_evidence": {
+        "result": "INFRA",
+        "workflow_run": 35686463559,
+        "job_id": 106614505106,
+        "artifact_id": 10676184483,
+        "artifact_sha256": "ab8027ff456dc8d7570fe17b90da2cfadec88d7763eeb04373d5ff8dcbdc4994",
+        "rootfs_artifact_id": 10676632838,
+        "rootfs_artifact_sha256": "3ef7c2ef0ce33dead1686293fa15003cda137001cd244d5fd527a31fe4737603",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "stage": "sbuild-dh_makeshlibs",
+        "tests": "17/17 PASS",
+        "package_state_effect": "none",
+        "cause": "Resolute GCC 15 symbol emission differs from the Debian 6.30 technical-reference symbols baseline: two std::shared_ptr template-instantiation RTTI/vtable symbols are absent and std::piecewise_construct is emitted."
       }
     }
   },
   "activation": {
-    "status": "armed",
-    "reason": "materialization-pass-and-policy-gates-ready",
-    "canonical_head": "3c7d6d266c07f90bde59312af334ea0eccafe351",
+    "status": "rematerialization-required",
+    "reason": "resolute-toolchain-symbol-baseline",
     "package_state_effect": "none"
   }
 }
