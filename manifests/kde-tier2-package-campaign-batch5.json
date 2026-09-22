@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "batch": "tier2-batch-5",
+  "lane": "kmime-frameworks-transition-clean-build",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "frameworks_series": "6.30.0",
+  "state": "prepared-pending-build",
+  "canonical_snapshot": "14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED",
+  "selected_nodes": [
+    "kmime"
+  ],
+  "scheduling": {
+    "fail_fast": false,
+    "independent_nodes": true,
+    "shared_resolute_rootfs": true,
+    "shared_retained_input_bundle": true,
+    "only_pass_predecessor_artifacts": true
+  },
+  "semantics": {
+    "pre_sbuild_failure": "INFRA",
+    "package_attempt_begins": "immediately-before-sbuild",
+    "blocked_is_not_fail": true,
+    "fail_requires": "node-owned-root-cause",
+    "post_sbuild_failure": "root-cause-classification-required",
+    "pass_requires": [
+      "clean-sbuild",
+      "nonzero-ctest-pass",
+      "exact-binary-set",
+      "lintian-errors-pass",
+      "abi-soname",
+      "apt-runtime-closure",
+      "cmake-consumer-smoke",
+      "all-predecessor-buildinfo-proof",
+      "legacy-runtime-coinstallation",
+      "no-fake-legacy-abi-metadata"
+    ],
+    "stable_promotion_requires_explicit_user_approval": true
+  },
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "artifact_sha256": "181ea1434e803453d61d345a28adeba5ad9cee09a7c93948c6ce3ef1214984ff",
+      "debs": {
+        "extra-cmake-modules": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+      }
+    }
+  },
+  "retained_predecessors": {
+    "kcodecs": {
+      "version": "6.30.0-0supralinux4",
+      "workflow_run": 34716761551,
+      "artifact_id": 10305050385,
+      "artifact_sha256": "d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45",
+      "dev_package": "libkf6codecs-dev",
+      "debs": {
+        "libkf6codecs-data": "70f2197d5fa6f475d2d414ef9a13a3e885bceee73e7dcf95983f3a3313565c24",
+        "libkf6codecs-dev": "87be51ba7f3ea8813e1ce61b3c6975b312db9c62d24f41e0909edb4d344f92dd",
+        "libkf6codecs-doc": "a84b0b5a59e9e0098975d5e247910ab5d2d65b42b85076f02ce7b17c4907337a",
+        "libkf6codecs6": "66b34b1ec140e1942d906c4e8537661bd540f959277e41de9a772e1e0956be13"
+      }
+    }
+  },
+  "nodes": {
+    "kmime": {
+      "state": "prepared-pending-build",
+      "last_result": null,
+      "downstream_eligible": false,
+      "source_package": "kf6-kmime",
+      "upstream_version": "6.30.0",
+      "source_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+      "package_version": "6.30.0-0supralinux1",
+      "expected_binary_packages": [
+        "libkf6mime-data",
+        "libkf6mime-dev",
+        "libkf6mime6"
+      ],
+      "runtime_package": "libkf6mime6",
+      "dev_package": "libkf6mime-dev",
+      "soname": "libKF6Mime.so.6",
+      "cmake_package": "KF6Mime",
+      "cmake_target": "KF6::Mime",
+      "python_module": null,
+      "qml_packages": [],
+      "extra_abi_contracts": [],
+      "predecessors": [
+        "kcodecs"
+      ],
+      "package_dependency_closure": [],
+      "materialization": {
+        "workflow_run": 35684824744,
+        "job_id": 106609323687,
+        "artifact_id": 10675444852,
+        "artifact_sha256": "ae47a46605bce3943e6abd3c1e713d189f41782adecab2dc02618f411427ff8b",
+        "tree_sha256": "876e44ff9afd3cc6257046b86ac6d88de5b0f1e07308dace5fa6b653438cd0fc",
+        "debian_tree_sha256": "1b489be2fc5479e7ef1615aa5d0c3255a1726a27a4d3be3ced66c116bc9eb385",
+        "dsc_sha256": "0cd2c44451d2852bc5fe380ee5d9dc6e115fe657ccc79654da90c1e4a5c97716",
+        "debian_tar_sha256": "2372e83d87d7f2da1a61fe07c63cbd71da594c116d114a238c2a43848500b613",
+        "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc"
+      },
+      "compatibility": {
+        "legacy_runtime_package": "libkpim6mime6",
+        "legacy_data_package": "libkmime-data",
+        "legacy_runtime_soname": "libKPim6Mime.so.6",
+        "legacy_source_version": "25.12.3-0ubuntu1",
+        "runtime_coinstallation_required": true,
+        "fake_abi_metadata_forbidden": true
+      }
+    }
+  }
+}

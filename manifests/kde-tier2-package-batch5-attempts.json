@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "batch": "tier2-batch-5",
+  "real_attempts": {
+    "kmime": []
+  },
+  "blocked_events": {
+    "kmime": []
+  },
+  "infrastructure_incidents": [],
+  "note": "A real attempt begins immediately before sbuild. Pre-sbuild failures are INFRA. BLOCKED is distinct from FAIL."
+}
