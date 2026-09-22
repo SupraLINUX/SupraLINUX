@@ -285,3 +285,14 @@ The first KMime split-source reference-capture attempt, run `35684356602`, did n
 The capture script is restored to a single fail-closed pipeline. It now reads Ubuntu and Debian source identities independently, permits a legacy Ubuntu version line only when the node contract declares it, validates provider-specific binary sets, and emits normalized versions/snapshot/SHA-256 evidence to both CI logs and artifacts.
 
 No package state changes from this correction.
+
+## KMime split-source reference capture PASS — 2026-09-22
+
+Run `35684604069`, job `106608642629`, artifact `10676511618`: **PASS**. Artifact SHA-256: `d7eafeafad8770316908a5398f2f5431f6be1d66c37635422f711edfe776360b`.
+
+- Ubuntu legacy reference: `kmime 25.12.3-0ubuntu1`; binaries `libkmime-data`, `libkmime-dev`, `libkpim6mime6`; `.dsc` `b34f080e...`, Debian tree `cb97254e...`, orig `fce3c603...`.
+- Debian Frameworks reference: `kf6-kmime 6.30.0-1`; binaries `libkf6mime-data`, `libkf6mime-dev`, `libkf6mime6`; `.dsc` `8aa8b358...`, Debian tree `34c9f5b5...`, orig `2969a5ef...`.
+- Debian Frameworks orig exactly matches the pinned KDE 6.30 authority source SHA-256 `2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc`.
+- Snapshot SHA-256: `189e93364d4646e22ac39fe6917639a3c4381a9deb28ee647a69b4bb0452c0b1`; versions SHA-256: `e3a808b670ab34630380fd26afb65dd9cf3a68df5363e7250ccc5e886cf5a8d4`.
+
+This reference PASS changes no package state. It only authorizes deterministic materialization of `kf6-kmime 6.30.0-0supralinux1` from the KDE authority source plus the pinned Debian Frameworks packaging tree.

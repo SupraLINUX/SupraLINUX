@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "as_of": "2026-09-22",
-  "state": "reference-capture-pending",
+  "state": "reference-capture-pass",
   "source_authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "packaging_authority": "supralinux",
@@ -873,21 +873,60 @@
         "fake_provides_replaces_for_runtime": false,
         "coinstallation_gate_required": true,
         "legacy_development_installed_by_default": false
+      },
+      "technical_references": {
+        "ubuntu": {
+          "source_package": "kmime",
+          "version": "25.12.3-0ubuntu1",
+          "upstream_version": "25.12.3",
+          "dsc_sha256": "b34f080ee832e9c22112c8e93110d6fa966d0b22d5dc62f9f84458148e970395",
+          "debian_tar_sha256": "cb97254e6d5b081d31e7aaba9e6733cbdd9866e2670edaf7a41f92e4a638a6ef",
+          "orig_tar_sha256": "fce3c603cac3fec9a3f0e101c49785c32ace07b8f60b52739b638d329f43826d",
+          "binary_packages": [
+            "libkmime-data",
+            "libkmime-dev",
+            "libkpim6mime6"
+          ],
+          "role": "legacy-compatibility-reference-only"
+        },
+        "debian": {
+          "source_package": "kf6-kmime",
+          "version": "6.30.0-1",
+          "upstream_version": "6.30.0",
+          "dsc_sha256": "8aa8b35899b57973a1b117cf458e06be1018c902a052edc01c282aab198875dd",
+          "debian_tar_sha256": "34c9f5b596679e31c1943f9756c0da5d0f22407df94de1257127e308601a64d8",
+          "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+          "orig_matches_kde_authority": true,
+          "binary_packages": [
+            "libkf6mime-data",
+            "libkf6mime-dev",
+            "libkf6mime6"
+          ],
+          "role": "frameworks-packaging-technical-reference-only"
+        }
       }
     }
   },
   "reference_evidence": {
-    "result": "pending",
+    "result": "PASS",
     "claim": "packaging-reference-snapshot-only",
     "package_state_effect": "none",
-    "reason": "tier2-package-contract-4-kmime-split-reference-capture-required"
+    "workflow_run": 35684604069,
+    "job_id": 106608642629,
+    "commit": "3aff0c8a7c26755b29372a556e2526a380291350",
+    "artifact_id": 10676511618,
+    "artifact_sha256": "d7eafeafad8770316908a5398f2f5431f6be1d66c37635422f711edfe776360b",
+    "snapshot_sha256": "189e93364d4646e22ac39fe6917639a3c4381a9deb28ee647a69b4bb0452c0b1",
+    "versions_sha256": "e3a808b670ab34630380fd26afb65dd9cf3a68df5363e7250ccc5e886cf5a8d4"
   },
   "materialization": {
-    "status": "blocked-reference-capture",
+    "status": "pending-ci",
     "method": "kde-authority-source-plus-pinned-debian-tree",
     "package_state_effect": "none",
     "package_attempted": false,
-    "reason": "KMime reference capture must PASS before deterministic materialization",
+    "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
+    "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
+    "reason": "tier2-package-contract-4-kmime-reference-capture-pass",
     "targets": [
       "kmime"
     ],
