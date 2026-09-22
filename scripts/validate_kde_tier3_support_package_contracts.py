@@ -86,10 +86,41 @@ else:
     if m.get("state")=="reference-capture-pass":
         req(all(c.get("contract_state")=="reference-capture-pass" for c in components.values()),"captured component contract state")
         req(m.get("materialization",{}).get("status")=="not-authorized-before-contract-review","materialization blocked until contract review")
+    elif m.get("state") in {"contracts-ready","materialized"}:
+        req(all(c.get("contract_state") in {"contract-ready","materialized"} for c in components.values()),"finalized support contract state")
+        tree=m.get("packaging_tree_capture",{})
+        req(tree.get("status")=="PASS","contracts require packaging-tree capture PASS")
+        req(set(m.get("packaging_trees",{}))==set(expected),"contracts require promoted packaging trees")
+        breeze=components["breeze-icons"].get("contract",{})
+        req(breeze.get("source_package")=="kf6-breeze-icons","Breeze source package contract")
+        req(breeze.get("package_version_candidate")=="4:6.30.0-0supralinux1","Breeze epoch/version contract")
+        req(breeze.get("target_binary_packages")==[
+            "breeze-icon-theme","breeze-icon-theme-rcc",
+            "kf6-breeze-icon-theme","kf6-breeze-icon-theme-rcc",
+            "libkf6breezeicons-dev","libkf6breezeicons6"
+        ],"Breeze binary package contract")
+        req(breeze.get("compatibility_strategy")=="current-primary-packages-plus-ubuntu-name-transitionals","Breeze Ubuntu compatibility strategy")
+        req(breeze.get("epoch_policy",{}).get("epoch")==4 and breeze.get("epoch_policy",{}).get("required") is True,"Breeze epoch policy")
+        rel=breeze.get("relations",{})
+        req(rel.get("kf6-breeze-icon-theme",{}).get("role")=="transitional-ubuntu-compatibility","Breeze legacy-name transition")
+        req(rel.get("kf6-breeze-icon-theme-rcc",{}).get("role")=="transitional-ubuntu-compatibility","Breeze RCC legacy-name transition")
+        req(breeze.get("selected_profile",{}).get("WITH_ICON_GENERATION") is True and breeze.get("selected_profile",{}).get("WITH_ICONS_LIBRARY") is True,"Breeze upstream feature profile")
+        req(breeze.get("profile_adaptation",{}).get("BINARY_ICONS_RESOURCE")=="enabled-for-rcc-compatibility-output","Breeze RCC compatibility adaptation")
+        kd=components["kdoctools"].get("contract",{})
+        req(kd.get("source_package")=="kf6-kdoctools" and kd.get("package_version_candidate")=="6.30.0-0supralinux1","KDocTools package identity")
+        req(kd.get("target_binary_packages")==["kdoctools6","libkf6doctools-dev","libkf6doctools-doc","libkf6doctools6"],"KDocTools binary package contract")
+        req(kd.get("selected_profile",{}).get("MEINPROC_NO_KARCHIVE") is False and kd.get("selected_profile",{}).get("BUILD_QCH") is True,"KDocTools selected profile")
+        kded=components["kded"].get("contract",{})
+        req(kded.get("source_package")=="kf6-kded" and kded.get("package_version_candidate")=="6.30.0-0supralinux1","KDED package identity")
+        req(kded.get("target_binary_packages")==["kded6","kded6-dev"],"KDED binary package contract")
+        req(kded.get("support_predecessors")==["kdoctools"],"KDED KDocTools selected predecessor")
+        topo=m.get("support_build_topology",{})
+        req(topo.get("level0")==["breeze-icons","kdoctools"] and topo.get("level1")==["kded"],"support build topology")
+        req(m.get("materialization",{}).get("status") in {"authorized-pending-lane","pending-ci","PASS"},"support materialization lifecycle")
 
 sc=tier3.get("support_components",{})
 req(sc.get("provider_audit")=="PASS","Tier3 canonical support provider audit")
-req(sc.get("next_gate") in {"support-package-contracts","support-contract-reference-capture","support-contract-tree-capture","support-contract-review"},"Tier3 support contract next gate")
+req(sc.get("next_gate") in {"support-package-contracts","support-contract-reference-capture","support-contract-tree-capture","support-contract-review","support-materialization"},"Tier3 support contract next gate")
 req(m.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 
 for path in (
