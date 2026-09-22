@@ -37,6 +37,24 @@
         "sbuild_result": "successful",
         "cause": "Headless Qt smoke used the default xcb platform and aborted without DISPLAY.",
         "remediation": "Set QT_QPA_PLATFORM=offscreen for kded6 --version; keep the same package revision."
+      },
+      {
+        "attempt": 3,
+        "result": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "workflow_run": 35720612123,
+        "job_id": 106722644773,
+        "commit": "fedefe8c0ef039a965c94e8febb550da2a0b7464",
+        "artifact_id": 10691611217,
+        "artifact_sha256": "32b194f758467d9a6dcd91971508b6a078c9bb80d2e7f2e52645c6d6580324fc",
+        "rootfs_artifact_id": 10691445957,
+        "rootfs_artifact_sha256": "ff1a5b5f6e6fd98706c2d756e343df6f6d5d23a79d2fb66b24d2367add577ec3",
+        "stage": "cmake-consumer",
+        "package_attempted": true,
+        "sbuild_result": "successful",
+        "executable_smoke": "PASS",
+        "cause": "Consumer used project(... NONE), preventing normal Debian multiarch CMake package discovery despite KF6KDEDConfig.cmake being present in kded6-dev.",
+        "remediation": "Use project(... LANGUAGES CXX); keep the identical package revision."
       }
     ]
   }
