@@ -55,3 +55,14 @@ The remediation changes only the external validation rule to require `kded6.8.gz
 A runnable level-1 node with `execution_request.status=requested` or `remediation-requested` must execute even when the latest PR commit changes only documentation or integration metadata. The request remains active across `cancel-in-progress` churn and is consumed only when the resulting attempt is promoted into the campaign/attempt ledger.
 
 This prevents a valid initial build or remediation retry from being silently skipped after rapid successive commits.
+
+
+## Attempt 2 — headless executable-smoke FAIL
+
+Run `35719952518`, job `106720898661`, artifact `10691217831`, artifact SHA-256 `5bd6bd478ec4c0aa58eb6a8042cb9b62ca16818f2bff166d304e9fc4d5c92c72`.
+
+The package again built successfully. The corrected payload gate passed, as did Lintian, package installation and `apt-get check`. The next gate, `executable-smoke`, aborted because `kded6 --version` initializes Qt and the headless GitHub runner had no display for the default `xcb` platform plugin.
+
+The remediation sets `QT_QPA_PLATFORM=offscreen` only for this version smoke. This tests the executable without requiring a graphical session and does not alter KDED packaging or runtime defaults.
+
+Attempt 2 remains a historical **FAIL** at `executable-smoke`. The retry remains `6.30.0-0supralinux1` because no package content changed.
