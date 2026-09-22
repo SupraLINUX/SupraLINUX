@@ -91,11 +91,21 @@ req(d.get("topology",{}).get("deferred_runtime_validation",{}).get("knewstuff")=
 
 for node in ("breeze-icons","kdoctools","kded"):
     c=support[node]
-    req(c.get("readiness")=="package-contract-ready",f"{node}: support contract readiness")
+    req(c.get("readiness") in {"package-contract-ready","materialized","PASS"},f"{node}: support lifecycle readiness")
     pc=c.get("package_contract",{})
     req(pc.get("status")=="ready" and pc.get("manifest")=="manifests/kde-tier3-support-package-contracts.json",f"{node}: support contract linkage")
 req(d.get("topology",{}).get("support_build_levels")==[["breeze-icons","kdoctools"],["kded"]],"support build topology")
 req(d.get("topology",{}).get("support_contracts",{}).get("status")=="ready","support contract topology state")
+
+sm=d.get("topology",{}).get("support_materialization",{})
+req(sm.get("status")=="PASS" and sm.get("manifest")=="manifests/kde-tier3-support-materialization.json","support materialization topology state")
+for node in ("breeze-icons","kdoctools","kded"):
+    c=support[node]
+    mat=c.get("materialization",{})
+    req(c.get("readiness")=="materialized",f"{node}: materialized readiness")
+    req(mat.get("status")=="PASS" and mat.get("package_state_effect")=="none",f"{node}: materialization evidence linkage")
+gate=d.get("topology",{}).get("support_build_gate",{})
+req(gate.get("level0")==["breeze-icons","kdoctools"] and gate.get("level1")==["kded"],"support binary-build gate")
 
 doc=(ROOT/"docs/kde-tier3.md").read_text()
 for token in ("Tier 3 dependency graph","Breeze Icons","KDocTools","KDED","4 topological"):
