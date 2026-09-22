@@ -122,7 +122,9 @@ for node in sorted(pending_ids):
         req(n.get("package_identity",{}).get("status")==expected_identity_status,f"{node}: package-contract identity status")
     else:
         req(n.get("package_identity",{}).get("package_version_candidate") is None,f"{node}: package version must remain undecided before a package contract exists")
-req(m.get("packaging",{}).get("reason")=="compatibility-transition-decision-required","KMime compatibility transition gate")
+req(m.get("packaging",{}).get("reason")=="provider-audit-required-after-ADR-0002","KMime accepted transition enters provider audit")
+req(m.get("package_identity",{}).get("source_package")=="kf6-kmime","KMime Framework source package identity")
+req(m.get("package_identity",{}).get("ubuntu_legacy_source_package")=="kmime","KMime legacy Ubuntu source identity")
 
 dep_nodes=deps.get("nodes",{})
 req(set(dep_nodes)==expected_ids,"Tier2 dependency manifest node set")
@@ -141,9 +143,9 @@ req(sum(n.get("state")=="PASS" for n in tier1.get("nodes",[]))==29 and not any(n
 
 active=discovery.get("nodes",{})
 req(set(active)==pending_ids,"Tier2 active discovery must contain exactly current pending nodes")
-for node in sorted(pending_ids-{"kmime"}):
+for node in sorted(pending_ids):
     req(active[node].get("readiness") in {"package-lane-pending","package-contract-ready","build-ready"},f"{node}: discovery readiness vocabulary")
-req(active["kmime"].get("readiness")=="compatibility-decision-required" and active["kmime"].get("blocker")=="ADR-0002","KMime decision gate")
+req(active["kmime"].get("readiness")=="package-lane-pending" and active["kmime"].get("architecture_decision")=="ADR-0002-accepted","KMime accepted decision/provider-audit lane")
 snap=discovery.get("promoted_snapshot",{})
 expected_snapshot={"pass":len(pass_ids),"pending":len(pending_ids),"current_fail":0,"blocked":0}
 req(snap==expected_snapshot,"Tier2 promoted snapshot")
@@ -161,11 +163,11 @@ for promoted in sorted(pass_ids):
 cmp=subprocess.run(["dpkg","--compare-versions","6.30.0-0supralinux1","lt","25.12.3-0ubuntu1"])
 req(cmp.returncode==0,"KMime naive Frameworks version ordering fact")
 adr=(ROOT/"docs/decisions/ADR-0002-kmime-frameworks-transition.md").read_text()
-for token in ("decision required","KPim6::Mime","KF6::Mime","libKPim6Mime.so.6","libKF6Mime.so.6","Pending human approval"):
+for token in ("Status: **Accepted**","KPim6::Mime","KF6::Mime","libKPim6Mime.so.6","libKF6Mime.so.6","available from the Ubuntu base repositories on demand"):
     req(token in adr,f"KMime ADR missing {token}")
 doc=(ROOT/"docs/kde-tier2.md").read_text()
 state_token=f"{len(pass_ids)} PASS / {len(pending_ids)} pending"
-for token in ("15","KAuth","KCrash","Syndication","KMime",state_token,"POLKITQT6-1","compatibility-decision-required"):
+for token in ("15","KAuth","KCrash","Syndication","KMime",state_token,"POLKITQT6-1","ADR-0002 accepted"):
     req(token in doc,f"Tier2 doc missing {token}")
 policy=(ROOT/".github/workflows/repository-policy.yml").read_text()
 req("python3 scripts/validate_kde_tier2.py" in policy,"Repository Policy Tier2 gate")
@@ -175,7 +177,7 @@ if errors:
     raise SystemExit(1)
 print("KDE Frameworks 6.30 Tier 2 discovery validation: PASS")
 print(f"Canonical Tier 2: {len(pass_ids)} PASS / {len(pending_ids)} pending / 0 FAIL / 0 BLOCKED")
-build_ready=sum(nodes[n].get("planning",{}).get("readiness")=="build-ready" for n in pending_ids-{"kmime"})
-contract_ready=sum(nodes[n].get("planning",{}).get("readiness")=="package-contract-ready" for n in pending_ids-{"kmime"})
-audit_pending=sum(nodes[n].get("planning",{}).get("readiness")=="package-lane-pending" for n in pending_ids-{"kmime"})
-print(f"Tier2 retained PASS={sorted(pass_ids)}; {build_ready} build-ready; {contract_ready} contract-ready; {audit_pending} provider-audit pending; KMime compatibility-decision-required")
+build_ready=sum(nodes[n].get("planning",{}).get("readiness")=="build-ready" for n in pending_ids)
+contract_ready=sum(nodes[n].get("planning",{}).get("readiness")=="package-contract-ready" for n in pending_ids)
+audit_pending=sum(nodes[n].get("planning",{}).get("readiness")=="package-lane-pending" for n in pending_ids)
+print(f"Tier2 retained PASS={sorted(pass_ids)}; {build_ready} build-ready; {contract_ready} contract-ready; {audit_pending} provider-audit pending")
