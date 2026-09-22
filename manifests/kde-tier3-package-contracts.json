@@ -538,7 +538,42 @@
       "provider": "supralinux",
       "contract_state": "reference-capture-pending",
       "package_version_candidate": null,
-      "technical_references": null
+      "technical_references": {
+        "ubuntu": {
+          "source_package": "kf6-knotifyconfig",
+          "version": "6.24.0-0ubuntu1",
+          "upstream_version": "6.24.0",
+          "binary_packages": [
+            "libkf6notifyconfig-data",
+            "libkf6notifyconfig-dev",
+            "libkf6notifyconfig-doc",
+            "libkf6notifyconfig6"
+          ],
+          "dsc_file": "kf6-knotifyconfig_6.24.0-0ubuntu1.dsc",
+          "dsc_sha256": "0a0f465b9583b4d467936c29ca2ddac337309df2332a420d00cadd38f897cdc6",
+          "debian_tar_file": "kf6-knotifyconfig_6.24.0-0ubuntu1.debian.tar.xz",
+          "debian_tar_sha256": "2dd4b190c36c9134895cce331b4a03c74040d93e6183d13ad1e76efebd836f34",
+          "orig_tar_file": "kf6-knotifyconfig_6.24.0.orig.tar.xz",
+          "orig_tar_sha256": "46ea907ebc6a538888fb32434ba8cde3e8ab4423df11ded693bcbe0b6e1d83b6"
+        },
+        "debian": {
+          "source_package": "kf6-knotifyconfig",
+          "version": "6.30.0-1",
+          "upstream_version": "6.30.0",
+          "binary_packages": [
+            "libkf6notifyconfig-data",
+            "libkf6notifyconfig-dev",
+            "libkf6notifyconfig-doc",
+            "libkf6notifyconfig6"
+          ],
+          "dsc_file": "kf6-knotifyconfig_6.30.0-1.dsc",
+          "dsc_sha256": "bbd01a239953b48f36cbcbe809ef556632c7d6b7c4960825b54f0ece212a4c41",
+          "debian_tar_file": "kf6-knotifyconfig_6.30.0-1.debian.tar.xz",
+          "debian_tar_sha256": "68faca7a689eecf115c88468ec808c42eeb040be3d0e9937dfe5931e3697f23a",
+          "orig_tar_file": "kf6-knotifyconfig_6.30.0.orig.tar.xz",
+          "orig_tar_sha256": "4a133decdb0d3731dbaa1d3625b30f057089e5c59c8326ff88a047cef35b2efb"
+        }
+      }
     },
     "kparts": {
       "upstream_version": "6.30.0",
@@ -547,7 +582,42 @@
       "provider": "supralinux",
       "contract_state": "reference-capture-pending",
       "package_version_candidate": null,
-      "technical_references": null
+      "technical_references": {
+        "ubuntu": {
+          "source_package": "kf6-kparts",
+          "version": "6.24.0-0ubuntu1",
+          "upstream_version": "6.24.0",
+          "binary_packages": [
+            "libkf6parts-data",
+            "libkf6parts-dev",
+            "libkf6parts-doc",
+            "libkf6parts6"
+          ],
+          "dsc_file": "kf6-kparts_6.24.0-0ubuntu1.dsc",
+          "dsc_sha256": "a0a1010f581c476463237c066a88b45d4bd698fa2ef50443bb8ec69494bc1cbd",
+          "debian_tar_file": "kf6-kparts_6.24.0-0ubuntu1.debian.tar.xz",
+          "debian_tar_sha256": "785c347ae23dfb3e41fa06dfd0e57f715c95306012f2e2384e3aa4e45da3bf25",
+          "orig_tar_file": "kf6-kparts_6.24.0.orig.tar.xz",
+          "orig_tar_sha256": "b4a0b72167e0f77974aafe93305c18dcc99c0e66c1f2fd56a3e44d78e72f54e7"
+        },
+        "debian": {
+          "source_package": "kf6-kparts",
+          "version": "6.30.0-1",
+          "upstream_version": "6.30.0",
+          "binary_packages": [
+            "libkf6parts-data",
+            "libkf6parts-dev",
+            "libkf6parts-doc",
+            "libkf6parts6"
+          ],
+          "dsc_file": "kf6-kparts_6.30.0-1.dsc",
+          "dsc_sha256": "626602e95999c7fccccdd467b9d66bedb256c6623580d3d1574134da991ed80f",
+          "debian_tar_file": "kf6-kparts_6.30.0-1.debian.tar.xz",
+          "debian_tar_sha256": "3f83562d44824d73fbf3c6b818177cb3d69dfd5dfe79ec6fa29a644a9bfa78ee",
+          "orig_tar_file": "kf6-kparts_6.30.0.orig.tar.xz",
+          "orig_tar_sha256": "99f5a0e3a4da10e1a0fbfb505ae966cd87627f887dd07929a920afe41c862ac0"
+        }
+      }
     },
     "kpeople": {
       "upstream_version": "6.30.0",
@@ -556,7 +626,48 @@
       "provider": "supralinux",
       "contract_state": "reference-capture-pending",
       "package_version_candidate": null,
-      "technical_references": null
+      "technical_references": {
+        "ubuntu": {
+          "source_package": "kf6-kpeople",
+          "version": "6.24.0-0ubuntu1",
+          "upstream_version": "6.24.0",
+          "binary_packages": [
+            "libkf6people-data",
+            "libkf6people-dev",
+            "libkf6people-doc",
+            "libkf6people6",
+            "libkf6peoplebackend6",
+            "libkf6peoplewidgets6",
+            "qml6-module-org-kde-people"
+          ],
+          "dsc_file": "kf6-kpeople_6.24.0-0ubuntu1.dsc",
+          "dsc_sha256": "19a07386aace98ae4660c34b6e2c37365b44a4850cad6ea0f172b7a67c125b8b",
+          "debian_tar_file": "kf6-kpeople_6.24.0-0ubuntu1.debian.tar.xz",
+          "debian_tar_sha256": "e053d47fe7212800893c06e83e78018943faa4d97c4ccb99a4b926df2f4a7ee5",
+          "orig_tar_file": "kf6-kpeople_6.24.0.orig.tar.xz",
+          "orig_tar_sha256": "d3e267753eb64c3bbba8e4af4a4503695ee62d015b30c2dad1a1f1343890fea4"
+        },
+        "debian": {
+          "source_package": "kf6-kpeople",
+          "version": "6.30.0-1",
+          "upstream_version": "6.30.0",
+          "binary_packages": [
+            "libkf6people-data",
+            "libkf6people-dev",
+            "libkf6people-doc",
+            "libkf6people6",
+            "libkf6peoplebackend6",
+            "libkf6peoplewidgets6",
+            "qml6-module-org-kde-people"
+          ],
+          "dsc_file": "kf6-kpeople_6.30.0-1.dsc",
+          "dsc_sha256": "ce23ba724d2f993b9c07a820f5ca6498c174f5b9167594b99a29fc58c83c2fc6",
+          "debian_tar_file": "kf6-kpeople_6.30.0-1.debian.tar.xz",
+          "debian_tar_sha256": "85f46086e9964a51f4125d040ed1bb8cc92bfa6240dbc69f9285c5b97732476a",
+          "orig_tar_file": "kf6-kpeople_6.30.0.orig.tar.xz",
+          "orig_tar_sha256": "094868f11c8c46e57a077c2788a39c6ee0b0ebc2b64279c6f7c70a5152f518e7"
+        }
+      }
     },
     "krunner": {
       "upstream_version": "6.30.0",
@@ -565,7 +676,40 @@
       "provider": "supralinux",
       "contract_state": "reference-capture-pending",
       "package_version_candidate": null,
-      "technical_references": null
+      "technical_references": {
+        "ubuntu": {
+          "source_package": "kf6-krunner",
+          "version": "6.24.0-0ubuntu1",
+          "upstream_version": "6.24.0",
+          "binary_packages": [
+            "libkf6runner-dev",
+            "libkf6runner-doc",
+            "libkf6runner6"
+          ],
+          "dsc_file": "kf6-krunner_6.24.0-0ubuntu1.dsc",
+          "dsc_sha256": "b67302b9ccfedd231ba24a0535d40fea848961d595dbcf8888ee8c35d5b70c2c",
+          "debian_tar_file": "kf6-krunner_6.24.0-0ubuntu1.debian.tar.xz",
+          "debian_tar_sha256": "609683623182c04f5d6ba812ea2264dac4ac357525ef3a2488d7bb70a4ca98fa",
+          "orig_tar_file": "kf6-krunner_6.24.0.orig.tar.xz",
+          "orig_tar_sha256": "5775d7292a31c0ca339b385c18f3716fda5486317423c53809a10d8008ff8e4d"
+        },
+        "debian": {
+          "source_package": "kf6-krunner",
+          "version": "6.30.0-1",
+          "upstream_version": "6.30.0",
+          "binary_packages": [
+            "libkf6runner-dev",
+            "libkf6runner-doc",
+            "libkf6runner6"
+          ],
+          "dsc_file": "kf6-krunner_6.30.0-1.dsc",
+          "dsc_sha256": "9755ad1422fb4c1446360bceb344fd0bad67eb67ba7e72c4c9bbd6d5ba0aac2b",
+          "debian_tar_file": "kf6-krunner_6.30.0-1.debian.tar.xz",
+          "debian_tar_sha256": "ee200581e63eaa75cf27886d5ed980581502ebe5e10e54c96d4df19c7169008f",
+          "orig_tar_file": "kf6-krunner_6.30.0.orig.tar.xz",
+          "orig_tar_sha256": "0885d0936aec6dc8553c673f1c685013e345b933a52812a07c5bddd1eebdb551"
+        }
+      }
     },
     "ksvg": {
       "upstream_version": "6.30.0",
@@ -574,7 +718,42 @@
       "provider": "supralinux",
       "contract_state": "reference-capture-pending",
       "package_version_candidate": null,
-      "technical_references": null
+      "technical_references": {
+        "ubuntu": {
+          "source_package": "kf6-ksvg",
+          "version": "6.24.0-0ubuntu1",
+          "upstream_version": "6.24.0",
+          "binary_packages": [
+            "libkf6svg-dev",
+            "libkf6svg-doc",
+            "libkf6svg6",
+            "qml6-module-org-kde-ksvg"
+          ],
+          "dsc_file": "kf6-ksvg_6.24.0-0ubuntu1.dsc",
+          "dsc_sha256": "8b1695de868d1d0ae5b79efffa63174981cd53f56ba2e6b4fa03cd1ffa736e3f",
+          "debian_tar_file": "kf6-ksvg_6.24.0-0ubuntu1.debian.tar.xz",
+          "debian_tar_sha256": "22ca061c56263d85decb2099ddc4aa496b38e8200251f42470bd81cddb757838",
+          "orig_tar_file": "kf6-ksvg_6.24.0.orig.tar.xz",
+          "orig_tar_sha256": "c4d61f6bb4c61452e83de0427f444cdec296d87333f6c7676fb7dae09480f4d2"
+        },
+        "debian": {
+          "source_package": "kf6-ksvg",
+          "version": "6.30.0-1",
+          "upstream_version": "6.30.0",
+          "binary_packages": [
+            "libkf6svg-dev",
+            "libkf6svg-doc",
+            "libkf6svg6",
+            "qml6-module-org-kde-ksvg"
+          ],
+          "dsc_file": "kf6-ksvg_6.30.0-1.dsc",
+          "dsc_sha256": "7d4e86118bba24de4c9e01f1666d54982b731a14488200e7d0f05e0ee3119856",
+          "debian_tar_file": "kf6-ksvg_6.30.0-1.debian.tar.xz",
+          "debian_tar_sha256": "7e8f493fe3e4bac7a028f2c1d907778fd74f0f51b0a1624cccc99103e93f8a5b",
+          "orig_tar_file": "kf6-ksvg_6.30.0.orig.tar.xz",
+          "orig_tar_sha256": "7b7aba4e9baa88bfb303977e139e8a105b5cd243443029ee773954307b51eb91"
+        }
+      }
     },
     "ktexteditor": {
       "upstream_version": "6.30.0",
