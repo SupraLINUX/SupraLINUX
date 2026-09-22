@@ -1117,7 +1117,8 @@
       "level1": [
         "kded"
       ],
-      "rule": "KDED binary build is blocked until KDocTools has a real PASS build artifact."
+      "rule": "KDED binary build is blocked until KDocTools has a real PASS build artifact.",
+      "manifest": "manifests/kde-tier3-support-build-level0.json"
     }
   }
 }
