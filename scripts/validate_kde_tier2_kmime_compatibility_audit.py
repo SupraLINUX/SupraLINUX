@@ -31,8 +31,12 @@ req(fc.get("runtime_soname")=="libKF6Mime.so.6" and fc.get("authoritative_for_kd
 req(m.get("trigger_observation",{}).get("removed_framework_packages")==["libkf6mime-data","libkf6mime-dev","libkf6mime6"],"observed solver removal set")
 required=set(m.get("required_checks",[]))
 req({"depends-conflicts-breaks-replaces-provides","pairwise-file-overlap","overlap-content-sha256","runtime-soname-separation","apt-solver-simulation"} <= required,"audit required checks")
-req(km.get("state")=="pending" and km.get("planning",{}).get("readiness")=="compatibility-provider-required","canonical KMime compatibility-provider state")
-req(plan.get("compatibility_provider_required")==["kmime"] and "kmime" not in plan.get("build_queue",[]),"campaign compatibility queue")
+if km.get("state")=="PASS":
+    req(km.get("planning",{}).get("readiness")=="retained-pass","canonical KMime retained PASS state")
+    req("kmime" in plan.get("retained_pass",[]) and "kmime" not in plan.get("compatibility_provider_required",[]) and "kmime" not in plan.get("build_queue",[]),"closed campaign compatibility queue")
+else:
+    req(km.get("state")=="pending" and km.get("planning",{}).get("readiness")=="compatibility-provider-required","canonical KMime compatibility-provider state")
+    req(plan.get("compatibility_provider_required")==["kmime"] and "kmime" not in plan.get("build_queue",[]),"campaign compatibility queue")
 for path in (
     "scripts/run-kde-tier2-kmime-compatibility-audit.sh",
     ".github/workflows/kde-tier2-kmime-compatibility-audit.yml",
