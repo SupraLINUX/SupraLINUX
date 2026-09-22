@@ -451,6 +451,7 @@
     "policy": "KDE upstream support components are separate from API tiers and retain their own build/runtime semantics.",
     "provider_audit_manifest": "manifests/kde-tier3-support-provider-audit.json",
     "provider_audit": "PASS",
-    "next_gate": "support-package-contracts"
+    "next_gate": "support-contract-reference-capture",
+    "package_contract_manifest": "manifests/kde-tier3-support-package-contracts.json"
   }
 }
