@@ -12,11 +12,11 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "provider-audit-pending",
+    "phase": "package-contracts-required",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
-    "provider_audit": "tier3-frameworks-pending-ci",
-    "package_contracts": "not-authorized-before-tier3-provider-audit",
-    "package_builds": "not-authorized-before-tier3-provider-audit"
+    "provider_audit": "PASS",
+    "package_contracts": "required-before-materialization",
+    "package_builds": "not-authorized-before-tier3-package-contracts"
   },
   "nodes": [
     {
@@ -29,12 +29,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -52,12 +59,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -75,12 +89,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -98,12 +119,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -121,12 +149,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -144,12 +179,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -167,12 +209,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -190,12 +239,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -213,12 +269,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -236,12 +299,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -259,12 +329,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -282,12 +359,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -305,12 +389,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -328,12 +419,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -351,12 +449,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -374,12 +479,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -397,12 +509,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -420,12 +539,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -443,12 +569,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -466,12 +599,19 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "dependency-graph-ready",
+        "readiness": "package-contract-required",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-authorized",
+        "package_contract": "required",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-        "provider_audit": "pending-ci",
-        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json"
+        "provider_audit": "PASS",
+        "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
+        "provider": "supralinux",
+        "provider_reason": "ubuntu-resolute-kf6-is-6.24.0-while-kde-requires-6.30.0",
+        "provider_audit_evidence": {
+          "workflow_run": 35725458767,
+          "artifact_id": 10692912109,
+          "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -487,7 +627,7 @@
     "policy": "KDE upstream support components are separate from API tiers and retain their own build/runtime semantics.",
     "provider_audit_manifest": "manifests/kde-tier3-support-provider-audit.json",
     "provider_audit": "PASS",
-    "next_gate": "tier3-provider-audit",
+    "next_gate": "tier3-package-contracts",
     "package_contract_manifest": "manifests/kde-tier3-support-package-contracts.json",
     "materialization_manifest": "manifests/kde-tier3-support-materialization.json",
     "materialization": "PASS",
