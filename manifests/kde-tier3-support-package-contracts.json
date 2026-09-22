@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-22",
+  "authority": "kde-upstream",
+  "role": "support-component-package-contract-preparation",
+  "frameworks_series": "6.30.0",
+  "selected_components": [
+    "breeze-icons",
+    "kdoctools",
+    "kded"
+  ],
+  "provider_audit": {
+    "manifest": "manifests/kde-tier3-support-provider-audit.json",
+    "required_status": "PASS",
+    "selected_provider": "supralinux"
+  },
+  "state": "reference-capture-pending",
+  "reference_capture": {
+    "status": "pending-ci",
+    "claim": "packaging-reference-snapshot-only",
+    "authoritative": false,
+    "package_state_effect": "none",
+    "ubuntu_suite": "resolute",
+    "debian_suite": "sid",
+    "debian_selection_policy": "prefer-exact-kde-6.30.0-otherwise-newest-not-newer",
+    "evidence": null
+  },
+  "components": {
+    "breeze-icons": {
+      "upstream_source": "breeze-icons",
+      "upstream_version": "6.30.0",
+      "upstream_source_sha256": "93866c19791838fc9757b305e010e23bb38cb5f201e4ecc96cc8ef5f1173ebe6",
+      "reference_sources": {
+        "ubuntu": "kf6-breeze-icons",
+        "debian": "kf6-breeze-icons"
+      },
+      "contract_state": "reference-capture-pending"
+    },
+    "kdoctools": {
+      "upstream_source": "kdoctools",
+      "upstream_version": "6.30.0",
+      "upstream_source_sha256": "b90b42ab222a3034729e517d0c06258abf6bdc28591ec78ad56f24aebbaaed94",
+      "reference_sources": {
+        "ubuntu": "kf6-kdoctools",
+        "debian": "kf6-kdoctools"
+      },
+      "contract_state": "reference-capture-pending"
+    },
+    "kded": {
+      "upstream_source": "kded",
+      "upstream_version": "6.30.0",
+      "upstream_source_sha256": "0adf6e22300cee74d57e790b5db844f03a1366a4d6315edbaa49174b12bf1861",
+      "reference_sources": {
+        "ubuntu": "kf6-kded",
+        "debian": "kf6-kded"
+      },
+      "contract_state": "reference-capture-pending"
+    }
+  },
+  "materialization": {
+    "status": "not-authorized-before-reference-capture",
+    "package_state_effect": "none"
+  },
+  "stable_promotion_requires_explicit_user_approval": true
+}
