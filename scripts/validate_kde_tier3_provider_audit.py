@@ -48,9 +48,15 @@ for node_id in canonical:
     req(c.get("provider_decision") in {"pending-ci","ubuntu-compatible","supralinux-required"},f"{node_id}: provider decision lifecycle")
     req(n.get("state")=="pending",f"{node_id}: provider audit must not alter package state")
     planning=n.get("planning",{})
-    req(planning.get("readiness")=="dependency-graph-ready",f"{node_id}: dependency-ready state")
-    req(planning.get("package_contract")=="not-authorized",f"{node_id}: package contract remains unauthorized")
+    req(planning.get("readiness") in {"dependency-graph-ready","package-contract-required"},f"{node_id}: provider-audit readiness lifecycle")
+    req(planning.get("package_contract") in {"not-authorized","required"},f"{node_id}: package contract lifecycle")
     req(planning.get("provider_audit") in {"pending-ci","PASS"},f"{node_id}: canonical provider audit lifecycle")
+    if a.get("status")=="PASS":
+        req(planning.get("readiness")=="package-contract-required",f"{node_id}: contract-required readiness")
+        req(planning.get("package_contract")=="required",f"{node_id}: package contract required")
+        req(planning.get("provider")=="supralinux",f"{node_id}: SupraLINUX provider selection")
+        pe=planning.get("provider_audit_evidence",{})
+        req(pe.get("workflow_run")==35725458767 and pe.get("artifact_id")==10692912109,f"{node_id}: provider audit evidence linkage")
 
 if a.get("status")=="pending-ci":
     req(all(c.get("provider_decision")=="pending-ci" for c in a["components"].values()),"pending Tier3 provider decisions")
@@ -64,6 +70,10 @@ else:
     req(len(ev.get("result_sha256",""))==64,"Tier3 provider audit result digest")
     req(all(c.get("provider_decision") in {"ubuntu-compatible","supralinux-required"} for c in a["components"].values()),"Tier3 final provider decisions")
     req(a.get("execution_request",{}).get("status")=="consumed","Tier3 provider audit execution request consumed")
+    summary=a.get("provider_summary",{})
+    req(summary.get("supralinux_required")==20 and summary.get("ubuntu_compatible")==0,"Tier3 provider ownership summary")
+    req(summary.get("qt_provider")=="ubuntu-resolute" and summary.get("qt_version")=="6.10.2","Tier3 Qt provider summary")
+    req(all(c.get("provider_decision")=="supralinux-required" for c in a["components"].values()),"Tier3 all 20 require SupraLINUX provider")
 
 req(a.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 doc=(ROOT/"docs/kde-tier3-provider-audit.md").read_text()
