@@ -78,7 +78,7 @@ for node in m["packaging_tree_capture"]["selected_components"]:
 PY
 )
 
-STAGE=source-download
+STAGE="source-download"
 for row in "${rows[@]}"; do
   IFS=$'\t' read -r node side source version dsc_file dsc_sha deb_file deb_sha orig_file orig_sha <<<"${row}"
   dir="${WORK}/${side}/${node}"
