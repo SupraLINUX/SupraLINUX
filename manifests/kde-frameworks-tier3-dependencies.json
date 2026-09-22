@@ -34,7 +34,7 @@
       "root_cmake_blob": "4482a5fa712f27feec0ee3ec4c5c7bcc07a660d3",
       "kde_ci_blob": "dcbc4346e295b14915ea43343228fd419decd0a1",
       "state": "pending",
-      "readiness": "package-contract-ready",
+      "readiness": "materialized",
       "provider": "supralinux",
       "provider_audit": {
         "status": "PASS",
@@ -52,6 +52,13 @@
         "status": "ready",
         "manifest": "manifests/kde-tier3-support-package-contracts.json",
         "package_version_candidate": "4:6.30.0-0supralinux1"
+      },
+      "materialization": {
+        "status": "PASS",
+        "manifest": "manifests/kde-tier3-support-materialization.json",
+        "artifact_id": 10680459412,
+        "artifact_sha256": "80955df1f6e90b6ad519b2f91cadbf1e4b56278e69a9827cdfa0b498a960fdb1",
+        "package_state_effect": "none"
       }
     },
     "kdoctools": {
@@ -76,7 +83,7 @@
         ]
       },
       "state": "pending",
-      "readiness": "package-contract-ready",
+      "readiness": "materialized",
       "provider": "supralinux",
       "provider_audit": {
         "status": "PASS",
@@ -94,6 +101,13 @@
         "status": "ready",
         "manifest": "manifests/kde-tier3-support-package-contracts.json",
         "package_version_candidate": "6.30.0-0supralinux1"
+      },
+      "materialization": {
+        "status": "PASS",
+        "manifest": "manifests/kde-tier3-support-materialization.json",
+        "artifact_id": 10680938435,
+        "artifact_sha256": "cf5c18889e9de6582ca05b4e8290686948942493aeaf54a318a2b4f4925cf5ac",
+        "package_state_effect": "none"
       }
     },
     "kded": {
@@ -121,7 +135,7 @@
         ]
       },
       "state": "pending",
-      "readiness": "package-contract-ready",
+      "readiness": "materialized",
       "provider": "supralinux",
       "provider_audit": {
         "status": "PASS",
@@ -139,6 +153,13 @@
         "status": "ready",
         "manifest": "manifests/kde-tier3-support-package-contracts.json",
         "package_version_candidate": "6.30.0-0supralinux1"
+      },
+      "materialization": {
+        "status": "PASS",
+        "manifest": "manifests/kde-tier3-support-materialization.json",
+        "artifact_id": 10680629132,
+        "artifact_sha256": "680ec2d408e1dd021b091c7adfe1d63a3077144bf54516da3164191d427efa99",
+        "package_state_effect": "none"
       }
     }
   },
@@ -1082,6 +1103,21 @@
       "status": "ready",
       "manifest": "manifests/kde-tier3-support-package-contracts.json",
       "package_state_effect": "none"
+    },
+    "support_materialization": {
+      "status": "PASS",
+      "manifest": "manifests/kde-tier3-support-materialization.json",
+      "package_state_effect": "none"
+    },
+    "support_build_gate": {
+      "level0": [
+        "breeze-icons",
+        "kdoctools"
+      ],
+      "level1": [
+        "kded"
+      ],
+      "rule": "KDED binary build is blocked until KDocTools has a real PASS build artifact."
     }
   }
 }
