@@ -102,6 +102,10 @@ jobs:
         shell: bash
         run: scripts/test-kde-tier2-package-batch4-scope.sh
 
+      - name: Test KDE Tier 2 Batch 5 package scope
+        shell: bash
+        run: scripts/test-kde-tier2-package-batch5-scope.sh
+
       - name: Test KDE Tier 2 provider-audit semantic scope
         shell: bash
         run: scripts/test-kde-tier2-provider-audit-scope.sh
@@ -200,6 +204,9 @@ jobs:
 
       - name: Validate KDE Tier 2 Batch 4 preparation
         run: python3 scripts/validate_kde_tier2_package_batch4.py
+
+      - name: Validate KDE Tier 2 Batch 5 preparation
+        run: python3 scripts/validate_kde_tier2_package_batch5.py
 
       - name: Validate KDE Attica 6.30 packaging preparation
         run: python3 scripts/validate_kde_attica_package.py
