@@ -80,7 +80,7 @@ req(support.get("package_contract_manifest")=="manifests/kde-tier3-support-packa
 req(support.get("materialization_manifest")=="manifests/kde-tier3-support-materialization.json","Tier3 support materialization manifest")
 req(support.get("materialization")=="PASS","Tier3 support materialization state")
 req(support.get("build_level0_manifest")=="manifests/kde-tier3-support-build-level0.json","Tier3 support level0 manifest")
-req(support.get("build_level0")=="PASS","Tier3 support level0 state")\nreq(support.get("next_gate")=="support-build-level1","Tier3 support next gate")
+req(support.get("build_level0")=="PASS","Tier3 support level0 state")\nreq(support.get("build_level1_manifest")=="manifests/kde-tier3-support-build-level1.json","Tier3 support level1 manifest")\nreq(support.get("next_gate")=="support-build-level1","Tier3 support next gate")
 
 doc=(ROOT/"docs/kde-tier3.md").read_text()
 req("0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED" in doc,"Tier3 docs canonical snapshot")
