@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-22",
+  "authority": "kde-upstream",
+  "role": "support-binary-build-level0",
+  "frameworks_series": "6.30.0",
+  "state": "pending-ci",
+  "package_state_effect": "real-package-build-on-PASS",
+  "selected_nodes": [
+    "breeze-icons",
+    "kdoctools"
+  ],
+  "blocked_nodes": {
+    "kded": {
+      "state": "BLOCKED",
+      "blocked_by": "kdoctools",
+      "reason": "KDED binary build requires a real KDocTools 6.30 PASS artifact; materialization alone is not sufficient."
+    }
+  },
+  "materialization_manifest": "manifests/kde-tier3-support-materialization.json",
+  "attempt_ledger": "manifests/kde-tier3-support-build-level0-attempts.json",
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "artifact_sha256": "181ea1434e803453d61d345a28adeba5ad9cee09a7c93948c6ce3ef1214984ff",
+      "debs": {
+        "extra-cmake-modules": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+      }
+    }
+  },
+  "retained_predecessors": {
+    "karchive": {
+      "version": "6.30.0-0supralinux4",
+      "workflow_run": 34884764702,
+      "artifact_id": 10364726750,
+      "artifact_sha256": "0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e",
+      "dev_package": "libkf6archive-dev",
+      "debs": {
+        "libkf6archive-data": "da46f11fc791e0038b981b1fcddf6bc41718bd0fe9edd932bbd0e0ab26745d83",
+        "libkf6archive-dev": "e9d34c95f1d25405cc603b9f1db5ee18e779d170bd5e3b1bd420a1137ca38843",
+        "libkf6archive-doc": "a053b59865cf3dd4031dbcc0c417eef581f5ee57d2b1d3ca3844b59bdb6f7e65",
+        "libkf6archive6": "dca57450e619cd01834152a3fffb943342128bd61ca514fa082c8b0eb1ba7541"
+      }
+    },
+    "ki18n": {
+      "version": "6.30.0-0supralinux1",
+      "workflow_run": 35358920602,
+      "artifact_id": 10553916882,
+      "artifact_sha256": "2a0d66f2760c49ba1128b8b51c741173a72e6f3ab51f3eb17c3584896d30a678",
+      "dev_package": "libkf6i18n-dev",
+      "debs": {
+        "libkf6i18n-data": "3df2300d5aca640c8968859367ac3cd606a31a87e875ca207a71eeda6d03f45a",
+        "libkf6i18n-dev": "a9485f9fdb874cc6a61064a824d66567306122c39677ccf92f8adb3b0db14870",
+        "libkf6i18n-doc": "72e312ee1a7f0a7f0be4fc0e6e8b338ebaa92c1a5b6c2e7c225bc168ed85754f",
+        "libkf6i18n6": "fa60bd16ffb35ae90eb1ab324386961d973a9b0dd31a4947351d3afc652b6e58",
+        "libkf6i18nlocaledata6": "19a6b680b3f85fe04901d53fa6193dd773d72fc02c9337387776ec779f5c285a",
+        "libkf6i18nqml6": "0297393117c5b4b0fd284d32aa9040c5afbe91aa0da73b2f83d1b181a812f91c",
+        "qml6-module-org-kde-i18n-localedata": "147a716c4794a50a63160928228afd25c406a02af2b3d00637bed289027f6001",
+        "qml6-module-org-kde-ki18n": "07960032b6582476f0844b72d4f74884240c592e55eb0613390f0191dbd98299"
+      }
+    }
+  },
+  "nodes": {
+    "breeze-icons": {
+      "state": "prepared-pending-build",
+      "source_package": "kf6-breeze-icons",
+      "upstream_version": "6.30.0",
+      "package_version": "4:6.30.0-0supralinux1",
+      "runtime_package": "libkf6breezeicons6",
+      "dev_package": "libkf6breezeicons-dev",
+      "soname": "libKF6BreezeIcons.so.6",
+      "cmake_package": "KF6BreezeIcons",
+      "cmake_target": "KF6::BreezeIcons",
+      "expected_binary_packages": [
+        "breeze-icon-theme",
+        "breeze-icon-theme-rcc",
+        "kf6-breeze-icon-theme",
+        "kf6-breeze-icon-theme-rcc",
+        "libkf6breezeicons-dev",
+        "libkf6breezeicons6"
+      ],
+      "materialization": {
+        "workflow_run": 35698463205,
+        "job_id": 106650704762,
+        "artifact_id": 10680459412,
+        "artifact_sha256": "80955df1f6e90b6ad519b2f91cadbf1e4b56278e69a9827cdfa0b498a960fdb1",
+        "dsc_sha256": "656cb25eeca440541c96dac702b77ea8007683ea8f4b40538fc8240a73add9fa",
+        "debian_tar_sha256": "373b83d55799bf8202986b761b0c91fd5cca2c981017971bb021db7b9a1d5879",
+        "orig_tar_sha256": "93866c19791838fc9757b305e010e23bb38cb5f201e4ecc96cc8ef5f1173ebe6"
+      },
+      "predecessors": [],
+      "test_policy": "require-positive-upstream-ctest",
+      "payload_contract": "breeze-primary-plus-rcc-plus-ubuntu-transitionals",
+      "downstream_targets": [
+        "kiconthemes",
+        "ktexteditor-ci"
+      ],
+      "downstream_eligible": false
+    },
+    "kdoctools": {
+      "state": "prepared-pending-build",
+      "source_package": "kf6-kdoctools",
+      "upstream_version": "6.30.0",
+      "package_version": "6.30.0-0supralinux1",
+      "runtime_package": "libkf6doctools6",
+      "dev_package": "libkf6doctools-dev",
+      "soname": "libKF6DocTools.so.6",
+      "cmake_package": "KF6DocTools",
+      "cmake_target": "KF6::DocTools",
+      "expected_binary_packages": [
+        "kdoctools6",
+        "libkf6doctools-dev",
+        "libkf6doctools-doc",
+        "libkf6doctools6"
+      ],
+      "materialization": {
+        "workflow_run": 35698463205,
+        "job_id": 106650704804,
+        "artifact_id": 10680938435,
+        "artifact_sha256": "cf5c18889e9de6582ca05b4e8290686948942493aeaf54a318a2b4f4925cf5ac",
+        "dsc_sha256": "677d1d29efc3b247750861bf8f22c86f20df03cd288403b4db92f7d5b8b7f4b5",
+        "debian_tar_sha256": "49880de46bf0dda23cecd1abd34393743f40efb35666718632528046298a8e94",
+        "orig_tar_sha256": "b90b42ab222a3034729e517d0c06258abf6bdc28591ec78ad56f24aebbaaed94"
+      },
+      "predecessors": [
+        "karchive",
+        "ki18n"
+      ],
+      "test_policy": "require-positive-upstream-ctest",
+      "payload_contract": "meinproc-checkxml-docbook-runtime-plus-kf6doctools-library",
+      "downstream_targets": [
+        "kded",
+        "kio-ci"
+      ],
+      "downstream_eligible": false
+    }
+  },
+  "stable_promotion_requires_explicit_user_approval": true
+}
