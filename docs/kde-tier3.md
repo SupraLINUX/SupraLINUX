@@ -110,3 +110,10 @@ The next gate is now implemented as `manifests/kde-tier3-support-provider-audit.
 It audits Breeze Icons, KDocTools and KDED without treating Ubuntu as KDE authority. The runner compares the actual Resolute candidate upstream version with the selected KDE 6.30.0 contract, while separately proving Qt/XML/DocBook/Python platform providers.
 
 The provider audit has `package_state_effect=none`: success selects who must provide each support component but does not make any support component or Tier 3 node PASS. Semantic scope prevents evidence-only changes from rerunning the audit.
+
+
+## Support provider audit PASS
+
+Run `35696178617` proved that Resolute carries Breeze Icons, KDocTools and KDED at `6.24.0-0ubuntu1`, below the selected KDE Frameworks `6.30.0` contract. All three support components therefore select **SupraLINUX** as provider.
+
+The audit itself changes no package state. The three support components remain pending and advance to `package-contract-required`. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**.
