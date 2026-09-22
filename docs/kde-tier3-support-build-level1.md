@@ -100,3 +100,8 @@ Binary SHA-256:
 Attempts 1–3 remain preserved as historical validation FAILs. Attempt 4 is the single terminal PASS.
 
 The Tier 3 support sub-DAG is now closed: **3 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+## Canonical promotion
+
+The level-1 campaign manifest is now terminal `PASS`: KDED is `PASS` and downstream-eligible, attempts 1–3 remain historical FAILs, attempt 4 is the single terminal PASS, and the pending execution request is consumed by artifact `10691372157`. No further level-1 rebuild is requested.
