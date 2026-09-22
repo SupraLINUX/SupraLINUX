@@ -1,6 +1,6 @@
 # KDE Tier 2 provider audit
 
-Status: **provider audit batch 4 active — KMime**  
+Status: **provider audit batch 4 PASS — KMime**  
 Reviewed: **2026-09-20**
 
 ## Scope
@@ -133,3 +133,12 @@ Selected upstream profile:
 - no legacy `KPim6Mime` provider is required to build the Frameworks KMime target.
 
 This audit validates provider availability/profile only. It does **not** establish package PASS, ABI compatibility with legacy KMime, or co-installation compatibility.
+
+
+## Provider audit batch 4 PASS
+
+Run `35684076926`, job `106607074116`, on commit `ed4ffead3122bec605979c0240c1d6bf2c58d65d`: **PASS**.
+
+Evidence artifact `10676051681` has SHA-256 `ed07314f0ea91e73dfc8f80e1d36033318ee1d4bfcb7250f17612c5b78021872`. Resolute provided Qt `6.10.2` through `qt6-base-dev 6.10.2+dfsg-7`; the selected Core/Test profile passed and the retained KCodecs predecessor was accepted.
+
+Package state is unchanged: KMime remains pending. It advances only to `package-contract-ready`.

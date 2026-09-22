@@ -145,7 +145,7 @@ active=discovery.get("nodes",{})
 req(set(active)==pending_ids,"Tier2 active discovery must contain exactly current pending nodes")
 for node in sorted(pending_ids):
     req(active[node].get("readiness") in {"package-lane-pending","package-contract-ready","build-ready"},f"{node}: discovery readiness vocabulary")
-req(active["kmime"].get("readiness")=="package-lane-pending" and active["kmime"].get("architecture_decision")=="ADR-0002-accepted","KMime accepted decision/provider-audit lane")
+req(active["kmime"].get("readiness") in {"package-lane-pending","package-contract-ready","build-ready"} and active["kmime"].get("architecture_decision")=="ADR-0002-accepted","KMime accepted decision/lifecycle lane")
 snap=discovery.get("promoted_snapshot",{})
 expected_snapshot={"pass":len(pass_ids),"pending":len(pending_ids),"current_fail":0,"blocked":0}
 req(snap==expected_snapshot,"Tier2 promoted snapshot")
