@@ -182,3 +182,10 @@ Because upstream KDED exports no Framework library, this gate validates its exec
 KDED attempt 1 in run `35702647931` compiled successfully, but the post-build payload gate produced a false negative by checking for `kded6.8` instead of the Debian-installed compressed manpage `kded6.8.gz`.
 
 The attempt is retained as historical FAIL at `payload-contract`. KDED remains pending in remediation, not PASS. No package revision is bumped because package contents are unchanged; only the CI validator is corrected.
+
+
+## Support build level 1 — attempt 2 retained FAIL
+
+KDED attempt 2 in run `35719952518` passed the corrected payload validation, Lintian and package-install closure, then failed only because `kded6 --version` tried to initialize Qt's `xcb` platform on a headless runner.
+
+The executable smoke is remediated with `QT_QPA_PLATFORM=offscreen`. This is a CI-only execution environment fix, so KDED remains `6.30.0-0supralinux1`; the package payload is unchanged.
