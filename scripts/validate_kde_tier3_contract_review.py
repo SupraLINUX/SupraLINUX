@@ -22,8 +22,8 @@ req(r.get("package_state_effect")=="none","Tier3 review package-state semantics"
 req(r.get("selected_nodes")==selected,"Tier3 review selected nodes")
 req(r.get("materialization_authorized") is False,"Tier3 review must not authorize materialization while pending/review-only")
 req(r.get("package_build_authorized") is False,"Tier3 review must not authorize builds")
-req(t.get("discovery_policy",{}).get("phase") in {"package-contract-review","package-contract-review-pass","materialization"},"Tier3 canonical review phase")
-req(t.get("support_components",{}).get("next_gate") in {"tier3-package-contract-review","tier3-materialization"},"Tier3 canonical review next gate")
+req(t.get("discovery_policy",{}).get("phase") in {"package-contract-review","package-contract-review-pass","package-contract-decision","materialization"},"Tier3 canonical review phase")
+req(t.get("support_components",{}).get("next_gate") in {"tier3-package-contract-review","tier3-package-contract-decision","tier3-materialization"},"Tier3 canonical review next gate")
 
 if r.get("status")=="pending-ci":
     req(r.get("evidence") is None,"pending Tier3 review evidence")
