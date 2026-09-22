@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-21",
+  "as_of": "2026-09-22",
   "scope": "kde-frameworks-tier2-6.30",
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
@@ -23,12 +23,12 @@
   },
   "nodes": {
     "kmime": {
-      "readiness": "compatibility-decision-required",
+      "readiness": "package-lane-pending",
       "tier1_predecessors": [
         "kcodecs"
       ],
-      "blocker": "ADR-0002",
-      "issue": "Frameworks KMime changes version line, CMake package/target namespace and ELF library basename relative to Ubuntu 26.04's PIM KMime."
+      "architecture_decision": "ADR-0002-accepted",
+      "compatibility_policy": "KF6Mime authoritative; Ubuntu KPim6Mime available on demand only"
     }
   },
   "next_actions": [
