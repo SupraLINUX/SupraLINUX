@@ -5,7 +5,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 MANIFEST="$ROOT/manifests/kde-tier2-kmime-compatibility-audit.json"
 WORK="$ROOT/.work/kde-tier2-kmime-compatibility-audit"
 EVIDENCE="$ROOT/evidence/kde-tier2-kmime-compatibility-audit"
-FRAMEWORK_ARTIFACT_DIR="\${FRAMEWORK_ARTIFACT_DIR:-}"
+FRAMEWORK_ARTIFACT_DIR="${FRAMEWORK_ARTIFACT_DIR:-}"
 
 rm -rf "$WORK" "$EVIDENCE"
 mkdir -p "$WORK/framework" "$WORK/legacy" "$WORK/extracted" "$EVIDENCE"
@@ -187,7 +187,7 @@ PY
 mapfile -t FRAMEWORK_DEBS < <(find "$WORK/framework" -maxdepth 1 -type f -name '*.deb' -print | sort)
 mapfile -t LEGACY_RUNTIME_DEBS < <(find "$WORK/legacy" -maxdepth 1 -type f \( -name 'libkmime-data_*.deb' -o -name 'libkpim6mime6_*.deb' \) -print | sort)
 set +e
-sudo apt-get -s -o Debug::pkgProblemResolver=yes install "\${FRAMEWORK_DEBS[@]}" "\${LEGACY_RUNTIME_DEBS[@]}" >"$EVIDENCE/apt-solver-simulation.log" 2>&1
+apt-get -s -o Debug::pkgProblemResolver=yes install "${FRAMEWORK_DEBS[@]}" "${LEGACY_RUNTIME_DEBS[@]}" >"$EVIDENCE/apt-solver-simulation.log" 2>&1
 solver_rc=$?
 set -e
 printf '%s\n' "$solver_rc" > "$EVIDENCE/apt-solver-exit-code.txt"
