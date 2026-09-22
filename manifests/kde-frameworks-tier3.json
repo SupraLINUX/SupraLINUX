@@ -1,0 +1,423 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-22",
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "tier": 3,
+  "tier_definition": "May depend on Tier 1, Tier 2 and other Tier 3 KDE Frameworks.",
+  "tier_reference": "https://api.kde.org/",
+  "release_reference": "https://kde.org/info/kde-frameworks-6.30.0/",
+  "canonical_tier2_precondition": {
+    "manifest": "manifests/kde-frameworks-tier2.json",
+    "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
+  },
+  "discovery_policy": {
+    "phase": "source-inventory",
+    "dependencies": "not-yet-materialized",
+    "provider_audit": "not-authorized-before-dependency-discovery",
+    "package_contracts": "not-authorized-before-dependency-discovery",
+    "package_builds": "not-authorized-before-dependency-discovery"
+  },
+  "nodes": [
+    {
+      "id": "baloo",
+      "name": "Baloo",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/baloo-6.30.0.tar.xz",
+      "source_sha256": "a59d33a919bfa1d164c8f3a6f992c609edaf2131ac5f52ea4ecb77f6fbc53be1",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "kbookmarks",
+      "name": "KBookmarks",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kbookmarks-6.30.0.tar.xz",
+      "source_sha256": "680120f09929d51da0a65e96a1f7d20ffbbdd2795a165719b0d07e00475e77c4",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "kcmutils",
+      "name": "KCMUtils",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kcmutils-6.30.0.tar.xz",
+      "source_sha256": "0159f80d030ac250b0b353113a55c013ed7e38cb0b678df44d2f0d0b2aca944c",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "kconfigwidgets",
+      "name": "KConfigWidgets",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kconfigwidgets-6.30.0.tar.xz",
+      "source_sha256": "6efd9fc7786a7e979b32904aeadf1d2d8e69a5da110f8ebd45f95ec02de41f77",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "kdav",
+      "name": "KDAV",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kdav-6.30.0.tar.xz",
+      "source_sha256": "08d95cf546c941dbe21a76fbc8b88a466f276ab29e866600994f4f60d604c7f4",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "kdesu",
+      "name": "KDESu",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kdesu-6.30.0.tar.xz",
+      "source_sha256": "9bf244884b09ce38ad84d00e5879e798b02e1610ec8f3d9ee6c93e7502b356e2",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "kiconthemes",
+      "name": "KIconThemes",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kiconthemes-6.30.0.tar.xz",
+      "source_sha256": "c0c684823d0e087f35168cd79f1053fd358bb8fb47b27996a11c7d7ee3da6f4d",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "kio",
+      "name": "KIO",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kio-6.30.0.tar.xz",
+      "source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "kjobwidgets",
+      "name": "KJobWidgets",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kjobwidgets-6.30.0.tar.xz",
+      "source_sha256": "bf36e3619df1c6ad3d900bd36433d97ab295be41c1cc401ff0e766380788bbae",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "knewstuff",
+      "name": "KNewStuff",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/knewstuff-6.30.0.tar.xz",
+      "source_sha256": "85408768b5c3f4b0b51ee6a14ae73fea263f451404e266e286c55e0c17e44037",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "knotifyconfig",
+      "name": "KNotifyConfig",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/knotifyconfig-6.30.0.tar.xz",
+      "source_sha256": "4a133decdb0d3731dbaa1d3625b30f057089e5c59c8326ff88a047cef35b2efb",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "kparts",
+      "name": "KParts",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kparts-6.30.0.tar.xz",
+      "source_sha256": "99f5a0e3a4da10e1a0fbfb505ae966cd87627f887dd07929a920afe41c862ac0",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "kpeople",
+      "name": "KPeople",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kpeople-6.30.0.tar.xz",
+      "source_sha256": "094868f11c8c46e57a077c2788a39c6ee0b0ebc2b64279c6f7c70a5152f518e7",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "krunner",
+      "name": "KRunner",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/krunner-6.30.0.tar.xz",
+      "source_sha256": "0885d0936aec6dc8553c673f1c685013e345b933a52812a07c5bddd1eebdb551",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "ksvg",
+      "name": "KSvg",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/ksvg-6.30.0.tar.xz",
+      "source_sha256": "7b7aba4e9baa88bfb303977e139e8a105b5cd243443029ee773954307b51eb91",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "ktexteditor",
+      "name": "KTextEditor",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/ktexteditor-6.30.0.tar.xz",
+      "source_sha256": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "ktextwidgets",
+      "name": "KTextWidgets",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/ktextwidgets-6.30.0.tar.xz",
+      "source_sha256": "b06b11bb727bf9c3578797b1e40daad5f48e10433e456a337f1c40b4082879c8",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "kwallet",
+      "name": "KWallet",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kwallet-6.30.0.tar.xz",
+      "source_sha256": "93cb9c1df2630807c04bf8c30312e75ae3bb466c77dd9b29bb2c752e71d34a26",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "kxmlgui",
+      "name": "KXMLGui",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kxmlgui-6.30.0.tar.xz",
+      "source_sha256": "10fb8a0f7b874248ff60d9a8ee4e1f06a0efcf01b0d34d7635dfff86e848c352",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    },
+    {
+      "id": "purpose",
+      "name": "Purpose",
+      "upstream_tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/purpose-6.30.0.tar.xz",
+      "source_sha256": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862",
+      "upstream_ref": "v6.30.0",
+      "state": "pending",
+      "planning": {
+        "readiness": "dependency-discovery-required",
+        "dependency_authority": "kde-upstream",
+        "package_contract": "not-authorized"
+      },
+      "packaging": {
+        "state": "pending",
+        "package_version": null,
+        "downstream_eligible": false
+      }
+    }
+  ]
+}
