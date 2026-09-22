@@ -168,3 +168,10 @@ Run `35700002095` produced real downstream-eligible PASS artifacts for both leve
 The support sub-DAG is now **2 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**. KDED is no longer blocked and becomes the sole runnable node in support build level 1.
 
 The canonical Tier 3 Framework inventory itself remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+## Support build level 1 activated
+
+KDED is now the sole runnable support node. Its build consumes the real PASS KDocTools artifact from level 0 plus pinned KConfig, KCoreAddons, KCrash, KDBusAddons and KService artifacts; KArchive and KI18n remain explicitly modeled as package-install closure rather than invented direct KDED edges.
+
+Because upstream KDED exports no Framework library, this gate validates its executable, DBus/systemd payload and CMake config instead of fabricating a SONAME contract.
