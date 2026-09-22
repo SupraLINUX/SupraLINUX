@@ -14,9 +14,9 @@
   "discovery_policy": {
     "phase": "dependency-graph-ready",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
-    "provider_audit": "support-components-PASS",
-    "package_contracts": "support-contracts-ready",
-    "package_builds": "support-build-level1-authorized"
+    "provider_audit": "tier3-frameworks-required",
+    "package_contracts": "not-authorized-before-tier3-provider-audit",
+    "package_builds": "not-authorized-before-tier3-provider-audit"
   },
   "nodes": [
     {
@@ -443,22 +443,23 @@
   "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
   "support_components": {
     "manifest": "manifests/kde-frameworks-tier3-dependencies.json",
-    "pending": [
-      "kded"
-    ],
+    "pending": [],
     "policy": "KDE upstream support components are separate from API tiers and retain their own build/runtime semantics.",
     "provider_audit_manifest": "manifests/kde-tier3-support-provider-audit.json",
     "provider_audit": "PASS",
-    "next_gate": "support-build-level1",
+    "next_gate": "tier3-provider-audit",
     "package_contract_manifest": "manifests/kde-tier3-support-package-contracts.json",
     "materialization_manifest": "manifests/kde-tier3-support-materialization.json",
     "materialization": "PASS",
     "build_level0_manifest": "manifests/kde-tier3-support-build-level0.json",
     "pass": [
       "breeze-icons",
-      "kdoctools"
+      "kdoctools",
+      "kded"
     ],
     "build_level0": "PASS",
-    "build_level1_manifest": "manifests/kde-tier3-support-build-level1.json"
+    "build_level1_manifest": "manifests/kde-tier3-support-build-level1.json",
+    "build_level1": "PASS",
+    "support_subdag": "PASS"
   }
 }
