@@ -294,6 +294,9 @@ jobs:
       - name: Validate KDE Tier 3 contract review
         run: python3 scripts/validate_kde_tier3_contract_review.py
 
+      - name: Validate KDE Tier 3 package-contract decisions
+        run: python3 scripts/validate_kde_tier3_contract_decisions.py
+
       - name: Validate KDE Attica 6.30 packaging preparation
         run: python3 scripts/validate_kde_attica_package.py
 
