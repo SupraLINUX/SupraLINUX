@@ -5,8 +5,8 @@
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "frameworks_series": "6.30.0",
-  "state": "compatibility-provider-required",
-  "canonical_snapshot": "14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED",
+  "state": "PASS",
+  "canonical_snapshot": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED",
   "selected_nodes": [
     "kmime"
   ],
@@ -65,9 +65,9 @@
   },
   "nodes": {
     "kmime": {
-      "state": "compatibility-provider-required",
-      "last_result": "INFRA",
-      "downstream_eligible": false,
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
       "source_package": "kf6-kmime",
       "upstream_version": "6.30.0",
       "source_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
@@ -111,7 +111,7 @@
         "legacy_source_version": "25.12.3-0ubuntu1",
         "runtime_coinstallation_required": true,
         "fake_abi_metadata_forbidden": true,
-        "audit_status": "pending",
+        "audit_status": "PASS",
         "stock_provider_observation": {
           "legacy_packages": [
             "libkpim6mime6",
@@ -125,7 +125,15 @@
           ],
           "framework_metadata_gate": "PASS",
           "framework_build_and_tests": "PASS"
-        }
+        },
+        "audit_evidence": {
+          "workflow_run": 35690284355,
+          "job_id": 106625630885,
+          "artifact_id": 10678073973,
+          "artifact_sha256": "7b0c9175b1e0f48eb1d18e9ceb1af03381c4de8d0b322bc619dd7be224307c5b"
+        },
+        "provider_status": "PASS",
+        "provider_manifest": "manifests/kde-tier2-kmime-legacy-provider.json"
       },
       "last_failure_evidence": {
         "result": "INFRA",
@@ -145,12 +153,38 @@
         "consumer_smoke": "PASS",
         "legacy_abi_metadata": "PASS",
         "cause": "Installing Ubuntu Resolute libkpim6mime6 + libkmime-data causes APT to remove libkf6mime-data, libkf6mime-dev and libkf6mime6. The Frameworks package itself built and validated successfully; the unresolved defect is the stock legacy-provider packaging/co-installation contract."
+      },
+      "pass_evidence": {
+        "result": "PASS",
+        "framework_build": {
+          "workflow_run": 35687831684,
+          "run_attempt": 2,
+          "job_id": 106619132039,
+          "artifact_id": 10677716050,
+          "artifact_sha256": "ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36",
+          "tests": "17/17 PASS",
+          "lintian": "PASS-errors",
+          "apt_check": "PASS",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6Mime.so.6"
+        },
+        "compatibility_provider": {
+          "workflow_run": 35691309612,
+          "job_id": 106628834481,
+          "artifact_id": 10679420779,
+          "artifact_sha256": "f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b",
+          "package_version": "25.12.3-0ubuntu1+supralinux1",
+          "coinstallation": "PASS",
+          "apt_check": "PASS",
+          "legacy_consumer": "PASS",
+          "framework_consumer": "PASS"
+        }
       }
     }
   },
   "activation": {
-    "status": "compatibility-provider-required",
-    "reason": "stock-ubuntu-legacy-provider-removes-frameworks-provider",
+    "status": "PASS",
+    "reason": "framework-build-plus-compatibility-provider-closure-pass",
     "package_state_effect": "none"
   }
 }
