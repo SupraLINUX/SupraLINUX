@@ -28,9 +28,7 @@
   "provider_audit_required": [],
   "package_contract_ready": [],
   "human_decision_required": [],
-  "build_queue": [
-    "kmime"
-  ],
+  "build_queue": [],
   "audit_batch_size": 5,
   "next_provider_audit_batch": [],
   "policy": {
@@ -39,5 +37,8 @@
     "package_contract_precedes_build_attempt": true,
     "only_pass_artifacts_feed_dependents": true,
     "stable_promotion_requires_explicit_user_approval": true
-  }
+  },
+  "compatibility_provider_required": [
+    "kmime"
+  ]
 }

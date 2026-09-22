@@ -19,11 +19,12 @@
     "compatibility-decision-required": "A compatibility/packaging architecture decision is required before materializing the package.",
     "note": "These are planning/readiness states, not package FAIL/BLOCKED results.",
     "package-contract-ready": "Provider audit is PASS; package contract/tree may now be materialized. Package state remains pending until a real build attempt.",
-    "build-ready": "Provider audit and deterministic package materialization are PASS; node may enter a real clean build. Package state remains pending until that build finishes."
+    "build-ready": "Provider audit and deterministic package materialization are PASS; node may enter a real clean build. Package state remains pending until that build finishes.",
+    "compatibility-provider-required": "The authoritative Frameworks package is materialized and has passed its own build gates, but an external compatibility provider must be adapted before the node can reach package PASS."
   },
   "nodes": {
     "kmime": {
-      "readiness": "build-ready",
+      "readiness": "compatibility-provider-required",
       "tier1_predecessors": [
         "kcodecs"
       ],
@@ -34,13 +35,15 @@
       "materialization_run": 35687009946,
       "materialization_run_attempt": 2,
       "materialization_artifact_id": 10677073138,
-      "compatibility_policy": "KF6Mime authoritative; Ubuntu KPim6Mime available on demand only"
+      "compatibility_audit": "pending",
+      "stock_ubuntu_coinstall_result": "installing libkpim6mime6 + libkmime-data removes libkf6mime6/libkf6mime-dev/libkf6mime-data",
+      "compatibility_policy": "KF6Mime authoritative; legacy KPim6Mime must remain available on demand without replacing KF6Mime"
     }
   },
   "next_actions": [
-    "Retry the KMime clean-build lane with the reviewed replacement materialization.",
-    "Require 17+ upstream tests, exact Frameworks binary set, Lintian, ABI/SONAME, APT closure, CMake consumer, exact KCodecs buildinfo proof, legacy runtime co-installation and no fake legacy ABI metadata.",
-    "Keep the first KMime package attempt as historical INFRA/post-sbuild evidence; do not rewrite it as FAIL.",
+    "Audit Ubuntu Resolute kmime 25.12.3 binary metadata (Depends/Conflicts/Breaks/Replaces/Provides) and payload overlap against SupraLINUX KF6Mime.",
+    "Design the smallest SupraLINUX compatibility-provider adaptation that preserves libKPim6Mime.so.6 for Ubuntu software without replacing or constraining KF6Mime.",
+    "Do not rebuild KMime Frameworks while the compatibility-provider audit is pending; its second build already passed source/tests/Lintian/ABI/consumer gates.",
     "Keep all 14 existing Tier 2 PASS nodes retained/downstream-eligible."
   ],
   "promoted_snapshot": {

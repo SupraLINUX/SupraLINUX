@@ -29,6 +29,42 @@
           "replacement_materialization_run": 35687009946,
           "replacement_materialization_job": 106616152530
         }
+      },
+      {
+        "attempt": 2,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "c7056cd8189ea1afe401ca30a97558075d0d746b",
+        "workflow_run": 35687831684,
+        "run_attempt": 2,
+        "job_id": 106619132039,
+        "artifact_id": 10677716050,
+        "artifact_sha256": "ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36",
+        "rootfs_artifact_id": 10677870006,
+        "rootfs_artifact_sha256": "14bce5a6b91833dcbc0531492cbd7e46127c7baa9da8b58d16b3d4b7fa905dd5",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "result": "INFRA",
+        "stage": "legacy-runtime-coinstallation",
+        "package_state_effect": "none",
+        "tests": "17/17 PASS",
+        "lintian": "PASS-errors",
+        "apt_check_before_legacy": "PASS",
+        "consumer_smoke": "PASS",
+        "predecessor_buildinfo_proof": "PASS",
+        "legacy_abi_metadata": "PASS",
+        "cause": "APT removes the installed SupraLINUX KF6Mime packages when the stock Ubuntu Resolute legacy runtime/data provider is installed on demand.",
+        "observed_solver_action": {
+          "requested": [
+            "libkpim6mime6",
+            "libkmime-data"
+          ],
+          "removed": [
+            "libkf6mime-data",
+            "libkf6mime-dev",
+            "libkf6mime6"
+          ]
+        },
+        "next_action": "legacy-provider-metadata-and-payload-audit"
       }
     ]
   },

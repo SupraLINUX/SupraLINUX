@@ -1898,12 +1898,12 @@
       },
       "packaging": {
         "state": "pending",
-        "reason": "clean-build-remediation-pending",
+        "reason": "legacy-provider-coinstallation-remediation-required",
         "compatibility_policy": "kf6mime-authoritative-legacy-kpim6mime-on-demand"
       },
       "state": "pending",
       "planning": {
-        "readiness": "build-ready",
+        "readiness": "compatibility-provider-required",
         "provider_audit": "complete",
         "package_contract": "materialized",
         "architecture_decision": "ADR-0002-accepted",
@@ -1962,9 +1962,21 @@
           "classification": "resolute-toolchain-symbol-baseline",
           "source_attempt_run": 35686463559,
           "source_attempt_job": 106614505106,
-          "status": "replacement-materialization-pass",
+          "status": "frameworks-build-pass-legacy-provider-blocked",
           "replacement_materialization_run": 35687009946,
           "replacement_materialization_job": 106616152530,
+          "package_state_effect": "none"
+        },
+        "compatibility_audit": {
+          "status": "pending",
+          "trigger": {
+            "workflow_run": 35687831684,
+            "run_attempt": 2,
+            "job_id": 106619132039,
+            "artifact_id": 10677716050,
+            "artifact_sha256": "ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36"
+          },
+          "observation": "Ubuntu Resolute libkpim6mime6 + libkmime-data installation removes libkf6mime6, libkf6mime-dev and libkf6mime-data.",
           "package_state_effect": "none"
         }
       }

@@ -311,3 +311,12 @@ KMime `kf6-kmime 6.30.0-0supralinux1` has deterministic materialization PASS fro
 The generated tree SHA-256 is `876e44ff9afd3cc6257046b86ac6d88de5b0f1e07308dace5fa6b653438cd0fc`; the generated Debian tree is `1b489be2fc5479e7ef1615aa5d0c3255a1726a27a4d3be3ced66c116bc9eb385`. The authoritative orig remains exactly KDE upstream SHA-256 `2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc`.
 
 KMime remains package-state `pending` and advances only to `build-ready`. The next gate is a real clean Ubuntu 26.04 sbuild plus compatibility/co-installation validation. Canonical Tier 2 remains **14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+## 2026-09-22 — KMime compatibility-provider gate
+
+KMime Frameworks 6.30 now passes its own clean-build path through 17/17 upstream tests, Lintian, ABI, runtime closure and CMake consumer validation. The remaining gate is external compatibility with Ubuntu's legacy PIM KMime runtime.
+
+A real co-installation test showed that installing Resolute `libkpim6mime6 + libkmime-data` removes the SupraLINUX `libkf6mime6/libkf6mime-dev/libkf6mime-data` set. Canonical Tier 2 therefore remains **14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**, with KMime in `compatibility-provider-required`.
+
+This does not transfer authority back to Ubuntu. KF6Mime remains the authoritative KDE provider. The audit now determines how to keep the legacy Ubuntu ABI available on demand without allowing its packaging to replace or constrain the Frameworks provider.

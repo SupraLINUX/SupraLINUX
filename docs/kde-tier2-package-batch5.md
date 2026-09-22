@@ -39,3 +39,23 @@ Run `35687009946`, attempt 2, job `106616152530` then produced the reviewed repl
 - KDE authority orig SHA-256 `2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc`.
 
 KMime is again **build-ready** and remains package-state `pending`. Batch 5 is re-armed with only this replacement materialization.
+
+
+## Attempt 2 — Frameworks build PASS, stock legacy provider blocks co-installation
+
+Run `35687831684`, attempt 2, job `106619132039`, consumed the corrected replacement materialization.
+
+The **KF6Mime side passed**:
+- clean `sbuild` completed successfully;
+- **17/17 upstream tests PASS**;
+- Lintian completed with no errors;
+- exact Frameworks binary set was produced;
+- `libKF6Mime.so.6` ABI gate passed;
+- APT runtime closure and external `KF6::Mime` CMake consumer passed;
+- the no-fake-legacy-`Provides/Replaces/Breaks` gate passed.
+
+The final compatibility gate exposed the actual remaining blocker. Requesting Ubuntu Resolute `libkpim6mime6 + libkmime-data` made APT remove `libkf6mime-data`, `libkf6mime-dev` and `libkf6mime6`. Therefore the stock Ubuntu legacy provider **cannot satisfy ADR-0002 co-installation as packaged**.
+
+This is retained as **INFRA/integration compatibility evidence**, not a KMime source FAIL. Artifact `10677716050`, SHA-256 `ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36`. KMime remains canonical `pending` and moves to `compatibility-provider-required`.
+
+The next step is a provider audit of Ubuntu's exact binary metadata and payload overlap. No further Frameworks rebuild is valid until that audit identifies the minimal compatibility packaging adaptation.
