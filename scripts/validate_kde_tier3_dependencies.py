@@ -105,7 +105,7 @@ for node in ("breeze-icons","kdoctools","kded"):
     req(c.get("readiness")=="materialized",f"{node}: materialized readiness")
     req(mat.get("status")=="PASS" and mat.get("package_state_effect")=="none",f"{node}: materialization evidence linkage")
 gate=d.get("topology",{}).get("support_build_gate",{})
-req(gate.get("level0")==["breeze-icons","kdoctools"] and gate.get("level1")==["kded"],"support binary-build gate")
+req(gate.get("level0")==["breeze-icons","kdoctools"] and gate.get("level1")==["kded"],"support binary-build gate")\nreq(gate.get("manifest")=="manifests/kde-tier3-support-build-level0.json","support build level0 campaign link")
 
 doc=(ROOT/"docs/kde-tier3.md").read_text()
 for token in ("Tier 3 dependency graph","Breeze Icons","KDocTools","KDED","4 topological"):
