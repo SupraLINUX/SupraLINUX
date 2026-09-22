@@ -62,12 +62,12 @@ for node_id,sha in expected.items():
     req(n.get("upstream_ref")=="v6.30.0",f"{node_id}: upstream ref")
     req(n.get("state")=="pending",f"{node_id}: initial canonical state")
     planning=n.get("planning",{})
-    req(planning.get("readiness")=="package-contract-reference-pass",f"{node_id}: package-contract reference PASS lifecycle")
+    req(planning.get("readiness")=="package-contract-tree-pending",f"{node_id}: package-contract tree pending lifecycle")
     req(planning.get("provider_audit")=="PASS",f"{node_id}: provider audit PASS lifecycle")
     req(planning.get("provider_audit_manifest")=="manifests/kde-tier3-provider-audit.json",f"{node_id}: provider audit manifest linkage")
     req(planning.get("dependency_authority")=="kde-upstream",f"{node_id}: dependency authority")
     req(planning.get("provider")=="supralinux",f"{node_id}: selected provider")
-    req(planning.get("package_contract")=="reference-capture-pass",f"{node_id}: package-contract reference PASS")\n    req(planning.get("package_contract_manifest")=="manifests/kde-tier3-package-contracts.json",f"{node_id}: package-contract manifest linkage")
+    req(planning.get("package_contract")=="packaging-tree-pending",f"{node_id}: package-contract packaging-tree pending")\n    req(planning.get("package_contract_manifest")=="manifests/kde-tier3-package-contracts.json",f"{node_id}: package-contract manifest linkage")
     pe=planning.get("provider_audit_evidence",{})
     req(pe.get("workflow_run")==35725458767 and pe.get("artifact_id")==10692912109,f"{node_id}: provider audit evidence linkage")
     packaging=n.get("packaging",{})
@@ -75,10 +75,10 @@ for node_id,sha in expected.items():
     req(node_id not in dag.get("nodes",{}),f"{node_id}: pending Tier3 node must not be promoted into canonical DAG")
 
 policy=tier3.get("discovery_policy",{})
-req(policy.get("phase")=="package-contract-reference-pass","Tier3 discovery phase")
+req(policy.get("phase")=="package-contract-tree-capture","Tier3 discovery phase")
 req(policy.get("dependencies")=="materialized-from-kde-upstream-v6.30.0","Tier3 dependency state")
 req(policy.get("provider_audit")=="PASS","Tier3 provider audit gate")
-req(policy.get("package_contracts")=="reference-capture-pass","Tier3 package-contract gate")
+req(policy.get("package_contracts")=="packaging-tree-pending","Tier3 package-contract gate")
 req(policy.get("package_builds")=="not-authorized-before-tier3-package-contracts","Tier3 package-build gate")
 support=tier3.get("support_components",{})
 req(support.get("provider_audit_manifest")=="manifests/kde-tier3-support-provider-audit.json","Tier3 support provider-audit manifest")
@@ -96,7 +96,7 @@ req(support.get("next_gate")=="tier3-package-contract-tree-capture","Tier3 suppo
 doc=(ROOT/"docs/kde-tier3.md").read_text()
 req("0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED" in doc,"Tier3 docs canonical snapshot")
 req("KDE upstream" in doc and "Ubuntu" in doc,"Tier3 docs authority/provider boundary")
-req("package-contract-reference-pass" in doc,"Tier3 docs lifecycle")
+req("package-contract-tree-pending" in doc,"Tier3 docs lifecycle")
 
 if errors:
     for e in errors:
