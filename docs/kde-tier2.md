@@ -252,3 +252,14 @@ Contract batch 3 deterministic materialization is now **3/3 PASS**. KDeclarative
 The final materialized KDeclarative tree preserves Ubuntu's `libkquickcontrolsprivate0` contract with the complete SOVERSION-0 library payload. KService contains no mandatory KDocTools dependency after applying upstream's optional-provider semantics. KFileMetaData retained its first valid materialization without redundant rebuilding.
 
 Canonical package state is still **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until clean-build evidence promotes these nodes.
+
+
+## Tier 2 Package Batch 4 — clean build lane
+
+KDeclarative, KFileMetaData and KService are now prepared for a shared-input clean-build campaign.
+
+The lane consumes only retained SupraLINUX PASS Framework artifacts plus Ubuntu Resolute platform dependencies. KDeclarative additionally pins KCoreAddons as a package-level closure input because the retained KGuiAddons development package depends on it. This closure is separate from KDE's upstream Framework DAG and is proven independently in the generated buildinfo.
+
+KDeclarative also carries explicit compatibility gates for Ubuntu's `libkquickcontrolsprivate0`: the binary must be emitted, its private library SONAME must be `libkquickcontrolsprivate.so.0`, exports must be non-empty, and all four KDeclarative QML binary packages must contain their QML metadata payload.
+
+Batch 4 keeps `fail-fast: false`, a shared clean Resolute rootfs and one validated retained-input bundle. Pre-sbuild failures are infrastructure events; BLOCKED remains distinct from FAIL. Canonical Tier 2 remains **11 PASS / 4 pending / 0 current FAIL / 0 BLOCKED** until real package PASS evidence is promoted.

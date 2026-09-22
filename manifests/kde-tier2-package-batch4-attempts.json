@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "batch": "tier2-batch-4",
+  "real_attempts": {
+    "kdeclarative": [],
+    "kfilemetadata": [],
+    "kservice": []
+  },
+  "blocked_events": {
+    "kdeclarative": [],
+    "kfilemetadata": [],
+    "kservice": []
+  },
+  "infrastructure_incidents": [],
+  "note": "Attempt begins immediately before clean sbuild. Pre-sbuild failures are INFRA. BLOCKED is not FAIL; FAIL requires an attempted package and a node-owned root cause."
+}
