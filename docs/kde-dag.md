@@ -504,3 +504,21 @@ KDE's current API inventory classifies exactly **20** Frameworks as Tier 3. Thei
 Canonical Tier 3 starts at **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. Every node is `dependency-discovery-required`; none is yet in the canonical PASS DAG.
 
 Because Tier 3 frameworks may depend on other Tier 3 frameworks, the next gate is global upstream dependency discovery followed by a topological partition. No provider audit, package contract or build is authorized until those edges are captured and validated.
+
+
+## Tier 3 upstream dependency graph ready
+
+The KDE Frameworks 6.30 Tier 3 graph is now source-derived and validated. It separates build, selected Linux profile, QML, test, runtime and CI-environment dependencies instead of flattening them into one relation.
+
+Build+test topology:
+- level 1: KBookmarks, KConfigWidgets, KDAV, KDESu, KIconThemes, KJobWidgets, KNewStuff, KPeople, KRunner, KSvg, KTextWidgets, KWallet;
+- level 2: KIO, KXMLGui;
+- level 3: Baloo, KCMUtils, KNotifyConfig, KParts;
+- level 4: KTextEditor, Purpose.
+
+The graph also discovered three KDE Frameworks 6.30 support components that are not assigned an API tier:
+- Breeze Icons: selected build predecessor for KIconThemes;
+- KDocTools: KIO/KDED CI-documentation profile predecessor;
+- KDED: KIO runtime predecessor.
+
+These are modeled explicitly as KDE-upstream components rather than being silently delegated to Ubuntu. Provider audit for the three support components is the next gate. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** and no Tier 3 package build is authorized yet.
