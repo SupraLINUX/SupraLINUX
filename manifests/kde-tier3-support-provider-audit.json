@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-22",
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "provider_platform": "ubuntu-resolute",
+  "claim": "provider-selection-only",
+  "authoritative_package_build": false,
+  "package_state_effect": "none",
+  "status": "pending-ci",
+  "components": {
+    "breeze-icons": {
+      "role": "selected-build-predecessor",
+      "required_upstream_version": "6.30.0",
+      "ubuntu_probe_package": "kf6-breeze-icon-theme",
+      "provider_decision": "pending-ci",
+      "retained_kde_predecessors": [
+        "extra-cmake-modules"
+      ],
+      "external_requirements": [
+        "qt6-base-dev",
+        "python3",
+        "python3-lxml"
+      ]
+    },
+    "kdoctools": {
+      "role": "ci-documentation-predecessor",
+      "required_upstream_version": "6.30.0",
+      "ubuntu_probe_package": "kdoctools6",
+      "provider_decision": "pending-ci",
+      "retained_kde_predecessors": [
+        "extra-cmake-modules",
+        "karchive",
+        "ki18n"
+      ],
+      "external_requirements": [
+        "qt6-base-dev",
+        "libxml2-dev",
+        "libxml2-utils",
+        "libxslt1-dev",
+        "docbook-xml",
+        "docbook-xsl"
+      ]
+    },
+    "kded": {
+      "role": "runtime-predecessor",
+      "required_upstream_version": "6.30.0",
+      "ubuntu_probe_package": "kded6",
+      "provider_decision": "pending-ci",
+      "retained_kde_predecessors": [
+        "extra-cmake-modules",
+        "kconfig",
+        "kcoreaddons",
+        "kcrash",
+        "kdbusaddons",
+        "kservice"
+      ],
+      "selected_ci_predecessors": [
+        "kdoctools"
+      ],
+      "external_requirements": [
+        "qt6-base-dev"
+      ]
+    }
+  },
+  "evidence": null,
+  "stable_promotion_requires_explicit_user_approval": true
+}
