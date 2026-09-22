@@ -267,7 +267,7 @@ Canonical readiness is now `package-contract-review-pass`. Tier 3 remains **0 PA
 The contract-review evidence has been converted into explicit SupraLINUX decisions. Canonical readiness is now `package-contract-ready` and package contract state is `not-materialized`.
 
 Materialization is the active gate. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**; no package build is authorized until source-package materialization completes.
-## Current canonical state — Tier 3 build-campaign planning
+## Current canonical state — Tier 3 `build-campaign-planning`
 
 Tier 3 source materialization remains closed at **20/20 PASS** from run `35746667704`; package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** because no Tier 3 binary build has been attempted.
 
