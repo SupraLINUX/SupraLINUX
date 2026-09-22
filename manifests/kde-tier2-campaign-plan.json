@@ -25,23 +25,14 @@
     "kunitconversion",
     "syndication"
   ],
-  "provider_audit_required": [
-    {
-      "node": "kmime",
-      "required_predecessors": [
-        "kcodecs"
-      ],
-      "conditional_frameworks": [],
-      "selected_profile": []
-    }
+  "provider_audit_required": [],
+  "package_contract_ready": [
+    "kmime"
   ],
-  "package_contract_ready": [],
   "human_decision_required": [],
   "build_queue": [],
   "audit_batch_size": 5,
-  "next_provider_audit_batch": [
-    "kmime"
-  ],
+  "next_provider_audit_batch": [],
   "policy": {
     "canonical_manifest_is_source_of_truth": true,
     "provider_audit_precedes_package_contract": true,

@@ -23,11 +23,13 @@
   },
   "nodes": {
     "kmime": {
-      "readiness": "package-lane-pending",
+      "readiness": "package-contract-ready",
       "tier1_predecessors": [
         "kcodecs"
       ],
       "architecture_decision": "ADR-0002-accepted",
+      "provider_audit": "PASS",
+      "provider_audit_run": 35684076926,
       "compatibility_policy": "KF6Mime authoritative; Ubuntu KPim6Mime available on demand only"
     }
   },
