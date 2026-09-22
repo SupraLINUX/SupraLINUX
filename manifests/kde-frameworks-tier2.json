@@ -1903,10 +1903,33 @@
       },
       "state": "pending",
       "planning": {
-        "readiness": "package-lane-pending",
-        "provider_audit": "required-before-materialization",
+        "readiness": "package-contract-ready",
+        "provider_audit": "complete",
         "package_contract": "not-materialized",
-        "architecture_decision": "ADR-0002-accepted"
+        "architecture_decision": "ADR-0002-accepted",
+        "provider_audit_basis": "upstream-v6.30.0-cmake-plus-ubuntu-resolute-provider-preflight",
+        "provider_audit_evidence": {
+          "result": "PASS",
+          "workflow_run": 35684076926,
+          "job_id": 106607074116,
+          "commit": "ed4ffead3122bec605979c0240c1d6bf2c58d65d",
+          "artifact_id": 10676051681,
+          "artifact_sha256": "ed07314f0ea91e73dfc8f80e1d36033318ee1d4bfcb7250f17612c5b78021872",
+          "claim": "provider-availability-and-selected-profile-only",
+          "package_state_effect": "none",
+          "ubuntu_version": "26.04",
+          "qt_upstream": "6.10.2",
+          "observed_providers": {
+            "qt6-base-dev": "6.10.2+dfsg-7"
+          },
+          "mandatory_qt_components": [
+            "Core",
+            "Test"
+          ],
+          "retained_predecessors": {
+            "kcodecs": "6.30.0-0supralinux1"
+          }
+        }
       }
     }
   ],
