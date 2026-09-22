@@ -14,7 +14,7 @@ canonical=[n["id"] for n in t["nodes"]]
 nodes={n["id"]:n for n in t["nodes"]}
 
 req(c.get("schema")==1,"Tier3 package-contract schema")
-req(c.get("state") in {"reference-capture-pending","reference-capture-pass","packaging-tree-pending","packaging-tree-pass","contracts-ready","materialized"},"Tier3 package-contract lifecycle")
+req(c.get("state") in {"reference-capture-pending","reference-capture-pass","packaging-tree-pending","packaging-tree-pass","contract-review-pass","contracts-ready","materialized"},"Tier3 package-contract lifecycle")
 req(c.get("source_authority")=="kde-upstream" and c.get("packaging_authority")=="supralinux","Tier3 contract authority boundary")
 req(c.get("frameworks_series")=="6.30.0","Tier3 contract Frameworks series")
 req(c.get("selected_nodes")==canonical and len(canonical)==20,"Tier3 contract canonical node set")
@@ -36,7 +36,7 @@ for node in canonical:
     req(x.get("upstream_version")=="6.30.0" and x.get("source_sha256")==n.get("source_sha256"),f"{node}: KDE source linkage")
     req(x.get("source_package")==f"kf6-{node}",f"{node}: source package")
     req(x.get("provider")=="supralinux",f"{node}: provider selection")
-    req(x.get("contract_state") in {"reference-capture-pending","reference-capture-pass","contract-ready","materialized"},f"{node}: contract lifecycle")
+    req(x.get("contract_state") in {"reference-capture-pending","reference-capture-pass","packaging-tree-pass","review-pending","review-pass","contract-ready","materialized"},f"{node}: contract lifecycle")
     req(n.get("state")=="pending",f"{node}: package state unchanged")
     req(n.get("packaging",{}).get("state")=="pending" and n.get("packaging",{}).get("downstream_eligible") is False,f"{node}: packaging remains pending")
     planning=n.get("planning",{})
@@ -55,7 +55,8 @@ else:
     req(isinstance(ev.get("artifact_id"),int) and len(ev.get("artifact_sha256",""))==64,"reference capture artifact")
     req(len(ev.get("snapshot_sha256",""))==64,"reference capture snapshot digest")
     for node in canonical:
-        tr=c["nodes"][node].get("technical_references",{})
+        x=c["nodes"][node]
+        tr=x.get("technical_references",{})
         for side in ("ubuntu","debian"):
             rr=tr.get(side,{})
             req(rr.get("source_package")==f"kf6-{node}",f"{node}/{side}: source identity")
