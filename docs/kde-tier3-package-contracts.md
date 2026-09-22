@@ -96,5 +96,5 @@ The reviewed deltas are now explicitly classified in `docs/kde-tier3-contract-de
 All 20 nodes are `package-contract-ready` with package version candidate `6.30.0-0supralinux1`. Materialization is authorized; package builds remain unauthorized.
 ## Materialization handoff
 
-The package-contract decision gate is closed and materialization is now implemented as a separate source-only gate. `manifests/kde-tier3-materialization.json` consumes these contracts without changing package PASS state. The materializer verifies the authoritative KDE tarball and exact Debian 6.30 packaging tree before applying the documented SupraLINUX overrides. Binary builds stay unauthorized until the promoted materialization evidence is followed by an explicit Tier 3 build-campaign planning gate.
+The package-contract decision gate is closed and the separate source-only materialization gate is now PASS (run `35746667704`, 20/20). `manifests/kde-tier3-materialization.json` consumes these contracts without changing package PASS state. The materializer verifies the authoritative KDE tarball and exact Debian 6.30 packaging tree before applying the documented SupraLINUX overrides. The promoted materialization evidence advances the project to `tier3-build-campaign-planning`. Binary builds remain unauthorized until that campaign is reviewed and explicitly activated.
 

@@ -6,7 +6,7 @@
   "frameworks_series": "6.30.0",
   "contract_manifest": "manifests/kde-tier3-package-contracts.json",
   "canonical_manifest": "manifests/kde-frameworks-tier3.json",
-  "state": "pending-ci",
+  "state": "PASS",
   "package_attempted": false,
   "package_state_effect": "none",
   "source_policy": "verify-kde-upstream-tarball-and-pinned-debian-6.30-packaging-before-adaptation",
@@ -47,26 +47,401 @@
     "source_tree_evidence": "deterministic-xz-tarball"
   },
   "nodes": {
-    "baloo": {"state": "pending"},
-    "kbookmarks": {"state": "pending"},
-    "kcmutils": {"state": "pending"},
-    "kconfigwidgets": {"state": "pending"},
-    "kdav": {"state": "pending"},
-    "kdesu": {"state": "pending"},
-    "kiconthemes": {"state": "pending"},
-    "kio": {"state": "pending"},
-    "kjobwidgets": {"state": "pending"},
-    "knewstuff": {"state": "pending"},
-    "knotifyconfig": {"state": "pending"},
-    "kparts": {"state": "pending"},
-    "kpeople": {"state": "pending"},
-    "krunner": {"state": "pending"},
-    "ksvg": {"state": "pending"},
-    "ktexteditor": {"state": "pending"},
-    "ktextwidgets": {"state": "pending"},
-    "kwallet": {"state": "pending"},
-    "kxmlgui": {"state": "pending"},
-    "purpose": {"state": "pending"}
+    "baloo": {
+      "state": "materialized",
+      "source_package": "kf6-baloo",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810107725,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10703700138,
+        "artifact_sha256": "28d91bcae969f33dba7150aaed34226443b4aecbb2ce88b911a11df934591916",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "a59d33a919bfa1d164c8f3a6f992c609edaf2131ac5f52ea4ecb77f6fbc53be1",
+        "reference_tree_sha256": "d5e63be64936b478d3ec2a9d9c493d79d5a662639a48c105d9651c8e8cb3f78d",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "kbookmarks": {
+      "state": "materialized",
+      "source_package": "kf6-kbookmarks",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810107754,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10702344615,
+        "artifact_sha256": "322e2c4b7e013e6fad0cb0d36f6a4787365f5a08de38938eb26b3b98469462de",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "680120f09929d51da0a65e96a1f7d20ffbbdd2795a165719b0d07e00475e77c4",
+        "reference_tree_sha256": "16797980fabab89ffb182589542f418f4f7278dafdd2a420cb3f35cd1163ad84",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "kcmutils": {
+      "state": "materialized",
+      "source_package": "kf6-kcmutils",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810107902,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10702614310,
+        "artifact_sha256": "8d7c100db9a68af5cf53ee0ca97936f17af5f8150352c45f1ef812d09b4e47aa",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "0159f80d030ac250b0b353113a55c013ed7e38cb0b678df44d2f0d0b2aca944c",
+        "reference_tree_sha256": "ed24fd11497ef4bf09ebc8a1f7ba6267c139f36ff2ddc54a0383ca90fabf11d6",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "kconfigwidgets": {
+      "state": "materialized",
+      "source_package": "kf6-kconfigwidgets",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810107808,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10703665224,
+        "artifact_sha256": "f1613aa3e15d83a4f6b539b514d190f88c4d0fbda9e9ba7a9554a32b640fd249",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "6efd9fc7786a7e979b32904aeadf1d2d8e69a5da110f8ebd45f95ec02de41f77",
+        "reference_tree_sha256": "191c332881d177e2b3e8d66663772e004db8a4fbfdff74235f665f2b52f47109",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "kdav": {
+      "state": "materialized",
+      "source_package": "kf6-kdav",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810107917,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10702499459,
+        "artifact_sha256": "a55642fe89cda2cc5c78ba2bdc814c5e47570d325063813d515be7073cc3a3c6",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "08d95cf546c941dbe21a76fbc8b88a466f276ab29e866600994f4f60d604c7f4",
+        "reference_tree_sha256": "f9ae4cc1bb30a078c7ef5a37bdc7f9482afc84a501d1ef083425629a866ef06c",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "kdesu": {
+      "state": "materialized",
+      "source_package": "kf6-kdesu",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810108167,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10702789992,
+        "artifact_sha256": "e84b7be6dd6d1eb9f11c82a8e87a67a540220c4a0dc216b78fa71437ecd3bf1a",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "9bf244884b09ce38ad84d00e5879e798b02e1610ec8f3d9ee6c93e7502b356e2",
+        "reference_tree_sha256": "d1efb700ac13cb1ddf0bc029e6b4a24f9b10da84ae185cd84812e3f17cf62ab3",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "kiconthemes": {
+      "state": "materialized",
+      "source_package": "kf6-kiconthemes",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810107884,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10703820086,
+        "artifact_sha256": "76c32c49e51b10b8f268c67ae74f710d36668e6bea480b44b6c6dc74850ca20c",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "c0c684823d0e087f35168cd79f1053fd358bb8fb47b27996a11c7d7ee3da6f4d",
+        "reference_tree_sha256": "c39952329869c0deb4ffb5f3bf36ce5a89d1b8290f7a14fe135a4453c32ff210",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "kio": {
+      "state": "materialized",
+      "source_package": "kf6-kio",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810108038,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10703145831,
+        "artifact_sha256": "d6b62bf44d85289d749ab2bb8fc9ce1b8d034fbcc88a27aff935dbfede495b40",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
+        "reference_tree_sha256": "50508b96984930b303c3d4467b464c8275de59ae68e210c8ad671e0832262e84",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "kjobwidgets": {
+      "state": "materialized",
+      "source_package": "kf6-kjobwidgets",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810107995,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10702499485,
+        "artifact_sha256": "4ff2537cab7257d72aaa3de0ad78ea8d9425bd3367614aa07ec2b22703a9bd2c",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "bf36e3619df1c6ad3d900bd36433d97ab295be41c1cc401ff0e766380788bbae",
+        "reference_tree_sha256": "f1fa1c6f41bbaaf140c65a6aa195a20ef791de09885a5b955252b9754c41e4f8",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "knewstuff": {
+      "state": "materialized",
+      "source_package": "kf6-knewstuff",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810107828,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10703640189,
+        "artifact_sha256": "bc9f4692c3d2efcefadd55f40af666fde96813e1b40dd999d76c77ef23cd8fd6",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "85408768b5c3f4b0b51ee6a14ae73fea263f451404e266e286c55e0c17e44037",
+        "reference_tree_sha256": "24501881b98aec525d67bebc537e2d85853854a2344b095f8e63c73565bf5f8f",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "knotifyconfig": {
+      "state": "materialized",
+      "source_package": "kf6-knotifyconfig",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810107913,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10702744961,
+        "artifact_sha256": "d98af3adcd95e1bdf0452dd2322d10dee0fa895be4cee578a7e0024e0666c33e",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "4a133decdb0d3731dbaa1d3625b30f057089e5c59c8326ff88a047cef35b2efb",
+        "reference_tree_sha256": "6cdd919d7ddce6c9306370980f1cd14df5077b40fa01d81236b38d6a2a9ea649",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "kparts": {
+      "state": "materialized",
+      "source_package": "kf6-kparts",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810107900,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10703755159,
+        "artifact_sha256": "a97952c5ebbb4cdf82ae9f7bbaad28407cf807324756d80493dede09df5626a4",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "99f5a0e3a4da10e1a0fbfb505ae966cd87627f887dd07929a920afe41c862ac0",
+        "reference_tree_sha256": "67e9851badde0130f5afbf12713644dcc5e4f0f42ef606143a957fb65c318f27",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "kpeople": {
+      "state": "materialized",
+      "source_package": "kf6-kpeople",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810108193,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10703315635,
+        "artifact_sha256": "b1e61512d3da1dab67f8cbb7e4e1fbbe48ef8385c70f0944f3dff03d924b8e95",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "094868f11c8c46e57a077c2788a39c6ee0b0ebc2b64279c6f7c70a5152f518e7",
+        "reference_tree_sha256": "27183cd75cb9995e47800fec55a2f8f482d41328fbf0e3422a2deb47e8d4b40d",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "krunner": {
+      "state": "materialized",
+      "source_package": "kf6-krunner",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810107951,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10702959832,
+        "artifact_sha256": "81c2d69889b222c6d05e96067b3c86bc4e5241572bc35415b3ae4d98d3ca5299",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "0885d0936aec6dc8553c673f1c685013e345b933a52812a07c5bddd1eebdb551",
+        "reference_tree_sha256": "949889c41a828d79ed9611762f8d750896cd49571c1c2bf4fbcb1663659c9f56",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "ksvg": {
+      "state": "materialized",
+      "source_package": "kf6-ksvg",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810108387,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10703445610,
+        "artifact_sha256": "b51a473a07bd200147d3e549552b216aa95cc9931abef7d5f3f8a2867b63dc86",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "7b7aba4e9baa88bfb303977e139e8a105b5cd243443029ee773954307b51eb91",
+        "reference_tree_sha256": "5a8658fb5f5a9f0144d8ab5cf6259913943c3dad3736974aaf0fde67257b7af2",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "ktexteditor": {
+      "state": "materialized",
+      "source_package": "kf6-ktexteditor",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810107946,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10703760099,
+        "artifact_sha256": "9c58c753f5fc7489b3d18f9641e84d07d3262fd74f711a5a3ab33733148afd0b",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7",
+        "reference_tree_sha256": "bb4beab892d545539937a1cd4292062c98ed355f05f1e4ea4c62cd4916a09fce",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "ktextwidgets": {
+      "state": "materialized",
+      "source_package": "kf6-ktextwidgets",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810108060,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10703290721,
+        "artifact_sha256": "fe1176866e32fe13f876b0840dc48dd9a8553fa4f2b1cb907ff26c95eb30fc23",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "b06b11bb727bf9c3578797b1e40daad5f48e10433e456a337f1c40b4082879c8",
+        "reference_tree_sha256": "f270e09ea12025525657e20fd42f8e62c80faa54cfda84f150dcd768611a523d",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "kwallet": {
+      "state": "materialized",
+      "source_package": "kf6-kwallet",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810108082,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10702319999,
+        "artifact_sha256": "eadcbbc8edfac7509e7930b68fcea78218840557f5b93ab379b74d223304960f",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "93cb9c1df2630807c04bf8c30312e75ae3bb466c77dd9b29bb2c752e71d34a26",
+        "reference_tree_sha256": "14828a62213875b9be1395f66ad4b4aa1f0349ed1ce9bf56a5b639d7089d6d2c",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "kxmlgui": {
+      "state": "materialized",
+      "source_package": "kf6-kxmlgui",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810108083,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10703925009,
+        "artifact_sha256": "9ad2056d1dbc9ab626521cd1f4bc67c13f5e36b18d93fc67da8ee6b7da3ba2fc",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "10fb8a0f7b874248ff60d9a8ee4e1f06a0efcf01b0d34d7635dfff86e848c352",
+        "reference_tree_sha256": "3b271d78381bfde2e9bcd7607b36e889dcc4f0f7e27f1893c4dfc8bcb37c6812",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    },
+    "purpose": {
+      "state": "materialized",
+      "source_package": "kf6-purpose",
+      "package_version": "6.30.0-0supralinux1",
+      "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810108129,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10703290646,
+        "artifact_sha256": "ca4f4b5c365468b4412c4c7a342b1d011adcaa66c618100e9d97af1d982d8f87",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862",
+        "reference_tree_sha256": "f1ca6eba5179a1a682a9543a948d604cb994bf4030ead2b9cef9cc442d6d7743",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
+    }
   },
-  "stable_promotion_requires_explicit_user_approval": true
+  "stable_promotion_requires_explicit_user_approval": true,
+  "evidence_summary": {
+    "result": "PASS",
+    "workflow_run": 35746667704,
+    "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+    "nodes": 20,
+    "artifacts": 20,
+    "package_attempted": false,
+    "package_state_effect": "none",
+    "repository_policy": {
+      "workflow_run": 35746667671,
+      "job_id": 106809960419,
+      "result": "PASS"
+    },
+    "next_gate": "tier3-build-campaign-planning"
+  }
 }

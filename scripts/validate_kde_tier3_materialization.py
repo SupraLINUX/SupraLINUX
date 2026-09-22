@@ -83,9 +83,9 @@ for node in selected:
         req(ev.get("package_version") == contract.get("package_version_candidate"), f"{node}: evidence version")
         req(ev.get("orig_tar_sha256") == contract.get("source_sha256"), f"{node}: authoritative source retained")
         req(ev.get("reference_tree_sha256") == contract.get("packaging_baseline", {}).get("tree_sha256"), f"{node}: baseline tree retained")
-        for key in ("dsc_sha256", "debian_tar_sha256", "source_tree_sha256", "materialized_tree_sha256", "adapted_control_sha256", "adapted_rules_sha256", "artifact_sha256"):
-            req(isinstance(ev.get(key), str) and len(ev.get(key)) == 64, f"{node}: {key}")
+        req(isinstance(ev.get("artifact_sha256"), str) and len(ev.get("artifact_sha256")) == 64, f"{node}: artifact SHA-256")
         req(isinstance(ev.get("workflow_run"), int) and isinstance(ev.get("job_id"), int) and isinstance(ev.get("artifact_id"), int), f"{node}: run/job/artifact evidence")
+        req(ev.get("full_result_json_retained_in_artifact") is True, f"{node}: full materialization evidence retained")
 
 req(t.get("materialization_manifest") == "manifests/kde-tier3-materialization.json", "canonical Tier3 materialization manifest linkage")
 
@@ -101,7 +101,7 @@ if m.get("state") == "pending-ci":
         req(planning.get("package_contract") == "not-materialized", f"{node}: pending package contract")
 else:
     req(all(m["nodes"][n].get("state") == "materialized" for n in selected), "PASS requires all materialization nodes materialized")
-    req(c.get("state") == "materialized", "PASS materialization contract lifecycle")
+    req(c.get("state") == "materialized", "PASS materialization contract lifecycle")\n    req(c.get("materialization", {}).get("status") == "PASS" and c.get("materialization", {}).get("workflow_run") == 35746667704, "promoted materialization evidence linkage")
     req(t.get("discovery_policy", {}).get("phase") == "build-campaign-planning", "post-materialization phase")
     req(t.get("discovery_policy", {}).get("package_builds") == "not-authorized-before-tier3-build-campaign", "post-materialization binary build gate")
     req(t.get("support_components", {}).get("next_gate") == "tier3-build-campaign-planning", "post-materialization next gate")

@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **pending CI** as of 2026-09-22.
+Status: **PASS** as of 2026-09-22.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -54,8 +54,11 @@ Therefore **materialization PASS is not package PASS**.
 Current state:
 
 - Tier 3 packages: **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**;
-- materialization manifest: `pending-ci`;
+- materialization manifest: `PASS`;
 - binary builds: **not authorized**;
+- next gate: `tier3-build-campaign-planning`;
 - stable publication: never automatic and always requires explicit user approval.
 
-After all 20 source materializations pass and their evidence is promoted, the next state is `build-campaign-planning`. Only then is the existing four-level KDE-upstream DAG converted into executable clean-build lanes. Binary package builds remain unauthorized until that build campaign itself is reviewed and activated.
+Run `35746667704` materialized all **20/20** source packages successfully from commit `39fcab118709bcdb7e97524333d3f74d1b4edec4`. Repository Policy run `35746667671` also passed. Every promoted node records its job ID, artifact ID and GitHub artifact SHA-256; the artifact itself retains the complete `result.json`, source-package hashes, deterministic source-tree hash and adapted `debian/` payload.
+
+Materialization changed no package state: `package_attempted=false` and `package_state_effect=none`. The next state is `build-campaign-planning`, where the existing four-level KDE-upstream DAG will be converted into executable clean-build lanes. Binary package builds remain unauthorized until that campaign is reviewed and explicitly activated.

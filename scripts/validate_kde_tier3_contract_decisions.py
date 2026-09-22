@@ -13,7 +13,7 @@ d=load("manifests/kde-frameworks-tier3-dependencies.json")
 selected=c.get("selected_nodes",[])
 nodes={n["id"]:n for n in t.get("nodes",[])}
 
-req(c.get("state")=="contracts-ready","Tier3 contracts must be ready")
+req(c.get("state") in {"contracts-ready","materialized"},"Tier3 contracts lifecycle")
 req(len(selected)==20 and set(selected)==set(nodes),"Tier3 decision node set")
 req(c.get("source_authority")=="kde-upstream" and c.get("packaging_authority")=="supralinux","Tier3 decision authority boundary")
 
@@ -63,8 +63,8 @@ for node_id in selected:
     req(tp.get("upstream_tests_required") is True and tp.get("failures_fatal") is True,f"{node_id}: fatal upstream tests")
     req(n.get("state")=="pending" and n.get("packaging",{}).get("downstream_eligible") is False,f"{node_id}: package state unchanged")
     planning=n.get("planning",{})
-    req(planning.get("readiness")=="package-contract-ready",f"{node_id}: materialization readiness")
-    req(planning.get("package_contract")=="not-materialized",f"{node_id}: not materialized")
+    req(planning.get("readiness") in {"package-contract-ready","materialized"},f"{node_id}: materialization readiness")
+    req(planning.get("package_contract") in {"not-materialized","materialized"},f"{node_id}: materialization lifecycle")
     req(node_id in d.get("nodes",{}),f"{node_id}: KDE dependency contract exists")
 
     additions=x.get("supralinux_additional_binary_packages",[])
@@ -94,10 +94,10 @@ req(any(q.get("action")=="preserve-ubuntu-optional-integration" and q.get("value
 req(set(d["nodes"]["purpose"]["frameworks"]["qml_required"])=={"prison","kitemmodels","kcmutils"},"Purpose upstream QML contract")
 
 canonical=t.get("discovery_policy",{})
-req(canonical.get("phase")=="materialization","Tier3 canonical materialization phase")
+req(canonical.get("phase") in {"materialization","build-campaign-planning"},"Tier3 canonical materialization/build-planning phase")
 req(canonical.get("package_contracts")=="PASS","Tier3 canonical contract PASS")
-req(canonical.get("package_builds")=="not-authorized-before-tier3-materialization","Tier3 build gate")
-req(t.get("support_components",{}).get("next_gate")=="tier3-materialization","Tier3 next gate")
+req(canonical.get("package_builds") in {"not-authorized-before-tier3-materialization","not-authorized-before-tier3-build-campaign"},"Tier3 build gate")
+req(t.get("support_components",{}).get("next_gate") in {"tier3-materialization","tier3-build-campaign-planning"},"Tier3 next gate")
 req(c.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 
 for path in (
@@ -111,4 +111,4 @@ if errors:
     raise SystemExit(1)
 print("KDE Tier 3 package-contract decisions: PASS")
 print("nodes=20")
-print("next_gate=tier3-materialization")
+print("next_gate="+t.get("support_components",{}).get("next_gate","unknown"))

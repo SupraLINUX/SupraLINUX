@@ -12,11 +12,11 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "materialization",
+    "phase": "build-campaign-planning",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "not-authorized-before-tier3-materialization"
+    "package_builds": "not-authorized-before-tier3-build-campaign"
   },
   "nodes": [
     {
@@ -29,9 +29,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -42,7 +42,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810107725,
+          "artifact_id": 10703700138,
+          "artifact_sha256": "28d91bcae969f33dba7150aaed34226443b4aecbb2ce88b911a11df934591916"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -60,9 +67,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -73,7 +80,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810107754,
+          "artifact_id": 10702344615,
+          "artifact_sha256": "322e2c4b7e013e6fad0cb0d36f6a4787365f5a08de38938eb26b3b98469462de"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -91,9 +105,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -104,7 +118,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810107902,
+          "artifact_id": 10702614310,
+          "artifact_sha256": "8d7c100db9a68af5cf53ee0ca97936f17af5f8150352c45f1ef812d09b4e47aa"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -122,9 +143,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -135,7 +156,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810107808,
+          "artifact_id": 10703665224,
+          "artifact_sha256": "f1613aa3e15d83a4f6b539b514d190f88c4d0fbda9e9ba7a9554a32b640fd249"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -153,9 +181,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -166,7 +194,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810107917,
+          "artifact_id": 10702499459,
+          "artifact_sha256": "a55642fe89cda2cc5c78ba2bdc814c5e47570d325063813d515be7073cc3a3c6"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -184,9 +219,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -197,7 +232,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810108167,
+          "artifact_id": 10702789992,
+          "artifact_sha256": "e84b7be6dd6d1eb9f11c82a8e87a67a540220c4a0dc216b78fa71437ecd3bf1a"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -215,9 +257,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -228,7 +270,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810107884,
+          "artifact_id": 10703820086,
+          "artifact_sha256": "76c32c49e51b10b8f268c67ae74f710d36668e6bea480b44b6c6dc74850ca20c"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -246,9 +295,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -259,7 +308,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810108038,
+          "artifact_id": 10703145831,
+          "artifact_sha256": "d6b62bf44d85289d749ab2bb8fc9ce1b8d034fbcc88a27aff935dbfede495b40"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -277,9 +333,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -290,7 +346,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810107995,
+          "artifact_id": 10702499485,
+          "artifact_sha256": "4ff2537cab7257d72aaa3de0ad78ea8d9425bd3367614aa07ec2b22703a9bd2c"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -308,9 +371,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -321,7 +384,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810107828,
+          "artifact_id": 10703640189,
+          "artifact_sha256": "bc9f4692c3d2efcefadd55f40af666fde96813e1b40dd999d76c77ef23cd8fd6"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -339,9 +409,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -352,7 +422,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810107913,
+          "artifact_id": 10702744961,
+          "artifact_sha256": "d98af3adcd95e1bdf0452dd2322d10dee0fa895be4cee578a7e0024e0666c33e"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -370,9 +447,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -383,7 +460,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810107900,
+          "artifact_id": 10703755159,
+          "artifact_sha256": "a97952c5ebbb4cdf82ae9f7bbaad28407cf807324756d80493dede09df5626a4"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -401,9 +485,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -414,7 +498,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810108193,
+          "artifact_id": 10703315635,
+          "artifact_sha256": "b1e61512d3da1dab67f8cbb7e4e1fbbe48ef8385c70f0944f3dff03d924b8e95"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -432,9 +523,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -445,7 +536,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810107951,
+          "artifact_id": 10702959832,
+          "artifact_sha256": "81c2d69889b222c6d05e96067b3c86bc4e5241572bc35415b3ae4d98d3ca5299"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -463,9 +561,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -476,7 +574,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810108387,
+          "artifact_id": 10703445610,
+          "artifact_sha256": "b51a473a07bd200147d3e549552b216aa95cc9931abef7d5f3f8a2867b63dc86"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -494,9 +599,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -507,7 +612,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810107946,
+          "artifact_id": 10703760099,
+          "artifact_sha256": "9c58c753f5fc7489b3d18f9641e84d07d3262fd74f711a5a3ab33733148afd0b"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -525,9 +637,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -538,7 +650,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810108060,
+          "artifact_id": 10703290721,
+          "artifact_sha256": "fe1176866e32fe13f876b0840dc48dd9a8553fa4f2b1cb907ff26c95eb30fc23"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -556,9 +675,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -569,7 +688,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810108082,
+          "artifact_id": 10702319999,
+          "artifact_sha256": "eadcbbc8edfac7509e7930b68fcea78218840557f5b93ab379b74d223304960f"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -587,9 +713,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -600,7 +726,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810108083,
+          "artifact_id": 10703925009,
+          "artifact_sha256": "9ad2056d1dbc9ab626521cd1f4bc67c13f5e36b18d93fc67da8ee6b7da3ba2fc"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -618,9 +751,9 @@
       "upstream_ref": "v6.30.0",
       "state": "pending",
       "planning": {
-        "readiness": "package-contract-ready",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
-        "package_contract": "not-materialized",
+        "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -631,7 +764,14 @@
           "artifact_id": 10692912109,
           "artifact_sha256": "c76ca765d3d4f565ba807a96bc2e6f324cce3dc5f92893c9c5f2c10de8ac07ac"
         },
-        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json"
+        "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
+        "materialization_manifest": "manifests/kde-tier3-materialization.json",
+        "materialization_evidence": {
+          "workflow_run": 35746667704,
+          "job_id": 106810108129,
+          "artifact_id": 10703290646,
+          "artifact_sha256": "ca4f4b5c365468b4412c4c7a342b1d011adcaa66c618100e9d97af1d982d8f87"
+        }
       },
       "packaging": {
         "state": "pending",
@@ -647,7 +787,7 @@
     "policy": "KDE upstream support components are separate from API tiers and retain their own build/runtime semantics.",
     "provider_audit_manifest": "manifests/kde-tier3-support-provider-audit.json",
     "provider_audit": "PASS",
-    "next_gate": "tier3-materialization",
+    "next_gate": "tier3-build-campaign-planning",
     "package_contract_manifest": "manifests/kde-tier3-support-package-contracts.json",
     "materialization_manifest": "manifests/kde-tier3-support-materialization.json",
     "materialization": "PASS",
@@ -664,5 +804,6 @@
   },
   "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
   "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
-  "materialization_manifest": "manifests/kde-tier3-materialization.json"
+  "materialization_manifest": "manifests/kde-tier3-materialization.json",
+  "materialization": "PASS"
 }

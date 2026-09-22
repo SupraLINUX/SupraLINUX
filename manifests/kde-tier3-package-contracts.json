@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "as_of": "2026-09-22",
-  "state": "contracts-ready",
+  "state": "materialized",
   "source_authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "packaging_authority": "supralinux",
@@ -2561,5 +2561,16 @@
         "validation": "clean-build-required"
       }
     }
+  },
+  "materialization": {
+    "status": "PASS",
+    "manifest": "manifests/kde-tier3-materialization.json",
+    "workflow_run": 35746667704,
+    "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+    "nodes": 20,
+    "artifacts": 20,
+    "package_attempted": false,
+    "package_state_effect": "none",
+    "next_gate": "tier3-build-campaign-planning"
   }
 }

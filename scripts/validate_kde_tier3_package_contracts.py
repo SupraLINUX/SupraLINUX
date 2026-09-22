@@ -41,7 +41,7 @@ for node in canonical:
     req(n.get("packaging",{}).get("state")=="pending" and n.get("packaging",{}).get("downstream_eligible") is False,f"{node}: packaging remains pending")
     planning=n.get("planning",{})
     req(planning.get("provider_audit")=="PASS" and planning.get("provider")=="supralinux",f"{node}: provider audit canonical linkage")
-    req(planning.get("package_contract") in {"required","reference-capture-pending","reference-capture-pass","packaging-tree-pending","packaging-tree-pass","review-pending","review-pass","ready","not-materialized"},f"{node}: canonical package-contract lifecycle")
+    req(planning.get("package_contract") in {"required","reference-capture-pending","reference-capture-pass","packaging-tree-pending","packaging-tree-pass","review-pending","review-pass","ready","not-materialized","materialized"},f"{node}: canonical package-contract lifecycle")
 
 if c.get("state")=="reference-capture-pending":
     req(rc.get("status")=="pending-ci" and rc.get("evidence") is None,"pending reference capture state")

@@ -267,11 +267,10 @@ Canonical readiness is now `package-contract-review-pass`. Tier 3 remains **0 PA
 The contract-review evidence has been converted into explicit SupraLINUX decisions. Canonical readiness is now `package-contract-ready` and package contract state is `not-materialized`.
 
 Materialization is the active gate. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**; no package build is authorized until source-package materialization completes.
-## Current canonical state — Tier 3 materialization active
+## Current canonical state — Tier 3 materialization PASS
 
-As of 2026-09-22, package-contract reference, packaging-tree capture, contract review and contract decisions are all PASS. The 20 Frameworks remain **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** because no binary package build has been attempted.
+Run `35746667704` completed the source-materialization matrix at **20/20 PASS** from commit `39fcab118709bcdb7e97524333d3f74d1b4edec4`; Repository Policy run `35746667671` also passed. The promoted evidence records every materialization job/artifact and its GitHub SHA-256.
 
-The active gate is now `tier3-materialization`, implemented by `manifests/kde-tier3-materialization.json` and `.github/workflows/kde-tier3-materialization.yml`. It verifies KDE 6.30 upstream source independently, reproduces the pinned Debian sid 6.30 packaging baseline before modification, applies only the approved SupraLINUX/Resolute adaptations, and emits reproducible source-package evidence for all 20 nodes in parallel.
+This does **not** make any Framework package PASS. Canonical package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**, every package remains `downstream_eligible=false`, and no binary build has yet been attempted.
 
-Materialization never changes package state: `package_attempted=false` and `package_state_effect=none`. Binary builds remain unauthorized until all materialization evidence is promoted and the subsequent `tier3-build-campaign-planning` gate is completed. Stable repository promotion continues to require explicit user approval.
-
+All 20 package contracts are now `materialized`. The canonical phase is `build-campaign-planning`; the next gate is `tier3-build-campaign-planning`. Binary builds remain unauthorized until the four-level KDE-upstream build/test DAG is compiled into an executable campaign with explicit predecessor artifact rules and PASS/FAIL/BLOCKED semantics. Stable publication still requires explicit user approval.
