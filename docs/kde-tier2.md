@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 2 discovery
 
-Status: **14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**  
+Status: **15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**  
 Date: **2026-09-21**
 
 KDE upstream classifies **15** Frameworks in Tier 2 for the current Frameworks API set:
@@ -320,3 +320,30 @@ KMime Frameworks 6.30 now passes its own clean-build path through 17/17 upstream
 A real co-installation test showed that installing Resolute `libkpim6mime6 + libkmime-data` removes the SupraLINUX `libkf6mime6/libkf6mime-dev/libkf6mime-data` set. Canonical Tier 2 therefore remains **14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**, with KMime in `compatibility-provider-required`.
 
 This does not transfer authority back to Ubuntu. KF6Mime remains the authoritative KDE provider. The audit now determines how to keep the legacy Ubuntu ABI available on demand without allowing its packaging to replace or constrain the Frameworks provider.
+
+
+## 2026-09-22 — Tier 2 closed: KMime PASS
+
+KMime `kf6-kmime 6.30.0-0supralinux1` is now canonical **PASS/downstream-eligible**. The promotion does not erase the historical stock-Ubuntu co-installation incident; the final claim is based on the complete evidence chain.
+
+Frameworks evidence:
+- run `35687831684`, attempt 2, job `106619132039`;
+- artifact `10677716050`, SHA-256 `ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36`;
+- 17/17 upstream tests PASS;
+- Lintian error gate, `libKF6Mime.so.6` ABI, APT closure, predecessor proof and external `KF6::Mime` consumer PASS.
+
+Compatibility audit:
+- run `35690284355`, job `106625630885`;
+- artifact `10678073973`, SHA-256 `7b0c9175b1e0f48eb1d18e9ceb1af03381c4de8d0b322bc619dd7be224307c5b`;
+- runtime namespaces are distinct; the stock conflict is the data-package transition.
+
+Legacy compatibility provider:
+- version `25.12.3-0ubuntu1+supralinux1`;
+- run `35691309612`, build job `106628834481`;
+- artifact `10679420779`, SHA-256 `f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b`;
+- real `libKPim6Mime.so.6`, no duplicate `libkmime-data`;
+- co-installation, APT closure, `KPim6::Mime` consumer and `KF6::Mime` consumer all PASS.
+
+The final canonical Tier 2 state is therefore **15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**. All 15 Tier 2 Framework nodes are downstream-eligible.
+
+The authority/provider boundary is unchanged: KDE Frameworks KMime is authoritative for the SupraLINUX desktop; the PIM-line runtime is compatibility-only and installed on demand. This closure makes packages eligible for `testing` only. Promotion to `stable` still requires explicit user approval.
