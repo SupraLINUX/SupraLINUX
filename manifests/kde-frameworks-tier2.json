@@ -1880,7 +1880,7 @@
       },
       "package_identity": {
         "source_package": "kf6-kmime",
-        "package_version_candidate": null,
+        "package_version_candidate": "6.30.0-0supralinux1",
         "status": "not-materialized",
         "framework_binary_packages": [
           "libkf6mime-data",
@@ -1898,7 +1898,7 @@
       },
       "packaging": {
         "state": "pending",
-        "reason": "provider-audit-required-after-ADR-0002",
+        "reason": "package-contract-reference-capture-pending",
         "compatibility_policy": "kf6mime-authoritative-legacy-kpim6mime-on-demand"
       },
       "state": "pending",
