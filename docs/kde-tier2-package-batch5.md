@@ -1,8 +1,8 @@
 # KDE Tier 2 Package Batch 5
 
-Status: **active — KMime clean build pending**
+Status: **closed — PASS**
 
-Batch 5 contains exactly **KMime** from KDE Frameworks 6.30.0. Canonical Tier 2 is **14 PASS / 1 pending / 0 current FAIL / 0 BLOCKED**.
+Batch 5 contains exactly **KMime** from KDE Frameworks 6.30.0. Canonical Tier 2 is now **15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**.
 
 The authoritative package is `kf6-kmime 6.30.0-0supralinux1`, producing `libkf6mime-data`, `libkf6mime-dev` and `libkf6mime6`. Its development/runtime contract is `KF6Mime` / `KF6::Mime` / `libKF6Mime.so.6`. KCodecs 6.30 is the only retained KDE predecessor.
 
@@ -59,3 +59,29 @@ The final compatibility gate exposed the actual remaining blocker. Requesting Ub
 This is retained as **INFRA/integration compatibility evidence**, not a KMime source FAIL. Artifact `10677716050`, SHA-256 `ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36`. KMime remains canonical `pending` and moves to `compatibility-provider-required`.
 
 The next step is a provider audit of Ubuntu's exact binary metadata and payload overlap. No further Frameworks rebuild is valid until that audit identifies the minimal compatibility packaging adaptation.
+
+
+## Compatibility audit and provider resolution
+
+The integration incident from attempt 2 remains retained as historical `INFRA`; it was not rewritten as a successful stock-Ubuntu co-installation.
+
+Compatibility audit run `35690284355`, job `106625630885`, artifact `10678073973`, SHA-256 `7b0c9175b1e0f48eb1d18e9ceb1af03381c4de8d0b322bc619dd7be224307c5b` proved that the conflict was confined to the data-package transition. `libKF6Mime.so.6` and `libKPim6Mime.so.6` are independent runtime payloads.
+
+The selected provider was then built from the real legacy source as `25.12.3-0ubuntu1+supralinux1`. Run `35691309612`, build job `106628834481`, artifact `10679420779`, SHA-256 `f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b` passed:
+- clean sbuild and Lintian;
+- exact legacy runtime/dev binary contract with no duplicate `libkmime-data`;
+- co-installation beside the already-built KF6Mime packages;
+- clean APT dependency state;
+- legacy `KPim6::Mime` consumer;
+- Frameworks `KF6::Mime` consumer.
+
+## Batch 5 closed — KMime PASS
+
+The final KMime package PASS is a **composite evidence claim**:
+1. Frameworks build run `35687831684`, attempt 2, job `106619132039`, artifact `10677716050`, SHA-256 `ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36` proves KF6Mime itself: 17/17 tests, Lintian, ABI, APT closure and `KF6::Mime` consumer.
+2. The compatibility audit identifies the stock-provider root cause.
+3. The SupraLINUX legacy provider proves real `libKPim6Mime.so.6` coexistence without changing the authoritative KF6Mime family.
+
+KMime is therefore canonical **PASS/downstream-eligible**, and Tier 2 closes at **15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**.
+
+This closure authorizes eligibility for `testing` only. It does **not** authorize promotion to `stable`.
