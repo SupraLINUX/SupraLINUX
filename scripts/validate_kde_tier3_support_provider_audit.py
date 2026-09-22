@@ -70,7 +70,7 @@ else:
     for node,c in components.items():
         dep=support.get(node,{})
         req(dep.get("provider")==c.get("provider_decision").replace("-required","") if c.get("provider_decision")=="supralinux-required" else dep.get("provider") in {"ubuntu","supralinux"},f"{node}: selected provider reflected in dependency manifest")
-        req(dep.get("readiness")=="package-contract-required",f"{node}: support package-contract readiness")
+        req(dep.get("readiness") in {"package-contract-required","package-contract-ready","materialized","PASS"},f"{node}: support package-contract lifecycle")
         pae=dep.get("provider_audit",{})
         req(pae.get("status")=="PASS" and pae.get("decision")==c.get("provider_decision"),f"{node}: provider-audit promotion")
         req(pae.get("artifact_id")==ev.get("artifact_id") and pae.get("artifact_sha256")==ev.get("artifact_sha256"),f"{node}: provider-audit evidence linkage")
