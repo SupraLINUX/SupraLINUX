@@ -1,0 +1,188 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-22",
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "release_reference": "https://kde.org/info/kde-frameworks-6.30.0/",
+  "provider_platform": "ubuntu-resolute",
+  "claim": "framework-provider-selection-only",
+  "authoritative_package_build": false,
+  "package_state_effect": "none",
+  "status": "pending-ci",
+  "selected_nodes": [
+    "baloo",
+    "kbookmarks",
+    "kcmutils",
+    "kconfigwidgets",
+    "kdav",
+    "kdesu",
+    "kiconthemes",
+    "kio",
+    "kjobwidgets",
+    "knewstuff",
+    "knotifyconfig",
+    "kparts",
+    "kpeople",
+    "krunner",
+    "ksvg",
+    "ktexteditor",
+    "ktextwidgets",
+    "kwallet",
+    "kxmlgui",
+    "purpose"
+  ],
+  "components": {
+    "baloo": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/baloo-6.30.0.tar.xz",
+      "kde_source_sha256": "a59d33a919bfa1d164c8f3a6f992c609edaf2131ac5f52ea4ecb77f6fbc53be1",
+      "ubuntu_source_package": "kf6-baloo",
+      "provider_decision": "pending-ci"
+    },
+    "kbookmarks": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/kbookmarks-6.30.0.tar.xz",
+      "kde_source_sha256": "680120f09929d51da0a65e96a1f7d20ffbbdd2795a165719b0d07e00475e77c4",
+      "ubuntu_source_package": "kf6-kbookmarks",
+      "provider_decision": "pending-ci"
+    },
+    "kcmutils": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/kcmutils-6.30.0.tar.xz",
+      "kde_source_sha256": "0159f80d030ac250b0b353113a55c013ed7e38cb0b678df44d2f0d0b2aca944c",
+      "ubuntu_source_package": "kf6-kcmutils",
+      "provider_decision": "pending-ci"
+    },
+    "kconfigwidgets": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/kconfigwidgets-6.30.0.tar.xz",
+      "kde_source_sha256": "6efd9fc7786a7e979b32904aeadf1d2d8e69a5da110f8ebd45f95ec02de41f77",
+      "ubuntu_source_package": "kf6-kconfigwidgets",
+      "provider_decision": "pending-ci"
+    },
+    "kdav": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/kdav-6.30.0.tar.xz",
+      "kde_source_sha256": "08d95cf546c941dbe21a76fbc8b88a466f276ab29e866600994f4f60d604c7f4",
+      "ubuntu_source_package": "kf6-kdav",
+      "provider_decision": "pending-ci"
+    },
+    "kdesu": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/kdesu-6.30.0.tar.xz",
+      "kde_source_sha256": "9bf244884b09ce38ad84d00e5879e798b02e1610ec8f3d9ee6c93e7502b356e2",
+      "ubuntu_source_package": "kf6-kdesu",
+      "provider_decision": "pending-ci"
+    },
+    "kiconthemes": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/kiconthemes-6.30.0.tar.xz",
+      "kde_source_sha256": "c0c684823d0e087f35168cd79f1053fd358bb8fb47b27996a11c7d7ee3da6f4d",
+      "ubuntu_source_package": "kf6-kiconthemes",
+      "provider_decision": "pending-ci"
+    },
+    "kio": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/kio-6.30.0.tar.xz",
+      "kde_source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
+      "ubuntu_source_package": "kf6-kio",
+      "provider_decision": "pending-ci"
+    },
+    "kjobwidgets": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/kjobwidgets-6.30.0.tar.xz",
+      "kde_source_sha256": "bf36e3619df1c6ad3d900bd36433d97ab295be41c1cc401ff0e766380788bbae",
+      "ubuntu_source_package": "kf6-kjobwidgets",
+      "provider_decision": "pending-ci"
+    },
+    "knewstuff": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/knewstuff-6.30.0.tar.xz",
+      "kde_source_sha256": "85408768b5c3f4b0b51ee6a14ae73fea263f451404e266e286c55e0c17e44037",
+      "ubuntu_source_package": "kf6-knewstuff",
+      "provider_decision": "pending-ci"
+    },
+    "knotifyconfig": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/knotifyconfig-6.30.0.tar.xz",
+      "kde_source_sha256": "4a133decdb0d3731dbaa1d3625b30f057089e5c59c8326ff88a047cef35b2efb",
+      "ubuntu_source_package": "kf6-knotifyconfig",
+      "provider_decision": "pending-ci"
+    },
+    "kparts": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/kparts-6.30.0.tar.xz",
+      "kde_source_sha256": "99f5a0e3a4da10e1a0fbfb505ae966cd87627f887dd07929a920afe41c862ac0",
+      "ubuntu_source_package": "kf6-kparts",
+      "provider_decision": "pending-ci"
+    },
+    "kpeople": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/kpeople-6.30.0.tar.xz",
+      "kde_source_sha256": "094868f11c8c46e57a077c2788a39c6ee0b0ebc2b64279c6f7c70a5152f518e7",
+      "ubuntu_source_package": "kf6-kpeople",
+      "provider_decision": "pending-ci"
+    },
+    "krunner": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/krunner-6.30.0.tar.xz",
+      "kde_source_sha256": "0885d0936aec6dc8553c673f1c685013e345b933a52812a07c5bddd1eebdb551",
+      "ubuntu_source_package": "kf6-krunner",
+      "provider_decision": "pending-ci"
+    },
+    "ksvg": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/ksvg-6.30.0.tar.xz",
+      "kde_source_sha256": "7b7aba4e9baa88bfb303977e139e8a105b5cd243443029ee773954307b51eb91",
+      "ubuntu_source_package": "kf6-ksvg",
+      "provider_decision": "pending-ci"
+    },
+    "ktexteditor": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/ktexteditor-6.30.0.tar.xz",
+      "kde_source_sha256": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7",
+      "ubuntu_source_package": "kf6-ktexteditor",
+      "provider_decision": "pending-ci"
+    },
+    "ktextwidgets": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/ktextwidgets-6.30.0.tar.xz",
+      "kde_source_sha256": "b06b11bb727bf9c3578797b1e40daad5f48e10433e456a337f1c40b4082879c8",
+      "ubuntu_source_package": "kf6-ktextwidgets",
+      "provider_decision": "pending-ci"
+    },
+    "kwallet": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/kwallet-6.30.0.tar.xz",
+      "kde_source_sha256": "93cb9c1df2630807c04bf8c30312e75ae3bb466c77dd9b29bb2c752e71d34a26",
+      "ubuntu_source_package": "kf6-kwallet",
+      "provider_decision": "pending-ci"
+    },
+    "kxmlgui": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/kxmlgui-6.30.0.tar.xz",
+      "kde_source_sha256": "10fb8a0f7b874248ff60d9a8ee4e1f06a0efcf01b0d34d7635dfff86e848c352",
+      "ubuntu_source_package": "kf6-kxmlgui",
+      "provider_decision": "pending-ci"
+    },
+    "purpose": {
+      "required_upstream_version": "6.30.0",
+      "kde_source_url": "https://download.kde.org/stable/frameworks/6.30/purpose-6.30.0.tar.xz",
+      "kde_source_sha256": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862",
+      "ubuntu_source_package": "kf6-purpose",
+      "provider_decision": "pending-ci"
+    }
+  },
+  "platform_contract": {
+    "qt_minimum": "6.9.0",
+    "cmake_minimum": "3.29",
+    "qt_probe_package": "qt6-base-dev"
+  },
+  "evidence": null,
+  "execution_request": {
+    "status": "requested",
+    "reason": "Initial provider ownership audit for all 20 canonical KDE Frameworks Tier 3 nodes.",
+    "package_state_effect": "none"
+  },
+  "stable_promotion_requires_explicit_user_approval": true
+}
