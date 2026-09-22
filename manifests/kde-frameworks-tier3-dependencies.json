@@ -168,8 +168,8 @@
           "kdoctools"
         ]
       },
-      "state": "pending",
-      "readiness": "build-level1-ready",
+      "state": "PASS",
+      "readiness": "PASS",
       "provider": "supralinux",
       "provider_audit": {
         "status": "PASS",
@@ -196,10 +196,28 @@
         "package_state_effect": "none"
       },
       "build_gate": {
-        "state": "READY",
-        "unblocked_by": "kdoctools",
+        "state": "PASS",
+        "predecessor": "kdoctools",
         "predecessor_artifact_id": 10682066198,
         "predecessor_artifact_sha256": "6daeb6beed63ba7b7e441dba4dfd356be3ad48a9f3ae75acddae0945c36a683d"
+      },
+      "packaging": {
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux1",
+        "downstream_eligible": true,
+        "evidence": {
+          "workflow_run": 35721085911,
+          "job_id": 106724304390,
+          "artifact_id": 10691372157,
+          "artifact_sha256": "ff8756cf6efb4746568fa032cfb17cdf5c6b47bc31f532130936536aecb7c5c9",
+          "rootfs_sha256": "e7d055c5ffe173c81869f89084518c679636e98dba77f868944239625af50ab2",
+          "tests": "1/1 PASS",
+          "lintian": "PASS-errors",
+          "apt_check": "PASS",
+          "executable_contract": "PASS",
+          "cmake_consumer": "PASS",
+          "payload_contract": "PASS"
+        }
       }
     }
   },
@@ -1160,9 +1178,22 @@
       "rule": "KDED binary build is blocked until KDocTools has a real PASS build artifact.",
       "manifest": "manifests/kde-tier3-support-build-level0.json",
       "level0_status": "PASS",
-      "level1_status": "ready",
+      "level1_status": "PASS",
       "kdoctools_pass_artifact_id": 10682066198,
-      "level1_manifest": "manifests/kde-tier3-support-build-level1.json"
+      "level1_manifest": "manifests/kde-tier3-support-build-level1.json",
+      "kded_pass_artifact_id": 10691372157,
+      "kded_pass_artifact_sha256": "ff8756cf6efb4746568fa032cfb17cdf5c6b47bc31f532130936536aecb7c5c9"
+    },
+    "support_subdag": {
+      "status": "PASS",
+      "pass": [
+        "breeze-icons",
+        "kdoctools",
+        "kded"
+      ],
+      "pending": [],
+      "current_fail": [],
+      "blocked": []
     }
   }
 }
