@@ -208,3 +208,10 @@ The support components are now **3 PASS / 0 pending / 0 current FAIL / 0 BLOCKED
 - KDED PASS.
 
 The 20 canonical Tier 3 Frameworks remain **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. Their next gate is now the **Tier 3 framework provider audit**. Package contracts and package builds for those 20 nodes remain unauthorized until that audit is complete.
+
+
+## Tier 3 framework provider audit activated
+
+KDE Frameworks 6.30.0 remains the current stable upstream release and is the authority for all 20 Tier 3 versions. The hosted Ubuntu 26.04 audit now checks Resolute's actual `kf6-*` source candidates and records whether Ubuntu can provide the exact 6.30.0 Framework or SupraLINUX must provide it.
+
+This gate has `package_state_effect=none`. All 20 Tier 3 Frameworks remain **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. Package contracts and package builds remain unauthorized until the provider audit is promoted.
