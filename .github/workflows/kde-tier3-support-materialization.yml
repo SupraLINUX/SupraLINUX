@@ -1,0 +1,91 @@
+name: KDE Frameworks Tier 3 support materialization
+
+on:
+  pull_request:
+    paths:
+      - manifests/kde-tier3-support-materialization.json
+      - manifests/kde-tier3-support-package-contracts.json
+      - scripts/materialize-kde-tier3-support-package.sh
+      - scripts/kde-tier3-support-materialization-needed.sh
+      - .github/workflows/kde-tier3-support-materialization.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kde-tier3-support-materialization-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    name: Plan Tier 3 support materialization
+    runs-on: ubuntu-26.04
+    outputs:
+      run: ${{ steps.scope.outputs.run }}
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - name: Determine semantic scope
+        id: scope
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_ACTION: ${{ github.event.action }}
+          EVENT_BEFORE: ${{ github.event.before }}
+          EVENT_AFTER: ${{ github.event.after }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          if [[ "${EVENT_NAME}" == workflow_dispatch ]]; then echo "run=true" >> "${GITHUB_OUTPUT}"; exit 0; fi
+          if [[ "${EVENT_ACTION}" == synchronize ]]; then before="${EVENT_BEFORE}"; after="${EVENT_AFTER}"; else before="${PR_BASE_SHA}"; after="${PR_HEAD_SHA}"; fi
+          for sha in "${before}" "${after}"; do git cat-file -e "${sha}^{commit}" 2>/dev/null || git fetch --no-tags origin "${sha}"; done
+          if bash scripts/kde-tier3-support-materialization-needed.sh "${before}" "${after}"; then
+            echo "run=true" >> "${GITHUB_OUTPUT}"
+          else
+            rc=$?; [[ "${rc}" -eq 1 ]] || exit "${rc}"; echo "run=false" >> "${GITHUB_OUTPUT}"
+          fi
+      - name: Build materialization matrix
+        id: matrix
+        shell: bash
+        run: |
+          python3 - <<'PY' >> "${GITHUB_OUTPUT}"
+          import json
+          m=json.load(open("manifests/kde-tier3-support-materialization.json"))
+          print("matrix="+json.dumps({"node":m["selected_nodes"]},separators=(",",":")))
+          PY
+
+  materialize:
+    name: Materialize ${{ matrix.node }}
+    needs: plan
+    if: needs.plan.outputs.run == 'true'
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    runs-on: ubuntu-26.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Materialize pinned KDE support source
+        run: bash scripts/materialize-kde-tier3-support-package.sh "${{ matrix.node }}"
+      - name: Upload materialization evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-tier3-support-materialized-${{ matrix.node }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-tier3-support-materialization/${{ matrix.node }}/
+          if-no-files-found: error
+          retention-days: 90
+
+  report-skip:
+    name: Report intentional materialization skip
+    needs: plan
+    if: needs.plan.outputs.run != 'true'
+    runs-on: ubuntu-26.04
+    steps:
+      - run: echo 'Tier 3 support materialization intentionally skipped; semantic inputs are unchanged.'
