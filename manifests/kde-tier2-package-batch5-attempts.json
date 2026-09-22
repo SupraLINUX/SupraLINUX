@@ -64,7 +64,17 @@
             "libkf6mime6"
           ]
         },
-        "next_action": "legacy-provider-metadata-and-payload-audit"
+        "next_action": "legacy-provider-metadata-and-payload-audit",
+        "resolution": {
+          "status": "resolved",
+          "compatibility_audit_run": 35690284355,
+          "compatibility_audit_artifact_id": 10678073973,
+          "compatibility_provider_run": 35691309612,
+          "compatibility_provider_job_id": 106628834481,
+          "compatibility_provider_artifact_id": 10679420779,
+          "compatibility_provider_artifact_sha256": "f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b",
+          "canonical_effect": "eligible-for-PASS-promotion"
+        }
       }
     ]
   },
@@ -88,5 +98,33 @@
       "retry_job_id": 106616152530
     }
   ],
-  "note": "A real attempt begins immediately before sbuild. Pre-sbuild failures are INFRA. BLOCKED is distinct from FAIL."
+  "note": "A real attempt begins immediately before sbuild. Pre-sbuild failures are INFRA. BLOCKED is distinct from FAIL.",
+  "compatibility_provider_attempts": {
+    "kmime": [
+      {
+        "attempt": 1,
+        "provider_package_version": "25.12.3-0ubuntu1+supralinux1",
+        "commit": "76e4027308957b1ff0b89d812369bb3287a7b30c",
+        "workflow_run": 35691309612,
+        "materialization_job_id": 106628689878,
+        "materialization_artifact_id": 10678479790,
+        "materialization_artifact_sha256": "6fcfc4357efd8852134ab2b36b2b2509b726a6282354fb347d48b025ba0b161b",
+        "rootfs_job_id": 106628690029,
+        "rootfs_artifact_id": 10679200063,
+        "rootfs_artifact_sha256": "e09e001bd03b1b4c1dc46184626ed6d5536e5c66f1878cf6e8ca89dca53f0040",
+        "build_job_id": 106628834481,
+        "build_artifact_id": 10679420779,
+        "build_artifact_sha256": "f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b",
+        "package_attempted": true,
+        "result": "PASS",
+        "clean_sbuild": "PASS",
+        "lintian": "PASS-errors",
+        "coinstallation": "PASS",
+        "apt_check": "PASS",
+        "legacy_consumer": "PASS",
+        "framework_consumer": "PASS",
+        "package_state_effect": "enables-kmime-pass"
+      }
+    ]
+  }
 }
