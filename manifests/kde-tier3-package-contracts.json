@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "as_of": "2026-09-22",
-  "state": "reference-capture-pending",
+  "state": "reference-capture-pass",
   "source_authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "packaging_authority": "supralinux",
@@ -47,14 +47,26 @@
     "purpose"
   ],
   "reference_capture": {
-    "status": "pending-ci",
+    "status": "PASS",
     "claim": "packaging-reference-snapshot-only",
     "authoritative": false,
     "package_state_effect": "none",
     "ubuntu_suite": "resolute",
     "debian_suite": "sid",
     "selection_policy": "prefer-exact-kde-6.30.0-otherwise-newest-not-newer",
-    "evidence": null
+    "evidence": {
+      "result": "PASS",
+      "workflow_run": 35726410174,
+      "job_id": 106741028368,
+      "commit": "cd01a5357141e5b15744aa03a63fe3226deead1a",
+      "artifact_id": 10693663804,
+      "artifact_sha256": "5e8f5989fe636e771b703814ab653ef60034396f5c5256a8af1dd8d37003a82b",
+      "snapshot_sha256": "6ca804f733769e2b770beb65226e0183d17b80eb38abf1e116ac9b6290391bb6",
+      "versions_sha256": "e405c341cb5fdd81a8952965e97ac7d8fd82c267260346d081df167a2bfbcbaa",
+      "nodes": 20,
+      "debian_exact_selected_kde": 20,
+      "package_state_effect": "none"
+    }
   },
   "nodes": {
     "baloo": {
@@ -62,7 +74,7 @@
       "source_sha256": "a59d33a919bfa1d164c8f3a6f992c609edaf2131ac5f52ea4ecb77f6fbc53be1",
       "source_package": "kf6-baloo",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -110,7 +122,7 @@
       "source_sha256": "680120f09929d51da0a65e96a1f7d20ffbbdd2795a165719b0d07e00475e77c4",
       "source_package": "kf6-kbookmarks",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -156,7 +168,7 @@
       "source_sha256": "0159f80d030ac250b0b353113a55c013ed7e38cb0b678df44d2f0d0b2aca944c",
       "source_package": "kf6-kcmutils",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -208,7 +220,7 @@
       "source_sha256": "6efd9fc7786a7e979b32904aeadf1d2d8e69a5da110f8ebd45f95ec02de41f77",
       "source_package": "kf6-kconfigwidgets",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -252,7 +264,7 @@
       "source_sha256": "08d95cf546c941dbe21a76fbc8b88a466f276ab29e866600994f4f60d604c7f4",
       "source_package": "kf6-kdav",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -296,7 +308,7 @@
       "source_sha256": "9bf244884b09ce38ad84d00e5879e798b02e1610ec8f3d9ee6c93e7502b356e2",
       "source_package": "kf6-kdesu",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -342,7 +354,7 @@
       "source_sha256": "c0c684823d0e087f35168cd79f1053fd358bb8fb47b27996a11c7d7ee3da6f4d",
       "source_package": "kf6-kiconthemes",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -392,7 +404,7 @@
       "source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
       "source_package": "kf6-kio",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -442,7 +454,7 @@
       "source_sha256": "bf36e3619df1c6ad3d900bd36433d97ab295be41c1cc401ff0e766380788bbae",
       "source_package": "kf6-kjobwidgets",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -486,7 +498,7 @@
       "source_sha256": "85408768b5c3f4b0b51ee6a14ae73fea263f451404e266e286c55e0c17e44037",
       "source_package": "kf6-knewstuff",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -536,7 +548,7 @@
       "source_sha256": "4a133decdb0d3731dbaa1d3625b30f057089e5c59c8326ff88a047cef35b2efb",
       "source_package": "kf6-knotifyconfig",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -580,7 +592,7 @@
       "source_sha256": "99f5a0e3a4da10e1a0fbfb505ae966cd87627f887dd07929a920afe41c862ac0",
       "source_package": "kf6-kparts",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -624,7 +636,7 @@
       "source_sha256": "094868f11c8c46e57a077c2788a39c6ee0b0ebc2b64279c6f7c70a5152f518e7",
       "source_package": "kf6-kpeople",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -674,7 +686,7 @@
       "source_sha256": "0885d0936aec6dc8553c673f1c685013e345b933a52812a07c5bddd1eebdb551",
       "source_package": "kf6-krunner",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -716,7 +728,7 @@
       "source_sha256": "7b7aba4e9baa88bfb303977e139e8a105b5cd243443029ee773954307b51eb91",
       "source_package": "kf6-ksvg",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -760,7 +772,7 @@
       "source_sha256": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7",
       "source_package": "kf6-ktexteditor",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -808,7 +820,7 @@
       "source_sha256": "b06b11bb727bf9c3578797b1e40daad5f48e10433e456a337f1c40b4082879c8",
       "source_package": "kf6-ktextwidgets",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -852,7 +864,7 @@
       "source_sha256": "93cb9c1df2630807c04bf8c30312e75ae3bb466c77dd9b29bb2c752e71d34a26",
       "source_package": "kf6-kwallet",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -900,7 +912,7 @@
       "source_sha256": "10fb8a0f7b874248ff60d9a8ee4e1f06a0efcf01b0d34d7635dfff86e848c352",
       "source_package": "kf6-kxmlgui",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -944,7 +956,7 @@
       "source_sha256": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862",
       "source_package": "kf6-purpose",
       "provider": "supralinux",
-      "contract_state": "reference-capture-pending",
+      "contract_state": "reference-capture-pass",
       "package_version_candidate": null,
       "technical_references": {
         "ubuntu": {
@@ -989,8 +1001,12 @@
     }
   },
   "execution_request": {
-    "status": "requested",
-    "reason": "Initial signed Ubuntu/Debian technical-reference capture for all 20 Tier 3 package contracts.",
+    "status": "consumed",
+    "consumed_by": {
+      "workflow_run": 35726410174,
+      "job_id": 106741028368,
+      "artifact_id": 10693663804
+    },
     "package_state_effect": "none"
   },
   "stable_promotion_requires_explicit_user_approval": true
