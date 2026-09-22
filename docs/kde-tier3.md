@@ -147,3 +147,12 @@ The materializer verifies the exact KDE 6.30 orig tar and pinned Debian 6.30 pac
 Breeze Icons, KDocTools and KDED source materialization completed successfully in run `35698463205`. Each artifact preserves the KDE 6.30 authoritative source hash and contains a Resolute-adapted source package; this phase did not build binary packages and therefore changed no package state.
 
 The active gate is now **support build level 0**: Breeze Icons and KDocTools may build independently. KDED remains deferred until KDocTools has a real PASS artifact that can feed its build.
+
+
+## Support build level 0 activated
+
+The first real support-package build campaign is now active.
+
+Breeze Icons and KDocTools are independent level-0 nodes and build in parallel from their promoted materialized source packages. The workflow injects only pinned downstream-eligible SupraLINUX KDE 6.30 predecessors and validates their exact versions/hashes before sbuild.
+
+KDED is explicitly **BLOCKED** by KDocTools at this stage. It is not attempted and is not counted as FAIL.
