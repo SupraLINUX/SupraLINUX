@@ -258,3 +258,10 @@ The review compares the promoted Ubuntu/Debian packaging trees against KDE-upstr
 The packaging-delta review passed in run `35730670337`. All 20 nodes retain identical Ubuntu/Debian binary package identities, but all 20 have at least one packaging delta requiring an explicit SupraLINUX decision.
 
 Canonical readiness is now `package-contract-review-pass`. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. The next gate is `tier3-package-contract-decision`; materialization and builds remain unauthorized.
+
+
+## Tier 3 package contracts ready
+
+The contract-review evidence has been converted into explicit SupraLINUX decisions. Canonical readiness is now `package-contract-ready` and package contract state is `not-materialized`.
+
+Materialization is the active gate. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**; no package build is authorized until source-package materialization completes.
