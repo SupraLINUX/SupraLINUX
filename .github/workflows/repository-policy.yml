@@ -189,6 +189,10 @@ jobs:
       - name: Validate KDE Tier 2 KMime compatibility-provider audit
         run: python3 scripts/validate_kde_tier2_kmime_compatibility_audit.py
 
+      - name: Test KDE Tier 2 KMime legacy-provider semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier2-kmime-legacy-provider-scope.sh
+
       - name: Validate KDE Tier 2 KMime legacy compatibility provider
         run: python3 scripts/validate_kde_tier2_kmime_legacy_provider.py
 
