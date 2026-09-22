@@ -40,11 +40,12 @@ for path in (
 ):
     req((ROOT/path).exists(),f"missing compatibility audit component: {path}")
 if m.get("state")=="PASS":
-    ev=m.get("evidence",{})
-    req(ev.get("audit_result")=="PASS","audit PASS evidence")
+    result=m.get("result",{})
+    ev=result.get("evidence",{})
+    req(result.get("audit_result")=="PASS","audit PASS evidence")
     req(isinstance(ev.get("workflow_run"),int) and isinstance(ev.get("job_id"),int),"audit run/job evidence")
     req(isinstance(ev.get("artifact_id"),int) and len(ev.get("artifact_sha256",""))==64,"audit artifact evidence")
-    req(ev.get("package_state_effect")=="none","audit PASS package-state semantics")
+    req(result.get("package_state_effect")=="none","audit PASS package-state semantics")
 if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)
     raise SystemExit(1)
