@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "as_of": "2026-09-22",
-  "state": "contract-review-pass",
+  "state": "contracts-ready",
   "source_authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "packaging_authority": "supralinux",
@@ -22,7 +22,13 @@
     "kde_upstream_contract_wins_on_namespace_transition": true,
     "package_pass_requires_real_clean_build": true,
     "reference_orig_must_match_kde_authority_when_same_upstream_version": true,
-    "provider_packaging_tooling_may_be_adapted_to_base": true
+    "provider_packaging_tooling_may_be_adapted_to_base": true,
+    "python_bindings_follow_upstream_defaults": true,
+    "upstream_tests_must_run": true,
+    "reference_test_suppression_not_authoritative": true,
+    "selected_linux_profiles_must_be_preserved": true,
+    "development_dependencies_follow_exported_upstream_contract": true,
+    "test_environment_dependencies_do_not_create_dag_edges": true
   },
   "selected_nodes": [
     "baloo",
@@ -74,8 +80,8 @@
       "source_sha256": "a59d33a919bfa1d164c8f3a6f992c609edaf2131ac5f52ea4ecb77f6fbc53be1",
       "source_package": "kf6-baloo",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-baloo",
@@ -115,15 +121,64 @@
           "orig_tar_file": "kf6-baloo_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "a59d33a919bfa1d164c8f3a6f992c609edaf2131ac5f52ea4ecb77f6fbc53be1"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "baloo6",
+        "libkf6baloo-dev",
+        "libkf6baloo-doc",
+        "libkf6baloo6",
+        "libkf6balooengine6",
+        "qml6-module-org-kde-baloo"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "baloo6",
+        "libkf6baloo-dev",
+        "libkf6baloo-doc",
+        "libkf6baloo6",
+        "libkf6balooengine6",
+        "qml6-module-org-kde-baloo"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "d5e63be64936b478d3ec2a9d9c493d79d5a662639a48c105d9651c8e8cb3f78d",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        },
+        {
+          "classification": "test-policy",
+          "decision": "do-not-inherit-disabled-or-ignored-tests",
+          "rationale": "SupraLINUX package PASS requires a real positive upstream test result; environment failures are remediated rather than hidden."
+        }
+      ]
     },
     "kbookmarks": {
       "upstream_version": "6.30.0",
       "source_sha256": "680120f09929d51da0a65e96a1f7d20ffbbdd2795a165719b0d07e00475e77c4",
       "source_package": "kf6-kbookmarks",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kbookmarks",
@@ -161,15 +216,62 @@
           "orig_tar_file": "kf6-kbookmarks_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "680120f09929d51da0a65e96a1f7d20ffbbdd2795a165719b0d07e00475e77c4"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "libkf6bookmarks-data",
+        "libkf6bookmarks-dev",
+        "libkf6bookmarks-doc",
+        "libkf6bookmarks6",
+        "libkf6bookmarkswidgets6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "libkf6bookmarks-data",
+        "libkf6bookmarks-dev",
+        "libkf6bookmarks-doc",
+        "libkf6bookmarks6",
+        "libkf6bookmarkswidgets6"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "16797980fabab89ffb182589542f418f4f7278dafdd2a420cb3f35cd1163ad84",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        },
+        {
+          "classification": "test-environment-provider",
+          "decision": "retain current Debian xvfb/xauth/dbus test tooling where present",
+          "rationale": "Test runner tooling is not a KDE ABI/build dependency edge."
+        }
+      ]
     },
     "kcmutils": {
       "upstream_version": "6.30.0",
       "source_sha256": "0159f80d030ac250b0b353113a55c013ed7e38cb0b678df44d2f0d0b2aca944c",
       "source_package": "kf6-kcmutils",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kcmutils",
@@ -213,15 +315,63 @@
           "orig_tar_file": "kf6-kcmutils_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "0159f80d030ac250b0b353113a55c013ed7e38cb0b678df44d2f0d0b2aca944c"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "libkf6kcmutils-bin",
+        "libkf6kcmutils-data",
+        "libkf6kcmutils-dev",
+        "libkf6kcmutils-doc",
+        "libkf6kcmutils6",
+        "libkf6kcmutilscore6",
+        "libkf6kcmutilsquick6",
+        "qml6-module-org-kde-kcmutils"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "libkf6kcmutils-bin",
+        "libkf6kcmutils-data",
+        "libkf6kcmutils-dev",
+        "libkf6kcmutils-doc",
+        "libkf6kcmutils6",
+        "libkf6kcmutilscore6",
+        "libkf6kcmutilsquick6",
+        "qml6-module-org-kde-kcmutils"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "ed24fd11497ef4bf09ebc8a1f7ba6267c139f36ff2ddc54a0383ca90fabf11d6",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        }
+      ]
     },
     "kconfigwidgets": {
       "upstream_version": "6.30.0",
       "source_sha256": "6efd9fc7786a7e979b32904aeadf1d2d8e69a5da110f8ebd45f95ec02de41f77",
       "source_package": "kf6-kconfigwidgets",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kconfigwidgets",
@@ -257,15 +407,55 @@
           "orig_tar_file": "kf6-kconfigwidgets_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "6efd9fc7786a7e979b32904aeadf1d2d8e69a5da110f8ebd45f95ec02de41f77"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "libkf6configwidgets-data",
+        "libkf6configwidgets-dev",
+        "libkf6configwidgets-doc",
+        "libkf6configwidgets6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "libkf6configwidgets-data",
+        "libkf6configwidgets-dev",
+        "libkf6configwidgets-doc",
+        "libkf6configwidgets6"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "191c332881d177e2b3e8d66663772e004db8a4fbfdff74235f665f2b52f47109",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        }
+      ]
     },
     "kdav": {
       "upstream_version": "6.30.0",
       "source_sha256": "08d95cf546c941dbe21a76fbc8b88a466f276ab29e866600994f4f60d604c7f4",
       "source_package": "kf6-kdav",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kdav",
@@ -301,15 +491,60 @@
           "orig_tar_file": "kf6-kdav_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "08d95cf546c941dbe21a76fbc8b88a466f276ab29e866600994f4f60d604c7f4"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "libkf6dav-data",
+        "libkf6dav-dev",
+        "libkf6dav-doc",
+        "libkf6dav6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "libkf6dav-data",
+        "libkf6dav-dev",
+        "libkf6dav-doc",
+        "libkf6dav6"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "f9ae4cc1bb30a078c7ef5a37bdc7f9482afc84a501d1ef083425629a866ef06c",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        },
+        {
+          "classification": "test-environment-provider",
+          "decision": "retain Debian kio6 build-time test provider without adding a KDAV→KIO build edge",
+          "rationale": "KDE upstream source dependency graph does not require KIO for KDAV."
+        }
+      ]
     },
     "kdesu": {
       "upstream_version": "6.30.0",
       "source_sha256": "9bf244884b09ce38ad84d00e5879e798b02e1610ec8f3d9ee6c93e7502b356e2",
       "source_package": "kf6-kdesu",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kdesu",
@@ -347,15 +582,65 @@
           "orig_tar_file": "kf6-kdesu_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "9bf244884b09ce38ad84d00e5879e798b02e1610ec8f3d9ee6c93e7502b356e2"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "libkf6su-bin",
+        "libkf6su-data",
+        "libkf6su-dev",
+        "libkf6su-doc",
+        "libkf6su6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "libkf6su-bin",
+        "libkf6su-data",
+        "libkf6su-dev",
+        "libkf6su-doc",
+        "libkf6su6"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "d1efb700ac13cb1ddf0bc029e6b4a24f9b10da84ae185cd84812e3f17cf62ab3",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true,
+        "KDESU_USE_SUDO_DEFAULT": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        },
+        {
+          "classification": "base-integration-exception",
+          "decision": "KDESU_USE_SUDO_DEFAULT=ON",
+          "upstream_blob": "14455a9354911d7bbf04feadc87d75140066a40b",
+          "upstream_default": false,
+          "rationale": "Ubuntu-family base locks the root account by default; sudo is required for usable KDESu integration."
+        }
+      ]
     },
     "kiconthemes": {
       "upstream_version": "6.30.0",
       "source_sha256": "c0c684823d0e087f35168cd79f1053fd358bb8fb47b27996a11c7d7ee3da6f4d",
       "source_package": "kf6-kiconthemes",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kiconthemes",
@@ -397,15 +682,71 @@
           "orig_tar_file": "kf6-kiconthemes_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "c0c684823d0e087f35168cd79f1053fd358bb8fb47b27996a11c7d7ee3da6f4d"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "libkf6iconthemes-bin",
+        "libkf6iconthemes-data",
+        "libkf6iconthemes-dev",
+        "libkf6iconthemes-doc",
+        "libkf6iconthemes6",
+        "libkf6iconwidgets6",
+        "qml6-module-org-kde-iconthemes"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "libkf6iconthemes-bin",
+        "libkf6iconthemes-data",
+        "libkf6iconthemes-dev",
+        "libkf6iconthemes-doc",
+        "libkf6iconthemes6",
+        "libkf6iconwidgets6",
+        "qml6-module-org-kde-iconthemes"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "c39952329869c0deb4ffb5f3bf36ce5a89d1b8290f7a14fe135a4453c32ff210",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        },
+        {
+          "classification": "test-environment-provider",
+          "decision": "retain current Debian xvfb/xauth/dbus test tooling where present",
+          "rationale": "Test runner tooling is not a KDE ABI/build dependency edge."
+        },
+        {
+          "classification": "test-policy",
+          "decision": "do-not-inherit-disabled-or-ignored-tests",
+          "rationale": "SupraLINUX package PASS requires a real positive upstream test result; environment failures are remediated rather than hidden."
+        }
+      ]
     },
     "kio": {
       "upstream_version": "6.30.0",
       "source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
       "source_package": "kf6-kio",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kio",
@@ -447,15 +788,85 @@
           "orig_tar_file": "kf6-kio_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "kio6",
+        "libkf6kio-dev",
+        "libkf6kio-doc",
+        "libkf6kiocore6",
+        "libkf6kiofilewidgets6",
+        "libkf6kiogui6",
+        "libkf6kiowidgets6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "kio6",
+        "libkf6kio-dev",
+        "libkf6kio-doc",
+        "libkf6kiocore6",
+        "libkf6kiofilewidgets6",
+        "libkf6kiogui6",
+        "libkf6kiowidgets6"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "50508b96984930b303c3d4467b464c8275de59ae68e210c8ad671e0832262e84",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true,
+        "WITH_WAYLAND": true,
+        "BUILD_DESIGNERPLUGIN": true,
+        "KDE_INSTALL_APP_TEMPLATES": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        },
+        {
+          "classification": "upstream-feature-restoration",
+          "decision": "BUILD_TESTING=ON; WITH_WAYLAND=ON on Linux",
+          "upstream_blob": "2b655093491670009d9396b60159afbec5cc8385",
+          "rationale": "KDE defaults Wayland ON on Linux; reference BUILD_TESTING=OFF is rejected."
+        },
+        {
+          "classification": "test-policy",
+          "decision": "do-not-inherit-disabled-or-ignored-tests",
+          "rationale": "SupraLINUX package PASS requires a real positive upstream test result; environment failures are remediated rather than hidden."
+        }
+      ],
+      "binary_relation_overrides": [
+        {
+          "package": "kio6",
+          "field": "Depends",
+          "action": "ensure",
+          "value": "kwallet6",
+          "classification": "selected-linux-profile-runtime-provider",
+          "rationale": "KWallet is the KDE-selected Linux profile for KIO password storage."
+        }
+      ]
     },
     "kjobwidgets": {
       "upstream_version": "6.30.0",
       "source_sha256": "bf36e3619df1c6ad3d900bd36433d97ab295be41c1cc401ff0e766380788bbae",
       "source_package": "kf6-kjobwidgets",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kjobwidgets",
@@ -491,6 +902,75 @@
           "orig_tar_file": "kf6-kjobwidgets_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "bf36e3619df1c6ad3d900bd36433d97ab295be41c1cc401ff0e766380788bbae"
         }
+      },
+      "compatibility_binary_packages": [
+        "libkf6jobwidgets-data",
+        "libkf6jobwidgets-dev",
+        "libkf6jobwidgets-doc",
+        "libkf6jobwidgets6"
+      ],
+      "supralinux_additional_binary_packages": [
+        "python3-kf6jobwidgets"
+      ],
+      "target_binary_packages": [
+        "libkf6jobwidgets-data",
+        "libkf6jobwidgets-dev",
+        "libkf6jobwidgets-doc",
+        "libkf6jobwidgets6",
+        "python3-kf6jobwidgets"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "f1fa1c6f41bbaaf140c65a6aa195a20ef791de09885a5b955252b9754c41e4f8",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true,
+        "BUILD_PYTHON_BINDINGS": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        },
+        {
+          "classification": "upstream-feature-restoration",
+          "decision": "BUILD_PYTHON_BINDINGS=ON",
+          "upstream_blob": "79a60665199ccbb54ca094e25f84839aeecde040",
+          "rationale": "KDE 6.30 declares Python bindings ON by default; Debian/Ubuntu reference OFF is not authoritative."
+        },
+        {
+          "classification": "test-environment-provider",
+          "decision": "retain current Debian xvfb/xauth/dbus test tooling where present",
+          "rationale": "Test runner tooling is not a KDE ABI/build dependency edge."
+        }
+      ],
+      "python_module": "KJobWidgets",
+      "python_runtime_contract": {
+        "upstream_typesystems": [
+          "QtCore",
+          "QtWidgets",
+          "KCoreAddons"
+        ],
+        "provider_packages": [
+          "python3-pyside6.qtwidgets",
+          "python3-kcoreaddons"
+        ],
+        "provider_platform": "ubuntu-resolute",
+        "classification": "python-binding-runtime-provider-closure"
       }
     },
     "knewstuff": {
@@ -498,8 +978,8 @@
       "source_sha256": "85408768b5c3f4b0b51ee6a14ae73fea263f451404e266e286c55e0c17e44037",
       "source_package": "kf6-knewstuff",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-knewstuff",
@@ -541,15 +1021,66 @@
           "orig_tar_file": "kf6-knewstuff_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "85408768b5c3f4b0b51ee6a14ae73fea263f451404e266e286c55e0c17e44037"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "knewstuff-dialog6",
+        "libkf6newstuff-data",
+        "libkf6newstuff-dev",
+        "libkf6newstuff-doc",
+        "libkf6newstuffcore6",
+        "libkf6newstuffwidgets6",
+        "qml6-module-org-kde-newstuff"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "knewstuff-dialog6",
+        "libkf6newstuff-data",
+        "libkf6newstuff-dev",
+        "libkf6newstuff-doc",
+        "libkf6newstuffcore6",
+        "libkf6newstuffwidgets6",
+        "qml6-module-org-kde-newstuff"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "24501881b98aec525d67bebc537e2d85853854a2344b095f8e63c73565bf5f8f",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        },
+        {
+          "classification": "test-policy",
+          "decision": "do-not-inherit-disabled-or-ignored-tests",
+          "rationale": "SupraLINUX package PASS requires a real positive upstream test result; environment failures are remediated rather than hidden."
+        }
+      ]
     },
     "knotifyconfig": {
       "upstream_version": "6.30.0",
       "source_sha256": "4a133decdb0d3731dbaa1d3625b30f057089e5c59c8326ff88a047cef35b2efb",
       "source_package": "kf6-knotifyconfig",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-knotifyconfig",
@@ -585,15 +1116,55 @@
           "orig_tar_file": "kf6-knotifyconfig_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "4a133decdb0d3731dbaa1d3625b30f057089e5c59c8326ff88a047cef35b2efb"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "libkf6notifyconfig-data",
+        "libkf6notifyconfig-dev",
+        "libkf6notifyconfig-doc",
+        "libkf6notifyconfig6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "libkf6notifyconfig-data",
+        "libkf6notifyconfig-dev",
+        "libkf6notifyconfig-doc",
+        "libkf6notifyconfig6"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "6cdd919d7ddce6c9306370980f1cd14df5077b40fa01d81236b38d6a2a9ea649",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        }
+      ]
     },
     "kparts": {
       "upstream_version": "6.30.0",
       "source_sha256": "99f5a0e3a4da10e1a0fbfb505ae966cd87627f887dd07929a920afe41c862ac0",
       "source_package": "kf6-kparts",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kparts",
@@ -629,15 +1200,55 @@
           "orig_tar_file": "kf6-kparts_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "99f5a0e3a4da10e1a0fbfb505ae966cd87627f887dd07929a920afe41c862ac0"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "libkf6parts-data",
+        "libkf6parts-dev",
+        "libkf6parts-doc",
+        "libkf6parts6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "libkf6parts-data",
+        "libkf6parts-dev",
+        "libkf6parts-doc",
+        "libkf6parts6"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "67e9851badde0130f5afbf12713644dcc5e4f0f42ef606143a957fb65c318f27",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        }
+      ]
     },
     "kpeople": {
       "upstream_version": "6.30.0",
       "source_sha256": "094868f11c8c46e57a077c2788a39c6ee0b0ebc2b64279c6f7c70a5152f518e7",
       "source_package": "kf6-kpeople",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kpeople",
@@ -679,15 +1290,66 @@
           "orig_tar_file": "kf6-kpeople_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "094868f11c8c46e57a077c2788a39c6ee0b0ebc2b64279c6f7c70a5152f518e7"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "libkf6people-data",
+        "libkf6people-dev",
+        "libkf6people-doc",
+        "libkf6people6",
+        "libkf6peoplebackend6",
+        "libkf6peoplewidgets6",
+        "qml6-module-org-kde-people"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "libkf6people-data",
+        "libkf6people-dev",
+        "libkf6people-doc",
+        "libkf6people6",
+        "libkf6peoplebackend6",
+        "libkf6peoplewidgets6",
+        "qml6-module-org-kde-people"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "27183cd75cb9995e47800fec55a2f8f482d41328fbf0e3422a2deb47e8d4b40d",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        },
+        {
+          "classification": "test-environment-provider",
+          "decision": "retain current Debian xvfb/xauth/dbus test tooling where present",
+          "rationale": "Test runner tooling is not a KDE ABI/build dependency edge."
+        }
+      ]
     },
     "krunner": {
       "upstream_version": "6.30.0",
       "source_sha256": "0885d0936aec6dc8553c673f1c685013e345b933a52812a07c5bddd1eebdb551",
       "source_package": "kf6-krunner",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-krunner",
@@ -721,15 +1383,58 @@
           "orig_tar_file": "kf6-krunner_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "0885d0936aec6dc8553c673f1c685013e345b933a52812a07c5bddd1eebdb551"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "libkf6runner-dev",
+        "libkf6runner-doc",
+        "libkf6runner6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "libkf6runner-dev",
+        "libkf6runner-doc",
+        "libkf6runner6"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "949889c41a828d79ed9611762f8d750896cd49571c1c2bf4fbcb1663659c9f56",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        },
+        {
+          "classification": "test-environment-provider",
+          "decision": "retain current Debian xvfb/xauth/dbus test tooling where present",
+          "rationale": "Test runner tooling is not a KDE ABI/build dependency edge."
+        }
+      ]
     },
     "ksvg": {
       "upstream_version": "6.30.0",
       "source_sha256": "7b7aba4e9baa88bfb303977e139e8a105b5cd243443029ee773954307b51eb91",
       "source_package": "kf6-ksvg",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-ksvg",
@@ -765,15 +1470,55 @@
           "orig_tar_file": "kf6-ksvg_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "7b7aba4e9baa88bfb303977e139e8a105b5cd243443029ee773954307b51eb91"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "libkf6svg-dev",
+        "libkf6svg-doc",
+        "libkf6svg6",
+        "qml6-module-org-kde-ksvg"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "libkf6svg-dev",
+        "libkf6svg-doc",
+        "libkf6svg6",
+        "qml6-module-org-kde-ksvg"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "5a8658fb5f5a9f0144d8ab5cf6259913943c3dad3736974aaf0fde67257b7af2",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        }
+      ]
     },
     "ktexteditor": {
       "upstream_version": "6.30.0",
       "source_sha256": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7",
       "source_package": "kf6-ktexteditor",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-ktexteditor",
@@ -813,15 +1558,64 @@
           "orig_tar_file": "kf6-ktexteditor_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "libkf6texteditor-data",
+        "libkf6texteditor-bin",
+        "libkf6texteditor-dev",
+        "libkf6texteditor-doc",
+        "libkf6texteditor-katepart",
+        "libkf6texteditor6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "libkf6texteditor-data",
+        "libkf6texteditor-bin",
+        "libkf6texteditor-dev",
+        "libkf6texteditor-doc",
+        "libkf6texteditor-katepart",
+        "libkf6texteditor6"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "bb4beab892d545539937a1cd4292062c98ed355f05f1e4ea4c62cd4916a09fce",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        },
+        {
+          "classification": "test-policy",
+          "decision": "do-not-inherit-disabled-or-ignored-tests",
+          "rationale": "SupraLINUX package PASS requires a real positive upstream test result; environment failures are remediated rather than hidden."
+        }
+      ]
     },
     "ktextwidgets": {
       "upstream_version": "6.30.0",
       "source_sha256": "b06b11bb727bf9c3578797b1e40daad5f48e10433e456a337f1c40b4082879c8",
       "source_package": "kf6-ktextwidgets",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-ktextwidgets",
@@ -857,15 +1651,55 @@
           "orig_tar_file": "kf6-ktextwidgets_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "b06b11bb727bf9c3578797b1e40daad5f48e10433e456a337f1c40b4082879c8"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "libkf6textwidgets-data",
+        "libkf6textwidgets-dev",
+        "libkf6textwidgets-doc",
+        "libkf6textwidgets6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "libkf6textwidgets-data",
+        "libkf6textwidgets-dev",
+        "libkf6textwidgets-doc",
+        "libkf6textwidgets6"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "f270e09ea12025525657e20fd42f8e62c80faa54cfda84f150dcd768611a523d",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        }
+      ]
     },
     "kwallet": {
       "upstream_version": "6.30.0",
       "source_sha256": "93cb9c1df2630807c04bf8c30312e75ae3bb466c77dd9b29bb2c752e71d34a26",
       "source_package": "kf6-kwallet",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kwallet",
@@ -905,15 +1739,69 @@
           "orig_tar_file": "kf6-kwallet_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "93cb9c1df2630807c04bf8c30312e75ae3bb466c77dd9b29bb2c752e71d34a26"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "kwallet6",
+        "libkf6wallet-data",
+        "libkf6wallet-dev",
+        "libkf6wallet-doc",
+        "libkf6wallet6",
+        "libkf6walletbackend6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "kwallet6",
+        "libkf6wallet-data",
+        "libkf6wallet-dev",
+        "libkf6wallet-doc",
+        "libkf6wallet6",
+        "libkf6walletbackend6"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "14828a62213875b9be1395f66ad4b4aa1f0349ed1ce9bf56a5b639d7089d6d2c",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        },
+        {
+          "classification": "runtime-provider-closure",
+          "decision": "retain Debian libqca-qt6-plugins runtime dependency",
+          "rationale": "QCA plugin availability is runtime functionality, not a KDE DAG edge."
+        },
+        {
+          "classification": "test-policy",
+          "decision": "do-not-inherit-disabled-or-ignored-tests",
+          "rationale": "SupraLINUX package PASS requires a real positive upstream test result; environment failures are remediated rather than hidden."
+        }
+      ]
     },
     "kxmlgui": {
       "upstream_version": "6.30.0",
       "source_sha256": "10fb8a0f7b874248ff60d9a8ee4e1f06a0efcf01b0d34d7635dfff86e848c352",
       "source_package": "kf6-kxmlgui",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kxmlgui",
@@ -949,6 +1837,73 @@
           "orig_tar_file": "kf6-kxmlgui_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "10fb8a0f7b874248ff60d9a8ee4e1f06a0efcf01b0d34d7635dfff86e848c352"
         }
+      },
+      "compatibility_binary_packages": [
+        "libkf6xmlgui-data",
+        "libkf6xmlgui-dev",
+        "libkf6xmlgui-doc",
+        "libkf6xmlgui6"
+      ],
+      "supralinux_additional_binary_packages": [
+        "python3-kf6xmlgui"
+      ],
+      "target_binary_packages": [
+        "libkf6xmlgui-data",
+        "libkf6xmlgui-dev",
+        "libkf6xmlgui-doc",
+        "libkf6xmlgui6",
+        "python3-kf6xmlgui"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "3b271d78381bfde2e9bcd7607b36e889dcc4f0f7e27f1893c4dfc8bcb37c6812",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true,
+        "BUILD_PYTHON_BINDINGS": true,
+        "BUILD_DESIGNERPLUGIN": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        },
+        {
+          "classification": "upstream-feature-restoration",
+          "decision": "BUILD_PYTHON_BINDINGS=ON; BUILD_DESIGNERPLUGIN=ON; BUILD_TESTING=ON",
+          "upstream_blob": "9db633199d697dee4b8730dd580c37ddb5c4a699",
+          "rationale": "KDE 6.30 enables Python bindings and Designer plugin by default and contains tests."
+        },
+        {
+          "classification": "test-policy",
+          "decision": "do-not-inherit-disabled-or-ignored-tests",
+          "rationale": "SupraLINUX package PASS requires a real positive upstream test result; environment failures are remediated rather than hidden."
+        }
+      ],
+      "python_module": "KXmlGui",
+      "python_runtime_contract": {
+        "upstream_typesystems": [
+          "QtWidgets"
+        ],
+        "provider_packages": [
+          "python3-pyside6.qtwidgets"
+        ],
+        "provider_platform": "ubuntu-resolute",
+        "classification": "python-binding-runtime-provider-closure"
       }
     },
     "purpose": {
@@ -956,8 +1911,8 @@
       "source_sha256": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862",
       "source_package": "kf6-purpose",
       "provider": "supralinux",
-      "contract_state": "review-pass",
-      "package_version_candidate": null,
+      "contract_state": "contract-ready",
+      "package_version_candidate": "6.30.0-0supralinux1",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-purpose",
@@ -997,7 +1952,80 @@
           "orig_tar_file": "kf6-purpose_6.30.0.orig.tar.xz",
           "orig_tar_sha256": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862"
         }
-      }
+      },
+      "compatibility_binary_packages": [
+        "libkf6purpose-bin",
+        "libkf6purpose-data",
+        "libkf6purpose-dev",
+        "libkf6purpose6",
+        "libkf6purposewidgets6",
+        "qml6-module-org-kde-purpose"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "target_binary_packages": [
+        "libkf6purpose-bin",
+        "libkf6purpose-data",
+        "libkf6purpose-dev",
+        "libkf6purpose6",
+        "libkf6purposewidgets6",
+        "qml6-module-org-kde-purpose"
+      ],
+      "packaging_baseline": {
+        "provider": "debian-sid",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "f1ca6eba5179a1a682a9543a948d604cb994bf4030ead2b9cef9cc442d6d7743",
+        "role": "technical-packaging-baseline-only",
+        "source_authority": "kde-upstream"
+      },
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "test_policy": {
+        "upstream_tests_required": true,
+        "failures_fatal": true,
+        "reference_test_suppressions": "not-adopted-without-node-specific-evidence"
+      },
+      "contract_decisions": [
+        {
+          "classification": "packaging-baseline",
+          "decision": "use-debian-6.30-tree",
+          "rationale": "Exact KDE 6.30 source reference; binary identities match Ubuntu."
+        },
+        {
+          "classification": "base-provider-adaptation",
+          "decision": "resolute-tooling",
+          "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        },
+        {
+          "classification": "upstream-test-restoration",
+          "decision": "BUILD_TESTING=ON",
+          "upstream_blob": "903c0dff07bd84ec52eb0eccee5b445eb5e5e917",
+          "rationale": "KDE 6.30 builds Purpose autotests/tests when BUILD_TESTING is enabled; reference suppression is rejected."
+        },
+        {
+          "classification": "test-policy",
+          "decision": "do-not-inherit-disabled-or-ignored-tests",
+          "rationale": "SupraLINUX package PASS requires a real positive upstream test result; environment failures are remediated rather than hidden."
+        }
+      ],
+      "binary_relation_overrides": [
+        {
+          "package": "qml6-module-org-kde-purpose",
+          "field": "Recommends/Suggests",
+          "action": "preserve-ubuntu-optional-integration",
+          "value": "Suggests: kdeconnect",
+          "classification": "ubuntu-compatibility-optional-integration",
+          "rationale": "KDE Connect integration is optional; do not pull it by default."
+        },
+        {
+          "package": "libkf6purpose-bin",
+          "field": "Recommends",
+          "action": "do-not-add",
+          "value": "qml6-module-org-kde-kdeconnect",
+          "classification": "optional-integration",
+          "rationale": "KDE Connect is not a required Purpose dependency upstream."
+        }
+      ]
     }
   },
   "execution_request": {
@@ -1477,15 +2505,61 @@
     }
   },
   "contract_decision": {
-    "status": "required",
+    "status": "PASS",
     "authority": "supralinux",
     "source_authority": "kde-upstream",
+    "baseline_policy": "debian-sid-exact-kde-6.30-tree-with-explicit-supralinux-overrides",
     "evidence_source": {
       "workflow_run": 35730670337,
       "artifact_id": 10695332103,
       "review_sha256": "687c2d7962515778b04e07b3a6a00b72453f9021d75d8abac96a3f84756ba358"
     },
-    "materialization_authorized": false,
+    "reasons": [
+      "Debian sid references are exact KDE 6.30.0 sources and all Debian orig SHA-256 values match KDE authority.",
+      "Ubuntu and Debian expose identical binary package identity sets for all 20 nodes.",
+      "KDE upstream feature/default semantics override distribution-specific feature suppression.",
+      "Ubuntu compatibility metadata is preserved when it does not conflict with KDE upstream semantics."
+    ],
+    "materialization_authorized": true,
     "package_build_authorized": false
+  },
+  "provider_adaptations": {
+    "ubuntu-resolute": {
+      "debhelper_compat": {
+        "technical_reference_level": 14,
+        "selected_level": 13,
+        "provider_package": "debhelper",
+        "observed_provider_version": "13.31ubuntu1",
+        "classification": "packaging-tooling-provider-adaptation",
+        "kde_feature_effect": "none",
+        "validation": "clean-build-required"
+      },
+      "changelog_distribution": {
+        "selected": "resolute",
+        "classification": "base-release-target-integration",
+        "kde_feature_effect": "none",
+        "validation": "lintian-clean-build-required"
+      },
+      "shiboken_clang_discovery": {
+        "provider_packages": [
+          "llvm-dev",
+          "libclang-common-21-dev"
+        ],
+        "observed_versions": {
+          "llvm-dev": "1:21.1.6-71",
+          "libclang-common-21-dev": "1:21.1.8-6ubuntu1"
+        },
+        "tool_path": "/usr/bin/llvm-config",
+        "llvm_major": 21,
+        "resource_header": "/usr/lib/llvm-21/lib/clang/21/include/stddef.h",
+        "applies_to": [
+          "kjobwidgets",
+          "kxmlgui"
+        ],
+        "classification": "python-binding-build-tool-provider-adaptation",
+        "kde_feature_effect": "none",
+        "validation": "clean-build-required"
+      }
+    }
   }
 }
