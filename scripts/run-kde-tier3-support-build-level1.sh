@@ -186,7 +186,7 @@ while IFS='|' read -r _pred dev ver; do [[ -z "${dev}" ]] && continue; [[ "$(dpk
 
 STAGE="executable-smoke"
 command -v kded6 | tee "${EVIDENCE}/kded6-path.txt"
-kded6 --version |& tee "${EVIDENCE}/kded6-version.txt"
+QT_QPA_PLATFORM=offscreen kded6 --version |& tee "${EVIDENCE}/kded6-version.txt"
 
 STAGE="cmake-consumer"
 CONSUMER="${WORK}/consumer"; mkdir -p "${CONSUMER}"
