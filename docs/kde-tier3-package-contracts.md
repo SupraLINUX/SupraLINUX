@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **packaging-tree PASS — contract review required**
+Status: **packaging-tree PASS — contract review pending CI**
 
 Reviewed: **2026-09-22**
 
@@ -71,3 +71,12 @@ All **40** pinned packaging trees (20 Frameworks × Ubuntu/Debian) were download
 This remains technical evidence only. No package version, adaptation, materialization or package PASS is implied.
 
 The next gate is **Tier 3 package-contract review**: compare KDE 6.30 upstream requirements against the exact Debian 6.30 tree and Ubuntu compatibility surface, then explicitly record any provider adaptation before materialization is authorized.
+
+
+## Contract review activated
+
+The contract-review lane consumes the promoted packaging-tree artifact and revalidates its index/tree hashes before comparing the exact Ubuntu and Debian package metadata.
+
+Canonical readiness is now `package-contract-review-pending`. The review captures Build-Depends, binary relationship, `debian/rules`, install-manifest, symbols and maintscript deltas alongside the KDE-upstream dependency classes.
+
+Differences are evidence, not automatic FAILs and not automatic contract decisions. Materialization and package builds remain explicitly unauthorized until the resulting review is promoted and each relevant delta is classified.
