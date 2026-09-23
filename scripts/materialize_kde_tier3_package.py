@@ -163,10 +163,29 @@ def validate_test_policy(rules: str) -> None:
             while j < len(lines) and (lines[j].startswith(("\t", " ")) or not lines[j].strip() or lines[j].lstrip().startswith("#")):
                 block.append(lines[j]); j += 1
             meaningful = [x.strip() for x in block if x.strip() and not x.lstrip().startswith("#")]
-            if not any("dh_auto_test" in x for x in meaningful):
+            has_dh_auto_test = any(re.search(r"\bdh_auto_test\b", x) for x in meaningful)
+            has_ctest = any(re.search(r"\bctest\b", x) for x in meaningful)
+            if not (has_dh_auto_test or has_ctest):
                 raise RuntimeError("override_dh_auto_test still suppresses upstream tests")
-            if any("|| true" in x or x.lstrip().startswith("-dh_auto_test") for x in meaningful):
-                raise RuntimeError("dh_auto_test failure suppression remains")
+            if any("|| true" in x or (x.startswith("-") and ("dh_auto_test" in x or re.search(r"\bctest\b", x))) for x in meaningful):
+                raise RuntimeError("test failure suppression remains")
+            if has_ctest:
+                joined = " ".join(meaningful)
+                forbidden = (
+                    r"(^|\s)-E(\s|$)",
+                    r"--exclude-regex(?:=|\s|$)",
+                    r"(^|\s)-R(\s|$)",
+                    r"--tests-regex(?:=|\s|$)",
+                    r"(^|\s)-I(\s|$)",
+                    r"--tests-information(?:=|\s|$)",
+                    r"--label-exclude(?:=|\s|$)",
+                    r"--label-regex(?:=|\s|$)",
+                    r"--rerun-failed(?:\s|$)",
+                    r"--tests-from-file(?:=|\s|$)",
+                    r"--exclude-from-file(?:=|\s|$)",
+                )
+                if any(re.search(pattern, joined) for pattern in forbidden):
+                    raise RuntimeError("direct ctest override filters or excludes upstream tests")
             return
 
 

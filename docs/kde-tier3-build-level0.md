@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 0
 
-Status: **Attempt 5 complete — 11 canonical PASS / 1 runtime-validation-required; Level 1 Attempt 2 active** as of 2026-09-23.
+Status: **Attempt 5 complete — Level 0 closed; Level 1 round 7 source remediation active** as of 2026-09-23.
 
 Level 0 is the first real binary-build campaign for the 20 canonical Tier 3 Frameworks. It contains **12 independent nodes**:
 
@@ -234,3 +234,10 @@ The Level 0 validator accepts both the active `build-level0` phase and the close
 ## Current downstream gate
 
 Level 0 evidence is unchanged. The Level 1 round-6 provider-closure remediation passed Policy run `35828634884` and Attempt 2 is now active for KIO + KXMLGui. This does not alter any Level 0 PASS state.
+
+
+## Post-Level0 round 7 boundary
+
+Level 1 Attempt 2 later produced real KIO and KXMLGui failures and opened global remediation round 7. This does **not** reopen Level 0: its Attempt 5 result remains final at eleven canonical PASS nodes plus KNewStuff runtime-validation-required.
+
+The Level 0 validator therefore treats round 7 as a valid post-Level0 Level 1 lifecycle state only. It does not authorize or schedule any Level 0 build from that remediation.

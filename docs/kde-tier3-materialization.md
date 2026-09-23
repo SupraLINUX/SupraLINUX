@@ -255,3 +255,8 @@ The materialization queue is exactly **KIO + KXMLGui**:
 - KXMLGui `6.30.0-0supralinux2`: adds `python3-build` and `python3-setuptools` for the enabled ECM/Shiboken Python wheel path.
 
 The previous KIO `-2` artifact `10735250819` and KXMLGui `-1` artifact `10703925009` remain retained as immutable history until replacements pass. Materialization is source-only: `package_attempted=false` and it cannot promote either package to PASS.
+
+
+### Round 7 test-policy validator semantics
+
+The materializer's no-test-suppression guard now distinguishes a disabled test override from a direct CTest runner. A direct `ctest` invocation is permitted only when failures remain fatal and no test-selection/exclusion options are present. KIO's round-7 wrapper therefore executes the complete suite while supplying environment isolation; it does not convert failing tests to PASS or filter them out.

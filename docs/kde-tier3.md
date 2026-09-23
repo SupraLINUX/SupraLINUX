@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 Attempt 2 active: KIO + KXMLGui**
+Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 round 7 source remediation: KIO + KXMLGui**
 
 Last reviewed: **2026-09-23**
 
@@ -429,3 +429,18 @@ Repository Policy run `35828634884` validated the complete round-6 provider clos
 A separate activation now authorizes **Attempt 2** for KIO and KXMLGui. No source, package revision or KDE DAG edge changes: KIO remains `6.30.0-0supralinux2`, KXMLGui remains `6.30.0-0supralinux1`, and the complete consumer-specific provider closure is retained exactly as validated.
 
 Canonical package state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED** until the Attempt 2 artifacts are reviewed. Attempt 1 remains historical raw CI failure evidence classified canonically as `INVALIDATED-ORCHESTRATION`.
+
+
+## Current canonical state — Level 1 round 7 source remediation
+
+Level 1 Attempt 2 workflow `35829170695` completed with **0 workflow SUCCESS / 2 real node FAIL** after the round-6 provider closure allowed both packages to reach their own build logic.
+
+KIO failed in its upstream CTest phase because the clean sbuild environment did not yet provide the complete test environment. KXMLGui failed in CMake because the enabled upstream Python bindings require the Python wheel build frontend/backend. Both FAIL records are retained in the Level 1 attempt ledger; no package PASS was promoted.
+
+Round 7 therefore rematerializes exactly two source packages:
+- KIO `6.30.0-0supralinux3`;
+- KXMLGui `6.30.0-0supralinux2`.
+
+Level 0 remains closed at **11 canonical PASS + KNewStuff runtime-validation-required** and is not reopened by this Level 1 remediation. Level 1 binary execution is paused until both round-7 source materializations PASS and their evidence is promoted and policy-validated.
+
+Canonical package-state snapshot remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**; the two Attempt 2 FAILs remain explicit campaign evidence while their nodes are in remediation.
