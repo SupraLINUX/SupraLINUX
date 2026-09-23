@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-22",
+  "as_of": "2026-09-23",
   "role": "tier3-build-level0-attempt-ledger",
   "nodes": {
     "kbookmarks": [
@@ -48,6 +48,20 @@
         "rootfs_artifact_id": 10728279487,
         "rootfs_artifact_sha256": "a4f7401427fb642afcb201142a7746874ab4db6c18d1aa90a4edc10c54ca86e5",
         "downstream_eligible": true
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 35813710318,
+        "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+        "job_id": 107030920402,
+        "artifact_id": 10730882303,
+        "artifact_sha256": "ee28bb9551ad659fe99261e0b6d3f6cfb557cf2c541a8e59438adba8179f72f4",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10730427348,
+        "rootfs_artifact_sha256": "7378d328afb430a2a1211764e705b0343187fe67ae3b1c098653a3d3f51318e7"
       }
     ],
     "kconfigwidgets": [
@@ -95,6 +109,20 @@
         "rootfs_artifact_id": 10728279487,
         "rootfs_artifact_sha256": "a4f7401427fb642afcb201142a7746874ab4db6c18d1aa90a4edc10c54ca86e5",
         "downstream_eligible": true
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 35813710318,
+        "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+        "job_id": 107030920436,
+        "artifact_id": 10730238753,
+        "artifact_sha256": "8f8644969f7ed11e1ab055ed5eda771603beae13e78723dc2d4a6e1459d1b305",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10730427348,
+        "rootfs_artifact_sha256": "7378d328afb430a2a1211764e705b0343187fe67ae3b1c098653a3d3f51318e7"
       }
     ],
     "kdav": [
@@ -145,6 +173,20 @@
         "rootfs_artifact_id": 10728279487,
         "rootfs_artifact_sha256": "a4f7401427fb642afcb201142a7746874ab4db6c18d1aa90a4edc10c54ca86e5",
         "downstream_eligible": true
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 35813710318,
+        "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+        "job_id": 107030920332,
+        "artifact_id": 10730853446,
+        "artifact_sha256": "27aad86f805bb37ed56628b6e0c4f4ac05df3730fb8e220aec8090920aa9fb01",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux2",
+        "rootfs_artifact_id": 10730427348,
+        "rootfs_artifact_sha256": "7378d328afb430a2a1211764e705b0343187fe67ae3b1c098653a3d3f51318e7"
       }
     ],
     "kdesu": [
@@ -192,6 +234,20 @@
         "rootfs_artifact_id": 10728279487,
         "rootfs_artifact_sha256": "a4f7401427fb642afcb201142a7746874ab4db6c18d1aa90a4edc10c54ca86e5",
         "downstream_eligible": true
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 35813710318,
+        "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+        "job_id": 107030920428,
+        "artifact_id": 10731051818,
+        "artifact_sha256": "b4bc1b3e8a2a78c23de8df0596d686cc9e55711c62ca8c2598a8dede22754472",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10730427348,
+        "rootfs_artifact_sha256": "7378d328afb430a2a1211764e705b0343187fe67ae3b1c098653a3d3f51318e7"
       }
     ],
     "kiconthemes": [
@@ -245,6 +301,20 @@
         "tests": "10/10 PASS",
         "remediation_validation": "round2 PASS",
         "note": "Round2 qt6-svg-plugins test-provider remediation validated by attempt3."
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 35813710318,
+        "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+        "job_id": 107030920427,
+        "artifact_id": 10730004382,
+        "artifact_sha256": "2bf00b10ae1ffadd8820bf3333c728c567dfeaf738e6767cda1546807381ebd3",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux3",
+        "rootfs_artifact_id": 10730427348,
+        "rootfs_artifact_sha256": "7378d328afb430a2a1211764e705b0343187fe67ae3b1c098653a3d3f51318e7"
       }
     ],
     "kjobwidgets": [
@@ -298,6 +368,22 @@
         "failure_stage": "lintian/symbols",
         "cause": "Build and 3/3 upstream tests succeeded, but dpkg-gensymbols introduced _ZSt19piecewise_construct@Base with the current Debian revision and Lintian rejected symbols-file-contains-current-version-with-debian-revision.",
         "remediation": "Add an explicit (optional) symbols-template entry at minimal upstream version 6.30.0, preserving the symbol as private/toolchain-dependent rather than KDE public ABI, then rematerialize as 6.30.0-0supralinux4."
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 35813710318,
+        "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+        "job_id": 107030920363,
+        "artifact_id": 10730124052,
+        "artifact_sha256": "22676ef9b0e1c0a98bfe9f22c309e16b0c59c181860136f7dfaa8759e780fc94",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux4",
+        "rootfs_artifact_id": 10730427348,
+        "rootfs_artifact_sha256": "7378d328afb430a2a1211764e705b0343187fe67ae3b1c098653a3d3f51318e7",
+        "tests": "3/3 PASS",
+        "remediation_validation": "round3 PASS"
       }
     ],
     "knewstuff": [
@@ -361,6 +447,27 @@
         "deferred_runtime_validation": [
           "kcmutils"
         ]
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 35813710318,
+        "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+        "job_id": 107030920582,
+        "artifact_id": 10730733894,
+        "artifact_sha256": "ae1f17bf7a189e54bbe1dc16e37485b9180bf9a566500a5553ab9d0efdcf0448",
+        "result": "RUNTIME_PENDING",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10730427348,
+        "rootfs_artifact_sha256": "7378d328afb430a2a1211764e705b0343187fe67ae3b1c098653a3d3f51318e7",
+        "build_result": "PASS",
+        "tests": "5/5 PASS",
+        "downstream_eligible": false,
+        "package_state_effect": "none-runtime-validation-pending",
+        "deferred_runtime_validation": [
+          "kcmutils"
+        ]
       }
     ],
     "kpeople": [
@@ -408,6 +515,20 @@
         "rootfs_artifact_id": 10728279487,
         "rootfs_artifact_sha256": "a4f7401427fb642afcb201142a7746874ab4db6c18d1aa90a4edc10c54ca86e5",
         "downstream_eligible": true
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 35813710318,
+        "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+        "job_id": 107030920456,
+        "artifact_id": 10730678913,
+        "artifact_sha256": "fb64d6ff55a0801a32ff060dcedc1f28dd71bb0a83d6f9a2ef9201ea927e2b3d",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10730427348,
+        "rootfs_artifact_sha256": "7378d328afb430a2a1211764e705b0343187fe67ae3b1c098653a3d3f51318e7"
       }
     ],
     "krunner": [
@@ -459,6 +580,20 @@
         "rootfs_artifact_id": 10728279487,
         "rootfs_artifact_sha256": "a4f7401427fb642afcb201142a7746874ab4db6c18d1aa90a4edc10c54ca86e5",
         "downstream_eligible": true
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 35813710318,
+        "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+        "job_id": 107030920507,
+        "artifact_id": 10730712342,
+        "artifact_sha256": "a3e4cf3307f0def93670f0262c5e4e7084ed1251058d47d6791e6eeefe378a59",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux2",
+        "rootfs_artifact_id": 10730427348,
+        "rootfs_artifact_sha256": "7378d328afb430a2a1211764e705b0343187fe67ae3b1c098653a3d3f51318e7"
       }
     ],
     "ksvg": [
@@ -506,6 +641,20 @@
         "rootfs_artifact_id": 10728279487,
         "rootfs_artifact_sha256": "a4f7401427fb642afcb201142a7746874ab4db6c18d1aa90a4edc10c54ca86e5",
         "downstream_eligible": true
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 35813710318,
+        "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+        "job_id": 107030920374,
+        "artifact_id": 10730963035,
+        "artifact_sha256": "a65603587a852ae709c6b25ec3dde86462ca190b5a29e814e8c31ca90a8f010e",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10730427348,
+        "rootfs_artifact_sha256": "7378d328afb430a2a1211764e705b0343187fe67ae3b1c098653a3d3f51318e7"
       }
     ],
     "ktextwidgets": [
@@ -553,6 +702,20 @@
         "rootfs_artifact_id": 10728279487,
         "rootfs_artifact_sha256": "a4f7401427fb642afcb201142a7746874ab4db6c18d1aa90a4edc10c54ca86e5",
         "downstream_eligible": true
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 35813710318,
+        "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+        "job_id": 107030920375,
+        "artifact_id": 10730507569,
+        "artifact_sha256": "5e48fff46658031f710075a8578cb994f37bc847e2b21790d9c79307bf96fb51",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10730427348,
+        "rootfs_artifact_sha256": "7378d328afb430a2a1211764e705b0343187fe67ae3b1c098653a3d3f51318e7"
       }
     ],
     "kwallet": [
@@ -606,6 +769,26 @@
         "failure_stage": "install-deps",
         "cause": "KDocTools support was injected, but libkf6doctools-dev 6.30 requires libkf6archive-dev >= 6.30 and KArchive was absent from the provider closure.",
         "remediation": "Keep KWallet source at 6.30.0-0supralinux3 and add the already-PASS KArchive artifact only to the retained package-provider closure for KDocTools; do not create a new KDE KWallet dependency edge."
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 35813710318,
+        "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+        "job_id": 107030920472,
+        "artifact_id": 10730477702,
+        "artifact_sha256": "ee43e7aed3766da6e44014c2aa7be260c30f453bdd456b61ab986a80df717a7a",
+        "result": "FAIL",
+        "stage": "post-build-lintian",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux3",
+        "rootfs_artifact_id": 10730427348,
+        "rootfs_artifact_sha256": "7378d328afb430a2a1211764e705b0343187fe67ae3b1c098653a3d3f51318e7",
+        "build_result": "PASS",
+        "sbuild_status": "successful",
+        "tests": "3/3 PASS-before-lintian-failure",
+        "failure_stage": "lintian/symbols",
+        "cause": "KArchive and KDocTools provider closure resolved, kwallet-query.1 was generated, dh_install passed, all 3 upstream tests passed and sbuild completed successfully; Lintian alone rejected _ZSt19piecewise_construct@Base because dpkg-gensymbols recorded the current Debian revision.",
+        "remediation": "Add an explicit (optional) libKF6WalletBackend.so.6 symbols-template entry at minimal upstream version 6.30.0, preserving it as private/toolchain-dependent rather than KDE public ABI, then rematerialize only KWallet as 6.30.0-0supralinux4."
       }
     ]
   },
@@ -659,6 +842,22 @@
       "canonical_promotions": 0,
       "orchestration_note": "Runs 35808224394 and 35808388332 were incomplete 3-node orchestration attempts and have no canonical package-state effect. Run 35808764577 is the corrected full 12-node attempt 3.",
       "note": "Nine normal nodes built PASS and KNewStuff built PASS but remains runtime-validation-pending. KJobWidgets and KWallet remain real FAIL; no attempt-3 result is promoted."
+    },
+    {
+      "attempt": 4,
+      "workflow_run": 35813710318,
+      "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+      "rootfs": {
+        "artifact_id": 10730427348,
+        "artifact_sha256": "7378d328afb430a2a1211764e705b0343187fe67ae3b1c098653a3d3f51318e7"
+      },
+      "result": "PARTIAL",
+      "workflow_jobs": {
+        "success": 11,
+        "fail": 1
+      },
+      "canonical_promotions": 0,
+      "note": "Ten normal nodes built PASS and KNewStuff built PASS but remains runtime-validation-pending. KWallet is the only real FAIL, solely on symbols/Lintian metadata after successful build and 3/3 tests; no attempt-4 result is canonically promoted."
     }
   ]
 }

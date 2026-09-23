@@ -53,7 +53,13 @@ active_nodes=set(active.get("trigger",{}).get("failed_nodes",[]))
 if active:
     round_no=active.get("round")
     req(active.get("status") in {"materialization-pending-ci","materialization-PASS"},"Tier3 active remediation state")
-    if round_no==3:
+    if round_no==4:
+        req(active_nodes=={"kwallet"},"Tier3 round4 failure set")
+        req(active.get("trigger",{}).get("workflow_run")==35813710318,"Tier3 round4 trigger run")
+        req(active.get("source_changed_nodes")==["kwallet"],"Tier3 round4 source-changed set")
+        req(active.get("provider_closure_only_nodes")==[],"Tier3 round4 closure-only set")
+        req(active.get("candidate_package_versions")=={"kwallet":"6.30.0-0supralinux4"},"Tier3 round4 package revision")
+    elif round_no==3:
         req(active_nodes=={"kjobwidgets","kwallet"},"Tier3 round3 failure set")
         req(active.get("trigger",{}).get("workflow_run")==35808764577,"Tier3 round3 trigger run")
         req(active.get("source_changed_nodes")==["kjobwidgets"],"Tier3 round3 source-changed set")
@@ -81,8 +87,8 @@ for node_id in selected:
     req(x.get("contract_state")=="contract-ready",f"{node_id}: contract-ready")
     expected_versions={
         "kiconthemes":"6.30.0-0supralinux3",
-        "kjobwidgets":"6.30.0-0supralinux4" if active.get("round")==3 else "6.30.0-0supralinux3",
-        "kwallet":"6.30.0-0supralinux3",
+        "kjobwidgets":"6.30.0-0supralinux4" if active.get("round") in {3,4} else "6.30.0-0supralinux3",
+        "kwallet":"6.30.0-0supralinux4" if active.get("round")==4 else "6.30.0-0supralinux3",
         "kdav":"6.30.0-0supralinux2",
         "krunner":"6.30.0-0supralinux2",
     }
@@ -136,7 +142,14 @@ req(canonical.get("package_builds") in {"not-authorized-before-tier3-materializa
 if active:
     ar=t.get("active_remediation",{})
     req(ar.get("round")==active.get("round") and set(ar.get("nodes",[]))==active_nodes,"Tier3 canonical remediation linkage")
-    if active.get("round")==3:
+    if active.get("round")==4:
+        req(ar.get("source_materialization_nodes")==["kwallet"],"Tier3 round4 canonical source materialization set")
+        req(ar.get("provider_closure_only_nodes")==[],"Tier3 round4 canonical provider closure set")
+        req(canonical.get("package_builds")=="tier3-level0-remediation-pending","Tier3 round4 build pause")
+        req(ar.get("execution_authorized") is False,"Tier3 round4 execution pause")
+        req(ar.get("status")=="materialization-pending-ci","Tier3 round4 pending canonical state")
+        req(ar.get("next_gate")=="tier3-round4-kwallet-materialization","Tier3 round4 canonical next gate")
+    elif active.get("round")==3:
         req(ar.get("source_materialization_nodes")==["kjobwidgets"],"Tier3 round3 canonical source materialization set")
         req(ar.get("provider_closure_only_nodes")==["kwallet"],"Tier3 round3 canonical provider closure set")
         if ar.get("current_attempt")==4:
@@ -184,13 +197,19 @@ if active:
     req(rel["kwallet"]==[("ensure","libkf6doctools-dev (>= 6.30.0~)")],"KWallet retained KDocTools relation")
     support=c["nodes"]["kwallet"].get("support_provider_requirements",[])
     req(len(support)==1 and support[0].get("id")=="kdoctools" and support[0].get("artifact_id")==10682066198,"KWallet KDocTools support contract")
-    if active.get("round")==3:
+    if active.get("round") in {3,4}:
         additions=c["nodes"]["kjobwidgets"].get("symbol_template_additions",[])
-        req(len(additions)==1 and additions[0].get("symbol")=="_ZSt19piecewise_construct@Base","KJobWidgets round3 symbols addition")
-        req(additions and additions[0].get("tags")==["optional"] and additions[0].get("minimal_version")=="6.30.0","KJobWidgets round3 optional symbol semantics")
+        req(len(additions)==1 and additions[0].get("symbol")=="_ZSt19piecewise_construct@Base","KJobWidgets retained round3 symbols addition")
+        req(additions and additions[0].get("tags")==["optional"] and additions[0].get("minimal_version")=="6.30.0","KJobWidgets retained optional symbol semantics")
         closure=c["nodes"]["kwallet"].get("support_provider_closure_requirements",[])
-        req(len(closure)==1 and closure[0].get("retained_input_id")=="karchive","KWallet round3 KArchive provider closure")
-        req(closure and closure[0].get("kde_dependency_edge") is False and closure[0].get("artifact_id")==10364726750,"KWallet round3 closure authority/evidence")
+        req(len(closure)==1 and closure[0].get("retained_input_id")=="karchive","KWallet retained KArchive provider closure")
+        req(closure and closure[0].get("kde_dependency_edge") is False and closure[0].get("artifact_id")==10364726750,"KWallet retained closure authority/evidence")
+        if active.get("round")==4:
+            wallet_symbols=c["nodes"]["kwallet"].get("symbol_template_additions",[])
+            req(len(wallet_symbols)==1 and wallet_symbols[0].get("package")=="libkf6walletbackend6","KWallet round4 symbols package")
+            req(wallet_symbols and wallet_symbols[0].get("soname")=="libKF6WalletBackend.so.6","KWallet round4 symbols SONAME")
+            req(wallet_symbols and wallet_symbols[0].get("symbol")=="_ZSt19piecewise_construct@Base","KWallet round4 symbols identity")
+            req(wallet_symbols and wallet_symbols[0].get("tags")==["optional"] and wallet_symbols[0].get("minimal_version")=="6.30.0","KWallet round4 optional symbol semantics")
 
 if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)

@@ -98,7 +98,30 @@ if m.get("state") == "remediation-pending-ci":
     req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-remediation-pending", "Tier3 remediation canonical build gate")
     req(active_t.get("execution_authorized") is False and active_t.get("full_level0_rerun_required") is True, "Tier3 remediation binary execution pause")
 
-    if active_round == 3:
+    if active_round == 4:
+        req(active_nodes == {"kwallet"}, "Tier3 round4 failure set")
+        req(queue == ["kwallet"], "Tier3 round4 source materialization queue")
+        req(set(active_m.get("nodes", [])) == {"kwallet"}, "Tier3 round4 materialization node set")
+        req(set(active_t.get("nodes", [])) == {"kwallet"}, "Tier3 round4 canonical remediation set")
+        req(active_c.get("source_changed_nodes") == ["kwallet"] and active_c.get("provider_closure_only_nodes") == [], "Tier3 round4 contract remediation classes")
+        req(active_m.get("source_changed_nodes") == ["kwallet"] and active_m.get("provider_closure_only_nodes") == [], "Tier3 round4 materialization classes")
+        req(active_t.get("source_materialization_nodes") == ["kwallet"] and active_t.get("provider_closure_only_nodes") == [], "Tier3 round4 canonical remediation classes")
+        req(active_c.get("trigger", {}).get("workflow_run") == 35813710318, "Tier3 round4 trigger run")
+        req(active_m.get("trigger_workflow_run") == 35813710318 and active_t.get("trigger_workflow_run") == 35813710318, "Tier3 round4 trigger linkage")
+        versions = active_c.get("candidate_package_versions", {})
+        req(versions == {"kwallet":"6.30.0-0supralinux4"}, "Tier3 round4 contract versions")
+        req(active_m.get("package_revision") == "6.30.0-0supralinux4", "Tier3 round4 materialization revision")
+        req(active_t.get("candidate_package_versions") == versions, "Tier3 round4 canonical versions")
+        additions = contracts["kwallet"].get("symbol_template_additions", [])
+        req(len(additions) == 1, "KWallet round4 symbols addition count")
+        if additions:
+            x = additions[0]
+            req(x.get("package") == "libkf6walletbackend6" and x.get("soname") == "libKF6WalletBackend.so.6", "KWallet round4 symbols package/SONAME")
+            req(x.get("symbol") == "_ZSt19piecewise_construct@Base" and x.get("minimal_version") == "6.30.0", "KWallet round4 symbols identity/version")
+            req(x.get("tags") == ["optional"], "KWallet round4 symbols optional tag")
+        closure = contracts["kwallet"].get("support_provider_closure_requirements", [])
+        req(len(closure) == 1 and closure[0].get("retained_input_id") == "karchive", "KWallet round4 retains KDocTools/KArchive closure")
+    elif active_round == 3:
         req(active_nodes == {"kjobwidgets", "kwallet"}, "Tier3 round3 failure set")
         req(queue == ["kjobwidgets"], "Tier3 round3 source materialization queue")
         req(set(active_m.get("nodes", [])) == {"kjobwidgets"}, "Tier3 round3 materialization node set")
@@ -183,7 +206,12 @@ for node in selected:
         req(node in queue_set, f"{node}: unexpected active remediation node")
         req(prev.get("result") == "PASS", f"{node}: previous materialization PASS retained")
         req(prev.get("package_attempted") is False and prev.get("package_state_effect") == "none", f"{node}: previous materialization semantics")
-        if active_c.get("round") == 3:
+        if active_c.get("round") == 4:
+            req(node == "kwallet", f"{node}: round4 only KWallet rematerializes")
+            req(prev.get("package_version") == "6.30.0-0supralinux3", f"{node}: round4 baseline materialization revision")
+            req(state.get("candidate_package_version") == "6.30.0-0supralinux4", f"{node}: round4 candidate revision")
+            req(len(state.get("evidence_history", [])) >= 3, f"{node}: round4 materialization history retained")
+        elif active_c.get("round") == 3:
             req(node == "kjobwidgets", f"{node}: round3 only KJobWidgets rematerializes")
             req(prev.get("package_version") == "6.30.0-0supralinux3", f"{node}: round3 baseline materialization revision")
             req(state.get("candidate_package_version") == "6.30.0-0supralinux4", f"{node}: round3 candidate revision")
@@ -238,7 +266,7 @@ elif m.get("state") == "PASS":
             req(active_t.get("execution_authorized") is False, "attempt4 not authorized before promotion validation")
             req(active_t.get("next_gate") == "tier3-build-level0-attempt4-activation-validation", "round3 activation validation gate")
 else:
-    expected_queue = ["kjobwidgets"] if active_c.get("round") == 3 else ["kiconthemes","kjobwidgets","kwallet"]
+    expected_queue = ["kwallet"] if active_c.get("round") == 4 else (["kjobwidgets"] if active_c.get("round") == 3 else ["kiconthemes","kjobwidgets","kwallet"])
     req(queue == expected_queue, "active remediation materialization queue")
     req(all(m["nodes"][n].get("state") == "remediation-pending" for n in queue), "active remediation materialization queue states")
     req(all(m["nodes"][n].get("state") == "materialized" for n in selected if n not in queue_set), "unaffected materializations remain PASS")

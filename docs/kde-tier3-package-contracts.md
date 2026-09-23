@@ -143,3 +143,12 @@ KWallet keeps its `6.30.0-0supralinux3` source pin; only its build-provider clos
 
 
 Attempt 4 is activated after Repository Policy run `35813396247`. KJobWidgets uses the promoted `6.30.0-0supralinux4` source contract and KWallet uses the unchanged `6.30.0-0supralinux3` source contract plus its complete KDocTools/KArchive provider closure.
+
+
+## Round 4 contract delta
+
+Attempt 4 run `35813710318` reduced Level 0 to one real FAIL: KWallet. The previously selected KDocTools/KArchive provider closure is now validated and remains unchanged.
+
+KWallet advances from `6.30.0-0supralinux3` to `6.30.0-0supralinux4` solely because its source symbols template changes. `libKF6WalletBackend.so.6` receives `(optional)_ZSt19piecewise_construct@Base 6.30.0`. This models an observed libstdc++/toolchain-dependent private export without declaring it KDE public ABI.
+
+No KDE dependency edge, payload choice, test policy or provider closure changes in round 4. Only KWallet is eligible for selective rematerialization.

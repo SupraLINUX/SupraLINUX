@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-22",
+  "as_of": "2026-09-23",
   "state": "materialized",
   "source_authority": "kde-upstream",
   "frameworks_series": "6.30.0",
@@ -1844,7 +1844,7 @@
       "source_package": "kf6-kwallet",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux3",
+      "package_version_candidate": "6.30.0-0supralinux4",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kwallet",
@@ -1952,6 +1952,11 @@
           "classification": "level0-remediation-round3",
           "decision": "complete-kdoctools-provider-closure-with-karchive",
           "rationale": "Attempt 3 injected the PASS KDocTools provider but sbuild could not install libkf6doctools-dev because its libkf6archive-dev >= 6.30 dependency was absent from the package-provider closure. KArchive is added only as retained provider closure; it is not a new KDE KWallet dependency edge and KWallet source remains unchanged."
+        },
+        {
+          "classification": "level0-remediation-round4",
+          "decision": "declare-walletbackend-toolchain-piecewise-construct-symbol-optional",
+          "rationale": "Attempt 4 fully built KWallet, generated the selected kwallet-query.1 payload and passed 3/3 upstream tests. Lintian alone rejected _ZSt19piecewise_construct@Base because dpkg-gensymbols assigned the current Debian revision. Treat the libstdc++ toolchain/private export exactly like the already-validated KJobWidgets case: optional at upstream version 6.30.0, not KDE public ABI."
         }
       ],
       "source_build_relation_overrides": [
@@ -1984,6 +1989,19 @@
           "artifact_sha256": "0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e",
           "authority_effect": "none",
           "kde_dependency_edge": false
+        }
+      ],
+      "symbol_template_additions": [
+        {
+          "package": "libkf6walletbackend6",
+          "soname": "libKF6WalletBackend.so.6",
+          "symbol": "_ZSt19piecewise_construct@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "toolchain-dependent-private-symbol",
+          "rationale": "Private libstdc++ implementation export observed on Resolute; its disappearance must not be treated as a KDE ABI break."
         }
       ]
     },
@@ -2873,27 +2891,23 @@
     "next_gate": "tier3-build-level0-reactivation"
   },
   "active_remediation": {
-    "round": 3,
-    "status": "materialization-PASS",
+    "round": 4,
+    "status": "materialization-pending-ci",
     "trigger": {
-      "workflow_run": 35808764577,
-      "commit": "417444e60bd09887383fdc4ef5f1c1f3df1efc09",
-      "level0_result": "10 job SUCCESS / 2 FAIL",
+      "workflow_run": 35813710318,
+      "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+      "level0_result": "11 job SUCCESS / 1 FAIL",
       "failed_nodes": [
-        "kjobwidgets",
         "kwallet"
       ]
     },
-    "previous_round": 2,
+    "previous_round": 3,
     "source_changed_nodes": [
-      "kjobwidgets"
-    ],
-    "provider_closure_only_nodes": [
       "kwallet"
     ],
+    "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kjobwidgets": "6.30.0-0supralinux4",
-      "kwallet": "6.30.0-0supralinux3"
+      "kwallet": "6.30.0-0supralinux4"
     },
     "policy": {
       "package_revision_bump_required_for_packaging_changes": true,
@@ -2901,23 +2915,7 @@
       "provider_closure_changes_do_not_require_source_rematerialization": true,
       "rerun_full_level0_after_remediation": true
     },
-    "next_gate": "tier3-build-level0-attempt4-activation-validation",
-    "evidence": {
-      "workflow_run": 35812918054,
-      "commit": "a57c13059dfc206ddf57390e1cd0cfd280471965",
-      "promoted_nodes": [
-        "kjobwidgets"
-      ],
-      "artifacts": {
-        "kjobwidgets": {
-          "job_id": 107028214719,
-          "artifact_id": 10730956293,
-          "artifact_sha256": "bcd505c1d4cbc65b45861335f41d8b03f18d53995bb9ba1d9036295bd5ce7804"
-        }
-      },
-      "package_attempted": false,
-      "package_state_effect": "none"
-    }
+    "next_gate": "tier3-round4-kwallet-materialization"
   },
   "remediation_history": [
     {
@@ -2978,6 +2976,68 @@
         ],
         "remaining_failed_nodes": [
           "kjobwidgets",
+          "kwallet"
+        ],
+        "canonical_promotions": 0
+      }
+    },
+    {
+      "round": 3,
+      "status": "materialization-PASS",
+      "trigger": {
+        "workflow_run": 35808764577,
+        "commit": "417444e60bd09887383fdc4ef5f1c1f3df1efc09",
+        "level0_result": "10 job SUCCESS / 2 FAIL",
+        "failed_nodes": [
+          "kjobwidgets",
+          "kwallet"
+        ]
+      },
+      "previous_round": 2,
+      "source_changed_nodes": [
+        "kjobwidgets"
+      ],
+      "provider_closure_only_nodes": [
+        "kwallet"
+      ],
+      "candidate_package_versions": {
+        "kjobwidgets": "6.30.0-0supralinux4",
+        "kwallet": "6.30.0-0supralinux3"
+      },
+      "policy": {
+        "package_revision_bump_required_for_packaging_changes": true,
+        "rematerialize_only_changed_nodes": true,
+        "provider_closure_changes_do_not_require_source_rematerialization": true,
+        "rerun_full_level0_after_remediation": true
+      },
+      "next_gate": "tier3-build-level0-attempt4-activation-validation",
+      "evidence": {
+        "workflow_run": 35812918054,
+        "commit": "a57c13059dfc206ddf57390e1cd0cfd280471965",
+        "promoted_nodes": [
+          "kjobwidgets"
+        ],
+        "artifacts": {
+          "kjobwidgets": {
+            "job_id": 107028214719,
+            "artifact_id": 10730956293,
+            "artifact_sha256": "bcd505c1d4cbc65b45861335f41d8b03f18d53995bb9ba1d9036295bd5ce7804"
+          }
+        },
+        "package_attempted": false,
+        "package_state_effect": "none"
+      },
+      "validation": {
+        "workflow_run": 35813710318,
+        "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+        "result": "11 job SUCCESS / 1 FAIL",
+        "validated_nodes": [
+          "kjobwidgets"
+        ],
+        "validated_provider_closures": [
+          "kwallet-kdoctools-karchive"
+        ],
+        "remaining_failed_nodes": [
           "kwallet"
         ],
         "canonical_promotions": 0

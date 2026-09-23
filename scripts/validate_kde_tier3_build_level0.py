@@ -25,6 +25,7 @@ round1={"kiconthemes","kdav","kwallet","krunner","kjobwidgets"}
 round2={"kiconthemes","kjobwidgets","kwallet"}
 round3={"kjobwidgets","kwallet"}
 round3_source={"kjobwidgets"}
+round4={"kwallet"}
 
 req(m.get("schema")==1,"Tier3 level0 schema")
 req(m.get("authority")=="kde-upstream","Tier3 level0 authority")
@@ -104,7 +105,7 @@ for node_id in expected:
 
     if node_id=="kiconthemes":
         req(n.get("support_input_ids")==["breeze-icons"],"KIconThemes Breeze support input")
-    elif node_id=="kwallet" and m.get("active_remediation",{}).get("round") in {2,3}:
+    elif node_id=="kwallet" and m.get("active_remediation",{}).get("round") in {2,3,4}:
         req(n.get("support_input_ids")==["kdoctools"],"KWallet KDocTools documentation support input")
         req(n.get("support_provider_role",{}).get("kdoctools")=="optional-upstream-documentation-provider-required-by-selected-manpage-payload","KWallet KDocTools provider role")
     else:
@@ -127,10 +128,11 @@ for node_id in expected:
 
 # Historical attempts 1-3 are retained with zero canonical promotion.
 history=a.get("campaign_history",[])
-req(len(history)>=3,"Level0 campaign history contains attempts 1, 2 and 3")
+req(len(history)>=4,"Level0 campaign history contains attempts 1 through 4")
 attempt1=next((x for x in history if x.get("attempt")==1),{})
 attempt2=next((x for x in history if x.get("attempt")==2),{})
 attempt3=next((x for x in history if x.get("attempt")==3),{})
+attempt4=next((x for x in history if x.get("attempt")==4),{})
 req(attempt1.get("workflow_run")==35755924197 and attempt1.get("workflow_jobs")=={"success":7,"fail":5},"Level0 attempt1 history")
 req(attempt2.get("workflow_run")==35770505868 and attempt2.get("commit")=="b381031bd9bbd7ea5b1d9a1ed3739766588be78e","Level0 attempt2 history")
 req(attempt2.get("workflow_jobs")=={"success":9,"fail":3} and attempt2.get("canonical_promotions")==0,"Level0 attempt2 summary")
@@ -138,6 +140,9 @@ req(attempt2.get("rootfs",{}).get("artifact_id")==10714370160 and attempt2.get("
 req(attempt3.get("workflow_run")==35808764577 and attempt3.get("commit")=="417444e60bd09887383fdc4ef5f1c1f3df1efc09","Level0 attempt3 history")
 req(attempt3.get("workflow_jobs")=={"success":10,"fail":2} and attempt3.get("canonical_promotions")==0,"Level0 attempt3 summary")
 req(attempt3.get("rootfs",{}).get("artifact_id")==10728279487 and attempt3.get("rootfs",{}).get("artifact_sha256")=="a4f7401427fb642afcb201142a7746874ab4db6c18d1aa90a4edc10c54ca86e5","Level0 attempt3 rootfs evidence")
+req(attempt4.get("workflow_run")==35813710318 and attempt4.get("commit")=="01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79","Level0 attempt4 history")
+req(attempt4.get("workflow_jobs")=={"success":11,"fail":1} and attempt4.get("canonical_promotions")==0,"Level0 attempt4 summary")
+req(attempt4.get("rootfs",{}).get("artifact_id")==10730427348 and attempt4.get("rootfs",{}).get("artifact_sha256")=="7378d328afb430a2a1211764e705b0343187fe67ae3b1c098653a3d3f51318e7","Level0 attempt4 rootfs evidence")
 
 expected2={
     "kbookmarks":"PASS","kconfigwidgets":"PASS","kdav":"PASS","kdesu":"PASS",
@@ -149,7 +154,12 @@ expected3={
     "kiconthemes":"PASS","kjobwidgets":"FAIL","knewstuff":"RUNTIME_PENDING",
     "kpeople":"PASS","krunner":"PASS","ksvg":"PASS","ktextwidgets":"PASS","kwallet":"FAIL",
 }
-for attempt_no,workflow_run,expected_results in ((2,35770505868,expected2),(3,35808764577,expected3)):
+expected4={
+    "kbookmarks":"PASS","kconfigwidgets":"PASS","kdav":"PASS","kdesu":"PASS",
+    "kiconthemes":"PASS","kjobwidgets":"PASS","knewstuff":"RUNTIME_PENDING",
+    "kpeople":"PASS","krunner":"PASS","ksvg":"PASS","ktextwidgets":"PASS","kwallet":"FAIL",
+}
+for attempt_no,workflow_run,expected_results in ((2,35770505868,expected2),(3,35808764577,expected3),(4,35813710318,expected4)):
     for node_id,result in expected_results.items():
         entries=a["nodes"][node_id]
         e=next((x for x in entries if x.get("attempt")==attempt_no),{})
@@ -166,6 +176,13 @@ req(ki3.get("remediation_validation")=="round2 PASS" and ki3.get("tests")=="10/1
 for node_id in round3:
     e=next((x for x in a["nodes"][node_id] if x.get("attempt")==3),{})
     req(isinstance(e.get("cause"),str) and isinstance(e.get("remediation"),str),f"{node_id}: attempt3 root cause/remediation recorded")
+knew4=next((x for x in a["nodes"]["knewstuff"] if x.get("attempt")==4),{})
+req(knew4.get("downstream_eligible") is False and knew4.get("deferred_runtime_validation")==["kcmutils"],"KNewStuff attempt4 remains runtime-pending")
+kj4=next((x for x in a["nodes"]["kjobwidgets"] if x.get("attempt")==4),{})
+req(kj4.get("result")=="PASS" and kj4.get("remediation_validation")=="round3 PASS" and kj4.get("tests")=="3/3 PASS","KJobWidgets round3 remediation validated by attempt4")
+kw4=next((x for x in a["nodes"]["kwallet"] if x.get("attempt")==4),{})
+req(kw4.get("result")=="FAIL" and kw4.get("failure_stage")=="lintian/symbols","KWallet attempt4 symbols failure recorded")
+req(isinstance(kw4.get("cause"),str) and isinstance(kw4.get("remediation"),str),"KWallet attempt4 root cause/remediation recorded")
 
 if m.get("state")=="active-pending-ci":
     req(m.get("execution_authorized") is True,"Level0 execution authorization")
@@ -241,7 +258,24 @@ elif m.get("state")=="remediation-pending-materialization":
     req(m.get("execution_authorized") is False,"Level0 execution paused during remediation")
     req(mat.get("state")=="remediation-pending-ci","Level0 remediation requires selective materialization")
     rem=m.get("active_remediation",{})
-    if rem.get("round")==3:
+    if rem.get("round")==4:
+        req(set(rem.get("nodes",[]))==round4,"Level0 round4 failure set")
+        req(rem.get("queue")==["kwallet"] and rem.get("source_materialization_nodes")==["kwallet"],"Level0 round4 source queue")
+        req(rem.get("provider_closure_only_nodes")==[],"Level0 round4 provider-closure-only set")
+        req(rem.get("candidate_package_versions")=={"kwallet":"6.30.0-0supralinux4"},"Level0 round4 candidate version")
+        req(rem.get("trigger_workflow_run")==35813710318 and rem.get("trigger_commit")=="01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79","Level0 round4 trigger evidence")
+        req(rem.get("full_level0_rerun_required") is True,"Level0 round4 full rerun policy")
+        req(m["nodes"]["kwallet"].get("state")=="remediation-pending-materialization","KWallet awaits round4 rematerialization")
+        req(m["nodes"]["kwallet"].get("previous_package_version")=="6.30.0-0supralinux3","KWallet round4 previous revision")
+        req(m["nodes"]["kwallet"].get("candidate_package_version")=="6.30.0-0supralinux4","KWallet round4 candidate revision")
+        req(m["nodes"]["kwallet"].get("support_input_ids")==["kdoctools"],"KWallet round4 KDocTools support retained")
+        req("karchive" in m["nodes"]["kwallet"].get("retained_input_ids",[]),"KWallet round4 KArchive closure retained")
+        req(m["nodes"]["kwallet"].get("symbol_remediation",{}).get("symbol")=="_ZSt19piecewise_construct@Base","KWallet round4 symbol remediation model")
+        req(all(m["nodes"][n].get("state")=="prepared-pending-revalidation" for n in expected if n not in round4),"attempt4 non-failing nodes await full revalidation")
+        summary=m.get("attempt4_summary",{})
+        req(summary.get("workflow_run")==35813710318 and summary.get("workflow_jobs")=={"success":11,"fail":1},"Level0 attempt4 summary linkage")
+        req(set(summary.get("job_fail",[]))==round4 and summary.get("canonical_promotions")==0,"Level0 attempt4 fail/promotion semantics")
+    elif rem.get("round")==3:
         req(set(rem.get("nodes",[]))==round3,"Level0 round3 failure set")
         req(rem.get("queue")==["kjobwidgets"] and rem.get("source_materialization_nodes")==["kjobwidgets"],"Level0 round3 source queue")
         req(rem.get("provider_closure_only_nodes")==["kwallet"],"Level0 round3 provider-closure-only set")
@@ -276,7 +310,13 @@ req(policy.get("phase")=="build-level0","canonical Tier3 Level0 phase")
 if m.get("state")=="remediation-pending-materialization":
     req(policy.get("package_builds")=="tier3-level0-remediation-pending","canonical Tier3 remediation build gate")
     ar=t.get("active_remediation",{})
-    if ar.get("round")==3:
+    if ar.get("round")==4:
+        req(set(ar.get("nodes",[]))==round4,"canonical Tier3 round4 remediation linkage")
+        req(ar.get("source_materialization_nodes")==["kwallet"] and ar.get("provider_closure_only_nodes")==[],"canonical Tier3 round4 remediation classes")
+        req(ar.get("candidate_package_versions")=={"kwallet":"6.30.0-0supralinux4"},"canonical Tier3 round4 version")
+        req(ar.get("trigger_workflow_run")==35813710318 and ar.get("execution_authorized") is False,"canonical Tier3 round4 execution pause")
+        req(ar.get("next_gate")=="tier3-round4-kwallet-materialization","canonical Tier3 round4 next gate")
+    elif ar.get("round")==3:
         req(set(ar.get("nodes",[]))==round3,"canonical Tier3 round3 remediation linkage")
         req(ar.get("source_materialization_nodes")==["kjobwidgets"] and ar.get("provider_closure_only_nodes")==["kwallet"],"canonical Tier3 round3 remediation classes")
         req(ar.get("candidate_package_versions")=={"kjobwidgets":"6.30.0-0supralinux4","kwallet":"6.30.0-0supralinux3"},"canonical Tier3 round3 versions")
@@ -332,4 +372,4 @@ print("KDE Tier 3 build Level 0 definition: PASS")
 print("nodes=12")
 print("state="+m["state"])
 print("execution_authorized="+str(m.get("execution_authorized")).lower())
-print("attempt3=10-success/2-fail round3-remediation=2-nodes source-rematerialization=1")
+print("attempt4=11-success/1-fail round4-remediation=kwallet source-rematerialization=1")

@@ -112,3 +112,12 @@ KWallet's round-3 decision remains provider-closure-only. Its source package and
 
 
 Repository Policy run `35813396247` validated the promoted round-3 contract state. Attempt 4 now tests the already-decided KJobWidgets symbols metadata and KWallet provider closure as real binary builds; no contract authority changes at activation.
+
+
+## Remediation round 4
+
+Attempt 4 completed **11 workflow SUCCESS / 1 FAIL**. KWallet's earlier documentation-provider decision is now proven: KArchive and KDocTools install correctly, `kwallet-query.1` is generated, `dh_install` passes, all **3/3** upstream tests pass and sbuild reports success.
+
+The remaining failure is package metadata only. `dpkg-gensymbols` observes `_ZSt19piecewise_construct@Base` in `libKF6WalletBackend.so.6` and assigns the current package revision, which Lintian rejects. SupraLINUX applies the same classification already validated for KJobWidgets: add the symbol to the template as `(optional)` at minimum upstream version `6.30.0`.
+
+This is a source-packaging change, so KWallet becomes `6.30.0-0supralinux4` and must be rematerialized. The KDocTools/KArchive closure remains a provider closure, not a KDE dependency edge.

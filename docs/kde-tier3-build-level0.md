@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 0
 
-Status: **Level 0 attempt 4 active — full 12-node rerun authorized** as of 2026-09-22.
+Status: **Level 0 attempt 4 reviewed — 11 SUCCESS / 1 FAIL; round-4 KWallet materialization pending** as of 2026-09-23.
 
 Level 0 is the first real binary-build campaign for the 20 canonical Tier 3 Frameworks. It contains **12 independent nodes**:
 
@@ -182,3 +182,18 @@ Repository Policy run `35813396247` validated promotion commit `48abcd1ed74e8d83
 All 12 Level 0 nodes must rerun. KJobWidgets consumes the new `6.30.0-0supralinux4` materialization; KWallet retains `6.30.0-0supralinux3` but its retained input closure now includes KArchive for the KDocTools provider. The other ten nodes are complete revalidation runs.
 
 No package result is promoted merely by activation. KNewStuff still requires its deferred KCMUtils runtime gate even if its binary build succeeds.
+
+
+## Attempt 4 result
+
+Run `35813710318` executed all 12 Level 0 nodes: **11 workflow SUCCESS / 1 FAIL**. No result is canonically promoted.
+
+KJobWidgets validates round 3 and is PASS as a build result. KNewStuff builds successfully and remains `RUNTIME_PENDING` on KCMUtils. KWallet is the only FAIL, despite a successful sbuild and **3/3 upstream tests**, because Lintian rejects `_ZSt19piecewise_construct@Base` in `libKF6WalletBackend.so.6` when the generated symbols metadata uses the current Debian revision.
+
+Artifact evidence for the KWallet FAIL is `10730477702`, SHA-256 `ee43e7aed3766da6e44014c2aa7be260c30f453bdd456b61ab986a80df717a7a`. The shared rootfs is artifact `10730427348`, SHA-256 `7378d328afb430a2a1211764e705b0343187fe67ae3b1c098653a3d3f51318e7`.
+
+## Round 4
+
+Only KWallet changes source packaging and advances to `6.30.0-0supralinux4`. The materializer will add an `(optional)` template entry for `_ZSt19piecewise_construct@Base` at upstream version `6.30.0`. The already-proven KDocTools/KArchive provider closure is retained.
+
+Binary execution is paused until that single source package materializes PASS, its evidence is promoted and Repository Policy validates the promotion. The next binary validation must again be a complete 12-node Level 0 rerun.
