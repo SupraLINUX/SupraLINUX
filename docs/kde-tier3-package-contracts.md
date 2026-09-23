@@ -232,3 +232,5 @@ Attempt 2 run `35829170695` proves that round 6 solved the transitive provider-c
 Two KIO upstream tests explicitly access `google.com`. The binary-build manifest therefore records a node-scoped sbuild network exception for KIO only; this is CI execution policy, not a KDE dependency edge and not a global build-network policy.
 
 No KDE DAG edge changes in round 7. Both revised source packages must rematerialize before Level 1 Attempt 3 can be authorized.
+
+Repository Policy validation for round 7 must also retain the earlier round-5 KIO upstream-alignment decisions and round-6 provider-closure contracts. The contract validator therefore treats those as cumulative invariants, while extending the Resolute Python build frontend/backend provider scope from KJobWidgets to KXMLGui.
