@@ -2874,7 +2874,7 @@
   },
   "active_remediation": {
     "round": 3,
-    "status": "materialization-pending-ci",
+    "status": "materialization-PASS",
     "trigger": {
       "workflow_run": 35808764577,
       "commit": "417444e60bd09887383fdc4ef5f1c1f3df1efc09",
@@ -2901,7 +2901,23 @@
       "provider_closure_changes_do_not_require_source_rematerialization": true,
       "rerun_full_level0_after_remediation": true
     },
-    "next_gate": "tier3-round3-kjobwidgets-materialization"
+    "next_gate": "tier3-build-level0-attempt4-activation-validation",
+    "evidence": {
+      "workflow_run": 35812918054,
+      "commit": "a57c13059dfc206ddf57390e1cd0cfd280471965",
+      "promoted_nodes": [
+        "kjobwidgets"
+      ],
+      "artifacts": {
+        "kjobwidgets": {
+          "job_id": 107028214719,
+          "artifact_id": 10730956293,
+          "artifact_sha256": "bcd505c1d4cbc65b45861335f41d8b03f18d53995bb9ba1d9036295bd5ce7804"
+        }
+      },
+      "package_attempted": false,
+      "package_state_effect": "none"
+    }
   },
   "remediation_history": [
     {

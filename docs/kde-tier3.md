@@ -292,3 +292,12 @@ The two FAILs are KJobWidgets and KWallet. KJobWidgets compiled and passed **3/3
 KIconThemes validated its round-2 SVG provider remediation with **10/10 tests PASS**. KNewStuff again has a successful binary build and **5/5 tests PASS**, but remains runtime-validation-pending on KCMUtils and is not downstream-eligible.
 
 Canonical Tier 3 package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** because no Level 0 attempt has been promoted. The build gate is paused while the single-node KJobWidgets rematerialization runs. After promotion and Policy validation, Level 0 requires another complete 12-node rerun. Levels 1–3 remain unauthorized, and promotion to SupraLINUX `stable` still requires explicit user approval.
+
+
+### Round 3 materialization promoted
+
+KJobWidgets `6.30.0-0supralinux4` materialized PASS in workflow `35812918054` and is now pinned to artifact `10730956293` with SHA-256 `bcd505c1d4cbc65b45861335f41d8b03f18d53995bb9ba1d9036295bd5ce7804`.
+
+KWallet remains on its already-promoted `6.30.0-0supralinux3` source and only gains the KArchive artifact in the KDocTools provider closure.
+
+Canonical package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. Level 0 is paused until Repository Policy validates this promotion. Attempt 4, when separately activated, must rerun all 12 Level 0 nodes.

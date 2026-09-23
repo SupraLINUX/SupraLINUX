@@ -194,21 +194,36 @@ if m.get("state")=="active-pending-ci":
     req(correction.get("canonical_package_state_effect")=="none","Level0 incomplete attempt3 has no canonical package effect")
 
 elif m.get("state")=="remediation-materialized-pending-activation":
-    req(m.get("execution_authorized") is False,"Level0 remains paused before attempt3 activation")
-    req(mat.get("state")=="PASS","round2 materialization promoted PASS")
+    req(m.get("execution_authorized") is False,"Level0 remains paused before activation")
+    req(mat.get("state")=="PASS","remediation materialization promoted PASS")
     rem=m.get("active_remediation",{})
-    req(rem.get("round")==2 and rem.get("status")=="materialization-PASS-pending-activation","Level0 round2 promotion state")
-    req(rem.get("materialization_workflow_run")==35806738003,"Level0 round2 materialization run")
-    req(rem.get("materialization_commit")=="d6aa9a9550dc3c870a9f1beb00fe216d8c20c3d6","Level0 round2 materialization commit")
-    req(rem.get("full_level0_rerun_required") is True,"attempt3 full rerun policy")
-    req(all(m["nodes"][n].get("state")=="remediation-pending-build" for n in round2),"round2 nodes ready for attempt3")
-    req(all(m["nodes"][n].get("state")=="prepared-pending-revalidation" for n in expected if n not in round2),"other Level0 nodes await attempt3 revalidation")
-    for n in round2:
-        node=m["nodes"][n]
-        req(node.get("package_version")=="6.30.0-0supralinux3",f"{n}: promoted round2 revision")
-        req(node.get("materialization",{}).get("workflow_run")==35806738003,f"{n}: promoted round2 materialization")
-        req(node.get("materialization")==p["nodes"][n].get("materialization"),f"{n}: campaign pin refreshed")
-    req(m["nodes"]["kwallet"].get("support_input_ids")==["kdoctools"],"KWallet KDocTools support retained for attempt3")
+    if rem.get("round")==3:
+        req(rem.get("status")=="materialization-PASS-pending-activation","Level0 round3 promotion state")
+        req(rem.get("materialization_workflow_run")==35812918054,"Level0 round3 materialization run")
+        req(rem.get("materialization_commit")=="a57c13059dfc206ddf57390e1cd0cfd280471965","Level0 round3 materialization commit")
+        req(rem.get("full_level0_rerun_required") is True,"attempt4 full rerun policy")
+        req(rem.get("next_gate")=="tier3-build-level0-attempt4-activation-validation","attempt4 activation validation gate")
+        req(m["nodes"]["kjobwidgets"].get("state")=="remediation-pending-build","KJobWidgets ready for attempt4")
+        req(m["nodes"]["kjobwidgets"].get("package_version")=="6.30.0-0supralinux4","KJobWidgets promoted round3 revision")
+        req(m["nodes"]["kjobwidgets"].get("materialization",{}).get("workflow_run")==35812918054,"KJobWidgets promoted round3 materialization")
+        req(m["nodes"]["kjobwidgets"].get("materialization")==p["nodes"]["kjobwidgets"].get("materialization"),"KJobWidgets campaign pin refreshed")
+        req(m["nodes"]["kwallet"].get("state")=="remediation-pending-build" and m["nodes"]["kwallet"].get("package_version")=="6.30.0-0supralinux3","KWallet closure-only remediation ready")
+        req("karchive" in m["nodes"]["kwallet"].get("retained_input_ids",[]),"KWallet KArchive provider closure retained")
+        req(m["nodes"]["kwallet"].get("support_input_ids")==["kdoctools"],"KWallet KDocTools support retained for attempt4")
+        req(all(m["nodes"][n].get("state")=="prepared-pending-revalidation" for n in expected if n not in round3),"other Level0 nodes await attempt4 revalidation")
+    else:
+        req(rem.get("round")==2 and rem.get("status")=="materialization-PASS-pending-activation","Level0 round2 promotion state")
+        req(rem.get("materialization_workflow_run")==35806738003,"Level0 round2 materialization run")
+        req(rem.get("materialization_commit")=="d6aa9a9550dc3c870a9f1beb00fe216d8c20c3d6","Level0 round2 materialization commit")
+        req(rem.get("full_level0_rerun_required") is True,"attempt3 full rerun policy")
+        req(all(m["nodes"][n].get("state")=="remediation-pending-build" for n in round2),"round2 nodes ready for attempt3")
+        req(all(m["nodes"][n].get("state")=="prepared-pending-revalidation" for n in expected if n not in round2),"other Level0 nodes await attempt3 revalidation")
+        for n in round2:
+            node=m["nodes"][n]
+            req(node.get("package_version")=="6.30.0-0supralinux3",f"{n}: promoted round2 revision")
+            req(node.get("materialization",{}).get("workflow_run")==35806738003,f"{n}: promoted round2 materialization")
+            req(node.get("materialization")==p["nodes"][n].get("materialization"),f"{n}: campaign pin refreshed")
+        req(m["nodes"]["kwallet"].get("support_input_ids")==["kdoctools"],"KWallet KDocTools support retained for attempt3")
 
 elif m.get("state")=="remediation-pending-materialization":
     req(m.get("execution_authorized") is False,"Level0 execution paused during remediation")
@@ -268,6 +283,12 @@ elif m.get("state")=="active-pending-ci":
     req(ar.get("next_gate")=="tier3-build-level0-attempt3","canonical Tier3 attempt3 next gate")
 else:
     req(policy.get("package_builds") in {"tier3-level0-authorized","tier3-level0-remediation-pending"},"canonical Tier3 Level0 build gate")
+    if m.get("state")=="remediation-materialized-pending-activation":
+        ar=t.get("active_remediation",{})
+        if ar.get("round")==3:
+            req(policy.get("package_builds")=="tier3-level0-remediation-pending","canonical Tier3 attempt4 remains paused")
+            req(ar.get("status")=="materialization-PASS-pending-level0-attempt4-activation","canonical Tier3 round3 promoted state")
+            req(ar.get("execution_authorized") is False and ar.get("next_gate")=="tier3-build-level0-attempt4-activation-validation","canonical Tier3 attempt4 activation gate")
 
 req(t.get("support_components",{}).get("next_gate")=="tier3-build-level0","canonical Tier3 Level0 next gate")
 req(t.get("build_level0_manifest")=="manifests/kde-tier3-build-level0.json","canonical Tier3 Level0 manifest linkage")

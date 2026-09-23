@@ -216,6 +216,20 @@ elif m.get("state") == "PASS":
             req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-remediation-pending", "Level0 remains paused after round2 promotion")
             req(active_t.get("status") == "materialization-PASS-pending-level0-attempt3-activation", "canonical round2 promotion state")
             req(active_t.get("execution_authorized") is False, "attempt3 not authorized before promotion validation")
+    elif active_c.get("round") == 3:
+        req(active_c.get("status") == "materialization-PASS", "round3 contract materialization PASS")
+        req(active_m.get("status") == "PASS" and active_m.get("workflow_run") == 35812918054, "round3 materialization evidence PASS")
+        req(active_m.get("commit") == "a57c13059dfc206ddf57390e1cd0cfd280471965", "round3 materialization commit")
+        req(active_m.get("promoted_nodes") == ["kjobwidgets"], "round3 promoted materialization set")
+        req(active_m.get("artifacts",{}).get("kjobwidgets",{}).get("artifact_id") == 10730956293, "round3 KJobWidgets materialization artifact")
+        req(active_m.get("artifacts",{}).get("kjobwidgets",{}).get("artifact_sha256") == "bcd505c1d4cbc65b45861335f41d8b03f18d53995bb9ba1d9036295bd5ce7804", "round3 KJobWidgets materialization digest")
+        req(m.get("evidence_summary", {}).get("promoted_remediation_materializations") == 1, "round3 materialization summary")
+        req(m["nodes"]["kjobwidgets"].get("package_version") == "6.30.0-0supralinux4", "round3 KJobWidgets promoted revision")
+        req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-remediation-pending", "Level0 remains paused after round3 promotion")
+        req(active_t.get("status") == "materialization-PASS-pending-level0-attempt4-activation", "canonical round3 promotion state")
+        req(active_t.get("materialization_workflow_run") == 35812918054, "canonical round3 materialization linkage")
+        req(active_t.get("execution_authorized") is False, "attempt4 not authorized before promotion validation")
+        req(active_t.get("next_gate") == "tier3-build-level0-attempt4-activation-validation", "round3 activation validation gate")
 else:
     expected_queue = ["kjobwidgets"] if active_c.get("round") == 3 else ["kiconthemes","kjobwidgets","kwallet"]
     req(queue == expected_queue, "active remediation materialization queue")

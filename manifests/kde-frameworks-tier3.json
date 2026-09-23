@@ -17,7 +17,7 @@
     "provider_audit": "PASS",
     "package_contracts": "PASS",
     "package_builds": "tier3-level0-remediation-pending",
-    "remediation": "round3-kjobwidgets-materialization-pending-kwallet-provider-closure-prepared"
+    "remediation": "round3-materialization-PASS-pending-attempt4-activation"
   },
   "nodes": [
     {
@@ -831,9 +831,11 @@
     },
     "execution_authorized": false,
     "full_level0_rerun_required": true,
-    "status": "materialization-pending-ci",
-    "next_gate": "tier3-round3-kjobwidgets-materialization",
-    "current_attempt": 3
+    "status": "materialization-PASS-pending-level0-attempt4-activation",
+    "next_gate": "tier3-build-level0-attempt4-activation-validation",
+    "current_attempt": 3,
+    "materialization_workflow_run": 35812918054,
+    "materialization_commit": "a57c13059dfc206ddf57390e1cd0cfd280471965"
   },
   "remediation_history": [
     {

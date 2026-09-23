@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package-contract decisions
 
-Status: **PASS — round 3 modeled; KJobWidgets rematerialization pending**
+Status: **PASS — round 3 materialization promoted; attempt 4 activation pending validation**
 
 Reviewed: **2026-09-22**
 
@@ -102,3 +102,10 @@ KJobWidgets retains `BUILD_PYTHON_BINDINGS=ON`, `python3-build` and `python3-set
 The `optional` tag is a Debian packaging mechanism for private/toolchain-dependent symbols and does not redefine KDE public ABI. KJobWidgets therefore becomes `6.30.0-0supralinux4`.
 
 KWallet has **no source change** in round 3. Its existing optional KDocTools provider contract is retained, while the provider closure gains the already-PASS KArchive artifact because `libkf6doctools-dev 6.30` depends on `libkf6archive-dev >= 6.30`. This remains provider closure and does not become a KDE dependency edge.
+
+
+## Round 3 promotion
+
+The KJobWidgets symbols-template correction materialized successfully in run `35812918054` as `6.30.0-0supralinux4`. The promoted artifact proves only the source-package transformation; binary PASS still requires the next complete Level 0 campaign.
+
+KWallet's round-3 decision remains provider-closure-only. Its source package and KDE dependency semantics are unchanged. The KArchive artifact is a provider prerequisite of KDocTools, not a newly invented KWallet framework edge.

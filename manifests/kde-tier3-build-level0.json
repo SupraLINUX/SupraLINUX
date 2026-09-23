@@ -5,7 +5,7 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level0",
   "frameworks_series": "6.30.0",
-  "state": "remediation-pending-materialization",
+  "state": "remediation-materialized-pending-activation",
   "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED",
@@ -706,9 +706,9 @@
       "current_attempt": 3
     },
     "kjobwidgets": {
-      "state": "remediation-pending-materialization",
+      "state": "remediation-pending-build",
       "source_package": "kf6-kjobwidgets",
-      "package_version": "6.30.0-0supralinux3",
+      "package_version": "6.30.0-0supralinux4",
       "expected_binary_packages": [
         "libkf6jobwidgets-data",
         "libkf6jobwidgets-dev",
@@ -717,10 +717,10 @@
         "python3-kf6jobwidgets"
       ],
       "materialization": {
-        "workflow_run": 35806738003,
-        "job_id": 107009274269,
-        "artifact_id": 10728630058,
-        "artifact_sha256": "6e5e293abd09904380a61980d69a77bcf9ac91189d16a429e5270f5c4060ddc5"
+        "workflow_run": 35812918054,
+        "job_id": 107028214719,
+        "artifact_id": 10730956293,
+        "artifact_sha256": "bcd505c1d4cbc65b45861335f41d8b03f18d53995bb9ba1d9036295bd5ce7804"
       },
       "direct_build_predecessors": [
         "kcoreaddons",
@@ -767,8 +767,7 @@
         "artifact_id": 10710136148,
         "artifact_sha256": "5feaea71e99bb9ebe2be812deb9101cee440d6d065ab98354b47ee36114f3d5a"
       },
-      "current_attempt": 3,
-      "candidate_package_version": "6.30.0-0supralinux4"
+      "current_attempt": 3
     },
     "knewstuff": {
       "state": "prepared-pending-revalidation",
@@ -1328,7 +1327,7 @@
   },
   "active_remediation": {
     "round": 3,
-    "status": "mixed-remediation-pending-materialization",
+    "status": "materialization-PASS-pending-activation",
     "nodes": [
       "kjobwidgets",
       "kwallet"
@@ -1351,7 +1350,16 @@
     "trigger_commit": "417444e60bd09887383fdc4ef5f1c1f3df1efc09",
     "execution_authorized": false,
     "current_attempt": 3,
-    "next_gate": "tier3-round3-kjobwidgets-materialization"
+    "next_gate": "tier3-build-level0-attempt4-activation-validation",
+    "materialization_workflow_run": 35812918054,
+    "materialization_commit": "a57c13059dfc206ddf57390e1cd0cfd280471965",
+    "materialization_artifacts": {
+      "kjobwidgets": {
+        "job_id": 107028214719,
+        "artifact_id": 10730956293,
+        "artifact_sha256": "bcd505c1d4cbc65b45861335f41d8b03f18d53995bb9ba1d9036295bd5ce7804"
+      }
+    }
   },
   "orchestration_correction": {
     "status": "closed-corrected",

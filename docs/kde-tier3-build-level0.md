@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 0
 
-Status: **attempt 3 complete — 10 workflow SUCCESS / 2 FAIL; round 3 remediation pending** as of 2026-09-22.
+Status: **attempt 3 complete — round-3 source remediation promoted; attempt 4 activation pending validation** as of 2026-09-22.
 
 Level 0 is the first real binary-build campaign for the 20 canonical Tier 3 Frameworks. It contains **12 independent nodes**:
 
@@ -164,3 +164,12 @@ The two real FAILs are independent:
 Therefore round 3 is intentionally asymmetric: only KJobWidgets rematerializes; KWallet is a provider-closure-only correction. Level 0 is paused with `execution_authorized=false`. After KJobWidgets materialization is promoted and Policy validates the refreshed pin, the next binary campaign must again be a complete 12-node rerun.
 
 The two earlier incomplete attempt-3 orchestration runs `35808224394` and `35808388332` remain historical non-canonical evidence only. The planner defect was corrected before run `35808764577`.
+
+
+## Round 3 source promotion complete
+
+KJobWidgets `6.30.0-0supralinux4` is now pinned to real materialization run `35812918054`, artifact `10730956293`, SHA-256 `bcd505c1d4cbc65b45861335f41d8b03f18d53995bb9ba1d9036295bd5ce7804`.
+
+KWallet remains `6.30.0-0supralinux3`; its source pin did not change. Its Level 0 input closure now includes the existing PASS KArchive provider needed transitively by KDocTools.
+
+The Level 0 manifest is intentionally `remediation-materialized-pending-activation` with `execution_authorized=false`. This commit does not launch attempt 4. Repository Policy must validate the promoted source pin and closure first; activation is a separate transition.

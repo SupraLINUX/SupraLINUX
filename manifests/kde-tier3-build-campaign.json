@@ -618,7 +618,7 @@
       "level": 0,
       "state": "planned",
       "source_package": "kf6-kjobwidgets",
-      "package_version": "6.30.0-0supralinux3",
+      "package_version": "6.30.0-0supralinux4",
       "expected_binary_packages": [
         "libkf6jobwidgets-data",
         "libkf6jobwidgets-dev",
@@ -627,10 +627,10 @@
         "python3-kf6jobwidgets"
       ],
       "materialization": {
-        "workflow_run": 35806738003,
-        "job_id": 107009274269,
-        "artifact_id": 10728630058,
-        "artifact_sha256": "6e5e293abd09904380a61980d69a77bcf9ac91189d16a429e5270f5c4060ddc5"
+        "workflow_run": 35812918054,
+        "job_id": 107028214719,
+        "artifact_id": 10730956293,
+        "artifact_sha256": "bcd505c1d4cbc65b45861335f41d8b03f18d53995bb9ba1d9036295bd5ce7804"
       },
       "blocking_predecessors": [],
       "edge_classes": {
