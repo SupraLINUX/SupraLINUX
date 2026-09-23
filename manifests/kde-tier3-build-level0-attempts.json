@@ -18,6 +18,21 @@
         "package_version": "6.30.0-0supralinux1",
         "downstream_eligible": true,
         "rootfs_sha256": "9966d46bef42083aeecd9016cb002b64fc23d60fae3098a8849b70e977873f68"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 35770505868,
+        "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+        "job_id": 106891450562,
+        "artifact_id": 10713509996,
+        "artifact_sha256": "77d2350ba05ea4ead1e16e1e36310bc2b742cf1d9d2ddf0a28cb7f369141204e",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10714370160,
+        "rootfs_artifact_sha256": "5e84adbad7e684010eefad73daff28fae7f894a325ec03d744b934558a6de4ea",
+        "downstream_eligible": true
       }
     ],
     "kconfigwidgets": [
@@ -35,6 +50,21 @@
         "package_version": "6.30.0-0supralinux1",
         "downstream_eligible": true,
         "rootfs_sha256": "9966d46bef42083aeecd9016cb002b64fc23d60fae3098a8849b70e977873f68"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 35770505868,
+        "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+        "job_id": 106891450549,
+        "artifact_id": 10714535880,
+        "artifact_sha256": "b964e7a5fbd3e0497ef6f93a70f7ead83e36c7147327f5b46e022cb2f979c49f",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10714370160,
+        "rootfs_artifact_sha256": "5e84adbad7e684010eefad73daff28fae7f894a325ec03d744b934558a6de4ea",
+        "downstream_eligible": true
       }
     ],
     "kdav": [
@@ -53,6 +83,23 @@
         "cause": "Debian 6.30 packaging made KIO a Build-Depends provider (kio6/libkf6kio-dev), creating a false KDAV→KIO build edge that KDE upstream 6.30 does not declare; KIO is intentionally a later Tier3 level.",
         "remediation": "Remove Debian-only kio6 and libkf6kio-dev Build-Depends; rematerialize as 6.30.0-0supralinux2.",
         "rootfs_sha256": "9966d46bef42083aeecd9016cb002b64fc23d60fae3098a8849b70e977873f68"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 35770505868,
+        "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+        "job_id": 106891450468,
+        "artifact_id": 10714321033,
+        "artifact_sha256": "5830626031ba0d5a6f4090783df305fb256ffe5b81f0aaf8a8ba9a4d20a1f282",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux2",
+        "rootfs_artifact_id": 10714370160,
+        "rootfs_artifact_sha256": "5e84adbad7e684010eefad73daff28fae7f894a325ec03d744b934558a6de4ea",
+        "downstream_eligible": true,
+        "remediation_validation": "round1 PASS",
+        "note": "Round1 removal of false KIO build providers validated by attempt2."
       }
     ],
     "kdesu": [
@@ -70,6 +117,21 @@
         "package_version": "6.30.0-0supralinux1",
         "downstream_eligible": true,
         "rootfs_sha256": "9966d46bef42083aeecd9016cb002b64fc23d60fae3098a8849b70e977873f68"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 35770505868,
+        "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+        "job_id": 106891450496,
+        "artifact_id": 10713703438,
+        "artifact_sha256": "7b4ad94f09b923bd5de988d5287092cf9f4c75e011becda0b63c4f9198483e9e",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10714370160,
+        "rootfs_artifact_sha256": "5e84adbad7e684010eefad73daff28fae7f894a325ec03d744b934558a6de4ea",
+        "downstream_eligible": true
       }
     ],
     "kiconthemes": [
@@ -88,6 +150,23 @@
         "cause": "Debian 6.30 packaging added libkf6configwidgets-dev although KDE upstream KIconThemes 6.30 does not require KConfigWidgets; retained package closure also omitted KCoreAddons needed by the selected 6.30 KGuiAddons package. Debian rules additionally excluded two upstream tests.",
         "remediation": "Remove false libkf6configwidgets-dev Build-Depends, restore the full upstream test set, include KCoreAddons in retained package closure, and rematerialize as 6.30.0-0supralinux2.",
         "rootfs_sha256": "9966d46bef42083aeecd9016cb002b64fc23d60fae3098a8849b70e977873f68"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 35770505868,
+        "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+        "job_id": 106891450553,
+        "artifact_id": 10714112544,
+        "artifact_sha256": "b3184231ff935baa872113a86f12c67da6d244d09345ca30dab82e1a07ee7e39",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux2",
+        "rootfs_artifact_id": 10714370160,
+        "rootfs_artifact_sha256": "5e84adbad7e684010eefad73daff28fae7f894a325ec03d744b934558a6de4ea",
+        "failure_stage": "upstream-tests",
+        "cause": "Full upstream tests now execute. kiconloader_unittest and kiconengine_unittest fail on SVG image loading/rendering; qt6-svg-dev is installed but Resolute qt6-svg-plugins is absent.",
+        "remediation": "Add qt6-svg-plugins <!nocheck> as test-environment provider, keep all upstream tests enabled, rematerialize as 6.30.0-0supralinux3."
       }
     ],
     "kjobwidgets": [
@@ -106,6 +185,23 @@
         "cause": "Upstream BUILD_PYTHON_BINDINGS=ON reached ECMGeneratePythonBindings, which requires the Python 'build' module; Resolute provider python3-build was absent from Build-Depends.",
         "remediation": "Add python3-build as a Resolute build-tool provider and rematerialize as 6.30.0-0supralinux2.",
         "rootfs_sha256": "9966d46bef42083aeecd9016cb002b64fc23d60fae3098a8849b70e977873f68"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 35770505868,
+        "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+        "job_id": 106891450547,
+        "artifact_id": 10714395700,
+        "artifact_sha256": "c8d01f57f5a15993b988297af8128f505575e8b40a1d99ea15e10b9a9f0914ba",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux2",
+        "rootfs_artifact_id": 10714370160,
+        "rootfs_artifact_sha256": "5e84adbad7e684010eefad73daff28fae7f894a325ec03d744b934558a6de4ea",
+        "failure_stage": "python-wheel-build",
+        "cause": "python -m build --wheel --no-isolation reached the configured backend but setuptools.build_meta was unavailable.",
+        "remediation": "Add python3-setuptools in addition to python3-build, preserve BUILD_PYTHON_BINDINGS=ON, rematerialize as 6.30.0-0supralinux3."
       }
     ],
     "knewstuff": [
@@ -128,6 +224,26 @@
           "kcmutils"
         ],
         "rootfs_sha256": "9966d46bef42083aeecd9016cb002b64fc23d60fae3098a8849b70e977873f68"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 35770505868,
+        "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+        "job_id": 106891450498,
+        "artifact_id": 10714865125,
+        "artifact_sha256": "c038bc7ff29cde9271291d29020ea4c506bd480932f374f97bf5f929a14e64db",
+        "result": "RUNTIME_PENDING",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10714370160,
+        "rootfs_artifact_sha256": "5e84adbad7e684010eefad73daff28fae7f894a325ec03d744b934558a6de4ea",
+        "build_result": "PASS",
+        "downstream_eligible": false,
+        "package_state_effect": "none-runtime-validation-pending",
+        "deferred_runtime_validation": [
+          "kcmutils"
+        ]
       }
     ],
     "kpeople": [
@@ -145,6 +261,21 @@
         "package_version": "6.30.0-0supralinux1",
         "downstream_eligible": true,
         "rootfs_sha256": "9966d46bef42083aeecd9016cb002b64fc23d60fae3098a8849b70e977873f68"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 35770505868,
+        "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+        "job_id": 106891450642,
+        "artifact_id": 10714436281,
+        "artifact_sha256": "88538df069906bc7b55eab672e9135e29d3c633b12bd1e6f9a334a779db4a686",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10714370160,
+        "rootfs_artifact_sha256": "5e84adbad7e684010eefad73daff28fae7f894a325ec03d744b934558a6de4ea",
+        "downstream_eligible": true
       }
     ],
     "krunner": [
@@ -164,6 +295,23 @@
         "cause": "Two libstdc++ shared_ptr template implementation symbols were treated as mandatory by the Debian symbols template and disappeared on Resolute amd64. The Debian source also carried skip-flaky-test.patch, which QSKIP-suppressed an upstream test.",
         "remediation": "Mark only the two toolchain-dependent template implementation symbols optional=templinst while preserving arch=!riscv64, reverse/drop the QSKIP patch, and rematerialize as 6.30.0-0supralinux2.",
         "rootfs_sha256": "9966d46bef42083aeecd9016cb002b64fc23d60fae3098a8849b70e977873f68"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 35770505868,
+        "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+        "job_id": 106891450572,
+        "artifact_id": 10714500900,
+        "artifact_sha256": "4ae6a2d67982e8462f2c1fb2d59c1daec5c07fe71e4c60310da0478dc1acc328",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux2",
+        "rootfs_artifact_id": 10714370160,
+        "rootfs_artifact_sha256": "5e84adbad7e684010eefad73daff28fae7f894a325ec03d744b934558a6de4ea",
+        "downstream_eligible": true,
+        "remediation_validation": "round1 PASS",
+        "note": "Round1 symbols/test-patch remediation validated by attempt2."
       }
     ],
     "ksvg": [
@@ -181,6 +329,21 @@
         "package_version": "6.30.0-0supralinux1",
         "downstream_eligible": true,
         "rootfs_sha256": "9966d46bef42083aeecd9016cb002b64fc23d60fae3098a8849b70e977873f68"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 35770505868,
+        "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+        "job_id": 106891450546,
+        "artifact_id": 10714505619,
+        "artifact_sha256": "533ed2c6975a24eb69becc541dd2f9ad0a583110a82a617490962e4ca951ef21",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10714370160,
+        "rootfs_artifact_sha256": "5e84adbad7e684010eefad73daff28fae7f894a325ec03d744b934558a6de4ea",
+        "downstream_eligible": true
       }
     ],
     "ktextwidgets": [
@@ -198,6 +361,21 @@
         "package_version": "6.30.0-0supralinux1",
         "downstream_eligible": true,
         "rootfs_sha256": "9966d46bef42083aeecd9016cb002b64fc23d60fae3098a8849b70e977873f68"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 35770505868,
+        "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+        "job_id": 106891450714,
+        "artifact_id": 10713853305,
+        "artifact_sha256": "8f9e4178bfc5aa2a670f5690c8fbc20eab27f0b24074e8ef9c0cba589e060df6",
+        "result": "PASS",
+        "stage": "complete",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10714370160,
+        "rootfs_artifact_sha256": "5e84adbad7e684010eefad73daff28fae7f894a325ec03d744b934558a6de4ea",
+        "downstream_eligible": true
       }
     ],
     "kwallet": [
@@ -216,6 +394,24 @@
         "cause": "Debian 6.30 packaging made libkf6doctools-dev mandatory although KDE upstream KWallet 6.30 uses a non-REQUIRED KF6DocTools lookup only for optional documentation.",
         "remediation": "Remove the mandatory libkf6doctools-dev Build-Depends and rematerialize as 6.30.0-0supralinux2.",
         "rootfs_sha256": "9966d46bef42083aeecd9016cb002b64fc23d60fae3098a8849b70e977873f68"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 35770505868,
+        "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+        "job_id": 106891450586,
+        "artifact_id": 10713723346,
+        "artifact_sha256": "26d6806864e79df0a9f004e47d2789026782cbcec32738cde83de4a7d8a61497",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux2",
+        "rootfs_artifact_id": 10714370160,
+        "rootfs_artifact_sha256": "5e84adbad7e684010eefad73daff28fae7f894a325ec03d744b934558a6de4ea",
+        "failure_stage": "dh_install",
+        "tests": "3/3 PASS-before-package-failure",
+        "cause": "Build and tests succeeded, but kwallet6 packaging requires usr/share/man/man1/kwallet-query.1; without optional KDocTools that payload is not generated.",
+        "remediation": "Supply the PASS KDocTools 6.30 artifact as documentation provider, ensure libkf6doctools-dev Build-Depends without creating a Tier3 edge, rematerialize as 6.30.0-0supralinux3."
       }
     ]
   },
@@ -236,6 +432,22 @@
       },
       "canonical_promotions": 0,
       "note": "Six normal nodes built PASS and KNewStuff built PASS but remains runtime-validation-pending. No result is promoted until remediation and a full Level0 rerun."
+    },
+    {
+      "attempt": 2,
+      "workflow_run": 35770505868,
+      "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+      "rootfs": {
+        "artifact_id": 10714370160,
+        "artifact_sha256": "5e84adbad7e684010eefad73daff28fae7f894a325ec03d744b934558a6de4ea"
+      },
+      "result": "PARTIAL",
+      "workflow_jobs": {
+        "success": 9,
+        "fail": 3
+      },
+      "canonical_promotions": 0,
+      "note": "Eight normal nodes built PASS and KNewStuff built PASS but remains runtime-validation-pending. KIconThemes, KJobWidgets and KWallet require remediation round 2; no attempt-2 result is promoted yet."
     }
   ]
 }

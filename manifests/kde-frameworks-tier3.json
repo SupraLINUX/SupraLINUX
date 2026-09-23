@@ -16,8 +16,8 @@
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level0-authorized",
-    "remediation": "selective-source-rematerialization-5-nodes"
+    "package_builds": "tier3-level0-remediation-pending",
+    "remediation": "selective-source-rematerialization-round2-3-nodes"
   },
   "nodes": [
     {
@@ -810,25 +810,44 @@
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
   "build_level0_manifest": "manifests/kde-tier3-build-level0.json",
   "active_remediation": {
-    "trigger_workflow_run": 35755924197,
+    "round": 2,
+    "trigger_workflow_run": 35770505868,
+    "trigger_commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
     "level": "build-level0",
     "materialization_manifest": "manifests/kde-tier3-materialization.json",
     "nodes": [
       "kiconthemes",
-      "kdav",
-      "kwallet",
-      "krunner",
-      "kjobwidgets"
+      "kjobwidgets",
+      "kwallet"
     ],
-    "candidate_package_version": "6.30.0-0supralinux2",
-    "execution_authorized": true,
+    "candidate_package_version": "6.30.0-0supralinux3",
+    "execution_authorized": false,
     "full_level0_rerun_required": true,
-    "status": "level0-rerun-active",
-    "materialization_workflow_run": 35759443440,
-    "materialization_commit": "0c23204d90b8a40ebf078ba41667c2292673ea81",
-    "materialization_promoted": true,
-    "next_gate": "tier3-build-level0-attempt2",
-    "current_attempt": 2,
-    "activation_policy_workflow_run": 35769883615
-  }
+    "status": "materialization-pending-ci",
+    "next_gate": "tier3-build-level0-remediation-round2"
+  },
+  "remediation_history": [
+    {
+      "trigger_workflow_run": 35755924197,
+      "level": "build-level0",
+      "materialization_manifest": "manifests/kde-tier3-materialization.json",
+      "nodes": [
+        "kiconthemes",
+        "kdav",
+        "kwallet",
+        "krunner",
+        "kjobwidgets"
+      ],
+      "candidate_package_version": "6.30.0-0supralinux2",
+      "execution_authorized": true,
+      "full_level0_rerun_required": true,
+      "status": "level0-rerun-active",
+      "materialization_workflow_run": 35759443440,
+      "materialization_commit": "0c23204d90b8a40ebf078ba41667c2292673ea81",
+      "materialization_promoted": true,
+      "next_gate": "tier3-build-level0-attempt2",
+      "current_attempt": 2,
+      "activation_policy_workflow_run": 35769883615
+    }
+  ]
 }

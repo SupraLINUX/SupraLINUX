@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **PASS — 20 materialized nodes, including 5 promoted remediation artifacts** as of 2026-09-22.
+Status: **round-2 selective remediation pending CI for 3 nodes** as of 2026-09-22.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -103,3 +103,16 @@ Run `35759443440` completed the selective remediation matrix with **5/5 SUCCESS*
 The promoted nodes are KIconThemes, KDAV, KWallet, KRunner and KJobWidgets at `6.30.0-0supralinux2`. Their previous `-0supralinux1` materialization evidence remains retained as history.
 
 The materialization scope selector now hashes only inputs that can change the produced source package. Lifecycle/evidence promotion and selector-only changes do not trigger a new materialization; semantic contract changes, the materializer itself, and the workflow still do.
+
+
+## Selective remediation round 2
+
+Level 0 attempt 2 (run `35770505868`) reduced the unresolved set from five nodes to three. The promoted `-0supralinux2` evidence remains the active baseline and is preserved in each node's materialization history.
+
+Only the following source packages are rematerialized:
+
+- KIconThemes `6.30.0-0supralinux3`: add Resolute `qt6-svg-plugins <!nocheck>` so the upstream SVG tests have the QImage format provider they actually exercise.
+- KJobWidgets `6.30.0-0supralinux3`: add `python3-setuptools` as the backend required by the already-enabled upstream Python wheel build.
+- KWallet `6.30.0-0supralinux3`: provide `libkf6doctools-dev (>= 6.30.0~)` from the PASS SupraLINUX KDocTools artifact so the selected `kwallet-query.1` payload is generated.
+
+The other 17 source materializations are not rebuilt. Materialization remains source-only: `package_attempted=false` and it cannot create package PASS.

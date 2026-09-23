@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **contracts retained — selective Level 0 remediation materialization PASS**
+Status: **contracts retained — remediation round 2 materialization pending for 3 nodes**
 
 Reviewed: **2026-09-22**
 
@@ -101,3 +101,14 @@ The initial source-only materialization passed 20/20 in run `35746667704`. Level
 
 
 Selective materialization run `35759443440` proved the five revised contracts at `6.30.0-0supralinux2`. The generated build plan now consumes those exact promoted source-artifact pins; Level 0 activation remains a separate step.
+
+
+## Round 2 contract delta
+
+Attempt 2 evidence changes only three candidate revisions:
+
+- KIconThemes → `6.30.0-0supralinux3`, adding the Resolute Qt SVG image-format plugin provider for upstream tests;
+- KJobWidgets → `6.30.0-0supralinux3`, adding the setuptools PEP 517 backend provider;
+- KWallet → `6.30.0-0supralinux3`, restoring KDocTools as an explicit support provider for the selected manpage payload.
+
+The five-node round-1 contract/evidence remains retained as history. KDAV and KRunner stay on their proven `-0supralinux2` revisions.

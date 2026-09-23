@@ -267,14 +267,18 @@ Canonical readiness is now `package-contract-review-pass`. Tier 3 remains **0 PA
 The contract-review evidence has been converted into explicit SupraLINUX decisions. Canonical readiness is now `package-contract-ready` and package contract state is `not-materialized`.
 
 Materialization is the active gate. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**; no package build is authorized until source-package materialization completes.
-## Current canonical state — Tier 3 `build-level0` attempt 2
+## Current canonical state — Tier 3 `build-level0` remediation round 2
 
-The five Level 0 remediation source artifacts passed selective materialization and their promotion was validated by Repository Policy run `35769883615`.
+Level 0 attempt 2 completed in workflow run `35770505868` from commit `b381031bd9bbd7ea5b1d9a1ed3739766588be78e`. Repository Policy passed. The 12-node matrix ended **9 workflow SUCCESS / 3 FAIL**.
 
-Level 0 is now reauthorized as **attempt 2**. All 12 independent Level 0 nodes are scheduled again: seven at their existing `6.30.0-0supralinux1` source revisions and the five remediated nodes — KIconThemes, KDAV, KWallet, KRunner and KJobWidgets — at `6.30.0-0supralinux2`.
+No attempt-2 result has been canonically promoted, so package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. KNewStuff again built successfully but remains `RUNTIME_PENDING` and non-downstream-eligible until the later KCMUtils runtime gate.
 
-Canonical package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** until the attempt-2 evidence is reviewed and promoted. Historical attempt-1 FAIL/PASS evidence remains retained.
+Attempt 2 validated the first remediation for **KDAV** and **KRunner**: both now build successfully from their `6.30.0-0supralinux2` source packages. The remaining three failures are KIconThemes, KJobWidgets and KWallet:
 
-KNewStuff still cannot become canonical PASS from this build alone; a successful build remains `RUNTIME_PENDING` until KCMUtils passes Level 2 and the deferred runtime gate closes.
+- **KIconThemes** now executes the previously suppressed upstream tests. Two SVG-dependent test binaries fail because Resolute has the Qt SVG development library but not the separate `qt6-svg-plugins` image-format provider in the build environment. The tests remain enabled and fatal; round 2 adds that provider.
+- **KJobWidgets** advances past CMake and reaches `python -m build --wheel --no-isolation`, then fails because `setuptools.build_meta` is unavailable. Round 2 retains `python3-build` and adds Resolute `python3-setuptools`.
+- **KWallet** compiles and passes **3/3 tests**, then `dh_install` fails because `kwallet-query.1` was not generated. KDE keeps KDocTools optional, but the selected Debian-compatible payload expects that manpage. Round 2 supplies the already-PASS SupraLINUX KDocTools 6.30 artifact as a documentation provider without creating a Tier 3 dependency edge.
+
+Only these three source packages advance to `6.30.0-0supralinux3` and enter selective rematerialization. The other 17 Tier 3 source materializations are retained. Level 0 execution is paused until the three new artifacts pass and are promoted; afterwards the complete 12-node Level 0 campaign will be rerun again.
 
 Levels 1–3 remain unauthorized. Promotion to SupraLINUX `stable` always requires explicit user approval.

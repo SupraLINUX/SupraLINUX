@@ -484,7 +484,9 @@ def validate_control(control: Path, node: str, contract: dict) -> None:
         if node == "kjobwidgets" and "python3-kcoreaddons" not in src_bd:
             raise RuntimeError("kjobwidgets: KCoreAddons Python typesystem provider missing")
         if node == "kjobwidgets" and "python3-build" not in src_bd:
-            raise RuntimeError("kjobwidgets: Python build module provider missing")
+            raise RuntimeError("kjobwidgets: Python build frontend provider missing")
+        if node == "kjobwidgets" and contract.get("package_version_candidate") == "6.30.0-0supralinux3" and "python3-setuptools" not in src_bd:
+            raise RuntimeError("kjobwidgets: setuptools build backend provider missing")
 
 
 def write_changelog(path: Path, source: str, version: str, node: str) -> None:

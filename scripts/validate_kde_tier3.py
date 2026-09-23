@@ -98,9 +98,15 @@ req(support.get("support_subdag")=="PASS","Tier3 support sub-DAG state")
 req(support.get("next_gate")=="tier3-build-level0","Tier3 support next gate")
 if policy.get("package_builds")=="tier3-level0-remediation-pending":
     rem=tier3.get("active_remediation",{})
-    req(rem.get("trigger_workflow_run")==35755924197,"Tier3 remediation trigger")
-    req(set(rem.get("nodes",[]))=={"kiconthemes","kdav","kwallet","krunner","kjobwidgets"},"Tier3 remediation nodes")
-    req(rem.get("candidate_package_version")=="6.30.0-0supralinux2","Tier3 remediation package revision")
+    if rem.get("round")==2:
+        req(rem.get("trigger_workflow_run")==35770505868,"Tier3 round2 remediation trigger")
+        req(set(rem.get("nodes",[]))=={"kiconthemes","kjobwidgets","kwallet"},"Tier3 round2 remediation nodes")
+        req(rem.get("candidate_package_version")=="6.30.0-0supralinux3","Tier3 round2 remediation package revision")
+        req(rem.get("status")=="materialization-pending-ci","Tier3 round2 remediation state")
+    else:
+        req(rem.get("trigger_workflow_run")==35755924197,"Tier3 round1 remediation trigger")
+        req(set(rem.get("nodes",[]))=={"kiconthemes","kdav","kwallet","krunner","kjobwidgets"},"Tier3 round1 remediation nodes")
+        req(rem.get("candidate_package_version")=="6.30.0-0supralinux2","Tier3 round1 remediation package revision")
     req(rem.get("execution_authorized") is False and rem.get("full_level0_rerun_required") is True,"Tier3 remediation execution policy")
 elif policy.get("package_builds")=="tier3-level0-authorized" and tier3.get("active_remediation",{}).get("current_attempt")==2:
     rem=tier3.get("active_remediation",{})

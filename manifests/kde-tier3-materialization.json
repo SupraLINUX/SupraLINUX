@@ -6,7 +6,7 @@
   "frameworks_series": "6.30.0",
   "contract_manifest": "manifests/kde-tier3-package-contracts.json",
   "canonical_manifest": "manifests/kde-frameworks-tier3.json",
-  "state": "PASS",
+  "state": "remediation-pending-ci",
   "package_attempted": false,
   "package_state_effect": "none",
   "source_policy": "verify-kde-upstream-tarball-and-pinned-debian-6.30-packaging-before-adaptation",
@@ -182,24 +182,10 @@
       }
     },
     "kiconthemes": {
-      "state": "materialized",
+      "state": "remediation-pending",
       "source_package": "kf6-kiconthemes",
       "package_version": "6.30.0-0supralinux2",
       "previous_evidence": {
-        "workflow_run": 35746667704,
-        "job_id": 106810107884,
-        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
-        "artifact_id": 10703820086,
-        "artifact_sha256": "76c32c49e51b10b8f268c67ae74f710d36668e6bea480b44b6c6dc74850ca20c",
-        "package_version": "6.30.0-0supralinux1",
-        "orig_tar_sha256": "c0c684823d0e087f35168cd79f1053fd358bb8fb47b27996a11c7d7ee3da6f4d",
-        "reference_tree_sha256": "c39952329869c0deb4ffb5f3bf36ce5a89d1b8290f7a14fe135a4453c32ff210",
-        "result": "PASS",
-        "package_attempted": false,
-        "package_state_effect": "none",
-        "full_result_json_retained_in_artifact": true
-      },
-      "evidence": {
         "workflow_run": 35759443440,
         "job_id": 106853774578,
         "commit": "0c23204d90b8a40ebf078ba41667c2292673ea81",
@@ -218,7 +204,44 @@
         "package_attempted": false,
         "package_state_effect": "none",
         "full_result_json_retained_in_artifact": true
-      }
+      },
+      "evidence_history": [
+        {
+          "workflow_run": 35746667704,
+          "job_id": 106810107884,
+          "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+          "artifact_id": 10703820086,
+          "artifact_sha256": "76c32c49e51b10b8f268c67ae74f710d36668e6bea480b44b6c6dc74850ca20c",
+          "package_version": "6.30.0-0supralinux1",
+          "orig_tar_sha256": "c0c684823d0e087f35168cd79f1053fd358bb8fb47b27996a11c7d7ee3da6f4d",
+          "reference_tree_sha256": "c39952329869c0deb4ffb5f3bf36ce5a89d1b8290f7a14fe135a4453c32ff210",
+          "result": "PASS",
+          "package_attempted": false,
+          "package_state_effect": "none",
+          "full_result_json_retained_in_artifact": true
+        },
+        {
+          "workflow_run": 35759443440,
+          "job_id": 106853774578,
+          "commit": "0c23204d90b8a40ebf078ba41667c2292673ea81",
+          "artifact_id": 10709706833,
+          "artifact_sha256": "9d9ceadb8ccc7cfde4bc674f8f64b64a66e91f2971a14c92ce97223012487eb8",
+          "package_version": "6.30.0-0supralinux2",
+          "orig_tar_sha256": "c0c684823d0e087f35168cd79f1053fd358bb8fb47b27996a11c7d7ee3da6f4d",
+          "reference_tree_sha256": "c39952329869c0deb4ffb5f3bf36ce5a89d1b8290f7a14fe135a4453c32ff210",
+          "dsc_sha256": "bbdd53ac5792afe25e7598b311a6d2c56dbfe750cf23bd8cb812f1ff219cd0b6",
+          "debian_tar_sha256": "a15c44884b7e3e54dd2e5983b079d5dba976213a98cca2ee57a364dcd9bcb384",
+          "source_tree_sha256": "080127be5dcd7a9feb906cb339f6ac0154da80c759756d0dac19fa1c1cc397e0",
+          "materialized_tree_sha256": "ab40b341ea6f2e7bfaa4c0815014481bd4cb8ae1f14316a1d67ad5e36de89b8c",
+          "adapted_control_sha256": "eb0cf5e1a94bad933f6e8c4ff2b0c2b2d3e9dbb597ff218490be597b7f984cc4",
+          "adapted_rules_sha256": "5bd4e633351ceabcb6103116ae6955fba5645d0709725e20bc22655378f906ac",
+          "result": "PASS",
+          "package_attempted": false,
+          "package_state_effect": "none",
+          "full_result_json_retained_in_artifact": true
+        }
+      ],
+      "candidate_package_version": "6.30.0-0supralinux3"
     },
     "kio": {
       "state": "materialized",
@@ -240,24 +263,10 @@
       }
     },
     "kjobwidgets": {
-      "state": "materialized",
+      "state": "remediation-pending",
       "source_package": "kf6-kjobwidgets",
       "package_version": "6.30.0-0supralinux2",
       "previous_evidence": {
-        "workflow_run": 35746667704,
-        "job_id": 106810107995,
-        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
-        "artifact_id": 10702499485,
-        "artifact_sha256": "4ff2537cab7257d72aaa3de0ad78ea8d9425bd3367614aa07ec2b22703a9bd2c",
-        "package_version": "6.30.0-0supralinux1",
-        "orig_tar_sha256": "bf36e3619df1c6ad3d900bd36433d97ab295be41c1cc401ff0e766380788bbae",
-        "reference_tree_sha256": "f1fa1c6f41bbaaf140c65a6aa195a20ef791de09885a5b955252b9754c41e4f8",
-        "result": "PASS",
-        "package_attempted": false,
-        "package_state_effect": "none",
-        "full_result_json_retained_in_artifact": true
-      },
-      "evidence": {
         "workflow_run": 35759443440,
         "job_id": 106853774765,
         "commit": "0c23204d90b8a40ebf078ba41667c2292673ea81",
@@ -276,7 +285,44 @@
         "package_attempted": false,
         "package_state_effect": "none",
         "full_result_json_retained_in_artifact": true
-      }
+      },
+      "evidence_history": [
+        {
+          "workflow_run": 35746667704,
+          "job_id": 106810107995,
+          "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+          "artifact_id": 10702499485,
+          "artifact_sha256": "4ff2537cab7257d72aaa3de0ad78ea8d9425bd3367614aa07ec2b22703a9bd2c",
+          "package_version": "6.30.0-0supralinux1",
+          "orig_tar_sha256": "bf36e3619df1c6ad3d900bd36433d97ab295be41c1cc401ff0e766380788bbae",
+          "reference_tree_sha256": "f1fa1c6f41bbaaf140c65a6aa195a20ef791de09885a5b955252b9754c41e4f8",
+          "result": "PASS",
+          "package_attempted": false,
+          "package_state_effect": "none",
+          "full_result_json_retained_in_artifact": true
+        },
+        {
+          "workflow_run": 35759443440,
+          "job_id": 106853774765,
+          "commit": "0c23204d90b8a40ebf078ba41667c2292673ea81",
+          "artifact_id": 10710136148,
+          "artifact_sha256": "5feaea71e99bb9ebe2be812deb9101cee440d6d065ab98354b47ee36114f3d5a",
+          "package_version": "6.30.0-0supralinux2",
+          "orig_tar_sha256": "bf36e3619df1c6ad3d900bd36433d97ab295be41c1cc401ff0e766380788bbae",
+          "reference_tree_sha256": "f1fa1c6f41bbaaf140c65a6aa195a20ef791de09885a5b955252b9754c41e4f8",
+          "dsc_sha256": "699861c7358a92adf2337d428ae727fb2d6f27981f166bcfcc9998b4c4f660bd",
+          "debian_tar_sha256": "cf2254e8650a9d6c03b58743b054c1ce709033c7d59931970315cb43c72b37a5",
+          "source_tree_sha256": "c12c3877dc5f746b12e1adba2a9b3a8a23566bebbcc1d6e1bad3c8251871c8bf",
+          "materialized_tree_sha256": "d963ee4ebc8a7b44d58979c81ebc4528740f48513e47647ded7325e2d3afc9d2",
+          "adapted_control_sha256": "15474d0aede96141cae936c26113d0adc56aac547b5b17a78e9ca1031649754f",
+          "adapted_rules_sha256": "fe4968b3d1dd39e686e735d3ec2012fb9612a50cc33c8608888e921eadb65499",
+          "result": "PASS",
+          "package_attempted": false,
+          "package_state_effect": "none",
+          "full_result_json_retained_in_artifact": true
+        }
+      ],
+      "candidate_package_version": "6.30.0-0supralinux3"
     },
     "knewstuff": {
       "state": "materialized",
@@ -451,24 +497,10 @@
       }
     },
     "kwallet": {
-      "state": "materialized",
+      "state": "remediation-pending",
       "source_package": "kf6-kwallet",
       "package_version": "6.30.0-0supralinux2",
       "previous_evidence": {
-        "workflow_run": 35746667704,
-        "job_id": 106810108082,
-        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
-        "artifact_id": 10702319999,
-        "artifact_sha256": "eadcbbc8edfac7509e7930b68fcea78218840557f5b93ab379b74d223304960f",
-        "package_version": "6.30.0-0supralinux1",
-        "orig_tar_sha256": "93cb9c1df2630807c04bf8c30312e75ae3bb466c77dd9b29bb2c752e71d34a26",
-        "reference_tree_sha256": "14828a62213875b9be1395f66ad4b4aa1f0349ed1ce9bf56a5b639d7089d6d2c",
-        "result": "PASS",
-        "package_attempted": false,
-        "package_state_effect": "none",
-        "full_result_json_retained_in_artifact": true
-      },
-      "evidence": {
         "workflow_run": 35759443440,
         "job_id": 106853774686,
         "commit": "0c23204d90b8a40ebf078ba41667c2292673ea81",
@@ -487,7 +519,44 @@
         "package_attempted": false,
         "package_state_effect": "none",
         "full_result_json_retained_in_artifact": true
-      }
+      },
+      "evidence_history": [
+        {
+          "workflow_run": 35746667704,
+          "job_id": 106810108082,
+          "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+          "artifact_id": 10702319999,
+          "artifact_sha256": "eadcbbc8edfac7509e7930b68fcea78218840557f5b93ab379b74d223304960f",
+          "package_version": "6.30.0-0supralinux1",
+          "orig_tar_sha256": "93cb9c1df2630807c04bf8c30312e75ae3bb466c77dd9b29bb2c752e71d34a26",
+          "reference_tree_sha256": "14828a62213875b9be1395f66ad4b4aa1f0349ed1ce9bf56a5b639d7089d6d2c",
+          "result": "PASS",
+          "package_attempted": false,
+          "package_state_effect": "none",
+          "full_result_json_retained_in_artifact": true
+        },
+        {
+          "workflow_run": 35759443440,
+          "job_id": 106853774686,
+          "commit": "0c23204d90b8a40ebf078ba41667c2292673ea81",
+          "artifact_id": 10709377109,
+          "artifact_sha256": "be3c7469e1edb7e17b265a80321a392607c65541d72f0d580cfcfd7b99fa27c3",
+          "package_version": "6.30.0-0supralinux2",
+          "orig_tar_sha256": "93cb9c1df2630807c04bf8c30312e75ae3bb466c77dd9b29bb2c752e71d34a26",
+          "reference_tree_sha256": "14828a62213875b9be1395f66ad4b4aa1f0349ed1ce9bf56a5b639d7089d6d2c",
+          "dsc_sha256": "ce947617021c6b41fad893b560f1e8a9adb10c78714a50d3ff8253043f3b62a0",
+          "debian_tar_sha256": "1063ef2584fffe1b07ee92b31dd7bd3ef7cec0927e05760cbd065fb403a4f7ff",
+          "source_tree_sha256": "9e640aa0b2b66d5c455cbcca1f43eac19439e189f85852b9d9b5f2ab814f6933",
+          "materialized_tree_sha256": "3ebb01b76650ba4b39517216fad16a6b140e9bc465ce45471789997f65779ffa",
+          "adapted_control_sha256": "f55b5c2d39aa28999e882e63194e662fb4bae4d7e4ad93fa476a6b4b644eb41e",
+          "adapted_rules_sha256": "56c931a7caefc02226fb82528454892dba12d6ad59a59bc1a616878c57217e5b",
+          "result": "PASS",
+          "package_attempted": false,
+          "package_state_effect": "none",
+          "full_result_json_retained_in_artifact": true
+        }
+      ],
+      "candidate_package_version": "6.30.0-0supralinux3"
     },
     "kxmlgui": {
       "state": "materialized",
@@ -578,21 +647,6 @@
   },
   "previous_evidence_summary": {
     "result": "PASS",
-    "workflow_run": 35746667704,
-    "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
-    "nodes": 20,
-    "artifacts": 20,
-    "package_attempted": false,
-    "package_state_effect": "none",
-    "repository_policy": {
-      "workflow_run": 35746667671,
-      "job_id": 106809960419,
-      "result": "PASS"
-    },
-    "next_gate": "tier3-build-campaign-planning"
-  },
-  "evidence_summary": {
-    "result": "PASS",
     "workflow_run": 35759443440,
     "commit": "0c23204d90b8a40ebf078ba41667c2292673ea81",
     "total_materialized_nodes": 20,
@@ -601,5 +655,73 @@
     "package_attempted": false,
     "package_state_effect": "none",
     "next_gate": "tier3-build-level0-reactivation"
-  }
+  },
+  "remediation_queue": [
+    "kiconthemes",
+    "kjobwidgets",
+    "kwallet"
+  ],
+  "active_remediation": {
+    "round": 2,
+    "status": "materialization-pending-ci",
+    "trigger_workflow_run": 35770505868,
+    "trigger_commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+    "reason": "Tier3 Level0 attempt 2 exposed three remaining provider/payload defects.",
+    "nodes": [
+      "kiconthemes",
+      "kjobwidgets",
+      "kwallet"
+    ],
+    "package_revision": "6.30.0-0supralinux3",
+    "policy": "rematerialize-only-changed-nodes-then-rerun-full-level0"
+  },
+  "remediation_history": [
+    {
+      "trigger_workflow_run": 35755924197,
+      "trigger_commit": "d73a6b25ea7a9ecd1e5fa088db734b29d159d618",
+      "reason": "Tier3 Level0 attempt 1 exposed five package-owned packaging/provider defects.",
+      "policy": "rematerialize-only-changed-nodes-then-rerun-full-level0",
+      "package_revision": "6.30.0-0supralinux2",
+      "status": "PASS",
+      "workflow_run": 35759443440,
+      "commit": "0c23204d90b8a40ebf078ba41667c2292673ea81",
+      "promoted_nodes": [
+        "kiconthemes",
+        "kdav",
+        "kwallet",
+        "krunner",
+        "kjobwidgets"
+      ],
+      "artifacts": {
+        "kiconthemes": {
+          "job_id": 106853774578,
+          "artifact_id": 10709706833,
+          "artifact_sha256": "9d9ceadb8ccc7cfde4bc674f8f64b64a66e91f2971a14c92ce97223012487eb8"
+        },
+        "kdav": {
+          "job_id": 106853774804,
+          "artifact_id": 10710221143,
+          "artifact_sha256": "6ba0e0b3a87ab417335327ba4ca58331d02c3cf9ec719e64b17e66b6c6083475"
+        },
+        "kwallet": {
+          "job_id": 106853774686,
+          "artifact_id": 10709377109,
+          "artifact_sha256": "be3c7469e1edb7e17b265a80321a392607c65541d72f0d580cfcfd7b99fa27c3"
+        },
+        "krunner": {
+          "job_id": 106853774810,
+          "artifact_id": 10709666393,
+          "artifact_sha256": "2180b2396f2521c0af1e41797842b1efe7074196652688266c37286f92ab7f48"
+        },
+        "kjobwidgets": {
+          "job_id": 106853774765,
+          "artifact_id": 10710136148,
+          "artifact_sha256": "5feaea71e99bb9ebe2be812deb9101cee440d6d065ab98354b47ee36114f3d5a"
+        }
+      },
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "next_gate": "tier3-build-level0-reactivation"
+    }
+  ]
 }

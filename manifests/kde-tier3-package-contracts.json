@@ -661,7 +661,7 @@
       "source_package": "kf6-kiconthemes",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux2",
+      "package_version_candidate": "6.30.0-0supralinux3",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kiconthemes",
@@ -763,6 +763,11 @@
           "classification": "level0-remediation",
           "decision": "remove-false-kconfigwidgets-build-and-development-edges-and-test-exclusions",
           "rationale": "Level0 attempt 1 failed before build on a Debian-only KConfigWidgets relation; upstream 6.30 declares no such dependency. The reference rules also excluded two upstream tests contrary to SupraLINUX policy."
+        },
+        {
+          "classification": "level0-remediation-round2",
+          "decision": "add-resolute-qt-svg-image-plugin-provider",
+          "rationale": "Attempt 2 restored and executed the full upstream test set. The two SVG-dependent test binaries failed with null/transparent images while qt6-svg-dev was present but qt6-svg-plugins was not installed; add the provider and keep tests fatal."
         }
       ],
       "source_build_relation_overrides": [
@@ -772,6 +777,13 @@
           "package": "libkf6configwidgets-dev",
           "classification": "debian-only-build-edge-removal",
           "rationale": "KDE 6.30 KIconThemes CMake and autotests do not require KConfigWidgets; Debian's relation must not create a false Tier3 edge."
+        },
+        {
+          "field": "Build-Depends",
+          "action": "ensure",
+          "relation": "qt6-svg-plugins <!nocheck>",
+          "classification": "upstream-test-environment-provider",
+          "rationale": "KIconThemes upstream SVG tests use QImageReader with the svg format; Resolute splits that image-format plugin into qt6-svg-plugins."
         }
       ],
       "reference_test_suppression_overrides": {
@@ -918,7 +930,7 @@
       "source_package": "kf6-kjobwidgets",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux2",
+      "package_version_candidate": "6.30.0-0supralinux3",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kjobwidgets",
@@ -1013,6 +1025,11 @@
           "classification": "level0-remediation",
           "decision": "add-python3-build-provider",
           "rationale": "Level0 attempt 1 reached CMake with upstream Python bindings enabled and failed because ECMGeneratePythonBindings could not import the Python build module."
+        },
+        {
+          "classification": "level0-remediation-round2",
+          "decision": "add-python-setuptools-backend-provider",
+          "rationale": "Attempt 2 reached wheel generation and failed because setuptools.build_meta was unavailable. Preserve upstream Python bindings and provide the missing Resolute backend."
         }
       ],
       "python_module": "KJobWidgets",
@@ -1035,7 +1052,14 @@
           "action": "ensure",
           "relation": "python3-build",
           "classification": "python-binding-build-tool-provider",
-          "rationale": "ECMGeneratePythonBindings requires the Python 'build' module when BUILD_PYTHON_BINDINGS=ON; Ubuntu Resolute provides it via python3-build."
+          "rationale": "ECMGeneratePythonBindings requires the Python 'build' frontend when BUILD_PYTHON_BINDINGS=ON; Ubuntu Resolute provides it via python3-build."
+        },
+        {
+          "field": "Build-Depends",
+          "action": "ensure",
+          "relation": "python3-setuptools",
+          "classification": "python-binding-build-backend-provider",
+          "rationale": "The upstream wheel build uses setuptools.build_meta under python -m build --no-isolation; Resolute python3-build does not depend on python3-setuptools."
         }
       ]
     },
@@ -1802,7 +1826,7 @@
       "source_package": "kf6-kwallet",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux2",
+      "package_version_candidate": "6.30.0-0supralinux3",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kwallet",
@@ -1900,15 +1924,30 @@
           "classification": "level0-remediation",
           "decision": "do-not-force-optional-kdoctools",
           "rationale": "Level0 attempt 1 was unsatisfiable only because the Debian baseline made optional KF6DocTools mandatory."
+        },
+        {
+          "classification": "level0-remediation-round2",
+          "decision": "provide-kdoctools-for-selected-manpage-payload-without-tier3-edge",
+          "rationale": "Attempt 2 compiled and passed 3/3 tests but dh_install failed because kwallet-query.1 was absent. KDocTools remains optional in KDE upstream; SupraLINUX supplies its PASS artifact only to satisfy the selected documentation payload."
         }
       ],
       "source_build_relation_overrides": [
         {
           "field": "Build-Depends",
-          "action": "remove",
-          "package": "libkf6doctools-dev",
-          "classification": "optional-upstream-feature-not-forced",
-          "rationale": "KDE 6.30 KWallet uses non-REQUIRED find_package(KF6DocTools) only for optional docs under BUILD_KWALLET_QUERY; packaging must not turn it into a mandatory build edge."
+          "action": "ensure",
+          "relation": "libkf6doctools-dev (>= 6.30.0~)",
+          "classification": "optional-upstream-documentation-provider-for-selected-packaging-payload",
+          "rationale": "KDE keeps KDocTools optional, but the selected kwallet6 packaging payload requires the generated kwallet-query.1 manpage. Use the already-PASS SupraLINUX KDocTools artifact as provider without creating a Tier3 dependency edge."
+        }
+      ],
+      "support_provider_requirements": [
+        {
+          "id": "kdoctools",
+          "role": "documentation-payload-provider",
+          "version": "6.30.0-0supralinux1",
+          "artifact_id": 10682066198,
+          "artifact_sha256": "6daeb6beed63ba7b7e441dba4dfd356be3ad48a9f3ae75acddae0945c36a683d",
+          "authority_effect": "none"
         }
       ]
     },
@@ -2686,6 +2725,26 @@
         "classification": "python-binding-build-tool-provider-adaptation",
         "kde_feature_effect": "none",
         "validation": "clean-build-required"
+      },
+      "python_setuptools_backend": {
+        "provider_package": "python3-setuptools",
+        "observed_provider_version": "78.1.1-0.1build1",
+        "applies_to": [
+          "kjobwidgets"
+        ],
+        "classification": "python-binding-build-tool-provider-adaptation",
+        "kde_feature_effect": "none",
+        "validation": "clean-build-required"
+      },
+      "qt_svg_image_plugin": {
+        "provider_package": "qt6-svg-plugins",
+        "observed_provider_version": "6.10.2-2",
+        "applies_to": [
+          "kiconthemes"
+        ],
+        "classification": "upstream-test-environment-provider-adaptation",
+        "kde_feature_effect": "none",
+        "validation": "full-upstream-test-suite-required"
       }
     }
   },
@@ -2776,5 +2835,26 @@
       "package_state_effect": "none"
     },
     "next_gate": "tier3-build-level0-reactivation"
+  },
+  "active_remediation": {
+    "round": 2,
+    "status": "materialization-pending-ci",
+    "trigger": {
+      "workflow_run": 35770505868,
+      "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+      "level0_result": "9 job SUCCESS / 3 FAIL",
+      "failed_nodes": [
+        "kiconthemes",
+        "kjobwidgets",
+        "kwallet"
+      ]
+    },
+    "previous_round": 1,
+    "candidate_package_version": "6.30.0-0supralinux3",
+    "policy": {
+      "package_revision_bump_required_for_packaging_changes": true,
+      "rematerialize_only_changed_nodes": true,
+      "rerun_full_level0_after_remediation": true
+    }
   }
 }

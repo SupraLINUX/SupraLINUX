@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 0
 
-Status: **Level 0 attempt 2 active / full 12-node rerun authorized** as of 2026-09-22.
+Status: **attempt 2 complete — remediation round 2 selective materialization pending** as of 2026-09-22.
 
 Level 0 is the first real binary-build campaign for the 20 canonical Tier 3 Frameworks. It contains **12 independent nodes**:
 
@@ -110,3 +110,20 @@ Promotion validation passed in Repository Policy run `35769883615`. Level 0 is t
 All 12 Level 0 nodes run again. The five remediated nodes consume their promoted `6.30.0-0supralinux2` source artifacts; the seven nodes that succeeded in attempt 1 are intentionally rebuilt as full-campaign revalidation rather than being silently carried forward.
 
 The DAG semantics are unchanged: independent jobs continue after unrelated FAILs, KNewStuff still transitions only to `RUNTIME_PENDING` on build success, and no result is promoted until attempt 2 evidence is reviewed.
+
+
+## Attempt 2 — 9 SUCCESS / 3 FAIL
+
+Workflow run `35770505868` completed all 12 Level 0 jobs. No result is promoted yet.
+
+Attempt 2 successfully revalidated KBookmarks, KConfigWidgets, KDESu, KPeople, KSvg and KTextWidgets; KNewStuff again completed its build but remains `RUNTIME_PENDING`. It also proved that the round-1 corrections for **KDAV** and **KRunner** are valid: both now build successfully at `6.30.0-0supralinux2`.
+
+Three real package FAILs remain:
+
+- **KIconThemes**: the full upstream test suite is now running. `kiconloader_unittest` and `kiconengine_unittest` fail specifically on SVG image loading/rendering. Resolute splits the QImage SVG format handler into `qt6-svg-plugins`; round 2 adds it as a nocheck test-environment provider. No test is disabled or ignored.
+- **KJobWidgets**: `python3-build` launches the wheel build, but the selected legacy setuptools backend cannot be imported. Round 2 adds `python3-setuptools` while keeping `BUILD_PYTHON_BINDINGS=ON`.
+- **KWallet**: build and **3/3 upstream tests PASS**. Packaging then fails because `usr/share/man/man1/kwallet-query.1` is absent. Round 2 uses the already-PASS KDocTools 6.30 artifact as the optional documentation provider required by the selected payload. This is a provider relationship, not a KDE Tier 3 build edge.
+
+These three packages advance to `6.30.0-0supralinux3`. Level 0 is paused with `execution_authorized=false` while only those three source packages are rematerialized. A successful round-2 materialization will be promoted and validated before a complete **attempt 3** reruns all 12 Level 0 nodes.
+
+The canonical package snapshot remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. Historical FAIL evidence is retained in the attempt ledger.

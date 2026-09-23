@@ -41,10 +41,24 @@ req(chg.get("selected")=="resolute","Tier3 changelog target")
 shi=adapt.get("shiboken_clang_discovery",{})
 req(shi.get("provider_packages")==["llvm-dev","libclang-common-21-dev"],"Tier3 Shiboken provider packages")
 req(shi.get("llvm_major")==21 and shi.get("applies_to")==["kjobwidgets","kxmlgui"],"Tier3 Shiboken provider contract")
-if c.get("remediation",{}).get("status")=="materialization-pending-ci":
-    pb=adapt.get("python_build_module",{})
-    req(pb.get("provider_package")=="python3-build" and pb.get("applies_to")==["kjobwidgets"],"Tier3 KJobWidgets Python build provider remediation")
-    req(set(c.get("remediation",{}).get("trigger",{}).get("failed_nodes",[]))=={"kiconthemes","kdav","kwallet","krunner","kjobwidgets"},"Tier3 Level0 remediation node set")
+round1=c.get("remediation",{})
+round1_nodes=set(round1.get("trigger",{}).get("failed_nodes",[]))
+req(round1_nodes=={"kiconthemes","kdav","kwallet","krunner","kjobwidgets"},"Tier3 round1 remediation node set")
+req(round1.get("status")=="materialization-PASS","Tier3 round1 materialization PASS")
+pb=adapt.get("python_build_module",{})
+req(pb.get("provider_package")=="python3-build" and pb.get("applies_to")==["kjobwidgets"],"Tier3 KJobWidgets Python build frontend provider")
+
+active=c.get("active_remediation",{})
+active_nodes=set(active.get("trigger",{}).get("failed_nodes",[]))
+if active:
+    req(active.get("round")==2 and active.get("status")=="materialization-pending-ci","Tier3 active remediation round/state")
+    req(active_nodes=={"kiconthemes","kjobwidgets","kwallet"},"Tier3 round2 remediation node set")
+    req(active.get("trigger",{}).get("workflow_run")==35770505868,"Tier3 round2 trigger run")
+    req(active.get("candidate_package_version")=="6.30.0-0supralinux3","Tier3 round2 package revision")
+    st=adapt.get("python_setuptools_backend",{})
+    req(st.get("provider_package")=="python3-setuptools" and st.get("observed_provider_version")=="78.1.1-0.1build1" and st.get("applies_to")==["kjobwidgets"],"Tier3 KJobWidgets setuptools backend provider")
+    svg=adapt.get("qt_svg_image_plugin",{})
+    req(svg.get("provider_package")=="qt6-svg-plugins" and svg.get("observed_provider_version")=="6.10.2-2" and svg.get("applies_to")==["kiconthemes"],"Tier3 KIconThemes SVG image plugin provider")
 
 python_nodes={
  "kjobwidgets":("python3-kf6jobwidgets","KJobWidgets",["python3-pyside6.qtwidgets","python3-kcoreaddons"],"79a60665199ccbb54ca094e25f84839aeecde040"),
@@ -55,8 +69,12 @@ for node_id in selected:
     x=c["nodes"][node_id]
     n=nodes[node_id]
     req(x.get("contract_state")=="contract-ready",f"{node_id}: contract-ready")
-    remediation_nodes=set(c.get("remediation",{}).get("trigger",{}).get("failed_nodes",[]))
-    expected_version="6.30.0-0supralinux2" if node_id in remediation_nodes else "6.30.0-0supralinux1"
+    if node_id in active_nodes:
+        expected_version="6.30.0-0supralinux3"
+    elif node_id in round1_nodes:
+        expected_version="6.30.0-0supralinux2"
+    else:
+        expected_version="6.30.0-0supralinux1"
     req(x.get("package_version_candidate")==expected_version,f"{node_id}: package version")
     tr=x.get("technical_references",{})
     req(x.get("compatibility_binary_packages")==tr.get("debian",{}).get("binary_packages"),f"{node_id}: compatibility binary identity")
@@ -103,6 +121,10 @@ canonical=t.get("discovery_policy",{})
 req(canonical.get("phase") in {"materialization","build-campaign-planning","build-level0"},"Tier3 canonical materialization/build-planning phase")
 req(canonical.get("package_contracts")=="PASS","Tier3 canonical contract PASS")
 req(canonical.get("package_builds") in {"not-authorized-before-tier3-materialization","not-authorized-before-tier3-build-campaign","tier3-level0-authorized","tier3-level0-remediation-pending"},"Tier3 build gate")
+if active:
+    req(canonical.get("package_builds")=="tier3-level0-remediation-pending","Tier3 round2 build pause")
+    ar=t.get("active_remediation",{})
+    req(ar.get("round")==2 and set(ar.get("nodes",[]))==active_nodes and ar.get("execution_authorized") is False,"Tier3 round2 canonical remediation linkage")
 req(t.get("support_components",{}).get("next_gate") in {"tier3-materialization","tier3-build-campaign-planning","tier3-build-level0"},"Tier3 next gate")
 req(c.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 
@@ -111,6 +133,18 @@ for path in (
  "docs/kde-tier3-package-contracts.md",
 ):
     req((ROOT/path).exists(),f"missing Tier3 contract-decision documentation: {path}")
+
+
+if active:
+    rel={
+      node:[(x.get("action"),x.get("package") or x.get("relation")) for x in c["nodes"][node].get("source_build_relation_overrides",[])]
+      for node in active_nodes
+    }
+    req(rel["kiconthemes"]==[("remove","libkf6configwidgets-dev"),("ensure","qt6-svg-plugins <!nocheck>")],"KIconThemes round2 relations")
+    req(rel["kjobwidgets"]==[("ensure","python3-build"),("ensure","python3-setuptools")],"KJobWidgets round2 relations")
+    req(rel["kwallet"]==[("ensure","libkf6doctools-dev (>= 6.30.0~)")],"KWallet round2 relations")
+    support=c["nodes"]["kwallet"].get("support_provider_requirements",[])
+    req(len(support)==1 and support[0].get("id")=="kdoctools" and support[0].get("artifact_id")==10682066198,"KWallet KDocTools support contract")
 
 if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)

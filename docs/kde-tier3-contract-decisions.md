@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package-contract decisions
 
-Status: **PASS — Level 0 remediation materialization promoted**
+Status: **PASS baseline — Level 0 remediation round 2 pending materialization**
 
 Reviewed: **2026-09-22**
 
@@ -63,3 +63,14 @@ These decisions do not weaken KDE tests or invent new KDE dependency edges. They
 
 
 The five remediation contracts were materialized successfully in run `35759443440`. Their contract revisions remain `6.30.0-0supralinux2`; this closes the source-materialization part of the remediation but does not itself authorize or promote any binary package.
+
+
+## Level 0 remediation round 2 decisions
+
+Attempt 2, run `35770505868`, narrowed the remaining failures to KIconThemes, KJobWidgets and KWallet. Their source revisions advance to `6.30.0-0supralinux3`.
+
+- KIconThemes keeps the full upstream test set enabled and gains Resolute `qt6-svg-plugins` as a test-environment provider. This supplies the SVG QImage format plugin used by the failing upstream tests; it does not change the KDE dependency DAG.
+- KJobWidgets keeps `BUILD_PYTHON_BINDINGS=ON`; `python3-setuptools` is added because the upstream wheel build selects `setuptools.build_meta` under `python -m build --no-isolation`.
+- KWallet regains KDocTools only as a **documentation/payload provider**. KDE upstream still treats KDocTools as optional. The already-PASS SupraLINUX KDocTools artifact is injected so the Debian-compatible `kwallet6` payload can include `kwallet-query.1`; no Tier 3 edge is created.
+
+KDAV and KRunner require no further source change: their round-1 remediations passed attempt 2.

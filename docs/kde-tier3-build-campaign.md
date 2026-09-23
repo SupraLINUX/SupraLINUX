@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 build campaign
 
-Status: **validated topology; Level 0 attempt 2 authorized** as of 2026-09-22.
+Status: **validated topology; Level 0 paused for remediation round 2** as of 2026-09-22.
 
 This document defines how the 20 materialized Tier 3 Frameworks will be built without changing the project-wide PASS / FAIL / BLOCKED semantics.
 
@@ -70,3 +70,10 @@ The five remediated Level 0 nodes now point to the real source artifacts from ma
 
 
 Repository Policy run `35769883615` validated the promoted remediation artifacts and refreshed campaign pins. The separate Level 0 authority now starts attempt 2 as a complete 12-node rerun; the immutable 12 / 2 / 4 / 2 topology remains unchanged.
+
+
+## After Level 0 attempt 2
+
+The 12 / 2 / 4 / 2 KDE-upstream topology is unchanged. Attempt 2 passed nine workflow jobs and left three package-owned failures. Because all three fixes modify source-package contracts, Level 0 is paused while KIconThemes, KJobWidgets and KWallet are selectively rematerialized as `-0supralinux3`.
+
+The global plan continues to reference each node's last promoted materialization while that selective source work is pending. After the three new artifacts pass, their exact IDs/digests replace the old pins, Repository Policy validates the promotion, and a separate activation starts full Level 0 attempt 3.
