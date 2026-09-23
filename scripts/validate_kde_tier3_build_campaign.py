@@ -114,6 +114,7 @@ phase = canonical.get("discovery_policy", {}).get("phase")
 req(phase in {
     "build-campaign-planning",
     "build-level0",
+    "build-level1-planning",
     "build-level1",
     "build-level2",
     "build-level3",

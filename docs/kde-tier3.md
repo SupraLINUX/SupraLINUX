@@ -353,3 +353,10 @@ Canonical Tier 3 state is now **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED
 After Level 0 Attempt 5 promotion, the canonical Tier 3 next gate is `tier3-build-level1-planning`. The retained support sub-DAG remains PASS and unchanged; its validators now explicitly accept this post-Level0 gate instead of incorrectly treating it as an invalid support lifecycle value.
 
 This is a validator-lifecycle correction only. It changes no package evidence, dependency edge, PASS state, runtime-validation requirement, or publication status.
+
+
+### Historical Tier 3 validators after Level 0
+
+The provider-audit, packaging-tree, contract-review and generated build-campaign validators are evidence/lifecycle validators, not package-state owners. After Level 0 promotion they explicitly accept the canonical `build-level1-planning` phase and retained PASS/runtime-pending node states.
+
+This prevents historical gates from falsely requiring the pre-build `pending` snapshot after real package PASS evidence has already been promoted. No provider decision, source hash, package contract, dependency edge or PASS evidence is changed by this validator correction.
