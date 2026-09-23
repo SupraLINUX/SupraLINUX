@@ -158,3 +158,10 @@ KArchive is retained: the selected KDocTools/help-worker path uses `KF6::Archive
 ### Round 5 materialization validation
 
 The KIO replacement source artifact passed materialization without a binary-package attempt. `debian/control`, `debian/rules`, patch-series membership and all source hashes are retained in artifact `10735250819`. The next decision gate is Level 1 planning validation, not binary execution.
+
+
+### Round 5 materialization gate transition
+
+KIO rematerialization passed in workflow `35825070347`, job `107064960565`, artifact `10735250819`, SHA-256 `8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106`.
+
+While round 5 is `materialization-pending-ci`, the next gate is `tier3-level1-kio-materialization`. Once that exact source artifact is promoted as `materialization-PASS`, the next gate becomes `tier3-build-level1-planning-validation`. Binary Level 1 execution remains unauthorized throughout this transition.

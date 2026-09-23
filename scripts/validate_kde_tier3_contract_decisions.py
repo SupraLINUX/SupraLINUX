@@ -59,7 +59,14 @@ if active:
         req(active.get("trigger",{}).get("workflow_run")==35818120201,"Tier3 round5 trigger run")
         req(active.get("source_changed_nodes")==["kio"] and active.get("provider_closure_only_nodes")==[],"Tier3 round5 remediation classes")
         req(active.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux2"},"Tier3 round5 KIO revision")
-        req(active.get("next_gate")=="tier3-level1-kio-materialization","Tier3 round5 next gate")
+        if active.get("status")=="materialization-PASS":
+            req(active.get("next_gate")=="tier3-build-level1-planning-validation","Tier3 round5 promoted next gate")
+            ev=active.get("evidence",{})
+            req(ev.get("workflow_run")==35825070347 and ev.get("commit")=="fbde9a53e357a138f4d74d7905230c7859e20444","Tier3 round5 promoted materialization run")
+            art=ev.get("artifacts",{}).get("kio",{})
+            req(art.get("job_id")==107064960565 and art.get("artifact_id")==10735250819 and art.get("artifact_sha256")=="8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106","Tier3 round5 promoted KIO artifact")
+        else:
+            req(active.get("next_gate")=="tier3-level1-kio-materialization","Tier3 round5 pending next gate")
     elif round_no==4:
         req(active_nodes=={"kwallet"},"Tier3 round4 failure set")
         req(active.get("trigger",{}).get("workflow_run")==35813710318,"Tier3 round4 trigger run")
