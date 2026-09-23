@@ -312,13 +312,17 @@ elif m.get("state")=="PARTIAL":
     req(t.get("discovery_policy",{}).get("package_builds") in {"tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized","tier3-level1-remediation-pending-provider-closure"},"Tier3 Level1 build gate")
     ar=t.get("active_remediation",{})
     if ar.get("round")==7:
-        req(ar.get("level")=="build-level1" and ar.get("status")=="materialization-pending-ci","Tier3 Level1 round7 source-remediation lifecycle")
+        req(ar.get("level")=="build-level1" and ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation"},"Tier3 Level1 round7 source-remediation lifecycle")
         req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==["kio","kxmlgui"] and ar.get("provider_closure_only_nodes")==[],"Tier3 Level1 round7 source scope")
         req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux3","kxmlgui":"6.30.0-0supralinux2"},"Tier3 Level1 round7 revisions")
         req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 Level1 round7 execution pause")
         req(ar.get("validation_workflow_run")==35829170695 and ar.get("validation_commit")=="897d3a864bc7ea164400c7d9de2e9c51cf6316ab","Tier3 Level1 Attempt2 evidence")
         req(set(ar.get("remaining_failed_nodes",[]))=={"kio","kxmlgui"} and ar.get("canonical_promotions")==0,"Tier3 Level1 Attempt2 failure/no-promotion semantics")
-        req(ar.get("next_gate")=="tier3-round7-level1-materialization","Tier3 Level1 round7 next gate")
+        if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
+            req(ar.get("materialization_workflow_run")==35882795135 and ar.get("materialization_commit")=="0d6c02f3f8dc41f716ba62ee7121f56371a8dc91","Tier3 Level1 round7 materialization evidence")
+            req(ar.get("next_gate")=="tier3-build-level1-planning-validation","Tier3 Level1 round7 planning-validation gate")
+        else:
+            req(ar.get("next_gate")=="tier3-round7-level1-materialization","Tier3 Level1 round7 next gate")
         hist4=[x for x in t.get("remediation_history",[]) if x.get("round")==4]
         req(len(hist4)==1 and hist4[0].get("status")=="attempt5-complete" and hist4[0].get("canonical_promotions")==11,"Tier3 Attempt5 closure retained while Level1 remediates")
     elif ar.get("round")==6:

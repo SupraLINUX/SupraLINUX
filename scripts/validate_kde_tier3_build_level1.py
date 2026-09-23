@@ -19,7 +19,7 @@ tier3=load("manifests/kde-frameworks-tier3.json")
 req(m.get("schema")==1 and m.get("authority")=="kde-upstream","Level1 schema/authority")
 req(m.get("provider_platform")=="ubuntu-resolute","Level1 provider platform")
 req(m.get("role")=="tier3-binary-build-level1" and m.get("frameworks_series")=="6.30.0","Level1 role/series")
-req(m.get("state") in {"planned-pending-activation","active-pending-ci","remediation-pending-activation","remediation-pending-materialization","PARTIAL","PASS"},"Level1 lifecycle")
+req(m.get("state") in {"planned-pending-activation","active-pending-ci","remediation-pending-activation","remediation-pending-materialization","remediation-materialized-pending-planning-validation","PARTIAL","PASS"},"Level1 lifecycle")
 req(m.get("selected_nodes")==["kio","kxmlgui"],"Level1 node set")
 req(m.get("build_campaign_manifest")=="manifests/kde-tier3-build-campaign.json","Level1 campaign link")
 req(m.get("materialization_manifest")=="manifests/kde-tier3-materialization.json","Level1 materialization link")
@@ -55,6 +55,15 @@ elif m.get("state")=="remediation-pending-materialization":
     req(s.get("workflow_run")==35829170695 and s.get("commit")=="897d3a864bc7ea164400c7d9de2e9c51cf6316ab","Level1 Attempt2 evidence identity")
     req(s.get("result")=="FAIL" and s.get("workflow_jobs")=={"success":0,"fail":2} and set(s.get("job_fail",[]))=={"kio","kxmlgui"},"Level1 Attempt2 real FAIL summary")
     req(s.get("canonical_promotions")==0 and s.get("next_attempt")==3,"Level1 Attempt2 no promotion / Attempt3 handoff")
+elif m.get("state")=="remediation-materialized-pending-planning-validation":
+    req(m.get("execution_authorized") is False and m.get("current_attempt")==2 and m.get("next_attempt")==3,"Level1 round7 post-materialization pause")
+    req(m.get("next_gate")=="tier3-build-level1-planning-validation","Level1 Attempt3 planning-validation gate")
+    rem=m.get("active_remediation",{})
+    req(rem.get("round")==2 and rem.get("global_round")==7 and set(rem.get("nodes",[]))=={"kio","kxmlgui"},"Level1 round7 promoted scope")
+    req(rem.get("status")=="materialization-PASS-pending-attempt3-planning-validation","Level1 round7 source PASS state")
+    req(rem.get("source_rematerialization_required") is False and rem.get("execution_authorized") is False,"Level1 round7 source handoff")
+    req(rem.get("materialization_workflow_run")==35882795135 and rem.get("materialization_commit")=="0d6c02f3f8dc41f716ba62ee7121f56371a8dc91","Level1 round7 materialization evidence")
+    req(rem.get("next_gate")=="tier3-build-level1-planning-validation","Level1 round7 planning-validation next gate")
 elif m.get("state")=="remediation-pending-activation":
     req(m.get("execution_authorized") is False and m.get("current_attempt")==1,"Level1 remediation pause after attempt1")
     rem=m.get("active_remediation",{})
@@ -93,6 +102,8 @@ else:
 if policy.get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
     req(ar.get("status")=="materialization-PASS-pending-level1-planning-validation","canonical planning-validation state")
     req(ar.get("level1_execution_authorized") is False and ar.get("next_gate")=="tier3-build-level1-planning-validation","canonical Level1 execution pause")
+    if ar.get("round")==7:
+        req(ar.get("materialization_workflow_run")==35882795135 and ar.get("materialization_commit")=="0d6c02f3f8dc41f716ba62ee7121f56371a8dc91","canonical round7 source PASS evidence")
 elif policy.get("package_builds")=="tier3-level1-remediation-pending-materialization":
     req(policy.get("phase")=="build-level1-planning","canonical Level1 round7 materialization phase")
     req(ar.get("round")==7 and ar.get("status")=="materialization-pending-ci","canonical Level1 round7 remediation state")
@@ -160,14 +171,14 @@ for node,cfg in ret.items():
 
 expected={
  "kio":{
-   "version":"6.30.0-0supralinux2",
-   "materialization":(35825070347,10735250819,"8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106"),
+   "version":"6.30.0-0supralinux3",
+   "materialization":(35882795135,10760324592,"b58b7a45f6df0c8f01e9bd9a37799c1470369124a7c1b48fecb82a5f7f86ae8d"),
    "tier3":["kbookmarks","kiconthemes","kjobwidgets","kwallet"],
    "support_build":["kdoctools"],"support_runtime":["kded"],"provider_closure":["kconfigwidgets","karchive","kcodecs","knotifications","breeze-icons"],"python":None,
  },
  "kxmlgui":{
-   "version":"6.30.0-0supralinux1",
-   "materialization":(35746667704,10703925009,"9ad2056d1dbc9ab626521cd1f4bc67c13f5e36b18d93fc67da8ee6b7da3ba2fc"),
+   "version":"6.30.0-0supralinux2",
+   "materialization":(35882795135,10761208629,"72cd10276558264646a9e38d5beab7b231434338597ef8d276030e790ff02214"),
    "tier3":["kconfigwidgets","kiconthemes","ktextwidgets"],
    "support_build":[],"support_runtime":[],"provider_closure":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet","breeze-icons"],"python":"KXmlGui",
  },

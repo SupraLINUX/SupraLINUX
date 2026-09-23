@@ -60,7 +60,13 @@ if active:
         req(active.get("trigger",{}).get("level1_result")=="0 workflow SUCCESS / 2 FAIL","Tier3 round7 Attempt2 result")
         req(active.get("source_changed_nodes")==["kio","kxmlgui"] and active.get("provider_closure_only_nodes")==[],"Tier3 round7 source-remediation classes")
         req(active.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux3","kxmlgui":"6.30.0-0supralinux2"},"Tier3 round7 package revisions")
-        req(active.get("next_gate")=="tier3-round7-level1-materialization","Tier3 round7 next gate")
+        if active.get("status")=="materialization-PASS":
+            req(active.get("next_gate")=="tier3-build-level1-planning-validation","Tier3 round7 promoted next gate")
+            ev2=active.get("evidence",{})
+            req(ev2.get("workflow_run")==35882795135 and ev2.get("commit")=="0d6c02f3f8dc41f716ba62ee7121f56371a8dc91","Tier3 round7 materialization evidence")
+            req(ev2.get("artifacts",{}).get("kio",{}).get("artifact_id")==10760324592 and ev2.get("artifacts",{}).get("kxmlgui",{}).get("artifact_id")==10761208629","Tier3 round7 materialization artifacts")
+        else:
+            req(active.get("next_gate")=="tier3-round7-level1-materialization","Tier3 round7 next gate")
         pol=active.get("policy",{})
         req(pol.get("package_revision_bump_required_for_packaging_changes") is True and pol.get("rematerialize_only_changed_nodes") is True and pol.get("kde_dependency_graph_unchanged") is True,"Tier3 round7 remediation policy")
         ev=active.get("failure_evidence",{})
@@ -219,14 +225,18 @@ if active:
     ar=t.get("active_remediation",{})
     req(ar.get("round")==active.get("round") and set(ar.get("nodes",[]))==active_nodes,"Tier3 canonical remediation linkage")
     if active.get("round")==7:
-        req(canonical.get("phase")=="build-level1-planning" and canonical.get("package_builds")=="tier3-level1-remediation-pending-materialization","Tier3 round7 canonical materialization gate")
-        req(ar.get("level")=="build-level1" and ar.get("status")=="materialization-pending-ci","Tier3 round7 canonical Level1 state")
+        req(canonical.get("phase")=="build-level1-planning" and canonical.get("package_builds") in {"tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"},"Tier3 round7 canonical materialization/planning gate")
+        req(ar.get("level")=="build-level1" and ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation"},"Tier3 round7 canonical Level1 state")
         req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==["kio","kxmlgui"] and ar.get("provider_closure_only_nodes")==[],"Tier3 round7 canonical source scope")
         req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux3","kxmlgui":"6.30.0-0supralinux2"},"Tier3 round7 canonical revisions")
         req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 round7 canonical execution pause")
         req(ar.get("validation_workflow_run")==35829170695 and ar.get("validation_commit")=="897d3a864bc7ea164400c7d9de2e9c51cf6316ab","Tier3 round7 canonical Attempt2 evidence")
         req(ar.get("validation_result")=="0 workflow SUCCESS / 2 FAIL" and set(ar.get("remaining_failed_nodes",[]))=={"kio","kxmlgui"} and ar.get("canonical_promotions")==0,"Tier3 round7 canonical failure/no-promotion semantics")
-        req(ar.get("next_gate")=="tier3-round7-level1-materialization","Tier3 round7 canonical next gate")
+        if canonical.get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
+            req(ar.get("materialization_workflow_run")==35882795135 and ar.get("materialization_commit")=="0d6c02f3f8dc41f716ba62ee7121f56371a8dc91","Tier3 round7 canonical source PASS evidence")
+            req(ar.get("next_gate")=="tier3-build-level1-planning-validation","Tier3 round7 canonical planning-validation gate")
+        else:
+            req(ar.get("next_gate")=="tier3-round7-level1-materialization","Tier3 round7 canonical next gate")
     elif active.get("round")==6:
         req(ar.get("level")=="build-level1","Tier3 round6 canonical Level1")
         req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==[] and set(ar.get("provider_closure_only_nodes",[]))=={"kio","kxmlgui"},"Tier3 round6 canonical closure-only scope")
