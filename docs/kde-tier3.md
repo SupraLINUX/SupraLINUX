@@ -346,3 +346,10 @@ Eleven nodes are now canonical **PASS** and downstream-eligible: KBookmarks, KCo
 KNewStuff also built successfully, passed **5/5 upstream tests**, Lintian, APT closure, ABI, CMake consumer and QML payload gates, but remains `runtime-validation-required` because its KDE runtime contract requires KCMUtils. It is therefore **not** promoted and cannot feed downstream nodes yet.
 
 Canonical Tier 3 state is now **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**. Level 1 contains KIO and KXMLGui; neither depends on KNewStuff, so the next gate is **Tier 3 Level 1 planning**. Level 1 builds are not authorized by this promotion.
+
+
+### Post-Level0 validator transition
+
+After Level 0 Attempt 5 promotion, the canonical Tier 3 next gate is `tier3-build-level1-planning`. The retained support sub-DAG remains PASS and unchanged; its validators now explicitly accept this post-Level0 gate instead of incorrectly treating it as an invalid support lifecycle value.
+
+This is a validator-lifecycle correction only. It changes no package evidence, dependency edge, PASS state, runtime-validation requirement, or publication status.

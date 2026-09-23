@@ -95,7 +95,7 @@ if c.get("state")=="PASS":
     req([x.get("attempt") for x in history]==[1,2,3],"KDED historical FAIL sequence")
     req(all(x.get("result")=="FAIL" for x in history),"KDED historical FAIL results")
     req(n.get("previous_failure",{}).get("attempt")==3,"KDED previous failure points to attempt 3")
-req(tier3.get("support_components",{}).get("next_gate") in {"support-build-level1","tier3-provider-audit","tier3-package-contracts","tier3-build","tier3-package-contract-tree-capture","tier3-package-contract-review","tier3-package-contract-decision","tier3-materialization","tier3-build-campaign-planning","tier3-build-level0"},"canonical level1 gate")
+req(tier3.get("support_components",{}).get("next_gate") in {"support-build-level1","tier3-provider-audit","tier3-package-contracts","tier3-build","tier3-package-contract-tree-capture","tier3-package-contract-review","tier3-package-contract-decision","tier3-materialization","tier3-build-campaign-planning","tier3-build-level0","tier3-build-level1-planning"},"canonical level1 gate")
 req(c.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 
 for path in (

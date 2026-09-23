@@ -128,7 +128,7 @@ else:
 
 sc=tier3.get("support_components",{})
 req(sc.get("provider_audit")=="PASS","Tier3 canonical support provider audit")
-req(sc.get("next_gate") in {"support-package-contracts","support-contract-reference-capture","support-contract-tree-capture","support-contract-review","support-materialization","support-build-level0","support-build-level1","tier3-provider-audit","tier3-package-contracts","tier3-package-contract-tree-capture","tier3-package-contract-review","tier3-package-contract-decision","tier3-materialization","tier3-build-campaign-planning","tier3-build-level0"},"Tier3 support contract next gate")
+req(sc.get("next_gate") in {"support-package-contracts","support-contract-reference-capture","support-contract-tree-capture","support-contract-review","support-materialization","support-build-level0","support-build-level1","tier3-provider-audit","tier3-package-contracts","tier3-package-contract-tree-capture","tier3-package-contract-review","tier3-package-contract-decision","tier3-materialization","tier3-build-campaign-planning","tier3-build-level0","tier3-build-level1-planning"},"Tier3 support contract next gate")
 req(m.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 
 for path in (
