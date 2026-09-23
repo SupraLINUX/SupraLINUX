@@ -356,10 +356,28 @@ def apply_reference_patch_suppressions(src: Path, debian: Path, node: str, contr
         lines = [x for x in lines if x.strip() != name]
         patch.unlink()
     series.write_text("\n".join(lines).rstrip() + ("\n" if lines else ""))
+    removed = set(names)
+    applied = src / ".pc" / "applied-patches"
+    if applied.is_file():
+        kept = [x for x in applied.read_text().splitlines() if x.strip() not in removed]
+        applied.write_text("\n".join(kept).rstrip() + ("\n" if kept else ""))
+    for name in names:
+        shutil.rmtree(src / ".pc" / name, ignore_errors=True)
     active = [x.strip() for x in lines if x.strip() and not x.lstrip().startswith("#")]
-    if active:
-        raise RuntimeError(f"{node}: selective patch suppression currently requires no remaining active patches: {active}")
-    shutil.rmtree(src / ".pc", ignore_errors=True)
+    if not active:
+        shutil.rmtree(src / ".pc", ignore_errors=True)
+
+
+def apply_rules_text_replacements(rules: str, node: str, contract: dict) -> str:
+    for item in contract.get("rules_text_replacements", []):
+        old = item["old"]
+        new = item["new"]
+        expected = int(item.get("expected_count", 1))
+        actual = rules.count(old)
+        if actual != expected:
+            raise RuntimeError(f"{node}: rules replacement expected {expected} matches, got {actual}: {old!r}")
+        rules = rules.replace(old, new)
+    return rules
 
 
 def apply_symbol_template_additions(debian: Path, node: str, contract: dict) -> None:
@@ -439,6 +457,15 @@ def validate_remediation_overrides(control: Path, debian: Path, rules: str, node
             if wanted not in relation_names:
                 raise RuntimeError(f"{node}: required Build-Depends missing: {wanted}")
 
+    for item in contract.get("rules_text_replacements", []):
+        old = item["old"]
+        new = item["new"]
+        expected = int(item.get("expected_count", 1))
+        if old in rules:
+            raise RuntimeError(f"{node}: rules replacement old text remains: {old!r}")
+        if rules.count(new) != expected:
+            raise RuntimeError(f"{node}: rules replacement new text count mismatch: {new!r}")
+
     test_cfg = contract.get("reference_test_suppression_overrides", {})
     for test_name in test_cfg.get("rules_remove_excluded_tests", []):
         if test_name in rules or "EXCLUDED_TESTS" in rules:
@@ -449,7 +476,7 @@ def validate_remediation_overrides(control: Path, debian: Path, rules: str, node
     series_text = series.read_text() if series.is_file() else ""
     for name in patch_cfg.get("reverse_and_drop", []):
         if name in series_text or (debian / "patches" / name).exists():
-            raise RuntimeError(f"{node}: reference QSKIP patch remains: {name}")
+            raise RuntimeError(f"{node}: removed reference patch remains: {name}")
 
     for override in contract.get("symbol_template_overrides", []):
         package = override["package"]
@@ -706,6 +733,7 @@ def main() -> None:
         rules_text = sanitize_test_suppression(rules.read_text())
         rules_text = apply_reference_test_suppression_overrides(rules_text, NODE, contract)
         rules_text = cmake_flags(rules_text, contract.get("selected_profile", {}))
+        rules_text = apply_rules_text_replacements(rules_text, NODE, contract)
         validate_test_policy(rules_text)
         rules.write_text(rules_text)
         apply_symbol_template_additions(debian, NODE, contract)
@@ -769,6 +797,7 @@ def main() -> None:
             "source_build_relation_overrides": contract.get("source_build_relation_overrides", []),
             "reference_test_suppression_overrides": contract.get("reference_test_suppression_overrides"),
             "reference_patch_suppression_overrides": contract.get("reference_patch_suppression_overrides"),
+            "rules_text_replacements": contract.get("rules_text_replacements", []),
             "symbol_template_overrides": contract.get("symbol_template_overrides", []),
             "symbol_template_additions": contract.get("symbol_template_additions", []),
             "stable_promotion_requires_explicit_user_approval": True,

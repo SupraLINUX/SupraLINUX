@@ -309,11 +309,18 @@ elif m.get("state")=="PARTIAL":
     req(all(m["nodes"][n].get("pass_evidence",{}).get("result")=="PASS" and m["nodes"][n].get("pass_evidence",{}).get("downstream_eligible") is True for n in expected_pass),"Level0 promoted PASS evidence")
     req(m["nodes"]["knewstuff"].get("pass_evidence",{}).get("result")=="RUNTIME_PENDING" and m["nodes"]["knewstuff"].get("pass_evidence",{}).get("downstream_eligible") is False,"KNewStuff retained build evidence")
     req(t.get("discovery_policy",{}).get("phase")=="build-level1-planning","Tier3 Level1 planning phase after Level0")
-    req(t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-not-authorized-before-planning","Tier3 Level1 build pause")
+    req(t.get("discovery_policy",{}).get("package_builds") in {"tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization"},"Tier3 Level1 build pause")
     ar=t.get("active_remediation",{})
-    req(ar.get("status")=="attempt5-complete" and ar.get("execution_authorized") is False,"Tier3 Attempt5 closure state")
-    req(ar.get("validation_workflow_run")==35818120201 and ar.get("canonical_promotions")==11 and ar.get("runtime_pending_nodes")==["knewstuff"],"Tier3 Attempt5 closure evidence")
-    req(ar.get("next_gate")=="tier3-build-level1-planning","Tier3 Level1 planning gate")
+    if ar.get("round")==5:
+        req(ar.get("level")=="build-level1-preflight" and ar.get("status")=="materialization-pending-ci","Tier3 Level1 KIO preflight remediation")
+        req(ar.get("nodes")==["kio"] and ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux2"},"Tier3 Level1 KIO remediation scope")
+        req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 Level1 execution remains paused")
+        hist=[x for x in t.get("remediation_history",[]) if x.get("round")==4]
+        req(len(hist)==1 and hist[0].get("status")=="attempt5-complete" and hist[0].get("canonical_promotions")==11,"Tier3 Attempt5 closure retained in history")
+    else:
+        req(ar.get("status")=="attempt5-complete" and ar.get("execution_authorized") is False,"Tier3 Attempt5 closure state")
+        req(ar.get("validation_workflow_run")==35818120201 and ar.get("canonical_promotions")==11 and ar.get("runtime_pending_nodes")==["knewstuff"],"Tier3 Attempt5 closure evidence")
+        req(ar.get("next_gate")=="tier3-build-level1-planning","Tier3 Level1 planning gate")
     for n in expected_pass:
         req(dag.get("nodes",{}).get(n,{}).get("tier")==3 and dag["nodes"][n].get("state")=="PASS" and dag["nodes"][n].get("downstream_eligible") is True,f"{n}: promoted Tier3 DAG PASS")
     req("knewstuff" not in dag.get("nodes",{}),"KNewStuff must not enter DAG before runtime validation")
@@ -408,9 +415,9 @@ elif m.get("state")=="active-pending-ci":
         req(ar.get("current_attempt")==3 and ar.get("activation_policy_workflow_run")==35807934729,"canonical Tier3 attempt3 activation evidence")
         req(ar.get("next_gate")=="tier3-build-level0-attempt3","canonical Tier3 attempt3 next gate")
 else:
-    req(policy.get("package_builds") in {"tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning"},"canonical Tier3 build gate")
+    req(policy.get("package_builds") in {"tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization"},"canonical Tier3 build gate")
     if m.get("state")=="PARTIAL":
-        req(policy.get("phase")=="build-level1-planning" and policy.get("package_builds")=="tier3-level1-not-authorized-before-planning","canonical Tier3 post-Level0 gate")
+        req(policy.get("phase")=="build-level1-planning" and policy.get("package_builds") in {"tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization"},"canonical Tier3 post-Level0 gate")
     elif m.get("state")=="remediation-materialized-pending-activation":
         ar=t.get("active_remediation",{})
         if ar.get("round")==4:

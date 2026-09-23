@@ -122,3 +122,19 @@ bash "${TMP}/scripts/kde-tier3-materialization-needed.sh" "${REMCHANGE}" "${SYMB
 
 echo "Tier 3 materialization remediation scope: PASS"
 
+
+# Generic rules-text replacements are source-materialization semantics.
+python3 - "${TMP}/manifests/kde-tier3-package-contracts.json" <<'PY'
+import json,sys
+p=sys.argv[1]; d=json.load(open(p))
+d["nodes"]["x"]["rules_text_replacements"]=[{
+  "old":"ifneq (linux,$(DEB_HOST_ARCH_OS))",
+  "new":"ifeq (linux,$(DEB_HOST_ARCH_OS))",
+  "expected_count":1
+}]
+open(p,"w").write(json.dumps(d)+"\n")
+PY
+git -C "${TMP}" add . && git -C "${TMP}" commit -qm rules-text-replacement
+RULESREPL="$(git -C "${TMP}" rev-parse HEAD)"
+bash "${TMP}/scripts/kde-tier3-materialization-needed.sh" "${SYMBOLADD}" "${RULESREPL}"
+echo "Tier 3 materialization rules-replacement scope: PASS"

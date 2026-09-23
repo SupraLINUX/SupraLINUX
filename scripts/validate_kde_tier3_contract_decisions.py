@@ -49,11 +49,18 @@ pb=adapt.get("python_build_module",{})
 req(pb.get("provider_package")=="python3-build" and pb.get("applies_to")==["kjobwidgets"],"Tier3 KJobWidgets Python build frontend provider")
 
 active=c.get("active_remediation",{})
-active_nodes=set(active.get("trigger",{}).get("failed_nodes",[]))
+active_nodes=set(active.get("trigger",{}).get("failed_nodes",active.get("trigger",{}).get("affected_nodes",[])))
 if active:
     round_no=active.get("round")
     req(active.get("status") in {"materialization-pending-ci","materialization-PASS"},"Tier3 active remediation state")
-    if round_no==4:
+    if round_no==5:
+        req(active_nodes=={"kio"},"Tier3 round5 KIO scope")
+        req(active.get("level")=="build-level1-preflight","Tier3 round5 Level1 preflight")
+        req(active.get("trigger",{}).get("workflow_run")==35818120201,"Tier3 round5 trigger run")
+        req(active.get("source_changed_nodes")==["kio"] and active.get("provider_closure_only_nodes")==[],"Tier3 round5 remediation classes")
+        req(active.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux2"},"Tier3 round5 KIO revision")
+        req(active.get("next_gate")=="tier3-level1-kio-materialization","Tier3 round5 next gate")
+    elif round_no==4:
         req(active_nodes=={"kwallet"},"Tier3 round4 failure set")
         req(active.get("trigger",{}).get("workflow_run")==35813710318,"Tier3 round4 trigger run")
         req(active.get("source_changed_nodes")==["kwallet"],"Tier3 round4 source-changed set")
@@ -91,6 +98,7 @@ for node_id in selected:
         "kwallet":"6.30.0-0supralinux4" if active.get("round")==4 else "6.30.0-0supralinux3",
         "kdav":"6.30.0-0supralinux2",
         "krunner":"6.30.0-0supralinux2",
+        "kio":"6.30.0-0supralinux2" if active.get("round")==5 else "6.30.0-0supralinux1",
     }
     expected_version=expected_versions.get(node_id,"6.30.0-0supralinux1")
     req(x.get("package_version_candidate")==expected_version,f"{node_id}: package version")
@@ -132,6 +140,12 @@ kio=c["nodes"]["kio"]
 req(kio.get("selected_profile",{}).get("WITH_WAYLAND") is True,"KIO Wayland Linux profile")
 req(any(q.get("package")=="kio6" and q.get("value")=="kwallet6" for q in kio.get("binary_relation_overrides",[])),"KIO KWallet runtime provider")
 req("kwallet" in d["nodes"]["kio"]["frameworks"]["selected_linux_profile"],"KIO upstream KWallet selected profile")
+if active.get("round")==5:
+    rel=[(x.get("action"),x.get("package") or x.get("relation")) for x in kio.get("source_build_relation_overrides",[])]
+    req(rel==[("remove","libkf6auth-dev"),("remove","libkf6configwidgets-dev")],"KIO round5 false-edge removals")
+    repl=kio.get("rules_text_replacements",[])
+    req(len(repl)==1 and repl[0].get("old")=="ifneq (linux,$(DEB_HOST_ARCH_OS))" and repl[0].get("new")=="ifeq (linux,$(DEB_HOST_ARCH_OS))","KIO round5 Linux Wayland rules correction")
+    req(kio.get("reference_patch_suppression_overrides",{}).get("reverse_and_drop")==["report_error_removing_dirs"],"KIO round5 upstream behavior restoration")
 
 kdesu=c["nodes"]["kdesu"]
 req(kdesu.get("selected_profile",{}).get("KDESU_USE_SUDO_DEFAULT") is True,"KDESu Ubuntu integration")
@@ -144,11 +158,18 @@ req(set(d["nodes"]["purpose"]["frameworks"]["qml_required"])=={"prison","kitemmo
 canonical=t.get("discovery_policy",{})
 req(canonical.get("phase") in {"materialization","build-campaign-planning","build-level0","build-level1-planning"},"Tier3 canonical materialization/build-planning phase")
 req(canonical.get("package_contracts")=="PASS","Tier3 canonical contract PASS")
-req(canonical.get("package_builds") in {"not-authorized-before-tier3-materialization","not-authorized-before-tier3-build-campaign","tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning"},"Tier3 build gate")
+req(canonical.get("package_builds") in {"not-authorized-before-tier3-materialization","not-authorized-before-tier3-build-campaign","tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization"},"Tier3 build gate")
 if active:
     ar=t.get("active_remediation",{})
     req(ar.get("round")==active.get("round") and set(ar.get("nodes",[]))==active_nodes,"Tier3 canonical remediation linkage")
-    if active.get("round")==4:
+    if active.get("round")==5:
+        req(ar.get("level")=="build-level1-preflight","Tier3 round5 canonical Level1 preflight")
+        req(ar.get("source_materialization_nodes")==["kio"] and ar.get("provider_closure_only_nodes")==[],"Tier3 round5 canonical source scope")
+        req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux2"},"Tier3 round5 canonical revision")
+        req(canonical.get("phase")=="build-level1-planning" and canonical.get("package_builds")=="tier3-level1-remediation-pending-materialization","Tier3 round5 canonical gate")
+        req(ar.get("status")=="materialization-pending-ci" and ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 round5 canonical execution pause")
+        req(ar.get("trigger_workflow_run")==35818120201 and ar.get("next_gate")=="tier3-level1-kio-materialization","Tier3 round5 canonical trigger/next gate")
+    elif active.get("round")==4:
         req(ar.get("source_materialization_nodes")==["kwallet"],"Tier3 round4 canonical source materialization set")
         req(ar.get("provider_closure_only_nodes")==[],"Tier3 round4 canonical provider closure set")
         req(ar.get("materialization_workflow_run")==35817654811 and ar.get("materialization_commit")=="1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf","Tier3 round4 promoted materialization evidence")
@@ -219,7 +240,7 @@ if active:
     req(rel["kwallet"]==[("ensure","libkf6doctools-dev (>= 6.30.0~)")],"KWallet retained KDocTools relation")
     support=c["nodes"]["kwallet"].get("support_provider_requirements",[])
     req(len(support)==1 and support[0].get("id")=="kdoctools" and support[0].get("artifact_id")==10682066198,"KWallet KDocTools support contract")
-    if active.get("round") in {3,4}:
+    if active.get("round") in {3,4,5}:
         additions=c["nodes"]["kjobwidgets"].get("symbol_template_additions",[])
         req(len(additions)==1 and additions[0].get("symbol")=="_ZSt19piecewise_construct@Base","KJobWidgets retained round3 symbols addition")
         req(additions and additions[0].get("tags")==["optional"] and additions[0].get("minimal_version")=="6.30.0","KJobWidgets retained optional symbol semantics")

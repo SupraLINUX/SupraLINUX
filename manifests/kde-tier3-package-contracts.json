@@ -810,7 +810,7 @@
       "source_package": "kf6-kio",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux1",
+      "package_version_candidate": "6.30.0-0supralinux2",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kio",
@@ -911,6 +911,21 @@
           "classification": "test-policy",
           "decision": "do-not-inherit-disabled-or-ignored-tests",
           "rationale": "SupraLINUX package PASS requires a real positive upstream test result; environment failures are remediated rather than hidden."
+        },
+        {
+          "classification": "level1-preflight-round5",
+          "decision": "remove-debian-only-kio-kf6auth-and-kconfigwidgets-build-edges",
+          "rationale": "KIO 6.30 upstream CMake has no KF6Auth or KF6ConfigWidgets find_package contract. Debian reference relations are packaging choices, not KDE dependency authority."
+        },
+        {
+          "classification": "level1-preflight-round5",
+          "decision": "make-kio-wayland-linux-profile-explicit",
+          "rationale": "KIO 6.30 upstream defaults WITH_WAYLAND ON on Linux; SupraLINUX materializes that selected profile explicitly for reproducible CI proof."
+        },
+        {
+          "classification": "level1-preflight-round5",
+          "decision": "drop-report-error-removing-dirs-reference-patch",
+          "rationale": "Preserve KIO upstream stable runtime behavior unless SupraLINUX has an explicit integration reason to diverge."
         }
       ],
       "binary_relation_overrides": [
@@ -922,7 +937,39 @@
           "classification": "selected-linux-profile-runtime-provider",
           "rationale": "KWallet is the KDE-selected Linux profile for KIO password storage."
         }
-      ]
+      ],
+      "source_build_relation_overrides": [
+        {
+          "field": "Build-Depends",
+          "action": "remove",
+          "package": "libkf6auth-dev",
+          "classification": "debian-only-false-kde-edge-removal",
+          "rationale": "KIO 6.30 upstream does not find or link KF6Auth; retaining the Debian relation would let a non-upstream edge influence the Level 1 build."
+        },
+        {
+          "field": "Build-Depends",
+          "action": "remove",
+          "package": "libkf6configwidgets-dev",
+          "classification": "debian-only-false-kde-edge-removal",
+          "rationale": "KIO 6.30 upstream does not find or link KF6ConfigWidgets; this Debian-only relation must not create a false Tier 3 dependency."
+        }
+      ],
+      "rules_text_replacements": [
+        {
+          "old": "ifneq (linux,$(DEB_HOST_ARCH_OS))",
+          "new": "ifeq (linux,$(DEB_HOST_ARCH_OS))",
+          "expected_count": 1,
+          "classification": "selected-linux-profile-correction",
+          "rationale": "KIO upstream defaults WITH_WAYLAND=ON on Linux; make the selected SupraLINUX Linux profile explicit instead of inheriting a reference conditional that applies the flag only off Linux."
+        }
+      ],
+      "reference_patch_suppression_overrides": {
+        "reverse_and_drop": [
+          "report_error_removing_dirs"
+        ],
+        "classification": "restore-upstream-behavior",
+        "rationale": "The Debian/Kubuntu report_error_removing_dirs patch changes KIO runtime behavior and has no SupraLINUX integration requirement; retain upstream 6.30 behavior."
+      }
     },
     "kjobwidgets": {
       "upstream_version": "6.30.0",
@@ -2891,47 +2938,33 @@
     "next_gate": "tier3-build-level0-reactivation"
   },
   "active_remediation": {
-    "round": 4,
-    "status": "materialization-PASS",
+    "round": 5,
+    "level": "build-level1-preflight",
+    "status": "materialization-pending-ci",
     "trigger": {
-      "workflow_run": 35813710318,
-      "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
-      "level0_result": "11 job SUCCESS / 1 FAIL",
-      "failed_nodes": [
-        "kwallet"
+      "workflow_run": 35818120201,
+      "commit": "0599266fd5fc9869002629b3778d71f1e76bbdc1",
+      "level0_result": "12 workflow SUCCESS / 0 FAIL; 11 canonical PASS + KNewStuff runtime-pending",
+      "planning_gate": "tier3-build-level1-planning",
+      "affected_nodes": [
+        "kio"
       ]
     },
-    "previous_round": 3,
+    "previous_round": 4,
     "source_changed_nodes": [
-      "kwallet"
+      "kio"
     ],
     "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kwallet": "6.30.0-0supralinux4"
+      "kio": "6.30.0-0supralinux2"
     },
     "policy": {
       "package_revision_bump_required_for_packaging_changes": true,
       "rematerialize_only_changed_nodes": true,
-      "provider_closure_changes_do_not_require_source_rematerialization": true,
-      "rerun_full_level0_after_remediation": true
+      "level1_execution_remains_unauthorized": true,
+      "kde_dependency_graph_unchanged": true
     },
-    "next_gate": "tier3-build-level0-attempt5-activation-validation",
-    "evidence": {
-      "workflow_run": 35817654811,
-      "commit": "1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf",
-      "promoted_nodes": [
-        "kwallet"
-      ],
-      "artifacts": {
-        "kwallet": {
-          "job_id": 107042596959,
-          "artifact_id": 10731134598,
-          "artifact_sha256": "de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef"
-        }
-      },
-      "package_attempted": false,
-      "package_state_effect": "none"
-    }
+    "next_gate": "tier3-level1-kio-materialization"
   },
   "remediation_history": [
     {
@@ -3057,6 +3090,61 @@
           "kwallet"
         ],
         "canonical_promotions": 0
+      }
+    },
+    {
+      "round": 4,
+      "status": "materialization-PASS",
+      "trigger": {
+        "workflow_run": 35813710318,
+        "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+        "level0_result": "11 job SUCCESS / 1 FAIL",
+        "failed_nodes": [
+          "kwallet"
+        ]
+      },
+      "previous_round": 3,
+      "source_changed_nodes": [
+        "kwallet"
+      ],
+      "provider_closure_only_nodes": [],
+      "candidate_package_versions": {
+        "kwallet": "6.30.0-0supralinux4"
+      },
+      "policy": {
+        "package_revision_bump_required_for_packaging_changes": true,
+        "rematerialize_only_changed_nodes": true,
+        "provider_closure_changes_do_not_require_source_rematerialization": true,
+        "rerun_full_level0_after_remediation": true
+      },
+      "next_gate": "tier3-build-level0-attempt5-activation-validation",
+      "evidence": {
+        "workflow_run": 35817654811,
+        "commit": "1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf",
+        "promoted_nodes": [
+          "kwallet"
+        ],
+        "artifacts": {
+          "kwallet": {
+            "job_id": 107042596959,
+            "artifact_id": 10731134598,
+            "artifact_sha256": "de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef"
+          }
+        },
+        "package_attempted": false,
+        "package_state_effect": "none"
+      },
+      "validation": {
+        "workflow_run": 35818120201,
+        "commit": "0599266fd5fc9869002629b3778d71f1e76bbdc1",
+        "result": "12 workflow SUCCESS / 0 FAIL; KWallet round4 remediation validated",
+        "validated_nodes": [
+          "kwallet"
+        ],
+        "canonical_promotions": 11,
+        "runtime_pending_nodes": [
+          "knewstuff"
+        ]
       }
     }
   ]

@@ -1,8 +1,8 @@
 # KDE Frameworks Tier 3 package-contract decisions
 
-Status: **PASS — round 3 materialization promoted; attempt 4 active**
+Status: **PASS baseline retained — round 5 KIO Level 1 preflight source remediation pending**
 
-Reviewed: **2026-09-22**
+Reviewed: **2026-09-23**
 
 ## Authority
 
@@ -140,3 +140,16 @@ Attempt 5 produced no new contract defect: all 12 builds succeeded and the round
 Eleven Level 0 nodes are promoted PASS. KNewStuff remains pending solely because its previously documented runtime-validation edge to KCMUtils cannot be closed until the later Level 2 node exists.
 
 No new authority/provider decision is introduced. The next architectural gate is Level 1 planning.
+
+
+## Round 5 decision — KIO preflight
+
+The Level 1 preflight uses KDE upstream 6.30 as dependency and behavior authority, not Debian's Build-Depends set.
+
+Three source-package decisions are recorded for KIO:
+
+- remove `libkf6auth-dev` and `libkf6configwidgets-dev` from Build-Depends because KIO 6.30 upstream does not declare those Framework dependencies;
+- make `WITH_WAYLAND=ON` effective and explicit on Linux, matching KDE's upstream default/selected profile;
+- reverse and remove the Debian/Kubuntu `report_error_removing_dirs` behavior patch because SupraLINUX has no explicit integration requirement to diverge from KDE stable behavior.
+
+KArchive is retained: the selected KDocTools/help-worker path uses `KF6::Archive` upstream. KDED is retained as the selected runtime support component. This distinction preserves authority vs provider and prevents packaging metadata from redefining the KDE DAG.

@@ -1,8 +1,8 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **contracts retained — round 3 promoted; attempt 4 active**
+Status: **contracts retained — round 5 KIO Level 1 preflight remediation pending**
 
-Reviewed: **2026-09-22**
+Reviewed: **2026-09-23**
 
 ## Scope
 
@@ -171,3 +171,14 @@ Attempt 5 run `35818120201` closes the source-contract validation loop for the L
 KNewStuff is intentionally not promoted despite a successful build. Its package evidence remains retained while the canonical package state stays pending until KCMUtils can satisfy the deferred runtime-validation contract.
 
 This transition does not alter any package-contract decision. It changes only package state/evidence and advances the next gate to Level 1 planning.
+
+
+## Round 5 — KIO Level 1 preflight contract delta
+
+KIO advances from `6.30.0-0supralinux1` to `6.30.0-0supralinux2` because its source packaging changes before Level 1 execution.
+
+The contract removes Debian-only `libkf6auth-dev` and `libkf6configwidgets-dev` Build-Depends. KDE 6.30 KIO does not declare either as a CMake dependency, so neither may become a SupraLINUX KDE DAG edge.
+
+The contract also materializes the selected Linux Wayland profile explicitly by correcting the reference Linux conditional, and reverses/removes only `report_error_removing_dirs` to restore upstream runtime behavior. The materializer now supports exact, counted `rules_text_replacements` and selective reference-patch removal while preserving unrelated active patches.
+
+No Level 0 PASS state changes. Only KIO enters the selective source-materialization queue; Level 1 remains unauthorized until the replacement source artifact passes and is promoted.

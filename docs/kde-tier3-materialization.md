@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **PASS — all Tier 3 sources materialized; Level 0 Attempt 5 closed with 11 canonical PASS and KNewStuff runtime-pending** as of 2026-09-23.
+Status: **round-5 remediation pending CI — selective KIO 6.30.0-0supralinux2 materialization** as of 2026-09-23.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -22,6 +22,8 @@ The materializer applies only the decisions already recorded in `manifests/kde-t
 - remove reference distribution Uploaders/VCS metadata;
 - force `BUILD_TESTING=ON` and remove only no-op test suppression;
 - preserve/force selected Linux profile flags from KDE upstream;
+- apply exact counted `rules_text_replacements` when a reference conditional prevents the selected profile from taking effect;
+- selectively reverse/remove explicitly rejected downstream patches while preserving unrelated active technical patches;
 - select `KDESU_USE_SUDO_DEFAULT=ON` only for the documented Ubuntu-family integration exception;
 - retain KIO Wayland/Designer/app-template profile and `kwallet6` runtime provider closure;
 - preserve Purpose KDE Connect as optional (`Suggests`), never mandatory;
@@ -199,3 +201,12 @@ Repository Policy run `35817928654` validates the round-4 promotion and refreshe
 Source materialization remains **20/20 PASS**. Attempt 5 consumed those exact source pins and produced 11 canonical package PASS nodes plus one retained KNewStuff build awaiting KCMUtils runtime validation.
 
 No source rematerialization is required. The next gate is Tier 3 Level 1 planning.
+
+
+## Round 5 selective KIO materialization
+
+Level 1 preflight found source-packaging divergence before any Level 1 binary attempt. The materialization queue therefore contains exactly **KIO** at candidate revision `6.30.0-0supralinux2`.
+
+The replacement source removes the two Debian-only false Framework Build-Depends, makes the selected Linux Wayland flag effective, and restores upstream behavior by removing only `report_error_removing_dirs`. The other 19 source-materialization artifacts remain pinned to their existing PASS evidence.
+
+This gate has `package_attempted=false` and no canonical package-state effect. The 11 Level 0 PASS nodes remain PASS, KNewStuff remains runtime-validation-required, and Level 1 binary execution stays unauthorized.

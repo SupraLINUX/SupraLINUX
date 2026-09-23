@@ -1,8 +1,8 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**
+Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 KIO preflight remediation pending**
 
-Last reviewed: **2026-09-22**
+Last reviewed: **2026-09-23**
 
 > Historical note: this document records the gate-by-gate progression of Tier 3. Earlier sections describe the state that was current at that point; the final **Current canonical state** section is authoritative for the present gate.
 
@@ -360,3 +360,18 @@ This is a validator-lifecycle correction only. It changes no package evidence, d
 The provider-audit, packaging-tree, contract-review and generated build-campaign validators are evidence/lifecycle validators, not package-state owners. After Level 0 promotion they explicitly accept the canonical `build-level1-planning` phase and retained PASS/runtime-pending node states.
 
 This prevents historical gates from falsely requiring the pre-build `pending` snapshot after real package PASS evidence has already been promoted. No provider decision, source hash, package contract, dependency edge or PASS evidence is changed by this validator correction.
+
+
+## Level 1 preflight — KIO source remediation round 5
+
+After Level 0 closed with 11 canonical PASS nodes, Level 1 planning compared the materialized KIO 6.30.0 source package against the KDE 6.30 upstream CMake contract before authorizing any binary build.
+
+The Debian 6.30 technical baseline contains two Build-Depends that do not correspond to KIO 6.30 upstream dependencies: `libkf6auth-dev` and `libkf6configwidgets-dev`. SupraLINUX removes both. They are packaging-reference edges, not KDE dependency authority, and must not pull Ubuntu KF6 6.24 or create false Tier 3 DAG edges.
+
+KIO upstream does use KArchive when the optional KDocTools/help-worker path is selected, and locates KDED as a runtime component. Those remain part of the selected SupraLINUX profile without turning KDED into a KDE build-DAG predecessor.
+
+The reference `debian/rules` contains `ifneq (linux,$(DEB_HOST_ARCH_OS))` around `-DWITH_WAYLAND=ON`. KDE upstream already defaults Wayland integration ON on Linux; SupraLINUX corrects the conditional so the selected Linux profile is explicit and reproducibly provable.
+
+The downstream `report_error_removing_dirs` patch changes KIO runtime behavior and has no explicit SupraLINUX integration requirement. It is reversed and removed so KIO follows KDE upstream stable behavior. Other technically scoped reference patches are retained.
+
+These are source-packaging changes, so KIO advances to **`6.30.0-0supralinux2`** and only KIO is rematerialized. Level 1 binary execution remains unauthorized. Canonical package state stays **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.

@@ -42,6 +42,7 @@ for node in nodes:
       "source_build_relation_overrides":x.get("source_build_relation_overrides",[]),
       "reference_test_suppression_overrides":x.get("reference_test_suppression_overrides"),
       "reference_patch_suppression_overrides":x.get("reference_patch_suppression_overrides"),
+      "rules_text_replacements":x.get("rules_text_replacements",[]),
       "symbol_template_overrides":x.get("symbol_template_overrides",[]),
       "symbol_template_additions":x.get("symbol_template_additions",[]),
       "debian_reference":x.get("technical_references",{}).get("debian",{}),

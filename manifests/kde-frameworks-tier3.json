@@ -16,8 +16,8 @@
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-not-authorized-before-planning",
-    "remediation": "round4-closed-attempt5-11-pass-1-runtime-pending"
+    "package_builds": "tier3-level1-remediation-pending-materialization",
+    "remediation": "round5-kio-level1-preflight-source-remediation"
   },
   "nodes": [
     {
@@ -1205,38 +1205,24 @@
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
   "build_level0_manifest": "manifests/kde-tier3-build-level0.json",
   "active_remediation": {
-    "round": 4,
-    "trigger_workflow_run": 35813710318,
-    "trigger_commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
-    "level": "build-level0",
-    "materialization_manifest": "manifests/kde-tier3-materialization.json",
+    "round": 5,
+    "level": "build-level1-preflight",
+    "trigger_workflow_run": 35818120201,
+    "trigger_commit": "0599266fd5fc9869002629b3778d71f1e76bbdc1",
     "nodes": [
-      "kwallet"
+      "kio"
     ],
     "source_materialization_nodes": [
-      "kwallet"
+      "kio"
     ],
     "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kwallet": "6.30.0-0supralinux4"
+      "kio": "6.30.0-0supralinux2"
     },
     "execution_authorized": false,
-    "full_level0_rerun_required": true,
-    "status": "attempt5-complete",
-    "next_gate": "tier3-build-level1-planning",
-    "materialization_workflow_run": 35817654811,
-    "materialization_commit": "1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf",
-    "current_attempt": 5,
-    "activation_policy_workflow_run": 35817928654,
-    "activation_policy_commit": "3b1387b636a7103ca8918e51836ea7ac9e105be5",
-    "validation_workflow_run": 35818120201,
-    "validation_commit": "0599266fd5fc9869002629b3778d71f1e76bbdc1",
-    "validation_result": "12 workflow SUCCESS / 0 FAIL; 11 PASS + 1 RUNTIME_PENDING",
-    "canonical_promotions": 11,
-    "remaining_failed_nodes": [],
-    "runtime_pending_nodes": [
-      "knewstuff"
-    ]
+    "status": "materialization-pending-ci",
+    "level1_execution_authorized": false,
+    "next_gate": "tier3-level1-kio-materialization"
   },
   "remediation_history": [
     {
@@ -1324,6 +1310,40 @@
       ],
       "remaining_failed_nodes": [
         "kwallet"
+      ]
+    },
+    {
+      "round": 4,
+      "trigger_workflow_run": 35813710318,
+      "trigger_commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+      "level": "build-level0",
+      "materialization_manifest": "manifests/kde-tier3-materialization.json",
+      "nodes": [
+        "kwallet"
+      ],
+      "source_materialization_nodes": [
+        "kwallet"
+      ],
+      "provider_closure_only_nodes": [],
+      "candidate_package_versions": {
+        "kwallet": "6.30.0-0supralinux4"
+      },
+      "execution_authorized": false,
+      "full_level0_rerun_required": true,
+      "status": "attempt5-complete",
+      "next_gate": "tier3-build-level1-planning",
+      "materialization_workflow_run": 35817654811,
+      "materialization_commit": "1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf",
+      "current_attempt": 5,
+      "activation_policy_workflow_run": 35817928654,
+      "activation_policy_commit": "3b1387b636a7103ca8918e51836ea7ac9e105be5",
+      "validation_workflow_run": 35818120201,
+      "validation_commit": "0599266fd5fc9869002629b3778d71f1e76bbdc1",
+      "validation_result": "12 workflow SUCCESS / 0 FAIL; 11 PASS + 1 RUNTIME_PENDING",
+      "canonical_promotions": 11,
+      "remaining_failed_nodes": [],
+      "runtime_pending_nodes": [
+        "knewstuff"
       ]
     }
   ],

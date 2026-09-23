@@ -6,7 +6,7 @@
   "frameworks_series": "6.30.0",
   "contract_manifest": "manifests/kde-tier3-package-contracts.json",
   "canonical_manifest": "manifests/kde-frameworks-tier3.json",
-  "state": "PASS",
+  "state": "remediation-pending-ci",
   "package_attempted": false,
   "package_state_effect": "none",
   "source_policy": "verify-kde-upstream-tarball-and-pinned-debian-6.30-packaging-before-adaptation",
@@ -263,10 +263,26 @@
       }
     },
     "kio": {
-      "state": "materialized",
+      "state": "remediation-pending",
       "source_package": "kf6-kio",
       "package_version": "6.30.0-0supralinux1",
-      "evidence": {
+      "evidence_history": [
+        {
+          "workflow_run": 35746667704,
+          "job_id": 106810108038,
+          "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+          "artifact_id": 10703145831,
+          "artifact_sha256": "d6b62bf44d85289d749ab2bb8fc9ce1b8d034fbcc88a27aff935dbfede495b40",
+          "package_version": "6.30.0-0supralinux1",
+          "orig_tar_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
+          "reference_tree_sha256": "50508b96984930b303c3d4467b464c8275de59ae68e210c8ad671e0832262e84",
+          "result": "PASS",
+          "package_attempted": false,
+          "package_state_effect": "none",
+          "full_result_json_retained_in_artifact": true
+        }
+      ],
+      "previous_evidence": {
         "workflow_run": 35746667704,
         "job_id": 106810108038,
         "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
@@ -279,7 +295,9 @@
         "package_attempted": false,
         "package_state_effect": "none",
         "full_result_json_retained_in_artifact": true
-      }
+      },
+      "previous_package_version": "6.30.0-0supralinux1",
+      "candidate_package_version": "6.30.0-0supralinux2"
     },
     "kjobwidgets": {
       "state": "materialized",
@@ -744,46 +762,35 @@
   },
   "previous_evidence_summary": {
     "result": "PASS",
-    "workflow_run": 35812918054,
-    "commit": "a57c13059dfc206ddf57390e1cd0cfd280471965",
+    "workflow_run": 35817654811,
+    "commit": "1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf",
     "total_materialized_nodes": 20,
     "retained_previous_materializations": 19,
     "promoted_remediation_materializations": 1,
-    "active_remediation_round": 3,
+    "active_remediation_round": 4,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level0-attempt4-activation-validation"
+    "next_gate": "tier3-build-level0-attempt5-activation-validation"
   },
   "active_remediation": {
-    "round": 4,
-    "status": "PASS",
-    "trigger_workflow_run": 35813710318,
-    "trigger_commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
-    "reason": "Tier3 Level0 attempt 4 left one KWallet symbols-template metadata defect after successful build and 3/3 upstream tests.",
+    "round": 5,
+    "level": "build-level1-preflight",
+    "status": "pending-ci",
+    "trigger_workflow_run": 35818120201,
+    "trigger_commit": "0599266fd5fc9869002629b3778d71f1e76bbdc1",
+    "reason": "KIO Level 1 preflight found two Debian-only false KDE Build-Depends, an ineffective Linux Wayland profile conditional, and one unneeded behavior-changing downstream patch.",
     "nodes": [
-      "kwallet"
+      "kio"
     ],
     "source_changed_nodes": [
-      "kwallet"
+      "kio"
     ],
     "provider_closure_only_nodes": [],
-    "package_revision": "6.30.0-0supralinux4",
-    "policy": "rematerialize-only-source-changed-nodes-then-rerun-full-level0",
+    "package_revision": "6.30.0-0supralinux2",
+    "policy": "rematerialize-only-kio-before-level1-planning-validation",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level0-attempt5-activation-validation",
-    "workflow_run": 35817654811,
-    "commit": "1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf",
-    "promoted_nodes": [
-      "kwallet"
-    ],
-    "artifacts": {
-      "kwallet": {
-        "job_id": 107042596959,
-        "artifact_id": 10731134598,
-        "artifact_sha256": "de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef"
-      }
-    }
+    "next_gate": "tier3-level1-kio-materialization"
   },
   "remediation_history": [
     {
@@ -915,18 +922,46 @@
         ],
         "canonical_promotions": 0
       }
+    },
+    {
+      "round": 4,
+      "status": "PASS",
+      "trigger_workflow_run": 35813710318,
+      "trigger_commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
+      "reason": "Tier3 Level0 attempt 4 left one KWallet symbols-template metadata defect after successful build and 3/3 upstream tests.",
+      "nodes": [
+        "kwallet"
+      ],
+      "source_changed_nodes": [
+        "kwallet"
+      ],
+      "provider_closure_only_nodes": [],
+      "package_revision": "6.30.0-0supralinux4",
+      "policy": "rematerialize-only-source-changed-nodes-then-rerun-full-level0",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "next_gate": "tier3-build-level0-attempt5-activation-validation",
+      "workflow_run": 35817654811,
+      "commit": "1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf",
+      "promoted_nodes": [
+        "kwallet"
+      ],
+      "artifacts": {
+        "kwallet": {
+          "job_id": 107042596959,
+          "artifact_id": 10731134598,
+          "artifact_sha256": "de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef"
+        }
+      },
+      "validation": {
+        "workflow_run": 35818120201,
+        "commit": "0599266fd5fc9869002629b3778d71f1e76bbdc1",
+        "result": "KWallet round4 source remediation validated by real package PASS",
+        "canonical_promotions": 11
+      }
     }
   ],
-  "evidence_summary": {
-    "result": "PASS",
-    "workflow_run": 35817654811,
-    "commit": "1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf",
-    "total_materialized_nodes": 20,
-    "retained_previous_materializations": 19,
-    "promoted_remediation_materializations": 1,
-    "active_remediation_round": 4,
-    "package_attempted": false,
-    "package_state_effect": "none",
-    "next_gate": "tier3-build-level0-attempt5-activation-validation"
-  }
+  "remediation_queue": [
+    "kio"
+  ]
 }
