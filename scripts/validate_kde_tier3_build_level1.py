@@ -169,16 +169,17 @@ for node,cfg in ret.items():
         req(False,f"{node}: unknown predecessor provenance")
     req(cfg.get("dev_package") in cfg.get("expected_binary_packages",[]),f"{node}: dev package identity")
 
+round7_source_promoted=m.get("state")=="remediation-materialized-pending-planning-validation"
 expected={
  "kio":{
-   "version":"6.30.0-0supralinux3",
-   "materialization":(35882795135,10760324592,"b58b7a45f6df0c8f01e9bd9a37799c1470369124a7c1b48fecb82a5f7f86ae8d"),
+   "version":"6.30.0-0supralinux3" if round7_source_promoted else "6.30.0-0supralinux2",
+   "materialization":(35882795135,10760324592,"b58b7a45f6df0c8f01e9bd9a37799c1470369124a7c1b48fecb82a5f7f86ae8d") if round7_source_promoted else (35825070347,10735250819,"8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106"),
    "tier3":["kbookmarks","kiconthemes","kjobwidgets","kwallet"],
    "support_build":["kdoctools"],"support_runtime":["kded"],"provider_closure":["kconfigwidgets","karchive","kcodecs","knotifications","breeze-icons"],"python":None,
  },
  "kxmlgui":{
-   "version":"6.30.0-0supralinux2",
-   "materialization":(35882795135,10761208629,"72cd10276558264646a9e38d5beab7b231434338597ef8d276030e790ff02214"),
+   "version":"6.30.0-0supralinux2" if round7_source_promoted else "6.30.0-0supralinux1",
+   "materialization":(35882795135,10761208629,"72cd10276558264646a9e38d5beab7b231434338597ef8d276030e790ff02214") if round7_source_promoted else (35746667704,10703925009,"9ad2056d1dbc9ab626521cd1f4bc67c13f5e36b18d93fc67da8ee6b7da3ba2fc"),
    "tier3":["kconfigwidgets","kiconthemes","ktextwidgets"],
    "support_build":[],"support_runtime":[],"provider_closure":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet","breeze-icons"],"python":"KXmlGui",
  },
