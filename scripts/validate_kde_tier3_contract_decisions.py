@@ -64,7 +64,7 @@ if active:
             req(active.get("next_gate")=="tier3-build-level1-planning-validation","Tier3 round7 promoted next gate")
             ev2=active.get("evidence",{})
             req(ev2.get("workflow_run")==35882795135 and ev2.get("commit")=="0d6c02f3f8dc41f716ba62ee7121f56371a8dc91","Tier3 round7 materialization evidence")
-            req(ev2.get("artifacts",{}).get("kio",{}).get("artifact_id")==10760324592 and ev2.get("artifacts",{}).get("kxmlgui",{}).get("artifact_id")==10761208629","Tier3 round7 materialization artifacts")
+            req(ev2.get("artifacts",{}).get("kio",{}).get("artifact_id")==10760324592 and ev2.get("artifacts",{}).get("kxmlgui",{}).get("artifact_id")==10761208629,"Tier3 round7 materialization artifacts")
         else:
             req(active.get("next_gate")=="tier3-round7-level1-materialization","Tier3 round7 next gate")
         pol=active.get("policy",{})
