@@ -335,3 +335,14 @@ Level 0 stays paused until Repository Policy validates this promotion. Attempt 5
 Repository Policy run `35817928654` validates the round-4 KWallet source promotion at commit `3b1387b636a7103ca8918e51836ea7ac9e105be5`. A separate activation now authorizes a complete **12-node Level 0 Attempt 5**.
 
 KWallet uses the promoted `6.30.0-0supralinux4` source artifact; the other eleven Level 0 nodes rerun for full revalidation. KNewStuff remains subject to its later KCMUtils runtime gate. Canonical Tier 3 package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** until the campaign evidence is reviewed.
+
+
+## Level 0 Attempt 5 promotion — 11 PASS, KNewStuff runtime pending
+
+Workflow `35818120201` at commit `0599266fd5fc9869002629b3778d71f1e76bbdc1` executed the complete 12-node Level 0 matrix with **12 workflow SUCCESS / 0 FAIL**.
+
+Eleven nodes are now canonical **PASS** and downstream-eligible: KBookmarks, KConfigWidgets, KDAV, KDESu, KIconThemes, KJobWidgets, KPeople, KRunner, KSvg, KTextWidgets and KWallet. Their exact Attempt 5 artifacts and SHA-256 values are retained in the Level 0 ledger and canonical DAG.
+
+KNewStuff also built successfully, passed **5/5 upstream tests**, Lintian, APT closure, ABI, CMake consumer and QML payload gates, but remains `runtime-validation-required` because its KDE runtime contract requires KCMUtils. It is therefore **not** promoted and cannot feed downstream nodes yet.
+
+Canonical Tier 3 state is now **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**. Level 1 contains KIO and KXMLGui; neither depends on KNewStuff, so the next gate is **Tier 3 Level 1 planning**. Level 1 builds are not authorized by this promotion.

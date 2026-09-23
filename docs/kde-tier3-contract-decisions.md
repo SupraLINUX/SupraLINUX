@@ -131,3 +131,12 @@ Binary execution remains paused. Repository Policy must first validate the refre
 
 
 Repository Policy run `35817928654` validates the round-4 materialization promotion. Level 0 Attempt 5 is separately authorized as a full 12-node rerun; this activation changes no package-contract decision.
+
+
+## Level 0 Attempt 5 closure
+
+Attempt 5 produced no new contract defect: all 12 builds succeeded and the round-4 KWallet symbols remediation is validated by a real PASS package build with **3/3 tests**.
+
+Eleven Level 0 nodes are promoted PASS. KNewStuff remains pending solely because its previously documented runtime-validation edge to KCMUtils cannot be closed until the later Level 2 node exists.
+
+No new authority/provider decision is introduced. The next architectural gate is Level 1 planning.

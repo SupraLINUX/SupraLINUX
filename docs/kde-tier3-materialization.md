@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **PASS — round-4 KWallet materialization promoted and Policy-validated; Level 0 Attempt 5 active** as of 2026-09-23.
+Status: **PASS — all Tier 3 sources materialized; Level 0 Attempt 5 closed with 11 canonical PASS and KNewStuff runtime-pending** as of 2026-09-23.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -192,3 +192,10 @@ All 20 source materializations are again PASS. This still changes no binary pack
 
 
 Repository Policy run `35817928654` validates the round-4 promotion and refreshed build campaign. Source materialization remains PASS; a separate Level 0 activation now consumes the promoted evidence in Attempt 5.
+
+
+## Post-Attempt-5 state
+
+Source materialization remains **20/20 PASS**. Attempt 5 consumed those exact source pins and produced 11 canonical package PASS nodes plus one retained KNewStuff build awaiting KCMUtils runtime validation.
+
+No source rematerialization is required. The next gate is Tier 3 Level 1 planning.

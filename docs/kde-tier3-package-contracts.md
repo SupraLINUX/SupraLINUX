@@ -162,3 +162,12 @@ The materialized symbols template contains exactly `(optional)_ZSt19piecewise_co
 
 
 Attempt 5 is activated only after Repository Policy run `35817928654` validates the promoted KWallet `-4` source pin and regenerated campaign. Contract authority and provider decisions are unchanged; this activation is binary validation only.
+
+
+## Level 0 Attempt 5 canonical transition
+
+Attempt 5 run `35818120201` closes the source-contract validation loop for the Level 0 set. Eleven real package PASS results are promoted canonically and remain tied to their exact artifact IDs and SHA-256 digests.
+
+KNewStuff is intentionally not promoted despite a successful build. Its package evidence remains retained while the canonical package state stays pending until KCMUtils can satisfy the deferred runtime-validation contract.
+
+This transition does not alter any package-contract decision. It changes only package state/evidence and advances the next gate to Level 1 planning.

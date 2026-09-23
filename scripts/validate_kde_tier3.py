@@ -57,33 +57,51 @@ req(len(tier2_nodes)==15 and all(n.get("state")=="PASS" for n in tier2_nodes),"T
 
 nodes={n.get("id"):n for n in tier3.get("nodes",[])}
 req(set(nodes)==set(expected),"Tier3 node set must match KDE upstream 20-node inventory")
+level0_pass={"kbookmarks","kconfigwidgets","kdav","kdesu","kiconthemes","kjobwidgets","kpeople","krunner","ksvg","ktextwidgets","kwallet"}
+post_level0=tier3.get("discovery_policy",{}).get("phase")=="build-level1-planning"
 for node_id,sha in expected.items():
     n=nodes.get(node_id,{})
     req(n.get("upstream_tier")==3 and n.get("upstream_version")=="6.30.0",f"{node_id}: upstream tier/version")
     req(n.get("source_sha256")==sha,f"{node_id}: KDE release SHA-256")
     req(n.get("source_url")==f"https://download.kde.org/stable/frameworks/6.30/{node_id}-6.30.0.tar.xz",f"{node_id}: source URL")
     req(n.get("upstream_ref")=="v6.30.0",f"{node_id}: upstream ref")
-    req(n.get("state")=="pending",f"{node_id}: initial canonical state")
     planning=n.get("planning",{})
-    req(planning.get("readiness")=="materialized",f"{node_id}: materialized lifecycle")
+    if post_level0 and node_id in level0_pass:
+        req(n.get("state")=="PASS",f"{node_id}: Level0 canonical PASS")
+        req(planning.get("readiness")=="retained-pass",f"{node_id}: retained PASS readiness")
+    elif post_level0 and node_id=="knewstuff":
+        req(n.get("state")=="pending",f"{node_id}: runtime validation still pending")
+        req(planning.get("readiness")=="runtime-validation-required",f"{node_id}: runtime-validation readiness")
+    else:
+        req(n.get("state")=="pending",f"{node_id}: canonical pending state")
+        req(planning.get("readiness")=="materialized",f"{node_id}: materialized lifecycle")
     req(planning.get("provider_audit")=="PASS",f"{node_id}: provider audit PASS lifecycle")
     req(planning.get("provider_audit_manifest")=="manifests/kde-tier3-provider-audit.json",f"{node_id}: provider audit manifest linkage")
     req(planning.get("dependency_authority")=="kde-upstream",f"{node_id}: dependency authority")
     req(planning.get("provider")=="supralinux",f"{node_id}: selected provider")
-    req(planning.get("package_contract")=="materialized",f"{node_id}: package contract materialized")
+    req(planning.get("package_contract") in {"materialized","retained-pass"},f"{node_id}: package contract lifecycle")
     req(planning.get("package_contract_manifest")=="manifests/kde-tier3-package-contracts.json",f"{node_id}: package-contract manifest linkage")
     pe=planning.get("provider_audit_evidence",{})
     req(pe.get("workflow_run")==35725458767 and pe.get("artifact_id")==10692912109,f"{node_id}: provider audit evidence linkage")
     packaging=n.get("packaging",{})
-    req(packaging.get("state")=="pending" and packaging.get("package_version") is None and packaging.get("downstream_eligible") is False,f"{node_id}: initial packaging state")
-    req(node_id not in dag.get("nodes",{}),f"{node_id}: pending Tier3 node must not be promoted into canonical DAG")
+    if post_level0 and node_id in level0_pass:
+        req(packaging.get("state")=="PASS" and packaging.get("downstream_eligible") is True,f"{node_id}: Level0 packaging PASS")
+        req(isinstance(packaging.get("package_version"),str) and packaging.get("package_version"),f"{node_id}: promoted package version")
+        req(dag.get("nodes",{}).get(node_id,{}).get("tier")==3 and dag["nodes"][node_id].get("state")=="PASS" and dag["nodes"][node_id].get("downstream_eligible") is True,f"{node_id}: canonical DAG promotion")
+    elif post_level0 and node_id=="knewstuff":
+        req(packaging.get("state")=="runtime-validation-required" and packaging.get("package_version")=="6.30.0-0supralinux1" and packaging.get("downstream_eligible") is False,f"{node_id}: runtime-validation pending packaging")
+        req(packaging.get("deferred_runtime_validation")==["kcmutils"],f"{node_id}: KCMUtils deferred validation")
+        req(node_id not in dag.get("nodes",{}),f"{node_id}: runtime-pending node must not enter canonical DAG")
+    else:
+        req(packaging.get("state")=="pending" and packaging.get("package_version") is None and packaging.get("downstream_eligible") is False,f"{node_id}: pending packaging state")
+        req(node_id not in dag.get("nodes",{}),f"{node_id}: pending Tier3 node must not be promoted into canonical DAG")
 
 policy=tier3.get("discovery_policy",{})
-req(policy.get("phase")=="build-level0","Tier3 discovery phase")
+req(policy.get("phase") in {"build-level0","build-level1-planning"},"Tier3 discovery phase")
 req(policy.get("dependencies")=="materialized-from-kde-upstream-v6.30.0","Tier3 dependency state")
 req(policy.get("provider_audit")=="PASS","Tier3 provider audit gate")
 req(policy.get("package_contracts")=="PASS","Tier3 package-contract gate")
-req(policy.get("package_builds") in {"tier3-level0-authorized","tier3-level0-remediation-pending"},"Tier3 package-build gate")
+req(policy.get("package_builds") in {"tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning"},"Tier3 package-build gate")
 support=tier3.get("support_components",{})
 req(support.get("provider_audit_manifest")=="manifests/kde-tier3-support-provider-audit.json","Tier3 support provider-audit manifest")
 req(support.get("provider_audit")=="PASS","Tier3 support provider-audit state")
@@ -95,7 +113,7 @@ req(support.get("build_level0")=="PASS","Tier3 support level0 state")
 req(support.get("build_level1_manifest")=="manifests/kde-tier3-support-build-level1.json","Tier3 support level1 manifest")
 req(support.get("build_level1")=="PASS","Tier3 support level1 state")
 req(support.get("support_subdag")=="PASS","Tier3 support sub-DAG state")
-req(support.get("next_gate")=="tier3-build-level0","Tier3 support next gate")
+req(support.get("next_gate") in {"tier3-build-level0","tier3-build-level1-planning"},"Tier3 support next gate")
 if policy.get("package_builds")=="tier3-level0-remediation-pending":
     rem=tier3.get("active_remediation",{})
     if rem.get("round")==4:
@@ -153,9 +171,19 @@ elif policy.get("package_builds")=="tier3-level0-authorized":
         req(rem.get("next_gate")=="tier3-build-level0-attempt2","Tier3 attempt2 next gate")
     else:
         req(False,"Tier3 authorized Level0 attempt marker")
+elif policy.get("package_builds")=="tier3-level1-not-authorized-before-planning":
+    rem=tier3.get("active_remediation",{})
+    req(policy.get("phase")=="build-level1-planning","Tier3 Level1 planning phase")
+    req(rem.get("round")==4 and rem.get("status")=="attempt5-complete","Tier3 Attempt5 closure")
+    req(rem.get("execution_authorized") is False,"Tier3 Level1 not yet authorized")
+    req(rem.get("validation_workflow_run")==35818120201 and rem.get("validation_commit")=="0599266fd5fc9869002629b3778d71f1e76bbdc1","Tier3 Attempt5 validation evidence")
+    req(rem.get("canonical_promotions")==11 and rem.get("remaining_failed_nodes")==[] and rem.get("runtime_pending_nodes")==["knewstuff"],"Tier3 Attempt5 promotion summary")
+    req(rem.get("next_gate")=="tier3-build-level1-planning","Tier3 Level1 planning next gate")
+    req(tier3.get("level0_snapshot")=={"pass":11,"pending":9,"current_fail":0,"blocked":0,"runtime_pending":["knewstuff"],"workflow_run":35818120201,"commit":"0599266fd5fc9869002629b3778d71f1e76bbdc1"},"Tier3 post-Level0 snapshot")
 
 doc=(ROOT/"docs/kde-tier3.md").read_text()
-req("0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED" in doc,"Tier3 docs canonical snapshot")
+state_token="11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED" if post_level0 else "0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED"
+req(state_token in doc,"Tier3 docs canonical snapshot")
 req("KDE upstream" in doc and "Ubuntu" in doc,"Tier3 docs authority/provider boundary")
 req("materialized" in doc and "build-level0" in doc and "remediation" in doc.lower(),"Tier3 docs lifecycle")
 

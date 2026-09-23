@@ -37,11 +37,17 @@ for node in canonical:
     req(x.get("source_package")==f"kf6-{node}",f"{node}: source package")
     req(x.get("provider")=="supralinux",f"{node}: provider selection")
     req(x.get("contract_state") in {"reference-capture-pending","reference-capture-pass","packaging-tree-pass","review-pending","review-pass","contract-ready","materialized"},f"{node}: contract lifecycle")
-    req(n.get("state")=="pending",f"{node}: package state unchanged")
-    req(n.get("packaging",{}).get("state")=="pending" and n.get("packaging",{}).get("downstream_eligible") is False,f"{node}: packaging remains pending")
+    packaging=n.get("packaging",{})
+    if n.get("state")=="PASS":
+        req(packaging.get("state")=="PASS" and packaging.get("downstream_eligible") is True,f"{node}: promoted packaging PASS")
+    elif node=="knewstuff" and packaging.get("state")=="runtime-validation-required":
+        req(n.get("state")=="pending" and packaging.get("downstream_eligible") is False,f"{node}: runtime validation remains pending")
+    else:
+        req(n.get("state")=="pending",f"{node}: package state pending")
+        req(packaging.get("state")=="pending" and packaging.get("downstream_eligible") is False,f"{node}: packaging remains pending")
     planning=n.get("planning",{})
     req(planning.get("provider_audit")=="PASS" and planning.get("provider")=="supralinux",f"{node}: provider audit canonical linkage")
-    req(planning.get("package_contract") in {"required","reference-capture-pending","reference-capture-pass","packaging-tree-pending","packaging-tree-pass","review-pending","review-pass","ready","not-materialized","materialized"},f"{node}: canonical package-contract lifecycle")
+    req(planning.get("package_contract") in {"required","reference-capture-pending","reference-capture-pass","packaging-tree-pending","packaging-tree-pass","review-pending","review-pass","ready","not-materialized","materialized","retained-pass"},f"{node}: canonical package-contract lifecycle")
 
 if c.get("state")=="reference-capture-pending":
     req(rc.get("status")=="pending-ci" and rc.get("evidence") is None,"pending reference capture state")

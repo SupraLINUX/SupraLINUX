@@ -188,8 +188,14 @@ for node in selected:
     req(contract.get("packaging_baseline", {}).get("provider") == "debian-sid", f"{node}: packaging baseline provider")
     req(contract.get("packaging_baseline", {}).get("tree_sha256") == c.get("packaging_trees", {}).get(node, {}).get("debian", {}).get("tree_sha256"), f"{node}: packaging tree pin")
     req(contract.get("selected_profile", {}).get("BUILD_TESTING") is True, f"{node}: BUILD_TESTING contract")
-    req(can.get("state") == "pending", f"{node}: canonical package state remains pending")
-    req(can.get("packaging", {}).get("state") == "pending" and can.get("packaging", {}).get("downstream_eligible") is False, f"{node}: no downstream eligibility")
+    packaging = can.get("packaging", {})
+    if can.get("state") == "PASS":
+        req(packaging.get("state") == "PASS" and packaging.get("downstream_eligible") is True, f"{node}: promoted package PASS")
+    elif node == "knewstuff" and packaging.get("state") == "runtime-validation-required":
+        req(can.get("state") == "pending" and packaging.get("downstream_eligible") is False, f"{node}: runtime validation remains pending")
+    else:
+        req(can.get("state") == "pending", f"{node}: canonical package state remains pending")
+        req(packaging.get("state") == "pending" and packaging.get("downstream_eligible") is False, f"{node}: no downstream eligibility")
 
     if state.get("state") == "materialized":
         ev = state.get("evidence", {})
@@ -228,7 +234,7 @@ if m.get("state") == "pending-ci":
 elif m.get("state") == "PASS":
     req(all(m["nodes"][n].get("state") == "materialized" for n in selected), "PASS requires all materialization nodes materialized")
     req(c.get("state") == "materialized", "PASS materialization contract lifecycle")
-    req(t.get("discovery_policy", {}).get("phase") in {"build-campaign-planning", "build-level0"}, "post-materialization phase")
+    req(t.get("discovery_policy", {}).get("phase") in {"build-campaign-planning", "build-level0", "build-level1-planning"}, "post-materialization phase")
     if active_c.get("round") == 4:
         req(active_c.get("status") == "materialization-PASS", "round4 contract materialization PASS")
         req(active_m.get("status") == "PASS" and active_m.get("workflow_run") == 35817654811, "round4 materialization evidence PASS")
@@ -239,7 +245,12 @@ elif m.get("state") == "PASS":
         req(m.get("evidence_summary", {}).get("promoted_remediation_materializations") == 1, "round4 materialization summary")
         req(m["nodes"]["kwallet"].get("package_version") == "6.30.0-0supralinux4", "round4 KWallet promoted revision")
         req(active_t.get("materialization_workflow_run") == 35817654811, "canonical round4 materialization linkage")
-        if active_t.get("current_attempt") == 5:
+        if t.get("discovery_policy", {}).get("package_builds") == "tier3-level1-not-authorized-before-planning":
+            req(active_t.get("status") == "attempt5-complete" and active_t.get("execution_authorized") is False, "Attempt5 closed before Level1 planning")
+            req(active_t.get("validation_workflow_run") == 35818120201 and active_t.get("validation_commit") == "0599266fd5fc9869002629b3778d71f1e76bbdc1", "Attempt5 closure evidence")
+            req(active_t.get("canonical_promotions") == 11 and active_t.get("runtime_pending_nodes") == ["knewstuff"], "Attempt5 promotion summary")
+            req(active_t.get("next_gate") == "tier3-build-level1-planning", "Level1 planning gate")
+        elif active_t.get("current_attempt") == 5:
             req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-authorized", "Level0 attempt5 canonical build gate")
             req(active_t.get("status") == "level0-rerun-active", "canonical attempt5 active state")
             req(active_t.get("execution_authorized") is True, "attempt5 execution authorized")

@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 0
 
-Status: **Level 0 Attempt 5 active — full 12-node rerun authorized** as of 2026-09-23.
+Status: **Attempt 5 complete — 11 canonical PASS / 1 runtime-validation-required; Level 1 planning next** as of 2026-09-23.
 
 Level 0 is the first real binary-build campaign for the 20 canonical Tier 3 Frameworks. It contains **12 independent nodes**:
 
@@ -211,3 +211,16 @@ The generated Tier 3 campaign is refreshed to consume this source pin. Level 0 r
 Repository Policy run `35817928654` validated promotion commit `3b1387b636a7103ca8918e51836ea7ac9e105be5`. Attempt 5 is explicitly authorized as a full **12-node** rerun with `fail-fast=false`.
 
 KWallet builds from `6.30.0-0supralinux4` using materialization run `35817654811`, artifact `10731134598`. All other Level 0 nodes rerun from their already-promoted source pins. This activation does not promote any prior SUCCESS result and does not authorize Levels 1–3.
+
+
+## Attempt 5 result and canonical promotion
+
+Run `35818120201` completed all 12 build jobs successfully. The shared Resolute rootfs is artifact `10732192564`, outer SHA-256 `e1c05fd6b5b486d51e79cffa9c32160dcf39d7bc10ed7e338fa286e8b6b39573`, inner rootfs SHA-256 `596e8d8a8865276f6bc1c4e53476485fc991a5cb6e76c4269b625486f278b349`.
+
+The following 11 nodes are promoted to canonical PASS and downstream-eligible: KBookmarks, KConfigWidgets, KDAV, KDESu, KIconThemes, KJobWidgets, KPeople, KRunner, KSvg, KTextWidgets and KWallet. All retained result artifacts report build PASS, positive upstream tests, `lintian=PASS-errors`, APT closure PASS, ABI contract PASS, CMake consumer PASS and predecessor buildinfo proof PASS.
+
+KNewStuff's artifact `10732461923` (SHA-256 `2d2b71cd19923c9d9896926f92c86a209fc633f5a2db04597c0ea10488b7ae4b`) reports build PASS and **5/5 tests PASS**, but its canonical transition is `pending/runtime-validation-required` with `downstream_eligible=false`. KCMUtils remains the deferred runtime gate.
+
+Level 0 therefore closes as `PARTIAL` with **11 PASS / 1 runtime-validation-required / 0 FAIL / 0 BLOCKED**. This is not a build failure. Tier 3 overall becomes **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.
+
+KIO and KXMLGui, the two Level 1 nodes, depend only on already-promoted PASS predecessors. The next gate is Level 1 planning; binary execution remains unauthorized until that plan is separately validated.

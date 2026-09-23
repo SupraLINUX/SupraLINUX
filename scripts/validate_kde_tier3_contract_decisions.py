@@ -103,10 +103,16 @@ for node_id in selected:
     req(x.get("selected_profile",{}).get("BUILD_TESTING") is True,f"{node_id}: BUILD_TESTING required")
     tp=x.get("test_policy",{})
     req(tp.get("upstream_tests_required") is True and tp.get("failures_fatal") is True,f"{node_id}: fatal upstream tests")
-    req(n.get("state")=="pending" and n.get("packaging",{}).get("downstream_eligible") is False,f"{node_id}: package state unchanged")
+    packaging=n.get("packaging",{})
+    if n.get("state")=="PASS":
+        req(packaging.get("state")=="PASS" and packaging.get("downstream_eligible") is True,f"{node_id}: promoted package PASS")
+    elif node_id=="knewstuff" and packaging.get("state")=="runtime-validation-required":
+        req(n.get("state")=="pending" and packaging.get("downstream_eligible") is False,f"{node_id}: runtime validation pending")
+    else:
+        req(n.get("state")=="pending" and packaging.get("downstream_eligible") is False,f"{node_id}: package remains pending")
     planning=n.get("planning",{})
-    req(planning.get("readiness") in {"package-contract-ready","materialized"},f"{node_id}: materialization readiness")
-    req(planning.get("package_contract") in {"not-materialized","materialized"},f"{node_id}: materialization lifecycle")
+    req(planning.get("readiness") in {"package-contract-ready","materialized","retained-pass","runtime-validation-required"},f"{node_id}: materialization readiness")
+    req(planning.get("package_contract") in {"not-materialized","materialized","retained-pass"},f"{node_id}: materialization lifecycle")
     req(node_id in d.get("nodes",{}),f"{node_id}: KDE dependency contract exists")
 
     additions=x.get("supralinux_additional_binary_packages",[])
@@ -136,9 +142,9 @@ req(any(q.get("action")=="preserve-ubuntu-optional-integration" and q.get("value
 req(set(d["nodes"]["purpose"]["frameworks"]["qml_required"])=={"prison","kitemmodels","kcmutils"},"Purpose upstream QML contract")
 
 canonical=t.get("discovery_policy",{})
-req(canonical.get("phase") in {"materialization","build-campaign-planning","build-level0"},"Tier3 canonical materialization/build-planning phase")
+req(canonical.get("phase") in {"materialization","build-campaign-planning","build-level0","build-level1-planning"},"Tier3 canonical materialization/build-planning phase")
 req(canonical.get("package_contracts")=="PASS","Tier3 canonical contract PASS")
-req(canonical.get("package_builds") in {"not-authorized-before-tier3-materialization","not-authorized-before-tier3-build-campaign","tier3-level0-authorized","tier3-level0-remediation-pending"},"Tier3 build gate")
+req(canonical.get("package_builds") in {"not-authorized-before-tier3-materialization","not-authorized-before-tier3-build-campaign","tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning"},"Tier3 build gate")
 if active:
     ar=t.get("active_remediation",{})
     req(ar.get("round")==active.get("round") and set(ar.get("nodes",[]))==active_nodes,"Tier3 canonical remediation linkage")
@@ -146,7 +152,12 @@ if active:
         req(ar.get("source_materialization_nodes")==["kwallet"],"Tier3 round4 canonical source materialization set")
         req(ar.get("provider_closure_only_nodes")==[],"Tier3 round4 canonical provider closure set")
         req(ar.get("materialization_workflow_run")==35817654811 and ar.get("materialization_commit")=="1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf","Tier3 round4 promoted materialization evidence")
-        if ar.get("current_attempt")==5:
+        if canonical.get("package_builds")=="tier3-level1-not-authorized-before-planning":
+            req(ar.get("status")=="attempt5-complete" and ar.get("execution_authorized") is False,"Tier3 Attempt5 closed canonical state")
+            req(ar.get("validation_workflow_run")==35818120201 and ar.get("validation_commit")=="0599266fd5fc9869002629b3778d71f1e76bbdc1","Tier3 Attempt5 closure evidence")
+            req(ar.get("canonical_promotions")==11 and ar.get("runtime_pending_nodes")==["knewstuff"],"Tier3 Attempt5 promotion summary")
+            req(ar.get("next_gate")=="tier3-build-level1-planning","Tier3 Level1 planning next gate")
+        elif ar.get("current_attempt")==5:
             req(canonical.get("package_builds")=="tier3-level0-authorized","Tier3 attempt5 build authorization")
             req(ar.get("status")=="level0-rerun-active" and ar.get("execution_authorized") is True,"Tier3 attempt5 canonical remediation state")
             req(ar.get("activation_policy_workflow_run")==35817928654,"Tier3 attempt5 activation evidence")
@@ -188,7 +199,7 @@ if active:
     else:
         req(canonical.get("package_builds")=="tier3-level0-remediation-pending","Tier3 round2 build pause")
         req(ar.get("execution_authorized") is False,"Tier3 round2 execution pause")
-req(t.get("support_components",{}).get("next_gate") in {"tier3-materialization","tier3-build-campaign-planning","tier3-build-level0"},"Tier3 next gate")
+req(t.get("support_components",{}).get("next_gate") in {"tier3-materialization","tier3-build-campaign-planning","tier3-build-level0","tier3-build-level1-planning"},"Tier3 next gate")
 req(c.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 
 for path in (
