@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 0
 
-Status: **attempt 2 complete — round-2 materialization PASS; attempt 3 activation pending validation** as of 2026-09-22.
+Status: **Level 0 attempt 3 active — full 12-node rerun authorized** as of 2026-09-22.
 
 Level 0 is the first real binary-build campaign for the 20 canonical Tier 3 Frameworks. It contains **12 independent nodes**:
 
@@ -136,3 +136,12 @@ Run `35806738003` produced PASS source artifacts for the three remaining remedia
 The state is deliberately `remediation-materialized-pending-activation` with `execution_authorized=false`. This commit does **not** start attempt 3. Repository Policy must first validate that the refreshed pins and lifecycle are internally consistent.
 
 After that gate passes, a separate activation commit will start a full 12-node Level 0 attempt 3, using the three `-0supralinux3` nodes plus revalidation of the other nine nodes.
+
+
+## Attempt 3 activated
+
+Repository Policy run `35807934729` validated the round-2 promotion commit `13c825b94e9c9c7de5d8ce8baf4c1631a5cd1f6e`. Level 0 is therefore reactivated as **attempt 3** with `execution_authorized=true`.
+
+All 12 Level 0 nodes rerun. KIconThemes, KJobWidgets and KWallet consume their new `6.30.0-0supralinux3` source artifacts; the other nine nodes are full revalidation runs. The shared clean Resolute rootfs, `fail-fast=false`, PASS/FAIL/BLOCKED semantics and KNewStuff deferred runtime gate remain unchanged.
+
+No node is canonically promoted merely by activation. Attempt-3 build evidence must be reviewed first.

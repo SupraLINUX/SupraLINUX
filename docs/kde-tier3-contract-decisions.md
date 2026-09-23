@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package-contract decisions
 
-Status: **PASS — remediation round 2 materialized and promoted; Level 0 attempt 3 pending activation**
+Status: **PASS — remediation round 2 materialized/promoted; Level 0 attempt 3 active**
 
 Reviewed: **2026-09-22**
 
@@ -81,3 +81,6 @@ KDAV and KRunner require no further source change: their round-1 remediations pa
 The three revised source contracts were materialized successfully in run `35806738003` at `6.30.0-0supralinux3`. This proves the source-package transformations and provider adaptations were materializable on Resolute.
 
 It does not prove binary build success. KIconThemes, KJobWidgets and KWallet must still pass the full Level 0 attempt 3. Until that run exists, canonical package state remains pending.
+
+
+Repository Policy run `35807934729` validated the promoted round-2 contracts. Attempt 3 is now authorized to test those contracts as binary packages; this does not alter the contract decisions themselves.

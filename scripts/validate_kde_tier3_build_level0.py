@@ -160,7 +160,27 @@ for node_id in round2:
     e=a["nodes"][node_id][-1]
     req(isinstance(e.get("cause"),str) and isinstance(e.get("remediation"),str),f"{node_id}: attempt2 root cause/remediation recorded")
 
-if m.get("state")=="remediation-materialized-pending-activation":
+if m.get("state")=="active-pending-ci":
+    req(m.get("execution_authorized") is True,"Level0 attempt3 execution authorization")
+    req(mat.get("state")=="PASS","Level0 attempt3 requires materialization PASS")
+    req(m.get("current_attempt")==3,"Level0 attempt3 marker")
+    activation=m.get("activation",{})
+    req(activation.get("status")=="ACTIVE","Level0 attempt3 activation status")
+    req(activation.get("attempt")==3,"Level0 attempt3 activation number")
+    req(activation.get("promotion_validation_workflow_run")==35807934729,"Level0 attempt3 promotion validation")
+    req(activation.get("promotion_commit")=="13c825b94e9c9c7de5d8ce8baf4c1631a5cd1f6e","Level0 attempt3 promotion commit")
+    req(activation.get("scope")=="full-level0-rerun-12-nodes","Level0 attempt3 full rerun scope")
+    rem=m.get("active_remediation",{})
+    req(rem.get("round")==2 and rem.get("status")=="level0-rerun-active","Level0 attempt3 active remediation")
+    req(rem.get("execution_authorized") is True and rem.get("current_attempt")==3,"Level0 attempt3 remediation authorization")
+    req(rem.get("activation_policy_workflow_run")==35807934729,"Level0 attempt3 remediation validation")
+    req(rem.get("next_gate")=="tier3-build-level0-attempt3","Level0 attempt3 next gate")
+    req(all(m["nodes"][n].get("current_attempt")==3 for n in expected),"Level0 attempt3 node markers")
+    req(all(m["nodes"][n].get("state")=="remediation-pending-build" for n in round2),"round2 nodes runnable in attempt3")
+    req(all(m["nodes"][n].get("state")=="prepared-pending-revalidation" for n in expected if n not in round2),"non-round2 nodes revalidated in attempt3")
+    req(m["nodes"]["kwallet"].get("support_input_ids")==["kdoctools"],"KWallet KDocTools support retained in attempt3")
+
+elif m.get("state")=="remediation-materialized-pending-activation":
     req(m.get("execution_authorized") is False,"Level0 remains paused before attempt3 activation")
     req(mat.get("state")=="PASS","round2 materialization promoted PASS")
     rem=m.get("active_remediation",{})
@@ -201,6 +221,13 @@ if m.get("state")=="remediation-pending-materialization":
     req(ar.get("round")==2 and set(ar.get("nodes",[]))==round2,"canonical Tier3 round2 remediation linkage")
     req(ar.get("candidate_package_version")=="6.30.0-0supralinux3","canonical Tier3 round2 revision")
     req(ar.get("execution_authorized") is False,"canonical Tier3 round2 execution pause")
+elif m.get("state")=="active-pending-ci":
+    req(policy.get("package_builds")=="tier3-level0-authorized","canonical Tier3 attempt3 build gate")
+    ar=t.get("active_remediation",{})
+    req(ar.get("round")==2 and set(ar.get("nodes",[]))==round2,"canonical Tier3 attempt3 remediation linkage")
+    req(ar.get("status")=="level0-rerun-active" and ar.get("execution_authorized") is True,"canonical Tier3 attempt3 authorization")
+    req(ar.get("current_attempt")==3 and ar.get("activation_policy_workflow_run")==35807934729,"canonical Tier3 attempt3 activation evidence")
+    req(ar.get("next_gate")=="tier3-build-level0-attempt3","canonical Tier3 attempt3 next gate")
 else:
     req(policy.get("package_builds") in {"tier3-level0-authorized","tier3-level0-remediation-pending"},"canonical Tier3 Level0 build gate")
 

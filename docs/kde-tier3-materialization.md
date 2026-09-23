@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **PASS — round-2 selective remediation promoted; Level 0 attempt 3 activation pending validation** as of 2026-09-22.
+Status: **PASS — round-2 selective remediation promoted; Level 0 attempt 3 active** as of 2026-09-22.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -131,3 +131,6 @@ The promoted source artifacts are:
 All 20 Tier 3 nodes are again materialized. Seventeen retain their previous source artifacts; only the three round-2 nodes changed. Materialization remains source-only and has no package-state effect.
 
 Level 0 remains intentionally paused. Attempt 3 can be activated only after Repository Policy validates these refreshed canonical pins.
+
+
+Repository Policy run `35807934729` validated the round-2 promotion. Source materialization is closed again at 20/20, and the separate Level 0 authority has now activated attempt 3. No additional source rematerialization is requested by that activation.

@@ -267,20 +267,12 @@ Canonical readiness is now `package-contract-review-pass`. Tier 3 remains **0 PA
 The contract-review evidence has been converted into explicit SupraLINUX decisions. Canonical readiness is now `package-contract-ready` and package contract state is `not-materialized`.
 
 Materialization is the active gate. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**; no package build is authorized until source-package materialization completes.
-## Current canonical state — Tier 3 `build-level0` attempt 3 pending activation
+## Current canonical state — Tier 3 `build-level0` attempt 3 active
 
-Level 0 attempt 2 remains historical evidence: workflow run `35770505868` ended **9 workflow SUCCESS / 3 FAIL**, with no canonical package promotion.
+Repository Policy run `35807934729` validated the promoted round-2 source pins. A separate activation now authorizes **Level 0 attempt 3** as a complete 12-node rerun.
 
-The three remaining source remediations were then materialized successfully in run `35806738003`:
+KIconThemes, KJobWidgets and KWallet build from `6.30.0-0supralinux3`; the other nine Level 0 nodes rerun for revalidation from their already-promoted source artifacts. The campaign remains parallel with `fail-fast=false`.
 
-- KIconThemes `6.30.0-0supralinux3`;
-- KJobWidgets `6.30.0-0supralinux3`;
-- KWallet `6.30.0-0supralinux3`.
-
-Their exact artifact IDs and SHA-256 digests are pinned in the canonical manifests. All 20 Tier 3 source packages are therefore materialized again.
-
-Canonical package state is still **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. Materialization does not count as a package attempt, and no Level 0 result from attempts 1 or 2 has been promoted.
-
-Level 0 remains paused with `execution_authorized=false` until Repository Policy validates the round-2 promotion commit. A separate activation commit will then start a complete 12-node **attempt 3**. KNewStuff will still require its later KCMUtils runtime gate even if its binary build succeeds.
+Canonical package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** until attempt-3 evidence is reviewed. KNewStuff remains subject to the later KCMUtils runtime-validation gate.
 
 Levels 1–3 remain unauthorized. Promotion to SupraLINUX `stable` always requires explicit user approval.

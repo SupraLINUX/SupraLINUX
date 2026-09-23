@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 build campaign
 
-Status: **validated topology; round-2 source artifacts promoted; Level 0 attempt 3 pending activation** as of 2026-09-22.
+Status: **validated topology; Level 0 attempt 3 active** as of 2026-09-22.
 
 This document defines how the 20 materialized Tier 3 Frameworks will be built without changing the project-wide PASS / FAIL / BLOCKED semantics.
 
@@ -84,3 +84,8 @@ The global plan continues to reference each node's last promoted materialization
 The campaign now points KIconThemes, KJobWidgets and KWallet to the real `6.30.0-0supralinux3` source artifacts from materialization run `35806738003`. The other 17 materialization pins are unchanged.
 
 The 12 / 2 / 4 / 2 topology and all dependency semantics remain unchanged. Level 0 is still paused in this promotion commit; activation is a separate validated transition.
+
+
+## Attempt 3 activation
+
+Repository Policy run `35807934729` validated the refreshed `-0supralinux3` pins. The 12 / 2 / 4 / 2 topology is unchanged; only Level 0 is authorized, as a complete 12-node attempt 3. Later levels remain gated.

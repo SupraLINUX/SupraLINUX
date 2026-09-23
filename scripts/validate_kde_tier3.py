@@ -108,12 +108,21 @@ if policy.get("package_builds")=="tier3-level0-remediation-pending":
         req(set(rem.get("nodes",[]))=={"kiconthemes","kdav","kwallet","krunner","kjobwidgets"},"Tier3 round1 remediation nodes")
         req(rem.get("candidate_package_version")=="6.30.0-0supralinux2","Tier3 round1 remediation package revision")
     req(rem.get("execution_authorized") is False and rem.get("full_level0_rerun_required") is True,"Tier3 remediation execution policy")
-elif policy.get("package_builds")=="tier3-level0-authorized" and tier3.get("active_remediation",{}).get("current_attempt")==2:
+elif policy.get("package_builds")=="tier3-level0-authorized":
     rem=tier3.get("active_remediation",{})
-    req(rem.get("status")=="level0-rerun-active","Tier3 attempt2 remediation status")
-    req(rem.get("execution_authorized") is True,"Tier3 attempt2 execution authorization")
-    req(rem.get("activation_policy_workflow_run")==35769883615,"Tier3 attempt2 activation validation")
-    req(rem.get("next_gate")=="tier3-build-level0-attempt2","Tier3 attempt2 next gate")
+    attempt=rem.get("current_attempt")
+    req(rem.get("status")=="level0-rerun-active","Tier3 active Level0 rerun status")
+    req(rem.get("execution_authorized") is True,"Tier3 active Level0 execution authorization")
+    if attempt==3:
+        req(rem.get("round")==2,"Tier3 attempt3 remediation round")
+        req(set(rem.get("nodes",[]))=={"kiconthemes","kjobwidgets","kwallet"},"Tier3 attempt3 remediation nodes")
+        req(rem.get("activation_policy_workflow_run")==35807934729,"Tier3 attempt3 activation validation")
+        req(rem.get("next_gate")=="tier3-build-level0-attempt3","Tier3 attempt3 next gate")
+    elif attempt==2:
+        req(rem.get("activation_policy_workflow_run")==35769883615,"Tier3 attempt2 activation validation")
+        req(rem.get("next_gate")=="tier3-build-level0-attempt2","Tier3 attempt2 next gate")
+    else:
+        req(False,"Tier3 authorized Level0 attempt marker")
 
 doc=(ROOT/"docs/kde-tier3.md").read_text()
 req("0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED" in doc,"Tier3 docs canonical snapshot")

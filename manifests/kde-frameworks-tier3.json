@@ -16,8 +16,8 @@
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level0-remediation-pending",
-    "remediation": "round2-materialization-PASS-pending-attempt3-activation"
+    "package_builds": "tier3-level0-authorized",
+    "remediation": "round2-full-level0-rerun-attempt3-active"
   },
   "nodes": [
     {
@@ -821,12 +821,14 @@
       "kwallet"
     ],
     "candidate_package_version": "6.30.0-0supralinux3",
-    "execution_authorized": false,
+    "execution_authorized": true,
     "full_level0_rerun_required": true,
-    "status": "materialization-PASS-pending-level0-attempt3-activation",
-    "next_gate": "tier3-build-level0-attempt3-activation-validation",
+    "status": "level0-rerun-active",
+    "next_gate": "tier3-build-level0-attempt3",
     "materialization_workflow_run": 35806738003,
-    "materialization_commit": "d6aa9a9550dc3c870a9f1beb00fe216d8c20c3d6"
+    "materialization_commit": "d6aa9a9550dc3c870a9f1beb00fe216d8c20c3d6",
+    "current_attempt": 3,
+    "activation_policy_workflow_run": 35807934729
   },
   "remediation_history": [
     {
