@@ -930,7 +930,7 @@
       "source_package": "kf6-kjobwidgets",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux3",
+      "package_version_candidate": "6.30.0-0supralinux4",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kjobwidgets",
@@ -1030,6 +1030,11 @@
           "classification": "level0-remediation-round2",
           "decision": "add-python-setuptools-backend-provider",
           "rationale": "Attempt 2 reached wheel generation and failed because setuptools.build_meta was unavailable. Preserve upstream Python bindings and provide the missing Resolute backend."
+        },
+        {
+          "classification": "level0-remediation-round3",
+          "decision": "declare-toolchain-piecewise-construct-symbol-optional",
+          "rationale": "Attempt 3 compiled KJobWidgets successfully with 3/3 tests PASS, but dpkg-gensymbols observed _ZSt19piecewise_construct@Base as a new libstdc++/toolchain-dependent export and Lintian rejected the generated current Debian revision. Model it as an optional private/toolchain symbol at upstream version 6.30.0 rather than as KDE public ABI."
         }
       ],
       "python_module": "KJobWidgets",
@@ -1060,6 +1065,19 @@
           "relation": "python3-setuptools",
           "classification": "python-binding-build-backend-provider",
           "rationale": "The upstream wheel build uses setuptools.build_meta under python -m build --no-isolation; Resolute python3-build does not depend on python3-setuptools."
+        }
+      ],
+      "symbol_template_additions": [
+        {
+          "package": "libkf6jobwidgets6",
+          "soname": "libKF6JobWidgets.so.6",
+          "symbol": "_ZSt19piecewise_construct@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "toolchain-dependent-private-symbol",
+          "rationale": "Private libstdc++ implementation export observed on Resolute; its disappearance must not be treated as a KDE ABI break."
         }
       ]
     },
@@ -1929,6 +1947,11 @@
           "classification": "level0-remediation-round2",
           "decision": "provide-kdoctools-for-selected-manpage-payload-without-tier3-edge",
           "rationale": "Attempt 2 compiled and passed 3/3 tests but dh_install failed because kwallet-query.1 was absent. KDocTools remains optional in KDE upstream; SupraLINUX supplies its PASS artifact only to satisfy the selected documentation payload."
+        },
+        {
+          "classification": "level0-remediation-round3",
+          "decision": "complete-kdoctools-provider-closure-with-karchive",
+          "rationale": "Attempt 3 injected the PASS KDocTools provider but sbuild could not install libkf6doctools-dev because its libkf6archive-dev >= 6.30 dependency was absent from the package-provider closure. KArchive is added only as retained provider closure; it is not a new KDE KWallet dependency edge and KWallet source remains unchanged."
         }
       ],
       "source_build_relation_overrides": [
@@ -1948,6 +1971,19 @@
           "artifact_id": 10682066198,
           "artifact_sha256": "6daeb6beed63ba7b7e441dba4dfd356be3ad48a9f3ae75acddae0945c36a683d",
           "authority_effect": "none"
+        }
+      ],
+      "support_provider_closure_requirements": [
+        {
+          "provider_id": "kdoctools",
+          "retained_input_id": "karchive",
+          "required_package": "libkf6archive-dev",
+          "version": "6.30.0-0supralinux4",
+          "workflow_run": 34884764702,
+          "artifact_id": 10364726750,
+          "artifact_sha256": "0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e",
+          "authority_effect": "none",
+          "kde_dependency_edge": false
         }
       ]
     },
@@ -2837,53 +2873,99 @@
     "next_gate": "tier3-build-level0-reactivation"
   },
   "active_remediation": {
-    "round": 2,
-    "status": "materialization-PASS",
+    "round": 3,
+    "status": "materialization-pending-ci",
     "trigger": {
-      "workflow_run": 35770505868,
-      "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
-      "level0_result": "9 job SUCCESS / 3 FAIL",
+      "workflow_run": 35808764577,
+      "commit": "417444e60bd09887383fdc4ef5f1c1f3df1efc09",
+      "level0_result": "10 job SUCCESS / 2 FAIL",
       "failed_nodes": [
-        "kiconthemes",
         "kjobwidgets",
         "kwallet"
       ]
     },
-    "previous_round": 1,
-    "candidate_package_version": "6.30.0-0supralinux3",
+    "previous_round": 2,
+    "source_changed_nodes": [
+      "kjobwidgets"
+    ],
+    "provider_closure_only_nodes": [
+      "kwallet"
+    ],
+    "candidate_package_versions": {
+      "kjobwidgets": "6.30.0-0supralinux4",
+      "kwallet": "6.30.0-0supralinux3"
+    },
     "policy": {
       "package_revision_bump_required_for_packaging_changes": true,
       "rematerialize_only_changed_nodes": true,
+      "provider_closure_changes_do_not_require_source_rematerialization": true,
       "rerun_full_level0_after_remediation": true
     },
-    "evidence": {
-      "workflow_run": 35806738003,
-      "commit": "d6aa9a9550dc3c870a9f1beb00fe216d8c20c3d6",
-      "promoted_nodes": [
-        "kiconthemes",
-        "kjobwidgets",
-        "kwallet"
-      ],
-      "artifacts": {
-        "kiconthemes": {
-          "job_id": 107009274349,
-          "artifact_id": 10728445324,
-          "artifact_sha256": "f03028a64343b09d02327376fdec0be9e8c06ad9e75d59c86e1195a1350a49d4"
-        },
-        "kjobwidgets": {
-          "job_id": 107009274269,
-          "artifact_id": 10728630058,
-          "artifact_sha256": "6e5e293abd09904380a61980d69a77bcf9ac91189d16a429e5270f5c4060ddc5"
-        },
-        "kwallet": {
-          "job_id": 107009274317,
-          "artifact_id": 10727054712,
-          "artifact_sha256": "46ad7064b20ffbfb5b8b5d2242378a8e2ab082452edf0985dd9d1f6fb9074deb"
-        }
+    "next_gate": "tier3-round3-kjobwidgets-materialization"
+  },
+  "remediation_history": [
+    {
+      "round": 2,
+      "status": "materialization-PASS",
+      "trigger": {
+        "workflow_run": 35770505868,
+        "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+        "level0_result": "9 job SUCCESS / 3 FAIL",
+        "failed_nodes": [
+          "kiconthemes",
+          "kjobwidgets",
+          "kwallet"
+        ]
       },
-      "package_attempted": false,
-      "package_state_effect": "none"
-    },
-    "next_gate": "tier3-build-level0-attempt3-activation"
-  }
+      "previous_round": 1,
+      "candidate_package_version": "6.30.0-0supralinux3",
+      "policy": {
+        "package_revision_bump_required_for_packaging_changes": true,
+        "rematerialize_only_changed_nodes": true,
+        "rerun_full_level0_after_remediation": true
+      },
+      "evidence": {
+        "workflow_run": 35806738003,
+        "commit": "d6aa9a9550dc3c870a9f1beb00fe216d8c20c3d6",
+        "promoted_nodes": [
+          "kiconthemes",
+          "kjobwidgets",
+          "kwallet"
+        ],
+        "artifacts": {
+          "kiconthemes": {
+            "job_id": 107009274349,
+            "artifact_id": 10728445324,
+            "artifact_sha256": "f03028a64343b09d02327376fdec0be9e8c06ad9e75d59c86e1195a1350a49d4"
+          },
+          "kjobwidgets": {
+            "job_id": 107009274269,
+            "artifact_id": 10728630058,
+            "artifact_sha256": "6e5e293abd09904380a61980d69a77bcf9ac91189d16a429e5270f5c4060ddc5"
+          },
+          "kwallet": {
+            "job_id": 107009274317,
+            "artifact_id": 10727054712,
+            "artifact_sha256": "46ad7064b20ffbfb5b8b5d2242378a8e2ab082452edf0985dd9d1f6fb9074deb"
+          }
+        },
+        "package_attempted": false,
+        "package_state_effect": "none"
+      },
+      "next_gate": "tier3-build-level0-attempt3-activation",
+      "validation": {
+        "workflow_run": 35808764577,
+        "commit": "417444e60bd09887383fdc4ef5f1c1f3df1efc09",
+        "result": "10 job SUCCESS / 2 FAIL",
+        "validated_nodes": [
+          "kiconthemes"
+        ],
+        "remaining_failed_nodes": [
+          "kjobwidgets",
+          "kwallet"
+        ],
+        "canonical_promotions": 0
+      }
+    }
+  ]
 }

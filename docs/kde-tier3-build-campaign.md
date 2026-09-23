@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 build campaign
 
-Status: **validated topology; Level 0 attempt 3 active** as of 2026-09-22.
+Status: **validated topology; attempt 3 complete, round 3 remediation pending** as of 2026-09-22.
 
 This document defines how the 20 materialized Tier 3 Frameworks will be built without changing the project-wide PASS / FAIL / BLOCKED semantics.
 
@@ -89,3 +89,10 @@ The 12 / 2 / 4 / 2 topology and all dependency semantics remain unchanged. Level
 ## Attempt 3 activation
 
 Repository Policy run `35807934729` validated the refreshed `-0supralinux3` pins. The 12 / 2 / 4 / 2 topology is unchanged; only Level 0 is authorized, as a complete 12-node attempt 3. Later levels remain gated.
+
+
+## Attempt 3 closure
+
+The corrected full 12-node run `35808764577` closed **10 workflow SUCCESS / 2 FAIL**. The topology remains 12 / 2 / 4 / 2 and no result is promoted yet.
+
+Round 3 does not alter the KDE DAG. KJobWidgets has one source-package metadata remediation and must be selectively rematerialized; KWallet has only a retained provider-closure correction. After that gate, Level 0 must rerun all 12 nodes before any Level 1 authorization.

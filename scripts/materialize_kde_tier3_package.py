@@ -362,6 +362,35 @@ def apply_reference_patch_suppressions(src: Path, debian: Path, node: str, contr
     shutil.rmtree(src / ".pc", ignore_errors=True)
 
 
+def apply_symbol_template_additions(debian: Path, node: str, contract: dict) -> None:
+    for addition in contract.get("symbol_template_additions", []):
+        package = addition["package"]
+        soname = addition["soname"]
+        symbol = addition["symbol"]
+        minimal_version = addition["minimal_version"]
+        tags = list(addition.get("tags", []))
+        path = debian / f"{package}.symbols"
+        if not path.is_file():
+            raise RuntimeError(f"{node}: symbols template missing for {package}")
+        lines = path.read_text().splitlines()
+        matches = [line for line in lines if symbol in line]
+        if matches:
+            raise RuntimeError(f"{node}: symbol template addition already exists for {symbol}")
+        header = next((i for i,line in enumerate(lines) if line.startswith(soname + " ")), None)
+        if header is None:
+            raise RuntimeError(f"{node}: SONAME block missing for {soname}")
+        end = len(lines)
+        for i in range(header + 1, len(lines)):
+            line = lines[i]
+            if line and not line[0].isspace() and not line.startswith(("*","|")):
+                end = i
+                break
+        prefix = f"({'|'.join(tags)})" if tags else ""
+        entry = f" {prefix}{symbol} {minimal_version}"
+        lines.insert(end, entry)
+        path.write_text("\n".join(lines) + "\n")
+
+
 def apply_symbol_template_overrides(debian: Path, node: str, contract: dict) -> None:
     for override in contract.get("symbol_template_overrides", []):
         package = override["package"]
@@ -434,6 +463,23 @@ def validate_remediation_overrides(control: Path, debian: Path, rules: str, node
             if tag not in line:
                 raise RuntimeError(f"{node}: symbols override tag missing for {symbol}: {tag}")
 
+    for addition in contract.get("symbol_template_additions", []):
+        package = addition["package"]
+        symbol = addition["symbol"]
+        minimal_version = addition["minimal_version"]
+        path = debian / f"{package}.symbols"
+        matches = [line for line in path.read_text().splitlines() if symbol in line]
+        if len(matches) != 1:
+            raise RuntimeError(f"{node}: symbols addition validation mismatch for {symbol}")
+        line = matches[0]
+        for tag in addition.get("tags", []):
+            if f"({tag})" not in line and f"|{tag}" not in line and f"{tag}|" not in line:
+                raise RuntimeError(f"{node}: symbols addition tag missing for {symbol}: {tag}")
+        if not line.rstrip().endswith(" " + minimal_version):
+            raise RuntimeError(f"{node}: symbols addition minimal version mismatch for {symbol}")
+        if "-0supralinux" in minimal_version:
+            raise RuntimeError(f"{node}: symbols addition must not use a Debian/SupraLINUX revision: {symbol}")
+
 
 def validate_control(control: Path, node: str, contract: dict) -> None:
     parts = paragraphs(control.read_text())
@@ -485,7 +531,7 @@ def validate_control(control: Path, node: str, contract: dict) -> None:
             raise RuntimeError("kjobwidgets: KCoreAddons Python typesystem provider missing")
         if node == "kjobwidgets" and "python3-build" not in src_bd:
             raise RuntimeError("kjobwidgets: Python build frontend provider missing")
-        if node == "kjobwidgets" and contract.get("package_version_candidate") == "6.30.0-0supralinux3" and "python3-setuptools" not in src_bd:
+        if node == "kjobwidgets" and "python3-setuptools" not in src_bd:
             raise RuntimeError("kjobwidgets: setuptools build backend provider missing")
 
 
@@ -662,6 +708,7 @@ def main() -> None:
         rules_text = cmake_flags(rules_text, contract.get("selected_profile", {}))
         validate_test_policy(rules_text)
         rules.write_text(rules_text)
+        apply_symbol_template_additions(debian, NODE, contract)
         apply_symbol_template_overrides(debian, NODE, contract)
         write_changelog(changelog, source_package, package_version, NODE)
 
@@ -723,6 +770,7 @@ def main() -> None:
             "reference_test_suppression_overrides": contract.get("reference_test_suppression_overrides"),
             "reference_patch_suppression_overrides": contract.get("reference_patch_suppression_overrides"),
             "symbol_template_overrides": contract.get("symbol_template_overrides", []),
+            "symbol_template_additions": contract.get("symbol_template_additions", []),
             "stable_promotion_requires_explicit_user_approval": True,
         }
         if evidence["orig_tar_sha256"] != upstream_sha:

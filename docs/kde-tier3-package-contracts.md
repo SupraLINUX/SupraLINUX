@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **contracts retained — remediation round 2 materialization PASS; attempt 3 active**
+Status: **contracts retained — round 3 selective KJobWidgets source remediation pending**
 
 Reviewed: **2026-09-22**
 
@@ -122,3 +122,14 @@ This promotion proves contract materialization only. Binary package PASS still r
 
 
 Repository Policy run `35807934729` validated the three refreshed source pins. The package-contract phase is unchanged; attempt 3 is the binary-build validation of those already-promoted contracts.
+
+
+## Round 3 contract delta
+
+The package-contract delta after Level 0 attempt 3 is deliberately minimal.
+
+**KJobWidgets** advances to `6.30.0-0supralinux4`. Existing Python provider adaptations remain unchanged. One symbols-template addition models `_ZSt19piecewise_construct@Base` at minimum version `6.30.0` with the Debian `optional` tag because the symbol is toolchain/private rather than KDE API.
+
+**KWallet** remains `6.30.0-0supralinux3`. Its source Build-Depends contract is unchanged. The Level 0 provider closure now records KArchive `6.30.0-0supralinux4` artifact `10364726750` as the provider of `libkf6archive-dev` required transitively by the selected KDocTools support artifact.
+
+No round-3 decision changes KDE upstream dependency semantics or canonical package state.

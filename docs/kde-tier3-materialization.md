@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **PASS — round-2 selective remediation promoted; Level 0 attempt 3 active** as of 2026-09-22.
+Status: **round-3 selective remediation pending CI — KJobWidgets only** as of 2026-09-22.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -139,3 +139,14 @@ Repository Policy run `35807934729` validated the round-2 promotion. Source mate
 ### Validator lifecycle note
 
 The materialization validator accepts both legitimate post-promotion states: a validated source promotion that is still waiting for Level 0 activation, and a separately validated Level 0 activation that leaves source materialization unchanged at PASS. Activating a binary-build campaign must not make the already-closed source-materialization definition invalid.
+
+
+## Round 3 selective materialization
+
+Level 0 attempt 3 (`35808764577`) leaves two binary failures, but only **KJobWidgets** changes source packaging.
+
+KJobWidgets advances from `6.30.0-0supralinux3` to `6.30.0-0supralinux4`. Its build and 3/3 upstream tests already succeeded; the new materialization changes only the symbols template by declaring the observed libstdc++/toolchain-dependent `_ZSt19piecewise_construct@Base` as `(optional)` with minimum upstream version `6.30.0`. Debian's source-symbol format defines `optional` for private symbols whose disappearance is not an ABI break.
+
+KWallet stays at `6.30.0-0supralinux3` and **must not rematerialize**. Its round-3 fix is solely a Level 0 provider-closure change: add the existing PASS KArchive artifact so the KDocTools support provider can satisfy `libkf6archive-dev >= 6.30`.
+
+The materialization queue is therefore exactly `[kjobwidgets]`. All other 19 promoted source artifacts remain unchanged. Source materialization continues to have no package-state effect.

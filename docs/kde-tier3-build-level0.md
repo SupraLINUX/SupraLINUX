@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 0
 
-Status: **Level 0 attempt 3 active — full 12-node rerun authorized** as of 2026-09-22.
+Status: **attempt 3 complete — 10 workflow SUCCESS / 2 FAIL; round 3 remediation pending** as of 2026-09-22.
 
 Level 0 is the first real binary-build campaign for the 20 canonical Tier 3 Frameworks. It contains **12 independent nodes**:
 
@@ -148,3 +148,19 @@ No node is canonically promoted merely by activation. Attempt-3 build evidence m
 
 
 The defective orchestration runs are retained as workflow runs `35808224394` and `35808388332`. They generated a 3-node matrix because `prepared-pending-revalidation` was absent from both the planner and runner runnable-state sets. They have **no canonical package-state effect** and are not treated as complete attempt-3 evidence.
+
+
+## Attempt 3 result and round 3 remediation
+
+The corrected full Level 0 attempt 3 is workflow run `35808764577`, commit `417444e60bd09887383fdc4ef5f1c1f3df1efc09`. It ran all 12 Level 0 nodes from one shared Resolute rootfs and closed with **10 workflow SUCCESS / 2 FAIL**. Canonical promotion remains **zero**.
+
+KIconThemes validates its round-2 remediation: the complete upstream test set executes with `qt6-svg-plugins` available and finishes **10/10 PASS**. KNewStuff again builds successfully with **5/5 tests PASS**, but remains `RUNTIME_PENDING` because its KCMUtils runtime gate has not run.
+
+The two real FAILs are independent:
+
+- **KJobWidgets**: binary build and **3/3 upstream tests PASS**. The failure is ABI metadata only: `dpkg-gensymbols` observes `_ZSt19piecewise_construct@Base` as a new toolchain/libstdc++ export and assigns the current package revision, which Lintian rejects. Round 3 adds an explicit source-template entry `(optional)_ZSt19piecewise_construct@Base 6.30.0` and advances only KJobWidgets to `6.30.0-0supralinux4`.
+- **KWallet**: the `6.30.0-0supralinux3` source package is unchanged. The injected KDocTools provider could not be installed because `libkf6doctools-dev` requires `libkf6archive-dev >= 6.30`; KArchive was missing from the provider closure. Round 3 adds the existing PASS KArchive artifact only to KWallet's retained package closure. This is **not** a new KDE KWallet dependency edge.
+
+Therefore round 3 is intentionally asymmetric: only KJobWidgets rematerializes; KWallet is a provider-closure-only correction. Level 0 is paused with `execution_authorized=false`. After KJobWidgets materialization is promoted and Policy validates the refreshed pin, the next binary campaign must again be a complete 12-node rerun.
+
+The two earlier incomplete attempt-3 orchestration runs `35808224394` and `35808388332` remain historical non-canonical evidence only. The planner defect was corrected before run `35808764577`.

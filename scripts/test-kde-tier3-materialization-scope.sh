@@ -106,5 +106,19 @@ git -C "${TMP}" add . && git -C "${TMP}" commit -qm remediation-contract-change
 REMCHANGE="$(git -C "${TMP}" rev-parse HEAD)"
 bash "${TMP}/scripts/kde-tier3-materialization-needed.sh" "${SELECTOR}" "${REMCHANGE}"
 
+# Symbols-template additions are source-materialization semantics too.
+python3 - "${TMP}/manifests/kde-tier3-package-contracts.json" <<'PY'
+import json,sys
+p=sys.argv[1]; d=json.load(open(p))
+d["nodes"]["x"]["symbol_template_additions"]=[{
+  "package":"libx1","soname":"libx.so.1","symbol":"_ZSt19piecewise_construct@Base",
+  "minimal_version":"6.30.0","tags":["optional"]
+}]
+open(p,"w").write(json.dumps(d)+"\n")
+PY
+git -C "${TMP}" add . && git -C "${TMP}" commit -qm symbol-addition
+SYMBOLADD="$(git -C "${TMP}" rev-parse HEAD)"
+bash "${TMP}/scripts/kde-tier3-materialization-needed.sh" "${REMCHANGE}" "${SYMBOLADD}"
+
 echo "Tier 3 materialization remediation scope: PASS"
 

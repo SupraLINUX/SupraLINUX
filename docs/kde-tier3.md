@@ -281,3 +281,14 @@ Levels 1–3 remain unauthorized. Promotion to SupraLINUX `stable` always requir
 ### Attempt 3 orchestration retry
 
 The first two attempt-3 workflow launches (`35808224394` and `35808388332`) exposed an orchestration defect: the Level 0 planner omitted nodes in `prepared-pending-revalidation`, producing a 3-node matrix instead of the required 12-node full rerun. Those runs are retained as non-canonical orchestration evidence only. Planner/runner scope is corrected and the full 12-node attempt 3 must run before any package promotion.
+
+
+## Current canonical state — Tier 3 `build-level0` round 3 remediation
+
+The authoritative Level 0 attempt 3 is workflow run `35808764577` at commit `417444e60bd09887383fdc4ef5f1c1f3df1efc09`. The corrected campaign executed all 12 Level 0 nodes and closed **10 workflow SUCCESS / 2 FAIL**.
+
+The two FAILs are KJobWidgets and KWallet. KJobWidgets compiled and passed **3/3** upstream tests but requires one symbols-template metadata correction, so only KJobWidgets advances to `6.30.0-0supralinux4` and rematerializes. KWallet keeps its already-materialized `6.30.0-0supralinux3` source; its correction is only to complete the KDocTools support-provider closure with the existing PASS KArchive artifact.
+
+KIconThemes validated its round-2 SVG provider remediation with **10/10 tests PASS**. KNewStuff again has a successful binary build and **5/5 tests PASS**, but remains runtime-validation-pending on KCMUtils and is not downstream-eligible.
+
+Canonical Tier 3 package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** because no Level 0 attempt has been promoted. The build gate is paused while the single-node KJobWidgets rematerialization runs. After promotion and Policy validation, Level 0 requires another complete 12-node rerun. Levels 1–3 remain unauthorized, and promotion to SupraLINUX `stable` still requires explicit user approval.

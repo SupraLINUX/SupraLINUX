@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package-contract decisions
 
-Status: **PASS — remediation round 2 materialized/promoted; Level 0 attempt 3 active**
+Status: **PASS — round 3 modeled; KJobWidgets rematerialization pending**
 
 Reviewed: **2026-09-22**
 
@@ -89,3 +89,16 @@ Repository Policy run `35807934729` validated the promoted round-2 contracts. At
 ### Post-promotion validator lifecycle
 
 A completed contract remediation may remain present while the separately validated Level 0 campaign is active. Contract validation therefore distinguishes the source-remediation state from the binary-build authorization state instead of assuming that any active remediation record requires Level 0 to be paused.
+
+
+## Remediation round 3
+
+Attempt 3 produced **10 workflow SUCCESS / 2 FAIL** with zero canonical promotion.
+
+KJobWidgets retains `BUILD_PYTHON_BINDINGS=ON`, `python3-build` and `python3-setuptools`; those issues are resolved. The remaining failure occurs after a successful build and 3/3 tests because a toolchain-dependent libstdc++ symbol appears as a new symbol. SupraLINUX adds this exact source-template entry:
+
+`(optional)_ZSt19piecewise_construct@Base 6.30.0`
+
+The `optional` tag is a Debian packaging mechanism for private/toolchain-dependent symbols and does not redefine KDE public ABI. KJobWidgets therefore becomes `6.30.0-0supralinux4`.
+
+KWallet has **no source change** in round 3. Its existing optional KDocTools provider contract is retained, while the provider closure gains the already-PASS KArchive artifact because `libkf6doctools-dev 6.30` depends on `libkf6archive-dev >= 6.30`. This remains provider closure and does not become a KDE dependency edge.

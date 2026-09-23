@@ -43,6 +43,7 @@ for node in nodes:
       "reference_test_suppression_overrides":x.get("reference_test_suppression_overrides"),
       "reference_patch_suppression_overrides":x.get("reference_patch_suppression_overrides"),
       "symbol_template_overrides":x.get("symbol_template_overrides",[]),
+      "symbol_template_additions":x.get("symbol_template_additions",[]),
       "debian_reference":x.get("technical_references",{}).get("debian",{}),
     }
 canonical={x.get("id"):{"source_url":x.get("source_url"),"source_sha256":x.get("source_sha256")} for x in t.get("nodes",[]) if x.get("id") in nodes}
