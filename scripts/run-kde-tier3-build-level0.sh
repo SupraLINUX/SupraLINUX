@@ -61,7 +61,7 @@ if c.get("execution_authorized") is not True:
 if node_id not in c.get("selected_nodes",[]):
     raise SystemExit(f"unknown Tier3 Level0 node: {node_id}")
 n=c["nodes"][node_id]
-if n.get("state") not in {"prepared-pending-build","remediation-pending-build"}:
+if n.get("state") not in {"prepared-pending-build","prepared-pending-revalidation","remediation-pending-build"}:
     raise SystemExit(f"{node_id}: not runnable, state={n.get('state')}")
 out=Path(outdir); specs=[]
 def add_spec(input_id,cfg,kind):

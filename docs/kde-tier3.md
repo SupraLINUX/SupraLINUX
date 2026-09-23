@@ -276,3 +276,8 @@ KIconThemes, KJobWidgets and KWallet build from `6.30.0-0supralinux3`; the other
 Canonical package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** until attempt-3 evidence is reviewed. KNewStuff remains subject to the later KCMUtils runtime-validation gate.
 
 Levels 1–3 remain unauthorized. Promotion to SupraLINUX `stable` always requires explicit user approval.
+
+
+### Attempt 3 orchestration retry
+
+The first two attempt-3 workflow launches (`35808224394` and `35808388332`) exposed an orchestration defect: the Level 0 planner omitted nodes in `prepared-pending-revalidation`, producing a 3-node matrix instead of the required 12-node full rerun. Those runs are retained as non-canonical orchestration evidence only. Planner/runner scope is corrected and the full 12-node attempt 3 must run before any package promotion.

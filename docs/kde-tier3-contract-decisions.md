@@ -84,3 +84,8 @@ It does not prove binary build success. KIconThemes, KJobWidgets and KWallet mus
 
 
 Repository Policy run `35807934729` validated the promoted round-2 contracts. Attempt 3 is now authorized to test those contracts as binary packages; this does not alter the contract decisions themselves.
+
+
+### Post-promotion validator lifecycle
+
+A completed contract remediation may remain present while the separately validated Level 0 campaign is active. Contract validation therefore distinguishes the source-remediation state from the binary-build authorization state instead of assuming that any active remediation record requires Level 0 to be paused.

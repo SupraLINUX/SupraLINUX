@@ -5,7 +5,7 @@ import json
 
 ROOT=Path(__file__).resolve().parents[1]
 MANIFEST=ROOT/"manifests/kde-tier3-build-level0.json"
-RUNNABLE={"prepared-pending-build","remediation-pending-build"}
+RUNNABLE={"prepared-pending-build","prepared-pending-revalidation","remediation-pending-build"}
 
 def main():
     ap=argparse.ArgumentParser()

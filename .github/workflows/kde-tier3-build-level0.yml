@@ -11,6 +11,7 @@ on:
       - manifests/kde-dag.json
       - scripts/plan-kde-tier3-build-level0.py
       - scripts/run-kde-tier3-build-level0.sh
+      - scripts/test-kde-tier3-build-level0-planner.py
       - scripts/validate_kde_tier3_build_level0.py
       - .github/workflows/kde-tier3-build-level0.yml
   workflow_dispatch:

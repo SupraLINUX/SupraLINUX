@@ -179,6 +179,12 @@ if m.get("state")=="active-pending-ci":
     req(all(m["nodes"][n].get("state")=="remediation-pending-build" for n in round2),"round2 nodes runnable in attempt3")
     req(all(m["nodes"][n].get("state")=="prepared-pending-revalidation" for n in expected if n not in round2),"non-round2 nodes revalidated in attempt3")
     req(m["nodes"]["kwallet"].get("support_input_ids")==["kdoctools"],"KWallet KDocTools support retained in attempt3")
+    correction=m.get("orchestration_correction",{})
+    req(correction.get("status")=="attempt3-corrected-rerun-required","Level0 attempt3 orchestration correction state")
+    req(correction.get("defective_workflow_runs")==[35808224394,35808388332],"Level0 attempt3 defective orchestration runs")
+    req(correction.get("expected_matrix_nodes")==12 and correction.get("observed_matrix_nodes")==3,"Level0 attempt3 matrix defect evidence")
+    req(correction.get("missing_state")=="prepared-pending-revalidation","Level0 attempt3 missing runnable state evidence")
+    req(correction.get("canonical_package_state_effect")=="none","Level0 incomplete attempt3 has no canonical package effect")
 
 elif m.get("state")=="remediation-materialized-pending-activation":
     req(m.get("execution_authorized") is False,"Level0 remains paused before attempt3 activation")

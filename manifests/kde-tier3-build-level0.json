@@ -1350,5 +1350,18 @@
     "activation_policy_workflow_run": 35807934729,
     "activation_commit_pending": true,
     "next_gate": "tier3-build-level0-attempt3"
+  },
+  "orchestration_correction": {
+    "status": "attempt3-corrected-rerun-required",
+    "defective_workflow_runs": [
+      35808224394,
+      35808388332
+    ],
+    "expected_matrix_nodes": 12,
+    "observed_matrix_nodes": 3,
+    "missing_state": "prepared-pending-revalidation",
+    "cause": "planner-and-runner-runnable-state-set-omitted-prepared-pending-revalidation",
+    "canonical_package_state_effect": "none",
+    "correction_policy": "rerun-complete-attempt3-after-planner-runner-fix"
   }
 }

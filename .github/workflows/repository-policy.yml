@@ -310,6 +310,9 @@ jobs:
       - name: Validate KDE Tier 3 build campaign plan
         run: python3 scripts/validate_kde_tier3_build_campaign.py
 
+      - name: Test KDE Tier 3 Level 0 planner and runner scope
+        run: python3 scripts/test-kde-tier3-build-level0-planner.py
+
       - name: Validate KDE Tier 3 build Level 0
         run: python3 scripts/validate_kde_tier3_build_level0.py
 

@@ -122,9 +122,16 @@ req(canonical.get("phase") in {"materialization","build-campaign-planning","buil
 req(canonical.get("package_contracts")=="PASS","Tier3 canonical contract PASS")
 req(canonical.get("package_builds") in {"not-authorized-before-tier3-materialization","not-authorized-before-tier3-build-campaign","tier3-level0-authorized","tier3-level0-remediation-pending"},"Tier3 build gate")
 if active:
-    req(canonical.get("package_builds")=="tier3-level0-remediation-pending","Tier3 round2 build pause")
     ar=t.get("active_remediation",{})
-    req(ar.get("round")==2 and set(ar.get("nodes",[]))==active_nodes and ar.get("execution_authorized") is False,"Tier3 round2 canonical remediation linkage")
+    req(ar.get("round")==2 and set(ar.get("nodes",[]))==active_nodes,"Tier3 round2 canonical remediation linkage")
+    if ar.get("current_attempt")==3:
+        req(canonical.get("package_builds")=="tier3-level0-authorized","Tier3 attempt3 build authorization")
+        req(ar.get("status")=="level0-rerun-active" and ar.get("execution_authorized") is True,"Tier3 attempt3 canonical remediation state")
+        req(ar.get("activation_policy_workflow_run")==35807934729,"Tier3 attempt3 activation evidence")
+        req(ar.get("next_gate")=="tier3-build-level0-attempt3","Tier3 attempt3 canonical next gate")
+    else:
+        req(canonical.get("package_builds")=="tier3-level0-remediation-pending","Tier3 round2 build pause")
+        req(ar.get("execution_authorized") is False,"Tier3 round2 execution pause")
 req(t.get("support_components",{}).get("next_gate") in {"tier3-materialization","tier3-build-campaign-planning","tier3-build-level0"},"Tier3 next gate")
 req(c.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 

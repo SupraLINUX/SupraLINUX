@@ -145,3 +145,6 @@ Repository Policy run `35807934729` validated the round-2 promotion commit `13c8
 All 12 Level 0 nodes rerun. KIconThemes, KJobWidgets and KWallet consume their new `6.30.0-0supralinux3` source artifacts; the other nine nodes are full revalidation runs. The shared clean Resolute rootfs, `fail-fast=false`, PASS/FAIL/BLOCKED semantics and KNewStuff deferred runtime gate remain unchanged.
 
 No node is canonically promoted merely by activation. Attempt-3 build evidence must be reviewed first.
+
+
+The defective orchestration runs are retained as workflow runs `35808224394` and `35808388332`. They generated a 3-node matrix because `prepared-pending-revalidation` was absent from both the planner and runner runnable-state sets. They have **no canonical package-state effect** and are not treated as complete attempt-3 evidence.
