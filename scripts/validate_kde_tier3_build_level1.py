@@ -140,7 +140,7 @@ for node,e in expected.items():
     provider_closure=n.get("provider_closure_input_ids",[])
     req(provider_closure==classes.get("provider_closure",[]),f"{node}: provider closure class linkage")
     req(set(n.get("retained_input_ids",[]))==set(classes.get("external_pass",[])+classes.get("tier3_level0_pass",[])+classes.get("support_build",[])+classes.get("support_runtime",[])+provider_closure),f"{node}: retained input closure")
-    req(all(ret.get(x,{}).get("provenance")=="canonical-dag-provider-closure" or x in classes.get("external_pass",[]) for x in provider_closure),f"{node}: provider closure PASS provenance")
+    req(all(ret.get(x,{}).get("provenance") in {"canonical-dag-provider-closure","canonical-dag-pass"} for x in provider_closure),f"{node}: provider closure PASS provenance")
     req(all(ret.get(x,{}).get("dev_package") not in n.get("buildinfo_proof_packages",[]) for x in provider_closure if x not in classes.get("external_pass",[])),f"{node}: provider closure must not invent buildinfo edge")
     for pkg in n.get("buildinfo_proof_packages",[]):
         providers=[x for x in n.get("retained_input_ids",[]) if ret.get(x,{}).get("dev_package")==pkg]
