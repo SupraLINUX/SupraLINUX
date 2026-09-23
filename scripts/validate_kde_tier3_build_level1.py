@@ -33,7 +33,17 @@ if m.get("state")=="planned-pending-activation":
     req(m.get("execution_authorized") is False,"planned Level1 must not authorize builds")
 elif m.get("state")=="active-pending-ci":
     req(m.get("execution_authorized") is True,"active Level1 authorization")
-    if m.get("current_attempt")==2:
+    if m.get("current_attempt")==3:
+        act=m.get("activation",{})
+        req(act.get("status")=="ACTIVE" and act.get("attempt")==3,"Level1 Attempt3 activation marker")
+        req(act.get("remediation_validation_policy_workflow_run")==35884583361 and act.get("remediation_validation_level1_workflow_run")==35884584590,"Level1 Attempt3 planning validation evidence")
+        req(act.get("remediation_commit")=="a562a145ba212349d725fad3e98a9dcb9c6c2ae0" and act.get("scope")=="full-level1-rerun-2-nodes","Level1 Attempt3 activation commit/scope")
+        rem=m.get("active_remediation",{})
+        req(rem.get("round")==2 and rem.get("global_round")==7 and rem.get("status")=="materialization-PASS-attempt3-active","Level1 Attempt3 round7 state")
+        req(rem.get("execution_authorized") is True and rem.get("current_attempt")==3,"Level1 Attempt3 remediation authorization")
+        req(rem.get("activation_policy_workflow_run")==35884583361 and rem.get("activation_level1_workflow_run")==35884584590,"Level1 Attempt3 validation linkage")
+        req(m.get("next_gate")=="tier3-build-level1-attempt3","Level1 Attempt3 next gate")
+    elif m.get("current_attempt")==2:
         act=m.get("activation",{})
         req(act.get("status")=="ACTIVE" and act.get("attempt")==2,"Level1 Attempt2 activation marker")
         req(act.get("remediation_validation_policy_workflow_run")==35828634884 and act.get("remediation_validation_level1_workflow_run")==35828634887,"Level1 Attempt2 remediation validation evidence")
@@ -123,7 +133,12 @@ elif policy.get("package_builds")=="tier3-level1-authorized":
     req(policy.get("phase")=="build-level1","canonical active Level1 phase")
     req(ar.get("status")=="level1-active-pending-ci","canonical active Level1 state")
     req(ar.get("execution_authorized") is True and ar.get("level1_execution_authorized") is True,"canonical Level1 authorization")
-    if ar.get("round")==6:
+    if ar.get("round")==7:
+        req(ar.get("current_attempt")==3,"canonical Level1 Attempt3 marker")
+        req(ar.get("activation_policy_workflow_run")==35884583361 and ar.get("activation_level1_workflow_run")==35884584590,"canonical Attempt3 planning validation")
+        req(ar.get("activation_commit")=="a562a145ba212349d725fad3e98a9dcb9c6c2ae0","canonical Attempt3 validation commit")
+        req(ar.get("next_gate")=="tier3-build-level1-attempt3","canonical Level1 Attempt3 gate")
+    elif ar.get("round")==6:
         req(ar.get("current_attempt")==2,"canonical Level1 Attempt2 marker")
         req(ar.get("activation_policy_workflow_run")==35828634884 and ar.get("activation_level1_workflow_run")==35828634887,"canonical Attempt2 remediation validation")
         req(ar.get("activation_commit")=="568beba8aa3dce7a3f3a51d5e91d31edb5a30523","canonical Attempt2 validation commit")
@@ -169,7 +184,7 @@ for node,cfg in ret.items():
         req(False,f"{node}: unknown predecessor provenance")
     req(cfg.get("dev_package") in cfg.get("expected_binary_packages",[]),f"{node}: dev package identity")
 
-round7_source_promoted=m.get("state")=="remediation-materialized-pending-planning-validation"
+round7_source_promoted=m.get("state")=="remediation-materialized-pending-planning-validation" or m.get("current_attempt")==3
 expected={
  "kio":{
    "version":"6.30.0-0supralinux3" if round7_source_promoted else "6.30.0-0supralinux2",

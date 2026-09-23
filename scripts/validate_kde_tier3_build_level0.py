@@ -312,13 +312,17 @@ elif m.get("state")=="PARTIAL":
     req(t.get("discovery_policy",{}).get("package_builds") in {"tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized","tier3-level1-remediation-pending-provider-closure"},"Tier3 Level1 build gate")
     ar=t.get("active_remediation",{})
     if ar.get("round")==7:
-        req(ar.get("level")=="build-level1" and ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation"},"Tier3 Level1 round7 source-remediation lifecycle")
+        req(ar.get("level")=="build-level1" and ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation","level1-active-pending-ci"},"Tier3 Level1 round7 source-remediation lifecycle")
         req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==["kio","kxmlgui"] and ar.get("provider_closure_only_nodes")==[],"Tier3 Level1 round7 source scope")
         req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux3","kxmlgui":"6.30.0-0supralinux2"},"Tier3 Level1 round7 revisions")
         req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 Level1 round7 execution pause")
         req(ar.get("validation_workflow_run")==35829170695 and ar.get("validation_commit")=="897d3a864bc7ea164400c7d9de2e9c51cf6316ab","Tier3 Level1 Attempt2 evidence")
         req(set(ar.get("remaining_failed_nodes",[]))=={"kio","kxmlgui"} and ar.get("canonical_promotions")==0,"Tier3 Level1 Attempt2 failure/no-promotion semantics")
-        if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
+        if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-authorized":
+            req(ar.get("status")=="level1-active-pending-ci" and ar.get("execution_authorized") is True and ar.get("level1_execution_authorized") is True,"Tier3 Level1 Attempt3 active authorization")
+            req(ar.get("current_attempt")==3 and ar.get("activation_policy_workflow_run")==35884583361 and ar.get("activation_level1_workflow_run")==35884584590,"Tier3 Level1 Attempt3 validation evidence")
+            req(ar.get("activation_commit")=="a562a145ba212349d725fad3e98a9dcb9c6c2ae0" and ar.get("next_gate")=="tier3-build-level1-attempt3","Tier3 Level1 Attempt3 activation gate")
+        elif t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
             req(ar.get("materialization_workflow_run")==35882795135 and ar.get("materialization_commit")=="0d6c02f3f8dc41f716ba62ee7121f56371a8dc91","Tier3 Level1 round7 materialization evidence")
             req(ar.get("next_gate")=="tier3-build-level1-planning-validation","Tier3 Level1 round7 planning-validation gate")
         else:

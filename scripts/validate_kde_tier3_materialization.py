@@ -294,7 +294,7 @@ elif m.get("state") == "PASS":
     req(c.get("state") == "materialized", "PASS materialization contract lifecycle")
     req(t.get("discovery_policy", {}).get("phase") in {"build-campaign-planning", "build-level0", "build-level1-planning", "build-level1"}, "post-materialization phase")
     if active_c.get("round") == 7:
-        req(active_c.get("status") == "materialization-PASS", "round7 contract materialization PASS")
+        req(active_c.get("status") in {"materialization-PASS","materialization-PASS-attempt3-active"}, "round7 contract materialization PASS")
         req(active_m.get("status") == "PASS" and active_m.get("workflow_run") == 35882795135, "round7 materialization evidence PASS")
         req(active_m.get("commit") == "0d6c02f3f8dc41f716ba62ee7121f56371a8dc91", "round7 materialization commit")
         req(active_m.get("promoted_nodes") == ["kio","kxmlgui"], "round7 promoted materialization set")
@@ -305,11 +305,18 @@ elif m.get("state") == "PASS":
         kev=m["nodes"]["kio"].get("evidence",{}); xev=m["nodes"]["kxmlgui"].get("evidence",{})
         req(kev.get("adapted_control_sha256")=="582159e83e2c36e16be0da212d67a4a5eb725341b5a28fe4828bc515a9b5f505" and kev.get("adapted_rules_sha256")=="6db9a93621a73f87a6be3a38bfa914df065f9ab85962cc46738a1cb3a5817cab", "round7 KIO adapted-source hashes")
         req(xev.get("adapted_control_sha256")=="734bbf0fb49ba1691ec9994ea83cb7ccb11446c8a9e098aa9ae796726c417c3b" and xev.get("adapted_rules_sha256")=="914ecc0245b8680ca4869549d6030a974c1cde60904759a0c876fabd25a19fa6", "round7 KXMLGui adapted-source hashes")
-        req(t.get("discovery_policy",{}).get("package_builds") == "tier3-level1-source-PASS-pending-planning-validation", "round7 planning validation build gate")
-        req(active_t.get("status") == "materialization-PASS-pending-level1-planning-validation", "round7 canonical source PASS state")
-        req(active_t.get("execution_authorized") is False and active_t.get("level1_execution_authorized") is False, "round7 Level1 remains paused")
         req(active_t.get("materialization_workflow_run") == 35882795135 and active_t.get("materialization_commit") == "0d6c02f3f8dc41f716ba62ee7121f56371a8dc91", "round7 canonical materialization evidence")
-        req(active_t.get("next_gate") == "tier3-build-level1-planning-validation", "round7 canonical planning-validation gate")
+        if t.get("discovery_policy",{}).get("package_builds") == "tier3-level1-authorized":
+            req(active_c.get("status")=="materialization-PASS-attempt3-active" and active_c.get("next_gate")=="tier3-build-level1-attempt3","round7 contract Attempt3 handoff")
+            req(active_t.get("status")=="level1-active-pending-ci" and active_t.get("execution_authorized") is True and active_t.get("level1_execution_authorized") is True,"round7 Attempt3 active state")
+            req(active_t.get("current_attempt")==3 and active_t.get("activation_policy_workflow_run")==35884583361 and active_t.get("activation_level1_workflow_run")==35884584590,"round7 Attempt3 activation evidence")
+            req(active_t.get("next_gate")=="tier3-build-level1-attempt3","round7 Attempt3 gate")
+            req(active_m.get("next_gate")=="tier3-build-level1-attempt3" and m.get("evidence_summary",{}).get("next_gate")=="tier3-build-level1-attempt3","round7 materialization Attempt3 handoff")
+        else:
+            req(t.get("discovery_policy",{}).get("package_builds") == "tier3-level1-source-PASS-pending-planning-validation", "round7 planning validation build gate")
+            req(active_t.get("status") == "materialization-PASS-pending-level1-planning-validation", "round7 canonical source PASS state")
+            req(active_t.get("execution_authorized") is False and active_t.get("level1_execution_authorized") is False, "round7 Level1 remains paused")
+            req(active_t.get("next_gate") == "tier3-build-level1-planning-validation", "round7 canonical planning-validation gate")
     elif active_c.get("round") == 6:
         req(active_c.get("status") in {"provider-closure-pending-attempt2-activation-validation","provider-closure-PASS"}, "round6 contract provider-closure state")
         req(active_c.get("source_changed_nodes") == [] and set(active_c.get("provider_closure_only_nodes",[])) == {"kio","kxmlgui"}, "round6 has no source materialization")
