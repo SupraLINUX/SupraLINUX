@@ -114,7 +114,7 @@ for node_id in selected:
         "kwallet":"6.30.0-0supralinux4" if active.get("round",0)>=4 else "6.30.0-0supralinux3",
         "kdav":"6.30.0-0supralinux2",
         "krunner":"6.30.0-0supralinux2",
-        "kio":"6.30.0-0supralinux2" if active.get("round")==5 else "6.30.0-0supralinux1",
+        "kio":"6.30.0-0supralinux2" if active.get("round",0)>=5 else "6.30.0-0supralinux1",
     }
     expected_version=expected_versions.get(node_id,"6.30.0-0supralinux1")
     req(x.get("package_version_candidate")==expected_version,f"{node_id}: package version")

@@ -172,3 +172,8 @@ While round 5 is `materialization-pending-ci`, the next gate is `tier3-level1-ki
 The additional KArchive/KCodecs/KNotifications/KColorScheme/KCompletion/Sonnet inputs are package-provider closure, not new KDE dependency edges. KDE upstream still defines the Level 1 topology; the closure only makes exact retained SupraLINUX PASS binary-package relations satisfiable inside sbuild.
 
 No source decision, selected KDE feature, binary package contract or package revision changes in round 6.
+
+
+### KIO revision continuity after round 5
+
+KIO `6.30.0-0supralinux2` was established by round 5 source remediation and remains the canonical candidate in round 6 and later unless a new source/package change explicitly bumps it. Provider-closure-only remediation must never regress the candidate to `-0supralinux1`.
