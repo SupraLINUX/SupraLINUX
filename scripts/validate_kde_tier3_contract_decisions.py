@@ -232,7 +232,6 @@ if active:
         req(ar.get("level")=="build-level1" and ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation","level1-active-pending-ci"},"Tier3 round7 canonical Level1 state")
         req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==["kio","kxmlgui"] and ar.get("provider_closure_only_nodes")==[],"Tier3 round7 canonical source scope")
         req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux3","kxmlgui":"6.30.0-0supralinux2"},"Tier3 round7 canonical revisions")
-        req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 round7 canonical execution pause")
         req(ar.get("validation_workflow_run")==35829170695 and ar.get("validation_commit")=="897d3a864bc7ea164400c7d9de2e9c51cf6316ab","Tier3 round7 canonical Attempt2 evidence")
         req(ar.get("validation_result")=="0 workflow SUCCESS / 2 FAIL" and set(ar.get("remaining_failed_nodes",[]))=={"kio","kxmlgui"} and ar.get("canonical_promotions")==0,"Tier3 round7 canonical failure/no-promotion semantics")
         if canonical.get("package_builds")=="tier3-level1-authorized":
@@ -240,9 +239,11 @@ if active:
             req(ar.get("current_attempt")==3 and ar.get("activation_policy_workflow_run")==35884583361 and ar.get("activation_level1_workflow_run")==35884584590,"Tier3 round7 Attempt3 canonical validation")
             req(ar.get("activation_commit")=="a562a145ba212349d725fad3e98a9dcb9c6c2ae0" and ar.get("next_gate")=="tier3-build-level1-attempt3","Tier3 round7 Attempt3 canonical gate")
         elif canonical.get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
+            req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 round7 canonical execution pause")
             req(ar.get("materialization_workflow_run")==35882795135 and ar.get("materialization_commit")=="0d6c02f3f8dc41f716ba62ee7121f56371a8dc91","Tier3 round7 canonical source PASS evidence")
             req(ar.get("next_gate")=="tier3-build-level1-planning-validation","Tier3 round7 canonical planning-validation gate")
         else:
+            req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 round7 canonical execution pause")
             req(ar.get("next_gate")=="tier3-round7-level1-materialization","Tier3 round7 canonical next gate")
     elif active.get("round")==6:
         req(ar.get("level")=="build-level1","Tier3 round6 canonical Level1")
