@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **round 7 remediation pending CI — KIO 6.30.0-0supralinux3 + KXMLGui 6.30.0-0supralinux2** as of 2026-09-23.
+Status: **PASS — round 7 KIO + KXMLGui source materializations promoted; Attempt 3 planning validation pending** as of 2026-09-23.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -260,3 +260,14 @@ The previous KIO `-2` artifact `10735250819` and KXMLGui `-1` artifact `10703925
 ### Round 7 test-policy validator semantics
 
 The materializer's no-test-suppression guard now distinguishes a disabled test override from a direct CTest runner. A direct `ctest` invocation is permitted only when failures remain fatal and no test-selection/exclusion options are present. KIO's round-7 wrapper therefore executes the complete suite while supplying environment isolation; it does not convert failing tests to PASS or filter them out.
+
+
+## Round 7 promotion evidence
+
+Selective source materialization run `35882795135` completed **2/2 SUCCESS** from commit `0d6c02f3f8dc41f716ba62ee7121f56371a8dc91`. This is source-only evidence: `package_attempted=false` and no binary package becomes PASS.
+
+KIO `6.30.0-0supralinux3` is artifact `10760324592`, SHA-256 `b58b7a45f6df0c8f01e9bd9a37799c1470369124a7c1b48fecb82a5f7f86ae8d`. Its adapted control/rules hashes are `582159e83e2c36e16be0da212d67a4a5eb725341b5a28fe4828bc515a9b5f505` and `6db9a93621a73f87a6be3a38bfa914df065f9ab85962cc46738a1cb3a5817cab`.
+
+KXMLGui `6.30.0-0supralinux2` is artifact `10761208629`, SHA-256 `72cd10276558264646a9e38d5beab7b231434338597ef8d276030e790ff02214`. Its adapted control/rules hashes are `734bbf0fb49ba1691ec9994ea83cb7ccb11446c8a9e098aa9ae796726c417c3b` and `914ecc0245b8680ca4869549d6030a974c1cde60904759a0c876fabd25a19fa6`.
+
+All 20 Tier 3 source materializations are again PASS. Level 1 remains unauthorized until Repository Policy validates these refreshed pins; the next binary action is a separately authorized full Attempt 3.

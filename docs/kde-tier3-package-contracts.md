@@ -234,3 +234,10 @@ Two KIO upstream tests explicitly access `google.com`. The binary-build manifest
 No KDE DAG edge changes in round 7. Both revised source packages must rematerialize before Level 1 Attempt 3 can be authorized.
 
 Repository Policy validation for round 7 must also retain the earlier round-5 KIO upstream-alignment decisions and round-6 provider-closure contracts. The contract validator therefore treats those as cumulative invariants, while extending the Resolute Python build frontend/backend provider scope from KJobWidgets to KXMLGui.
+
+
+### Round 7 source materialization PASS
+
+Both contract deltas materialized successfully in run `35882795135` at commit `0d6c02f3f8dc41f716ba62ee7121f56371a8dc91`: KIO `6.30.0-0supralinux3` artifact `10760324592` and KXMLGui `6.30.0-0supralinux2` artifact `10761208629`.
+
+The promotion preserves the cumulative round-5 KIO upstream-alignment contract and round-6 provider closure. It changes no KDE DAG edge and grants no binary execution authority. The next gate is Level 1 planning validation for a separately authorized Attempt 3.

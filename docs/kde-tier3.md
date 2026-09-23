@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 round 7 source remediation: KIO + KXMLGui**
+Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 round 7 source PASS; Attempt 3 planning validation pending**
 
 Last reviewed: **2026-09-23**
 
@@ -444,3 +444,12 @@ Round 7 therefore rematerializes exactly two source packages:
 Level 0 remains closed at **11 canonical PASS + KNewStuff runtime-validation-required** and is not reopened by this Level 1 remediation. Level 1 binary execution is paused until both round-7 source materializations PASS and their evidence is promoted and policy-validated.
 
 Canonical package-state snapshot remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**; the two Attempt 2 FAILs remain explicit campaign evidence while their nodes are in remediation.
+
+
+## Current canonical state — round 7 source PASS
+
+Round-7 source materialization run `35882795135` completed **KIO + KXMLGui source PASS**. KIO is now `6.30.0-0supralinux3` pinned to artifact `10760324592`; KXMLGui is `6.30.0-0supralinux2` pinned to artifact `10761208629`.
+
+This is not a binary package promotion. Canonical Tier 3 remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED** while the two real Attempt 2 FAIL records remain historical campaign evidence under active remediation.
+
+Level 1 execution remains paused. Repository Policy must validate the refreshed materialization/campaign pins before a separate Attempt 3 activation can schedule KIO and KXMLGui.

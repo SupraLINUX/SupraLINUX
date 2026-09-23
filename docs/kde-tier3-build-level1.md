@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **Attempt 2 reviewed — 0 SUCCESS / 2 real FAIL; round 7 KIO + KXMLGui source remediation pending** as of 2026-09-23.
+Status: **Attempt 2 reviewed — round 7 source PASS; Attempt 3 planning validation pending** as of 2026-09-23.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -118,3 +118,10 @@ KIO's two upstream external HTTP tests intentionally access `google.com`. Becaus
 KXMLGui advances to `6.30.0-0supralinux2` and adds `python3-build` plus `python3-setuptools`; Python bindings remain enabled.
 
 Level 1 is paused. Only KIO and KXMLGui enter source materialization; a full Attempt 3 rerun is allowed only after both materializations PASS, their exact evidence is promoted, and Repository Policy validates the promotion.
+
+
+## Round 7 source PASS handoff
+
+Source materialization run `35882795135` passed for both remediated Level 1 nodes. KIO is now pinned to `6.30.0-0supralinux3` artifact `10760324592` / SHA-256 `b58b7a45f6df0c8f01e9bd9a37799c1470369124a7c1b48fecb82a5f7f86ae8d`; KXMLGui is pinned to `6.30.0-0supralinux2` artifact `10761208629` / SHA-256 `72cd10276558264646a9e38d5beab7b231434338597ef8d276030e790ff02214`.
+
+This transition does **not** authorize package builds. Attempt 2 remains the latest binary evidence and its two real FAIL records stay in the ledger. The Level 1 runner is paused with the refreshed source pins until Repository Policy validates the promotion; Attempt 3 requires a separate activation commit.
