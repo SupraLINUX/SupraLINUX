@@ -382,3 +382,12 @@ These are source-packaging changes, so KIO advances to **`6.30.0-0supralinux2`**
 Selective materialization run `35825070347` produced KIO `6.30.0-0supralinux2` PASS from commit `fbde9a53e357a138f4d74d7905230c7859e20444`. Artifact `10735250819` is pinned by SHA-256 `8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106`.
 
 The artifact proves the two false Build-Depends are absent, the Linux Wayland conditional is effective, and only `report_error_removing_dirs` was removed from the reference patch series. KIO is still canonically pending because this is source evidence only. Level 1 binary execution remains unauthorized until Repository Policy validates the promotion and the Level 1 plan.
+
+
+### Level 1 plan prepared
+
+The formal Level 1 gate contains KIO and KXMLGui and is linked by `manifests/kde-tier3-build-level1.json`. Its initial state is `planned-pending-activation` with `execution_authorized=false`.
+
+All Level 1 inputs are exact retained PASS artifacts. KIO consumes its round-5 source materialization plus KBookmarks, KIconThemes, KJobWidgets and KWallet; KDocTools remains a build/documentation provider and KDED a runtime-validation provider. KXMLGui consumes KConfigWidgets, KIconThemes and KTextWidgets plus its external PASS inputs.
+
+Canonical package state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED** until real Level 1 package evidence is produced and separately promoted.

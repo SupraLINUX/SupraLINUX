@@ -316,6 +316,12 @@ jobs:
       - name: Validate KDE Tier 3 build Level 0
         run: python3 scripts/validate_kde_tier3_build_level0.py
 
+      - name: Test KDE Tier 3 Level 1 planner and runner scope
+        run: python3 scripts/test-kde-tier3-build-level1-planner.py
+
+      - name: Validate KDE Tier 3 build Level 1
+        run: python3 scripts/validate_kde_tier3_build_level1.py
+
       - name: Validate KDE Attica 6.30 packaging preparation
         run: python3 scripts/validate_kde_attica_package.py
 

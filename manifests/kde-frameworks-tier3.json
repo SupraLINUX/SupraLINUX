@@ -1360,5 +1360,6 @@
     ],
     "workflow_run": 35818120201,
     "commit": "0599266fd5fc9869002629b3778d71f1e76bbdc1"
-  }
+  },
+  "build_level1_manifest": "manifests/kde-tier3-build-level1.json"
 }

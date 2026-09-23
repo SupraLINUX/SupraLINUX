@@ -122,3 +122,12 @@ Only KIO is rematerialized as `6.30.0-0supralinux2`. The **12 / 2 / 4 / 2** topo
 ### Refreshed KIO source pin
 
 The generated campaign now points KIO to `6.30.0-0supralinux2`, materialization run `35825070347`, artifact `10735250819`, SHA-256 `8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106`. Topology remains unchanged. Repository Policy must validate this refreshed source pin before the separate Level 1 plan can be activated.
+
+
+## Level 1 planning gate prepared
+
+Repository Policy run `35825677329` validated the promoted KIO round-5 source pin. The dedicated Level 1 definition now selects exactly KIO and KXMLGui, pins every external/Tier 3/support predecessor to an existing PASS artifact, and retains the KDE-upstream 12 / 2 / 4 / 2 topology unchanged.
+
+The Level 1 manifest starts with `execution_authorized=false`. KIO uses the promoted `6.30.0-0supralinux2` source artifact; KXMLGui remains `6.30.0-0supralinux1`. KDED participates only in KIO runtime closure validation and is not promoted into the Tier 3 build DAG as a false build edge.
+
+Repository Policy must validate this Level 1 plan before a separate activation commit can schedule either binary build.
