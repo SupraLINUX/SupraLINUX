@@ -3123,7 +3123,7 @@
   "active_remediation": {
     "round": 8,
     "level": "build-level1",
-    "status": "materialization-pending-ci",
+    "status": "materialization-PASS",
     "trigger": {
       "workflow_run": 35887558758,
       "commit": "7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94",
@@ -3169,7 +3169,23 @@
         "failure_substage": "ctest/qt-platform"
       }
     },
-    "next_gate": "tier3-round8-level1-materialization"
+    "next_gate": "tier3-build-level1-planning-validation",
+    "evidence": {
+      "workflow_run": 35894317888,
+      "commit": "65f5ba76a913e7acf619eb9fee86e878e2914415",
+      "artifacts": {
+        "kio": {
+          "job_id": 107294403189,
+          "artifact_id": 10766471076,
+          "artifact_sha256": "80959256047d70323b6ea311551bed573661cefb4b831f30750e27ed11076cf6"
+        },
+        "kxmlgui": {
+          "job_id": 107294403314,
+          "artifact_id": 10766665506,
+          "artifact_sha256": "100cf903ca1ef17cf2b37bab58ba0b7bf1e562d111cc04107247c3f35b134d58"
+        }
+      }
+    }
   },
   "remediation_history": [
     {

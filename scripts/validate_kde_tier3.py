@@ -216,7 +216,27 @@ elif policy.get("package_builds")=="tier3-level1-authorized":
 elif policy.get("package_builds") in {"tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"}:
     rem=tier3.get("active_remediation",{})
     req(policy.get("phase")=="build-level1-planning","Tier3 Level1 remediation planning phase")
-    if rem.get("round")==7:
+    if rem.get("round")==8:
+        req(rem.get("level")=="build-level1","Tier3 round8 Level1 identity")
+        req(set(rem.get("nodes",[]))=={"kio","kxmlgui"} and rem.get("source_materialization_nodes")==["kio","kxmlgui"],"Tier3 round8 source scope")
+        req(rem.get("provider_closure_only_nodes")==[],"Tier3 round8 closure-only set")
+        req(rem.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux4","kxmlgui":"6.30.0-0supralinux3"},"Tier3 round8 package revisions")
+        req(rem.get("execution_authorized") is False and rem.get("level1_execution_authorized") is False,"Tier3 round8 execution pause")
+        req(rem.get("trigger_workflow_run")==35887558758 and rem.get("trigger_commit")=="7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94","Tier3 round8 trigger evidence")
+        req(rem.get("validation_workflow_run")==35887558758 and rem.get("validation_result")=="0 workflow SUCCESS / 2 FAIL","Tier3 round8 Attempt3 evidence")
+        req(set(rem.get("remaining_failed_nodes",[]))=={"kio","kxmlgui"} and rem.get("canonical_promotions")==0,"Tier3 round8 failure/no-promotion semantics")
+        if policy.get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
+            req(rem.get("status")=="materialization-PASS-pending-level1-planning-validation","Tier3 round8 source PASS state")
+            req(rem.get("materialization_workflow_run")==35894317888 and rem.get("materialization_commit")=="65f5ba76a913e7acf619eb9fee86e878e2914415","Tier3 round8 source PASS evidence")
+            req(rem.get("next_gate")=="tier3-build-level1-planning-validation","Tier3 round8 planning-validation gate")
+            nodes={x.get("id"):x for x in tier3.get("nodes",[])}
+            req(nodes["kio"].get("planning",{}).get("materialization_evidence",{}).get("artifact_id")==10766471076,"KIO round8 refreshed materialization evidence")
+            req(nodes["kxmlgui"].get("planning",{}).get("materialization_evidence",{}).get("artifact_id")==10766665506,"KXMLGui round8 refreshed materialization evidence")
+        else:
+            req(policy.get("package_builds")=="tier3-level1-remediation-pending-materialization","Tier3 round8 materialization gate")
+            req(rem.get("status")=="materialization-pending-ci","Tier3 round8 pending materialization state")
+            req(rem.get("next_gate")=="tier3-round8-level1-materialization","Tier3 round8 next gate")
+    elif rem.get("round")==7:
         req(rem.get("level")=="build-level1","Tier3 round7 Level1 identity")
         req(set(rem.get("nodes",[]))=={"kio","kxmlgui"} and rem.get("source_materialization_nodes")==["kio","kxmlgui"],"Tier3 round7 source scope")
         req(rem.get("provider_closure_only_nodes")==[],"Tier3 round7 closure-only set")

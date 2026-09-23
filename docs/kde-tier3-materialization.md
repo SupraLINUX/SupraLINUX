@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **round 8 remediation pending CI — KIO 6.30.0-0supralinux4 + KXMLGui 6.30.0-0supralinux3** as of 2026-09-23.
+Status: **round 8 PASS — KIO 6.30.0-0supralinux4 + KXMLGui 6.30.0-0supralinux3 promoted as source inputs** as of 2026-09-23.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -287,3 +287,13 @@ Attempt 3 run `35887558758` establishes two narrow source-package test-environme
 - KXMLGui `6.30.0-0supralinux3`: retain the validated Python build providers and run the complete upstream `dh_auto_test` with `QT_QPA_PLATFORM=offscreen`.
 
 The prior source PASS artifacts remain immutable evidence: KIO `-3` artifact `10760324592` and KXMLGui `-2` artifact `10761208629`. Round 8 changes no KDE DAG edge and suppresses no upstream test. Materialization remains source-only and cannot promote a binary package to PASS.
+
+## Round 8 evidence
+
+Workflow `35894317888` materialized both queued nodes successfully.
+
+KIO evidence: job `107294403189`, artifact `10766471076`, SHA-256 `80959256047d70323b6ea311551bed573661cefb4b831f30750e27ed11076cf6`, source-tree SHA-256 `d88c3b4e7a8774cb2997cfa0c3d3bba73e97e8ef11bd073e64c49ead74fb229b`, materialized-tree SHA-256 `93d2d6e512b9e48048d1aa8469ecb176d619a2574e2edfb128e7434a8eff924c`.
+
+KXMLGui evidence: job `107294403314`, artifact `10766665506`, SHA-256 `100cf903ca1ef17cf2b37bab58ba0b7bf1e562d111cc04107247c3f35b134d58`, source-tree SHA-256 `bcdab8c76d72dc9fc885ee87806760f8541b3a023e7ca9857be51a1db8024a94`, materialized-tree SHA-256 `4dfbea635019b76d9dbd435b90fc60f93cbacf77226e9dbffa847c48c65159e0`.
+
+Both results are source-materialization PASS only: `package_attempted=false`, `package_state_effect=none`. The next gate is Level 1 planning validation.

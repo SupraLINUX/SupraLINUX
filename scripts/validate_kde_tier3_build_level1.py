@@ -81,14 +81,23 @@ elif m.get("state")=="remediation-pending-materialization":
         req(s.get("canonical_promotions")==0 and s.get("next_attempt")==3,"Level1 Attempt2 no promotion / Attempt3 handoff")
 
 elif m.get("state")=="remediation-materialized-pending-planning-validation":
-    req(m.get("execution_authorized") is False and m.get("current_attempt")==2 and m.get("next_attempt")==3,"Level1 round7 post-materialization pause")
-    req(m.get("next_gate")=="tier3-build-level1-planning-validation","Level1 Attempt3 planning-validation gate")
     rem=m.get("active_remediation",{})
-    req(rem.get("round")==2 and rem.get("global_round")==7 and set(rem.get("nodes",[]))=={"kio","kxmlgui"},"Level1 round7 promoted scope")
-    req(rem.get("status")=="materialization-PASS-pending-attempt3-planning-validation","Level1 round7 source PASS state")
-    req(rem.get("source_rematerialization_required") is False and rem.get("execution_authorized") is False,"Level1 round7 source handoff")
-    req(rem.get("materialization_workflow_run")==35882795135 and rem.get("materialization_commit")=="0d6c02f3f8dc41f716ba62ee7121f56371a8dc91","Level1 round7 materialization evidence")
-    req(rem.get("next_gate")=="tier3-build-level1-planning-validation","Level1 round7 planning-validation next gate")
+    if rem.get("global_round")==8:
+        req(m.get("execution_authorized") is False and m.get("current_attempt")==3 and m.get("next_attempt")==4,"Level1 round8 post-materialization pause")
+        req(m.get("next_gate")=="tier3-build-level1-planning-validation","Level1 Attempt4 planning-validation gate")
+        req(rem.get("round")==3 and set(rem.get("nodes",[]))=={"kio","kxmlgui"},"Level1 round8 promoted scope")
+        req(rem.get("status")=="materialization-PASS-pending-attempt4-planning-validation","Level1 round8 source PASS state")
+        req(rem.get("source_rematerialization_required") is False and rem.get("execution_authorized") is False,"Level1 round8 source handoff")
+        req(rem.get("materialization_workflow_run")==35894317888 and rem.get("materialization_commit")=="65f5ba76a913e7acf619eb9fee86e878e2914415","Level1 round8 materialization evidence")
+        req(rem.get("next_gate")=="tier3-build-level1-planning-validation","Level1 round8 planning-validation next gate")
+    else:
+        req(m.get("execution_authorized") is False and m.get("current_attempt")==2 and m.get("next_attempt")==3,"Level1 round7 post-materialization pause")
+        req(m.get("next_gate")=="tier3-build-level1-planning-validation","Level1 Attempt3 planning-validation gate")
+        req(rem.get("round")==2 and rem.get("global_round")==7 and set(rem.get("nodes",[]))=={"kio","kxmlgui"},"Level1 round7 promoted scope")
+        req(rem.get("status")=="materialization-PASS-pending-attempt3-planning-validation","Level1 round7 source PASS state")
+        req(rem.get("source_rematerialization_required") is False and rem.get("execution_authorized") is False,"Level1 round7 source handoff")
+        req(rem.get("materialization_workflow_run")==35882795135 and rem.get("materialization_commit")=="0d6c02f3f8dc41f716ba62ee7121f56371a8dc91","Level1 round7 materialization evidence")
+        req(rem.get("next_gate")=="tier3-build-level1-planning-validation","Level1 round7 planning-validation next gate")
 elif m.get("state")=="remediation-pending-activation":
     req(m.get("execution_authorized") is False and m.get("current_attempt")==1,"Level1 remediation pause after attempt1")
     rem=m.get("active_remediation",{})
@@ -118,10 +127,10 @@ if ar.get("round")==8:
     req(set(ar.get("nodes",[]))=={"kio","kxmlgui"},"canonical round8 scope")
     req(set(ar.get("source_materialization_nodes",[]))=={"kio","kxmlgui"} and ar.get("provider_closure_only_nodes")==[],"canonical round8 source classes")
     req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux4","kxmlgui":"6.30.0-0supralinux3"},"canonical round8 candidate revisions")
-    req(policy.get("phase")=="build-level1-planning" and policy.get("package_builds")=="tier3-level1-remediation-pending-materialization","canonical round8 materialization gate")
-    req(ar.get("status")=="materialization-pending-ci" and ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"canonical round8 execution pause")
+    req(policy.get("phase")=="build-level1-planning" and policy.get("package_builds") in {"tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"},"canonical round8 materialization/planning gate")
+    req(ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation"} and ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"canonical round8 execution pause")
     req(ar.get("validation_workflow_run")==35887558758 and ar.get("validation_commit")=="7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94","canonical round8 Attempt3 evidence")
-    req(ar.get("current_attempt")==3 and ar.get("next_attempt")==4 and ar.get("next_gate")=="tier3-round8-level1-materialization","canonical round8 next gate")
+    req(ar.get("current_attempt")==3 and ar.get("next_attempt")==4,"canonical round8 attempt markers")
 elif ar.get("round")==7:
     req(set(ar.get("nodes",[]))=={"kio","kxmlgui"},"canonical round7 scope")
     req(set(ar.get("source_materialization_nodes",[]))=={"kio","kxmlgui"} and ar.get("provider_closure_only_nodes")==[],"canonical round7 source classes")
@@ -135,15 +144,23 @@ else:
 if policy.get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
     req(ar.get("status")=="materialization-PASS-pending-level1-planning-validation","canonical planning-validation state")
     req(ar.get("level1_execution_authorized") is False and ar.get("next_gate")=="tier3-build-level1-planning-validation","canonical Level1 execution pause")
-    if ar.get("round")==7:
+    if ar.get("round")==8:
+        req(ar.get("materialization_workflow_run")==35894317888 and ar.get("materialization_commit")=="65f5ba76a913e7acf619eb9fee86e878e2914415","canonical round8 source PASS evidence")
+    elif ar.get("round")==7:
         req(ar.get("materialization_workflow_run")==35882795135 and ar.get("materialization_commit")=="0d6c02f3f8dc41f716ba62ee7121f56371a8dc91","canonical round7 source PASS evidence")
 elif policy.get("package_builds")=="tier3-level1-remediation-pending-materialization":
-    req(policy.get("phase")=="build-level1-planning","canonical Level1 round7 materialization phase")
-    req(ar.get("round")==7 and ar.get("status")=="materialization-pending-ci","canonical Level1 round7 remediation state")
-    req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"canonical Level1 round7 execution pause")
-    req(ar.get("validation_workflow_run")==35829170695 and ar.get("validation_commit")=="897d3a864bc7ea164400c7d9de2e9c51cf6316ab","canonical Attempt2 validation evidence")
-    req(set(ar.get("remaining_failed_nodes",[]))=={"kio","kxmlgui"} and ar.get("canonical_promotions")==0,"canonical Attempt2 failure/no-promotion semantics")
-    req(ar.get("next_gate")=="tier3-round7-level1-materialization","canonical round7 materialization gate")
+    req(policy.get("phase")=="build-level1-planning","canonical Level1 materialization phase")
+    req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"canonical Level1 materialization execution pause")
+    if ar.get("round")==8:
+        req(ar.get("status")=="materialization-pending-ci","canonical Level1 round8 remediation state")
+        req(ar.get("validation_workflow_run")==35887558758 and ar.get("validation_commit")=="7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94","canonical Attempt3 validation evidence")
+        req(set(ar.get("remaining_failed_nodes",[]))=={"kio","kxmlgui"} and ar.get("canonical_promotions")==0,"canonical Attempt3 failure/no-promotion semantics")
+        req(ar.get("next_gate")=="tier3-round8-level1-materialization","canonical round8 materialization gate")
+    else:
+        req(ar.get("round")==7 and ar.get("status")=="materialization-pending-ci","canonical Level1 round7 remediation state")
+        req(ar.get("validation_workflow_run")==35829170695 and ar.get("validation_commit")=="897d3a864bc7ea164400c7d9de2e9c51cf6316ab","canonical Attempt2 validation evidence")
+        req(set(ar.get("remaining_failed_nodes",[]))=={"kio","kxmlgui"} and ar.get("canonical_promotions")==0,"canonical Attempt2 failure/no-promotion semantics")
+        req(ar.get("next_gate")=="tier3-round7-level1-materialization","canonical round7 materialization gate")
 elif policy.get("package_builds")=="tier3-level1-remediation-pending-provider-closure":
     req(policy.get("phase")=="build-level1-planning","canonical Level1 remediation planning phase")
     req(ar.get("status")=="provider-closure-pending-attempt2-activation-validation","canonical round6 remediation state")
@@ -207,17 +224,18 @@ for node,cfg in ret.items():
         req(False,f"{node}: unknown predecessor provenance")
     req(cfg.get("dev_package") in cfg.get("expected_binary_packages",[]),f"{node}: dev package identity")
 
-round7_source_promoted=m.get("state")=="remediation-materialized-pending-planning-validation" or m.get("current_attempt")==3
+round8_source_promoted=m.get("state")=="remediation-materialized-pending-planning-validation" and m.get("active_remediation",{}).get("global_round")==8
+round7_source_promoted=round8_source_promoted or m.get("current_attempt")==3
 expected={
  "kio":{
-   "version":"6.30.0-0supralinux3" if round7_source_promoted else "6.30.0-0supralinux2",
-   "materialization":(35882795135,10760324592,"b58b7a45f6df0c8f01e9bd9a37799c1470369124a7c1b48fecb82a5f7f86ae8d") if round7_source_promoted else (35825070347,10735250819,"8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106"),
+   "version":"6.30.0-0supralinux4" if round8_source_promoted else ("6.30.0-0supralinux3" if round7_source_promoted else "6.30.0-0supralinux2"),
+   "materialization":(35894317888,10766471076,"80959256047d70323b6ea311551bed573661cefb4b831f30750e27ed11076cf6") if round8_source_promoted else ((35882795135,10760324592,"b58b7a45f6df0c8f01e9bd9a37799c1470369124a7c1b48fecb82a5f7f86ae8d") if round7_source_promoted else (35825070347,10735250819,"8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106")),
    "tier3":["kbookmarks","kiconthemes","kjobwidgets","kwallet"],
    "support_build":["kdoctools"],"support_runtime":["kded"],"provider_closure":["kconfigwidgets","karchive","kcodecs","knotifications","breeze-icons"],"python":None,
  },
  "kxmlgui":{
-   "version":"6.30.0-0supralinux2" if round7_source_promoted else "6.30.0-0supralinux1",
-   "materialization":(35882795135,10761208629,"72cd10276558264646a9e38d5beab7b231434338597ef8d276030e790ff02214") if round7_source_promoted else (35746667704,10703925009,"9ad2056d1dbc9ab626521cd1f4bc67c13f5e36b18d93fc67da8ee6b7da3ba2fc"),
+   "version":"6.30.0-0supralinux3" if round8_source_promoted else ("6.30.0-0supralinux2" if round7_source_promoted else "6.30.0-0supralinux1"),
+   "materialization":(35894317888,10766665506,"100cf903ca1ef17cf2b37bab58ba0b7bf1e562d111cc04107247c3f35b134d58") if round8_source_promoted else ((35882795135,10761208629,"72cd10276558264646a9e38d5beab7b231434338597ef8d276030e790ff02214") if round7_source_promoted else (35746667704,10703925009,"9ad2056d1dbc9ab626521cd1f4bc67c13f5e36b18d93fc67da8ee6b7da3ba2fc")),
    "tier3":["kconfigwidgets","kiconthemes","ktextwidgets"],
    "support_build":[],"support_runtime":[],"provider_closure":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet","breeze-icons"],"python":"KXmlGui",
  },

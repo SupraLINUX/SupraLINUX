@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **round 8 source remediation pending — KIO -4 + KXMLGui -3**
+Status: **round 8 materialization PASS; Level 1 planning validation pending**
 
 Reviewed: **2026-09-23**
 
@@ -256,3 +256,9 @@ For KIO, the round-7 environment is mostly validated by the improvement from 56/
 For KXMLGui, the Python frontend/backend requirement is now proven satisfied. The remaining failure class is Qt platform selection, so the contract adds exactly one test wrapper: full `dh_auto_test` under `QT_QPA_PLATFORM=offscreen`. It does not inherit KIO's D-Bus, network, HOME or direct CTest wrapper.
 
 The candidate revisions are KIO `6.30.0-0supralinux4` and KXMLGui `6.30.0-0supralinux3`. No KDE dependency edge changes.
+
+## Round 8 materialization proof
+
+The round-8 contract deltas materialized without changing KDE dependency edges. Workflow `35894317888` produced KIO artifact `10766471076` and KXMLGui artifact `10766665506`, both PASS as source-only materializations.
+
+KIO's adapted `debian/rules` SHA-256 is `e8dae488976ef4d4748f044f52b3aebcf687ae3a52733588917fa8c397920f3e`; KXMLGui's is `597ef52317fee17c1aa1dca92b0c547ac1fa543f4a56b8b3b1d6075e07d5c14f`. These exact source artifacts are the inputs to the next binary campaign after planning validation. No binary PASS and no stable promotion is implied.

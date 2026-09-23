@@ -470,3 +470,9 @@ Level 1 Attempt 3 workflow `35887558758` completed with **0 SUCCESS / 2 real FAI
 Round 8 is a selective source remediation for KIO `6.30.0-0supralinux4` and KXMLGui `6.30.0-0supralinux3`. Binary execution is paused while those sources rematerialize. No Level 2 work is authorized and no package is promoted by this transition.
 
 Canonical package state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**. Attempt 3 FAIL records remain immutable campaign evidence while the affected nodes are under remediation.
+
+## Round 8 source materialization PASS
+
+Round 8 source materialization workflow `35894317888` completed **2/2 PASS** at commit `65f5ba76a913e7acf619eb9fee86e878e2914415`. KIO `6.30.0-0supralinux4` and KXMLGui `6.30.0-0supralinux3` are now the retained source inputs for the next Level 1 attempt. This is source-only evidence and does not change the canonical package snapshot.
+
+Level 1 remains paused. The next gate is `tier3-build-level1-planning-validation`; Attempt 4 is not authorized until Repository Policy and the Level 1 planner validate the promoted round-8 state.

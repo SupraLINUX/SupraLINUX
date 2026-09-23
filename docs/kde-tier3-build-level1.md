@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **Attempt 3 reviewed — 0 SUCCESS / 2 real FAIL; round 8 KIO + KXMLGui source remediation pending** as of 2026-09-23.
+Status: **round 8 source materialization PASS; Attempt 4 paused pending planning validation** as of 2026-09-23.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -144,3 +144,12 @@ Workflow `35887558758` at commit `7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94` comp
 **KXMLGui** job `107272258358` / artifact `10763747234` / SHA-256 `c4626450ad4149723818884373dfc56603e411b62eafa1d4968ac979c0fa6516` proves the Python build-provider remediation is solved. The complete upstream test invocation then produced **1 PASS / 6 FAIL**, all six aborting because Qt attempted xcb without a display. Round 8 keeps the normal upstream `dh_auto_test` path and adds only `QT_QPA_PLATFORM=offscreen`.
 
 KIO advances to `6.30.0-0supralinux4`; KXMLGui advances to `6.30.0-0supralinux3`. Level 1 execution is paused until both source rematerializations PASS and their exact evidence is policy-validated. Level 2 remains unauthorized. Canonical package state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.
+
+## Round 8 materialization handoff
+
+Source materialization workflow `35894317888` completed successfully for both Level 1 nodes.
+
+- KIO `6.30.0-0supralinux4`: job `107294403189`, artifact `10766471076`, artifact SHA-256 `80959256047d70323b6ea311551bed573661cefb4b831f30750e27ed11076cf6`, adapted rules SHA-256 `e8dae488976ef4d4748f044f52b3aebcf687ae3a52733588917fa8c397920f3e`.
+- KXMLGui `6.30.0-0supralinux3`: job `107294403314`, artifact `10766665506`, artifact SHA-256 `100cf903ca1ef17cf2b37bab58ba0b7bf1e562d111cc04107247c3f35b134d58`, adapted rules SHA-256 `597ef52317fee17c1aa1dca92b0c547ac1fa543f4a56b8b3b1d6075e07d5c14f`.
+
+The prior push exposed two historical lifecycle-validator assumptions before any binary rebuild occurred: `validate_kde_tier3.py` fell back to the old round-5 branch and `validate_kde_tier3_build_level1.py` still had a second round-7-only pending-materialization branch. They are updated with the round-8 handoff. Attempt 4 remains unauthorized until planning validation passes.
