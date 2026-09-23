@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package-contract decisions
 
-Status: **PASS baseline — Level 0 remediation round 2 pending materialization**
+Status: **PASS — remediation round 2 materialized and promoted; Level 0 attempt 3 pending activation**
 
 Reviewed: **2026-09-22**
 
@@ -74,3 +74,10 @@ Attempt 2, run `35770505868`, narrowed the remaining failures to KIconThemes, KJ
 - KWallet regains KDocTools only as a **documentation/payload provider**. KDE upstream still treats KDocTools as optional. The already-PASS SupraLINUX KDocTools artifact is injected so the Debian-compatible `kwallet6` payload can include `kwallet-query.1`; no Tier 3 edge is created.
 
 KDAV and KRunner require no further source change: their round-1 remediations passed attempt 2.
+
+
+## Round 2 materialization result
+
+The three revised source contracts were materialized successfully in run `35806738003` at `6.30.0-0supralinux3`. This proves the source-package transformations and provider adaptations were materializable on Resolute.
+
+It does not prove binary build success. KIconThemes, KJobWidgets and KWallet must still pass the full Level 0 attempt 3. Until that run exists, canonical package state remains pending.

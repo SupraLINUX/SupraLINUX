@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 0
 
-Status: **attempt 2 complete — remediation round 2 selective materialization pending** as of 2026-09-22.
+Status: **attempt 2 complete — round-2 materialization PASS; attempt 3 activation pending validation** as of 2026-09-22.
 
 Level 0 is the first real binary-build campaign for the 20 canonical Tier 3 Frameworks. It contains **12 independent nodes**:
 
@@ -127,3 +127,12 @@ Three real package FAILs remain:
 These three packages advance to `6.30.0-0supralinux3`. Level 0 is paused with `execution_authorized=false` while only those three source packages are rematerialized. A successful round-2 materialization will be promoted and validated before a complete **attempt 3** reruns all 12 Level 0 nodes.
 
 The canonical package snapshot remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. Historical FAIL evidence is retained in the attempt ledger.
+
+
+## Round 2 materialization promoted
+
+Run `35806738003` produced PASS source artifacts for the three remaining remediation nodes at `6.30.0-0supralinux3`. Their exact artifact IDs and digests are now pinned in the materialization manifest, generated build campaign and Level 0 manifest.
+
+The state is deliberately `remediation-materialized-pending-activation` with `execution_authorized=false`. This commit does **not** start attempt 3. Repository Policy must first validate that the refreshed pins and lifecycle are internally consistent.
+
+After that gate passes, a separate activation commit will start a full 12-node Level 0 attempt 3, using the three `-0supralinux3` nodes plus revalidation of the other nine nodes.

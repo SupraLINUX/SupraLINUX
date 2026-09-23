@@ -2838,7 +2838,7 @@
   },
   "active_remediation": {
     "round": 2,
-    "status": "materialization-pending-ci",
+    "status": "materialization-PASS",
     "trigger": {
       "workflow_run": 35770505868,
       "commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
@@ -2855,6 +2855,35 @@
       "package_revision_bump_required_for_packaging_changes": true,
       "rematerialize_only_changed_nodes": true,
       "rerun_full_level0_after_remediation": true
-    }
+    },
+    "evidence": {
+      "workflow_run": 35806738003,
+      "commit": "d6aa9a9550dc3c870a9f1beb00fe216d8c20c3d6",
+      "promoted_nodes": [
+        "kiconthemes",
+        "kjobwidgets",
+        "kwallet"
+      ],
+      "artifacts": {
+        "kiconthemes": {
+          "job_id": 107009274349,
+          "artifact_id": 10728445324,
+          "artifact_sha256": "f03028a64343b09d02327376fdec0be9e8c06ad9e75d59c86e1195a1350a49d4"
+        },
+        "kjobwidgets": {
+          "job_id": 107009274269,
+          "artifact_id": 10728630058,
+          "artifact_sha256": "6e5e293abd09904380a61980d69a77bcf9ac91189d16a429e5270f5c4060ddc5"
+        },
+        "kwallet": {
+          "job_id": 107009274317,
+          "artifact_id": 10727054712,
+          "artifact_sha256": "46ad7064b20ffbfb5b8b5d2242378a8e2ab082452edf0985dd9d1f6fb9074deb"
+        }
+      },
+      "package_attempted": false,
+      "package_state_effect": "none"
+    },
+    "next_gate": "tier3-build-level0-attempt3-activation"
   }
 }

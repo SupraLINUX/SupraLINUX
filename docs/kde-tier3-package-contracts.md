@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **contracts retained — remediation round 2 materialization pending for 3 nodes**
+Status: **contracts retained — remediation round 2 materialization PASS; attempt 3 pending activation**
 
 Reviewed: **2026-09-22**
 
@@ -112,3 +112,10 @@ Attempt 2 evidence changes only three candidate revisions:
 - KWallet → `6.30.0-0supralinux3`, restoring KDocTools as an explicit support provider for the selected manpage payload.
 
 The five-node round-1 contract/evidence remains retained as history. KDAV and KRunner stay on their proven `-0supralinux2` revisions.
+
+
+## Round 2 contract materialization evidence
+
+Run `35806738003` materialized the three `6.30.0-0supralinux3` contracts successfully. The exact source artifacts are now canonical pins for the next Level 0 run.
+
+This promotion proves contract materialization only. Binary package PASS still requires the complete Level 0 attempt 3; no package state is promoted by this step.

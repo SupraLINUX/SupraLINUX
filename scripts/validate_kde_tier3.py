@@ -102,7 +102,7 @@ if policy.get("package_builds")=="tier3-level0-remediation-pending":
         req(rem.get("trigger_workflow_run")==35770505868,"Tier3 round2 remediation trigger")
         req(set(rem.get("nodes",[]))=={"kiconthemes","kjobwidgets","kwallet"},"Tier3 round2 remediation nodes")
         req(rem.get("candidate_package_version")=="6.30.0-0supralinux3","Tier3 round2 remediation package revision")
-        req(rem.get("status")=="materialization-pending-ci","Tier3 round2 remediation state")
+        req(rem.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level0-attempt3-activation"},"Tier3 round2 remediation state")
     else:
         req(rem.get("trigger_workflow_run")==35755924197,"Tier3 round1 remediation trigger")
         req(set(rem.get("nodes",[]))=={"kiconthemes","kdav","kwallet","krunner","kjobwidgets"},"Tier3 round1 remediation nodes")

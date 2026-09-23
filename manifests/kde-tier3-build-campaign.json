@@ -522,7 +522,7 @@
       "level": 0,
       "state": "planned",
       "source_package": "kf6-kiconthemes",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "expected_binary_packages": [
         "libkf6iconthemes-bin",
         "libkf6iconthemes-data",
@@ -533,10 +533,10 @@
         "qml6-module-org-kde-iconthemes"
       ],
       "materialization": {
-        "workflow_run": 35759443440,
-        "job_id": 106853774578,
-        "artifact_id": 10709706833,
-        "artifact_sha256": "9d9ceadb8ccc7cfde4bc674f8f64b64a66e91f2971a14c92ce97223012487eb8"
+        "workflow_run": 35806738003,
+        "job_id": 107009274349,
+        "artifact_id": 10728445324,
+        "artifact_sha256": "f03028a64343b09d02327376fdec0be9e8c06ad9e75d59c86e1195a1350a49d4"
       },
       "blocking_predecessors": [],
       "edge_classes": {
@@ -618,7 +618,7 @@
       "level": 0,
       "state": "planned",
       "source_package": "kf6-kjobwidgets",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "expected_binary_packages": [
         "libkf6jobwidgets-data",
         "libkf6jobwidgets-dev",
@@ -627,10 +627,10 @@
         "python3-kf6jobwidgets"
       ],
       "materialization": {
-        "workflow_run": 35759443440,
-        "job_id": 106853774765,
-        "artifact_id": 10710136148,
-        "artifact_sha256": "5feaea71e99bb9ebe2be812deb9101cee440d6d065ab98354b47ee36114f3d5a"
+        "workflow_run": 35806738003,
+        "job_id": 107009274269,
+        "artifact_id": 10728630058,
+        "artifact_sha256": "6e5e293abd09904380a61980d69a77bcf9ac91189d16a429e5270f5c4060ddc5"
       },
       "blocking_predecessors": [],
       "edge_classes": {
@@ -984,7 +984,7 @@
       "level": 0,
       "state": "planned",
       "source_package": "kf6-kwallet",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "expected_binary_packages": [
         "kwallet6",
         "libkf6wallet-data",
@@ -994,10 +994,10 @@
         "libkf6walletbackend6"
       ],
       "materialization": {
-        "workflow_run": 35759443440,
-        "job_id": 106853774686,
-        "artifact_id": 10709377109,
-        "artifact_sha256": "be3c7469e1edb7e17b265a80321a392607c65541d72f0d580cfcfd7b99fa27c3"
+        "workflow_run": 35806738003,
+        "job_id": 107009274317,
+        "artifact_id": 10727054712,
+        "artifact_sha256": "46ad7064b20ffbfb5b8b5d2242378a8e2ab082452edf0985dd9d1f6fb9074deb"
       },
       "blocking_predecessors": [],
       "edge_classes": {

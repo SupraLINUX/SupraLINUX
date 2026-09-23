@@ -51,7 +51,7 @@ req(pb.get("provider_package")=="python3-build" and pb.get("applies_to")==["kjob
 active=c.get("active_remediation",{})
 active_nodes=set(active.get("trigger",{}).get("failed_nodes",[]))
 if active:
-    req(active.get("round")==2 and active.get("status")=="materialization-pending-ci","Tier3 active remediation round/state")
+    req(active.get("round")==2 and active.get("status") in {"materialization-pending-ci","materialization-PASS"},"Tier3 active remediation round/state")
     req(active_nodes=={"kiconthemes","kjobwidgets","kwallet"},"Tier3 round2 remediation node set")
     req(active.get("trigger",{}).get("workflow_run")==35770505868,"Tier3 round2 trigger run")
     req(active.get("candidate_package_version")=="6.30.0-0supralinux3","Tier3 round2 package revision")

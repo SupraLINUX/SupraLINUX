@@ -160,7 +160,24 @@ for node_id in round2:
     e=a["nodes"][node_id][-1]
     req(isinstance(e.get("cause"),str) and isinstance(e.get("remediation"),str),f"{node_id}: attempt2 root cause/remediation recorded")
 
-if m.get("state")=="remediation-pending-materialization":
+if m.get("state")=="remediation-materialized-pending-activation":
+    req(m.get("execution_authorized") is False,"Level0 remains paused before attempt3 activation")
+    req(mat.get("state")=="PASS","round2 materialization promoted PASS")
+    rem=m.get("active_remediation",{})
+    req(rem.get("round")==2 and rem.get("status")=="materialization-PASS-pending-activation","Level0 round2 promotion state")
+    req(rem.get("materialization_workflow_run")==35806738003,"Level0 round2 materialization run")
+    req(rem.get("materialization_commit")=="d6aa9a9550dc3c870a9f1beb00fe216d8c20c3d6","Level0 round2 materialization commit")
+    req(rem.get("full_level0_rerun_required") is True,"attempt3 full rerun policy")
+    req(all(m["nodes"][n].get("state")=="remediation-pending-build" for n in round2),"round2 nodes ready for attempt3")
+    req(all(m["nodes"][n].get("state")=="prepared-pending-revalidation" for n in expected if n not in round2),"other Level0 nodes await attempt3 revalidation")
+    for n in round2:
+        node=m["nodes"][n]
+        req(node.get("package_version")=="6.30.0-0supralinux3",f"{n}: promoted round2 revision")
+        req(node.get("materialization",{}).get("workflow_run")==35806738003,f"{n}: promoted round2 materialization")
+        req(node.get("materialization")==p["nodes"][n].get("materialization"),f"{n}: campaign pin refreshed")
+    req(m["nodes"]["kwallet"].get("support_input_ids")==["kdoctools"],"KWallet KDocTools support retained for attempt3")
+
+elif m.get("state")=="remediation-pending-materialization":
     req(m.get("execution_authorized") is False,"Level0 execution paused during round2 source remediation")
     req(mat.get("state")=="remediation-pending-ci","Level0 round2 requires selective materialization")
     rem=m.get("active_remediation",{})

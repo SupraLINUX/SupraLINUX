@@ -5,7 +5,7 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level0",
   "frameworks_series": "6.30.0",
-  "state": "remediation-pending-materialization",
+  "state": "remediation-materialized-pending-activation",
   "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED",
@@ -630,9 +630,9 @@
       "current_attempt": 2
     },
     "kiconthemes": {
-      "state": "remediation-pending-materialization",
+      "state": "remediation-pending-build",
       "source_package": "kf6-kiconthemes",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "expected_binary_packages": [
         "libkf6iconthemes-bin",
         "libkf6iconthemes-data",
@@ -643,10 +643,10 @@
         "qml6-module-org-kde-iconthemes"
       ],
       "materialization": {
-        "workflow_run": 35759443440,
-        "job_id": 106853774578,
-        "artifact_id": 10709706833,
-        "artifact_sha256": "9d9ceadb8ccc7cfde4bc674f8f64b64a66e91f2971a14c92ce97223012487eb8"
+        "workflow_run": 35806738003,
+        "job_id": 107009274349,
+        "artifact_id": 10728445324,
+        "artifact_sha256": "f03028a64343b09d02327376fdec0be9e8c06ad9e75d59c86e1195a1350a49d4"
       },
       "direct_build_predecessors": [
         "karchive",
@@ -698,18 +698,17 @@
         "reason": "libkf6guiaddons-dev 6.30 from the retained package closure requires libkf6coreaddons-dev; package-provider closure must be complete without inventing a KDE source edge."
       },
       "previous_materialization": {
-        "workflow_run": 35746667704,
-        "job_id": 106810107884,
-        "artifact_id": 10703820086,
-        "artifact_sha256": "76c32c49e51b10b8f268c67ae74f710d36668e6bea480b44b6c6dc74850ca20c"
+        "workflow_run": 35759443440,
+        "job_id": 106853774578,
+        "artifact_id": 10709706833,
+        "artifact_sha256": "9d9ceadb8ccc7cfde4bc674f8f64b64a66e91f2971a14c92ce97223012487eb8"
       },
-      "current_attempt": 2,
-      "candidate_package_version": "6.30.0-0supralinux3"
+      "current_attempt": 2
     },
     "kjobwidgets": {
-      "state": "remediation-pending-materialization",
+      "state": "remediation-pending-build",
       "source_package": "kf6-kjobwidgets",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "expected_binary_packages": [
         "libkf6jobwidgets-data",
         "libkf6jobwidgets-dev",
@@ -718,10 +717,10 @@
         "python3-kf6jobwidgets"
       ],
       "materialization": {
-        "workflow_run": 35759443440,
-        "job_id": 106853774765,
-        "artifact_id": 10710136148,
-        "artifact_sha256": "5feaea71e99bb9ebe2be812deb9101cee440d6d065ab98354b47ee36114f3d5a"
+        "workflow_run": 35806738003,
+        "job_id": 107009274269,
+        "artifact_id": 10728630058,
+        "artifact_sha256": "6e5e293abd09904380a61980d69a77bcf9ac91189d16a429e5270f5c4060ddc5"
       },
       "direct_build_predecessors": [
         "kcoreaddons",
@@ -763,13 +762,12 @@
       },
       "previous_package_version": "6.30.0-0supralinux2",
       "previous_materialization": {
-        "workflow_run": 35746667704,
-        "job_id": 106810107995,
-        "artifact_id": 10702499485,
-        "artifact_sha256": "4ff2537cab7257d72aaa3de0ad78ea8d9425bd3367614aa07ec2b22703a9bd2c"
+        "workflow_run": 35759443440,
+        "job_id": 106853774765,
+        "artifact_id": 10710136148,
+        "artifact_sha256": "5feaea71e99bb9ebe2be812deb9101cee440d6d065ab98354b47ee36114f3d5a"
       },
-      "current_attempt": 2,
-      "candidate_package_version": "6.30.0-0supralinux3"
+      "current_attempt": 2
     },
     "knewstuff": {
       "state": "prepared-pending-revalidation",
@@ -1102,9 +1100,9 @@
       "current_attempt": 2
     },
     "kwallet": {
-      "state": "remediation-pending-materialization",
+      "state": "remediation-pending-build",
       "source_package": "kf6-kwallet",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "expected_binary_packages": [
         "kwallet6",
         "libkf6wallet-data",
@@ -1114,10 +1112,10 @@
         "libkf6walletbackend6"
       ],
       "materialization": {
-        "workflow_run": 35759443440,
-        "job_id": 106853774686,
-        "artifact_id": 10709377109,
-        "artifact_sha256": "be3c7469e1edb7e17b265a80321a392607c65541d72f0d580cfcfd7b99fa27c3"
+        "workflow_run": 35806738003,
+        "job_id": 107009274317,
+        "artifact_id": 10727054712,
+        "artifact_sha256": "46ad7064b20ffbfb5b8b5d2242378a8e2ab082452edf0985dd9d1f6fb9074deb"
       },
       "direct_build_predecessors": [
         "kconfig",
@@ -1176,13 +1174,12 @@
       },
       "previous_package_version": "6.30.0-0supralinux2",
       "previous_materialization": {
-        "workflow_run": 35746667704,
-        "job_id": 106810108082,
-        "artifact_id": 10702319999,
-        "artifact_sha256": "eadcbbc8edfac7509e7930b68fcea78218840557f5b93ab379b74d223304960f"
+        "workflow_run": 35759443440,
+        "job_id": 106853774686,
+        "artifact_id": 10709377109,
+        "artifact_sha256": "be3c7469e1edb7e17b265a80321a392607c65541d72f0d580cfcfd7b99fa27c3"
       },
       "current_attempt": 2,
-      "candidate_package_version": "6.30.0-0supralinux3",
       "support_provider_role": {
         "kdoctools": "optional-upstream-documentation-provider-required-by-selected-manpage-payload"
       }
@@ -1317,7 +1314,7 @@
   },
   "active_remediation": {
     "round": 2,
-    "status": "source-materialization-pending-ci",
+    "status": "materialization-PASS-pending-activation",
     "materialization_manifest": "manifests/kde-tier3-materialization.json",
     "queue": [
       "kiconthemes",
@@ -1327,6 +1324,25 @@
     "candidate_package_version": "6.30.0-0supralinux3",
     "full_level0_rerun_required": true,
     "trigger_workflow_run": 35770505868,
-    "trigger_commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e"
+    "trigger_commit": "b381031bd9bbd7ea5b1d9a1ed3739766588be78e",
+    "materialization_workflow_run": 35806738003,
+    "materialization_commit": "d6aa9a9550dc3c870a9f1beb00fe216d8c20c3d6",
+    "materialization_artifacts": {
+      "kiconthemes": {
+        "job_id": 107009274349,
+        "artifact_id": 10728445324,
+        "artifact_sha256": "f03028a64343b09d02327376fdec0be9e8c06ad9e75d59c86e1195a1350a49d4"
+      },
+      "kjobwidgets": {
+        "job_id": 107009274269,
+        "artifact_id": 10728630058,
+        "artifact_sha256": "6e5e293abd09904380a61980d69a77bcf9ac91189d16a429e5270f5c4060ddc5"
+      },
+      "kwallet": {
+        "job_id": 107009274317,
+        "artifact_id": 10727054712,
+        "artifact_sha256": "46ad7064b20ffbfb5b8b5d2242378a8e2ab082452edf0985dd9d1f6fb9074deb"
+      }
+    }
   }
 }

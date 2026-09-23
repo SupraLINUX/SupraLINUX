@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **round-2 selective remediation pending CI for 3 nodes** as of 2026-09-22.
+Status: **PASS — round-2 selective remediation promoted; Level 0 attempt 3 activation pending validation** as of 2026-09-22.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -116,3 +116,18 @@ Only the following source packages are rematerialized:
 - KWallet `6.30.0-0supralinux3`: provide `libkf6doctools-dev (>= 6.30.0~)` from the PASS SupraLINUX KDocTools artifact so the selected `kwallet-query.1` payload is generated.
 
 The other 17 source materializations are not rebuilt. Materialization remains source-only: `package_attempted=false` and it cannot create package PASS.
+
+
+## Round 2 promotion evidence
+
+Selective materialization run `35806738003` completed **3/3 SUCCESS** from commit `d6aa9a9550dc3c870a9f1beb00fe216d8c20c3d6`.
+
+The promoted source artifacts are:
+
+- KIconThemes `6.30.0-0supralinux3`: artifact `10728445324`, SHA-256 `f03028a64343b09d02327376fdec0be9e8c06ad9e75d59c86e1195a1350a49d4`;
+- KJobWidgets `6.30.0-0supralinux3`: artifact `10728630058`, SHA-256 `6e5e293abd09904380a61980d69a77bcf9ac91189d16a429e5270f5c4060ddc5`;
+- KWallet `6.30.0-0supralinux3`: artifact `10727054712`, SHA-256 `46ad7064b20ffbfb5b8b5d2242378a8e2ab082452edf0985dd9d1f6fb9074deb`.
+
+All 20 Tier 3 nodes are again materialized. Seventeen retain their previous source artifacts; only the three round-2 nodes changed. Materialization remains source-only and has no package-state effect.
+
+Level 0 remains intentionally paused. Attempt 3 can be activated only after Repository Policy validates these refreshed canonical pins.

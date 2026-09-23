@@ -97,7 +97,7 @@ if m.get("state") == "remediation-pending-ci":
     req(active_nodes == {"kiconthemes", "kjobwidgets", "kwallet"}, "Tier3 round2 remediation node set")
     req(queue == ["kiconthemes", "kjobwidgets", "kwallet"], "Tier3 round2 materialization queue")
     req(queue_set == active_nodes == set(active_m.get("nodes", [])) == set(active_t.get("nodes", [])), "Tier3 round2 remediation linkage")
-    req(active_c.get("status") == "materialization-pending-ci" and active_m.get("status") == "materialization-pending-ci", "Tier3 round2 remediation state")
+    req(active_c.get("status") in {"materialization-pending-ci","materialization-PASS"} and active_m.get("status") in {"materialization-pending-ci","PASS"}, "Tier3 round2 remediation state")
     req(active_c.get("trigger", {}).get("workflow_run") == 35770505868, "Tier3 round2 trigger run")
     req(active_m.get("trigger_workflow_run") == 35770505868 and active_t.get("trigger_workflow_run") == 35770505868, "Tier3 round2 trigger linkage")
     req(active_c.get("candidate_package_version") == "6.30.0-0supralinux3", "Tier3 round2 candidate revision")
@@ -173,6 +173,14 @@ elif m.get("state") == "PASS":
     req(all(m["nodes"][n].get("state") == "materialized" for n in selected), "PASS requires all materialization nodes materialized")
     req(c.get("state") == "materialized", "PASS materialization contract lifecycle")
     req(t.get("discovery_policy", {}).get("phase") in {"build-campaign-planning", "build-level0"}, "post-materialization phase")
+    if active_c.get("round") == 2:
+        req(active_c.get("status") == "materialization-PASS", "round2 contract materialization PASS")
+        req(active_m.get("status") == "PASS" and active_m.get("workflow_run") == 35806738003, "round2 materialization evidence PASS")
+        req(set(active_m.get("promoted_nodes", [])) == {"kiconthemes","kjobwidgets","kwallet"}, "round2 promoted materialization set")
+        req(m.get("evidence_summary", {}).get("promoted_remediation_materializations") == 3, "round2 materialization summary")
+        req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-remediation-pending", "Level0 remains paused after round2 promotion")
+        req(active_t.get("status") == "materialization-PASS-pending-level0-attempt3-activation", "canonical round2 promotion state")
+        req(active_t.get("execution_authorized") is False, "attempt3 not authorized before promotion validation")
 else:
     req(len(queue) == 3, "round2 materialization node count")
     req(all(m["nodes"][n].get("state") == "remediation-pending" for n in queue), "round2 materialization queue states")
