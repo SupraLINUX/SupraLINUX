@@ -159,3 +159,6 @@ No KDE dependency edge, payload choice, test policy or provider closure changes 
 KWallet `6.30.0-0supralinux4` materialized PASS in run `35817654811` from commit `1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf`. The promoted source artifact is `10731134598`, SHA-256 `de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef`.
 
 The materialized symbols template contains exactly `(optional)_ZSt19piecewise_construct@Base 6.30.0`. Promotion updates the source pin only; it does not make KWallet or any other Tier 3 node canonical PASS.
+
+
+Attempt 5 is activated only after Repository Policy run `35817928654` validates the promoted KWallet `-4` source pin and regenerated campaign. Contract authority and provider decisions are unchanged; this activation is binary validation only.

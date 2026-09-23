@@ -192,7 +192,22 @@ if m.get("state")=="active-pending-ci":
     req(activation.get("scope")=="full-level0-rerun-12-nodes","Level0 full rerun scope")
     rem=m.get("active_remediation",{})
     attempt=m.get("current_attempt")
-    if attempt==4:
+    if attempt==5:
+        req(activation.get("attempt")==5,"Level0 attempt5 activation number")
+        req(activation.get("promotion_validation_workflow_run")==35817928654,"Level0 attempt5 promotion validation")
+        req(activation.get("promotion_commit")=="3b1387b636a7103ca8918e51836ea7ac9e105be5","Level0 attempt5 promotion commit")
+        req(rem.get("round")==4 and rem.get("status")=="level0-rerun-active","Level0 attempt5 active remediation")
+        req(rem.get("execution_authorized") is True and rem.get("current_attempt")==5,"Level0 attempt5 remediation authorization")
+        req(rem.get("activation_policy_workflow_run")==35817928654,"Level0 attempt5 remediation validation")
+        req(rem.get("next_gate")=="tier3-build-level0-attempt5","Level0 attempt5 next gate")
+        req(all(m["nodes"][n].get("current_attempt")==5 for n in expected),"Level0 attempt5 node markers")
+        req(m["nodes"]["kwallet"].get("state")=="remediation-pending-build","KWallet runnable in attempt5")
+        req(all(m["nodes"][n].get("state")=="prepared-pending-revalidation" for n in expected if n!="kwallet"),"non-round4 nodes revalidated in attempt5")
+        req(m["nodes"]["kwallet"].get("package_version")=="6.30.0-0supralinux4","KWallet attempt5 revision")
+        req(m["nodes"]["kwallet"].get("materialization",{}).get("workflow_run")==35817654811,"KWallet attempt5 source pin")
+        req("karchive" in m["nodes"]["kwallet"].get("retained_input_ids",[]),"KWallet attempt5 KArchive provider closure")
+        req(m["nodes"]["kwallet"].get("support_input_ids")==["kdoctools"],"KWallet attempt5 KDocTools support")
+    elif attempt==4:
         req(activation.get("attempt")==4,"Level0 attempt4 activation number")
         req(activation.get("promotion_validation_workflow_run")==35813396247,"Level0 attempt4 promotion validation")
         req(activation.get("promotion_commit")=="48abcd1ed74e8d83c9c256ddc491218e102d66cf","Level0 attempt4 promotion commit")
@@ -342,7 +357,12 @@ if m.get("state")=="remediation-pending-materialization":
 elif m.get("state")=="active-pending-ci":
     req(policy.get("package_builds")=="tier3-level0-authorized","canonical Tier3 active Level0 build gate")
     ar=t.get("active_remediation",{})
-    if m.get("current_attempt")==4:
+    if m.get("current_attempt")==5:
+        req(ar.get("round")==4 and set(ar.get("nodes",[]))==round4,"canonical Tier3 attempt5 remediation linkage")
+        req(ar.get("status")=="level0-rerun-active" and ar.get("execution_authorized") is True,"canonical Tier3 attempt5 authorization")
+        req(ar.get("current_attempt")==5 and ar.get("activation_policy_workflow_run")==35817928654,"canonical Tier3 attempt5 activation evidence")
+        req(ar.get("next_gate")=="tier3-build-level0-attempt5","canonical Tier3 attempt5 next gate")
+    elif m.get("current_attempt")==4:
         req(ar.get("round")==3 and set(ar.get("nodes",[]))==round3,"canonical Tier3 attempt4 remediation linkage")
         req(ar.get("status")=="level0-rerun-active" and ar.get("execution_authorized") is True,"canonical Tier3 attempt4 authorization")
         req(ar.get("current_attempt")==4 and ar.get("activation_policy_workflow_run")==35813396247,"canonical Tier3 attempt4 activation evidence")

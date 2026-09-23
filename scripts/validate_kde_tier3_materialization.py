@@ -239,10 +239,17 @@ elif m.get("state") == "PASS":
         req(m.get("evidence_summary", {}).get("promoted_remediation_materializations") == 1, "round4 materialization summary")
         req(m["nodes"]["kwallet"].get("package_version") == "6.30.0-0supralinux4", "round4 KWallet promoted revision")
         req(active_t.get("materialization_workflow_run") == 35817654811, "canonical round4 materialization linkage")
-        req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-remediation-pending", "Level0 remains paused after round4 promotion")
-        req(active_t.get("status") == "materialization-PASS-pending-level0-attempt5-activation", "canonical round4 promotion state")
-        req(active_t.get("execution_authorized") is False, "attempt5 not authorized before promotion validation")
-        req(active_t.get("next_gate") == "tier3-build-level0-attempt5-activation-validation", "round4 activation validation gate")
+        if active_t.get("current_attempt") == 5:
+            req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-authorized", "Level0 attempt5 canonical build gate")
+            req(active_t.get("status") == "level0-rerun-active", "canonical attempt5 active state")
+            req(active_t.get("execution_authorized") is True, "attempt5 execution authorized")
+            req(active_t.get("activation_policy_workflow_run") == 35817928654, "attempt5 activation validation evidence")
+            req(active_t.get("next_gate") == "tier3-build-level0-attempt5", "attempt5 canonical next gate")
+        else:
+            req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-remediation-pending", "Level0 remains paused after round4 promotion")
+            req(active_t.get("status") == "materialization-PASS-pending-level0-attempt5-activation", "canonical round4 promotion state")
+            req(active_t.get("execution_authorized") is False, "attempt5 not authorized before promotion validation")
+            req(active_t.get("next_gate") == "tier3-build-level0-attempt5-activation-validation", "round4 activation validation gate")
     elif active_c.get("round") == 2:
         req(active_c.get("status") == "materialization-PASS", "round2 contract materialization PASS")
         req(active_m.get("status") == "PASS" and active_m.get("workflow_run") == 35806738003, "round2 materialization evidence PASS")

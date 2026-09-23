@@ -128,3 +128,6 @@ This is a source-packaging change, so KWallet becomes `6.30.0-0supralinux4` and 
 The KWallet symbols-template correction materialized successfully in run `35817654811`. The exact promoted source artifact is `10731134598` with SHA-256 `de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef`.
 
 Binary execution remains paused. Repository Policy must first validate the refreshed source pin and generated campaign before a separate Attempt 5 activation can authorize the next complete Level 0 rerun.
+
+
+Repository Policy run `35817928654` validates the round-4 materialization promotion. Level 0 Attempt 5 is separately authorized as a full 12-node rerun; this activation changes no package-contract decision.

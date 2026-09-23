@@ -328,3 +328,10 @@ Selective materialization run `35817654811` produced KWallet `6.30.0-0supralinux
 The artifact proves the intended `(optional)_ZSt19piecewise_construct@Base 6.30.0` template entry and preserves the KDocTools/KArchive provider closure. This is source-materialization evidence only; canonical package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**.
 
 Level 0 stays paused until Repository Policy validates this promotion. Attempt 5, if separately activated after that gate, must rerun all 12 Level 0 nodes.
+
+
+### Level 0 Attempt 5 active
+
+Repository Policy run `35817928654` validates the round-4 KWallet source promotion at commit `3b1387b636a7103ca8918e51836ea7ac9e105be5`. A separate activation now authorizes a complete **12-node Level 0 Attempt 5**.
+
+KWallet uses the promoted `6.30.0-0supralinux4` source artifact; the other eleven Level 0 nodes rerun for full revalidation. KNewStuff remains subject to its later KCMUtils runtime gate. Canonical Tier 3 package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** until the campaign evidence is reviewed.
