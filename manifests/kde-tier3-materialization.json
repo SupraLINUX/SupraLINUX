@@ -6,7 +6,7 @@
   "frameworks_series": "6.30.0",
   "contract_manifest": "manifests/kde-tier3-package-contracts.json",
   "canonical_manifest": "manifests/kde-frameworks-tier3.json",
-  "state": "PASS",
+  "state": "remediation-pending-ci",
   "package_attempted": false,
   "package_state_effect": "none",
   "source_policy": "verify-kde-upstream-tarball-and-pinned-debian-6.30-packaging-before-adaptation",
@@ -263,7 +263,7 @@
       }
     },
     "kio": {
-      "state": "materialized",
+      "state": "remediation-pending",
       "source_package": "kf6-kio",
       "package_version": "6.30.0-0supralinux3",
       "evidence_history": [
@@ -300,9 +300,29 @@
           "package_attempted": false,
           "package_state_effect": "none",
           "full_result_json_retained_in_artifact": true
+        },
+        {
+          "workflow_run": 35882795135,
+          "job_id": 107255289804,
+          "commit": "0d6c02f3f8dc41f716ba62ee7121f56371a8dc91",
+          "artifact_id": 10760324592,
+          "artifact_sha256": "b58b7a45f6df0c8f01e9bd9a37799c1470369124a7c1b48fecb82a5f7f86ae8d",
+          "package_version": "6.30.0-0supralinux3",
+          "orig_tar_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
+          "reference_tree_sha256": "50508b96984930b303c3d4467b464c8275de59ae68e210c8ad671e0832262e84",
+          "dsc_sha256": "3fd6c612c846693d3eaa131136858aa854d8f96c3e523e14c1ff687099e50bbf",
+          "debian_tar_sha256": "d0dc33c96e76592ac3982dab24e4e5b6dc1fcc2dd31f21e0d3ceff86e2340244",
+          "source_tree_sha256": "285fd8692fc0c59b89e08ad7b2b93453925415bf0e671898f04f97014bd8ff51",
+          "materialized_tree_sha256": "430d1df363d11206ff929d1c7f399211110b2a2fee0b32234916eee30398fe0f",
+          "adapted_control_sha256": "582159e83e2c36e16be0da212d67a4a5eb725341b5a28fe4828bc515a9b5f505",
+          "adapted_rules_sha256": "6db9a93621a73f87a6be3a38bfa914df065f9ab85962cc46738a1cb3a5817cab",
+          "result": "PASS",
+          "package_attempted": false,
+          "package_state_effect": "none",
+          "full_result_json_retained_in_artifact": true
         }
       ],
-      "evidence": {
+      "previous_evidence": {
         "workflow_run": 35882795135,
         "job_id": 107255289804,
         "commit": "0d6c02f3f8dc41f716ba62ee7121f56371a8dc91",
@@ -321,7 +341,9 @@
         "package_attempted": false,
         "package_state_effect": "none",
         "full_result_json_retained_in_artifact": true
-      }
+      },
+      "previous_package_version": "6.30.0-0supralinux3",
+      "candidate_package_version": "6.30.0-0supralinux4"
     },
     "kjobwidgets": {
       "state": "materialized",
@@ -698,7 +720,7 @@
       }
     },
     "kxmlgui": {
-      "state": "materialized",
+      "state": "remediation-pending",
       "source_package": "kf6-kxmlgui",
       "package_version": "6.30.0-0supralinux2",
       "evidence_history": [
@@ -715,9 +737,29 @@
           "package_attempted": false,
           "package_state_effect": "none",
           "full_result_json_retained_in_artifact": true
+        },
+        {
+          "workflow_run": 35882795135,
+          "job_id": 107255289573,
+          "commit": "0d6c02f3f8dc41f716ba62ee7121f56371a8dc91",
+          "artifact_id": 10761208629,
+          "artifact_sha256": "72cd10276558264646a9e38d5beab7b231434338597ef8d276030e790ff02214",
+          "package_version": "6.30.0-0supralinux2",
+          "orig_tar_sha256": "10fb8a0f7b874248ff60d9a8ee4e1f06a0efcf01b0d34d7635dfff86e848c352",
+          "reference_tree_sha256": "3b271d78381bfde2e9bcd7607b36e889dcc4f0f7e27f1893c4dfc8bcb37c6812",
+          "dsc_sha256": "ce9fab037d4c71d826f522214258560c93e4e7c30721e682d95a849a8564b5de",
+          "debian_tar_sha256": "a5cc49837c24ae6dc17b11b9a74250f7e939d7eb66e30a3876cb68529fdc70fe",
+          "source_tree_sha256": "9db3851382ce98366ae7aa98413569ad64d1122630fe8366424af730b8980776",
+          "materialized_tree_sha256": "930250dd56599a1ae9ab2d031f9b62bf5a92487c4fb67dc384b52b7b339c24ca",
+          "adapted_control_sha256": "734bbf0fb49ba1691ec9994ea83cb7ccb11446c8a9e098aa9ae796726c417c3b",
+          "adapted_rules_sha256": "914ecc0245b8680ca4869549d6030a974c1cde60904759a0c876fabd25a19fa6",
+          "result": "PASS",
+          "package_attempted": false,
+          "package_state_effect": "none",
+          "full_result_json_retained_in_artifact": true
         }
       ],
-      "evidence": {
+      "previous_evidence": {
         "workflow_run": 35882795135,
         "job_id": 107255289573,
         "commit": "0d6c02f3f8dc41f716ba62ee7121f56371a8dc91",
@@ -736,7 +778,9 @@
         "package_attempted": false,
         "package_state_effect": "none",
         "full_result_json_retained_in_artifact": true
-      }
+      },
+      "previous_package_version": "6.30.0-0supralinux2",
+      "candidate_package_version": "6.30.0-0supralinux3"
     },
     "purpose": {
       "state": "materialized",
@@ -808,23 +852,23 @@
   },
   "previous_evidence_summary": {
     "result": "PASS",
-    "workflow_run": 35825070347,
-    "commit": "fbde9a53e357a138f4d74d7905230c7859e20444",
+    "workflow_run": 35882795135,
+    "commit": "0d6c02f3f8dc41f716ba62ee7121f56371a8dc91",
     "total_materialized_nodes": 20,
-    "retained_previous_materializations": 19,
-    "promoted_remediation_materializations": 1,
-    "active_remediation_round": 5,
+    "retained_previous_materializations": 18,
+    "promoted_remediation_materializations": 2,
+    "active_remediation_round": 7,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-attempt1"
+    "next_gate": "tier3-build-level1-attempt3"
   },
   "active_remediation": {
-    "round": 7,
+    "round": 8,
     "level": "build-level1",
-    "status": "PASS",
-    "trigger_workflow_run": 35829170695,
-    "trigger_commit": "897d3a864bc7ea164400c7d9de2e9c51cf6316ab",
-    "reason": "Level 1 Attempt 2 established two node-owned packaging/test-environment defects: KIO needs its upstream test environment materialized and KXMLGui needs the Python wheel build providers required by enabled upstream bindings.",
+    "status": "pending-ci",
+    "trigger_workflow_run": 35887558758,
+    "trigger_commit": "7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94",
+    "reason": "Level 1 Attempt 3 established two narrow test-environment follow-ups: KIO must stop forcing one shared XDG_RUNTIME_DIR while retaining the round-7 environment that improved the suite to 62/69 PASS, and KXMLGui must run its full upstream test suite with Qt offscreen after its Python binding build path succeeded.",
     "nodes": [
       "kio",
       "kxmlgui"
@@ -835,31 +879,13 @@
     ],
     "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux3",
-      "kxmlgui": "6.30.0-0supralinux2"
+      "kio": "6.30.0-0supralinux4",
+      "kxmlgui": "6.30.0-0supralinux3"
     },
     "policy": "rematerialize-only-source-changed-level1-nodes-then-rerun-full-level1",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-attempt3",
-    "workflow_run": 35882795135,
-    "commit": "0d6c02f3f8dc41f716ba62ee7121f56371a8dc91",
-    "promoted_nodes": [
-      "kio",
-      "kxmlgui"
-    ],
-    "artifacts": {
-      "kio": {
-        "job_id": 107255289804,
-        "artifact_id": 10760324592,
-        "artifact_sha256": "b58b7a45f6df0c8f01e9bd9a37799c1470369124a7c1b48fecb82a5f7f86ae8d"
-      },
-      "kxmlgui": {
-        "job_id": 107255289573,
-        "artifact_id": 10761208629,
-        "artifact_sha256": "72cd10276558264646a9e38d5beab7b231434338597ef8d276030e790ff02214"
-      }
-    }
+    "next_gate": "tier3-round8-level1-materialization"
   },
   "remediation_history": [
     {
@@ -1066,18 +1092,53 @@
         "planner_workflow_run": 35826072818,
         "attempt": 1
       }
+    },
+    {
+      "round": 7,
+      "level": "build-level1",
+      "status": "PASS",
+      "trigger_workflow_run": 35829170695,
+      "trigger_commit": "897d3a864bc7ea164400c7d9de2e9c51cf6316ab",
+      "reason": "Level 1 Attempt 2 established two node-owned packaging/test-environment defects: KIO needs its upstream test environment materialized and KXMLGui needs the Python wheel build providers required by enabled upstream bindings.",
+      "nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "source_changed_nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "provider_closure_only_nodes": [],
+      "candidate_package_versions": {
+        "kio": "6.30.0-0supralinux3",
+        "kxmlgui": "6.30.0-0supralinux2"
+      },
+      "policy": "rematerialize-only-source-changed-level1-nodes-then-rerun-full-level1",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "next_gate": "tier3-build-level1-attempt3",
+      "workflow_run": 35882795135,
+      "commit": "0d6c02f3f8dc41f716ba62ee7121f56371a8dc91",
+      "promoted_nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "artifacts": {
+        "kio": {
+          "job_id": 107255289804,
+          "artifact_id": 10760324592,
+          "artifact_sha256": "b58b7a45f6df0c8f01e9bd9a37799c1470369124a7c1b48fecb82a5f7f86ae8d"
+        },
+        "kxmlgui": {
+          "job_id": 107255289573,
+          "artifact_id": 10761208629,
+          "artifact_sha256": "72cd10276558264646a9e38d5beab7b231434338597ef8d276030e790ff02214"
+        }
+      }
     }
   ],
-  "evidence_summary": {
-    "result": "PASS",
-    "workflow_run": 35882795135,
-    "commit": "0d6c02f3f8dc41f716ba62ee7121f56371a8dc91",
-    "total_materialized_nodes": 20,
-    "retained_previous_materializations": 18,
-    "promoted_remediation_materializations": 2,
-    "active_remediation_round": 7,
-    "package_attempted": false,
-    "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-attempt3"
-  }
+  "remediation_queue": [
+    "kio",
+    "kxmlgui"
+  ]
 }

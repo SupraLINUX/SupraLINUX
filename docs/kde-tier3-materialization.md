@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **PASS — round 7 KIO + KXMLGui source materializations promoted; Attempt 3 planning validation pending** as of 2026-09-23.
+Status: **round 8 remediation pending CI — KIO 6.30.0-0supralinux4 + KXMLGui 6.30.0-0supralinux3** as of 2026-09-23.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -278,3 +278,12 @@ All 20 Tier 3 source materializations are again PASS. Level 1 remains unauthoriz
 The promoted round-7 materialization set remains **20/20 PASS**. After Policy validation, its next gate is now `tier3-build-level1-attempt3`; no source artifact changes at activation.
 
 KIO remains pinned to artifact `10760324592` and KXMLGui to `10761208629`. Materialization itself still has no binary package-state effect.
+
+## Round 8 selective materialization
+
+Attempt 3 run `35887558758` establishes two narrow source-package test-environment deltas. The materialization queue is exactly **KIO + KXMLGui**.
+
+- KIO `6.30.0-0supralinux4`: keep the round-7 test environment that improved the suite to 62/69 PASS, but stop forcing a shared `XDG_RUNTIME_DIR`.
+- KXMLGui `6.30.0-0supralinux3`: retain the validated Python build providers and run the complete upstream `dh_auto_test` with `QT_QPA_PLATFORM=offscreen`.
+
+The prior source PASS artifacts remain immutable evidence: KIO `-3` artifact `10760324592` and KXMLGui `-2` artifact `10761208629`. Round 8 changes no KDE DAG edge and suppresses no upstream test. Materialization remains source-only and cannot promote a binary package to PASS.

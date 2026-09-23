@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **Attempt 3 active — KIO + KXMLGui full Level 1 rerun** as of 2026-09-23.
+Status: **Attempt 3 reviewed — 0 SUCCESS / 2 real FAIL; round 8 KIO + KXMLGui source remediation pending** as of 2026-09-23.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -134,3 +134,13 @@ Round-7 source promotion passed Repository Policy `35884583361` and paused Level
 A separate activation commit authorizes the complete two-node Level 1 rerun. KIO consumes `6.30.0-0supralinux3` artifact `10760324592`; KXMLGui consumes `6.30.0-0supralinux2` artifact `10761208629`. Scheduling remains parallel with `fail-fast=false`.
 
 KIO alone retains the documented sbuild network exception required by its upstream external HTTP tests; KXMLGui remains network-disabled. No stable publication is implied by build success.
+
+## Attempt 3 result — round 8 follow-up
+
+Workflow `35887558758` at commit `7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94` completed **0 SUCCESS / 2 real FAIL**. The shared Resolute rootfs is artifact `10763606519`, artifact SHA-256 `bf1fe0caaf73f0595d94c75b01f560f2913511bcafe8efe6fa81d8cc2bc0aa67`, inner rootfs SHA-256 `bd00be95fb5b9446a527ea155d625bd7c1cfd9ff7a0c8e59ceef118b421c11b6`.
+
+**KIO** job `107272258383` / artifact `10763498649` / SHA-256 `87ece6a4a4dd51af6b8d5810aaed39b58e5f3f01e979c0f2ce8daa8b3082d564` executed all 69 upstream tests: **62 PASS / 7 FAIL**. Round 7 therefore improved the suite from 13 failures to 7. Four current failures involve QLocalServer/listen behavior while the round-7 wrapper forces one fixed `XDG_RUNTIME_DIR`; `connectionbackendtest` and `fileundomanagertest` are new relative to Attempt 2. Round 8 removes only that forced runtime-directory override and retains the D-Bus session, offscreen Qt backend, Breeze payload, controlled HOME, KDECI marker, serial CTest and KIO-only network access that already fixed real failures. `krecentdocumenttest`, `kdirmodeltest` and `knewfilemenutest` remain explicitly unresolved; no test is suppressed.
+
+**KXMLGui** job `107272258358` / artifact `10763747234` / SHA-256 `c4626450ad4149723818884373dfc56603e411b62eafa1d4968ac979c0fa6516` proves the Python build-provider remediation is solved. The complete upstream test invocation then produced **1 PASS / 6 FAIL**, all six aborting because Qt attempted xcb without a display. Round 8 keeps the normal upstream `dh_auto_test` path and adds only `QT_QPA_PLATFORM=offscreen`.
+
+KIO advances to `6.30.0-0supralinux4`; KXMLGui advances to `6.30.0-0supralinux3`. Level 1 execution is paused until both source rematerializations PASS and their exact evidence is policy-validated. Level 2 remains unauthorized. Canonical package state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.

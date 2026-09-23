@@ -311,7 +311,17 @@ elif m.get("state")=="PARTIAL":
     req(t.get("discovery_policy",{}).get("phase") in {"build-level1-planning","build-level1"},"Tier3 Level1 phase after Level0")
     req(t.get("discovery_policy",{}).get("package_builds") in {"tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized","tier3-level1-remediation-pending-provider-closure"},"Tier3 Level1 build gate")
     ar=t.get("active_remediation",{})
-    if ar.get("round")==7:
+    if ar.get("round")==8:
+        req(ar.get("level")=="build-level1" and ar.get("status")=="materialization-pending-ci","Tier3 Level1 round8 source-remediation lifecycle")
+        req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==["kio","kxmlgui"] and ar.get("provider_closure_only_nodes")==[],"Tier3 Level1 round8 source scope")
+        req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux4","kxmlgui":"6.30.0-0supralinux3"},"Tier3 Level1 round8 revisions")
+        req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 Level1 round8 execution pause")
+        req(ar.get("validation_workflow_run")==35887558758 and ar.get("validation_commit")=="7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94","Tier3 Level1 Attempt3 evidence")
+        req(set(ar.get("remaining_failed_nodes",[]))=={"kio","kxmlgui"} and ar.get("canonical_promotions")==0,"Tier3 Level1 Attempt3 failure/no-promotion semantics")
+        req(ar.get("current_attempt")==3 and ar.get("next_attempt")==4 and ar.get("next_gate")=="tier3-round8-level1-materialization","Tier3 Level1 round8 next gate")
+        hist4=[x for x in t.get("remediation_history",[]) if x.get("round")==4]
+        req(len(hist4)==1 and hist4[0].get("status")=="attempt5-complete" and hist4[0].get("canonical_promotions")==11,"Tier3 Attempt5 closure retained while Level1 round8 remediates")
+    elif ar.get("round")==7:
         req(ar.get("level")=="build-level1" and ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation","level1-active-pending-ci"},"Tier3 Level1 round7 source-remediation lifecycle")
         req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==["kio","kxmlgui"] and ar.get("provider_closure_only_nodes")==[],"Tier3 Level1 round7 source scope")
         req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux3","kxmlgui":"6.30.0-0supralinux2"},"Tier3 Level1 round7 revisions")

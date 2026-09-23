@@ -53,7 +53,21 @@ active_nodes=set(active.get("trigger",{}).get("failed_nodes",active.get("trigger
 if active:
     round_no=active.get("round")
     req(active.get("status") in {"materialization-pending-ci","materialization-PASS","materialization-PASS-attempt3-active","provider-closure-pending-attempt2-activation-validation","provider-closure-PASS"},"Tier3 active remediation state")
-    if round_no==7:
+    if round_no==8:
+        req(active_nodes=={"kio","kxmlgui"},"Tier3 round8 Level1 failure set")
+        req(active.get("level")=="build-level1","Tier3 round8 Level1 identity")
+        req(active.get("trigger",{}).get("workflow_run")==35887558758 and active.get("trigger",{}).get("commit")=="7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94","Tier3 round8 trigger")
+        req(active.get("trigger",{}).get("level1_result")=="0 workflow SUCCESS / 2 FAIL","Tier3 round8 Attempt3 result")
+        req(active.get("source_changed_nodes")==["kio","kxmlgui"] and active.get("provider_closure_only_nodes")==[],"Tier3 round8 source-remediation classes")
+        req(active.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux4","kxmlgui":"6.30.0-0supralinux3"},"Tier3 round8 package revisions")
+        req(active.get("next_gate")=="tier3-round8-level1-materialization","Tier3 round8 next gate")
+        pol=active.get("policy",{})
+        req(pol.get("package_revision_bump_required_for_packaging_changes") is True and pol.get("rematerialize_only_changed_nodes") is True and pol.get("kde_dependency_graph_unchanged") is True,"Tier3 round8 remediation policy")
+        ev=active.get("failure_evidence",{}); root=ev.get("rootfs",{})
+        req(root.get("artifact_id")==10763606519 and root.get("artifact_sha256")=="bf1fe0caaf73f0595d94c75b01f560f2913511bcafe8efe6fa81d8cc2bc0aa67" and root.get("rootfs_sha256")=="bd00be95fb5b9446a527ea155d625bd7c1cfd9ff7a0c8e59ceef118b421c11b6","Tier3 round8 rootfs evidence")
+        req(ev.get("kio",{}).get("job_id")==107272258383 and ev.get("kio",{}).get("artifact_id")==10763498649 and ev.get("kio",{}).get("failure_substage")=="ctest/upstream-test-environment-followup","Tier3 round8 KIO failure evidence")
+        req(ev.get("kxmlgui",{}).get("job_id")==107272258358 and ev.get("kxmlgui",{}).get("artifact_id")==10763747234 and ev.get("kxmlgui",{}).get("failure_substage")=="ctest/qt-platform","Tier3 round8 KXMLGui failure evidence")
+    elif round_no==7:
         req(active_nodes=={"kio","kxmlgui"},"Tier3 round7 Level1 failure set")
         req(active.get("level")=="build-level1","Tier3 round7 Level1 identity")
         req(active.get("trigger",{}).get("workflow_run")==35829170695 and active.get("trigger",{}).get("commit")=="897d3a864bc7ea164400c7d9de2e9c51cf6316ab","Tier3 round7 trigger")
@@ -145,8 +159,8 @@ for node_id in selected:
         "kwallet":"6.30.0-0supralinux4" if active.get("round",0)>=4 else "6.30.0-0supralinux3",
         "kdav":"6.30.0-0supralinux2",
         "krunner":"6.30.0-0supralinux2",
-        "kio":"6.30.0-0supralinux3" if active.get("round",0)>=7 else ("6.30.0-0supralinux2" if active.get("round",0)>=5 else "6.30.0-0supralinux1"),
-        "kxmlgui":"6.30.0-0supralinux2" if active.get("round",0)>=7 else "6.30.0-0supralinux1",
+        "kio":"6.30.0-0supralinux4" if active.get("round",0)>=8 else ("6.30.0-0supralinux3" if active.get("round",0)>=7 else ("6.30.0-0supralinux2" if active.get("round",0)>=5 else "6.30.0-0supralinux1")),
+        "kxmlgui":"6.30.0-0supralinux3" if active.get("round",0)>=8 else ("6.30.0-0supralinux2" if active.get("round",0)>=7 else "6.30.0-0supralinux1"),
     }
     expected_version=expected_versions.get(node_id,"6.30.0-0supralinux1")
     req(x.get("package_version_candidate")==expected_version,f"{node_id}: package version")
@@ -203,7 +217,19 @@ if active.get("round",0)>=5:
     req(any(x.get("old")=="ifneq (linux,$(DEB_HOST_ARCH_OS))" and x.get("new")=="ifeq (linux,$(DEB_HOST_ARCH_OS))" for x in repl),"KIO retained round5 Linux Wayland rules correction")
     req(kio.get("reference_patch_suppression_overrides",{}).get("reverse_and_drop")==["report_error_removing_dirs"],"KIO retained round5 upstream behavior restoration")
 
-if active.get("round")==7:
+if active.get("round")==8:
+    rel=set((x.get("action"),x.get("package") or x.get("relation")) for x in kio.get("source_build_relation_overrides",[]))
+    req(("ensure","dbus-daemon <!nocheck>") in rel and ("ensure","breeze-icon-theme (>= 4:6.30.0~) <!nocheck>") in rel,"KIO round8 retained test-environment providers")
+    test_repl=[x for x in kio.get("rules_text_replacements",[]) if x.get("classification")=="upstream-test-environment-correction"]
+    req(len(test_repl)==1 and "dbus-run-session -- ctest --verbose -j1" in test_repl[0].get("new",""),"KIO round8 full-suite test wrapper")
+    req("QT_QPA_PLATFORM=offscreen" in test_repl[0].get("new","") and "KDECI_PLATFORM_PATH=" in test_repl[0].get("new","") and "XDG_RUNTIME_DIR=" not in test_repl[0].get("new",""),"KIO round8 runtime-directory correction")
+    req(kio.get("test_environment_contract",{}).get("runtime_directory_policy")=="do-not-override-XDG_RUNTIME_DIR-use-session-default","KIO round8 runtime-directory policy")
+    xnode=c["nodes"]["kxmlgui"]
+    xrel=[(x.get("action"),x.get("package") or x.get("relation")) for x in xnode.get("source_build_relation_overrides",[])]
+    req(xrel==[("ensure","python3-build"),("ensure","python3-setuptools")],"KXMLGui round8 retained Python build providers")
+    xr=xnode.get("rules_text_replacements",[])
+    req(len(xr)==1 and xr[0].get("new")=="override_dh_auto_test:\n\tQT_QPA_PLATFORM=offscreen dh_auto_test","KXMLGui round8 full-suite offscreen test wrapper")
+elif active.get("round")==7:
     rel=set((x.get("action"),x.get("package") or x.get("relation")) for x in kio.get("source_build_relation_overrides",[]))
     req(("ensure","dbus-daemon <!nocheck>") in rel and ("ensure","breeze-icon-theme (>= 4:6.30.0~) <!nocheck>") in rel,"KIO round7 test-environment providers")
     test_repl=[x for x in kio.get("rules_text_replacements",[]) if x.get("classification")=="upstream-test-environment-correction"]
@@ -227,7 +253,16 @@ req(canonical.get("package_builds") in {"not-authorized-before-tier3-materializa
 if active:
     ar=t.get("active_remediation",{})
     req(ar.get("round")==active.get("round") and set(ar.get("nodes",[]))==active_nodes,"Tier3 canonical remediation linkage")
-    if active.get("round")==7:
+    if active.get("round")==8:
+        req(canonical.get("phase")=="build-level1-planning" and canonical.get("package_builds")=="tier3-level1-remediation-pending-materialization","Tier3 round8 canonical materialization gate")
+        req(ar.get("level")=="build-level1" and ar.get("status")=="materialization-pending-ci","Tier3 round8 canonical Level1 state")
+        req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==["kio","kxmlgui"] and ar.get("provider_closure_only_nodes")==[],"Tier3 round8 canonical source scope")
+        req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux4","kxmlgui":"6.30.0-0supralinux3"},"Tier3 round8 canonical revisions")
+        req(ar.get("validation_workflow_run")==35887558758 and ar.get("validation_commit")=="7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94","Tier3 round8 canonical Attempt3 evidence")
+        req(ar.get("validation_result")=="0 workflow SUCCESS / 2 FAIL" and set(ar.get("remaining_failed_nodes",[]))=={"kio","kxmlgui"} and ar.get("canonical_promotions")==0,"Tier3 round8 canonical failure/no-promotion semantics")
+        req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False and ar.get("current_attempt")==3 and ar.get("next_attempt")==4,"Tier3 round8 canonical execution pause")
+        req(ar.get("next_gate")=="tier3-round8-level1-materialization","Tier3 round8 canonical next gate")
+    elif active.get("round")==7:
         req(canonical.get("phase") in {"build-level1-planning","build-level1"} and canonical.get("package_builds") in {"tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized"},"Tier3 round7 canonical materialization/planning/build gate")
         req(ar.get("level")=="build-level1" and ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation","level1-active-pending-ci"},"Tier3 round7 canonical Level1 state")
         req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==["kio","kxmlgui"] and ar.get("provider_closure_only_nodes")==[],"Tier3 round7 canonical source scope")

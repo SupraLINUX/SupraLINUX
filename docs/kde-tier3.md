@@ -462,3 +462,11 @@ The round-7 KIO/KXMLGui source promotion passed its planning gates. Level 1 Atte
 The pre-result canonical snapshot remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**. Attempt 2's two real FAIL records remain immutable campaign history under remediation; Attempt 3 will establish the next package-owned results.
 
 Level 2 remains unauthorized until both Level 1 results are reviewed and promoted according to PASS / FAIL / BLOCKED semantics.
+
+## Current canonical state — Attempt 3 closed / round 8 pending
+
+Level 1 Attempt 3 workflow `35887558758` completed with **0 SUCCESS / 2 real FAIL**. KIO reached **62/69 upstream tests passing**; KXMLGui reached its test phase after the Python binding build fix and failed only on xcb display selection.
+
+Round 8 is a selective source remediation for KIO `6.30.0-0supralinux4` and KXMLGui `6.30.0-0supralinux3`. Binary execution is paused while those sources rematerialize. No Level 2 work is authorized and no package is promoted by this transition.
+
+Canonical package state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**. Attempt 3 FAIL records remain immutable campaign evidence while the affected nodes are under remediation.

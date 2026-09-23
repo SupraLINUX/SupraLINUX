@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **round 7 source remediation pending — KIO -3 + KXMLGui -2**
+Status: **round 8 source remediation pending — KIO -4 + KXMLGui -3**
 
 Reviewed: **2026-09-23**
 
@@ -246,3 +246,13 @@ The promotion preserves the cumulative round-5 KIO upstream-alignment contract a
 ### Round 7 Attempt 3 handoff
 
 The round-7 materialization contracts passed validation and are now handed to Level 1 Attempt 3. The activation changes only execution authority; KIO/KXMLGui source identities, provider closure and KDE DAG semantics remain exactly those already validated.
+
+## Round 8 — Level 1 Attempt 3 contract delta
+
+Attempt 3 `35887558758` leaves both Level 1 nodes as real FAIL evidence and grants no canonical promotion.
+
+For KIO, the round-7 environment is mostly validated by the improvement from 56/69 to 62/69 passing tests. Round 8 therefore does not discard D-Bus, Breeze, offscreen Qt, controlled HOME, KDECI, serial execution or node-scoped network. It removes only the explicit shared `XDG_RUNTIME_DIR`, which is the new environmental change common to the QLocalServer/listen regressions. The three persistent non-socket test classes remain unresolved rather than being hidden.
+
+For KXMLGui, the Python frontend/backend requirement is now proven satisfied. The remaining failure class is Qt platform selection, so the contract adds exactly one test wrapper: full `dh_auto_test` under `QT_QPA_PLATFORM=offscreen`. It does not inherit KIO's D-Bus, network, HOME or direct CTest wrapper.
+
+The candidate revisions are KIO `6.30.0-0supralinux4` and KXMLGui `6.30.0-0supralinux3`. No KDE dependency edge changes.

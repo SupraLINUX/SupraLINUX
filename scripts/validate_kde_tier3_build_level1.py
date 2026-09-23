@@ -54,17 +54,32 @@ elif m.get("state")=="active-pending-ci":
         req(rem.get("validation_policy_workflow_run")==35828634884 and rem.get("validation_level1_workflow_run")==35828634887,"Level1 Attempt2 validation linkage")
         req(m.get("next_gate")=="tier3-build-level1-attempt2","Level1 Attempt2 next gate")
 elif m.get("state")=="remediation-pending-materialization":
-    req(m.get("execution_authorized") is False and m.get("current_attempt")==2 and m.get("next_attempt")==3,"Level1 Attempt2 remediation pause")
     rem=m.get("active_remediation",{})
-    req(rem.get("round")==2 and rem.get("global_round")==7 and set(rem.get("nodes",[]))=={"kio","kxmlgui"},"Level1 round7 remediation scope")
-    req(set(rem.get("source_changed_nodes",[]))=={"kio","kxmlgui"} and rem.get("provider_closure_only_nodes")==[],"Level1 round7 source remediation classes")
-    req(rem.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux3","kxmlgui":"6.30.0-0supralinux2"},"Level1 round7 candidate revisions")
-    req(rem.get("source_rematerialization_required") is True and rem.get("package_revision_bump_required") is True,"Level1 round7 source rematerialization requirement")
-    req(rem.get("full_level1_rerun_required") is True and rem.get("next_gate")=="tier3-round7-level1-materialization","Level1 round7 next gate")
-    s=m.get("attempt2_summary",{})
-    req(s.get("workflow_run")==35829170695 and s.get("commit")=="897d3a864bc7ea164400c7d9de2e9c51cf6316ab","Level1 Attempt2 evidence identity")
-    req(s.get("result")=="FAIL" and s.get("workflow_jobs")=={"success":0,"fail":2} and set(s.get("job_fail",[]))=={"kio","kxmlgui"},"Level1 Attempt2 real FAIL summary")
-    req(s.get("canonical_promotions")==0 and s.get("next_attempt")==3,"Level1 Attempt2 no promotion / Attempt3 handoff")
+    if rem.get("global_round")==8:
+        req(m.get("execution_authorized") is False and m.get("current_attempt")==3 and m.get("next_attempt")==4,"Level1 Attempt3 remediation pause")
+        req(rem.get("round")==3 and set(rem.get("nodes",[]))=={"kio","kxmlgui"},"Level1 round8 remediation scope")
+        req(set(rem.get("source_changed_nodes",[]))=={"kio","kxmlgui"} and rem.get("provider_closure_only_nodes")==[],"Level1 round8 source remediation classes")
+        req(rem.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux4","kxmlgui":"6.30.0-0supralinux3"},"Level1 round8 candidate revisions")
+        req(rem.get("source_rematerialization_required") is True and rem.get("package_revision_bump_required") is True,"Level1 round8 source rematerialization requirement")
+        req(rem.get("full_level1_rerun_required") is True and rem.get("next_gate")=="tier3-round8-level1-materialization","Level1 round8 next gate")
+        s3=m.get("attempt3_summary",{})
+        req(s3.get("workflow_run")==35887558758 and s3.get("commit")=="7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94","Level1 Attempt3 evidence identity")
+        req(s3.get("result")=="FAIL" and s3.get("workflow_jobs")=={"success":0,"fail":2} and set(s3.get("job_fail",[]))=={"kio","kxmlgui"},"Level1 Attempt3 real FAIL summary")
+        req(s3.get("canonical_promotions")==0 and s3.get("next_attempt")==4,"Level1 Attempt3 no promotion / Attempt4 handoff")
+        req(s3.get("kio_tests")=={"total":69,"pass":62,"fail":7} and s3.get("kxmlgui_tests")=={"total":7,"pass":1,"fail":6},"Level1 Attempt3 test totals")
+    else:
+        req(m.get("execution_authorized") is False and m.get("current_attempt")==2 and m.get("next_attempt")==3,"Level1 Attempt2 remediation pause")
+        rem=m.get("active_remediation",{})
+        req(rem.get("round")==2 and rem.get("global_round")==7 and set(rem.get("nodes",[]))=={"kio","kxmlgui"},"Level1 round7 remediation scope")
+        req(set(rem.get("source_changed_nodes",[]))=={"kio","kxmlgui"} and rem.get("provider_closure_only_nodes")==[],"Level1 round7 source remediation classes")
+        req(rem.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux3","kxmlgui":"6.30.0-0supralinux2"},"Level1 round7 candidate revisions")
+        req(rem.get("source_rematerialization_required") is True and rem.get("package_revision_bump_required") is True,"Level1 round7 source rematerialization requirement")
+        req(rem.get("full_level1_rerun_required") is True and rem.get("next_gate")=="tier3-round7-level1-materialization","Level1 round7 next gate")
+        s=m.get("attempt2_summary",{})
+        req(s.get("workflow_run")==35829170695 and s.get("commit")=="897d3a864bc7ea164400c7d9de2e9c51cf6316ab","Level1 Attempt2 evidence identity")
+        req(s.get("result")=="FAIL" and s.get("workflow_jobs")=={"success":0,"fail":2} and set(s.get("job_fail",[]))=={"kio","kxmlgui"},"Level1 Attempt2 real FAIL summary")
+        req(s.get("canonical_promotions")==0 and s.get("next_attempt")==3,"Level1 Attempt2 no promotion / Attempt3 handoff")
+
 elif m.get("state")=="remediation-materialized-pending-planning-validation":
     req(m.get("execution_authorized") is False and m.get("current_attempt")==2 and m.get("next_attempt")==3,"Level1 round7 post-materialization pause")
     req(m.get("next_gate")=="tier3-build-level1-planning-validation","Level1 Attempt3 planning-validation gate")
@@ -99,7 +114,15 @@ policy=tier3.get("discovery_policy",{})
 req(policy.get("phase") in {"build-level1-planning","build-level1"},"canonical Level1 phase")
 req(policy.get("package_builds") in {"tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized","tier3-level1-remediation-pending-provider-closure","tier3-level1-remediation-pending-materialization"},"canonical Level1 build gate")
 ar=tier3.get("active_remediation",{})
-if ar.get("round")==7:
+if ar.get("round")==8:
+    req(set(ar.get("nodes",[]))=={"kio","kxmlgui"},"canonical round8 scope")
+    req(set(ar.get("source_materialization_nodes",[]))=={"kio","kxmlgui"} and ar.get("provider_closure_only_nodes")==[],"canonical round8 source classes")
+    req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux4","kxmlgui":"6.30.0-0supralinux3"},"canonical round8 candidate revisions")
+    req(policy.get("phase")=="build-level1-planning" and policy.get("package_builds")=="tier3-level1-remediation-pending-materialization","canonical round8 materialization gate")
+    req(ar.get("status")=="materialization-pending-ci" and ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"canonical round8 execution pause")
+    req(ar.get("validation_workflow_run")==35887558758 and ar.get("validation_commit")=="7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94","canonical round8 Attempt3 evidence")
+    req(ar.get("current_attempt")==3 and ar.get("next_attempt")==4 and ar.get("next_gate")=="tier3-round8-level1-materialization","canonical round8 next gate")
+elif ar.get("round")==7:
     req(set(ar.get("nodes",[]))=={"kio","kxmlgui"},"canonical round7 scope")
     req(set(ar.get("source_materialization_nodes",[]))=={"kio","kxmlgui"} and ar.get("provider_closure_only_nodes")==[],"canonical round7 source classes")
     req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux3","kxmlgui":"6.30.0-0supralinux2"},"canonical round7 candidate revisions")
@@ -266,6 +289,21 @@ else:
             req(x.get("rootfs_artifact_id")==10736033276 and x.get("rootfs_artifact_sha256")=="8576bb973423d12cdd805c37e6c8b479aedf82466e38762a5ed8cb99def6961f" and x.get("rootfs_sha256")=="170fdc81f745a8597880a6433026f9ef66bca68665bf3450d02f0de561f3abe6",f"{node}: Attempt2 rootfs")
             req(x.get("package_attempted") is True and x.get("failure_substage")==substage and x.get("package_version")==version,f"{node}: Attempt2 stage/version")
             req(x.get("remediation",{}).get("candidate_package_version")==candidate and x.get("remediation",{}).get("source_rematerialization_required") is True,f"{node}: Attempt2 remediation revision")
+
+    if len(hist)>=3:
+        req(hist[2].get("attempt")==3 and hist[2].get("workflow_run")==35887558758 and hist[2].get("commit")=="7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94","Level1 Attempt3 ledger history")
+        req(hist[2].get("result")=="FAIL" and hist[2].get("workflow_jobs")=={"success":0,"fail":2},"Level1 Attempt3 real failure summary")
+        req(set(hist[2].get("failed_nodes",[]))=={"kio","kxmlgui"} and hist[2].get("canonical_promotions")==0 and hist[2].get("next_attempt")==4,"Level1 Attempt3 fail/no-promotion semantics")
+        for node,job,artifact,digest,version,substage,candidate in (
+          ("kio",107272258383,10763498649,"87ece6a4a4dd51af6b8d5810aaed39b58e5f3f01e979c0f2ce8daa8b3082d564","6.30.0-0supralinux3","ctest/upstream-test-environment-followup","6.30.0-0supralinux4"),
+          ("kxmlgui",107272258358,10763747234,"c4626450ad4149723818884373dfc56603e411b62eafa1d4968ac979c0fa6516","6.30.0-0supralinux2","ctest/qt-platform","6.30.0-0supralinux3"),
+        ):
+            x=a["nodes"][node][2]
+            req(x.get("attempt")==3 and x.get("result")=="FAIL" and x.get("workflow_run")==35887558758 and x.get("job_id")==job,f"{node}: Attempt3 failure identity")
+            req(x.get("artifact_id")==artifact and x.get("artifact_sha256")==digest,f"{node}: Attempt3 artifact")
+            req(x.get("rootfs_artifact_id")==10763606519 and x.get("rootfs_artifact_sha256")=="bf1fe0caaf73f0595d94c75b01f560f2913511bcafe8efe6fa81d8cc2bc0aa67" and x.get("rootfs_sha256")=="bd00be95fb5b9446a527ea155d625bd7c1cfd9ff7a0c8e59ceef118b421c11b6",f"{node}: Attempt3 rootfs")
+            req(x.get("package_attempted") is True and x.get("failure_substage")==substage and x.get("package_version")==version,f"{node}: Attempt3 stage/version")
+            req(x.get("remediation",{}).get("candidate_package_version")==candidate and x.get("remediation",{}).get("source_rematerialization_required") is True,f"{node}: Attempt3 remediation revision")
 
 for path in (
  "scripts/plan-kde-tier3-build-level1.py",
