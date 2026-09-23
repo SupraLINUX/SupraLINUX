@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **contracts retained — round 3 KJobWidgets source remediation promoted; attempt 4 pending**
+Status: **contracts retained — round 3 promoted; attempt 4 active**
 
 Reviewed: **2026-09-22**
 
@@ -140,3 +140,6 @@ No round-3 decision changes KDE upstream dependency semantics or canonical packa
 KJobWidgets `6.30.0-0supralinux4` source materialization is PASS in run `35812918054` and is now the canonical source pin for the next Level 0 campaign. The exact artifact is `10730956293` with SHA-256 `bcd505c1d4cbc65b45861335f41d8b03f18d53995bb9ba1d9036295bd5ce7804`.
 
 KWallet keeps its `6.30.0-0supralinux3` source pin; only its build-provider closure changes. Neither transition changes canonical package state.
+
+
+Attempt 4 is activated after Repository Policy run `35813396247`. KJobWidgets uses the promoted `6.30.0-0supralinux4` source contract and KWallet uses the unchanged `6.30.0-0supralinux3` source contract plus its complete KDocTools/KArchive provider closure.

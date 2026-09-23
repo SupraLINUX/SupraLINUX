@@ -137,15 +137,23 @@ if active:
     ar=t.get("active_remediation",{})
     req(ar.get("round")==active.get("round") and set(ar.get("nodes",[]))==active_nodes,"Tier3 canonical remediation linkage")
     if active.get("round")==3:
-        req(canonical.get("package_builds")=="tier3-level0-remediation-pending","Tier3 round3 build pause")
-        req(ar.get("execution_authorized") is False,"Tier3 round3 execution pause")
         req(ar.get("source_materialization_nodes")==["kjobwidgets"],"Tier3 round3 canonical source materialization set")
         req(ar.get("provider_closure_only_nodes")==["kwallet"],"Tier3 round3 canonical provider closure set")
-        if active.get("status")=="materialization-PASS":
+        if ar.get("current_attempt")==4:
+            req(canonical.get("package_builds")=="tier3-level0-authorized","Tier3 attempt4 build authorization")
+            req(ar.get("status")=="level0-rerun-active" and ar.get("execution_authorized") is True,"Tier3 attempt4 canonical remediation state")
+            req(ar.get("materialization_workflow_run")==35812918054 and ar.get("materialization_commit")=="a57c13059dfc206ddf57390e1cd0cfd280471965","Tier3 attempt4 materialization evidence")
+            req(ar.get("activation_policy_workflow_run")==35813396247,"Tier3 attempt4 activation evidence")
+            req(ar.get("next_gate")=="tier3-build-level0-attempt4","Tier3 attempt4 canonical next gate")
+        elif active.get("status")=="materialization-PASS":
+            req(canonical.get("package_builds")=="tier3-level0-remediation-pending","Tier3 round3 build pause")
+            req(ar.get("execution_authorized") is False,"Tier3 round3 execution pause")
             req(ar.get("status")=="materialization-PASS-pending-level0-attempt4-activation","Tier3 round3 promoted canonical state")
             req(ar.get("materialization_workflow_run")==35812918054 and ar.get("materialization_commit")=="a57c13059dfc206ddf57390e1cd0cfd280471965","Tier3 round3 promoted materialization evidence")
             req(ar.get("next_gate")=="tier3-build-level0-attempt4-activation-validation","Tier3 round3 activation validation gate")
         else:
+            req(canonical.get("package_builds")=="tier3-level0-remediation-pending","Tier3 round3 build pause")
+            req(ar.get("execution_authorized") is False,"Tier3 round3 execution pause")
             req(ar.get("status")=="materialization-pending-ci","Tier3 round3 pending canonical state")
             req(ar.get("next_gate")=="tier3-round3-kjobwidgets-materialization","Tier3 round3 canonical next gate")
     elif ar.get("current_attempt")==3:

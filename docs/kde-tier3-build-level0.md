@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 0
 
-Status: **attempt 3 complete — round-3 source remediation promoted; attempt 4 activation pending validation** as of 2026-09-22.
+Status: **Level 0 attempt 4 active — full 12-node rerun authorized** as of 2026-09-22.
 
 Level 0 is the first real binary-build campaign for the 20 canonical Tier 3 Frameworks. It contains **12 independent nodes**:
 
@@ -173,3 +173,12 @@ KJobWidgets `6.30.0-0supralinux4` is now pinned to real materialization run `358
 KWallet remains `6.30.0-0supralinux3`; its source pin did not change. Its Level 0 input closure now includes the existing PASS KArchive provider needed transitively by KDocTools.
 
 The Level 0 manifest is intentionally `remediation-materialized-pending-activation` with `execution_authorized=false`. This commit does not launch attempt 4. Repository Policy must validate the promoted source pin and closure first; activation is a separate transition.
+
+
+## Attempt 4 activated
+
+Repository Policy run `35813396247` validated promotion commit `48abcd1ed74e8d83c9c256ddc491218e102d66cf`. Level 0 attempt 4 is now authorized with `execution_authorized=true`.
+
+All 12 Level 0 nodes must rerun. KJobWidgets consumes the new `6.30.0-0supralinux4` materialization; KWallet retains `6.30.0-0supralinux3` but its retained input closure now includes KArchive for the KDocTools provider. The other ten nodes are complete revalidation runs.
+
+No package result is promoted merely by activation. KNewStuff still requires its deferred KCMUtils runtime gate even if its binary build succeeds.

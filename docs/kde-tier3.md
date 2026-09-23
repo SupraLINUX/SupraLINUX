@@ -301,3 +301,12 @@ KJobWidgets `6.30.0-0supralinux4` materialized PASS in workflow `35812918054` an
 KWallet remains on its already-promoted `6.30.0-0supralinux3` source and only gains the KArchive artifact in the KDocTools provider closure.
 
 Canonical package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. Level 0 is paused until Repository Policy validates this promotion. Attempt 4, when separately activated, must rerun all 12 Level 0 nodes.
+
+
+### Level 0 attempt 4 active
+
+Repository Policy run `35813396247` validated the round-3 promotion commit `48abcd1ed74e8d83c9c256ddc491218e102d66cf`. A separate activation authorizes a complete **12-node Level 0 attempt 4**.
+
+KJobWidgets builds from `6.30.0-0supralinux4`; KWallet remains `6.30.0-0supralinux3` with the KArchive-completed KDocTools provider closure. The other ten nodes rerun for full revalidation.
+
+Canonical Tier 3 package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** until attempt-4 evidence is reviewed. Levels 1–3 remain unauthorized.

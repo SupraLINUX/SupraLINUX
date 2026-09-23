@@ -121,7 +121,14 @@ elif policy.get("package_builds")=="tier3-level0-authorized":
     attempt=rem.get("current_attempt")
     req(rem.get("status")=="level0-rerun-active","Tier3 active Level0 rerun status")
     req(rem.get("execution_authorized") is True,"Tier3 active Level0 execution authorization")
-    if attempt==3:
+    if attempt==4:
+        req(rem.get("round")==3,"Tier3 attempt4 remediation round")
+        req(set(rem.get("nodes",[]))=={"kjobwidgets","kwallet"},"Tier3 attempt4 remediation nodes")
+        req(rem.get("source_materialization_nodes")==["kjobwidgets"],"Tier3 attempt4 source-remediated node")
+        req(rem.get("provider_closure_only_nodes")==["kwallet"],"Tier3 attempt4 closure-only node")
+        req(rem.get("activation_policy_workflow_run")==35813396247,"Tier3 attempt4 activation validation")
+        req(rem.get("next_gate")=="tier3-build-level0-attempt4","Tier3 attempt4 next gate")
+    elif attempt==3:
         req(rem.get("round")==2,"Tier3 attempt3 remediation round")
         req(set(rem.get("nodes",[]))=={"kiconthemes","kjobwidgets","kwallet"},"Tier3 attempt3 remediation nodes")
         req(rem.get("activation_policy_workflow_run")==35807934729,"Tier3 attempt3 activation validation")

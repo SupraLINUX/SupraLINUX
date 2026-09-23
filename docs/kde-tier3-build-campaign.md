@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 build campaign
 
-Status: **validated topology; round-3 source promotion complete, attempt 4 pending activation** as of 2026-09-22.
+Status: **validated topology; Level 0 attempt 4 active** as of 2026-09-22.
 
 This document defines how the 20 materialized Tier 3 Frameworks will be built without changing the project-wide PASS / FAIL / BLOCKED semantics.
 
@@ -103,3 +103,8 @@ Round 3 does not alter the KDE DAG. KJobWidgets has one source-package metadata 
 The generated campaign now pins KJobWidgets to `6.30.0-0supralinux4` materialization run `35812918054`. KWallet remains on its `6.30.0-0supralinux3` source artifact while its separate Level 0 provider closure includes KArchive.
 
 The 12 / 2 / 4 / 2 topology remains unchanged. Attempt 4 is not active in this promotion commit; Levels 1–3 remain gated.
+
+
+## Attempt 4 activation
+
+Repository Policy run `35813396247` validated the round-3 promoted inputs. Level 0 is authorized as a complete 12-node attempt 4 with `fail-fast=false`; the 12 / 2 / 4 / 2 topology is unchanged and later levels remain unauthorized.

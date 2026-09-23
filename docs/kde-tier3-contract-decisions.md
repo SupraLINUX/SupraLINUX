@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package-contract decisions
 
-Status: **PASS — round 3 materialization promoted; attempt 4 activation pending validation**
+Status: **PASS — round 3 materialization promoted; attempt 4 active**
 
 Reviewed: **2026-09-22**
 
@@ -109,3 +109,6 @@ KWallet has **no source change** in round 3. Its existing optional KDocTools pro
 The KJobWidgets symbols-template correction materialized successfully in run `35812918054` as `6.30.0-0supralinux4`. The promoted artifact proves only the source-package transformation; binary PASS still requires the next complete Level 0 campaign.
 
 KWallet's round-3 decision remains provider-closure-only. Its source package and KDE dependency semantics are unchanged. The KArchive artifact is a provider prerequisite of KDocTools, not a newly invented KWallet framework edge.
+
+
+Repository Policy run `35813396247` validated the promoted round-3 contract state. Attempt 4 now tests the already-decided KJobWidgets symbols metadata and KWallet provider closure as real binary builds; no contract authority changes at activation.

@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **PASS — round-3 KJobWidgets materialization promoted; Level 0 attempt 4 activation pending validation** as of 2026-09-22.
+Status: **PASS — round-3 KJobWidgets materialization promoted; Level 0 attempt 4 active** as of 2026-09-22.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -170,3 +170,6 @@ The retained KDE upstream tarball SHA-256 remains `bf36e3619df1c6ad3d900bd36433d
 All 20 Tier 3 nodes are again source-materialized. Nineteen retain their previous source artifacts; only KJobWidgets changed. KWallet remains source-identical at `6.30.0-0supralinux3`.
 
 This promotion does **not** authorize binary builds. Level 0 stays paused until Repository Policy validates the refreshed KJobWidgets pin and the KWallet KArchive provider closure.
+
+
+Repository Policy run `35813396247` validated the round-3 source promotion. Materialization remains closed at 20/20 PASS while the separate binary-build authority activates Level 0 attempt 4. No additional source rematerialization is requested.

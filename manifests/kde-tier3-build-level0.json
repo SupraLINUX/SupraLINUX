@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level0",
   "frameworks_series": "6.30.0",
-  "state": "remediation-materialized-pending-activation",
-  "execution_authorized": false,
+  "state": "active-pending-ci",
+  "execution_authorized": true,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -450,7 +450,7 @@
         "artifact_sha256": "c9fee3ac73302dfdce8d3fece9348fc292d03f60c23a81d8073b358ce0b99a9d",
         "result": "PASS"
       },
-      "current_attempt": 3
+      "current_attempt": 4
     },
     "kconfigwidgets": {
       "state": "prepared-pending-revalidation",
@@ -514,7 +514,7 @@
         "artifact_sha256": "4243ba90092149ca854f4f9bb0570458dbb195e2ffbb67ef1aea2bf57f5fbb64",
         "result": "PASS"
       },
-      "current_attempt": 3
+      "current_attempt": 4
     },
     "kdav": {
       "state": "prepared-pending-revalidation",
@@ -570,7 +570,7 @@
         "artifact_id": 10702499459,
         "artifact_sha256": "a55642fe89cda2cc5c78ba2bdc814c5e47570d325063813d515be7073cc3a3c6"
       },
-      "current_attempt": 3
+      "current_attempt": 4
     },
     "kdesu": {
       "state": "prepared-pending-revalidation",
@@ -627,7 +627,7 @@
         "artifact_sha256": "c034c2751d6b98a30818b6236174a1ece42dde21da8e3cc66a031cec9a068b97",
         "result": "PASS"
       },
-      "current_attempt": 3
+      "current_attempt": 4
     },
     "kiconthemes": {
       "state": "prepared-pending-revalidation",
@@ -703,7 +703,7 @@
         "artifact_id": 10709706833,
         "artifact_sha256": "9d9ceadb8ccc7cfde4bc674f8f64b64a66e91f2971a14c92ce97223012487eb8"
       },
-      "current_attempt": 3
+      "current_attempt": 4
     },
     "kjobwidgets": {
       "state": "remediation-pending-build",
@@ -767,7 +767,7 @@
         "artifact_id": 10710136148,
         "artifact_sha256": "5feaea71e99bb9ebe2be812deb9101cee440d6d065ab98354b47ee36114f3d5a"
       },
-      "current_attempt": 3
+      "current_attempt": 4
     },
     "knewstuff": {
       "state": "prepared-pending-revalidation",
@@ -845,7 +845,7 @@
         "artifact_sha256": "742883c867d562c7634b1640cb7eab64e2617d096d3a48c9664d61f296eb5283",
         "result": "RUNTIME_PENDING"
       },
-      "current_attempt": 3
+      "current_attempt": 4
     },
     "kpeople": {
       "state": "prepared-pending-revalidation",
@@ -910,7 +910,7 @@
         "artifact_sha256": "e5b541df475c70b5beac53d57fce0ebacf74ac2ff07bd597f6cbc1c07d8a1e1e",
         "result": "PASS"
       },
-      "current_attempt": 3
+      "current_attempt": 4
     },
     "krunner": {
       "state": "prepared-pending-revalidation",
@@ -974,7 +974,7 @@
         "artifact_id": 10702959832,
         "artifact_sha256": "81c2d69889b222c6d05e96067b3c86bc4e5241572bc35415b3ae4d98d3ca5299"
       },
-      "current_attempt": 3
+      "current_attempt": 4
     },
     "ksvg": {
       "state": "prepared-pending-revalidation",
@@ -1038,7 +1038,7 @@
         "artifact_sha256": "49a3729468affc63702306c7ebacfd6afa1ea4eb84416ad467d9d86e3f7648cd",
         "result": "PASS"
       },
-      "current_attempt": 3
+      "current_attempt": 4
     },
     "ktextwidgets": {
       "state": "prepared-pending-revalidation",
@@ -1097,7 +1097,7 @@
         "artifact_sha256": "115cbee8e63f5262cdbb9120b33bfbfcdf3d74b97b3fecf8d5e724dbb4972dff",
         "result": "PASS"
       },
-      "current_attempt": 3
+      "current_attempt": 4
     },
     "kwallet": {
       "state": "remediation-pending-build",
@@ -1180,7 +1180,7 @@
         "artifact_id": 10709377109,
         "artifact_sha256": "be3c7469e1edb7e17b265a80321a392607c65541d72f0d580cfcfd7b99fa27c3"
       },
-      "current_attempt": 3,
+      "current_attempt": 4,
       "support_provider_role": {
         "kdoctools": "optional-upstream-documentation-provider-required-by-selected-manpage-payload"
       },
@@ -1287,17 +1287,14 @@
     },
     "activation_policy_workflow_run": 35769883615
   },
-  "current_attempt": 3,
+  "current_attempt": 4,
   "activation": {
-    "status": "CLOSED-PARTIAL",
-    "promotion_validation_workflow_run": 35807934729,
-    "promotion_commit": "13c825b94e9c9c7de5d8ce8baf4c1631a5cd1f6e",
+    "status": "ACTIVE",
+    "attempt": 4,
+    "promotion_validation_workflow_run": 35813396247,
+    "promotion_commit": "48abcd1ed74e8d83c9c256ddc491218e102d66cf",
     "scope": "full-level0-rerun-12-nodes",
-    "reason": "revalidate-complete-level0-after-round2-three-source-remediations",
-    "attempt": 3,
-    "completed_workflow_run": 35808764577,
-    "result": "10-success-2-fail",
-    "canonical_promotions": 0
+    "reason": "revalidate-complete-level0-after-round3-kjobwidgets-symbols-and-kwallet-provider-closure-remediations"
   },
   "attempt2_summary": {
     "workflow_run": 35770505868,
@@ -1327,7 +1324,7 @@
   },
   "active_remediation": {
     "round": 3,
-    "status": "materialization-PASS-pending-activation",
+    "status": "level0-rerun-active",
     "nodes": [
       "kjobwidgets",
       "kwallet"
@@ -1348,9 +1345,9 @@
     "full_level0_rerun_required": true,
     "trigger_workflow_run": 35808764577,
     "trigger_commit": "417444e60bd09887383fdc4ef5f1c1f3df1efc09",
-    "execution_authorized": false,
-    "current_attempt": 3,
-    "next_gate": "tier3-build-level0-attempt4-activation-validation",
+    "execution_authorized": true,
+    "current_attempt": 4,
+    "next_gate": "tier3-build-level0-attempt4",
     "materialization_workflow_run": 35812918054,
     "materialization_commit": "a57c13059dfc206ddf57390e1cd0cfd280471965",
     "materialization_artifacts": {
@@ -1359,7 +1356,8 @@
         "artifact_id": 10730956293,
         "artifact_sha256": "bcd505c1d4cbc65b45861335f41d8b03f18d53995bb9ba1d9036295bd5ce7804"
       }
-    }
+    },
+    "activation_policy_workflow_run": 35813396247
   },
   "orchestration_correction": {
     "status": "closed-corrected",
