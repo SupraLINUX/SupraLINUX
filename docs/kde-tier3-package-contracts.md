@@ -189,3 +189,8 @@ No Level 0 PASS state changes. Only KIO enters the selective source-materializat
 KIO `6.30.0-0supralinux2` materialized PASS in run `35825070347`, artifact `10735250819`, SHA-256 `8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106`.
 
 Historical remediated revisions are monotonic: KJobWidgets and KWallet remain at their previously promoted `-4` revisions while KIO advances to `-2`; entering a later remediation round never reverts an earlier package contract.
+
+
+### Round 5 activation handoff
+
+KIO source materialization is already PASS and unchanged. Repository Policy run `35826072726` validated the Level 1 plan, so the round-5 contract handoff now points to `tier3-build-level1-attempt1`. This does not modify KIO's package contract; it records that the separate binary-execution gate has been satisfied.

@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **planning prepared; binary execution unauthorized** as of 2026-09-23.
+Status: **Attempt 1 active — KIO + KXMLGui authorized** as of 2026-09-23.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -31,3 +31,12 @@ KIO explicitly proves `BUILD_TESTING=ON`, `WITH_WAYLAND=ON`, `BUILD_DESIGNERPLUG
 This planning commit does **not** run KIO or KXMLGui. Repository Policy must first validate the Level 1 definition. A later, separate activation may set `execution_authorized=true`.
 
 PASS may make packages eligible for the SupraLINUX `testing` channel. Promotion to `stable` is never automatic and always requires explicit user approval.
+
+
+## Attempt 1 activation
+
+Repository Policy run `35826072726` validated the complete Level 1 definition at commit `b96e925ee9f649c1b4b984ed6fed277ef911f2c2`. The planning workflow `35826072818` also validated the planner/runner and intentionally scheduled zero package jobs while `execution_authorized=false`.
+
+A separate activation now sets `execution_authorized=true` for exactly KIO and KXMLGui. The canonical phase becomes `build-level1`; both jobs may execute independently with `fail-fast=false`. No other Tier 3 node is authorized.
+
+No package is promoted by activation alone. PASS/FAIL is determined only by the real build artifacts and gates from Attempt 1.

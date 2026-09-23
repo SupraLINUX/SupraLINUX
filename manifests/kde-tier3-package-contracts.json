@@ -2961,10 +2961,11 @@
     "policy": {
       "package_revision_bump_required_for_packaging_changes": true,
       "rematerialize_only_changed_nodes": true,
-      "level1_execution_remains_unauthorized": true,
-      "kde_dependency_graph_unchanged": true
+      "level1_execution_remains_unauthorized": false,
+      "kde_dependency_graph_unchanged": true,
+      "level1_activation_requires_separate_policy_gate": true
     },
-    "next_gate": "tier3-build-level1-planning-validation",
+    "next_gate": "tier3-build-level1-attempt1",
     "evidence": {
       "workflow_run": 35825070347,
       "commit": "fbde9a53e357a138f4d74d7905230c7859e20444",
@@ -2980,6 +2981,12 @@
       },
       "package_attempted": false,
       "package_state_effect": "none"
+    },
+    "level1_activation": {
+      "policy_workflow_run": 35826072726,
+      "policy_commit": "b96e925ee9f649c1b4b984ed6fed277ef911f2c2",
+      "planner_workflow_run": 35826072818,
+      "attempt": 1
     }
   },
   "remediation_history": [

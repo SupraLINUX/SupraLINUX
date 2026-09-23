@@ -131,3 +131,10 @@ Repository Policy run `35825677329` validated the promoted KIO round-5 source pi
 The Level 1 manifest starts with `execution_authorized=false`. KIO uses the promoted `6.30.0-0supralinux2` source artifact; KXMLGui remains `6.30.0-0supralinux1`. KDED participates only in KIO runtime closure validation and is not promoted into the Tier 3 build DAG as a false build edge.
 
 Repository Policy must validate this Level 1 plan before a separate activation commit can schedule either binary build.
+
+
+### Level 1 Attempt 1 activation
+
+The Level 1 plan passed Repository Policy run `35826072726`. A separate activation authorizes exactly KIO and KXMLGui as Attempt 1 and transitions the canonical phase to `build-level1`.
+
+The validated topology and artifact pins are unchanged. Activation itself creates no package PASS state and performs no stable publication.

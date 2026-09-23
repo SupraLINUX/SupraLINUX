@@ -219,3 +219,8 @@ Run `35825070347`, job `107064960565`, produced source-only PASS artifact `10735
 The promoted source hashes are: DSC `c9b8e0a660b3450f3662f7de99fce063041d71111952806d741e6b68b7999852`, Debian tar `98e558f4855c4ddf407ac0508fa9404926b727462da57263018b70030bd342e0`, source tree `1d020987f3a12eb5e588ca75d02b5f2efe0a5530e33b812012e3ef7719deaf23`, materialized tree `cdfa0bd2dc13f7ee75354bb3480951f6aebaf5d82a138746bcd56343a5ac15f9`, adapted control `b1ab7b4386e5076a2fcdddcf29b399ccf8093d1f7bcec20d717fc9ceaa8ec31b`, and adapted rules `87a32e610585ab989426006099b0e62a15f22d299ea70db3266b2a399f8dfd10`.
 
 All 20 Tier 3 source materializations are again PASS. This promotion has no binary package-state effect.
+
+
+### Round 5 activation handoff
+
+The KIO `6.30.0-0supralinux2` materialization remains the exact PASS artifact from run `35825070347`. After Level 1 planning passed Repository Policy run `35826072726`, the materialization lifecycle hands off to `tier3-build-level1-attempt1`. No source artifact or hash changes at activation.

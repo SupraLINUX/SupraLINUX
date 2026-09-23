@@ -58,7 +58,7 @@ req(len(tier2_nodes)==15 and all(n.get("state")=="PASS" for n in tier2_nodes),"T
 nodes={n.get("id"):n for n in tier3.get("nodes",[])}
 req(set(nodes)==set(expected),"Tier3 node set must match KDE upstream 20-node inventory")
 level0_pass={"kbookmarks","kconfigwidgets","kdav","kdesu","kiconthemes","kjobwidgets","kpeople","krunner","ksvg","ktextwidgets","kwallet"}
-post_level0=tier3.get("discovery_policy",{}).get("phase")=="build-level1-planning"
+post_level0=tier3.get("discovery_policy",{}).get("phase") in {"build-level1-planning","build-level1"}
 for node_id,sha in expected.items():
     n=nodes.get(node_id,{})
     req(n.get("upstream_tier")==3 and n.get("upstream_version")=="6.30.0",f"{node_id}: upstream tier/version")
@@ -97,11 +97,11 @@ for node_id,sha in expected.items():
         req(node_id not in dag.get("nodes",{}),f"{node_id}: pending Tier3 node must not be promoted into canonical DAG")
 
 policy=tier3.get("discovery_policy",{})
-req(policy.get("phase") in {"build-level0","build-level1-planning"},"Tier3 discovery phase")
+req(policy.get("phase") in {"build-level0","build-level1-planning","build-level1"},"Tier3 discovery phase")
 req(policy.get("dependencies")=="materialized-from-kde-upstream-v6.30.0","Tier3 dependency state")
 req(policy.get("provider_audit")=="PASS","Tier3 provider audit gate")
 req(policy.get("package_contracts")=="PASS","Tier3 package-contract gate")
-req(policy.get("package_builds") in {"tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"},"Tier3 package-build gate")
+req(policy.get("package_builds") in {"tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized"},"Tier3 package-build gate")
 support=tier3.get("support_components",{})
 req(support.get("provider_audit_manifest")=="manifests/kde-tier3-support-provider-audit.json","Tier3 support provider-audit manifest")
 req(support.get("provider_audit")=="PASS","Tier3 support provider-audit state")
@@ -113,7 +113,7 @@ req(support.get("build_level0")=="PASS","Tier3 support level0 state")
 req(support.get("build_level1_manifest")=="manifests/kde-tier3-support-build-level1.json","Tier3 support level1 manifest")
 req(support.get("build_level1")=="PASS","Tier3 support level1 state")
 req(support.get("support_subdag")=="PASS","Tier3 support sub-DAG state")
-req(support.get("next_gate") in {"tier3-build-level0","tier3-build-level1-planning"},"Tier3 support next gate")
+req(support.get("next_gate") in {"tier3-build-level0","tier3-build-level1-planning","tier3-build-level1"},"Tier3 support next gate")
 if policy.get("package_builds")=="tier3-level0-remediation-pending":
     rem=tier3.get("active_remediation",{})
     if rem.get("round")==4:
@@ -171,6 +171,17 @@ elif policy.get("package_builds")=="tier3-level0-authorized":
         req(rem.get("next_gate")=="tier3-build-level0-attempt2","Tier3 attempt2 next gate")
     else:
         req(False,"Tier3 authorized Level0 attempt marker")
+elif policy.get("package_builds")=="tier3-level1-authorized":
+    rem=tier3.get("active_remediation",{})
+    req(policy.get("phase")=="build-level1","Tier3 active Level1 phase")
+    req(rem.get("round")==5 and rem.get("level")=="build-level1-preflight","Tier3 active Level1 round5 identity")
+    req(rem.get("status")=="level1-active-pending-ci","Tier3 active Level1 status")
+    req(rem.get("execution_authorized") is True and rem.get("level1_execution_authorized") is True,"Tier3 active Level1 authorization")
+    req(rem.get("current_attempt")==1,"Tier3 Level1 attempt marker")
+    req(rem.get("planning_policy_workflow_run")==35826072726 and rem.get("planning_policy_commit")=="b96e925ee9f649c1b4b984ed6fed277ef911f2c2","Tier3 Level1 planning Policy evidence")
+    req(rem.get("planner_workflow_run")==35826072818,"Tier3 Level1 planner evidence")
+    req(rem.get("next_gate")=="tier3-build-level1-attempt1","Tier3 Level1 attempt1 gate")
+    req(tier3.get("build_level1_manifest")=="manifests/kde-tier3-build-level1.json","Tier3 Level1 manifest linkage")
 elif policy.get("package_builds") in {"tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"}:
     rem=tier3.get("active_remediation",{})
     req(policy.get("phase")=="build-level1-planning","Tier3 round5 Level1 planning phase")

@@ -808,7 +808,7 @@
     "policy": "rematerialize-only-kio-before-level1-planning-validation",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-planning-validation",
+    "next_gate": "tier3-build-level1-attempt1",
     "workflow_run": 35825070347,
     "commit": "fbde9a53e357a138f4d74d7905230c7859e20444",
     "promoted_nodes": [
@@ -820,6 +820,12 @@
         "artifact_id": 10735250819,
         "artifact_sha256": "8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106"
       }
+    },
+    "level1_activation": {
+      "policy_workflow_run": 35826072726,
+      "policy_commit": "b96e925ee9f649c1b4b984ed6fed277ef911f2c2",
+      "planner_workflow_run": 35826072818,
+      "attempt": 1
     }
   },
   "remediation_history": [
@@ -1001,6 +1007,6 @@
     "active_remediation_round": 5,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-planning-validation"
+    "next_gate": "tier3-build-level1-attempt1"
   }
 }

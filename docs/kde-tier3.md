@@ -391,3 +391,10 @@ The formal Level 1 gate contains KIO and KXMLGui and is linked by `manifests/kde
 All Level 1 inputs are exact retained PASS artifacts. KIO consumes its round-5 source materialization plus KBookmarks, KIconThemes, KJobWidgets and KWallet; KDocTools remains a build/documentation provider and KDED a runtime-validation provider. KXMLGui consumes KConfigWidgets, KIconThemes and KTextWidgets plus its external PASS inputs.
 
 Canonical package state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED** until real Level 1 package evidence is produced and separately promoted.
+
+
+### Level 1 Attempt 1 active
+
+Repository Policy run `35826072726` validated the Level 1 plan. Canonical phase is now `build-level1` and exactly KIO plus KXMLGui are authorized for real binary Attempt 1.
+
+The pre-build canonical package snapshot remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**. Any later PASS/FAIL transition must come from the real Level 1 build evidence; stable publication remains explicitly user-approved only.

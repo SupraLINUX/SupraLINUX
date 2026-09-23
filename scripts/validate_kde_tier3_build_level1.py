@@ -29,6 +29,11 @@ req(m.get("canonical_snapshot")=="11 PASS / 9 pending / 0 current FAIL / 0 BLOCK
 req(m.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
 if m.get("state")=="planned-pending-activation":
     req(m.get("execution_authorized") is False,"planned Level1 must not authorize builds")
+elif m.get("state")=="active-pending-ci":
+    req(m.get("execution_authorized") is True and m.get("current_attempt")==1,"active Level1 attempt1 authorization")
+    act=m.get("activation",{})
+    req(act.get("policy_workflow_run")==35826072726 and act.get("policy_commit")=="b96e925ee9f649c1b4b984ed6fed277ef911f2c2","Level1 activation Policy evidence")
+    req(act.get("planner_workflow_run")==35826072818 and act.get("scope")=="kio+kxmlgui","Level1 activation planner/scope")
 
 pre=m.get("planning_precondition",{})
 req(pre.get("level0_attempt")==5 and pre.get("level0_workflow_run")==35818120201,"Level1 Level0 prerequisite")
@@ -38,7 +43,7 @@ req(pre.get("pre_plan_repository_policy_workflow_run")==35825677329 and pre.get(
 
 req(tier3.get("build_level1_manifest")=="manifests/kde-tier3-build-level1.json","canonical Level1 manifest link")
 policy=tier3.get("discovery_policy",{})
-req(policy.get("phase")=="build-level1-planning","canonical Level1 planning phase")
+req(policy.get("phase") in {"build-level1-planning","build-level1"},"canonical Level1 phase")
 req(policy.get("package_builds") in {"tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized"},"canonical Level1 build gate")
 ar=tier3.get("active_remediation",{})
 req(ar.get("round")==5 and ar.get("nodes")==["kio"],"canonical round5 scope")
@@ -46,6 +51,13 @@ req(ar.get("materialization_workflow_run")==35825070347 and ar.get("materializat
 if policy.get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
     req(ar.get("status")=="materialization-PASS-pending-level1-planning-validation","canonical planning-validation state")
     req(ar.get("level1_execution_authorized") is False and ar.get("next_gate")=="tier3-build-level1-planning-validation","canonical Level1 execution pause")
+elif policy.get("package_builds")=="tier3-level1-authorized":
+    req(policy.get("phase")=="build-level1","canonical active Level1 phase")
+    req(ar.get("status")=="level1-active-pending-ci","canonical active Level1 state")
+    req(ar.get("execution_authorized") is True and ar.get("level1_execution_authorized") is True,"canonical Level1 authorization")
+    req(ar.get("current_attempt")==1 and ar.get("planning_policy_workflow_run")==35826072726,"canonical Level1 attempt/planning evidence")
+    req(ar.get("next_gate")=="tier3-build-level1-attempt1","canonical Level1 attempt1 gate")
+    req(tier3.get("support_components",{}).get("next_gate")=="tier3-build-level1","canonical Level1 support gate")
 
 shared=m.get("shared_predecessors",{}).get("extra-cmake-modules",{})
 ecm=campaign.get("retained_pass_artifacts",{}).get("extra-cmake-modules",{})

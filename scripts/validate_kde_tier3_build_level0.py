@@ -308,13 +308,16 @@ elif m.get("state")=="PARTIAL":
     req(m["nodes"]["knewstuff"].get("state")=="runtime-validation-required","KNewStuff remains runtime-validation-required")
     req(all(m["nodes"][n].get("pass_evidence",{}).get("result")=="PASS" and m["nodes"][n].get("pass_evidence",{}).get("downstream_eligible") is True for n in expected_pass),"Level0 promoted PASS evidence")
     req(m["nodes"]["knewstuff"].get("pass_evidence",{}).get("result")=="RUNTIME_PENDING" and m["nodes"]["knewstuff"].get("pass_evidence",{}).get("downstream_eligible") is False,"KNewStuff retained build evidence")
-    req(t.get("discovery_policy",{}).get("phase")=="build-level1-planning","Tier3 Level1 planning phase after Level0")
-    req(t.get("discovery_policy",{}).get("package_builds") in {"tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"},"Tier3 Level1 build pause")
+    req(t.get("discovery_policy",{}).get("phase") in {"build-level1-planning","build-level1"},"Tier3 Level1 phase after Level0")
+    req(t.get("discovery_policy",{}).get("package_builds") in {"tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized"},"Tier3 Level1 build gate")
     ar=t.get("active_remediation",{})
     if ar.get("round")==5:
-        req(ar.get("level")=="build-level1-preflight" and ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation"},"Tier3 Level1 KIO preflight remediation")
+        req(ar.get("level")=="build-level1-preflight" and ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation","level1-active-pending-ci"},"Tier3 Level1 KIO preflight remediation")
         req(ar.get("nodes")==["kio"] and ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux2"},"Tier3 Level1 KIO remediation scope")
-        req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 Level1 execution remains paused")
+        if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-authorized":
+            req(ar.get("execution_authorized") is True and ar.get("level1_execution_authorized") is True and ar.get("current_attempt")==1,"Tier3 Level1 execution active")
+        else:
+            req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 Level1 execution remains paused")
         hist=[x for x in t.get("remediation_history",[]) if x.get("round")==4]
         req(len(hist)==1 and hist[0].get("status")=="attempt5-complete" and hist[0].get("canonical_promotions")==11,"Tier3 Attempt5 closure retained in history")
     else:
@@ -376,7 +379,7 @@ elif m.get("state")=="remediation-pending-materialization":
         req(all(m["nodes"][n].get("state")=="prepared-pending-revalidation" for n in expected if n not in round2),"attempt2 non-failing nodes await revalidation")
 
 policy=t.get("discovery_policy",{})
-req(policy.get("phase") in {"build-level0","build-level1-planning"},"canonical Tier3 Level0/post-Level0 phase")
+req(policy.get("phase") in {"build-level0","build-level1-planning","build-level1"},"canonical Tier3 Level0/post-Level0 phase")
 if m.get("state")=="remediation-pending-materialization":
     req(policy.get("package_builds")=="tier3-level0-remediation-pending","canonical Tier3 remediation build gate")
     ar=t.get("active_remediation",{})
@@ -415,9 +418,9 @@ elif m.get("state")=="active-pending-ci":
         req(ar.get("current_attempt")==3 and ar.get("activation_policy_workflow_run")==35807934729,"canonical Tier3 attempt3 activation evidence")
         req(ar.get("next_gate")=="tier3-build-level0-attempt3","canonical Tier3 attempt3 next gate")
 else:
-    req(policy.get("package_builds") in {"tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"},"canonical Tier3 build gate")
+    req(policy.get("package_builds") in {"tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized"},"canonical Tier3 build gate")
     if m.get("state")=="PARTIAL":
-        req(policy.get("phase")=="build-level1-planning" and policy.get("package_builds") in {"tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"},"canonical Tier3 post-Level0 gate")
+        req(policy.get("phase") in {"build-level1-planning","build-level1"} and policy.get("package_builds") in {"tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized"},"canonical Tier3 post-Level0 gate")
     elif m.get("state")=="remediation-materialized-pending-activation":
         ar=t.get("active_remediation",{})
         if ar.get("round")==4:
@@ -429,7 +432,7 @@ else:
             req(ar.get("status")=="materialization-PASS-pending-level0-attempt4-activation","canonical Tier3 round3 promoted state")
             req(ar.get("execution_authorized") is False and ar.get("next_gate")=="tier3-build-level0-attempt4-activation-validation","canonical Tier3 attempt4 activation gate")
 
-req(t.get("support_components",{}).get("next_gate") in {"tier3-build-level0","tier3-build-level1-planning"},"canonical Tier3 next gate")
+req(t.get("support_components",{}).get("next_gate") in {"tier3-build-level0","tier3-build-level1-planning","tier3-build-level1"},"canonical Tier3 next gate")
 req(t.get("build_level0_manifest")=="manifests/kde-tier3-build-level0.json","canonical Tier3 Level0 manifest linkage")
 
 for path in (

@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "planned-pending-activation",
-  "execution_authorized": false,
+  "state": "active-pending-ci",
+  "execution_authorized": true,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -614,5 +614,13 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "repository-policy-level1-plan"
+  "next_gate": "tier3-build-level1-attempt1",
+  "current_attempt": 1,
+  "activation": {
+    "policy_workflow_run": 35826072726,
+    "policy_commit": "b96e925ee9f649c1b4b984ed6fed277ef911f2c2",
+    "planner_workflow_run": 35826072818,
+    "scope": "kio+kxmlgui",
+    "reason": "Level1 plan validated; authorize first real binary attempt"
+  }
 }

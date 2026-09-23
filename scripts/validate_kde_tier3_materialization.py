@@ -260,7 +260,7 @@ if m.get("state") == "pending-ci":
 elif m.get("state") == "PASS":
     req(all(m["nodes"][n].get("state") == "materialized" for n in selected), "PASS requires all materialization nodes materialized")
     req(c.get("state") == "materialized", "PASS materialization contract lifecycle")
-    req(t.get("discovery_policy", {}).get("phase") in {"build-campaign-planning", "build-level0", "build-level1-planning"}, "post-materialization phase")
+    req(t.get("discovery_policy", {}).get("phase") in {"build-campaign-planning", "build-level0", "build-level1-planning", "build-level1"}, "post-materialization phase")
     if active_c.get("round") == 5:
         req(active_c.get("status") == "materialization-PASS", "round5 contract materialization PASS")
         req(active_m.get("status") == "PASS" and active_m.get("workflow_run") == 35825070347, "round5 KIO materialization evidence PASS")
@@ -273,10 +273,18 @@ elif m.get("state") == "PASS":
         ev=m["nodes"]["kio"].get("evidence",{})
         req(ev.get("adapted_control_sha256")=="b1ab7b4386e5076a2fcdddcf29b399ccf8093d1f7bcec20d717fc9ceaa8ec31b","KIO round5 control hash")
         req(ev.get("adapted_rules_sha256")=="87a32e610585ab989426006099b0e62a15f22d299ea70db3266b2a399f8dfd10","KIO round5 rules hash")
-        req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level1-source-PASS-pending-planning-validation", "round5 planning validation build gate")
-        req(active_t.get("status") == "materialization-PASS-pending-level1-planning-validation", "round5 canonical source PASS state")
-        req(active_t.get("execution_authorized") is False and active_t.get("level1_execution_authorized") is False, "round5 Level1 remains paused")
-        req(active_t.get("materialization_workflow_run") == 35825070347 and active_t.get("next_gate") == "tier3-build-level1-planning-validation", "round5 canonical evidence/next gate")
+        if t.get("discovery_policy", {}).get("package_builds") == "tier3-level1-authorized":
+            req(t.get("discovery_policy", {}).get("phase") == "build-level1", "round5 active Level1 phase")
+            req(active_t.get("status") == "level1-active-pending-ci", "round5 active Level1 state")
+            req(active_t.get("execution_authorized") is True and active_t.get("level1_execution_authorized") is True, "round5 Level1 authorized")
+            req(active_t.get("current_attempt") == 1 and active_t.get("next_gate") == "tier3-build-level1-attempt1", "round5 Level1 attempt1 gate")
+            req(active_m.get("next_gate") == "tier3-build-level1-attempt1", "round5 materialization handoff gate")
+            req(m.get("evidence_summary",{}).get("next_gate") == "tier3-build-level1-attempt1", "round5 materialization summary handoff")
+        else:
+            req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level1-source-PASS-pending-planning-validation", "round5 planning validation build gate")
+            req(active_t.get("status") == "materialization-PASS-pending-level1-planning-validation", "round5 canonical source PASS state")
+            req(active_t.get("execution_authorized") is False and active_t.get("level1_execution_authorized") is False, "round5 Level1 remains paused")
+            req(active_t.get("materialization_workflow_run") == 35825070347 and active_t.get("next_gate") == "tier3-build-level1-planning-validation", "round5 canonical evidence/next gate")
     elif active_c.get("round") == 4:
         req(active_c.get("status") == "materialization-PASS", "round4 contract materialization PASS")
         req(active_m.get("status") == "PASS" and active_m.get("workflow_run") == 35817654811, "round4 materialization evidence PASS")
@@ -347,8 +355,8 @@ else:
     prev_summary = m.get("previous_evidence_summary", {})
     req(prev_summary.get("result") == "PASS" and prev_summary.get("package_attempted") is False, "previous materialization summary retained")
     if active_c.get("round") == 5:
-        req(t.get("discovery_policy", {}).get("phase") == "build-level1-planning", "round5 remediation remains in Level1 planning")
-        req(t.get("support_components", {}).get("next_gate") == "tier3-build-level1-planning", "round5 remediation remains in Level1 planning gate")
+        req(t.get("discovery_policy", {}).get("phase") in {"build-level1-planning","build-level1"}, "round5 remediation remains in Level1 lifecycle")
+        req(t.get("support_components", {}).get("next_gate") in {"tier3-build-level1-planning","tier3-build-level1"}, "round5 remediation remains in Level1 gate")
     else:
         req(t.get("discovery_policy", {}).get("phase") == "build-level0", "remediation remains in Level0 phase")
         req(t.get("support_components", {}).get("next_gate") == "tier3-build-level0", "remediation remains in Level0 gate")
