@@ -88,6 +88,7 @@ plan={
  "extra_buildinfo_proof_packages":n.get("extra_buildinfo_proof_packages",[]),
  "provider_closure_input_ids":n.get("provider_closure_input_ids",[]),
  "runtime_validation_input_ids":n.get("runtime_validation_input_ids",[]),
+ "sbuild_enable_network":n.get("sbuild_enable_network",False),
 }
 (out/"input-plan.json").write_text(json.dumps(plan,indent=2)+"\n")
 env={
@@ -97,6 +98,7 @@ env={
  "PYTHON_MODULE":n.get("python_module") or "",
  "QML_PACKAGES_JSON":json.dumps(n.get("qml_packages",[]),separators=(",",":")),
  "SUCCESS_TRANSITION":n.get("success_transition","PASS"),
+ "SBUILD_ENABLE_NETWORK":"1" if n.get("sbuild_enable_network") is True else "0",
 }
 (out/"input-env.sh").write_text("\n".join(f"{k}={shlex.quote(v)}" for k,v in env.items())+"\n")
 PY
@@ -232,6 +234,7 @@ PACKAGE_ATTEMPTED=true
 STATE=FAIL
 EXTRA_ARGS=()
 for deb in "${PREDECESSOR_DEBS[@]}"; do EXTRA_ARGS+=(--extra-package="${deb}"); done
+if [[ "${SBUILD_ENABLE_NETWORK}" == "1" ]]; then EXTRA_ARGS+=(--enable-network); fi
 sbuild --verbose --chroot-mode=unshare --dist=resolute --arch=amd64 --arch-all   "${EXTRA_ARGS[@]}" --build-dir="${OUT}" "${DSC}" |& tee "${EVIDENCE}/sbuild.log"
 
 grep -Eq '100% tests passed, 0 tests failed out of [1-9][0-9]*' "${EVIDENCE}/sbuild.log" || {

@@ -31,9 +31,16 @@ for token in (
     "runtime_validation_input_ids",
     "runtime-validation.json",
     "declared-runtime-input-proof",
+    "SBUILD_ENABLE_NETWORK",
+    "--enable-network",
 ):
     if token not in runner:
         raise SystemExit(f"Level1 runner missing contract token: {token}")
+
+if manifest["nodes"]["kio"].get("sbuild_enable_network") is not True:
+    raise SystemExit("KIO must explicitly opt into network for its upstream external HTTP tests")
+if manifest["nodes"]["kxmlgui"].get("sbuild_enable_network") is not False:
+    raise SystemExit("KXMLGui must retain network-disabled sbuild")
 
 print("KDE Tier 3 Level 1 planner/runner scope: PASS")
 print(f"planned_nodes={len(planned)}")

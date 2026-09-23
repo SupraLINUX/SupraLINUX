@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "active-pending-ci",
-  "execution_authorized": true,
+  "state": "remediation-pending-materialization",
+  "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -458,7 +458,7 @@
   },
   "nodes": {
     "kio": {
-      "state": "prepared-pending-revalidation",
+      "state": "remediation-pending-materialization",
       "source_package": "kf6-kio",
       "package_version": "6.30.0-0supralinux2",
       "expected_binary_packages": [
@@ -600,20 +600,38 @@
         "breeze-icons"
       ],
       "last_attempt": {
-        "attempt": 1,
-        "workflow_run": 35826694664,
-        "job_id": 107070288529,
-        "artifact_id": 10735576795,
-        "artifact_sha256": "bbc1cb4caa351a335077e4b3dc0dcee7b2a7dfb96d85e6659d112ad87069c353",
-        "raw_result": "FAIL",
-        "result": "INVALIDATED-ORCHESTRATION",
+        "attempt": 2,
+        "workflow_run": 35829170695,
+        "job_id": 107077795233,
+        "artifact_id": 10736848742,
+        "artifact_sha256": "94f5c7b51f47cd29dae2604f6258b8f10d13ef78e6f36e7023887c4f4336a51b",
+        "result": "FAIL",
         "package_attempted": true,
-        "stage": "sbuild/install-deps",
-        "canonical_state_effect": "none"
+        "stage": "sbuild",
+        "failure_substage": "ctest/upstream-test-environment"
+      },
+      "previous_package_version": "6.30.0-0supralinux2",
+      "candidate_package_version": "6.30.0-0supralinux3",
+      "current_attempt": 2,
+      "sbuild_enable_network": true,
+      "remediation": {
+        "global_round": 7,
+        "classification": "upstream-test-environment-provider-remediation",
+        "source_rematerialization_required": true,
+        "changes": [
+          "dbus-daemon test provider",
+          "SupraLINUX Breeze icon-theme test provider",
+          "isolated dbus-run-session",
+          "QT_QPA_PLATFORM=offscreen",
+          "controlled HOME/XDG_RUNTIME_DIR",
+          "KDECI_PLATFORM_PATH marker",
+          "serial CTest execution",
+          "node-scoped sbuild network for upstream external HTTP tests"
+        ]
       }
     },
     "kxmlgui": {
-      "state": "prepared-pending-revalidation",
+      "state": "remediation-pending-materialization",
       "source_package": "kf6-kxmlgui",
       "package_version": "6.30.0-0supralinux1",
       "expected_binary_packages": [
@@ -723,16 +741,28 @@
         "breeze-icons"
       ],
       "last_attempt": {
-        "attempt": 1,
-        "workflow_run": 35826694664,
-        "job_id": 107070288573,
-        "artifact_id": 10734929331,
-        "artifact_sha256": "9e14c20ddfed7bc1cb500e1c2544eac1469b97cc2862ed54a946fd0deb1161ed",
-        "raw_result": "FAIL",
-        "result": "INVALIDATED-ORCHESTRATION",
+        "attempt": 2,
+        "workflow_run": 35829170695,
+        "job_id": 107077795323,
+        "artifact_id": 10735938957,
+        "artifact_sha256": "fe460539e197a4549b79cb8b6cedd9eac7ae823ceed6b758483cf53fcf774800",
+        "result": "FAIL",
         "package_attempted": true,
-        "stage": "sbuild/install-deps",
-        "canonical_state_effect": "none"
+        "stage": "sbuild",
+        "failure_substage": "cmake/python-binding-build-provider"
+      },
+      "previous_package_version": "6.30.0-0supralinux1",
+      "candidate_package_version": "6.30.0-0supralinux2",
+      "current_attempt": 2,
+      "sbuild_enable_network": false,
+      "remediation": {
+        "global_round": 7,
+        "classification": "python-binding-build-tool-provider-remediation",
+        "source_rematerialization_required": true,
+        "build_depends": [
+          "python3-build",
+          "python3-setuptools"
+        ]
       }
     }
   },
@@ -759,7 +789,7 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-build-level1-attempt2",
+  "next_gate": "tier3-round7-level1-materialization",
   "current_attempt": 2,
   "last_activation": {
     "policy_workflow_run": 35826072726,
@@ -794,50 +824,31 @@
     "cause": "Both Level1 jobs reached sbuild but failed during install-deps because the Level1 orchestration omitted transitive package-provider closure required to install already-PASS predecessor artifacts. No node-owned source/build defect was established."
   },
   "active_remediation": {
-    "round": 1,
-    "trigger_workflow_run": 35826694664,
-    "trigger_commit": "e7e98703184967487198f26a488d553038756990",
+    "round": 2,
+    "global_round": 7,
+    "trigger_workflow_run": 35829170695,
+    "trigger_commit": "897d3a864bc7ea164400c7d9de2e9c51cf6316ab",
     "nodes": [
       "kio",
       "kxmlgui"
     ],
-    "source_changed_nodes": [],
-    "provider_closure_only_nodes": [
+    "source_changed_nodes": [
       "kio",
       "kxmlgui"
     ],
+    "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux2",
-      "kxmlgui": "6.30.0-0supralinux1"
+      "kio": "6.30.0-0supralinux3",
+      "kxmlgui": "6.30.0-0supralinux2"
     },
-    "provider_closure_inputs": {
-      "kio": [
-        "kconfigwidgets",
-        "karchive",
-        "kcodecs",
-        "knotifications",
-        "breeze-icons"
-      ],
-      "kxmlgui": [
-        "karchive",
-        "kcodecs",
-        "kcolorscheme",
-        "kcompletion",
-        "sonnet",
-        "breeze-icons"
-      ]
-    },
-    "execution_authorized": true,
+    "execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "provider-closure-PASS-attempt2-active",
-    "canonical_failures": 0,
-    "source_rematerialization_required": false,
-    "package_revision_bump_required": false,
-    "next_gate": "tier3-build-level1-attempt2",
+    "status": "materialization-pending-ci",
+    "source_rematerialization_required": true,
+    "package_revision_bump_required": true,
+    "next_gate": "tier3-round7-level1-materialization",
     "current_attempt": 2,
-    "validation_policy_workflow_run": 35828634884,
-    "validation_level1_workflow_run": 35828634887,
-    "validation_commit": "568beba8aa3dce7a3f3a51d5e91d31edb5a30523"
+    "next_attempt": 3
   },
   "activation": {
     "status": "ACTIVE",
@@ -847,5 +858,27 @@
     "remediation_commit": "568beba8aa3dce7a3f3a51d5e91d31edb5a30523",
     "scope": "full-level1-rerun-2-nodes",
     "reason": "Provider closure remediation validated; rerun KIO and KXMLGui without source or package revision changes"
+  },
+  "next_attempt": 3,
+  "attempt2_summary": {
+    "workflow_run": 35829170695,
+    "commit": "897d3a864bc7ea164400c7d9de2e9c51cf6316ab",
+    "rootfs": {
+      "artifact_id": 10736033276,
+      "artifact_sha256": "8576bb973423d12cdd805c37e6c8b479aedf82466e38762a5ed8cb99def6961f",
+      "rootfs_sha256": "170fdc81f745a8597880a6433026f9ef66bca68665bf3450d02f0de561f3abe6"
+    },
+    "workflow_jobs": {
+      "success": 0,
+      "fail": 2
+    },
+    "job_fail": [
+      "kio",
+      "kxmlgui"
+    ],
+    "result": "FAIL",
+    "canonical_promotions": 0,
+    "failure_class": "node-owned-packaging-and-test-environment",
+    "next_attempt": 3
   }
 }

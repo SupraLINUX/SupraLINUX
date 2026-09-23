@@ -810,7 +810,7 @@
       "source_package": "kf6-kio",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux2",
+      "package_version_candidate": "6.30.0-0supralinux3",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kio",
@@ -926,6 +926,11 @@
           "classification": "level1-preflight-round5",
           "decision": "drop-report-error-removing-dirs-reference-patch",
           "rationale": "Preserve KIO upstream stable runtime behavior unless SupraLINUX has an explicit integration reason to diverge."
+        },
+        {
+          "classification": "level1-attempt2-remediation",
+          "decision": "provide-upstream-kio-test-environment-with-node-scoped-network",
+          "rationale": "Attempt 2 compiled KIO but 13 CTest targets failed in missing display/session-bus/icon-theme/network or shared-state conditions. Preserve all upstream tests: provide their environment instead of excluding or patching them."
         }
       ],
       "binary_relation_overrides": [
@@ -952,6 +957,20 @@
           "package": "libkf6configwidgets-dev",
           "classification": "debian-only-false-kde-edge-removal",
           "rationale": "KIO 6.30 upstream does not find or link KF6ConfigWidgets; this Debian-only relation must not create a false Tier 3 dependency."
+        },
+        {
+          "field": "Build-Depends",
+          "action": "ensure",
+          "relation": "dbus-daemon <!nocheck>",
+          "classification": "upstream-test-environment-provider-adaptation",
+          "rationale": "KIO 6.30 is built WITH_QTDBUS and its upstream tests require an isolated session bus; dbus-run-session is provided by dbus-daemon on Resolute."
+        },
+        {
+          "field": "Build-Depends",
+          "action": "ensure",
+          "relation": "breeze-icon-theme (>= 4:6.30.0~) <!nocheck>",
+          "classification": "upstream-test-environment-provider-adaptation",
+          "rationale": "KIO upstream icon assertions require the selected Breeze icon theme payload. The package is supplied by the retained SupraLINUX breeze-icons PASS artifact."
         }
       ],
       "rules_text_replacements": [
@@ -961,6 +980,13 @@
           "expected_count": 1,
           "classification": "selected-linux-profile-correction",
           "rationale": "KIO upstream defaults WITH_WAYLAND=ON on Linux; make the selected SupraLINUX Linux profile explicit instead of inheriting a reference conditional that applies the flag only off Linux."
+        },
+        {
+          "old": "override_dh_auto_test:\n\tdh_auto_test",
+          "new": "override_dh_auto_test:\n\tmkdir -p debian/.supralinux-test-home/sbuild debian/.supralinux-runtime\n\tchmod 700 debian/.supralinux-runtime\n\tcd obj-$(DEB_HOST_GNU_TYPE) && \\\n\t\tHOME=\"$(CURDIR)/debian/.supralinux-test-home/sbuild\" \\\n\t\tXDG_RUNTIME_DIR=\"$(CURDIR)/debian/.supralinux-runtime\" \\\n\t\tQT_QPA_PLATFORM=offscreen \\\n\t\tKDECI_PLATFORM_PATH=\"$(CURDIR)\" \\\n\t\tdbus-run-session -- ctest --verbose -j1",
+          "expected_count": 1,
+          "classification": "upstream-test-environment-correction",
+          "rationale": "Run the complete KIO CTest suite with a deterministic writable HOME, isolated D-Bus session, Qt offscreen platform and KDE CI marker; serialize tests to avoid cross-test state interference without suppressing any upstream test."
         }
       ],
       "reference_patch_suppression_overrides": {
@@ -1011,7 +1037,29 @@
           "kde_dependency_edge": false,
           "classification": "transitive-deb-provider-closure"
         }
-      ]
+      ],
+      "test_environment_contract": {
+        "session_bus": {
+          "provider_package": "dbus-daemon",
+          "provider_platform": "ubuntu-resolute",
+          "runner": "dbus-run-session",
+          "isolation": "per-build-test-session"
+        },
+        "icon_theme": {
+          "provider_input_id": "breeze-icons",
+          "provider_package": "breeze-icon-theme",
+          "provider_version": "4:6.30.0-0supralinux1"
+        },
+        "qt_platform": "offscreen",
+        "home_policy": "writable-path-ending-in-sbuild-to-match-build-user-for-QDir-home-tests",
+        "kde_ci_marker": "KDECI_PLATFORM_PATH",
+        "ctest_parallelism": 1,
+        "external_network": {
+          "required": true,
+          "scope": "kio-sbuild-only",
+          "reason": "KIO 6.30 upstream mimetypefinderjobtest and openurljobtest intentionally exercise google.com; unshare-mode sbuild blocks network by default."
+        }
+      }
     },
     "kjobwidgets": {
       "upstream_version": "6.30.0",
@@ -2100,7 +2148,7 @@
       "source_package": "kf6-kxmlgui",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux1",
+      "package_version_candidate": "6.30.0-0supralinux2",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kxmlgui",
@@ -2191,6 +2239,11 @@
           "classification": "test-policy",
           "decision": "do-not-inherit-disabled-or-ignored-tests",
           "rationale": "SupraLINUX package PASS requires a real positive upstream test result; environment failures are remediated rather than hidden."
+        },
+        {
+          "classification": "level1-attempt2-remediation",
+          "decision": "add-python3-build-and-python3-setuptools",
+          "rationale": "Attempt 2 passed provider closure and reached CMake. BUILD_PYTHON_BINDINGS remains ON; the failure is missing Resolute Python build tooling, not a reason to disable KDE upstream bindings."
         }
       ],
       "python_module": "KXmlGui",
@@ -2252,6 +2305,22 @@
           "version": "4:6.30.0-0supralinux1",
           "kde_dependency_edge": false,
           "classification": "transitive-deb-provider-closure"
+        }
+      ],
+      "source_build_relation_overrides": [
+        {
+          "field": "Build-Depends",
+          "action": "ensure",
+          "relation": "python3-build",
+          "classification": "python-binding-build-tool-provider-adaptation",
+          "rationale": "KXMLGui 6.30 ECMGeneratePythonBindings imports the Python build frontend before generating the enabled upstream bindings."
+        },
+        {
+          "field": "Build-Depends",
+          "action": "ensure",
+          "relation": "python3-setuptools",
+          "classification": "python-binding-build-backend-provider-adaptation",
+          "rationale": "ECM builds the KXMLGui wheel with python -m build --no-isolation; the Resolute environment therefore needs the setuptools.build_meta backend, as already proven by KJobWidgets."
         }
       ]
     },
@@ -2913,7 +2982,8 @@
         "provider_package": "python3-build",
         "observed_provider_version": "1.4.0-1",
         "applies_to": [
-          "kjobwidgets"
+          "kjobwidgets",
+          "kxmlgui"
         ],
         "classification": "python-binding-build-tool-provider-adaptation",
         "kde_feature_effect": "none",
@@ -2923,7 +2993,8 @@
         "provider_package": "python3-setuptools",
         "observed_provider_version": "78.1.1-0.1build1",
         "applies_to": [
-          "kjobwidgets"
+          "kjobwidgets",
+          "kxmlgui"
         ],
         "classification": "python-binding-build-tool-provider-adaptation",
         "kde_feature_effect": "none",
@@ -3030,66 +3101,55 @@
     "next_gate": "tier3-build-level0-reactivation"
   },
   "active_remediation": {
-    "round": 6,
+    "round": 7,
     "level": "build-level1",
-    "status": "provider-closure-PASS",
+    "status": "materialization-pending-ci",
     "trigger": {
-      "workflow_run": 35826694664,
-      "commit": "e7e98703184967487198f26a488d553038756990",
-      "level1_result": "2 raw workflow FAIL / 0 canonical FAIL",
-      "affected_nodes": [
-        "kio",
-        "kxmlgui"
-      ],
-      "raw_failed_nodes": [
+      "workflow_run": 35829170695,
+      "commit": "897d3a864bc7ea164400c7d9de2e9c51cf6316ab",
+      "level1_result": "0 workflow SUCCESS / 2 FAIL",
+      "failed_nodes": [
         "kio",
         "kxmlgui"
       ]
     },
-    "previous_round": 5,
-    "source_changed_nodes": [],
-    "provider_closure_only_nodes": [
+    "previous_round": 6,
+    "source_changed_nodes": [
       "kio",
       "kxmlgui"
     ],
+    "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux2",
-      "kxmlgui": "6.30.0-0supralinux1"
-    },
-    "provider_closure_inputs": {
-      "kio": [
-        "kconfigwidgets",
-        "karchive",
-        "kcodecs",
-        "knotifications",
-        "breeze-icons"
-      ],
-      "kxmlgui": [
-        "karchive",
-        "kcodecs",
-        "kcolorscheme",
-        "kcompletion",
-        "sonnet",
-        "breeze-icons"
-      ]
+      "kio": "6.30.0-0supralinux3",
+      "kxmlgui": "6.30.0-0supralinux2"
     },
     "policy": {
       "package_revision_bump_required_for_packaging_changes": true,
+      "rematerialize_only_changed_nodes": true,
       "provider_closure_changes_do_not_require_source_rematerialization": true,
-      "package_revision_unchanged": true,
       "rerun_full_level1_after_remediation": true,
       "kde_dependency_graph_unchanged": true
     },
-    "next_gate": "tier3-build-level1-attempt2",
-    "canonical_failures": 0,
-    "evidence": {
-      "repository_policy_workflow_run": 35828634884,
-      "level1_validation_workflow_run": 35828634887,
-      "commit": "568beba8aa3dce7a3f3a51d5e91d31edb5a30523",
-      "provider_closure_validated": true,
-      "package_attempted": false,
-      "package_state_effect": "none"
-    }
+    "failure_evidence": {
+      "rootfs": {
+        "artifact_id": 10736033276,
+        "artifact_sha256": "8576bb973423d12cdd805c37e6c8b479aedf82466e38762a5ed8cb99def6961f",
+        "rootfs_sha256": "170fdc81f745a8597880a6433026f9ef66bca68665bf3450d02f0de561f3abe6"
+      },
+      "kio": {
+        "job_id": 107077795233,
+        "artifact_id": 10736848742,
+        "artifact_sha256": "94f5c7b51f47cd29dae2604f6258b8f10d13ef78e6f36e7023887c4f4336a51b",
+        "failure_substage": "ctest/upstream-test-environment"
+      },
+      "kxmlgui": {
+        "job_id": 107077795323,
+        "artifact_id": 10735938957,
+        "artifact_sha256": "fe460539e197a4549b79cb8b6cedd9eac7ae823ceed6b758483cf53fcf774800",
+        "failure_substage": "cmake/python-binding-build-provider"
+      }
+    },
+    "next_gate": "tier3-round7-level1-materialization"
   },
   "remediation_history": [
     {
@@ -3332,6 +3392,79 @@
           "kxmlgui"
         ],
         "failure_class": "provider-closure-incomplete"
+      }
+    },
+    {
+      "round": 6,
+      "level": "build-level1",
+      "status": "attempt2-FAIL",
+      "trigger": {
+        "workflow_run": 35826694664,
+        "commit": "e7e98703184967487198f26a488d553038756990",
+        "level1_result": "2 raw workflow FAIL / 0 canonical FAIL",
+        "affected_nodes": [
+          "kio",
+          "kxmlgui"
+        ],
+        "raw_failed_nodes": [
+          "kio",
+          "kxmlgui"
+        ]
+      },
+      "previous_round": 5,
+      "source_changed_nodes": [],
+      "provider_closure_only_nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "candidate_package_versions": {
+        "kio": "6.30.0-0supralinux2",
+        "kxmlgui": "6.30.0-0supralinux1"
+      },
+      "provider_closure_inputs": {
+        "kio": [
+          "kconfigwidgets",
+          "karchive",
+          "kcodecs",
+          "knotifications",
+          "breeze-icons"
+        ],
+        "kxmlgui": [
+          "karchive",
+          "kcodecs",
+          "kcolorscheme",
+          "kcompletion",
+          "sonnet",
+          "breeze-icons"
+        ]
+      },
+      "policy": {
+        "package_revision_bump_required_for_packaging_changes": true,
+        "provider_closure_changes_do_not_require_source_rematerialization": true,
+        "package_revision_unchanged": true,
+        "rerun_full_level1_after_remediation": true,
+        "kde_dependency_graph_unchanged": true
+      },
+      "next_gate": "tier3-build-level1-attempt2",
+      "canonical_failures": 0,
+      "evidence": {
+        "repository_policy_workflow_run": 35828634884,
+        "level1_validation_workflow_run": 35828634887,
+        "commit": "568beba8aa3dce7a3f3a51d5e91d31edb5a30523",
+        "provider_closure_validated": true,
+        "package_attempted": false,
+        "package_state_effect": "none"
+      },
+      "validation": {
+        "workflow_run": 35829170695,
+        "commit": "897d3a864bc7ea164400c7d9de2e9c51cf6316ab",
+        "result": "0 workflow SUCCESS / 2 FAIL",
+        "failed_nodes": [
+          "kio",
+          "kxmlgui"
+        ],
+        "package_attempted": true,
+        "canonical_promotions": 0
       }
     }
   ]

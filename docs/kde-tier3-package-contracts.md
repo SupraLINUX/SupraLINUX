@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **contracts retained — round 6 provider closure PASS; Attempt 2 active**
+Status: **round 7 source remediation pending — KIO -3 + KXMLGui -2**
 
 Reviewed: **2026-09-23**
 
@@ -219,3 +219,16 @@ Attempt 2 requires a separate activation only after Repository Policy validates 
 The round-6 closure passed Repository Policy `35828634884` and Level 1 paused validation workflow `35828634887`. KIO remains `6.30.0-0supralinux2`; KXMLGui remains `6.30.0-0supralinux1`.
 
 This activation changes only execution state. It does not alter source packaging, binary identities, selected profiles, KDE dependency edges or stable-publication policy.
+
+
+## Round 7 — Level 1 Attempt 2 contract delta
+
+Attempt 2 run `35829170695` proves that round 6 solved the transitive provider-closure failure: both nodes reached their own build logic. The remaining changes are therefore node-owned source-packaging/test-environment adaptations.
+
+**KXMLGui** advances to `6.30.0-0supralinux2`. Its upstream-default Python bindings stay enabled. The contract adds `python3-build` and `python3-setuptools`, extending the already-proven KJobWidgets Resolute Python-build provider adaptation to KXMLGui.
+
+**KIO** advances to `6.30.0-0supralinux3`. The contract does not suppress any of the 69 upstream CTest targets. It adds the test-only session-bus provider and the exact SupraLINUX Breeze theme payload, then supplies a deterministic offscreen/session-bus/HOME test environment with serial CTest execution.
+
+Two KIO upstream tests explicitly access `google.com`. The binary-build manifest therefore records a node-scoped sbuild network exception for KIO only; this is CI execution policy, not a KDE dependency edge and not a global build-network policy.
+
+No KDE DAG edge changes in round 7. Both revised source packages must rematerialize before Level 1 Attempt 3 can be authorized.

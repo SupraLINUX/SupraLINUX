@@ -29,6 +29,28 @@
       "canonical_promotions": 0,
       "failure_class": "provider-closure-incomplete",
       "next_attempt": 2
+    },
+    {
+      "attempt": 2,
+      "workflow_run": 35829170695,
+      "commit": "897d3a864bc7ea164400c7d9de2e9c51cf6316ab",
+      "rootfs": {
+        "artifact_id": 10736033276,
+        "artifact_sha256": "8576bb973423d12cdd805c37e6c8b479aedf82466e38762a5ed8cb99def6961f",
+        "rootfs_sha256": "170fdc81f745a8597880a6433026f9ef66bca68665bf3450d02f0de561f3abe6"
+      },
+      "result": "FAIL",
+      "workflow_jobs": {
+        "success": 0,
+        "fail": 2
+      },
+      "failed_nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "canonical_promotions": 0,
+      "failure_class": "node-owned-packaging-and-test-environment",
+      "next_attempt": 3
     }
   ],
   "nodes": {
@@ -64,6 +86,32 @@
         "source_change": false,
         "raw_result": "FAIL",
         "canonical_state_effect": "none"
+      },
+      {
+        "attempt": 2,
+        "result": "FAIL",
+        "workflow_run": 35829170695,
+        "job_id": 107077795233,
+        "commit": "897d3a864bc7ea164400c7d9de2e9c51cf6316ab",
+        "artifact_id": 10736848742,
+        "artifact_sha256": "94f5c7b51f47cd29dae2604f6258b8f10d13ef78e6f36e7023887c4f4336a51b",
+        "rootfs_artifact_id": 10736033276,
+        "rootfs_artifact_sha256": "8576bb973423d12cdd805c37e6c8b479aedf82466e38762a5ed8cb99def6961f",
+        "rootfs_sha256": "170fdc81f745a8597880a6433026f9ef66bca68665bf3450d02f0de561f3abe6",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux2",
+        "stage": "sbuild",
+        "failure_substage": "ctest/upstream-test-environment",
+        "cause": "KIO compiled and entered its complete 69-test CTest suite. Thirteen targets failed because the clean unshare build lacked the upstream test environment: isolated session D-Bus, a usable offscreen GUI environment for all tests, Breeze icon-theme payload, external network for two upstream google.com tests, deterministic HOME semantics and serialized shared-state execution.",
+        "remediation": {
+          "candidate_package_version": "6.30.0-0supralinux3",
+          "source_rematerialization_required": true,
+          "sbuild_enable_network": true,
+          "test_environment": "dbus-run-session + offscreen + Breeze + controlled HOME/XDG_RUNTIME_DIR + KDECI_PLATFORM_PATH + ctest -j1"
+        },
+        "package_version_unchanged": true,
+        "source_change": false,
+        "canonical_state_effect": "none-remediation-pending"
       }
     ],
     "kxmlgui": [
@@ -99,6 +147,34 @@
         "source_change": false,
         "raw_result": "FAIL",
         "canonical_state_effect": "none"
+      },
+      {
+        "attempt": 2,
+        "result": "FAIL",
+        "workflow_run": 35829170695,
+        "job_id": 107077795323,
+        "commit": "897d3a864bc7ea164400c7d9de2e9c51cf6316ab",
+        "artifact_id": 10735938957,
+        "artifact_sha256": "fe460539e197a4549b79cb8b6cedd9eac7ae823ceed6b758483cf53fcf774800",
+        "rootfs_artifact_id": 10736033276,
+        "rootfs_artifact_sha256": "8576bb973423d12cdd805c37e6c8b479aedf82466e38762a5ed8cb99def6961f",
+        "rootfs_sha256": "170fdc81f745a8597880a6433026f9ef66bca68665bf3450d02f0de561f3abe6",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux1",
+        "stage": "sbuild",
+        "failure_substage": "cmake/python-binding-build-provider",
+        "cause": "KXMLGui passed install-deps and reached CMake with BUILD_PYTHON_BINDINGS=ON. ECMGeneratePythonBindings stopped because the Python build frontend is absent; the same no-isolation wheel pipeline previously proved setuptools.build_meta is also required.",
+        "remediation": {
+          "candidate_package_version": "6.30.0-0supralinux2",
+          "source_rematerialization_required": true,
+          "build_depends": [
+            "python3-build",
+            "python3-setuptools"
+          ]
+        },
+        "package_version_unchanged": true,
+        "source_change": false,
+        "canonical_state_effect": "none-remediation-pending"
       }
     ]
   }

@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **PASS — 20/20 source materializations retained; Level 1 Attempt 2 needs no rematerialization** as of 2026-09-23.
+Status: **round 7 remediation pending CI — KIO 6.30.0-0supralinux3 + KXMLGui 6.30.0-0supralinux2** as of 2026-09-23.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -243,3 +243,15 @@ Accordingly, round 6 has no materialization queue, no new source hash and no pac
 ## Attempt 2 activation handoff
 
 The round-6 closure remediation passed Repository Policy `35828634884`. Source materialization remains **20/20 PASS** with no new artifact or revision. Attempt 2 is a binary-only rerun consuming the already-promoted KIO and KXMLGui source packages.
+
+
+## Round 7 selective materialization
+
+Level 1 Attempt 2 (`35829170695`) crossed the round-6 provider-closure gate and established two source-packaging/test-environment remediations.
+
+The materialization queue is exactly **KIO + KXMLGui**:
+
+- KIO `6.30.0-0supralinux3`: adds the providers and deterministic test wrapper required to execute the complete upstream KIO suite without exclusions.
+- KXMLGui `6.30.0-0supralinux2`: adds `python3-build` and `python3-setuptools` for the enabled ECM/Shiboken Python wheel path.
+
+The previous KIO `-2` artifact `10735250819` and KXMLGui `-1` artifact `10703925009` remain retained as immutable history until replacements pass. Materialization is source-only: `package_attempted=false` and it cannot promote either package to PASS.

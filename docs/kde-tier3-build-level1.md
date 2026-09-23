@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **Attempt 2 active — KIO + KXMLGui full rerun with validated provider closure** as of 2026-09-23.
+Status: **Attempt 2 reviewed — 0 SUCCESS / 2 real FAIL; round 7 KIO + KXMLGui source remediation pending** as of 2026-09-23.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -96,3 +96,25 @@ Validation evidence:
 - scheduling: parallel, `fail-fast=false`.
 
 The runner additionally proves the complete provider-closure artifact set and declared runtime-input versions. No package becomes PASS merely by activation; canonical transitions occur only after Attempt 2 evidence review.
+
+
+## Attempt 2 result — two real node failures
+
+Workflow `35829170695` at commit `897d3a864bc7ea164400c7d9de2e9c51cf6316ab` reran both independent Level 1 nodes with the round-6 provider closure. The shared Resolute rootfs is artifact `10736033276`, artifact SHA-256 `8576bb973423d12cdd805c37e6c8b479aedf82466e38762a5ed8cb99def6961f`, inner rootfs SHA-256 `170fdc81f745a8597880a6433026f9ef66bca68665bf3450d02f0de561f3abe6`.
+
+Both jobs passed dependency installation, so these failures are no longer orchestration-invalidated:
+
+- **KIO** job `107077795233`, artifact `10736848742`, SHA-256 `94f5c7b51f47cd29dae2604f6258b8f10d13ef78e6f36e7023887c4f4336a51b`: compilation reached the complete 69-test CTest suite; 13 targets failed because the clean build lacked pieces of KIO's upstream test environment (session D-Bus, universal offscreen GUI selection, installed Breeze theme payload, network for the two upstream Google HTTP tests, deterministic HOME semantics, and isolation from cross-test shared state).
+- **KXMLGui** job `107077795323`, artifact `10735938957`, SHA-256 `fe460539e197a4549b79cb8b6cedd9eac7ae823ceed6b758483cf53fcf774800`: CMake reached `ECMGeneratePythonBindings` with `BUILD_PYTHON_BINDINGS=ON` and stopped because Python module `build` is missing. The same ECM wheel path already established that Resolute also needs the setuptools backend.
+
+These are **real FAIL results** in the Level 1 attempt ledger, not BLOCKED and not invalidated orchestration. No package is promoted from Attempt 2.
+
+## Round 7 remediation
+
+KIO advances to `6.30.0-0supralinux3`. No upstream test is disabled. The source package adds test-only `dbus-daemon` and the SupraLINUX Breeze icon-theme provider, and runs CTest under a controlled writable HOME/XDG runtime directory, `QT_QPA_PLATFORM=offscreen`, an isolated `dbus-run-session`, the KDE CI marker used by KIO itself, and serial CTest scheduling.
+
+KIO's two upstream external HTTP tests intentionally access `google.com`. Because unshare-mode sbuild blocks build-network access by default, the Level 1 runner records a **KIO-only** `--enable-network` exception. KXMLGui and every other node remain network-disabled.
+
+KXMLGui advances to `6.30.0-0supralinux2` and adds `python3-build` plus `python3-setuptools`; Python bindings remain enabled.
+
+Level 1 is paused. Only KIO and KXMLGui enter source materialization; a full Attempt 3 rerun is allowed only after both materializations PASS, their exact evidence is promoted, and Repository Policy validates the promotion.
