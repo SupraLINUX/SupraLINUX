@@ -178,9 +178,16 @@ elif m.get("state") == "PASS":
         req(active_m.get("status") == "PASS" and active_m.get("workflow_run") == 35806738003, "round2 materialization evidence PASS")
         req(set(active_m.get("promoted_nodes", [])) == {"kiconthemes","kjobwidgets","kwallet"}, "round2 promoted materialization set")
         req(m.get("evidence_summary", {}).get("promoted_remediation_materializations") == 3, "round2 materialization summary")
-        req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-remediation-pending", "Level0 remains paused after round2 promotion")
-        req(active_t.get("status") == "materialization-PASS-pending-level0-attempt3-activation", "canonical round2 promotion state")
-        req(active_t.get("execution_authorized") is False, "attempt3 not authorized before promotion validation")
+        if active_t.get("current_attempt") == 3:
+            req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-authorized", "Level0 attempt3 canonical build gate")
+            req(active_t.get("status") == "level0-rerun-active", "canonical attempt3 active state")
+            req(active_t.get("execution_authorized") is True, "attempt3 execution authorized")
+            req(active_t.get("activation_policy_workflow_run") == 35807934729, "attempt3 activation validation evidence")
+            req(active_t.get("next_gate") == "tier3-build-level0-attempt3", "attempt3 canonical next gate")
+        else:
+            req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-remediation-pending", "Level0 remains paused after round2 promotion")
+            req(active_t.get("status") == "materialization-PASS-pending-level0-attempt3-activation", "canonical round2 promotion state")
+            req(active_t.get("execution_authorized") is False, "attempt3 not authorized before promotion validation")
 else:
     req(len(queue) == 3, "round2 materialization node count")
     req(all(m["nodes"][n].get("state") == "remediation-pending" for n in queue), "round2 materialization queue states")

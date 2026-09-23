@@ -134,3 +134,8 @@ Level 0 remains intentionally paused. Attempt 3 can be activated only after Repo
 
 
 Repository Policy run `35807934729` validated the round-2 promotion. Source materialization is closed again at 20/20, and the separate Level 0 authority has now activated attempt 3. No additional source rematerialization is requested by that activation.
+
+
+### Validator lifecycle note
+
+The materialization validator accepts both legitimate post-promotion states: a validated source promotion that is still waiting for Level 0 activation, and a separately validated Level 0 activation that leaves source materialization unchanged at PASS. Activating a binary-build campaign must not make the already-closed source-materialization definition invalid.
