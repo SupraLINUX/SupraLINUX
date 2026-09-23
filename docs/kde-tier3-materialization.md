@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **round-4 remediation pending CI — selective KWallet 6.30.0-0supralinux4 materialization** as of 2026-09-23.
+Status: **PASS — round-4 KWallet 6.30.0-0supralinux4 materialization promoted; Attempt 5 activation pending Policy** as of 2026-09-23.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -180,3 +180,12 @@ Repository Policy run `35813396247` validated the round-3 source promotion. Mate
 Level 0 attempt 4 run `35813710318` validated KWallet's complete KDocTools/KArchive provider closure and all 3 upstream tests. The only remaining defect is the KWallet symbols template for `_ZSt19piecewise_construct@Base`.
 
 The materialization queue therefore contains exactly **one node: KWallet**. Candidate revision is `6.30.0-0supralinux4`; all other 19 Tier 3 source materializations remain pinned to their already-promoted PASS evidence. This gate still has no canonical package-state effect.
+
+
+## Round 4 promotion
+
+Run `35817654811`, job `107042596959`, materialized KWallet `6.30.0-0supralinux4` successfully. Artifact `10731134598` has SHA-256 `de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef`.
+
+The source evidence records: DSC SHA-256 `c97d75a119e3971c9c551ebb44f6b0f74e63771f0ffabb62e3d8c71bce1d0348`, Debian tar SHA-256 `c5b7629a60ed1dddc55142582c892e38d382b19e59bcf3a10a479405f67f5cf2`, source-tree SHA-256 `8759eef0fe99b844c7fdff5765012e73daabf67fb06899656308b1cbfbabff7c`, and materialized-tree SHA-256 `c5a73861d71245a913b2915013db22be9acb041999c85df020773461271f71c0`.
+
+All 20 source materializations are again PASS. This still changes no binary package state. The next gate is Repository Policy validation before separate Level 0 Attempt 5 activation.

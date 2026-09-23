@@ -152,3 +152,10 @@ Attempt 4 run `35813710318` reduced Level 0 to one real FAIL: KWallet. The previ
 KWallet advances from `6.30.0-0supralinux3` to `6.30.0-0supralinux4` solely because its source symbols template changes. `libKF6WalletBackend.so.6` receives `(optional)_ZSt19piecewise_construct@Base 6.30.0`. This models an observed libstdc++/toolchain-dependent private export without declaring it KDE public ABI.
 
 No KDE dependency edge, payload choice, test policy or provider closure changes in round 4. Only KWallet is eligible for selective rematerialization.
+
+
+## Round 4 materialization result
+
+KWallet `6.30.0-0supralinux4` materialized PASS in run `35817654811` from commit `1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf`. The promoted source artifact is `10731134598`, SHA-256 `de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef`.
+
+The materialized symbols template contains exactly `(optional)_ZSt19piecewise_construct@Base 6.30.0`. Promotion updates the source pin only; it does not make KWallet or any other Tier 3 node canonical PASS.

@@ -147,8 +147,13 @@ if active:
         req(ar.get("provider_closure_only_nodes")==[],"Tier3 round4 canonical provider closure set")
         req(canonical.get("package_builds")=="tier3-level0-remediation-pending","Tier3 round4 build pause")
         req(ar.get("execution_authorized") is False,"Tier3 round4 execution pause")
-        req(ar.get("status")=="materialization-pending-ci","Tier3 round4 pending canonical state")
-        req(ar.get("next_gate")=="tier3-round4-kwallet-materialization","Tier3 round4 canonical next gate")
+        if active.get("status")=="materialization-PASS":
+            req(ar.get("status")=="materialization-PASS-pending-level0-attempt5-activation","Tier3 round4 promoted canonical state")
+            req(ar.get("materialization_workflow_run")==35817654811 and ar.get("materialization_commit")=="1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf","Tier3 round4 promoted materialization evidence")
+            req(ar.get("next_gate")=="tier3-build-level0-attempt5-activation-validation","Tier3 round4 activation validation gate")
+        else:
+            req(ar.get("status")=="materialization-pending-ci","Tier3 round4 pending canonical state")
+            req(ar.get("next_gate")=="tier3-round4-kwallet-materialization","Tier3 round4 canonical next gate")
     elif active.get("round")==3:
         req(ar.get("source_materialization_nodes")==["kjobwidgets"],"Tier3 round3 canonical source materialization set")
         req(ar.get("provider_closure_only_nodes")==["kwallet"],"Tier3 round3 canonical provider closure set")

@@ -17,7 +17,7 @@
     "provider_audit": "PASS",
     "package_contracts": "PASS",
     "package_builds": "tier3-level0-remediation-pending",
-    "remediation": "round4-kwallet-symbol-remediation-pending-materialization"
+    "remediation": "round4-kwallet-materialization-PASS-pending-attempt5-activation"
   },
   "nodes": [
     {
@@ -827,8 +827,10 @@
     },
     "execution_authorized": false,
     "full_level0_rerun_required": true,
-    "status": "materialization-pending-ci",
-    "next_gate": "tier3-round4-kwallet-materialization"
+    "status": "materialization-PASS-pending-level0-attempt5-activation",
+    "next_gate": "tier3-build-level0-attempt5-activation-validation",
+    "materialization_workflow_run": 35817654811,
+    "materialization_commit": "1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf"
   },
   "remediation_history": [
     {

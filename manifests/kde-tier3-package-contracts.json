@@ -2892,7 +2892,7 @@
   },
   "active_remediation": {
     "round": 4,
-    "status": "materialization-pending-ci",
+    "status": "materialization-PASS",
     "trigger": {
       "workflow_run": 35813710318,
       "commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
@@ -2915,7 +2915,23 @@
       "provider_closure_changes_do_not_require_source_rematerialization": true,
       "rerun_full_level0_after_remediation": true
     },
-    "next_gate": "tier3-round4-kwallet-materialization"
+    "next_gate": "tier3-build-level0-attempt5-activation-validation",
+    "evidence": {
+      "workflow_run": 35817654811,
+      "commit": "1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf",
+      "promoted_nodes": [
+        "kwallet"
+      ],
+      "artifacts": {
+        "kwallet": {
+          "job_id": 107042596959,
+          "artifact_id": 10731134598,
+          "artifact_sha256": "de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef"
+        }
+      },
+      "package_attempted": false,
+      "package_state_effect": "none"
+    }
   },
   "remediation_history": [
     {

@@ -229,7 +229,21 @@ elif m.get("state") == "PASS":
     req(all(m["nodes"][n].get("state") == "materialized" for n in selected), "PASS requires all materialization nodes materialized")
     req(c.get("state") == "materialized", "PASS materialization contract lifecycle")
     req(t.get("discovery_policy", {}).get("phase") in {"build-campaign-planning", "build-level0"}, "post-materialization phase")
-    if active_c.get("round") == 2:
+    if active_c.get("round") == 4:
+        req(active_c.get("status") == "materialization-PASS", "round4 contract materialization PASS")
+        req(active_m.get("status") == "PASS" and active_m.get("workflow_run") == 35817654811, "round4 materialization evidence PASS")
+        req(active_m.get("commit") == "1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf", "round4 materialization commit")
+        req(active_m.get("promoted_nodes") == ["kwallet"], "round4 promoted materialization set")
+        req(active_m.get("artifacts",{}).get("kwallet",{}).get("artifact_id") == 10731134598, "round4 KWallet materialization artifact")
+        req(active_m.get("artifacts",{}).get("kwallet",{}).get("artifact_sha256") == "de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef", "round4 KWallet materialization digest")
+        req(m.get("evidence_summary", {}).get("promoted_remediation_materializations") == 1, "round4 materialization summary")
+        req(m["nodes"]["kwallet"].get("package_version") == "6.30.0-0supralinux4", "round4 KWallet promoted revision")
+        req(active_t.get("materialization_workflow_run") == 35817654811, "canonical round4 materialization linkage")
+        req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-remediation-pending", "Level0 remains paused after round4 promotion")
+        req(active_t.get("status") == "materialization-PASS-pending-level0-attempt5-activation", "canonical round4 promotion state")
+        req(active_t.get("execution_authorized") is False, "attempt5 not authorized before promotion validation")
+        req(active_t.get("next_gate") == "tier3-build-level0-attempt5-activation-validation", "round4 activation validation gate")
+    elif active_c.get("round") == 2:
         req(active_c.get("status") == "materialization-PASS", "round2 contract materialization PASS")
         req(active_m.get("status") == "PASS" and active_m.get("workflow_run") == 35806738003, "round2 materialization evidence PASS")
         req(set(active_m.get("promoted_nodes", [])) == {"kiconthemes","kjobwidgets","kwallet"}, "round2 promoted materialization set")

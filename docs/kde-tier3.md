@@ -319,3 +319,12 @@ Workflow `35813710318` at commit `01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79` exec
 KWallet is the only remaining FAIL. Its KDocTools/KArchive provider closure is now proven: the build installs both providers, generates `kwallet-query.1`, passes `dh_install`, passes **3/3 upstream tests**, produces the binary packages and finishes sbuild successfully. The sole blocker is Lintian because `dpkg-gensymbols` observed `_ZSt19piecewise_construct@Base` in `libKF6WalletBackend.so.6` with the current Debian revision.
 
 Round 4 therefore changes **only KWallet source packaging metadata**: candidate `6.30.0-0supralinux4`, with an `(optional)` symbols-template entry at minimum upstream version `6.30.0`. Only KWallet rematerializes. Canonical Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** and Levels 1–3 remain unauthorized.
+
+
+### Round 4 KWallet materialization promoted
+
+Selective materialization run `35817654811` produced KWallet `6.30.0-0supralinux4` PASS from commit `1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf`. Artifact `10731134598` is pinned by SHA-256 `de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef`.
+
+The artifact proves the intended `(optional)_ZSt19piecewise_construct@Base 6.30.0` template entry and preserves the KDocTools/KArchive provider closure. This is source-materialization evidence only; canonical package state remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**.
+
+Level 0 stays paused until Repository Policy validates this promotion. Attempt 5, if separately activated after that gate, must rerun all 12 Level 0 nodes.

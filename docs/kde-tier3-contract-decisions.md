@@ -121,3 +121,10 @@ Attempt 4 completed **11 workflow SUCCESS / 1 FAIL**. KWallet's earlier document
 The remaining failure is package metadata only. `dpkg-gensymbols` observes `_ZSt19piecewise_construct@Base` in `libKF6WalletBackend.so.6` and assigns the current package revision, which Lintian rejects. SupraLINUX applies the same classification already validated for KJobWidgets: add the symbol to the template as `(optional)` at minimum upstream version `6.30.0`.
 
 This is a source-packaging change, so KWallet becomes `6.30.0-0supralinux4` and must be rematerialized. The KDocTools/KArchive closure remains a provider closure, not a KDE dependency edge.
+
+
+## Round 4 materialization promotion
+
+The KWallet symbols-template correction materialized successfully in run `35817654811`. The exact promoted source artifact is `10731134598` with SHA-256 `de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef`.
+
+Binary execution remains paused. Repository Policy must first validate the refreshed source pin and generated campaign before a separate Attempt 5 activation can authorize the next complete Level 0 rerun.

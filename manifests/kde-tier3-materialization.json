@@ -6,7 +6,7 @@
   "frameworks_series": "6.30.0",
   "contract_manifest": "manifests/kde-tier3-package-contracts.json",
   "canonical_manifest": "manifests/kde-frameworks-tier3.json",
-  "state": "remediation-pending-ci",
+  "state": "PASS",
   "package_attempted": false,
   "package_state_effect": "none",
   "source_policy": "verify-kde-upstream-tarball-and-pinned-debian-6.30-packaging-before-adaptation",
@@ -555,9 +555,9 @@
       }
     },
     "kwallet": {
-      "state": "remediation-pending",
+      "state": "materialized",
       "source_package": "kf6-kwallet",
-      "package_version": "6.30.0-0supralinux3",
+      "package_version": "6.30.0-0supralinux4",
       "previous_evidence": {
         "workflow_run": 35806738003,
         "job_id": 107009274317,
@@ -634,8 +634,26 @@
           "full_result_json_retained_in_artifact": true
         }
       ],
-      "previous_package_version": "6.30.0-0supralinux3",
-      "candidate_package_version": "6.30.0-0supralinux4"
+      "evidence": {
+        "workflow_run": 35817654811,
+        "job_id": 107042596959,
+        "commit": "1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf",
+        "artifact_id": 10731134598,
+        "artifact_sha256": "de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef",
+        "package_version": "6.30.0-0supralinux4",
+        "orig_tar_sha256": "93cb9c1df2630807c04bf8c30312e75ae3bb466c77dd9b29bb2c752e71d34a26",
+        "reference_tree_sha256": "14828a62213875b9be1395f66ad4b4aa1f0349ed1ce9bf56a5b639d7089d6d2c",
+        "dsc_sha256": "c97d75a119e3971c9c551ebb44f6b0f74e63771f0ffabb62e3d8c71bce1d0348",
+        "debian_tar_sha256": "c5b7629a60ed1dddc55142582c892e38d382b19e59bcf3a10a479405f67f5cf2",
+        "source_tree_sha256": "8759eef0fe99b844c7fdff5765012e73daabf67fb06899656308b1cbfbabff7c",
+        "materialized_tree_sha256": "c5a73861d71245a913b2915013db22be9acb041999c85df020773461271f71c0",
+        "adapted_control_sha256": "a7fb64a884fa7c692dd1fe3855ce73861697c58884d48efd3730338ac05b8ec5",
+        "adapted_rules_sha256": "56c931a7caefc02226fb82528454892dba12d6ad59a59bc1a616878c57217e5b",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      }
     },
     "kxmlgui": {
       "state": "materialized",
@@ -738,7 +756,7 @@
   },
   "active_remediation": {
     "round": 4,
-    "status": "pending-ci",
+    "status": "PASS",
     "trigger_workflow_run": 35813710318,
     "trigger_commit": "01bbc2b6df1621e17b2cdf6c65ebfb0f13063c79",
     "reason": "Tier3 Level0 attempt 4 left one KWallet symbols-template metadata defect after successful build and 3/3 upstream tests.",
@@ -753,7 +771,19 @@
     "policy": "rematerialize-only-source-changed-nodes-then-rerun-full-level0",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-round4-kwallet-materialization"
+    "next_gate": "tier3-build-level0-attempt5-activation-validation",
+    "workflow_run": 35817654811,
+    "commit": "1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf",
+    "promoted_nodes": [
+      "kwallet"
+    ],
+    "artifacts": {
+      "kwallet": {
+        "job_id": 107042596959,
+        "artifact_id": 10731134598,
+        "artifact_sha256": "de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef"
+      }
+    }
   },
   "remediation_history": [
     {
@@ -887,7 +917,16 @@
       }
     }
   ],
-  "remediation_queue": [
-    "kwallet"
-  ]
+  "evidence_summary": {
+    "result": "PASS",
+    "workflow_run": 35817654811,
+    "commit": "1a9a4ba82b4aac9f1df9f6457faef8b905dd17cf",
+    "total_materialized_nodes": 20,
+    "retained_previous_materializations": 19,
+    "promoted_remediation_materializations": 1,
+    "active_remediation_round": 4,
+    "package_attempted": false,
+    "package_state_effect": "none",
+    "next_gate": "tier3-build-level0-attempt5-activation-validation"
+  }
 }

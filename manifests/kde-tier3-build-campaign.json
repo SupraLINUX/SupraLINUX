@@ -984,7 +984,7 @@
       "level": 0,
       "state": "planned",
       "source_package": "kf6-kwallet",
-      "package_version": "6.30.0-0supralinux3",
+      "package_version": "6.30.0-0supralinux4",
       "expected_binary_packages": [
         "kwallet6",
         "libkf6wallet-data",
@@ -994,10 +994,10 @@
         "libkf6walletbackend6"
       ],
       "materialization": {
-        "workflow_run": 35806738003,
-        "job_id": 107009274317,
-        "artifact_id": 10727054712,
-        "artifact_sha256": "46ad7064b20ffbfb5b8b5d2242378a8e2ab082452edf0985dd9d1f6fb9074deb"
+        "workflow_run": 35817654811,
+        "job_id": 107042596959,
+        "artifact_id": 10731134598,
+        "artifact_sha256": "de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef"
       },
       "blocking_predecessors": [],
       "edge_classes": {

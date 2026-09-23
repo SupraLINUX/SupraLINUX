@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 0
 
-Status: **Level 0 attempt 4 reviewed — 11 SUCCESS / 1 FAIL; round-4 KWallet materialization pending** as of 2026-09-23.
+Status: **round-4 KWallet materialization promoted — Level 0 Attempt 5 activation pending Policy** as of 2026-09-23.
 
 Level 0 is the first real binary-build campaign for the 20 canonical Tier 3 Frameworks. It contains **12 independent nodes**:
 
@@ -197,3 +197,10 @@ Artifact evidence for the KWallet FAIL is `10730477702`, SHA-256 `ee43e7aed3766d
 Only KWallet changes source packaging and advances to `6.30.0-0supralinux4`. The materializer will add an `(optional)` template entry for `_ZSt19piecewise_construct@Base` at upstream version `6.30.0`. The already-proven KDocTools/KArchive provider closure is retained.
 
 Binary execution is paused until that single source package materializes PASS, its evidence is promoted and Repository Policy validates the promotion. The next binary validation must again be a complete 12-node Level 0 rerun.
+
+
+## Round 4 source promotion
+
+KWallet `6.30.0-0supralinux4` materialization is PASS in run `35817654811` and is now pinned to artifact `10731134598`, SHA-256 `de215dfb5f86816dadccc630f23360bdc4c79a010aa6f7a0e2e99b1969bcf4ef`.
+
+The generated Tier 3 campaign is refreshed to consume this source pin. Level 0 remains `execution_authorized=false` until Repository Policy validates the promotion. A later activation must be explicit and must schedule a complete 12-node Attempt 5, not only KWallet.
