@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "manifests" / "kde-dag.json"
 TIER1_MANIFEST = ROOT / "manifests" / "kde-frameworks-tier1.json"
 TIER2_MANIFEST = ROOT / "manifests" / "kde-frameworks-tier2.json"
+TIER3_MANIFEST = ROOT / "manifests" / "kde-frameworks-tier3.json"
 WORKFLOW = ROOT / ".github" / "workflows" / "kde-ecm-package-preflight.yml"
 RUNNER = ROOT / "scripts" / "run-kde-ecm-package-preflight.sh"
 DELTA = ROOT / "scripts" / "kde-ecm-preflight-needed.sh"
@@ -77,6 +78,7 @@ require(data.get("states") == ["PASS", "FAIL", "BLOCKED", "pending"], "KDE DAG s
 nodes = data.get("nodes", {})
 tier1_canonical = json.loads(TIER1_MANIFEST.read_text(encoding="utf-8"))
 tier2_canonical = json.loads(TIER2_MANIFEST.read_text(encoding="utf-8"))
+tier3_canonical = json.loads(TIER3_MANIFEST.read_text(encoding="utf-8"))
 expected_promoted = {"extra-cmake-modules"}
 expected_promoted |= {
     node["id"] for node in tier1_canonical.get("nodes", [])
@@ -84,6 +86,10 @@ expected_promoted |= {
 }
 expected_promoted |= {
     node["id"] for node in tier2_canonical.get("nodes", [])
+    if node.get("state") == "PASS" and node.get("packaging", {}).get("downstream_eligible") is True
+}
+expected_promoted |= {
+    node["id"] for node in tier3_canonical.get("nodes", [])
     if node.get("state") == "PASS" and node.get("packaging", {}).get("downstream_eligible") is True
 }
 require(set(nodes) == expected_promoted, "Canonical DAG must equal ECM plus all canonical PASS/downstream-eligible Framework nodes")
@@ -120,6 +126,41 @@ if kgui_passes:
     require(item.get("tests") == "9/9 PASS" and item.get("lintian") == "PASS-errors", "KGuiAddons DAG build/test gate mismatch")
 require(kgui.get("pass_files", {}).get("rootfs_sha256") == "c68681aacfd32976c6e0bf471ec1928179fd80e402faf2293706e53f88ad25c6", "KGuiAddons DAG rootfs evidence mismatch")
 require(len(nodes) == len(expected_promoted), "Canonical DAG node count must match canonical promoted set")
+
+tier3_promoted = {
+    node["id"]: node for node in tier3_canonical.get("nodes", [])
+    if node.get("state") == "PASS" and node.get("packaging", {}).get("downstream_eligible") is True
+}
+require(
+    set(tier3_promoted) == {"kbookmarks","kconfigwidgets","kdav","kdesu","kiconthemes","kjobwidgets","kpeople","krunner","ksvg","ktextwidgets","kwallet"},
+    "Tier3 canonical promoted set after Level0 Attempt5 is unexpected",
+)
+for node_id, canonical_node in sorted(tier3_promoted.items()):
+    node = nodes.get(node_id, {})
+    packaging = canonical_node.get("packaging", {})
+    require(node.get("tier") == 3, f"{node_id}: promoted Tier3 DAG tier mismatch")
+    require(node.get("upstream_version") == canonical_node.get("upstream_version") == "6.30.0", f"{node_id}: Tier3 DAG upstream version mismatch")
+    require(node.get("source_sha256") == canonical_node.get("source_sha256"), f"{node_id}: Tier3 DAG source SHA mismatch")
+    require(node.get("source_authority") == "kde-upstream" and node.get("package_provider") == "supralinux", f"{node_id}: Tier3 DAG authority/provider boundary")
+    require(node.get("package_version") == packaging.get("package_version"), f"{node_id}: Tier3 DAG package version mismatch")
+    require(node.get("state") == "PASS" and node.get("downstream_eligible") is True, f"{node_id}: Tier3 DAG PASS/downstream state")
+    require(node.get("attempt_ledger") == "manifests/kde-tier3-build-level0-attempts.json", f"{node_id}: Tier3 DAG attempt ledger")
+    require(all(dep in nodes for dep in node.get("depends_on", [])), f"{node_id}: Tier3 DAG predecessor must already be canonical PASS")
+    passes = [item for item in node.get("evidence", []) if isinstance(item, dict) and item.get("result") == "PASS"]
+    require(len(passes) == 1, f"{node_id}: Tier3 DAG requires exactly one retained PASS")
+    package_passes = [item for item in packaging.get("evidence", []) if isinstance(item, dict) and item.get("result") == "PASS"]
+    require(len(package_passes) == 1, f"{node_id}: Tier3 canonical packaging requires exactly one retained PASS")
+    if passes and package_passes:
+        dag_evidence, canonical_evidence = passes[0], package_passes[0]
+        for key in ("workflow_run","job_id","commit","artifact_id","artifact_sha256","tests","lintian","apt_check","abi_contract","cmake_consumer","buildinfo_predecessor_proof"):
+            require(dag_evidence.get(key) == canonical_evidence.get(key), f"{node_id}: Tier3 DAG/canonical evidence mismatch for {key}")
+        require(dag_evidence.get("downstream_eligible") is True, f"{node_id}: Tier3 DAG PASS evidence downstream eligibility")
+
+knewstuff = next((node for node in tier3_canonical.get("nodes", []) if node.get("id") == "knewstuff"), {})
+require(knewstuff.get("state") == "pending", "KNewStuff must remain canonical pending before KCMUtils runtime validation")
+require(knewstuff.get("packaging", {}).get("state") == "runtime-validation-required", "KNewStuff runtime-validation state")
+require(knewstuff.get("packaging", {}).get("downstream_eligible") is False, "KNewStuff must remain non-downstream-eligible")
+require("knewstuff" not in nodes, "KNewStuff must not enter canonical DAG before KCMUtils runtime validation")
 
 kauth = nodes.get("kauth", {})
 require(kauth.get("tier") == 2 and kauth.get("upstream_version") == "6.30.0", "KAuth promoted Tier 2 identity mismatch")

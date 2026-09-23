@@ -522,3 +522,12 @@ The graph also discovered three KDE Frameworks 6.30 support components that are 
 - KDED: KIO runtime predecessor.
 
 These are modeled explicitly as KDE-upstream components rather than being silently delegated to Ubuntu. Provider audit for the three support components is the next gate. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** and no Tier 3 package build is authorized yet.
+
+
+## Tier 3 Level 0 promotion — 2026-09-23
+
+The canonical DAG now includes the eleven Tier 3 Level 0 Frameworks promoted by Attempt 5 run `35818120201`: KBookmarks, KConfigWidgets, KDAV, KDESu, KIconThemes, KJobWidgets, KPeople, KRunner, KSvg, KTextWidgets and KWallet.
+
+Each DAG node is backed by the exact canonical package PASS evidence retained in `manifests/kde-frameworks-tier3.json` and `manifests/kde-tier3-build-level0-attempts.json`. The DAG validator derives the promoted set from **Tier 1 + Tier 2 + Tier 3** canonical manifests; it must not assume Tier 3 is empty after Level 0.
+
+KNewStuff is deliberately absent from the DAG even though its binary build passed. Its canonical state remains pending with `runtime-validation-required` until KCMUtils closes the KDE runtime-validation edge. `BLOCKED` remains distinct from `FAIL`.
