@@ -224,3 +224,8 @@ KNewStuff's artifact `10732461923` (SHA-256 `2d2b71cd19923c9d9896926f92c86a209fc
 Level 0 therefore closes as `PARTIAL` with **11 PASS / 1 runtime-validation-required / 0 FAIL / 0 BLOCKED**. This is not a build failure. Tier 3 overall becomes **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.
 
 KIO and KXMLGui, the two Level 1 nodes, depend only on already-promoted PASS predecessors. The next gate is Level 1 planning; binary execution remains unauthorized until that plan is separately validated.
+
+
+### Post-Level0 validator correction
+
+The Level 0 validator accepts both the active `build-level0` phase and the closed post-Level0 `build-level1-planning` phase. This fixes a lifecycle validation mismatch only; Attempt 5 evidence, canonical package state and build authorization are unchanged.

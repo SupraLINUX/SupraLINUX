@@ -369,7 +369,7 @@ elif m.get("state")=="remediation-pending-materialization":
         req(all(m["nodes"][n].get("state")=="prepared-pending-revalidation" for n in expected if n not in round2),"attempt2 non-failing nodes await revalidation")
 
 policy=t.get("discovery_policy",{})
-req(policy.get("phase")=="build-level0","canonical Tier3 Level0 phase")
+req(policy.get("phase") in {"build-level0","build-level1-planning"},"canonical Tier3 Level0/post-Level0 phase")
 if m.get("state")=="remediation-pending-materialization":
     req(policy.get("package_builds")=="tier3-level0-remediation-pending","canonical Tier3 remediation build gate")
     ar=t.get("active_remediation",{})
