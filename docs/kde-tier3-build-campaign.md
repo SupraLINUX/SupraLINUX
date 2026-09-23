@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 build campaign
 
-Status: **Level 0 closed; Level 1 KIO preflight source remediation pending** as of 2026-09-23.
+Status: **Level 0 closed; KIO round-5 source PASS; Level 1 planning validation pending** as of 2026-09-23.
 
 This document defines how the 20 materialized Tier 3 Frameworks will be built without changing the project-wide PASS / FAIL / BLOCKED semantics.
 
@@ -117,3 +117,8 @@ Level 0 Attempt 5 is closed: 11 nodes are canonical PASS and KNewStuff remains r
 Before Level 1 activation, KIO's materialized Debian baseline was compared again with KDE upstream 6.30. That review found two Debian-only false Framework Build-Depends plus one Linux-profile conditional and one behavior-changing downstream patch that must be corrected in the source package.
 
 Only KIO is rematerialized as `6.30.0-0supralinux2`. The **12 / 2 / 4 / 2** topology is unchanged: no removed Debian relation becomes a KDE edge, and KArchive/KDocTools/KDED support semantics remain separate from the Tier 3 build topology. Level 1 execution remains unauthorized until the new KIO source artifact is promoted and Repository Policy validates the refreshed plan.
+
+
+### Refreshed KIO source pin
+
+The generated campaign now points KIO to `6.30.0-0supralinux2`, materialization run `35825070347`, artifact `10735250819`, SHA-256 `8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106`. Topology remains unchanged. Repository Policy must validate this refreshed source pin before the separate Level 1 plan can be activated.

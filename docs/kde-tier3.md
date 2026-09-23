@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 KIO preflight remediation pending**
+Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — KIO round-5 source PASS; Level 1 planning validation pending**
 
 Last reviewed: **2026-09-23**
 
@@ -375,3 +375,10 @@ The reference `debian/rules` contains `ifneq (linux,$(DEB_HOST_ARCH_OS))` around
 The downstream `report_error_removing_dirs` patch changes KIO runtime behavior and has no explicit SupraLINUX integration requirement. It is reversed and removed so KIO follows KDE upstream stable behavior. Other technically scoped reference patches are retained.
 
 These are source-packaging changes, so KIO advances to **`6.30.0-0supralinux2`** and only KIO is rematerialized. Level 1 binary execution remains unauthorized. Canonical package state stays **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.
+
+
+### KIO round 5 source PASS
+
+Selective materialization run `35825070347` produced KIO `6.30.0-0supralinux2` PASS from commit `fbde9a53e357a138f4d74d7905230c7859e20444`. Artifact `10735250819` is pinned by SHA-256 `8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106`.
+
+The artifact proves the two false Build-Depends are absent, the Linux Wayland conditional is effective, and only `report_error_removing_dirs` was removed from the reference patch series. KIO is still canonically pending because this is source evidence only. Level 1 binary execution remains unauthorized until Repository Policy validates the promotion and the Level 1 plan.

@@ -94,8 +94,8 @@ for node_id in selected:
     req(x.get("contract_state")=="contract-ready",f"{node_id}: contract-ready")
     expected_versions={
         "kiconthemes":"6.30.0-0supralinux3",
-        "kjobwidgets":"6.30.0-0supralinux4" if active.get("round") in {3,4} else "6.30.0-0supralinux3",
-        "kwallet":"6.30.0-0supralinux4" if active.get("round")==4 else "6.30.0-0supralinux3",
+        "kjobwidgets":"6.30.0-0supralinux4" if active.get("round",0)>=3 else "6.30.0-0supralinux3",
+        "kwallet":"6.30.0-0supralinux4" if active.get("round",0)>=4 else "6.30.0-0supralinux3",
         "kdav":"6.30.0-0supralinux2",
         "krunner":"6.30.0-0supralinux2",
         "kio":"6.30.0-0supralinux2" if active.get("round")==5 else "6.30.0-0supralinux1",
@@ -158,7 +158,7 @@ req(set(d["nodes"]["purpose"]["frameworks"]["qml_required"])=={"prison","kitemmo
 canonical=t.get("discovery_policy",{})
 req(canonical.get("phase") in {"materialization","build-campaign-planning","build-level0","build-level1-planning"},"Tier3 canonical materialization/build-planning phase")
 req(canonical.get("package_contracts")=="PASS","Tier3 canonical contract PASS")
-req(canonical.get("package_builds") in {"not-authorized-before-tier3-materialization","not-authorized-before-tier3-build-campaign","tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization"},"Tier3 build gate")
+req(canonical.get("package_builds") in {"not-authorized-before-tier3-materialization","not-authorized-before-tier3-build-campaign","tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"},"Tier3 build gate")
 if active:
     ar=t.get("active_remediation",{})
     req(ar.get("round")==active.get("round") and set(ar.get("nodes",[]))==active_nodes,"Tier3 canonical remediation linkage")
@@ -166,9 +166,15 @@ if active:
         req(ar.get("level")=="build-level1-preflight","Tier3 round5 canonical Level1 preflight")
         req(ar.get("source_materialization_nodes")==["kio"] and ar.get("provider_closure_only_nodes")==[],"Tier3 round5 canonical source scope")
         req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux2"},"Tier3 round5 canonical revision")
-        req(canonical.get("phase")=="build-level1-planning" and canonical.get("package_builds")=="tier3-level1-remediation-pending-materialization","Tier3 round5 canonical gate")
-        req(ar.get("status")=="materialization-pending-ci" and ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 round5 canonical execution pause")
-        req(ar.get("trigger_workflow_run")==35818120201 and ar.get("next_gate")=="tier3-level1-kio-materialization","Tier3 round5 canonical trigger/next gate")
+        req(canonical.get("phase")=="build-level1-planning" and canonical.get("package_builds") in {"tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"},"Tier3 round5 canonical gate")
+        req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 round5 canonical execution pause")
+        req(ar.get("trigger_workflow_run")==35818120201,"Tier3 round5 canonical trigger")
+        if canonical.get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
+            req(ar.get("status")=="materialization-PASS-pending-level1-planning-validation","Tier3 round5 promoted canonical state")
+            req(ar.get("materialization_workflow_run")==35825070347 and ar.get("materialization_commit")=="fbde9a53e357a138f4d74d7905230c7859e20444","Tier3 round5 materialization evidence")
+            req(ar.get("next_gate")=="tier3-build-level1-planning-validation","Tier3 round5 planning validation gate")
+        else:
+            req(ar.get("status")=="materialization-pending-ci" and ar.get("next_gate")=="tier3-level1-kio-materialization","Tier3 round5 pending canonical state")
     elif active.get("round")==4:
         req(ar.get("source_materialization_nodes")==["kwallet"],"Tier3 round4 canonical source materialization set")
         req(ar.get("provider_closure_only_nodes")==[],"Tier3 round4 canonical provider closure set")

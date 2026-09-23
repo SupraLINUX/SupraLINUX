@@ -2940,7 +2940,7 @@
   "active_remediation": {
     "round": 5,
     "level": "build-level1-preflight",
-    "status": "materialization-pending-ci",
+    "status": "materialization-PASS",
     "trigger": {
       "workflow_run": 35818120201,
       "commit": "0599266fd5fc9869002629b3778d71f1e76bbdc1",
@@ -2964,7 +2964,23 @@
       "level1_execution_remains_unauthorized": true,
       "kde_dependency_graph_unchanged": true
     },
-    "next_gate": "tier3-level1-kio-materialization"
+    "next_gate": "tier3-build-level1-planning-validation",
+    "evidence": {
+      "workflow_run": 35825070347,
+      "commit": "fbde9a53e357a138f4d74d7905230c7859e20444",
+      "promoted_nodes": [
+        "kio"
+      ],
+      "artifacts": {
+        "kio": {
+          "job_id": 107064960565,
+          "artifact_id": 10735250819,
+          "artifact_sha256": "8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106"
+        }
+      },
+      "package_attempted": false,
+      "package_state_effect": "none"
+    }
   },
   "remediation_history": [
     {

@@ -16,8 +16,8 @@
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-remediation-pending-materialization",
-    "remediation": "round5-kio-level1-preflight-source-remediation"
+    "package_builds": "tier3-level1-source-PASS-pending-planning-validation",
+    "remediation": "round5-kio-source-PASS-pending-level1-planning-validation"
   },
   "nodes": [
     {
@@ -477,10 +477,10 @@
         "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
         "materialization_manifest": "manifests/kde-tier3-materialization.json",
         "materialization_evidence": {
-          "workflow_run": 35746667704,
-          "job_id": 106810108038,
-          "artifact_id": 10703145831,
-          "artifact_sha256": "d6b62bf44d85289d749ab2bb8fc9ce1b8d034fbcc88a27aff935dbfede495b40"
+          "workflow_run": 35825070347,
+          "job_id": 107064960565,
+          "artifact_id": 10735250819,
+          "artifact_sha256": "8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106"
         }
       },
       "packaging": {
@@ -1220,9 +1220,11 @@
       "kio": "6.30.0-0supralinux2"
     },
     "execution_authorized": false,
-    "status": "materialization-pending-ci",
+    "status": "materialization-PASS-pending-level1-planning-validation",
     "level1_execution_authorized": false,
-    "next_gate": "tier3-level1-kio-materialization"
+    "next_gate": "tier3-build-level1-planning-validation",
+    "materialization_workflow_run": 35825070347,
+    "materialization_commit": "fbde9a53e357a138f4d74d7905230c7859e20444"
   },
   "remediation_history": [
     {

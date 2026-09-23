@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package-contract decisions
 
-Status: **PASS baseline retained — round 5 KIO Level 1 preflight source remediation pending**
+Status: **PASS baseline retained — KIO round-5 source PASS; Level 1 planning validation pending**
 
 Reviewed: **2026-09-23**
 
@@ -153,3 +153,8 @@ Three source-package decisions are recorded for KIO:
 - reverse and remove the Debian/Kubuntu `report_error_removing_dirs` behavior patch because SupraLINUX has no explicit integration requirement to diverge from KDE stable behavior.
 
 KArchive is retained: the selected KDocTools/help-worker path uses `KF6::Archive` upstream. KDED is retained as the selected runtime support component. This distinction preserves authority vs provider and prevents packaging metadata from redefining the KDE DAG.
+
+
+### Round 5 materialization validation
+
+The KIO replacement source artifact passed materialization without a binary-package attempt. `debian/control`, `debian/rules`, patch-series membership and all source hashes are retained in artifact `10735250819`. The next decision gate is Level 1 planning validation, not binary execution.

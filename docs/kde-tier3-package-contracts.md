@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **contracts retained — round 5 KIO Level 1 preflight remediation pending**
+Status: **contracts retained — round 5 KIO source materialization PASS; planning validation pending**
 
 Reviewed: **2026-09-23**
 
@@ -182,3 +182,10 @@ The contract removes Debian-only `libkf6auth-dev` and `libkf6configwidgets-dev` 
 The contract also materializes the selected Linux Wayland profile explicitly by correcting the reference Linux conditional, and reverses/removes only `report_error_removing_dirs` to restore upstream runtime behavior. The materializer now supports exact, counted `rules_text_replacements` and selective reference-patch removal while preserving unrelated active patches.
 
 No Level 0 PASS state changes. Only KIO enters the selective source-materialization queue; Level 1 remains unauthorized until the replacement source artifact passes and is promoted.
+
+
+### Round 5 source evidence
+
+KIO `6.30.0-0supralinux2` materialized PASS in run `35825070347`, artifact `10735250819`, SHA-256 `8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106`.
+
+Historical remediated revisions are monotonic: KJobWidgets and KWallet remain at their previously promoted `-4` revisions while KIO advances to `-2`; entering a later remediation round never reverts an earlier package contract.
