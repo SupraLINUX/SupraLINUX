@@ -398,3 +398,12 @@ Canonical package state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCK
 Repository Policy run `35826072726` validated the Level 1 plan. Canonical phase is now `build-level1` and exactly KIO plus KXMLGui are authorized for real binary Attempt 1.
 
 The pre-build canonical package snapshot remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**. Any later PASS/FAIL transition must come from the real Level 1 build evidence; stable publication remains explicitly user-approved only.
+
+
+### Level 1 Attempt 1 closure
+
+Level 1 Attempt 1 run `35826694664` produced **0 SUCCESS / 2 FAIL / 0 BLOCKED**. KIO and KXMLGui both reached real sbuild execution and failed at dependency installation because the Level 1 retained-provider set lacked transitive 6.30 PASS artifacts.
+
+This does not change the KDE-upstream DAG and does not require source rematerialization. Round 6 is provider-closure-only for KIO and KXMLGui; their revisions remain `6.30.0-0supralinux2` and `6.30.0-0supralinux1` respectively.
+
+Canonical package PASS state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**: the Attempt 1 FAILs are retained historical campaign evidence and are not promoted into canonical package state. Level 1 execution is paused pending closure validation.

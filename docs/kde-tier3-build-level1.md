@@ -40,3 +40,24 @@ Repository Policy run `35826072726` validated the complete Level 1 definition at
 A separate activation now sets `execution_authorized=true` for exactly KIO and KXMLGui. The canonical phase becomes `build-level1`; both jobs may execute independently with `fail-fast=false`. No other Tier 3 node is authorized.
 
 No package is promoted by activation alone. PASS/FAIL is determined only by the real build artifacts and gates from Attempt 1.
+
+
+## Attempt 1 — 0 SUCCESS / 2 FAIL, provider closure incomplete
+
+Workflow `35826694664` ran both Level 1 nodes against the same Resolute rootfs (artifact `10735292514`, artifact SHA-256 `7f1bd21e77ca479dbb2e478467d61cf1aa2d71740a929eb92d2737a8252378c2`, inner rootfs SHA-256 `65b28559cd2e23c1a2b5968e12ca0b3e48fd518b791b069ac2217898b44bfbed`).
+
+Both nodes were really attempted and therefore are **FAIL**, not BLOCKED:
+
+- KIO job `107070288529`, artifact `10735576795`, SHA-256 `bbc1cb4caa351a335077e4b3dc0dcee7b2a7dfb96d85e6659d112ad87069c353`: sbuild stopped at install-deps. The retained input set omitted transitive provider closure. `dose3` first proved `libkf6archive-dev >= 6.30.0` unsatisfied.
+- KXMLGui job `107070288573`, artifact `10734929331`, SHA-256 `9e14c20ddfed7bc1cb500e1c2544eac1469b97cc2862ed54a946fd0deb1161ed`: sbuild stopped at install-deps. `libkf6configwidgets-dev 6.30.0` could not satisfy its `libkf6codecs-dev >= 6.30.0` relation from the retained artifacts.
+
+The root cause is the Level 1 **provider closure plan**, not either source package. No source revision changes and no rematerialization are justified.
+
+The complete added closure is:
+
+- KIO: KArchive, KCodecs, KNotifications.
+- KXMLGui: KArchive, KCodecs, KColorScheme, KCompletion, Sonnet.
+
+Each is an existing canonical SupraLINUX PASS artifact. They are marked `provider_closure`, not KDE DAG edges, and are intentionally excluded from direct predecessor `.buildinfo` proof unless the same component is independently a real direct input.
+
+Level 1 is paused with `execution_authorized=false`. Repository Policy must validate this closure-only remediation before a separate Attempt 2 activation.

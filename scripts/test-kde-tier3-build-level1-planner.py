@@ -26,6 +26,7 @@ for token in (
     "evidence/kde-tier3-build-level1",
     "buildinfo-proof-contracts.tsv",
     "consumer-runtime-check.log",
+    "provider_closure_input_ids",
 ):
     if token not in runner:
         raise SystemExit(f"Level1 runner missing contract token: {token}")

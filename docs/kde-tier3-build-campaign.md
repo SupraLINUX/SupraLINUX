@@ -138,3 +138,12 @@ Repository Policy must validate this Level 1 plan before a separate activation c
 The Level 1 plan passed Repository Policy run `35826072726`. A separate activation authorizes exactly KIO and KXMLGui as Attempt 1 and transitions the canonical phase to `build-level1`.
 
 The validated topology and artifact pins are unchanged. Activation itself creates no package PASS state and performs no stable publication.
+
+
+## Level 1 Attempt 1 provider-closure remediation
+
+Attempt 1 run `35826694664` attempted both Level 1 nodes and both failed during sbuild dependency installation. The failures are independent real FAIL results, not BLOCKED nodes.
+
+The source artifacts are unchanged. The remediation expands only the exact retained provider closure required by already-PASS 6.30 packages: KIO adds KArchive, KCodecs and KNotifications; KXMLGui adds KArchive, KCodecs, KColorScheme, KCompletion and Sonnet.
+
+These closure artifacts do not create new KDE dependency edges and are not added to direct `.buildinfo` predecessor proof. The 12 / 2 / 4 / 2 topology remains unchanged. Attempt 2 requires a separate activation after Repository Policy validates the closure.

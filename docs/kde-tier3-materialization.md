@@ -224,3 +224,10 @@ All 20 Tier 3 source materializations are again PASS. This promotion has no bina
 ### Round 5 activation handoff
 
 The KIO `6.30.0-0supralinux2` materialization remains the exact PASS artifact from run `35825070347`. After Level 1 planning passed Repository Policy run `35826072726`, the materialization lifecycle hands off to `tier3-build-level1-attempt1`. No source artifact or hash changes at activation.
+
+
+### Round 6 requires no materialization
+
+Level 1 Attempt 1 failed before compilation because retained provider closure was incomplete. No source-package content changes.
+
+The existing 20/20 materialization PASS remains authoritative, including KIO `6.30.0-0supralinux2` artifact `10735250819`. Round 6 has no materialization queue and no new source hash. The next action is Level 1 Attempt 2 activation only after Repository Policy validates the provider closure.

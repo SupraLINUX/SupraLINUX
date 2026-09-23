@@ -261,7 +261,16 @@ elif m.get("state") == "PASS":
     req(all(m["nodes"][n].get("state") == "materialized" for n in selected), "PASS requires all materialization nodes materialized")
     req(c.get("state") == "materialized", "PASS materialization contract lifecycle")
     req(t.get("discovery_policy", {}).get("phase") in {"build-campaign-planning", "build-level0", "build-level1-planning", "build-level1"}, "post-materialization phase")
-    if active_c.get("round") == 5:
+    if active_c.get("round") == 6:
+        req(active_c.get("status") == "provider-closure-pending-attempt2-activation-validation", "round6 contract provider-closure state")
+        req(active_c.get("source_changed_nodes") == [] and set(active_c.get("provider_closure_only_nodes",[])) == {"kio","kxmlgui"}, "round6 has no source materialization")
+        req(active_m.get("round") == 5 and active_m.get("status") == "PASS", "round6 retains round5 materialization PASS")
+        req(active_m.get("workflow_run") == 35825070347 and active_m.get("artifacts",{}).get("kio",{}).get("artifact_id") == 10735250819, "round6 retains exact KIO source artifact")
+        req(t.get("discovery_policy",{}).get("phase") == "build-level1" and t.get("discovery_policy",{}).get("package_builds") == "tier3-level1-remediation-pending-provider-closure", "round6 canonical provider-closure gate")
+        req(active_t.get("round") == 6 and active_t.get("source_materialization_nodes") == [] and set(active_t.get("provider_closure_only_nodes",[])) == {"kio","kxmlgui"}, "round6 canonical no-source scope")
+        req(active_t.get("execution_authorized") is False and active_t.get("next_gate") == "tier3-build-level1-attempt2-activation-validation", "round6 Level1 pause")
+        req(m["nodes"]["kio"].get("package_version") == "6.30.0-0supralinux2" and m["nodes"]["kxmlgui"].get("package_version") == "6.30.0-0supralinux1", "round6 materialized revisions unchanged")
+    elif active_c.get("round") == 5:
         req(active_c.get("status") == "materialization-PASS", "round5 contract materialization PASS")
         req(active_m.get("status") == "PASS" and active_m.get("workflow_run") == 35825070347, "round5 KIO materialization evidence PASS")
         req(active_m.get("commit") == "fbde9a53e357a138f4d74d7905230c7859e20444", "round5 KIO materialization commit")

@@ -165,3 +165,10 @@ The KIO replacement source artifact passed materialization without a binary-pack
 KIO rematerialization passed in workflow `35825070347`, job `107064960565`, artifact `10735250819`, SHA-256 `8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106`.
 
 While round 5 is `materialization-pending-ci`, the next gate is `tier3-level1-kio-materialization`. Once that exact source artifact is promoted as `materialization-PASS`, the next gate becomes `tier3-build-level1-planning-validation`. Binary Level 1 execution remains unauthorized throughout this transition.
+
+
+### Round 6 authority boundary
+
+The additional KArchive/KCodecs/KNotifications/KColorScheme/KCompletion/Sonnet inputs are package-provider closure, not new KDE dependency edges. KDE upstream still defines the Level 1 topology; the closure only makes exact retained SupraLINUX PASS binary-package relations satisfiable inside sbuild.
+
+No source decision, selected KDE feature, binary package contract or package revision changes in round 6.

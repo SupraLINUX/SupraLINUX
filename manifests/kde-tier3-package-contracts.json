@@ -969,7 +969,33 @@
         ],
         "classification": "restore-upstream-behavior",
         "rationale": "The Debian/Kubuntu report_error_removing_dirs patch changes KIO runtime behavior and has no SupraLINUX integration requirement; retain upstream 6.30 behavior."
-      }
+      },
+      "level1_provider_closure_requirements": [
+        {
+          "retained_input_id": "karchive",
+          "artifact_id": 10364726750,
+          "artifact_sha256": "0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e",
+          "version": "6.30.0-0supralinux4",
+          "kde_dependency_edge": false,
+          "classification": "transitive-deb-provider-closure"
+        },
+        {
+          "retained_input_id": "kcodecs",
+          "artifact_id": 10305050385,
+          "artifact_sha256": "d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45",
+          "version": "6.30.0-0supralinux4",
+          "kde_dependency_edge": false,
+          "classification": "transitive-deb-provider-closure"
+        },
+        {
+          "retained_input_id": "knotifications",
+          "artifact_id": 10616445435,
+          "artifact_sha256": "09ede9c6f1f07333e1ea54291232a855c6dca9f9cf9679a38d37b1ec69eb6135",
+          "version": "6.30.0-0supralinux1",
+          "kde_dependency_edge": false,
+          "classification": "transitive-deb-provider-closure"
+        }
+      ]
     },
     "kjobwidgets": {
       "upstream_version": "6.30.0",
@@ -2161,7 +2187,49 @@
         ],
         "provider_platform": "ubuntu-resolute",
         "classification": "python-binding-runtime-provider-closure"
-      }
+      },
+      "level1_provider_closure_requirements": [
+        {
+          "retained_input_id": "karchive",
+          "artifact_id": 10364726750,
+          "artifact_sha256": "0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e",
+          "version": "6.30.0-0supralinux4",
+          "kde_dependency_edge": false,
+          "classification": "transitive-deb-provider-closure"
+        },
+        {
+          "retained_input_id": "kcodecs",
+          "artifact_id": 10305050385,
+          "artifact_sha256": "d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45",
+          "version": "6.30.0-0supralinux4",
+          "kde_dependency_edge": false,
+          "classification": "transitive-deb-provider-closure"
+        },
+        {
+          "retained_input_id": "kcolorscheme",
+          "artifact_id": 10651864741,
+          "artifact_sha256": "d52b7bbc99d1e211600f648152781b6dc1b958c51972fdb206099c1e860e88f3",
+          "version": "6.30.0-0supralinux1",
+          "kde_dependency_edge": false,
+          "classification": "transitive-deb-provider-closure"
+        },
+        {
+          "retained_input_id": "kcompletion",
+          "artifact_id": 10649102710,
+          "artifact_sha256": "02e2dd47d4be5d0898130abd111048ac85ed1a2b45e8b895c0b611c9c1e628f0",
+          "version": "6.30.0-0supralinux1",
+          "kde_dependency_edge": false,
+          "classification": "transitive-deb-provider-closure"
+        },
+        {
+          "retained_input_id": "sonnet",
+          "artifact_id": 10554216487,
+          "artifact_sha256": "ae5a33cf8699b96b7b7b8c1a83bc4d37a484878029818c1885b4f4f44f15b431",
+          "version": "6.30.0-0supralinux3",
+          "kde_dependency_edge": false,
+          "classification": "transitive-deb-provider-closure"
+        }
+      ]
     },
     "purpose": {
       "upstream_version": "6.30.0",
@@ -2938,56 +3006,50 @@
     "next_gate": "tier3-build-level0-reactivation"
   },
   "active_remediation": {
-    "round": 5,
-    "level": "build-level1-preflight",
-    "status": "materialization-PASS",
+    "round": 6,
+    "level": "build-level1",
+    "status": "provider-closure-pending-attempt2-activation-validation",
     "trigger": {
-      "workflow_run": 35818120201,
-      "commit": "0599266fd5fc9869002629b3778d71f1e76bbdc1",
-      "level0_result": "12 workflow SUCCESS / 0 FAIL; 11 canonical PASS + KNewStuff runtime-pending",
-      "planning_gate": "tier3-build-level1-planning",
-      "affected_nodes": [
-        "kio"
+      "workflow_run": 35826694664,
+      "commit": "e7e98703184967487198f26a488d553038756990",
+      "level1_result": "0 workflow SUCCESS / 2 FAIL",
+      "failed_nodes": [
+        "kio",
+        "kxmlgui"
       ]
     },
-    "previous_round": 4,
-    "source_changed_nodes": [
-      "kio"
+    "previous_round": 5,
+    "source_changed_nodes": [],
+    "provider_closure_only_nodes": [
+      "kio",
+      "kxmlgui"
     ],
-    "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux2"
+      "kio": "6.30.0-0supralinux2",
+      "kxmlgui": "6.30.0-0supralinux1"
+    },
+    "provider_closure_inputs": {
+      "kio": [
+        "karchive",
+        "kcodecs",
+        "knotifications"
+      ],
+      "kxmlgui": [
+        "karchive",
+        "kcodecs",
+        "kcolorscheme",
+        "kcompletion",
+        "sonnet"
+      ]
     },
     "policy": {
       "package_revision_bump_required_for_packaging_changes": true,
-      "rematerialize_only_changed_nodes": true,
-      "level1_execution_remains_unauthorized": false,
-      "kde_dependency_graph_unchanged": true,
-      "level1_activation_requires_separate_policy_gate": true
+      "provider_closure_changes_do_not_require_source_rematerialization": true,
+      "package_revision_unchanged": true,
+      "rerun_full_level1_after_remediation": true,
+      "kde_dependency_graph_unchanged": true
     },
-    "next_gate": "tier3-build-level1-attempt1",
-    "evidence": {
-      "workflow_run": 35825070347,
-      "commit": "fbde9a53e357a138f4d74d7905230c7859e20444",
-      "promoted_nodes": [
-        "kio"
-      ],
-      "artifacts": {
-        "kio": {
-          "job_id": 107064960565,
-          "artifact_id": 10735250819,
-          "artifact_sha256": "8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106"
-        }
-      },
-      "package_attempted": false,
-      "package_state_effect": "none"
-    },
-    "level1_activation": {
-      "policy_workflow_run": 35826072726,
-      "policy_commit": "b96e925ee9f649c1b4b984ed6fed277ef911f2c2",
-      "planner_workflow_run": 35826072818,
-      "attempt": 1
-    }
+    "next_gate": "tier3-build-level1-attempt2-activation-validation"
   },
   "remediation_history": [
     {
@@ -3168,6 +3230,68 @@
         "runtime_pending_nodes": [
           "knewstuff"
         ]
+      }
+    },
+    {
+      "round": 5,
+      "level": "build-level1-preflight",
+      "status": "materialization-PASS",
+      "trigger": {
+        "workflow_run": 35818120201,
+        "commit": "0599266fd5fc9869002629b3778d71f1e76bbdc1",
+        "level0_result": "12 workflow SUCCESS / 0 FAIL; 11 canonical PASS + KNewStuff runtime-pending",
+        "planning_gate": "tier3-build-level1-planning",
+        "affected_nodes": [
+          "kio"
+        ]
+      },
+      "previous_round": 4,
+      "source_changed_nodes": [
+        "kio"
+      ],
+      "provider_closure_only_nodes": [],
+      "candidate_package_versions": {
+        "kio": "6.30.0-0supralinux2"
+      },
+      "policy": {
+        "package_revision_bump_required_for_packaging_changes": true,
+        "rematerialize_only_changed_nodes": true,
+        "level1_execution_remains_unauthorized": false,
+        "kde_dependency_graph_unchanged": true,
+        "level1_activation_requires_separate_policy_gate": true
+      },
+      "next_gate": "tier3-build-level1-attempt1",
+      "evidence": {
+        "workflow_run": 35825070347,
+        "commit": "fbde9a53e357a138f4d74d7905230c7859e20444",
+        "promoted_nodes": [
+          "kio"
+        ],
+        "artifacts": {
+          "kio": {
+            "job_id": 107064960565,
+            "artifact_id": 10735250819,
+            "artifact_sha256": "8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106"
+          }
+        },
+        "package_attempted": false,
+        "package_state_effect": "none"
+      },
+      "level1_activation": {
+        "policy_workflow_run": 35826072726,
+        "policy_commit": "b96e925ee9f649c1b4b984ed6fed277ef911f2c2",
+        "planner_workflow_run": 35826072818,
+        "attempt": 1
+      },
+      "validation": {
+        "workflow_run": 35826694664,
+        "commit": "e7e98703184967487198f26a488d553038756990",
+        "result": "0 workflow SUCCESS / 2 FAIL",
+        "remaining_failed_nodes": [
+          "kio",
+          "kxmlgui"
+        ],
+        "failure_class": "provider-closure-incomplete"
       }
     }
   ]

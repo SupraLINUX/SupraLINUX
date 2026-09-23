@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "active-pending-ci",
-  "execution_authorized": true,
+  "state": "remediation-pending-activation",
+  "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -376,11 +376,73 @@
       ],
       "dev_package": "kded6-dev",
       "provenance": "tier3-support-pass"
+    },
+    "karchive": {
+      "version": "6.30.0-0supralinux4",
+      "workflow_run": 34884764702,
+      "artifact_id": 10364726750,
+      "artifact_sha256": "0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e",
+      "expected_binary_packages": [
+        "libkf6archive-data",
+        "libkf6archive-dev",
+        "libkf6archive-doc",
+        "libkf6archive6"
+      ],
+      "dev_package": "libkf6archive-dev",
+      "provenance": "canonical-dag-provider-closure"
+    },
+    "kcodecs": {
+      "version": "6.30.0-0supralinux4",
+      "workflow_run": 34716761551,
+      "artifact_id": 10305050385,
+      "artifact_sha256": "d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45",
+      "expected_binary_packages": [
+        "libkf6codecs-data",
+        "libkf6codecs-dev",
+        "libkf6codecs-doc",
+        "libkf6codecs6"
+      ],
+      "dev_package": "libkf6codecs-dev",
+      "provenance": "canonical-dag-provider-closure"
+    },
+    "knotifications": {
+      "version": "6.30.0-0supralinux1",
+      "workflow_run": 35544063879,
+      "artifact_id": 10616445435,
+      "artifact_sha256": "09ede9c6f1f07333e1ea54291232a855c6dca9f9cf9679a38d37b1ec69eb6135",
+      "expected_binary_packages": [
+        "libkf6notifications-data",
+        "libkf6notifications-dev",
+        "libkf6notifications-doc",
+        "libkf6notifications6",
+        "python3-kf6notifications",
+        "qml6-module-org-kde-notifications"
+      ],
+      "dev_package": "libkf6notifications-dev",
+      "provenance": "canonical-dag-provider-closure"
+    },
+    "sonnet": {
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 35358920602,
+      "artifact_id": 10554216487,
+      "artifact_sha256": "ae5a33cf8699b96b7b7b8c1a83bc4d37a484878029818c1885b4f4f44f15b431",
+      "expected_binary_packages": [
+        "sonnet6-plugins",
+        "libkf6sonnet-data",
+        "libkf6sonnet-dev",
+        "libkf6sonnet-dev-bin",
+        "libkf6sonnet-doc",
+        "libkf6sonnetcore6",
+        "libkf6sonnetui6",
+        "qml6-module-org-kde-sonnet"
+      ],
+      "dev_package": "libkf6sonnet-dev",
+      "provenance": "canonical-dag-provider-closure"
     }
   },
   "nodes": {
     "kio": {
-      "state": "prepared-pending-build",
+      "state": "prepared-pending-revalidation",
       "source_package": "kf6-kio",
       "package_version": "6.30.0-0supralinux2",
       "expected_binary_packages": [
@@ -436,7 +498,10 @@
         "kjobwidgets",
         "kwallet",
         "kdoctools",
-        "kded"
+        "kded",
+        "karchive",
+        "kcodecs",
+        "knotifications"
       ],
       "input_classes": {
         "external_pass": [
@@ -465,6 +530,11 @@
         ],
         "support_runtime": [
           "kded"
+        ],
+        "provider_closure": [
+          "karchive",
+          "kcodecs",
+          "knotifications"
         ]
       },
       "buildinfo_proof_packages": [
@@ -501,10 +571,25 @@
       },
       "deferred_runtime_validation": [],
       "success_transition": "PASS",
-      "downstream_eligible_on_build_success": true
+      "downstream_eligible_on_build_success": true,
+      "provider_closure_input_ids": [
+        "karchive",
+        "kcodecs",
+        "knotifications"
+      ],
+      "last_attempt": {
+        "attempt": 1,
+        "workflow_run": 35826694664,
+        "job_id": 107070288529,
+        "artifact_id": 10735576795,
+        "artifact_sha256": "bbc1cb4caa351a335077e4b3dc0dcee7b2a7dfb96d85e6659d112ad87069c353",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "failure_substage": "install-deps"
+      }
     },
     "kxmlgui": {
-      "state": "prepared-pending-build",
+      "state": "prepared-pending-revalidation",
       "source_package": "kf6-kxmlgui",
       "package_version": "6.30.0-0supralinux1",
       "expected_binary_packages": [
@@ -547,7 +632,12 @@
         "kglobalaccel",
         "kconfigwidgets",
         "kiconthemes",
-        "ktextwidgets"
+        "ktextwidgets",
+        "karchive",
+        "kcodecs",
+        "kcolorscheme",
+        "kcompletion",
+        "sonnet"
       ],
       "input_classes": {
         "external_pass": [
@@ -565,7 +655,14 @@
           "ktextwidgets"
         ],
         "support_build": [],
-        "support_runtime": []
+        "support_runtime": [],
+        "provider_closure": [
+          "karchive",
+          "kcodecs",
+          "kcolorscheme",
+          "kcompletion",
+          "sonnet"
+        ]
       },
       "buildinfo_proof_packages": [
         "libkf6coreaddons-dev",
@@ -590,7 +687,24 @@
       },
       "deferred_runtime_validation": [],
       "success_transition": "PASS",
-      "downstream_eligible_on_build_success": true
+      "downstream_eligible_on_build_success": true,
+      "provider_closure_input_ids": [
+        "karchive",
+        "kcodecs",
+        "kcolorscheme",
+        "kcompletion",
+        "sonnet"
+      ],
+      "last_attempt": {
+        "attempt": 1,
+        "workflow_run": 35826694664,
+        "job_id": 107070288573,
+        "artifact_id": 10734929331,
+        "artifact_sha256": "9e14c20ddfed7bc1cb500e1c2544eac1469b97cc2862ed54a946fd0deb1161ed",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "failure_substage": "install-deps"
+      }
     }
   },
   "semantics": {
@@ -614,13 +728,71 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-build-level1-attempt1",
+  "next_gate": "tier3-build-level1-attempt2-activation-validation",
   "current_attempt": 1,
-  "activation": {
+  "last_activation": {
     "policy_workflow_run": 35826072726,
     "policy_commit": "b96e925ee9f649c1b4b984ed6fed277ef911f2c2",
     "planner_workflow_run": 35826072818,
     "scope": "kio+kxmlgui",
-    "reason": "Level1 plan validated; authorize first real binary attempt"
+    "reason": "Level1 plan validated; authorize first real binary attempt",
+    "status": "CLOSED-2-FAIL",
+    "workflow_run": 35826694664
+  },
+  "attempt1_summary": {
+    "workflow_run": 35826694664,
+    "commit": "e7e98703184967487198f26a488d553038756990",
+    "rootfs": {
+      "artifact_id": 10735292514,
+      "artifact_sha256": "7f1bd21e77ca479dbb2e478467d61cf1aa2d71740a929eb92d2737a8252378c2",
+      "rootfs_sha256": "65b28559cd2e23c1a2b5968e12ca0b3e48fd518b791b069ac2217898b44bfbed"
+    },
+    "workflow_jobs": {
+      "success": 0,
+      "fail": 2
+    },
+    "fail": [
+      "kio",
+      "kxmlgui"
+    ],
+    "blocked": [],
+    "canonical_promotions": 0,
+    "failure_class": "provider-closure-incomplete"
+  },
+  "active_remediation": {
+    "round": 1,
+    "trigger_workflow_run": 35826694664,
+    "trigger_commit": "e7e98703184967487198f26a488d553038756990",
+    "nodes": [
+      "kio",
+      "kxmlgui"
+    ],
+    "source_changed_nodes": [],
+    "provider_closure_only_nodes": [
+      "kio",
+      "kxmlgui"
+    ],
+    "candidate_package_versions": {
+      "kio": "6.30.0-0supralinux2",
+      "kxmlgui": "6.30.0-0supralinux1"
+    },
+    "provider_closure_inputs": {
+      "kio": [
+        "karchive",
+        "kcodecs",
+        "knotifications"
+      ],
+      "kxmlgui": [
+        "karchive",
+        "kcodecs",
+        "kcolorscheme",
+        "kcompletion",
+        "sonnet"
+      ]
+    },
+    "execution_authorized": false,
+    "full_level1_rerun_required": true,
+    "status": "provider-closure-pending-attempt2-activation-validation",
+    "next_gate": "tier3-build-level1-attempt2-activation-validation"
   }
 }

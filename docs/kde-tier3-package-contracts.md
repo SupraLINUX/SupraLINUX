@@ -194,3 +194,12 @@ Historical remediated revisions are monotonic: KJobWidgets and KWallet remain at
 ### Round 5 activation handoff
 
 KIO source materialization is already PASS and unchanged. Repository Policy run `35826072726` validated the Level 1 plan, so the round-5 contract handoff now points to `tier3-build-level1-attempt1`. This does not modify KIO's package contract; it records that the separate binary-execution gate has been satisfied.
+
+
+### Round 6 — Level 1 provider closure only
+
+Attempt 1 exposed no new KIO or KXMLGui source-contract defect. The failed install-deps phase instead proved that the retained artifact set was missing transitive Debian package providers.
+
+Round 6 therefore has `source_changed_nodes=[]` and `provider_closure_only_nodes=[kio,kxmlgui]`. KIO stays at `6.30.0-0supralinux2`; KXMLGui stays at `6.30.0-0supralinux1`.
+
+The closure rows are explicitly classified `transitive-deb-provider-closure` with `kde_dependency_edge=false`. They preserve package-manager closure without allowing Debian packaging relations to redefine the KDE-upstream DAG.

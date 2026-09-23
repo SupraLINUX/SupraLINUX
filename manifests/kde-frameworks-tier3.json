@@ -16,8 +16,8 @@
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-authorized",
-    "remediation": "round5-kio-source-PASS-level1-attempt1-active"
+    "package_builds": "tier3-level1-remediation-pending-provider-closure",
+    "remediation": "round6-level1-provider-closure-attempt1-2-fail"
   },
   "nodes": [
     {
@@ -1205,30 +1205,51 @@
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
   "build_level0_manifest": "manifests/kde-tier3-build-level0.json",
   "active_remediation": {
-    "round": 5,
-    "level": "build-level1-preflight",
-    "trigger_workflow_run": 35818120201,
-    "trigger_commit": "0599266fd5fc9869002629b3778d71f1e76bbdc1",
+    "round": 6,
+    "level": "build-level1",
+    "trigger_workflow_run": 35826694664,
+    "trigger_commit": "e7e98703184967487198f26a488d553038756990",
     "nodes": [
-      "kio"
+      "kio",
+      "kxmlgui"
     ],
-    "source_materialization_nodes": [
-      "kio"
+    "source_materialization_nodes": [],
+    "provider_closure_only_nodes": [
+      "kio",
+      "kxmlgui"
     ],
-    "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux2"
+      "kio": "6.30.0-0supralinux2",
+      "kxmlgui": "6.30.0-0supralinux1"
     },
-    "execution_authorized": true,
-    "status": "level1-active-pending-ci",
-    "level1_execution_authorized": true,
-    "next_gate": "tier3-build-level1-attempt1",
-    "materialization_workflow_run": 35825070347,
-    "materialization_commit": "fbde9a53e357a138f4d74d7905230c7859e20444",
+    "provider_closure_inputs": {
+      "kio": [
+        "karchive",
+        "kcodecs",
+        "knotifications"
+      ],
+      "kxmlgui": [
+        "karchive",
+        "kcodecs",
+        "kcolorscheme",
+        "kcompletion",
+        "sonnet"
+      ]
+    },
+    "execution_authorized": false,
+    "level1_execution_authorized": false,
+    "full_level1_rerun_required": true,
+    "status": "provider-closure-pending-attempt2-activation-validation",
+    "next_gate": "tier3-build-level1-attempt2-activation-validation",
     "current_attempt": 1,
-    "planning_policy_workflow_run": 35826072726,
-    "planning_policy_commit": "b96e925ee9f649c1b4b984ed6fed277ef911f2c2",
-    "planner_workflow_run": 35826072818
+    "validation_workflow_run": 35826694664,
+    "validation_commit": "e7e98703184967487198f26a488d553038756990",
+    "validation_result": "0 workflow SUCCESS / 2 FAIL",
+    "remaining_failed_nodes": [
+      "kio",
+      "kxmlgui"
+    ],
+    "blocked_nodes": []
   },
   "remediation_history": [
     {
@@ -1351,6 +1372,40 @@
       "runtime_pending_nodes": [
         "knewstuff"
       ]
+    },
+    {
+      "round": 5,
+      "level": "build-level1-preflight",
+      "trigger_workflow_run": 35818120201,
+      "trigger_commit": "0599266fd5fc9869002629b3778d71f1e76bbdc1",
+      "nodes": [
+        "kio"
+      ],
+      "source_materialization_nodes": [
+        "kio"
+      ],
+      "provider_closure_only_nodes": [],
+      "candidate_package_versions": {
+        "kio": "6.30.0-0supralinux2"
+      },
+      "execution_authorized": true,
+      "status": "level1-attempt1-complete-provider-closure-fail",
+      "level1_execution_authorized": true,
+      "next_gate": "tier3-build-level1-attempt1",
+      "materialization_workflow_run": 35825070347,
+      "materialization_commit": "fbde9a53e357a138f4d74d7905230c7859e20444",
+      "current_attempt": 1,
+      "planning_policy_workflow_run": 35826072726,
+      "planning_policy_commit": "b96e925ee9f649c1b4b984ed6fed277ef911f2c2",
+      "planner_workflow_run": 35826072818,
+      "validation_workflow_run": 35826694664,
+      "validation_commit": "e7e98703184967487198f26a488d553038756990",
+      "validation_result": "0 workflow SUCCESS / 2 FAIL",
+      "remaining_failed_nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "canonical_promotions": 0
     }
   ],
   "build_level0": "PARTIAL",

@@ -52,8 +52,17 @@ active=c.get("active_remediation",{})
 active_nodes=set(active.get("trigger",{}).get("failed_nodes",active.get("trigger",{}).get("affected_nodes",[])))
 if active:
     round_no=active.get("round")
-    req(active.get("status") in {"materialization-pending-ci","materialization-PASS"},"Tier3 active remediation state")
-    if round_no==5:
+    req(active.get("status") in {"materialization-pending-ci","materialization-PASS","provider-closure-pending-attempt2-activation-validation"},"Tier3 active remediation state")
+    if round_no==6:
+        req(active_nodes=={"kio","kxmlgui"},"Tier3 round6 Level1 failure set")
+        req(active.get("level")=="build-level1","Tier3 round6 Level1 identity")
+        req(active.get("trigger",{}).get("workflow_run")==35826694664 and active.get("trigger",{}).get("commit")=="e7e98703184967487198f26a488d553038756990","Tier3 round6 trigger")
+        req(active.get("source_changed_nodes")==[] and set(active.get("provider_closure_only_nodes",[]))=={"kio","kxmlgui"},"Tier3 round6 closure-only classes")
+        req(active.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux2","kxmlgui":"6.30.0-0supralinux1"},"Tier3 round6 unchanged revisions")
+        req(active.get("provider_closure_inputs")=={"kio":["karchive","kcodecs","knotifications"],"kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet"]},"Tier3 round6 closure inputs")
+        req(active.get("next_gate")=="tier3-build-level1-attempt2-activation-validation","Tier3 round6 next gate")
+        req(active.get("policy",{}).get("provider_closure_changes_do_not_require_source_rematerialization") is True and active.get("policy",{}).get("package_revision_unchanged") is True,"Tier3 round6 no-source policy")
+    elif round_no==5:
         req(active_nodes=={"kio"},"Tier3 round5 KIO scope")
         req(active.get("level")=="build-level1-preflight","Tier3 round5 Level1 preflight")
         req(active.get("trigger",{}).get("workflow_run")==35818120201,"Tier3 round5 trigger run")
@@ -147,6 +156,14 @@ kio=c["nodes"]["kio"]
 req(kio.get("selected_profile",{}).get("WITH_WAYLAND") is True,"KIO Wayland Linux profile")
 req(any(q.get("package")=="kio6" and q.get("value")=="kwallet6" for q in kio.get("binary_relation_overrides",[])),"KIO KWallet runtime provider")
 req("kwallet" in d["nodes"]["kio"]["frameworks"]["selected_linux_profile"],"KIO upstream KWallet selected profile")
+if active.get("round")==6:
+    for node,expected in {
+      "kio":["karchive","kcodecs","knotifications"],
+      "kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet"],
+    }.items():
+        rows=c["nodes"][node].get("level1_provider_closure_requirements",[])
+        req([x.get("retained_input_id") for x in rows]==expected,f"{node}: Level1 provider closure contract")
+        req(all(x.get("kde_dependency_edge") is False and x.get("classification")=="transitive-deb-provider-closure" for x in rows),f"{node}: closure is not a KDE edge")
 if active.get("round")==5:
     rel=[(x.get("action"),x.get("package") or x.get("relation")) for x in kio.get("source_build_relation_overrides",[])]
     req(rel==[("remove","libkf6auth-dev"),("remove","libkf6configwidgets-dev")],"KIO round5 false-edge removals")
@@ -165,11 +182,18 @@ req(set(d["nodes"]["purpose"]["frameworks"]["qml_required"])=={"prison","kitemmo
 canonical=t.get("discovery_policy",{})
 req(canonical.get("phase") in {"materialization","build-campaign-planning","build-level0","build-level1-planning","build-level1"},"Tier3 canonical materialization/build-planning phase")
 req(canonical.get("package_contracts")=="PASS","Tier3 canonical contract PASS")
-req(canonical.get("package_builds") in {"not-authorized-before-tier3-materialization","not-authorized-before-tier3-build-campaign","tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized"},"Tier3 build gate")
+req(canonical.get("package_builds") in {"not-authorized-before-tier3-materialization","not-authorized-before-tier3-build-campaign","tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized","tier3-level1-remediation-pending-provider-closure"},"Tier3 build gate")
 if active:
     ar=t.get("active_remediation",{})
     req(ar.get("round")==active.get("round") and set(ar.get("nodes",[]))==active_nodes,"Tier3 canonical remediation linkage")
-    if active.get("round")==5:
+    if active.get("round")==6:
+        req(ar.get("level")=="build-level1","Tier3 round6 canonical Level1")
+        req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==[] and set(ar.get("provider_closure_only_nodes",[]))=={"kio","kxmlgui"},"Tier3 round6 canonical closure-only scope")
+        req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux2","kxmlgui":"6.30.0-0supralinux1"},"Tier3 round6 canonical revisions")
+        req(canonical.get("phase")=="build-level1" and canonical.get("package_builds")=="tier3-level1-remediation-pending-provider-closure","Tier3 round6 canonical gate")
+        req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 round6 canonical execution pause")
+        req(ar.get("validation_workflow_run")==35826694664 and ar.get("next_gate")=="tier3-build-level1-attempt2-activation-validation","Tier3 round6 canonical evidence/gate")
+    elif active.get("round")==5:
         req(ar.get("level")=="build-level1-preflight","Tier3 round5 canonical Level1 preflight")
         req(ar.get("source_materialization_nodes")==["kio"] and ar.get("provider_closure_only_nodes")==[],"Tier3 round5 canonical source scope")
         req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux2"},"Tier3 round5 canonical revision")

@@ -86,6 +86,7 @@ plan={
  "direct_build_predecessors":n.get("direct_build_predecessors",[]),
  "buildinfo_proof_packages":n.get("buildinfo_proof_packages",[]),
  "extra_buildinfo_proof_packages":n.get("extra_buildinfo_proof_packages",[]),
+ "provider_closure_input_ids":n.get("provider_closure_input_ids",[]),
 }
 (out/"input-plan.json").write_text(json.dumps(plan,indent=2)+"\n")
 env={

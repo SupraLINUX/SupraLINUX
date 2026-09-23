@@ -101,7 +101,7 @@ req(policy.get("phase") in {"build-level0","build-level1-planning","build-level1
 req(policy.get("dependencies")=="materialized-from-kde-upstream-v6.30.0","Tier3 dependency state")
 req(policy.get("provider_audit")=="PASS","Tier3 provider audit gate")
 req(policy.get("package_contracts")=="PASS","Tier3 package-contract gate")
-req(policy.get("package_builds") in {"tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized"},"Tier3 package-build gate")
+req(policy.get("package_builds") in {"tier3-level0-authorized","tier3-level0-remediation-pending","tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized","tier3-level1-remediation-pending-provider-closure"},"Tier3 package-build gate")
 support=tier3.get("support_components",{})
 req(support.get("provider_audit_manifest")=="manifests/kde-tier3-support-provider-audit.json","Tier3 support provider-audit manifest")
 req(support.get("provider_audit")=="PASS","Tier3 support provider-audit state")
@@ -171,6 +171,20 @@ elif policy.get("package_builds")=="tier3-level0-authorized":
         req(rem.get("next_gate")=="tier3-build-level0-attempt2","Tier3 attempt2 next gate")
     else:
         req(False,"Tier3 authorized Level0 attempt marker")
+elif policy.get("package_builds")=="tier3-level1-remediation-pending-provider-closure":
+    rem=tier3.get("active_remediation",{})
+    req(policy.get("phase")=="build-level1","Tier3 round6 Level1 phase")
+    req(rem.get("round")==6 and rem.get("level")=="build-level1","Tier3 round6 identity")
+    req(set(rem.get("nodes",[]))=={"kio","kxmlgui"},"Tier3 round6 node set")
+    req(rem.get("source_materialization_nodes")==[] and set(rem.get("provider_closure_only_nodes",[]))=={"kio","kxmlgui"},"Tier3 round6 provider-closure-only classes")
+    req(rem.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux2","kxmlgui":"6.30.0-0supralinux1"},"Tier3 round6 unchanged revisions")
+    req(rem.get("provider_closure_inputs")=={"kio":["karchive","kcodecs","knotifications"],"kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet"]},"Tier3 round6 closure inputs")
+    req(rem.get("execution_authorized") is False and rem.get("level1_execution_authorized") is False,"Tier3 round6 execution pause")
+    req(rem.get("validation_workflow_run")==35826694664 and rem.get("validation_commit")=="e7e98703184967487198f26a488d553038756990","Tier3 round6 trigger evidence")
+    req(rem.get("validation_result")=="0 workflow SUCCESS / 2 FAIL" and set(rem.get("remaining_failed_nodes",[]))=={"kio","kxmlgui"},"Tier3 round6 failure summary")
+    req(rem.get("next_gate")=="tier3-build-level1-attempt2-activation-validation","Tier3 round6 next gate")
+    hist=[x for x in tier3.get("remediation_history",[]) if x.get("round")==5]
+    req(len(hist)==1 and hist[0].get("validation_workflow_run")==35826694664,"Tier3 round5 history retains Attempt1 result")
 elif policy.get("package_builds")=="tier3-level1-authorized":
     rem=tier3.get("active_remediation",{})
     req(policy.get("phase")=="build-level1","Tier3 active Level1 phase")
