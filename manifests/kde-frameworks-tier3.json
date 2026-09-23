@@ -16,8 +16,8 @@
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-remediation-pending-materialization",
-    "remediation": "round7-kio-kxmlgui-source-remediation-pending-materialization"
+    "package_builds": "tier3-level1-source-PASS-pending-planning-validation",
+    "remediation": "round7-kio-kxmlgui-source-PASS-pending-level1-planning-validation"
   },
   "nodes": [
     {
@@ -477,10 +477,10 @@
         "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
         "materialization_manifest": "manifests/kde-tier3-materialization.json",
         "materialization_evidence": {
-          "workflow_run": 35825070347,
-          "job_id": 107064960565,
-          "artifact_id": 10735250819,
-          "artifact_sha256": "8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106"
+          "workflow_run": 35882795135,
+          "job_id": 107255289804,
+          "artifact_id": 10760324592,
+          "artifact_sha256": "b58b7a45f6df0c8f01e9bd9a37799c1470369124a7c1b48fecb82a5f7f86ae8d"
         }
       },
       "packaging": {
@@ -1125,10 +1125,10 @@
         "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
         "materialization_manifest": "manifests/kde-tier3-materialization.json",
         "materialization_evidence": {
-          "workflow_run": 35746667704,
-          "job_id": 106810108083,
-          "artifact_id": 10703925009,
-          "artifact_sha256": "9ad2056d1dbc9ab626521cd1f4bc67c13f5e36b18d93fc67da8ee6b7da3ba2fc"
+          "workflow_run": 35882795135,
+          "job_id": 107255289573,
+          "artifact_id": 10761208629,
+          "artifact_sha256": "72cd10276558264646a9e38d5beab7b231434338597ef8d276030e790ff02214"
         }
       },
       "packaging": {
@@ -1225,8 +1225,8 @@
     "execution_authorized": false,
     "level1_execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "materialization-pending-ci",
-    "next_gate": "tier3-round7-level1-materialization",
+    "status": "materialization-PASS-pending-level1-planning-validation",
+    "next_gate": "tier3-build-level1-planning-validation",
     "current_attempt": 2,
     "validation_workflow_run": 35829170695,
     "validation_commit": "897d3a864bc7ea164400c7d9de2e9c51cf6316ab",
@@ -1240,6 +1240,20 @@
     "failure_classes": {
       "kio": "upstream-test-environment-incomplete",
       "kxmlgui": "python-binding-build-provider-incomplete"
+    },
+    "materialization_workflow_run": 35882795135,
+    "materialization_commit": "0d6c02f3f8dc41f716ba62ee7121f56371a8dc91",
+    "materialization_artifacts": {
+      "kio": {
+        "job_id": 107255289804,
+        "artifact_id": 10760324592,
+        "artifact_sha256": "b58b7a45f6df0c8f01e9bd9a37799c1470369124a7c1b48fecb82a5f7f86ae8d"
+      },
+      "kxmlgui": {
+        "job_id": 107255289573,
+        "artifact_id": 10761208629,
+        "artifact_sha256": "72cd10276558264646a9e38d5beab7b231434338597ef8d276030e790ff02214"
+      }
     }
   },
   "remediation_history": [
