@@ -153,3 +153,7 @@ Source materialization workflow `35894317888` completed successfully for both Le
 - KXMLGui `6.30.0-0supralinux3`: job `107294403314`, artifact `10766665506`, artifact SHA-256 `100cf903ca1ef17cf2b37bab58ba0b7bf1e562d111cc04107247c3f35b134d58`, adapted rules SHA-256 `597ef52317fee17c1aa1dca92b0c547ac1fa543f4a56b8b3b1d6075e07d5c14f`.
 
 The prior push exposed two historical lifecycle-validator assumptions before any binary rebuild occurred: `validate_kde_tier3.py` fell back to the old round-5 branch and `validate_kde_tier3_build_level1.py` still had a second round-7-only pending-materialization branch. They are updated with the round-8 handoff. Attempt 4 remains unauthorized until planning validation passes.
+
+## Generated campaign synchronized after round 8
+
+The generated Tier 3 build campaign now points to the promoted round-8 source inputs: KIO `6.30.0-0supralinux4` artifact `10766471076` and KXMLGui `6.30.0-0supralinux3` artifact `10766665506`, both from materialization run `35894317888`. This refresh changes only derived source pins; `execution_authorized=false` remains unchanged and Attempt 4 is still gated by Level 1 planning validation.
