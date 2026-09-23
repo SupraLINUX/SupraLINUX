@@ -87,6 +87,7 @@ plan={
  "buildinfo_proof_packages":n.get("buildinfo_proof_packages",[]),
  "extra_buildinfo_proof_packages":n.get("extra_buildinfo_proof_packages",[]),
  "provider_closure_input_ids":n.get("provider_closure_input_ids",[]),
+ "runtime_validation_input_ids":n.get("runtime_validation_input_ids",[]),
 }
 (out/"input-plan.json").write_text(json.dumps(plan,indent=2)+"\n")
 env={
@@ -186,6 +187,10 @@ for spec in plan["inputs"]:
         raise SystemExit(f"{input_id}: declared dev package missing: {spec['dev_package']}")
     all_debs.extend(paths[p] for p in sorted(paths)); records[input_id]={**spec,"files":actual}
 (out/"retained-inputs.json").write_text(json.dumps(records,indent=2,sort_keys=True)+"\n")
+closure_ids=plan.get("provider_closure_input_ids",[])
+missing=[x for x in closure_ids if x not in records]
+if missing: raise SystemExit(f"provider closure inputs missing from retained records: {missing}")
+(out/"provider-closure.json").write_text(json.dumps({x:records[x] for x in closure_ids},indent=2,sort_keys=True)+"\n")
 (out/"predecessor-debs.txt").write_text("\n".join(all_debs)+"\n")
 proof=[]
 for pkg in plan.get("buildinfo_proof_packages",[]):
@@ -312,6 +317,25 @@ STAGE=consumer-runtime-closure
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends   "${PREDECESSOR_DEBS[@]}" "${DEBS[@]}" |& tee "${EVIDENCE}/consumer-runtime-install.log"
 sudo apt-get check |& tee "${EVIDENCE}/consumer-runtime-check.log"
 
+STAGE=declared-runtime-input-proof
+python3 - "${EVIDENCE}/input-plan.json" "${EVIDENCE}/retained-inputs.json" "${EVIDENCE}/runtime-validation.json" <<'PY'
+import json,subprocess,sys
+from pathlib import Path
+plan=json.load(open(sys.argv[1])); records=json.load(open(sys.argv[2])); out=Path(sys.argv[3]); rows=[]
+for input_id in plan.get("runtime_validation_input_ids",[]):
+    rec=records.get(input_id)
+    if not rec:
+        raise SystemExit(f"runtime validation input missing from retained records: {input_id}")
+    version=rec["version"]; installed=[]
+    for pkg in rec["expected_binary_packages"]:
+        actual=subprocess.check_output(["dpkg-query","-W","-f=${Version}",pkg],text=True).strip()
+        if actual!=version:
+            raise SystemExit(f"{input_id}/{pkg}: installed version {actual} != {version}")
+        installed.append(pkg)
+    rows.append({"input":input_id,"version":version,"packages":installed})
+out.write_text(json.dumps(rows,indent=2)+"\n")
+PY
+
 python3 - "${EVIDENCE}/built-debs.json" "${PACKAGE_VERSION}" <<'PY'
 import json,subprocess,sys
 for pkg in json.load(open(sys.argv[1])):
@@ -387,6 +411,8 @@ data.update({
  "buildinfo_predecessor_proof":"PASS","selected_profile_proof":"PASS",
  "python_import":"PASS" if (ev/"python-import.log").exists() else "not-applicable",
  "qml_payload":"PASS" if (ev/"qml-payload.json").exists() else "not-applicable",
+ "provider_closure_artifact_validation":"PASS" if (ev/"provider-closure.json").exists() else "not-applicable",
+ "declared_runtime_input_proof":"PASS" if (ev/"runtime-validation.json").exists() else "not-applicable",
  "canonical_success_transition":transition,
  "downstream_eligible":not runtime_pending,
  "package_state_effect":"none-runtime-validation-pending" if runtime_pending else "PASS",

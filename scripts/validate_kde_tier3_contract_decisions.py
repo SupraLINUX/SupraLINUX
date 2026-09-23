@@ -59,7 +59,8 @@ if active:
         req(active.get("trigger",{}).get("workflow_run")==35826694664 and active.get("trigger",{}).get("commit")=="e7e98703184967487198f26a488d553038756990","Tier3 round6 trigger")
         req(active.get("source_changed_nodes")==[] and set(active.get("provider_closure_only_nodes",[]))=={"kio","kxmlgui"},"Tier3 round6 closure-only classes")
         req(active.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux2","kxmlgui":"6.30.0-0supralinux1"},"Tier3 round6 unchanged revisions")
-        req(active.get("provider_closure_inputs")=={"kio":["karchive","kcodecs","knotifications"],"kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet"]},"Tier3 round6 closure inputs")
+        req(active.get("provider_closure_inputs")=={"kio":["kconfigwidgets","karchive","kcodecs","knotifications","breeze-icons"],"kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet","breeze-icons"]},"Tier3 round6 closure inputs")
+        req(active.get("canonical_failures")==0,"Tier3 round6 has no canonical package FAIL")
         req(active.get("next_gate")=="tier3-build-level1-attempt2-activation-validation","Tier3 round6 next gate")
         req(active.get("policy",{}).get("provider_closure_changes_do_not_require_source_rematerialization") is True and active.get("policy",{}).get("package_revision_unchanged") is True,"Tier3 round6 no-source policy")
     elif round_no==5:
@@ -158,8 +159,8 @@ req(any(q.get("package")=="kio6" and q.get("value")=="kwallet6" for q in kio.get
 req("kwallet" in d["nodes"]["kio"]["frameworks"]["selected_linux_profile"],"KIO upstream KWallet selected profile")
 if active.get("round")==6:
     for node,expected in {
-      "kio":["karchive","kcodecs","knotifications"],
-      "kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet"],
+      "kio":["kconfigwidgets","karchive","kcodecs","knotifications","breeze-icons"],
+      "kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet","breeze-icons"],
     }.items():
         rows=c["nodes"][node].get("level1_provider_closure_requirements",[])
         req([x.get("retained_input_id") for x in rows]==expected,f"{node}: Level1 provider closure contract")
@@ -190,9 +191,12 @@ if active:
         req(ar.get("level")=="build-level1","Tier3 round6 canonical Level1")
         req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==[] and set(ar.get("provider_closure_only_nodes",[]))=={"kio","kxmlgui"},"Tier3 round6 canonical closure-only scope")
         req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux2","kxmlgui":"6.30.0-0supralinux1"},"Tier3 round6 canonical revisions")
-        req(canonical.get("phase")=="build-level1" and canonical.get("package_builds")=="tier3-level1-remediation-pending-provider-closure","Tier3 round6 canonical gate")
+        req(canonical.get("phase")=="build-level1-planning" and canonical.get("package_builds")=="tier3-level1-remediation-pending-provider-closure","Tier3 round6 canonical gate")
         req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 round6 canonical execution pause")
-        req(ar.get("validation_workflow_run")==35826694664 and ar.get("next_gate")=="tier3-build-level1-attempt2-activation-validation","Tier3 round6 canonical evidence/gate")
+        req(ar.get("validation_workflow_run")==35826694664 and ar.get("validation_result")=="2 raw workflow FAIL / 0 canonical FAIL","Tier3 round6 canonical raw/canonical evidence")
+        req(ar.get("raw_failed_nodes")==["kio","kxmlgui"] and ar.get("remaining_failed_nodes")==[] and ar.get("canonical_failures")==0,"Tier3 round6 canonical no current FAIL")
+        req(ar.get("provider_closure_inputs")=={"kio":["kconfigwidgets","karchive","kcodecs","knotifications","breeze-icons"],"kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet","breeze-icons"]},"Tier3 round6 canonical complete closure")
+        req(ar.get("next_attempt")==2 and ar.get("next_gate")=="tier3-build-level1-attempt2-activation-validation","Tier3 round6 canonical evidence/gate")
     elif active.get("round")==5:
         req(ar.get("level")=="build-level1-preflight","Tier3 round5 canonical Level1 preflight")
         req(ar.get("source_materialization_nodes")==["kio"] and ar.get("provider_closure_only_nodes")==[],"Tier3 round5 canonical source scope")
@@ -283,7 +287,7 @@ if active:
     req(rel["kwallet"]==[("ensure","libkf6doctools-dev (>= 6.30.0~)")],"KWallet retained KDocTools relation")
     support=c["nodes"]["kwallet"].get("support_provider_requirements",[])
     req(len(support)==1 and support[0].get("id")=="kdoctools" and support[0].get("artifact_id")==10682066198,"KWallet KDocTools support contract")
-    if active.get("round") in {3,4,5}:
+    if active.get("round",0) >= 3:
         additions=c["nodes"]["kjobwidgets"].get("symbol_template_additions",[])
         req(len(additions)==1 and additions[0].get("symbol")=="_ZSt19piecewise_construct@Base","KJobWidgets retained round3 symbols addition")
         req(additions and additions[0].get("tags")==["optional"] and additions[0].get("minimal_version")=="6.30.0","KJobWidgets retained optional symbol semantics")

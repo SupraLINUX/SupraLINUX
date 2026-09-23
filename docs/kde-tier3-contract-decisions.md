@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package-contract decisions
 
-Status: **PASS baseline retained — KIO round-5 source PASS; Level 1 planning validation pending**
+Status: **PASS baseline retained — complete Level 1 provider closure pending Attempt 2 validation**
 
 Reviewed: **2026-09-23**
 
@@ -177,3 +177,12 @@ No source decision, selected KDE feature, binary package contract or package rev
 ### KIO revision continuity after round 5
 
 KIO `6.30.0-0supralinux2` was established by round 5 source remediation and remains the canonical candidate in round 6 and later unless a new source/package change explicitly bumps it. Provider-closure-only remediation must never regress the candidate to `-0supralinux1`.
+
+
+## Round 6 complete provider closure and canonical failure semantics
+
+Round 6 remains provider/orchestration-only. The complete KIO closure is KConfigWidgets, KArchive, KCodecs, KNotifications and Breeze Icons; KXMLGui requires KArchive, KCodecs, KColorScheme, KCompletion, Sonnet and Breeze Icons.
+
+These roles are consumer-specific and each row remains `kde_dependency_edge=false`. KConfigWidgets and Breeze Icons complete package-manager closure discovered from the actual PASS predecessor `.deb` relations; neither becomes a new KDE-upstream dependency edge.
+
+Attempt 1 preserves the two raw CI failures, but canonical current FAIL is zero because both were caused by the shared retained-provider plan rather than a node-owned source/build defect. No source decision, feature selection, package identity or revision changes. Attempt 2 is a full Level 1 revalidation after Policy validates the closure.

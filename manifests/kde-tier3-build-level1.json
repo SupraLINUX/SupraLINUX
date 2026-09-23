@@ -438,6 +438,22 @@
       ],
       "dev_package": "libkf6sonnet-dev",
       "provenance": "canonical-dag-provider-closure"
+    },
+    "breeze-icons": {
+      "version": "4:6.30.0-0supralinux1",
+      "workflow_run": 35700002095,
+      "artifact_id": 10682012012,
+      "artifact_sha256": "daaa5abda5a8f824c6fa509142d7cd9132de213d782cb32e0561873f427aa577",
+      "expected_binary_packages": [
+        "breeze-icon-theme",
+        "breeze-icon-theme-rcc",
+        "kf6-breeze-icon-theme",
+        "kf6-breeze-icon-theme-rcc",
+        "libkf6breezeicons-dev",
+        "libkf6breezeicons6"
+      ],
+      "dev_package": "libkf6breezeicons-dev",
+      "provenance": "tier3-support-pass"
     }
   },
   "nodes": {
@@ -501,7 +517,9 @@
         "kded",
         "karchive",
         "kcodecs",
-        "knotifications"
+        "knotifications",
+        "kconfigwidgets",
+        "breeze-icons"
       ],
       "input_classes": {
         "external_pass": [
@@ -532,9 +550,11 @@
           "kded"
         ],
         "provider_closure": [
+          "kconfigwidgets",
           "karchive",
           "kcodecs",
-          "knotifications"
+          "knotifications",
+          "breeze-icons"
         ]
       },
       "buildinfo_proof_packages": [
@@ -573,9 +593,11 @@
       "success_transition": "PASS",
       "downstream_eligible_on_build_success": true,
       "provider_closure_input_ids": [
+        "kconfigwidgets",
         "karchive",
         "kcodecs",
-        "knotifications"
+        "knotifications",
+        "breeze-icons"
       ],
       "last_attempt": {
         "attempt": 1,
@@ -583,9 +605,11 @@
         "job_id": 107070288529,
         "artifact_id": 10735576795,
         "artifact_sha256": "bbc1cb4caa351a335077e4b3dc0dcee7b2a7dfb96d85e6659d112ad87069c353",
-        "result": "FAIL",
-        "stage": "sbuild",
-        "failure_substage": "install-deps"
+        "raw_result": "FAIL",
+        "result": "INVALIDATED-ORCHESTRATION",
+        "package_attempted": true,
+        "stage": "sbuild/install-deps",
+        "canonical_state_effect": "none"
       }
     },
     "kxmlgui": {
@@ -637,7 +661,8 @@
         "kcodecs",
         "kcolorscheme",
         "kcompletion",
-        "sonnet"
+        "sonnet",
+        "breeze-icons"
       ],
       "input_classes": {
         "external_pass": [
@@ -661,7 +686,8 @@
           "kcodecs",
           "kcolorscheme",
           "kcompletion",
-          "sonnet"
+          "sonnet",
+          "breeze-icons"
         ]
       },
       "buildinfo_proof_packages": [
@@ -693,7 +719,8 @@
         "kcodecs",
         "kcolorscheme",
         "kcompletion",
-        "sonnet"
+        "sonnet",
+        "breeze-icons"
       ],
       "last_attempt": {
         "attempt": 1,
@@ -701,9 +728,11 @@
         "job_id": 107070288573,
         "artifact_id": 10734929331,
         "artifact_sha256": "9e14c20ddfed7bc1cb500e1c2544eac1469b97cc2862ed54a946fd0deb1161ed",
-        "result": "FAIL",
-        "stage": "sbuild",
-        "failure_substage": "install-deps"
+        "raw_result": "FAIL",
+        "result": "INVALIDATED-ORCHESTRATION",
+        "package_attempted": true,
+        "stage": "sbuild/install-deps",
+        "canonical_state_effect": "none"
       }
     }
   },
@@ -723,7 +752,9 @@
       "cmake-config-consumer",
       "all-required-predecessor-buildinfo-proof",
       "selected-profile-proof",
-      "python-import-when-declared"
+      "python-import-when-declared",
+      "provider-closure-artifact-validation",
+      "declared-runtime-input-version-proof"
     ],
     "stable_promotion_requires_explicit_user_approval": true
   },
@@ -747,17 +778,20 @@
       "artifact_sha256": "7f1bd21e77ca479dbb2e478467d61cf1aa2d71740a929eb92d2737a8252378c2",
       "rootfs_sha256": "65b28559cd2e23c1a2b5968e12ca0b3e48fd518b791b069ac2217898b44bfbed"
     },
-    "workflow_jobs": {
+    "raw_workflow_jobs": {
       "success": 0,
       "fail": 2
     },
-    "fail": [
+    "raw_failed_nodes": [
       "kio",
       "kxmlgui"
     ],
-    "blocked": [],
+    "result": "INVALIDATED-ORCHESTRATION",
+    "canonical_failures": 0,
     "canonical_promotions": 0,
-    "failure_class": "provider-closure-incomplete"
+    "source_revision_changes": 0,
+    "failure_class": "provider-closure-incomplete",
+    "cause": "Both Level1 jobs reached sbuild but failed during install-deps because the Level1 orchestration omitted transitive package-provider closure required to install already-PASS predecessor artifacts. No node-owned source/build defect was established."
   },
   "active_remediation": {
     "round": 1,
@@ -778,21 +812,28 @@
     },
     "provider_closure_inputs": {
       "kio": [
+        "kconfigwidgets",
         "karchive",
         "kcodecs",
-        "knotifications"
+        "knotifications",
+        "breeze-icons"
       ],
       "kxmlgui": [
         "karchive",
         "kcodecs",
         "kcolorscheme",
         "kcompletion",
-        "sonnet"
+        "sonnet",
+        "breeze-icons"
       ]
     },
     "execution_authorized": false,
     "full_level1_rerun_required": true,
     "status": "provider-closure-pending-attempt2-activation-validation",
+    "canonical_failures": 0,
+    "source_rematerialization_required": false,
+    "package_revision_bump_required": false,
     "next_gate": "tier3-build-level1-attempt2-activation-validation"
-  }
+  },
+  "next_attempt": 2
 }

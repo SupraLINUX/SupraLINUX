@@ -314,7 +314,9 @@ elif m.get("state")=="PARTIAL":
     if ar.get("round")==6:
         req(ar.get("level")=="build-level1" and ar.get("status")=="provider-closure-pending-attempt2-activation-validation","Tier3 Level1 round6 provider closure remediation")
         req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==[] and set(ar.get("provider_closure_only_nodes",[]))=={"kio","kxmlgui"},"Tier3 Level1 round6 closure-only scope")
-        req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 Level1 round6 execution pause")
+        req(ar.get("provider_closure_inputs")=={"kio":["kconfigwidgets","karchive","kcodecs","knotifications","breeze-icons"],"kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet","breeze-icons"]},"Tier3 Level1 round6 complete provider closure")
+        req(ar.get("validation_result")=="2 raw workflow FAIL / 0 canonical FAIL" and ar.get("remaining_failed_nodes")==[] and ar.get("canonical_failures")==0,"Tier3 Level1 round6 no current FAIL")
+        req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False and ar.get("next_attempt")==2,"Tier3 Level1 round6 execution pause")
         req(ar.get("next_gate")=="tier3-build-level1-attempt2-activation-validation","Tier3 Level1 round6 next gate")
     elif ar.get("round")==5:
         req(ar.get("level")=="build-level1-preflight" and ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation","level1-active-pending-ci"},"Tier3 Level1 KIO preflight remediation")

@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **Attempt 1 active — KIO + KXMLGui authorized** as of 2026-09-23.
+Status: **Attempt 1 invalidated by orchestration — Attempt 2 provider-closure remediation pending activation** as of 2026-09-23.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -66,3 +66,20 @@ Level 1 is paused with `execution_authorized=false`. Repository Policy must vali
 ### Provider-closure classification is consumer-specific
 
 A retained PASS artifact may be a direct input for one Level 1 node and only transitive provider closure for another. The global artifact pin therefore keeps its canonical PASS provenance; `provider_closure_input_ids` on each node determines whether that same artifact is closure-only for that consumer. This classification never changes the KDE DAG.
+
+
+## Attempt 1 canonical classification and complete Attempt 2 closure
+
+The raw Attempt 1 artifacts remain:
+- KIO job `107070288529`, artifact `10735576795`, SHA-256 `bbc1cb4caa351a335077e4b3dc0dcee7b2a7dfb96d85e6659d112ad87069c353`;
+- KXMLGui job `107070288573`, artifact `10734929331`, SHA-256 `9e14c20ddfed7bc1cb500e1c2544eac1469b97cc2862ed54a946fd0deb1161ed`.
+
+Both jobs reported raw `FAIL` after entering sbuild, but they stopped in `install-deps` because the common Level 1 orchestration omitted package-provider closure. No node-owned compilation, test or package defect was established. The ledger therefore retains `raw_result=FAIL` while the canonical result is `INVALIDATED-ORCHESTRATION`; current canonical FAIL remains zero.
+
+Consumer-specific closure remains the controlling classification: a retained artifact can be a direct input for one node and closure-only for another. The complete closure required by real predecessor `.deb` metadata is:
+- KIO: KConfigWidgets, KArchive, KCodecs, KNotifications and Breeze Icons;
+- KXMLGui: KArchive, KCodecs, KColorScheme, KCompletion, Sonnet and Breeze Icons.
+
+Breeze Icons is supplied from the support PASS sub-DAG. KConfigWidgets is already a canonical Tier 3 Level 0 PASS artifact. None of these closure-only roles creates a KDE DAG edge or a direct `.buildinfo` requirement.
+
+The runner now retains `provider-closure.json`, verifies declared runtime-input versions in `runtime-validation.json`, and records both gates in final evidence. KIO stays `6.30.0-0supralinux2`; KXMLGui stays `6.30.0-0supralinux1`. Attempt 2 remains `execution_authorized=false` until Repository Policy validates this corrected closure.

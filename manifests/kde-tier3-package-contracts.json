@@ -972,6 +972,14 @@
       },
       "level1_provider_closure_requirements": [
         {
+          "retained_input_id": "kconfigwidgets",
+          "artifact_id": 10732830907,
+          "artifact_sha256": "28315a16f9e1192b3eb6b80a0ab50e560a59da63332ba33356cca32bbfc6a757",
+          "version": "6.30.0-0supralinux1",
+          "kde_dependency_edge": false,
+          "classification": "transitive-deb-provider-closure"
+        },
+        {
           "retained_input_id": "karchive",
           "artifact_id": 10364726750,
           "artifact_sha256": "0fcd8722eddf40995152df200aa576a3ff1234b8135c52e59a66f05dbc8eeb3e",
@@ -992,6 +1000,14 @@
           "artifact_id": 10616445435,
           "artifact_sha256": "09ede9c6f1f07333e1ea54291232a855c6dca9f9cf9679a38d37b1ec69eb6135",
           "version": "6.30.0-0supralinux1",
+          "kde_dependency_edge": false,
+          "classification": "transitive-deb-provider-closure"
+        },
+        {
+          "retained_input_id": "breeze-icons",
+          "artifact_id": 10682012012,
+          "artifact_sha256": "daaa5abda5a8f824c6fa509142d7cd9132de213d782cb32e0561873f427aa577",
+          "version": "4:6.30.0-0supralinux1",
           "kde_dependency_edge": false,
           "classification": "transitive-deb-provider-closure"
         }
@@ -2228,6 +2244,14 @@
           "version": "6.30.0-0supralinux3",
           "kde_dependency_edge": false,
           "classification": "transitive-deb-provider-closure"
+        },
+        {
+          "retained_input_id": "breeze-icons",
+          "artifact_id": 10682012012,
+          "artifact_sha256": "daaa5abda5a8f824c6fa509142d7cd9132de213d782cb32e0561873f427aa577",
+          "version": "4:6.30.0-0supralinux1",
+          "kde_dependency_edge": false,
+          "classification": "transitive-deb-provider-closure"
         }
       ]
     },
@@ -3012,8 +3036,12 @@
     "trigger": {
       "workflow_run": 35826694664,
       "commit": "e7e98703184967487198f26a488d553038756990",
-      "level1_result": "0 workflow SUCCESS / 2 FAIL",
-      "failed_nodes": [
+      "level1_result": "2 raw workflow FAIL / 0 canonical FAIL",
+      "affected_nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "raw_failed_nodes": [
         "kio",
         "kxmlgui"
       ]
@@ -3030,16 +3058,19 @@
     },
     "provider_closure_inputs": {
       "kio": [
+        "kconfigwidgets",
         "karchive",
         "kcodecs",
-        "knotifications"
+        "knotifications",
+        "breeze-icons"
       ],
       "kxmlgui": [
         "karchive",
         "kcodecs",
         "kcolorscheme",
         "kcompletion",
-        "sonnet"
+        "sonnet",
+        "breeze-icons"
       ]
     },
     "policy": {
@@ -3049,7 +3080,8 @@
       "rerun_full_level1_after_remediation": true,
       "kde_dependency_graph_unchanged": true
     },
-    "next_gate": "tier3-build-level1-attempt2-activation-validation"
+    "next_gate": "tier3-build-level1-attempt2-activation-validation",
+    "canonical_failures": 0
   },
   "remediation_history": [
     {

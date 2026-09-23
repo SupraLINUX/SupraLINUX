@@ -16,25 +16,26 @@
         "artifact_sha256": "7f1bd21e77ca479dbb2e478467d61cf1aa2d71740a929eb92d2737a8252378c2",
         "rootfs_sha256": "65b28559cd2e23c1a2b5968e12ca0b3e48fd518b791b069ac2217898b44bfbed"
       },
-      "result": "FAIL",
-      "workflow_jobs": {
+      "result": "INVALIDATED-ORCHESTRATION",
+      "raw_workflow_jobs": {
         "success": 0,
         "fail": 2
       },
-      "fail": [
+      "raw_failed_nodes": [
         "kio",
         "kxmlgui"
       ],
-      "blocked": [],
+      "canonical_failures": 0,
+      "canonical_promotions": 0,
       "failure_class": "provider-closure-incomplete",
-      "canonical_promotions": 0
+      "next_attempt": 2
     }
   ],
   "nodes": {
     "kio": [
       {
         "attempt": 1,
-        "result": "FAIL",
+        "result": "INVALIDATED-ORCHESTRATION",
         "workflow_run": 35826694664,
         "job_id": 107070288529,
         "commit": "e7e98703184967487198f26a488d553038756990",
@@ -48,15 +49,27 @@
         "stage": "sbuild",
         "failure_substage": "install-deps",
         "cause": "Level1 retained provider closure omitted KArchive/KCodecs/KNotifications. dose3 first proved libkf6archive-dev >= 6.30.0 unsatisfied.",
-        "remediation": "Add exact canonical PASS provider-closure artifacts karchive, kcodecs and knotifications; no source/package revision change.",
+        "remediation": {
+          "provider_closure_inputs": [
+            "kconfigwidgets",
+            "karchive",
+            "kcodecs",
+            "knotifications",
+            "breeze-icons"
+          ],
+          "source_rematerialization_required": false,
+          "package_revision_bump_required": false
+        },
         "package_version_unchanged": true,
-        "source_change": false
+        "source_change": false,
+        "raw_result": "FAIL",
+        "canonical_state_effect": "none"
       }
     ],
     "kxmlgui": [
       {
         "attempt": 1,
-        "result": "FAIL",
+        "result": "INVALIDATED-ORCHESTRATION",
         "workflow_run": 35826694664,
         "job_id": 107070288573,
         "commit": "e7e98703184967487198f26a488d553038756990",
@@ -70,9 +83,22 @@
         "stage": "sbuild",
         "failure_substage": "install-deps",
         "cause": "Level1 retained provider closure omitted transitive PASS providers. dose3 proved libkf6configwidgets-dev 6.30.0 could not satisfy libkf6codecs-dev >= 6.30.0.",
-        "remediation": "Add exact canonical PASS provider-closure artifacts karchive, kcodecs, kcolorscheme, kcompletion and sonnet; no source/package revision change.",
+        "remediation": {
+          "provider_closure_inputs": [
+            "karchive",
+            "kcodecs",
+            "kcolorscheme",
+            "kcompletion",
+            "sonnet",
+            "breeze-icons"
+          ],
+          "source_rematerialization_required": false,
+          "package_revision_bump_required": false
+        },
         "package_version_unchanged": true,
-        "source_change": false
+        "source_change": false,
+        "raw_result": "FAIL",
+        "canonical_state_effect": "none"
       }
     ]
   }

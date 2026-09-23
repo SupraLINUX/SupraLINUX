@@ -27,6 +27,10 @@ for token in (
     "buildinfo-proof-contracts.tsv",
     "consumer-runtime-check.log",
     "provider_closure_input_ids",
+    "provider-closure.json",
+    "runtime_validation_input_ids",
+    "runtime-validation.json",
+    "declared-runtime-input-proof",
 ):
     if token not in runner:
         raise SystemExit(f"Level1 runner missing contract token: {token}")

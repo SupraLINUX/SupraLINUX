@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **PASS — KIO round-5 6.30.0-0supralinux2 materialization promoted; Level 1 planning validation pending** as of 2026-09-23.
+Status: **PASS — 20/20 source materializations retained; Level 1 Attempt 2 needs no rematerialization** as of 2026-09-23.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -231,3 +231,10 @@ The KIO `6.30.0-0supralinux2` materialization remains the exact PASS artifact fr
 Level 1 Attempt 1 failed before compilation because retained provider closure was incomplete. No source-package content changes.
 
 The existing 20/20 materialization PASS remains authoritative, including KIO `6.30.0-0supralinux2` artifact `10735250819`. Round 6 has no materialization queue and no new source hash. The next action is Level 1 Attempt 2 activation only after Repository Policy validates the provider closure.
+
+
+## Attempt 1 provider-closure result
+
+Attempt 1 changes no source artifact. KIO remains `6.30.0-0supralinux2`; KXMLGui remains `6.30.0-0supralinux1`. The failure occurred in dependency installation before compilation and is corrected only by retained PASS provider artifacts.
+
+Accordingly, round 6 has no materialization queue, no new source hash and no package revision bump. Attempt 2 is gated exclusively on provider-closure validation.

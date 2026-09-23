@@ -27,6 +27,8 @@ req(m.get("level0_manifest")=="manifests/kde-tier3-build-level0.json","Level1 Le
 req(m.get("attempt_ledger")=="manifests/kde-tier3-build-level1-attempts.json","Level1 attempt ledger link")
 req(m.get("canonical_snapshot")=="11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED","Level1 canonical pre-build snapshot")
 req(m.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval policy")
+req("provider-closure-artifact-validation" in m.get("semantics",{}).get("pass_requires",[]),"Level1 provider-closure evidence gate")
+req("declared-runtime-input-version-proof" in m.get("semantics",{}).get("pass_requires",[]),"Level1 runtime-input evidence gate")
 if m.get("state")=="planned-pending-activation":
     req(m.get("execution_authorized") is False,"planned Level1 must not authorize builds")
 elif m.get("state")=="active-pending-ci":
@@ -37,8 +39,13 @@ elif m.get("state")=="remediation-pending-activation":
     req(rem.get("round")==1 and set(rem.get("nodes",[]))=={"kio","kxmlgui"},"Level1 remediation node set")
     req(rem.get("source_changed_nodes")==[] and set(rem.get("provider_closure_only_nodes",[]))=={"kio","kxmlgui"},"Level1 closure-only remediation")
     req(rem.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux2","kxmlgui":"6.30.0-0supralinux1"},"Level1 unchanged package revisions")
-    req(rem.get("provider_closure_inputs")=={"kio":["karchive","kcodecs","knotifications"],"kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet"]},"Level1 closure input sets")
+    req(rem.get("provider_closure_inputs")=={"kio":["kconfigwidgets","karchive","kcodecs","knotifications","breeze-icons"],"kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet","breeze-icons"]},"Level1 closure input sets")
+    req(rem.get("canonical_failures")==0 and rem.get("source_rematerialization_required") is False and rem.get("package_revision_bump_required") is False,"Level1 invalidated orchestration semantics")
     req(rem.get("full_level1_rerun_required") is True and rem.get("next_gate")=="tier3-build-level1-attempt2-activation-validation","Level1 attempt2 remediation gate")
+    s=m.get("attempt1_summary",{})
+    req(s.get("result")=="INVALIDATED-ORCHESTRATION" and s.get("raw_workflow_jobs")=={"success":0,"fail":2},"Level1 Attempt1 raw workflow evidence")
+    req(s.get("raw_failed_nodes")==["kio","kxmlgui"] and s.get("canonical_failures")==0 and s.get("canonical_promotions")==0,"Level1 Attempt1 canonical no-effect")
+    req(m.get("next_attempt")==2 and m.get("next_gate")=="tier3-build-level1-attempt2-activation-validation","Level1 Attempt2 paused gate")
 
 pre=m.get("planning_precondition",{})
 req(pre.get("level0_attempt")==5 and pre.get("level0_workflow_run")==35818120201,"Level1 Level0 prerequisite")
@@ -61,11 +68,13 @@ if policy.get("package_builds")=="tier3-level1-source-PASS-pending-planning-vali
     req(ar.get("status")=="materialization-PASS-pending-level1-planning-validation","canonical planning-validation state")
     req(ar.get("level1_execution_authorized") is False and ar.get("next_gate")=="tier3-build-level1-planning-validation","canonical Level1 execution pause")
 elif policy.get("package_builds")=="tier3-level1-remediation-pending-provider-closure":
-    req(policy.get("phase")=="build-level1","canonical Level1 remediation phase")
+    req(policy.get("phase")=="build-level1-planning","canonical Level1 remediation planning phase")
     req(ar.get("status")=="provider-closure-pending-attempt2-activation-validation","canonical round6 remediation state")
     req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"canonical Level1 remediation pause")
-    req(ar.get("validation_workflow_run")==35826694664 and ar.get("validation_result")=="0 workflow SUCCESS / 2 FAIL","canonical Attempt1 failure evidence")
-    req(ar.get("next_gate")=="tier3-build-level1-attempt2-activation-validation","canonical Attempt2 activation gate")
+    req(ar.get("validation_workflow_run")==35826694664 and ar.get("validation_result")=="2 raw workflow FAIL / 0 canonical FAIL","canonical Attempt1 raw/canonical evidence")
+    req(ar.get("raw_failed_nodes")==["kio","kxmlgui"] and ar.get("remaining_failed_nodes")==[] and ar.get("canonical_failures")==0,"canonical Attempt1 no current FAIL")
+    req(ar.get("provider_closure_inputs")=={"kio":["kconfigwidgets","karchive","kcodecs","knotifications","breeze-icons"],"kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet","breeze-icons"]},"canonical complete provider closure")
+    req(ar.get("next_attempt")==2 and ar.get("next_gate")=="tier3-build-level1-attempt2-activation-validation","canonical Attempt2 activation gate")
 elif policy.get("package_builds")=="tier3-level1-authorized":
     req(policy.get("phase")=="build-level1","canonical active Level1 phase")
     req(ar.get("status")=="level1-active-pending-ci","canonical active Level1 state")
@@ -96,7 +105,7 @@ for node,cfg in ret.items():
         req(n.get("state")=="PASS" and ev.get("result")=="PASS" and ev.get("downstream_eligible") is True,f"{node}: Level0 PASS")
         check_pin(node,cfg,n.get("package_version"),ev.get("artifact_id"),ev.get("artifact_sha256"))
     elif prov=="tier3-support-pass":
-        n=(s0 if node=="kdoctools" else s1).get("nodes",{}).get(node,{})
+        n=(s0 if node in s0.get("nodes",{}) else s1).get("nodes",{}).get(node,{})
         ev=n.get("pass_evidence",{})
         req(n.get("state")=="PASS" and ev.get("result")=="PASS" and ev.get("downstream_eligible") is True,f"{node}: support PASS")
         check_pin(node,cfg,n.get("package_version"),ev.get("artifact_id"),ev.get("artifact_sha256"))
@@ -114,13 +123,13 @@ expected={
    "version":"6.30.0-0supralinux2",
    "materialization":(35825070347,10735250819,"8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106"),
    "tier3":["kbookmarks","kiconthemes","kjobwidgets","kwallet"],
-   "support_build":["kdoctools"],"support_runtime":["kded"],"python":None,
+   "support_build":["kdoctools"],"support_runtime":["kded"],"provider_closure":["kconfigwidgets","karchive","kcodecs","knotifications","breeze-icons"],"python":None,
  },
  "kxmlgui":{
    "version":"6.30.0-0supralinux1",
    "materialization":(35746667704,10703925009,"9ad2056d1dbc9ab626521cd1f4bc67c13f5e36b18d93fc67da8ee6b7da3ba2fc"),
    "tier3":["kconfigwidgets","kiconthemes","ktextwidgets"],
-   "support_build":[],"support_runtime":[],"python":"KXmlGui",
+   "support_build":[],"support_runtime":[],"provider_closure":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet","breeze-icons"],"python":"KXmlGui",
  },
 }
 for node,e in expected.items():
@@ -134,14 +143,17 @@ for node,e in expected.items():
     classes=n.get("input_classes",{})
     req(classes.get("tier3_level0_pass")==e["tier3"],f"{node}: Tier3 predecessor class")
     req(classes.get("support_build")==e["support_build"] and classes.get("support_runtime")==e["support_runtime"],f"{node}: support classes")
+    req(classes.get("provider_closure")==e["provider_closure"],f"{node}: provider closure class")
+    req(n.get("provider_closure_input_ids")==e["provider_closure"],f"{node}: provider closure input IDs")
     req(n.get("runtime_validation_input_ids")==e["support_runtime"],f"{node}: runtime validation inputs")
     req(n.get("python_module")==e["python"],f"{node}: Python module")
     req(n.get("success_transition")=="PASS" and n.get("downstream_eligible_on_build_success") is True,f"{node}: success transition")
     provider_closure=n.get("provider_closure_input_ids",[])
     req(provider_closure==classes.get("provider_closure",[]),f"{node}: provider closure class linkage")
     req(set(n.get("retained_input_ids",[]))==set(classes.get("external_pass",[])+classes.get("tier3_level0_pass",[])+classes.get("support_build",[])+classes.get("support_runtime",[])+provider_closure),f"{node}: retained input closure")
-    req(all(ret.get(x,{}).get("provenance") in {"canonical-dag-provider-closure","canonical-dag-pass"} for x in provider_closure),f"{node}: provider closure PASS provenance")
-    req(all(ret.get(x,{}).get("dev_package") not in n.get("buildinfo_proof_packages",[]) for x in provider_closure if x not in classes.get("external_pass",[])),f"{node}: provider closure must not invent buildinfo edge")
+    req(all(x in ret for x in provider_closure),f"{node}: provider closure pins exist")
+    closure_dev={ret[x].get("dev_package") for x in provider_closure}
+    req(not (closure_dev & set(n.get("buildinfo_proof_packages",[]))),f"{node}: provider closure must not invent buildinfo edge")
     for pkg in n.get("buildinfo_proof_packages",[]):
         providers=[x for x in n.get("retained_input_ids",[]) if ret.get(x,{}).get("dev_package")==pkg]
         req(len(providers)==1,f"{node}: buildinfo provider for {pkg}")
@@ -153,14 +165,16 @@ if m.get("state")=="planned-pending-activation":
 else:
     hist=a.get("campaign_history",[])
     req(len(hist)>=1 and hist[0].get("attempt")==1 and hist[0].get("workflow_run")==35826694664,"Level1 Attempt1 ledger history")
-    req(hist[0].get("workflow_jobs")=={"success":0,"fail":2} and set(hist[0].get("fail",[]))=={"kio","kxmlgui"} and hist[0].get("blocked")==[],"Level1 Attempt1 result summary")
+    req(hist[0].get("result")=="INVALIDATED-ORCHESTRATION" and hist[0].get("raw_workflow_jobs")=={"success":0,"fail":2},"Level1 Attempt1 raw result summary")
+    req(hist[0].get("raw_failed_nodes")==["kio","kxmlgui"] and hist[0].get("canonical_failures")==0 and hist[0].get("canonical_promotions")==0,"Level1 Attempt1 canonical no-effect")
     req(hist[0].get("failure_class")=="provider-closure-incomplete","Level1 Attempt1 failure class")
     for node,job,artifact,digest,version in (
       ("kio",107070288529,10735576795,"bbc1cb4caa351a335077e4b3dc0dcee7b2a7dfb96d85e6659d112ad87069c353","6.30.0-0supralinux2"),
       ("kxmlgui",107070288573,10734929331,"9e14c20ddfed7bc1cb500e1c2544eac1469b97cc2862ed54a946fd0deb1161ed","6.30.0-0supralinux1"),
     ):
         x=a["nodes"][node][0]
-        req(x.get("attempt")==1 and x.get("result")=="FAIL" and x.get("workflow_run")==35826694664 and x.get("job_id")==job,f"{node}: Attempt1 FAIL identity")
+        req(x.get("attempt")==1 and x.get("raw_result")=="FAIL" and x.get("result")=="INVALIDATED-ORCHESTRATION" and x.get("workflow_run")==35826694664 and x.get("job_id")==job,f"{node}: Attempt1 invalidated identity")
+        req(x.get("canonical_state_effect")=="none" and x.get("package_version_unchanged") is True and x.get("source_change") is False,f"{node}: Attempt1 canonical no-effect")
         req(x.get("artifact_id")==artifact and x.get("artifact_sha256")==digest,f"{node}: Attempt1 artifact")
         req(x.get("rootfs_artifact_id")==10735292514 and x.get("rootfs_sha256")=="65b28559cd2e23c1a2b5968e12ca0b3e48fd518b791b069ac2217898b44bfbed",f"{node}: Attempt1 rootfs evidence")
         req(x.get("package_attempted") is True and x.get("stage")=="sbuild" and x.get("failure_substage")=="install-deps",f"{node}: Attempt1 failure stage")

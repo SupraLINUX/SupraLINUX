@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — KIO round-5 source PASS; Level 1 planning validation pending**
+Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 Attempt 1 invalidated by provider-closure orchestration; Attempt 2 validation pending**
 
 Last reviewed: **2026-09-23**
 
@@ -407,3 +407,16 @@ Level 1 Attempt 1 run `35826694664` produced **0 SUCCESS / 2 FAIL / 0 BLOCKED**.
 This does not change the KDE-upstream DAG and does not require source rematerialization. Round 6 is provider-closure-only for KIO and KXMLGui; their revisions remain `6.30.0-0supralinux2` and `6.30.0-0supralinux1` respectively.
 
 Canonical package PASS state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**: the Attempt 1 FAILs are retained historical campaign evidence and are not promoted into canonical package state. Level 1 execution is paused pending closure validation.
+
+
+## Current canonical state — Attempt 1 orchestration invalidated
+
+Level 1 workflow `35826694664` produced two **raw GitHub job failures** after KIO and KXMLGui entered sbuild. Both stopped in `install-deps` before compilation because the Level 1 orchestrator did not provide the complete transitive package-provider closure needed to install already-PASS predecessor artifacts.
+
+These raw failures are retained verbatim in the attempt ledger, but they are **not current canonical package FAILs**: SupraLINUX FAIL requires a node-owned cause. Canonical Tier 3 therefore remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED** with zero Attempt 1 promotions and zero source revisions changed.
+
+The corrected provider closure is:
+- KIO: KConfigWidgets, KArchive, KCodecs, KNotifications and Breeze Icons.
+- KXMLGui: KArchive, KCodecs, KColorScheme, KCompletion, Sonnet and Breeze Icons.
+
+Every closure entry is an already-PASS SupraLINUX artifact and has `kde_dependency_edge=false`. These providers make Debian package relations satisfiable but do not redefine the KDE-upstream DAG or the required `.buildinfo` predecessor set. Attempt 2 remains unauthorized until Repository Policy validates this remediation.
