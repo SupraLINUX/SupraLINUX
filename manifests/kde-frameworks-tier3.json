@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level1-planning",
+    "phase": "build-level1",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-remediation-pending-provider-closure",
-    "remediation": "round6-level1-provider-closure-attempt1-invalidated"
+    "package_builds": "tier3-level1-authorized",
+    "remediation": "round6-provider-closure-PASS-attempt2-active"
   },
   "nodes": [
     {
@@ -1239,23 +1239,25 @@
         "breeze-icons"
       ]
     },
-    "execution_authorized": false,
-    "level1_execution_authorized": false,
+    "execution_authorized": true,
+    "level1_execution_authorized": true,
     "full_level1_rerun_required": true,
-    "status": "provider-closure-pending-attempt2-activation-validation",
-    "next_gate": "tier3-build-level1-attempt2-activation-validation",
-    "current_attempt": 1,
+    "status": "level1-active-pending-ci",
+    "next_gate": "tier3-build-level1-attempt2",
+    "current_attempt": 2,
     "validation_workflow_run": 35826694664,
     "validation_commit": "e7e98703184967487198f26a488d553038756990",
     "validation_result": "2 raw workflow FAIL / 0 canonical FAIL",
     "remaining_failed_nodes": [],
     "blocked_nodes": [],
-    "next_attempt": 2,
     "raw_failed_nodes": [
       "kio",
       "kxmlgui"
     ],
-    "canonical_failures": 0
+    "canonical_failures": 0,
+    "activation_policy_workflow_run": 35828634884,
+    "activation_level1_workflow_run": 35828634887,
+    "activation_commit": "568beba8aa3dce7a3f3a51d5e91d31edb5a30523"
   },
   "remediation_history": [
     {

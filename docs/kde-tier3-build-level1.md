@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **Attempt 1 invalidated by orchestration — Attempt 2 provider-closure remediation pending activation** as of 2026-09-23.
+Status: **Attempt 2 active — KIO + KXMLGui full rerun with validated provider closure** as of 2026-09-23.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -83,3 +83,16 @@ Consumer-specific closure remains the controlling classification: a retained art
 Breeze Icons is supplied from the support PASS sub-DAG. KConfigWidgets is already a canonical Tier 3 Level 0 PASS artifact. None of these closure-only roles creates a KDE DAG edge or a direct `.buildinfo` requirement.
 
 The runner now retains `provider-closure.json`, verifies declared runtime-input versions in `runtime-validation.json`, and records both gates in final evidence. KIO stays `6.30.0-0supralinux2`; KXMLGui stays `6.30.0-0supralinux1`. Attempt 2 remains `execution_authorized=false` until Repository Policy validates this corrected closure.
+
+
+## Attempt 2 activation
+
+Validation evidence:
+- remediation commit: `568beba8aa3dce7a3f3a51d5e91d31edb5a30523`;
+- Repository Policy: `35828634884` PASS;
+- paused Level 1 validation workflow: `35828634887` PASS with rootfs/build skip;
+- source revisions: unchanged;
+- scope: full KIO + KXMLGui rerun;
+- scheduling: parallel, `fail-fast=false`.
+
+The runner additionally proves the complete provider-closure artifact set and declared runtime-input versions. No package becomes PASS merely by activation; canonical transitions occur only after Attempt 2 evidence review.

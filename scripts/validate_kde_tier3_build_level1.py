@@ -33,6 +33,16 @@ if m.get("state")=="planned-pending-activation":
     req(m.get("execution_authorized") is False,"planned Level1 must not authorize builds")
 elif m.get("state")=="active-pending-ci":
     req(m.get("execution_authorized") is True,"active Level1 authorization")
+    if m.get("current_attempt")==2:
+        act=m.get("activation",{})
+        req(act.get("status")=="ACTIVE" and act.get("attempt")==2,"Level1 Attempt2 activation marker")
+        req(act.get("remediation_validation_policy_workflow_run")==35828634884 and act.get("remediation_validation_level1_workflow_run")==35828634887,"Level1 Attempt2 remediation validation evidence")
+        req(act.get("remediation_commit")=="568beba8aa3dce7a3f3a51d5e91d31edb5a30523" and act.get("scope")=="full-level1-rerun-2-nodes","Level1 Attempt2 activation commit/scope")
+        rem=m.get("active_remediation",{})
+        req(rem.get("round")==1 and rem.get("status")=="provider-closure-PASS-attempt2-active","Level1 Attempt2 closure state")
+        req(rem.get("execution_authorized") is True and rem.get("current_attempt")==2,"Level1 Attempt2 remediation authorization")
+        req(rem.get("validation_policy_workflow_run")==35828634884 and rem.get("validation_level1_workflow_run")==35828634887,"Level1 Attempt2 validation linkage")
+        req(m.get("next_gate")=="tier3-build-level1-attempt2","Level1 Attempt2 next gate")
 elif m.get("state")=="remediation-pending-activation":
     req(m.get("execution_authorized") is False and m.get("current_attempt")==1,"Level1 remediation pause after attempt1")
     rem=m.get("active_remediation",{})
@@ -58,7 +68,7 @@ policy=tier3.get("discovery_policy",{})
 req(policy.get("phase") in {"build-level1-planning","build-level1"},"canonical Level1 phase")
 req(policy.get("package_builds") in {"tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized","tier3-level1-remediation-pending-provider-closure"},"canonical Level1 build gate")
 ar=tier3.get("active_remediation",{})
-if policy.get("package_builds")=="tier3-level1-remediation-pending-provider-closure":
+if policy.get("package_builds")=="tier3-level1-remediation-pending-provider-closure" or (policy.get("package_builds")=="tier3-level1-authorized" and ar.get("round")==6):
     req(ar.get("round")==6 and set(ar.get("nodes",[]))=={"kio","kxmlgui"},"canonical round6 scope")
     req(ar.get("source_materialization_nodes")==[] and set(ar.get("provider_closure_only_nodes",[]))=={"kio","kxmlgui"},"canonical round6 closure-only classes")
 else:
@@ -79,8 +89,15 @@ elif policy.get("package_builds")=="tier3-level1-authorized":
     req(policy.get("phase")=="build-level1","canonical active Level1 phase")
     req(ar.get("status")=="level1-active-pending-ci","canonical active Level1 state")
     req(ar.get("execution_authorized") is True and ar.get("level1_execution_authorized") is True,"canonical Level1 authorization")
-    req(ar.get("current_attempt")==1 and ar.get("planning_policy_workflow_run")==35826072726,"canonical Level1 attempt/planning evidence")
-    req(ar.get("next_gate")=="tier3-build-level1-attempt1","canonical Level1 attempt1 gate")
+    if ar.get("round")==6:
+        req(ar.get("current_attempt")==2,"canonical Level1 Attempt2 marker")
+        req(ar.get("activation_policy_workflow_run")==35828634884 and ar.get("activation_level1_workflow_run")==35828634887,"canonical Attempt2 remediation validation")
+        req(ar.get("activation_commit")=="568beba8aa3dce7a3f3a51d5e91d31edb5a30523","canonical Attempt2 validation commit")
+        req(ar.get("provider_closure_inputs")=={"kio":["kconfigwidgets","karchive","kcodecs","knotifications","breeze-icons"],"kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet","breeze-icons"]},"canonical Attempt2 provider closure")
+        req(ar.get("next_gate")=="tier3-build-level1-attempt2","canonical Level1 Attempt2 gate")
+    else:
+        req(ar.get("current_attempt")==1 and ar.get("planning_policy_workflow_run")==35826072726,"canonical Level1 attempt/planning evidence")
+        req(ar.get("next_gate")=="tier3-build-level1-attempt1","canonical Level1 attempt1 gate")
     req(tier3.get("support_components",{}).get("next_gate")=="tier3-build-level1","canonical Level1 support gate")
 
 shared=m.get("shared_predecessors",{}).get("extra-cmake-modules",{})

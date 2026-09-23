@@ -238,3 +238,8 @@ The existing 20/20 materialization PASS remains authoritative, including KIO `6.
 Attempt 1 changes no source artifact. KIO remains `6.30.0-0supralinux2`; KXMLGui remains `6.30.0-0supralinux1`. The failure occurred in dependency installation before compilation and is corrected only by retained PASS provider artifacts.
 
 Accordingly, round 6 has no materialization queue, no new source hash and no package revision bump. Attempt 2 is gated exclusively on provider-closure validation.
+
+
+## Attempt 2 activation handoff
+
+The round-6 closure remediation passed Repository Policy `35828634884`. Source materialization remains **20/20 PASS** with no new artifact or revision. Attempt 2 is a binary-only rerun consuming the already-promoted KIO and KXMLGui source packages.

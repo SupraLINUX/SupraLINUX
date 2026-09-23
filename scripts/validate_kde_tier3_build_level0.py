@@ -312,12 +312,17 @@ elif m.get("state")=="PARTIAL":
     req(t.get("discovery_policy",{}).get("package_builds") in {"tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized","tier3-level1-remediation-pending-provider-closure"},"Tier3 Level1 build gate")
     ar=t.get("active_remediation",{})
     if ar.get("round")==6:
-        req(ar.get("level")=="build-level1" and ar.get("status")=="provider-closure-pending-attempt2-activation-validation","Tier3 Level1 round6 provider closure remediation")
+        req(ar.get("level")=="build-level1" and ar.get("status") in {"provider-closure-pending-attempt2-activation-validation","level1-active-pending-ci"},"Tier3 Level1 round6 provider closure lifecycle")
         req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==[] and set(ar.get("provider_closure_only_nodes",[]))=={"kio","kxmlgui"},"Tier3 Level1 round6 closure-only scope")
         req(ar.get("provider_closure_inputs")=={"kio":["kconfigwidgets","karchive","kcodecs","knotifications","breeze-icons"],"kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet","breeze-icons"]},"Tier3 Level1 round6 complete provider closure")
         req(ar.get("validation_result")=="2 raw workflow FAIL / 0 canonical FAIL" and ar.get("remaining_failed_nodes")==[] and ar.get("canonical_failures")==0,"Tier3 Level1 round6 no current FAIL")
-        req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False and ar.get("next_attempt")==2,"Tier3 Level1 round6 execution pause")
-        req(ar.get("next_gate")=="tier3-build-level1-attempt2-activation-validation","Tier3 Level1 round6 next gate")
+        if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-authorized":
+            req(ar.get("status")=="level1-active-pending-ci" and ar.get("execution_authorized") is True and ar.get("level1_execution_authorized") is True,"Tier3 Level1 Attempt2 active authorization")
+            req(ar.get("current_attempt")==2 and ar.get("activation_policy_workflow_run")==35828634884 and ar.get("activation_level1_workflow_run")==35828634887,"Tier3 Level1 Attempt2 validation evidence")
+            req(ar.get("next_gate")=="tier3-build-level1-attempt2","Tier3 Level1 Attempt2 gate")
+        else:
+            req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False and ar.get("next_attempt")==2,"Tier3 Level1 round6 execution pause")
+            req(ar.get("next_gate")=="tier3-build-level1-attempt2-activation-validation","Tier3 Level1 round6 next gate")
     elif ar.get("round")==5:
         req(ar.get("level")=="build-level1-preflight" and ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation","level1-active-pending-ci"},"Tier3 Level1 KIO preflight remediation")
         req(ar.get("nodes")==["kio"] and ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux2"},"Tier3 Level1 KIO remediation scope")

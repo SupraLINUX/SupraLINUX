@@ -262,15 +262,24 @@ elif m.get("state") == "PASS":
     req(c.get("state") == "materialized", "PASS materialization contract lifecycle")
     req(t.get("discovery_policy", {}).get("phase") in {"build-campaign-planning", "build-level0", "build-level1-planning", "build-level1"}, "post-materialization phase")
     if active_c.get("round") == 6:
-        req(active_c.get("status") == "provider-closure-pending-attempt2-activation-validation", "round6 contract provider-closure state")
+        req(active_c.get("status") in {"provider-closure-pending-attempt2-activation-validation","provider-closure-PASS"}, "round6 contract provider-closure state")
         req(active_c.get("source_changed_nodes") == [] and set(active_c.get("provider_closure_only_nodes",[])) == {"kio","kxmlgui"}, "round6 has no source materialization")
         req(active_m.get("round") == 5 and active_m.get("status") == "PASS", "round6 retains round5 materialization PASS")
         req(active_m.get("workflow_run") == 35825070347 and active_m.get("artifacts",{}).get("kio",{}).get("artifact_id") == 10735250819, "round6 retains exact KIO source artifact")
-        req(t.get("discovery_policy",{}).get("phase") == "build-level1-planning" and t.get("discovery_policy",{}).get("package_builds") == "tier3-level1-remediation-pending-provider-closure", "round6 canonical provider-closure planning gate")
         req(active_t.get("round") == 6 and active_t.get("source_materialization_nodes") == [] and set(active_t.get("provider_closure_only_nodes",[])) == {"kio","kxmlgui"}, "round6 canonical no-source scope")
         req(active_t.get("provider_closure_inputs")=={"kio":["kconfigwidgets","karchive","kcodecs","knotifications","breeze-icons"],"kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet","breeze-icons"]},"round6 complete provider closure")
         req(active_t.get("validation_result")=="2 raw workflow FAIL / 0 canonical FAIL" and active_t.get("remaining_failed_nodes")==[] and active_t.get("canonical_failures")==0,"round6 raw/canonical no-FAIL semantics")
-        req(active_t.get("execution_authorized") is False and active_t.get("next_attempt")==2 and active_t.get("next_gate") == "tier3-build-level1-attempt2-activation-validation", "round6 Level1 pause")
+        if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-authorized":
+            req(active_c.get("status")=="provider-closure-PASS","round6 active contract closure PASS")
+            ev=active_c.get("evidence",{})
+            req(ev.get("repository_policy_workflow_run")==35828634884 and ev.get("level1_validation_workflow_run")==35828634887,"round6 closure validation evidence")
+            req(t.get("discovery_policy",{}).get("phase")=="build-level1","round6 active Level1 phase")
+            req(active_t.get("status")=="level1-active-pending-ci" and active_t.get("execution_authorized") is True and active_t.get("level1_execution_authorized") is True,"round6 active Level1 authorization")
+            req(active_t.get("current_attempt")==2 and active_t.get("activation_policy_workflow_run")==35828634884,"round6 Attempt2 activation evidence")
+            req(active_t.get("next_gate")=="tier3-build-level1-attempt2","round6 Attempt2 active gate")
+        else:
+            req(t.get("discovery_policy",{}).get("phase") == "build-level1-planning" and t.get("discovery_policy",{}).get("package_builds") == "tier3-level1-remediation-pending-provider-closure", "round6 canonical provider-closure planning gate")
+            req(active_t.get("execution_authorized") is False and active_t.get("next_attempt")==2 and active_t.get("next_gate") == "tier3-build-level1-attempt2-activation-validation", "round6 Level1 pause")
         req(m["nodes"]["kio"].get("package_version") == "6.30.0-0supralinux2" and m["nodes"]["kxmlgui"].get("package_version") == "6.30.0-0supralinux1", "round6 materialized revisions unchanged")
     elif active_c.get("round") == 5:
         req(active_c.get("status") == "materialization-PASS", "round5 contract materialization PASS")

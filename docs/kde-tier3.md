@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 Attempt 1 invalidated by provider-closure orchestration; Attempt 2 validation pending**
+Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 Attempt 2 active: KIO + KXMLGui**
 
 Last reviewed: **2026-09-23**
 
@@ -420,3 +420,12 @@ The corrected provider closure is:
 - KXMLGui: KArchive, KCodecs, KColorScheme, KCompletion, Sonnet and Breeze Icons.
 
 Every closure entry is an already-PASS SupraLINUX artifact and has `kde_dependency_edge=false`. These providers make Debian package relations satisfiable but do not redefine the KDE-upstream DAG or the required `.buildinfo` predecessor set. Attempt 2 remains unauthorized until Repository Policy validates this remediation.
+
+
+## Level 1 Attempt 2 active
+
+Repository Policy run `35828634884` validated the complete round-6 provider closure and Level 1 workflow `35828634887` independently confirmed the remediation state with an intentional binary-build skip.
+
+A separate activation now authorizes **Attempt 2** for KIO and KXMLGui. No source, package revision or KDE DAG edge changes: KIO remains `6.30.0-0supralinux2`, KXMLGui remains `6.30.0-0supralinux1`, and the complete consumer-specific provider closure is retained exactly as validated.
+
+Canonical package state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED** until the Attempt 2 artifacts are reviewed. Attempt 1 remains historical raw CI failure evidence classified canonically as `INVALIDATED-ORCHESTRATION`.

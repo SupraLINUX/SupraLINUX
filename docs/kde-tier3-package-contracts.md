@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **contracts retained — round 6 provider closure complete; Attempt 2 validation pending**
+Status: **contracts retained — round 6 provider closure PASS; Attempt 2 active**
 
 Reviewed: **2026-09-23**
 
@@ -212,3 +212,10 @@ The Level 1 package contracts keep KIO at `6.30.0-0supralinux2` and KXMLGui at `
 The provider closure is expanded to the full set proven by real predecessor `.deb` metadata, including KConfigWidgets for KIO's KBookmarks packaging closure and Breeze Icons for the KIconThemes runtime relation. These retained PASS providers are availability inputs only, not new KDE DAG edges and not direct `.buildinfo` requirements.
 
 Attempt 2 requires a separate activation only after Repository Policy validates this closure-only remediation.
+
+
+## Attempt 2 activation
+
+The round-6 closure passed Repository Policy `35828634884` and Level 1 paused validation workflow `35828634887`. KIO remains `6.30.0-0supralinux2`; KXMLGui remains `6.30.0-0supralinux1`.
+
+This activation changes only execution state. It does not alter source packaging, binary identities, selected profiles, KDE dependency edges or stable-publication policy.

@@ -3032,7 +3032,7 @@
   "active_remediation": {
     "round": 6,
     "level": "build-level1",
-    "status": "provider-closure-pending-attempt2-activation-validation",
+    "status": "provider-closure-PASS",
     "trigger": {
       "workflow_run": 35826694664,
       "commit": "e7e98703184967487198f26a488d553038756990",
@@ -3080,8 +3080,16 @@
       "rerun_full_level1_after_remediation": true,
       "kde_dependency_graph_unchanged": true
     },
-    "next_gate": "tier3-build-level1-attempt2-activation-validation",
-    "canonical_failures": 0
+    "next_gate": "tier3-build-level1-attempt2",
+    "canonical_failures": 0,
+    "evidence": {
+      "repository_policy_workflow_run": 35828634884,
+      "level1_validation_workflow_run": 35828634887,
+      "commit": "568beba8aa3dce7a3f3a51d5e91d31edb5a30523",
+      "provider_closure_validated": true,
+      "package_attempted": false,
+      "package_state_effect": "none"
+    }
   },
   "remediation_history": [
     {

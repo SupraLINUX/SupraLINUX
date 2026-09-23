@@ -190,13 +190,21 @@ elif policy.get("package_builds")=="tier3-level1-remediation-pending-provider-cl
 elif policy.get("package_builds")=="tier3-level1-authorized":
     rem=tier3.get("active_remediation",{})
     req(policy.get("phase")=="build-level1","Tier3 active Level1 phase")
-    req(rem.get("round")==5 and rem.get("level")=="build-level1-preflight","Tier3 active Level1 round5 identity")
     req(rem.get("status")=="level1-active-pending-ci","Tier3 active Level1 status")
     req(rem.get("execution_authorized") is True and rem.get("level1_execution_authorized") is True,"Tier3 active Level1 authorization")
-    req(rem.get("current_attempt")==1,"Tier3 Level1 attempt marker")
-    req(rem.get("planning_policy_workflow_run")==35826072726 and rem.get("planning_policy_commit")=="b96e925ee9f649c1b4b984ed6fed277ef911f2c2","Tier3 Level1 planning Policy evidence")
-    req(rem.get("planner_workflow_run")==35826072818,"Tier3 Level1 planner evidence")
-    req(rem.get("next_gate")=="tier3-build-level1-attempt1","Tier3 Level1 attempt1 gate")
+    if rem.get("round")==6:
+        req(rem.get("level")=="build-level1" and set(rem.get("nodes",[]))=={"kio","kxmlgui"},"Tier3 active Level1 round6 identity")
+        req(rem.get("current_attempt")==2,"Tier3 Level1 Attempt2 marker")
+        req(rem.get("activation_policy_workflow_run")==35828634884 and rem.get("activation_level1_workflow_run")==35828634887,"Tier3 Level1 Attempt2 validation evidence")
+        req(rem.get("activation_commit")=="568beba8aa3dce7a3f3a51d5e91d31edb5a30523","Tier3 Level1 Attempt2 validation commit")
+        req(rem.get("provider_closure_inputs")=={"kio":["kconfigwidgets","karchive","kcodecs","knotifications","breeze-icons"],"kxmlgui":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet","breeze-icons"]},"Tier3 Level1 Attempt2 complete closure")
+        req(rem.get("next_gate")=="tier3-build-level1-attempt2","Tier3 Level1 Attempt2 gate")
+    else:
+        req(rem.get("round")==5 and rem.get("level")=="build-level1-preflight","Tier3 active Level1 round5 identity")
+        req(rem.get("current_attempt")==1,"Tier3 Level1 attempt marker")
+        req(rem.get("planning_policy_workflow_run")==35826072726 and rem.get("planning_policy_commit")=="b96e925ee9f649c1b4b984ed6fed277ef911f2c2","Tier3 Level1 planning Policy evidence")
+        req(rem.get("planner_workflow_run")==35826072818,"Tier3 Level1 planner evidence")
+        req(rem.get("next_gate")=="tier3-build-level1-attempt1","Tier3 Level1 attempt1 gate")
     req(tier3.get("build_level1_manifest")=="manifests/kde-tier3-build-level1.json","Tier3 Level1 manifest linkage")
 elif policy.get("package_builds") in {"tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"}:
     rem=tier3.get("active_remediation",{})

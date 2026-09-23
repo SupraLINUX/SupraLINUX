@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package-contract decisions
 
-Status: **PASS baseline retained — complete Level 1 provider closure pending Attempt 2 validation**
+Status: **PASS baseline retained — complete Level 1 provider closure validated; Attempt 2 active**
 
 Reviewed: **2026-09-23**
 
@@ -186,3 +186,10 @@ Round 6 remains provider/orchestration-only. The complete KIO closure is KConfig
 These roles are consumer-specific and each row remains `kde_dependency_edge=false`. KConfigWidgets and Breeze Icons complete package-manager closure discovered from the actual PASS predecessor `.deb` relations; neither becomes a new KDE-upstream dependency edge.
 
 Attempt 1 preserves the two raw CI failures, but canonical current FAIL is zero because both were caused by the shared retained-provider plan rather than a node-owned source/build defect. No source decision, feature selection, package identity or revision changes. Attempt 2 is a full Level 1 revalidation after Policy validates the closure.
+
+
+## Attempt 2 activation
+
+Repository Policy `35828634884` validates the round-6 provider closure. The closure is now contract-state PASS for the purpose of binary execution; no source or dependency-authority decision changes.
+
+Attempt 2 tests the unchanged KIO/KXMLGui contracts with the validated consumer-specific provider closure. The closure remains `kde_dependency_edge=false`.

@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "remediation-pending-activation",
-  "execution_authorized": false,
+  "state": "active-pending-ci",
+  "execution_authorized": true,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -759,8 +759,8 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-build-level1-attempt2-activation-validation",
-  "current_attempt": 1,
+  "next_gate": "tier3-build-level1-attempt2",
+  "current_attempt": 2,
   "last_activation": {
     "policy_workflow_run": 35826072726,
     "policy_commit": "b96e925ee9f649c1b4b984ed6fed277ef911f2c2",
@@ -827,13 +827,25 @@
         "breeze-icons"
       ]
     },
-    "execution_authorized": false,
+    "execution_authorized": true,
     "full_level1_rerun_required": true,
-    "status": "provider-closure-pending-attempt2-activation-validation",
+    "status": "provider-closure-PASS-attempt2-active",
     "canonical_failures": 0,
     "source_rematerialization_required": false,
     "package_revision_bump_required": false,
-    "next_gate": "tier3-build-level1-attempt2-activation-validation"
+    "next_gate": "tier3-build-level1-attempt2",
+    "current_attempt": 2,
+    "validation_policy_workflow_run": 35828634884,
+    "validation_level1_workflow_run": 35828634887,
+    "validation_commit": "568beba8aa3dce7a3f3a51d5e91d31edb5a30523"
   },
-  "next_attempt": 2
+  "activation": {
+    "status": "ACTIVE",
+    "attempt": 2,
+    "remediation_validation_policy_workflow_run": 35828634884,
+    "remediation_validation_level1_workflow_run": 35828634887,
+    "remediation_commit": "568beba8aa3dce7a3f3a51d5e91d31edb5a30523",
+    "scope": "full-level1-rerun-2-nodes",
+    "reason": "Provider closure remediation validated; rerun KIO and KXMLGui without source or package revision changes"
+  }
 }

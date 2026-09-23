@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 build campaign
 
-Status: **Level 0 closed; Level 1 Attempt 1 invalidated by provider closure; Attempt 2 activation validation pending** as of 2026-09-23.
+Status: **Level 0 closed; Level 1 Attempt 2 active after provider-closure validation** as of 2026-09-23.
 
 This document defines how the 20 materialized Tier 3 Frameworks will be built without changing the project-wide PASS / FAIL / BLOCKED semantics.
 
@@ -154,3 +154,10 @@ These closure artifacts do not create new KDE dependency edges and are not added
 Run `35826694664` had 0 successful and 2 failed workflow jobs, but both failures share the same orchestration cause: incomplete provider closure during `install-deps`. The raw CI failures remain evidence; canonical package failure count is **0** because neither node reached a node-owned compile/test/package defect.
 
 No source package is rematerialized and no revision is bumped. Attempt 2 will rerun both Level 1 nodes only after Policy validates the complete closure, including KConfigWidgets and Breeze Icons where required. Provider closure remains separate from KDE dependency authority and from direct `.buildinfo` proof.
+
+
+## Level 1 Attempt 2 activation
+
+Round 6 provider closure passed Repository Policy run `35828634884`; Level 1 workflow `35828634887` validated the paused remediation and scheduled zero package builds. Attempt 2 is now separately authorized as a full two-node rerun with `fail-fast=false`.
+
+KIO and KXMLGui retain their existing source artifacts and revisions. The additional providers remain package-manager closure only and do not become KDE DAG edges or direct `.buildinfo` proof requirements.
