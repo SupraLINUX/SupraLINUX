@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "remediation-materialized-pending-planning-validation",
-  "execution_authorized": false,
+  "state": "active-pending-ci",
+  "execution_authorized": true,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -785,8 +785,8 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-build-level1-planning-validation",
-  "current_attempt": 2,
+  "next_gate": "tier3-build-level1-attempt3",
+  "current_attempt": 3,
   "last_activation": {
     "policy_workflow_run": 35826072726,
     "policy_commit": "b96e925ee9f649c1b4b984ed6fed277ef911f2c2",
@@ -837,13 +837,13 @@
       "kio": "6.30.0-0supralinux3",
       "kxmlgui": "6.30.0-0supralinux2"
     },
-    "execution_authorized": false,
+    "execution_authorized": true,
     "full_level1_rerun_required": true,
-    "status": "materialization-PASS-pending-attempt3-planning-validation",
+    "status": "materialization-PASS-attempt3-active",
     "source_rematerialization_required": false,
     "package_revision_bump_required": true,
-    "next_gate": "tier3-build-level1-planning-validation",
-    "current_attempt": 2,
+    "next_gate": "tier3-build-level1-attempt3",
+    "current_attempt": 3,
     "next_attempt": 3,
     "materialization_workflow_run": 35882795135,
     "materialization_commit": "0d6c02f3f8dc41f716ba62ee7121f56371a8dc91",
@@ -858,18 +858,20 @@
         "artifact_id": 10761208629,
         "artifact_sha256": "72cd10276558264646a9e38d5beab7b231434338597ef8d276030e790ff02214"
       }
-    }
+    },
+    "activation_policy_workflow_run": 35884583361,
+    "activation_level1_workflow_run": 35884584590,
+    "activation_commit": "a562a145ba212349d725fad3e98a9dcb9c6c2ae0"
   },
   "activation": {
-    "status": "CLOSED-2-FAIL",
-    "attempt": 2,
-    "remediation_validation_policy_workflow_run": 35828634884,
-    "remediation_validation_level1_workflow_run": 35828634887,
-    "remediation_commit": "568beba8aa3dce7a3f3a51d5e91d31edb5a30523",
+    "status": "ACTIVE",
+    "attempt": 3,
+    "remediation_validation_policy_workflow_run": 35884583361,
+    "remediation_validation_level1_workflow_run": 35884584590,
+    "remediation_commit": "a562a145ba212349d725fad3e98a9dcb9c6c2ae0",
     "scope": "full-level1-rerun-2-nodes",
-    "reason": "Provider closure remediation validated; rerun KIO and KXMLGui without source or package revision changes"
+    "reason": "Round 7 source materializations promoted and planning validation passed; authorize complete Level 1 Attempt 3"
   },
-  "next_attempt": 3,
   "attempt2_summary": {
     "workflow_run": 35829170695,
     "commit": "897d3a864bc7ea164400c7d9de2e9c51cf6316ab",

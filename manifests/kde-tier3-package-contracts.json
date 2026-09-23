@@ -3103,7 +3103,7 @@
   "active_remediation": {
     "round": 7,
     "level": "build-level1",
-    "status": "materialization-PASS",
+    "status": "materialization-PASS-attempt3-active",
     "trigger": {
       "workflow_run": 35829170695,
       "commit": "897d3a864bc7ea164400c7d9de2e9c51cf6316ab",
@@ -3149,7 +3149,7 @@
         "failure_substage": "cmake/python-binding-build-provider"
       }
     },
-    "next_gate": "tier3-build-level1-planning-validation",
+    "next_gate": "tier3-build-level1-attempt3",
     "evidence": {
       "workflow_run": 35882795135,
       "commit": "0d6c02f3f8dc41f716ba62ee7121f56371a8dc91",
@@ -3171,7 +3171,10 @@
       },
       "package_attempted": false,
       "package_state_effect": "none"
-    }
+    },
+    "activation_policy_workflow_run": 35884583361,
+    "activation_level1_workflow_run": 35884584590,
+    "activation_commit": "a562a145ba212349d725fad3e98a9dcb9c6c2ae0"
   },
   "remediation_history": [
     {
