@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **Attempt 6 active — KIO + KXMLGui full Level 1 rerun** as of 2026-09-24.
+Status: **Attempt 6 active — initial run blocked pre-build by validator lifecycle omission; retry pending** as of 2026-09-24.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -241,3 +241,11 @@ The promoted round-10 sources passed planning validation in Repository Policy `3
 A separate activation commit now authorizes the complete two-node Attempt 6. KIO consumes `6.30.0-0supralinux6` artifact `10809231495`; KXMLGui consumes `6.30.0-0supralinux5` artifact `10808294092`. Scheduling remains parallel with `fail-fast=false`.
 
 KIO retains its documented node-scoped network exception; KXMLGui remains network-disabled. No stable promotion is authorized by a package PASS.
+
+## Attempt 6 initial activation run — invalidated before build
+
+Activation commit `987cb0e9ce7a2335e71ecf625a62e97c3c0cceb5` produced Level 1 run `36033998450`. Its planner job `107749450128` failed only in **Validate Level 1 definition** with the stale fallback assertions `canonical Level1 attempt/planning evidence` and `canonical Level1 attempt1 gate`. Shared-rootfs and build-matrix jobs were therefore skipped.
+
+Repository Policy `36033998712` failed on the same validator, while materialization `36033998598` passed and performed no rematerialization. No KIO or KXMLGui binary build was attempted, so this run is not a package FAIL and does not alter the canonical **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED** snapshot.
+
+The defect is a duplicated lifecycle-dispatch omission in the validator: one round-10 active branch existed, but the later canonical-active block covered only rounds 6–9 and fell through to Attempt 1 for round 10. The correction adds the exact Attempt-6 evidence branch without changing manifests, source artifacts, package revisions or build scope.

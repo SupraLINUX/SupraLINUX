@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 Attempt 6 active**
+Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 Attempt 6 active; first activation run invalidated pre-build**
 
 Last reviewed: **2026-09-24**
 
@@ -544,3 +544,9 @@ Round-10 source promotion passed the planning gates at commit `0fee159ac1f24dc16
 A separate activation now authorizes the complete two-node Level 1 Attempt 6. KIO uses `6.30.0-0supralinux6` artifact `10809231495`; KXMLGui uses `6.30.0-0supralinux5` artifact `10808294092`. The pre-result canonical snapshot remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.
 
 Level 2 remains unauthorized until Attempt 6 completes and its KIO/KXMLGui evidence is reviewed under PASS / FAIL / BLOCKED semantics. Binary PASS does not imply stable publication.
+
+## Attempt 6 activation run 36 — validator-only failure
+
+Level 1 run `36033998450` and Repository Policy `36033998712` from activation commit `987cb0e9ce7a2335e71ecf625a62e97c3c0cceb5` failed before rootfs creation or package execution. The Level 1 validator's second canonical-active dispatch lacked round 10 and incorrectly applied Attempt-1 assertions. Materialization `36033998598` remained PASS/no-op.
+
+This is **not** a KIO/KXMLGui FAIL: both binary jobs were skipped, package-attempt count is zero, canonical promotions remain zero, and the canonical snapshot stays **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**. The validator is corrected in isolation and Attempt 6 remains the next executable gate.

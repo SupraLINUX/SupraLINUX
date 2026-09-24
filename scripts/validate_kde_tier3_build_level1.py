@@ -323,7 +323,12 @@ elif policy.get("package_builds")=="tier3-level1-authorized":
     req(policy.get("phase")=="build-level1","canonical active Level1 phase")
     req(ar.get("status")=="level1-active-pending-ci","canonical active Level1 state")
     req(ar.get("execution_authorized") is True and ar.get("level1_execution_authorized") is True,"canonical Level1 authorization")
-    if ar.get("round")==9:
+    if ar.get("round")==10:
+        req(ar.get("current_attempt")==6,"canonical Level1 Attempt6 marker")
+        req(ar.get("activation_policy_workflow_run")==36032425645 and ar.get("activation_level1_workflow_run")==36032425729,"canonical Attempt6 planning validation")
+        req(ar.get("activation_commit")=="0fee159ac1f24dc160e1edd9976a7708f89d657d","canonical Attempt6 validation commit")
+        req(ar.get("next_gate")=="tier3-build-level1-attempt6","canonical Level1 Attempt6 gate")
+    elif ar.get("round")==9:
         req(ar.get("current_attempt")==5,"canonical Level1 Attempt5 marker")
         req(ar.get("activation_policy_workflow_run")==35990068378 and ar.get("activation_level1_workflow_run")==35990068382,"canonical Attempt5 planning validation")
         req(ar.get("activation_commit")=="45675c1fb5a43f95204c2cf0c5c15df0ef703832","canonical Attempt5 validation commit")

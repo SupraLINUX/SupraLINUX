@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 build campaign
 
-Status: **Level 0 closed; Level 1 Attempt 6 active with round-10 source pins** as of 2026-09-24.
+Status: **Level 0 closed; Level 1 Attempt 6 active; initial activation run blocked pre-build by validator omission** as of 2026-09-24.
 
 This document defines how the 20 materialized Tier 3 Frameworks will be built without changing the project-wide PASS / FAIL / BLOCKED semantics.
 
@@ -240,3 +240,9 @@ The generated campaign remains the validated **12 / 2 / 4 / 2** KDE-upstream top
 Round-10 source promotion passed Policy/planner validation (`36032425645` / `36032425729`) at `0fee159ac1f24dc160e1edd9976a7708f89d657d`. The forward-compatible Attempt-6 lifecycle then passed Repository Policy `36033162764`, Level 1 `36033163019`, and materialization `36033162995` at `16d829174476a6f9846d53d14efc2dd21651332d`, with package builds still skipped.
 
 A separate activation now authorizes exactly KIO `6.30.0-0supralinux6` and KXMLGui `6.30.0-0supralinux5` for the complete Level 1 Attempt 6.
+
+### Attempt 6 activation validator correction
+
+Activation commit `987cb0e9ce7a2335e71ecf625a62e97c3c0cceb5` triggered Level 1 run `36033998450` and Repository Policy `36033998712`. Both stopped before any rootfs or package build because `scripts/validate_kde_tier3_build_level1.py` had a second canonical-active dispatch block that recognized rounds 6–9 but not round 10, so round 10 incorrectly fell through to historical Attempt 1 assertions.
+
+Materialization run `36033998598` remained PASS/no-op. This is classified as a validator/orchestration defect with **zero package attempts and zero package-state effect**. The missing round-10 branch is corrected before retrying Attempt 6; source pins and execution scope are unchanged.
