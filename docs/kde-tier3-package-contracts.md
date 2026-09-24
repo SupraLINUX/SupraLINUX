@@ -1,8 +1,8 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **round 8 materialization PASS; handed to active Level 1 Attempt 4**
+Status: **round 9 source remediation pending — KIO -5 + KXMLGui -4**
 
-Reviewed: **2026-09-23**
+Reviewed: **2026-09-24**
 
 ## Scope
 
@@ -268,3 +268,13 @@ KIO's adapted `debian/rules` SHA-256 is `e8dae488976ef4d4748f044f52b3aebcf687ae3
 The validated round-8 source contracts are now handed to Level 1 Attempt 4. Activation changes only execution authority; KIO/KXMLGui source identities, provider closure, test-policy deltas and KDE DAG semantics remain exactly those already validated.
 
 Planning evidence is Repository Policy `35895610944` plus Level 1 `35895610937`; forward-compatible lifecycle validation is Repository Policy `35961362802` plus Level 1 `35961362869`.
+
+## Round 9 — Level 1 Attempt 4 contract delta
+
+Attempt 4 `35961584503` produced two real test-environment FAIL results and no canonical promotion.
+
+KIO's prior remediation is now strongly validated: 67/69 test targets pass. The two remaining targets first fail because Qt themed-icon lookup returns empty names even though the Breeze payload is installed. The offscreen QPA backend does not provide the generic Unix/XDG icon-theme search paths used by XCB. Round 9 therefore adds the Ubuntu Resolute `xvfb` test provider, runs the unchanged upstream CTest suite using XCB on an isolated virtual X server, and sets `QT_QPA_SYSTEM_ICON_THEME=breeze`. D-Bus, controlled HOME, KDECI, serial execution, node-scoped network and the no-XDG_RUNTIME_DIR-override policy are retained.
+
+KXMLGui's offscreen correction is validated by 6/7 passing targets. Its only remaining `ktoolbar_unittest` path uses `QDBusConnection::sessionBus()` for toolbar-style propagation. Round 9 adds `dbus-daemon <!nocheck>` and wraps the complete offscreen `dh_auto_test` in `dbus-run-session`; it does not inherit KIO's other test-environment policy.
+
+No KDE dependency edge changes. Candidate revisions are KIO `6.30.0-0supralinux5` and KXMLGui `6.30.0-0supralinux4`.

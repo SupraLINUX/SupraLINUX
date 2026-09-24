@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **PASS — round 8 KIO + KXMLGui source inputs handed to active Attempt 4** as of 2026-09-24.
+Status: **round 9 remediation pending CI — KIO 6.30.0-0supralinux5 + KXMLGui 6.30.0-0supralinux4** as of 2026-09-24.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -303,3 +303,12 @@ Both results are source-materialization PASS only: `package_attempted=false`, `p
 The round-8 materialization set remains **20/20 PASS**. After planning validation, its next gate is now `tier3-build-level1-attempt4`; activation does not alter any source artifact.
 
 KIO remains pinned to artifact `10766471076` and KXMLGui to `10766665506`. Materialization continues to have no binary package-state effect.
+
+## Round 9 selective materialization
+
+Attempt 4 `35961584503` leaves exactly two source-package test-environment deltas. The materialization queue remains exactly **KIO + KXMLGui**.
+
+- KIO `6.30.0-0supralinux5`: add `xvfb <!nocheck>`; retain D-Bus, controlled HOME, KDECI, serial CTest and node-scoped network; run the complete suite through `QT_QPA_PLATFORM=xcb` on Xvfb and set `QT_QPA_SYSTEM_ICON_THEME=breeze`.
+- KXMLGui `6.30.0-0supralinux4`: add `dbus-daemon <!nocheck>`; retain `QT_QPA_PLATFORM=offscreen`; run the complete upstream `dh_auto_test` inside `dbus-run-session`.
+
+The promoted round-8 source artifacts remain immutable previous evidence until round 9 succeeds: KIO artifact `10766471076`, KXMLGui artifact `10766665506`. This gate remains source-only and cannot promote a binary package.

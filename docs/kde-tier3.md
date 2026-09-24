@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 Attempt 4 active**
+Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 Attempt 4 closed; round 9 materialization pending**
 
 Last reviewed: **2026-09-24**
 
@@ -484,3 +484,13 @@ Round-8 source promotion and its generated campaign passed Repository Policy `35
 Attempt 4 is now separately authorized as a full two-node Level 1 rerun. KIO uses `6.30.0-0supralinux4`; KXMLGui uses `6.30.0-0supralinux3`. The pre-result canonical snapshot remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED** and Attempt 3's two FAIL records remain immutable campaign history.
 
 Level 2 remains unauthorized until the new KIO/KXMLGui binary evidence is reviewed and promoted under PASS / FAIL / BLOCKED semantics.
+
+## Current canonical state — Attempt 4 closed / round 9 pending
+
+Level 1 Attempt 4 workflow `35961584503` completed **0 SUCCESS / 2 real FAIL**, with no canonical promotion. Both nodes used shared rootfs artifact `10792995587`, artifact SHA-256 `c9ed6500670e092f8fe6e0ec531857afb51c5587f9a56bef083af2267c268ce3`, inner rootfs SHA-256 `46fd06c2725ce8f10efba3c577da62f3a0dd5cb96e59683ca9fc988bed28c3a8`.
+
+KIO improved to **67/69 upstream CTest targets PASS**. Only `kdirmodeltest` and `knewfilemenutest` remain; their first failures are empty `QIcon::fromTheme()` names. Round 9 keeps the proven D-Bus/HOME/KDECI/serial/network environment, replaces Qt offscreen with XCB under isolated Xvfb, and selects Breeze through `QT_QPA_SYSTEM_ICON_THEME=breeze`.
+
+KXMLGui improved to **6/7 upstream test targets PASS**. Only `ktoolbar_unittest` remains; upstream performs its toolbar-style notification through the Qt D-Bus session bus. Round 9 keeps offscreen and the full `dh_auto_test` suite, adding only `dbus-daemon <!nocheck>` plus an isolated `dbus-run-session`.
+
+Round 9 candidates are KIO `6.30.0-0supralinux5` and KXMLGui `6.30.0-0supralinux4`. Binary Level 1 execution is paused until both source materializations PASS and their evidence is validated. Level 2 remains unauthorized.

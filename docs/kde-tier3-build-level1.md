@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **Attempt 4 active — KIO + KXMLGui full Level 1 rerun** as of 2026-09-24.
+Status: **Attempt 4 reviewed — 0 SUCCESS / 2 real FAIL; round 9 source remediation pending** as of 2026-09-24.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -171,3 +171,13 @@ The promoted round-8 source pins passed Repository Policy `35895610944` and paus
 A separate activation commit now authorizes the complete two-node Attempt 4. KIO consumes `6.30.0-0supralinux4` artifact `10766471076`; KXMLGui consumes `6.30.0-0supralinux3` artifact `10766665506`. Scheduling remains parallel with `fail-fast=false`.
 
 KIO retains only its previously documented node-scoped network exception; KXMLGui remains network-disabled. Binary PASS does not imply stable publication.
+
+## Attempt 4 result — round 9 follow-up
+
+Workflow `35961584503` at commit `513cb12a96c7c79ffb5790253504482a56af2e63` completed with KIO FAIL and KXMLGui FAIL. The shared rootfs is artifact `10792995587`, SHA-256 `c9ed6500670e092f8fe6e0ec531857afb51c5587f9a56bef083af2267c268ce3`, inner SHA-256 `46fd06c2725ce8f10efba3c577da62f3a0dd5cb96e59683ca9fc988bed28c3a8`.
+
+**KIO** job `107511358507`, artifact `10792898014`, SHA-256 `507f741700f698a1252851cb3d6ef2883fab68b4db79e239885eb5dc9e8bc299`: **67/69 CTest targets PASS**. The first assertions in both remaining targets show missing themed-icon lookup, not a compile, network, D-Bus or runtime-directory failure. The round-9 package revision `6.30.0-0supralinux5` retains the proven environment and uses XCB on Xvfb with Breeze selected as the system icon theme.
+
+**KXMLGui** job `107511358468`, artifact `10792134667`, SHA-256 `7171d692f12eede3945b6136f175538ef6557601e7f370d2ccd9b11f45ec5849`: **6/7 CTest targets PASS**. The sole failing `ktoolbar_unittest` contains D-Bus-dependent toolbar-style assertions. Revision `6.30.0-0supralinux4` adds only an isolated session bus around the complete offscreen `dh_auto_test`.
+
+Attempt 5 is not authorized. The next gate is `tier3-round9-level1-materialization`.

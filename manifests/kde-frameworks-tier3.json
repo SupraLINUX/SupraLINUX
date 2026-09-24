@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-23",
+  "as_of": "2026-09-24",
   "authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "tier": 3,
@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level1",
+    "phase": "build-level1-planning",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-authorized",
-    "remediation": "round8-kio-kxmlgui-attempt4-active"
+    "package_builds": "tier3-level1-remediation-pending-materialization",
+    "remediation": "round9-kio-kxmlgui-test-environment-followup-pending-materialization"
   },
   "nodes": [
     {
@@ -1205,10 +1205,10 @@
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
   "build_level0_manifest": "manifests/kde-tier3-build-level0.json",
   "active_remediation": {
-    "round": 8,
+    "round": 9,
     "level": "build-level1",
-    "trigger_workflow_run": 35887558758,
-    "trigger_commit": "7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94",
+    "trigger_workflow_run": 35961584503,
+    "trigger_commit": "513cb12a96c7c79ffb5790253504482a56af2e63",
     "nodes": [
       "kio",
       "kxmlgui"
@@ -1219,17 +1219,18 @@
     ],
     "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux4",
-      "kxmlgui": "6.30.0-0supralinux3"
+      "kio": "6.30.0-0supralinux5",
+      "kxmlgui": "6.30.0-0supralinux4"
     },
-    "execution_authorized": true,
-    "level1_execution_authorized": true,
+    "execution_authorized": false,
+    "level1_execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "level1-active-pending-ci",
-    "next_gate": "tier3-build-level1-attempt4",
+    "status": "materialization-pending-ci",
+    "next_gate": "tier3-round9-level1-materialization",
     "current_attempt": 4,
-    "validation_workflow_run": 35887558758,
-    "validation_commit": "7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94",
+    "next_attempt": 5,
+    "validation_workflow_run": 35961584503,
+    "validation_commit": "513cb12a96c7c79ffb5790253504482a56af2e63",
     "validation_result": "0 workflow SUCCESS / 2 FAIL",
     "remaining_failed_nodes": [
       "kio",
@@ -1238,26 +1239,9 @@
     "blocked_nodes": [],
     "canonical_promotions": 0,
     "failure_classes": {
-      "kio": "upstream-test-environment-followup",
-      "kxmlgui": "qt-platform-test-environment"
-    },
-    "materialization_workflow_run": 35894317888,
-    "materialization_commit": "65f5ba76a913e7acf619eb9fee86e878e2914415",
-    "materialization_artifacts": {
-      "kio": {
-        "job_id": 107294403189,
-        "artifact_id": 10766471076,
-        "artifact_sha256": "80959256047d70323b6ea311551bed573661cefb4b831f30750e27ed11076cf6"
-      },
-      "kxmlgui": {
-        "job_id": 107294403314,
-        "artifact_id": 10766665506,
-        "artifact_sha256": "100cf903ca1ef17cf2b37bab58ba0b7bf1e562d111cc04107247c3f35b134d58"
-      }
-    },
-    "activation_policy_workflow_run": 35895610944,
-    "activation_level1_workflow_run": 35895610937,
-    "activation_commit": "9f680b0d8790c7bc472e8352e6675d606f706ee7"
+      "kio": "qt-icon-theme-platform",
+      "kxmlgui": "session-bus-test-environment"
+    }
   },
   "remediation_history": [
     {
@@ -1528,6 +1512,61 @@
       "activation_policy_workflow_run": 35884583361,
       "activation_level1_workflow_run": 35884584590,
       "activation_commit": "a562a145ba212349d725fad3e98a9dcb9c6c2ae0"
+    },
+    {
+      "round": 8,
+      "level": "build-level1",
+      "trigger_workflow_run": 35887558758,
+      "trigger_commit": "7583ba2ffcf7f91a1ea061c2e8c0cecd9f031d94",
+      "nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "source_materialization_nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "provider_closure_only_nodes": [],
+      "candidate_package_versions": {
+        "kio": "6.30.0-0supralinux4",
+        "kxmlgui": "6.30.0-0supralinux3"
+      },
+      "execution_authorized": true,
+      "level1_execution_authorized": true,
+      "full_level1_rerun_required": true,
+      "status": "attempt4-complete-FAIL",
+      "next_gate": "tier3-build-level1-attempt4",
+      "current_attempt": 4,
+      "validation_workflow_run": 35961584503,
+      "validation_commit": "513cb12a96c7c79ffb5790253504482a56af2e63",
+      "validation_result": "0 workflow SUCCESS / 2 FAIL",
+      "remaining_failed_nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "blocked_nodes": [],
+      "canonical_promotions": 0,
+      "failure_classes": {
+        "kio": "qt-icon-theme-platform",
+        "kxmlgui": "session-bus-test-environment"
+      },
+      "materialization_workflow_run": 35894317888,
+      "materialization_commit": "65f5ba76a913e7acf619eb9fee86e878e2914415",
+      "materialization_artifacts": {
+        "kio": {
+          "job_id": 107294403189,
+          "artifact_id": 10766471076,
+          "artifact_sha256": "80959256047d70323b6ea311551bed573661cefb4b831f30750e27ed11076cf6"
+        },
+        "kxmlgui": {
+          "job_id": 107294403314,
+          "artifact_id": 10766665506,
+          "artifact_sha256": "100cf903ca1ef17cf2b37bab58ba0b7bf1e562d111cc04107247c3f35b134d58"
+        }
+      },
+      "activation_policy_workflow_run": 35895610944,
+      "activation_level1_workflow_run": 35895610937,
+      "activation_commit": "9f680b0d8790c7bc472e8352e6675d606f706ee7"
     }
   ],
   "build_level0": "PARTIAL",

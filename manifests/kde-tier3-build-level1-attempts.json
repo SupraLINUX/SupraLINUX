@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-23",
+  "as_of": "2026-09-24",
   "batch": "tier3-build-level1",
   "selected_nodes": [
     "kio",
@@ -73,6 +73,28 @@
       "canonical_promotions": 0,
       "failure_class": "node-owned-test-environment-followup",
       "next_attempt": 4
+    },
+    {
+      "attempt": 4,
+      "workflow_run": 35961584503,
+      "commit": "513cb12a96c7c79ffb5790253504482a56af2e63",
+      "rootfs": {
+        "artifact_id": 10792995587,
+        "artifact_sha256": "c9ed6500670e092f8fe6e0ec531857afb51c5587f9a56bef083af2267c268ce3",
+        "rootfs_sha256": "46fd06c2725ce8f10efba3c577da62f3a0dd5cb96e59683ca9fc988bed28c3a8"
+      },
+      "result": "FAIL",
+      "workflow_jobs": {
+        "success": 0,
+        "fail": 2
+      },
+      "failed_nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "canonical_promotions": 0,
+      "failure_class": "node-owned-test-environment-followup",
+      "next_attempt": 5
     }
   ],
   "nodes": {
@@ -156,6 +178,32 @@
           "source_rematerialization_required": true,
           "sbuild_enable_network": true,
           "test_environment": "retain dbus-run-session + offscreen + Breeze + controlled HOME + KDECI_PLATFORM_PATH + ctest -j1 + node-scoped network; stop overriding XDG_RUNTIME_DIR"
+        },
+        "package_version_unchanged": true,
+        "source_change": false,
+        "canonical_state_effect": "none-remediation-pending"
+      },
+      {
+        "attempt": 4,
+        "result": "FAIL",
+        "workflow_run": 35961584503,
+        "job_id": 107511358507,
+        "commit": "513cb12a96c7c79ffb5790253504482a56af2e63",
+        "artifact_id": 10792898014,
+        "artifact_sha256": "507f741700f698a1252851cb3d6ef2883fab68b4db79e239885eb5dc9e8bc299",
+        "rootfs_artifact_id": 10792995587,
+        "rootfs_artifact_sha256": "c9ed6500670e092f8fe6e0ec531857afb51c5587f9a56bef083af2267c268ce3",
+        "rootfs_sha256": "46fd06c2725ce8f10efba3c577da62f3a0dd5cb96e59683ca9fc988bed28c3a8",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux4",
+        "stage": "sbuild",
+        "failure_substage": "ctest/qt-icon-theme-platform",
+        "cause": "KIO compiled and executed all 69 upstream CTest targets: 67 passed and only kdirmodeltest plus knewfilemenutest failed. Their first assertions show QIcon::fromTheme returning an empty icon name for unknown/inode-directory. Qt 6.10 offscreen does not provide XDG icon-theme search paths, so the installed Breeze payload is not discoverable through the active platform theme; later assertions are cascades after the first test failures.",
+        "remediation": {
+          "candidate_package_version": "6.30.0-0supralinux5",
+          "source_rematerialization_required": true,
+          "sbuild_enable_network": true,
+          "test_environment": "retain dbus-run-session + controlled HOME + KDECI_PLATFORM_PATH + ctest -j1 + node-scoped network; replace offscreen with xcb under xvfb and set QT_QPA_SYSTEM_ICON_THEME=breeze"
         },
         "package_version_unchanged": true,
         "source_change": false,
@@ -244,6 +292,34 @@
           "candidate_package_version": "6.30.0-0supralinux3",
           "source_rematerialization_required": true,
           "test_environment": "QT_QPA_PLATFORM=offscreen on the complete upstream dh_auto_test invocation"
+        },
+        "package_version_unchanged": true,
+        "source_change": false,
+        "canonical_state_effect": "none-remediation-pending"
+      },
+      {
+        "attempt": 4,
+        "result": "FAIL",
+        "workflow_run": 35961584503,
+        "job_id": 107511358468,
+        "commit": "513cb12a96c7c79ffb5790253504482a56af2e63",
+        "artifact_id": 10792134667,
+        "artifact_sha256": "7171d692f12eede3945b6136f175538ef6557601e7f370d2ccd9b11f45ec5849",
+        "rootfs_artifact_id": 10792995587,
+        "rootfs_artifact_sha256": "c9ed6500670e092f8fe6e0ec531857afb51c5587f9a56bef083af2267c268ce3",
+        "rootfs_sha256": "46fd06c2725ce8f10efba3c577da62f3a0dd5cb96e59683ca9fc988bed28c3a8",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux3",
+        "stage": "sbuild",
+        "failure_substage": "ctest/session-bus",
+        "cause": "KXMLGui compiled and ran the complete 7-target upstream test suite under Qt offscreen: 6 targets passed and only ktoolbar_unittest failed. The failing toolbar-style assertions are guarded by WITH_QTDBUS and upstream changes the global style through QDBusConnection::sessionBus(); the clean build had no session bus.",
+        "remediation": {
+          "candidate_package_version": "6.30.0-0supralinux4",
+          "source_rematerialization_required": true,
+          "build_depends": [
+            "dbus-daemon <!nocheck>"
+          ],
+          "test_environment": "dbus-run-session around the complete QT_QPA_PLATFORM=offscreen dh_auto_test invocation"
         },
         "package_version_unchanged": true,
         "source_change": false,
