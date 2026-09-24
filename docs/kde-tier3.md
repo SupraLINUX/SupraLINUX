@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — round 9 source PASS; Attempt 5 planning gates PASS; activation paused**
+Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 Attempt 5 active**
 
 Last reviewed: **2026-09-24**
 
@@ -506,3 +506,11 @@ This is source-only evidence. Canonical package state remains **11 PASS / 9 pend
 The promoted round-9 source inputs and regenerated campaign passed Repository Policy `35990068378` and the paused Level 1 planner `35990068382` at commit `45675c1fb5a43f95204c2cf0c5c15df0ef703832`. The Level 1 workflow intentionally skipped the shared rootfs and both binary builds, so **Attempt 5 has not executed**.
 
 Before changing execution authority, the validators are extended to recognize the future round-9 / Attempt-5 active lifecycle and to bind it to those exact planning-validation runs. This transition remains validator/documentation-only: canonical package state stays **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**, `execution_authorized=false`, and Level 2 remains unauthorized.
+
+## Current canonical state — Attempt 5 active
+
+Round-9 source promotion passed the planning gates at commit `45675c1fb5a43f95204c2cf0c5c15df0ef703832`: Repository Policy `35990068378` and paused Level 1 `35990068382`. The forward-compatible Attempt-5 lifecycle then passed Repository Policy `35990715536`, Level 1 `35990715990`, and materialization `35990715302` at commit `6ed2f38cdc0e092b6bf639a8a5b0b2461057784a`, with all package builds still skipped.
+
+A separate activation now authorizes the complete two-node Level 1 Attempt 5. KIO uses `6.30.0-0supralinux5` artifact `10794251210`; KXMLGui uses `6.30.0-0supralinux4` artifact `10793229286`. The pre-result canonical snapshot remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.
+
+Level 2 remains unauthorized until Attempt 5 completes and its KIO/KXMLGui evidence is reviewed under PASS / FAIL / BLOCKED semantics. Binary PASS does not imply stable publication.

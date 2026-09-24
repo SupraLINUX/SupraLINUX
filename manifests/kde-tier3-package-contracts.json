@@ -3167,7 +3167,7 @@
   "active_remediation": {
     "round": 9,
     "level": "build-level1",
-    "status": "materialization-PASS",
+    "status": "materialization-PASS-attempt5-active",
     "trigger": {
       "workflow_run": 35961584503,
       "commit": "513cb12a96c7c79ffb5790253504482a56af2e63",
@@ -3213,7 +3213,7 @@
         "failure_substage": "ctest/session-bus"
       }
     },
-    "next_gate": "tier3-build-level1-planning-validation",
+    "next_gate": "tier3-build-level1-attempt5",
     "evidence": {
       "workflow_run": 35965579279,
       "commit": "8380856c8161dccc9de9c12745012c555baa26b0",
@@ -3229,7 +3229,10 @@
           "artifact_sha256": "44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093"
         }
       }
-    }
+    },
+    "activation_policy_workflow_run": 35990068378,
+    "activation_level1_workflow_run": 35990068382,
+    "activation_commit": "45675c1fb5a43f95204c2cf0c5c15df0ef703832"
   },
   "remediation_history": [
     {

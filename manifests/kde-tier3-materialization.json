@@ -921,7 +921,7 @@
     "policy": "rematerialize-only-source-changed-level1-nodes-then-rerun-full-level1",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-planning-validation",
+    "next_gate": "tier3-build-level1-attempt5",
     "workflow_run": 35965579279,
     "commit": "8380856c8161dccc9de9c12745012c555baa26b0",
     "promoted_nodes": [
@@ -1201,6 +1201,6 @@
     "active_remediation_round": 9,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-planning-validation"
+    "next_gate": "tier3-build-level1-attempt5"
   }
 }
