@@ -1,0 +1,115 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-24",
+  "authority": "supralinux",
+  "source_authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "frameworks_series": "6.30.0",
+  "node": "kio",
+  "round": 11,
+  "status": "definition-pending-validation",
+  "claim": "non-executable-remediation-definition",
+  "canonical_state_effect": "none",
+  "execution_authorized": false,
+  "source_materialization_authorized": false,
+  "current_canonical_state": {
+    "snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+    "kio": {
+      "state": "FAIL",
+      "package_version": "6.30.0-0supralinux6",
+      "downstream_eligible": false
+    },
+    "kxmlgui": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux5",
+      "downstream_eligible": true
+    },
+    "level1_state": "attempt6-closed-mixed",
+    "level1_execution_authorized": false,
+    "current_attempt": 6
+  },
+  "diagnostic_evidence": {
+    "workflow_run": 36071103806,
+    "job_id": 107872008601,
+    "commit": "b314ad501bf5eb6213f6cf4b2562cce60804b76c",
+    "artifact_id": 10837734340,
+    "artifact_sha256": "d4d944ac656d755ebd8c828d1e84c1b735e076c26a17adc66da42f0464a8cedc",
+    "closure_commit": "5f057d6abcdd767f97856d83ce7d7fb0caa0bca0",
+    "closure_repository_policy_run": 36071666308,
+    "closure_diagnostic_run": 36071666343
+  },
+  "attempt7_plan": {
+    "source_changed_nodes": [
+      "kio"
+    ],
+    "retained_revalidation_nodes": [
+      "kxmlgui"
+    ],
+    "source_materialization_nodes": [
+      "kio"
+    ],
+    "full_level1_rerun_nodes": [
+      "kio",
+      "kxmlgui"
+    ],
+    "candidate_package_versions": {
+      "kio": "6.30.0-0supralinux7",
+      "kxmlgui": "6.30.0-0supralinux5"
+    },
+    "package_revision_bump_required": true,
+    "rematerialize_only_changed_nodes": true,
+    "full_level1_rerun_required": true
+  },
+  "planned_contract_delta": {
+    "target": "debian/rules generated autotests/CMakeLists.txt test-property adaptation",
+    "from": {
+      "cmake_property": "ENVIRONMENT",
+      "operation": "set_tests_properties",
+      "affected_tests": [
+        "kiowidgets-kdirmodeltest",
+        "kiofilewidgets-knewfilemenutest"
+      ],
+      "consequence": "replaces the complete per-test CTest environment and drops KDE/ECM QT_PLUGIN_PATH"
+    },
+    "to": {
+      "cmake_property": "ENVIRONMENT_MODIFICATION",
+      "operation": "set_property(TEST ... APPEND PROPERTY ENVIRONMENT_MODIFICATION ...)",
+      "affected_tests": [
+        "kiowidgets-kdirmodeltest",
+        "kiofilewidgets-knewfilemenutest"
+      ],
+      "modifications": [
+        "QT_QPA_PLATFORM=set:xcb",
+        "QT_QPA_SYSTEM_ICON_THEME=set:breeze"
+      ],
+      "preserves": [
+        "QT_PLUGIN_PATH",
+        "all other pre-existing per-test ENVIRONMENT entries"
+      ]
+    },
+    "upstream_source_changed": false,
+    "packaging_source_changed": true,
+    "test_suppression": false
+  },
+  "krecentdocument_policy": {
+    "classification": "unresolved-timestamp-tie-hypothesis",
+    "source_patch_authorized": false,
+    "suppression_authorized": false,
+    "exclusion_authorized": false,
+    "next_attempt_behavior": "remain-fatal",
+    "followup": "if reproduced in Attempt 7, open an independent focused diagnostic gate"
+  },
+  "activation_policy": {
+    "prerequisite": "Repository Policy PASS for this definition",
+    "after_validation": [
+      "mutate KIO package contract candidate to 6.30.0-0supralinux7",
+      "replace the Round 10 destructive CTest ENVIRONMENT adaptation with ENVIRONMENT_MODIFICATION",
+      "set materialization remediation queue to KIO only",
+      "materialize KIO only",
+      "validate the resulting source artifact before authorizing Attempt 7",
+      "rerun complete Level 1 with KIO -7 and retained KXMLGui -5"
+    ]
+  },
+  "next_gate": "tier3-round11-definition-validation",
+  "stable_promotion_requires_explicit_user_approval": true
+}
