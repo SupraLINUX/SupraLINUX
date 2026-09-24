@@ -262,3 +262,8 @@ Canonical DAG state after closure: **12 PASS / 1 pending / 1 current FAIL / 6 BL
 
 Execution is closed with `execution_authorized=false`. Level 2 is not authorized. The next gate is `tier3-round11-kio-remediation-definition`: define the KIO Round 11 remediation from evidence before changing source or package revision. This closure does not claim a Round 11 implementation or a `6.30.0-0supralinux7` package.
 
+## Attempt 6 closure validation — PASS
+
+The canonical Attempt 6 closure was revalidated at commit `2f0c2e3729f2af442c8219dd730f7d8d0c4c8252` after correcting the provider-audit lifecycle invariant. Repository Policy `36067377056` passed, Tier 3 provider audit `36067376827` passed, paused Level 1 `36067376935` passed with the intentional skip, materialization `36067376772` passed with the intentional skip, and Level 0 `36067376945` passed with the intentional skip.
+
+No rootfs, source materialization, KIO build, KXMLGui build, or other Tier 3 package build was executed by these validation workflows. Canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**, `execution_authorized=false`, and Level 2 remains unauthorized. Attempt 6 is therefore closed and validated. The next gate remains `tier3-round11-kio-remediation-definition`.
