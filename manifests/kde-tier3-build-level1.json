@@ -5,7 +5,7 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "remediation-pending-materialization",
+  "state": "remediation-materialized-pending-planning-validation",
   "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
@@ -818,7 +818,7 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-round11-kio-materialization",
+  "next_gate": "tier3-build-level1-planning-validation",
   "current_attempt": 6,
   "last_activation": {
     "policy_workflow_run": 35826072726,
@@ -874,13 +874,13 @@
     },
     "execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "materialization-pending-ci",
-    "source_rematerialization_required": true,
+    "status": "materialization-PASS-pending-attempt7-planning-validation",
+    "source_rematerialization_required": false,
     "source_rematerialization_nodes": [
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "tier3-round11-kio-materialization",
+    "next_gate": "tier3-build-level1-planning-validation",
     "current_attempt": 6,
     "next_attempt": 7,
     "remaining_failed_nodes": [
@@ -905,6 +905,22 @@
       "commit": "0dad8b3e82eb07bb02e90da4036001a82e885b0f",
       "repository_policy_workflow_run": 36072487004,
       "result": "PASS"
+    },
+    "materialization_workflow_run": 36073638711,
+    "materialization_commit": "ebe60a0147e2a47b6c256ac015f43eea350c3ba2",
+    "materialization_artifacts": {
+      "kio": {
+        "job_id": 107879979760,
+        "artifact_id": 10839162922,
+        "artifact_sha256": "ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c",
+        "package_version": "6.30.0-0supralinux7"
+      },
+      "kxmlgui": {
+        "job_id": 107643756357,
+        "artifact_id": 10808294092,
+        "artifact_sha256": "bccf76b46d0c9619e4306f1fe704ff5b501b9554a63f7968093e3afd4beb0d86",
+        "package_version": "6.30.0-0supralinux5"
+      }
     }
   },
   "activation": {

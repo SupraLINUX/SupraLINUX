@@ -352,3 +352,13 @@ KXMLGui remains canonical PASS and source-retained at `6.30.0-0supralinux5`; it 
 `krecentdocumenttest` remains unchanged and fatal. If its Attempt 6 timestamp-order failure reproduces in Attempt 7, it will be diagnosed independently rather than hidden.
 
 Current canonical package state is still **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**. Binary execution remains unauthorized. Active gate: `tier3-round11-kio-materialization`.
+
+## Round 11 KIO materialization — PASS
+
+KIO candidate `6.30.0-0supralinux7` was materialized successfully in workflow `36073638711`, job `107879979760`, from commit `ebe60a0147e2a47b6c256ac015f43eea350c3ba2`.
+
+Evidence artifact `10839162922` has SHA-256 `ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c`. Internal source evidence includes `dsc_sha256=fbba71c0d66cb4e0e09a9f6e2625dd416d642c075a7b8f9ae8bfcd51eee413ec`, `debian_tar_sha256=bccd518fc0be0e9f09bf06e9b346ad21d24143191eef73585cf4347a6fa41118`, `source_tree_sha256=8db83e361fa632ecb36fb171ae78ec021cc6f9e1d0b67fc0476f045e3afce923`, `materialized_tree_sha256=9138398b41e18849de47ac93a0f5f4a68b449607a3b8b02fd16607cf99b2e18d`, and `adapted_rules_sha256=c966d9328a0ab624ac5c7b5fb4d1b328d4812ac477446e0b0adf05671c410bfd`.
+
+This remains **source materialization only**: no KIO binary package was built and canonical KIO remains FAIL at `6.30.0-0supralinux6` until a later Level 1 Attempt 7 succeeds. KXMLGui remains canonical PASS at `6.30.0-0supralinux5`.
+
+The generated Tier 3 build campaign now references the KIO `-7` materialization artifact while `execution_authorized=false`. The next gate is `tier3-build-level1-planning-validation`.

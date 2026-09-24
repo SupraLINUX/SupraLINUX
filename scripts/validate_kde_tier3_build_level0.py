@@ -20,9 +20,9 @@ t=load("manifests/kde-frameworks-tier3.json")
 mat=load("manifests/kde-tier3-materialization.json")
 dag=load("manifests/kde-dag.json")
 
-if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-remediation-pending-materialization" and t.get("active_remediation",{}).get("round")==11:
+if t.get("active_remediation",{}).get("round")==11 and t.get("discovery_policy",{}).get("package_builds") in {"tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"}:
     import subprocess
-    raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_round11_materialization.py")]).returncode)
+    raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_round11.py")]).returncode)
 
 if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-attempt6-closed":
     import subprocess
