@@ -810,7 +810,7 @@
       "source_package": "kf6-kio",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux5",
+      "package_version_candidate": "6.30.0-0supralinux6",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kio",
@@ -941,6 +941,11 @@
           "classification": "level1-attempt4-remediation",
           "decision": "run-kio-gui-tests-under-xvfb-xcb-with-breeze-system-icon-theme",
           "rationale": "Attempt 4 passed 67/69 upstream CTest targets. The first failures in kdirmodeltest and knewfilemenutest are empty QIcon::fromTheme results. Qt 6.10 offscreen does not expose XDG icon-theme search paths; use an isolated Xvfb/XCB platform and select Breeze as the system icon theme instead of suppressing either test."
+        },
+        {
+          "classification": "level1-attempt5-remediation",
+          "decision": "override-only-kio-icon-tests-per-test-offscreen-with-xcb",
+          "rationale": "Attempt 5 still ran kdirmodeltest and knewfilemenutest with QT_QPA_PLATFORM=offscreen because KDE CTest sets that variable on the individual tests. The outer XCB wrapper therefore never reached them. Keep the complete suite and the proven environment, but set only those two tests to XCB/Breeze under Xvfb."
         }
       ],
       "binary_relation_overrides": [
@@ -1004,6 +1009,13 @@
           "expected_count": 1,
           "classification": "upstream-test-environment-correction",
           "rationale": "Execute the complete KIO CTest suite with the proven round-8 D-Bus/HOME/KDECI/serial/network environment, but use XCB on an isolated Xvfb server so Qt supplies XDG icon-theme search paths; explicitly select Breeze for deterministic QIcon::fromTheme resolution. No upstream test is filtered."
+        },
+        {
+          "old": "override_dh_auto_configure:\n\tdh_auto_configure -- -DBUILD_QCH=ON -DBUILD_TESTING=ON -DKDE_INSTALL_APP_TEMPLATES=ON $(EXTRA_CMAKE_ARGS) -DBUILD_DESIGNERPLUGIN=ON",
+          "new": "override_dh_auto_configure:\n\tprintf '%s\\n' \\\n\t\t'set_tests_properties(kiowidgets-kdirmodeltest PROPERTIES ENVIRONMENT \"QT_QPA_PLATFORM=xcb;QT_QPA_SYSTEM_ICON_THEME=breeze\")' \\\n\t\t'set_tests_properties(kiofilewidgets-knewfilemenutest PROPERTIES ENVIRONMENT \"QT_QPA_PLATFORM=xcb;QT_QPA_SYSTEM_ICON_THEME=breeze\")' \\\n\t\t>> autotests/CMakeLists.txt\n\tdh_auto_configure -- -DBUILD_QCH=ON -DBUILD_TESTING=ON -DKDE_INSTALL_APP_TEMPLATES=ON $(EXTRA_CMAKE_ARGS) -DBUILD_DESIGNERPLUGIN=ON",
+          "expected_count": 1,
+          "classification": "upstream-test-environment-targeted-correction",
+          "rationale": "Attempt 5 proved KDE 6.30 CTest assigns QT_QPA_PLATFORM=offscreen per-test to kdirmodeltest and knewfilemenutest, overriding the outer XCB environment. Override only those two icon-theme tests to XCB/Breeze at configure time under the existing isolated Xvfb server; preserve every upstream test and all other per-test environments."
         }
       ],
       "reference_patch_suppression_overrides": {
@@ -1083,7 +1095,18 @@
           "runner": "xvfb-run -a",
           "screen": "1280x1024x24"
         },
-        "system_icon_theme_override": "breeze"
+        "system_icon_theme_override": "breeze",
+        "ctest_per_test_qpa_overrides": {
+          "kiowidgets-kdirmodeltest": {
+            "qt_platform": "xcb",
+            "system_icon_theme": "breeze"
+          },
+          "kiofilewidgets-knewfilemenutest": {
+            "qt_platform": "xcb",
+            "system_icon_theme": "breeze"
+          }
+        },
+        "upstream_per_test_environment_preserved_for_other_tests": true
       }
     },
     "kjobwidgets": {
@@ -2173,7 +2196,7 @@
       "source_package": "kf6-kxmlgui",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux4",
+      "package_version_candidate": "6.30.0-0supralinux5",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kxmlgui",
@@ -2279,6 +2302,16 @@
           "classification": "level1-attempt4-remediation",
           "decision": "provide-isolated-session-bus-for-ktoolbar-upstream-test",
           "rationale": "Attempt 4 passed 6/7 upstream test targets under Qt offscreen. The sole ktoolbar_unittest target changes the global toolbar style through QDBusConnection::sessionBus() when WITH_QTDBUS is enabled; provide only the missing isolated session bus."
+        },
+        {
+          "classification": "level1-attempt5-remediation",
+          "decision": "declare-kxmlgui-ktextwidgets-test-build-dependency",
+          "rationale": "Attempt 5 passed all 7 upstream CTest targets but .buildinfo could not prove the modeled KTextWidgets test_required predecessor because libkf6textwidgets-dev was available in the closure but absent from Build-Depends. Declare it <!nocheck> rather than weakening predecessor proof."
+        },
+        {
+          "classification": "level1-attempt5-remediation",
+          "decision": "add-kxmlgui-optional-piecewise-template-symbol-baseline",
+          "rationale": "Attempt 5 exposed _ZSt19piecewise_construct@Base only with the Resolute toolchain. Treat it as the same optional private libstdc++ template symbol already handled in KJobWidgets, using upstream 6.30.0 as the minimal version instead of a Debian revision."
         }
       ],
       "python_module": "KXmlGui",
@@ -2363,6 +2396,13 @@
           "relation": "dbus-daemon <!nocheck>",
           "classification": "upstream-test-environment-provider-adaptation",
           "rationale": "KXMLGui ktoolbar_unittest is built WITH_QTDBUS and requires a session bus for its global toolbar-style change notification."
+        },
+        {
+          "field": "Build-Depends",
+          "action": "ensure",
+          "relation": "libkf6textwidgets-dev (>= 6.30.0~) <!nocheck>",
+          "classification": "upstream-test-build-provider-adaptation",
+          "rationale": "KXMLGui 6.30 finds KF6TextWidgets QUIET only in its BUILD_TESTING subtree and builds the krichtexteditor test helper when present. Level 1 models KTextWidgets as test_required, so the source package must declare the test-only development dependency and prove it in .buildinfo."
         }
       ],
       "rules_text_replacements": [
@@ -2386,7 +2426,20 @@
         "external_network": {
           "required": false
         }
-      }
+      },
+      "symbol_template_additions": [
+        {
+          "package": "libkf6xmlgui6",
+          "soname": "libKF6XmlGui.so.6",
+          "symbol": "_ZSt19piecewise_construct@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "toolchain-dependent-private-symbol",
+          "rationale": "Resolute GCC/libstdc++ exposes std::piecewise_construct from libKF6XmlGui as a toolchain-dependent private template symbol. Mirror the already-proven KJobWidgets treatment so disappearance is not a KDE ABI break and dpkg-gensymbols does not assign the Debian package revision."
+        }
+      ]
     },
     "purpose": {
       "upstream_version": "6.30.0",
@@ -3165,27 +3218,27 @@
     "next_gate": "tier3-build-level0-reactivation"
   },
   "active_remediation": {
-    "round": 9,
+    "round": 10,
     "level": "build-level1",
-    "status": "materialization-PASS-attempt5-active",
+    "status": "materialization-pending-ci",
     "trigger": {
-      "workflow_run": 35961584503,
-      "commit": "513cb12a96c7c79ffb5790253504482a56af2e63",
+      "workflow_run": 35991007820,
+      "commit": "3197c1988e1ab86ec5010cb693064db949bfe6b0",
       "level1_result": "0 workflow SUCCESS / 2 FAIL",
       "failed_nodes": [
         "kio",
         "kxmlgui"
       ]
     },
-    "previous_round": 8,
+    "previous_round": 9,
     "source_changed_nodes": [
       "kio",
       "kxmlgui"
     ],
     "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux5",
-      "kxmlgui": "6.30.0-0supralinux4"
+      "kio": "6.30.0-0supralinux6",
+      "kxmlgui": "6.30.0-0supralinux5"
     },
     "policy": {
       "package_revision_bump_required_for_packaging_changes": true,
@@ -3196,43 +3249,24 @@
     },
     "failure_evidence": {
       "rootfs": {
-        "artifact_id": 10792995587,
-        "artifact_sha256": "c9ed6500670e092f8fe6e0ec531857afb51c5587f9a56bef083af2267c268ce3",
-        "rootfs_sha256": "46fd06c2725ce8f10efba3c577da62f3a0dd5cb96e59683ca9fc988bed28c3a8"
+        "artifact_id": 10804620493,
+        "artifact_sha256": "0855a64addfe52eb38ae3f71b4e7a8c3c1a08c5351dfa677ba03e0933426ca21",
+        "rootfs_sha256": "ecc2df763b7dd14b8812bfebedecb1ff3c532dd970cb3f1f5b2973b750d9740c"
       },
       "kio": {
-        "job_id": 107511358507,
-        "artifact_id": 10792898014,
-        "artifact_sha256": "507f741700f698a1252851cb3d6ef2883fab68b4db79e239885eb5dc9e8bc299",
-        "failure_substage": "ctest/qt-icon-theme-platform"
+        "job_id": 107605066803,
+        "artifact_id": 10804966399,
+        "artifact_sha256": "850d56de4b07a9b0d2fd3dd2730ef13381fdcf4f0e9059e097cb829809a25ad3",
+        "failure_substage": "ctest/per-test-offscreen-icon-theme"
       },
       "kxmlgui": {
-        "job_id": 107511358468,
-        "artifact_id": 10792134667,
-        "artifact_sha256": "7171d692f12eede3945b6136f175538ef6557601e7f370d2ccd9b11f45ec5849",
-        "failure_substage": "ctest/session-bus"
+        "job_id": 107605066954,
+        "artifact_id": 10804084102,
+        "artifact_sha256": "92adc73ad8242e07299b5ae20c0acd100979e78f0b7da6ebb8fb5686c4c7204a",
+        "failure_substage": "post-build/buildinfo-and-symbols-policy"
       }
     },
-    "next_gate": "tier3-build-level1-attempt5",
-    "evidence": {
-      "workflow_run": 35965579279,
-      "commit": "8380856c8161dccc9de9c12745012c555baa26b0",
-      "artifacts": {
-        "kio": {
-          "job_id": 107523339110,
-          "artifact_id": 10794251210,
-          "artifact_sha256": "45eac20aca30ca6a5ef78d8a94d15ee5408a8bed39c8fa72c6c8823134ffa0b2"
-        },
-        "kxmlgui": {
-          "job_id": 107523339321,
-          "artifact_id": 10793229286,
-          "artifact_sha256": "44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093"
-        }
-      }
-    },
-    "activation_policy_workflow_run": 35990068378,
-    "activation_level1_workflow_run": 35990068382,
-    "activation_commit": "45675c1fb5a43f95204c2cf0c5c15df0ef703832"
+    "next_gate": "tier3-round10-level1-materialization"
   },
   "remediation_history": [
     {
@@ -3709,6 +3743,87 @@
       "validation": {
         "workflow_run": 35961584503,
         "commit": "513cb12a96c7c79ffb5790253504482a56af2e63",
+        "result": "0 workflow SUCCESS / 2 FAIL",
+        "failed_nodes": [
+          "kio",
+          "kxmlgui"
+        ],
+        "package_attempted": true,
+        "canonical_promotions": 0
+      }
+    },
+    {
+      "round": 9,
+      "level": "build-level1",
+      "status": "attempt5-FAIL",
+      "trigger": {
+        "workflow_run": 35961584503,
+        "commit": "513cb12a96c7c79ffb5790253504482a56af2e63",
+        "level1_result": "0 workflow SUCCESS / 2 FAIL",
+        "failed_nodes": [
+          "kio",
+          "kxmlgui"
+        ]
+      },
+      "previous_round": 8,
+      "source_changed_nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "provider_closure_only_nodes": [],
+      "candidate_package_versions": {
+        "kio": "6.30.0-0supralinux5",
+        "kxmlgui": "6.30.0-0supralinux4"
+      },
+      "policy": {
+        "package_revision_bump_required_for_packaging_changes": true,
+        "rematerialize_only_changed_nodes": true,
+        "provider_closure_changes_do_not_require_source_rematerialization": true,
+        "rerun_full_level1_after_remediation": true,
+        "kde_dependency_graph_unchanged": true
+      },
+      "failure_evidence": {
+        "rootfs": {
+          "artifact_id": 10792995587,
+          "artifact_sha256": "c9ed6500670e092f8fe6e0ec531857afb51c5587f9a56bef083af2267c268ce3",
+          "rootfs_sha256": "46fd06c2725ce8f10efba3c577da62f3a0dd5cb96e59683ca9fc988bed28c3a8"
+        },
+        "kio": {
+          "job_id": 107511358507,
+          "artifact_id": 10792898014,
+          "artifact_sha256": "507f741700f698a1252851cb3d6ef2883fab68b4db79e239885eb5dc9e8bc299",
+          "failure_substage": "ctest/qt-icon-theme-platform"
+        },
+        "kxmlgui": {
+          "job_id": 107511358468,
+          "artifact_id": 10792134667,
+          "artifact_sha256": "7171d692f12eede3945b6136f175538ef6557601e7f370d2ccd9b11f45ec5849",
+          "failure_substage": "ctest/session-bus"
+        }
+      },
+      "next_gate": "tier3-build-level1-attempt5",
+      "evidence": {
+        "workflow_run": 35965579279,
+        "commit": "8380856c8161dccc9de9c12745012c555baa26b0",
+        "artifacts": {
+          "kio": {
+            "job_id": 107523339110,
+            "artifact_id": 10794251210,
+            "artifact_sha256": "45eac20aca30ca6a5ef78d8a94d15ee5408a8bed39c8fa72c6c8823134ffa0b2"
+          },
+          "kxmlgui": {
+            "job_id": 107523339321,
+            "artifact_id": 10793229286,
+            "artifact_sha256": "44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093"
+          }
+        }
+      },
+      "activation_policy_workflow_run": 35990068378,
+      "activation_level1_workflow_run": 35990068382,
+      "activation_commit": "45675c1fb5a43f95204c2cf0c5c15df0ef703832",
+      "validation": {
+        "workflow_run": 35991007820,
+        "commit": "3197c1988e1ab86ec5010cb693064db949bfe6b0",
         "result": "0 workflow SUCCESS / 2 FAIL",
         "failed_nodes": [
           "kio",

@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **round 9 materialization PASS; handed to active Level 1 Attempt 5**
+Status: **round 10 source remediation pending — KIO -6 + KXMLGui -5**
 
 Reviewed: **2026-09-24**
 
@@ -298,3 +298,13 @@ The next transition is lifecycle validation only: validators may recognize a fut
 The validated round-9 source contracts are now handed to Level 1 Attempt 5. Activation changes only execution authority; KIO/KXMLGui source identities, provider closure, test-policy deltas and KDE DAG semantics remain unchanged.
 
 Planning evidence is Repository Policy `35990068378` plus Level 1 `35990068382` at `45675c1fb5a43f95204c2cf0c5c15df0ef703832`. Forward-compatible lifecycle evidence is Repository Policy `35990715536`, Level 1 `35990715990`, and materialization `35990715302` at `6ed2f38cdc0e092b6bf639a8a5b0b2461057784a`.
+
+## Round 10 — Level 1 Attempt 5 contract delta
+
+Attempt 5 `35991007820` produced two real package-job FAIL results and no canonical promotion, but it narrowed both causes.
+
+For KIO, round 9's premise was only partially correct: the Xvfb/XCB wrapper exists, but KDE's CTest metadata for `kdirmodeltest` and `knewfilemenutest` explicitly sets `QT_QPA_PLATFORM=offscreen`, which takes precedence over the wrapper environment. Round 10 does not replace KDE's test suite or globally rewrite its QPA choices. Instead, `debian/rules` appends two CMake `set_tests_properties` overrides at configure time for those exact tests, selecting XCB plus Breeze under the already-present Xvfb server. The other 67 test environments are preserved.
+
+For KXMLGui, the session-bus correction is proven by 7/7 upstream CTest PASS. The remaining contract defect is packaging evidence. KDE 6.30 finds KTextWidgets only in the `BUILD_TESTING` subtree and builds the `krichtexteditor` test helper when it is available; because the SupraLINUX DAG classifies KTextWidgets as `test_required`, round 10 declares `libkf6textwidgets-dev (>= 6.30.0~) <!nocheck>` instead of weakening .buildinfo proof. The Resolute toolchain also emits `_ZSt19piecewise_construct@Base` from `libKF6XmlGui.so.6`; the contract applies the same optional-private-symbol policy already used for KJobWidgets, with minimal version `6.30.0`.
+
+No KDE dependency edge changes. Candidate revisions are KIO `6.30.0-0supralinux6` and KXMLGui `6.30.0-0supralinux5`.

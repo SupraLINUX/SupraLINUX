@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **PASS — round 9 KIO -5 + KXMLGui -4 handed to active Attempt 5** as of 2026-09-24.
+Status: **round 10 remediation pending CI — KIO 6.30.0-0supralinux6 + KXMLGui 6.30.0-0supralinux5** as of 2026-09-24.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -338,3 +338,12 @@ Materialization still has no binary package-state effect. Its future Attempt-5 h
 The round-9 materialization set remains **20/20 source PASS** and is now handed to active Level 1 Attempt 5 after planning validation (`35990068378` / `35990068382`) and forward-compatible lifecycle validation (`35990715536` / `35990715990` / `35990715302`).
 
 KIO remains pinned to artifact `10794251210` and KXMLGui to `10793229286`. Activation changes no source artifact and materialization still has no binary package-state effect.
+
+## Round 10 selective materialization
+
+Attempt 5 `35991007820` leaves two source-package deltas, so the materialization queue is again exactly **KIO + KXMLGui**.
+
+- KIO `6.30.0-0supralinux6`: retain the proven D-Bus, Breeze, Xvfb, controlled HOME, KDECI, serial CTest and node-scoped network setup. During `override_dh_auto_configure`, append two CMake test-property overrides so only `kiowidgets-kdirmodeltest` and `kiofilewidgets-knewfilemenutest` use `QT_QPA_PLATFORM=xcb;QT_QPA_SYSTEM_ICON_THEME=breeze`. Every other upstream test retains its existing environment.
+- KXMLGui `6.30.0-0supralinux5`: retain the now-proven 7/7 D-Bus/offscreen suite; add the test-only `libkf6textwidgets-dev (>= 6.30.0~) <!nocheck>` relation and one optional toolchain template-symbol baseline for `_ZSt19piecewise_construct@Base` at `6.30.0`.
+
+The promoted round-9 source artifacts remain immutable previous evidence until round 10 succeeds: KIO artifact `10794251210`, KXMLGui artifact `10793229286`. This gate is source-only and cannot promote a binary package.

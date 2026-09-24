@@ -95,6 +95,28 @@
       "canonical_promotions": 0,
       "failure_class": "node-owned-test-environment-followup",
       "next_attempt": 5
+    },
+    {
+      "attempt": 5,
+      "workflow_run": 35991007820,
+      "commit": "3197c1988e1ab86ec5010cb693064db949bfe6b0",
+      "rootfs": {
+        "artifact_id": 10804620493,
+        "artifact_sha256": "0855a64addfe52eb38ae3f71b4e7a8c3c1a08c5351dfa677ba03e0933426ca21",
+        "rootfs_sha256": "ecc2df763b7dd14b8812bfebedecb1ff3c532dd970cb3f1f5b2973b750d9740c"
+      },
+      "result": "FAIL",
+      "workflow_jobs": {
+        "success": 0,
+        "fail": 2
+      },
+      "failed_nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "canonical_promotions": 0,
+      "failure_class": "node-owned-test-environment-and-packaging-contract-followup",
+      "next_attempt": 6
     }
   ],
   "nodes": {
@@ -204,6 +226,32 @@
           "source_rematerialization_required": true,
           "sbuild_enable_network": true,
           "test_environment": "retain dbus-run-session + controlled HOME + KDECI_PLATFORM_PATH + ctest -j1 + node-scoped network; replace offscreen with xcb under xvfb and set QT_QPA_SYSTEM_ICON_THEME=breeze"
+        },
+        "package_version_unchanged": true,
+        "source_change": false,
+        "canonical_state_effect": "none-remediation-pending"
+      },
+      {
+        "attempt": 5,
+        "result": "FAIL",
+        "workflow_run": 35991007820,
+        "job_id": 107605066803,
+        "commit": "3197c1988e1ab86ec5010cb693064db949bfe6b0",
+        "artifact_id": 10804966399,
+        "artifact_sha256": "850d56de4b07a9b0d2fd3dd2730ef13381fdcf4f0e9059e097cb829809a25ad3",
+        "rootfs_artifact_id": 10804620493,
+        "rootfs_artifact_sha256": "0855a64addfe52eb38ae3f71b4e7a8c3c1a08c5351dfa677ba03e0933426ca21",
+        "rootfs_sha256": "ecc2df763b7dd14b8812bfebedecb1ff3c532dd970cb3f1f5b2973b750d9740c",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux5",
+        "stage": "sbuild",
+        "failure_substage": "ctest/per-test-offscreen-icon-theme",
+        "cause": "KIO compiled and executed all 69 upstream CTest targets: 67 passed and kdirmodeltest plus knewfilemenutest failed. Attempt 5's outer QT_QPA_PLATFORM=xcb did not reach those two targets because KDE 6.30 assigns QT_QPA_PLATFORM=offscreen in each test's CTest ENVIRONMENT property; their themed-icon names therefore remained empty despite Breeze and Xvfb being installed.",
+        "remediation": {
+          "candidate_package_version": "6.30.0-0supralinux6",
+          "source_rematerialization_required": true,
+          "sbuild_enable_network": true,
+          "test_environment": "retain the proven full-suite wrapper and Xvfb, but override only kdirmodeltest and knewfilemenutest CTest ENVIRONMENT to xcb + Breeze at configure time"
         },
         "package_version_unchanged": true,
         "source_change": false,
@@ -320,6 +368,34 @@
             "dbus-daemon <!nocheck>"
           ],
           "test_environment": "dbus-run-session around the complete QT_QPA_PLATFORM=offscreen dh_auto_test invocation"
+        },
+        "package_version_unchanged": true,
+        "source_change": false,
+        "canonical_state_effect": "none-remediation-pending"
+      },
+      {
+        "attempt": 5,
+        "result": "FAIL",
+        "workflow_run": 35991007820,
+        "job_id": 107605066954,
+        "commit": "3197c1988e1ab86ec5010cb693064db949bfe6b0",
+        "artifact_id": 10804084102,
+        "artifact_sha256": "92adc73ad8242e07299b5ae20c0acd100979e78f0b7da6ebb8fb5686c4c7204a",
+        "rootfs_artifact_id": 10804620493,
+        "rootfs_artifact_sha256": "0855a64addfe52eb38ae3f71b4e7a8c3c1a08c5351dfa677ba03e0933426ca21",
+        "rootfs_sha256": "ecc2df763b7dd14b8812bfebedecb1ff3c532dd970cb3f1f5b2973b750d9740c",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux4",
+        "stage": "buildinfo-predecessor-proof",
+        "failure_substage": "post-build/buildinfo-and-symbols-policy",
+        "cause": "KXMLGui compiled successfully and all 7 upstream CTest targets passed under the round-9 D-Bus/offscreen environment. The job then failed package evidence: libkf6textwidgets-dev was a modeled test_required predecessor and available in the retained inputs but absent from Build-Depends/Installed-Build-Depends, and Lintian rejected the toolchain-emitted _ZSt19piecewise_construct@Base symbol after dpkg-gensymbols assigned the current Debian revision.",
+        "remediation": {
+          "candidate_package_version": "6.30.0-0supralinux5",
+          "source_rematerialization_required": true,
+          "build_depends": [
+            "libkf6textwidgets-dev (>= 6.30.0~) <!nocheck>"
+          ],
+          "symbol_template": "add _ZSt19piecewise_construct@Base as optional at 6.30.0 in libkf6xmlgui6.symbols; retain 7/7-passing D-Bus/offscreen test environment"
         },
         "package_version_unchanged": true,
         "source_change": false,

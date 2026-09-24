@@ -95,7 +95,11 @@ queue_set = set(queue)
 if m.get("state") == "remediation-pending-ci":
     active_round = active_c.get("round")
     req(active_round == active_m.get("round") == active_t.get("round"), "Tier3 active remediation round linkage")
-    if active_round == 9:
+    if active_round == 10:
+        req(t.get("discovery_policy", {}).get("phase") == "build-level1-planning", "Tier3 round10 Level1 planning phase")
+        req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level1-remediation-pending-materialization", "Tier3 round10 canonical build gate")
+        req(active_t.get("execution_authorized") is False and active_t.get("level1_execution_authorized") is False, "Tier3 round10 Level1 execution pause")
+    elif active_round == 9:
         req(t.get("discovery_policy", {}).get("phase") == "build-level1-planning", "Tier3 round9 Level1 planning phase")
         req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level1-remediation-pending-materialization", "Tier3 round9 canonical build gate")
         req(active_t.get("execution_authorized") is False and active_t.get("level1_execution_authorized") is False, "Tier3 round9 Level1 execution pause")
@@ -115,7 +119,31 @@ if m.get("state") == "remediation-pending-ci":
         req(t.get("discovery_policy", {}).get("package_builds") == "tier3-level0-remediation-pending", "Tier3 remediation canonical build gate")
         req(active_t.get("execution_authorized") is False and active_t.get("full_level0_rerun_required") is True, "Tier3 remediation binary execution pause")
 
-    if active_round == 9:
+    if active_round == 10:
+        req(active_nodes == {"kio","kxmlgui"}, "Tier3 round10 Level1 failure set")
+        req(queue == ["kio","kxmlgui"], "Tier3 round10 source materialization queue")
+        req(set(active_m.get("nodes", [])) == {"kio","kxmlgui"} and set(active_t.get("nodes", [])) == {"kio","kxmlgui"}, "Tier3 round10 node linkage")
+        req(active_c.get("source_changed_nodes") == ["kio","kxmlgui"] and active_c.get("provider_closure_only_nodes") == [], "Tier3 round10 contract classes")
+        req(active_m.get("source_changed_nodes") == ["kio","kxmlgui"] and active_m.get("provider_closure_only_nodes") == [], "Tier3 round10 materialization classes")
+        req(active_t.get("source_materialization_nodes") == ["kio","kxmlgui"] and active_t.get("provider_closure_only_nodes") == [], "Tier3 round10 canonical classes")
+        req(active_c.get("trigger", {}).get("workflow_run") == 35991007820 and active_c.get("trigger", {}).get("commit") == "3197c1988e1ab86ec5010cb693064db949bfe6b0", "Tier3 round10 trigger")
+        req(active_m.get("trigger_workflow_run") == 35991007820 and active_t.get("trigger_workflow_run") == 35991007820, "Tier3 round10 trigger linkage")
+        versions={"kio":"6.30.0-0supralinux6","kxmlgui":"6.30.0-0supralinux5"}
+        req(active_c.get("candidate_package_versions") == versions and active_m.get("candidate_package_versions") == versions and active_t.get("candidate_package_versions") == versions, "Tier3 round10 candidate revisions")
+        kio_rel=[(x.get("action"),x.get("package") or x.get("relation")) for x in contracts["kio"].get("source_build_relation_overrides",[])]
+        req(kio_rel == [("remove","libkf6auth-dev"),("remove","libkf6configwidgets-dev"),("ensure","dbus-daemon <!nocheck>"),("ensure","breeze-icon-theme (>= 4:6.30.0~) <!nocheck>"),("ensure","xvfb <!nocheck>")], "KIO round10 retained test-provider relations")
+        rr=contracts["kio"].get("rules_text_replacements",[])
+        req(len(rr)==3 and any(x.get("classification")=="upstream-test-environment-targeted-correction" and "kiowidgets-kdirmodeltest" in x.get("new","") and "kiofilewidgets-knewfilemenutest" in x.get("new","") for x in rr), "KIO round10 targeted icon-test QPA rules")
+        env=contracts["kio"].get("test_environment_contract",{})
+        ov=env.get("ctest_per_test_qpa_overrides",{})
+        req(set(ov)=={"kiowidgets-kdirmodeltest","kiofilewidgets-knewfilemenutest"} and all(v.get("qt_platform")=="xcb" and v.get("system_icon_theme")=="breeze" for v in ov.values()), "KIO round10 targeted QPA contract")
+        kxml_rel=[(x.get("action"),x.get("package") or x.get("relation")) for x in contracts["kxmlgui"].get("source_build_relation_overrides",[])]
+        req(kxml_rel == [("ensure","python3-build"),("ensure","python3-setuptools"),("ensure","dbus-daemon <!nocheck>"),("ensure","libkf6textwidgets-dev (>= 6.30.0~) <!nocheck>")], "KXMLGui round10 exact build/test providers")
+        adds=contracts["kxmlgui"].get("symbol_template_additions",[])
+        req(len(adds)==1 and adds[0].get("symbol")=="_ZSt19piecewise_construct@Base" and adds[0].get("minimal_version")=="6.30.0" and adds[0].get("tags")==["optional"], "KXMLGui round10 optional template symbol")
+        xr=contracts["kxmlgui"].get("rules_text_replacements",[])
+        req(len(xr)==1 and xr[0].get("new")=="override_dh_auto_test:\n\tdbus-run-session -- env QT_QPA_PLATFORM=offscreen dh_auto_test", "KXMLGui round10 retained D-Bus offscreen full-suite rules")
+    elif active_round == 9:
         req(active_nodes == {"kio","kxmlgui"}, "Tier3 round9 Level1 failure set")
         req(queue == ["kio","kxmlgui"], "Tier3 round9 source materialization queue")
         req(set(active_m.get("nodes", [])) == {"kio","kxmlgui"} and set(active_t.get("nodes", [])) == {"kio","kxmlgui"}, "Tier3 round9 node linkage")
@@ -318,7 +346,15 @@ for node in selected:
         req(node in queue_set, f"{node}: unexpected active remediation node")
         req(prev.get("result") == "PASS", f"{node}: previous materialization PASS retained")
         req(prev.get("package_attempted") is False and prev.get("package_state_effect") == "none", f"{node}: previous materialization semantics")
-        if active_c.get("round") == 9:
+        if active_c.get("round") == 10:
+            req(node in {"kio","kxmlgui"}, f"{node}: round10 only KIO/KXMLGui rematerialize")
+            expected_prev={"kio":"6.30.0-0supralinux5","kxmlgui":"6.30.0-0supralinux4"}[node]
+            expected_next={"kio":"6.30.0-0supralinux6","kxmlgui":"6.30.0-0supralinux5"}[node]
+            req(prev.get("package_version") == expected_prev, f"{node}: round10 baseline materialization revision")
+            req(state.get("candidate_package_version") == expected_next, f"{node}: round10 candidate revision")
+            minimum_history={"kio":5,"kxmlgui":4}[node]
+            req(len(state.get("evidence_history", [])) >= minimum_history, f"{node}: round10 materialization history retained")
+        elif active_c.get("round") == 9:
             req(node in {"kio","kxmlgui"}, f"{node}: round9 only KIO/KXMLGui rematerialize")
             expected_prev={"kio":"6.30.0-0supralinux4","kxmlgui":"6.30.0-0supralinux3"}[node]
             expected_next={"kio":"6.30.0-0supralinux5","kxmlgui":"6.30.0-0supralinux4"}[node]
@@ -551,13 +587,13 @@ elif m.get("state") == "PASS":
             req(active_t.get("execution_authorized") is False, "attempt4 not authorized before promotion validation")
             req(active_t.get("next_gate") == "tier3-build-level0-attempt4-activation-validation", "round3 activation validation gate")
 else:
-    expected_queue = ["kio","kxmlgui"] if active_c.get("round") in {7,8,9} else (["kio"] if active_c.get("round") == 5 else (["kwallet"] if active_c.get("round") == 4 else (["kjobwidgets"] if active_c.get("round") == 3 else ["kiconthemes","kjobwidgets","kwallet"])))
+    expected_queue = ["kio","kxmlgui"] if active_c.get("round") in {7,8,9,10} else (["kio"] if active_c.get("round") == 5 else (["kwallet"] if active_c.get("round") == 4 else (["kjobwidgets"] if active_c.get("round") == 3 else ["kiconthemes","kjobwidgets","kwallet"])))
     req(queue == expected_queue, "active remediation materialization queue")
     req(all(m["nodes"][n].get("state") == "remediation-pending" for n in queue), "active remediation materialization queue states")
     req(all(m["nodes"][n].get("state") == "materialized" for n in selected if n not in queue_set), "unaffected materializations remain PASS")
     prev_summary = m.get("previous_evidence_summary", {})
     req(prev_summary.get("result") == "PASS" and prev_summary.get("package_attempted") is False, "previous materialization summary retained")
-    if active_c.get("round") in {5,7,8,9}:
+    if active_c.get("round") in {5,7,8,9,10}:
         req(t.get("discovery_policy", {}).get("phase") in {"build-level1-planning","build-level1"}, "Level1 remediation remains in Level1 lifecycle")
         req(t.get("support_components", {}).get("next_gate") in {"tier3-build-level1-planning","tier3-build-level1"}, "round5 remediation remains in Level1 gate")
     else:

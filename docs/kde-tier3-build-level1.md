@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **Attempt 5 active — KIO + KXMLGui full Level 1 rerun** as of 2026-09-24.
+Status: **Attempt 5 reviewed — 0 SUCCESS / 2 real FAIL; round 10 source remediation pending** as of 2026-09-24.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -206,3 +206,13 @@ The promoted round-9 sources passed planning validation in Repository Policy `35
 A separate activation commit now authorizes the complete two-node Attempt 5. KIO consumes `6.30.0-0supralinux5` artifact `10794251210`; KXMLGui consumes `6.30.0-0supralinux4` artifact `10793229286`. Scheduling remains parallel with `fail-fast=false`.
 
 KIO retains its documented node-scoped network exception; KXMLGui remains network-disabled. No stable promotion is authorized by a package PASS.
+
+## Attempt 5 result — round 10 follow-up
+
+Workflow `35991007820` at commit `3197c1988e1ab86ec5010cb693064db949bfe6b0` completed with KIO FAIL and KXMLGui FAIL. Shared rootfs evidence is artifact `10804620493`, artifact SHA-256 `0855a64addfe52eb38ae3f71b4e7a8c3c1a08c5351dfa677ba03e0933426ca21`, inner SHA-256 `ecc2df763b7dd14b8812bfebedecb1ff3c532dd970cb3f1f5b2973b750d9740c`.
+
+**KIO** job `107605066803`, artifact `10804966399`, SHA-256 `850d56de4b07a9b0d2fd3dd2730ef13381fdcf4f0e9059e097cb829809a25ad3`: **67/69 CTest targets PASS**. The two failures remain `kdirmodeltest` and `knewfilemenutest`, but Attempt 5 proves why round 9 did not change them: CTest injects `QT_QPA_PLATFORM=offscreen` directly into those tests, overriding the outer XCB environment. Round 10 therefore changes only those two CTest properties to XCB/Breeze while keeping Xvfb and the complete suite.
+
+**KXMLGui** job `107605066954`, artifact `10804084102`, SHA-256 `92adc73ad8242e07299b5ae20c0acd100979e78f0b7da6ebb8fb5686c4c7204a`: build succeeded and **7/7 CTest targets PASS**. The remaining failure is post-test packaging proof: add `libkf6textwidgets-dev (>= 6.30.0~) <!nocheck>` so the modeled upstream test-only predecessor is installed/proven, and add `_ZSt19piecewise_construct@Base` as an optional `6.30.0` symbol baseline rather than accepting a Debian-revision ABI version.
+
+Attempt 6 is not authorized. The next gate is `tier3-round10-level1-materialization`.

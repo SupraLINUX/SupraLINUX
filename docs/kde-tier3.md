@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 Attempt 5 active**
+Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 Attempt 5 closed; round 10 materialization pending**
 
 Last reviewed: **2026-09-24**
 
@@ -514,3 +514,13 @@ Round-9 source promotion passed the planning gates at commit `45675c1fb5a43f9520
 A separate activation now authorizes the complete two-node Level 1 Attempt 5. KIO uses `6.30.0-0supralinux5` artifact `10794251210`; KXMLGui uses `6.30.0-0supralinux4` artifact `10793229286`. The pre-result canonical snapshot remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.
 
 Level 2 remains unauthorized until Attempt 5 completes and its KIO/KXMLGui evidence is reviewed under PASS / FAIL / BLOCKED semantics. Binary PASS does not imply stable publication.
+
+## Current canonical state — Attempt 5 closed / round 10 pending
+
+Level 1 Attempt 5 workflow `35991007820` at commit `3197c1988e1ab86ec5010cb693064db949bfe6b0` completed **0 workflow SUCCESS / 2 real FAIL**, with no canonical promotion. Both nodes used shared rootfs artifact `10804620493`, artifact SHA-256 `0855a64addfe52eb38ae3f71b4e7a8c3c1a08c5351dfa677ba03e0933426ca21`, inner rootfs SHA-256 `ecc2df763b7dd14b8812bfebedecb1ff3c532dd970cb3f1f5b2973b750d9740c`.
+
+KIO again reached **67/69 CTest PASS**. The decisive new evidence is that KDE 6.30 itself assigns `QT_QPA_PLATFORM=offscreen` in the CTest `ENVIRONMENT` property of `kiowidgets-kdirmodeltest` and `kiofilewidgets-knewfilemenutest`. That per-test property overrode round 9's outer `QT_QPA_PLATFORM=xcb`, so the intended XCB/Breeze environment never reached the two failing tests. Round 10 preserves all 69 tests and all proven test providers, but overrides only those two test properties to XCB/Breeze under the existing isolated Xvfb server.
+
+KXMLGui compiled and passed **7/7 upstream CTest targets**; the round-9 D-Bus/offscreen remediation is therefore proven. Its job failed later on packaging evidence: `libkf6textwidgets-dev` is modeled as the upstream `test_required` predecessor but was not declared in Build-Depends, so it was absent from `Installed-Build-Depends`; additionally Resolute emitted the private template symbol `_ZSt19piecewise_construct@Base`, which dpkg-gensymbols versioned with the current Debian revision and Lintian rejected. Round 10 adds the test-only KTextWidgets Build-Depends and treats that symbol as optional at upstream version `6.30.0`, matching the already-proven KJobWidgets policy.
+
+Round 10 candidates are KIO `6.30.0-0supralinux6` and KXMLGui `6.30.0-0supralinux5`. Binary Level 1 execution is paused until both rematerializations PASS and their evidence is validated. Level 2 remains unauthorized.

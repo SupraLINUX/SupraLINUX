@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "active-pending-ci",
-  "execution_authorized": true,
+  "state": "remediation-pending-materialization",
+  "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -458,7 +458,7 @@
   },
   "nodes": {
     "kio": {
-      "state": "prepared-pending-revalidation",
+      "state": "remediation-pending-materialization",
       "source_package": "kf6-kio",
       "package_version": "6.30.0-0supralinux5",
       "expected_binary_packages": [
@@ -600,37 +600,33 @@
         "breeze-icons"
       ],
       "last_attempt": {
-        "attempt": 4,
-        "workflow_run": 35961584503,
-        "job_id": 107511358507,
-        "artifact_id": 10792898014,
-        "artifact_sha256": "507f741700f698a1252851cb3d6ef2883fab68b4db79e239885eb5dc9e8bc299",
+        "attempt": 5,
+        "workflow_run": 35991007820,
+        "job_id": 107605066803,
+        "artifact_id": 10804966399,
+        "artifact_sha256": "850d56de4b07a9b0d2fd3dd2730ef13381fdcf4f0e9059e097cb829809a25ad3",
         "result": "FAIL",
         "package_attempted": true,
         "stage": "sbuild",
-        "failure_substage": "ctest/qt-icon-theme-platform"
+        "failure_substage": "ctest/per-test-offscreen-icon-theme"
       },
-      "current_attempt": 4,
+      "current_attempt": 5,
       "sbuild_enable_network": true,
       "remediation": {
-        "global_round": 9,
-        "classification": "qt-icon-theme-platform-remediation",
-        "source_rematerialization_required": false,
+        "global_round": 10,
+        "classification": "per-test-qpa-icon-theme-remediation",
+        "source_rematerialization_required": true,
         "changes": [
-          "retain dbus-daemon test provider and isolated dbus-run-session",
-          "retain SupraLINUX Breeze icon-theme payload",
-          "add xvfb test provider and run Qt GUI tests through xcb on an isolated virtual X server",
-          "set QT_QPA_SYSTEM_ICON_THEME=breeze so QIcon::fromTheme resolves the selected Breeze payload",
-          "retain controlled HOME",
-          "retain KDECI_PLATFORM_PATH marker",
-          "retain serial CTest execution",
-          "retain node-scoped sbuild network for upstream external HTTP tests",
-          "do not suppress kdirmodeltest or knewfilemenutest"
+          "retain dbus-daemon, Breeze, Xvfb, controlled HOME, KDECI marker, serial CTest and node-scoped network",
+          "retain the complete 69-target upstream CTest suite",
+          "preserve KDE's per-test offscreen settings for unaffected tests",
+          "override only kiowidgets-kdirmodeltest and kiofilewidgets-knewfilemenutest to QT_QPA_PLATFORM=xcb with Breeze under Xvfb",
+          "do not suppress or exclude either failing test"
         ]
       }
     },
     "kxmlgui": {
-      "state": "prepared-pending-revalidation",
+      "state": "remediation-pending-materialization",
       "source_package": "kf6-kxmlgui",
       "package_version": "6.30.0-0supralinux4",
       "expected_binary_packages": [
@@ -740,28 +736,28 @@
         "breeze-icons"
       ],
       "last_attempt": {
-        "attempt": 4,
-        "workflow_run": 35961584503,
-        "job_id": 107511358468,
-        "artifact_id": 10792134667,
-        "artifact_sha256": "7171d692f12eede3945b6136f175538ef6557601e7f370d2ccd9b11f45ec5849",
+        "attempt": 5,
+        "workflow_run": 35991007820,
+        "job_id": 107605066954,
+        "artifact_id": 10804084102,
+        "artifact_sha256": "92adc73ad8242e07299b5ae20c0acd100979e78f0b7da6ebb8fb5686c4c7204a",
         "result": "FAIL",
         "package_attempted": true,
-        "stage": "sbuild",
-        "failure_substage": "ctest/session-bus"
+        "stage": "buildinfo-predecessor-proof",
+        "failure_substage": "post-build/buildinfo-and-symbols-policy"
       },
-      "current_attempt": 4,
+      "current_attempt": 5,
       "sbuild_enable_network": false,
       "remediation": {
-        "global_round": 9,
-        "classification": "session-bus-test-environment-remediation",
-        "source_rematerialization_required": false,
+        "global_round": 10,
+        "classification": "test-build-dependency-and-symbol-template-remediation",
+        "source_rematerialization_required": true,
         "changes": [
-          "retain python3-build/python3-setuptools providers",
-          "retain complete dh_auto_test with QT_QPA_PLATFORM=offscreen",
-          "add dbus-daemon test provider",
-          "run the complete dh_auto_test suite inside an isolated dbus-run-session",
-          "do not add KIO HOME, network or direct CTest policy"
+          "retain python3-build/python3-setuptools and dbus-daemon providers",
+          "retain complete 7/7-passing dh_auto_test suite under dbus-run-session + QT_QPA_PLATFORM=offscreen",
+          "add libkf6textwidgets-dev (>= 6.30.0~) <!nocheck> so the modeled upstream test_required predecessor is installed and proven in .buildinfo",
+          "add _ZSt19piecewise_construct@Base to libkf6xmlgui6.symbols as optional at upstream version 6.30.0, matching the proven KJobWidgets toolchain-template treatment",
+          "do not weaken predecessor proof or silence Lintian"
         ]
       }
     }
@@ -789,7 +785,7 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-build-level1-attempt5",
+  "next_gate": "tier3-round10-level1-materialization",
   "current_attempt": 5,
   "last_activation": {
     "policy_workflow_run": 35826072726,
@@ -824,10 +820,10 @@
     "cause": "Both Level1 jobs reached sbuild but failed during install-deps because the Level1 orchestration omitted transitive package-provider closure required to install already-PASS predecessor artifacts. No node-owned source/build defect was established."
   },
   "active_remediation": {
-    "round": 4,
-    "global_round": 9,
-    "trigger_workflow_run": 35961584503,
-    "trigger_commit": "513cb12a96c7c79ffb5790253504482a56af2e63",
+    "round": 5,
+    "global_round": 10,
+    "trigger_workflow_run": 35991007820,
+    "trigger_commit": "3197c1988e1ab86ec5010cb693064db949bfe6b0",
     "nodes": [
       "kio",
       "kxmlgui"
@@ -838,34 +834,17 @@
     ],
     "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux5",
-      "kxmlgui": "6.30.0-0supralinux4"
+      "kio": "6.30.0-0supralinux6",
+      "kxmlgui": "6.30.0-0supralinux5"
     },
-    "execution_authorized": true,
+    "execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "materialization-PASS-attempt5-active",
-    "source_rematerialization_required": false,
+    "status": "materialization-pending-ci",
+    "source_rematerialization_required": true,
     "package_revision_bump_required": true,
-    "next_gate": "tier3-build-level1-attempt5",
+    "next_gate": "tier3-round10-level1-materialization",
     "current_attempt": 5,
-    "next_attempt": 5,
-    "materialization_workflow_run": 35965579279,
-    "materialization_commit": "8380856c8161dccc9de9c12745012c555baa26b0",
-    "materialization_artifacts": {
-      "kio": {
-        "job_id": 107523339110,
-        "artifact_id": 10794251210,
-        "artifact_sha256": "45eac20aca30ca6a5ef78d8a94d15ee5408a8bed39c8fa72c6c8823134ffa0b2"
-      },
-      "kxmlgui": {
-        "job_id": 107523339321,
-        "artifact_id": 10793229286,
-        "artifact_sha256": "44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093"
-      }
-    },
-    "activation_policy_workflow_run": 35990068378,
-    "activation_level1_workflow_run": 35990068382,
-    "activation_commit": "45675c1fb5a43f95204c2cf0c5c15df0ef703832"
+    "next_attempt": 6
   },
   "activation": {
     "status": "ACTIVE",
@@ -958,5 +937,41 @@
       "pass": 6,
       "fail": 1
     }
+  },
+  "next_attempt": 6,
+  "attempt5_summary": {
+    "workflow_run": 35991007820,
+    "commit": "3197c1988e1ab86ec5010cb693064db949bfe6b0",
+    "rootfs": {
+      "artifact_id": 10804620493,
+      "artifact_sha256": "0855a64addfe52eb38ae3f71b4e7a8c3c1a08c5351dfa677ba03e0933426ca21",
+      "rootfs_sha256": "ecc2df763b7dd14b8812bfebedecb1ff3c532dd970cb3f1f5b2973b750d9740c"
+    },
+    "workflow_jobs": {
+      "success": 0,
+      "fail": 2
+    },
+    "job_fail": [
+      "kio",
+      "kxmlgui"
+    ],
+    "result": "FAIL",
+    "canonical_promotions": 0,
+    "failure_class": "node-owned-test-environment-and-packaging-contract-followup",
+    "next_attempt": 6,
+    "kio_tests": {
+      "total": 69,
+      "pass": 67,
+      "fail": 2
+    },
+    "kxmlgui_tests": {
+      "total": 7,
+      "pass": 7,
+      "fail": 0
+    },
+    "kxmlgui_post_test_failures": [
+      "missing-buildinfo-proof-libkf6textwidgets-dev",
+      "lintian-symbols-file-current-version-with-debian-revision"
+    ]
   }
 }

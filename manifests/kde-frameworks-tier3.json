@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level1",
+    "phase": "build-level1-planning",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-authorized",
-    "remediation": "round9-kio-kxmlgui-attempt5-active"
+    "package_builds": "tier3-level1-remediation-pending-materialization",
+    "remediation": "round10-kio-kxmlgui-test-and-packaging-followup-pending-materialization"
   },
   "nodes": [
     {
@@ -1205,10 +1205,10 @@
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
   "build_level0_manifest": "manifests/kde-tier3-build-level0.json",
   "active_remediation": {
-    "round": 9,
+    "round": 10,
     "level": "build-level1",
-    "trigger_workflow_run": 35961584503,
-    "trigger_commit": "513cb12a96c7c79ffb5790253504482a56af2e63",
+    "trigger_workflow_run": 35991007820,
+    "trigger_commit": "3197c1988e1ab86ec5010cb693064db949bfe6b0",
     "nodes": [
       "kio",
       "kxmlgui"
@@ -1219,17 +1219,18 @@
     ],
     "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux5",
-      "kxmlgui": "6.30.0-0supralinux4"
+      "kio": "6.30.0-0supralinux6",
+      "kxmlgui": "6.30.0-0supralinux5"
     },
-    "execution_authorized": true,
-    "level1_execution_authorized": true,
+    "execution_authorized": false,
+    "level1_execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "level1-active-pending-ci",
-    "next_gate": "tier3-build-level1-attempt5",
+    "status": "materialization-pending-ci",
+    "next_gate": "tier3-round10-level1-materialization",
     "current_attempt": 5,
-    "validation_workflow_run": 35961584503,
-    "validation_commit": "513cb12a96c7c79ffb5790253504482a56af2e63",
+    "next_attempt": 6,
+    "validation_workflow_run": 35991007820,
+    "validation_commit": "3197c1988e1ab86ec5010cb693064db949bfe6b0",
     "validation_result": "0 workflow SUCCESS / 2 FAIL",
     "remaining_failed_nodes": [
       "kio",
@@ -1238,26 +1239,9 @@
     "blocked_nodes": [],
     "canonical_promotions": 0,
     "failure_classes": {
-      "kio": "qt-icon-theme-platform",
-      "kxmlgui": "session-bus-test-environment"
-    },
-    "materialization_workflow_run": 35965579279,
-    "materialization_commit": "8380856c8161dccc9de9c12745012c555baa26b0",
-    "materialization_artifacts": {
-      "kio": {
-        "job_id": 107523339110,
-        "artifact_id": 10794251210,
-        "artifact_sha256": "45eac20aca30ca6a5ef78d8a94d15ee5408a8bed39c8fa72c6c8823134ffa0b2"
-      },
-      "kxmlgui": {
-        "job_id": 107523339321,
-        "artifact_id": 10793229286,
-        "artifact_sha256": "44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093"
-      }
-    },
-    "activation_policy_workflow_run": 35990068378,
-    "activation_level1_workflow_run": 35990068382,
-    "activation_commit": "45675c1fb5a43f95204c2cf0c5c15df0ef703832"
+      "kio": "ctest-per-test-offscreen-overrides-xcb",
+      "kxmlgui": "test-required-build-dependency-and-template-symbol-baseline"
+    }
   },
   "remediation_history": [
     {
@@ -1583,6 +1567,61 @@
       "activation_policy_workflow_run": 35895610944,
       "activation_level1_workflow_run": 35895610937,
       "activation_commit": "9f680b0d8790c7bc472e8352e6675d606f706ee7"
+    },
+    {
+      "round": 9,
+      "level": "build-level1",
+      "trigger_workflow_run": 35961584503,
+      "trigger_commit": "513cb12a96c7c79ffb5790253504482a56af2e63",
+      "nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "source_materialization_nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "provider_closure_only_nodes": [],
+      "candidate_package_versions": {
+        "kio": "6.30.0-0supralinux5",
+        "kxmlgui": "6.30.0-0supralinux4"
+      },
+      "execution_authorized": true,
+      "level1_execution_authorized": true,
+      "full_level1_rerun_required": true,
+      "status": "attempt5-complete-FAIL",
+      "next_gate": "tier3-build-level1-attempt5",
+      "current_attempt": 5,
+      "validation_workflow_run": 35991007820,
+      "validation_commit": "3197c1988e1ab86ec5010cb693064db949bfe6b0",
+      "validation_result": "0 workflow SUCCESS / 2 FAIL",
+      "remaining_failed_nodes": [
+        "kio",
+        "kxmlgui"
+      ],
+      "blocked_nodes": [],
+      "canonical_promotions": 0,
+      "failure_classes": {
+        "kio": "ctest-per-test-offscreen-overrides-xcb",
+        "kxmlgui": "test-required-build-dependency-and-template-symbol-baseline"
+      },
+      "materialization_workflow_run": 35965579279,
+      "materialization_commit": "8380856c8161dccc9de9c12745012c555baa26b0",
+      "materialization_artifacts": {
+        "kio": {
+          "job_id": 107523339110,
+          "artifact_id": 10794251210,
+          "artifact_sha256": "45eac20aca30ca6a5ef78d8a94d15ee5408a8bed39c8fa72c6c8823134ffa0b2"
+        },
+        "kxmlgui": {
+          "job_id": 107523339321,
+          "artifact_id": 10793229286,
+          "artifact_sha256": "44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093"
+        }
+      },
+      "activation_policy_workflow_run": 35990068378,
+      "activation_level1_workflow_run": 35990068382,
+      "activation_commit": "45675c1fb5a43f95204c2cf0c5c15df0ef703832"
     }
   ],
   "build_level0": "PARTIAL",

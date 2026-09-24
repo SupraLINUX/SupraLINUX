@@ -311,7 +311,19 @@ elif m.get("state")=="PARTIAL":
     req(t.get("discovery_policy",{}).get("phase") in {"build-level1-planning","build-level1"},"Tier3 Level1 phase after Level0")
     req(t.get("discovery_policy",{}).get("package_builds") in {"tier3-level1-not-authorized-before-planning","tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized","tier3-level1-remediation-pending-provider-closure"},"Tier3 Level1 build gate")
     ar=t.get("active_remediation",{})
-    if ar.get("round")==9:
+    if ar.get("round")==10:
+        req(ar.get("level")=="build-level1" and ar.get("status")=="materialization-pending-ci","Tier3 Level1 round10 source-remediation lifecycle")
+        req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==["kio","kxmlgui"] and ar.get("provider_closure_only_nodes")==[],"Tier3 Level1 round10 source scope")
+        req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux6","kxmlgui":"6.30.0-0supralinux5"},"Tier3 Level1 round10 revisions")
+        req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"Tier3 Level1 round10 execution pause")
+        req(ar.get("validation_workflow_run")==35991007820 and ar.get("validation_commit")=="3197c1988e1ab86ec5010cb693064db949bfe6b0","Tier3 Level1 Attempt5 evidence")
+        req(set(ar.get("remaining_failed_nodes",[]))=={"kio","kxmlgui"} and ar.get("canonical_promotions")==0,"Tier3 Level1 Attempt5 failure/no-promotion semantics")
+        req(ar.get("current_attempt")==5 and ar.get("next_attempt")==6 and ar.get("next_gate")=="tier3-round10-level1-materialization","Tier3 Level1 round10 attempt/materialization gate")
+        hist9=[x for x in t.get("remediation_history",[]) if x.get("round")==9]
+        req(len(hist9)==1 and hist9[0].get("status")=="attempt5-complete-FAIL" and hist9[0].get("validation_workflow_run")==35991007820,"Tier3 Attempt5 closure retained while Level1 round10 remediates")
+        hist4=[x for x in t.get("remediation_history",[]) if x.get("round")==4]
+        req(len(hist4)==1 and hist4[0].get("status")=="attempt5-complete" and hist4[0].get("canonical_promotions")==11,"Tier3 Level0 Attempt5 closure retained while Level1 round10 remediates")
+    elif ar.get("round")==9:
         req(ar.get("level")=="build-level1" and ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation","level1-active-pending-ci"},"Tier3 Level1 round9 source-remediation lifecycle")
         req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==["kio","kxmlgui"] and ar.get("provider_closure_only_nodes")==[],"Tier3 Level1 round9 source scope")
         req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux5","kxmlgui":"6.30.0-0supralinux4"},"Tier3 Level1 round9 revisions")

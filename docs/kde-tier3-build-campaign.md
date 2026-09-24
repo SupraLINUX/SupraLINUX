@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 build campaign
 
-Status: **Level 0 closed; Level 1 Attempt 5 active with round-9 source pins** as of 2026-09-24.
+Status: **Level 0 closed; Level 1 Attempt 5 closed; round 10 source remediation pending** as of 2026-09-24.
 
 This document defines how the 20 materialized Tier 3 Frameworks will be built without changing the project-wide PASS / FAIL / BLOCKED semantics.
 
@@ -214,3 +214,9 @@ Campaign `execution_authorized=false` is unchanged. Validators are extended firs
 The generated campaign remains the validated **12 / 2 / 4 / 2** KDE-upstream topology and still has `execution_authorized=false`; execution authority is delegated only by `manifests/kde-tier3-build-level1.json`.
 
 After round-9 source promotion passed Policy/planner validation (`35990068378` / `35990068382`) and the forward-compatible Attempt-5 lifecycle passed again (`35990715536` / `35990715990`, with materialization `35990715302` also PASS), Level 1 is separately activated for KIO `6.30.0-0supralinux5` and KXMLGui `6.30.0-0supralinux4`.
+
+## Round 10 source-remediation boundary
+
+The generated **12 / 2 / 4 / 2** campaign is intentionally **not regenerated yet**. It continues to pin the promoted round-9 KIO/KXMLGui source artifacts while round 10 materialization is pending.
+
+Only after KIO `6.30.0-0supralinux6` and KXMLGui `6.30.0-0supralinux5` both materialize PASS will the generated campaign be refreshed to those exact new artifacts and validated before a separately authorized Attempt 6. The campaign's own `execution_authorized=false` remains unchanged.
