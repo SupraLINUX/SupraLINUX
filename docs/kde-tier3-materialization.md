@@ -312,3 +312,7 @@ Attempt 4 `35961584503` leaves exactly two source-package test-environment delta
 - KXMLGui `6.30.0-0supralinux4`: add `dbus-daemon <!nocheck>`; retain `QT_QPA_PLATFORM=offscreen`; run the complete upstream `dh_auto_test` inside `dbus-run-session`.
 
 The promoted round-8 source artifacts remain immutable previous evidence until round 9 succeeds: KIO artifact `10766471076`, KXMLGui artifact `10766665506`. This gate remains source-only and cannot promote a binary package.
+
+### Round 9 relation-validator scope
+
+The materialization validator treats KIO/KXMLGui test-provider relations as round-scoped contracts: round 9 extends the retained round-8 sets with `xvfb <!nocheck>` for KIO and `dbus-daemon <!nocheck>` for KXMLGui. Historical round-8 validation continues to require its original relation sets.

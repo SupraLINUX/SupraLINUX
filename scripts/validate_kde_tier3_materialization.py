@@ -261,8 +261,16 @@ if m.get("state") == "remediation-pending-ci":
         "kiconthemes": [("remove", "libkf6configwidgets-dev"), ("ensure", "qt6-svg-plugins <!nocheck>")],
         "kjobwidgets": [("ensure", "python3-build"), ("ensure", "python3-setuptools")],
         "kwallet": [("ensure", "libkf6doctools-dev (>= 6.30.0~)")],
-        "kio": [("remove","libkf6auth-dev"),("remove","libkf6configwidgets-dev"),("ensure","dbus-daemon <!nocheck>"),("ensure","breeze-icon-theme (>= 4:6.30.0~) <!nocheck>")],
-        "kxmlgui": [("ensure","python3-build"),("ensure","python3-setuptools")],
+        "kio": (
+            [("remove","libkf6auth-dev"),("remove","libkf6configwidgets-dev"),("ensure","dbus-daemon <!nocheck>"),("ensure","breeze-icon-theme (>= 4:6.30.0~) <!nocheck>"),("ensure","xvfb <!nocheck>")]
+            if active_c.get("round")==9 else
+            [("remove","libkf6auth-dev"),("remove","libkf6configwidgets-dev"),("ensure","dbus-daemon <!nocheck>"),("ensure","breeze-icon-theme (>= 4:6.30.0~) <!nocheck>")]
+        ),
+        "kxmlgui": (
+            [("ensure","python3-build"),("ensure","python3-setuptools"),("ensure","dbus-daemon <!nocheck>")]
+            if active_c.get("round")==9 else
+            [("ensure","python3-build"),("ensure","python3-setuptools")]
+        ),
     }
     for node, expected in expected_rel.items():
         actual = [(x.get("action"), x.get("package") or x.get("relation")) for x in contracts[node].get("source_build_relation_overrides", [])]
