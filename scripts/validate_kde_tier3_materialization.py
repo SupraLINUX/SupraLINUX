@@ -291,13 +291,15 @@ if m.get("state") == "remediation-pending-ci":
         "kwallet": [("ensure", "libkf6doctools-dev (>= 6.30.0~)")],
         "kio": (
             [("remove","libkf6auth-dev"),("remove","libkf6configwidgets-dev"),("ensure","dbus-daemon <!nocheck>"),("ensure","breeze-icon-theme (>= 4:6.30.0~) <!nocheck>"),("ensure","xvfb <!nocheck>")]
-            if active_c.get("round")==9 else
+            if active_c.get("round") in {9,10} else
             [("remove","libkf6auth-dev"),("remove","libkf6configwidgets-dev"),("ensure","dbus-daemon <!nocheck>"),("ensure","breeze-icon-theme (>= 4:6.30.0~) <!nocheck>")]
         ),
         "kxmlgui": (
-            [("ensure","python3-build"),("ensure","python3-setuptools"),("ensure","dbus-daemon <!nocheck>")]
-            if active_c.get("round")==9 else
-            [("ensure","python3-build"),("ensure","python3-setuptools")]
+            [("ensure","python3-build"),("ensure","python3-setuptools"),("ensure","dbus-daemon <!nocheck>"),("ensure","libkf6textwidgets-dev (>= 6.30.0~) <!nocheck>")]
+            if active_c.get("round")==10 else
+            ([("ensure","python3-build"),("ensure","python3-setuptools"),("ensure","dbus-daemon <!nocheck>")]
+             if active_c.get("round")==9 else
+             [("ensure","python3-build"),("ensure","python3-setuptools")])
         ),
     }
     for node, expected in expected_rel.items():

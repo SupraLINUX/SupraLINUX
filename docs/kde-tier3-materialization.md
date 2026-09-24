@@ -347,3 +347,7 @@ Attempt 5 `35991007820` leaves two source-package deltas, so the materialization
 - KXMLGui `6.30.0-0supralinux5`: retain the now-proven 7/7 D-Bus/offscreen suite; add the test-only `libkf6textwidgets-dev (>= 6.30.0~) <!nocheck>` relation and one optional toolchain template-symbol baseline for `_ZSt19piecewise_construct@Base` at `6.30.0`.
 
 The promoted round-9 source artifacts remain immutable previous evidence until round 10 succeeds: KIO artifact `10794251210`, KXMLGui artifact `10793229286`. This gate is source-only and cannot promote a binary package.
+
+### Round 10 validator scope
+
+The materialization validator now treats the retained source-relation baseline as round-aware: KIO keeps the round-9 Xvfb provider set in round 10, while KXMLGui extends the round-9 Python/D-Bus set only with the explicitly approved test-only KTextWidgets relation. This prevents historical equality checks from rejecting the documented round-10 packaging delta before either source is attempted.
