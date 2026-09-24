@@ -16,6 +16,10 @@ s0=load("manifests/kde-tier3-support-build-level0.json")
 s1=load("manifests/kde-tier3-support-build-level1.json")
 tier3=load("manifests/kde-frameworks-tier3.json")
 
+if tier3.get("discovery_policy",{}).get("package_builds")=="tier3-level1-attempt6-closed":
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_attempt6_closure.py")]).returncode)
+
 req(m.get("schema")==1 and m.get("authority")=="kde-upstream","Level1 schema/authority")
 req(m.get("provider_platform")=="ubuntu-resolute","Level1 provider platform")
 req(m.get("role")=="tier3-binary-build-level1" and m.get("frameworks_series")=="6.30.0","Level1 role/series")

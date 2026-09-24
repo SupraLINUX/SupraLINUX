@@ -14,6 +14,10 @@ tier3=load("manifests/kde-frameworks-tier3.json")
 tier2=load("manifests/kde-frameworks-tier2.json")
 dag=load("manifests/kde-dag.json")
 
+if tier3.get("discovery_policy",{}).get("package_builds")=="tier3-level1-attempt6-closed":
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_attempt6_closure.py")]).returncode)
+
 expected={
  "baloo":"a59d33a919bfa1d164c8f3a6f992c609edaf2131ac5f52ea4ecb77f6fbc53be1",
  "kbookmarks":"680120f09929d51da0a65e96a1f7d20ffbbdd2795a165719b0d07e00475e77c4",

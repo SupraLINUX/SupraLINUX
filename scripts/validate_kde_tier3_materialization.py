@@ -21,6 +21,10 @@ selected = m.get("selected_nodes", [])
 canonical = {x.get("id"): x for x in t.get("nodes", [])}
 contracts = c.get("nodes", {})
 
+if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-attempt6-closed":
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_attempt6_closure.py")]).returncode)
+
 req(m.get("schema") == 1, "Tier3 materialization schema")
 req(m.get("authority") == "kde-upstream", "Tier3 materialization source authority")
 req(m.get("role") == "tier3-source-materialization", "Tier3 materialization role")

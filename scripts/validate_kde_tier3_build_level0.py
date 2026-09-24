@@ -20,6 +20,10 @@ t=load("manifests/kde-frameworks-tier3.json")
 mat=load("manifests/kde-tier3-materialization.json")
 dag=load("manifests/kde-dag.json")
 
+if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-attempt6-closed":
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_attempt6_closure.py")]).returncode)
+
 expected=p["levels"][0]["nodes"]
 round1={"kiconthemes","kdav","kwallet","krunner","kjobwidgets"}
 round2={"kiconthemes","kjobwidgets","kwallet"}

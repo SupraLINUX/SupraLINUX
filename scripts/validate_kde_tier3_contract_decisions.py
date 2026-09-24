@@ -13,6 +13,10 @@ d=load("manifests/kde-frameworks-tier3-dependencies.json")
 selected=c.get("selected_nodes",[])
 nodes={n["id"]:n for n in t.get("nodes",[])}
 
+if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-attempt6-closed":
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_attempt6_closure.py")]).returncode)
+
 req(c.get("state") in {"contracts-ready","materialized"},"Tier3 contracts lifecycle")
 req(len(selected)==20 and set(selected)==set(nodes),"Tier3 decision node set")
 req(c.get("source_authority")=="kde-upstream" and c.get("packaging_authority")=="supralinux","Tier3 decision authority boundary")
