@@ -13,6 +13,10 @@ a=load("manifests/kde-tier3-provider-audit.json")
 canonical=[n["id"] for n in t["nodes"]]
 nodes={n["id"]:n for n in t["nodes"]}
 
+if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-remediation-pending-materialization" and t.get("active_remediation",{}).get("round")==11:
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_round11_materialization.py")]).returncode)
+
 req(c.get("schema")==1,"Tier3 package-contract schema")
 req(c.get("state") in {"reference-capture-pending","reference-capture-pass","packaging-tree-pending","packaging-tree-pass","contract-review-pass","contracts-ready","materialized"},"Tier3 package-contract lifecycle")
 req(c.get("source_authority")=="kde-upstream" and c.get("packaging_authority")=="supralinux","Tier3 contract authority boundary")

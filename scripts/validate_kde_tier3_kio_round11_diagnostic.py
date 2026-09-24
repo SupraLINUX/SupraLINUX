@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import json
+import json,sys
 
 ROOT=Path(__file__).resolve().parents[1]
 M=ROOT/"manifests/kde-tier3-kio-round11-diagnostic.json"
@@ -16,6 +16,10 @@ def fail(msg):
 m=json.loads(M.read_text())
 t=json.loads(T.read_text())
 l=json.loads(L.read_text())
+
+if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-remediation-pending-materialization" and t.get("active_remediation",{}).get("round")==11:
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_round11_materialization.py")]).returncode)
 
 if m.get("schema")!=1 or m.get("node")!="kio" or m.get("round")!=11:
     fail("KIO Round11 diagnostic identity")

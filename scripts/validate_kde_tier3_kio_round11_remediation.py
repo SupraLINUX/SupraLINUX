@@ -14,6 +14,10 @@ errors=[]
 def req(v,m):
     if not v: errors.append(m)
 
+if T.get("discovery_policy",{}).get("package_builds")=="tier3-level1-remediation-pending-materialization" and T.get("active_remediation",{}).get("round")==11:
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_round11_materialization.py")]).returncode)
+
 req(D.get("schema")==1 and D.get("node")=="kio" and D.get("round")==11,"Round11 definition identity")
 req(D.get("status")=="definition-pending-validation" and D.get("claim")=="non-executable-remediation-definition","Round11 definition lifecycle")
 req(D.get("canonical_state_effect")=="none" and D.get("execution_authorized") is False and D.get("source_materialization_authorized") is False,"Round11 definition must be non-executable")

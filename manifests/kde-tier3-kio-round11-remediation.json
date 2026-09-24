@@ -7,11 +7,11 @@
   "frameworks_series": "6.30.0",
   "node": "kio",
   "round": 11,
-  "status": "definition-pending-validation",
+  "status": "definition-PASS-materialization-active",
   "claim": "non-executable-remediation-definition",
-  "canonical_state_effect": "none",
+  "canonical_state_effect": "planning-only",
   "execution_authorized": false,
-  "source_materialization_authorized": false,
+  "source_materialization_authorized": true,
   "current_canonical_state": {
     "snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
     "kio": {
@@ -110,6 +110,21 @@
       "rerun complete Level 1 with KIO -7 and retained KXMLGui -5"
     ]
   },
-  "next_gate": "tier3-round11-definition-validation",
-  "stable_promotion_requires_explicit_user_approval": true
+  "next_gate": "tier3-round11-kio-materialization",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "definition_validation": {
+    "commit": "0dad8b3e82eb07bb02e90da4036001a82e885b0f",
+    "repository_policy_workflow_run": 36072487004,
+    "result": "PASS"
+  },
+  "activation": {
+    "scope": "source-materialization-only",
+    "nodes": [
+      "kio"
+    ],
+    "candidate_package_version": "6.30.0-0supralinux7",
+    "retained_revalidation_node": "kxmlgui",
+    "retained_revalidation_version": "6.30.0-0supralinux5",
+    "level1_execution_authorized": false
+  }
 }

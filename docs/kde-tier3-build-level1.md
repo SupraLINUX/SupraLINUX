@@ -267,3 +267,15 @@ Execution is closed with `execution_authorized=false`. Level 2 is not authorized
 The canonical Attempt 6 closure was revalidated at commit `2f0c2e3729f2af442c8219dd730f7d8d0c4c8252` after correcting the provider-audit lifecycle invariant. Repository Policy `36067377056` passed, Tier 3 provider audit `36067376827` passed, paused Level 1 `36067376935` passed with the intentional skip, materialization `36067376772` passed with the intentional skip, and Level 0 `36067376945` passed with the intentional skip.
 
 No rootfs, source materialization, KIO build, KXMLGui build, or other Tier 3 package build was executed by these validation workflows. Canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**, `execution_authorized=false`, and Level 2 remains unauthorized. Attempt 6 is therefore closed and validated. The next gate remains `tier3-round11-kio-remediation-definition`.
+
+## Round 11 definition validated — KIO materialization active
+
+Repository Policy `36072487004` validated the Round 11 remediation definition at commit `0dad8b3e82eb07bb02e90da4036001a82e885b0f`.
+
+The executable remediation now advances only the KIO source package to candidate `6.30.0-0supralinux7`. Its two targeted icon tests use CMake `ENVIRONMENT_MODIFICATION` for `QT_QPA_PLATFORM=set:xcb` and `QT_QPA_SYSTEM_ICON_THEME=set:breeze`, preserving KDE/ECM's existing `QT_PLUGIN_PATH` and all other per-test environment entries. No test is suppressed.
+
+KXMLGui remains canonical PASS and source-retained at `6.30.0-0supralinux5`; it is not rematerialized. It will be rerun together with KIO in the complete Level 1 Attempt 7 only after the KIO `-7` source artifact passes materialization and planning validation.
+
+`krecentdocumenttest` remains unchanged and fatal. If its Attempt 6 timestamp-order failure reproduces in Attempt 7, it will be diagnosed independently rather than hidden.
+
+Current canonical package state is still **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**. Binary execution remains unauthorized. Active gate: `tier3-round11-kio-materialization`.

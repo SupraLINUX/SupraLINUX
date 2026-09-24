@@ -13,6 +13,10 @@ d=load("manifests/kde-frameworks-tier3-dependencies.json")
 selected=c.get("selected_nodes",[])
 nodes={n["id"]:n for n in t.get("nodes",[])}
 
+if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-remediation-pending-materialization" and t.get("active_remediation",{}).get("round")==11:
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_round11_materialization.py")]).returncode)
+
 if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-attempt6-closed":
     import subprocess
     raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_attempt6_closure.py")]).returncode)

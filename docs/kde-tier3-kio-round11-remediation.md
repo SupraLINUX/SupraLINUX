@@ -56,3 +56,17 @@ While this definition is pending validation:
 - stable promotion remains impossible without explicit user approval.
 
 Next gate: `tier3-round11-definition-validation`.
+
+## Definition validation — PASS / materialization active
+
+The Round 11 definition passed Repository Policy `36072487004` at commit `0dad8b3e82eb07bb02e90da4036001a82e885b0f`.
+
+That approval authorizes the next source-only gate:
+
+- rematerialize **KIO only** as candidate `6.30.0-0supralinux7`;
+- retain KXMLGui `6.30.0-0supralinux5` unchanged for later full Level 1 revalidation;
+- replace the destructive per-test CTest `ENVIRONMENT` assignment with `ENVIRONMENT_MODIFICATION`;
+- preserve `QT_PLUGIN_PATH` and every pre-existing per-test environment entry;
+- keep all 69 KIO upstream tests fatal, including `krecentdocumenttest`.
+
+This activation does not authorize a binary package build. Canonical package state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED** and KIO remains canonical FAIL at `6.30.0-0supralinux6` until a later binary Attempt 7 succeeds. The active gate is now `tier3-round11-kio-materialization`.

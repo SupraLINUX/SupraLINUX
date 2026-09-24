@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level1",
+    "phase": "build-level1-planning",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-attempt6-closed",
-    "remediation": "round10-attempt6-closed-mixed"
+    "package_builds": "tier3-level1-remediation-pending-materialization",
+    "remediation": "round11-kio-materialization-pending-ci"
   },
   "nodes": [
     {
@@ -1282,29 +1282,32 @@
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
   "build_level0_manifest": "manifests/kde-tier3-build-level0.json",
   "active_remediation": {
-    "round": 10,
+    "round": 11,
     "level": "build-level1",
-    "trigger_workflow_run": 35991007820,
-    "trigger_commit": "3197c1988e1ab86ec5010cb693064db949bfe6b0",
+    "trigger_workflow_run": 36035351270,
+    "trigger_commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
     "nodes": [
       "kio",
       "kxmlgui"
     ],
     "source_materialization_nodes": [
-      "kio",
+      "kio"
+    ],
+    "retained_revalidation_nodes": [
       "kxmlgui"
     ],
     "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux6",
+      "kio": "6.30.0-0supralinux7",
       "kxmlgui": "6.30.0-0supralinux5"
     },
     "execution_authorized": false,
     "level1_execution_authorized": false,
-    "full_level1_rerun_required": false,
-    "status": "attempt6-complete-mixed",
-    "next_gate": "tier3-round11-kio-remediation-definition",
+    "full_level1_rerun_required": true,
+    "status": "materialization-pending-ci",
+    "next_gate": "tier3-round11-kio-materialization",
     "current_attempt": 6,
+    "next_attempt": 7,
     "validation_workflow_run": 36035351270,
     "validation_commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
     "validation_result": "1 workflow SUCCESS / 1 FAIL",
@@ -1319,43 +1322,22 @@
       "ktexteditor",
       "purpose"
     ],
-    "canonical_promotions": 1,
-    "failure_classes": {
-      "kio": "ctest/upstream-test-environment",
-      "kxmlgui": "PASS"
+    "canonical_promotions": 0,
+    "diagnostic_evidence": {
+      "workflow_run": 36071103806,
+      "job_id": 107872008601,
+      "artifact_id": 10837734340,
+      "artifact_sha256": "d4d944ac656d755ebd8c828d1e84c1b735e076c26a17adc66da42f0464a8cedc"
     },
-    "materialization_workflow_run": 36002910277,
-    "materialization_commit": "c0774e5514fd83995aad3c86e1f6a5b106b001a3",
-    "materialization_artifacts": {
-      "kio": {
-        "job_id": 107643756393,
-        "artifact_id": 10809231495,
-        "artifact_sha256": "5a0c2db21af5a87d4bd5ee2b02ebff7bce4dd98c66622398f00c67ef7210227b"
-      },
-      "kxmlgui": {
-        "job_id": 107643756357,
-        "artifact_id": 10808294092,
-        "artifact_sha256": "bccf76b46d0c9619e4306f1fe704ff5b501b9554a63f7968093e3afd4beb0d86"
-      }
+    "definition_validation": {
+      "commit": "0dad8b3e82eb07bb02e90da4036001a82e885b0f",
+      "repository_policy_workflow_run": 36072487004,
+      "result": "PASS"
     },
-    "activation_policy_workflow_run": 36032425645,
-    "activation_level1_workflow_run": 36032425729,
-    "activation_commit": "0fee159ac1f24dc160e1edd9976a7708f89d657d",
-    "attempt6_evidence": {
-      "rootfs": {
-        "artifact_id": 10824730747,
-        "artifact_sha256": "3ece315a28ecd5070a1e2139db45af8483126aebbe8f99bce1cf25999e218234"
-      },
-      "kio": {
-        "job_id": 107754320435,
-        "artifact_id": 10824413911,
-        "artifact_sha256": "61f2c1ad261fcc4fae4cd8064d71606af42542f5ab735a672e6ff77f6b2f5861"
-      },
-      "kxmlgui": {
-        "job_id": 107754320420,
-        "artifact_id": 10824512023,
-        "artifact_sha256": "da271b820ffe62c1bd4bf4e59874582ff482eb89b9e42d6bf6ae28c8cccc74e6"
-      }
+    "krecentdocument_policy": {
+      "classification": "unresolved-timestamp-tie-hypothesis",
+      "action": "no-patch-no-suppression",
+      "next_attempt_behavior": "fatal-if-reproduced"
     }
   },
   "remediation_history": [
