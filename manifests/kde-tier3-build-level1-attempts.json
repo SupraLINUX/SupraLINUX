@@ -117,6 +117,39 @@
       "canonical_promotions": 0,
       "failure_class": "node-owned-test-environment-and-packaging-contract-followup",
       "next_attempt": 6
+    },
+    {
+      "attempt": 6,
+      "workflow_run": 36035351270,
+      "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
+      "rootfs": {
+        "artifact_id": 10824730747,
+        "artifact_sha256": "3ece315a28ecd5070a1e2139db45af8483126aebbe8f99bce1cf25999e218234"
+      },
+      "result": "MIXED",
+      "workflow_jobs": {
+        "success": 1,
+        "fail": 1
+      },
+      "pass_nodes": [
+        "kxmlgui"
+      ],
+      "failed_nodes": [
+        "kio"
+      ],
+      "blocked_nodes": [
+        "baloo",
+        "kcmutils",
+        "knotifyconfig",
+        "kparts",
+        "ktexteditor",
+        "purpose"
+      ],
+      "canonical_promotions": 1,
+      "current_fail_nodes": [
+        "kio"
+      ],
+      "next_gate": "tier3-round11-kio-remediation-definition"
     }
   ],
   "nodes": {
@@ -256,6 +289,35 @@
         "package_version_unchanged": true,
         "source_change": false,
         "canonical_state_effect": "none-remediation-pending"
+      },
+      {
+        "attempt": 6,
+        "result": "FAIL",
+        "workflow_run": 36035351270,
+        "job_id": 107754320435,
+        "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
+        "artifact_id": 10824413911,
+        "artifact_sha256": "61f2c1ad261fcc4fae4cd8064d71606af42542f5ab735a672e6ff77f6b2f5861",
+        "rootfs_artifact_id": 10824730747,
+        "rootfs_artifact_sha256": "3ece315a28ecd5070a1e2139db45af8483126aebbe8f99bce1cf25999e218234",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux6",
+        "stage": "sbuild",
+        "failure_substage": "ctest/upstream-tests",
+        "cause": "KIO compiled and executed all 69 upstream CTest targets. 66 passed; krecentdocumenttest, kdirmodeltest and knewfilemenutest failed. The round-10 per-test XCB override did not resolve the icon-theme failures and introduced krecentdocumenttest versus Attempt 5.",
+        "tests": {
+          "total": 69,
+          "pass": 66,
+          "fail": 3
+        },
+        "failed_tests": [
+          "kiocore-krecentdocumenttest",
+          "kiowidgets-kdirmodeltest",
+          "kiofilewidgets-knewfilemenutest"
+        ],
+        "package_version_unchanged": true,
+        "source_change": false,
+        "canonical_state_effect": "FAIL"
       }
     ],
     "kxmlgui": [
@@ -400,6 +462,30 @@
         "package_version_unchanged": true,
         "source_change": false,
         "canonical_state_effect": "none-remediation-pending"
+      },
+      {
+        "attempt": 6,
+        "result": "PASS",
+        "workflow_run": 36035351270,
+        "job_id": 107754320420,
+        "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
+        "artifact_id": 10824512023,
+        "artifact_sha256": "da271b820ffe62c1bd4bf4e59874582ff482eb89b9e42d6bf6ae28c8cccc74e6",
+        "rootfs_artifact_id": 10824730747,
+        "rootfs_artifact_sha256": "3ece315a28ecd5070a1e2139db45af8483126aebbe8f99bce1cf25999e218234",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux5",
+        "stage": "complete",
+        "tests": {
+          "total": 7,
+          "pass": 7,
+          "fail": 0
+        },
+        "python_import": "PASS",
+        "package_version_unchanged": true,
+        "source_change": false,
+        "canonical_state_effect": "PASS",
+        "downstream_eligible": true
       }
     ]
   }

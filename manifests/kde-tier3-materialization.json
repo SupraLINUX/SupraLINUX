@@ -961,7 +961,7 @@
     "policy": "rematerialize-only-source-changed-level1-nodes-then-rerun-full-level1",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-attempt6",
+    "next_gate": "tier3-round11-kio-remediation-definition",
     "workflow_run": 36002910277,
     "commit": "c0774e5514fd83995aad3c86e1f6a5b106b001a3",
     "promoted_nodes": [
@@ -979,6 +979,26 @@
         "artifact_id": 10808294092,
         "artifact_sha256": "bccf76b46d0c9619e4306f1fe704ff5b501b9554a63f7968093e3afd4beb0d86"
       }
+    },
+    "attempt6_result": {
+      "workflow_run": 36035351270,
+      "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
+      "result": "MIXED",
+      "pass_nodes": [
+        "kxmlgui"
+      ],
+      "failed_nodes": [
+        "kio"
+      ],
+      "blocked_nodes": [
+        "baloo",
+        "kcmutils",
+        "knotifyconfig",
+        "kparts",
+        "ktexteditor",
+        "purpose"
+      ],
+      "canonical_promotions": 1
     }
   },
   "remediation_history": [
@@ -1241,6 +1261,6 @@
     "active_remediation_round": 10,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-attempt6"
+    "next_gate": "tier3-round11-kio-remediation-definition"
   }
 }

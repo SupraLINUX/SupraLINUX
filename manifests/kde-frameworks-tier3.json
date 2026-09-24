@@ -16,8 +16,8 @@
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-authorized",
-    "remediation": "round10-kio-kxmlgui-attempt6-active"
+    "package_builds": "tier3-level1-attempt6-closed",
+    "remediation": "round10-attempt6-closed-mixed"
   },
   "nodes": [
     {
@@ -28,7 +28,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/baloo-6.30.0.tar.xz",
       "source_sha256": "a59d33a919bfa1d164c8f3a6f992c609edaf2131ac5f52ea4ecb77f6fbc53be1",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "BLOCKED",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -53,9 +53,13 @@
         }
       },
       "packaging": {
-        "state": "pending",
+        "state": "BLOCKED",
         "package_version": null,
-        "downstream_eligible": false
+        "downstream_eligible": false,
+        "blocked_by": [
+          "kio"
+        ],
+        "reason": "predecessor-current-FAIL"
       }
     },
     {
@@ -137,7 +141,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kcmutils-6.30.0.tar.xz",
       "source_sha256": "0159f80d030ac250b0b353113a55c013ed7e38cb0b678df44d2f0d0b2aca944c",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "BLOCKED",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -162,9 +166,13 @@
         }
       },
       "packaging": {
-        "state": "pending",
+        "state": "BLOCKED",
         "package_version": null,
-        "downstream_eligible": false
+        "downstream_eligible": false,
+        "blocked_by": [
+          "kio"
+        ],
+        "reason": "predecessor-current-FAIL"
       }
     },
     {
@@ -459,7 +467,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kio-6.30.0.tar.xz",
       "source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "FAIL",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -484,9 +492,37 @@
         }
       },
       "packaging": {
-        "state": "pending",
-        "package_version": null,
-        "downstream_eligible": false
+        "state": "FAIL",
+        "package_version": "6.30.0-0supralinux6",
+        "downstream_eligible": false,
+        "attempt_ledger": "manifests/kde-tier3-build-level1-attempts.json",
+        "campaign": "manifests/kde-tier3-build-level1.json",
+        "evidence": [
+          {
+            "result": "FAIL",
+            "build_result": "FAIL",
+            "workflow_run": 36035351270,
+            "job_id": 107754320435,
+            "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
+            "attempted_package_version": "6.30.0-0supralinux6",
+            "artifact_id": 10824413911,
+            "artifact_sha256": "61f2c1ad261fcc4fae4cd8064d71606af42542f5ab735a672e6ff77f6b2f5861",
+            "rootfs_artifact_id": 10824730747,
+            "rootfs_artifact_sha256": "3ece315a28ecd5070a1e2139db45af8483126aebbe8f99bce1cf25999e218234",
+            "stage": "sbuild",
+            "failure_substage": "ctest/upstream-tests",
+            "tests": "66/69 PASS",
+            "failed_tests": [
+              "kiocore-krecentdocumenttest",
+              "kiowidgets-kdirmodeltest",
+              "kiofilewidgets-knewfilemenutest"
+            ],
+            "downstream_eligible": false,
+            "canonical_success_transition": "FAIL",
+            "package_state_effect": "FAIL",
+            "full_result_json_retained_in_artifact": true
+          }
+        ]
       }
     },
     {
@@ -638,7 +674,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/knotifyconfig-6.30.0.tar.xz",
       "source_sha256": "4a133decdb0d3731dbaa1d3625b30f057089e5c59c8326ff88a047cef35b2efb",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "BLOCKED",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -663,9 +699,13 @@
         }
       },
       "packaging": {
-        "state": "pending",
+        "state": "BLOCKED",
         "package_version": null,
-        "downstream_eligible": false
+        "downstream_eligible": false,
+        "blocked_by": [
+          "kio"
+        ],
+        "reason": "predecessor-current-FAIL"
       }
     },
     {
@@ -676,7 +716,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kparts-6.30.0.tar.xz",
       "source_sha256": "99f5a0e3a4da10e1a0fbfb505ae966cd87627f887dd07929a920afe41c862ac0",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "BLOCKED",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -701,9 +741,13 @@
         }
       },
       "packaging": {
-        "state": "pending",
+        "state": "BLOCKED",
         "package_version": null,
-        "downstream_eligible": false
+        "downstream_eligible": false,
+        "blocked_by": [
+          "kio"
+        ],
+        "reason": "predecessor-current-FAIL"
       }
     },
     {
@@ -927,7 +971,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/ktexteditor-6.30.0.tar.xz",
       "source_sha256": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "BLOCKED",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -952,9 +996,13 @@
         }
       },
       "packaging": {
-        "state": "pending",
+        "state": "BLOCKED",
         "package_version": null,
-        "downstream_eligible": false
+        "downstream_eligible": false,
+        "blocked_by": [
+          "kio"
+        ],
+        "reason": "predecessor-current-FAIL"
       }
     },
     {
@@ -1107,11 +1155,11 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kxmlgui-6.30.0.tar.xz",
       "source_sha256": "10fb8a0f7b874248ff60d9a8ee4e1f06a0efcf01b0d34d7635dfff86e848c352",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "PASS",
       "planning": {
-        "readiness": "materialized",
+        "readiness": "retained-pass",
         "dependency_authority": "kde-upstream",
-        "package_contract": "materialized",
+        "package_contract": "retained-pass",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -1132,9 +1180,34 @@
         }
       },
       "packaging": {
-        "state": "pending",
-        "package_version": null,
-        "downstream_eligible": false
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux5",
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "downstream_eligible": true,
+        "attempt_ledger": "manifests/kde-tier3-build-level1-attempts.json",
+        "campaign": "manifests/kde-tier3-build-level1.json",
+        "evidence": [
+          {
+            "result": "PASS",
+            "build_result": "PASS",
+            "workflow_run": 36035351270,
+            "job_id": 107754320420,
+            "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
+            "attempted_package_version": "6.30.0-0supralinux5",
+            "artifact_id": 10824512023,
+            "artifact_sha256": "da271b820ffe62c1bd4bf4e59874582ff482eb89b9e42d6bf6ae28c8cccc74e6",
+            "rootfs_artifact_id": 10824730747,
+            "rootfs_artifact_sha256": "3ece315a28ecd5070a1e2139db45af8483126aebbe8f99bce1cf25999e218234",
+            "stage": "complete",
+            "tests": "7/7 PASS",
+            "python_import": "PASS",
+            "downstream_eligible": true,
+            "canonical_success_transition": "PASS",
+            "package_state_effect": "PASS",
+            "full_result_json_retained_in_artifact": true
+          }
+        ]
       }
     },
     {
@@ -1145,7 +1218,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/purpose-6.30.0.tar.xz",
       "source_sha256": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "BLOCKED",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -1170,9 +1243,13 @@
         }
       },
       "packaging": {
-        "state": "pending",
+        "state": "BLOCKED",
         "package_version": null,
-        "downstream_eligible": false
+        "downstream_eligible": false,
+        "blocked_by": [
+          "kio"
+        ],
+        "reason": "predecessor-current-FAIL"
       }
     }
   ],
@@ -1222,24 +1299,30 @@
       "kio": "6.30.0-0supralinux6",
       "kxmlgui": "6.30.0-0supralinux5"
     },
-    "execution_authorized": true,
-    "level1_execution_authorized": true,
-    "full_level1_rerun_required": true,
-    "status": "level1-active-pending-ci",
-    "next_gate": "tier3-build-level1-attempt6",
+    "execution_authorized": false,
+    "level1_execution_authorized": false,
+    "full_level1_rerun_required": false,
+    "status": "attempt6-complete-mixed",
+    "next_gate": "tier3-round11-kio-remediation-definition",
     "current_attempt": 6,
-    "validation_workflow_run": 35991007820,
-    "validation_commit": "3197c1988e1ab86ec5010cb693064db949bfe6b0",
-    "validation_result": "0 workflow SUCCESS / 2 FAIL",
+    "validation_workflow_run": 36035351270,
+    "validation_commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
+    "validation_result": "1 workflow SUCCESS / 1 FAIL",
     "remaining_failed_nodes": [
-      "kio",
-      "kxmlgui"
+      "kio"
     ],
-    "blocked_nodes": [],
-    "canonical_promotions": 0,
+    "blocked_nodes": [
+      "baloo",
+      "kcmutils",
+      "knotifyconfig",
+      "kparts",
+      "ktexteditor",
+      "purpose"
+    ],
+    "canonical_promotions": 1,
     "failure_classes": {
-      "kio": "ctest-per-test-offscreen-overrides-xcb",
-      "kxmlgui": "test-required-build-dependency-and-template-symbol-baseline"
+      "kio": "ctest/upstream-test-environment",
+      "kxmlgui": "PASS"
     },
     "materialization_workflow_run": 36002910277,
     "materialization_commit": "c0774e5514fd83995aad3c86e1f6a5b106b001a3",
@@ -1257,7 +1340,23 @@
     },
     "activation_policy_workflow_run": 36032425645,
     "activation_level1_workflow_run": 36032425729,
-    "activation_commit": "0fee159ac1f24dc160e1edd9976a7708f89d657d"
+    "activation_commit": "0fee159ac1f24dc160e1edd9976a7708f89d657d",
+    "attempt6_evidence": {
+      "rootfs": {
+        "artifact_id": 10824730747,
+        "artifact_sha256": "3ece315a28ecd5070a1e2139db45af8483126aebbe8f99bce1cf25999e218234"
+      },
+      "kio": {
+        "job_id": 107754320435,
+        "artifact_id": 10824413911,
+        "artifact_sha256": "61f2c1ad261fcc4fae4cd8064d71606af42542f5ab735a672e6ff77f6b2f5861"
+      },
+      "kxmlgui": {
+        "job_id": 107754320420,
+        "artifact_id": 10824512023,
+        "artifact_sha256": "da271b820ffe62c1bd4bf4e59874582ff482eb89b9e42d6bf6ae28c8cccc74e6"
+      }
+    }
   },
   "remediation_history": [
     {
@@ -1652,5 +1751,27 @@
     "workflow_run": 35818120201,
     "commit": "0599266fd5fc9869002629b3778d71f1e76bbdc1"
   },
-  "build_level1_manifest": "manifests/kde-tier3-build-level1.json"
+  "build_level1_manifest": "manifests/kde-tier3-build-level1.json",
+  "level1_snapshot": {
+    "pass": 12,
+    "pending": 1,
+    "current_fail": 1,
+    "blocked": 6,
+    "runtime_pending": [
+      "knewstuff"
+    ],
+    "current_fail_nodes": [
+      "kio"
+    ],
+    "blocked_nodes": [
+      "baloo",
+      "kcmutils",
+      "knotifyconfig",
+      "kparts",
+      "ktexteditor",
+      "purpose"
+    ],
+    "workflow_run": 36035351270,
+    "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791"
+  }
 }

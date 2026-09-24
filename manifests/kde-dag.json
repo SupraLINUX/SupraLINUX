@@ -4551,6 +4551,66 @@
           "full_result_json_retained_in_artifact": true
         }
       ]
+    },
+    "kxmlgui": {
+      "tier": 3,
+      "upstream_version": "6.30.0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kxmlgui-6.30.0.tar.xz",
+      "source_sha256": "10fb8a0f7b874248ff60d9a8ee4e1f06a0efcf01b0d34d7635dfff86e848c352",
+      "source_evidence": "https://kde.org/info/kde-frameworks-6.30.0/",
+      "source_authority": "kde-upstream",
+      "package_provider": "supralinux",
+      "source_package": "kf6-kxmlgui",
+      "binary_packages": [
+        "libkf6xmlgui-data",
+        "libkf6xmlgui-dev",
+        "libkf6xmlgui-doc",
+        "libkf6xmlgui6",
+        "python3-kf6xmlgui"
+      ],
+      "package_version": "6.30.0-0supralinux5",
+      "depends_on": [
+        "kcoreaddons",
+        "kitemviews",
+        "kconfig",
+        "kguiaddons",
+        "ki18n",
+        "kwidgetsaddons",
+        "kglobalaccel",
+        "kconfigwidgets",
+        "kiconthemes",
+        "ktextwidgets"
+      ],
+      "state": "PASS",
+      "claim": "hosted-clean-package-preflight",
+      "authoritative": false,
+      "downstream_eligible": true,
+      "attempt_ledger": "manifests/kde-tier3-build-level1-attempts.json",
+      "workflow_run": 36035351270,
+      "job_id": 107754320420,
+      "artifact_id": 10824512023,
+      "artifact_sha256": "da271b820ffe62c1bd4bf4e59874582ff482eb89b9e42d6bf6ae28c8cccc74e6",
+      "evidence": [
+        {
+          "result": "PASS",
+          "build_result": "PASS",
+          "workflow_run": 36035351270,
+          "job_id": 107754320420,
+          "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
+          "attempted_package_version": "6.30.0-0supralinux5",
+          "artifact_id": 10824512023,
+          "artifact_sha256": "da271b820ffe62c1bd4bf4e59874582ff482eb89b9e42d6bf6ae28c8cccc74e6",
+          "rootfs_artifact_id": 10824730747,
+          "rootfs_artifact_sha256": "3ece315a28ecd5070a1e2139db45af8483126aebbe8f99bce1cf25999e218234",
+          "stage": "complete",
+          "tests": "7/7 PASS",
+          "python_import": "PASS",
+          "downstream_eligible": true,
+          "canonical_success_transition": "PASS",
+          "package_state_effect": "PASS",
+          "full_result_json_retained_in_artifact": true
+        }
+      ]
     }
   },
   "ci_scope_incidents": [
