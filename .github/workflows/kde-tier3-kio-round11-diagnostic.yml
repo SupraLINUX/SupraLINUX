@@ -1,0 +1,50 @@
+name: KDE Frameworks Tier 3 KIO Round 11 diagnostic
+
+on:
+  pull_request:
+    paths:
+      - manifests/kde-tier3-kio-round11-diagnostic.json
+      - scripts/run-kde-tier3-kio-round11-diagnostic.sh
+      - scripts/validate_kde_tier3_kio_round11_diagnostic.py
+      - docs/kde-tier3-kio-round11-diagnostic.md
+      - .github/workflows/kde-tier3-kio-round11-diagnostic.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnostic:
+    name: KIO Round 11 non-promoting diagnostic
+    runs-on: ubuntu-26.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Validate diagnostic definition
+        run: python3 scripts/validate_kde_tier3_kio_round11_diagnostic.py
+
+      - name: Download retained Breeze PASS artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10682012012'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35700002095'
+          path: .work/retained-breeze
+
+      - name: Capture KIO Round 11 diagnostic evidence
+        env:
+          BREEZE_ARTIFACT_DIR: ${{ github.workspace }}/.work/retained-breeze
+        run: bash scripts/run-kde-tier3-kio-round11-diagnostic.sh
+
+      - name: Upload diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-tier3-kio-round11-diagnostic-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-tier3-kio-round11-diagnostic/
+          if-no-files-found: error
+          retention-days: 90
