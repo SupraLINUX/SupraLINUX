@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 build campaign
 
-Status: **Level 0 closed; Level 1 round 8 source PASS; Attempt 4 planning gates PASS, activation paused** as of 2026-09-24.
+Status: **Level 0 closed; Level 1 Attempt 4 active with round-8 source pins** as of 2026-09-24.
 
 This document defines how the 20 materialized Tier 3 Frameworks will be built without changing the project-wide PASS / FAIL / BLOCKED semantics.
 
@@ -184,3 +184,9 @@ Both nodes are independent at this level and run with `fail-fast=false`. Any PAS
 The generated **12 / 2 / 4 / 2** campaign is synchronized to KIO `6.30.0-0supralinux4` artifact `10766471076` and KXMLGui `6.30.0-0supralinux3` artifact `10766665506`. Repository Policy `35895610944` and the paused Level 1 workflow `35895610937` both passed at commit `9f680b0d8790c7bc472e8352e6675d606f706ee7`.
 
 Campaign topology and the generated campaign's `execution_authorized=false` remain unchanged. A separate Level 1 activation is required before Attempt 4 may build either node.
+
+## Level 1 Attempt 4 activation
+
+The generated campaign remains the validated **12 / 2 / 4 / 2** KDE-upstream topology and still has `execution_authorized=false`; execution authority is delegated only by the dedicated Level 1 manifest.
+
+After round-8 source promotion passed Policy/planner validation (`35895610944` / `35895610937`) and the forward-compatible Attempt 4 lifecycle passed again (`35961362802` / `35961362869`), Level 1 is separately activated for KIO `6.30.0-0supralinux4` and KXMLGui `6.30.0-0supralinux3`.

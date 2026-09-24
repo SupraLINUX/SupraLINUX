@@ -1,8 +1,8 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 Attempt 3 active**
+Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 Attempt 4 active**
 
-Last reviewed: **2026-09-23**
+Last reviewed: **2026-09-24**
 
 > Historical note: this document records the gate-by-gate progression of Tier 3. Earlier sections describe the state that was current at that point; the final **Current canonical state** section is authoritative for the present gate.
 
@@ -476,3 +476,11 @@ Canonical package state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCK
 Round 8 source materialization workflow `35894317888` completed **2/2 PASS** at commit `65f5ba76a913e7acf619eb9fee86e878e2914415`. KIO `6.30.0-0supralinux4` and KXMLGui `6.30.0-0supralinux3` are now the retained source inputs for the next Level 1 attempt. This is source-only evidence and does not change the canonical package snapshot.
 
 Level 1 remains paused. The next gate is `tier3-build-level1-planning-validation`; Attempt 4 is not authorized until Repository Policy and the Level 1 planner validate the promoted round-8 state.
+
+## Current canonical state — Attempt 4 active
+
+Round-8 source promotion and its generated campaign passed Repository Policy `35895610944` plus the paused Level 1 planner `35895610937` at commit `9f680b0d8790c7bc472e8352e6675d606f706ee7`. The forward-compatible Attempt 4 lifecycle then passed Repository Policy `35961362802` and Level 1 validation `35961362869`.
+
+Attempt 4 is now separately authorized as a full two-node Level 1 rerun. KIO uses `6.30.0-0supralinux4`; KXMLGui uses `6.30.0-0supralinux3`. The pre-result canonical snapshot remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED** and Attempt 3's two FAIL records remain immutable campaign history.
+
+Level 2 remains unauthorized until the new KIO/KXMLGui binary evidence is reviewed and promoted under PASS / FAIL / BLOCKED semantics.

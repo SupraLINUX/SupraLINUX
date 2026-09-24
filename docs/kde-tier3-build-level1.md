@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **round 8 source PASS; Attempt 4 planning gates PASS; activation still paused** as of 2026-09-24.
+Status: **Attempt 4 active — KIO + KXMLGui full Level 1 rerun** as of 2026-09-24.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -163,3 +163,11 @@ The generated Tier 3 build campaign now points to the promoted round-8 source in
 The promoted round-8 inputs passed Repository Policy `35895610944` and the paused Level 1 planner `35895610937` at commit `9f680b0d8790c7bc472e8352e6675d606f706ee7`. KIO remains pinned to `6.30.0-0supralinux4`; KXMLGui remains pinned to `6.30.0-0supralinux3`.
 
 Before changing execution authority, the validators are extended to recognize the future Attempt 4 active lifecycle and to require those exact planning-validation runs. This validator-only transition does not schedule package builds: `execution_authorized=false` remains the current manifest state until a separate activation commit.
+
+## Attempt 4 activation
+
+The promoted round-8 source pins passed Repository Policy `35895610944` and paused Level 1 validation `35895610937` at commit `9f680b0d8790c7bc472e8352e6675d606f706ee7`. The forward-compatible active lifecycle itself then passed Repository Policy `35961362802` and Level 1 validation `35961362869`.
+
+A separate activation commit now authorizes the complete two-node Attempt 4. KIO consumes `6.30.0-0supralinux4` artifact `10766471076`; KXMLGui consumes `6.30.0-0supralinux3` artifact `10766665506`. Scheduling remains parallel with `fail-fast=false`.
+
+KIO retains only its previously documented node-scoped network exception; KXMLGui remains network-disabled. Binary PASS does not imply stable publication.

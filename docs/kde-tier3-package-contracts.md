@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **round 8 materialization PASS; Level 1 planning validation pending**
+Status: **round 8 materialization PASS; handed to active Level 1 Attempt 4**
 
 Reviewed: **2026-09-23**
 
@@ -262,3 +262,9 @@ The candidate revisions are KIO `6.30.0-0supralinux4` and KXMLGui `6.30.0-0supra
 The round-8 contract deltas materialized without changing KDE dependency edges. Workflow `35894317888` produced KIO artifact `10766471076` and KXMLGui artifact `10766665506`, both PASS as source-only materializations.
 
 KIO's adapted `debian/rules` SHA-256 is `e8dae488976ef4d4748f044f52b3aebcf687ae3a52733588917fa8c397920f3e`; KXMLGui's is `597ef52317fee17c1aa1dca92b0c547ac1fa543f4a56b8b3b1d6075e07d5c14f`. These exact source artifacts are the inputs to the next binary campaign after planning validation. No binary PASS and no stable promotion is implied.
+
+### Round 8 Attempt 4 handoff
+
+The validated round-8 source contracts are now handed to Level 1 Attempt 4. Activation changes only execution authority; KIO/KXMLGui source identities, provider closure, test-policy deltas and KDE DAG semantics remain exactly those already validated.
+
+Planning evidence is Repository Policy `35895610944` plus Level 1 `35895610937`; forward-compatible lifecycle validation is Repository Policy `35961362802` plus Level 1 `35961362869`.
