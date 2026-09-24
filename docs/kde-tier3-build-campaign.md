@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 build campaign
 
-Status: **Level 0 closed; Level 1 Attempt 6 active; initial activation run blocked pre-build by validator omission** as of 2026-09-24.
+Status: **Level 0 closed; Level 1 Attempt 6 closed — KXMLGui PASS, KIO FAIL; downstream blocked by KIO** as of 2026-09-24.
 
 This document defines how the 20 materialized Tier 3 Frameworks will be built without changing the project-wide PASS / FAIL / BLOCKED semantics.
 
@@ -246,3 +246,16 @@ A separate activation now authorizes exactly KIO `6.30.0-0supralinux6` and KXMLG
 Activation commit `987cb0e9ce7a2335e71ecf625a62e97c3c0cceb5` triggered Level 1 run `36033998450` and Repository Policy `36033998712`. Both stopped before any rootfs or package build because `scripts/validate_kde_tier3_build_level1.py` had a second canonical-active dispatch block that recognized rounds 6–9 but not round 10, so round 10 incorrectly fell through to historical Attempt 1 assertions.
 
 Materialization run `36033998598` remained PASS/no-op. This is classified as a validator/orchestration defect with **zero package attempts and zero package-state effect**. The missing round-10 branch is corrected before retrying Attempt 6; source pins and execution scope are unchanged.
+
+## Level 1 Attempt 6 — canonical closure
+
+Attempt 6 is closed from workflow `36035351270` at commit `f6d47684e4c69cf0765e2d24e8bb93807be04791`. The shared rootfs passed: artifact `10824730747`, SHA-256 `3ece315a28ecd5070a1e2139db45af8483126aebbe8f99bce1cf25999e218234`.
+
+KXMLGui `6.30.0-0supralinux5` is a real canonical **PASS**: 7/7 upstream tests passed and the Python import check passed. Evidence: job `107754320420`, artifact `10824512023`, SHA-256 `da271b820ffe62c1bd4bf4e59874582ff482eb89b9e42d6bf6ae28c8cccc74e6`. It is downstream-eligible and eligible for the SupraLINUX `testing` channel; this does not authorize promotion to `stable`.
+
+KIO `6.30.0-0supralinux6` is a real current **FAIL**: 66/69 upstream tests passed. The failing tests are `kiocore-krecentdocumenttest`, `kiowidgets-kdirmodeltest`, and `kiofilewidgets-knewfilemenutest`. Evidence: job `107754320435`, artifact `10824413911`, SHA-256 `61f2c1ad261fcc4fae4cd8064d71606af42542f5ab735a672e6ff77f6b2f5861`.
+
+Canonical DAG state after closure: **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**. BLOCKED: `baloo`, `kcmutils`, `knotifyconfig`, `kparts`, `ktexteditor`, and `purpose`. `knewstuff` remains pending runtime validation rather than BLOCKED because its package build already succeeded and its deferred runtime validation depends on KCMUtils.
+
+Execution is closed with `execution_authorized=false`. Level 2 is not authorized. The next gate is `tier3-round11-kio-remediation-definition`: define the KIO Round 11 remediation from evidence before changing source or package revision. This closure does not claim a Round 11 implementation or a `6.30.0-0supralinux7` package.
+
