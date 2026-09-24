@@ -192,7 +192,15 @@ elif policy.get("package_builds")=="tier3-level1-authorized":
     req(policy.get("phase")=="build-level1","Tier3 active Level1 phase")
     req(rem.get("status")=="level1-active-pending-ci","Tier3 active Level1 status")
     req(rem.get("execution_authorized") is True and rem.get("level1_execution_authorized") is True,"Tier3 active Level1 authorization")
-    if rem.get("round")==7:
+    if rem.get("round")==8:
+        req(rem.get("level")=="build-level1" and set(rem.get("nodes",[]))=={"kio","kxmlgui"},"Tier3 active Level1 round8 identity")
+        req(rem.get("source_materialization_nodes")==["kio","kxmlgui"] and rem.get("provider_closure_only_nodes")==[],"Tier3 Attempt4 source-remediation scope")
+        req(rem.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux4","kxmlgui":"6.30.0-0supralinux3"},"Tier3 Attempt4 source revisions")
+        req(rem.get("current_attempt")==4,"Tier3 Level1 Attempt4 marker")
+        req(rem.get("activation_policy_workflow_run")==35895610944 and rem.get("activation_level1_workflow_run")==35895610937,"Tier3 Attempt4 validation evidence")
+        req(rem.get("activation_commit")=="9f680b0d8790c7bc472e8352e6675d606f706ee7","Tier3 Attempt4 validation commit")
+        req(rem.get("next_gate")=="tier3-build-level1-attempt4","Tier3 Level1 Attempt4 gate")
+    elif rem.get("round")==7:
         req(rem.get("level")=="build-level1" and set(rem.get("nodes",[]))=={"kio","kxmlgui"},"Tier3 active Level1 round7 identity")
         req(rem.get("source_materialization_nodes")==["kio","kxmlgui"] and rem.get("provider_closure_only_nodes")==[],"Tier3 Attempt3 source-remediation scope")
         req(rem.get("current_attempt")==3,"Tier3 Level1 Attempt3 marker")

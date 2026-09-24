@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 build campaign
 
-Status: **Level 0 closed; Level 1 Attempt 3 active with refreshed round-7 source pins** as of 2026-09-23.
+Status: **Level 0 closed; Level 1 round 8 source PASS; Attempt 4 planning gates PASS, activation paused** as of 2026-09-24.
 
 This document defines how the 20 materialized Tier 3 Frameworks will be built without changing the project-wide PASS / FAIL / BLOCKED semantics.
 
@@ -178,3 +178,9 @@ Campaign execution authority remains false. These refreshed pins must pass Repos
 The refreshed KIO/KXMLGui source pins passed Repository Policy and the paused Level 1 planner. Attempt 3 is now separately authorized as a complete Level 1 rerun using the unchanged **12 / 2 / 4 / 2** KDE-upstream topology.
 
 Both nodes are independent at this level and run with `fail-fast=false`. Any PASS/FAIL transition comes only from the new binary evidence; downstream Level 2 remains unauthorized until Level 1 is closed.
+
+## Round 8 / Attempt 4 planning gate
+
+The generated **12 / 2 / 4 / 2** campaign is synchronized to KIO `6.30.0-0supralinux4` artifact `10766471076` and KXMLGui `6.30.0-0supralinux3` artifact `10766665506`. Repository Policy `35895610944` and the paused Level 1 workflow `35895610937` both passed at commit `9f680b0d8790c7bc472e8352e6675d606f706ee7`.
+
+Campaign topology and the generated campaign's `execution_authorized=false` remain unchanged. A separate Level 1 activation is required before Attempt 4 may build either node.

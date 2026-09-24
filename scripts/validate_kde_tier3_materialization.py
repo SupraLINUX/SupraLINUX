@@ -284,13 +284,32 @@ for node in selected:
         req(prev.get("result") == "PASS", f"{node}: previous materialization PASS retained")
         req(prev.get("package_attempted") is False and prev.get("package_state_effect") == "none", f"{node}: previous materialization semantics")
         if active_c.get("round") == 8:
-            req(node in {"kio","kxmlgui"}, f"{node}: round8 only KIO/KXMLGui rematerialize")
-            expected_prev={"kio":"6.30.0-0supralinux3","kxmlgui":"6.30.0-0supralinux2"}[node]
-            expected_next={"kio":"6.30.0-0supralinux4","kxmlgui":"6.30.0-0supralinux3"}[node]
-            req(prev.get("package_version") == expected_prev, f"{node}: round8 baseline materialization revision")
-            req(state.get("candidate_package_version") == expected_next, f"{node}: round8 candidate revision")
-            req(len(state.get("evidence_history", [])) >= 2, f"{node}: round8 materialization history retained")
-        elif active_c.get("round") == 7:
+        req(active_c.get("status") in {"materialization-PASS","materialization-PASS-attempt4-active"}, "round8 contract materialization PASS")
+        req(active_m.get("status") == "PASS" and active_m.get("workflow_run") == 35894317888, "round8 materialization evidence PASS")
+        req(active_m.get("commit") == "65f5ba76a913e7acf619eb9fee86e878e2914415", "round8 materialization commit")
+        req(active_m.get("promoted_nodes") == ["kio","kxmlgui"], "round8 promoted materialization set")
+        req(active_m.get("artifacts",{}).get("kio",{}).get("artifact_id") == 10766471076 and active_m.get("artifacts",{}).get("kio",{}).get("artifact_sha256") == "80959256047d70323b6ea311551bed573661cefb4b831f30750e27ed11076cf6", "round8 KIO materialization artifact")
+        req(active_m.get("artifacts",{}).get("kxmlgui",{}).get("artifact_id") == 10766665506 and active_m.get("artifacts",{}).get("kxmlgui",{}).get("artifact_sha256") == "100cf903ca1ef17cf2b37bab58ba0b7bf1e562d111cc04107247c3f35b134d58", "round8 KXMLGui materialization artifact")
+        req(m.get("evidence_summary",{}).get("promoted_remediation_materializations") == 2 and m.get("evidence_summary",{}).get("retained_previous_materializations") == 18, "round8 materialization summary")
+        req(m["nodes"]["kio"].get("package_version") == "6.30.0-0supralinux4" and m["nodes"]["kxmlgui"].get("package_version") == "6.30.0-0supralinux3", "round8 promoted revisions")
+        kev=m["nodes"]["kio"].get("evidence",{}); xev=m["nodes"]["kxmlgui"].get("evidence",{})
+        req(kev.get("adapted_control_sha256")=="582159e83e2c36e16be0da212d67a4a5eb725341b5a28fe4828bc515a9b5f505" and kev.get("adapted_rules_sha256")=="e8dae488976ef4d4748f044f52b3aebcf687ae3a52733588917fa8c397920f3e", "round8 KIO adapted-source hashes")
+        req(xev.get("adapted_control_sha256")=="734bbf0fb49ba1691ec9994ea83cb7ccb11446c8a9e098aa9ae796726c417c3b" and xev.get("adapted_rules_sha256")=="597ef52317fee17c1aa1dca92b0c547ac1fa543f4a56b8b3b1d6075e07d5c14f", "round8 KXMLGui adapted-source hashes")
+        req(active_t.get("materialization_workflow_run") == 35894317888 and active_t.get("materialization_commit") == "65f5ba76a913e7acf619eb9fee86e878e2914415", "round8 canonical materialization evidence")
+        if t.get("discovery_policy",{}).get("package_builds") == "tier3-level1-authorized":
+            req(active_c.get("status")=="materialization-PASS-attempt4-active" and active_c.get("next_gate")=="tier3-build-level1-attempt4","round8 contract Attempt4 handoff")
+            req(active_c.get("activation_policy_workflow_run")==35895610944 and active_c.get("activation_level1_workflow_run")==35895610937 and active_c.get("activation_commit")=="9f680b0d8790c7bc472e8352e6675d606f706ee7","round8 contract Attempt4 validation evidence")
+            req(active_t.get("status")=="level1-active-pending-ci" and active_t.get("execution_authorized") is True and active_t.get("level1_execution_authorized") is True,"round8 Attempt4 active state")
+            req(active_t.get("current_attempt")==4 and active_t.get("activation_policy_workflow_run")==35895610944 and active_t.get("activation_level1_workflow_run")==35895610937,"round8 Attempt4 activation evidence")
+            req(active_t.get("activation_commit")=="9f680b0d8790c7bc472e8352e6675d606f706ee7" and active_t.get("next_gate")=="tier3-build-level1-attempt4","round8 Attempt4 gate")
+            req(active_m.get("next_gate")=="tier3-build-level1-attempt4" and m.get("evidence_summary",{}).get("next_gate")=="tier3-build-level1-attempt4","round8 materialization Attempt4 handoff")
+        else:
+            req(t.get("discovery_policy",{}).get("package_builds") == "tier3-level1-source-PASS-pending-planning-validation", "round8 planning validation build gate")
+            req(active_t.get("status") == "materialization-PASS-pending-level1-planning-validation", "round8 canonical source PASS state")
+            req(active_t.get("execution_authorized") is False and active_t.get("level1_execution_authorized") is False, "round8 Level1 remains paused")
+            req(active_t.get("current_attempt")==3 and active_t.get("next_attempt")==4, "round8 planning attempt markers")
+            req(active_t.get("next_gate") == "tier3-build-level1-planning-validation", "round8 canonical planning-validation gate")
+    elif active_c.get("round") == 7:
             req(node in {"kio","kxmlgui"}, f"{node}: round7 only KIO/KXMLGui rematerialize")
             expected_prev={"kio":"6.30.0-0supralinux2","kxmlgui":"6.30.0-0supralinux1"}[node]
             expected_next={"kio":"6.30.0-0supralinux3","kxmlgui":"6.30.0-0supralinux2"}[node]
