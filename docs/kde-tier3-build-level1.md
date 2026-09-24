@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **Attempt 4 reviewed — 0 SUCCESS / 2 real FAIL; round 9 source remediation pending** as of 2026-09-24.
+Status: **round 9 source materialization PASS; Attempt 5 paused pending planning validation** as of 2026-09-24.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -181,3 +181,12 @@ Workflow `35961584503` at commit `513cb12a96c7c79ffb5790253504482a56af2e63` comp
 **KXMLGui** job `107511358468`, artifact `10792134667`, SHA-256 `7171d692f12eede3945b6136f175538ef6557601e7f370d2ccd9b11f45ec5849`: **6/7 CTest targets PASS**. The sole failing `ktoolbar_unittest` contains D-Bus-dependent toolbar-style assertions. Revision `6.30.0-0supralinux4` adds only an isolated session bus around the complete offscreen `dh_auto_test`.
 
 Attempt 5 is not authorized. The next gate is `tier3-round9-level1-materialization`.
+
+## Round 9 materialization handoff
+
+Source materialization workflow `35965579279` completed successfully for both Level 1 nodes at commit `8380856c8161dccc9de9c12745012c555baa26b0`.
+
+- KIO `6.30.0-0supralinux5`: job `107523339110`, artifact `10794251210`, artifact SHA-256 `45eac20aca30ca6a5ef78d8a94d15ee5408a8bed39c8fa72c6c8823134ffa0b2`, adapted rules SHA-256 `365ef3d5c2e2f13fb5e7c82891cddea72d4ec7538010b14fb834048d352bc2ee`.
+- KXMLGui `6.30.0-0supralinux4`: job `107523339321`, artifact `10793229286`, artifact SHA-256 `44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093`, adapted rules SHA-256 `65cd53913bb5e4ac48cd96b38606acf33bc0cc054128b9733508bffdd2d8a7b2`.
+
+The generated campaign is refreshed to those exact source artifacts. `execution_authorized=false` remains unchanged; Attempt 5 is still gated by Repository Policy and Level 1 planning validation. No binary PASS or stable publication is implied.

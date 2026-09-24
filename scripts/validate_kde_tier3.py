@@ -234,9 +234,19 @@ elif policy.get("package_builds") in {"tier3-level1-remediation-pending-material
         req(rem.get("validation_workflow_run")==35961584503 and rem.get("validation_result")=="0 workflow SUCCESS / 2 FAIL","Tier3 round9 Attempt4 evidence")
         req(set(rem.get("remaining_failed_nodes",[]))=={"kio","kxmlgui"} and rem.get("canonical_promotions")==0,"Tier3 round9 failure/no-promotion semantics")
         req(rem.get("current_attempt")==4 and rem.get("next_attempt")==5,"Tier3 round9 attempt markers")
-        req(policy.get("package_builds")=="tier3-level1-remediation-pending-materialization","Tier3 round9 materialization gate")
-        req(rem.get("status")=="materialization-pending-ci","Tier3 round9 pending materialization state")
-        req(rem.get("next_gate")=="tier3-round9-level1-materialization","Tier3 round9 next gate")
+        if policy.get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
+            req(rem.get("status")=="materialization-PASS-pending-level1-planning-validation","Tier3 round9 source PASS state")
+            req(rem.get("materialization_workflow_run")==35965579279 and rem.get("materialization_commit")=="8380856c8161dccc9de9c12745012c555baa26b0","Tier3 round9 source PASS evidence")
+            arts=rem.get("materialization_artifacts",{})
+            req(arts.get("kio",{}).get("artifact_id")==10794251210 and arts.get("kxmlgui",{}).get("artifact_id")==10793229286,"Tier3 round9 source PASS artifacts")
+            req(rem.get("next_gate")=="tier3-build-level1-planning-validation","Tier3 round9 planning-validation gate")
+            nodes={x.get("id"):x for x in tier3.get("nodes",[])}
+            req(nodes["kio"].get("planning",{}).get("materialization_evidence",{}).get("artifact_id")==10794251210,"KIO round9 refreshed materialization evidence")
+            req(nodes["kxmlgui"].get("planning",{}).get("materialization_evidence",{}).get("artifact_id")==10793229286,"KXMLGui round9 refreshed materialization evidence")
+        else:
+            req(policy.get("package_builds")=="tier3-level1-remediation-pending-materialization","Tier3 round9 materialization gate")
+            req(rem.get("status")=="materialization-pending-ci","Tier3 round9 pending materialization state")
+            req(rem.get("next_gate")=="tier3-round9-level1-materialization","Tier3 round9 next gate")
         hist=[x for x in tier3.get("remediation_history",[]) if x.get("round")==8]
         req(len(hist)==1 and hist[0].get("status")=="attempt4-complete-FAIL" and hist[0].get("validation_workflow_run")==35961584503,"Tier3 round8 history retains Attempt4 result")
     elif rem.get("round")==8:

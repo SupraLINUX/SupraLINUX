@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **round 9 remediation pending CI — KIO 6.30.0-0supralinux5 + KXMLGui 6.30.0-0supralinux4** as of 2026-09-24.
+Status: **round 9 PASS — KIO 6.30.0-0supralinux5 + KXMLGui 6.30.0-0supralinux4 promoted as source inputs** as of 2026-09-24.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -316,3 +316,13 @@ The promoted round-8 source artifacts remain immutable previous evidence until r
 ### Round 9 relation-validator scope
 
 The materialization validator treats KIO/KXMLGui test-provider relations as round-scoped contracts: round 9 extends the retained round-8 sets with `xvfb <!nocheck>` for KIO and `dbus-daemon <!nocheck>` for KXMLGui. Historical round-8 validation continues to require its original relation sets.
+
+## Round 9 evidence
+
+Workflow `35965579279` materialized both queued nodes successfully at commit `8380856c8161dccc9de9c12745012c555baa26b0`.
+
+KIO evidence: job `107523339110`, artifact `10794251210`, SHA-256 `45eac20aca30ca6a5ef78d8a94d15ee5408a8bed39c8fa72c6c8823134ffa0b2`, source-tree SHA-256 `fa3df7e7ef328c7e553b045530264ccdd824fb64724872f1aefc60f5f48210fd`, materialized-tree SHA-256 `aa5cdf630de7edfbf21689b7855c8f3e149f0c3d219448ae27cf525fdaac8dec`.
+
+KXMLGui evidence: job `107523339321`, artifact `10793229286`, SHA-256 `44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093`, source-tree SHA-256 `2869ebb158febcebec727ef5b661ea72c130b6ba7a82472c4ef09620b5b693dd`, materialized-tree SHA-256 `735268065ebb91c3dca48e303c2179cd5658f1086950ba00a537e15bf1949642`.
+
+Both results are source-materialization PASS only: `package_attempted=false`, `package_state_effect=none`. The next gate is Level 1 planning validation; Attempt 5 remains unauthorized.

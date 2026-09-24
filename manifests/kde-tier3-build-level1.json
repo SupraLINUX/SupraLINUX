@@ -5,7 +5,7 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "remediation-pending-materialization",
+  "state": "remediation-materialized-pending-planning-validation",
   "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED",
@@ -458,9 +458,9 @@
   },
   "nodes": {
     "kio": {
-      "state": "remediation-pending-materialization",
+      "state": "prepared-pending-revalidation",
       "source_package": "kf6-kio",
-      "package_version": "6.30.0-0supralinux4",
+      "package_version": "6.30.0-0supralinux5",
       "expected_binary_packages": [
         "kio6",
         "libkf6kio-dev",
@@ -471,10 +471,10 @@
         "libkf6kiowidgets6"
       ],
       "materialization": {
-        "workflow_run": 35894317888,
-        "job_id": 107294403189,
-        "artifact_id": 10766471076,
-        "artifact_sha256": "80959256047d70323b6ea311551bed573661cefb4b831f30750e27ed11076cf6"
+        "workflow_run": 35965579279,
+        "job_id": 107523339110,
+        "artifact_id": 10794251210,
+        "artifact_sha256": "45eac20aca30ca6a5ef78d8a94d15ee5408a8bed39c8fa72c6c8823134ffa0b2"
       },
       "blocking_predecessors": [
         "kbookmarks",
@@ -615,7 +615,7 @@
       "remediation": {
         "global_round": 9,
         "classification": "qt-icon-theme-platform-remediation",
-        "source_rematerialization_required": true,
+        "source_rematerialization_required": false,
         "changes": [
           "retain dbus-daemon test provider and isolated dbus-run-session",
           "retain SupraLINUX Breeze icon-theme payload",
@@ -630,9 +630,9 @@
       }
     },
     "kxmlgui": {
-      "state": "remediation-pending-materialization",
+      "state": "prepared-pending-revalidation",
       "source_package": "kf6-kxmlgui",
-      "package_version": "6.30.0-0supralinux3",
+      "package_version": "6.30.0-0supralinux4",
       "expected_binary_packages": [
         "libkf6xmlgui-data",
         "libkf6xmlgui-dev",
@@ -641,10 +641,10 @@
         "python3-kf6xmlgui"
       ],
       "materialization": {
-        "workflow_run": 35894317888,
-        "job_id": 107294403314,
-        "artifact_id": 10766665506,
-        "artifact_sha256": "100cf903ca1ef17cf2b37bab58ba0b7bf1e562d111cc04107247c3f35b134d58"
+        "workflow_run": 35965579279,
+        "job_id": 107523339321,
+        "artifact_id": 10793229286,
+        "artifact_sha256": "44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093"
       },
       "blocking_predecessors": [
         "kconfigwidgets",
@@ -755,7 +755,7 @@
       "remediation": {
         "global_round": 9,
         "classification": "session-bus-test-environment-remediation",
-        "source_rematerialization_required": true,
+        "source_rematerialization_required": false,
         "changes": [
           "retain python3-build/python3-setuptools providers",
           "retain complete dh_auto_test with QT_QPA_PLATFORM=offscreen",
@@ -789,7 +789,7 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-round9-level1-materialization",
+  "next_gate": "tier3-build-level1-planning-validation",
   "current_attempt": 4,
   "last_activation": {
     "policy_workflow_run": 35826072726,
@@ -843,12 +843,26 @@
     },
     "execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "materialization-pending-ci",
-    "source_rematerialization_required": true,
+    "status": "materialization-PASS-pending-attempt5-planning-validation",
+    "source_rematerialization_required": false,
     "package_revision_bump_required": true,
-    "next_gate": "tier3-round9-level1-materialization",
+    "next_gate": "tier3-build-level1-planning-validation",
     "current_attempt": 4,
-    "next_attempt": 5
+    "next_attempt": 5,
+    "materialization_workflow_run": 35965579279,
+    "materialization_commit": "8380856c8161dccc9de9c12745012c555baa26b0",
+    "materialization_artifacts": {
+      "kio": {
+        "job_id": 107523339110,
+        "artifact_id": 10794251210,
+        "artifact_sha256": "45eac20aca30ca6a5ef78d8a94d15ee5408a8bed39c8fa72c6c8823134ffa0b2"
+      },
+      "kxmlgui": {
+        "job_id": 107523339321,
+        "artifact_id": 10793229286,
+        "artifact_sha256": "44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093"
+      }
+    }
   },
   "activation": {
     "status": "ACTIVE",

@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 Attempt 4 closed; round 9 materialization pending**
+Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — round 9 source PASS; Attempt 5 planning validation pending**
 
 Last reviewed: **2026-09-24**
 
@@ -494,3 +494,9 @@ KIO improved to **67/69 upstream CTest targets PASS**. Only `kdirmodeltest` and 
 KXMLGui improved to **6/7 upstream test targets PASS**. Only `ktoolbar_unittest` remains; upstream performs its toolbar-style notification through the Qt D-Bus session bus. Round 9 keeps offscreen and the full `dh_auto_test` suite, adding only `dbus-daemon <!nocheck>` plus an isolated `dbus-run-session`.
 
 Round 9 candidates are KIO `6.30.0-0supralinux5` and KXMLGui `6.30.0-0supralinux4`. Binary Level 1 execution is paused until both source materializations PASS and their evidence is validated. Level 2 remains unauthorized.
+
+## Current canonical state — round 9 source PASS / Attempt 5 planning validation
+
+Round 9 source materialization workflow `35965579279` completed **2/2 PASS** at commit `8380856c8161dccc9de9c12745012c555baa26b0`. KIO `6.30.0-0supralinux5` is artifact `10794251210` (SHA-256 `45eac20aca30ca6a5ef78d8a94d15ee5408a8bed39c8fa72c6c8823134ffa0b2`); KXMLGui `6.30.0-0supralinux4` is artifact `10793229286` (SHA-256 `44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093`).
+
+This is source-only evidence. Canonical package state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**. Level 1 stays paused with `execution_authorized=false`; Attempt 5 is not authorized until Repository Policy and the Level 1 planner validate the refreshed round-9 source/campaign pins. Level 2 remains unauthorized.

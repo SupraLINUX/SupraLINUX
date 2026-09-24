@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **round 9 source remediation pending — KIO -5 + KXMLGui -4**
+Status: **round 9 materialization PASS; Level 1 planning validation pending**
 
 Reviewed: **2026-09-24**
 
@@ -278,3 +278,11 @@ KIO's prior remediation is now strongly validated: 67/69 test targets pass. The 
 KXMLGui's offscreen correction is validated by 6/7 passing targets. Its only remaining `ktoolbar_unittest` path uses `QDBusConnection::sessionBus()` for toolbar-style propagation. Round 9 adds `dbus-daemon <!nocheck>` and wraps the complete offscreen `dh_auto_test` in `dbus-run-session`; it does not inherit KIO's other test-environment policy.
 
 No KDE dependency edge changes. Candidate revisions are KIO `6.30.0-0supralinux5` and KXMLGui `6.30.0-0supralinux4`.
+
+## Round 9 materialization proof
+
+The round-9 contract deltas materialized without changing KDE dependency edges. Workflow `35965579279` produced KIO artifact `10794251210` and KXMLGui artifact `10793229286`, both PASS as source-only materializations at commit `8380856c8161dccc9de9c12745012c555baa26b0`.
+
+KIO's adapted `debian/control` / `debian/rules` SHA-256 values are `d291d67f1ae89ff839a1adab6c82eeecf8268cb5449d71dbed8f2c73386db280` / `365ef3d5c2e2f13fb5e7c82891cddea72d4ec7538010b14fb834048d352bc2ee`. KXMLGui's are `80533fe7cd08135fa0a1a35cd75dbb6ed2e464a6c26ec51874ebc3562bde6e0` / `65cd53913bb5e4ac48cd96b38606acf33bc0cc054128b9733508bffdd2d8a7b2`.
+
+These exact source artifacts are the inputs to the next Level 1 campaign after planning validation. No binary PASS and no stable promotion is implied.
