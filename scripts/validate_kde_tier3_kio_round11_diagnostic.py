@@ -94,7 +94,7 @@ for token in ("package_attempted",'"package_state_effect":"none"',"ENVIRONMENT_M
         fail(f"Round11 runner missing {token}")
 if "sbuild " in runner or "dpkg-buildpackage" in runner:
     fail("Round11 diagnostic runner must not build a package")
-for token in ("Attempt 5","Attempt 6","ENVIRONMENT_MODIFICATION","QT_PLUGIN_PATH","Breeze","krecentdocumenttest","no crea","6.30.0-0supralinux7"):
+for token in ("Attempt 5","Attempt 6","ENVIRONMENT_MODIFICATION","QT_PLUGIN_PATH","Breeze","krecentdocumenttest","does not create or claim","6.30.0-0supralinux7"):
     if token not in doc:
         fail(f"Round11 diagnostic docs missing {token}")
 if m.get("stable_promotion_requires_explicit_user_approval") is not True:
