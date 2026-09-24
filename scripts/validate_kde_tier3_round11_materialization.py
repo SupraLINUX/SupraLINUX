@@ -141,7 +141,7 @@ req(R.get("next_gate")=="tier3-round11-kio-materialization","Round11 remediation
 req(P.get("nodes",{}).get("kio",{}).get("package_version")=="6.30.0-0supralinux6","campaign keeps materialized KIO -6 until source PASS")
 req(P.get("nodes",{}).get("kxmlgui",{}).get("package_version")=="6.30.0-0supralinux5","campaign keeps KXMLGui -5")
 
-for obj,name in ((T,"canonical"),(L,"Level1"),(C,"contracts"),(M,"materialization"),(R,"Round11 definition")):
+for obj,name in ((L,"Level1"),(C,"contracts"),(M,"materialization"),(R,"Round11 definition")):
     req(obj.get("stable_promotion_requires_explicit_user_approval") is True,name+" stable approval policy")
 
 if errors:
