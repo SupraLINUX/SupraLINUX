@@ -121,10 +121,69 @@
       "QT_QPA_PLATFORM=set:xcb",
       "QT_QPA_SYSTEM_ICON_THEME=set:breeze"
     ],
-    "status": "candidate-pending-diagnostic-evidence",
+    "status": "diagnostic-PASS-remediation-candidate",
     "package_revision": null
   },
-  "status": "definition-pending-diagnostic",
-  "next_gate": "tier3-round11-kio-diagnostic-evidence",
-  "stable_promotion_requires_explicit_user_approval": true
+  "status": "diagnostic-PASS",
+  "next_gate": "tier3-round11-kio-remediation-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "diagnostic_evidence": {
+    "workflow_run": 36071103806,
+    "job_id": 107872008601,
+    "commit": "b314ad501bf5eb6213f6cf4b2562cce60804b76c",
+    "artifact_id": 10837734340,
+    "artifact_sha256": "d4d944ac656d755ebd8c828d1e84c1b735e076c26a17adc66da42f0464a8cedc",
+    "result": "DIAG_COMPLETE",
+    "package_attempted": false,
+    "package_state_effect": "none"
+  },
+  "diagnostic_results": {
+    "cmake_environment_modification": {
+      "result": "PASS",
+      "effective_environment": [
+        "QT_QPA_PLATFORM=xcb",
+        "QT_QPA_SYSTEM_ICON_THEME=breeze",
+        "QT_PLUGIN_PATH=/probe/upstream-build-tree/bin"
+      ],
+      "conclusion": "ENVIRONMENT_MODIFICATION changes only the intended variables and preserves the pre-existing CTest environment."
+    },
+    "qt_breeze_icon_resolution": {
+      "result": "PASS",
+      "qt_version": "6.10.2",
+      "theme_name": "breeze",
+      "theme_paths": [
+        "/usr/local/share/icons",
+        "/usr/share/icons",
+        ":/icons"
+      ],
+      "icons": {
+        "unknown": {
+          "has": true,
+          "null": false,
+          "name": "unknown"
+        },
+        "inode-directory": {
+          "has": true,
+          "null": false,
+          "name": "inode-directory"
+        },
+        "folder-red": {
+          "has": true,
+          "null": false,
+          "name": "folder-red"
+        }
+      },
+      "modes_passed": [
+        "system-default-xdg",
+        "system-explicit-xdg",
+        "explicit-theme"
+      ]
+    },
+    "krecentdocument": {
+      "result": "UNRESOLVED-HYPOTHESIS",
+      "classification": "timestamp-tie-risk-present",
+      "action": "do-not-patch-or-suppress-without-focused-runtime-evidence",
+      "rerun_policy": "remain-fatal-in-next-full-Level1-attempt"
+    }
+  }
 }

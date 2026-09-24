@@ -62,3 +62,17 @@ That is evidence for a timestamp-tie race hypothesis, not permission to suppress
 Current canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**. KIO remains the sole current FAIL at `6.30.0-0supralinux6`; `execution_authorized=false`.
 
 The next step after this definition is diagnostic evidence. Only that evidence may decide whether a source-package change and revision `6.30.0-0supralinux7` are justified. Stable promotion remains separately gated by explicit user approval.
+
+## Diagnostic result — PASS
+
+Round 11 diagnostic workflow `36071103806` at commit `b314ad501bf5eb6213f6cf4b2562cce60804b76c` completed successfully in job `107872008601`. Evidence artifact `10837734340` has SHA-256 `d4d944ac656d755ebd8c828d1e84c1b735e076c26a17adc66da42f0464a8cedc`. The run remained non-promoting: `package_attempted=false`, no DAG state changed, and KIO stayed canonical FAIL.
+
+The CMake fixture proved the non-destructive mechanism. The original test environment contained `QT_QPA_PLATFORM=offscreen` and `QT_PLUGIN_PATH=/probe/upstream-build-tree/bin`; applying `ENVIRONMENT_MODIFICATION` produced effective `QT_QPA_PLATFORM=xcb` and `QT_QPA_SYSTEM_ICON_THEME=breeze` while preserving `QT_PLUGIN_PATH`.
+
+The Qt/Breeze probe also passed independently on Ubuntu Resolute with Qt 6.10.2 and the exact retained SupraLINUX Breeze package. `QIcon::themeName()` was `breeze`, the search path included `/usr/local/share/icons` and `/usr/share/icons`, and `unknown`, `inode-directory`, and `folder-red` all returned `HAS=true`, `NULL=false`, with the expected icon name in all three probe modes.
+
+This is sufficient evidence to replace Round 10's destructive per-test `ENVIRONMENT` assignment with `ENVIRONMENT_MODIFICATION` in the Round 11 remediation definition.
+
+`krecentdocumenttest` remains separate. Its timestamp-tie explanation is evidence-backed but not yet a focused runtime proof; therefore Round 11 does not patch, suppress, exclude, or downgrade that test. It remains fatal in the next full Level 1 attempt. If it fails again, it becomes the next independent diagnostic gate.
+
+Canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**, with `execution_authorized=false`. The next gate is `tier3-round11-kio-remediation-definition`; no `6.30.0-0supralinux7` package is claimed by this diagnostic closure.

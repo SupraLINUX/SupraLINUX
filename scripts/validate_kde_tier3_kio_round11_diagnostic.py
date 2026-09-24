@@ -27,8 +27,12 @@ if m.get("package_attempted") is not False or m.get("package_state_effect")!="no
     fail("KIO Round11 diagnostic must not attempt/promote a package")
 if m.get("dag_state_changes_allowed") is not False or m.get("downstream_eligibility_changes_allowed") is not False:
     fail("KIO Round11 diagnostic cannot mutate DAG/downstream state")
-if m.get("status")!="definition-pending-diagnostic" or m.get("next_gate")!="tier3-round11-kio-diagnostic-evidence":
+if m.get("status") not in {"definition-pending-diagnostic","diagnostic-PASS"}:
     fail("KIO Round11 diagnostic lifecycle")
+if m.get("status")=="definition-pending-diagnostic" and m.get("next_gate")!="tier3-round11-kio-diagnostic-evidence":
+    fail("KIO Round11 definition next gate")
+if m.get("status")=="diagnostic-PASS" and m.get("next_gate")!="tier3-round11-kio-remediation-definition":
+    fail("KIO Round11 PASS next gate")
 
 canonical={n["id"]:n for n in t.get("nodes",[])}
 kio=canonical.get("kio",{})
@@ -80,8 +84,30 @@ if mechanism.get("cmake_property")!="ENVIRONMENT_MODIFICATION":
     fail("Round11 must use non-destructive CTest environment mechanism candidate")
 if mechanism.get("operations")!=["QT_QPA_PLATFORM=set:xcb","QT_QPA_SYSTEM_ICON_THEME=set:breeze"]:
     fail("Round11 environment modification operations")
-if mechanism.get("status")!="candidate-pending-diagnostic-evidence" or mechanism.get("package_revision") is not None:
+if mechanism.get("status") not in {"candidate-pending-diagnostic-evidence","diagnostic-PASS-remediation-candidate"} or mechanism.get("package_revision") is not None:
     fail("Round11 must not claim a new package revision yet")
+if m.get("status")=="diagnostic-PASS":
+    ev=m.get("diagnostic_evidence",{})
+    if ev.get("workflow_run")!=36071103806 or ev.get("job_id")!=107872008601 or ev.get("commit")!="b314ad501bf5eb6213f6cf4b2562cce60804b76c":
+        fail("Round11 diagnostic PASS workflow identity")
+    if ev.get("artifact_id")!=10837734340 or ev.get("artifact_sha256")!="d4d944ac656d755ebd8c828d1e84c1b735e076c26a17adc66da42f0464a8cedc":
+        fail("Round11 diagnostic PASS artifact identity")
+    if ev.get("result")!="DIAG_COMPLETE" or ev.get("package_attempted") is not False or ev.get("package_state_effect")!="none":
+        fail("Round11 diagnostic PASS non-promoting evidence")
+    dr=m.get("diagnostic_results",{})
+    env=dr.get("cmake_environment_modification",{})
+    if env.get("result")!="PASS" or set(env.get("effective_environment",[]))!={"QT_QPA_PLATFORM=xcb","QT_QPA_SYSTEM_ICON_THEME=breeze","QT_PLUGIN_PATH=/probe/upstream-build-tree/bin"}:
+        fail("Round11 ENVIRONMENT_MODIFICATION evidence")
+    icons=dr.get("qt_breeze_icon_resolution",{})
+    if icons.get("result")!="PASS" or icons.get("qt_version")!="6.10.2" or icons.get("theme_name")!="breeze":
+        fail("Round11 Qt/Breeze probe identity")
+    for name in ("unknown","inode-directory","folder-red"):
+        item=icons.get("icons",{}).get(name,{})
+        if item!={"has":True,"null":False,"name":name}:
+            fail(f"Round11 icon probe failed for {name}")
+    recent=dr.get("krecentdocument",{})
+    if recent.get("result")!="UNRESOLVED-HYPOTHESIS" or recent.get("action")!="do-not-patch-or-suppress-without-focused-runtime-evidence":
+        fail("Round11 KRecentDocument conservative handling")
 
 workflow=W.read_text()
 runner=R.read_text()
