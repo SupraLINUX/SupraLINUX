@@ -52,7 +52,7 @@ active=c.get("active_remediation",{})
 active_nodes=set(active.get("trigger",{}).get("failed_nodes",active.get("trigger",{}).get("affected_nodes",[])))
 if active:
     round_no=active.get("round")
-    req(active.get("status") in {"materialization-pending-ci","materialization-PASS","materialization-PASS-attempt3-active","materialization-PASS-attempt4-active","materialization-PASS-attempt5-active","provider-closure-pending-attempt2-activation-validation","provider-closure-PASS"},"Tier3 active remediation state")
+    req(active.get("status") in {"materialization-pending-ci","materialization-PASS","materialization-PASS-attempt3-active","materialization-PASS-attempt4-active","materialization-PASS-attempt5-active","materialization-PASS-attempt6-active","provider-closure-pending-attempt2-activation-validation","provider-closure-PASS"},"Tier3 active remediation state")
     if round_no==10:
         req(active_nodes=={"kio","kxmlgui"},"Tier3 round10 Level1 failure set")
         req(active.get("level")=="build-level1","Tier3 round10 Level1 identity")
@@ -60,11 +60,16 @@ if active:
         req(active.get("trigger",{}).get("level1_result")=="0 workflow SUCCESS / 2 FAIL","Tier3 round10 Attempt5 result")
         req(active.get("source_changed_nodes")==["kio","kxmlgui"] and active.get("provider_closure_only_nodes")==[],"Tier3 round10 source-remediation classes")
         req(active.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux6","kxmlgui":"6.30.0-0supralinux5"},"Tier3 round10 package revisions")
-        if active.get("status")=="materialization-PASS":
+        if active.get("status") in {"materialization-PASS","materialization-PASS-attempt6-active"}:
             ev2=active.get("evidence",{})
             req(ev2.get("workflow_run")==36002910277 and ev2.get("commit")=="c0774e5514fd83995aad3c86e1f6a5b106b001a3","Tier3 round10 materialization evidence")
             req(ev2.get("artifacts",{}).get("kio",{}).get("artifact_id")==10809231495 and ev2.get("artifacts",{}).get("kxmlgui",{}).get("artifact_id")==10808294092,"Tier3 round10 materialization artifacts")
-            req(active.get("next_gate")=="tier3-build-level1-planning-validation","Tier3 round10 promoted next gate")
+            if active.get("status")=="materialization-PASS-attempt6-active":
+                req(active.get("next_gate")=="tier3-build-level1-attempt6","Tier3 round10 Attempt6 contract gate")
+                req(active.get("activation_policy_workflow_run")==36032425645 and active.get("activation_level1_workflow_run")==36032425729,"Tier3 round10 Attempt6 validation evidence")
+                req(active.get("activation_commit")=="0fee159ac1f24dc160e1edd9976a7708f89d657d","Tier3 round10 Attempt6 validation commit")
+            else:
+                req(active.get("next_gate")=="tier3-build-level1-planning-validation","Tier3 round10 promoted next gate")
         else:
             req(active.get("status")=="materialization-pending-ci" and active.get("next_gate")=="tier3-round10-level1-materialization","Tier3 round10 pending materialization gate")
         pol=active.get("policy",{})
@@ -350,18 +355,23 @@ if active:
     ar=t.get("active_remediation",{})
     req(ar.get("round")==active.get("round") and set(ar.get("nodes",[]))==active_nodes,"Tier3 canonical remediation linkage")
     if active.get("round")==10:
-        req(canonical.get("phase")=="build-level1-planning" and canonical.get("package_builds") in {"tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"},"Tier3 round10 canonical materialization/planning gate")
-        req(ar.get("level")=="build-level1" and ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation"},"Tier3 round10 canonical Level1 state")
+        req(canonical.get("phase") in {"build-level1-planning","build-level1"} and canonical.get("package_builds") in {"tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized"},"Tier3 round10 canonical materialization/planning/build gate")
+        req(ar.get("level")=="build-level1" and ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation","level1-active-pending-ci"},"Tier3 round10 canonical Level1 state")
         req(set(ar.get("nodes",[]))=={"kio","kxmlgui"} and ar.get("source_materialization_nodes")==["kio","kxmlgui"] and ar.get("provider_closure_only_nodes")==[],"Tier3 round10 canonical source scope")
         req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux6","kxmlgui":"6.30.0-0supralinux5"},"Tier3 round10 canonical revisions")
         req(ar.get("validation_workflow_run")==35991007820 and ar.get("validation_commit")=="3197c1988e1ab86ec5010cb693064db949bfe6b0","Tier3 round10 canonical Attempt5 evidence")
         req(ar.get("validation_result")=="0 workflow SUCCESS / 2 FAIL" and set(ar.get("remaining_failed_nodes",[]))=={"kio","kxmlgui"} and ar.get("canonical_promotions")==0,"Tier3 round10 canonical failure/no-promotion semantics")
-        req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False and ar.get("current_attempt")==5 and ar.get("next_attempt")==6,"Tier3 round10 canonical execution pause")
-        if canonical.get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
+        if canonical.get("package_builds")=="tier3-level1-authorized":
+            req(ar.get("status")=="level1-active-pending-ci" and ar.get("execution_authorized") is True and ar.get("level1_execution_authorized") is True,"Tier3 round10 Attempt6 canonical active state")
+            req(ar.get("current_attempt")==6 and ar.get("activation_policy_workflow_run")==36032425645 and ar.get("activation_level1_workflow_run")==36032425729,"Tier3 round10 Attempt6 canonical validation")
+            req(ar.get("activation_commit")=="0fee159ac1f24dc160e1edd9976a7708f89d657d" and ar.get("next_gate")=="tier3-build-level1-attempt6","Tier3 round10 Attempt6 canonical gate")
+        elif canonical.get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
+            req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False and ar.get("current_attempt")==5 and ar.get("next_attempt")==6,"Tier3 round10 canonical execution pause")
             req(ar.get("status")=="materialization-PASS-pending-level1-planning-validation","Tier3 round10 canonical source PASS state")
             req(ar.get("materialization_workflow_run")==36002910277 and ar.get("materialization_commit")=="c0774e5514fd83995aad3c86e1f6a5b106b001a3","Tier3 round10 canonical source PASS evidence")
             req(ar.get("next_gate")=="tier3-build-level1-planning-validation","Tier3 round10 canonical planning gate")
         else:
+            req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False and ar.get("current_attempt")==5 and ar.get("next_attempt")==6,"Tier3 round10 canonical execution pause")
             req(ar.get("status")=="materialization-pending-ci" and ar.get("next_gate")=="tier3-round10-level1-materialization","Tier3 round10 canonical materialization gate")
     elif active.get("round")==9:
         req(canonical.get("phase") in {"build-level1-planning","build-level1"} and canonical.get("package_builds") in {"tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation","tier3-level1-authorized"},"Tier3 round9 canonical materialization/planning/build gate")

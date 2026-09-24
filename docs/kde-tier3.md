@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — round 10 source PASS; Attempt 6 planning validation pending**
+Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — round 10 source PASS; Attempt 6 planning gates PASS; activation paused**
 
 Last reviewed: **2026-09-24**
 
@@ -530,3 +530,9 @@ Round 10 candidates are KIO `6.30.0-0supralinux6` and KXMLGui `6.30.0-0supralinu
 Round 10 source materialization workflow `36002910277` completed **2/2 PASS** at commit `c0774e5514fd83995aad3c86e1f6a5b106b001a3`. KIO `6.30.0-0supralinux6` is artifact `10809231495` (SHA-256 `5a0c2db21af5a87d4bd5ee2b02ebff7bce4dd98c66622398f00c67ef7210227b`); KXMLGui `6.30.0-0supralinux5` is artifact `10808294092` (SHA-256 `bccf76b46d0c9619e4306f1fe704ff5b501b9554a63f7968093e3afd4beb0d86`).
 
 This is source-only evidence. Canonical package state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**. Level 1 remains paused with `execution_authorized=false`; Attempt 6 is not authorized until Repository Policy and the Level 1 planner validate the refreshed round-10 source/campaign pins. Level 2 remains unauthorized.
+
+## Current canonical state — Attempt 6 planning gates PASS / activation paused
+
+The promoted round-10 source inputs and regenerated campaign passed Repository Policy `36032425645` and the paused Level 1 planner `36032425729` at commit `0fee159ac1f24dc160e1edd9976a7708f89d657d`. The Level 1 workflow intentionally skipped the shared rootfs and both binary builds, so **Attempt 6 has not executed**.
+
+Before changing execution authority, the validators are extended to recognize the future round-10 / Attempt-6 active lifecycle and to bind it to those exact planning-validation runs. This transition remains validator/documentation-only: canonical package state stays **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**, `execution_authorized=false`, and Level 2 remains unauthorized.

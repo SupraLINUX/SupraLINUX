@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **round 10 source materialization PASS; Attempt 6 paused pending planning validation** as of 2026-09-24.
+Status: **round 10 source PASS; Attempt 6 planning gates PASS; activation lifecycle validation pending** as of 2026-09-24.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -225,3 +225,11 @@ Source materialization workflow `36002910277` completed **2/2 PASS** at commit `
 - KXMLGui `6.30.0-0supralinux5`: job `107643756357`, artifact `10808294092`, artifact SHA-256 `bccf76b46d0c9619e4306f1fe704ff5b501b9554a63f7968093e3afd4beb0d86`, adapted control SHA-256 `9284376c94338ed4399102ff41ab488912fbb149e6318ab5c18bf6319730462b`, adapted rules SHA-256 `65cd53913bb5e4ac48cd96b38606acf33bc0cc054128b9733508bffdd2d8a7b2`.
 
 The generated campaign now points to these exact source artifacts. Canonical package state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**. `execution_authorized=false`; Attempt 6 is not authorized until Repository Policy and the paused Level 1 planner validate this handoff.
+
+## Attempt 6 lifecycle pre-validation
+
+The round-10 source pins passed Repository Policy `36032425645` and the paused Level 1 planner `36032425729` at commit `0fee159ac1f24dc160e1edd9976a7708f89d657d`. Planner job `107744209611` and the intentional-skip report `107744280536` passed; shared-rootfs job `107744282419` and build-matrix job `107744282631` were skipped, so no package build occurred.
+
+The validators are now pre-armed for a future active Attempt 6 using exactly KIO `6.30.0-0supralinux6` artifact `10809231495` and KXMLGui `6.30.0-0supralinux5` artifact `10808294092`, with activation evidence pinned to Policy `36032425645`, Level 1 `36032425729`, and commit `0fee159ac1f24dc160e1edd9976a7708f89d657d`.
+
+This pre-validation does not authorize execution. `execution_authorized=false` remains authoritative until a separate activation commit passes its own gates.

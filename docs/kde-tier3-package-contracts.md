@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **round 10 materialization PASS; Attempt 6 planning validation pending**
+Status: **round 10 materialization PASS; Attempt 6 planning gates PASS; activation paused**
 
 Reviewed: **2026-09-24**
 
@@ -316,3 +316,9 @@ The round-10 contract deltas materialized without changing KDE dependency edges.
 KIO's adapted `debian/control` / `debian/rules` SHA-256 values are `d291d67f1ae89ff839a1adab6c82eeecf8268cb5449d71dbed8f2c73386db280` / `42e0d023a0ad42b194b649ae2026b3899575bed9823d6be05d9faf59fa6cc175`. KXMLGui's are `9284376c94338ed4399102ff41ab488912fbb149e6318ab5c18bf6319730462b` / `65cd53913bb5e4ac48cd96b38606acf33bc0cc054128b9733508bffdd2d8a7b2`.
 
 These exact source artifacts are the inputs to the next Level 1 campaign after planning validation. No binary PASS and no stable promotion is implied.
+
+### Round 10 Attempt 6 planning handoff
+
+The round-10 source contracts and generated Level 1 pins passed Repository Policy `36032425645` and paused Level 1 validation `36032425729` at commit `0fee159ac1f24dc160e1edd9976a7708f89d657d`.
+
+The next transition is lifecycle validation only: validators may recognize a future `materialization-PASS-attempt6-active` state bound to those exact planning runs, but the current manifests remain paused. Source identities, provider closure, KDE DAG semantics and test-policy deltas are unchanged.

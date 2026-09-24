@@ -33,7 +33,18 @@ if m.get("state")=="planned-pending-activation":
     req(m.get("execution_authorized") is False,"planned Level1 must not authorize builds")
 elif m.get("state")=="active-pending-ci":
     req(m.get("execution_authorized") is True,"active Level1 authorization")
-    if m.get("current_attempt")==5:
+    if m.get("current_attempt")==6:
+        act=m.get("activation",{})
+        req(act.get("status")=="ACTIVE" and act.get("attempt")==6,"Level1 Attempt6 activation marker")
+        req(act.get("remediation_validation_policy_workflow_run")==36032425645 and act.get("remediation_validation_level1_workflow_run")==36032425729,"Level1 Attempt6 planning validation evidence")
+        req(act.get("remediation_commit")=="0fee159ac1f24dc160e1edd9976a7708f89d657d" and act.get("scope")=="full-level1-rerun-2-nodes","Level1 Attempt6 activation commit/scope")
+        rem=m.get("active_remediation",{})
+        req(rem.get("round")==5 and rem.get("global_round")==10 and rem.get("status")=="materialization-PASS-attempt6-active","Level1 Attempt6 round10 state")
+        req(rem.get("execution_authorized") is True and rem.get("current_attempt")==6,"Level1 Attempt6 remediation authorization")
+        req(rem.get("activation_policy_workflow_run")==36032425645 and rem.get("activation_level1_workflow_run")==36032425729,"Level1 Attempt6 validation linkage")
+        req(rem.get("activation_commit")=="0fee159ac1f24dc160e1edd9976a7708f89d657d","Level1 Attempt6 validation commit")
+        req(m.get("next_gate")=="tier3-build-level1-attempt6","Level1 Attempt6 next gate")
+    elif m.get("current_attempt")==5:
         act=m.get("activation",{})
         req(act.get("status")=="ACTIVE" and act.get("attempt")==5,"Level1 Attempt5 activation marker")
         req(act.get("remediation_validation_policy_workflow_run")==35990068378 and act.get("remediation_validation_level1_workflow_run")==35990068382,"Level1 Attempt5 planning validation evidence")
@@ -197,15 +208,23 @@ if ar.get("round")==10:
     req(set(ar.get("source_materialization_nodes",[]))=={"kio","kxmlgui"} and ar.get("provider_closure_only_nodes")==[],"canonical round10 source classes")
     req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux6","kxmlgui":"6.30.0-0supralinux5"},"canonical round10 candidate revisions")
     req(ar.get("validation_workflow_run")==35991007820 and ar.get("validation_commit")=="3197c1988e1ab86ec5010cb693064db949bfe6b0","canonical round10 Attempt5 evidence")
-    req(policy.get("phase")=="build-level1-planning" and policy.get("package_builds") in {"tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"},"canonical round10 materialization/planning gate")
-    req(ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation"} and ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"canonical round10 execution pause")
-    req(ar.get("current_attempt")==5 and ar.get("next_attempt")==6,"canonical round10 attempt markers")
-    if policy.get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
-        req(ar.get("status")=="materialization-PASS-pending-level1-planning-validation","canonical round10 source PASS state")
-        req(ar.get("materialization_workflow_run")==36002910277 and ar.get("materialization_commit")=="c0774e5514fd83995aad3c86e1f6a5b106b001a3","canonical round10 source PASS evidence")
-        req(ar.get("next_gate")=="tier3-build-level1-planning-validation","canonical round10 planning gate")
+    if policy.get("package_builds")=="tier3-level1-authorized":
+        req(policy.get("phase")=="build-level1","canonical round10 active phase")
+        req(ar.get("status")=="level1-active-pending-ci" and ar.get("execution_authorized") is True and ar.get("level1_execution_authorized") is True,"canonical round10 active authorization")
+        req(ar.get("current_attempt")==6,"canonical round10 Attempt6 marker")
+        req(ar.get("activation_policy_workflow_run")==36032425645 and ar.get("activation_level1_workflow_run")==36032425729,"canonical round10 Attempt6 planning validation")
+        req(ar.get("activation_commit")=="0fee159ac1f24dc160e1edd9976a7708f89d657d","canonical round10 Attempt6 validation commit")
+        req(ar.get("next_gate")=="tier3-build-level1-attempt6","canonical round10 Attempt6 gate")
     else:
-        req(ar.get("status")=="materialization-pending-ci" and ar.get("next_gate")=="tier3-round10-level1-materialization","canonical round10 materialization gate")
+        req(policy.get("phase")=="build-level1-planning" and policy.get("package_builds") in {"tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"},"canonical round10 materialization/planning gate")
+        req(ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation"} and ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"canonical round10 execution pause")
+        req(ar.get("current_attempt")==5 and ar.get("next_attempt")==6,"canonical round10 attempt markers")
+        if policy.get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
+            req(ar.get("status")=="materialization-PASS-pending-level1-planning-validation","canonical round10 source PASS state")
+            req(ar.get("materialization_workflow_run")==36002910277 and ar.get("materialization_commit")=="c0774e5514fd83995aad3c86e1f6a5b106b001a3","canonical round10 source PASS evidence")
+            req(ar.get("next_gate")=="tier3-build-level1-planning-validation","canonical round10 planning gate")
+        else:
+            req(ar.get("status")=="materialization-pending-ci" and ar.get("next_gate")=="tier3-round10-level1-materialization","canonical round10 materialization gate")
 elif ar.get("round")==9:
     req(set(ar.get("nodes",[]))=={"kio","kxmlgui"},"canonical round9 scope")
     req(set(ar.get("source_materialization_nodes",[]))=={"kio","kxmlgui"} and ar.get("provider_closure_only_nodes")==[],"canonical round9 source classes")
@@ -365,7 +384,7 @@ for node,cfg in ret.items():
         req(False,f"{node}: unknown predecessor provenance")
     req(cfg.get("dev_package") in cfg.get("expected_binary_packages",[]),f"{node}: dev package identity")
 
-round10_source_promoted=m.get("state")=="remediation-materialized-pending-planning-validation" and m.get("active_remediation",{}).get("global_round")==10
+round10_source_promoted=(m.get("state")=="remediation-materialized-pending-planning-validation" and m.get("active_remediation",{}).get("global_round")==10) or m.get("current_attempt")==6
 round9_source_promoted=round10_source_promoted or (m.get("state")=="remediation-materialized-pending-planning-validation" and m.get("active_remediation",{}).get("global_round")==9) or m.get("current_attempt")==5
 round8_source_promoted=round9_source_promoted or (m.get("state")=="remediation-materialized-pending-planning-validation" and m.get("active_remediation",{}).get("global_round")==8) or m.get("current_attempt")==4
 round7_source_promoted=round8_source_promoted or m.get("current_attempt")==3
