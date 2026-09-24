@@ -40,6 +40,11 @@ for node in canonical:
     packaging=n.get("packaging",{})
     if n.get("state")=="PASS":
         req(packaging.get("state")=="PASS" and packaging.get("downstream_eligible") is True,f"{node}: promoted packaging PASS")
+    elif n.get("state")=="FAIL":
+        req(packaging.get("state")=="FAIL" and packaging.get("downstream_eligible") is False,f"{node}: current FAIL packaging state")
+    elif n.get("state")=="BLOCKED":
+        req(packaging.get("state")=="BLOCKED" and packaging.get("downstream_eligible") is False,f"{node}: BLOCKED packaging state")
+        req(packaging.get("blocked_by")==["kio"],f"{node}: BLOCKED propagation from KIO")
     elif node=="knewstuff" and packaging.get("state")=="runtime-validation-required":
         req(n.get("state")=="pending" and packaging.get("downstream_eligible") is False,f"{node}: runtime validation remains pending")
     else:

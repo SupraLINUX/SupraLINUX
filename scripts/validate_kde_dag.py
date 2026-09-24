@@ -132,8 +132,8 @@ tier3_promoted = {
     if node.get("state") == "PASS" and node.get("packaging", {}).get("downstream_eligible") is True
 }
 require(
-    set(tier3_promoted) == {"kbookmarks","kconfigwidgets","kdav","kdesu","kiconthemes","kjobwidgets","kpeople","krunner","ksvg","ktextwidgets","kwallet"},
-    "Tier3 canonical promoted set after Level0 Attempt5 is unexpected",
+    set(tier3_promoted) == {"kbookmarks","kconfigwidgets","kdav","kdesu","kiconthemes","kjobwidgets","kpeople","krunner","ksvg","ktextwidgets","kwallet","kxmlgui"},
+    "Tier3 canonical promoted set after Level1 Attempt6 closure is unexpected",
 )
 for node_id, canonical_node in sorted(tier3_promoted.items()):
     node = nodes.get(node_id, {})
@@ -144,7 +144,7 @@ for node_id, canonical_node in sorted(tier3_promoted.items()):
     require(node.get("source_authority") == "kde-upstream" and node.get("package_provider") == "supralinux", f"{node_id}: Tier3 DAG authority/provider boundary")
     require(node.get("package_version") == packaging.get("package_version"), f"{node_id}: Tier3 DAG package version mismatch")
     require(node.get("state") == "PASS" and node.get("downstream_eligible") is True, f"{node_id}: Tier3 DAG PASS/downstream state")
-    require(node.get("attempt_ledger") == "manifests/kde-tier3-build-level0-attempts.json", f"{node_id}: Tier3 DAG attempt ledger")
+    require(node.get("attempt_ledger") == ("manifests/kde-tier3-build-level1-attempts.json" if node_id=="kxmlgui" else "manifests/kde-tier3-build-level0-attempts.json"), f"{node_id}: Tier3 DAG attempt ledger")
     require(all(dep in nodes for dep in node.get("depends_on", [])), f"{node_id}: Tier3 DAG predecessor must already be canonical PASS")
     passes = [item for item in node.get("evidence", []) if isinstance(item, dict) and item.get("result") == "PASS"]
     require(len(passes) == 1, f"{node_id}: Tier3 DAG requires exactly one retained PASS")
