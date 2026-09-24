@@ -50,4 +50,6 @@ All **20/20** Tier 3 Frameworks require SupraLINUX as provider. Resolute exposes
 
 Ubuntu remains the selected Qt provider: the runner proved Qt `6.10.2`, satisfying KDE's minimum `6.9.0`.
 
-This audit changed no package state. Tier 3 remains **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED**. Every node now advances to `package-contract-required`; package builds remain unauthorized.
+At the time this audit closed, it changed no package state: Tier 3 remained **0 PASS / 20 pending / 0 current FAIL / 0 BLOCKED** and every node advanced to `package-contract-required`; package builds remained unauthorized.
+
+The provider-audit evidence is lifecycle-independent: later canonical package states `PASS`, `FAIL`, `BLOCKED`, or `pending` do not invalidate the already-proven provider decision. Package-build results affect downstream eligibility, not provider authority.

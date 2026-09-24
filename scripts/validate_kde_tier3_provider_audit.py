@@ -46,7 +46,7 @@ for node_id in canonical:
     req(c.get("kde_source_sha256")==n.get("source_sha256"),f"{node_id}: KDE source SHA linkage")
     req(c.get("ubuntu_source_package")==f"kf6-{node_id}",f"{node_id}: Ubuntu source-package probe")
     req(c.get("provider_decision") in {"pending-ci","ubuntu-compatible","supralinux-required"},f"{node_id}: provider decision lifecycle")
-    req(n.get("state") in {"pending","PASS"},f"{node_id}: provider audit evidence must remain valid across later package promotion")
+    req(n.get("state") in {"pending","PASS","FAIL","BLOCKED"},f"{node_id}: provider audit evidence must remain valid across later package lifecycle states")
     planning=n.get("planning",{})
     req(planning.get("readiness") in {"dependency-graph-ready","package-contract-required","package-contract-reference-pending","package-contract-reference-pass","package-contract-tree-pending","package-contract-tree-pass","package-contract-review-pending","package-contract-review-pass","package-contract-decision-pending","package-contract-ready","materialized","PASS","retained-pass","runtime-validation-required"},f"{node_id}: provider-audit readiness lifecycle")
     req(planning.get("package_contract") in {"not-authorized","required","reference-capture-pending","reference-capture-pass","packaging-tree-pending","packaging-tree-pass","review-pending","review-pass","ready","not-materialized","materialized","PASS","retained-pass","runtime-validation-required"},f"{node_id}: package contract lifecycle")
