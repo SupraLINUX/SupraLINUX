@@ -369,7 +369,7 @@ elif m.get("state") == "PASS":
     req(c.get("state") == "materialized", "PASS materialization contract lifecycle")
     req(t.get("discovery_policy", {}).get("phase") in {"build-campaign-planning", "build-level0", "build-level1-planning", "build-level1"}, "post-materialization phase")
     if active_c.get("round") == 9:
-        req(active_c.get("status") == "materialization-PASS", "round9 contract materialization PASS")
+        req(active_c.get("status") in {"materialization-PASS","materialization-PASS-attempt5-active"}, "round9 contract materialization PASS")
         req(active_m.get("status") == "PASS" and active_m.get("workflow_run") == 35965579279, "round9 materialization evidence PASS")
         req(active_m.get("commit") == "8380856c8161dccc9de9c12745012c555baa26b0", "round9 materialization commit")
         req(active_m.get("promoted_nodes") == ["kio","kxmlgui"], "round9 promoted materialization set")
@@ -381,11 +381,19 @@ elif m.get("state") == "PASS":
         req(kev.get("adapted_control_sha256")=="d291d67f1ae89ff839a1adab6c82eeecf8268cb5449d71dbed8f2c73386db280" and kev.get("adapted_rules_sha256")=="365ef3d5c2e2f13fb5e7c82891cddea72d4ec7538010b14fb834048d352bc2ee", "round9 KIO adapted-source hashes")
         req(xev.get("adapted_control_sha256")=="80533fe7cd08135fa0a1a35cd75dbb6ed2e464a6c26ec51874ebc3562bde6e0" and xev.get("adapted_rules_sha256")=="65cd53913bb5e4ac48cd96b38606acf33bc0cc054128b9733508bffdd2d8a7b2", "round9 KXMLGui adapted-source hashes")
         req(active_t.get("materialization_workflow_run") == 35965579279 and active_t.get("materialization_commit") == "8380856c8161dccc9de9c12745012c555baa26b0", "round9 canonical materialization evidence")
-        req(t.get("discovery_policy",{}).get("package_builds") == "tier3-level1-source-PASS-pending-planning-validation", "round9 planning validation build gate")
-        req(active_t.get("status") == "materialization-PASS-pending-level1-planning-validation", "round9 canonical source PASS state")
-        req(active_t.get("execution_authorized") is False and active_t.get("level1_execution_authorized") is False, "round9 Level1 remains paused")
-        req(active_t.get("current_attempt")==4 and active_t.get("next_attempt")==5, "round9 planning attempt markers")
-        req(active_t.get("next_gate") == "tier3-build-level1-planning-validation", "round9 canonical planning-validation gate")
+        if t.get("discovery_policy",{}).get("package_builds") == "tier3-level1-authorized":
+            req(active_c.get("status")=="materialization-PASS-attempt5-active" and active_c.get("next_gate")=="tier3-build-level1-attempt5","round9 contract Attempt5 handoff")
+            req(active_c.get("activation_policy_workflow_run")==35990068378 and active_c.get("activation_level1_workflow_run")==35990068382 and active_c.get("activation_commit")=="45675c1fb5a43f95204c2cf0c5c15df0ef703832","round9 contract Attempt5 validation evidence")
+            req(active_t.get("status")=="level1-active-pending-ci" and active_t.get("execution_authorized") is True and active_t.get("level1_execution_authorized") is True,"round9 Attempt5 active state")
+            req(active_t.get("current_attempt")==5 and active_t.get("activation_policy_workflow_run")==35990068378 and active_t.get("activation_level1_workflow_run")==35990068382,"round9 Attempt5 activation evidence")
+            req(active_t.get("activation_commit")=="45675c1fb5a43f95204c2cf0c5c15df0ef703832" and active_t.get("next_gate")=="tier3-build-level1-attempt5","round9 Attempt5 gate")
+            req(active_m.get("next_gate")=="tier3-build-level1-attempt5" and m.get("evidence_summary",{}).get("next_gate")=="tier3-build-level1-attempt5","round9 materialization Attempt5 handoff")
+        else:
+            req(t.get("discovery_policy",{}).get("package_builds") == "tier3-level1-source-PASS-pending-planning-validation", "round9 planning validation build gate")
+            req(active_t.get("status") == "materialization-PASS-pending-level1-planning-validation", "round9 canonical source PASS state")
+            req(active_t.get("execution_authorized") is False and active_t.get("level1_execution_authorized") is False, "round9 Level1 remains paused")
+            req(active_t.get("current_attempt")==4 and active_t.get("next_attempt")==5, "round9 planning attempt markers")
+            req(active_t.get("next_gate") == "tier3-build-level1-planning-validation", "round9 canonical planning-validation gate")
     elif active_c.get("round") == 8:
         req(active_c.get("status") in {"materialization-PASS","materialization-PASS-attempt4-active"}, "round8 contract materialization PASS")
         req(active_m.get("status") == "PASS" and active_m.get("workflow_run") == 35894317888, "round8 materialization evidence PASS")

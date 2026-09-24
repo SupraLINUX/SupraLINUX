@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **round 9 source materialization PASS; Attempt 5 paused pending planning validation** as of 2026-09-24.
+Status: **round 9 source PASS; Attempt 5 planning gates PASS; activation lifecycle validation pending** as of 2026-09-24.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -190,3 +190,11 @@ Source materialization workflow `35965579279` completed successfully for both Le
 - KXMLGui `6.30.0-0supralinux4`: job `107523339321`, artifact `10793229286`, artifact SHA-256 `44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093`, adapted rules SHA-256 `65cd53913bb5e4ac48cd96b38606acf33bc0cc054128b9733508bffdd2d8a7b2`.
 
 The generated campaign is refreshed to those exact source artifacts. `execution_authorized=false` remains unchanged; Attempt 5 is still gated by Repository Policy and Level 1 planning validation. No binary PASS or stable publication is implied.
+
+## Attempt 5 lifecycle pre-validation
+
+The round-9 source pins passed Repository Policy `35990068378` and the paused Level 1 planner `35990068382` at commit `45675c1fb5a43f95204c2cf0c5c15df0ef703832`. The planner reported the intentional skip; rootfs and build-matrix jobs were skipped, so no package build occurred.
+
+The validators are now pre-armed for a future active Attempt 5 using exactly KIO `6.30.0-0supralinux5` artifact `10794251210` and KXMLGui `6.30.0-0supralinux4` artifact `10793229286`, with activation evidence pinned to Policy `35990068378`, Level 1 `35990068382`, and commit `45675c1fb5a43f95204c2cf0c5c15df0ef703832`.
+
+This pre-validation does not authorize execution. `execution_authorized=false` remains authoritative until a separate activation commit passes its own gates.

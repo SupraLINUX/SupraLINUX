@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **round 9 PASS — KIO 6.30.0-0supralinux5 + KXMLGui 6.30.0-0supralinux4 promoted as source inputs** as of 2026-09-24.
+Status: **round 9 PASS — KIO -5 + KXMLGui -4 validated for Attempt 5 planning; binary activation paused** as of 2026-09-24.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -326,3 +326,9 @@ KIO evidence: job `107523339110`, artifact `10794251210`, SHA-256 `45eac20aca30c
 KXMLGui evidence: job `107523339321`, artifact `10793229286`, SHA-256 `44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093`, source-tree SHA-256 `2869ebb158febcebec727ef5b661ea72c130b6ba7a82472c4ef09620b5b693dd`, materialized-tree SHA-256 `735268065ebb91c3dca48e303c2179cd5658f1086950ba00a537e15bf1949642`.
 
 Both results are source-materialization PASS only: `package_attempted=false`, `package_state_effect=none`. The next gate is Level 1 planning validation; Attempt 5 remains unauthorized.
+
+### Attempt 5 planning handoff
+
+The round-9 materialization set remains **20/20 source PASS**. Repository Policy `35990068378` and the paused Level 1 planner `35990068382` validated the promoted source/campaign pins at commit `45675c1fb5a43f95204c2cf0c5c15df0ef703832`.
+
+Materialization still has no binary package-state effect. Its future Attempt-5 handoff is being validator-prepared before activation; KIO remains artifact `10794251210`, KXMLGui remains artifact `10793229286`, and no source is rematerialized.
