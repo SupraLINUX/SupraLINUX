@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **round 10 source remediation pending — KIO -6 + KXMLGui -5**
+Status: **round 10 materialization PASS; Attempt 6 planning validation pending**
 
 Reviewed: **2026-09-24**
 
@@ -308,3 +308,11 @@ For KIO, round 9's premise was only partially correct: the Xvfb/XCB wrapper exis
 For KXMLGui, the session-bus correction is proven by 7/7 upstream CTest PASS. The remaining contract defect is packaging evidence. KDE 6.30 finds KTextWidgets only in the `BUILD_TESTING` subtree and builds the `krichtexteditor` test helper when it is available; because the SupraLINUX DAG classifies KTextWidgets as `test_required`, round 10 declares `libkf6textwidgets-dev (>= 6.30.0~) <!nocheck>` instead of weakening .buildinfo proof. The Resolute toolchain also emits `_ZSt19piecewise_construct@Base` from `libKF6XmlGui.so.6`; the contract applies the same optional-private-symbol policy already used for KJobWidgets, with minimal version `6.30.0`.
 
 No KDE dependency edge changes. Candidate revisions are KIO `6.30.0-0supralinux6` and KXMLGui `6.30.0-0supralinux5`.
+
+## Round 10 materialization proof
+
+The round-10 contract deltas materialized without changing KDE dependency edges. Workflow `36002910277` produced KIO artifact `10809231495` and KXMLGui artifact `10808294092`, both PASS as source-only materializations at commit `c0774e5514fd83995aad3c86e1f6a5b106b001a3`.
+
+KIO's adapted `debian/control` / `debian/rules` SHA-256 values are `d291d67f1ae89ff839a1adab6c82eeecf8268cb5449d71dbed8f2c73386db280` / `42e0d023a0ad42b194b649ae2026b3899575bed9823d6be05d9faf59fa6cc175`. KXMLGui's are `9284376c94338ed4399102ff41ab488912fbb149e6318ab5c18bf6319730462b` / `65cd53913bb5e4ac48cd96b38606acf33bc0cc054128b9733508bffdd2d8a7b2`.
+
+These exact source artifacts are the inputs to the next Level 1 campaign after planning validation. No binary PASS and no stable promotion is implied.

@@ -131,7 +131,17 @@ elif m.get("state")=="remediation-pending-materialization":
 
 elif m.get("state")=="remediation-materialized-pending-planning-validation":
     rem=m.get("active_remediation",{})
-    if rem.get("global_round")==9:
+    if rem.get("global_round")==10:
+        req(m.get("execution_authorized") is False and m.get("current_attempt")==5 and m.get("next_attempt")==6,"Level1 round10 post-materialization pause")
+        req(m.get("next_gate")=="tier3-build-level1-planning-validation","Level1 Attempt6 planning-validation gate")
+        req(rem.get("round")==5 and set(rem.get("nodes",[]))=={"kio","kxmlgui"},"Level1 round10 promoted scope")
+        req(rem.get("status")=="materialization-PASS-pending-attempt6-planning-validation","Level1 round10 source PASS state")
+        req(rem.get("source_rematerialization_required") is False and rem.get("execution_authorized") is False,"Level1 round10 source handoff")
+        req(rem.get("materialization_workflow_run")==36002910277 and rem.get("materialization_commit")=="c0774e5514fd83995aad3c86e1f6a5b106b001a3","Level1 round10 materialization evidence")
+        arts=rem.get("materialization_artifacts",{})
+        req(arts.get("kio",{}).get("artifact_id")==10809231495 and arts.get("kxmlgui",{}).get("artifact_id")==10808294092,"Level1 round10 materialization artifacts")
+        req(rem.get("next_gate")=="tier3-build-level1-planning-validation","Level1 round10 planning-validation next gate")
+    elif rem.get("global_round")==9:
         req(m.get("execution_authorized") is False and m.get("current_attempt")==4 and m.get("next_attempt")==5,"Level1 round9 post-materialization pause")
         req(m.get("next_gate")=="tier3-build-level1-planning-validation","Level1 Attempt5 planning-validation gate")
         req(rem.get("round")==4 and set(rem.get("nodes",[]))=={"kio","kxmlgui"},"Level1 round9 promoted scope")
@@ -187,9 +197,15 @@ if ar.get("round")==10:
     req(set(ar.get("source_materialization_nodes",[]))=={"kio","kxmlgui"} and ar.get("provider_closure_only_nodes")==[],"canonical round10 source classes")
     req(ar.get("candidate_package_versions")=={"kio":"6.30.0-0supralinux6","kxmlgui":"6.30.0-0supralinux5"},"canonical round10 candidate revisions")
     req(ar.get("validation_workflow_run")==35991007820 and ar.get("validation_commit")=="3197c1988e1ab86ec5010cb693064db949bfe6b0","canonical round10 Attempt5 evidence")
-    req(policy.get("phase")=="build-level1-planning" and policy.get("package_builds")=="tier3-level1-remediation-pending-materialization","canonical round10 materialization gate")
-    req(ar.get("status")=="materialization-pending-ci" and ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"canonical round10 execution pause")
-    req(ar.get("current_attempt")==5 and ar.get("next_attempt")==6 and ar.get("next_gate")=="tier3-round10-level1-materialization","canonical round10 attempt/gate markers")
+    req(policy.get("phase")=="build-level1-planning" and policy.get("package_builds") in {"tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"},"canonical round10 materialization/planning gate")
+    req(ar.get("status") in {"materialization-pending-ci","materialization-PASS-pending-level1-planning-validation"} and ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"canonical round10 execution pause")
+    req(ar.get("current_attempt")==5 and ar.get("next_attempt")==6,"canonical round10 attempt markers")
+    if policy.get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
+        req(ar.get("status")=="materialization-PASS-pending-level1-planning-validation","canonical round10 source PASS state")
+        req(ar.get("materialization_workflow_run")==36002910277 and ar.get("materialization_commit")=="c0774e5514fd83995aad3c86e1f6a5b106b001a3","canonical round10 source PASS evidence")
+        req(ar.get("next_gate")=="tier3-build-level1-planning-validation","canonical round10 planning gate")
+    else:
+        req(ar.get("status")=="materialization-pending-ci" and ar.get("next_gate")=="tier3-round10-level1-materialization","canonical round10 materialization gate")
 elif ar.get("round")==9:
     req(set(ar.get("nodes",[]))=={"kio","kxmlgui"},"canonical round9 scope")
     req(set(ar.get("source_materialization_nodes",[]))=={"kio","kxmlgui"} and ar.get("provider_closure_only_nodes")==[],"canonical round9 source classes")
@@ -241,7 +257,11 @@ else:
 if policy.get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation":
     req(ar.get("status")=="materialization-PASS-pending-level1-planning-validation","canonical planning-validation state")
     req(ar.get("level1_execution_authorized") is False and ar.get("next_gate")=="tier3-build-level1-planning-validation","canonical Level1 execution pause")
-    if ar.get("round")==9:
+    if ar.get("round")==10:
+        req(ar.get("materialization_workflow_run")==36002910277 and ar.get("materialization_commit")=="c0774e5514fd83995aad3c86e1f6a5b106b001a3","canonical round10 source PASS evidence")
+        arts=ar.get("materialization_artifacts",{})
+        req(arts.get("kio",{}).get("artifact_id")==10809231495 and arts.get("kxmlgui",{}).get("artifact_id")==10808294092,"canonical round10 source PASS artifacts")
+    elif ar.get("round")==9:
         req(ar.get("materialization_workflow_run")==35965579279 and ar.get("materialization_commit")=="8380856c8161dccc9de9c12745012c555baa26b0","canonical round9 source PASS evidence")
         arts=ar.get("materialization_artifacts",{})
         req(arts.get("kio",{}).get("artifact_id")==10794251210 and arts.get("kxmlgui",{}).get("artifact_id")==10793229286,"canonical round9 source PASS artifacts")
@@ -345,19 +365,20 @@ for node,cfg in ret.items():
         req(False,f"{node}: unknown predecessor provenance")
     req(cfg.get("dev_package") in cfg.get("expected_binary_packages",[]),f"{node}: dev package identity")
 
-round9_source_promoted=(m.get("state")=="remediation-materialized-pending-planning-validation" and m.get("active_remediation",{}).get("global_round")==9) or m.get("current_attempt")==5
+round10_source_promoted=m.get("state")=="remediation-materialized-pending-planning-validation" and m.get("active_remediation",{}).get("global_round")==10
+round9_source_promoted=round10_source_promoted or (m.get("state")=="remediation-materialized-pending-planning-validation" and m.get("active_remediation",{}).get("global_round")==9) or m.get("current_attempt")==5
 round8_source_promoted=round9_source_promoted or (m.get("state")=="remediation-materialized-pending-planning-validation" and m.get("active_remediation",{}).get("global_round")==8) or m.get("current_attempt")==4
 round7_source_promoted=round8_source_promoted or m.get("current_attempt")==3
 expected={
  "kio":{
-   "version":"6.30.0-0supralinux5" if round9_source_promoted else ("6.30.0-0supralinux4" if round8_source_promoted else ("6.30.0-0supralinux3" if round7_source_promoted else "6.30.0-0supralinux2")),
-   "materialization":(35965579279,10794251210,"45eac20aca30ca6a5ef78d8a94d15ee5408a8bed39c8fa72c6c8823134ffa0b2") if round9_source_promoted else ((35894317888,10766471076,"80959256047d70323b6ea311551bed573661cefb4b831f30750e27ed11076cf6") if round8_source_promoted else ((35882795135,10760324592,"b58b7a45f6df0c8f01e9bd9a37799c1470369124a7c1b48fecb82a5f7f86ae8d") if round7_source_promoted else (35825070347,10735250819,"8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106"))),
+   "version":"6.30.0-0supralinux6" if round10_source_promoted else ("6.30.0-0supralinux5" if round9_source_promoted else ("6.30.0-0supralinux4" if round8_source_promoted else ("6.30.0-0supralinux3" if round7_source_promoted else "6.30.0-0supralinux2"))),
+   "materialization":(36002910277,10809231495,"5a0c2db21af5a87d4bd5ee2b02ebff7bce4dd98c66622398f00c67ef7210227b") if round10_source_promoted else ((35965579279,10794251210,"45eac20aca30ca6a5ef78d8a94d15ee5408a8bed39c8fa72c6c8823134ffa0b2") if round9_source_promoted else ((35894317888,10766471076,"80959256047d70323b6ea311551bed573661cefb4b831f30750e27ed11076cf6") if round8_source_promoted else ((35882795135,10760324592,"b58b7a45f6df0c8f01e9bd9a37799c1470369124a7c1b48fecb82a5f7f86ae8d") if round7_source_promoted else (35825070347,10735250819,"8d958c9ac8194cbaf26d4bf310148e129cfbe11b7ebaf6fed967d6c8400dc106")))),
    "tier3":["kbookmarks","kiconthemes","kjobwidgets","kwallet"],
    "support_build":["kdoctools"],"support_runtime":["kded"],"provider_closure":["kconfigwidgets","karchive","kcodecs","knotifications","breeze-icons"],"python":None,
  },
  "kxmlgui":{
-   "version":"6.30.0-0supralinux4" if round9_source_promoted else ("6.30.0-0supralinux3" if round8_source_promoted else ("6.30.0-0supralinux2" if round7_source_promoted else "6.30.0-0supralinux1")),
-   "materialization":(35965579279,10793229286,"44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093") if round9_source_promoted else ((35894317888,10766665506,"100cf903ca1ef17cf2b37bab58ba0b7bf1e562d111cc04107247c3f35b134d58") if round8_source_promoted else ((35882795135,10761208629,"72cd10276558264646a9e38d5beab7b231434338597ef8d276030e790ff02214") if round7_source_promoted else (35746667704,10703925009,"9ad2056d1dbc9ab626521cd1f4bc67c13f5e36b18d93fc67da8ee6b7da3ba2fc"))),
+   "version":"6.30.0-0supralinux5" if round10_source_promoted else ("6.30.0-0supralinux4" if round9_source_promoted else ("6.30.0-0supralinux3" if round8_source_promoted else ("6.30.0-0supralinux2" if round7_source_promoted else "6.30.0-0supralinux1"))),
+   "materialization":(36002910277,10808294092,"bccf76b46d0c9619e4306f1fe704ff5b501b9554a63f7968093e3afd4beb0d86") if round10_source_promoted else ((35965579279,10793229286,"44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093") if round9_source_promoted else ((35894317888,10766665506,"100cf903ca1ef17cf2b37bab58ba0b7bf1e562d111cc04107247c3f35b134d58") if round8_source_promoted else ((35882795135,10761208629,"72cd10276558264646a9e38d5beab7b231434338597ef8d276030e790ff02214") if round7_source_promoted else (35746667704,10703925009,"9ad2056d1dbc9ab626521cd1f4bc67c13f5e36b18d93fc67da8ee6b7da3ba2fc")))),
    "tier3":["kconfigwidgets","kiconthemes","ktextwidgets"],
    "support_build":[],"support_runtime":[],"provider_closure":["karchive","kcodecs","kcolorscheme","kcompletion","sonnet","breeze-icons"],"python":"KXmlGui",
  },

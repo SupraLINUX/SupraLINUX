@@ -3220,7 +3220,7 @@
   "active_remediation": {
     "round": 10,
     "level": "build-level1",
-    "status": "materialization-pending-ci",
+    "status": "materialization-PASS",
     "trigger": {
       "workflow_run": 35991007820,
       "commit": "3197c1988e1ab86ec5010cb693064db949bfe6b0",
@@ -3266,7 +3266,23 @@
         "failure_substage": "post-build/buildinfo-and-symbols-policy"
       }
     },
-    "next_gate": "tier3-round10-level1-materialization"
+    "next_gate": "tier3-build-level1-planning-validation",
+    "evidence": {
+      "workflow_run": 36002910277,
+      "commit": "c0774e5514fd83995aad3c86e1f6a5b106b001a3",
+      "artifacts": {
+        "kio": {
+          "job_id": 107643756393,
+          "artifact_id": 10809231495,
+          "artifact_sha256": "5a0c2db21af5a87d4bd5ee2b02ebff7bce4dd98c66622398f00c67ef7210227b"
+        },
+        "kxmlgui": {
+          "job_id": 107643756357,
+          "artifact_id": 10808294092,
+          "artifact_sha256": "bccf76b46d0c9619e4306f1fe704ff5b501b9554a63f7968093e3afd4beb0d86"
+        }
+      }
+    }
   },
   "remediation_history": [
     {

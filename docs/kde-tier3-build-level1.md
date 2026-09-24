@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **Attempt 5 reviewed — 0 SUCCESS / 2 real FAIL; round 10 source remediation pending** as of 2026-09-24.
+Status: **round 10 source materialization PASS; Attempt 6 paused pending planning validation** as of 2026-09-24.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -216,3 +216,12 @@ Workflow `35991007820` at commit `3197c1988e1ab86ec5010cb693064db949bfe6b0` comp
 **KXMLGui** job `107605066954`, artifact `10804084102`, SHA-256 `92adc73ad8242e07299b5ae20c0acd100979e78f0b7da6ebb8fb5686c4c7204a`: build succeeded and **7/7 CTest targets PASS**. The remaining failure is post-test packaging proof: add `libkf6textwidgets-dev (>= 6.30.0~) <!nocheck>` so the modeled upstream test-only predecessor is installed/proven, and add `_ZSt19piecewise_construct@Base` as an optional `6.30.0` symbol baseline rather than accepting a Debian-revision ABI version.
 
 Attempt 6 is not authorized. The next gate is `tier3-round10-level1-materialization`.
+
+## Round 10 materialization handoff
+
+Source materialization workflow `36002910277` completed **2/2 PASS** at commit `c0774e5514fd83995aad3c86e1f6a5b106b001a3`.
+
+- KIO `6.30.0-0supralinux6`: job `107643756393`, artifact `10809231495`, artifact SHA-256 `5a0c2db21af5a87d4bd5ee2b02ebff7bce4dd98c66622398f00c67ef7210227b`, adapted rules SHA-256 `42e0d023a0ad42b194b649ae2026b3899575bed9823d6be05d9faf59fa6cc175`.
+- KXMLGui `6.30.0-0supralinux5`: job `107643756357`, artifact `10808294092`, artifact SHA-256 `bccf76b46d0c9619e4306f1fe704ff5b501b9554a63f7968093e3afd4beb0d86`, adapted control SHA-256 `9284376c94338ed4399102ff41ab488912fbb149e6318ab5c18bf6319730462b`, adapted rules SHA-256 `65cd53913bb5e4ac48cd96b38606acf33bc0cc054128b9733508bffdd2d8a7b2`.
+
+The generated campaign now points to these exact source artifacts. Canonical package state remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**. `execution_authorized=false`; Attempt 6 is not authorized until Repository Policy and the paused Level 1 planner validate this handoff.

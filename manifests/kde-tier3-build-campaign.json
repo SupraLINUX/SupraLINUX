@@ -560,7 +560,7 @@
       "level": 1,
       "state": "planned",
       "source_package": "kf6-kio",
-      "package_version": "6.30.0-0supralinux5",
+      "package_version": "6.30.0-0supralinux6",
       "expected_binary_packages": [
         "kio6",
         "libkf6kio-dev",
@@ -571,10 +571,10 @@
         "libkf6kiowidgets6"
       ],
       "materialization": {
-        "workflow_run": 35965579279,
-        "job_id": 107523339110,
-        "artifact_id": 10794251210,
-        "artifact_sha256": "45eac20aca30ca6a5ef78d8a94d15ee5408a8bed39c8fa72c6c8823134ffa0b2"
+        "workflow_run": 36002910277,
+        "job_id": 107643756393,
+        "artifact_id": 10809231495,
+        "artifact_sha256": "5a0c2db21af5a87d4bd5ee2b02ebff7bce4dd98c66622398f00c67ef7210227b"
       },
       "blocking_predecessors": [
         "kbookmarks",
@@ -1026,7 +1026,7 @@
       "level": 1,
       "state": "planned",
       "source_package": "kf6-kxmlgui",
-      "package_version": "6.30.0-0supralinux4",
+      "package_version": "6.30.0-0supralinux5",
       "expected_binary_packages": [
         "libkf6xmlgui-data",
         "libkf6xmlgui-dev",
@@ -1035,10 +1035,10 @@
         "python3-kf6xmlgui"
       ],
       "materialization": {
-        "workflow_run": 35965579279,
-        "job_id": 107523339321,
-        "artifact_id": 10793229286,
-        "artifact_sha256": "44b9cf9d0ad12f06b12bda37c291fcda5ecf933e25cfdd61c42d9df6e11b0093"
+        "workflow_run": 36002910277,
+        "job_id": 107643756357,
+        "artifact_id": 10808294092,
+        "artifact_sha256": "bccf76b46d0c9619e4306f1fe704ff5b501b9554a63f7968093e3afd4beb0d86"
       },
       "blocking_predecessors": [
         "kconfigwidgets",

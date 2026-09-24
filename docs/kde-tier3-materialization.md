@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **round 10 remediation pending CI — KIO 6.30.0-0supralinux6 + KXMLGui 6.30.0-0supralinux5** as of 2026-09-24.
+Status: **round 10 PASS — KIO 6.30.0-0supralinux6 + KXMLGui 6.30.0-0supralinux5 promoted as source inputs** as of 2026-09-24.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -351,3 +351,13 @@ The promoted round-9 source artifacts remain immutable previous evidence until r
 ### Round 10 validator scope
 
 The materialization validator now treats the retained source-relation baseline as round-aware: KIO keeps the round-9 Xvfb provider set in round 10, while KXMLGui extends the round-9 Python/D-Bus set only with the explicitly approved test-only KTextWidgets relation. This prevents historical equality checks from rejecting the documented round-10 packaging delta before either source is attempted.
+
+## Round 10 evidence
+
+Workflow `36002910277` materialized both queued Level 1 nodes successfully at commit `c0774e5514fd83995aad3c86e1f6a5b106b001a3`.
+
+KIO evidence: job `107643756393`, artifact `10809231495`, artifact SHA-256 `5a0c2db21af5a87d4bd5ee2b02ebff7bce4dd98c66622398f00c67ef7210227b`, source-tree SHA-256 `2d9ece007442cccf7145e9dbf1424f10a150c9f28b01f3f548cf1ddbb25a3228`, materialized-tree SHA-256 `cc588e793e0c90b534b9be650ef402a3a766639ec33c38a03b846006ef7b612b`, adapted control SHA-256 `d291d67f1ae89ff839a1adab6c82eeecf8268cb5449d71dbed8f2c73386db280`, adapted rules SHA-256 `42e0d023a0ad42b194b649ae2026b3899575bed9823d6be05d9faf59fa6cc175`.
+
+KXMLGui evidence: job `107643756357`, artifact `10808294092`, artifact SHA-256 `bccf76b46d0c9619e4306f1fe704ff5b501b9554a63f7968093e3afd4beb0d86`, source-tree SHA-256 `81b02b7bf9ecac390fbb5beb1694412f7faec2ecbc86ac2887ff134ba0ff99ef`, materialized-tree SHA-256 `2be38f32658e0b46dac4c9b0a1e7489f87d7e3759fd4470f6483fca54bddaf33`, adapted control SHA-256 `9284376c94338ed4399102ff41ab488912fbb149e6318ab5c18bf6319730462b`, adapted rules SHA-256 `65cd53913bb5e4ac48cd96b38606acf33bc0cc054128b9733508bffdd2d8a7b2`.
+
+Both are source-materialization PASS only: `package_attempted=false`, `package_state_effect=none`. The next gate is Level 1 planning validation; Attempt 6 remains unauthorized.
