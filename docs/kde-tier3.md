@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — round 10 source PASS; Attempt 6 planning gates PASS; activation paused**
+Status: **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED — Level 1 Attempt 6 active**
 
 Last reviewed: **2026-09-24**
 
@@ -536,3 +536,11 @@ This is source-only evidence. Canonical package state remains **11 PASS / 9 pend
 The promoted round-10 source inputs and regenerated campaign passed Repository Policy `36032425645` and the paused Level 1 planner `36032425729` at commit `0fee159ac1f24dc160e1edd9976a7708f89d657d`. The Level 1 workflow intentionally skipped the shared rootfs and both binary builds, so **Attempt 6 has not executed**.
 
 Before changing execution authority, the validators are extended to recognize the future round-10 / Attempt-6 active lifecycle and to bind it to those exact planning-validation runs. This transition remains validator/documentation-only: canonical package state stays **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**, `execution_authorized=false`, and Level 2 remains unauthorized.
+
+## Current canonical state — Attempt 6 active
+
+Round-10 source promotion passed the planning gates at commit `0fee159ac1f24dc160e1edd9976a7708f89d657d`: Repository Policy `36032425645` and paused Level 1 `36032425729`. The forward-compatible Attempt-6 lifecycle then passed Repository Policy `36033162764`, Level 1 `36033163019`, and materialization `36033162995` at commit `16d829174476a6f9846d53d14efc2dd21651332d`, with all package builds still skipped.
+
+A separate activation now authorizes the complete two-node Level 1 Attempt 6. KIO uses `6.30.0-0supralinux6` artifact `10809231495`; KXMLGui uses `6.30.0-0supralinux5` artifact `10808294092`. The pre-result canonical snapshot remains **11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED**.
+
+Level 2 remains unauthorized until Attempt 6 completes and its KIO/KXMLGui evidence is reviewed under PASS / FAIL / BLOCKED semantics. Binary PASS does not imply stable publication.

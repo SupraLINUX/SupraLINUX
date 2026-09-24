@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level1-planning",
+    "phase": "build-level1",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-source-PASS-pending-planning-validation",
-    "remediation": "round10-source-PASS-pending-level1-planning-validation"
+    "package_builds": "tier3-level1-authorized",
+    "remediation": "round10-kio-kxmlgui-attempt6-active"
   },
   "nodes": [
     {
@@ -1222,13 +1222,12 @@
       "kio": "6.30.0-0supralinux6",
       "kxmlgui": "6.30.0-0supralinux5"
     },
-    "execution_authorized": false,
-    "level1_execution_authorized": false,
+    "execution_authorized": true,
+    "level1_execution_authorized": true,
     "full_level1_rerun_required": true,
-    "status": "materialization-PASS-pending-level1-planning-validation",
-    "next_gate": "tier3-build-level1-planning-validation",
-    "current_attempt": 5,
-    "next_attempt": 6,
+    "status": "level1-active-pending-ci",
+    "next_gate": "tier3-build-level1-attempt6",
+    "current_attempt": 6,
     "validation_workflow_run": 35991007820,
     "validation_commit": "3197c1988e1ab86ec5010cb693064db949bfe6b0",
     "validation_result": "0 workflow SUCCESS / 2 FAIL",
@@ -1255,7 +1254,10 @@
         "artifact_id": 10808294092,
         "artifact_sha256": "bccf76b46d0c9619e4306f1fe704ff5b501b9554a63f7968093e3afd4beb0d86"
       }
-    }
+    },
+    "activation_policy_workflow_run": 36032425645,
+    "activation_level1_workflow_run": 36032425729,
+    "activation_commit": "0fee159ac1f24dc160e1edd9976a7708f89d657d"
   },
   "remediation_history": [
     {

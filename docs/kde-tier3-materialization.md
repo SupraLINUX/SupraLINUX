@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **round 10 PASS — KIO -6 + KXMLGui -5 validated for Attempt 6 planning; binary activation paused** as of 2026-09-24.
+Status: **PASS — round 10 KIO -6 + KXMLGui -5 handed to active Attempt 6** as of 2026-09-24.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -367,3 +367,9 @@ Both are source-materialization PASS only: `package_attempted=false`, `package_s
 The round-10 materialization set remains **20/20 source PASS**. Repository Policy `36032425645`, paused Level 1 `36032425729`, and the no-op materialization validation `36032425591` all passed at commit `0fee159ac1f24dc160e1edd9976a7708f89d657d`.
 
 Materialization still has no binary package-state effect. Its future Attempt-6 handoff is being validator-prepared before activation; KIO remains artifact `10809231495`, KXMLGui remains artifact `10808294092`, and no source is rematerialized.
+
+### Attempt 6 active handoff
+
+The round-10 materialization set remains **20/20 source PASS** and is now handed to active Level 1 Attempt 6 after planning validation (`36032425645` / `36032425729`) and forward-compatible lifecycle validation (`36033162764` / `36033163019` / `36033162995`).
+
+KIO remains pinned to artifact `10809231495` and KXMLGui to `10808294092`. Activation changes no source artifact and materialization still has no binary package-state effect.

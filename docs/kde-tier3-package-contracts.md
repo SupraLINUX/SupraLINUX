@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 package contracts
 
-Status: **round 10 materialization PASS; Attempt 6 planning gates PASS; activation paused**
+Status: **round 10 materialization PASS; handed to active Level 1 Attempt 6**
 
 Reviewed: **2026-09-24**
 
@@ -322,3 +322,9 @@ These exact source artifacts are the inputs to the next Level 1 campaign after p
 The round-10 source contracts and generated Level 1 pins passed Repository Policy `36032425645` and paused Level 1 validation `36032425729` at commit `0fee159ac1f24dc160e1edd9976a7708f89d657d`.
 
 The next transition is lifecycle validation only: validators may recognize a future `materialization-PASS-attempt6-active` state bound to those exact planning runs, but the current manifests remain paused. Source identities, provider closure, KDE DAG semantics and test-policy deltas are unchanged.
+
+### Round 10 Attempt 6 active handoff
+
+The validated round-10 source contracts are now handed to Level 1 Attempt 6. Activation changes only execution authority; KIO/KXMLGui source identities, provider closure, test-policy deltas and KDE DAG semantics remain unchanged.
+
+Planning evidence is Repository Policy `36032425645` plus Level 1 `36032425729` at `0fee159ac1f24dc160e1edd9976a7708f89d657d`. Forward-compatible lifecycle evidence is Repository Policy `36033162764`, Level 1 `36033163019`, and materialization `36033162995` at `16d829174476a6f9846d53d14efc2dd21651332d`.

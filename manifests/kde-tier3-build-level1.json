@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "remediation-materialized-pending-planning-validation",
-  "execution_authorized": false,
+  "state": "active-pending-ci",
+  "execution_authorized": true,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "11 PASS / 9 pending / 0 current FAIL / 0 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -785,8 +785,8 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-build-level1-planning-validation",
-  "current_attempt": 5,
+  "next_gate": "tier3-build-level1-attempt6",
+  "current_attempt": 6,
   "last_activation": {
     "policy_workflow_run": 35826072726,
     "policy_commit": "b96e925ee9f649c1b4b984ed6fed277ef911f2c2",
@@ -837,13 +837,13 @@
       "kio": "6.30.0-0supralinux6",
       "kxmlgui": "6.30.0-0supralinux5"
     },
-    "execution_authorized": false,
+    "execution_authorized": true,
     "full_level1_rerun_required": true,
-    "status": "materialization-PASS-pending-attempt6-planning-validation",
+    "status": "materialization-PASS-attempt6-active",
     "source_rematerialization_required": false,
     "package_revision_bump_required": true,
-    "next_gate": "tier3-build-level1-planning-validation",
-    "current_attempt": 5,
+    "next_gate": "tier3-build-level1-attempt6",
+    "current_attempt": 6,
     "next_attempt": 6,
     "materialization_workflow_run": 36002910277,
     "materialization_commit": "c0774e5514fd83995aad3c86e1f6a5b106b001a3",
@@ -858,16 +858,19 @@
         "artifact_id": 10808294092,
         "artifact_sha256": "bccf76b46d0c9619e4306f1fe704ff5b501b9554a63f7968093e3afd4beb0d86"
       }
-    }
+    },
+    "activation_policy_workflow_run": 36032425645,
+    "activation_level1_workflow_run": 36032425729,
+    "activation_commit": "0fee159ac1f24dc160e1edd9976a7708f89d657d"
   },
   "activation": {
     "status": "ACTIVE",
-    "attempt": 5,
-    "remediation_validation_policy_workflow_run": 35990068378,
-    "remediation_validation_level1_workflow_run": 35990068382,
-    "remediation_commit": "45675c1fb5a43f95204c2cf0c5c15df0ef703832",
+    "attempt": 6,
+    "remediation_validation_policy_workflow_run": 36032425645,
+    "remediation_validation_level1_workflow_run": 36032425729,
+    "remediation_commit": "0fee159ac1f24dc160e1edd9976a7708f89d657d",
     "scope": "full-level1-rerun-2-nodes",
-    "reason": "Round 9 source materializations promoted and planning validation passed; authorize complete Level 1 Attempt 5"
+    "reason": "Round 10 source materializations promoted and planning validation passed; authorize complete Level 1 Attempt 6"
   },
   "attempt2_summary": {
     "workflow_run": 35829170695,
@@ -952,7 +955,6 @@
       "fail": 1
     }
   },
-  "next_attempt": 6,
   "attempt5_summary": {
     "workflow_run": 35991007820,
     "commit": "3197c1988e1ab86ec5010cb693064db949bfe6b0",

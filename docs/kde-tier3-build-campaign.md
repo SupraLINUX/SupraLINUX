@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 build campaign
 
-Status: **Level 0 closed; round 10 source PASS; Attempt 6 planning gates PASS; activation paused** as of 2026-09-24.
+Status: **Level 0 closed; Level 1 Attempt 6 active with round-10 source pins** as of 2026-09-24.
 
 This document defines how the 20 materialized Tier 3 Frameworks will be built without changing the project-wide PASS / FAIL / BLOCKED semantics.
 
@@ -232,3 +232,11 @@ Campaign topology is unchanged and `execution_authorized=false` remains authorit
 The generated **12 / 2 / 4 / 2** campaign with KIO `6.30.0-0supralinux6` artifact `10809231495` and KXMLGui `6.30.0-0supralinux5` artifact `10808294092` passed Repository Policy `36032425645` and the paused Level 1 workflow `36032425729` at commit `0fee159ac1f24dc160e1edd9976a7708f89d657d`.
 
 The Level 1 planner completed successfully, emitted the intentional skip report, and skipped both the shared rootfs and binary build matrix. Campaign `execution_authorized=false` remains unchanged. Validators are extended first so a later, separate Attempt 6 activation can be checked against those exact planning gates without mixing validation and execution.
+
+## Level 1 Attempt 6 activation
+
+The generated campaign remains the validated **12 / 2 / 4 / 2** KDE-upstream topology and still has `execution_authorized=false`; execution authority is delegated only by `manifests/kde-tier3-build-level1.json`.
+
+Round-10 source promotion passed Policy/planner validation (`36032425645` / `36032425729`) at `0fee159ac1f24dc160e1edd9976a7708f89d657d`. The forward-compatible Attempt-6 lifecycle then passed Repository Policy `36033162764`, Level 1 `36033163019`, and materialization `36033162995` at `16d829174476a6f9846d53d14efc2dd21651332d`, with package builds still skipped.
+
+A separate activation now authorizes exactly KIO `6.30.0-0supralinux6` and KXMLGui `6.30.0-0supralinux5` for the complete Level 1 Attempt 6.
