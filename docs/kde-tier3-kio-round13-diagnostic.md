@@ -36,3 +36,13 @@ If the exact host build-tree reproduces and one environment removal recovers bot
 Canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED** and `execution_authorized=false`.
 
 Next gate: `tier3-round13-kio-build-tree-diagnostic-evidence`.
+
+## Infrastructure attempt 1
+
+Workflow `36131672792`, job `108060121271`, on commit `35bdba0d35836eabb53e96675e0b3767d30b0de3` did **not** reach the KIO build-tree experiment. It failed at the local APT repository stage because the repository lived below the GitHub workspace home and the APT sandbox user `_apt` could not traverse/read that path.
+
+The uploaded failure artifact is `10862700232`, SHA-256 `b6ff8d87f036ad227b440ac256b8d600fbb1e5e61773e1a69a1624a861dd724a`. This attempt is classified **INFRA_FAIL** and supplies no diagnostic evidence about KIO itself.
+
+Repository Policy for that commit also stopped at ShellCheck because of three runner-only lint issues. Those issues do not alter the Round 13 diagnostic design.
+
+The corrected runner uses a world-traversable repository under `/tmp/supralinux-round13-repo`, materializes both `Packages` and `Packages.gz`, and preserves provider-version evidence while satisfying ShellCheck. Round 13 remains `definition-pending-diagnostic`.

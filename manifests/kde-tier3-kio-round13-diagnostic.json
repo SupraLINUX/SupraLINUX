@@ -64,5 +64,20 @@
     "exact_does_not_reproduce": "next-scope-sbuild-unshare-chroot-specific"
   },
   "next_gate": "tier3-round13-kio-build-tree-diagnostic-evidence",
-  "stable_promotion_requires_explicit_user_approval": true
+  "stable_promotion_requires_explicit_user_approval": true,
+  "infra_attempts": [
+    {
+      "workflow_run": 36131672792,
+      "job_id": 108060121271,
+      "commit": "35bdba0d35836eabb53e96675e0b3767d30b0de3",
+      "artifact_id": 10862700232,
+      "artifact_sha256": "b6ff8d87f036ad227b440ac256b8d600fbb1e5e61773e1a69a1624a861dd724a",
+      "result": "INFRA_FAIL",
+      "stage": "local-repository",
+      "cause": "APT file repository was created below the GitHub workspace home; apt sandbox user _apt could not traverse/read the index path.",
+      "diagnostic_evidence_valid": false,
+      "package_attempted": false,
+      "package_state_effect": "none"
+    }
+  ]
 }
