@@ -316,3 +316,7 @@ The first KDirModel failure still shows `QIcon::fromTheme` producing an empty ic
 Canonical Tier 3 remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**. KIO's current canonical failed revision is now `6.30.0-0supralinux7`; KXMLGui remains PASS at `6.30.0-0supralinux5`. Binary execution is closed again with `execution_authorized=false`. Level 2 remains unauthorized and no stable promotion is authorized.
 
 Round 11 is closed as mixed. The next gate is **`tier3-round12-kio-diagnostic-definition`**. No Round 12 remediation, source change, package revision or new build is claimed by this closure.
+
+### Canonical DAG evidence versus PASS revalidation history
+
+A later PASS revalidation does not create a second canonical promotion. The canonical DAG keeps the single evidence record that originally promoted the package to PASS; the package lifecycle may retain additional PASS records only when they are explicitly classified as `package_state_effect=PASS-revalidation`, match the current package revision, and preserve downstream eligibility. Attempt 7 KXMLGui is the first Level 1 instance of this distinction.

@@ -133,7 +133,7 @@ tier3_promoted = {
 }
 require(
     set(tier3_promoted) == {"kbookmarks","kconfigwidgets","kdav","kdesu","kiconthemes","kjobwidgets","kpeople","krunner","ksvg","ktextwidgets","kwallet","kxmlgui"},
-    "Tier3 canonical promoted set after Level1 Attempt6 closure is unexpected",
+    "Tier3 canonical promoted set after Level1 Attempt7 closure is unexpected",
 )
 for node_id, canonical_node in sorted(tier3_promoted.items()):
     node = nodes.get(node_id, {})
@@ -149,11 +149,17 @@ for node_id, canonical_node in sorted(tier3_promoted.items()):
     passes = [item for item in node.get("evidence", []) if isinstance(item, dict) and item.get("result") == "PASS"]
     require(len(passes) == 1, f"{node_id}: Tier3 DAG requires exactly one retained PASS")
     package_passes = [item for item in packaging.get("evidence", []) if isinstance(item, dict) and item.get("result") == "PASS"]
-    require(len(package_passes) == 1, f"{node_id}: Tier3 canonical packaging requires exactly one retained PASS")
-    if passes and package_passes:
-        dag_evidence, canonical_evidence = passes[0], package_passes[0]
+    canonical_package_passes = [item for item in package_passes if item.get("package_state_effect") == "PASS"]
+    revalidation_passes = [item for item in package_passes if item.get("package_state_effect") == "PASS-revalidation"]
+    require(len(canonical_package_passes) == 1, f"{node_id}: Tier3 canonical packaging requires exactly one promotion PASS")
+    require(len(package_passes) == len(canonical_package_passes) + len(revalidation_passes), f"{node_id}: Tier3 packaging PASS evidence must be promotion or revalidation")
+    for item in revalidation_passes:
+        require(item.get("attempted_package_version") == packaging.get("package_version"), f"{node_id}: Tier3 PASS revalidation package version mismatch")
+        require(item.get("downstream_eligible") is True, f"{node_id}: Tier3 PASS revalidation must preserve downstream eligibility")
+    if passes and canonical_package_passes:
+        dag_evidence, canonical_evidence = passes[0], canonical_package_passes[0]
         for key in ("workflow_run","job_id","commit","artifact_id","artifact_sha256","tests","lintian","apt_check","abi_contract","cmake_consumer","buildinfo_predecessor_proof"):
-            require(dag_evidence.get(key) == canonical_evidence.get(key), f"{node_id}: Tier3 DAG/canonical evidence mismatch for {key}")
+            require(dag_evidence.get(key) == canonical_evidence.get(key), f"{node_id}: Tier3 DAG/canonical promotion evidence mismatch for {key}")
         require(dag_evidence.get("downstream_eligible") is True, f"{node_id}: Tier3 DAG PASS evidence downstream eligibility")
 
 knewstuff = next((node for node in tier3_canonical.get("nodes", []) if node.get("id") == "knewstuff"), {})
