@@ -85,3 +85,25 @@ Canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**:
 - stable promotion still requires explicit user approval.
 
 Next diagnostic gate: `tier3-round12-kio-diagnostic-evidence`.
+
+## Diagnostic result — PASS, no isolated reproduction
+
+Round 12 completed in workflow `36082312546` at commit `91b57e78d5d74ed6ad7c87313086d1476bf60ba6`, job `107906716315`. Evidence artifact `10842450967` has SHA-256 `5b34f0a73e1e0f9b32e0c88d6c5bc90d3463d4b4854931eecda66244a9c52df6`. Repository Policy `36082312426` also passed for the definition commit.
+
+The result is intentionally diagnostic rather than a package PASS. No package was built, no package revision changed, and canonical KIO remains FAIL at `6.30.0-0supralinux7`.
+
+All five Qt/Breeze probe modes resolved `unknown`, `inode-directory`, and `folder-red` correctly. In particular:
+
+- baseline: Breeze selected and all three icons resolved;
+- `KDirModelTest` test-mode sequence: all three icons still resolved, with `.qttest/share` added ahead of the normal system data locations;
+- explicit Breeze after KDirModel test mode: still resolved;
+- `KNewFileMenuTest` enable-test-mode → capture `.qttest/config` → disable-test-mode → fake `XDG_CONFIG_HOME` sequence: all three icons still resolved;
+- explicit Breeze after the KNewFileMenu sequence: still resolved.
+
+Therefore neither `QStandardPaths::setTestModeEnabled(true)` nor the KNewFileMenu `XDG_CONFIG_HOME` sequence is sufficient to reproduce Attempt 7. Qt 6.10.2, XCB/Xvfb and the exact retained Breeze package also work together in isolation.
+
+This narrows the unresolved delta to the real **KIO build-tree/test-process context**: something present only when the actual KIO test binaries run from the build tree causes the themed icon name to become empty.
+
+Round 12 is closed. No remediation is justified yet and no `6.30.0-0supralinux8` revision is allocated. Canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**, with `execution_authorized=false`.
+
+Next gate: **`tier3-round13-kio-build-tree-diagnostic-definition`**.

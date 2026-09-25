@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-24",
+  "as_of": "2026-09-25",
   "node": "kio",
   "round": 12,
   "authority": "kde-upstream",
@@ -14,7 +14,7 @@
   "dag_state_changes_allowed": false,
   "downstream_eligibility_changes_allowed": false,
   "execution_authorized": false,
-  "status": "definition-pending-diagnostic",
+  "status": "diagnostic-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -108,6 +108,122 @@
     "source_modification": false,
     "test_suppression": false
   },
-  "next_gate": "tier3-round12-kio-diagnostic-evidence",
-  "stable_promotion_requires_explicit_user_approval": true
+  "next_gate": "tier3-round13-kio-build-tree-diagnostic-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "definition_validation": {
+    "commit": "91b57e78d5d74ed6ad7c87313086d1476bf60ba6",
+    "repository_policy_workflow_run": 36082312426,
+    "result": "PASS"
+  },
+  "diagnostic_evidence": {
+    "workflow_run": 36082312546,
+    "job_id": 107906716315,
+    "commit": "91b57e78d5d74ed6ad7c87313086d1476bf60ba6",
+    "artifact_id": 10842450967,
+    "artifact_sha256": "5b34f0a73e1e0f9b32e0c88d6c5bc90d3463d4b4854931eecda66244a9c52df6",
+    "result": "DIAG_COMPLETE",
+    "package_attempted": false,
+    "package_state_effect": "none"
+  },
+  "diagnostic_results": {
+    "qt_version": "6.10.2",
+    "theme_name": "breeze",
+    "baseline": {
+      "unknown": {
+        "has": true,
+        "null": false,
+        "name": "unknown"
+      },
+      "inode-directory": {
+        "has": true,
+        "null": false,
+        "name": "inode-directory"
+      },
+      "folder-red": {
+        "has": true,
+        "null": false,
+        "name": "folder-red"
+      }
+    },
+    "kdirmodel_testmode": {
+      "reproduced": false,
+      "theme_name": "breeze",
+      "generic_data_includes": [
+        ".qttest/share",
+        "/usr/local/share",
+        "/usr/share"
+      ],
+      "theme_paths": [
+        "/usr/local/share/icons",
+        "/usr/share/icons",
+        ":/icons"
+      ],
+      "unknown": {
+        "has": true,
+        "null": false,
+        "name": "unknown"
+      },
+      "inode-directory": {
+        "has": true,
+        "null": false,
+        "name": "inode-directory"
+      },
+      "folder-red": {
+        "has": true,
+        "null": false,
+        "name": "folder-red"
+      }
+    },
+    "kdirmodel_testmode_explicit_theme": {
+      "reproduced": false,
+      "theme_name": "breeze",
+      "unknown": {
+        "has": true,
+        "null": false,
+        "name": "unknown"
+      }
+    },
+    "knewfilemenu_sequence": {
+      "reproduced": false,
+      "theme_name": "breeze",
+      "captured_config_suffix": ".qttest/config",
+      "theme_paths": [
+        "/usr/local/share/icons",
+        "/usr/share/icons",
+        ":/icons"
+      ],
+      "unknown": {
+        "has": true,
+        "null": false,
+        "name": "unknown"
+      },
+      "inode-directory": {
+        "has": true,
+        "null": false,
+        "name": "inode-directory"
+      },
+      "folder-red": {
+        "has": true,
+        "null": false,
+        "name": "folder-red"
+      }
+    },
+    "knewfilemenu_sequence_explicit_theme": {
+      "reproduced": false,
+      "theme_name": "breeze",
+      "inode-directory": {
+        "has": true,
+        "null": false,
+        "name": "inode-directory"
+      }
+    },
+    "classification": {
+      "kdirmodel_testmode_reproduces": false,
+      "kdirmodel_explicit_theme_resolves": true,
+      "knewfilemenu_sequence_reproduces": false,
+      "knewfilemenu_explicit_theme_resolves": true
+    },
+    "conclusion": "isolated Qt/QStandardPaths/Breeze sequences do not reproduce Attempt 7; remaining delta is specific to KIO build-tree/process context",
+    "next_diagnostic_scope": "kio-build-tree-process-specific-icon-resolution-diagnostic"
+  }
 }

@@ -27,7 +27,7 @@ req(M.get("status") in {"definition-pending-diagnostic","diagnostic-PASS"},"Roun
 if M.get("status")=="definition-pending-diagnostic":
     req(M.get("next_gate")=="tier3-round12-kio-diagnostic-evidence","Round12 definition next gate")
 if M.get("status")=="diagnostic-PASS":
-    req(M.get("next_gate")=="tier3-round12-kio-remediation-definition","Round12 PASS next gate")
+    req(M.get("next_gate")=="tier3-round13-kio-build-tree-diagnostic-definition","Round12 PASS next gate")
 
 nodes={n["id"]:n for n in T.get("nodes",[])}
 kio=nodes.get("kio",{})
@@ -37,7 +37,10 @@ req(kio.get("packaging",{}).get("downstream_eligible") is False,"Round12 KIO rem
 req(kxml.get("state")=="PASS" and kxml.get("packaging",{}).get("package_version")=="6.30.0-0supralinux5","Round12 must retain KXMLGui PASS")
 req(L.get("state")=="attempt7-closed-mixed" and L.get("execution_authorized") is False,"Level1 must remain Attempt7 closed")
 req(L.get("canonical_snapshot")=="12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED","Round12 canonical snapshot")
-req(L.get("next_gate")=="tier3-round12-kio-diagnostic-definition","canonical next gate remains Round12 definition until evidence is closed")
+if M.get("status")=="definition-pending-diagnostic":
+    req(L.get("next_gate")=="tier3-round12-kio-diagnostic-definition","canonical next gate remains Round12 definition until evidence is closed")
+else:
+    req(L.get("next_gate")=="tier3-round13-kio-build-tree-diagnostic-definition","closed Round12 must hand off to Round13 build-tree diagnostic")
 req(L.get("current_attempt")==7 and L.get("next_attempt")==8,"Round12 attempt counters")
 
 e=M.get("attempt7_evidence",{})
@@ -86,7 +89,16 @@ req("No package revision is allocated" in D and "67/69" in D and "inode-director
 
 if M.get("status")=="diagnostic-PASS":
     ev=M.get("diagnostic_evidence",{})
+    req(ev.get("workflow_run")==36082312546 and ev.get("job_id")==107906716315 and ev.get("commit")=="91b57e78d5d74ed6ad7c87313086d1476bf60ba6","Round12 PASS workflow identity")
+    req(ev.get("artifact_id")==10842450967 and ev.get("artifact_sha256")=="5b34f0a73e1e0f9b32e0c88d6c5bc90d3463d4b4854931eecda66244a9c52df6","Round12 PASS artifact identity")
     req(ev.get("result")=="DIAG_COMPLETE" and ev.get("package_attempted") is False and ev.get("package_state_effect")=="none","Round12 PASS non-promoting evidence")
+    dr=M.get("diagnostic_results",{})
+    req(dr.get("qt_version")=="6.10.2" and dr.get("theme_name")=="breeze","Round12 Qt/Breeze identity")
+    req(dr.get("baseline",{}).get("unknown")=={"has":True,"null":False,"name":"unknown"},"Round12 baseline unknown icon")
+    req(dr.get("baseline",{}).get("inode-directory")=={"has":True,"null":False,"name":"inode-directory"},"Round12 baseline inode-directory icon")
+    req(dr.get("kdirmodel_testmode",{}).get("reproduced") is False,"Round12 KDirModel isolated sequence must not reproduce")
+    req(dr.get("knewfilemenu_sequence",{}).get("reproduced") is False,"Round12 KNewFileMenu isolated sequence must not reproduce")
+    req(dr.get("next_diagnostic_scope")=="kio-build-tree-process-specific-icon-resolution-diagnostic","Round12 next diagnostic scope")
 
 req(M.get("stable_promotion_requires_explicit_user_approval") is True,"Round12 stable gate")
 print("KDE Tier 3 KIO Round 12 diagnostic definition: PASS")
