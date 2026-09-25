@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-25",
+  "node": "kio",
+  "round": 13,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "claim": "non-promoting-kio-build-tree-process-diagnostic",
+  "non_promoting": true,
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "execution_authorized": false,
+  "status": "definition-pending-diagnostic",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "canonical_kio": {
+    "state": "FAIL",
+    "package_version": "6.30.0-0supralinux7",
+    "downstream_eligible": false
+  },
+  "round12_evidence": {
+    "workflow_run": 36082312546,
+    "job_id": 107906716315,
+    "commit": "91b57e78d5d74ed6ad7c87313086d1476bf60ba6",
+    "artifact_id": 10842450967,
+    "artifact_sha256": "5b34f0a73e1e0f9b32e0c88d6c5bc90d3463d4b4854931eecda66244a9c52df6",
+    "result": "DIAG_COMPLETE",
+    "isolated_reproduction": false
+  },
+  "source_materialization": {
+    "workflow_run": 36073638711,
+    "job_id": 107879979760,
+    "artifact_id": 10839162922,
+    "artifact_sha256": "ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c",
+    "package_version": "6.30.0-0supralinux7"
+  },
+  "diagnostic_scope": {
+    "build_only_targets": [
+      "kdirmodeltest",
+      "knewfilemenutest"
+    ],
+    "exact_provider_closure_from": "manifests/kde-tier3-build-level1.json",
+    "variants": [
+      "ctest-exact-attempt7-environment",
+      "direct-exact-attempt7-environment",
+      "direct-without-qt-plugin-path",
+      "direct-without-kdeci-platform-path",
+      "direct-with-explicit-xdg-data-dirs"
+    ],
+    "traces": [
+      "QT_DEBUG_PLUGINS",
+      "strace-file-access"
+    ],
+    "source_modification": false,
+    "package_build": false,
+    "package_revision_allocation": false,
+    "test_suppression": false
+  },
+  "decision_rules": {
+    "exact_reproduces_and_without_qt_plugin_path_recovers": "classify-build-tree-QT_PLUGIN_PATH-delta",
+    "exact_reproduces_and_without_kdeci_platform_path_recovers": "classify-KDECI_PLATFORM_PATH-delta",
+    "exact_reproduces_and_explicit_xdg_data_dirs_recovers": "classify-XDG-data-path-delta",
+    "exact_reproduces_but_no_variant_recovers": "inspect-plugin-and-file-access-traces-before-remediation",
+    "exact_does_not_reproduce": "next-scope-sbuild-unshare-chroot-specific"
+  },
+  "next_gate": "tier3-round13-kio-build-tree-diagnostic-evidence",
+  "stable_promotion_requires_explicit_user_approval": true
+}

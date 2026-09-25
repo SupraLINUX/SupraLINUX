@@ -360,3 +360,9 @@ Attempt 7's immutable campaign ledger continues to record `tier3-round12-kio-dia
 The live Tier 3, Level 1, package-contract and materialization manifests may advance to `tier3-round13-kio-build-tree-diagnostic-definition` only when the recorded Round 12 diagnostic is `diagnostic-PASS` with workflow `36082312546`, job `107906716315`, artifact `10842450967` and SHA-256 `5b34f0a73e1e0f9b32e0c88d6c5bc90d3463d4b4854931eecda66244a9c52df6`.
 
 This distinction preserves historical evidence while allowing the current lifecycle to advance. It does not authorize Level 1 execution, alter the canonical package states, or allocate a new KIO revision.
+
+## Round 13 KIO build-tree/process diagnostic definition
+
+The Round 12 closure and lifecycle handoff are now validated. Round 13 keeps KIO `6.30.0-0supralinux7` as the current FAIL and builds only the two affected CMake test targets from the exact materialized source and exact Level 1 provider closure.
+
+The diagnostic compares the original binaries under the Attempt 7 environment and controlled removals of `QT_PLUGIN_PATH`, `KDECI_PLATFORM_PATH`, plus explicit `XDG_DATA_DIRS`. It also captures Qt plugin diagnostics and file-access traces. No Debian package is built and no `-8` revision exists.
