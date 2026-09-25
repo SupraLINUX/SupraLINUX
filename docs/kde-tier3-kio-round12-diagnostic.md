@@ -107,3 +107,11 @@ This narrows the unresolved delta to the real **KIO build-tree/test-process cont
 Round 12 is closed. No remediation is justified yet and no `6.30.0-0supralinux8` revision is allocated. Canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**, with `execution_authorized=false`.
 
 Next gate: **`tier3-round13-kio-build-tree-diagnostic-definition`**.
+
+### Historical versus current next-gate validation
+
+Attempt 7's immutable campaign ledger continues to record `tier3-round12-kio-diagnostic-definition` as the gate that followed that attempt. Closing Round 12 must not rewrite that historical edge.
+
+The live Tier 3, Level 1, package-contract and materialization manifests may advance to `tier3-round13-kio-build-tree-diagnostic-definition` only when the recorded Round 12 diagnostic is `diagnostic-PASS` with workflow `36082312546`, job `107906716315`, artifact `10842450967` and SHA-256 `5b34f0a73e1e0f9b32e0c88d6c5bc90d3463d4b4854931eecda66244a9c52df6`.
+
+This distinction preserves historical evidence while allowing the current lifecycle to advance. It does not authorize Level 1 execution, alter the canonical package states, or allocate a new KIO revision.
