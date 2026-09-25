@@ -10,7 +10,8 @@ A=json.loads((ROOT/"manifests/kde-tier3-build-level1-attempts.json").read_text()
 W=(ROOT/".github/workflows/kde-tier3-kio-round12-diagnostic.yml").read_text()
 R=(ROOT/"scripts/run-kde-tier3-kio-round12-diagnostic.sh").read_text()
 D=(ROOT/"docs/kde-tier3-kio-round12-diagnostic.md").read_text()
-D13=json.loads((ROOT/"manifests/kde-tier3-kio-round13-diagnostic.json").read_text())\nD14=json.loads((ROOT/"manifests/kde-tier3-kio-round14-diagnostic.json").read_text())
+D13=json.loads((ROOT/"manifests/kde-tier3-kio-round13-diagnostic.json").read_text())
+D14=json.loads((ROOT/"manifests/kde-tier3-kio-round14-diagnostic.json").read_text())
 
 def req(v,m):
     if not v:

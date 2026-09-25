@@ -15,7 +15,8 @@ KIO={"job_id":107897110171,"artifact_id":10840963289,"artifact_sha256":"32b10c0a
 KXML={"job_id":107897110192,"artifact_id":10841652858,"artifact_sha256":"4cc0f2a0eadbb54eefc3ae90359d842f16cb2cfd95ae2ca0adaec3c1385338fe"}
 ATTEMPT7_NEXT="tier3-round12-kio-diagnostic-definition"
 ROUND13_NEXT="tier3-round13-kio-build-tree-diagnostic-definition"
-ROUND14_NEXT="tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition"\nROUND15_NEXT="tier3-round15-kio-breeze-icons-init-state-diagnostic-definition"
+ROUND14_NEXT="tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition"
+ROUND15_NEXT="tier3-round15-kio-breeze-icons-init-state-diagnostic-definition"
 FAILS=["kiowidgets-kdirmodeltest","kiofilewidgets-knewfilemenutest"]
 BLOCKED=["baloo","kcmutils","knotifyconfig","kparts","ktexteditor","purpose"]
 PASS={"kbookmarks","kconfigwidgets","kdav","kdesu","kiconthemes","kjobwidgets","kpeople","krunner","ksvg","ktextwidgets","kwallet","kxmlgui"}
@@ -27,7 +28,8 @@ C=load("manifests/kde-tier3-package-contracts.json")
 M=load("manifests/kde-tier3-materialization.json")
 R=load("manifests/kde-tier3-kio-round11-remediation.json")
 D12=load("manifests/kde-tier3-kio-round12-diagnostic.json")
-D13=load("manifests/kde-tier3-kio-round13-diagnostic.json")\nD14=load("manifests/kde-tier3-kio-round14-diagnostic.json")
+D13=load("manifests/kde-tier3-kio-round13-diagnostic.json")
+D14=load("manifests/kde-tier3-kio-round14-diagnostic.json")
 P=load("manifests/kde-tier3-build-campaign.json")
 G=load("manifests/kde-dag.json")
 

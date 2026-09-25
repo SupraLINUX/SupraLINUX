@@ -25,7 +25,8 @@ req(nodes["kio"].get("state")=="FAIL" and nodes["kio"].get("packaging",{}).get("
 req(nodes["kio"].get("packaging",{}).get("downstream_eligible") is False,"Round14 KIO remains ineligible")
 req(L.get("state")=="attempt7-closed-mixed" and L.get("execution_authorized") is False,"Round14 keeps Level1 closed")
 req(L.get("current_attempt")==7 and L.get("next_attempt")==8,"Round14 attempt counters")
-expected_live_gate = "tier3-round15-kio-breeze-icons-init-state-diagnostic-definition" if M.get("status")=="diagnostic-PASS" else "tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition"\nreq(L.get("next_gate")==expected_live_gate,"Round14 current live gate")
+expected_live_gate = "tier3-round15-kio-breeze-icons-init-state-diagnostic-definition" if M.get("status")=="diagnostic-PASS" else "tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition"
+req(L.get("next_gate")==expected_live_gate,"Round14 current live gate")
 req(D13.get("status")=="diagnostic-PASS" and D13.get("next_gate")=="tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition","Round13 closure handoff")
 e13=M.get("round13_evidence",{})
 req(e13.get("workflow_run")==36146880757 and e13.get("job_id")==108110145068,"Round13 evidence identity")
