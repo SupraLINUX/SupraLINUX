@@ -11,7 +11,7 @@
   "package_attempted": false,
   "package_state_effect": "none",
   "execution_authorized": false,
-  "status": "definition-pending-diagnostic",
+  "status": "diagnostic-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -72,6 +72,61 @@
     "baseline_reproduces_and_provider_does_not_recover": "provider-hypothesis-rejected-next-deeper-diagnostic",
     "baseline_does_not_reproduce": "diagnostic-baseline-drift-invalid"
   },
-  "next_gate": "tier3-round14-kio-kiconthemes-engine-provider-diagnostic-evidence",
-  "stable_promotion_requires_explicit_user_approval": true
+  "next_gate": "tier3-round15-kio-breeze-icons-init-state-diagnostic-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "definition_validation": {
+    "commit": "49e27249ecaa8f7d1ba20fe38615bdc2ee11d991",
+    "repository_policy_workflow_run": 36163271913,
+    "result": "PASS"
+  },
+  "diagnostic_evidence": {
+    "workflow_run": 36163272251,
+    "job_id": 108164792241,
+    "commit": "49e27249ecaa8f7d1ba20fe38615bdc2ee11d991",
+    "artifact_id": 10876807762,
+    "artifact_sha256": "2dda498091873a1c99a649ddb15c795130592c91100a3d97a78a608b8f531b87",
+    "result": "DIAG_COMPLETE",
+    "package_attempted": false,
+    "package_state_effect": "none"
+  },
+  "diagnostic_results": {
+    "conclusion": "libkf6iconthemes-bin-does-not-recover-both-kio-tests",
+    "baseline": {
+      "direct": {
+        "rc": 1,
+        "kdirmodel_empty_icon": true,
+        "knewfilemenu_empty_icon": true,
+        "plugin_seen": false
+      },
+      "ctest": {
+        "rc": 8,
+        "kdirmodel_empty_icon": true,
+        "knewfilemenu_empty_icon": true,
+        "plugin_seen": false
+      }
+    },
+    "provider": {
+      "direct": {
+        "rc": 1,
+        "kdirmodel_empty_icon": true,
+        "knewfilemenu_empty_icon": true,
+        "plugin_seen": false
+      },
+      "ctest": {
+        "rc": 8,
+        "kdirmodel_empty_icon": true,
+        "knewfilemenu_empty_icon": true,
+        "plugin_seen": false
+      }
+    },
+    "provider_plugin_seen": false,
+    "established_findings": [
+      "the exact Round 13 KIO build-tree baseline still reproduces both primary empty-icon-name failures",
+      "installing the exact retained libkf6iconthemes-bin 6.30.0-0supralinux3 package does not recover either direct test",
+      "the same two complete CTest targets still fail after provider installation",
+      "QT_DEBUG_PLUGINS does not report KIconEnginePlugin.so loaded in the treatment",
+      "provider presence alone is therefore not the missing causal condition"
+    ],
+    "next_diagnostic_scope": "breeze-icons-fallback-and-resource-init-state"
+  }
 }

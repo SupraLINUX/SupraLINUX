@@ -25,3 +25,17 @@ If the provider does not recover the tests, the hypothesis is rejected and the n
 No KIO revision is allocated. No source is patched, no test is suppressed, no Debian package is built, and canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**.
 
 Next gate: tier3-round14-kio-kiconthemes-engine-provider-diagnostic-evidence.
+
+## Diagnostic result — provider-presence hypothesis rejected
+
+Round 14 completed successfully in workflow `36163272251`, job `108164792241`, at commit `49e27249ecaa8f7d1ba20fe38615bdc2ee11d991`. Evidence artifact `10876807762` has SHA-256 `2dda498091873a1c99a649ddb15c795130592c91100a3d97a78a608b8f531b87`.
+
+The baseline reproduced both primary failures exactly. Installing only the exact retained `libkf6iconthemes-bin 6.30.0-0supralinux3` package did **not** recover either failure: direct execution and the complete CTest pair remained unchanged. `QT_DEBUG_PLUGINS` did not report `KIconEnginePlugin.so` loaded.
+
+Therefore the Round 13 hypothesis is rejected in its simple form: **provider presence alone is not sufficient**. This does not show that KIconEngine is irrelevant; it shows that merely installing its plugin package does not activate it in these KIO test processes.
+
+Round 12 had `QIcon::themeName()=breeze` with `QIcon::fallbackThemeName()=hicolor` and preserved icon names. KIconThemes startup calls `BreezeIcons::initIcons()`, which registers the Breeze resource and changes an empty/hicolor fallback to `breeze`. The next diagnostic isolates that state change before returning to packaging.
+
+Round 14 remains non-promoting. KIO stays `6.30.0-0supralinux7` FAIL/downstream-ineligible, no `-8` exists, and canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**.
+
+Next gate: **`tier3-round15-kio-breeze-icons-init-state-diagnostic-definition`**.

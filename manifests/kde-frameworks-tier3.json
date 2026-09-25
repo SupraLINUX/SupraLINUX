@@ -1349,7 +1349,7 @@
     "level1_execution_authorized": false,
     "full_level1_rerun_required": false,
     "status": "attempt7-complete-mixed",
-    "next_gate": "tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition",
+    "next_gate": "tier3-round15-kio-breeze-icons-init-state-diagnostic-definition",
     "current_attempt": 7,
     "next_attempt": 8,
     "validation_workflow_run": 36079116873,
@@ -1455,6 +1455,47 @@
         "plugin_path": "/usr/lib/x86_64-linux-gnu/qt6/plugins/kiconthemes6/iconengines/KIconEnginePlugin.so"
       },
       "next_diagnostic_scope": "kiconthemes-engine-provider-presence"
+    },
+    "round14_diagnostic": {
+      "status": "diagnostic-PASS",
+      "workflow_run": 36163272251,
+      "job_id": 108164792241,
+      "commit": "49e27249ecaa8f7d1ba20fe38615bdc2ee11d991",
+      "artifact_id": 10876807762,
+      "artifact_sha256": "2dda498091873a1c99a649ddb15c795130592c91100a3d97a78a608b8f531b87",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "conclusion": "libkf6iconthemes-bin-does-not-recover-both-kio-tests",
+      "baseline": {
+        "direct": {
+          "rc": 1,
+          "kdirmodel_empty_icon": true,
+          "knewfilemenu_empty_icon": true,
+          "plugin_seen": false
+        },
+        "ctest": {
+          "rc": 8,
+          "kdirmodel_empty_icon": true,
+          "knewfilemenu_empty_icon": true,
+          "plugin_seen": false
+        }
+      },
+      "provider": {
+        "direct": {
+          "rc": 1,
+          "kdirmodel_empty_icon": true,
+          "knewfilemenu_empty_icon": true,
+          "plugin_seen": false
+        },
+        "ctest": {
+          "rc": 8,
+          "kdirmodel_empty_icon": true,
+          "knewfilemenu_empty_icon": true,
+          "plugin_seen": false
+        }
+      },
+      "provider_plugin_seen": false,
+      "next_diagnostic_scope": "breeze-icons-fallback-and-resource-init-state"
     }
   },
   "remediation_history": [
