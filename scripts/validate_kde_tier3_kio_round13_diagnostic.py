@@ -27,7 +27,8 @@ nodes={n["id"]:n for n in T.get("nodes",[])}
 req(nodes["kio"].get("state")=="FAIL" and nodes["kio"].get("packaging",{}).get("package_version")=="6.30.0-0supralinux7","Round13 retains KIO -7 FAIL")
 req(nodes["kio"].get("packaging",{}).get("downstream_eligible") is False,"Round13 KIO downstream eligibility")
 req(L.get("execution_authorized") is False and L.get("state")=="attempt7-closed-mixed","Round13 keeps Level1 closed")
-req(L.get("next_gate")=="tier3-round13-kio-build-tree-diagnostic-definition","Round13 current canonical gate")
+expected_live_gate = "tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition" if M.get("status")=="diagnostic-PASS" else "tier3-round13-kio-build-tree-diagnostic-definition"
+req(L.get("next_gate")==expected_live_gate,"Round13 current canonical gate")
 req(L.get("current_attempt")==7 and L.get("next_attempt")==8,"Round13 attempt counters")
 
 req(D12.get("status")=="diagnostic-PASS" and D12.get("next_gate")=="tier3-round13-kio-build-tree-diagnostic-definition","Round12 closure handoff")
@@ -73,8 +74,22 @@ req("No new KIO revision is allocated" in D and "build-tree" in D and "sbuild/un
 if M.get("status")=="definition-pending-diagnostic":
     req(M.get("next_gate")=="tier3-round13-kio-build-tree-diagnostic-evidence","Round13 definition gate")
 else:
+    req(M.get("next_gate")=="tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition","Round13 closure next gate")
     ev=M.get("diagnostic_evidence",{})
+    req(ev.get("workflow_run")==36146880757 and ev.get("job_id")==108110145068 and ev.get("commit")=="7ede12eba5bd301687e074646027ebc293a4b489","Round13 closure workflow identity")
+    req(ev.get("artifact_id")==10869413386 and ev.get("artifact_sha256")=="f96d4fdfebc5fcebe63633650ebf3998a51e37e5c84c12b50bc3d745097d7cd7","Round13 closure artifact identity")
     req(ev.get("result")=="DIAG_COMPLETE" and ev.get("package_attempted") is False and ev.get("package_state_effect")=="none","Round13 closure evidence")
+    dr=M.get("diagnostic_results",{})
+    req(dr.get("conclusion")=="build-tree-reproduces-no-simple-env-recovery-inspect-traces","Round13 conclusion")
+    variants=dr.get("variants",{})
+    req(len(variants)==5 and all(x.get("both_primary_failures") is True for x in variants.values()),"Round13 all variants reproduce both primary failures")
+    ts=dr.get("trace_summary",{})
+    req(ts.get("kdirmodeltest",{}).get("mentions_breeze") is True and ts.get("kdirmodeltest",{}).get("mentions_unknown") is True,"Round13 KDirModel trace")
+    req(ts.get("knewfilemenutest",{}).get("mentions_breeze") is True and ts.get("knewfilemenutest",{}).get("mentions_inode_directory") is True,"Round13 KNewFileMenu trace")
+    pc=dr.get("provider_candidate",{})
+    req(pc.get("classification")=="strong-hypothesis-unproven","Round13 provider candidate remains unproven")
+    req(pc.get("binary_package")=="libkf6iconthemes-bin" and pc.get("binary_deb_sha256")=="6806b7b03b3f30d21620c315118066c9c7f35714e6a12e0b3360e01cbcfaff0c","Round13 provider candidate identity")
+    req(pc.get("plugin_path")=="/usr/lib/x86_64-linux-gnu/qt6/plugins/kiconthemes6/iconengines/KIconEnginePlugin.so","Round13 KIconEngine plugin path")
 
 req(M.get("stable_promotion_requires_explicit_user_approval") is True,"Round13 stable gate")
 print("KDE Tier 3 KIO Round 13 diagnostic definition: PASS")

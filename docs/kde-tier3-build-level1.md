@@ -366,3 +366,25 @@ This distinction preserves historical evidence while allowing the current lifecy
 The Round 12 closure and lifecycle handoff are now validated. Round 13 keeps KIO `6.30.0-0supralinux7` as the current FAIL and builds only the two affected CMake test targets from the exact materialized source and exact Level 1 provider closure.
 
 The diagnostic compares the original binaries under the Attempt 7 environment and controlled removals of `QT_PLUGIN_PATH`, `KDECI_PLATFORM_PATH`, plus explicit `XDG_DATA_DIRS`. It also captures Qt plugin diagnostics and file-access traces. No Debian package is built and no `-8` revision exists.
+
+## Diagnostic result — build-tree reproduction confirmed
+
+Round 13 completed successfully in workflow `36146880757`, job `108110145068`, at commit `7ede12eba5bd301687e074646027ebc293a4b489`. Evidence artifact `10869413386` has SHA-256 `f96d4fdfebc5fcebe63633650ebf3998a51e37e5c84c12b50bc3d745097d7cd7`. Repository Policy `36146880825` passed on the same commit.
+
+The exact KIO build-tree reproduces both primary Attempt 7 failures. CTest returns the same empty icon-name signatures, and direct execution reproduces them as well. Removing `QT_PLUGIN_PATH`, removing `KDECI_PLATFORM_PATH`, or explicitly setting `XDG_DATA_DIRS=/usr/local/share:/usr/share` does not recover either test.
+
+The file-access traces prove that this is not simply “Breeze is missing”: KDirModel reaches Breeze and the `unknown` icon path; KNewFileMenu reaches Breeze and `inode-directory`. The failure is therefore between icon-theme/provider integration and the resulting `QIcon` identity.
+
+A stronger provider hypothesis emerged from the retained KIconThemes package. Canonical KIconThemes `6.30.0-0supralinux3` artifact `10731249726` contains `libkf6iconthemes-bin`, whose exact Debian package SHA-256 is `6806b7b03b3f30d21620c315118066c9c7f35714e6a12e0b3360e01cbcfaff0c`. That package installs:
+
+`/usr/lib/x86_64-linux-gnu/qt6/plugins/kiconthemes6/iconengines/KIconEnginePlugin.so`
+
+Upstream KIconThemes 6.30 explicitly provides this `QIconEnginePlugin`; its theme initialization can add the `kiconthemes6` plugin path and force the `KIconEngine` theme key.
+
+However, both `libkf6iconthemes6` and `libkf6iconwidgets6` declare `libkf6iconthemes-bin` only as a **Recommends**. Attempt 7 and Round 13 both show it under “Recommended packages”, while their build/test installation excludes recommendations. The Round 13 traces consequently find neither the build-tree `iconengines` directory nor the system Qt `iconengines` directory.
+
+This is a **strong hypothesis, not yet a root-cause claim**. No package relationship changes here. The next gate will test only whether installing the exact retained `libkf6iconthemes-bin` provider makes the two original build-tree tests recover.
+
+Round 13 remains non-promoting: no KIO package was built, KIO stays FAIL at `6.30.0-0supralinux7`, no `-8` revision exists, and canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**.
+
+Next gate: **`tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition`**.

@@ -11,7 +11,7 @@
   "package_attempted": false,
   "package_state_effect": "none",
   "execution_authorized": false,
-  "status": "definition-pending-diagnostic",
+  "status": "diagnostic-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -75,7 +75,7 @@
     "exact_reproduces_but_no_variant_recovers": "inspect-plugin-and-file-access-traces-before-remediation",
     "exact_does_not_reproduce": "next-scope-sbuild-unshare-chroot-specific"
   },
-  "next_gate": "tier3-round13-kio-build-tree-diagnostic-evidence",
+  "next_gate": "tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition",
   "stable_promotion_requires_explicit_user_approval": true,
   "infra_attempts": [
     {
@@ -125,5 +125,94 @@
       "package_attempted": false,
       "package_state_effect": "none"
     }
-  ]
+  ],
+  "definition_validation": {
+    "commit": "7ede12eba5bd301687e074646027ebc293a4b489",
+    "repository_policy_workflow_run": 36146880825,
+    "result": "PASS"
+  },
+  "diagnostic_evidence": {
+    "workflow_run": 36146880757,
+    "job_id": 108110145068,
+    "commit": "7ede12eba5bd301687e074646027ebc293a4b489",
+    "artifact_id": 10869413386,
+    "artifact_sha256": "f96d4fdfebc5fcebe63633650ebf3998a51e37e5c84c12b50bc3d745097d7cd7",
+    "result": "DIAG_COMPLETE",
+    "package_attempted": false,
+    "package_state_effect": "none"
+  },
+  "diagnostic_results": {
+    "conclusion": "build-tree-reproduces-no-simple-env-recovery-inspect-traces",
+    "variants": {
+      "ctest-exact-attempt7-environment": {
+        "rc": 8,
+        "kdirmodel_empty_icon": true,
+        "knewfilemenu_empty_icon": true,
+        "both_primary_failures": true
+      },
+      "direct-exact-attempt7-environment": {
+        "rc": 1,
+        "kdirmodel_empty_icon": true,
+        "knewfilemenu_empty_icon": true,
+        "both_primary_failures": true
+      },
+      "direct-without-qt-plugin-path": {
+        "rc": 1,
+        "kdirmodel_empty_icon": true,
+        "knewfilemenu_empty_icon": true,
+        "both_primary_failures": true
+      },
+      "direct-without-kdeci-platform-path": {
+        "rc": 1,
+        "kdirmodel_empty_icon": true,
+        "knewfilemenu_empty_icon": true,
+        "both_primary_failures": true
+      },
+      "direct-with-explicit-xdg-data-dirs": {
+        "rc": 1,
+        "kdirmodel_empty_icon": true,
+        "knewfilemenu_empty_icon": true,
+        "both_primary_failures": true
+      }
+    },
+    "trace_summary": {
+      "kdirmodeltest": {
+        "mentions_breeze": true,
+        "mentions_index_theme": true,
+        "mentions_inode_directory": false,
+        "mentions_unknown": true
+      },
+      "knewfilemenutest": {
+        "mentions_breeze": true,
+        "mentions_index_theme": true,
+        "mentions_inode_directory": true,
+        "mentions_unknown": false
+      }
+    },
+    "established_findings": [
+      "the exact KIO build-tree reproduces both Attempt 7 primary icon-name failures",
+      "removing QT_PLUGIN_PATH does not recover either failure",
+      "removing KDECI_PLATFORM_PATH does not recover either failure",
+      "explicit XDG_DATA_DIRS does not recover either failure",
+      "both processes reach Breeze metadata/payload paths, so the failure is not simply a missing Breeze theme",
+      "the KIconThemes engine-plugin package is available in the canonical provider artifact but is omitted from build/test installation under no-install-recommends"
+    ],
+    "provider_candidate": {
+      "classification": "strong-hypothesis-unproven",
+      "package_version": "6.30.0-0supralinux3",
+      "canonical_artifact_id": 10731249726,
+      "canonical_artifact_sha256": "5b06a92638fb67409710b140f3ebc597400d0d739db497e3d570fbe42cfa5206",
+      "binary_package": "libkf6iconthemes-bin",
+      "binary_deb_sha256": "6806b7b03b3f30d21620c315118066c9c7f35714e6a12e0b3360e01cbcfaff0c",
+      "plugin_path": "/usr/lib/x86_64-linux-gnu/qt6/plugins/kiconthemes6/iconengines/KIconEnginePlugin.so",
+      "upstream_behavior": "KIconThemes 6.30 provides KIconEnginePlugin and KIconTheme::initTheme can add the kiconthemes6 plugin path and force QIcon theme key KIconEngine.",
+      "packaging_relation": {
+        "libkf6iconthemes6": "Recommends: libkf6iconthemes-bin (= 6.30.0-0supralinux3)",
+        "libkf6iconwidgets6": "Recommends: libkf6iconthemes-bin (= 6.30.0-0supralinux3)"
+      },
+      "build_test_observation": "Attempt 7 and Round 13 list libkf6iconthemes-bin only under Recommended packages; no-install-recommends excludes it from the test environment.",
+      "trace_observation": "Round 13 traces probe build-tree/bin/iconengines and /usr/lib/x86_64-linux-gnu/qt6/plugins/iconengines and receive ENOENT while Breeze payloads themselves are reachable.",
+      "required_next_test": "install the exact retained libkf6iconthemes-bin provider only, rerun the same two build-tree tests, and compare icon-name behavior before changing package contracts"
+    }
+  }
 }

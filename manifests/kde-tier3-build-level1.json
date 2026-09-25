@@ -828,7 +828,7 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-round13-kio-build-tree-diagnostic-definition",
+  "next_gate": "tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition",
   "current_attempt": 7,
   "last_activation": {
     "policy_workflow_run": 35826072726,
@@ -890,7 +890,7 @@
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "tier3-round13-kio-build-tree-diagnostic-definition",
+    "next_gate": "tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition",
     "current_attempt": 7,
     "next_attempt": 8,
     "remaining_failed_nodes": [
@@ -966,6 +966,26 @@
       "isolated_reproduction": false,
       "conclusion": "Qt 6.10.2 + retained Breeze + the upstream QStandardPaths sequences resolve unknown, inode-directory and folder-red correctly outside the KIO build-tree process.",
       "next_diagnostic_scope": "kio-build-tree-process-specific-icon-resolution-diagnostic"
+    },
+    "round13_diagnostic": {
+      "status": "diagnostic-PASS",
+      "workflow_run": 36146880757,
+      "job_id": 108110145068,
+      "commit": "7ede12eba5bd301687e074646027ebc293a4b489",
+      "artifact_id": 10869413386,
+      "artifact_sha256": "f96d4fdfebc5fcebe63633650ebf3998a51e37e5c84c12b50bc3d745097d7cd7",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "conclusion": "build-tree-reproduces-no-simple-env-recovery-inspect-traces",
+      "provider_candidate": {
+        "classification": "strong-hypothesis-unproven",
+        "binary_package": "libkf6iconthemes-bin",
+        "package_version": "6.30.0-0supralinux3",
+        "canonical_artifact_id": 10731249726,
+        "binary_deb_sha256": "6806b7b03b3f30d21620c315118066c9c7f35714e6a12e0b3360e01cbcfaff0c",
+        "plugin_path": "/usr/lib/x86_64-linux-gnu/qt6/plugins/kiconthemes6/iconengines/KIconEnginePlugin.so"
+      },
+      "next_diagnostic_scope": "kiconthemes-engine-provider-presence"
     }
   },
   "activation": {

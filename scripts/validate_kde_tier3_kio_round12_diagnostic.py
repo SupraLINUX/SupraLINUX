@@ -10,6 +10,7 @@ A=json.loads((ROOT/"manifests/kde-tier3-build-level1-attempts.json").read_text()
 W=(ROOT/".github/workflows/kde-tier3-kio-round12-diagnostic.yml").read_text()
 R=(ROOT/"scripts/run-kde-tier3-kio-round12-diagnostic.sh").read_text()
 D=(ROOT/"docs/kde-tier3-kio-round12-diagnostic.md").read_text()
+D13=json.loads((ROOT/"manifests/kde-tier3-kio-round13-diagnostic.json").read_text())
 
 def req(v,m):
     if not v:
@@ -40,7 +41,8 @@ req(L.get("canonical_snapshot")=="12 PASS / 1 pending / 1 current FAIL / 6 BLOCK
 if M.get("status")=="definition-pending-diagnostic":
     req(L.get("next_gate")=="tier3-round12-kio-diagnostic-definition","canonical next gate remains Round12 definition until evidence is closed")
 else:
-    req(L.get("next_gate")=="tier3-round13-kio-build-tree-diagnostic-definition","closed Round12 must hand off to Round13 build-tree diagnostic")
+    current_next = "tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition" if D13.get("status")=="diagnostic-PASS" else "tier3-round13-kio-build-tree-diagnostic-definition"
+    req(L.get("next_gate")==current_next,"closed Round12 live handoff")
 req(L.get("current_attempt")==7 and L.get("next_attempt")==8,"Round12 attempt counters")
 
 e=M.get("attempt7_evidence",{})

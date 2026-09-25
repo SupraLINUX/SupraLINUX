@@ -15,6 +15,7 @@ KIO={"job_id":107897110171,"artifact_id":10840963289,"artifact_sha256":"32b10c0a
 KXML={"job_id":107897110192,"artifact_id":10841652858,"artifact_sha256":"4cc0f2a0eadbb54eefc3ae90359d842f16cb2cfd95ae2ca0adaec3c1385338fe"}
 ATTEMPT7_NEXT="tier3-round12-kio-diagnostic-definition"
 ROUND13_NEXT="tier3-round13-kio-build-tree-diagnostic-definition"
+ROUND14_NEXT="tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition"
 FAILS=["kiowidgets-kdirmodeltest","kiofilewidgets-knewfilemenutest"]
 BLOCKED=["baloo","kcmutils","knotifyconfig","kparts","ktexteditor","purpose"]
 PASS={"kbookmarks","kconfigwidgets","kdav","kdesu","kiconthemes","kjobwidgets","kpeople","krunner","ksvg","ktextwidgets","kwallet","kxmlgui"}
@@ -26,6 +27,7 @@ C=load("manifests/kde-tier3-package-contracts.json")
 M=load("manifests/kde-tier3-materialization.json")
 R=load("manifests/kde-tier3-kio-round11-remediation.json")
 D12=load("manifests/kde-tier3-kio-round12-diagnostic.json")
+D13=load("manifests/kde-tier3-kio-round13-diagnostic.json")
 P=load("manifests/kde-tier3-build-campaign.json")
 G=load("manifests/kde-dag.json")
 
@@ -46,7 +48,8 @@ req("kio" not in G.get("nodes",{}),"KIO remains absent from PASS DAG")
 req(G.get("nodes",{}).get("kxmlgui",{}).get("state")=="PASS","KXMLGui remains PASS in DAG")
 
 round12_closed = D12.get("status")=="diagnostic-PASS"
-CURRENT_NEXT = ROUND13_NEXT if round12_closed else ATTEMPT7_NEXT
+round13_closed = D13.get("status")=="diagnostic-PASS"
+CURRENT_NEXT = ROUND14_NEXT if round13_closed else (ROUND13_NEXT if round12_closed else ATTEMPT7_NEXT)
 if round12_closed:
     ev=D12.get("diagnostic_evidence",{})
     req(ev.get("workflow_run")==36082312546 and ev.get("job_id")==107906716315,"Round12 closure workflow evidence")
@@ -56,6 +59,14 @@ if round12_closed:
     req(dr.get("next_diagnostic_scope")=="kio-build-tree-process-specific-icon-resolution-diagnostic","Round12 handoff scope")
 else:
     req(D12.get("status")=="definition-pending-diagnostic","Round12 lifecycle before closure")
+if round13_closed:
+    ev=D13.get("diagnostic_evidence",{})
+    req(ev.get("workflow_run")==36146880757 and ev.get("job_id")==108110145068,"Round13 closure workflow evidence")
+    req(ev.get("artifact_id")==10869413386 and ev.get("artifact_sha256")=="f96d4fdfebc5fcebe63633650ebf3998a51e37e5c84c12b50bc3d745097d7cd7","Round13 closure artifact evidence")
+    req(ev.get("result")=="DIAG_COMPLETE" and ev.get("package_attempted") is False and ev.get("package_state_effect")=="none","Round13 closure remains non-promoting")
+    req(D13.get("diagnostic_results",{}).get("conclusion")=="build-tree-reproduces-no-simple-env-recovery-inspect-traces","Round13 closure conclusion")
+elif round12_closed:
+    req(D13.get("status")=="definition-pending-diagnostic","Round13 lifecycle before closure")
 
 ar=T.get("active_remediation",{})
 req(ar.get("round")==11 and ar.get("status")=="attempt7-complete-mixed","Round11 canonical closure")
