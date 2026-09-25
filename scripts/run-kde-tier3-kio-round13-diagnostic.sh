@@ -85,7 +85,22 @@ DSC="$(find "${INPUTS}/materialization" -type f -name '*.dsc' -print -quit)"
 [[ -n "${DSC}" && -s "${DSC}" ]]
 
 STAGE=provider-download
-while IFS=
+TAB="$(printf '\t')"
+while IFS="${TAB}" read -r input_id artifact_id artifact_sha version; do
+  printf '%s\t%s\t%s\n' "${input_id}" "${version}" "${artifact_id}" >> "${EVIDENCE}/provider-plan.tsv"
+  download_artifact "${artifact_id}" "${artifact_sha}" "${INPUTS}/${input_id}"
+done < "${EVIDENCE}/input-plan.tsv"
+
+STAGE=local-repository
+find "${INPUTS}" -mindepth 2 -type f -name '*.deb' -exec cp -n {} "${APT_REPO}/" \;
+(
+  cd "${APT_REPO}"
+  dpkg-scanpackages . /dev/null > Packages
+  gzip -9c Packages > Packages.gz
+  chmod 0644 Packages Packages.gz ./*.deb
+)
+echo "deb [trusted=yes] file:${APT_REPO} ./" | sudo tee /etc/apt/sources.list.d/supralinux-round13.list
+sudo apt-get update
 
 STAGE=source-extract
 mkdir -p "${WORK}/source"

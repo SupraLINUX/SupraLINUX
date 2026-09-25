@@ -78,6 +78,19 @@
       "diagnostic_evidence_valid": false,
       "package_attempted": false,
       "package_state_effect": "none"
+    },
+    {
+      "workflow_run": 36134433836,
+      "job_id": 108069000227,
+      "commit": "f406f157e361c4561e112f64ae58617d52f8d842",
+      "artifact_id": 10862348959,
+      "artifact_sha256": "73c954e57ee368506b226167a70e2048b2c0de18330a85cef3e7171691ad99d9",
+      "result": "INFRA_FAIL",
+      "stage": "provider-download-script-parse",
+      "cause": "The previous repair accidentally truncated the provider-download and local-repository block, leaving a syntactically incomplete 'while IFS=' statement. Bash and ShellCheck stopped before any KIO build-tree experiment.",
+      "diagnostic_evidence_valid": false,
+      "package_attempted": false,
+      "package_state_effect": "none"
     }
   ]
 }

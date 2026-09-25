@@ -46,3 +46,11 @@ The uploaded failure artifact is `10862700232`, SHA-256 `b6ff8d87f036ad227b440ac
 Repository Policy for that commit also stopped at ShellCheck because of three runner-only lint issues. Those issues do not alter the Round 13 diagnostic design.
 
 The corrected runner uses a world-traversable repository under `/tmp/supralinux-round13-repo`, materializes both `Packages` and `Packages.gz`, and preserves provider-version evidence while satisfying ShellCheck. Round 13 remains `definition-pending-diagnostic`.
+
+## Infrastructure attempt 2
+
+Workflow `36134433836`, job `108069000227`, on commit `f406f157e361c4561e112f64ae58617d52f8d842` also produced no KIO diagnostic result. Artifact `10862348959`, SHA-256 `73c954e57ee368506b226167a70e2048b2c0de18330a85cef3e7171691ad99d9`, is retained as infrastructure evidence only.
+
+The previous repair accidentally truncated the provider-download/local-repository block and left an incomplete `while IFS=` statement. Both ShellCheck and Bash therefore failed before provider installation or KIO configuration.
+
+The runner now restores the full block and obtains the tab separator through `printf`, avoiding shell ANSI-C quoting in the generated script. Round 13 remains `definition-pending-diagnostic`; no package or canonical state changed.
