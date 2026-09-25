@@ -320,3 +320,13 @@ Round 11 is closed as mixed. The next gate is **`tier3-round12-kio-diagnostic-de
 ### Canonical DAG evidence versus PASS revalidation history
 
 A later PASS revalidation does not create a second canonical promotion. The canonical DAG keeps the single evidence record that originally promoted the package to PASS; the package lifecycle may retain additional PASS records only when they are explicitly classified as `package_state_effect=PASS-revalidation`, match the current package revision, and preserve downstream eligibility. Attempt 7 KXMLGui is the first Level 1 instance of this distinction.
+
+## Round 12 KIO diagnostic definition
+
+Attempt 7 closure validation passed on commit `8f79504c8bce450ffc3b2ecdd7da388e5f62103b`, including Repository Policy `36081396544`. Round 12 therefore starts as a non-promoting diagnostic only.
+
+The current failure class is reduced to themed-icon resolution in `kiowidgets-kdirmodeltest` and the default row of `kiofilewidgets-knewfilemenutest`. The later KNewFileMenu expanded-state failures are downstream of the default row aborting before state persistence.
+
+The Round 12 workflow revalidates the exact Attempt 7 failure artifact and exact Breeze provider, verifies KIO 6.30.0 source by SHA-256, and probes the QStandardPaths/QIcon sequences used by the two upstream tests. It does not build or rematerialize KIO and does not allocate a `-8` package revision.
+
+Canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED** and Level 1 execution remains closed. Diagnostic gate: `tier3-round12-kio-diagnostic-evidence`.

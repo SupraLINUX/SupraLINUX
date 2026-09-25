@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-24",
+  "node": "kio",
+  "round": 12,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "upstream_source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
+  "claim": "non-promoting-kio-icon-resolution-diagnostic",
+  "non_promoting": true,
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "dag_state_changes_allowed": false,
+  "downstream_eligibility_changes_allowed": false,
+  "execution_authorized": false,
+  "status": "definition-pending-diagnostic",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "canonical_kio": {
+    "state": "FAIL",
+    "package_version": "6.30.0-0supralinux7",
+    "downstream_eligible": false
+  },
+  "attempt7_evidence": {
+    "workflow_run": 36079116873,
+    "commit": "ef6262ac9018df2c0d111d97f99919d8acdeb215",
+    "rootfs": {
+      "artifact_id": 10841431451,
+      "artifact_sha256": "ac49ee835a7d45f00c4655c36d60e3725558d570b6af1f630849f84a2d8bb532"
+    },
+    "kio": {
+      "job_id": 107897110171,
+      "artifact_id": 10840963289,
+      "artifact_sha256": "32b10c0ac337040239edea709440c5b09b898d76da1ac3c8e10339bf1477d239",
+      "tests": {
+        "total": 69,
+        "pass": 67,
+        "fail": 2
+      },
+      "failed_tests": [
+        "kiowidgets-kdirmodeltest",
+        "kiofilewidgets-knewfilemenutest"
+      ]
+    },
+    "kxmlgui": {
+      "job_id": 107897110192,
+      "artifact_id": 10841652858,
+      "artifact_sha256": "4cc0f2a0eadbb54eefc3ae90359d842f16cb2cfd95ae2ca0adaec3c1385338fe",
+      "result": "PASS"
+    }
+  },
+  "retained_breeze_provider": {
+    "version": "4:6.30.0-0supralinux1",
+    "workflow_run": 35700002095,
+    "job_id": 106656021938,
+    "artifact_id": 10682012012,
+    "artifact_sha256": "daaa5abda5a8f824c6fa509142d7cd9132de213d782cb32e0561873f427aa577",
+    "breeze_deb_sha256": "308a20089ef387da2d5ba08b42be4299dd62fe5f5535786a0d8881d93b0d1e09"
+  },
+  "established_findings": [
+    {
+      "id": "attempt7-ctest-environment-preserved",
+      "state": "PROVEN",
+      "evidence": [
+        "both failed targets retained QT_PLUGIN_PATH=<build-tree>/bin",
+        "both targets retained QT_QPA_PLATFORM=offscreen as their base CTest environment",
+        "both targets applied QT_QPA_PLATFORM=set:xcb and QT_QPA_SYSTEM_ICON_THEME=set:breeze through ENVIRONMENT_MODIFICATION"
+      ]
+    },
+    {
+      "id": "breeze-installed-in-attempt7-chroot",
+      "state": "PROVEN",
+      "evidence": "sbuild installed breeze-icon-theme 4:6.30.0-0supralinux1 before tests"
+    },
+    {
+      "id": "krecentdocument-recovered",
+      "state": "PROVEN",
+      "evidence": "Attempt 7 reached 67/69 and krecentdocumenttest is absent from the failing set"
+    },
+    {
+      "id": "knewfilemenu-primary-failure-is-icon-resolution",
+      "state": "PROVEN",
+      "evidence": "default data row first fails at knewfilemenutest.cpp:527 because iconLabel iconName is empty instead of inode-directory; later expanded-state failures occur after that row aborts before directory creation/state persistence"
+    },
+    {
+      "id": "kdirmodel-primary-failure-is-icon-resolution",
+      "state": "PROVEN",
+      "evidence": "testIcon first observes an empty QIcon name where unknown is expected; later state/data failures are downstream cascades"
+    }
+  ],
+  "diagnostic_questions": [
+    "Does QStandardPaths::setTestModeEnabled(true), as used by KDirModelTest, alter QIcon theme search paths or resolution under the exact XCB/Breeze environment?",
+    "Does the KNewFileMenuTest true-to-false QStandardPaths test-mode sequence plus its fake XDG_CONFIG_HOME alter later QIcon resolution?",
+    "Does explicitly setting the Breeze theme restore either sequence, distinguishing theme selection from search-path discovery?",
+    "If none of the isolated sequences reproduce the failure, is the remaining delta specific to the KIO build-tree/test process rather than Ubuntu Qt or the Breeze payload?"
+  ],
+  "probes": {
+    "attempt7_log_revalidation": true,
+    "verified_kio_source_static_analysis": true,
+    "qt_widgets_icon_probe_modes": [
+      "baseline",
+      "kdirmodel-testmode",
+      "kdirmodel-testmode-explicit-theme",
+      "knewfilemenu-sequence",
+      "knewfilemenu-sequence-explicit-theme"
+    ],
+    "package_build": false,
+    "source_modification": false,
+    "test_suppression": false
+  },
+  "next_gate": "tier3-round12-kio-diagnostic-evidence",
+  "stable_promotion_requires_explicit_user_approval": true
+}

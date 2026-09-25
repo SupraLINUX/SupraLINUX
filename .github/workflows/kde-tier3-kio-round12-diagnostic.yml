@@ -1,0 +1,58 @@
+name: KDE Frameworks Tier 3 KIO Round 12 diagnostic
+
+on:
+  pull_request:
+    paths:
+      - manifests/kde-tier3-kio-round12-diagnostic.json
+      - scripts/run-kde-tier3-kio-round12-diagnostic.sh
+      - scripts/validate_kde_tier3_kio_round12_diagnostic.py
+      - docs/kde-tier3-kio-round12-diagnostic.md
+      - .github/workflows/kde-tier3-kio-round12-diagnostic.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnostic:
+    name: KIO Round 12 non-promoting icon diagnostic
+    runs-on: ubuntu-26.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Validate diagnostic definition
+        run: python3 scripts/validate_kde_tier3_kio_round12_diagnostic.py
+
+      - name: Determine diagnostic capture mode
+        id: mode
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          status=json.loads(Path("manifests/kde-tier3-kio-round12-diagnostic.json").read_text())["status"]
+          if status not in {"definition-pending-diagnostic","diagnostic-PASS"}:
+              raise SystemExit(f"unsupported diagnostic status: {status}")
+          print("capture=" + ("true" if status=="definition-pending-diagnostic" else "false"))
+          PY
+
+      - name: Capture KIO Round 12 diagnostic evidence
+        if: steps.mode.outputs.capture == 'true'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash scripts/run-kde-tier3-kio-round12-diagnostic.sh
+
+      - name: Upload diagnostic evidence
+        if: always() && steps.mode.outputs.capture == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-tier3-kio-round12-diagnostic-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-tier3-kio-round12-diagnostic/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Report closed diagnostic skip
+        if: steps.mode.outputs.capture != 'true'
+        run: echo 'Round 12 diagnostic is already closed; historical evidence validated and recapture skipped.'
