@@ -388,3 +388,9 @@ This is a **strong hypothesis, not yet a root-cause claim**. No package relation
 Round 13 remains non-promoting: no KIO package was built, KIO stays FAIL at `6.30.0-0supralinux7`, no `-8` revision exists, and canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**.
 
 Next gate: **`tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition`**.
+
+## Round 14 KIO KIconThemes engine-provider diagnostic definition
+
+Round 13 closed with a strong but unproven provider hypothesis: the retained KIconThemes artifact contains libkf6iconthemes-bin and KIconEnginePlugin.so, while KIO's no-recommends test environment omits that binary package.
+
+Round 14 is a controlled A/B diagnostic. It reproduces the same KIO -7 build-tree first without the provider and then after installing only the exact retained libkf6iconthemes-bin 6.30.0-0supralinux3. The two primary functions and the two complete CTest targets are compared. No package revision or contract change is made by the diagnostic.

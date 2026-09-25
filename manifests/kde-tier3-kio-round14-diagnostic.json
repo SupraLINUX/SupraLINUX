@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-25",
+  "node": "kio",
+  "round": 14,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "claim": "non-promoting-kiconthemes-engine-provider-diagnostic",
+  "non_promoting": true,
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "execution_authorized": false,
+  "status": "definition-pending-diagnostic",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "canonical_kio": {
+    "state": "FAIL",
+    "package_version": "6.30.0-0supralinux7",
+    "downstream_eligible": false
+  },
+  "round13_evidence": {
+    "workflow_run": 36146880757,
+    "job_id": 108110145068,
+    "commit": "7ede12eba5bd301687e074646027ebc293a4b489",
+    "artifact_id": 10869413386,
+    "artifact_sha256": "f96d4fdfebc5fcebe63633650ebf3998a51e37e5c84c12b50bc3d745097d7cd7",
+    "conclusion": "build-tree-reproduces-no-simple-env-recovery-inspect-traces"
+  },
+  "provider_candidate": {
+    "node": "kiconthemes",
+    "package_version": "6.30.0-0supralinux3",
+    "canonical_artifact_id": 10731249726,
+    "canonical_artifact_sha256": "5b06a92638fb67409710b140f3ebc597400d0d739db497e3d570fbe42cfa5206",
+    "binary_package": "libkf6iconthemes-bin",
+    "binary_deb_sha256": "6806b7b03b3f30d21620c315118066c9c7f35714e6a12e0b3360e01cbcfaff0c",
+    "plugin_path": "/usr/lib/x86_64-linux-gnu/qt6/plugins/kiconthemes6/iconengines/KIconEnginePlugin.so",
+    "current_relation": "Recommends",
+    "build_test_observation": "excluded by --no-install-recommends in Attempt 7 and Round 13"
+  },
+  "source_materialization": {
+    "artifact_id": 10839162922,
+    "artifact_sha256": "ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c",
+    "package_version": "6.30.0-0supralinux7"
+  },
+  "diagnostic_scope": {
+    "baseline": "exact Round 13 build-tree environment without libkf6iconthemes-bin",
+    "treatment": "install only exact retained libkf6iconthemes-bin Debian package",
+    "build_support_targets": [
+      "kio_file",
+      "kioworker"
+    ],
+    "build_test_targets": [
+      "kdirmodeltest",
+      "knewfilemenutest"
+    ],
+    "direct_test_functions": {
+      "kdirmodeltest": "testIcon",
+      "knewfilemenutest": "testFolderIconCollection"
+    },
+    "post_provider_ctest_targets": [
+      "kiowidgets-kdirmodeltest",
+      "kiofilewidgets-knewfilemenutest"
+    ],
+    "qt_plugin_debug_after_provider": true,
+    "package_build": false,
+    "source_modification": false,
+    "package_revision_allocation": false,
+    "test_suppression": false
+  },
+  "decision_rules": {
+    "baseline_reproduces_and_provider_recovers_both": "provider-causal-for-kio-upstream-test-environment",
+    "baseline_reproduces_and_provider_does_not_recover": "provider-hypothesis-rejected-next-deeper-diagnostic",
+    "baseline_does_not_reproduce": "diagnostic-baseline-drift-invalid"
+  },
+  "next_gate": "tier3-round14-kio-kiconthemes-engine-provider-diagnostic-evidence",
+  "stable_promotion_requires_explicit_user_approval": true
+}
