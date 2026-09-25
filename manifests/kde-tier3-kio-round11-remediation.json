@@ -7,10 +7,10 @@
   "frameworks_series": "6.30.0",
   "node": "kio",
   "round": 11,
-  "status": "source-materialization-PASS-pending-planning-validation",
+  "status": "attempt7-active",
   "claim": "non-executable-remediation-definition",
   "canonical_state_effect": "planning-only",
-  "execution_authorized": false,
+  "execution_authorized": true,
   "source_materialization_authorized": false,
   "current_canonical_state": {
     "snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
@@ -110,7 +110,7 @@
       "rerun complete Level 1 with KIO -7 and retained KXMLGui -5"
     ]
   },
-  "next_gate": "tier3-build-level1-planning-validation",
+  "next_gate": "tier3-build-level1-attempt7",
   "stable_promotion_requires_explicit_user_approval": true,
   "definition_validation": {
     "commit": "0dad8b3e82eb07bb02e90da4036001a82e885b0f",
@@ -118,14 +118,17 @@
     "result": "PASS"
   },
   "activation": {
-    "scope": "planning-validation-only",
+    "scope": "full-level1-rerun-2-nodes",
     "nodes": [
-      "kio"
+      "kio",
+      "kxmlgui"
     ],
-    "candidate_package_version": "6.30.0-0supralinux7",
-    "retained_revalidation_node": "kxmlgui",
-    "retained_revalidation_version": "6.30.0-0supralinux5",
-    "level1_execution_authorized": false
+    "kio_package_version": "6.30.0-0supralinux7",
+    "kxmlgui_package_version": "6.30.0-0supralinux5",
+    "repository_policy_workflow_run": 36076306121,
+    "level1_planning_workflow_run": 36076306143,
+    "commit": "8ac22bf8d97a592a548fbfc9a40af65773fd4d30",
+    "level1_execution_authorized": true
   },
   "materialization_evidence": {
     "workflow_run": 36073638711,

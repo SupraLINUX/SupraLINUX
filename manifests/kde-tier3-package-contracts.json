@@ -3229,7 +3229,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "materialization-PASS-pending-level1-planning-validation",
+    "status": "materialization-PASS-attempt7-active",
     "trigger": {
       "workflow_run": 36035351270,
       "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -3271,9 +3271,9 @@
       "repository_policy_workflow_run": 36072487004,
       "result": "PASS"
     },
-    "execution_authorized": false,
-    "level1_execution_authorized": false,
-    "next_gate": "tier3-build-level1-planning-validation",
+    "execution_authorized": true,
+    "level1_execution_authorized": true,
+    "next_gate": "tier3-build-level1-attempt7",
     "materialization_evidence": {
       "workflow_run": 36073638711,
       "commit": "ebe60a0147e2a47b6c256ac015f43eea350c3ba2",
@@ -3285,7 +3285,10 @@
           "package_version": "6.30.0-0supralinux7"
         }
       }
-    }
+    },
+    "activation_policy_workflow_run": 36076306121,
+    "activation_level1_workflow_run": 36076306143,
+    "activation_commit": "8ac22bf8d97a592a548fbfc9a40af65773fd4d30"
   },
   "remediation_history": [
     {

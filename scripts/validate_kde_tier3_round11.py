@@ -14,6 +14,8 @@ if gate=="tier3-level1-remediation-pending-materialization":
     target="validate_kde_tier3_round11_materialization.py"
 elif gate=="tier3-level1-source-PASS-pending-planning-validation":
     target="validate_kde_tier3_round11_planning.py"
+elif gate=="tier3-level1-authorized":
+    target="validate_kde_tier3_round11_attempt7.py"
 else:
     raise SystemExit(f"unsupported Round 11 lifecycle gate: {gate!r}")
 

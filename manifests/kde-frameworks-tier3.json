@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level1-planning",
+    "phase": "build-level1",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-source-PASS-pending-planning-validation",
-    "remediation": "round11-kio-source-PASS-pending-planning-validation"
+    "package_builds": "tier3-level1-authorized",
+    "remediation": "round11-kio-attempt7-active"
   },
   "nodes": [
     {
@@ -1302,12 +1302,12 @@
       "kio": "6.30.0-0supralinux7",
       "kxmlgui": "6.30.0-0supralinux5"
     },
-    "execution_authorized": false,
-    "level1_execution_authorized": false,
+    "execution_authorized": true,
+    "level1_execution_authorized": true,
     "full_level1_rerun_required": true,
-    "status": "materialization-PASS-pending-level1-planning-validation",
-    "next_gate": "tier3-build-level1-planning-validation",
-    "current_attempt": 6,
+    "status": "level1-active-pending-ci",
+    "next_gate": "tier3-build-level1-attempt7",
+    "current_attempt": 7,
     "next_attempt": 7,
     "validation_workflow_run": 36035351270,
     "validation_commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -1350,7 +1350,16 @@
         "package_version": "6.30.0-0supralinux7"
       }
     },
-    "source_materialization_complete": true
+    "source_materialization_complete": true,
+    "activation_policy_workflow_run": 36076306121,
+    "activation_level1_workflow_run": 36076306143,
+    "activation_commit": "8ac22bf8d97a592a548fbfc9a40af65773fd4d30",
+    "planning_validation": {
+      "repository_policy_workflow_run": 36076306121,
+      "level1_workflow_run": 36076306143,
+      "commit": "8ac22bf8d97a592a548fbfc9a40af65773fd4d30",
+      "result": "PASS"
+    }
   },
   "remediation_history": [
     {

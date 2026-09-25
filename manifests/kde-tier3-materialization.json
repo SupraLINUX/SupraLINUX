@@ -961,7 +961,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "materialization-PASS-pending-level1-planning-validation",
+    "status": "PASS",
     "trigger_workflow_run": 36035351270,
     "trigger_commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
     "reason": "Round 11 diagnostic proved the icon tests require a non-destructive CTest environment modification; rematerialize KIO only as 6.30.0-0supralinux7 while retaining KXMLGui 6.30.0-0supralinux5.",
@@ -983,7 +983,7 @@
     "policy": "rematerialize-only-kio-then-rerun-full-level1",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-planning-validation",
+    "next_gate": "tier3-build-level1-attempt7",
     "diagnostic_evidence": {
       "workflow_run": 36071103806,
       "job_id": 107872008601,
@@ -1006,8 +1006,20 @@
         "artifact_id": 10839162922,
         "artifact_sha256": "ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c",
         "package_version": "6.30.0-0supralinux7"
+      },
+      "kxmlgui": {
+        "job_id": 107643756357,
+        "artifact_id": 10808294092,
+        "artifact_sha256": "bccf76b46d0c9619e4306f1fe704ff5b501b9554a63f7968093e3afd4beb0d86",
+        "package_version": "6.30.0-0supralinux5"
       }
-    }
+    },
+    "promoted_nodes": [
+      "kio"
+    ],
+    "activation_policy_workflow_run": 36076306121,
+    "activation_level1_workflow_run": 36076306143,
+    "activation_commit": "8ac22bf8d97a592a548fbfc9a40af65773fd4d30"
   },
   "remediation_history": [
     {
@@ -1269,6 +1281,6 @@
     "active_remediation_round": 10,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-planning-validation"
+    "next_gate": "tier3-build-level1-attempt7"
   }
 }

@@ -80,3 +80,16 @@ Evidence artifact `10839162922` has SHA-256 `ffd7fb48d855b4788b3659ed083c0652cd2
 This remains **source materialization only**: no KIO binary package was built and canonical KIO remains FAIL at `6.30.0-0supralinux6` until a later Level 1 Attempt 7 succeeds. KXMLGui remains canonical PASS at `6.30.0-0supralinux5`.
 
 The generated Tier 3 build campaign now references the KIO `-7` materialization artifact while `execution_authorized=false`. The next gate is `tier3-build-level1-planning-validation`.
+
+## Round 11 Attempt 7 — active
+
+Round 11 planning validation completed at commit `8ac22bf8d97a592a548fbfc9a40af65773fd4d30`: Repository Policy `36076306121` passed and paused Level 1 workflow `36076306143` passed with execution disabled.
+
+Attempt 7 is now authorized as the complete two-node Level 1 rerun:
+
+- KIO `6.30.0-0supralinux7`, source materialization workflow `36073638711`, job `107879979760`, artifact `10839162922`, SHA-256 `ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c`;
+- KXMLGui `6.30.0-0supralinux5`, retained source artifact `10808294092`, SHA-256 `bccf76b46d0c9619e4306f1fe704ff5b501b9554a63f7968093e3afd4beb0d86`.
+
+This transition grants binary execution authority only. Canonical results do not change before the real jobs finish: KIO remains the current canonical FAIL from Attempt 6 and KXMLGui remains canonical PASS while being revalidated. The canonical snapshot therefore remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED** during execution.
+
+The KIO suite remains complete and fatal, including `krecentdocumenttest`. No test is suppressed. Active gate: `tier3-build-level1-attempt7`. No stable promotion is authorized.

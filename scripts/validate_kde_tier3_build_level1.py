@@ -16,7 +16,7 @@ s0=load("manifests/kde-tier3-support-build-level0.json")
 s1=load("manifests/kde-tier3-support-build-level1.json")
 tier3=load("manifests/kde-frameworks-tier3.json")
 
-if tier3.get("active_remediation",{}).get("round")==11 and tier3.get("discovery_policy",{}).get("package_builds") in {"tier3-level1-remediation-pending-materialization","tier3-level1-source-PASS-pending-planning-validation"}:
+if tier3.get("active_remediation",{}).get("round")==11:
     import subprocess
     raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_round11.py")]).returncode)
 
