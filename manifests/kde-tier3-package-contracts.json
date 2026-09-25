@@ -3229,7 +3229,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "materialization-PASS-attempt7-active",
+    "status": "attempt7-complete-mixed",
     "trigger": {
       "workflow_run": 36035351270,
       "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -3271,9 +3271,9 @@
       "repository_policy_workflow_run": 36072487004,
       "result": "PASS"
     },
-    "execution_authorized": true,
-    "level1_execution_authorized": true,
-    "next_gate": "tier3-build-level1-attempt7",
+    "execution_authorized": false,
+    "level1_execution_authorized": false,
+    "next_gate": "tier3-round12-kio-diagnostic-definition",
     "materialization_evidence": {
       "workflow_run": 36073638711,
       "commit": "ebe60a0147e2a47b6c256ac015f43eea350c3ba2",
@@ -3288,7 +3288,38 @@
     },
     "activation_policy_workflow_run": 36076306121,
     "activation_level1_workflow_run": 36076306143,
-    "activation_commit": "8ac22bf8d97a592a548fbfc9a40af65773fd4d30"
+    "activation_commit": "8ac22bf8d97a592a548fbfc9a40af65773fd4d30",
+    "validation_workflow_run": 36079116873,
+    "validation_commit": "ef6262ac9018df2c0d111d97f99919d8acdeb215",
+    "validation_result": "1 workflow SUCCESS / 1 FAIL",
+    "remaining_failed_nodes": [
+      "kio"
+    ],
+    "blocked_nodes": [
+      "baloo",
+      "kcmutils",
+      "knotifyconfig",
+      "kparts",
+      "ktexteditor",
+      "purpose"
+    ],
+    "canonical_promotions": 0,
+    "attempt7_evidence": {
+      "rootfs": {
+        "artifact_id": 10841431451,
+        "artifact_sha256": "ac49ee835a7d45f00c4655c36d60e3725558d570b6af1f630849f84a2d8bb532"
+      },
+      "kio": {
+        "job_id": 107897110171,
+        "artifact_id": 10840963289,
+        "artifact_sha256": "32b10c0ac337040239edea709440c5b09b898d76da1ac3c8e10339bf1477d239"
+      },
+      "kxmlgui": {
+        "job_id": 107897110192,
+        "artifact_id": 10841652858,
+        "artifact_sha256": "4cc0f2a0eadbb54eefc3ae90359d842f16cb2cfd95ae2ca0adaec3c1385338fe"
+      }
+    }
   },
   "remediation_history": [
     {

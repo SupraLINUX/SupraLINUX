@@ -150,6 +150,39 @@
         "kio"
       ],
       "next_gate": "tier3-round11-kio-remediation-definition"
+    },
+    {
+      "attempt": 7,
+      "workflow_run": 36079116873,
+      "commit": "ef6262ac9018df2c0d111d97f99919d8acdeb215",
+      "rootfs": {
+        "artifact_id": 10841431451,
+        "artifact_sha256": "ac49ee835a7d45f00c4655c36d60e3725558d570b6af1f630849f84a2d8bb532"
+      },
+      "result": "MIXED",
+      "workflow_jobs": {
+        "success": 1,
+        "fail": 1
+      },
+      "pass_nodes": [
+        "kxmlgui"
+      ],
+      "failed_nodes": [
+        "kio"
+      ],
+      "blocked_nodes": [
+        "baloo",
+        "kcmutils",
+        "knotifyconfig",
+        "kparts",
+        "ktexteditor",
+        "purpose"
+      ],
+      "canonical_promotions": 0,
+      "current_fail_nodes": [
+        "kio"
+      ],
+      "next_gate": "tier3-round12-kio-diagnostic-definition"
     }
   ],
   "nodes": {
@@ -312,6 +345,34 @@
         },
         "failed_tests": [
           "kiocore-krecentdocumenttest",
+          "kiowidgets-kdirmodeltest",
+          "kiofilewidgets-knewfilemenutest"
+        ],
+        "package_version_unchanged": true,
+        "source_change": false,
+        "canonical_state_effect": "FAIL"
+      },
+      {
+        "attempt": 7,
+        "result": "FAIL",
+        "workflow_run": 36079116873,
+        "job_id": 107897110171,
+        "commit": "ef6262ac9018df2c0d111d97f99919d8acdeb215",
+        "artifact_id": 10840963289,
+        "artifact_sha256": "32b10c0ac337040239edea709440c5b09b898d76da1ac3c8e10339bf1477d239",
+        "rootfs_artifact_id": 10841431451,
+        "rootfs_artifact_sha256": "ac49ee835a7d45f00c4655c36d60e3725558d570b6af1f630849f84a2d8bb532",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux7",
+        "stage": "sbuild",
+        "failure_substage": "ctest/upstream-tests",
+        "cause": "KIO compiled and executed all 69 upstream CTest targets: 67 passed and 2 failed. krecentdocumenttest passed in Attempt 7. kiowidgets-kdirmodeltest still fails first in testIcon because QIcon::fromTheme yields an empty icon name where unknown is expected, followed by shared-state cascades; kiofilewidgets-knewfilemenutest still fails its folder icon collection expansion assertions. Round 11 preserved the existing CTest environment with ENVIRONMENT_MODIFICATION but did not resolve these two failures.",
+        "tests": {
+          "total": 69,
+          "pass": 67,
+          "fail": 2
+        },
+        "failed_tests": [
           "kiowidgets-kdirmodeltest",
           "kiofilewidgets-knewfilemenutest"
         ],
@@ -485,6 +546,30 @@
         "package_version_unchanged": true,
         "source_change": false,
         "canonical_state_effect": "PASS",
+        "downstream_eligible": true
+      },
+      {
+        "attempt": 7,
+        "result": "PASS",
+        "workflow_run": 36079116873,
+        "job_id": 107897110192,
+        "commit": "ef6262ac9018df2c0d111d97f99919d8acdeb215",
+        "artifact_id": 10841652858,
+        "artifact_sha256": "4cc0f2a0eadbb54eefc3ae90359d842f16cb2cfd95ae2ca0adaec3c1385338fe",
+        "rootfs_artifact_id": 10841431451,
+        "rootfs_artifact_sha256": "ac49ee835a7d45f00c4655c36d60e3725558d570b6af1f630849f84a2d8bb532",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux5",
+        "stage": "complete",
+        "tests": {
+          "total": 7,
+          "pass": 7,
+          "fail": 0
+        },
+        "python_import": "PASS",
+        "package_version_unchanged": true,
+        "source_change": false,
+        "canonical_state_effect": "PASS-revalidation",
         "downstream_eligible": true
       }
     ]

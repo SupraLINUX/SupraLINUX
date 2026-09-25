@@ -375,3 +375,17 @@ Attempt 7 is now authorized as the complete two-node Level 1 rerun:
 This transition grants binary execution authority only. Canonical results do not change before the real jobs finish: KIO remains the current canonical FAIL from Attempt 6 and KXMLGui remains canonical PASS while being revalidated. The canonical snapshot therefore remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED** during execution.
 
 The KIO suite remains complete and fatal, including `krecentdocumenttest`. No test is suppressed. Active gate: `tier3-build-level1-attempt7`. No stable promotion is authorized.
+
+## Level 1 Attempt 7 — canonical closure
+
+Attempt 7 completed in workflow `36079116873` at commit `ef6262ac9018df2c0d111d97f99919d8acdeb215`. The shared Resolute rootfs passed as artifact `10841431451`, SHA-256 `ac49ee835a7d45f00c4655c36d60e3725558d570b6af1f630849f84a2d8bb532`.
+
+KXMLGui `6.30.0-0supralinux5` revalidated successfully: all **7/7** upstream tests passed and the Python `KXmlGui` import passed. Evidence: job `107897110192`, artifact `10841652858`, SHA-256 `4cc0f2a0eadbb54eefc3ae90359d842f16cb2cfd95ae2ca0adaec3c1385338fe`. This confirms its existing canonical PASS; it is not a new canonical promotion.
+
+KIO `6.30.0-0supralinux7` is a real current **FAIL**: **67/69** upstream CTest targets passed. The remaining failures are `kiowidgets-kdirmodeltest` and `kiofilewidgets-knewfilemenutest`. `kiocore-krecentdocumenttest`, which failed in Attempt 6, passed in Attempt 7. Evidence: job `107897110171`, artifact `10840963289`, SHA-256 `32b10c0ac337040239edea709440c5b09b898d76da1ac3c8e10339bf1477d239`.
+
+The first KDirModel failure still shows `QIcon::fromTheme` producing an empty icon name where `unknown` is expected, followed by state-dependent cascades. KNewFileMenu still fails the folder-icon collection expansion checks (`chooseIconBox->isExpanded()` is false). Round 11 therefore proved that preserving the existing CTest environment with `ENVIRONMENT_MODIFICATION` was correct, but that change alone does not fix the two remaining failures.
+
+Canonical Tier 3 remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**. KIO's current canonical failed revision is now `6.30.0-0supralinux7`; KXMLGui remains PASS at `6.30.0-0supralinux5`. Binary execution is closed again with `execution_authorized=false`. Level 2 remains unauthorized and no stable promotion is authorized.
+
+Round 11 is closed as mixed. The next gate is **`tier3-round12-kio-diagnostic-definition`**. No Round 12 remediation, source change, package revision or new build is claimed by this closure.

@@ -983,7 +983,7 @@
     "policy": "rematerialize-only-kio-then-rerun-full-level1",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-attempt7",
+    "next_gate": "tier3-round12-kio-diagnostic-definition",
     "diagnostic_evidence": {
       "workflow_run": 36071103806,
       "job_id": 107872008601,
@@ -1019,7 +1019,41 @@
     ],
     "activation_policy_workflow_run": 36076306121,
     "activation_level1_workflow_run": 36076306143,
-    "activation_commit": "8ac22bf8d97a592a548fbfc9a40af65773fd4d30"
+    "activation_commit": "8ac22bf8d97a592a548fbfc9a40af65773fd4d30",
+    "attempt7_result": {
+      "workflow_run": 36079116873,
+      "commit": "ef6262ac9018df2c0d111d97f99919d8acdeb215",
+      "result": "MIXED",
+      "pass_nodes": [
+        "kxmlgui"
+      ],
+      "failed_nodes": [
+        "kio"
+      ],
+      "blocked_nodes": [
+        "baloo",
+        "kcmutils",
+        "knotifyconfig",
+        "kparts",
+        "ktexteditor",
+        "purpose"
+      ],
+      "canonical_promotions": 0,
+      "rootfs": {
+        "artifact_id": 10841431451,
+        "artifact_sha256": "ac49ee835a7d45f00c4655c36d60e3725558d570b6af1f630849f84a2d8bb532"
+      },
+      "kio": {
+        "job_id": 107897110171,
+        "artifact_id": 10840963289,
+        "artifact_sha256": "32b10c0ac337040239edea709440c5b09b898d76da1ac3c8e10339bf1477d239"
+      },
+      "kxmlgui": {
+        "job_id": 107897110192,
+        "artifact_id": 10841652858,
+        "artifact_sha256": "4cc0f2a0eadbb54eefc3ae90359d842f16cb2cfd95ae2ca0adaec3c1385338fe"
+      }
+    }
   },
   "remediation_history": [
     {
