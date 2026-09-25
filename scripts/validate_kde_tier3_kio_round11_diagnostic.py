@@ -17,10 +17,6 @@ m=json.loads(M.read_text())
 t=json.loads(T.read_text())
 l=json.loads(L.read_text())
 
-if t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-remediation-pending-materialization" and t.get("active_remediation",{}).get("round")==11:
-    import subprocess
-    raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_round11_materialization.py")]).returncode)
-
 if m.get("schema")!=1 or m.get("node")!="kio" or m.get("round")!=11:
     fail("KIO Round11 diagnostic identity")
 if m.get("authority")!="kde-upstream" or m.get("frameworks_series")!="6.30.0":
@@ -38,19 +34,20 @@ if m.get("status")=="definition-pending-diagnostic" and m.get("next_gate")!="tie
 if m.get("status")=="diagnostic-PASS" and m.get("next_gate")!="tier3-round11-kio-remediation-definition":
     fail("KIO Round11 PASS next gate")
 
-canonical={n["id"]:n for n in t.get("nodes",[])}
-kio=canonical.get("kio",{})
-if kio.get("state")!="FAIL":
-    fail("KIO canonical state must remain FAIL during diagnostic definition")
-pack=kio.get("packaging",{})
-if pack.get("state")!="FAIL" or pack.get("package_version")!="6.30.0-0supralinux6" or pack.get("downstream_eligible") is not False:
-    fail("KIO canonical packaging state/version drift")
-if l.get("state")!="attempt6-closed-mixed" or l.get("execution_authorized") is not False:
-    fail("Level1 must stay closed while Round11 is diagnostic-only")
-if l.get("canonical_snapshot")!="12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED":
-    fail("Round11 diagnostic must not alter canonical snapshot")
-if l.get("next_gate")!="tier3-round11-kio-remediation-definition":
-    fail("canonical next gate must remain Round11 definition until diagnostic evidence exists")
+if m.get("status")=="definition-pending-diagnostic":
+    canonical={n["id"]:n for n in t.get("nodes",[])}
+    kio=canonical.get("kio",{})
+    if kio.get("state")!="FAIL":
+        fail("KIO canonical state must remain FAIL during diagnostic definition")
+    pack=kio.get("packaging",{})
+    if pack.get("state")!="FAIL" or pack.get("package_version")!="6.30.0-0supralinux6" or pack.get("downstream_eligible") is not False:
+        fail("KIO canonical packaging state/version drift")
+    if l.get("state")!="attempt6-closed-mixed" or l.get("execution_authorized") is not False:
+        fail("Level1 must stay closed while Round11 is diagnostic-only")
+    if l.get("canonical_snapshot")!="12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED":
+        fail("Round11 diagnostic must not alter canonical snapshot")
+    if l.get("next_gate")!="tier3-round11-kio-remediation-definition":
+        fail("canonical next gate must remain Round11 definition until diagnostic evidence exists")
 
 a5=m.get("attempt5_evidence",{})
 a6=m.get("attempt6_evidence",{})
@@ -116,7 +113,15 @@ if m.get("status")=="diagnostic-PASS":
 workflow=W.read_text()
 runner=R.read_text()
 doc=D.read_text()
-for token in ("KDE Frameworks Tier 3 KIO Round 11 diagnostic","artifact-ids: '10682012012'","run-kde-tier3-kio-round11-diagnostic.sh","retention-days: 90"):
+for token in (
+    "KDE Frameworks Tier 3 KIO Round 11 diagnostic",
+    "Determine diagnostic capture mode",
+    "steps.mode.outputs.capture == 'true'",
+    "Report closed diagnostic skip",
+    "artifact-ids: '10682012012'",
+    "run-kde-tier3-kio-round11-diagnostic.sh",
+    "retention-days: 90",
+):
     if token not in workflow:
         fail(f"Round11 workflow missing {token}")
 for token in ("package_attempted",'"package_state_effect":"none"',"ENVIRONMENT_MODIFICATION","QT_PLUGIN_PATH=/probe/upstream-build-tree/bin","QT_QPA_PLATFORM=set:xcb","QT_QPA_SYSTEM_ICON_THEME=set:breeze","QIcon::themeSearchPaths","QIcon::hasThemeIcon","krecentdocument-static.json","DIAG_COMPLETE"):
@@ -131,4 +136,4 @@ if m.get("stable_promotion_requires_explicit_user_approval") is not True:
     fail("stable approval policy")
 
 print("KDE Tier 3 KIO Round 11 diagnostic definition: PASS")
-print("canonical state unchanged; package build disabled")
+print("diagnostic evidence/history valid; package build disabled")

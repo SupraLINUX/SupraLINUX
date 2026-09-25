@@ -76,3 +76,11 @@ This is sufficient evidence to replace Round 10's destructive per-test `ENVIRONM
 `krecentdocumenttest` remains separate. Its timestamp-tie explanation is evidence-backed but not yet a focused runtime proof; therefore Round 11 does not patch, suppress, exclude, or downgrade that test. It remains fatal in the next full Level 1 attempt. If it fails again, it becomes the next independent diagnostic gate.
 
 Canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**, with `execution_authorized=false`. The next gate is `tier3-round11-kio-remediation-definition`; no `6.30.0-0supralinux7` package is claimed by this diagnostic closure.
+
+## Closed-diagnostic CI behavior
+
+The Round 11 diagnostic workflow is part of the pull-request diff, so GitHub can reevaluate it on later `synchronize` events even after the diagnostic gate has closed. Run `36075258421` exposed the old lifecycle assumption: its validator still required Level 1 to remain frozen at the diagnostic-stage Attempt 6 state, and the unconditional artifact upload then failed because no new diagnostic evidence had been produced.
+
+The diagnostic validator now treats a `diagnostic-PASS` record as immutable historical evidence. Canonical lifecycle freeze checks apply only while the diagnostic is still pending. Once closed, later workflow invocations validate the recorded run/job/artifact, findings, CMake mechanism and conservative `krecentdocumenttest` policy without requiring the rest of Tier 3 to remain at the old gate.
+
+The workflow also has explicit capture mode. It downloads Breeze, runs probes and uploads a new artifact only while `status=definition-pending-diagnostic`. With `status=diagnostic-PASS`, it reports an intentional skip after validating the historical evidence. This prevents redundant probes and false CI failures as Round 11 advances.

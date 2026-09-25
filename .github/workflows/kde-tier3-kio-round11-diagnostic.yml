@@ -26,7 +26,20 @@ jobs:
       - name: Validate diagnostic definition
         run: python3 scripts/validate_kde_tier3_kio_round11_diagnostic.py
 
+      - name: Determine diagnostic capture mode
+        id: mode
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          status = json.loads(Path("manifests/kde-tier3-kio-round11-diagnostic.json").read_text())["status"]
+          if status not in {"definition-pending-diagnostic", "diagnostic-PASS"}:
+              raise SystemExit(f"unsupported diagnostic status: {status}")
+          print("capture=" + ("true" if status == "definition-pending-diagnostic" else "false"))
+          PY
+
       - name: Download retained Breeze PASS artifact
+        if: steps.mode.outputs.capture == 'true'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           artifact-ids: '10682012012'
@@ -36,15 +49,20 @@ jobs:
           path: .work/retained-breeze
 
       - name: Capture KIO Round 11 diagnostic evidence
+        if: steps.mode.outputs.capture == 'true'
         env:
           BREEZE_ARTIFACT_DIR: ${{ github.workspace }}/.work/retained-breeze
         run: bash scripts/run-kde-tier3-kio-round11-diagnostic.sh
 
       - name: Upload diagnostic evidence
-        if: always()
+        if: always() && steps.mode.outputs.capture == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: kde-tier3-kio-round11-diagnostic-${{ github.event.pull_request.head.sha || github.sha }}
           path: evidence/kde-tier3-kio-round11-diagnostic/
           if-no-files-found: error
           retention-days: 90
+
+      - name: Report closed diagnostic skip
+        if: steps.mode.outputs.capture != 'true'
+        run: echo 'Round 11 diagnostic is already closed; historical evidence validated and recapture skipped.'
