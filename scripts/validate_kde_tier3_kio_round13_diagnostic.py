@@ -42,6 +42,9 @@ req(sm.get("package_version")=="6.30.0-0supralinux7","Round13 source revision")
 
 scope=M.get("diagnostic_scope",{})
 req(scope.get("build_only_targets")==["kdirmodeltest","knewfilemenutest"],"Round13 test targets")
+req(scope.get("build_support_targets")==["kio_file","kioworker"],"Round13 runtime support targets")
+req(scope.get("direct_test_functions")=={"kdirmodeltest":"testIcon","knewfilemenutest":"testFolderIconCollection"},"Round13 direct primary test functions")
+req(scope.get("per_process_timeout_seconds")=={"test":180,"trace":180},"Round13 per-process timeout policy")
 req(scope.get("exact_provider_closure_from")=="manifests/kde-tier3-build-level1.json","Round13 provider closure authority")
 req(set(scope.get("variants",[]))=={
  "ctest-exact-attempt7-environment","direct-exact-attempt7-environment",
@@ -58,7 +61,7 @@ for token in (
     req(token in W,f"Round13 workflow token {token}")
 for token in (
  "10839162922","ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c",
- "kdirmodeltest","knewfilemenutest","QT_DEBUG_PLUGINS","strace",
+ "kdirmodeltest","knewfilemenutest","kio_file","kioworker","QT_DEBUG_PLUGINS","strace","timeout --signal=TERM",
  "KDECI_PLATFORM_PATH","QT_PLUGIN_PATH","XDG_DATA_DIRS",
  "override_dh_auto_configure",
 ):

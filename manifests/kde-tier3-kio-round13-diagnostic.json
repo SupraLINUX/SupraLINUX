@@ -54,7 +54,19 @@
     "source_modification": false,
     "package_build": false,
     "package_revision_allocation": false,
-    "test_suppression": false
+    "test_suppression": false,
+    "build_support_targets": [
+      "kio_file",
+      "kioworker"
+    ],
+    "direct_test_functions": {
+      "kdirmodeltest": "testIcon",
+      "knewfilemenutest": "testFolderIconCollection"
+    },
+    "per_process_timeout_seconds": {
+      "test": 180,
+      "trace": 180
+    }
   },
   "decision_rules": {
     "exact_reproduces_and_without_qt_plugin_path_recovers": "classify-build-tree-QT_PLUGIN_PATH-delta",
@@ -89,6 +101,27 @@
       "stage": "provider-download-script-parse",
       "cause": "The previous repair accidentally truncated the provider-download and local-repository block, leaving a syntactically incomplete 'while IFS=' statement. Bash and ShellCheck stopped before any KIO build-tree experiment.",
       "diagnostic_evidence_valid": false,
+      "package_attempted": false,
+      "package_state_effect": "none"
+    },
+    {
+      "workflow_run": 36135797611,
+      "job_id": 108073442662,
+      "commit": "c3955036cd44741fab10f30492170aafa31cec37",
+      "artifact_id": 10867849144,
+      "artifact_sha256": "8680766cfe5d8de83ae37aec247514158e21389b70e13493d9e1885bc755ba5f",
+      "result": "CANCELLED_PARTIAL_INFRA",
+      "stage": "trace-exact",
+      "cause": "The two test binaries compiled, but the diagnostic did not build the KIO file worker. All five pre-trace variants failed earlier than the Attempt 7 icon assertions with Unknown protocol 'file'. The knewfilemenutest strace run then remained live until the workflow was cancelled.",
+      "diagnostic_evidence_valid": false,
+      "partial_findings": {
+        "configure": "PASS",
+        "test_targets_build": "PASS",
+        "pretrace_variants_completed": 5,
+        "common_blocker": "Unable to create KIO worker. Unknown protocol 'file'.",
+        "kdirmodel_trace_completed": true,
+        "knewfilemenu_trace_completed": false
+      },
       "package_attempted": false,
       "package_state_effect": "none"
     }

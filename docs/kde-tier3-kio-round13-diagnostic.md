@@ -54,3 +54,15 @@ Workflow `36134433836`, job `108069000227`, on commit `f406f157e361c4561e112f64a
 The previous repair accidentally truncated the provider-download/local-repository block and left an incomplete `while IFS=` statement. Both ShellCheck and Bash therefore failed before provider installation or KIO configuration.
 
 The runner now restores the full block and obtains the tab separator through `printf`, avoiding shell ANSI-C quoting in the generated script. Round 13 remains `definition-pending-diagnostic`; no package or canonical state changed.
+
+## Infrastructure attempt 3 — partial build-tree evidence
+
+Workflow `36135797611`, job `108073442662`, commit `c3955036cd44741fab10f30492170aafa31cec37`, reached real KIO configuration and compiled both requested test binaries. Its artifact is `10867849144`, SHA-256 `8680766cfe5d8de83ae37aec247514158e21389b70e13493d9e1885bc755ba5f`.
+
+The five pre-trace variants are not valid comparisons with Attempt 7: every one failed earlier because the reduced target build omitted KIO's `file` worker, producing `Unable to create KIO worker. Unknown protocol 'file'.` KDirModel therefore failed in `initTestCase()`, and KNewFileMenu failed before reaching the icon assertions.
+
+The `kdirmodeltest` trace completed with that same prerequisite failure. The `knewfilemenutest` trace remained alive under `strace` until GitHub cancelled the workflow. This run is retained as **CANCELLED_PARTIAL_INFRA**, not as Round 13 diagnostic closure.
+
+The corrected diagnostic now also builds `kio_file` and `kioworker`. Attempt 7 shows their build-tree outputs as `<obj>/bin/kf6/kio/kio_file.so` and `<obj>/bin/kioworker`; the build-tree `bin` directory is also prepended to `PATH`. Direct and trace variants execute only the two primary upstream functions, `KDirModelTest::testIcon` and `KNewFileMenuTest::testFolderIconCollection`, after their normal QtTest initialization. Every test/trace process has a 180-second hard timeout so a tracing anomaly cannot block the workflow indefinitely.
+
+The old duplicated tail after the canonical `COMPLETE` marker is removed. Round 13 remains `definition-pending-diagnostic`; no KIO package revision or canonical state changes.
