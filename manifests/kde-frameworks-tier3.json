@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level1",
+    "phase": "build-level1-planning",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-authorized",
-    "remediation": "round18-kio-svg-test-provider-attempt8-active"
+    "package_builds": "tier3-level1-attempt8-closed",
+    "remediation": "round19-kio-diagnostic-definition-pending"
   },
   "nodes": [
     {
@@ -494,7 +494,7 @@
       },
       "packaging": {
         "state": "FAIL",
-        "package_version": "6.30.0-0supralinux7",
+        "package_version": "6.30.0-0supralinux8",
         "downstream_eligible": false,
         "attempt_ledger": "manifests/kde-tier3-build-level1-attempts.json",
         "campaign": "manifests/kde-tier3-build-level1.json",
@@ -542,6 +542,30 @@
               "kiofilewidgets-knewfilemenutest"
             ],
             "cause": "KIO compiled and executed all 69 upstream CTest targets: 67 passed and 2 failed. krecentdocumenttest passed in Attempt 7. kiowidgets-kdirmodeltest still fails first in testIcon because QIcon::fromTheme yields an empty icon name where unknown is expected, followed by shared-state cascades; kiofilewidgets-knewfilemenutest still fails its folder icon collection expansion assertions. Round 11 preserved the existing CTest environment with ENVIRONMENT_MODIFICATION but did not resolve these two failures.",
+            "downstream_eligible": false,
+            "canonical_success_transition": "FAIL",
+            "package_state_effect": "FAIL",
+            "full_result_json_retained_in_artifact": true
+          },
+          {
+            "result": "FAIL",
+            "build_result": "FAIL",
+            "workflow_run": 36238357510,
+            "job_id": 108394325161,
+            "commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
+            "attempted_package_version": "6.30.0-0supralinux8",
+            "artifact_id": 10905267300,
+            "artifact_sha256": "9f95e2b8e3330ee4f1b275eb059736b87fa57d7752602aa598cb313659cae53f",
+            "rootfs_artifact_id": 10904512642,
+            "rootfs_artifact_sha256": "d689f1658d37e3dedcf57d7f4a233917a6d84ed592346d4ac87f60d626724afe",
+            "stage": "sbuild",
+            "failure_substage": "ctest/upstream-tests",
+            "tests": "67/69 PASS",
+            "failed_tests": [
+              "kiocore-krecentdocumenttest",
+              "kiowidgets-kdirmodeltest"
+            ],
+            "cause": "KIO compiled and executed all 69 upstream CTest targets: 67 passed and 2 failed. The Round 18 qt6-svg-plugins provider remediation fixed kiofilewidgets-knewfilemenutest and KDirModelTest::testIcon(). Remaining failures are independent: KRecentDocumentTest::testXbelBookmarkMaxEntries returned temp File 11 where temp File 12 was expected, and KDirModelTest failed testShowRoot plus testShowRootAndExpandToUrl because indexForUrl(homeUrl) was invalid.",
             "downstream_eligible": false,
             "canonical_success_transition": "FAIL",
             "package_state_effect": "FAIL",
@@ -1250,6 +1274,25 @@
             "canonical_success_transition": "PASS",
             "package_state_effect": "PASS-revalidation",
             "full_result_json_retained_in_artifact": true
+          },
+          {
+            "result": "PASS",
+            "build_result": "PASS",
+            "workflow_run": 36238357510,
+            "job_id": 108394325149,
+            "commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
+            "attempted_package_version": "6.30.0-0supralinux5",
+            "artifact_id": 10905212105,
+            "artifact_sha256": "297d8d91e52f82cd6713c30072a8f2deff80d73647b9c93c1b89263e5f21d441",
+            "rootfs_artifact_id": 10904512642,
+            "rootfs_artifact_sha256": "d689f1658d37e3dedcf57d7f4a233917a6d84ed592346d4ac87f60d626724afe",
+            "stage": "complete",
+            "tests": "7/7 PASS",
+            "python_import": "PASS",
+            "downstream_eligible": true,
+            "canonical_success_transition": "PASS",
+            "package_state_effect": "PASS-revalidation",
+            "full_result_json_retained_in_artifact": true
           }
         ]
       }
@@ -1345,15 +1388,15 @@
       "kio": "6.30.0-0supralinux8",
       "kxmlgui": "6.30.0-0supralinux5"
     },
-    "execution_authorized": true,
-    "level1_execution_authorized": true,
+    "execution_authorized": false,
+    "level1_execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "level1-active-pending-ci",
-    "next_gate": "tier3-build-level1-attempt8",
+    "status": "attempt8-complete-mixed",
+    "next_gate": "tier3-round19-kio-diagnostic-definition",
     "current_attempt": 8,
-    "next_attempt": 8,
-    "validation_workflow_run": 36079116873,
-    "validation_commit": "ef6262ac9018df2c0d111d97f99919d8acdeb215",
+    "next_attempt": 9,
+    "validation_workflow_run": 36238357510,
+    "validation_commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
     "validation_result": "1 workflow SUCCESS / 1 FAIL",
     "remaining_failed_nodes": [
       "kio"
@@ -1547,6 +1590,22 @@
       "artifact_sha256": "8dfc4f94ed892a49bd4dd3fd262b7755cb078adfa56716a7c0e7e679f6cb9c6c",
       "qt6_svg_plugins_deb_sha256": "41be607dc17ef0ad3510b169fc7607758ab4574acc4311c3ef1daaaac9c9139b",
       "result": "AUDIT_COMPLETE"
+    },
+    "attempt8_evidence": {
+      "rootfs": {
+        "artifact_id": 10904512642,
+        "artifact_sha256": "d689f1658d37e3dedcf57d7f4a233917a6d84ed592346d4ac87f60d626724afe"
+      },
+      "kio": {
+        "job_id": 108394325161,
+        "artifact_id": 10905267300,
+        "artifact_sha256": "9f95e2b8e3330ee4f1b275eb059736b87fa57d7752602aa598cb313659cae53f"
+      },
+      "kxmlgui": {
+        "job_id": 108394325149,
+        "artifact_id": 10905212105,
+        "artifact_sha256": "297d8d91e52f82cd6713c30072a8f2deff80d73647b9c93c1b89263e5f21d441"
+      }
     }
   },
   "remediation_history": [

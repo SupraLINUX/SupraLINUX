@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "active-pending-ci",
-  "execution_authorized": true,
+  "state": "attempt8-closed-mixed",
+  "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -458,7 +458,7 @@
   },
   "nodes": {
     "kio": {
-      "state": "prepared-pending-revalidation",
+      "state": "FAIL",
       "source_package": "kf6-kio",
       "package_version": "6.30.0-0supralinux8",
       "expected_binary_packages": [
@@ -600,14 +600,14 @@
         "breeze-icons"
       ],
       "last_attempt": {
-        "attempt": 7,
-        "workflow_run": 36079116873,
-        "job_id": 107897110171,
-        "artifact_id": 10840963289,
-        "artifact_sha256": "32b10c0ac337040239edea709440c5b09b898d76da1ac3c8e10339bf1477d239",
+        "attempt": 8,
+        "workflow_run": 36238357510,
+        "job_id": 108394325161,
+        "artifact_id": 10905267300,
+        "artifact_sha256": "9f95e2b8e3330ee4f1b275eb059736b87fa57d7752602aa598cb313659cae53f",
         "result": "FAIL",
         "package_attempted": true,
-        "package_version": "6.30.0-0supralinux7",
+        "package_version": "6.30.0-0supralinux8",
         "stage": "sbuild",
         "failure_substage": "ctest/upstream-tests",
         "tests": {
@@ -616,10 +616,10 @@
           "fail": 2
         },
         "failed_tests": [
-          "kiowidgets-kdirmodeltest",
-          "kiofilewidgets-knewfilemenutest"
+          "kiocore-krecentdocumenttest",
+          "kiowidgets-kdirmodeltest"
         ],
-        "cause": "KIO compiled and executed all 69 upstream CTest targets: 67 passed and 2 failed. krecentdocumenttest passed in Attempt 7. kiowidgets-kdirmodeltest still fails first in testIcon because QIcon::fromTheme yields an empty icon name where unknown is expected, followed by shared-state cascades; kiofilewidgets-knewfilemenutest still fails its folder icon collection expansion assertions. Round 11 preserved the existing CTest environment with ENVIRONMENT_MODIFICATION but did not resolve these two failures.",
+        "cause": "KIO compiled and executed all 69 upstream CTest targets: 67 passed and 2 failed. The Round 18 qt6-svg-plugins provider remediation fixed kiofilewidgets-knewfilemenutest and KDirModelTest::testIcon(). Remaining failures are independent: KRecentDocumentTest::testXbelBookmarkMaxEntries returned temp File 11 where temp File 12 was expected, and KDirModelTest failed testShowRoot plus testShowRootAndExpandToUrl because indexForUrl(homeUrl) was invalid.",
         "canonical_state_effect": "FAIL"
       },
       "current_attempt": 8,
@@ -651,7 +651,7 @@
       "downstream_eligible": false
     },
     "kxmlgui": {
-      "state": "prepared-pending-revalidation",
+      "state": "PASS",
       "source_package": "kf6-kxmlgui",
       "package_version": "6.30.0-0supralinux5",
       "expected_binary_packages": [
@@ -761,11 +761,11 @@
         "breeze-icons"
       ],
       "last_attempt": {
-        "attempt": 7,
-        "workflow_run": 36079116873,
-        "job_id": 107897110192,
-        "artifact_id": 10841652858,
-        "artifact_sha256": "4cc0f2a0eadbb54eefc3ae90359d842f16cb2cfd95ae2ca0adaec3c1385338fe",
+        "attempt": 8,
+        "workflow_run": 36238357510,
+        "job_id": 108394325149,
+        "artifact_id": 10905212105,
+        "artifact_sha256": "297d8d91e52f82cd6713c30072a8f2deff80d73647b9c93c1b89263e5f21d441",
         "result": "PASS",
         "package_attempted": true,
         "package_version": "6.30.0-0supralinux5",
@@ -838,7 +838,7 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-build-level1-attempt8",
+  "next_gate": "tier3-round19-kio-diagnostic-definition",
   "current_attempt": 8,
   "last_activation": {
     "policy_workflow_run": 35826072726,
@@ -892,17 +892,17 @@
       "kio": "6.30.0-0supralinux8",
       "kxmlgui": "6.30.0-0supralinux5"
     },
-    "execution_authorized": true,
+    "execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "materialization-PASS-attempt8-active",
+    "status": "attempt8-complete-mixed",
     "source_rematerialization_required": false,
     "source_rematerialization_nodes": [
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "tier3-build-level1-attempt8",
+    "next_gate": "tier3-round19-kio-diagnostic-definition",
     "current_attempt": 8,
-    "next_attempt": 8,
+    "next_attempt": 9,
     "remaining_failed_nodes": [
       "kio"
     ],
@@ -945,8 +945,8 @@
     "activation_policy_workflow_run": 36237942524,
     "activation_level1_workflow_run": 36237942600,
     "activation_commit": "349b0d543edefb2979f1712079628e25e37d8135",
-    "validation_workflow_run": 36079116873,
-    "validation_commit": "ef6262ac9018df2c0d111d97f99919d8acdeb215",
+    "validation_workflow_run": 36238357510,
+    "validation_commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
     "validation_result": "1 workflow SUCCESS / 1 FAIL",
     "attempt7_evidence": {
       "rootfs": {
@@ -1088,16 +1088,36 @@
       "artifact_sha256": "8dfc4f94ed892a49bd4dd3fd262b7755cb078adfa56716a7c0e7e679f6cb9c6c",
       "qt6_svg_plugins_deb_sha256": "41be607dc17ef0ad3510b169fc7607758ab4574acc4311c3ef1daaaac9c9139b",
       "result": "AUDIT_COMPLETE"
+    },
+    "attempt8_evidence": {
+      "rootfs": {
+        "artifact_id": 10904512642,
+        "artifact_sha256": "d689f1658d37e3dedcf57d7f4a233917a6d84ed592346d4ac87f60d626724afe"
+      },
+      "kio": {
+        "job_id": 108394325161,
+        "artifact_id": 10905267300,
+        "artifact_sha256": "9f95e2b8e3330ee4f1b275eb059736b87fa57d7752602aa598cb313659cae53f"
+      },
+      "kxmlgui": {
+        "job_id": 108394325149,
+        "artifact_id": 10905212105,
+        "artifact_sha256": "297d8d91e52f82cd6713c30072a8f2deff80d73647b9c93c1b89263e5f21d441"
+      }
     }
   },
   "activation": {
-    "status": "ACTIVE",
+    "status": "CLOSED-MIXED",
     "attempt": 8,
     "remediation_validation_policy_workflow_run": 36237942524,
     "remediation_validation_level1_workflow_run": 36237942600,
     "remediation_commit": "349b0d543edefb2979f1712079628e25e37d8135",
     "scope": "full-level1-rerun-2-nodes",
-    "reason": "Round 18 KIO -8 source materialization and Attempt 8 planning validation passed; authorize complete Level 1 Attempt 8 with retained KXMLGui -5"
+    "reason": "Round 18 KIO -8 source materialization and Attempt 8 planning validation passed; authorize complete Level 1 Attempt 8 with retained KXMLGui -5",
+    "workflow_run": 36238357510,
+    "commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
+    "result": "1 PASS / 1 FAIL",
+    "next_gate": "tier3-round19-kio-diagnostic-definition"
   },
   "attempt2_summary": {
     "workflow_run": 35829170695,
@@ -1264,5 +1284,35 @@
     },
     "next_gate": "tier3-round11-kio-remediation-definition"
   },
-  "next_attempt": 8
+  "next_attempt": 9,
+  "attempt8_summary": {
+    "workflow_run": 36238357510,
+    "commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
+    "rootfs": {
+      "artifact_id": 10904512642,
+      "artifact_sha256": "d689f1658d37e3dedcf57d7f4a233917a6d84ed592346d4ac87f60d626724afe"
+    },
+    "result": "MIXED",
+    "workflow_jobs": {
+      "success": 1,
+      "fail": 1
+    },
+    "kio_tests": {
+      "total": 69,
+      "pass": 67,
+      "fail": 2
+    },
+    "kio_failed_tests": [
+      "kiocore-krecentdocumenttest",
+      "kiowidgets-kdirmodeltest"
+    ],
+    "kxmlgui_tests": {
+      "total": 7,
+      "pass": 7,
+      "fail": 0
+    },
+    "kxmlgui_python_import": "PASS",
+    "canonical_promotions": 0,
+    "next_gate": "tier3-round19-kio-diagnostic-definition"
+  }
 }

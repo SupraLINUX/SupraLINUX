@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-24",
+  "as_of": "2026-09-26",
   "batch": "tier3-build-level1",
   "selected_nodes": [
     "kio",
@@ -183,6 +183,48 @@
         "kio"
       ],
       "next_gate": "tier3-round12-kio-diagnostic-definition"
+    },
+    {
+      "attempt": 8,
+      "workflow_run": 36238357510,
+      "commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
+      "rootfs": {
+        "artifact_id": 10904512642,
+        "artifact_sha256": "d689f1658d37e3dedcf57d7f4a233917a6d84ed592346d4ac87f60d626724afe"
+      },
+      "result": "MIXED",
+      "workflow_jobs": {
+        "success": 1,
+        "fail": 1
+      },
+      "pass_nodes": [
+        "kxmlgui"
+      ],
+      "failed_nodes": [
+        "kio"
+      ],
+      "blocked_nodes": [
+        "baloo",
+        "kcmutils",
+        "knotifyconfig",
+        "kparts",
+        "ktexteditor",
+        "purpose"
+      ],
+      "canonical_promotions": 0,
+      "current_fail_nodes": [
+        "kio"
+      ],
+      "observations": {
+        "qt6_svg_provider_effect": "PARTIAL-PASS",
+        "knewfilemenutest": "PASS",
+        "kdirmodel_testIcon": "PASS",
+        "remaining_failures": [
+          "kiocore-krecentdocumenttest",
+          "kiowidgets-kdirmodeltest"
+        ]
+      },
+      "next_gate": "tier3-round19-kio-diagnostic-definition"
     }
   ],
   "nodes": {
@@ -379,6 +421,34 @@
         "package_version_unchanged": true,
         "source_change": false,
         "canonical_state_effect": "FAIL"
+      },
+      {
+        "attempt": 8,
+        "result": "FAIL",
+        "workflow_run": 36238357510,
+        "job_id": 108394325161,
+        "commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
+        "artifact_id": 10905267300,
+        "artifact_sha256": "9f95e2b8e3330ee4f1b275eb059736b87fa57d7752602aa598cb313659cae53f",
+        "rootfs_artifact_id": 10904512642,
+        "rootfs_artifact_sha256": "d689f1658d37e3dedcf57d7f4a233917a6d84ed592346d4ac87f60d626724afe",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux8",
+        "stage": "sbuild",
+        "failure_substage": "ctest/upstream-tests",
+        "cause": "KIO compiled and executed all 69 upstream CTest targets: 67 passed and 2 failed. The Round 18 qt6-svg-plugins provider remediation fixed kiofilewidgets-knewfilemenutest and KDirModelTest::testIcon(). Remaining failures are independent: KRecentDocumentTest::testXbelBookmarkMaxEntries returned temp File 11 where temp File 12 was expected, and KDirModelTest failed testShowRoot plus testShowRootAndExpandToUrl because indexForUrl(homeUrl) was invalid.",
+        "tests": {
+          "total": 69,
+          "pass": 67,
+          "fail": 2
+        },
+        "failed_tests": [
+          "kiocore-krecentdocumenttest",
+          "kiowidgets-kdirmodeltest"
+        ],
+        "package_version_unchanged": true,
+        "source_change": false,
+        "canonical_state_effect": "FAIL"
       }
     ],
     "kxmlgui": [
@@ -571,6 +641,28 @@
         "source_change": false,
         "canonical_state_effect": "PASS-revalidation",
         "downstream_eligible": true
+      },
+      {
+        "attempt": 8,
+        "result": "PASS",
+        "workflow_run": 36238357510,
+        "job_id": 108394325149,
+        "commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
+        "artifact_id": 10905212105,
+        "artifact_sha256": "297d8d91e52f82cd6713c30072a8f2deff80d73647b9c93c1b89263e5f21d441",
+        "rootfs_artifact_id": 10904512642,
+        "rootfs_artifact_sha256": "d689f1658d37e3dedcf57d7f4a233917a6d84ed592346d4ac87f60d626724afe",
+        "package_attempted": true,
+        "package_version": "6.30.0-0supralinux5",
+        "stage": "complete",
+        "tests": {
+          "total": 7,
+          "pass": 7,
+          "fail": 0
+        },
+        "python_import": "PASS",
+        "downstream_eligible": true,
+        "canonical_state_effect": "PASS-revalidation"
       }
     ]
   }

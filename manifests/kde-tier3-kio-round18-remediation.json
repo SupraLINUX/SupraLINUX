@@ -8,10 +8,10 @@
   "packaging_authority": "supralinux",
   "provider_platform": "ubuntu-resolute",
   "frameworks_series": "6.30.0",
-  "status": "attempt8-active",
+  "status": "attempt8-closed-mixed",
   "claim": "kio-qt-svg-test-provider-remediation",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
-  "current_package_version": "6.30.0-0supralinux7",
+  "current_package_version": "6.30.0-0supralinux8",
   "candidate_package_version": "6.30.0-0supralinux8",
   "retained_revalidation_package": {
     "node": "kxmlgui",
@@ -37,7 +37,7 @@
   },
   "materialization": {
     "source_materialization_authorized": false,
-    "binary_execution_authorized": true,
+    "binary_execution_authorized": false,
     "previous_materialization": {
       "workflow_run": 36073638711,
       "job_id": 107879979760,
@@ -49,13 +49,13 @@
     "expected_package_version": "6.30.0-0supralinux8"
   },
   "invariants": [
-    "KIO canonical state remains FAIL at 6.30.0-0supralinux7 until a real Attempt 8 package build passes",
-    "KXMLGui remains PASS at 6.30.0-0supralinux5 and is not rematerialized",
+    "KIO canonical state is FAIL at 6.30.0-0supralinux8 after the real Attempt 8 package failure",
+    "KXMLGui remains PASS at 6.30.0-0supralinux5 after 7/7 revalidation and Python import PASS",
     "all 69 upstream KIO CTest targets remain enabled and fatal",
-    "qt6-svg-plugins is build/test-only for KIO; no new runtime binary relation is introduced",
+    "qt6-svg-plugins remains build/test-only for KIO; no new runtime binary relation is introduced",
     "BLOCKED remains distinct from FAIL"
   ],
-  "next_gate": "tier3-build-level1-attempt8",
+  "next_gate": "tier3-round19-kio-diagnostic-definition",
   "stable_promotion_requires_explicit_user_approval": true,
   "materialization_evidence": {
     "workflow_run": 36222711238,
@@ -72,7 +72,7 @@
     "adapted_control_sha256": "b5f687a50fd97d7ca90871a49610dc35be3ca92c51bfd20d38c9f48af45585a5",
     "adapted_rules_sha256": "c966d9328a0ab624ac5c7b5fb4d1b328d4812ac477446e0b0adf05671c410bfd"
   },
-  "execution_authorized": true,
+  "execution_authorized": false,
   "activation": {
     "scope": "full-level1-rerun-2-nodes",
     "nodes": [
@@ -85,5 +85,52 @@
     "level1_planning_workflow_run": 36237942600,
     "commit": "349b0d543edefb2979f1712079628e25e37d8135",
     "level1_execution_authorized": true
+  },
+  "attempt8_result": {
+    "workflow_run": 36238357510,
+    "commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
+    "result": "MIXED",
+    "rootfs": {
+      "artifact_id": 10904512642,
+      "artifact_sha256": "d689f1658d37e3dedcf57d7f4a233917a6d84ed592346d4ac87f60d626724afe"
+    },
+    "kio": {
+      "job_id": 108394325161,
+      "artifact_id": 10905267300,
+      "artifact_sha256": "9f95e2b8e3330ee4f1b275eb059736b87fa57d7752602aa598cb313659cae53f",
+      "package_version": "6.30.0-0supralinux8",
+      "tests": {
+        "total": 69,
+        "pass": 67,
+        "fail": 2
+      },
+      "failed_tests": [
+        "kiocore-krecentdocumenttest",
+        "kiowidgets-kdirmodeltest"
+      ],
+      "established_progress": [
+        "kiofilewidgets-knewfilemenutest now PASS",
+        "KDirModelTest::testIcon() now PASS",
+        "qt6-svg-plugins remediation therefore fixed the icon-provider failure class"
+      ],
+      "remaining_failures": {
+        "krecentdocument": "testXbelBookmarkMaxEntries: actual temp File 11, expected temp File 12",
+        "kdirmodel": "testShowRoot and testShowRootAndExpandToUrl: indexForUrl(homeUrl) invalid"
+      }
+    },
+    "kxmlgui": {
+      "job_id": 108394325149,
+      "artifact_id": 10905212105,
+      "artifact_sha256": "297d8d91e52f82cd6713c30072a8f2deff80d73647b9c93c1b89263e5f21d441",
+      "package_version": "6.30.0-0supralinux5",
+      "tests": {
+        "total": 7,
+        "pass": 7,
+        "fail": 0
+      },
+      "python_import": "PASS"
+    },
+    "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+    "next_gate": "tier3-round19-kio-diagnostic-definition"
   }
 }

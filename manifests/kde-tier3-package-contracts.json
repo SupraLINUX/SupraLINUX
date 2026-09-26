@@ -3241,7 +3241,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "materialization-PASS-attempt8-active",
+    "status": "attempt8-complete-mixed",
     "trigger": {
       "workflow_run": 36035351270,
       "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -3283,9 +3283,9 @@
       "repository_policy_workflow_run": 36072487004,
       "result": "PASS"
     },
-    "execution_authorized": true,
-    "level1_execution_authorized": true,
-    "next_gate": "tier3-build-level1-attempt8",
+    "execution_authorized": false,
+    "level1_execution_authorized": false,
+    "next_gate": "tier3-round19-kio-diagnostic-definition",
     "materialization_evidence": {
       "workflow_run": 36222711238,
       "commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",
@@ -3301,8 +3301,8 @@
     "activation_policy_workflow_run": 36237942524,
     "activation_level1_workflow_run": 36237942600,
     "activation_commit": "349b0d543edefb2979f1712079628e25e37d8135",
-    "validation_workflow_run": 36079116873,
-    "validation_commit": "ef6262ac9018df2c0d111d97f99919d8acdeb215",
+    "validation_workflow_run": 36238357510,
+    "validation_commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
     "validation_result": "1 workflow SUCCESS / 1 FAIL",
     "remaining_failed_nodes": [
       "kio"
@@ -3448,7 +3448,7 @@
       "next_diagnostic_scope": "actual-kio-object-path-state-transition"
     },
     "current_attempt": 8,
-    "next_attempt": 8,
+    "next_attempt": 9,
     "round18_provider_contract_audit": {
       "workflow_run": 36221977278,
       "job_id": 108348814091,
@@ -3470,6 +3470,22 @@
       "level1_workflow_run": 36237942600,
       "commit": "349b0d543edefb2979f1712079628e25e37d8135",
       "result": "PASS"
+    },
+    "attempt8_evidence": {
+      "rootfs": {
+        "artifact_id": 10904512642,
+        "artifact_sha256": "d689f1658d37e3dedcf57d7f4a233917a6d84ed592346d4ac87f60d626724afe"
+      },
+      "kio": {
+        "job_id": 108394325161,
+        "artifact_id": 10905267300,
+        "artifact_sha256": "9f95e2b8e3330ee4f1b275eb059736b87fa57d7752602aa598cb313659cae53f"
+      },
+      "kxmlgui": {
+        "job_id": 108394325149,
+        "artifact_id": 10905212105,
+        "artifact_sha256": "297d8d91e52f82cd6713c30072a8f2deff80d73647b9c93c1b89263e5f21d441"
+      }
     }
   },
   "remediation_history": [

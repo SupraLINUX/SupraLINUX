@@ -981,7 +981,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "materialization-PASS-attempt8-active",
+    "status": "attempt8-complete-mixed",
     "trigger_workflow_run": 36035351270,
     "trigger_commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
     "reason": "Round 18 provider-contract audit proved KIO's sbuild test closure must explicitly install qt6-svg-plugins while Ubuntu runtime ownership remains with the Qt GUI recommendation. Rematerialize only KIO as 6.30.0-0supralinux8.",
@@ -1003,7 +1003,7 @@
     "policy": "rematerialize-only-kio-test-provider-change-then-rerun-full-level1",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-attempt8",
+    "next_gate": "tier3-round19-kio-diagnostic-definition",
     "diagnostic_evidence": {
       "workflow_run": 36071103806,
       "job_id": 107872008601,
@@ -1198,7 +1198,10 @@
     ],
     "promoted_nodes": [
       "kio"
-    ]
+    ],
+    "validation_workflow_run": 36238357510,
+    "validation_commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
+    "validation_result": "1 workflow SUCCESS / 1 FAIL"
   },
   "remediation_history": [
     {
@@ -1460,6 +1463,6 @@
     "active_remediation_round": 11,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-attempt8"
+    "next_gate": "tier3-round19-kio-diagnostic-definition"
   }
 }
