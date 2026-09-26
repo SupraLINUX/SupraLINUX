@@ -117,8 +117,6 @@ if r.get("result")!="PASS" or r.get("package_attempted") is not False or r.get("
     raise SystemExit("source materialization identity drift")
 PY
 
-source "${ROOT}/scripts/run-kde-tier3-kio-round17-instrument.sh"
-
 STAGE=build-dependencies
 cd "${SRC}"
 sudo mk-build-deps --install --remove --tool 'apt-get -y --no-install-recommends' debian/control

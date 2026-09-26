@@ -45,28 +45,32 @@ req(sm.get("artifact_id")==10839162922 and sm.get("artifact_sha256")=="ffd7fb48d
 req(sm.get("package_version")=="6.30.0-0supralinux7" and sm.get("upstream_source_sha256")=="c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2","Round17 source identity")
 
 invalid=M.get("invalid_attempts",[])
-req(len(invalid)==1,"Round17 invalid attempt ledger")
-a=invalid[0]
-req(a.get("attempt")==1 and a.get("workflow_run")==36213295538 and a.get("job_id")==108324143779,"Round17 invalid Attempt1 workflow")
-req(a.get("artifact_id")==10896761982 and a.get("artifact_sha256")=="5247d6b2f9f80c15cb04c63c4687d37b707421e3a1f91f0e8f9e2d3360c01084","Round17 invalid Attempt1 artifact")
-req(a.get("result")=="DIAG_INVALID" and a.get("conclusion")=="instrumentation-perturbed-original-failure" and a.get("canonical_effect")=="none","Round17 invalid Attempt1 classification")
+req(len(invalid)==2,"Round17 invalid attempt ledger")
+a1,a2=invalid
+req(a1.get("attempt")==1 and a1.get("workflow_run")==36213295538 and a1.get("job_id")==108324143779,"Round17 invalid Attempt1 workflow")
+req(a1.get("artifact_id")==10896761982 and a1.get("artifact_sha256")=="5247d6b2f9f80c15cb04c63c4687d37b707421e3a1f91f0e8f9e2d3360c01084","Round17 invalid Attempt1 artifact")
+req(a1.get("result")=="DIAG_INVALID" and a1.get("conclusion")=="instrumentation-perturbed-original-failure" and a1.get("canonical_effect")=="none","Round17 invalid Attempt1 classification")
+req(a2.get("attempt")==2 and a2.get("workflow_run")==36214198192 and a2.get("job_id")==108326788757,"Round17 invalid Attempt2 workflow")
+req(a2.get("artifact_id")==10896848386 and a2.get("artifact_sha256")=="5b4c14d52b858a2455b7a9ee395db305360c8a386993fad37e92f7620fdb4002","Round17 invalid Attempt2 artifact")
+req(a2.get("repository_policy_workflow_run")==36214198247 and a2.get("repository_policy_result")=="FAIL-SHELLCHECK-SC2100","Round17 invalid Attempt2 policy")
+req(a2.get("result")=="DIAG_INVALID" and a2.get("conclusion")=="conditional-instrumentation-still-perturbs-baseline" and a2.get("canonical_effect")=="none","Round17 invalid Attempt2 classification")
 
 scope=M.get("diagnostic_scope",{})
 req(scope.get("transient_instrumented_files")==["src/widgets/kdirmodel.cpp","src/filewidgets/knewfilemenu.cpp"],"Round17 instrumented files")
 req(scope.get("exact_test_cases",{}).get("kdirmodeltest")=="testIcon","Round17 KDir test")
 req(scope.get("exact_test_cases",{}).get("knewfilemenutest")=="testFolderIconCollection:default","Round17 KNew test")
-req(scope.get("instrumentation_strategy")=="conditional-single-QIcon-name-read-perturbation","Round17 corrected strategy")
-req(scope.get("kdirmodel_touch_variants")==["baseline-no-touch","KDIR_FALLBACK","KDIR_ABSOLUTE","KDIR_FROMTHEME","KDIR_BEFORE_OVERLAYS","KDIR_AFTER_OVERLAYS"],"Round17 KDir touch matrix")
-req(scope.get("knewfilemenu_touch_variants")==["baseline-no-touch","KNEW_CONSTRUCTOR","KNEW_CHECK_ENTRY","KNEW_CHECK_EXIT","KNEW_SHOW_ENTRY","KNEW_AFTER_INIT","KNEW_DEFAULT_CREATED","KNEW_SETICON_INPUT"],"Round17 KNew touch matrix")
+req(scope.get("instrumentation_strategy")=="exact-original-baseline-then-minimal-structural-ab","Round17 Attempt3 strategy")
+req(scope.get("kdirmodel_variants")==["exact-original","local-result-for-KIconUtils-addOverlays-return","restored-exact-original"],"Round17 KDir structural matrix")
+req(scope.get("knewfilemenu_variants")==["exact-original","named-local-QIcon-before-setIcon","restored-exact-original"],"Round17 KNew structural matrix")
 req(all(scope.get(x) is False for x in ("package_build","canonical_source_modification","package_revision_allocation","test_suppression")),"Round17 safety scope")
 
 for token in ("KDE Frameworks Tier 3 KIO Round 17 diagnostic","ubuntu-26.04","run-kde-tier3-kio-round17-diagnostic.sh"):
     req(token in W,f"workflow token {token}")
-for token in ("10839162922","SUPRALINUX_R17_TOUCH","KDIR_FROMTHEME","KDIR_AFTER_OVERLAYS","KNEW_CONSTRUCTOR","KNEW_SETICON_INPUT","testFolderIconCollection:default","instrumentation.patch"):
+for token in ("10839162922","variant-kdirmodel-local-result.patch","variant-knewfilemenu-named-default.patch","KIconUtils::addOverlays","r17DefaultFolderIcon","testFolderIconCollection:default"):
     req(token in R,f"runner token {token}")
 for forbidden in ("dpkg-buildpackage","sbuild --"):
     req(forbidden not in R,f"Round17 must not package: {forbidden}")
-req("transient diagnostic-only instrumentation patch" in D and "must still reproduce both original failures" in D and "Corrected Attempt 2 strategy" in D,"Round17 documentation")
+req("transient diagnostic-only instrumentation patch" in D and "must still reproduce both original failures" in D and "Attempt 3 — exact original baseline, then structural A/B" in D,"Round17 documentation")
 
 if M.get("status")=="definition-pending-diagnostic":
     req(L.get("next_gate")=="tier3-round17-kio-object-path-state-transition-diagnostic-definition","Round17 live definition gate")

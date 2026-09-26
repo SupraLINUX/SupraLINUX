@@ -68,41 +68,33 @@
       "setIcon property write and pixmap render"
     ],
     "invariants": [
-      "baseline-no-touch must reproduce both original empty-name failures",
-      "each touch variant executes in a fresh process and performs exactly one controlled QIcon::name() read site",
-      "instrumentation is diagnostic-only and is never materialized into Debian source or binary packages",
-      "exact XCB/Breeze/KDECI/QT_PLUGIN_PATH environment is retained"
+      "exact unmodified source must reproduce both original empty-name failures before any intervention",
+      "each structural variant changes exactly one QIcon temporary/return lifetime shape",
+      "source is restored byte-for-byte and rebuilt after each variant; restored tests must reproduce the original failures",
+      "all variant patches and source hashes are retained as evidence",
+      "no diagnostic source delta is materialized into Debian source or binary packages"
     ],
     "package_build": false,
     "canonical_source_modification": false,
     "package_revision_allocation": false,
     "test_suppression": false,
-    "instrumentation_strategy": "conditional-single-QIcon-name-read-perturbation",
-    "kdirmodel_touch_variants": [
-      "baseline-no-touch",
-      "KDIR_FALLBACK",
-      "KDIR_ABSOLUTE",
-      "KDIR_FROMTHEME",
-      "KDIR_BEFORE_OVERLAYS",
-      "KDIR_AFTER_OVERLAYS"
+    "instrumentation_strategy": "exact-original-baseline-then-minimal-structural-ab",
+    "kdirmodel_variants": [
+      "exact-original",
+      "local-result-for-KIconUtils-addOverlays-return",
+      "restored-exact-original"
     ],
-    "knewfilemenu_touch_variants": [
-      "baseline-no-touch",
-      "KNEW_CONSTRUCTOR",
-      "KNEW_CHECK_ENTRY",
-      "KNEW_CHECK_EXIT",
-      "KNEW_SHOW_ENTRY",
-      "KNEW_AFTER_INIT",
-      "KNEW_DEFAULT_CREATED",
-      "KNEW_SETICON_INPUT"
+    "knewfilemenu_variants": [
+      "exact-original",
+      "named-local-QIcon-before-setIcon",
+      "restored-exact-original"
     ]
   },
   "decision_rules": {
-    "baseline_no_touch_does_not_reproduce": "diagnostic-invalid-conditional-instrumentation-perturbed-baseline",
-    "first_healing_touch": "earliest controlled QIcon::name() read that changes FAIL to PASS",
-    "both_paths_heal": "confirm-lazy-QIcon-name-materialization-root-cause",
-    "one_path_heals": "confirm-localized-read-heal-and-investigate-unresolved-path",
-    "no_single_touch_heals": "reproduce-attempt1-minimal-combination"
+    "exact_original_or_restored_does_not_reproduce": "diagnostic-invalid-build-reproducibility-drift",
+    "both_minimal_structural_variants_heal": "confirm-temporary-lifetime-copy-move-vs-LTO-root-cause",
+    "one_minimal_structural_variant_heals": "confirm-healed-path-and-isolate-unresolved-path",
+    "neither_minimal_structural_variant_heals": "isolate-other-attempt1-codegen-perturbations"
   },
   "next_gate": "tier3-round17-kio-object-path-state-transition-diagnostic-evidence",
   "stable_promotion_requires_explicit_user_approval": true,
@@ -117,6 +109,20 @@
       "result": "DIAG_INVALID",
       "conclusion": "instrumentation-perturbed-original-failure",
       "observed_effect": "intermediate QIcon::name() reads caused both originally failing tests to pass",
+      "canonical_effect": "none"
+    },
+    {
+      "attempt": 2,
+      "definition_commit": "4c5c4bcb9c3cf420d02b7d9a406159ef62e4535c",
+      "workflow_run": 36214198192,
+      "job_id": 108326788757,
+      "artifact_id": 10896848386,
+      "artifact_sha256": "5b4c14d52b858a2455b7a9ee395db305360c8a386993fad37e92f7620fdb4002",
+      "repository_policy_workflow_run": 36214198247,
+      "repository_policy_result": "FAIL-SHELLCHECK-SC2100",
+      "result": "DIAG_INVALID",
+      "conclusion": "conditional-instrumentation-still-perturbs-baseline",
+      "cause": "Even with SUPRALINUX_R17_TOUCH unset, the modified production source changed QIcon temporary/return structure, and both original tests passed.",
       "canonical_effect": "none"
     }
   ]

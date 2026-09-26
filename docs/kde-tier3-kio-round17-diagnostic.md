@@ -77,3 +77,28 @@ The diagnostic classifies the earliest single read that changes each original FA
 
 No package is built, no canonical source is changed, and no KIO revision is allocated.
 
+## Invalid Attempt 2 — conditional source still changed the baseline
+
+Attempt 2 at commit `4c5c4bcb9c3cf420d02b7d9a406159ef62e4535c` also cannot be used as causal evidence. Workflow `36214198192`, job `108326788757`, produced artifact `10896848386` with SHA-256 `5b4c14d52b858a2455b7a9ee395db305360c8a386993fad37e92f7620fdb4002`.
+
+The no-touch baseline unexpectedly passed both tests. Although `SUPRALINUX_R17_TOUCH` was unset, the instrumented source still changed C++ object shape: KDirModel stored the overlay result in a local `QIcon` before returning it, and KNewFileMenu stored the default themed icon in a named local before passing it to `setIcon()`. Therefore the baseline was not semantically identical at the object-lifetime/codegen level.
+
+Repository Policy `36214198247` also stopped at ShellCheck SC2100 on an unquoted diagnostic stage label. That lint issue is independent of the diagnostic result and is corrected in Attempt 3.
+
+Attempt 2 is recorded as `DIAG_INVALID / conditional-instrumentation-still-perturbs-baseline`, with no canonical effect.
+
+## Attempt 3 — exact original baseline, then structural A/B
+
+Attempt 3 builds and executes the exact unmodified `6.30.0-0supralinux7` source first. Both original failures must reproduce before any source delta is applied.
+
+Only after that gate passes:
+
+1. KDirModel changes exactly one expression: the direct return of `KIconUtils::addOverlays(...)` is stored in a local `QIcon` and then returned.
+2. The original KDirModel source is restored byte-for-byte, rebuilt, and must fail again.
+3. KNewFileMenu changes exactly one expression: `QIcon::fromTheme(defaultFolderIconName)` is stored in a named local `QIcon` before `setIcon()`.
+4. The original KNewFileMenu source is restored byte-for-byte, rebuilt, and must fail again.
+
+This directly tests whether the temporary/copy/move lifetime shape that appeared accidentally in Attempts 1–2 is sufficient to heal each failure. If both variants heal while both restored baselines fail, the next gate is a focused confirmation of temporary lifetime/copy-move semantics versus LTO/code generation.
+
+No package is built and no KIO revision is allocated.
+
