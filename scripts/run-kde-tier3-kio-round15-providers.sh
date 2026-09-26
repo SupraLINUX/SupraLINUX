@@ -1,4 +1,5 @@
-# shellcheck disable=SC2154
+#!/usr/bin/env bash
+# shellcheck disable=SC1090,SC2034,SC2154
 STAGE=breeze-provider
 download_artifact "10682012012" "daaa5abda5a8f824c6fa509142d7cd9132de213d782cb32e0561873f427aa577" "${WORK}/breeze"
 BREEZE_THEME="$(find "${WORK}/breeze" -type f -name 'breeze-icon-theme_6.30.0-0supralinux1_all.deb' -print -quit)"

@@ -96,5 +96,19 @@
     "not_reproduced": "all isolated modes preserve icon identity; advance to KIconThemes startup/KIO library interaction"
   },
   "next_gate": "tier3-round15-kio-breeze-icons-init-state-diagnostic-evidence",
-  "stable_promotion_requires_explicit_user_approval": true
+  "stable_promotion_requires_explicit_user_approval": true,
+  "invalid_attempts": [
+    {
+      "attempt": 1,
+      "definition_commit": "d4a220f95b742b1125fad564b2729358ebfd941d",
+      "workflow_run": 36207971890,
+      "job_id": 108308432777,
+      "artifact_id": 10894787434,
+      "artifact_sha256": "7ac10f5ee01a1a28240db7391d748cbd292abaed923c155845d560307710f598",
+      "result": "DIAG_INVALID",
+      "conclusion": "baseline-drift-invalid",
+      "cause": "Round 15 host fixture omitted qt6-svg-dev and qt6-svg-plugins, so the SVG-based Breeze icons were unreadable in every matrix mode.",
+      "canonical_effect": "none"
+    }
+  ]
 }

@@ -49,3 +49,11 @@ The runner reuses only retained, hash-verified evidence:
 No Debian package is built, no KIO revision is allocated, no source is patched and no test is suppressed. Canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**. Stable promotion still requires explicit user approval.
 
 Next gate: `tier3-round15-kio-breeze-icons-init-state-diagnostic-evidence`.
+
+## Invalid Attempt 1 — fixture drift
+
+The first Round 15 execution at commit `d4a220f95b742b1125fad564b2729358ebfd941d` reached the matrix but is **not diagnostic evidence about BreezeIcons behavior**. Workflow `36207971890`, job `108308432777`, produced artifact `10894787434` with SHA-256 `7ac10f5ee01a1a28240db7391d748cbd292abaed923c155845d560307710f598`.
+
+Every mode, including `qt-baseline`, returned null/unnamed icons. Comparison with the validated Round 12 fixture found the drift: Round 12 explicitly installed `qt6-svg-dev` and `qt6-svg-plugins`, while the initial Round 15 runner omitted them. Breeze's filesystem theme payload is SVG, so this invalidated the baseline before any BreezeIcons causal comparison.
+
+Attempt 1 is therefore recorded as `DIAG_INVALID / baseline-drift-invalid`, with **no canonical state effect**. The definition is corrected by restoring the exact Qt SVG fixture and by making invalid-baseline result reporting explicit. The same matrix will be rerun; no package or KIO revision changes.

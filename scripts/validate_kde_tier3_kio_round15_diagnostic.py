@@ -57,6 +57,14 @@ k=M.get("kiconthemes_source",{})
 req(k.get("artifact_id")==10731249726 and k.get("source_sha256")=="c0c684823d0e087f35168cd79f1053fd358bb8fb47b27996a11c7d7ee3da6f4d","KIconThemes source")
 req("Q_COREAPP_STARTUP_FUNCTION(initThemeHelper)" in k.get("source_contract",[]),"KIconThemes startup contract")
 
+invalid=M.get("invalid_attempts",[])
+req(len(invalid) in {0,1},"Round15 invalid attempt ledger")
+if invalid:
+    a=invalid[0]
+    req(a.get("attempt")==1 and a.get("workflow_run")==36207971890 and a.get("job_id")==108308432777,"Round15 invalid Attempt1 workflow")
+    req(a.get("artifact_id")==10894787434 and a.get("artifact_sha256")=="7ac10f5ee01a1a28240db7391d748cbd292abaed923c155845d560307710f598","Round15 invalid Attempt1 artifact")
+    req(a.get("result")=="DIAG_INVALID" and a.get("conclusion")=="baseline-drift-invalid" and a.get("canonical_effect")=="none","Round15 invalid Attempt1 classification")
+
 scope=M.get("diagnostic_scope",{})
 req(scope.get("sequences")==["normal","kdirmodel-testmode","knewfilemenu-sequence"],"Round15 sequences")
 req(scope.get("modes")==["qt-baseline","qt-fallback-breeze","breeze-linked-no-init","breeze-init"],"Round15 modes")

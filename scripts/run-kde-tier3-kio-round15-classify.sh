@@ -1,5 +1,7 @@
-# shellcheck disable=SC2154
+#!/usr/bin/env bash
+# shellcheck disable=SC2034,SC2154
 STAGE=classification
+set +e
 python3 - "${EVIDENCE}" <<'PY'
 import json,re,sys
 from pathlib import Path
@@ -42,15 +44,29 @@ elif any_repro("breeze-init"):
     conclusion,result="breeze-initicons-reproduces-kio-icon-name-loss","DIAG_COMPLETE"
 else:
     conclusion,result="breeze-init-state-does-not-reproduce-kio-icon-name-loss","DIAG_COMPLETE"
+if result=="DIAG_INVALID":
+    next_scope="restore-round12-qt-svg-fixture-and-rerun"
+elif conclusion.endswith("does-not-reproduce-kio-icon-name-loss"):
+    next_scope="kiconthemes-startup-or-kio-library-interaction"
+else:
+    next_scope="root-cause-confirmation-and-remediation-definition"
 findings={
   "result":result,"package_attempted":False,"package_state_effect":"none",
   "baseline_valid":baseline_valid,"matrix":results,"conclusion":conclusion,
-  "next_scope":"kiconthemes-startup-or-kio-library-interaction" if conclusion.endswith("does-not-reproduce-kio-icon-name-loss") else "root-cause-confirmation-and-remediation-definition"
+  "next_scope":next_scope
 }
 (ev/"findings.json").write_text(json.dumps(findings,indent=2,sort_keys=True)+"\n")
 print(conclusion)
 if result!="DIAG_COMPLETE": raise SystemExit(3)
 PY
+rc=$?
+set -e
+if [[ "${rc}" -eq 3 ]]; then
+  DIAG_RESULT=DIAG_INVALID
+  exit 3
+elif [[ "${rc}" -ne 0 ]]; then
+  exit "${rc}"
+fi
 
 STAGE=complete
 DIAG_RESULT=DIAG_COMPLETE

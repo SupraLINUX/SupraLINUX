@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC2034
 set -Eeuo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -54,7 +54,7 @@ STAGE=host-tools
 [[ "${ID}" == ubuntu && "${VERSION_ID}" == 26.04 ]]
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-  ca-certificates cmake curl g++ qt6-base-dev qt6-qpa-plugins xauth xvfb unzip xz-utils
+  ca-certificates cmake curl g++ qt6-base-dev qt6-qpa-plugins qt6-svg-dev qt6-svg-plugins xauth xvfb unzip xz-utils
 
 STAGE=round13-linkage-proof
 download_artifact "10869413386" "f96d4fdfebc5fcebe63633650ebf3998a51e37e5c84c12b50bc3d745097d7cd7" "${WORK}/round13"
