@@ -1,0 +1,7 @@
+usr/include/KF6/KCoreAddons/
+usr/include/PySide6/KCoreAddons/
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6CoreAddons/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6CoreAddons.so
+usr/lib/${DEB_HOST_MULTIARCH}/pkgconfig/KF6CoreAddons.pc
+usr/lib/${DEB_HOST_MULTIARCH}/qt6/metatypes/qt6kf6coreaddons_metatypes.json
+usr/share/PySide6/typesystems/typesystem_kcoreaddons.xml

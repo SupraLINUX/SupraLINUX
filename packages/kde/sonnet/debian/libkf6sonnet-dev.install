@@ -1,0 +1,7 @@
+usr/include/KF6/Sonnet/
+usr/include/KF6/SonnetCore/
+usr/include/KF6/SonnetUi/
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6Sonnet/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6SonnetCore.so
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6SonnetUi.so
+usr/lib/${DEB_HOST_MULTIARCH}/qt6/plugins/designer/sonnet6widgets.so

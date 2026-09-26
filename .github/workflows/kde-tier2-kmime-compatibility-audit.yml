@@ -1,0 +1,53 @@
+name: KDE Frameworks Tier 2 KMime compatibility-provider audit
+
+on:
+  pull_request:
+    paths:
+      - manifests/kde-tier2-kmime-compatibility-audit.json
+      - manifests/kde-frameworks-tier2.json
+      - manifests/kde-tier2-campaign-plan.json
+      - scripts/run-kde-tier2-kmime-compatibility-audit.sh
+      - scripts/validate_kde_tier2_kmime_compatibility_audit.py
+      - docs/kde-tier2-kmime-compatibility-audit.md
+      - .github/workflows/kde-tier2-kmime-compatibility-audit.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: kde-tier2-kmime-compatibility-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    name: Audit KMime legacy provider coexistence
+    runs-on: ubuntu-26.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Download validated KF6Mime build evidence
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10677716050'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35687831684'
+          path: .work/framework-artifact
+
+      - name: Audit package metadata, payload overlap and APT solver
+        env:
+          FRAMEWORK_ARTIFACT_DIR: ${{ github.workspace }}/.work/framework-artifact
+        run: scripts/run-kde-tier2-kmime-compatibility-audit.sh
+
+      - name: Upload compatibility audit evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-tier2-kmime-compatibility-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-tier2-kmime-compatibility-audit/
+          if-no-files-found: error
+          retention-days: 90

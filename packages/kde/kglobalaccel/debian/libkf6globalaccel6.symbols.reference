@@ -1,0 +1,6 @@
+# Debian sid symbols baseline retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+node=kglobalaccel
+path=trees/debian/kglobalaccel/debian/libkf6globalaccel6.symbols
+sha256=967876c92b88b1a0654b06084c70604191464ecaded59df4bbf4dea71c0c6bb7

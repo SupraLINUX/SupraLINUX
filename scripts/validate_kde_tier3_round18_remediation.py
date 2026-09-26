@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import json,sys
+ROOT=Path(__file__).resolve().parents[1]
+errors=[]
+def req(v,m):
+    if not v: errors.append(m)
+def load(p): return json.loads((ROOT/p).read_text())
+_rstate=load("manifests/kde-tier3-kio-round18-remediation.json").get("status")
+if _rstate=="source-materialization-PASS-pending-planning-validation":
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable,str(ROOT/"scripts"/"validate_kde_tier3_round18_planning.py")]).returncode)
+if _rstate=="attempt8-active":
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable,str(ROOT/"scripts"/"validate_kde_tier3_round18_attempt8.py")]).returncode)
+if _rstate=="attempt8-closed-mixed":
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable,str(ROOT/"scripts"/"validate_kde_tier3_round18_attempt8_closure.py")]).returncode)
+T=load("manifests/kde-frameworks-tier3.json")
+L=load("manifests/kde-tier3-build-level1.json")
+C=load("manifests/kde-tier3-package-contracts.json")
+M=load("manifests/kde-tier3-materialization.json")
+P=load("manifests/kde-tier3-build-campaign.json")
+A=load("manifests/kde-tier3-kio-round18-provider-contract.json")
+R=load("manifests/kde-tier3-kio-round18-remediation.json")
+D=load("manifests/kde-dag.json")
+SNAPSHOT="12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED"
+BLOCKED=["baloo","kcmutils","knotifyconfig","kparts","ktexteditor","purpose"]
+CANDIDATE="6.30.0-0supralinux8"
+RETAINED="6.30.0-0supralinux5"
+RELATION="qt6-svg-plugins <!nocheck>"
+GATE="tier3-round18-kio-test-provider-remediation-materialization"
+req(A.get("status")=="audit-PASS","Round18 provider audit must be closed")
+ae=A.get("audit_evidence",{})
+req(ae.get("workflow_run")==36221977278 and ae.get("job_id")==108348814091,"Round18 audit run/job")
+req(ae.get("artifact_id")==10899531699 and ae.get("artifact_sha256")=="8dfc4f94ed892a49bd4dd3fd262b7755cb078adfa56716a7c0e7e679f6cb9c6c","Round18 audit artifact")
+req(ae.get("qt6_svg_plugins_deb_sha256")=="41be607dc17ef0ad3510b169fc7607758ab4574acc4311c3ef1daaaac9c9139b","Round18 audited plugin deb")
+req(R.get("schema")==1 and R.get("node")=="kio" and R.get("diagnostic_round")==18,"Round18 remediation identity")
+req(R.get("global_remediation_round")==11,"Round18 remains inside global remediation Round11")
+req(R.get("authority")=="kde-upstream" and R.get("packaging_authority")=="supralinux","authority/provider separation")
+req(R.get("status")=="definition-pending-materialization","Round18 remediation lifecycle")
+req(R.get("canonical_snapshot")==SNAPSHOT,"Round18 remediation snapshot")
+req(R.get("current_package_version")=="6.30.0-0supralinux7" and R.get("candidate_package_version")==CANDIDATE,"Round18 KIO revision transition")
+a=R.get("accepted_contract",{})
+req(a.get("field")=="Build-Depends" and a.get("action")=="ensure" and a.get("relation")==RELATION,"Round18 relation")
+req(a.get("classification")=="upstream-test-environment-provider" and a.get("runtime_binary_relation")=="none","Round18 provider class/runtime boundary")
+mat=R.get("materialization",{})
+req(mat.get("source_materialization_authorized") is True and mat.get("binary_execution_authorized") is False,"Round18 source-only authority")
+req(mat.get("remediation_queue")==["kio"] and mat.get("expected_package_version")==CANDIDATE,"Round18 materialization queue/version")
+prev=mat.get("previous_materialization",{})
+req(prev.get("workflow_run")==36073638711 and prev.get("job_id")==107879979760,"retained -7 materialization run/job")
+req(prev.get("artifact_id")==10839162922 and prev.get("artifact_sha256")=="ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c","retained -7 materialization artifact")
+req(R.get("next_gate")==GATE,"Round18 remediation gate")
+nodes={n["id"]:n for n in T.get("nodes",[])}
+req(nodes["kio"].get("state")=="FAIL" and nodes["kio"].get("packaging",{}).get("package_version")=="6.30.0-0supralinux7","KIO canonical FAIL/-7")
+req(nodes["kio"].get("packaging",{}).get("downstream_eligible") is False,"KIO remains ineligible")
+req(nodes["kxmlgui"].get("state")=="PASS" and nodes["kxmlgui"].get("packaging",{}).get("package_version")==RETAINED,"KXMLGui PASS/-5")
+req({n for n,v in nodes.items() if v.get("state")=="BLOCKED"}==set(BLOCKED),"canonical BLOCKED set")
+req("kio" not in D.get("nodes",{}),"KIO FAIL absent from PASS DAG")
+snap=T.get("level1_snapshot",{})
+req((snap.get("pass"),snap.get("pending"),snap.get("current_fail"),snap.get("blocked"))==(12,1,1,6),"Tier3 snapshot")
+pol=T.get("discovery_policy",{})
+req(pol.get("phase")=="build-level1-planning" and pol.get("package_builds")=="tier3-level1-remediation-pending-materialization","Round18 materialization phase")
+req(pol.get("remediation")=="round18-kio-svg-test-provider-materialization-pending-ci","Round18 marker")
+ta=T.get("active_remediation",{})
+req(ta.get("round")==11 and ta.get("status")=="materialization-pending-ci","canonical Round11/18 lifecycle")
+req(ta.get("candidate_package_versions")=={"kio":CANDIDATE,"kxmlgui":RETAINED},"canonical candidate versions")
+req(ta.get("source_materialization_nodes")==["kio"] and ta.get("retained_revalidation_nodes")==["kxmlgui"],"canonical source/revalidation split")
+req(ta.get("execution_authorized") is False and ta.get("level1_execution_authorized") is False and ta.get("full_level1_rerun_required") is True,"canonical execution pause")
+req(ta.get("current_attempt")==7 and ta.get("next_attempt")==8 and ta.get("next_gate")==GATE,"canonical Attempt8 handoff")
+req(L.get("state")=="remediation-pending-materialization" and L.get("execution_authorized") is False,"Level1 pending materialization")
+req(L.get("canonical_snapshot")==SNAPSHOT and L.get("current_attempt")==7 and L.get("next_attempt")==8 and L.get("next_gate")==GATE,"Level1 counters/gate")
+la=L.get("active_remediation",{})
+req(la.get("global_round")==11 and la.get("candidate_package_versions")=={"kio":CANDIDATE,"kxmlgui":RETAINED},"Level1 candidate versions")
+req(la.get("source_rematerialization_required") is True and la.get("source_rematerialization_nodes")==["kio"],"Level1 KIO rematerialization")
+req(la.get("full_level1_rerun_required") is True and la.get("execution_authorized") is False,"Level1 full rerun paused")
+kr=L.get("nodes",{}).get("kio",{}).get("remediation",{})
+req(kr.get("candidate_package_version")==CANDIDATE and kr.get("classification")=="qt-svg-test-provider-remediation","Level1 KIO remediation")
+req(any(RELATION in x for x in kr.get("changes",[])),"Level1 relation recorded")
+req(L.get("nodes",{}).get("kio",{}).get("state")=="FAIL" and L.get("nodes",{}).get("kxmlgui",{}).get("state")=="PASS","Level1 canonical states")
+cr=C.get("active_remediation",{})
+req(cr.get("round")==11 and cr.get("status")=="materialization-pending-ci","contracts lifecycle")
+req(cr.get("candidate_package_versions")=={"kio":CANDIDATE,"kxmlgui":RETAINED},"contracts versions")
+req(cr.get("execution_authorized") is False and cr.get("level1_execution_authorized") is False and cr.get("next_gate")==GATE,"contracts pause/gate")
+kc=C.get("nodes",{}).get("kio",{})
+req(kc.get("package_version_candidate")==CANDIDATE,"KIO contract candidate -8")
+rels=[(x.get("action"),x.get("package") or x.get("relation"),x.get("classification")) for x in kc.get("source_build_relation_overrides",[])]
+req(("ensure",RELATION,"upstream-test-environment-provider") in rels and sum(1 for x in rels if x[1]==RELATION)==1,"KIO SVG test provider relation")
+req(not any((x.get("relation") or x.get("value"))=="qt6-svg-plugins" for x in kc.get("binary_relation_overrides",[])),"KIO no runtime plugin relation")
+req(any(x.get("decision")=="add-resolute-qt-svg-plugin-test-provider" for x in kc.get("contract_decisions",[])),"KIO Round18 decision")
+req(kc.get("test_policy",{}).get("upstream_tests_required") is True and kc.get("test_policy",{}).get("failures_fatal") is True,"KIO tests complete/fatal")
+req(M.get("state")=="remediation-pending-ci" and M.get("remediation_queue")==["kio"],"materialization KIO-only queue")
+ma=M.get("active_remediation",{})
+req(ma.get("round")==11 and ma.get("status")=="materialization-pending-ci" and ma.get("candidate_package_versions")=={"kio":CANDIDATE,"kxmlgui":RETAINED},"materialization lifecycle")
+req(ma.get("package_attempted") is False and ma.get("package_state_effect")=="none" and ma.get("next_gate")==GATE,"materialization source-only")
+mk=M.get("nodes",{}).get("kio",{})
+req(mk.get("state")=="remediation-pending" and mk.get("package_version")=="6.30.0-0supralinux7" and mk.get("candidate_package_version")==CANDIDATE,"KIO source pending -8")
+mp=mk.get("previous_evidence",{})
+req(mp.get("result")=="PASS" and mp.get("package_version")=="6.30.0-0supralinux7","KIO previous PASS/-7")
+req(mp.get("workflow_run")==36073638711 and mp.get("artifact_id")==10839162922 and mp.get("artifact_sha256")=="ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c","KIO previous source exact")
+req(M.get("nodes",{}).get("kxmlgui",{}).get("state")=="materialized" and M.get("nodes",{}).get("kxmlgui",{}).get("package_version")==RETAINED,"KXMLGui source retained")
+pk=P.get("nodes",{}).get("kio",{})
+req(pk.get("package_version")=="6.30.0-0supralinux7","campaign retains KIO -7 before source PASS")
+req(pk.get("materialization",{}).get("artifact_id")==10839162922 and pk.get("materialization",{}).get("artifact_sha256")=="ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c","campaign exact retained KIO source")
+req(P.get("execution_authorized") is False,"campaign unauthorized")
+for obj,name in ((R,"Round18 remediation"),(L,"Level1"),(C,"contracts"),(M,"materialization")):
+    req(obj.get("stable_promotion_requires_explicit_user_approval") is True,name+" stable policy")
+if errors:
+    for e in errors: print("ERROR:",e,file=sys.stderr)
+    raise SystemExit(1)
+print("KDE Tier 3 KIO Round 18 remediation materialization definition: PASS")
+print(SNAPSHOT)
+print("materialization_queue=kio; candidate="+CANDIDATE)
+print("relation="+RELATION)
+print("Level1 execution_authorized=false")

@@ -1,0 +1,62 @@
+Source: kf6-attica
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends:
+ debhelper-compat (= 13),
+ dh-sequence-kf6,
+ dh-sequence-pkgkde-symbolshelper,
+ cmake (>= 3.29),
+ extra-cmake-modules (>= 6.30.0~),
+ python3,
+ qt6-base-dev (>= 6.9.0~),
+ reuse
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+Homepage: https://invent.kde.org/frameworks/attica
+
+Package: libkf6attica-dev
+Section: libdevel
+Architecture: any
+Depends:
+ libkf6attica6 (= ${binary:Version}),
+ qt6-base-dev (>= 6.9.0~),
+ ${misc:Depends}
+Recommends:
+ libkf6attica-doc (= ${source:Version})
+Description: development files for libkf6attica6
+ Attica is a Qt library that implements the Open Collaboration Services
+ API version 1.6 and provides access to persons, contents and other OCS
+ resources.
+ .
+ This package contains the development headers, CMake package metadata and
+ pkg-config metadata for KDE Frameworks 6 Attica.
+
+Package: libkf6attica-doc
+Architecture: all
+Multi-Arch: foreign
+Section: doc
+Depends:
+ ${misc:Depends}
+Description: Qt library that implements the Open Collaboration Services API (documentation)
+ Attica is a Qt library that implements the Open Collaboration Services
+ API version 1.6 and provides access to persons, contents and other OCS
+ resources.
+ .
+ This compatibility package reserves the KDE Frameworks 6 Attica
+ documentation package contract. QDoc output is not part of Attica's default
+ upstream build and is not generated in this package profile.
+
+Package: libkf6attica6
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends}
+Description: Qt library that implements the Open Collaboration Services API
+ Attica is a Qt library that implements the Open Collaboration Services
+ API version 1.6 and provides access to persons, contents and other OCS
+ resources.
+ .
+ This SupraLINUX package follows KDE Frameworks 6.30 upstream while
+ preserving the Debian/Ubuntu libkf6attica6 binary-package contract.

@@ -1,0 +1,40 @@
+kf6-kuserfeedback (6.30.0-0supralinux5) resolute; urgency=medium
+
+  * Package the upstream UserFeedbackConsole QCH manual emitted by ENABLE_DOCS.
+  * Keep BUILD_QCH=OFF for the common Framework API-QCH profile.
+  * Preserve the complete 15/15 upstream test suite.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sun, 20 Sep 2026 01:43:00 -0300
+
+kf6-kuserfeedback (6.30.0-0supralinux4) resolute; urgency=medium
+
+  * Complete SampleTest compatibility with PHPUnit 13 object assertions.
+  * Replace removed object-attribute assertions with property assertions.
+  * Keep all 15 upstream CTest entries enabled.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sun, 20 Sep 2026 01:34:00 -0300
+
+kf6-kuserfeedback (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Complete PHPUnit 13 test compatibility for SampleTest output capture.
+  * Replace removed TestCase::getActualOutput() with scoped PHP buffering.
+  * Keep all 15 upstream CTest entries enabled.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sun, 20 Sep 2026 01:26:00 -0300
+
+kf6-kuserfeedback (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Keep PHP/PHPUnit tests enabled on Ubuntu Resolute.
+  * Adapt upstream PHP autotests to PHPUnit 13 DataProvider attributes.
+  * Make the SQLite test fixture robust to scoped PHPUnit file loading.
+  * Add the PDO SQLite provider required by the upstream database tests.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sun, 20 Sep 2026 01:20:00 -0300
+
+kf6-kuserfeedback (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE KUserFeedback 6.30.0 from upstream stable.
+  * Preserve upstream default feature profile and full upstream tests.
+  * Validate Core/Widgets ABIs, QML import closure and external consumer use.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 19 Sep 2026 18:30:00 -0300

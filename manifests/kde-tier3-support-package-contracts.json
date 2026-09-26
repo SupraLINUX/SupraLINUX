@@ -1,0 +1,504 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-22",
+  "authority": "kde-upstream",
+  "role": "support-component-package-contract-preparation",
+  "frameworks_series": "6.30.0",
+  "selected_components": [
+    "breeze-icons",
+    "kdoctools",
+    "kded"
+  ],
+  "provider_audit": {
+    "manifest": "manifests/kde-tier3-support-provider-audit.json",
+    "required_status": "PASS",
+    "selected_provider": "supralinux"
+  },
+  "state": "materialized",
+  "reference_capture": {
+    "status": "PASS",
+    "claim": "packaging-reference-snapshot-only",
+    "authoritative": false,
+    "package_state_effect": "none",
+    "ubuntu_suite": "resolute",
+    "debian_suite": "sid",
+    "debian_selection_policy": "prefer-exact-kde-6.30.0-otherwise-newest-not-newer",
+    "evidence": {
+      "result": "PASS",
+      "workflow_run": 35696911023,
+      "job_id": 106645687497,
+      "commit": "46fc3f11fdaa082f2b0b6462d4e154caa713d8fd",
+      "artifact_id": 10680304903,
+      "artifact_sha256": "677f5a0065d3fab2983471a0ccc54ba640b980d25740773e35eea1c5ef9ee95d",
+      "snapshot_sha256": "27012f04c7686e94061055a6aeb33d12f2d17521a151c5742b5e2b2863d5c4d8",
+      "versions_sha256": "5fc42cdb50596d5fa96fe333738de2aa4129580d184436047ef5a39cb5ab995a",
+      "package_state_effect": "none"
+    }
+  },
+  "components": {
+    "breeze-icons": {
+      "upstream_source": "breeze-icons",
+      "upstream_version": "6.30.0",
+      "upstream_source_sha256": "93866c19791838fc9757b305e010e23bb38cb5f201e4ecc96cc8ef5f1173ebe6",
+      "reference_sources": {
+        "ubuntu": "kf6-breeze-icons",
+        "debian": "kf6-breeze-icons"
+      },
+      "contract_state": "materialized",
+      "contract": {
+        "source_package": "kf6-breeze-icons",
+        "package_version_candidate": "4:6.30.0-0supralinux1",
+        "packaging_reference": {
+          "provider": "debian-sid",
+          "version": "4:6.30.0-1",
+          "tree_sha256": "c0127864df0444373e3256559cd1b7d0f3e326d71630c2a4c1eab334ee81d416"
+        },
+        "ubuntu_compatibility_reference": {
+          "version": "6.24.0-0ubuntu1",
+          "tree_sha256": "01cd784add5916345563f18cb5af5e4f45a595010cbf14a2f1bd63fefb6549c9"
+        },
+        "target_binary_packages": [
+          "breeze-icon-theme",
+          "breeze-icon-theme-rcc",
+          "kf6-breeze-icon-theme",
+          "kf6-breeze-icon-theme-rcc",
+          "libkf6breezeicons-dev",
+          "libkf6breezeicons6"
+        ],
+        "compatibility_strategy": "current-primary-packages-plus-ubuntu-name-transitionals",
+        "epoch_policy": {
+          "epoch": 4,
+          "required": true,
+          "reason": "The primary breeze-icon-theme package has a historical epoch 4; retaining it is required for 6.30 to upgrade the existing 4:5.x line correctly."
+        },
+        "relations": {
+          "breeze-icon-theme": {
+            "breaks": "kf6-breeze-icon-theme (<< 6.28.0-3~)",
+            "replaces": "kf6-breeze-icon-theme (<< 6.28.0-3~)"
+          },
+          "breeze-icon-theme-rcc": {
+            "breaks": "kf6-breeze-icon-theme-rcc (<< 6.28.0-3~)",
+            "replaces": "kf6-breeze-icon-theme-rcc (<< 6.28.0-3~)"
+          },
+          "kf6-breeze-icon-theme": {
+            "role": "transitional-ubuntu-compatibility",
+            "depends": "breeze-icon-theme (>= ${source:Version})"
+          },
+          "kf6-breeze-icon-theme-rcc": {
+            "role": "transitional-ubuntu-compatibility",
+            "depends": "breeze-icon-theme-rcc (>= ${source:Version})"
+          }
+        },
+        "selected_profile": {
+          "WITH_ICON_GENERATION": true,
+          "WITH_ICONS_LIBRARY": true,
+          "SKIP_INSTALL_ICONS": false,
+          "BINARY_ICONS_RESOURCE": true
+        },
+        "profile_adaptation": {
+          "BINARY_ICONS_RESOURCE": "enabled-for-rcc-compatibility-output",
+          "kde_feature_effect": "none"
+        },
+        "retained_kde_predecessors": [
+          "extra-cmake-modules"
+        ],
+        "symbols_reference_sha256": "2d21d0016bdce1d61b93468daee11d5c12d3903635e4e61a3616f7067e9e8225"
+      },
+      "materialization_evidence": {
+        "artifact_id": 10680459412,
+        "artifact_sha256": "80955df1f6e90b6ad519b2f91cadbf1e4b56278e69a9827cdfa0b498a960fdb1",
+        "dsc_sha256": "656cb25eeca440541c96dac702b77ea8007683ea8f4b40538fc8240a73add9fa",
+        "debian_tar_sha256": "373b83d55799bf8202986b761b0c91fd5cca2c981017971bb021db7b9a1d5879",
+        "adapted_control_sha256": "47c72187131e94569a80d0aa0abd41cbab247ccd99eb5e1a0e22be0b7237edb6"
+      }
+    },
+    "kdoctools": {
+      "upstream_source": "kdoctools",
+      "upstream_version": "6.30.0",
+      "upstream_source_sha256": "b90b42ab222a3034729e517d0c06258abf6bdc28591ec78ad56f24aebbaaed94",
+      "reference_sources": {
+        "ubuntu": "kf6-kdoctools",
+        "debian": "kf6-kdoctools"
+      },
+      "contract_state": "materialized",
+      "contract": {
+        "source_package": "kf6-kdoctools",
+        "package_version_candidate": "6.30.0-0supralinux1",
+        "packaging_reference": {
+          "provider": "debian-sid",
+          "version": "6.30.0-1",
+          "tree_sha256": "208eebbad9c402e0b6803cfa0b20b2c9e3b843415f0a44c843a1c7c64c4ed3b5"
+        },
+        "ubuntu_compatibility_reference": {
+          "version": "6.24.0-0ubuntu1",
+          "tree_sha256": "573efbcf309bd981dac9481e069ae8db0502a5743aa0cace05ea55f69e3179f3"
+        },
+        "target_binary_packages": [
+          "kdoctools6",
+          "libkf6doctools-dev",
+          "libkf6doctools-doc",
+          "libkf6doctools6"
+        ],
+        "compatibility_strategy": "preserve-ubuntu-binary-identities",
+        "selected_profile": {
+          "MEINPROC_NO_KARCHIVE": false,
+          "BUILD_QCH": true,
+          "KI18N_TRANSLATIONS": true
+        },
+        "retained_kde_predecessors": [
+          "extra-cmake-modules",
+          "karchive",
+          "ki18n"
+        ],
+        "external_requirements": [
+          "docbook-xml",
+          "docbook-xsl",
+          "liburi-perl",
+          "libxml2-dev",
+          "libxml2-utils",
+          "libxslt1-dev",
+          "qt6-base-dev",
+          "qt6-tools-dev"
+        ],
+        "symbols_reference_sha256": "25f447ce3dddef13a7aefdf5b3689c1f95943f2bdb362361417f771079f181a6"
+      },
+      "materialization_evidence": {
+        "artifact_id": 10680938435,
+        "artifact_sha256": "cf5c18889e9de6582ca05b4e8290686948942493aeaf54a318a2b4f4925cf5ac",
+        "dsc_sha256": "677d1d29efc3b247750861bf8f22c86f20df03cd288403b4db92f7d5b8b7f4b5",
+        "debian_tar_sha256": "49880de46bf0dda23cecd1abd34393743f40efb35666718632528046298a8e94",
+        "adapted_control_sha256": "cf3a9a29051d1e050f20ac68b49b5f223780cc145dcbb079008dffd5df3e65ed"
+      }
+    },
+    "kded": {
+      "upstream_source": "kded",
+      "upstream_version": "6.30.0",
+      "upstream_source_sha256": "0adf6e22300cee74d57e790b5db844f03a1366a4d6315edbaa49174b12bf1861",
+      "reference_sources": {
+        "ubuntu": "kf6-kded",
+        "debian": "kf6-kded"
+      },
+      "contract_state": "materialized",
+      "contract": {
+        "source_package": "kf6-kded",
+        "package_version_candidate": "6.30.0-0supralinux1",
+        "packaging_reference": {
+          "provider": "debian-sid",
+          "version": "6.30.0-1",
+          "tree_sha256": "035f17f065f2d31e9650d979b51b0d79989ea142503436de30e93cc717c5fbdc"
+        },
+        "ubuntu_compatibility_reference": {
+          "version": "6.24.0-0ubuntu1",
+          "tree_sha256": "a17d7584cf4778c0232803e5e9f64261c6b6e0691424652dc016249e99e78212"
+        },
+        "target_binary_packages": [
+          "kded6",
+          "kded6-dev"
+        ],
+        "compatibility_strategy": "preserve-ubuntu-binary-identities",
+        "selected_profile": {
+          "documentation_with_kdoctools": true
+        },
+        "retained_kde_predecessors": [
+          "extra-cmake-modules",
+          "kconfig",
+          "kcoreaddons",
+          "kcrash",
+          "kdbusaddons",
+          "kservice"
+        ],
+        "support_predecessors": [
+          "kdoctools"
+        ],
+        "external_requirements": [
+          "qt6-base-dev"
+        ]
+      },
+      "materialization_evidence": {
+        "artifact_id": 10680629132,
+        "artifact_sha256": "680ec2d408e1dd021b091c7adfe1d63a3077144bf54516da3164191d427efa99",
+        "dsc_sha256": "fe48627801159b62904c354794e7a980ecf8175a20c3c282d8a378f25083e4de",
+        "debian_tar_sha256": "5f971aa53129d6c1a70347b19876731addeca02fa3d21060af9a396aedd7be9d",
+        "adapted_control_sha256": "70fd370f87bb05e0ee69a63b48d6cdc18d4234fee6baf597e71987ddfb6857b5"
+      }
+    }
+  },
+  "materialization": {
+    "status": "PASS",
+    "method": "kde-authority-source-plus-pinned-debian-6.30-tree",
+    "package_state_effect": "none",
+    "package_attempted": false,
+    "manifest": "manifests/kde-tier3-support-materialization.json",
+    "workflow_run": 35698463205,
+    "commit": "080cdd5ddf75d46b914efb0baca85981deee0765"
+  },
+  "stable_promotion_requires_explicit_user_approval": true,
+  "technical_references": {
+    "breeze-icons": {
+      "ubuntu": {
+        "source_package": "kf6-breeze-icons",
+        "version": "6.24.0-0ubuntu1",
+        "upstream_version": "6.24.0",
+        "binary_packages": [
+          "kf6-breeze-icon-theme",
+          "kf6-breeze-icon-theme-rcc",
+          "libkf6breezeicons-dev",
+          "libkf6breezeicons6"
+        ],
+        "checksums_sha256": [
+          {
+            "file": "kf6-breeze-icons_6.24.0.orig.tar.xz",
+            "sha256": "63d67d834b28f95f45d53ee4594b1b39de4802429570f0e3b5e63ab509abde8b",
+            "size": 2107944
+          },
+          {
+            "file": "kf6-breeze-icons_6.24.0-0ubuntu1.debian.tar.xz",
+            "sha256": "5b115eeab7a4bf9662a835bdb17f42faafe5748f6ca1697bc8e07f8760de8f22",
+            "size": 15192
+          },
+          {
+            "file": "kf6-breeze-icons_6.24.0-0ubuntu1.dsc",
+            "sha256": "a2b06ba10581a1f288cc28ad8b27e7cd1e6ac89e197fadc5a10b2ccc05020783",
+            "size": 2677
+          }
+        ]
+      },
+      "debian": {
+        "source_package": "kf6-breeze-icons",
+        "version": "4:6.30.0-1",
+        "upstream_version": "6.30.0",
+        "binary_packages": [
+          "breeze-icon-theme",
+          "breeze-icon-theme-rcc",
+          "kf6-breeze-icon-theme",
+          "kf6-breeze-icon-theme-rcc",
+          "libkf6breezeicons-dev",
+          "libkf6breezeicons6"
+        ],
+        "checksums_sha256": [
+          {
+            "file": "kf6-breeze-icons_6.30.0-1.dsc",
+            "sha256": "66b9f6fb5896fc116a0770e5beaae6abf48e708f5233f20956dbd0972b1417e4",
+            "size": 3026
+          },
+          {
+            "file": "kf6-breeze-icons_6.30.0.orig.tar.xz",
+            "sha256": "93866c19791838fc9757b305e010e23bb38cb5f201e4ecc96cc8ef5f1173ebe6",
+            "size": 2108936
+          },
+          {
+            "file": "kf6-breeze-icons_6.30.0.orig.tar.xz.asc",
+            "sha256": "2a33a2e84cc54b4584330426c20debe6fd237f4cafbc675fb5f091b4fe9d5381",
+            "size": 228
+          },
+          {
+            "file": "kf6-breeze-icons_6.30.0-1.debian.tar.xz",
+            "sha256": "92dbe7609dfcb0e366ffd10f7b794dd0ec8beb1d973f19baf80e60943fb3e273",
+            "size": 18592
+          }
+        ]
+      }
+    },
+    "kdoctools": {
+      "ubuntu": {
+        "source_package": "kf6-kdoctools",
+        "version": "6.24.0-0ubuntu1",
+        "upstream_version": "6.24.0",
+        "binary_packages": [
+          "kdoctools6",
+          "libkf6doctools-dev",
+          "libkf6doctools-doc",
+          "libkf6doctools6"
+        ],
+        "checksums_sha256": [
+          {
+            "file": "kf6-kdoctools_6.24.0.orig.tar.xz",
+            "sha256": "89304e42dc043e5d5943fed36821dda76f933fb11085a94577ad117a2122f191",
+            "size": 461096
+          },
+          {
+            "file": "kf6-kdoctools_6.24.0-0ubuntu1.debian.tar.xz",
+            "sha256": "5394c53a589b1c3eb327bfb168aeb720ceffb50495dbd6bbc89e3fd10b6155ff",
+            "size": 15516
+          },
+          {
+            "file": "kf6-kdoctools_6.24.0-0ubuntu1.dsc",
+            "sha256": "4a435002b28e18ad8dd02be28024ab30878db84ab2a11a17ca08430c8caa7763",
+            "size": 2719
+          }
+        ]
+      },
+      "debian": {
+        "source_package": "kf6-kdoctools",
+        "version": "6.30.0-1",
+        "upstream_version": "6.30.0",
+        "binary_packages": [
+          "kdoctools6",
+          "libkf6doctools-dev",
+          "libkf6doctools-doc",
+          "libkf6doctools6"
+        ],
+        "checksums_sha256": [
+          {
+            "file": "kf6-kdoctools_6.30.0-1.dsc",
+            "sha256": "76214fd233a1381be0cfdd0eb6a313e884e4e07608e47ea2445105c4939be1ee",
+            "size": 2899
+          },
+          {
+            "file": "kf6-kdoctools_6.30.0.orig.tar.xz",
+            "sha256": "b90b42ab222a3034729e517d0c06258abf6bdc28591ec78ad56f24aebbaaed94",
+            "size": 461252
+          },
+          {
+            "file": "kf6-kdoctools_6.30.0.orig.tar.xz.asc",
+            "sha256": "e46b8cbec7bf0bd882a16f2d544bb30a84cd6172d91ef16474b6c97357761d52",
+            "size": 228
+          },
+          {
+            "file": "kf6-kdoctools_6.30.0-1.debian.tar.xz",
+            "sha256": "12d5ef58f8b5b31d63699dfd13b171108abde7b829116ad6d58741b933c830ba",
+            "size": 14976
+          }
+        ]
+      }
+    },
+    "kded": {
+      "ubuntu": {
+        "source_package": "kf6-kded",
+        "version": "6.24.0-0ubuntu1",
+        "upstream_version": "6.24.0",
+        "binary_packages": [
+          "kded6",
+          "kded6-dev"
+        ],
+        "checksums_sha256": [
+          {
+            "file": "kf6-kded_6.24.0.orig.tar.xz",
+            "sha256": "f60981d4000961425cbeabe90f0f77e9792cbd5421e55b4c224fdb14aa96b2a5",
+            "size": 35996
+          },
+          {
+            "file": "kf6-kded_6.24.0-0ubuntu1.debian.tar.xz",
+            "sha256": "38a2b7e1b23a278489933e23e0c6eb77ad7c01272b2ca711d3797bc2aa0e4c5e",
+            "size": 13492
+          },
+          {
+            "file": "kf6-kded_6.24.0-0ubuntu1.dsc",
+            "sha256": "8751e5cde56146b548c0cabfaf681cf7baee79b1985af5dc55ccb264d695e1a3",
+            "size": 2535
+          }
+        ]
+      },
+      "debian": {
+        "source_package": "kf6-kded",
+        "version": "6.30.0-1",
+        "upstream_version": "6.30.0",
+        "binary_packages": [
+          "kded6",
+          "kded6-dev"
+        ],
+        "checksums_sha256": [
+          {
+            "file": "kf6-kded_6.30.0-1.dsc",
+            "sha256": "7f84ccd8f0f06d55235b94a166ecab730c1c67234b577ea25cff197fea9f3773",
+            "size": 2700
+          },
+          {
+            "file": "kf6-kded_6.30.0.orig.tar.xz",
+            "sha256": "0adf6e22300cee74d57e790b5db844f03a1366a4d6315edbaa49174b12bf1861",
+            "size": 34736
+          },
+          {
+            "file": "kf6-kded_6.30.0.orig.tar.xz.asc",
+            "sha256": "acf4fe326e29af51d2c848021cb618b9a6242dc7582a1bcc1e21744d4cae5cd9",
+            "size": 228
+          },
+          {
+            "file": "kf6-kded_6.30.0-1.debian.tar.xz",
+            "sha256": "5d41612078b913fc1f734dc86904adf985f021c121c73c47aaf359a0dfaa7dc5",
+            "size": 12916
+          }
+        ]
+      }
+    }
+  },
+  "packaging_tree_capture": {
+    "status": "PASS",
+    "claim": "technical-packaging-tree-only",
+    "authoritative": false,
+    "package_state_effect": "none",
+    "selected_components": [
+      "breeze-icons",
+      "kdoctools",
+      "kded"
+    ],
+    "selected_sides": [
+      "ubuntu",
+      "debian"
+    ],
+    "evidence": {
+      "result": "PASS",
+      "workflow_run": 35697315731,
+      "job_id": 106646990521,
+      "commit": "67a242451da70c6ae9d85a3a7c965783d5599f5b",
+      "artifact_id": 10681410828,
+      "artifact_sha256": "819917d75fc00de52a7d3bb851a4e1a9d467138bad6e7218c10c95a62babf61f",
+      "index_sha256": "dc5e72000afc3843f804177a383ad81fe3cd3cfb346c955a809389243cf382fa",
+      "package_state_effect": "none"
+    }
+  },
+  "packaging_trees": {
+    "breeze-icons": {
+      "ubuntu": {
+        "source_package": "kf6-breeze-icons",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "01cd784add5916345563f18cb5af5e4f45a595010cbf14a2f1bd63fefb6549c9",
+        "control_summary_sha256": "11b1e340cc209198194dca12d7649735fe1d9ddecea0b5605f5cff7a0bd717df"
+      },
+      "debian": {
+        "source_package": "kf6-breeze-icons",
+        "source_version": "4:6.30.0-1",
+        "tree_sha256": "c0127864df0444373e3256559cd1b7d0f3e326d71630c2a4c1eab334ee81d416",
+        "control_summary_sha256": "823723c7219ef9070e446c297106fd2f74352c821346463628bfb5fd2e9076e1"
+      }
+    },
+    "kdoctools": {
+      "ubuntu": {
+        "source_package": "kf6-kdoctools",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "573efbcf309bd981dac9481e069ae8db0502a5743aa0cace05ea55f69e3179f3",
+        "control_summary_sha256": "e66c1d21199664bc161c9a9b6a6924c004447a54f519ba9abb371bce41ca4b3d"
+      },
+      "debian": {
+        "source_package": "kf6-kdoctools",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "208eebbad9c402e0b6803cfa0b20b2c9e3b843415f0a44c843a1c7c64c4ed3b5",
+        "control_summary_sha256": "2638eff3735a227e80b96c5bf8b006dab641f647ffe4a3689f904ada0780c196"
+      }
+    },
+    "kded": {
+      "ubuntu": {
+        "source_package": "kf6-kded",
+        "source_version": "6.24.0-0ubuntu1",
+        "tree_sha256": "a17d7584cf4778c0232803e5e9f64261c6b6e0691424652dc016249e99e78212",
+        "control_summary_sha256": "a647570f2210f24e614e84fef54090bc584da4f44ecf4112d389afac28210985"
+      },
+      "debian": {
+        "source_package": "kf6-kded",
+        "source_version": "6.30.0-1",
+        "tree_sha256": "035f17f065f2d31e9650d979b51b0d79989ea142503436de30e93cc717c5fbdc",
+        "control_summary_sha256": "99ae3f39214890bdf8856148e87c40e33a725c821147fd5709ef39efa3ebce3a"
+      }
+    }
+  },
+  "support_build_topology": {
+    "level0": [
+      "breeze-icons",
+      "kdoctools"
+    ],
+    "level1": [
+      "kded"
+    ],
+    "rule": "KDED waits for the selected KDocTools 6.30 CI/documentation predecessor; Breeze Icons and KDocTools are independent."
+  }
+}

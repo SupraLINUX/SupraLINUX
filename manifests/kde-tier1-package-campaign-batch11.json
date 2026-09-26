@@ -1,0 +1,352 @@
+{
+  "schema": 2,
+  "batch": "tier1-batch-11",
+  "lane": "multi-surface-optional",
+  "frameworks_series": "6.30.0",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "canonical_snapshot": {
+    "state": "pre-batch-11",
+    "tier1": "27 PASS / 2 pending / 0 current FAIL / 0 BLOCKED after Batch 10 canonical promotion"
+  },
+  "selected_nodes": [
+    "kuserfeedback",
+    "prison"
+  ],
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+    },
+    "packaging_trees": {
+      "status": "PASS",
+      "workflow_run": 34708030450,
+      "artifact_id": 10301938362,
+      "artifact_sha256": "6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6",
+      "snapshot_json_sha256": "f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345",
+      "tree_hashes_tsv_sha256": "abf95096bbc16718102a53a132a576c9f61252d13321c58027325ffb2819c09e",
+      "role": "technical-reference-only"
+    }
+  },
+  "nodes": {
+    "kuserfeedback": {
+      "name": "KUserFeedback",
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-kuserfeedback",
+      "package_version": "6.30.0-0supralinux5",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kuserfeedback-6.30.0.tar.xz",
+      "source_sha256": "c8a463c8e570f6d532cbe150732220575c6385df97c91399b6c84450691771ca",
+      "kde_framework_build_dependencies": [],
+      "upstream_defaults": {
+        "ENABLE_SURVEY_TARGET_EXPRESSIONS": "ON",
+        "ENABLE_PHP": "ON",
+        "ENABLE_PHP_UNIT": "ON",
+        "ENABLE_DOCS": "ON",
+        "ENABLE_CONSOLE": "OFF",
+        "BUILD_TESTING": "ON"
+      },
+      "cmake_required_options": {
+        "BUILD_QCH": "OFF",
+        "BUILD_TESTING": "ON",
+        "BUILD_SHARED_LIBS": "ON",
+        "ENABLE_SURVEY_TARGET_EXPRESSIONS": "ON",
+        "ENABLE_PHP": "ON",
+        "ENABLE_PHP_UNIT": "ON",
+        "ENABLE_DOCS": "ON",
+        "ENABLE_CONSOLE": "OFF"
+      },
+      "feature_required_build_providers": [
+        "bison",
+        "flex",
+        "php",
+        "phpunit",
+        "php-sqlite3",
+        "qt6-base-dev",
+        "qt6-charts-dev",
+        "qt6-declarative-dev",
+        "qt6-tools-dev"
+      ],
+      "expected_test_count": 15,
+      "binary_contracts": [
+        {
+          "name": "libkf6userfeedback-data",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6userfeedback-dev",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6userfeedback-doc",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6userfeedbackcore6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6userfeedbackwidgets6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "qml6-module-org-kde-userfeedback",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        }
+      ],
+      "abi_contracts": [
+        {
+          "surface": "UserFeedbackCore",
+          "runtime_package": "libkf6userfeedbackcore6",
+          "soname": "libKF6UserFeedbackCore.so.6",
+          "symbols_file": "libkf6userfeedbackcore6.symbols",
+          "reference_provider": "debian"
+        },
+        {
+          "surface": "UserFeedbackWidgets",
+          "runtime_package": "libkf6userfeedbackwidgets6",
+          "soname": "libKF6UserFeedbackWidgets.so.6",
+          "symbols_file": "libkf6userfeedbackwidgets6.symbols",
+          "reference_provider": "debian"
+        }
+      ],
+      "qml_contracts": [
+        {
+          "package": "qml6-module-org-kde-userfeedback",
+          "required_root_module": "org.kde.userfeedback",
+          "enumerate_all_declared_modules": true
+        }
+      ],
+      "signing_key": {
+        "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"
+      },
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "last_failure_evidence": {
+        "workflow_run": 35489499984,
+        "job_id": 106021890875,
+        "artifact_id": 10598313568,
+        "artifact_sha256": "15458a33a3b4091bab61523097c23d7caeb46b188ba78188a92afec9f582dec5",
+        "rootfs_sha256": "caddb55927435be40069ab9a3d8429f8997b10eb126a839c4fa4c03f84529dce",
+        "stage": "sbuild",
+        "tests": "15/15 CTest PASS",
+        "cause": "All upstream tests pass; dh_missing rejected the ENABLE_DOCS UserFeedbackConsole QCH manual because libkf6userfeedback-doc did not yet install it."
+      },
+      "pass_evidence": {
+        "workflow_run": 35489771315,
+        "job_id": 106022610412,
+        "artifact_id": 10597923863,
+        "artifact_sha256": "0a057d591a198f74cf6eee24d3b1ef4355f2a0d6073d48de8e220ac37f0a38b7",
+        "rootfs_sha256": "8b5518bea1704ffb9830b4d9a3259e2655ca69efb6dff108b9a9709e66d87e39",
+        "package_version": "6.30.0-0supralinux5",
+        "tests": "15/15 PASS",
+        "lintian": "PASS-errors",
+        "abi_contract": "PASS",
+        "apt_check": "PASS",
+        "qml_import_smoke": "PASS",
+        "consumer_smoke": "PASS",
+        "development_contract": "PASS"
+      }
+    },
+    "prison": {
+      "name": "Prison",
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-prison",
+      "package_version": "6.30.0-0supralinux1",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/prison-6.30.0.tar.xz",
+      "source_sha256": "2cdb0a2689ab45b907c76c9a01c1dc14855b8e5329ad0a9cf65c1ad64e5fed1b",
+      "kde_framework_build_dependencies": [],
+      "upstream_defaults": {
+        "WITH_DMTX": "ON",
+        "WITH_ZXING": "ON",
+        "WITH_QUICK": "ON",
+        "WITH_MULTIMEDIA": "ON",
+        "BUILD_TESTING": "ON"
+      },
+      "cmake_required_options": {
+        "BUILD_QCH": "OFF",
+        "BUILD_TESTING": "ON",
+        "WITH_DMTX": "ON",
+        "WITH_ZXING": "ON",
+        "WITH_QUICK": "ON",
+        "WITH_MULTIMEDIA": "ON"
+      },
+      "feature_required_build_providers": [
+        "libdmtx-dev",
+        "libqrencode-dev",
+        "libzxing-dev",
+        "qt6-base-dev",
+        "qt6-declarative-dev",
+        "qt6-multimedia-dev"
+      ],
+      "expected_test_count": 9,
+      "binary_contracts": [
+        {
+          "name": "libkf6prison-dev",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6prison-doc",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6prison6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6prisonscanner6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "qml6-module-org-kde-prison",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        }
+      ],
+      "abi_contracts": [
+        {
+          "surface": "Prison",
+          "runtime_package": "libkf6prison6",
+          "soname": "libKF6Prison.so.6",
+          "symbols_file": "libkf6prison6.symbols",
+          "reference_provider": "debian"
+        },
+        {
+          "surface": "PrisonScanner",
+          "runtime_package": "libkf6prisonscanner6",
+          "soname": "libKF6PrisonScanner.so.6",
+          "symbols_file": "libkf6prisonscanner6.symbols",
+          "reference_provider": "debian"
+        }
+      ],
+      "qml_contracts": [
+        {
+          "package": "qml6-module-org-kde-prison",
+          "required_root_module": "org.kde.prison",
+          "enumerate_all_declared_modules": true
+        },
+        {
+          "package": "qml6-module-org-kde-prison",
+          "required_root_module": "org.kde.prison.scanner",
+          "enumerate_all_declared_modules": true
+        }
+      ],
+      "signing_key": {
+        "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"
+      },
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "last_validation_incident": {
+        "workflow_run": 35485199667,
+        "job_id": 106010235300,
+        "artifact_id": 10596344285,
+        "artifact_sha256": "67803dee1fc950cd960bfd836de516e3e397b7132f02338df00703c4f611c779",
+        "rootfs_sha256": "6b8a9abdf3720fe8e291209b7bab8ba98d812e5df573c2b0ccfce9a53d70c500",
+        "stage": "sbuild-postcheck",
+        "cause": "Runner expected 8 CTest entries, while Prison 6.30 executed 9/9 PASS. sbuild and Lintian succeeded; the exact-count assertion was wrong."
+      },
+      "pass_evidence": {
+        "workflow_run": 35488901554,
+        "job_id": 106020266290,
+        "artifact_id": 10597829797,
+        "artifact_sha256": "f0074c8da29cfda08018fa568fce9cabbf6fc23669416caf20c714c25ff7773f",
+        "rootfs_sha256": "a1ae6cb653ec18a6dba7142f4ee5acd94210076a9adba23d9d67d03ac03885e7",
+        "package_version": "6.30.0-0supralinux1",
+        "tests": "9/9 PASS",
+        "lintian": "PASS-errors",
+        "abi_contract": "PASS",
+        "apt_check": "PASS",
+        "qml_import_smoke": "PASS",
+        "consumer_smoke": "PASS",
+        "development_contract": "PASS"
+      }
+    }
+  },
+  "as_of": "2026-09-20",
+  "state": "PASS",
+  "attempt_ledger": "manifests/kde-tier1-package-batch11-attempts.json",
+  "canonical_promotion": {
+    "status": "promoted",
+    "tier1": "29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED",
+    "dag_nodes": [
+      "kuserfeedback",
+      "prison"
+    ]
+  },
+  "promotion_precheck": {
+    "repository_policy": {
+      "workflow_run": 35489771248,
+      "job_id": 106022596719,
+      "result": "PASS"
+    },
+    "pr_ci": {
+      "workflow_run": 35489771315,
+      "commit": "69d271891f96f75ada404623611ffa42bc061090",
+      "result": "PASS"
+    }
+  },
+  "closure_evidence": {
+    "kuserfeedback": {
+      "workflow_run": 35489771315,
+      "job_id": 106022610412,
+      "artifact_id": 10597923863,
+      "artifact_sha256": "0a057d591a198f74cf6eee24d3b1ef4355f2a0d6073d48de8e220ac37f0a38b7",
+      "rootfs_sha256": "8b5518bea1704ffb9830b4d9a3259e2655ca69efb6dff108b9a9709e66d87e39",
+      "package_version": "6.30.0-0supralinux5",
+      "tests": "15/15 PASS"
+    },
+    "prison": {
+      "workflow_run": 35488901554,
+      "job_id": 106020266290,
+      "artifact_id": 10597829797,
+      "artifact_sha256": "f0074c8da29cfda08018fa568fce9cabbf6fc23669416caf20c714c25ff7773f",
+      "rootfs_sha256": "a1ae6cb653ec18a6dba7142f4ee5acd94210076a9adba23d9d67d03ac03885e7",
+      "package_version": "6.30.0-0supralinux1",
+      "tests": "9/9 PASS"
+    }
+  },
+  "promotion_validation_incidents": [
+    {
+      "workflow_run": 35491700804,
+      "job_id": 106027643479,
+      "commit": "4385e7193d75bf158b7a2798d644d8c3f726671e",
+      "classification": "INFRA",
+      "package_state_effect": "none",
+      "package_attempted": false,
+      "failed_gate": "validate_kde_tier1_packaging_reference.py",
+      "cause": "Packaging-reference/tree historical PASS_NODES registries were not extended to the two newly promoted Batch 11 nodes, so the validator falsely treated KUserFeedback and Prison as unattempted pending nodes.",
+      "remediation": "Add KUserFeedback and Prison to the packaging-reference/tree PASS registries; canonical Tier 1/DAG state and package evidence remain unchanged."
+    }
+  ],
+  "promotion_validation": {
+    "status": "PASS",
+    "commit": "d0c3c66dac717ebc82d6d00632e82e54d43c1dc5",
+    "repository_policy": {
+      "workflow_run": 35491774160,
+      "job_id": 106027831625,
+      "result": "PASS"
+    },
+    "pr_ci": {
+      "workflow_run": 35491774999,
+      "result": "PASS",
+      "heavy_workflows": "scope-skipped"
+    },
+    "package_rebuilds": 0,
+    "package_attempt_ledger_effect": "none",
+    "canonical_state": "29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
+  }
+}

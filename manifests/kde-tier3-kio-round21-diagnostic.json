@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-26",
+  "node": "kio",
+  "round": 21,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "claim": "non-promoting-krecent-visible-cwd-timestamp-ordering-diagnostic",
+  "non_promoting": true,
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "canonical_source_modified": false,
+  "diagnostic_worktree_modified": true,
+  "dag_state_changes_allowed": false,
+  "downstream_eligibility_changes_allowed": false,
+  "package_revision_allocation": false,
+  "test_suppression": false,
+  "execution_authorized": true,
+  "package_execution_authorized": false,
+  "status": "definition-pending-diagnostic",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "canonical_kio": {
+    "state": "FAIL",
+    "package_version": "6.30.0-0supralinux8",
+    "downstream_eligible": false
+  },
+  "predecessor_round20": {
+    "status": "diagnostic-PASS",
+    "workflow_run": 36244913604,
+    "job_id": 108412266582,
+    "branch_commit": "b86b84dacf00a2c374f79a89766fd68c643897d2",
+    "artifact_id": 10906434669,
+    "artifact_sha256": "2071034608c31411399b656fb4e963cd066bded08e8c52566beea6c186d77fbc",
+    "kdirmodel_conclusion": "hidden-home-component-controls-kdirmodel-showroot-failure",
+    "krecentdocument_conclusion": "DIAG_INVALID-hidden-working-directory-and-post-test-cleanup"
+  },
+  "attempt8_reference": {
+    "workflow_run": 36238357510,
+    "kio_job_id": 108394325161,
+    "kio_artifact_id": 10905267300,
+    "kio_artifact_sha256": "9f95e2b8e3330ee4f1b275eb059736b87fa57d7752602aa598cb313659cae53f",
+    "tests": {
+      "total": 69,
+      "pass": 67,
+      "fail": 2
+    },
+    "krecentdocument_signature": "testXbelBookmarkMaxEntries: actual temp File 11, expected temp File 12"
+  },
+  "source_materialization": {
+    "workflow_run": 36222711238,
+    "job_id": 108350884409,
+    "artifact_id": 10898999142,
+    "artifact_sha256": "c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d",
+    "package_version": "6.30.0-0supralinux8",
+    "upstream_source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2"
+  },
+  "round20_invalidity_root_cause": {
+    "upstream_test_behavior": "testXbelBookmarkMaxEntries creates temp File N below QDir::currentPath()",
+    "upstream_runtime_behavior": "KRecentDocument::add returns without recording a local URL when IgnoreHidden is true and the path contains '/.'",
+    "round20_environment": "the direct diagnostic CWD was below the repository .work directory",
+    "post_test_behavior": "QTest cleanup removes m_xbelPath after the selected test, so evidence capture must preserve the XBEL explicitly",
+    "consequence": "Round20 KRecent runs were not representative of Attempt 8 and cannot test the timestamp-ordering hypothesis"
+  },
+  "validity_contract": {
+    "visible_work_root": "parent-of-GITHUB_WORKSPACE-repository-root/supralinux-krecent-visible-round21",
+    "cwd_zero_dot_prefixed_components": true,
+    "cwd_outside_qdir_temp_path": true,
+    "tmpdir": "/tmp",
+    "fresh_home_per_run": true,
+    "home_zero_dot_prefixed_components": true,
+    "xdg_overrides_unset": [
+      "XDG_DATA_HOME",
+      "XDG_CONFIG_HOME",
+      "XDG_CACHE_HOME"
+    ],
+    "preserve_xbel_diagnostic_instrumentation": true,
+    "xbel_discovery": "find exactly one recently-used.xbel below the fresh HOME after each selected test",
+    "baseline_validity": "30 runs, each with exactly 3 XBEL bookmarks",
+    "capture_all_validity": "MaxEntries=50 test-only variant leaves exactly 15 XBEL bookmarks",
+    "delayed_validity": "30 QTest::qWait(5) runs, each with exactly 3 XBEL bookmarks",
+    "source_restored_byte_for_byte": true
+  },
+  "diagnostic_scope": {
+    "build_targets": [
+      "krecentdocumenttest"
+    ],
+    "baseline_repetitions": 30,
+    "capture_all_variant": "test-only MaxEntries=50 with ordering assertion removed solely to preserve all 15 entries for timestamp inspection",
+    "delayed_variant": "test-only QTest::qWait(5) after every KRecentDocument::add",
+    "delayed_repetitions": 30,
+    "evidence": [
+      "per-run return code",
+      "Attempt 8 exact failure signature frequency",
+      "actual discovered XBEL path",
+      "bookmark filenames",
+      "bookmark modified timestamps",
+      "duplicate modified timestamp groups",
+      "visible CWD/HOME path audit"
+    ],
+    "invariants": [
+      "canonical KIO 6.30.0-0supralinux8 remains FAIL",
+      "KDirModel Round20 causal finding is retained and not rerun",
+      "Attempt 9 remains unauthorized",
+      "no Debian package is built",
+      "no package revision is allocated",
+      "no test is suppressed",
+      "canonical DAG and downstream eligibility remain unchanged"
+    ]
+  },
+  "decision_rules": {
+    "invalid_environment": "any run lacks exactly one XBEL, baseline/delayed entry count differs from 3, capture-all differs from 15, or CWD/HOME visibility audit fails => DIAG_INVALID",
+    "timestamp_collision_confirmed": "valid environment + at least one exact Attempt8 baseline signature + capture-all duplicate modified timestamps + all delayed runs PASS",
+    "timestamp_collision_rejected": "valid environment + exact Attempt8 baseline signature reproduced but delayed runs retain it, or capture-all has no duplicate modified timestamps",
+    "historical_failure_not_reproduced": "valid environment + no baseline run reproduces the Attempt8 signature",
+    "no_package_decision": "Round21 evidence cannot itself authorize Attempt 9 or allocate a package revision"
+  },
+  "next_gate": "tier3-round21-kio-krecent-visible-cwd-diagnostic-evidence",
+  "stable_promotion_requires_explicit_user_approval": true
+}

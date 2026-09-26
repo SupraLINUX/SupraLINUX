@@ -1,0 +1,72 @@
+Source: kf6-prison
+Section: libs
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               dh-sequence-qmldeps,
+               cmake (>= 3.29~),
+               extra-cmake-modules (>= 6.30.0~),
+               libdmtx-dev,
+               libqrencode-dev,
+               libzxing-dev,
+               pkgconf,
+               qt6-base-dev (>= 6.9.0~),
+               qt6-declarative-dev (>= 6.9.0~),
+               qt6-multimedia-dev (>= 6.9.0~),
+               qml6-module-qtmultimedia <!nocheck>,
+               qml6-module-qtquick <!nocheck>,
+               xauth <!nocheck>,
+               xvfb <!nocheck>
+Standards-Version: 4.7.4
+Rules-Requires-Root: no
+Homepage: https://invent.kde.org/frameworks/prison
+
+Package: libkf6prison-dev
+Architecture: any
+Multi-Arch: same
+Section: libdevel
+Depends: libkf6prison6 (= ${binary:Version}),
+         libkf6prisonscanner6 (= ${binary:Version}),
+         qml6-module-org-kde-prison (= ${binary:Version}),
+         qt6-base-dev (>= 6.9.0~),
+         qt6-multimedia-dev (>= 6.9.0~),
+         ${misc:Depends}
+Recommends: libkf6prison-doc (= ${source:Version})
+Description: Prison 6 development files
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkf6prison-doc
+Section: doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Description: Prison 6 documentation
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkf6prison6
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Description: Prison 6 barcode runtime library
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: libkf6prisonscanner6
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Description: Prison 6 barcode scanner runtime library
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.
+
+Package: qml6-module-org-kde-prison
+Architecture: any
+Multi-Arch: same
+Depends: libkf6prison6 (= ${binary:Version}),
+         libkf6prisonscanner6 (= ${binary:Version}),
+         ${misc:Depends},
+         ${qml6:Depends},
+         ${shlibs:Depends}
+Description: Prison 6 Qt Quick barcode and scanner modules
+ SupraLINUX packaging of KDE Frameworks 6.30 upstream stable.

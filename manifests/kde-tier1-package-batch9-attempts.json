@@ -1,0 +1,199 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-18",
+  "batch": "tier1-batch-9",
+  "attempts": {
+    "kconfig": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "958d9990f0c5c6e85ade45faf8b7fa1a62c0c3af",
+        "workflow_run": 35348130023,
+        "job_id": 105609530611,
+        "artifact_id": 10549115856,
+        "artifact_sha256": "6579cc838436e1390c950da9037997ae4646fb4fb40d5e69290377c16f385b6c",
+        "rootfs_sha256": "79fe82c1adfffb5050106b07157c423ed7c9c7c0a4a2608ace84899d5ae1184e",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "90/90 PASS",
+        "cause": "Lintian rejected _ZN16KStandardActions16staticMetaObjectE@Base at 6.30.0-0supralinux1; upstream introduction reviewed as KDE Frameworks 6.29.0."
+      },
+      {
+        "attempt": 2,
+        "package_version": "6.30.0-0supralinux2",
+        "commit": "f23d5b995468d16189ef18e9b59b63ac3927736f",
+        "workflow_run": 35354088696,
+        "job_id": 105629086800,
+        "artifact_id": 10551565818,
+        "artifact_sha256": "44095dd2f16b7101c0f1dbe65fb561d79361b28a8b5f255151760e64a4ea09a3",
+        "rootfs_sha256": "a3ef32e90b7f8c734110becf63a327503855e3c5d495fb340668f944cb24b30c",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "90/90 PASS",
+        "cause": "Reviewed symbols delta passed; Lintian rejected debian/rules because python3:any was not declared in Build-Depends."
+      },
+      {
+        "attempt": 3,
+        "validation_cycle": 4,
+        "package_version": "6.30.0-0supralinux3",
+        "commit": "1048fd52df303957d2db82c29988c8170b6fd656",
+        "workflow_run": 35358920602,
+        "job_id": 105645094816,
+        "artifact_id": 10553307816,
+        "artifact_sha256": "7bc04355d35d9bd86033ffaceb89a2addbb79e9e5d49ef14f59be58f2cfde312",
+        "rootfs_sha256": "3c863b17d63bf75492b41bcb774d6d40616ffe646ded3d0c50fb51562c17df57",
+        "result": "FAIL",
+        "stage": "consumer-smoke",
+        "tests": "90/90 PASS",
+        "cause": "Build/tests/Lintian/ABI/APT/QML import passed; consumer CMake failed because libkf6config-dev omitted qt6-declarative-dev although KF6ConfigConfig.cmake requires Qt6Qml >= 6.9.0."
+      },
+      {
+        "attempt": 4,
+        "validation_cycle": 5,
+        "package_version": "6.30.0-0supralinux4",
+        "commit": "bfb02cdc6f6086ed41092cc900563dfa3be86e64",
+        "workflow_run": 35360530830,
+        "job_id": 105650448776,
+        "artifact_id": 10554715051,
+        "artifact_sha256": "bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e",
+        "rootfs_sha256": "cf14256f216dd3ec9a67a7bca3bd46e8624391ffe40b2c08567dc1fe90a4b9e3",
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "90/90 PASS",
+        "downstream_eligible": true,
+        "cause": "qt6-declarative-dev consumer-development dependency closed the exported Qt6Qml >= 6.9.0 CMake contract; all full gates passed."
+      }
+    ],
+    "ki18n": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "958d9990f0c5c6e85ade45faf8b7fa1a62c0c3af",
+        "workflow_run": 35348130023,
+        "job_id": 105609530707,
+        "artifact_id": 10548710619,
+        "artifact_sha256": "d213147477242b08a1dac78611b30eacb60f9bd727abb1313d5a2c8bc7c24cf4",
+        "rootfs_sha256": "f3849a2ceb003aeb1de899fe3b56dec59b3b29da6589f79da9b7dc3685c52b4d",
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "17/17 PASS",
+        "downstream_eligible": true
+      },
+      {
+        "attempt": 2,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "f23d5b995468d16189ef18e9b59b63ac3927736f",
+        "workflow_run": 35354088696,
+        "job_id": 105629086722,
+        "artifact_id": 10550338682,
+        "artifact_sha256": "08271a40a392b0d947b05413c54c913230261d26bff1ed12d91d37a85400a3bd",
+        "rootfs_sha256": "2e45730952a04dc7b8ed5fe96c6e479427697a5d6fc0c840cc8817fe81c24974",
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "17/17 PASS",
+        "downstream_eligible": true
+      },
+      {
+        "attempt": 3,
+        "validation_cycle": 4,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "1048fd52df303957d2db82c29988c8170b6fd656",
+        "workflow_run": 35358920602,
+        "job_id": 105645094825,
+        "artifact_id": 10553916882,
+        "artifact_sha256": "2a0d66f2760c49ba1128b8b51c741173a72e6f3ab51f3eb17c3584896d30a678",
+        "rootfs_sha256": "c3a542cadce65b491d0997f7fa61cfabc2b44188a2021c151858349766fd148d",
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "17/17 PASS",
+        "downstream_eligible": true
+      }
+    ],
+    "sonnet": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "958d9990f0c5c6e85ade45faf8b7fa1a62c0c3af",
+        "workflow_run": 35348130023,
+        "job_id": 105609530666,
+        "artifact_id": 10549100349,
+        "artifact_sha256": "d01d279dc2645efd9ecc01506e17c0f99aecadda761bc12236af7ae1341a3fc6",
+        "rootfs_sha256": "300d410c9e584cd0bc8dee75578db2ac940363e20440a289c2a31142b64d7d09",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "8/8 PASS",
+        "cause": "Lintian rejected _ZN6Sonnet8Settings22defaultSkipRunTogetherEv@Base at 6.30.0-0supralinux1; upstream introduction reviewed as KDE Frameworks 6.30.0."
+      },
+      {
+        "attempt": 2,
+        "package_version": "6.30.0-0supralinux2",
+        "commit": "f23d5b995468d16189ef18e9b59b63ac3927736f",
+        "workflow_run": 35354088696,
+        "job_id": 105629086871,
+        "artifact_id": 10551700066,
+        "artifact_sha256": "3d995b55c0e106554957bd7cfc2a1f63df19fc3c7b95a59be9fa0df51a9f6c23",
+        "rootfs_sha256": "bca53d5e3e2f5e536987ad3d8885ba44d814db9a2bd80b7ed07b006bc394b5f7",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "8/8 PASS",
+        "cause": "Reviewed symbols delta passed; Lintian rejected debian/rules because python3:any was not declared in Build-Depends."
+      },
+      {
+        "attempt": 3,
+        "validation_cycle": 4,
+        "package_version": "6.30.0-0supralinux3",
+        "commit": "1048fd52df303957d2db82c29988c8170b6fd656",
+        "workflow_run": 35358920602,
+        "job_id": 105645094787,
+        "artifact_id": 10554216487,
+        "artifact_sha256": "ae5a33cf8699b96b7b7b8c1a83bc4d37a484878029818c1885b4f4f44f15b431",
+        "rootfs_sha256": "38f9fcd9dd6cb379bd5ba1fbfb5c93f57b49db71c166615415ff663366fc54bb",
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "8/8 PASS",
+        "downstream_eligible": true
+      }
+    ]
+  },
+  "validation_incidents": {
+    "kconfig": [
+      {
+        "validation_cycle": 3,
+        "package_version": "6.30.0-0supralinux3",
+        "commit": "97e4feb51df541501b027ba80c4b86907d8763c8",
+        "workflow_run": 35355395436,
+        "job_id": 105633436677,
+        "artifact_id": 10551433966,
+        "artifact_sha256": "eed45f10d52f3190fcf099ceb63c4138f1c346d191d6aa85429b1beafd829b95",
+        "rootfs_sha256": "cd684394244cb651b6d36171bf140e8dfae4905d92b5f4da2d87d89b66754629",
+        "stage": "abi-contract",
+        "classification": "INFRA",
+        "package_state_effect": "none",
+        "package_build": "successful",
+        "lintian": "PASS-errors",
+        "tests": "90/90 PASS",
+        "cause": "False-negative ABI export floor: amd64 output 640 was compared to cross-architecture total 648 although only 634 baseline exports are required on amd64."
+      }
+    ],
+    "ki18n": [],
+    "sonnet": [
+      {
+        "validation_cycle": 3,
+        "package_version": "6.30.0-0supralinux3",
+        "commit": "97e4feb51df541501b027ba80c4b86907d8763c8",
+        "workflow_run": 35355395436,
+        "job_id": 105633436582,
+        "artifact_id": 10551832586,
+        "artifact_sha256": "f9352e5f5c3cd527cc32887896b1c6c4441e1291ee103204de470e3378a77218",
+        "rootfs_sha256": "9e79ae0631e0c4b7a59f3fb82af976eaaf9c388c01b57edfebd30001f37d38af",
+        "stage": "abi-contract",
+        "classification": "INFRA",
+        "package_state_effect": "none",
+        "package_build": "successful",
+        "lintian": "PASS-errors",
+        "tests": "8/8 PASS",
+        "cause": "False-negative ABI export floor: generated 255 exports were compared to total 263 although nine baseline exports are optional=templinst and only 254 are required."
+      }
+    ]
+  }
+}

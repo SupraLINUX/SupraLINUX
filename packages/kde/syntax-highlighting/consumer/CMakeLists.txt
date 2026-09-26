@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(syntax-highlighting-consumer LANGUAGES CXX)
+find_package(KF6SyntaxHighlighting 6.30 REQUIRED)
+add_executable(syntax-highlighting-consumer main.cpp)
+target_compile_features(syntax-highlighting-consumer PRIVATE cxx_std_17)
+target_link_libraries(syntax-highlighting-consumer PRIVATE KF6::SyntaxHighlighting ${CMAKE_DL_LIBS})

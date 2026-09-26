@@ -1,0 +1,1990 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-22",
+  "state": "materialized",
+  "source_authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "packaging_authority": "supralinux",
+  "compatibility_reference": {
+    "ubuntu": {
+      "series": "resolute",
+      "role": "technical-reference-only"
+    },
+    "debian": {
+      "series": "sid",
+      "role": "technical-reference-only"
+    }
+  },
+  "policy": {
+    "upstream_features_must_not_be_silently_disabled": true,
+    "python_bindings_follow_upstream_defaults": true,
+    "reference_packaging_is_not_authoritative": true,
+    "package_pass_requires_real_clean_build": true,
+    "reference_orig_must_match_kde_authority_when_same_upstream_version": true,
+    "reference_debian_tree_may_be_used_when_reference_orig_mismatches": true,
+    "provider_packaging_tooling_may_be_adapted_to_base": true,
+    "verified_files_excluded_repack_allowed": true,
+    "preserve_ubuntu_binary_names_when_contract_equivalent": true,
+    "kde_upstream_contract_wins_on_namespace_transition": true,
+    "legacy_ubuntu_abi_may_coinstall_on_demand": true,
+    "fake_abi_equivalence_forbidden": true
+  },
+  "selected_nodes": [
+    "kmime"
+  ],
+  "nodes": {
+    "kcrash": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+      "source_package": "kf6-kcrash",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkf6crash-dev",
+        "libkf6crash-doc",
+        "libkf6crash6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "cmake_package": "KF6Crash",
+      "cmake_target": "KF6::Crash",
+      "soname": "libKF6Crash.so.6",
+      "selected_profile": {
+        "WITH_X11": true,
+        "BUILD_TESTING": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "9dce3b857735cb3c888cf6c59ecf51e081d2889be0d3229a508cd2911cdb692a",
+          "debian_tar_sha256": "c33139da1ce93431905aa981f21613cdbab3f08f4931cd160991b30597894897",
+          "orig_tar_sha256": "4544428c3c96587e46342daf5b1f083dd7950c7bc940d7bc7921300600ef8074"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "7fb5b51a0661cd0816cc26228a452c750cefdd290c5d1a9aa4eff55df993dedb",
+          "debian_tar_sha256": "03d0455ee72054bb623685558b608a7cc6f9c8a1912a6a292c35f145d22393e3",
+          "orig_tar_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+          "orig_matches_kde_authority": true
+        }
+      }
+    },
+    "knotifications": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "09ad50570b26aada0408bb9ccfaabf629c56ec89a9972c8b0e155ab780f577cf",
+      "source_package": "kf6-knotifications",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkf6notifications-data",
+        "libkf6notifications-dev",
+        "libkf6notifications-doc",
+        "libkf6notifications6",
+        "qml6-module-org-kde-notifications"
+      ],
+      "supralinux_additional_binary_packages": [
+        "python3-kf6notifications"
+      ],
+      "cmake_package": "KF6Notifications",
+      "cmake_target": "KF6::Notifications",
+      "soname": "libKF6Notifications.so.6",
+      "python_module": "KNotifications",
+      "selected_profile": {
+        "USE_DBUS": true,
+        "BUILD_PYTHON_BINDINGS": true,
+        "BUILD_TESTING": true,
+        "BUILD_QML_IF_PROVIDER_AVAILABLE": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "c1adffdf826fa5abc60c72c99c7b0f1a72576d72ed97db5762e85ee259e2f99a",
+          "debian_tar_sha256": "da8c7b44f42c69d284137dffa158d5bf603a241f03ce41962c00169e73ae32cc",
+          "orig_tar_sha256": "12bb0b34ac9ae39b96d189cc0b29f526ae12a9014d0aad3721cacc9148e42940"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "88b7f33bf9dc8df25328de7e221fbd024ecefcde6a34c26c8c303c5d79ee1655",
+          "debian_tar_sha256": "08faad896e5926d6259695cfad25a220272eee7561447a9899ccc7ff0e98ef9d",
+          "orig_tar_sha256": "09ad50570b26aada0408bb9ccfaabf629c56ec89a9972c8b0e155ab780f577cf",
+          "orig_matches_kde_authority": true
+        }
+      },
+      "python_runtime_package": "libkf6notifications6",
+      "python_runtime_contract": {
+        "upstream_typesystems": [
+          "QtGui"
+        ],
+        "provider_packages": [
+          "python3-pyside6.qtgui"
+        ],
+        "provider_platform": "ubuntu-resolute",
+        "classification": "python-binding-runtime-provider-closure"
+      }
+    },
+    "kstatusnotifieritem": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "373fb23fe6a5c0c5c755c473e7cf272796ea59891c05157c3a7e9607a4c4af4f",
+      "source_package": "kf6-kstatusnotifieritem",
+      "package_version_candidate": "6.30.0-0supralinux2",
+      "compatibility_binary_packages": [
+        "libkf6statusnotifieritem-data",
+        "libkf6statusnotifieritem-dev",
+        "libkf6statusnotifieritem-doc",
+        "libkf6statusnotifieritem6"
+      ],
+      "supralinux_additional_binary_packages": [
+        "python3-kf6statusnotifieritem"
+      ],
+      "cmake_package": "KF6StatusNotifierItem",
+      "cmake_target": "KF6::StatusNotifierItem",
+      "soname": "libKF6StatusNotifierItem.so.6",
+      "python_module": "KStatusNotifierItem",
+      "selected_profile": {
+        "WITHOUT_X11": false,
+        "USE_DBUS": true,
+        "BUILD_PYTHON_BINDINGS": true,
+        "BUILD_TESTING": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "9c4b959a4e3e0ba1068b11e6f8d206a7cf83185bdc7b0d59045be58a81621727",
+          "debian_tar_sha256": "be9400b7fa68d5c3681d67bad760c3cfd67f3c3758cd1414454647c9adecbf66",
+          "orig_tar_sha256": "f76c77dcc27a60007330329a6d6c60298c11ddddba82f710a90715ec81f886ff"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "2f622db13cb79283ff267fdda684eba0c6e2a5b137cded4118ee4e823af5dcb8",
+          "debian_tar_sha256": "e25660593cdc52e72a37ebcefc698b8bdb33ec5cd00ed3c9d1295498f6eecbe6",
+          "orig_tar_sha256": "373fb23fe6a5c0c5c755c473e7cf272796ea59891c05157c3a7e9607a4c4af4f",
+          "orig_matches_kde_authority": true
+        }
+      },
+      "python_runtime_package": "libkf6statusnotifieritem6",
+      "python_runtime_contract": {
+        "upstream_typesystems": [
+          "QtCore",
+          "QtGui",
+          "QtWidgets"
+        ],
+        "provider_packages": [
+          "python3-pyside6.qtwidgets"
+        ],
+        "provider_platform": "ubuntu-resolute",
+        "classification": "python-binding-runtime-provider-closure"
+      },
+      "symbols_adjustments": [
+        {
+          "file": "libkf6statusnotifieritem6.symbols",
+          "symbol": "_ZSt19piecewise_construct@Base",
+          "tag": "optional=templinst",
+          "version": "6.30.0",
+          "classification": "toolchain-template-export",
+          "evidence_run": 35543268413,
+          "rationale": "dpkg-gensymbols exposed std::piecewise_construct under the Resolute toolchain; keep this implementation/template export optional and use the upstream version floor without a Debian revision."
+        }
+      ]
+    },
+    "kunitconversion": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "3dcaa45875bab5a2dcadc34cf57cf06689b8d86ff40e20fee01ca2b18987175f",
+      "source_package": "kf6-kunitconversion",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkf6unitconversion-data",
+        "libkf6unitconversion-dev",
+        "libkf6unitconversion-doc",
+        "libkf6unitconversion6"
+      ],
+      "supralinux_additional_binary_packages": [
+        "python3-kf6unitconversion"
+      ],
+      "cmake_package": "KF6UnitConversion",
+      "cmake_target": "KF6::UnitConversion",
+      "soname": "libKF6UnitConversion.so.6",
+      "python_module": "KUnitConversion",
+      "selected_profile": {
+        "BUILD_PYTHON_BINDINGS": true,
+        "BUILD_TESTING": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "5dd8e5bb88f745e43b62327585b9275406b82376130f30305f6ede4773584d3e",
+          "debian_tar_sha256": "61018a38a76c44a907aa36099e2ff4f819f3b7bd256865ce3496c8118b93ef5b",
+          "orig_tar_sha256": "a0cd582e48c302d56b5ebcea560b5590f94b8615dbd54bc67bcd165714979fa6"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "80cbc8f12a339d62623a95f06649f26d71bccb799a8eed92699f6f23bdd24898",
+          "debian_tar_sha256": "1180130c838da3d81bec14f5a00bcadef4975240da9c8ff90a8705b122fdd268",
+          "orig_tar_sha256": "3dcaa45875bab5a2dcadc34cf57cf06689b8d86ff40e20fee01ca2b18987175f",
+          "orig_matches_kde_authority": true
+        }
+      },
+      "python_runtime_package": "libkf6unitconversion6",
+      "python_runtime_contract": {
+        "upstream_typesystems": [
+          "QtCore"
+        ],
+        "provider_packages": [
+          "python3-pyside6.qtcore"
+        ],
+        "provider_platform": "ubuntu-resolute",
+        "classification": "python-binding-runtime-provider-closure"
+      }
+    },
+    "syndication": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+      "source_package": "kf6-syndication",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkf6syndication-dev",
+        "libkf6syndication-doc",
+        "libkf6syndication6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "cmake_package": "KF6Syndication",
+      "cmake_target": "KF6::Syndication",
+      "soname": "libKF6Syndication.so.6",
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "7d0dd92d9937d2161b32e42229e07b9ec845df647d082f7a4bf16a6a27789009",
+          "debian_tar_sha256": "7817265b0e57e50d902e35404a8be88f86a9b3229f58b0ee6e0c27169153a4fb",
+          "orig_tar_sha256": "99e282bf23a0398dd9a22ce94168a8228bbf1b72aaaf9c52154b70b8a768a05c"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "4c57c6c871c8973f435d0d7515acdeb757e9c37b1b3293d8bb6989acc32ecd4d",
+          "debian_tar_sha256": "d8602d238d2416e565e79394ea4806348d955492bc25751825c9f796ffd46bac",
+          "orig_tar_sha256": "fb46986bd539f49dc39c79553c4e8e9eaeb5953efa8cba1b47d3b139ee54f5af",
+          "orig_matches_kde_authority": false,
+          "authority_source_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+          "policy": "verified-files-excluded-repack-required",
+          "files_excluded_basis": "debian/copyright"
+        }
+      },
+      "source_distribution": {
+        "mode": "verified-files-excluded-repack",
+        "authority": "kde-upstream",
+        "authority_source_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+        "repack_provider": "debian-technical-reference",
+        "repack_orig_sha256": "fb46986bd539f49dc39c79553c4e8e9eaeb5953efa8cba1b47d3b139ee54f5af",
+        "verification": "PASS-run-35543068531-exact-files-excluded-diff"
+      }
+    },
+    "kcolorscheme": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "a4128e82e47cd474c777754c4dd8af28a00a57ecf388da1a62f8173d898890d0",
+      "source_package": "kf6-kcolorscheme",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkf6colorscheme-data",
+        "libkf6colorscheme-dev",
+        "libkf6colorscheme-doc",
+        "libkf6colorscheme6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "cmake_package": "KF6ColorScheme",
+      "cmake_target": "KF6::ColorScheme",
+      "soname": "libKF6ColorScheme.so.6",
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "9f27ec0d90b0d408b92105c25a2daade70fafafa59f8849beefb93df288e5d99",
+          "debian_tar_sha256": "714ed15d93745425bed0f6040eee3a2d0534b91e89611cfa19be350a66f3ec9f",
+          "orig_tar_sha256": "e9c9e0155e9b8049ad8588049645c998494b91145648467ddcbef178e31e84c5"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "2bc45fa48ca9bef036dedcef2483f7729abf82ff3ddf3e9e6b997d7d7c2129f6",
+          "debian_tar_sha256": "160d5e927400f8a16d2dd51affe0f1cc66ab273f93f4a365109cff5ef9914c9f",
+          "orig_tar_sha256": "a4128e82e47cd474c777754c4dd8af28a00a57ecf388da1a62f8173d898890d0",
+          "orig_matches_kde_authority": true
+        }
+      }
+    },
+    "kcompletion": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "96ad9c429ca53b830359c45614ca4c32ed6b759f3023f1b3db1650ba1c19bd58",
+      "source_package": "kf6-kcompletion",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkf6completion-data",
+        "libkf6completion-dev",
+        "libkf6completion-doc",
+        "libkf6completion6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "cmake_package": "KF6Completion",
+      "cmake_target": "KF6::Completion",
+      "soname": "libKF6Completion.so.6",
+      "selected_profile": {
+        "BUILD_TESTING": true,
+        "BUILD_DESIGNERPLUGIN": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "a3c6da82683645d0072dcbbd36707f3d42d25acf2ffa0c73f3ec90adf557aef3",
+          "debian_tar_sha256": "e7aef369fe95c8a21f3828a344c535c451921c7e754c62b79b5668bc58dad2d3",
+          "orig_tar_sha256": "1bdfb8f2dcb8da558d7210d7f21f054c4f0d934d69e86aed36675755ded370d5"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "91d1174f6ded6556a642e724e1ffb7c19943ee783cc3945c9a6acb29fb7b8c7d",
+          "debian_tar_sha256": "94f5e30fa94adbd8a717e03167686738818ffc0028a951178723442ed5ae1aa5",
+          "orig_tar_sha256": "96ad9c429ca53b830359c45614ca4c32ed6b759f3023f1b3db1650ba1c19bd58",
+          "orig_matches_kde_authority": true
+        }
+      }
+    },
+    "kcontacts": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "170b51a41ac132968ea03d5f1ce8c585777155bbdc57e819a0562b1f8d03b7a5",
+      "source_package": "kf6-kcontacts",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkf6contacts-data",
+        "libkf6contacts-dev",
+        "libkf6contacts-doc",
+        "libkf6contacts6",
+        "qml6-module-org-kde-contacts"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "cmake_package": "KF6Contacts",
+      "cmake_target": "KF6::Contacts",
+      "soname": "libKF6Contacts.so.6",
+      "selected_profile": {
+        "BUILD_TESTING": true,
+        "USE_QML": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "85264d2c2bc23cd05fc8e81f78a119c3dbe90edaf2910efa7301ada13a024463",
+          "debian_tar_sha256": "1a1b633ec10f11ec3b09ca8f7654d012b985943d7712a83b3b1e0b799d4879b5",
+          "orig_tar_sha256": "7ffc5c0e6c7966d47c996dd778a47d2cd1bb711baa4b63be441c941a334ab48b"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "6643bd579d89428d7526809f8fadaad5949d9141e7212e3c821a13e6c891df98",
+          "debian_tar_sha256": "770640bfd5cd78b325c4e9b2d43769aee466174ec788767656e4c7a7201c8037",
+          "orig_tar_sha256": "170b51a41ac132968ea03d5f1ce8c585777155bbdc57e819a0562b1f8d03b7a5",
+          "orig_matches_kde_authority": true
+        }
+      },
+      "build_depends_remove": [
+        "libkf6coreaddons-dev"
+      ],
+      "binary_depends_remove": {
+        "libkf6contacts-dev": [
+          "libkf6coreaddons-dev"
+        ]
+      },
+      "rules_auto_test_command": "xvfb-run -- dh_auto_test --no-parallel",
+      "provider_adaptation": {
+        "classification": "technical-reference-overconstraint-removal",
+        "removed_build_depends": [
+          "libkf6coreaddons-dev"
+        ],
+        "removed_binary_depends": {
+          "libkf6contacts-dev": [
+            "libkf6coreaddons-dev"
+          ]
+        },
+        "restored_auto_test": "xvfb-run -- dh_auto_test --no-parallel",
+        "upstream_basis": "KContacts v6.30.0 requires KF6 I18n, Config and Codecs; KDE upstream source/CMake has no KCoreAddons dependency.",
+        "kde_feature_effect": "none",
+        "validation": "fresh-materialization-and-clean-build-required"
+      }
+    },
+    "kpackage": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
+      "source_package": "kf6-kpackage",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "kpackagetool6",
+        "libkf6package-data",
+        "libkf6package-dev",
+        "libkf6package-doc",
+        "libkf6package6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "cmake_package": "KF6Package",
+      "cmake_target": "KF6::Package",
+      "soname": "libKF6Package.so.6",
+      "selected_profile": {
+        "BUILD_TESTING": true,
+        "USE_DBUS": true,
+        "CMAKE_DISABLE_FIND_PACKAGE_KF6DocTools": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "e027ffb8d90a2cb676b38f15e75c2bfb9ecd0be079240f628119269e24a5f425",
+          "debian_tar_sha256": "3bc48f86e7068737a689a8b82ea48fc9b894de8880ee823875471a1f03585256",
+          "orig_tar_sha256": "50e0c35f61a764f8568760948f4027c51c476701e3ddc529360abd78fe3cc074"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "4be44b0eae95687f2803ca2c2721e056400f99b308e275f95b7a07ba1f0914a9",
+          "debian_tar_sha256": "b108c8d6d0bae8a9a00622786481b16d3fae47ea7cc5093674161ce739f20fca",
+          "orig_tar_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
+          "orig_matches_kde_authority": true
+        }
+      },
+      "build_depends_remove": [
+        "libkf6doctools-dev"
+      ],
+      "provider_adaptation": {
+        "classification": "technical-reference-overconstraint-removal",
+        "removed_build_depends": [
+          "libkf6doctools-dev"
+        ],
+        "upstream_basis": "KF6DocTools is optional in KDE KPackage v6.30.0. With that optional integration disabled, Debian-reference manpage install entries generated only by KDocTools must also be removed.",
+        "kde_feature_effect": "optional-documentation-integration-disabled-until-matching-supralinux-provider",
+        "removed_install_entries": {
+          "kpackagetool6.install": [
+            "usr/share/man/*/man1/kpackagetool6.1",
+            "usr/share/man/man1/kpackagetool6.1"
+          ]
+        },
+        "restored_auto_test": "AS_VALIDATE_NONET=1 xvfb-run -a --server-args=\"-screen 0 1024x768x24+32\" dh_auto_test --buildsystem=kf6 -O--buildsystem=kf6 --no-parallel",
+        "validation": "fresh-materialization-and-clean-build-required"
+      },
+      "install_entries_remove": {
+        "kpackagetool6.install": [
+          "usr/share/man/*/man1/kpackagetool6.1",
+          "usr/share/man/man1/kpackagetool6.1"
+        ]
+      },
+      "rules_auto_test_command": "AS_VALIDATE_NONET=1 xvfb-run -a --server-args=\"-screen 0 1024x768x24+32\" dh_auto_test --buildsystem=kf6 -O--buildsystem=kf6 --no-parallel",
+      "test_environment_adaptation": {
+        "classification": "provider-validator-network-isolation",
+        "tool": "appstreamcli",
+        "observed_provider_version": "1.1.2-1",
+        "upstream_tool_release": "v1.1.2",
+        "upstream_tool_reference": "https://github.com/ximion/appstream/blob/v1.1.2/docs/xml/man/appstreamcli.1.xml",
+        "setting": "AS_VALIDATE_NONET=1",
+        "upstream_tool_basis": "AppStream v1.1.2 documents AS_VALIDATE_NONET as equivalent to --no-net when validating metadata.",
+        "scope": "dh_auto_test-only",
+        "validation_effect": "Disable remote URL reachability checks while keeping AppStream metadata validation and KDE upstream CTest enabled.",
+        "kde_feature_effect": "none",
+        "validation": "fresh-materialization-and-clean-build-required"
+      }
+    },
+    "kpty": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "ad66149c20470de29d483f0ccdcb057d42ccf778f3f8cc8e68aefca5380bace7",
+      "source_package": "kf6-kpty",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkf6pty-data",
+        "libkf6pty-dev",
+        "libkf6pty-doc",
+        "libkf6pty6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "cmake_package": "KF6Pty",
+      "cmake_target": "KF6::Pty",
+      "soname": "libKF6Pty.so.6",
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "b68a6d98156e5b58851528f9e9d7e9710ac7ad656440f9a1c561bd132596387f",
+          "debian_tar_sha256": "11737659362e2df8d4be737a078c79cb8ae9eb8f2e457949bf7d36a7c8954a2a",
+          "orig_tar_sha256": "27aff14f8211a8873008fd528998727523d98bb5d5018f48a0509ef5792b8319"
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "66f776d8c1d8931c442722505a30ff04ebe53841e7a48ec693dcbc176c1b264f",
+          "debian_tar_sha256": "cee27a5e509fd860b3e74098122d020665b46859f3d7a1cb6071f7dea1e46795",
+          "orig_tar_sha256": "ad66149c20470de29d483f0ccdcb057d42ccf778f3f8cc8e68aefca5380bace7",
+          "orig_matches_kde_authority": true
+        }
+      }
+    },
+    "kdeclarative": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "7ec3583a2cf2cd7143e39936ffb39e22d20563f4c87a8462e0e9d12c59ea89a6",
+      "source_package": "kf6-kdeclarative",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkquickcontrolsprivate0",
+        "libkf6calendarevents6",
+        "libkf6declarative-data",
+        "libkf6declarative-dev",
+        "libkf6declarative-doc",
+        "qml6-module-org-kde-draganddrop",
+        "qml6-module-org-kde-graphicaleffects",
+        "qml6-module-org-kde-kquickcontrols",
+        "qml6-module-org-kde-kquickcontrolsaddons"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "cmake_package": "KF6Declarative",
+      "cmake_target": "KF6::CalendarEvents",
+      "soname": "libKF6CalendarEvents.so.6",
+      "selected_profile": {
+        "BUILD_TESTING": true,
+        "BUILD_EXAMPLES": false
+      },
+      "upstream_contract": {
+        "authority": "KDE v6.30.0",
+        "cmake_basis": "KDeclarative exports KF6::CalendarEvents; there is no KF6::Declarative library target.",
+        "selected_linux_frameworks": [
+          "ki18n",
+          "kconfig",
+          "kguiaddons",
+          "kglobalaccel",
+          "kwidgetsaddons"
+        ]
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "b7c2cfc5e142afc9b78169767d8dbfd17d62642eb7f0e5c6e5a6c3764198af27",
+          "debian_tar_sha256": "5de6a683695d807126e47bac323b002cc6505f7e70c0e2f47367d3329fc00960",
+          "orig_tar_sha256": "d00d697aa8ce7a5a16864e92bc74f52adb2b3008881d6e12b66155a80b136915",
+          "binary_packages": [
+            "libkquickcontrolsprivate0",
+            "libkf6calendarevents6",
+            "libkf6declarative-data",
+            "libkf6declarative-dev",
+            "libkf6declarative-doc",
+            "qml6-module-org-kde-draganddrop",
+            "qml6-module-org-kde-graphicaleffects",
+            "qml6-module-org-kde-kquickcontrols",
+            "qml6-module-org-kde-kquickcontrolsaddons"
+          ]
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "b18feb6b7fc75cb43bb761c609f3b506784f253f4263c4598daef21fa4defe98",
+          "debian_tar_sha256": "a22655f616b3c9c2058de2d91eb720fccc3611015e3095c6e51977a5a75f7f42",
+          "orig_tar_sha256": "7ec3583a2cf2cd7143e39936ffb39e22d20563f4c87a8462e0e9d12c59ea89a6",
+          "orig_matches_kde_authority": true,
+          "binary_packages": [
+            "libkf6calendarevents6",
+            "libkf6declarative-data",
+            "libkf6declarative-dev",
+            "libkf6declarative-doc",
+            "qml6-module-org-kde-draganddrop",
+            "qml6-module-org-kde-graphicaleffects",
+            "qml6-module-org-kde-kquickcontrols",
+            "qml6-module-org-kde-kquickcontrolsaddons"
+          ]
+        }
+      },
+      "binary_package_splits": [
+        {
+          "package": "libkquickcontrolsprivate0",
+          "source_match_substrings": [
+            "libkquickcontrolsprivate.so.0",
+            "libkquickcontrolsprivate.so.6."
+          ],
+          "section": "libs",
+          "architecture": "any",
+          "multi_arch": "same",
+          "depends": [
+            "libkf6declarative-data (= ${binary:Version})",
+            "${misc:Depends}",
+            "${shlibs:Depends}"
+          ],
+          "description_short": "KDE Declarative private Quick Controls runtime library",
+          "description_long": "Private runtime library used by the KDE Quick Controls QML module. SupraLINUX preserves the Ubuntu binary-package contract while using KDE Frameworks 6.30 upstream."
+        }
+      ],
+      "provider_adaptation": {
+        "classification": "ubuntu-binary-contract-preservation",
+        "ubuntu_binary_package": "libkquickcontrolsprivate0",
+        "debian_6_30_reference_split": "merged-into-another-binary-package",
+        "upstream_basis": "KDE KDeclarative v6.30.0 still builds and installs kquickcontrolsprivate with SOVERSION 0.",
+        "compatibility_basis": "Ubuntu 26.04 publishes libkquickcontrolsprivate0 and qml6-module-org-kde-kquickcontrols depends on it.",
+        "kde_feature_effect": "none",
+        "validation": "fresh-materialization-and-clean-build-required",
+        "payload_contract": [
+          "libkquickcontrolsprivate.so.0",
+          "libkquickcontrolsprivate.so.6.30.0"
+        ]
+      }
+    },
+    "kfilemetadata": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "5e14cd8e395e927042cb3eb7cff47e0effda5e8bf2520cf18d1082a9403b2e62",
+      "source_package": "kf6-kfilemetadata",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkf6filemetadata-bin",
+        "libkf6filemetadata-data",
+        "libkf6filemetadata-dev",
+        "libkf6filemetadata-dev-tools",
+        "libkf6filemetadata-doc",
+        "libkf6filemetadata3"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "cmake_package": "KF6FileMetaData",
+      "cmake_target": "KF6::FileMetaData",
+      "soname": "libKF6FileMetaData.so.3",
+      "selected_profile": {
+        "BUILD_TESTING": true,
+        "BUILD_FUZZERS": false,
+        "FUZZERS_USE_QT_MINIMAL_INTEGRATION_PLUGIN": false,
+        "ENABLE_MOBIPOCKET_TEXT_EXTRACTION": false
+      },
+      "upstream_contract": {
+        "authority": "KDE v6.30.0",
+        "required_frameworks": [
+          "ki18n",
+          "kcoreaddons",
+          "kcodecs"
+        ],
+        "selected_optional_frameworks": [
+          "karchive",
+          "kconfig"
+        ],
+        "linux_required_external": [
+          "xattr"
+        ],
+        "optional_extractors": [
+          "Qt6Gui",
+          "PopplerQt6",
+          "Taglib",
+          "LibExiv2",
+          "FFmpeg",
+          "EPub",
+          "CatDoc",
+          "QMobipocket6",
+          "libappimage"
+        ]
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "bd4767951349b3de63c8a110f0f8ce4a3eaf7cfd356bee1c32f2fec31a7dcd73",
+          "debian_tar_sha256": "723938e56302032361421b37620f2e0b55063ef980690007ce105a9cdc419fb8",
+          "orig_tar_sha256": "2efdc2ebacf9af1f66f611fe95d776023590e9dcf97525aa93eaad7f1aa2ce23",
+          "binary_packages": [
+            "libkf6filemetadata-bin",
+            "libkf6filemetadata-data",
+            "libkf6filemetadata-dev",
+            "libkf6filemetadata-dev-tools",
+            "libkf6filemetadata-doc",
+            "libkf6filemetadata3"
+          ]
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "0c6af3309b5556a302851d9d16646d22085d5516467ab175e220ea4bcd8ae38c",
+          "debian_tar_sha256": "e06f1df88b4941a71efc6ec51477c5653ce397a571472dfa41f6c79c510242f3",
+          "orig_tar_sha256": "5e14cd8e395e927042cb3eb7cff47e0effda5e8bf2520cf18d1082a9403b2e62",
+          "orig_matches_kde_authority": true,
+          "binary_packages": [
+            "libkf6filemetadata-bin",
+            "libkf6filemetadata-data",
+            "libkf6filemetadata-dev",
+            "libkf6filemetadata-dev-tools",
+            "libkf6filemetadata-doc",
+            "libkf6filemetadata3"
+          ]
+        }
+      }
+    },
+    "kservice": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
+      "source_package": "kf6-kservice",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "compatibility_binary_packages": [
+        "libkf6service-bin",
+        "libkf6service-data",
+        "libkf6service-dev",
+        "libkf6service-doc",
+        "libkf6service6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "cmake_package": "KF6Service",
+      "cmake_target": "KF6::Service",
+      "soname": "libKF6Service.so.6",
+      "selected_profile": {
+        "BUILD_TESTING": true,
+        "CMAKE_DISABLE_FIND_PACKAGE_KF6DocTools": true
+      },
+      "upstream_contract": {
+        "authority": "KDE v6.30.0",
+        "required_frameworks": [
+          "kconfig",
+          "kcoreaddons",
+          "ki18n"
+        ],
+        "optional_framework": "kdoctools",
+        "selected_optional_frameworks": [],
+        "reason": "KDocTools is optional upstream and remains disabled until a matching SupraLINUX provider is available."
+      },
+      "technical_references": {
+        "ubuntu": {
+          "version": "6.24.0-0ubuntu1",
+          "dsc_sha256": "de1e4d4e698d7325a40bd9a59d3659e8c931c5a2433de3e4920e218815430234",
+          "debian_tar_sha256": "ac22ab3bde195222bbf7ef4e972b71cdcea558cb66621b8482f5626ce7feb731",
+          "orig_tar_sha256": "f7b3e5fab52949d16c0fce96afc5aaeb1cc94b47536e024d580750ffb1739723",
+          "binary_packages": [
+            "libkf6service-bin",
+            "libkf6service-data",
+            "libkf6service-dev",
+            "libkf6service-doc",
+            "libkf6service6"
+          ]
+        },
+        "debian": {
+          "version": "6.30.0-1",
+          "dsc_sha256": "ccf732ba7394a5330487a646d5486c388b34ba09a79d1a3513413edd73697efd",
+          "debian_tar_sha256": "623c888c4cb3a258d69fd6e0552df4b28e594e6a4609366aa7d6f8c12414d0d8",
+          "orig_tar_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
+          "orig_matches_kde_authority": true,
+          "binary_packages": [
+            "libkf6service-bin",
+            "libkf6service-data",
+            "libkf6service-dev",
+            "libkf6service-doc",
+            "libkf6service6"
+          ]
+        }
+      },
+      "build_depends_remove": [
+        "libkf6doctools-dev"
+      ],
+      "install_entries_remove": {
+        "libkf6service-bin.install": [
+          "usr/share/man/*/man8/kbuildsycoca6.8",
+          "usr/share/man/man8/kbuildsycoca6.8"
+        ]
+      },
+      "provider_adaptation": {
+        "classification": "technical-reference-optional-provider-removal",
+        "removed_build_depends": [
+          "libkf6doctools-dev"
+        ],
+        "removed_install_entries": {
+          "libkf6service-bin.install": [
+            "usr/share/man/*/man8/kbuildsycoca6.8",
+            "usr/share/man/man8/kbuildsycoca6.8"
+          ]
+        },
+        "upstream_basis": "KService v6.30.0 finds KF6DocTools optionally and only adds docs/manpages when KF6DocTools_FOUND.",
+        "kde_feature_effect": "optional-documentation-integration-disabled-until-matching-supralinux-provider",
+        "validation": "fresh-materialization-and-clean-build-required",
+        "removed_binary_depends": {
+          "libkf6service-dev": [
+            "libkf6doctools-dev"
+          ]
+        }
+      },
+      "binary_depends_remove": {
+        "libkf6service-dev": [
+          "libkf6doctools-dev"
+        ]
+      },
+      "symbols_adjustments": [
+        {
+          "file": "libkf6service6.symbols",
+          "symbol": "_ZSt19piecewise_construct@Base",
+          "version": "6.30.0",
+          "tag": "optional=toolchain"
+        }
+      ],
+      "toolchain_symbol_adaptation": {
+        "classification": "resolute-toolchain-symbol-baseline",
+        "observed_workflow_run": 35676553259,
+        "observed_job_id": 106584347252,
+        "symbol": "_ZSt19piecewise_construct@Base",
+        "demangled": "std::piecewise_construct",
+        "rationale": "The symbol is emitted by the Resolute C++ toolchain but absent from the Debian 6.30 baseline. It is implementation/toolchain dependent and must not acquire a SupraLINUX Debian-revision minimum version.",
+        "selected_tag": "optional=toolchain",
+        "selected_minimum_version": "6.30.0",
+        "kde_feature_effect": "none",
+        "validation": "fresh-materialization-and-clean-build-required"
+      }
+    },
+    "kmime": {
+      "upstream_version": "6.30.0",
+      "source_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+      "source_package": "kf6-kmime",
+      "package_version_candidate": "6.30.0-0supralinux1",
+      "target_binary_packages": [
+        "libkf6mime-data",
+        "libkf6mime-dev",
+        "libkf6mime6"
+      ],
+      "supralinux_additional_binary_packages": [],
+      "cmake_package": "KF6Mime",
+      "cmake_target": "KF6::Mime",
+      "soname": "libKF6Mime.so.6",
+      "selected_profile": {
+        "BUILD_TESTING": true
+      },
+      "upstream_contract": {
+        "authority": "KDE v6.30.0",
+        "required_frameworks": [
+          "kcodecs"
+        ],
+        "legacy_pim_contract_is_not_upstream_framework_contract": true
+      },
+      "reference_sources": {
+        "ubuntu": "kmime",
+        "debian": "kf6-kmime"
+      },
+      "reference_expected_binary_packages": {
+        "ubuntu": [
+          "libkmime-data",
+          "libkmime-dev",
+          "libkpim6mime6"
+        ],
+        "debian": [
+          "libkf6mime-data",
+          "libkf6mime-dev",
+          "libkf6mime6"
+        ]
+      },
+      "reference_expected_versions": {
+        "ubuntu": "25.12.3-0ubuntu1",
+        "debian": "6.30.0-1"
+      },
+      "reference_version_policy": {
+        "ubuntu": "legacy-line-allowed",
+        "debian": "selected-kde-series"
+      },
+      "compatibility_contract": {
+        "authority": "kde-upstream",
+        "framework_runtime": "libKF6Mime.so.6",
+        "legacy_runtime": "libKPim6Mime.so.6",
+        "legacy_provider": "ubuntu-resolute",
+        "legacy_install_policy": "on-demand-only",
+        "runtime_abi_equivalent": false,
+        "fake_provides_replaces_for_runtime": false,
+        "coinstallation_gate_required": true,
+        "legacy_development_installed_by_default": false
+      },
+      "technical_references": {
+        "ubuntu": {
+          "source_package": "kmime",
+          "version": "25.12.3-0ubuntu1",
+          "upstream_version": "25.12.3",
+          "dsc_sha256": "b34f080ee832e9c22112c8e93110d6fa966d0b22d5dc62f9f84458148e970395",
+          "debian_tar_sha256": "cb97254e6d5b081d31e7aaba9e6733cbdd9866e2670edaf7a41f92e4a638a6ef",
+          "orig_tar_sha256": "fce3c603cac3fec9a3f0e101c49785c32ace07b8f60b52739b638d329f43826d",
+          "binary_packages": [
+            "libkmime-data",
+            "libkmime-dev",
+            "libkpim6mime6"
+          ],
+          "role": "legacy-compatibility-reference-only"
+        },
+        "debian": {
+          "source_package": "kf6-kmime",
+          "version": "6.30.0-1",
+          "upstream_version": "6.30.0",
+          "dsc_sha256": "8aa8b35899b57973a1b117cf458e06be1018c902a052edc01c282aab198875dd",
+          "debian_tar_sha256": "34c9f5b596679e31c1943f9756c0da5d0f22407df94de1257127e308601a64d8",
+          "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+          "orig_matches_kde_authority": true,
+          "binary_packages": [
+            "libkf6mime-data",
+            "libkf6mime-dev",
+            "libkf6mime6"
+          ],
+          "role": "frameworks-packaging-technical-reference-only"
+        }
+      },
+      "symbols_adjustments": [
+        {
+          "mode": "retag",
+          "file": "libkf6mime6.symbols",
+          "symbol": "_ZTISt23_Sp_counted_ptr_inplaceIN5KMime7MessageESaIvELN9__gnu_cxx12_Lock_policyE2EE@Base",
+          "version": "6.28.0",
+          "expected_tag": "arch=!riscv64",
+          "tag": "optional=templinst|arch=!riscv64"
+        },
+        {
+          "mode": "retag",
+          "file": "libkf6mime6.symbols",
+          "symbol": "_ZTVSt23_Sp_counted_ptr_inplaceIN5KMime7MessageESaIvELN9__gnu_cxx12_Lock_policyE2EE@Base",
+          "version": "6.28.0",
+          "expected_tag": "arch=!riscv64",
+          "tag": "optional=templinst|arch=!riscv64"
+        },
+        {
+          "mode": "add",
+          "file": "libkf6mime6.symbols",
+          "symbol": "_ZSt19piecewise_construct@Base",
+          "version": "6.30.0",
+          "tag": "optional=toolchain"
+        }
+      ],
+      "toolchain_symbol_adaptation": {
+        "classification": "resolute-toolchain-symbol-baseline",
+        "observed_workflow_run": 35686463559,
+        "observed_job_id": 106614505106,
+        "tests": "17/17 PASS",
+        "rationale": "GCC 15 on Ubuntu Resolute does not emit two std::shared_ptr template-instantiation RTTI/vtable symbols that Debian marks only arch-dependent, while it emits std::piecewise_construct. These are compiler/template implementation details, not KDE API loss.",
+        "selected_changes": [
+          "retag two std::shared_ptr symbols as optional=templinst while preserving arch=!riscv64",
+          "add std::piecewise_construct as optional=toolchain at upstream version 6.30.0"
+        ],
+        "kde_feature_effect": "none",
+        "validation": "selective-rematerialization-pass; clean-build-retry-required"
+      }
+    }
+  },
+  "reference_evidence": {
+    "result": "PASS",
+    "claim": "packaging-reference-snapshot-only",
+    "package_state_effect": "none",
+    "workflow_run": 35684604069,
+    "job_id": 106608642629,
+    "commit": "3aff0c8a7c26755b29372a556e2526a380291350",
+    "artifact_id": 10676511618,
+    "artifact_sha256": "d7eafeafad8770316908a5398f2f5431f6be1d66c37635422f711edfe776360b",
+    "snapshot_sha256": "189e93364d4646e22ac39fe6917639a3c4381a9deb28ee647a69b4bb0452c0b1",
+    "versions_sha256": "e3a808b670ab34630380fd26afb65dd9cf3a68df5363e7250ccc5e886cf5a8d4"
+  },
+  "materialization": {
+    "status": "PASS",
+    "result": "PASS",
+    "method": "kde-authority-source-plus-pinned-debian-tree",
+    "package_state_effect": "none",
+    "package_attempted": false,
+    "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
+    "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
+    "reason": "kmime-resolute-toolchain-symbol-rematerialization-pass",
+    "targets": [],
+    "retained_package_pass": [
+      "kauth",
+      "kcolorscheme",
+      "kcompletion",
+      "kcontacts",
+      "kcrash",
+      "kdeclarative",
+      "kfilemetadata",
+      "knotifications",
+      "kpackage",
+      "kpty",
+      "kservice",
+      "kstatusnotifieritem",
+      "kunitconversion",
+      "syndication"
+    ],
+    "evidence": {
+      "kmime": {
+        "workflow_run": 35687009946,
+        "run_attempt": 2,
+        "job_id": 106616152530,
+        "artifact_id": 10677073138,
+        "artifact_sha256": "539745b0f656efeed14c703f6cfb23670bfc8f79d07d270991dde5eafe2f6ea4",
+        "tree_sha256": "eecfc8d314ff8ff9715c561c7c9be1c2c4c5f239ca6c563214eeaee33bf50ba6",
+        "debian_tree_sha256": "65f384007ae703c2480b297cea68843fe32d11f5c6deb51eee9e2dc911559820",
+        "dsc_sha256": "f646a30a01e0bfce647cceb2869bb3316a2414f09a16c3d7c4f965690fd1a7b3",
+        "debian_tar_sha256": "fa598699697f8a835f69935aab534da3e664f1eec955e6d56273495c8be878f3",
+        "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+        "package_version": "6.30.0-0supralinux1",
+        "package_attempted": false,
+        "package_state_effect": "none"
+      }
+    },
+    "history": [
+      {
+        "kind": "initial-materialization-pass",
+        "evidence": {
+          "result": "PASS",
+          "workflow_run": 35684824744,
+          "job_id": 106609323687,
+          "commit": "4d947df28a923ea37eeb351ebdd435f1a5f0fb69",
+          "artifact_id": 10675444852,
+          "artifact_sha256": "ae47a46605bce3943e6abd3c1e713d189f41782adecab2dc02618f411427ff8b",
+          "tree_sha256": "876e44ff9afd3cc6257046b86ac6d88de5b0f1e07308dace5fa6b653438cd0fc",
+          "debian_tree_sha256": "1b489be2fc5479e7ef1615aa5d0c3255a1726a27a4d3be3ced66c116bc9eb385",
+          "dsc_sha256": "0cd2c44451d2852bc5fe380ee5d9dc6e115fe657ccc79654da90c1e4a5c97716",
+          "debian_tar_sha256": "2372e83d87d7f2da1a61fe07c63cbd71da594c116d114a238c2a43848500b613",
+          "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+          "package_version": "6.30.0-0supralinux1",
+          "package_attempted": false,
+          "package_state_effect": "none"
+        }
+      },
+      {
+        "kind": "infrastructure-incident",
+        "result": "INFRA",
+        "workflow_run": 35687009946,
+        "run_attempt": 1,
+        "job_id": 106615915654,
+        "artifact_id": 10676748373,
+        "artifact_sha256": "ae975228a53ad826e56ede2102a868c25adcef995ee2554d503f8752b74133d4",
+        "stage": "authoritative-source-download",
+        "cause": "curl 35 Recv failure: Connection reset by peer",
+        "package_attempted": false,
+        "package_state_effect": "none"
+      },
+      {
+        "kind": "replacement-materialization-pass",
+        "evidence": {
+          "workflow_run": 35687009946,
+          "run_attempt": 2,
+          "job_id": 106616152530,
+          "artifact_id": 10677073138,
+          "artifact_sha256": "539745b0f656efeed14c703f6cfb23670bfc8f79d07d270991dde5eafe2f6ea4",
+          "tree_sha256": "eecfc8d314ff8ff9715c561c7c9be1c2c4c5f239ca6c563214eeaee33bf50ba6",
+          "debian_tree_sha256": "65f384007ae703c2480b297cea68843fe32d11f5c6deb51eee9e2dc911559820",
+          "dsc_sha256": "f646a30a01e0bfce647cceb2869bb3316a2414f09a16c3d7c4f965690fd1a7b3",
+          "debian_tar_sha256": "fa598699697f8a835f69935aab534da3e664f1eec955e6d56273495c8be878f3",
+          "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+          "package_version": "6.30.0-0supralinux1",
+          "package_attempted": false,
+          "package_state_effect": "none"
+        }
+      }
+    ]
+  },
+  "provider_adaptations": {
+    "ubuntu-resolute": {
+      "debhelper_compat": {
+        "technical_reference_level": 14,
+        "selected_level": 13,
+        "provider_package": "debhelper",
+        "observed_provider_version": "13.31ubuntu1",
+        "classification": "packaging-tooling-provider-adaptation",
+        "kde_feature_effect": "none",
+        "validation": "clean-build-required"
+      },
+      "changelog_distribution": {
+        "selected": "resolute",
+        "classification": "base-release-target-integration",
+        "kde_feature_effect": "none",
+        "validation": "lintian-clean-build-required"
+      },
+      "shiboken_clang_discovery": {
+        "provider_packages": [
+          "llvm-dev",
+          "libclang-common-21-dev"
+        ],
+        "observed_versions": {
+          "llvm-dev": "1:21.1.6-71",
+          "libclang-common-21-dev": "1:21.1.8-6ubuntu1"
+        },
+        "tool_path": "/usr/bin/llvm-config",
+        "llvm_major": 21,
+        "resource_header": "/usr/lib/llvm-21/lib/clang/21/include/stddef.h",
+        "applies_to": [
+          "knotifications",
+          "kstatusnotifieritem",
+          "kunitconversion"
+        ],
+        "classification": "python-binding-build-tool-provider-adaptation",
+        "kde_feature_effect": "none",
+        "validation": "clean-build-required"
+      }
+    }
+  },
+  "batch": "tier2-package-contract-4",
+  "history": [
+    {
+      "batch": "tier2-package-contract-1",
+      "selected_nodes": [
+        "kcrash",
+        "knotifications",
+        "kstatusnotifieritem",
+        "kunitconversion",
+        "syndication"
+      ],
+      "reference_evidence": {
+        "result": "PASS",
+        "workflow_run": 35525757861,
+        "job_id": 106117497527,
+        "commit": "d0063439374a4ce66301c206b64c559e092494d4",
+        "artifact_id": 10610520138,
+        "artifact_sha256": "987ca77884695296ee6d21a841f428f16ed49fb8b103b84a84db8c735ceac9e9",
+        "snapshot_sha256": "5bfdf1238cedc31ccda2a3f3c93459911709b3e7650eb40c129354f42d0286e9",
+        "versions_sha256": "adc9d4eda684acaaa77a05a4089fa975ca3e894acdd9bd18190d41cbdb062d74",
+        "result_json_sha256": "5fd85f5d9365a658497bd104007f666304c3f88da2366d32b2bf5b629bf6b14f",
+        "claim": "packaging-reference-snapshot-only",
+        "package_state_effect": "none",
+        "previous": {
+          "workflow_run": 35525532348,
+          "job_id": 106116905607,
+          "commit": "5f1d04379ee256835e237b6cf5eb1946577a5650",
+          "artifact_id": 10609796320,
+          "artifact_sha256": "0d5d1f961e0189190505545aedca169dc0180ed1d9e189a5eca021267a8385e3",
+          "reason": "initial PASS before mismatch-policy revalidation"
+        },
+        "revalidation": "snapshot-identical-after-source-mismatch-policy"
+      },
+      "materialization": {
+        "status": "PASS",
+        "method": "kde-authority-source-plus-pinned-debian-tree",
+        "package_state_effect": "none",
+        "package_attempted": false,
+        "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
+        "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
+        "reason": "python-runtime-provider-closure-and-kstatus-symbols-remediation",
+        "result": "PASS",
+        "targets": [],
+        "retained_package_pass": [
+          "kcrash",
+          "syndication"
+        ],
+        "workflow_run": 35543959765,
+        "commit": "4cf3d9f9e6f28ac6f759b3c2d9ca75c4698d6e09",
+        "previous_pass": {
+          "status": "PASS",
+          "method": "kde-authority-source-plus-pinned-debian-tree",
+          "package_state_effect": "none",
+          "package_attempted": false,
+          "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
+          "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
+          "reason": "shiboken-resource-closure-and-syndication-verified-repack",
+          "result": "PASS",
+          "targets": [],
+          "retained_package_pass": [
+            "kcrash"
+          ],
+          "workflow_run": 35543068531,
+          "commit": "88338b9117626281409027826acc2274d32a56b8",
+          "previous_pass": {
+            "status": "PASS",
+            "method": "kde-authority-source-plus-pinned-debian-tree",
+            "package_state_effect": "none",
+            "package_attempted": false,
+            "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
+            "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
+            "reason": "resolute-packaging-tooling-and-shiboken-provider-remediation",
+            "result": "PASS",
+            "previous_pass": {
+              "status": "PASS",
+              "method": "kde-authority-source-plus-pinned-debian-tree",
+              "package_state_effect": "none",
+              "package_attempted": false,
+              "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
+              "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
+              "reason": "provider-adaptation-debhelper-compat-14-to-13",
+              "result": "PASS",
+              "previous_pass": {
+                "status": "PASS",
+                "method": "kde-authority-source-plus-pinned-debian-tree",
+                "package_state_effect": "none",
+                "package_attempted": false,
+                "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
+                "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
+                "workflow_run": 35527533481,
+                "commit": "f079313ee518dce6c063e741e9cd868820a1c806",
+                "result": "PASS",
+                "evidence": {
+                  "kcrash": {
+                    "job_id": 106122236790,
+                    "artifact_id": 10609867532,
+                    "artifact_sha256": "71182044053fb13567670b9f51321e7a3f85ae2b9cc70de19c789fad70174353",
+                    "tree_sha256": "7058399d53a61c45041493ea3d624288ae3ba59e66ed9508fd22ddbae2912aa3",
+                    "debian_tree_sha256": "4fabfae3449ab5c8eb253bc6b0b505b460a1fc91f87825cf5f5d93112868d067",
+                    "debian_tar_sha256": "529d8496f62a88ca81b3db70180b35701e7aa0441df145bbbe28dde89e3206c3",
+                    "dsc_sha256": "7981c6f1262e5e3ea2b62aa0bd6f1893428fc4584532fdf4295e5636f19ec2ec",
+                    "orig_tar_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+                    "package_version": "6.30.0-0supralinux1",
+                    "source_package": "kf6-kcrash",
+                    "result": "PASS",
+                    "package_attempted": false,
+                    "package_state_effect": "none"
+                  },
+                  "knotifications": {
+                    "job_id": 106122236813,
+                    "artifact_id": 10609449652,
+                    "artifact_sha256": "7d71bcf8ddcc1a12d701ca637cc8aaf996b117395345d607ae8bf5445cc57517",
+                    "tree_sha256": "ce14ec010c80301c4ff88a242575d12e11731493e322b9ad631e42329367df63",
+                    "debian_tree_sha256": "f62adddbe1a6fa91b252db132a1078e39c6e9c0336c14c246c77a48445417443",
+                    "debian_tar_sha256": "7b854dd73dde9287bde3469e9457ea427706ac38111d8dd202a907e0a8856035",
+                    "dsc_sha256": "aed9d823c557c72d8a61eb0d7a1310dca1b9eab9850a4f1948b62eb6d486d53b",
+                    "orig_tar_sha256": "09ad50570b26aada0408bb9ccfaabf629c56ec89a9972c8b0e155ab780f577cf",
+                    "package_version": "6.30.0-0supralinux1",
+                    "source_package": "kf6-knotifications",
+                    "result": "PASS",
+                    "package_attempted": false,
+                    "package_state_effect": "none"
+                  },
+                  "kstatusnotifieritem": {
+                    "job_id": 106122236810,
+                    "artifact_id": 10610122358,
+                    "artifact_sha256": "f8db3f903861d68d0170e2b0a709fda3c69336ec45a5e1d7e26756830a3b2f1a",
+                    "tree_sha256": "0dffc2d5094daad0cafc15e483bbbb56c487c04f8448dab6b84538593f4c2836",
+                    "debian_tree_sha256": "96acbf99467e3694343c42b28ec05889331ece96ce6cbb8fc2449a10d869fd8d",
+                    "debian_tar_sha256": "74efa61cf797f7356c18f3db910561a048f10f4899f97d274b2985bc8569d380",
+                    "dsc_sha256": "e2deb39878e03787c82cb0be809c6112ae5e84d6804781179849ca9edf322a6a",
+                    "orig_tar_sha256": "373fb23fe6a5c0c5c755c473e7cf272796ea59891c05157c3a7e9607a4c4af4f",
+                    "package_version": "6.30.0-0supralinux1",
+                    "source_package": "kf6-kstatusnotifieritem",
+                    "result": "PASS",
+                    "package_attempted": false,
+                    "package_state_effect": "none"
+                  },
+                  "kunitconversion": {
+                    "job_id": 106122236748,
+                    "artifact_id": 10610347022,
+                    "artifact_sha256": "a1a753831cb5f075051c8d9f56e496ad3f74599f6657ca4118ad1652be77816c",
+                    "tree_sha256": "cc19efb0ae58bbfe2b525cefc5f9174513e5a6cd34b9b15af820f95afa3f8556",
+                    "debian_tree_sha256": "a158409744e939f922c85111c238df4fd5fe46e590c61814f8842e1b803bd584",
+                    "debian_tar_sha256": "7b545eb7bd0efb3cd0d3efa3e962f788a96ea3af23c56663f726ccad81dc2071",
+                    "dsc_sha256": "4f33543379a73abfc1c8655ee29da25c704d375c005c16c674636767c899ca7d",
+                    "orig_tar_sha256": "3dcaa45875bab5a2dcadc34cf57cf06689b8d86ff40e20fee01ca2b18987175f",
+                    "package_version": "6.30.0-0supralinux1",
+                    "source_package": "kf6-kunitconversion",
+                    "result": "PASS",
+                    "package_attempted": false,
+                    "package_state_effect": "none"
+                  },
+                  "syndication": {
+                    "job_id": 106122236787,
+                    "artifact_id": 10610143584,
+                    "artifact_sha256": "a9cbb7cc6edea7a896bfc8d04a5653272abce80584ff6420334ebc054e32be8e",
+                    "tree_sha256": "0c24bbbcd0575a5151b40b86546e2b58f0ed4e446f4eba7ef01090350f5cdf11",
+                    "debian_tree_sha256": "21bc2ba2e37f324f69aec3ccb6a5267e2b2d8348770d167ec1c834d9caf6caad",
+                    "debian_tar_sha256": "06ce4272f99065fb46f330080ddfe55887a5157985f6ef8660db14a6f58e86d7",
+                    "dsc_sha256": "acef22cea57812f6c79e9896ea5277f83fae6a8f662fa39c709f9aa597186a12",
+                    "orig_tar_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+                    "package_version": "6.30.0-0supralinux1",
+                    "source_package": "kf6-syndication",
+                    "result": "PASS",
+                    "package_attempted": false,
+                    "package_state_effect": "none"
+                  }
+                }
+              },
+              "workflow_run": 35534384634,
+              "commit": "f2927e550d113369a33011d7737136a0bb91f272",
+              "evidence": {
+                "kcrash": {
+                  "job_id": 106140683997,
+                  "artifact_id": 10611834586,
+                  "artifact_sha256": "96d776e28bd474511a3318e6ef2a56f5e399cbed23b1578593cd54fafff7c577",
+                  "tree_sha256": "f1da18905165b0f43920269cfd3246bf313b321c37e8f3dd5e909fa3a3a9ea53",
+                  "debian_tree_sha256": "522254915036f84c18ae986da6a946d028570923cfa6181f01650572f33d1948",
+                  "debian_tar_sha256": "55419fedd40cc91e4b7443d01f7f37f4908bf41310af797eef9006d65d29f1fb",
+                  "dsc_sha256": "95d6a4348cab22796cbcfdc541d81c8e387f3d2f4b9b4232ceb895c4931e4bd2",
+                  "orig_tar_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+                  "package_version": "6.30.0-0supralinux1",
+                  "source_package": "kf6-kcrash",
+                  "result": "PASS",
+                  "package_attempted": false,
+                  "package_state_effect": "none"
+                },
+                "knotifications": {
+                  "job_id": 106140683897,
+                  "artifact_id": 10612293440,
+                  "artifact_sha256": "bf14082d63bd8967dd30e6db8797fa48264ee8a2d2d13c88ec47e76e13d43573",
+                  "tree_sha256": "3f6fa52d2ad2639005b90976af5195e21ff4db813d80edd4a939f3a319780ccd",
+                  "debian_tree_sha256": "3b0df536c2c1e70b28d959979d68472c16829659fb66fbda2067a3839912e2ea",
+                  "debian_tar_sha256": "07c26121f174ac4598b759aa01f97c4e674f46cafd03f8b9fbffc597ccb55bdb",
+                  "dsc_sha256": "429ef2bd4f3a9e8c07ca3ab987d123aad4f79ad19e698f108ac434ed35822315",
+                  "orig_tar_sha256": "09ad50570b26aada0408bb9ccfaabf629c56ec89a9972c8b0e155ab780f577cf",
+                  "package_version": "6.30.0-0supralinux1",
+                  "source_package": "kf6-knotifications",
+                  "result": "PASS",
+                  "package_attempted": false,
+                  "package_state_effect": "none"
+                },
+                "kstatusnotifieritem": {
+                  "job_id": 106140683947,
+                  "artifact_id": 10611879452,
+                  "artifact_sha256": "37873531a138bb5ed0b22219d06b69ae7cf6ec0db057a85251d87865e18c0da9",
+                  "tree_sha256": "818b83ec53172d7f57a7ebd093cbb712b4a7a1921152da10a08bb3de7f159572",
+                  "debian_tree_sha256": "b1a56133304c57ef312f67594c949dd5e7ea206547b1a9345f640ef89fcdf788",
+                  "debian_tar_sha256": "cea3f8be21d461e6b259af8a9b3b45dd1967e20f3dc495a2f1111cf87292ea95",
+                  "dsc_sha256": "f3143376d9fbfa24cbf36efed031eefb81f63fffb60b7888776c1165048f0656",
+                  "orig_tar_sha256": "373fb23fe6a5c0c5c755c473e7cf272796ea59891c05157c3a7e9607a4c4af4f",
+                  "package_version": "6.30.0-0supralinux1",
+                  "source_package": "kf6-kstatusnotifieritem",
+                  "result": "PASS",
+                  "package_attempted": false,
+                  "package_state_effect": "none"
+                },
+                "kunitconversion": {
+                  "job_id": 106140683957,
+                  "artifact_id": 10612467659,
+                  "artifact_sha256": "0afef762199e72b0dfcd5a6fc35b2791f689726684d6be08ee653a428e6cf868",
+                  "tree_sha256": "4f2e8cff662df6d954c20a088cfbe228de3c7a1871273e27b996c198fc68a25c",
+                  "debian_tree_sha256": "fffb460602d985dda1d6ac426948923020504e2523c9d56cfe69447600b5e30a",
+                  "debian_tar_sha256": "2be6cf0ba33f862e740944f412fa0bac9ffc795ba954ded8cc6cdf5ed7561746",
+                  "dsc_sha256": "89c730a8022fa4f564edf0f39cce12cbe15d764532fe189a7f530f357937bc78",
+                  "orig_tar_sha256": "3dcaa45875bab5a2dcadc34cf57cf06689b8d86ff40e20fee01ca2b18987175f",
+                  "package_version": "6.30.0-0supralinux1",
+                  "source_package": "kf6-kunitconversion",
+                  "result": "PASS",
+                  "package_attempted": false,
+                  "package_state_effect": "none"
+                },
+                "syndication": {
+                  "job_id": 106140683962,
+                  "artifact_id": 10612213475,
+                  "artifact_sha256": "77c8d4e621fac3bd0cc01505f06a1874d73582cc34776181ba0298293d7ffef2",
+                  "tree_sha256": "4daf4fada75f2b8acc38e4ff70aa17f0591991fdcd3502dcf73f46ece131dc9b",
+                  "debian_tree_sha256": "da62a1fe01863d9e204b95f800fa52ccc89e793ebaf14101b12c6d72ffec8067",
+                  "debian_tar_sha256": "1ba25cd520c3aee5262ca5e28f9f62ccbae93408f1c908ef0376cd1fb4fb7b4a",
+                  "dsc_sha256": "2dc66df6cc56f745b4de1794a1c5391da9a44615c5f2190330520c7ce385869b",
+                  "orig_tar_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+                  "package_version": "6.30.0-0supralinux1",
+                  "source_package": "kf6-syndication",
+                  "result": "PASS",
+                  "package_attempted": false,
+                  "package_state_effect": "none"
+                }
+              }
+            },
+            "workflow_run": 35535155799,
+            "commit": "e03516fab151d3ea5ec6443ad65d5c4961aa6e68",
+            "evidence": {
+              "kcrash": {
+                "job_id": 106142770257,
+                "artifact_id": 10612224837,
+                "artifact_sha256": "37c45ad18a9587a5e8b950e3f1d7e33092b31d502c5093b36c42992f5f14cac6",
+                "tree_sha256": "302cc71f478e01c2b2fab20c6401286824f54d4772a59446cb32fce2d5a5d938",
+                "debian_tree_sha256": "5f5256b619f3e43cba2930debaee545ab773ee813bb1728031e9b7ee8a274a92",
+                "debian_tar_sha256": "1330eaa16e7d8acbc6244cb4c1730cbe33d06972dc5c29ecfe482e7168fb9f2d",
+                "dsc_sha256": "c586f512ee573c893a093562b8351ff2165ead7a0c50e9610c4b3b57e061ce6b",
+                "orig_tar_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+                "package_version": "6.30.0-0supralinux1",
+                "source_package": "kf6-kcrash",
+                "result": "PASS",
+                "package_attempted": false,
+                "package_state_effect": "none"
+              },
+              "knotifications": {
+                "job_id": 106142770287,
+                "artifact_id": 10611504990,
+                "artifact_sha256": "fcc7249930292ed35f958395fa398a3e72c34856b8c579650222298e0ae0d936",
+                "tree_sha256": "4be011bc2433ebdc4942ca80c65cad24d801907c413bcb8b0a13a0cc17f0daea",
+                "debian_tree_sha256": "5289935cfa382ee6fd3be88841321d068d351c6ae5bcdde9a740e4afbec33cd6",
+                "debian_tar_sha256": "4992a020ced43ebca3361f06a75860fb4afa51f5685db5b993083e8dcd1c7f17",
+                "dsc_sha256": "365527190baff9954c28653458191e74de96316937bfd55f17b9796928021d5a",
+                "orig_tar_sha256": "09ad50570b26aada0408bb9ccfaabf629c56ec89a9972c8b0e155ab780f577cf",
+                "package_version": "6.30.0-0supralinux1",
+                "source_package": "kf6-knotifications",
+                "result": "PASS",
+                "package_attempted": false,
+                "package_state_effect": "none"
+              },
+              "kstatusnotifieritem": {
+                "job_id": 106142770232,
+                "artifact_id": 10613175026,
+                "artifact_sha256": "241a8bf8477441d0de45b37f413e965285abea0c6e12491e8aa0cc6c1670014d",
+                "tree_sha256": "5b33a62c435ac32b89f093d3dddec83737e774b0b8d0ad87d220e2fda442ee2d",
+                "debian_tree_sha256": "6e763e0dc9fb2c66217839dd6f786d897ebc55861ca2526405b5796755123dfc",
+                "debian_tar_sha256": "be62f8b0b34a07c4d13e535bf0c4b8d9da10728ab96cabaa276c83107d4b378a",
+                "dsc_sha256": "2c60ba115281822fc2f62c4a2d8064c0338233070600dbc984af7e1d26dbe8a2",
+                "orig_tar_sha256": "373fb23fe6a5c0c5c755c473e7cf272796ea59891c05157c3a7e9607a4c4af4f",
+                "package_version": "6.30.0-0supralinux1",
+                "source_package": "kf6-kstatusnotifieritem",
+                "result": "PASS",
+                "package_attempted": false,
+                "package_state_effect": "none"
+              },
+              "kunitconversion": {
+                "job_id": 106142770262,
+                "artifact_id": 10612498422,
+                "artifact_sha256": "a43bb38340fac941a2a58bd4e8a66cd6270742430fd7309d33d4bc615a4fc1c8",
+                "tree_sha256": "d0a136e856a0151c8f3d204df7bee85a48dff7de3caa5704a30fe68ae375b3c0",
+                "debian_tree_sha256": "9cd86534deb798a309f219fd077a85014b262d92aceed77fead8a172a739d7de",
+                "debian_tar_sha256": "87bf671f953cc43bf29229e59f982d8e8dbd281c8f4ae36a5a4617070a3db5d7",
+                "dsc_sha256": "8918cb1064d049823ad3bfc79cbb3078c301327a11af67336da356429b1b99a3",
+                "orig_tar_sha256": "3dcaa45875bab5a2dcadc34cf57cf06689b8d86ff40e20fee01ca2b18987175f",
+                "package_version": "6.30.0-0supralinux1",
+                "source_package": "kf6-kunitconversion",
+                "result": "PASS",
+                "package_attempted": false,
+                "package_state_effect": "none"
+              },
+              "syndication": {
+                "job_id": 106142770252,
+                "artifact_id": 10612304550,
+                "artifact_sha256": "df41b96ba2d550faa4293228ff401d6aba4d5e2c2f11dcd01b855dbaf96963e6",
+                "tree_sha256": "8fa51ee205599b18e3d507f5d39c782386bd6da26267611bf2a151c8db042992",
+                "debian_tree_sha256": "93ec08321fdfb8152ab2b58e48c1a1a2b8087ca487d134835118d718c267105a",
+                "debian_tar_sha256": "84e75fd68013887a612ac1881b72a0f07dcd6e9c8ec3f65dfc2923af939649cc",
+                "dsc_sha256": "c26aa6ad7e13103d8c58a9ba3203de13d2c65530a90f28ce0d596995811ef2db",
+                "orig_tar_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+                "package_version": "6.30.0-0supralinux1",
+                "source_package": "kf6-syndication",
+                "result": "PASS",
+                "package_attempted": false,
+                "package_state_effect": "none"
+              }
+            }
+          },
+          "evidence": {
+            "knotifications": {
+              "job_id": 106164132687,
+              "artifact_id": 10614639579,
+              "artifact_sha256": "69b28883d57467443f295a932fe49c337efc78a2f95f52c46a8e95ad77f3ff68",
+              "tree_sha256": "fd69b8ca46c9f21c799a0204ebd4835560ce52f9f6957e0fd7941571b95f3f59",
+              "debian_tree_sha256": "4ab3e95ff8666529c3256399e4951da84acd8b2db71d171fda2945ed6bb21a0d",
+              "debian_tar_sha256": "85002bb6172b39433e850a1151c3745a857d8893d8f0e8a729fcab0cf3bb8e87",
+              "dsc_sha256": "f1c035dbee9db214c413d9b5c4394800e7ded5e855147dfbcc90a09413632fd9",
+              "orig_tar_sha256": "09ad50570b26aada0408bb9ccfaabf629c56ec89a9972c8b0e155ab780f577cf",
+              "package_version": "6.30.0-0supralinux1",
+              "source_package": "kf6-knotifications",
+              "result": "PASS",
+              "package_attempted": false,
+              "package_state_effect": "none",
+              "workflow_run": 35543068531
+            },
+            "kstatusnotifieritem": {
+              "job_id": 106164132693,
+              "artifact_id": 10615730037,
+              "artifact_sha256": "f7bf31fe39e47cd8bc108aefb63695a9101006bd91ffab657a49701990768ebe",
+              "tree_sha256": "4d9022a7420a5e29033980f0cb217a73a4564df19924626bb54e1d01a4a3a602",
+              "debian_tree_sha256": "ed266698ea5b016e10e40bc8c5d62e8fcdf2249d95ebf9a6cccc62dc7d46d6b1",
+              "debian_tar_sha256": "71b71e056b194fac38a52e214aef6326d3f3712bba9ef768440f5a2b7eb80eb4",
+              "dsc_sha256": "0c5e1f9ab0464c488082cd6dee724e8b0784d7532505fb45c5ed2870b26b17a1",
+              "orig_tar_sha256": "373fb23fe6a5c0c5c755c473e7cf272796ea59891c05157c3a7e9607a4c4af4f",
+              "package_version": "6.30.0-0supralinux1",
+              "source_package": "kf6-kstatusnotifieritem",
+              "result": "PASS",
+              "package_attempted": false,
+              "package_state_effect": "none",
+              "workflow_run": 35543068531
+            },
+            "kunitconversion": {
+              "job_id": 106164132804,
+              "artifact_id": 10614659697,
+              "artifact_sha256": "179bc281660415e40b99c80c62ead5b08e05d43bd03842158c69315f464f5d4b",
+              "tree_sha256": "4b16d1f934495f736e70f458970a9e92dbea5f840313917ac795551f3b85ac61",
+              "debian_tree_sha256": "fdb2e305176194cbcd7590bab12783e022d7ec26c301cef5ba10b38163079b37",
+              "debian_tar_sha256": "68e1b98b04b0d27b31dc2d7ec93cc3cb39d412f3f19380f82ddca32539892998",
+              "dsc_sha256": "da4b461651debbad462c9bd81e3d4011187faf8fb9b74bcd69d65f9a9bfb0249",
+              "orig_tar_sha256": "3dcaa45875bab5a2dcadc34cf57cf06689b8d86ff40e20fee01ca2b18987175f",
+              "package_version": "6.30.0-0supralinux1",
+              "source_package": "kf6-kunitconversion",
+              "result": "PASS",
+              "package_attempted": false,
+              "package_state_effect": "none",
+              "workflow_run": 35543068531
+            },
+            "syndication": {
+              "job_id": 106164132706,
+              "artifact_id": 10615288297,
+              "artifact_sha256": "6c7782f8362b8b4195f9dda177dead382d4493852d10348e9f41f086d83d9c8e",
+              "tree_sha256": "496dc0b37c74c3a392979abb25c48c06b55c7cf9d20d16a203de71ddbe7867f0",
+              "debian_tree_sha256": "6f1dcd16768bae36a736586a51c5e3044fbafa88d9bf21d976414b63ab492924",
+              "debian_tar_sha256": "a40be4c22e28b7254ce4688d43b30dad5314ff4b1f788386e05b0ce1a13c9e96",
+              "dsc_sha256": "99151b4fed75d13781ee4275238d17fe751d35afde7c42dc855e60f5700f21d2",
+              "orig_tar_sha256": "fb46986bd539f49dc39c79553c4e8e9eaeb5953efa8cba1b47d3b139ee54f5af",
+              "authority_source_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+              "repack_verification": "PASS-exact-Files-Excluded-diff",
+              "package_version": "6.30.0-0supralinux1",
+              "source_package": "kf6-syndication",
+              "result": "PASS",
+              "package_attempted": false,
+              "package_state_effect": "none",
+              "workflow_run": 35543068531
+            },
+            "kcrash": {
+              "workflow_run": 35535155799,
+              "job_id": 106142770257,
+              "artifact_id": 10612224837,
+              "artifact_sha256": "37c45ad18a9587a5e8b950e3f1d7e33092b31d502c5093b36c42992f5f14cac6",
+              "tree_sha256": "302cc71f478e01c2b2fab20c6401286824f54d4772a59446cb32fce2d5a5d938",
+              "debian_tree_sha256": "5f5256b619f3e43cba2930debaee545ab773ee813bb1728031e9b7ee8a274a92",
+              "debian_tar_sha256": "1330eaa16e7d8acbc6244cb4c1730cbe33d06972dc5c29ecfe482e7168fb9f2d",
+              "dsc_sha256": "c586f512ee573c893a093562b8351ff2165ead7a0c50e9610c4b3b57e061ce6b",
+              "orig_tar_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+              "package_version": "6.30.0-0supralinux1",
+              "source_package": "kf6-kcrash",
+              "result": "PASS",
+              "package_attempted": false,
+              "package_state_effect": "none"
+            }
+          },
+          "activation_requires": {
+            "provider_audit_run": 35543178504,
+            "provider_audit_result": "PASS"
+          }
+        },
+        "evidence": {
+          "knotifications": {
+            "job_id": 106166484062,
+            "artifact_id": 10616275343,
+            "artifact_sha256": "5dc140d99a91bdd0ccd3ed3564f5d336a6b820acd57dd2317f8c7a5cbf3f1d15",
+            "tree_sha256": "778ccf3cf50b1c6549b11a3fb073191e1da82a57bf58d3552e98c67379486b1b",
+            "debian_tree_sha256": "596267eb543e2bfc59b912c63e2e82cf2cfb2e8db364d9d4d736e93a3f7e0d79",
+            "debian_tar_sha256": "bbc9ea094563f86afce2670e941f69c5e5d77a48bff4d428b68f7983afb59783",
+            "dsc_sha256": "7ecaf3bae26c58074c677fafeae7fa7736666863fc642020f9b300ebfb66a2fa",
+            "orig_tar_sha256": "09ad50570b26aada0408bb9ccfaabf629c56ec89a9972c8b0e155ab780f577cf",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-knotifications",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "workflow_run": 35543959765
+          },
+          "kstatusnotifieritem": {
+            "job_id": 106166483875,
+            "artifact_id": 10615805884,
+            "artifact_sha256": "866f5c704761061d7199c9dcc0edf1c56667c32f65cacfb0ee7320527a131862",
+            "tree_sha256": "7cdb62ae6b3a992f9531514ec7942a9b74a88a6a199afd6687c86d3f2eb41978",
+            "debian_tree_sha256": "07bc9037bea5d066f30c709a2f014f931742fbbcdcafdf48dbdb52ca80ddea46",
+            "debian_tar_sha256": "365d1c606c0a89436db6810915e443cdeb7416b66ca1724e91a7d9a391bfc858",
+            "dsc_sha256": "570793c572ea2ff973cab4eac1fdfe4c38fb366377b3b06188296af07ddd9fc0",
+            "orig_tar_sha256": "373fb23fe6a5c0c5c755c473e7cf272796ea59891c05157c3a7e9607a4c4af4f",
+            "package_version": "6.30.0-0supralinux2",
+            "source_package": "kf6-kstatusnotifieritem",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "workflow_run": 35543959765
+          },
+          "kunitconversion": {
+            "job_id": 106166483885,
+            "artifact_id": 10615638692,
+            "artifact_sha256": "e9578b08cd2fa5ecd98b3b84e4bd80cc1031118da71929597a0179648277e1a4",
+            "tree_sha256": "2ce4c5f43e7d439b86c9d4d01e985345474daa45b86448925c4ce74348498f4e",
+            "debian_tree_sha256": "63af6f93220b7fa442dd5001aaa91bd6981836eaa05c91853314dbfed0dcaf48",
+            "debian_tar_sha256": "374b5ac407ba8d24f081baf8ad3bbb49017539ced26be39a2bf6a71e5ff01f20",
+            "dsc_sha256": "b23814d4305cba21f867ee5536e3577249418546603bb71dbae04efcec5d12cb",
+            "orig_tar_sha256": "3dcaa45875bab5a2dcadc34cf57cf06689b8d86ff40e20fee01ca2b18987175f",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-kunitconversion",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "workflow_run": 35543959765
+          },
+          "syndication": {
+            "job_id": 106164132706,
+            "artifact_id": 10615288297,
+            "artifact_sha256": "6c7782f8362b8b4195f9dda177dead382d4493852d10348e9f41f086d83d9c8e",
+            "tree_sha256": "496dc0b37c74c3a392979abb25c48c06b55c7cf9d20d16a203de71ddbe7867f0",
+            "debian_tree_sha256": "6f1dcd16768bae36a736586a51c5e3044fbafa88d9bf21d976414b63ab492924",
+            "debian_tar_sha256": "a40be4c22e28b7254ce4688d43b30dad5314ff4b1f788386e05b0ce1a13c9e96",
+            "dsc_sha256": "99151b4fed75d13781ee4275238d17fe751d35afde7c42dc855e60f5700f21d2",
+            "orig_tar_sha256": "fb46986bd539f49dc39c79553c4e8e9eaeb5953efa8cba1b47d3b139ee54f5af",
+            "authority_source_sha256": "2d44e45b05766d342d3fe19e92d2b039c916a7a83f9e4dff0f9fa15860e140ee",
+            "repack_verification": "PASS-exact-Files-Excluded-diff",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-syndication",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "workflow_run": 35543068531
+          },
+          "kcrash": {
+            "workflow_run": 35535155799,
+            "job_id": 106142770257,
+            "artifact_id": 10612224837,
+            "artifact_sha256": "37c45ad18a9587a5e8b950e3f1d7e33092b31d502c5093b36c42992f5f14cac6",
+            "tree_sha256": "302cc71f478e01c2b2fab20c6401286824f54d4772a59446cb32fce2d5a5d938",
+            "debian_tree_sha256": "5f5256b619f3e43cba2930debaee545ab773ee813bb1728031e9b7ee8a274a92",
+            "debian_tar_sha256": "1330eaa16e7d8acbc6244cb4c1730cbe33d06972dc5c29ecfe482e7168fb9f2d",
+            "dsc_sha256": "c586f512ee573c893a093562b8351ff2165ead7a0c50e9610c4b3b57e061ce6b",
+            "orig_tar_sha256": "b17f8242309e1502119c48b1ef5059a396a3068596a84fb79fdef6d9e2cd4f49",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-kcrash",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none"
+          }
+        }
+      }
+    },
+    {
+      "batch": "tier2-package-contract-2",
+      "selected_nodes": [
+        "kcolorscheme",
+        "kcompletion",
+        "kcontacts",
+        "kpackage",
+        "kpty"
+      ],
+      "reference_evidence": {
+        "result": "PASS",
+        "workflow_run": 35607692121,
+        "job_id": 106358716421,
+        "commit": "bae9a4d107fdc8b7387f1adf3dd8df21e7dba4ee",
+        "artifact_id": 10642218003,
+        "artifact_sha256": "d683cade7450654d599e467486f0956632044bedbfc880fdc92ece091add61fe",
+        "snapshot_sha256": "703ec8233c2694bad11b9b41545bc5828f45b8e070706bac35a470c7d7af139a",
+        "versions_sha256": "5b135cfaedd0b6a4d1d2bbd6648a943fb351e54f9d2294114b75ef99c2d2c861",
+        "result_json_sha256": "5fd85f5d9365a658497bd104007f666304c3f88da2366d32b2bf5b629bf6b14f",
+        "claim": "packaging-reference-snapshot-only",
+        "package_state_effect": "none"
+      },
+      "materialization": {
+        "status": "PASS",
+        "method": "kde-authority-source-plus-pinned-debian-tree",
+        "package_state_effect": "none",
+        "package_attempted": false,
+        "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
+        "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
+        "reason": "tier2-package-contract-2-kpackage-appstream-offline-rematerialization-pass",
+        "result": "PASS",
+        "targets": [],
+        "retained_package_pass": [
+          "kauth",
+          "kcolorscheme",
+          "kcompletion",
+          "kcontacts",
+          "kcrash",
+          "knotifications",
+          "kpackage",
+          "kpty",
+          "kstatusnotifieritem",
+          "kunitconversion",
+          "syndication"
+        ],
+        "evidence": {
+          "kcolorscheme": {
+            "job_id": 106362493777,
+            "artifact_id": 10642908326,
+            "artifact_sha256": "c68b71a9e1dceab3cc801528caeaf32fb4732fefcfd0d34d8d161b0dfac02b77",
+            "tree_sha256": "c1828077f27cfcfe06bf9dfe2f43a0514c878f35e19ad36591eae2abc3e1d176",
+            "debian_tree_sha256": "ea5f8a76cc314b9b668e7994ff244762e47d2f9f6afafceb46051080575e6ca2",
+            "debian_tar_sha256": "fa5d7f65b2b0d1281cfc762dbd083d5776eabeb0dfa14e8c51a3d681a58195b2",
+            "dsc_sha256": "15d0c6abc1c3ec767e3299e422b1852578dc8a699f130692df94f75e8934607c",
+            "orig_tar_sha256": "a4128e82e47cd474c777754c4dd8af28a00a57ecf388da1a62f8173d898890d0",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-kcolorscheme",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "workflow_run": 35608790364
+          },
+          "kcompletion": {
+            "job_id": 106362493855,
+            "artifact_id": 10642138572,
+            "artifact_sha256": "846589674b46bcda78064bb6765e3e5ddd6f6ac3d98907aa3fe5a428f3f3cb29",
+            "tree_sha256": "eaa960fcc648a5b25b7a6692725b9a156393479c5f7a39941fb3586209d89ec7",
+            "debian_tree_sha256": "9f683f30b8861e996bb17d10650cae9b37cca62e8598849630eaa44ab36b2b82",
+            "debian_tar_sha256": "d5442ed902e511748980ff12d4ef52be511b436c2dada3d185f062cf21de16e7",
+            "dsc_sha256": "b3c48503ee6d3955edf69fc934ffc922c53c3a2f5a9290fbb076c8d185b6c60b",
+            "orig_tar_sha256": "96ad9c429ca53b830359c45614ca4c32ed6b759f3023f1b3db1650ba1c19bd58",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-kcompletion",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "workflow_run": 35608790364
+          },
+          "kcontacts": {
+            "job_id": 106411141167,
+            "artifact_id": 10649784091,
+            "artifact_sha256": "bf0ea0c660da42ab84ff2e92d6196c90e65a274c40fafed1cc16a5c05f1dd432",
+            "tree_sha256": "2c19a5963c900f03f77a270029c04516d3aa3c4a2655fbdeff1af6e1769cc9f5",
+            "debian_tree_sha256": "fc5cae5f5ec04bd5a5be80acdcf0dbcde6610e2d07ddce35cfcd0217e030d835",
+            "debian_tar_sha256": "1c7b2809563707a9c5d60ba283c71a36a3437730d15b30dce8b2a1445a0dc77d",
+            "dsc_sha256": "d6e8de6fe653bfa6d477c95fbf0ba225e2adea42a8cc2db8dc59655ec19de4f8",
+            "orig_tar_sha256": "170b51a41ac132968ea03d5f1ce8c585777155bbdc57e819a0562b1f8d03b7a5",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-kcontacts",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "workflow_run": 35623204805,
+            "commit": "ec4091371846d287e2d169c4cad171adcdfd1144"
+          },
+          "kpackage": {
+            "job_id": 106430800639,
+            "artifact_id": 10653266498,
+            "artifact_sha256": "b956d399879174a0c959e7eadf0baf1bc767cfc739390354212855daf95fe71c",
+            "tree_sha256": "d80ad88ba49eb0949b1be8375379525dba3da1f1bba2082843598bc0c042b7c1",
+            "debian_tree_sha256": "31d9156d7ecbda1cc9aefd706e629938217c45f6b66ac69520fc2af8814ed4dd",
+            "debian_tar_sha256": "dd3b83e83d91078a50bdbb9c4ef9e28d12efd26f505dd274029110bdb9dd976e",
+            "dsc_sha256": "f30185c49f28399330d2934287ee7da5f0d6c2d577bb2c682b4e5a59293bae75",
+            "orig_tar_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-kpackage",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "workflow_run": 35629129797,
+            "commit": "5fa15910b91e5693395d04ef7555af94dfa7fe13"
+          },
+          "kpty": {
+            "job_id": 106362494052,
+            "artifact_id": 10643865040,
+            "artifact_sha256": "4b2e6e5684da32fdd5f15fc86b1310a8ee7989a2d4789a1959231692f63056c8",
+            "tree_sha256": "1b6c5d0e54ce12bce779c5a31fa38e02a879c0611939c8279c2de0171eedc4d2",
+            "debian_tree_sha256": "1b60a275866d00060527c3fbc0aa053d1e6de2c1b60d3599446a7c16927ce8ba",
+            "debian_tar_sha256": "05e6e39f4053112e4f62e93d09d9a278389a933b424ae244e72953508de81d2f",
+            "dsc_sha256": "7adcb21b4697e3d9c3a9ef8033f0bc0f76c420ca696adbffe7c52757e554b349",
+            "orig_tar_sha256": "ad66149c20470de29d483f0ccdcb057d42ccf778f3f8cc8e68aefca5380bace7",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-kpty",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "workflow_run": 35608790364
+          }
+        },
+        "previous_pass": {
+          "result": "PASS",
+          "workflow_run": 35608790364,
+          "commit": "42bf5f9b5672e59df3ce037f9ffd25412a29049e",
+          "note": "Initial 5/5 materialization retained historically; KContacts and KPackage trees are superseded for build consumption after Batch 3 diagnostics."
+        },
+        "history": [
+          {
+            "node": "kcontacts",
+            "job_id": 106362493851,
+            "artifact_id": 10642848344,
+            "artifact_sha256": "0c16947ba76fa61fc100721f65d1c527492e31a474db9dee20da79c3c13333ca",
+            "tree_sha256": "9fbcd6ce0076d40427b0a12c26c222e3bf61f9f49501ca591e3466f794518a8b",
+            "debian_tree_sha256": "3752c72cfc505649eee8bc349bb0159a3a2bf028129d9cb2be11ce0e247804d7",
+            "debian_tar_sha256": "44ddda241239e7563808f0d7ca84c9673fea6b8b8ab224e8034bee6ec5f870da",
+            "dsc_sha256": "bcef4d94d4ed80b2fbb0d22b688b8e9f74410c59c7bb9d9443c86363a84ff9dc",
+            "orig_tar_sha256": "170b51a41ac132968ea03d5f1ce8c585777155bbdc57e819a0562b1f8d03b7a5",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-kcontacts",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "workflow_run": 35608790364,
+            "superseded_for_build": true,
+            "status": "superseded"
+          },
+          {
+            "node": "kpackage",
+            "job_id": 106362493754,
+            "artifact_id": 10643670033,
+            "artifact_sha256": "0e2281fca63b84a0a7c96e6c5256f98365509ef329790c70f91730637a5bd924",
+            "tree_sha256": "f21367663463b5732594a4220d23c21dd50d8d9b1989c3f7a2cbe450c4a1d886",
+            "debian_tree_sha256": "e67157e73ede9401529f4d47165061351c520eda6d8b27b4a3eec3ec3b7b396f",
+            "debian_tar_sha256": "b411f5c20bd4f2f7273d2fd36298ee4283bb4f92b3163e034aafc5d103fbbea9",
+            "dsc_sha256": "901d52b71e82e1d74d8786a6d699d38eaa89e5a127885ea7ee05b1e8a69392b6",
+            "orig_tar_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-kpackage",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "workflow_run": 35608790364,
+            "superseded_for_build": true,
+            "status": "superseded"
+          },
+          {
+            "node": "kpackage",
+            "job_id": 106411141243,
+            "artifact_id": 10649014863,
+            "artifact_sha256": "7d805f24f4bba2b9e9f4d383252b04ef6efe7dbdba64c72aa10e50382a148188",
+            "tree_sha256": "cd5bb495c9d621f2127653d0dbcc46e179a66901c8b13c67fd4c07c49307b559",
+            "debian_tree_sha256": "7fe53af6606ff304839ed1195a7df70b9b897872493b6faccdcb9924edd87c91",
+            "debian_tar_sha256": "5240389bc1bc5170f8908de40568dccd445edf4ebe4ada38a5f32ab611ad083e",
+            "dsc_sha256": "15b5e6cfe6a65d9bda3ed173dfedcc6fc12d513ae46107d4a62702663c6a2e4f",
+            "orig_tar_sha256": "58939af0c553f24963652e10d248e2f8f2b2ca2b87dc26d3220675ed0cf33019",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-kpackage",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "workflow_run": 35623204805,
+            "commit": "ec4091371846d287e2d169c4cad171adcdfd1144",
+            "status": "superseded",
+            "superseded_reason": "AppStream 1.1.2 URL reachability checks require an explicit offline validation environment inside isolated clean builds"
+          }
+        ],
+        "workflow_run": 35629129797,
+        "commit": "5fa15910b91e5693395d04ef7555af94dfa7fe13",
+        "last_clean_build": {
+          "node": "kpackage",
+          "result": "PASS",
+          "workflow_run": 35631458583,
+          "job_id": 106439193430,
+          "commit": "cfaad11660a827f26092b927645413e7dbf62743",
+          "artifact_id": 10653599787,
+          "artifact_sha256": "8b55260a3b9f4653c3e5c6589034c1fa96daa5ca000e8669c2a39f8c64288faf",
+          "tests": "10/10 PASS",
+          "abi_soname": "libKF6Package.so.6",
+          "abi_export_count": 86,
+          "apt_check": "PASS",
+          "consumer_smoke": "PASS"
+        }
+      }
+    },
+    {
+      "batch": "tier2-package-contract-3",
+      "selected_nodes": [
+        "kdeclarative",
+        "kfilemetadata",
+        "kservice"
+      ],
+      "reference_evidence": {
+        "result": "PASS",
+        "claim": "packaging-reference-snapshot-only",
+        "package_state_effect": "none",
+        "workflow_run": 35633777318,
+        "job_id": 106446066768,
+        "commit": "01dbd612863f4045c44a179928fb90f2a6cf04a4",
+        "artifact_id": 10655657085,
+        "artifact_sha256": "14cc5e7684149844cd39df66bd0f69d7415428c4a4e2b194dbe7505c181f5fe4",
+        "snapshot_sha256": "398da3131d1711d8401a75c915b2958c2469b74e89d23a638031a678304f6652",
+        "versions_sha256": "5d15d12b4d077c27573386ccba29aff148c05639f75c566454fed944bbbca430",
+        "input_manifest_sha256": "20c12e82242a51005d4b72d080e77c305e213d6d1a12b6367b310332fec73fde"
+      },
+      "materialization": {
+        "status": "PASS",
+        "method": "kde-authority-source-plus-pinned-debian-tree",
+        "package_state_effect": "none",
+        "package_attempted": false,
+        "maintainer_during_ci": "SupraLINUX Build System <build@supralinux.invalid>",
+        "publication_blocker": "replace-ci-maintainer-with-approved-project-contact",
+        "reason": "tier2-package-contract-3-kservice-toolchain-symbol-materialization-pass",
+        "result": "PASS",
+        "targets": [],
+        "retained_package_pass": [
+          "kauth",
+          "kcolorscheme",
+          "kcompletion",
+          "kcontacts",
+          "kcrash",
+          "kdeclarative",
+          "kfilemetadata",
+          "knotifications",
+          "kpackage",
+          "kpty",
+          "kservice",
+          "kstatusnotifieritem",
+          "kunitconversion",
+          "syndication"
+        ],
+        "workflow_run": 35677466559,
+        "commit": "4076738a6c93ddce271ab046fa57edc934e496ab",
+        "evidence": {
+          "kdeclarative": {
+            "workflow_run": 35636800957,
+            "job_id": 106456174035,
+            "commit": "e193ebe8b2a0b80129d2b064306b5d68bf8e91b7",
+            "artifact_id": 10656343343,
+            "artifact_sha256": "0db6c87b3c7f5a9beb81a0e919270d69e23533080b256659d2d439ac5ddf7233",
+            "tree_sha256": "0fd4cf10600c3d07cbbdbf0459751614ed20618da409cd36f39f63880e3e4c85",
+            "debian_tree_sha256": "4a6a33bcb2e661159d76d9ca09d42b8b67b7deeeec26cab343b52971e9c63eb0",
+            "dsc_sha256": "b4ed483a8e1f548c82461271e21ab582240a6e739f353c9034eac3e108a95ee7",
+            "debian_tar_sha256": "2f32d407bc0c8abeb110e68e62425a0d80030d4043b25c1e01a1f19f747b63e4",
+            "orig_tar_sha256": "7ec3583a2cf2cd7143e39936ffb39e22d20563f4c87a8462e0e9d12c59ea89a6",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-kdeclarative",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none"
+          },
+          "kfilemetadata": {
+            "workflow_run": 35635818815,
+            "job_id": 106452910488,
+            "commit": "40d51b2282660c19032c8194aa43467d73c68cf7",
+            "artifact_id": 10656246928,
+            "artifact_sha256": "f5a31635efaf6aa9b8c9b8aa378f3c48a011ea4360a06edd9bafe26f7546361e",
+            "tree_sha256": "ab84c9dbcfe0efc2b50a663bb1e5c6b893548f31c596215ae06df266846c90e5",
+            "debian_tree_sha256": "221b6a05b2a48fb06d2662548f2997fb59f208ddec962108e539808b48d4709a",
+            "dsc_sha256": "6e27345975ce7a591e0d06c0169da33643604d64cb3a6271c04cb3de98cac8ce",
+            "debian_tar_sha256": "5e5294547267f887fc198620195275c153fc553f5a0ee2c58b69d27fcf98ac2f",
+            "orig_tar_sha256": "5e14cd8e395e927042cb3eb7cff47e0effda5e8bf2520cf18d1082a9403b2e62",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-kfilemetadata",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none"
+          },
+          "kservice": {
+            "result": "PASS",
+            "workflow_run": 35677466559,
+            "job_id": 106586918751,
+            "commit": "4076738a6c93ddce271ab046fa57edc934e496ab",
+            "artifact_id": 10673841912,
+            "artifact_sha256": "c75ae3d4fd2960333fc9db6403282631140cbc9a81031934d04717092aeadf0b",
+            "tree_sha256": "155404d0851efdea82fc5ffb29c2fc69aabcb28271f8509735b4554424f34bac",
+            "debian_tree_sha256": "342e4afe16a3cacf918aa894a68b2b2876a3c82f09d430158d0dad4486b58b99",
+            "dsc_sha256": "89ecf2b6e8df503b2f5973f80ca82d7507f1cc88a407d222a63bb55dcfaf9374",
+            "debian_tar_sha256": "a92c9aa510bfef21fd01659ad6064b9bff6dc29da791584adc0722b0c802a2b0",
+            "orig_tar_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-kservice",
+            "package_attempted": false,
+            "package_state_effect": "none"
+          }
+        },
+        "history": [
+          {
+            "node": "kdeclarative",
+            "job_id": 106452910479,
+            "artifact_id": 10656151887,
+            "artifact_sha256": "1471fc0173d7abf6ee3711a48f071b7743a1637030c3924304bd76ea023785e2",
+            "tree_sha256": "de3e2c4aa13b23794b077a586210ee2da2daf8a8a3040e4d7307da79e53f1083",
+            "debian_tree_sha256": "6141279580581890f54905f4fd74806b317d3e92cfe9eed9b6c13f12bad39c7b",
+            "dsc_sha256": "d02784538b7ec7a2af3ac4ab363b306128206c5444d57d0c399908cc765db4fe",
+            "debian_tar_sha256": "6e2b2fba313cb20c3a7bc64f7d58edf47f718ef65a878e02689534acc0abdbec",
+            "orig_tar_sha256": "7ec3583a2cf2cd7143e39936ffb39e22d20563f4c87a8462e0e9d12c59ea89a6",
+            "workflow_run": 35635818815,
+            "commit": "40d51b2282660c19032c8194aa43467d73c68cf7",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "status": "superseded-for-integration",
+            "superseded_reason": "Initial Ubuntu compatibility split moved only SONAME symlink; runtime package must own both libkquickcontrolsprivate.so.0 and the versioned library payload."
+          },
+          {
+            "node": "kservice",
+            "job_id": 106452910663,
+            "artifact_id": 10656446848,
+            "artifact_sha256": "c605d6301701c57462c66b71859c17f44cadbfdf649cf41b50c9374716e12ff7",
+            "tree_sha256": "f2a5fb8b44f2d242011edc694730eddfab68813c9c8a023de2b5b030ba931e36",
+            "debian_tree_sha256": "55bf951eafa273e8ad47131e788aea17138e28b39f0f1fc394003f97a76d470a",
+            "dsc_sha256": "151cbe84b5d7f23eae2b89bcaf481f461eb5007faacbbb08f110f861d4a6af41",
+            "debian_tar_sha256": "bffeae57217b7eca41bd71947fd018d6606c6f6aa466fc7d7a0e22f9582be84b",
+            "orig_tar_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
+            "workflow_run": 35635818815,
+            "commit": "40d51b2282660c19032c8194aa43467d73c68cf7",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "status": "superseded-for-integration",
+            "superseded_reason": "Source Build-Depends removed optional KDocTools, but libkf6service-dev still retained a technical-reference Depends on libkf6doctools-dev."
+          },
+          {
+            "node": "kservice",
+            "workflow_run": 35636800957,
+            "job_id": 106456174118,
+            "commit": "e193ebe8b2a0b80129d2b064306b5d68bf8e91b7",
+            "artifact_id": 10657011134,
+            "artifact_sha256": "485b92ac6c739aebf51259b1a3fd85d6dc04f135c53666faa37489bc0756dc61",
+            "tree_sha256": "d3c844418c1fb5a02705da4cffde44aba02b2300ffccfed9a5ee8e73af929591",
+            "debian_tree_sha256": "4100351a0222d1f5a1fd17768c84e160b58cebcd4149ef4fa734fb71af99a3b5",
+            "dsc_sha256": "f7cc4bbc2292888ca282a4358dc2de4b472a9858a6c41749f07d573de758f1b9",
+            "debian_tar_sha256": "af74952199c62ffa8f0a2a163947cf7d26323b0a3584fa021a6c6f49085db7ef",
+            "orig_tar_sha256": "e63062504ede4ebfda4c93e3484a63817731e1157cdcac6e33fb47fe6abc1657",
+            "package_version": "6.30.0-0supralinux1",
+            "source_package": "kf6-kservice",
+            "result": "PASS",
+            "package_attempted": false,
+            "package_state_effect": "none",
+            "status": "superseded-for-toolchain-symbol-baseline"
+          }
+        ],
+        "last_clean_build": {
+          "node": "kservice",
+          "result": "PASS",
+          "workflow_run": 35681046106,
+          "job_id": 106598026738,
+          "commit": "e33a2142dd63efecf2efaa1dca571444edac73a6",
+          "artifact_id": 10674773768,
+          "artifact_sha256": "5777d006748c9560b2e0c0935d0e20a31226c79106f3bd28c523c4c8b39b8d0d",
+          "tests": "7/7 PASS",
+          "abi_soname": "libKF6Service.so.6",
+          "abi_export_count": 299,
+          "apt_check": "PASS",
+          "consumer_smoke": "PASS",
+          "toolchain_symbol_baseline": "PASS"
+        }
+      }
+    }
+  ]
+}

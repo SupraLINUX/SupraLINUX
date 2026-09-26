@@ -1,0 +1,250 @@
+name: KDE Frameworks Tier 2 package batch 3
+
+on:
+  pull_request:
+    paths:
+      - manifests/kde-tier2-package-campaign-batch3.json
+      - manifests/kde-tier2-package-batch3-attempts.json
+      - manifests/kde-tier2-package-contracts.json
+      - manifests/kde-frameworks-tier2.json
+      - manifests/kde-frameworks-tier2-dependencies.json
+      - manifests/kde-frameworks-tier1.json
+      - manifests/kde-dag.json
+      - scripts/plan-kde-tier2-package-batch3.py
+      - scripts/kde-tier2-package-batch3-needed.sh
+      - scripts/validate-kde-tier2-batch3-retained-inputs.py
+      - scripts/run-kde-tier2-package-batch3.sh
+      - .github/workflows/kde-tier2-package-batch3.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: kde-tier2-batch3-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    name: Plan Tier 2 Batch 3
+    runs-on: ubuntu-26.04
+    outputs:
+      run: ${{ steps.final.outputs.run }}
+      matrix: ${{ steps.final.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Determine semantic scope
+        id: scope
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_ACTION: ${{ github.event.action }}
+          EVENT_BEFORE: ${{ github.event.before }}
+          EVENT_AFTER: ${{ github.event.after }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          if [[ "${EVENT_NAME}" == workflow_dispatch ]]; then
+            echo "run=true" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+          if [[ "${EVENT_ACTION}" == synchronize ]]; then
+            before="${EVENT_BEFORE}"
+            after="${EVENT_AFTER}"
+          else
+            before="${PR_BASE_SHA}"
+            after="${PR_HEAD_SHA}"
+          fi
+          for sha in "${before}" "${after}"; do
+            git cat-file -e "${sha}^{commit}" 2>/dev/null || git fetch --no-tags origin "${sha}"
+          done
+          if scripts/kde-tier2-package-batch3-needed.sh "${before}" "${after}"; then
+            echo "run=true" >> "${GITHUB_OUTPUT}"
+          else
+            rc=$?
+            [[ "${rc}" -eq 1 ]] || exit "${rc}"
+            echo "run=false" >> "${GITHUB_OUTPUT}"
+          fi
+      - name: Build runnable matrix
+        id: matrix
+        run: python3 scripts/plan-kde-tier2-package-batch3.py --github-output "${GITHUB_OUTPUT}"
+      - name: Finalize plan
+        id: final
+        shell: bash
+        run: |
+          if [[ "${{ steps.scope.outputs.run }}" == true && "${{ steps.matrix.outputs.run }}" == true ]]; then
+            echo "run=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "run=false" >> "${GITHUB_OUTPUT}"
+          fi
+          echo 'matrix=${{ steps.matrix.outputs.matrix }}' >> "${GITHUB_OUTPUT}"
+
+  rootfs:
+    name: Build shared Resolute rootfs
+    needs: plan
+    if: needs.plan.outputs.run == 'true'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 25
+    steps:
+      - name: Create one clean buildd rootfs
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends mmdebstrap uidmap
+          if ! grep -q "^${USER}:" /etc/subuid; then sudo usermod --add-subuids 100000-165535 "${USER}"; fi
+          if ! grep -q "^${USER}:" /etc/subgid; then sudo usermod --add-subgids 100000-165535 "${USER}"; fi
+          unshare --user --map-auto true
+          mkdir -p .work/rootfs
+          mmdebstrap --mode=unshare --variant=buildd --architectures=amd64 --components=main,universe \
+            --skip=output/mknod --format=tar resolute .work/rootfs/resolute-amd64.tar http://azure.archive.ubuntu.com/ubuntu
+          (cd .work/rootfs && sha256sum resolute-amd64.tar > rootfs.sha256)
+          { cat /etc/os-release; mmdebstrap --version; } > .work/rootfs/provenance.txt
+      - name: Upload shared rootfs
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: kde-tier2-batch3-rootfs-${{ github.run_id }}
+          path: .work/rootfs/
+          compression-level: 0
+          retention-days: 7
+
+  retained-inputs:
+    name: Prepare shared retained PASS inputs
+    needs: plan
+    if: needs.plan.outputs.run == 'true'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Download retained ECM
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10298635300'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34694951158'
+          path: .work/retained-inputs/extra_cmake_modules
+      - name: Download retained KArchive
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10364726750'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34884764702'
+          path: .work/retained-inputs/karchive
+      - name: Download retained KCodecs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10305050385'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34716761551'
+          path: .work/retained-inputs/kcodecs
+      - name: Download retained KConfig
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10554715051'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35360530830'
+          path: .work/retained-inputs/kconfig
+      - name: Download retained KCoreAddons
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10457958023'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35122522242'
+          path: .work/retained-inputs/kcoreaddons
+      - name: Download retained KGuiAddons
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10482007092'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35185562846'
+          path: .work/retained-inputs/kguiaddons
+      - name: Download retained KI18n
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10553916882'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35358920602'
+          path: .work/retained-inputs/ki18n
+      - name: Download retained KWidgetsAddons
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10467164025'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '35145607543'
+          path: .work/retained-inputs/kwidgetsaddons
+      - name: Validate retained package names, versions and SHA-256
+        run: python3 scripts/validate-kde-tier2-batch3-retained-inputs.py --root .work/retained-inputs
+      - name: Upload shared retained input bundle
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: kde-tier2-batch3-retained-inputs-${{ github.run_id }}
+          path: .work/retained-inputs/
+          compression-level: 0
+          retention-days: 7
+
+  package:
+    name: Build ${{ matrix.node }}
+    needs: [plan, rootfs, retained-inputs]
+    if: needs.plan.outputs.run == 'true'
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Download materialized source package
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: ${{ matrix.materialization_artifact_id }}
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ matrix.materialization_run }}
+          path: .work/materialized-source
+      - name: Download shared retained inputs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: kde-tier2-batch3-retained-inputs-${{ github.run_id }}
+          path: .work/retained-inputs
+      - name: Download shared rootfs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: kde-tier2-batch3-rootfs-${{ github.run_id }}
+          path: .work/rootfs
+      - name: Build and validate node
+        env:
+          MATERIALIZATION_ARTIFACT_DIR: ${{ github.workspace }}/.work/materialized-source
+          RETAINED_INPUTS_DIR: ${{ github.workspace }}/.work/retained-inputs
+          ROOTFS_ARTIFACT_DIR: ${{ github.workspace }}/.work/rootfs
+        run: scripts/run-kde-tier2-package-batch3.sh "${{ matrix.node }}"
+      - name: Upload package evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: kde-tier2-batch3-${{ matrix.node }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-tier2-package-batch3/${{ matrix.node }}/
+          if-no-files-found: error
+          retention-days: 90
+
+  skip:
+    name: Report intentional Batch 3 skip
+    needs: plan
+    if: needs.plan.outputs.run == 'false'
+    runs-on: ubuntu-26.04
+    steps:
+      - run: echo 'Tier 2 Batch 3 intentionally skipped; no runnable semantic input changed.'

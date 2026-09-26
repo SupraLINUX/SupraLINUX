@@ -1,0 +1,396 @@
+name: Repository policy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate architecture manifest
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Ubuntu policy tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gnupg
+          sudo apt-get install -y --no-install-recommends shellcheck
+          shellcheck --version
+          gpgv --version | head -1
+
+      - name: Validate shell syntax
+        shell: bash
+        run: bash -n scripts/*.sh
+
+      - name: Lint shell scripts
+        shell: bash
+        run: shellcheck -e SC1091 scripts/*.sh
+
+      - name: Test KVM-required QEMU wrapper
+        shell: bash
+        run: scripts/test-qemu-kvm-required.sh
+
+      - name: Test signed Ubuntu source-image verification
+        shell: bash
+        run: scripts/test-verify-ubuntu-cloud-image-provenance.sh
+
+      - name: Test effective Actions runner provenance checker
+        shell: bash
+        run: scripts/test-check-actions-runner-runtime.sh
+
+      - name: Test golden-image provenance gate
+        shell: bash
+        run: scripts/test-check-golden-image-provenance.sh
+
+      - name: Test PR CI semantic evidence scope
+        shell: bash
+        run: scripts/test-pr-ci-router-scope.sh
+
+      - name: Test KDE development contract audit
+        shell: bash
+        run: scripts/test-kde-development-contract-audit.sh
+
+      - name: Test KDE Tier 1 dependency preflight semantic scope
+        shell: bash
+        run: scripts/test-kde-tier1-dependency-preflight-scope.sh
+
+      - name: Test KDE Tier 1 Batch 7 package scope
+        shell: bash
+        run: scripts/test-kde-tier1-package-batch7-scope.sh
+
+      - name: Test KDE Tier 1 Batch 8 package scope
+        shell: bash
+        run: scripts/test-kde-tier1-package-batch8-scope.sh
+
+      - name: Test KDE Tier 1 Batch 9 package scope
+        shell: bash
+        run: scripts/test-kde-tier1-package-batch9-scope.sh
+
+      - name: Test KDE Tier 1 Batch 10 package scope
+        shell: bash
+        run: scripts/test-kde-tier1-package-batch10-scope.sh
+
+      - name: Test KDE Tier 1 Batch 11 package scope
+        shell: bash
+        run: scripts/test-kde-tier1-package-batch11-scope.sh
+
+      - name: Test KDE Tier 2 Batch 1 package scope
+        shell: bash
+        run: scripts/test-kde-tier2-package-batch1-scope.sh
+
+      - name: Test KDE Tier 2 Batch 2 package scope
+        shell: bash
+        run: scripts/test-kde-tier2-package-batch2-scope.sh
+
+      - name: Test KDE Tier 2 Batch 3 package scope
+        shell: bash
+        run: scripts/test-kde-tier2-package-batch3-scope.sh
+
+      - name: Test KDE Tier 2 Batch 4 package scope
+        shell: bash
+        run: scripts/test-kde-tier2-package-batch4-scope.sh
+
+      - name: Test KDE Tier 2 Batch 5 package scope
+        shell: bash
+        run: scripts/test-kde-tier2-package-batch5-scope.sh
+
+      - name: Test KDE Tier 2 provider-audit semantic scope
+        shell: bash
+        run: scripts/test-kde-tier2-provider-audit-scope.sh
+
+      - name: Test KDE Tier 1 global source diagnostic scope
+        shell: bash
+        run: scripts/test-kde-tier1-source-diagnostic-scope.sh
+
+      - name: Validate repository invariants
+        run: python3 scripts/validate_repository.py
+
+      - name: Validate Qt provider invariants
+        run: python3 scripts/validate_qt_provider.py
+
+      - name: Validate KDE DAG invariants
+        run: python3 scripts/validate_kde_dag.py
+
+      - name: Validate KDE Frameworks Tier 1 manifest
+        run: python3 scripts/validate_kde_tier1.py
+
+      - name: Validate KDE Tier 1 global discovery policy
+        run: python3 scripts/validate_kde_tier1_global_discovery.py
+
+      - name: Validate KDE Tier 1 global source diagnostic policy
+        run: python3 scripts/validate_kde_tier1_source_diagnostic.py
+
+      - name: Validate KDE Frameworks Tier 1 packaging-reference policy
+        run: python3 scripts/validate_kde_tier1_packaging_reference.py
+
+      - name: Validate KDE Tier 1 packaging-tree policy
+        run: python3 scripts/validate_kde_tier1_packaging_tree.py
+
+      - name: Validate KDE Tier 1 batch 1 preparation
+        run: python3 scripts/validate_kde_tier1_package_batch1.py
+
+      - name: Validate KDE Tier 1 batch 2 preparation
+        run: python3 scripts/validate_kde_tier1_package_batch2.py
+
+      - name: Validate KDE Tier 1 batch 3 preparation
+        run: python3 scripts/validate_kde_tier1_package_batch3.py
+
+      - name: Validate KDE Tier 1 batch 4 preparation
+        run: python3 scripts/validate_kde_tier1_package_batch4.py
+
+      - name: Validate KDE Tier 1 batch 5 preparation
+        run: python3 scripts/validate_kde_tier1_package_batch5.py
+
+      - name: Validate KDE Tier 1 batch 6 preparation
+        run: python3 scripts/validate_kde_tier1_package_batch6.py
+
+      - name: Validate KDE Tier 1 batch 7 preparation
+        run: python3 scripts/validate_kde_tier1_package_batch7.py
+
+      - name: Validate KDE Tier 1 batch 8 preparation
+        run: python3 scripts/validate_kde_tier1_package_batch8.py
+
+      - name: Validate KDE Tier 1 batch 9 preparation
+        run: python3 scripts/validate_kde_tier1_package_batch9.py
+
+      - name: Validate KDE Tier 1 batch 10 preparation
+        run: python3 scripts/validate_kde_tier1_package_batch10.py
+
+      - name: Validate KDE Tier 1 batch 11 preparation
+        run: python3 scripts/validate_kde_tier1_package_batch11.py
+
+      - name: Validate KDE Frameworks Tier 2 discovery
+        run: python3 scripts/validate_kde_tier2.py
+
+      - name: Validate KDE Tier 2 canonical/derived consistency
+        run: python3 scripts/validate_kde_tier2_consistency.py
+
+      - name: Validate generated KDE Tier 2 campaign plan
+        run: python3 scripts/compile_kde_tier2_campaign.py --check
+
+      - name: Validate KDE Tier 2 provider-audit definition
+        run: python3 scripts/validate_kde_tier2_provider_audit.py
+
+      - name: Validate KDE Tier 2 package-contract draft
+        run: python3 scripts/validate_kde_tier2_package_contracts.py
+
+      - name: Validate KDE Tier 2 KMime compatibility-provider audit
+        run: python3 scripts/validate_kde_tier2_kmime_compatibility_audit.py
+
+      - name: Test KDE Tier 2 KMime legacy-provider semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier2-kmime-legacy-provider-scope.sh
+
+      - name: Validate KDE Tier 2 KMime legacy compatibility provider
+        run: python3 scripts/validate_kde_tier2_kmime_legacy_provider.py
+
+      - name: Validate KDE Tier 2 materialization definition
+        run: python3 scripts/validate_kde_tier2_materialization.py
+
+      - name: Test KDE Tier 2 materialization semantic scope
+        shell: bash
+        run: scripts/test-kde-tier2-materialization-scope.sh
+
+      - name: Validate KDE Tier 2 Batch 1 KAuth preparation
+        run: python3 scripts/validate_kde_tier2_package_batch1.py
+
+      - name: Validate KDE Tier 2 Batch 2 preparation
+        run: python3 scripts/validate_kde_tier2_package_batch2.py
+
+      - name: Validate KDE Tier 2 Batch 3 preparation
+        run: python3 scripts/validate_kde_tier2_package_batch3.py
+
+      - name: Validate KDE Tier 2 Batch 4 preparation
+        run: python3 scripts/validate_kde_tier2_package_batch4.py
+
+      - name: Validate KDE Tier 2 Batch 5 preparation
+        run: python3 scripts/validate_kde_tier2_package_batch5.py
+
+      - name: Validate KDE Frameworks Tier 3 inventory
+        run: python3 scripts/validate_kde_tier3.py
+
+      - name: Validate KDE Frameworks Tier 3 dependencies
+        run: python3 scripts/validate_kde_tier3_dependencies.py
+
+      - name: Test KDE Tier 3 support provider-audit semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier3-support-provider-audit-scope.sh
+
+      - name: Validate KDE Tier 3 support provider audit
+        run: python3 scripts/validate_kde_tier3_support_provider_audit.py
+
+      - name: Test KDE Tier 3 support contract-reference semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier3-support-contract-reference-scope.sh
+
+      - name: Validate KDE Tier 3 support package contracts
+        run: python3 scripts/validate_kde_tier3_support_package_contracts.py
+
+      - name: Test KDE Tier 3 support packaging-tree semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier3-support-packaging-tree-scope.sh
+
+      - name: Validate KDE Tier 3 support packaging-tree capture
+        run: python3 scripts/validate_kde_tier3_support_packaging_tree.py
+
+      - name: Test KDE Tier 3 support materialization semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier3-support-materialization-scope.sh
+
+      - name: Validate KDE Tier 3 support materialization
+        run: python3 scripts/validate_kde_tier3_support_materialization.py
+
+      - name: Test KDE Tier 3 support build level 0 semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier3-support-build-level0-scope.sh
+
+      - name: Validate KDE Tier 3 support build level 0
+        run: python3 scripts/validate_kde_tier3_support_build_level0.py
+
+      - name: Test KDE Tier 3 support build level 1 semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier3-support-build-level1-scope.sh
+
+      - name: Validate KDE Tier 3 support build level 1
+        run: python3 scripts/validate_kde_tier3_support_build_level1.py
+
+      - name: Test KDE Tier 3 framework provider-audit semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier3-provider-audit-scope.sh
+
+      - name: Validate KDE Tier 3 framework provider audit
+        run: python3 scripts/validate_kde_tier3_provider_audit.py
+
+      - name: Test KDE Tier 3 package-contract reference semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier3-contract-reference-scope.sh
+
+      - name: Validate KDE Tier 3 package-contract references
+        run: python3 scripts/validate_kde_tier3_package_contracts.py
+
+      - name: Test KDE Tier 3 packaging-tree semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier3-packaging-tree-scope.sh
+
+      - name: Validate KDE Tier 3 packaging-tree capture
+        run: python3 scripts/validate_kde_tier3_packaging_tree.py
+
+      - name: Test KDE Tier 3 contract-review semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier3-contract-review-scope.sh
+
+      - name: Validate KDE Tier 3 contract review
+        run: python3 scripts/validate_kde_tier3_contract_review.py
+
+      - name: Validate KDE Tier 3 package-contract decisions
+        run: python3 scripts/validate_kde_tier3_contract_decisions.py
+
+      - name: Test KDE Tier 3 materialization semantic scope
+        shell: bash
+        run: bash scripts/test-kde-tier3-materialization-scope.sh
+
+      - name: Validate KDE Tier 3 materialization definition
+        run: python3 scripts/validate_kde_tier3_materialization.py
+
+      - name: Validate generated KDE Tier 3 build campaign plan
+        run: python3 scripts/compile_kde_tier3_build_campaign.py --check
+
+      - name: Validate KDE Tier 3 build campaign plan
+        run: python3 scripts/validate_kde_tier3_build_campaign.py
+
+      - name: Test KDE Tier 3 Level 0 planner and runner scope
+        run: python3 scripts/test-kde-tier3-build-level0-planner.py
+
+      - name: Validate KDE Tier 3 build Level 0
+        run: python3 scripts/validate_kde_tier3_build_level0.py
+
+      - name: Test KDE Tier 3 Level 1 planner and runner scope
+        run: python3 scripts/test-kde-tier3-build-level1-planner.py
+
+      - name: Validate KDE Tier 3 build Level 1
+        run: python3 scripts/validate_kde_tier3_build_level1.py
+
+      - name: Validate KDE Tier 3 historical evidence boundary
+        run: python3 scripts/validate_kde_tier3_historical_boundary.py
+
+      - name: Validate KDE Tier 3 Round 11 lifecycle
+        run: python3 scripts/validate_kde_tier3_round11.py
+
+      - name: Validate KDE Tier 3 KIO Round 12 diagnostic
+        run: python3 scripts/validate_kde_tier3_kio_round12_diagnostic.py
+
+      - name: Validate KDE Tier 3 KIO Round 13 diagnostic
+        run: python3 scripts/validate_kde_tier3_kio_round13_diagnostic.py
+
+      - name: Validate KDE Tier 3 KIO Round 14 diagnostic
+        run: python3 scripts/validate_kde_tier3_kio_round14_diagnostic.py
+
+      - name: Validate KDE Tier 3 KIO Round 15 diagnostic
+        run: python3 scripts/validate_kde_tier3_kio_round15_diagnostic.py
+
+      - name: Validate KDE Tier 3 KIO Round 16 diagnostic
+        run: python3 scripts/validate_kde_tier3_kio_round16_diagnostic.py
+
+      - name: Validate KDE Tier 3 KIO Round 17 diagnostic
+        run: python3 scripts/validate_kde_tier3_kio_round17_diagnostic.py
+
+      - name: Validate KDE Tier 3 KIO Round 18 provider contract
+        run: python3 scripts/validate_kde_tier3_kio_round18_provider_contract.py
+
+      - name: Validate KDE Tier 3 KIO Round 18 remediation
+        run: python3 scripts/validate_kde_tier3_round18_remediation.py
+
+      - name: Validate KDE Tier 3 KIO Round 19 diagnostic
+        run: python3 scripts/validate_kde_tier3_kio_round19_diagnostic.py
+
+      - name: Validate KDE Tier 3 KIO Round 20 diagnostic
+        run: python3 scripts/validate_kde_tier3_kio_round20_diagnostic.py
+
+      - name: Validate KDE Tier 3 KIO Round 21 diagnostic
+        run: python3 scripts/validate_kde_tier3_kio_round21_diagnostic.py
+
+      - name: Validate KDE Attica 6.30 packaging preparation
+        run: python3 scripts/validate_kde_attica_package.py
+
+      - name: Validate KDE Attica CI delta scope
+        run: python3 scripts/validate_kde_attica_ci_scope.py
+
+      - name: Verify runner and Ubuntu Qt candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          . /etc/os-release
+          if [[ "${VERSION_ID}" != "26.04" ]]; then
+            echo "Expected Ubuntu 26.04, got ${PRETTY_NAME}" >&2
+            exit 1
+          fi
+
+          candidate="$(apt-cache policy qt6-base-dev | awk '/Candidate:/ {print $2}')"
+          if [[ -z "${candidate}" || "${candidate}" == "(none)" ]]; then
+            echo "qt6-base-dev has no candidate on this Ubuntu 26.04 runner" >&2
+            exit 1
+          fi
+
+          required="$(python3 -c 'import json; print(json.load(open("manifests/desktop-stack.json"))["qt"]["required_series"])')"
+          case "${candidate}" in
+            "${required}".*) ;;
+            *)
+              echo "Ubuntu Qt candidate ${candidate} does not match required Qt series ${required}" >&2
+              exit 1
+              ;;
+          esac
+
+          echo "Ubuntu ${VERSION_ID}; Qt candidate ${candidate}; required series ${required}: PASS"

@@ -1,0 +1,409 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-22",
+  "scope": "kde-frameworks-tier2-6.30",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "strategy": "dag-global-discovery",
+  "canonical_tier1_precondition": "29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED",
+  "policy": {
+    "parallelize_independent_nodes": true,
+    "continue_after_independent_failures": true,
+    "blocked_is_not_fail": true,
+    "only_pass_artifacts_feed_dependents": true,
+    "preserve_every_real_attempt": true,
+    "no_package_attempt_before_packaging_contract": true
+  },
+  "state_model": {
+    "package-lane-pending": "Upstream/dependency discovery is complete, but no package attempt is valid until a package runner/tree exists.",
+    "compatibility-decision-required": "A compatibility/packaging architecture decision is required before materializing the package.",
+    "note": "These are planning/readiness states, not package FAIL/BLOCKED results.",
+    "package-contract-ready": "Provider audit is PASS; package contract/tree may now be materialized. Package state remains pending until a real build attempt.",
+    "build-ready": "Provider audit and deterministic package materialization are PASS; node may enter a real clean build. Package state remains pending until that build finishes.",
+    "compatibility-provider-required": "The authoritative Frameworks package is materialized and has passed its own build gates, but an external compatibility provider must be adapted before the node can reach package PASS."
+  },
+  "nodes": {},
+  "next_actions": [
+    "Tier 2 package campaign is closed at 15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED.",
+    "Retain all 15 Tier 2 PASS artifacts as downstream-eligible inputs for later KDE DAG levels.",
+    "Keep the KMime legacy provider on-demand compatibility-only; it is not part of the default KDE desktop install.",
+    "Do not promote any package to stable without explicit user approval."
+  ],
+  "promoted_snapshot": {
+    "pass": 15,
+    "pending": 0,
+    "current_fail": 0,
+    "blocked": 0
+  },
+  "completed_nodes": {
+    "kauth": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux3",
+      "workflow_run": 35497461178,
+      "job_id": 106043001431,
+      "artifact_id": 10601382235,
+      "artifact_sha256": "443a47a67188a52faae6c20b03c2c53203d5a9386dbbb5765af4f69e0cd1744b",
+      "rootfs_sha256": "15113b108b939e2575758c6696fc34808dfa925fa2dd3cc5e6c13e65e7be4668",
+      "backend": "POLKITQT6-1",
+      "helper_backend": "DBUS",
+      "tier1_predecessors": [
+        "kcoreaddons",
+        "kwindowsystem"
+      ],
+      "downstream_eligible": true
+    },
+    "kcrash": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35535289692,
+      "job_id": 106143242223,
+      "artifact_id": 10613480229,
+      "artifact_sha256": "1f97e3cbcba2ed1d6b33af69cae1920726c2d5efab2382c3b21083a2e29d30d9",
+      "rootfs_sha256": "db01172d5e4e9cadebf1dbfd0c7f631710e981f051160edb0a923b8613399e8f",
+      "tests": "4/4 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6Crash.so.6",
+      "abi_export_count": 13,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "tier1_predecessors": [
+        "kcoreaddons"
+      ],
+      "downstream_eligible": true
+    },
+    "syndication": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35543268413,
+      "job_id": 106164765409,
+      "artifact_id": 10615910224,
+      "artifact_sha256": "729dc8301377ba6e7d0a29cf65552542e0df85d76b19a24270bd328be13c9d7c",
+      "rootfs_sha256": "0943ab94eb5f4d0cbbf64bb0d69ccf36ad48309cbafc1c73e8745d3925a4b734",
+      "tests": "4/4 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6Syndication.so.6",
+      "abi_export_count": 363,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "tier1_predecessors": [
+        "kcodecs"
+      ],
+      "downstream_eligible": true
+    },
+    "knotifications": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35544063879,
+      "job_id": 106166898618,
+      "artifact_id": 10616445435,
+      "artifact_sha256": "09ede9c6f1f07333e1ea54291232a855c6dca9f9cf9679a38d37b1ec69eb6135",
+      "rootfs_sha256": "0438cb6edfece79dcb08b47bdb6a15565919d8e41d831a26e1ca094d1f329576",
+      "tests": "1/1 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6Notifications.so.6",
+      "abi_export_count": 162,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "python_import": "PASS",
+      "tier1_predecessors": [
+        "kconfig"
+      ],
+      "downstream_eligible": true,
+      "qml_payload_smoke": "PASS"
+    },
+    "kstatusnotifieritem": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux2",
+      "workflow_run": 35544063879,
+      "job_id": 106166898613,
+      "artifact_id": 10616011544,
+      "artifact_sha256": "542bebf07f51d20c0dccf21c06123418e025e8904b1864bd21692c9af0cfe552",
+      "rootfs_sha256": "0438cb6edfece79dcb08b47bdb6a15565919d8e41d831a26e1ca094d1f329576",
+      "tests": "1/1 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6StatusNotifierItem.so.6",
+      "abi_export_count": 113,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "python_import": "PASS",
+      "tier1_predecessors": [
+        "kwindowsystem"
+      ],
+      "downstream_eligible": true
+    },
+    "kunitconversion": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35544063879,
+      "job_id": 106166898551,
+      "artifact_id": 10616255861,
+      "artifact_sha256": "86edb104be7febf657345de21c238555bc5367d975b916dfe0552aff9beaea57",
+      "rootfs_sha256": "0438cb6edfece79dcb08b47bdb6a15565919d8e41d831a26e1ca094d1f329576",
+      "tests": "3/3 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6UnitConversion.so.6",
+      "abi_export_count": 105,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "python_import": "PASS",
+      "tier1_predecessors": [
+        "ki18n"
+      ],
+      "downstream_eligible": true
+    },
+    "kcompletion": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35620923130,
+      "run_attempt": 2,
+      "job_id": 106404917964,
+      "artifact_id": 10649102710,
+      "artifact_sha256": "02e2dd47d4be5d0898130abd111048ac85ed1a2b45e8b895c0b611c9c1e628f0",
+      "rootfs_sha256": "2ec1afc0318c4a3cf33a77b88f48f92e4a4ddafb8434382bf9c488987bb4aa9b",
+      "tests": "6/6 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6Completion.so.6",
+      "abi_export_count": 297,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "predecessor_buildinfo_proof": "PASS",
+      "tier1_predecessors": [
+        "kcodecs",
+        "kconfig",
+        "kwidgetsaddons"
+      ],
+      "downstream_eligible": true
+    },
+    "kpty": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35620923130,
+      "run_attempt": 2,
+      "job_id": 106404918040,
+      "artifact_id": 10649911201,
+      "artifact_sha256": "b2ab1931be5d21f0395f6666f9da119856d3a31cbf0889a444d82f09c735caeb",
+      "rootfs_sha256": "2ec1afc0318c4a3cf33a77b88f48f92e4a4ddafb8434382bf9c488987bb4aa9b",
+      "tests": "2/2 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6Pty.so.6",
+      "abi_export_count": 70,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "predecessor_buildinfo_proof": "PASS",
+      "tier1_predecessors": [
+        "kcoreaddons",
+        "ki18n"
+      ],
+      "downstream_eligible": true
+    },
+    "kcolorscheme": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35627389046,
+      "run_attempt": 1,
+      "job_id": 106425601911,
+      "artifact_id": 10651864741,
+      "artifact_sha256": "d52b7bbc99d1e211600f648152781b6dc1b958c51972fdb206099c1e860e88f3",
+      "rootfs_sha256": "4d53ff1b4b933010a4aeef39131983a698a787c4f49f32f65a3169f376b48d12",
+      "tests": "2/2 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6ColorScheme.so.6",
+      "abi_export_count": 69,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "predecessor_buildinfo_proof": "PASS",
+      "package_dependency_closure_buildinfo_proof": "PASS",
+      "tier1_predecessors": [
+        "kconfig",
+        "kguiaddons",
+        "ki18n"
+      ],
+      "package_dependency_closure": {
+        "kcoreaddons": "6.30.0-0supralinux4"
+      },
+      "downstream_eligible": true
+    },
+    "kcontacts": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35627389046,
+      "run_attempt": 1,
+      "job_id": 106425601953,
+      "artifact_id": 10653450027,
+      "artifact_sha256": "369ccd7e71ee00120b78d711c5782363996d401703dacd43d57839861a3710e0",
+      "rootfs_sha256": "4d53ff1b4b933010a4aeef39131983a698a787c4f49f32f65a3169f376b48d12",
+      "tests": "33/33 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6Contacts.so.6",
+      "abi_export_count": 973,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "predecessor_buildinfo_proof": "PASS",
+      "package_dependency_closure_buildinfo_proof": "PASS",
+      "tier1_predecessors": [
+        "ki18n",
+        "kconfig",
+        "kcodecs"
+      ],
+      "package_dependency_closure": {},
+      "downstream_eligible": true,
+      "qml_payload_smoke": "PASS"
+    },
+    "kpackage": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35631458583,
+      "run_attempt": 1,
+      "job_id": 106439193430,
+      "artifact_id": 10653599787,
+      "artifact_sha256": "8b55260a3b9f4653c3e5c6589034c1fa96daa5ca000e8669c2a39f8c64288faf",
+      "rootfs_sha256": "af1bbbf06929caef42b87b39b26c2b12b7ffdc5c058e747a6fa8eb64be63b2a8",
+      "tests": "10/10 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6Package.so.6",
+      "abi_export_count": 86,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "predecessor_buildinfo_proof": "PASS",
+      "package_dependency_closure_buildinfo_proof": "PASS",
+      "tier1_predecessors": [
+        "karchive",
+        "ki18n",
+        "kcoreaddons"
+      ],
+      "selected_conditional_predecessors": [],
+      "downstream_eligible": true
+    },
+    "kfilemetadata": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35676553259,
+      "run_attempt": 1,
+      "job_id": 106584347249,
+      "artifact_id": 10673811173,
+      "artifact_sha256": "1ecb8d7a94650ee810a6424d9eeffb9d176d0a30ad9b75ed6b3257538fa1ba30",
+      "rootfs_sha256": "3146df833463c82141688d0d641a0359cd535a0246658832b6bf7f4049e4aac3",
+      "tests": "31/31 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6FileMetaData.so.3",
+      "abi_export_count": 193,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "predecessor_buildinfo_proof": "PASS",
+      "package_dependency_closure_buildinfo_proof": "PASS",
+      "tier1_predecessors": [
+        "ki18n",
+        "kcoreaddons",
+        "kcodecs",
+        "karchive",
+        "kconfig"
+      ],
+      "selected_conditional_predecessors": [
+        "karchive",
+        "kconfig"
+      ],
+      "downstream_eligible": true
+    },
+    "kdeclarative": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35677466571,
+      "run_attempt": 1,
+      "job_id": 106587017706,
+      "artifact_id": 10673008440,
+      "artifact_sha256": "8433514ef2032988d815a7577431395489d7a62ad57b250aefb90e0982acb44d",
+      "rootfs_sha256": "e569d69be6070db9f157fed33b8535e9617d38be0250e1ca553c36be03ad3201",
+      "tests": "1/1 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6CalendarEvents.so.6",
+      "abi_export_count": 50,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "predecessor_buildinfo_proof": "PASS",
+      "package_dependency_closure_buildinfo_proof": "PASS",
+      "qml_payload_smoke": "PASS",
+      "extra_abi_contracts": "PASS",
+      "tier1_predecessors": [
+        "ki18n",
+        "kconfig",
+        "kguiaddons",
+        "kglobalaccel",
+        "kwidgetsaddons"
+      ],
+      "selected_conditional_predecessors": [
+        "kglobalaccel",
+        "kwidgetsaddons"
+      ],
+      "package_dependency_closure": {
+        "kcoreaddons": "6.30.0-0supralinux4"
+      },
+      "downstream_eligible": true
+    },
+    "kservice": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "workflow_run": 35681046106,
+      "run_attempt": 1,
+      "job_id": 106598026738,
+      "artifact_id": 10674773768,
+      "artifact_sha256": "5777d006748c9560b2e0c0935d0e20a31226c79106f3bd28c523c4c8b39b8d0d",
+      "rootfs_sha256": "5135c9e4142d6378f4f824b8cf206532b8ff223e9f549305cabd04c1f71b0c2b",
+      "tests": "7/7 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6Service.so.6",
+      "abi_export_count": 299,
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "predecessor_buildinfo_proof": "PASS",
+      "package_dependency_closure_buildinfo_proof": "PASS",
+      "tier1_predecessors": [
+        "kconfig",
+        "kcoreaddons",
+        "ki18n"
+      ],
+      "selected_conditional_predecessors": [],
+      "package_dependency_closure": {},
+      "toolchain_symbol_baseline": "optional=toolchain _ZSt19piecewise_construct@Base 6.30.0",
+      "downstream_eligible": true
+    },
+    "kmime": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux1",
+      "framework_workflow_run": 35687831684,
+      "framework_run_attempt": 2,
+      "framework_job_id": 106619132039,
+      "framework_artifact_id": 10677716050,
+      "framework_artifact_sha256": "ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36",
+      "tests": "17/17 PASS",
+      "lintian": "PASS-errors",
+      "abi_soname": "libKF6Mime.so.6",
+      "consumer_smoke": "PASS",
+      "apt_check": "PASS",
+      "predecessor_buildinfo_proof": "PASS",
+      "compatibility_audit_run": 35690284355,
+      "compatibility_audit_artifact_id": 10678073973,
+      "compatibility_audit_artifact_sha256": "7b0c9175b1e0f48eb1d18e9ceb1af03381c4de8d0b322bc619dd7be224307c5b",
+      "compatibility_provider_version": "25.12.3-0ubuntu1+supralinux1",
+      "compatibility_provider_run": 35691309612,
+      "compatibility_provider_job_id": 106628834481,
+      "compatibility_provider_artifact_id": 10679420779,
+      "compatibility_provider_artifact_sha256": "f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b",
+      "legacy_provider_coinstallation": "PASS",
+      "legacy_consumer": "PASS",
+      "framework_consumer": "PASS",
+      "tier1_predecessors": [
+        "kcodecs"
+      ],
+      "downstream_eligible": true
+    }
+  },
+  "inventory_correction": {
+    "date": "2026-09-20",
+    "previous_incorrect_scope": "KAuth + KMime only",
+    "corrected_upstream_tier2_count": 15,
+    "evidence": [
+      "https://api.kde.org/",
+      "https://kde.org/info/kde-frameworks-6.30.0/"
+    ]
+  }
+}

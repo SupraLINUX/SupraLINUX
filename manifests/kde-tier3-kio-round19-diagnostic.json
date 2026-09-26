@@ -1,0 +1,180 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-26",
+  "node": "kio",
+  "round": 19,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "claim": "non-promoting-kio-residual-test-root-cause-diagnostic",
+  "non_promoting": true,
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "canonical_source_modified": false,
+  "diagnostic_worktree_modified": true,
+  "dag_state_changes_allowed": false,
+  "downstream_eligibility_changes_allowed": false,
+  "package_revision_allocation": false,
+  "test_suppression": false,
+  "execution_authorized": false,
+  "package_execution_authorized": false,
+  "status": "diagnostic-PASS",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "canonical_kio": {
+    "state": "FAIL",
+    "package_version": "6.30.0-0supralinux8",
+    "downstream_eligible": false
+  },
+  "predecessor": {
+    "attempt": 8,
+    "workflow_run": 36238357510,
+    "commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
+    "rootfs": {
+      "artifact_id": 10904512642,
+      "artifact_sha256": "d689f1658d37e3dedcf57d7f4a233917a6d84ed592346d4ac87f60d626724afe"
+    },
+    "kio": {
+      "job_id": 108394325161,
+      "artifact_id": 10905267300,
+      "artifact_sha256": "9f95e2b8e3330ee4f1b275eb059736b87fa57d7752602aa598cb313659cae53f",
+      "tests": {
+        "total": 69,
+        "pass": 67,
+        "fail": 2
+      }
+    },
+    "kxmlgui": {
+      "job_id": 108394325149,
+      "artifact_id": 10905212105,
+      "artifact_sha256": "297d8d91e52f82cd6713c30072a8f2deff80d73647b9c93c1b89263e5f21d441",
+      "tests": {
+        "total": 7,
+        "pass": 7,
+        "fail": 0
+      },
+      "python_import": "PASS"
+    },
+    "established_progress": [
+      "kiofilewidgets-knewfilemenutest PASS",
+      "KDirModelTest::testIcon PASS",
+      "qt6-svg-plugins test-provider remediation fixed the previous icon-provider failure class"
+    ],
+    "remaining_failures": {
+      "krecentdocument": "testXbelBookmarkMaxEntries: actual temp File 11, expected temp File 12",
+      "kdirmodel": "testShowRoot and testShowRootAndExpandToUrl: indexForUrl(homeUrl) invalid"
+    }
+  },
+  "source_materialization": {
+    "workflow_run": 36222711238,
+    "job_id": 108350884409,
+    "commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",
+    "artifact_id": 10898999142,
+    "artifact_sha256": "c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d",
+    "package_version": "6.30.0-0supralinux8",
+    "upstream_source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2"
+  },
+  "upstream_source_observations": {
+    "krecentdocument": {
+      "test_file_git_blob": "ee4652d040a5cb52e1af5c5339a24ddcb2bd11a0",
+      "implementation_git_blob": "a2e96a8f4b9a695f866cdc100aab5b24665e07e7",
+      "test_behavior": "15 immediate KRecentDocument::add calls with MaxEntries=3; expects temp File 12, 13, 14",
+      "implementation_behavior": "pruning orders QMultiMap entries by parsed modified timestamp; currentTimestamp is generated from current UTC time with millisecond source precision",
+      "upstream_master_still_equivalent": true
+    },
+    "kdirmodel": {
+      "test_file_git_blob": "1d9d47f086a2605f76ceb31581111000a83bfba4",
+      "test_behavior": "testShowRoot and testShowRootAndExpandToUrl open file:/// then expandToUrl(QDir::homePath()); trailing-slash test opens HOME directly",
+      "attempt8_home": "/build/reproducible-path/kf6-kio-6.30.0/debian/.supralinux-test-home/sbuild",
+      "hypothesis": "expandToUrl from filesystem root cannot traverse hidden .supralinux-test-home component while hidden items are not shown"
+    }
+  },
+  "diagnostic_scope": {
+    "build_targets": [
+      "kio_file",
+      "kioworker",
+      "krecentdocumenttest",
+      "kdirmodeltest"
+    ],
+    "krecentdocument": {
+      "baseline_repetitions": 30,
+      "capture_all_variant": "diagnostic test-only MaxEntries=50 to retain all 15 timestamps",
+      "delayed_variant": "diagnostic test-only QTest::qWait(5) after each add",
+      "delayed_repetitions": 30,
+      "evidence": [
+        "per-run exit code",
+        "retained filenames",
+        "modified timestamps",
+        "duplicate timestamp groups",
+        "source hash before/after diagnostic instrumentation"
+      ]
+    },
+    "kdirmodel": {
+      "sequence": [
+        "hidden-home-initial",
+        "visible-home",
+        "hidden-home-repeat"
+      ],
+      "hidden_home_component": ".supralinux-test-home",
+      "visible_home_component": "supralinux-test-home",
+      "executable": "exact unmodified kdirmodeltest",
+      "evidence": [
+        "exit code",
+        "exact failing test functions",
+        "testShowRootWithTrailingSlash status",
+        "HOME path",
+        "A/B/A recovery"
+      ]
+    },
+    "invariants": [
+      "canonical source materialization remains unchanged",
+      "only extracted diagnostic worktree test source may be temporarily instrumented for KRecentDocument probes",
+      "KDirModel A/B/A uses the exact unmodified upstream test binary",
+      "no Debian package is built",
+      "no test is suppressed",
+      "no KIO package revision is allocated",
+      "canonical DAG and downstream eligibility do not change"
+    ]
+  },
+  "decision_rules": {
+    "recent_baseline_failures_and_timestamp_collisions_and_delayed_pass": "krecentdocument-timestamp-collision-ordering-confirmed",
+    "recent_delayed_still_fails": "krecentdocument-pruning-semantics-require-deeper-diagnostic",
+    "kdir_hidden_fail_visible_pass_hidden_fail": "hidden-home-component-controls-kdirmodel-showroot-failure",
+    "kdir_all_modes_fail": "kdirmodel-expand-state-requires-deeper-diagnostic",
+    "kdir_hidden_modes_pass": "diagnostic-invalid-cannot-reproduce-attempt8-showroot-failure"
+  },
+  "next_gate": "tier3-round20-kio-environment-corrected-diagnostic-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "diagnostic_evidence": {
+    "result": "DIAG_COMPLETE",
+    "workflow_run": 36243076879,
+    "job_id": 108407192850,
+    "branch_commit": "0df59eee29ee3c0024d2331a0bc78e503975f72f",
+    "referenced_workflow_sha": "ca433e58636ae43ffc744f1098eed805e11d1e01",
+    "artifact_id": 10906951441,
+    "artifact_sha256": "3395536506ea205ce722a4a9be8962b0f0b3fb7597dbee708a6b7e0dc8ef2611",
+    "package_attempted": false,
+    "package_state_effect": "none"
+  },
+  "diagnostic_results": {
+    "overall_conclusion": "inconclusive-methodology-defects-require-environment-corrected-followup",
+    "krecentdocument": {
+      "baseline_runs": 30,
+      "baseline_failures": 30,
+      "delayed_runs": 30,
+      "delayed_failures": 30,
+      "capture_all_entries": 0,
+      "conclusion": "invalid-targeted-environment",
+      "validity_defect": "QStandardPaths test mode resolved recently-used.xbel below $HOME/.qttest/share, but the targeted runner created only $HOME. The test therefore failed with recentUrls.length()==0 rather than reproducing Attempt 8 temp File 11 vs temp File 12."
+    },
+    "kdirmodel": {
+      "hidden_initial": "historical-showroot-signature-FAIL",
+      "visible_control": "historical-showroot-signature-FAIL",
+      "hidden_repeat": "historical-showroot-signature-FAIL",
+      "trailing_slash": "PASS",
+      "test_icon": "PASS",
+      "conclusion": "control-path-invalid-for-hidden-component-hypothesis",
+      "validity_defect": "The nominal visible HOME removed .supralinux-test-home but remained below the diagnostic .work directory, so the control still contained a hidden path component."
+    },
+    "next_scope": "round20-environment-corrected-krecent-and-kdirmodel-controls"
+  }
+}

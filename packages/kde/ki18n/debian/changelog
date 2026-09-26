@@ -1,0 +1,9 @@
+kf6-ki18n (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE upstream KI18n 6.30.0 for SupraLINUX.
+  * Preserve KDE upstream defaults and keep BUILD_TESTING enabled.
+  * Use Debian 6.28 only as a technical package-layout and symbols baseline.
+  * Preserve Debian-family binary package names and Multi-Arch contracts.
+  * Keep QCH disabled by the common SupraLINUX Frameworks packaging profile.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Fri, 18 Sep 2026 11:30:00 +0000

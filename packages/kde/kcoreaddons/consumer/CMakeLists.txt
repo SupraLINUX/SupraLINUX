@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(kcoreaddons-consumer LANGUAGES CXX)
+find_package(KF6CoreAddons 6.30 REQUIRED)
+add_executable(kcoreaddons-consumer main.cpp)
+target_compile_features(kcoreaddons-consumer PRIVATE cxx_std_17)
+target_link_libraries(kcoreaddons-consumer PRIVATE KF6::CoreAddons ${CMAKE_DL_LIBS})

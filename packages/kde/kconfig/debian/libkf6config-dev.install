@@ -1,0 +1,10 @@
+usr/include/KF6/KConfig/kconfig_version.h
+usr/include/KF6/KConfigCore/
+usr/include/KF6/KConfigGui/
+usr/include/KF6/KConfigQml/
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6Config/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6ConfigCore.so
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6ConfigGui.so
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6ConfigQml.so
+usr/lib/${DEB_HOST_MULTIARCH}/qt6/metatypes/qt6kf6configcore_metatypes.json
+usr/lib/${DEB_HOST_MULTIARCH}/qt6/metatypes/qt6kf6configgui_metatypes.json

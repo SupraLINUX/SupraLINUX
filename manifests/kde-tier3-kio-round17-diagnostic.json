@@ -1,0 +1,168 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-26",
+  "node": "kio",
+  "round": 17,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "claim": "non-promoting-qt-svg-plugin-environment-root-cause-diagnostic",
+  "non_promoting": true,
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "canonical_source_modified": false,
+  "diagnostic_instrumentation": false,
+  "dag_state_changes_allowed": false,
+  "downstream_eligibility_changes_allowed": false,
+  "execution_authorized": false,
+  "status": "diagnostic-PASS",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "round16_evidence": {
+    "workflow_run": 36209833629,
+    "job_id": 108313880904,
+    "commit": "5bea0781bf90ed97c53fdddc761566d4a984f5a7",
+    "artifact_id": 10894374901,
+    "artifact_sha256": "8cda50173446df052b21e5ca4fe89129af65e1c1e1ff13ac137953b5a9508cf6",
+    "result": "DIAG_COMPLETE",
+    "conclusion": "library-preload-alone-does-not-reproduce-kio-icon-name-loss"
+  },
+  "source_materialization": {
+    "workflow_run": 36073638711,
+    "job_id": 107879979760,
+    "artifact_id": 10839162922,
+    "artifact_sha256": "ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c",
+    "package_version": "6.30.0-0supralinux7",
+    "upstream_source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2"
+  },
+  "diagnostic_scope": {
+    "exact_provider_closure_from": "manifests/kde-tier3-build-level1.json",
+    "source_modified": false,
+    "build_targets": [
+      "kio_file",
+      "kioworker",
+      "kdirmodeltest",
+      "knewfilemenutest"
+    ],
+    "exact_test_cases": {
+      "kdirmodeltest": "testIcon",
+      "knewfilemenutest": "testFolderIconCollection:default"
+    },
+    "environment_variable": "qt6-svg-plugins package presence",
+    "aba_sequence": [
+      "present-initial",
+      "absent-after-package-removal",
+      "reinstalled"
+    ],
+    "evidence": [
+      "dpkg package status and versions",
+      "apt-cache policy and dependency metadata",
+      "installed SVG plugin files",
+      "per-test exit codes and original failure signatures"
+    ],
+    "invariants": [
+      "source remains byte-for-byte unchanged for all A/B/A phases",
+      "initial plugin-present phase must pass both tests",
+      "plugin-absent phase must reproduce both exact historical empty-name failures to establish control",
+      "reinstalled phase must return both tests to PASS",
+      "no Debian package is built and no KIO revision is allocated"
+    ],
+    "package_build": false,
+    "canonical_source_modification": false,
+    "package_revision_allocation": false,
+    "test_suppression": false
+  },
+  "decision_rules": {
+    "present_pass_absent_reproduces_reinstall_pass": "qt6-svg-plugins-presence-controls-both-kio-icon-name-failures",
+    "present_not_clean": "diagnostic-invalid-svg-present-baseline",
+    "absent_does_not_reproduce_both": "compare-round13-environment-beyond-svg-plugin",
+    "reinstall_does_not_recover": "inspect-process-cache-or-package-removal-side-effects"
+  },
+  "next_gate": "tier3-round18-kio-qt-svg-provider-contract-remediation-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "invalid_attempts": [
+    {
+      "attempt": 1,
+      "definition_commit": "9d0286656b81152d76e96e9ec7fb776e0fd233ab",
+      "workflow_run": 36213295538,
+      "job_id": 108324143779,
+      "artifact_id": 10896761982,
+      "artifact_sha256": "5247d6b2f9f80c15cb04c63c4687d37b707421e3a1f91f0e8f9e2d3360c01084",
+      "result": "DIAG_INVALID",
+      "conclusion": "instrumentation-perturbed-original-failure",
+      "observed_effect": "intermediate QIcon::name() reads caused both originally failing tests to pass",
+      "canonical_effect": "none"
+    },
+    {
+      "attempt": 2,
+      "definition_commit": "4c5c4bcb9c3cf420d02b7d9a406159ef62e4535c",
+      "workflow_run": 36214198192,
+      "job_id": 108326788757,
+      "artifact_id": 10896848386,
+      "artifact_sha256": "5b4c14d52b858a2455b7a9ee395db305360c8a386993fad37e92f7620fdb4002",
+      "repository_policy_workflow_run": 36214198247,
+      "repository_policy_result": "FAIL-SHELLCHECK-SC2100",
+      "result": "DIAG_INVALID",
+      "conclusion": "conditional-instrumentation-still-perturbs-baseline",
+      "cause": "Even with SUPRALINUX_R17_TOUCH unset, the modified production source changed QIcon temporary/return structure, and both original tests passed.",
+      "canonical_effect": "none"
+    },
+    {
+      "attempt": 3,
+      "definition_commit": "287c4e09d259af0d7f05c70ba856f81a75fac0b3",
+      "workflow_run": 36215721289,
+      "job_id": 108331181346,
+      "artifact_id": 10897152304,
+      "artifact_sha256": "dfe1356e3e10e4e12894627cab203c96ba9d842f11825ccb405b211da329b8f6",
+      "repository_policy_workflow_run": 36215721283,
+      "repository_policy_result": "PASS",
+      "result": "DIAG_INVALID",
+      "stage": "exact-original-baseline",
+      "conclusion": "original-baseline-passed-due-to-environment-fixture-drift",
+      "observed": {
+        "kdirmodel": "PASS",
+        "knewfilemenu": "PASS"
+      },
+      "cause": "Round17 inherited explicit qt6-svg-dev and qt6-svg-plugins installation from Round16; Round13/Attempt7 did not explicitly install qt6-svg-plugins.",
+      "canonical_effect": "none"
+    }
+  ],
+  "environment_ab": true,
+  "definition_validation": {
+    "commit": "0495449acb5c82e535540e346f2341a394bcc8b5",
+    "repository_policy_workflow_run": 36218411106,
+    "result": "PASS"
+  },
+  "diagnostic_evidence": {
+    "workflow_run": 36218411267,
+    "job_id": 108338905718,
+    "commit": "0495449acb5c82e535540e346f2341a394bcc8b5",
+    "artifact_id": 10898332133,
+    "artifact_sha256": "511239dc8fd4581c032d8a7723e2edd772aab450718d44513c528dcf56a862f0",
+    "result": "DIAG_COMPLETE",
+    "package_attempted": false,
+    "package_state_effect": "none"
+  },
+  "diagnostic_results": {
+    "aba_valid": true,
+    "conclusion": "qt6-svg-plugins-presence-controls-both-kio-icon-name-failures",
+    "present_initial": {
+      "kdirmodel": "PASS",
+      "knewfilemenu": "PASS"
+    },
+    "absent": {
+      "kdirmodel": "historical-empty-name-FAIL",
+      "knewfilemenu": "historical-empty-name-FAIL"
+    },
+    "reinstalled": {
+      "kdirmodel": "PASS",
+      "knewfilemenu": "PASS"
+    },
+    "qt_svg_plugins": {
+      "version": "6.10.2-2",
+      "icon_engine_plugin": "/usr/lib/x86_64-linux-gnu/qt6/plugins/iconengines/libqsvgicon.so",
+      "image_format_plugin": "/usr/lib/x86_64-linux-gnu/qt6/plugins/imageformats/libqsvg.so",
+      "qt6_svg_dev_depends_on_plugin": false
+    },
+    "next_scope": "qt-svg-provider-contract-ownership-and-remediation"
+  }
+}
