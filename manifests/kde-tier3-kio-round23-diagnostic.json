@@ -18,7 +18,7 @@
   "test_suppression": false,
   "execution_authorized": true,
   "package_execution_authorized": false,
-  "status": "definition-pending-diagnostic-retry-2",
+  "status": "definition-pending-diagnostic-retry-3",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -141,6 +141,22 @@
       "package_attempted": false,
       "canonical_state_effect": "none",
       "usable_for_kio_diagnostic_conclusion": false
+    },
+    {
+      "ordinal": 3,
+      "status": "INFRA_INVALID",
+      "workflow_run": 36280922944,
+      "job_id": 108512470733,
+      "merge_commit": "54171f65790003d556518b23afc120acdb6d4971",
+      "branch_commit": "43a2d7ff335bba8d229bfe3f7ee67bf94bab2c8e",
+      "artifact_id": null,
+      "artifact_sha256": null,
+      "artifact_status": "not-produced",
+      "failed_stage": "initialization",
+      "reason": "runner expanded SBUILD_LOG from EVIDENCE before EVIDENCE was assigned under set -u; execution stopped before evidence directory creation",
+      "package_attempted": false,
+      "canonical_state_effect": "none",
+      "usable_for_kio_diagnostic_conclusion": false
     }
   ],
   "methodology": {
@@ -158,6 +174,8 @@
       "hook-complete sentinel",
       "no Command: dpkg-buildpackage",
       "no package artifacts"
-    ]
+    ],
+    "rootfs_delivery": "exact Attempt 8 tarball symlinked to ~/.cache/sbuild/resolute-amd64.tar, matching the proven Level 1 invocation",
+    "sbuild_invocation": "sbuild --chroot-mode=unshare --dist=resolute; no alternate --chroot path"
   }
 }

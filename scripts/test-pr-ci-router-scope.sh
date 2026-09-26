@@ -155,6 +155,7 @@ for p in ('manifests/kde-frameworks-tier3.json','manifests/kde-tier3-build-level
 PY
 echo 'name: Round22 diagnostic' > .github/workflows/kde-tier3-kio-round22-diagnostic.yml
 echo '#!/usr/bin/env bash' > scripts/run-kde-tier3-kio-round22-diagnostic.sh
+echo '#!/usr/bin/env bash' > scripts/run-kde-tier3-kio-round22-hook.sh
 echo '{"schema":1,"round":22}' > manifests/kde-tier3-kio-round22-diagnostic.json
 git add .; git commit -qm tier3-diagnostic-lifecycle; TD=$(git rev-parse HEAD)
 if bash scripts/pr-ci-router-needed.sh "$B2" "$TD"; then echo "Tier3 diagnostic lifecycle unexpectedly requested full reusable CI" >&2; exit 1; fi

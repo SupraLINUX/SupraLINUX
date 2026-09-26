@@ -148,7 +148,7 @@ PY
 for path in "${changed[@]}"; do
   case "${path}" in
     docs/*|README.md|scripts/validate_*.py|scripts/test-*.sh|scripts/pr-ci-router-needed.sh|scripts/compile_kde_tier2_campaign.py|manifests/kde-tier1-package-batch*-attempts.json|manifests/kde-tier2-campaign-plan.json|.github/workflows/repository-policy.yml|.github/workflows/pr-ci-router.yml) continue ;;
-    .github/workflows/kde-tier3-kio-round*-diagnostic.yml|scripts/run-kde-tier3-kio-round*-diagnostic.sh|manifests/kde-tier3-kio-round*-diagnostic.json)
+    .github/workflows/kde-tier3-kio-round*-diagnostic.yml|scripts/run-kde-tier3-kio-round*-diagnostic.sh|scripts/run-kde-tier3-kio-round*-hook.sh|manifests/kde-tier3-kio-round*-diagnostic.json)
       continue ;;
     manifests/kde-frameworks-tier3.json|manifests/kde-tier3-build-level1.json|manifests/kde-tier3-package-contracts.json|manifests/kde-tier3-materialization.json)
       if tier3_diagnostic_lifecycle_only "${path}"; then continue; fi

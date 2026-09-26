@@ -8,8 +8,8 @@ ROOTFS_DIR="${WORK}/rootfs-artifact"
 HOOK_SHARE="${WORK}/hook-share"
 OUT="${WORK}/out"
 CONFIG="${WORK}/sbuild-config.pl"
-SBUILD_LOG="${EVIDENCE}/sbuild.log"
 EVIDENCE="${ROOT}/evidence/kde-tier3-kio-round23-diagnostic"
+SBUILD_LOG="${EVIDENCE}/sbuild.log"
 RESULT="${EVIDENCE}/result.json"
 STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 STAGE=initialization
@@ -22,7 +22,7 @@ chmod 0777 "${EVIDENCE}" "${EVIDENCE}/xbels"
 exec > >(tee "${EVIDENCE}/pipeline.log") 2>&1
 
 finish() {
-  local rc="$?" finished
+  local rc="$1" finished
   finished="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   if [[ ! -s "${RESULT}" ]]; then
     python3 - "${RESULT}" "${DIAG_RESULT}" "${rc}" "${STAGE}" "${STARTED_AT}" "${finished}" <<'PY'
@@ -36,7 +36,7 @@ Path(p).write_text(json.dumps({"schema":1,"node":"kio","round":23,"diagnostic_re
 PY
   fi
 }
-trap finish EXIT
+trap 'finish "$?"' EXIT
 
 download_artifact() {
   local id="$1" sha="$2" dest="$3" zip
@@ -74,6 +74,10 @@ actual="$(sha256sum "${ROOTFS_TAR}" | awk '{print $1}')"
 [[ "${expected}" == "${actual}" ]]
 printf '%s\n' "${actual}" > "${EVIDENCE}/rootfs-tar.sha256"
 cp "${ROOTFS_DIR}/provenance.txt" "${EVIDENCE}/attempt8-rootfs-provenance.txt" 2>/dev/null || true
+SBUILD_CACHE="${HOME}/.cache/sbuild"
+mkdir -p "${SBUILD_CACHE}"
+ln -sfn "${ROOTFS_TAR}" "${SBUILD_CACHE}/resolute-amd64.tar"
+readlink -f "${SBUILD_CACHE}/resolute-amd64.tar" > "${EVIDENCE}/sbuild-rootfs-cache-target.txt"
 
 STAGE=input-plan
 python3 - "${LEVEL1}" "${EVIDENCE}/input-plan.tsv" <<'PY'
@@ -136,7 +140,7 @@ STAGE=sbuild-unshare-diagnostic
 EXTRA_ARGS=()
 for deb in "${PREDECESSOR_DEBS[@]}"; do EXTRA_ARGS+=(--extra-package="${deb}"); done
 set +e
-SBUILD_CONFIG="${CONFIG}" sbuild --verbose --chroot-mode=unshare --chroot="${ROOTFS_TAR}" --dist=resolute \
+SBUILD_CONFIG="${CONFIG}" sbuild --verbose --chroot-mode=unshare --dist=resolute \
   --arch=amd64 --arch-all --no-run-lintian --no-run-autopkgtest --no-run-piuparts \
   "${EXTRA_ARGS[@]}" --build-dir="${OUT}" "${DSC}" |& tee "${SBUILD_LOG}"
 SBUILD_RC=${PIPESTATUS[0]}
