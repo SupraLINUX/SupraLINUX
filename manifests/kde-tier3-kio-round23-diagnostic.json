@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-26",
+  "node": "kio",
+  "round": 23,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "claim": "non-promoting-krecent-attempt8-rootfs-diagnostic",
+  "non_promoting": true,
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "canonical_source_modified": false,
+  "diagnostic_worktree_modified": true,
+  "dag_state_changes_allowed": false,
+  "downstream_eligibility_changes_allowed": false,
+  "package_revision_allocation": false,
+  "test_suppression": false,
+  "execution_authorized": true,
+  "package_execution_authorized": false,
+  "status": "definition-pending-diagnostic",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "canonical_kio": {
+    "state": "FAIL",
+    "package_version": "6.30.0-0supralinux8",
+    "downstream_eligible": false
+  },
+  "predecessor_round22": {
+    "status": "diagnostic-PASS",
+    "workflow_run": 36278019755,
+    "job_id": 108504444054,
+    "branch_commit": "07282c338c1c6d3b1341e4ba8d4d1c82c9b3b658",
+    "artifact_id": 10917842068,
+    "artifact_sha256": "0554aeb1a38aa78de4b9316e85058fbfd6b24cc8ff62c7978cfa286f6ea34f8e",
+    "environment_valid": true,
+    "conclusion": "krecentdocument-attempt8-failure-not-reproduced-outside-sbuild"
+  },
+  "attempt8_reference": {
+    "workflow_run": 36238357510,
+    "kio_job_id": 108394325161,
+    "kio_artifact_id": 10905267300,
+    "kio_artifact_sha256": "9f95e2b8e3330ee4f1b275eb059736b87fa57d7752602aa598cb313659cae53f",
+    "rootfs_artifact_id": 10904512642,
+    "rootfs_artifact_sha256": "d689f1658d37e3dedcf57d7f4a233917a6d84ed592346d4ac87f60d626724afe",
+    "exact_failure_signature": "Actual temp File 11 / Expected temp File 12",
+    "source_path": "/build/reproducible-path/kf6-kio-6.30.0",
+    "working_directory": "/build/reproducible-path/kf6-kio-6.30.0/obj-x86_64-linux-gnu/autotests",
+    "home": "/build/reproducible-path/kf6-kio-6.30.0/debian/.supralinux-test-home/sbuild",
+    "environment": [
+      "LANG=C.UTF-8",
+      "LC_ALL=C.UTF-8",
+      "LOGNAME=sbuild",
+      "USER=sbuild",
+      "QT_QPA_PLATFORM=xcb",
+      "QT_QPA_SYSTEM_ICON_THEME=breeze"
+    ]
+  },
+  "source_materialization": {
+    "workflow_run": 36222711238,
+    "job_id": 108350884409,
+    "artifact_id": 10898999142,
+    "artifact_sha256": "c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d",
+    "package_version": "6.30.0-0supralinux8",
+    "upstream_source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2"
+  },
+  "validity_contract": {
+    "exact_attempt8_rootfs_artifact_required": true,
+    "rootfs_internal_sha256_must_validate": true,
+    "exact_source_path_required": true,
+    "exact_hidden_home_required": true,
+    "same_kio_materialization_required": true,
+    "same_predecessor_artifacts_from_level1_manifest": true,
+    "configure_and_build_without_dpkg_buildpackage": true,
+    "full_kio_build_target_allowed": true,
+    "package_artifacts_forbidden": true,
+    "xbel_capture_after_recentUrls_before_assertion": true,
+    "source_restored_byte_for_byte": true
+  },
+  "diagnostic_matrix": [
+    {
+      "id": "isolated-krecent",
+      "runner": "ctest -R ^kiocore-krecentdocumenttest$",
+      "repetitions": 100,
+      "fresh_home_each_run": true
+    },
+    {
+      "id": "prefix-through-krecent",
+      "runner": "ctest -I 1,26",
+      "repetitions": 30,
+      "fresh_home_each_run": true
+    },
+    {
+      "id": "full-suite",
+      "runner": "ctest --verbose -j1",
+      "repetitions": 3,
+      "fresh_home_each_run": true
+    }
+  ],
+  "decision_rules": {
+    "invalid_environment": "rootfs/source/provider verification failure or any isolated/prefix run lacks one valid three-bookmark capture => DIAG_INVALID",
+    "chroot_reproduction": "any lane reproduces exact Attempt 8 KRecent signature inside the Attempt 8 rootfs",
+    "prefix_dependency": "prefix-through-krecent reproduces while isolated-krecent does not",
+    "isolated_flake": "isolated-krecent reproduces without requiring prefix tests",
+    "exact_full_suite_only": "full-suite reproduces while isolated and prefix do not",
+    "not_reproduced": "all valid lanes have zero exact Attempt 8 signatures",
+    "no_package_decision": "Round23 cannot authorize Attempt 9 or allocate a package revision"
+  },
+  "next_gate": "tier3-round23-kio-krecent-attempt8-rootfs-diagnostic-evidence",
+  "stable_promotion_requires_explicit_user_approval": true
+}

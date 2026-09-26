@@ -40,6 +40,8 @@ elif gate=="tier3-round21-diagnostic-pending":
     target="validate_kde_tier3_kio_round21_diagnostic.py"
 elif gate=="tier3-round22-diagnostic-pending":
     target="validate_kde_tier3_kio_round22_diagnostic.py"
+elif gate=="tier3-round23-diagnostic-pending":
+    target="validate_kde_tier3_kio_round23_diagnostic.py"
 else:
     raise SystemExit(f"unsupported Round 11 lifecycle gate: {gate!r}")
 

@@ -1,38 +1,27 @@
 # KDE Tier 3 KIO Round 22 — KRecent CTest/HOME matrix
 
-Status: definition pending diagnostic evidence.
+Status: **diagnostic PASS; Attempt 8 failure not reproduced outside sbuild**.
 
-Round 22 is non-promoting. It does not build a Debian package, allocate a KIO revision, suppress a test, alter the DAG, or authorize Attempt 9.
+Closed evidence:
 
-## Why this round exists
+- workflow run: `36278019755`
+- job: `108504444054`
+- commit: `07282c338c1c6d3b1341e4ba8d4d1c82c9b3b658`
+- artifact: `10917842068`
+- artifact SHA-256: `0554aeb1a38aa78de4b9316e85058fbfd6b24cc8ff62c7978cfa286f6ea34f8e`
 
-Round 21 established a valid direct-test environment, but the Attempt 8 failure did not reproduce in 30 baseline runs. Round 21 differed from Attempt 8 in two important ways:
+All four lanes were valid and clean:
 
-- Round 21 invoked only `testXbelBookmarkMaxEntries` in a fresh process.
-- Attempt 8 ran the complete `KRecentDocumentTest` through CTest with the packaging HOME `debian/.supralinux-test-home/sbuild`.
+| Lane | Runs | Failures | Attempt 8 signature | Valid XBEL captures | Duplicate timestamp runs |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| direct-visible | 30 | 0 | 0 | 30 | 0 |
+| direct-hidden | 30 | 0 | 0 | 30 | 0 |
+| ctest-visible | 30 | 0 | 0 | 30 | 0 |
+| ctest-hidden | 30 | 0 | 0 | 30 | 0 |
 
-Attempt 8 also used `LANG=C.UTF-8`, `LC_ALL=C.UTF-8`, `LOGNAME=sbuild`, `USER=sbuild`, XCB, Breeze, D-Bus and Xvfb.
+Therefore neither the hidden packaging HOME nor complete KRecentDocumentTest execution through CTest is sufficient to reproduce the historical failure on the hosted runner filesystem.
 
-## Matrix
-
-Each lane runs 30 times from the visible build-tree `obj-*/autotests` directory:
-
-| Lane | Invocation | HOME |
-| --- | --- | --- |
-| direct-visible | selected max-entry function | visible |
-| direct-hidden | selected max-entry function | packaging-shaped hidden HOME |
-| ctest-visible | complete KRecentDocumentTest via CTest | visible |
-| ctest-hidden | complete KRecentDocumentTest via CTest | packaging-shaped hidden HOME |
-
-The `ctest-hidden` lane is the closest reproduction of Attempt 8 outside the actual sbuild chroot.
-
-## Evidence preservation
-
-A diagnostic-only source modification copies `m_xbelPath` immediately after `KRecentDocument::recentUrls()` and before the max-entry assertions. Upstream `cleanup()` is untouched, so test sequencing semantics are preserved.
-
-Every run must produce a captured XBEL containing exactly three bookmarks. The evidence records return code, exact `temp File 11` / `temp File 12` signature, filenames, timestamps and duplicate timestamp groups.
-
-If all four lanes remain clean, the next useful scope is an sbuild-contained KRecent diagnostic rather than another host-side approximation.
+Round 23 moves the diagnostic into the exact Attempt 8 rootfs artifact. No package build, package revision, test suppression or Attempt 9 authorization occurs.
 
 ```text
 12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED

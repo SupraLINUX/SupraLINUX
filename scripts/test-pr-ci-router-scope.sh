@@ -55,8 +55,10 @@ echo '# validator' >> scripts/validate_x.py; git add .; git commit -qm validator
 if bash scripts/pr-ci-router-needed.sh "$D" "$V"; then echo "validator-only delta unexpectedly requested reusable CI" >&2; exit 1; fi
 echo '# policy' >> .github/workflows/repository-policy.yml; git add .; git commit -qm policy; RP=$(git rev-parse HEAD)
 if bash scripts/pr-ci-router-needed.sh "$V" "$RP"; then echo "repository-policy-only delta unexpectedly requested reusable CI" >&2; exit 1; fi
+echo 'name: PR CI router' > .github/workflows/pr-ci-router.yml; git add .; git commit -qm router-self; RS=$(git rev-parse HEAD)
+if bash scripts/pr-ci-router-needed.sh "$RP" "$RS"; then echo "router-self delta unexpectedly requested reusable CI" >&2; exit 1; fi
 echo '# compiler' >> scripts/compile_kde_tier2_campaign.py; git add .; git commit -qm compiler; CP=$(git rev-parse HEAD)
-if bash scripts/pr-ci-router-needed.sh "$RP" "$CP"; then echo "Tier2 compiler-only delta unexpectedly requested reusable CI" >&2; exit 1; fi
+if bash scripts/pr-ci-router-needed.sh "$RS" "$CP"; then echo "Tier2 compiler-only delta unexpectedly requested reusable CI" >&2; exit 1; fi
 echo '{"schema":1,"generated":true}' > manifests/kde-tier2-campaign-plan.json; git add .; git commit -qm generated-plan; GP=$(git rev-parse HEAD)
 if bash scripts/pr-ci-router-needed.sh "$CP" "$GP"; then echo "generated Tier2 plan unexpectedly requested reusable CI" >&2; exit 1; fi
 python3 - <<'PY'

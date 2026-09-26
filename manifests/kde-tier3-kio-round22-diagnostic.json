@@ -16,9 +16,9 @@
   "downstream_eligibility_changes_allowed": false,
   "package_revision_allocation": false,
   "test_suppression": false,
-  "execution_authorized": true,
+  "execution_authorized": false,
   "package_execution_authorized": false,
-  "status": "definition-pending-diagnostic",
+  "status": "diagnostic-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -124,6 +124,48 @@
     "outside_sbuild_not_reproduced": "all four valid lanes have zero exact Attempt8 signatures",
     "no_package_decision": "Round22 cannot itself allocate a revision, modify package source, or authorize Attempt 9"
   },
-  "next_gate": "tier3-round22-kio-krecent-ctest-home-matrix-diagnostic-evidence",
-  "stable_promotion_requires_explicit_user_approval": true
+  "next_gate": "tier3-round23-kio-krecent-attempt8-rootfs-diagnostic-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "diagnostic_evidence": {
+    "workflow_run": 36278019755,
+    "job_id": 108504444054,
+    "branch_commit": "07282c338c1c6d3b1341e4ba8d4d1c82c9b3b658",
+    "artifact_id": 10917842068,
+    "artifact_sha256": "0554aeb1a38aa78de4b9316e85058fbfd6b24cc8ff62c7978cfa286f6ea34f8e",
+    "result": "DIAG_COMPLETE"
+  },
+  "result": {
+    "environment_valid": true,
+    "matrix": {
+      "direct-visible": {
+        "runs": 30,
+        "failures": 0,
+        "attempt8_signature_failures": 0,
+        "valid_captures": 30,
+        "duplicate_modified_runs": 0
+      },
+      "direct-hidden": {
+        "runs": 30,
+        "failures": 0,
+        "attempt8_signature_failures": 0,
+        "valid_captures": 30,
+        "duplicate_modified_runs": 0
+      },
+      "ctest-visible": {
+        "runs": 30,
+        "failures": 0,
+        "attempt8_signature_failures": 0,
+        "valid_captures": 30,
+        "duplicate_modified_runs": 0
+      },
+      "ctest-hidden": {
+        "runs": 30,
+        "failures": 0,
+        "attempt8_signature_failures": 0,
+        "valid_captures": 30,
+        "duplicate_modified_runs": 0
+      }
+    },
+    "conclusion": "krecentdocument-attempt8-failure-not-reproduced-outside-sbuild"
+  }
 }
