@@ -5,7 +5,7 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "remediation-pending-materialization",
+  "state": "remediation-materialized-pending-planning-validation",
   "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
@@ -471,10 +471,10 @@
         "libkf6kiowidgets6"
       ],
       "materialization": {
-        "workflow_run": 36073638711,
-        "job_id": 107879979760,
-        "artifact_id": 10839162922,
-        "artifact_sha256": "ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c"
+        "workflow_run": 36222711238,
+        "job_id": 108350884409,
+        "artifact_id": 10898999142,
+        "artifact_sha256": "c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d"
       },
       "blocking_predecessors": [
         "kbookmarks",
@@ -838,7 +838,7 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-round18-kio-test-provider-remediation-materialization",
+  "next_gate": "tier3-build-level1-planning-validation",
   "current_attempt": 7,
   "last_activation": {
     "policy_workflow_run": 35826072726,
@@ -894,13 +894,13 @@
     },
     "execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "materialization-pending-ci",
-    "source_rematerialization_required": true,
+    "status": "materialization-PASS-pending-attempt8-planning-validation",
+    "source_rematerialization_required": false,
     "source_rematerialization_nodes": [
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "tier3-round18-kio-test-provider-remediation-materialization",
+    "next_gate": "tier3-build-level1-planning-validation",
     "current_attempt": 7,
     "next_attempt": 8,
     "remaining_failed_nodes": [
@@ -926,14 +926,14 @@
       "repository_policy_workflow_run": 36072487004,
       "result": "PASS"
     },
-    "materialization_workflow_run": 36073638711,
-    "materialization_commit": "ebe60a0147e2a47b6c256ac015f43eea350c3ba2",
+    "materialization_workflow_run": 36222711238,
+    "materialization_commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",
     "materialization_artifacts": {
       "kio": {
-        "job_id": 107879979760,
-        "artifact_id": 10839162922,
-        "artifact_sha256": "ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c",
-        "package_version": "6.30.0-0supralinux7"
+        "job_id": 108350884409,
+        "artifact_id": 10898999142,
+        "artifact_sha256": "c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d",
+        "package_version": "6.30.0-0supralinux8"
       },
       "kxmlgui": {
         "job_id": 107643756357,

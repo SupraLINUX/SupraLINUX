@@ -1,6 +1,6 @@
 # KDE Tier 3 — KIO Round 18 test-provider remediation
 
-Status: **definition pending source materialization**.
+Status: **source materialization PASS; Attempt 8 planning validation pending**.
 
 Round 17 established the causal environmental root cause: removing `qt6-svg-plugins` from otherwise identical KIO test binaries restores both historical empty-`QIcon::name()` failures, and reinstalling it restores PASS.
 
@@ -27,8 +27,8 @@ Only KIO is rematerialized:
 
 The existing complete test environment is retained: D-Bus session, writable HOME, KDECI marker, Xvfb/XCB, Breeze, node-scoped network, serial CTest and non-destructive `ENVIRONMENT_MODIFICATION`. All 69 upstream tests remain enabled and fatal.
 
-This stage authorizes **source materialization only**. Attempt 8 binary execution remains unauthorized, canonical KIO remains FAIL/downstream-ineligible, and the six dependent nodes remain BLOCKED.
+Source materialization completed successfully in workflow `36222711238`, job `108350884409`, artifact `10898999142` (SHA-256 `c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d`). The materialized source is `6.30.0-0supralinux8`; this is source evidence only, not a package PASS. Attempt 8 binary execution remains unauthorized, canonical KIO remains FAIL/downstream-ineligible at `6.30.0-0supralinux7`, and the six dependent nodes remain BLOCKED.
 
 Canonical state: **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**.
 
-Next gate: `tier3-round18-kio-test-provider-remediation-materialization`.
+Next gate: `tier3-build-level1-planning-validation`.

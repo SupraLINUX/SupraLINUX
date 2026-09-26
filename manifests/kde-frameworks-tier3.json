@@ -16,8 +16,8 @@
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-remediation-pending-materialization",
-    "remediation": "round18-kio-svg-test-provider-materialization-pending-ci"
+    "package_builds": "tier3-level1-source-PASS-pending-planning-validation",
+    "remediation": "round18-kio-svg-test-provider-source-PASS-pending-planning-validation"
   },
   "nodes": [
     {
@@ -485,11 +485,11 @@
         "package_contract_manifest": "manifests/kde-tier3-package-contracts.json",
         "materialization_manifest": "manifests/kde-tier3-materialization.json",
         "materialization_evidence": {
-          "workflow_run": 36073638711,
-          "job_id": 107879979760,
-          "artifact_id": 10839162922,
-          "artifact_sha256": "ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c",
-          "package_version": "6.30.0-0supralinux7"
+          "workflow_run": 36222711238,
+          "job_id": 108350884409,
+          "artifact_id": 10898999142,
+          "artifact_sha256": "c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d",
+          "package_version": "6.30.0-0supralinux8"
         }
       },
       "packaging": {
@@ -1348,8 +1348,8 @@
     "execution_authorized": false,
     "level1_execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "materialization-pending-ci",
-    "next_gate": "tier3-round18-kio-test-provider-remediation-materialization",
+    "status": "materialization-PASS-pending-level1-planning-validation",
+    "next_gate": "tier3-build-level1-planning-validation",
     "current_attempt": 7,
     "next_attempt": 8,
     "validation_workflow_run": 36079116873,
@@ -1383,17 +1383,17 @@
       "action": "no-patch-no-suppression",
       "next_attempt_behavior": "fatal-if-reproduced"
     },
-    "materialization_workflow_run": 36073638711,
-    "materialization_commit": "ebe60a0147e2a47b6c256ac015f43eea350c3ba2",
+    "materialization_workflow_run": 36222711238,
+    "materialization_commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",
     "materialization_artifacts": {
       "kio": {
-        "job_id": 107879979760,
-        "artifact_id": 10839162922,
-        "artifact_sha256": "ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c",
-        "package_version": "6.30.0-0supralinux7"
+        "job_id": 108350884409,
+        "artifact_id": 10898999142,
+        "artifact_sha256": "c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d",
+        "package_version": "6.30.0-0supralinux8"
       }
     },
-    "source_materialization_complete": false,
+    "source_materialization_complete": true,
     "activation_policy_workflow_run": 36076306121,
     "activation_level1_workflow_run": 36076306143,
     "activation_commit": "8ac22bf8d97a592a548fbfc9a40af65773fd4d30",

@@ -17,7 +17,11 @@ if gate=="tier3-level1-remediation-pending-materialization":
     else:
         target="validate_kde_tier3_round11_materialization.py"
 elif gate=="tier3-level1-source-PASS-pending-planning-validation":
-    target="validate_kde_tier3_round11_planning.py"
+    marker=t.get("discovery_policy",{}).get("remediation")
+    if marker=="round18-kio-svg-test-provider-source-PASS-pending-planning-validation":
+        target="validate_kde_tier3_round18_planning.py"
+    else:
+        target="validate_kde_tier3_round11_planning.py"
 elif gate=="tier3-level1-authorized":
     target="validate_kde_tier3_round11_attempt7.py"
 elif gate=="tier3-level1-attempt7-closed":

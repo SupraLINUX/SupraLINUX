@@ -3241,7 +3241,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "materialization-pending-ci",
+    "status": "materialization-PASS-pending-level1-planning-validation",
     "trigger": {
       "workflow_run": 36035351270,
       "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -3285,16 +3285,16 @@
     },
     "execution_authorized": false,
     "level1_execution_authorized": false,
-    "next_gate": "tier3-round18-kio-test-provider-remediation-materialization",
+    "next_gate": "tier3-build-level1-planning-validation",
     "materialization_evidence": {
-      "workflow_run": 36073638711,
-      "commit": "ebe60a0147e2a47b6c256ac015f43eea350c3ba2",
+      "workflow_run": 36222711238,
+      "commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",
       "artifacts": {
         "kio": {
-          "job_id": 107879979760,
-          "artifact_id": 10839162922,
-          "artifact_sha256": "ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c",
-          "package_version": "6.30.0-0supralinux7"
+          "job_id": 108350884409,
+          "artifact_id": 10898999142,
+          "artifact_sha256": "c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d",
+          "package_version": "6.30.0-0supralinux8"
         }
       }
     },
