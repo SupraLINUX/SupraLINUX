@@ -15,7 +15,7 @@
   "dag_state_changes_allowed": false,
   "downstream_eligibility_changes_allowed": false,
   "package_revision_allocation": false,
-  "status": "definition-pending-audit",
+  "status": "audit-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "round17_evidence": {
     "workflow_run": 36218411267,
@@ -88,6 +88,48 @@
     "runtime_binary_relation": "none",
     "rationale": "KIO upstream icon tests consume Breeze SVG through QIcon. Ubuntu supplies the SVG icon engine as a libqt6gui6 Recommends, while sbuild test closure cannot rely on Recommends. Make the test provider explicit without changing Ubuntu-compatible runtime dependency contracts."
   },
-  "next_gate": "tier3-round18-kio-qt-svg-provider-contract-audit-evidence",
-  "stable_promotion_requires_explicit_user_approval": true
+  "next_gate": "tier3-round18-kio-test-provider-remediation-materialization-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "audit_evidence": {
+    "workflow_run": 36221977278,
+    "job_id": 108348814091,
+    "commit": "c01506a16e9222b0f0d3366b68dac89e07ebf328",
+    "repository_policy_workflow_run": 36221977169,
+    "repository_policy_result": "PASS",
+    "artifact_id": 10899531699,
+    "artifact_sha256": "8dfc4f94ed892a49bd4dd3fd262b7755cb078adfa56716a7c0e7e679f6cb9c6c",
+    "result": "AUDIT_COMPLETE",
+    "package_attempted": false,
+    "package_state_effect": "none",
+    "ubuntu_version": "26.04",
+    "package_versions": {
+      "kf6-breeze-icon-theme": "6.24.0-0ubuntu1",
+      "libkf6iconthemes6": "6.24.0-0ubuntu2",
+      "libqt6gui6": "6.10.2+dfsg-7",
+      "qt6-svg-dev": "6.10.2-2",
+      "qt6-svg-plugins": "6.10.2-2"
+    },
+    "qt6_svg_plugins_deb_sha256": "41be607dc17ef0ad3510b169fc7607758ab4574acc4311c3ef1daaaac9c9139b",
+    "verified_contracts": {
+      "qt6_svg_dev_depends_on_plugin": false,
+      "libqt6gui6_recommends_plugin": true,
+      "libkf6iconthemes6_depends_on_libqt6svg6": true,
+      "libkf6iconthemes6_depends_on_plugin": false,
+      "breeze_icon_theme_depends_on_plugin": false
+    },
+    "verified_plugin_files": [
+      "/usr/lib/x86_64-linux-gnu/qt6/plugins/iconengines/libqsvgicon.so",
+      "/usr/lib/x86_64-linux-gnu/qt6/plugins/imageformats/libqsvg.so"
+    ]
+  },
+  "decision": {
+    "owner": "kio-build-test-closure",
+    "field": "Build-Depends",
+    "action": "ensure",
+    "relation": "qt6-svg-plugins <!nocheck>",
+    "classification": "upstream-test-environment-provider",
+    "runtime_binary_relation": "none",
+    "result": "accepted",
+    "rationale": "KIO upstream icon tests consume Breeze SVG through QIcon. Ubuntu supplies the SVG icon engine as a libqt6gui6 Recommends, while sbuild test closure cannot rely on Recommends. Make the test provider explicit without changing Ubuntu-compatible runtime dependency contracts."
+  }
 }
