@@ -1,6 +1,8 @@
 # KDE Tier 3 KIO Round 23 — Attempt 8 rootfs KRecent diagnostic
 
-Status: definition pending diagnostic evidence.
+Status: definition pending diagnostic retry.
+
+Diagnostic attempt 1 (workflow `36279506026`) is recorded as **INFRA_INVALID**: the runner stopped at `stage-inputs` because a non-recursive wildcard attempted to copy the materialization artifact's `debian/` directory. No chroot test or package build occurred, so it carries no KIO conclusion. The retry copies only the `.dsc`, `.orig.tar.*` and `.debian.tar.*` source files and resolves `sbuild` ownership by account name rather than an assumed UID.
 
 Round 22 eliminated two host-side explanations: hidden HOME and complete KRecent CTest execution. Round 23 therefore moves the test into the **exact Attempt 8 rootfs artifact** while retaining the same KIO 6.30.0-0supralinux8 source materialization and predecessor package set.
 

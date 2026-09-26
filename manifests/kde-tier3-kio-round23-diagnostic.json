@@ -18,7 +18,7 @@
   "test_suppression": false,
   "execution_authorized": true,
   "package_execution_authorized": false,
-  "status": "definition-pending-diagnostic",
+  "status": "definition-pending-diagnostic-retry",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -106,5 +106,22 @@
     "no_package_decision": "Round23 cannot authorize Attempt 9 or allocate a package revision"
   },
   "next_gate": "tier3-round23-kio-krecent-attempt8-rootfs-diagnostic-evidence",
-  "stable_promotion_requires_explicit_user_approval": true
+  "stable_promotion_requires_explicit_user_approval": true,
+  "diagnostic_attempts": [
+    {
+      "ordinal": 1,
+      "status": "INFRA_INVALID",
+      "workflow_run": 36279506026,
+      "job_id": 108508563238,
+      "merge_commit": "e72959bcfec0c44a2fff0e059847c67edfed7c18",
+      "branch_commit": "4cf7189b2266a6a3cec8fc9238c82456fc030817",
+      "artifact_id": 10918841412,
+      "artifact_sha256": "14093d80dd902ea003ddf26f46c194b6b9cafdc48391440044fb2b53b7783b8c",
+      "failed_stage": "stage-inputs",
+      "reason": "runner copied the materialization artifact with a non-recursive wildcard and encountered its debian/ directory before entering the chroot",
+      "package_attempted": false,
+      "canonical_state_effect": "none",
+      "usable_for_kio_diagnostic_conclusion": false
+    }
+  ]
 }

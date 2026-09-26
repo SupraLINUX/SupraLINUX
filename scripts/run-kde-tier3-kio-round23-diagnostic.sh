@@ -11,7 +11,6 @@ RESULT="${EVIDENCE}/result.json"
 STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 STAGE=initialization
 DIAG_RESULT=DIAG_INFRA_FAIL
-PACKAGE_ATTEMPTED=false
 MOUNTED=0
 : "${GITHUB_TOKEN:?missing GitHub Actions token}"
 
@@ -115,11 +114,14 @@ sudo mount --make-rslave "${CHROOT}/dev"
 sudo mount --rbind /sys "${CHROOT}/sys"
 sudo mount --make-rslave "${CHROOT}/sys"
 MOUNTED=1
-sudo chroot "${CHROOT}" /bin/bash -lc 'set -e; . /etc/os-release; test "$ID" = ubuntu; test "$VERSION_ID" = 26.04; cat /etc/os-release' > "${EVIDENCE}/chroot-os-release.txt"
+sudo chroot "${CHROOT}" /bin/bash -lc 'set -e; . /etc/os-release; test "$ID" = ubuntu; test "$VERSION_ID" = 26.04; cat /etc/os-release' | tee "${EVIDENCE}/chroot-os-release.txt" >/dev/null
 
 STAGE=stage-inputs
 sudo mkdir -p "${CHROOT}/input/source" "${CHROOT}/opt/supralinux-repo" "${CHROOT}/build/reproducible-path"
-sudo cp "${INPUTS}/materialization"/* "${CHROOT}/input/source/"
+mapfile -t SOURCE_INPUTS < <(find "${INPUTS}/materialization" -type f \( -name '*.dsc' -o -name '*.orig.tar.*' -o -name '*.debian.tar.*' \) -print | sort)
+(( ${#SOURCE_INPUTS[@]} == 3 )) || { printf 'expected exactly 3 source files, got %s\n' "${#SOURCE_INPUTS[@]}" >&2; exit 1; }
+sudo cp "${SOURCE_INPUTS[@]}" "${CHROOT}/input/source/"
+[[ "$(find "${CHROOT}/input/source" -maxdepth 1 -type f -name '*.dsc' | wc -l)" -eq 1 ]]
 find "${INPUTS}" -mindepth 2 -type f -name '*.deb' -exec sudo cp -n {} "${CHROOT}/opt/supralinux-repo/" \;
 sudo chroot "${CHROOT}" /bin/bash -lc '
  set -e
@@ -196,7 +198,7 @@ run_lane() {
     home="${SRC}/debian/.supralinux-test-home/sbuild"
     sudo rm -rf "${CHROOT}${home}"
     sudo mkdir -p "${CHROOT}${home}"
-    sudo chown -R 999:999 "${CHROOT}${home}" 2>/dev/null || sudo chroot "${CHROOT}" chown -R sbuild:sbuild "${home}"
+    sudo chroot "${CHROOT}" chown -R sbuild:sbuild "${home}"
     sudo rm -f "${HOST_OBJ}/autotests"/temp\ File*
     cap="/tmp/round23-${lane}-${i}.xbel"
     sudo rm -f "${CHROOT}${cap}"
@@ -209,8 +211,8 @@ run_lane() {
         QT_QPA_PLATFORM=xcb QT_QPA_SYSTEM_ICON_THEME=breeze KDECI_PLATFORM_PATH=\"${SRC}\" \
         SUPRALINUX_CAPTURE_XBEL=\"${cap}\" \
         dbus-run-session -- xvfb-run -a -s \"-screen 0 1280x1024x24\" ctest --verbose -j1 ${ctest_args}'
-    " >"${log}" 2>&1
-    rc=$?
+    " 2>&1 | tee "${log}" >/dev/null
+    rc=${PIPESTATUS[0]}
     set -e
     if [[ -f "${CHROOT}${cap}" ]]; then sudo cp "${CHROOT}${cap}" "${EVIDENCE}/xbels/${lane}-${i}.xbel"; fi
     python3 - "${EVIDENCE}/runs.jsonl" "${lane}" "${i}" "${rc}" "${EVIDENCE}/xbels/${lane}-${i}.xbel" "${log}" <<'PY'
