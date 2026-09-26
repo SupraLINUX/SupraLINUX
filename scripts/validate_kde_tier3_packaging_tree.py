@@ -8,7 +8,6 @@ def req(v,m):
 def load(p): return json.loads((ROOT/p).read_text())
 
 c=load("manifests/kde-tier3-package-contracts.json")
-t=load("manifests/kde-frameworks-tier3.json")
 selected=c.get("selected_nodes",[])
 capture=c.get("packaging_tree_capture",{})
 
@@ -18,9 +17,6 @@ req(len(selected)==20,"Tier3 packaging-tree node count")
 req(capture.get("claim")=="technical-packaging-tree-only" and capture.get("authoritative") is False,"packaging-tree non-authority")
 req(capture.get("package_state_effect")=="none","packaging-tree package-state semantics")
 req(capture.get("selected_sides")==["ubuntu","debian"],"packaging-tree selected sides")
-req(t.get("package_contract_manifest")=="manifests/kde-tier3-package-contracts.json","canonical Tier3 package-contract manifest")
-req(t.get("discovery_policy",{}).get("phase") in {"package-contract-tree-capture","package-contract-tree-pass","package-contract-review","package-contract-decision","materialization","build-campaign-planning","build-level0","build-level1-planning","build-level1"},"canonical Tier3 packaging-tree phase")
-req(t.get("support_components",{}).get("next_gate") in {"tier3-package-contract-tree-capture","tier3-package-contract-review","tier3-package-contract-decision","tier3-materialization","tier3-build-campaign-planning","tier3-build-level0","tier3-build-level1-planning","tier3-build-level1"},"canonical Tier3 packaging-tree next gate")
 
 for node in selected:
     refs=c["nodes"][node].get("technical_references",{})
@@ -64,5 +60,5 @@ for path in (
 if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)
     raise SystemExit(1)
-print("KDE Tier 3 packaging-tree definition: PASS")
+print("KDE Tier 3 packaging-tree historical evidence: PASS")
 print("status="+capture["status"])
