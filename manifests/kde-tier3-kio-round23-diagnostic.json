@@ -18,7 +18,7 @@
   "test_suppression": false,
   "execution_authorized": true,
   "package_execution_authorized": false,
-  "status": "definition-pending-diagnostic-retry",
+  "status": "definition-pending-diagnostic-retry-2",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -74,7 +74,11 @@
     "full_kio_build_target_allowed": true,
     "package_artifacts_forbidden": true,
     "xbel_capture_after_recentUrls_before_assertion": true,
-    "source_restored_byte_for_byte": true
+    "source_restored_byte_for_byte": true,
+    "exact_sbuild_unshare_backend_required": true,
+    "manual_chroot_emulation_forbidden": true,
+    "starting_build_hook_must_abort_before_dpkg_buildpackage": true,
+    "sbuild_build_user_must_be_native_default": true
   },
   "diagnostic_matrix": [
     {
@@ -122,6 +126,38 @@
       "package_attempted": false,
       "canonical_state_effect": "none",
       "usable_for_kio_diagnostic_conclusion": false
+    },
+    {
+      "ordinal": 2,
+      "status": "INFRA_INVALID",
+      "workflow_run": 36279908858,
+      "job_id": 108509683175,
+      "merge_commit": "b8af6dca5db25f278a03243a1b5a82ae52a643c9",
+      "branch_commit": "29cce3fab80a8320e0b6a236aaea35c64e4a337b",
+      "artifact_id": 10918078631,
+      "artifact_sha256": "adb866de60351fa0cb104b3f10187df1532863af639a2ae1227367ae32e5e19f",
+      "failed_stage": "source-extract",
+      "reason": "manual chroot runner attempted to create the sbuild account with useradd, but the exact Attempt 8 buildd rootfs does not contain useradd",
+      "package_attempted": false,
+      "canonical_state_effect": "none",
+      "usable_for_kio_diagnostic_conclusion": false
     }
-  ]
+  ],
+  "methodology": {
+    "containment": "sbuild-0.91.2ubuntu3-unshare",
+    "chroot": "exact Attempt 8 rootfs artifact 10904512642",
+    "build_path": "/build/reproducible-path",
+    "build_user": "sbuild (native unshare default)",
+    "provider_injection": "same --extra-package artifacts as Attempt 8 Level 1 plan",
+    "diagnostic_entrypoint": "starting-build-commands after dependency installation",
+    "package_build_prevention": "diagnostic hook exits sentinel 86 before dpkg-buildpackage",
+    "validity_guards": [
+      "exact sbuild 0.91.2ubuntu3",
+      "exact build path",
+      "native sbuild user",
+      "hook-complete sentinel",
+      "no Command: dpkg-buildpackage",
+      "no package artifacts"
+    ]
+  }
 }
