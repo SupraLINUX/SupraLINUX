@@ -69,7 +69,7 @@ req(all(scope.get(x) is False for x in ("package_build","canonical_source_modifi
 
 for token in ("KDE Frameworks Tier 3 KIO Round 17 diagnostic","ubuntu-26.04","run-kde-tier3-kio-round17-diagnostic.sh"):
     req(token in W,f"workflow token {token}")
-for token in ("10839162922","qt6-svg-plugins","r17_remove_svg_plugin","r17_install_svg_plugin","svg-state-present-initial","testFolderIconCollection:default","historical_empty_name_failure"):
+for token in ("10839162922","qt6-svg-plugins","r17_remove_svg_plugin","r17_install_svg_plugin","r17_record_svg_state present-initial","testFolderIconCollection:default","historical_empty_name_failure"):
     req(token in R,f"runner token {token}")
 for forbidden in ("dpkg-buildpackage","sbuild --"):
     req(forbidden not in R,f"Round17 must not package: {forbidden}")
