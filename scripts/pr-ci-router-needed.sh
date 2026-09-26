@@ -91,6 +91,37 @@ raise SystemExit(0 if {i:bd.get(i) for i in ids} == {i:ad.get(i) for i in ids} e
 PY
 }
 
+tier3_diagnostic_lifecycle_only() {
+  local path="$1"
+  git cat-file -e "${BEFORE}:${path}" 2>/dev/null || return 1
+  git cat-file -e "${AFTER}:${path}" 2>/dev/null || return 1
+  python3 - "${BEFORE}" "${AFTER}" "${path}" <<'PY'
+import copy,json,subprocess,sys
+before,after,path=sys.argv[1:]
+def load(ref):
+    return json.loads(subprocess.check_output(['git','show',f'{ref}:{path}'],text=True))
+def strip_active(d):
+    a=d.get('active_remediation')
+    if isinstance(a,dict):
+        for k in ('status','next_gate','execution_authorized','level1_execution_authorized'):
+            a.pop(k,None)
+def norm(d):
+    d=copy.deepcopy(d); d.pop('as_of',None)
+    if path=='manifests/kde-frameworks-tier3.json':
+        p=d.get('discovery_policy',{})
+        for k in ('phase','package_builds','remediation'): p.pop(k,None)
+        strip_active(d)
+    elif path=='manifests/kde-tier3-build-level1.json':
+        d.pop('next_gate',None); strip_active(d)
+    elif path in ('manifests/kde-tier3-package-contracts.json','manifests/kde-tier3-materialization.json'):
+        strip_active(d)
+    else:
+        raise SystemExit(1)
+    return d
+raise SystemExit(0 if norm(load(before))==norm(load(after)) else 1)
+PY
+}
+
 campaign_is_evidence_only() {
   local path="$1" batch selector rc node
   local -a nodes=()
@@ -116,7 +147,12 @@ PY
 
 for path in "${changed[@]}"; do
   case "${path}" in
-    docs/*|README.md|scripts/validate_*.py|scripts/test-*.sh|scripts/compile_kde_tier2_campaign.py|manifests/kde-tier1-package-batch*-attempts.json|manifests/kde-tier2-campaign-plan.json|.github/workflows/repository-policy.yml) continue ;;
+    docs/*|README.md|scripts/validate_*.py|scripts/test-*.sh|scripts/pr-ci-router-needed.sh|scripts/compile_kde_tier2_campaign.py|manifests/kde-tier1-package-batch*-attempts.json|manifests/kde-tier2-campaign-plan.json|.github/workflows/repository-policy.yml) continue ;;
+    .github/workflows/kde-tier3-kio-round*-diagnostic.yml|scripts/run-kde-tier3-kio-round*-diagnostic.sh|manifests/kde-tier3-kio-round*-diagnostic.json)
+      continue ;;
+    manifests/kde-frameworks-tier3.json|manifests/kde-tier3-build-level1.json|manifests/kde-tier3-package-contracts.json|manifests/kde-tier3-materialization.json)
+      if tier3_diagnostic_lifecycle_only "${path}"; then continue; fi
+      echo "${path}: Tier 3 package/build semantics changed; reusable hosted CI required."; exit 0 ;;
     manifests/kde-frameworks-tier2.json)
       if canonical_tier2_is_planning_only; then continue; fi
       echo "${path}: canonical Tier 2 build identity changed; reusable hosted CI required."; exit 0 ;;

@@ -16,9 +16,9 @@
   "downstream_eligibility_changes_allowed": false,
   "package_revision_allocation": false,
   "test_suppression": false,
-  "execution_authorized": true,
+  "execution_authorized": false,
   "package_execution_authorized": false,
-  "status": "definition-pending-diagnostic",
+  "status": "diagnostic-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -115,6 +115,26 @@
     "historical_failure_not_reproduced": "valid environment + no baseline run reproduces the Attempt8 signature",
     "no_package_decision": "Round21 evidence cannot itself authorize Attempt 9 or allocate a package revision"
   },
-  "next_gate": "tier3-round21-kio-krecent-visible-cwd-diagnostic-evidence",
-  "stable_promotion_requires_explicit_user_approval": true
+  "next_gate": "tier3-round22-kio-krecent-ctest-home-matrix-diagnostic-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "diagnostic_evidence": {
+    "workflow_run": 36248969228,
+    "job_id": 108423337171,
+    "branch_commit": "9c18c9e811d31f8ec296d22180fdda7ed70545d9",
+    "artifact_id": 10908497619,
+    "artifact_sha256": "31f4fddc17bf13b2058773c9c506a54f625ebe100d884418ef27fe45fd9ec4e0",
+    "result": "DIAG_COMPLETE"
+  },
+  "result": {
+    "environment_valid": true,
+    "baseline_runs": 30,
+    "baseline_failures": 0,
+    "baseline_attempt8_signature_failures": 0,
+    "delayed_runs": 30,
+    "delayed_failures": 0,
+    "delayed_attempt8_signature_failures": 0,
+    "capture_all_entries": 15,
+    "capture_all_duplicate_modified_groups": 0,
+    "conclusion": "krecentdocument-attempt8-failure-not-reproduced"
+  }
 }

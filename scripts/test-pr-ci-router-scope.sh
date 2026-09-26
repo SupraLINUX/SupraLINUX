@@ -36,6 +36,18 @@ echo '{"schema":1}' > manifests/kde-tier2-campaign-plan.json
 echo 'name: Repository policy' > .github/workflows/repository-policy.yml
 echo 'print("compiler")' > scripts/compile_kde_tier2_campaign.py
 echo a > packages/kde/kirigami/a; echo b > packages/kde/kquickcharts/b; echo doc > docs/x.md; echo 'print(1)' > scripts/validate_x.py
+cat > manifests/kde-frameworks-tier3.json <<'JSON'
+{"schema":1,"as_of":"2026-09-26","discovery_policy":{"phase":"diagnostic","dependencies":"x","provider_audit":"PASS","package_contracts":"PASS","package_builds":"tier3-round21-diagnostic-pending","remediation":"round21-pending"},"active_remediation":{"status":"round21-pending","next_gate":"g21","execution_authorized":false,"level1_execution_authorized":false,"candidate_package_versions":{"kio":"6.30.0-0supralinux8"}},"nodes":[{"id":"kio","packaging":{"package_version":"6.30.0-0supralinux8"}}]}
+JSON
+cat > manifests/kde-tier3-build-level1.json <<'JSON'
+{"schema":1,"state":"attempt8-closed-mixed","next_gate":"g21","execution_authorized":false,"active_remediation":{"status":"round21-pending","next_gate":"g21","execution_authorized":false,"candidate_package_versions":{"kio":"6.30.0-0supralinux8"}}}
+JSON
+cat > manifests/kde-tier3-package-contracts.json <<'JSON'
+{"schema":1,"active_remediation":{"status":"round21-pending","next_gate":"g21","execution_authorized":false,"level1_execution_authorized":false,"candidate_package_versions":{"kio":"6.30.0-0supralinux8"}}}
+JSON
+cat > manifests/kde-tier3-materialization.json <<'JSON'
+{"schema":1,"state":"PASS","active_remediation":{"status":"round21-pending","next_gate":"g21","candidate_package_versions":{"kio":"6.30.0-0supralinux8"}}}
+JSON
 git add .; git commit -qm base; BASE=$(git rev-parse HEAD)
 echo more >> docs/x.md; git add .; git commit -qm docs; D=$(git rev-parse HEAD)
 if bash scripts/pr-ci-router-needed.sh "$BASE" "$D"; then echo "docs delta unexpectedly requested reusable CI" >&2; exit 1; fi
@@ -128,4 +140,26 @@ echo '{"schema":1}' > manifests/kde-tier2-package-campaign-batch2.json
 echo '{"schema":1}' > manifests/kde-tier2-package-batch2-attempts.json
 git add .; git commit -qm tier2-batch2-dedicated; B2=$(git rev-parse HEAD)
 if bash scripts/pr-ci-router-needed.sh "$I" "$B2"; then echo "dedicated Tier2 Batch2 inputs unexpectedly requested legacy reusable CI" >&2; exit 1; fi
+python3 - <<'PY'
+import json
+for p in ('manifests/kde-frameworks-tier3.json','manifests/kde-tier3-build-level1.json','manifests/kde-tier3-package-contracts.json','manifests/kde-tier3-materialization.json'):
+    d=json.load(open(p))
+    if p.endswith('kde-frameworks-tier3.json'):
+        d['discovery_policy']['package_builds']='tier3-round22-diagnostic-pending'; d['discovery_policy']['remediation']='round22-pending'
+    if p.endswith('kde-tier3-build-level1.json'):
+        d['next_gate']='g22'
+    d['active_remediation']['status']='round22-pending'; d['active_remediation']['next_gate']='g22'
+    open(p,'w').write(json.dumps(d))
+PY
+echo 'name: Round22 diagnostic' > .github/workflows/kde-tier3-kio-round22-diagnostic.yml
+echo '#!/usr/bin/env bash' > scripts/run-kde-tier3-kio-round22-diagnostic.sh
+echo '{"schema":1,"round":22}' > manifests/kde-tier3-kio-round22-diagnostic.json
+git add .; git commit -qm tier3-diagnostic-lifecycle; TD=$(git rev-parse HEAD)
+if bash scripts/pr-ci-router-needed.sh "$B2" "$TD"; then echo "Tier3 diagnostic lifecycle unexpectedly requested full reusable CI" >&2; exit 1; fi
+python3 - <<'PY'
+import json
+p='manifests/kde-frameworks-tier3.json'; d=json.load(open(p)); d['nodes'][0]['packaging']['package_version']='6.30.0-0supralinux9'; open(p,'w').write(json.dumps(d))
+PY
+git add .; git commit -qm tier3-package-semantic; TPS=$(git rev-parse HEAD)
+bash scripts/pr-ci-router-needed.sh "$TD" "$TPS"
 echo "PR CI semantic evidence router: PASS"

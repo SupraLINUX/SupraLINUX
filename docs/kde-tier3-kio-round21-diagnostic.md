@@ -1,22 +1,37 @@
 # KDE Tier 3 KIO Round 21 — KRecent visible-CWD timestamp diagnostic
 
-Status: definition pending diagnostic evidence.
+Status: **diagnostic PASS; Attempt 8 failure not reproduced**.
 
-Round 21 is a **non-promoting KRecent-only diagnostic**. KDirModel is not rerun because Round 20 established its hidden-HOME cause. No Debian package is built, no KIO revision is allocated, no test is suppressed, and Attempt 9 remains unauthorized.
+Round 21 remained non-promoting. No Debian package was built, no KIO revision was allocated, no test was suppressed, and Attempt 9 was not authorized.
 
-## Corrected environment
+## Closed evidence
 
-Each selected test gets a visible CWD outside `/tmp`, a fresh visible HOME, `TMPDIR=/tmp`, and the XDG data/config/cache overrides unset. Diagnostic-only instrumentation prevents QTest cleanup from deleting the XBEL after the test. The runner then discovers exactly one `recently-used.xbel` below HOME instead of assuming its path.
+- workflow run: `36248969228`
+- job: `108423337171`
+- commit: `9c18c9e811d31f8ec296d22180fdda7ed70545d9`
+- artifact: `10908497619`
+- artifact SHA-256: `31f4fddc17bf13b2058773c9c506a54f625ebe100d884418ef27fe45fd9ec4e0`
 
-## Sequence
+## Result
 
-1. 30 baseline runs.
-2. A capture-all variant with `MaxEntries=50` and the ordering assertion removed only for timestamp inspection.
-3. Capture all 15 bookmark names and `modified` timestamps.
-4. Restore upstream source, add only `QTest::qWait(5)` after each add plus XBEL preservation, and run 30 delayed repetitions.
-5. Restore upstream source byte-for-byte.
+The corrected environment was valid:
 
-Timestamp-collision ordering is confirmed only with a valid environment, at least one exact Attempt 8 baseline signature (`temp File 11` vs `temp File 12`), duplicate capture-all timestamps, and zero delayed failures.
+- baseline: 30 runs, 0 failures;
+- exact Attempt 8 `temp File 11` vs `temp File 12` signature: 0/30;
+- delayed `QTest::qWait(5)`: 30 runs, 0 failures;
+- capture-all: 15 XBEL entries;
+- duplicate `modified` timestamp groups: 0.
+
+Therefore the simple timestamp-collision hypothesis was **not reproduced in the Round 21 direct-test environment**. This is not evidence that the Attempt 8 failure was spurious: Attempt 8 ran the complete KRecentDocumentTest through CTest inside the package test environment, while Round 21 invoked only one test function in a new process.
+
+## Handoff
+
+Round 22 compares the two remaining environmental dimensions directly:
+
+1. selected test function vs complete CTest test binary;
+2. visible HOME vs the hidden packaging HOME used by Attempt 8.
+
+The CTest hidden-HOME lane reproduces the exact outer environment from Attempt 8 as closely as possible without building a Debian package.
 
 ```text
 12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED
