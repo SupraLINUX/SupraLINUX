@@ -810,7 +810,7 @@
       "source_package": "kf6-kio",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux7",
+      "package_version_candidate": "6.30.0-0supralinux8",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kio",
@@ -951,6 +951,11 @@
           "classification": "level1-attempt6-remediation",
           "decision": "use-non-destructive-ctest-environment-modification-for-kio-icon-tests",
           "rationale": "Round 11 diagnostic proved Round 10 replaced the complete CTest ENVIRONMENT and dropped KDE/ECM QT_PLUGIN_PATH. Use ENVIRONMENT_MODIFICATION so only the XCB/Breeze variables change while every existing per-test environment entry is preserved."
+        },
+        {
+          "classification": "level1-attempt8-remediation",
+          "decision": "add-resolute-qt-svg-plugin-test-provider",
+          "rationale": "Round 17 proved qt6-svg-plugins controls both historical KIO icon-name failures, and Round 18 proved Resolute exposes the plugin through the Qt GUI runtime recommendation rather than a KIO-specific hard runtime dependency. Make the provider explicit only in the KIO upstream test/build closure so sbuild with no recommends is reproducible without changing runtime ABI/package contracts."
         }
       ],
       "binary_relation_overrides": [
@@ -998,6 +1003,13 @@
           "relation": "xvfb <!nocheck>",
           "classification": "upstream-test-environment-provider-adaptation",
           "rationale": "KIO GUI/icon-theme tests need the Qt XCB generic Unix platform theme in headless CI; Resolute xvfb provides an isolated virtual X server and depends on xauth."
+        },
+        {
+          "field": "Build-Depends",
+          "action": "ensure",
+          "relation": "qt6-svg-plugins <!nocheck>",
+          "classification": "upstream-test-environment-provider",
+          "rationale": "Round 17 proved qt6-svg-plugins controls both historical KIO icon-name failures, and Round 18 proved Resolute exposes the plugin through the Qt GUI runtime recommendation rather than a KIO-specific hard runtime dependency. Make the provider explicit only in the KIO upstream test/build closure so sbuild with no recommends is reproducible without changing runtime ABI/package contracts."
         }
       ],
       "rules_text_replacements": [
@@ -3229,7 +3241,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "attempt7-complete-mixed",
+    "status": "materialization-pending-ci",
     "trigger": {
       "workflow_run": 36035351270,
       "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -3250,7 +3262,7 @@
     ],
     "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux7",
+      "kio": "6.30.0-0supralinux8",
       "kxmlgui": "6.30.0-0supralinux5"
     },
     "policy": {
@@ -3273,7 +3285,7 @@
     },
     "execution_authorized": false,
     "level1_execution_authorized": false,
-    "next_gate": "tier3-round18-kio-qt-svg-provider-contract-remediation-definition",
+    "next_gate": "tier3-round18-kio-test-provider-remediation-materialization",
     "materialization_evidence": {
       "workflow_run": 36073638711,
       "commit": "ebe60a0147e2a47b6c256ac015f43eea350c3ba2",
@@ -3434,6 +3446,24 @@
         "kiofilewidgets-closure"
       ],
       "next_diagnostic_scope": "actual-kio-object-path-state-transition"
+    },
+    "current_attempt": 7,
+    "next_attempt": 8,
+    "round18_provider_contract_audit": {
+      "workflow_run": 36221977278,
+      "job_id": 108348814091,
+      "commit": "c01506a16e9222b0f0d3366b68dac89e07ebf328",
+      "repository_policy_workflow_run": 36221977169,
+      "artifact_id": 10899531699,
+      "artifact_sha256": "8dfc4f94ed892a49bd4dd3fd262b7755cb078adfa56716a7c0e7e679f6cb9c6c",
+      "qt6_svg_plugins_deb_sha256": "41be607dc17ef0ad3510b169fc7607758ab4574acc4311c3ef1daaaac9c9139b",
+      "result": "AUDIT_COMPLETE"
+    },
+    "round18_remediation": {
+      "classification": "upstream-test-environment-provider",
+      "relation": "qt6-svg-plugins <!nocheck>",
+      "runtime_binary_relation": "none",
+      "source_rematerialization_required": true
     }
   },
   "remediation_history": [

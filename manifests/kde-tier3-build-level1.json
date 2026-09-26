@@ -5,7 +5,7 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "attempt7-closed-mixed",
+  "state": "remediation-pending-materialization",
   "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
@@ -626,17 +626,27 @@
       "sbuild_enable_network": true,
       "remediation": {
         "global_round": 11,
-        "classification": "non-destructive-ctest-environment-remediation",
-        "source_rematerialization_required": false,
-        "candidate_package_version": "6.30.0-0supralinux7",
+        "diagnostic_round": 18,
+        "classification": "qt-svg-test-provider-remediation",
+        "source_rematerialization_required": true,
+        "candidate_package_version": "6.30.0-0supralinux8",
         "changes": [
           "retain the complete 69-target upstream CTest suite and all proven D-Bus/HOME/KDECI/Xvfb/XCB/Breeze/network fixtures",
-          "replace Round 10 set_tests_properties(... ENVIRONMENT ...) on kdirmodeltest and knewfilemenutest with APPEND ENVIRONMENT_MODIFICATION",
-          "preserve KDE/ECM QT_PLUGIN_PATH and all other pre-existing per-test ENVIRONMENT entries",
+          "retain ENVIRONMENT_MODIFICATION for kdirmodeltest and knewfilemenutest so KDE/ECM QT_PLUGIN_PATH and all existing per-test environment survive",
+          "add qt6-svg-plugins <!nocheck> to KIO Build-Depends so the Qt SVG icon engine is present in no-recommends sbuild tests",
+          "do not add any KIO, KIconThemes or Breeze runtime dependency on qt6-svg-plugins",
           "keep krecentdocumenttest unchanged and fatal"
         ],
-        "diagnostic_workflow_run": 36071103806,
-        "diagnostic_artifact_id": 10837734340
+        "provider_contract_audit": {
+          "workflow_run": 36221977278,
+          "job_id": 108348814091,
+          "commit": "c01506a16e9222b0f0d3366b68dac89e07ebf328",
+          "repository_policy_workflow_run": 36221977169,
+          "artifact_id": 10899531699,
+          "artifact_sha256": "8dfc4f94ed892a49bd4dd3fd262b7755cb078adfa56716a7c0e7e679f6cb9c6c",
+          "qt6_svg_plugins_deb_sha256": "41be607dc17ef0ad3510b169fc7607758ab4574acc4311c3ef1daaaac9c9139b",
+          "result": "AUDIT_COMPLETE"
+        }
       },
       "downstream_eligible": false
     },
@@ -828,7 +838,7 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-round18-kio-qt-svg-provider-contract-remediation-definition",
+  "next_gate": "tier3-round18-kio-test-provider-remediation-materialization",
   "current_attempt": 7,
   "last_activation": {
     "policy_workflow_run": 35826072726,
@@ -879,18 +889,18 @@
     ],
     "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux7",
+      "kio": "6.30.0-0supralinux8",
       "kxmlgui": "6.30.0-0supralinux5"
     },
     "execution_authorized": false,
-    "full_level1_rerun_required": false,
-    "status": "attempt7-complete-mixed",
-    "source_rematerialization_required": false,
+    "full_level1_rerun_required": true,
+    "status": "materialization-pending-ci",
+    "source_rematerialization_required": true,
     "source_rematerialization_nodes": [
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "tier3-round18-kio-qt-svg-provider-contract-remediation-definition",
+    "next_gate": "tier3-round18-kio-test-provider-remediation-materialization",
     "current_attempt": 7,
     "next_attempt": 8,
     "remaining_failed_nodes": [
@@ -1068,6 +1078,16 @@
         "kiofilewidgets-closure"
       ],
       "next_diagnostic_scope": "actual-kio-object-path-state-transition"
+    },
+    "round18_provider_contract_audit": {
+      "workflow_run": 36221977278,
+      "job_id": 108348814091,
+      "commit": "c01506a16e9222b0f0d3366b68dac89e07ebf328",
+      "repository_policy_workflow_run": 36221977169,
+      "artifact_id": 10899531699,
+      "artifact_sha256": "8dfc4f94ed892a49bd4dd3fd262b7755cb078adfa56716a7c0e7e679f6cb9c6c",
+      "qt6_svg_plugins_deb_sha256": "41be607dc17ef0ad3510b169fc7607758ab4574acc4311c3ef1daaaac9c9139b",
+      "result": "AUDIT_COMPLETE"
     }
   },
   "activation": {

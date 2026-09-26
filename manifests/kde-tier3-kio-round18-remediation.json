@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-26",
+  "node": "kio",
+  "global_remediation_round": 11,
+  "diagnostic_round": 18,
+  "authority": "kde-upstream",
+  "packaging_authority": "supralinux",
+  "provider_platform": "ubuntu-resolute",
+  "frameworks_series": "6.30.0",
+  "status": "definition-pending-materialization",
+  "claim": "kio-qt-svg-test-provider-remediation",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "current_package_version": "6.30.0-0supralinux7",
+  "candidate_package_version": "6.30.0-0supralinux8",
+  "retained_revalidation_package": {
+    "node": "kxmlgui",
+    "package_version": "6.30.0-0supralinux5"
+  },
+  "provider_contract_audit": {
+    "workflow_run": 36221977278,
+    "job_id": 108348814091,
+    "commit": "c01506a16e9222b0f0d3366b68dac89e07ebf328",
+    "repository_policy_workflow_run": 36221977169,
+    "artifact_id": 10899531699,
+    "artifact_sha256": "8dfc4f94ed892a49bd4dd3fd262b7755cb078adfa56716a7c0e7e679f6cb9c6c",
+    "qt6_svg_plugins_deb_sha256": "41be607dc17ef0ad3510b169fc7607758ab4574acc4311c3ef1daaaac9c9139b",
+    "result": "AUDIT_COMPLETE"
+  },
+  "accepted_contract": {
+    "field": "Build-Depends",
+    "action": "ensure",
+    "relation": "qt6-svg-plugins <!nocheck>",
+    "classification": "upstream-test-environment-provider",
+    "runtime_binary_relation": "none",
+    "rationale": "Round 17 proved qt6-svg-plugins controls both historical KIO icon-name failures, and Round 18 proved Resolute exposes the plugin through the Qt GUI runtime recommendation rather than a KIO-specific hard runtime dependency. Make the provider explicit only in the KIO upstream test/build closure so sbuild with no recommends is reproducible without changing runtime ABI/package contracts."
+  },
+  "materialization": {
+    "source_materialization_authorized": true,
+    "binary_execution_authorized": false,
+    "remediation_queue": [
+      "kio"
+    ],
+    "previous_materialization": {
+      "workflow_run": 36073638711,
+      "job_id": 107879979760,
+      "artifact_id": 10839162922,
+      "artifact_sha256": "ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c",
+      "package_version": "6.30.0-0supralinux7"
+    },
+    "expected_source_package": "kf6-kio",
+    "expected_package_version": "6.30.0-0supralinux8"
+  },
+  "invariants": [
+    "KIO canonical state remains FAIL at 6.30.0-0supralinux7 until a real Attempt 8 package build passes",
+    "KXMLGui remains PASS at 6.30.0-0supralinux5 and is not rematerialized",
+    "all 69 upstream KIO CTest targets remain enabled and fatal",
+    "qt6-svg-plugins is build/test-only for KIO; no new runtime binary relation is introduced",
+    "BLOCKED remains distinct from FAIL"
+  ],
+  "next_gate": "tier3-round18-kio-test-provider-remediation-materialization",
+  "stable_promotion_requires_explicit_user_approval": true
+}

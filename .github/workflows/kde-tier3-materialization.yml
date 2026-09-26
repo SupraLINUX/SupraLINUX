@@ -4,10 +4,12 @@ on:
   pull_request:
     paths:
       - manifests/kde-tier3-materialization.json
+      - manifests/kde-tier3-kio-round18-remediation.json
       - manifests/kde-tier3-package-contracts.json
       - manifests/kde-frameworks-tier3.json
       - scripts/materialize_kde_tier3_package.py
       - scripts/validate_kde_tier3_materialization.py
+      - scripts/validate_kde_tier3_round18_remediation.py
       - scripts/kde-tier3-materialization-needed.sh
       - scripts/test-kde-tier3-materialization-scope.sh
       - .github/workflows/kde-tier3-materialization.yml

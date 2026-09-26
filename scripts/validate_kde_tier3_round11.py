@@ -11,7 +11,11 @@ if ar.get("round")!=11:
     raise SystemExit("Round 11 lifecycle validator invoked outside Round 11")
 
 if gate=="tier3-level1-remediation-pending-materialization":
-    target="validate_kde_tier3_round11_materialization.py"
+    marker=t.get("discovery_policy",{}).get("remediation")
+    if marker=="round18-kio-svg-test-provider-materialization-pending-ci":
+        target="validate_kde_tier3_round18_remediation.py"
+    else:
+        target="validate_kde_tier3_round11_materialization.py"
 elif gate=="tier3-level1-source-PASS-pending-planning-validation":
     target="validate_kde_tier3_round11_planning.py"
 elif gate=="tier3-level1-authorized":

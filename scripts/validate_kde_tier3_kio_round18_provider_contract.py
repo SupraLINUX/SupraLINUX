@@ -41,7 +41,10 @@ req(kio.get("state") == "FAIL", "KIO remains FAIL")
 req(kio.get("packaging", {}).get("package_version") == "6.30.0-0supralinux7", "KIO remains revision -7")
 req(kio.get("packaging", {}).get("downstream_eligible") is False, "KIO remains downstream-ineligible")
 req(level1.get("canonical_snapshot") == "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED", "Level1 snapshot unchanged")
-req(level1.get("next_gate") == "tier3-round18-kio-qt-svg-provider-contract-remediation-definition", "Round18 live handoff")
+if m.get("status") == "definition-pending-audit":
+    req(level1.get("next_gate") == "tier3-round18-kio-qt-svg-provider-contract-remediation-definition", "Round18 live handoff before audit")
+else:
+    req(m.get("next_gate") == "tier3-round18-kio-test-provider-remediation-materialization-definition", "Round18 historical post-audit handoff")
 
 up = m.get("upstream_contract_evidence", {})
 req(up.get("kio", {}).get("cmake_blob") == "2b655093491670009d9396b60159afbec5cc8385", "KIO upstream CMake evidence")
