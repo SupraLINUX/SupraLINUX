@@ -8,6 +8,7 @@ T=json.loads((ROOT/"manifests/kde-frameworks-tier3.json").read_text())
 L=json.loads((ROOT/"manifests/kde-tier3-build-level1.json").read_text())
 D12=json.loads((ROOT/"manifests/kde-tier3-kio-round12-diagnostic.json").read_text())
 D14=json.loads((ROOT/"manifests/kde-tier3-kio-round14-diagnostic.json").read_text())
+D15=json.loads((ROOT/"manifests/kde-tier3-kio-round15-diagnostic.json").read_text())
 W=(ROOT/".github/workflows/kde-tier3-kio-round13-diagnostic.yml").read_text()
 R=(ROOT/"scripts/run-kde-tier3-kio-round13-diagnostic.sh").read_text()
 D=(ROOT/"docs/kde-tier3-kio-round13-diagnostic.md").read_text()
@@ -28,7 +29,7 @@ nodes={n["id"]:n for n in T.get("nodes",[])}
 req(nodes["kio"].get("state")=="FAIL" and nodes["kio"].get("packaging",{}).get("package_version")=="6.30.0-0supralinux7","Round13 retains KIO -7 FAIL")
 req(nodes["kio"].get("packaging",{}).get("downstream_eligible") is False,"Round13 KIO downstream eligibility")
 req(L.get("execution_authorized") is False and L.get("state")=="attempt7-closed-mixed","Round13 keeps Level1 closed")
-expected_live_gate = ("tier3-round15-kio-breeze-icons-init-state-diagnostic-definition" if D14.get("status")=="diagnostic-PASS" else "tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition") if M.get("status")=="diagnostic-PASS" else "tier3-round13-kio-build-tree-diagnostic-definition"
+expected_live_gate = ("tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition" if D15.get("status")=="diagnostic-PASS" else ("tier3-round15-kio-breeze-icons-init-state-diagnostic-definition" if D14.get("status")=="diagnostic-PASS" else "tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition")) if M.get("status")=="diagnostic-PASS" else "tier3-round13-kio-build-tree-diagnostic-definition"
 req(L.get("next_gate")==expected_live_gate,"Round13 current canonical gate")
 req(L.get("current_attempt")==7 and L.get("next_attempt")==8,"Round13 attempt counters")
 

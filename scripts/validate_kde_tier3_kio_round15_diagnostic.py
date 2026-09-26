@@ -83,10 +83,19 @@ if M.get("status")=="definition-pending-diagnostic":
     req(L.get("next_gate")=="tier3-round15-kio-breeze-icons-init-state-diagnostic-definition","Round15 live definition gate")
     req(M.get("next_gate")=="tier3-round15-kio-breeze-icons-init-state-diagnostic-evidence","Round15 evidence gate")
 else:
-    req(M.get("next_gate","").startswith("tier3-round16-"),"Round15 closed handoff")
+    req(M.get("next_gate")=="tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition","Round15 closed handoff")
     req(L.get("next_gate")==M.get("next_gate"),"Round15 closed live gate")
+    dv=M.get("definition_validation",{})
+    req(dv.get("commit")=="594b86b3e5ca78a8b936350d037c3877743ac273" and dv.get("repository_policy_workflow_run")==36208311436 and dv.get("result")=="PASS","Round15 definition validation")
     ev=M.get("diagnostic_evidence",{})
+    req(ev.get("workflow_run")==36208311383 and ev.get("job_id")==108309466429 and ev.get("commit")=="594b86b3e5ca78a8b936350d037c3877743ac273","Round15 closure workflow identity")
+    req(ev.get("artifact_id")==10894857677 and ev.get("artifact_sha256")=="58413dce8261e276f08b450ac6fbab494a0d691018dd0472a997b570b5e2e136","Round15 closure artifact identity")
     req(ev.get("result")=="DIAG_COMPLETE" and ev.get("package_attempted") is False and ev.get("package_state_effect")=="none","Round15 closure evidence")
+    dr=M.get("diagnostic_results",{})
+    req(dr.get("baseline_valid") is True and dr.get("conclusion")=="breeze-init-state-does-not-reproduce-kio-icon-name-loss","Round15 closure conclusion")
+    req(dr.get("next_diagnostic_scope")=="kiconthemes-startup-or-kio-library-interaction","Round15 closure next scope")
+    for mode in ("qt-baseline","qt-fallback-breeze","breeze-linked-no-init","breeze-init"):
+        req(dr.get("mode_results",{}).get(mode,{}).get("primary_empty_any") is False,f"Round15 {mode} preserves primary icon names")
 
 req(M.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval gate")
 print("KDE Tier 3 KIO Round 15 diagnostic definition: PASS")

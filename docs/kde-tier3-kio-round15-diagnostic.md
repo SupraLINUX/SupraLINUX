@@ -1,6 +1,6 @@
 # KDE Tier 3 — KIO Round 15 BreezeIcons init-state diagnostic
 
-Status: **definition pending diagnostic evidence**.
+Status: **diagnostic PASS — closed**.
 
 Round 14 rejected the simple provider-presence hypothesis: installing the exact retained `libkf6iconthemes-bin 6.30.0-0supralinux3` package did not recover either KIO icon-name failure, and `KIconEnginePlugin.so` was not loaded. KIO remains `6.30.0-0supralinux7` FAIL/downstream-ineligible.
 
@@ -57,3 +57,22 @@ The first Round 15 execution at commit `d4a220f95b742b1125fad564b2729358ebfd941d
 Every mode, including `qt-baseline`, returned null/unnamed icons. Comparison with the validated Round 12 fixture found the drift: Round 12 explicitly installed `qt6-svg-dev` and `qt6-svg-plugins`, while the initial Round 15 runner omitted them. Breeze's filesystem theme payload is SVG, so this invalidated the baseline before any BreezeIcons causal comparison.
 
 Attempt 1 is therefore recorded as `DIAG_INVALID / baseline-drift-invalid`, with **no canonical state effect**. The definition is corrected by restoring the exact Qt SVG fixture and by making invalid-baseline result reporting explicit. The same matrix will be rerun; no package or KIO revision changes.
+
+## Diagnostic result — PASS, Breeze initialization is not sufficient
+
+The corrected Round 15 execution completed in workflow `36208311383`, job `108309466429`, at commit `594b86b3e5ca78a8b936350d037c3877743ac273`. Evidence artifact `10894857677` has SHA-256 `58413dce8261e276f08b450ac6fbab494a0d691018dd0472a997b570b5e2e136`. Repository Policy `36208311436` passed on the same commit.
+
+The baseline is valid. Across all three path sequences — normal, `KDirModelTest` test mode, and the `KNewFileMenuTest` test-mode/config sequence — all four modes preserve the semantic names `unknown`, `inode-directory`, and `folder-red`.
+
+The state transitions were observed exactly:
+
+- Qt baseline: fallback remains `hicolor`, Breeze resource is not visible, icon names remain intact.
+- fallback-only: fallback becomes `breeze`, resource remains absent, icon names remain intact.
+- BreezeIcons linked without explicit init: `:/icons/breeze` is visible while fallback remains `hicolor`; icon names remain intact.
+- explicit `BreezeIcons::initIcons()`: resource is visible and fallback changes `hicolor → breeze`; icon names remain intact.
+
+Therefore neither the fallback change, Breeze resource visibility, BreezeIcons linkage, nor `BreezeIcons::initIcons()` is sufficient to reproduce the KIO icon-name loss.
+
+Round 15 remains non-promoting. KIO stays `6.30.0-0supralinux7` FAIL/downstream-ineligible, no `-8` exists, and canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**.
+
+Next gate: **`tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition`**.

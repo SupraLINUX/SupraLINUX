@@ -17,6 +17,7 @@ ATTEMPT7_NEXT="tier3-round12-kio-diagnostic-definition"
 ROUND13_NEXT="tier3-round13-kio-build-tree-diagnostic-definition"
 ROUND14_NEXT="tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition"
 ROUND15_NEXT="tier3-round15-kio-breeze-icons-init-state-diagnostic-definition"
+ROUND16_NEXT="tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition"
 FAILS=["kiowidgets-kdirmodeltest","kiofilewidgets-knewfilemenutest"]
 BLOCKED=["baloo","kcmutils","knotifyconfig","kparts","ktexteditor","purpose"]
 PASS={"kbookmarks","kconfigwidgets","kdav","kdesu","kiconthemes","kjobwidgets","kpeople","krunner","ksvg","ktextwidgets","kwallet","kxmlgui"}
@@ -30,6 +31,7 @@ R=load("manifests/kde-tier3-kio-round11-remediation.json")
 D12=load("manifests/kde-tier3-kio-round12-diagnostic.json")
 D13=load("manifests/kde-tier3-kio-round13-diagnostic.json")
 D14=load("manifests/kde-tier3-kio-round14-diagnostic.json")
+D15=load("manifests/kde-tier3-kio-round15-diagnostic.json")
 P=load("manifests/kde-tier3-build-campaign.json")
 G=load("manifests/kde-dag.json")
 
@@ -52,7 +54,8 @@ req(G.get("nodes",{}).get("kxmlgui",{}).get("state")=="PASS","KXMLGui remains PA
 round12_closed = D12.get("status")=="diagnostic-PASS"
 round13_closed = D13.get("status")=="diagnostic-PASS"
 round14_closed = D14.get("status")=="diagnostic-PASS"
-CURRENT_NEXT = ROUND15_NEXT if round14_closed else (ROUND14_NEXT if round13_closed else (ROUND13_NEXT if round12_closed else ATTEMPT7_NEXT))
+round15_closed = D15.get("status")=="diagnostic-PASS"
+CURRENT_NEXT = ROUND16_NEXT if round15_closed else (ROUND15_NEXT if round14_closed else (ROUND14_NEXT if round13_closed else (ROUND13_NEXT if round12_closed else ATTEMPT7_NEXT)))
 if round12_closed:
     ev=D12.get("diagnostic_evidence",{})
     req(ev.get("workflow_run")==36082312546 and ev.get("job_id")==107906716315,"Round12 closure workflow evidence")
@@ -78,6 +81,16 @@ if round14_closed:
     req(D14.get("diagnostic_results",{}).get("conclusion")=="libkf6iconthemes-bin-does-not-recover-both-kio-tests","Round14 closure conclusion")
 elif round13_closed:
     req(D14.get("status")=="definition-pending-diagnostic","Round14 lifecycle before closure")
+if round15_closed:
+    ev=D15.get("diagnostic_evidence",{})
+    req(ev.get("workflow_run")==36208311383 and ev.get("job_id")==108309466429,"Round15 closure workflow evidence")
+    req(ev.get("artifact_id")==10894857677 and ev.get("artifact_sha256")=="58413dce8261e276f08b450ac6fbab494a0d691018dd0472a997b570b5e2e136","Round15 closure artifact evidence")
+    req(ev.get("result")=="DIAG_COMPLETE" and ev.get("package_attempted") is False and ev.get("package_state_effect")=="none","Round15 closure remains non-promoting")
+    dr=D15.get("diagnostic_results",{})
+    req(dr.get("baseline_valid") is True and dr.get("conclusion")=="breeze-init-state-does-not-reproduce-kio-icon-name-loss","Round15 closure conclusion")
+    req(dr.get("next_diagnostic_scope")=="kiconthemes-startup-or-kio-library-interaction","Round15 handoff scope")
+elif round14_closed:
+    req(D15.get("status")=="definition-pending-diagnostic","Round15 lifecycle before closure")
 
 ar=T.get("active_remediation",{})
 req(ar.get("round")==11 and ar.get("status")=="attempt7-complete-mixed","Round11 canonical closure")
