@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 10
     outputs:
       run_ci: ${{ steps.scope.outputs.run_ci }}
-      run_round19: ${{ steps.scope.outputs.run_round19 }}
+      run_round20: ${{ steps.scope.outputs.run_round20 }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -68,19 +68,19 @@ jobs:
           fi
 
           echo "run_ci=${run_ci}" >> "${GITHUB_OUTPUT}"
-          run_round19="$(python3 -c 'import json; m=json.load(open("manifests/kde-frameworks-tier3.json")); print("true" if m.get("discovery_policy",{}).get("package_builds")=="tier3-round19-diagnostic-pending" else "false")')"
-          echo "run_round19=${run_round19}" >> "${GITHUB_OUTPUT}"
+          run_round20="$(python3 -c 'import json; m=json.load(open("manifests/kde-frameworks-tier3.json")); print("true" if m.get("discovery_policy",{}).get("package_builds")=="tier3-round20-diagnostic-pending" else "false")')"
+          echo "run_round20=${run_round20}" >> "${GITHUB_OUTPUT}"
           if [[ "${run_ci}" == "true" ]]; then
             echo "Semantic build/reference/provider input changed; invoking reusable CI lanes."
           else
             echo "Evidence/policy-only event delta; Repository Policy remains authoritative and reusable hosted lanes are skipped."
           fi
 
-  kde-tier3-kio-round19-diagnostic:
-    name: Tier 3 KIO Round 19 diagnostic
+  kde-tier3-kio-round20-diagnostic:
+    name: Tier 3 KIO Round 20 diagnostic
     needs: plan
-    if: needs.plan.outputs.run_round19 == 'true'
-    uses: ./.github/workflows/kde-tier3-kio-round19-diagnostic.yml
+    if: needs.plan.outputs.run_round20 == 'true'
+    uses: ./.github/workflows/kde-tier3-kio-round20-diagnostic.yml
 
   package-build-proof:
     name: Phase 1 package preflight

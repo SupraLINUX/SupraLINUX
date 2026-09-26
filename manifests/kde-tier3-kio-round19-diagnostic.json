@@ -16,9 +16,9 @@
   "downstream_eligibility_changes_allowed": false,
   "package_revision_allocation": false,
   "test_suppression": false,
-  "execution_authorized": true,
+  "execution_authorized": false,
   "package_execution_authorized": false,
-  "status": "definition-pending-diagnostic",
+  "status": "diagnostic-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -142,6 +142,39 @@
     "kdir_all_modes_fail": "kdirmodel-expand-state-requires-deeper-diagnostic",
     "kdir_hidden_modes_pass": "diagnostic-invalid-cannot-reproduce-attempt8-showroot-failure"
   },
-  "next_gate": "tier3-round19-kio-residual-test-diagnostic-evidence",
-  "stable_promotion_requires_explicit_user_approval": true
+  "next_gate": "tier3-round20-kio-environment-corrected-diagnostic-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "diagnostic_evidence": {
+    "result": "DIAG_COMPLETE",
+    "workflow_run": 36243076879,
+    "job_id": 108407192850,
+    "branch_commit": "0df59eee29ee3c0024d2331a0bc78e503975f72f",
+    "referenced_workflow_sha": "ca433e58636ae43ffc744f1098eed805e11d1e01",
+    "artifact_id": 10906951441,
+    "artifact_sha256": "3395536506ea205ce722a4a9be8962b0f0b3fb7597dbee708a6b7e0dc8ef2611",
+    "package_attempted": false,
+    "package_state_effect": "none"
+  },
+  "diagnostic_results": {
+    "overall_conclusion": "inconclusive-methodology-defects-require-environment-corrected-followup",
+    "krecentdocument": {
+      "baseline_runs": 30,
+      "baseline_failures": 30,
+      "delayed_runs": 30,
+      "delayed_failures": 30,
+      "capture_all_entries": 0,
+      "conclusion": "invalid-targeted-environment",
+      "validity_defect": "QStandardPaths test mode resolved recently-used.xbel below $HOME/.qttest/share, but the targeted runner created only $HOME. The test therefore failed with recentUrls.length()==0 rather than reproducing Attempt 8 temp File 11 vs temp File 12."
+    },
+    "kdirmodel": {
+      "hidden_initial": "historical-showroot-signature-FAIL",
+      "visible_control": "historical-showroot-signature-FAIL",
+      "hidden_repeat": "historical-showroot-signature-FAIL",
+      "trailing_slash": "PASS",
+      "test_icon": "PASS",
+      "conclusion": "control-path-invalid-for-hidden-component-hypothesis",
+      "validity_defect": "The nominal visible HOME removed .supralinux-test-home but remained below the diagnostic .work directory, so the control still contained a hidden path component."
+    },
+    "next_scope": "round20-environment-corrected-krecent-and-kdirmodel-controls"
+  }
 }

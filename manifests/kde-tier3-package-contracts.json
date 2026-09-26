@@ -3241,7 +3241,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "round19-diagnostic-definition-pending-ci",
+    "status": "round20-diagnostic-definition-pending-ci",
     "trigger": {
       "workflow_run": 36035351270,
       "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -3285,7 +3285,7 @@
     },
     "execution_authorized": false,
     "level1_execution_authorized": false,
-    "next_gate": "tier3-round19-kio-residual-test-diagnostic-evidence",
+    "next_gate": "tier3-round20-kio-environment-corrected-diagnostic-evidence",
     "materialization_evidence": {
       "workflow_run": 36222711238,
       "commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",
@@ -3486,7 +3486,9 @@
         "artifact_id": 10905212105,
         "artifact_sha256": "297d8d91e52f82cd6713c30072a8f2deff80d73647b9c93c1b89263e5f21d441"
       }
-    }
+    },
+    "package_attempted": false,
+    "package_state_effect": "none"
   },
   "remediation_history": [
     {

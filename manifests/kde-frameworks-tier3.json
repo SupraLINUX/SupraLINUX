@@ -16,8 +16,8 @@
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-round19-diagnostic-pending",
-    "remediation": "round19-kio-residual-tests-definition-pending-ci"
+    "package_builds": "tier3-round20-diagnostic-pending",
+    "remediation": "round20-kio-environment-corrected-diagnostic-pending-ci"
   },
   "nodes": [
     {
@@ -1391,8 +1391,8 @@
     "execution_authorized": false,
     "level1_execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "round19-diagnostic-definition-pending-ci",
-    "next_gate": "tier3-round19-kio-residual-test-diagnostic-evidence",
+    "status": "round20-diagnostic-definition-pending-ci",
+    "next_gate": "tier3-round20-kio-environment-corrected-diagnostic-evidence",
     "current_attempt": 8,
     "next_attempt": 9,
     "validation_workflow_run": 36238357510,
@@ -1606,6 +1606,14 @@
         "artifact_id": 10905212105,
         "artifact_sha256": "297d8d91e52f82cd6713c30072a8f2deff80d73647b9c93c1b89263e5f21d441"
       }
+    },
+    "round19_diagnostic": {
+      "status": "diagnostic-PASS",
+      "workflow_run": 36243076879,
+      "job_id": 108407192850,
+      "artifact_id": 10906951441,
+      "artifact_sha256": "3395536506ea205ce722a4a9be8962b0f0b3fb7597dbee708a6b7e0dc8ef2611",
+      "conclusion": "inconclusive-methodology-defects-require-environment-corrected-followup"
     }
   },
   "remediation_history": [

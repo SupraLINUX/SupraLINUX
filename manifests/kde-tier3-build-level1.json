@@ -838,7 +838,7 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-round19-kio-residual-test-diagnostic-evidence",
+  "next_gate": "tier3-round20-kio-environment-corrected-diagnostic-evidence",
   "current_attempt": 8,
   "last_activation": {
     "policy_workflow_run": 35826072726,
@@ -894,13 +894,13 @@
     },
     "execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "round19-diagnostic-definition-pending-ci",
+    "status": "round20-diagnostic-definition-pending-ci",
     "source_rematerialization_required": false,
     "source_rematerialization_nodes": [
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "tier3-round19-kio-residual-test-diagnostic-evidence",
+    "next_gate": "tier3-round20-kio-environment-corrected-diagnostic-evidence",
     "current_attempt": 8,
     "next_attempt": 9,
     "remaining_failed_nodes": [
