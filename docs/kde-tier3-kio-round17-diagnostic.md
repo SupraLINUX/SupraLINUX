@@ -1,4 +1,4 @@
-# KDE Tier 3 — KIO Round 17 actual object-path state-transition diagnostic
+# KDE Tier 3 — KIO Round 17 root-cause environment diagnostic
 
 Status: **definition pending diagnostic evidence**.
 
@@ -14,46 +14,25 @@ For `KNewFileMenuTest::testFolderIconCollection`, the test constructs `KNewFileM
 
 These are now the shortest known paths between the successful Round 16 probes and the failing real assertions.
 
-## Method
+## Current method — Attempt 4
 
-Round 17 rematerializes the exact retained KIO `6.30.0-0supralinux7` source and exact provider closure. It then applies a **transient diagnostic-only instrumentation patch** to two files:
+Round 17 now uses an environment-only A/B/A experiment. KIO source and compiled binaries remain unchanged while only the installed state of `qt6-svg-plugins` changes:
 
-- `src/widgets/kdirmodel.cpp`;
-- `src/filewidgets/knewfilemenu.cpp`.
+1. **present-initial** — the exact original tests run with the SVG plugin installed;
+2. **absent** — `qt6-svg-plugins` is removed and the same binaries run again;
+3. **reinstalled** — the plugin is installed again and the same binaries run a third time.
 
-The patch adds only `qInfo()` observations prefixed with `R17|`; it does not change conditions, return values, icon names, package metadata, tests, or expected results. The exact patch diff is retained in the evidence artifact.
+Every phase uses a fresh HOME and the same XCB/Breeze/KDECI/QT_PLUGIN_PATH environment. Evidence records dpkg state, package versions, apt policy/dependency metadata, SVG plugin files on disk, test exit codes, and exact historical failure signatures.
 
-The instrumented build must still reproduce both original failures. If either test unexpectedly passes, the diagnostic is invalid because the instrumentation perturbed behavior.
+The controlling A/B/A result is:
 
-### KDirModel checkpoints
+`PASS with plugin → both historical empty-name FAILs without plugin → PASS after reinstall`.
 
-For the invalid absolute icon entry, evidence records the icon name/null state at:
-
-1. direct `unknown` fallback creation;
-2. direct absolute-path `QIcon` construction;
-3. after `QIcon::fromTheme(invalidName, fallbackIcon)`;
-4. before `KIconUtils::addOverlays()`;
-5. after `KIconUtils::addOverlays()`.
-
-This distinguishes Qt fallback semantics from KGuiAddons overlay processing and later KDirModel transport.
-
-### KNewFileMenu checkpoints
-
-Evidence probes `inode-directory` at:
-
-1. constructor body;
-2. `checkUpToDate()` entry and exit;
-3. `showNewDirNameDlg()` entry;
-4. after `initDialog()`;
-5. actual default icon construction;
-6. `setIcon()` input;
-7. after writing the `iconName` property and after pixmap rendering.
-
-The first checkpoint where the semantic name becomes empty identifies the smallest object-path interval requiring the next investigation.
+If confirmed, Round 17 establishes the missing Qt SVG plugin as the environmental root cause controlling both failures. It does **not** yet assign packaging ownership. The following gate must decide whether the required contract belongs to Breeze icon-theme packaging, the KIO build/test closure, or another shared Qt SVG provider rule.
 
 ## Safety
 
-This is not a remediation and not a package attempt. The diagnostic patch never enters Debian source artifacts, no KIO revision is allocated, no expected result is changed, and no test is suppressed. KIO remains `6.30.0-0supralinux7` FAIL/downstream-ineligible and canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**.
+This is not a remediation and not a package attempt. Attempt 4 patches no source, changes no expected result, builds no Debian package, and allocates no KIO revision. KIO remains `6.30.0-0supralinux7` FAIL/downstream-ineligible until an actual package attempt passes. Canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**.
 
 Next gate: `tier3-round17-kio-object-path-state-transition-diagnostic-evidence`.
 
@@ -101,4 +80,35 @@ Only after that gate passes:
 This directly tests whether the temporary/copy/move lifetime shape that appeared accidentally in Attempts 1–2 is sufficient to heal each failure. If both variants heal while both restored baselines fail, the next gate is a focused confirmation of temporary lifetime/copy-move semantics versus LTO/code generation.
 
 No package is built and no KIO revision is allocated.
+
+## Invalid Attempt 3 — exact source, wrong environment fixture
+
+Attempt 3 at commit `287c4e09d259af0d7f05c70ba856f81a75fac0b3` used the exact unmodified KIO source, but the supposedly historical baseline still passed both tests. Workflow `36215721289`, job `108331181346`, produced artifact `10897152304` with SHA-256 `dfe1356e3e10e4e12894627cab203c96ba9d842f11825ccb405b211da329b8f6`. Repository Policy `36215721283` passed.
+
+The artifact proves:
+
+- `KDirModelTest::testIcon`: 3 passed / 0 failed;
+- `KNewFileMenuTest::testFolderIconCollection(default)`: 3 passed / 0 failed.
+
+The important difference is environmental, not source-level. Round 17 inherited the Round 16 host-tools fixture, which explicitly installs both `qt6-svg-dev` and `qt6-svg-plugins`. Round 13 — the build-tree reproduction matching Attempt 7 — did not explicitly install those SVG packages. This also aligns with the earlier Round 15 invalid baseline where Breeze SVG icons became null/unnamed without the SVG plugin.
+
+Attempt 3 is therefore recorded as `DIAG_INVALID / original-baseline-passed-due-to-environment-fixture-drift`, with no canonical effect. The temporary-lifetime hypothesis is not promoted from this attempt.
+
+## Attempt 4 — Qt SVG plugin A/B/A, no source changes
+
+Attempt 4 leaves KIO source and binaries unchanged and varies only the installed state of `qt6-svg-plugins`:
+
+1. **present-initial** — exact original tests run with the plugin installed;
+2. **absent** — remove only `qt6-svg-plugins` and rerun the same binaries;
+3. **reinstalled** — reinstall `qt6-svg-plugins` and rerun again.
+
+Each phase uses a fresh HOME and the same XCB/Breeze/KDECI/QT_PLUGIN_PATH environment. Evidence records package versions, apt policy/dependency metadata, the SVG plugin files on disk, test exit codes, and the exact historical failure signatures.
+
+The strongest confirmation is:
+
+`PASS with plugin → both historical empty-name FAILs without plugin → PASS after reinstall`.
+
+That would establish `qt6-svg-plugins` presence as the controlling environmental variable for both KIO failures. Only after that result will the next gate decide the correct packaging owner/provider contract — for example whether the dependency belongs in the Breeze icon-theme contract, KIO build/test closure, or another shared Qt SVG provider rule. No ownership decision is assumed in Round 17.
+
+No package is built, no source is patched, and no KIO revision is allocated.
 

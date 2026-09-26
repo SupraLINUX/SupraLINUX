@@ -2,6 +2,8 @@
 # shellcheck disable=SC2034,SC2154,SC1090
 set -Eeuo pipefail
 
+source "${ROOT}/scripts/run-kde-tier3-kio-round17-instrument.sh"
+
 run_r17_test() {
   local bin="$1" testcase="$2" label="$3"
   local home="${WORK}/homes/${label}"
@@ -17,45 +19,22 @@ run_r17_test() {
   echo "${rc}" > "${EVIDENCE}/${label}.rc"
 }
 
-STAGE='exact-original-baseline'
-run_r17_test kdirmodeltest testIcon kdirmodel-original
-run_r17_test knewfilemenutest 'testFolderIconCollection:default' knewfilemenu-original
+STAGE='svg-plugin-present-initial'
+r17_record_svg_state present-initial
+run_r17_test kdirmodeltest testIcon kdirmodel-present-initial
+run_r17_test knewfilemenutest 'testFolderIconCollection:default' knewfilemenu-present-initial
 
-python3 - "${EVIDENCE}" <<'PY'
-import sys
-from pathlib import Path
-ev=Path(sys.argv[1])
-kd=(ev/"kdirmodel-original.log").read_text(errors="replace")
-kn=(ev/"knewfilemenu-original.log").read_text(errors="replace")
-kdrc=int((ev/"kdirmodel-original.rc").read_text())
-knrc=int((ev/"knewfilemenu-original.rc").read_text())
-if kdrc==0 or 'Actual   (icon2.name()): ""' not in kd:
-    raise SystemExit("ORIGINAL_BASELINE_INVALID: kdirmodel did not reproduce")
-if knrc==0 or 'Actual   (iconLabel->property("iconName").toString()): ""' not in kn:
-    raise SystemExit("ORIGINAL_BASELINE_INVALID: knewfilemenu did not reproduce")
-PY
+STAGE='svg-plugin-absent'
+r17_remove_svg_plugin
+r17_record_svg_state absent
+run_r17_test kdirmodeltest testIcon kdirmodel-absent
+run_r17_test knewfilemenutest 'testFolderIconCollection:default' knewfilemenu-absent
 
-source "${ROOT}/scripts/run-kde-tier3-kio-round17-instrument.sh"
-
-STAGE='kdirmodel-local-result-variant'
-r17_patch_kdirmodel_local_result
-cmake --build "${OBJ}" --target kdirmodeltest --parallel 2 |& tee "${EVIDENCE}/kdirmodel-local-result-build.log"
-run_r17_test kdirmodeltest testIcon kdirmodel-local-result
-
-STAGE='restore-after-kdirmodel'
-r17_restore_sources
-cmake --build "${OBJ}" --target kdirmodeltest --parallel 2 |& tee "${EVIDENCE}/kdirmodel-restored-build.log"
-run_r17_test kdirmodeltest testIcon kdirmodel-restored
-
-STAGE='knewfilemenu-named-default-variant'
-r17_patch_knew_named_default
-cmake --build "${OBJ}" --target knewfilemenutest --parallel 2 |& tee "${EVIDENCE}/knewfilemenu-named-default-build.log"
-run_r17_test knewfilemenutest 'testFolderIconCollection:default' knewfilemenu-named-default
-
-STAGE='restore-after-knewfilemenu'
-r17_restore_sources
-cmake --build "${OBJ}" --target knewfilemenutest --parallel 2 |& tee "${EVIDENCE}/knewfilemenu-restored-build.log"
-run_r17_test knewfilemenutest 'testFolderIconCollection:default' knewfilemenu-restored
+STAGE='svg-plugin-reinstalled'
+r17_install_svg_plugin
+r17_record_svg_state reinstalled
+run_r17_test kdirmodeltest testIcon kdirmodel-reinstalled
+run_r17_test knewfilemenutest 'testFolderIconCollection:default' knewfilemenu-reinstalled
 
 STAGE='classification'
 set +e
@@ -69,48 +48,54 @@ knmarker='Actual   (iconLabel->property("iconName").toString()): ""'
 def read(label,marker):
     text=(ev/f"{label}.log").read_text(errors="replace")
     rc=int((ev/f"{label}.rc").read_text().strip())
-    return {"rc":rc,"original_failure":marker in text,"pass":rc==0}
+    return {"rc":rc,"historical_empty_name_failure":marker in text,"pass":rc==0}
 
-kd0=read("kdirmodel-original",kdmarker)
-kn0=read("knewfilemenu-original",knmarker)
-kdr=read("kdirmodel-restored",kdmarker)
-knr=read("knewfilemenu-restored",knmarker)
-kdv=read("kdirmodel-local-result",kdmarker)
-knv=read("knewfilemenu-named-default",knmarker)
+present={
+ "kdirmodel":read("kdirmodel-present-initial",kdmarker),
+ "knewfilemenu":read("knewfilemenu-present-initial",knmarker),
+}
+absent={
+ "kdirmodel":read("kdirmodel-absent",kdmarker),
+ "knewfilemenu":read("knewfilemenu-absent",knmarker),
+}
+reinstalled={
+ "kdirmodel":read("kdirmodel-reinstalled",kdmarker),
+ "knewfilemenu":read("knewfilemenu-reinstalled",knmarker),
+}
 
-baseline_valid=(
-    kd0["rc"]!=0 and kd0["original_failure"] and
-    kn0["rc"]!=0 and kn0["original_failure"] and
-    kdr["rc"]!=0 and kdr["original_failure"] and
-    knr["rc"]!=0 and knr["original_failure"]
-)
-if not baseline_valid:
+present_ok=all(x["pass"] and not x["historical_empty_name_failure"] for x in present.values())
+absent_reproduces=all((not x["pass"]) and x["historical_empty_name_failure"] for x in absent.values())
+reinstalled_ok=all(x["pass"] and not x["historical_empty_name_failure"] for x in reinstalled.values())
+
+if present_ok and absent_reproduces and reinstalled_ok:
+    result="DIAG_COMPLETE"
+    conclusion="qt6-svg-plugins-presence-controls-both-kio-icon-name-failures"
+    next_scope="qt-svg-provider-contract-root-cause-confirmation-and-remediation-definition"
+elif not present_ok:
     result="DIAG_INVALID"
-    conclusion="original-or-restored-baseline-drift"
-    next_scope="repair-build-reproducibility-before-structural-ab"
-elif kdv["pass"] and knv["pass"]:
+    conclusion="svg-present-baseline-not-clean"
+    next_scope="repair-present-baseline"
+elif not absent_reproduces:
     result="DIAG_COMPLETE"
-    conclusion="minimal-QIcon-local-lifetime-changes-heal-both-failures"
-    next_scope="confirm-temporary-lifetime-copy-move-vs-LTO-root-cause"
-elif kdv["pass"] or knv["pass"]:
-    result="DIAG_COMPLETE"
-    conclusion="minimal-QIcon-local-lifetime-change-heals-one-failure"
-    next_scope="confirm-healed-path-and-isolate-unresolved-path"
+    conclusion="removing-qt6-svg-plugins-does-not-reproduce-both-historical-failures"
+    next_scope="compare-round13-environment-beyond-svg-plugin"
 else:
     result="DIAG_COMPLETE"
-    conclusion="minimal-local-lifetime-changes-do-not-heal"
-    next_scope="isolate-other-attempt1-codegen-perturbations"
+    conclusion="qt6-svg-plugins-removal-reproduces-but-reinstall-does-not-recover"
+    next_scope="inspect-process-cache-or-package-removal-side-effects"
 
 findings={
  "result":result,
  "package_attempted":False,
  "package_state_effect":"none",
- "baseline_valid":baseline_valid,
- "original":{"kdirmodel":kd0,"knewfilemenu":kn0},
- "restored":{"kdirmodel":kdr,"knewfilemenu":knr},
- "variants":{
-   "kdirmodel-local-result":kdv,
-   "knewfilemenu-named-default":knv,
+ "source_modified":False,
+ "present_initial":present,
+ "absent":absent,
+ "reinstalled":reinstalled,
+ "aba_invariants":{
+   "present_initial_pass":present_ok,
+   "absent_reproduces_both_historical_failures":absent_reproduces,
+   "reinstalled_pass":reinstalled_ok
  },
  "conclusion":conclusion,
  "next_scope":next_scope
@@ -131,4 +116,4 @@ fi
 
 STAGE='complete'
 DIAG_RESULT=DIAG_COMPLETE
-echo 'KIO Round 17 original-source structural A/B diagnostic: COMPLETE (non-promoting)'
+echo 'KIO Round 17 Qt SVG plugin A/B/A diagnostic: COMPLETE (non-promoting)'

@@ -11,7 +11,7 @@
   "package_attempted": false,
   "package_state_effect": "none",
   "canonical_source_modified": false,
-  "diagnostic_instrumentation": true,
+  "diagnostic_instrumentation": false,
   "dag_state_changes_allowed": false,
   "downstream_eligibility_changes_allowed": false,
   "execution_authorized": false,
@@ -36,10 +36,7 @@
   },
   "diagnostic_scope": {
     "exact_provider_closure_from": "manifests/kde-tier3-build-level1.json",
-    "transient_instrumented_files": [
-      "src/widgets/kdirmodel.cpp",
-      "src/filewidgets/knewfilemenu.cpp"
-    ],
+    "source_modified": false,
     "build_targets": [
       "kio_file",
       "kioworker",
@@ -50,51 +47,35 @@
       "kdirmodeltest": "testIcon",
       "knewfilemenutest": "testFolderIconCollection:default"
     },
-    "kdirmodel_checkpoints": [
-      "direct unknown fallback",
-      "absolute invalid icon QIcon construction",
-      "QIcon::fromTheme(invalid absolute name, fallback)",
-      "before KIconUtils::addOverlays",
-      "after KIconUtils::addOverlays"
+    "environment_variable": "qt6-svg-plugins package presence",
+    "aba_sequence": [
+      "present-initial",
+      "absent-after-package-removal",
+      "reinstalled"
     ],
-    "knewfilemenu_checkpoints": [
-      "constructor body",
-      "checkUpToDate entry",
-      "checkUpToDate exit",
-      "showNewDirNameDlg entry",
-      "after initDialog",
-      "default inode-directory QIcon creation",
-      "setIcon input",
-      "setIcon property write and pixmap render"
+    "evidence": [
+      "dpkg package status and versions",
+      "apt-cache policy and dependency metadata",
+      "installed SVG plugin files",
+      "per-test exit codes and original failure signatures"
     ],
     "invariants": [
-      "exact unmodified source must reproduce both original empty-name failures before any intervention",
-      "each structural variant changes exactly one QIcon temporary/return lifetime shape",
-      "source is restored byte-for-byte and rebuilt after each variant; restored tests must reproduce the original failures",
-      "all variant patches and source hashes are retained as evidence",
-      "no diagnostic source delta is materialized into Debian source or binary packages"
+      "source remains byte-for-byte unchanged for all A/B/A phases",
+      "initial plugin-present phase must pass both tests",
+      "plugin-absent phase must reproduce both exact historical empty-name failures to establish control",
+      "reinstalled phase must return both tests to PASS",
+      "no Debian package is built and no KIO revision is allocated"
     ],
     "package_build": false,
     "canonical_source_modification": false,
     "package_revision_allocation": false,
-    "test_suppression": false,
-    "instrumentation_strategy": "exact-original-baseline-then-minimal-structural-ab",
-    "kdirmodel_variants": [
-      "exact-original",
-      "local-result-for-KIconUtils-addOverlays-return",
-      "restored-exact-original"
-    ],
-    "knewfilemenu_variants": [
-      "exact-original",
-      "named-local-QIcon-before-setIcon",
-      "restored-exact-original"
-    ]
+    "test_suppression": false
   },
   "decision_rules": {
-    "exact_original_or_restored_does_not_reproduce": "diagnostic-invalid-build-reproducibility-drift",
-    "both_minimal_structural_variants_heal": "confirm-temporary-lifetime-copy-move-vs-LTO-root-cause",
-    "one_minimal_structural_variant_heals": "confirm-healed-path-and-isolate-unresolved-path",
-    "neither_minimal_structural_variant_heals": "isolate-other-attempt1-codegen-perturbations"
+    "present_pass_absent_reproduces_reinstall_pass": "qt6-svg-plugins-presence-controls-both-kio-icon-name-failures",
+    "present_not_clean": "diagnostic-invalid-svg-present-baseline",
+    "absent_does_not_reproduce_both": "compare-round13-environment-beyond-svg-plugin",
+    "reinstall_does_not_recover": "inspect-process-cache-or-package-removal-side-effects"
   },
   "next_gate": "tier3-round17-kio-object-path-state-transition-diagnostic-evidence",
   "stable_promotion_requires_explicit_user_approval": true,
@@ -124,6 +105,26 @@
       "conclusion": "conditional-instrumentation-still-perturbs-baseline",
       "cause": "Even with SUPRALINUX_R17_TOUCH unset, the modified production source changed QIcon temporary/return structure, and both original tests passed.",
       "canonical_effect": "none"
+    },
+    {
+      "attempt": 3,
+      "definition_commit": "287c4e09d259af0d7f05c70ba856f81a75fac0b3",
+      "workflow_run": 36215721289,
+      "job_id": 108331181346,
+      "artifact_id": 10897152304,
+      "artifact_sha256": "dfe1356e3e10e4e12894627cab203c96ba9d842f11825ccb405b211da329b8f6",
+      "repository_policy_workflow_run": 36215721283,
+      "repository_policy_result": "PASS",
+      "result": "DIAG_INVALID",
+      "stage": "exact-original-baseline",
+      "conclusion": "original-baseline-passed-due-to-environment-fixture-drift",
+      "observed": {
+        "kdirmodel": "PASS",
+        "knewfilemenu": "PASS"
+      },
+      "cause": "Round17 inherited explicit qt6-svg-dev and qt6-svg-plugins installation from Round16; Round13/Attempt7 did not explicitly install qt6-svg-plugins.",
+      "canonical_effect": "none"
     }
-  ]
+  ],
+  "environment_ab": true
 }

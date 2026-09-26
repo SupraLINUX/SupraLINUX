@@ -24,7 +24,7 @@ req(M.get("schema")==1 and M.get("node")=="kio" and M.get("round")==17,"Round17 
 req(M.get("authority")=="kde-upstream" and M.get("frameworks_series")=="6.30.0" and M.get("upstream_ref")=="v6.30.0","Round17 upstream identity")
 req(M.get("claim")=="non-promoting-actual-kio-object-path-state-transition-diagnostic" and M.get("non_promoting") is True,"Round17 claim")
 req(M.get("package_attempted") is False and M.get("package_state_effect")=="none","Round17 package state")
-req(M.get("canonical_source_modified") is False and M.get("diagnostic_instrumentation") is True,"Round17 instrumentation contract")
+req(M.get("canonical_source_modified") is False and M.get("diagnostic_instrumentation") is False and M.get("environment_ab") is True,"Round17 A/B environment contract")
 req(M.get("dag_state_changes_allowed") is False and M.get("downstream_eligibility_changes_allowed") is False,"Round17 DAG safety")
 req(M.get("execution_authorized") is False and M.get("status") in {"definition-pending-diagnostic","diagnostic-PASS"},"Round17 lifecycle")
 req(M.get("canonical_snapshot")=="12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED","Round17 snapshot")
@@ -45,8 +45,8 @@ req(sm.get("artifact_id")==10839162922 and sm.get("artifact_sha256")=="ffd7fb48d
 req(sm.get("package_version")=="6.30.0-0supralinux7" and sm.get("upstream_source_sha256")=="c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2","Round17 source identity")
 
 invalid=M.get("invalid_attempts",[])
-req(len(invalid)==2,"Round17 invalid attempt ledger")
-a1,a2=invalid
+req(len(invalid)==3,"Round17 invalid attempt ledger")
+a1,a2,a3=invalid
 req(a1.get("attempt")==1 and a1.get("workflow_run")==36213295538 and a1.get("job_id")==108324143779,"Round17 invalid Attempt1 workflow")
 req(a1.get("artifact_id")==10896761982 and a1.get("artifact_sha256")=="5247d6b2f9f80c15cb04c63c4687d37b707421e3a1f91f0e8f9e2d3360c01084","Round17 invalid Attempt1 artifact")
 req(a1.get("result")=="DIAG_INVALID" and a1.get("conclusion")=="instrumentation-perturbed-original-failure" and a1.get("canonical_effect")=="none","Round17 invalid Attempt1 classification")
@@ -54,23 +54,26 @@ req(a2.get("attempt")==2 and a2.get("workflow_run")==36214198192 and a2.get("job
 req(a2.get("artifact_id")==10896848386 and a2.get("artifact_sha256")=="5b4c14d52b858a2455b7a9ee395db305360c8a386993fad37e92f7620fdb4002","Round17 invalid Attempt2 artifact")
 req(a2.get("repository_policy_workflow_run")==36214198247 and a2.get("repository_policy_result")=="FAIL-SHELLCHECK-SC2100","Round17 invalid Attempt2 policy")
 req(a2.get("result")=="DIAG_INVALID" and a2.get("conclusion")=="conditional-instrumentation-still-perturbs-baseline" and a2.get("canonical_effect")=="none","Round17 invalid Attempt2 classification")
+req(a3.get("attempt")==3 and a3.get("workflow_run")==36215721289 and a3.get("job_id")==108331181346,"Round17 invalid Attempt3 workflow")
+req(a3.get("artifact_id")==10897152304 and a3.get("artifact_sha256")=="dfe1356e3e10e4e12894627cab203c96ba9d842f11825ccb405b211da329b8f6","Round17 invalid Attempt3 artifact")
+req(a3.get("repository_policy_workflow_run")==36215721283 and a3.get("repository_policy_result")=="PASS","Round17 invalid Attempt3 policy")
+req(a3.get("result")=="DIAG_INVALID" and a3.get("conclusion")=="original-baseline-passed-due-to-environment-fixture-drift" and a3.get("canonical_effect")=="none","Round17 invalid Attempt3 classification")
 
 scope=M.get("diagnostic_scope",{})
-req(scope.get("transient_instrumented_files")==["src/widgets/kdirmodel.cpp","src/filewidgets/knewfilemenu.cpp"],"Round17 instrumented files")
+req(scope.get("source_modified") is False,"Round17 source unchanged")
 req(scope.get("exact_test_cases",{}).get("kdirmodeltest")=="testIcon","Round17 KDir test")
 req(scope.get("exact_test_cases",{}).get("knewfilemenutest")=="testFolderIconCollection:default","Round17 KNew test")
-req(scope.get("instrumentation_strategy")=="exact-original-baseline-then-minimal-structural-ab","Round17 Attempt3 strategy")
-req(scope.get("kdirmodel_variants")==["exact-original","local-result-for-KIconUtils-addOverlays-return","restored-exact-original"],"Round17 KDir structural matrix")
-req(scope.get("knewfilemenu_variants")==["exact-original","named-local-QIcon-before-setIcon","restored-exact-original"],"Round17 KNew structural matrix")
+req(scope.get("environment_variable")=="qt6-svg-plugins package presence","Round17 SVG variable")
+req(scope.get("aba_sequence")==["present-initial","absent-after-package-removal","reinstalled"],"Round17 A/B/A sequence")
 req(all(scope.get(x) is False for x in ("package_build","canonical_source_modification","package_revision_allocation","test_suppression")),"Round17 safety scope")
 
 for token in ("KDE Frameworks Tier 3 KIO Round 17 diagnostic","ubuntu-26.04","run-kde-tier3-kio-round17-diagnostic.sh"):
     req(token in W,f"workflow token {token}")
-for token in ("10839162922","variant-kdirmodel-local-result.patch","variant-knewfilemenu-named-default.patch","KIconUtils::addOverlays","r17DefaultFolderIcon","testFolderIconCollection:default"):
+for token in ("10839162922","qt6-svg-plugins","r17_remove_svg_plugin","r17_install_svg_plugin","svg-state-present-initial","testFolderIconCollection:default","historical_empty_name_failure"):
     req(token in R,f"runner token {token}")
 for forbidden in ("dpkg-buildpackage","sbuild --"):
     req(forbidden not in R,f"Round17 must not package: {forbidden}")
-req("transient diagnostic-only instrumentation patch" in D and "must still reproduce both original failures" in D and "Attempt 3 — exact original baseline, then structural A/B" in D,"Round17 documentation")
+req("Attempt 4 — Qt SVG plugin A/B/A, no source changes" in D and "PASS with plugin" in D and "No ownership decision is assumed in Round 17" in D,"Round17 documentation")
 
 if M.get("status")=="definition-pending-diagnostic":
     req(L.get("next_gate")=="tier3-round17-kio-object-path-state-transition-diagnostic-definition","Round17 live definition gate")
