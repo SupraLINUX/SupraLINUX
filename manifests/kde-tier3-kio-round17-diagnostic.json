@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-25",
+  "node": "kio",
+  "round": 17,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "claim": "non-promoting-actual-kio-object-path-state-transition-diagnostic",
+  "non_promoting": true,
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "canonical_source_modified": false,
+  "diagnostic_instrumentation": true,
+  "dag_state_changes_allowed": false,
+  "downstream_eligibility_changes_allowed": false,
+  "execution_authorized": false,
+  "status": "definition-pending-diagnostic",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "round16_evidence": {
+    "workflow_run": 36209833629,
+    "job_id": 108313880904,
+    "commit": "5bea0781bf90ed97c53fdddc761566d4a984f5a7",
+    "artifact_id": 10894374901,
+    "artifact_sha256": "8cda50173446df052b21e5ca4fe89129af65e1c1e1ff13ac137953b5a9508cf6",
+    "result": "DIAG_COMPLETE",
+    "conclusion": "library-preload-alone-does-not-reproduce-kio-icon-name-loss"
+  },
+  "source_materialization": {
+    "workflow_run": 36073638711,
+    "job_id": 107879979760,
+    "artifact_id": 10839162922,
+    "artifact_sha256": "ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c",
+    "package_version": "6.30.0-0supralinux7",
+    "upstream_source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2"
+  },
+  "diagnostic_scope": {
+    "exact_provider_closure_from": "manifests/kde-tier3-build-level1.json",
+    "transient_instrumented_files": [
+      "src/widgets/kdirmodel.cpp",
+      "src/filewidgets/knewfilemenu.cpp"
+    ],
+    "build_targets": [
+      "kio_file",
+      "kioworker",
+      "kdirmodeltest",
+      "knewfilemenutest"
+    ],
+    "exact_test_cases": {
+      "kdirmodeltest": "testIcon",
+      "knewfilemenutest": "testFolderIconCollection:default"
+    },
+    "kdirmodel_checkpoints": [
+      "direct unknown fallback",
+      "absolute invalid icon QIcon construction",
+      "QIcon::fromTheme(invalid absolute name, fallback)",
+      "before KIconUtils::addOverlays",
+      "after KIconUtils::addOverlays"
+    ],
+    "knewfilemenu_checkpoints": [
+      "constructor body",
+      "checkUpToDate entry",
+      "checkUpToDate exit",
+      "showNewDirNameDlg entry",
+      "after initDialog",
+      "default inode-directory QIcon creation",
+      "setIcon input",
+      "setIcon property write and pixmap render"
+    ],
+    "invariants": [
+      "instrumented tests must still reproduce their original empty-name failures",
+      "instrumentation adds observation only and is never materialized into Debian source or binary packages",
+      "exact XCB/Breeze/KDECI/QT_PLUGIN_PATH environment is retained"
+    ],
+    "package_build": false,
+    "canonical_source_modification": false,
+    "package_revision_allocation": false,
+    "test_suppression": false
+  },
+  "decision_rules": {
+    "kdirmodel_fallback_already_empty": "global-icon-state-is-broken-before-kdirmodel-fallback",
+    "kdirmodel_fromtheme_fallback_loses_name": "invalid-theme-fallback-transition",
+    "kdirmodel_addoverlays_loses_name": "KIconUtils-addOverlays-transition",
+    "kdirmodel_unresolved": "deeper-KDirModel-return-or-QVariant-transition",
+    "knewfilemenu_first_empty_checkpoint": "first KNewFileMenu object-path checkpoint with empty inode-directory name",
+    "original_failure_not_reproduced": "diagnostic-invalid-instrumentation-perturbed-behavior",
+    "both_transitions_localized": "define-minimal-root-cause-confirmation",
+    "one_or_both_unresolved": "narrow-next-instrumentation-to-unresolved-gap"
+  },
+  "next_gate": "tier3-round17-kio-object-path-state-transition-diagnostic-evidence",
+  "stable_promotion_requires_explicit_user_approval": true
+}

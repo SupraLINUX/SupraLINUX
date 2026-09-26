@@ -340,6 +340,9 @@ jobs:
       - name: Validate KDE Tier 3 KIO Round 16 diagnostic
         run: python3 scripts/validate_kde_tier3_kio_round16_diagnostic.py
 
+      - name: Validate KDE Tier 3 KIO Round 17 diagnostic
+        run: python3 scripts/validate_kde_tier3_kio_round17_diagnostic.py
+
       - name: Validate KDE Attica 6.30 packaging preparation
         run: python3 scripts/validate_kde_attica_package.py
 
