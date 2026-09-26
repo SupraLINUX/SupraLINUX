@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-26",
+  "node": "kio",
+  "round": 18,
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "claim": "non-promoting-qt-svg-provider-contract-ownership-audit",
+  "non_promoting": true,
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "canonical_source_modified": false,
+  "dag_state_changes_allowed": false,
+  "downstream_eligibility_changes_allowed": false,
+  "package_revision_allocation": false,
+  "status": "definition-pending-audit",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "round17_evidence": {
+    "workflow_run": 36218411267,
+    "job_id": 108338905718,
+    "artifact_id": 10898332133,
+    "artifact_sha256": "511239dc8fd4581c032d8a7723e2edd772aab450718d44513c528dcf56a862f0",
+    "conclusion": "qt6-svg-plugins-presence-controls-both-kio-icon-name-failures"
+  },
+  "upstream_contract_evidence": {
+    "kio": {
+      "repository": "KDE/kio",
+      "ref": "v6.30.0",
+      "cmake_blob": "2b655093491670009d9396b60159afbec5cc8385",
+      "observation": "KIO requires Qt6 Widgets/Network/Concurrent/Xml/Test and KF6IconThemes but does not directly find Qt6Svg."
+    },
+    "kiconthemes": {
+      "repository": "KDE/kiconthemes",
+      "ref": "v6.30.0",
+      "cmake_blob": "252edc1c87f2b312801771c4e971740b71fdf01e",
+      "src_cmake_blob": "99cbb97db7cc47828b1fde49ed1d58f86b3d76d7",
+      "observation": "KIconThemes requires Qt6Svg and links Qt6::Svg privately."
+    },
+    "breeze_icons": {
+      "repository": "KDE/breeze-icons",
+      "ref": "v6.30.0",
+      "cmake_blob": "4482a5fa712f27feec0ee3ec4c5c7bcc07a660d3",
+      "observation": "Breeze Icons does not define the Qt SVG runtime plugin contract."
+    },
+    "qt": {
+      "qicon_documentation": "https://doc.qt.io/qt-6/qicon.html",
+      "plugin_documentation": "https://doc.qt.io/qt-6/plugins-howto.html",
+      "observation": "QtSvg provides the SVG QIcon engine; QIconEnginePlugin uses the iconengines plugin category."
+    }
+  },
+  "resolute_contract_expectations": {
+    "qt6-svg-plugins": {
+      "expected_version": "6.10.2-2",
+      "must_contain": [
+        "/usr/lib/x86_64-linux-gnu/qt6/plugins/iconengines/libqsvgicon.so",
+        "/usr/lib/x86_64-linux-gnu/qt6/plugins/imageformats/libqsvg.so"
+      ]
+    },
+    "qt6-svg-dev": {
+      "expected_version": "6.10.2-2",
+      "must_not_depend_on": "qt6-svg-plugins"
+    },
+    "libqt6gui6": {
+      "version_series": "6.10.2",
+      "must_recommend": "qt6-svg-plugins"
+    },
+    "libkf6iconthemes6": {
+      "must_depend_on": "libqt6svg6",
+      "must_not_depend_on": "qt6-svg-plugins"
+    },
+    "kf6-breeze-icon-theme": {
+      "must_not_depend_on": "qt6-svg-plugins"
+    }
+  },
+  "supralinux_precedent": {
+    "node": "kiconthemes",
+    "relation": "qt6-svg-plugins <!nocheck>",
+    "classification": "upstream-test-environment-provider"
+  },
+  "decision_if_audit_passes": {
+    "owner": "kio-build-test-closure",
+    "field": "Build-Depends",
+    "action": "ensure",
+    "relation": "qt6-svg-plugins <!nocheck>",
+    "classification": "upstream-test-environment-provider",
+    "runtime_binary_relation": "none",
+    "rationale": "KIO upstream icon tests consume Breeze SVG through QIcon. Ubuntu supplies the SVG icon engine as a libqt6gui6 Recommends, while sbuild test closure cannot rely on Recommends. Make the test provider explicit without changing Ubuntu-compatible runtime dependency contracts."
+  },
+  "next_gate": "tier3-round18-kio-qt-svg-provider-contract-audit-evidence",
+  "stable_promotion_requires_explicit_user_approval": true
+}
