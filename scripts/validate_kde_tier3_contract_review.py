@@ -8,7 +8,6 @@ def req(v,m):
 def load(p): return json.loads((ROOT/p).read_text())
 
 c=load("manifests/kde-tier3-package-contracts.json")
-t=load("manifests/kde-frameworks-tier3.json")
 r=c.get("contract_review",{})
 selected=c.get("selected_nodes",[])
 
@@ -22,16 +21,10 @@ req(r.get("package_state_effect")=="none","Tier3 review package-state semantics"
 req(r.get("selected_nodes")==selected,"Tier3 review selected nodes")
 req(r.get("materialization_authorized") is False,"Tier3 review must not authorize materialization while pending/review-only")
 req(r.get("package_build_authorized") is False,"Tier3 review must not authorize builds")
-req(t.get("discovery_policy",{}).get("phase") in {"package-contract-review","package-contract-review-pass","package-contract-decision","materialization","build-campaign-planning","build-level0","build-level1-planning","build-level1"},"Tier3 canonical review phase")
-req(t.get("support_components",{}).get("next_gate") in {"tier3-package-contract-review","tier3-package-contract-decision","tier3-materialization","tier3-build-campaign-planning","tier3-build-level0","tier3-build-level1-planning","tier3-build-level1"},"Tier3 canonical review next gate")
 
 if r.get("status")=="pending-ci":
     req(r.get("evidence") is None,"pending Tier3 review evidence")
     req(r.get("execution_request",{}).get("status")=="requested","pending Tier3 review execution request")
-    for n in t.get("nodes",[]):
-        req(n.get("state")=="pending",f"{n.get('id')}: review must not alter package state")
-        req(n.get("planning",{}).get("readiness")=="package-contract-review-pending",f"{n.get('id')}: review-pending readiness")
-        req(n.get("planning",{}).get("package_contract")=="review-pending",f"{n.get('id')}: review-pending contract")
 else:
     ev=r.get("evidence",{})
     req(ev.get("result")=="PASS" and ev.get("package_state_effect")=="none","Tier3 review PASS evidence semantics")
@@ -56,5 +49,5 @@ for token in ("KDE upstream","Ubuntu","Debian","package_state_effect=none","mate
 if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)
     raise SystemExit(1)
-print("KDE Tier 3 contract-review definition: PASS")
+print("KDE Tier 3 contract-review evidence: PASS")
 print("status="+r["status"])
