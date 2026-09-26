@@ -43,32 +43,23 @@ kdir_old='''                static const QIcon fallbackIcon = QIcon::fromTheme(Q
 kdir_new='''                static const QIcon fallbackIcon = QIcon::fromTheme(QStringLiteral("unknown"));
 
                 const QString iconName(item.iconName());
-                const bool r17Trace = QDir::isAbsolutePath(iconName);
-                if (r17Trace) {
-                    qInfo().noquote() << QStringLiteral("R17|KDIR|stage=fallback|source=%1|name=%2|null=%3|theme=%4|fallback=%5")
-                                            .arg(iconName)
-                                            .arg(fallbackIcon.name())
-                                            .arg(fallbackIcon.isNull() ? 1 : 0)
-                                            .arg(QIcon::themeName())
-                                            .arg(QIcon::fallbackThemeName());
+                const QString r17Touch = qEnvironmentVariable("SUPRALINUX_R17_TOUCH");
+                if (r17Touch == QStringLiteral("KDIR_FALLBACK")) {
+                    (void)fallbackIcon.name();
                 }
                 QIcon icon;
 
                 if (QDir::isAbsolutePath(iconName)) {
                     icon = QIcon(iconName);
-                    qInfo().noquote() << QStringLiteral("R17|KDIR|stage=absolute-qicon|source=%1|name=%2|null=%3")
-                                            .arg(iconName)
-                                            .arg(icon.name())
-                                            .arg(icon.isNull() ? 1 : 0);
+                    if (r17Touch == QStringLiteral("KDIR_ABSOLUTE")) {
+                        (void)icon.name();
+                    }
                 }
                 if (icon.isNull()
                     || (!(iconName.endsWith(QLatin1String(".svg")) || iconName.endsWith(QLatin1String(".svgz"))) && icon.availableSizes().isEmpty())) {
                     icon = QIcon::fromTheme(iconName, fallbackIcon);
-                    if (r17Trace) {
-                        qInfo().noquote() << QStringLiteral("R17|KDIR|stage=after-fromtheme|source=%1|name=%2|null=%3")
-                                                .arg(iconName)
-                                                .arg(icon.name())
-                                                .arg(icon.isNull() ? 1 : 0);
+                    if (r17Touch == QStringLiteral("KDIR_FROMTHEME")) {
+                        (void)icon.name();
                     }
                 }
 
@@ -76,66 +67,25 @@ kdir_new='''                static const QIcon fallbackIcon = QIcon::fromTheme(Q
                 if (parentNode->isOnNetwork()) {
                     return icon;
                 } else {
-                    const auto overlays = item.overlays();
-                    if (r17Trace) {
-                        qInfo().noquote() << QStringLiteral("R17|KDIR|stage=before-overlays|source=%1|name=%2|null=%3|overlays=%4")
-                                                .arg(iconName)
-                                                .arg(icon.name())
-                                                .arg(icon.isNull() ? 1 : 0)
-                                                .arg(overlays.size());
+                    if (r17Touch == QStringLiteral("KDIR_BEFORE_OVERLAYS")) {
+                        (void)icon.name();
                     }
-                    const QIcon result = KIconUtils::addOverlays(icon, overlays);
-                    if (r17Trace) {
-                        qInfo().noquote() << QStringLiteral("R17|KDIR|stage=after-overlays|source=%1|name=%2|null=%3")
-                                                .arg(iconName)
-                                                .arg(result.name())
-                                                .arg(result.isNull() ? 1 : 0);
+                    const QIcon result = KIconUtils::addOverlays(icon, item.overlays());
+                    if (r17Touch == QStringLiteral("KDIR_AFTER_OVERLAYS")) {
+                        (void)result.name();
                     }
                     return result;
                 }
 '''
-replace_once(kdir,kdir_old,kdir_new,"kdirmodel decoration")
-
-seticon_old='''void KNewFileMenuPrivate::setIcon(const QIcon &icon)
-{
-    m_iconLabel->setProperty("iconName", icon.name());
-    if (!icon.isNull()) {
-        const QSize iconSize{KIconLoader::SizeHuge, KIconLoader::SizeHuge};
-        m_iconLabel->setPixmap(icon.pixmap(iconSize, m_fileDialog->devicePixelRatioF()));
-    }
-    m_iconLabel->setVisible(!icon.isNull());
-}
-'''
-seticon_new='''void KNewFileMenuPrivate::setIcon(const QIcon &icon)
-{
-    qInfo().noquote() << QStringLiteral("R17|KNEW|stage=seticon-input|name=%1|null=%2|theme=%3|fallback=%4")
-                            .arg(icon.name())
-                            .arg(icon.isNull() ? 1 : 0)
-                            .arg(QIcon::themeName())
-                            .arg(QIcon::fallbackThemeName());
-    m_iconLabel->setProperty("iconName", icon.name());
-    qInfo().noquote() << QStringLiteral("R17|KNEW|stage=seticon-property|name=%1")
-                            .arg(m_iconLabel->property("iconName").toString());
-    if (!icon.isNull()) {
-        const QSize iconSize{KIconLoader::SizeHuge, KIconLoader::SizeHuge};
-        m_iconLabel->setPixmap(icon.pixmap(iconSize, m_fileDialog->devicePixelRatioF()));
-    }
-    qInfo().noquote() << QStringLiteral("R17|KNEW|stage=seticon-after-pixmap|name=%1")
-                            .arg(m_iconLabel->property("iconName").toString());
-    m_iconLabel->setVisible(!icon.isNull());
-}
-'''
-replace_once(knew,seticon_old,seticon_new,"knew setIcon")
+replace_once(kdir,kdir_old,kdir_new,"kdirmodel touch points")
 
 ctor_old='''{
     // Don't fill the menu yet
 '''
 ctor_new='''{
-    const QIcon r17CtorProbe = QIcon::fromTheme(QStringLiteral("inode-directory"));
-    qInfo().noquote() << QStringLiteral("R17|KNEW|stage=constructor-body|name=%1|theme=%2|fallback=%3")
-                            .arg(r17CtorProbe.name())
-                            .arg(QIcon::themeName())
-                            .arg(QIcon::fallbackThemeName());
+    if (qEnvironmentVariable("SUPRALINUX_R17_TOUCH") == QStringLiteral("KNEW_CONSTRUCTOR")) {
+        (void)QIcon::fromTheme(QStringLiteral("inode-directory")).name();
+    }
     // Don't fill the menu yet
 '''
 replace_once(knew,ctor_old,ctor_new,"knew constructor")
@@ -164,11 +114,10 @@ check_old='''void KNewFileMenu::checkUpToDate()
 '''
 check_new='''void KNewFileMenu::checkUpToDate()
 {
-    const QIcon r17EntryProbe = QIcon::fromTheme(QStringLiteral("inode-directory"));
-    qInfo().noquote() << QStringLiteral("R17|KNEW|stage=check-entry|name=%1|theme=%2|fallback=%3")
-                            .arg(r17EntryProbe.name())
-                            .arg(QIcon::themeName())
-                            .arg(QIcon::fallbackThemeName());
+    const QString r17Touch = qEnvironmentVariable("SUPRALINUX_R17_TOUCH");
+    if (r17Touch == QStringLiteral("KNEW_CHECK_ENTRY")) {
+        (void)QIcon::fromTheme(QStringLiteral("inode-directory")).name();
+    }
     KNewFileMenuSingleton *s = kNewMenuGlobals();
     // qDebug() << this << "m_menuItemsVersion=" << d->m_menuItemsVersion
     //              << "s->templatesVersion=" << s->templatesVersion;
@@ -187,11 +136,9 @@ check_new='''void KNewFileMenu::checkUpToDate()
 
         d->m_menuItemsVersion = s->templatesVersion;
     }
-    const QIcon r17ExitProbe = QIcon::fromTheme(QStringLiteral("inode-directory"));
-    qInfo().noquote() << QStringLiteral("R17|KNEW|stage=check-exit|name=%1|theme=%2|fallback=%3")
-                            .arg(r17ExitProbe.name())
-                            .arg(QIcon::themeName())
-                            .arg(QIcon::fallbackThemeName());
+    if (r17Touch == QStringLiteral("KNEW_CHECK_EXIT")) {
+        (void)QIcon::fromTheme(QStringLiteral("inode-directory")).name();
+    }
 }
 '''
 replace_once(knew,check_old,check_new,"knew checkUpToDate")
@@ -204,49 +151,43 @@ show_old='''void KNewFileMenuPrivate::showNewDirNameDlg(const QString &name)
 '''
 show_new='''void KNewFileMenuPrivate::showNewDirNameDlg(const QString &name)
 {
-    const QIcon r17ShowEntry = QIcon::fromTheme(QStringLiteral("inode-directory"));
-    qInfo().noquote() << QStringLiteral("R17|KNEW|stage=show-entry|name=%1|theme=%2|fallback=%3")
-                            .arg(r17ShowEntry.name())
-                            .arg(QIcon::themeName())
-                            .arg(QIcon::fallbackThemeName());
+    const QString r17Touch = qEnvironmentVariable("SUPRALINUX_R17_TOUCH");
+    if (r17Touch == QStringLiteral("KNEW_SHOW_ENTRY")) {
+        (void)QIcon::fromTheme(QStringLiteral("inode-directory")).name();
+    }
     initDialog();
-    const QIcon r17AfterInit = QIcon::fromTheme(QStringLiteral("inode-directory"));
-    qInfo().noquote() << QStringLiteral("R17|KNEW|stage=show-after-init|name=%1|theme=%2|fallback=%3")
-                            .arg(r17AfterInit.name())
-                            .arg(QIcon::themeName())
-                            .arg(QIcon::fallbackThemeName());
+    if (r17Touch == QStringLiteral("KNEW_AFTER_INIT")) {
+        (void)QIcon::fromTheme(QStringLiteral("inode-directory")).name();
+    }
 
     m_fileDialog->setWindowTitle(m_windowTitle.isEmpty() ? i18nc("@title:window", "Create New Folder") : m_windowTitle);
 '''
-replace_once(knew,show_old,show_new,"knew show entry")
+replace_once(knew,show_old,show_new,"knew showNewDirNameDlg")
 
 default_old='''    const QString defaultFolderIconName = QStringLiteral("inode-directory");
     setIcon(QIcon::fromTheme(defaultFolderIconName));
 '''
 default_new='''    const QString defaultFolderIconName = QStringLiteral("inode-directory");
-    const QIcon r17DefaultFolderIcon = QIcon::fromTheme(defaultFolderIconName);
-    qInfo().noquote() << QStringLiteral("R17|KNEW|stage=default-created|name=%1|null=%2|theme=%3|fallback=%4")
-                            .arg(r17DefaultFolderIcon.name())
-                            .arg(r17DefaultFolderIcon.isNull() ? 1 : 0)
-                            .arg(QIcon::themeName())
-                            .arg(QIcon::fallbackThemeName());
+    QIcon r17DefaultFolderIcon = QIcon::fromTheme(defaultFolderIconName);
+    if (r17Touch == QStringLiteral("KNEW_DEFAULT_CREATED")) {
+        (void)r17DefaultFolderIcon.name();
+    }
     setIcon(r17DefaultFolderIcon);
 '''
 replace_once(knew,default_old,default_new,"knew default icon")
 
-grid_old='''        m_chooseIconBox->show();
-    }
-
-    m_creatingDirectory = true;
+seticon_old='''void KNewFileMenuPrivate::setIcon(const QIcon &icon)
+{
+    m_iconLabel->setProperty("iconName", icon.name());
 '''
-grid_new='''        m_chooseIconBox->show();
-        qInfo().noquote() << QStringLiteral("R17|KNEW|stage=grid-ready|name=%1")
-                                .arg(m_iconLabel->property("iconName").toString());
+seticon_new='''void KNewFileMenuPrivate::setIcon(const QIcon &icon)
+{
+    if (qEnvironmentVariable("SUPRALINUX_R17_TOUCH") == QStringLiteral("KNEW_SETICON_INPUT")) {
+        (void)icon.name();
     }
-
-    m_creatingDirectory = true;
+    m_iconLabel->setProperty("iconName", icon.name());
 '''
-replace_once(knew,grid_old,grid_new,"knew grid ready")
+replace_once(knew,seticon_old,seticon_new,"knew setIcon input")
 PY
 
 {
@@ -259,15 +200,15 @@ import hashlib,json,sys
 from pathlib import Path
 work,kdir,knew,out=map(Path,sys.argv[1:])
 def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
-data={
+out.write_text(json.dumps({
  "diagnostic_only":True,
  "canonical_source_modified":False,
+ "strategy":"conditional-single-QIcon-name-read-perturbation",
  "files":{
    "src/widgets/kdirmodel.cpp":{"before":sha(work/"original/kdirmodel.cpp"),"after":sha(kdir)},
-   "src/filewidgets/knewfilemenu.cpp":{"before":sha(work/"original/knewfilemenu.cpp"),"after":sha(knew)},
+   "src/filewidgets/knewfilemenu.cpp":{"before":sha(work/"original/knewfilemenu.cpp"),"after":sha(knew)}
  }
-}
-out.write_text(json.dumps(data,indent=2,sort_keys=True)+"\n")
+},indent=2,sort_keys=True)+"\n")
 PY
-grep -F 'R17|KDIR' "${KDIR}" >/dev/null
-grep -F 'R17|KNEW' "${KNEW}" >/dev/null
+grep -F 'SUPRALINUX_R17_TOUCH' "${KDIR}" >/dev/null
+grep -F 'SUPRALINUX_R17_TOUCH' "${KNEW}" >/dev/null

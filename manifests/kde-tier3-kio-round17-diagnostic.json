@@ -68,25 +68,56 @@
       "setIcon property write and pixmap render"
     ],
     "invariants": [
-      "instrumented tests must still reproduce their original empty-name failures",
-      "instrumentation adds observation only and is never materialized into Debian source or binary packages",
+      "baseline-no-touch must reproduce both original empty-name failures",
+      "each touch variant executes in a fresh process and performs exactly one controlled QIcon::name() read site",
+      "instrumentation is diagnostic-only and is never materialized into Debian source or binary packages",
       "exact XCB/Breeze/KDECI/QT_PLUGIN_PATH environment is retained"
     ],
     "package_build": false,
     "canonical_source_modification": false,
     "package_revision_allocation": false,
-    "test_suppression": false
+    "test_suppression": false,
+    "instrumentation_strategy": "conditional-single-QIcon-name-read-perturbation",
+    "kdirmodel_touch_variants": [
+      "baseline-no-touch",
+      "KDIR_FALLBACK",
+      "KDIR_ABSOLUTE",
+      "KDIR_FROMTHEME",
+      "KDIR_BEFORE_OVERLAYS",
+      "KDIR_AFTER_OVERLAYS"
+    ],
+    "knewfilemenu_touch_variants": [
+      "baseline-no-touch",
+      "KNEW_CONSTRUCTOR",
+      "KNEW_CHECK_ENTRY",
+      "KNEW_CHECK_EXIT",
+      "KNEW_SHOW_ENTRY",
+      "KNEW_AFTER_INIT",
+      "KNEW_DEFAULT_CREATED",
+      "KNEW_SETICON_INPUT"
+    ]
   },
   "decision_rules": {
-    "kdirmodel_fallback_already_empty": "global-icon-state-is-broken-before-kdirmodel-fallback",
-    "kdirmodel_fromtheme_fallback_loses_name": "invalid-theme-fallback-transition",
-    "kdirmodel_addoverlays_loses_name": "KIconUtils-addOverlays-transition",
-    "kdirmodel_unresolved": "deeper-KDirModel-return-or-QVariant-transition",
-    "knewfilemenu_first_empty_checkpoint": "first KNewFileMenu object-path checkpoint with empty inode-directory name",
-    "original_failure_not_reproduced": "diagnostic-invalid-instrumentation-perturbed-behavior",
-    "both_transitions_localized": "define-minimal-root-cause-confirmation",
-    "one_or_both_unresolved": "narrow-next-instrumentation-to-unresolved-gap"
+    "baseline_no_touch_does_not_reproduce": "diagnostic-invalid-conditional-instrumentation-perturbed-baseline",
+    "first_healing_touch": "earliest controlled QIcon::name() read that changes FAIL to PASS",
+    "both_paths_heal": "confirm-lazy-QIcon-name-materialization-root-cause",
+    "one_path_heals": "confirm-localized-read-heal-and-investigate-unresolved-path",
+    "no_single_touch_heals": "reproduce-attempt1-minimal-combination"
   },
   "next_gate": "tier3-round17-kio-object-path-state-transition-diagnostic-evidence",
-  "stable_promotion_requires_explicit_user_approval": true
+  "stable_promotion_requires_explicit_user_approval": true,
+  "invalid_attempts": [
+    {
+      "attempt": 1,
+      "definition_commit": "9d0286656b81152d76e96e9ec7fb776e0fd233ab",
+      "workflow_run": 36213295538,
+      "job_id": 108324143779,
+      "artifact_id": 10896761982,
+      "artifact_sha256": "5247d6b2f9f80c15cb04c63c4687d37b707421e3a1f91f0e8f9e2d3360c01084",
+      "result": "DIAG_INVALID",
+      "conclusion": "instrumentation-perturbed-original-failure",
+      "observed_effect": "intermediate QIcon::name() reads caused both originally failing tests to pass",
+      "canonical_effect": "none"
+    }
+  ]
 }
