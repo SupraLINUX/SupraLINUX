@@ -16,9 +16,9 @@
   "downstream_eligibility_changes_allowed": false,
   "package_revision_allocation": false,
   "test_suppression": false,
-  "execution_authorized": true,
+  "execution_authorized": false,
   "package_execution_authorized": false,
-  "status": "definition-pending-diagnostic",
+  "status": "diagnostic-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -131,6 +131,50 @@
     "hidden_home_rejected": "audited truly-visible B reproduces the historical failures",
     "no_package_decision": "Round20 evidence alone cannot authorize Attempt 9 or allocate a package revision"
   },
-  "next_gate": "tier3-round20-kio-environment-corrected-diagnostic-evidence",
-  "stable_promotion_requires_explicit_user_approval": true
+  "next_gate": "tier3-round21-kio-krecent-visible-cwd-diagnostic-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "diagnostic_evidence": {
+    "workflow_run": 36244913604,
+    "job_id": 108412266582,
+    "branch_commit": "b86b84dacf00a2c374f79a89766fd68c643897d2",
+    "artifact_id": 10906434669,
+    "artifact_sha256": "2071034608c31411399b656fb4e963cd066bded08e8c52566beea6c186d77fbc",
+    "result": "DIAG_COMPLETE"
+  },
+  "result": {
+    "overall": "partial-causal-resolution",
+    "kdirmodel": {
+      "conclusion": "hidden-home-component-controls-kdirmodel-showroot-failure",
+      "hidden_initial": {
+        "show_root_fail": true,
+        "show_root_expand_fail": true,
+        "trailing_slash_pass": true
+      },
+      "visible": {
+        "show_root_fail": false,
+        "show_root_expand_fail": false,
+        "trailing_slash_pass": true
+      },
+      "hidden_repeat": {
+        "show_root_fail": true,
+        "show_root_expand_fail": true,
+        "trailing_slash_pass": true
+      },
+      "visible_home": "/home/runner/work/_temp/supralinux-kdir-home/sbuild",
+      "visible_path_hidden_components": []
+    },
+    "krecentdocument": {
+      "conclusion": "DIAG_INVALID-hidden-working-directory-and-post-test-cleanup",
+      "baseline_runs": 30,
+      "baseline_failures": 30,
+      "delayed_runs": 30,
+      "delayed_failures": 30,
+      "capture_all_entries": 0,
+      "defects": [
+        "the test creates its local temp File N inputs below QDir::currentPath(); Round20 executed from a .work path",
+        "KRecentDocument::add ignores local URLs containing '/.' when IgnoreHidden is true, so Round20 discarded the test inputs before XBEL creation",
+        "QTest invokes KRecentDocumentTest::cleanup after the selected test and that cleanup removes m_xbelPath, so post-process XBEL capture also required explicit diagnostic preservation"
+      ]
+    }
+  }
 }

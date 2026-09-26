@@ -12,6 +12,7 @@ HISTORICAL=[
     "scripts/validate_kde_tier3_kio_round17_diagnostic.py",
     "scripts/validate_kde_tier3_kio_round18_provider_contract.py",
     "scripts/validate_kde_tier3_kio_round19_diagnostic.py",
+    "scripts/validate_kde_tier3_kio_round20_diagnostic.py",
 ]
 LIVE_READS=[
     'ROOT/"manifests/kde-frameworks-tier3.json"',

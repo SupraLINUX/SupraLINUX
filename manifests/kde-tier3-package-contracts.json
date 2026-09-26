@@ -3241,7 +3241,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "round20-diagnostic-definition-pending-ci",
+    "status": "round21-diagnostic-definition-pending-ci",
     "trigger": {
       "workflow_run": 36035351270,
       "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -3285,7 +3285,7 @@
     },
     "execution_authorized": false,
     "level1_execution_authorized": false,
-    "next_gate": "tier3-round20-kio-environment-corrected-diagnostic-evidence",
+    "next_gate": "tier3-round21-kio-krecent-visible-cwd-diagnostic-evidence",
     "materialization_evidence": {
       "workflow_run": 36222711238,
       "commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",

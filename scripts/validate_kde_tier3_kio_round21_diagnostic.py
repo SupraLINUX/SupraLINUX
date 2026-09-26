@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import json,sys
+ROOT=Path(__file__).resolve().parents[1]
+def load(p): return json.loads((ROOT/p).read_text())
+def req(v,m):
+    if not v:
+        print("ERROR:",m,file=sys.stderr); raise SystemExit(1)
+M=load("manifests/kde-tier3-kio-round21-diagnostic.json"); R20=load("manifests/kde-tier3-kio-round20-diagnostic.json")
+T=load("manifests/kde-frameworks-tier3.json"); L=load("manifests/kde-tier3-build-level1.json")
+C=load("manifests/kde-tier3-package-contracts.json"); MAT=load("manifests/kde-tier3-materialization.json")
+W=(ROOT/".github/workflows/kde-tier3-kio-round21-diagnostic.yml").read_text()
+ROUTER=(ROOT/".github/workflows/pr-ci-router.yml").read_text()
+RUNNER=(ROOT/"scripts/run-kde-tier3-kio-round21-diagnostic.sh").read_text()
+DOC=(ROOT/"docs/kde-tier3-kio-round21-diagnostic.md").read_text()
+req(M.get("schema")==1 and M.get("node")=="kio" and M.get("round")==21,"Round21 identity")
+req(M.get("authority")=="kde-upstream" and M.get("frameworks_series")=="6.30.0" and M.get("upstream_ref")=="v6.30.0","Round21 upstream")
+req(M.get("claim")=="non-promoting-krecent-visible-cwd-timestamp-ordering-diagnostic" and M.get("non_promoting") is True,"Round21 claim")
+req(M.get("package_attempted") is False and M.get("package_state_effect")=="none" and M.get("package_revision_allocation") is False,"Round21 package safety")
+req(M.get("canonical_source_modified") is False and M.get("diagnostic_worktree_modified") is True and M.get("test_suppression") is False,"Round21 source safety")
+req(M.get("execution_authorized") is True and M.get("package_execution_authorized") is False and M.get("status")=="definition-pending-diagnostic","Round21 authorization")
+req(M.get("canonical_snapshot")=="12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED","Round21 snapshot")
+p=M.get("predecessor_round20",{})
+req(R20.get("status")=="diagnostic-PASS" and R20.get("next_gate")=="tier3-round21-kio-krecent-visible-cwd-diagnostic-definition","Round20 closed handoff")
+req(p.get("workflow_run")==36244913604 and p.get("job_id")==108412266582 and p.get("artifact_id")==10906434669,"Round21 predecessor evidence")
+req(p.get("artifact_sha256")=="2071034608c31411399b656fb4e963cd066bded08e8c52566beea6c186d77fbc","Round21 predecessor digest")
+root=M.get("round20_invalidity_root_cause",{})
+req("/." in root.get("upstream_runtime_behavior","") and ".work" in root.get("round20_environment","") and "cleanup" in root.get("post_test_behavior",""),"Round21 root cause")
+vc=M.get("validity_contract",{})
+req(vc.get("cwd_zero_dot_prefixed_components") is True and vc.get("cwd_outside_qdir_temp_path") is True and vc.get("home_zero_dot_prefixed_components") is True,"Round21 visible paths")
+req(vc.get("xdg_overrides_unset")==["XDG_DATA_HOME","XDG_CONFIG_HOME","XDG_CACHE_HOME"] and vc.get("preserve_xbel_diagnostic_instrumentation") is True,"Round21 XDG/XBEL")
+req(M.get("diagnostic_scope",{}).get("baseline_repetitions")==30 and M.get("diagnostic_scope",{}).get("delayed_repetitions")==30,"Round21 repetitions")
+policy=T.get("discovery_policy",{})
+req(policy.get("phase")=="diagnostic" and policy.get("package_builds")=="tier3-round21-diagnostic-pending" and policy.get("remediation")=="round21-kio-krecent-visible-cwd-diagnostic-pending-ci","Round21 live phase")
+gate="tier3-round21-kio-krecent-visible-cwd-diagnostic-evidence"
+for obj,name in ((T.get("active_remediation",{}),"canonical"),(L.get("active_remediation",{}),"Level1"),(C.get("active_remediation",{}),"contracts"),(MAT.get("active_remediation",{}),"materialization")):
+    req(obj.get("next_gate")==gate,name+" Round21 gate")
+req(T.get("active_remediation",{}).get("execution_authorized") is False and L.get("execution_authorized") is False and L.get("state")=="attempt8-closed-mixed" and L.get("current_attempt")==8,"Attempt9 remains unauthorized")
+for token in ("workflow_call","run-kde-tier3-kio-round21-diagnostic.sh","KIO Round 21 KRecent visible-CWD diagnostic"): req(token in W,"workflow "+token)
+req("pull_request:" not in W,"reusable workflow must not subscribe to PR")
+for token in ("run_round21","kde-tier3-kio-round21-diagnostic.yml","tier3-round21-diagnostic-pending"): req(token in ROUTER,"router "+token)
+for token in ("SUPRALINUX_PRESERVE_XBEL","audit_visible_path","env -u XDG_DATA_HOME","recent-capture-all","QTest::qWait(5)","capture_all_duplicate_modified_groups"): req(token in RUNNER,"runner "+token)
+for forbidden in ("dpkg-buildpackage","sbuild --"): req(forbidden not in RUNNER,"must not package "+forbidden)
+req("Round 20" in DOC and "visible CWD" in DOC and "Attempt 9" in DOC,"Round21 docs")
+req(M.get("next_gate")==gate and M.get("stable_promotion_requires_explicit_user_approval") is True,"Round21 gate/policy")
+print("KDE Tier 3 KIO Round 21 diagnostic definition: PASS")
+print("Attempt9=NOT-AUTHORIZED")
