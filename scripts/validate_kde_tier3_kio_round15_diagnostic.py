@@ -10,11 +10,7 @@ def req(v,m):
         raise SystemExit(1)
 
 M=load("manifests/kde-tier3-kio-round15-diagnostic.json")
-T=load("manifests/kde-frameworks-tier3.json")
-L=load("manifests/kde-tier3-build-level1.json")
 D14=load("manifests/kde-tier3-kio-round14-diagnostic.json")
-D16=load("manifests/kde-tier3-kio-round16-diagnostic.json")
-D17=load("manifests/kde-tier3-kio-round17-diagnostic.json")
 W=(ROOT/".github/workflows/kde-tier3-kio-round15-diagnostic.yml").read_text()
 D=(ROOT/"docs/kde-tier3-kio-round15-diagnostic.md").read_text()
 runner_paths=[
@@ -33,12 +29,6 @@ req(M.get("dag_state_changes_allowed") is False and M.get("downstream_eligibilit
 req(M.get("execution_authorized") is False,"Round15 execution remains closed")
 req(M.get("status") in {"definition-pending-diagnostic","diagnostic-PASS"},"Round15 lifecycle")
 req(M.get("canonical_snapshot")=="12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED","Round15 snapshot")
-
-nodes={n["id"]:n for n in T.get("nodes",[])}
-req(nodes["kio"].get("state")=="FAIL" and nodes["kio"].get("packaging",{}).get("package_version")=="6.30.0-0supralinux7","KIO -7 remains FAIL")
-req(nodes["kio"].get("packaging",{}).get("downstream_eligible") is False,"KIO remains downstream-ineligible")
-req(L.get("state")=="attempt7-closed-mixed" and L.get("execution_authorized") is False,"Level1 remains closed")
-req(L.get("current_attempt")==7 and L.get("next_attempt")==8,"Attempt counters")
 
 req(D14.get("status")=="diagnostic-PASS" and D14.get("next_gate")=="tier3-round15-kio-breeze-icons-init-state-diagnostic-definition","Round14 handoff")
 e14=M.get("round14_evidence",{})
@@ -82,12 +72,9 @@ for forbidden in ("dpkg-buildpackage","sbuild --"):
 req("Round 14 rejected" in D and "BreezeIcons::initIcons()" in D and "No Debian package is built" in D,"Round15 documentation")
 
 if M.get("status")=="definition-pending-diagnostic":
-    req(L.get("next_gate")=="tier3-round15-kio-breeze-icons-init-state-diagnostic-definition","Round15 live definition gate")
     req(M.get("next_gate")=="tier3-round15-kio-breeze-icons-init-state-diagnostic-evidence","Round15 evidence gate")
 else:
     req(M.get("next_gate")=="tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition","Round15 closed handoff")
-    expected_live="tier3-round18-kio-qt-svg-provider-contract-remediation-definition" if D17.get("status")=="diagnostic-PASS" else ("tier3-round17-kio-object-path-state-transition-diagnostic-definition" if D16.get("status")=="diagnostic-PASS" else M.get("next_gate"))
-    req(L.get("next_gate")==expected_live,"Round15 closed live gate")
     dv=M.get("definition_validation",{})
     req(dv.get("commit")=="594b86b3e5ca78a8b936350d037c3877743ac273" and dv.get("repository_policy_workflow_run")==36208311436 and dv.get("result")=="PASS","Round15 definition validation")
     ev=M.get("diagnostic_evidence",{})
@@ -101,7 +88,7 @@ else:
         req(dr.get("mode_results",{}).get(mode,{}).get("primary_empty_any") is False,f"Round15 {mode} preserves primary icon names")
 
 req(M.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval gate")
-print("KDE Tier 3 KIO Round 15 diagnostic definition: PASS")
+print("KDE Tier 3 KIO Round 15 historical diagnostic evidence: PASS")
 print("canonical=12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED")
 print("KIO=FAIL 6.30.0-0supralinux7")
 print("next_gate="+M["next_gate"])

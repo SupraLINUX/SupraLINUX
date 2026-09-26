@@ -10,8 +10,6 @@ def req(v,m):
 
 M=load("manifests/kde-tier3-kio-round17-diagnostic.json")
 D16=load("manifests/kde-tier3-kio-round16-diagnostic.json")
-T=load("manifests/kde-frameworks-tier3.json")
-L=load("manifests/kde-tier3-build-level1.json")
 W=(ROOT/".github/workflows/kde-tier3-kio-round17-diagnostic.yml").read_text()
 D=(ROOT/"docs/kde-tier3-kio-round17-diagnostic.md").read_text()
 R="\n".join((ROOT/p).read_text() for p in (
@@ -28,12 +26,6 @@ req(M.get("canonical_source_modified") is False and M.get("diagnostic_instrument
 req(M.get("dag_state_changes_allowed") is False and M.get("downstream_eligibility_changes_allowed") is False,"Round17 DAG safety")
 req(M.get("execution_authorized") is False and M.get("status") in {"definition-pending-diagnostic","diagnostic-PASS"},"Round17 lifecycle")
 req(M.get("canonical_snapshot")=="12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED","Round17 snapshot")
-
-nodes={n["id"]:n for n in T.get("nodes",[])}
-req(nodes["kio"].get("state")=="FAIL" and nodes["kio"].get("packaging",{}).get("package_version")=="6.30.0-0supralinux7","KIO -7 FAIL")
-req(nodes["kio"].get("packaging",{}).get("downstream_eligible") is False,"KIO ineligible")
-req(L.get("state")=="attempt7-closed-mixed" and L.get("execution_authorized") is False,"Level1 closed")
-req(L.get("current_attempt")==7 and L.get("next_attempt")==8,"Attempt counters")
 
 req(D16.get("status")=="diagnostic-PASS" and D16.get("next_gate")=="tier3-round17-kio-object-path-state-transition-diagnostic-definition","Round16 handoff")
 e16=M.get("round16_evidence",{})
@@ -76,11 +68,9 @@ for forbidden in ("dpkg-buildpackage","sbuild --"):
 req("Attempt 4 — Qt SVG plugin A/B/A, no source changes" in D and "PASS with plugin" in D and "Closure — diagnostic PASS" in D and "No snapshot is created" in D,"Round17 documentation")
 
 if M.get("status")=="definition-pending-diagnostic":
-    req(L.get("next_gate")=="tier3-round17-kio-object-path-state-transition-diagnostic-definition","Round17 live definition gate")
     req(M.get("next_gate")=="tier3-round17-kio-object-path-state-transition-diagnostic-evidence","Round17 evidence gate")
 else:
     req(M.get("next_gate")=="tier3-round18-kio-qt-svg-provider-contract-remediation-definition","Round17 closed handoff")
-    req(L.get("next_gate")==M.get("next_gate"),"Round17 closed live gate")
     dv=M.get("definition_validation",{})
     req(dv.get("commit")=="0495449acb5c82e535540e346f2341a394bcc8b5" and dv.get("repository_policy_workflow_run")==36218411106 and dv.get("result")=="PASS","Round17 definition validation")
     ev=M.get("diagnostic_evidence",{})
@@ -99,7 +89,7 @@ else:
     req(dr.get("next_scope")=="qt-svg-provider-contract-ownership-and-remediation","Round17 next scope")
 
 req(M.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval")
-print("KDE Tier 3 KIO Round 17 diagnostic definition: PASS")
+print("KDE Tier 3 KIO Round 17 historical diagnostic evidence: PASS")
 print("canonical=12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED")
 print("KIO=FAIL 6.30.0-0supralinux7")
 print("next_gate="+M["next_gate"])

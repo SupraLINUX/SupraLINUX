@@ -4,13 +4,7 @@ import json,sys
 
 ROOT=Path(__file__).resolve().parents[1]
 M=json.loads((ROOT/"manifests/kde-tier3-kio-round13-diagnostic.json").read_text())
-T=json.loads((ROOT/"manifests/kde-frameworks-tier3.json").read_text())
-L=json.loads((ROOT/"manifests/kde-tier3-build-level1.json").read_text())
 D12=json.loads((ROOT/"manifests/kde-tier3-kio-round12-diagnostic.json").read_text())
-D14=json.loads((ROOT/"manifests/kde-tier3-kio-round14-diagnostic.json").read_text())
-D15=json.loads((ROOT/"manifests/kde-tier3-kio-round15-diagnostic.json").read_text())
-D16=json.loads((ROOT/"manifests/kde-tier3-kio-round16-diagnostic.json").read_text())
-D17=json.loads((ROOT/"manifests/kde-tier3-kio-round17-diagnostic.json").read_text())
 W=(ROOT/".github/workflows/kde-tier3-kio-round13-diagnostic.yml").read_text()
 R=(ROOT/"scripts/run-kde-tier3-kio-round13-diagnostic.sh").read_text()
 D=(ROOT/"docs/kde-tier3-kio-round13-diagnostic.md").read_text()
@@ -26,14 +20,6 @@ req(M.get("package_attempted") is False and M.get("package_state_effect")=="none
 req(M.get("execution_authorized") is False,"Round13 must not authorize canonical execution")
 req(M.get("status") in {"definition-pending-diagnostic","diagnostic-PASS"},"Round13 lifecycle")
 req(M.get("canonical_snapshot")=="12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED","Round13 canonical snapshot")
-
-nodes={n["id"]:n for n in T.get("nodes",[])}
-req(nodes["kio"].get("state")=="FAIL" and nodes["kio"].get("packaging",{}).get("package_version")=="6.30.0-0supralinux7","Round13 retains KIO -7 FAIL")
-req(nodes["kio"].get("packaging",{}).get("downstream_eligible") is False,"Round13 KIO downstream eligibility")
-req(L.get("execution_authorized") is False and L.get("state")=="attempt7-closed-mixed","Round13 keeps Level1 closed")
-expected_live_gate = ("tier3-round18-kio-qt-svg-provider-contract-remediation-definition" if D17.get("status")=="diagnostic-PASS" else ("tier3-round17-kio-object-path-state-transition-diagnostic-definition" if D16.get("status")=="diagnostic-PASS" else ("tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition" if D15.get("status")=="diagnostic-PASS" else ("tier3-round15-kio-breeze-icons-init-state-diagnostic-definition" if D14.get("status")=="diagnostic-PASS" else "tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition")))) if M.get("status")=="diagnostic-PASS" else "tier3-round13-kio-build-tree-diagnostic-definition"
-req(L.get("next_gate")==expected_live_gate,"Round13 current canonical gate")
-req(L.get("current_attempt")==7 and L.get("next_attempt")==8,"Round13 attempt counters")
 
 req(D12.get("status")=="diagnostic-PASS" and D12.get("next_gate")=="tier3-round13-kio-build-tree-diagnostic-definition","Round12 closure handoff")
 e12=M.get("round12_evidence",{})
@@ -96,7 +82,7 @@ else:
     req(pc.get("plugin_path")=="/usr/lib/x86_64-linux-gnu/qt6/plugins/kiconthemes6/iconengines/KIconEnginePlugin.so","Round13 KIconEngine plugin path")
 
 req(M.get("stable_promotion_requires_explicit_user_approval") is True,"Round13 stable gate")
-print("KDE Tier 3 KIO Round 13 diagnostic definition: PASS")
+print("KDE Tier 3 KIO Round 13 historical diagnostic evidence: PASS")
 print("canonical=12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED")
 print("KIO=FAIL 6.30.0-0supralinux7")
 print("next_gate="+M["next_gate"])

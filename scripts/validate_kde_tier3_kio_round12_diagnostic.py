@@ -4,17 +4,10 @@ import json,sys
 
 ROOT=Path(__file__).resolve().parents[1]
 M=json.loads((ROOT/"manifests/kde-tier3-kio-round12-diagnostic.json").read_text())
-T=json.loads((ROOT/"manifests/kde-frameworks-tier3.json").read_text())
-L=json.loads((ROOT/"manifests/kde-tier3-build-level1.json").read_text())
 A=json.loads((ROOT/"manifests/kde-tier3-build-level1-attempts.json").read_text())
 W=(ROOT/".github/workflows/kde-tier3-kio-round12-diagnostic.yml").read_text()
 R=(ROOT/"scripts/run-kde-tier3-kio-round12-diagnostic.sh").read_text()
 D=(ROOT/"docs/kde-tier3-kio-round12-diagnostic.md").read_text()
-D13=json.loads((ROOT/"manifests/kde-tier3-kio-round13-diagnostic.json").read_text())
-D14=json.loads((ROOT/"manifests/kde-tier3-kio-round14-diagnostic.json").read_text())
-D15=json.loads((ROOT/"manifests/kde-tier3-kio-round15-diagnostic.json").read_text())
-D16=json.loads((ROOT/"manifests/kde-tier3-kio-round16-diagnostic.json").read_text())
-D17=json.loads((ROOT/"manifests/kde-tier3-kio-round17-diagnostic.json").read_text())
 
 def req(v,m):
     if not v:
@@ -34,20 +27,7 @@ if M.get("status")=="definition-pending-diagnostic":
 if M.get("status")=="diagnostic-PASS":
     req(M.get("next_gate")=="tier3-round13-kio-build-tree-diagnostic-definition","Round12 PASS next gate")
 
-nodes={n["id"]:n for n in T.get("nodes",[])}
-kio=nodes.get("kio",{})
-kxml=nodes.get("kxmlgui",{})
-req(kio.get("state")=="FAIL" and kio.get("packaging",{}).get("package_version")=="6.30.0-0supralinux7","Round12 must retain canonical KIO -7 FAIL")
-req(kio.get("packaging",{}).get("downstream_eligible") is False,"Round12 KIO remains downstream-ineligible")
-req(kxml.get("state")=="PASS" and kxml.get("packaging",{}).get("package_version")=="6.30.0-0supralinux5","Round12 must retain KXMLGui PASS")
-req(L.get("state")=="attempt7-closed-mixed" and L.get("execution_authorized") is False,"Level1 must remain Attempt7 closed")
-req(L.get("canonical_snapshot")=="12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED","Round12 canonical snapshot")
-if M.get("status")=="definition-pending-diagnostic":
-    req(L.get("next_gate")=="tier3-round12-kio-diagnostic-definition","canonical next gate remains Round12 definition until evidence is closed")
-else:
-    current_next = "tier3-round18-kio-qt-svg-provider-contract-remediation-definition" if D17.get("status")=="diagnostic-PASS" else ("tier3-round17-kio-object-path-state-transition-diagnostic-definition" if D16.get("status")=="diagnostic-PASS" else ("tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition" if D15.get("status")=="diagnostic-PASS" else ("tier3-round15-kio-breeze-icons-init-state-diagnostic-definition" if D14.get("status")=="diagnostic-PASS" else ("tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition" if D13.get("status")=="diagnostic-PASS" else "tier3-round13-kio-build-tree-diagnostic-definition"))))
-    req(L.get("next_gate")==current_next,"closed Round12 live handoff")
-req(L.get("current_attempt")==7 and L.get("next_attempt")==8,"Round12 attempt counters")
+req(M.get("canonical_snapshot")=="12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED","Round12 historical canonical snapshot")
 
 e=M.get("attempt7_evidence",{})
 req(e.get("workflow_run")==36079116873 and e.get("commit")=="ef6262ac9018df2c0d111d97f99919d8acdeb215","Attempt7 workflow identity")
@@ -107,7 +87,7 @@ if M.get("status")=="diagnostic-PASS":
     req(dr.get("next_diagnostic_scope")=="kio-build-tree-process-specific-icon-resolution-diagnostic","Round12 next diagnostic scope")
 
 req(M.get("stable_promotion_requires_explicit_user_approval") is True,"Round12 stable gate")
-print("KDE Tier 3 KIO Round 12 diagnostic definition: PASS")
+print("KDE Tier 3 KIO Round 12 historical diagnostic evidence: PASS")
 print("canonical=12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED")
 print("KIO=FAIL 6.30.0-0supralinux7")
 print("next_gate="+M["next_gate"])
