@@ -27,7 +27,7 @@ req(nodes["kio"].get("state")=="FAIL" and nodes["kio"].get("packaging",{}).get("
 req(nodes["kio"].get("packaging",{}).get("downstream_eligible") is False,"Round14 KIO remains ineligible")
 req(L.get("state")=="attempt7-closed-mixed" and L.get("execution_authorized") is False,"Round14 keeps Level1 closed")
 req(L.get("current_attempt")==7 and L.get("next_attempt")==8,"Round14 attempt counters")
-expected_live_gate = "tier3-round17-kio-object-path-state-transition-diagnostic-definition" if D16.get("status")=="diagnostic-PASS" else ("tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition" if D15.get("status")=="diagnostic-PASS" else ("tier3-round15-kio-breeze-icons-init-state-diagnostic-definition" if M.get("status")=="diagnostic-PASS" else "tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition"))
+expected_live_gate = "tier3-round18-kio-qt-svg-provider-contract-remediation-definition" if D17.get("status")=="diagnostic-PASS" else ("tier3-round17-kio-object-path-state-transition-diagnostic-definition" if D16.get("status")=="diagnostic-PASS" else ("tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition" if D15.get("status")=="diagnostic-PASS" else ("tier3-round15-kio-breeze-icons-init-state-diagnostic-definition" if M.get("status")=="diagnostic-PASS" else "tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition")))
 req(L.get("next_gate")==expected_live_gate,"Round14 current live gate")
 req(D13.get("status")=="diagnostic-PASS" and D13.get("next_gate")=="tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition","Round13 closure handoff")
 e13=M.get("round13_evidence",{})

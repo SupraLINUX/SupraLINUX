@@ -10,6 +10,7 @@ def req(v,m):
 
 M=load("manifests/kde-tier3-kio-round16-diagnostic.json")
 D15=load("manifests/kde-tier3-kio-round15-diagnostic.json")
+D17=load("manifests/kde-tier3-kio-round17-diagnostic.json")
 T=load("manifests/kde-frameworks-tier3.json")
 L=load("manifests/kde-tier3-build-level1.json")
 W=(ROOT/".github/workflows/kde-tier3-kio-round16-diagnostic.yml").read_text()
@@ -74,7 +75,8 @@ if M.get("status")=="definition-pending-diagnostic":
     req(M.get("next_gate")=="tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-evidence","Round16 evidence gate")
 else:
     req(M.get("next_gate")=="tier3-round17-kio-object-path-state-transition-diagnostic-definition","Round16 closed handoff")
-    req(L.get("next_gate")==M.get("next_gate"),"Round16 closed live gate")
+    expected_live="tier3-round18-kio-qt-svg-provider-contract-remediation-definition" if D17.get("status")=="diagnostic-PASS" else M.get("next_gate")
+    req(L.get("next_gate")==expected_live,"Round16 closed live gate")
     dv=M.get("definition_validation",{})
     req(dv.get("commit")=="5bea0781bf90ed97c53fdddc761566d4a984f5a7" and dv.get("repository_policy_workflow_run")==36209833503 and dv.get("result")=="PASS","Round16 definition validation")
     ev=M.get("diagnostic_evidence",{})

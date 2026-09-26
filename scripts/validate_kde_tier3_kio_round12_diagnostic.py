@@ -44,7 +44,7 @@ req(L.get("canonical_snapshot")=="12 PASS / 1 pending / 1 current FAIL / 6 BLOCK
 if M.get("status")=="definition-pending-diagnostic":
     req(L.get("next_gate")=="tier3-round12-kio-diagnostic-definition","canonical next gate remains Round12 definition until evidence is closed")
 else:
-    current_next = "tier3-round17-kio-object-path-state-transition-diagnostic-definition" if D16.get("status")=="diagnostic-PASS" else ("tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition" if D15.get("status")=="diagnostic-PASS" else ("tier3-round15-kio-breeze-icons-init-state-diagnostic-definition" if D14.get("status")=="diagnostic-PASS" else ("tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition" if D13.get("status")=="diagnostic-PASS" else "tier3-round13-kio-build-tree-diagnostic-definition")))
+    current_next = "tier3-round18-kio-qt-svg-provider-contract-remediation-definition" if D17.get("status")=="diagnostic-PASS" else ("tier3-round17-kio-object-path-state-transition-diagnostic-definition" if D16.get("status")=="diagnostic-PASS" else ("tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition" if D15.get("status")=="diagnostic-PASS" else ("tier3-round15-kio-breeze-icons-init-state-diagnostic-definition" if D14.get("status")=="diagnostic-PASS" else ("tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition" if D13.get("status")=="diagnostic-PASS" else "tier3-round13-kio-build-tree-diagnostic-definition"))))
     req(L.get("next_gate")==current_next,"closed Round12 live handoff")
 req(L.get("current_attempt")==7 and L.get("next_attempt")==8,"Round12 attempt counters")
 

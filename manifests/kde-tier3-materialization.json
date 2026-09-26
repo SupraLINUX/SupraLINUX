@@ -983,7 +983,7 @@
     "policy": "rematerialize-only-kio-then-rerun-full-level1",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-round17-kio-object-path-state-transition-diagnostic-definition",
+    "next_gate": "tier3-round18-kio-qt-svg-provider-contract-remediation-definition",
     "diagnostic_evidence": {
       "workflow_run": 36071103806,
       "job_id": 107872008601,

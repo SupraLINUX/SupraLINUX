@@ -22,7 +22,7 @@ R="\n".join((ROOT/p).read_text() for p in (
 
 req(M.get("schema")==1 and M.get("node")=="kio" and M.get("round")==17,"Round17 identity")
 req(M.get("authority")=="kde-upstream" and M.get("frameworks_series")=="6.30.0" and M.get("upstream_ref")=="v6.30.0","Round17 upstream identity")
-req(M.get("claim")=="non-promoting-actual-kio-object-path-state-transition-diagnostic" and M.get("non_promoting") is True,"Round17 claim")
+req(M.get("claim")=="non-promoting-qt-svg-plugin-environment-root-cause-diagnostic" and M.get("non_promoting") is True,"Round17 claim")
 req(M.get("package_attempted") is False and M.get("package_state_effect")=="none","Round17 package state")
 req(M.get("canonical_source_modified") is False and M.get("diagnostic_instrumentation") is False and M.get("environment_ab") is True,"Round17 A/B environment contract")
 req(M.get("dag_state_changes_allowed") is False and M.get("downstream_eligibility_changes_allowed") is False,"Round17 DAG safety")
@@ -73,16 +73,30 @@ for token in ("10839162922","qt6-svg-plugins","r17_remove_svg_plugin","r17_insta
     req(token in R,f"runner token {token}")
 for forbidden in ("dpkg-buildpackage","sbuild --"):
     req(forbidden not in R,f"Round17 must not package: {forbidden}")
-req("Attempt 4 — Qt SVG plugin A/B/A, no source changes" in D and "PASS with plugin" in D and "No ownership decision is assumed in Round 17" in D,"Round17 documentation")
+req("Attempt 4 — Qt SVG plugin A/B/A, no source changes" in D and "PASS with plugin" in D and "Closure — diagnostic PASS" in D and "No snapshot is created" in D,"Round17 documentation")
 
 if M.get("status")=="definition-pending-diagnostic":
     req(L.get("next_gate")=="tier3-round17-kio-object-path-state-transition-diagnostic-definition","Round17 live definition gate")
     req(M.get("next_gate")=="tier3-round17-kio-object-path-state-transition-diagnostic-evidence","Round17 evidence gate")
 else:
-    req(M.get("next_gate","").startswith("tier3-round18-"),"Round17 closed handoff")
+    req(M.get("next_gate")=="tier3-round18-kio-qt-svg-provider-contract-remediation-definition","Round17 closed handoff")
     req(L.get("next_gate")==M.get("next_gate"),"Round17 closed live gate")
+    dv=M.get("definition_validation",{})
+    req(dv.get("commit")=="0495449acb5c82e535540e346f2341a394bcc8b5" and dv.get("repository_policy_workflow_run")==36218411106 and dv.get("result")=="PASS","Round17 definition validation")
     ev=M.get("diagnostic_evidence",{})
+    req(ev.get("workflow_run")==36218411267 and ev.get("job_id")==108338905718 and ev.get("commit")=="0495449acb5c82e535540e346f2341a394bcc8b5","Round17 workflow identity")
+    req(ev.get("artifact_id")==10898332133 and ev.get("artifact_sha256")=="511239dc8fd4581c032d8a7723e2edd772aab450718d44513c528dcf56a862f0","Round17 artifact identity")
     req(ev.get("result")=="DIAG_COMPLETE" and ev.get("package_attempted") is False and ev.get("package_state_effect")=="none","Round17 closure evidence")
+    dr=M.get("diagnostic_results",{})
+    req(dr.get("aba_valid") is True and dr.get("conclusion")=="qt6-svg-plugins-presence-controls-both-kio-icon-name-failures","Round17 A/B/A conclusion")
+    req(dr.get("present_initial")=={"kdirmodel":"PASS","knewfilemenu":"PASS"},"Round17 present phase")
+    req(dr.get("absent")=={"kdirmodel":"historical-empty-name-FAIL","knewfilemenu":"historical-empty-name-FAIL"},"Round17 absent phase")
+    req(dr.get("reinstalled")=={"kdirmodel":"PASS","knewfilemenu":"PASS"},"Round17 reinstall phase")
+    svg=dr.get("qt_svg_plugins",{})
+    req(svg.get("version")=="6.10.2-2" and svg.get("qt6_svg_dev_depends_on_plugin") is False,"Round17 Qt SVG provider contract")
+    req(svg.get("icon_engine_plugin")=="/usr/lib/x86_64-linux-gnu/qt6/plugins/iconengines/libqsvgicon.so","Round17 SVG icon engine")
+    req(svg.get("image_format_plugin")=="/usr/lib/x86_64-linux-gnu/qt6/plugins/imageformats/libqsvg.so","Round17 SVG image plugin")
+    req(dr.get("next_scope")=="qt-svg-provider-contract-ownership-and-remediation","Round17 next scope")
 
 req(M.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval")
 print("KDE Tier 3 KIO Round 17 diagnostic definition: PASS")

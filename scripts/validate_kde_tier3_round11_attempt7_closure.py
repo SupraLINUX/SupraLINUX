@@ -19,6 +19,7 @@ ROUND14_NEXT="tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definitio
 ROUND15_NEXT="tier3-round15-kio-breeze-icons-init-state-diagnostic-definition"
 ROUND16_NEXT="tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition"
 ROUND17_NEXT="tier3-round17-kio-object-path-state-transition-diagnostic-definition"
+ROUND18_NEXT="tier3-round18-kio-qt-svg-provider-contract-remediation-definition"
 FAILS=["kiowidgets-kdirmodeltest","kiofilewidgets-knewfilemenutest"]
 BLOCKED=["baloo","kcmutils","knotifyconfig","kparts","ktexteditor","purpose"]
 PASS={"kbookmarks","kconfigwidgets","kdav","kdesu","kiconthemes","kjobwidgets","kpeople","krunner","ksvg","ktextwidgets","kwallet","kxmlgui"}
@@ -34,6 +35,7 @@ D13=load("manifests/kde-tier3-kio-round13-diagnostic.json")
 D14=load("manifests/kde-tier3-kio-round14-diagnostic.json")
 D15=load("manifests/kde-tier3-kio-round15-diagnostic.json")
 D16=load("manifests/kde-tier3-kio-round16-diagnostic.json")
+D17=load("manifests/kde-tier3-kio-round17-diagnostic.json")
 P=load("manifests/kde-tier3-build-campaign.json")
 G=load("manifests/kde-dag.json")
 
@@ -58,7 +60,8 @@ round13_closed = D13.get("status")=="diagnostic-PASS"
 round14_closed = D14.get("status")=="diagnostic-PASS"
 round15_closed = D15.get("status")=="diagnostic-PASS"
 round16_closed = D16.get("status")=="diagnostic-PASS"
-CURRENT_NEXT = ROUND17_NEXT if round16_closed else (ROUND16_NEXT if round15_closed else (ROUND15_NEXT if round14_closed else (ROUND14_NEXT if round13_closed else (ROUND13_NEXT if round12_closed else ATTEMPT7_NEXT))))
+round17_closed = D17.get("status")=="diagnostic-PASS"
+CURRENT_NEXT = ROUND18_NEXT if round17_closed else (ROUND17_NEXT if round16_closed else (ROUND16_NEXT if round15_closed else (ROUND15_NEXT if round14_closed else (ROUND14_NEXT if round13_closed else (ROUND13_NEXT if round12_closed else ATTEMPT7_NEXT)))))
 if round12_closed:
     ev=D12.get("diagnostic_evidence",{})
     req(ev.get("workflow_run")==36082312546 and ev.get("job_id")==107906716315,"Round12 closure workflow evidence")

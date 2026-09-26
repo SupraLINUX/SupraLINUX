@@ -3273,7 +3273,7 @@
     },
     "execution_authorized": false,
     "level1_execution_authorized": false,
-    "next_gate": "tier3-round17-kio-object-path-state-transition-diagnostic-definition",
+    "next_gate": "tier3-round18-kio-qt-svg-provider-contract-remediation-definition",
     "materialization_evidence": {
       "workflow_run": 36073638711,
       "commit": "ebe60a0147e2a47b6c256ac015f43eea350c3ba2",

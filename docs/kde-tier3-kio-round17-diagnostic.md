@@ -1,6 +1,6 @@
 # KDE Tier 3 — KIO Round 17 root-cause environment diagnostic
 
-Status: **definition pending diagnostic evidence**.
+Status: **diagnostic PASS — root cause controlled by `qt6-svg-plugins` presence**.
 
 Round 16 closed with workflow `36209833629`, job `108313880904`, artifact `10894374901`, SHA-256 `8cda50173446df052b21e5ca4fe89129af65e1c1e1ff13ac137953b5a9508cf6`. It proved that simply loading KIconThemes, KIOCore, KIOWidgets or KIOFileWidgets — including a verified KIconThemes startup — does not reproduce the empty `QIcon::name()` failures.
 
@@ -34,7 +34,7 @@ If confirmed, Round 17 establishes the missing Qt SVG plugin as the environmenta
 
 This is not a remediation and not a package attempt. Attempt 4 patches no source, changes no expected result, builds no Debian package, and allocates no KIO revision. KIO remains `6.30.0-0supralinux7` FAIL/downstream-ineligible until an actual package attempt passes. Canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**.
 
-Next gate: `tier3-round17-kio-object-path-state-transition-diagnostic-evidence`.
+Next gate: `tier3-round18-kio-qt-svg-provider-contract-remediation-definition`.
 
 ## Invalid Attempt 1 — observation changed behavior
 
@@ -111,4 +111,23 @@ The strongest confirmation is:
 That would establish `qt6-svg-plugins` presence as the controlling environmental variable for both KIO failures. Only after that result will the next gate decide the correct packaging owner/provider contract — for example whether the dependency belongs in the Breeze icon-theme contract, KIO build/test closure, or another shared Qt SVG provider rule. No ownership decision is assumed in Round 17.
 
 No package is built, no source is patched, and no KIO revision is allocated.
+
+## Closure — diagnostic PASS
+
+Round 17 closed on commit `0495449acb5c82e535540e346f2341a394bcc8b5`.
+
+- Repository Policy `36218411106`: PASS.
+- Round 17 workflow `36218411267`: PASS.
+- job `108338905718`.
+- artifact `10898332133`.
+- artifact SHA-256 `511239dc8fd4581c032d8a7723e2edd772aab450718d44513c528dcf56a862f0`.
+- result `DIAG_COMPLETE`; no package attempt and no package-state effect.
+
+The A/B/A invariant is complete: with `qt6-svg-plugins 6.10.2-2` installed both tests PASS; removing only that package makes both exact historical empty-`QIcon::name()` failures return; reinstalling it restores both tests to PASS.
+
+The package provides `/usr/lib/x86_64-linux-gnu/qt6/plugins/iconengines/libqsvgicon.so` and `/usr/lib/x86_64-linux-gnu/qt6/plugins/imageformats/libqsvg.so`. `qt6-svg-dev 6.10.2-2` remains installed when the plugin package is absent, so the development package does not provide or pull in the runtime SVG plugin contract required by these paths.
+
+Conclusion: `qt6-svg-plugins` presence controls both KIO failures. Round 18 must determine packaging ownership and the remediation contract; Round 17 does not assign that ownership.
+
+KIO remains `6.30.0-0supralinux7` FAIL/downstream-ineligible. No `-8` revision is allocated. No snapshot is created because KIO itself is not yet PASS.
 

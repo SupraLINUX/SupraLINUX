@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "as_of": "2026-09-25",
+  "as_of": "2026-09-26",
   "node": "kio",
   "round": 17,
   "authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "upstream_ref": "v6.30.0",
-  "claim": "non-promoting-actual-kio-object-path-state-transition-diagnostic",
+  "claim": "non-promoting-qt-svg-plugin-environment-root-cause-diagnostic",
   "non_promoting": true,
   "package_attempted": false,
   "package_state_effect": "none",
@@ -15,7 +15,7 @@
   "dag_state_changes_allowed": false,
   "downstream_eligibility_changes_allowed": false,
   "execution_authorized": false,
-  "status": "definition-pending-diagnostic",
+  "status": "diagnostic-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "round16_evidence": {
     "workflow_run": 36209833629,
@@ -77,7 +77,7 @@
     "absent_does_not_reproduce_both": "compare-round13-environment-beyond-svg-plugin",
     "reinstall_does_not_recover": "inspect-process-cache-or-package-removal-side-effects"
   },
-  "next_gate": "tier3-round17-kio-object-path-state-transition-diagnostic-evidence",
+  "next_gate": "tier3-round18-kio-qt-svg-provider-contract-remediation-definition",
   "stable_promotion_requires_explicit_user_approval": true,
   "invalid_attempts": [
     {
@@ -126,5 +126,43 @@
       "canonical_effect": "none"
     }
   ],
-  "environment_ab": true
+  "environment_ab": true,
+  "definition_validation": {
+    "commit": "0495449acb5c82e535540e346f2341a394bcc8b5",
+    "repository_policy_workflow_run": 36218411106,
+    "result": "PASS"
+  },
+  "diagnostic_evidence": {
+    "workflow_run": 36218411267,
+    "job_id": 108338905718,
+    "commit": "0495449acb5c82e535540e346f2341a394bcc8b5",
+    "artifact_id": 10898332133,
+    "artifact_sha256": "511239dc8fd4581c032d8a7723e2edd772aab450718d44513c528dcf56a862f0",
+    "result": "DIAG_COMPLETE",
+    "package_attempted": false,
+    "package_state_effect": "none"
+  },
+  "diagnostic_results": {
+    "aba_valid": true,
+    "conclusion": "qt6-svg-plugins-presence-controls-both-kio-icon-name-failures",
+    "present_initial": {
+      "kdirmodel": "PASS",
+      "knewfilemenu": "PASS"
+    },
+    "absent": {
+      "kdirmodel": "historical-empty-name-FAIL",
+      "knewfilemenu": "historical-empty-name-FAIL"
+    },
+    "reinstalled": {
+      "kdirmodel": "PASS",
+      "knewfilemenu": "PASS"
+    },
+    "qt_svg_plugins": {
+      "version": "6.10.2-2",
+      "icon_engine_plugin": "/usr/lib/x86_64-linux-gnu/qt6/plugins/iconengines/libqsvgicon.so",
+      "image_format_plugin": "/usr/lib/x86_64-linux-gnu/qt6/plugins/imageformats/libqsvg.so",
+      "qt6_svg_dev_depends_on_plugin": false
+    },
+    "next_scope": "qt-svg-provider-contract-ownership-and-remediation"
+  }
 }
