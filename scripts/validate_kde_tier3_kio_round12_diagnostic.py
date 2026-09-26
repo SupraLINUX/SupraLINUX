@@ -14,6 +14,7 @@ D13=json.loads((ROOT/"manifests/kde-tier3-kio-round13-diagnostic.json").read_tex
 D14=json.loads((ROOT/"manifests/kde-tier3-kio-round14-diagnostic.json").read_text())
 D15=json.loads((ROOT/"manifests/kde-tier3-kio-round15-diagnostic.json").read_text())
 D16=json.loads((ROOT/"manifests/kde-tier3-kio-round16-diagnostic.json").read_text())
+D17=json.loads((ROOT/"manifests/kde-tier3-kio-round17-diagnostic.json").read_text())
 
 def req(v,m):
     if not v:
