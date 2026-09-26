@@ -32,6 +32,8 @@ elif gate=="tier3-level1-attempt7-closed":
     target="validate_kde_tier3_round11_attempt7_closure.py"
 elif gate=="tier3-level1-attempt8-closed":
     target="validate_kde_tier3_round18_attempt8_closure.py"
+elif gate=="tier3-round19-diagnostic-pending":
+    target="validate_kde_tier3_kio_round19_diagnostic.py"
 else:
     raise SystemExit(f"unsupported Round 11 lifecycle gate: {gate!r}")
 

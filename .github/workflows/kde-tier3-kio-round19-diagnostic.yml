@@ -1,0 +1,34 @@
+name: KDE Frameworks Tier 3 KIO Round 19 diagnostic
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnostic:
+    name: KIO Round 19 residual test root cause
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Validate diagnostic definition
+        run: python3 scripts/validate_kde_tier3_kio_round19_diagnostic.py
+
+      - name: Capture Round 19 evidence
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash scripts/run-kde-tier3-kio-round19-diagnostic.sh
+
+      - name: Upload diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-tier3-kio-round19-diagnostic-${{ github.sha }}
+          path: evidence/kde-tier3-kio-round19-diagnostic/
+          if-no-files-found: error
+          retention-days: 90

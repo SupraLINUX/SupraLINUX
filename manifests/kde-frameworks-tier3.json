@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level1-planning",
+    "phase": "diagnostic",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-attempt8-closed",
-    "remediation": "round19-kio-diagnostic-definition-pending"
+    "package_builds": "tier3-round19-diagnostic-pending",
+    "remediation": "round19-kio-residual-tests-definition-pending-ci"
   },
   "nodes": [
     {
@@ -1391,8 +1391,8 @@
     "execution_authorized": false,
     "level1_execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "attempt8-complete-mixed",
-    "next_gate": "tier3-round19-kio-diagnostic-definition",
+    "status": "round19-diagnostic-definition-pending-ci",
+    "next_gate": "tier3-round19-kio-residual-test-diagnostic-evidence",
     "current_attempt": 8,
     "next_attempt": 9,
     "validation_workflow_run": 36238357510,
