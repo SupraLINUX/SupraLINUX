@@ -983,7 +983,7 @@
     "policy": "rematerialize-only-kio-then-rerun-full-level1",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition",
+    "next_gate": "tier3-round17-kio-object-path-state-transition-diagnostic-definition",
     "diagnostic_evidence": {
       "workflow_run": 36071103806,
       "job_id": 107872008601,
@@ -1146,6 +1146,28 @@
         "BreezeIcons::initIcons() changes fallback hicolor to breeze and preserves all three icon names"
       ],
       "next_diagnostic_scope": "kiconthemes-startup-or-kio-library-interaction"
+    },
+    "round16_diagnostic": {
+      "status": "diagnostic-PASS",
+      "workflow_run": 36209833629,
+      "job_id": 108313880904,
+      "commit": "5bea0781bf90ed97c53fdddc761566d4a984f5a7",
+      "artifact_id": 10894374901,
+      "artifact_sha256": "8cda50173446df052b21e5ca4fe89129af65e1c1e1ff13ac137953b5a9508cf6",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "baseline_valid": true,
+      "kiconthemes_startup_observed": true,
+      "conclusion": "library-preload-alone-does-not-reproduce-kio-icon-name-loss",
+      "modes_without_reproduction": [
+        "qt-baseline",
+        "kiconthemes-only",
+        "kiocore-only",
+        "kiconthemes-plus-kiocore",
+        "kiowidgets-closure",
+        "kiofilewidgets-closure"
+      ],
+      "next_diagnostic_scope": "actual-kio-object-path-state-transition"
     }
   },
   "remediation_history": [

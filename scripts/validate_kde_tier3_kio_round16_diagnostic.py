@@ -73,10 +73,20 @@ if M.get("status")=="definition-pending-diagnostic":
     req(L.get("next_gate")=="tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition","Round16 live definition gate")
     req(M.get("next_gate")=="tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-evidence","Round16 evidence gate")
 else:
-    req(M.get("next_gate","").startswith("tier3-round17-"),"Round16 closed handoff")
+    req(M.get("next_gate")=="tier3-round17-kio-object-path-state-transition-diagnostic-definition","Round16 closed handoff")
     req(L.get("next_gate")==M.get("next_gate"),"Round16 closed live gate")
+    dv=M.get("definition_validation",{})
+    req(dv.get("commit")=="5bea0781bf90ed97c53fdddc761566d4a984f5a7" and dv.get("repository_policy_workflow_run")==36209833503 and dv.get("result")=="PASS","Round16 definition validation")
     ev=M.get("diagnostic_evidence",{})
+    req(ev.get("workflow_run")==36209833629 and ev.get("job_id")==108313880904 and ev.get("commit")=="5bea0781bf90ed97c53fdddc761566d4a984f5a7","Round16 workflow identity")
+    req(ev.get("artifact_id")==10894374901 and ev.get("artifact_sha256")=="8cda50173446df052b21e5ca4fe89129af65e1c1e1ff13ac137953b5a9508cf6","Round16 artifact identity")
     req(ev.get("result")=="DIAG_COMPLETE" and ev.get("package_attempted") is False and ev.get("package_state_effect")=="none","Round16 closure evidence")
+    dr=M.get("diagnostic_results",{})
+    req(dr.get("baseline_valid") is True and dr.get("kiconthemes_startup_observed") is True,"Round16 valid baseline/startup")
+    req(dr.get("conclusion")=="library-preload-alone-does-not-reproduce-kio-icon-name-loss","Round16 closure conclusion")
+    req(dr.get("next_diagnostic_scope")=="actual-kio-object-path-state-transition","Round16 next scope")
+    for mode in ("qt-baseline","kiconthemes-only","kiocore-only","kiconthemes-plus-kiocore","kiowidgets-closure","kiofilewidgets-closure"):
+        req(dr.get("modes",{}).get(mode,{}).get("primary_empty_any") is False,f"Round16 {mode} preserves primary icon names")
 
 req(M.get("stable_promotion_requires_explicit_user_approval") is True,"stable approval")
 print("KDE Tier 3 KIO Round 16 diagnostic definition: PASS")

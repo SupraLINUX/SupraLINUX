@@ -18,6 +18,7 @@ ROUND13_NEXT="tier3-round13-kio-build-tree-diagnostic-definition"
 ROUND14_NEXT="tier3-round14-kio-kiconthemes-engine-provider-diagnostic-definition"
 ROUND15_NEXT="tier3-round15-kio-breeze-icons-init-state-diagnostic-definition"
 ROUND16_NEXT="tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition"
+ROUND17_NEXT="tier3-round17-kio-object-path-state-transition-diagnostic-definition"
 FAILS=["kiowidgets-kdirmodeltest","kiofilewidgets-knewfilemenutest"]
 BLOCKED=["baloo","kcmutils","knotifyconfig","kparts","ktexteditor","purpose"]
 PASS={"kbookmarks","kconfigwidgets","kdav","kdesu","kiconthemes","kjobwidgets","kpeople","krunner","ksvg","ktextwidgets","kwallet","kxmlgui"}
@@ -32,6 +33,7 @@ D12=load("manifests/kde-tier3-kio-round12-diagnostic.json")
 D13=load("manifests/kde-tier3-kio-round13-diagnostic.json")
 D14=load("manifests/kde-tier3-kio-round14-diagnostic.json")
 D15=load("manifests/kde-tier3-kio-round15-diagnostic.json")
+D16=load("manifests/kde-tier3-kio-round16-diagnostic.json")
 P=load("manifests/kde-tier3-build-campaign.json")
 G=load("manifests/kde-dag.json")
 
@@ -55,7 +57,8 @@ round12_closed = D12.get("status")=="diagnostic-PASS"
 round13_closed = D13.get("status")=="diagnostic-PASS"
 round14_closed = D14.get("status")=="diagnostic-PASS"
 round15_closed = D15.get("status")=="diagnostic-PASS"
-CURRENT_NEXT = ROUND16_NEXT if round15_closed else (ROUND15_NEXT if round14_closed else (ROUND14_NEXT if round13_closed else (ROUND13_NEXT if round12_closed else ATTEMPT7_NEXT)))
+round16_closed = D16.get("status")=="diagnostic-PASS"
+CURRENT_NEXT = ROUND17_NEXT if round16_closed else (ROUND16_NEXT if round15_closed else (ROUND15_NEXT if round14_closed else (ROUND14_NEXT if round13_closed else (ROUND13_NEXT if round12_closed else ATTEMPT7_NEXT))))
 if round12_closed:
     ev=D12.get("diagnostic_evidence",{})
     req(ev.get("workflow_run")==36082312546 and ev.get("job_id")==107906716315,"Round12 closure workflow evidence")
@@ -91,6 +94,17 @@ if round15_closed:
     req(dr.get("next_diagnostic_scope")=="kiconthemes-startup-or-kio-library-interaction","Round15 handoff scope")
 elif round14_closed:
     req(D15.get("status")=="definition-pending-diagnostic","Round15 lifecycle before closure")
+if round16_closed:
+    ev=D16.get("diagnostic_evidence",{})
+    req(ev.get("workflow_run")==36209833629 and ev.get("job_id")==108313880904,"Round16 closure workflow evidence")
+    req(ev.get("artifact_id")==10894374901 and ev.get("artifact_sha256")=="8cda50173446df052b21e5ca4fe89129af65e1c1e1ff13ac137953b5a9508cf6","Round16 closure artifact evidence")
+    req(ev.get("result")=="DIAG_COMPLETE" and ev.get("package_attempted") is False and ev.get("package_state_effect")=="none","Round16 closure remains non-promoting")
+    dr=D16.get("diagnostic_results",{})
+    req(dr.get("baseline_valid") is True and dr.get("kiconthemes_startup_observed") is True,"Round16 valid baseline/startup")
+    req(dr.get("conclusion")=="library-preload-alone-does-not-reproduce-kio-icon-name-loss","Round16 closure conclusion")
+    req(dr.get("next_diagnostic_scope")=="actual-kio-object-path-state-transition","Round16 handoff scope")
+elif round15_closed:
+    req(D16.get("status")=="definition-pending-diagnostic","Round16 lifecycle before closure")
 
 ar=T.get("active_remediation",{})
 req(ar.get("round")==11 and ar.get("status")=="attempt7-complete-mixed","Round11 canonical closure")

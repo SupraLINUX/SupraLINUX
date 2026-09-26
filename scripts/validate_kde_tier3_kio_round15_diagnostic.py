@@ -13,6 +13,7 @@ M=load("manifests/kde-tier3-kio-round15-diagnostic.json")
 T=load("manifests/kde-frameworks-tier3.json")
 L=load("manifests/kde-tier3-build-level1.json")
 D14=load("manifests/kde-tier3-kio-round14-diagnostic.json")
+D16=load("manifests/kde-tier3-kio-round16-diagnostic.json")
 W=(ROOT/".github/workflows/kde-tier3-kio-round15-diagnostic.yml").read_text()
 D=(ROOT/"docs/kde-tier3-kio-round15-diagnostic.md").read_text()
 runner_paths=[
@@ -84,7 +85,8 @@ if M.get("status")=="definition-pending-diagnostic":
     req(M.get("next_gate")=="tier3-round15-kio-breeze-icons-init-state-diagnostic-evidence","Round15 evidence gate")
 else:
     req(M.get("next_gate")=="tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-definition","Round15 closed handoff")
-    req(L.get("next_gate")==M.get("next_gate"),"Round15 closed live gate")
+    expected_live="tier3-round17-kio-object-path-state-transition-diagnostic-definition" if D16.get("status")=="diagnostic-PASS" else M.get("next_gate")
+    req(L.get("next_gate")==expected_live,"Round15 closed live gate")
     dv=M.get("definition_validation",{})
     req(dv.get("commit")=="594b86b3e5ca78a8b936350d037c3877743ac273" and dv.get("repository_policy_workflow_run")==36208311436 and dv.get("result")=="PASS","Round15 definition validation")
     ev=M.get("diagnostic_evidence",{})

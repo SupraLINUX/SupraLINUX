@@ -1,6 +1,6 @@
 # KDE Tier 3 — KIO Round 16 KIconThemes/KIO library linkage diagnostic
 
-Status: **definition pending diagnostic evidence**.
+Status: **diagnostic PASS — closed**.
 
 Round 15 closed with valid evidence: workflow `36208311383`, job `108309466429`, artifact `10894857677`, SHA-256 `58413dce8261e276f08b450ac6fbab494a0d691018dd0472a997b570b5e2e136`. It proved that changing the fallback to Breeze, making the Breeze resource visible, linking BreezeIcons, and calling `BreezeIcons::initIcons()` all preserve the semantic names `unknown`, `inode-directory`, and `folder-red`.
 
@@ -45,3 +45,17 @@ If `kiconthemes-only` reproduces, loading KIconThemes before QApplication is suf
 No KIO source remediation is introduced, no test is suppressed, no Debian package is built, and no `6.30.0-0supralinux8` revision is allocated. Canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED** and `execution_authorized=false`.
 
 Next gate: `tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-evidence`.
+
+## Diagnostic result — PASS, preload/linkage is not sufficient
+
+Round 16 completed in workflow `36209833629`, job `108313880904`, at commit `5bea0781bf90ed97c53fdddc761566d4a984f5a7`. Evidence artifact `10894374901` has SHA-256 `8cda50173446df052b21e5ca4fe89129af65e1c1e1ff13ac137953b5a9508cf6`. Repository Policy `36209833503` passed on the same commit.
+
+The baseline is valid and KIconThemes startup was actually observed. In every path-state sequence, all six linkage modes preserved `unknown`, `inode-directory`, and `folder-red`.
+
+Qt baseline kept fallback `hicolor` with no Breeze resource. KIconThemes-only changed fallback to `breeze` and exposed the Breeze resource. KIOCore-only, KIconThemes+KIOCore, KIOWidgets closure, and KIOFileWidgets closure all preserved icon identity.
+
+Therefore loading the real KIO/KIconThemes library closures is not sufficient to reproduce the KIO test failure. The distinguishing transition must occur when actual KIO objects or code paths execute.
+
+Round 16 remains non-promoting. KIO stays `6.30.0-0supralinux7` FAIL/downstream-ineligible, no `-8` exists, and canonical state remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**.
+
+Next gate: **`tier3-round17-kio-object-path-state-transition-diagnostic-definition`**.

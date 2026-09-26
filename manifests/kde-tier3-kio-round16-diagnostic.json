@@ -13,7 +13,7 @@
   "dag_state_changes_allowed": false,
   "downstream_eligibility_changes_allowed": false,
   "execution_authorized": false,
-  "status": "definition-pending-diagnostic",
+  "status": "diagnostic-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "round15_evidence": {
     "workflow_run": 36208311383,
@@ -130,6 +130,59 @@
     "kiofilewidgets_only_reproduces": "filewidgets-specific-effect-does-not-explain-kdirmodel-common-cause",
     "none_reproduce": "library-preload-alone-insufficient-advance-to-actual-kio-object-path"
   },
-  "next_gate": "tier3-round16-kio-kiconthemes-startup-kio-library-diagnostic-evidence",
-  "stable_promotion_requires_explicit_user_approval": true
+  "next_gate": "tier3-round17-kio-object-path-state-transition-diagnostic-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "definition_validation": {
+    "commit": "5bea0781bf90ed97c53fdddc761566d4a984f5a7",
+    "repository_policy_workflow_run": 36209833503,
+    "result": "PASS"
+  },
+  "diagnostic_evidence": {
+    "workflow_run": 36209833629,
+    "job_id": 108313880904,
+    "commit": "5bea0781bf90ed97c53fdddc761566d4a984f5a7",
+    "artifact_id": 10894374901,
+    "artifact_sha256": "8cda50173446df052b21e5ca4fe89129af65e1c1e1ff13ac137953b5a9508cf6",
+    "result": "DIAG_COMPLETE",
+    "package_attempted": false,
+    "package_state_effect": "none"
+  },
+  "diagnostic_results": {
+    "baseline_valid": true,
+    "kiconthemes_startup_observed": true,
+    "conclusion": "library-preload-alone-does-not-reproduce-kio-icon-name-loss",
+    "modes": {
+      "qt-baseline": {
+        "primary_empty_any": false,
+        "fallback": "hicolor",
+        "breeze_resource": false
+      },
+      "kiconthemes-only": {
+        "primary_empty_any": false,
+        "fallback": "breeze",
+        "breeze_resource": true
+      },
+      "kiocore-only": {
+        "primary_empty_any": false,
+        "fallback": "hicolor",
+        "breeze_resource": false
+      },
+      "kiconthemes-plus-kiocore": {
+        "primary_empty_any": false,
+        "fallback": "breeze",
+        "breeze_resource": true
+      },
+      "kiowidgets-closure": {
+        "primary_empty_any": false,
+        "fallback": "breeze",
+        "breeze_resource": true
+      },
+      "kiofilewidgets-closure": {
+        "primary_empty_any": false,
+        "fallback": "breeze",
+        "breeze_resource": true
+      }
+    },
+    "next_diagnostic_scope": "actual-kio-object-path-state-transition"
+  }
 }
