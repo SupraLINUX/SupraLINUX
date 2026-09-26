@@ -10,6 +10,7 @@ D12=json.loads((ROOT/"manifests/kde-tier3-kio-round12-diagnostic.json").read_tex
 D14=json.loads((ROOT/"manifests/kde-tier3-kio-round14-diagnostic.json").read_text())
 D15=json.loads((ROOT/"manifests/kde-tier3-kio-round15-diagnostic.json").read_text())
 D16=json.loads((ROOT/"manifests/kde-tier3-kio-round16-diagnostic.json").read_text())
+D17=json.loads((ROOT/"manifests/kde-tier3-kio-round17-diagnostic.json").read_text())
 W=(ROOT/".github/workflows/kde-tier3-kio-round13-diagnostic.yml").read_text()
 R=(ROOT/"scripts/run-kde-tier3-kio-round13-diagnostic.sh").read_text()
 D=(ROOT/"docs/kde-tier3-kio-round13-diagnostic.md").read_text()
