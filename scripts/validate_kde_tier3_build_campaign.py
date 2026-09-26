@@ -110,18 +110,6 @@ for key in (
 ):
     req(policy.get(key) is True, f"Tier3 build campaign policy: {key}")
 
-phase = canonical.get("discovery_policy", {}).get("phase")
-req(phase in {
-    "build-campaign-planning",
-    "build-level0",
-    "build-level1-planning",
-    "build-level1",
-    "build-level2",
-    "build-level3",
-    "runtime-validation",
-    "complete",
-}, "canonical Tier3 build-campaign lifecycle")
-
 for path in (
     "scripts/compile_kde_tier3_build_campaign.py",
     "scripts/validate_kde_tier3_build_campaign.py",

@@ -68,13 +68,7 @@ jobs:
           fi
 
           echo "run_ci=${run_ci}" >> "${GITHUB_OUTPUT}"
-          run_round19="$(python3 - <<'PY'
-import json
-from pathlib import Path
-m=json.loads(Path("manifests/kde-frameworks-tier3.json").read_text())
-print("true" if m.get("discovery_policy",{}).get("package_builds")=="tier3-round19-diagnostic-pending" else "false")
-PY
-)"
+          run_round19="$(python3 -c 'import json; m=json.load(open("manifests/kde-frameworks-tier3.json")); print("true" if m.get("discovery_policy",{}).get("package_builds")=="tier3-round19-diagnostic-pending" else "false")')"
           echo "run_round19=${run_round19}" >> "${GITHUB_OUTPUT}"
           if [[ "${run_ci}" == "true" ]]; then
             echo "Semantic build/reference/provider input changed; invoking reusable CI lanes."
