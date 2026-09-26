@@ -1,6 +1,6 @@
 # KDE Tier 3 — KIO Round 18 test-provider remediation
 
-Status: **source materialization PASS; Attempt 8 planning validation pending**.
+Status: **Attempt 8 active; binary CI pending**.
 
 Round 17 established the causal environmental root cause: removing `qt6-svg-plugins` from otherwise identical KIO test binaries restores both historical empty-`QIcon::name()` failures, and reinstalling it restores PASS.
 
@@ -31,4 +31,8 @@ Source materialization completed successfully in workflow `36222711238`, job `10
 
 Canonical state: **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**.
 
-Next gate: `tier3-build-level1-planning-validation`.
+Planning validation passed in Repository Policy `36237942524` and Level 1 workflow `36237942600` for commit `349b0d543edefb2979f1712079628e25e37d8135`.
+
+Attempt 8 is now authorized for the full Level 1 scope: KIO `6.30.0-0supralinux8` plus retained KXMLGui `6.30.0-0supralinux5`. Canonical KIO remains FAIL/downstream-ineligible until the real package job passes.
+
+Next gate: `tier3-build-level1-attempt8`.

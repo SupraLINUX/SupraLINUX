@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level1-planning",
+    "phase": "build-level1",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-source-PASS-pending-planning-validation",
-    "remediation": "round18-kio-svg-test-provider-source-PASS-pending-planning-validation"
+    "package_builds": "tier3-level1-authorized",
+    "remediation": "round18-kio-svg-test-provider-attempt8-active"
   },
   "nodes": [
     {
@@ -1345,12 +1345,12 @@
       "kio": "6.30.0-0supralinux8",
       "kxmlgui": "6.30.0-0supralinux5"
     },
-    "execution_authorized": false,
-    "level1_execution_authorized": false,
+    "execution_authorized": true,
+    "level1_execution_authorized": true,
     "full_level1_rerun_required": true,
-    "status": "materialization-PASS-pending-level1-planning-validation",
-    "next_gate": "tier3-build-level1-planning-validation",
-    "current_attempt": 7,
+    "status": "level1-active-pending-ci",
+    "next_gate": "tier3-build-level1-attempt8",
+    "current_attempt": 8,
     "next_attempt": 8,
     "validation_workflow_run": 36079116873,
     "validation_commit": "ef6262ac9018df2c0d111d97f99919d8acdeb215",
@@ -1394,13 +1394,13 @@
       }
     },
     "source_materialization_complete": true,
-    "activation_policy_workflow_run": 36076306121,
-    "activation_level1_workflow_run": 36076306143,
-    "activation_commit": "8ac22bf8d97a592a548fbfc9a40af65773fd4d30",
+    "activation_policy_workflow_run": 36237942524,
+    "activation_level1_workflow_run": 36237942600,
+    "activation_commit": "349b0d543edefb2979f1712079628e25e37d8135",
     "planning_validation": {
-      "repository_policy_workflow_run": 36076306121,
-      "level1_workflow_run": 36076306143,
-      "commit": "8ac22bf8d97a592a548fbfc9a40af65773fd4d30",
+      "repository_policy_workflow_run": 36237942524,
+      "level1_workflow_run": 36237942600,
+      "commit": "349b0d543edefb2979f1712079628e25e37d8135",
       "result": "PASS"
     },
     "failure_classes": {

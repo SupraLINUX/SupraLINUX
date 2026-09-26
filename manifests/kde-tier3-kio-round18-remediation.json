@@ -8,7 +8,7 @@
   "packaging_authority": "supralinux",
   "provider_platform": "ubuntu-resolute",
   "frameworks_series": "6.30.0",
-  "status": "source-materialization-PASS-pending-planning-validation",
+  "status": "attempt8-active",
   "claim": "kio-qt-svg-test-provider-remediation",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "current_package_version": "6.30.0-0supralinux7",
@@ -37,7 +37,7 @@
   },
   "materialization": {
     "source_materialization_authorized": false,
-    "binary_execution_authorized": false,
+    "binary_execution_authorized": true,
     "previous_materialization": {
       "workflow_run": 36073638711,
       "job_id": 107879979760,
@@ -55,7 +55,7 @@
     "qt6-svg-plugins is build/test-only for KIO; no new runtime binary relation is introduced",
     "BLOCKED remains distinct from FAIL"
   ],
-  "next_gate": "tier3-build-level1-planning-validation",
+  "next_gate": "tier3-build-level1-attempt8",
   "stable_promotion_requires_explicit_user_approval": true,
   "materialization_evidence": {
     "workflow_run": 36222711238,
@@ -71,5 +71,19 @@
     "materialized_tree_sha256": "240ba85604578e0b4615c5f09049b67dbf5b41f6e2779db75fc8b662871f704b",
     "adapted_control_sha256": "b5f687a50fd97d7ca90871a49610dc35be3ca92c51bfd20d38c9f48af45585a5",
     "adapted_rules_sha256": "c966d9328a0ab624ac5c7b5fb4d1b328d4812ac477446e0b0adf05671c410bfd"
+  },
+  "execution_authorized": true,
+  "activation": {
+    "scope": "full-level1-rerun-2-nodes",
+    "nodes": [
+      "kio",
+      "kxmlgui"
+    ],
+    "kio_package_version": "6.30.0-0supralinux8",
+    "kxmlgui_package_version": "6.30.0-0supralinux5",
+    "repository_policy_workflow_run": 36237942524,
+    "level1_planning_workflow_run": 36237942600,
+    "commit": "349b0d543edefb2979f1712079628e25e37d8135",
+    "level1_execution_authorized": true
   }
 }

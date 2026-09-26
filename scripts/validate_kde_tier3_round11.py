@@ -23,7 +23,11 @@ elif gate=="tier3-level1-source-PASS-pending-planning-validation":
     else:
         target="validate_kde_tier3_round11_planning.py"
 elif gate=="tier3-level1-authorized":
-    target="validate_kde_tier3_round11_attempt7.py"
+    marker=t.get("discovery_policy",{}).get("remediation")
+    if marker=="round18-kio-svg-test-provider-attempt8-active":
+        target="validate_kde_tier3_round18_attempt8.py"
+    else:
+        target="validate_kde_tier3_round11_attempt7.py"
 elif gate=="tier3-level1-attempt7-closed":
     target="validate_kde_tier3_round11_attempt7_closure.py"
 else:

@@ -10,6 +10,9 @@ _rstate=load("manifests/kde-tier3-kio-round18-remediation.json").get("status")
 if _rstate=="source-materialization-PASS-pending-planning-validation":
     import subprocess
     raise SystemExit(subprocess.run([sys.executable,str(ROOT/"scripts"/"validate_kde_tier3_round18_planning.py")]).returncode)
+if _rstate=="attempt8-active":
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable,str(ROOT/"scripts"/"validate_kde_tier3_round18_attempt8.py")]).returncode)
 T=load("manifests/kde-frameworks-tier3.json")
 L=load("manifests/kde-tier3-build-level1.json")
 C=load("manifests/kde-tier3-package-contracts.json")
