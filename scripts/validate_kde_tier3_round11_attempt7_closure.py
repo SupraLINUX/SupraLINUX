@@ -51,7 +51,8 @@ req(G.get("nodes",{}).get("kxmlgui",{}).get("state")=="PASS","KXMLGui remains PA
 
 round12_closed = D12.get("status")=="diagnostic-PASS"
 round13_closed = D13.get("status")=="diagnostic-PASS"
-CURRENT_NEXT = ROUND14_NEXT if round13_closed else (ROUND13_NEXT if round12_closed else ATTEMPT7_NEXT)
+round14_closed = D14.get("status")=="diagnostic-PASS"
+CURRENT_NEXT = ROUND15_NEXT if round14_closed else (ROUND14_NEXT if round13_closed else (ROUND13_NEXT if round12_closed else ATTEMPT7_NEXT))
 if round12_closed:
     ev=D12.get("diagnostic_evidence",{})
     req(ev.get("workflow_run")==36082312546 and ev.get("job_id")==107906716315,"Round12 closure workflow evidence")
