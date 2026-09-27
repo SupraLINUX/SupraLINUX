@@ -55,7 +55,7 @@ download_artifact() {
 }
 
 STAGE=contract
-python3 scripts/validate_kde_tier3_kio_round25_diagnostic.py
+python3 scripts/validate_kde_tier3_kio_round25_remediation.py
 
 STAGE=host-tools
 . /etc/os-release
@@ -373,7 +373,6 @@ if diag!="REMEDIATION_PASS":
     raise SystemExit(85)
 PY
 
-REMEDIATION_RESULT=REMEDIATION_PASS
 DIAG_RESULT=REMEDIATION_PASS
 STAGE=complete
 exit 0
