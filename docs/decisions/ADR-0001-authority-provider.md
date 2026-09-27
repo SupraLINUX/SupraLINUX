@@ -1,7 +1,8 @@
 # ADR-0001: Separate component authority from package provider
 
 Status: **accepted**  
-Date: **2026-09-11**
+Date: **2026-09-11**  
+Amended by: **ADR-0003 (2026-09-27)**
 
 ## Context
 
@@ -15,9 +16,9 @@ SupraLINUX separates **authority** from **provider**.
 - KDE upstream is authoritative for the KDE desktop stack and its dependency requirements.
 - The Qt Project is authoritative for Qt itself, while KDE's release dependency profile determines the Qt version line required by the selected KDE stable stack.
 - Ubuntu may be the package provider for Qt when its packages satisfy the selected profile and certification gates.
-- SupraLINUX becomes the provider when Ubuntu cannot satisfy that profile.
+- If Ubuntu cannot satisfy that profile, SupraLINUX may become the provider only when the substitution passes the Ubuntu application-compatibility contract. Otherwise the selected KDE integration frontier remains at the newest compatible stable release.
 
-For KDE components owned by SupraLINUX, KDE upstream stable is selected first. Ubuntu's package version is never used as the upper bound for the KDE release.
+For KDE components owned by SupraLINUX, Ubuntu's package version is never used as the selection authority or upper bound. SupraLINUX selects the newest official stable KDE stack that can be integrated completely while satisfying the Ubuntu application-compatibility contract. See ADR-0003.
 
 ## Consequences
 

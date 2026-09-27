@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-11",
+  "as_of": "2026-09-27",
   "platform": {
     "authority": "ubuntu",
     "distribution": "Ubuntu",
@@ -71,6 +71,25 @@
       "system_test": "autopkgtest-qemu",
       "nested_kvm_required": true,
       "status": "pending-certification"
+    }
+  },
+  "selection_policy": {
+    "decision_authority": "supralinux",
+    "objective": "newest-stable-kde-compatible-with-ubuntu-application-contract",
+    "internal_heuristic": "stay-ahead-of-ubuntu-where-compatible",
+    "ubuntu_desktop_packages_select_stack": false,
+    "ubuntu_desktop_versions_are_upper_bound": false,
+    "pre_release_canonical_allowed": false,
+    "feature_completeness": {
+      "policy": "selected-upstream-desktop-features-available-by-default",
+      "documented_exceptions_required": true
+    },
+    "compatibility_contract": {
+      "baseline": "ubuntu-26.04",
+      "scope": "ubuntu-and-third-party-applications",
+      "hard_gate": true,
+      "qt_or_platform_substitution_requires_evidence": true,
+      "incompatible_next_release_action": "retain-newest-compatible-stable-kde"
     }
   }
 }

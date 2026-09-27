@@ -2,11 +2,11 @@
 
 Provider preflight: **PASS**  
 Final certification: **pending**  
-Last reviewed: **2026-09-12**
+Last reviewed: **2026-09-27**
 
 ## Authority and provider
 
-KDE upstream is the authority for the Qt version required by the desktop. Ubuntu may provide that Qt only when it satisfies the KDE-selected requirement and SupraLINUX compatibility gates.
+KDE upstream is the authority for the Qt version required by each KDE release. SupraLINUX selects the KDE integration frontier. Ubuntu may provide the selected Qt only when it satisfies the KDE requirement and SupraLINUX compatibility gates. A SupraLINUX-provided Qt is not an automatic fallback: a broad Qt substitution must itself pass the Ubuntu application-compatibility contract, otherwise SupraLINUX retains the newest compatible KDE stable release.
 
 Current KDE schedule evidence:
 
@@ -26,6 +26,12 @@ Current Ubuntu Resolute candidate evidence includes:
 Although Debian revisions differ, they all resolve to upstream **Qt 6.10.2**. Qt documents patch releases as maintenance releases and its Qt 6 compatibility commitments remain subject to the documented toolchain/configuration/private-API caveats: <https://doc.qt.io/qt-6.10/qt-releases.html>.
 
 These facts and the successful provider preflight make Ubuntu Qt 6.10.2 a validated **reuse candidate** for the Plasma/Frameworks baseline. They do **not** constitute final KDE-stack certification.
+
+## Current upstream selection check
+
+As of 2026-09-27, KDE's official announcements still classify Plasma 6.8 as beta, so it is not eligible for the canonical stable stack. KDE's Plasma 6 schedule assigns Plasma 6.7 to Qt 6.10 and Plasma 6.8 to Qt 6.11. The current canonical Plasma 6.7.5 selection therefore remains on the Qt 6.10 compatibility line while Plasma 6.8 becomes a future integration-frontier evaluation after its stable release.
+
+This distinction is intentional: a newer upstream dependency requirement is evidence about what KDE needs, not automatic authorization to replace Ubuntu's Qt. Qt documents backward binary compatibility within Qt 6 under matching toolchain/system/configuration conditions, but distro integration must also account for private APIs, plugins, package metadata and other consumers. SupraLINUX therefore requires its own compatibility evidence before a broad Qt provider transition.
 
 ## Provider preflight evidence
 
@@ -138,6 +144,7 @@ Ubuntu Qt may move from `reuse-candidate` with final certification `pending` to 
 5. Debian package metadata/ABI contracts remain compatible with the SupraLINUX/Ubuntu package model — **pending**;
 6. KDE runtime/session smoke tests pass — **pending**;
 7. compatibility tests for relevant Ubuntu and third-party Qt applications pass — **pending**;
-8. real evidence is recorded in manifests/status documentation — **ongoing**.
+8. real evidence is recorded in manifests/status documentation — **ongoing**;
+9. for any SupraLINUX-provided Qt transition, representative Ubuntu and third-party application compatibility remains within the documented contract — **hard gate**.
 
 Until those stronger gates pass, `qt.certification.status` remains `pending` and Ubuntu remains a `reuse-candidate`, not a certified Qt provider.

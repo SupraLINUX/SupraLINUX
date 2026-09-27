@@ -39,6 +39,21 @@ require(platform.get("series") == "resolute", "Ubuntu 26.04 series must be resol
 
 desktop = data.get("desktop", {})
 require(desktop.get("authority") == "kde-upstream", "desktop authority must be kde-upstream")
+selection = data.get("selection_policy", {})
+require(selection.get("decision_authority") == "supralinux", "desktop integration decision authority must be supralinux")
+require(selection.get("objective") == "newest-stable-kde-compatible-with-ubuntu-application-contract", "desktop selection objective is invalid")
+require(selection.get("internal_heuristic") == "stay-ahead-of-ubuntu-where-compatible", "desktop internal heuristic is invalid")
+require(selection.get("ubuntu_desktop_packages_select_stack") is False, "Ubuntu desktop packages must not select the KDE stack")
+require(selection.get("ubuntu_desktop_versions_are_upper_bound") is False, "Ubuntu desktop versions must not cap KDE")
+require(selection.get("pre_release_canonical_allowed") is False, "pre-release KDE must not be canonical by default")
+feature_policy = selection.get("feature_completeness", {})
+require(feature_policy.get("policy") == "selected-upstream-desktop-features-available-by-default", "selected KDE feature-completeness policy is invalid")
+require(feature_policy.get("documented_exceptions_required") is True, "feature-completeness exceptions must be documented")
+compat = selection.get("compatibility_contract", {})
+require(compat.get("baseline") == "ubuntu-26.04", "compatibility baseline must remain Ubuntu 26.04")
+require(compat.get("hard_gate") is True, "Ubuntu application compatibility must be a hard gate")
+require(compat.get("qt_or_platform_substitution_requires_evidence") is True, "Qt/platform substitution must require compatibility evidence")
+require(compat.get("incompatible_next_release_action") == "retain-newest-compatible-stable-kde", "incompatible KDE release fallback is invalid")
 for component in ("plasma", "frameworks", "gear"):
     item = desktop.get(component, {})
     require(bool(item.get("version")), f"{component} version is required")
@@ -185,6 +200,7 @@ required_files = [
     "scripts/validate_diagnostic_infrastructure_preflight.py",
     "docs/status/2026-09-11.md",
     "docs/decisions/ADR-0001-authority-provider.md",
+    "docs/decisions/ADR-0003-kde-integration-frontier.md",
     "docs/runners/ubuntu-26.04.md",
     "docs/runners/provisioning.md",
     "docs/runners/host-kvm.md",
@@ -385,6 +401,7 @@ if errors:
 
 print("Repository policy validation: PASS")
 print(f"Platform: {platform['version']} ({platform['series']})")
+print(f"Selection: {selection['objective']} / compatibility-hard-gate={compat['hard_gate']}")
 print(
     "Desktop: Plasma {plasma}, Frameworks {frameworks}, Gear {gear}".format(
         plasma=desktop["plasma"]["version"],

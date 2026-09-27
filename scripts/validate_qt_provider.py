@@ -36,6 +36,14 @@ except Exception as exc:
     print(f"ERROR: cannot read {MANIFEST.relative_to(ROOT)}: {exc}", file=sys.stderr)
     raise SystemExit(1)
 
+selection = data.get("selection_policy", {})
+compat = selection.get("compatibility_contract", {})
+require(selection.get("decision_authority") == "supralinux", "KDE integration decision authority must be supralinux")
+require(selection.get("objective") == "newest-stable-kde-compatible-with-ubuntu-application-contract", "KDE integration objective is invalid")
+require(compat.get("hard_gate") is True, "Ubuntu application compatibility must remain a hard gate")
+require(compat.get("qt_or_platform_substitution_requires_evidence") is True, "Qt substitution must require compatibility evidence")
+require(compat.get("incompatible_next_release_action") == "retain-newest-compatible-stable-kde", "Qt incompatibility fallback is invalid")
+
 qt = data.get("qt", {})
 provider = qt.get("provider", {})
 preflight = qt.get("provider_preflight", {})
@@ -137,6 +145,8 @@ for tracked in (
 
 require("provider preflight" in doc_lower, "Qt provider documentation must describe the provider preflight boundary")
 require("final certification" in doc_lower, "Qt provider documentation must distinguish final certification")
+require("integration frontier" in doc_lower, "Qt provider documentation must describe the KDE integration frontier")
+require("application-compatibility contract" in doc_lower, "Qt provider documentation must describe the compatibility hard gate")
 require("34665704108" in doc, "Qt provider documentation must record the first real PASS run")
 require("10288816586" in doc, "Qt provider documentation must record the first evidence artifact")
 require("90a25a24b60dcc02691c7043eb3a985f21013c73e3ea4489a7427fa74e618e33" in doc, "Qt provider documentation must record the first artifact digest")

@@ -76,7 +76,7 @@ Rules:
 - infrastructure PASS only certifies the mechanism; it does not change package state;
 - infrastructure FAIL/INFRA_INVALID never becomes a package FAIL.
 
-The reusable `diagnostic-infrastructure-preflight.yml` certifies hosted Ubuntu 26.04 + sbuild/unshare diagnostic transport. KIO Round 23 is BLOCKED until that preflight closes PASS. See `docs/decisions/diagnostic-infrastructure-preflight-2026-09-26.md`.
+The reusable `diagnostic-infrastructure-preflight.yml` certifies hosted Ubuntu 26.04 + sbuild/unshare diagnostic transport. KIO Round 23 used this gate and later closed `diagnostic-PASS`; future diagnostics using new mechanisms follow the same preflight-before-target rule. See `docs/decisions/diagnostic-infrastructure-preflight-2026-09-26.md`.
 ## Authoritative KVM/JIT lane
 
 Release-relevant evidence is produced inside disposable self-hosted Ubuntu 26.04 KVM VMs. Required labels are:
