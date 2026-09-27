@@ -1,12 +1,16 @@
 # KDE Tier 3 KIO Round 23 — Attempt 8 rootfs KRecent diagnostic
 
-Status: definition pending diagnostic retry 3.
+Status: definition pending diagnostic retry 4.
 
 Diagnostic attempt 1 (workflow `36279506026`) is recorded as **INFRA_INVALID**: the runner stopped at `stage-inputs` because a non-recursive wildcard attempted to copy the materialization artifact's `debian/` directory. No chroot test or package build occurred, so it carries no KIO conclusion. The retry copies only the `.dsc`, `.orig.tar.*` and `.debian.tar.*` source files and resolves `sbuild` ownership by account name rather than an assumed UID.
 
 Diagnostic attempt 2 (workflow `36279908858`, job `108509683175`, artifact `10918078631`, SHA-256 `adb866de60351fa0cb104b3f10187df1532863af639a2ae1227367ae32e5e19f`) is also **INFRA_INVALID**. It reached source extraction but the manual wrapper tried to call `useradd`; the exact buildd rootfs does not contain that utility. No tests or package build ran.
 
 Diagnostic attempt 3 (workflow `36280922944`, job `108512470733`) is **INFRA_INVALID** and produced no artifact: `SBUILD_LOG` was expanded before `EVIDENCE` was assigned under `set -u`. Execution stopped during initialization, before sbuild or package activity.
+
+Diagnostic attempt 4 (workflow `36281142919`, job `108513096316`, artifact `10918188486`, SHA-256 `3e34166181099e5e5534a6e0e54138390ea5384eaf072ea3b0e2c17ab8266897`) is **INFRA_INVALID**. All historical inputs were downloaded and verified, but generation of `sbuild-config.pl` failed because Python %-formatting interpreted the hook's literal `%p`. sbuild itself was never invoked and no package/test execution occurred.
+
+The retry preserves `%p` literally by replacing named placeholders rather than using Python's %-format operator. Policy's ShellCheck warning is also resolved by documenting the intentional indirect EXIT-trap invocation of `finish()`.
 
 The retry also restores the exact rootfs-selection mechanism already proven by Attempt 8: the verified tarball is linked as `~/.cache/sbuild/resolute-amd64.tar` and sbuild is invoked with `--chroot-mode=unshare --dist=resolute`.
 

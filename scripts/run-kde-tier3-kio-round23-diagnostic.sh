@@ -21,6 +21,7 @@ mkdir -p "${INPUTS}" "${ROOTFS_DIR}" "${HOOK_SHARE}" "${OUT}" "${EVIDENCE}/xbels
 chmod 0777 "${EVIDENCE}" "${EVIDENCE}/xbels"
 exec > >(tee "${EVIDENCE}/pipeline.log") 2>&1
 
+# shellcheck disable=SC2329
 finish() {
   local rc="$1" finished
   finished="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -121,8 +122,8 @@ def q(s): return "'" + s.replace("\\","\\\\").replace("'","\\'") + "'"
 text="""$chroot_mode = 'unshare';
 $unshare_mmdebstrap_auto_create = 0;
 $unshare_bind_mounts = [
-  { directory => %s, mountpoint => '/supralinux-round23' },
-  { directory => %s, mountpoint => '/supralinux-evidence' },
+  { directory => __HOOK__, mountpoint => '/supralinux-round23' },
+  { directory => __EVIDENCE__, mountpoint => '/supralinux-evidence' },
 ];
 $run_lintian = 0;
 $run_autopkgtest = 0;
@@ -131,7 +132,8 @@ $external_commands = {
   'starting-build-commands' => [ [ '/bin/bash', '/supralinux-round23/hook.sh', '%p' ] ],
 };
 1;
-""" % (q(hook),q(evidence))
+"""
+text=text.replace("__HOOK__",q(hook)).replace("__EVIDENCE__",q(evidence))
 Path(path).write_text(text)
 PY
 cp "${CONFIG}" "${EVIDENCE}/sbuild-config.pl"

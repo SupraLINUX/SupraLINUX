@@ -18,7 +18,7 @@
   "test_suppression": false,
   "execution_authorized": true,
   "package_execution_authorized": false,
-  "status": "definition-pending-diagnostic-retry-3",
+  "status": "definition-pending-diagnostic-retry-4",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -154,6 +154,21 @@
       "artifact_status": "not-produced",
       "failed_stage": "initialization",
       "reason": "runner expanded SBUILD_LOG from EVIDENCE before EVIDENCE was assigned under set -u; execution stopped before evidence directory creation",
+      "package_attempted": false,
+      "canonical_state_effect": "none",
+      "usable_for_kio_diagnostic_conclusion": false
+    },
+    {
+      "ordinal": 4,
+      "status": "INFRA_INVALID",
+      "workflow_run": 36281142919,
+      "job_id": 108513096316,
+      "merge_commit": "ddce8187cfca725644f84dadde577f4251a807f3",
+      "branch_commit": "851e5d9290acb6962786d802a480d53ac1f3658a",
+      "artifact_id": 10918188486,
+      "artifact_sha256": "3e34166181099e5e5534a6e0e54138390ea5384eaf072ea3b0e2c17ab8266897",
+      "failed_stage": "sbuild-config",
+      "reason": "Python config generator used percent-formatting while the sbuild external-command template contained literal %p, causing TypeError before sbuild invocation",
       "package_attempted": false,
       "canonical_state_effect": "none",
       "usable_for_kio_diagnostic_conclusion": false
