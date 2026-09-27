@@ -16,8 +16,8 @@
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-round23-diagnostic-closed",
-    "remediation": "round23-krecent-isolated-reproduction-PASS-pending-round24-definition"
+    "package_builds": "tier3-round24-diagnostic-pending",
+    "remediation": "round24-krecent-timestamp-tie-causality-diagnostic-pending-ci"
   },
   "nodes": [
     {
@@ -1391,8 +1391,8 @@
     "execution_authorized": false,
     "level1_execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "round23-diagnostic-PASS-pending-round24-definition",
-    "next_gate": "tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-definition",
+    "status": "round24-diagnostic-pending-ci",
+    "next_gate": "tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-evidence",
     "current_attempt": 8,
     "next_attempt": 9,
     "validation_workflow_run": 36238357510,
@@ -1422,9 +1422,9 @@
       "result": "PASS"
     },
     "krecentdocument_policy": {
-      "classification": "unresolved-timestamp-tie-hypothesis",
-      "action": "no-patch-no-suppression",
-      "next_attempt_behavior": "fatal-if-reproduced"
+      "classification": "timestamp-tie-causality-under-test",
+      "action": "diagnostic-controls-only-no-production-patch",
+      "next_attempt_behavior": "Attempt9-remains-unauthorized"
     },
     "materialization_workflow_run": 36222711238,
     "materialization_commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",
@@ -1649,6 +1649,17 @@
           "attempt8_signature_failures": 1
         }
       }
+    },
+    "round24_definition": {
+      "status": "definition-pending-ci",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "matrix": {
+        "native": 40,
+        "monotonic": 40,
+        "fixed": 20
+      },
+      "next_gate": "tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-evidence"
     }
   },
   "remediation_history": [

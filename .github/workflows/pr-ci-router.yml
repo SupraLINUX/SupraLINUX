@@ -21,6 +21,7 @@ jobs:
       run_ci: ${{ steps.scope.outputs.run_ci }}
       run_diag_preflight: ${{ steps.scope.outputs.run_diag_preflight }}
       run_round23: ${{ steps.scope.outputs.run_round23 }}
+      run_round24: ${{ steps.scope.outputs.run_round24 }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -73,6 +74,8 @@ jobs:
           echo "run_diag_preflight=${run_diag_preflight}" >> "${GITHUB_OUTPUT}"
           run_round23="$(python3 -c 'import json; t=json.load(open("manifests/kde-frameworks-tier3.json")); p=json.load(open("manifests/diagnostic-infrastructure-preflight.json")); r=json.load(open("manifests/kde-tier3-kio-round23-diagnostic.json")); ok=t.get("discovery_policy",{}).get("package_builds")=="tier3-round23-diagnostic-pending" and p.get("status")=="PASS" and r.get("status")=="definition-pending-ci" and r.get("execution_authorized") is True; print("true" if ok else "false")')"
           echo "run_round23=${run_round23}" >> "${GITHUB_OUTPUT}"
+          run_round24="$(python3 -c 'import json; t=json.load(open("manifests/kde-frameworks-tier3.json")); r23=json.load(open("manifests/kde-tier3-kio-round23-diagnostic.json")); r24=json.load(open("manifests/kde-tier3-kio-round24-diagnostic.json")); ok=t.get("discovery_policy",{}).get("package_builds")=="tier3-round24-diagnostic-pending" and r23.get("status")=="diagnostic-PASS" and r24.get("status")=="definition-pending-ci" and r24.get("execution_authorized") is True and r24.get("package_execution_authorized") is False; print("true" if ok else "false")')"
+          echo "run_round24=${run_round24}" >> "${GITHUB_OUTPUT}"
           if [[ "${run_ci}" == "true" ]]; then
             echo "Semantic build/reference/provider input changed; invoking reusable CI lanes."
           else
@@ -90,6 +93,12 @@ jobs:
     needs: plan
     if: needs.plan.outputs.run_round23 == 'true'
     uses: ./.github/workflows/kde-tier3-kio-round23-diagnostic.yml
+
+  kde-tier3-kio-round24-diagnostic:
+    name: Tier 3 KIO Round 24 diagnostic
+    needs: plan
+    if: needs.plan.outputs.run_round24 == 'true'
+    uses: ./.github/workflows/kde-tier3-kio-round24-diagnostic.yml
 
   package-build-proof:
     name: Phase 1 package preflight

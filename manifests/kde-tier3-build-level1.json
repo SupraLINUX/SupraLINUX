@@ -894,13 +894,13 @@
     },
     "execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "round23-diagnostic-PASS-pending-round24-definition",
+    "status": "round24-diagnostic-pending-ci",
     "source_rematerialization_required": false,
     "source_rematerialization_nodes": [
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-definition",
+    "next_gate": "tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-evidence",
     "current_attempt": 8,
     "next_attempt": 9,
     "remaining_failed_nodes": [
@@ -1140,6 +1140,17 @@
           "attempt8_signature_failures": 1
         }
       }
+    },
+    "round24_definition": {
+      "status": "definition-pending-ci",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "matrix": {
+        "native": 40,
+        "monotonic": 40,
+        "fixed": 20
+      },
+      "next_gate": "tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-evidence"
     }
   },
   "activation": {

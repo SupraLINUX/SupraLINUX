@@ -124,6 +124,8 @@ routed_pr_workflows = (
     "kde-tier1-source-diagnostic.yml",
     "qt-provider-preflight.yml",
     "diagnostic-infrastructure-preflight.yml",
+    "kde-tier3-kio-round23-diagnostic.yml",
+    "kde-tier3-kio-round24-diagnostic.yml",
 )
 
 require(f"actions/checkout@{CHECKOUT_SHA}" in repository_policy, "repository policy checkout action must use the approved immutable SHA")
@@ -159,6 +161,9 @@ require("cancel-in-progress: true" in pr_ci_router, "PR CI router must cancel su
 require("pr-ci-router-${{ github.event.pull_request.number }}" in pr_ci_router, "PR CI router concurrency must be scoped to the PR number")
 require("run_diag_preflight" in pr_ci_router and "diagnostic-infrastructure-preflight.yml" in pr_ci_router, "PR router must expose diagnostic infrastructure preflight")
 require('p.get("status")=="PASS"' in pr_ci_router, "Round23 admission must require diagnostic preflight PASS")
+require("run_round24" in pr_ci_router and "kde-tier3-kio-round24-diagnostic.yml" in pr_ci_router, "PR router must expose Round24 diagnostic")
+require('r23.get("status")=="diagnostic-PASS"' in pr_ci_router, "Round24 admission must require closed Round23 PASS")
+require('r24.get("package_execution_authorized") is False' in pr_ci_router, "Round24 admission must remain diagnostic-only")
 
 for filename in routed_pr_workflows:
     text = workflow_texts.get(filename, "")
@@ -198,6 +203,11 @@ required_files = [
     "manifests/diagnostic-infrastructure-preflight.json",
     "scripts/run-diagnostic-infrastructure-preflight.sh",
     "scripts/validate_diagnostic_infrastructure_preflight.py",
+    "manifests/kde-tier3-kio-round24-diagnostic.json",
+    "scripts/run-kde-tier3-kio-round24-hook.sh",
+    "scripts/run-kde-tier3-kio-round24-diagnostic.sh",
+    "scripts/validate_kde_tier3_kio_round24_diagnostic.py",
+    "docs/kde-tier3-kio-round24-diagnostic.md",
     "docs/status/2026-09-11.md",
     "docs/decisions/ADR-0001-authority-provider.md",
     "docs/decisions/ADR-0003-kde-integration-frontier.md",

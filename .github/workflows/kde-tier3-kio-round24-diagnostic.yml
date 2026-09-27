@@ -1,4 +1,4 @@
-name: KDE Frameworks Tier 3 KIO Round 23 diagnostic
+name: KDE Frameworks Tier 3 KIO Round 24 diagnostic
 
 on:
   workflow_call:
@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   diagnostic:
-    name: KIO Round 23 Attempt 8 rootfs KRecent diagnostic
+    name: KIO Round 24 timestamp-tie causality diagnostic
     runs-on: ubuntu-26.04
     timeout-minutes: 120
     steps:
@@ -18,18 +18,18 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Validate diagnostic definition
-        run: python3 scripts/validate_kde_tier3_kio_round23_diagnostic.py
+        run: python3 scripts/validate_kde_tier3_kio_round24_diagnostic.py
 
-      - name: Capture Round 23 evidence
+      - name: Capture Round 24 evidence
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: bash scripts/run-kde-tier3-kio-round23-diagnostic.sh
+        run: bash scripts/run-kde-tier3-kio-round24-diagnostic.sh
 
       - name: Upload diagnostic evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: kde-tier3-kio-round23-diagnostic-${{ github.sha }}
-          path: evidence/kde-tier3-kio-round23-diagnostic/
+          name: kde-tier3-kio-round24-diagnostic-${{ github.sha }}
+          path: evidence/kde-tier3-kio-round24-diagnostic/
           if-no-files-found: error
           retention-days: 90

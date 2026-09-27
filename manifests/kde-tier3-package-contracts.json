@@ -3241,7 +3241,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "round23-diagnostic-PASS-pending-round24-definition",
+    "status": "round24-diagnostic-pending-ci",
     "trigger": {
       "workflow_run": 36035351270,
       "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -3285,7 +3285,7 @@
     },
     "execution_authorized": false,
     "level1_execution_authorized": false,
-    "next_gate": "tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-definition",
+    "next_gate": "tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-evidence",
     "materialization_evidence": {
       "workflow_run": 36222711238,
       "commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",
@@ -3523,6 +3523,17 @@
           "attempt8_signature_failures": 1
         }
       }
+    },
+    "round24_definition": {
+      "status": "definition-pending-ci",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "matrix": {
+        "native": 40,
+        "monotonic": 40,
+        "fixed": 20
+      },
+      "next_gate": "tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-evidence"
     }
   },
   "remediation_history": [
