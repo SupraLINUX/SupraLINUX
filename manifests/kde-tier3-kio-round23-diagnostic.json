@@ -18,7 +18,7 @@
   "test_suppression": false,
   "execution_authorized": true,
   "package_execution_authorized": false,
-  "status": "definition-pending-diagnostic-retry-4",
+  "status": "definition-pending-diagnostic-retry-5",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -78,7 +78,9 @@
     "exact_sbuild_unshare_backend_required": true,
     "manual_chroot_emulation_forbidden": true,
     "starting_build_hook_must_abort_before_dpkg_buildpackage": true,
-    "sbuild_build_user_must_be_native_default": true
+    "sbuild_build_user_must_be_native_default": true,
+    "rootfs_bind_mountpoints_must_exist_and_be_empty": true,
+    "rootfs_must_remain_byte_identical": true
   },
   "diagnostic_matrix": [
     {
@@ -172,6 +174,21 @@
       "package_attempted": false,
       "canonical_state_effect": "none",
       "usable_for_kio_diagnostic_conclusion": false
+    },
+    {
+      "ordinal": 5,
+      "status": "INFRA_INVALID",
+      "workflow_run": 36281666521,
+      "job_id": 108514584256,
+      "merge_commit": "c1a022d7fbae4f79842407f24b5da22bdffba9b6",
+      "branch_commit": "17e614a0c9161318e2d8b2a7f2cf68c0e89da94d",
+      "artifact_id": 10919077905,
+      "artifact_sha256": "8cf052daaa71449c16caf978a19b8b372184ba29d1ccf047529417d9eead8c77",
+      "failed_stage": "create-session",
+      "reason": "sbuild unshare opened the exact Attempt 8 rootfs but bind mounting the diagnostic hook failed because /supralinux-round23 did not exist in the rootfs",
+      "package_attempted": false,
+      "canonical_state_effect": "none",
+      "usable_for_kio_diagnostic_conclusion": false
     }
   ],
   "methodology": {
@@ -191,6 +208,17 @@
       "no package artifacts"
     ],
     "rootfs_delivery": "exact Attempt 8 tarball symlinked to ~/.cache/sbuild/resolute-amd64.tar, matching the proven Level 1 invocation",
-    "sbuild_invocation": "sbuild --chroot-mode=unshare --dist=resolute; no alternate --chroot path"
+    "sbuild_invocation": "sbuild --chroot-mode=unshare --dist=resolute; no alternate --chroot path",
+    "bind_mounts": {
+      "hook": {
+        "host": "diagnostic hook-share",
+        "chroot": "/mnt"
+      },
+      "evidence": {
+        "host": "Round23 evidence directory",
+        "chroot": "/media"
+      },
+      "rootfs_precondition": "/mnt and /media must both exist as empty directories in the exact Attempt 8 tarball; verified before sbuild"
+    }
   }
 }

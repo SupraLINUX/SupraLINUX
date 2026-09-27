@@ -80,6 +80,32 @@ mkdir -p "${SBUILD_CACHE}"
 ln -sfn "${ROOTFS_TAR}" "${SBUILD_CACHE}/resolute-amd64.tar"
 readlink -f "${SBUILD_CACHE}/resolute-amd64.tar" > "${EVIDENCE}/sbuild-rootfs-cache-target.txt"
 
+python3 - "${ROOTFS_TAR}" "${EVIDENCE}/rootfs-mountpoints.json" <<'PY'
+import json,sys,tarfile
+from pathlib import Path
+tar_path,out=sys.argv[1:]
+required=("mnt","media")
+with tarfile.open(tar_path) as tf:
+    entries={}
+    for member in tf.getmembers():
+        name=member.name
+        while name.startswith("./"):
+            name=name[2:]
+        name=name.rstrip("/")
+        if name:
+            entries[name]=member
+report={}
+for path in required:
+    member=entries.get(path)
+    children=sorted(name for name in entries if name.startswith(path+"/"))
+    if member is None or not member.isdir():
+        raise SystemExit(f"required rootfs mountpoint /{path} missing or not a directory")
+    if children:
+        raise SystemExit(f"required rootfs mountpoint /{path} is not empty: {children[:10]}")
+    report[path]={"exists":True,"directory":True,"empty":True}
+Path(out).write_text(json.dumps(report,indent=2,sort_keys=True)+"\n")
+PY
+
 STAGE=input-plan
 python3 - "${LEVEL1}" "${EVIDENCE}/input-plan.tsv" <<'PY'
 import json,sys
@@ -122,14 +148,14 @@ def q(s): return "'" + s.replace("\\","\\\\").replace("'","\\'") + "'"
 text="""$chroot_mode = 'unshare';
 $unshare_mmdebstrap_auto_create = 0;
 $unshare_bind_mounts = [
-  { directory => __HOOK__, mountpoint => '/supralinux-round23' },
-  { directory => __EVIDENCE__, mountpoint => '/supralinux-evidence' },
+  { directory => __HOOK__, mountpoint => '/mnt' },
+  { directory => __EVIDENCE__, mountpoint => '/media' },
 ];
 $run_lintian = 0;
 $run_autopkgtest = 0;
 $run_piuparts = 0;
 $external_commands = {
-  'starting-build-commands' => [ [ '/bin/bash', '/supralinux-round23/hook.sh', '%p' ] ],
+  'starting-build-commands' => [ [ '/bin/bash', '/mnt/hook.sh', '%p' ] ],
 };
 1;
 """

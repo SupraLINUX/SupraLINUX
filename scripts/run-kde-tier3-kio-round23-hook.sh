@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 PKGDIR="${1:?missing package build directory}"
-EVIDENCE=/supralinux-evidence
+EVIDENCE=/media
 EXPECTED=/build/reproducible-path/kf6-kio-6.30.0
 STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 [[ "${PKGDIR}" == "${EXPECTED}" ]]

@@ -1,6 +1,6 @@
 # KDE Tier 3 KIO Round 23 — Attempt 8 rootfs KRecent diagnostic
 
-Status: definition pending diagnostic retry 4.
+Status: definition pending diagnostic retry 5.
 
 Diagnostic attempt 1 (workflow `36279506026`) is recorded as **INFRA_INVALID**: the runner stopped at `stage-inputs` because a non-recursive wildcard attempted to copy the materialization artifact's `debian/` directory. No chroot test or package build occurred, so it carries no KIO conclusion. The retry copies only the `.dsc`, `.orig.tar.*` and `.debian.tar.*` source files and resolves `sbuild` ownership by account name rather than an assumed UID.
 
@@ -10,11 +10,15 @@ Diagnostic attempt 3 (workflow `36280922944`, job `108512470733`) is **INFRA_INV
 
 Diagnostic attempt 4 (workflow `36281142919`, job `108513096316`, artifact `10918188486`, SHA-256 `3e34166181099e5e5534a6e0e54138390ea5384eaf072ea3b0e2c17ab8266897`) is **INFRA_INVALID**. All historical inputs were downloaded and verified, but generation of `sbuild-config.pl` failed because Python %-formatting interpreted the hook's literal `%p`. sbuild itself was never invoked and no package/test execution occurred.
 
+Diagnostic attempt 5 (workflow `36281666521`, job `108514584256`, artifact `10919077905`, SHA-256 `8cf052daaa71449c16caf978a19b8b372184ba29d1ccf047529417d9eead8c77`) is **INFRA_INVALID**. This time sbuild 0.91.2ubuntu3 opened the exact Attempt 8 rootfs, but session creation failed before dependency installation because the requested bind mountpoint `/supralinux-round23` did not exist in that rootfs. No KIO test or package command ran.
+
+The retry does not modify the rootfs. Before invoking sbuild it inspects the exact tarball and requires `/mnt` and `/media` to already exist as empty directories. Only then are those standard mountpoints used for the diagnostic hook and append-only evidence exchange.
+
 The retry preserves `%p` literally by replacing named placeholders rather than using Python's %-format operator. Policy's ShellCheck warning is also resolved by documenting the intentional indirect EXIT-trap invocation of `finish()`.
 
 The retry also restores the exact rootfs-selection mechanism already proven by Attempt 8: the verified tarball is linked as `~/.cache/sbuild/resolute-amd64.tar` and sbuild is invoked with `--chroot-mode=unshare --dist=resolute`.
 
-The retry now delegates containment to the actual Ubuntu Resolute `sbuild 0.91.2ubuntu3` unshare backend. The exact historical rootfs is passed directly to sbuild, the same predecessor packages are injected with `--extra-package`, and sbuild provides its native `sbuild` user and namespace. A `starting-build-commands` hook runs the diagnostic after dependency installation and exits with sentinel code 86 before `dpkg-buildpackage`. The outer runner accepts the result only if the hook completes, the log contains no `Command: dpkg-buildpackage`, and no package artifacts exist.
+The retry now delegates containment to the actual Ubuntu Resolute `sbuild 0.91.2ubuntu3` unshare backend. The exact historical rootfs is selected through the same `~/.cache/sbuild/resolute-amd64.tar` mechanism as Attempt 8, the same predecessor packages are injected with `--extra-package`, and sbuild provides its native `sbuild` user and namespace. A `starting-build-commands` hook runs the diagnostic after dependency installation and exits with sentinel code 86 before `dpkg-buildpackage`. The outer runner accepts the result only if the hook completes, the log contains no `Command: dpkg-buildpackage`, and no package artifacts exist.
 
 Round 22 eliminated two host-side explanations: hidden HOME and complete KRecent CTest execution. Round 23 therefore moves the test into the **exact Attempt 8 rootfs artifact** while retaining the same KIO 6.30.0-0supralinux8 source materialization and predecessor package set.
 
