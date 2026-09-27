@@ -11,10 +11,6 @@ def req(v,m):
 M=load("manifests/kde-tier3-kio-round23-diagnostic.json")
 R22=load("manifests/kde-tier3-kio-round22-diagnostic.json")
 P=load("manifests/diagnostic-infrastructure-preflight.json")
-T=load("manifests/kde-frameworks-tier3.json")
-L=load("manifests/kde-tier3-build-level1.json")
-C=load("manifests/kde-tier3-package-contracts.json")
-MAT=load("manifests/kde-tier3-materialization.json")
 W=(ROOT/".github/workflows/kde-tier3-kio-round23-diagnostic.yml").read_text()
 RUNNER=(ROOT/"scripts/run-kde-tier3-kio-round23-diagnostic.sh").read_text()
 HOOK=(ROOT/"scripts/run-kde-tier3-kio-round23-hook.sh").read_text()
@@ -66,22 +62,9 @@ req(interp.get("classification")=="isolated-nondeterministic-krecent-ordering-re
 req(interp.get("preceding_ctest_prefix_required") is False and interp.get("exact_attempt8_signature_reproduced") is True,"Round23 isolated reproduction")
 req(interp.get("timestamp_tie_hypothesis")=="strengthened-but-not-yet-proven-causal","Round23 timestamp hypothesis discipline")
 
-next_gate="tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-definition"
-policy=T.get("discovery_policy",{})
-req(policy.get("phase")=="diagnostic" and policy.get("package_builds")=="tier3-round23-diagnostic-closed","Round23 live closed gate")
-req(policy.get("remediation")=="round23-krecent-isolated-reproduction-PASS-pending-round24-definition","Round23 live remediation")
-for obj,name in ((T.get("active_remediation",{}),"canonical"),(L.get("active_remediation",{}),"level1"),(C.get("active_remediation",{}),"contracts"),(MAT.get("active_remediation",{}),"materialization")):
-    req(obj.get("status")=="round23-diagnostic-PASS-pending-round24-definition",name+" Round23 closure")
-    req(obj.get("next_gate")==next_gate,name+" Round23 handoff")
-    e=obj.get("round23_diagnostic",{})
-    req(e.get("workflow_run")==36288655361 and e.get("artifact_id")==10921272952 and e.get("result")=="DIAG_COMPLETE",name+" Round23 evidence")
-req(T.get("active_remediation",{}).get("execution_authorized") is False,"canonical package execution blocked")
-req(L.get("execution_authorized") is False and L.get("current_attempt")==8 and L.get("active_remediation",{}).get("next_attempt")==9,"Attempt9 remains unauthorized")
-req(C.get("active_remediation",{}).get("execution_authorized") is False and C.get("active_remediation",{}).get("level1_execution_authorized") is False,"Level1 remains blocked")
-req(MAT.get("active_remediation",{}).get("package_attempted") is False and MAT.get("active_remediation",{}).get("package_state_effect")=="none","materialization unchanged")
-req(M.get("next_gate")==next_gate,"Round23 next gate")
+req(M.get("next_gate")=="tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-definition","Round23 historical next gate")
 
-req("workflow_call" in W and "pull_request:" not in W,"Round23 workflow reusable-only")
+req("workflow_call:" in W and "workflow_dispatch:" in W and "\n  pull_request:\n" not in W,"Round23 workflow reusable/manual only")
 req("# shellcheck disable=SC2329" in RUNNER,"Round23 EXIT-trap ShellCheck annotation")
 for token in ("Command: dpkg-buildpackage --sanitize-env -us -uc -b","debian/rules binary","SUPRALINUX_ROUND23_EVIDENCE_BASE64_BEGIN"):
     req(token in RUNNER,"Round23 retained runner token "+token)

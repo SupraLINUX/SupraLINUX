@@ -1,6 +1,6 @@
 # KDE Tier 3 KIO Round 24 — timestamp-tie causality diagnostic
 
-Status: **definition pending CI; diagnostic execution authorized**.  
+Status: **diagnostic-PASS; closed historical evidence**.  
 Candidate package execution / Attempt 9: **not authorized**.  
 Canonical KIO: **6.30.0-0supralinux8 = FAIL**.
 
@@ -67,6 +67,22 @@ If monotonic still fails, timestamp ties are not sufficient as the sole cause. I
 
 Round 24 is diagnostic only. No result from this run can itself patch KIO, suppress the test, allocate a package revision, authorize Attempt 9, unblock dependents or promote packages.
 
+## Result
+
+Workflow `36295265079`, job `108552864340`, artifact `10922979916` completed with valid historical-path evidence.
+
+| Lane | Result | Timestamp proof | Observed final order |
+| --- | --- | --- | --- |
+| native | **14/40 FAIL** | 31 captures had 2 distinct timestamps; 9 had 3 | 14× `11,13,14`; 26× `12,13,14` |
+| monotonic | **0/40 FAIL** | 40/40 had 3 distinct timestamps | 40× `12,13,14` |
+| fixed | **20/20 FAIL** | 20/20 had exactly 1 timestamp | 20× `0,1,2` |
+
+Conclusion: `timestamp-tie-causality-confirmed`.
+
+Removing timestamp ties eliminated the failure in every monotonic run, while forcing all max-entry timestamps equal reproduced the failure in every fixed run. The native control reproduced the historical class in 14/40 runs. This is causal evidence for the timestamp-tie ordering defect, not merely correlation.
+
+The experiment remained non-promoting: the diagnostic source and `debian/rules` were restored, no candidate package artifacts were accepted, KIO remains FAIL, and Attempt 9 remains unauthorized.
+
 ## Current state
 
 ```text
@@ -76,6 +92,6 @@ Attempt 8 = CLOSED-MIXED
 Attempt 9 = NOT AUTHORIZED
 Infrastructure preflight = PASS
 Round 23 = diagnostic-PASS
-Round 24 = definition-pending-ci
-Next gate = tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-evidence
+Round 24 = diagnostic-PASS / timestamp-tie-causality-confirmed
+Next gate = tier3-round25-kio-krecent-ordering-remediation-definition
 ```

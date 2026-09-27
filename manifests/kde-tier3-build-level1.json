@@ -894,13 +894,13 @@
     },
     "execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "round24-diagnostic-pending-ci",
+    "status": "round24-diagnostic-PASS-pending-round25-remediation-definition",
     "source_rematerialization_required": false,
     "source_rematerialization_nodes": [
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-evidence",
+    "next_gate": "tier3-round25-kio-krecent-ordering-remediation-definition",
     "current_attempt": 8,
     "next_attempt": 9,
     "remaining_failed_nodes": [
@@ -1151,6 +1151,51 @@
         "fixed": 20
       },
       "next_gate": "tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-evidence"
+    },
+    "round24_diagnostic": {
+      "status": "diagnostic-PASS",
+      "workflow_run": 36295265079,
+      "job_id": 108552864340,
+      "branch_commit": "6fa1facb7afb562bf0cae8e1f4edaa067ab4c297",
+      "artifact_id": 10922979916,
+      "artifact_sha256": "3fac75e577fbe9d33ec671ef6bc4fa9fca86f6324285fa04f7fb9a4147cfa4a3",
+      "result": "DIAG_COMPLETE",
+      "conclusion": "timestamp-tie-causality-confirmed",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "matrix": {
+        "native": {
+          "runs": 40,
+          "expected_runs": 40,
+          "valid_captures": 40,
+          "failed_runs": 14,
+          "attempt8_signature_failures": 14,
+          "timestamp_cardinality_counts": {
+            "2": 31,
+            "3": 9
+          }
+        },
+        "monotonic": {
+          "runs": 40,
+          "expected_runs": 40,
+          "valid_captures": 40,
+          "failed_runs": 0,
+          "attempt8_signature_failures": 0,
+          "timestamp_cardinality_counts": {
+            "3": 40
+          }
+        },
+        "fixed": {
+          "runs": 20,
+          "expected_runs": 20,
+          "valid_captures": 20,
+          "failed_runs": 20,
+          "attempt8_signature_failures": 0,
+          "timestamp_cardinality_counts": {
+            "1": 20
+          }
+        }
+      }
     }
   },
   "activation": {

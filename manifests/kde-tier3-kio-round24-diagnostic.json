@@ -17,9 +17,9 @@
   "downstream_eligibility_changes_allowed": false,
   "package_revision_allocation": false,
   "test_suppression": false,
-  "execution_authorized": true,
+  "execution_authorized": false,
   "package_execution_authorized": false,
-  "status": "definition-pending-ci",
+  "status": "diagnostic-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -151,6 +151,80 @@
     "native_control_not_reproduced": "native has zero failures => valid but inconclusive experiment",
     "no_package_decision": "Round24 cannot authorize Attempt 9, allocate a package revision, patch KIO, or suppress the test"
   },
-  "next_gate": "tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-evidence",
-  "stable_promotion_requires_explicit_user_approval": true
+  "next_gate": "tier3-round25-kio-krecent-ordering-remediation-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "diagnostic_evidence": {
+    "workflow_run": 36295265079,
+    "job_id": 108552864340,
+    "branch_commit": "6fa1facb7afb562bf0cae8e1f4edaa067ab4c297",
+    "artifact_id": 10922979916,
+    "artifact_sha256": "3fac75e577fbe9d33ec671ef6bc4fa9fca86f6324285fa04f7fb9a4147cfa4a3",
+    "result": "DIAG_COMPLETE"
+  },
+  "result": {
+    "environment_valid": true,
+    "diagnostic_build_path_invoked": true,
+    "containment": "sbuild-0.91.2ubuntu3-unshare",
+    "historical_build_path": "sbuild -> dpkg-buildpackage --sanitize-env -us -uc -b -> debian/rules binary -> override_dh_auto_test",
+    "source_restored": true,
+    "rules_restored": true,
+    "controlled_timestamp_modes_verified": true,
+    "package_attempted": false,
+    "package_state_effect": "none",
+    "matrix": {
+      "fixed": {
+        "attempt8_signature_failures": 0,
+        "expected_runs": 20,
+        "failed_runs": 20,
+        "observed_orders": {
+          "temp File 0 | temp File 1 | temp File 2": 20
+        },
+        "runs": 20,
+        "timestamp_cardinality_counts": {
+          "1": 20
+        },
+        "valid_captures": 20
+      },
+      "monotonic": {
+        "attempt8_signature_failures": 0,
+        "expected_runs": 40,
+        "failed_runs": 0,
+        "observed_orders": {
+          "temp File 12 | temp File 13 | temp File 14": 40
+        },
+        "runs": 40,
+        "timestamp_cardinality_counts": {
+          "3": 40
+        },
+        "valid_captures": 40
+      },
+      "native": {
+        "attempt8_signature_failures": 14,
+        "expected_runs": 40,
+        "failed_runs": 14,
+        "observed_orders": {
+          "temp File 11 | temp File 13 | temp File 14": 14,
+          "temp File 12 | temp File 13 | temp File 14": 26
+        },
+        "runs": 40,
+        "timestamp_cardinality_counts": {
+          "2": 31,
+          "3": 9
+        },
+        "valid_captures": 40
+      }
+    },
+    "conclusion": "timestamp-tie-causality-confirmed"
+  },
+  "interpretation": {
+    "classification": "timestamp-ties-causally-confirmed-for-krecent-max-entry-flake",
+    "native_reproduced": true,
+    "no_tie_control_eliminated_failures": true,
+    "forced_tie_control_reproduced_failures": true,
+    "production_fix_selected": false,
+    "test_suppression_authorized": false,
+    "attempt9_authorized": false,
+    "reason": "native failed 14/40, the monotonic no-tie control passed 40/40 with three distinct final timestamps, and the fixed all-tied control failed 20/20 with one final timestamp value",
+    "next_scope": "define the minimal upstream-compatible ordering remediation before allocating a package revision"
+  }
 }
