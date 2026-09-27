@@ -4,8 +4,8 @@
   "scope": "diagnostic-infrastructure-preflight",
   "authority": "supralinux-ci-architecture",
   "provider_platform": "ubuntu-resolute",
-  "status": "definition-pending-ci",
-  "execution_authorized": true,
+  "status": "PASS",
+  "execution_authorized": false,
   "package_execution_authorized": false,
   "authoritative": false,
   "canonical_state_effect": "none",
@@ -14,7 +14,8 @@
     "workflow_run": 36238357510,
     "artifact_id": 10904512642,
     "artifact_sha256": "d689f1658d37e3dedcf57d7f4a233917a6d84ed592346d4ac87f60d626724afe",
-    "selection": "~/.cache/sbuild/resolute-amd64.tar"
+    "selection": "~/.cache/sbuild/resolute-amd64.tar",
+    "tar_sha256": "790139881455b78e00621f1b8ab02efaee899b7e6873f4d65ae0ff7fa295020e"
   },
   "sbuild_contract": {
     "version": "0.91.2ubuntu3",
@@ -49,10 +50,23 @@
     "infra_preflight_required_for_new_diagnostic_mechanism": true,
     "after_cutoff": "freeze target diagnostic; document methodology review; certify cheap synthetic preflight before retry"
   },
-  "blocked_consumer": {
+  "next_gate": "tier3-round23-krecent-attempt8-full-build-path-diagnostic-evidence",
+  "consumer_handoff": {
     "diagnostic": "KIO Round 23",
     "manifest": "manifests/kde-tier3-kio-round23-diagnostic.json",
-    "reason": "six historical and one current infrastructure-invalid retries exposed unvalidated diagnostic machinery"
+    "status": "eligible-after-preflight-PASS"
   },
-  "next_gate": "diagnostic-infrastructure-preflight-evidence"
+  "evidence": {
+    "workflow_run": 36286096599,
+    "job_id": 108527097646,
+    "commit": "340da99451a86b65513efcbfcae6b6b7145a2a96",
+    "artifact_id": 10920194622,
+    "artifact_sha256": "ee6adecf77aa5110db735220bca0ebecd2a4a41b4a2b8dacc6692816866c1d39",
+    "result": "PASS",
+    "stage": "complete",
+    "rootfs_tar_sha256": "790139881455b78e00621f1b8ab02efaee899b7e6873f4d65ae0ff7fa295020e",
+    "sbuild_exit_code": 1,
+    "package_attempted": false,
+    "canonical_state_effect": "none"
+  }
 }

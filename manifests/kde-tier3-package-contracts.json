@@ -3241,7 +3241,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "round23-BLOCKED-pending-diagnostic-infrastructure-preflight",
+    "status": "round23-diagnostic-pending-ci-after-infrastructure-PASS",
     "trigger": {
       "workflow_run": 36035351270,
       "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -3285,7 +3285,7 @@
     },
     "execution_authorized": false,
     "level1_execution_authorized": false,
-    "next_gate": "diagnostic-infrastructure-preflight-evidence",
+    "next_gate": "tier3-round23-krecent-attempt8-full-build-path-diagnostic-evidence",
     "materialization_evidence": {
       "workflow_run": 36222711238,
       "commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",

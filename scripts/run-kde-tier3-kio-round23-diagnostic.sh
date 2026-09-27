@@ -19,7 +19,6 @@ rm -rf "${WORK}" "${EVIDENCE}"
 mkdir -p "${INPUTS}" "${ROOTFS_DIR}" "${OUT}" "${EVIDENCE}"
 exec > >(tee "${EVIDENCE}/pipeline.log") 2>&1
 
-# shellcheck disable=SC2329
 finish() {
   local rc="$1" finished
   finished="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -28,10 +27,13 @@ finish() {
 import json,sys
 from pathlib import Path
 p,result,rc,stage,started,finished=sys.argv[1:]
-Path(p).write_text(json.dumps({"schema":1,"node":"kio","round":23,"diagnostic_result":result,
- "exit_code":int(rc),"stage":stage,"started_at":started,"finished_at":finished,
- "claim":"non-promoting-krecent-attempt8-rootfs-diagnostic","package_attempted":False,
- "package_state_effect":"none"},indent=2,sort_keys=True)+"\n")
+Path(p).write_text(json.dumps({
+  "schema":1,"node":"kio","round":23,"diagnostic_result":result,
+  "exit_code":int(rc),"stage":stage,"started_at":started,"finished_at":finished,
+  "claim":"non-promoting-krecent-attempt8-rootfs-diagnostic",
+  "package_attempted":False,"diagnostic_build_path_invoked":stage not in {"initialization","contract","host-tools"},
+  "package_state_effect":"none"
+},indent=2,sort_keys=True)+"\n")
 PY
   fi
 }
@@ -39,11 +41,14 @@ trap 'finish "$?"' EXIT
 
 download_artifact() {
   local id="$1" sha="$2" dest="$3" zip
-  mkdir -p "${dest}"; zip="${dest}.zip"
+  mkdir -p "${dest}"
+  zip="${dest}.zip"
   curl --fail --silent --show-error --location --retry 3 --retry-delay 2 \
-    -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" \
+    -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+    -H "Accept: application/vnd.github+json" \
     -H "X-GitHub-Api-Version: 2022-11-28" \
-    "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/${id}/zip" -o "${zip}"
+    "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/${id}/zip" \
+    -o "${zip}"
   printf '%s  %s\n' "${sha}" "${zip}" | sha256sum --check --strict
   unzip -q "${zip}" -d "${dest}"
 }
@@ -71,6 +76,7 @@ ROOTFS_SHA="$(find "${ROOTFS_DIR}" -type f -name 'rootfs.sha256' -print -quit)"
 expected="$(awk '{print $1}' "${ROOTFS_SHA}")"
 actual="$(sha256sum "${ROOTFS_TAR}" | awk '{print $1}')"
 [[ "${expected}" == "${actual}" ]]
+[[ "${actual}" == "790139881455b78e00621f1b8ab02efaee899b7e6873f4d65ae0ff7fa295020e" ]]
 printf '%s\n' "${actual}" > "${EVIDENCE}/rootfs-tar.sha256"
 cp "${ROOTFS_DIR}/provenance.txt" "${EVIDENCE}/attempt8-rootfs-provenance.txt" 2>/dev/null || true
 SBUILD_CACHE="${HOME}/.cache/sbuild"
@@ -78,37 +84,105 @@ mkdir -p "${SBUILD_CACHE}"
 ln -sfn "${ROOTFS_TAR}" "${SBUILD_CACHE}/resolute-amd64.tar"
 readlink -f "${SBUILD_CACHE}/resolute-amd64.tar" > "${EVIDENCE}/sbuild-rootfs-cache-target.txt"
 
-
 STAGE=input-plan
-python3 - "${LEVEL1}" "${EVIDENCE}/input-plan.tsv" <<'PY'
+python3 - "${LEVEL1}" "${EVIDENCE}/input-plan.json" <<'PY'
 import json,sys
 from pathlib import Path
 m=json.loads(Path(sys.argv[1]).read_text()); n=m["nodes"]["kio"]
 if n["package_version"]!="6.30.0-0supralinux8": raise SystemExit("unexpected KIO revision")
-rows=[]
-def add(i,c): rows.append((i,str(c["artifact_id"]),c["artifact_sha256"],c["version"]))
-add("extra-cmake-modules",m["shared_predecessors"]["extra-cmake-modules"])
-for i in n["retained_input_ids"]: add(i,m["retained_predecessors"][i])
-for i in n.get("support_input_ids",[]): add(i,m["support_predecessors"][i])
-if len({r[0] for r in rows})!=len(rows): raise SystemExit("duplicate provider input")
-Path(sys.argv[2]).write_text("\n".join("\t".join(r) for r in rows)+"\n")
+if n.get("sbuild_enable_network") is not True: raise SystemExit("Attempt8 KIO network contract drift")
+specs=[]
+def add(i,c,kind):
+    specs.append({
+      "id":i,"kind":kind,"workflow_run":c.get("workflow_run"),
+      "artifact_id":c["artifact_id"],"artifact_sha256":c["artifact_sha256"],
+      "version":c["version"],"expected_binary_packages":c["expected_binary_packages"],
+      "dev_package":c.get("dev_package")
+    })
+add("extra-cmake-modules",m["shared_predecessors"]["extra-cmake-modules"],"shared")
+for i in n["retained_input_ids"]: add(i,m["retained_predecessors"][i],"retained")
+for i in n.get("support_input_ids",[]): add(i,m["support_predecessors"][i],"support")
+if len({x["id"] for x in specs})!=len(specs): raise SystemExit("duplicate provider input")
+plan={
+  "node":"kio","package_version":n["package_version"],
+  "materialization":n["materialization"],"inputs":specs,
+  "sbuild_enable_network":True,
+  "attempt8_workflow_run":36238357510,
+  "attempt8_job_id":108394325161
+}
+Path(sys.argv[2]).write_text(json.dumps(plan,indent=2,sort_keys=True)+"\n")
 PY
 
 STAGE=source-download
 download_artifact 10898999142 c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d "${INPUTS}/materialization"
-DSC="$(find "${INPUTS}/materialization" -type f -name '*.dsc' -print -quit)"
-[[ -n "${DSC}" && -s "${DSC}" ]]
+
+STAGE=source-validation
+python3 - "${INPUTS}/materialization" "${EVIDENCE}" <<'PY'
+import hashlib,json,shlex,sys
+from pathlib import Path
+root=Path(sys.argv[1]); out=Path(sys.argv[2])
+def sha(p):
+    h=hashlib.sha256()
+    with p.open('rb') as f:
+        for c in iter(lambda:f.read(1024*1024),b''): h.update(c)
+    return h.hexdigest()
+def one(pattern):
+    xs=list(root.rglob(pattern))
+    if len(xs)!=1: raise SystemExit(f"expected exactly one {pattern}, got {len(xs)}")
+    return xs[0]
+r=json.loads(one("result.json").read_text())
+if r.get("result")!="PASS" or r.get("package_attempted") is not False: raise SystemExit("KIO materialization is not source-only PASS")
+if r.get("node")!="kio" or r.get("package_version")!="6.30.0-0supralinux8": raise SystemExit("KIO materialization identity drift")
+dsc=one("*.dsc"); orig=one("*.orig.tar.*"); debtar=one("*.debian.tar.*")
+for p,key in ((dsc,"dsc_sha256"),(orig,"orig_tar_sha256"),(debtar,"debian_tar_sha256")):
+    if sha(p)!=r.get(key): raise SystemExit(f"materialization hash mismatch: {p.name}")
+(out/"materialization-result.json").write_text(json.dumps(r,indent=2,sort_keys=True)+"\n")
+(out/"source-env.sh").write_text(f"DSC={shlex.quote(str(dsc))}\n")
+PY
+source "${EVIDENCE}/source-env.sh"
 
 STAGE=provider-download
+python3 - "${EVIDENCE}/input-plan.json" <<'PY' > "${EVIDENCE}/artifact-inputs.tsv"
+import json,sys
+p=json.load(open(sys.argv[1]))
+for x in p["inputs"]:
+    print(f"{x['id']}\t{x['artifact_id']}\t{x['artifact_sha256']}")
+PY
 TAB="$(printf '\t')"
-while IFS="${TAB}" read -r input_id artifact_id artifact_sha version; do
-  printf '%s\t%s\t%s\n' "${input_id}" "${version}" "${artifact_id}" >> "${EVIDENCE}/provider-plan.tsv"
+while IFS="${TAB}" read -r input_id artifact_id artifact_sha; do
   download_artifact "${artifact_id}" "${artifact_sha}" "${INPUTS}/${input_id}"
-done < "${EVIDENCE}/input-plan.tsv"
+done < "${EVIDENCE}/artifact-inputs.tsv"
 
-mapfile -t PREDECESSOR_DEBS < <(find "${INPUTS}" -mindepth 2 -type f -name '*.deb' -print | sort)
+STAGE=provider-validation
+python3 - "${EVIDENCE}/input-plan.json" "${INPUTS}" "${EVIDENCE}" <<'PY'
+import hashlib,json,subprocess,sys
+from pathlib import Path
+plan=json.load(open(sys.argv[1])); root=Path(sys.argv[2]); out=Path(sys.argv[3])
+def sha(p):
+    h=hashlib.sha256()
+    with p.open('rb') as f:
+        for c in iter(lambda:f.read(1024*1024),b''): h.update(c)
+    return h.hexdigest()
+def meta(p):
+    return tuple(subprocess.check_output(["dpkg-deb","-f",str(p),f],text=True).strip() for f in ("Package","Version"))
+all_debs=[]; records={}; owners={}
+for spec in plan["inputs"]:
+    idir=root/spec["id"]; actual={}; paths={}
+    for p in sorted(idir.rglob("*.deb")):
+        pkg,ver=meta(p)
+        if pkg in actual: raise SystemExit(f"{spec['id']}: duplicate binary {pkg}")
+        if ver!=spec["version"]: raise SystemExit(f"{spec['id']}: {pkg} version {ver} != {spec['version']}")
+        if pkg in owners: raise SystemExit(f"duplicate provider binary {pkg}")
+        owners[pkg]=spec["id"]; actual[pkg]=sha(p); paths[pkg]=str(p)
+    if set(actual)!=set(spec["expected_binary_packages"]):
+        raise SystemExit(f"{spec['id']}: binary set mismatch")
+    all_debs.extend(paths[p] for p in sorted(paths))
+    records[spec["id"]]={**spec,"files":actual}
+(out/"retained-inputs.json").write_text(json.dumps(records,indent=2,sort_keys=True)+"\n")
+(out/"predecessor-debs.txt").write_text("\n".join(all_debs)+"\n")
+PY
+mapfile -t PREDECESSOR_DEBS < "${EVIDENCE}/predecessor-debs.txt"
 (( ${#PREDECESSOR_DEBS[@]} > 0 ))
-printf '%s\n' "${PREDECESSOR_DEBS[@]}" > "${EVIDENCE}/predecessor-debs.txt"
 
 STAGE=sbuild-config
 python3 - "${CONFIG}" "${ROOT}/scripts/run-kde-tier3-kio-round23-hook.sh" <<'PY'
@@ -130,59 +204,142 @@ $external_commands = {
 };
 1;
 """
-text=text.replace("__COPY_COMMAND__",repr(copy_command))
-Path(path).write_text(text)
+Path(path).write_text(text.replace("__COPY_COMMAND__",repr(copy_command)))
 PY
 cp "${CONFIG}" "${EVIDENCE}/sbuild-config.pl"
+perl -c "${CONFIG}" |& tee "${EVIDENCE}/sbuild-config-check.txt"
+bash -n "${ROOT}/scripts/run-kde-tier3-kio-round23-hook.sh"
 
-STAGE=sbuild-unshare-diagnostic
+STAGE=sbuild-historical-build-path
 EXTRA_ARGS=()
 for deb in "${PREDECESSOR_DEBS[@]}"; do EXTRA_ARGS+=(--extra-package="${deb}"); done
+EXTRA_ARGS+=(--enable-network)
 set +e
 SBUILD_CONFIG="${CONFIG}" sbuild --verbose --chroot-mode=unshare --dist=resolute \
-  --arch=amd64 --arch-all --no-run-lintian --no-run-autopkgtest --no-run-piuparts \
-  "${EXTRA_ARGS[@]}" --build-dir="${OUT}" "${DSC}" |& tee "${SBUILD_LOG}"
+  --arch=amd64 --arch-all "${EXTRA_ARGS[@]}" --build-dir="${OUT}" "${DSC}" |& tee "${SBUILD_LOG}"
 SBUILD_RC=${PIPESTATUS[0]}
 set -e
 printf '%s\n' "${SBUILD_RC}" > "${EVIDENCE}/sbuild-exit-code.txt"
+
+STAGE=historical-path-proof
+(( SBUILD_RC != 0 ))
+grep -Fq 'Command: dpkg-buildpackage --sanitize-env -us -uc -b' "${SBUILD_LOG}"
+grep -Fq 'debian/rules binary' "${SBUILD_LOG}"
+grep -Fq '/tmp/supralinux-round23-test-stage.sh' "${SBUILD_LOG}"
+if find "${OUT}" -maxdepth 1 -type f \( -name '*.deb' -o -name '*.changes' -o -name '*.buildinfo' \) -print -quit | grep -q .; then
+  echo "candidate package artifacts were produced; Round23 invalid" >&2
+  exit 84
+fi
+printf '%s\n' \
+  'sbuild -> dpkg-buildpackage --sanitize-env -us -uc -b -> debian/rules binary reached' \
+  'diagnostic aborted inside override_dh_auto_test before package artifacts' \
+  > "${EVIDENCE}/historical-build-path-proof.txt"
 
 STAGE=sbuild-evidence-recovery
 python3 - "${SBUILD_LOG}" "${EVIDENCE}" <<'PY'
 import base64,io,sys,tarfile
 from pathlib import Path
-log=Path(sys.argv[1]).read_text(errors="replace").splitlines()
-out=Path(sys.argv[2])
-begin="SUPRALINUX_ROUND23_EVIDENCE_BASE64_BEGIN"
-end="SUPRALINUX_ROUND23_EVIDENCE_BASE64_END"
+log=Path(sys.argv[1]).read_text(errors="replace").splitlines(); out=Path(sys.argv[2])
+begin="SUPRALINUX_ROUND23_EVIDENCE_BASE64_BEGIN"; end="SUPRALINUX_ROUND23_EVIDENCE_BASE64_END"
 try:
-    a=log.index(begin)
-    b=log.index(end,a+1)
+    a=log.index(begin); b=log.index(end,a+1)
 except ValueError as exc:
     raise SystemExit(f"Round23 evidence markers missing: {exc}")
 payload="".join(line.strip() for line in log[a+1:b] if line.strip())
 raw=base64.b64decode(payload,validate=True)
 (out/"round23-evidence.tar.gz").write_bytes(raw)
 with tarfile.open(fileobj=io.BytesIO(raw),mode="r:gz") as tf:
-    members=tf.getmembers()
-    for m in members:
+    for m in tf.getmembers():
         p=Path(m.name)
-        if p.is_absolute() or ".." in p.parts:
-            raise SystemExit(f"unsafe evidence member: {m.name}")
+        if p.is_absolute() or ".." in p.parts: raise SystemExit(f"unsafe evidence member: {m.name}")
     tf.extractall(out)
 PY
 
-STAGE=sbuild-sentinel-validation
-(( SBUILD_RC != 0 ))
-[[ -f "${EVIDENCE}/hook-complete" && -s "${RESULT}" ]]
-python3 - "${RESULT}" <<'PY'
-import json,sys
-r=json.load(open(sys.argv[1]))
-if r.get("diagnostic_result")!="DIAG_COMPLETE": raise SystemExit("Round23 hook did not complete")
-if r.get("package_attempted") is not False: raise SystemExit("Round23 unexpectedly reports package attempt")
+STAGE=matrix-classification
+[[ -f "${EVIDENCE}/preparation-complete" ]]
+[[ -f "${EVIDENCE}/matrix-complete" ]]
+[[ -f "${EVIDENCE}/hook-complete" ]]
+[[ -f "${EVIDENCE}/source-restored" ]]
+python3 - "${EVIDENCE}" "${RESULT}" "${STARTED_AT}" <<'PY'
+import collections,json,sys,urllib.parse,xml.etree.ElementTree as ET
+from pathlib import Path
+
+ev=Path(sys.argv[1]); result=Path(sys.argv[2]); started=sys.argv[3]
+rows=[]
+for line in (ev/"runs.tsv").read_text().splitlines():
+    if not line.strip(): continue
+    lane,run,rc,sig,failed,capture=line.split("\t")
+    exists,order_lines=capture.split(":")
+    cap=ev/"xbels"/f"{lane}-{run}.xbel"
+    order=Path(str(cap)+".order")
+    names=order.read_text(errors="replace").splitlines() if order.is_file() else []
+    bookmarks=[]
+    if cap.is_file():
+        root=ET.parse(cap).getroot()
+        for e in root.iter():
+            if str(e.tag).endswith("bookmark") and "href" in e.attrib:
+                bookmarks.append(urllib.parse.unquote(e.attrib["href"]).rstrip("/").split("/")[-1])
+    rows.append({
+      "lane":lane,"run":int(run),"rc":int(rc),"attempt8_signature":sig=="1",
+      "krecent_failed":failed=="1","capture_exists":exists=="1",
+      "order":names,"xbel_bookmarks":bookmarks,
+      "valid_capture":exists=="1" and int(order_lines)==3 and len(names)==3 and len(bookmarks)==3
+    })
+expected={"isolated-krecent":100,"prefix-through-krecent":30,"full-suite":3}
+summary={}
+valid=True
+for lane,n in expected.items():
+    xs=[x for x in rows if x["lane"]==lane]
+    orders=collections.Counter(tuple(x["order"]) for x in xs if x["order"])
+    summary[lane]={
+      "runs":len(xs),"expected_runs":n,
+      "valid_captures":sum(x["valid_capture"] for x in xs),
+      "attempt8_signature_failures":sum(x["attempt8_signature"] for x in xs),
+      "krecent_failed_runs":sum(x["krecent_failed"] for x in xs),
+      "observed_orders":{" | ".join(k):v for k,v in sorted(orders.items())}
+    }
+    valid &= len(xs)==n and all(x["valid_capture"] for x in xs)
+
+before=(ev/"source-before.sha256").read_text().split()[0]
+after=(ev/"source-after.sha256").read_text().split()[0]
+rules_before=(ev/"rules-before.sha256").read_text().split()[0]
+rules_after=(ev/"rules-after.sha256").read_text().split()[0]
+valid &= before==after and rules_before==rules_after
+
+i=summary["isolated-krecent"]["attempt8_signature_failures"]
+p=summary["prefix-through-krecent"]["attempt8_signature_failures"]
+f=summary["full-suite"]["attempt8_signature_failures"]
+if not valid:
+    conclusion="DIAG_INVALID-historical-build-path-evidence"
+    diag="DIAG_INVALID"
+elif i>0:
+    conclusion="krecentdocument-attempt8-signature-reproduced-isolated-in-historical-build-path"
+    diag="DIAG_COMPLETE"
+elif p>0:
+    conclusion="krecentdocument-attempt8-signature-requires-prior-ctest-prefix-in-historical-build-path"
+    diag="DIAG_COMPLETE"
+elif f>0:
+    conclusion="krecentdocument-attempt8-signature-reproduced-only-in-full-suite-historical-build-path"
+    diag="DIAG_COMPLETE"
+else:
+    conclusion="krecentdocument-attempt8-failure-not-reproduced-in-historical-build-path"
+    diag="DIAG_COMPLETE"
+
+payload={
+  "schema":1,"node":"kio","round":23,"diagnostic_result":diag,
+  "claim":"non-promoting-krecent-attempt8-rootfs-diagnostic",
+  "package_attempted":False,"diagnostic_build_path_invoked":True,
+  "package_state_effect":"none","environment_valid":valid,
+  "containment":"sbuild-0.91.2ubuntu3-unshare",
+  "historical_build_path":"sbuild -> dpkg-buildpackage --sanitize-env -us -uc -b -> debian/rules binary -> override_dh_auto_test",
+  "source_restored":before==after,"rules_restored":rules_before==rules_after,
+  "matrix":summary,"conclusion":conclusion,"started_at":started
+}
+result.write_text(json.dumps(payload,indent=2,sort_keys=True)+"\n")
+print(json.dumps(payload,indent=2,sort_keys=True))
+if diag!="DIAG_COMPLETE": raise SystemExit(85)
 PY
-if grep -Fq "Command: dpkg-buildpackage" "${SBUILD_LOG}"; then echo "dpkg-buildpackage was reached; Round23 invalid" >&2; exit 83; fi
-if find "${OUT}" -type f \( -name '*.deb' -o -name '*.changes' -o -name '*.buildinfo' \) -print -quit | grep -q .; then echo "package artifacts were produced; Round23 invalid" >&2; exit 84; fi
-printf '%s\n' "sbuild stopped by Round23 hook before dpkg-buildpackage" > "${EVIDENCE}/package-build-prevention.txt"
+
 DIAG_RESULT=DIAG_COMPLETE
 STAGE=complete
 exit 0

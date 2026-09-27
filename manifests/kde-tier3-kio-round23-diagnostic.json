@@ -16,9 +16,9 @@
   "downstream_eligibility_changes_allowed": false,
   "package_revision_allocation": false,
   "test_suppression": false,
-  "execution_authorized": false,
+  "execution_authorized": true,
   "package_execution_authorized": false,
-  "status": "BLOCKED-pending-diagnostic-infrastructure-preflight",
+  "status": "definition-pending-ci",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -53,7 +53,11 @@
       "USER=sbuild",
       "QT_QPA_PLATFORM=xcb",
       "QT_QPA_SYSTEM_ICON_THEME=breeze"
-    ]
+    ],
+    "job_id": 108394325161,
+    "rootfs_tar_sha256": "790139881455b78e00621f1b8ab02efaee899b7e6873f4d65ae0ff7fa295020e",
+    "materialization_artifact_id": 10898999142,
+    "materialization_artifact_sha256": "c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d"
   },
   "source_materialization": {
     "workflow_run": 36222711238,
@@ -64,25 +68,19 @@
     "upstream_source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2"
   },
   "validity_contract": {
-    "exact_attempt8_rootfs_artifact_required": true,
-    "rootfs_internal_sha256_must_validate": true,
-    "exact_source_path_required": true,
-    "exact_hidden_home_required": true,
-    "same_kio_materialization_required": true,
-    "same_predecessor_artifacts_from_level1_manifest": true,
-    "configure_and_build_without_dpkg_buildpackage": true,
-    "full_kio_build_target_allowed": true,
-    "package_artifacts_forbidden": true,
-    "xbel_capture_after_recentUrls_before_assertion": true,
-    "source_restored_byte_for_byte": true,
-    "exact_sbuild_unshare_backend_required": true,
-    "manual_chroot_emulation_forbidden": true,
-    "starting_build_hook_must_abort_before_dpkg_buildpackage": true,
-    "sbuild_build_user_must_be_native_default": true,
-    "rootfs_must_remain_byte_identical": true,
-    "unshare_bind_mounts_forbidden": true,
-    "hook_transfer_must_use_sbuild_chroot_exec_stdin": true,
-    "evidence_return_must_use_external_command_stdout": true
+    "exact_attempt8_rootfs": true,
+    "exact_attempt8_source_materialization": true,
+    "exact_attempt8_predecessor_artifacts": true,
+    "exact_sbuild_unshare_mode": true,
+    "historical_dpkg_buildpackage_required": true,
+    "diagnostic_runs_from_override_dh_auto_test": true,
+    "canonical_source_artifact_unchanged": true,
+    "no_candidate_package_artifacts": true,
+    "matrix": {
+      "isolated-krecent": 100,
+      "prefix-through-krecent": 30,
+      "full-suite": 3
+    }
   },
   "diagnostic_matrix": [
     {
@@ -113,7 +111,7 @@
     "not_reproduced": "all valid lanes have zero exact Attempt 8 signatures",
     "no_package_decision": "Round23 cannot authorize Attempt 9 or allocate a package revision"
   },
-  "next_gate": "diagnostic-infrastructure-preflight-evidence",
+  "next_gate": "tier3-round23-krecent-attempt8-full-build-path-diagnostic-evidence",
   "stable_promotion_requires_explicit_user_approval": true,
   "diagnostic_attempts": [
     {
@@ -231,20 +229,21 @@
     "build_user": "sbuild (native unshare default)",
     "provider_injection": "same --extra-package artifacts as Attempt 8 Level 1 plan",
     "hook_injection": "documented pre-build-commands host-to-chroot stdin transfer via %SBUILD_CHROOT_EXEC; no bind mounts",
-    "diagnostic_entrypoint": "starting-build-commands after dependency installation",
+    "diagnostic_entrypoint": "starting-build-commands prepares instrumentation; dpkg-buildpackage reaches override_dh_auto_test",
     "evidence_return": "hook emits a gzip tar of /tmp/supralinux-round23-evidence as base64 over external-command stdout; host reconstructs it from sbuild.log",
-    "package_build_prevention": "diagnostic hook emits complete evidence then exits sentinel 86 before dpkg-buildpackage",
+    "package_build_prevention": "override_dh_auto_test diagnostic emits evidence, restores worktree files, then exits sentinel 86 before binary package artifacts",
     "validity_guards": [
       "exact sbuild 0.91.2ubuntu3",
       "exact rootfs digest",
       "exact build path",
       "native sbuild user",
-      "evidence markers and hook-complete sentinel",
-      "no Command: dpkg-buildpackage",
-      "no package artifacts"
-    ]
+      "historical dpkg-buildpackage and debian/rules binary reached",
+      "matrix evidence complete",
+      "source and debian/rules restored",
+      "no candidate package artifacts"
+    ],
+    "historical_build_path": "sbuild -> dpkg-buildpackage --sanitize-env -us -uc -b -> debian/rules binary"
   },
-  "blocked_reason": "diagnostic infrastructure must be certified independently before KIO is used again",
   "methodology_review": {
     "triggered": true,
     "infra_invalid_cutoff": 2,
@@ -254,5 +253,27 @@
     "redesign_after_preflight_pass": true,
     "preserve_historical_build_path": true,
     "rule": "after two consecutive INFRA_INVALID attempts, freeze the target diagnostic and certify the mechanism with a cheap synthetic preflight before retry"
+  },
+  "diagnostic_build_path_invocation_required": true,
+  "candidate_package_artifacts_forbidden": true,
+  "infrastructure_preflight": {
+    "status": "PASS",
+    "workflow_run": 36286096599,
+    "job_id": 108527097646,
+    "commit": "340da99451a86b65513efcbfcae6b6b7145a2a96",
+    "artifact_id": 10920194622,
+    "artifact_sha256": "ee6adecf77aa5110db735220bca0ebecd2a4a41b4a2b8dacc6692816866c1d39",
+    "rootfs_tar_sha256": "790139881455b78e00621f1b8ab02efaee899b7e6873f4d65ae0ff7fa295020e"
+  },
+  "historical_build_path_contract": {
+    "sbuild_version": "0.91.2ubuntu3",
+    "chroot_mode": "unshare",
+    "network": true,
+    "dpkg_buildpackage_command": "dpkg-buildpackage --sanitize-env -us -uc -b",
+    "debian_entrypoint": "debian/rules binary",
+    "diagnostic_injection_point": "override_dh_auto_test",
+    "manual_configure_or_build_from_hook_forbidden": true,
+    "worktree_source_restored_before_exit": true,
+    "candidate_package_artifacts_forbidden": true
   }
 }

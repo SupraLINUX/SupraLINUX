@@ -894,13 +894,13 @@
     },
     "execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "round23-BLOCKED-pending-diagnostic-infrastructure-preflight",
+    "status": "round23-diagnostic-pending-ci-after-infrastructure-PASS",
     "source_rematerialization_required": false,
     "source_rematerialization_nodes": [
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "diagnostic-infrastructure-preflight-evidence",
+    "next_gate": "tier3-round23-krecent-attempt8-full-build-path-diagnostic-evidence",
     "current_attempt": 8,
     "next_attempt": 9,
     "remaining_failed_nodes": [
@@ -1104,7 +1104,8 @@
         "artifact_id": 10905212105,
         "artifact_sha256": "297d8d91e52f82cd6713c30072a8f2deff80d73647b9c93c1b89263e5f21d441"
       }
-    }
+    },
+    "level1_execution_authorized": false
   },
   "activation": {
     "status": "CLOSED-MIXED",
