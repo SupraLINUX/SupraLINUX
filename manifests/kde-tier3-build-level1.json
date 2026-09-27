@@ -894,13 +894,13 @@
     },
     "execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "round24-diagnostic-PASS-pending-round25-remediation-definition",
+    "status": "round25-remediation-pending-ci",
     "source_rematerialization_required": false,
     "source_rematerialization_nodes": [
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "tier3-round25-kio-krecent-ordering-remediation-definition",
+    "next_gate": "tier3-round25-kio-krecent-ordering-remediation-evidence",
     "current_attempt": 8,
     "next_attempt": 9,
     "remaining_failed_nodes": [
@@ -1196,6 +1196,18 @@
           }
         }
       }
+    },
+    "round25_definition": {
+      "status": "definition-pending-ci",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "matrix": {
+        "native": 100,
+        "fixed": 100,
+        "monotonic": 20,
+        "full-suite": 1
+      },
+      "next_gate": "tier3-round25-kio-krecent-ordering-remediation-evidence"
     }
   },
   "activation": {

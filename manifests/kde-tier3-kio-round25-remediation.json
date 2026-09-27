@@ -1,0 +1,170 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-27",
+  "node": "kio",
+  "round": 25,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "claim": "non-promoting-krecent-deterministic-ordering-remediation-proof",
+  "non_promoting": true,
+  "remediation_candidate": true,
+  "controlled_perturbation": true,
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "canonical_source_modified": false,
+  "diagnostic_worktree_modified": true,
+  "dag_state_changes_allowed": false,
+  "downstream_eligibility_changes_allowed": false,
+  "package_revision_allocation": false,
+  "test_suppression": false,
+  "execution_authorized": true,
+  "package_execution_authorized": false,
+  "status": "definition-pending-ci",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "canonical_kio": {
+    "state": "FAIL",
+    "package_version": "6.30.0-0supralinux8",
+    "downstream_eligible": false
+  },
+  "predecessor_round24": {
+    "status": "diagnostic-PASS",
+    "workflow_run": 36295265079,
+    "job_id": 108552864340,
+    "branch_commit": "6fa1facb7afb562bf0cae8e1f4edaa067ab4c297",
+    "artifact_id": 10922979916,
+    "artifact_sha256": "3fac75e577fbe9d33ec671ef6bc4fa9fca86f6324285fa04f7fb9a4147cfa4a3",
+    "conclusion": "timestamp-tie-causality-confirmed",
+    "native": {
+      "runs": 40,
+      "failed_runs": 14
+    },
+    "monotonic": {
+      "runs": 40,
+      "failed_runs": 0
+    },
+    "fixed": {
+      "runs": 20,
+      "failed_runs": 20
+    }
+  },
+  "upstream_check": {
+    "repository": "KDE/kio",
+    "master_commit": "970cbbbc5f80e56b71c9f32b1d333abac24a7770",
+    "relevant_logic_still_unfixed": true,
+    "observations": [
+      "master still orders eviction through QMultiMap<QDateTime,QDomNode> keyed only by modified timestamp",
+      "master recentUrls still sorts URLs only by selected QDateTime",
+      "no upstream source fix was found to cherry-pick during the Round25 definition check"
+    ]
+  },
+  "candidate_remediation": {
+    "source_file": "src/core/krecentdocument.cpp",
+    "public_api_change": false,
+    "abi_change": false,
+    "timestamp_format_change": false,
+    "xbel_schema_change": false,
+    "eviction_order": {
+      "primary": "modified timestamp ascending",
+      "tie_breaker": "XBEL document order ascending",
+      "effect": "when timestamps tie, later XBEL entries are retained as newer than earlier entries"
+    },
+    "recent_urls_order": {
+      "primary": "selected recent timestamp ascending",
+      "tie_breaker": "XBEL document order ascending",
+      "effect": "recentUrls remains deterministic when timestamps tie"
+    },
+    "url_deduplication": "preserved through per-URL map before final deterministic sort",
+    "candidate_is_upstreamable": true,
+    "production_patch_selected": false
+  },
+  "infrastructure_basis": {
+    "new_infrastructure_mechanism": false,
+    "certified_preflight": {
+      "status": "PASS",
+      "workflow_run": 36286096599,
+      "job_id": 108527097646,
+      "artifact_id": 10920194622,
+      "artifact_sha256": "ee6adecf77aa5110db735220bca0ebecd2a4a41b4a2b8dacc6692816866c1d39"
+    },
+    "certified_target_transport": {
+      "round": 24,
+      "status": "diagnostic-PASS",
+      "workflow_run": 36295265079,
+      "artifact_id": 10922979916
+    }
+  },
+  "historical_build_path_contract": {
+    "sbuild_version": "0.91.2ubuntu3",
+    "chroot_mode": "unshare",
+    "network": true,
+    "dpkg_buildpackage_command": "dpkg-buildpackage --sanitize-env -us -uc -b",
+    "debian_entrypoint": "debian/rules binary",
+    "diagnostic_injection_point": "override_dh_auto_test",
+    "manual_configure_or_build_from_hook_forbidden": true,
+    "worktree_source_restored_before_exit": true,
+    "candidate_package_artifacts_forbidden": true
+  },
+  "diagnostic_matrix": [
+    {
+      "id": "native",
+      "runner": "ctest -R ^kiocore-krecentdocumenttest$",
+      "repetitions": 100,
+      "fresh_home_each_run": true,
+      "timestamp_mode": "native"
+    },
+    {
+      "id": "fixed",
+      "runner": "ctest -R ^kiocore-krecentdocumenttest$",
+      "repetitions": 100,
+      "fresh_home_each_run": true,
+      "timestamp_mode": "fixed"
+    },
+    {
+      "id": "monotonic",
+      "runner": "ctest -R ^kiocore-krecentdocumenttest$",
+      "repetitions": 20,
+      "fresh_home_each_run": true,
+      "timestamp_mode": "monotonic"
+    },
+    {
+      "id": "full-suite",
+      "runner": "ctest --verbose -j1",
+      "repetitions": 1,
+      "fresh_home_each_run": true,
+      "timestamp_mode": "native"
+    }
+  ],
+  "validity_contract": {
+    "exact_attempt8_rootfs": true,
+    "exact_attempt8_source_materialization": true,
+    "exact_attempt8_predecessor_artifacts": true,
+    "exact_sbuild_unshare_mode": true,
+    "historical_dpkg_buildpackage_required": true,
+    "remediation_runs_from_override_dh_auto_test": true,
+    "fixed_lane_requires_one_final_timestamp": true,
+    "monotonic_lane_requires_three_distinct_final_timestamps": true,
+    "all_lanes_require_final_order_12_13_14": true,
+    "candidate_patch_retained_in_evidence": true,
+    "candidate_source_hash_retained": true,
+    "test_and_core_sources_restored_before_exit": true,
+    "canonical_source_artifact_unchanged": true,
+    "no_candidate_package_artifacts": true
+  },
+  "pass_contract": {
+    "native": "100/100 isolated runs pass",
+    "fixed": "100/100 forced-tie isolated runs pass",
+    "monotonic": "20/20 no-tie isolated runs pass",
+    "full_suite": "1/1 complete CTest suite exits zero",
+    "expected_final_order": "temp File 12 | temp File 13 | temp File 14",
+    "conclusion": "deterministic-xbel-ordering-remediation-PASS"
+  },
+  "decision_rules": {
+    "pass": "all matrix runs/captures valid, all rc zero, no KRecent failures, fixed/monotonic controls verified, expected final order in every capture, source restored, and no package artifacts",
+    "fail": "valid historical path but candidate does not compile or any required test/order assertion fails => remediation candidate FAIL",
+    "infra_invalid": "transport/input/environment failure prevents valid candidate evaluation => INFRA_INVALID",
+    "no_package_decision": "Round25 cannot authorize Attempt 9, allocate a package revision, suppress tests, unblock dependents, or promote packages"
+  },
+  "next_gate": "tier3-round25-kio-krecent-ordering-remediation-evidence",
+  "stable_promotion_requires_explicit_user_approval": true
+}
