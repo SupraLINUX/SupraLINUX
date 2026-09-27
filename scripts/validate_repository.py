@@ -82,6 +82,7 @@ authoritative_workflow = workflow_texts.get("authoritative-package-proof.yml", "
 hosted_workflow = workflow_texts.get("package-build-proof.yml", "")
 qt_provider_workflow = workflow_texts.get("qt-provider-preflight.yml", "")
 pr_ci_router = workflow_texts.get("pr-ci-router.yml", "")
+diagnostic_preflight_workflow = workflow_texts.get("diagnostic-infrastructure-preflight.yml", "")
 
 routed_pr_workflows = (
     "package-build-proof.yml",
@@ -107,6 +108,7 @@ routed_pr_workflows = (
     "kde-tier2-package-batch1.yml",
     "kde-tier1-source-diagnostic.yml",
     "qt-provider-preflight.yml",
+    "diagnostic-infrastructure-preflight.yml",
 )
 
 require(f"actions/checkout@{CHECKOUT_SHA}" in repository_policy, "repository policy checkout action must use the approved immutable SHA")
@@ -120,6 +122,7 @@ require("scripts/test-verify-ubuntu-cloud-image-provenance.sh" in repository_pol
 require("scripts/test-check-actions-runner-runtime.sh" in repository_policy, "repository policy must functionally test effective Actions runner provenance")
 require("scripts/test-check-golden-image-provenance.sh" in repository_policy, "repository policy must functionally test the golden-image provenance gate")
 require("scripts/test-pr-ci-router-scope.sh" in repository_policy, "repository policy must functionally test semantic PR evidence routing")
+require("python3 scripts/validate_diagnostic_infrastructure_preflight.py" in repository_policy, "repository policy must validate diagnostic infrastructure preflight")
 require("scripts/test-kde-tier2-package-batch1-scope.sh" in repository_policy, "repository policy must test KDE Tier 2 Batch 1 scope")
 require("python3 scripts/validate_kde-tier2-package-batch1.py" not in repository_policy, "repository policy must not contain a misspelled Tier 2 validator path")
 require("python3 scripts/validate_kde_tier2_package_batch1.py" in repository_policy, "repository policy must execute KDE Tier 2 Batch 1 validator")
@@ -139,6 +142,8 @@ require("github.event.pull_request.base.sha" in pr_ci_router and "github.event.p
 require("scripts/pr-ci-router-needed.sh" in pr_ci_router, "PR CI router must delegate semantic evidence/build classification to the tested scope helper")
 require("cancel-in-progress: true" in pr_ci_router, "PR CI router must cancel superseded runs")
 require("pr-ci-router-${{ github.event.pull_request.number }}" in pr_ci_router, "PR CI router concurrency must be scoped to the PR number")
+require("run_diag_preflight" in pr_ci_router and "diagnostic-infrastructure-preflight.yml" in pr_ci_router, "PR router must expose diagnostic infrastructure preflight")
+require('p.get("status")=="PASS"' in pr_ci_router, "Round23 admission must require diagnostic preflight PASS")
 
 for filename in routed_pr_workflows:
     text = workflow_texts.get(filename, "")
@@ -174,6 +179,10 @@ require("fetch-depth: 0" in hosted_workflow, "hosted package preflight must fetc
 required_files = [
     "docs/architecture/overview.md",
     "docs/architecture/build-ci.md",
+    "docs/decisions/diagnostic-infrastructure-preflight-2026-09-26.md",
+    "manifests/diagnostic-infrastructure-preflight.json",
+    "scripts/run-diagnostic-infrastructure-preflight.sh",
+    "scripts/validate_diagnostic_infrastructure_preflight.py",
     "docs/status/2026-09-11.md",
     "docs/decisions/ADR-0001-authority-provider.md",
     "docs/runners/ubuntu-26.04.md",

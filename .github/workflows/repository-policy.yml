@@ -364,6 +364,9 @@ jobs:
       - name: Validate KDE Tier 3 KIO Round 22 diagnostic
         run: python3 scripts/validate_kde_tier3_kio_round22_diagnostic.py
 
+      - name: Validate diagnostic infrastructure preflight
+        run: python3 scripts/validate_diagnostic_infrastructure_preflight.py
+
       - name: Validate KDE Tier 3 KIO Round 23 diagnostic
         run: python3 scripts/validate_kde_tier3_kio_round23_diagnostic.py
 

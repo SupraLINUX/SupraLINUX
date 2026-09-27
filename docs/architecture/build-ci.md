@@ -1,7 +1,7 @@
 # Build, CI and promotion architecture
 
 Status: **active architecture**  
-Last reviewed: **2026-09-17**
+Last reviewed: **2026-09-26**
 
 ## Build semantics
 
@@ -63,6 +63,20 @@ Repository Policy requires:
 
 `SC1091` is excluded only for intentional runtime system sources such as `/etc/os-release`; all other ShellCheck diagnostics are blocking.
 
+## Diagnostic infrastructure discipline
+
+A new diagnostic mechanism is itself a dependency and must be certified before the failing target package is used to exercise it.
+
+Rules:
+
+- the target package must not be the first probe of new chroot/sbuild transport, hook semantics or evidence extraction;
+- validate scripts/configuration locally where practical before CI;
+- use a cheap synthetic probe for new diagnostic infrastructure;
+- two consecutive `INFRA_INVALID` executions of the same diagnostic mechanism force a methodology review and freeze further target-package retries;
+- infrastructure PASS only certifies the mechanism; it does not change package state;
+- infrastructure FAIL/INFRA_INVALID never becomes a package FAIL.
+
+The reusable `diagnostic-infrastructure-preflight.yml` certifies hosted Ubuntu 26.04 + sbuild/unshare diagnostic transport. KIO Round 23 is BLOCKED until that preflight closes PASS. See `docs/decisions/diagnostic-infrastructure-preflight-2026-09-26.md`.
 ## Authoritative KVM/JIT lane
 
 Release-relevant evidence is produced inside disposable self-hosted Ubuntu 26.04 KVM VMs. Required labels are:

@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "diagnostic",
+    "phase": "diagnostic-infrastructure-preflight",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-round23-diagnostic-pending",
-    "remediation": "round23-kio-krecent-attempt8-rootfs-diagnostic-pending-ci"
+    "package_builds": "diagnostic-infrastructure-preflight-pending",
+    "remediation": "round23-blocked-pending-diagnostic-infrastructure-preflight"
   },
   "nodes": [
     {
@@ -1391,8 +1391,8 @@
     "execution_authorized": false,
     "level1_execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "round23-diagnostic-definition-pending-ci",
-    "next_gate": "tier3-round23-kio-krecent-attempt8-rootfs-diagnostic-evidence",
+    "status": "round23-BLOCKED-pending-diagnostic-infrastructure-preflight",
+    "next_gate": "diagnostic-infrastructure-preflight-evidence",
     "current_attempt": 8,
     "next_attempt": 9,
     "validation_workflow_run": 36238357510,

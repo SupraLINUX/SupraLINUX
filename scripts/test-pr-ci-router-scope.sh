@@ -159,10 +159,15 @@ echo '#!/usr/bin/env bash' > scripts/run-kde-tier3-kio-round22-hook.sh
 echo '{"schema":1,"round":22}' > manifests/kde-tier3-kio-round22-diagnostic.json
 git add .; git commit -qm tier3-diagnostic-lifecycle; TD=$(git rev-parse HEAD)
 if bash scripts/pr-ci-router-needed.sh "$B2" "$TD"; then echo "Tier3 diagnostic lifecycle unexpectedly requested full reusable CI" >&2; exit 1; fi
+echo 'name: Diagnostic infrastructure preflight' > .github/workflows/diagnostic-infrastructure-preflight.yml
+echo '#!/usr/bin/env bash' > scripts/run-diagnostic-infrastructure-preflight.sh
+echo '{"schema":1,"scope":"diagnostic-infrastructure-preflight"}' > manifests/diagnostic-infrastructure-preflight.json
+git add .; git commit -qm diagnostic-infrastructure-preflight; DIP=$(git rev-parse HEAD)
+if bash scripts/pr-ci-router-needed.sh "$TD" "$DIP"; then echo "diagnostic infrastructure preflight unexpectedly requested full reusable CI" >&2; exit 1; fi
 python3 - <<'PY'
 import json
 p='manifests/kde-frameworks-tier3.json'; d=json.load(open(p)); d['nodes'][0]['packaging']['package_version']='6.30.0-0supralinux9'; open(p,'w').write(json.dumps(d))
 PY
 git add .; git commit -qm tier3-package-semantic; TPS=$(git rev-parse HEAD)
-bash scripts/pr-ci-router-needed.sh "$TD" "$TPS"
+bash scripts/pr-ci-router-needed.sh "$DIP" "$TPS"
 echo "PR CI semantic evidence router: PASS"

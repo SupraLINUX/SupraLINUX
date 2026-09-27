@@ -19,6 +19,7 @@ jobs:
     timeout-minutes: 10
     outputs:
       run_ci: ${{ steps.scope.outputs.run_ci }}
+      run_diag_preflight: ${{ steps.scope.outputs.run_diag_preflight }}
       run_round23: ${{ steps.scope.outputs.run_round23 }}
     steps:
       - name: Checkout
@@ -68,13 +69,21 @@ jobs:
           fi
 
           echo "run_ci=${run_ci}" >> "${GITHUB_OUTPUT}"
-          run_round23="$(python3 -c 'import json; m=json.load(open("manifests/kde-frameworks-tier3.json")); print("true" if m.get("discovery_policy",{}).get("package_builds")=="tier3-round23-diagnostic-pending" else "false")')"
+          run_diag_preflight="$(python3 -c 'import json; m=json.load(open("manifests/kde-frameworks-tier3.json")); print("true" if m.get("discovery_policy",{}).get("package_builds")=="diagnostic-infrastructure-preflight-pending" else "false")')"
+          echo "run_diag_preflight=${run_diag_preflight}" >> "${GITHUB_OUTPUT}"
+          run_round23="$(python3 -c 'import json; t=json.load(open("manifests/kde-frameworks-tier3.json")); p=json.load(open("manifests/diagnostic-infrastructure-preflight.json")); ok=t.get("discovery_policy",{}).get("package_builds")=="tier3-round23-diagnostic-pending" and p.get("status")=="PASS"; print("true" if ok else "false")')"
           echo "run_round23=${run_round23}" >> "${GITHUB_OUTPUT}"
           if [[ "${run_ci}" == "true" ]]; then
             echo "Semantic build/reference/provider input changed; invoking reusable CI lanes."
           else
             echo "Evidence/policy-only event delta; Repository Policy remains authoritative and reusable hosted lanes are skipped."
           fi
+
+  diagnostic-infrastructure-preflight:
+    name: Diagnostic infrastructure preflight
+    needs: plan
+    if: needs.plan.outputs.run_diag_preflight == 'true'
+    uses: ./.github/workflows/diagnostic-infrastructure-preflight.yml
 
   kde-tier3-kio-round23-diagnostic:
     name: Tier 3 KIO Round 23 diagnostic

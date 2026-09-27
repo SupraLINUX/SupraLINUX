@@ -16,9 +16,9 @@
   "downstream_eligibility_changes_allowed": false,
   "package_revision_allocation": false,
   "test_suppression": false,
-  "execution_authorized": true,
+  "execution_authorized": false,
   "package_execution_authorized": false,
-  "status": "definition-pending-diagnostic-retry-6",
+  "status": "BLOCKED-pending-diagnostic-infrastructure-preflight",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -113,7 +113,7 @@
     "not_reproduced": "all valid lanes have zero exact Attempt 8 signatures",
     "no_package_decision": "Round23 cannot authorize Attempt 9 or allocate a package revision"
   },
-  "next_gate": "tier3-round23-kio-krecent-attempt8-rootfs-diagnostic-evidence",
+  "next_gate": "diagnostic-infrastructure-preflight-evidence",
   "stable_promotion_requires_explicit_user_approval": true,
   "diagnostic_attempts": [
     {
@@ -206,6 +206,21 @@
       "package_attempted": false,
       "canonical_state_effect": "none",
       "usable_for_kio_diagnostic_conclusion": false
+    },
+    {
+      "ordinal": 7,
+      "status": "INFRA_INVALID",
+      "workflow_run": 36282766027,
+      "job_id": 108517688179,
+      "merge_commit": "1cfcbe62b16929d3c05396ec32c80179727915cd",
+      "branch_commit": "66d3652c504e827c1a25cce19b6b5fb6c14319d1",
+      "artifact_id": 10919472201,
+      "artifact_sha256": "c70ec7003ab48c6bdca8f99adc86fe2464abfa7c61b7a48eba61d32525754780",
+      "failed_stage": "run-starting-build-commands",
+      "reason": "native sbuild-unshare and host-to-chroot transport succeeded, but the KIO-specific hook failed during its manually reconstructed configure/build path before the diagnostic matrix or evidence markers completed; methodology superseded by a cheap synthetic infrastructure preflight",
+      "package_attempted": false,
+      "canonical_state_effect": "none",
+      "usable_for_kio_diagnostic_conclusion": false
     }
   ],
   "methodology": {
@@ -228,5 +243,16 @@
       "no Command: dpkg-buildpackage",
       "no package artifacts"
     ]
+  },
+  "blocked_reason": "diagnostic infrastructure must be certified independently before KIO is used again",
+  "methodology_review": {
+    "triggered": true,
+    "infra_invalid_cutoff": 2,
+    "observed_infra_invalid": 7,
+    "required_preflight": "manifests/diagnostic-infrastructure-preflight.json",
+    "target_package_must_not_be_first_infrastructure_probe": true,
+    "redesign_after_preflight_pass": true,
+    "preserve_historical_build_path": true,
+    "rule": "after two consecutive INFRA_INVALID attempts, freeze the target diagnostic and certify the mechanism with a cheap synthetic preflight before retry"
   }
 }
