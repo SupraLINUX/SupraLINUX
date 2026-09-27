@@ -5,7 +5,6 @@ LEVEL1="${ROOT}/manifests/kde-tier3-build-level1.json"
 WORK="${ROOT}/.work/kde-tier3-kio-round23-diagnostic"
 INPUTS="${WORK}/inputs"
 ROOTFS_DIR="${WORK}/rootfs-artifact"
-HOOK_SHARE="${WORK}/hook-share"
 OUT="${WORK}/out"
 CONFIG="${WORK}/sbuild-config.pl"
 EVIDENCE="${ROOT}/evidence/kde-tier3-kio-round23-diagnostic"
@@ -17,8 +16,7 @@ DIAG_RESULT=DIAG_INFRA_FAIL
 : "${GITHUB_TOKEN:?missing GitHub Actions token}"
 
 rm -rf "${WORK}" "${EVIDENCE}"
-mkdir -p "${INPUTS}" "${ROOTFS_DIR}" "${HOOK_SHARE}" "${OUT}" "${EVIDENCE}/xbels"
-chmod 0777 "${EVIDENCE}" "${EVIDENCE}/xbels"
+mkdir -p "${INPUTS}" "${ROOTFS_DIR}" "${OUT}" "${EVIDENCE}"
 exec > >(tee "${EVIDENCE}/pipeline.log") 2>&1
 
 # shellcheck disable=SC2329
@@ -80,31 +78,6 @@ mkdir -p "${SBUILD_CACHE}"
 ln -sfn "${ROOTFS_TAR}" "${SBUILD_CACHE}/resolute-amd64.tar"
 readlink -f "${SBUILD_CACHE}/resolute-amd64.tar" > "${EVIDENCE}/sbuild-rootfs-cache-target.txt"
 
-python3 - "${ROOTFS_TAR}" "${EVIDENCE}/rootfs-mountpoints.json" <<'PY'
-import json,sys,tarfile
-from pathlib import Path
-tar_path,out=sys.argv[1:]
-required=("mnt","media")
-with tarfile.open(tar_path) as tf:
-    entries={}
-    for member in tf.getmembers():
-        name=member.name
-        while name.startswith("./"):
-            name=name[2:]
-        name=name.rstrip("/")
-        if name:
-            entries[name]=member
-report={}
-for path in required:
-    member=entries.get(path)
-    children=sorted(name for name in entries if name.startswith(path+"/"))
-    if member is None or not member.isdir():
-        raise SystemExit(f"required rootfs mountpoint /{path} missing or not a directory")
-    if children:
-        raise SystemExit(f"required rootfs mountpoint /{path} is not empty: {children[:10]}")
-    report[path]={"exists":True,"directory":True,"empty":True}
-Path(out).write_text(json.dumps(report,indent=2,sort_keys=True)+"\n")
-PY
 
 STAGE=input-plan
 python3 - "${LEVEL1}" "${EVIDENCE}/input-plan.tsv" <<'PY'
@@ -136,30 +109,28 @@ done < "${EVIDENCE}/input-plan.tsv"
 mapfile -t PREDECESSOR_DEBS < <(find "${INPUTS}" -mindepth 2 -type f -name '*.deb' -print | sort)
 (( ${#PREDECESSOR_DEBS[@]} > 0 ))
 printf '%s\n' "${PREDECESSOR_DEBS[@]}" > "${EVIDENCE}/predecessor-debs.txt"
-cp "${ROOT}/scripts/run-kde-tier3-kio-round23-hook.sh" "${HOOK_SHARE}/hook.sh"
-chmod 0755 "${HOOK_SHARE}/hook.sh"
 
 STAGE=sbuild-config
-python3 - "${CONFIG}" "${HOOK_SHARE}" "${EVIDENCE}" <<'PY'
-import sys
+python3 - "${CONFIG}" "${ROOT}/scripts/run-kde-tier3-kio-round23-hook.sh" <<'PY'
+import shlex,sys
 from pathlib import Path
-path,hook,evidence=sys.argv[1:]
-def q(s): return "'" + s.replace("\\","\\\\").replace("'","\\'") + "'"
+path,hook=sys.argv[1:]
+host_hook=shlex.quote(hook)
+copy_command=f"cat {host_hook} | %SBUILD_CHROOT_EXEC sh -c 'cat > /tmp/supralinux-round23-hook.sh && chmod 0755 /tmp/supralinux-round23-hook.sh'"
 text="""$chroot_mode = 'unshare';
 $unshare_mmdebstrap_auto_create = 0;
-$unshare_bind_mounts = [
-  { directory => __HOOK__, mountpoint => '/mnt' },
-  { directory => __EVIDENCE__, mountpoint => '/media' },
-];
 $run_lintian = 0;
 $run_autopkgtest = 0;
 $run_piuparts = 0;
+$log_external_command_output = 1;
+$log_external_command_error = 1;
 $external_commands = {
-  'starting-build-commands' => [ [ '/bin/bash', '/mnt/hook.sh', '%p' ] ],
+  'pre-build-commands' => [ __COPY_COMMAND__ ],
+  'starting-build-commands' => [ [ '/bin/bash', '/tmp/supralinux-round23-hook.sh', '%p' ] ],
 };
 1;
 """
-text=text.replace("__HOOK__",q(hook)).replace("__EVIDENCE__",q(evidence))
+text=text.replace("__COPY_COMMAND__",repr(copy_command))
 Path(path).write_text(text)
 PY
 cp "${CONFIG}" "${EVIDENCE}/sbuild-config.pl"
@@ -174,6 +145,31 @@ SBUILD_CONFIG="${CONFIG}" sbuild --verbose --chroot-mode=unshare --dist=resolute
 SBUILD_RC=${PIPESTATUS[0]}
 set -e
 printf '%s\n' "${SBUILD_RC}" > "${EVIDENCE}/sbuild-exit-code.txt"
+
+STAGE=sbuild-evidence-recovery
+python3 - "${SBUILD_LOG}" "${EVIDENCE}" <<'PY'
+import base64,io,sys,tarfile
+from pathlib import Path
+log=Path(sys.argv[1]).read_text(errors="replace").splitlines()
+out=Path(sys.argv[2])
+begin="SUPRALINUX_ROUND23_EVIDENCE_BASE64_BEGIN"
+end="SUPRALINUX_ROUND23_EVIDENCE_BASE64_END"
+try:
+    a=log.index(begin)
+    b=log.index(end,a+1)
+except ValueError as exc:
+    raise SystemExit(f"Round23 evidence markers missing: {exc}")
+payload="".join(line.strip() for line in log[a+1:b] if line.strip())
+raw=base64.b64decode(payload,validate=True)
+(out/"round23-evidence.tar.gz").write_bytes(raw)
+with tarfile.open(fileobj=io.BytesIO(raw),mode="r:gz") as tf:
+    members=tf.getmembers()
+    for m in members:
+        p=Path(m.name)
+        if p.is_absolute() or ".." in p.parts:
+            raise SystemExit(f"unsafe evidence member: {m.name}")
+    tf.extractall(out)
+PY
 
 STAGE=sbuild-sentinel-validation
 (( SBUILD_RC != 0 ))

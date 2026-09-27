@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 PKGDIR="${1:?missing package build directory}"
-EVIDENCE=/media
+EVIDENCE=/tmp/supralinux-round23-evidence
 EXPECTED=/build/reproducible-path/kf6-kio-6.30.0
 STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+rm -rf "${EVIDENCE}"
+mkdir -p "${EVIDENCE}/xbels"
 [[ "${PKGDIR}" == "${EXPECTED}" ]]
 [[ "$(id -un)" == root ]]
 getent passwd sbuild > "${EVIDENCE}/sbuild-passwd.txt"
@@ -136,4 +138,7 @@ result={"schema":1,"node":"kio","round":23,"diagnostic_result":"DIAG_COMPLETE",
 print(json.dumps(result,indent=2,sort_keys=True))
 PY
 touch "${EVIDENCE}/hook-complete"
+printf '%s\n' 'SUPRALINUX_ROUND23_EVIDENCE_BASE64_BEGIN'
+tar -C "${EVIDENCE}" -czf - . | base64
+printf '%s\n' 'SUPRALINUX_ROUND23_EVIDENCE_BASE64_END'
 exit 86

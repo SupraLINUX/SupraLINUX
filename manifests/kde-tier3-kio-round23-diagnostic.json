@@ -18,7 +18,7 @@
   "test_suppression": false,
   "execution_authorized": true,
   "package_execution_authorized": false,
-  "status": "definition-pending-diagnostic-retry-5",
+  "status": "definition-pending-diagnostic-retry-6",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "canonical_kio": {
     "state": "FAIL",
@@ -79,8 +79,10 @@
     "manual_chroot_emulation_forbidden": true,
     "starting_build_hook_must_abort_before_dpkg_buildpackage": true,
     "sbuild_build_user_must_be_native_default": true,
-    "rootfs_bind_mountpoints_must_exist_and_be_empty": true,
-    "rootfs_must_remain_byte_identical": true
+    "rootfs_must_remain_byte_identical": true,
+    "unshare_bind_mounts_forbidden": true,
+    "hook_transfer_must_use_sbuild_chroot_exec_stdin": true,
+    "evidence_return_must_use_external_command_stdout": true
   },
   "diagnostic_matrix": [
     {
@@ -189,36 +191,42 @@
       "package_attempted": false,
       "canonical_state_effect": "none",
       "usable_for_kio_diagnostic_conclusion": false
+    },
+    {
+      "ordinal": 6,
+      "status": "INFRA_INVALID",
+      "workflow_run": 36282461028,
+      "job_id": 108516845093,
+      "merge_commit": "a3b03ab62974e35cf4382ab32407da0ec2f0d4d4",
+      "branch_commit": "e476cfd0b4dcd3ee1b613434694f703fad0ea015",
+      "artifact_id": 10919516426,
+      "artifact_sha256": "246b6bfb1a52a99718c8e242bb5b5907da8f84ec5844e8a62c685cbb78f74477",
+      "failed_stage": "create-session",
+      "reason": "sbuild unshare verified /mnt and /media existed in the exact rootfs, but bind mounting the GitHub workspace filesystem into the user namespace failed with ENOTTY before dependency installation",
+      "package_attempted": false,
+      "canonical_state_effect": "none",
+      "usable_for_kio_diagnostic_conclusion": false
     }
   ],
   "methodology": {
     "containment": "sbuild-0.91.2ubuntu3-unshare",
     "chroot": "exact Attempt 8 rootfs artifact 10904512642",
+    "rootfs_delivery": "exact Attempt 8 tarball symlinked to ~/.cache/sbuild/resolute-amd64.tar, matching Attempt 8",
     "build_path": "/build/reproducible-path",
     "build_user": "sbuild (native unshare default)",
     "provider_injection": "same --extra-package artifacts as Attempt 8 Level 1 plan",
+    "hook_injection": "documented pre-build-commands host-to-chroot stdin transfer via %SBUILD_CHROOT_EXEC; no bind mounts",
     "diagnostic_entrypoint": "starting-build-commands after dependency installation",
-    "package_build_prevention": "diagnostic hook exits sentinel 86 before dpkg-buildpackage",
+    "evidence_return": "hook emits a gzip tar of /tmp/supralinux-round23-evidence as base64 over external-command stdout; host reconstructs it from sbuild.log",
+    "package_build_prevention": "diagnostic hook emits complete evidence then exits sentinel 86 before dpkg-buildpackage",
     "validity_guards": [
       "exact sbuild 0.91.2ubuntu3",
+      "exact rootfs digest",
       "exact build path",
       "native sbuild user",
-      "hook-complete sentinel",
+      "evidence markers and hook-complete sentinel",
       "no Command: dpkg-buildpackage",
       "no package artifacts"
-    ],
-    "rootfs_delivery": "exact Attempt 8 tarball symlinked to ~/.cache/sbuild/resolute-amd64.tar, matching the proven Level 1 invocation",
-    "sbuild_invocation": "sbuild --chroot-mode=unshare --dist=resolute; no alternate --chroot path",
-    "bind_mounts": {
-      "hook": {
-        "host": "diagnostic hook-share",
-        "chroot": "/mnt"
-      },
-      "evidence": {
-        "host": "Round23 evidence directory",
-        "chroot": "/media"
-      },
-      "rootfs_precondition": "/mnt and /media must both exist as empty directories in the exact Attempt 8 tarball; verified before sbuild"
-    }
+    ]
   }
 }
