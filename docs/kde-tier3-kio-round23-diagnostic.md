@@ -1,61 +1,57 @@
 # KDE Tier 3 KIO Round 23 — historical build-path diagnostic
 
-Status: **definition pending CI; diagnostic execution authorized**.  
+Status: **diagnostic PASS — exact Attempt 8 KRecent signature reproduced in isolation**.  
 Infrastructure preflight: **PASS**.  
-Candidate package execution: **not authorized**.
+Candidate package execution / Attempt 9: **not authorized**.
 
-Round 23 investigates the nondeterministic `KRecentDocumentTest::testXbelBookmarkMaxEntries()` failure observed in Level 1 Attempt 8. It does not change package state and it is not Attempt 9.
-
-## Why the method changed
-
-Seven earlier Round 23 executions were `INFRA_INVALID`. None is usable as a KIO conclusion. The seventh proved the native sbuild transport but still manually reconstructed selected `debian/rules` configure/build steps, so it did not preserve the historical failure path closely enough.
-
-The infrastructure methodology was then frozen and a package-independent preflight was introduced under the two-invalid-attempt cutoff rule.
-
-## Infrastructure gate — PASS
-
-Closed preflight evidence:
-
-- workflow run: `36286096599`
-- job: `108527097646`
-- commit: `340da99451a86b65513efcbfcae6b6b7145a2a96`
-- artifact: `10920194622`
-- artifact SHA-256: `ee6adecf77aa5110db735220bca0ebecd2a4a41b4a2b8dacc6692816866c1d39`
-- exact Attempt 8 rootfs tar SHA-256: `790139881455b78e00621f1b8ab02efaee899b7e6873f4d65ae0ff7fa295020e`
-
-That PASS certifies the sbuild/unshare hook transport and evidence round-trip. It does **not** prove anything about the KIO failure itself.
-
-## Historical parity contract
-
-The redesigned Round 23 must use:
+Round 23 used the exact Attempt 8 rootfs, KIO 6.30.0-0supralinux8 source materialization, retained predecessor artifacts, sbuild 0.91.2ubuntu3/unshare and the historical Debian build path:
 
 ```text
-exact Attempt 8 rootfs
-+ exact KIO 6.30.0-0supralinux8 materialization
-+ exact retained predecessor artifacts
-+ sbuild 0.91.2ubuntu3 / unshare
-+ --enable-network
-+ dpkg-buildpackage --sanitize-env -us -uc -b
-+ debian/rules binary
+sbuild
+→ dpkg-buildpackage --sanitize-env -us -uc -b
+→ debian/rules binary
+→ override_dh_auto_test
 ```
 
-The `starting-build-commands` hook is now limited to preparing instrumentation in the disposable unpacked worktree. It may not run `debian/rules clean`, `override_dh_auto_configure` or `override_dh_auto_build` itself.
+No candidate package artifacts were produced. The temporary KRecent instrumentation and `debian/rules` change were restored byte-for-byte before the diagnostic abort.
 
-The real `dpkg-buildpackage` path performs clean/configure/build. Only `override_dh_auto_test` is temporarily redirected to the diagnostic matrix. Before the intentional test-stage abort, the modified KRecent source and `debian/rules` are restored byte-for-byte.
+## Closed evidence
 
-No `.deb`, `.changes` or `.buildinfo` may be produced. If they appear, the diagnostic is invalid.
+- workflow run: `36288655361`
+- job: `108534328079`
+- branch commit: `f31c5620697dfaecb69b870287a180574b3bc92d`
+- artifact: `10921272952`
+- artifact SHA-256: `1638ac8ea01881a78e4ec32761eb473836258653d3c08f1f116af6ac93829e69`
+- result: `DIAG_COMPLETE`
+- environment valid: **true**
+- historical build path invoked: **true**
+- source restored: **true**
+- rules restored: **true**
+- package attempted: **false**
 
-## Matrix
+## Result
 
-The test-stage diagnostic runs under the same package directory, HOME, XCB, Breeze, KDECI, D-Bus and Xvfb contract used by Attempt 8:
+| Lane | Runs | KRecent failures | Exact Attempt 8 signature | Valid XBEL captures |
+| --- | ---: | ---: | ---: | ---: |
+| isolated KRecent | 100 | 58 | **51** | 100 |
+| CTest prefix 1–26 | 30 | 14 | **13** | 30 |
+| full suite | 3 | 3 | **1** | 3 |
 
-- `kiocore-krecentdocumenttest` isolated: 100 runs;
-- CTest prefix 1–26: 30 runs;
-- complete CTest suite: 3 runs.
+The exact historical failure — `Actual temp File 11 / Expected temp File 12` — therefore reproduces without any preceding CTest targets: **51 / 100 isolated runs**.
 
-Instrumentation is placed immediately after `KRecentDocument::recentUrls()` and before the failing comparison. It records the already-computed URL order and the XBEL state for each run.
+Seven additional isolated failures returned `temp File 10` instead of `temp File 12`. This is broader ordering instability, not a dependency on a previous test.
 
-A valid diagnostic requires all expected runs and captures. The conclusion distinguishes reproduction while isolated, after the CTest prefix, only in the full suite, or no reproduction.
+## Interpretation
+
+Round 23 closes the main uncertainty left by Rounds 19–22:
+
+- hidden HOME alone was insufficient;
+- CTest sequencing outside the retained build rootfs was insufficient;
+- inside the exact historical build path, the failure is reproducible even when KRecentDocumentTest is isolated.
+
+Captured XBEL files show millisecond-level timestamp ties around the surviving recent entries. That materially strengthens the timestamp-tie hypothesis, but **does not yet prove it is the sole cause**: both passing and failing captures can contain tied timestamps.
+
+Therefore no production patch or test suppression is justified yet. The next diagnostic must prove or reject timestamp-tie causality, preferably by observing the per-add timestamp/eviction sequence and a controlled no-tie lane while preserving the historical build path.
 
 ## Canonical state
 
@@ -65,8 +61,8 @@ KIO 6.30.0-0supralinux8 = FAIL
 Attempt 8 = CLOSED-MIXED
 Attempt 9 = NOT AUTHORIZED
 Infrastructure preflight = PASS
-Round 23 = diagnostic pending CI
-Next gate = tier3-round23-krecent-attempt8-full-build-path-diagnostic-evidence
+Round 23 = diagnostic-PASS
+Next gate = tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-definition
 ```
 
-A Round 23 result can guide diagnosis only. It cannot promote KIO, authorize Attempt 9, or alter stable/testing publication state by itself.
+Round 23 changes diagnostic knowledge only. It does not promote KIO, unblock dependents, allocate a package revision, or alter testing/stable publication state.

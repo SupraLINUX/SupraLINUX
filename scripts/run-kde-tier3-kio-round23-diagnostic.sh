@@ -19,6 +19,7 @@ rm -rf "${WORK}" "${EVIDENCE}"
 mkdir -p "${INPUTS}" "${ROOTFS_DIR}" "${OUT}" "${EVIDENCE}"
 exec > >(tee "${EVIDENCE}/pipeline.log") 2>&1
 
+# shellcheck disable=SC2329
 finish() {
   local rc="$1" finished
   finished="$(date -u +%Y-%m-%dT%H:%M:%SZ)"

@@ -16,8 +16,8 @@
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-round23-diagnostic-pending",
-    "remediation": "round23-krecent-attempt8-full-build-path-diagnostic-pending-ci"
+    "package_builds": "tier3-round23-diagnostic-closed",
+    "remediation": "round23-krecent-isolated-reproduction-PASS-pending-round24-definition"
   },
   "nodes": [
     {
@@ -1391,8 +1391,8 @@
     "execution_authorized": false,
     "level1_execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "round23-diagnostic-pending-ci-after-infrastructure-PASS",
-    "next_gate": "tier3-round23-krecent-attempt8-full-build-path-diagnostic-evidence",
+    "status": "round23-diagnostic-PASS-pending-round24-definition",
+    "next_gate": "tier3-round24-kio-krecent-timestamp-tie-causality-diagnostic-definition",
     "current_attempt": 8,
     "next_attempt": 9,
     "validation_workflow_run": 36238357510,
@@ -1614,6 +1614,41 @@
       "artifact_id": 10906951441,
       "artifact_sha256": "3395536506ea205ce722a4a9be8962b0f0b3fb7597dbee708a6b7e0dc8ef2611",
       "conclusion": "inconclusive-methodology-defects-require-environment-corrected-followup"
+    },
+    "round23_diagnostic": {
+      "status": "diagnostic-PASS",
+      "workflow_run": 36288655361,
+      "job_id": 108534328079,
+      "branch_commit": "f31c5620697dfaecb69b870287a180574b3bc92d",
+      "artifact_id": 10921272952,
+      "artifact_sha256": "1638ac8ea01881a78e4ec32761eb473836258653d3c08f1f116af6ac93829e69",
+      "result": "DIAG_COMPLETE",
+      "conclusion": "krecentdocument-attempt8-signature-reproduced-isolated-in-historical-build-path",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "matrix": {
+        "isolated-krecent": {
+          "runs": 100,
+          "expected_runs": 100,
+          "valid_captures": 100,
+          "krecent_failed_runs": 58,
+          "attempt8_signature_failures": 51
+        },
+        "prefix-through-krecent": {
+          "runs": 30,
+          "expected_runs": 30,
+          "valid_captures": 30,
+          "krecent_failed_runs": 14,
+          "attempt8_signature_failures": 13
+        },
+        "full-suite": {
+          "runs": 3,
+          "expected_runs": 3,
+          "valid_captures": 3,
+          "krecent_failed_runs": 3,
+          "attempt8_signature_failures": 1
+        }
+      }
     }
   },
   "remediation_history": [
