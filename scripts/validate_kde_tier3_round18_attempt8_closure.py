@@ -76,27 +76,27 @@ req(R.get("stable_promotion_requires_explicit_user_approval") is True,
     "Round18 stable promotion policy")
 
 # Append-only Attempt ledger independently corroborates the closed result.
-hist=A.get("campaign_history",[])
-req(hist and hist[-1].get("attempt")==8 and hist[-1].get("workflow_run")==RUN and
-    hist[-1].get("result")=="MIXED",
+hist=[x for x in A.get("campaign_history",[]) if x.get("attempt")==8]
+req(len(hist)==1 and hist[0].get("workflow_run")==RUN and
+    hist[0].get("result")=="MIXED",
     "Attempt8 ledger campaign")
-req(hist and hist[-1].get("workflow_jobs")=={"success":1,"fail":1} and
-    hist[-1].get("canonical_promotions")==0,
+req(len(hist)==1 and hist[0].get("workflow_jobs")=={"success":1,"fail":1} and
+    hist[0].get("canonical_promotions")==0,
     "Attempt8 mixed/no promotion")
-ki=A.get("nodes",{}).get("kio",[])
-kx=A.get("nodes",{}).get("kxmlgui",[])
-req(ki and ki[-1].get("attempt")==8 and ki[-1].get("result")=="FAIL" and
-    ki[-1].get("job_id")==KIO_JOB and ki[-1].get("artifact_id")==KIO_ART and
-    ki[-1].get("artifact_sha256")==KIO_SHA,
+ki=[x for x in A.get("nodes",{}).get("kio",[]) if x.get("attempt")==8]
+kx=[x for x in A.get("nodes",{}).get("kxmlgui",[]) if x.get("attempt")==8]
+req(len(ki)==1 and ki[0].get("result")=="FAIL" and
+    ki[0].get("job_id")==KIO_JOB and ki[0].get("artifact_id")==KIO_ART and
+    ki[0].get("artifact_sha256")==KIO_SHA,
     "KIO ledger Attempt8 evidence")
-req(ki and ki[-1].get("tests")=={"total":69,"pass":67,"fail":2},
+req(len(ki)==1 and ki[0].get("tests")=={"total":69,"pass":67,"fail":2},
     "KIO ledger tests")
-req(kx and kx[-1].get("attempt")==8 and kx[-1].get("result")=="PASS" and
-    kx[-1].get("job_id")==KXML_JOB and kx[-1].get("artifact_id")==KXML_ART and
-    kx[-1].get("artifact_sha256")==KXML_SHA,
+req(len(kx)==1 and kx[0].get("result")=="PASS" and
+    kx[0].get("job_id")==KXML_JOB and kx[0].get("artifact_id")==KXML_ART and
+    kx[0].get("artifact_sha256")==KXML_SHA,
     "KXMLGui ledger Attempt8 evidence")
-req(kx and kx[-1].get("tests")=={"total":7,"pass":7,"fail":0} and
-    kx[-1].get("python_import")=="PASS",
+req(len(kx)==1 and kx[0].get("tests")=={"total":7,"pass":7,"fail":0} and
+    kx[0].get("python_import")=="PASS",
     "KXMLGui ledger tests/import")
 
 if errors:
