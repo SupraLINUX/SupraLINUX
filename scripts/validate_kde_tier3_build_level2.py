@@ -10,10 +10,11 @@ T=["baloo","kcmutils","knotifyconfig","kparts"]
 tn={x["id"]:x for x in t.get("nodes",[])}
 D={"baloo":["kio","kcoreaddons","kconfig","kdbusaddons","ki18n","kidletime","solid","kfilemetadata","kcrash"],"kcmutils":["kio","kconfigwidgets","kxmlgui","kitemviews","kcoreaddons","kguiaddons","ki18n","kwidgetsaddons","kirigami"],"knotifyconfig":["kio","kconfigwidgets","kxmlgui","kcompletion","kconfig","ki18n","knotifications","kwidgetsaddons"],"kparts":["kio","kjobwidgets","kxmlgui","kconfig","kcoreaddons","ki18n","kservice","kwidgetsaddons"]}
 P={"baloo":{"BUILD_TESTING":"ON"},"kcmutils":{"BUILD_TESTING":"ON"},"knotifyconfig":{"BUILD_TESTING":"ON"},"kparts":{"BUILD_TESTING":"ON","KDE_INSTALL_APP_TEMPLATES":"ON"}}
+attempt3_context=m.get("current_attempt")==3 or m.get("next_attempt")==3
 req(m.get("schema")==1 and m.get("authority")=="kde-upstream" and m.get("provider_platform")=="ubuntu-resolute","Level2 schema/authority/provider")
 req(m.get("role")=="tier3-binary-build-level2" and m.get("frameworks_series")=="6.30.0","Level2 role/series")
 req(m.get("selected_nodes")==T,"Level2 node set")
-if m.get("next_attempt")==3:
+if attempt3_context:
     req(m.get("canonical_snapshot")=="13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED","Attempt2 canonical snapshot")
 else:
     req(m.get("canonical_snapshot")=="13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED","pre-Attempt2 canonical snapshot")
@@ -49,7 +50,16 @@ if m.get("state")=="planned-pending-activation":
 elif m.get("state")=="active-pending-ci":
     req(m.get("execution_authorized") is True,"active Level2 must authorize execution")
     act=m.get("activation",{}); pv=m.get("planning_validation",{}); pol=t.get("discovery_policy",{}); live=t.get("level2_execution",{})
-    if m.get("current_attempt")==2:
+    if m.get("current_attempt")==3:
+        req(m.get("next_attempt") is None and m.get("next_gate")=="tier3-build-level2-attempt3","Attempt3 active gate")
+        req(act.get("status")=="ACTIVE" and act.get("attempt")==3 and act.get("planning_policy_workflow_run")==36459675227 and act.get("planning_level2_workflow_run")==36459675009 and act.get("planning_commit")=="82d1e390673e261bc45a1676d002630248b46dc5","Level2 Attempt3 activation evidence")
+        req(act.get("runner_executable_preflight")=="PASS" and act.get("support_closure_validation")=="PASS","Attempt3 planning preflights")
+        req(pv.get("repository_policy_workflow_run")==36459675227 and pv.get("level2_workflow_run")==36459675009 and pv.get("commit")=="82d1e390673e261bc45a1676d002630248b46dc5" and pv.get("runner_executable_preflight")=="PASS" and pv.get("support_closure_validation")=="PASS" and pv.get("result")=="PASS","Attempt3 planning validation evidence")
+        req(pol.get("phase")=="build-level2" and pol.get("package_builds")=="tier3-level2-attempt3-active" and pol.get("remediation")=="level2-attempt3-inherited-support-closure","Attempt3 canonical live phase")
+        req(live.get("status")=="attempt3-active" and live.get("attempt")==3 and live.get("execution_authorized") is True and live.get("next_gate")=="tier3-build-level2-attempt3","canonical Attempt3 live execution")
+        req(live.get("planning_validation",{}).get("repository_policy_workflow_run")==36459675227 and live.get("planning_validation",{}).get("level2_workflow_run")==36459675009 and live.get("planning_validation",{}).get("support_closure_validation")=="PASS","canonical Attempt3 planning evidence")
+        req(live.get("canonical_prebuild_snapshot")=="13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED","Attempt3 canonical prebuild snapshot")
+    elif m.get("current_attempt")==2:
         req(m.get("next_gate")=="tier3-build-level2-attempt2","Attempt2 active gate")
         req(act.get("status")=="ACTIVE" and act.get("attempt")==2 and act.get("planning_policy_workflow_run")==36447346563 and act.get("planning_level2_workflow_run")==36447346441 and act.get("planning_commit")=="d420cd8b60e48a837ab90acf5ce144f0bfc9be54","Level2 Attempt2 activation evidence")
         req(act.get("runner_executable_preflight")=="PASS","Attempt2 executable preflight")
@@ -67,7 +77,7 @@ else:
 pre=m.get("planning_precondition",{}); req(pre.get("level1_attempt")==10 and pre.get("level1_workflow_run")==36425867815 and pre.get("level1_closure_commit")=="0e5e2602cba730612bcb9301a59f5b51c3fdd574" and pre.get("repository_policy_workflow_run")==36430910043 and pre.get("result")=="PASS","Level2 precondition")
 req(l1.get("state")=="PASS" and l1.get("execution_authorized") is False and l1.get("current_attempt")==10,"Level1 closed precondition")
 ks=tn["knewstuff"]
-if m.get("next_attempt")==3:
+if attempt3_context:
     req(ks.get("state")=="BLOCKED" and ks.get("packaging",{}).get("state")=="BLOCKED","KNewStuff blocked during Level2 remediation")
 else:
     req(ks.get("state")=="pending" and ks.get("packaging",{}).get("state")=="runtime-validation-required","KNewStuff runtime pending")

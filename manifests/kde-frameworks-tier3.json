@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level2-remediation-planning",
+    "phase": "build-level2",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level2-attempt2-closed-FAIL",
-    "remediation": "level2-support-provider-closure-remediation-pending-validation"
+    "package_builds": "tier3-level2-attempt3-active",
+    "remediation": "level2-attempt3-inherited-support-closure"
   },
   "nodes": [
     {
@@ -2510,20 +2510,31 @@
   },
   "level2_execution": {
     "manifest": "manifests/kde-tier3-build-level2.json",
-    "status": "attempt2-closed-FAIL-pending-attempt3-planning-validation",
-    "current_attempt": 2,
-    "next_attempt": 3,
+    "status": "attempt3-active",
+    "attempt": 3,
     "selected_nodes": [
       "baloo",
       "kcmutils",
       "knotifyconfig",
       "kparts"
     ],
-    "execution_authorized": false,
-    "workflow_run": 36448160410,
-    "commit": "8fdd7fd10685872f2e99c7bec5c81bf42711ba60",
-    "failure_class": "packaging-provider-closure-incomplete",
-    "canonical_state_effect": "4 FAIL + 3 BLOCKED",
+    "execution_authorized": true,
+    "attempt1_result": "INFRA_INVALID",
+    "attempt1_workflow_run": 36446660866,
+    "attempt1_package_state_effect": "none",
+    "attempt2_result": "FAIL",
+    "attempt2_workflow_run": 36448160410,
+    "attempt2_failure_class": "packaging-provider-closure-incomplete",
+    "planning_validation": {
+      "repository_policy_workflow_run": 36459675227,
+      "level2_workflow_run": 36459675009,
+      "commit": "82d1e390673e261bc45a1676d002630248b46dc5",
+      "plan_job_id": 109054796685,
+      "intentional_skip_job_id": 109054959597,
+      "runner_executable_preflight": "PASS",
+      "support_closure_validation": "PASS",
+      "result": "PASS"
+    },
     "support_closure_remediation": {
       "required": [
         "breeze-icons",
@@ -2532,7 +2543,8 @@
       "demonstrated": "breeze-icons",
       "proactive": "kdoctools"
     },
-    "next_gate": "tier3-build-level2-attempt3-planning-validation"
+    "canonical_prebuild_snapshot": "13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED",
+    "next_gate": "tier3-build-level2-attempt3"
   },
   "level2_snapshot": {
     "pass": 13,
