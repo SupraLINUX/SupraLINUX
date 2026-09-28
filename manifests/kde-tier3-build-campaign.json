@@ -560,7 +560,7 @@
       "level": 1,
       "state": "planned",
       "source_package": "kf6-kio",
-      "package_version": "6.30.0-0supralinux9",
+      "package_version": "6.30.0-0supralinux10",
       "expected_binary_packages": [
         "kio6",
         "libkf6kio-dev",
@@ -571,10 +571,10 @@
         "libkf6kiowidgets6"
       ],
       "materialization": {
-        "workflow_run": 36413768965,
-        "job_id": 108899950721,
-        "artifact_id": 10965892140,
-        "artifact_sha256": "b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c"
+        "workflow_run": 36424068585,
+        "job_id": 108933677695,
+        "artifact_id": 10970466420,
+        "artifact_sha256": "f25ae14e1f393d24f95b1118680d7967f6bef449c8790981b170cfb78a1f3d22"
       },
       "blocking_predecessors": [
         "kbookmarks",

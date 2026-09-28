@@ -460,7 +460,7 @@
     "kio": {
       "state": "FAIL",
       "source_package": "kf6-kio",
-      "package_version": "6.30.0-0supralinux9",
+      "package_version": "6.30.0-0supralinux10",
       "expected_binary_packages": [
         "kio6",
         "libkf6kio-dev",
@@ -471,10 +471,10 @@
         "libkf6kiowidgets6"
       ],
       "materialization": {
-        "workflow_run": 36413768965,
-        "job_id": 108899950721,
-        "artifact_id": 10965892140,
-        "artifact_sha256": "b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c"
+        "workflow_run": 36424068585,
+        "job_id": 108933677695,
+        "artifact_id": 10970466420,
+        "artifact_sha256": "f25ae14e1f393d24f95b1118680d7967f6bef449c8790981b170cfb78a1f3d22"
       },
       "blocking_predecessors": [
         "kbookmarks",
@@ -642,7 +642,7 @@
       "remediation": {
         "global_round": 11,
         "classification": "symbol-template-metadata-remediation",
-        "source_rematerialization_required": true,
+        "source_rematerialization_required": false,
         "candidate_package_version": "6.30.0-0supralinux10",
         "changes": [
           "retain the exact KRecent deterministic-ordering patch proven by Round 26 and Attempt 9",
@@ -850,7 +850,7 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-attempt10-kio-symbol-metadata-materialization-evidence",
+  "next_gate": "tier3-attempt10-kio-planning-validation",
   "current_attempt": 9,
   "last_activation": {
     "policy_workflow_run": 35826072726,
@@ -906,13 +906,13 @@
     },
     "execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "attempt10-symbol-metadata-remediation-defined-pending-materialization",
-    "source_rematerialization_required": true,
+    "status": "materialization-PASS-pending-attempt10-planning-validation",
+    "source_rematerialization_required": false,
     "source_rematerialization_nodes": [
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "tier3-attempt10-kio-symbol-metadata-materialization-evidence",
+    "next_gate": "tier3-attempt10-kio-planning-validation",
     "current_attempt": 9,
     "next_attempt": 10,
     "remaining_failed_nodes": [
@@ -938,14 +938,14 @@
       "repository_policy_workflow_run": 36072487004,
       "result": "PASS"
     },
-    "materialization_workflow_run": 36413768965,
-    "materialization_commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
+    "materialization_workflow_run": 36424068585,
+    "materialization_commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
     "materialization_artifacts": {
       "kio": {
-        "job_id": 108899950721,
-        "artifact_id": 10965892140,
-        "artifact_sha256": "b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c",
-        "package_version": "6.30.0-0supralinux9"
+        "job_id": 108933677695,
+        "artifact_id": 10970466420,
+        "artifact_sha256": "f25ae14e1f393d24f95b1118680d7967f6bef449c8790981b170cfb78a1f3d22",
+        "package_version": "6.30.0-0supralinux10"
       },
       "kxmlgui": {
         "job_id": 107643756357,
@@ -1336,7 +1336,7 @@
       }
     },
     "attempt10_definition": {
-      "status": "definition-pending-ci",
+      "status": "source-materialization-PASS-pending-planning-validation",
       "candidate_package_version": "6.30.0-0supralinux10",
       "source_rematerialization_nodes": [
         "kio"
@@ -1345,6 +1345,20 @@
         "kxmlgui"
       ],
       "package_execution_authorized": false
+    },
+    "attempt10_definition_validation": {
+      "commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
+      "repository_policy_workflow_run": 36424068693,
+      "result": "PASS"
+    },
+    "attempt10_materialization_evidence": {
+      "workflow_run": 36424068585,
+      "job_id": 108933677695,
+      "commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
+      "artifact_id": 10970466420,
+      "artifact_sha256": "f25ae14e1f393d24f95b1118680d7967f6bef449c8790981b170cfb78a1f3d22",
+      "package_version": "6.30.0-0supralinux10",
+      "result": "PASS"
     }
   },
   "activation": {

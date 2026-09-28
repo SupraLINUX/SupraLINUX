@@ -1,6 +1,6 @@
 # KDE Tier 3 KIO Attempt 10 symbol-metadata remediation
 
-Status: **definition pending CI and source materialization**.  
+Status: **source materialization PASS; planning validation pending**.  
 Attempt 10 binary execution: **not authorized**.
 
 ## Attempt 9 evidence
@@ -50,9 +50,9 @@ This definition authorizes **KIO source/package materialization only**.
 ```text
 Attempt 9 CLOSED-MIXED
 → Attempt 10 definition
-→ materialize KIO 6.30.0-0supralinux10
-→ verify symbols/source/package artifacts
-→ planning validation
+→ materialize KIO 6.30.0-0supralinux10 — PASS
+→ verify symbols/source/package artifacts — PASS
+→ planning validation — CURRENT
 → explicit Attempt 10 activation
 → binary build
 ```
@@ -66,5 +66,21 @@ Current canonical state:
 KIO 6.30.0-0supralinux9 = FAIL
 KXMLGui 6.30.0-0supralinux5 = PASS
 Candidate KIO = 6.30.0-0supralinux10
-Next gate = tier3-attempt10-kio-symbol-metadata-materialization-evidence
+Next gate = tier3-attempt10-kio-planning-validation
 ```
+
+
+## Materialization evidence
+
+KIO `6.30.0-0supralinux10` materialization passed on commit `a77f6e1f247792ccb486720010d969e2cbc41680`.
+
+- workflow: `36424068585`
+- job: `108933677695`
+- artifact: `10970466420`
+- artifact SHA-256: `f25ae14e1f393d24f95b1118680d7967f6bef449c8790981b170cfb78a1f3d22`
+- source tree: `05a15e08edad1e95358383e97ae326d41c308b64a116cb0dcaf37a11f4677d0e`
+- materialized tree: `06bbd34131df5bc52793703782b7db2b5f6a3a9c8541d82c4ee8daeba947c8a8`
+- Debian tar: `801680a76fa4013f07ae2891a0f4ab3c98f31b974bc94385912333b625719fd5`
+- 34 private/test-only symbols remain modeled as optional at upstream `6.30.0`.
+
+Repository Policy `36424068693` passed the Attempt 10 definition on the same commit. Binary execution remains blocked until planning validation passes and a separate activation occurs.

@@ -6,7 +6,7 @@
   "frameworks_series": "6.30.0",
   "contract_manifest": "manifests/kde-tier3-package-contracts.json",
   "canonical_manifest": "manifests/kde-frameworks-tier3.json",
-  "state": "remediation-pending-ci",
+  "state": "PASS",
   "package_attempted": false,
   "package_state_effect": "none",
   "source_policy": "verify-kde-upstream-tarball-and-pinned-debian-6.30-packaging-before-adaptation",
@@ -263,7 +263,7 @@
       }
     },
     "kio": {
-      "state": "remediation-pending",
+      "state": "materialized",
       "source_package": "kf6-kio",
       "package_version": "6.30.0-0supralinux10",
       "evidence_history": [
@@ -420,21 +420,49 @@
           "package_attempted": false,
           "package_state_effect": "none",
           "full_result_json_retained_in_artifact": true
+        },
+        {
+          "workflow_run": 36413768965,
+          "job_id": 108899950721,
+          "commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
+          "artifact_id": 10965892140,
+          "artifact_sha256": "b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c",
+          "package_version": "6.30.0-0supralinux9",
+          "orig_tar_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
+          "reference_tree_sha256": "50508b96984930b303c3d4467b464c8275de59ae68e210c8ad671e0832262e84",
+          "dsc_sha256": "e3cf8fc56b8dce25af5d0c5ce8ce23455d4330f83814e1664375a0b06a63477e",
+          "debian_tar_sha256": "6627dec0cee7294c4398f8faf634672b06725050ebbdd1cdf840a19b14581331",
+          "source_tree_sha256": "ff6b8bd3ff3df12b8a3be332e61e9aa85bdb15c69bcada4e9bc8be5f15fc0beb",
+          "materialized_tree_sha256": "a6a05b5d977c5bdf911cacac87b0310669681935c45bca15ef5a77e8fa9ab8fb",
+          "adapted_control_sha256": "b5f687a50fd97d7ca90871a49610dc35be3ca92c51bfd20d38c9f48af45585a5",
+          "adapted_rules_sha256": "bda27ef4c2d07b790e6eb0473a32abe6c58371e29f909ab7f52ee45e69ed0a3f",
+          "supralinux_source_patches": [
+            {
+              "name": "supralinux-krecent-deterministic-ordering.patch",
+              "target": "src/core/krecentdocument.cpp",
+              "patch_sha256": "8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602",
+              "patched_source_sha256": "57d20f3786220178316b31819ba266432207b1f4d55859ccf8d1fad37645021b"
+            }
+          ],
+          "result": "PASS",
+          "package_attempted": false,
+          "package_state_effect": "none",
+          "full_result_json_retained_in_artifact": true
         }
       ],
       "evidence": {
-        "workflow_run": 36413768965,
-        "job_id": 108899950721,
-        "commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
-        "artifact_id": 10965892140,
-        "artifact_sha256": "b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c",
-        "package_version": "6.30.0-0supralinux9",
+        "workflow_run": 36424068585,
+        "job_id": 108933677695,
+        "commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
+        "artifact_id": 10970466420,
+        "artifact_sha256": "f25ae14e1f393d24f95b1118680d7967f6bef449c8790981b170cfb78a1f3d22",
+        "package_version": "6.30.0-0supralinux10",
         "orig_tar_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
         "reference_tree_sha256": "50508b96984930b303c3d4467b464c8275de59ae68e210c8ad671e0832262e84",
-        "dsc_sha256": "e3cf8fc56b8dce25af5d0c5ce8ce23455d4330f83814e1664375a0b06a63477e",
-        "debian_tar_sha256": "6627dec0cee7294c4398f8faf634672b06725050ebbdd1cdf840a19b14581331",
-        "source_tree_sha256": "ff6b8bd3ff3df12b8a3be332e61e9aa85bdb15c69bcada4e9bc8be5f15fc0beb",
-        "materialized_tree_sha256": "a6a05b5d977c5bdf911cacac87b0310669681935c45bca15ef5a77e8fa9ab8fb",
+        "dsc_sha256": "4f27b6ab8797bf44c3104e57cf33a69f921ba7ac83e90b5ea82082cdd1342eb3",
+        "debian_tar_sha256": "801680a76fa4013f07ae2891a0f4ab3c98f31b974bc94385912333b625719fd5",
+        "source_tree_sha256": "05a15e08edad1e95358383e97ae326d41c308b64a116cb0dcaf37a11f4677d0e",
+        "materialized_tree_sha256": "06bbd34131df5bc52793703782b7db2b5f6a3a9c8541d82c4ee8daeba947c8a8",
         "adapted_control_sha256": "b5f687a50fd97d7ca90871a49610dc35be3ca92c51bfd20d38c9f48af45585a5",
         "adapted_rules_sha256": "bda27ef4c2d07b790e6eb0473a32abe6c58371e29f909ab7f52ee45e69ed0a3f",
         "supralinux_source_patches": [
@@ -995,21 +1023,19 @@
     "next_gate": "tier3-build-level0-reactivation"
   },
   "previous_evidence_summary": {
-    "result": "PASS",
-    "workflow_run": 36413768965,
-    "commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
+    "result": "PENDING",
     "total_materialized_nodes": 20,
     "retained_previous_materializations": 19,
-    "promoted_remediation_materializations": 1,
+    "pending_remediation_materializations": 1,
     "active_remediation_round": 11,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-attempt9"
+    "next_gate": "tier3-attempt10-kio-symbol-metadata-materialization-evidence"
   },
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "attempt10-symbol-metadata-remediation-defined-pending-materialization",
+    "status": "materialization-PASS-pending-level1-planning-validation",
     "trigger_workflow_run": 36035351270,
     "trigger_commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
     "reason": "Attempt 9 passed all 69 KIO upstream tests and built binary packages, but Lintian rejected 34 private/test-only symbols whose generated baseline included the SupraLINUX Debian revision. Rematerialize only KIO as 6.30.0-0supralinux10 with optional upstream-6.30.0 symbol metadata.",
@@ -1031,7 +1057,7 @@
     "policy": "rematerialize-only-kio-symbol-template-metadata-then-validate-before-attempt10",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-attempt10-kio-symbol-metadata-materialization-evidence",
+    "next_gate": "tier3-attempt10-kio-planning-validation",
     "diagnostic_evidence": {
       "workflow_run": 36071103806,
       "job_id": 107872008601,
@@ -1404,7 +1430,7 @@
       "materialization_authorized": false,
       "package_build_authorized": true
     },
-    "source_materialization_complete": false,
+    "source_materialization_complete": true,
     "attempt9_definition_validation": {
       "commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
       "repository_policy_workflow_run": 36413768747,
@@ -1442,11 +1468,30 @@
       }
     },
     "attempt10_definition": {
-      "status": "definition-pending-ci",
+      "status": "source-materialization-PASS-pending-planning-validation",
       "package_version": "6.30.0-0supralinux10",
       "symbol_template_additions": 34,
-      "materialization_authorized": true,
+      "materialization_authorized": false,
       "package_build_authorized": false
+    },
+    "materialization_workflow_run": 36424068585,
+    "materialization_commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
+    "materialization_artifacts": {
+      "kio": {
+        "job_id": 108933677695,
+        "artifact_id": 10970466420,
+        "artifact_sha256": "f25ae14e1f393d24f95b1118680d7967f6bef449c8790981b170cfb78a1f3d22",
+        "package_version": "6.30.0-0supralinux10"
+      }
+    },
+    "attempt10_materialization_evidence": {
+      "workflow_run": 36424068585,
+      "job_id": 108933677695,
+      "commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
+      "artifact_id": 10970466420,
+      "artifact_sha256": "f25ae14e1f393d24f95b1118680d7967f6bef449c8790981b170cfb78a1f3d22",
+      "package_version": "6.30.0-0supralinux10",
+      "result": "PASS"
     }
   },
   "remediation_history": [
@@ -1700,16 +1745,15 @@
     }
   ],
   "evidence_summary": {
-    "result": "PENDING",
+    "result": "PASS",
+    "workflow_run": 36424068585,
+    "commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
     "total_materialized_nodes": 20,
     "retained_previous_materializations": 19,
-    "pending_remediation_materializations": 1,
+    "promoted_remediation_materializations": 1,
     "active_remediation_round": 11,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-attempt10-kio-symbol-metadata-materialization-evidence"
-  },
-  "remediation_queue": [
-    "kio"
-  ]
+    "next_gate": "tier3-attempt10-kio-planning-validation"
+  }
 }
