@@ -30,7 +30,7 @@ MAT_RUN=36477724469
 MAT_JOB=109115619026
 MAT_COMMIT="2ff091a675dc7660ebeff0ebb7c7828b9e6fb0bd"
 MAT_ART=10994755385
-MAT_SHA="69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3"
+MAT_SHA="69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3a"
 MAT_VERSION="6.30.0-0supralinux3"
 
 req(latest.get("result")=="MIXED" and latest.get("package_attempted") is True,"latest valid package attempt closure")

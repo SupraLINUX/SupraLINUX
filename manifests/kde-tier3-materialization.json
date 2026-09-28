@@ -94,7 +94,7 @@
         "job_id": 109115619026,
         "commit": "2ff091a675dc7660ebeff0ebb7c7828b9e6fb0bd",
         "artifact_id": 10994755385,
-        "artifact_sha256": "69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3",
+        "artifact_sha256": "69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3a",
         "package_version": "6.30.0-0supralinux3",
         "orig_tar_sha256": "0159f80d030ac250b0b353113a55c013ed7e38cb0b678df44d2f0d0b2aca944c",
         "reference_tree_sha256": "ed24fd11497ef4bf09ebc8a1f7ba6267c139f36ff2ddc54a0383ca90fabf11d6",
@@ -1861,7 +1861,7 @@
         "kcmutils": {
           "job_id": 109115619026,
           "artifact_id": 10994755385,
-          "artifact_sha256": "69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3",
+          "artifact_sha256": "69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3a",
           "package_version": "6.30.0-0supralinux3"
         }
       }

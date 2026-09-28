@@ -716,7 +716,7 @@
         "workflow_run": 36477724469,
         "job_id": 109115619026,
         "artifact_id": 10994755385,
-        "artifact_sha256": "69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3"
+        "artifact_sha256": "69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3a"
       },
       "blocking_predecessors": [
         "kio",
@@ -1536,7 +1536,7 @@
         "kcmutils": {
           "job_id": 109115619026,
           "artifact_id": 10994755385,
-          "artifact_sha256": "69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3",
+          "artifact_sha256": "69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3a",
           "package_version": "6.30.0-0supralinux3"
         }
       }
