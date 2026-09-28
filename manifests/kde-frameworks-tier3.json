@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level1",
+    "phase": "build-level2-planning",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-authorized",
-    "remediation": "attempt10-kio-symbol-metadata-attempt10-active"
+    "package_builds": "tier3-level1-attempt10-closed",
+    "remediation": "attempt10-closed-success-kio-PASS"
   },
   "nodes": [
     {
@@ -28,7 +28,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/baloo-6.30.0.tar.xz",
       "source_sha256": "a59d33a919bfa1d164c8f3a6f992c609edaf2131ac5f52ea4ecb77f6fbc53be1",
       "upstream_ref": "v6.30.0",
-      "state": "BLOCKED",
+      "state": "pending",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -53,13 +53,9 @@
         }
       },
       "packaging": {
-        "state": "BLOCKED",
+        "state": "pending",
         "package_version": null,
-        "downstream_eligible": false,
-        "blocked_by": [
-          "kio"
-        ],
-        "reason": "predecessor-current-FAIL"
+        "downstream_eligible": false
       }
     },
     {
@@ -141,7 +137,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kcmutils-6.30.0.tar.xz",
       "source_sha256": "0159f80d030ac250b0b353113a55c013ed7e38cb0b678df44d2f0d0b2aca944c",
       "upstream_ref": "v6.30.0",
-      "state": "BLOCKED",
+      "state": "pending",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -166,13 +162,9 @@
         }
       },
       "packaging": {
-        "state": "BLOCKED",
+        "state": "pending",
         "package_version": null,
-        "downstream_eligible": false,
-        "blocked_by": [
-          "kio"
-        ],
-        "reason": "predecessor-current-FAIL"
+        "downstream_eligible": false
       }
     },
     {
@@ -467,11 +459,11 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kio-6.30.0.tar.xz",
       "source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
       "upstream_ref": "v6.30.0",
-      "state": "FAIL",
+      "state": "PASS",
       "planning": {
-        "readiness": "materialized",
+        "readiness": "retained-pass",
         "dependency_authority": "kde-upstream",
-        "package_contract": "materialized",
+        "package_contract": "retained-pass",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
         "provider_audit": "PASS",
         "provider_audit_manifest": "manifests/kde-tier3-provider-audit.json",
@@ -514,9 +506,9 @@
         }
       },
       "packaging": {
-        "state": "FAIL",
-        "package_version": "6.30.0-0supralinux9",
-        "downstream_eligible": false,
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux10",
+        "downstream_eligible": true,
         "attempt_ledger": "manifests/kde-tier3-build-level1-attempts.json",
         "campaign": "manifests/kde-tier3-build-level1.json",
         "evidence": [
@@ -631,8 +623,58 @@
             "build_result": "FAIL",
             "package_state_effect": "FAIL",
             "canonical_success_transition": "FAIL"
+          },
+          {
+            "result": "PASS",
+            "build_result": "PASS",
+            "workflow_run": 36425867815,
+            "job_id": 108939890139,
+            "commit": "dc7cedb37689eb6eb27b6034b58584c33985a5b0",
+            "attempted_package_version": "6.30.0-0supralinux10",
+            "artifact_id": 10972557457,
+            "artifact_sha256": "700a7abebfaca99ae76e36cfb8f54798694732f248b0002224025cfc80d94056",
+            "rootfs_artifact_id": 10971154003,
+            "rootfs_artifact_sha256": "963ca24b1ef3e5b97cb0a52d767ae22696f21d16921315690b08266756ee1103",
+            "stage": "complete",
+            "tests": "69/69 PASS",
+            "lintian": "PASS-errors",
+            "apt_check": "PASS",
+            "abi_contract": "PASS",
+            "cmake_consumer": "PASS",
+            "buildinfo_predecessor_proof": "PASS",
+            "provider_closure_artifact_validation": "PASS",
+            "declared_runtime_input_proof": "PASS",
+            "selected_profile_proof": "PASS",
+            "python_import": "not-applicable",
+            "qml_payload": "not-applicable",
+            "downstream_eligible": true,
+            "canonical_success_transition": "PASS",
+            "package_state_effect": "PASS",
+            "artifacts": {
+              "kf6-kio_6.30.0-0supralinux10.debian.tar.xz": "801680a76fa4013f07ae2891a0f4ab3c98f31b974bc94385912333b625719fd5",
+              "kf6-kio_6.30.0-0supralinux10.dsc": "4f27b6ab8797bf44c3104e57cf33a69f921ba7ac83e90b5ea82082cdd1342eb3",
+              "kf6-kio_6.30.0-0supralinux10_amd64.buildinfo": "1cc23d9d2a93f349ae45811b5ef6e294e5c334ac257724185e2c47208be08f99",
+              "kf6-kio_6.30.0-0supralinux10_amd64.changes": "f50fc781871b5078f7a26385d4b65fbaaa33314d4324c314af3bf7d2854261e4",
+              "kf6-kio_6.30.0.orig.tar.xz": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
+              "kio6-dbgsym_6.30.0-0supralinux10_amd64.ddeb": "a97c224d2da8429c6f3a4ee5fba0eeec4e092b3fc0de9dd79f7af64591945916",
+              "kio6_6.30.0-0supralinux10_amd64.deb": "f8ff63f173f67e6151d22c45db48298d25957e0d9fb5f1ef44caf336c342dc04",
+              "libkf6kio-dev-dbgsym_6.30.0-0supralinux10_amd64.ddeb": "877679d5366f62c8a2e9163d0c7cede3b153f8e7e67d083e1541fc701042e8b2",
+              "libkf6kio-dev_6.30.0-0supralinux10_amd64.deb": "10225a85a14b38cf34a238269edbebbaaa1635aec768e2397b64bca7a3a8cd16",
+              "libkf6kio-doc_6.30.0-0supralinux10_all.deb": "7b52b44608bc9aa5f3371a6c476ec0670bc7d0edc1b428d667c9fbfc0e560d3a",
+              "libkf6kiocore6-dbgsym_6.30.0-0supralinux10_amd64.ddeb": "974b3c1ea4bec92468d430fbc0ee5d4e44818a24587b7a7eed8014660af57ee4",
+              "libkf6kiocore6_6.30.0-0supralinux10_amd64.deb": "080c5eba2441a60ae714b6d42b5420e8efb0d37d1cd116519ddc1cd2cb69e9e8",
+              "libkf6kiofilewidgets6-dbgsym_6.30.0-0supralinux10_amd64.ddeb": "c15ed3d79a5ca493046694783e24c65b8416cf13c26a82a6b164d74c65dc2834",
+              "libkf6kiofilewidgets6_6.30.0-0supralinux10_amd64.deb": "78df15c0959d6ffcbe03c6384f98d243f27104a227f81a70df8d0a5b5d1404fb",
+              "libkf6kiogui6-dbgsym_6.30.0-0supralinux10_amd64.ddeb": "985303099c95f361c79689afb1ae1084f4667abe5368eae204985f0f141b7e6e",
+              "libkf6kiogui6_6.30.0-0supralinux10_amd64.deb": "bcc18064e09f03a5b6dc221b4c0b80bc0d5767c038f81719be263168ebf818fb",
+              "libkf6kiowidgets6-dbgsym_6.30.0-0supralinux10_amd64.ddeb": "140a517ac642c98e49b05e94f0a829a7f583da6152b9bb330bb0b852fd8cf3ca",
+              "libkf6kiowidgets6_6.30.0-0supralinux10_amd64.deb": "6d6fe01c9c44e4cc46ae71dc942b5ba9a4558ceebdbf860d19a96cf84ac38db3"
+            },
+            "full_result_json_retained_in_artifact": true
           }
-        ]
+        ],
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false
       }
     },
     {
@@ -784,7 +826,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/knotifyconfig-6.30.0.tar.xz",
       "source_sha256": "4a133decdb0d3731dbaa1d3625b30f057089e5c59c8326ff88a047cef35b2efb",
       "upstream_ref": "v6.30.0",
-      "state": "BLOCKED",
+      "state": "pending",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -809,13 +851,9 @@
         }
       },
       "packaging": {
-        "state": "BLOCKED",
+        "state": "pending",
         "package_version": null,
-        "downstream_eligible": false,
-        "blocked_by": [
-          "kio"
-        ],
-        "reason": "predecessor-current-FAIL"
+        "downstream_eligible": false
       }
     },
     {
@@ -826,7 +864,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kparts-6.30.0.tar.xz",
       "source_sha256": "99f5a0e3a4da10e1a0fbfb505ae966cd87627f887dd07929a920afe41c862ac0",
       "upstream_ref": "v6.30.0",
-      "state": "BLOCKED",
+      "state": "pending",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -851,13 +889,9 @@
         }
       },
       "packaging": {
-        "state": "BLOCKED",
+        "state": "pending",
         "package_version": null,
-        "downstream_eligible": false,
-        "blocked_by": [
-          "kio"
-        ],
-        "reason": "predecessor-current-FAIL"
+        "downstream_eligible": false
       }
     },
     {
@@ -1081,7 +1115,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/ktexteditor-6.30.0.tar.xz",
       "source_sha256": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7",
       "upstream_ref": "v6.30.0",
-      "state": "BLOCKED",
+      "state": "pending",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -1106,13 +1140,9 @@
         }
       },
       "packaging": {
-        "state": "BLOCKED",
+        "state": "pending",
         "package_version": null,
-        "downstream_eligible": false,
-        "blocked_by": [
-          "kio"
-        ],
-        "reason": "predecessor-current-FAIL"
+        "downstream_eligible": false
       }
     },
     {
@@ -1379,6 +1409,49 @@
             "build_result": "PASS",
             "package_state_effect": "PASS-revalidation",
             "canonical_success_transition": "PASS"
+          },
+          {
+            "result": "PASS",
+            "build_result": "PASS",
+            "workflow_run": 36425867815,
+            "job_id": 108939889724,
+            "commit": "dc7cedb37689eb6eb27b6034b58584c33985a5b0",
+            "attempted_package_version": "6.30.0-0supralinux5",
+            "artifact_id": 10971509790,
+            "artifact_sha256": "a4a5bac1ca996792cc9d44e20d68d451ac61ea0a30811781260299bf87a04c00",
+            "rootfs_artifact_id": 10971154003,
+            "rootfs_artifact_sha256": "963ca24b1ef3e5b97cb0a52d767ae22696f21d16921315690b08266756ee1103",
+            "stage": "complete",
+            "tests": "7/7 PASS",
+            "lintian": "PASS-errors",
+            "apt_check": "PASS",
+            "abi_contract": "PASS",
+            "cmake_consumer": "PASS",
+            "buildinfo_predecessor_proof": "PASS",
+            "provider_closure_artifact_validation": "PASS",
+            "declared_runtime_input_proof": "PASS",
+            "selected_profile_proof": "PASS",
+            "python_import": "PASS",
+            "qml_payload": "not-applicable",
+            "downstream_eligible": true,
+            "canonical_success_transition": "PASS",
+            "package_state_effect": "PASS-revalidation",
+            "artifacts": {
+              "kf6-kxmlgui_6.30.0-0supralinux5.debian.tar.xz": "82c7bc714edf2a0f12d77294d679df2b371a1d755f07720cccfd15fd799bfa21",
+              "kf6-kxmlgui_6.30.0-0supralinux5.dsc": "e52d49a6576fbea650803e5b75de8dd3430781db1b589ea15e0819b129e55f23",
+              "kf6-kxmlgui_6.30.0-0supralinux5_amd64.buildinfo": "fb0c0a098f82c7a9396c18d1f7de11deebe5c9cfb267f83dc4768129a7cb2d81",
+              "kf6-kxmlgui_6.30.0-0supralinux5_amd64.changes": "1994470871aaea0a035e31e1bdbc1f728903e9f08e937e9b0eeedaf8fc41500e",
+              "kf6-kxmlgui_6.30.0.orig.tar.xz": "10fb8a0f7b874248ff60d9a8ee4e1f06a0efcf01b0d34d7635dfff86e848c352",
+              "libkf6xmlgui-data_6.30.0-0supralinux5_all.deb": "6e7ce0401f82ce9ca93d9bcea1a1a1f41d682d29a00c053399f95948cee58236",
+              "libkf6xmlgui-dev-dbgsym_6.30.0-0supralinux5_amd64.ddeb": "dd001a4c5e22838be13b44b94ef6f2b5bdfa64d6f22a0546f84e1201564bfd6a",
+              "libkf6xmlgui-dev_6.30.0-0supralinux5_amd64.deb": "5e88d08f5e243542b53d43d22249c4da128d3892bc65e1f1cab8312ec0286374",
+              "libkf6xmlgui-doc_6.30.0-0supralinux5_all.deb": "df80fb13e43f0c02ae25899a50e7c1d1235894edd1127fb7cee40bff7965474d",
+              "libkf6xmlgui6-dbgsym_6.30.0-0supralinux5_amd64.ddeb": "ec579bc6390176c4feec95616be46b3f079ace7fdf7d033b51c78fa68670686d",
+              "libkf6xmlgui6_6.30.0-0supralinux5_amd64.deb": "6e6564474fb35639c663c6865f0a1dba8ef09fcd0f66640fcd14c20296c7b4bf",
+              "python3-kf6xmlgui-dbgsym_6.30.0-0supralinux5_amd64.ddeb": "ecd920c5bab996269bd49f2442a5b5e9ce325e080932eeaadb85d7f944bb33f5",
+              "python3-kf6xmlgui_6.30.0-0supralinux5_amd64.deb": "29c4b383d796b087ad8ba65fd549100022dae9f8391bebbe610f35d86f58fcb6"
+            },
+            "full_result_json_retained_in_artifact": true
           }
         ]
       }
@@ -1391,7 +1464,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/purpose-6.30.0.tar.xz",
       "source_sha256": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862",
       "upstream_ref": "v6.30.0",
-      "state": "BLOCKED",
+      "state": "pending",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -1416,13 +1489,9 @@
         }
       },
       "packaging": {
-        "state": "BLOCKED",
+        "state": "pending",
         "package_version": null,
-        "downstream_eligible": false,
-        "blocked_by": [
-          "kio"
-        ],
-        "reason": "predecessor-current-FAIL"
+        "downstream_eligible": false
       }
     }
   ],
@@ -1474,28 +1543,18 @@
       "kio": "6.30.0-0supralinux10",
       "kxmlgui": "6.30.0-0supralinux5"
     },
-    "execution_authorized": true,
-    "level1_execution_authorized": true,
+    "execution_authorized": false,
+    "level1_execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "level1-active-pending-ci",
-    "next_gate": "tier3-build-level1-attempt10",
+    "status": "attempt10-complete-PASS",
+    "next_gate": "tier3-build-level2-planning",
     "current_attempt": 10,
-    "next_attempt": 10,
-    "validation_workflow_run": 36416891314,
-    "validation_commit": "e7dfc689bf18aea5ed194df03f31e9c74627ead0",
-    "validation_result": "1 workflow SUCCESS / 1 FAIL",
-    "remaining_failed_nodes": [
-      "kio"
-    ],
-    "blocked_nodes": [
-      "baloo",
-      "kcmutils",
-      "knotifyconfig",
-      "kparts",
-      "ktexteditor",
-      "purpose"
-    ],
-    "canonical_promotions": 0,
+    "validation_workflow_run": 36425867815,
+    "validation_commit": "dc7cedb37689eb6eb27b6034b58584c33985a5b0",
+    "validation_result": "2 workflow SUCCESS / 0 FAIL; KIO PASS + KXMLGui PASS-revalidation",
+    "remaining_failed_nodes": [],
+    "blocked_nodes": [],
+    "canonical_promotions": 1,
     "diagnostic_evidence": {
       "workflow_run": 36071103806,
       "job_id": 107872008601,
@@ -1531,10 +1590,6 @@
       "level1_workflow_run": 36424710626,
       "commit": "0471d2332eef5f02344b2ffad96828f31ee3a405",
       "result": "PASS"
-    },
-    "failure_classes": {
-      "kio": "ctest/upstream-tests",
-      "kxmlgui": "PASS-revalidation"
     },
     "attempt7_evidence": {
       "rootfs": {
@@ -1917,10 +1972,10 @@
       "canonical_promotions": 0
     },
     "attempt10_definition": {
-      "status": "attempt10-active",
+      "status": "attempt10-closed-PASS",
       "package_version": "6.30.0-0supralinux10",
       "materialization_authorized": false,
-      "package_build_authorized": true,
+      "package_build_authorized": false,
       "remediation": "declare-34-upstream-private-or-BUILD_TESTING-only-symbols-optional-at-upstream-6.30.0",
       "symbol_count": 34,
       "source_code_change": false,
@@ -1939,6 +1994,38 @@
       "artifact_sha256": "f25ae14e1f393d24f95b1118680d7967f6bef449c8790981b170cfb78a1f3d22",
       "package_version": "6.30.0-0supralinux10",
       "result": "PASS"
+    },
+    "runtime_pending_nodes": [
+      "knewstuff"
+    ],
+    "attempt10_result": {
+      "result": "PASS",
+      "workflow_run": 36425867815,
+      "commit": "dc7cedb37689eb6eb27b6034b58584c33985a5b0",
+      "rootfs": {
+        "artifact_id": 10971154003,
+        "artifact_sha256": "963ca24b1ef3e5b97cb0a52d767ae22696f21d16921315690b08266756ee1103"
+      },
+      "kio": {
+        "job_id": 108939890139,
+        "artifact_id": 10972557457,
+        "artifact_sha256": "700a7abebfaca99ae76e36cfb8f54798694732f248b0002224025cfc80d94056",
+        "package_version": "6.30.0-0supralinux10",
+        "tests": "69/69 PASS",
+        "lintian": "PASS-errors",
+        "downstream_eligible": true
+      },
+      "kxmlgui": {
+        "job_id": 108939889724,
+        "artifact_id": 10971509790,
+        "artifact_sha256": "a4a5bac1ca996792cc9d44e20d68d451ac61ea0a30811781260299bf87a04c00",
+        "package_version": "6.30.0-0supralinux5",
+        "tests": "7/7 PASS",
+        "python_import": "PASS",
+        "package_state_effect": "PASS-revalidation"
+      },
+      "canonical_promotions": 1,
+      "next_gate": "tier3-build-level2-planning"
     }
   },
   "remediation_history": [
@@ -2336,25 +2423,16 @@
   },
   "build_level1_manifest": "manifests/kde-tier3-build-level1.json",
   "level1_snapshot": {
-    "pass": 12,
-    "pending": 1,
-    "current_fail": 1,
-    "blocked": 6,
+    "pass": 13,
+    "pending": 7,
+    "current_fail": 0,
+    "blocked": 0,
     "runtime_pending": [
       "knewstuff"
     ],
-    "current_fail_nodes": [
-      "kio"
-    ],
-    "blocked_nodes": [
-      "baloo",
-      "kcmutils",
-      "knotifyconfig",
-      "kparts",
-      "ktexteditor",
-      "purpose"
-    ],
-    "workflow_run": 36035351270,
-    "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791"
+    "current_fail_nodes": [],
+    "blocked_nodes": [],
+    "workflow_run": 36425867815,
+    "commit": "dc7cedb37689eb6eb27b6034b58584c33985a5b0"
   }
 }

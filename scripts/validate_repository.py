@@ -236,6 +236,7 @@ required_files = [
     "scripts/validate_kde_tier3_kio_attempt9_closure.py",
     "scripts/validate_kde_tier3_kio_attempt10_planning.py",
     "scripts/validate_kde_tier3_kio_attempt10.py",
+    "scripts/validate_kde_tier3_kio_attempt10_closure.py",
     "manifests/kde-tier3-kio-attempt10-remediation.json",
     "scripts/validate_kde_tier3_kio_attempt10_definition.py",
     "docs/kde-tier3-kio-attempt10-remediation.md",

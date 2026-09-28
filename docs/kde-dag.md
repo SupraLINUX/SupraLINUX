@@ -531,3 +531,10 @@ The canonical DAG now includes the eleven Tier 3 Level 0 Frameworks promoted by 
 Each DAG node is backed by the exact canonical package PASS evidence retained in `manifests/kde-frameworks-tier3.json` and `manifests/kde-tier3-build-level0-attempts.json`. The DAG validator derives the promoted set from **Tier 1 + Tier 2 + Tier 3** canonical manifests; it must not assume Tier 3 is empty after Level 0.
 
 KNewStuff is deliberately absent from the DAG even though its binary build passed. Its canonical state remains pending with `runtime-validation-required` until KCMUtils closes the KDE runtime-validation edge. `BLOCKED` remains distinct from `FAIL`.
+
+
+## Tier 3 Level 1 checkpoint
+
+Attempt 10 workflow `36425867815` promotes KIO `6.30.0-0supralinux10` to canonical PASS after **69/69 upstream tests** and all package gates. KXMLGui `6.30.0-0supralinux5` revalidates PASS.
+
+The canonical Tier 3 DAG now contains 13 PASS/downstream-eligible nodes. Six KIO dependents are no longer BLOCKED and return to pending; KNewStuff remains pending on its deferred KCMUtils runtime-validation edge. The next lifecycle gate is `tier3-build-level2-planning`.

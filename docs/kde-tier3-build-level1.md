@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 1
 
-Status: **Attempt 6 closed — KXMLGui PASS / KIO FAIL; execution paused before Round 11** as of 2026-09-24.
+Status: **Attempt 10 PASS — KIO promoted; Level 1 complete; Level 2 planning next** as of 2026-09-28.
 
 Level 1 contains exactly **KIO** and **KXMLGui** from the validated KDE-upstream 6.30.0 DAG. The execution authority is `manifests/kde-tier3-build-level1.json`; its initial state is `planned-pending-activation` with `execution_authorized=false`.
 
@@ -402,3 +402,18 @@ Round 14 provider A/B completed in workflow `36163272251`, job `108164792241`, a
 The exact KIO `-7` baseline reproduced both empty-icon-name failures. Installing only canonical `libkf6iconthemes-bin 6.30.0-0supralinux3` did not recover either direct test or either complete CTest target, and Qt plugin diagnostics did not show `KIconEnginePlugin.so` loaded.
 
 Provider presence alone is therefore rejected as the root cause. The lifecycle advances to `tier3-round15-kio-breeze-icons-init-state-diagnostic-definition`, which isolates the BreezeIcons fallback/resource initialization state. No package revision, canonical state, downstream eligibility, or stable channel state changes here.
+
+
+## Attempt 10 — Level 1 complete
+
+Workflow `36425867815` at commit `dc7cedb37689eb6eb27b6034b58584c33985a5b0` completed both Level 1 package jobs successfully.
+
+- KIO `6.30.0-0supralinux10`: job `108939890139`, artifact `10972557457`, artifact SHA-256 `700a7abebfaca99ae76e36cfb8f54798694732f248b0002224025cfc80d94056`; **69/69 upstream tests PASS**, Lintian error gate PASS, APT closure PASS, ABI contract PASS, CMake consumer PASS, provider-closure proof PASS and declared-runtime-input proof PASS.
+- KXMLGui `6.30.0-0supralinux5`: job `108939889724`, artifact `10971509790`, artifact SHA-256 `a4a5bac1ca996792cc9d44e20d68d451ac61ea0a30811781260299bf87a04c00`; **7/7 tests PASS**, Python import PASS and all package gates PASS.
+- Shared Resolute rootfs artifact: `10971154003`, artifact SHA-256 `963ca24b1ef3e5b97cb0a52d767ae22696f21d16921315690b08266756ee1103`.
+
+KIO is promoted to canonical PASS/downstream-eligible. KXMLGui is a PASS revalidation of its existing canonical `6.30.0-0supralinux5` package.
+
+Tier 3 becomes **13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**. Baloo, KCMUtils, KNotifyConfig, KParts, KTextEditor and Purpose are unblocked and return to pending. KNewStuff remains runtime-validation-required on KCMUtils.
+
+Level 1 is closed. Binary execution is disabled again. The next gate is `tier3-build-level2-planning`; no Level 2 package build is authorized by this closure.

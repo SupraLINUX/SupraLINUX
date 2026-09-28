@@ -388,6 +388,9 @@ jobs:
       - name: Validate KDE Tier 3 KIO Attempt 10 definition
         run: python3 scripts/validate_kde_tier3_kio_attempt10_definition.py
 
+      - name: Validate KDE Tier 3 KIO Attempt 10 closure
+        run: python3 scripts/validate_kde_tier3_kio_attempt10_closure.py
+
       - name: Validate KDE Attica 6.30 packaging preparation
         run: python3 scripts/validate_kde_attica_package.py
 

@@ -1,7 +1,7 @@
 # KDE Tier 3 KIO Attempt 10 symbol-metadata remediation
 
-Status: **Attempt 10 active; binary CI pending**.  
-Attempt 10 binary execution: **authorized for the full Level 1 rerun**.
+Status: **Attempt 10 CLOSED-PASS; KIO canonical PASS**.  
+Attempt 10 binary execution: **closed; no further Level 1 execution authorized**.
 
 ## Attempt 9 evidence
 
@@ -54,7 +54,9 @@ Attempt 9 CLOSED-MIXED
 → verify symbols/source/package artifacts — PASS
 → planning validation — PASS
 → explicit Attempt 10 activation — ACTIVE
-→ binary build — CURRENT
+→ binary build — PASS
+→ canonical KIO promotion — PASS
+→ Level 2 planning — NEXT
 ```
 
 KXMLGui is retained at `6.30.0-0supralinux5` and will be revalidated only in the full Level 1 rerun. Binary Attempt 10 remains unauthorized.
@@ -66,7 +68,7 @@ Current canonical state:
 KIO 6.30.0-0supralinux9 = FAIL
 KXMLGui 6.30.0-0supralinux5 = PASS
 Candidate KIO = 6.30.0-0supralinux10
-Next gate = tier3-build-level1-attempt10
+Next gate = tier3-build-level2-planning
 ```
 
 
@@ -100,3 +102,31 @@ Attempt 10 is now authorized for the full Level 1 scope:
 - retained KXMLGui `6.30.0-0supralinux5` revalidation.
 
 Canonical KIO remains FAIL at `6.30.0-0supralinux9` until the real Attempt 10 package job passes every package gate.
+
+
+## Attempt 10 result
+
+Workflow `36425867815` completed **2 SUCCESS / 0 FAIL**.
+
+KIO `6.30.0-0supralinux10`:
+- 69/69 upstream CTest targets PASS;
+- Lintian error gate PASS;
+- APT closure PASS;
+- ABI contract PASS;
+- installed CMake consumer PASS;
+- exact predecessor/buildinfo proof PASS;
+- artifact `10972557457`, SHA-256 `700a7abebfaca99ae76e36cfb8f54798694732f248b0002224025cfc80d94056`.
+
+This validates both the Round 26 functional remediation and the Attempt 10 optional-symbol metadata remediation in the real package path.
+
+KXMLGui `6.30.0-0supralinux5` revalidated PASS with 7/7 tests and Python import PASS; artifact `10971509790`, SHA-256 `a4a5bac1ca996792cc9d44e20d68d451ac61ea0a30811781260299bf87a04c00`.
+
+Canonical state is now:
+
+```text
+13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED
+KIO 6.30.0-0supralinux10 = PASS / downstream eligible
+KXMLGui 6.30.0-0supralinux5 = PASS
+KNewStuff = runtime-validation-required
+Next gate = tier3-build-level2-planning
+```

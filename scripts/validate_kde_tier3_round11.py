@@ -44,6 +44,8 @@ elif gate=="tier3-level1-attempt7-closed":
     target="validate_kde_tier3_round11_attempt7_closure.py"
 elif gate=="tier3-level1-attempt8-closed":
     target="validate_kde_tier3_round18_attempt8_closure.py"
+elif gate=="tier3-level1-attempt10-closed":
+    target="validate_kde_tier3_kio_attempt10_closure.py"
 elif gate=="tier3-round19-diagnostic-pending":
     target="validate_kde_tier3_kio_round19_diagnostic.py"
 elif gate=="tier3-round20-diagnostic-pending":

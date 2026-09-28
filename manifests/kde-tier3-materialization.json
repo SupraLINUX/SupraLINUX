@@ -1035,7 +1035,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "materialization-PASS-attempt10-active",
+    "status": "attempt10-complete-PASS",
     "trigger_workflow_run": 36035351270,
     "trigger_commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
     "reason": "Attempt 9 passed all 69 KIO upstream tests and built binary packages, but Lintian rejected 34 private/test-only symbols whose generated baseline included the SupraLINUX Debian revision. Rematerialize only KIO as 6.30.0-0supralinux10 with optional upstream-6.30.0 symbol metadata.",
@@ -1057,7 +1057,7 @@
     "policy": "rematerialize-only-kio-symbol-template-metadata-then-validate-before-attempt10",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-attempt10",
+    "next_gate": "tier3-build-level2-planning",
     "diagnostic_evidence": {
       "workflow_run": 36071103806,
       "job_id": 107872008601,
@@ -1253,9 +1253,9 @@
     "promoted_nodes": [
       "kio"
     ],
-    "validation_workflow_run": 36238357510,
-    "validation_commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
-    "validation_result": "1 workflow SUCCESS / 1 FAIL",
+    "validation_workflow_run": 36425867815,
+    "validation_commit": "dc7cedb37689eb6eb27b6034b58584c33985a5b0",
+    "validation_result": "KIO PASS + KXMLGui PASS-revalidation",
     "execution_authorized": false,
     "level1_execution_authorized": false,
     "round23_diagnostic": {
@@ -1468,11 +1468,11 @@
       }
     },
     "attempt10_definition": {
-      "status": "attempt10-active",
+      "status": "attempt10-closed-PASS",
       "package_version": "6.30.0-0supralinux10",
       "symbol_template_additions": 34,
       "materialization_authorized": false,
-      "package_build_authorized": true
+      "package_build_authorized": false
     },
     "materialization_workflow_run": 36424068585,
     "materialization_commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
@@ -1492,6 +1492,12 @@
       "artifact_sha256": "f25ae14e1f393d24f95b1118680d7967f6bef449c8790981b170cfb78a1f3d22",
       "package_version": "6.30.0-0supralinux10",
       "result": "PASS"
+    },
+    "attempt10_result": {
+      "workflow_run": 36425867815,
+      "commit": "dc7cedb37689eb6eb27b6034b58584c33985a5b0",
+      "result": "PASS",
+      "next_gate": "tier3-build-level2-planning"
     }
   },
   "remediation_history": [
@@ -1754,6 +1760,6 @@
     "active_remediation_round": 11,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-attempt10"
+    "next_gate": "tier3-build-level2-planning"
   }
 }

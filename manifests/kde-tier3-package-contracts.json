@@ -3650,7 +3650,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "materialization-PASS-attempt10-active",
+    "status": "attempt10-complete-PASS",
     "trigger": {
       "workflow_run": 36035351270,
       "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -3692,9 +3692,9 @@
       "repository_policy_workflow_run": 36072487004,
       "result": "PASS"
     },
-    "execution_authorized": true,
-    "level1_execution_authorized": true,
-    "next_gate": "tier3-build-level1-attempt10",
+    "execution_authorized": false,
+    "level1_execution_authorized": false,
+    "next_gate": "tier3-build-level2-planning",
     "materialization_evidence": {
       "workflow_run": 36424068585,
       "commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
@@ -3710,9 +3710,9 @@
     "activation_policy_workflow_run": 36424710656,
     "activation_level1_workflow_run": 36424710626,
     "activation_commit": "0471d2332eef5f02344b2ffad96828f31ee3a405",
-    "validation_workflow_run": 36238357510,
-    "validation_commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
-    "validation_result": "1 workflow SUCCESS / 1 FAIL",
+    "validation_workflow_run": 36425867815,
+    "validation_commit": "dc7cedb37689eb6eb27b6034b58584c33985a5b0",
+    "validation_result": "2 workflow SUCCESS / 0 FAIL; KIO PASS + KXMLGui PASS-revalidation",
     "remaining_failed_nodes": [
       "kio"
     ],
@@ -3724,7 +3724,7 @@
       "ktexteditor",
       "purpose"
     ],
-    "canonical_promotions": 0,
+    "canonical_promotions": 1,
     "attempt7_evidence": {
       "rootfs": {
         "artifact_id": 10841431451,
@@ -3857,7 +3857,6 @@
       "next_diagnostic_scope": "actual-kio-object-path-state-transition"
     },
     "current_attempt": 10,
-    "next_attempt": 10,
     "round18_provider_contract_audit": {
       "workflow_run": 36221977278,
       "job_id": 108348814091,
@@ -4101,17 +4100,25 @@
       }
     },
     "attempt10_definition": {
-      "status": "attempt10-active",
+      "status": "attempt10-closed-PASS",
       "package_version": "6.30.0-0supralinux10",
       "symbol_template_additions": 34,
       "materialization_authorized": false,
-      "package_build_authorized": true
+      "package_build_authorized": false
     },
     "source_materialization_complete": true,
     "attempt10_definition_validation": {
       "commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
       "repository_policy_workflow_run": 36424068693,
       "result": "PASS"
+    },
+    "attempt10_result": {
+      "workflow_run": 36425867815,
+      "commit": "dc7cedb37689eb6eb27b6034b58584c33985a5b0",
+      "result": "PASS",
+      "kio_package_version": "6.30.0-0supralinux10",
+      "kxmlgui_package_version": "6.30.0-0supralinux5",
+      "next_gate": "tier3-build-level2-planning"
     }
   },
   "remediation_history": [
