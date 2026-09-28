@@ -6,7 +6,7 @@
   "frameworks_series": "6.30.0",
   "contract_manifest": "manifests/kde-tier3-package-contracts.json",
   "canonical_manifest": "manifests/kde-frameworks-tier3.json",
-  "state": "PASS",
+  "state": "remediation-pending-ci",
   "package_attempted": false,
   "package_state_effect": "none",
   "source_policy": "verify-kde-upstream-tarball-and-pinned-debian-6.30-packaging-before-adaptation",
@@ -263,9 +263,9 @@
       }
     },
     "kio": {
-      "state": "materialized",
+      "state": "remediation-pending",
       "source_package": "kf6-kio",
-      "package_version": "6.30.0-0supralinux9",
+      "package_version": "6.30.0-0supralinux10",
       "evidence_history": [
         {
           "workflow_run": 35746667704,
@@ -996,23 +996,23 @@
   },
   "previous_evidence_summary": {
     "result": "PASS",
-    "workflow_run": 36222711238,
-    "commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",
+    "workflow_run": 36413768965,
+    "commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
     "total_materialized_nodes": 20,
     "retained_previous_materializations": 19,
     "promoted_remediation_materializations": 1,
     "active_remediation_round": 11,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-attempt9-kio-remediation-definition"
+    "next_gate": "tier3-build-level1-attempt9"
   },
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "materialization-PASS-attempt9-active",
+    "status": "attempt10-symbol-metadata-remediation-defined-pending-materialization",
     "trigger_workflow_run": 36035351270,
     "trigger_commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
-    "reason": "Round 26 proved the exact KRecent deterministic-ordering patch and visible test HOME together pass all 69 KIO tests; rematerialize only KIO as 6.30.0-0supralinux9 before any binary Attempt 9.",
+    "reason": "Attempt 9 passed all 69 KIO upstream tests and built binary packages, but Lintian rejected 34 private/test-only symbols whose generated baseline included the SupraLINUX Debian revision. Rematerialize only KIO as 6.30.0-0supralinux10 with optional upstream-6.30.0 symbol metadata.",
     "nodes": [
       "kio",
       "kxmlgui"
@@ -1025,13 +1025,13 @@
     ],
     "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux9",
+      "kio": "6.30.0-0supralinux10",
       "kxmlgui": "6.30.0-0supralinux5"
     },
-    "policy": "rematerialize-only-kio-proven-source-and-test-home-remediation-then-validate-before-attempt9",
+    "policy": "rematerialize-only-kio-symbol-template-metadata-then-validate-before-attempt10",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-attempt9",
+    "next_gate": "tier3-attempt10-kio-symbol-metadata-materialization-evidence",
     "diagnostic_evidence": {
       "workflow_run": 36071103806,
       "job_id": 107872008601,
@@ -1404,7 +1404,7 @@
       "materialization_authorized": false,
       "package_build_authorized": true
     },
-    "source_materialization_complete": true,
+    "source_materialization_complete": false,
     "attempt9_definition_validation": {
       "commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
       "repository_policy_workflow_run": 36413768747,
@@ -1424,6 +1424,29 @@
       "level1_workflow_run": 36415653322,
       "commit": "bcc76458eecff8118d5526c043d18aa7de3b4b4c",
       "result": "PASS"
+    },
+    "attempt9_evidence": {
+      "rootfs": {
+        "artifact_id": 10967311404,
+        "artifact_sha256": "533a74c6ad1dbce5b6ce5e219cabbc720ad9e692017d24899afbe8dede69f72e"
+      },
+      "kio": {
+        "job_id": 108910323115,
+        "artifact_id": 10968800996,
+        "artifact_sha256": "17a0d0160104a1d095b433e3e80b5a8153c811a25ae802cb382ebcf85bf48260"
+      },
+      "kxmlgui": {
+        "job_id": 108910323005,
+        "artifact_id": 10967257671,
+        "artifact_sha256": "91d0f5100748097446079fe1cead44444c88cf1d7a729d286c442402774921e5"
+      }
+    },
+    "attempt10_definition": {
+      "status": "definition-pending-ci",
+      "package_version": "6.30.0-0supralinux10",
+      "symbol_template_additions": 34,
+      "materialization_authorized": true,
+      "package_build_authorized": false
     }
   },
   "remediation_history": [
@@ -1677,15 +1700,16 @@
     }
   ],
   "evidence_summary": {
-    "result": "PASS",
-    "workflow_run": 36413768965,
-    "commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
+    "result": "PENDING",
     "total_materialized_nodes": 20,
     "retained_previous_materializations": 19,
-    "promoted_remediation_materializations": 1,
+    "pending_remediation_materializations": 1,
     "active_remediation_round": 11,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-attempt9"
-  }
+    "next_gate": "tier3-attempt10-kio-symbol-metadata-materialization-evidence"
+  },
+  "remediation_queue": [
+    "kio"
+  ]
 }

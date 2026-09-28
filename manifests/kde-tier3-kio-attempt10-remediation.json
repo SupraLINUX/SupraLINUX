@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-28",
+  "node": "kio",
+  "attempt": 10,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "status": "definition-pending-ci",
+  "candidate_package_version": "6.30.0-0supralinux10",
+  "previous_package_version": "6.30.0-0supralinux9",
+  "package_revision_bump_required": true,
+  "source_rematerialization_required": true,
+  "materialization_authorized": true,
+  "package_execution_authorized": false,
+  "level1_execution_authorized": false,
+  "canonical_kio_state": "FAIL",
+  "canonical_kio_package_version": "6.30.0-0supralinux9",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "predecessor_attempt9": {
+    "workflow_run": 36416891314,
+    "commit": "e7dfc689bf18aea5ed194df03f31e9c74627ead0",
+    "result": "MIXED",
+    "kio_tests": "69/69 PASS",
+    "failure_substage": "lintian/symbol-metadata",
+    "rootfs": {
+      "artifact_id": 10967311404,
+      "artifact_sha256": "533a74c6ad1dbce5b6ce5e219cabbc720ad9e692017d24899afbe8dede69f72e"
+    },
+    "kio": {
+      "job_id": 108910323115,
+      "artifact_id": 10968800996,
+      "artifact_sha256": "17a0d0160104a1d095b433e3e80b5a8153c811a25ae802cb382ebcf85bf48260"
+    },
+    "kxmlgui": {
+      "job_id": 108910323005,
+      "artifact_id": 10967257671,
+      "artifact_sha256": "91d0f5100748097446079fe1cead44444c88cf1d7a729d286c442402774921e5"
+    }
+  },
+  "retained_functional_remediation": {
+    "krecent_patch_sha256": "8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602",
+    "patched_source_sha256": "57d20f3786220178316b31819ba266432207b1f4d55859ccf8d1fad37645021b",
+    "test_home": "debian/supralinux-test-home/sbuild",
+    "upstream_tests": "69/69 PASS in Attempt 9",
+    "source_code_change_from_attempt9": false
+  },
+  "symbol_metadata_remediation": {
+    "total_symbols": 34,
+    "minimal_version": "6.30.0",
+    "tags": [
+      "optional"
+    ],
+    "public_abi_promotion": false,
+    "lintian_suppression": false,
+    "kiocore": {
+      "package": "libkf6kiocore6",
+      "soname": "libKF6KIOCore.so.6",
+      "symbols": [
+        "_ZN3KIO6Worker20setTestWorkerFactoryERKSt8weak_ptrINS_13WorkerFactoryEE@Base"
+      ],
+      "classification": "private test hook declared in worker_p.h"
+    },
+    "kiogui": {
+      "package": "libkf6kiogui6",
+      "soname": "libKF6KIOGui.so.6",
+      "symbols": [
+        "_ZN3KIO14FilePreviewJob11canBeCachedERK7QString@Base",
+        "_ZN3KIO14FilePreviewJob11emitPreviewERK6QImage@Base",
+        "_ZN3KIO14FilePreviewJob11qt_metacallEN11QMetaObject4CallEiPPv@Base",
+        "_ZN3KIO14FilePreviewJob11qt_metacastEPKc@Base",
+        "_ZN3KIO14FilePreviewJob11slotTimeoutEv@Base",
+        "_ZN3KIO14FilePreviewJob12isCacheValidERK6QImage@Base",
+        "_ZN3KIO14FilePreviewJob12slotStatFileEP4KJob@Base",
+        "_ZN3KIO14FilePreviewJob13parentDirPathERK7QString@Base",
+        "_ZN3KIO14FilePreviewJob13slotThumbDataEPNS_3JobERK10QByteArray@Base",
+        "_ZN3KIO14FilePreviewJob15createThumbnailERK7QString@Base",
+        "_ZN3KIO14FilePreviewJob16staticMetaObjectE@Base",
+        "_ZN3KIO14FilePreviewJob17saveThumbnailDataER6QImage@Base",
+        "_ZN3KIO14FilePreviewJob20getOrCreateThumbnailEv@Base",
+        "_ZN3KIO14FilePreviewJob20loadAvailablePluginsEv@Base",
+        "_ZN3KIO14FilePreviewJob20saveThumbnailToCacheERK6QImageRK7QString@Base",
+        "_ZN3KIO14FilePreviewJob20standardThumbnailersEv@Base",
+        "_ZN3KIO14FilePreviewJob21slotStandardThumbDataEPNS_3JobERK6QImage@Base",
+        "_ZN3KIO14FilePreviewJob22createThumbnailViaFuseERK4QUrlS3_@Base",
+        "_ZN3KIO14FilePreviewJob24preparePluginForMimetypeERK7QString@Base",
+        "_ZN3KIO14FilePreviewJob24slotGetOrCreateThumbnailEP4KJob@Base",
+        "_ZN3KIO14FilePreviewJob27createThumbnailViaLocalCopyERK4QUrl@Base",
+        "_ZN3KIO14FilePreviewJob5startEv@Base",
+        "_ZN3KIO14FilePreviewJobC1ERK9KFileItemiRKNS_14PreviewOptionsERKNS_16PreviewSetupDataE@Base",
+        "_ZN3KIO14FilePreviewJobC2ERK9KFileItemiRKNS_14PreviewOptionsERKNS_16PreviewSetupDataE@Base",
+        "_ZN3KIO14FilePreviewJobD0Ev@Base",
+        "_ZN3KIO14FilePreviewJobD1Ev@Base",
+        "_ZN3KIO14FilePreviewJobD2Ev@Base",
+        "_ZNK3KIO14FilePreviewJob10metaObjectEv@Base",
+        "_ZNK3KIO14FilePreviewJob12previewImageEv@Base",
+        "_ZNK3KIO14FilePreviewJob23thumbnailWorkerMetaDataEv@Base",
+        "_ZTIN3KIO14FilePreviewJobE@Base",
+        "_ZTSN3KIO14FilePreviewJobE@Base",
+        "_ZTVN3KIO14FilePreviewJobE@Base"
+      ],
+      "classification": "FilePreviewJob exported only under BUILD_TESTING via KIOGUI_TEST_EXPORT"
+    }
+  },
+  "build_scope": {
+    "source_materialization_nodes": [
+      "kio"
+    ],
+    "retained_revalidation_nodes": [
+      "kxmlgui"
+    ],
+    "full_level1_rerun_required": true
+  },
+  "gates": {
+    "current": "tier3-attempt10-kio-symbol-metadata-materialization-evidence",
+    "after_materialization": "tier3-attempt10-kio-planning-validation",
+    "package_execution_requires_separate_authorization": true
+  },
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "stable_promotion_requires_explicit_user_approval": true
+}

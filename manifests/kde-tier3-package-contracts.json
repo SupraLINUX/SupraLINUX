@@ -810,7 +810,7 @@
       "source_package": "kf6-kio",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux9",
+      "package_version_candidate": "6.30.0-0supralinux10",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kio",
@@ -961,6 +961,11 @@
           "classification": "level1-attempt9-remediation",
           "decision": "apply-proven-krecent-ordering-patch-and-visible-test-home",
           "rationale": "Round 26 reproduced the historical hidden-HOME KDirModel signature 10/10, passed the visible-HOME control 20/20, and passed all 69 KIO tests with the exact Round25 KRecent candidate."
+        },
+        {
+          "classification": "level1-attempt10-remediation",
+          "decision": "declare-build-testing-private-kio-symbols-optional",
+          "rationale": "Attempt 9 passed all 69 upstream KIO tests and built the binaries, then Lintian rejected 34 symbols that appear only because SupraLINUX intentionally builds with BUILD_TESTING=ON. KDE 6.30 marks FilePreviewJob export conditional on BUILD_TESTING, while Worker::setTestWorkerFactory is a private test hook in worker_p.h. Model these as optional private/test symbols at upstream 6.30.0; do not assign a Debian/SupraLINUX revision and do not weaken Lintian."
         }
       ],
       "binary_relation_overrides": [
@@ -1155,6 +1160,382 @@
           ],
           "classification": "upstream-compatible-krecent-deterministic-ordering-remediation",
           "rationale": "Rounds 24-26 proved timestamp ties cause nondeterministic KRecent ordering and proved this exact source result under native, forced-tie and complete-suite conditions."
+        }
+      ],
+      "symbol_template_additions": [
+        {
+          "package": "libkf6kiocore6",
+          "soname": "libKF6KIOCore.so.6",
+          "symbol": "_ZN3KIO6Worker20setTestWorkerFactoryERKSt8weak_ptrINS_13WorkerFactoryEE@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-private-test-symbol",
+          "rationale": "KDE KIO 6.30 declares setTestWorkerFactory in the private worker_p.h header as a test worker-factory hook. It is not public KIO ABI and must not acquire a SupraLINUX Debian revision as its ABI baseline."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob11canBeCachedERK7QString@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob11emitPreviewERK6QImage@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob11qt_metacallEN11QMetaObject4CallEiPPv@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob11qt_metacastEPKc@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob11slotTimeoutEv@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob12isCacheValidERK6QImage@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob12slotStatFileEP4KJob@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob13parentDirPathERK7QString@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob13slotThumbDataEPNS_3JobERK10QByteArray@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob15createThumbnailERK7QString@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob16staticMetaObjectE@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob17saveThumbnailDataER6QImage@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob20getOrCreateThumbnailEv@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob20loadAvailablePluginsEv@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob20saveThumbnailToCacheERK6QImageRK7QString@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob20standardThumbnailersEv@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob21slotStandardThumbDataEPNS_3JobERK6QImage@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob22createThumbnailViaFuseERK4QUrlS3_@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob24preparePluginForMimetypeERK7QString@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob24slotGetOrCreateThumbnailEP4KJob@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob27createThumbnailViaLocalCopyERK4QUrl@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJob5startEv@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJobC1ERK9KFileItemiRKNS_14PreviewOptionsERKNS_16PreviewSetupDataE@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJobC2ERK9KFileItemiRKNS_14PreviewOptionsERKNS_16PreviewSetupDataE@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJobD0Ev@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJobD1Ev@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZN3KIO14FilePreviewJobD2Ev@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZNK3KIO14FilePreviewJob10metaObjectEv@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZNK3KIO14FilePreviewJob12previewImageEv@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZNK3KIO14FilePreviewJob23thumbnailWorkerMetaDataEv@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZTIN3KIO14FilePreviewJobE@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZTSN3KIO14FilePreviewJobE@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
+        },
+        {
+          "package": "libkf6kiogui6",
+          "soname": "libKF6KIOGui.so.6",
+          "symbol": "_ZTVN3KIO14FilePreviewJobE@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "upstream-build-testing-only-symbol",
+          "rationale": "KDE KIO 6.30 exports FilePreviewJob only when BUILD_TESTING is enabled via KIOGUI_TEST_EXPORT; normal production builds do not expose this class as public ABI."
         }
       ]
     },
@@ -3269,7 +3650,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "materialization-PASS-attempt9-active",
+    "status": "attempt10-symbol-metadata-remediation-defined-pending-materialization",
     "trigger": {
       "workflow_run": 36035351270,
       "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -3290,7 +3671,7 @@
     ],
     "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux9",
+      "kio": "6.30.0-0supralinux10",
       "kxmlgui": "6.30.0-0supralinux5"
     },
     "policy": {
@@ -3311,9 +3692,9 @@
       "repository_policy_workflow_run": 36072487004,
       "result": "PASS"
     },
-    "execution_authorized": true,
-    "level1_execution_authorized": true,
-    "next_gate": "tier3-build-level1-attempt9",
+    "execution_authorized": false,
+    "level1_execution_authorized": false,
+    "next_gate": "tier3-attempt10-kio-symbol-metadata-materialization-evidence",
     "materialization_evidence": {
       "workflow_run": 36413768965,
       "commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
@@ -3475,8 +3856,8 @@
       ],
       "next_diagnostic_scope": "actual-kio-object-path-state-transition"
     },
-    "current_attempt": 8,
-    "next_attempt": 9,
+    "current_attempt": 9,
+    "next_attempt": 10,
     "round18_provider_contract_audit": {
       "workflow_run": 36221977278,
       "job_id": 108348814091,
@@ -3702,6 +4083,29 @@
       "artifact_sha256": "b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c",
       "package_version": "6.30.0-0supralinux9",
       "result": "PASS"
+    },
+    "attempt9_evidence": {
+      "rootfs": {
+        "artifact_id": 10967311404,
+        "artifact_sha256": "533a74c6ad1dbce5b6ce5e219cabbc720ad9e692017d24899afbe8dede69f72e"
+      },
+      "kio": {
+        "job_id": 108910323115,
+        "artifact_id": 10968800996,
+        "artifact_sha256": "17a0d0160104a1d095b433e3e80b5a8153c811a25ae802cb382ebcf85bf48260"
+      },
+      "kxmlgui": {
+        "job_id": 108910323005,
+        "artifact_id": 10967257671,
+        "artifact_sha256": "91d0f5100748097446079fe1cead44444c88cf1d7a729d286c442402774921e5"
+      }
+    },
+    "attempt10_definition": {
+      "status": "definition-pending-ci",
+      "package_version": "6.30.0-0supralinux10",
+      "symbol_template_additions": 34,
+      "materialization_authorized": true,
+      "package_build_authorized": false
     }
   },
   "remediation_history": [

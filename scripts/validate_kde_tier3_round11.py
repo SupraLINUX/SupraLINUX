@@ -16,6 +16,8 @@ if gate=="tier3-level1-remediation-pending-materialization":
         target="validate_kde_tier3_round18_remediation.py"
     elif marker=="attempt9-kio-proven-remediation-pending-materialization":
         target="validate_kde_tier3_kio_attempt9_definition.py"
+    elif marker=="attempt10-kio-symbol-metadata-remediation-pending-materialization":
+        target="validate_kde_tier3_kio_attempt10_definition.py"
     else:
         target="validate_kde_tier3_round11_materialization.py"
 elif gate=="tier3-level1-source-PASS-pending-planning-validation":

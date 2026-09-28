@@ -6,6 +6,7 @@ on:
       - manifests/kde-tier3-materialization.json
       - manifests/kde-tier3-kio-round18-remediation.json
       - manifests/kde-tier3-kio-attempt9-remediation.json
+      - manifests/kde-tier3-kio-attempt10-remediation.json
       - manifests/kde-tier3-package-contracts.json
       - manifests/kde-frameworks-tier3.json
       - scripts/materialize_kde_tier3_package.py

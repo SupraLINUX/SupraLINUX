@@ -1,8 +1,9 @@
 # KDE Tier 3 KIO Attempt 9 remediation definition
 
-Status: **Attempt 9 active; binary CI pending**.  
+Status: **Attempt 9 closed MIXED**.  
 Definition contract: **PASS**.  
-Attempt 9 package execution: **authorized for the full Level 1 rerun**.
+Functional KIO test remediation: **PASS (69/69)**.  
+Package result: **FAIL at Lintian symbol metadata**.
 
 ## Inputs already proven
 
@@ -54,7 +55,7 @@ definition PASS
 → verify source/package artifacts and hashes — PASS
 → planning validation — PASS
 → explicit Attempt 9 activation — ACTIVE
-→ binary build — CURRENT
+→ binary build — CLOSED MIXED
 ```
 
 Materialization PASS evidence: workflow `36413768965`, job `108899950721`, artifact `10965892140` (SHA-256 `b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c`). The source package is `6.30.0-0supralinux9`; the exact KRecent patch and patched-source hashes match the Round 26 candidate.
@@ -72,8 +73,23 @@ rematerialization is required.
 12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED
 KIO 6.30.0-0supralinux8 = FAIL
 Attempt 8 = CLOSED-MIXED
-Attempt 9 = ACTIVE / binary CI pending
+Attempt 9 = CLOSED-MIXED
 Round 26 = remediation-PASS / 69/69 combined proof
 Candidate KIO = 6.30.0-0supralinux9
-Next gate = tier3-build-level1-attempt9
+Next gate = tier3-attempt10-kio-symbol-metadata-materialization-evidence
 ```
+
+
+## Attempt 9 result
+
+Workflow `36416891314` on `e7dfc689bf18aea5ed194df03f31e9c74627ead0` executed the full Level 1 rerun.
+
+- KXMLGui `6.30.0-0supralinux5`: PASS, 7/7 upstream tests and Python import PASS.
+- KIO `6.30.0-0supralinux9`: all 69/69 upstream CTest targets PASS.
+- KIO binary packages were produced.
+- KIO then failed the package gate at Lintian, not at compile or test time.
+- Lintian found 34 symbols whose generated minimum version was `6.30.0-0supralinux9`, which is invalid because it embeds the Debian/SupraLINUX revision.
+
+Upstream KIO 6.30 establishes that the 33 `FilePreviewJob` symbols are exported only when `BUILD_TESTING` is enabled, and `Worker::setTestWorkerFactory` is a private test hook declared in `worker_p.h`. They are therefore packaging/test-build symbols, not new public ABI.
+
+Canonical KIO becomes FAIL at `6.30.0-0supralinux9` and remains downstream-ineligible. The canonical snapshot stays **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**.
