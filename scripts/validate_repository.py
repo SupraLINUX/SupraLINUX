@@ -127,6 +127,7 @@ routed_pr_workflows = (
     "kde-tier3-kio-round23-diagnostic.yml",
     "kde-tier3-kio-round24-diagnostic.yml",
     "kde-tier3-kio-round25-remediation.yml",
+    "kde-tier3-kio-round26-remediation.yml",
 )
 
 require(f"actions/checkout@{CHECKOUT_SHA}" in repository_policy, "repository policy checkout action must use the approved immutable SHA")
@@ -142,6 +143,7 @@ require("scripts/test-check-golden-image-provenance.sh" in repository_policy, "r
 require("scripts/test-pr-ci-router-scope.sh" in repository_policy, "repository policy must functionally test semantic PR evidence routing")
 require("python3 scripts/validate_diagnostic_infrastructure_preflight.py" in repository_policy, "repository policy must validate diagnostic infrastructure preflight")
 require("python3 scripts/validate_kde_tier3_kio_round25_remediation.py" in repository_policy, "repository policy must validate Round25 remediation definition")
+require("python3 scripts/validate_kde_tier3_kio_round26_remediation.py" in repository_policy, "repository policy must validate Round26 remediation definition")
 require("scripts/test-kde-tier2-package-batch1-scope.sh" in repository_policy, "repository policy must test KDE Tier 2 Batch 1 scope")
 require("python3 scripts/validate_kde-tier2-package-batch1.py" not in repository_policy, "repository policy must not contain a misspelled Tier 2 validator path")
 require("python3 scripts/validate_kde_tier2_package_batch1.py" in repository_policy, "repository policy must execute KDE Tier 2 Batch 1 validator")
@@ -169,6 +171,10 @@ require('r24.get("package_execution_authorized") is False' in pr_ci_router, "Rou
 require("run_round25" in pr_ci_router and "kde-tier3-kio-round25-remediation.yml" in pr_ci_router, "PR router must expose Round25 remediation proof")
 require('r24.get("status")=="diagnostic-PASS"' in pr_ci_router, "Round25 admission must require closed Round24 PASS")
 require('r25.get("package_execution_authorized") is False' in pr_ci_router, "Round25 admission must remain non-promoting")
+require("run_round26" in pr_ci_router and "kde-tier3-kio-round26-remediation.yml" in pr_ci_router, "PR router must expose Round26 combined remediation proof")
+require('r25.get("status")=="remediation-FAIL-contract"' in pr_ci_router, "Round26 admission must retain Round25 historical contract result")
+require('r25.get("interpretation",{}).get("target_krecent_remediation")=="PASS"' in pr_ci_router, "Round26 admission must require KRecent target PASS")
+require('r26.get("package_execution_authorized") is False' in pr_ci_router, "Round26 admission must remain non-promoting")
 
 for filename in routed_pr_workflows:
     text = workflow_texts.get(filename, "")
@@ -219,6 +225,11 @@ required_files = [
     "scripts/run-kde-tier3-kio-round25-diagnostic.sh",
     "scripts/validate_kde_tier3_kio_round25_remediation.py",
     "docs/kde-tier3-kio-round25-remediation.md",
+    "manifests/kde-tier3-kio-round26-remediation.json",
+    "scripts/run-kde-tier3-kio-round26-hook.sh",
+    "scripts/run-kde-tier3-kio-round26-diagnostic.sh",
+    "scripts/validate_kde_tier3_kio_round26_remediation.py",
+    "docs/kde-tier3-kio-round26-remediation.md",
     "docs/status/2026-09-11.md",
     "docs/decisions/ADR-0001-authority-provider.md",
     "docs/decisions/ADR-0003-kde-integration-frontier.md",

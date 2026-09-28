@@ -894,13 +894,13 @@
     },
     "execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "round25-remediation-pending-ci",
+    "status": "round26-remediation-pending-ci",
     "source_rematerialization_required": false,
     "source_rematerialization_nodes": [
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "tier3-round25-kio-krecent-ordering-remediation-evidence",
+    "next_gate": "tier3-round26-kio-combined-remediation-evidence",
     "current_attempt": 8,
     "next_attempt": 9,
     "remaining_failed_nodes": [
@@ -1208,6 +1208,30 @@
         "full-suite": 1
       },
       "next_gate": "tier3-round25-kio-krecent-ordering-remediation-evidence"
+    },
+    "round25_remediation": {
+      "status": "remediation-FAIL-contract",
+      "workflow_run": 36359842892,
+      "job_id": 108734756942,
+      "branch_commit": "5d8b72cf6d468550aa520d0a09c169ff9c1bf05f",
+      "artifact_id": 10945592004,
+      "artifact_sha256": "0ac55c97c3efb725bd46500d9f899fcc0222368f8b60973b574356975b2dd1ce",
+      "historical_contract_result": "FAIL",
+      "target_krecent_remediation": "PASS",
+      "independent_blocker": "kiowidgets-kdirmodeltest",
+      "package_attempted": false,
+      "package_state_effect": "none"
+    },
+    "round26_definition": {
+      "status": "definition-pending-ci",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "matrix": {
+        "hidden-home": 10,
+        "visible-home": 20,
+        "full-suite-visible": 1
+      },
+      "next_gate": "tier3-round26-kio-combined-remediation-evidence"
     }
   },
   "activation": {
