@@ -607,7 +607,9 @@
             "canonical_state_effect": "FAIL",
             "full_result_json_retained_in_artifact": true,
             "attempted_package_version": "6.30.0-0supralinux9",
-            "build_result": "FAIL"
+            "build_result": "FAIL",
+            "package_state_effect": "FAIL",
+            "canonical_success_transition": "FAIL"
           }
         ]
       }
@@ -1353,7 +1355,9 @@
             "canonical_state_effect": "PASS-revalidation",
             "full_result_json_retained_in_artifact": true,
             "attempted_package_version": "6.30.0-0supralinux5",
-            "build_result": "PASS"
+            "build_result": "PASS",
+            "package_state_effect": "PASS-revalidation",
+            "canonical_success_transition": "PASS"
           }
         ]
       }
