@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level2",
   "frameworks_series": "6.30.0",
-  "state": "planned-pending-activation",
-  "execution_authorized": false,
+  "state": "active-pending-ci",
+  "execution_authorized": true,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -1134,5 +1134,26 @@
     }
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-build-level2-planning-validation"
+  "next_gate": "tier3-build-level2-attempt1",
+  "current_attempt": 1,
+  "planning_validation": {
+    "repository_policy_workflow_run": 36443524514,
+    "level2_workflow_run": 36443524497,
+    "commit": "b07c6c0a0b3072a76e57cf52d679001de2985d3c",
+    "plan_job_id": 108999812548,
+    "intentional_skip_job_id": 108999881832,
+    "rootfs_job_conclusion": "skipped",
+    "package_matrix_conclusion": "skipped",
+    "result": "PASS"
+  },
+  "activation": {
+    "status": "ACTIVE",
+    "attempt": 1,
+    "planning_policy_workflow_run": 36443524514,
+    "planning_level2_workflow_run": 36443524497,
+    "planning_commit": "b07c6c0a0b3072a76e57cf52d679001de2985d3c",
+    "scope": "baloo+kcmutils+knotifyconfig+kparts",
+    "reason": "Level 2 planning and policy validation passed; authorize first real binary attempt",
+    "next_gate": "tier3-build-level2-attempt1"
+  }
 }

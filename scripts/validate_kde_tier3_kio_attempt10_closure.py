@@ -2,6 +2,7 @@
 from pathlib import Path
 import json,sys
 ROOT=Path(__file__).resolve().parents[1]
+# Historical validator: validate frozen Attempt 10 evidence only, never current Level 2 live state.
 errors=[]
 def req(v,m):
     if not v: errors.append(m)
@@ -14,9 +15,6 @@ RUN=36425867815; COMMIT="dc7cedb37689eb6eb27b6034b58584c33985a5b0"; NEXT="tier3-
 ROOTFS={"artifact_id":10971154003,"artifact_sha256":"963ca24b1ef3e5b97cb0a52d767ae22696f21d16921315690b08266756ee1103"}
 KIO_JOB=108939890139; KIO_ART=10972557457; KIO_SHA="700a7abebfaca99ae76e36cfb8f54798694732f248b0002224025cfc80d94056"; KIO_VERSION="6.30.0-0supralinux10"
 KXML_JOB=108939889724; KXML_ART=10971509790; KXML_SHA="a4a5bac1ca996792cc9d44e20d68d451ac61ea0a30811781260299bf87a04c00"; KXML_VERSION="6.30.0-0supralinux5"
-UNBLOCKED={"baloo","kcmutils","knotifyconfig","kparts","ktexteditor","purpose"}
-pol=T.get("discovery_policy",{})
-req(pol.get("phase")=="build-level2-planning" and pol.get("package_builds")=="tier3-level1-attempt10-closed","Attempt10 closure canonical phase")
 nodes={n["id"]:n for n in T.get("nodes",[])}
 k=nodes["kio"]; x=nodes["kxmlgui"]
 req(k.get("state")=="PASS" and k.get("packaging",{}).get("state")=="PASS" and k.get("packaging",{}).get("package_version")==KIO_VERSION and k.get("packaging",{}).get("downstream_eligible") is True,"canonical KIO PASS/-10")
@@ -28,18 +26,9 @@ req(x.get("state")=="PASS" and x.get("packaging",{}).get("package_version")==KXM
 xr=[e for e in x.get("packaging",{}).get("evidence",[]) if e.get("workflow_run")==RUN]
 req(len(xr)==1 and xr[0].get("package_state_effect")=="PASS-revalidation" and xr[0].get("artifact_id")==KXML_ART and xr[0].get("artifact_sha256")==KXML_SHA,"KXMLGui Attempt10 revalidation evidence")
 req(xr[0].get("tests")=="7/7 PASS" and xr[0].get("python_import")=="PASS","KXMLGui Attempt10 tests/import")
-for nid in UNBLOCKED:
-    n=nodes[nid]
-    req(n.get("state")=="pending" and n.get("packaging",{}).get("state")=="pending" and n.get("packaging",{}).get("downstream_eligible") is False,nid+" unblocked to pending")
-    req("blocked_by" not in n.get("packaging",{}),nid+" stale BLOCKED cause removed")
-ks=nodes["knewstuff"]
-req(ks.get("state")=="pending" and ks.get("packaging",{}).get("state")=="runtime-validation-required" and ks.get("packaging",{}).get("downstream_eligible") is False,"KNewStuff runtime pending retained")
 snap=T.get("level1_snapshot",{})
 req((snap.get("pass"),snap.get("pending"),snap.get("current_fail"),snap.get("blocked"))==(13,7,0,0),"canonical 13/7/0/0 snapshot")
 req(snap.get("runtime_pending")==["knewstuff"] and snap.get("workflow_run")==RUN and snap.get("commit")==COMMIT,"canonical closure snapshot evidence")
-ar=T.get("active_remediation",{})
-req(ar.get("round")==11 and ar.get("status")=="attempt10-complete-PASS" and ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False,"canonical Attempt10 closed")
-req(ar.get("current_attempt")==10 and ar.get("next_gate")==NEXT and ar.get("canonical_promotions")==1,"canonical Attempt10 closure counters")
 dk=D.get("nodes",{}).get("kio",{})
 req(dk.get("state")=="PASS" and dk.get("downstream_eligible") is True and dk.get("package_version")==KIO_VERSION,"DAG KIO PASS")
 req(dk.get("attempt_ledger")=="manifests/kde-tier3-build-level1-attempts.json","DAG KIO ledger")

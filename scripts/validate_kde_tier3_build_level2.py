@@ -14,10 +14,21 @@ req(m.get("role")=="tier3-binary-build-level2" and m.get("frameworks_series")=="
 req(m.get("selected_nodes")==T and m.get("canonical_snapshot")=="13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED","Level2 node set/snapshot")
 if m.get("state")=="planned-pending-activation":
     req(m.get("execution_authorized") is False and m.get("next_gate")=="tier3-build-level2-planning-validation","planned Level2 authorization/gate")
-else: req(m.get("state") in {"active-pending-ci","PASS","PARTIAL"},"Level2 lifecycle")
+    req(t.get("discovery_policy",{}).get("phase")=="build-level2-planning" and t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-attempt10-closed","planned Level2 canonical live phase")
+elif m.get("state")=="active-pending-ci":
+    req(m.get("execution_authorized") is True and m.get("current_attempt")==1 and m.get("next_gate")=="tier3-build-level2-attempt1","active Level2 authorization/gate")
+    act=m.get("activation",{})
+    req(act.get("status")=="ACTIVE" and act.get("attempt")==1 and act.get("planning_policy_workflow_run")==36443524514 and act.get("planning_level2_workflow_run")==36443524497 and act.get("planning_commit")=="b07c6c0a0b3072a76e57cf52d679001de2985d3c","Level2 Attempt1 activation evidence")
+    pv=m.get("planning_validation",{})
+    req(pv.get("repository_policy_workflow_run")==36443524514 and pv.get("level2_workflow_run")==36443524497 and pv.get("result")=="PASS","Level2 planning validation evidence")
+    pol=t.get("discovery_policy",{})
+    req(pol.get("phase")=="build-level2" and pol.get("package_builds")=="tier3-level2-attempt1-active","active Level2 canonical live phase")
+    live=t.get("level2_execution",{})
+    req(live.get("status")=="attempt1-active" and live.get("attempt")==1 and live.get("execution_authorized") is True and live.get("next_gate")=="tier3-build-level2-attempt1","canonical Level2 live execution")
+else:
+    req(m.get("state") in {"PASS","PARTIAL"},"Level2 lifecycle")
 pre=m.get("planning_precondition",{}); req(pre.get("level1_attempt")==10 and pre.get("level1_workflow_run")==36425867815 and pre.get("level1_closure_commit")=="0e5e2602cba730612bcb9301a59f5b51c3fdd574" and pre.get("repository_policy_workflow_run")==36430910043 and pre.get("result")=="PASS","Level2 precondition")
 req(l1.get("state")=="PASS" and l1.get("execution_authorized") is False and l1.get("current_attempt")==10,"Level1 closed precondition")
-req(t.get("discovery_policy",{}).get("phase")=="build-level2-planning","canonical live phase")
 tn={x["id"]:x for x in t.get("nodes",[])}; ks=tn["knewstuff"]; req(ks.get("state")=="pending" and ks.get("packaging",{}).get("state")=="runtime-validation-required","KNewStuff runtime pending")
 h=m["deferred_runtime_validation_handoff"]["knewstuff"]; req(h.get("requires_level2_pass")==["kcmutils"] and h.get("effect")=="runtime-validation-gate-only-no-auto-PASS","KNewStuff handoff")
 dn=d.get("nodes",{}); ret=m.get("retained_predecessors",{})
