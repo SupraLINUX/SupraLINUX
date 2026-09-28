@@ -1,7 +1,7 @@
 # KDE Tier 3 KIO Attempt 10 symbol-metadata remediation
 
-Status: **source materialization PASS; planning validation pending**.  
-Attempt 10 binary execution: **not authorized**.
+Status: **Attempt 10 active; binary CI pending**.  
+Attempt 10 binary execution: **authorized for the full Level 1 rerun**.
 
 ## Attempt 9 evidence
 
@@ -52,9 +52,9 @@ Attempt 9 CLOSED-MIXED
 → Attempt 10 definition
 → materialize KIO 6.30.0-0supralinux10 — PASS
 → verify symbols/source/package artifacts — PASS
-→ planning validation — CURRENT
-→ explicit Attempt 10 activation
-→ binary build
+→ planning validation — PASS
+→ explicit Attempt 10 activation — ACTIVE
+→ binary build — CURRENT
 ```
 
 KXMLGui is retained at `6.30.0-0supralinux5` and will be revalidated only in the full Level 1 rerun. Binary Attempt 10 remains unauthorized.
@@ -66,7 +66,7 @@ Current canonical state:
 KIO 6.30.0-0supralinux9 = FAIL
 KXMLGui 6.30.0-0supralinux5 = PASS
 Candidate KIO = 6.30.0-0supralinux10
-Next gate = tier3-attempt10-kio-planning-validation
+Next gate = tier3-build-level1-attempt10
 ```
 
 
@@ -84,3 +84,19 @@ KIO `6.30.0-0supralinux10` materialization passed on commit `a77f6e1f247792ccb48
 - 34 private/test-only symbols remain modeled as optional at upstream `6.30.0`.
 
 Repository Policy `36424068693` passed the Attempt 10 definition on the same commit. Binary execution remains blocked until planning validation passes and a separate activation occurs.
+
+
+## Planning and activation
+
+Planning validation passed on commit `0471d2332eef5f02344b2ffad96828f31ee3a405`:
+
+- Repository Policy: `36424710656`
+- Level 1 planner: `36424710626`
+- the Level 1 run skipped rootfs and binary matrix execution while authorization was false.
+
+Attempt 10 is now authorized for the full Level 1 scope:
+
+- KIO `6.30.0-0supralinux10`;
+- retained KXMLGui `6.30.0-0supralinux5` revalidation.
+
+Canonical KIO remains FAIL at `6.30.0-0supralinux9` until the real Attempt 10 package job passes every package gate.

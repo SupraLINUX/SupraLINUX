@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "attempt9-closed-mixed",
-  "execution_authorized": false,
+  "state": "active-pending-ci",
+  "execution_authorized": true,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -458,7 +458,7 @@
   },
   "nodes": {
     "kio": {
-      "state": "FAIL",
+      "state": "prepared-pending-revalidation",
       "source_package": "kf6-kio",
       "package_version": "6.30.0-0supralinux10",
       "expected_binary_packages": [
@@ -637,7 +637,7 @@
         "canonical_state_effect": "FAIL",
         "full_result_json_retained_in_artifact": true
       },
-      "current_attempt": 9,
+      "current_attempt": 10,
       "sbuild_enable_network": true,
       "remediation": {
         "global_round": 11,
@@ -659,7 +659,7 @@
       "downstream_eligible": false
     },
     "kxmlgui": {
-      "state": "PASS",
+      "state": "prepared-pending-revalidation",
       "source_package": "kf6-kxmlgui",
       "package_version": "6.30.0-0supralinux5",
       "expected_binary_packages": [
@@ -791,7 +791,7 @@
         "canonical_state_effect": "PASS-revalidation",
         "full_result_json_retained_in_artifact": true
       },
-      "current_attempt": 9,
+      "current_attempt": 10,
       "sbuild_enable_network": false,
       "remediation": {
         "global_round": 10,
@@ -850,8 +850,8 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-attempt10-kio-planning-validation",
-  "current_attempt": 9,
+  "next_gate": "tier3-build-level1-attempt10",
+  "current_attempt": 10,
   "last_activation": {
     "policy_workflow_run": 35826072726,
     "policy_commit": "b96e925ee9f649c1b4b984ed6fed277ef911f2c2",
@@ -904,16 +904,16 @@
       "kio": "6.30.0-0supralinux10",
       "kxmlgui": "6.30.0-0supralinux5"
     },
-    "execution_authorized": false,
+    "execution_authorized": true,
     "full_level1_rerun_required": true,
-    "status": "materialization-PASS-pending-attempt10-planning-validation",
+    "status": "materialization-PASS-attempt10-active",
     "source_rematerialization_required": false,
     "source_rematerialization_nodes": [
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "tier3-attempt10-kio-planning-validation",
-    "current_attempt": 9,
+    "next_gate": "tier3-build-level1-attempt10",
+    "current_attempt": 10,
     "next_attempt": 10,
     "remaining_failed_nodes": [
       "kio"
@@ -954,9 +954,9 @@
         "package_version": "6.30.0-0supralinux5"
       }
     },
-    "activation_policy_workflow_run": 36415650130,
-    "activation_level1_workflow_run": 36415653322,
-    "activation_commit": "bcc76458eecff8118d5526c043d18aa7de3b4b4c",
+    "activation_policy_workflow_run": 36424710656,
+    "activation_level1_workflow_run": 36424710626,
+    "activation_commit": "0471d2332eef5f02344b2ffad96828f31ee3a405",
     "validation_workflow_run": 36416891314,
     "validation_commit": "e7dfc689bf18aea5ed194df03f31e9c74627ead0",
     "validation_result": "1 workflow SUCCESS / 1 FAIL",
@@ -1117,7 +1117,7 @@
         "artifact_sha256": "297d8d91e52f82cd6713c30072a8f2deff80d73647b9c93c1b89263e5f21d441"
       }
     },
-    "level1_execution_authorized": false,
+    "level1_execution_authorized": true,
     "round23_diagnostic": {
       "status": "diagnostic-PASS",
       "workflow_run": 36288655361,
@@ -1314,9 +1314,9 @@
       "result": "PASS"
     },
     "planning_validation": {
-      "repository_policy_workflow_run": 36415650130,
-      "level1_workflow_run": 36415653322,
-      "commit": "bcc76458eecff8118d5526c043d18aa7de3b4b4c",
+      "repository_policy_workflow_run": 36424710656,
+      "level1_workflow_run": 36424710626,
+      "commit": "0471d2332eef5f02344b2ffad96828f31ee3a405",
       "result": "PASS"
     },
     "attempt9_evidence": {
@@ -1336,7 +1336,7 @@
       }
     },
     "attempt10_definition": {
-      "status": "source-materialization-PASS-pending-planning-validation",
+      "status": "attempt10-active",
       "candidate_package_version": "6.30.0-0supralinux10",
       "source_rematerialization_nodes": [
         "kio"
@@ -1344,7 +1344,7 @@
       "retained_revalidation_nodes": [
         "kxmlgui"
       ],
-      "package_execution_authorized": false
+      "package_execution_authorized": true
     },
     "attempt10_definition_validation": {
       "commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
@@ -1362,17 +1362,13 @@
     }
   },
   "activation": {
-    "status": "CLOSED-MIXED",
-    "attempt": 9,
-    "remediation_validation_policy_workflow_run": 36415650130,
-    "remediation_validation_level1_workflow_run": 36415653322,
-    "remediation_commit": "bcc76458eecff8118d5526c043d18aa7de3b4b4c",
+    "status": "ACTIVE",
+    "attempt": 10,
+    "remediation_validation_policy_workflow_run": 36424710656,
+    "remediation_validation_level1_workflow_run": 36424710626,
+    "remediation_commit": "0471d2332eef5f02344b2ffad96828f31ee3a405",
     "scope": "full-level1-rerun-2-nodes",
-    "reason": "Round 26 proven KIO -9 remediation materialization and Attempt 9 planning validation passed; authorize complete Level 1 Attempt 9 with retained KXMLGui -5",
-    "workflow_run": 36416891314,
-    "commit": "e7dfc689bf18aea5ed194df03f31e9c74627ead0",
-    "result": "1 PASS / 1 FAIL",
-    "next_gate": "tier3-attempt10-kio-symbol-metadata-materialization-evidence"
+    "reason": "Attempt 10 source materialization and planning validation passed; authorize KIO 6.30.0-0supralinux10 plus retained KXMLGui 6.30.0-0supralinux5 revalidation"
   },
   "attempt2_summary": {
     "workflow_run": 35829170695,

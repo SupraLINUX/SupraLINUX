@@ -6,14 +6,14 @@
   "authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "upstream_ref": "v6.30.0",
-  "status": "source-materialization-PASS-pending-planning-validation",
+  "status": "attempt10-active",
   "candidate_package_version": "6.30.0-0supralinux10",
   "previous_package_version": "6.30.0-0supralinux9",
   "package_revision_bump_required": true,
   "source_rematerialization_required": true,
   "materialization_authorized": false,
-  "package_execution_authorized": false,
-  "level1_execution_authorized": false,
+  "package_execution_authorized": true,
+  "level1_execution_authorized": true,
   "canonical_kio_state": "FAIL",
   "canonical_kio_package_version": "6.30.0-0supralinux9",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
@@ -112,7 +112,7 @@
     "full_level1_rerun_required": true
   },
   "gates": {
-    "current": "tier3-attempt10-kio-planning-validation",
+    "current": "tier3-build-level1-attempt10",
     "after_materialization": "tier3-attempt10-kio-planning-validation",
     "package_execution_requires_separate_authorization": true
   },
@@ -120,7 +120,7 @@
   "package_state_effect": "none",
   "stable_promotion_requires_explicit_user_approval": true,
   "source_materialization_complete": true,
-  "execution_authorized": false,
+  "execution_authorized": true,
   "definition_contract": {
     "status": "PASS",
     "definition_commit": "0a36afe3c2841dd4d00f783fc9b898a29580497c",
@@ -166,5 +166,24 @@
     "package_attempted": false,
     "package_state_effect": "none",
     "full_result_json_retained_in_artifact": true
+  },
+  "planning_validation": {
+    "repository_policy_workflow_run": 36424710656,
+    "level1_workflow_run": 36424710626,
+    "commit": "0471d2332eef5f02344b2ffad96828f31ee3a405",
+    "result": "PASS"
+  },
+  "activation": {
+    "scope": "full-level1-rerun-2-nodes",
+    "nodes": [
+      "kio",
+      "kxmlgui"
+    ],
+    "kio_package_version": "6.30.0-0supralinux10",
+    "kxmlgui_package_version": "6.30.0-0supralinux5",
+    "repository_policy_workflow_run": 36424710656,
+    "level1_planning_workflow_run": 36424710626,
+    "commit": "0471d2332eef5f02344b2ffad96828f31ee3a405",
+    "level1_execution_authorized": true
   }
 }

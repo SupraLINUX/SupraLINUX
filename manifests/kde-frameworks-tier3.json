@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level1-planning",
+    "phase": "build-level1",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level1-source-PASS-pending-planning-validation",
-    "remediation": "attempt10-kio-symbol-metadata-source-PASS-pending-planning-validation"
+    "package_builds": "tier3-level1-authorized",
+    "remediation": "attempt10-kio-symbol-metadata-attempt10-active"
   },
   "nodes": [
     {
@@ -1474,12 +1474,12 @@
       "kio": "6.30.0-0supralinux10",
       "kxmlgui": "6.30.0-0supralinux5"
     },
-    "execution_authorized": false,
-    "level1_execution_authorized": false,
+    "execution_authorized": true,
+    "level1_execution_authorized": true,
     "full_level1_rerun_required": true,
-    "status": "materialization-PASS-pending-level1-planning-validation",
-    "next_gate": "tier3-attempt10-kio-planning-validation",
-    "current_attempt": 9,
+    "status": "level1-active-pending-ci",
+    "next_gate": "tier3-build-level1-attempt10",
+    "current_attempt": 10,
     "next_attempt": 10,
     "validation_workflow_run": 36416891314,
     "validation_commit": "e7dfc689bf18aea5ed194df03f31e9c74627ead0",
@@ -1508,9 +1508,9 @@
       "result": "PASS"
     },
     "krecentdocument_policy": {
-      "classification": "production-remediation-PASS-in-real-package-build",
-      "action": "retain-exact-krecent-patch-and-visible-test-home-unchanged",
-      "next_attempt_behavior": "Attempt10 changes packaging symbol metadata only"
+      "classification": "production-remediation-retained-after-real-69-of-69-PASS",
+      "action": "retain-exact-krecent-patch-visible-test-home-and-symbol-metadata-remediation",
+      "next_attempt_behavior": "all-upstream-tests-and-package-gates-fatal; promote-only-on-real-PASS"
     },
     "materialization_workflow_run": 36424068585,
     "materialization_commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
@@ -1523,13 +1523,13 @@
       }
     },
     "source_materialization_complete": true,
-    "activation_policy_workflow_run": 36415650130,
-    "activation_level1_workflow_run": 36415653322,
-    "activation_commit": "bcc76458eecff8118d5526c043d18aa7de3b4b4c",
+    "activation_policy_workflow_run": 36424710656,
+    "activation_level1_workflow_run": 36424710626,
+    "activation_commit": "0471d2332eef5f02344b2ffad96828f31ee3a405",
     "planning_validation": {
-      "repository_policy_workflow_run": 36415650130,
-      "level1_workflow_run": 36415653322,
-      "commit": "bcc76458eecff8118d5526c043d18aa7de3b4b4c",
+      "repository_policy_workflow_run": 36424710656,
+      "level1_workflow_run": 36424710626,
+      "commit": "0471d2332eef5f02344b2ffad96828f31ee3a405",
       "result": "PASS"
     },
     "failure_classes": {
@@ -1917,10 +1917,10 @@
       "canonical_promotions": 0
     },
     "attempt10_definition": {
-      "status": "source-materialization-PASS-pending-planning-validation",
+      "status": "attempt10-active",
       "package_version": "6.30.0-0supralinux10",
       "materialization_authorized": false,
-      "package_build_authorized": false,
+      "package_build_authorized": true,
       "remediation": "declare-34-upstream-private-or-BUILD_TESTING-only-symbols-optional-at-upstream-6.30.0",
       "symbol_count": 34,
       "source_code_change": false,

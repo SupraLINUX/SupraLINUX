@@ -3650,7 +3650,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "materialization-PASS-pending-level1-planning-validation",
+    "status": "materialization-PASS-attempt10-active",
     "trigger": {
       "workflow_run": 36035351270,
       "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -3692,9 +3692,9 @@
       "repository_policy_workflow_run": 36072487004,
       "result": "PASS"
     },
-    "execution_authorized": false,
-    "level1_execution_authorized": false,
-    "next_gate": "tier3-attempt10-kio-planning-validation",
+    "execution_authorized": true,
+    "level1_execution_authorized": true,
+    "next_gate": "tier3-build-level1-attempt10",
     "materialization_evidence": {
       "workflow_run": 36424068585,
       "commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
@@ -3707,9 +3707,9 @@
         }
       }
     },
-    "activation_policy_workflow_run": 36415650130,
-    "activation_level1_workflow_run": 36415653322,
-    "activation_commit": "bcc76458eecff8118d5526c043d18aa7de3b4b4c",
+    "activation_policy_workflow_run": 36424710656,
+    "activation_level1_workflow_run": 36424710626,
+    "activation_commit": "0471d2332eef5f02344b2ffad96828f31ee3a405",
     "validation_workflow_run": 36238357510,
     "validation_commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
     "validation_result": "1 workflow SUCCESS / 1 FAIL",
@@ -3856,7 +3856,7 @@
       ],
       "next_diagnostic_scope": "actual-kio-object-path-state-transition"
     },
-    "current_attempt": 9,
+    "current_attempt": 10,
     "next_attempt": 10,
     "round18_provider_contract_audit": {
       "workflow_run": 36221977278,
@@ -3875,9 +3875,9 @@
       "source_rematerialization_required": true
     },
     "planning_validation": {
-      "repository_policy_workflow_run": 36415650130,
-      "level1_workflow_run": 36415653322,
-      "commit": "bcc76458eecff8118d5526c043d18aa7de3b4b4c",
+      "repository_policy_workflow_run": 36424710656,
+      "level1_workflow_run": 36424710626,
+      "commit": "0471d2332eef5f02344b2ffad96828f31ee3a405",
       "result": "PASS"
     },
     "attempt8_evidence": {
@@ -4101,11 +4101,11 @@
       }
     },
     "attempt10_definition": {
-      "status": "source-materialization-PASS-pending-planning-validation",
+      "status": "attempt10-active",
       "package_version": "6.30.0-0supralinux10",
       "symbol_template_additions": 34,
       "materialization_authorized": false,
-      "package_build_authorized": false
+      "package_build_authorized": true
     },
     "source_materialization_complete": true,
     "attempt10_definition_validation": {
