@@ -1,4 +1,5 @@
 name: KDE Frameworks Tier 3 build level 2
+
 on:
   pull_request:
     paths:
@@ -14,20 +15,33 @@ on:
       - scripts/validate_kde_tier3_build_level2.py
       - .github/workflows/kde-tier3-build-level2.yml
   workflow_dispatch:
-permissions: {contents: read, actions: read}
+
+permissions:
+  contents: read
+  actions: read
+
 concurrency:
   group: kde-tier3-build-level2-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
+
 jobs:
   plan:
     name: Plan Tier 3 Level 2
     runs-on: ubuntu-26.04
-    outputs: {run: ${{ steps.matrix.outputs.run }}, matrix: ${{ steps.matrix.outputs.matrix }}}
+    outputs:
+      run: ${{ steps.matrix.outputs.run }}
+      matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
-      - {name: Checkout, uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1}
-      - {name: Validate Level 2 definition, run: python3 scripts/validate_kde_tier3_build_level2.py}
-      - {name: Test Level 2 planner and runner scope, run: python3 scripts/test-kde-tier3-build-level2-planner.py}
-      - {name: Build runnable matrix, id: matrix, run: 'python3 scripts/plan-kde-tier3-build-level2.py --github-output "${GITHUB_OUTPUT}"'}
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Validate Level 2 definition
+        run: python3 scripts/validate_kde_tier3_build_level2.py
+      - name: Test Level 2 planner and runner scope
+        run: python3 scripts/test-kde-tier3-build-level2-planner.py
+      - name: Build runnable matrix
+        id: matrix
+        run: python3 scripts/plan-kde-tier3-build-level2.py --github-output "${GITHUB_OUTPUT}"
+
   rootfs:
     name: Build shared Resolute rootfs
     needs: plan
@@ -50,7 +64,12 @@ jobs:
           { cat /etc/os-release; mmdebstrap --version; } > .work/rootfs/provenance.txt
       - name: Upload shared rootfs
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with: {name: 'kde-tier3-level2-rootfs-${{ github.run_id }}', path: .work/rootfs/, compression-level: 0, retention-days: 7}
+        with:
+          name: kde-tier3-level2-rootfs-${{ github.run_id }}
+          path: .work/rootfs/
+          compression-level: 0
+          retention-days: 7
+
   package:
     name: Build ${{ matrix.node }}
     needs: [plan, rootfs]
@@ -62,17 +81,27 @@ jobs:
     runs-on: ubuntu-26.04
     timeout-minutes: 120
     steps:
-      - {name: Checkout, uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1}
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Download shared rootfs
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-        with: {name: 'kde-tier3-level2-rootfs-${{ github.run_id }}', path: .work/rootfs}
+        with:
+          name: kde-tier3-level2-rootfs-${{ github.run_id }}
+          path: .work/rootfs
       - name: Build and validate node
-        env: {GITHUB_TOKEN: ${{ github.token }}, ROOTFS_ARTIFACT_DIR: '${{ github.workspace }}/.work/rootfs'}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ROOTFS_ARTIFACT_DIR: ${{ github.workspace }}/.work/rootfs
         run: scripts/run-kde-tier3-build-level2.sh "${{ matrix.node }}"
       - name: Upload package evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with: {name: 'kde-tier3-level2-${{ matrix.node }}-${{ github.event.pull_request.head.sha || github.sha }}', path: 'evidence/kde-tier3-build-level2/${{ matrix.node }}/', if-no-files-found: error, retention-days: 90}
+        with:
+          name: kde-tier3-level2-${{ matrix.node }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-tier3-build-level2/${{ matrix.node }}/
+          if-no-files-found: error
+          retention-days: 90
+
   skip:
     name: Report intentional Level 2 skip
     needs: plan
