@@ -21,7 +21,7 @@ selected = m.get("selected_nodes", [])
 canonical = {x.get("id"): x for x in t.get("nodes", [])}
 contracts = c.get("nodes", {})
 
-if t.get("level2_remediation",{}).get("status")=="materialization-pending-ci":
+if t.get("level2_remediation",{}).get("status") in {"materialization-pending-ci","materialization-PASS-pending-attempt4-activation-validation"}:
     import subprocess
     raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_level2_remediation.py")]).returncode)
 

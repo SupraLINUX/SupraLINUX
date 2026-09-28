@@ -78,3 +78,13 @@ The runner then exposed a validation defect: it treated every support provider's
 Primary classification: Baloo and KNotifyConfig are `INFRA_INVALID` at buildinfo-predecessor-proof; KParts is also `INFRA_INVALID` at that primary stage, with an independent Lintian symbol-metadata blocker observed; KCMUtils is a real `FAIL` in sbuild/dpkg-gensymbols after 6/6 tests passed.
 
 Canonical state remains **13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED**. Attempt 4 is not authorized. Only KCMUtils and KParts are queued for rematerialization as `6.30.0-0supralinux2`; Baloo and KNotifyConfig retain their current source materializations.
+
+
+## Attempt 4 materialization gate
+
+Remediation materialization workflow `36466461781` completed successfully at commit `a0ee684e97f834e39a760eab401ba29e2c172a5d`.
+
+- KCMUtils `6.30.0-0supralinux2`: artifact `10989229464`, SHA-256 `ec9fb73d8c03f7c972ab2e878ffaa56a3a51f7edad56e276464a09842a88fe5b`.
+- KParts `6.30.0-0supralinux2`: artifact `10989828107`, SHA-256 `52183686781a2fd30a0d6b8c0b0c40fce6e5da55ac2f8680df7fcc2eae120112`.
+
+Both source materializations are now promoted into the Level 2 build inputs. This does **not** change package state: the canonical snapshot remains **13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED**. Binary execution remains disabled until the separate Attempt 4 activation-validation gate passes.

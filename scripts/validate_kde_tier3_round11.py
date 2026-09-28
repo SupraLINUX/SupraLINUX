@@ -7,8 +7,10 @@ t=json.loads((ROOT/"manifests/kde-frameworks-tier3.json").read_text())
 ar=t.get("active_remediation",{})
 gate=t.get("discovery_policy",{}).get("package_builds")
 
-if gate in {"tier3-level2-planning-validated","tier3-level2-attempt1-active","tier3-level2-attempt1-infra-invalid-pending-attempt2-planning-validation","tier3-level2-attempt2-active","tier3-level2-attempt2-closed-FAIL"}:
-    raise SystemExit(subprocess.run([sys.executable,str(ROOT/"scripts/validate_kde_tier3_build_level2.py")]).returncode)
+if isinstance(gate,str) and gate.startswith("tier3-level2"):
+    # Round 11 / Attempt 10 is closed historical evidence once Level 2 is live.
+    # Validate the frozen closure only; never constrain the current Level 2 gate.
+    raise SystemExit(subprocess.run([sys.executable,str(ROOT/"scripts/validate_kde_tier3_kio_attempt10_closure.py")]).returncode)
 
 if ar.get("round")!=11:
     raise SystemExit("Round 11 lifecycle validator invoked outside Round 11")

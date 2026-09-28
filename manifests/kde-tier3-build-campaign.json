@@ -366,7 +366,7 @@
       "level": 2,
       "state": "planned",
       "source_package": "kf6-kcmutils",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "expected_binary_packages": [
         "libkf6kcmutils-bin",
         "libkf6kcmutils-data",
@@ -378,10 +378,10 @@
         "qml6-module-org-kde-kcmutils"
       ],
       "materialization": {
-        "workflow_run": 35746667704,
-        "job_id": 106810107902,
-        "artifact_id": 10702614310,
-        "artifact_sha256": "8d7c100db9a68af5cf53ee0ca97936f17af5f8150352c45f1ef812d09b4e47aa"
+        "workflow_run": 36466461781,
+        "job_id": 109078164555,
+        "artifact_id": 10989229464,
+        "artifact_sha256": "ec9fb73d8c03f7c972ab2e878ffaa56a3a51f7edad56e276464a09842a88fe5b"
       },
       "blocking_predecessors": [
         "kio",
@@ -746,7 +746,7 @@
       "level": 2,
       "state": "planned",
       "source_package": "kf6-kparts",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "expected_binary_packages": [
         "libkf6parts-data",
         "libkf6parts-dev",
@@ -754,10 +754,10 @@
         "libkf6parts6"
       ],
       "materialization": {
-        "workflow_run": 35746667704,
-        "job_id": 106810107900,
-        "artifact_id": 10703755159,
-        "artifact_sha256": "a97952c5ebbb4cdf82ae9f7bbaad28407cf807324756d80493dede09df5626a4"
+        "workflow_run": 36466461781,
+        "job_id": 109078164738,
+        "artifact_id": 10989828107,
+        "artifact_sha256": "52183686781a2fd30a0d6b8c0b0c40fce6e5da55ac2f8680df7fcc2eae120112"
       },
       "blocking_predecessors": [
         "kio",

@@ -434,3 +434,8 @@ The first KDirModel failure still shows `QIcon::fromTheme` producing an empty ic
 Canonical Tier 3 remains **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED**. KIO's current canonical failed revision is now `6.30.0-0supralinux7`; KXMLGui remains PASS at `6.30.0-0supralinux5`. Binary execution is closed again with `execution_authorized=false`. Level 2 remains unauthorized and no stable promotion is authorized.
 
 Round 11 is closed as mixed. The next gate is **`tier3-round12-kio-diagnostic-definition`**. No Round 12 remediation, source change, package revision or new build is claimed by this closure.
+
+
+## Level 2 remediation materialization evidence
+
+Workflow `36466461781` materialized only KCMUtils and KParts and both jobs passed. Their `result.json` records confirm package versions `6.30.0-0supralinux2`, unchanged KDE 6.30 upstream tarball hashes, and the intended symbols-only packaging adaptations. The evidence is now the promoted source input for Level 2 Attempt 4; package execution remains unauthorized.

@@ -6,7 +6,7 @@ def req(v,m):
     if not v: errors.append(m)
 def load(p): return json.loads((ROOT/p).read_text())
 m=load("manifests/kde-tier3-build-level2.json"); a=load("manifests/kde-tier3-build-level2-attempts.json"); c=load("manifests/kde-tier3-build-campaign.json"); d=load("manifests/kde-dag.json"); l0=load("manifests/kde-tier3-build-level0.json"); l1=load("manifests/kde-tier3-build-level1.json"); mat=load("manifests/kde-tier3-materialization.json"); contracts=load("manifests/kde-tier3-package-contracts.json"); t=load("manifests/kde-frameworks-tier3.json")
-if m.get("state")=="remediation-pending-materialization":
+if m.get("state") in {"remediation-pending-materialization","remediation-materialized-pending-activation"}:
     import subprocess
     raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_level2_remediation.py")]).returncode)
 T=["baloo","kcmutils","knotifyconfig","kparts"]
