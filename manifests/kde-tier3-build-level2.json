@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level2",
   "frameworks_series": "6.30.0",
-  "state": "active-pending-ci",
-  "execution_authorized": true,
+  "state": "remediation-pending-materialization",
+  "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -681,7 +681,7 @@
       ]
     },
     "kcmutils": {
-      "state": "remediation-pending-build",
+      "state": "rematerialization-pending",
       "source_package": "kf6-kcmutils",
       "package_version": "6.30.0-0supralinux1",
       "expected_binary_packages": [
@@ -840,7 +840,8 @@
       "support_input_ids": [
         "breeze-icons",
         "kdoctools"
-      ]
+      ],
+      "candidate_package_version": "6.30.0-0supralinux2"
     },
     "knotifyconfig": {
       "state": "remediation-pending-build",
@@ -996,7 +997,7 @@
       ]
     },
     "kparts": {
-      "state": "remediation-pending-build",
+      "state": "rematerialization-pending",
       "source_package": "kf6-kparts",
       "package_version": "6.30.0-0supralinux1",
       "expected_binary_packages": [
@@ -1146,11 +1147,12 @@
       "support_input_ids": [
         "breeze-icons",
         "kdoctools"
-      ]
+      ],
+      "candidate_package_version": "6.30.0-0supralinux2"
     }
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-build-level2-attempt3",
+  "next_gate": "tier3-level2-attempt4-remediation-materialization-evidence",
   "current_attempt": 3,
   "planning_validation": {
     "repository_policy_workflow_run": 36459675227,
@@ -1165,16 +1167,14 @@
     "result": "PASS"
   },
   "activation": {
-    "status": "ACTIVE",
+    "status": "CLOSED-MIXED",
     "attempt": 3,
-    "planning_policy_workflow_run": 36459675227,
-    "planning_level2_workflow_run": 36459675009,
-    "planning_commit": "82d1e390673e261bc45a1676d002630248b46dc5",
-    "scope": "baloo+kcmutils+knotifyconfig+kparts",
-    "prerequisite": "Attempt 2 closed FAIL; inherited support closure validated in planning-only gate",
-    "runner_executable_preflight": "PASS",
-    "support_closure_validation": "PASS",
-    "next_gate": "tier3-build-level2-attempt3"
+    "workflow_run": 36461187872,
+    "commit": "76bbe36b1d036b31bc95840dbba26dbf8e9b0bb1",
+    "result": "MIXED",
+    "package_attempted": true,
+    "canonical_state_effect": "none; retain 4 FAIL + 3 BLOCKED",
+    "next_gate": "tier3-level2-attempt4-remediation-materialization-evidence"
   },
   "attempt1_summary": {
     "workflow_run": 36446660866,
@@ -1324,6 +1324,47 @@
       "source_code_change": false,
       "package_version_change": false,
       "next_attempt": 3
+    }
+  },
+  "next_attempt": 4,
+  "attempt3_summary": {
+    "workflow_run": 36461187872,
+    "commit": "76bbe36b1d036b31bc95840dbba26dbf8e9b0bb1",
+    "result": "MIXED",
+    "rootfs": {
+      "job_id": 109060037802,
+      "artifact_id": 10987856935,
+      "artifact_sha256": "02587e014fcdac5c51961def414b1bb4335e2fd62c1b8147f3d81cb865be3a39"
+    },
+    "primary_classification": {
+      "FAIL": [
+        "kcmutils"
+      ],
+      "INFRA_INVALID": [
+        "baloo",
+        "knotifyconfig",
+        "kparts"
+      ]
+    },
+    "support_closure_result": "PASS-beyond-install-deps",
+    "runner_proof_defect": "support dev packages were incorrectly promoted into buildinfo proof obligations",
+    "canonical_failures": 0,
+    "canonical_promotions": 0,
+    "canonical_snapshot": "13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED",
+    "remediation": {
+      "runner": "prove exact support artifacts in closure without inventing .buildinfo Build-Depends",
+      "source_materialization_nodes": [
+        "kcmutils",
+        "kparts"
+      ],
+      "retained_source_nodes": [
+        "baloo",
+        "knotifyconfig"
+      ],
+      "candidate_package_versions": {
+        "kcmutils": "6.30.0-0supralinux2",
+        "kparts": "6.30.0-0supralinux2"
+      }
     }
   }
 }

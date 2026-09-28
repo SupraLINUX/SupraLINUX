@@ -271,7 +271,7 @@
       "source_package": "kf6-kcmutils",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux1",
+      "package_version_candidate": "6.30.0-0supralinux2",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kcmutils",
@@ -362,6 +362,20 @@
           "classification": "base-provider-adaptation",
           "decision": "resolute-tooling",
           "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        }
+      ],
+      "symbol_template_overrides": [
+        {
+          "package": "libkf6kcmutilsquick6",
+          "symbol": "_ZTVSt23_Sp_counted_ptr_inplaceI10QQmlEngineSaIvELN9__gnu_cxx12_Lock_policyE2EE@Base",
+          "preserve_tags": [
+            "arch=!riscv64"
+          ],
+          "add_tags": [
+            "optional"
+          ],
+          "classification": "toolchain-generated-template-vtable",
+          "rationale": "Compiler/libstdc++ implementation detail is not a stable KDE ABI contract; preserve the architecture condition but do not make its emission mandatory."
         }
       ]
     },
@@ -1887,7 +1901,7 @@
       "source_package": "kf6-kparts",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux1",
+      "package_version_candidate": "6.30.0-0supralinux2",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kparts",
@@ -1962,6 +1976,19 @@
           "classification": "base-provider-adaptation",
           "decision": "resolute-tooling",
           "rationale": "Use Resolute provider tooling without changing KDE feature semantics."
+        }
+      ],
+      "symbol_template_additions": [
+        {
+          "package": "libkf6parts6",
+          "soname": "libKF6Parts.so.6",
+          "symbol": "_ZSt19piecewise_construct@Base",
+          "minimal_version": "6.30.0",
+          "tags": [
+            "optional"
+          ],
+          "classification": "toolchain-generated-template-symbol",
+          "rationale": "Record the compiler-generated symbol at upstream 6.30.0 without embedding the SupraLINUX Debian revision."
         }
       ]
     },
@@ -4686,5 +4713,30 @@
         "canonical_promotions": 0
       }
     }
-  ]
+  ],
+  "level2_remediation": {
+    "status": "materialization-pending-ci",
+    "trigger": {
+      "attempt": 3,
+      "workflow_run": 36461187872,
+      "commit": "76bbe36b1d036b31bc95840dbba26dbf8e9b0bb1",
+      "result": "MIXED"
+    },
+    "source_changed_nodes": [
+      "kcmutils",
+      "kparts"
+    ],
+    "validation_only_nodes": [
+      "baloo",
+      "knotifyconfig"
+    ],
+    "candidate_package_versions": {
+      "kcmutils": "6.30.0-0supralinux2",
+      "kparts": "6.30.0-0supralinux2"
+    },
+    "materialization_authorized": true,
+    "package_build_authorized": false,
+    "canonical_state_effect": "none until materialization/build PASS",
+    "next_gate": "tier3-level2-attempt4-remediation-materialization-evidence"
+  }
 }

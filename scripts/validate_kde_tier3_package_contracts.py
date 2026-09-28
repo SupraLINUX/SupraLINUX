@@ -13,6 +13,10 @@ a=load("manifests/kde-tier3-provider-audit.json")
 canonical=[n["id"] for n in t["nodes"]]
 nodes={n["id"]:n for n in t["nodes"]}
 
+if t.get("level2_remediation",{}).get("status")=="materialization-pending-ci":
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_level2_remediation.py")]).returncode)
+
 if t.get("active_remediation",{}).get("round")==11:
     import subprocess
     raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_round11.py")]).returncode)

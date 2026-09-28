@@ -9,8 +9,9 @@ runner_path=ROOT/"scripts/run-kde-tier3-build-level2.sh"
 if not runner_path.is_file() or not os.access(runner_path,os.X_OK):
     raise SystemExit("Level2 runner must be executable")
 runner=runner_path.read_text()
-for token in ("manifests/kde-tier3-build-level2.json",".work/kde-tier3-build-level2","evidence/kde-tier3-build-level2","buildinfo-proof-contracts.tsv","provider_closure_input_ids","provider-closure.json","SBUILD_ENABLE_NETWORK"):
+for token in ("manifests/kde-tier3-build-level2.json",".work/kde-tier3-build-level2","evidence/kde-tier3-build-level2","buildinfo-proof-contracts.tsv","provider_closure_input_ids","provider-closure.json","support_input_ids","support-closure.json","SBUILD_ENABLE_NETWORK"):
     if token not in runner: raise SystemExit("Level2 runner missing "+token)
+if 'if x["kind"]=="support" and x.get("dev_package")' in runner: raise SystemExit("Level2 runner must not invent support dev-package buildinfo edges")
 for node,cfg in m["nodes"].items():
     if cfg.get("sbuild_enable_network") is not False: raise SystemExit(node+": network must remain disabled")
     if attempt3_context and cfg.get("support_input_ids")!=["breeze-icons","kdoctools"]:

@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 2
 
-Status: **Attempt 3 active with inherited support-provider closure** as of 2026-09-28.
+Status: **Attempt 3 closed MIXED; Attempt 4 remediation pending KCMUtils/KParts materialization** as of 2026-09-28.
 
 Level 2 contains Baloo, KCMUtils, KNotifyConfig and KParts. Its precondition is closed Level 1 Attempt 10: KIO `6.30.0-0supralinux10` and KXMLGui `6.30.0-0supralinux5` are canonical PASS, with Tier 3 at **13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**.
 
@@ -67,3 +67,14 @@ Attempt 3 remediation does not change source code or package versions. It adds t
 ## Attempt 3 activation
 
 Attempt 3 is active only to validate the inherited packaging support closure. The canonical pre-build snapshot remains **13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED**. No source, package version, upstream release, Qt provider or materialization changed. `breeze-icons` and `kdoctools` are the only new inherited support inputs, and stable promotion remains outside this gate.
+
+
+## Attempt 3 result
+
+Workflow `36461187872` proved that the inherited support closure fixed the Attempt 2 install-deps blocker: all four nodes advanced beyond dependency installation.
+
+The runner then exposed a validation defect: it treated every support provider's development package as if it were a direct Build-Depends that must appear in `.buildinfo`. Exact support artifacts are now proven separately in `support-closure.json`; `.buildinfo` remains authoritative only for declared direct Build-Depends and explicit additional proof packages.
+
+Primary classification: Baloo and KNotifyConfig are `INFRA_INVALID` at buildinfo-predecessor-proof; KParts is also `INFRA_INVALID` at that primary stage, with an independent Lintian symbol-metadata blocker observed; KCMUtils is a real `FAIL` in sbuild/dpkg-gensymbols after 6/6 tests passed.
+
+Canonical state remains **13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED**. Attempt 4 is not authorized. Only KCMUtils and KParts are queued for rematerialization as `6.30.0-0supralinux2`; Baloo and KNotifyConfig retain their current source materializations.

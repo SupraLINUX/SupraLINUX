@@ -59,6 +59,42 @@
       "canonical_promotions": 0,
       "common_root_cause": "libkf6iconthemes6 requires libkf6breezeicons6 >= 4:6.30.0~; support provider omitted from Level2 closure",
       "next_attempt": 3
+    },
+    {
+      "attempt": 3,
+      "workflow_run": 36461187872,
+      "commit": "76bbe36b1d036b31bc95840dbba26dbf8e9b0bb1",
+      "result": "MIXED",
+      "package_attempted": true,
+      "package_state_effect": "no net canonical transition; retain 4 FAIL + 3 BLOCKED",
+      "rootfs": {
+        "job_id": 109060037802,
+        "artifact_id": 10987856935,
+        "artifact_sha256": "02587e014fcdac5c51961def414b1bb4335e2fd62c1b8147f3d81cb865be3a39"
+      },
+      "workflow_jobs": {
+        "success": 0,
+        "fail": 4
+      },
+      "primary_classification": {
+        "FAIL": [
+          "kcmutils"
+        ],
+        "INFRA_INVALID": [
+          "baloo",
+          "knotifyconfig",
+          "kparts"
+        ]
+      },
+      "canonical_failures": 0,
+      "canonical_promotions": 0,
+      "remediation_findings": {
+        "support_closure": "PASS: all four nodes advanced beyond install-deps",
+        "invalid_proof": "runner incorrectly required support-provider dev packages in .buildinfo",
+        "kcmutils": "real sbuild/dpkg-gensymbols failure on compiler-generated symbol metadata",
+        "kparts": "independent Lintian symbol-version blocker observed before invalid proof terminated the runner"
+      },
+      "next_attempt": 4
     }
   ],
   "nodes": {
@@ -99,6 +135,26 @@
         "rootfs_artifact_id": 10981049607,
         "rootfs_artifact_sha256": "2fd3974bd3af35e25d19669f585fc894b926a055448b6ec36e66d8898c4eea63",
         "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
+      },
+      {
+        "attempt": 3,
+        "workflow_run": 36461187872,
+        "commit": "76bbe36b1d036b31bc95840dbba26dbf8e9b0bb1",
+        "job_id": 109060567943,
+        "artifact_id": 10987558546,
+        "artifact_sha256": "d9d8b5db948cc77958acaa3c9a3754e1bdd5ba302d4567b8b82d44cc7fc8e535",
+        "raw_result": "FAIL",
+        "result": "INFRA_INVALID",
+        "stage": "buildinfo-predecessor-proof",
+        "failure_substage": "invented-support-dev-buildinfo-edge",
+        "exit_code": 1,
+        "package_attempted": true,
+        "package_state_effect": "none",
+        "canonical_state_effect": "retain-prior-FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10987856935,
+        "rootfs_artifact_sha256": "02587e014fcdac5c51961def414b1bb4335e2fd62c1b8147f3d81cb865be3a39",
+        "observed_package_result": "sbuild successful; 38/38 tests PASS; Lintian did not fail before invalid proof"
       }
     ],
     "kcmutils": [
@@ -138,6 +194,26 @@
         "rootfs_artifact_id": 10981049607,
         "rootfs_artifact_sha256": "2fd3974bd3af35e25d19669f585fc894b926a055448b6ec36e66d8898c4eea63",
         "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
+      },
+      {
+        "attempt": 3,
+        "workflow_run": 36461187872,
+        "commit": "76bbe36b1d036b31bc95840dbba26dbf8e9b0bb1",
+        "job_id": 109060567940,
+        "artifact_id": 10988002505,
+        "artifact_sha256": "f9968354bda9dbaab681743fcf4ff015aec69d90f3f2cf49aa5f3a312307511c",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "failure_substage": "dpkg-gensymbols-missing-compiler-generated-symbol",
+        "exit_code": 2,
+        "package_attempted": true,
+        "package_state_effect": "FAIL",
+        "canonical_state_effect": "retain-FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10987856935,
+        "rootfs_artifact_sha256": "02587e014fcdac5c51961def414b1bb4335e2fd62c1b8147f3d81cb865be3a39",
+        "tests": "6/6 PASS",
+        "root_cause": "libkf6kcmutilsquick6 symbols baseline treats a libstdc++ shared_ptr vtable as mandatory on !riscv64; Resolute toolchain does not emit it"
       }
     ],
     "knotifyconfig": [
@@ -177,6 +253,26 @@
         "rootfs_artifact_id": 10981049607,
         "rootfs_artifact_sha256": "2fd3974bd3af35e25d19669f585fc894b926a055448b6ec36e66d8898c4eea63",
         "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
+      },
+      {
+        "attempt": 3,
+        "workflow_run": 36461187872,
+        "commit": "76bbe36b1d036b31bc95840dbba26dbf8e9b0bb1",
+        "job_id": 109060567968,
+        "artifact_id": 10987288089,
+        "artifact_sha256": "015fcf5ddfb4c5caabf0c5ff13fb8ff6fc83e1b85e27f62bac49174a8138269a",
+        "raw_result": "FAIL",
+        "result": "INFRA_INVALID",
+        "stage": "buildinfo-predecessor-proof",
+        "failure_substage": "invented-support-dev-buildinfo-edge",
+        "exit_code": 1,
+        "package_attempted": true,
+        "package_state_effect": "none",
+        "canonical_state_effect": "retain-prior-FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10987856935,
+        "rootfs_artifact_sha256": "02587e014fcdac5c51961def414b1bb4335e2fd62c1b8147f3d81cb865be3a39",
+        "observed_package_result": "sbuild successful; 1/1 tests PASS; Lintian did not fail before invalid proof"
       }
     ],
     "kparts": [
@@ -216,6 +312,27 @@
         "rootfs_artifact_id": 10981049607,
         "rootfs_artifact_sha256": "2fd3974bd3af35e25d19669f585fc894b926a055448b6ec36e66d8898c4eea63",
         "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
+      },
+      {
+        "attempt": 3,
+        "workflow_run": 36461187872,
+        "commit": "76bbe36b1d036b31bc95840dbba26dbf8e9b0bb1",
+        "job_id": 109060568000,
+        "artifact_id": 10987207839,
+        "artifact_sha256": "35da4cf473a6ef3f160146cfec02f33610be3cac9670a824f0e1bece86d42a4f",
+        "raw_result": "FAIL",
+        "result": "INFRA_INVALID",
+        "stage": "buildinfo-predecessor-proof",
+        "failure_substage": "invented-support-dev-buildinfo-edge",
+        "exit_code": 1,
+        "package_attempted": true,
+        "package_state_effect": "none",
+        "canonical_state_effect": "retain-prior-FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10987856935,
+        "rootfs_artifact_sha256": "02587e014fcdac5c51961def414b1bb4335e2fd62c1b8147f3d81cb865be3a39",
+        "tests": "3/3 PASS",
+        "independent_package_blocker_observed": "Lintian symbols-file-contains-current-version-with-debian-revision for _ZSt19piecewise_construct@Base"
       }
     ]
   },

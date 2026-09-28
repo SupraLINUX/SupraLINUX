@@ -87,6 +87,7 @@ plan={
  "buildinfo_proof_packages":n.get("buildinfo_proof_packages",[]),
  "extra_buildinfo_proof_packages":n.get("extra_buildinfo_proof_packages",[]),
  "provider_closure_input_ids":n.get("provider_closure_input_ids",[]),
+ "support_input_ids":n.get("support_input_ids",[]),
  "runtime_validation_input_ids":n.get("runtime_validation_input_ids",[]),
  "sbuild_enable_network":n.get("sbuild_enable_network",False),
 }
@@ -193,6 +194,10 @@ closure_ids=plan.get("provider_closure_input_ids",[])
 missing=[x for x in closure_ids if x not in records]
 if missing: raise SystemExit(f"provider closure inputs missing from retained records: {missing}")
 (out/"provider-closure.json").write_text(json.dumps({x:records[x] for x in closure_ids},indent=2,sort_keys=True)+"\n")
+support_ids=plan.get("support_input_ids",[])
+missing_support=[x for x in support_ids if x not in records or records[x].get("kind")!="support"]
+if missing_support: raise SystemExit(f"support closure inputs missing from retained records: {missing_support}")
+(out/"support-closure.json").write_text(json.dumps({x:records[x] for x in support_ids},indent=2,sort_keys=True)+"\n")
 (out/"predecessor-debs.txt").write_text("\n".join(all_debs)+"\n")
 proof=[]
 for pkg in plan.get("buildinfo_proof_packages",[]):
@@ -203,9 +208,9 @@ for pkg in plan.get("extra_buildinfo_proof_packages",[]):
     matches=[x for x in plan["inputs"] if pkg in x["expected_binary_packages"]]
     if len(matches)!=1: raise SystemExit(f"extra buildinfo proof package {pkg}: expected one provider")
     proof.append((pkg,matches[0]["version"],matches[0]["id"]))
-for x in plan["inputs"]:
-    if x["kind"]=="support" and x.get("dev_package"):
-        proof.append((x["dev_package"],x["version"],x["id"]))
+# Support providers are exact solver-closure inputs, not synthetic source Build-Depends.
+# Their artifacts are proven separately in support-closure.json; only declared direct
+# Build-Depends or explicit extra proof packages belong in .buildinfo proof.
 (out/"buildinfo-proof-contracts.tsv").write_text("\n".join("\t".join(x) for x in proof)+"\n")
 PY
 mapfile -t PREDECESSOR_DEBS < "${EVIDENCE}/predecessor-debs.txt"
