@@ -7,7 +7,7 @@ t=json.loads((ROOT/"manifests/kde-frameworks-tier3.json").read_text())
 ar=t.get("active_remediation",{})
 gate=t.get("discovery_policy",{}).get("package_builds")
 
-if gate in {"tier3-level2-planning-validated","tier3-level2-attempt1-active","tier3-level2-attempt1-infra-invalid-pending-attempt2-planning-validation"}:
+if gate in {"tier3-level2-planning-validated","tier3-level2-attempt1-active","tier3-level2-attempt1-infra-invalid-pending-attempt2-planning-validation","tier3-level2-attempt2-active"}:
     raise SystemExit(subprocess.run([sys.executable,str(ROOT/"scripts/validate_kde_tier3_build_level2.py")]).returncode)
 
 if ar.get("round")!=11:

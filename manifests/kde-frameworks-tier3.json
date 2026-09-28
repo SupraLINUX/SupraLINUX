@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level2-planning",
+    "phase": "build-level2",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level2-attempt1-infra-invalid-pending-attempt2-planning-validation",
-    "remediation": "level2-runner-executable-bit-remediation"
+    "package_builds": "tier3-level2-attempt2-active",
+    "remediation": "level2-attempt2-after-runner-executable-remediation"
   },
   "nodes": [
     {
@@ -2437,22 +2437,26 @@
   },
   "level2_execution": {
     "manifest": "manifests/kde-tier3-build-level2.json",
-    "status": "attempt1-INFRA_INVALID-pending-attempt2-planning-validation",
-    "current_attempt": 1,
-    "next_attempt": 2,
+    "status": "attempt2-active",
+    "attempt": 2,
     "selected_nodes": [
       "baloo",
       "kcmutils",
       "knotifyconfig",
       "kparts"
     ],
-    "execution_authorized": false,
+    "execution_authorized": true,
+    "attempt1_result": "INFRA_INVALID",
     "attempt1_workflow_run": 36446660866,
-    "attempt1_commit": "d3d504d02ecff7aa1138c5e03052e4c77e558c12",
-    "failure_class": "runner-not-executable",
-    "package_attempted": false,
-    "canonical_state_effect": "none",
+    "attempt1_package_state_effect": "none",
+    "planning_validation": {
+      "repository_policy_workflow_run": 36447346563,
+      "level2_workflow_run": 36447346441,
+      "commit": "d420cd8b60e48a837ab90acf5ce144f0bfc9be54",
+      "runner_executable_preflight": "PASS",
+      "result": "PASS"
+    },
     "canonical_prebuild_snapshot": "13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED",
-    "next_gate": "tier3-build-level2-attempt2-planning-validation"
+    "next_gate": "tier3-build-level2-attempt2"
   }
 }
