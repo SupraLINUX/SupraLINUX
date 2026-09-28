@@ -229,6 +229,7 @@ required_files = [
     "scripts/run-kde-tier3-kio-round26-hook.sh",
     "scripts/run-kde-tier3-kio-round26-diagnostic.sh",
     "scripts/validate_kde_tier3_kio_round26_remediation.py",
+    "scripts/validate_kde_tier3_kio_round26_closure.py",
     "docs/kde-tier3-kio-round26-remediation.md",
     "docs/status/2026-09-11.md",
     "docs/decisions/ADR-0001-authority-provider.md",

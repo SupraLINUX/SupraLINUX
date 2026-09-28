@@ -981,7 +981,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "round26-remediation-pending-ci",
+    "status": "round26-remediation-PASS-pending-attempt9-definition",
     "trigger_workflow_run": 36035351270,
     "trigger_commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
     "reason": "Round 18 provider-contract audit proved KIO's sbuild test closure must explicitly install qt6-svg-plugins while Ubuntu runtime ownership remains with the Qt GUI recommendation. Rematerialize only KIO as 6.30.0-0supralinux8.",
@@ -1003,7 +1003,7 @@
     "policy": "rematerialize-only-kio-test-provider-change-then-rerun-full-level1",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-round26-kio-combined-remediation-evidence",
+    "next_gate": "tier3-attempt9-kio-remediation-definition",
     "diagnostic_evidence": {
       "workflow_run": 36071103806,
       "job_id": 107872008601,
@@ -1330,6 +1330,42 @@
         "full-suite-visible": 1
       },
       "next_gate": "tier3-round26-kio-combined-remediation-evidence"
+    },
+    "round26_remediation": {
+      "status": "remediation-PASS",
+      "workflow_run": 36366972800,
+      "job_id": 108755265236,
+      "branch_commit": "d8ad9719307bcc115380440f008e9b862b5e6388",
+      "artifact_id": 10948970106,
+      "artifact_sha256": "7c8b91266fd9ecd79638c8c4bfc5419dadac937b911517522b083900e9bc9f98",
+      "result": "REMEDIATION_PASS",
+      "conclusion": "hidden-home-causality-and-combined-kio-remediation-PASS",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "hidden_home": {
+        "runs": 10,
+        "expected_runs": 10,
+        "nonzero_rc_runs": 10,
+        "exact_historical_signature_runs": 10
+      },
+      "visible_home": {
+        "runs": 20,
+        "expected_runs": 20,
+        "nonzero_rc_runs": 0,
+        "exact_historical_signature_runs": 0
+      },
+      "full_suite_visible": {
+        "rc": 0,
+        "all_69_tests_pass": true,
+        "kdirmodel_pass": true,
+        "krecent_pass": true,
+        "krecent_final_order": [
+          "temp File 12",
+          "temp File 13",
+          "temp File 14"
+        ],
+        "krecent_final_order_ok": true
+      }
     }
   },
   "remediation_history": [
@@ -1592,6 +1628,6 @@
     "active_remediation_round": 11,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-round26-kio-combined-remediation-evidence"
+    "next_gate": "tier3-attempt9-kio-remediation-definition"
   }
 }

@@ -1,6 +1,6 @@
 # KDE Tier 3 KIO Round 26 — hidden-HOME causality and combined remediation proof
 
-Status: **definition pending CI; non-promoting remediation proof authorized**.  
+Status: **remediation-PASS; closed historical evidence**.  
 Candidate package execution / Attempt 9: **not authorized**.  
 Canonical KIO: **6.30.0-0supralinux8 = FAIL**.
 
@@ -69,6 +69,34 @@ A PASS proves both:
 
 This still does not authorize Attempt 9. Round 26 remains non-promoting and produces no candidate package.
 
+## Result
+
+Round 26 completed successfully in workflow `36366972800`, job `108755265236`.
+
+Evidence artifact:
+
+- artifact ID: `10948970106`
+- artifact SHA-256: `7c8b91266fd9ecd79638c8c4bfc5419dadac937b911517522b083900e9bc9f98`
+
+Causal controls:
+
+| Lane | Result |
+| --- | --- |
+| historical hidden HOME | **10/10 reproduced the exact historical KDirModel signature** |
+| visible HOME | **20/20 PASS** |
+| full suite with visible HOME + exact KRecent candidate | **69/69 PASS** |
+
+The full-suite lane also retained the expected KRecent final order `12,13,14`.
+
+Conclusion: `hidden-home-causality-and-combined-kio-remediation-PASS`.
+
+The evidence confirms that the remaining KDirModel failure was caused by the hidden SupraLINUX test-HOME path. The proven combined remediation is therefore:
+
+1. the exact deterministic KRecent ordering candidate from Round 25;
+2. a visible packaging test HOME instead of `debian/.supralinux-test-home/sbuild`.
+
+Round 26 remained non-promoting. No package revision was allocated and Attempt 9 was not executed.
+
 ## Current state
 
 ```text
@@ -79,6 +107,6 @@ Attempt 9 = NOT AUTHORIZED
 Round 24 = diagnostic-PASS / timestamp-tie-causality-confirmed
 Round 25 historical contract = FAIL
 Round 25 target KRecent remediation = PASS
-Round 26 = definition-pending-ci
-Next gate = tier3-round26-kio-combined-remediation-evidence
+Round 26 = remediation-PASS / combined KIO proof 69/69
+Next gate = tier3-attempt9-kio-remediation-definition
 ```

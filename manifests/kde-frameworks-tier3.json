@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "diagnostic",
+    "phase": "remediation",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-round26-remediation-pending",
-    "remediation": "round26-kdirmodel-hidden-home-causality-and-combined-remediation-pending-ci"
+    "package_builds": "tier3-round26-remediation-closed",
+    "remediation": "round26-combined-kio-remediation-PASS-pending-attempt9-definition"
   },
   "nodes": [
     {
@@ -1391,8 +1391,8 @@
     "execution_authorized": false,
     "level1_execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "round26-remediation-pending-ci",
-    "next_gate": "tier3-round26-kio-combined-remediation-evidence",
+    "status": "round26-remediation-PASS-pending-attempt9-definition",
+    "next_gate": "tier3-attempt9-kio-remediation-definition",
     "current_attempt": 8,
     "next_attempt": 9,
     "validation_workflow_run": 36238357510,
@@ -1422,9 +1422,9 @@
       "result": "PASS"
     },
     "krecentdocument_policy": {
-      "classification": "deterministic-ordering-candidate-PASS-independent-kdirmodel-blocker",
-      "action": "prove-hidden-home-causality-and-combined-kio-remediation",
-      "next_attempt_behavior": "Attempt9-remains-unauthorized"
+      "classification": "deterministic-ordering-candidate-PASS",
+      "action": "prepare-attempt9-package-remediation-with-proven-krecent-patch-and-visible-test-home",
+      "next_attempt_behavior": "Attempt9-remains-unauthorized-pending-definition"
     },
     "materialization_workflow_run": 36222711238,
     "materialization_commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",
@@ -1741,6 +1741,42 @@
         "full-suite-visible": 1
       },
       "next_gate": "tier3-round26-kio-combined-remediation-evidence"
+    },
+    "round26_remediation": {
+      "status": "remediation-PASS",
+      "workflow_run": 36366972800,
+      "job_id": 108755265236,
+      "branch_commit": "d8ad9719307bcc115380440f008e9b862b5e6388",
+      "artifact_id": 10948970106,
+      "artifact_sha256": "7c8b91266fd9ecd79638c8c4bfc5419dadac937b911517522b083900e9bc9f98",
+      "result": "REMEDIATION_PASS",
+      "conclusion": "hidden-home-causality-and-combined-kio-remediation-PASS",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "hidden_home": {
+        "runs": 10,
+        "expected_runs": 10,
+        "nonzero_rc_runs": 10,
+        "exact_historical_signature_runs": 10
+      },
+      "visible_home": {
+        "runs": 20,
+        "expected_runs": 20,
+        "nonzero_rc_runs": 0,
+        "exact_historical_signature_runs": 0
+      },
+      "full_suite_visible": {
+        "rc": 0,
+        "all_69_tests_pass": true,
+        "kdirmodel_pass": true,
+        "krecent_pass": true,
+        "krecent_final_order": [
+          "temp File 12",
+          "temp File 13",
+          "temp File 14"
+        ],
+        "krecent_final_order_ok": true
+      }
     }
   },
   "remediation_history": [
