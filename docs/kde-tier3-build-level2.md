@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 2
 
-Status: **Attempt 4 closed MIXED; KCMUtils `6.30.0-0supralinux3` remediation materialization pending** as of 2026-09-28.
+Status: **Attempt 4 closed MIXED; KCMUtils `6.30.0-0supralinux3` materialization PASS; Attempt 5 planning validation pending** as of 2026-09-28.
 
 Level 2 contains Baloo, KCMUtils, KNotifyConfig and KParts. Its precondition is closed Level 1 Attempt 10: KIO `6.30.0-0supralinux10` and KXMLGui `6.30.0-0supralinux5` are canonical PASS, with Tier 3 at **13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**.
 
@@ -118,4 +118,4 @@ The next source-only candidate is `6.30.0-0supralinux3`. It preserves `arch=!ris
 
 as `optional`. No KDE public ABI, upstream source, Qt provider, tests or support closure is relaxed.
 
-Materialization is the only authorized next action. It does **not** consume Package Attempt 5. Binary execution remains disabled until materialization and a later activation gate pass.
+Materialization workflow `36477724469` completed successfully for KCMUtils `6.30.0-0supralinux3`: job `109115619026`, artifact `10994755385`, artifact SHA-256 `69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3`. The retained result records `package_attempted=false`, unchanged KDE 6.30 upstream tarball SHA-256, and only the two reviewed optional shared_ptr implementation-symbol overrides.\n\nThis materialization does **not** consume Package Attempt 5. Canonical package state remains **16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED**. Binary execution remains disabled; the next gate is `tier3-build-level2-attempt5-planning-validation`.

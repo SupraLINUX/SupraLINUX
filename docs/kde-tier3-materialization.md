@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 source materialization
 
-Status: **Round 10 source materialization PASS retained; Attempt 6 closed; no Round 11 rematerialization authorized** as of 2026-09-24.
+Status: **20/20 Tier 3 source materializations PASS; KCMUtils `6.30.0-0supralinux3` remediation materialized; Attempt 5 planning validation pending** as of 2026-09-28.
 
 This gate materializes the 20 canonical KDE Frameworks Tier 3 source packages from the already-approved SupraLINUX package contracts. It does **not** build binary packages and cannot make a Tier 3 node `PASS` or downstream-eligible.
 
@@ -445,6 +445,6 @@ Workflow `36466461781` materialized only KCMUtils and KParts and both jobs passe
 
 Level 2 workflow `36473379324` closed MIXED: Baloo, KNotifyConfig and KParts passed, while KCMUtils `6.30.0-0supralinux2` failed in `dpkg-gensymbols` after all 6 upstream tests passed.
 
-The new materialization queue contains only KCMUtils. Candidate `6.30.0-0supralinux3` keeps the previous optional shared_ptr vtable override and additionally marks the matching libstdc++ shared_ptr typeinfo as optional while preserving `arch=!riscv64`. This is source-package metadata materialization only; `package_attempted=false` and binary execution remains unauthorized.
+The remediation materialization queue contained only KCMUtils. Candidate `6.30.0-0supralinux3` keeps the previous optional shared_ptr vtable override and additionally marks the matching libstdc++ shared_ptr typeinfo as optional while preserving `arch=!riscv64`. Workflow `36477724469`, job `109115619026`, artifact `10994755385` completed PASS with artifact SHA-256 `69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3`. The retained `result.json` records `package_attempted=false`, so this remains source-package metadata materialization only.
 
-Canonical package state before this materialization is **16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED**. Next gate: `tier3-level2-remediation-materialization-evidence`.
+Canonical package state remains **16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED**. All 20 Tier 3 source packages are now materialized. Package Attempt 5 has not started and binary execution remains unauthorized. Next gate: `tier3-build-level2-attempt5-planning-validation`.

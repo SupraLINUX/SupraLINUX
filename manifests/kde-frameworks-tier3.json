@@ -16,8 +16,8 @@
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level2-remediation-pending-materialization",
-    "remediation": "level2-kcmutils-symbol-metadata-remediation"
+    "package_builds": "tier3-level2-remediation-materialized-pending-attempt5-planning-validation",
+    "remediation": "level2-kcmutils-symbol-metadata-remediation-materialized"
   },
   "nodes": [
     {
@@ -2636,7 +2636,7 @@
   },
   "level2_execution": {
     "manifest": "manifests/kde-tier3-build-level2.json",
-    "status": "attempt-closed-MIXED-remediation-pending-materialization",
+    "status": "attempt4-closed-MIXED-remediation-materialized-pending-attempt5-activation",
     "current_attempt": 4,
     "next_attempt": 5,
     "selected_nodes": [
@@ -2662,7 +2662,7 @@
     },
     "canonical_state_effect": "3 PASS promoted; KCMUtils remains current FAIL; KTextEditor unblocked to pending",
     "canonical_snapshot": "16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED",
-    "next_gate": "tier3-level2-remediation-materialization-evidence"
+    "next_gate": "tier3-build-level2-attempt5-planning-validation"
   },
   "level2_snapshot": {
     "pass": 16,
@@ -2681,7 +2681,7 @@
     "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3"
   },
   "level2_remediation": {
-    "status": "materialization-pending-ci",
+    "status": "materialization-PASS-pending-attempt5-activation-validation",
     "trigger": {
       "attempt": 4,
       "workflow_run": 36473379324,
@@ -2702,7 +2702,24 @@
     "reason": "KCMUtils passed 6/6 tests but dpkg-gensymbols rejected one mandatory libstdc++ shared_ptr typeinfo symbol that the Resolute amd64 toolchain does not emit.",
     "execution_authorized": false,
     "canonical_state_effect": "3 PASS promoted; KCMUtils FAIL retained",
-    "next_gate": "tier3-level2-remediation-materialization-evidence"
+    "next_gate": "tier3-build-level2-attempt5-planning-validation",
+    "source_materialization_complete": true,
+    "materialization_authorized": false,
+    "package_build_authorized": false,
+    "materialization_workflow_run": 36477724469,
+    "materialization_commit": "2ff091a675dc7660ebeff0ebb7c7828b9e6fb0bd",
+    "materialization_evidence": {
+      "workflow_run": 36477724469,
+      "commit": "2ff091a675dc7660ebeff0ebb7c7828b9e6fb0bd",
+      "artifacts": {
+        "kcmutils": {
+          "job_id": 109115619026,
+          "artifact_id": 10994755385,
+          "artifact_sha256": "69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3",
+          "package_version": "6.30.0-0supralinux3"
+        }
+      }
+    }
   },
   "level2_remediation_history": [
     {

@@ -4727,7 +4727,7 @@
     }
   ],
   "level2_remediation": {
-    "status": "materialization-pending-ci",
+    "status": "materialization-PASS",
     "trigger": {
       "attempt": 4,
       "workflow_run": 36473379324,
@@ -4745,10 +4745,25 @@
     "candidate_package_versions": {
       "kcmutils": "6.30.0-0supralinux3"
     },
-    "materialization_authorized": true,
+    "materialization_authorized": false,
     "package_build_authorized": false,
     "canonical_state_effect": "Attempt 4 already promoted Baloo/KNotifyConfig/KParts; KCMUtils remains FAIL until a later package PASS",
-    "next_gate": "tier3-level2-remediation-materialization-evidence"
+    "next_gate": "tier3-build-level2-attempt5-planning-validation",
+    "source_materialization_complete": true,
+    "materialization_workflow_run": 36477724469,
+    "materialization_commit": "2ff091a675dc7660ebeff0ebb7c7828b9e6fb0bd",
+    "materialization_evidence": {
+      "workflow_run": 36477724469,
+      "commit": "2ff091a675dc7660ebeff0ebb7c7828b9e6fb0bd",
+      "artifacts": {
+        "kcmutils": {
+          "job_id": 109115619026,
+          "artifact_id": 10994755385,
+          "artifact_sha256": "69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3",
+          "package_version": "6.30.0-0supralinux3"
+        }
+      }
+    }
   },
   "level2_remediation_history": [
     {

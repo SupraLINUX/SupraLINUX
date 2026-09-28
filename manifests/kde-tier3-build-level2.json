@@ -5,7 +5,7 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level2",
   "frameworks_series": "6.30.0",
-  "state": "remediation-pending-materialization",
+  "state": "remediation-materialized-pending-activation",
   "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED",
@@ -699,9 +699,9 @@
       }
     },
     "kcmutils": {
-      "state": "rematerialization-pending",
+      "state": "remediation-pending-build",
       "source_package": "kf6-kcmutils",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "expected_binary_packages": [
         "libkf6kcmutils-bin",
         "libkf6kcmutils-data",
@@ -713,10 +713,10 @@
         "qml6-module-org-kde-kcmutils"
       ],
       "materialization": {
-        "workflow_run": 36466461781,
-        "job_id": 109078164555,
-        "artifact_id": 10989229464,
-        "artifact_sha256": "ec9fb73d8c03f7c972ab2e878ffaa56a3a51f7edad56e276464a09842a88fe5b"
+        "workflow_run": 36477724469,
+        "job_id": 109115619026,
+        "artifact_id": 10994755385,
+        "artifact_sha256": "69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3"
       },
       "blocking_predecessors": [
         "kio",
@@ -859,7 +859,6 @@
         "breeze-icons",
         "kdoctools"
       ],
-      "candidate_package_version": "6.30.0-0supralinux3",
       "fail_evidence": {
         "result": "FAIL",
         "build_result": "FAIL",
@@ -1223,7 +1222,7 @@
     }
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-level2-remediation-materialization-evidence",
+  "next_gate": "tier3-build-level2-attempt5-planning-validation",
   "current_attempt": 4,
   "planning_validation": {
     "repository_policy_workflow_run": 36468037163,
@@ -1509,5 +1508,41 @@
         "kcmutils": "6.30.0-0supralinux3"
       }
     }
+  },
+  "level2_remediation": {
+    "status": "materialization-PASS-pending-attempt5-activation-validation",
+    "trigger": {
+      "attempt": 4,
+      "workflow_run": 36473379324,
+      "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3",
+      "result": "MIXED"
+    },
+    "source_changed_nodes": [
+      "kcmutils"
+    ],
+    "retained_pass_nodes": [
+      "baloo",
+      "knotifyconfig",
+      "kparts"
+    ],
+    "candidate_package_versions": {
+      "kcmutils": "6.30.0-0supralinux3"
+    },
+    "source_materialization_complete": true,
+    "materialization_evidence": {
+      "workflow_run": 36477724469,
+      "commit": "2ff091a675dc7660ebeff0ebb7c7828b9e6fb0bd",
+      "artifacts": {
+        "kcmutils": {
+          "job_id": 109115619026,
+          "artifact_id": 10994755385,
+          "artifact_sha256": "69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3",
+          "package_version": "6.30.0-0supralinux3"
+        }
+      }
+    },
+    "package_build_authorized": false,
+    "execution_authorized": false,
+    "next_gate": "tier3-build-level2-attempt5-planning-validation"
   }
 }
