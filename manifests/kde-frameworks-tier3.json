@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level2-remediation-planning",
+    "phase": "build-level2",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level2-remediation-materialized-pending-attempt5-planning-validation",
-    "remediation": "level2-kcmutils-symbol-metadata-remediation-materialized"
+    "package_builds": "tier3-level2-remediation-package-attempt-active",
+    "remediation": "level2-kcmutils-symbol-metadata-remediation"
   },
   "nodes": [
     {
@@ -2636,33 +2636,28 @@
   },
   "level2_execution": {
     "manifest": "manifests/kde-tier3-build-level2.json",
-    "status": "attempt4-closed-MIXED-remediation-materialized-pending-attempt5-activation",
-    "current_attempt": 4,
-    "next_attempt": 5,
+    "status": "remediation-package-attempt-active",
+    "current_attempt": 5,
+    "next_attempt": null,
     "selected_nodes": [
-      "baloo",
-      "kcmutils",
-      "knotifyconfig",
-      "kparts"
+      "kcmutils"
     ],
-    "execution_authorized": false,
-    "workflow_run": 36473379324,
-    "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3",
-    "result": "MIXED",
-    "classification": {
-      "PASS": [
-        "baloo",
-        "knotifyconfig",
-        "kparts"
-      ],
-      "FAIL": [
-        "kcmutils"
-      ],
-      "INFRA_INVALID": []
+    "execution_authorized": true,
+    "planning_validation": {
+      "repository_policy_workflow_run": 36494035689,
+      "level2_workflow_run": 36494035772,
+      "commit": "ed1e39fe980acdca43e668ec564a66219d5b2adf",
+      "policy_job_id": 109169283549,
+      "plan_job_id": 109169283518,
+      "intentional_skip_job_id": 109169328324,
+      "rootfs_job_conclusion": "skipped",
+      "package_matrix_conclusion": "skipped",
+      "runner_scope_validation": "PASS",
+      "remediation_materialization_validation": "PASS",
+      "result": "PASS"
     },
-    "canonical_state_effect": "3 PASS promoted; KCMUtils remains current FAIL; KTextEditor unblocked to pending",
-    "canonical_snapshot": "16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED",
-    "next_gate": "tier3-build-level2-attempt5-planning-validation"
+    "canonical_prebuild_snapshot": "16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED",
+    "next_gate": "tier3-build-level2-attempt5"
   },
   "level2_snapshot": {
     "pass": 16,
@@ -2681,7 +2676,7 @@
     "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3"
   },
   "level2_remediation": {
-    "status": "materialization-PASS-pending-attempt5-activation-validation",
+    "status": "package-attempt-active",
     "trigger": {
       "attempt": 4,
       "workflow_run": 36473379324,
@@ -2700,12 +2695,12 @@
       "kcmutils": "6.30.0-0supralinux3"
     },
     "reason": "KCMUtils passed 6/6 tests but dpkg-gensymbols rejected one mandatory libstdc++ shared_ptr typeinfo symbol that the Resolute amd64 toolchain does not emit.",
-    "execution_authorized": false,
+    "execution_authorized": true,
     "canonical_state_effect": "3 PASS promoted; KCMUtils FAIL retained",
-    "next_gate": "tier3-build-level2-attempt5-planning-validation",
+    "next_gate": "tier3-build-level2-attempt5",
     "source_materialization_complete": true,
     "materialization_authorized": false,
-    "package_build_authorized": false,
+    "package_build_authorized": true,
     "materialization_workflow_run": 36477724469,
     "materialization_commit": "2ff091a675dc7660ebeff0ebb7c7828b9e6fb0bd",
     "materialization_evidence": {
@@ -2719,6 +2714,40 @@
           "package_version": "6.30.0-0supralinux3"
         }
       }
+    },
+    "current_attempt": 5,
+    "next_attempt": null,
+    "planning_validation": {
+      "repository_policy_workflow_run": 36494035689,
+      "level2_workflow_run": 36494035772,
+      "commit": "ed1e39fe980acdca43e668ec564a66219d5b2adf",
+      "policy_job_id": 109169283549,
+      "plan_job_id": 109169283518,
+      "intentional_skip_job_id": 109169328324,
+      "rootfs_job_conclusion": "skipped",
+      "package_matrix_conclusion": "skipped",
+      "runner_scope_validation": "PASS",
+      "remediation_materialization_validation": "PASS",
+      "result": "PASS"
+    },
+    "activation": {
+      "status": "ACTIVE",
+      "attempt": 5,
+      "planning_policy_workflow_run": 36494035689,
+      "planning_level2_workflow_run": 36494035772,
+      "planning_commit": "ed1e39fe980acdca43e668ec564a66219d5b2adf",
+      "policy_job_id": 109169283549,
+      "plan_job_id": 109169283518,
+      "intentional_skip_job_id": 109169328324,
+      "scope": "kcmutils-only",
+      "source_materialization_versions": {
+        "kcmutils": "6.30.0-0supralinux3"
+      },
+      "runner_scope_validation": "PASS",
+      "remediation_materialization_validation": "PASS",
+      "rootfs_job_conclusion": "skipped",
+      "package_matrix_conclusion": "skipped",
+      "next_gate": "tier3-build-level2-attempt5"
     }
   },
   "level2_remediation_history": [

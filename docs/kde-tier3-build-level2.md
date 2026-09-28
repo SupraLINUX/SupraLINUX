@@ -1,17 +1,19 @@
 # KDE Frameworks Tier 3 — build Level 2
 
-Status: **Attempt 4 closed MIXED; KCMUtils `6.30.0-0supralinux3` materialization PASS; Attempt 5 planning validation pending** as of 2026-09-28.
+Status: **Package Attempt 5 active for KCMUtils `6.30.0-0supralinux3` only** as of 2026-09-28.
 
 Level 2 contains Baloo, KCMUtils, KNotifyConfig and KParts. Its precondition is closed Level 1 Attempt 10: KIO `6.30.0-0supralinux10` and KXMLGui `6.30.0-0supralinux5` are canonical PASS, with Tier 3 at **13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**.
 
 The Level 2 manifest freezes each source-only materialization, all direct Frameworks 6.30 Build-Depends, the recursive SupraLINUX provider closure, exact predecessor versions/artifact IDs/SHA-256 values, selected build profiles and QML payload checks. Every Level 2 sbuild remains network-disabled.
 
-```text
+\`\`\`text
 state = active-pending-ci
 execution_authorized = true
-current_attempt = 4
-next_gate = tier3-build-level2-attempt4
-```
+current_attempt = 5
+next_attempt = null
+runnable_nodes = kcmutils
+next_gate = tier3-build-level2-attempt5
+\`\`\`
 
 Planning was validated by Repository Policy `36443524514` and Level 2 workflow `36443524497` at commit `b07c6c0a0b3072a76e57cf52d679001de2985d3c`. That run executed the planner and intentional skip only; rootfs and package jobs were skipped as required.
 
@@ -119,3 +121,12 @@ The next source-only candidate is `6.30.0-0supralinux3`. It preserves `arch=!ris
 as `optional`. No KDE public ABI, upstream source, Qt provider, tests or support closure is relaxed.
 
 Materialization workflow `36477724469` completed successfully for KCMUtils `6.30.0-0supralinux3`: job `109115619026`, artifact `10994755385`, artifact SHA-256 `69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3a`. The retained result records `package_attempted=false`, unchanged KDE 6.30 upstream tarball SHA-256, and only the two reviewed optional shared_ptr implementation-symbol overrides.\n\nThis materialization does **not** consume Package Attempt 5. Canonical package state remains **16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED**. Binary execution remains disabled; the next gate is `tier3-build-level2-attempt5-planning-validation`.
+
+
+## Attempt 5 activation
+
+Repository Policy `36494035689` and Level 2 planning workflow `36494035772` both passed at commit `ed1e39fe980acdca43e668ec564a66219d5b2adf`. Policy job `109169283549`, planning job `109169283518`, and intentional-skip job `109169328324` passed; rootfs and package jobs were skipped, proving the activation state before binary execution.
+
+Package Attempt 5 is authorized for **KCMUtils only**, using source materialization `6.30.0-0supralinux3` from workflow `36477724469`, job `109115619026`, artifact `10994755385`, SHA-256 `69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3a`. Baloo, KNotifyConfig and KParts remain retained canonical PASS and are not rebuilt.
+
+Activation changes no package result by itself. The canonical pre-build snapshot remains **16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED**. Attempt 5 begins only when the KCMUtils runner starts valid package execution; the active gate is `tier3-build-level2-attempt5`.

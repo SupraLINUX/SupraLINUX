@@ -4727,7 +4727,7 @@
     }
   ],
   "level2_remediation": {
-    "status": "materialization-PASS",
+    "status": "package-attempt-active",
     "trigger": {
       "attempt": 4,
       "workflow_run": 36473379324,
@@ -4746,9 +4746,9 @@
       "kcmutils": "6.30.0-0supralinux3"
     },
     "materialization_authorized": false,
-    "package_build_authorized": false,
+    "package_build_authorized": true,
     "canonical_state_effect": "Attempt 4 already promoted Baloo/KNotifyConfig/KParts; KCMUtils remains FAIL until a later package PASS",
-    "next_gate": "tier3-build-level2-attempt5-planning-validation",
+    "next_gate": "tier3-build-level2-attempt5",
     "source_materialization_complete": true,
     "materialization_workflow_run": 36477724469,
     "materialization_commit": "2ff091a675dc7660ebeff0ebb7c7828b9e6fb0bd",
@@ -4763,6 +4763,40 @@
           "package_version": "6.30.0-0supralinux3"
         }
       }
+    },
+    "current_attempt": 5,
+    "next_attempt": null,
+    "planning_validation": {
+      "repository_policy_workflow_run": 36494035689,
+      "level2_workflow_run": 36494035772,
+      "commit": "ed1e39fe980acdca43e668ec564a66219d5b2adf",
+      "policy_job_id": 109169283549,
+      "plan_job_id": 109169283518,
+      "intentional_skip_job_id": 109169328324,
+      "rootfs_job_conclusion": "skipped",
+      "package_matrix_conclusion": "skipped",
+      "runner_scope_validation": "PASS",
+      "remediation_materialization_validation": "PASS",
+      "result": "PASS"
+    },
+    "activation": {
+      "status": "ACTIVE",
+      "attempt": 5,
+      "planning_policy_workflow_run": 36494035689,
+      "planning_level2_workflow_run": 36494035772,
+      "planning_commit": "ed1e39fe980acdca43e668ec564a66219d5b2adf",
+      "policy_job_id": 109169283549,
+      "plan_job_id": 109169283518,
+      "intentional_skip_job_id": 109169328324,
+      "scope": "kcmutils-only",
+      "source_materialization_versions": {
+        "kcmutils": "6.30.0-0supralinux3"
+      },
+      "runner_scope_validation": "PASS",
+      "remediation_materialization_validation": "PASS",
+      "rootfs_job_conclusion": "skipped",
+      "package_matrix_conclusion": "skipped",
+      "next_gate": "tier3-build-level2-attempt5"
     }
   },
   "level2_remediation_history": [

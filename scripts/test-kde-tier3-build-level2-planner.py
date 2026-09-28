@@ -4,7 +4,7 @@ import json,os,subprocess,sys
 ROOT=Path(__file__).resolve().parents[1]; m=json.loads((ROOT/"manifests/kde-tier3-build-level2.json").read_text()); attempt3_context=m.get("current_attempt")==3 or m.get("next_attempt")==3
 p=json.loads(subprocess.check_output([sys.executable,str(ROOT/"scripts/plan-kde-tier3-build-level2.py")],text=True)); planned=[x["node"] for x in json.loads(p["matrix"])["include"]]
 if m.get("execution_authorized") is False and (p["run"]!="false" or planned): raise SystemExit("inactive Level2 gate scheduled package jobs")
-if m.get("state")=="active-pending-ci" and (p["run"]!="true" or planned!=m["selected_nodes"]): raise SystemExit("active Level2 matrix mismatch")
+if m.get("execution_authorized") is True:\n    runnable=[node for node in m.get("selected_nodes",[]) if m["nodes"][node].get("state") in {"prepared-pending-build","remediation-pending-build"}]\n    if p["run"]!="true" or planned!=runnable: raise SystemExit("active Level2 matrix mismatch")
 runner_path=ROOT/"scripts/run-kde-tier3-build-level2.sh"
 if not runner_path.is_file() or not os.access(runner_path,os.X_OK):
     raise SystemExit("Level2 runner must be executable")
