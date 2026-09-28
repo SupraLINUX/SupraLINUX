@@ -53,7 +53,7 @@ hh=i.get("hidden_home_hypothesis",{})
 req(hh.get("classification")=="strong-causal-candidate-not-yet-proven","Round25 hidden HOME hypothesis discipline")
 req(M.get("next_gate")=="tier3-round26-kio-kdirmodel-hidden-home-causality-definition","Round25 historical next gate")
 req("workflow_call:" in W and "workflow_dispatch:" in W and "\n  pull_request:\n" not in W,"Round25 workflow reusable/manual")
-req("target KRecent remediation: **PASS**" in DOC and "historical Round 25 contract: **FAIL**" in DOC,"Round25 closed docs")
+req("Target KRecent remediation: **PASS**" in DOC and "Historical Round 25 contract: **FAIL**" in DOC,"Round25 closed docs")
 
 print("KDE Tier 3 KIO Round 25 historical evidence: PASS")
 print("historical_contract=FAIL")
