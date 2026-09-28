@@ -151,7 +151,9 @@ def compile_plan() -> dict:
             evidence = mat.get("evidence", {})
             planned_package_version = contract.get("package_version_candidate")
         elif materialization_state == "remediation-pending-ci" and mat.get("state") == "remediation-pending":
-            evidence = mat.get("previous_evidence", {})
+            evidence = mat.get("evidence", {})
+            if evidence.get("result") != "PASS":
+                evidence = mat.get("previous_evidence", {})
             planned_package_version = evidence.get("package_version")
         else:
             raise ValueError(f"{node_id}: materialization PASS baseline evidence missing")
