@@ -5,10 +5,10 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level2",
   "frameworks_series": "6.30.0",
-  "state": "active-pending-ci",
-  "execution_authorized": true,
+  "state": "planned-pending-activation",
+  "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
-  "canonical_snapshot": "13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED",
+  "canonical_snapshot": "13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
   "materialization_manifest": "manifests/kde-tier3-materialization.json",
   "level0_manifest": "manifests/kde-tier3-build-level0.json",
@@ -538,7 +538,7 @@
   },
   "nodes": {
     "baloo": {
-      "state": "prepared-pending-build",
+      "state": "remediation-pending-build",
       "source_package": "kf6-baloo",
       "package_version": "6.30.0-0supralinux1",
       "expected_binary_packages": [
@@ -674,10 +674,14 @@
       "deferred_runtime_validation": [],
       "success_transition": "PASS",
       "downstream_eligible_on_build_success": true,
-      "sbuild_enable_network": false
+      "sbuild_enable_network": false,
+      "support_input_ids": [
+        "breeze-icons",
+        "kdoctools"
+      ]
     },
     "kcmutils": {
-      "state": "prepared-pending-build",
+      "state": "remediation-pending-build",
       "source_package": "kf6-kcmutils",
       "package_version": "6.30.0-0supralinux1",
       "expected_binary_packages": [
@@ -832,10 +836,14 @@
       "deferred_runtime_validation": [],
       "success_transition": "PASS",
       "downstream_eligible_on_build_success": true,
-      "sbuild_enable_network": false
+      "sbuild_enable_network": false,
+      "support_input_ids": [
+        "breeze-icons",
+        "kdoctools"
+      ]
     },
     "knotifyconfig": {
-      "state": "prepared-pending-build",
+      "state": "remediation-pending-build",
       "source_package": "kf6-knotifyconfig",
       "package_version": "6.30.0-0supralinux1",
       "expected_binary_packages": [
@@ -981,10 +989,14 @@
       "deferred_runtime_validation": [],
       "success_transition": "PASS",
       "downstream_eligible_on_build_success": true,
-      "sbuild_enable_network": false
+      "sbuild_enable_network": false,
+      "support_input_ids": [
+        "breeze-icons",
+        "kdoctools"
+      ]
     },
     "kparts": {
-      "state": "prepared-pending-build",
+      "state": "remediation-pending-build",
       "source_package": "kf6-kparts",
       "package_version": "6.30.0-0supralinux1",
       "expected_binary_packages": [
@@ -1130,11 +1142,15 @@
       "deferred_runtime_validation": [],
       "success_transition": "PASS",
       "downstream_eligible_on_build_success": true,
-      "sbuild_enable_network": false
+      "sbuild_enable_network": false,
+      "support_input_ids": [
+        "breeze-icons",
+        "kdoctools"
+      ]
     }
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-build-level2-attempt2",
+  "next_gate": "tier3-build-level2-attempt3-planning-validation",
   "current_attempt": 2,
   "planning_validation": {
     "repository_policy_workflow_run": 36447346563,
@@ -1148,15 +1164,14 @@
     "result": "PASS"
   },
   "activation": {
-    "status": "ACTIVE",
+    "status": "CLOSED-FAIL",
     "attempt": 2,
-    "planning_policy_workflow_run": 36447346563,
-    "planning_level2_workflow_run": 36447346441,
-    "planning_commit": "d420cd8b60e48a837ab90acf5ce144f0bfc9be54",
-    "scope": "baloo+kcmutils+knotifyconfig+kparts",
-    "prerequisite": "Attempt 1 INFRA_INVALID closed with zero canonical package effect",
-    "runner_executable_preflight": "PASS",
-    "next_gate": "tier3-build-level2-attempt2"
+    "workflow_run": 36448160410,
+    "commit": "8fdd7fd10685872f2e99c7bec5c81bf42711ba60",
+    "result": "FAIL",
+    "package_attempted": true,
+    "canonical_state_effect": "4 FAIL + 3 BLOCKED",
+    "next_gate": "tier3-build-level2-attempt3-planning-validation"
   },
   "attempt1_summary": {
     "workflow_run": 36446660866,
@@ -1194,6 +1209,119 @@
       "runner_mode_required": "100755",
       "add_executable_preflight": true,
       "next_attempt": 2
+    }
+  },
+  "next_attempt": 3,
+  "support_predecessors": {
+    "breeze-icons": {
+      "version": "4:6.30.0-0supralinux1",
+      "workflow_run": 35700002095,
+      "artifact_id": 10682012012,
+      "artifact_sha256": "daaa5abda5a8f824c6fa509142d7cd9132de213d782cb32e0561873f427aa577",
+      "expected_binary_packages": [
+        "breeze-icon-theme",
+        "breeze-icon-theme-rcc",
+        "kf6-breeze-icon-theme",
+        "kf6-breeze-icon-theme-rcc",
+        "libkf6breezeicons-dev",
+        "libkf6breezeicons6"
+      ],
+      "dev_package": "libkf6breezeicons-dev",
+      "provenance": "tier3-support-pass"
+    },
+    "kdoctools": {
+      "version": "6.30.0-0supralinux1",
+      "workflow_run": 35700002095,
+      "artifact_id": 10682066198,
+      "artifact_sha256": "6daeb6beed63ba7b7e441dba4dfd356be3ad48a9f3ae75acddae0945c36a683d",
+      "expected_binary_packages": [
+        "kdoctools6",
+        "libkf6doctools-dev",
+        "libkf6doctools-doc",
+        "libkf6doctools6"
+      ],
+      "dev_package": "libkf6doctools-dev",
+      "provenance": "tier3-support-pass"
+    }
+  },
+  "attempt2_summary": {
+    "workflow_run": 36448160410,
+    "commit": "8fdd7fd10685872f2e99c7bec5c81bf42711ba60",
+    "result": "FAIL",
+    "package_attempted": true,
+    "canonical_failures": 4,
+    "canonical_promotions": 0,
+    "rootfs": {
+      "job_id": 109015791622,
+      "artifact_id": 10981049607,
+      "artifact_sha256": "2fd3974bd3af35e25d19669f585fc894b926a055448b6ec36e66d8898c4eea63"
+    },
+    "failure_class": "packaging-provider-closure-incomplete",
+    "failure_stage": "sbuild/install-deps",
+    "common_root_cause": {
+      "missing_package": "libkf6breezeicons6",
+      "required_by": "libkf6iconthemes6 (= 6.30.0-0supralinux3)",
+      "dependency_chain": "Level2 target -> libkf6kio-dev -> libkf6kiofilewidgets6 -> libkf6iconthemes6 -> libkf6breezeicons6",
+      "solver_result": "no installable choice",
+      "build_time_seconds": 0
+    },
+    "node_evidence": {
+      "baloo": {
+        "job_id": 109016123491,
+        "artifact_id": 10982505073,
+        "artifact_sha256": "1c3b0dae679778df0909d2234b762b76acbf8c363d70993808a8354040a724d5",
+        "artifact_result": "FAIL",
+        "stage": "sbuild",
+        "fail_stage": "install-deps",
+        "exit_code": 3,
+        "package_attempted": true
+      },
+      "kcmutils": {
+        "job_id": 109016123759,
+        "artifact_id": 10982475133,
+        "artifact_sha256": "e3f8c61a58e218f225e867b44b9400728eaf8e19763f363c48bd2f046d03ff84",
+        "artifact_result": "FAIL",
+        "stage": "sbuild",
+        "fail_stage": "install-deps",
+        "exit_code": 3,
+        "package_attempted": true
+      },
+      "knotifyconfig": {
+        "job_id": 109016123722,
+        "artifact_id": 10981681529,
+        "artifact_sha256": "1ee07aa26da659a381c1cb6e1cd739a199b7837f6cd06fa7585f7c4c64616d4e",
+        "artifact_result": "FAIL",
+        "stage": "sbuild",
+        "fail_stage": "install-deps",
+        "exit_code": 3,
+        "package_attempted": true
+      },
+      "kparts": {
+        "job_id": 109016123572,
+        "artifact_id": 10981412011,
+        "artifact_sha256": "aa5fade80d1bdf82499f2527abab7b34bf00e783a610a511791abd7a664fd507",
+        "artifact_result": "FAIL",
+        "stage": "sbuild",
+        "fail_stage": "install-deps",
+        "exit_code": 3,
+        "package_attempted": true
+      }
+    },
+    "remediation": {
+      "strategy": "inherit-support-input-closure-from-retained-providers",
+      "support_inputs_added": [
+        "breeze-icons",
+        "kdoctools"
+      ],
+      "demonstrated_missing_support": [
+        "breeze-icons"
+      ],
+      "proactively_closed_support": [
+        "kdoctools"
+      ],
+      "source_code_change": false,
+      "package_version_change": false,
+      "next_attempt": 3
     }
   }
 }

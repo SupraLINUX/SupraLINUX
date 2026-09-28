@@ -11,11 +11,31 @@ D={"baloo":["kio","kcoreaddons","kconfig","kdbusaddons","ki18n","kidletime","sol
 P={"baloo":{"BUILD_TESTING":"ON"},"kcmutils":{"BUILD_TESTING":"ON"},"knotifyconfig":{"BUILD_TESTING":"ON"},"kparts":{"BUILD_TESTING":"ON","KDE_INSTALL_APP_TEMPLATES":"ON"}}
 req(m.get("schema")==1 and m.get("authority")=="kde-upstream" and m.get("provider_platform")=="ubuntu-resolute","Level2 schema/authority/provider")
 req(m.get("role")=="tier3-binary-build-level2" and m.get("frameworks_series")=="6.30.0","Level2 role/series")
-req(m.get("selected_nodes")==T and m.get("canonical_snapshot")=="13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED","Level2 node set/snapshot")
+req(m.get("selected_nodes")==T,"Level2 node set")
+if m.get("next_attempt")==3:
+    req(m.get("canonical_snapshot")=="13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED","Attempt2 canonical snapshot")
+else:
+    req(m.get("canonical_snapshot")=="13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED","pre-Attempt2 canonical snapshot")
 if m.get("state")=="planned-pending-activation":
     req(m.get("execution_authorized") is False,"planned Level2 must not authorize execution")
     pol=t.get("discovery_policy",{})
-    if m.get("next_attempt")==2:
+    if m.get("next_attempt")==3:
+        req(m.get("current_attempt")==2 and m.get("next_gate")=="tier3-build-level2-attempt3-planning-validation","Attempt2 FAIL handoff")
+        req(pol.get("phase")=="build-level2-remediation-planning" and pol.get("package_builds")=="tier3-level2-attempt2-closed-FAIL","Attempt3 planning live phase")
+        s=m.get("attempt2_summary",{})
+        req(s.get("workflow_run")==36448160410 and s.get("commit")=="8fdd7fd10685872f2e99c7bec5c81bf42711ba60" and s.get("result")=="FAIL","Attempt2 identity")
+        req(s.get("package_attempted") is True and s.get("canonical_failures")==4 and s.get("canonical_promotions")==0,"Attempt2 canonical failure effect")
+        req(s.get("common_root_cause",{}).get("missing_package")=="libkf6breezeicons6","Attempt2 root cause")
+        req(set(m.get("support_predecessors",{}))=={"breeze-icons","kdoctools"},"Attempt3 support provider set")
+        for sid in ("breeze-icons","kdoctools"):
+            req(m["support_predecessors"][sid].get("provenance")=="tier3-support-pass",sid+": support provenance")
+            req(m["support_predecessors"][sid].get("artifact_id")==l0.get("support_predecessors",{}).get(sid,{}).get("artifact_id"),sid+": support artifact pin")
+        req(tn["knewstuff"].get("state")=="BLOCKED" and tn["knewstuff"].get("packaging",{}).get("blocked_by")==["kcmutils"],"KNewStuff BLOCKED by KCMUtils")
+        req(tn["ktexteditor"].get("state")=="BLOCKED" and tn["ktexteditor"].get("packaging",{}).get("blocked_by")==["kparts"],"KTextEditor BLOCKED by KParts")
+        req(tn["purpose"].get("state")=="BLOCKED" and tn["purpose"].get("packaging",{}).get("blocked_by")==["kcmutils"],"Purpose BLOCKED by KCMUtils")
+        for x in T:
+            req(tn[x].get("state")=="FAIL" and tn[x].get("packaging",{}).get("state")=="FAIL",x+": canonical Attempt2 FAIL")
+    elif m.get("next_attempt")==2:
         req(m.get("current_attempt")==1 and m.get("next_gate")=="tier3-build-level2-attempt2-planning-validation","Attempt1 INFRA_INVALID handoff")
         req(pol.get("phase")=="build-level2-planning" and pol.get("package_builds")=="tier3-level2-attempt1-infra-invalid-pending-attempt2-planning-validation","Attempt2 planning live phase")
         s=m.get("attempt1_summary",{})
@@ -45,7 +65,11 @@ else:
     req(m.get("state") in {"PASS","PARTIAL"},"Level2 lifecycle")
 pre=m.get("planning_precondition",{}); req(pre.get("level1_attempt")==10 and pre.get("level1_workflow_run")==36425867815 and pre.get("level1_closure_commit")=="0e5e2602cba730612bcb9301a59f5b51c3fdd574" and pre.get("repository_policy_workflow_run")==36430910043 and pre.get("result")=="PASS","Level2 precondition")
 req(l1.get("state")=="PASS" and l1.get("execution_authorized") is False and l1.get("current_attempt")==10,"Level1 closed precondition")
-tn={x["id"]:x for x in t.get("nodes",[])}; ks=tn["knewstuff"]; req(ks.get("state")=="pending" and ks.get("packaging",{}).get("state")=="runtime-validation-required","KNewStuff runtime pending")
+tn={x["id"]:x for x in t.get("nodes",[])}; ks=tn["knewstuff"]
+if m.get("next_attempt")==3:
+    req(ks.get("state")=="BLOCKED" and ks.get("packaging",{}).get("state")=="BLOCKED","KNewStuff blocked during Level2 remediation")
+else:
+    req(ks.get("state")=="pending" and ks.get("packaging",{}).get("state")=="runtime-validation-required","KNewStuff runtime pending")
 h=m["deferred_runtime_validation_handoff"]["knewstuff"]; req(h.get("requires_level2_pass")==["kcmutils"] and h.get("effect")=="runtime-validation-gate-only-no-auto-PASS","KNewStuff handoff")
 dn=d.get("nodes",{}); ret=m.get("retained_predecessors",{})
 def rec(roots):
@@ -78,6 +102,12 @@ for x in T:
     req(n.get("direct_build_predecessors")==D[x],x+": direct Build-Depends")
     provider=sorted(rec(D[x])-set(D[x])); req(n.get("provider_closure_input_ids")==provider,x+": provider closure"); req(set(n.get("retained_input_ids",[]))==set(D[x])|set(provider),x+": retained closure")
     req(all(y in ret for y in n.get("retained_input_ids",[])),x+": retained pins")
+    inherited_support=set()
+    for y in n.get("retained_input_ids",[]):
+        for src in (l0.get("nodes",{}).get(y,{}),l1.get("nodes",{}).get(y,{})):
+            inherited_support.update(src.get("support_input_ids",[]))
+    req(n.get("support_input_ids",[])==sorted(inherited_support),x+": inherited support closure")
+    req(all(y in m.get("support_predecessors",{}) for y in inherited_support),x+": support provider pins")
     req(n.get("buildinfo_proof_packages")==[ret[y]["dev_package"] for y in D[x]],x+": buildinfo proof")
     req(not ({ret[y]["dev_package"] for y in provider}&set(n.get("buildinfo_proof_packages",[]))),x+": closure invented buildinfo edge")
     req(n.get("profile_assertions")==P[x],x+": profile"); req(n.get("qml_packages")==[y for y in cp.get("expected_binary_packages",[]) if y.startswith("qml6-module-")],x+": QML contract")
@@ -85,7 +115,14 @@ for x in T:
     req(n.get("success_transition")=="PASS" and n.get("downstream_eligible_on_build_success") is True,x+": success transition")
 req(a.get("schema")==1 and a.get("batch")=="tier3-build-level2" and a.get("selected_nodes")==T and set(a.get("nodes",{}))==set(T),"Level2 ledger")
 if m.get("state")=="planned-pending-activation":
-    if m.get("next_attempt")==2:
+    if m.get("next_attempt")==3:
+        hist=a.get("campaign_history",[])
+        req(len(hist)==2 and hist[1].get("attempt")==2 and hist[1].get("workflow_run")==36448160410 and hist[1].get("result")=="FAIL","Attempt2 campaign ledger")
+        req(hist[1].get("package_attempted") is True and hist[1].get("canonical_failures")==4 and hist[1].get("canonical_promotions")==0,"Attempt2 ledger effect")
+        for x in T:
+            rows=a.get("nodes",{}).get(x,[])
+            req(len(rows)==2 and rows[1].get("attempt")==2 and rows[1].get("result")=="FAIL" and rows[1].get("package_attempted") is True and rows[1].get("failure_substage")=="install-deps",x+": Attempt2 node ledger")
+    elif m.get("next_attempt")==2:
         hist=a.get("campaign_history",[])
         req(len(hist)==1 and hist[0].get("attempt")==1 and hist[0].get("workflow_run")==36446660866 and hist[0].get("result")=="INFRA_INVALID","Attempt1 INFRA ledger")
         req(hist[0].get("package_attempted") is False and hist[0].get("canonical_failures")==0 and hist[0].get("canonical_promotions")==0,"Attempt1 ledger canonical no-effect")

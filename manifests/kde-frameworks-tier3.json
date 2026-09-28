@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level2",
+    "phase": "build-level2-remediation-planning",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level2-attempt2-active",
-    "remediation": "level2-attempt2-after-runner-executable-remediation"
+    "package_builds": "tier3-level2-attempt2-closed-FAIL",
+    "remediation": "level2-support-provider-closure-remediation-pending-validation"
   },
   "nodes": [
     {
@@ -28,7 +28,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/baloo-6.30.0.tar.xz",
       "source_sha256": "a59d33a919bfa1d164c8f3a6f992c609edaf2131ac5f52ea4ecb77f6fbc53be1",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "FAIL",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -53,9 +53,25 @@
         }
       },
       "packaging": {
-        "state": "pending",
-        "package_version": null,
-        "downstream_eligible": false
+        "state": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "downstream_eligible": false,
+        "evidence": [
+          {
+            "result": "FAIL",
+            "workflow_run": 36448160410,
+            "job_id": 109016123491,
+            "commit": "8fdd7fd10685872f2e99c7bec5c81bf42711ba60",
+            "artifact_id": 10982505073,
+            "artifact_sha256": "1c3b0dae679778df0909d2234b762b76acbf8c363d70993808a8354040a724d5",
+            "stage": "sbuild",
+            "failure_substage": "install-deps",
+            "exit_code": 3,
+            "package_attempted": true,
+            "package_state_effect": "FAIL",
+            "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
+          }
+        ]
       }
     },
     {
@@ -137,7 +153,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kcmutils-6.30.0.tar.xz",
       "source_sha256": "0159f80d030ac250b0b353113a55c013ed7e38cb0b678df44d2f0d0b2aca944c",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "FAIL",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -162,9 +178,25 @@
         }
       },
       "packaging": {
-        "state": "pending",
-        "package_version": null,
-        "downstream_eligible": false
+        "state": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "downstream_eligible": false,
+        "evidence": [
+          {
+            "result": "FAIL",
+            "workflow_run": 36448160410,
+            "job_id": 109016123759,
+            "commit": "8fdd7fd10685872f2e99c7bec5c81bf42711ba60",
+            "artifact_id": 10982475133,
+            "artifact_sha256": "e3f8c61a58e218f225e867b44b9400728eaf8e19763f363c48bd2f046d03ff84",
+            "stage": "sbuild",
+            "failure_substage": "install-deps",
+            "exit_code": 3,
+            "package_attempted": true,
+            "package_state_effect": "FAIL",
+            "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
+          }
+        ]
       }
     },
     {
@@ -756,7 +788,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/knewstuff-6.30.0.tar.xz",
       "source_sha256": "85408768b5c3f4b0b51ee6a14ae73fea263f451404e266e286c55e0c17e44037",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "BLOCKED",
       "planning": {
         "readiness": "runtime-validation-required",
         "dependency_authority": "kde-upstream",
@@ -781,7 +813,7 @@
         }
       },
       "packaging": {
-        "state": "runtime-validation-required",
+        "state": "BLOCKED",
         "package_version": "6.30.0-0supralinux1",
         "downstream_eligible": false,
         "deferred_runtime_validation": [
@@ -815,6 +847,9 @@
             "package_state_effect": "none-runtime-validation-pending",
             "full_result_json_retained_in_artifact": true
           }
+        ],
+        "blocked_by": [
+          "kcmutils"
         ]
       }
     },
@@ -826,7 +861,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/knotifyconfig-6.30.0.tar.xz",
       "source_sha256": "4a133decdb0d3731dbaa1d3625b30f057089e5c59c8326ff88a047cef35b2efb",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "FAIL",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -851,9 +886,25 @@
         }
       },
       "packaging": {
-        "state": "pending",
-        "package_version": null,
-        "downstream_eligible": false
+        "state": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "downstream_eligible": false,
+        "evidence": [
+          {
+            "result": "FAIL",
+            "workflow_run": 36448160410,
+            "job_id": 109016123722,
+            "commit": "8fdd7fd10685872f2e99c7bec5c81bf42711ba60",
+            "artifact_id": 10981681529,
+            "artifact_sha256": "1ee07aa26da659a381c1cb6e1cd739a199b7837f6cd06fa7585f7c4c64616d4e",
+            "stage": "sbuild",
+            "failure_substage": "install-deps",
+            "exit_code": 3,
+            "package_attempted": true,
+            "package_state_effect": "FAIL",
+            "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
+          }
+        ]
       }
     },
     {
@@ -864,7 +915,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kparts-6.30.0.tar.xz",
       "source_sha256": "99f5a0e3a4da10e1a0fbfb505ae966cd87627f887dd07929a920afe41c862ac0",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "FAIL",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -889,9 +940,25 @@
         }
       },
       "packaging": {
-        "state": "pending",
-        "package_version": null,
-        "downstream_eligible": false
+        "state": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "downstream_eligible": false,
+        "evidence": [
+          {
+            "result": "FAIL",
+            "workflow_run": 36448160410,
+            "job_id": 109016123572,
+            "commit": "8fdd7fd10685872f2e99c7bec5c81bf42711ba60",
+            "artifact_id": 10981412011,
+            "artifact_sha256": "aa5fade80d1bdf82499f2527abab7b34bf00e783a610a511791abd7a664fd507",
+            "stage": "sbuild",
+            "failure_substage": "install-deps",
+            "exit_code": 3,
+            "package_attempted": true,
+            "package_state_effect": "FAIL",
+            "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
+          }
+        ]
       }
     },
     {
@@ -1115,7 +1182,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/ktexteditor-6.30.0.tar.xz",
       "source_sha256": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "BLOCKED",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -1140,9 +1207,12 @@
         }
       },
       "packaging": {
-        "state": "pending",
+        "state": "BLOCKED",
         "package_version": null,
-        "downstream_eligible": false
+        "downstream_eligible": false,
+        "blocked_by": [
+          "kparts"
+        ]
       }
     },
     {
@@ -1464,7 +1534,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/purpose-6.30.0.tar.xz",
       "source_sha256": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "BLOCKED",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -1489,9 +1559,12 @@
         }
       },
       "packaging": {
-        "state": "pending",
+        "state": "BLOCKED",
         "package_version": null,
-        "downstream_eligible": false
+        "downstream_eligible": false,
+        "blocked_by": [
+          "kcmutils"
+        ]
       }
     }
   ],
@@ -2437,26 +2510,48 @@
   },
   "level2_execution": {
     "manifest": "manifests/kde-tier3-build-level2.json",
-    "status": "attempt2-active",
-    "attempt": 2,
+    "status": "attempt2-closed-FAIL-pending-attempt3-planning-validation",
+    "current_attempt": 2,
+    "next_attempt": 3,
     "selected_nodes": [
       "baloo",
       "kcmutils",
       "knotifyconfig",
       "kparts"
     ],
-    "execution_authorized": true,
-    "attempt1_result": "INFRA_INVALID",
-    "attempt1_workflow_run": 36446660866,
-    "attempt1_package_state_effect": "none",
-    "planning_validation": {
-      "repository_policy_workflow_run": 36447346563,
-      "level2_workflow_run": 36447346441,
-      "commit": "d420cd8b60e48a837ab90acf5ce144f0bfc9be54",
-      "runner_executable_preflight": "PASS",
-      "result": "PASS"
+    "execution_authorized": false,
+    "workflow_run": 36448160410,
+    "commit": "8fdd7fd10685872f2e99c7bec5c81bf42711ba60",
+    "failure_class": "packaging-provider-closure-incomplete",
+    "canonical_state_effect": "4 FAIL + 3 BLOCKED",
+    "support_closure_remediation": {
+      "required": [
+        "breeze-icons",
+        "kdoctools"
+      ],
+      "demonstrated": "breeze-icons",
+      "proactive": "kdoctools"
     },
-    "canonical_prebuild_snapshot": "13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED",
-    "next_gate": "tier3-build-level2-attempt2"
+    "next_gate": "tier3-build-level2-attempt3-planning-validation"
+  },
+  "level2_snapshot": {
+    "pass": 13,
+    "pending": 0,
+    "current_fail": 4,
+    "blocked": 3,
+    "runtime_pending": [],
+    "current_fail_nodes": [
+      "baloo",
+      "kcmutils",
+      "knotifyconfig",
+      "kparts"
+    ],
+    "blocked_nodes": [
+      "knewstuff",
+      "ktexteditor",
+      "purpose"
+    ],
+    "workflow_run": 36448160410,
+    "commit": "8fdd7fd10685872f2e99c7bec5c81bf42711ba60"
   }
 }

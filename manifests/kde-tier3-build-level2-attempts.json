@@ -37,6 +37,28 @@
       "canonical_failures": 0,
       "canonical_promotions": 0,
       "next_attempt": 2
+    },
+    {
+      "attempt": 2,
+      "workflow_run": 36448160410,
+      "commit": "8fdd7fd10685872f2e99c7bec5c81bf42711ba60",
+      "result": "FAIL",
+      "failure_class": "packaging-provider-closure-incomplete",
+      "package_attempted": true,
+      "package_state_effect": "4 FAIL",
+      "rootfs": {
+        "job_id": 109015791622,
+        "artifact_id": 10981049607,
+        "artifact_sha256": "2fd3974bd3af35e25d19669f585fc894b926a055448b6ec36e66d8898c4eea63"
+      },
+      "workflow_jobs": {
+        "success": 0,
+        "fail": 4
+      },
+      "canonical_failures": 4,
+      "canonical_promotions": 0,
+      "common_root_cause": "libkf6iconthemes6 requires libkf6breezeicons6 >= 4:6.30.0~; support provider omitted from Level2 closure",
+      "next_attempt": 3
     }
   ],
   "nodes": {
@@ -58,6 +80,25 @@
         "evidence_artifact_uploaded": false,
         "rootfs_artifact_id": 10980029224,
         "rootfs_artifact_sha256": "eae0f8b164ee002ad56b96f76e3a882254b60ca639d8ce7663c63447b961e000"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 36448160410,
+        "commit": "8fdd7fd10685872f2e99c7bec5c81bf42711ba60",
+        "job_id": 109016123491,
+        "artifact_id": 10982505073,
+        "artifact_sha256": "1c3b0dae679778df0909d2234b762b76acbf8c363d70993808a8354040a724d5",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "failure_substage": "install-deps",
+        "exit_code": 3,
+        "package_attempted": true,
+        "package_state_effect": "FAIL",
+        "canonical_state_effect": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10981049607,
+        "rootfs_artifact_sha256": "2fd3974bd3af35e25d19669f585fc894b926a055448b6ec36e66d8898c4eea63",
+        "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
       }
     ],
     "kcmutils": [
@@ -78,6 +119,25 @@
         "evidence_artifact_uploaded": false,
         "rootfs_artifact_id": 10980029224,
         "rootfs_artifact_sha256": "eae0f8b164ee002ad56b96f76e3a882254b60ca639d8ce7663c63447b961e000"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 36448160410,
+        "commit": "8fdd7fd10685872f2e99c7bec5c81bf42711ba60",
+        "job_id": 109016123759,
+        "artifact_id": 10982475133,
+        "artifact_sha256": "e3f8c61a58e218f225e867b44b9400728eaf8e19763f363c48bd2f046d03ff84",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "failure_substage": "install-deps",
+        "exit_code": 3,
+        "package_attempted": true,
+        "package_state_effect": "FAIL",
+        "canonical_state_effect": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10981049607,
+        "rootfs_artifact_sha256": "2fd3974bd3af35e25d19669f585fc894b926a055448b6ec36e66d8898c4eea63",
+        "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
       }
     ],
     "knotifyconfig": [
@@ -98,6 +158,25 @@
         "evidence_artifact_uploaded": false,
         "rootfs_artifact_id": 10980029224,
         "rootfs_artifact_sha256": "eae0f8b164ee002ad56b96f76e3a882254b60ca639d8ce7663c63447b961e000"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 36448160410,
+        "commit": "8fdd7fd10685872f2e99c7bec5c81bf42711ba60",
+        "job_id": 109016123722,
+        "artifact_id": 10981681529,
+        "artifact_sha256": "1ee07aa26da659a381c1cb6e1cd739a199b7837f6cd06fa7585f7c4c64616d4e",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "failure_substage": "install-deps",
+        "exit_code": 3,
+        "package_attempted": true,
+        "package_state_effect": "FAIL",
+        "canonical_state_effect": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10981049607,
+        "rootfs_artifact_sha256": "2fd3974bd3af35e25d19669f585fc894b926a055448b6ec36e66d8898c4eea63",
+        "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
       }
     ],
     "kparts": [
@@ -118,6 +197,25 @@
         "evidence_artifact_uploaded": false,
         "rootfs_artifact_id": 10980029224,
         "rootfs_artifact_sha256": "eae0f8b164ee002ad56b96f76e3a882254b60ca639d8ce7663c63447b961e000"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 36448160410,
+        "commit": "8fdd7fd10685872f2e99c7bec5c81bf42711ba60",
+        "job_id": 109016123572,
+        "artifact_id": 10981412011,
+        "artifact_sha256": "aa5fade80d1bdf82499f2527abab7b34bf00e783a610a511791abd7a664fd507",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "failure_substage": "install-deps",
+        "exit_code": 3,
+        "package_attempted": true,
+        "package_state_effect": "FAIL",
+        "canonical_state_effect": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10981049607,
+        "rootfs_artifact_sha256": "2fd3974bd3af35e25d19669f585fc894b926a055448b6ec36e66d8898c4eea63",
+        "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
       }
     ]
   },
