@@ -538,3 +538,11 @@ KNewStuff is deliberately absent from the DAG even though its binary build passe
 Attempt 10 workflow `36425867815` promotes KIO `6.30.0-0supralinux10` to canonical PASS after **69/69 upstream tests** and all package gates. KXMLGui `6.30.0-0supralinux5` revalidates PASS.
 
 The canonical Tier 3 DAG now contains 13 PASS/downstream-eligible nodes. Six KIO dependents are no longer BLOCKED and return to pending; KNewStuff remains pending on its deferred KCMUtils runtime-validation edge. The next lifecycle gate is `tier3-build-level2-planning`.
+
+## Tier 3 Level 2 checkpoint
+
+Attempt 4 workflow `36473379324` closed MIXED: Baloo `6.30.0-0supralinux1`, KNotifyConfig `6.30.0-0supralinux1` and KParts `6.30.0-0supralinux2` are canonical PASS/downstream-eligible; KCMUtils `6.30.0-0supralinux2` remains the only current package FAIL from that attempt.
+
+The canonical Tier 3 DAG now contains **16 PASS/downstream-eligible nodes**. The three Level 2 promotions retain their exact Attempt 4 PASS artifacts and use `manifests/kde-tier3-build-level2-attempts.json` as their attempt ledger. KCMUtils is deliberately absent until a later package attempt reaches PASS. KTextEditor returned to pending after KParts passed; Purpose and KNewStuff remain BLOCKED by KCMUtils.
+
+The DAG validator derives the complete Tier 3 promoted set and each node's attempt ledger from the canonical Tier 3 manifest. It no longer embeds a historical Level 1 node list or assumes Level 0/1 ledger ownership.
