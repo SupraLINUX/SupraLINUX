@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-24",
+  "as_of": "2026-09-28",
   "state": "materialized",
   "source_authority": "kde-upstream",
   "frameworks_series": "6.30.0",
@@ -810,7 +810,7 @@
       "source_package": "kf6-kio",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux8",
+      "package_version_candidate": "6.30.0-0supralinux9",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kio",
@@ -956,6 +956,11 @@
           "classification": "level1-attempt8-remediation",
           "decision": "add-resolute-qt-svg-plugin-test-provider",
           "rationale": "Round 17 proved qt6-svg-plugins controls both historical KIO icon-name failures, and Round 18 proved Resolute exposes the plugin through the Qt GUI runtime recommendation rather than a KIO-specific hard runtime dependency. Make the provider explicit only in the KIO upstream test/build closure so sbuild with no recommends is reproducible without changing runtime ABI/package contracts."
+        },
+        {
+          "classification": "level1-attempt9-remediation",
+          "decision": "apply-proven-krecent-ordering-patch-and-visible-test-home",
+          "rationale": "Round 26 reproduced the historical hidden-HOME KDirModel signature 10/10, passed the visible-HOME control 20/20, and passed all 69 KIO tests with the exact Round25 KRecent candidate."
         }
       ],
       "binary_relation_overrides": [
@@ -1022,10 +1027,10 @@
         },
         {
           "old": "override_dh_auto_test:\n\tdh_auto_test",
-          "new": "override_dh_auto_test:\n\tmkdir -p debian/.supralinux-test-home/sbuild\n\tcd obj-$(DEB_HOST_GNU_TYPE) && \\\n\t\tHOME=\"$(CURDIR)/debian/.supralinux-test-home/sbuild\" \\\n\t\tQT_QPA_PLATFORM=xcb \\\n\t\tQT_QPA_SYSTEM_ICON_THEME=breeze \\\n\t\tKDECI_PLATFORM_PATH=\"$(CURDIR)\" \\\n\t\tdbus-run-session -- xvfb-run -a -s \"-screen 0 1280x1024x24\" ctest --verbose -j1",
+          "new": "override_dh_auto_test:\n\tmkdir -p debian/supralinux-test-home/sbuild\n\tcd obj-$(DEB_HOST_GNU_TYPE) && \\\n\t\tHOME=\"$(CURDIR)/debian/supralinux-test-home/sbuild\" \\\n\t\tQT_QPA_PLATFORM=xcb \\\n\t\tQT_QPA_SYSTEM_ICON_THEME=breeze \\\n\t\tKDECI_PLATFORM_PATH=\"$(CURDIR)\" \\\n\t\tdbus-run-session -- xvfb-run -a -s \"-screen 0 1280x1024x24\" ctest --verbose -j1",
           "expected_count": 1,
           "classification": "upstream-test-environment-correction",
-          "rationale": "Execute the complete KIO CTest suite with the proven round-8 D-Bus/HOME/KDECI/serial/network environment, but use XCB on an isolated Xvfb server so Qt supplies XDG icon-theme search paths; explicitly select Breeze for deterministic QIcon::fromTheme resolution. No upstream test is filtered."
+          "rationale": "Round 26 proved the hidden .supralinux-test-home path causes KDirModel ShowRoot expansion failures. Keep the complete upstream suite and identical D-Bus/XCB/Breeze/KDECI/network fixture while using a visible writable HOME ending in sbuild."
         },
         {
           "old": "override_dh_auto_configure:\n\tdh_auto_configure -- -DBUILD_QCH=ON -DBUILD_TESTING=ON -DKDE_INSTALL_APP_TEMPLATES=ON $(EXTRA_CMAKE_ARGS) -DBUILD_DESIGNERPLUGIN=ON",
@@ -1097,7 +1102,7 @@
           "provider_version": "4:6.30.0-0supralinux1"
         },
         "qt_platform": "xcb",
-        "home_policy": "writable-path-ending-in-sbuild-to-match-build-user-for-QDir-home-tests",
+        "home_policy": "writable-visible-path-debian/supralinux-test-home/sbuild-ending-in-sbuild-to-match-build-user",
         "kde_ci_marker": "KDECI_PLATFORM_PATH",
         "ctest_parallelism": 1,
         "external_network": {
@@ -1128,7 +1133,30 @@
           }
         },
         "upstream_per_test_environment_preserved_for_other_tests": true
-      }
+      },
+      "supralinux_source_patches": [
+        {
+          "name": "supralinux-krecent-deterministic-ordering.patch",
+          "target": "src/core/krecentdocument.cpp",
+          "expected_patch_sha256": "8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602",
+          "expected_source_sha256": "57d20f3786220178316b31819ba266432207b1f4d55859ccf8d1fad37645021b",
+          "provenance": "Round25 target PASS + Round26 exact patch reuse",
+          "replacements": [
+            {
+              "old": "    QMultiMap<QDateTime, QDomNode> bookmarksByModifiedDate;\n    for (int i = 0; i < bookmarkList.length(); ++i) {\n        const auto node = bookmarkList.item(i);\n        const auto modifiedString = node.attributes().namedItem(modifiedAttribute);\n        const auto modifiedTime = QDateTime::fromString(modifiedString.nodeValue(), Qt::ISODate);\n\n        bookmarksByModifiedDate.insert(modifiedTime, node);\n    }\n\n    int i = 0;\n    // entries are traversed in ascending key order\n    for (auto entry = bookmarksByModifiedDate.keyValueBegin(); entry != bookmarksByModifiedDate.keyValueEnd(); ++entry) {\n        // only keep the maxEntries last nodes\n        if (bookmarksByModifiedDate.size() - i > maxEntries) {\n            xbelElement.removeChild(entry->second);\n        }\n        ++i;\n    }\n",
+              "new": "    struct BookmarkEntry {\n        QDateTime modified;\n        int xbelOrder;\n        QDomNode node;\n    };\n    QList<BookmarkEntry> bookmarksByModifiedDate;\n    bookmarksByModifiedDate.reserve(bookmarkList.length());\n    for (int i = 0; i < bookmarkList.length(); ++i) {\n        const auto node = bookmarkList.item(i);\n        const auto modifiedString = node.attributes().namedItem(modifiedAttribute);\n        const auto modifiedTime = QDateTime::fromString(modifiedString.nodeValue(), Qt::ISODate);\n        bookmarksByModifiedDate.push_back({modifiedTime, i, node});\n    }\n\n    std::sort(bookmarksByModifiedDate.begin(), bookmarksByModifiedDate.end(), [](const BookmarkEntry &a, const BookmarkEntry &b) {\n        if (a.modified != b.modified) {\n            return a.modified < b.modified;\n        }\n        return a.xbelOrder < b.xbelOrder;\n    });\n\n    const int entriesToRemove = bookmarksByModifiedDate.size() - maxEntries;\n    for (int i = 0; i < entriesToRemove; ++i) {\n        xbelElement.removeChild(bookmarksByModifiedDate.at(i).node);\n    }\n",
+              "expected_count": 1
+            },
+            {
+              "old": "static QMap<QUrl, QDateTime> xbelRecentlyUsedList()\n{\n    QMap<QUrl, QDateTime> ret;\n    QFile input(xbelPath());\n    if (!input.open(QIODevice::ReadOnly)) {\n        qCWarning(KIO_CORE) << \"Failed to open\" << input.fileName() << input.errorString();\n        return ret;\n    }\n\n    QXmlStreamReader xml(&input);\n    xml.readNextStartElement();\n    if (xml.name() != QLatin1String(\"xbel\") || xml.attributes().value(QLatin1String(\"version\")) != QLatin1String(\"1.0\")) {\n        qCWarning(KIO_CORE) << \"The file is not an XBEL version 1.0 file.\";\n        return ret;\n    }\n\n    while (!xml.atEnd() && !xml.hasError()) {\n        if (xml.readNext() != QXmlStreamReader::StartElement || xml.name() != QLatin1String(\"bookmark\")) {\n            continue;\n        }\n\n        const auto urlString = xml.attributes().value(QLatin1String(\"href\"));\n        if (urlString.isEmpty()) {\n            qCInfo(KIO_CORE) << \"Invalid bookmark in\" << input.fileName();\n            continue;\n        }\n        const QUrl url = QUrl::fromEncoded(urlString.toLatin1());\n        if (url.isLocalFile() && !QFile(url.toLocalFile()).exists()) {\n            continue;\n        }\n        const auto attributes = xml.attributes();\n        const QDateTime modified = QDateTime::fromString(attributes.value(QLatin1String(\"modified\")).toString(), Qt::ISODate);\n        const QDateTime visited = QDateTime::fromString(attributes.value(QLatin1String(\"visited\")).toString(), Qt::ISODate);\n        const QDateTime added = QDateTime::fromString(attributes.value(QLatin1String(\"added\")).toString(), Qt::ISODate);\n        if (modified > visited && modified > added) {\n            ret[url] = modified;\n        } else if (visited > added) {\n            ret[url] = visited;\n        } else {\n            ret[url] = added;\n        }\n    }\n\n    if (xml.hasError()) {\n        qCWarning(KIO_CORE) << \"Failed to read\" << input.fileName() << xml.errorString();\n    }\n\n    return ret;\n}\n\nQList<QUrl> KRecentDocument::recentUrls()\n{\n    QMap<QUrl, QDateTime> documents = xbelRecentlyUsedList();\n\n    QList<QUrl> ret = documents.keys();\n    std::sort(ret.begin(), ret.end(), [&](const QUrl &doc1, const QUrl &doc2) {\n        return documents.value(doc1) < documents.value(doc2);\n    });\n\n    return ret;\n}\n",
+              "new": "struct RecentDocumentEntry\n{\n    QUrl url;\n    QDateTime timestamp;\n    int xbelOrder;\n};\n\nstatic QList<RecentDocumentEntry> xbelRecentlyUsedList()\n{\n    QMap<QUrl, RecentDocumentEntry> uniqueEntries;\n    QFile input(xbelPath());\n    if (!input.open(QIODevice::ReadOnly)) {\n        qCWarning(KIO_CORE) << \"Failed to open\" << input.fileName() << input.errorString();\n        return {};\n    }\n\n    QXmlStreamReader xml(&input);\n    xml.readNextStartElement();\n    if (xml.name() != QLatin1String(\"xbel\") || xml.attributes().value(QLatin1String(\"version\")) != QLatin1String(\"1.0\")) {\n        qCWarning(KIO_CORE) << \"The file is not an XBEL version 1.0 file.\";\n        return {};\n    }\n\n    int xbelOrder = 0;\n    while (!xml.atEnd() && !xml.hasError()) {\n        if (xml.readNext() != QXmlStreamReader::StartElement || xml.name() != QLatin1String(\"bookmark\")) {\n            continue;\n        }\n\n        const auto urlString = xml.attributes().value(QLatin1String(\"href\"));\n        if (urlString.isEmpty()) {\n            qCInfo(KIO_CORE) << \"Invalid bookmark in\" << input.fileName();\n            continue;\n        }\n        const QUrl url = QUrl::fromEncoded(urlString.toLatin1());\n        if (url.isLocalFile() && !QFile(url.toLocalFile()).exists()) {\n            continue;\n        }\n        const auto attributes = xml.attributes();\n        const QDateTime modified = QDateTime::fromString(attributes.value(QLatin1String(\"modified\")).toString(), Qt::ISODate);\n        const QDateTime visited = QDateTime::fromString(attributes.value(QLatin1String(\"visited\")).toString(), Qt::ISODate);\n        const QDateTime added = QDateTime::fromString(attributes.value(QLatin1String(\"added\")).toString(), Qt::ISODate);\n        QDateTime timestamp;\n        if (modified > visited && modified > added) {\n            timestamp = modified;\n        } else if (visited > added) {\n            timestamp = visited;\n        } else {\n            timestamp = added;\n        }\n        uniqueEntries.insert(url, {url, timestamp, xbelOrder++});\n    }\n\n    if (xml.hasError()) {\n        qCWarning(KIO_CORE) << \"Failed to read\" << input.fileName() << xml.errorString();\n    }\n\n    return uniqueEntries.values();\n}\n\nQList<QUrl> KRecentDocument::recentUrls()\n{\n    auto documents = xbelRecentlyUsedList();\n    std::sort(documents.begin(), documents.end(), [](const RecentDocumentEntry &a, const RecentDocumentEntry &b) {\n        if (a.timestamp != b.timestamp) {\n            return a.timestamp < b.timestamp;\n        }\n        return a.xbelOrder < b.xbelOrder;\n    });\n\n    QList<QUrl> ret;\n    ret.reserve(documents.size());\n    for (const auto &document : std::as_const(documents)) {\n        ret.push_back(document.url);\n    }\n    return ret;\n}\n",
+              "expected_count": 1
+            }
+          ],
+          "classification": "upstream-compatible-krecent-deterministic-ordering-remediation",
+          "rationale": "Rounds 24-26 proved timestamp ties cause nondeterministic KRecent ordering and proved this exact source result under native, forced-tie and complete-suite conditions."
+        }
+      ]
     },
     "kjobwidgets": {
       "upstream_version": "6.30.0",
@@ -3241,7 +3269,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "round26-remediation-PASS-pending-attempt9-definition",
+    "status": "attempt9-remediation-defined-pending-materialization",
     "trigger": {
       "workflow_run": 36035351270,
       "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -3262,7 +3290,7 @@
     ],
     "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux8",
+      "kio": "6.30.0-0supralinux9",
       "kxmlgui": "6.30.0-0supralinux5"
     },
     "policy": {
@@ -3285,7 +3313,7 @@
     },
     "execution_authorized": false,
     "level1_execution_authorized": false,
-    "next_gate": "tier3-attempt9-kio-remediation-definition",
+    "next_gate": "tier3-attempt9-kio-remediation-materialization-evidence",
     "materialization_evidence": {
       "workflow_run": 36222711238,
       "commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",
@@ -3651,6 +3679,15 @@
         ],
         "krecent_final_order_ok": true
       }
+    },
+    "attempt9_definition": {
+      "status": "definition-pending-ci",
+      "package_version": "6.30.0-0supralinux9",
+      "source_patch_sha256": "8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602",
+      "patched_source_sha256": "57d20f3786220178316b31819ba266432207b1f4d55859ccf8d1fad37645021b",
+      "test_home": "debian/supralinux-test-home/sbuild",
+      "materialization_authorized": true,
+      "package_build_authorized": false
     }
   },
   "remediation_history": [

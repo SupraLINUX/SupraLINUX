@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "as_of": "2026-09-24",
+  "as_of": "2026-09-28",
   "authority": "kde-upstream",
   "role": "tier3-source-materialization",
   "frameworks_series": "6.30.0",
   "contract_manifest": "manifests/kde-tier3-package-contracts.json",
   "canonical_manifest": "manifests/kde-frameworks-tier3.json",
-  "state": "PASS",
+  "state": "remediation-pending-ci",
   "package_attempted": false,
   "package_state_effect": "none",
   "source_policy": "verify-kde-upstream-tarball-and-pinned-debian-6.30-packaging-before-adaptation",
@@ -263,9 +263,9 @@
       }
     },
     "kio": {
-      "state": "materialized",
+      "state": "remediation-pending",
       "source_package": "kf6-kio",
-      "package_version": "6.30.0-0supralinux8",
+      "package_version": "6.30.0-0supralinux9",
       "evidence_history": [
         {
           "workflow_run": 35746667704,
@@ -968,23 +968,23 @@
   },
   "previous_evidence_summary": {
     "result": "PASS",
-    "workflow_run": 35965579279,
-    "commit": "8380856c8161dccc9de9c12745012c555baa26b0",
+    "workflow_run": 36222711238,
+    "commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",
     "total_materialized_nodes": 20,
-    "retained_previous_materializations": 18,
-    "promoted_remediation_materializations": 2,
-    "active_remediation_round": 9,
+    "retained_previous_materializations": 19,
+    "promoted_remediation_materializations": 1,
+    "active_remediation_round": 11,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level1-attempt5"
+    "next_gate": "tier3-attempt9-kio-remediation-definition"
   },
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "round26-remediation-PASS-pending-attempt9-definition",
+    "status": "attempt9-remediation-defined-pending-materialization",
     "trigger_workflow_run": 36035351270,
     "trigger_commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
-    "reason": "Round 18 provider-contract audit proved KIO's sbuild test closure must explicitly install qt6-svg-plugins while Ubuntu runtime ownership remains with the Qt GUI recommendation. Rematerialize only KIO as 6.30.0-0supralinux8.",
+    "reason": "Round 26 proved the exact KRecent deterministic-ordering patch and visible test HOME together pass all 69 KIO tests; rematerialize only KIO as 6.30.0-0supralinux9 before any binary Attempt 9.",
     "nodes": [
       "kio",
       "kxmlgui"
@@ -997,13 +997,13 @@
     ],
     "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux8",
+      "kio": "6.30.0-0supralinux9",
       "kxmlgui": "6.30.0-0supralinux5"
     },
-    "policy": "rematerialize-only-kio-test-provider-change-then-rerun-full-level1",
+    "policy": "rematerialize-only-kio-proven-source-and-test-home-remediation-then-validate-before-attempt9",
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-attempt9-kio-remediation-definition",
+    "next_gate": "tier3-attempt9-kio-remediation-materialization-evidence",
     "diagnostic_evidence": {
       "workflow_run": 36071103806,
       "job_id": 107872008601,
@@ -1366,6 +1366,15 @@
         ],
         "krecent_final_order_ok": true
       }
+    },
+    "attempt9_definition": {
+      "status": "definition-pending-ci",
+      "package_version": "6.30.0-0supralinux9",
+      "source_patch_sha256": "8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602",
+      "patched_source_sha256": "57d20f3786220178316b31819ba266432207b1f4d55859ccf8d1fad37645021b",
+      "visible_test_home": "debian/supralinux-test-home/sbuild",
+      "materialization_authorized": true,
+      "package_build_authorized": false
     }
   },
   "remediation_history": [
@@ -1619,15 +1628,16 @@
     }
   ],
   "evidence_summary": {
-    "result": "PASS",
-    "workflow_run": 36222711238,
-    "commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",
+    "result": "PENDING",
     "total_materialized_nodes": 20,
     "retained_previous_materializations": 19,
-    "promoted_remediation_materializations": 1,
+    "pending_remediation_materializations": 1,
     "active_remediation_round": 11,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-attempt9-kio-remediation-definition"
-  }
+    "next_gate": "tier3-attempt9-kio-remediation-materialization-evidence"
+  },
+  "remediation_queue": [
+    "kio"
+  ]
 }

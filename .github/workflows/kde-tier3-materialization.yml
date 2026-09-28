@@ -5,6 +5,7 @@ on:
     paths:
       - manifests/kde-tier3-materialization.json
       - manifests/kde-tier3-kio-round18-remediation.json
+      - manifests/kde-tier3-kio-attempt9-remediation.json
       - manifests/kde-tier3-package-contracts.json
       - manifests/kde-frameworks-tier3.json
       - scripts/materialize_kde_tier3_package.py
@@ -97,7 +98,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-            ca-certificates curl debian-archive-keyring dpkg-dev patch xz-utils
+            ca-certificates curl debian-archive-keyring dpkg-dev patch quilt xz-utils
       - name: Materialize pinned KDE source and SupraLINUX packaging
         run: python3 scripts/materialize_kde_tier3_package.py "${{ matrix.node }}"
       - name: Upload materialization evidence

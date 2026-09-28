@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import difflib
 import hashlib
 import json
 import os
@@ -23,10 +24,10 @@ WORK = ROOT / ".work/kde-tier3-materialization" / NODE
 EVIDENCE = ROOT / "evidence/kde-tier3-materialization" / NODE
 
 
-def run(args, *, cwd: Path | None = None, capture: bool = False) -> subprocess.CompletedProcess:
+def run(args, *, cwd: Path | None = None, capture: bool = False, env: dict | None = None) -> subprocess.CompletedProcess:
     print("+", " ".join(str(x) for x in args), flush=True)
     return subprocess.run(
-        [str(x) for x in args], cwd=cwd, check=True,
+        [str(x) for x in args], cwd=cwd, check=True, env=env,
         text=capture, stdout=subprocess.PIPE if capture else None,
         stderr=subprocess.STDOUT if capture else None,
     )
@@ -387,6 +388,77 @@ def apply_reference_patch_suppressions(src: Path, debian: Path, node: str, contr
         shutil.rmtree(src / ".pc", ignore_errors=True)
 
 
+def apply_supralinux_source_patches(src: Path, debian: Path, node: str, contract: dict) -> list[dict]:
+    results: list[dict] = []
+    items = contract.get("supralinux_source_patches", [])
+    if not items:
+        return results
+
+    patches = debian / "patches"
+    patches.mkdir(parents=True, exist_ok=True)
+    series = patches / "series"
+    if not series.exists():
+        series.write_text("")
+
+    for item in items:
+        target_rel = item["target"]
+        target = src / target_rel
+        if not target.is_file():
+            raise RuntimeError(f"{node}: source patch target missing: {target_rel}")
+        original = target.read_text()
+        modified = original
+        for repl in item.get("replacements", []):
+            old = repl["old"]
+            new = repl["new"]
+            expected = int(repl.get("expected_count", 1))
+            actual = modified.count(old)
+            if actual != expected:
+                raise RuntimeError(f"{node}: source patch replacement expected {expected} matches, got {actual}: {target_rel}")
+            modified = modified.replace(old, new)
+
+        patch_text = "".join(difflib.unified_diff(
+            original.splitlines(True),
+            modified.splitlines(True),
+            fromfile=f"a/{target_rel}",
+            tofile=f"b/{target_rel}",
+        ))
+        if not patch_text:
+            raise RuntimeError(f"{node}: generated source patch is empty: {target_rel}")
+        patch_digest = hashlib.sha256(patch_text.encode()).hexdigest()
+        expected_patch = item["expected_patch_sha256"]
+        if patch_digest != expected_patch:
+            raise RuntimeError(f"{node}: source patch SHA mismatch: {patch_digest} != {expected_patch}")
+
+        patch_name = item["name"]
+        patch_path = patches / patch_name
+        if patch_path.exists():
+            raise RuntimeError(f"{node}: SupraLINUX patch already exists in baseline: {patch_name}")
+        patch_path.write_text(patch_text)
+
+        series_lines = series.read_text().splitlines()
+        if any(x.strip() == patch_name for x in series_lines):
+            raise RuntimeError(f"{node}: SupraLINUX patch already active in series: {patch_name}")
+        series_lines.append(patch_name)
+        series.write_text("\n".join(series_lines).rstrip() + "\n")
+
+        env = os.environ.copy()
+        env["QUILT_PATCHES"] = "debian/patches"
+        run(["quilt", "push", patch_name], cwd=src, env=env)
+
+        expected_source = item["expected_source_sha256"]
+        actual_source = sha256(target)
+        if actual_source != expected_source:
+            raise RuntimeError(f"{node}: patched source SHA mismatch: {actual_source} != {expected_source}")
+
+        results.append({
+            "name": patch_name,
+            "target": target_rel,
+            "patch_sha256": patch_digest,
+            "patched_source_sha256": actual_source,
+        })
+    return results
+
+
 def apply_rules_text_replacements(rules: str, node: str, contract: dict) -> str:
     for item in contract.get("rules_text_replacements", []):
         old = item["old"]
@@ -429,6 +501,21 @@ def apply_symbol_template_additions(debian: Path, node: str, contract: dict) -> 
 
 
 def apply_symbol_template_overrides(debian: Path, node: str, contract: dict) -> None:
+    for item in contract.get("supralinux_source_patches", []):
+        patch_name = item["name"]
+        patch_path = debian / "patches" / patch_name
+        if not patch_path.is_file():
+            raise RuntimeError(f"{node}: SupraLINUX source patch missing: {patch_name}")
+        if sha256(patch_path) != item["expected_patch_sha256"]:
+            raise RuntimeError(f"{node}: SupraLINUX source patch digest mismatch: {patch_name}")
+        series = debian / "patches" / "series"
+        active = [x.strip() for x in series.read_text().splitlines() if x.strip() and not x.lstrip().startswith("#")]
+        if patch_name not in active:
+            raise RuntimeError(f"{node}: SupraLINUX source patch not active: {patch_name}")
+        target = debian.parent / item["target"]
+        if sha256(target) != item["expected_source_sha256"]:
+            raise RuntimeError(f"{node}: SupraLINUX patched source digest mismatch: {item['target']}")
+
     for override in contract.get("symbol_template_overrides", []):
         package = override["package"]
         symbol = override["symbol"]
@@ -749,6 +836,7 @@ def main() -> None:
         changelog = debian / "changelog"
         adapt_control(control, NODE, contract)
         apply_reference_patch_suppressions(src, debian, NODE, contract)
+        source_patch_evidence = apply_supralinux_source_patches(src, debian, NODE, contract)
         rules_text = sanitize_test_suppression(rules.read_text())
         rules_text = apply_reference_test_suppression_overrides(rules_text, NODE, contract)
         rules_text = cmake_flags(rules_text, contract.get("selected_profile", {}))
@@ -816,6 +904,7 @@ def main() -> None:
             "source_build_relation_overrides": contract.get("source_build_relation_overrides", []),
             "reference_test_suppression_overrides": contract.get("reference_test_suppression_overrides"),
             "reference_patch_suppression_overrides": contract.get("reference_patch_suppression_overrides"),
+            "supralinux_source_patches": source_patch_evidence,
             "rules_text_replacements": contract.get("rules_text_replacements", []),
             "symbol_template_overrides": contract.get("symbol_template_overrides", []),
             "symbol_template_additions": contract.get("symbol_template_additions", []),

@@ -14,6 +14,8 @@ if gate=="tier3-level1-remediation-pending-materialization":
     marker=t.get("discovery_policy",{}).get("remediation")
     if marker=="round18-kio-svg-test-provider-materialization-pending-ci":
         target="validate_kde_tier3_round18_remediation.py"
+    elif marker=="attempt9-kio-proven-remediation-pending-materialization":
+        target="validate_kde_tier3_kio_attempt9_definition.py"
     else:
         target="validate_kde_tier3_round11_materialization.py"
 elif gate=="tier3-level1-source-PASS-pending-planning-validation":

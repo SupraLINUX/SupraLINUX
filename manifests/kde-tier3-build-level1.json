@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-24",
+  "as_of": "2026-09-28",
   "authority": "kde-upstream",
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level1",
@@ -889,18 +889,18 @@
     ],
     "provider_closure_only_nodes": [],
     "candidate_package_versions": {
-      "kio": "6.30.0-0supralinux8",
+      "kio": "6.30.0-0supralinux9",
       "kxmlgui": "6.30.0-0supralinux5"
     },
     "execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "round26-remediation-PASS-pending-attempt9-definition",
-    "source_rematerialization_required": false,
+    "status": "attempt9-remediation-defined-pending-materialization",
+    "source_rematerialization_required": true,
     "source_rematerialization_nodes": [
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "tier3-attempt9-kio-remediation-definition",
+    "next_gate": "tier3-attempt9-kio-remediation-materialization-evidence",
     "current_attempt": 8,
     "next_attempt": 9,
     "remaining_failed_nodes": [
@@ -1268,6 +1268,18 @@
         ],
         "krecent_final_order_ok": true
       }
+    },
+    "attempt9_definition": {
+      "status": "definition-pending-ci",
+      "candidate_package_version": "6.30.0-0supralinux9",
+      "full_level1_rerun_required": true,
+      "retained_revalidation_nodes": [
+        "kxmlgui"
+      ],
+      "source_rematerialization_nodes": [
+        "kio"
+      ],
+      "package_execution_authorized": false
     }
   },
   "activation": {

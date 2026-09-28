@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-28",
+  "node": "kio",
+  "attempt": 9,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "status": "definition-pending-ci",
+  "candidate_package_version": "6.30.0-0supralinux9",
+  "previous_package_version": "6.30.0-0supralinux8",
+  "package_revision_bump_required": true,
+  "source_rematerialization_required": true,
+  "materialization_authorized": true,
+  "package_execution_authorized": false,
+  "level1_execution_authorized": false,
+  "canonical_kio_state": "FAIL",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "predecessor_round26": {
+    "status": "remediation-PASS",
+    "workflow_run": 36366972800,
+    "job_id": 108755265236,
+    "artifact_id": 10948970106,
+    "artifact_sha256": "7c8b91266fd9ecd79638c8c4bfc5419dadac937b911517522b083900e9bc9f98",
+    "conclusion": "hidden-home-causality-and-combined-kio-remediation-PASS",
+    "hidden_home_reproduction": "10/10",
+    "visible_home_pass": "20/20",
+    "full_suite": "69/69 PASS"
+  },
+  "source_remediation": {
+    "target": "src/core/krecentdocument.cpp",
+    "patch_name": "supralinux-krecent-deterministic-ordering.patch",
+    "exact_patch_sha256": "8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602",
+    "exact_patched_source_sha256": "57d20f3786220178316b31819ba266432207b1f4d55859ccf8d1fad37645021b",
+    "public_api_change": false,
+    "abi_change": false,
+    "xbel_schema_change": false,
+    "timestamp_format_change": false,
+    "provenance": "Round25 target PASS and Round26 exact candidate reuse"
+  },
+  "test_environment_remediation": {
+    "previous_home": "debian/.supralinux-test-home/sbuild",
+    "selected_home": "debian/supralinux-test-home/sbuild",
+    "test_environment_only": true,
+    "package_runtime_effect": false,
+    "upstream_tests_filtered": false,
+    "failures_fatal": true
+  },
+  "build_scope": {
+    "source_materialization_nodes": [
+      "kio"
+    ],
+    "retained_revalidation_nodes": [
+      "kxmlgui"
+    ],
+    "full_level1_rerun_required": true
+  },
+  "gates": {
+    "current": "tier3-attempt9-kio-remediation-definition",
+    "after_definition": "tier3-attempt9-kio-remediation-materialization-evidence",
+    "after_materialization": "tier3-attempt9-kio-planning-validation",
+    "package_execution_requires_separate_authorization": true
+  },
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "stable_promotion_requires_explicit_user_approval": true
+}
