@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 2
 
-Status: **Attempt 4 active after remediation materialization + activation validation PASS** as of 2026-09-28.
+Status: **Attempt 4 closed MIXED; KCMUtils `6.30.0-0supralinux3` remediation materialization pending** as of 2026-09-28.
 
 Level 2 contains Baloo, KCMUtils, KNotifyConfig and KParts. Its precondition is closed Level 1 Attempt 10: KIO `6.30.0-0supralinux10` and KXMLGui `6.30.0-0supralinux5` are canonical PASS, with Tier 3 at **13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**.
 
@@ -95,3 +95,27 @@ Both source materializations are now promoted into the Level 2 build inputs. Thi
 Repository Policy `36468037163` and Level 2 workflow `36468036937` both passed at commit `8b38a250b86f33dbbab60b406b2724ac6b25498d`. The Level 2 planning job `109082952071` and intentional-skip job `109083016803` passed; shared rootfs and package matrix were skipped, proving the activation state before package execution.
 
 Attempt 4 is now authorized for all four Level 2 nodes. Baloo and KNotifyConfig retain their `-1` source materializations; KCMUtils and KParts use the remediated `-2` materializations. The canonical pre-build snapshot remains **13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED** until real Attempt 4 evidence is consumed.
+
+
+## Attempt 4 result
+
+Workflow `36473379324` executed all four Level 2 package nodes from commit `35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3` using shared rootfs artifact `10992682557` (SHA-256 `0dad0fc0a61d5d39bb0cc12c62d43956927657d13e67a79f9cfb6274ef690d54`).
+
+- Baloo `6.30.0-0supralinux1`: **PASS**, 38/38 tests, artifact `10993001091`.
+- KNotifyConfig `6.30.0-0supralinux1`: **PASS**, 1/1 test, artifact `10992533517`.
+- KParts `6.30.0-0supralinux2`: **PASS**, 3/3 tests, artifact `10992408883`.
+- KCMUtils `6.30.0-0supralinux2`: real **FAIL** in `sbuild` after 6/6 tests passed, artifact `10992718121`.
+
+The three successful nodes are canonically promoted. KTextEditor is therefore no longer BLOCKED by KParts and returns to `pending`. Purpose and KNewStuff remain BLOCKED by KCMUtils. Canonical Tier 3 is now **16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED**.
+
+KCMUtils failed in `dpkg-gensymbols`: the existing `-2` remediation correctly made the shared_ptr vtable optional, but the matching libstdc++ shared_ptr `typeinfo` symbol remained mandatory on `!riscv64` and is not emitted by the Resolute amd64 toolchain. The already-`optional=templinst` missing symbols are not fatal.
+
+## KCMUtils remediation after Attempt 4
+
+The next source-only candidate is `6.30.0-0supralinux3`. It preserves `arch=!riscv64` and marks only the compiler-generated typeinfo symbol
+
+`_ZTISt23_Sp_counted_ptr_inplaceI10QQmlEngineSaIvELN9__gnu_cxx12_Lock_policyE2EE@Base`
+
+as `optional`. No KDE public ABI, upstream source, Qt provider, tests or support closure is relaxed.
+
+Materialization is the only authorized next action. It does **not** consume Package Attempt 5. Binary execution remains disabled until materialization and a later activation gate pass.

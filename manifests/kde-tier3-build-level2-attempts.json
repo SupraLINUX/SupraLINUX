@@ -95,6 +95,44 @@
         "kparts": "independent Lintian symbol-version blocker observed before invalid proof terminated the runner"
       },
       "next_attempt": 4
+    },
+    {
+      "attempt": 4,
+      "workflow_run": 36473379324,
+      "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3",
+      "result": "MIXED",
+      "package_attempted": true,
+      "package_state_effect": "3 PASS / 1 FAIL; canonical 16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED",
+      "rootfs": {
+        "job_id": 109100990204,
+        "artifact_id": 10992682557,
+        "artifact_sha256": "0dad0fc0a61d5d39bb0cc12c62d43956927657d13e67a79f9cfb6274ef690d54"
+      },
+      "workflow_jobs": {
+        "success": 3,
+        "fail": 1
+      },
+      "primary_classification": {
+        "PASS": [
+          "baloo",
+          "knotifyconfig",
+          "kparts"
+        ],
+        "FAIL": [
+          "kcmutils"
+        ],
+        "INFRA_INVALID": []
+      },
+      "canonical_failures": 1,
+      "canonical_promotions": 3,
+      "remediation_findings": {
+        "runner_and_support_closure": "PASS: shared rootfs and exact support-closure validation succeeded for all executed nodes",
+        "baloo": "PASS; 38/38 tests",
+        "knotifyconfig": "PASS; 1/1 tests",
+        "kparts": "PASS; 3/3 tests; -2 symbol metadata remediation validated",
+        "kcmutils": "real sbuild FAIL after 6/6 tests: mandatory libstdc++ shared_ptr typeinfo absent on Resolute amd64"
+      },
+      "next_attempt": 5
     }
   ],
   "nodes": {
@@ -155,6 +193,24 @@
         "rootfs_artifact_id": 10987856935,
         "rootfs_artifact_sha256": "02587e014fcdac5c51961def414b1bb4335e2fd62c1b8147f3d81cb865be3a39",
         "observed_package_result": "sbuild successful; 38/38 tests PASS; Lintian did not fail before invalid proof"
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 36473379324,
+        "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3",
+        "job_id": 109101309616,
+        "artifact_id": 10993001091,
+        "artifact_sha256": "6cc70756a50990874ec7342194a0d59e85b0c5f47b4a894c721c1cc9684b5ff4",
+        "result": "PASS",
+        "stage": "complete",
+        "exit_code": 0,
+        "package_attempted": true,
+        "package_state_effect": "PASS",
+        "canonical_state_effect": "PASS",
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10992682557,
+        "rootfs_artifact_sha256": "0dad0fc0a61d5d39bb0cc12c62d43956927657d13e67a79f9cfb6274ef690d54",
+        "tests": "38/38 PASS"
       }
     ],
     "kcmutils": [
@@ -214,6 +270,27 @@
         "rootfs_artifact_sha256": "02587e014fcdac5c51961def414b1bb4335e2fd62c1b8147f3d81cb865be3a39",
         "tests": "6/6 PASS",
         "root_cause": "libkf6kcmutilsquick6 symbols baseline treats a libstdc++ shared_ptr vtable as mandatory on !riscv64; Resolute toolchain does not emit it"
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 36473379324,
+        "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3",
+        "job_id": 109101309445,
+        "artifact_id": 10992718121,
+        "artifact_sha256": "674a760f2075e9000e713b910cebd281d120aedf0bfdbfe3833a9950b3a7a999",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "failure_substage": "dpkg-gensymbols-missing-toolchain-template-typeinfo",
+        "exit_code": 2,
+        "package_attempted": true,
+        "package_state_effect": "FAIL",
+        "canonical_state_effect": "retain-FAIL",
+        "package_version": "6.30.0-0supralinux2",
+        "rootfs_artifact_id": 10992682557,
+        "rootfs_artifact_sha256": "0dad0fc0a61d5d39bb0cc12c62d43956927657d13e67a79f9cfb6274ef690d54",
+        "tests": "6/6 PASS",
+        "root_cause": "libkf6kcmutilsquick6 keeps libstdc++ shared_ptr typeinfo _ZTISt23_Sp_counted_ptr_inplaceI10QQmlEngineSaIvELN9__gnu_cxx12_Lock_policyE2EE@Base mandatory on !riscv64; the Resolute amd64 toolchain does not emit it.",
+        "symbol": "_ZTISt23_Sp_counted_ptr_inplaceI10QQmlEngineSaIvELN9__gnu_cxx12_Lock_policyE2EE@Base"
       }
     ],
     "knotifyconfig": [
@@ -273,6 +350,24 @@
         "rootfs_artifact_id": 10987856935,
         "rootfs_artifact_sha256": "02587e014fcdac5c51961def414b1bb4335e2fd62c1b8147f3d81cb865be3a39",
         "observed_package_result": "sbuild successful; 1/1 tests PASS; Lintian did not fail before invalid proof"
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 36473379324,
+        "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3",
+        "job_id": 109101309465,
+        "artifact_id": 10992533517,
+        "artifact_sha256": "243ef6fe3e99e9dfa1132cdcf9c47dbe528b28bfefa048f2bbe179f98470ff39",
+        "result": "PASS",
+        "stage": "complete",
+        "exit_code": 0,
+        "package_attempted": true,
+        "package_state_effect": "PASS",
+        "canonical_state_effect": "PASS",
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 10992682557,
+        "rootfs_artifact_sha256": "0dad0fc0a61d5d39bb0cc12c62d43956927657d13e67a79f9cfb6274ef690d54",
+        "tests": "1/1 PASS"
       }
     ],
     "kparts": [
@@ -333,6 +428,24 @@
         "rootfs_artifact_sha256": "02587e014fcdac5c51961def414b1bb4335e2fd62c1b8147f3d81cb865be3a39",
         "tests": "3/3 PASS",
         "independent_package_blocker_observed": "Lintian symbols-file-contains-current-version-with-debian-revision for _ZSt19piecewise_construct@Base"
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 36473379324,
+        "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3",
+        "job_id": 109101309656,
+        "artifact_id": 10992408883,
+        "artifact_sha256": "be548d17290dc7f5adaa9b518574c04bd9e29348b292e5db2795609bce355935",
+        "result": "PASS",
+        "stage": "complete",
+        "exit_code": 0,
+        "package_attempted": true,
+        "package_state_effect": "PASS",
+        "canonical_state_effect": "PASS",
+        "package_version": "6.30.0-0supralinux2",
+        "rootfs_artifact_id": 10992682557,
+        "rootfs_artifact_sha256": "0dad0fc0a61d5d39bb0cc12c62d43956927657d13e67a79f9cfb6274ef690d54",
+        "tests": "3/3 PASS"
       }
     ]
   },

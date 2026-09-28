@@ -271,7 +271,7 @@
       "source_package": "kf6-kcmutils",
       "provider": "supralinux",
       "contract_state": "contract-ready",
-      "package_version_candidate": "6.30.0-0supralinux2",
+      "package_version_candidate": "6.30.0-0supralinux3",
       "technical_references": {
         "ubuntu": {
           "source_package": "kf6-kcmutils",
@@ -376,6 +376,18 @@
           ],
           "classification": "toolchain-generated-template-vtable",
           "rationale": "Compiler/libstdc++ implementation detail is not a stable KDE ABI contract; preserve the architecture condition but do not make its emission mandatory."
+        },
+        {
+          "package": "libkf6kcmutilsquick6",
+          "symbol": "_ZTISt23_Sp_counted_ptr_inplaceI10QQmlEngineSaIvELN9__gnu_cxx12_Lock_policyE2EE@Base",
+          "preserve_tags": [
+            "arch=!riscv64"
+          ],
+          "add_tags": [
+            "optional"
+          ],
+          "classification": "toolchain-generated-template-typeinfo",
+          "rationale": "libstdc++ shared_ptr implementation typeinfo is not a stable KDE ABI contract; preserve the architecture condition but do not require this compiler-generated implementation detail to be emitted."
         }
       ]
     },
@@ -4715,63 +4727,89 @@
     }
   ],
   "level2_remediation": {
-    "status": "attempt4-active",
+    "status": "materialization-pending-ci",
     "trigger": {
-      "attempt": 3,
-      "workflow_run": 36461187872,
-      "commit": "76bbe36b1d036b31bc95840dbba26dbf8e9b0bb1",
+      "attempt": 4,
+      "workflow_run": 36473379324,
+      "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3",
       "result": "MIXED"
     },
     "source_changed_nodes": [
-      "kcmutils",
-      "kparts"
+      "kcmutils"
     ],
     "validation_only_nodes": [
       "baloo",
-      "knotifyconfig"
+      "knotifyconfig",
+      "kparts"
     ],
     "candidate_package_versions": {
-      "kcmutils": "6.30.0-0supralinux2",
-      "kparts": "6.30.0-0supralinux2"
+      "kcmutils": "6.30.0-0supralinux3"
     },
-    "materialization_authorized": false,
-    "package_build_authorized": true,
-    "canonical_state_effect": "none until Attempt 4 package PASS",
-    "next_gate": "tier3-build-level2-attempt4",
-    "source_materialization_complete": true,
-    "materialization_evidence": {
-      "workflow_run": 36466461781,
-      "commit": "a0ee684e97f834e39a760eab401ba29e2c172a5d",
-      "artifacts": {
-        "kcmutils": {
-          "job_id": 109078164555,
-          "artifact_id": 10989229464,
-          "artifact_sha256": "ec9fb73d8c03f7c972ab2e878ffaa56a3a51f7edad56e276464a09842a88fe5b",
-          "package_version": "6.30.0-0supralinux2"
-        },
-        "kparts": {
-          "job_id": 109078164738,
-          "artifact_id": 10989828107,
-          "artifact_sha256": "52183686781a2fd30a0d6b8c0b0c40fce6e5da55ac2f8680df7fcc2eae120112",
-          "package_version": "6.30.0-0supralinux2"
+    "materialization_authorized": true,
+    "package_build_authorized": false,
+    "canonical_state_effect": "Attempt 4 already promoted Baloo/KNotifyConfig/KParts; KCMUtils remains FAIL until a later package PASS",
+    "next_gate": "tier3-level2-remediation-materialization-evidence"
+  },
+  "level2_remediation_history": [
+    {
+      "status": "attempt4-active",
+      "trigger": {
+        "attempt": 3,
+        "workflow_run": 36461187872,
+        "commit": "76bbe36b1d036b31bc95840dbba26dbf8e9b0bb1",
+        "result": "MIXED"
+      },
+      "source_changed_nodes": [
+        "kcmutils",
+        "kparts"
+      ],
+      "validation_only_nodes": [
+        "baloo",
+        "knotifyconfig"
+      ],
+      "candidate_package_versions": {
+        "kcmutils": "6.30.0-0supralinux2",
+        "kparts": "6.30.0-0supralinux2"
+      },
+      "materialization_authorized": false,
+      "package_build_authorized": true,
+      "canonical_state_effect": "none until Attempt 4 package PASS",
+      "next_gate": "tier3-build-level2-attempt4",
+      "source_materialization_complete": true,
+      "materialization_evidence": {
+        "workflow_run": 36466461781,
+        "commit": "a0ee684e97f834e39a760eab401ba29e2c172a5d",
+        "artifacts": {
+          "kcmutils": {
+            "job_id": 109078164555,
+            "artifact_id": 10989229464,
+            "artifact_sha256": "ec9fb73d8c03f7c972ab2e878ffaa56a3a51f7edad56e276464a09842a88fe5b",
+            "package_version": "6.30.0-0supralinux2"
+          },
+          "kparts": {
+            "job_id": 109078164738,
+            "artifact_id": 10989828107,
+            "artifact_sha256": "52183686781a2fd30a0d6b8c0b0c40fce6e5da55ac2f8680df7fcc2eae120112",
+            "package_version": "6.30.0-0supralinux2"
+          }
         }
+      },
+      "activation_policy_workflow_run": 36468037163,
+      "activation_level2_workflow_run": 36468036937,
+      "activation_commit": "8b38a250b86f33dbbab60b406b2724ac6b25498d",
+      "planning_validation": {
+        "repository_policy_workflow_run": 36468037163,
+        "level2_workflow_run": 36468036937,
+        "commit": "8b38a250b86f33dbbab60b406b2724ac6b25498d",
+        "policy_job_id": 109082952242,
+        "plan_job_id": 109082952071,
+        "intentional_skip_job_id": 109083016803,
+        "rootfs_job_conclusion": "skipped",
+        "package_matrix_conclusion": "skipped",
+        "runner_scope_validation": "PASS",
+        "remediation_materialization_validation": "PASS",
+        "result": "PASS"
       }
-    },
-    "activation_policy_workflow_run": 36468037163,
-    "activation_level2_workflow_run": 36468036937,
-    "activation_commit": "8b38a250b86f33dbbab60b406b2724ac6b25498d",
-    "planning_validation": {
-      "repository_policy_workflow_run": 36468037163,
-      "level2_workflow_run": 36468036937,
-      "commit": "8b38a250b86f33dbbab60b406b2724ac6b25498d",
-      "policy_job_id": 109082952242,
-      "plan_job_id": 109082952071,
-      "intentional_skip_job_id": 109083016803,
-      "rootfs_job_conclusion": "skipped",
-      "package_matrix_conclusion": "skipped",
-      "runner_scope_validation": "PASS",
-      "remediation_materialization_validation": "PASS",
-      "result": "PASS"
     }
-  }
+  ]
 }

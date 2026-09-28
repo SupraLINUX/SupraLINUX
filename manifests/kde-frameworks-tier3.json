@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level2",
+    "phase": "build-level2-remediation-planning",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level2-attempt4-active",
-    "remediation": "level2-attempt4-proof-and-symbol-metadata-remediation"
+    "package_builds": "tier3-level2-remediation-pending-materialization",
+    "remediation": "level2-kcmutils-symbol-metadata-remediation"
   },
   "nodes": [
     {
@@ -28,7 +28,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/baloo-6.30.0.tar.xz",
       "source_sha256": "a59d33a919bfa1d164c8f3a6f992c609edaf2131ac5f52ea4ecb77f6fbc53be1",
       "upstream_ref": "v6.30.0",
-      "state": "FAIL",
+      "state": "PASS",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -53,9 +53,9 @@
         }
       },
       "packaging": {
-        "state": "FAIL",
+        "state": "PASS",
         "package_version": "6.30.0-0supralinux1",
-        "downstream_eligible": false,
+        "downstream_eligible": true,
         "evidence": [
           {
             "result": "FAIL",
@@ -70,8 +70,42 @@
             "package_attempted": true,
             "package_state_effect": "FAIL",
             "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
+          },
+          {
+            "result": "PASS",
+            "build_result": "PASS",
+            "workflow_run": 36473379324,
+            "job_id": 109101309616,
+            "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3",
+            "attempted_package_version": "6.30.0-0supralinux1",
+            "artifact_id": 10993001091,
+            "artifact_sha256": "6cc70756a50990874ec7342194a0d59e85b0c5f47b4a894c721c1cc9684b5ff4",
+            "rootfs_artifact_id": 10992682557,
+            "rootfs_artifact_sha256": "0dad0fc0a61d5d39bb0cc12c62d43956927657d13e67a79f9cfb6274ef690d54",
+            "stage": "complete",
+            "tests": "38/38 PASS",
+            "lintian": "PASS-errors",
+            "apt_check": "PASS",
+            "abi_contract": "PASS",
+            "cmake_consumer": "PASS",
+            "buildinfo_predecessor_proof": "PASS",
+            "provider_closure_artifact_validation": "PASS",
+            "declared_runtime_input_proof": "PASS",
+            "selected_profile_proof": "PASS",
+            "python_import": "not-applicable",
+            "qml_payload": "PASS",
+            "downstream_eligible": true,
+            "canonical_success_transition": "PASS",
+            "package_state_effect": "PASS",
+            "claim": "hosted-clean-package-preflight",
+            "authoritative": false,
+            "full_result_json_retained_in_artifact": true
           }
-        ]
+        ],
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "attempt_ledger": "manifests/kde-tier3-build-level2-attempts.json",
+        "campaign": "manifests/kde-tier3-build-level2.json"
       }
     },
     {
@@ -179,7 +213,7 @@
       },
       "packaging": {
         "state": "FAIL",
-        "package_version": "6.30.0-0supralinux1",
+        "package_version": "6.30.0-0supralinux2",
         "downstream_eligible": false,
         "evidence": [
           {
@@ -195,8 +229,35 @@
             "package_attempted": true,
             "package_state_effect": "FAIL",
             "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
+          },
+          {
+            "result": "FAIL",
+            "build_result": "FAIL",
+            "workflow_run": 36473379324,
+            "job_id": 109101309445,
+            "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3",
+            "attempted_package_version": "6.30.0-0supralinux2",
+            "artifact_id": 10992718121,
+            "artifact_sha256": "674a760f2075e9000e713b910cebd281d120aedf0bfdbfe3833a9950b3a7a999",
+            "rootfs_artifact_id": 10992682557,
+            "rootfs_artifact_sha256": "0dad0fc0a61d5d39bb0cc12c62d43956927657d13e67a79f9cfb6274ef690d54",
+            "stage": "sbuild",
+            "failure_substage": "dpkg-gensymbols-missing-toolchain-template-typeinfo",
+            "exit_code": 2,
+            "tests": "6/6 PASS",
+            "downstream_eligible": false,
+            "canonical_success_transition": "FAIL",
+            "package_state_effect": "FAIL",
+            "claim": "hosted-clean-package-preflight",
+            "authoritative": false,
+            "root_cause": "libkf6kcmutilsquick6 keeps libstdc++ shared_ptr typeinfo _ZTISt23_Sp_counted_ptr_inplaceI10QQmlEngineSaIvELN9__gnu_cxx12_Lock_policyE2EE@Base mandatory on !riscv64; the Resolute amd64 toolchain does not emit it.",
+            "full_result_json_retained_in_artifact": true
           }
-        ]
+        ],
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "attempt_ledger": "manifests/kde-tier3-build-level2-attempts.json",
+        "campaign": "manifests/kde-tier3-build-level2.json"
       }
     },
     {
@@ -861,7 +922,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/knotifyconfig-6.30.0.tar.xz",
       "source_sha256": "4a133decdb0d3731dbaa1d3625b30f057089e5c59c8326ff88a047cef35b2efb",
       "upstream_ref": "v6.30.0",
-      "state": "FAIL",
+      "state": "PASS",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -886,9 +947,9 @@
         }
       },
       "packaging": {
-        "state": "FAIL",
+        "state": "PASS",
         "package_version": "6.30.0-0supralinux1",
-        "downstream_eligible": false,
+        "downstream_eligible": true,
         "evidence": [
           {
             "result": "FAIL",
@@ -903,8 +964,42 @@
             "package_attempted": true,
             "package_state_effect": "FAIL",
             "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
+          },
+          {
+            "result": "PASS",
+            "build_result": "PASS",
+            "workflow_run": 36473379324,
+            "job_id": 109101309465,
+            "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3",
+            "attempted_package_version": "6.30.0-0supralinux1",
+            "artifact_id": 10992533517,
+            "artifact_sha256": "243ef6fe3e99e9dfa1132cdcf9c47dbe528b28bfefa048f2bbe179f98470ff39",
+            "rootfs_artifact_id": 10992682557,
+            "rootfs_artifact_sha256": "0dad0fc0a61d5d39bb0cc12c62d43956927657d13e67a79f9cfb6274ef690d54",
+            "stage": "complete",
+            "tests": "1/1 PASS",
+            "lintian": "PASS-errors",
+            "apt_check": "PASS",
+            "abi_contract": "PASS",
+            "cmake_consumer": "PASS",
+            "buildinfo_predecessor_proof": "PASS",
+            "provider_closure_artifact_validation": "PASS",
+            "declared_runtime_input_proof": "PASS",
+            "selected_profile_proof": "PASS",
+            "python_import": "not-applicable",
+            "qml_payload": "not-applicable",
+            "downstream_eligible": true,
+            "canonical_success_transition": "PASS",
+            "package_state_effect": "PASS",
+            "claim": "hosted-clean-package-preflight",
+            "authoritative": false,
+            "full_result_json_retained_in_artifact": true
           }
-        ]
+        ],
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "attempt_ledger": "manifests/kde-tier3-build-level2-attempts.json",
+        "campaign": "manifests/kde-tier3-build-level2.json"
       }
     },
     {
@@ -915,7 +1010,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kparts-6.30.0.tar.xz",
       "source_sha256": "99f5a0e3a4da10e1a0fbfb505ae966cd87627f887dd07929a920afe41c862ac0",
       "upstream_ref": "v6.30.0",
-      "state": "FAIL",
+      "state": "PASS",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -940,9 +1035,9 @@
         }
       },
       "packaging": {
-        "state": "FAIL",
-        "package_version": "6.30.0-0supralinux1",
-        "downstream_eligible": false,
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux2",
+        "downstream_eligible": true,
         "evidence": [
           {
             "result": "FAIL",
@@ -957,8 +1052,42 @@
             "package_attempted": true,
             "package_state_effect": "FAIL",
             "root_cause": "missing support provider libkf6breezeicons6 via kiconthemes"
+          },
+          {
+            "result": "PASS",
+            "build_result": "PASS",
+            "workflow_run": 36473379324,
+            "job_id": 109101309656,
+            "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3",
+            "attempted_package_version": "6.30.0-0supralinux2",
+            "artifact_id": 10992408883,
+            "artifact_sha256": "be548d17290dc7f5adaa9b518574c04bd9e29348b292e5db2795609bce355935",
+            "rootfs_artifact_id": 10992682557,
+            "rootfs_artifact_sha256": "0dad0fc0a61d5d39bb0cc12c62d43956927657d13e67a79f9cfb6274ef690d54",
+            "stage": "complete",
+            "tests": "3/3 PASS",
+            "lintian": "PASS-errors",
+            "apt_check": "PASS",
+            "abi_contract": "PASS",
+            "cmake_consumer": "PASS",
+            "buildinfo_predecessor_proof": "PASS",
+            "provider_closure_artifact_validation": "PASS",
+            "declared_runtime_input_proof": "PASS",
+            "selected_profile_proof": "PASS",
+            "python_import": "not-applicable",
+            "qml_payload": "not-applicable",
+            "downstream_eligible": true,
+            "canonical_success_transition": "PASS",
+            "package_state_effect": "PASS",
+            "claim": "hosted-clean-package-preflight",
+            "authoritative": false,
+            "full_result_json_retained_in_artifact": true
           }
-        ]
+        ],
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "attempt_ledger": "manifests/kde-tier3-build-level2-attempts.json",
+        "campaign": "manifests/kde-tier3-build-level2.json"
       }
     },
     {
@@ -1182,7 +1311,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/ktexteditor-6.30.0.tar.xz",
       "source_sha256": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7",
       "upstream_ref": "v6.30.0",
-      "state": "BLOCKED",
+      "state": "pending",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -1207,12 +1336,9 @@
         }
       },
       "packaging": {
-        "state": "BLOCKED",
+        "state": "pending",
         "package_version": null,
-        "downstream_eligible": false,
-        "blocked_by": [
-          "kparts"
-        ]
+        "downstream_eligible": false
       }
     },
     {
@@ -2510,140 +2636,133 @@
   },
   "level2_execution": {
     "manifest": "manifests/kde-tier3-build-level2.json",
-    "status": "attempt4-active",
+    "status": "attempt-closed-MIXED-remediation-pending-materialization",
     "current_attempt": 4,
+    "next_attempt": 5,
     "selected_nodes": [
       "baloo",
       "kcmutils",
       "knotifyconfig",
       "kparts"
     ],
-    "execution_authorized": true,
-    "workflow_run": 36461187872,
-    "commit": "76bbe36b1d036b31bc95840dbba26dbf8e9b0bb1",
-    "attempt3_result": "MIXED",
-    "primary_classification": {
-      "FAIL": [
-        "kcmutils"
-      ],
-      "INFRA_INVALID": [
+    "execution_authorized": false,
+    "workflow_run": 36473379324,
+    "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3",
+    "result": "MIXED",
+    "classification": {
+      "PASS": [
         "baloo",
         "knotifyconfig",
         "kparts"
-      ]
+      ],
+      "FAIL": [
+        "kcmutils"
+      ],
+      "INFRA_INVALID": []
     },
-    "canonical_state_effect": "none; retain 4 FAIL + 3 BLOCKED",
-    "canonical_snapshot": "13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED",
-    "next_gate": "tier3-build-level2-attempt4",
-    "materialization_workflow_run": 36466461781,
-    "materialization_commit": "a0ee684e97f834e39a760eab401ba29e2c172a5d",
-    "materialization_artifacts": {
-      "kcmutils": {
-        "job_id": 109078164555,
-        "artifact_id": 10989229464,
-        "artifact_sha256": "ec9fb73d8c03f7c972ab2e878ffaa56a3a51f7edad56e276464a09842a88fe5b",
-        "package_version": "6.30.0-0supralinux2"
-      },
-      "kparts": {
-        "job_id": 109078164738,
-        "artifact_id": 10989828107,
-        "artifact_sha256": "52183686781a2fd30a0d6b8c0b0c40fce6e5da55ac2f8680df7fcc2eae120112",
-        "package_version": "6.30.0-0supralinux2"
-      }
-    },
-    "attempt": 4,
-    "planning_validation": {
-      "repository_policy_workflow_run": 36468037163,
-      "level2_workflow_run": 36468036937,
-      "commit": "8b38a250b86f33dbbab60b406b2724ac6b25498d",
-      "policy_job_id": 109082952242,
-      "plan_job_id": 109082952071,
-      "intentional_skip_job_id": 109083016803,
-      "rootfs_job_conclusion": "skipped",
-      "package_matrix_conclusion": "skipped",
-      "runner_scope_validation": "PASS",
-      "remediation_materialization_validation": "PASS",
-      "result": "PASS"
-    },
-    "canonical_prebuild_snapshot": "13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED"
+    "canonical_state_effect": "3 PASS promoted; KCMUtils remains current FAIL; KTextEditor unblocked to pending",
+    "canonical_snapshot": "16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED",
+    "next_gate": "tier3-level2-remediation-materialization-evidence"
   },
   "level2_snapshot": {
-    "pass": 13,
-    "pending": 0,
-    "current_fail": 4,
-    "blocked": 3,
+    "pass": 16,
+    "pending": 1,
+    "current_fail": 1,
+    "blocked": 2,
     "runtime_pending": [],
     "current_fail_nodes": [
-      "baloo",
-      "kcmutils",
-      "knotifyconfig",
-      "kparts"
+      "kcmutils"
     ],
     "blocked_nodes": [
       "knewstuff",
-      "ktexteditor",
       "purpose"
     ],
-    "workflow_run": 36448160410,
-    "commit": "8fdd7fd10685872f2e99c7bec5c81bf42711ba60"
+    "workflow_run": 36473379324,
+    "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3"
   },
   "level2_remediation": {
-    "status": "attempt4-active",
+    "status": "materialization-pending-ci",
     "trigger": {
-      "attempt": 3,
-      "workflow_run": 36461187872,
-      "commit": "76bbe36b1d036b31bc95840dbba26dbf8e9b0bb1",
+      "attempt": 4,
+      "workflow_run": 36473379324,
+      "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3",
       "result": "MIXED"
     },
-    "runner_validation_fix": "support artifacts must be proven as exact closure inputs, not synthetic .buildinfo dev-package edges",
     "source_materialization_nodes": [
-      "kcmutils",
-      "kparts"
+      "kcmutils"
     ],
     "retained_source_nodes": [
       "baloo",
-      "knotifyconfig"
+      "knotifyconfig",
+      "kparts"
     ],
     "candidate_package_versions": {
-      "kcmutils": "6.30.0-0supralinux2",
-      "kparts": "6.30.0-0supralinux2"
+      "kcmutils": "6.30.0-0supralinux3"
     },
-    "execution_authorized": true,
-    "canonical_state_effect": "none",
-    "next_gate": "tier3-build-level2-attempt4",
-    "source_materialization_complete": true,
-    "materialization_workflow_run": 36466461781,
-    "materialization_commit": "a0ee684e97f834e39a760eab401ba29e2c172a5d",
-    "materialization_artifacts": {
-      "kcmutils": {
-        "job_id": 109078164555,
-        "artifact_id": 10989229464,
-        "artifact_sha256": "ec9fb73d8c03f7c972ab2e878ffaa56a3a51f7edad56e276464a09842a88fe5b",
-        "package_version": "6.30.0-0supralinux2"
+    "reason": "KCMUtils passed 6/6 tests but dpkg-gensymbols rejected one mandatory libstdc++ shared_ptr typeinfo symbol that the Resolute amd64 toolchain does not emit.",
+    "execution_authorized": false,
+    "canonical_state_effect": "3 PASS promoted; KCMUtils FAIL retained",
+    "next_gate": "tier3-level2-remediation-materialization-evidence"
+  },
+  "level2_remediation_history": [
+    {
+      "status": "attempt4-active",
+      "trigger": {
+        "attempt": 3,
+        "workflow_run": 36461187872,
+        "commit": "76bbe36b1d036b31bc95840dbba26dbf8e9b0bb1",
+        "result": "MIXED"
       },
-      "kparts": {
-        "job_id": 109078164738,
-        "artifact_id": 10989828107,
-        "artifact_sha256": "52183686781a2fd30a0d6b8c0b0c40fce6e5da55ac2f8680df7fcc2eae120112",
-        "package_version": "6.30.0-0supralinux2"
+      "runner_validation_fix": "support artifacts must be proven as exact closure inputs, not synthetic .buildinfo dev-package edges",
+      "source_materialization_nodes": [
+        "kcmutils",
+        "kparts"
+      ],
+      "retained_source_nodes": [
+        "baloo",
+        "knotifyconfig"
+      ],
+      "candidate_package_versions": {
+        "kcmutils": "6.30.0-0supralinux2",
+        "kparts": "6.30.0-0supralinux2"
+      },
+      "execution_authorized": true,
+      "canonical_state_effect": "none",
+      "next_gate": "tier3-build-level2-attempt4",
+      "source_materialization_complete": true,
+      "materialization_workflow_run": 36466461781,
+      "materialization_commit": "a0ee684e97f834e39a760eab401ba29e2c172a5d",
+      "materialization_artifacts": {
+        "kcmutils": {
+          "job_id": 109078164555,
+          "artifact_id": 10989229464,
+          "artifact_sha256": "ec9fb73d8c03f7c972ab2e878ffaa56a3a51f7edad56e276464a09842a88fe5b",
+          "package_version": "6.30.0-0supralinux2"
+        },
+        "kparts": {
+          "job_id": 109078164738,
+          "artifact_id": 10989828107,
+          "artifact_sha256": "52183686781a2fd30a0d6b8c0b0c40fce6e5da55ac2f8680df7fcc2eae120112",
+          "package_version": "6.30.0-0supralinux2"
+        }
+      },
+      "package_build_authorized": true,
+      "activation_policy_workflow_run": 36468037163,
+      "activation_level2_workflow_run": 36468036937,
+      "activation_commit": "8b38a250b86f33dbbab60b406b2724ac6b25498d",
+      "planning_validation": {
+        "repository_policy_workflow_run": 36468037163,
+        "level2_workflow_run": 36468036937,
+        "commit": "8b38a250b86f33dbbab60b406b2724ac6b25498d",
+        "policy_job_id": 109082952242,
+        "plan_job_id": 109082952071,
+        "intentional_skip_job_id": 109083016803,
+        "rootfs_job_conclusion": "skipped",
+        "package_matrix_conclusion": "skipped",
+        "runner_scope_validation": "PASS",
+        "remediation_materialization_validation": "PASS",
+        "result": "PASS"
       }
-    },
-    "package_build_authorized": true,
-    "activation_policy_workflow_run": 36468037163,
-    "activation_level2_workflow_run": 36468036937,
-    "activation_commit": "8b38a250b86f33dbbab60b406b2724ac6b25498d",
-    "planning_validation": {
-      "repository_policy_workflow_run": 36468037163,
-      "level2_workflow_run": 36468036937,
-      "commit": "8b38a250b86f33dbbab60b406b2724ac6b25498d",
-      "policy_job_id": 109082952242,
-      "plan_job_id": 109082952071,
-      "intentional_skip_job_id": 109083016803,
-      "rootfs_job_conclusion": "skipped",
-      "package_matrix_conclusion": "skipped",
-      "runner_scope_validation": "PASS",
-      "remediation_materialization_validation": "PASS",
-      "result": "PASS"
     }
-  }
+  ]
 }

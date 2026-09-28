@@ -439,3 +439,12 @@ Round 11 is closed as mixed. The next gate is **`tier3-round12-kio-diagnostic-de
 ## Level 2 remediation materialization evidence
 
 Workflow `36466461781` materialized only KCMUtils and KParts and both jobs passed. Their `result.json` records confirm package versions `6.30.0-0supralinux2`, unchanged KDE 6.30 upstream tarball hashes, and the intended symbols-only packaging adaptations. The evidence is now the promoted source input for Level 2 Attempt 4; package execution remains unauthorized.
+
+
+## Level 2 KCMUtils remediation after Attempt 4
+
+Level 2 workflow `36473379324` closed MIXED: Baloo, KNotifyConfig and KParts passed, while KCMUtils `6.30.0-0supralinux2` failed in `dpkg-gensymbols` after all 6 upstream tests passed.
+
+The new materialization queue contains only KCMUtils. Candidate `6.30.0-0supralinux3` keeps the previous optional shared_ptr vtable override and additionally marks the matching libstdc++ shared_ptr typeinfo as optional while preserving `arch=!riscv64`. This is source-package metadata materialization only; `package_attempted=false` and binary execution remains unauthorized.
+
+Canonical package state before this materialization is **16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED**. Next gate: `tier3-level2-remediation-materialization-evidence`.
