@@ -28,7 +28,7 @@ req(ar.get("materialization_workflow_run")==RUN and ar.get("materialization_comm
 check(nodes["kio"].get("planning",{}).get("materialization_evidence",{}),"canonical planning")
 lr=L.get("active_remediation",{})
 req(lr.get("global_round")==11 and lr.get("status")=="materialization-PASS-pending-attempt9-planning-validation" and lr.get("source_rematerialization_required") is False,"Level1 source PASS")
-req(lr.get("execution_authorized") is False and L.get("level1_execution_authorized") is False and lr.get("current_attempt")==8 and lr.get("next_attempt")==9 and lr.get("next_gate")==GATE,"Level1 Attempt9 paused")
+req(L.get("execution_authorized") is False and lr.get("execution_authorized") is False and lr.get("level1_execution_authorized") is False and lr.get("current_attempt")==8 and lr.get("next_attempt")==9 and lr.get("next_gate")==GATE,"Level1 Attempt9 paused")
 req(lr.get("materialization_workflow_run")==RUN and lr.get("materialization_commit")==COMMIT and lr.get("materialization_artifacts",{}).get("kio")=={"job_id":JOB,"artifact_id":ART,"artifact_sha256":ART_SHA,"package_version":VERSION},"Level1 source evidence")
 req(L.get("nodes",{}).get("kio",{}).get("materialization")=={"workflow_run":RUN,"job_id":JOB,"artifact_id":ART,"artifact_sha256":ART_SHA},"Level1 KIO materialization")
 cr=C.get("active_remediation",{})
