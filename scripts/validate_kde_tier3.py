@@ -14,7 +14,7 @@ tier3=load("manifests/kde-frameworks-tier3.json")
 tier2=load("manifests/kde-frameworks-tier2.json")
 dag=load("manifests/kde-dag.json")
 
-if tier3.get("level2_remediation",{}).get("status") in {"materialization-pending-ci","materialization-PASS-pending-attempt4-activation-validation"}:
+if tier3.get("level2_remediation",{}).get("status") in {"materialization-pending-ci","materialization-PASS-pending-attempt4-activation-validation","attempt4-active"}:
     import subprocess
     raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_level2_remediation.py")]).returncode)
 

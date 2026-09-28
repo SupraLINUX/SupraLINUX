@@ -4715,7 +4715,7 @@
     }
   ],
   "level2_remediation": {
-    "status": "materialization-PASS-pending-attempt4-activation-validation",
+    "status": "attempt4-active",
     "trigger": {
       "attempt": 3,
       "workflow_run": 36461187872,
@@ -4735,9 +4735,9 @@
       "kparts": "6.30.0-0supralinux2"
     },
     "materialization_authorized": false,
-    "package_build_authorized": false,
+    "package_build_authorized": true,
     "canonical_state_effect": "none until Attempt 4 package PASS",
-    "next_gate": "tier3-build-level2-attempt4-activation-validation",
+    "next_gate": "tier3-build-level2-attempt4",
     "source_materialization_complete": true,
     "materialization_evidence": {
       "workflow_run": 36466461781,
@@ -4756,6 +4756,22 @@
           "package_version": "6.30.0-0supralinux2"
         }
       }
+    },
+    "activation_policy_workflow_run": 36468037163,
+    "activation_level2_workflow_run": 36468036937,
+    "activation_commit": "8b38a250b86f33dbbab60b406b2724ac6b25498d",
+    "planning_validation": {
+      "repository_policy_workflow_run": 36468037163,
+      "level2_workflow_run": 36468036937,
+      "commit": "8b38a250b86f33dbbab60b406b2724ac6b25498d",
+      "policy_job_id": 109082952242,
+      "plan_job_id": 109082952071,
+      "intentional_skip_job_id": 109083016803,
+      "rootfs_job_conclusion": "skipped",
+      "package_matrix_conclusion": "skipped",
+      "runner_scope_validation": "PASS",
+      "remediation_materialization_validation": "PASS",
+      "result": "PASS"
     }
   }
 }

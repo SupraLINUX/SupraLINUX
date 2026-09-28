@@ -1806,11 +1806,11 @@
     "level2_remediation_attempt": 4,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level2-attempt4-activation-validation"
+    "next_gate": "tier3-build-level2-attempt4"
   },
   "remediation_queue": [],
   "level2_remediation": {
-    "status": "materialization-PASS-pending-attempt4-activation-validation",
+    "status": "materialization-PASS",
     "trigger": {
       "attempt": 3,
       "workflow_run": 36461187872,
@@ -1831,7 +1831,7 @@
     },
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-build-level2-attempt4-activation-validation",
+    "next_gate": "tier3-build-level2-attempt4",
     "materialization_workflow_run": 36466461781,
     "materialization_commit": "a0ee684e97f834e39a760eab401ba29e2c172a5d",
     "materialization_evidence": {
@@ -1856,6 +1856,11 @@
       "kcmutils",
       "kparts"
     ],
-    "source_materialization_complete": true
+    "source_materialization_complete": true,
+    "materialization_authorized": false,
+    "package_build_authorized": true,
+    "activation_policy_workflow_run": 36468037163,
+    "activation_level2_workflow_run": 36468036937,
+    "activation_commit": "8b38a250b86f33dbbab60b406b2724ac6b25498d"
   }
 }

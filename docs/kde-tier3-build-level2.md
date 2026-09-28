@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 2
 
-Status: **Attempt 3 closed MIXED; Attempt 4 remediation pending KCMUtils/KParts materialization** as of 2026-09-28.
+Status: **Attempt 4 active after remediation materialization + activation validation PASS** as of 2026-09-28.
 
 Level 2 contains Baloo, KCMUtils, KNotifyConfig and KParts. Its precondition is closed Level 1 Attempt 10: KIO `6.30.0-0supralinux10` and KXMLGui `6.30.0-0supralinux5` are canonical PASS, with Tier 3 at **13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**.
 
@@ -9,8 +9,8 @@ The Level 2 manifest freezes each source-only materialization, all direct Framew
 ```text
 state = active-pending-ci
 execution_authorized = true
-current_attempt = 3
-next_gate = tier3-build-level2-attempt3
+current_attempt = 4
+next_gate = tier3-build-level2-attempt4
 ```
 
 Planning was validated by Repository Policy `36443524514` and Level 2 workflow `36443524497` at commit `b07c6c0a0b3072a76e57cf52d679001de2985d3c`. That run executed the planner and intentional skip only; rootfs and package jobs were skipped as required.
@@ -88,3 +88,10 @@ Remediation materialization workflow `36466461781` completed successfully at com
 - KParts `6.30.0-0supralinux2`: artifact `10989828107`, SHA-256 `52183686781a2fd30a0d6b8c0b0c40fce6e5da55ac2f8680df7fcc2eae120112`.
 
 Both source materializations are now promoted into the Level 2 build inputs. This does **not** change package state: the canonical snapshot remains **13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED**. Binary execution remains disabled until the separate Attempt 4 activation-validation gate passes.
+
+
+## Attempt 4 activation
+
+Repository Policy `36468037163` and Level 2 workflow `36468036937` both passed at commit `8b38a250b86f33dbbab60b406b2724ac6b25498d`. The Level 2 planning job `109082952071` and intentional-skip job `109083016803` passed; shared rootfs and package matrix were skipped, proving the activation state before package execution.
+
+Attempt 4 is now authorized for all four Level 2 nodes. Baloo and KNotifyConfig retain their `-1` source materializations; KCMUtils and KParts use the remediated `-2` materializations. The canonical pre-build snapshot remains **13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED** until real Attempt 4 evidence is consumed.

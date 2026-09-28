@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level2",
   "frameworks_series": "6.30.0",
-  "state": "remediation-materialized-pending-activation",
-  "execution_authorized": false,
+  "state": "active-pending-ci",
+  "execution_authorized": true,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "13 PASS / 0 pending / 4 current FAIL / 3 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -681,7 +681,7 @@
       ]
     },
     "kcmutils": {
-      "state": "remediation-materialized",
+      "state": "remediation-pending-build",
       "source_package": "kf6-kcmutils",
       "package_version": "6.30.0-0supralinux2",
       "expected_binary_packages": [
@@ -996,7 +996,7 @@
       ]
     },
     "kparts": {
-      "state": "remediation-materialized",
+      "state": "remediation-pending-build",
       "source_package": "kf6-kparts",
       "package_version": "6.30.0-0supralinux2",
       "expected_binary_packages": [
@@ -1150,29 +1150,39 @@
     }
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-build-level2-attempt4-activation-validation",
-  "current_attempt": 3,
+  "next_gate": "tier3-build-level2-attempt4",
+  "current_attempt": 4,
   "planning_validation": {
-    "repository_policy_workflow_run": 36459675227,
-    "level2_workflow_run": 36459675009,
-    "commit": "82d1e390673e261bc45a1676d002630248b46dc5",
-    "plan_job_id": 109054796685,
-    "intentional_skip_job_id": 109054959597,
+    "repository_policy_workflow_run": 36468037163,
+    "level2_workflow_run": 36468036937,
+    "commit": "8b38a250b86f33dbbab60b406b2724ac6b25498d",
+    "policy_job_id": 109082952242,
+    "plan_job_id": 109082952071,
+    "intentional_skip_job_id": 109083016803,
     "rootfs_job_conclusion": "skipped",
     "package_matrix_conclusion": "skipped",
-    "runner_executable_preflight": "PASS",
-    "support_closure_validation": "PASS",
+    "runner_scope_validation": "PASS",
+    "remediation_materialization_validation": "PASS",
     "result": "PASS"
   },
   "activation": {
-    "status": "CLOSED-MIXED",
-    "attempt": 3,
-    "workflow_run": 36461187872,
-    "commit": "76bbe36b1d036b31bc95840dbba26dbf8e9b0bb1",
-    "result": "MIXED",
-    "package_attempted": true,
-    "canonical_state_effect": "none; retain 4 FAIL + 3 BLOCKED",
-    "next_gate": "tier3-level2-attempt4-remediation-materialization-evidence"
+    "status": "ACTIVE",
+    "attempt": 4,
+    "planning_policy_workflow_run": 36468037163,
+    "planning_level2_workflow_run": 36468036937,
+    "planning_commit": "8b38a250b86f33dbbab60b406b2724ac6b25498d",
+    "plan_job_id": 109082952071,
+    "intentional_skip_job_id": 109083016803,
+    "scope": "baloo+kcmutils+knotifyconfig+kparts",
+    "source_materialization_versions": {
+      "baloo": "6.30.0-0supralinux1",
+      "kcmutils": "6.30.0-0supralinux2",
+      "knotifyconfig": "6.30.0-0supralinux1",
+      "kparts": "6.30.0-0supralinux2"
+    },
+    "runner_scope_validation": "PASS",
+    "remediation_materialization_validation": "PASS",
+    "next_gate": "tier3-build-level2-attempt4"
   },
   "attempt1_summary": {
     "workflow_run": 36446660866,
@@ -1324,7 +1334,6 @@
       "next_attempt": 3
     }
   },
-  "next_attempt": 4,
   "attempt3_summary": {
     "workflow_run": 36461187872,
     "commit": "76bbe36b1d036b31bc95840dbba26dbf8e9b0bb1",
