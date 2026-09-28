@@ -13,8 +13,18 @@ req(m.get("schema")==1 and m.get("authority")=="kde-upstream" and m.get("provide
 req(m.get("role")=="tier3-binary-build-level2" and m.get("frameworks_series")=="6.30.0","Level2 role/series")
 req(m.get("selected_nodes")==T and m.get("canonical_snapshot")=="13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED","Level2 node set/snapshot")
 if m.get("state")=="planned-pending-activation":
-    req(m.get("execution_authorized") is False and m.get("next_gate")=="tier3-build-level2-planning-validation","planned Level2 authorization/gate")
-    req(t.get("discovery_policy",{}).get("phase")=="build-level2-planning" and t.get("discovery_policy",{}).get("package_builds")=="tier3-level1-attempt10-closed","planned Level2 canonical live phase")
+    req(m.get("execution_authorized") is False,"planned Level2 must not authorize execution")
+    pol=t.get("discovery_policy",{})
+    if m.get("next_attempt")==2:
+        req(m.get("current_attempt")==1 and m.get("next_gate")=="tier3-build-level2-attempt2-planning-validation","Attempt1 INFRA_INVALID handoff")
+        req(pol.get("phase")=="build-level2-planning" and pol.get("package_builds")=="tier3-level2-attempt1-infra-invalid-pending-attempt2-planning-validation","Attempt2 planning live phase")
+        s=m.get("attempt1_summary",{})
+        req(s.get("workflow_run")==36446660866 and s.get("commit")=="d3d504d02ecff7aa1138c5e03052e4c77e558c12" and s.get("result")=="INFRA_INVALID","Attempt1 INFRA_INVALID identity")
+        req(s.get("package_attempted") is False and s.get("canonical_failures")==0 and s.get("canonical_promotions")==0,"Attempt1 canonical no-effect")
+        req(s.get("common_failure",{}).get("exit_code")==126 and s.get("common_failure",{}).get("stage")=="runner-launch","Attempt1 runner-launch failure")
+    else:
+        req(m.get("next_gate")=="tier3-build-level2-planning-validation","initial Level2 planning gate")
+        req(pol.get("phase")=="build-level2-planning" and pol.get("package_builds")=="tier3-level1-attempt10-closed","initial Level2 canonical live phase")
 elif m.get("state")=="active-pending-ci":
     req(m.get("execution_authorized") is True and m.get("current_attempt")==1 and m.get("next_gate")=="tier3-build-level2-attempt1","active Level2 authorization/gate")
     act=m.get("activation",{})
@@ -68,7 +78,16 @@ for x in T:
     req(n.get("python_module") is None and n.get("runtime_validation_input_ids")==[] and n.get("sbuild_enable_network") is False,x+": undeclared runtime/network")
     req(n.get("success_transition")=="PASS" and n.get("downstream_eligible_on_build_success") is True,x+": success transition")
 req(a.get("schema")==1 and a.get("batch")=="tier3-build-level2" and a.get("selected_nodes")==T and set(a.get("nodes",{}))==set(T),"Level2 ledger")
-if m.get("state")=="planned-pending-activation": req(a.get("campaign_history")==[] and all(a["nodes"][x]==[] for x in T),"planned ledger must be empty")
+if m.get("state")=="planned-pending-activation":
+    if m.get("next_attempt")==2:
+        hist=a.get("campaign_history",[])
+        req(len(hist)==1 and hist[0].get("attempt")==1 and hist[0].get("workflow_run")==36446660866 and hist[0].get("result")=="INFRA_INVALID","Attempt1 INFRA ledger")
+        req(hist[0].get("package_attempted") is False and hist[0].get("canonical_failures")==0 and hist[0].get("canonical_promotions")==0,"Attempt1 ledger canonical no-effect")
+        for x in T:
+            rows=a.get("nodes",{}).get(x,[])
+            req(len(rows)==1 and rows[0].get("attempt")==1 and rows[0].get("result")=="INFRA_INVALID" and rows[0].get("package_attempted") is False and rows[0].get("exit_code")==126,x+": Attempt1 INFRA node ledger")
+    else:
+        req(a.get("campaign_history")==[] and all(a["nodes"][x]==[] for x in T),"initial planned ledger must be empty")
 for p in ("scripts/plan-kde-tier3-build-level2.py","scripts/test-kde-tier3-build-level2-planner.py","scripts/run-kde-tier3-build-level2.sh",".github/workflows/kde-tier3-build-level2.yml","docs/kde-tier3-build-level2.md"): req((ROOT/p).exists(),"missing Level2 component: "+p)
 if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)

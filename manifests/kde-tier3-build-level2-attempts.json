@@ -10,12 +10,116 @@
     "knotifyconfig",
     "kparts"
   ],
-  "campaign_history": [],
+  "campaign_history": [
+    {
+      "attempt": 1,
+      "workflow_run": 36446660866,
+      "commit": "d3d504d02ecff7aa1138c5e03052e4c77e558c12",
+      "result": "INFRA_INVALID",
+      "failure_class": "runner-not-executable",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "rootfs": {
+        "job_id": 109010697960,
+        "artifact_id": 10980029224,
+        "artifact_sha256": "eae0f8b164ee002ad56b96f76e3a882254b60ca639d8ce7663c63447b961e000"
+      },
+      "raw_workflow_jobs": {
+        "success": 0,
+        "fail": 4
+      },
+      "raw_failed_nodes": [
+        "baloo",
+        "kcmutils",
+        "knotifyconfig",
+        "kparts"
+      ],
+      "canonical_failures": 0,
+      "canonical_promotions": 0,
+      "next_attempt": 2
+    }
+  ],
   "nodes": {
-    "baloo": [],
-    "kcmutils": [],
-    "knotifyconfig": [],
-    "kparts": []
+    "baloo": [
+      {
+        "attempt": 1,
+        "workflow_run": 36446660866,
+        "commit": "d3d504d02ecff7aa1138c5e03052e4c77e558c12",
+        "job_id": 109010993537,
+        "raw_result": "FAIL",
+        "result": "INFRA_INVALID",
+        "stage": "runner-launch",
+        "failure_substage": "permission-denied-executable-bit",
+        "exit_code": 126,
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "canonical_state_effect": "none",
+        "package_version": "6.30.0-0supralinux1",
+        "evidence_artifact_uploaded": false,
+        "rootfs_artifact_id": 10980029224,
+        "rootfs_artifact_sha256": "eae0f8b164ee002ad56b96f76e3a882254b60ca639d8ce7663c63447b961e000"
+      }
+    ],
+    "kcmutils": [
+      {
+        "attempt": 1,
+        "workflow_run": 36446660866,
+        "commit": "d3d504d02ecff7aa1138c5e03052e4c77e558c12",
+        "job_id": 109010993557,
+        "raw_result": "FAIL",
+        "result": "INFRA_INVALID",
+        "stage": "runner-launch",
+        "failure_substage": "permission-denied-executable-bit",
+        "exit_code": 126,
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "canonical_state_effect": "none",
+        "package_version": "6.30.0-0supralinux1",
+        "evidence_artifact_uploaded": false,
+        "rootfs_artifact_id": 10980029224,
+        "rootfs_artifact_sha256": "eae0f8b164ee002ad56b96f76e3a882254b60ca639d8ce7663c63447b961e000"
+      }
+    ],
+    "knotifyconfig": [
+      {
+        "attempt": 1,
+        "workflow_run": 36446660866,
+        "commit": "d3d504d02ecff7aa1138c5e03052e4c77e558c12",
+        "job_id": 109010993568,
+        "raw_result": "FAIL",
+        "result": "INFRA_INVALID",
+        "stage": "runner-launch",
+        "failure_substage": "permission-denied-executable-bit",
+        "exit_code": 126,
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "canonical_state_effect": "none",
+        "package_version": "6.30.0-0supralinux1",
+        "evidence_artifact_uploaded": false,
+        "rootfs_artifact_id": 10980029224,
+        "rootfs_artifact_sha256": "eae0f8b164ee002ad56b96f76e3a882254b60ca639d8ce7663c63447b961e000"
+      }
+    ],
+    "kparts": [
+      {
+        "attempt": 1,
+        "workflow_run": 36446660866,
+        "commit": "d3d504d02ecff7aa1138c5e03052e4c77e558c12",
+        "job_id": 109010994535,
+        "raw_result": "FAIL",
+        "result": "INFRA_INVALID",
+        "stage": "runner-launch",
+        "failure_substage": "permission-denied-executable-bit",
+        "exit_code": 126,
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "canonical_state_effect": "none",
+        "package_version": "6.30.0-0supralinux1",
+        "evidence_artifact_uploaded": false,
+        "rootfs_artifact_id": 10980029224,
+        "rootfs_artifact_sha256": "eae0f8b164ee002ad56b96f76e3a882254b60ca639d8ce7663c63447b961e000"
+      }
+    ]
   },
   "stable_promotion_requires_explicit_user_approval": true
 }

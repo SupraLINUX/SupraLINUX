@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level2",
   "frameworks_series": "6.30.0",
-  "state": "active-pending-ci",
-  "execution_authorized": true,
+  "state": "planned-pending-activation",
+  "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -1134,7 +1134,7 @@
     }
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "tier3-build-level2-attempt1",
+  "next_gate": "tier3-build-level2-attempt2-planning-validation",
   "current_attempt": 1,
   "planning_validation": {
     "repository_policy_workflow_run": 36443524514,
@@ -1147,13 +1147,54 @@
     "result": "PASS"
   },
   "activation": {
-    "status": "ACTIVE",
+    "status": "CLOSED-INFRA_INVALID",
     "attempt": 1,
     "planning_policy_workflow_run": 36443524514,
     "planning_level2_workflow_run": 36443524497,
     "planning_commit": "b07c6c0a0b3072a76e57cf52d679001de2985d3c",
     "scope": "baloo+kcmutils+knotifyconfig+kparts",
-    "reason": "Level 2 planning and policy validation passed; authorize first real binary attempt",
-    "next_gate": "tier3-build-level2-attempt1"
+    "result": "INFRA_INVALID-before-runner",
+    "package_attempted": false,
+    "canonical_state_effect": "none",
+    "next_gate": "tier3-build-level2-attempt2-planning-validation"
+  },
+  "next_attempt": 2,
+  "attempt1_summary": {
+    "workflow_run": 36446660866,
+    "commit": "d3d504d02ecff7aa1138c5e03052e4c77e558c12",
+    "result": "INFRA_INVALID",
+    "failure_class": "runner-not-executable",
+    "package_attempted": false,
+    "package_state_effect": "none",
+    "raw_failed_nodes": [
+      "baloo",
+      "kcmutils",
+      "knotifyconfig",
+      "kparts"
+    ],
+    "canonical_failures": 0,
+    "canonical_promotions": 0,
+    "rootfs": {
+      "job_id": 109010697960,
+      "artifact_id": 10980029224,
+      "artifact_sha256": "eae0f8b164ee002ad56b96f76e3a882254b60ca639d8ce7663c63447b961e000"
+    },
+    "jobs": {
+      "baloo": 109010993537,
+      "kcmutils": 109010993557,
+      "knotifyconfig": 109010993568,
+      "kparts": 109010994535
+    },
+    "common_failure": {
+      "stage": "runner-launch",
+      "exit_code": 126,
+      "message": "scripts/run-kde-tier3-build-level2.sh: Permission denied",
+      "evidence_artifacts_uploaded": false
+    },
+    "remediation": {
+      "runner_mode_required": "100755",
+      "add_executable_preflight": true,
+      "next_attempt": 2
+    }
   }
 }
