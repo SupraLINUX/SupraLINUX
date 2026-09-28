@@ -163,8 +163,14 @@ for node_id, canonical_node in sorted(tier3_promoted.items()):
         require(dag_evidence.get("downstream_eligible") is True, f"{node_id}: Tier3 DAG PASS evidence downstream eligibility")
 
 knewstuff = next((node for node in tier3_canonical.get("nodes", []) if node.get("id") == "knewstuff"), {})
-require(knewstuff.get("state") == "pending", "KNewStuff must remain canonical pending before KCMUtils runtime validation")
-require(knewstuff.get("packaging", {}).get("state") == "runtime-validation-required", "KNewStuff runtime-validation state")
+kcmutils_canonical = next((node for node in tier3_canonical.get("nodes", []) if node.get("id") == "kcmutils"), {})
+if kcmutils_canonical.get("state") in {"FAIL", "BLOCKED"}:
+    require(knewstuff.get("state") == "BLOCKED", "KNewStuff must be BLOCKED while KCMUtils is FAIL/BLOCKED")
+    require(knewstuff.get("packaging", {}).get("state") == "BLOCKED", "KNewStuff packaging state must be BLOCKED while KCMUtils is FAIL/BLOCKED")
+    require(knewstuff.get("packaging", {}).get("blocked_by") == ["kcmutils"], "KNewStuff BLOCKED predecessor must be KCMUtils")
+else:
+    require(knewstuff.get("state") == "pending", "KNewStuff must remain canonical pending until KCMUtils runtime validation is available")
+    require(knewstuff.get("packaging", {}).get("state") == "runtime-validation-required", "KNewStuff runtime-validation state")
 require(knewstuff.get("packaging", {}).get("downstream_eligible") is False, "KNewStuff must remain non-downstream-eligible")
 require("knewstuff" not in nodes, "KNewStuff must not enter canonical DAG before KCMUtils runtime validation")
 

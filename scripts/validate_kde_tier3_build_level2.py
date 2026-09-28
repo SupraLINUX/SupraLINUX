@@ -7,6 +7,7 @@ def req(v,m):
 def load(p): return json.loads((ROOT/p).read_text())
 m=load("manifests/kde-tier3-build-level2.json"); a=load("manifests/kde-tier3-build-level2-attempts.json"); c=load("manifests/kde-tier3-build-campaign.json"); d=load("manifests/kde-dag.json"); l0=load("manifests/kde-tier3-build-level0.json"); l1=load("manifests/kde-tier3-build-level1.json"); mat=load("manifests/kde-tier3-materialization.json"); contracts=load("manifests/kde-tier3-package-contracts.json"); t=load("manifests/kde-frameworks-tier3.json")
 T=["baloo","kcmutils","knotifyconfig","kparts"]
+tn={x["id"]:x for x in t.get("nodes",[])}
 D={"baloo":["kio","kcoreaddons","kconfig","kdbusaddons","ki18n","kidletime","solid","kfilemetadata","kcrash"],"kcmutils":["kio","kconfigwidgets","kxmlgui","kitemviews","kcoreaddons","kguiaddons","ki18n","kwidgetsaddons","kirigami"],"knotifyconfig":["kio","kconfigwidgets","kxmlgui","kcompletion","kconfig","ki18n","knotifications","kwidgetsaddons"],"kparts":["kio","kjobwidgets","kxmlgui","kconfig","kcoreaddons","ki18n","kservice","kwidgetsaddons"]}
 P={"baloo":{"BUILD_TESTING":"ON"},"kcmutils":{"BUILD_TESTING":"ON"},"knotifyconfig":{"BUILD_TESTING":"ON"},"kparts":{"BUILD_TESTING":"ON","KDE_INSTALL_APP_TEMPLATES":"ON"}}
 req(m.get("schema")==1 and m.get("authority")=="kde-upstream" and m.get("provider_platform")=="ubuntu-resolute","Level2 schema/authority/provider")
@@ -65,12 +66,12 @@ else:
     req(m.get("state") in {"PASS","PARTIAL"},"Level2 lifecycle")
 pre=m.get("planning_precondition",{}); req(pre.get("level1_attempt")==10 and pre.get("level1_workflow_run")==36425867815 and pre.get("level1_closure_commit")=="0e5e2602cba730612bcb9301a59f5b51c3fdd574" and pre.get("repository_policy_workflow_run")==36430910043 and pre.get("result")=="PASS","Level2 precondition")
 req(l1.get("state")=="PASS" and l1.get("execution_authorized") is False and l1.get("current_attempt")==10,"Level1 closed precondition")
-tn={x["id"]:x for x in t.get("nodes",[])}; ks=tn["knewstuff"]
+ks=tn["knewstuff"]
 if m.get("next_attempt")==3:
     req(ks.get("state")=="BLOCKED" and ks.get("packaging",{}).get("state")=="BLOCKED","KNewStuff blocked during Level2 remediation")
 else:
     req(ks.get("state")=="pending" and ks.get("packaging",{}).get("state")=="runtime-validation-required","KNewStuff runtime pending")
-h=m["deferred_runtime_validation_handoff"]["knewstuff"]; req(h.get("requires_level2_pass")==["kcmutils"] and h.get("effect")=="runtime-validation-gate-only-no-auto-PASS","KNewStuff handoff")
+h=m["deferred_runtime_validation_handoff"]["knewstuff"]; req(h.get("requires_level2_pass")==["kcmutils"] and h.get("effect")=="runtime-validation-gate-only-no-auto-PASS","KNewStuff handoff"); req(h.get("canonical_state_during_level2")=="dependency-derived: BLOCKED while kcmutils is FAIL/BLOCKED; otherwise pending/runtime-validation-required","KNewStuff dependency-derived canonical state")
 dn=d.get("nodes",{}); ret=m.get("retained_predecessors",{})
 def rec(roots):
     seen=set()

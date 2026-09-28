@@ -61,7 +61,7 @@
         "kcmutils"
       ],
       "effect": "runtime-validation-gate-only-no-auto-PASS",
-      "canonical_state_during_level2": "pending/runtime-validation-required"
+      "canonical_state_during_level2": "dependency-derived: BLOCKED while kcmutils is FAIL/BLOCKED; otherwise pending/runtime-validation-required"
     }
   },
   "shared_predecessors": {

@@ -18,7 +18,7 @@ Planning was validated by Repository Policy `36443524514` and Level 2 workflow `
 
 Attempt 1 was invalidated before package execution. Recovery planning then passed under Repository Policy `36447346563` and Level 2 workflow `36447346441` at commit `d420cd8b60e48a837ab90acf5ce144f0bfc9be54`; the executable-runner preflight passed while rootfs and package jobs remained skipped. Attempt 2 is now separately authorized for Baloo, KCMUtils, KNotifyConfig and KParts. Canonical package state remains unchanged until real build evidence is consumed.
 
-KNewStuff remains `pending/runtime-validation-required`. A KCMUtils PASS only enables its separate runtime-validation gate; it never auto-promotes KNewStuff.
+KNewStuff is dependency-derived: it remains `pending/runtime-validation-required` while KCMUtils has not failed; if KCMUtils is `FAIL` or `BLOCKED`, KNewStuff is canonically `BLOCKED` by KCMUtils. A KCMUtils PASS only enables its separate runtime-validation gate; it never auto-promotes KNewStuff.
 
 PASS, FAIL, BLOCKED and INFRA retain their existing semantics. Independent Level 2 nodes use fail-fast=false. Stable promotion still requires explicit user approval.
 
