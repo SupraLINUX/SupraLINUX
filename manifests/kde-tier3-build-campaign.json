@@ -366,7 +366,7 @@
       "level": 2,
       "state": "planned",
       "source_package": "kf6-kcmutils",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "expected_binary_packages": [
         "libkf6kcmutils-bin",
         "libkf6kcmutils-data",
@@ -378,10 +378,10 @@
         "qml6-module-org-kde-kcmutils"
       ],
       "materialization": {
-        "workflow_run": 36466461781,
-        "job_id": 109078164555,
-        "artifact_id": 10989229464,
-        "artifact_sha256": "ec9fb73d8c03f7c972ab2e878ffaa56a3a51f7edad56e276464a09842a88fe5b"
+        "workflow_run": 36477724469,
+        "job_id": 109115619026,
+        "artifact_id": 10994755385,
+        "artifact_sha256": "69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3"
       },
       "blocking_predecessors": [
         "kio",
