@@ -1,6 +1,7 @@
 # KDE Tier 3 KIO Attempt 9 remediation definition
 
-Status: **definition pending CI and source materialization**.  
+Status: **source materialization PASS; Attempt 9 planning validation pending**.  
+Definition contract: **PASS**.  
 Attempt 9 package execution: **not authorized**.
 
 ## Inputs already proven
@@ -43,20 +44,22 @@ ABI, timestamp format or XBEL schema.
 
 ## Lifecycle
 
-This definition authorizes **source materialization only**.
+The definition authorized **source materialization only**. That materialization is now closed with PASS evidence.
 
 Required sequence:
 
 ```text
 definition PASS
-→ materialize KIO 6.30.0-0supralinux9
-→ verify source/package artifacts and hashes
-→ planning validation
+→ materialize KIO 6.30.0-0supralinux9 — PASS
+→ verify source/package artifacts and hashes — PASS
+→ planning validation — CURRENT
 → explicit Attempt 9 activation
 → binary build
 ```
 
-No step in this definition authorizes the binary Attempt 9 itself.
+Materialization PASS evidence: workflow `36413768965`, job `108899950721`, artifact `10965892140` (SHA-256 `b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c`). The source package is `6.30.0-0supralinux9`; the exact KRecent patch and patched-source hashes match the Round 26 candidate.
+
+No step completed so far authorizes the binary Attempt 9 itself.
 
 KXMLGui remains a retained PASS/revalidation node. No KXMLGui source
 rematerialization is required.
@@ -70,5 +73,5 @@ Attempt 8 = CLOSED-MIXED
 Attempt 9 = NOT AUTHORIZED
 Round 26 = remediation-PASS / 69/69 combined proof
 Candidate KIO = 6.30.0-0supralinux9
-Next gate = tier3-attempt9-kio-remediation-materialization-evidence
+Next gate = tier3-attempt9-kio-planning-validation
 ```

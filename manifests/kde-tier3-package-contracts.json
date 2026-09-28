@@ -3269,7 +3269,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "attempt9-remediation-defined-pending-materialization",
+    "status": "materialization-PASS-pending-level1-planning-validation",
     "trigger": {
       "workflow_run": 36035351270,
       "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -3313,16 +3313,16 @@
     },
     "execution_authorized": false,
     "level1_execution_authorized": false,
-    "next_gate": "tier3-attempt9-kio-remediation-materialization-evidence",
+    "next_gate": "tier3-attempt9-kio-planning-validation",
     "materialization_evidence": {
-      "workflow_run": 36222711238,
-      "commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",
+      "workflow_run": 36413768965,
+      "commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
       "artifacts": {
         "kio": {
-          "job_id": 108350884409,
-          "artifact_id": 10898999142,
-          "artifact_sha256": "c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d",
-          "package_version": "6.30.0-0supralinux8"
+          "job_id": 108899950721,
+          "artifact_id": 10965892140,
+          "artifact_sha256": "b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c",
+          "package_version": "6.30.0-0supralinux9"
         }
       }
     },
@@ -3681,13 +3681,27 @@
       }
     },
     "attempt9_definition": {
-      "status": "definition-pending-ci",
+      "status": "source-materialization-PASS-pending-planning-validation",
       "package_version": "6.30.0-0supralinux9",
       "source_patch_sha256": "8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602",
       "patched_source_sha256": "57d20f3786220178316b31819ba266432207b1f4d55859ccf8d1fad37645021b",
       "test_home": "debian/supralinux-test-home/sbuild",
-      "materialization_authorized": true,
+      "materialization_authorized": false,
       "package_build_authorized": false
+    },
+    "attempt9_definition_validation": {
+      "commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
+      "repository_policy_workflow_run": 36413768747,
+      "result": "PASS"
+    },
+    "attempt9_materialization_evidence": {
+      "workflow_run": 36413768965,
+      "job_id": 108899950721,
+      "commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
+      "artifact_id": 10965892140,
+      "artifact_sha256": "b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c",
+      "package_version": "6.30.0-0supralinux9",
+      "result": "PASS"
     }
   },
   "remediation_history": [

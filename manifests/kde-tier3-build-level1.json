@@ -471,10 +471,10 @@
         "libkf6kiowidgets6"
       ],
       "materialization": {
-        "workflow_run": 36222711238,
-        "job_id": 108350884409,
-        "artifact_id": 10898999142,
-        "artifact_sha256": "c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d"
+        "workflow_run": 36413768965,
+        "job_id": 108899950721,
+        "artifact_id": 10965892140,
+        "artifact_sha256": "b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c"
       },
       "blocking_predecessors": [
         "kbookmarks",
@@ -894,13 +894,13 @@
     },
     "execution_authorized": false,
     "full_level1_rerun_required": true,
-    "status": "attempt9-remediation-defined-pending-materialization",
-    "source_rematerialization_required": true,
+    "status": "materialization-PASS-pending-attempt9-planning-validation",
+    "source_rematerialization_required": false,
     "source_rematerialization_nodes": [
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "tier3-attempt9-kio-remediation-materialization-evidence",
+    "next_gate": "tier3-attempt9-kio-planning-validation",
     "current_attempt": 8,
     "next_attempt": 9,
     "remaining_failed_nodes": [
@@ -926,14 +926,14 @@
       "repository_policy_workflow_run": 36072487004,
       "result": "PASS"
     },
-    "materialization_workflow_run": 36222711238,
-    "materialization_commit": "29b730acf3ad09c0c399b839e57b03a26df2ea2e",
+    "materialization_workflow_run": 36413768965,
+    "materialization_commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
     "materialization_artifacts": {
       "kio": {
-        "job_id": 108350884409,
-        "artifact_id": 10898999142,
-        "artifact_sha256": "c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d",
-        "package_version": "6.30.0-0supralinux8"
+        "job_id": 108899950721,
+        "artifact_id": 10965892140,
+        "artifact_sha256": "b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c",
+        "package_version": "6.30.0-0supralinux9"
       },
       "kxmlgui": {
         "job_id": 107643756357,
@@ -1270,7 +1270,7 @@
       }
     },
     "attempt9_definition": {
-      "status": "definition-pending-ci",
+      "status": "source-materialization-PASS-pending-planning-validation",
       "candidate_package_version": "6.30.0-0supralinux9",
       "full_level1_rerun_required": true,
       "retained_revalidation_nodes": [
@@ -1279,7 +1279,27 @@
       "source_rematerialization_nodes": [
         "kio"
       ],
-      "package_execution_authorized": false
+      "package_execution_authorized": false,
+      "materialization_evidence": {
+        "workflow_run": 36413768965,
+        "job_id": 108899950721,
+        "artifact_id": 10965892140,
+        "artifact_sha256": "b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c"
+      }
+    },
+    "attempt9_definition_validation": {
+      "commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
+      "repository_policy_workflow_run": 36413768747,
+      "result": "PASS"
+    },
+    "attempt9_materialization_evidence": {
+      "workflow_run": 36413768965,
+      "job_id": 108899950721,
+      "commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
+      "artifact_id": 10965892140,
+      "artifact_sha256": "b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c",
+      "package_version": "6.30.0-0supralinux9",
+      "result": "PASS"
     }
   },
   "activation": {
