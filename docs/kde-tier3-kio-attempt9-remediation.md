@@ -1,8 +1,8 @@
 # KDE Tier 3 KIO Attempt 9 remediation definition
 
-Status: **source materialization PASS; Attempt 9 planning validation pending**.  
+Status: **Attempt 9 active; binary CI pending**.  
 Definition contract: **PASS**.  
-Attempt 9 package execution: **not authorized**.
+Attempt 9 package execution: **authorized for the full Level 1 rerun**.
 
 ## Inputs already proven
 
@@ -52,14 +52,16 @@ Required sequence:
 definition PASS
 → materialize KIO 6.30.0-0supralinux9 — PASS
 → verify source/package artifacts and hashes — PASS
-→ planning validation — CURRENT
-→ explicit Attempt 9 activation
-→ binary build
+→ planning validation — PASS
+→ explicit Attempt 9 activation — ACTIVE
+→ binary build — CURRENT
 ```
 
 Materialization PASS evidence: workflow `36413768965`, job `108899950721`, artifact `10965892140` (SHA-256 `b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c`). The source package is `6.30.0-0supralinux9`; the exact KRecent patch and patched-source hashes match the Round 26 candidate.
 
-No step completed so far authorizes the binary Attempt 9 itself.
+Planning validation passed in Repository Policy `36415650130` and Level 1 workflow `36415653322` for commit `bcc76458eecff8118d5526c043d18aa7de3b4b4c`.
+
+Attempt 9 is now authorized for the full Level 1 scope: KIO `6.30.0-0supralinux9` plus retained KXMLGui `6.30.0-0supralinux5`. Canonical KIO remains FAIL/downstream-ineligible until the real package job passes.
 
 KXMLGui remains a retained PASS/revalidation node. No KXMLGui source
 rematerialization is required.
@@ -70,8 +72,8 @@ rematerialization is required.
 12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED
 KIO 6.30.0-0supralinux8 = FAIL
 Attempt 8 = CLOSED-MIXED
-Attempt 9 = NOT AUTHORIZED
+Attempt 9 = ACTIVE / binary CI pending
 Round 26 = remediation-PASS / 69/69 combined proof
 Candidate KIO = 6.30.0-0supralinux9
-Next gate = tier3-attempt9-kio-planning-validation
+Next gate = tier3-build-level1-attempt9
 ```

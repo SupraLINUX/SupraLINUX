@@ -3269,7 +3269,7 @@
   "active_remediation": {
     "round": 11,
     "level": "build-level1",
-    "status": "materialization-PASS-pending-level1-planning-validation",
+    "status": "materialization-PASS-attempt9-active",
     "trigger": {
       "workflow_run": 36035351270,
       "commit": "f6d47684e4c69cf0765e2d24e8bb93807be04791",
@@ -3311,9 +3311,9 @@
       "repository_policy_workflow_run": 36072487004,
       "result": "PASS"
     },
-    "execution_authorized": false,
-    "level1_execution_authorized": false,
-    "next_gate": "tier3-attempt9-kio-planning-validation",
+    "execution_authorized": true,
+    "level1_execution_authorized": true,
+    "next_gate": "tier3-build-level1-attempt9",
     "materialization_evidence": {
       "workflow_run": 36413768965,
       "commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",
@@ -3326,9 +3326,9 @@
         }
       }
     },
-    "activation_policy_workflow_run": 36237942524,
-    "activation_level1_workflow_run": 36237942600,
-    "activation_commit": "349b0d543edefb2979f1712079628e25e37d8135",
+    "activation_policy_workflow_run": 36415650130,
+    "activation_level1_workflow_run": 36415653322,
+    "activation_commit": "bcc76458eecff8118d5526c043d18aa7de3b4b4c",
     "validation_workflow_run": 36238357510,
     "validation_commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
     "validation_result": "1 workflow SUCCESS / 1 FAIL",
@@ -3494,9 +3494,9 @@
       "source_rematerialization_required": true
     },
     "planning_validation": {
-      "repository_policy_workflow_run": 36237942524,
-      "level1_workflow_run": 36237942600,
-      "commit": "349b0d543edefb2979f1712079628e25e37d8135",
+      "repository_policy_workflow_run": 36415650130,
+      "level1_workflow_run": 36415653322,
+      "commit": "bcc76458eecff8118d5526c043d18aa7de3b4b4c",
       "result": "PASS"
     },
     "attempt8_evidence": {
@@ -3681,13 +3681,13 @@
       }
     },
     "attempt9_definition": {
-      "status": "source-materialization-PASS-pending-planning-validation",
+      "status": "attempt9-active",
       "package_version": "6.30.0-0supralinux9",
       "source_patch_sha256": "8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602",
       "patched_source_sha256": "57d20f3786220178316b31819ba266432207b1f4d55859ccf8d1fad37645021b",
       "test_home": "debian/supralinux-test-home/sbuild",
       "materialization_authorized": false,
-      "package_build_authorized": false
+      "package_build_authorized": true
     },
     "attempt9_definition_validation": {
       "commit": "0997aa320e2d0a7bbf96cce36ce759cd8433f9b4",

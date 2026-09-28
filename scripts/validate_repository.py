@@ -233,6 +233,7 @@ required_files = [
     "manifests/kde-tier3-kio-attempt9-remediation.json",
     "scripts/validate_kde_tier3_kio_attempt9_definition.py",
     "scripts/validate_kde_tier3_kio_attempt9_planning.py",
+    "scripts/validate_kde_tier3_kio_attempt9.py",
     "docs/kde-tier3-kio-attempt9-remediation.md",
     "docs/kde-tier3-kio-round26-remediation.md",
     "docs/status/2026-09-11.md",

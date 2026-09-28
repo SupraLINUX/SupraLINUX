@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level1",
   "frameworks_series": "6.30.0",
-  "state": "attempt8-closed-mixed",
-  "execution_authorized": false,
+  "state": "active-pending-ci",
+  "execution_authorized": true,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -458,9 +458,9 @@
   },
   "nodes": {
     "kio": {
-      "state": "FAIL",
+      "state": "prepared-pending-revalidation",
       "source_package": "kf6-kio",
-      "package_version": "6.30.0-0supralinux8",
+      "package_version": "6.30.0-0supralinux9",
       "expected_binary_packages": [
         "kio6",
         "libkf6kio-dev",
@@ -622,36 +622,30 @@
         "cause": "KIO compiled and executed all 69 upstream CTest targets: 67 passed and 2 failed. The Round 18 qt6-svg-plugins provider remediation fixed kiofilewidgets-knewfilemenutest and KDirModelTest::testIcon(). Remaining failures are independent: KRecentDocumentTest::testXbelBookmarkMaxEntries returned temp File 11 where temp File 12 was expected, and KDirModelTest failed testShowRoot plus testShowRootAndExpandToUrl because indexForUrl(homeUrl) was invalid.",
         "canonical_state_effect": "FAIL"
       },
-      "current_attempt": 8,
+      "current_attempt": 9,
       "sbuild_enable_network": true,
       "remediation": {
         "global_round": 11,
-        "diagnostic_round": 18,
-        "classification": "qt-svg-test-provider-remediation",
+        "diagnostic_round": 26,
+        "classification": "proven-krecent-ordering-and-visible-home-remediation",
         "source_rematerialization_required": false,
-        "candidate_package_version": "6.30.0-0supralinux8",
+        "candidate_package_version": "6.30.0-0supralinux9",
         "changes": [
-          "retain the complete 69-target upstream CTest suite and all proven D-Bus/HOME/KDECI/Xvfb/XCB/Breeze/network fixtures",
-          "retain ENVIRONMENT_MODIFICATION for kdirmodeltest and knewfilemenutest so KDE/ECM QT_PLUGIN_PATH and all existing per-test environment survive",
-          "add qt6-svg-plugins <!nocheck> to KIO Build-Depends so the Qt SVG icon engine is present in no-recommends sbuild tests",
-          "do not add any KIO, KIconThemes or Breeze runtime dependency on qt6-svg-plugins",
-          "keep krecentdocumenttest unchanged and fatal"
+          "apply the exact Round 25 deterministic KRecent tie-ordering quilt patch",
+          "use visible test HOME debian/supralinux-test-home/sbuild proven by Round 26",
+          "retain all 69 upstream KIO tests enabled and fatal",
+          "retain the existing D-Bus/Xvfb/XCB/Breeze/qt6-svg-plugins test-provider closure",
+          "no public API, ABI, XBEL schema or timestamp-format change"
         ],
-        "provider_contract_audit": {
-          "workflow_run": 36221977278,
-          "job_id": 108348814091,
-          "commit": "c01506a16e9222b0f0d3366b68dac89e07ebf328",
-          "repository_policy_workflow_run": 36221977169,
-          "artifact_id": 10899531699,
-          "artifact_sha256": "8dfc4f94ed892a49bd4dd3fd262b7755cb078adfa56716a7c0e7e679f6cb9c6c",
-          "qt6_svg_plugins_deb_sha256": "41be607dc17ef0ad3510b169fc7607758ab4574acc4311c3ef1daaaac9c9139b",
-          "result": "AUDIT_COMPLETE"
+        "proof": {
+          "round25_target_remediation": "PASS",
+          "round26_combined_suite": "69/69 PASS"
         }
       },
       "downstream_eligible": false
     },
     "kxmlgui": {
-      "state": "PASS",
+      "state": "prepared-pending-revalidation",
       "source_package": "kf6-kxmlgui",
       "package_version": "6.30.0-0supralinux5",
       "expected_binary_packages": [
@@ -779,7 +773,7 @@
         "canonical_state_effect": "PASS-revalidation",
         "downstream_eligible": true
       },
-      "current_attempt": 8,
+      "current_attempt": 9,
       "sbuild_enable_network": false,
       "remediation": {
         "global_round": 10,
@@ -838,8 +832,8 @@
     "stable_promotion_requires_explicit_user_approval": true
   },
   "stable_promotion_requires_explicit_user_approval": true,
-  "next_gate": "diagnostic-infrastructure-preflight-evidence",
-  "current_attempt": 8,
+  "next_gate": "tier3-build-level1-attempt9",
+  "current_attempt": 9,
   "last_activation": {
     "policy_workflow_run": 35826072726,
     "policy_commit": "b96e925ee9f649c1b4b984ed6fed277ef911f2c2",
@@ -892,16 +886,16 @@
       "kio": "6.30.0-0supralinux9",
       "kxmlgui": "6.30.0-0supralinux5"
     },
-    "execution_authorized": false,
+    "execution_authorized": true,
     "full_level1_rerun_required": true,
-    "status": "materialization-PASS-pending-attempt9-planning-validation",
+    "status": "materialization-PASS-attempt9-active",
     "source_rematerialization_required": false,
     "source_rematerialization_nodes": [
       "kio"
     ],
     "package_revision_bump_required": true,
-    "next_gate": "tier3-attempt9-kio-planning-validation",
-    "current_attempt": 8,
+    "next_gate": "tier3-build-level1-attempt9",
+    "current_attempt": 9,
     "next_attempt": 9,
     "remaining_failed_nodes": [
       "kio"
@@ -942,9 +936,9 @@
         "package_version": "6.30.0-0supralinux5"
       }
     },
-    "activation_policy_workflow_run": 36237942524,
-    "activation_level1_workflow_run": 36237942600,
-    "activation_commit": "349b0d543edefb2979f1712079628e25e37d8135",
+    "activation_policy_workflow_run": 36415650130,
+    "activation_level1_workflow_run": 36415653322,
+    "activation_commit": "bcc76458eecff8118d5526c043d18aa7de3b4b4c",
     "validation_workflow_run": 36238357510,
     "validation_commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
     "validation_result": "1 workflow SUCCESS / 1 FAIL",
@@ -1105,7 +1099,7 @@
         "artifact_sha256": "297d8d91e52f82cd6713c30072a8f2deff80d73647b9c93c1b89263e5f21d441"
       }
     },
-    "level1_execution_authorized": false,
+    "level1_execution_authorized": true,
     "round23_diagnostic": {
       "status": "diagnostic-PASS",
       "workflow_run": 36288655361,
@@ -1270,7 +1264,7 @@
       }
     },
     "attempt9_definition": {
-      "status": "source-materialization-PASS-pending-planning-validation",
+      "status": "attempt9-active",
       "candidate_package_version": "6.30.0-0supralinux9",
       "full_level1_rerun_required": true,
       "retained_revalidation_nodes": [
@@ -1279,7 +1273,7 @@
       "source_rematerialization_nodes": [
         "kio"
       ],
-      "package_execution_authorized": false,
+      "package_execution_authorized": true,
       "materialization_evidence": {
         "workflow_run": 36413768965,
         "job_id": 108899950721,
@@ -1300,20 +1294,22 @@
       "artifact_sha256": "b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c",
       "package_version": "6.30.0-0supralinux9",
       "result": "PASS"
+    },
+    "planning_validation": {
+      "repository_policy_workflow_run": 36415650130,
+      "level1_workflow_run": 36415653322,
+      "commit": "bcc76458eecff8118d5526c043d18aa7de3b4b4c",
+      "result": "PASS"
     }
   },
   "activation": {
-    "status": "CLOSED-MIXED",
-    "attempt": 8,
-    "remediation_validation_policy_workflow_run": 36237942524,
-    "remediation_validation_level1_workflow_run": 36237942600,
-    "remediation_commit": "349b0d543edefb2979f1712079628e25e37d8135",
+    "status": "ACTIVE",
+    "attempt": 9,
+    "remediation_validation_policy_workflow_run": 36415650130,
+    "remediation_validation_level1_workflow_run": 36415653322,
+    "remediation_commit": "bcc76458eecff8118d5526c043d18aa7de3b4b4c",
     "scope": "full-level1-rerun-2-nodes",
-    "reason": "Round 18 KIO -8 source materialization and Attempt 8 planning validation passed; authorize complete Level 1 Attempt 8 with retained KXMLGui -5",
-    "workflow_run": 36238357510,
-    "commit": "77129c31006ac746d0d5d1d249ed7d1aaf6cf530",
-    "result": "1 PASS / 1 FAIL",
-    "next_gate": "tier3-round19-kio-diagnostic-definition"
+    "reason": "Round 26 proven KIO -9 remediation materialization and Attempt 9 planning validation passed; authorize complete Level 1 Attempt 9 with retained KXMLGui -5"
   },
   "attempt2_summary": {
     "workflow_run": 35829170695,

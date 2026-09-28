@@ -30,6 +30,8 @@ elif gate=="tier3-level1-authorized":
     marker=t.get("discovery_policy",{}).get("remediation")
     if marker=="round18-kio-svg-test-provider-attempt8-active":
         target="validate_kde_tier3_round18_attempt8.py"
+    elif marker=="attempt9-kio-proven-remediation-attempt9-active":
+        target="validate_kde_tier3_kio_attempt9.py"
     else:
         target="validate_kde_tier3_round11_attempt7.py"
 elif gate=="tier3-level1-attempt7-closed":

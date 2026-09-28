@@ -6,14 +6,14 @@
   "authority": "kde-upstream",
   "frameworks_series": "6.30.0",
   "upstream_ref": "v6.30.0",
-  "status": "source-materialization-PASS-pending-planning-validation",
+  "status": "attempt9-active",
   "candidate_package_version": "6.30.0-0supralinux9",
   "previous_package_version": "6.30.0-0supralinux8",
   "package_revision_bump_required": true,
   "source_rematerialization_required": true,
   "materialization_authorized": false,
-  "package_execution_authorized": false,
-  "level1_execution_authorized": false,
+  "package_execution_authorized": true,
+  "level1_execution_authorized": true,
   "canonical_kio_state": "FAIL",
   "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
   "predecessor_round26": {
@@ -56,7 +56,7 @@
     "full_level1_rerun_required": true
   },
   "gates": {
-    "current": "tier3-attempt9-kio-planning-validation",
+    "current": "tier3-build-level1-attempt9",
     "after_definition": "tier3-attempt9-kio-remediation-materialization-evidence",
     "after_materialization": "tier3-attempt9-kio-planning-validation",
     "package_execution_requires_separate_authorization": true
@@ -109,5 +109,25 @@
     "package_attempted": false,
     "package_state_effect": "none",
     "full_result_json_retained_in_artifact": true
+  },
+  "execution_authorized": true,
+  "planning_validation": {
+    "repository_policy_workflow_run": 36415650130,
+    "level1_workflow_run": 36415653322,
+    "commit": "bcc76458eecff8118d5526c043d18aa7de3b4b4c",
+    "result": "PASS"
+  },
+  "activation": {
+    "scope": "full-level1-rerun-2-nodes",
+    "nodes": [
+      "kio",
+      "kxmlgui"
+    ],
+    "kio_package_version": "6.30.0-0supralinux9",
+    "kxmlgui_package_version": "6.30.0-0supralinux5",
+    "repository_policy_workflow_run": 36415650130,
+    "level1_planning_workflow_run": 36415653322,
+    "commit": "bcc76458eecff8118d5526c043d18aa7de3b4b4c",
+    "level1_execution_authorized": true
   }
 }
