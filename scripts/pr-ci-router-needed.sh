@@ -110,6 +110,8 @@ def norm(d):
     if path=='manifests/kde-frameworks-tier3.json':
         p=d.get('discovery_policy',{})
         for k in ('phase','package_builds','remediation'): p.pop(k,None)
+        d.pop('build_level3_manifest',None)
+        d.pop('build_level3',None)
         strip_active(d)
     elif path=='manifests/kde-tier3-build-level1.json':
         d.pop('next_gate',None); strip_active(d)
@@ -148,6 +150,8 @@ PY
 for path in "${changed[@]}"; do
   case "${path}" in
     docs/*|README.md|scripts/validate_*.py|scripts/test-*.sh|scripts/pr-ci-router-needed.sh|scripts/compile_kde_tier2_campaign.py|manifests/kde-tier1-package-batch*-attempts.json|manifests/kde-tier2-campaign-plan.json|.github/workflows/repository-policy.yml|.github/workflows/pr-ci-router.yml) continue ;;
+    .github/workflows/kde-tier3-build-level3.yml|scripts/run-kde-tier3-build-level3.sh|scripts/plan-kde-tier3-build-level3.py|scripts/test-kde-tier3-build-level3-planner.py|scripts/validate_kde_tier3_build_level3.py|manifests/kde-tier3-build-level3.json|manifests/kde-tier3-build-level3-attempts.json)
+      continue ;;
     .github/workflows/diagnostic-infrastructure-preflight.yml|scripts/run-diagnostic-infrastructure-preflight.sh|manifests/diagnostic-infrastructure-preflight.json)
       continue ;;
     .github/workflows/kde-tier3-kio-round*-diagnostic.yml|scripts/run-kde-tier3-kio-round*-diagnostic.sh|scripts/run-kde-tier3-kio-round*-hook.sh|manifests/kde-tier3-kio-round*-diagnostic.json)

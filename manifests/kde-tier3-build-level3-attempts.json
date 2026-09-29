@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-29",
+  "batch": "tier3-build-level3",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "selected_nodes": [
+    "ktexteditor",
+    "purpose"
+  ],
+  "campaign_history": [],
+  "nodes": {
+    "ktexteditor": [],
+    "purpose": []
+  },
+  "stable_promotion_requires_explicit_user_approval": true
+}

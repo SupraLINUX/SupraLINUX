@@ -12,11 +12,11 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "runtime-validation-closure",
+    "phase": "build-level3-planning",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level2-package-attempt-PASS-closed",
+    "package_builds": "tier3-level3-planning-pending-validation",
     "remediation": "level2-closed",
     "runtime_validation": "PASS-closed"
   },
@@ -2948,5 +2948,23 @@
     "commit": "49f7a2fabc15f0c75c7633e9048812801877cfc9",
     "artifact_id": 11046266772,
     "artifact_sha256": "01fc348f3b1a4fbee86599ab6d33c3781858f46264d082747bc155cf6cef9fad"
+  },
+  "build_level3_manifest": "manifests/kde-tier3-build-level3.json",
+  "build_level3": {
+    "status": "planned-pending-activation",
+    "execution_authorized": false,
+    "selected_nodes": [
+      "ktexteditor",
+      "purpose"
+    ],
+    "current_attempt": 1,
+    "canonical_snapshot": "18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED",
+    "planning_precondition": {
+      "repository_policy_workflow_run": 36601250554,
+      "repository_policy_job_id": 109518908048,
+      "commit": "b3890f8b1399da43527a97136365c8d4339385f7",
+      "result": "PASS"
+    },
+    "next_gate": "tier3-build-level3-planning-validation"
   }
 }

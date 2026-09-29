@@ -2,7 +2,7 @@
 
 Status: **18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED — KNewStuff runtime validation PASS**
 
-Last reviewed: **2026-09-24**
+Last reviewed: **2026-09-29**
 
 > Historical note: this document records the gate-by-gate progression of Tier 3. Earlier sections describe the state that was current at that point; the final **Current canonical state** section is authoritative for the present gate.
 
@@ -49,20 +49,11 @@ The current upstream Tier 3 inventory contains exactly 20 Frameworks:
 
 ## Current lifecycle
 
-All 20 nodes are canonical `pending` with readiness:
+Canonical Tier 3 is **18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**.
 
-`dependency-graph-ready`
+KNewStuff\'s deferred runtime-validation gate is closed PASS. The only pending Frameworks are **KTextEditor** and **Purpose**, the two nodes of the already-defined fourth topological build level.
 
-At this stage:
-
-- no Ubuntu/Debian package version has been selected as authority;
-- no SupraLINUX package revision is authorized;
-- no provider audit is authorized;
-- no package contract/materialization/build is authorized;
-- no Tier 3 node is downstream-eligible;
-- no pending Tier 3 node is inserted into the canonical PASS DAG.
-
-The global KDE-upstream dependency discovery is now complete and recorded in `manifests/kde-frameworks-tier3-dependencies.json`. Provider/profile audit is the next gate; package contracts and builds remain unauthorized until that audit is complete.
+The current gate is **Level 3 planning validation**. `execution_authorized=false`: no Level 3 package job, rootfs build or Package Attempt is authorized by this planning definition. All direct and transitive inputs are pinned to retained canonical PASS artifacts.
 
 The project rule remains: **KDE decides what KDE needs.**
 
@@ -574,3 +565,12 @@ The retained KNewStuff package build remains historically `RUNTIME_PENDING`; it 
 The historical Level 2 snapshot remains immutable at **17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED**. The new post-runtime canonical snapshot is **18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**. Remaining pending nodes: KTextEditor and Purpose.
 
 No Package Attempt was consumed by the runtime validation, and no `stable` publication is authorized by this closure.
+
+
+## Level 3 plan prepared
+
+The final formal build level is now materialized as `manifests/kde-tier3-build-level3.json` with exactly KTextEditor + Purpose and the pre-plan snapshot **18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**.
+
+Repository Policy run `36601250554` (job `109518908048`) validated the KNewStuff promotion/closure at commit `b3890f8b1399da43527a97136365c8d4339385f7`. That closed runtime gate is a planning precondition; it is not rerun.
+
+Level 3 begins deliberately paused at `execution_authorized=false`. Its reusable workflow is routed through `pr-ci-router.yml`; historical/legacy CI lanes are not re-enabled by this planning transition. The next gate is `tier3-build-level3-planning-validation`, after which package execution requires a separate activation.

@@ -331,6 +331,12 @@ jobs:
       - name: Validate KDE Tier 3 build Level 2
         run: python3 scripts/validate_kde_tier3_build_level2.py
 
+      - name: Test KDE Tier 3 Level 3 planner and runner scope
+        run: python3 scripts/test-kde-tier3-build-level3-planner.py
+
+      - name: Validate KDE Tier 3 build Level 3
+        run: python3 scripts/validate_kde_tier3_build_level3.py
+
       - name: Validate KDE Tier 3 Level 2 Attempt 4 closure
         run: python3 scripts/validate_kde_tier3_level2_attempt4_closure.py
 

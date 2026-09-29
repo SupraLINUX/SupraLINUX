@@ -47,9 +47,9 @@ req(top.get("canonical_state_effect") == "KNewStuff-promoted-to-PASS", "Tier3 ru
 req(top.get("next_gate") == "tier3-knewstuff-runtime-validation-closure", "Tier3 runtime-validation closure gate")
 
 pol = t.get("discovery_policy", {})
-req(pol.get("phase") == "runtime-validation-closure", "Tier3 post-Level2 phase")
+# phase/package_builds are live lifecycle state and deliberately not asserted by
+# this closed runtime-evidence validator. The current lifecycle validator owns them.
 req(pol.get("runtime_validation") == "PASS-closed", "Tier3 runtime-validation closure marker")
-req(pol.get("package_builds") == "tier3-level2-package-attempt-PASS-closed", "Level2 package-build closure retained")
 
 nodes = {n["id"]: n for n in t.get("nodes", [])}
 kn = nodes.get("knewstuff", {})
