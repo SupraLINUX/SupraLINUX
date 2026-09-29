@@ -19,6 +19,12 @@ l3=load("manifests/kde-tier3-build-level3.json")
 a=load("manifests/kde-tier3-build-level3-attempts.json")
 support=load("manifests/kde-tier3-support-build-level1.json")
 
+if t.get("level3_remediation",{}).get("status")=="attempt2-active":
+    # Source-remediation evidence is closed. The current binary lifecycle is
+    # authoritative from this point forward; do not constrain it with the
+    # historical materialization-planning state.
+    raise SystemExit(subprocess.run([sys.executable,str(ROOT/"scripts/validate_kde_tier3_build_level3.py")]).returncode)
+
 T=["ktexteditor","purpose"]
 VERS={"ktexteditor":"6.30.0-0supralinux2","purpose":"6.30.0-0supralinux2"}
 SNAP="18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED"
