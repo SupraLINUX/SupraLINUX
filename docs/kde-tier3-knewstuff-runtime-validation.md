@@ -105,3 +105,23 @@ package_attempted=false
 ```
 
 This authorization permits the router to execute the deferred KNewStuff + KCMUtils runtime validation. It does not promote KNewStuff, does not change the canonical snapshot, and does not consume a Package Attempt. Promotion requires a separate review of PASS runtime evidence.
+
+
+## Validation run 1 — INFRA_INVALID
+
+The first authorized runtime validation executed in PR router run `36575095841`, job `109428639526`, from head commit `955c9189e720633b16791b7e6f1fb7f51e7439b4` (execution merge SHA `023661cb7e3181e383cb617eee17a24d67155665`).
+
+Retained evidence:
+
+- artifact: `11036509658`
+- artifact SHA-256: `069046c2a72c5c280bb91152a093e1fae34b5debcdf4cb7aaea4646ae013815a`
+- result: `INFRA_INVALID`
+- stage: `artifact-contract`
+- `package_attempted=false`
+- canonical state effect: none
+
+The retained `result.json` proves that the run failed before rootfs bootstrap or runtime installation. The mechanism selected artifacts with `glob("<artifact_id>-*")`; after download there are two matching filesystem entries: the extracted directory and its sibling `.zip`. This made the selector ambiguous even though every downloaded artifact passed its pinned outer SHA-256 check.
+
+The remediation uses the exact extracted path `<artifact_id>-<label>`. Repository Policy now runs a synthetic preflight that deliberately creates both the directory and sibling ZIP and certifies that only the exact directory is selected. The runtime lane also depends on Repository Policy PASS, so the remediated infrastructure is validated before the KNewStuff runtime retry begins.
+
+This is infrastructure evidence only. It does not consume a Package Attempt, does not make KNewStuff FAIL, and leaves the canonical snapshot at `17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED`.

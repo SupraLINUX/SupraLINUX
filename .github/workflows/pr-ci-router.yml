@@ -97,8 +97,8 @@ jobs:
 
   kde-tier3-knewstuff-runtime-validation:
     name: Tier 3 KNewStuff runtime validation
-    needs: plan
-    if: needs.plan.outputs.run_knewstuff_runtime == 'true'
+    needs: [plan, repository-policy]
+    if: needs.plan.outputs.run_knewstuff_runtime == 'true' && needs.repository-policy.result == 'success'
     uses: ./.github/workflows/kde-tier3-knewstuff-runtime-validation.yml
 
   diagnostic-infrastructure-preflight:

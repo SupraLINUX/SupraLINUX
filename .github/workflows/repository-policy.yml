@@ -337,7 +337,10 @@ jobs:
       - name: Validate KDE Tier 3 Level 2 Attempt 5 closure
         run: python3 scripts/validate_kde_tier3_level2_attempt5_closure.py
 
-      - name: Validate KDE Tier 3 KNewStuff runtime-validation planning
+      - name: Test KDE Tier 3 KNewStuff runtime-validation infrastructure
+        run: python3 scripts/test-kde-tier3-knewstuff-runtime-validation-infra.py
+
+      - name: Validate KDE Tier 3 KNewStuff runtime validation
         run: python3 scripts/validate_kde_tier3_knewstuff_runtime_validation.py
 
       - name: Validate KDE Tier 3 historical evidence boundary

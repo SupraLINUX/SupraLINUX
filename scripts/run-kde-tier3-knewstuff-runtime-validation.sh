@@ -58,10 +58,10 @@ for camp,node in ((l0,l0["nodes"]["knewstuff"]),(l2,l2["nodes"]["kcmutils"])):
   q=camp.get("retained_predecessors",{}).get(x) or camp.get("support_predecessors",{}).get(x); add(x,q["artifact_id"],q["version"],q["expected_binary_packages"])
 seen={}
 for label,aid,ver,expected in specs:
- dirs=list(root.glob(f"{aid}-*"))
- if len(dirs)!=1: raise SystemExit(f"{label}: artifact directory ambiguity")
+ artifact_dir=root/f"{aid}-{label}"
+ if not artifact_dir.is_dir(): raise SystemExit(f"{label}: extracted artifact directory missing: {artifact_dir}")
  actual={}
- for deb in dirs[0].rglob("*.deb"):
+ for deb in artifact_dir.rglob("*.deb"):
   pkg=subprocess.check_output(["dpkg-deb","-f",str(deb),"Package"],text=True).strip(); vv=subprocess.check_output(["dpkg-deb","-f",str(deb),"Version"],text=True).strip()
   if vv!=ver: raise SystemExit(f"{label}/{pkg}: version {vv} != {ver}")
   actual[pkg]=deb

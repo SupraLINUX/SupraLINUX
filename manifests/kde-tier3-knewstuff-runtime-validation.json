@@ -213,5 +213,23 @@
     "commit": "c139f70509cd321913c1e1c89565bfa60a7f22ff",
     "conclusion": "success",
     "validated_gate": "tier3-knewstuff-runtime-validation-planning"
-  }
+  },
+  "validation_history": [
+    {
+      "validation_run": 1,
+      "workflow_run": 36575095841,
+      "job_id": 109428639526,
+      "head_commit": "955c9189e720633b16791b7e6f1fb7f51e7439b4",
+      "execution_merge_commit": "023661cb7e3181e383cb617eee17a24d67155665",
+      "artifact_id": 11036509658,
+      "artifact_sha256": "069046c2a72c5c280bb91152a093e1fae34b5debcdf4cb7aaea4646ae013815a",
+      "validation_result": "INFRA_INVALID",
+      "stage": "artifact-contract",
+      "package_attempted": false,
+      "consumes_package_attempt": false,
+      "canonical_state_effect": "none",
+      "cause": "The artifact selector glob matched both the extracted <artifact_id>-<label> directory and its sibling .zip archive.",
+      "remediation": "Select the exact extracted <artifact_id>-<label> directory and certify that selector with a synthetic directory-plus-zip preflight before retry."
+    }
+  ]
 }

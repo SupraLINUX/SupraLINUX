@@ -186,6 +186,18 @@ req(fs.get("knewstuff_state") == "pending/runtime-validation-required" and fs.ge
 ii = sem.get("infra_invalid", {})
 req(ii.get("validation_result") == "INFRA_INVALID" and ii.get("package_attempted") is False and ii.get("package_state_effect") == "none", "runtime INFRA_INVALID semantics")
 
+history = rv.get("validation_history", [])
+req(len(history) == 1, "runtime validation history length")
+incident = history[0] if history else {}
+req(incident.get("validation_run") == 1, "runtime validation incident sequence")
+req(incident.get("workflow_run") == 36575095841 and incident.get("job_id") == 109428639526, "runtime INFRA_INVALID run/job evidence")
+req(incident.get("head_commit") == "955c9189e720633b16791b7e6f1fb7f51e7439b4", "runtime INFRA_INVALID head commit")
+req(incident.get("execution_merge_commit") == "023661cb7e3181e383cb617eee17a24d67155665", "runtime INFRA_INVALID merge execution commit")
+req(incident.get("artifact_id") == 11036509658 and incident.get("artifact_sha256") == "069046c2a72c5c280bb91152a093e1fae34b5debcdf4cb7aaea4646ae013815a", "runtime INFRA_INVALID evidence artifact")
+req(incident.get("validation_result") == "INFRA_INVALID" and incident.get("stage") == "artifact-contract", "runtime INFRA_INVALID classification")
+req(incident.get("package_attempted") is False and incident.get("consumes_package_attempt") is False and incident.get("canonical_state_effect") == "none", "runtime INFRA_INVALID state boundary")
+req("sibling .zip" in incident.get("cause", "") and "synthetic" in incident.get("remediation", ""), "runtime INFRA_INVALID diagnosis/remediation")
+
 activation = rv.get("activation", {})
 planning_policy = rv.get("planning_policy_evidence", {})
 req(planning_policy.get("workflow_run") == 36567527801, "planning Policy workflow evidence")
