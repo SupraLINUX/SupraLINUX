@@ -125,3 +125,23 @@ The retained `result.json` proves that the run failed before rootfs bootstrap or
 The remediation uses the exact extracted path `<artifact_id>-<label>`. Repository Policy now runs a synthetic preflight that deliberately creates both the directory and sibling ZIP and certifies that only the exact directory is selected. The runtime lane also depends on Repository Policy PASS, so the remediated infrastructure is validated before the KNewStuff runtime retry begins.
 
 This is infrastructure evidence only. It does not consume a Package Attempt, does not make KNewStuff FAIL, and leaves the canonical snapshot at `17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED`.
+
+
+## Validation run 2 — reported PASS, canonical INFRA_INVALID
+
+The remediated runtime lane executed in PR router run `36576400800`, job `109433549606`, from head commit `438fb5cacf4b4bd7016557b87880ed92c73afa44` (execution merge SHA `dee8ca3945dd7140037ce49065fca73aaf3a1009`).
+
+The runtime checks themselves completed successfully: exact KNewStuff/KCMUtils versions were installed, `apt-get check` passed, the ELF scan contained no `not found`, and the offscreen QML smoke completed. The retained evidence artifact is `11037137944`, SHA-256 `03847ee18320d15b4109dac0e9ec2bf71cde92d5b86308aba4e91f88f7f396ce`.
+
+However, this run is **not canonical PASS**. Review of the executable runner showed that the planned contract item `verify-result-json-identity-and-internal-artifact-hashes` was not implemented: outer artifact ZIP hashes and package metadata were verified, but each retained artifact's internal `result.json.artifacts` SHA-256 map was not checked. Under the CI evidence rules this makes the validation evidence incomplete, so the canonical classification is `INFRA_INVALID`, not package/runtime FAIL and not promotable PASS.
+
+This is the second consecutive `INFRA_INVALID` of the runtime-validation mechanism. Retries are therefore frozen:
+
+```text
+gate=tier3-knewstuff-runtime-validation-infrastructure-certification
+state=infrastructure-certification-pending-policy-validation
+execution_authorized=false
+package_attempted=false
+```
+
+The certification adds a generic verifier for `result.json` identity plus every internal artifact SHA-256, and a synthetic preflight that proves a valid fixture passes and a tampered payload is rejected. Only after Repository Policy certifies this mechanism may runtime execution be reauthorized.

@@ -5,9 +5,9 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-knewstuff-deferred-runtime-validation",
   "frameworks_series": "6.30.0",
-  "gate": "tier3-knewstuff-runtime-validation",
-  "state": "execution-authorized",
-  "execution_authorized": true,
+  "gate": "tier3-knewstuff-runtime-validation-infrastructure-certification",
+  "state": "infrastructure-certification-pending-policy-validation",
+  "execution_authorized": false,
   "validation_run_kind": "runtime-only",
   "package_attempted": false,
   "consumes_package_attempt": false,
@@ -230,6 +230,35 @@
       "canonical_state_effect": "none",
       "cause": "The artifact selector glob matched both the extracted <artifact_id>-<label> directory and its sibling .zip archive.",
       "remediation": "Select the exact extracted <artifact_id>-<label> directory and certify that selector with a synthetic directory-plus-zip preflight before retry."
+    },
+    {
+      "validation_run": 2,
+      "workflow_run": 36576400800,
+      "job_id": 109433549606,
+      "head_commit": "438fb5cacf4b4bd7016557b87880ed92c73afa44",
+      "execution_merge_commit": "dee8ca3945dd7140037ce49065fca73aaf3a1009",
+      "artifact_id": 11037137944,
+      "artifact_sha256": "03847ee18320d15b4109dac0e9ec2bf71cde92d5b86308aba4e91f88f7f396ce",
+      "reported_validation_result": "PASS",
+      "validation_result": "INFRA_INVALID",
+      "stage": "evidence-contract",
+      "package_attempted": false,
+      "consumes_package_attempt": false,
+      "canonical_state_effect": "none",
+      "cause": "The runtime checks completed, but the runner did not implement the planned verification of result.json internal artifact SHA-256 hashes, so the PASS evidence is incomplete and non-promotable.",
+      "remediation": "Freeze retries; verify result.json identity and every internal artifact SHA-256 through a generic verifier; certify it with a synthetic positive and tamper-rejection preflight before reauthorization."
     }
-  ]
+  ],
+  "infrastructure_certification": {
+    "status": "pending-policy-validation",
+    "execution_authorized": false,
+    "reason": "Two consecutive INFRA_INVALID runtime-validation runs require frozen retries and synthetic infrastructure certification before reauthorization.",
+    "required_checks": [
+      "exact-extracted-artifact-directory-selection",
+      "result-json-node-version-result-identity",
+      "result-json-internal-artifact-sha256-verification",
+      "tampered-artifact-rejection"
+    ],
+    "next_gate_after_policy_pass": "tier3-knewstuff-runtime-validation-execution-reauthorization"
+  }
 }

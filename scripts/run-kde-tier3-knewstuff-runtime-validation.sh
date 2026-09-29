@@ -46,20 +46,22 @@ with open(out,"w") as f:
 PY
 while IFS=$'\t' read -r id sha label; do download "${id}" "${sha}" "${INPUTS}/${id}-${label}"; done < "${EV}/artifact-plan.tsv"
 STAGE=artifact-contract
-python3 - "${MANIFEST}" "${L0}" "${L2}" "${INPUTS}" "${REPO}" "${EV}" <<'PY'
+python3 - "${MANIFEST}" "${L0}" "${L2}" "${INPUTS}" "${REPO}" "${EV}" "${ROOT}/scripts/verify-kde-runtime-artifact.py" <<'PY'
 import json,shutil,subprocess,sys
 from pathlib import Path
 rv,l0,l2=json.load(open(sys.argv[1])),json.load(open(sys.argv[2])),json.load(open(sys.argv[3])); root,repo,ev=map(Path,sys.argv[4:7]); specs=[]
-def add(label,aid,ver,expected): specs.append((label,aid,ver,set(expected)))
-s=rv["subject"]; add("knewstuff",s["retained_build_evidence"]["artifact_id"],s["package_version"],s["expected_binary_packages"])
-p=rv["runtime_provider"]; add("kcmutils",p["pass_evidence"]["artifact_id"],p["package_version"],p["expected_binary_packages"])
+def add(label,aid,ver,expected,result): specs.append((label,aid,ver,set(expected),result))
+s=rv["subject"]; add("knewstuff",s["retained_build_evidence"]["artifact_id"],s["package_version"],s["expected_binary_packages"],"RUNTIME_PENDING")
+p=rv["runtime_provider"]; add("kcmutils",p["pass_evidence"]["artifact_id"],p["package_version"],p["expected_binary_packages"],"PASS")
 for camp,node in ((l0,l0["nodes"]["knewstuff"]),(l2,l2["nodes"]["kcmutils"])):
  for x in sorted(set(node.get("retained_input_ids",[]))|set(node.get("support_input_ids",[]))|set(node.get("external_runtime_inputs",[]))):
-  q=camp.get("retained_predecessors",{}).get(x) or camp.get("support_predecessors",{}).get(x); add(x,q["artifact_id"],q["version"],q["expected_binary_packages"])
+  q=camp.get("retained_predecessors",{}).get(x) or camp.get("support_predecessors",{}).get(x); add(x,q["artifact_id"],q["version"],q["expected_binary_packages"],"PASS")
 seen={}
-for label,aid,ver,expected in specs:
+verifier=Path(sys.argv[7])
+for label,aid,ver,expected,expected_result in specs:
  artifact_dir=root/f"{aid}-{label}"
  if not artifact_dir.is_dir(): raise SystemExit(f"{label}: extracted artifact directory missing: {artifact_dir}")
+ subprocess.run([sys.executable,str(verifier),str(artifact_dir),label,ver,expected_result],check=True)
  actual={}
  for deb in artifact_dir.rglob("*.deb"):
   pkg=subprocess.check_output(["dpkg-deb","-f",str(deb),"Package"],text=True).strip(); vv=subprocess.check_output(["dpkg-deb","-f",str(deb),"Version"],text=True).strip()
