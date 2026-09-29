@@ -19,6 +19,90 @@ l3=load("manifests/kde-tier3-build-level3.json")
 a=load("manifests/kde-tier3-build-level3-attempts.json")
 support=load("manifests/kde-tier3-support-build-level1.json")
 
+# Attempt 3 source remediation is a new live lifecycle over immutable Attempts 1/2.
+_phase=t.get("level3_remediation",{}).get("status")
+_trigger=t.get("level3_remediation",{}).get("trigger",{})
+if _phase=="materialization-pending-ci" and _trigger.get("attempt")==2:
+    closure2=subprocess.run([sys.executable,str(ROOT/"scripts/validate_kde_tier3_level3_attempt2_closure.py")])
+    if closure2.returncode:
+        raise SystemExit(closure2.returncode)
+
+    T3=["ktexteditor","purpose"]
+    V3={"ktexteditor":"6.30.0-0supralinux3","purpose":"6.30.0-0supralinux3"}
+    BASE={"ktexteditor":"6.30.0-0supralinux2","purpose":"6.30.0-0supralinux2"}
+    SNAP3="18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED"
+    GATE3="tier3-level3-attempt3-remediation-materialization-evidence"
+    TRIGGER3={"attempt":2,"workflow_run":36639418961,"commit":"9fd5041053a176fdafcb3939e57a0ff2dd26d91e","failed_nodes":T3,"rootfs_artifact_id":11066320451,"rootfs_artifact_sha256":"d6ec90546a42d24d6561e49c9684ca03716b9c0ce4b98d7d95415571e3f4bb85"}
+    MAT2={
+      "ktexteditor":(36637751833,109643132222,11064709291,"606f9e22f162382f60b9499654248ebb8ac9e7970f47934b11457757a832becf"),
+      "purpose":(36614234522,109563580375,11054941469,"b7fa3f20bacbc6b142f18596cc6cabd3a670a86f9246f39f7307be905dac16c7"),
+    }
+
+    for obj,name in ((c.get("level3_remediation",{}),"contracts"),(m.get("level3_remediation",{}),"materialization"),(t.get("level3_remediation",{}),"canonical"),(l3.get("level3_remediation",{}),"level3")):
+        req(obj.get("status")=="materialization-pending-ci",name+": Attempt3 remediation status")
+        req(obj.get("trigger")==TRIGGER3,name+": Attempt3 remediation trigger")
+        req(obj.get("candidate_package_versions")==V3,name+": Attempt3 candidate versions")
+        req(obj.get("package_attempted") in {None,False},name+": Attempt3 has no package attempt")
+
+    req(c["level3_remediation"].get("materialization_authorized") is True and c["level3_remediation"].get("package_build_authorized") is False,"Attempt3 contract source-only authorization")
+    req(m.get("state")=="remediation-pending-ci" and m.get("remediation_queue")==T3,"Attempt3 materialization queue")
+    req(m.get("package_attempted") is False and m.get("package_state_effect")=="none","Attempt3 materialization has no package state effect")
+    req(m["level3_remediation"].get("materialization_authorized") is True and m["level3_remediation"].get("package_execution_authorized") is False,"Attempt3 materialization execution boundary")
+    req(t.get("discovery_policy",{}).get("phase")=="build-level3-remediation-planning","Attempt3 canonical remediation phase")
+    req(t.get("discovery_policy",{}).get("package_builds")=="tier3-level3-attempt3-remediation-pending-materialization","Attempt3 canonical materialization gate")
+    req(t.get("discovery_policy",{}).get("remediation")=="level3-attempt2-remediation-materialization","Attempt3 canonical remediation marker")
+    req(t.get("build_level3",{}).get("status")=="attempt2-closed-FAIL" and t.get("build_level3",{}).get("execution_authorized") is False,"Attempt2 binary closure retained")
+    req(t.get("build_level3",{}).get("current_attempt")==2 and t.get("build_level3",{}).get("next_attempt")==3 and t.get("build_level3",{}).get("next_gate")==GATE3,"Attempt3 canonical live gate")
+    req(l3.get("state")=="FAIL" and l3.get("execution_authorized") is False and l3.get("current_attempt")==2 and l3.get("next_attempt")==3 and l3.get("next_gate")==GATE3,"Attempt3 package execution remains paused")
+    req(l3.get("canonical_snapshot")==SNAP3,"Attempt3 canonical snapshot")
+    req(len(a.get("campaign_history",[]))==2 and all(len(a.get("nodes",{}).get(x,[]))==2 for x in T3),"Attempts 1/2 ledger remains immutable")
+
+    tn={x["id"]:x for x in t.get("nodes",[])}
+    for node in T3:
+        mm=m["nodes"][node]
+        run,job,artifact,digest=MAT2[node]
+        ev=mm.get("evidence",{})
+        req(mm.get("state")=="remediation-pending" and mm.get("package_version")==BASE[node] and mm.get("candidate_package_version")==V3[node],node+": Attempt3 materialization candidate")
+        req(ev.get("workflow_run")==run and ev.get("job_id")==job and ev.get("artifact_id")==artifact and ev.get("artifact_sha256")==digest,node+": retained Attempt2 source materialization")
+        req(ev.get("result")=="PASS" and ev.get("package_attempted") is False and ev.get("package_state_effect")=="none",node+": retained source-only PASS")
+        can=tn.get(node,{})
+        pkg=can.get("packaging",{})
+        req(can.get("state")=="FAIL" and pkg.get("state")=="FAIL" and pkg.get("package_version")==BASE[node] and pkg.get("downstream_eligible") is False,node+": canonical Attempt2 FAIL retained")
+        ln=l3["nodes"][node]
+        req(ln.get("state")=="FAIL" and ln.get("package_version")==BASE[node],node+": Level3 Attempt2 FAIL retained")
+
+    kt=c["nodes"]["ktexteditor"]
+    req(kt.get("package_version_candidate")==V3["ktexteditor"],"Attempt3 KTextEditor revision")
+    req(any(x.get("old")=="\tdh_auto_test" and x.get("new")=="\tdh_auto_test --no-parallel" and x.get("expected_count")==1 for x in kt.get("rules_text_replacements",[])),"Attempt3 KTextEditor serialized full suite retained")
+    ksp=kt.get("supralinux_source_patches",[])
+    req(len(ksp)==1 and ksp[0].get("name")=="supralinux-test-abouttosave-self-contained-fixture.patch" and ksp[0].get("target")=="autotests/src/katedocument_test.cpp","Attempt3 KTextEditor self-contained fixture patch")
+    if ksp:
+        req(ksp[0].get("expected_patch_sha256")=="b4d9868777b7da55bf92b4196aa948671629f42c8827bade013f4a56926635b5","Attempt3 KTextEditor patch digest")
+        req(ksp[0].get("expected_source_sha256")=="7d1de51198c26826007b21b03b42e0c6509cc50c2ea1715d8513fdef529ebe6d","Attempt3 KTextEditor source digest")
+
+    pu=c["nodes"]["purpose"]
+    req(pu.get("package_version_candidate")==V3["purpose"],"Attempt3 Purpose revision")
+    req(any(x.get("action")=="ensure" and x.get("relation")=="kio6 (>= 6.30.0~) <!nocheck>" for x in pu.get("source_build_relation_overrides",[])),"Attempt3 Purpose KIO worker provider retained")
+    req(any(x.get("old")=="\tdh_auto_test" and x.get("new")=="\tQT_QPA_PLATFORM=offscreen dh_auto_test" and x.get("expected_count")==1 for x in pu.get("rules_text_replacements",[])),"Attempt3 Purpose offscreen environment retained")
+    psp={x.get("name"):x for x in pu.get("supralinux_source_patches",[])}
+    req(set(psp)=={"supralinux-purpose-runjob-local-source.patch","supralinux-purpose-menutest-local-source.patch"},"Attempt3 Purpose local-source patch set")
+    if "supralinux-purpose-runjob-local-source.patch" in psp:
+        x=psp["supralinux-purpose-runjob-local-source.patch"]
+        req(x.get("target")=="autotests/alternativesmodeltest.cpp" and x.get("expected_patch_sha256")=="888db6f1c73a9bfbc007050baa9cc697b85a98079cd0e51279ca4b70cb58369a" and x.get("expected_source_sha256")=="e6c414e12136a2805bb3309abf7e83c2f046e79ed5998bca87b306930891394c","Attempt3 Purpose AlternativesModel patch hashes")
+    if "supralinux-purpose-menutest-local-source.patch" in psp:
+        x=psp["supralinux-purpose-menutest-local-source.patch"]
+        req(x.get("target")=="autotests/menutest.cpp" and x.get("expected_patch_sha256")=="9013b6add8307ae55c407005ae7a79621aa381926d73874d4bf0283403dbde2b" and x.get("expected_source_sha256")=="50bcd5f12061e25e0ed1b5b4dbe45c581a4ee2699aa238b6a84c07c8bac153f8","Attempt3 Purpose Menu patch hashes")
+
+    req(c.get("stable_promotion_requires_explicit_user_approval") is True,"Attempt3 stable approval contract")
+    req(m.get("stable_promotion_requires_explicit_user_approval") is True,"Attempt3 stable approval materialization")
+    if errors:
+        for e in errors: print("ERROR:",e,file=sys.stderr)
+        raise SystemExit(1)
+    print("KDE Tier 3 Level 3 Attempt 3 remediation definition: PASS")
+    print("source-rematerialization=ktexteditor,purpose; candidate=6.30.0-0supralinux3")
+    print("package-execution-authorized=false")
+    raise SystemExit(0)
+
 if t.get("level3_remediation",{}).get("status") in {"attempt2-active","attempt2-closed-FAIL-pending-remediation-definition"}:
     # Source-remediation evidence is closed. The current binary lifecycle is
     # authoritative from this point forward; do not constrain it with the

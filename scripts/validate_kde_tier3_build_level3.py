@@ -17,6 +17,11 @@ mat=load("manifests/kde-tier3-materialization.json")
 contracts=load("manifests/kde-tier3-package-contracts.json")
 t=load("manifests/kde-frameworks-tier3.json")
 
+# Attempt 3 source-remediation state is validated by the dedicated remediation lifecycle.
+if t.get("level3_remediation",{}).get("status")=="materialization-pending-ci" and t.get("level3_remediation",{}).get("trigger",{}).get("attempt")==2:
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable,str(ROOT/"scripts/validate_kde_tier3_level3_remediation.py")]).returncode)
+
 # Closed Attempt 2: validate immutable history first, then only current live closure.
 if m.get("state")=="FAIL" and m.get("current_attempt")==2:
     import subprocess

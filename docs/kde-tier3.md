@@ -623,3 +623,12 @@ PR CI router `36639418961` at commit `9fd5041053a176fdafcb3939e57a0ff2dd26d91e` 
 KTextEditor `6.30.0-0supralinux2` improved to **76/77 upstream CTest PASS**. The serialized suite removed all twelve previous encoding races; only `testAboutToSave()` remains, because its test fixture still depends on relative `__FILE__` path resolution in a reproducible build. Purpose `6.30.0-0supralinux2` still reports **1/3 PASS**, but its KIO-file and headless-display blockers are resolved; the two remaining tests perform external `http://kde.org` I/O while the package build deliberately has no network.
 
 Evidence is frozen in the Level 3 Attempt ledger and dedicated Attempt 2 closure validator. Canonical state stays **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED**. Package execution is closed, no DAG promotion occurs, and the next gate is an Attempt 3 remediation definition. No stable publication is authorized.
+
+
+## Level 3 Attempt 3 remediation — materialization pending
+
+Level 3 Attempt 2 is historically closed **FAIL** for KTextEditor and Purpose. The current canonical snapshot stays **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED** while source-only revisions `6.30.0-0supralinux3` are prepared.
+
+The KTextEditor remediation removes the final autotest dependency on relative `__FILE__` resolution by using a self-contained writable temporary document. The Purpose remediation keeps KIO workers and headless Qt, but replaces external HTTP inputs only in the two tests that actually execute Save As jobs; the package build remains intentionally network-disabled.
+
+The live gate is `tier3-level3-attempt3-remediation-materialization-evidence`. Source materialization consumes no Package Attempt and does not change canonical PASS/FAIL state. Attempt 3 package execution and stable publication remain unauthorized.

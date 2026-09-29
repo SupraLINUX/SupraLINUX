@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 build Level 3
 
-Status: **Attempt 2 closed FAIL; Attempt 3 remediation definition pending**
+Status: **Attempt 2 closed FAIL; Attempt 3 source materialization pending**
 
 Level 3 is the fourth and final topological build level already recorded by the KDE-upstream dependency DAG. It contains exactly KTextEditor `6.30.0-0supralinux1` and Purpose `6.30.0-0supralinux1`.
 
@@ -87,3 +87,14 @@ Both nodes reached valid `sbuild`, so both consumed Package Attempt 2 and are re
 - Purpose `6.30.0-0supralinux2`: job `109648412196`, artifact `11066102772`, SHA-256 `adf13dd09a0ebd4b001f51c83cfe2b19360fa482b6c73c1a1ab579e7914e0a19`. CTest remains **1/3 PASS**, but the previous blockers changed: the KIO file worker is present and Qt offscreen works. `alternativesmodeltest` and `menutest` now fail while accessing their upstream literal `http://kde.org` URL inside the intentionally network-disabled `sbuild` environment.
 
 Canonical Tier 3 therefore remains **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED**. No package is promoted, execution is paused, and Attempt 3 is not authorized. The next gate is `tier3-build-level3-attempt2-remediation-definition`.
+
+
+## Attempt 3 remediation definition — source materialization pending
+
+Attempt 2 is closed as two real package **FAIL** with immutable evidence in workflow `36639418961`. Canonical Tier 3 remains **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED**; no package is promoted.
+
+KTextEditor `6.30.0-0supralinux3` keeps the serialized full upstream suite that removed the twelve encoding races. Its only source change is autotest-only: `testAboutToSave()` now creates and writes a self-contained `QTemporaryFile` before opening it as the document under test. This removes the reproducible-build-relative `__FILE__` assumption observed in Attempt 2 without touching production code.
+
+Purpose `6.30.0-0supralinux3` retains the KIO worker test provider and `QT_QPA_PLATFORM=offscreen`. The two executing tests that previously used literal `http://kde.org` now create local source files and pass `file:` URLs into the same Save As/Menu flows. Attempt 2 already proved the `file` worker is available; external network reachability is not part of those test contracts, and `sbuild` remains network-disabled.
+
+This gate authorizes **source materialization only** for KTextEditor and Purpose. `package_execution_authorized=false`; Package Attempt 3 cannot begin until both `-3` materializations PASS and a later planning/activation gate is validated.
