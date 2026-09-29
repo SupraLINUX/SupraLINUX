@@ -12,23 +12,23 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "runtime-validation-planning",
+    "phase": "runtime-validation-activation",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
     "package_builds": "tier3-level2-package-attempt-PASS-closed",
     "remediation": "level2-closed",
-    "runtime_validation": "planning-pending-policy-validation"
+    "runtime_validation": "activation-pending-policy-validation"
   },
   "runtime_validation": {
     "manifest": "manifests/kde-tier3-knewstuff-runtime-validation.json",
     "node": "knewstuff",
-    "status": "planning-pending-policy-validation",
+    "status": "activation-pending-policy-validation",
     "execution_authorized": false,
     "validation_run_kind": "runtime-only",
     "consumes_package_attempt": false,
     "canonical_state_effect": "none-until-runtime-validation-PASS",
-    "next_gate": "tier3-knewstuff-runtime-validation-planning"
+    "next_gate": "tier3-knewstuff-runtime-validation-activation"
   },
   "nodes": [
     {
@@ -934,7 +934,7 @@
           "artifact_sha256": "bc9f4692c3d2efcefadd55f40af666fde96813e1b40dd999d76c77ef23cd8fd6"
         },
         "runtime_validation_manifest": "manifests/kde-tier3-knewstuff-runtime-validation.json",
-        "runtime_validation_status": "planning-pending-policy-validation"
+        "runtime_validation_status": "activation-pending-policy-validation"
       },
       "packaging": {
         "state": "runtime-validation-required",

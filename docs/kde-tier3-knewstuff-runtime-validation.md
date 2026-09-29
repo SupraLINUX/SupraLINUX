@@ -81,3 +81,10 @@ tier3-knewstuff-runtime-validation-activation
 ```
 
 That later activation will define/authorize the executable runtime workflow. Stable promotion remains separate and always requires explicit user approval.
+
+
+## Activation checkpoint — 2026-09-29
+
+Planning Policy passed in PR router run `36567527801`, job `109403055592`, at commit `c139f70509cd321913c1e1c89565bfa60a7f22ff`.
+
+The executable runtime lane is defined but remains unauthorized until this activation contract passes Repository Policy. The next transition is `tier3-knewstuff-runtime-validation-execution-authorization`. The lane performs no `sbuild` and never consumes a Package Attempt.
