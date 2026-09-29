@@ -224,3 +224,30 @@ package_attempted=false
 ```
 
 This authorizes one fresh runtime-validation execution. It does not promote KNewStuff by itself and does not alter the canonical `17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED` snapshot.
+
+
+## Validation run 4 — PASS and canonical promotion
+
+The schema-adaptive runtime-validation lane completed successfully in PR router run `36595513031`, job `109499716109`, from head commit `49f7a2fabc15f0c75c7633e9048812801877cfc9` (execution merge SHA `83ed6e84491d80ee66415ae6544880f7f2c9d904`).
+
+Retained evidence artifact `11046266772` has SHA-256 `01fc348f3b1a4fbee86599ab6d33c3781858f46264d082747bc155cf6cef9fad`. The run closed with `validation_result=PASS`, `stage=complete`, `package_attempted=false` and `consumes_package_attempt=false`.
+
+The evidence proves:
+
+- KNewStuff runtime packages exactly `6.30.0-0supralinux1`;
+- KCMUtils runtime packages exactly `6.30.0-0supralinux3`;
+- `apt-get check` PASS;
+- no unresolved ELF dependency (`not found` count = 0);
+- QML imports for `org.kde.newstuff` and `org.kde.kcmutils` PASS;
+- installed `EntryDetails.qml` and `Page.qml` compile-load PASS;
+- every retained artifact uses its pinned outer SHA-256, and every internal hash recorded by its historical `result.json` is verified.
+
+The original KNewStuff build evidence remains immutable as `RUNTIME_PENDING`. Canonical PASS is a separate promotion record combining that retained successful build with this runtime PASS.
+
+Canonical Tier 3 state is now:
+
+```text
+18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED
+```
+
+The remaining pending nodes are KTextEditor and Purpose. KNewStuff is now downstream-eligible and present in the canonical DAG. This promotion does not publish anything to `stable`.

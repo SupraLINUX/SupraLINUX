@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED — Level 1 Attempt 6 closed**
+Status: **18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED — KNewStuff runtime validation PASS**
 
 Last reviewed: **2026-09-24**
 
@@ -563,3 +563,14 @@ Canonical DAG state after closure: **12 PASS / 1 pending / 1 current FAIL / 6 BL
 
 Execution is closed with `execution_authorized=false`. Level 2 is not authorized. The next gate is `tier3-round11-kio-remediation-definition`: define the KIO Round 11 remediation from evidence before changing source or package revision. This closure does not claim a Round 11 implementation or a `6.30.0-0supralinux7` package.
 
+
+
+## KNewStuff runtime-validation closure — canonical PASS
+
+The deferred KNewStuff runtime gate is closed by runtime-validation workflow `36595513031`, job `109499716109`, from head commit `49f7a2fabc15f0c75c7633e9048812801877cfc9`. Evidence artifact `11046266772` has SHA-256 `01fc348f3b1a4fbee86599ab6d33c3781858f46264d082747bc155cf6cef9fad`.
+
+The retained KNewStuff package build remains historically `RUNTIME_PENDING`; it is not rewritten. The separate runtime PASS proves the exact SupraLINUX KCMUtils 6.30 closure, APT consistency, ELF resolution and offscreen QML integration. KNewStuff `6.30.0-0supralinux1` is therefore promoted to canonical **PASS**, becomes downstream-eligible and enters the canonical DAG.
+
+The historical Level 2 snapshot remains immutable at **17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED**. The new post-runtime canonical snapshot is **18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**. Remaining pending nodes: KTextEditor and Purpose.
+
+No Package Attempt was consumed by the runtime validation, and no `stable` publication is authorized by this closure.

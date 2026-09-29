@@ -165,15 +165,23 @@ for node_id, canonical_node in sorted(tier3_promoted.items()):
 
 knewstuff = next((node for node in tier3_canonical.get("nodes", []) if node.get("id") == "knewstuff"), {})
 kcmutils_canonical = next((node for node in tier3_canonical.get("nodes", []) if node.get("id") == "kcmutils"), {})
-if kcmutils_canonical.get("state") in {"FAIL", "BLOCKED"}:
-    require(knewstuff.get("state") == "BLOCKED", "KNewStuff must be BLOCKED while KCMUtils is FAIL/BLOCKED")
-    require(knewstuff.get("packaging", {}).get("state") == "BLOCKED", "KNewStuff packaging state must be BLOCKED while KCMUtils is FAIL/BLOCKED")
-    require(knewstuff.get("packaging", {}).get("blocked_by") == ["kcmutils"], "KNewStuff BLOCKED predecessor must be KCMUtils")
-else:
-    require(knewstuff.get("state") == "pending", "KNewStuff must remain canonical pending until KCMUtils runtime validation is available")
-    require(knewstuff.get("packaging", {}).get("state") == "runtime-validation-required", "KNewStuff runtime-validation state")
-require(knewstuff.get("packaging", {}).get("downstream_eligible") is False, "KNewStuff must remain non-downstream-eligible")
-require("knewstuff" not in nodes, "KNewStuff must not enter canonical DAG before KCMUtils runtime validation")
+require(kcmutils_canonical.get("state") == "PASS" and kcmutils_canonical.get("packaging", {}).get("downstream_eligible") is True, "KCMUtils must be canonical PASS before KNewStuff runtime promotion")
+require(knewstuff.get("state") == "PASS", "KNewStuff must be canonical PASS after runtime validation")
+require(knewstuff.get("packaging", {}).get("state") == "PASS", "KNewStuff packaging must be PASS after runtime validation")
+require(knewstuff.get("packaging", {}).get("downstream_eligible") is True, "KNewStuff must be downstream-eligible after runtime validation")
+require("knewstuff" in nodes, "KNewStuff must enter canonical DAG after runtime validation PASS")
+kd = nodes.get("knewstuff", {})
+require(kd.get("depends_on") == ["karchive","kconfig","kcoreaddons","ki18n","kpackage","kwidgetsaddons","attica","syndication","kirigami","kcmutils"], "KNewStuff DAG dependency closure mismatch")
+require(kd.get("package_version") == "6.30.0-0supralinux1", "KNewStuff DAG package version mismatch")
+require(kd.get("attempt_ledger") == "manifests/kde-tier3-build-level0-attempts.json", "KNewStuff DAG attempt ledger mismatch")
+krv = kd.get("runtime_validation_evidence", [])
+require(len(krv) == 1, "KNewStuff DAG requires exactly one runtime-validation PASS evidence record")
+if krv:
+    item = krv[0]
+    require(item.get("workflow_run") == 36595513031 and item.get("job_id") == 109499716109, "KNewStuff runtime-validation run/job mismatch")
+    require(item.get("artifact_id") == 11046266772 and item.get("artifact_sha256") == "01fc348f3b1a4fbee86599ab6d33c3781858f46264d082747bc155cf6cef9fad", "KNewStuff runtime-validation artifact mismatch")
+    require(item.get("validation_result") == "PASS" and item.get("stage") == "complete", "KNewStuff runtime-validation result mismatch")
+    require(item.get("package_attempted") is False and item.get("consumes_package_attempt") is False, "KNewStuff runtime validation must not consume Package Attempt")
 
 kauth = nodes.get("kauth", {})
 require(kauth.get("tier") == 2 and kauth.get("upstream_version") == "6.30.0", "KAuth promoted Tier 2 identity mismatch")

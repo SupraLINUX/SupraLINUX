@@ -12,23 +12,23 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "runtime-validation-execution",
+    "phase": "runtime-validation-closure",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
     "package_builds": "tier3-level2-package-attempt-PASS-closed",
     "remediation": "level2-closed",
-    "runtime_validation": "execution-authorized"
+    "runtime_validation": "PASS-closed"
   },
   "runtime_validation": {
     "manifest": "manifests/kde-tier3-knewstuff-runtime-validation.json",
     "node": "knewstuff",
-    "status": "execution-authorized",
-    "execution_authorized": true,
+    "status": "PASS-closed",
+    "execution_authorized": false,
     "validation_run_kind": "runtime-only",
     "consumes_package_attempt": false,
-    "canonical_state_effect": "none-until-runtime-validation-PASS",
-    "next_gate": "tier3-knewstuff-runtime-validation"
+    "canonical_state_effect": "KNewStuff-promoted-to-PASS",
+    "next_gate": "tier3-knewstuff-runtime-validation-closure"
   },
   "nodes": [
     {
@@ -910,9 +910,9 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/knewstuff-6.30.0.tar.xz",
       "source_sha256": "85408768b5c3f4b0b51ee6a14ae73fea263f451404e266e286c55e0c17e44037",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "PASS",
       "planning": {
-        "readiness": "runtime-validation-required",
+        "readiness": "materialized",
         "dependency_authority": "kde-upstream",
         "package_contract": "materialized",
         "dependency_manifest": "manifests/kde-frameworks-tier3-dependencies.json",
@@ -934,13 +934,16 @@
           "artifact_sha256": "bc9f4692c3d2efcefadd55f40af666fde96813e1b40dd999d76c77ef23cd8fd6"
         },
         "runtime_validation_manifest": "manifests/kde-tier3-knewstuff-runtime-validation.json",
-        "runtime_validation_status": "execution-authorized"
+        "runtime_validation_status": "PASS-closed"
       },
       "packaging": {
-        "state": "runtime-validation-required",
+        "state": "PASS",
         "package_version": "6.30.0-0supralinux1",
-        "downstream_eligible": false,
+        "downstream_eligible": true,
         "deferred_runtime_validation": [
+          "kcmutils"
+        ],
+        "runtime_validation_closed": [
           "kcmutils"
         ],
         "build_evidence": [
@@ -971,7 +974,76 @@
             "package_state_effect": "none-runtime-validation-pending",
             "full_result_json_retained_in_artifact": true
           }
-        ]
+        ],
+        "evidence": [
+          {
+            "result": "PASS",
+            "build_result": "PASS",
+            "evidence_kind": "canonical-promotion-from-retained-build-plus-runtime-validation",
+            "original_build_result": "RUNTIME_PENDING",
+            "workflow_run": 35818120201,
+            "job_id": 107044336736,
+            "commit": "0599266fd5fc9869002629b3778d71f1e76bbdc1",
+            "attempted_package_version": "6.30.0-0supralinux1",
+            "artifact_id": 10732461923,
+            "artifact_sha256": "2d2b71cd19923c9d9896926f92c86a209fc633f5a2db04597c0ea10488b7ae4b",
+            "rootfs_artifact_id": 10732192564,
+            "rootfs_artifact_sha256": "e1c05fd6b5b486d51e79cffa9c32160dcf39d7bc10ed7e338fa286e8b6b39573",
+            "rootfs_sha256": "596e8d8a8865276f6bc1c4e53476485fc991a5cb6e76c4269b625486f278b349",
+            "stage": "complete",
+            "tests": "5/5 PASS",
+            "lintian": "PASS-errors",
+            "apt_check": "PASS",
+            "abi_contract": "PASS",
+            "cmake_consumer": "PASS",
+            "buildinfo_predecessor_proof": "PASS",
+            "selected_profile_proof": "PASS",
+            "python_import": "not-applicable",
+            "qml_payload": "PASS",
+            "runtime_validation": "PASS",
+            "runtime_validation_workflow_run": 36595513031,
+            "runtime_validation_job_id": 109499716109,
+            "runtime_validation_commit": "49f7a2fabc15f0c75c7633e9048812801877cfc9",
+            "runtime_validation_execution_merge_commit": "83ed6e84491d80ee66415ae6544880f7f2c9d904",
+            "runtime_validation_artifact_id": 11046266772,
+            "runtime_validation_artifact_sha256": "01fc348f3b1a4fbee86599ab6d33c3781858f46264d082747bc155cf6cef9fad",
+            "downstream_eligible": true,
+            "canonical_success_transition": "PASS",
+            "package_state_effect": "PASS",
+            "claim": "hosted-clean-package-preflight",
+            "authoritative": false,
+            "full_result_json_retained_in_artifact": true
+          }
+        ],
+        "runtime_validation_evidence": [
+          {
+            "validation_run": 4,
+            "workflow_run": 36595513031,
+            "job_id": 109499716109,
+            "head_commit": "49f7a2fabc15f0c75c7633e9048812801877cfc9",
+            "execution_merge_commit": "83ed6e84491d80ee66415ae6544880f7f2c9d904",
+            "artifact_id": 11046266772,
+            "artifact_sha256": "01fc348f3b1a4fbee86599ab6d33c3781858f46264d082747bc155cf6cef9fad",
+            "validation_result": "PASS",
+            "result": "PASS",
+            "stage": "complete",
+            "exit_code": 0,
+            "package_attempted": false,
+            "consumes_package_attempt": false,
+            "validation_run_kind": "runtime-only",
+            "canonical_state_effect": "promote-existing-knewstuff-build-to-PASS",
+            "exact_knewstuff_version": "6.30.0-0supralinux1",
+            "exact_kcmutils_version": "6.30.0-0supralinux3",
+            "apt_check": "PASS",
+            "elf_resolution": "PASS",
+            "qml_import_smoke": "PASS",
+            "qml_component_compile": "PASS"
+          }
+        ],
+        "claim": "hosted-clean-package-preflight",
+        "authoritative": false,
+        "attempt_ledger": "manifests/kde-tier3-build-level0-attempts.json",
+        "campaign": "manifests/kde-tier3-build-level0.json"
       }
     },
     {
@@ -2858,5 +2930,23 @@
         "result": "PASS"
       }
     }
-  ]
+  ],
+  "runtime_validation_snapshot": {
+    "pass": 18,
+    "pending": 2,
+    "current_fail": 0,
+    "blocked": 0,
+    "runtime_pending": [],
+    "pending_nodes": [
+      "ktexteditor",
+      "purpose"
+    ],
+    "current_fail_nodes": [],
+    "blocked_nodes": [],
+    "workflow_run": 36595513031,
+    "job_id": 109499716109,
+    "commit": "49f7a2fabc15f0c75c7633e9048812801877cfc9",
+    "artifact_id": 11046266772,
+    "artifact_sha256": "01fc348f3b1a4fbee86599ab6d33c3781858f46264d082747bc155cf6cef9fad"
+  }
 }

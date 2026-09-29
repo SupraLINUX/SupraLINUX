@@ -5,20 +5,20 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-knewstuff-deferred-runtime-validation",
   "frameworks_series": "6.30.0",
-  "gate": "tier3-knewstuff-runtime-validation",
-  "state": "execution-authorized",
-  "execution_authorized": true,
+  "gate": "tier3-knewstuff-runtime-validation-closure",
+  "state": "PASS-closed",
+  "execution_authorized": false,
   "validation_run_kind": "runtime-only",
   "package_attempted": false,
   "consumes_package_attempt": false,
-  "package_state_effect": "none-until-runtime-validation-PASS",
+  "package_state_effect": "promoted-existing-knewstuff-build-to-PASS",
   "canonical_snapshot_before": "17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED",
   "subject": {
     "node": "knewstuff",
     "source_package": "kf6-knewstuff",
     "package_version": "6.30.0-0supralinux1",
-    "canonical_state": "pending/runtime-validation-required",
-    "downstream_eligible": false,
+    "canonical_state": "PASS",
+    "downstream_eligible": true,
     "retained_build_evidence": {
       "workflow_run": 35818120201,
       "job_id": 107044336736,
@@ -265,11 +265,34 @@
       "canonical_state_effect": "none",
       "cause": "The certified verifier assumed every retained result.json contains package_version/result/internal hash fields. The real retained closure spans four historical schema generations; Attica is a node-only legacy result.json.",
       "remediation": "Freeze runtime execution. Certify a schema-adaptive verifier that always validates node identity, strictly validates optional fields when present, verifies every recorded internal artifact hash, and relies on pinned outer artifact SHA-256 plus exact .deb version/binary-set proof for legacy artifacts lacking internal hash maps."
+    },
+    {
+      "validation_run": 4,
+      "workflow_run": 36595513031,
+      "job_id": 109499716109,
+      "head_commit": "49f7a2fabc15f0c75c7633e9048812801877cfc9",
+      "execution_merge_commit": "83ed6e84491d80ee66415ae6544880f7f2c9d904",
+      "artifact_id": 11046266772,
+      "artifact_sha256": "01fc348f3b1a4fbee86599ab6d33c3781858f46264d082747bc155cf6cef9fad",
+      "validation_result": "PASS",
+      "result": "PASS",
+      "stage": "complete",
+      "exit_code": 0,
+      "package_attempted": false,
+      "consumes_package_attempt": false,
+      "validation_run_kind": "runtime-only",
+      "canonical_state_effect": "promote-existing-knewstuff-build-to-PASS",
+      "exact_knewstuff_version": "6.30.0-0supralinux1",
+      "exact_kcmutils_version": "6.30.0-0supralinux3",
+      "apt_check": "PASS",
+      "elf_resolution": "PASS",
+      "qml_import_smoke": "PASS",
+      "qml_component_compile": "PASS"
     }
   ],
   "infrastructure_certification": {
     "status": "PASS",
-    "execution_authorized": true,
+    "execution_authorized": false,
     "reason": "Validation run 3 exposed real historical result.json schema evolution not represented by the prior synthetic certification.",
     "required_checks": [
       "exact-extracted-artifact-directory-selection",
@@ -294,17 +317,23 @@
       "schema_generation_result_no_hashes": "PASS",
       "schema_generation_hash_map": "PASS",
       "tamper_rejection": "PASS"
-    }
+    },
+    "closed_by_validation_run": 4,
+    "closed_result": "PASS"
   },
   "reauthorization": {
     "round": 2,
-    "status": "ACTIVE",
-    "execution_authorized": true,
+    "status": "CLOSED-PASS",
+    "execution_authorized": false,
     "basis": "Repository Policy certified the schema-adaptive runtime-validation infrastructure after validation run 3.",
     "certification_workflow_run": 36591431061,
     "certification_job_id": 109485235871,
     "certification_commit": "cfe5f54ae5ecfb16f2fd95bd1a0a526bd4257fc5",
-    "runtime_execution_gate": "tier3-knewstuff-runtime-validation"
+    "runtime_execution_gate": "tier3-knewstuff-runtime-validation",
+    "closed_by_validation_run": 4,
+    "closed_workflow_run": 36595513031,
+    "closed_job_id": 109499716109,
+    "closed_commit": "49f7a2fabc15f0c75c7633e9048812801877cfc9"
   },
   "retained_closure_schema_audit": {
     "scope_artifact_count": 34,
@@ -365,5 +394,42 @@
       "superseded_by_validation_run": 3,
       "superseded_reason": "Validation run 3 exposed historical result.json schema evolution not covered by the prior certification."
     }
-  ]
+  ],
+  "canonical_snapshot_after": "18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED",
+  "promotion": {
+    "status": "PASS",
+    "promoted_existing_build": true,
+    "package_version": "6.30.0-0supralinux1",
+    "runtime_provider_version": "6.30.0-0supralinux3",
+    "runtime_validation_evidence": {
+      "validation_run": 4,
+      "workflow_run": 36595513031,
+      "job_id": 109499716109,
+      "head_commit": "49f7a2fabc15f0c75c7633e9048812801877cfc9",
+      "execution_merge_commit": "83ed6e84491d80ee66415ae6544880f7f2c9d904",
+      "artifact_id": 11046266772,
+      "artifact_sha256": "01fc348f3b1a4fbee86599ab6d33c3781858f46264d082747bc155cf6cef9fad",
+      "validation_result": "PASS",
+      "result": "PASS",
+      "stage": "complete",
+      "exit_code": 0,
+      "package_attempted": false,
+      "consumes_package_attempt": false,
+      "validation_run_kind": "runtime-only",
+      "canonical_state_effect": "promote-existing-knewstuff-build-to-PASS",
+      "exact_knewstuff_version": "6.30.0-0supralinux1",
+      "exact_kcmutils_version": "6.30.0-0supralinux3",
+      "apt_check": "PASS",
+      "elf_resolution": "PASS",
+      "qml_import_smoke": "PASS",
+      "qml_component_compile": "PASS"
+    },
+    "canonical_snapshot_before": "17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED",
+    "canonical_snapshot_after": "18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED",
+    "remaining_pending_nodes": [
+      "ktexteditor",
+      "purpose"
+    ],
+    "stable_promotion": false
+  }
 }

@@ -18,7 +18,7 @@ l0 = load("manifests/kde-tier3-build-level0.json")
 l2 = load("manifests/kde-tier3-build-level2.json")
 dag = load("manifests/kde-dag.json")
 
-SNAP = "17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED"
+SNAP = "17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED"\nPOST_SNAP = "18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED"
 PLAN_GATE = "tier3-knewstuff-runtime-validation-planning"
 ACTIVATION_GATE = "tier3-knewstuff-runtime-validation-activation"
 EXECUTION_GATE = "tier3-knewstuff-runtime-validation"
@@ -28,45 +28,45 @@ req(rv.get("authority") == "kde-upstream", "runtime-validation authority")
 req(rv.get("provider_platform") == "ubuntu-resolute", "runtime-validation provider platform")
 req(rv.get("role") == "tier3-knewstuff-deferred-runtime-validation", "runtime-validation role")
 req(rv.get("frameworks_series") == "6.30.0", "runtime-validation Frameworks series")
-req(rv.get("gate") == EXECUTION_GATE, "runtime-validation execution gate")
-req(rv.get("state") == "execution-authorized", "runtime-validation execution state")
-req(rv.get("execution_authorized") is True, "runtime execution must be reauthorized after infrastructure remediation PASS")
+req(rv.get("gate") == "tier3-knewstuff-runtime-validation-closure", "runtime-validation closure gate")
+req(rv.get("state") == "PASS-closed", "runtime-validation closure state")
+req(rv.get("execution_authorized") is False, "runtime execution must be closed after PASS")
 req(rv.get("validation_run_kind") == "runtime-only", "runtime-validation run kind")
 req(rv.get("package_attempted") is False and rv.get("consumes_package_attempt") is False, "planning/runtime validation cannot consume Package Attempt")
-req(rv.get("package_state_effect") == "none-until-runtime-validation-PASS", "runtime planning has no package-state effect")
+req(rv.get("package_state_effect") == "promoted-existing-knewstuff-build-to-PASS", "runtime PASS package-state effect")
 req(rv.get("canonical_snapshot_before") == SNAP, "runtime planning canonical snapshot")
 
 top = t.get("runtime_validation", {})
 req(top.get("manifest") == "manifests/kde-tier3-knewstuff-runtime-validation.json", "Tier3 runtime-validation manifest linkage")
 req(top.get("node") == "knewstuff", "Tier3 runtime-validation node")
-req(top.get("status") == "execution-authorized", "Tier3 runtime-validation live status")
-req(top.get("execution_authorized") is True, "Tier3 runtime-validation execution must be authorized")
+req(top.get("status") == "PASS-closed", "Tier3 runtime-validation live status")
+req(top.get("execution_authorized") is False, "Tier3 runtime-validation execution must be closed")
 req(top.get("validation_run_kind") == "runtime-only" and top.get("consumes_package_attempt") is False, "Tier3 runtime-validation attempt semantics")
-req(top.get("canonical_state_effect") == "none-until-runtime-validation-PASS", "Tier3 runtime-validation state-effect guard")
-req(top.get("next_gate") == EXECUTION_GATE, "Tier3 runtime-validation live next gate")
+req(top.get("canonical_state_effect") == "KNewStuff-promoted-to-PASS", "Tier3 runtime-validation applied state effect")
+req(top.get("next_gate") == "tier3-knewstuff-runtime-validation-closure", "Tier3 runtime-validation closure gate")
 
 pol = t.get("discovery_policy", {})
-req(pol.get("phase") == "runtime-validation-execution", "Tier3 post-Level2 phase")
-req(pol.get("runtime_validation") == "execution-authorized", "Tier3 runtime-validation execution marker")
+req(pol.get("phase") == "runtime-validation-closure", "Tier3 post-Level2 phase")
+req(pol.get("runtime_validation") == "PASS-closed", "Tier3 runtime-validation closure marker")
 req(pol.get("package_builds") == "tier3-level2-package-attempt-PASS-closed", "Level2 package-build closure retained")
 
 nodes = {n["id"]: n for n in t.get("nodes", [])}
 kn = nodes.get("knewstuff", {})
 kp = nodes.get("kcmutils", {})
-req(kn.get("state") == "pending", "KNewStuff canonical state remains pending")
-req(kn.get("planning", {}).get("readiness") == "runtime-validation-required", "KNewStuff runtime-validation readiness")
+req(kn.get("state") == "PASS", "KNewStuff canonical state promoted to PASS")
+req(kn.get("planning", {}).get("readiness") == "materialized", "KNewStuff readiness after runtime closure")
 req(kn.get("planning", {}).get("runtime_validation_manifest") == "manifests/kde-tier3-knewstuff-runtime-validation.json", "KNewStuff planning manifest linkage")
-req(kn.get("planning", {}).get("runtime_validation_status") == "execution-authorized", "KNewStuff execution status")
-req(kn.get("packaging", {}).get("state") == "runtime-validation-required", "KNewStuff packaging runtime gate")
+req(kn.get("planning", {}).get("runtime_validation_status") == "PASS-closed", "KNewStuff runtime-validation closure status")
+req(kn.get("packaging", {}).get("state") == "PASS", "KNewStuff packaging PASS")
 req(kn.get("packaging", {}).get("package_version") == "6.30.0-0supralinux1", "KNewStuff package version")
 req(kn.get("packaging", {}).get("deferred_runtime_validation") == ["kcmutils"], "KNewStuff deferred provider")
-req(kn.get("packaging", {}).get("downstream_eligible") is False, "KNewStuff remains non-downstream-eligible")
-req("knewstuff" not in dag.get("nodes", {}), "KNewStuff must remain outside DAG before runtime PASS")
+req(kn.get("packaging", {}).get("downstream_eligible") is True, "KNewStuff is downstream-eligible after runtime PASS")
+req("knewstuff" in dag.get("nodes", {}), "KNewStuff must enter canonical DAG after runtime PASS")
 
 subject = rv.get("subject", {})
 req(subject.get("node") == "knewstuff" and subject.get("source_package") == "kf6-knewstuff", "runtime subject identity")
 req(subject.get("package_version") == "6.30.0-0supralinux1", "runtime subject version")
-req(subject.get("canonical_state") == "pending/runtime-validation-required" and subject.get("downstream_eligible") is False, "runtime subject canonical state")
+req(subject.get("canonical_state") == "PASS" and subject.get("downstream_eligible") is True, "runtime subject canonical state")
 be = subject.get("retained_build_evidence", {})
 expected_be = {
     "workflow_run": 35818120201,
@@ -189,7 +189,7 @@ ii = sem.get("infra_invalid", {})
 req(ii.get("validation_result") == "INFRA_INVALID" and ii.get("package_attempted") is False and ii.get("package_state_effect") == "none", "runtime INFRA_INVALID semantics")
 
 history = rv.get("validation_history", [])
-req(len(history) == 3, "runtime validation history length")
+req(len(history) == 4, "runtime validation history length")
 incident = history[0] if history else {}
 req(incident.get("validation_run") == 1, "runtime validation incident sequence")
 req(incident.get("workflow_run") == 36575095841 and incident.get("job_id") == 109428639526, "runtime INFRA_INVALID run/job evidence")
@@ -221,6 +221,16 @@ req(incident3.get("validation_result") == "INFRA_INVALID" and incident3.get("sta
 req(incident3.get("package_attempted") is False and incident3.get("consumes_package_attempt") is False and incident3.get("canonical_state_effect") == "none", "runtime INFRA_INVALID3 state boundary")
 req("four historical schema generations" in incident3.get("cause", "") and "schema-adaptive verifier" in incident3.get("remediation", ""), "runtime INFRA_INVALID3 diagnosis/remediation")
 
+run4 = history[3] if len(history) > 3 else {}
+req(run4.get("validation_run") == 4 and run4.get("validation_result") == "PASS" and run4.get("stage") == "complete", "runtime validation run4 PASS closure")
+req(run4.get("workflow_run") == 36595513031 and run4.get("job_id") == 109499716109, "runtime validation run4 run/job evidence")
+req(run4.get("head_commit") == "49f7a2fabc15f0c75c7633e9048812801877cfc9", "runtime validation run4 head commit")
+req(run4.get("execution_merge_commit") == "83ed6e84491d80ee66415ae6544880f7f2c9d904", "runtime validation run4 execution merge commit")
+req(run4.get("artifact_id") == 11046266772 and run4.get("artifact_sha256") == "01fc348f3b1a4fbee86599ab6d33c3781858f46264d082747bc155cf6cef9fad", "runtime validation run4 artifact evidence")
+req(run4.get("package_attempted") is False and run4.get("consumes_package_attempt") is False, "runtime validation run4 attempt boundary")
+req(run4.get("exact_knewstuff_version") == "6.30.0-0supralinux1" and run4.get("exact_kcmutils_version") == "6.30.0-0supralinux3", "runtime validation run4 exact versions")
+req(run4.get("apt_check") == "PASS" and run4.get("elf_resolution") == "PASS" and run4.get("qml_import_smoke") == "PASS" and run4.get("qml_component_compile") == "PASS", "runtime validation run4 runtime gates")
+
 audit = rv.get("retained_closure_schema_audit", {})
 req(audit.get("scope_artifact_count") == 34 and audit.get("outer_sha256_verified") == 34 and audit.get("outer_sha256_mismatches") == 0, "retained closure outer-hash audit")
 req(audit.get("schema_counts") == {
@@ -231,7 +241,7 @@ req(audit.get("schema_counts") == {
 }, "retained closure schema distribution")
 req(audit.get("internal_hash_map_artifacts_checked") == 10 and audit.get("internal_hash_mismatches") == 0, "retained closure internal-hash audit")
 cert = rv.get("infrastructure_certification", {})
-req(cert.get("status") == "PASS" and cert.get("execution_authorized") is True and cert.get("certification_round") == 2, "runtime infrastructure remediation certification PASS")
+req(cert.get("status") == "PASS" and cert.get("execution_authorized") is False and cert.get("certification_round") == 2, "runtime infrastructure certification closed after PASS")
 req(cert.get("next_gate_after_policy_pass") == EXECUTION_GATE, "runtime infrastructure remediation next gate")
 req(set(cert.get("required_checks", [])) == {
     "exact-extracted-artifact-directory-selection",
@@ -279,18 +289,24 @@ req(cert_policy.get("schema_generation_result_no_hashes") == "PASS" and cert_pol
 req(cert_policy.get("tamper_rejection") == "PASS", "runtime infrastructure live tamper rejection")
 
 reauth = rv.get("reauthorization", {})
-req(reauth.get("round") == 2 and reauth.get("status") == "ACTIVE" and reauth.get("execution_authorized") is True, "runtime reauthorization round2 active")
+req(reauth.get("round") == 2 and reauth.get("status") == "CLOSED-PASS" and reauth.get("execution_authorized") is False, "runtime reauthorization round2 closed PASS")
 req(reauth.get("certification_workflow_run") == 36591431061 and reauth.get("certification_job_id") == 109485235871, "runtime reauthorization round2 evidence")
 req(reauth.get("certification_commit") == "cfe5f54ae5ecfb16f2fd95bd1a0a526bd4257fc5", "runtime reauthorization round2 commit")
+req(reauth.get("closed_by_validation_run") == 4 and reauth.get("closed_workflow_run") == 36595513031 and reauth.get("closed_job_id") == 109499716109, "runtime reauthorization round2 closure evidence")
 req(reauth.get("runtime_execution_gate") == EXECUTION_GATE, "runtime reauthorization round2 execution gate")
 snap = t.get("level2_snapshot", {})
-req((snap.get("pass"), snap.get("pending"), snap.get("current_fail"), snap.get("blocked")) == (17,3,0,0), "canonical snapshot unchanged during planning")
+req((snap.get("pass"), snap.get("pending"), snap.get("current_fail"), snap.get("blocked")) == (17,3,0,0), "historical Level2 snapshot remains immutable")
+post = t.get("runtime_validation_snapshot", {})
+req((post.get("pass"), post.get("pending"), post.get("current_fail"), post.get("blocked")) == (18,2,0,0), "post-runtime canonical snapshot")
+req(post.get("pending_nodes") == ["ktexteditor","purpose"] and post.get("runtime_pending") == [], "post-runtime pending set")
+req(post.get("workflow_run") == 36595513031 and post.get("job_id") == 109499716109, "post-runtime snapshot evidence")
+req(post.get("artifact_id") == 11046266772 and post.get("artifact_sha256") == "01fc348f3b1a4fbee86599ab6d33c3781858f46264d082747bc155cf6cef9fad", "post-runtime snapshot artifact")
 
 doc = (ROOT / "docs/kde-tier3-knewstuff-runtime-validation.md").read_text()
 for token in (
     "RUNTIME_PENDING", "10732461923", "11006467074", "6.24.0-0ubuntu1",
     "6.30.0-0supralinux3", "EntryDetails.qml", "Page.qml",
-    "validation_run", "Package Attempt", "INFRA_INVALID", "execution_authorized=false"
+    "validation_run", "Package Attempt", "INFRA_INVALID", "execution_authorized=false", "18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED"
 ):
     req(token in doc, f"runtime-validation docs missing {token}")
 
@@ -299,9 +315,9 @@ if errors:
         print("ERROR:", error, file=sys.stderr)
     raise SystemExit(1)
 
-print("KDE Tier 3 KNewStuff runtime-validation execution reauthorization round 2: PASS")
-print("state=execution-authorized")
-print("execution_authorized=true")
+print("KDE Tier 3 KNewStuff runtime-validation canonical promotion: PASS")
+print("state=PASS-closed")
+print("execution_authorized=false")
 print("package_attempted=false")
-print("canonical=" + SNAP)
-print("next_gate=" + EXECUTION_GATE)
+print("historical_level2=" + SNAP)\nprint("canonical=" + POST_SNAP)
+print("next_gate=tier3-knewstuff-runtime-validation-closure")
