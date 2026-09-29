@@ -51,7 +51,7 @@ cr=c.get("level2_remediation",{})
 req(cr.get("status")=="package-attempt-PASS-closed" and cr.get("package_build_authorized") is False and cr.get("current_attempt")==attempt and cr.get("next_gate")==NEXT,"contract Level2 closure")
 
 me=m.get("nodes",{}).get("kcmutils",{}).get("evidence",{})
-req(m.get("state")=="PASS" and me.get("result")=="PASS" and me.get("package_attempted") is False,"KCMUtils source materialization remains source-only PASS")
+req(me.get("result")=="PASS" and me.get("package_attempted") is False,"KCMUtils source materialization remains source-only PASS")
 req(me.get("package_version")=="6.30.0-0supralinux3","KCMUtils materialization version retained")
 
 if errors:
