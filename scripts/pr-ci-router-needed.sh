@@ -139,7 +139,7 @@ m=load('manifests/kde-tier3-materialization.json')
 t=load('manifests/kde-frameworks-tier3.json')
 mr=m.get('level3_remediation',{})
 tr=t.get('level3_remediation',{})
-ok=(
+pending=(
     m.get('state')=='remediation-pending-ci'
     and mr.get('status')=='materialization-pending-ci'
     and mr.get('materialization_authorized') is True
@@ -148,6 +148,16 @@ ok=(
     and tr.get('materialization_authorized') is True
     and tr.get('package_execution_authorized') is False
 )
+planning=(
+    m.get('state')=='PASS'
+    and mr.get('status')=='materialization-PASS'
+    and mr.get('materialization_authorized') is False
+    and mr.get('package_execution_authorized') is False
+    and tr.get('status')=='materialization-PASS-pending-attempt2-planning-validation'
+    and tr.get('materialization_authorized') is False
+    and tr.get('package_execution_authorized') is False
+)
+ok=pending or planning
 raise SystemExit(0 if ok else 1)
 PY
 }

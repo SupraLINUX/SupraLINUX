@@ -23,36 +23,74 @@ T=["ktexteditor","purpose"]
 VERS={"ktexteditor":"6.30.0-0supralinux2","purpose":"6.30.0-0supralinux2"}
 SNAP="18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED"
 TRIGGER={"attempt":1,"workflow_run":36607647059,"commit":"2692489bdb861520181df486c524efb9cdf47d60","failed_nodes":T,"rootfs_artifact_id":11051807633,"rootfs_artifact_sha256":"08eb26b3d264c79e26dd0f5e1cb6fe543a16e1f2be0f713bab5fee45cabdbd83"}
+PENDING="materialization-pending-ci"
+FINAL="materialization-PASS-pending-attempt2-planning-validation"
+phase=t.get("level3_remediation",{}).get("status")
+finalized=phase==FINAL
+req(phase in {PENDING,FINAL},"canonical Level3 remediation lifecycle")
 
 for obj,name in ((c.get("level3_remediation",{}),"contracts"),(m.get("level3_remediation",{}),"materialization"),(t.get("level3_remediation",{}),"canonical"),(l3.get("level3_remediation",{}),"level3")):
-    req(obj.get("status")=="materialization-pending-ci",name+": Level3 remediation status")
+    expected="materialization-PASS" if finalized and name=="materialization" else phase
+    req(obj.get("status")==expected,name+": Level3 remediation status")
     req(obj.get("trigger")==TRIGGER,name+": Level3 remediation trigger")
     req(obj.get("candidate_package_versions")==VERS,name+": candidate versions")
     req(obj.get("package_attempted") in {None,False},name+": no package attempt")
 
-req(c["level3_remediation"].get("materialization_authorized") is True and c["level3_remediation"].get("package_build_authorized") is False,"contract materialization/package authorization")
-req(m.get("state")=="remediation-pending-ci" and m.get("remediation_queue")==["ktexteditor"],"Level3 remediation materialization queue")
 req(m.get("package_attempted") is False and m.get("package_state_effect")=="none","materialization has no package state effect")
-req(m["level3_remediation"].get("materialization_authorized") is True and m["level3_remediation"].get("package_execution_authorized") is False,"materialization execution boundary")
-req(t.get("discovery_policy",{}).get("phase")=="build-level3-remediation-planning","canonical remediation phase")
-req(t.get("discovery_policy",{}).get("package_builds")=="tier3-level3-remediation-pending-materialization","canonical materialization gate")
-req(t.get("discovery_policy",{}).get("remediation")=="level3-attempt1-remediation-materialization","canonical remediation marker")
-req(t.get("build_level3",{}).get("status")=="attempt1-closed-FAIL" and t.get("build_level3",{}).get("execution_authorized") is False,"binary Level3 remains closed")
-req(t["level3_remediation"].get("materialization_authorized") is True and t["level3_remediation"].get("package_execution_authorized") is False,"canonical source-only authorization")
 req(t["level3_remediation"].get("canonical_snapshot")==SNAP and t["level3_remediation"].get("current_attempt")==1 and t["level3_remediation"].get("next_attempt")==2,"canonical snapshot/attempt markers")
-req(l3.get("state")=="FAIL" and l3.get("execution_authorized") is False and l3.get("current_attempt")==1 and l3.get("next_attempt")==2,"Level3 package execution remains paused")
-req(l3.get("canonical_snapshot")==SNAP and l3.get("next_gate")=="tier3-level3-remediation-materialization-evidence","Level3 remediation next gate")
 req(len(a.get("campaign_history",[]))==1 and all(len(a.get("nodes",{}).get(x,[]))==1 for x in T),"Attempt2 has not consumed package execution")
 
-progress=m.get("level3_remediation",{}).get("materialization_progress",{})
-req(progress.get("workflow_run")==36614234522 and progress.get("result")=="PARTIAL","Level3 partial materialization evidence")
-req(progress.get("PASS")==["purpose"] and progress.get("INFRA_INVALID")==["ktexteditor"] and progress.get("package_attempted") is False,"Level3 partial materialization classification")
-inc=progress.get("infrastructure_incident",{})
-req(inc.get("classification")=="INFRA_INVALID" and inc.get("node")=="ktexteditor" and inc.get("job_id")==109563580419 and inc.get("artifact_id")==11055071212 and inc.get("package_attempted") is False,"KTextEditor materialization infrastructure incident")
+if not finalized:
+    req(c["level3_remediation"].get("materialization_authorized") is True and c["level3_remediation"].get("package_build_authorized") is False,"contract materialization/package authorization")
+    req(m.get("state")=="remediation-pending-ci" and m.get("remediation_queue")==["ktexteditor"],"Level3 remediation materialization queue")
+    req(m["level3_remediation"].get("materialization_authorized") is True and m["level3_remediation"].get("package_execution_authorized") is False,"materialization execution boundary")
+    req(t.get("discovery_policy",{}).get("phase")=="build-level3-remediation-planning","canonical remediation phase")
+    req(t.get("discovery_policy",{}).get("package_builds")=="tier3-level3-remediation-pending-materialization","canonical materialization gate")
+    req(t.get("discovery_policy",{}).get("remediation")=="level3-attempt1-remediation-materialization","canonical remediation marker")
+    req(t.get("build_level3",{}).get("status")=="attempt1-closed-FAIL" and t.get("build_level3",{}).get("execution_authorized") is False,"binary Level3 remains closed")
+    req(t["level3_remediation"].get("materialization_authorized") is True and t["level3_remediation"].get("package_execution_authorized") is False,"canonical source-only authorization")
+    req(l3.get("state")=="FAIL" and l3.get("execution_authorized") is False and l3.get("current_attempt")==1 and l3.get("next_attempt")==2,"Level3 package execution remains paused")
+    req(l3.get("canonical_snapshot")==SNAP and l3.get("next_gate")=="tier3-level3-remediation-materialization-evidence","Level3 remediation next gate")
 
-ktm=m["nodes"]["ktexteditor"]
-req(ktm.get("state")=="remediation-pending" and ktm.get("candidate_package_version")==VERS["ktexteditor"],"KTextEditor materialization remains pending")
-req(ktm.get("retained_previous_evidence",{}).get("result")=="PASS" and ktm.get("materialization_incident",{}).get("classification")=="INFRA_INVALID","KTextEditor retained source/incident")
+    progress=m.get("level3_remediation",{}).get("materialization_progress",{})
+    req(progress.get("workflow_run")==36614234522 and progress.get("result")=="PARTIAL","Level3 partial materialization evidence")
+    req(progress.get("PASS")==["purpose"] and progress.get("INFRA_INVALID")==["ktexteditor"] and progress.get("package_attempted") is False,"Level3 partial materialization classification")
+    inc=progress.get("infrastructure_incident",{})
+    req(inc.get("classification")=="INFRA_INVALID" and inc.get("node")=="ktexteditor" and inc.get("job_id")==109563580419 and inc.get("artifact_id")==11055071212 and inc.get("package_attempted") is False,"KTextEditor materialization infrastructure incident")
+
+    ktm=m["nodes"]["ktexteditor"]
+    req(ktm.get("state")=="remediation-pending" and ktm.get("candidate_package_version")==VERS["ktexteditor"],"KTextEditor materialization remains pending")
+    req(ktm.get("retained_previous_evidence",{}).get("result")=="PASS" and ktm.get("materialization_incident",{}).get("classification")=="INFRA_INVALID","KTextEditor retained source/incident")
+else:
+    req(c["level3_remediation"].get("materialization_authorized") is False and c["level3_remediation"].get("package_build_authorized") is False,"final contract execution boundary")
+    req(m.get("state")=="PASS" and m.get("remediation_queue")==[],"Level3 remediation materialization closed PASS")
+    req(m["level3_remediation"].get("source_materialization_complete") is True and m["level3_remediation"].get("materialization_authorized") is False and m["level3_remediation"].get("package_execution_authorized") is False,"final materialization execution boundary")
+    req(t.get("discovery_policy",{}).get("phase")=="build-level3-remediation-planning","canonical remediation planning phase")
+    req(t.get("discovery_policy",{}).get("package_builds")=="tier3-level3-remediation-materialized-pending-attempt2-planning-validation","canonical Attempt2 planning gate")
+    req(t.get("discovery_policy",{}).get("remediation")=="level3-attempt1-remediation-materialized","canonical remediation materialized marker")
+    req(t.get("build_level3",{}).get("status")=="attempt1-closed-FAIL-remediation-materialized-pending-attempt2-activation" and t.get("build_level3",{}).get("execution_authorized") is False,"binary Level3 Attempt2 remains paused")
+    req(t["level3_remediation"].get("materialization_authorized") is False and t["level3_remediation"].get("package_execution_authorized") is False,"canonical final source-only boundary")
+    req(l3.get("state")=="remediation-materialized-pending-activation" and l3.get("execution_authorized") is False and l3.get("current_attempt")==1 and l3.get("next_attempt")==2,"Level3 Attempt2 planning state")
+    req(l3.get("canonical_snapshot")==SNAP and l3.get("next_gate")=="tier3-build-level3-attempt2-planning-validation","Level3 Attempt2 planning next gate")
+
+    ev=m["level3_remediation"].get("materialization_evidence",{})
+    req(ev.get("result")=="PASS" and ev.get("package_attempted") is False and ev.get("package_state_effect")=="none","final materialization evidence result")
+    arts=ev.get("artifacts",{})
+    req(arts.get("ktexteditor",{}).get("workflow_run")==36637751833 and arts.get("ktexteditor",{}).get("job_id")==109643132222 and arts.get("ktexteditor",{}).get("artifact_id")==11064709291 and arts.get("ktexteditor",{}).get("artifact_sha256")=="606f9e22f162382f60b9499654248ebb8ac9e7970f47934b11457757a832becf","KTextEditor final materialization artifact")
+    req(arts.get("purpose",{}).get("workflow_run")==36614234522 and arts.get("purpose",{}).get("job_id")==109563580375 and arts.get("purpose",{}).get("artifact_id")==11054941469 and arts.get("purpose",{}).get("artifact_sha256")=="b7fa3f20bacbc6b142f18596cc6cabd3a670a86f9246f39f7307be905dac16c7","Purpose final materialization artifact")
+
+    for node,run,job,artifact,digest in (
+        ("ktexteditor",36637751833,109643132222,11064709291,"606f9e22f162382f60b9499654248ebb8ac9e7970f47934b11457757a832becf"),
+        ("purpose",36614234522,109563580375,11054941469,"b7fa3f20bacbc6b142f18596cc6cabd3a670a86f9246f39f7307be905dac16c7"),
+    ):
+        mm=m["nodes"][node]; mev=mm.get("evidence",{})
+        req(mm.get("state")=="materialized" and mm.get("package_version")==VERS[node] and mm.get("candidate_package_version")==VERS[node],node+": final materialized version")
+        req(mev.get("workflow_run")==run and mev.get("job_id")==job and mev.get("artifact_id")==artifact and mev.get("artifact_sha256")==digest,node+": final materialization evidence")
+        req(mev.get("result")=="PASS" and mev.get("package_attempted") is False and mev.get("package_state_effect")=="none",node+": final source-only PASS")
+
+        ln=l3["nodes"][node]
+        req(ln.get("state")=="remediation-pending-build" and ln.get("package_version")==VERS[node],node+": Attempt2 prepared package identity")
+        req(ln.get("materialization")=={"workflow_run":run,"job_id":job,"artifact_id":artifact,"artifact_sha256":digest},node+": Attempt2 materialization pin")
 
 pum=m["nodes"]["purpose"]; pev=pum.get("evidence",{})
 req(pum.get("state")=="materialized" and pum.get("package_version")==VERS["purpose"] and pum.get("candidate_package_version")==VERS["purpose"],"Purpose remediation materialized")
