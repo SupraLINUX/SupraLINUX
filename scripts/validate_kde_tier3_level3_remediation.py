@@ -179,7 +179,7 @@ if _phase=="materialization-pending-ci" and _trigger.get("attempt")==2:
     print("package-execution-authorized=false")
     raise SystemExit(0)
 
-if t.get("level3_remediation",{}).get("status") in {"attempt2-active","attempt2-closed-FAIL-pending-remediation-definition"}:
+if t.get("level3_remediation",{}).get("status") in {"attempt2-active","attempt2-closed-FAIL-pending-remediation-definition","attempt3-active"}:
     # Source-remediation evidence is closed. The current binary lifecycle is
     # authoritative from this point forward; do not constrain it with the
     # historical materialization-planning state.

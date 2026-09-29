@@ -117,3 +117,19 @@ Canonical package state remains **18 PASS / 0 pending / 2 current FAIL / 0 BLOCK
 Commit `d214ea22cbe7b9e0bc512121b3514dab724964ec` was created with an incomplete Git tree while recording the Attempt 3 source-materialization closure. This was a repository commit-construction incident, not package execution and not package evidence. No Package Attempt was consumed.
 
 Commit `9d92876ce876791ac0922ffa1818802bac090530` restored the complete tree from `91a493ffe10620d00350c404f37c13baa9fdbd45` and reapplied only the intended Level 3 closure changes. A comparison from `91a493f...` to `9d92876...` confirmed exactly the intended 11 modified files. The noisy CI router event caused by comparing the incomplete tree to the restored tree is infrastructure-invalid for planning evidence and must not be used to authorize Package Attempt 3.
+
+
+## Attempt 3 activation
+
+Planning validation for Attempt 3 passed on clean PR CI router run `36644567893` at commit `691816b58bd631bc946cdfd617403971f3f6ef2e`.
+
+- Router plan job: `109664829457` — PASS.
+- Repository Policy job: `109664830010` — PASS.
+- Level 3 planner/runner scope: PASS.
+- Level 3 definition: PASS.
+- Attempt 1 closure: PASS.
+- Attempt 2 closure: PASS.
+- Historical evidence boundary: PASS.
+- All unrelated reusable CI lanes: skipped.
+
+This authorizes Package Attempt 3 for KTextEditor and Purpose using the pinned `6.30.0-0supralinux3` source materializations. The canonical package state remains the two Attempt 2 FAILs until real Attempt 3 package evidence is classified.
