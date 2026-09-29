@@ -18,7 +18,8 @@ l0 = load("manifests/kde-tier3-build-level0.json")
 l2 = load("manifests/kde-tier3-build-level2.json")
 dag = load("manifests/kde-dag.json")
 
-SNAP = "17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED"\nPOST_SNAP = "18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED"
+SNAP = "17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED"
+POST_SNAP = "18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED"
 PLAN_GATE = "tier3-knewstuff-runtime-validation-planning"
 ACTIVATION_GATE = "tier3-knewstuff-runtime-validation-activation"
 EXECUTION_GATE = "tier3-knewstuff-runtime-validation"
@@ -319,5 +320,6 @@ print("KDE Tier 3 KNewStuff runtime-validation canonical promotion: PASS")
 print("state=PASS-closed")
 print("execution_authorized=false")
 print("package_attempted=false")
-print("historical_level2=" + SNAP)\nprint("canonical=" + POST_SNAP)
+print("historical_level2=" + SNAP)
+print("canonical=" + POST_SNAP)
 print("next_gate=tier3-knewstuff-runtime-validation-closure")
