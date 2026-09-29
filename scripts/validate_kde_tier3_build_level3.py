@@ -23,7 +23,8 @@ D={
   "purpose":["kio","kcmutils","kcoreaddons","ki18n","kconfig","kirigami","knotifications","kservice","prison","kitemmodels"],
 }
 P={"ktexteditor":{"BUILD_TESTING":"ON"},"purpose":{"BUILD_TESTING":"ON"}}
-PRE_SNAP="18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED"\nFAIL_SNAP="18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED"
+PRE_SNAP="18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED"
+FAIL_SNAP="18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED"
 
 req(m.get("schema")==1 and m.get("authority")=="kde-upstream" and m.get("provider_platform")=="ubuntu-resolute","Level3 schema/authority/provider")
 req(m.get("role")=="tier3-binary-build-level3" and m.get("frameworks_series")=="6.30.0","Level3 role/series")
