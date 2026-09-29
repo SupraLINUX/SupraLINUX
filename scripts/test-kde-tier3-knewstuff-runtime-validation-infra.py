@@ -10,6 +10,17 @@ ROOT = Path(__file__).resolve().parents[1]
 runner = (ROOT / "scripts/run-kde-tier3-knewstuff-runtime-validation.sh").read_text()
 verifier = ROOT / "scripts/verify-kde-runtime-artifact.py"
 
+def run_verifier(path, node, version, result, expect_ok=True):
+    p = subprocess.run(
+        [sys.executable, str(verifier), str(path), node, version, result],
+        text=True, capture_output=True
+    )
+    if expect_ok and p.returncode != 0:
+        raise SystemExit(f"verifier unexpectedly failed: {p.stderr}{p.stdout}")
+    if not expect_ok and p.returncode == 0:
+        raise SystemExit("verifier unexpectedly accepted invalid fixture")
+    return p
+
 with TemporaryDirectory() as td:
     root = Path(td)
     aid = 123456
@@ -31,6 +42,28 @@ with TemporaryDirectory() as td:
     payload = extracted / "synthetic_6.30.0-0supralinux1_amd64.deb"
     payload.write_bytes(b"synthetic retained artifact payload")
     digest = hashlib.sha256(payload.read_bytes()).hexdigest()
+
+    # Generation 1: node-only historical result.json.
+    (extracted / "result.json").write_text(json.dumps({"node": label}) + "\n")
+    run_verifier(extracted, label, version, "PASS")
+
+    # Generation 2: package_version added, but no result/hash map yet.
+    (extracted / "result.json").write_text(json.dumps({
+        "node": label, "package_version": version
+    }) + "\n")
+    run_verifier(extracted, label, version, "PASS")
+    run_verifier(extracted, label, version + ".wrong", "PASS", expect_ok=False)
+
+    # Generation 3: PASS result/state exists, still no internal hash map.
+    (extracted / "result.json").write_text(json.dumps({
+        "node": label,
+        "package_version": version,
+        "result": "PASS",
+        "package_state_effect": "PASS",
+    }) + "\n")
+    run_verifier(extracted, label, version, "PASS")
+
+    # Generation 4: full internal artifact SHA-256 map.
     (extracted / "result.json").write_text(json.dumps({
         "node": label,
         "package_version": version,
@@ -38,26 +71,23 @@ with TemporaryDirectory() as td:
         "package_state_effect": "PASS",
         "artifacts": {payload.name: digest},
     }) + "\n")
-
-    subprocess.run([sys.executable, str(verifier), str(extracted), label, version, "PASS"], check=True)
+    run_verifier(extracted, label, version, "PASS")
 
     payload.write_bytes(b"tampered payload")
-    tampered = subprocess.run(
-        [sys.executable, str(verifier), str(extracted), label, version, "PASS"],
-        text=True, capture_output=True
-    )
-    if tampered.returncode == 0:
-        raise SystemExit("internal-hash verifier accepted a tampered payload")
+    run_verifier(extracted, label, version, "PASS", expect_ok=False)
 
 if 'artifact_dir=root/f"{aid}-{label}"' not in runner:
     raise SystemExit("runtime runner does not use the certified exact artifact-directory selector")
 if 'root.glob(f"{aid}-*")' in runner:
     raise SystemExit("runtime runner still contains the ambiguous artifact glob")
 if "verify-kde-runtime-artifact.py" not in runner:
-    raise SystemExit("runtime runner does not invoke the certified internal-hash verifier")
+    raise SystemExit("runtime runner does not invoke the certified result.json verifier")
 
 print("KNewStuff runtime-validation infrastructure preflight: PASS")
 print("historical_bug_reproduced=directory-plus-sibling-zip")
 print("certified_selector=exact-extracted-directory")
-print("internal_result_json_hash_verifier=PASS")
+print("schema_generation_legacy_minimal=PASS")
+print("schema_generation_version_only=PASS")
+print("schema_generation_result_no_hashes=PASS")
+print("schema_generation_hash_map=PASS")
 print("tamper_rejection=PASS")

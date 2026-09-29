@@ -170,3 +170,32 @@ package_attempted=false
 ```
 
 The two previous `INFRA_INVALID` records remain immutable historical evidence. This reauthorization permits a fresh runtime validation run; it does not itself promote KNewStuff or alter the canonical snapshot.
+
+
+## Validation run 3 — INFRA_INVALID: historical result.json schema evolution
+
+The reauthorized runtime lane executed in PR router run `36585341825`, job `109464539716`, from head commit `7b92076e53eef84a874f3d5e51877cfa13d01741` (execution merge SHA `4410e30a6b47aed1f95ac87ac0bdb711a47767f2`).
+
+KNewStuff and KCMUtils themselves passed the new internal-hash verifier. The run then stopped at Attica because its historical `result.json` predates `package_version`. This is infrastructure/schema incompatibility, not a package/runtime failure. Evidence artifact `11042070381` has SHA-256 `4afb676a88b08c150e8b3c28f4f2d1be12c5e4e81bab36f1323361e2e1fb2d1a`.
+
+A complete audit of the 34 retained closure artifacts found:
+
+- 34/34 pinned outer artifact SHA-256 values match;
+- 15 node-only legacy `result.json` files;
+- 7 with `package_version` but no `result` or internal hash map;
+- 2 with PASS result/state but no internal hash map;
+- 10 with a full internal `artifacts` SHA-256 map;
+- 10/10 internal hash maps verify with zero mismatches.
+
+The verifier must therefore follow the evidence that actually exists. It always requires the historical node identity. Optional historical fields such as `package_version` and `result` are enforced strictly when present. Every recorded internal artifact hash is verified when a hash map exists. Legacy artifacts that predate internal hash maps remain protected by their pinned outer artifact SHA-256 plus the runner's exact `.deb` version and binary-set checks.
+
+Runtime execution is frozen while Repository Policy certifies this schema-adaptive verifier:
+
+```text
+gate=tier3-knewstuff-runtime-validation-infrastructure-remediation
+state=infrastructure-remediation-pending-policy-validation
+execution_authorized=false
+package_attempted=false
+```
+
+KNewStuff remains pending/runtime-validation-required; the canonical snapshot remains `17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED`.

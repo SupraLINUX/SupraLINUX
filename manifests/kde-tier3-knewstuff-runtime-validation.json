@@ -5,9 +5,9 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-knewstuff-deferred-runtime-validation",
   "frameworks_series": "6.30.0",
-  "gate": "tier3-knewstuff-runtime-validation",
-  "state": "execution-authorized",
-  "execution_authorized": true,
+  "gate": "tier3-knewstuff-runtime-validation-infrastructure-remediation",
+  "state": "infrastructure-remediation-pending-policy-validation",
+  "execution_authorized": false,
   "validation_run_kind": "runtime-only",
   "package_attempted": false,
   "consumes_package_attempt": false,
@@ -129,7 +129,9 @@
       "internal_result_json_artifact_hashes_are_verified": true,
       "only_canonical_pass_supralinux_artifacts_feed_the_validation": true,
       "ubuntu_may_supply_non_supralinux_base_dependencies": true,
-      "ubuntu_kcmutils_fallback_forbidden": true
+      "ubuntu_kcmutils_fallback_forbidden": true,
+      "legacy_artifacts_without_internal_hash_maps_use_outer_sha256_plus_exact_deb_contract": true,
+      "result_json_fields_are_enforced_when_present": true
     }
   },
   "environment": {
@@ -143,7 +145,7 @@
   },
   "planned_checks": [
     "download-retained-artifacts-by-id-and-sha256",
-    "verify-result-json-identity-and-internal-artifact-hashes",
+    "verify-result-json-identity-and-every-recorded-internal-artifact-hash",
     "verify-exact-knewstuff-and-kcmutils-binary-sets",
     "install-canonical-supralinux-runtime-closure",
     "apt-get-check",
@@ -247,30 +249,37 @@
       "canonical_state_effect": "none",
       "cause": "The runtime checks completed, but the runner did not implement the planned verification of result.json internal artifact SHA-256 hashes, so the PASS evidence is incomplete and non-promotable.",
       "remediation": "Freeze retries; verify result.json identity and every internal artifact SHA-256 through a generic verifier; certify it with a synthetic positive and tamper-rejection preflight before reauthorization."
+    },
+    {
+      "validation_run": 3,
+      "workflow_run": 36585341825,
+      "job_id": 109464539716,
+      "head_commit": "7b92076e53eef84a874f3d5e51877cfa13d01741",
+      "execution_merge_commit": "4410e30a6b47aed1f95ac87ac0bdb711a47767f2",
+      "artifact_id": 11042070381,
+      "artifact_sha256": "4afb676a88b08c150e8b3c28f4f2d1be12c5e4e81bab36f1323361e2e1fb2d1a",
+      "validation_result": "INFRA_INVALID",
+      "stage": "artifact-contract",
+      "package_attempted": false,
+      "consumes_package_attempt": false,
+      "canonical_state_effect": "none",
+      "cause": "The certified verifier assumed every retained result.json contains package_version/result/internal hash fields. The real retained closure spans four historical schema generations; Attica is a node-only legacy result.json.",
+      "remediation": "Freeze runtime execution. Certify a schema-adaptive verifier that always validates node identity, strictly validates optional fields when present, verifies every recorded internal artifact hash, and relies on pinned outer artifact SHA-256 plus exact .deb version/binary-set proof for legacy artifacts lacking internal hash maps."
     }
   ],
   "infrastructure_certification": {
-    "status": "PASS",
-    "execution_authorized": true,
-    "reason": "Two consecutive INFRA_INVALID runtime-validation runs require frozen retries and synthetic infrastructure certification before reauthorization.",
+    "status": "remediation-pending-policy-validation",
+    "execution_authorized": false,
+    "reason": "Validation run 3 exposed real historical result.json schema evolution not represented by the prior synthetic certification.",
     "required_checks": [
       "exact-extracted-artifact-directory-selection",
-      "result-json-node-version-result-identity",
-      "result-json-internal-artifact-sha256-verification",
+      "legacy-minimal-result-json-compatibility",
+      "version-only-result-json-strict-when-present",
+      "result-without-hash-map-compatibility",
+      "verify-every-recorded-internal-artifact-sha256",
       "tampered-artifact-rejection"
     ],
-    "next_gate_after_policy_pass": "tier3-knewstuff-runtime-validation",
-    "certification_policy_evidence": {
-      "workflow_run": 36583737052,
-      "job_id": 109458398423,
-      "commit": "f310c657cd3f0050ff4ffbebc0d3df284a8324d1",
-      "conclusion": "success",
-      "validated_gate": "tier3-knewstuff-runtime-validation-infrastructure-certification",
-      "synthetic_preflight": "PASS",
-      "exact_selector": "PASS",
-      "internal_result_json_hash_verifier": "PASS",
-      "tamper_rejection": "PASS"
-    }
+    "next_gate_after_policy_pass": "tier3-knewstuff-runtime-validation-execution-reauthorization"
   },
   "reauthorization": {
     "status": "ACTIVE",
@@ -280,5 +289,19 @@
     "certification_job_id": 109458398423,
     "certification_commit": "f310c657cd3f0050ff4ffbebc0d3df284a8324d1",
     "runtime_execution_gate": "tier3-knewstuff-runtime-validation"
+  },
+  "retained_closure_schema_audit": {
+    "scope_artifact_count": 34,
+    "outer_sha256_verified": 34,
+    "outer_sha256_mismatches": 0,
+    "schema_counts": {
+      "legacy_minimal": 15,
+      "version_no_result_hashes": 7,
+      "result_no_hashes": 2,
+      "hash_map": 10
+    },
+    "internal_hash_map_artifacts_checked": 10,
+    "internal_hash_mismatches": 0,
+    "interpretation": "Historical artifact schemas evolved during Tier 1/Tier 3 work. Missing legacy fields are absence-of-evidence fields, not mismatches; outer pinned artifact SHA-256 and exact .deb contracts remain mandatory for every artifact."
   }
 }

@@ -28,9 +28,9 @@ req(rv.get("authority") == "kde-upstream", "runtime-validation authority")
 req(rv.get("provider_platform") == "ubuntu-resolute", "runtime-validation provider platform")
 req(rv.get("role") == "tier3-knewstuff-deferred-runtime-validation", "runtime-validation role")
 req(rv.get("frameworks_series") == "6.30.0", "runtime-validation Frameworks series")
-req(rv.get("gate") == EXECUTION_GATE, "runtime-validation execution gate")
-req(rv.get("state") == "execution-authorized", "runtime-validation execution state")
-req(rv.get("execution_authorized") is True, "runtime execution must be reauthorized after infrastructure certification")
+req(rv.get("gate") == "tier3-knewstuff-runtime-validation-infrastructure-remediation", "runtime-validation infrastructure-remediation gate")
+req(rv.get("state") == "infrastructure-remediation-pending-policy-validation", "runtime-validation infrastructure-remediation state")
+req(rv.get("execution_authorized") is False, "runtime execution must be frozen during infrastructure remediation")
 req(rv.get("validation_run_kind") == "runtime-only", "runtime-validation run kind")
 req(rv.get("package_attempted") is False and rv.get("consumes_package_attempt") is False, "planning/runtime validation cannot consume Package Attempt")
 req(rv.get("package_state_effect") == "none-until-runtime-validation-PASS", "runtime planning has no package-state effect")
@@ -39,15 +39,15 @@ req(rv.get("canonical_snapshot_before") == SNAP, "runtime planning canonical sna
 top = t.get("runtime_validation", {})
 req(top.get("manifest") == "manifests/kde-tier3-knewstuff-runtime-validation.json", "Tier3 runtime-validation manifest linkage")
 req(top.get("node") == "knewstuff", "Tier3 runtime-validation node")
-req(top.get("status") == "execution-authorized", "Tier3 runtime-validation live status")
-req(top.get("execution_authorized") is True, "Tier3 runtime-validation execution must be reauthorized")
+req(top.get("status") == "infrastructure-remediation-pending-policy-validation", "Tier3 runtime-validation live status")
+req(top.get("execution_authorized") is False, "Tier3 runtime-validation execution must be frozen")
 req(top.get("validation_run_kind") == "runtime-only" and top.get("consumes_package_attempt") is False, "Tier3 runtime-validation attempt semantics")
 req(top.get("canonical_state_effect") == "none-until-runtime-validation-PASS", "Tier3 runtime-validation state-effect guard")
-req(top.get("next_gate") == EXECUTION_GATE, "Tier3 runtime-validation live next gate")
+req(top.get("next_gate") == "tier3-knewstuff-runtime-validation-infrastructure-remediation", "Tier3 runtime-validation live next gate")
 
 pol = t.get("discovery_policy", {})
-req(pol.get("phase") == "runtime-validation-execution", "Tier3 post-Level2 phase")
-req(pol.get("runtime_validation") == "execution-authorized", "Tier3 runtime-validation execution marker")
+req(pol.get("phase") == "runtime-validation-infrastructure-remediation", "Tier3 post-Level2 phase")
+req(pol.get("runtime_validation") == "infrastructure-remediation-pending-policy-validation", "Tier3 runtime-validation remediation marker")
 req(pol.get("package_builds") == "tier3-level2-package-attempt-PASS-closed", "Level2 package-build closure retained")
 
 nodes = {n["id"]: n for n in t.get("nodes", [])}
@@ -56,7 +56,7 @@ kp = nodes.get("kcmutils", {})
 req(kn.get("state") == "pending", "KNewStuff canonical state remains pending")
 req(kn.get("planning", {}).get("readiness") == "runtime-validation-required", "KNewStuff runtime-validation readiness")
 req(kn.get("planning", {}).get("runtime_validation_manifest") == "manifests/kde-tier3-knewstuff-runtime-validation.json", "KNewStuff planning manifest linkage")
-req(kn.get("planning", {}).get("runtime_validation_status") == "execution-authorized", "KNewStuff execution status")
+req(kn.get("planning", {}).get("runtime_validation_status") == "infrastructure-remediation-pending-policy-validation", "KNewStuff infrastructure-remediation status")
 req(kn.get("packaging", {}).get("state") == "runtime-validation-required", "KNewStuff packaging runtime gate")
 req(kn.get("packaging", {}).get("package_version") == "6.30.0-0supralinux1", "KNewStuff package version")
 req(kn.get("packaging", {}).get("deferred_runtime_validation") == ["kcmutils"], "KNewStuff deferred provider")
@@ -136,6 +136,8 @@ for key in (
     "artifact_ids_and_outer_sha256_are_pinned",
     "exact_binary_sets_and_versions_are_verified_before_install",
     "internal_result_json_artifact_hashes_are_verified",
+    "legacy_artifacts_without_internal_hash_maps_use_outer_sha256_plus_exact_deb_contract",
+    "result_json_fields_are_enforced_when_present",
     "only_canonical_pass_supralinux_artifacts_feed_the_validation",
     "ubuntu_may_supply_non_supralinux_base_dependencies",
     "ubuntu_kcmutils_fallback_forbidden",
@@ -152,7 +154,7 @@ req(env.get("qml_platform") == "offscreen" and env.get("smoke_test_network") is 
 checks = set(rv.get("planned_checks", []))
 required_checks = {
     "download-retained-artifacts-by-id-and-sha256",
-    "verify-result-json-identity-and-internal-artifact-hashes",
+    "verify-result-json-identity-and-every-recorded-internal-artifact-hash",
     "verify-exact-knewstuff-and-kcmutils-binary-sets",
     "install-canonical-supralinux-runtime-closure",
     "apt-get-check",
@@ -187,7 +189,7 @@ ii = sem.get("infra_invalid", {})
 req(ii.get("validation_result") == "INFRA_INVALID" and ii.get("package_attempted") is False and ii.get("package_state_effect") == "none", "runtime INFRA_INVALID semantics")
 
 history = rv.get("validation_history", [])
-req(len(history) == 2, "runtime validation history length")
+req(len(history) == 3, "runtime validation history length")
 incident = history[0] if history else {}
 req(incident.get("validation_run") == 1, "runtime validation incident sequence")
 req(incident.get("workflow_run") == 36575095841 and incident.get("job_id") == 109428639526, "runtime INFRA_INVALID run/job evidence")
@@ -208,15 +210,37 @@ req(incident2.get("reported_validation_result") == "PASS" and incident2.get("val
 req(incident2.get("stage") == "evidence-contract", "runtime INFRA_INVALID2 stage")
 req(incident2.get("package_attempted") is False and incident2.get("consumes_package_attempt") is False and incident2.get("canonical_state_effect") == "none", "runtime INFRA_INVALID2 state boundary")
 req("internal artifact SHA-256" in incident2.get("cause", "") and "Freeze retries" in incident2.get("remediation", ""), "runtime INFRA_INVALID2 diagnosis/remediation")
+
+incident3 = history[2] if len(history) > 2 else {}
+req(incident3.get("validation_run") == 3, "runtime validation incident3 sequence")
+req(incident3.get("workflow_run") == 36585341825 and incident3.get("job_id") == 109464539716, "runtime INFRA_INVALID3 run/job evidence")
+req(incident3.get("head_commit") == "7b92076e53eef84a874f3d5e51877cfa13d01741", "runtime INFRA_INVALID3 head commit")
+req(incident3.get("execution_merge_commit") == "4410e30a6b47aed1f95ac87ac0bdb711a47767f2", "runtime INFRA_INVALID3 merge execution commit")
+req(incident3.get("artifact_id") == 11042070381 and incident3.get("artifact_sha256") == "4afb676a88b08c150e8b3c28f4f2d1be12c5e4e81bab36f1323361e2e1fb2d1a", "runtime INFRA_INVALID3 evidence artifact")
+req(incident3.get("validation_result") == "INFRA_INVALID" and incident3.get("stage") == "artifact-contract", "runtime INFRA_INVALID3 classification")
+req(incident3.get("package_attempted") is False and incident3.get("consumes_package_attempt") is False and incident3.get("canonical_state_effect") == "none", "runtime INFRA_INVALID3 state boundary")
+req("four historical schema generations" in incident3.get("cause", "") and "schema-adaptive verifier" in incident3.get("remediation", ""), "runtime INFRA_INVALID3 diagnosis/remediation")
+
+audit = rv.get("retained_closure_schema_audit", {})
+req(audit.get("scope_artifact_count") == 34 and audit.get("outer_sha256_verified") == 34 and audit.get("outer_sha256_mismatches") == 0, "retained closure outer-hash audit")
+req(audit.get("schema_counts") == {
+    "legacy_minimal": 15,
+    "version_no_result_hashes": 7,
+    "result_no_hashes": 2,
+    "hash_map": 10,
+}, "retained closure schema distribution")
+req(audit.get("internal_hash_map_artifacts_checked") == 10 and audit.get("internal_hash_mismatches") == 0, "retained closure internal-hash audit")
 cert = rv.get("infrastructure_certification", {})
-req(cert.get("status") == "PASS" and cert.get("execution_authorized") is True, "runtime infrastructure certification state")
-req(cert.get("next_gate_after_policy_pass") == EXECUTION_GATE, "runtime infrastructure certification next gate")
+req(cert.get("status") == "remediation-pending-policy-validation" and cert.get("execution_authorized") is False, "runtime infrastructure remediation state")
+req(cert.get("next_gate_after_policy_pass") == "tier3-knewstuff-runtime-validation-execution-reauthorization", "runtime infrastructure remediation next gate")
 req(set(cert.get("required_checks", [])) == {
     "exact-extracted-artifact-directory-selection",
-    "result-json-node-version-result-identity",
-    "result-json-internal-artifact-sha256-verification",
+    "legacy-minimal-result-json-compatibility",
+    "version-only-result-json-strict-when-present",
+    "result-without-hash-map-compatibility",
+    "verify-every-recorded-internal-artifact-sha256",
     "tampered-artifact-rejection",
-}, "runtime infrastructure certification check set")
+}, "runtime infrastructure remediation check set")
 
 cert_policy = cert.get("certification_policy_evidence", {})
 req(cert_policy.get("workflow_run") == 36583737052 and cert_policy.get("job_id") == 109458398423, "runtime infrastructure certification Policy evidence")
@@ -224,30 +248,6 @@ req(cert_policy.get("commit") == "f310c657cd3f0050ff4ffbebc0d3df284a8324d1" and 
 req(cert_policy.get("validated_gate") == "tier3-knewstuff-runtime-validation-infrastructure-certification", "runtime infrastructure certification validated gate")
 req(cert_policy.get("synthetic_preflight") == "PASS" and cert_policy.get("exact_selector") == "PASS", "runtime infrastructure selector certification")
 req(cert_policy.get("internal_result_json_hash_verifier") == "PASS" and cert_policy.get("tamper_rejection") == "PASS", "runtime infrastructure evidence-verifier certification")
-reauth = rv.get("reauthorization", {})
-req(reauth.get("status") == "ACTIVE" and reauth.get("execution_authorized") is True, "runtime reauthorization state")
-req(reauth.get("certification_workflow_run") == 36583737052 and reauth.get("certification_job_id") == 109458398423, "runtime reauthorization certification evidence")
-req(reauth.get("certification_commit") == "f310c657cd3f0050ff4ffbebc0d3df284a8324d1", "runtime reauthorization certification commit")
-req(reauth.get("runtime_execution_gate") == EXECUTION_GATE, "runtime reauthorization execution gate")
-
-activation = rv.get("activation", {})
-planning_policy = rv.get("planning_policy_evidence", {})
-req(planning_policy.get("workflow_run") == 36567527801, "planning Policy workflow evidence")
-req(planning_policy.get("job_id") == 109403055592, "planning Policy job evidence")
-req(planning_policy.get("commit") == "c139f70509cd321913c1e1c89565bfa60a7f22ff", "planning Policy commit evidence")
-req(planning_policy.get("conclusion") == "success", "planning Policy PASS evidence")
-req(planning_policy.get("validated_gate") == PLAN_GATE, "planning Policy validated gate")
-req(activation.get("status") == "ACTIVE" and activation.get("execution_authorized") is True, "runtime activation must be active")
-req(activation.get("activation_requires") == "Repository Policy PASS for activation contract and executable runtime lane", "runtime activation precondition")
-req(activation.get("runtime_execution_gate") == EXECUTION_GATE, "runtime execution gate")
-activation_policy = activation.get("activation_policy_evidence", {})
-req(activation_policy.get("workflow_run") == 36573815831, "activation Policy workflow evidence")
-req(activation_policy.get("job_id") == 109424159153, "activation Policy job evidence")
-req(activation_policy.get("commit") == "76261018520c0f566f152b319d41e6d770fdc310", "activation Policy commit evidence")
-req(activation_policy.get("conclusion") == "success", "activation Policy PASS evidence")
-req(activation_policy.get("validated_gate") == ACTIVATION_GATE, "activation Policy validated gate")
-req(activation.get("stable_promotion_requires_explicit_user_approval") is True, "stable approval policy")
-
 snap = t.get("level2_snapshot", {})
 req((snap.get("pass"), snap.get("pending"), snap.get("current_fail"), snap.get("blocked")) == (17,3,0,0), "canonical snapshot unchanged during planning")
 
@@ -264,9 +264,9 @@ if errors:
         print("ERROR:", error, file=sys.stderr)
     raise SystemExit(1)
 
-print("KDE Tier 3 KNewStuff runtime-validation execution reauthorization: PASS")
-print("state=execution-authorized")
-print("execution_authorized=true")
+print("KDE Tier 3 KNewStuff runtime-validation infrastructure remediation planning: PASS")
+print("state=infrastructure-remediation-pending-policy-validation")
+print("execution_authorized=false")
 print("package_attempted=false")
 print("canonical=" + SNAP)
-print("next_gate=" + EXECUTION_GATE)
+print("next_gate=tier3-knewstuff-runtime-validation-infrastructure-remediation")
