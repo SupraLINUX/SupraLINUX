@@ -150,7 +150,7 @@ PY
 for path in "${changed[@]}"; do
   case "${path}" in
     docs/*|README.md|scripts/validate_*.py|scripts/test-*.sh|scripts/pr-ci-router-needed.sh|scripts/compile_kde_tier2_campaign.py|manifests/kde-tier1-package-batch*-attempts.json|manifests/kde-tier2-campaign-plan.json|.github/workflows/repository-policy.yml|.github/workflows/pr-ci-router.yml) continue ;;
-    .github/workflows/kde-tier3-build-level3.yml|scripts/run-kde-tier3-build-level3.sh|scripts/plan-kde-tier3-build-level3.py|scripts/test-kde-tier3-build-level3-planner.py|scripts/validate_kde_tier3_build_level3.py|manifests/kde-tier3-build-level3.json|manifests/kde-tier3-build-level3-attempts.json)
+    .github/workflows/kde-tier3-build-level3.yml|scripts/run-kde-tier3-build-level3.sh|scripts/plan-kde-tier3-build-level3.py|scripts/test-kde-tier3-build-level3-planner.py|manifests/kde-tier3-build-level3.json|manifests/kde-tier3-build-level3-attempts.json)
       continue ;;
     .github/workflows/diagnostic-infrastructure-preflight.yml|scripts/run-diagnostic-infrastructure-preflight.sh|manifests/diagnostic-infrastructure-preflight.json)
       continue ;;
