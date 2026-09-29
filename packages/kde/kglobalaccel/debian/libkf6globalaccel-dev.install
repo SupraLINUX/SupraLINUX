@@ -1,0 +1,5 @@
+usr/include/KF6/KGlobalAccel/
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6GlobalAccel/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6GlobalAccel.so
+usr/share/dbus-1/interfaces/kf6_org.kde.KGlobalAccel.xml
+usr/share/dbus-1/interfaces/kf6_org.kde.kglobalaccel.Component.xml

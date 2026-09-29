@@ -1,0 +1,181 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-24",
+  "authority": "supralinux",
+  "source_authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "frameworks_series": "6.30.0",
+  "node": "kio",
+  "round": 11,
+  "status": "attempt7-closed-mixed",
+  "claim": "attempt7-closure",
+  "canonical_state_effect": "KIO-FAIL-revalidated-KXMLGui-PASS",
+  "execution_authorized": false,
+  "source_materialization_authorized": false,
+  "current_canonical_state": {
+    "snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+    "kio": {
+      "state": "FAIL",
+      "package_version": "6.30.0-0supralinux6",
+      "downstream_eligible": false
+    },
+    "kxmlgui": {
+      "state": "PASS",
+      "package_version": "6.30.0-0supralinux5",
+      "downstream_eligible": true
+    },
+    "level1_state": "attempt6-closed-mixed",
+    "level1_execution_authorized": false,
+    "current_attempt": 6
+  },
+  "diagnostic_evidence": {
+    "workflow_run": 36071103806,
+    "job_id": 107872008601,
+    "commit": "b314ad501bf5eb6213f6cf4b2562cce60804b76c",
+    "artifact_id": 10837734340,
+    "artifact_sha256": "d4d944ac656d755ebd8c828d1e84c1b735e076c26a17adc66da42f0464a8cedc",
+    "closure_commit": "5f057d6abcdd767f97856d83ce7d7fb0caa0bca0",
+    "closure_repository_policy_run": 36071666308,
+    "closure_diagnostic_run": 36071666343
+  },
+  "attempt7_plan": {
+    "source_changed_nodes": [
+      "kio"
+    ],
+    "retained_revalidation_nodes": [
+      "kxmlgui"
+    ],
+    "source_materialization_nodes": [
+      "kio"
+    ],
+    "full_level1_rerun_nodes": [
+      "kio",
+      "kxmlgui"
+    ],
+    "candidate_package_versions": {
+      "kio": "6.30.0-0supralinux7",
+      "kxmlgui": "6.30.0-0supralinux5"
+    },
+    "package_revision_bump_required": true,
+    "rematerialize_only_changed_nodes": true,
+    "full_level1_rerun_required": true
+  },
+  "planned_contract_delta": {
+    "target": "debian/rules generated autotests/CMakeLists.txt test-property adaptation",
+    "from": {
+      "cmake_property": "ENVIRONMENT",
+      "operation": "set_tests_properties",
+      "affected_tests": [
+        "kiowidgets-kdirmodeltest",
+        "kiofilewidgets-knewfilemenutest"
+      ],
+      "consequence": "replaces the complete per-test CTest environment and drops KDE/ECM QT_PLUGIN_PATH"
+    },
+    "to": {
+      "cmake_property": "ENVIRONMENT_MODIFICATION",
+      "operation": "set_property(TEST ... APPEND PROPERTY ENVIRONMENT_MODIFICATION ...)",
+      "affected_tests": [
+        "kiowidgets-kdirmodeltest",
+        "kiofilewidgets-knewfilemenutest"
+      ],
+      "modifications": [
+        "QT_QPA_PLATFORM=set:xcb",
+        "QT_QPA_SYSTEM_ICON_THEME=set:breeze"
+      ],
+      "preserves": [
+        "QT_PLUGIN_PATH",
+        "all other pre-existing per-test ENVIRONMENT entries"
+      ]
+    },
+    "upstream_source_changed": false,
+    "packaging_source_changed": true,
+    "test_suppression": false
+  },
+  "krecentdocument_policy": {
+    "classification": "unresolved-timestamp-tie-hypothesis",
+    "source_patch_authorized": false,
+    "suppression_authorized": false,
+    "exclusion_authorized": false,
+    "next_attempt_behavior": "remain-fatal",
+    "followup": "if reproduced in Attempt 7, open an independent focused diagnostic gate"
+  },
+  "activation_policy": {
+    "prerequisite": "Repository Policy PASS for this definition",
+    "after_validation": [
+      "mutate KIO package contract candidate to 6.30.0-0supralinux7",
+      "replace the Round 10 destructive CTest ENVIRONMENT adaptation with ENVIRONMENT_MODIFICATION",
+      "set materialization remediation queue to KIO only",
+      "materialize KIO only",
+      "validate the resulting source artifact before authorizing Attempt 7",
+      "rerun complete Level 1 with KIO -7 and retained KXMLGui -5"
+    ]
+  },
+  "next_gate": "tier3-round12-kio-diagnostic-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "definition_validation": {
+    "commit": "0dad8b3e82eb07bb02e90da4036001a82e885b0f",
+    "repository_policy_workflow_run": 36072487004,
+    "result": "PASS"
+  },
+  "activation": {
+    "scope": "full-level1-rerun-2-nodes",
+    "nodes": [
+      "kio",
+      "kxmlgui"
+    ],
+    "kio_package_version": "6.30.0-0supralinux7",
+    "kxmlgui_package_version": "6.30.0-0supralinux5",
+    "repository_policy_workflow_run": 36076306121,
+    "level1_planning_workflow_run": 36076306143,
+    "commit": "8ac22bf8d97a592a548fbfc9a40af65773fd4d30",
+    "level1_execution_authorized": false
+  },
+  "materialization_evidence": {
+    "workflow_run": 36073638711,
+    "job_id": 107879979760,
+    "commit": "ebe60a0147e2a47b6c256ac015f43eea350c3ba2",
+    "artifact_id": 10839162922,
+    "artifact_sha256": "ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c",
+    "package_version": "6.30.0-0supralinux7",
+    "result": "PASS"
+  },
+  "attempt7_result": {
+    "workflow_run": 36079116873,
+    "commit": "ef6262ac9018df2c0d111d97f99919d8acdeb215",
+    "result": "MIXED",
+    "rootfs": {
+      "artifact_id": 10841431451,
+      "artifact_sha256": "ac49ee835a7d45f00c4655c36d60e3725558d570b6af1f630849f84a2d8bb532"
+    },
+    "kio": {
+      "job_id": 107897110171,
+      "artifact_id": 10840963289,
+      "artifact_sha256": "32b10c0ac337040239edea709440c5b09b898d76da1ac3c8e10339bf1477d239",
+      "package_version": "6.30.0-0supralinux7",
+      "tests": {
+        "total": 69,
+        "pass": 67,
+        "fail": 2
+      },
+      "failed_tests": [
+        "kiowidgets-kdirmodeltest",
+        "kiofilewidgets-knewfilemenutest"
+      ],
+      "cause": "KIO compiled and executed all 69 upstream CTest targets: 67 passed and 2 failed. krecentdocumenttest passed in Attempt 7. kiowidgets-kdirmodeltest still fails first in testIcon because QIcon::fromTheme yields an empty icon name where unknown is expected, followed by shared-state cascades; kiofilewidgets-knewfilemenutest still fails its folder icon collection expansion assertions. Round 11 preserved the existing CTest environment with ENVIRONMENT_MODIFICATION but did not resolve these two failures."
+    },
+    "kxmlgui": {
+      "job_id": 107897110192,
+      "artifact_id": 10841652858,
+      "artifact_sha256": "4cc0f2a0eadbb54eefc3ae90359d842f16cb2cfd95ae2ca0adaec3c1385338fe",
+      "package_version": "6.30.0-0supralinux5",
+      "tests": {
+        "total": 7,
+        "pass": 7,
+        "fail": 0
+      },
+      "python_import": "PASS"
+    },
+    "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+    "next_gate": "tier3-round12-kio-diagnostic-definition"
+  }
+}

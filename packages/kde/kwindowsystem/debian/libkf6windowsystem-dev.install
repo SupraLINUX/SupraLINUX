@@ -1,0 +1,4 @@
+usr/include/KF6/KWindowSystem/
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6WindowSystem/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6WindowSystem.so
+usr/lib/${DEB_HOST_MULTIARCH}/pkgconfig/KF6WindowSystem.pc

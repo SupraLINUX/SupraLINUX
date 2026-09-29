@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(kwindowsystem-consumer LANGUAGES CXX)
+find_package(KF6WindowSystem 6.30 REQUIRED)
+add_executable(kwindowsystem-consumer main.cpp)
+target_compile_features(kwindowsystem-consumer PRIVATE cxx_std_17)
+target_link_libraries(kwindowsystem-consumer PRIVATE KF6::WindowSystem ${CMAKE_DL_LIBS})

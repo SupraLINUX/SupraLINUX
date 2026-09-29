@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(kitemmodels-consumer LANGUAGES CXX)
+find_package(KF6ItemModels 6.30 REQUIRED)
+add_executable(kitemmodels-consumer main.cpp)
+target_compile_features(kitemmodels-consumer PRIVATE cxx_std_17)
+target_link_libraries(kitemmodels-consumer PRIVATE KF6::ItemModels ${CMAKE_DL_LIBS})

@@ -1,0 +1,9 @@
+SupraLINUX Prison packaging notes
+
+Authority is KDE Frameworks upstream stable 6.30.0. Ubuntu 26.04 Resolute is the provider platform. Debian packaging is a technical reference only.
+
+Batch 11 explicitly preserves all four upstream default-enabled Prison surfaces: WITH_DMTX=ON, WITH_ZXING=ON, WITH_QUICK=ON and WITH_MULTIMEDIA=ON. Resolute providers are libdmtx-dev, libzxing-dev, qt6-declarative-dev and qt6-multimedia-dev; QRencode remains required through libqrencode-dev.
+
+The retained Debian packaging-tree artifact 10301938362 supplies copyright and symbols metadata only after the entire retained tree manifest has been hash-verified. Those files do not select the KDE version or feature profile.
+
+No downstream behavior patch or test suppression is retained. Real package attempts are recorded separately from infrastructure incidents.

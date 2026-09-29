@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(kcalendarcore-consumer LANGUAGES CXX)
+find_package(KF6CalendarCore 6.30 REQUIRED)
+add_executable(kcalendarcore-consumer main.cpp)
+target_compile_features(kcalendarcore-consumer PRIVATE cxx_std_17)
+target_link_libraries(kcalendarcore-consumer PRIVATE KF6::CalendarCore ${CMAKE_DL_LIBS})

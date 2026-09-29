@@ -1,0 +1,100 @@
+Source: kf6-ki18n
+Section: libs
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               dh-sequence-qmldeps,
+               cmake (>= 3.29~),
+               doxygen (>= 1.8.13~),
+               extra-cmake-modules (>= 6.30.0~),
+               gettext,
+               iso-codes <!nocheck>,
+               language-pack-fr-base <!nocheck>,
+               locales-all <!nocheck>,
+               python3:any,
+               qt6-base-dev (>= 6.9.0~),
+               qt6-declarative-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.9.0~),
+Standards-Version: 4.7.4
+Homepage: https://invent.kde.org/frameworks/ki18n
+Rules-Requires-Root: no
+
+Package: libkf6i18n-data
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Description: SupraLINUX package for KDE Frameworks 6 KI18n (libkf6i18n-data)
+ This binary package provides the libkf6i18n-data split from KDE upstream KI18n.
+
+Package: libkf6i18n-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: gettext,
+         libkf6i18n6 (= ${binary:Version}),
+         libkf6i18nlocaledata6 (= ${binary:Version}),
+         libkf6i18nqml6 (= ${binary:Version}),
+         python3:any,
+         qml6-module-org-kde-i18n-localedata (= ${binary:Version}),
+         qml6-module-org-kde-ki18n (= ${binary:Version}),
+         qt6-base-dev (>= 6.9.0~),
+         qt6-declarative-dev (>= 6.9.0~),
+         ${misc:Depends},
+Recommends: libkf6i18n-doc (= ${source:Version}),
+Description: SupraLINUX package for KDE Frameworks 6 KI18n (libkf6i18n-dev)
+ This binary package provides the libkf6i18n-dev split from KDE upstream KI18n.
+
+Package: libkf6i18n-doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: SupraLINUX package for KDE Frameworks 6 KI18n (libkf6i18n-doc)
+ This binary package provides the libkf6i18n-doc split from KDE upstream KI18n.
+Section: doc
+
+Package: libkf6i18n6
+Architecture: any
+Multi-Arch: same
+Depends: libkf6i18n-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: SupraLINUX package for KDE Frameworks 6 KI18n (libkf6i18n6)
+ This binary package provides the libkf6i18n6 split from KDE upstream KI18n.
+
+Package: libkf6i18nlocaledata6
+Architecture: any
+Multi-Arch: same
+Depends: iso-codes,
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: SupraLINUX package for KDE Frameworks 6 KI18n (libkf6i18nlocaledata6)
+ This binary package provides the libkf6i18nlocaledata6 split from KDE upstream KI18n.
+
+Package: libkf6i18nqml6
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Description: SupraLINUX package for KDE Frameworks 6 KI18n (libkf6i18nqml6)
+ This binary package provides the libkf6i18nqml6 split from KDE upstream KI18n.
+
+Package: qml6-module-org-kde-i18n-localedata
+Architecture: any
+Multi-Arch: same
+Depends: libkf6i18nlocaledata6 (= ${binary:Version}),
+         ${misc:Depends},
+         ${qml6:Depends},
+         ${shlibs:Depends},
+Description: SupraLINUX package for KDE Frameworks 6 KI18n (qml6-module-org-kde-i18n-localedata)
+ This binary package provides the qml6-module-org-kde-i18n-localedata split from KDE upstream KI18n.
+
+Package: qml6-module-org-kde-ki18n
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${qml6:Depends},
+         ${shlibs:Depends},
+Description: SupraLINUX package for KDE Frameworks 6 KI18n (qml6-module-org-kde-ki18n)
+ This binary package provides the qml6-module-org-kde-ki18n split from KDE upstream KI18n.

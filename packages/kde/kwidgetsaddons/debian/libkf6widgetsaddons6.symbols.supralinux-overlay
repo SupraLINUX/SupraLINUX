@@ -1,0 +1,6 @@
+ _ZN11KColorCombo14dragEnterEventEP15QDragEnterEvent@Base 6.29.0
+ _ZN11KColorCombo16contextMenuEventEP17QContextMenuEvent@Base 6.29.0
+ _ZN11KColorCombo9dropEventEP10QDropEvent@Base 6.29.0
+ _ZN12KColorButton16contextMenuEventEP17QContextMenuEvent@Base 6.29.0
+ _ZNK16KAssistantDialog10onLastPageEv@Base 6.29.0
+ (optional=toolchain)_ZSt19piecewise_construct@Base 6.30.0

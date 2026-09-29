@@ -1,0 +1,208 @@
+name: KDE Frameworks Tier 1 package batch 10
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  kirigami-package:
+    name: kirigami 6.30 QML/multisurface clean package preflight
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    outputs:
+      built: ${{ steps.scope.outputs.run }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - name: Determine whether this event delta affects kirigami
+        id: scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          run=true
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            if [[ "${{ github.event.action }}" == "synchronize" ]]; then before="${{ github.event.before }}"; after="${{ github.event.after }}"; else before="${{ github.event.pull_request.base.sha }}"; after="${{ github.event.pull_request.head.sha }}"; fi
+            if bash scripts/kde-tier1-package-batch10-needed.sh kirigami "${before}" "${after}"; then run=true; else rc=$?; [[ "${rc}" -eq 1 ]] && run=false || exit "${rc}"; fi
+          fi
+          echo "run=${run}" >> "${GITHUB_OUTPUT}"
+
+      - name: Download retained ECM PASS artifact
+        if: steps.scope.outputs.run == 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10298635300'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34694951158'
+          path: .work/retained-ecm
+
+      - name: Download retained Tier 1 packaging-tree artifact
+        if: steps.scope.outputs.run == 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10301938362'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34708030450'
+          path: .work/retained-tier1-reference
+
+      - name: Download retained Tier 1 binary-contract artifact
+        if: steps.scope.outputs.run == 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10301282501'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34704117024'
+          path: .work/retained-tier1-contracts
+
+      - name: Build and validate kirigami
+        if: steps.scope.outputs.run == 'true'
+        env:
+          ECM_ARTIFACT_DIR: ${{ github.workspace }}/.work/retained-ecm
+          TIER1_REFERENCE_DIR: ${{ github.workspace }}/.work/retained-tier1-reference
+          BINARY_CONTRACT_DIR: ${{ github.workspace }}/.work/retained-tier1-contracts
+        run: bash scripts/run-kde-tier1-package-batch10-preflight.sh kirigami
+
+      - name: Upload kirigami package evidence
+        if: steps.scope.outputs.run == 'true' && always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-tier1-batch10-kirigami-package-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-tier1-package-batch10/kirigami/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Report intentionally skipped kirigami build
+        if: steps.scope.outputs.run != 'true'
+        run: echo "kirigami Batch 10 package preflight intentionally skipped; event delta does not affect this node."
+
+  kquickcharts-package:
+    name: kquickcharts 6.30 QML/multisurface clean package preflight
+    needs: kirigami-package
+    if: always()
+    runs-on: ubuntu-26.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - name: Determine whether this event delta affects kquickcharts
+        id: scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          run=true
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            if [[ "${{ github.event.action }}" == "synchronize" ]]; then before="${{ github.event.before }}"; after="${{ github.event.after }}"; else before="${{ github.event.pull_request.base.sha }}"; after="${{ github.event.pull_request.head.sha }}"; fi
+            if bash scripts/kde-tier1-package-batch10-needed.sh kquickcharts "${before}" "${after}"; then run=true; else rc=$?; [[ "${rc}" -eq 1 ]] && run=false || exit "${rc}"; fi
+          fi
+          echo "run=${run}" >> "${GITHUB_OUTPUT}"
+
+      - name: Record BLOCKED when Kirigami package validation failed
+        if: steps.scope.outputs.run == 'true' && needs.kirigami-package.result != 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence/kde-tier1-package-batch10/kquickcharts
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          Path('evidence/kde-tier1-package-batch10/kquickcharts/result.json').write_text(json.dumps({
+            'node':'kquickcharts','state':'BLOCKED','exit_code':0,'stage':'package-validation-predecessor',
+            'claim':'hosted-clean-package-preflight','lane':'qml-multisurface','downstream_eligible':False,
+            'blocked_by':'kirigami','reason':'Kirigami package validation job did not PASS; KQuickCharts was not attempted.'
+          },indent=2)+'\n')
+          PY
+
+      - name: Download current-run Kirigami PASS artifact
+        if: steps.scope.outputs.run == 'true' && needs.kirigami-package.result == 'success' && needs.kirigami-package.outputs.built == 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: kde-tier1-batch10-kirigami-package-${{ github.event.pull_request.head.sha || github.sha }}
+          path: .work/kirigami-pass
+
+      - name: Resolve retained Kirigami PASS evidence
+        id: retained-kirigami
+        if: steps.scope.outputs.run == 'true' && needs.kirigami-package.result == 'success' && needs.kirigami-package.outputs.built != 'true'
+        shell: bash
+        run: |
+          python3 - manifests/kde-tier1-package-campaign-batch10.json >> "${GITHUB_OUTPUT}" <<'PY'
+          import json,sys
+          d=json.load(open(sys.argv[1])); p=d['nodes']['kirigami'].get('pass_evidence')
+          if not isinstance(p,dict) or not p.get('artifact_id') or not p.get('workflow_run'):
+              raise SystemExit('Kirigami scope-skipped but campaign has no retained PASS artifact')
+          print(f"artifact_id={p['artifact_id']}")
+          print(f"workflow_run={p['workflow_run']}")
+          PY
+
+      - name: Download retained Kirigami PASS artifact
+        if: steps.scope.outputs.run == 'true' && needs.kirigami-package.result == 'success' && needs.kirigami-package.outputs.built != 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: ${{ steps.retained-kirigami.outputs.artifact_id }}
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: ${{ steps.retained-kirigami.outputs.workflow_run }}
+          path: .work/kirigami-pass
+
+      - name: Download retained ECM PASS artifact
+        if: steps.scope.outputs.run == 'true' && needs.kirigami-package.result == 'success'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10298635300'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34694951158'
+          path: .work/retained-ecm
+
+      - name: Download retained Tier 1 packaging-tree artifact
+        if: steps.scope.outputs.run == 'true' && needs.kirigami-package.result == 'success'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10301938362'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34708030450'
+          path: .work/retained-tier1-reference
+
+      - name: Download retained Tier 1 binary-contract artifact
+        if: steps.scope.outputs.run == 'true' && needs.kirigami-package.result == 'success'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: '10301282501'
+          github-token: ${{ github.token }}
+          repository: SupraLINUX/SupraLINUX
+          run-id: '34704117024'
+          path: .work/retained-tier1-contracts
+
+      - name: Build and validate kquickcharts
+        if: steps.scope.outputs.run == 'true' && needs.kirigami-package.result == 'success'
+        env:
+          ECM_ARTIFACT_DIR: ${{ github.workspace }}/.work/retained-ecm
+          TIER1_REFERENCE_DIR: ${{ github.workspace }}/.work/retained-tier1-reference
+          BINARY_CONTRACT_DIR: ${{ github.workspace }}/.work/retained-tier1-contracts
+          KIRIGAMI_ARTIFACT_DIR: ${{ github.workspace }}/.work/kirigami-pass
+        run: bash scripts/run-kde-tier1-package-batch10-preflight.sh kquickcharts
+
+      - name: Upload kquickcharts package evidence
+        if: steps.scope.outputs.run == 'true' && always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-tier1-batch10-kquickcharts-package-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-tier1-package-batch10/kquickcharts/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Report intentionally skipped kquickcharts build
+        if: steps.scope.outputs.run != 'true'
+        run: echo "kquickcharts Batch 10 package preflight intentionally skipped; event delta does not affect this node."

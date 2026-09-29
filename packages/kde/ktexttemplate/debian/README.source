@@ -1,0 +1,27 @@
+# SupraLINUX ktexttemplate packaging
+
+KDE Frameworks 6.30.0 is the source/build authority. Ubuntu Resolute and Debian sid
+packaging trees are compatibility references only.
+
+The Batch 2 hosted runner verifies and injects the exact Debian 6.28 symbols baseline
+from workflow run 34708030450 / artifact 10301938362 before dpkg-source -b. Debian is
+selected for this technical baseline because it is closer to KDE 6.30; Ubuntu remains
+the direct binary-compatibility target.
+
+The first real 6.30 build (workflow run 34720201713, artifact 10306265683) passed all
+10 upstream autotests and then failed at dpkg-gensymbols. Review showed three new
+public Filter symbols, eleven Qt/plugin implementation exports that left the main
+library when upstream moved scriptable-tag support into a plugin, and the absence of
+the inline Exception vtable even though Exception's public header is unchanged.
+
+Revision 6.30.0-0supralinux2 therefore applies `debian/apply-symbols-delta.py` before
+dh_makeshlibs. The transform refuses any input except the retained 6.28 baseline SHA
+552e0c732cef6e8e0679d014fc7416ad23ecaa83322df9475a09d640e9831273 and refuses any
+output except SHA 2ff2111ce15f910328557c3295008fa21588518a0156626425df3c7b9f1b0e19.
+The three new Filter exports use upstream minimum 6.30.0; the Exception vtable is
+kept as optional=inline rather than treated as a mandatory ABI export.
+
+QDoc targets generated through ECMGenerateQDoc are not part of the default build.
+The established documentation binary package name is retained as a compatibility
+stub until SupraLINUX defines a common Frameworks QDoc policy. Upstream autotests
+remain enabled.

@@ -1,0 +1,188 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-25",
+  "node": "kio",
+  "round": 16,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "claim": "non-promoting-kiconthemes-startup-kio-library-linkage-diagnostic",
+  "non_promoting": true,
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "dag_state_changes_allowed": false,
+  "downstream_eligibility_changes_allowed": false,
+  "execution_authorized": false,
+  "status": "diagnostic-PASS",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "round15_evidence": {
+    "workflow_run": 36208311383,
+    "job_id": 108309466429,
+    "commit": "594b86b3e5ca78a8b936350d037c3877743ac273",
+    "artifact_id": 10894857677,
+    "artifact_sha256": "58413dce8261e276f08b450ac6fbab494a0d691018dd0472a997b570b5e2e136",
+    "result": "DIAG_COMPLETE",
+    "conclusion": "breeze-init-state-does-not-reproduce-kio-icon-name-loss"
+  },
+  "round13_build_tree_evidence": {
+    "workflow_run": 36146880757,
+    "job_id": 108110145068,
+    "commit": "7ede12eba5bd301687e074646027ebc293a4b489",
+    "artifact_id": 10869413386,
+    "artifact_sha256": "f96d4fdfebc5fcebe63633650ebf3998a51e37e5c84c12b50bc3d745097d7cd7",
+    "conclusion": "build-tree-reproduces-no-simple-env-recovery-inspect-traces"
+  },
+  "source_materialization": {
+    "workflow_run": 36073638711,
+    "job_id": 107879979760,
+    "artifact_id": 10839162922,
+    "artifact_sha256": "ffd7fb48d855b4788b3659ed083c0652cd2fefd6290428d46c768267198fef4c",
+    "package_version": "6.30.0-0supralinux7",
+    "upstream_source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2"
+  },
+  "kiconthemes_provider": {
+    "package_version": "6.30.0-0supralinux3",
+    "artifact_id": 10731249726,
+    "artifact_sha256": "5b06a92638fb67409710b140f3ebc597400d0d739db497e3d570fbe42cfa5206"
+  },
+  "source_link_contract": {
+    "kdirmodeltest": [
+      "KF6::KIOCore",
+      "KF6::KIOWidgets",
+      "Qt6::Test"
+    ],
+    "knewfilemenutest": [
+      "KF6::KIOFileWidgets",
+      "KF6::KIOWidgets",
+      "KF6::Bookmarks",
+      "Qt6::Test",
+      "KF6::I18n",
+      "KF6::WindowSystem"
+    ],
+    "kiowidgets_public": [
+      "KF6::KIOGui",
+      "KF6::KIOCore",
+      "KF6::JobWidgets",
+      "KF6::Service",
+      "Qt6::Network",
+      "KF6::Completion",
+      "KF6::WidgetsAddons"
+    ],
+    "kiowidgets_private_includes": [
+      "KF6::IconThemes"
+    ],
+    "kiofilewidgets_public_includes": [
+      "KF6::KIOWidgets"
+    ]
+  },
+  "diagnostic_scope": {
+    "exact_provider_closure_from": "manifests/kde-tier3-build-level1.json",
+    "build_support_targets": [
+      "kio_file",
+      "kioworker",
+      "kdirmodeltest",
+      "knewfilemenutest"
+    ],
+    "sequences": [
+      "normal",
+      "kdirmodel-testmode",
+      "knewfilemenu-sequence"
+    ],
+    "modes": [
+      "qt-baseline",
+      "kiconthemes-only",
+      "kiocore-only",
+      "kiconthemes-plus-kiocore",
+      "kiowidgets-closure",
+      "kiofilewidgets-closure"
+    ],
+    "icons": [
+      "unknown",
+      "inode-directory",
+      "folder-red"
+    ],
+    "observations": [
+      "QIcon theme/fallback",
+      "Breeze resource visibility",
+      "QIcon search/data paths",
+      "QIcon hasThemeIcon/null/name identity",
+      "ldd retained-library closure"
+    ],
+    "environment": [
+      "QT_QPA_PLATFORM=xcb",
+      "QT_QPA_SYSTEM_ICON_THEME=breeze",
+      "QT_PLUGIN_PATH=<KIO build-tree>/bin",
+      "KDECI_PLATFORM_PATH=<KIO source>",
+      "Xvfb/XCB",
+      "D-Bus session"
+    ],
+    "package_build": false,
+    "source_modification": false,
+    "package_revision_allocation": false,
+    "test_suppression": false
+  },
+  "decision_rules": {
+    "baseline_invalid": "diagnostic-invalid-environment-drift",
+    "kiconthemes_reproduces": "kiconthemes-startup-load-is-sufficient",
+    "kiocore_reproduces": "kiocore-load-is-sufficient",
+    "kiconthemes_plus_kiocore_reproduces": "kiconthemes-kiocore-interaction-is-sufficient",
+    "kiowidgets_reproduces": "kiowidgets-closure-is-sufficient",
+    "kiofilewidgets_only_reproduces": "filewidgets-specific-effect-does-not-explain-kdirmodel-common-cause",
+    "none_reproduce": "library-preload-alone-insufficient-advance-to-actual-kio-object-path"
+  },
+  "next_gate": "tier3-round17-kio-object-path-state-transition-diagnostic-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "definition_validation": {
+    "commit": "5bea0781bf90ed97c53fdddc761566d4a984f5a7",
+    "repository_policy_workflow_run": 36209833503,
+    "result": "PASS"
+  },
+  "diagnostic_evidence": {
+    "workflow_run": 36209833629,
+    "job_id": 108313880904,
+    "commit": "5bea0781bf90ed97c53fdddc761566d4a984f5a7",
+    "artifact_id": 10894374901,
+    "artifact_sha256": "8cda50173446df052b21e5ca4fe89129af65e1c1e1ff13ac137953b5a9508cf6",
+    "result": "DIAG_COMPLETE",
+    "package_attempted": false,
+    "package_state_effect": "none"
+  },
+  "diagnostic_results": {
+    "baseline_valid": true,
+    "kiconthemes_startup_observed": true,
+    "conclusion": "library-preload-alone-does-not-reproduce-kio-icon-name-loss",
+    "modes": {
+      "qt-baseline": {
+        "primary_empty_any": false,
+        "fallback": "hicolor",
+        "breeze_resource": false
+      },
+      "kiconthemes-only": {
+        "primary_empty_any": false,
+        "fallback": "breeze",
+        "breeze_resource": true
+      },
+      "kiocore-only": {
+        "primary_empty_any": false,
+        "fallback": "hicolor",
+        "breeze_resource": false
+      },
+      "kiconthemes-plus-kiocore": {
+        "primary_empty_any": false,
+        "fallback": "breeze",
+        "breeze_resource": true
+      },
+      "kiowidgets-closure": {
+        "primary_empty_any": false,
+        "fallback": "breeze",
+        "breeze_resource": true
+      },
+      "kiofilewidgets-closure": {
+        "primary_empty_any": false,
+        "fallback": "breeze",
+        "breeze_resource": true
+      }
+    },
+    "next_diagnostic_scope": "actual-kio-object-path-state-transition"
+  }
+}

@@ -1,0 +1,120 @@
+name: Authoritative runner contract
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' ||
+          (github.event.label.name == 'ci:runner-contract' &&
+           github.event.pull_request.head.repo.full_name == github.repository) }}
+    name: Verify disposable Ubuntu 26.04 KVM build runner
+    runs-on: [self-hosted, linux, x64, supralinux, ubuntu-26.04, kvm, ephemeral]
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Verify effective Actions runner provenance
+        shell: bash
+        run: scripts/check-actions-runner-runtime.sh evidence/runner-contract/actions-runner-runtime.txt
+
+      - name: Verify operating system and KVM boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          . /etc/os-release
+          test "${ID}" = "ubuntu"
+          test "${VERSION_ID}" = "26.04"
+          test "$(systemd-detect-virt --vm)" = "kvm"
+          test -c /dev/kvm
+          test -r /dev/kvm
+          test -w /dev/kvm
+          qemu-system-x86_64 -accel help 2>&1 | grep -q '^kvm$'
+          echo "${PRETTY_NAME}"
+          systemd-detect-virt --vm
+          ls -l /dev/kvm
+
+      - name: Verify build and test tool contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            sbuild
+            mmdebstrap
+            dpkg-buildpackage
+            autopkgtest
+            autopkgtest-buildvm-ubuntu-cloud
+            qemu-system-x86_64
+            qemu-img
+            aptly
+            gpg
+            git
+            jq
+            python3
+            timeout
+          )
+
+          failed=0
+          for command_name in "${required[@]}"; do
+            if ! command -v "${command_name}" >/dev/null 2>&1; then
+              echo "Missing required command: ${command_name}" >&2
+              failed=1
+            fi
+          done
+
+          image=/var/lib/supralinux/autopkgtest/resolute-amd64.img
+          if [[ ! -f "${image}" ]]; then
+            echo "Missing required autopkgtest image: ${image}" >&2
+            failed=1
+          fi
+          exit "${failed}"
+
+      - name: Prove nested KVM runtime
+        shell: bash
+        run: scripts/check-nested-kvm-runtime.sh evidence/runner-contract/nested-kvm-runtime.txt
+
+      - name: Capture runner contract evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence/runner-contract
+          {
+            cat /etc/os-release
+            echo
+            uname -a
+            echo
+            echo "virtualization=$(systemd-detect-virt --vm)"
+            ls -l /dev/kvm
+            echo
+            qemu-system-x86_64 --version
+            sbuild --version
+            autopkgtest --version
+            echo
+            cat /var/lib/supralinux/evidence/actions-runner.txt 2>/dev/null || true
+            echo
+            cat evidence/runner-contract/actions-runner-runtime.txt 2>/dev/null || true
+            echo
+            cat /var/lib/supralinux/evidence/base-image-seal.txt 2>/dev/null || true
+          } > evidence/runner-contract/environment.txt
+          sha256sum /var/lib/supralinux/autopkgtest/resolute-amd64.img \
+            > evidence/runner-contract/autopkgtest-image-sha256.txt
+
+      - name: Validate repository invariants
+        run: python3 scripts/validate_repository.py
+
+      - name: Upload runner contract evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: authoritative-runner-contract-${{ github.sha }}
+          path: evidence/runner-contract/
+          if-no-files-found: warn
+          retention-days: 90

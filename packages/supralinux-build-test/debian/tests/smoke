@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+output="$(supralinux-build-test --self-test)"
+grep -Fxq 'SUPRALINUX_BUILD_PROOF_OK' <<<"${output}"

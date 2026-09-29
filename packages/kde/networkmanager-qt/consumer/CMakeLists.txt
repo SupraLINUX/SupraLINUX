@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(networkmanager-qt-consumer LANGUAGES CXX)
+find_package(KF6NetworkManagerQt 6.30 REQUIRED)
+add_executable(networkmanager-qt-consumer main.cpp)
+target_compile_features(networkmanager-qt-consumer PRIVATE cxx_std_17)
+target_link_libraries(networkmanager-qt-consumer PRIVATE KF6::NetworkManagerQt ${CMAKE_DL_LIBS})

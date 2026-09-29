@@ -1,0 +1,12 @@
+# SupraLINUX kcodecs packaging
+
+KDE Frameworks 6.30.0 is the source/build authority. Ubuntu Resolute and Debian sid
+packaging trees are compatibility references only.
+
+The full Ubuntu symbols file is intentionally not duplicated in Git. The hosted
+package runner verifies and injects the exact retained baseline from workflow run
+34708030450 / artifact 10301938362 before dpkg-source -b.
+
+QDoc targets generated through ECMGenerateQDoc are not part of the default build.
+The established documentation binary package name is retained as a compatibility
+stub until SupraLINUX defines a common Frameworks QDoc policy.

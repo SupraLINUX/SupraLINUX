@@ -1,0 +1,6 @@
+Retained technical copyright reference
+provider: debian
+reference_version: 6.28.x retained snapshot
+integrity: verified through tree-hashes.tsv and the node tree-files.sha256 manifest
+source: retained Tier 1 packaging-tree artifact 10301938362
+build_use: runner materializes the verified debian/copyright into the ephemeral source package

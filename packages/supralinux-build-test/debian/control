@@ -1,0 +1,15 @@
+Source: supralinux-build-test
+Section: misc
+Priority: optional
+Maintainer: SupraLINUX Project <noreply@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Homepage: https://github.com/SupraLINUX/SupraLINUX
+
+Package: supralinux-build-test
+Architecture: all
+Depends: ${misc:Depends}
+Description: SupraLINUX package-build proof
+ Minimal package used to prove the SupraLINUX Debian package build,
+ artifact capture and autopkgtest pipeline. It is not a desktop component.

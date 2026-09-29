@@ -1,0 +1,6 @@
+# Debian sid symbols baseline retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+node=kidletime
+path=trees/debian/kidletime/debian/libkf6idletime6.symbols
+sha256=1ae402305be324fc97b61bb099d3c6e001ec2bfc8eaf2ae09f1cd69eafbe914c

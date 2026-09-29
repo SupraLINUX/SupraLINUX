@@ -1,0 +1,8 @@
+kf6-kidletime (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE Frameworks 6.30.0 for SupraLINUX.
+  * Retain KDE upstream X11 and Wayland defaults on Linux.
+  * Disable only QCH generation under the documented common Frameworks profile.
+  * Preserve Debian-family binary package contracts as compatibility inputs.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Tue, 15 Sep 2026 19:20:00 +0000
