@@ -601,3 +601,16 @@ Workflow `36607647059` executed both final Level 3 nodes after Repository Policy
 KTextEditor artifact `11052302105` (SHA-256 `d66ad916ef3f4e38e2ab3dc436fba3ac7dcb6f1e59603399c5debaebfa6a5458`) reached 64/77 CTest PASS; the observed failures are twelve encoding diff tests plus a 300-second `testAboutToSave` timeout. Purpose artifact `11052225512` (SHA-256 `cff8b75aac023985ba5f4c3c4d429665b268cd65865d65969724408ec2cc5122`) reached 1/3 CTest PASS; observed failures are KIO `file` protocol availability and xcb display startup.
 
 Canonical Tier 3 is therefore **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED**. Level 3 execution is paused, Attempt 2 is not authorized, and the next gate is a remediation definition based on the retained Attempt 1 evidence. No stable publication is implied.
+
+
+## Level 3 Attempt 1 remediation — source materialization pending
+
+The two canonical FAILs remain KTextEditor and Purpose; the snapshot stays **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED** while remediation sources are prepared.
+
+For KTextEditor `6.30.0-0supralinux2`, the remediation preserves all upstream tests: it serializes CTest to remove the proven create/diff ordering race and patches only `testAboutToSave()` so its save target is an explicitly writable temporary local file. The patch is deterministic and does not modify production code.
+
+For Purpose `6.30.0-0supralinux2`, the remediation supplies the missing `kio6` test-runtime workers and uses Qt's offscreen platform for the GUI test. Production Purpose code is unchanged.
+
+Because `kio6` depends on KDED at runtime, Level 3 now also pins the existing SupraLINUX KDED 6.30 PASS artifact instead of allowing Ubuntu KDED 6.24 to enter the solver closure. This is provider closure only and does not alter the KDE-upstream DAG.
+
+The dedicated materialization workflow is routed through the single PR CI router after Repository Policy. Source materialization consumes no Package Attempt. Attempt 2 and stable publication remain unauthorized.

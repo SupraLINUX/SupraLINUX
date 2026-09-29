@@ -33,9 +33,10 @@ for node,exp in ART.items():
     req(x.get("failure_substage")==exp["failure_substage"] and x.get("package_version")==exp["version"] and x.get("tests")==exp["tests"],node+": failure identity/version/tests")
     req(x.get("rootfs_artifact_id")==ROOTFS["artifact_id"] and x.get("rootfs_artifact_sha256")==ROOTFS["artifact_sha256"],node+": rootfs proof")
 req(m.get("state")=="FAIL" and m.get("execution_authorized") is False and m.get("current_attempt")==1 and m.get("next_attempt")==2,"Level3 Attempt1 closed manifest state")
-req(m.get("canonical_snapshot")=="18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED" and m.get("next_gate")=="tier3-build-level3-attempt1-remediation-definition","Level3 Attempt1 closed snapshot/gate")
+req(m.get("canonical_snapshot")=="18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED","Level3 Attempt1 closed snapshot")
+req(m.get("attempt1_summary",{}).get("next_gate")=="tier3-build-level3-attempt1-remediation-definition","Level3 Attempt1 historical next gate")
 req(t.get("build_level3",{}).get("status")=="attempt1-closed-FAIL" and t.get("build_level3",{}).get("execution_authorized") is False,"Tier3 live Level3 closure")
-req(t.get("discovery_policy",{}).get("package_builds")=="tier3-level3-attempt1-closed-FAIL","Tier3 live closure gate")
+req(t.get("build_level3",{}).get("attempt1_evidence",{}).get("next_gate")=="tier3-build-level3-attempt1-remediation-definition","Tier3 historical closure gate")
 nodes={x["id"]:x for x in t.get("nodes",[])}
 for node in ART:
     req(nodes.get(node,{}).get("state")=="FAIL" and nodes.get(node,{}).get("packaging",{}).get("state")=="FAIL",node+": canonical FAIL")

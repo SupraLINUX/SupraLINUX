@@ -112,6 +112,7 @@ def norm(d):
         for k in ('phase','package_builds','remediation'): p.pop(k,None)
         d.pop('build_level3_manifest',None)
         d.pop('build_level3',None)
+        d.pop('level3_remediation',None)
         for node in d.get('nodes',[]):
             if node.get('id') in {'ktexteditor','purpose'}:
                 node.pop('state',None)
@@ -125,6 +126,29 @@ def norm(d):
         raise SystemExit(1)
     return d
 raise SystemExit(0 if norm(load(before))==norm(load(after)) else 1)
+PY
+}
+
+tier3_level3_materialization_is_routed() {
+  python3 - "${AFTER}" <<'PY'
+import json,subprocess,sys
+after=sys.argv[1]
+def load(path):
+    return json.loads(subprocess.check_output(['git','show',f'{after}:{path}'],text=True))
+m=load('manifests/kde-tier3-materialization.json')
+t=load('manifests/kde-frameworks-tier3.json')
+mr=m.get('level3_remediation',{})
+tr=t.get('level3_remediation',{})
+ok=(
+    m.get('state')=='remediation-pending-ci'
+    and mr.get('status')=='materialization-pending-ci'
+    and mr.get('materialization_authorized') is True
+    and mr.get('package_execution_authorized') is False
+    and tr.get('status')=='materialization-pending-ci'
+    and tr.get('materialization_authorized') is True
+    and tr.get('package_execution_authorized') is False
+)
+raise SystemExit(0 if ok else 1)
 PY
 }
 
@@ -160,9 +184,13 @@ for path in "${changed[@]}"; do
       continue ;;
     .github/workflows/kde-tier3-kio-round*-diagnostic.yml|scripts/run-kde-tier3-kio-round*-diagnostic.sh|scripts/run-kde-tier3-kio-round*-hook.sh|manifests/kde-tier3-kio-round*-diagnostic.json)
       continue ;;
-    manifests/kde-frameworks-tier3.json|manifests/kde-tier3-build-level1.json|manifests/kde-tier3-package-contracts.json|manifests/kde-tier3-materialization.json)
+    manifests/kde-frameworks-tier3.json|manifests/kde-tier3-build-level1.json)
       if tier3_diagnostic_lifecycle_only "${path}"; then continue; fi
       echo "${path}: Tier 3 package/build semantics changed; reusable hosted CI required."; exit 0 ;;
+    manifests/kde-tier3-package-contracts.json|manifests/kde-tier3-materialization.json)
+      if tier3_level3_materialization_is_routed; then continue; fi
+      if tier3_diagnostic_lifecycle_only "${path}"; then continue; fi
+      echo "${path}: Tier 3 package/materialization semantics changed; reusable hosted CI required."; exit 0 ;;
     manifests/kde-frameworks-tier2.json)
       if canonical_tier2_is_planning_only; then continue; fi
       echo "${path}: canonical Tier 2 build identity changed; reusable hosted CI required."; exit 0 ;;

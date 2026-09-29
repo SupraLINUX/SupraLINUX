@@ -17,6 +17,10 @@ mat=load("manifests/kde-tier3-materialization.json")
 contracts=load("manifests/kde-tier3-package-contracts.json")
 t=load("manifests/kde-frameworks-tier3.json")
 
+if t.get("level3_remediation",{}).get("status") in {"materialization-pending-ci","materialization-PASS-pending-attempt2-planning-validation"}:
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_level3_remediation.py")]).returncode)
+
 T=["ktexteditor","purpose"]
 D={
   "ktexteditor":["kio","kparts","karchive","kconfig","kguiaddons","ki18n","sonnet","syntax-highlighting","kcolorscheme","kauth"],

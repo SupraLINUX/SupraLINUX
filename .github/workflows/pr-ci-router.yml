@@ -25,6 +25,7 @@ jobs:
       run_round25: ${{ steps.scope.outputs.run_round25 }}
       run_round26: ${{ steps.scope.outputs.run_round26 }}
       run_knewstuff_runtime: ${{ steps.scope.outputs.run_knewstuff_runtime }}
+      run_tier3_materialization: ${{ steps.scope.outputs.run_tier3_materialization }}
       run_tier3_level3: ${{ steps.scope.outputs.run_tier3_level3 }}
     steps:
       - name: Checkout
@@ -86,6 +87,8 @@ jobs:
           echo "run_round26=${run_round26}" >> "${GITHUB_OUTPUT}"
           run_knewstuff_runtime="$(python3 -c 'import json; r=json.load(open("manifests/kde-tier3-knewstuff-runtime-validation.json")); ok=r.get("state")=="execution-authorized" and r.get("execution_authorized") is True and r.get("activation",{}).get("execution_authorized") is True; print("true" if ok else "false")')"
           echo "run_knewstuff_runtime=${run_knewstuff_runtime}" >> "${GITHUB_OUTPUT}"
+          run_tier3_materialization="$(python3 -c 'import json; m=json.load(open("manifests/kde-tier3-materialization.json")); t=json.load(open("manifests/kde-frameworks-tier3.json")); mr=m.get("level3_remediation",{}); tr=t.get("level3_remediation",{}); ok=m.get("state")=="remediation-pending-ci" and mr.get("status")=="materialization-pending-ci" and mr.get("materialization_authorized") is True and mr.get("package_execution_authorized") is False and tr.get("status")=="materialization-pending-ci" and tr.get("materialization_authorized") is True and tr.get("package_execution_authorized") is False; print("true" if ok else "false")')"
+          echo "run_tier3_materialization=${run_tier3_materialization}" >> "${GITHUB_OUTPUT}"
           run_tier3_level3="$(python3 -c 'import json; m=json.load(open("manifests/kde-tier3-build-level3.json")); ok=m.get("state")=="active-pending-ci" and m.get("execution_authorized") is True; print("true" if ok else "false")')"
           echo "run_tier3_level3=${run_tier3_level3}" >> "${GITHUB_OUTPUT}"
           if [[ "${run_ci}" == "true" ]]; then
@@ -103,6 +106,12 @@ jobs:
     needs: [plan, repository-policy]
     if: needs.plan.outputs.run_knewstuff_runtime == 'true' && needs.repository-policy.result == 'success'
     uses: ./.github/workflows/kde-tier3-knewstuff-runtime-validation.yml
+
+  kde-tier3-materialization:
+    name: Tier 3 Level 3 source materialization
+    needs: [plan, repository-policy]
+    if: needs.plan.outputs.run_tier3_materialization == 'true' && needs.repository-policy.result == 'success'
+    uses: ./.github/workflows/kde-tier3-materialization.yml
 
   kde-tier3-build-level3:
     name: Tier 3 build Level 3

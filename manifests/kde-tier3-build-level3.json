@@ -623,6 +623,18 @@
       ],
       "dev_package": "libkf6doctools-dev",
       "provenance": "tier3-support-pass"
+    },
+    "kded": {
+      "version": "6.30.0-0supralinux1",
+      "workflow_run": 35721085911,
+      "artifact_id": 10691372157,
+      "artifact_sha256": "ff8756cf6efb4746568fa032cfb17cdf5c6b47bc31f532130936536aecb7c5c9",
+      "expected_binary_packages": [
+        "kded6",
+        "kded6-dev"
+      ],
+      "dev_package": "kded6-dev",
+      "provenance": "tier3-support-level1-pass"
     }
   },
   "nodes": {
@@ -787,7 +799,8 @@
       "sbuild_enable_network": false,
       "support_input_ids": [
         "breeze-icons",
-        "kdoctools"
+        "kdoctools",
+        "kded"
       ],
       "fail_evidence": {
         "workflow_run": 36607647059,
@@ -972,7 +985,8 @@
       "sbuild_enable_network": false,
       "support_input_ids": [
         "breeze-icons",
-        "kdoctools"
+        "kdoctools",
+        "kded"
       ],
       "fail_evidence": {
         "workflow_run": 36607647059,
@@ -993,7 +1007,7 @@
   },
   "current_attempt": 1,
   "next_attempt": 2,
-  "next_gate": "tier3-build-level3-attempt1-remediation-definition",
+  "next_gate": "tier3-level3-remediation-materialization-evidence",
   "planning_validation": {
     "repository_policy_workflow_run": 36606233220,
     "repository_policy_job_id": 109535845900,
@@ -1071,5 +1085,34 @@
     },
     "next_attempt": 2,
     "next_gate": "tier3-build-level3-attempt1-remediation-definition"
+  },
+  "level3_remediation": {
+    "status": "materialization-pending-ci",
+    "trigger": {
+      "attempt": 1,
+      "workflow_run": 36607647059,
+      "commit": "2692489bdb861520181df486c524efb9cdf47d60",
+      "failed_nodes": [
+        "ktexteditor",
+        "purpose"
+      ],
+      "rootfs_artifact_id": 11051807633,
+      "rootfs_artifact_sha256": "08eb26b3d264c79e26dd0f5e1cb6fe543a16e1f2be0f713bab5fee45cabdbd83"
+    },
+    "source_materialization_nodes": [
+      "ktexteditor",
+      "purpose"
+    ],
+    "provider_closure_only_nodes": [],
+    "candidate_package_versions": {
+      "ktexteditor": "6.30.0-0supralinux2",
+      "purpose": "6.30.0-0supralinux2"
+    },
+    "materialization_authorized": true,
+    "package_execution_authorized": false,
+    "current_attempt": 1,
+    "next_attempt": 2,
+    "canonical_snapshot": "18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED",
+    "next_gate": "tier3-level3-remediation-materialization-evidence"
   }
 }

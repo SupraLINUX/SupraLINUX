@@ -17,6 +17,10 @@ m = load("manifests/kde-tier3-materialization.json")
 c = load("manifests/kde-tier3-package-contracts.json")
 t = load("manifests/kde-frameworks-tier3.json")
 
+if m.get("level3_remediation",{}).get("status") in {"materialization-pending-ci","materialization-PASS-pending-attempt2-planning-validation"}:
+    import subprocess
+    raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_level3_remediation.py")]).returncode)
+
 selected = m.get("selected_nodes", [])
 canonical = {x.get("id"): x for x in t.get("nodes", [])}
 contracts = c.get("nodes", {})

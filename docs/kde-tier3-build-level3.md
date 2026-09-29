@@ -58,3 +58,16 @@ Both independent nodes reached valid `sbuild`, so each consumed Package Attempt 
 - Purpose `6.30.0-0supralinux1`: job `109541487871`, artifact `11052225512`, SHA-256 `cff8b75aac023985ba5f4c3c4d429665b268cd65865d65969724408ec2cc5122`. CTest reached 1/3 PASS. `alternativesmodeltest` observed KIO `Unknown protocol 'file'`; `menutest` aborted because Qt xcb could not connect to a display.
 
 The canonical snapshot is now **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED**. Execution is closed with `execution_authorized=false`. No root cause beyond the observed test failures is asserted by this closure. The next gate is `tier3-build-level3-attempt1-remediation-definition`; Attempt 2 is not authorized.
+
+
+## Attempt 1 remediation definition
+
+Attempt 1 closure is Policy-validated. Attempt 2 remains unauthorized while exactly two source packages are rematerialized as revision `6.30.0-0supralinux2`.
+
+KTextEditor remediation is test-only. Attempt 1 proved all twelve encoding `*_create` tests PASS while their paired `*_diff` tests raced them under parallel CTest, so the complete unfiltered suite is serialized with `dh_auto_test --no-parallel`. The remaining `testAboutToSave()` timeout is remediated by a deterministic autotest-only patch that copies `__FILE__` into a writable `QTemporaryFile` before testing the normal save signals. Production KTextEditor code is unchanged.
+
+Purpose remediation adds the missing test runtime provider `kio6 (>= 6.30.0~) <!nocheck>`, because the retained KIO 6.30 package provides the `file` and `http` workers that Attempt 1 could not find. The GUI `menutest` runs with `QT_QPA_PLATFORM=offscreen`; no Purpose production source change is required.
+
+The Level 3 solver/support closure also gains the already-PASS KDED `6.30.0-0supralinux1` artifact `10691372157`. This prevents KIO runtime resolution from mixing the selected KDE 6.30 stack with Ubuntu's older KDED provider. KDED remains a solver/support input, not an invented KDE dependency or a synthetic `.buildinfo` edge.
+
+This gate authorizes **source materialization only**. `package_execution_authorized=false`; no Package Attempt 2 can begin until both rematerializations PASS and a later planning/activation gate is validated.

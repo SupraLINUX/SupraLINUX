@@ -455,3 +455,10 @@ Canonical package state remains **16 PASS / 1 pending / 1 current FAIL / 2 BLOCK
 The KCMUtils `6.30.0-0supralinux3` materialization from workflow `36477724469` was consumed by Level 2 Package Attempt 5 in workflow `36503684811`. KCMUtils completed PASS with package artifact `11006467074` (SHA-256 `4dc1045a571b0cb05e61e25600a56fbdc59e5a80cde071cc3ad6af78f7b884a7`) and **6/6** upstream tests.
 
 This does not change the materialization evidence itself: it remains a source-only PASS with `package_attempted=false`. The later package evidence is recorded separately in the Level 2 attempt ledger and canonical package state. Level 2 is now 4/4 PASS; next gate: `tier3-knewstuff-runtime-validation-planning`.
+
+
+## Level 3 Attempt 1 remediation
+
+The Level 3 remediation queue contains exactly `ktexteditor` and `purpose`, both targeting `6.30.0-0supralinux2`. The previous materialization evidence remains retained and immutable; the new artifacts must be produced by the same KDE-upstream + pinned Debian-tree materializer.
+
+The gate is `state=remediation-pending-ci` with `materialization_authorized=true` and `package_execution_authorized=false`. The PR router invokes this reusable workflow only after Repository Policy validates the exact remediation contracts. A successful source materialization changes no canonical package PASS/FAIL state and consumes no Package Attempt.

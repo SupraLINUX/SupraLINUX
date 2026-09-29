@@ -6,7 +6,7 @@
   "frameworks_series": "6.30.0",
   "contract_manifest": "manifests/kde-tier3-package-contracts.json",
   "canonical_manifest": "manifests/kde-frameworks-tier3.json",
-  "state": "PASS",
+  "state": "remediation-pending-ci",
   "package_attempted": false,
   "package_state_effect": "none",
   "source_policy": "verify-kde-upstream-tarball-and-pinned-debian-6.30-packaging-before-adaptation",
@@ -779,10 +779,25 @@
       }
     },
     "ktexteditor": {
-      "state": "materialized",
+      "state": "remediation-pending",
       "source_package": "kf6-ktexteditor",
       "package_version": "6.30.0-0supralinux1",
       "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810107946,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10703760099,
+        "artifact_sha256": "9c58c753f5fc7489b3d18f9641e84d07d3262fd74f711a5a3ab33733148afd0b",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7",
+        "reference_tree_sha256": "bb4beab892d545539937a1cd4292062c98ed355f05f1e4ea4c62cd4916a09fce",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      },
+      "candidate_package_version": "6.30.0-0supralinux2",
+      "retained_previous_evidence": {
         "workflow_run": 35746667704,
         "job_id": 106810107946,
         "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
@@ -1019,10 +1034,25 @@
       }
     },
     "purpose": {
-      "state": "materialized",
+      "state": "remediation-pending",
       "source_package": "kf6-purpose",
       "package_version": "6.30.0-0supralinux1",
       "evidence": {
+        "workflow_run": 35746667704,
+        "job_id": 106810108129,
+        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
+        "artifact_id": 10703290646,
+        "artifact_sha256": "ca4f4b5c365468b4412c4c7a342b1d011adcaa66c618100e9d97af1d982d8f87",
+        "package_version": "6.30.0-0supralinux1",
+        "orig_tar_sha256": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862",
+        "reference_tree_sha256": "f1ca6eba5179a1a682a9543a948d604cb994bf4030ead2b9cef9cc442d6d7743",
+        "result": "PASS",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "full_result_json_retained_in_artifact": true
+      },
+      "candidate_package_version": "6.30.0-0supralinux2",
+      "retained_previous_evidence": {
         "workflow_run": 35746667704,
         "job_id": 106810108129,
         "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
@@ -1827,7 +1857,10 @@
     "package_state_effect": "none",
     "next_gate": "tier3-build-level2-attempt5-planning-validation"
   },
-  "remediation_queue": [],
+  "remediation_queue": [
+    "ktexteditor",
+    "purpose"
+  ],
   "level2_remediation": {
     "status": "materialization-PASS",
     "trigger": {
@@ -1923,5 +1956,45 @@
       "activation_level2_workflow_run": 36468036937,
       "activation_commit": "8b38a250b86f33dbbab60b406b2724ac6b25498d"
     }
-  ]
+  ],
+  "level3_previous_evidence_summary": {
+    "result": "PASS",
+    "workflow_run": 36477724469,
+    "commit": "2ff091a675dc7660ebeff0ebb7c7828b9e6fb0bd",
+    "total_materialized_nodes": 20,
+    "retained_previous_materializations": 19,
+    "promoted_remediation_materializations": 1,
+    "package_attempted": false,
+    "package_state_effect": "none",
+    "next_gate": "tier3-build-level2-attempt5-planning-validation"
+  },
+  "level3_remediation": {
+    "status": "materialization-pending-ci",
+    "trigger": {
+      "attempt": 1,
+      "workflow_run": 36607647059,
+      "commit": "2692489bdb861520181df486c524efb9cdf47d60",
+      "failed_nodes": [
+        "ktexteditor",
+        "purpose"
+      ],
+      "rootfs_artifact_id": 11051807633,
+      "rootfs_artifact_sha256": "08eb26b3d264c79e26dd0f5e1cb6fe543a16e1f2be0f713bab5fee45cabdbd83"
+    },
+    "source_changed_nodes": [
+      "ktexteditor",
+      "purpose"
+    ],
+    "provider_closure_only_nodes": [],
+    "candidate_package_versions": {
+      "ktexteditor": "6.30.0-0supralinux2",
+      "purpose": "6.30.0-0supralinux2"
+    },
+    "materialization_authorized": true,
+    "package_execution_authorized": false,
+    "package_attempted": false,
+    "package_state_effect": "none",
+    "next_gate": "tier3-level3-remediation-materialization-evidence"
+  },
+  "next_gate": "tier3-level3-remediation-materialization-evidence"
 }
