@@ -28,10 +28,18 @@ SNAP="18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED"
 req(m.get("schema")==1 and m.get("authority")=="kde-upstream" and m.get("provider_platform")=="ubuntu-resolute","Level3 schema/authority/provider")
 req(m.get("role")=="tier3-binary-build-level3" and m.get("frameworks_series")=="6.30.0","Level3 role/series")
 req(m.get("selected_nodes")==T and m.get("canonical_snapshot")==SNAP,"Level3 node set/snapshot")
-if m.get("state")=="planned-pending-activation":
+PV={"repository_policy_workflow_run":36606233220,"repository_policy_job_id":109535845900,"router_plan_job_id":109535845121,"commit":"87099ae7fa83a41edde584c60cea0d2880e22d4c"}
+state=m.get("state")
+if state=="planned-pending-activation":
     req(m.get("execution_authorized") is False and m.get("next_gate")=="tier3-build-level3-planning-validation","planned Level3 authorization/gate")
+elif state=="active-pending-ci":
+    req(m.get("execution_authorized") is True and m.get("current_attempt")==1 and m.get("next_attempt") is None and m.get("next_gate")=="tier3-build-level3-attempt1","active Level3 authorization/gate")
+    pv=m.get("planning_validation",{})
+    req(all(pv.get(k)==v for k,v in PV.items()) and pv.get("planner_runner_scope")=="PASS" and pv.get("level3_definition")=="PASS" and pv.get("historical_boundary")=="PASS" and pv.get("result")=="PASS","Level3 Attempt1 planning validation evidence")
+    act=m.get("activation",{})
+    req(act.get("status")=="ACTIVE" and act.get("attempt")==1 and act.get("planning_policy_workflow_run")==PV["repository_policy_workflow_run"] and act.get("planning_commit")==PV["commit"],"Level3 Attempt1 activation evidence")
 else:
-    req(m.get("state") in {"active-pending-ci","PASS","PARTIAL"},"Level3 lifecycle")
+    req(state in {"PASS","PARTIAL"},"Level3 lifecycle")
 
 pre=m.get("planning_precondition",{})
 req(pre.get("level2_attempt")==5 and pre.get("level2_workflow_run")==36503684811,"Level3 Level2 precondition")
@@ -41,13 +49,18 @@ req(pre.get("closure_commit")=="b3890f8b1399da43527a97136365c8d4339385f7" and pr
 
 req(l2.get("state")=="PASS" and l2.get("execution_authorized") is False and l2.get("current_attempt")==5,"Level2 closed precondition")
 pol=t.get("discovery_policy",{})
-req(pol.get("phase") in {"build-level3-planning","build-level3"},"Tier3 current Level3 phase")
 req(pol.get("runtime_validation")=="PASS-closed","KNewStuff runtime closure retained")
 live=t.get("build_level3",{})
 req(t.get("build_level3_manifest")=="manifests/kde-tier3-build-level3.json","Tier3 Level3 manifest linkage")
 req(live.get("selected_nodes")==T and live.get("canonical_snapshot")==SNAP,"Tier3 Level3 live node set/snapshot")
-if m.get("state")=="planned-pending-activation":
-    req(live.get("status")=="planned-pending-activation" and live.get("execution_authorized") is False,"Tier3 Level3 live planning state")
+if state=="planned-pending-activation":
+    req(pol.get("phase")=="build-level3-planning" and pol.get("package_builds")=="tier3-level3-planning-pending-validation","Tier3 Level3 planning live gate")
+    req(live.get("status")=="planned-pending-activation" and live.get("execution_authorized") is False and live.get("next_gate")=="tier3-build-level3-planning-validation","Tier3 Level3 live planning state")
+elif state=="active-pending-ci":
+    req(pol.get("phase")=="build-level3" and pol.get("package_builds")=="tier3-level3-authorized","Tier3 Level3 active live gate")
+    req(live.get("status")=="attempt1-active-pending-ci" and live.get("execution_authorized") is True and live.get("current_attempt")==1 and live.get("next_gate")=="tier3-build-level3-attempt1","Tier3 Level3 live Attempt1 state")
+    lpv=live.get("planning_validation",{})
+    req(all(lpv.get(k)==v for k,v in PV.items()) and lpv.get("result")=="PASS","Tier3 Level3 live planning evidence")
 
 tn={x["id"]:x for x in t.get("nodes",[])}
 for x in T:
@@ -102,7 +115,7 @@ for x in T:
     req(n.get("success_transition")=="PASS" and n.get("downstream_eligible_on_build_success") is True,x+": success transition")
 
 req(a.get("schema")==1 and a.get("batch")=="tier3-build-level3" and a.get("selected_nodes")==T and set(a.get("nodes",{}))==set(T),"Level3 ledger")
-if m.get("state")=="planned-pending-activation": req(a.get("campaign_history")==[] and all(a["nodes"][x]==[] for x in T),"planned ledger must be empty")
+if state in {"planned-pending-activation","active-pending-ci"}: req(a.get("campaign_history")==[] and all(a["nodes"][x]==[] for x in T),"pre-execution Level3 ledger must be empty")
 for p in ("scripts/plan-kde-tier3-build-level3.py","scripts/test-kde-tier3-build-level3-planner.py","scripts/run-kde-tier3-build-level3.sh",".github/workflows/kde-tier3-build-level3.yml","docs/kde-tier3-build-level3.md"): req((ROOT/p).exists(),"missing Level3 component: "+p)
 
 if errors:

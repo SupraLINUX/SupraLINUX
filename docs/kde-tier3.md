@@ -574,3 +574,12 @@ The final formal build level is now materialized as `manifests/kde-tier3-build-l
 Repository Policy run `36601250554` (job `109518908048`) validated the KNewStuff promotion/closure at commit `b3890f8b1399da43527a97136365c8d4339385f7`. That closed runtime gate is a planning precondition; it is not rerun.
 
 Level 3 begins deliberately paused at `execution_authorized=false`. Its reusable workflow is routed through `pr-ci-router.yml`; historical/legacy CI lanes are not re-enabled by this planning transition. The next gate is `tier3-build-level3-planning-validation`, after which package execution requires a separate activation.
+
+
+## Level 3 planning gates PASS / activation paused
+
+The Level 3 planning definition passed PR CI router run `36606233220` at commit `87099ae7fa83a41edde584c60cea0d2880e22d4c`. Repository Policy job `109535845900` passed, including the Level 3 planner/runner scope, Level 3 definition, KNewStuff runtime closure, historical-evidence boundary and closed Round 11 lifecycle checks. Router plan job `109535845121` also passed.
+
+Because `execution_authorized=false`, no Level 3 rootfs or KTextEditor/Purpose package build was scheduled and **Attempt 1 has not executed**. Canonical Tier 3 remains **18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**.
+
+Before changing execution authority, the Level 3 validator is extended to recognize the future Attempt 1 active lifecycle only when it is bound to this exact planning-validation evidence. This transition is validator/documentation-only; the next action remains a separate Level 3 Attempt 1 activation.

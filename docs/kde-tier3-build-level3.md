@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 build Level 3
 
-Status: **planning gate defined; package execution not authorized**
+Status: **planning validation PASS; activation still paused**
 
 Level 3 is the fourth and final topological build level already recorded by the KDE-upstream dependency DAG. It contains exactly KTextEditor `6.30.0-0supralinux1` and Purpose `6.30.0-0supralinux1`.
 
@@ -28,3 +28,12 @@ The reusable Level 3 workflow is invoked only through the single PR CI router. R
 GitHub-hosted Ubuntu 26.04 remains preflight evidence. Release-relevant final certification still requires the authoritative Ubuntu 26.04 KVM lane.
 
 No stable publication is implied or authorized by this gate.
+
+
+## Planning validation PASS / activation paused
+
+The paused Level 3 definition passed the single PR router at commit `87099ae7fa83a41edde584c60cea0d2880e22d4c`. PR CI router run `36606233220` completed PASS; its Repository Policy job `109535845900` and router plan job `109535845121` both passed.
+
+Repository Policy explicitly passed the Level 3 planner/runner scope and Level 3 definition checks, plus the retained KNewStuff runtime closure, historical-evidence boundary and closed Round 11 validator. The router did **not** schedule the Level 3 reusable build because `execution_authorized=false`, so the shared rootfs and both package jobs did not run and no Package Attempt was consumed.
+
+Before activation, the Level 3 validator is made forward-compatible with `state=active-pending-ci` and binds that future state to the exact planning-validation evidence above. This checkpoint changes no package state and does not authorize execution. A later activation is valid only if it references this PASS evidence exactly.

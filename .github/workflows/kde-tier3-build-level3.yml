@@ -1,4 +1,4 @@
-name: KDE Frameworks Tier 3 build level 2
+name: KDE Frameworks Tier 3 build level 3
 
 on:
   workflow_call:
