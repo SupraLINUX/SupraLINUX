@@ -199,3 +199,10 @@ package_attempted=false
 ```
 
 KNewStuff remains pending/runtime-validation-required; the canonical snapshot remains `17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED`.
+
+
+## Historical certification boundary correction
+
+The prior infrastructure certification from run `36583737052` remains valid historical evidence for what it actually proved at that time, but it is no longer treated as the live certification object.
+
+After validation run 3 exposed additional historical `result.json` schema generations, that earlier certification and its reauthorization became **superseded historical evidence**. The current live object is only the schema-remediation gate. This preserves the project rule that historical evidence is append-only while live state may advance or be frozen without rewriting the past.

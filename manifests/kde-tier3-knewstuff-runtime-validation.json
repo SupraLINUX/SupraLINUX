@@ -282,13 +282,15 @@
     "next_gate_after_policy_pass": "tier3-knewstuff-runtime-validation-execution-reauthorization"
   },
   "reauthorization": {
-    "status": "ACTIVE",
-    "execution_authorized": true,
+    "status": "SUPERSEDED",
+    "execution_authorized": false,
     "basis": "Repository Policy certified the runtime-validation infrastructure after two consecutive INFRA_INVALID incidents.",
     "certification_workflow_run": 36583737052,
     "certification_job_id": 109458398423,
     "certification_commit": "f310c657cd3f0050ff4ffbebc0d3df284a8324d1",
-    "runtime_execution_gate": "tier3-knewstuff-runtime-validation"
+    "runtime_execution_gate": "tier3-knewstuff-runtime-validation",
+    "superseded_by_validation_run": 3,
+    "superseded_reason": "Validation run 3 exposed historical result.json schema evolution not covered by the prior certification."
   },
   "retained_closure_schema_audit": {
     "scope_artifact_count": 34,
@@ -303,5 +305,21 @@
     "internal_hash_map_artifacts_checked": 10,
     "internal_hash_mismatches": 0,
     "interpretation": "Historical artifact schemas evolved during Tier 1/Tier 3 work. Missing legacy fields are absence-of-evidence fields, not mismatches; outer pinned artifact SHA-256 and exact .deb contracts remain mandatory for every artifact."
-  }
+  },
+  "infrastructure_certification_history": [
+    {
+      "round": 1,
+      "status": "PASS",
+      "workflow_run": 36583737052,
+      "job_id": 109458398423,
+      "commit": "f310c657cd3f0050ff4ffbebc0d3df284a8324d1",
+      "conclusion": "success",
+      "validated_gate": "tier3-knewstuff-runtime-validation-infrastructure-certification",
+      "synthetic_preflight": "PASS",
+      "exact_selector": "PASS",
+      "internal_result_json_hash_verifier": "PASS",
+      "tamper_rejection": "PASS",
+      "scope_limit": "Certified the then-known selector/hash mechanism, but did not model all historical result.json schema generations later exposed by validation run 3."
+    }
+  ]
 }

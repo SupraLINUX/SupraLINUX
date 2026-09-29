@@ -242,12 +242,21 @@ req(set(cert.get("required_checks", [])) == {
     "tampered-artifact-rejection",
 }, "runtime infrastructure remediation check set")
 
-cert_policy = cert.get("certification_policy_evidence", {})
-req(cert_policy.get("workflow_run") == 36583737052 and cert_policy.get("job_id") == 109458398423, "runtime infrastructure certification Policy evidence")
-req(cert_policy.get("commit") == "f310c657cd3f0050ff4ffbebc0d3df284a8324d1" and cert_policy.get("conclusion") == "success", "runtime infrastructure certification commit/PASS")
-req(cert_policy.get("validated_gate") == "tier3-knewstuff-runtime-validation-infrastructure-certification", "runtime infrastructure certification validated gate")
-req(cert_policy.get("synthetic_preflight") == "PASS" and cert_policy.get("exact_selector") == "PASS", "runtime infrastructure selector certification")
-req(cert_policy.get("internal_result_json_hash_verifier") == "PASS" and cert_policy.get("tamper_rejection") == "PASS", "runtime infrastructure evidence-verifier certification")
+cert_history = rv.get("infrastructure_certification_history", [])
+req(len(cert_history) == 1, "runtime infrastructure certification history length")
+cert1 = cert_history[0] if cert_history else {}
+req(cert1.get("round") == 1 and cert1.get("status") == "PASS", "runtime infrastructure certification history round1 state")
+req(cert1.get("workflow_run") == 36583737052 and cert1.get("job_id") == 109458398423, "runtime infrastructure certification historical Policy evidence")
+req(cert1.get("commit") == "f310c657cd3f0050ff4ffbebc0d3df284a8324d1" and cert1.get("conclusion") == "success", "runtime infrastructure certification historical commit/PASS")
+req(cert1.get("validated_gate") == "tier3-knewstuff-runtime-validation-infrastructure-certification", "runtime infrastructure certification historical validated gate")
+req(cert1.get("synthetic_preflight") == "PASS" and cert1.get("exact_selector") == "PASS", "runtime infrastructure historical selector certification")
+req(cert1.get("internal_result_json_hash_verifier") == "PASS" and cert1.get("tamper_rejection") == "PASS", "runtime infrastructure historical evidence-verifier certification")
+req("did not model all historical result.json schema generations" in cert1.get("scope_limit", ""), "runtime infrastructure historical certification scope limit")
+
+reauth = rv.get("reauthorization", {})
+req(reauth.get("status") == "SUPERSEDED" and reauth.get("execution_authorized") is False, "runtime prior reauthorization superseded")
+req(reauth.get("certification_workflow_run") == 36583737052 and reauth.get("certification_job_id") == 109458398423, "runtime prior reauthorization retained evidence")
+req(reauth.get("superseded_by_validation_run") == 3, "runtime prior reauthorization superseded by run3")
 snap = t.get("level2_snapshot", {})
 req((snap.get("pass"), snap.get("pending"), snap.get("current_fail"), snap.get("blocked")) == (17,3,0,0), "canonical snapshot unchanged during planning")
 
