@@ -5,9 +5,9 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-knewstuff-deferred-runtime-validation",
   "frameworks_series": "6.30.0",
-  "gate": "tier3-knewstuff-runtime-validation-infrastructure-remediation",
-  "state": "infrastructure-remediation-pending-policy-validation",
-  "execution_authorized": false,
+  "gate": "tier3-knewstuff-runtime-validation",
+  "state": "execution-authorized",
+  "execution_authorized": true,
   "validation_run_kind": "runtime-only",
   "package_attempted": false,
   "consumes_package_attempt": false,
@@ -268,8 +268,8 @@
     }
   ],
   "infrastructure_certification": {
-    "status": "remediation-pending-policy-validation",
-    "execution_authorized": false,
+    "status": "PASS",
+    "execution_authorized": true,
     "reason": "Validation run 3 exposed real historical result.json schema evolution not represented by the prior synthetic certification.",
     "required_checks": [
       "exact-extracted-artifact-directory-selection",
@@ -279,18 +279,32 @@
       "verify-every-recorded-internal-artifact-sha256",
       "tampered-artifact-rejection"
     ],
-    "next_gate_after_policy_pass": "tier3-knewstuff-runtime-validation-execution-reauthorization"
+    "next_gate_after_policy_pass": "tier3-knewstuff-runtime-validation",
+    "certification_round": 2,
+    "certification_policy_evidence": {
+      "workflow_run": 36591431061,
+      "job_id": 109485235871,
+      "commit": "cfe5f54ae5ecfb16f2fd95bd1a0a526bd4257fc5",
+      "conclusion": "success",
+      "validated_gate": "tier3-knewstuff-runtime-validation-infrastructure-remediation",
+      "synthetic_preflight": "PASS",
+      "exact_selector": "PASS",
+      "schema_generation_legacy_minimal": "PASS",
+      "schema_generation_version_only": "PASS",
+      "schema_generation_result_no_hashes": "PASS",
+      "schema_generation_hash_map": "PASS",
+      "tamper_rejection": "PASS"
+    }
   },
   "reauthorization": {
-    "status": "SUPERSEDED",
-    "execution_authorized": false,
-    "basis": "Repository Policy certified the runtime-validation infrastructure after two consecutive INFRA_INVALID incidents.",
-    "certification_workflow_run": 36583737052,
-    "certification_job_id": 109458398423,
-    "certification_commit": "f310c657cd3f0050ff4ffbebc0d3df284a8324d1",
-    "runtime_execution_gate": "tier3-knewstuff-runtime-validation",
-    "superseded_by_validation_run": 3,
-    "superseded_reason": "Validation run 3 exposed historical result.json schema evolution not covered by the prior certification."
+    "round": 2,
+    "status": "ACTIVE",
+    "execution_authorized": true,
+    "basis": "Repository Policy certified the schema-adaptive runtime-validation infrastructure after validation run 3.",
+    "certification_workflow_run": 36591431061,
+    "certification_job_id": 109485235871,
+    "certification_commit": "cfe5f54ae5ecfb16f2fd95bd1a0a526bd4257fc5",
+    "runtime_execution_gate": "tier3-knewstuff-runtime-validation"
   },
   "retained_closure_schema_audit": {
     "scope_artifact_count": 34,
@@ -320,6 +334,36 @@
       "internal_result_json_hash_verifier": "PASS",
       "tamper_rejection": "PASS",
       "scope_limit": "Certified the then-known selector/hash mechanism, but did not model all historical result.json schema generations later exposed by validation run 3."
+    },
+    {
+      "round": 2,
+      "status": "PASS",
+      "workflow_run": 36591431061,
+      "job_id": 109485235871,
+      "commit": "cfe5f54ae5ecfb16f2fd95bd1a0a526bd4257fc5",
+      "conclusion": "success",
+      "validated_gate": "tier3-knewstuff-runtime-validation-infrastructure-remediation",
+      "synthetic_preflight": "PASS",
+      "exact_selector": "PASS",
+      "schema_generation_legacy_minimal": "PASS",
+      "schema_generation_version_only": "PASS",
+      "schema_generation_result_no_hashes": "PASS",
+      "schema_generation_hash_map": "PASS",
+      "tamper_rejection": "PASS",
+      "retained_closure_schema_audit": "34/34 outer SHA-256 PASS; 10/10 recorded internal hash maps PASS"
+    }
+  ],
+  "reauthorization_history": [
+    {
+      "status": "SUPERSEDED",
+      "execution_authorized": false,
+      "basis": "Repository Policy certified the runtime-validation infrastructure after two consecutive INFRA_INVALID incidents.",
+      "certification_workflow_run": 36583737052,
+      "certification_job_id": 109458398423,
+      "certification_commit": "f310c657cd3f0050ff4ffbebc0d3df284a8324d1",
+      "runtime_execution_gate": "tier3-knewstuff-runtime-validation",
+      "superseded_by_validation_run": 3,
+      "superseded_reason": "Validation run 3 exposed historical result.json schema evolution not covered by the prior certification."
     }
   ]
 }
