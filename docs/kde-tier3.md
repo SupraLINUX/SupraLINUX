@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED — KNewStuff runtime validation PASS**
+Status: **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED — Level 3 Attempt 1 closed**
 
 Last reviewed: **2026-09-29**
 
@@ -592,3 +592,12 @@ The forward-compatible Level 3 lifecycle passed Repository Policy `36606727079` 
 A separate activation now authorizes **KTextEditor + Purpose** as Level 3 Attempt 1. The pre-result canonical snapshot remains **18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**. The two nodes are independent at this level and the matrix uses `fail-fast=false`; one node does not become BLOCKED merely because the other fails.
 
 Attempt accounting remains per valid package execution: no attempt is consumed until that node reaches `sbuild`. Stable publication remains unauthorized.
+
+
+## Level 3 Attempt 1 closed — KTextEditor + Purpose FAIL
+
+Workflow `36607647059` executed both final Level 3 nodes after Repository Policy and the shared Resolute rootfs passed. KTextEditor and Purpose each reached valid `sbuild`, so Attempt 1 is consumed for both nodes and both results are canonical package **FAIL**, not infrastructure incidents.
+
+KTextEditor artifact `11052302105` (SHA-256 `d66ad916ef3f4e38e2ab3dc436fba3ac7dcb6f1e59603399c5debaebfa6a5458`) reached 64/77 CTest PASS; the observed failures are twelve encoding diff tests plus a 300-second `testAboutToSave` timeout. Purpose artifact `11052225512` (SHA-256 `cff8b75aac023985ba5f4c3c4d429665b268cd65865d65969724408ec2cc5122`) reached 1/3 CTest PASS; observed failures are KIO `file` protocol availability and xcb display startup.
+
+Canonical Tier 3 is therefore **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED**. Level 3 execution is paused, Attempt 2 is not authorized, and the next gate is a remediation definition based on the retained Attempt 1 evidence. No stable publication is implied.

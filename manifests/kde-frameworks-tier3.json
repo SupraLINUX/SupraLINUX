@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level3",
+    "phase": "build-level3-remediation-planning",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level3-authorized",
-    "remediation": "level2-closed",
+    "package_builds": "tier3-level3-attempt1-closed-FAIL",
+    "remediation": "level3-attempt1-failures-pending-definition",
     "runtime_validation": "PASS-closed"
   },
   "runtime_validation": {
@@ -1443,7 +1443,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/ktexteditor-6.30.0.tar.xz",
       "source_sha256": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "FAIL",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -1468,9 +1468,19 @@
         }
       },
       "packaging": {
-        "state": "pending",
-        "package_version": null,
-        "downstream_eligible": false
+        "state": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "downstream_eligible": false,
+        "failure_evidence": {
+          "workflow_run": 36607647059,
+          "job_id": 109541487937,
+          "artifact_id": 11052302105,
+          "artifact_sha256": "d66ad916ef3f4e38e2ab3dc436fba3ac7dcb6f1e59603399c5debaebfa6a5458",
+          "stage": "sbuild",
+          "failure_substage": "ctest-encoding-diffs-and-katedocument-save-timeout",
+          "tests": "64/77 PASS",
+          "package_attempted": true
+        }
       }
     },
     {
@@ -1792,7 +1802,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/purpose-6.30.0.tar.xz",
       "source_sha256": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862",
       "upstream_ref": "v6.30.0",
-      "state": "pending",
+      "state": "FAIL",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -1817,9 +1827,19 @@
         }
       },
       "packaging": {
-        "state": "pending",
-        "package_version": null,
-        "downstream_eligible": false
+        "state": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "downstream_eligible": false,
+        "failure_evidence": {
+          "workflow_run": 36607647059,
+          "job_id": 109541487871,
+          "artifact_id": 11052225512,
+          "artifact_sha256": "cff8b75aac023985ba5f4c3c4d429665b268cd65865d65969724408ec2cc5122",
+          "stage": "sbuild",
+          "failure_substage": "ctest-kio-file-protocol-and-xcb-display",
+          "tests": "1/3 PASS",
+          "package_attempted": true
+        }
       }
     }
   ],
@@ -2951,21 +2971,21 @@
   },
   "build_level3_manifest": "manifests/kde-tier3-build-level3.json",
   "build_level3": {
-    "status": "attempt1-active-pending-ci",
-    "execution_authorized": true,
+    "status": "attempt1-closed-FAIL",
+    "execution_authorized": false,
     "selected_nodes": [
       "ktexteditor",
       "purpose"
     ],
     "current_attempt": 1,
-    "canonical_snapshot": "18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED",
+    "canonical_snapshot": "18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED",
     "planning_precondition": {
       "repository_policy_workflow_run": 36601250554,
       "repository_policy_job_id": 109518908048,
       "commit": "b3890f8b1399da43527a97136365c8d4339385f7",
       "result": "PASS"
     },
-    "next_gate": "tier3-build-level3-attempt1",
+    "next_gate": "tier3-build-level3-attempt1-remediation-definition",
     "planning_validation": {
       "repository_policy_workflow_run": 36606233220,
       "repository_policy_job_id": 109535845900,
@@ -2981,6 +3001,57 @@
       "repository_policy_job_id": 109537541705,
       "commit": "8812f744e21ab3833ebd162594a805a30ce9e294",
       "result": "PASS"
+    },
+    "next_attempt": 2,
+    "attempt1_evidence": {
+      "workflow_run": 36607647059,
+      "commit": "2692489bdb861520181df486c524efb9cdf47d60",
+      "result": "FAIL",
+      "package_attempted": true,
+      "package_state_effect": "2 FAIL; canonical 18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED",
+      "rootfs": {
+        "job_id": 109541198352,
+        "artifact_id": 11051807633,
+        "artifact_sha256": "08eb26b3d264c79e26dd0f5e1cb6fe543a16e1f2be0f713bab5fee45cabdbd83"
+      },
+      "workflow_jobs": {
+        "success": 0,
+        "fail": 2
+      },
+      "primary_classification": {
+        "PASS": [],
+        "FAIL": [
+          "ktexteditor",
+          "purpose"
+        ],
+        "INFRA_INVALID": []
+      },
+      "canonical_promotions": 0,
+      "canonical_failures": 2,
+      "node_evidence": {
+        "ktexteditor": {
+          "job_id": 109541487937,
+          "artifact_id": 11052302105,
+          "artifact_sha256": "d66ad916ef3f4e38e2ab3dc436fba3ac7dcb6f1e59603399c5debaebfa6a5458",
+          "stage": "sbuild",
+          "fail_stage": "ctest",
+          "exit_code": 2,
+          "package_attempted": true,
+          "tests": "64/77 PASS"
+        },
+        "purpose": {
+          "job_id": 109541487871,
+          "artifact_id": 11052225512,
+          "artifact_sha256": "cff8b75aac023985ba5f4c3c4d429665b268cd65865d65969724408ec2cc5122",
+          "stage": "sbuild",
+          "fail_stage": "ctest",
+          "exit_code": 2,
+          "package_attempted": true,
+          "tests": "1/3 PASS"
+        }
+      },
+      "next_attempt": 2,
+      "next_gate": "tier3-build-level3-attempt1-remediation-definition"
     }
   }
 }

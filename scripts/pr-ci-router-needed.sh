@@ -112,6 +112,10 @@ def norm(d):
         for k in ('phase','package_builds','remediation'): p.pop(k,None)
         d.pop('build_level3_manifest',None)
         d.pop('build_level3',None)
+        for node in d.get('nodes',[]):
+            if node.get('id') in {'ktexteditor','purpose'}:
+                node.pop('state',None)
+                node.pop('packaging',None)
         strip_active(d)
     elif path=='manifests/kde-tier3-build-level1.json':
         d.pop('next_gate',None); strip_active(d)

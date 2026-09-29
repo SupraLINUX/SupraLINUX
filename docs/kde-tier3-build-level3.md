@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 build Level 3
 
-Status: **planning validation PASS; activation still paused**
+Status: **Attempt 1 closed FAIL; remediation definition pending**
 
 Level 3 is the fourth and final topological build level already recorded by the KDE-upstream dependency DAG. It contains exactly KTextEditor `6.30.0-0supralinux1` and Purpose `6.30.0-0supralinux1`.
 
@@ -46,3 +46,15 @@ Planning validation PASS is bound to Repository Policy run `36606233220` (job `1
 A separate activation now sets `state=active-pending-ci`, `execution_authorized=true`, and `next_gate=tier3-build-level3-attempt1`. The runnable set is exactly KTextEditor + Purpose, scheduled independently with `fail-fast=false` and `max-parallel=2`.
 
 This activation itself does not consume a Package Attempt. Each node consumes Attempt 1 only when its runner reaches valid `sbuild` execution. A pre-sbuild runner/rootfs/transport failure remains infrastructure evidence rather than package FAIL.
+
+
+## Attempt 1 closure — 2 real FAIL
+
+Level 3 Attempt 1 ran in PR CI router workflow `36607647059` from commit `2692489bdb861520181df486c524efb9cdf47d60`. Repository Policy passed first. The Level 3 plan and shared Resolute rootfs also passed. Rootfs evidence: job `109541198352`, artifact `11051807633`, SHA-256 `08eb26b3d264c79e26dd0f5e1cb6fe543a16e1f2be0f713bab5fee45cabdbd83`.
+
+Both independent nodes reached valid `sbuild`, so each consumed Package Attempt 1 and each is a real package **FAIL**:
+
+- KTextEditor `6.30.0-0supralinux1`: job `109541487937`, artifact `11052302105`, SHA-256 `d66ad916ef3f4e38e2ab3dc436fba3ac7dcb6f1e59603399c5debaebfa6a5458`. CTest reached 64/77 PASS. Twelve encoding diff tests failed and `katedocument_test::testAboutToSave()` timed out at 300000 ms.
+- Purpose `6.30.0-0supralinux1`: job `109541487871`, artifact `11052225512`, SHA-256 `cff8b75aac023985ba5f4c3c4d429665b268cd65865d65969724408ec2cc5122`. CTest reached 1/3 PASS. `alternativesmodeltest` observed KIO `Unknown protocol 'file'`; `menutest` aborted because Qt xcb could not connect to a display.
+
+The canonical snapshot is now **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED**. Execution is closed with `execution_authorized=false`. No root cause beyond the observed test failures is asserted by this closure. The next gate is `tier3-build-level3-attempt1-remediation-definition`; Attempt 2 is not authorized.
