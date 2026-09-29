@@ -1074,7 +1074,7 @@
       "level": 3,
       "state": "planned",
       "source_package": "kf6-purpose",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "expected_binary_packages": [
         "libkf6purpose-bin",
         "libkf6purpose-data",
@@ -1084,10 +1084,10 @@
         "qml6-module-org-kde-purpose"
       ],
       "materialization": {
-        "workflow_run": 35746667704,
-        "job_id": 106810108129,
-        "artifact_id": 10703290646,
-        "artifact_sha256": "ca4f4b5c365468b4412c4c7a342b1d011adcaa66c618100e9d97af1d982d8f87"
+        "workflow_run": 36614234522,
+        "job_id": 109563580375,
+        "artifact_id": 11054941469,
+        "artifact_sha256": "b7fa3f20bacbc6b142f18596cc6cabd3a670a86f9246f39f7307be905dac16c7"
       },
       "blocking_predecessors": [
         "kio",
