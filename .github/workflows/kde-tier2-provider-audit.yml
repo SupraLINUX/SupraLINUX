@@ -1,13 +1,7 @@
 name: KDE Frameworks Tier 2 provider audit
 
 on:
-  pull_request:
-    paths:
-      - manifests/kde-frameworks-tier2-dependencies.json
-      - manifests/kde-tier2-campaign-plan.json
-      - scripts/run-kde-tier2-provider-audit.sh
-      - scripts/kde-tier2-provider-audit-needed.sh
-      - .github/workflows/kde-tier2-provider-audit.yml
+  workflow_call:
   workflow_dispatch:
 
 permissions:

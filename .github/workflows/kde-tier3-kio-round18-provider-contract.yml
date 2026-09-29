@@ -1,13 +1,7 @@
 name: KDE Frameworks Tier 3 KIO Round 18 provider contract audit
 
 on:
-  pull_request:
-    paths:
-      - manifests/kde-tier3-kio-round18-provider-contract.json
-      - docs/kde-tier3-kio-round18-provider-contract.md
-      - scripts/run-kde-tier3-kio-round18-provider-contract.py
-      - scripts/validate_kde_tier3_kio_round18_provider_contract.py
-      - .github/workflows/kde-tier3-kio-round18-provider-contract.yml
+  workflow_call:
   workflow_dispatch:
 
 permissions:

@@ -88,6 +88,10 @@ jobs:
             echo "Evidence/policy-only event delta; Repository Policy remains authoritative and reusable hosted lanes are skipped."
           fi
 
+  repository-policy:
+    name: Repository policy
+    uses: ./.github/workflows/repository-policy.yml
+
   diagnostic-infrastructure-preflight:
     name: Diagnostic infrastructure preflight
     needs: plan

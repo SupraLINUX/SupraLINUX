@@ -1,13 +1,7 @@
 name: KDE Frameworks Tier 2 KMime legacy compatibility provider
 
 on:
-  pull_request:
-    paths:
-      - manifests/kde-tier2-kmime-legacy-provider.json
-      - scripts/materialize-kde-tier2-kmime-legacy-provider.sh
-      - scripts/run-kde-tier2-kmime-legacy-provider-build.sh
-      - scripts/kde-tier2-kmime-legacy-provider-needed.sh
-      - .github/workflows/kde-tier2-kmime-legacy-provider.yml
+  workflow_call:
   workflow_dispatch:
 
 permissions:

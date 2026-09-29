@@ -1,19 +1,7 @@
 name: KDE Frameworks Tier 3 build level 2
 
 on:
-  pull_request:
-    paths:
-      - manifests/kde-tier3-build-level2.json
-      - manifests/kde-tier3-build-level2-attempts.json
-      - manifests/kde-tier3-build-level1.json
-      - manifests/kde-tier3-build-campaign.json
-      - manifests/kde-tier3-materialization.json
-      - manifests/kde-dag.json
-      - scripts/plan-kde-tier3-build-level2.py
-      - scripts/test-kde-tier3-build-level2-planner.py
-      - scripts/run-kde-tier3-build-level2.sh
-      - scripts/validate_kde_tier3_build_level2.py
-      - .github/workflows/kde-tier3-build-level2.yml
+  workflow_call:
   workflow_dispatch:
 
 permissions:

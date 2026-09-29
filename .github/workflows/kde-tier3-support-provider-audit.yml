@@ -1,13 +1,7 @@
 name: KDE Frameworks Tier 3 support provider audit
 
 on:
-  pull_request:
-    paths:
-      - manifests/kde-tier3-support-provider-audit.json
-      - manifests/kde-frameworks-tier3-dependencies.json
-      - scripts/run-kde-tier3-support-provider-audit.sh
-      - scripts/kde-tier3-support-provider-audit-needed.sh
-      - .github/workflows/kde-tier3-support-provider-audit.yml
+  workflow_call:
   workflow_dispatch:
 
 permissions:

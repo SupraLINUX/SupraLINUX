@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  pull_request:
+  workflow_call:
   workflow_dispatch:
 
 permissions:
@@ -57,6 +57,9 @@ jobs:
       - name: Test PR CI semantic evidence scope
         shell: bash
         run: scripts/test-pr-ci-router-scope.sh
+
+      - name: Validate PR workflow entrypoints
+        run: python3 scripts/validate_pr_workflow_entrypoints.py
 
       - name: Test KDE development contract audit
         shell: bash

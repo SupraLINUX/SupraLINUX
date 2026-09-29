@@ -1,12 +1,7 @@
 name: KDE Frameworks Tier 3 support packaging tree
 
 on:
-  pull_request:
-    paths:
-      - manifests/kde-tier3-support-package-contracts.json
-      - scripts/run-kde-tier3-support-packaging-tree-capture.sh
-      - scripts/kde-tier3-support-packaging-tree-needed.sh
-      - .github/workflows/kde-tier3-support-packaging-tree.yml
+  workflow_call:
   workflow_dispatch:
 
 permissions:

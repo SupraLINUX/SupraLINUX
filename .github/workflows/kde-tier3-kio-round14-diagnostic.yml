@@ -1,13 +1,8 @@
 name: KDE Frameworks Tier 3 KIO Round 14 diagnostic
 on:
-  pull_request:
-    paths:
-      - manifests/kde-tier3-kio-round14-diagnostic.json
-      - scripts/run-kde-tier3-kio-round14-diagnostic.sh
-      - scripts/validate_kde_tier3_kio_round14_diagnostic.py
-      - docs/kde-tier3-kio-round14-diagnostic.md
-      - .github/workflows/kde-tier3-kio-round14-diagnostic.yml
+  workflow_call:
   workflow_dispatch:
+
 permissions:
   contents: read
   actions: read

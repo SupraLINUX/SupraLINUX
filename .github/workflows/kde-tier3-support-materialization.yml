@@ -1,13 +1,7 @@
 name: KDE Frameworks Tier 3 support materialization
 
 on:
-  pull_request:
-    paths:
-      - manifests/kde-tier3-support-materialization.json
-      - manifests/kde-tier3-support-package-contracts.json
-      - scripts/materialize-kde-tier3-support-package.sh
-      - scripts/kde-tier3-support-materialization-needed.sh
-      - .github/workflows/kde-tier3-support-materialization.yml
+  workflow_call:
   workflow_dispatch:
 
 permissions:

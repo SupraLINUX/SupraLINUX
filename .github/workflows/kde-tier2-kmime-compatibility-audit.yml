@@ -1,15 +1,7 @@
 name: KDE Frameworks Tier 2 KMime compatibility-provider audit
 
 on:
-  pull_request:
-    paths:
-      - manifests/kde-tier2-kmime-compatibility-audit.json
-      - manifests/kde-frameworks-tier2.json
-      - manifests/kde-tier2-campaign-plan.json
-      - scripts/run-kde-tier2-kmime-compatibility-audit.sh
-      - scripts/validate_kde_tier2_kmime_compatibility_audit.py
-      - docs/kde-tier2-kmime-compatibility-audit.md
-      - .github/workflows/kde-tier2-kmime-compatibility-audit.yml
+  workflow_call:
   workflow_dispatch:
 
 permissions:

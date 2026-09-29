@@ -1,14 +1,7 @@
 name: KDE Frameworks Tier 3 contract reference
 
 on:
-  pull_request:
-    paths:
-      - manifests/kde-tier3-package-contracts.json
-      - manifests/kde-tier3-provider-audit.json
-      - scripts/run-kde-tier3-contract-reference-snapshot.sh
-      - scripts/kde-tier3-contract-reference-needed.sh
-      - scripts/validate_kde_tier3_package_contracts.py
-      - .github/workflows/kde-tier3-contract-reference.yml
+  workflow_call:
   workflow_dispatch:
 
 permissions:

@@ -1,20 +1,7 @@
 name: KDE Frameworks Tier 2 package batch 3
 
 on:
-  pull_request:
-    paths:
-      - manifests/kde-tier2-package-campaign-batch3.json
-      - manifests/kde-tier2-package-batch3-attempts.json
-      - manifests/kde-tier2-package-contracts.json
-      - manifests/kde-frameworks-tier2.json
-      - manifests/kde-frameworks-tier2-dependencies.json
-      - manifests/kde-frameworks-tier1.json
-      - manifests/kde-dag.json
-      - scripts/plan-kde-tier2-package-batch3.py
-      - scripts/kde-tier2-package-batch3-needed.sh
-      - scripts/validate-kde-tier2-batch3-retained-inputs.py
-      - scripts/run-kde-tier2-package-batch3.sh
-      - .github/workflows/kde-tier2-package-batch3.yml
+  workflow_call:
   workflow_dispatch:
 
 permissions:

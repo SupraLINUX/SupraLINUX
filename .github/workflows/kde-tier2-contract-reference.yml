@@ -1,12 +1,7 @@
 name: KDE Frameworks Tier 2 contract reference
 
 on:
-  pull_request:
-    paths:
-      - manifests/kde-tier2-package-contracts.json
-      - scripts/run-kde-tier2-contract-reference-snapshot.sh
-      - scripts/kde-tier2-contract-reference-needed.sh
-      - .github/workflows/kde-tier2-contract-reference.yml
+  workflow_call:
   workflow_dispatch:
 
 permissions:

@@ -1,18 +1,7 @@
 name: KDE Frameworks Tier 3 support build level 1
 
 on:
-  pull_request:
-    paths:
-      - manifests/kde-tier3-support-build-level1.json
-      - manifests/kde-tier3-support-build-level1-attempts.json
-      - manifests/kde-tier3-support-build-level0.json
-      - manifests/kde-tier3-support-materialization.json
-      - manifests/kde-frameworks-tier3-dependencies.json
-      - scripts/plan-kde-tier3-support-build-level1.py
-      - scripts/validate-kde-tier3-support-level1-retained-inputs.py
-      - scripts/run-kde-tier3-support-build-level1.sh
-      - scripts/kde-tier3-support-build-level1-needed.sh
-      - .github/workflows/kde-tier3-support-build-level1.yml
+  workflow_call:
   workflow_dispatch:
 
 permissions:
