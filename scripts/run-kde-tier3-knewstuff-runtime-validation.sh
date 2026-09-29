@@ -105,7 +105,10 @@ Path(sys.argv[3]).write_text(json.dumps(rows,indent=2,sort_keys=True)+"\n")
 PY
 STAGE=elf-resolution
 sudo chroot "${ROOTFS}" bash -ceu 'for pkg in knewstuff-dialog6 libkf6newstuffcore6 libkf6newstuffwidgets6 libkf6kcmutils-bin libkf6kcmutils6 libkf6kcmutilscore6 libkf6kcmutilsquick6; do dpkg -L "$pkg"; done | sort -u | while read -r p; do [ -f "$p" ] || continue; if readelf -h "$p" >/dev/null 2>&1; then ldd "$p" 2>/dev/null || true; fi; done' | tee "${EV}/ldd.log"
-! grep -F 'not found' "${EV}/ldd.log"
+if grep -Fq 'not found' "${EV}/ldd.log"; then
+  echo 'unresolved runtime shared-object dependency detected' >&2
+  exit 1
+fi
 STAGE=qml-smoke
 cat > "${WORK}/qml-smoke.cpp" <<'CPP'
 #include <QGuiApplication>
