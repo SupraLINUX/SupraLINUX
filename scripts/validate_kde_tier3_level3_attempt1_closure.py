@@ -32,14 +32,22 @@ for node,exp in ART.items():
     req(x.get("result")=="FAIL" and x.get("stage")=="sbuild" and x.get("exit_code")==2 and x.get("package_attempted") is True,node+": real sbuild FAIL")
     req(x.get("failure_substage")==exp["failure_substage"] and x.get("package_version")==exp["version"] and x.get("tests")==exp["tests"],node+": failure identity/version/tests")
     req(x.get("rootfs_artifact_id")==ROOTFS["artifact_id"] and x.get("rootfs_artifact_sha256")==ROOTFS["artifact_sha256"],node+": rootfs proof")
-req(m.get("state")=="FAIL" and m.get("execution_authorized") is False and m.get("current_attempt")==1 and m.get("next_attempt")==2,"Level3 Attempt1 closed manifest state")
-req(m.get("canonical_snapshot")=="18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED","Level3 Attempt1 closed snapshot")
-req(m.get("attempt1_summary",{}).get("next_gate")=="tier3-build-level3-attempt1-remediation-definition","Level3 Attempt1 historical next gate")
-req(t.get("build_level3",{}).get("status")=="attempt1-closed-FAIL" and t.get("build_level3",{}).get("execution_authorized") is False,"Tier3 live Level3 closure")
-req(t.get("build_level3",{}).get("attempt1_evidence",{}).get("next_gate")=="tier3-build-level3-attempt1-remediation-definition","Tier3 historical closure gate")
-nodes={x["id"]:x for x in t.get("nodes",[])}
-for node in ART:
-    req(nodes.get(node,{}).get("state")=="FAIL" and nodes.get(node,{}).get("packaging",{}).get("state")=="FAIL",node+": canonical FAIL")
+def validate_frozen_summary(s, label):
+    req(s.get("workflow_run")==RUN and s.get("commit")==COMMIT and s.get("result")=="FAIL",label+": identity/result")
+    req(s.get("package_attempted") is True and s.get("rootfs")==ROOTFS,label+": package execution/rootfs")
+    req(s.get("workflow_jobs")=={"success":0,"fail":2},label+": job counts")
+    req(s.get("primary_classification")=={"PASS":[],"FAIL":["ktexteditor","purpose"],"INFRA_INVALID":[]},label+": classification")
+    req(s.get("canonical_promotions")==0 and s.get("canonical_failures")==2 and s.get("next_attempt")==2,label+": canonical effect")
+    req(s.get("next_gate")=="tier3-build-level3-attempt1-remediation-definition",label+": historical next gate")
+    ne=s.get("node_evidence",{})
+    for node,exp in ART.items():
+        x=ne.get(node,{})
+        req(x.get("job_id")==exp["job_id"] and x.get("artifact_id")==exp["artifact_id"] and x.get("artifact_sha256")==exp["artifact_sha256"],label+": "+node+" artifact")
+        req(x.get("stage")=="sbuild" and x.get("exit_code")==2 and x.get("package_attempted") is True,label+": "+node+" real sbuild FAIL")
+        req(x.get("tests")==exp["tests"],label+": "+node+" tests")
+
+validate_frozen_summary(m.get("attempt1_summary",{}),"Level3 manifest Attempt1 summary")
+validate_frozen_summary(t.get("build_level3",{}).get("attempt1_evidence",{}),"Tier3 canonical Attempt1 evidence")
 if errors:
     for e in errors: print("ERROR:",e,file=sys.stderr)
     raise SystemExit(1)
