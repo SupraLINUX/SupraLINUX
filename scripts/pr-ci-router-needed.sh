@@ -180,6 +180,9 @@ for path in "${changed[@]}"; do
     docs/*|README.md|scripts/validate_*.py|scripts/test-*.sh|scripts/pr-ci-router-needed.sh|scripts/compile_kde_tier2_campaign.py|manifests/kde-tier1-package-batch*-attempts.json|manifests/kde-tier2-campaign-plan.json|.github/workflows/repository-policy.yml|.github/workflows/pr-ci-router.yml) continue ;;
     .github/workflows/kde-tier3-build-level3.yml|scripts/run-kde-tier3-build-level3.sh|scripts/plan-kde-tier3-build-level3.py|scripts/test-kde-tier3-build-level3-planner.py|manifests/kde-tier3-build-level3.json|manifests/kde-tier3-build-level3-attempts.json)
       continue ;;
+    .github/workflows/kde-tier3-materialization.yml|scripts/materialize_kde_tier3_package.py|scripts/kde-tier3-materialization-needed.sh)
+      if tier3_level3_materialization_is_routed; then continue; fi
+      echo "${path}: Tier 3 materialization execution input changed outside routed remediation; reusable hosted CI required."; exit 0 ;;
     .github/workflows/diagnostic-infrastructure-preflight.yml|scripts/run-diagnostic-infrastructure-preflight.sh|manifests/diagnostic-infrastructure-preflight.json)
       continue ;;
     .github/workflows/kde-tier3-kio-round*-diagnostic.yml|scripts/run-kde-tier3-kio-round*-diagnostic.sh|scripts/run-kde-tier3-kio-round*-hook.sh|manifests/kde-tier3-kio-round*-diagnostic.json)
