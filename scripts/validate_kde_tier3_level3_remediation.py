@@ -60,6 +60,8 @@ req(pev.get("workflow_run")==36614234522 and pev.get("job_id")==109563580375 and
 req(pev.get("result")=="PASS" and pev.get("package_attempted") is False and pev.get("package_state_effect")=="none","Purpose source-only materialization PASS")
 req(pev.get("package_version")==VERS["purpose"] and pev.get("materialized_tree_sha256")=="b320bfaaba55b2a76adbfd2b4f5354b4315de6926672eafcf239d4ad348020bc","Purpose materialized version/tree")
 req(pum.get("retained_previous_evidence",{}).get("result")=="PASS","Purpose previous materialization retained")
+
+for x in T:
     node=next(n for n in t["nodes"] if n["id"]==x)
     req(node.get("state")=="FAIL" and node.get("packaging",{}).get("state")=="FAIL" and node.get("packaging",{}).get("downstream_eligible") is False,x+": canonical FAIL retained")
 
