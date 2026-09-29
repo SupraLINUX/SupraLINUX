@@ -901,7 +901,7 @@
       "level": 3,
       "state": "planned",
       "source_package": "kf6-ktexteditor",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "expected_binary_packages": [
         "libkf6texteditor-data",
         "libkf6texteditor-bin",
@@ -911,10 +911,10 @@
         "libkf6texteditor6"
       ],
       "materialization": {
-        "workflow_run": 35746667704,
-        "job_id": 106810107946,
-        "artifact_id": 10703760099,
-        "artifact_sha256": "9c58c753f5fc7489b3d18f9641e84d07d3262fd74f711a5a3ab33733148afd0b"
+        "workflow_run": 36637751833,
+        "job_id": 109643132222,
+        "artifact_id": 11064709291,
+        "artifact_sha256": "606f9e22f162382f60b9499654248ebb8ac9e7970f47934b11457757a832becf"
       },
       "blocking_predecessors": [
         "kio",

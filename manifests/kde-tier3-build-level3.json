@@ -5,7 +5,7 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level3",
   "frameworks_series": "6.30.0",
-  "state": "FAIL",
+  "state": "remediation-materialized-pending-activation",
   "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED",
@@ -639,9 +639,9 @@
   },
   "nodes": {
     "ktexteditor": {
-      "state": "FAIL",
+      "state": "remediation-pending-build",
       "source_package": "kf6-ktexteditor",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "expected_binary_packages": [
         "libkf6texteditor-data",
         "libkf6texteditor-bin",
@@ -651,10 +651,10 @@
         "libkf6texteditor6"
       ],
       "materialization": {
-        "workflow_run": 35746667704,
-        "job_id": 106810107946,
-        "artifact_id": 10703760099,
-        "artifact_sha256": "9c58c753f5fc7489b3d18f9641e84d07d3262fd74f711a5a3ab33733148afd0b"
+        "workflow_run": 36637751833,
+        "job_id": 109643132222,
+        "artifact_id": 11064709291,
+        "artifact_sha256": "606f9e22f162382f60b9499654248ebb8ac9e7970f47934b11457757a832becf"
       },
       "blocking_predecessors": [
         "kio",
@@ -819,9 +819,9 @@
       }
     },
     "purpose": {
-      "state": "FAIL",
+      "state": "remediation-pending-build",
       "source_package": "kf6-purpose",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "expected_binary_packages": [
         "libkf6purpose-bin",
         "libkf6purpose-data",
@@ -831,10 +831,10 @@
         "qml6-module-org-kde-purpose"
       ],
       "materialization": {
-        "workflow_run": 35746667704,
-        "job_id": 106810108129,
-        "artifact_id": 10703290646,
-        "artifact_sha256": "ca4f4b5c365468b4412c4c7a342b1d011adcaa66c618100e9d97af1d982d8f87"
+        "workflow_run": 36614234522,
+        "job_id": 109563580375,
+        "artifact_id": 11054941469,
+        "artifact_sha256": "b7fa3f20bacbc6b142f18596cc6cabd3a670a86f9246f39f7307be905dac16c7"
       },
       "blocking_predecessors": [
         "kio",
@@ -1007,7 +1007,7 @@
   },
   "current_attempt": 1,
   "next_attempt": 2,
-  "next_gate": "tier3-level3-remediation-materialization-evidence",
+  "next_gate": "tier3-build-level3-attempt2-planning-validation",
   "planning_validation": {
     "repository_policy_workflow_run": 36606233220,
     "repository_policy_job_id": 109535845900,
@@ -1087,7 +1087,7 @@
     "next_gate": "tier3-build-level3-attempt1-remediation-definition"
   },
   "level3_remediation": {
-    "status": "materialization-pending-ci",
+    "status": "materialization-PASS-pending-attempt2-planning-validation",
     "trigger": {
       "attempt": 1,
       "workflow_run": 36607647059,
@@ -1108,11 +1108,52 @@
       "ktexteditor": "6.30.0-0supralinux2",
       "purpose": "6.30.0-0supralinux2"
     },
-    "materialization_authorized": true,
+    "materialization_authorized": false,
     "package_execution_authorized": false,
     "current_attempt": 1,
     "next_attempt": 2,
     "canonical_snapshot": "18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED",
-    "next_gate": "tier3-level3-remediation-materialization-evidence"
+    "next_gate": "tier3-build-level3-attempt2-planning-validation",
+    "source_materialization_complete": true,
+    "materialization_evidence": {
+      "result": "PASS",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "artifacts": {
+        "ktexteditor": {
+          "workflow_run": 36637751833,
+          "job_id": 109643132222,
+          "artifact_id": 11064709291,
+          "artifact_sha256": "606f9e22f162382f60b9499654248ebb8ac9e7970f47934b11457757a832becf",
+          "commit": "1cbac53df873910d05b3371e20b2a8a567ffae33",
+          "package_version": "6.30.0-0supralinux2"
+        },
+        "purpose": {
+          "workflow_run": 36614234522,
+          "job_id": 109563580375,
+          "artifact_id": 11054941469,
+          "artifact_sha256": "b7fa3f20bacbc6b142f18596cc6cabd3a670a86f9246f39f7307be905dac16c7",
+          "commit": "02e00c3158b685b974ba52f400b071054855a26d",
+          "package_version": "6.30.0-0supralinux2"
+        }
+      },
+      "infrastructure_history": [
+        {
+          "classification": "INFRA_INVALID",
+          "mechanism": "materialization-rules-replacement-validator",
+          "workflow_run": 36614234522,
+          "job_id": 109563580419,
+          "commit": "02e00c3158b685b974ba52f400b071054855a26d",
+          "artifact_id": 11055071212,
+          "artifact_sha256": "ff84d594dc64e6166e31e178e20b5bd3e7b001ec75a2f00189ec08022f50251b",
+          "node": "ktexteditor",
+          "stage": "contract-adaptation-validation",
+          "package_attempted": false,
+          "package_state_effect": "none",
+          "cause": "old-text substring check falsely matched the valid dh_auto_test --no-parallel replacement",
+          "disposition": "validator-fixed-rerun-ktexteditor-only"
+        }
+      ]
+    }
   }
 }

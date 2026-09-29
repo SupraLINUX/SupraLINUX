@@ -4924,7 +4924,7 @@
     }
   ],
   "level3_remediation": {
-    "status": "materialization-pending-ci",
+    "status": "materialization-PASS-pending-attempt2-planning-validation",
     "trigger": {
       "attempt": 1,
       "workflow_run": 36607647059,
@@ -4945,7 +4945,7 @@
       "ktexteditor": "6.30.0-0supralinux2",
       "purpose": "6.30.0-0supralinux2"
     },
-    "materialization_authorized": true,
+    "materialization_authorized": false,
     "package_build_authorized": false,
     "package_attempted": false,
     "package_state_effect": "none",
@@ -4963,6 +4963,47 @@
         "tests": "1/3 PASS"
       }
     },
-    "next_gate": "tier3-level3-remediation-materialization-evidence"
+    "next_gate": "tier3-build-level3-attempt2-planning-validation",
+    "source_materialization_complete": true,
+    "materialization_evidence": {
+      "result": "PASS",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "artifacts": {
+        "ktexteditor": {
+          "workflow_run": 36637751833,
+          "job_id": 109643132222,
+          "artifact_id": 11064709291,
+          "artifact_sha256": "606f9e22f162382f60b9499654248ebb8ac9e7970f47934b11457757a832becf",
+          "commit": "1cbac53df873910d05b3371e20b2a8a567ffae33",
+          "package_version": "6.30.0-0supralinux2"
+        },
+        "purpose": {
+          "workflow_run": 36614234522,
+          "job_id": 109563580375,
+          "artifact_id": 11054941469,
+          "artifact_sha256": "b7fa3f20bacbc6b142f18596cc6cabd3a670a86f9246f39f7307be905dac16c7",
+          "commit": "02e00c3158b685b974ba52f400b071054855a26d",
+          "package_version": "6.30.0-0supralinux2"
+        }
+      },
+      "infrastructure_history": [
+        {
+          "classification": "INFRA_INVALID",
+          "mechanism": "materialization-rules-replacement-validator",
+          "workflow_run": 36614234522,
+          "job_id": 109563580419,
+          "commit": "02e00c3158b685b974ba52f400b071054855a26d",
+          "artifact_id": 11055071212,
+          "artifact_sha256": "ff84d594dc64e6166e31e178e20b5bd3e7b001ec75a2f00189ec08022f50251b",
+          "node": "ktexteditor",
+          "stage": "contract-adaptation-validation",
+          "package_attempted": false,
+          "package_state_effect": "none",
+          "cause": "old-text substring check falsely matched the valid dh_auto_test --no-parallel replacement",
+          "disposition": "validator-fixed-rerun-ktexteditor-only"
+        }
+      ]
+    }
   }
 }

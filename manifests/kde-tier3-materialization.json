@@ -6,7 +6,7 @@
   "frameworks_series": "6.30.0",
   "contract_manifest": "manifests/kde-tier3-package-contracts.json",
   "canonical_manifest": "manifests/kde-frameworks-tier3.json",
-  "state": "remediation-pending-ci",
+  "state": "PASS",
   "package_attempted": false,
   "package_state_effect": "none",
   "source_policy": "verify-kde-upstream-tarball-and-pinned-debian-6.30-packaging-before-adaptation",
@@ -779,19 +779,27 @@
       }
     },
     "ktexteditor": {
-      "state": "remediation-pending",
+      "state": "materialized",
       "source_package": "kf6-ktexteditor",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "evidence": {
-        "workflow_run": 35746667704,
-        "job_id": 106810107946,
-        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
-        "artifact_id": 10703760099,
-        "artifact_sha256": "9c58c753f5fc7489b3d18f9641e84d07d3262fd74f711a5a3ab33733148afd0b",
-        "package_version": "6.30.0-0supralinux1",
+        "workflow_run": 36637751833,
+        "job_id": 109643132222,
+        "commit": "1cbac53df873910d05b3371e20b2a8a567ffae33",
+        "artifact_id": 11064709291,
+        "artifact_sha256": "606f9e22f162382f60b9499654248ebb8ac9e7970f47934b11457757a832becf",
+        "package_version": "6.30.0-0supralinux2",
         "orig_tar_sha256": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7",
         "reference_tree_sha256": "bb4beab892d545539937a1cd4292062c98ed355f05f1e4ea4c62cd4916a09fce",
+        "source_tree_sha256": "8bcdaf4531f076eee0950299e8b60409456db80e10421ceb8351662818489711",
+        "materialized_tree_sha256": "a37653a2a5b0ecb8e596d4f565f365d18603691dbebb47d838aca7463a345728",
+        "adapted_control_sha256": "fa459bd11f886155798fc5fb57b7b587ef1bc8a9698837cb52f98f1d9baa3c99",
+        "adapted_rules_sha256": "ae9ca644701393ae026fb05549a556f241d96a89ddc5e43f9ed58bdd2d1b6028",
+        "dsc_sha256": "6a33b275cae36f3cb77c30d2d46593b70735074d4f80306fb5284cac38089060",
+        "debian_tar_sha256": "2d11f353a35203cf58d868431a4e1660a772e5f0ce3d77ec083243e98fa576c8",
         "result": "PASS",
+        "stage": "complete",
+        "exit_code": 0,
         "package_attempted": false,
         "package_state_effect": "none",
         "full_result_json_retained_in_artifact": true
@@ -1880,9 +1888,7 @@
     "package_state_effect": "none",
     "next_gate": "tier3-build-level2-attempt5-planning-validation"
   },
-  "remediation_queue": [
-    "ktexteditor"
-  ],
+  "remediation_queue": [],
   "level2_remediation": {
     "status": "materialization-PASS",
     "trigger": {
@@ -1991,7 +1997,7 @@
     "next_gate": "tier3-build-level2-attempt5-planning-validation"
   },
   "level3_remediation": {
-    "status": "materialization-pending-ci",
+    "status": "materialization-PASS",
     "trigger": {
       "attempt": 1,
       "workflow_run": 36607647059,
@@ -2012,17 +2018,16 @@
       "ktexteditor": "6.30.0-0supralinux2",
       "purpose": "6.30.0-0supralinux2"
     },
-    "materialization_authorized": true,
+    "materialization_authorized": false,
     "package_execution_authorized": false,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-level3-remediation-materialization-evidence",
+    "next_gate": "tier3-build-level3-attempt2-planning-validation",
     "materialized_nodes": [
+      "ktexteditor",
       "purpose"
     ],
-    "pending_materialization_nodes": [
-      "ktexteditor"
-    ],
+    "pending_materialization_nodes": [],
     "materialization_progress": {
       "workflow_run": 36614234522,
       "commit": "02e00c3158b685b974ba52f400b071054855a26d",
@@ -2055,6 +2060,47 @@
         "cause": "old-text substring check falsely matched the valid dh_auto_test --no-parallel replacement",
         "disposition": "validator-fixed-rerun-ktexteditor-only"
       }
+    },
+    "source_materialization_complete": true,
+    "materialization_evidence": {
+      "result": "PASS",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "artifacts": {
+        "ktexteditor": {
+          "workflow_run": 36637751833,
+          "job_id": 109643132222,
+          "artifact_id": 11064709291,
+          "artifact_sha256": "606f9e22f162382f60b9499654248ebb8ac9e7970f47934b11457757a832becf",
+          "commit": "1cbac53df873910d05b3371e20b2a8a567ffae33",
+          "package_version": "6.30.0-0supralinux2"
+        },
+        "purpose": {
+          "workflow_run": 36614234522,
+          "job_id": 109563580375,
+          "artifact_id": 11054941469,
+          "artifact_sha256": "b7fa3f20bacbc6b142f18596cc6cabd3a670a86f9246f39f7307be905dac16c7",
+          "commit": "02e00c3158b685b974ba52f400b071054855a26d",
+          "package_version": "6.30.0-0supralinux2"
+        }
+      },
+      "infrastructure_history": [
+        {
+          "classification": "INFRA_INVALID",
+          "mechanism": "materialization-rules-replacement-validator",
+          "workflow_run": 36614234522,
+          "job_id": 109563580419,
+          "commit": "02e00c3158b685b974ba52f400b071054855a26d",
+          "artifact_id": 11055071212,
+          "artifact_sha256": "ff84d594dc64e6166e31e178e20b5bd3e7b001ec75a2f00189ec08022f50251b",
+          "node": "ktexteditor",
+          "stage": "contract-adaptation-validation",
+          "package_attempted": false,
+          "package_state_effect": "none",
+          "cause": "old-text substring check falsely matched the valid dh_auto_test --no-parallel replacement",
+          "disposition": "validator-fixed-rerun-ktexteditor-only"
+        }
+      ]
     }
   },
   "next_gate": "tier3-level3-remediation-materialization-evidence"
