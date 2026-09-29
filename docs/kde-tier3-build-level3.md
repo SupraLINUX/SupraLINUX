@@ -110,3 +110,10 @@ Both revision-`3` sources materialized **PASS** with `package_attempted=false` a
 - Purpose `6.30.0-0supralinux3`: job `109661057232`, artifact `11067860328`, ZIP SHA-256 `988a4d2f21d152a938e17b802026a9c950fd2a91351ab2fbee6ae1300720945f`. Both local-source test patches reproduced their declared hashes.
 
 Canonical package state remains **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED** because source materialization does not promote packages. Package Attempt 3 is still unauthorized. The next gate is `tier3-build-level3-attempt3-planning-validation`.
+
+
+### Repository tree recovery incident
+
+Commit `d214ea22cbe7b9e0bc512121b3514dab724964ec` was created with an incomplete Git tree while recording the Attempt 3 source-materialization closure. This was a repository commit-construction incident, not package execution and not package evidence. No Package Attempt was consumed.
+
+Commit `9d92876ce876791ac0922ffa1818802bac090530` restored the complete tree from `91a493ffe10620d00350c404f37c13baa9fdbd45` and reapplied only the intended Level 3 closure changes. A comparison from `91a493f...` to `9d92876...` confirmed exactly the intended 11 modified files. The noisy CI router event caused by comparing the incomplete tree to the restored tree is infrastructure-invalid for planning evidence and must not be used to authorize Package Attempt 3.
