@@ -563,13 +563,18 @@ def validate_remediation_overrides(control: Path, debian: Path, rules: str, node
             if wanted not in relation_names:
                 raise RuntimeError(f"{node}: required Build-Depends missing: {wanted}")
 
+    def replacement_count(text: str, needle: str) -> int:
+        if "\n" not in needle:
+            return sum(1 for line in text.splitlines() if line == needle)
+        return text.count(needle)
+
     for item in contract.get("rules_text_replacements", []):
         old = item["old"]
         new = item["new"]
         expected = int(item.get("expected_count", 1))
-        if old in rules:
+        if replacement_count(rules, old) != 0:
             raise RuntimeError(f"{node}: rules replacement old text remains: {old!r}")
-        if rules.count(new) != expected:
+        if replacement_count(rules, new) != expected:
             raise RuntimeError(f"{node}: rules replacement new text count mismatch: {new!r}")
 
     test_cfg = contract.get("reference_test_suppression_overrides", {})

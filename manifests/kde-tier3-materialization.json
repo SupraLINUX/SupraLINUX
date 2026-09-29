@@ -810,6 +810,21 @@
         "package_attempted": false,
         "package_state_effect": "none",
         "full_result_json_retained_in_artifact": true
+      },
+      "materialization_incident": {
+        "classification": "INFRA_INVALID",
+        "mechanism": "materialization-rules-replacement-validator",
+        "workflow_run": 36614234522,
+        "job_id": 109563580419,
+        "commit": "02e00c3158b685b974ba52f400b071054855a26d",
+        "artifact_id": 11055071212,
+        "artifact_sha256": "ff84d594dc64e6166e31e178e20b5bd3e7b001ec75a2f00189ec08022f50251b",
+        "node": "ktexteditor",
+        "stage": "contract-adaptation-validation",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "cause": "old-text substring check falsely matched the valid dh_auto_test --no-parallel replacement",
+        "disposition": "validator-fixed-rerun-ktexteditor-only"
       }
     },
     "ktextwidgets": {
@@ -1034,19 +1049,27 @@
       }
     },
     "purpose": {
-      "state": "remediation-pending",
+      "state": "materialized",
       "source_package": "kf6-purpose",
-      "package_version": "6.30.0-0supralinux1",
+      "package_version": "6.30.0-0supralinux2",
       "evidence": {
-        "workflow_run": 35746667704,
-        "job_id": 106810108129,
-        "commit": "39fcab118709bcdb7e97524333d3f74d1b4edec4",
-        "artifact_id": 10703290646,
-        "artifact_sha256": "ca4f4b5c365468b4412c4c7a342b1d011adcaa66c618100e9d97af1d982d8f87",
-        "package_version": "6.30.0-0supralinux1",
+        "workflow_run": 36614234522,
+        "job_id": 109563580375,
+        "commit": "02e00c3158b685b974ba52f400b071054855a26d",
+        "artifact_id": 11054941469,
+        "artifact_sha256": "b7fa3f20bacbc6b142f18596cc6cabd3a670a86f9246f39f7307be905dac16c7",
+        "package_version": "6.30.0-0supralinux2",
         "orig_tar_sha256": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862",
         "reference_tree_sha256": "f1ca6eba5179a1a682a9543a948d604cb994bf4030ead2b9cef9cc442d6d7743",
+        "source_tree_sha256": "cad2a7fce3083c176ff47dc7db2cabc3cc3084dd42840e18fc85df71bdbb305f",
+        "materialized_tree_sha256": "b320bfaaba55b2a76adbfd2b4f5354b4315de6926672eafcf239d4ad348020bc",
+        "adapted_control_sha256": "1c49f7eb199855101b28dde4022c5c991da8ed0eeeab3db5d3ba196b4e1e7312",
+        "adapted_rules_sha256": "e74159dcfa6a7a176283b709be5eb0c2b2b98f161e658f9d045f9c252c7a35ac",
+        "dsc_sha256": "48d90f4f0236d9f8becb7aa445730ae06f328210ca7144f30a8a49153b5ca35f",
+        "debian_tar_sha256": "0505e853e9a5a91d6fd1c04463329804c7ef24fc30b60534054cbba1dc789f70",
         "result": "PASS",
+        "stage": "complete",
+        "exit_code": 0,
         "package_attempted": false,
         "package_state_effect": "none",
         "full_result_json_retained_in_artifact": true
@@ -1858,8 +1881,7 @@
     "next_gate": "tier3-build-level2-attempt5-planning-validation"
   },
   "remediation_queue": [
-    "ktexteditor",
-    "purpose"
+    "ktexteditor"
   ],
   "level2_remediation": {
     "status": "materialization-PASS",
@@ -1994,7 +2016,46 @@
     "package_execution_authorized": false,
     "package_attempted": false,
     "package_state_effect": "none",
-    "next_gate": "tier3-level3-remediation-materialization-evidence"
+    "next_gate": "tier3-level3-remediation-materialization-evidence",
+    "materialized_nodes": [
+      "purpose"
+    ],
+    "pending_materialization_nodes": [
+      "ktexteditor"
+    ],
+    "materialization_progress": {
+      "workflow_run": 36614234522,
+      "commit": "02e00c3158b685b974ba52f400b071054855a26d",
+      "result": "PARTIAL",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "PASS": [
+        "purpose"
+      ],
+      "INFRA_INVALID": [
+        "ktexteditor"
+      ],
+      "purpose_artifact": {
+        "job_id": 109563580375,
+        "artifact_id": 11054941469,
+        "artifact_sha256": "b7fa3f20bacbc6b142f18596cc6cabd3a670a86f9246f39f7307be905dac16c7"
+      },
+      "infrastructure_incident": {
+        "classification": "INFRA_INVALID",
+        "mechanism": "materialization-rules-replacement-validator",
+        "workflow_run": 36614234522,
+        "job_id": 109563580419,
+        "commit": "02e00c3158b685b974ba52f400b071054855a26d",
+        "artifact_id": 11055071212,
+        "artifact_sha256": "ff84d594dc64e6166e31e178e20b5bd3e7b001ec75a2f00189ec08022f50251b",
+        "node": "ktexteditor",
+        "stage": "contract-adaptation-validation",
+        "package_attempted": false,
+        "package_state_effect": "none",
+        "cause": "old-text substring check falsely matched the valid dh_auto_test --no-parallel replacement",
+        "disposition": "validator-fixed-rerun-ktexteditor-only"
+      }
+    }
   },
   "next_gate": "tier3-level3-remediation-materialization-evidence"
 }
