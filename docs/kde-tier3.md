@@ -632,3 +632,12 @@ Level 3 Attempt 2 is historically closed **FAIL** for KTextEditor and Purpose. T
 The KTextEditor remediation removes the final autotest dependency on relative `__FILE__` resolution by using a self-contained writable temporary document. The Purpose remediation keeps KIO workers and headless Qt, but replaces external HTTP inputs only in the two tests that actually execute Save As jobs; the package build remains intentionally network-disabled.
 
 The live gate is `tier3-level3-attempt3-remediation-materialization-evidence`. Source materialization consumes no Package Attempt and does not change canonical PASS/FAIL state. Attempt 3 package execution and stable publication remain unauthorized.
+
+
+## Level 3 Attempt 3 materialization closure
+
+Workflow `36643423967` materialized both Level 3 revision-`3` sources successfully while the binary build lane remained skipped. KTextEditor artifact `11066929892` has SHA-256 `74afd833bcd1f35571e59a9983e5fa56bb8b774eff4210df9c4a5b6a93a321b5`; Purpose artifact `11067860328` has SHA-256 `988a4d2f21d152a938e17b802026a9c950fd2a91351ab2fbee6ae1300720945f`.
+
+The current source artifacts are now pinned into the Level 3 campaign while the previous `-1` and `-2` materializations remain retained as history. No Package Attempt was consumed and the canonical snapshot remains **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED**.
+
+Next gate: `tier3-build-level3-attempt3-planning-validation`. Package execution remains disabled until that planning gate passes and Attempt 3 is activated separately.

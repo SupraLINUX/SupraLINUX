@@ -153,7 +153,7 @@ planning=(
     and mr.get('status')=='materialization-PASS'
     and mr.get('materialization_authorized') is False
     and mr.get('package_execution_authorized') is False
-    and tr.get('status')=='materialization-PASS-pending-attempt2-planning-validation'
+    and tr.get('status') in {'materialization-PASS-pending-attempt2-planning-validation','materialization-PASS-pending-attempt3-planning-validation'}
     and tr.get('materialization_authorized') is False
     and tr.get('package_execution_authorized') is False
 )

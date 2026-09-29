@@ -17,7 +17,7 @@ m = load("manifests/kde-tier3-materialization.json")
 c = load("manifests/kde-tier3-package-contracts.json")
 t = load("manifests/kde-frameworks-tier3.json")
 
-if m.get("level3_remediation",{}).get("status") in {"materialization-pending-ci","materialization-PASS-pending-attempt2-planning-validation"}:
+if m.get("level3_remediation",{}).get("status") in {"materialization-pending-ci","materialization-PASS-pending-attempt2-planning-validation","materialization-PASS-pending-attempt3-planning-validation"}:
     import subprocess
     raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_level3_remediation.py")]).returncode)
 

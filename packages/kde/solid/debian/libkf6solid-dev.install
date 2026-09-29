@@ -1,3 +1,0 @@
-usr/include/KF6/Solid/
-usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6Solid/
-usr/lib/${DEB_HOST_MULTIARCH}/libKF6Solid.so

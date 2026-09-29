@@ -18,7 +18,7 @@ contracts=load("manifests/kde-tier3-package-contracts.json")
 t=load("manifests/kde-frameworks-tier3.json")
 
 # Attempt 3 source-remediation state is validated by the dedicated remediation lifecycle.
-if t.get("level3_remediation",{}).get("status")=="materialization-pending-ci" and t.get("level3_remediation",{}).get("trigger",{}).get("attempt")==2:
+if t.get("level3_remediation",{}).get("status") in {"materialization-pending-ci","materialization-PASS-pending-attempt3-planning-validation"} and t.get("level3_remediation",{}).get("trigger",{}).get("attempt")==2:
     import subprocess
     raise SystemExit(subprocess.run([sys.executable,str(ROOT/"scripts/validate_kde_tier3_level3_remediation.py")]).returncode)
 

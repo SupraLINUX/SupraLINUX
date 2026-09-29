@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 build Level 3
 
-Status: **Attempt 2 closed FAIL; Attempt 3 source materialization pending**
+Status: **Attempt 3 source materialization PASS; planning validation pending**
 
 Level 3 is the fourth and final topological build level already recorded by the KDE-upstream dependency DAG. It contains exactly KTextEditor `6.30.0-0supralinux1` and Purpose `6.30.0-0supralinux1`.
 
@@ -98,3 +98,15 @@ KTextEditor `6.30.0-0supralinux3` keeps the serialized full upstream suite that 
 Purpose `6.30.0-0supralinux3` retains the KIO worker test provider and `QT_QPA_PLATFORM=offscreen`. The two executing tests that previously used literal `http://kde.org` now create local source files and pass `file:` URLs into the same Save As/Menu flows. Attempt 2 already proved the `file` worker is available; external network reachability is not part of those test contracts, and `sbuild` remains network-disabled.
 
 This gate authorizes **source materialization only** for KTextEditor and Purpose. `package_execution_authorized=false`; Package Attempt 3 cannot begin until both `-3` materializations PASS and a later planning/activation gate is validated.
+
+
+## Attempt 3 source materialization — PASS
+
+PR CI router `36643423967` at commit `91a493ffe10620d00350c404f37c13baa9fdbd45` passed Repository Policy and ran only the source-materialization lane. Package Level 3 remained skipped.
+
+Both revision-`3` sources materialized **PASS** with `package_attempted=false` and `package_state_effect=none`:
+
+- KTextEditor `6.30.0-0supralinux3`: job `109661057170`, artifact `11066929892`, ZIP SHA-256 `74afd833bcd1f35571e59a9983e5fa56bb8b774eff4210df9c4a5b6a93a321b5`. The materializer reproduced the self-contained `testAboutToSave()` patch hash `b4d9868777b7da55bf92b4196aa948671629f42c8827bade013f4a56926635b5`.
+- Purpose `6.30.0-0supralinux3`: job `109661057232`, artifact `11067860328`, ZIP SHA-256 `988a4d2f21d152a938e17b802026a9c950fd2a91351ab2fbee6ae1300720945f`. Both local-source test patches reproduced their declared hashes.
+
+Canonical package state remains **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED** because source materialization does not promote packages. Package Attempt 3 is still unauthorized. The next gate is `tier3-build-level3-attempt3-planning-validation`.

@@ -901,7 +901,7 @@
       "level": 3,
       "state": "planned",
       "source_package": "kf6-ktexteditor",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "expected_binary_packages": [
         "libkf6texteditor-data",
         "libkf6texteditor-bin",
@@ -911,10 +911,10 @@
         "libkf6texteditor6"
       ],
       "materialization": {
-        "workflow_run": 36637751833,
-        "job_id": 109643132222,
-        "artifact_id": 11064709291,
-        "artifact_sha256": "606f9e22f162382f60b9499654248ebb8ac9e7970f47934b11457757a832becf"
+        "workflow_run": 36643423967,
+        "job_id": 109661057170,
+        "artifact_id": 11066929892,
+        "artifact_sha256": "74afd833bcd1f35571e59a9983e5fa56bb8b774eff4210df9c4a5b6a93a321b5"
       },
       "blocking_predecessors": [
         "kio",
@@ -1074,7 +1074,7 @@
       "level": 3,
       "state": "planned",
       "source_package": "kf6-purpose",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "expected_binary_packages": [
         "libkf6purpose-bin",
         "libkf6purpose-data",
@@ -1084,10 +1084,10 @@
         "qml6-module-org-kde-purpose"
       ],
       "materialization": {
-        "workflow_run": 36614234522,
-        "job_id": 109563580375,
-        "artifact_id": 11054941469,
-        "artifact_sha256": "b7fa3f20bacbc6b142f18596cc6cabd3a670a86f9246f39f7307be905dac16c7"
+        "workflow_run": 36643423967,
+        "job_id": 109661057232,
+        "artifact_id": 11067860328,
+        "artifact_sha256": "988a4d2f21d152a938e17b802026a9c950fd2a91351ab2fbee6ae1300720945f"
       },
       "blocking_predecessors": [
         "kio",

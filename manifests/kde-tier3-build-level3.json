@@ -5,7 +5,7 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level3",
   "frameworks_series": "6.30.0",
-  "state": "FAIL",
+  "state": "remediation-materialized-pending-activation",
   "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED",
@@ -639,9 +639,9 @@
   },
   "nodes": {
     "ktexteditor": {
-      "state": "FAIL",
+      "state": "remediation-pending-build",
       "source_package": "kf6-ktexteditor",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "expected_binary_packages": [
         "libkf6texteditor-data",
         "libkf6texteditor-bin",
@@ -651,10 +651,10 @@
         "libkf6texteditor6"
       ],
       "materialization": {
-        "workflow_run": 36637751833,
-        "job_id": 109643132222,
-        "artifact_id": 11064709291,
-        "artifact_sha256": "606f9e22f162382f60b9499654248ebb8ac9e7970f47934b11457757a832becf"
+        "workflow_run": 36643423967,
+        "job_id": 109661057170,
+        "artifact_id": 11066929892,
+        "artifact_sha256": "74afd833bcd1f35571e59a9983e5fa56bb8b774eff4210df9c4a5b6a93a321b5"
       },
       "blocking_predecessors": [
         "kio",
@@ -819,9 +819,9 @@
       }
     },
     "purpose": {
-      "state": "FAIL",
+      "state": "remediation-pending-build",
       "source_package": "kf6-purpose",
-      "package_version": "6.30.0-0supralinux2",
+      "package_version": "6.30.0-0supralinux3",
       "expected_binary_packages": [
         "libkf6purpose-bin",
         "libkf6purpose-data",
@@ -831,10 +831,10 @@
         "qml6-module-org-kde-purpose"
       ],
       "materialization": {
-        "workflow_run": 36614234522,
-        "job_id": 109563580375,
-        "artifact_id": 11054941469,
-        "artifact_sha256": "b7fa3f20bacbc6b142f18596cc6cabd3a670a86f9246f39f7307be905dac16c7"
+        "workflow_run": 36643423967,
+        "job_id": 109661057232,
+        "artifact_id": 11067860328,
+        "artifact_sha256": "988a4d2f21d152a938e17b802026a9c950fd2a91351ab2fbee6ae1300720945f"
       },
       "blocking_predecessors": [
         "kio",
@@ -1007,7 +1007,7 @@
   },
   "current_attempt": 2,
   "next_attempt": 3,
-  "next_gate": "tier3-level3-attempt3-remediation-materialization-evidence",
+  "next_gate": "tier3-build-level3-attempt3-planning-validation",
   "planning_validation": {
     "repository_policy_workflow_run": 36606233220,
     "repository_policy_job_id": 109535845900,
@@ -1087,7 +1087,7 @@
     "next_gate": "tier3-build-level3-attempt1-remediation-definition"
   },
   "level3_remediation": {
-    "status": "materialization-pending-ci",
+    "status": "materialization-PASS-pending-attempt3-planning-validation",
     "trigger": {
       "attempt": 2,
       "workflow_run": 36639418961,
@@ -1108,12 +1108,36 @@
       "ktexteditor": "6.30.0-0supralinux3",
       "purpose": "6.30.0-0supralinux3"
     },
-    "materialization_authorized": true,
+    "materialization_authorized": false,
     "package_execution_authorized": false,
     "current_attempt": 2,
     "next_attempt": 3,
     "canonical_snapshot": "18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED",
-    "next_gate": "tier3-level3-attempt3-remediation-materialization-evidence"
+    "next_gate": "tier3-build-level3-attempt3-planning-validation",
+    "source_materialization_complete": true,
+    "materialization_evidence": {
+      "result": "PASS",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "artifacts": {
+        "ktexteditor": {
+          "workflow_run": 36643423967,
+          "job_id": 109661057170,
+          "artifact_id": 11066929892,
+          "artifact_sha256": "74afd833bcd1f35571e59a9983e5fa56bb8b774eff4210df9c4a5b6a93a321b5",
+          "commit": "91a493ffe10620d00350c404f37c13baa9fdbd45",
+          "package_version": "6.30.0-0supralinux3"
+        },
+        "purpose": {
+          "workflow_run": 36643423967,
+          "job_id": 109661057232,
+          "artifact_id": 11067860328,
+          "artifact_sha256": "988a4d2f21d152a938e17b802026a9c950fd2a91351ab2fbee6ae1300720945f",
+          "commit": "91a493ffe10620d00350c404f37c13baa9fdbd45",
+          "package_version": "6.30.0-0supralinux3"
+        }
+      }
+    }
   },
   "attempt2_planning_validation": {
     "repository_policy_workflow_run": 36638763826,

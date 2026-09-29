@@ -1,3 +1,0 @@
-usr/include/KF6/KItemModels/
-usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6ItemModels/
-usr/lib/${DEB_HOST_MULTIARCH}/libKF6ItemModels.so
