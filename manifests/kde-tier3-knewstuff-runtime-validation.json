@@ -5,9 +5,9 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-knewstuff-deferred-runtime-validation",
   "frameworks_series": "6.30.0",
-  "gate": "tier3-knewstuff-runtime-validation-infrastructure-certification",
-  "state": "infrastructure-certification-pending-policy-validation",
-  "execution_authorized": false,
+  "gate": "tier3-knewstuff-runtime-validation",
+  "state": "execution-authorized",
+  "execution_authorized": true,
   "validation_run_kind": "runtime-only",
   "package_attempted": false,
   "consumes_package_attempt": false,
@@ -250,8 +250,8 @@
     }
   ],
   "infrastructure_certification": {
-    "status": "pending-policy-validation",
-    "execution_authorized": false,
+    "status": "PASS",
+    "execution_authorized": true,
     "reason": "Two consecutive INFRA_INVALID runtime-validation runs require frozen retries and synthetic infrastructure certification before reauthorization.",
     "required_checks": [
       "exact-extracted-artifact-directory-selection",
@@ -259,6 +259,26 @@
       "result-json-internal-artifact-sha256-verification",
       "tampered-artifact-rejection"
     ],
-    "next_gate_after_policy_pass": "tier3-knewstuff-runtime-validation-execution-reauthorization"
+    "next_gate_after_policy_pass": "tier3-knewstuff-runtime-validation",
+    "certification_policy_evidence": {
+      "workflow_run": 36583737052,
+      "job_id": 109458398423,
+      "commit": "f310c657cd3f0050ff4ffbebc0d3df284a8324d1",
+      "conclusion": "success",
+      "validated_gate": "tier3-knewstuff-runtime-validation-infrastructure-certification",
+      "synthetic_preflight": "PASS",
+      "exact_selector": "PASS",
+      "internal_result_json_hash_verifier": "PASS",
+      "tamper_rejection": "PASS"
+    }
+  },
+  "reauthorization": {
+    "status": "ACTIVE",
+    "execution_authorized": true,
+    "basis": "Repository Policy certified the runtime-validation infrastructure after two consecutive INFRA_INVALID incidents.",
+    "certification_workflow_run": 36583737052,
+    "certification_job_id": 109458398423,
+    "certification_commit": "f310c657cd3f0050ff4ffbebc0d3df284a8324d1",
+    "runtime_execution_gate": "tier3-knewstuff-runtime-validation"
   }
 }

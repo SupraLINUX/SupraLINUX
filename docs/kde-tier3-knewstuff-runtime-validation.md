@@ -145,3 +145,28 @@ package_attempted=false
 ```
 
 The certification adds a generic verifier for `result.json` identity plus every internal artifact SHA-256, and a synthetic preflight that proves a valid fixture passes and a tampered payload is rejected. Only after Repository Policy certifies this mechanism may runtime execution be reauthorized.
+
+
+## Infrastructure certification PASS and execution reauthorization
+
+Repository Policy certified the remediated runtime-validation mechanism in PR router run `36583737052`, job `109458398423`, at commit `f310c657cd3f0050ff4ffbebc0d3df284a8324d1`.
+
+The synthetic preflight proved all required infrastructure properties:
+
+- historical directory + sibling ZIP ambiguity reproduced;
+- exact extracted-directory selector: PASS;
+- internal `result.json` SHA-256 verifier: PASS;
+- tampered payload rejection: PASS.
+
+The verifier was additionally checked against retained real KNewStuff, KCMUtils and KIO artifact formats before reauthorization.
+
+The live state is therefore reauthorized:
+
+```text
+gate=tier3-knewstuff-runtime-validation
+state=execution-authorized
+execution_authorized=true
+package_attempted=false
+```
+
+The two previous `INFRA_INVALID` records remain immutable historical evidence. This reauthorization permits a fresh runtime validation run; it does not itself promote KNewStuff or alter the canonical snapshot.
