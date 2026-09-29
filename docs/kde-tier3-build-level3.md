@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 build Level 3
 
-Status: **Attempt 1 closed FAIL; remediation definition pending**
+Status: **Attempt 2 closed FAIL; Attempt 3 remediation definition pending**
 
 Level 3 is the fourth and final topological build level already recorded by the KDE-upstream dependency DAG. It contains exactly KTextEditor `6.30.0-0supralinux1` and Purpose `6.30.0-0supralinux1`.
 
@@ -71,3 +71,19 @@ Purpose remediation adds the missing test runtime provider `kio6 (>= 6.30.0~) <!
 The Level 3 solver/support closure also gains the already-PASS KDED `6.30.0-0supralinux1` artifact `10691372157`. This prevents KIO runtime resolution from mixing the selected KDE 6.30 stack with Ubuntu's older KDED provider. KDED remains a solver/support input, not an invented KDE dependency or a synthetic `.buildinfo` edge.
 
 This gate authorizes **source materialization only**. `package_execution_authorized=false`; no Package Attempt 2 can begin until both rematerializations PASS and a later planning/activation gate is validated.
+
+
+## Attempt 2 planning, activation and closure — 2 real FAIL
+
+The remediated source inputs were closed source-only PASS before execution: KTextEditor `6.30.0-0supralinux2` is artifact `11064709291` (SHA-256 `606f9e22f162382f60b9499654248ebb8ac9e7970f47934b11457757a832becf`), while Purpose `6.30.0-0supralinux2` retains artifact `11054941469` (SHA-256 `b7fa3f20bacbc6b142f18596cc6cabd3a670a86f9246f39f7307be905dac16c7`). The KTextEditor-only rerun followed one pre-package `INFRA_INVALID` validator incident; it did not consume an extra package Attempt.
+
+Attempt 2 planning passed PR CI router `36638763826` at commit `53189d094b89afecbd6e382fe8fd4054334c1a0e`; Repository Policy job `109645765290` and router-plan job `109645764969` passed with binary execution paused. Attempt 2 was then activated separately. The first activation-policy failure remained pre-build and consumed no package Attempt; after the lifecycle handoff fix, PR CI router `36639418961` at commit `9fd5041053a176fdafcb3939e57a0ff2dd26d91e` passed Repository Policy and entered the reusable Level 3 build.
+
+The shared Resolute rootfs passed in job `109648205853`: artifact `11066320451`, SHA-256 `d6ec90546a42d24d6561e49c9684ca03716b9c0ce4b98d7d95415571e3f4bb85`.
+
+Both nodes reached valid `sbuild`, so both consumed Package Attempt 2 and are real package **FAIL**:
+
+- KTextEditor `6.30.0-0supralinux2`: job `109648411937`, artifact `11066168089`, SHA-256 `74fd2819b9110d7a8ce35ca2a2c8a89fb1a9b31548e32e05de2cb0e9426234e6`. CTest improved from 64/77 to **76/77 PASS**. Serialization fixed the twelve encoding create/diff races. The only remaining failure is `KateDocumentTest::testAboutToSave()`: the remediation attempted to open `__FILE__`, but the reproducible build exposes it as a relative source path from the test working directory.
+- Purpose `6.30.0-0supralinux2`: job `109648412196`, artifact `11066102772`, SHA-256 `adf13dd09a0ebd4b001f51c83cfe2b19360fa482b6c73c1a1ab579e7914e0a19`. CTest remains **1/3 PASS**, but the previous blockers changed: the KIO file worker is present and Qt offscreen works. `alternativesmodeltest` and `menutest` now fail while accessing their upstream literal `http://kde.org` URL inside the intentionally network-disabled `sbuild` environment.
+
+Canonical Tier 3 therefore remains **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED**. No package is promoted, execution is paused, and Attempt 3 is not authorized. The next gate is `tier3-build-level3-attempt2-remediation-definition`.

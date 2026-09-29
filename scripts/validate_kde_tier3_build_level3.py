@@ -17,6 +17,48 @@ mat=load("manifests/kde-tier3-materialization.json")
 contracts=load("manifests/kde-tier3-package-contracts.json")
 t=load("manifests/kde-frameworks-tier3.json")
 
+# Closed Attempt 2: validate immutable history first, then only current live closure.
+if m.get("state")=="FAIL" and m.get("current_attempt")==2:
+    import subprocess
+    for script in ("scripts/validate_kde_tier3_level3_attempt1_closure.py","scripts/validate_kde_tier3_level3_attempt2_closure.py"):
+        rc=subprocess.run([sys.executable,str(ROOT/script)]).returncode
+        if rc:
+            raise SystemExit(rc)
+    SNAP2="18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED"
+    req(m.get("execution_authorized") is False and m.get("next_attempt")==3 and m.get("next_gate")=="tier3-build-level3-attempt2-remediation-definition","Attempt2 closed Level3 authorization/gate")
+    req(m.get("canonical_snapshot")==SNAP2,"Attempt2 closed Level3 snapshot")
+    pol=t.get("discovery_policy",{})
+    live=t.get("build_level3",{})
+    req(pol.get("phase")=="build-level3-remediation-planning" and pol.get("package_builds")=="tier3-level3-attempt2-closed-FAIL" and pol.get("remediation")=="level3-attempt2-closed-failure","Attempt2 closed canonical gate")
+    req(pol.get("runtime_validation")=="PASS-closed","Attempt2 closure retains KNewStuff runtime PASS")
+    req(live.get("status")=="attempt2-closed-FAIL" and live.get("execution_authorized") is False and live.get("current_attempt")==2 and live.get("next_attempt")==3 and live.get("next_gate")=="tier3-build-level3-attempt2-remediation-definition","Attempt2 closed canonical Level3 state")
+    rem=t.get("level3_remediation",{})
+    req(rem.get("status")=="attempt2-closed-FAIL-pending-remediation-definition" and rem.get("materialization_authorized") is False and rem.get("package_execution_authorized") is False and rem.get("current_attempt")==2 and rem.get("next_attempt")==3,"Attempt2 remediation execution pause")
+    req(mat.get("state")=="PASS" and mat.get("package_attempted") is False and mat.get("package_state_effect")=="none","Attempt2 source materialization remains closed source-only PASS")
+    tn={x["id"]:x for x in t.get("nodes",[])}
+    expected={
+      "ktexteditor":("6.30.0-0supralinux2",109648411937,11066168089,"74fd2819b9110d7a8ce35ca2a2c8a89fb1a9b31548e32e05de2cb0e9426234e6"),
+      "purpose":("6.30.0-0supralinux2",109648412196,11066102772,"adf13dd09a0ebd4b001f51c83cfe2b19360fa482b6c73c1a1ab579e7914e0a19"),
+    }
+    for node,(version,job,artifact,digest) in expected.items():
+        n=m.get("nodes",{}).get(node,{})
+        req(n.get("state")=="FAIL" and n.get("package_version")==version,node+": closed Attempt2 Level3 package state")
+        fe=n.get("fail_evidence",{})
+        req(fe.get("workflow_run")==36639418961 and fe.get("job_id")==job and fe.get("artifact_id")==artifact and fe.get("artifact_sha256")==digest and fe.get("package_attempted") is True,node+": Level3 current FAIL evidence")
+        cn=tn.get(node,{})
+        pkg=cn.get("packaging",{})
+        req(cn.get("state")=="FAIL" and pkg.get("state")=="FAIL" and pkg.get("package_version")==version and pkg.get("downstream_eligible") is False,node+": canonical current FAIL")
+        cfe=pkg.get("failure_evidence",{})
+        req(cfe.get("workflow_run")==36639418961 and cfe.get("job_id")==job and cfe.get("artifact_id")==artifact and cfe.get("artifact_sha256")==digest and cfe.get("package_attempted") is True,node+": canonical current FAIL evidence")
+    if errors:
+        for e in errors: print("ERROR:",e,file=sys.stderr)
+        raise SystemExit(1)
+    print("KDE Tier 3 build Level 3 Attempt 2 closure: PASS")
+    print("state=FAIL")
+    print("execution_authorized=false")
+    print("canonical="+SNAP2)
+    raise SystemExit(0)
+
 # Attempt 2 is a new live lifecycle over immutable Attempt 1 history.
 # Validate it independently so closed Attempt 1 evidence never constrains future live state.
 if m.get("state")=="active-pending-ci" and m.get("current_attempt")==2:

@@ -614,3 +614,12 @@ For Purpose `6.30.0-0supralinux2`, the remediation supplies the missing `kio6` t
 Because `kio6` depends on KDED at runtime, Level 3 now also pins the existing SupraLINUX KDED 6.30 PASS artifact instead of allowing Ubuntu KDED 6.24 to enter the solver closure. This is provider closure only and does not alter the KDE-upstream DAG.
 
 The dedicated materialization workflow is routed through the single PR CI router after Repository Policy. Source materialization consumes no Package Attempt. Attempt 2 and stable publication remain unauthorized.
+
+
+## Level 3 Attempt 2 closed — remediation narrowed
+
+PR CI router `36639418961` at commit `9fd5041053a176fdafcb3939e57a0ff2dd26d91e` passed Repository Policy, built the shared Resolute rootfs, and ran both final Level 3 packages through valid `sbuild`. Both nodes are therefore real Package Attempt 2 **FAIL**, not infrastructure failures.
+
+KTextEditor `6.30.0-0supralinux2` improved to **76/77 upstream CTest PASS**. The serialized suite removed all twelve previous encoding races; only `testAboutToSave()` remains, because its test fixture still depends on relative `__FILE__` path resolution in a reproducible build. Purpose `6.30.0-0supralinux2` still reports **1/3 PASS**, but its KIO-file and headless-display blockers are resolved; the two remaining tests perform external `http://kde.org` I/O while the package build deliberately has no network.
+
+Evidence is frozen in the Level 3 Attempt ledger and dedicated Attempt 2 closure validator. Canonical state stays **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED**. Package execution is closed, no DAG promotion occurs, and the next gate is an Attempt 3 remediation definition. No stable publication is authorized.

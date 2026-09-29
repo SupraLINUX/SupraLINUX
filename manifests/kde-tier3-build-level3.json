@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level3",
   "frameworks_series": "6.30.0",
-  "state": "active-pending-ci",
-  "execution_authorized": true,
+  "state": "FAIL",
+  "execution_authorized": false,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -639,7 +639,7 @@
   },
   "nodes": {
     "ktexteditor": {
-      "state": "remediation-pending-build",
+      "state": "FAIL",
       "source_package": "kf6-ktexteditor",
       "package_version": "6.30.0-0supralinux2",
       "expected_binary_packages": [
@@ -803,23 +803,23 @@
         "kded"
       ],
       "fail_evidence": {
-        "workflow_run": 36607647059,
-        "commit": "2692489bdb861520181df486c524efb9cdf47d60",
-        "job_id": 109541487937,
-        "artifact_id": 11052302105,
-        "artifact_sha256": "d66ad916ef3f4e38e2ab3dc436fba3ac7dcb6f1e59603399c5debaebfa6a5458",
-        "rootfs_artifact_id": 11051807633,
-        "rootfs_artifact_sha256": "08eb26b3d264c79e26dd0f5e1cb6fe543a16e1f2be0f713bab5fee45cabdbd83",
+        "workflow_run": 36639418961,
+        "commit": "9fd5041053a176fdafcb3939e57a0ff2dd26d91e",
+        "job_id": 109648411937,
+        "artifact_id": 11066168089,
+        "artifact_sha256": "74fd2819b9110d7a8ce35ca2a2c8a89fb1a9b31548e32e05de2cb0e9426234e6",
+        "rootfs_artifact_id": 11066320451,
+        "rootfs_artifact_sha256": "d6ec90546a42d24d6561e49c9684ca03716b9c0ce4b98d7d95415571e3f4bb85",
         "stage": "sbuild",
-        "failure_substage": "ctest-encoding-diffs-and-katedocument-save-timeout",
+        "failure_substage": "ctest-katedocument-testAboutToSave-relative-source-path",
         "exit_code": 2,
         "package_attempted": true,
-        "tests": "64/77 PASS",
-        "observation": "12 encoding *_diff tests failed; katedocument_test::testAboutToSave timed out after 300000ms"
+        "tests": "76/77 PASS",
+        "observation": "Encoding race remediation passed; only katedocument_test::testAboutToSave failed because the test tried to open relative __FILE__ from the reproducible build working directory."
       }
     },
     "purpose": {
-      "state": "remediation-pending-build",
+      "state": "FAIL",
       "source_package": "kf6-purpose",
       "package_version": "6.30.0-0supralinux2",
       "expected_binary_packages": [
@@ -989,25 +989,25 @@
         "kded"
       ],
       "fail_evidence": {
-        "workflow_run": 36607647059,
-        "commit": "2692489bdb861520181df486c524efb9cdf47d60",
-        "job_id": 109541487871,
-        "artifact_id": 11052225512,
-        "artifact_sha256": "cff8b75aac023985ba5f4c3c4d429665b268cd65865d65969724408ec2cc5122",
-        "rootfs_artifact_id": 11051807633,
-        "rootfs_artifact_sha256": "08eb26b3d264c79e26dd0f5e1cb6fe543a16e1f2be0f713bab5fee45cabdbd83",
+        "workflow_run": 36639418961,
+        "commit": "9fd5041053a176fdafcb3939e57a0ff2dd26d91e",
+        "job_id": 109648412196,
+        "artifact_id": 11066102772,
+        "artifact_sha256": "adf13dd09a0ebd4b001f51c83cfe2b19360fa482b6c73c1a1ab579e7914e0a19",
+        "rootfs_artifact_id": 11066320451,
+        "rootfs_artifact_sha256": "d6ec90546a42d24d6561e49c9684ca03716b9c0ce4b98d7d95415571e3f4bb85",
         "stage": "sbuild",
-        "failure_substage": "ctest-kio-file-protocol-and-xcb-display",
+        "failure_substage": "ctest-purpose-external-http-under-network-disabled-sbuild",
         "exit_code": 2,
         "package_attempted": true,
         "tests": "1/3 PASS",
-        "observation": "alternativesmodeltest failed with Unknown protocol 'file'; menutest aborted because Qt xcb could not connect to a display"
+        "observation": "KIO file workers and the offscreen Qt platform were resolved; alternativesmodeltest and menutest still used http://kde.org and failed under the intentionally network-disabled sbuild environment."
       }
     }
   },
   "current_attempt": 2,
-  "next_attempt": null,
-  "next_gate": "tier3-build-level3-attempt2",
+  "next_attempt": 3,
+  "next_gate": "tier3-build-level3-attempt2-remediation-definition",
   "planning_validation": {
     "repository_policy_workflow_run": 36606233220,
     "repository_policy_job_id": 109535845900,
@@ -1087,7 +1087,7 @@
     "next_gate": "tier3-build-level3-attempt1-remediation-definition"
   },
   "level3_remediation": {
-    "status": "attempt2-active",
+    "status": "attempt2-closed-FAIL-pending-remediation-definition",
     "trigger": {
       "attempt": 1,
       "workflow_run": 36607647059,
@@ -1109,11 +1109,11 @@
       "purpose": "6.30.0-0supralinux2"
     },
     "materialization_authorized": false,
-    "package_execution_authorized": true,
+    "package_execution_authorized": false,
     "current_attempt": 2,
-    "next_attempt": null,
+    "next_attempt": 3,
     "canonical_snapshot": "18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED",
-    "next_gate": "tier3-build-level3-attempt2",
+    "next_gate": "tier3-build-level3-attempt2-remediation-definition",
     "source_materialization_complete": true,
     "materialization_evidence": {
       "result": "PASS",
@@ -1179,5 +1179,61 @@
       "purpose": "6.30.0-0supralinux2"
     },
     "next_gate": "tier3-build-level3-attempt2"
+  },
+  "attempt2_summary": {
+    "workflow_run": 36639418961,
+    "commit": "9fd5041053a176fdafcb3939e57a0ff2dd26d91e",
+    "result": "FAIL",
+    "package_attempted": true,
+    "package_state_effect": "2 FAIL; canonical 18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED",
+    "rootfs": {
+      "job_id": 109648205853,
+      "artifact_id": 11066320451,
+      "artifact_sha256": "d6ec90546a42d24d6561e49c9684ca03716b9c0ce4b98d7d95415571e3f4bb85"
+    },
+    "workflow_jobs": {
+      "success": 0,
+      "fail": 2
+    },
+    "primary_classification": {
+      "PASS": [],
+      "FAIL": [
+        "ktexteditor",
+        "purpose"
+      ],
+      "INFRA_INVALID": []
+    },
+    "canonical_promotions": 0,
+    "canonical_failures": 2,
+    "node_evidence": {
+      "ktexteditor": {
+        "job_id": 109648411937,
+        "artifact_id": 11066168089,
+        "artifact_sha256": "74fd2819b9110d7a8ce35ca2a2c8a89fb1a9b31548e32e05de2cb0e9426234e6",
+        "package_version": "6.30.0-0supralinux2",
+        "stage": "sbuild",
+        "fail_stage": "ctest",
+        "failure_substage": "ctest-katedocument-testAboutToSave-relative-source-path",
+        "exit_code": 2,
+        "package_attempted": true,
+        "tests": "76/77 PASS",
+        "observation": "Encoding race remediation passed; only katedocument_test::testAboutToSave failed because the test tried to open relative __FILE__ from the reproducible build working directory."
+      },
+      "purpose": {
+        "job_id": 109648412196,
+        "artifact_id": 11066102772,
+        "artifact_sha256": "adf13dd09a0ebd4b001f51c83cfe2b19360fa482b6c73c1a1ab579e7914e0a19",
+        "package_version": "6.30.0-0supralinux2",
+        "stage": "sbuild",
+        "fail_stage": "ctest",
+        "failure_substage": "ctest-purpose-external-http-under-network-disabled-sbuild",
+        "exit_code": 2,
+        "package_attempted": true,
+        "tests": "1/3 PASS",
+        "observation": "KIO file workers and the offscreen Qt platform were resolved; alternativesmodeltest and menutest still used http://kde.org and failed under the intentionally network-disabled sbuild environment."
+      }
+    },
+    "next_attempt": 3,
+    "next_gate": "tier3-build-level3-attempt2-remediation-definition"
   }
 }

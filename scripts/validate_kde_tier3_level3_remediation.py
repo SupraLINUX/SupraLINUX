@@ -19,7 +19,7 @@ l3=load("manifests/kde-tier3-build-level3.json")
 a=load("manifests/kde-tier3-build-level3-attempts.json")
 support=load("manifests/kde-tier3-support-build-level1.json")
 
-if t.get("level3_remediation",{}).get("status")=="attempt2-active":
+if t.get("level3_remediation",{}).get("status") in {"attempt2-active","attempt2-closed-FAIL-pending-remediation-definition"}:
     # Source-remediation evidence is closed. The current binary lifecycle is
     # authoritative from this point forward; do not constrain it with the
     # historical materialization-planning state.
