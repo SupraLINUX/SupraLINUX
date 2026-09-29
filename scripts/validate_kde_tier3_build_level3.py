@@ -17,6 +17,99 @@ mat=load("manifests/kde-tier3-materialization.json")
 contracts=load("manifests/kde-tier3-package-contracts.json")
 t=load("manifests/kde-frameworks-tier3.json")
 
+# Attempt 2 is a new live lifecycle over immutable Attempt 1 history.
+# Validate it independently so closed Attempt 1 evidence never constrains future live state.
+if m.get("state")=="active-pending-ci" and m.get("current_attempt")==2:
+    import subprocess
+    rc=subprocess.run([sys.executable,str(ROOT/"scripts/validate_kde_tier3_level3_attempt1_closure.py")]).returncode
+    if rc:
+        raise SystemExit(rc)
+
+    T2=["ktexteditor","purpose"]
+    SNAP2="18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED"
+    PV2={
+      "repository_policy_workflow_run":36638763826,
+      "repository_policy_job_id":109645765290,
+      "router_plan_job_id":109645764969,
+      "commit":"53189d094b89afecbd6e382fe8fd4054334c1a0e",
+      "planner_runner_scope":"PASS",
+      "level3_definition":"PASS",
+      "historical_boundary":"PASS",
+      "result":"PASS",
+    }
+    SUPPORT2={
+      "breeze-icons":{
+        "version":"4:6.30.0-0supralinux1","workflow_run":35700002095,
+        "artifact_id":10682012012,"artifact_sha256":"daaa5abda5a8f824c6fa509142d7cd9132de213d782cb32e0561873f427aa577",
+        "expected_binary_packages":["breeze-icon-theme","breeze-icon-theme-rcc","kf6-breeze-icon-theme","kf6-breeze-icon-theme-rcc","libkf6breezeicons-dev","libkf6breezeicons6"],
+        "dev_package":"libkf6breezeicons-dev","provenance":"tier3-support-pass",
+      },
+      "kdoctools":{
+        "version":"6.30.0-0supralinux1","workflow_run":35700002095,
+        "artifact_id":10682066198,"artifact_sha256":"6daeb6beed63ba7b7e441dba4dfd356be3ad48a9f3ae75acddae0945c36a683d",
+        "expected_binary_packages":["kdoctools6","libkf6doctools-dev","libkf6doctools-doc","libkf6doctools6"],
+        "dev_package":"libkf6doctools-dev","provenance":"tier3-support-pass",
+      },
+      "kded":{
+        "version":"6.30.0-0supralinux1","workflow_run":35721085911,
+        "artifact_id":10691372157,"artifact_sha256":"ff8756cf6efb4746568fa032cfb17cdf5c6b47bc31f532130936536aecb7c5c9",
+        "expected_binary_packages":["kded6","kded6-dev"],"dev_package":"kded6-dev","provenance":"tier3-support-level1-pass",
+      },
+    }
+    MAT2={
+      "ktexteditor":{"workflow_run":36637751833,"job_id":109643132222,"artifact_id":11064709291,"artifact_sha256":"606f9e22f162382f60b9499654248ebb8ac9e7970f47934b11457757a832becf","version":"6.30.0-0supralinux2"},
+      "purpose":{"workflow_run":36614234522,"job_id":109563580375,"artifact_id":11054941469,"artifact_sha256":"b7fa3f20bacbc6b142f18596cc6cabd3a670a86f9246f39f7307be905dac16c7","version":"6.30.0-0supralinux2"},
+    }
+
+    req(m.get("schema")==1 and m.get("authority")=="kde-upstream" and m.get("provider_platform")=="ubuntu-resolute","Attempt2 Level3 schema/authority/provider")
+    req(m.get("selected_nodes")==T2 and m.get("canonical_snapshot")==SNAP2,"Attempt2 Level3 node set/snapshot")
+    req(m.get("execution_authorized") is True and m.get("next_attempt") is None and m.get("next_gate")=="tier3-build-level3-attempt2","Attempt2 Level3 authorization/gate")
+    pv=m.get("attempt2_planning_validation",{})
+    req(all(pv.get(k)==v for k,v in PV2.items()),"Attempt2 planning validation evidence")
+    act=m.get("attempt2_activation",{})
+    req(act.get("status")=="ACTIVE" and act.get("attempt")==2 and act.get("planning_policy_workflow_run")==PV2["repository_policy_workflow_run"] and act.get("planning_commit")==PV2["commit"] and act.get("next_gate")=="tier3-build-level3-attempt2","Attempt2 activation evidence")
+
+    pol=t.get("discovery_policy",{})
+    live=t.get("build_level3",{})
+    req(pol.get("phase")=="build-level3" and pol.get("package_builds")=="tier3-level3-attempt2-authorized" and pol.get("remediation")=="level3-attempt2-active","Attempt2 canonical live gate")
+    req(pol.get("runtime_validation")=="PASS-closed","Attempt2 retains KNewStuff runtime closure")
+    req(live.get("status")=="attempt2-active-pending-ci" and live.get("execution_authorized") is True and live.get("current_attempt")==2 and live.get("next_attempt") is None and live.get("next_gate")=="tier3-build-level3-attempt2","Attempt2 canonical live state")
+    lpv=live.get("attempt2_planning_validation",{})
+    req(all(lpv.get(k)==v for k,v in PV2.items()),"Attempt2 canonical planning evidence")
+    lact=live.get("attempt2_activation",{})
+    req(lact.get("status")=="ACTIVE" and lact.get("attempt")==2 and lact.get("planning_commit")==PV2["commit"],"Attempt2 canonical activation evidence")
+    rem=t.get("level3_remediation",{})
+    req(rem.get("status")=="attempt2-active" and rem.get("materialization_authorized") is False and rem.get("package_execution_authorized") is True and rem.get("current_attempt")==2 and rem.get("next_attempt") is None,"Attempt2 remediation live authority")
+
+    tn={x["id"]:x for x in t.get("nodes",[])}
+    for node in T2:
+        req(tn.get(node,{}).get("state")=="FAIL" and tn.get(node,{}).get("packaging",{}).get("state")=="FAIL" and tn.get(node,{}).get("packaging",{}).get("downstream_eligible") is False,node+": Attempt1 FAIL retained until Attempt2 result")
+        n=m["nodes"][node]; exp=MAT2[node]
+        req(n.get("state")=="remediation-pending-build" and n.get("package_version")==exp["version"],node+": Attempt2 runnable identity")
+        req(n.get("materialization")=={k:exp[k] for k in ("workflow_run","job_id","artifact_id","artifact_sha256")},node+": Attempt2 materialization pin")
+        req(n.get("support_input_ids")==["breeze-icons","kdoctools","kded"],node+": Attempt2 support closure")
+        mm=mat.get("nodes",{}).get(node,{})
+        req(mm.get("state")=="materialized" and mm.get("package_version")==exp["version"] and mm.get("evidence",{}).get("result")=="PASS" and mm.get("evidence",{}).get("package_attempted") is False,node+": source-only materialization PASS")
+        cp=c.get("nodes",{}).get(node,{})
+        req(cp.get("package_version")==exp["version"] and cp.get("materialization")==n.get("materialization"),node+": generated campaign Attempt2 pin")
+
+    req(m.get("support_predecessors")==SUPPORT2,"Attempt2 exact support predecessor pins")
+
+    hist=a.get("campaign_history",[])
+    req(len(hist)==1 and hist[0].get("attempt")==1 and hist[0].get("result")=="FAIL","Attempt2 pre-execution campaign ledger retains only Attempt1")
+    for node in T2:
+        rows=a.get("nodes",{}).get(node,[])
+        req(len(rows)==1 and rows[0].get("attempt")==1 and rows[0].get("result")=="FAIL",node+": Attempt2 pre-execution ledger retains only Attempt1")
+
+    if errors:
+        for e in errors: print("ERROR:",e,file=sys.stderr)
+        raise SystemExit(1)
+    print("KDE Tier 3 build Level 3 Attempt 2 definition: PASS")
+    print("state=active-pending-ci")
+    print("execution_authorized=true")
+    print("canonical="+SNAP2)
+    raise SystemExit(0)
+
 if t.get("level3_remediation",{}).get("status") in {"materialization-pending-ci","materialization-PASS-pending-attempt2-planning-validation"}:
     import subprocess
     raise SystemExit(subprocess.run([sys.executable, str(ROOT/"scripts/validate_kde_tier3_level3_remediation.py")]).returncode)

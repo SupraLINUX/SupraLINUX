@@ -5,8 +5,8 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-binary-build-level3",
   "frameworks_series": "6.30.0",
-  "state": "remediation-materialized-pending-activation",
-  "execution_authorized": false,
+  "state": "active-pending-ci",
+  "execution_authorized": true,
   "package_state_effect": "real-package-build-on-PASS",
   "canonical_snapshot": "18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED",
   "build_campaign_manifest": "manifests/kde-tier3-build-campaign.json",
@@ -1005,9 +1005,9 @@
       }
     }
   },
-  "current_attempt": 1,
-  "next_attempt": 2,
-  "next_gate": "tier3-build-level3-attempt2-planning-validation",
+  "current_attempt": 2,
+  "next_attempt": null,
+  "next_gate": "tier3-build-level3-attempt2",
   "planning_validation": {
     "repository_policy_workflow_run": 36606233220,
     "repository_policy_job_id": 109535845900,
@@ -1087,7 +1087,7 @@
     "next_gate": "tier3-build-level3-attempt1-remediation-definition"
   },
   "level3_remediation": {
-    "status": "materialization-PASS-pending-attempt2-planning-validation",
+    "status": "attempt2-active",
     "trigger": {
       "attempt": 1,
       "workflow_run": 36607647059,
@@ -1109,11 +1109,11 @@
       "purpose": "6.30.0-0supralinux2"
     },
     "materialization_authorized": false,
-    "package_execution_authorized": false,
-    "current_attempt": 1,
-    "next_attempt": 2,
+    "package_execution_authorized": true,
+    "current_attempt": 2,
+    "next_attempt": null,
     "canonical_snapshot": "18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED",
-    "next_gate": "tier3-build-level3-attempt2-planning-validation",
+    "next_gate": "tier3-build-level3-attempt2",
     "source_materialization_complete": true,
     "materialization_evidence": {
       "result": "PASS",
@@ -1155,5 +1155,29 @@
         }
       ]
     }
+  },
+  "attempt2_planning_validation": {
+    "repository_policy_workflow_run": 36638763826,
+    "repository_policy_job_id": 109645765290,
+    "router_plan_job_id": 109645764969,
+    "commit": "53189d094b89afecbd6e382fe8fd4054334c1a0e",
+    "planner_runner_scope": "PASS",
+    "level3_definition": "PASS",
+    "historical_boundary": "PASS",
+    "result": "PASS"
+  },
+  "attempt2_activation": {
+    "status": "ACTIVE",
+    "attempt": 2,
+    "planning_policy_workflow_run": 36638763826,
+    "planning_policy_job_id": 109645765290,
+    "planning_router_plan_job_id": 109645764969,
+    "planning_commit": "53189d094b89afecbd6e382fe8fd4054334c1a0e",
+    "scope": "ktexteditor+purpose",
+    "source_materialization_versions": {
+      "ktexteditor": "6.30.0-0supralinux2",
+      "purpose": "6.30.0-0supralinux2"
+    },
+    "next_gate": "tier3-build-level3-attempt2"
   }
 }
