@@ -12,11 +12,11 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level3-planning",
+    "phase": "build-level3",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level3-planning-pending-validation",
+    "package_builds": "tier3-level3-authorized",
     "remediation": "level2-closed",
     "runtime_validation": "PASS-closed"
   },
@@ -2951,8 +2951,8 @@
   },
   "build_level3_manifest": "manifests/kde-tier3-build-level3.json",
   "build_level3": {
-    "status": "planned-pending-activation",
-    "execution_authorized": false,
+    "status": "attempt1-active-pending-ci",
+    "execution_authorized": true,
     "selected_nodes": [
       "ktexteditor",
       "purpose"
@@ -2965,6 +2965,22 @@
       "commit": "b3890f8b1399da43527a97136365c8d4339385f7",
       "result": "PASS"
     },
-    "next_gate": "tier3-build-level3-planning-validation"
+    "next_gate": "tier3-build-level3-attempt1",
+    "planning_validation": {
+      "repository_policy_workflow_run": 36606233220,
+      "repository_policy_job_id": 109535845900,
+      "router_plan_job_id": 109535845121,
+      "commit": "87099ae7fa83a41edde584c60cea0d2880e22d4c",
+      "planner_runner_scope": "PASS",
+      "level3_definition": "PASS",
+      "historical_boundary": "PASS",
+      "result": "PASS"
+    },
+    "activation_validation": {
+      "repository_policy_workflow_run": 36606727079,
+      "repository_policy_job_id": 109537541705,
+      "commit": "8812f744e21ab3833ebd162594a805a30ce9e294",
+      "result": "PASS"
+    }
   }
 }

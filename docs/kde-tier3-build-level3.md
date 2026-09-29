@@ -37,3 +37,12 @@ The paused Level 3 definition passed the single PR router at commit `87099ae7fa8
 Repository Policy explicitly passed the Level 3 planner/runner scope and Level 3 definition checks, plus the retained KNewStuff runtime closure, historical-evidence boundary and closed Round 11 validator. The router did **not** schedule the Level 3 reusable build because `execution_authorized=false`, so the shared rootfs and both package jobs did not run and no Package Attempt was consumed.
 
 Before activation, the Level 3 validator is made forward-compatible with `state=active-pending-ci` and binds that future state to the exact planning-validation evidence above. This checkpoint changes no package state and does not authorize execution. A later activation is valid only if it references this PASS evidence exactly.
+
+
+## Attempt 1 active
+
+Planning validation PASS is bound to Repository Policy run `36606233220` (job `109535845900`) and router plan job `109535845121` at commit `87099ae7fa83a41edde584c60cea0d2880e22d4c`. The forward-compatible active lifecycle validator then passed Repository Policy run `36606727079` (job `109537541705`) at commit `8812f744e21ab3833ebd162594a805a30ce9e294`.
+
+A separate activation now sets `state=active-pending-ci`, `execution_authorized=true`, and `next_gate=tier3-build-level3-attempt1`. The runnable set is exactly KTextEditor + Purpose, scheduled independently with `fail-fast=false` and `max-parallel=2`.
+
+This activation itself does not consume a Package Attempt. Each node consumes Attempt 1 only when its runner reaches valid `sbuild` execution. A pre-sbuild runner/rootfs/transport failure remains infrastructure evidence rather than package FAIL.

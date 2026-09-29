@@ -583,3 +583,12 @@ The Level 3 planning definition passed PR CI router run `36606233220` at commit 
 Because `execution_authorized=false`, no Level 3 rootfs or KTextEditor/Purpose package build was scheduled and **Attempt 1 has not executed**. Canonical Tier 3 remains **18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**.
 
 Before changing execution authority, the Level 3 validator is extended to recognize the future Attempt 1 active lifecycle only when it is bound to this exact planning-validation evidence. This transition is validator/documentation-only; the next action remains a separate Level 3 Attempt 1 activation.
+
+
+## Level 3 Attempt 1 active
+
+The forward-compatible Level 3 lifecycle passed Repository Policy `36606727079` / job `109537541705` at commit `8812f744e21ab3833ebd162594a805a30ce9e294`, after the planning gate had already passed at `36606233220`.
+
+A separate activation now authorizes **KTextEditor + Purpose** as Level 3 Attempt 1. The pre-result canonical snapshot remains **18 PASS / 2 pending / 0 current FAIL / 0 BLOCKED**. The two nodes are independent at this level and the matrix uses `fail-fast=false`; one node does not become BLOCKED merely because the other fails.
+
+Attempt accounting remains per valid package execution: no attempt is consumed until that node reaches `sbuild`. Stable publication remains unauthorized.
