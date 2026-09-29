@@ -88,3 +88,20 @@ That later activation will define/authorize the executable runtime workflow. Sta
 Planning Policy passed in PR router run `36567527801`, job `109403055592`, at commit `c139f70509cd321913c1e1c89565bfa60a7f22ff`.
 
 The executable runtime lane is defined but remains unauthorized until this activation contract passes Repository Policy. The next transition is `tier3-knewstuff-runtime-validation-execution-authorization`. The lane performs no `sbuild` and never consumes a Package Attempt.
+
+
+## Execution authorization checkpoint — 2026-09-29
+
+The activation contract passed Repository Policy in PR router run `36573815831`, job `109424159153`, at commit `76261018520c0f566f152b319d41e6d770fdc310`.
+
+The live runtime-validation state is now:
+
+```text
+gate=tier3-knewstuff-runtime-validation
+state=execution-authorized
+execution_authorized=true
+validation_run_kind=runtime-only
+package_attempted=false
+```
+
+This authorization permits the router to execute the deferred KNewStuff + KCMUtils runtime validation. It does not promote KNewStuff, does not change the canonical snapshot, and does not consume a Package Attempt. Promotion requires a separate review of PASS runtime evidence.

@@ -5,9 +5,9 @@
   "provider_platform": "ubuntu-resolute",
   "role": "tier3-knewstuff-deferred-runtime-validation",
   "frameworks_series": "6.30.0",
-  "gate": "tier3-knewstuff-runtime-validation-activation",
-  "state": "activation-pending-policy-validation",
-  "execution_authorized": false,
+  "gate": "tier3-knewstuff-runtime-validation",
+  "state": "execution-authorized",
+  "execution_authorized": true,
   "validation_run_kind": "runtime-only",
   "package_attempted": false,
   "consumes_package_attempt": false,
@@ -194,10 +194,16 @@
     }
   },
   "activation": {
-    "status": "pending-policy-validation",
-    "execution_authorized": false,
+    "status": "ACTIVE",
+    "execution_authorized": true,
     "activation_requires": "Repository Policy PASS for activation contract and executable runtime lane",
-    "next_gate_after_activation_pass": "tier3-knewstuff-runtime-validation-execution-authorization",
+    "activation_policy_evidence": {
+      "workflow_run": 36573815831,
+      "job_id": 109424159153,
+      "commit": "76261018520c0f566f152b319d41e6d770fdc310",
+      "conclusion": "success",
+      "validated_gate": "tier3-knewstuff-runtime-validation-activation"
+    },
     "runtime_execution_gate": "tier3-knewstuff-runtime-validation",
     "stable_promotion_requires_explicit_user_approval": true
   },
