@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level2",
+    "phase": "runtime-validation-planning",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level2-remediation-package-attempt-active",
-    "remediation": "level2-kcmutils-symbol-metadata-remediation"
+    "package_builds": "tier3-level2-package-attempt-PASS-closed",
+    "remediation": "level2-closed"
   },
   "nodes": [
     {
@@ -187,7 +187,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/kcmutils-6.30.0.tar.xz",
       "source_sha256": "0159f80d030ac250b0b353113a55c013ed7e38cb0b678df44d2f0d0b2aca944c",
       "upstream_ref": "v6.30.0",
-      "state": "FAIL",
+      "state": "PASS",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -212,9 +212,9 @@
         }
       },
       "packaging": {
-        "state": "FAIL",
-        "package_version": "6.30.0-0supralinux2",
-        "downstream_eligible": false,
+        "state": "PASS",
+        "package_version": "6.30.0-0supralinux3",
+        "downstream_eligible": true,
         "evidence": [
           {
             "result": "FAIL",
@@ -251,6 +251,56 @@
             "claim": "hosted-clean-package-preflight",
             "authoritative": false,
             "root_cause": "libkf6kcmutilsquick6 keeps libstdc++ shared_ptr typeinfo _ZTISt23_Sp_counted_ptr_inplaceI10QQmlEngineSaIvELN9__gnu_cxx12_Lock_policyE2EE@Base mandatory on !riscv64; the Resolute amd64 toolchain does not emit it.",
+            "full_result_json_retained_in_artifact": true
+          },
+          {
+            "result": "PASS",
+            "build_result": "PASS",
+            "workflow_run": 36503684811,
+            "job_id": 109200408066,
+            "commit": "fdc9d93fcc6ec9065f173d5d47b2bca928bf6f06",
+            "attempted_package_version": "6.30.0-0supralinux3",
+            "artifact_id": 11006467074,
+            "artifact_sha256": "4dc1045a571b0cb05e61e25600a56fbdc59e5a80cde071cc3ad6af78f7b884a7",
+            "rootfs_artifact_id": 11006221515,
+            "rootfs_artifact_sha256": "4676e81943a42a265b0649e87a5da668f27975d768bf62eedee99af9b79f0d84",
+            "stage": "complete",
+            "tests": "6/6 PASS",
+            "lintian": "PASS-errors",
+            "apt_check": "PASS",
+            "abi_contract": "PASS",
+            "cmake_consumer": "PASS",
+            "buildinfo_predecessor_proof": "PASS",
+            "provider_closure_artifact_validation": "PASS",
+            "declared_runtime_input_proof": "PASS",
+            "selected_profile_proof": "PASS",
+            "python_import": "not-applicable",
+            "qml_payload": "PASS",
+            "downstream_eligible": true,
+            "canonical_success_transition": "PASS",
+            "package_state_effect": "PASS",
+            "claim": "hosted-clean-package-preflight",
+            "authoritative": false,
+            "artifacts": {
+              "kf6-kcmutils_6.30.0-0supralinux3.debian.tar.xz": "aad01ac6a215716a5cab7481ea1fc4f62c3135c749ca332d3776410600dbfb44",
+              "kf6-kcmutils_6.30.0-0supralinux3.dsc": "ab47f2e0d58a566e9ccf87b7cd810845b2192b3b16d944430c4c570599c6bb6e",
+              "kf6-kcmutils_6.30.0-0supralinux3_amd64.buildinfo": "1f05be8d5ebb4e0a4c68a80c8047b19f266dba351d01e891ef40ca34ac99127f",
+              "kf6-kcmutils_6.30.0-0supralinux3_amd64.changes": "4408b6e068267950af21440cee41b148c4d4491524450a3ff38c4b4ab2269995",
+              "kf6-kcmutils_6.30.0.orig.tar.xz": "0159f80d030ac250b0b353113a55c013ed7e38cb0b678df44d2f0d0b2aca944c",
+              "libkf6kcmutils-bin-dbgsym_6.30.0-0supralinux3_amd64.ddeb": "35e0434f24030c0cb080d2cf69b076f0dda511114ba91efa14f1f67d0da09297",
+              "libkf6kcmutils-bin_6.30.0-0supralinux3_amd64.deb": "1929c8fa835fa74ce33e786404bda9d329ff4560e0b79381d0b3ffdee6b27d77",
+              "libkf6kcmutils-data_6.30.0-0supralinux3_all.deb": "1b906e036a9797160957d31f6fef1cf4da3e0ef8c1ebbbebb952e9e2b3937a20",
+              "libkf6kcmutils-dev_6.30.0-0supralinux3_amd64.deb": "81f2a9196ddf965a51c3c343e4589042871f79eecf460aed0975e9728c0bf488",
+              "libkf6kcmutils-doc_6.30.0-0supralinux3_all.deb": "53ea11998a48d2b4d045f43b6039bcd7d5608230b1c00e395d6c2211d25336d2",
+              "libkf6kcmutils6-dbgsym_6.30.0-0supralinux3_amd64.ddeb": "a1a95900aaa36a8adf09926b3043eb5bdbe9410d7de1c4c719a6bd9ac5b95fe4",
+              "libkf6kcmutils6_6.30.0-0supralinux3_amd64.deb": "cf182514e1bbf76bfe49869d1410e91a2fdb801c751a911e49de580b54a62bd1",
+              "libkf6kcmutilscore6-dbgsym_6.30.0-0supralinux3_amd64.ddeb": "fc3d1852b727491112999e6e9efb04717603865fdad7d7871b5f93ec49435232",
+              "libkf6kcmutilscore6_6.30.0-0supralinux3_amd64.deb": "339fe4d46244a54988ae82747afb2e38887bf345a3ea8f233c6691f545678732",
+              "libkf6kcmutilsquick6-dbgsym_6.30.0-0supralinux3_amd64.ddeb": "28b9d492db4176290880ea3f7c522af57da50ecc18a4ed5f089503c887d11cad",
+              "libkf6kcmutilsquick6_6.30.0-0supralinux3_amd64.deb": "f52c71956240d29bdabdbffba7f01bea342845f776802687fb469b0195d7c315",
+              "qml6-module-org-kde-kcmutils-dbgsym_6.30.0-0supralinux3_amd64.ddeb": "2ce9be0e62ad34625d53ab600749e340bb94f57c334ba4c8be2947fba9a896b4",
+              "qml6-module-org-kde-kcmutils_6.30.0-0supralinux3_amd64.deb": "7a522b06a096306325654159ee30cf5d64bbe6a7d16cbde31306c24a43d61a0f"
+            },
             "full_result_json_retained_in_artifact": true
           }
         ],
@@ -849,7 +899,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/knewstuff-6.30.0.tar.xz",
       "source_sha256": "85408768b5c3f4b0b51ee6a14ae73fea263f451404e266e286c55e0c17e44037",
       "upstream_ref": "v6.30.0",
-      "state": "BLOCKED",
+      "state": "pending",
       "planning": {
         "readiness": "runtime-validation-required",
         "dependency_authority": "kde-upstream",
@@ -874,7 +924,7 @@
         }
       },
       "packaging": {
-        "state": "BLOCKED",
+        "state": "runtime-validation-required",
         "package_version": "6.30.0-0supralinux1",
         "downstream_eligible": false,
         "deferred_runtime_validation": [
@@ -908,9 +958,6 @@
             "package_state_effect": "none-runtime-validation-pending",
             "full_result_json_retained_in_artifact": true
           }
-        ],
-        "blocked_by": [
-          "kcmutils"
         ]
       }
     },
@@ -1660,7 +1707,7 @@
       "source_url": "https://download.kde.org/stable/frameworks/6.30/purpose-6.30.0.tar.xz",
       "source_sha256": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862",
       "upstream_ref": "v6.30.0",
-      "state": "BLOCKED",
+      "state": "pending",
       "planning": {
         "readiness": "materialized",
         "dependency_authority": "kde-upstream",
@@ -1685,12 +1732,9 @@
         }
       },
       "packaging": {
-        "state": "BLOCKED",
+        "state": "pending",
         "package_version": null,
-        "downstream_eligible": false,
-        "blocked_by": [
-          "kcmutils"
-        ]
+        "downstream_eligible": false
       }
     }
   ],
@@ -2636,47 +2680,35 @@
   },
   "level2_execution": {
     "manifest": "manifests/kde-tier3-build-level2.json",
-    "status": "remediation-package-attempt-active",
+    "status": "package-attempt-PASS-closed",
     "current_attempt": 5,
     "next_attempt": null,
     "selected_nodes": [
       "kcmutils"
     ],
-    "execution_authorized": true,
-    "planning_validation": {
-      "repository_policy_workflow_run": 36494035689,
-      "level2_workflow_run": 36494035772,
-      "commit": "ed1e39fe980acdca43e668ec564a66219d5b2adf",
-      "policy_job_id": 109169283549,
-      "plan_job_id": 109169283518,
-      "intentional_skip_job_id": 109169328324,
-      "rootfs_job_conclusion": "skipped",
-      "package_matrix_conclusion": "skipped",
-      "runner_scope_validation": "PASS",
-      "remediation_materialization_validation": "PASS",
-      "result": "PASS"
-    },
-    "canonical_prebuild_snapshot": "16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED",
-    "next_gate": "tier3-build-level2-attempt5"
+    "execution_authorized": false,
+    "workflow_run": 36503684811,
+    "commit": "fdc9d93fcc6ec9065f173d5d47b2bca928bf6f06",
+    "result": "PASS",
+    "canonical_state_effect": "KCMUtils promoted PASS; Purpose unblocked to pending; KNewStuff returns to pending/runtime-validation-required",
+    "canonical_snapshot": "17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED",
+    "next_gate": "tier3-knewstuff-runtime-validation-planning"
   },
   "level2_snapshot": {
-    "pass": 16,
-    "pending": 1,
-    "current_fail": 1,
-    "blocked": 2,
-    "runtime_pending": [],
-    "current_fail_nodes": [
-      "kcmutils"
+    "pass": 17,
+    "pending": 3,
+    "current_fail": 0,
+    "blocked": 0,
+    "runtime_pending": [
+      "knewstuff"
     ],
-    "blocked_nodes": [
-      "knewstuff",
-      "purpose"
-    ],
-    "workflow_run": 36473379324,
-    "commit": "35ee2761b4f6c196e9ab95e7c8eff66c6cffcce3"
+    "current_fail_nodes": [],
+    "blocked_nodes": [],
+    "workflow_run": 36503684811,
+    "commit": "fdc9d93fcc6ec9065f173d5d47b2bca928bf6f06"
   },
   "level2_remediation": {
-    "status": "package-attempt-active",
+    "status": "package-attempt-PASS-closed",
     "trigger": {
       "attempt": 4,
       "workflow_run": 36473379324,
@@ -2695,12 +2727,12 @@
       "kcmutils": "6.30.0-0supralinux3"
     },
     "reason": "KCMUtils passed 6/6 tests but dpkg-gensymbols rejected one mandatory libstdc++ shared_ptr typeinfo symbol that the Resolute amd64 toolchain does not emit.",
-    "execution_authorized": true,
-    "canonical_state_effect": "3 PASS promoted; KCMUtils FAIL retained",
-    "next_gate": "tier3-build-level2-attempt5",
+    "execution_authorized": false,
+    "canonical_state_effect": "KCMUtils promoted PASS; Purpose unblocked; KNewStuff runtime validation enabled",
+    "next_gate": "tier3-knewstuff-runtime-validation-planning",
     "source_materialization_complete": true,
     "materialization_authorized": false,
-    "package_build_authorized": true,
+    "package_build_authorized": false,
     "materialization_workflow_run": 36477724469,
     "materialization_commit": "2ff091a675dc7660ebeff0ebb7c7828b9e6fb0bd",
     "materialization_evidence": {
@@ -2748,7 +2780,10 @@
       "rootfs_job_conclusion": "skipped",
       "package_matrix_conclusion": "skipped",
       "next_gate": "tier3-build-level2-attempt5"
-    }
+    },
+    "workflow_run": 36503684811,
+    "commit": "fdc9d93fcc6ec9065f173d5d47b2bca928bf6f06",
+    "result": "PASS"
   },
   "level2_remediation_history": [
     {

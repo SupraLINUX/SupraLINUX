@@ -448,3 +448,10 @@ Level 2 workflow `36473379324` closed MIXED: Baloo, KNotifyConfig and KParts pas
 The remediation materialization queue contained only KCMUtils. Candidate `6.30.0-0supralinux3` keeps the previous optional shared_ptr vtable override and additionally marks the matching libstdc++ shared_ptr typeinfo as optional while preserving `arch=!riscv64`. Workflow `36477724469`, job `109115619026`, artifact `10994755385` completed PASS with artifact SHA-256 `69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3a`. The retained `result.json` records `package_attempted=false`, so this remains source-package metadata materialization only.
 
 Canonical package state remains **16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED**. All 20 Tier 3 source packages are now materialized. Package Attempt 5 has not started and binary execution remains unauthorized. Next gate: `tier3-build-level2-attempt5-planning-validation`.
+
+
+## Level 2 Attempt 5 package closure
+
+The KCMUtils `6.30.0-0supralinux3` materialization from workflow `36477724469` was consumed by Level 2 Package Attempt 5 in workflow `36503684811`. KCMUtils completed PASS with package artifact `11006467074` (SHA-256 `4dc1045a571b0cb05e61e25600a56fbdc59e5a80cde071cc3ad6af78f7b884a7`) and **6/6** upstream tests.
+
+This does not change the materialization evidence itself: it remains a source-only PASS with `package_attempted=false`. The later package evidence is recorded separately in the Level 2 attempt ledger and canonical package state. Level 2 is now 4/4 PASS; next gate: `tier3-knewstuff-runtime-validation-planning`.

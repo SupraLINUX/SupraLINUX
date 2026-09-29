@@ -331,6 +331,9 @@ jobs:
       - name: Validate KDE Tier 3 Level 2 Attempt 4 closure
         run: python3 scripts/validate_kde_tier3_level2_attempt4_closure.py
 
+      - name: Validate KDE Tier 3 Level 2 Attempt 5 closure
+        run: python3 scripts/validate_kde_tier3_level2_attempt5_closure.py
+
       - name: Validate KDE Tier 3 historical evidence boundary
         run: python3 scripts/validate_kde_tier3_historical_boundary.py
 

@@ -4,6 +4,8 @@ import sys
 
 ROOT=Path(__file__).resolve().parents[1]
 HISTORICAL=[
+    "scripts/validate_kde_tier3_level2_attempt4_closure.py",
+    "scripts/validate_kde_tier3_level2_attempt5_closure.py",
     "scripts/validate_kde_tier3_kio_round12_diagnostic.py",
     "scripts/validate_kde_tier3_kio_round13_diagnostic.py",
     "scripts/validate_kde_tier3_kio_round14_diagnostic.py",

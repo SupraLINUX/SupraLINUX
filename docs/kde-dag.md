@@ -546,3 +546,12 @@ Attempt 4 workflow `36473379324` closed MIXED: Baloo `6.30.0-0supralinux1`, KNot
 The canonical Tier 3 DAG now contains **16 PASS/downstream-eligible nodes**. The three Level 2 promotions retain their exact Attempt 4 PASS artifacts and use `manifests/kde-tier3-build-level2-attempts.json` as their attempt ledger. KCMUtils is deliberately absent until a later package attempt reaches PASS. KTextEditor returned to pending after KParts passed; Purpose and KNewStuff remain BLOCKED by KCMUtils.
 
 The DAG validator derives the complete Tier 3 promoted set and each node's attempt ledger from the canonical Tier 3 manifest. It no longer embeds a historical Level 1 node list or assumes Level 0/1 ledger ownership.
+
+
+## Tier 3 Level 2 Attempt 5 promotion
+
+Workflow `36503684811` promoted KCMUtils `6.30.0-0supralinux3` after a valid package execution with 6/6 upstream tests and all package gates PASS. Evidence: job `109200408066`, artifact `11006467074`, SHA-256 `4dc1045a571b0cb05e61e25600a56fbdc59e5a80cde071cc3ad6af78f7b884a7`.
+
+The canonical Tier 3 DAG now contains **17 PASS/downstream-eligible nodes**. KCMUtils enters the DAG with `manifests/kde-tier3-build-level2-attempts.json` as its attempt ledger. KTextEditor and Purpose are pending for the final build level. KNewStuff remains outside the DAG as `pending/runtime-validation-required`; KCMUtils PASS only enables that deferred runtime gate and does not auto-promote KNewStuff.
+
+Canonical Tier 3: **17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED**. Next gate: `tier3-knewstuff-runtime-validation-planning`. Hosted evidence remains non-authoritative for final release certification; the later KVM lane remains required.

@@ -1,6 +1,6 @@
 # KDE Frameworks Tier 3 — build Level 2
 
-Status: **Package Attempt 5 active for KCMUtils `6.30.0-0supralinux3` only** as of 2026-09-28.
+Status: **Level 2 closed PASS (4/4); KCMUtils `6.30.0-0supralinux3` PASS in Package Attempt 5** as of 2026-09-28.
 
 Level 2 contains Baloo, KCMUtils, KNotifyConfig and KParts. Its precondition is closed Level 1 Attempt 10: KIO `6.30.0-0supralinux10` and KXMLGui `6.30.0-0supralinux5` are canonical PASS, with Tier 3 at **13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED**.
 
@@ -130,3 +130,14 @@ Repository Policy `36494035689` and Level 2 planning workflow `36494035772` both
 Package Attempt 5 is authorized for **KCMUtils only**, using source materialization `6.30.0-0supralinux3` from workflow `36477724469`, job `109115619026`, artifact `10994755385`, SHA-256 `69b0be3b9f9db37f7cac1fe1acf2a0b11faa64a796add88c23766d9127f7ea3a`. Baloo, KNotifyConfig and KParts remain retained canonical PASS and are not rebuilt.
 
 Activation changes no package result by itself. The canonical pre-build snapshot remains **16 PASS / 1 pending / 1 current FAIL / 2 BLOCKED**. Attempt 5 begins only when the KCMUtils runner starts valid package execution; the active gate is `tier3-build-level2-attempt5`.
+
+
+## Attempt 5 result
+
+Workflow `36503684811` at commit `fdc9d93fcc6ec9065f173d5d47b2bca928bf6f06` executed only KCMUtils `6.30.0-0supralinux3`. The shared Resolute rootfs passed as artifact `11006221515`, SHA-256 `4676e81943a42a265b0649e87a5da668f27975d768bf62eedee99af9b79f0d84`. KCMUtils job `109200408066` completed **PASS** and uploaded artifact `11006467074`, SHA-256 `4dc1045a571b0cb05e61e25600a56fbdc59e5a80cde071cc3ad6af78f7b884a7`.
+
+The package attempt reached valid `sbuild` execution and completed with **6/6 upstream tests PASS**. Lintian errors, APT installability, ABI contract, CMake consumer, buildinfo predecessor proof, provider-closure artifact validation, declared runtime-input proof, selected profile and QML payload all passed. The artifact is classified `hosted-clean-package-preflight` with `authoritative=false`; authoritative Ubuntu 26.04 KVM release certification remains a later gate.
+
+KCMUtils is therefore promoted to canonical PASS/downstream-eligible at `6.30.0-0supralinux3`. Level 2 is **4/4 PASS**. Purpose is unblocked to `pending`; KNewStuff returns to `pending/runtime-validation-required` and is **not** auto-promoted. Canonical Tier 3 is now **17 PASS / 3 pending / 0 current FAIL / 0 BLOCKED**.
+
+Binary execution is closed again. The next gate is `tier3-knewstuff-runtime-validation-planning`.
