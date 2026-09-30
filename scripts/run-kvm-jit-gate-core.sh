@@ -63,6 +63,7 @@ required_commands=(
     base64
     curl
     flock
+    git
     jq
     qemu-img
     sha256sum
@@ -107,7 +108,8 @@ if ! grep -Eq '\b(vmx|svm)\b' /proc/cpuinfo; then
 fi
 
 export LIBVIRT_DEFAULT_URI="${LIBVIRT_URI}"
-if ! virsh net-info "${LIBVIRT_NETWORK}" 2>/dev/null | grep -Eq '^Active:[[:space:]]+yes$'; then
+network_info="$(LC_ALL=C virsh net-info "${LIBVIRT_NETWORK}" 2>/dev/null || true)"
+if ! grep -Eq '^Active:[[:space:]]+yes$' <<<"${network_info}"; then
     printf 'libvirt network %s is not active.\n' "${LIBVIRT_NETWORK}" >&2
     exit 1
 fi
@@ -271,18 +273,24 @@ if [[ ! "${PR_HEAD_SHA}" =~ ^[0-9a-fA-F]{40}$ ]]; then
     exit 1
 fi
 
+LOCAL_HEAD="$(git -C "${ROOT}" rev-parse HEAD)"
+if [[ "${LOCAL_HEAD,,}" != "${PR_HEAD_SHA,,}" ]]; then
+    printf 'Host checkout does not match the PR head being certified.\n' >&2
+    printf 'Local HEAD: %s\n' "${LOCAL_HEAD}" >&2
+    printf 'PR head:    %s\n' "${PR_HEAD_SHA}" >&2
+    exit 1
+fi
+if [[ -n "$(git -C "${ROOT}" status --porcelain --untracked-files=normal)" ]]; then
+    printf 'Host checkout is not clean; authoritative JIT execution requires an exact clean PR checkout.\n' >&2
+    exit 1
+fi
+
+SUPRALINUX_GOLDEN_COMPAT_COMMIT="${PR_HEAD_SHA}" \
+    "${ROOT}/scripts/check-golden-image-provenance.sh" \
+    "${GOLDEN_IMAGE}" "${EVIDENCE_DIR}/golden-provenance-admission.txt"
+
 GOLDEN_SOURCE_COMMIT="$(awk -F= '$1 == "source_commit" {print $2; exit}' "${GOLDEN_PROVENANCE}")"
-if [[ ! "${GOLDEN_SOURCE_COMMIT}" =~ ^[0-9a-fA-F]{40}$ ]]; then
-    printf 'Golden provenance does not contain a valid source_commit.\n' >&2
-    exit 1
-fi
-if [[ "${GOLDEN_SOURCE_COMMIT,,}" != "${PR_HEAD_SHA,,}" ]]; then
-    printf 'Golden image source commit does not match the PR head being certified.\n' >&2
-    printf 'Golden source_commit: %s\n' "${GOLDEN_SOURCE_COMMIT}" >&2
-    printf 'PR head_sha:          %s\n' "${PR_HEAD_SHA}" >&2
-    printf 'Rebuild the golden image from the current PR head before running authoritative gates.\n' >&2
-    exit 1
-fi
+GOLDEN_INPUT_DIGEST="$(awk -F= '$1 == "golden_input_digest" {print $2; exit}' "${GOLDEN_PROVENANCE}")"
 
 printf 'Checking for stale/active authoritative workflow runs before creating a runner...\n'
 ACTIVE_RUNS_JSON="$(api GET "/repos/${REPOSITORY}/actions/runs?event=pull_request&per_page=100")"
@@ -308,7 +316,9 @@ printf '%s\n' "${BASELINE_RUN_IDS}" > "${EVIDENCE_DIR}/workflow-baseline-ids.jso
     printf 'pr_number=%s\n' "${PR_NUMBER}"
     printf 'pr_head_sha=%s\n' "${PR_HEAD_SHA}"
     printf 'pr_head_branch=%s\n' "${PR_HEAD_BRANCH}"
+    printf 'local_head=%s\n' "${LOCAL_HEAD}"
     printf 'golden_source_commit=%s\n' "${GOLDEN_SOURCE_COMMIT}"
+    printf 'golden_input_digest=%s\n' "${GOLDEN_INPUT_DIGEST}"
     printf 'gate=%s\n' "${GATE}"
     printf 'gate_label=%s\n' "${GATE_LABEL}"
     printf 'workflow_name=%s\n' "${WORKFLOW_NAME}"
