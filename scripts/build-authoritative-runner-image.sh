@@ -232,6 +232,7 @@ if ! timeout --foreground "${BUILD_TIMEOUT_SECONDS}" virt-install \
     --noautoconsole \
     --osinfo detect=on,require=off \
     --cloud-init "user-data=${USER_DATA},meta-data=${META_DATA},disable=on" \
+    --noreboot \
     --wait=-1; then
     printf 'Preparation VM did not complete successfully within the configured timeout.\n' >&2
     exit 1

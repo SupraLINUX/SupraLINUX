@@ -55,7 +55,15 @@ Default output:
 /var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2
 ```
 
-Existing golden images are not replaced unless `SUPRALINUX_REPLACE_GOLDEN_IMAGE=1` is explicitly supplied. Failed builds preserve diagnostic state and do not publish a replacement image.
+Existing golden images are not replaced unless `SUPRALINUX_REPLACE_GOLDEN_IMAGE=1` is explicitly supplied. Failed builds preserve diagnostic state and do not publish a replacement image. The preparation launch uses `virt-install --noreboot` because cloud-init deliberately powers the guest off when provisioning completes; the builder requires that domain to remain shut off before any offline evidence extraction or sysprep begins.
+
+After two consecutive `INFRA_INVALID` incidents in the golden-preparation mechanism, full retries are frozen until the real-host synthetic lifecycle preflight passes:
+
+```bash
+scripts/check-golden-preparation-lifecycle.sh
+```
+
+That preflight reuses the verified Ubuntu source image but performs no package build: it exercises the same scoped libvirt storage permissions, boots a minimal KVM guest, writes a guest marker, powers off, requires the domain to remain `shut off`, retains evidence, and cleans up the disposable VM. It exists specifically so the investigated golden build is not the first test of changed infrastructure.
 
 ## JIT runner lifecycle
 

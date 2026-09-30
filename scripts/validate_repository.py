@@ -352,6 +352,7 @@ for token, message in (
     ("qemu-img check", "golden builder must validate the final qcow2"),
     ("SUPRALINUX_REPLACE_GOLDEN_IMAGE", "golden replacement must require explicit opt-in"),
     ("source_checkout_removed=yes", "golden builder must prove temporary source checkout removal"),
+    ("--noreboot", "golden builder must prevent virt-install from rebooting after cloud-init powers the preparation VM off"),
     ("LIBVIRT_QEMU_USER", "golden builder must resolve the system libvirt QEMU identity"),
     ('chmod 0710 "${BUILD_DIR}"', "golden builder must grant only group traversal on its private build directory"),
     ('chmod 0660 "${WORK_DISK}"', "golden builder must grant only owner/group access to the writable overlay"),
@@ -359,6 +360,20 @@ for token, message in (
 ):
     require(token in golden_builder, message)
 require("machine-id" in golden_builder and "ssh-hostkeys" in golden_builder, "golden builder must reset machine and SSH identities")
+
+golden_lifecycle_preflight = read_required("scripts/check-golden-preparation-lifecycle.sh")
+for token, message in (
+    ("scripts/check-kvm-host.sh", "golden lifecycle preflight must require the certified KVM host contract"),
+    ("scripts/verify-ubuntu-cloud-image-provenance.sh", "golden lifecycle preflight must reverify the signed Ubuntu source image"),
+    ('chmod 0710 "${BUILD_DIR}"', "golden lifecycle preflight must exercise scoped build-directory traversal"),
+    ('chmod 0660 "${WORK_DISK}"', "golden lifecycle preflight must exercise scoped writable-overlay access"),
+    ("--noreboot", "golden lifecycle preflight must test virt-install no-reboot semantics"),
+    ('[[ "${DOMAIN_STATE}" != "shut off" ]]', "golden lifecycle preflight must fail unless the domain remains shut off"),
+    ("status=PASS", "golden lifecycle preflight must verify a guest-written completion marker"),
+    ("Golden preparation lifecycle synthetic preflight: PASS", "golden lifecycle preflight must emit explicit PASS evidence"),
+):
+    require(token in golden_lifecycle_preflight, message)
+
 verify_pos = golden_builder.find("scripts/verify-ubuntu-cloud-image-provenance.sh")
 inspect_pos = golden_builder.find('SOURCE_FORMAT="$(qemu-img info')
 require(verify_pos >= 0 and inspect_pos >= 0 and verify_pos < inspect_pos, "golden builder must reverify source integrity before qemu-img inspects the source image")
