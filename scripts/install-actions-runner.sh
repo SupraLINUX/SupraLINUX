@@ -20,6 +20,9 @@ fi
 
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "${TMP_DIR}"' EXIT
+TARGET_GROUP="$(id -gn "${TARGET_USER}")"
+sudo chown "${TARGET_USER}:${TARGET_GROUP}" "${TMP_DIR}"
+sudo chmod 0700 "${TMP_DIR}"
 
 printf 'Resolving latest stable GitHub Actions runner release...\n'
 RELEASE_JSON="$(curl --fail --silent --show-error --location \
@@ -54,7 +57,7 @@ printf 'Downloading %s...\n' "${ASSET_NAME}"
 curl --fail --show-error --location --output "${ARCHIVE}" "${DOWNLOAD_URL}"
 printf '%s  %s\n' "${EXPECTED_SHA256}" "${ARCHIVE}" | sha256sum --check --strict
 
-sudo install -d -o "${TARGET_USER}" -g "$(id -gn "${TARGET_USER}")" -m 0755 "${INSTALL_DIR}"
+sudo install -d -o "${TARGET_USER}" -g "${TARGET_GROUP}" -m 0755 "${INSTALL_DIR}"
 sudo find "${INSTALL_DIR}" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
 sudo -u "${TARGET_USER}" tar -xzf "${ARCHIVE}" -C "${INSTALL_DIR}"
 

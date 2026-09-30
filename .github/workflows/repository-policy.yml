@@ -50,6 +50,10 @@ jobs:
         shell: bash
         run: scripts/test-verify-ubuntu-cloud-image-provenance.sh
 
+      - name: Test Actions runner non-root staging
+        shell: bash
+        run: scripts/test-install-actions-runner-staging.sh
+
       - name: Test effective Actions runner provenance checker
         shell: bash
         run: scripts/test-check-actions-runner-runtime.sh

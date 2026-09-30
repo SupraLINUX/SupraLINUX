@@ -274,6 +274,7 @@ required_files = [
     "scripts/test-verify-ubuntu-cloud-image-provenance.sh",
     "scripts/build-authoritative-runner-image.sh",
     "scripts/install-actions-runner.sh",
+    "scripts/test-install-actions-runner-staging.sh",
     "scripts/provision-authoritative-runner-guest.sh",
     "scripts/prepare-autopkgtest-qemu-image.sh",
     "scripts/seal-authoritative-runner-image.sh",
@@ -412,6 +413,24 @@ require(verify_pos >= 0 and inspect_pos >= 0 and verify_pos < inspect_pos, "gold
 
 installer = read_required("scripts/install-actions-runner.sh")
 require(".digest" in installer and "sha256sum --check --strict" in installer, "Actions runner archive must use GitHub-published SHA-256 verification")
+for token, message in (
+    ('TARGET_GROUP="$(id -gn "${TARGET_USER}")"', "Actions runner installer must resolve the target user primary group"),
+    ('sudo chown "${TARGET_USER}:${TARGET_GROUP}" "${TMP_DIR}"', "Actions runner staging directory must be owned by the extraction user"),
+    ('sudo chmod 0700 "${TMP_DIR}"', "Actions runner staging directory must remain private"),
+    ('sudo -u "${TARGET_USER}" tar -xzf "${ARCHIVE}"', "Actions runner archive must still be extracted non-root"),
+):
+    require(token in installer, message)
+require(
+    installer.find('sudo chown "${TARGET_USER}:${TARGET_GROUP}" "${TMP_DIR}"')
+    < installer.find('sudo -u "${TARGET_USER}" tar -xzf'),
+    "Actions runner staging ownership must precede non-root extraction",
+)
+
+runner_staging_test = read_required("scripts/test-install-actions-runner-staging.sh")
+require(
+    "Actions runner non-root staging functional test: PASS" in runner_staging_test,
+    "Actions runner staging functional test must emit PASS",
+)
 
 runner_runtime_checker = read_required("scripts/check-actions-runner-runtime.sh")
 for token, message in (
