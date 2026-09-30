@@ -12,12 +12,12 @@
     "required_state": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
   },
   "discovery_policy": {
-    "phase": "build-level3-remediation-planning",
+    "phase": "build-level3",
     "dependencies": "materialized-from-kde-upstream-v6.30.0",
     "provider_audit": "PASS",
     "package_contracts": "PASS",
-    "package_builds": "tier3-level3-attempt3-closed-PARTIAL",
-    "remediation": "purpose-buildinfo-proof-contract-remediation",
+    "package_builds": "tier3-level3-attempt4-authorized",
+    "remediation": "level3-attempt4-purpose-validation-remediation-active",
     "runtime_validation": "PASS-closed"
   },
   "runtime_validation": {
@@ -3076,13 +3076,13 @@
   },
   "build_level3_manifest": "manifests/kde-tier3-build-level3.json",
   "build_level3": {
-    "status": "attempt3-closed-PARTIAL-validation-INFRA_INVALID",
-    "execution_authorized": false,
+    "status": "attempt4-active-pending-ci",
+    "execution_authorized": true,
     "selected_nodes": [
       "ktexteditor",
       "purpose"
     ],
-    "current_attempt": 3,
+    "current_attempt": 4,
     "canonical_snapshot": "19 PASS / 0 pending / 1 current FAIL / 0 BLOCKED",
     "planning_precondition": {
       "repository_policy_workflow_run": 36601250554,
@@ -3090,7 +3090,7 @@
       "commit": "b3890f8b1399da43527a97136365c8d4339385f7",
       "result": "PASS"
     },
-    "next_gate": "tier3-build-level3-attempt4-planning-validation",
+    "next_gate": "tier3-build-level3-attempt4",
     "planning_validation": {
       "repository_policy_workflow_run": 36606233220,
       "repository_policy_job_id": 109535845900,
@@ -3107,7 +3107,7 @@
       "commit": "8812f744e21ab3833ebd162594a805a30ce9e294",
       "result": "PASS"
     },
-    "next_attempt": 4,
+    "next_attempt": null,
     "attempt1_evidence": {
       "workflow_run": 36607647059,
       "commit": "2692489bdb861520181df486c524efb9cdf47d60",
@@ -3349,10 +3349,35 @@
       },
       "next_attempt": 4,
       "next_gate": "tier3-build-level3-attempt4-planning-validation"
+    },
+    "attempt4_planning_validation": {
+      "repository_policy_workflow_run": 36655130391,
+      "repository_policy_job_id": 109697724136,
+      "router_plan_job_id": 109697723905,
+      "commit": "b57f89b4506d300c2f5f1f9fca29afe3a11e477a",
+      "planner_runner_scope": "PASS",
+      "level3_definition": "PASS",
+      "attempt3_closure": "PASS",
+      "historical_boundary": "PASS",
+      "result": "PASS"
+    },
+    "attempt4_activation": {
+      "status": "ACTIVE",
+      "attempt": 4,
+      "planning_policy_workflow_run": 36655130391,
+      "planning_policy_job_id": 109697724136,
+      "planning_router_plan_job_id": 109697723905,
+      "planning_commit": "b57f89b4506d300c2f5f1f9fca29afe3a11e477a",
+      "scope": "purpose",
+      "source_materialization_versions": {
+        "purpose": "6.30.0-0supralinux3"
+      },
+      "validator_remediation": "prison-qml-buildinfo-proof",
+      "next_gate": "tier3-build-level3-attempt4"
     }
   },
   "level3_remediation": {
-    "status": "attempt3-PARTIAL-validation-INFRA_INVALID-pending-attempt4-planning-validation",
+    "status": "attempt4-active",
     "trigger": {
       "attempt": 2,
       "workflow_run": 36639418961,
@@ -3373,11 +3398,11 @@
       "purpose": "6.30.0-0supralinux3"
     },
     "materialization_authorized": false,
-    "package_execution_authorized": false,
-    "current_attempt": 3,
-    "next_attempt": 4,
+    "package_execution_authorized": true,
+    "current_attempt": 4,
+    "next_attempt": null,
     "canonical_snapshot": "19 PASS / 0 pending / 1 current FAIL / 0 BLOCKED",
-    "next_gate": "tier3-build-level3-attempt4-planning-validation",
+    "next_gate": "tier3-build-level3-attempt4",
     "source_materialization_complete": true,
     "materialization_evidence": {
       "result": "PASS",

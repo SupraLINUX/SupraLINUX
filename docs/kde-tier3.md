@@ -650,3 +650,10 @@ Workflow `36645760261` consumed Package Attempt 3 for both Level 3 nodes. KTextE
 Purpose is therefore recorded as a validation **INFRA_INVALID**, not a new package FAIL; its prior Attempt 2 FAIL remains the current canonical state. Tier 3 is now **19 PASS / 0 pending / 1 current FAIL / 0 BLOCKED**.
 
 The proof contract is corrected to `qml6-module-org-kde-prison`, successful build outputs are now retained before post-build validation, and the next package execution is Attempt 4 for Purpose only. No source rematerialization is required.
+
+
+## Level 3 Attempt 4 active
+
+Repository Policy run `36655130391` validates the Attempt 3 PARTIAL closure, KTextEditor canonical/DAG promotion and the corrected Purpose proof contract. Attempt 4 is separately activated for Purpose only at the unchanged source version `6.30.0-0supralinux3`.
+
+KTextEditor remains PASS and is not rerun. Purpose's previous canonical FAIL remains until a valid Attempt 4 result replaces it. No source rematerialization is required.

@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 build Level 3
 
-Status: **Attempt 3 closed PARTIAL; KTextEditor PASS; Purpose validation INFRA_INVALID; Attempt 4 planning pending**
+Status: **Attempt 4 active for Purpose only**
 
 Level 3 is the fourth and final topological build level already recorded by the KDE-upstream dependency DAG. It contains exactly KTextEditor `6.30.0-0supralinux1` and Purpose `6.30.0-0supralinux1`.
 
@@ -149,3 +149,14 @@ Canonical Tier 3 becomes **19 PASS / 0 pending / 1 current FAIL / 0 BLOCKED**. P
 The remediation changes no Purpose source and does not rematerialize it. The Level 3 proof contract now validates the Prison QML binary actually consumed. The runner also captures successful package outputs before post-build validators, preventing a future validator defect from discarding usable build products.
 
 Because Attempt 3's Purpose artifact predates that retention fix, its built `.deb/.buildinfo/.changes` outputs were not retained in the uploaded artifact. Completing the validation therefore requires a new valid package execution, which will be Package Attempt 4. Attempt 4 is scoped to Purpose only, keeps version `6.30.0-0supralinux3`, and is not yet authorized. Next gate: `tier3-build-level3-attempt4-planning-validation`.
+
+
+## Attempt 4 active — Purpose only
+
+The Attempt 3 PARTIAL closure and KTextEditor DAG promotion passed clean Repository Policy in PR CI router run `36655130391` at commit `b57f89b4506d300c2f5f1f9fca29afe3a11e477a`. Router-plan job `109697723905` and Repository Policy job `109697724136` passed. The Level 3 planner/runner scope, Level 3 live definition, immutable Attempt 3 closure and historical/live evidence boundary all passed; unrelated build lanes were skipped.
+
+Package Attempt 4 is now authorized for **Purpose only**. KTextEditor remains canonical PASS and is excluded from the runnable matrix. Purpose reuses its existing `6.30.0-0supralinux3` source materialization; there is no source change or package revision bump.
+
+The only remediation is the post-build proof contract: Prison is proven through `qml6-module-org-kde-prison`, matching Purpose's real Build-Depends, rather than the incorrect `libkf6prison-dev` expectation. The runner now retains successful build outputs before post-build validators execute.
+
+Canonical Tier 3 remains **19 PASS / 0 pending / 1 current FAIL / 0 BLOCKED** until Attempt 4 produces valid Purpose evidence.

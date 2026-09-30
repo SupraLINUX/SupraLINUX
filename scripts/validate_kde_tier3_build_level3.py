@@ -22,6 +22,70 @@ if t.get("level3_remediation",{}).get("status") in {"materialization-pending-ci"
     import subprocess
     raise SystemExit(subprocess.run([sys.executable,str(ROOT/"scripts/validate_kde_tier3_level3_remediation.py")]).returncode)
 
+# Attempt 4 re-executes Purpose only after the Attempt 3 post-build proof incident.
+if m.get("state")=="active-pending-ci" and m.get("current_attempt")==4:
+    import subprocess
+    for script in ("scripts/validate_kde_tier3_level3_attempt1_closure.py","scripts/validate_kde_tier3_level3_attempt2_closure.py","scripts/validate_kde_tier3_level3_attempt3_closure.py"):
+        rc=subprocess.run([sys.executable,str(ROOT/script)]).returncode
+        if rc:
+            raise SystemExit(rc)
+
+    SNAP4="19 PASS / 0 pending / 1 current FAIL / 0 BLOCKED"
+    PV4={
+      "repository_policy_workflow_run":36655130391,
+      "repository_policy_job_id":109697724136,
+      "router_plan_job_id":109697723905,
+      "commit":"b57f89b4506d300c2f5f1f9fca29afe3a11e477a",
+      "planner_runner_scope":"PASS",
+      "level3_definition":"PASS",
+      "attempt3_closure":"PASS",
+      "historical_boundary":"PASS",
+      "result":"PASS",
+    }
+    req(m.get("selected_nodes")==["ktexteditor","purpose"] and m.get("canonical_snapshot")==SNAP4,"Attempt4 Level3 node set/snapshot")
+    req(m.get("execution_authorized") is True and m.get("next_attempt") is None and m.get("next_gate")=="tier3-build-level3-attempt4","Attempt4 Level3 authorization/gate")
+    req(all(m.get("attempt4_planning_validation",{}).get(k)==v for k,v in PV4.items()),"Attempt4 planning validation evidence")
+    act=m.get("attempt4_activation",{})
+    req(act.get("status")=="ACTIVE" and act.get("attempt")==4 and act.get("scope")=="purpose" and act.get("planning_policy_workflow_run")==PV4["repository_policy_workflow_run"] and act.get("planning_policy_job_id")==PV4["repository_policy_job_id"] and act.get("planning_router_plan_job_id")==PV4["router_plan_job_id"] and act.get("planning_commit")==PV4["commit"] and act.get("source_materialization_versions")=={"purpose":"6.30.0-0supralinux3"} and act.get("validator_remediation")=="prison-qml-buildinfo-proof" and act.get("next_gate")=="tier3-build-level3-attempt4","Attempt4 activation evidence")
+
+    pol=t.get("discovery_policy",{}); live=t.get("build_level3",{}); rem=t.get("level3_remediation",{})
+    req(pol.get("phase")=="build-level3" and pol.get("package_builds")=="tier3-level3-attempt4-authorized" and pol.get("remediation")=="level3-attempt4-purpose-validation-remediation-active","Attempt4 canonical live gate")
+    req(pol.get("runtime_validation")=="PASS-closed","Attempt4 retains KNewStuff runtime closure")
+    req(live.get("status")=="attempt4-active-pending-ci" and live.get("execution_authorized") is True and live.get("current_attempt")==4 and live.get("next_attempt") is None and live.get("next_gate")=="tier3-build-level3-attempt4","Attempt4 canonical live state")
+    req(all(live.get("attempt4_planning_validation",{}).get(k)==v for k,v in PV4.items()),"Attempt4 canonical planning evidence")
+    req(live.get("attempt4_activation",{}).get("status")=="ACTIVE" and live.get("attempt4_activation",{}).get("attempt")==4 and live.get("attempt4_activation",{}).get("scope")=="purpose" and live.get("attempt4_activation",{}).get("planning_commit")==PV4["commit"],"Attempt4 canonical activation evidence")
+    req(rem.get("status")=="attempt4-active" and rem.get("materialization_authorized") is False and rem.get("package_execution_authorized") is True and rem.get("current_attempt")==4 and rem.get("next_attempt") is None and rem.get("next_gate")=="tier3-build-level3-attempt4" and rem.get("remediation_scope")==["purpose"] and rem.get("source_changes_required") is False,"Attempt4 remediation live authority")
+
+    tn={x["id"]:x for x in t.get("nodes",[])}
+    k=tn.get("ktexteditor",{}); kp=k.get("packaging",{})
+    req(k.get("state")=="PASS" and kp.get("state")=="PASS" and kp.get("package_version")=="6.30.0-0supralinux3" and kp.get("downstream_eligible") is True,"Attempt4 KTextEditor remains canonical PASS")
+    req(d.get("nodes",{}).get("ktexteditor",{}).get("state")=="PASS" and d.get("nodes",{}).get("ktexteditor",{}).get("package_version")=="6.30.0-0supralinux3","Attempt4 KTextEditor canonical DAG promotion retained")
+
+    p=tn.get("purpose",{}); pp=p.get("packaging",{})
+    req(p.get("state")=="FAIL" and pp.get("state")=="FAIL" and pp.get("package_version")=="6.30.0-0supralinux2" and pp.get("downstream_eligible") is False,"Attempt4 Purpose prior canonical FAIL retained until result")
+    pn=m.get("nodes",{}).get("purpose",{})
+    req(pn.get("state")=="remediation-pending-build" and pn.get("package_version")=="6.30.0-0supralinux3","Attempt4 Purpose runnable identity")
+    req("libkf6prison-dev" not in pn.get("buildinfo_proof_packages",[]) and pn.get("extra_buildinfo_proof_packages")==["qml6-module-org-kde-prison"],"Attempt4 Purpose corrected QML Prison proof")
+    kn=m.get("nodes",{}).get("ktexteditor",{})
+    req(kn.get("state")=="PASS","Attempt4 KTextEditor excluded from runnable matrix")
+
+    mm=mat.get("nodes",{}).get("purpose",{}); mev=mm.get("evidence",{})
+    req(mm.get("state")=="materialized" and mm.get("package_version")=="6.30.0-0supralinux3" and mev.get("result")=="PASS" and mev.get("package_attempted") is False,"Attempt4 Purpose reuses source-only materialization")
+    cp=c.get("nodes",{}).get("purpose",{})
+    req(cp.get("package_version")=="6.30.0-0supralinux3" and cp.get("materialization")==pn.get("materialization"),"Attempt4 generated campaign Purpose pin")
+
+    hist=a.get("campaign_history",[])
+    req(len(hist)==3 and [x.get("attempt") for x in hist]==[1,2,3],"Attempt4 pre-execution campaign ledger retains Attempts 1/2/3 only")
+    req(len(a.get("nodes",{}).get("ktexteditor",[]))==3 and len(a.get("nodes",{}).get("purpose",[]))==3,"Attempt4 pre-execution node ledgers unchanged")
+    if errors:
+        for e in errors: print("ERROR:",e,file=sys.stderr)
+        raise SystemExit(1)
+    print("KDE Tier 3 build Level 3 Attempt 4 definition: PASS")
+    print("state=active-pending-ci")
+    print("runnable=purpose")
+    print("canonical="+SNAP4)
+    raise SystemExit(0)
+
 # Attempt 3 closed PARTIAL: KTextEditor PASS; Purpose post-build validation INFRA_INVALID.
 if m.get("state")=="PARTIAL" and m.get("current_attempt")==3:
     import subprocess
