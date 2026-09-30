@@ -45,6 +45,8 @@ scripts/build-authoritative-runner-image.sh
 
 The builder requires host preflight PASS and verified source-image provenance. It creates a preparation overlay, boots a KVM guest with host CPU passthrough, checks out the exact requested SupraLINUX commit, provisions the toolchain/runner, creates the nested `autopkgtest` image, seals runner state, removes the temporary source checkout, powers off, exports evidence, applies explicit offline `virt-sysprep`, flattens the overlay, runs `qemu-img check` and records the final golden-image SHA-256/provenance.
 
+Golden provenance also records a versioned SHA-256 fingerprint of the repository inputs that actually define the golden image. The build commit remains immutable historical provenance; admission against a later PR HEAD is allowed only when that HEAD has the same golden-input fingerprint. State/evidence/documentation-only commits therefore do not force image churn, while a change to any declared golden input fails closed and requires an explicit rebuild.
+
 Default output:
 
 ```text
@@ -134,4 +136,4 @@ SUPRALINUX_RUNNER_GROUP_ID=... \
 scripts/run-authoritative-kvm-certification.sh
 ```
 
-The local checkout, golden-image source commit and PR head must all be identical. A mismatch fails before a JIT runner is created. Golden replacement is opt-in through `SUPRALINUX_REBUILD_GOLDEN=1`; evidence is retained outside the repository and is never auto-committed.
+The local checkout and PR head must be identical. The golden image may originate from an earlier commit only when its versioned golden-input fingerprint exactly matches the PR HEAD being certified; otherwise execution fails before a JIT runner is created and the image must be rebuilt. `source_commit` remains historical provenance, not a mutable live-state lock. Golden replacement is opt-in through `SUPRALINUX_REBUILD_GOLDEN=1`; evidence is retained outside the repository and is never auto-committed.
