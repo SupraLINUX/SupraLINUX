@@ -19,7 +19,9 @@
     "evidence": [],
     "image_sha256": null,
     "source_commit": null,
-    "source_checkout_removed": null
+    "source_checkout_removed": null,
+    "input_fingerprint_schema": 1,
+    "input_digest": null
   },
   "gates": [
     {
