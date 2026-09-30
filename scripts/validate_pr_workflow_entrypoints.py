@@ -31,6 +31,7 @@ req(re.search(r"pull_request:\s*\n\s+types:\s*\[opened, synchronize, reopened\]"
     "PR router must handle opened/synchronize/reopened")
 
 special = {
+    "authoritative-frameworks-sample-proof.yml",
     "authoritative-package-proof.yml",
     "runner-contract.yml",
 }
