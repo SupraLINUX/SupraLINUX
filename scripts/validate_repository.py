@@ -251,6 +251,8 @@ required_files = [
     "docs/runners/ubuntu-26.04.md",
     "docs/runners/provisioning.md",
     "docs/runners/host-kvm.md",
+    "manifests/authoritative-kvm-certification.json",
+    "scripts/validate_authoritative_kvm_certification.py",
     "docs/qt-provider-certification.md",
     "scripts/validate_qt_provider.py",
     "scripts/run-qt-provider-preflight.sh",

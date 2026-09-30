@@ -1,0 +1,101 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import json,re,sys
+
+ROOT=Path(__file__).resolve().parents[1]
+state=json.loads((ROOT/"manifests/authoritative-kvm-certification.json").read_text())
+desktop=json.loads((ROOT/"manifests/desktop-stack.json").read_text())
+errors=[]
+
+def req(v,m):
+    if not v:
+        errors.append(m)
+
+req(state.get("schema")==1,"authoritative KVM certification schema")
+req(state.get("authority")=="supralinux","authoritative KVM certification authority")
+req(state.get("role")=="live-authoritative-kvm-certification-state","authoritative KVM live-state role")
+
+pre=state.get("hosted_frameworks_precondition",{})
+req(pre.get("status")=="PASS","hosted Frameworks precondition must be PASS")
+req(pre.get("canonical_snapshot")=="20 PASS / 0 pending / 0 current FAIL / 0 BLOCKED","hosted Frameworks canonical snapshot")
+req(pre.get("manifest")=="manifests/kde-frameworks-tier3.json","hosted Frameworks manifest binding")
+req(re.fullmatch(r"[0-9a-f]{40}",str(pre.get("closure_commit",""))) is not None,"hosted Frameworks closure commit")
+req(isinstance(pre.get("repository_policy_run"),int) and pre["repository_policy_run"]>0,"hosted Frameworks policy evidence")
+
+host=state.get("host_kvm_preflight",{})
+gold=state.get("golden_image",{})
+req(host.get("status") in {"pending-real-evidence","PASS"},"host KVM preflight status")
+req(gold.get("status") in {"pending-real-evidence","PASS"},"golden image status")
+if host.get("status")=="PASS":
+    req(bool(host.get("evidence")),"host KVM PASS requires evidence")
+if gold.get("status")=="PASS":
+    req(host.get("status")=="PASS","golden image PASS requires host KVM PASS")
+    req(bool(gold.get("evidence")),"golden image PASS requires evidence")
+    req(re.fullmatch(r"[0-9a-f]{64}",str(gold.get("image_sha256",""))) is not None,"golden image PASS requires SHA-256")
+    req(re.fullmatch(r"[0-9a-f]{40}",str(gold.get("source_commit",""))) is not None,"golden image PASS requires source commit")
+    req(gold.get("source_checkout_removed") is True,"golden image PASS requires source checkout removal")
+
+gates=state.get("gates",[])
+req([x.get("id") for x in gates]==["runner-contract","authoritative-package-proof","frameworks-sample-proof"],"authoritative gate order")
+byid={x.get("id"):x for x in gates}
+allowed={"pending","PASS","FAIL","INFRA_INVALID"}
+for gate in gates:
+    gid=gate.get("id")
+    req(gate.get("status") in allowed,f"{gid}: status")
+    req(isinstance(gate.get("execution_authorized"),bool),f"{gid}: execution_authorized boolean")
+    req((ROOT/gate.get("workflow","")).is_file(),f"{gid}: workflow exists")
+    text=(ROOT/gate["workflow"]).read_text()
+    req(gate.get("trigger_label") in text,f"{gid}: workflow label binding")
+    req("self-hosted" in text and "ubuntu-26.04" in text and "kvm" in text and "ephemeral" in text,f"{gid}: authoritative runner labels")
+    if gate.get("status")=="PASS":
+        req(bool(gate.get("evidence")),f"{gid}: PASS requires evidence")
+        req(gate.get("execution_authorized") is False,f"{gid}: closed PASS cannot remain execution-authorized")
+
+runner=byid.get("runner-contract",{})
+pkg=byid.get("authoritative-package-proof",{})
+sample=byid.get("frameworks-sample-proof",{})
+
+runner_ready=host.get("status")=="PASS" and gold.get("status")=="PASS"
+if runner.get("execution_authorized"):
+    req(runner_ready and runner.get("status")=="pending","runner-contract authorization requires host+golden PASS")
+if pkg.get("execution_authorized"):
+    req(runner.get("status")=="PASS" and pkg.get("status")=="pending","package proof authorization requires runner-contract PASS")
+if sample.get("execution_authorized"):
+    req(pkg.get("status")=="PASS" and sample.get("status")=="pending","Frameworks sample authorization requires package proof PASS")
+
+s=sample.get("sample",{})
+req(s.get("framework")=="karchive","Frameworks certification sample")
+req(s.get("package_version")=="6.30.0-0supralinux4","KArchive sample package version")
+req(s.get("ecm_predecessor")=="6.30.0-0supralinux3","KArchive sample ECM predecessor")
+req(s.get("package_state_effect")=="none","Frameworks sample must not alter canonical package state")
+
+release=state.get("release_relevant_desktop",{})
+final_pass=sample.get("status")=="PASS"
+if final_pass:
+    req(release.get("status") in {"ready","unlocked"},"final sample PASS must unlock release-relevant desktop state")
+else:
+    req(release.get("status")=="locked","desktop must remain locked before Frameworks sample PASS")
+    req(release.get("plasma_authorized") is False,"Plasma release-relevant work locked")
+    req(release.get("kwin_authorized") is False,"KWin release-relevant work locked")
+    req(release.get("session_authorized") is False,"session release-relevant work locked")
+
+ci=desktop.get("ci",{}).get("authoritative_runner",{})
+req(ci.get("certification_manifest")=="manifests/authoritative-kvm-certification.json","desktop stack binds authoritative certification manifest")
+req(ci.get("desktop_release_relevant_authorized") is final_pass,"desktop stack authorization mirrors final Frameworks gate")
+if not final_pass:
+    req(ci.get("status")=="pending-certification","desktop stack remains pending certification")
+    req(ci.get("next_gate")=="host-kvm-preflight-and-golden-image","desktop stack next gate")
+req(state.get("stable_publication_authorized") is False,"KVM certification must never auto-authorize stable publication")
+
+if errors:
+    for e in errors:
+        print("ERROR:",e,file=sys.stderr)
+    raise SystemExit(1)
+
+print("Authoritative KVM certification live state: PASS")
+print("host_kvm="+host.get("status","missing"))
+print("golden_image="+gold.get("status","missing"))
+print("runner_contract="+runner.get("status","missing"))
+print("authoritative_package_proof="+pkg.get("status","missing"))
+print("frameworks_sample_proof="+sample.get("status","missing"))
+print("desktop_release_relevant_authorized="+str(final_pass).lower())

@@ -186,3 +186,12 @@ scripts/run-kvm-jit-gate.sh frameworks-sample-proof
 ```
 
 The sample is a certification run, not a new canonical KArchive package attempt: it records `package_state_effect=none`.
+
+
+## Live certification state
+
+The current authoritative runner lifecycle is tracked in `manifests/authoritative-kvm-certification.json` and validated by Repository Policy.
+
+The manifest deliberately separates hosted Frameworks completion from real KVM certification. The current state keeps host preflight, golden-image admission, runner-contract, synthetic package proof and KArchive Frameworks sample as pending real evidence. Until the final Frameworks sample is PASS, `desktop_release_relevant_authorized=false` and Plasma/KWin/session release-relevant execution remains locked.
+
+This live-state manifest is not historical evidence. Real KVM workflow IDs, image hashes and retained artifacts are added only after those executions occur.

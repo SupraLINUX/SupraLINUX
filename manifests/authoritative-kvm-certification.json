@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-29",
+  "authority": "supralinux",
+  "role": "live-authoritative-kvm-certification-state",
+  "hosted_frameworks_precondition": {
+    "status": "PASS",
+    "canonical_snapshot": "20 PASS / 0 pending / 0 current FAIL / 0 BLOCKED",
+    "manifest": "manifests/kde-frameworks-tier3.json",
+    "closure_commit": "600bbf1e824427dc8a30bc724b56a89284490aa6",
+    "repository_policy_run": 36656731103
+  },
+  "host_kvm_preflight": {
+    "status": "pending-real-evidence",
+    "evidence": []
+  },
+  "golden_image": {
+    "status": "pending-real-evidence",
+    "evidence": [],
+    "image_sha256": null,
+    "source_commit": null,
+    "source_checkout_removed": null
+  },
+  "gates": [
+    {
+      "id": "runner-contract",
+      "workflow": ".github/workflows/runner-contract.yml",
+      "trigger_label": "ci:runner-contract",
+      "status": "pending",
+      "execution_authorized": false,
+      "requires": [
+        "host-kvm-preflight",
+        "golden-image-admission"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "authoritative-package-proof",
+      "workflow": ".github/workflows/authoritative-package-proof.yml",
+      "trigger_label": "ci:authoritative-package-proof",
+      "status": "pending",
+      "execution_authorized": false,
+      "requires": [
+        "runner-contract"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "frameworks-sample-proof",
+      "workflow": ".github/workflows/authoritative-frameworks-sample-proof.yml",
+      "trigger_label": "ci:frameworks-sample-proof",
+      "status": "pending",
+      "execution_authorized": false,
+      "requires": [
+        "authoritative-package-proof"
+      ],
+      "sample": {
+        "framework": "karchive",
+        "package_version": "6.30.0-0supralinux4",
+        "ecm_predecessor": "6.30.0-0supralinux3",
+        "package_state_effect": "none"
+      },
+      "evidence": []
+    }
+  ],
+  "release_relevant_desktop": {
+    "status": "locked",
+    "plasma_authorized": false,
+    "kwin_authorized": false,
+    "session_authorized": false,
+    "unlock_requires": "frameworks-sample-proof:PASS"
+  },
+  "next_gate": "host-kvm-preflight-and-golden-image",
+  "stable_publication_authorized": false
+}

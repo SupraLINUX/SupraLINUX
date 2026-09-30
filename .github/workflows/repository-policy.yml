@@ -120,6 +120,9 @@ jobs:
       - name: Validate repository invariants
         run: python3 scripts/validate_repository.py
 
+      - name: Validate authoritative KVM certification state
+        run: python3 scripts/validate_authoritative_kvm_certification.py
+
       - name: Validate Qt provider invariants
         run: python3 scripts/validate_qt_provider.py
 

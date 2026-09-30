@@ -70,7 +70,11 @@
       "build_isolation": "sbuild-unshare",
       "system_test": "autopkgtest-qemu",
       "nested_kvm_required": true,
-      "status": "pending-certification"
+      "status": "pending-certification",
+      "certification_manifest": "manifests/authoritative-kvm-certification.json",
+      "next_gate": "host-kvm-preflight-and-golden-image",
+      "desktop_release_relevant_authorized": false,
+      "frameworks_sample_required": true
     }
   },
   "selection_policy": {
