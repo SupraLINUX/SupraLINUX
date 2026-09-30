@@ -78,6 +78,11 @@ VM_DEFINED=0
 mkdir -p "${BUILD_DIR}" "${EVIDENCE_DIR}" "$(dirname "${TARGET_IMAGE}")"
 chmod 0700 "${BUILD_DIR}"
 
+GOLDEN_INPUT_FINGERPRINT_SCHEMA=1
+GOLDEN_INPUT_DIGEST="$("${ROOT}/scripts/golden-image-input-digest.sh" "${SOURCE_COMMIT}")"
+"${ROOT}/scripts/golden-image-input-digest.sh" "${SOURCE_COMMIT}" --manifest \
+    > "${EVIDENCE_DIR}/golden-input-manifest.txt"
+
 cleanup() {
     local rc="$?"
     trap - EXIT INT TERM
@@ -172,6 +177,8 @@ EOF_USER
 {
     printf 'started_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
     printf 'source_commit=%s\n' "${SOURCE_COMMIT}"
+    printf 'golden_input_fingerprint_schema=%s\n' "${GOLDEN_INPUT_FINGERPRINT_SCHEMA}"
+    printf 'golden_input_digest=%s\n' "${GOLDEN_INPUT_DIGEST}"
     printf 'repository_url=%s\n' "${REPOSITORY_URL}"
     printf 'source_image=%s\n' "${SOURCE_IMAGE}"
     printf 'source_image_sha256='; sha256sum "${SOURCE_IMAGE}" | awk '{print $1}'
@@ -264,6 +271,8 @@ PROVENANCE_TMP="$(mktemp)"
 {
     printf 'created_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
     printf 'source_commit=%s\n' "${SOURCE_COMMIT}"
+    printf 'golden_input_fingerprint_schema=%s\n' "${GOLDEN_INPUT_FINGERPRINT_SCHEMA}"
+    printf 'golden_input_digest=%s\n' "${GOLDEN_INPUT_DIGEST}"
     printf 'repository_url=%s\n' "${REPOSITORY_URL}"
     printf 'source_image=%s\n' "${SOURCE_IMAGE}"
     printf 'source_image_sha256='; sha256sum "${SOURCE_IMAGE}" | awk '{print $1}'
