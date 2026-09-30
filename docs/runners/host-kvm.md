@@ -47,6 +47,8 @@ The builder requires host preflight PASS and verified source-image provenance. I
 
 Golden provenance also records a versioned SHA-256 fingerprint of the repository inputs that actually define the golden image. The build commit remains immutable historical provenance; admission against a later PR HEAD is allowed only when that HEAD has the same golden-input fingerprint. State/evidence/documentation-only commits therefore do not force image churn, while a change to any declared golden input fails closed and requires an explicit rebuild.
 
+For the system libvirt connection, the preparation directory remains private to the invoking user while its group is set to the effective libvirt QEMU group. The directory grants group traversal only (`0710`) and the writable qcow2 grants owner/group read-write only (`0660`). The builder records these modes and identities in `libvirt-storage-access.txt`; it does not make the build tree world-readable or world-writable.
+
 Default output:
 
 ```text
@@ -118,7 +120,7 @@ The authoritative workflow separately uploads runner/package evidence. Promotion
 
 ## Current blocker
 
-The real Ubuntu 26.04 host preflight is **PASS** with retained host-local evidence. The signed source-image fetch/hash, golden-image build/hash, nested-KVM runtime inside disposable runners, JIT startup, runner-group policy, QEMU system testing and cleanup/export behavior remain **pending execution**, not PASS.
+The real Ubuntu 26.04 host preflight and signed source-image fetch/re-verification are **PASS** with retained host-local evidence. Golden-image build/hash, nested-KVM runtime inside disposable runners, JIT startup, runner-group policy, QEMU system testing and cleanup/export behavior remain **pending execution**, not PASS.
 
 
 ## Frameworks sample gate

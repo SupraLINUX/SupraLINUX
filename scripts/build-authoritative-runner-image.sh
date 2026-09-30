@@ -9,6 +9,7 @@ SOURCE_PROVENANCE="${SOURCE_IMAGE}.provenance.txt"
 TARGET_IMAGE="${SUPRALINUX_GOLDEN_IMAGE:-/var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2}"
 LIBVIRT_URI="${SUPRALINUX_LIBVIRT_URI:-qemu:///system}"
 LIBVIRT_NETWORK="${SUPRALINUX_LIBVIRT_NETWORK:-default}"
+LIBVIRT_QEMU_USER="${SUPRALINUX_LIBVIRT_QEMU_USER:-libvirt-qemu}"
 RUNNER_USER="${SUPRALINUX_RUNNER_USER:-ubuntu}"
 VM_MEMORY_MIB="${SUPRALINUX_GOLDEN_BUILD_MEMORY_MIB:-12288}"
 VM_VCPUS="${SUPRALINUX_GOLDEN_BUILD_VCPUS:-6}"
@@ -28,10 +29,15 @@ if [[ ! "${RUNNER_USER}" =~ ^[a-z_][a-z0-9_-]*[$]?$ ]]; then
 fi
 
 required=(
+    chgrp
+    chmod
     git
+    id
     jq
     qemu-img
     sha256sum
+    stat
+    sudo
     timeout
     virsh
     virt-cat
@@ -45,6 +51,12 @@ for command_name in "${required[@]}"; do
         exit 1
     }
 done
+
+if ! id "${LIBVIRT_QEMU_USER}" >/dev/null 2>&1; then
+    printf 'Configured libvirt QEMU user does not exist: %s\n' "${LIBVIRT_QEMU_USER}" >&2
+    exit 1
+fi
+LIBVIRT_QEMU_GROUP="$(id -gn "${LIBVIRT_QEMU_USER}")"
 
 "${ROOT}/scripts/check-kvm-host.sh"
 
@@ -76,7 +88,8 @@ SUCCESS=0
 VM_DEFINED=0
 
 mkdir -p "${BUILD_DIR}" "${EVIDENCE_DIR}" "$(dirname "${TARGET_IMAGE}")"
-chmod 0700 "${BUILD_DIR}"
+sudo chgrp "${LIBVIRT_QEMU_GROUP}" "${BUILD_DIR}"
+chmod 0710 "${BUILD_DIR}"
 
 GOLDEN_INPUT_FINGERPRINT_SCHEMA=1
 GOLDEN_INPUT_DIGEST="$("${ROOT}/scripts/golden-image-input-digest.sh" "${SOURCE_COMMIT}")"
@@ -117,7 +130,15 @@ SOURCE_FORMAT="$(qemu-img info --output=json "${SOURCE_IMAGE}" | jq -r '.format'
 printf 'Creating preparation overlay from verified Ubuntu 26.04 image...\n'
 qemu-img create -f qcow2 -F "${SOURCE_FORMAT}" -b "${SOURCE_IMAGE}" "${WORK_DISK}"
 qemu-img resize "${WORK_DISK}" "${VM_DISK_SIZE_GIB}G"
+sudo chgrp "${LIBVIRT_QEMU_GROUP}" "${WORK_DISK}"
+chmod 0660 "${WORK_DISK}"
 qemu-img info --output=json "${WORK_DISK}" > "${EVIDENCE_DIR}/work-disk-before.json"
+{
+    printf 'libvirt_qemu_user=%s\n' "${LIBVIRT_QEMU_USER}"
+    printf 'libvirt_qemu_group=%s\n' "${LIBVIRT_QEMU_GROUP}"
+    stat -c 'build_dir_mode=%a owner=%U group=%G path=%n' "${BUILD_DIR}"
+    stat -c 'work_disk_mode=%a owner=%U group=%G path=%n' "${WORK_DISK}"
+} > "${EVIDENCE_DIR}/libvirt-storage-access.txt"
 
 cat > "${META_DATA}" <<EOF_META
 instance-id: ${VM_NAME}
@@ -185,6 +206,8 @@ EOF_USER
     printf 'source_image_provenance_verified=yes\n'
     printf 'source_image_format=%s\n' "${SOURCE_FORMAT}"
     printf 'vm_name=%s\n' "${VM_NAME}"
+    printf 'libvirt_qemu_user=%s\n' "${LIBVIRT_QEMU_USER}"
+    printf 'libvirt_qemu_group=%s\n' "${LIBVIRT_QEMU_GROUP}"
     printf 'memory_mib=%s\n' "${VM_MEMORY_MIB}"
     printf 'vcpus=%s\n' "${VM_VCPUS}"
     printf 'disk_size_gib=%s\n' "${VM_DISK_SIZE_GIB}"

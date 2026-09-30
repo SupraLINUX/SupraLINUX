@@ -352,6 +352,10 @@ for token, message in (
     ("qemu-img check", "golden builder must validate the final qcow2"),
     ("SUPRALINUX_REPLACE_GOLDEN_IMAGE", "golden replacement must require explicit opt-in"),
     ("source_checkout_removed=yes", "golden builder must prove temporary source checkout removal"),
+    ("LIBVIRT_QEMU_USER", "golden builder must resolve the system libvirt QEMU identity"),
+    ('chmod 0710 "${BUILD_DIR}"', "golden builder must grant only group traversal on its private build directory"),
+    ('chmod 0660 "${WORK_DISK}"', "golden builder must grant only owner/group access to the writable overlay"),
+    ("libvirt-storage-access.txt", "golden builder must retain libvirt storage-access evidence"),
 ):
     require(token in golden_builder, message)
 require("machine-id" in golden_builder and "ssh-hostkeys" in golden_builder, "golden builder must reset machine and SSH identities")
