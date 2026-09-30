@@ -22,6 +22,52 @@ if t.get("level3_remediation",{}).get("status") in {"materialization-pending-ci"
     import subprocess
     raise SystemExit(subprocess.run([sys.executable,str(ROOT/"scripts/validate_kde_tier3_level3_remediation.py")]).returncode)
 
+# Attempt 4 closes the hosted Frameworks campaign: Purpose PASS, all 20 Tier 3 nodes PASS.
+if m.get("state")=="PASS" and m.get("current_attempt")==4:
+    import subprocess
+    for script in ("scripts/validate_kde_tier3_level3_attempt1_closure.py","scripts/validate_kde_tier3_level3_attempt2_closure.py","scripts/validate_kde_tier3_level3_attempt3_closure.py","scripts/validate_kde_tier3_level3_attempt4_closure.py"):
+        rc=subprocess.run([sys.executable,str(ROOT/script)]).returncode
+        if rc:
+            raise SystemExit(rc)
+
+    SNAP4="20 PASS / 0 pending / 0 current FAIL / 0 BLOCKED"
+    NEXT4="authoritative-kvm-runner-certification"
+    req(m.get("execution_authorized") is False and m.get("current_attempt")==4 and m.get("next_attempt") is None and m.get("next_gate")==NEXT4,"Attempt4 closed Level3 authorization/gate")
+    req(m.get("canonical_snapshot")==SNAP4 and m.get("hosted_preflight_complete") is True and m.get("authoritative_kvm_certification")=="pending","Attempt4 hosted/KVM boundary")
+    pol=t.get("discovery_policy",{}); live=t.get("build_level3",{}); rem=t.get("level3_remediation",{})
+    req(pol.get("phase")=="build-level3" and pol.get("package_builds")=="tier3-level3-PASS-hosted" and pol.get("remediation")=="closed" and pol.get("runtime_validation")=="PASS-closed","Attempt4 canonical hosted-complete gate")
+    req(live.get("status")=="PASS" and live.get("execution_authorized") is False and live.get("current_attempt")==4 and live.get("next_attempt") is None and live.get("next_gate")==NEXT4,"Attempt4 canonical Level3 closure")
+    req(live.get("canonical_snapshot")==SNAP4 and live.get("hosted_preflight_complete") is True and live.get("authoritative_kvm_certification")=="pending","Attempt4 canonical hosted/KVM boundary")
+    req(rem.get("status")=="closed-PASS" and rem.get("materialization_authorized") is False and rem.get("package_execution_authorized") is False and rem.get("current_attempt")==4 and rem.get("next_attempt") is None and rem.get("next_gate")==NEXT4 and rem.get("remediation_scope")==[],"Attempt4 remediation closure")
+
+    tn={x["id"]:x for x in t.get("nodes",[])}
+    req(len(tn)==20 and all(n.get("state")=="PASS" and n.get("packaging",{}).get("state")=="PASS" and n.get("packaging",{}).get("downstream_eligible") is True for n in tn.values()),"Tier3 hosted campaign requires 20/20 canonical PASS")
+    dag3={node_id:node for node_id,node in d.get("nodes",{}).items() if node.get("tier")==3}
+    req(set(dag3)==set(tn) and len(dag3)==20 and all(x.get("state")=="PASS" and x.get("downstream_eligible") is True for x in dag3.values()),"Tier3 DAG requires all 20 promoted PASS nodes")
+
+    p=tn.get("purpose",{}); pp=p.get("packaging",{})
+    req(pp.get("package_version")=="6.30.0-0supralinux3" and pp.get("claim")=="hosted-clean-package-preflight" and pp.get("authoritative") is False,"Purpose hosted PASS identity")
+    pev=[x for x in pp.get("evidence",[]) if x.get("result")=="PASS" and x.get("package_state_effect")=="PASS"]
+    req(len(pev)==1,"Purpose requires exactly one promotion PASS")
+    if pev:
+        x=pev[0]
+        req(x.get("workflow_run")==36655388053 and x.get("job_id")==109699029883 and x.get("artifact_id")==11072881455 and x.get("artifact_sha256")=="f9429216194b38e34fcd4ac36bb9638bf5c9b134965b445b8520e18ce667eb68","Purpose Attempt4 PASS artifact")
+        req(x.get("tests")=="3/3 PASS" and x.get("buildinfo_predecessor_proof")=="PASS" and x.get("qml_payload")=="PASS" and x.get("lintian")=="PASS-errors" and x.get("apt_check")=="PASS" and x.get("abi_contract")=="PASS" and x.get("cmake_consumer")=="PASS","Purpose Attempt4 validation gates")
+        req(x.get("downstream_eligible") is True and x.get("authoritative") is False,"Purpose Attempt4 hosted downstream PASS")
+    req(dag3.get("purpose",{}).get("package_version")=="6.30.0-0supralinux3" and dag3.get("purpose",{}).get("attempt_ledger")=="manifests/kde-tier3-build-level3-attempts.json","Purpose canonical DAG promotion")
+
+    hist=a.get("campaign_history",[])
+    req(len(hist)==4 and [x.get("attempt") for x in hist]==[1,2,3,4] and [x.get("result") for x in hist]==["FAIL","FAIL","PARTIAL","PASS"],"Attempt4 campaign ledger append-only closure")
+    req(len(a.get("nodes",{}).get("ktexteditor",[]))==3 and len(a.get("nodes",{}).get("purpose",[]))==4,"Attempt4 node ledger cardinality")
+    if errors:
+        for e in errors: print("ERROR:",e,file=sys.stderr)
+        raise SystemExit(1)
+    print("KDE Tier 3 build Level 3 Attempt 4 closure: PASS")
+    print("hosted_preflight=20/20 PASS")
+    print("authoritative_kvm_certification=pending")
+    print("next_gate="+NEXT4)
+    raise SystemExit(0)
+
 # Attempt 4 re-executes Purpose only after the Attempt 3 post-build proof incident.
 if m.get("state")=="active-pending-ci" and m.get("current_attempt")==4:
     import subprocess

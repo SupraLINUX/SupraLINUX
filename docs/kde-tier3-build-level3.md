@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 build Level 3
 
-Status: **Attempt 4 active for Purpose only**
+Status: **PASS — hosted Frameworks preflight complete; authoritative KVM certification pending**
 
 Level 3 is the fourth and final topological build level already recorded by the KDE-upstream dependency DAG. It contains exactly KTextEditor `6.30.0-0supralinux1` and Purpose `6.30.0-0supralinux1`.
 
@@ -160,3 +160,25 @@ Package Attempt 4 is now authorized for **Purpose only**. KTextEditor remains ca
 The only remediation is the post-build proof contract: Prison is proven through `qml6-module-org-kde-prison`, matching Purpose's real Build-Depends, rather than the incorrect `libkf6prison-dev` expectation. The runner now retains successful build outputs before post-build validators execute.
 
 Canonical Tier 3 remains **19 PASS / 0 pending / 1 current FAIL / 0 BLOCKED** until Attempt 4 produces valid Purpose evidence.
+
+
+## Attempt 4 closure — Purpose PASS / Level 3 complete
+
+Purpose-only Package Attempt 4 ran in PR CI router workflow `36655388053` from commit `cbfa17227fda156e5cccf598b910a36ed4bc8518`. The planner proved `runnable=purpose` and `planned_nodes=1`; KTextEditor was not rerun.
+
+The shared Resolute rootfs passed in job `109698853580`, artifact `11072870340`, SHA-256 `345b669578c89f718f69038c0a8e1f0ef78406e802040bea8e6203a03d938172`.
+
+Purpose `6.30.0-0supralinux3` completed PASS in job `109699029883`, artifact `11072881455`, SHA-256 `f9429216194b38e34fcd4ac36bb9638bf5c9b134965b445b8520e18ce667eb68`:
+
+- CTest: **3/3 PASS**;
+- corrected buildinfo predecessor proof: PASS, including `qml6-module-org-kde-prison (= 6.30.0-0supralinux1)`;
+- Lintian: PASS-errors;
+- ABI contract: PASS;
+- APT/runtime closure: PASS;
+- CMake consumer: PASS;
+- QML payload: PASS;
+- exact `.deb/.ddeb/.changes/.buildinfo` outputs retained.
+
+Purpose is promoted and downstream-eligible. Together with the already-promoted KTextEditor, canonical Tier 3 is now **20 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**.
+
+This closes the GitHub-hosted Frameworks build preflight. It does **not** certify release-relevant execution: hosted Ubuntu 26.04 remains non-authoritative. The next gate is `authoritative-kvm-runner-certification`, using the already-defined disposable Ubuntu 26.04 KVM runner path. No stable publication is authorized.

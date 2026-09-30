@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 discovery
 
-Status: **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED — Level 3 Attempt 1 closed**
+Status: **20 PASS / 0 pending / 0 current FAIL / 0 BLOCKED — hosted Frameworks preflight complete; authoritative KVM certification pending**
 
 Last reviewed: **2026-09-29**
 
@@ -657,3 +657,14 @@ The proof contract is corrected to `qml6-module-org-kde-prison`, successful buil
 Repository Policy run `36655130391` validates the Attempt 3 PARTIAL closure, KTextEditor canonical/DAG promotion and the corrected Purpose proof contract. Attempt 4 is separately activated for Purpose only at the unchanged source version `6.30.0-0supralinux3`.
 
 KTextEditor remains PASS and is not rerun. Purpose's previous canonical FAIL remains until a valid Attempt 4 result replaces it. No source rematerialization is required.
+
+
+## Current canonical state — Tier 3 hosted preflight complete
+
+Level 3 Attempt 4 workflow `36655388053` completed Purpose `6.30.0-0supralinux3` PASS from commit `cbfa17227fda156e5cccf598b910a36ed4bc8518`. Purpose passed 3/3 upstream tests, the corrected QML Prison buildinfo proof, Lintian, ABI, APT/runtime closure, CMake consumer and QML payload validation. Artifact `11072881455` is retained with SHA-256 `f9429216194b38e34fcd4ac36bb9638bf5c9b134965b445b8520e18ce667eb68`.
+
+All 20 canonical Tier 3 Frameworks are now **PASS** and downstream-eligible, and all 20 are represented in the canonical DAG. The hosted package campaign therefore closes at:
+
+**20 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**
+
+This is a hosted clean-build preflight milestone, not final release certification. Per the SupraLINUX runner contract, GitHub-hosted Ubuntu 26.04 evidence is non-authoritative. The next gate is **authoritative KVM runner certification** before KWin/Plasma/session release-relevant work is accepted. Stable publication remains explicitly user-approved only.
