@@ -18,6 +18,8 @@ STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 CERT_DIR=""
 PR_HEAD_SHA=""
 GOLDEN_SHA256=""
+GOLDEN_SOURCE_COMMIT=""
+GOLDEN_INPUT_DIGEST=""
 
 die() {
     printf 'ERROR: %s\n' "$*" >&2
@@ -76,12 +78,12 @@ write_result() {
     local finished_at
     finished_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
     if [[ -n "${CERT_DIR}" ]]; then
-        python3 - "${CERT_DIR}/certification-result.json" "${STATE}" "${rc}" "${STAGE}" "${STARTED_AT}" "${finished_at}" "${REPOSITORY}" "${PR_NUMBER}" "${PR_HEAD_SHA}" "${GOLDEN_SHA256}" <<'PY'
+        python3 - "${CERT_DIR}/certification-result.json" "${STATE}" "${rc}" "${STAGE}" "${STARTED_AT}" "${finished_at}" "${REPOSITORY}" "${PR_NUMBER}" "${PR_HEAD_SHA}" "${GOLDEN_SHA256}" "${GOLDEN_SOURCE_COMMIT}" "${GOLDEN_INPUT_DIGEST}" <<'PY'
 import json
 import sys
 from pathlib import Path
 
-path,state,rc,stage,started,finished,repository,pr_number,head,golden=sys.argv[1:]
+path,state,rc,stage,started,finished,repository,pr_number,head,golden,golden_source,golden_inputs=sys.argv[1:]
 payload={
     "state": state,
     "exit_code": int(rc),
@@ -92,6 +94,8 @@ payload={
     "pr_number": int(pr_number),
     "pr_head_sha": head,
     "golden_image_sha256": golden or None,
+    "golden_source_commit": golden_source or None,
+    "golden_input_digest": golden_inputs or None,
     "canonical_state_effect": "none",
     "stable_publication_authorized": False,
 }
@@ -110,6 +114,7 @@ trap write_result EXIT
     printf 'source_image=%s\n' "${SOURCE_IMAGE}"
     printf 'golden_image=%s\n' "${GOLDEN_IMAGE}"
     printf 'rebuild_golden=%s\n' "${REBUILD_GOLDEN}"
+    printf 'current_golden_input_digest=%s\n' "$("${ROOT}/scripts/golden-image-input-digest.sh" "${PR_HEAD_SHA}")"
 } > "${CERT_DIR}/certification-inputs.txt"
 
 STAGE="host-kvm-preflight"
@@ -129,27 +134,20 @@ golden_source_commit() {
     awk -F= '$1 == "source_commit" {print $2; exit}' "${GOLDEN_IMAGE}.provenance.txt"
 }
 
+golden_input_digest() {
+    awk -F= '$1 == "golden_input_digest" {print $2; exit}' "${GOLDEN_IMAGE}.provenance.txt"
+}
+
 STAGE="golden-image-admission"
 NEED_BUILD=0
 if [[ ! -f "${GOLDEN_IMAGE}" || ! -f "${GOLDEN_IMAGE}.provenance.txt" ]]; then
     NEED_BUILD=1
 else
-    if ! "${ROOT}/scripts/check-golden-image-provenance.sh" \
+    if ! SUPRALINUX_GOLDEN_COMPAT_COMMIT="${PR_HEAD_SHA}" \
+        "${ROOT}/scripts/check-golden-image-provenance.sh" \
         "${GOLDEN_IMAGE}" "${CERT_DIR}/golden-provenance-before.txt"; then
-        [[ "${REBUILD_GOLDEN}" == "1" ]] || die "Existing golden image failed provenance validation. Set SUPRALINUX_REBUILD_GOLDEN=1 only after reviewing the preserved evidence."
+        [[ "${REBUILD_GOLDEN}" == "1" ]] || die "Existing golden image failed provenance or golden-input compatibility validation. Set SUPRALINUX_REBUILD_GOLDEN=1 only after reviewing the preserved evidence."
         NEED_BUILD=1
-    else
-        EXISTING_SOURCE_COMMIT="$(golden_source_commit)"
-        if [[ "${EXISTING_SOURCE_COMMIT,,}" != "${PR_HEAD_SHA,,}" ]]; then
-            [[ "${REBUILD_GOLDEN}" == "1" ]] || {
-                printf 'Existing golden image was built from a different source commit.\n' >&2
-                printf 'Golden: %s\n' "${EXISTING_SOURCE_COMMIT}" >&2
-                printf 'PR head: %s\n' "${PR_HEAD_SHA}" >&2
-                printf 'Set SUPRALINUX_REBUILD_GOLDEN=1 to explicitly replace it.\n' >&2
-                exit 1
-            }
-            NEED_BUILD=1
-        fi
     fi
 fi
 
@@ -170,11 +168,12 @@ if (( NEED_BUILD )); then
         |& tee "${CERT_DIR}/golden-build-console.txt"
 fi
 
-"${ROOT}/scripts/check-golden-image-provenance.sh" \
+SUPRALINUX_GOLDEN_COMPAT_COMMIT="${PR_HEAD_SHA}" \
+    "${ROOT}/scripts/check-golden-image-provenance.sh" \
     "${GOLDEN_IMAGE}" "${CERT_DIR}/golden-provenance.txt" \
     |& tee "${CERT_DIR}/golden-provenance-console.txt"
 GOLDEN_SOURCE_COMMIT="$(golden_source_commit)"
-[[ "${GOLDEN_SOURCE_COMMIT,,}" == "${PR_HEAD_SHA,,}" ]] || die "Admitted golden source commit does not match PR head."
+GOLDEN_INPUT_DIGEST="$(golden_input_digest)"
 GOLDEN_SHA256="$(sha256sum "${GOLDEN_IMAGE}" | awk '{print $1}')"
 
 run_gate() {
@@ -230,5 +229,7 @@ STAGE="complete"
 printf 'Authoritative KVM certification sequence: PASS\n'
 printf 'pr_head_sha=%s\n' "${PR_HEAD_SHA}"
 printf 'golden_image_sha256=%s\n' "${GOLDEN_SHA256}"
+printf 'golden_source_commit=%s\n' "${GOLDEN_SOURCE_COMMIT}"
+printf 'golden_input_digest=%s\n' "${GOLDEN_INPUT_DIGEST}"
 printf 'evidence=%s\n' "${CERT_DIR}"
 printf 'Canonical package state was not modified. Stable publication remains unauthorized.\n'
