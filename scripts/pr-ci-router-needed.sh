@@ -10,6 +10,27 @@ done
 mapfile -t changed < <(git diff --name-only "${BEFORE}" "${AFTER}" --)
 (("${#changed[@]}" > 0)) || { echo "No changed paths; Repository Policy only."; exit 1; }
 
+
+desktop_stack_authoritative_ci_only() {
+  local path="manifests/desktop-stack.json"
+  git cat-file -e "${BEFORE}:${path}" 2>/dev/null || return 1
+  git cat-file -e "${AFTER}:${path}" 2>/dev/null || return 1
+  python3 - "${BEFORE}" "${AFTER}" "${path}" <<'PY'
+import copy,json,subprocess,sys
+before,after,path=sys.argv[1:]
+def load(ref):
+    return json.loads(subprocess.check_output(['git','show',f'{ref}:{path}'],text=True))
+def norm(d):
+    d=copy.deepcopy(d)
+    d.pop('as_of',None)
+    ci=d.get('ci')
+    if isinstance(ci,dict):
+        ci.pop('authoritative_runner',None)
+    return d
+raise SystemExit(0 if norm(load(before))==norm(load(after)) else 1)
+PY
+}
+
 canonical_state_is_promotion_only() {
   local path="$1"
   git cat-file -e "${BEFORE}:${path}" 2>/dev/null || return 1
@@ -188,6 +209,12 @@ PY
 for path in "${changed[@]}"; do
   case "${path}" in
     docs/*|README.md|scripts/validate_*.py|scripts/test-*.sh|scripts/pr-ci-router-needed.sh|scripts/compile_kde_tier2_campaign.py|manifests/kde-tier1-package-batch*-attempts.json|manifests/kde-tier2-campaign-plan.json|.github/workflows/repository-policy.yml|.github/workflows/pr-ci-router.yml) continue ;;
+    manifests/authoritative-kvm-certification.json) continue ;;
+    manifests/desktop-stack.json)
+      if desktop_stack_authoritative_ci_only; then continue; fi
+      echo "${path}: desktop/KDE/Qt selection semantics changed; reusable hosted CI required."; exit 0 ;;
+    .github/workflows/runner-contract.yml|.github/workflows/authoritative-package-proof.yml|.github/workflows/authoritative-frameworks-sample-proof.yml|scripts/run-authoritative-package-proof.sh|scripts/run-authoritative-frameworks-sample-proof.sh|scripts/run-kvm-jit-gate.sh|scripts/run-kvm-jit-gate-core.sh|scripts/provision-kvm-host.sh|scripts/check-kvm-host.sh|scripts/build-authoritative-runner-image.sh|scripts/provision-authoritative-runner-guest.sh|scripts/install-actions-runner.sh|scripts/prepare-autopkgtest-qemu-image.sh|scripts/seal-authoritative-runner-image.sh|scripts/check-nested-kvm-runtime.sh|scripts/check-actions-runner-runtime.sh|scripts/check-golden-image-provenance.sh|scripts/fetch-ubuntu-26.04-cloud-image.sh|scripts/verify-ubuntu-cloud-image-provenance.sh|scripts/qemu-kvm-required.sh)
+      continue ;;
     .github/workflows/kde-tier3-build-level3.yml|scripts/run-kde-tier3-build-level3.sh|scripts/plan-kde-tier3-build-level3.py|scripts/test-kde-tier3-build-level3-planner.py|manifests/kde-tier3-build-level3.json|manifests/kde-tier3-build-level3-attempts.json|manifests/kde-tier3-build-campaign.json)
       continue ;;
     .github/workflows/kde-tier3-materialization.yml|scripts/materialize_kde_tier3_package.py|scripts/kde-tier3-materialization-needed.sh)

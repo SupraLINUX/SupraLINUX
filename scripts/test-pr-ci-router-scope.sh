@@ -23,6 +23,12 @@ cat > manifests/kde-frameworks-tier1-packaging-tree-evidence.json <<'JSON'
 {"schema":1,"authority":"technical-reference-only","role":"reference","selected_kde":"6.30.0","status":"PASS","evidence":{"artifact_id":1}}
 JSON
 echo '{"schema":1,"nodes":{"kirigami":{"qt":{"required":["Core"]}}}}' > manifests/kde-frameworks-tier1-dependencies.json
+cat > manifests/authoritative-kvm-certification.json <<'JSON'
+{"schema":1,"role":"live-authoritative-kvm-certification-state","host_kvm_preflight":{"status":"pending-real-evidence"},"gates":[{"id":"runner-contract","status":"pending"}]}
+JSON
+cat > manifests/desktop-stack.json <<'JSON'
+{"schema":1,"desktop":{"plasma":{"version":"6.7.5"},"frameworks":{"version":"6.30.0"},"gear":{"version":"26.08.1"}},"qt":{"required_series":"6.10"},"ci":{"authoritative_runner":{"status":"pending-certification","next_gate":"host-kvm-preflight-and-golden-image","desktop_release_relevant_authorized":false}}}
+JSON
 cat > manifests/kde-frameworks-tier2.json <<'JSON'
 {"schema":1,"frameworks_series":"6.30.0","tier":2,"nodes":[{"id":"kcrash","source_sha256":"src","kde_framework_dependencies":{"required":["kcoreaddons"]},"state":"pending","planning":{"readiness":"package-lane-pending","provider_audit":"required-before-materialization","package_contract":"not-materialized"}}]}
 JSON
@@ -57,8 +63,26 @@ echo '# policy' >> .github/workflows/repository-policy.yml; git add .; git commi
 if bash scripts/pr-ci-router-needed.sh "$V" "$RP"; then echo "repository-policy-only delta unexpectedly requested reusable CI" >&2; exit 1; fi
 echo 'name: PR CI router' > .github/workflows/pr-ci-router.yml; git add .; git commit -qm router-self; RS=$(git rev-parse HEAD)
 if bash scripts/pr-ci-router-needed.sh "$RP" "$RS"; then echo "router-self delta unexpectedly requested reusable CI" >&2; exit 1; fi
+python3 - <<'PY'
+import json
+p='manifests/authoritative-kvm-certification.json'; d=json.load(open(p)); d['host_kvm_preflight']['status']='PASS'; d['host_kvm_preflight']['evidence']=[{'id':'host'}]; open(p,'w').write(json.dumps(d))
+PY
+git add .; git commit -qm kvm-live-state; KLS=$(git rev-parse HEAD)
+if bash scripts/pr-ci-router-needed.sh "$RS" "$KLS"; then echo "KVM live-state delta unexpectedly requested reusable CI" >&2; exit 1; fi
+python3 - <<'PY'
+import json
+p='manifests/desktop-stack.json'; d=json.load(open(p)); d['ci']['authoritative_runner']['status']='certification-in-progress'; d['ci']['authoritative_runner']['next_gate']='runner-contract'; open(p,'w').write(json.dumps(d))
+PY
+git add .; git commit -qm desktop-authoritative-state; DAS=$(git rev-parse HEAD)
+if bash scripts/pr-ci-router-needed.sh "$KLS" "$DAS"; then echo "desktop authoritative-runner state unexpectedly requested reusable CI" >&2; exit 1; fi
+python3 - <<'PY'
+import json
+p='manifests/desktop-stack.json'; d=json.load(open(p)); d['desktop']['frameworks']['version']='6.31.0'; open(p,'w').write(json.dumps(d))
+PY
+git add .; git commit -qm desktop-frameworks-selection; DFS=$(git rev-parse HEAD)
+bash scripts/pr-ci-router-needed.sh "$DAS" "$DFS"
 echo '# compiler' >> scripts/compile_kde_tier2_campaign.py; git add .; git commit -qm compiler; CP=$(git rev-parse HEAD)
-if bash scripts/pr-ci-router-needed.sh "$RS" "$CP"; then echo "Tier2 compiler-only delta unexpectedly requested reusable CI" >&2; exit 1; fi
+if bash scripts/pr-ci-router-needed.sh "$DFS" "$CP"; then echo "Tier2 compiler-only delta unexpectedly requested reusable CI" >&2; exit 1; fi
 echo '{"schema":1,"generated":true}' > manifests/kde-tier2-campaign-plan.json; git add .; git commit -qm generated-plan; GP=$(git rev-parse HEAD)
 if bash scripts/pr-ci-router-needed.sh "$CP" "$GP"; then echo "generated Tier2 plan unexpectedly requested reusable CI" >&2; exit 1; fi
 python3 - <<'PY'
