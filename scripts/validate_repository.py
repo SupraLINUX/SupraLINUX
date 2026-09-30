@@ -440,7 +440,7 @@ require("scripts/check-actions-runner-runtime.sh" in frameworks_sample, "Framewo
 require("scripts/check-nested-kvm-runtime.sh" in frameworks_sample, "Frameworks sample must prove nested-KVM runtime on the sample guest")
 require('"run_kind": "authoritative-certification-sample"' in frameworks_sample, "Frameworks sample must classify itself as certification evidence")
 require('"package_state_effect": "none"' in frameworks_sample, "Frameworks sample must not mutate canonical package state")
-require("kf6-karchive_6.30.0-0supralinux4.dsc" in frameworks_sample, "Frameworks sample must bind KArchive 6.30.0-0supralinux4")
+require('KARCHIVE_VERSION="6.30.0-0supralinux4"' in frameworks_sample and 'kf6-karchive_${KARCHIVE_VERSION}.dsc' in frameworks_sample, "Frameworks sample must bind KArchive 6.30.0-0supralinux4")
 require("extra-cmake-modules_" in frameworks_sample and "6.30.0-0supralinux3" in frameworks_sample, "Frameworks sample must bind the retained ECM 6.30 predecessor")
 require('--extra-package="${ECM_DEB}"' in frameworks_sample, "Frameworks sample sbuild must inject the exact ECM predecessor")
 require("100% tests passed, 0 tests failed out of 5" in frameworks_sample, "Frameworks sample must prove KArchive upstream tests")
