@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-29",
+  "as_of": "2026-09-30",
   "authority": "supralinux",
   "role": "live-authoritative-kvm-certification-state",
   "hosted_frameworks_precondition": {
@@ -11,8 +11,18 @@
     "repository_policy_run": 36656731103
   },
   "host_kvm_preflight": {
-    "status": "pending-real-evidence",
-    "evidence": []
+    "status": "PASS",
+    "evidence": [
+      {
+        "kind": "host-local-file",
+        "host": "espadarunica",
+        "checked_at": "2026-09-30T14:55:37Z",
+        "pr_head_sha": "fe3fa1bc6b8cedf764e211928a4a1b34bbe0d822",
+        "golden_input_digest": "0fe642396e44b571b8d26521d02b4b079917277971f633b6232a8961f753f92c",
+        "path": "/var/lib/supralinux/evidence/authoritative-certification/host-preflight-fe3fa1bc6b8c/host-kvm-preflight.txt",
+        "sha256": "5128a6af307a690ae0768a1212f3d1f5d141e500bdb7cec9983a9d83337d10a8"
+      }
+    ]
   },
   "golden_image": {
     "status": "pending-real-evidence",

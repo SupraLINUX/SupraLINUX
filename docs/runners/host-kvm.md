@@ -1,7 +1,7 @@
 # KVM/libvirt host orchestration
 
-Status: **host bootstrap, golden-image build and JIT orchestration implemented; not yet executed on a real host**  
-Last reviewed: **2026-09-11**
+Status: **real-host bootstrap/preflight PASS; golden-image build and JIT certification pending**  
+Last reviewed: **2026-09-30**
 
 The long-lived host is an infrastructure provider only. It is not a SupraLINUX build runner and must not be treated as release evidence. Its job is to provide KVM/libvirt, build the sealed Ubuntu 26.04 golden runner image, create one disposable runner guest per authoritative GitHub Actions job, preserve evidence, and destroy writable VM state afterwards.
 
@@ -118,7 +118,7 @@ The authoritative workflow separately uploads runner/package evidence. Promotion
 
 ## Current blocker
 
-No real KVM host has executed this complete chain yet. Therefore host preflight, source-image fetch/hash, golden-image build/hash, nested KVM, JIT startup, runner-group policy, QEMU system testing and cleanup/export behavior remain **pending execution**, not PASS.
+The real Ubuntu 26.04 host preflight is **PASS** with retained host-local evidence. The signed source-image fetch/hash, golden-image build/hash, nested-KVM runtime inside disposable runners, JIT startup, runner-group policy, QEMU system testing and cleanup/export behavior remain **pending execution**, not PASS.
 
 
 ## Frameworks sample gate

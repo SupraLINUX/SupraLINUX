@@ -1,7 +1,7 @@
 # Authoritative KVM runner provisioning
 
 Status: **repository implementation complete for current Phase 1 design; real KVM certification pending**  
-Last reviewed: **2026-09-11**
+Last reviewed: **2026-09-30**
 
 The long-lived KVM/libvirt host is an infrastructure provider, not the build runner. The authoritative identity begins inside each disposable Ubuntu 26.04 JIT runner VM.
 
@@ -170,7 +170,7 @@ A golden image and Phase 1 remain **pending** until real evidence establishes:
 12. `authoritative-frameworks-sample-proof.yml` PASS on a third disposable JIT KVM guest, rebuilding canonical KArchive `6.30.0-0supralinux4` with exact ECM `6.30.0-0supralinux3` and retaining package/test/ABI/consumer evidence;
 13. retained workflow artifacts plus host/runner diagnostics.
 
-Until those real VMs execute, no authoritative PASS or real host-generated image hash is claimed.
+Until the remaining real VMs execute, no authoritative runner/package PASS or real golden-image hash is claimed.
 
 
 ### Frameworks lane sample
@@ -194,7 +194,7 @@ The sample is a certification run, not a new canonical KArchive package attempt:
 
 The current authoritative runner lifecycle is tracked in `manifests/authoritative-kvm-certification.json` and validated by Repository Policy.
 
-The manifest deliberately separates hosted Frameworks completion from real KVM certification. The current state keeps host preflight, golden-image admission, runner-contract, synthetic package proof and KArchive Frameworks sample as pending real evidence. Until the final Frameworks sample is PASS, `desktop_release_relevant_authorized=false` and Plasma/KWin/session release-relevant execution remains locked.
+The manifest deliberately separates hosted Frameworks completion from real KVM certification. The real-host KVM preflight is now PASS with retained host evidence; golden-image admission, runner-contract, synthetic package proof and KArchive Frameworks sample remain pending real evidence. Until the final Frameworks sample is PASS, `desktop_release_relevant_authorized=false` and Plasma/KWin/session release-relevant execution remains locked.
 
 This live-state manifest is not historical evidence. Real KVM workflow IDs, image hashes and retained artifacts are added only after those executions occur.
 
