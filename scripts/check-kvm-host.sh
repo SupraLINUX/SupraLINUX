@@ -19,7 +19,9 @@ printf 'checked_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 printf 'user=%s\n' "${USER}"
 printf 'kernel=%s\n' "$(uname -r)"
 printf 'architecture=%s\n' "$(uname -m)"
-printf 'outer_virtualization=%s\n' "$(systemd-detect-virt --vm 2>/dev/null || printf 'none')"
+OUTER_VIRTUALIZATION="$(systemd-detect-virt --vm 2>/dev/null || true)"
+[[ -n "${OUTER_VIRTUALIZATION}" ]] || OUTER_VIRTUALIZATION="none"
+printf 'outer_virtualization=%s\n' "${OUTER_VIRTUALIZATION}"
 
 if [[ "$(uname -m)" != "x86_64" ]]; then
     fail 'current authoritative host recipe requires x86_64/amd64'
