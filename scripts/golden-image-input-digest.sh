@@ -7,6 +7,7 @@ MODE="${2:-digest}"
 FINGERPRINT_SCHEMA=1
 
 INPUTS=(
+    scripts/golden-image-input-digest.sh
     scripts/build-authoritative-runner-image.sh
     scripts/provision-authoritative-runner-guest.sh
     scripts/install-actions-runner.sh
