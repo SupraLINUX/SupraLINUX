@@ -61,52 +61,7 @@ if ! sudo virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}" >/dev/n
     exit 1
 fi
 network_info="$(sudo virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}")"
-if ! grep -Eq '^Active:[[:space:]]+yes
-sudo virsh --connect "${LIBVIRT_URI}" net-autostart "${LIBVIRT_NETWORK}"
-
-sudo install -d -m 0755 /var/lib/supralinux/images
-sudo install -d -m 0755 /var/lib/supralinux/golden-builds
-sudo install -d -m 0755 /var/lib/supralinux/ephemeral-runners
-sudo install -d -m 0755 /var/lib/supralinux/evidence
-sudo install -d -m 0755 "${EVIDENCE_DIR}"
-sudo chown "${TARGET_USER}:$(id -gn "${TARGET_USER}")" \
-    /var/lib/supralinux/images \
-    /var/lib/supralinux/golden-builds \
-    /var/lib/supralinux/ephemeral-runners \
-    /var/lib/supralinux/evidence
-
-EVIDENCE_TMP="$(mktemp)"
-trap 'rm -f "${EVIDENCE_TMP}"' EXIT
-{
-    printf 'prepared_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-    printf 'host_user=%s\n' "${TARGET_USER}"
-    printf 'libvirt_uri=%s\n' "${LIBVIRT_URI}"
-    printf 'libvirt_network=%s\n' "${LIBVIRT_NETWORK}"
-    printf '\nos-release:\n'
-    cat /etc/os-release
-    printf '\nuname:\n'
-    uname -a
-    printf '\npackages:\n'
-    dpkg-query -W -f='${Package}\t${Version}\n' \
-        cloud-image-utils cpu-checker curl genisoimage gnupg jq libguestfs-tools \
-        libvirt-clients libvirt-daemon-system qemu-system-x86 qemu-utils ubuntu-keyring virt-install
-    printf '\nnetwork:\n'
-    sudo virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}"
-    printf '\nkvm-module-state:\n'
-    for nested in /sys/module/kvm_intel/parameters/nested /sys/module/kvm_amd/parameters/nested; do
-        if [[ -r "${nested}" ]]; then
-            printf '%s=' "${nested}"
-            cat "${nested}"
-        fi
-    done
-} > "${EVIDENCE_TMP}"
-sudo install -m 0644 "${EVIDENCE_TMP}" "${EVIDENCE_DIR}/provisioning.txt"
-
-printf '\nHost packages and libvirt network are provisioned.\n'
-printf 'A new login session is required for kvm/libvirt group membership to apply.\n'
-printf 'This script does NOT change BIOS settings or reload KVM modules to force nested virtualization.\n'
-printf 'After re-login, run: %s/scripts/check-kvm-host.sh\n' "${ROOT}"
- <<<"${network_info}"; then
+if ! grep -Eq '^Active:[[:space:]]+yes$' <<<"${network_info}"; then
     sudo virsh --connect "${LIBVIRT_URI}" net-start "${LIBVIRT_NETWORK}"
 fi
 sudo virsh --connect "${LIBVIRT_URI}" net-autostart "${LIBVIRT_NETWORK}"
