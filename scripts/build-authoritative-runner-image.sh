@@ -37,7 +37,6 @@ required=(
     qemu-img
     sha256sum
     stat
-    sudo
     timeout
     virsh
     virt-cat
@@ -57,6 +56,7 @@ if ! id "${LIBVIRT_QEMU_USER}" >/dev/null 2>&1; then
     exit 1
 fi
 LIBVIRT_QEMU_GROUP="$(id -gn "${LIBVIRT_QEMU_USER}")"
+grep -qw "${LIBVIRT_QEMU_GROUP}" <<<"$(id -nG)" || { printf 'Current user is not in the effective libvirt QEMU group: %s\n' "${LIBVIRT_QEMU_GROUP}" >&2; exit 1; }
 
 "${ROOT}/scripts/check-kvm-host.sh"
 
@@ -88,7 +88,7 @@ SUCCESS=0
 VM_DEFINED=0
 
 mkdir -p "${BUILD_DIR}" "${EVIDENCE_DIR}" "$(dirname "${TARGET_IMAGE}")"
-sudo chgrp "${LIBVIRT_QEMU_GROUP}" "${BUILD_DIR}"
+chgrp "${LIBVIRT_QEMU_GROUP}" "${BUILD_DIR}"
 chmod 0710 "${BUILD_DIR}"
 
 GOLDEN_INPUT_FINGERPRINT_SCHEMA=1
@@ -130,7 +130,7 @@ SOURCE_FORMAT="$(qemu-img info --output=json "${SOURCE_IMAGE}" | jq -r '.format'
 printf 'Creating preparation overlay from verified Ubuntu 26.04 image...\n'
 qemu-img create -f qcow2 -F "${SOURCE_FORMAT}" -b "${SOURCE_IMAGE}" "${WORK_DISK}"
 qemu-img resize "${WORK_DISK}" "${VM_DISK_SIZE_GIB}G"
-sudo chgrp "${LIBVIRT_QEMU_GROUP}" "${WORK_DISK}"
+chgrp "${LIBVIRT_QEMU_GROUP}" "${WORK_DISK}"
 chmod 0660 "${WORK_DISK}"
 qemu-img info --output=json "${WORK_DISK}" > "${EVIDENCE_DIR}/work-disk-before.json"
 {
@@ -244,12 +244,13 @@ if virsh domstate "${VM_NAME}" 2>/dev/null | grep -Eq 'running|paused|in shutdow
 fi
 
 printf 'Extracting guest preparation evidence...\n'
+"${ROOT}/scripts/with-libguestfs-runtime.sh" --describe > "${EVIDENCE_DIR}/libguestfs-runtime.txt"
 mkdir -p "${EVIDENCE_DIR}/guest"
-virt-copy-out -a "${WORK_DISK}" /var/lib/supralinux/evidence "${EVIDENCE_DIR}/guest"
-virt-copy-out -a "${WORK_DISK}" /var/log/supralinux-golden-build.log "${EVIDENCE_DIR}/guest" 2>/dev/null || true
+"${ROOT}/scripts/with-libguestfs-runtime.sh" virt-copy-out -a "${WORK_DISK}" /var/lib/supralinux/evidence "${EVIDENCE_DIR}/guest"
+"${ROOT}/scripts/with-libguestfs-runtime.sh" virt-copy-out -a "${WORK_DISK}" /var/log/supralinux-golden-build.log "${EVIDENCE_DIR}/guest" 2>/dev/null || true
 
-RESULT_TEXT="$(virt-cat -a "${WORK_DISK}" /var/lib/supralinux/evidence/golden-build-result.txt 2>/dev/null || true)"
-COMPLETE_TEXT="$(virt-cat -a "${WORK_DISK}" /var/lib/supralinux/evidence/golden-build-complete.txt 2>/dev/null || true)"
+RESULT_TEXT="$("${ROOT}/scripts/with-libguestfs-runtime.sh" virt-cat -a "${WORK_DISK}" /var/lib/supralinux/evidence/golden-build-result.txt 2>/dev/null || true)"
+COMPLETE_TEXT="$("${ROOT}/scripts/with-libguestfs-runtime.sh" virt-cat -a "${WORK_DISK}" /var/lib/supralinux/evidence/golden-build-complete.txt 2>/dev/null || true)"
 printf '%s\n' "${RESULT_TEXT}" > "${EVIDENCE_DIR}/golden-build-result.txt"
 printf '%s\n' "${COMPLETE_TEXT}" > "${EVIDENCE_DIR}/golden-build-complete.txt"
 
@@ -267,7 +268,7 @@ if ! grep -qx 'source_checkout_removed=yes' <<<"${COMPLETE_TEXT}"; then
 fi
 
 printf 'Applying explicit offline clone-safety operations...\n'
-SUPPORTED_OPS="$(virt-sysprep --list-operations | awk '{print $1}')"
+SUPPORTED_OPS="$("${ROOT}/scripts/with-libguestfs-runtime.sh" virt-sysprep --list-operations | awk '{print $1}')"
 SYSPREP_OPS=(machine-id ssh-hostkeys dhcp-client-state logfiles tmp-files)
 for op in "${SYSPREP_OPS[@]}"; do
     grep -qx "${op}" <<<"${SUPPORTED_OPS}" || {
@@ -276,7 +277,7 @@ for op in "${SYSPREP_OPS[@]}"; do
     }
 done
 OPS_CSV="$(IFS=,; echo "${SYSPREP_OPS[*]}")"
-virt-sysprep -a "${WORK_DISK}" --operations "${OPS_CSV}" |& tee "${EVIDENCE_DIR}/virt-sysprep.log"
+"${ROOT}/scripts/with-libguestfs-runtime.sh" virt-sysprep -a "${WORK_DISK}" --operations "${OPS_CSV}" |& tee "${EVIDENCE_DIR}/virt-sysprep.log"
 
 printf 'Flattening the prepared overlay into a standalone golden qcow2...\n'
 qemu-img convert -p -O qcow2 "${WORK_DISK}" "${TARGET_TMP}" |& tee "${EVIDENCE_DIR}/qemu-img-convert.log"

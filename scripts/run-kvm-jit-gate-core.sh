@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+LIBVIRT_QEMU_USER="${SUPRALINUX_LIBVIRT_QEMU_USER:-libvirt-qemu}"
 REPOSITORY="${SUPRALINUX_REPOSITORY:-SupraLINUX/SupraLINUX}"
 PR_NUMBER="${SUPRALINUX_PR_NUMBER:-1}"
 GATE="${1:-${SUPRALINUX_GATE:-}}"
@@ -61,7 +63,10 @@ fi
 
 required_commands=(
     base64
+    chgrp
+    chmod
     curl
+    id
     flock
     git
     jq
@@ -77,6 +82,14 @@ for command_name in "${required_commands[@]}"; do
         exit 1
     }
 done
+
+if ! id "${LIBVIRT_QEMU_USER}" >/dev/null 2>&1; then
+    printf 'Configured libvirt QEMU user does not exist: %s\n' "${LIBVIRT_QEMU_USER}" >&2
+    exit 1
+fi
+LIBVIRT_QEMU_GROUP="$(id -gn "${LIBVIRT_QEMU_USER}")"
+grep -qw "${LIBVIRT_QEMU_GROUP}" <<<"$(id -nG)" || { printf 'Current user is not in the effective libvirt QEMU group: %s\n' "${LIBVIRT_QEMU_GROUP}" >&2; exit 1; }
+"${ROOT}/scripts/with-libguestfs-runtime.sh" true
 
 GOLDEN_PROVENANCE="${GOLDEN_IMAGE}.provenance.txt"
 if [[ ! -f "${GOLDEN_IMAGE}" ]]; then
@@ -199,7 +212,8 @@ LABEL_ADDED=0
 VM_CREATED=0
 
 mkdir -p "${RUN_DIR}" "${EVIDENCE_DIR}"
-chmod 0700 "${RUN_DIR}"
+chgrp "${LIBVIRT_QEMU_GROUP}" "${RUN_DIR}"
+chmod 0710 "${RUN_DIR}"
 
 cleanup() {
     local rc="$?"
@@ -229,9 +243,9 @@ cleanup() {
         fi
 
         mkdir -p "${EVIDENCE_DIR}/guest-files"
-        virt-copy-out -a "${OVERLAY}" /opt/actions-runner/_diag "${EVIDENCE_DIR}/guest-files" >/dev/null 2>&1 || true
-        virt-copy-out -a "${OVERLAY}" /var/lib/supralinux/evidence "${EVIDENCE_DIR}/guest-files" >/dev/null 2>&1 || true
-        virt-copy-out -a "${OVERLAY}" /var/log/supralinux-actions-runner-console.log "${EVIDENCE_DIR}/guest-files" >/dev/null 2>&1 || true
+        "${ROOT}/scripts/with-libguestfs-runtime.sh" virt-copy-out -a "${OVERLAY}" /opt/actions-runner/_diag "${EVIDENCE_DIR}/guest-files" >/dev/null 2>&1 || true
+        "${ROOT}/scripts/with-libguestfs-runtime.sh" virt-copy-out -a "${OVERLAY}" /var/lib/supralinux/evidence "${EVIDENCE_DIR}/guest-files" >/dev/null 2>&1 || true
+        "${ROOT}/scripts/with-libguestfs-runtime.sh" virt-copy-out -a "${OVERLAY}" /var/log/supralinux-actions-runner-console.log "${EVIDENCE_DIR}/guest-files" >/dev/null 2>&1 || true
         virsh undefine "${VM_NAME}" >/dev/null 2>&1 || true
     fi
 
@@ -349,7 +363,10 @@ printf 'Creating ephemeral overlay and KVM VM...\n'
 BACKING_FORMAT="$(qemu-img info --output=json "${GOLDEN_IMAGE}" | jq -r '.format')"
 qemu-img create -f qcow2 -F "${BACKING_FORMAT}" -b "${GOLDEN_IMAGE}" "${OVERLAY}"
 qemu-img resize "${OVERLAY}" "${VM_DISK_SIZE_GIB}G"
+chgrp "${LIBVIRT_QEMU_GROUP}" "${OVERLAY}"
+chmod 0660 "${OVERLAY}"
 qemu-img info --output=json "${OVERLAY}" > "${EVIDENCE_DIR}/overlay-info-before-boot.json"
+"${ROOT}/scripts/with-libguestfs-runtime.sh" --describe > "${EVIDENCE_DIR}/libguestfs-runtime.txt"
 
 VM_CREATED=1
 virt-install \

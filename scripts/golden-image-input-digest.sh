@@ -9,6 +9,7 @@ FINGERPRINT_SCHEMA=1
 INPUTS=(
     scripts/golden-image-input-digest.sh
     scripts/build-authoritative-runner-image.sh
+    scripts/with-libguestfs-runtime.sh
     scripts/provision-authoritative-runner-guest.sh
     scripts/install-actions-runner.sh
     scripts/prepare-autopkgtest-qemu-image.sh
