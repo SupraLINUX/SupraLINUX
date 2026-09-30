@@ -277,6 +277,7 @@ required_files = [
     "scripts/test-qemu-kvm-required.sh",
     "scripts/run-kvm-jit-gate.sh",
     "scripts/run-kvm-jit-gate-core.sh",
+    "scripts/run-authoritative-kvm-certification.sh",
     "scripts/run-authoritative-package-proof.sh",
     "scripts/run-authoritative-frameworks-sample-proof.sh",
     "manifests/kde-frameworks-tier2.json",
@@ -424,9 +425,39 @@ for token, message in (
     ("guest-exec-status", "host orchestrator must detect premature runner exit"),
     ("PROVENANCE_SHA256", "host orchestrator core must verify the golden image against provenance"),
     ("source_checkout_removed=yes", "host orchestrator core must require a source-clean golden image"),
+    ("GOLDEN_SOURCE_COMMIT", "host orchestrator must read the golden source commit"),
+    ('"${GOLDEN_SOURCE_COMMIT,,}" != "${PR_HEAD_SHA,,}"', "host orchestrator must reject a golden image built from a different PR head"),
+    ("Rebuild the golden image from the current PR head", "golden/PR mismatch must fail closed with remediation guidance"),
     ("su --login --shell /bin/bash --command", "guest runner must start non-root with an explicit login shell"),
 ):
     require(token in host_orchestrator, message)
+
+certification_orchestrator = read_required("scripts/run-authoritative-kvm-certification.sh")
+for token, message in (
+    ('LOCAL_HEAD="$(git -C "${ROOT}" rev-parse HEAD)"', "certification orchestrator must bind the local checkout HEAD"),
+    ('"${LOCAL_HEAD,,}" == "${PR_HEAD_SHA,,}"', "certification orchestrator must require local HEAD to equal PR head"),
+    ('status --porcelain --untracked-files=normal', "certification orchestrator must require a clean checkout"),
+    ("scripts/check-kvm-host.sh", "certification orchestrator must run real host KVM preflight"),
+    ("scripts/verify-ubuntu-cloud-image-provenance.sh", "certification orchestrator must verify the Ubuntu source image"),
+    ("SUPRALINUX_REBUILD_GOLDEN", "golden replacement must require explicit certification-run opt-in"),
+    ("scripts/build-authoritative-runner-image.sh", "certification orchestrator must build the golden image through the supported builder"),
+    ("scripts/check-golden-image-provenance.sh", "certification orchestrator must admit the exact golden bytes"),
+    ("run_gate runner-contract", "certification orchestrator must run runner-contract"),
+    ("run_gate authoritative-package-proof", "certification orchestrator must run the synthetic package proof"),
+    ("run_gate frameworks-sample-proof", "certification orchestrator must run the Frameworks sample"),
+    ("certification-result.json", "certification orchestrator must emit machine-readable final evidence"),
+    ("gate-results.json", "certification orchestrator must aggregate exact workflow run IDs"),
+    ('"canonical_state_effect": "none"', "certification orchestrator must not mutate canonical package state"),
+    ('"stable_publication_authorized": False', "certification orchestrator must not authorize stable publication"),
+):
+    require(token in certification_orchestrator, message)
+require(
+    certification_orchestrator.index("run_gate runner-contract")
+    < certification_orchestrator.index("run_gate authoritative-package-proof")
+    < certification_orchestrator.index("run_gate frameworks-sample-proof"),
+    "authoritative certification gates must execute in strict order",
+)
+require("git commit" not in certification_orchestrator and "git push" not in certification_orchestrator, "certification orchestrator must never commit or push evidence automatically")
 
 authoritative_proof = read_required("scripts/run-authoritative-package-proof.sh")
 require("scripts/check-actions-runner-runtime.sh" in authoritative_proof, "authoritative proof must verify effective Actions runner provenance")

@@ -122,3 +122,16 @@ No real KVM host has executed this complete chain yet. Therefore host preflight,
 ## Frameworks sample gate
 
 After runner-contract and the synthetic authoritative package proof pass, a third fresh JIT guest runs `frameworks-sample-proof`. It rebuilds canonical KArchive 6.30.0 with the exact retained ECM 6.30.0 predecessor and records package/test/ABI/consumer evidence. This is the required Frameworks lane certification checkpoint before KWin, Plasma or session work.
+
+
+## Full certification entrypoint
+
+For an admitted host, use the single fail-closed entrypoint rather than manually sequencing gates:
+
+```bash
+SUPRALINUX_GITHUB_TOKEN=... \
+SUPRALINUX_RUNNER_GROUP_ID=... \
+scripts/run-authoritative-kvm-certification.sh
+```
+
+The local checkout, golden-image source commit and PR head must all be identical. A mismatch fails before a JIT runner is created. Golden replacement is opt-in through `SUPRALINUX_REBUILD_GOLDEN=1`; evidence is retained outside the repository and is never auto-committed.

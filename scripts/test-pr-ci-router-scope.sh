@@ -40,6 +40,7 @@ echo '#!/usr/bin/env bash' > scripts/run-kde-tier2-provider-audit.sh
 echo '#!/usr/bin/env bash' > scripts/kde-tier2-provider-audit-needed.sh
 echo '{"schema":1}' > manifests/kde-tier2-campaign-plan.json
 echo 'name: Repository policy' > .github/workflows/repository-policy.yml
+echo '#!/usr/bin/env bash' > scripts/run-authoritative-kvm-certification.sh
 echo 'print("compiler")' > scripts/compile_kde_tier2_campaign.py
 echo a > packages/kde/kirigami/a; echo b > packages/kde/kquickcharts/b; echo doc > docs/x.md; echo 'print(1)' > scripts/validate_x.py
 cat > manifests/kde-frameworks-tier3.json <<'JSON'
@@ -75,12 +76,15 @@ p='manifests/desktop-stack.json'; d=json.load(open(p)); d['ci']['authoritative_r
 PY
 git add .; git commit -qm desktop-authoritative-state; DAS=$(git rev-parse HEAD)
 if bash scripts/pr-ci-router-needed.sh "$KLS" "$DAS"; then echo "desktop authoritative-runner state unexpectedly requested reusable CI" >&2; exit 1; fi
+echo '# orchestration maintenance' >> scripts/run-authoritative-kvm-certification.sh
+git add .; git commit -qm kvm-orchestrator-maintenance; KOM=$(git rev-parse HEAD)
+if bash scripts/pr-ci-router-needed.sh "$DAS" "$KOM"; then echo "KVM orchestrator maintenance unexpectedly requested reusable hosted CI" >&2; exit 1; fi
 python3 - <<'PY'
 import json
 p='manifests/desktop-stack.json'; d=json.load(open(p)); d['desktop']['frameworks']['version']='6.31.0'; open(p,'w').write(json.dumps(d))
 PY
 git add .; git commit -qm desktop-frameworks-selection; DFS=$(git rev-parse HEAD)
-bash scripts/pr-ci-router-needed.sh "$DAS" "$DFS"
+bash scripts/pr-ci-router-needed.sh "$KOM" "$DFS"
 echo '# compiler' >> scripts/compile_kde_tier2_campaign.py; git add .; git commit -qm compiler; CP=$(git rev-parse HEAD)
 if bash scripts/pr-ci-router-needed.sh "$DFS" "$CP"; then echo "Tier2 compiler-only delta unexpectedly requested reusable CI" >&2; exit 1; fi
 echo '{"schema":1,"generated":true}' > manifests/kde-tier2-campaign-plan.json; git add .; git commit -qm generated-plan; GP=$(git rev-parse HEAD)

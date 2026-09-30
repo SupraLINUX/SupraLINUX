@@ -195,3 +195,26 @@ The current authoritative runner lifecycle is tracked in `manifests/authoritativ
 The manifest deliberately separates hosted Frameworks completion from real KVM certification. The current state keeps host preflight, golden-image admission, runner-contract, synthetic package proof and KArchive Frameworks sample as pending real evidence. Until the final Frameworks sample is PASS, `desktop_release_relevant_authorized=false` and Plasma/KWin/session release-relevant execution remains locked.
 
 This live-state manifest is not historical evidence. Real KVM workflow IDs, image hashes and retained artifacts are added only after those executions occur.
+
+
+### One-command host certification
+
+Once the KVM/libvirt host has been provisioned and the repository checkout is exactly the open PR head, the supported full certification entrypoint is:
+
+```bash
+SUPRALINUX_GITHUB_TOKEN=... \
+SUPRALINUX_RUNNER_GROUP_ID=... \
+scripts/run-authoritative-kvm-certification.sh
+```
+
+The orchestrator fails closed unless the local checkout is clean and its HEAD exactly matches the PR head. It validates the host, fetches or verifies the signed Ubuntu 26.04 source image, admits or builds a golden image from that same PR commit, then runs the three disposable JIT gates in strict order:
+
+1. `runner-contract`;
+2. `authoritative-package-proof`;
+3. `frameworks-sample-proof`.
+
+An existing golden image is never replaced implicitly. If it is stale or invalid, replacement requires explicit `SUPRALINUX_REBUILD_GOLDEN=1`. The previous image is still handled by the golden builder's preservation logic.
+
+The run writes a self-contained evidence bundle under `/var/lib/supralinux/evidence/authoritative-certification/` by default, including host preflight, source/golden provenance, gate host evidence, exact GitHub workflow run IDs and `certification-result.json`.
+
+The orchestrator deliberately does **not** run `git commit` or `git push`, does not update canonical package state, and never authorizes stable publication. Real evidence must be reviewed and then consumed by the live-state lifecycle separately.

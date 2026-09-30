@@ -271,6 +271,19 @@ if [[ ! "${PR_HEAD_SHA}" =~ ^[0-9a-fA-F]{40}$ ]]; then
     exit 1
 fi
 
+GOLDEN_SOURCE_COMMIT="$(awk -F= '$1 == "source_commit" {print $2; exit}' "${GOLDEN_PROVENANCE}")"
+if [[ ! "${GOLDEN_SOURCE_COMMIT}" =~ ^[0-9a-fA-F]{40}$ ]]; then
+    printf 'Golden provenance does not contain a valid source_commit.\n' >&2
+    exit 1
+fi
+if [[ "${GOLDEN_SOURCE_COMMIT,,}" != "${PR_HEAD_SHA,,}" ]]; then
+    printf 'Golden image source commit does not match the PR head being certified.\n' >&2
+    printf 'Golden source_commit: %s\n' "${GOLDEN_SOURCE_COMMIT}" >&2
+    printf 'PR head_sha:          %s\n' "${PR_HEAD_SHA}" >&2
+    printf 'Rebuild the golden image from the current PR head before running authoritative gates.\n' >&2
+    exit 1
+fi
+
 printf 'Checking for stale/active authoritative workflow runs before creating a runner...\n'
 ACTIVE_RUNS_JSON="$(api GET "/repos/${REPOSITORY}/actions/runs?event=pull_request&per_page=100")"
 ACTIVE_AUTHORITATIVE="$(jq -c \
@@ -295,6 +308,7 @@ printf '%s\n' "${BASELINE_RUN_IDS}" > "${EVIDENCE_DIR}/workflow-baseline-ids.jso
     printf 'pr_number=%s\n' "${PR_NUMBER}"
     printf 'pr_head_sha=%s\n' "${PR_HEAD_SHA}"
     printf 'pr_head_branch=%s\n' "${PR_HEAD_BRANCH}"
+    printf 'golden_source_commit=%s\n' "${GOLDEN_SOURCE_COMMIT}"
     printf 'gate=%s\n' "${GATE}"
     printf 'gate_label=%s\n' "${GATE_LABEL}"
     printf 'workflow_name=%s\n' "${WORKFLOW_NAME}"
