@@ -107,6 +107,16 @@ A runner image/campaign becomes authoritative only after real evidence exists fo
 4. `runner-contract.yml` PASS on a disposable JIT guest;
 5. authoritative `sbuild` PASS with retained `.deb/.changes/.buildinfo`;
 6. `autopkgtest/QEMU` PASS through the KVM-only QEMU wrapper;
-7. bound workflow IDs, hashes, logs and artifacts.
+7. real KDE Frameworks sample PASS on a disposable KVM guest using canonical KArchive `6.30.0-0supralinux4` and exact ECM `6.30.0-0supralinux3`;
+8. bound workflow IDs, hashes, logs and artifacts.
 
 Until those real KVM executions occur, authoritative status remains **pending**, not PASS.
+
+
+## KDE Frameworks sample requirement
+
+The Phase 1 synthetic package proves the generic runner/tooling path only. SupraLINUX additionally requires `.github/workflows/authoritative-frameworks-sample-proof.yml` before KWin/Plasma/session work is treated as release-relevant.
+
+The sample workflow runs on the same disposable Ubuntu 26.04 KVM runner class, verifies effective Actions runner provenance and nested KVM, then performs a fresh `sbuild/unshare` of canonical KArchive `6.30.0-0supralinux4` with the retained ECM `6.30.0-0supralinux3` predecessor. It retains source-input hashes, rootfs hash, `.deb/.ddeb/.changes/.buildinfo`, upstream 5/5 test proof, Lintian, ABI and consumer-smoke evidence.
+
+This gate has `package_state_effect=none`: it certifies the runner lane and does not create a new canonical Framework package attempt.

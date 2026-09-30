@@ -33,6 +33,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     autopkgtest \
     build-essential \
     ca-certificates \
+    cmake \
     curl \
     debhelper \
     devscripts \
@@ -40,12 +41,15 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     git \
     gnupg \
     jq \
+    lintian \
     mmdebstrap \
+    ninja-build \
     openssh-server \
     python3 \
     qemu-guest-agent \
     qemu-system-x86 \
     qemu-utils \
+    qt6-base-dev \
     sbuild \
     uidmap \
     ubuntu-keyring
@@ -84,8 +88,8 @@ SUPRALINUX_RUNNER_USER="${TARGET_USER}" "${ROOT}/scripts/install-actions-runner.
     printf '\npackages:\n'
     dpkg-query -W -f='${Package}\t${Version}\n' \
         aptly autopkgtest build-essential ca-certificates curl debhelper devscripts \
-        dpkg-dev git gnupg jq mmdebstrap openssh-server python3 qemu-guest-agent \
-        qemu-system-x86 qemu-utils sbuild uidmap ubuntu-keyring
+        cmake dpkg-dev git gnupg jq lintian mmdebstrap ninja-build openssh-server python3 qemu-guest-agent \
+        qemu-system-x86 qemu-utils qt6-base-dev sbuild uidmap ubuntu-keyring
 } | sudo tee /var/lib/supralinux/evidence/runner-guest-provisioning.txt >/dev/null
 
 printf '\nGuest tooling and verified Actions runner installed.\n'

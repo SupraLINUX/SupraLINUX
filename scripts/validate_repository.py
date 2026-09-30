@@ -94,6 +94,7 @@ for path in sorted(WORKFLOWS.glob("*.y*ml")):
 repository_policy = workflow_texts.get("repository-policy.yml", "")
 runner_contract = workflow_texts.get("runner-contract.yml", "")
 authoritative_workflow = workflow_texts.get("authoritative-package-proof.yml", "")
+frameworks_sample_workflow = workflow_texts.get("authoritative-frameworks-sample-proof.yml", "")
 hosted_workflow = workflow_texts.get("package-build-proof.yml", "")
 qt_provider_workflow = workflow_texts.get("qt-provider-preflight.yml", "")
 pr_ci_router = workflow_texts.get("pr-ci-router.yml", "")
@@ -190,6 +191,7 @@ for filename in routed_pr_workflows:
 for filename, text, gate_label in (
     ("runner-contract.yml", runner_contract, "ci:runner-contract"),
     ("authoritative-package-proof.yml", authoritative_workflow, "ci:authoritative-package-proof"),
+    ("authoritative-frameworks-sample-proof.yml", frameworks_sample_workflow, "ci:frameworks-sample-proof"),
 ):
     require(bool(text), f"missing authoritative workflow: .github/workflows/{filename}")
     require("types: [labeled]" in text, f"{filename} must use controlled PR labeled events")
@@ -274,6 +276,7 @@ required_files = [
     "scripts/run-kvm-jit-gate.sh",
     "scripts/run-kvm-jit-gate-core.sh",
     "scripts/run-authoritative-package-proof.sh",
+    "scripts/run-authoritative-frameworks-sample-proof.sh",
     "manifests/kde-frameworks-tier2.json",
     "manifests/kde-frameworks-tier2-dependencies.json",
     "manifests/kde-tier2-global-discovery.json",
@@ -414,6 +417,8 @@ for token, message in (
     ("workflow-baseline-ids.json", "host orchestrator must snapshot workflow IDs before triggering"),
     ("head_sha=${PR_HEAD_SHA}", "host orchestrator must query the exact PR head SHA"),
     ("actions/runs/${WORKFLOW_RUN_ID}", "host orchestrator must bind an exact workflow run ID"),
+    ("ci:frameworks-sample-proof", "host orchestrator must support the Frameworks sample gate"),
+    ("KDE Frameworks authoritative KVM sample proof", "host orchestrator must bind the Frameworks sample workflow"),
     ("guest-exec-status", "host orchestrator must detect premature runner exit"),
     ("PROVENANCE_SHA256", "host orchestrator core must verify the golden image against provenance"),
     ("source_checkout_removed=yes", "host orchestrator core must require a source-clean golden image"),
@@ -429,6 +434,18 @@ require('--qemu-command="${KVM_QEMU_WRAPPER}"' in authoritative_proof, "authorit
 require("--qemu-architecture=x86_64" in authoritative_proof, "authoritative autopkgtest must pin QEMU architecture")
 require("qemu-kvm-wrapper-sha256.txt" in authoritative_proof, "authoritative evidence must hash the QEMU wrapper")
 require('"system_test_acceleration": "kvm-required"' in authoritative_proof, "authoritative result must record KVM-required acceleration")
+
+frameworks_sample = read_required("scripts/run-authoritative-frameworks-sample-proof.sh")
+require("scripts/check-actions-runner-runtime.sh" in frameworks_sample, "Frameworks sample must verify effective Actions runner provenance")
+require("scripts/check-nested-kvm-runtime.sh" in frameworks_sample, "Frameworks sample must prove nested-KVM runtime on the sample guest")
+require('"run_kind": "authoritative-certification-sample"' in frameworks_sample, "Frameworks sample must classify itself as certification evidence")
+require('"package_state_effect": "none"' in frameworks_sample, "Frameworks sample must not mutate canonical package state")
+require("kf6-karchive_6.30.0-0supralinux4.dsc" in frameworks_sample, "Frameworks sample must bind KArchive 6.30.0-0supralinux4")
+require("extra-cmake-modules_" in frameworks_sample and "6.30.0-0supralinux3" in frameworks_sample, "Frameworks sample must bind the retained ECM 6.30 predecessor")
+require('--extra-package="${ECM_DEB}"' in frameworks_sample, "Frameworks sample sbuild must inject the exact ECM predecessor")
+require("100% tests passed, 0 tests failed out of 5" in frameworks_sample, "Frameworks sample must prove KArchive upstream tests")
+require("STAGE=\"artifact-capture\"" in frameworks_sample and "STAGE=\"lintian\"" in frameworks_sample, "Frameworks sample must retain outputs before post-build validation")
+require(frameworks_sample.index('STAGE="artifact-capture"') < frameworks_sample.index('STAGE="lintian"'), "Frameworks sample artifact capture must precede Lintian")
 
 qemu_wrapper = read_required("scripts/qemu-kvm-required.sh")
 require('exec "${QEMU}" -accel kvm "$@"' in qemu_wrapper, "QEMU wrapper must select KVM only")

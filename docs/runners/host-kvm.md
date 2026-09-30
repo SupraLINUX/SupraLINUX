@@ -80,6 +80,7 @@ export SUPRALINUX_GOLDEN_IMAGE='/var/lib/supralinux/images/ubuntu-26.04-authorit
 
 scripts/run-kvm-jit-gate.sh runner-contract
 scripts/run-kvm-jit-gate.sh authoritative-package-proof
+scripts/run-kvm-jit-gate.sh frameworks-sample-proof
 ```
 
 For each invocation the host creates a fresh overlay VM, obtains/injects a fresh JIT config, waits for the runner to become online, applies exactly one controlled Draft-PR label, binds the resulting workflow run, observes one job, exports diagnostics/evidence and destroys writable state. Fork PRs are rejected by both host and workflow conditions.
@@ -89,6 +90,7 @@ Controlled labels:
 ```text
 ci:runner-contract
 ci:authoritative-package-proof
+ci:frameworks-sample-proof
 ```
 
 ## Authoritative package path
@@ -115,3 +117,8 @@ The authoritative workflow separately uploads runner/package evidence. Promotion
 ## Current blocker
 
 No real KVM host has executed this complete chain yet. Therefore host preflight, source-image fetch/hash, golden-image build/hash, nested KVM, JIT startup, runner-group policy, QEMU system testing and cleanup/export behavior remain **pending execution**, not PASS.
+
+
+## Frameworks sample gate
+
+After runner-contract and the synthetic authoritative package proof pass, a third fresh JIT guest runs `frameworks-sample-proof`. It rebuilds canonical KArchive 6.30.0 with the exact retained ECM 6.30.0 predecessor and records package/test/ABI/consumer evidence. This is the required Frameworks lane certification checkpoint before KWin, Plasma or session work.

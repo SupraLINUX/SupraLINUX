@@ -21,6 +21,7 @@ API_VERSION="2026-03-10"
 HOST_GITHUB_TOKEN="${SUPRALINUX_GITHUB_TOKEN:-${GITHUB_TOKEN:-}}"
 RUNNER_CONTRACT_WORKFLOW="Authoritative runner contract"
 PACKAGE_PROOF_WORKFLOW="Phase 1 authoritative KVM package proof"
+FRAMEWORKS_SAMPLE_WORKFLOW="KDE Frameworks authoritative KVM sample proof"
 
 case "${GATE}" in
     runner-contract)
@@ -31,8 +32,12 @@ case "${GATE}" in
         GATE_LABEL="ci:authoritative-package-proof"
         WORKFLOW_NAME="${PACKAGE_PROOF_WORKFLOW}"
         ;;
+    frameworks-sample-proof)
+        GATE_LABEL="ci:frameworks-sample-proof"
+        WORKFLOW_NAME="${FRAMEWORKS_SAMPLE_WORKFLOW}"
+        ;;
     *)
-        printf 'Usage: %s {runner-contract|authoritative-package-proof}\n' "$0" >&2
+        printf 'Usage: %s {runner-contract|authoritative-package-proof|frameworks-sample-proof}\n' "$0" >&2
         exit 2
         ;;
 esac
@@ -271,7 +276,8 @@ ACTIVE_RUNS_JSON="$(api GET "/repos/${REPOSITORY}/actions/runs?event=pull_reques
 ACTIVE_AUTHORITATIVE="$(jq -c \
     --arg runner_contract "${RUNNER_CONTRACT_WORKFLOW}" \
     --arg package_proof "${PACKAGE_PROOF_WORKFLOW}" \
-    '[.workflow_runs[] | select((.name == $runner_contract or .name == $package_proof) and .status != "completed")]' \
+    --arg frameworks_sample "${FRAMEWORKS_SAMPLE_WORKFLOW}" \
+    '[.workflow_runs[] | select((.name == $runner_contract or .name == $package_proof or .name == $frameworks_sample) and .status != "completed")]' \
     <<<"${ACTIVE_RUNS_JSON}")"
 if (( $(jq 'length' <<<"${ACTIVE_AUTHORITATIVE}") > 0 )); then
     printf 'Refusing to create a JIT runner while another authoritative workflow is active or queued:\n' >&2

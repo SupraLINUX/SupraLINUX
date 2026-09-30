@@ -145,6 +145,7 @@ Controlled pre-merge labels:
 ```text
 ci:runner-contract
 ci:authoritative-package-proof
+ci:frameworks-sample-proof
 ```
 
 Both host and workflows refuse fork PRs. Do not add these labels until the matching disposable JIT runner is actually online.
@@ -164,6 +165,24 @@ A golden image and Phase 1 remain **pending** until real evidence establishes:
 9. nested `autopkgtest` image SHA-256;
 10. `runner-contract.yml` PASS on a disposable JIT KVM guest, including real nested-KVM probe;
 11. `authoritative-package-proof.yml` PASS on a separate disposable JIT KVM guest, including clean `sbuild` and KVM-only `autopkgtest/QEMU`;
-12. retained workflow artifacts plus host/runner diagnostics.
+12. `authoritative-frameworks-sample-proof.yml` PASS on a third disposable JIT KVM guest, rebuilding canonical KArchive `6.30.0-0supralinux4` with exact ECM `6.30.0-0supralinux3` and retaining package/test/ABI/consumer evidence;
+13. retained workflow artifacts plus host/runner diagnostics.
 
 Until those real VMs execute, no authoritative PASS or real host-generated image hash is claimed.
+
+
+### Frameworks lane sample
+
+The generic authoritative package proof certifies the KVM/sbuild/autopkgtest machinery, but it is intentionally based on the synthetic `supralinux-build-test` package. Before KWin, Plasma or session work can use the lane as release-relevant evidence, SupraLINUX requires one real KDE Framework sample.
+
+The selected sample is **KArchive 6.30.0-0supralinux4** because it is a canonical Tier 1 PASS with a small dependency surface and real upstream tests. The gate reuses the retained canonical source package from workflow `34884764702`, artifact `10364726750`, and the exact ECM predecessor `6.30.0-0supralinux3` from workflow `34694951158`, artifact `10298635300`.
+
+Run it only after the first two gates pass:
+
+```bash
+scripts/run-kvm-jit-gate.sh runner-contract
+scripts/run-kvm-jit-gate.sh authoritative-package-proof
+scripts/run-kvm-jit-gate.sh frameworks-sample-proof
+```
+
+The sample is a certification run, not a new canonical KArchive package attempt: it records `package_state_effect=none`.

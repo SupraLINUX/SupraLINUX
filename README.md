@@ -41,4 +41,4 @@ Build graph state is represented as `PASS`, `FAIL` or `BLOCKED`. `BLOCKED` is ne
 
 ## Development state
 
-This project is in architecture/bootstrap development. The hosted clean-build preflight has real PASS evidence, but the authoritative KVM runner and its QEMU test image are not yet certified. No document should be interpreted as evidence that a full KDE stack has already been built or certified unless the corresponding artifacts and CI evidence exist.
+This project is in architecture/bootstrap development. KDE Frameworks 6.30 has completed the GitHub-hosted clean-build preflight, including Tier 3 at **20 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**. Hosted evidence remains non-authoritative: the real Ubuntu 26.04 KVM lane, KVM-only QEMU system-test path and required KArchive Frameworks sample are still pending certification. Plasma/Gear/KWin/session work must not treat the lane as release-relevant until those KVM gates pass.
