@@ -364,6 +364,7 @@ require("machine-id" in golden_builder and "ssh-hostkeys" in golden_builder, "go
 golden_lifecycle_preflight = read_required("scripts/check-golden-preparation-lifecycle.sh")
 for token, message in (
     ("scripts/check-kvm-host.sh", "golden lifecycle preflight must require the certified KVM host contract"),
+    ("/var/lib/supralinux/golden-builds/lifecycle-preflight", "golden lifecycle preflight state must stay under the provisioned operator-owned golden-build root"),
     ("scripts/verify-ubuntu-cloud-image-provenance.sh", "golden lifecycle preflight must reverify the signed Ubuntu source image"),
     ('chmod 0710 "${BUILD_DIR}"', "golden lifecycle preflight must exercise scoped build-directory traversal"),
     ('chmod 0660 "${WORK_DISK}"', "golden lifecycle preflight must exercise scoped writable-overlay access"),

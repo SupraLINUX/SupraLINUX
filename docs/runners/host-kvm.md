@@ -63,7 +63,7 @@ After two consecutive `INFRA_INVALID` incidents in the golden-preparation mechan
 scripts/check-golden-preparation-lifecycle.sh
 ```
 
-That preflight reuses the verified Ubuntu source image but performs no package build: it exercises the same scoped libvirt storage permissions, boots a minimal KVM guest, writes a guest marker, powers off, requires the domain to remain `shut off`, retains evidence, and cleans up the disposable VM. It exists specifically so the investigated golden build is not the first test of changed infrastructure.
+That preflight reuses the verified Ubuntu source image but performs no package build: it exercises the same scoped libvirt storage permissions, boots a minimal KVM guest, writes a guest marker, powers off, requires the domain to remain `shut off`, retains evidence, and cleans up the disposable VM. Its writable state lives under the already provisioned operator-owned `/var/lib/supralinux/golden-builds/lifecycle-preflight` tree rather than introducing another privileged host root. It exists specifically so the investigated golden build is not the first test of changed infrastructure.
 
 ## JIT runner lifecycle
 
