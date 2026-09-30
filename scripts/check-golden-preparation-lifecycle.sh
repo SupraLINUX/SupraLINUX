@@ -41,6 +41,7 @@ if ! id "${LIBVIRT_QEMU_USER}" >/dev/null 2>&1; then
     exit 1
 fi
 LIBVIRT_QEMU_GROUP="$(id -gn "${LIBVIRT_QEMU_USER}")"
+grep -qw "${LIBVIRT_QEMU_GROUP}" <<<"$(id -nG)" || { printf 'Current user is not in the effective libvirt QEMU group: %s\n' "${LIBVIRT_QEMU_GROUP}" >&2; exit 1; }
 
 if [[ ! -f "${SOURCE_IMAGE}" || ! -f "${SOURCE_PROVENANCE}" ]]; then
     printf 'Verified Ubuntu source image/provenance is missing.\n' >&2
@@ -58,7 +59,7 @@ SUCCESS=0
 VM_DEFINED=0
 
 mkdir -p "${BUILD_DIR}" "${EVIDENCE_DIR}"
-sudo chgrp "${LIBVIRT_QEMU_GROUP}" "${BUILD_DIR}"
+chgrp "${LIBVIRT_QEMU_GROUP}" "${BUILD_DIR}"
 chmod 0710 "${BUILD_DIR}"
 
 cleanup() {
@@ -84,6 +85,9 @@ trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
+"${ROOT}/scripts/with-libguestfs-runtime.sh" --describe > "${EVIDENCE_DIR}/libguestfs-runtime.txt"
+"${ROOT}/scripts/with-libguestfs-runtime.sh" libguestfs-test-tool |& tee "${EVIDENCE_DIR}/libguestfs-test-tool.txt"
+
 "${ROOT}/scripts/verify-ubuntu-cloud-image-provenance.sh" \
     "${SOURCE_IMAGE}" \
     "${SOURCE_PROVENANCE}" \
@@ -91,7 +95,7 @@ trap 'exit 143' TERM
 
 SOURCE_FORMAT="$(qemu-img info --output=json "${SOURCE_IMAGE}" | jq -r '.format')"
 qemu-img create -f qcow2 -F "${SOURCE_FORMAT}" -b "${SOURCE_IMAGE}" "${WORK_DISK}"
-sudo chgrp "${LIBVIRT_QEMU_GROUP}" "${WORK_DISK}"
+chgrp "${LIBVIRT_QEMU_GROUP}" "${WORK_DISK}"
 chmod 0660 "${WORK_DISK}"
 
 {
@@ -150,7 +154,7 @@ if [[ "${DOMAIN_STATE}" != "shut off" ]]; then
     exit 1
 fi
 
-MARKER="$(virt-cat -a "${WORK_DISK}" /var/lib/supralinux/golden-lifecycle-preflight.txt 2>/dev/null || true)"
+MARKER="$("${ROOT}/scripts/with-libguestfs-runtime.sh" virt-cat -a "${WORK_DISK}" /var/lib/supralinux/golden-lifecycle-preflight.txt 2>/dev/null || true)"
 printf '%s\n' "${MARKER}" > "${EVIDENCE_DIR}/guest-marker.txt"
 if ! grep -qx 'status=PASS' <<<"${MARKER}"; then
     printf 'Synthetic lifecycle VM did not persist the expected guest marker.\n' >&2

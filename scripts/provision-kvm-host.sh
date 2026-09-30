@@ -44,6 +44,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     libvirt-daemon-system \
     qemu-system-x86 \
     qemu-utils \
+    supermin \
     ubuntu-keyring \
     virt-install
 
@@ -77,6 +78,9 @@ sudo chown "${TARGET_USER}:$(id -gn "${TARGET_USER}")" \
     /var/lib/supralinux/ephemeral-runners \
     /var/lib/supralinux/evidence
 
+printf 'Preparing private non-root libguestfs kernel runtime...\n'
+SUPRALINUX_HOST_USER="${TARGET_USER}" "${ROOT}/scripts/prepare-libguestfs-runtime.sh"
+
 EVIDENCE_TMP="$(mktemp)"
 trap 'rm -f "${EVIDENCE_TMP}"' EXIT
 {
@@ -91,7 +95,9 @@ trap 'rm -f "${EVIDENCE_TMP}"' EXIT
     printf '\npackages:\n'
     dpkg-query -W -f='${Package}\t${Version}\n' \
         cloud-image-utils cpu-checker curl genisoimage gnupg jq libguestfs-tools \
-        libvirt-clients libvirt-daemon-system qemu-system-x86 qemu-utils ubuntu-keyring virt-install
+        libvirt-clients libvirt-daemon-system qemu-system-x86 qemu-utils supermin ubuntu-keyring virt-install
+    printf '\nlibguestfs-runtime:\n'
+    cat "/var/lib/supralinux/images/libguestfs-runtime/$(uname -r)/provenance.txt"
     printf '\nnetwork:\n'
     sudo virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}"
     printf '\nkvm-module-state:\n'

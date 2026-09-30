@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+LIBVIRT_QEMU_USER="${SUPRALINUX_LIBVIRT_QEMU_USER:-libvirt-qemu}"
 LIBVIRT_URI="${SUPRALINUX_LIBVIRT_URI:-qemu:///system}"
 LIBVIRT_NETWORK="${SUPRALINUX_LIBVIRT_NETWORK:-default}"
 FAILED=0
@@ -91,6 +93,8 @@ required=(
     base64
     sha256sum
     gpgv
+    libguestfs-test-tool
+    supermin
 )
 for command_name in "${required[@]}"; do
     if command -v "${command_name}" >/dev/null 2>&1; then
@@ -99,6 +103,22 @@ for command_name in "${required[@]}"; do
         fail "missing command: ${command_name}"
     fi
 done
+
+if id "${LIBVIRT_QEMU_USER}" >/dev/null 2>&1; then
+    LIBVIRT_QEMU_GROUP="$(id -gn "${LIBVIRT_QEMU_USER}")"
+    if grep -qw "${LIBVIRT_QEMU_GROUP}" <<<"$(id -nG)"; then
+        pass "current user belongs to libvirt QEMU group: ${LIBVIRT_QEMU_GROUP}"
+    else
+        fail "current user is not in the effective libvirt QEMU group: ${LIBVIRT_QEMU_GROUP}"
+    fi
+else
+    fail "configured libvirt QEMU user does not exist: ${LIBVIRT_QEMU_USER}"
+fi
+if "${ROOT}/scripts/with-libguestfs-runtime.sh" true; then
+    pass 'private libguestfs runtime matches the current host kernel/modules'
+else
+    fail 'private libguestfs runtime is missing or stale; run scripts/prepare-libguestfs-runtime.sh'
+fi
 
 if command -v qemu-system-x86_64 >/dev/null 2>&1; then
     if qemu-system-x86_64 -accel help 2>&1 | grep -q '^kvm$'; then
