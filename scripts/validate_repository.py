@@ -140,6 +140,7 @@ require("--no-install-recommends shellcheck" in repository_policy, "repository p
 require("scripts/test-qemu-kvm-required.sh" in repository_policy, "repository policy must functionally test the KVM-only QEMU wrapper")
 require("scripts/test-verify-ubuntu-cloud-image-provenance.sh" in repository_policy, "repository policy must functionally test signed Ubuntu source-image verification")
 require("scripts/test-check-actions-runner-runtime.sh" in repository_policy, "repository policy must functionally test effective Actions runner provenance")
+require("scripts/test-autopkgtest-workspace-contract.sh" in repository_policy, "repository policy must functionally test the persistent autopkgtest workspace contract")
 require("scripts/test-check-golden-image-provenance.sh" in repository_policy, "repository policy must functionally test the golden-image provenance gate")
 require("scripts/test-pr-ci-router-scope.sh" in repository_policy, "repository policy must functionally test semantic PR evidence routing")
 require("python3 scripts/validate_diagnostic_infrastructure_preflight.py" in repository_policy, "repository policy must validate diagnostic infrastructure preflight")
@@ -276,6 +277,8 @@ required_files = [
     "scripts/install-actions-runner.sh",
     "scripts/test-install-actions-runner-staging.sh",
     "scripts/provision-authoritative-runner-guest.sh",
+    "scripts/check-autopkgtest-workspace.sh",
+    "scripts/test-autopkgtest-workspace-contract.sh",
     "scripts/prepare-autopkgtest-qemu-image.sh",
     "scripts/seal-authoritative-runner-image.sh",
     "scripts/qemu-kvm-required.sh",
@@ -432,6 +435,38 @@ require(
     "Actions runner staging functional test must emit PASS",
 )
 
+guest_provisioner = read_required("scripts/provision-authoritative-runner-guest.sh")
+for token, message in (
+    ("genisoimage", "authoritative guest provisioning must install genisoimage"),
+    ("/var/lib/supralinux/autopkgtest/work", "authoritative guest provisioning must create persistent autopkgtest work storage"),
+    ('-o "${TARGET_USER}"', "autopkgtest work storage must be owned by the runner user"),
+):
+    require(token in guest_provisioner, message)
+
+autopkgtest_workspace = read_required("scripts/check-autopkgtest-workspace.sh")
+for token, message in (
+    ("21474836480", "autopkgtest workspace preflight must require at least 20 GiB by default"),
+    ("tmpfs", "autopkgtest workspace preflight must reject memory-backed tmpfs"),
+    ("free_bytes=", "autopkgtest workspace preflight must report available bytes"),
+    ("status=PASS", "autopkgtest workspace preflight must emit explicit PASS"),
+):
+    require(token in autopkgtest_workspace, message)
+
+autopkgtest_prep = read_required("scripts/prepare-autopkgtest-qemu-image.sh")
+for token, message in (
+    ("AUTOPKGTEST_QEMU_WORK_ROOT:-/var/lib/supralinux/autopkgtest/work", "autopkgtest image preparation must use persistent guest storage by default"),
+    ("scripts/check-autopkgtest-workspace.sh", "autopkgtest image preparation must preflight its work filesystem"),
+    ("genisoimage", "autopkgtest image preparation must require genisoimage"),
+    ('--disk-size="${DISK_SIZE}"', "autopkgtest image preparation must explicitly bind image disk size"),
+):
+    require(token in autopkgtest_prep, message)
+
+autopkgtest_workspace_test = read_required("scripts/test-autopkgtest-workspace-contract.sh")
+require(
+    "Autopkgtest persistent-workspace contract test: PASS" in autopkgtest_workspace_test,
+    "autopkgtest workspace contract test must emit PASS",
+)
+
 runner_runtime_checker = read_required("scripts/check-actions-runner-runtime.sh")
 for token, message in (
     ("bin/Runner.Listener", "runner runtime checker must query Runner.Listener directly"),
@@ -461,6 +496,7 @@ for token, message in (
     ("scripts/with-libguestfs-runtime.sh", "golden input fingerprint must bind offline libguestfs behavior"),
     ("scripts/provision-authoritative-runner-guest.sh", "golden input fingerprint must bind guest provisioning"),
     ("scripts/install-actions-runner.sh", "golden input fingerprint must bind Actions runner installation"),
+    ("scripts/check-autopkgtest-workspace.sh", "golden input fingerprint must bind nested autopkgtest workspace admission"),
     ("scripts/prepare-autopkgtest-qemu-image.sh", "golden input fingerprint must bind nested autopkgtest image preparation"),
     ("scripts/seal-authoritative-runner-image.sh", "golden input fingerprint must bind golden sealing"),
     ("scripts/verify-ubuntu-cloud-image-provenance.sh", "golden input fingerprint must bind Ubuntu source verification"),

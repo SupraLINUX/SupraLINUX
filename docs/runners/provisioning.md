@@ -129,7 +129,7 @@ The runtime checker requires the effective semantic version to equal the verifie
 /var/lib/supralinux/autopkgtest/resolute-amd64.img
 ```
 
-with real image SHA-256/provenance.
+with real image SHA-256/provenance. Ubuntu 26.04 mounts `/tmp` as a memory-backed tmpfs, so the nested-image builder does not use the default `mktemp` location for its 20 GiB workspace. Guest provisioning installs `genisoimage` and creates runner-owned persistent work storage at `/var/lib/supralinux/autopkgtest/work`; a fail-closed workspace preflight rejects tmpfs/ramfs and insufficient free space before `autopkgtest-buildvm-ubuntu-cloud` starts.
 
 `scripts/seal-authoritative-runner-image.sh` pre-seals runner/package state inside the guest. Clone identity is reset after shutdown by host-side offline `virt-sysprep`.
 

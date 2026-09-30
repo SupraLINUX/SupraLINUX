@@ -25,6 +25,7 @@ if ! id "${TARGET_USER}" >/dev/null 2>&1; then
     printf 'Intended runner user does not exist: %s\n' "${TARGET_USER}" >&2
     exit 1
 fi
+TARGET_GROUP="$(id -gn "${TARGET_USER}")"
 
 printf 'Provisioning SupraLINUX authoritative runner guest for user %s...\n' "${TARGET_USER}"
 sudo apt-get update
@@ -39,6 +40,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     devscripts \
     dpkg-dev \
     git \
+    genisoimage \
     gnupg \
     jq \
     lintian \
@@ -73,6 +75,7 @@ sudo systemctl restart ssh
 sudo systemctl restart qemu-guest-agent || true
 
 sudo install -d -m 0755 /var/lib/supralinux/autopkgtest
+sudo install -d -o "${TARGET_USER}" -g "${TARGET_GROUP}" -m 0750 /var/lib/supralinux/autopkgtest/work
 sudo install -d -m 0755 /var/lib/supralinux/evidence
 
 SUPRALINUX_RUNNER_USER="${TARGET_USER}" "${ROOT}/scripts/install-actions-runner.sh"
@@ -88,8 +91,10 @@ SUPRALINUX_RUNNER_USER="${TARGET_USER}" "${ROOT}/scripts/install-actions-runner.
     printf '\npackages:\n'
     dpkg-query -W -f='${Package}\t${Version}\n' \
         aptly autopkgtest build-essential ca-certificates curl debhelper devscripts \
-        cmake dpkg-dev git gnupg jq lintian mmdebstrap ninja-build openssh-server python3 qemu-guest-agent \
+        cmake dpkg-dev git genisoimage gnupg jq lintian mmdebstrap ninja-build openssh-server python3 qemu-guest-agent \
         qemu-system-x86 qemu-utils qt6-base-dev sbuild uidmap ubuntu-keyring
+    printf '\nautopkgtest_work_root:\n'
+    stat -c 'mode=%a owner=%U group=%G path=%n' /var/lib/supralinux/autopkgtest/work
 } | sudo tee /var/lib/supralinux/evidence/runner-guest-provisioning.txt >/dev/null
 
 printf '\nGuest tooling and verified Actions runner installed.\n'

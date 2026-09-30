@@ -12,6 +12,7 @@ INPUTS=(
     scripts/with-libguestfs-runtime.sh
     scripts/provision-authoritative-runner-guest.sh
     scripts/install-actions-runner.sh
+    scripts/check-autopkgtest-workspace.sh
     scripts/prepare-autopkgtest-qemu-image.sh
     scripts/seal-authoritative-runner-image.sh
     scripts/verify-ubuntu-cloud-image-provenance.sh

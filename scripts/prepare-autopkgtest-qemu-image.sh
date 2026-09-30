@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TARGET="${AUTOPKGTEST_QEMU_IMAGE:-/var/lib/supralinux/autopkgtest/resolute-amd64.img}"
-WORK_DIR="$(mktemp -d)"
+WORK_ROOT="${AUTOPKGTEST_QEMU_WORK_ROOT:-/var/lib/supralinux/autopkgtest/work}"
+DISK_SIZE="${AUTOPKGTEST_QEMU_DISK_SIZE:-20G}"
+
+"${ROOT}/scripts/check-autopkgtest-workspace.sh" "${WORK_ROOT}"
+WORK_DIR="$(mktemp -d "${WORK_ROOT%/}/build.XXXXXX")"
 trap 'rm -rf "${WORK_DIR}"' EXIT
 
 . /etc/os-release
@@ -21,7 +26,7 @@ if [[ ! -c /dev/kvm || ! -r /dev/kvm || ! -w /dev/kvm ]]; then
     exit 1
 fi
 
-for command_name in autopkgtest-buildvm-ubuntu-cloud qemu-img sha256sum; do
+for command_name in autopkgtest-buildvm-ubuntu-cloud genisoimage qemu-img sha256sum; do
     command -v "${command_name}" >/dev/null 2>&1 || {
         printf 'Missing required command: %s\n' "${command_name}" >&2
         exit 1
@@ -33,6 +38,7 @@ autopkgtest-buildvm-ubuntu-cloud \
     --release=resolute \
     --arch=amd64 \
     --output-dir="${WORK_DIR}" \
+    --disk-size="${DISK_SIZE}" \
     --ram-size=2048 \
     --cpus=2 \
     --verbose
@@ -51,6 +57,8 @@ PROVENANCE="$(mktemp)"
     printf 'prepared_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
     printf 'release=resolute\n'
     printf 'architecture=amd64\n'
+    printf 'work_root=%s\n' "${WORK_ROOT}"
+    printf 'disk_size=%s\n' "${DISK_SIZE}"
     printf 'builder=' 
     autopkgtest-buildvm-ubuntu-cloud --help 2>&1 | head -1 || true
     printf '\nqemu_image_info:\n'
