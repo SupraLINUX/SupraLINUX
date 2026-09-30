@@ -22,7 +22,7 @@ if [[ "${FS_TYPE}" == "tmpfs" || "${FS_TYPE}" == "ramfs" ]]; then
     fail "work root is memory-backed (${FS_TYPE}); use persistent guest storage instead of /tmp"
 fi
 
-FREE_BYTES="$(df -PB1 --output=avail "${WORK_ROOT}" | tail -n 1 | tr -d '[:space:]')"
+FREE_BYTES="$(df -B1 --output=avail "${WORK_ROOT}" | tail -n 1 | tr -d '[:space:]')"
 [[ "${FREE_BYTES}" =~ ^[0-9]+$ ]] || fail "could not determine available bytes for ${WORK_ROOT}"
 if (( FREE_BYTES < MIN_FREE_BYTES )); then
     fail "insufficient free space in ${WORK_ROOT}: available=${FREE_BYTES} required=${MIN_FREE_BYTES}"
