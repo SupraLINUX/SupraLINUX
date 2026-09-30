@@ -59,7 +59,7 @@ The wrapper is hashed into authoritative evidence as `qemu-kvm-wrapper-sha256.tx
 
 ## Golden image contract
 
-The golden runner image is built from a signed and verified released Ubuntu Resolute cloud image by `scripts/build-authoritative-runner-image.sh`. Required provenance includes signed source metadata/hash, exact SupraLINUX commit, verified Actions runner digest, nested `autopkgtest` image hash, guest provisioning/seal evidence, removal of temporary source, offline sysprep evidence and final qcow2 hash/validation.
+The golden runner image is built from a signed and verified released Ubuntu Resolute cloud image by `scripts/build-authoritative-runner-image.sh`. Required provenance includes signed source metadata/hash, exact SupraLINUX build commit, a versioned SHA-256 fingerprint of the declared golden-image repository inputs, verified Actions runner digest, nested `autopkgtest` image hash, guest provisioning/seal evidence, removal of temporary source, offline sysprep evidence and final qcow2 hash/validation. The build commit is historical provenance; reuse against a later PR HEAD is allowed only when the golden-input fingerprint remains identical.
 
 The golden image contains runner software but no persistent GitHub credential and no temporary SupraLINUX build checkout.
 
