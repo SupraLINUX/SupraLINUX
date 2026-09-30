@@ -641,3 +641,12 @@ Workflow `36643423967` materialized both Level 3 revision-`3` sources successful
 The current source artifacts are now pinned into the Level 3 campaign while the previous `-1` and `-2` materializations remain retained as history. No Package Attempt was consumed and the canonical snapshot remains **18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED**.
 
 Next gate: `tier3-build-level3-attempt3-planning-validation`. Package execution remains disabled until that planning gate passes and Attempt 3 is activated separately.
+
+
+## Level 3 Attempt 3 partial closure
+
+Workflow `36645760261` consumed Package Attempt 3 for both Level 3 nodes. KTextEditor `6.30.0-0supralinux3` passed completely and is promoted. Purpose `6.30.0-0supralinux3` built successfully with 3/3 tests, but a post-build proof contract incorrectly expected the Prison development package instead of the QML package actually declared by Purpose.
+
+Purpose is therefore recorded as a validation **INFRA_INVALID**, not a new package FAIL; its prior Attempt 2 FAIL remains the current canonical state. Tier 3 is now **19 PASS / 0 pending / 1 current FAIL / 0 BLOCKED**.
+
+The proof contract is corrected to `qml6-module-org-kde-prison`, successful build outputs are now retained before post-build validation, and the next package execution is Attempt 4 for Purpose only. No source rematerialization is required.

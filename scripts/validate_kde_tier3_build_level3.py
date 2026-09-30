@@ -22,6 +22,46 @@ if t.get("level3_remediation",{}).get("status") in {"materialization-pending-ci"
     import subprocess
     raise SystemExit(subprocess.run([sys.executable,str(ROOT/"scripts/validate_kde_tier3_level3_remediation.py")]).returncode)
 
+# Attempt 3 closed PARTIAL: KTextEditor PASS; Purpose post-build validation INFRA_INVALID.
+if m.get("state")=="PARTIAL" and m.get("current_attempt")==3:
+    import subprocess
+    for script in ("scripts/validate_kde_tier3_level3_attempt1_closure.py","scripts/validate_kde_tier3_level3_attempt2_closure.py","scripts/validate_kde_tier3_level3_attempt3_closure.py"):
+        rc=subprocess.run([sys.executable,str(ROOT/script)]).returncode
+        if rc:
+            raise SystemExit(rc)
+    SNAP3="19 PASS / 0 pending / 1 current FAIL / 0 BLOCKED"
+    NEXT3="tier3-build-level3-attempt4-planning-validation"
+    req(m.get("execution_authorized") is False and m.get("next_attempt")==4 and m.get("next_gate")==NEXT3,"Attempt3 PARTIAL Level3 authorization/gate")
+    req(m.get("canonical_snapshot")==SNAP3,"Attempt3 PARTIAL snapshot")
+    pol=t.get("discovery_policy",{}); live=t.get("build_level3",{}); rem=t.get("level3_remediation",{})
+    req(pol.get("phase")=="build-level3-remediation-planning" and pol.get("package_builds")=="tier3-level3-attempt3-closed-PARTIAL" and pol.get("remediation")=="purpose-buildinfo-proof-contract-remediation","Attempt3 PARTIAL canonical gate")
+    req(live.get("status")=="attempt3-closed-PARTIAL-validation-INFRA_INVALID" and live.get("execution_authorized") is False and live.get("current_attempt")==3 and live.get("next_attempt")==4 and live.get("next_gate")==NEXT3,"Attempt3 PARTIAL canonical live state")
+    req(rem.get("status")=="attempt3-PARTIAL-validation-INFRA_INVALID-pending-attempt4-planning-validation" and rem.get("package_execution_authorized") is False and rem.get("materialization_authorized") is False and rem.get("source_changes_required") is False and rem.get("remediation_scope")==["purpose"],"Attempt4 remediation scope/boundary")
+    req(rem.get("candidate_package_versions")=={"purpose":"6.30.0-0supralinux3"},"Attempt4 Purpose source identity retained")
+    tn={x["id"]:x for x in t.get("nodes",[])}
+    k=tn.get("ktexteditor",{}); kp=k.get("packaging",{})
+    req(k.get("state")=="PASS" and kp.get("state")=="PASS" and kp.get("package_version")=="6.30.0-0supralinux3" and kp.get("downstream_eligible") is True,"KTextEditor Attempt3 canonical PASS")
+    kev=[x for x in kp.get("evidence",[]) if x.get("workflow_run")==36645760261]
+    req(len(kev)==1 and kev[0].get("result")=="PASS" and kev[0].get("job_id")==109668677528 and kev[0].get("artifact_id")==11068519665 and kev[0].get("artifact_sha256")=="96361a7771ea352dd01ffb9a032e37ed66399cb538f98137948c595ff043a69e" and kev[0].get("tests")=="77/77 PASS","KTextEditor Attempt3 PASS evidence")
+    p=tn.get("purpose",{}); pp=p.get("packaging",{})
+    req(p.get("state")=="FAIL" and pp.get("state")=="FAIL" and pp.get("package_version")=="6.30.0-0supralinux2" and pp.get("downstream_eligible") is False,"Purpose prior canonical FAIL retained")
+    incs=pp.get("validation_incidents",[])
+    req(len(incs)==1 and incs[0].get("classification")=="INFRA_INVALID" and incs[0].get("workflow_run")==36645760261 and incs[0].get("job_id")==109668677478 and incs[0].get("build_result")=="PASS" and incs[0].get("tests")=="3/3 PASS" and incs[0].get("package_state_effect")=="none","Purpose Attempt3 validation incident")
+    pn=m.get("nodes",{}).get("purpose",{})
+    req(pn.get("state")=="remediation-pending-build" and pn.get("package_version")=="6.30.0-0supralinux3","Purpose Attempt4 runnable identity")
+    req("libkf6prison-dev" not in pn.get("buildinfo_proof_packages",[]) and pn.get("extra_buildinfo_proof_packages")==["qml6-module-org-kde-prison"],"Purpose QML Prison buildinfo proof correction")
+    kn=m.get("nodes",{}).get("ktexteditor",{})
+    req(kn.get("state")=="PASS" and kn.get("pass_evidence",{}).get("workflow_run")==36645760261,"KTextEditor removed from runnable closure")
+    hist=a.get("campaign_history",[])
+    req(len(hist)==3 and [x.get("attempt") for x in hist]==[1,2,3],"Attempt3 campaign ledger append-only")
+    if errors:
+        for e in errors: print("ERROR:",e,file=sys.stderr)
+        raise SystemExit(1)
+    print("KDE Tier 3 build Level 3 Attempt 3 closure/live remediation: PASS")
+    print("canonical="+SNAP3)
+    print("next_gate="+NEXT3)
+    raise SystemExit(0)
+
 # Attempt 3 is a new live lifecycle over immutable Attempts 1/2.
 if m.get("state")=="active-pending-ci" and m.get("current_attempt")==3:
     import subprocess

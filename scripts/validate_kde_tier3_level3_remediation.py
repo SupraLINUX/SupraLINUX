@@ -19,6 +19,9 @@ l3=load("manifests/kde-tier3-build-level3.json")
 a=load("manifests/kde-tier3-build-level3-attempts.json")
 support=load("manifests/kde-tier3-support-build-level1.json")
 
+if t.get("level3_remediation",{}).get("status")=="attempt3-PARTIAL-validation-INFRA_INVALID-pending-attempt4-planning-validation":
+    raise SystemExit(subprocess.run([sys.executable,str(ROOT/"scripts/validate_kde_tier3_build_level3.py")]).returncode)
+
 # Closed Attempt 3 source materialization: validate immutable Attempts 1/2, then the new source-only evidence.
 _phase=t.get("level3_remediation",{}).get("status")
 _trigger=t.get("level3_remediation",{}).get("trigger",{})

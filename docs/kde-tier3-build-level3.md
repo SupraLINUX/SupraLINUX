@@ -1,6 +1,6 @@
 # KDE Frameworks 6.30 — Tier 3 build Level 3
 
-Status: **Attempt 3 source materialization PASS; planning validation pending**
+Status: **Attempt 3 closed PARTIAL; KTextEditor PASS; Purpose validation INFRA_INVALID; Attempt 4 planning pending**
 
 Level 3 is the fourth and final topological build level already recorded by the KDE-upstream dependency DAG. It contains exactly KTextEditor `6.30.0-0supralinux1` and Purpose `6.30.0-0supralinux1`.
 
@@ -133,3 +133,19 @@ Planning validation for Attempt 3 passed on clean PR CI router run `36644567893`
 - All unrelated reusable CI lanes: skipped.
 
 This authorizes Package Attempt 3 for KTextEditor and Purpose using the pinned `6.30.0-0supralinux3` source materializations. The canonical package state remains the two Attempt 2 FAILs until real Attempt 3 package evidence is classified.
+
+
+## Attempt 3 closure — KTextEditor PASS, Purpose validation INFRA_INVALID
+
+Attempt 3 ran in PR CI router workflow `36645760261` from commit `a9bb6b507cdf98bbf81f61524ed594a4f1e5e000`. Repository Policy and the Level 3 planner passed. Shared Resolute rootfs job `109668495106` produced artifact `11068855519` with SHA-256 `f3a25f7c68905b206281d023530031f01648228d6ca4974d6c478e0746cdc132`.
+
+Both nodes reached valid `sbuild`, so both consumed Package Attempt 3.
+
+- KTextEditor `6.30.0-0supralinux3` is a complete **PASS**: job `109668677528`, artifact `11068519665`, SHA-256 `96361a7771ea352dd01ffb9a032e37ed66399cb538f98137948c595ff043a69e`, CTest **77/77 PASS**, plus buildinfo predecessor proof, lintian, ABI, apt/runtime closure and CMake consumer checks. It is promoted and downstream-eligible.
+- Purpose `6.30.0-0supralinux3` completed `sbuild` successfully with **3/3 CTest PASS**. Its job `109668677478` then failed only in the post-build `buildinfo-predecessor-proof` validator; artifact `11068364147`, SHA-256 `b76383545d2bd8eb7d64cf1fd27e57d081eb05b385f88529ad50069c1e0c49f3`. The plan incorrectly required `libkf6prison-dev`, while Purpose's actual source Build-Depends and generated buildinfo use `qml6-module-org-kde-prison (= 6.30.0-0supralinux1)`. This is classified **INFRA_INVALID** for the validation mechanism, not a Package FAIL.
+
+Canonical Tier 3 becomes **19 PASS / 0 pending / 1 current FAIL / 0 BLOCKED**. Purpose retains its previous Attempt 2 FAIL canonically until a complete valid validation closes the `-3` build.
+
+The remediation changes no Purpose source and does not rematerialize it. The Level 3 proof contract now validates the Prison QML binary actually consumed. The runner also captures successful package outputs before post-build validators, preventing a future validator defect from discarding usable build products.
+
+Because Attempt 3's Purpose artifact predates that retention fix, its built `.deb/.buildinfo/.changes` outputs were not retained in the uploaded artifact. Completing the validation therefore requires a new valid package execution, which will be Package Attempt 4. Attempt 4 is scoped to Purpose only, keeps version `6.30.0-0supralinux3`, and is not yet authorized. Next gate: `tier3-build-level3-attempt4-planning-validation`.
