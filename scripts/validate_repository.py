@@ -258,6 +258,10 @@ required_files = [
     "scripts/run-qt-provider-preflight.sh",
     "scripts/qt-provider-preflight-needed.sh",
     "scripts/check-kvm-host.sh",
+    "scripts/prepare-libguestfs-runtime.sh",
+    "scripts/with-libguestfs-runtime.sh",
+    "scripts/test-with-libguestfs-runtime.sh",
+    "scripts/check-golden-preparation-lifecycle.sh",
     "scripts/check-nested-kvm-runtime.sh",
     "scripts/check-actions-runner-runtime.sh",
     "scripts/test-check-actions-runner-runtime.sh",
@@ -296,13 +300,37 @@ for tracked in ("packages/supralinux-build-test/*", "scripts/run-package-build-p
     require(tracked in package_delta, f"package preflight delta detector must track {tracked}")
 
 host_provisioner = read_required("scripts/provision-kvm-host.sh")
-for package in ("libvirt-daemon-system", "qemu-system-x86", "virt-install", "libguestfs-tools"):
+for package in ("libvirt-daemon-system", "qemu-system-x86", "virt-install", "libguestfs-tools", "supermin"):
     require(package in host_provisioner, f"host provisioning must install {package}")
 require("does NOT change BIOS" in host_provisioner, "host provisioning must not silently alter BIOS/KVM module state")
 require("/var/lib/supralinux/golden-builds" in host_provisioner, "host provisioning must create golden-build state")
+require("scripts/prepare-libguestfs-runtime.sh" in host_provisioner, "host provisioning must prepare the private libguestfs kernel runtime")
+
+libguestfs_prepare = read_required("scripts/prepare-libguestfs-runtime.sh")
+for token, message in (
+    ("/boot/vmlinuz-", "libguestfs runtime preparation must bind the current host kernel"),
+    ("sudo sha256sum", "libguestfs runtime preparation must hash the root-only host kernel"),
+    ("modules.dep", "libguestfs runtime preparation must bind the matching module tree"),
+    ("kernel_sha256=", "libguestfs runtime preparation must record kernel provenance"),
+):
+    require(token in libguestfs_prepare, message)
+
+libguestfs_wrapper = read_required("scripts/with-libguestfs-runtime.sh")
+for token, message in (
+    ("SUPERMIN_KERNEL", "libguestfs wrapper must select the prepared private kernel"),
+    ("SUPERMIN_KERNEL_VERSION", "libguestfs wrapper must bind the host kernel version"),
+    ("SUPERMIN_MODULES", "libguestfs wrapper must bind matching kernel modules"),
+    ("LIBGUESTFS_CACHEDIR", "libguestfs wrapper must isolate the supermin cache"),
+    ("source_kernel_stat", "libguestfs wrapper must reject host-kernel drift"),
+    ("modules_dep_sha256", "libguestfs wrapper must reject module-tree drift"),
+):
+    require(token in libguestfs_wrapper, message)
+
+libguestfs_wrapper_test = read_required("scripts/test-with-libguestfs-runtime.sh")
+require("Libguestfs private-kernel runtime wrapper functional test: PASS" in libguestfs_wrapper_test, "libguestfs wrapper functional test must emit PASS")
 
 host_checker = read_required("scripts/check-kvm-host.sh")
-for token in ("/dev/kvm", "parameters/nested", "qemu:///system", "virt-sysprep", "virt-cat", "virt-copy-out", "flock"):
+for token in ("/dev/kvm", "parameters/nested", "qemu:///system", "virt-sysprep", "virt-cat", "virt-copy-out", "flock", "with-libguestfs-runtime.sh"):
     require(token in host_checker, f"host preflight missing required check: {token}")
 
 nested_probe = read_required("scripts/check-nested-kvm-runtime.sh")
@@ -357,6 +385,7 @@ for token, message in (
     ('chmod 0710 "${BUILD_DIR}"', "golden builder must grant only group traversal on its private build directory"),
     ('chmod 0660 "${WORK_DISK}"', "golden builder must grant only owner/group access to the writable overlay"),
     ("libvirt-storage-access.txt", "golden builder must retain libvirt storage-access evidence"),
+    ("with-libguestfs-runtime.sh", "golden builder must use the certified non-root libguestfs runtime"),
 ):
     require(token in golden_builder, message)
 require("machine-id" in golden_builder and "ssh-hostkeys" in golden_builder, "golden builder must reset machine and SSH identities")
@@ -371,6 +400,8 @@ for token, message in (
     ("--noreboot", "golden lifecycle preflight must test virt-install no-reboot semantics"),
     ('[[ "${DOMAIN_STATE}" != "shut off" ]]', "golden lifecycle preflight must fail unless the domain remains shut off"),
     ("status=PASS", "golden lifecycle preflight must verify a guest-written completion marker"),
+    ("libguestfs-test-tool", "golden lifecycle preflight must execute the real libguestfs appliance"),
+    ("with-libguestfs-runtime.sh", "golden lifecycle preflight must inspect the guest through the certified libguestfs runtime"),
     ("Golden preparation lifecycle synthetic preflight: PASS", "golden lifecycle preflight must emit explicit PASS evidence"),
 ):
     require(token in golden_lifecycle_preflight, message)
@@ -408,6 +439,7 @@ for token, message in (
     ("FINGERPRINT_SCHEMA=1", "golden input fingerprint schema must be versioned"),
     ("scripts/golden-image-input-digest.sh", "golden input fingerprint must bind its own definition"),
     ("scripts/build-authoritative-runner-image.sh", "golden input fingerprint must bind the golden builder"),
+    ("scripts/with-libguestfs-runtime.sh", "golden input fingerprint must bind offline libguestfs behavior"),
     ("scripts/provision-authoritative-runner-guest.sh", "golden input fingerprint must bind guest provisioning"),
     ("scripts/install-actions-runner.sh", "golden input fingerprint must bind Actions runner installation"),
     ("scripts/prepare-autopkgtest-qemu-image.sh", "golden input fingerprint must bind nested autopkgtest image preparation"),
@@ -472,6 +504,9 @@ for token, message in (
     ("scripts/check-golden-image-provenance.sh", "host orchestrator core must run the golden provenance/input-compatibility gate"),
     ("GOLDEN_SOURCE_COMMIT", "host orchestrator must retain the golden source commit as historical provenance"),
     ("GOLDEN_INPUT_DIGEST", "host orchestrator must retain the golden-input digest"),
+    ("with-libguestfs-runtime.sh", "host orchestrator must use the certified libguestfs runtime for offline evidence extraction"),
+    ('chmod 0710 "${RUN_DIR}"', "host orchestrator must grant only group traversal to the JIT run directory"),
+    ('chmod 0660 "${OVERLAY}"', "host orchestrator must grant only owner/group access to the JIT overlay"),
     ("su --login --shell /bin/bash --command", "guest runner must start non-root with an explicit login shell"),
 ):
     require(token in host_orchestrator, message)

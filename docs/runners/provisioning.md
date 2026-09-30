@@ -14,7 +14,16 @@ scripts/provision-kvm-host.sh
 scripts/check-kvm-host.sh
 ```
 
-The supported recipe targets Ubuntu 26.04 amd64/x86_64, installs the declared KVM/libvirt/libguestfs toolchain, prepares state/evidence directories and group access, and validates nested KVM/readable-writable `/dev/kvm`, `qemu:///system`, required tools and active libvirt networking. It does not silently modify BIOS/firmware or forcibly reload KVM modules.
+The supported recipe targets Ubuntu 26.04 amd64/x86_64, installs the declared KVM/libvirt/libguestfs toolchain, prepares state/evidence directories and group access, and validates nested KVM/readable-writable `/dev/kvm`, `qemu:///system`, required tools and active libvirt networking. It also prepares a private, SHA-256-verified copy of the currently booted root-only Ubuntu kernel for non-root supermin/libguestfs use. It does not silently modify BIOS/firmware, relax `/boot/vmlinuz-*` permissions, or forcibly reload KVM modules.
+
+After any host kernel/module update, refresh this runtime before authoritative execution:
+
+```bash
+scripts/prepare-libguestfs-runtime.sh
+scripts/check-kvm-host.sh
+```
+
+All host-side `virt-cat`, `virt-copy-out` and `virt-sysprep` calls run through `scripts/with-libguestfs-runtime.sh`, which fails closed if the prepared kernel copy, host-kernel metadata or module tree has drifted.
 
 ## Released Ubuntu source image
 
@@ -194,7 +203,7 @@ The sample is a certification run, not a new canonical KArchive package attempt:
 
 The current authoritative runner lifecycle is tracked in `manifests/authoritative-kvm-certification.json` and validated by Repository Policy.
 
-The manifest deliberately separates hosted Frameworks completion from real KVM certification. The real-host KVM preflight is now PASS with retained host evidence; golden-image admission, runner-contract, synthetic package proof and KArchive Frameworks sample remain pending real evidence. Until the final Frameworks sample is PASS, `desktop_release_relevant_authorized=false` and Plasma/KWin/session release-relevant execution remains locked.
+The manifest deliberately separates hosted Frameworks completion from real KVM certification. Earlier host-preflight evidence is retained, but the live host status is pending recertification after adding the private libguestfs runtime to the current contract. Golden-image admission, runner-contract, synthetic package proof and KArchive Frameworks sample remain pending real evidence. Until the final Frameworks sample is PASS, `desktop_release_relevant_authorized=false` and Plasma/KWin/session release-relevant execution remains locked.
 
 This live-state manifest is not historical evidence. Real KVM workflow IDs, image hashes and retained artifacts are added only after those executions occur.
 

@@ -38,6 +38,10 @@ jobs:
         shell: bash
         run: shellcheck -e SC1091 scripts/*.sh
 
+      - name: Test libguestfs private-kernel runtime wrapper
+        shell: bash
+        run: scripts/test-with-libguestfs-runtime.sh
+
       - name: Test KVM-required QEMU wrapper
         shell: bash
         run: scripts/test-qemu-kvm-required.sh

@@ -17,7 +17,9 @@ scripts/check-kvm-host.sh
 
 The bootstrap installs KVM/QEMU, libvirt, `virt-install`, libguestfs and support tools; configures `kvm`/`libvirt` access; prepares `/var/lib/supralinux` state directories; and starts the selected libvirt network when available.
 
-It does **not** alter firmware/BIOS settings or forcibly reload KVM modules. The read-only preflight requires visible CPU virtualization, usable `/dev/kvm`, nested KVM, required groups/tools (including libguestfs and `flock`), working `qemu:///system` and an active libvirt network.
+It does **not** alter firmware/BIOS settings or forcibly reload KVM modules. The read-only preflight requires visible CPU virtualization, usable `/dev/kvm`, nested KVM, required groups/tools (including libguestfs and `flock`), working `qemu:///system`, an active libvirt network, and a prepared private libguestfs kernel runtime matching the currently booted kernel and module tree.
+
+Ubuntu 26.04 keeps `/boot/vmlinuz-*` root-only on this host. SupraLINUX therefore does not relax `/boot` permissions and does not run all libguestfs operations as root. `scripts/prepare-libguestfs-runtime.sh` makes a SHA-256-verified `0600` copy owned by the orchestration user under `/var/lib/supralinux/images/libguestfs-runtime/<kernel-version>/`. `scripts/with-libguestfs-runtime.sh` validates recorded kernel metadata, the private-copy hash and the `modules.dep` hash, then exports the supported supermin/libguestfs environment before running the requested tool. After a host kernel/module update, rerun the preparation script before authoritative work.
 
 ## Verified Ubuntu source image
 
@@ -128,7 +130,7 @@ The authoritative workflow separately uploads runner/package evidence. Promotion
 
 ## Current blocker
 
-The real Ubuntu 26.04 host preflight and signed source-image fetch/re-verification are **PASS** with retained host-local evidence. Golden-image build/hash, nested-KVM runtime inside disposable runners, JIT startup, runner-group policy, QEMU system testing and cleanup/export behavior remain **pending execution**, not PASS.
+The earlier Ubuntu 26.04 KVM/basic-host preflight and signed source-image fetch/re-verification remain valid historical evidence, but the **current host contract is pending recertification** because it now includes the private non-root libguestfs runtime discovered during golden-preparation diagnostics. The full golden retry remains frozen until the updated host preflight and synthetic golden lifecycle both PASS. Golden-image build/hash, nested-KVM runtime inside disposable runners, JIT startup, runner-group policy, QEMU system testing and cleanup/export behavior remain pending.
 
 
 ## Frameworks sample gate

@@ -11,7 +11,7 @@
     "repository_policy_run": 36656731103
   },
   "host_kvm_preflight": {
-    "status": "PASS",
+    "status": "pending-real-evidence",
     "evidence": [
       {
         "kind": "host-local-file",
@@ -22,6 +22,12 @@
         "path": "/var/lib/supralinux/evidence/authoritative-certification/host-preflight-fe3fa1bc6b8c/host-kvm-preflight.txt",
         "sha256": "5128a6af307a690ae0768a1212f3d1f5d141e500bdb7cec9983a9d83337d10a8"
       }
+    ],
+    "recertification_reason": "private-libguestfs-kernel-runtime-added-after-infrastructure-diagnostic",
+    "current_contract_requires": [
+      "kvm-host-preflight",
+      "private-libguestfs-runtime",
+      "golden-preparation-lifecycle-synthetic-preflight"
     ]
   },
   "golden_image": {
