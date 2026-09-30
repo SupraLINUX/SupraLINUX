@@ -26,6 +26,7 @@ host=state.get("host_kvm_preflight",{})
 gold=state.get("golden_image",{})
 req(host.get("status") in {"pending-real-evidence","PASS"},"host KVM preflight status")
 req(gold.get("status") in {"pending-real-evidence","PASS"},"golden image status")
+req(gold.get("input_fingerprint_schema")==1,"golden image input fingerprint schema")
 if host.get("status")=="PASS":
     req(bool(host.get("evidence")),"host KVM PASS requires evidence")
 if gold.get("status")=="PASS":
@@ -33,6 +34,7 @@ if gold.get("status")=="PASS":
     req(bool(gold.get("evidence")),"golden image PASS requires evidence")
     req(re.fullmatch(r"[0-9a-f]{64}",str(gold.get("image_sha256",""))) is not None,"golden image PASS requires SHA-256")
     req(re.fullmatch(r"[0-9a-f]{40}",str(gold.get("source_commit",""))) is not None,"golden image PASS requires source commit")
+    req(re.fullmatch(r"[0-9a-f]{64}",str(gold.get("input_digest",""))) is not None,"golden image PASS requires golden-input digest")
     req(gold.get("source_checkout_removed") is True,"golden image PASS requires source checkout removal")
 
 gates=state.get("gates",[])
