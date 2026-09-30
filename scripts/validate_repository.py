@@ -383,13 +383,31 @@ for token, message in (
 ):
     require(token in runner_runtime_test, message)
 
+golden_input_fingerprint = read_required("scripts/golden-image-input-digest.sh")
+for token, message in (
+    ("FINGERPRINT_SCHEMA=1", "golden input fingerprint schema must be versioned"),
+    ("scripts/golden-image-input-digest.sh", "golden input fingerprint must bind its own definition"),
+    ("scripts/build-authoritative-runner-image.sh", "golden input fingerprint must bind the golden builder"),
+    ("scripts/provision-authoritative-runner-guest.sh", "golden input fingerprint must bind guest provisioning"),
+    ("scripts/install-actions-runner.sh", "golden input fingerprint must bind Actions runner installation"),
+    ("scripts/prepare-autopkgtest-qemu-image.sh", "golden input fingerprint must bind nested autopkgtest image preparation"),
+    ("scripts/seal-authoritative-runner-image.sh", "golden input fingerprint must bind golden sealing"),
+    ("scripts/verify-ubuntu-cloud-image-provenance.sh", "golden input fingerprint must bind Ubuntu source verification"),
+):
+    require(token in golden_input_fingerprint, message)
+
 golden_provenance_checker = read_required("scripts/check-golden-image-provenance.sh")
 for token, message in (
     ("golden_image_sha256", "golden provenance checker must require the published golden hash"),
     ("source_image_sha256", "golden provenance checker must require the verified source-image hash"),
-    ("source_commit", "golden provenance checker must require the source commit"),
+    ("source_commit", "golden provenance checker must retain the historical source commit"),
     ("source_checkout_removed", "golden provenance checker must require source-checkout cleanup"),
     ("source_image_provenance_verified", "golden provenance checker must require signed source-image re-verification"),
+    ("golden_input_fingerprint_schema", "golden provenance checker must require the input fingerprint schema"),
+    ("golden_input_digest", "golden provenance checker must require the golden-input digest"),
+    ("CURRENT_INPUT_DIGEST", "golden provenance checker must recompute current golden inputs"),
+    ("SUPRALINUX_GOLDEN_COMPAT_COMMIT", "golden provenance checker must bind compatibility to an explicit checkout commit"),
+    ("golden_input_compatibility=PASS", "golden provenance checker must emit explicit input-compatibility evidence"),
     ("ACTUAL_GOLDEN_SHA256", "golden provenance checker must hash the current image bytes"),
     ("golden_provenance_verification=PASS", "golden provenance checker must emit explicit PASS evidence"),
 ):
@@ -397,18 +415,20 @@ for token, message in (
 
 golden_provenance_test = read_required("scripts/test-check-golden-image-provenance.sh")
 for token, message in (
-    ("modified golden-image bytes", "golden provenance test must reject modified golden bytes"),
-    ("without signed source verification", "golden provenance test must reject missing signed-source proof"),
-    ("without source-checkout cleanup", "golden provenance test must reject missing cleanup proof"),
-    ("duplicate golden-image hashes", "golden provenance test must reject ambiguous golden hashes"),
-    ("truncated source commit", "golden provenance test must reject invalid source commit evidence"),
+    ("Accepted modified golden bytes.", "golden provenance test must reject modified golden bytes"),
+    ("Accepted missing signed-source proof.", "golden provenance test must reject missing signed-source proof"),
+    ("Accepted missing source cleanup.", "golden provenance test must reject missing cleanup proof"),
+    ("Accepted duplicate golden hash.", "golden provenance test must reject ambiguous golden hashes"),
+    ("Accepted truncated source commit.", "golden provenance test must reject invalid source commit evidence"),
+    ("Accepted unsupported fingerprint schema.", "golden provenance test must reject an unsupported fingerprint schema"),
+    ("Accepted stale golden inputs.", "golden provenance test must reject stale golden-relevant inputs"),
+    ("Accepted duplicate input digest.", "golden provenance test must reject ambiguous golden-input digests"),
     ("Golden image provenance functional test: PASS", "golden provenance test must emit explicit PASS evidence"),
 ):
     require(token in golden_provenance_test, message)
 
 host_entrypoint = read_required("scripts/run-kvm-jit-gate.sh")
-require("scripts/check-golden-image-provenance.sh" in host_entrypoint, "JIT entrypoint must verify golden provenance before orchestration")
-require("scripts/run-kvm-jit-gate-core.sh" in host_entrypoint, "JIT entrypoint must delegate only after provenance verification")
+require("scripts/run-kvm-jit-gate-core.sh" in host_entrypoint, "JIT entrypoint must delegate to the fail-closed core")
 require('exec "${ROOT}/scripts/run-kvm-jit-gate-core.sh" "$@"' in host_entrypoint, "JIT entrypoint must preserve arguments when delegating to the core")
 
 host_orchestrator = read_required("scripts/run-kvm-jit-gate-core.sh")
@@ -425,9 +445,13 @@ for token, message in (
     ("guest-exec-status", "host orchestrator must detect premature runner exit"),
     ("PROVENANCE_SHA256", "host orchestrator core must verify the golden image against provenance"),
     ("source_checkout_removed=yes", "host orchestrator core must require a source-clean golden image"),
-    ("GOLDEN_SOURCE_COMMIT", "host orchestrator must read the golden source commit"),
-    ('"${GOLDEN_SOURCE_COMMIT,,}" != "${PR_HEAD_SHA,,}"', "host orchestrator must reject a golden image built from a different PR head"),
-    ("Rebuild the golden image from the current PR head", "golden/PR mismatch must fail closed with remediation guidance"),
+    ('LOCAL_HEAD="$(git -C "${ROOT}" rev-parse HEAD)"', "host orchestrator must bind the local checkout HEAD"),
+    ('"${LOCAL_HEAD,,}" != "${PR_HEAD_SHA,,}"', "host orchestrator must require local HEAD to equal the PR head"),
+    ("status --porcelain --untracked-files=normal", "host orchestrator must require a clean checkout"),
+    ("SUPRALINUX_GOLDEN_COMPAT_COMMIT", "host orchestrator must admit golden compatibility against the exact PR head"),
+    ("scripts/check-golden-image-provenance.sh", "host orchestrator core must run the golden provenance/input-compatibility gate"),
+    ("GOLDEN_SOURCE_COMMIT", "host orchestrator must retain the golden source commit as historical provenance"),
+    ("GOLDEN_INPUT_DIGEST", "host orchestrator must retain the golden-input digest"),
     ("su --login --shell /bin/bash --command", "guest runner must start non-root with an explicit login shell"),
 ):
     require(token in host_orchestrator, message)
@@ -442,6 +466,8 @@ for token, message in (
     ("SUPRALINUX_REBUILD_GOLDEN", "golden replacement must require explicit certification-run opt-in"),
     ("scripts/build-authoritative-runner-image.sh", "certification orchestrator must build the golden image through the supported builder"),
     ("scripts/check-golden-image-provenance.sh", "certification orchestrator must admit the exact golden bytes"),
+    ("SUPRALINUX_GOLDEN_COMPAT_COMMIT", "certification orchestrator must bind golden admission to the current PR head"),
+    ("golden_input_digest", "certification orchestrator must retain the admitted golden-input digest"),
     ("run_gate runner-contract", "certification orchestrator must run runner-contract"),
     ("run_gate authoritative-package-proof", "certification orchestrator must run the synthetic package proof"),
     ("run_gate frameworks-sample-proof", "certification orchestrator must run the Frameworks sample"),
