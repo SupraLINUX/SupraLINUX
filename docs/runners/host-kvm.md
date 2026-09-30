@@ -130,7 +130,7 @@ The authoritative workflow separately uploads runner/package evidence. Promotion
 
 ## Current blocker
 
-The earlier Ubuntu 26.04 KVM/basic-host preflight and signed source-image fetch/re-verification remain valid historical evidence, but the **current host contract is pending recertification** because it now includes the private non-root libguestfs runtime discovered during golden-preparation diagnostics. The full golden retry remains frozen until the updated host preflight and synthetic golden lifecycle both PASS. Golden-image build/hash, nested-KVM runtime inside disposable runners, JIT startup, runner-group policy, QEMU system testing and cleanup/export behavior remain pending.
+The current Ubuntu 26.04 host contract is **PASS** after real-host recertification of KVM/libvirt, the private non-root libguestfs runtime and the synthetic golden-preparation lifecycle. The recovery gate imposed after two consecutive golden-preparation `INFRA_INVALID` incidents is therefore closed and a fresh golden build may resume. Golden-image build/hash, nested-KVM runtime inside disposable runners, JIT startup, runner-group policy, QEMU system testing and cleanup/export behavior remain pending.
 
 
 ## Frameworks sample gate

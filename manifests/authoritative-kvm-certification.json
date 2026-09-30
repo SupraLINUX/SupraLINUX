@@ -11,7 +11,7 @@
     "repository_policy_run": 36656731103
   },
   "host_kvm_preflight": {
-    "status": "pending-real-evidence",
+    "status": "PASS",
     "evidence": [
       {
         "kind": "host-local-file",
@@ -21,6 +21,26 @@
         "golden_input_digest": "0fe642396e44b571b8d26521d02b4b079917277971f633b6232a8961f753f92c",
         "path": "/var/lib/supralinux/evidence/authoritative-certification/host-preflight-fe3fa1bc6b8c/host-kvm-preflight.txt",
         "sha256": "5128a6af307a690ae0768a1212f3d1f5d141e500bdb7cec9983a9d83337d10a8"
+      },
+      {
+        "kind": "host-local-recertification-bundle",
+        "host": "espadarunica",
+        "checked_at": "2026-09-30T16:08:22Z",
+        "pr_head_sha": "27731184d4e87ddc75577e1a8579878890dfb1ad",
+        "golden_input_digest": "8c719053230aed83b748b8407c0a24b1acfa15ad2fc36ca1d9751e6f9c5e6aa2",
+        "path": "/var/lib/supralinux/evidence/authoritative-certification/host-recertification-27731184d4e8-20260930T160816Z",
+        "result": "PASS",
+        "artifacts": {
+          "libguestfs-runtime-prepare.txt": "0feb1701e523c20630d6f42fec4c7d3d3ec1a82b9f1ab0d8c6c284ea7aef36e0",
+          "libguestfs-runtime-describe.txt": "f523f8d4af0aaa98a61b3451e81b0270d3532803b5880532239d2927fde79583",
+          "host-kvm-preflight.txt": "570fc8d269ef7ae43ff28b6f55b91d32a87f76ec468d92b4bb224fa0f781314e",
+          "golden-lifecycle-console.txt": "24ad0a0e0d42ccbfdf6ce6c210191c0df318f5c0480941610bb9c7a7c9aace0f",
+          "golden-lifecycle/result.txt": "2c6a464d8797c2c8f9bbcd26762484e1b6263178e63cfd798547341a14a474e7",
+          "golden-lifecycle/guest-marker.txt": "3f46ea84fd46dcf96234f2d9e71f878657aa4959c71a29d38c99f1a9a6e64abe",
+          "golden-lifecycle/libguestfs-test-tool.txt": "c61623f1ff74ed744a5a684c469ded837aa2deae632c62e175372e4d0876482a",
+          "golden-lifecycle/source-image-verification.txt": "1e7e7e34f8cc1547f6f3e4348f062bfa8baa47e190c4fb80a23b5b12dac7bc05",
+          "golden-lifecycle/virt-install.txt": "19d0f14f6e6a26ed36393adbac374d6d9c47a041038c2317157bc6c6b6e61aa9"
+        }
       }
     ],
     "recertification_reason": "private-libguestfs-kernel-runtime-added-after-infrastructure-diagnostic",
@@ -28,7 +48,8 @@
       "kvm-host-preflight",
       "private-libguestfs-runtime",
       "golden-preparation-lifecycle-synthetic-preflight"
-    ]
+    ],
+    "recertification_closed_at": "2026-09-30T16:08:22Z"
   },
   "golden_image": {
     "status": "pending-real-evidence",
