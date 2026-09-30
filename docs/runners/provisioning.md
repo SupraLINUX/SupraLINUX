@@ -84,10 +84,12 @@ The checker requires exactly one valid value for:
 - `golden_image_sha256`;
 - `source_image_sha256`;
 - `source_commit` (full 40-hex SHA);
+- `golden_input_fingerprint_schema=1`;
+- `golden_input_digest` (64-hex SHA-256);
 - `source_checkout_removed=yes`;
 - `source_image_provenance_verified=yes`.
 
-It recalculates the current golden-image SHA-256. Modified bytes, duplicate/ambiguous fields, missing signed-source proof or missing source cleanup fail closed.
+It recalculates the current golden-image SHA-256 and recomputes the versioned golden-input fingerprint for the checkout being certified. Modified bytes, duplicate/ambiguous fields, missing signed-source proof, missing source cleanup, an unsupported fingerprint schema, or any golden-relevant input drift fail closed. The original `source_commit` is retained for historical provenance; exact source-commit equality is not required when the current PR HEAD has an identical golden-input fingerprint.
 
 Only after this gate passes does the wrapper delegate to `scripts/run-kvm-jit-gate-core.sh`, which implements the existing serialized libvirt/JIT workflow lifecycle.
 
@@ -207,7 +209,7 @@ SUPRALINUX_RUNNER_GROUP_ID=... \
 scripts/run-authoritative-kvm-certification.sh
 ```
 
-The orchestrator fails closed unless the local checkout is clean and its HEAD exactly matches the PR head. It validates the host, fetches or verifies the signed Ubuntu 26.04 source image, admits or builds a golden image from that same PR commit, then runs the three disposable JIT gates in strict order:
+The orchestrator fails closed unless the local checkout is clean and its HEAD exactly matches the PR head. It validates the host, fetches or verifies the signed Ubuntu 26.04 source image, then admits an existing golden only when its versioned golden-input fingerprint matches the current PR HEAD; otherwise an explicit rebuild is required. A new golden is built from the current PR commit. It then runs the three disposable JIT gates in strict order:
 
 1. `runner-contract`;
 2. `authoritative-package-proof`;
