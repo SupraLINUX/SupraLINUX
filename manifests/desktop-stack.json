@@ -72,7 +72,7 @@
       "nested_kvm_required": true,
       "status": "pending-certification",
       "certification_manifest": "manifests/authoritative-kvm-certification.json",
-      "next_gate": "authoritative-package-proof",
+      "next_gate": "frameworks-sample-proof",
       "desktop_release_relevant_authorized": false,
       "frameworks_sample_required": true
     }

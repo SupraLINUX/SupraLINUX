@@ -380,6 +380,34 @@ if closed_superficial_pkg_hold:
     req(artifact.get("id")==11142903389,"closed superficial-only incident artifact ID")
     req(artifact.get("digest")=="sha256:7e23b9b797eb2e99749cf1352ecb869e69fe9dccd529b6890e658a9d081aa61c","closed superficial-only incident artifact digest")
 
+if pkg.get("status")=="PASS":
+    req(pkg.get("execution_authorized") is False,"package proof PASS must close package-proof execution authorization")
+    evidence=pkg.get("evidence",[])
+    req(len(evidence)==3,"package proof PASS evidence set")
+    github=next((x for x in evidence if x.get("kind")=="github-actions-authoritative-package-proof-pass"),{})
+    req(github.get("workflow_run_id")==36821470840,"package proof PASS workflow run")
+    req(github.get("workflow_head_sha")=="985bb09eadb9c8ebd5d48d58f84aeedf55831e14","package proof PASS workflow head")
+    req(github.get("workflow_checkout_merge_sha")=="a859f3b13ea2549993c90825ab13a4c4cef9b03a","package proof PASS checkout merge")
+    req(github.get("job_id")==110237761112 and github.get("conclusion")=="success","package proof PASS job")
+    result=github.get("result",{})
+    req(result.get("state")=="PASS" and result.get("exit_code")==0 and result.get("stage")=="complete","package proof PASS result")
+    req(result.get("authoritative") is True and result.get("package_attempt_consumed") is True,"package proof PASS authoritative attempt")
+    req(result.get("canonical_kde_package_state_effect")=="none","package proof PASS canonical KDE state")
+    req(result.get("sbuild_result")=="PASS" and result.get("autopkgtest_result")=="PASS" and result.get("autopkgtest_exit_code")==0,"package proof PASS build/system test")
+    artifact=github.get("artifact",{})
+    req(artifact.get("id")==11143842131,"package proof PASS artifact ID")
+    req(artifact.get("digest")=="sha256:3a67e29341afa78c29cae1d29e1849659aa47825b160c6ce1fe84dc12f17ba02","package proof PASS artifact digest")
+    req(artifact.get("files",{}).get("result.json")=="a4d15540ebe223efea74650b27cd2aa9ee70a95d7f2c47c54ff3d5c6c161c7b0","package proof PASS result hash")
+    host_bundle=next((x for x in evidence if x.get("kind")=="host-local-package-proof-bundle"),{})
+    req(host_bundle.get("workflow_run_id")==36821470840 and host_bundle.get("host_result_exit_code")==0,"package proof PASS host bundle")
+    req(host_bundle.get("evidence_manifest_sha256")=="4311ddf6967d746c44adced1ff39d840197a267566f25a125d6027549ced60a2","package proof PASS host bundle seal")
+    req(host_bundle.get("workspace_evidence_exported") is False,"package proof historical host bundle must preserve workspace export gap")
+    supplemental=next((x for x in evidence if x.get("kind")=="host-local-supplemental-package-proof-archive"),{})
+    req(supplemental.get("workflow_run_id")==36821470840 and supplemental.get("artifact_id")==11143842131,"package proof PASS supplemental archive binding")
+    req(supplemental.get("result_json_sha256")=="a4d15540ebe223efea74650b27cd2aa9ee70a95d7f2c47c54ff3d5c6c161c7b0","package proof PASS supplemental result hash")
+    req(supplemental.get("evidence_manifest_sha256")=="6e87286d11f08fc00b0f9f011e37869f97613dbaad20deb67195084c3964191f","package proof PASS supplemental archive seal")
+    req(sample.get("status")=="pending" and sample.get("execution_authorized") is True,"package proof PASS must authorize Frameworks sample")
+
 if pkg.get("execution_authorized"):
     req(runner.get("status")=="PASS" and pkg.get("status")=="pending","package proof authorization requires runner-contract PASS")
     req(not pkg.get("infrastructure_hold"),"execution-authorized package proof cannot retain an active infrastructure hold")
@@ -389,6 +417,11 @@ if pkg.get("execution_authorized"):
         req(closed_superficial_pkg_hold.get("retry_authorized") is True,"package proof retry requires certified substantive-test recovery")
 if sample.get("execution_authorized"):
     req(pkg.get("status")=="PASS" and sample.get("status")=="pending","Frameworks sample authorization requires package proof PASS")
+
+host_orchestrator=(ROOT / "scripts/run-kvm-jit-gate-core.sh").read_text()
+req('REPOSITORY_NAME="${REPOSITORY##*/}"' in host_orchestrator,"host orchestrator must derive repository name for workspace evidence export")
+req('/opt/actions-runner/_work/${REPOSITORY_NAME}/${REPOSITORY_NAME}/evidence' in host_orchestrator,"host orchestrator must export workflow workspace evidence")
+req('guest-files/workspace' in host_orchestrator,"host orchestrator must isolate workspace evidence from golden-image evidence")
 
 s=sample.get("sample",{})
 req(s.get("framework")=="karchive","Frameworks certification sample")

@@ -143,6 +143,7 @@ if [[ ! "${REPOSITORY}" =~ ^[^/]+/[^/]+$ ]]; then
     exit 1
 fi
 REPOSITORY_OWNER="${REPOSITORY%%/*}"
+REPOSITORY_NAME="${REPOSITORY##*/}"
 if [[ ! "${RUNNER_ORGANIZATION}" =~ ^[^/]+$ ]]; then
     printf 'SUPRALINUX_RUNNER_ORGANIZATION must be a single GitHub organization name.\n' >&2
     exit 1
@@ -276,6 +277,16 @@ cleanup() {
         }
         copy_guest_path /opt/actions-runner/_diag
         copy_guest_path /var/lib/supralinux/evidence
+
+        WORKSPACE_EVIDENCE="/opt/actions-runner/_work/${REPOSITORY_NAME}/${REPOSITORY_NAME}/evidence"
+        mkdir -p "${EVIDENCE_DIR}/guest-files/workspace"
+        printf 'path=%s\n' "${WORKSPACE_EVIDENCE}" >> "${EVIDENCE_DIR}/guest-copy-out.txt"
+        WORKSPACE_COPY_RC=0
+        "${ROOT}/scripts/with-libguestfs-runtime.sh" virt-copy-out \
+            -a "${OVERLAY}" "${WORKSPACE_EVIDENCE}" "${EVIDENCE_DIR}/guest-files/workspace" \
+            >> "${EVIDENCE_DIR}/guest-copy-out.txt" 2>&1 || WORKSPACE_COPY_RC=$?
+        printf 'exit_code=%s\n\n' "${WORKSPACE_COPY_RC}" >> "${EVIDENCE_DIR}/guest-copy-out.txt"
+
         copy_guest_path /var/log/supralinux-actions-runner-console.log
         virsh undefine "${VM_NAME}" >/dev/null 2>&1 || true
     fi
