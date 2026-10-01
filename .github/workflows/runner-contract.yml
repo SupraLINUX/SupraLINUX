@@ -96,7 +96,7 @@ jobs:
             echo
             qemu-system-x86_64 --version
             sbuild --version
-            autopkgtest --version
+            dpkg-query -W -f='autopkgtest ${Version}\n' autopkgtest
             echo
             cat /var/lib/supralinux/evidence/actions-runner.txt 2>/dev/null || true
             echo
