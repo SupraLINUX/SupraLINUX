@@ -192,7 +192,24 @@
             "workflow_created": false,
             "package_attempt_consumed": false
           }
-        ]
+        ],
+        "recovery_candidate": {
+          "kind": "host-local-jit-startup-validation-run",
+          "host": "chmodmasx-h370mds3h",
+          "finished_at": "2026-10-01T03:55:51Z",
+          "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-jit-startup-preflight-20261001t035441z-968661",
+          "runner_id": 158,
+          "runner_status": "online",
+          "runner_busy": false,
+          "runner_version": "2.337.0",
+          "console_state": "Connected to GitHub; Listening for Jobs",
+          "workflow_run_id": "",
+          "package_attempt_consumed": false,
+          "cleanup": "PASS",
+          "validation_run_verdict": "INFRA_INVALID",
+          "validator_defect": ".busy // true treats explicit false as fallback true",
+          "canonical_recovery_state": "awaiting-evidence-hashes"
+        }
       }
     },
     {
