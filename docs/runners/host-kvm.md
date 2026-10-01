@@ -101,7 +101,7 @@ A separate startup preflight exercises the exact disposable KVM/golden/JIT injec
 scripts/check-jit-runner-startup-lifecycle.sh
 ```
 
-It validates the exact byte count returned by QEMU `guest-file-write`, flushes the config file, waits for the JIT runner to reach `online` while still idle, deletes the synthetic runner and verifies cleanup. A startup failure is infrastructure-invalid and does not consume a package Attempt. Host cleanup forces `LC_ALL=C` for libvirt domain-state checks so diagnostic extraction is not fooled by a non-English operator locale.
+It validates the exact byte count returned by QEMU `guest-file-write`, flushes the config file, waits for the JIT runner to reach `online` while still idle, deletes the synthetic runner and verifies cleanup. A startup failure is infrastructure-invalid and does not consume a package Attempt. If the infrastructure reaches the required milestone (`online`, explicit `busy=false`, GitHub session created and `Listening for Jobs`) but a later validator defect makes the validation run exit nonzero, the validation run remains `INFRA_INVALID` while the infrastructure result may be adjudicated `PASS` from immutable hashed evidence; the two outcomes are recorded separately. Host cleanup forces `LC_ALL=C` for libvirt domain-state checks so diagnostic extraction is not fooled by a non-English operator locale.
 
 With a sealed golden image and runner group configured:
 
