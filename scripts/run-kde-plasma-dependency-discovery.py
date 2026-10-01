@@ -9,6 +9,8 @@ import tarfile
 import urllib.request
 from pathlib import Path
 
+from kde_plasma_dependency_parser import parse_find_packages
+
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "manifests/kde-plasma.json"
 OUT = ROOT / "evidence/kde-plasma-dependency-discovery"
@@ -55,7 +57,6 @@ def compact(value):
     return re.sub(r"[^a-z0-9]", "", value.lower())
 
 source_by_compact = {compact(item["id"]): item["id"] for item in sources}
-find_re = re.compile(r"\b(?:find_package|find_dependency)\s*\(\s*([A-Za-z0-9_.+:-]+)", re.IGNORECASE)
 qml_re = re.compile(r"\becm_find_qmlmodule\s*\(\s*([^\s\)]+)", re.IGNORECASE)
 pkg_call_re = re.compile(r"\bpkg_check_modules\s*\(\s*([^\)]+)\)", re.IGNORECASE | re.DOTALL)
 config_name_re = re.compile(r"^(.+?)Config\.cmake(?:\.in)?$", re.IGNORECASE)
@@ -63,55 +64,6 @@ pkg_keywords = {
     "REQUIRED", "QUIET", "IMPORTED_TARGET", "GLOBAL", "NO_CMAKE_PATH",
     "NO_CMAKE_ENVIRONMENT_PATH", "NO_SYSTEM_ENVIRONMENT_PATH",
 }
-
-find_component_stop = {
-    "REQUIRED", "QUIET", "EXACT", "CONFIG", "NO_MODULE", "MODULE",
-    "NO_POLICY_SCOPE", "BYPASS_PROVIDER", "NAMES", "HINTS", "PATHS",
-    "PATH_SUFFIXES", "REGISTRY_VIEW", "GLOBAL",
-}
-
-def parse_find_packages(cmake):
-    packages = set()
-    required_components = {}
-    optional_components = {}
-
-    for body in find_call_re.findall(cmake):
-        tokens = re.findall(r'"[^"]*"|[^\\s]+', body.replace("\\n", " "))
-        tokens = [token.strip().strip('"').rstrip(",") for token in tokens if token.strip()]
-        if not tokens:
-            continue
-
-        package = tokens[0]
-        packages.add(package)
-        mode = None
-
-        for token in tokens[1:]:
-            upper = token.upper()
-            if upper == "COMPONENTS":
-                mode = "required"
-                continue
-            if upper == "OPTIONAL_COMPONENTS":
-                mode = "optional"
-                continue
-            if upper in find_component_stop:
-                if upper not in {"REQUIRED", "QUIET", "EXACT"}:
-                    mode = None
-                continue
-            if mode is None:
-                continue
-            if token.startswith("$") or token.startswith("${"):
-                continue
-            if not re.fullmatch(r"[A-Za-z0-9_.+:-]+", token):
-                continue
-
-            target = required_components if mode == "required" else optional_components
-            target.setdefault(package, set()).add(token)
-
-    return (
-        sorted(packages),
-        {key: sorted(value) for key, value in sorted(required_components.items())},
-        {key: sorted(value) for key, value in sorted(optional_components.items())},
-    )
 
 errors = []
 raw_nodes = {}
