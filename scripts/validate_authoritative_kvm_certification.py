@@ -84,9 +84,23 @@ else:
 ci=desktop.get("ci",{}).get("authoritative_runner",{})
 req(ci.get("certification_manifest")=="manifests/authoritative-kvm-certification.json","desktop stack binds authoritative certification manifest")
 req(ci.get("desktop_release_relevant_authorized") is final_pass,"desktop stack authorization mirrors final Frameworks gate")
+
+if not runner_ready:
+    expected_next_gate="host-kvm-preflight-and-golden-image"
+elif runner.get("status")!="PASS":
+    expected_next_gate="runner-contract"
+elif pkg.get("status")!="PASS":
+    expected_next_gate="authoritative-package-proof"
+elif sample.get("status")!="PASS":
+    expected_next_gate="frameworks-sample-proof"
+else:
+    expected_next_gate="certification-complete"
+
+req(state.get("next_gate")==expected_next_gate,"authoritative KVM live-state next gate")
+req(ci.get("next_gate")==expected_next_gate,"desktop stack next gate mirrors authoritative KVM lifecycle")
+
 if not final_pass:
     req(ci.get("status")=="pending-certification","desktop stack remains pending certification")
-    req(ci.get("next_gate")=="host-kvm-preflight-and-golden-image","desktop stack next gate")
 req(state.get("stable_publication_authorized") is False,"KVM certification must never auto-authorize stable publication")
 
 if errors:

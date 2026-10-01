@@ -77,13 +77,31 @@
     "recertification_closed_at": "2026-10-01T01:06:33Z"
   },
   "golden_image": {
-    "status": "pending-real-evidence",
-    "evidence": [],
-    "image_sha256": null,
-    "source_commit": null,
-    "source_checkout_removed": null,
+    "status": "PASS",
+    "evidence": [
+      {
+        "kind": "host-local-golden-build",
+        "host": "chmodmasx-h370mds3h",
+        "checked_at": "2026-10-01T02:05:10Z",
+        "build_id": "20261001T012658Z-3d4ce1a31222-149797",
+        "path": "/var/lib/supralinux/evidence/golden-build/20261001T012658Z-3d4ce1a31222-149797",
+        "result": "PASS",
+        "build_exit_code": 0,
+        "source_image_sha256": "8800651811af9a85465ad1d552add729947bb16488dddb4a9b5305a3d97332b2",
+        "nested_autopkgtest_image_sha256": "e4fc9fc613bf662fd297ac05ebad8c01cbf77a3d761f9f67d2da36e74a27727e",
+        "admission": {
+          "path": "/var/lib/supralinux/evidence/golden-build/20261001T012658Z-3d4ce1a31222-149797/golden-provenance-admission.txt",
+          "sha256": "81a69dd0b5e935ba41e7c84bf8a5d960e2b6a50fd32a5e6ce2263ca9fc7e2651",
+          "golden_input_compatibility": "PASS",
+          "golden_provenance_verification": "PASS"
+        }
+      }
+    ],
+    "image_sha256": "a0b88447d9a9ecd9785087390cf499abaf9416291864fe1be4d63d9a334b2acd",
+    "source_commit": "3d4ce1a312220337934a51025c32c8429bf8fb3a",
+    "source_checkout_removed": true,
     "input_fingerprint_schema": 1,
-    "input_digest": null
+    "input_digest": "2d5ec214607124d11c279b8d3f715808a065e88ad0fd6e57f40c89ca6b37110b"
   },
   "gates": [
     {
@@ -91,7 +109,7 @@
       "workflow": ".github/workflows/runner-contract.yml",
       "trigger_label": "ci:runner-contract",
       "status": "pending",
-      "execution_authorized": false,
+      "execution_authorized": true,
       "requires": [
         "host-kvm-preflight",
         "golden-image-admission"
@@ -134,6 +152,6 @@
     "session_authorized": false,
     "unlock_requires": "frameworks-sample-proof:PASS"
   },
-  "next_gate": "host-kvm-preflight-and-golden-image",
+  "next_gate": "runner-contract",
   "stable_publication_authorized": false
 }
