@@ -282,7 +282,8 @@ reconcile_named_runner_after_failed_create() {
         printf '{"status":"runner-list-failed"}\n' > "${EVIDENCE_DIR}/jit-create-reconciliation.json"
         return 1
     fi
-    matching="$(jq -c --arg name "${VM_NAME}"         '[.runners[]? | select(.name == $name) | {id,name,status,busy}]' <<<"${runners_json}")"
+    matching="$(jq -c --arg name "${VM_NAME}" \
+        '[.runners[]? | select(.name == $name) | {id,name,status,busy}]' <<<"${runners_json}")"
     printf '%s\n' "${matching}" > "${EVIDENCE_DIR}/jit-create-reconciliation.json"
     while IFS= read -r runner_id; do
         [[ -n "${runner_id}" ]] || continue
@@ -295,18 +296,43 @@ reconcile_named_runner_after_failed_create() {
 
 request_jit_config() {
     local payload="$1"
-    local raw="" curl_rc=0 http_code="" body=""
-    local args=(
-        --silent
-        --show-error
-        --location
-        --request POST
-        --header 'Accept: application/vnd.github+json'
-        --header "Authorization: Bearer ${HOST_GITHUB_TOKEN}"
-        --header "X-GitHub-Api-Version: ${API_VERSION}"
-        --header 'Content-Type: application/json'
-        --data "${payload}"
-        --write-out 
+    local response_file status_file curl_rc=0 http_code
+
+    response_file="$(mktemp)"
+    status_file="$(mktemp)"
+
+    curl --silent --show-error --location \
+        --request POST \
+        --header 'Accept: application/vnd.github+json' \
+        --header "Authorization: Bearer ${HOST_GITHUB_TOKEN}" \
+        --header "X-GitHub-Api-Version: ${API_VERSION}" \
+        --header 'Content-Type: application/json' \
+        --data "${payload}" \
+        --output "${response_file}" \
+        --write-out '%{http_code}' \
+        "https://api.github.com/orgs/${RUNNER_ORGANIZATION}/actions/runners/generate-jitconfig" \
+        >"${status_file}" || curl_rc=$?
+
+    http_code="$(cat "${status_file}")"
+    printf 'curl_exit_code=%s\nhttp_status=%s\n' "${curl_rc}" "${http_code:-missing}" \
+        > "${EVIDENCE_DIR}/jit-create-transport.txt"
+
+    if (( curl_rc != 0 )) || [[ "${http_code}" != "201" ]]; then
+        rm -f "${response_file}" "${status_file}"
+        if ! reconcile_named_runner_after_failed_create; then
+            printf 'JIT create failed ambiguously and leaked-runner reconciliation also failed.\n' >&2
+        fi
+        printf 'Organization-scoped generate-jitconfig did not complete unambiguously (curl=%s HTTP=%s).\n' \
+            "${curl_rc}" "${http_code:-missing}" >&2
+        return 1
+    fi
+
+    JIT_JSON="$(cat "${response_file}")"
+    rm -f "${response_file}" "${status_file}"
+    return 0
+}
+
+printf 'Validating pull request and preparing gate %s...\n' "${GATE}"
 PR_JSON="$(api GET "/repos/${REPOSITORY}/pulls/${PR_NUMBER}")"
 PR_STATE="$(jq -r '.state' <<<"${PR_JSON}")"
 PR_HEAD_REPO="$(jq -r '.head.repo.full_name // empty' <<<"${PR_JSON}")"
