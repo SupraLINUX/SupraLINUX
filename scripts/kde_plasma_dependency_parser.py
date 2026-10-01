@@ -9,9 +9,7 @@ FIND_CALL_RE = re.compile(
 )
 
 FIND_COMPONENT_STOP = {
-    "CONFIG",
     "NO_MODULE",
-    "MODULE",
     "NO_POLICY_SCOPE",
     "BYPASS_PROVIDER",
     "NAMES",
@@ -57,6 +55,9 @@ def parse_find_packages(cmake: str):
             if upper in {"REQUIRED", "QUIET", "EXACT"}:
                 continue
 
+            # CONFIG and MODULE are valid KDE component names (notably
+            # KF6::Config), so they must not terminate an active COMPONENTS
+            # list.  Other path/provider keywords still end component parsing.
             if upper in FIND_COMPONENT_STOP:
                 mode = None
                 continue
