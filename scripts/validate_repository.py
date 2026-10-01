@@ -675,8 +675,14 @@ require("qemu-kvm-wrapper-sha256.txt" in authoritative_proof, "authoritative evi
 require('"system_test_acceleration": "kvm-required"' in authoritative_proof, "authoritative result must record KVM-required acceleration")
 require('"package_attempt_consumed": package_attempt_consumed == "true"' in authoritative_proof, "authoritative result must record whether valid package execution began")
 require('"canonical_kde_package_state_effect": "none"' in authoritative_proof, "synthetic authoritative proof must not alter canonical KDE package state")
+require('8)' in authoritative_proof and 'AUTOPKGTEST_RESULT="insufficient-non-superficial-test-coverage"' in authoritative_proof and 'STATE="INFRA_INVALID"' in authoritative_proof, "autopkgtest exit 8 must be classified as insufficient proof, not package FAIL")
 require('16)' in authoritative_proof and 'AUTOPKGTEST_RESULT="testbed-failure"' in authoritative_proof and 'STATE="INFRA_INVALID"' in authoritative_proof, "autopkgtest exit 16 must be classified as infrastructure-invalid")
 require('"autopkgtest_exit_code"' in authoritative_proof, "authoritative result must retain autopkgtest exit status")
+
+synthetic_tests_control = read_required("packages/supralinux-build-test/debian/tests/control")
+require("Tests: smoke" in synthetic_tests_control, "synthetic package proof must retain the smoke autopkgtest")
+require("Depends: @" in synthetic_tests_control, "synthetic smoke autopkgtest must test the built package")
+require("superficial" not in synthetic_tests_control, "synthetic package proof smoke test must be substantive, not superficial")
 
 frameworks_sample = read_required("scripts/run-authoritative-frameworks-sample-proof.sh")
 require("scripts/check-actions-runner-runtime.sh" in frameworks_sample, "Frameworks sample must verify effective Actions runner provenance")
