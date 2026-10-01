@@ -673,6 +673,10 @@ require('--qemu-command="${KVM_QEMU_WRAPPER}"' in authoritative_proof, "authorit
 require("--qemu-architecture=x86_64" in authoritative_proof, "authoritative autopkgtest must pin QEMU architecture")
 require("qemu-kvm-wrapper-sha256.txt" in authoritative_proof, "authoritative evidence must hash the QEMU wrapper")
 require('"system_test_acceleration": "kvm-required"' in authoritative_proof, "authoritative result must record KVM-required acceleration")
+require('"package_attempt_consumed": package_attempt_consumed == "true"' in authoritative_proof, "authoritative result must record whether valid package execution began")
+require('"canonical_kde_package_state_effect": "none"' in authoritative_proof, "synthetic authoritative proof must not alter canonical KDE package state")
+require('16)' in authoritative_proof and 'AUTOPKGTEST_RESULT="testbed-failure"' in authoritative_proof and 'STATE="INFRA_INVALID"' in authoritative_proof, "autopkgtest exit 16 must be classified as infrastructure-invalid")
+require('"autopkgtest_exit_code"' in authoritative_proof, "authoritative result must retain autopkgtest exit status")
 
 frameworks_sample = read_required("scripts/run-authoritative-frameworks-sample-proof.sh")
 require("scripts/check-actions-runner-runtime.sh" in frameworks_sample, "Frameworks sample must verify effective Actions runner provenance")
@@ -687,11 +691,16 @@ require("STAGE=\"artifact-capture\"" in frameworks_sample and "STAGE=\"lintian\"
 require(frameworks_sample.index('STAGE="artifact-capture"') < frameworks_sample.index('STAGE="lintian"'), "Frameworks sample artifact capture must precede Lintian")
 
 qemu_wrapper = read_required("scripts/qemu-kvm-required.sh")
-require('exec "${QEMU}" -accel kvm "$@"' in qemu_wrapper, "QEMU wrapper must select KVM only")
+require("normalize_machine" in qemu_wrapper, "QEMU wrapper must normalize existing -machine acceleration")
+require('normalized+=("accel=kvm")' in qemu_wrapper, "QEMU wrapper must force KVM in the machine acceleration field")
+require('exec "${QEMU}" "${normalized_args[@]}"' in qemu_wrapper, "QEMU wrapper must execute only the normalized argument vector")
+require('exec "${QEMU}" -accel kvm "$@"' not in qemu_wrapper, "QEMU wrapper must not blindly prepend -accel when autopkgtest already sets machine acceleration")
 require("tcg" not in qemu_wrapper.lower(), "KVM-only wrapper must not contain a TCG fallback")
 
 qemu_wrapper_test = read_required("scripts/test-qemu-kvm-required.sh")
 require("Supra Linux Runner" in qemu_wrapper_test, "QEMU wrapper test must preserve an argument containing spaces")
+require("q35,accel=kvm:tcg" in qemu_wrapper_test and "q35,accel=kvm" in qemu_wrapper_test, "QEMU wrapper test must reproduce and normalize autopkgtest machine acceleration")
+require("Wrapper must not combine top-level -accel with -machine accel=." in qemu_wrapper_test, "QEMU wrapper test must reject conflicting accelerator syntax")
 require("MISSING_RC" in qemu_wrapper_test and "127" in qemu_wrapper_test, "QEMU wrapper test must verify missing-executable failure semantics")
 require("KVM-required QEMU wrapper functional test: PASS" in qemu_wrapper_test, "QEMU wrapper test must emit explicit PASS evidence")
 
