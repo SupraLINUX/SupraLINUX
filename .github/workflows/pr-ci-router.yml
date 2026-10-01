@@ -92,17 +92,9 @@ jobs:
           echo "run_tier3_materialization=${run_tier3_materialization}" >> "${GITHUB_OUTPUT}"
           run_tier3_level3="$(python3 -c 'import json; m=json.load(open("manifests/kde-tier3-build-level3.json")); ok=m.get("state")=="active-pending-ci" and m.get("execution_authorized") is True; print("true" if ok else "false")')"
           echo "run_tier3_level3=${run_tier3_level3}" >> "${GITHUB_OUTPUT}"
-          if bash scripts/kde-plasma-dependency-discovery-needed.sh "${before}" "${after}"; then
-            run_plasma_discovery=true
-          else
-            rc=$?
-            if [[ "${rc}" -eq 1 ]]; then
-              run_plasma_discovery=false
-            else
-              exit "${rc}"
-            fi
-          fi
+          run_plasma_discovery="$(python3 -c 'import json; m=json.load(open("manifests/kde-plasma.json")); p=m.get("planning",{}); ok=p.get("status")=="dependency-discovery-pending" and p.get("execution_authorized") is True and p.get("package_execution_authorized") is False; print("true" if ok else "false")')"
           echo "run_plasma_discovery=${run_plasma_discovery}" >> "${GITHUB_OUTPUT}"
+          echo "Plasma dependency discovery live authorization: ${run_plasma_discovery}"
           if [[ "${run_ci}" == "true" ]]; then
             echo "Semantic build/reference/provider input changed; invoking reusable CI lanes."
           else
