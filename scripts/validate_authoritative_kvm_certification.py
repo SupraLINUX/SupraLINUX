@@ -406,7 +406,12 @@ if pkg.get("status")=="PASS":
     req(supplemental.get("workflow_run_id")==36821470840 and supplemental.get("artifact_id")==11143842131,"package proof PASS supplemental archive binding")
     req(supplemental.get("result_json_sha256")=="a4d15540ebe223efea74650b27cd2aa9ee70a95d7f2c47c54ff3d5c6c161c7b0","package proof PASS supplemental result hash")
     req(supplemental.get("evidence_manifest_sha256")=="6e87286d11f08fc00b0f9f011e37869f97613dbaad20deb67195084c3964191f","package proof PASS supplemental archive seal")
-    req(sample.get("status")=="pending" and sample.get("execution_authorized") is True,"package proof PASS must authorize Frameworks sample")
+    if sample.get("status")=="pending":
+        req(sample.get("execution_authorized") is True,"package proof PASS must authorize pending Frameworks sample")
+    elif sample.get("status")=="PASS":
+        req(sample.get("execution_authorized") is False,"completed Frameworks sample must close execution authorization")
+    else:
+        req(False,"package proof PASS requires Frameworks sample pending or PASS")
 
 if pkg.get("execution_authorized"):
     req(runner.get("status")=="PASS" and pkg.get("status")=="pending","package proof authorization requires runner-contract PASS")
