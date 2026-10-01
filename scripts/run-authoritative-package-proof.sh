@@ -253,6 +253,12 @@ case "${AUTOPKGTEST_EXIT_CODE}" in
     0)
         AUTOPKGTEST_RESULT="PASS"
         ;;
+    8)
+        STATE="INFRA_INVALID"
+        AUTOPKGTEST_RESULT="insufficient-non-superficial-test-coverage"
+        printf 'autopkgtest exit 8 means no substantive non-superficial test completed; package state is not FAIL.\n' >&2
+        exit 8
+        ;;
     16)
         STATE="INFRA_INVALID"
         AUTOPKGTEST_RESULT="testbed-failure"
