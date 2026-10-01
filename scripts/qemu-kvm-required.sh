@@ -35,8 +35,8 @@ normalize_machine() {
 args=("$@")
 machine_present=0
 
-for ((i=0; i<${#args[@]}; i++)); do
-    case "${args[i]}" in
+for arg in "${args[@]}"; do
+    case "${arg}" in
         -machine|-M|-machine=*|-M=*)
             machine_present=1
             ;;
@@ -44,27 +44,22 @@ for ((i=0; i<${#args[@]}; i++)); do
 done
 
 normalized_args=()
-direct_accel_added=0
 
 for ((i=0; i<${#args[@]}; i++)); do
     arg="${args[i]}"
     case "${arg}" in
+        -enable-kvm)
+            # autopkgtest 5.55 adds this automatically when /dev/kvm exists.
+            # Drop it here because this wrapper emits one canonical KVM selector.
+            ;;
         -accel)
             if (( i + 1 >= ${#args[@]} )); then
                 printf 'QEMU -accel option is missing its value.\n' >&2
                 exit 2
             fi
             ((i+=1))
-            if (( ! machine_present && ! direct_accel_added )); then
-                normalized_args+=("-accel" "kvm")
-                direct_accel_added=1
-            fi
             ;;
         -accel=*)
-            if (( ! machine_present && ! direct_accel_added )); then
-                normalized_args+=("-accel" "kvm")
-                direct_accel_added=1
-            fi
             ;;
         -machine|-M)
             if (( i + 1 >= ${#args[@]} )); then
@@ -86,7 +81,7 @@ for ((i=0; i<${#args[@]}; i++)); do
     esac
 done
 
-if (( ! machine_present && ! direct_accel_added )); then
+if (( ! machine_present )); then
     normalized_args=("-accel" "kvm" "${normalized_args[@]}")
 fi
 
