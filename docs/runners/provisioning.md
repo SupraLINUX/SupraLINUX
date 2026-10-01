@@ -205,7 +205,7 @@ The sample is a certification run, not a new canonical KArchive package attempt:
 
 The current authoritative runner lifecycle is tracked in `manifests/authoritative-kvm-certification.json` and validated by Repository Policy.
 
-The manifest deliberately separates hosted Frameworks completion from real KVM certification. After migration away from the previous physical provider, the live host contract is pending fresh real-host recertification on the replacement provider; earlier host evidence remains retained as historical evidence only. Golden-image admission, runner-contract, synthetic package proof and KArchive Frameworks sample remain pending real evidence. Until the final Frameworks sample is PASS, `desktop_release_relevant_authorized=false` and Plasma/KWin/session release-relevant execution remains locked.
+The manifest deliberately separates hosted Frameworks completion from real KVM certification. After migration away from the previous physical provider, the replacement physical host is now recertified PASS for KVM/libvirt access, the private non-root libguestfs runtime, signed Ubuntu source-image verification and the synthetic golden-preparation lifecycle; earlier provider evidence remains retained as historical evidence only. Golden-image admission, runner-contract, synthetic package proof and KArchive Frameworks sample remain pending real evidence. Until the final Frameworks sample is PASS, `desktop_release_relevant_authorized=false` and Plasma/KWin/session release-relevant execution remains locked.
 
 This live-state manifest is not historical evidence. Real KVM workflow IDs, image hashes and retained artifacts are added only after those executions occur.
 
