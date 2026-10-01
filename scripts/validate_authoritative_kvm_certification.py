@@ -86,6 +86,12 @@ if runner.get("status")=="INFRA_INVALID":
             req(evidence.get("guest_exit_code")==1,"runner-contract startup diagnosis guest exit")
             req(evidence.get("workflow_run_id")=="","runner-contract startup diagnosis must precede workflow creation")
             req(evidence.get("package_attempt_consumed") is False,"runner-contract startup diagnosis must not consume a package attempt")
+        history=hold.get("diagnostic_history",[])
+        if history:
+            req(len(history)>=3,"runner-contract guest startup diagnostic history")
+            req(all(x.get("workflow_created") is False for x in history),"runner-contract startup diagnostics must precede workflow creation")
+            req(all(x.get("package_attempt_consumed") is False for x in history),"runner-contract startup diagnostics must not consume package attempts")
+            req("rmdir /run/supralinux-jit: Permission denied" in [x.get("observed_failure") for x in history],"runner-contract latest startup diagnosis")
 
 closed_hold=runner.get("closed_infrastructure_hold",{})
 if closed_hold:
