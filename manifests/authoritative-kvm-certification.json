@@ -11,7 +11,7 @@
     "repository_policy_run": 36656731103
   },
   "host_kvm_preflight": {
-    "status": "PASS",
+    "status": "pending-real-evidence",
     "evidence": [
       {
         "kind": "host-local-file",
@@ -43,13 +43,13 @@
         }
       }
     ],
-    "recertification_reason": "private-libguestfs-kernel-runtime-added-after-infrastructure-diagnostic",
+    "recertification_reason": "authoritative-host-provider-migration-from-espadarunica",
     "current_contract_requires": [
       "kvm-host-preflight",
       "private-libguestfs-runtime",
       "golden-preparation-lifecycle-synthetic-preflight"
     ],
-    "recertification_closed_at": "2026-09-30T16:08:22Z"
+    "recertification_closed_at": null
   },
   "golden_image": {
     "status": "pending-real-evidence",
