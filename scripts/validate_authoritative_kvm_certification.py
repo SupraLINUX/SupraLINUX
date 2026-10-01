@@ -66,6 +66,22 @@ if runner.get("status")=="INFRA_INVALID":
     req(hold.get("mechanism")=="github-jit-runner-api","runner-contract INFRA_INVALID mechanism")
     req(isinstance(hold.get("consecutive_infra_invalid"),int) and hold["consecutive_infra_invalid"]>=2,"runner-contract INFRA_INVALID retry cutoff")
     req(hold.get("resume_requires")=="scripts/check-jit-runner-api-lifecycle.sh:PASS","runner-contract resume requires synthetic JIT API PASS")
+
+closed_hold=runner.get("closed_infrastructure_hold",{})
+if closed_hold:
+    req(closed_hold.get("mechanism")=="github-jit-runner-api","closed runner-contract infrastructure hold mechanism")
+    req(isinstance(closed_hold.get("consecutive_infra_invalid"),int) and closed_hold["consecutive_infra_invalid"]>=2,"closed runner-contract infrastructure hold incident count")
+    req(closed_hold.get("resume_requires")=="scripts/check-jit-runner-api-lifecycle.sh:PASS","closed runner-contract hold recovery contract")
+    req(closed_hold.get("closed_by")=="scripts/check-jit-runner-api-lifecycle.sh:PASS","closed runner-contract hold closure evidence")
+    recovery=closed_hold.get("recovery_evidence",{})
+    req(recovery.get("kind")=="host-local-jit-api-preflight","runner-contract recovery evidence kind")
+    req(recovery.get("result")=="PASS","runner-contract recovery evidence PASS")
+    req(recovery.get("runner_group_id")==3,"runner-contract recovery runner group")
+    req(recovery.get("http_status")==201,"runner-contract recovery HTTP status")
+    req(recovery.get("cleanup")=="PASS","runner-contract recovery cleanup")
+    artifacts=recovery.get("artifacts",{})
+    req(re.fullmatch(r"[0-9a-f]{64}",str(artifacts.get("result.txt",""))) is not None,"runner-contract recovery result hash")
+    req(re.fullmatch(r"[0-9a-f]{64}",str(artifacts.get("transport.txt",""))) is not None,"runner-contract recovery transport hash")
 if pkg.get("execution_authorized"):
     req(runner.get("status")=="PASS" and pkg.get("status")=="pending","package proof authorization requires runner-contract PASS")
 if sample.get("execution_authorized"):
