@@ -70,14 +70,14 @@ for command_name in autopkgtest-buildvm-ubuntu-cloud fallocate genisoimage mkswa
     }
 done
 
-[[ "${RAM_SIZE}" =~ ^[0-9]+$ ]] && (( RAM_SIZE >= 2048 )) || {
+if [[ ! "${RAM_SIZE}" =~ ^[0-9]+$ ]] || (( RAM_SIZE < 2048 )); then
     printf 'AUTOPKGTEST_QEMU_RAM_MIB must be an integer >= 2048.\n' >&2
     exit 1
-}
-[[ "${BUILD_SWAP_MIB}" =~ ^[0-9]+$ ]] && (( BUILD_SWAP_MIB >= 4096 )) || {
+fi
+if [[ ! "${BUILD_SWAP_MIB}" =~ ^[0-9]+$ ]] || (( BUILD_SWAP_MIB < 4096 )); then
     printf 'AUTOPKGTEST_QEMU_BUILD_SWAP_MIB must be an integer >= 4096.\n' >&2
     exit 1
-}
+fi
 if [[ -e "${BUILD_SWAP_FILE}" ]]; then
     printf 'Refusing stale temporary build swap file: %s\n' "${BUILD_SWAP_FILE}" >&2
     exit 1
