@@ -298,8 +298,8 @@
       "id": "authoritative-package-proof",
       "workflow": ".github/workflows/authoritative-package-proof.yml",
       "trigger_label": "ci:authoritative-package-proof",
-      "status": "INFRA_INVALID",
-      "execution_authorized": false,
+      "status": "pending",
+      "execution_authorized": true,
       "requires": [
         "runner-contract"
       ],
@@ -349,7 +349,7 @@
         },
         "recovery_state": "authoritative-package-proof-pending"
       },
-      "infrastructure_hold": {
+      "closed_repeated_infrastructure_hold": {
         "mechanism": "autopkgtest-qemu-acceleration-argv",
         "consecutive_infra_invalid": 2,
         "reason": "two consecutive authoritative package-proof validation runs reached valid synthetic package execution and sbuild PASS, then failed before autopkgtest testbed boot with the same QEMU accelerator-selection conflict",
@@ -424,7 +424,32 @@
           "canonical_adjudication": "INFRA_INVALID",
           "artifact_id": 11141369927,
           "artifact_digest": "sha256:eac3c15aa99dae57de683862b8758b6f47dca776bfdbd8e3dc88a79e261617be"
-        }
+        },
+        "closed_by": "synthetic-autopkgtest-qemu-argv-preflight-and-repository-policy:PASS",
+        "repository_policy_run": 36819196488,
+        "repository_policy_job": 110230862901,
+        "recovery_head_sha": "3cba7dc932ab062bc78dbe61a138c46bb341ef95",
+        "remediation_commits": [
+          "daec41391737023014d6315aa525c457b325b52e",
+          "cd9cb70d693ba80c7287372f52998b9466191e5c",
+          "01536a93ae8323cb890fa4198de49fdb565ab198",
+          "ec7914d51349af6bf3baf18bd2156a28a4ab1ed3",
+          "fbdb311f8c271200f76a23343701bef5fffd8b4b",
+          "27213ff871fa959188138c27cc2b7f54b5f80741",
+          "3cba7dc932ab062bc78dbe61a138c46bb341ef95"
+        ],
+        "synthetic_recovery_evidence": {
+          "shellcheck": "PASS",
+          "qemu_wrapper_functional_test": "PASS",
+          "autopkgtest_qemu_argv_lifecycle": "PASS",
+          "autopkgtest_version": "5.55",
+          "provider_contract": "-enable-kvm",
+          "normalized_acceleration": "-accel kvm",
+          "repository_invariants": "PASS",
+          "authoritative_kvm_state_validator": "PASS"
+        },
+        "recovery_state": "authoritative-package-proof-pending",
+        "retry_authorized": true
       }
     },
     {
