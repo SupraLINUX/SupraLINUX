@@ -63,9 +63,19 @@ if runner.get("execution_authorized"):
 if runner.get("status")=="INFRA_INVALID":
     hold=runner.get("infrastructure_hold",{})
     req(runner.get("execution_authorized") is False,"INFRA_INVALID runner-contract must be execution-frozen")
-    req(hold.get("mechanism")=="github-jit-runner-api","runner-contract INFRA_INVALID mechanism")
-    req(isinstance(hold.get("consecutive_infra_invalid"),int) and hold["consecutive_infra_invalid"]>=2,"runner-contract INFRA_INVALID retry cutoff")
-    req(hold.get("resume_requires")=="scripts/check-jit-runner-api-lifecycle.sh:PASS","runner-contract resume requires synthetic JIT API PASS")
+    mechanism=hold.get("mechanism")
+    req(mechanism in {"github-jit-runner-api","guest-actions-runner-startup"},"runner-contract INFRA_INVALID mechanism")
+    if mechanism=="github-jit-runner-api":
+        req(isinstance(hold.get("consecutive_infra_invalid"),int) and hold["consecutive_infra_invalid"]>=2,"runner-contract JIT API retry cutoff")
+        req(hold.get("resume_requires")=="scripts/check-jit-runner-api-lifecycle.sh:PASS","runner-contract resume requires synthetic JIT API PASS")
+    elif mechanism=="guest-actions-runner-startup":
+        req(isinstance(hold.get("consecutive_infra_invalid"),int) and hold["consecutive_infra_invalid"]>=1,"runner-contract guest startup incident count")
+        req(hold.get("resume_requires")=="scripts/check-jit-runner-startup-lifecycle.sh:PASS","runner-contract resume requires synthetic guest startup PASS")
+        incident=hold.get("incident_evidence",{})
+        req(incident.get("runner_id")==155,"runner-contract guest startup incident runner ID")
+        req(incident.get("guest_exit_code")==1,"runner-contract guest startup incident exit code")
+        req(incident.get("workflow_run_id")=="","runner-contract guest startup incident must precede workflow creation")
+        req(incident.get("package_attempt_consumed") is False,"runner-contract guest startup incident must not consume a package attempt")
 
 closed_hold=runner.get("closed_infrastructure_hold",{})
 if closed_hold:

@@ -108,8 +108,8 @@
       "id": "runner-contract",
       "workflow": ".github/workflows/runner-contract.yml",
       "trigger_label": "ci:runner-contract",
-      "status": "pending",
-      "execution_authorized": true,
+      "status": "INFRA_INVALID",
+      "execution_authorized": false,
       "requires": [
         "host-kvm-preflight",
         "golden-image-admission"
@@ -138,6 +138,23 @@
             "result.txt": "fa8afa3e4640097e34c36d350b4177de28f2dabe08fbd8ba40b31060ba464db8",
             "transport.txt": "2b779bd5cf937111ea7e80c53b581735c452c411010c4143d44e71ba8183cf9c"
           }
+        }
+      },
+      "infrastructure_hold": {
+        "mechanism": "guest-actions-runner-startup",
+        "consecutive_infra_invalid": 1,
+        "reason": "organization JIT configuration and guest injection succeeded, but the Actions Runner process exited with code 1 before reaching online state; no workflow was created",
+        "resume_requires": "scripts/check-jit-runner-startup-lifecycle.sh:PASS",
+        "incident_evidence": {
+          "kind": "host-local-runner-contract-infrastructure-incident",
+          "host": "chmodmasx-h370mds3h",
+          "finished_at": "2026-10-01T03:16:08Z",
+          "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-runner-contract-20261001t031511z-747622",
+          "runner_id": 155,
+          "guest_exec_pid": 1298,
+          "guest_exit_code": 1,
+          "workflow_run_id": "",
+          "package_attempt_consumed": false
         }
       }
     },

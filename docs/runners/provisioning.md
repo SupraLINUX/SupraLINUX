@@ -141,7 +141,9 @@ The golden image contains runner software but no persistent GitHub registration 
 
 After golden admission, `scripts/run-kvm-jit-gate-core.sh` creates a fresh overlay VM, requests organization-scoped `generate-jitconfig`, injects it into guest `/run`, launches the runner non-root, waits until it is online, applies one controlled PR label, binds one new workflow run for the exact PR head SHA, exports diagnostics/evidence and destroys writable state.
 
-The JIT create call is deliberately not retried automatically. A non-201/transport failure triggers exact-name organization-runner reconciliation and cleanup because GitHub may commit the runner registration even when the client receives a 5xx. Two consecutive infrastructure-invalid incidents freeze gate execution until `scripts/check-jit-runner-api-lifecycle.sh` passes.
+The JIT create call is deliberately not retried automatically. A non-201/transport failure triggers exact-name organization-runner reconciliation and cleanup because GitHub may commit the runner registration even when the client receives a 5xx. Two consecutive API-creation infrastructure-invalid incidents freeze gate execution until `scripts/check-jit-runner-api-lifecycle.sh` passes.
+
+Guest startup is certified separately when needed with `scripts/check-jit-runner-startup-lifecycle.sh`. This mode reuses the same golden, overlay, QEMU guest-agent injection and `run.sh --jitconfig` path, but disables trigger-label mutation and exits after the runner reaches online/idle state. The QGA write result must report the exact JIT configuration byte count and is flushed before startup. No workflow or Package Attempt is created by this preflight.
 
 Required labels:
 

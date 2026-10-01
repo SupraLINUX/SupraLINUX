@@ -20,6 +20,7 @@ VM_DISK_SIZE_GIB="${SUPRALINUX_VM_DISK_SIZE_GIB:-80}"
 ONLINE_TIMEOUT_SECONDS="${SUPRALINUX_ONLINE_TIMEOUT_SECONDS:-300}"
 BUSY_TIMEOUT_SECONDS="${SUPRALINUX_BUSY_TIMEOUT_SECONDS:-300}"
 JOB_TIMEOUT_SECONDS="${SUPRALINUX_JOB_TIMEOUT_SECONDS:-7200}"
+STARTUP_PREFLIGHT="${SUPRALINUX_JIT_STARTUP_PREFLIGHT:-0}"
 API_VERSION="2026-03-10"
 HOST_GITHUB_TOKEN="${SUPRALINUX_GITHUB_TOKEN:-${GITHUB_TOKEN:-}}"
 RUNNER_CONTRACT_WORKFLOW="Authoritative runner contract"
@@ -61,6 +62,14 @@ if [[ ! "${PR_NUMBER}" =~ ^[0-9]+$ ]]; then
     printf 'SUPRALINUX_PR_NUMBER must be numeric.\n' >&2
     exit 1
 fi
+if [[ "${STARTUP_PREFLIGHT}" != "0" && "${STARTUP_PREFLIGHT}" != "1" ]]; then
+    printf 'SUPRALINUX_JIT_STARTUP_PREFLIGHT must be 0 or 1.\n' >&2
+    exit 1
+fi
+if [[ "${STARTUP_PREFLIGHT}" == "1" && "${GATE}" != "runner-contract" ]]; then
+    printf 'JIT startup preflight is valid only against the runner-contract infrastructure path.\n' >&2
+    exit 1
+fi
 
 required_commands=(
     base64
@@ -76,6 +85,7 @@ required_commands=(
     virsh
     virt-copy-out
     virt-install
+    wc
 )
 for command_name in "${required_commands[@]}"; do
     command -v "${command_name}" >/dev/null 2>&1 || {
@@ -199,6 +209,9 @@ label_uri() {
 
 SAFE_REPOSITORY="${REPOSITORY//[^a-zA-Z0-9._-]/-}"
 SAFE_GATE="${GATE//[^a-zA-Z0-9-]/-}"
+if [[ "${STARTUP_PREFLIGHT}" == "1" ]]; then
+    SAFE_GATE="jit-startup-preflight"
+fi
 mkdir -p "${STATE_DIR}/.locks"
 LOCK_FILE="${STATE_DIR}/.locks/${SAFE_REPOSITORY}-authoritative.lock"
 exec 9>"${LOCK_FILE}"
@@ -409,6 +422,7 @@ printf '%s\n' "${BASELINE_RUN_IDS}" > "${EVIDENCE_DIR}/workflow-baseline-ids.jso
     printf 'golden_source_commit=%s\n' "${GOLDEN_SOURCE_COMMIT}"
     printf 'golden_input_digest=%s\n' "${GOLDEN_INPUT_DIGEST}"
     printf 'gate=%s\n' "${GATE}"
+    printf 'jit_startup_preflight=%s\n' "${STARTUP_PREFLIGHT}"
     printf 'gate_label=%s\n' "${GATE_LABEL}"
     printf 'workflow_name=%s\n' "${WORKFLOW_NAME}"
     printf 'vm_name=%s\n' "${VM_NAME}"
@@ -425,14 +439,18 @@ printf '%s\n' "${BASELINE_RUN_IDS}" > "${EVIDENCE_DIR}/workflow-baseline-ids.jso
     cat "${GOLDEN_PROVENANCE}"
 } > "${EVIDENCE_DIR}/host-environment.txt"
 
-printf 'Ensuring trigger label exists and is currently absent...\n'
-ENCODED_LABEL="$(label_uri "${GATE_LABEL}")"
-if ! api_allow_404 GET "/repos/${REPOSITORY}/labels/${ENCODED_LABEL}" | jq -e '.name? // empty' >/dev/null 2>&1; then
-    api POST "/repos/${REPOSITORY}/labels" \
-        "$(jq -nc --arg name "${GATE_LABEL}" --arg description 'SupraLINUX controlled authoritative CI gate' '{name:$name,color:"5319e7",description:$description}')" \
-        >/dev/null
+if [[ "${STARTUP_PREFLIGHT}" != "1" ]]; then
+    printf 'Ensuring trigger label exists and is currently absent...\n'
+    ENCODED_LABEL="$(label_uri "${GATE_LABEL}")"
+    if ! api_allow_404 GET "/repos/${REPOSITORY}/labels/${ENCODED_LABEL}" | jq -e '.name? // empty' >/dev/null 2>&1; then
+        api POST "/repos/${REPOSITORY}/labels" \
+            "$(jq -nc --arg name "${GATE_LABEL}" --arg description 'SupraLINUX controlled authoritative CI gate' '{name:$name,color:"5319e7",description:$description}')" \
+            >/dev/null
+    fi
+    api_allow_404 DELETE "/repos/${REPOSITORY}/issues/${PR_NUMBER}/labels/${ENCODED_LABEL}" >/dev/null 2>&1 || true
+else
+    printf 'JIT startup preflight: trigger-label mutation disabled.\n'
 fi
-api_allow_404 DELETE "/repos/${REPOSITORY}/issues/${PR_NUMBER}/labels/${ENCODED_LABEL}" >/dev/null 2>&1 || true
 
 printf 'Creating ephemeral overlay and KVM VM...\n'
 BACKING_FORMAT="$(qemu-img info --output=json "${GOLDEN_IMAGE}" | jq -r '.format')"
@@ -518,10 +536,23 @@ printf 'runner_id=%s\n' "${RUNNER_ID}" >> "${EVIDENCE_DIR}/host-environment.txt"
 printf 'Injecting JIT configuration into guest tmpfs...\n'
 OPEN_PAYLOAD="$(jq -nc --arg path '/run/supralinux-jit-config' '{execute:"guest-file-open",arguments:{path:$path,mode:"w"}}')"
 HANDLE="$(qga "${OPEN_PAYLOAD}" | jq -r '.return')"
+JIT_CONFIG_BYTES="$(printf '%s' "${JIT_CONFIG}" | wc -c)"
 WRITE_PAYLOAD="$(jq -nc --argjson handle "${HANDLE}" --arg data "$(printf '%s' "${JIT_CONFIG}" | base64 -w0)" \
     '{execute:"guest-file-write",arguments:{handle:$handle,"buf-b64":$data}}')"
-qga "${WRITE_PAYLOAD}" >/dev/null
+WRITE_RESULT="$(qga "${WRITE_PAYLOAD}")"
+printf '%s\n' "${WRITE_RESULT}" > "${EVIDENCE_DIR}/jit-config-write.json"
+WRITTEN_BYTES="$(jq -r '.return.count // empty' <<<"${WRITE_RESULT}")"
+if [[ ! "${WRITTEN_BYTES}" =~ ^[0-9]+$ || "${WRITTEN_BYTES}" -ne "${JIT_CONFIG_BYTES}" ]]; then
+    qga "$(jq -nc --argjson handle "${HANDLE}" '{execute:"guest-file-close",arguments:{handle:$handle}}')" >/dev/null 2>&1 || true
+    printf 'QEMU guest agent wrote an incomplete JIT config: expected=%s actual=%s\n' \
+        "${JIT_CONFIG_BYTES}" "${WRITTEN_BYTES:-missing}" >&2
+    unset JIT_CONFIG JIT_JSON
+    exit 1
+fi
+FLUSH_RESULT="$(qga "$(jq -nc --argjson handle "${HANDLE}" '{execute:"guest-file-flush",arguments:{handle:$handle}}')")"
+printf '%s\n' "${FLUSH_RESULT}" > "${EVIDENCE_DIR}/jit-config-flush.json"
 qga "$(jq -nc --argjson handle "${HANDLE}" '{execute:"guest-file-close",arguments:{handle:$handle}}')" >/dev/null
+printf 'jit_config_bytes=%s\n' "${JIT_CONFIG_BYTES}" >> "${EVIDENCE_DIR}/host-environment.txt"
 unset JIT_CONFIG JIT_JSON
 
 START_COMMAND="chown ${RUNNER_USER}:${RUNNER_USER} /run/supralinux-jit-config && chmod 600 /run/supralinux-jit-config && : > /var/log/supralinux-actions-runner-console.log && chown ${RUNNER_USER}:${RUNNER_USER} /var/log/supralinux-actions-runner-console.log && exec su --login --shell /bin/bash --command 'cd /opt/actions-runner && config=\"\$(cat /run/supralinux-jit-config)\" && rm -f /run/supralinux-jit-config && exec ./run.sh --jitconfig \"\$config\" >>/var/log/supralinux-actions-runner-console.log 2>&1' ${RUNNER_USER}"
@@ -554,6 +585,36 @@ while true; do
     fi
     sleep 3
 done
+
+if [[ "${STARTUP_PREFLIGHT}" == "1" ]]; then
+    if [[ "$(jq -r '.busy // true' <<<"${SNAPSHOT}")" != "false" ]]; then
+        printf 'Synthetic JIT startup runner became busy unexpectedly; refusing to treat it as isolated infrastructure evidence.\n' >&2
+        exit 1
+    fi
+    PREFLIGHT_RUNNER_ID="${RUNNER_ID}"
+    api_allow_404 DELETE "/orgs/${RUNNER_ORGANIZATION}/actions/runners/${PREFLIGHT_RUNNER_ID}" >/dev/null
+    DEADLINE=$(( $(date +%s) + 60 ))
+    while [[ -n "$(runner_snapshot)" ]]; do
+        if (( $(date +%s) >= DEADLINE )); then
+            printf 'Synthetic JIT startup runner did not disappear after cleanup.\n' >&2
+            exit 1
+        fi
+        sleep 2
+    done
+    RUNNER_ID=""
+    {
+        printf 'status=PASS\n'
+        printf 'runner_id=%s\n' "${PREFLIGHT_RUNNER_ID}"
+        printf 'runner_status=online\n'
+        printf 'runner_busy=false\n'
+        printf 'jit_config_bytes=%s\n' "${JIT_CONFIG_BYTES}"
+        printf 'workflow_triggered=no\n'
+        printf 'package_state_effect=none\n'
+        printf 'cleanup=PASS\n'
+    } > "${EVIDENCE_DIR}/jit-startup-preflight-result.txt"
+    printf 'JIT runner startup synthetic preflight: PASS\n'
+    exit 0
+fi
 
 printf 'Triggering the PR gate by adding %s...\n' "${GATE_LABEL}"
 api POST "/repos/${REPOSITORY}/issues/${PR_NUMBER}/labels" \

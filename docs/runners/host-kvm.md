@@ -93,7 +93,15 @@ After two consecutive JIT-mechanism `INFRA_INVALID` incidents, full gate retries
 scripts/check-jit-runner-api-lifecycle.sh
 ```
 
-The synthetic preflight verifies the organization runner-group/repository binding, performs one JIT creation, confirms that both runner ID and encoded configuration were returned, deletes the runner, verifies cleanup and never starts a VM or workflow.
+The synthetic API preflight verifies the organization runner-group/repository binding, performs one JIT creation, confirms that both runner ID and encoded configuration were returned, deletes the runner, verifies cleanup and never starts a VM or workflow.
+
+A separate startup preflight exercises the exact disposable KVM/golden/JIT injection/non-root runner startup path without adding a PR label or creating a workflow:
+
+```bash
+scripts/check-jit-runner-startup-lifecycle.sh
+```
+
+It validates the exact byte count returned by QEMU `guest-file-write`, flushes the config file, waits for the JIT runner to reach `online` while still idle, deletes the synthetic runner and verifies cleanup. A startup failure is infrastructure-invalid and does not consume a package Attempt.
 
 With a sealed golden image and runner group configured:
 

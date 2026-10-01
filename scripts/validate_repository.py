@@ -567,6 +567,11 @@ for token, message in (
     ('/orgs/${RUNNER_ORGANIZATION}/actions/runners?per_page=100', "host orchestrator must observe JIT runners through the organization scope"),
     ("jit-create-reconciliation.json", "host orchestrator must reconcile ambiguous JIT creation side effects"),
     ("jit-create-transport.txt", "host orchestrator must retain non-secret JIT transport evidence"),
+    ("SUPRALINUX_JIT_STARTUP_PREFLIGHT", "host orchestrator must support an isolated JIT startup preflight"),
+    ("jit-config-write.json", "host orchestrator must retain QGA JIT write evidence"),
+    ("guest-file-flush", "host orchestrator must flush JIT config before runner startup"),
+    ("WRITTEN_BYTES", "host orchestrator must validate the exact JIT config byte count"),
+    ("JIT runner startup synthetic preflight: PASS", "host orchestrator must expose a workflow-free startup PASS point"),
     ("/run/supralinux-jit-config", "JIT config must live in guest tmpfs"),
     ("Authoritative self-hosted gates refuse fork PRs", "host orchestrator must refuse fork PRs"),
     ('[[ ! "${REPOSITORY}" =~ ^[^/]+/[^/]+$ ]]', "host orchestrator must validate owner/repo syntax without rejecting matching owner and repository names"),
@@ -609,6 +614,13 @@ require(
     '/repos/${REPOSITORY}/actions/runners/generate-jitconfig' not in jit_api_preflight,
     "JIT API preflight must not fall back to repository-scoped JIT creation",
 )
+
+jit_startup_preflight = read_required("scripts/check-jit-runner-startup-lifecycle.sh")
+for token, message in (
+    ("SUPRALINUX_JIT_STARTUP_PREFLIGHT=1", "JIT startup preflight must enable the isolated startup mode"),
+    ('run-kvm-jit-gate.sh" runner-contract', "JIT startup preflight must reuse the runner-contract infrastructure path"),
+):
+    require(token in jit_startup_preflight, message)
 
 certification_orchestrator = read_required("scripts/run-authoritative-kvm-certification.sh")
 for token, message in (
