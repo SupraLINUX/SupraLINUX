@@ -298,8 +298,8 @@
       "id": "authoritative-package-proof",
       "workflow": ".github/workflows/authoritative-package-proof.yml",
       "trigger_label": "ci:authoritative-package-proof",
-      "status": "INFRA_INVALID",
-      "execution_authorized": false,
+      "status": "pending",
+      "execution_authorized": true,
       "requires": [
         "runner-contract"
       ],
@@ -451,7 +451,7 @@
         "recovery_state": "authoritative-package-proof-pending",
         "retry_authorized": true
       },
-      "infrastructure_hold": {
+      "closed_superficial_only_infrastructure_hold": {
         "mechanism": "autopkgtest-superficial-only-proof",
         "consecutive_infra_invalid": 1,
         "reason": "the authoritative QEMU/KVM testbed booted successfully and the smoke test passed, but the only autopkgtest was marked superficial, so autopkgtest exited 8 because no substantive non-superficial test completed",
@@ -497,7 +497,22 @@
             "buildinfo_sha256": "d9d3ad6f281b307ad32b74a9b4d4a62cdeef2c0ff34907d3125f5643e0ef990f"
           }
         },
-        "remediation": "remove the superficial restriction from the synthetic smoke test so the certification proof requires a substantive autopkgtest PASS; classify autopkgtest exit 8 as INFRA_INVALID proof insufficiency rather than package FAIL"
+        "remediation": "remove the superficial restriction from the synthetic smoke test so the certification proof requires a substantive autopkgtest PASS; classify autopkgtest exit 8 as INFRA_INVALID proof insufficiency rather than package FAIL",
+        "closed_by": "repository-policy:PASS-after-substantive-autopkgtest-remediation",
+        "repository_policy_run": 36820787722,
+        "repository_policy_job": 110235765685,
+        "remediation_head_sha": "361d4ceb2d4ee3a06cbb6e218340b5cf2f4299ae",
+        "synthetic_validation": {
+          "shellcheck": "PASS",
+          "qemu_wrapper_functional_test": "PASS",
+          "autopkgtest_qemu_argv_lifecycle": "PASS",
+          "repository_invariants": "PASS",
+          "authoritative_kvm_state_validator": "PASS",
+          "smoke_test_superficial_restriction_absent": true,
+          "autopkgtest_exit_8_classification": "INFRA_INVALID"
+        },
+        "recovery_state": "authoritative-package-proof-pending",
+        "retry_authorized": true
       }
     },
     {
