@@ -150,7 +150,9 @@ The authoritative workflow separately uploads runner/package evidence. Promotion
 
 The authoritative Ubuntu 26.04 host and sealed golden image are **PASS**. The real `runner-contract` is also **PASS**: the disposable JIT runner proved Actions Runner provenance, Ubuntu 26.04/KVM boundaries, required build/test tools, nested KVM, evidence capture, repository invariants, artifact upload and host-side cleanup/export. Historical JIT API, guest-startup and evidence-capture `INFRA_INVALID` incidents remain preserved as closed evidence and do not alter the current PASS.
 
-The next live gate is `authoritative-package-proof`. Plasma, KWin and session work remain locked until the subsequent `frameworks-sample-proof` passes.
+The current live gate is `authoritative-package-proof`, temporarily **INFRA_INVALID** after its synthetic package completed `sbuild/unshare` successfully but the nested autopkgtest QEMU testbed failed before boot because the wrapper added top-level `-accel kvm` while autopkgtest already supplied `-machine accel=...`. The remediation normalizes the existing machine acceleration to KVM and Repository Policy exercises that argv path with a fake QEMU before another real gate run. The incident consumes the synthetic certification package execution but does not create a canonical KDE package FAIL or alter KDE package state.
+
+Plasma, KWin and session work remain locked until `authoritative-package-proof` and the subsequent `frameworks-sample-proof` pass.
 
 
 ## Frameworks sample gate
