@@ -239,8 +239,33 @@ if pkg.get("status")=="INFRA_INVALID":
     req(artifact.get("id")==11141147657,"package proof infrastructure artifact ID")
     req(artifact.get("digest")=="sha256:cbe9e3bbc6983a72ff94f70d66004cce75af18fa0f9cdfed789bc024f484638d","package proof infrastructure artifact digest")
 
+closed_pkg_hold=pkg.get("closed_infrastructure_hold",{})
+if closed_pkg_hold:
+    req(closed_pkg_hold.get("mechanism")=="autopkgtest-qemu-acceleration-argv","closed package proof infrastructure mechanism")
+    req(closed_pkg_hold.get("consecutive_infra_invalid")==1,"closed package proof infrastructure incident count")
+    req(closed_pkg_hold.get("resume_requires")=="repository-policy:PASS-after-autopkgtest-qemu-acceleration-remediation","closed package proof infrastructure recovery contract")
+    req(closed_pkg_hold.get("closed_by")=="repository-policy:PASS-after-autopkgtest-qemu-acceleration-remediation","closed package proof infrastructure closure")
+    req(closed_pkg_hold.get("repository_policy_run")==36816437830,"closed package proof infrastructure policy run")
+    req(closed_pkg_hold.get("remediation_commit")=="35fc1ce488f2f51a8dc940d55b51866d4a0b7a2b","closed package proof infrastructure remediation commit")
+    validation=closed_pkg_hold.get("synthetic_validation",{})
+    req(validation.get("qemu_wrapper_test")=="PASS","closed package proof QEMU wrapper synthetic PASS")
+    req(validation.get("repository_invariants")=="PASS","closed package proof repository invariants PASS")
+    req(validation.get("authoritative_kvm_state_validator")=="PASS","closed package proof KVM state validator PASS")
+    req(closed_pkg_hold.get("recovery_state")=="authoritative-package-proof-pending","closed package proof recovery state")
+    incident=closed_pkg_hold.get("incident_evidence",{})
+    req(incident.get("workflow_run_id")==36815641827,"closed package proof infrastructure workflow run")
+    req(incident.get("job_id")==110219976560,"closed package proof infrastructure job")
+    attempt=incident.get("package_attempt",{})
+    req(attempt.get("execution_started") is True,"closed package proof synthetic attempt execution")
+    req(attempt.get("sbuild_result")=="PASS","closed package proof synthetic attempt sbuild PASS")
+    req(attempt.get("canonical_kde_package_state_effect")=="none","closed package proof incident must not alter canonical KDE package state")
+    artifact=incident.get("artifact",{})
+    req(artifact.get("id")==11141147657,"closed package proof infrastructure artifact ID")
+    req(artifact.get("digest")=="sha256:cbe9e3bbc6983a72ff94f70d66004cce75af18fa0f9cdfed789bc024f484638d","closed package proof infrastructure artifact digest")
+
 if pkg.get("execution_authorized"):
     req(runner.get("status")=="PASS" and pkg.get("status")=="pending","package proof authorization requires runner-contract PASS")
+    req(not pkg.get("infrastructure_hold"),"execution-authorized package proof cannot retain an active infrastructure hold")
 if sample.get("execution_authorized"):
     req(pkg.get("status")=="PASS" and sample.get("status")=="pending","Frameworks sample authorization requires package proof PASS")
 
