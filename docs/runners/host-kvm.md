@@ -1,7 +1,7 @@
 # KVM/libvirt host orchestration
 
-Status: **real-host bootstrap/preflight PASS; golden-image build and JIT certification pending**  
-Last reviewed: **2026-09-30**
+Status: **host PASS; golden image PASS; runner-contract PASS; authoritative package proof next**  
+Last reviewed: **2026-10-01**
 
 The long-lived host is an infrastructure provider only. It is not a SupraLINUX build runner and must not be treated as release evidence. Its job is to provide KVM/libvirt, build the sealed Ubuntu 26.04 golden runner image, create one disposable runner guest per authoritative GitHub Actions job, preserve evidence, and destroy writable VM state afterwards.
 
@@ -146,9 +146,11 @@ Repository Policy additionally executes `bash -n scripts/*.sh` so shell syntax i
 
 The authoritative workflow separately uploads runner/package evidence. Promotion decisions require the bound workflow result plus retained evidence.
 
-## Current blocker
+## Current certification state
 
-The current Ubuntu 26.04 host contract is **PASS** after real-host recertification of KVM/libvirt, the private non-root libguestfs runtime and the synthetic golden-preparation lifecycle. The recovery gate imposed after two consecutive golden-preparation `INFRA_INVALID` incidents is therefore closed and a fresh golden build may resume. Golden-image build/hash, nested-KVM runtime inside disposable runners, JIT startup, runner-group policy, QEMU system testing and cleanup/export behavior remain pending.
+The authoritative Ubuntu 26.04 host and sealed golden image are **PASS**. The real `runner-contract` is also **PASS**: the disposable JIT runner proved Actions Runner provenance, Ubuntu 26.04/KVM boundaries, required build/test tools, nested KVM, evidence capture, repository invariants, artifact upload and host-side cleanup/export. Historical JIT API, guest-startup and evidence-capture `INFRA_INVALID` incidents remain preserved as closed evidence and do not alter the current PASS.
+
+The next live gate is `authoritative-package-proof`. Plasma, KWin and session work remain locked until the subsequent `frameworks-sample-proof` passes.
 
 
 ## Frameworks sample gate
