@@ -574,7 +574,7 @@ for token, message in (
     ("JIT runner startup synthetic preflight: PASS", "host orchestrator must expose a workflow-free startup PASS point"),
     ("/run/supralinux-jit", "JIT config must live in a private guest tmpfs directory"),
     ('"-o",$user,"-g",$user,"-m","0700"', "JIT tmpfs directory must be private and runner-owned"),
-    ("rmdir ${JIT_CONFIG_DIR}", "guest runner startup must remove the private JIT tmpfs directory before the job loop"),
+    ("rm -f ${JIT_CONFIG_PATH}", "guest runner startup must remove the JIT secret before the job loop"),
     ("LC_ALL=C virsh domstate", "guest cleanup must use locale-stable libvirt domain states"),
     ("Authoritative self-hosted gates refuse fork PRs", "host orchestrator must refuse fork PRs"),
     ('[[ ! "${REPOSITORY}" =~ ^[^/]+/[^/]+$ ]]', "host orchestrator must validate owner/repo syntax without rejecting matching owner and repository names"),
@@ -603,6 +603,10 @@ for token, message in (
 require(
     '/repos/${REPOSITORY}/actions/runners/generate-jitconfig' not in host_orchestrator,
     "host orchestrator must not use repository-scoped JIT creation for the organization runner group",
+)
+require(
+    "rmdir ${JIT_CONFIG_DIR}" not in host_orchestrator,
+    "non-root guest startup must not try to remove a directory directly from root-owned /run",
 )
 
 jit_api_preflight = read_required("scripts/check-jit-runner-api-lifecycle.sh")
