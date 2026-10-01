@@ -693,16 +693,28 @@ require(frameworks_sample.index('STAGE="artifact-capture"') < frameworks_sample.
 qemu_wrapper = read_required("scripts/qemu-kvm-required.sh")
 require("normalize_machine" in qemu_wrapper, "QEMU wrapper must normalize existing -machine acceleration")
 require('normalized+=("accel=kvm")' in qemu_wrapper, "QEMU wrapper must force KVM in the machine acceleration field")
+require("-enable-kvm)" in qemu_wrapper, "QEMU wrapper must explicitly handle autopkgtest -enable-kvm")
+require('normalized_args=("-accel" "kvm" "${normalized_args[@]}")' in qemu_wrapper, "QEMU wrapper must emit one canonical top-level KVM selector when no machine option exists")
 require('exec "${QEMU}" "${normalized_args[@]}"' in qemu_wrapper, "QEMU wrapper must execute only the normalized argument vector")
-require('exec "${QEMU}" -accel kvm "$@"' not in qemu_wrapper, "QEMU wrapper must not blindly prepend -accel when autopkgtest already sets machine acceleration")
+require('exec "${QEMU}" -accel kvm "$@"' not in qemu_wrapper, "QEMU wrapper must not blindly prepend -accel")
 require("tcg" not in qemu_wrapper.lower(), "KVM-only wrapper must not contain a TCG fallback")
 
 qemu_wrapper_test = read_required("scripts/test-qemu-kvm-required.sh")
 require("Supra Linux Runner" in qemu_wrapper_test, "QEMU wrapper test must preserve an argument containing spaces")
-require("q35,accel=kvm:tcg" in qemu_wrapper_test and "q35,accel=kvm" in qemu_wrapper_test, "QEMU wrapper test must reproduce and normalize autopkgtest machine acceleration")
-require("Wrapper must not combine top-level -accel with -machine accel=." in qemu_wrapper_test, "QEMU wrapper test must reject conflicting accelerator syntax")
+require("AUTOPKGTEST_5_55_STYLE" in qemu_wrapper_test, "QEMU wrapper test must reproduce autopkgtest 5.55 argv")
+require("-enable-kvm" in qemu_wrapper_test, "QEMU wrapper test must exercise autopkgtest -enable-kvm")
+require("EXPECTED_AUTOPKGTEST_5_55_STYLE" in qemu_wrapper_test and "-accel" in qemu_wrapper_test and "kvm" in qemu_wrapper_test, "QEMU wrapper test must require canonical -accel kvm output")
+require("q35,accel=kvm:tcg" in qemu_wrapper_test and "q35,accel=kvm" in qemu_wrapper_test, "QEMU wrapper test must normalize mixed machine acceleration")
 require("MISSING_RC" in qemu_wrapper_test and "127" in qemu_wrapper_test, "QEMU wrapper test must verify missing-executable failure semantics")
 require("KVM-required QEMU wrapper functional test: PASS" in qemu_wrapper_test, "QEMU wrapper test must emit explicit PASS evidence")
+
+autopkgtest_qemu_preflight = read_required("scripts/check-autopkgtest-qemu-argv-lifecycle.sh")
+require("/usr/share/autopkgtest/lib/autopkgtest_qemu.py" in autopkgtest_qemu_preflight, "autopkgtest QEMU preflight must inspect the installed provider implementation")
+require('argv.append("-enable-kvm")' in autopkgtest_qemu_preflight, "autopkgtest QEMU preflight must verify the installed -enable-kvm provider contract")
+require("-enable-kvm" in autopkgtest_qemu_preflight and "-accel" in autopkgtest_qemu_preflight, "autopkgtest QEMU preflight must exercise acceleration normalization")
+require("Synthetic autopkgtest QEMU argv lifecycle preflight: PASS" in autopkgtest_qemu_preflight, "autopkgtest QEMU preflight must emit explicit PASS evidence")
+require("scripts/check-autopkgtest-qemu-argv-lifecycle.sh" in repository_policy, "Repository Policy must run the autopkgtest QEMU argv lifecycle preflight")
+require("shellcheck autopkgtest" in repository_policy, "Repository Policy must install autopkgtest for the QEMU argv lifecycle preflight")
 
 if errors:
     for error in errors:
