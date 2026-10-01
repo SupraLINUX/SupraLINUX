@@ -298,8 +298,8 @@
       "id": "authoritative-package-proof",
       "workflow": ".github/workflows/authoritative-package-proof.yml",
       "trigger_label": "ci:authoritative-package-proof",
-      "status": "pending",
-      "execution_authorized": true,
+      "status": "INFRA_INVALID",
+      "execution_authorized": false,
       "requires": [
         "runner-contract"
       ],
@@ -348,6 +348,83 @@
           "authoritative_kvm_state_validator": "PASS"
         },
         "recovery_state": "authoritative-package-proof-pending"
+      },
+      "infrastructure_hold": {
+        "mechanism": "autopkgtest-qemu-acceleration-argv",
+        "consecutive_infra_invalid": 2,
+        "reason": "two consecutive authoritative package-proof validation runs reached valid synthetic package execution and sbuild PASS, then failed before autopkgtest testbed boot with the same QEMU accelerator-selection conflict",
+        "resume_requires": "scripts/check-autopkgtest-qemu-argv-lifecycle.sh:PASS-and-repository-policy:PASS",
+        "diagnosis": {
+          "provider": "autopkgtest 5.55",
+          "provider_behavior": "on KVM-compatible x86_64 with /dev/kvm, autopkgtest adds -enable-kvm to the QEMU argv",
+          "first_remediation_gap": "the first synthetic wrapper test covered -accel and -machine accel= but did not reproduce autopkgtest's -enable-kvm path",
+          "cause": "the wrapper added canonical -accel kvm while leaving autopkgtest-provided -enable-kvm in the argv, so QEMU received conflicting accelerator selectors",
+          "remediation": "strip autopkgtest -enable-kvm and any existing top-level -accel selector; emit exactly one canonical KVM selector, using -machine accel=kvm when a machine option exists and -accel kvm otherwise"
+        },
+        "incident_history": [
+          {
+            "sequence": 1,
+            "workflow_run_id": 36815641827,
+            "workflow_head_sha": "f6de7272b507cb2b9cacc7cb3b4f5fb96c28acc7",
+            "job_id": 110219976560,
+            "stage": "autopkgtest-qemu",
+            "autopkgtest_exit_code": 16,
+            "package_attempt": {
+              "kind": "synthetic-certification-package-attempt",
+              "package": "supralinux-build-test",
+              "version": "0.1.0",
+              "execution_started": true,
+              "sbuild_result": "PASS",
+              "canonical_kde_package_state_effect": "none"
+            },
+            "artifact": {
+              "id": 11141147657,
+              "digest": "sha256:cbe9e3bbc6983a72ff94f70d66004cce75af18fa0f9cdfed789bc024f484638d"
+            }
+          },
+          {
+            "sequence": 2,
+            "workflow_run_id": 36817238333,
+            "workflow_head_sha": "7b952961c6939a18b855e3814c43479cb6b7b4b7",
+            "job_id": 110224861819,
+            "stage": "autopkgtest-qemu",
+            "autopkgtest_exit_code": 16,
+            "package_attempt": {
+              "kind": "synthetic-certification-package-attempt",
+              "package": "supralinux-build-test",
+              "version": "0.1.0",
+              "execution_started": true,
+              "sbuild_result": "PASS",
+              "canonical_kde_package_state_effect": "none"
+            },
+            "artifact": {
+              "id": 11141369927,
+              "name": "phase1-authoritative-package-proof-e54f6afd3f4d1cab7bc751d682633b4e62a83b84",
+              "digest": "sha256:eac3c15aa99dae57de683862b8758b6f47dca776bfdbd8e3dc88a79e261617be",
+              "size_in_bytes": 47095,
+              "retention_days": 90
+            },
+            "result_semantics": {
+              "state": "INFRA_INVALID",
+              "sbuild_result": "PASS",
+              "autopkgtest_result": "testbed-failure",
+              "package_attempt_consumed": true,
+              "canonical_kde_package_state_effect": "none"
+            },
+            "qemu_wrapper_sha256": "f27de04824122ba9b2fa80244c68cabde942a84d3dc1eec8e1e734e24ab7ff32",
+            "host_local_evidence_path": "/var/lib/supralinux/evidence/host-kvm/supralinux-authoritative-package-proof-20261001t045249z-1294514"
+          }
+        ],
+        "latest_incident": {
+          "workflow_run_id": 36817238333,
+          "workflow_head_sha": "7b952961c6939a18b855e3814c43479cb6b7b4b7",
+          "job_id": 110224861819,
+          "failure": "qemu-system-x86_64: The -accel and \"-machine accel=\" options are incompatible",
+          "autopkgtest_exit_code": 16,
+          "canonical_adjudication": "INFRA_INVALID",
+          "artifact_id": 11141369927,
+          "artifact_digest": "sha256:eac3c15aa99dae57de683862b8758b6f47dca776bfdbd8e3dc88a79e261617be"
+        }
       }
     },
     {
