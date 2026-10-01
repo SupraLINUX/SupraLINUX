@@ -254,12 +254,12 @@ cleanup() {
         virsh dumpxml "${VM_NAME}" > "${EVIDENCE_DIR}/domain.xml" 2>/dev/null || true
         virsh shutdown "${VM_NAME}" >/dev/null 2>&1 || true
         for _ in $(seq 1 30); do
-            if ! virsh domstate "${VM_NAME}" 2>/dev/null | grep -Eq 'running|paused|in shutdown'; then
+            if ! LC_ALL=C virsh domstate "${VM_NAME}" 2>/dev/null | grep -Eq 'running|paused|in shutdown'; then
                 break
             fi
             sleep 2
         done
-        if virsh domstate "${VM_NAME}" 2>/dev/null | grep -Eq 'running|paused|in shutdown'; then
+        if LC_ALL=C virsh domstate "${VM_NAME}" 2>/dev/null | grep -Eq 'running|paused|in shutdown'; then
             virsh destroy "${VM_NAME}" >/dev/null 2>&1 || true
         fi
 
@@ -480,6 +480,33 @@ qga() {
     virsh qemu-agent-command "${VM_NAME}" "$1"
 }
 
+qga_exec_wait() {
+    local payload="$1"
+    local timeout_seconds="${2:-30}"
+    local result pid status deadline exit_code
+    result="$(qga "${payload}")"
+    pid="$(jq -r '.return.pid // empty' <<<"${result}")"
+    if [[ ! "${pid}" =~ ^[0-9]+$ ]]; then
+        printf 'qemu-guest-agent did not return a valid synchronous helper PID.\n' >&2
+        return 1
+    fi
+    deadline=$(( $(date +%s) + timeout_seconds ))
+    while true; do
+        status="$(qga "$(jq -nc --argjson pid "${pid}" '{execute:"guest-exec-status",arguments:{pid:$pid}}')")"
+        if [[ "$(jq -r '.return.exited // false' <<<"${status}")" == "true" ]]; then
+            printf '%s\n' "${status}"
+            exit_code="$(jq -r '.return.exitcode // 1' <<<"${status}")"
+            [[ "${exit_code}" == "0" ]]
+            return
+        fi
+        if (( $(date +%s) >= deadline )); then
+            printf 'Timed out waiting for qemu-guest-agent helper PID %s.\n' "${pid}" >&2
+            return 1
+        fi
+        sleep 1
+    done
+}
+
 guest_runner_status() {
     [[ -n "${GUEST_RUNNER_PID}" ]] || return 0
     qga "$(jq -nc --argjson pid "${GUEST_RUNNER_PID}" '{execute:"guest-exec-status",arguments:{pid:$pid}}')"
@@ -534,7 +561,19 @@ fi
 printf 'runner_id=%s\n' "${RUNNER_ID}" >> "${EVIDENCE_DIR}/host-environment.txt"
 
 printf 'Injecting JIT configuration into guest tmpfs...\n'
-OPEN_PAYLOAD="$(jq -nc --arg path '/run/supralinux-jit-config' '{execute:"guest-file-open",arguments:{path:$path,mode:"w"}}')"
+JIT_CONFIG_DIR="/run/supralinux-jit"
+JIT_CONFIG_PATH="${JIT_CONFIG_DIR}/config"
+DIR_PAYLOAD="$(jq -nc \
+    --arg user "${RUNNER_USER}" \
+    --arg dir "${JIT_CONFIG_DIR}" \
+    '{execute:"guest-exec",arguments:{path:"/usr/bin/install",arg:["-d","-o",$user,"-g",$user,"-m","0700",$dir],"capture-output":true}}')"
+if ! DIR_RESULT="$(qga_exec_wait "${DIR_PAYLOAD}" 30)"; then
+    printf '%s\n' "${DIR_RESULT:-}" > "${EVIDENCE_DIR}/jit-config-dir-create.json"
+    printf 'Could not create the private guest JIT tmpfs directory.\n' >&2
+    exit 1
+fi
+printf '%s\n' "${DIR_RESULT}" > "${EVIDENCE_DIR}/jit-config-dir-create.json"
+OPEN_PAYLOAD="$(jq -nc --arg path "${JIT_CONFIG_PATH}" '{execute:"guest-file-open",arguments:{path:$path,mode:"w"}}')"
 HANDLE="$(qga "${OPEN_PAYLOAD}" | jq -r '.return')"
 JIT_CONFIG_BYTES="$(printf '%s' "${JIT_CONFIG}" | wc -c)"
 WRITE_PAYLOAD="$(jq -nc --argjson handle "${HANDLE}" --arg data "$(printf '%s' "${JIT_CONFIG}" | base64 -w0)" \
@@ -555,7 +594,7 @@ qga "$(jq -nc --argjson handle "${HANDLE}" '{execute:"guest-file-close",argument
 printf 'jit_config_bytes=%s\n' "${JIT_CONFIG_BYTES}" >> "${EVIDENCE_DIR}/host-environment.txt"
 unset JIT_CONFIG JIT_JSON
 
-START_COMMAND="chown ${RUNNER_USER}:${RUNNER_USER} /run/supralinux-jit-config && chmod 600 /run/supralinux-jit-config && : > /var/log/supralinux-actions-runner-console.log && chown ${RUNNER_USER}:${RUNNER_USER} /var/log/supralinux-actions-runner-console.log && exec su --login --shell /bin/bash --command 'cd /opt/actions-runner && config=\"\$(cat /run/supralinux-jit-config)\" && rm -f /run/supralinux-jit-config && exec ./run.sh --jitconfig \"\$config\" >>/var/log/supralinux-actions-runner-console.log 2>&1' ${RUNNER_USER}"
+START_COMMAND="chown ${RUNNER_USER}:${RUNNER_USER} ${JIT_CONFIG_PATH} && chmod 600 ${JIT_CONFIG_PATH} && : > /var/log/supralinux-actions-runner-console.log && chown ${RUNNER_USER}:${RUNNER_USER} /var/log/supralinux-actions-runner-console.log && exec su --login --shell /bin/bash --command 'cd /opt/actions-runner && config=\"\$(cat ${JIT_CONFIG_PATH})\" && rm -f ${JIT_CONFIG_PATH} && rmdir ${JIT_CONFIG_DIR} && exec ./run.sh --jitconfig \"\$config\" >>/var/log/supralinux-actions-runner-console.log 2>&1' ${RUNNER_USER}"
 EXEC_PAYLOAD="$(jq -nc --arg cmd "${START_COMMAND}" '{execute:"guest-exec",arguments:{path:"/bin/bash",arg:["-lc",$cmd],"capture-output":true}}')"
 EXEC_RESULT="$(qga "${EXEC_PAYLOAD}")"
 printf '%s\n' "${EXEC_RESULT}" > "${EVIDENCE_DIR}/guest-runner-exec.json"
