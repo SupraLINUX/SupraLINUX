@@ -14,44 +14,65 @@ printf '%s\n' "$@"
 FAKE
 chmod +x "${FAKE_QEMU}"
 
-mapfile -t ACTUAL < <(
-    SUPRALINUX_QEMU_SYSTEM_X86_64="${FAKE_QEMU}" \
-        "${WRAPPER}" \
-        -machine q35 \
-        -m 256 \
-        -name 'Supra Linux Runner'
+mapfile -t AUTOPKGTEST_STYLE < <(
+    SUPRALINUX_QEMU_SYSTEM_X86_64="${FAKE_QEMU}"         "${WRAPPER}"         -machine q35,accel=kvm:tcg         -m 256         -name 'Supra Linux Runner'
 )
 
-EXPECTED=(
-    -accel
-    kvm
+EXPECTED_AUTOPKGTEST_STYLE=(
     -machine
-    q35
+    q35,accel=kvm
     -m
     256
     -name
     'Supra Linux Runner'
 )
 
-if (( ${#ACTUAL[@]} != ${#EXPECTED[@]} )); then
-    printf 'Wrapper argument count mismatch: expected=%d actual=%d\n' \
-        "${#EXPECTED[@]}" "${#ACTUAL[@]}" >&2
+if (( ${#AUTOPKGTEST_STYLE[@]} != ${#EXPECTED_AUTOPKGTEST_STYLE[@]} )); then
+    printf 'Autopkgtest-style wrapper argument count mismatch: expected=%d actual=%d\n'         "${#EXPECTED_AUTOPKGTEST_STYLE[@]}" "${#AUTOPKGTEST_STYLE[@]}" >&2
     printf 'Actual arguments:\n' >&2
-    printf '  <%s>\n' "${ACTUAL[@]}" >&2
+    printf '  <%s>\n' "${AUTOPKGTEST_STYLE[@]}" >&2
     exit 1
 fi
 
-for i in "${!EXPECTED[@]}"; do
-    if [[ "${ACTUAL[$i]}" != "${EXPECTED[$i]}" ]]; then
-        printf 'Wrapper argument mismatch at index %d: expected=<%s> actual=<%s>\n' \
-            "${i}" "${EXPECTED[$i]}" "${ACTUAL[$i]}" >&2
+for i in "${!EXPECTED_AUTOPKGTEST_STYLE[@]}"; do
+    if [[ "${AUTOPKGTEST_STYLE[$i]}" != "${EXPECTED_AUTOPKGTEST_STYLE[$i]}" ]]; then
+        printf 'Autopkgtest-style wrapper mismatch at index %d: expected=<%s> actual=<%s>\n'             "${i}" "${EXPECTED_AUTOPKGTEST_STYLE[$i]}" "${AUTOPKGTEST_STYLE[$i]}" >&2
+        exit 1
+    fi
+done
+
+if printf '%s\n' "${AUTOPKGTEST_STYLE[@]}" | grep -qx -- '-accel'; then
+    printf 'Wrapper must not combine top-level -accel with -machine accel=.\n' >&2
+    exit 1
+fi
+
+mapfile -t NO_MACHINE < <(
+    SUPRALINUX_QEMU_SYSTEM_X86_64="${FAKE_QEMU}"         "${WRAPPER}"         -m 256         -name 'Supra Linux Runner'
+)
+
+EXPECTED_NO_MACHINE=(
+    -accel
+    kvm
+    -m
+    256
+    -name
+    'Supra Linux Runner'
+)
+
+if (( ${#NO_MACHINE[@]} != ${#EXPECTED_NO_MACHINE[@]} )); then
+    printf 'No-machine wrapper argument count mismatch.\n' >&2
+    exit 1
+fi
+
+for i in "${!EXPECTED_NO_MACHINE[@]}"; do
+    if [[ "${NO_MACHINE[$i]}" != "${EXPECTED_NO_MACHINE[$i]}" ]]; then
+        printf 'No-machine wrapper mismatch at index %d: expected=<%s> actual=<%s>\n'             "${i}" "${EXPECTED_NO_MACHINE[$i]}" "${NO_MACHINE[$i]}" >&2
         exit 1
     fi
 done
 
 set +e
-SUPRALINUX_QEMU_SYSTEM_X86_64="${TMP_DIR}/missing-qemu" \
-    "${WRAPPER}" -machine q35 >/dev/null 2>&1
+SUPRALINUX_QEMU_SYSTEM_X86_64="${TMP_DIR}/missing-qemu"     "${WRAPPER}" -machine q35 >/dev/null 2>&1
 MISSING_RC=$?
 set -e
 
