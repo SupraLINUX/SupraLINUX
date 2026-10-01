@@ -108,18 +108,37 @@
       "id": "runner-contract",
       "workflow": ".github/workflows/runner-contract.yml",
       "trigger_label": "ci:runner-contract",
-      "status": "INFRA_INVALID",
-      "execution_authorized": false,
+      "status": "pending",
+      "execution_authorized": true,
       "requires": [
         "host-kvm-preflight",
         "golden-image-admission"
       ],
       "evidence": [],
-      "infrastructure_hold": {
+      "closed_infrastructure_hold": {
         "mechanism": "github-jit-runner-api",
         "consecutive_infra_invalid": 2,
         "reason": "repository-scoped JIT creation returned HTTP 404; organization-scoped synthetic creation then returned HTTP 502 after creating an offline runner, proving an ambiguous non-idempotent side effect",
-        "resume_requires": "scripts/check-jit-runner-api-lifecycle.sh:PASS"
+        "resume_requires": "scripts/check-jit-runner-api-lifecycle.sh:PASS",
+        "closed_by": "scripts/check-jit-runner-api-lifecycle.sh:PASS",
+        "recovery_evidence": {
+          "kind": "host-local-jit-api-preflight",
+          "host": "chmodmasx-h370mds3h",
+          "checked_at": "2026-10-01T03:07:05Z",
+          "path": "/var/lib/supralinux/evidence/jit-api-preflight/20261001T030705Z-706614",
+          "result": "PASS",
+          "repository": "SupraLINUX/SupraLINUX",
+          "runner_organization": "SupraLINUX",
+          "runner_group_id": 3,
+          "runner_group_name": "SupraLINUX Authoritative JIT",
+          "synthetic_runner_id": 154,
+          "http_status": 201,
+          "cleanup": "PASS",
+          "artifacts": {
+            "result.txt": "fa8afa3e4640097e34c36d350b4177de28f2dabe08fbd8ba40b31060ba464db8",
+            "transport.txt": "2b779bd5cf937111ea7e80c53b581735c452c411010c4143d44e71ba8183cf9c"
+          }
+        }
       }
     },
     {
