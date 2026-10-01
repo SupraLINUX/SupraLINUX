@@ -65,7 +65,7 @@ if runner.get("status")=="INFRA_INVALID":
     hold=runner.get("infrastructure_hold",{})
     req(runner.get("execution_authorized") is False,"INFRA_INVALID runner-contract must be execution-frozen")
     mechanism=hold.get("mechanism")
-    req(mechanism in {"github-jit-runner-api","guest-actions-runner-startup"},"runner-contract INFRA_INVALID mechanism")
+    req(mechanism in {"github-jit-runner-api","guest-actions-runner-startup","runner-contract-evidence-capture"},"runner-contract INFRA_INVALID mechanism")
     if mechanism=="github-jit-runner-api":
         req(isinstance(hold.get("consecutive_infra_invalid"),int) and hold["consecutive_infra_invalid"]>=2,"runner-contract JIT API retry cutoff")
         req(hold.get("resume_requires")=="scripts/check-jit-runner-api-lifecycle.sh:PASS","runner-contract resume requires synthetic JIT API PASS")
@@ -101,6 +101,20 @@ if runner.get("status")=="INFRA_INVALID":
             req(candidate.get("cleanup")=="PASS","runner-contract recovery candidate cleanup")
             req(candidate.get("validation_run_verdict")=="INFRA_INVALID","runner-contract recovery candidate validator incident classification")
             req(candidate.get("canonical_recovery_state")=="awaiting-evidence-hashes","runner-contract recovery candidate hash gate")
+    elif mechanism=="runner-contract-evidence-capture":
+        req(isinstance(hold.get("consecutive_infra_invalid"),int) and hold["consecutive_infra_invalid"]>=1,"runner-contract evidence-capture incident count")
+        req(hold.get("resume_requires")=="repository-policy:PASS-after-runner-contract-evidence-capture-remediation","runner-contract evidence-capture recovery contract")
+        incident=hold.get("incident_evidence",{})
+        req(incident.get("workflow_run_id")==36813959540,"runner-contract evidence-capture workflow run")
+        req(incident.get("job_id")==110214858616,"runner-contract evidence-capture job")
+        req(incident.get("failing_step")=="Capture runner contract evidence","runner-contract evidence-capture failing step")
+        req("unrecognized arguments: --version" in str(incident.get("failure","")),"runner-contract evidence-capture failure")
+        req(incident.get("failure_exit_code")==20,"runner-contract evidence-capture exit code")
+        req(incident.get("repository_invariants_ran") is False,"runner-contract evidence-capture must record skipped repository invariants")
+        req(incident.get("package_attempt_consumed") is False,"runner-contract evidence-capture must not consume a package attempt")
+        artifact=incident.get("partial_artifact",{})
+        req(artifact.get("id")==11140222717,"runner-contract evidence-capture artifact ID")
+        req(re.fullmatch(r"sha256:[0-9a-f]{64}",str(artifact.get("digest",""))) is not None,"runner-contract evidence-capture artifact digest")
 
 closed_guest_startup=runner.get("closed_guest_startup_hold",{})
 if closed_guest_startup:
