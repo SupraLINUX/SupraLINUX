@@ -108,8 +108,8 @@
       "id": "runner-contract",
       "workflow": ".github/workflows/runner-contract.yml",
       "trigger_label": "ci:runner-contract",
-      "status": "INFRA_INVALID",
-      "execution_authorized": false,
+      "status": "pending",
+      "execution_authorized": true,
       "requires": [
         "host-kvm-preflight",
         "golden-image-admission"
@@ -223,7 +223,7 @@
           }
         }
       },
-      "infrastructure_hold": {
+      "closed_evidence_capture_hold": {
         "mechanism": "runner-contract-evidence-capture",
         "consecutive_infra_invalid": 1,
         "reason": "the authoritative runner contract reached and passed runner provenance, Ubuntu/KVM boundary, toolchain and nested-KVM runtime, but the evidence-capture step invoked unsupported `autopkgtest --version`, causing workflow failure before repository invariants could run",
@@ -253,7 +253,11 @@
             "retention_days": 90
           }
         },
-        "remediation": "capture autopkgtest version with dpkg-query; retain all existing contract checks and rerun only after Repository Policy passes"
+        "remediation": "capture autopkgtest version with dpkg-query; retain all existing contract checks and rerun only after Repository Policy passes",
+        "closed_by": "repository-policy:PASS-after-runner-contract-evidence-capture-remediation",
+        "repository_policy_run": 36814180227,
+        "remediation_commit": "c280d83fcb1c170c15fb6b712e3e3161587c9b56",
+        "recovery_state": "runner-contract-pending"
       }
     },
     {
