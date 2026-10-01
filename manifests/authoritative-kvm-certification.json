@@ -142,8 +142,8 @@
       },
       "infrastructure_hold": {
         "mechanism": "guest-actions-runner-startup",
-        "consecutive_infra_invalid": 1,
-        "reason": "organization JIT configuration and guest injection succeeded, but the Actions Runner process exited with code 1 before reaching online state; no workflow was created",
+        "consecutive_infra_invalid": 3,
+        "reason": "guest Actions Runner startup failed before online state in the real runner-contract and two isolated startup validation runs; both validation failures were caused by non-root cleanup operations against root-owned /run",
         "resume_requires": "scripts/check-jit-runner-startup-lifecycle.sh:PASS",
         "incident_evidence": {
           "kind": "host-local-runner-contract-infrastructure-incident",
@@ -157,22 +157,42 @@
           "package_attempt_consumed": false
         },
         "diagnosis": {
-          "cause": "the JIT config was injected directly as /run/supralinux-jit-config; although the file was chowned to ubuntu, /run itself is not writable by ubuntu, so bootstrap failed while deleting the secret before invoking run.sh",
-          "evidence": {
-            "kind": "host-local-jit-startup-validation-run",
-            "host": "chmodmasx-h370mds3h",
-            "finished_at": "2026-10-01T03:34:33Z",
+          "cause": "the runner user may delete the secret file inside its own 0700 /run/supralinux-jit directory, but it cannot remove that directory because deleting it requires write permission on root-owned /run",
+          "remediation": "delete only /run/supralinux-jit/config as ubuntu before run.sh; leave the now-empty private directory in the disposable VM overlay for host cleanup"
+        },
+        "diagnostic_history": [
+          {
+            "kind": "runner-contract-infrastructure-incident",
+            "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-runner-contract-20261001t031511z-747622",
+            "finished_at": "2026-10-01T03:16:08Z",
+            "guest_exit_code": 1,
+            "observed_failure": "rm /run/supralinux-jit-config: Permission denied",
+            "workflow_created": false,
+            "package_attempt_consumed": false
+          },
+          {
+            "kind": "jit-startup-validation-run",
             "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-jit-startup-preflight-20261001t033332z-850468",
-            "runner_id": 156,
+            "finished_at": "2026-10-01T03:34:33Z",
+            "guest_exit_code": 1,
+            "observed_failure": "rm /run/supralinux-jit-config: Permission denied",
             "jit_config_expected_bytes": 4144,
             "jit_config_written_bytes": 4144,
             "jit_config_flush": "PASS",
-            "guest_exit_code": 1,
-            "workflow_run_id": "",
+            "workflow_created": false,
             "package_attempt_consumed": false
           },
-          "remediation": "use /run/supralinux-jit/config inside a 0700 runner-owned tmpfs directory; delete the file and directory as ubuntu before run.sh"
-        }
+          {
+            "kind": "jit-startup-validation-run",
+            "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-jit-startup-preflight-20261001t034242z-901645",
+            "guest_exit_code": 1,
+            "observed_failure": "rmdir /run/supralinux-jit: Permission denied",
+            "jit_config_written_bytes": 4144,
+            "guest_copy_out": "PASS for /var/lib/supralinux/evidence and runner console; _diag absent because run.sh was never reached",
+            "workflow_created": false,
+            "package_attempt_consumed": false
+          }
+        ]
       }
     },
     {
