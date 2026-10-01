@@ -26,7 +26,7 @@ jobs:
           set -euo pipefail
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends gnupg
-          sudo apt-get install -y --no-install-recommends shellcheck
+          sudo apt-get install -y --no-install-recommends shellcheck autopkgtest
           shellcheck --version
           gpgv --version | head -1
 
@@ -45,6 +45,10 @@ jobs:
       - name: Test KVM-required QEMU wrapper
         shell: bash
         run: scripts/test-qemu-kvm-required.sh
+
+      - name: Test autopkgtest QEMU argv lifecycle
+        shell: bash
+        run: scripts/check-autopkgtest-qemu-argv-lifecycle.sh
 
       - name: Test signed Ubuntu source-image verification
         shell: bash
