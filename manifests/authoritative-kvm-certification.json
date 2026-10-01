@@ -108,13 +108,47 @@
       "id": "runner-contract",
       "workflow": ".github/workflows/runner-contract.yml",
       "trigger_label": "ci:runner-contract",
-      "status": "pending",
-      "execution_authorized": true,
+      "status": "PASS",
+      "execution_authorized": false,
       "requires": [
         "host-kvm-preflight",
         "golden-image-admission"
       ],
-      "evidence": [],
+      "evidence": [
+        {
+          "kind": "github-actions-run",
+          "workflow_run_id": 36814843490,
+          "workflow_name": "Authoritative runner contract",
+          "workflow_head_sha": "31b28aa91ec8430159ecaf249dee14121bdb4fde",
+          "job_id": 110217559631,
+          "conclusion": "success",
+          "artifact": {
+            "id": 11141310599,
+            "name": "authoritative-runner-contract-9af348d1086c32ef3cbbf34692db607fbf56a98c",
+            "digest": "sha256:1e227aa48517efb3f8c90075781213dd49b1dfbc7418af43a75dee868d6fbbb7",
+            "size_in_bytes": 2834,
+            "retention_days": 90
+          }
+        },
+        {
+          "kind": "host-local-runner-contract-bundle",
+          "host": "chmodmasx-h370mds3h",
+          "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-runner-contract-20261001t042143z-1121254",
+          "result": "PASS",
+          "finished_at": "2026-10-01T04:23:37Z",
+          "workflow_run_id": 36814843490,
+          "evidence_manifest_sha256": "89fa380bc9706e43e9544339cc4372651f3db6884b0de39e158c15119a7cba50",
+          "artifacts": {
+            "guest-copy-out.txt": "aa17deedcd84cd8403c73ec16a04e31c69d48f29d106ca9f90900fc671a10712",
+            "host-environment.txt": "046374a92791132eade0ee5fcb0e3fd6a159a08d05e70b82c678590a9f4fae9d",
+            "host-result.json": "bda4118f9a86f9ef27e3a9449d1ffe1e4968d41494f46dfc735bc48ddf2ae516",
+            "runner-busy.json": "cd4e7505bd74355b1f9dc18687c3b1e4e8af3f122d942693a349a5fae6737580",
+            "runner-online.json": "1286aa4d8d31d4630846a11b5ef6682dbdc13992980218fb326ae7096ccd3f1c",
+            "workflow-run-created.json": "5ae8119ccb8abdc6996ce74097a1a4ddac2c24acaacac4bc58419af382fc869f",
+            "workflow-run.json": "c1d698419955473d95d088b2133387187fa64192d123a61b46fd8395ca7db8a5"
+          }
+        }
+      ],
       "closed_infrastructure_hold": {
         "mechanism": "github-jit-runner-api",
         "consecutive_infra_invalid": 2,
@@ -265,7 +299,7 @@
       "workflow": ".github/workflows/authoritative-package-proof.yml",
       "trigger_label": "ci:authoritative-package-proof",
       "status": "pending",
-      "execution_authorized": false,
+      "execution_authorized": true,
       "requires": [
         "runner-contract"
       ],
@@ -296,6 +330,6 @@
     "session_authorized": false,
     "unlock_requires": "frameworks-sample-proof:PASS"
   },
-  "next_gate": "runner-contract",
+  "next_gate": "authoritative-package-proof",
   "stable_publication_authorized": false
 }
