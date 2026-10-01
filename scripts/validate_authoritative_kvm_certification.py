@@ -153,6 +153,23 @@ if closed_guest_startup:
     req(set(artifacts)==expected_artifacts,"guest startup recovery artifact set")
     req(all(re.fullmatch(r"[0-9a-f]{64}",str(value)) is not None for value in artifacts.values()),"guest startup recovery artifact hashes")
 
+closed_evidence_capture=runner.get("closed_evidence_capture_hold",{})
+if closed_evidence_capture:
+    req(closed_evidence_capture.get("mechanism")=="runner-contract-evidence-capture","closed runner-contract evidence-capture mechanism")
+    req(closed_evidence_capture.get("consecutive_infra_invalid")==1,"closed runner-contract evidence-capture incident count")
+    req(closed_evidence_capture.get("resume_requires")=="repository-policy:PASS-after-runner-contract-evidence-capture-remediation","closed runner-contract evidence-capture recovery contract")
+    req(closed_evidence_capture.get("closed_by")=="repository-policy:PASS-after-runner-contract-evidence-capture-remediation","closed runner-contract evidence-capture closure")
+    req(closed_evidence_capture.get("repository_policy_run")==36814180227,"closed runner-contract evidence-capture policy run")
+    req(closed_evidence_capture.get("remediation_commit")=="c280d83fcb1c170c15fb6b712e3e3161587c9b56","closed runner-contract evidence-capture remediation commit")
+    req(closed_evidence_capture.get("recovery_state")=="runner-contract-pending","closed runner-contract evidence-capture recovery state")
+    incident=closed_evidence_capture.get("incident_evidence",{})
+    req(incident.get("workflow_run_id")==36813959540,"closed runner-contract evidence-capture workflow run")
+    req(incident.get("job_id")==110214858616,"closed runner-contract evidence-capture job")
+    req(incident.get("package_attempt_consumed") is False,"closed runner-contract evidence-capture must not consume a package attempt")
+    artifact=incident.get("partial_artifact",{})
+    req(artifact.get("id")==11140222717,"closed runner-contract evidence-capture artifact ID")
+    req(artifact.get("digest")=="sha256:4e7d2f6cf6e2f7743d02f0a3f76dbbc879e610444628d89e947076bb35e35699","closed runner-contract evidence-capture artifact digest")
+
 closed_hold=runner.get("closed_infrastructure_hold",{})
 if closed_hold:
     req(closed_hold.get("mechanism")=="github-jit-runner-api","closed runner-contract infrastructure hold mechanism")
