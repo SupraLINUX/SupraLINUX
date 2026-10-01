@@ -713,7 +713,7 @@ require("/usr/share/autopkgtest/lib/autopkgtest_qemu.py" in autopkgtest_qemu_pre
 require('argv.append("-enable-kvm")' in autopkgtest_qemu_preflight, "autopkgtest QEMU preflight must verify the installed -enable-kvm provider contract")
 require("-enable-kvm" in autopkgtest_qemu_preflight and "-accel" in autopkgtest_qemu_preflight, "autopkgtest QEMU preflight must exercise acceleration normalization")
 require("Synthetic autopkgtest QEMU argv lifecycle preflight: PASS" in autopkgtest_qemu_preflight, "autopkgtest QEMU preflight must emit explicit PASS evidence")
-require("scripts/check-autopkgtest-qemu-argv-lifecycle.sh" in repository_policy, "Repository Policy must run the autopkgtest QEMU argv lifecycle preflight")
+require("bash scripts/check-autopkgtest-qemu-argv-lifecycle.sh" in repository_policy, "Repository Policy must invoke the autopkgtest QEMU argv lifecycle preflight through bash")
 require("shellcheck autopkgtest" in repository_policy, "Repository Policy must install autopkgtest for the QEMU argv lifecycle preflight")
 
 if errors:
