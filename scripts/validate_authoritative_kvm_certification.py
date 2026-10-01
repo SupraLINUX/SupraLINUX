@@ -348,11 +348,45 @@ if closed_repeated_pkg_hold:
     req(all(x.get("package_attempt",{}).get("sbuild_result")=="PASS" for x in history),"closed repeated package proof sbuild history")
     req(all(x.get("package_attempt",{}).get("canonical_kde_package_state_effect")=="none" for x in history),"closed repeated package proof canonical package state")
 
+closed_superficial_pkg_hold=pkg.get("closed_superficial_only_infrastructure_hold",{})
+if closed_superficial_pkg_hold:
+    req(closed_superficial_pkg_hold.get("mechanism")=="autopkgtest-superficial-only-proof","closed superficial-only package proof mechanism")
+    req(closed_superficial_pkg_hold.get("consecutive_infra_invalid")==1,"closed superficial-only package proof incident count")
+    req(closed_superficial_pkg_hold.get("resume_requires")=="repository-policy:PASS-after-substantive-autopkgtest-remediation","closed superficial-only package proof recovery contract")
+    req(closed_superficial_pkg_hold.get("closed_by")=="repository-policy:PASS-after-substantive-autopkgtest-remediation","closed superficial-only package proof closure")
+    req(closed_superficial_pkg_hold.get("repository_policy_run")==36820787722,"closed superficial-only package proof policy run")
+    req(closed_superficial_pkg_hold.get("repository_policy_job")==110235765685,"closed superficial-only package proof policy job")
+    req(closed_superficial_pkg_hold.get("remediation_head_sha")=="361d4ceb2d4ee3a06cbb6e218340b5cf2f4299ae","closed superficial-only package proof remediation head")
+    validation=closed_superficial_pkg_hold.get("synthetic_validation",{})
+    req(validation.get("shellcheck")=="PASS","closed superficial-only shellcheck PASS")
+    req(validation.get("qemu_wrapper_functional_test")=="PASS","closed superficial-only QEMU wrapper PASS")
+    req(validation.get("autopkgtest_qemu_argv_lifecycle")=="PASS","closed superficial-only QEMU argv lifecycle PASS")
+    req(validation.get("repository_invariants")=="PASS","closed superficial-only repository invariants PASS")
+    req(validation.get("authoritative_kvm_state_validator")=="PASS","closed superficial-only KVM state validator PASS")
+    req(validation.get("smoke_test_superficial_restriction_absent") is True,"closed superficial-only smoke test must be substantive")
+    req(validation.get("autopkgtest_exit_8_classification")=="INFRA_INVALID","closed superficial-only exit 8 classification")
+    req(closed_superficial_pkg_hold.get("recovery_state")=="authoritative-package-proof-pending","closed superficial-only recovery state")
+    req(closed_superficial_pkg_hold.get("retry_authorized") is True,"closed superficial-only retry authorization")
+    incident=closed_superficial_pkg_hold.get("incident_evidence",{})
+    req(incident.get("workflow_run_id")==36820141760,"closed superficial-only incident run")
+    req(incident.get("job_id")==110233743928,"closed superficial-only incident job")
+    attempt=incident.get("package_attempt",{})
+    req(attempt.get("sbuild_result")=="PASS","closed superficial-only incident sbuild PASS")
+    req(attempt.get("canonical_kde_package_state_effect")=="none","closed superficial-only incident canonical package state")
+    autopkg=incident.get("autopkgtest",{})
+    req(autopkg.get("exit_code")==8,"closed superficial-only incident autopkgtest exit")
+    req(autopkg.get("smoke_result")=="PASS (superficial)","closed superficial-only incident smoke result")
+    artifact=incident.get("artifact",{})
+    req(artifact.get("id")==11142903389,"closed superficial-only incident artifact ID")
+    req(artifact.get("digest")=="sha256:7e23b9b797eb2e99749cf1352ecb869e69fe9dccd529b6890e658a9d081aa61c","closed superficial-only incident artifact digest")
+
 if pkg.get("execution_authorized"):
     req(runner.get("status")=="PASS" and pkg.get("status")=="pending","package proof authorization requires runner-contract PASS")
     req(not pkg.get("infrastructure_hold"),"execution-authorized package proof cannot retain an active infrastructure hold")
     if closed_repeated_pkg_hold:
         req(closed_repeated_pkg_hold.get("retry_authorized") is True,"package proof retry requires certified repeated-infra recovery")
+    if closed_superficial_pkg_hold:
+        req(closed_superficial_pkg_hold.get("retry_authorized") is True,"package proof retry requires certified substantive-test recovery")
 if sample.get("execution_authorized"):
     req(pkg.get("status")=="PASS" and sample.get("status")=="pending","Frameworks sample authorization requires package proof PASS")
 
