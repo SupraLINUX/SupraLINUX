@@ -155,6 +155,23 @@
           "guest_exit_code": 1,
           "workflow_run_id": "",
           "package_attempt_consumed": false
+        },
+        "diagnosis": {
+          "cause": "the JIT config was injected directly as /run/supralinux-jit-config; although the file was chowned to ubuntu, /run itself is not writable by ubuntu, so bootstrap failed while deleting the secret before invoking run.sh",
+          "evidence": {
+            "kind": "host-local-jit-startup-validation-run",
+            "host": "chmodmasx-h370mds3h",
+            "finished_at": "2026-10-01T03:34:33Z",
+            "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-jit-startup-preflight-20261001t033332z-850468",
+            "runner_id": 156,
+            "jit_config_expected_bytes": 4144,
+            "jit_config_written_bytes": 4144,
+            "jit_config_flush": "PASS",
+            "guest_exit_code": 1,
+            "workflow_run_id": "",
+            "package_attempt_consumed": false
+          },
+          "remediation": "use /run/supralinux-jit/config inside a 0700 runner-owned tmpfs directory; delete the file and directory as ubuntu before run.sh"
         }
       }
     },
