@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-09-30",
+  "as_of": "2026-10-01",
   "authority": "supralinux",
   "role": "live-authoritative-kvm-certification-state",
   "hosted_frameworks_precondition": {
@@ -11,7 +11,7 @@
     "repository_policy_run": 36656731103
   },
   "host_kvm_preflight": {
-    "status": "pending-real-evidence",
+    "status": "PASS",
     "evidence": [
       {
         "kind": "host-local-file",
@@ -41,15 +41,40 @@
           "golden-lifecycle/source-image-verification.txt": "1e7e7e34f8cc1547f6f3e4348f062bfa8baa47e190c4fb80a23b5b12dac7bc05",
           "golden-lifecycle/virt-install.txt": "19d0f14f6e6a26ed36393adbac374d6d9c47a041038c2317157bc6c6b6e61aa9"
         }
+      },
+      {
+        "kind": "host-local-recertification-bundle",
+        "host": "chmodmasx-h370mds3h",
+        "checked_at": "2026-10-01T01:06:33Z",
+        "pr_head_sha": "6159b39a9c15b9fc551b7a9d57022a86972c0ace",
+        "path": "/var/lib/supralinux/evidence/authoritative-certification/host-recertification-20261001T010539Z-6159b39a9c15",
+        "result": "PASS",
+        "source_image_sha256": "8800651811af9a85465ad1d552add729947bb16488dddb4a9b5305a3d97332b2",
+        "artifacts": {
+          "libguestfs-runtime-prepare.txt": "0feb1701e523c20630d6f42fec4c7d3d3ec1a82b9f1ab0d8c6c284ea7aef36e0",
+          "libguestfs-runtime-describe.txt": "5db0c7947abfb53e236634e530bd2587e63ef12cd972a2974c45d182a00448ff",
+          "host-kvm-preflight.txt": "475c7128cb081893e6687d612dcf6f719904e91fca30b099c9fd49d22a0216bc",
+          "source-image-fetch.txt": "fb04c2cf6334c85bd36761f9bdf6a51c5f1f27d71b0ffec960442b1392211484",
+          "source-image-verification.txt": "9f575d21c9bb05e8a9cbfda67fdda707dcab5e4465cec09298ce565453656ea0",
+          "libguestfs-test-tool.txt": "64b59d8a6cbae36486b05a1585eb8b93588ead0064147511f8e717a7eb05275a",
+          "golden-lifecycle-console.txt": "4eabf2da23f2bab6828fc2aa6d1ad0f15c45988a14c8f3a1a6d1c5db86a7796f",
+          "golden-lifecycle/20261001T010633Z-34731/result.txt": "9eade6622aae97425ef019bbc97e9c0765e7728367653ac1bdb95ccb91171144",
+          "golden-lifecycle/20261001T010633Z-34731/guest-marker.txt": "3f46ea84fd46dcf96234f2d9e71f878657aa4959c71a29d38c99f1a9a6e64abe",
+          "golden-lifecycle/20261001T010633Z-34731/libguestfs-test-tool.txt": "767a1c41dc619da7960c9ed0c3de3b270030e029732d1c829eefb4237ef11825",
+          "golden-lifecycle/20261001T010633Z-34731/source-image-verification.txt": "1e7e7e34f8cc1547f6f3e4348f062bfa8baa47e190c4fb80a23b5b12dac7bc05",
+          "golden-lifecycle/20261001T010633Z-34731/virt-install.txt": "2dbe76650c7f4facbb751879ec52c85f158e9c96eaadafaf27f2dcefa380ffa1",
+          "golden-lifecycle/20261001T010633Z-34731/domain-state.txt": "4ac2843107022561129b54a476ecd4001dec7a2f57e73177fdc9cadf28eb19e1",
+          "golden-lifecycle/20261001T010633Z-34731/libvirt-storage-access.txt": "2187afdaa681ee7521e3a2b8ee924642344c421d1e2c61733b8a2218ae433ae7"
+        }
       }
     ],
-    "recertification_reason": "authoritative-host-provider-migration-from-espadarunica",
+    "recertification_reason": "authoritative-host-provider-migration-from-espadarunica-certified-on-replacement-provider",
     "current_contract_requires": [
       "kvm-host-preflight",
       "private-libguestfs-runtime",
       "golden-preparation-lifecycle-synthetic-preflight"
     ],
-    "recertification_closed_at": null
+    "recertification_closed_at": "2026-10-01T01:06:33Z"
   },
   "golden_image": {
     "status": "pending-real-evidence",
