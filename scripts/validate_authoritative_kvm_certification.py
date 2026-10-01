@@ -61,6 +61,35 @@ runner_ready=host.get("status")=="PASS" and gold.get("status")=="PASS"
 if runner.get("execution_authorized"):
     req(runner_ready and runner.get("status")=="pending","runner-contract authorization requires host+golden PASS")
     req(not runner.get("infrastructure_hold"),"execution-authorized runner-contract cannot retain an active infrastructure hold")
+if runner.get("status")=="PASS":
+    evidence=runner.get("evidence",[])
+    req(len(evidence)==2,"runner-contract PASS evidence set")
+    github_evidence=next((x for x in evidence if x.get("kind")=="github-actions-run"),{})
+    host_evidence=next((x for x in evidence if x.get("kind")=="host-local-runner-contract-bundle"),{})
+    req(github_evidence.get("workflow_run_id")==36814843490,"runner-contract PASS workflow run")
+    req(github_evidence.get("workflow_head_sha")=="31b28aa91ec8430159ecaf249dee14121bdb4fde","runner-contract PASS workflow head")
+    req(github_evidence.get("job_id")==110217559631,"runner-contract PASS job")
+    req(github_evidence.get("conclusion")=="success","runner-contract PASS workflow conclusion")
+    artifact=github_evidence.get("artifact",{})
+    req(artifact.get("id")==11141310599,"runner-contract PASS artifact ID")
+    req(artifact.get("digest")=="sha256:1e227aa48517efb3f8c90075781213dd49b1dfbc7418af43a75dee868d6fbbb7","runner-contract PASS artifact digest")
+    req(host_evidence.get("host")=="chmodmasx-h370mds3h","runner-contract PASS host")
+    req(host_evidence.get("result")=="PASS","runner-contract host bundle PASS")
+    req(host_evidence.get("workflow_run_id")==36814843490,"runner-contract host bundle workflow binding")
+    req(host_evidence.get("evidence_manifest_sha256")=="89fa380bc9706e43e9544339cc4372651f3db6884b0de39e158c15119a7cba50","runner-contract host bundle manifest hash")
+    host_artifacts=host_evidence.get("artifacts",{})
+    expected_host_artifacts={
+        "guest-copy-out.txt",
+        "host-environment.txt",
+        "host-result.json",
+        "runner-busy.json",
+        "runner-online.json",
+        "workflow-run-created.json",
+        "workflow-run.json",
+    }
+    req(set(host_artifacts)==expected_host_artifacts,"runner-contract host bundle artifact set")
+    req(all(re.fullmatch(r"[0-9a-f]{64}",str(value)) is not None for value in host_artifacts.values()),"runner-contract host bundle artifact hashes")
+
 if runner.get("status")=="INFRA_INVALID":
     hold=runner.get("infrastructure_hold",{})
     req(runner.get("execution_authorized") is False,"INFRA_INVALID runner-contract must be execution-frozen")
