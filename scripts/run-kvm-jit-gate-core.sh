@@ -131,8 +131,6 @@ if [[ ! "${REPOSITORY}" =~ ^[^/]+/[^/]+$ ]]; then
     printf 'SUPRALINUX_REPOSITORY must use owner/repo form.\n' >&2
     exit 1
 fi
-OWNER="${REPOSITORY%%/*}"
-REPO="${REPOSITORY#*/}"
 
 api() {
     local method="$1"
