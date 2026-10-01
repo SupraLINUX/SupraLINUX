@@ -217,6 +217,8 @@ for path in "${changed[@]}"; do
       continue ;;
     .github/workflows/kde-tier3-build-level3.yml|scripts/run-kde-tier3-build-level3.sh|scripts/plan-kde-tier3-build-level3.py|scripts/test-kde-tier3-build-level3-planner.py|manifests/kde-tier3-build-level3.json|manifests/kde-tier3-build-level3-attempts.json|manifests/kde-tier3-build-campaign.json)
       continue ;;
+    .github/workflows/kde-plasma-dependency-discovery.yml|scripts/run-kde-plasma-dependency-discovery.py|scripts/kde-plasma-dependency-discovery-needed.sh|manifests/kde-plasma.json|manifests/kde-plasma-dependencies.json)
+      continue ;;
     .github/workflows/kde-tier3-materialization.yml|scripts/materialize_kde_tier3_package.py|scripts/kde-tier3-materialization-needed.sh)
       if tier3_level3_materialization_is_routed; then continue; fi
       echo "${path}: Tier 3 materialization execution input changed outside routed remediation; reusable hosted CI required."; exit 0 ;;

@@ -27,6 +27,7 @@ jobs:
       run_knewstuff_runtime: ${{ steps.scope.outputs.run_knewstuff_runtime }}
       run_tier3_materialization: ${{ steps.scope.outputs.run_tier3_materialization }}
       run_tier3_level3: ${{ steps.scope.outputs.run_tier3_level3 }}
+      run_plasma_discovery: ${{ steps.scope.outputs.run_plasma_discovery }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -91,6 +92,17 @@ jobs:
           echo "run_tier3_materialization=${run_tier3_materialization}" >> "${GITHUB_OUTPUT}"
           run_tier3_level3="$(python3 -c 'import json; m=json.load(open("manifests/kde-tier3-build-level3.json")); ok=m.get("state")=="active-pending-ci" and m.get("execution_authorized") is True; print("true" if ok else "false")')"
           echo "run_tier3_level3=${run_tier3_level3}" >> "${GITHUB_OUTPUT}"
+          if bash scripts/kde-plasma-dependency-discovery-needed.sh "${before}" "${after}"; then
+            run_plasma_discovery=true
+          else
+            rc=$?
+            if [[ "${rc}" -eq 1 ]]; then
+              run_plasma_discovery=false
+            else
+              exit "${rc}"
+            fi
+          fi
+          echo "run_plasma_discovery=${run_plasma_discovery}" >> "${GITHUB_OUTPUT}"
           if [[ "${run_ci}" == "true" ]]; then
             echo "Semantic build/reference/provider input changed; invoking reusable CI lanes."
           else
@@ -100,6 +112,12 @@ jobs:
   repository-policy:
     name: Repository policy
     uses: ./.github/workflows/repository-policy.yml
+
+  kde-plasma-dependency-discovery:
+    name: Plasma 6.7.5 dependency discovery
+    needs: [plan, repository-policy]
+    if: needs.plan.outputs.run_plasma_discovery == 'true' && needs.repository-policy.result == 'success'
+    uses: ./.github/workflows/kde-plasma-dependency-discovery.yml
 
   kde-tier3-knewstuff-runtime-validation:
     name: Tier 3 KNewStuff runtime validation

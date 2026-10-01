@@ -139,6 +139,9 @@ jobs:
       - name: Validate authoritative KVM certification state
         run: python3 scripts/validate_authoritative_kvm_certification.py
 
+      - name: Validate KDE Plasma planning state
+        run: python3 scripts/validate_kde_plasma.py
+
       - name: Validate Qt provider invariants
         run: python3 scripts/validate_qt_provider.py
 
