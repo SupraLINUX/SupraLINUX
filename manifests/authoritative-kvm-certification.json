@@ -298,13 +298,13 @@
       "id": "authoritative-package-proof",
       "workflow": ".github/workflows/authoritative-package-proof.yml",
       "trigger_label": "ci:authoritative-package-proof",
-      "status": "INFRA_INVALID",
-      "execution_authorized": false,
+      "status": "pending",
+      "execution_authorized": true,
       "requires": [
         "runner-contract"
       ],
       "evidence": [],
-      "infrastructure_hold": {
+      "closed_infrastructure_hold": {
         "mechanism": "autopkgtest-qemu-acceleration-argv",
         "consecutive_infra_invalid": 1,
         "reason": "the synthetic package built successfully with sbuild/unshare, but autopkgtest's QEMU testbed could not start because the KVM wrapper added top-level -accel kvm while autopkgtest already supplied -machine accel=..., which QEMU rejects as incompatible accelerator syntax",
@@ -338,7 +338,16 @@
           },
           "host_local_evidence_path": "/var/lib/supralinux/evidence/host-kvm/supralinux-authoritative-package-proof-20261001t043158z-1178971"
         },
-        "remediation": "normalize existing QEMU -machine accel= to accel=kvm and only use top-level -accel kvm when no -machine option exists; classify autopkgtest exit 16 as INFRA_INVALID instead of package FAIL"
+        "remediation": "normalize existing QEMU -machine accel= to accel=kvm and only use top-level -accel kvm when no -machine option exists; classify autopkgtest exit 16 as INFRA_INVALID instead of package FAIL",
+        "closed_by": "repository-policy:PASS-after-autopkgtest-qemu-acceleration-remediation",
+        "repository_policy_run": 36816437830,
+        "remediation_commit": "35fc1ce488f2f51a8dc940d55b51866d4a0b7a2b",
+        "synthetic_validation": {
+          "qemu_wrapper_test": "PASS",
+          "repository_invariants": "PASS",
+          "authoritative_kvm_state_validator": "PASS"
+        },
+        "recovery_state": "authoritative-package-proof-pending"
       }
     },
     {
