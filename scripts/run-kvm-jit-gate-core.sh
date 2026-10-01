@@ -626,8 +626,8 @@ while true; do
 done
 
 if [[ "${STARTUP_PREFLIGHT}" == "1" ]]; then
-    if [[ "$(jq -r '.busy // true' <<<"${SNAPSHOT}")" != "false" ]]; then
-        printf 'Synthetic JIT startup runner became busy unexpectedly; refusing to treat it as isolated infrastructure evidence.\n' >&2
+    if ! jq -e 'has("busy") and .busy == false' <<<"${SNAPSHOT}" >/dev/null; then
+        printf 'Synthetic JIT startup runner did not report an explicit idle state; refusing to treat it as isolated infrastructure evidence.\n' >&2
         exit 1
     fi
     PREFLIGHT_RUNNER_ID="${RUNNER_ID}"
