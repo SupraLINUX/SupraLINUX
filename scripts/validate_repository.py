@@ -572,6 +572,7 @@ for token, message in (
     ("guest-file-flush", "host orchestrator must flush JIT config before runner startup"),
     ("WRITTEN_BYTES", "host orchestrator must validate the exact JIT config byte count"),
     ("JIT runner startup synthetic preflight: PASS", "host orchestrator must expose a workflow-free startup PASS point"),
+    ("has(\"busy\") and .busy == false", "JIT startup preflight must require an explicit idle runner state"),
     ("/run/supralinux-jit", "JIT config must live in a private guest tmpfs directory"),
     ('"-o",$user,"-g",$user,"-m","0700"', "JIT tmpfs directory must be private and runner-owned"),
     ("rm -f ${JIT_CONFIG_PATH}", "guest runner startup must remove the JIT secret before the job loop"),
@@ -603,6 +604,10 @@ for token, message in (
 require(
     '/repos/${REPOSITORY}/actions/runners/generate-jitconfig' not in host_orchestrator,
     "host orchestrator must not use repository-scoped JIT creation for the organization runner group",
+)
+require(
+    ".busy // true" not in host_orchestrator,
+    "JIT startup preflight must not treat an explicit busy=false value as jq fallback",
 )
 require(
     "rmdir ${JIT_CONFIG_DIR}" not in host_orchestrator,
