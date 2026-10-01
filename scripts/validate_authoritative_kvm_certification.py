@@ -60,6 +60,7 @@ sample=byid.get("frameworks-sample-proof",{})
 runner_ready=host.get("status")=="PASS" and gold.get("status")=="PASS"
 if runner.get("execution_authorized"):
     req(runner_ready and runner.get("status")=="pending","runner-contract authorization requires host+golden PASS")
+    req(not runner.get("infrastructure_hold"),"execution-authorized runner-contract cannot retain an active infrastructure hold")
 if runner.get("status")=="INFRA_INVALID":
     hold=runner.get("infrastructure_hold",{})
     req(runner.get("execution_authorized") is False,"INFRA_INVALID runner-contract must be execution-frozen")
@@ -100,6 +101,43 @@ if runner.get("status")=="INFRA_INVALID":
             req(candidate.get("cleanup")=="PASS","runner-contract recovery candidate cleanup")
             req(candidate.get("validation_run_verdict")=="INFRA_INVALID","runner-contract recovery candidate validator incident classification")
             req(candidate.get("canonical_recovery_state")=="awaiting-evidence-hashes","runner-contract recovery candidate hash gate")
+
+closed_guest_startup=runner.get("closed_guest_startup_hold",{})
+if closed_guest_startup:
+    req(closed_guest_startup.get("mechanism")=="guest-actions-runner-startup","closed guest startup hold mechanism")
+    req(isinstance(closed_guest_startup.get("consecutive_infra_invalid"),int) and closed_guest_startup["consecutive_infra_invalid"]>=3,"closed guest startup hold incident count")
+    req(closed_guest_startup.get("resume_requires")=="scripts/check-jit-runner-startup-lifecycle.sh:PASS","closed guest startup hold recovery contract")
+    req(closed_guest_startup.get("closed_by")=="host-local-evidence-adjudication:PASS","closed guest startup hold adjudication")
+    req(closed_guest_startup.get("closed_after_repository_policy_run")==36813130825,"closed guest startup hold policy run")
+    history=closed_guest_startup.get("diagnostic_history",[])
+    req(len(history)>=3,"closed guest startup diagnostic history")
+    if history:
+        req(all(x.get("workflow_created") is False for x in history),"closed guest startup incidents must precede workflow creation")
+        req(all(x.get("package_attempt_consumed") is False for x in history),"closed guest startup incidents must not consume package attempts")
+    recovery=closed_guest_startup.get("recovery_evidence",{})
+    req(recovery.get("kind")=="host-local-jit-startup-validation-run","guest startup recovery evidence kind")
+    req(recovery.get("infrastructure_result")=="PASS","guest startup recovery infrastructure PASS")
+    req(recovery.get("validation_run_result")=="INFRA_INVALID","guest startup recovery preserves validator incident")
+    req(recovery.get("runner_id")==158,"guest startup recovery runner ID")
+    req(recovery.get("runner_status")=="online","guest startup recovery online state")
+    req(recovery.get("runner_busy") is False,"guest startup recovery idle state")
+    req(recovery.get("runner_version")=="2.337.0","guest startup recovery runner version")
+    req(recovery.get("workflow_run_id")=="","guest startup recovery must precede workflow creation")
+    req(recovery.get("package_attempt_consumed") is False,"guest startup recovery must not consume a package attempt")
+    req(recovery.get("cleanup")=="PASS","guest startup recovery cleanup")
+    req(re.fullmatch(r"[0-9a-f]{64}",str(recovery.get("evidence_manifest_sha256",""))) is not None,"guest startup recovery evidence manifest hash")
+    artifacts=recovery.get("artifacts",{})
+    expected_artifacts={
+        "guest-copy-out.txt",
+        "guest-files/_diag/Runner_20261001-035533-utc.log",
+        "guest-files/supralinux-actions-runner-console.log",
+        "host-result.json",
+        "jit-config-flush.json",
+        "jit-config-write.json",
+        "runner-online.json",
+    }
+    req(set(artifacts)==expected_artifacts,"guest startup recovery artifact set")
+    req(all(re.fullmatch(r"[0-9a-f]{64}",str(value)) is not None for value in artifacts.values()),"guest startup recovery artifact hashes")
 
 closed_hold=runner.get("closed_infrastructure_hold",{})
 if closed_hold:
