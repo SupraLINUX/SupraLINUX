@@ -69,7 +69,7 @@ if runner.get("status")=="INFRA_INVALID":
         req(isinstance(hold.get("consecutive_infra_invalid"),int) and hold["consecutive_infra_invalid"]>=2,"runner-contract JIT API retry cutoff")
         req(hold.get("resume_requires")=="scripts/check-jit-runner-api-lifecycle.sh:PASS","runner-contract resume requires synthetic JIT API PASS")
     elif mechanism=="guest-actions-runner-startup":
-        req(isinstance(hold.get("consecutive_infra_invalid"),int) and hold["consecutive_infra_invalid"]>=1,"runner-contract guest startup incident count")
+        req(isinstance(hold.get("consecutive_infra_invalid"),int) and hold["consecutive_infra_invalid"]>=2,"runner-contract guest startup retry cutoff")
         req(hold.get("resume_requires")=="scripts/check-jit-runner-startup-lifecycle.sh:PASS","runner-contract resume requires synthetic guest startup PASS")
         incident=hold.get("incident_evidence",{})
         req(incident.get("runner_id")==155,"runner-contract guest startup incident runner ID")
@@ -77,21 +77,18 @@ if runner.get("status")=="INFRA_INVALID":
         req(incident.get("workflow_run_id")=="","runner-contract guest startup incident must precede workflow creation")
         req(incident.get("package_attempt_consumed") is False,"runner-contract guest startup incident must not consume a package attempt")
         diagnosis=hold.get("diagnosis",{})
-        if diagnosis:
-            evidence=diagnosis.get("evidence",{})
-            req(evidence.get("runner_id")==156,"runner-contract startup diagnosis runner ID")
-            req(evidence.get("jit_config_expected_bytes")==4144,"runner-contract startup diagnosis expected JIT bytes")
-            req(evidence.get("jit_config_written_bytes")==4144,"runner-contract startup diagnosis written JIT bytes")
-            req(evidence.get("jit_config_flush")=="PASS","runner-contract startup diagnosis JIT flush")
-            req(evidence.get("guest_exit_code")==1,"runner-contract startup diagnosis guest exit")
-            req(evidence.get("workflow_run_id")=="","runner-contract startup diagnosis must precede workflow creation")
-            req(evidence.get("package_attempt_consumed") is False,"runner-contract startup diagnosis must not consume a package attempt")
+        req("/run" in str(diagnosis.get("cause","")),"runner-contract startup diagnosis must identify the /run ownership boundary")
+        req("delete only" in str(diagnosis.get("remediation","")),"runner-contract startup diagnosis must preserve the minimal remediation")
         history=hold.get("diagnostic_history",[])
+        req(len(history)>=3,"runner-contract guest startup diagnostic history")
         if history:
-            req(len(history)>=3,"runner-contract guest startup diagnostic history")
             req(all(x.get("workflow_created") is False for x in history),"runner-contract startup diagnostics must precede workflow creation")
             req(all(x.get("package_attempt_consumed") is False for x in history),"runner-contract startup diagnostics must not consume package attempts")
-            req("rmdir /run/supralinux-jit: Permission denied" in [x.get("observed_failure") for x in history],"runner-contract latest startup diagnosis")
+            failures=[x.get("observed_failure") for x in history]
+            req("rm /run/supralinux-jit-config: Permission denied" in failures,"runner-contract direct-/run startup failure evidence")
+            req("rmdir /run/supralinux-jit: Permission denied" in failures,"runner-contract private-directory startup failure evidence")
+            write_runs=[x for x in history if x.get("jit_config_expected_bytes")==4144]
+            req(any(x.get("jit_config_written_bytes")==4144 and x.get("jit_config_flush")=="PASS" for x in write_runs),"runner-contract JIT config byte/flush evidence")
 
 closed_hold=runner.get("closed_infrastructure_hold",{})
 if closed_hold:
