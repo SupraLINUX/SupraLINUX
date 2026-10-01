@@ -8,4 +8,86 @@ if [[ ! -x "${QEMU}" ]]; then
     exit 127
 fi
 
-exec "${QEMU}" -accel kvm "$@"
+normalize_machine() {
+    local value="$1"
+    local field
+    local seen_accel=0
+    local -a fields normalized=()
+
+    IFS=',' read -r -a fields <<< "${value}"
+    for field in "${fields[@]}"; do
+        if [[ "${field}" == accel=* ]]; then
+            normalized+=("accel=kvm")
+            seen_accel=1
+        else
+            normalized+=("${field}")
+        fi
+    done
+
+    if (( ! seen_accel )); then
+        normalized+=("accel=kvm")
+    fi
+
+    local IFS=,
+    printf '%s' "${normalized[*]}"
+}
+
+args=("$@")
+machine_present=0
+
+for ((i=0; i<${#args[@]}; i++)); do
+    case "${args[i]}" in
+        -machine|-M|-machine=*|-M=*)
+            machine_present=1
+            ;;
+    esac
+done
+
+normalized_args=()
+direct_accel_added=0
+
+for ((i=0; i<${#args[@]}; i++)); do
+    arg="${args[i]}"
+    case "${arg}" in
+        -accel)
+            if (( i + 1 >= ${#args[@]} )); then
+                printf 'QEMU -accel option is missing its value.\n' >&2
+                exit 2
+            fi
+            ((i+=1))
+            if (( ! machine_present && ! direct_accel_added )); then
+                normalized_args+=("-accel" "kvm")
+                direct_accel_added=1
+            fi
+            ;;
+        -accel=*)
+            if (( ! machine_present && ! direct_accel_added )); then
+                normalized_args+=("-accel" "kvm")
+                direct_accel_added=1
+            fi
+            ;;
+        -machine|-M)
+            if (( i + 1 >= ${#args[@]} )); then
+                printf 'QEMU %s option is missing its value.\n' "${arg}" >&2
+                exit 2
+            fi
+            machine_value="$(normalize_machine "${args[i+1]}")"
+            normalized_args+=("${arg}" "${machine_value}")
+            ((i+=1))
+            ;;
+        -machine=*|-M=*)
+            prefix="${arg%%=*}"
+            machine_value="$(normalize_machine "${arg#*=}")"
+            normalized_args+=("${prefix}=${machine_value}")
+            ;;
+        *)
+            normalized_args+=("${arg}")
+            ;;
+    esac
+done
+
+if (( ! machine_present && ! direct_accel_added )); then
+    normalized_args=("-accel" "kvm" "${normalized_args[@]}")
+fi
+
+exec "${QEMU}" "${normalized_args[@]}"
