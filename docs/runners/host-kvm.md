@@ -148,15 +148,17 @@ The authoritative workflow separately uploads runner/package evidence. Promotion
 
 ## Current certification state
 
-The authoritative Ubuntu 26.04 host and sealed golden image are **PASS**. The real `runner-contract` is also **PASS**: the disposable JIT runner proved Actions Runner provenance, Ubuntu 26.04/KVM boundaries, required build/test tools, nested KVM, evidence capture, repository invariants, artifact upload and host-side cleanup/export. Historical JIT API, guest-startup and evidence-capture `INFRA_INVALID` incidents remain preserved as closed evidence and do not alter the current PASS.
+The authoritative Ubuntu 26.04 KVM certification is now **complete**. The admitted host, sealed golden image, real `runner-contract`, synthetic `authoritative-package-proof` and real `frameworks-sample-proof` are all **PASS**. Historical `INFRA_INVALID` incidents remain preserved as immutable evidence and do not overwrite the later successful runs.
 
-The `authoritative-package-proof` gate is now **PASS**. Workflow run `36821470840` on PR head `985bb09eadb9c8ebd5d48d58f84aeedf55831e14` completed successfully on the authoritative ephemeral Ubuntu 26.04 KVM runner. The synthetic package reached valid `sbuild/unshare` execution, `sbuild` finished PASS, the nested QEMU/KVM autopkgtest testbed booted, the substantive `smoke` test passed, and autopkgtest exited `0`.
+The final Frameworks sample is workflow run `36823362745` on PR head `7125f11efee46e478a37b010d89d4896ed5e61bf`, job `110243543920`. It rebuilt KArchive `6.30.0-0supralinux4` against the retained ECM `6.30.0-0supralinux3` input on the authoritative ephemeral Ubuntu 26.04 KVM runner. The package build completed successfully, all 5 upstream CTest targets passed, Lintian completed with warnings only, and the external consumer configure/build/link proof passed against Qt 6.10.2.
 
-The GitHub artifact `11143842131` is retained with digest `sha256:3a67e29341afa78c29cae1d29e1849659aa47825b160c6ce1fe84dc12f17ba02`; its `result.json` hashes to `a4d15540ebe223efea74650b27cd2aa9ee70a95d7f2c47c54ff3d5c6c161c7b0`. The original host-local bundle is sealed by manifest hash `4311ddf6967d746c44adced1ff39d840197a267566f25a125d6027549ced60a2`. That bundle exposed an evidence-export gap: host cleanup copied `/var/lib/supralinux/evidence`, while package-proof evidence lived in the Actions runner workspace. A separate immutable host-local archive therefore binds the successful GitHub artifact to the host run and is sealed by `6e87286d11f08fc00b0f9f011e37869f97613dbaad20deb67195084c3964191f`.
+The uploaded Frameworks artifact is `11143244708` with digest `sha256:2419e353f66856bb398cf1d72e50b7d4d12a282ff675d8fb3b42afd595729e76`; its `result.json` hashes to `44b8ae4d1fcd94ab8453941ca7fc5d55956068ed41852b9f036acebfb793dd00`. The corrected host exporter also retained the workspace evidence directly in `guest-files/workspace`. The host-local bundle is sealed by manifest SHA-256 `293e4847e6460dec41ff8c798ab9222b2fa3d4100457121ce6b28a8a8e59a903`.
 
-The host JIT orchestrator now also exports `/opt/actions-runner/_work/<repo>/<repo>/evidence` into a separate `guest-files/workspace` directory during cleanup, so subsequent authoritative gates retain their workflow evidence directly in the host-local bundle without colliding with golden-image evidence.
+The live certification state is now `certification-complete`. Release-relevant Plasma, KWin and session work is **unlocked** on this certified runner lane. This does not authorize stable publication: `stable_publication_authorized` remains false, and stable still requires manual testing plus explicit confirmation.
 
-The next live gate is `frameworks-sample-proof`, authorized for the KArchive 6.30.0 sample. Plasma, KWin and session work remain locked until that Frameworks sample passes.
+Future host-local gate bundles are sealed automatically at cleanup: the orchestrator hashes the closed evidence tree into `evidence-sha256.txt`, prints the manifest digest and evidence directory, and fails the host gate if sealing itself fails after an otherwise successful run. This removes the repeated manual `find/sha256sum` handoff used during certification.
+
+No new VM image checkpoint is created for this milestone because the successful Frameworks build ran in a disposable overlay and did not change the admitted golden image. The sealed golden image remains the reusable execution checkpoint; package artifacts, manifests and evidence remain the source of truth.
 
 
 ## Frameworks sample gate

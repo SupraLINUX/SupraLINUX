@@ -581,8 +581,8 @@
       "id": "frameworks-sample-proof",
       "workflow": ".github/workflows/authoritative-frameworks-sample-proof.yml",
       "trigger_label": "ci:frameworks-sample-proof",
-      "status": "pending",
-      "execution_authorized": true,
+      "status": "PASS",
+      "execution_authorized": false,
       "requires": [
         "authoritative-package-proof"
       ],
@@ -592,16 +592,88 @@
         "ecm_predecessor": "6.30.0-0supralinux3",
         "package_state_effect": "none"
       },
-      "evidence": []
+      "evidence": [
+        {
+          "kind": "github-actions-authoritative-frameworks-sample-pass",
+          "workflow_run_id": 36823362745,
+          "workflow_name": "Authoritative Frameworks sample proof",
+          "workflow_head_sha": "7125f11efee46e478a37b010d89d4896ed5e61bf",
+          "workflow_checkout_merge_sha": "eb5adde4b605afa4d32c7029c1ff43f387ddcb28",
+          "job_id": 110243543920,
+          "conclusion": "success",
+          "result": {
+            "node": "karchive",
+            "state": "PASS",
+            "exit_code": 0,
+            "stage": "complete",
+            "authoritative": true,
+            "run_kind": "authoritative-certification-sample",
+            "package_execution_started": true,
+            "package_state_effect": "none",
+            "canonical_package_version": "6.30.0-0supralinux4",
+            "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
+            "outer_virtualization": "kvm",
+            "nested_kvm_runtime": "required",
+            "sbuild_backend": "unshare"
+          },
+          "retained_inputs": {
+            "ecm_run": 34694951158,
+            "ecm_artifact": 10298635300,
+            "ecm_version": "6.30.0-0supralinux3",
+            "ecm_deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f",
+            "karchive_run": 34884764702,
+            "karchive_artifact": 10364726750,
+            "karchive_version": "6.30.0-0supralinux4",
+            "source_dsc_sha256": "4938c3df5f4299d5feae1bfe22663dec64455f62519a310d664a5daaeb5839cd",
+            "source_debian_tar_sha256": "1f76ab399b9f8c839bdd161b2e0ef0e607e54796e79c96ae8674bf0faae0a11f",
+            "source_orig_tar_sha256": "4cf89d91e429d2ece3110e78f7ef7011952b0412cb15011329516b46f21e98e2"
+          },
+          "validation": {
+            "upstream_ctest": "5/5 PASS",
+            "lintian": "completed-with-warnings",
+            "consumer_configure": "PASS",
+            "consumer_build": "PASS",
+            "consumer_link_qt": "6.10.2"
+          },
+          "artifact": {
+            "id": 11143244708,
+            "name": "authoritative-frameworks-sample-eb5adde4b605afa4d32c7029c1ff43f387ddcb28",
+            "digest": "sha256:2419e353f66856bb398cf1d72e50b7d4d12a282ff675d8fb3b42afd595729e76",
+            "size_in_bytes": 2442293,
+            "retention_days": 90,
+            "files": {
+              "result.json": "44b8ae4d1fcd94ab8453941ca7fc5d55956068ed41852b9f036acebfb793dd00",
+              "kf6-karchive_6.30.0-0supralinux4_amd64.buildinfo": "90dec690ec5ab61ba7d67835521ffeb92c0a4ed451e6419ebbff40e0d228bd62",
+              "kf6-karchive_6.30.0-0supralinux4_amd64.changes": "7904a815a8d983163b53ebca1b92ca940993fa29f98478656a88bb0fa20ec6ba",
+              "libkf6archive6_6.30.0-0supralinux4_amd64.deb": "dca57450e619cd01834152a3fffb943342128bd61ca514fa082c8b0eb1ba7541",
+              "libkf6archive-dev_6.30.0-0supralinux4_amd64.deb": "e9d34c95f1d25405cc603b9f1db5ee18e779d170bd5e3b1bd420a1137ca38843",
+              "libkf6archive-data_6.30.0-0supralinux4_all.deb": "da46f11fc791e0038b981b1fcddf6bc41718bd0fe9edd932bbd0e0ab26745d83",
+              "libkf6archive-doc_6.30.0-0supralinux4_all.deb": "a053b59865cf3dd4031dbcc0c417eef581f5ee57d2b1d3ca3844b59bdb6f7e65"
+            }
+          }
+        },
+        {
+          "kind": "host-local-frameworks-sample-bundle",
+          "host": "chmodmasx-h370mds3h",
+          "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-frameworks-sample-proof-20261001t060913z-1718536",
+          "result": "PASS",
+          "workflow_run_id": 36823362745,
+          "host_result_exit_code": 0,
+          "workspace_evidence_exported": true,
+          "workspace_result_json_sha256": "44b8ae4d1fcd94ab8453941ca7fc5d55956068ed41852b9f036acebfb793dd00",
+          "evidence_manifest_sha256": "293e4847e6460dec41ff8c798ab9222b2fa3d4100457121ce6b28a8a8e59a903"
+        }
+      ]
     }
   ],
   "release_relevant_desktop": {
-    "status": "locked",
-    "plasma_authorized": false,
-    "kwin_authorized": false,
-    "session_authorized": false,
-    "unlock_requires": "frameworks-sample-proof:PASS"
+    "status": "unlocked",
+    "plasma_authorized": true,
+    "kwin_authorized": true,
+    "session_authorized": true,
+    "unlock_requires": "frameworks-sample-proof:PASS",
+    "unlocked_by": "frameworks-sample-proof:PASS"
   },
-  "next_gate": "frameworks-sample-proof",
+  "next_gate": "certification-complete",
   "stable_publication_authorized": false
 }

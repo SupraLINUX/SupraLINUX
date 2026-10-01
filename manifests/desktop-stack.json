@@ -70,10 +70,10 @@
       "build_isolation": "sbuild-unshare",
       "system_test": "autopkgtest-qemu",
       "nested_kvm_required": true,
-      "status": "pending-certification",
+      "status": "certified",
       "certification_manifest": "manifests/authoritative-kvm-certification.json",
-      "next_gate": "frameworks-sample-proof",
-      "desktop_release_relevant_authorized": false,
+      "next_gate": "certification-complete",
+      "desktop_release_relevant_authorized": true,
       "frameworks_sample_required": true
     }
   },

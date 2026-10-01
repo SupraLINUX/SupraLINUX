@@ -304,6 +304,29 @@ cleanup() {
         "$(jq -Rn --arg v "${WORKFLOW_RUN_ID}" '$v')" \
         "$(jq -Rn --arg v "$(date -u +%Y-%m-%dT%H:%M:%SZ)" '$v')" \
         > "${EVIDENCE_DIR}/host-result.json"
+
+    seal_rc=0
+    (
+        cd "${EVIDENCE_DIR}" || exit 1
+        find . -type f ! -name evidence-sha256.txt ! -name .evidence-sha256.tmp -print0 \
+            | sort -z \
+            | xargs -0 sha256sum \
+            > .evidence-sha256.tmp
+        mv .evidence-sha256.tmp evidence-sha256.txt
+    ) || seal_rc=$?
+
+    if (( seal_rc == 0 )); then
+        evidence_manifest_sha256="$(sha256sum "${EVIDENCE_DIR}/evidence-sha256.txt" | awk '{print $1}')"
+        printf 'Host evidence bundle sealed: %s\n' "${evidence_manifest_sha256}"
+        printf 'EVIDENCE_DIR=%s\n' "${EVIDENCE_DIR}"
+    else
+        rm -f "${EVIDENCE_DIR}/.evidence-sha256.tmp"
+        printf 'Host evidence bundle sealing failed with exit code %d.\n' "${seal_rc}" >&2
+        if (( rc == 0 )); then
+            rc=1
+        fi
+    fi
+
     exit "${rc}"
 }
 trap cleanup EXIT

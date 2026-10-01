@@ -429,10 +429,48 @@ req(s.get("package_version")=="6.30.0-0supralinux4","KArchive sample package ver
 req(s.get("ecm_predecessor")=="6.30.0-0supralinux3","KArchive sample ECM predecessor")
 req(s.get("package_state_effect")=="none","Frameworks sample must not alter canonical package state")
 
+if sample.get("status")=="PASS":
+    req(sample.get("execution_authorized") is False,"Frameworks sample PASS must close execution authorization")
+    evidence=sample.get("evidence",[])
+    req(len(evidence)==2,"Frameworks sample PASS evidence set")
+    github=next((x for x in evidence if x.get("kind")=="github-actions-authoritative-frameworks-sample-pass"),{})
+    req(github.get("workflow_run_id")==36823362745,"Frameworks sample PASS workflow run")
+    req(github.get("workflow_head_sha")=="7125f11efee46e478a37b010d89d4896ed5e61bf","Frameworks sample PASS workflow head")
+    req(github.get("workflow_checkout_merge_sha")=="eb5adde4b605afa4d32c7029c1ff43f387ddcb28","Frameworks sample PASS checkout merge")
+    req(github.get("job_id")==110243543920 and github.get("conclusion")=="success","Frameworks sample PASS job")
+    result=github.get("result",{})
+    req(result.get("node")=="karchive" and result.get("state")=="PASS" and result.get("exit_code")==0,"Frameworks sample PASS result")
+    req(result.get("stage")=="complete" and result.get("authoritative") is True,"Frameworks sample PASS authoritative completion")
+    req(result.get("run_kind")=="authoritative-certification-sample","Frameworks sample PASS run kind")
+    req(result.get("package_execution_started") is True and result.get("package_state_effect")=="none","Frameworks sample PASS package semantics")
+    req(result.get("canonical_package_version")=="6.30.0-0supralinux4","Frameworks sample PASS package version")
+    retained=github.get("retained_inputs",{})
+    req(retained.get("ecm_run")==34694951158 and retained.get("ecm_artifact")==10298635300,"Frameworks sample retained ECM evidence")
+    req(retained.get("ecm_version")=="6.30.0-0supralinux3","Frameworks sample retained ECM version")
+    req(retained.get("ecm_deb_sha256")=="ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f","Frameworks sample retained ECM hash")
+    req(retained.get("karchive_run")==34884764702 and retained.get("karchive_artifact")==10364726750,"Frameworks sample retained KArchive evidence")
+    validation=github.get("validation",{})
+    req(validation.get("upstream_ctest")=="5/5 PASS","Frameworks sample upstream tests")
+    req(validation.get("lintian")=="completed-with-warnings","Frameworks sample Lintian result")
+    req(validation.get("consumer_configure")=="PASS" and validation.get("consumer_build")=="PASS","Frameworks sample consumer proof")
+    artifact=github.get("artifact",{})
+    req(artifact.get("id")==11143244708,"Frameworks sample PASS artifact ID")
+    req(artifact.get("digest")=="sha256:2419e353f66856bb398cf1d72e50b7d4d12a282ff675d8fb3b42afd595729e76","Frameworks sample PASS artifact digest")
+    req(artifact.get("files",{}).get("result.json")=="44b8ae4d1fcd94ab8453941ca7fc5d55956068ed41852b9f036acebfb793dd00","Frameworks sample PASS result hash")
+    host=next((x for x in evidence if x.get("kind")=="host-local-frameworks-sample-bundle"),{})
+    req(host.get("workflow_run_id")==36823362745 and host.get("host_result_exit_code")==0,"Frameworks sample host bundle binding")
+    req(host.get("workspace_evidence_exported") is True,"Frameworks sample workspace evidence export")
+    req(host.get("workspace_result_json_sha256")=="44b8ae4d1fcd94ab8453941ca7fc5d55956068ed41852b9f036acebfb793dd00","Frameworks sample host result hash")
+    req(host.get("evidence_manifest_sha256")=="293e4847e6460dec41ff8c798ab9222b2fa3d4100457121ce6b28a8a8e59a903","Frameworks sample host bundle seal")
+
 release=state.get("release_relevant_desktop",{})
 final_pass=sample.get("status")=="PASS"
 if final_pass:
-    req(release.get("status") in {"ready","unlocked"},"final sample PASS must unlock release-relevant desktop state")
+    req(release.get("status")=="unlocked","final sample PASS must unlock release-relevant desktop state")
+    req(release.get("plasma_authorized") is True,"Plasma release-relevant work unlocked")
+    req(release.get("kwin_authorized") is True,"KWin release-relevant work unlocked")
+    req(release.get("session_authorized") is True,"session release-relevant work unlocked")
+    req(release.get("unlocked_by")=="frameworks-sample-proof:PASS","desktop unlock provenance")
 else:
     req(release.get("status")=="locked","desktop must remain locked before Frameworks sample PASS")
     req(release.get("plasma_authorized") is False,"Plasma release-relevant work locked")
@@ -457,7 +495,9 @@ else:
 req(state.get("next_gate")==expected_next_gate,"authoritative KVM live-state next gate")
 req(ci.get("next_gate")==expected_next_gate,"desktop stack next gate mirrors authoritative KVM lifecycle")
 
-if not final_pass:
+if final_pass:
+    req(ci.get("status")=="certified","desktop stack must record completed authoritative certification")
+else:
     req(ci.get("status")=="pending-certification","desktop stack remains pending certification")
 req(state.get("stable_publication_authorized") is False,"KVM certification must never auto-authorize stable publication")
 
