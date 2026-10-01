@@ -5,6 +5,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TARGET_USER="${SUPRALINUX_HOST_USER:-${SUDO_USER:-${USER}}}"
 LIBVIRT_URI="${SUPRALINUX_LIBVIRT_URI:-qemu:///system}"
 LIBVIRT_NETWORK="${SUPRALINUX_LIBVIRT_NETWORK:-default}"
+LIBVIRT_QEMU_USER="${SUPRALINUX_LIBVIRT_QEMU_USER:-libvirt-qemu}"
 EVIDENCE_DIR="${SUPRALINUX_HOST_SETUP_EVIDENCE_DIR:-/var/lib/supralinux/evidence/host-setup}"
 
 if [[ "${EUID}" -eq 0 && -z "${SUDO_USER:-}" && -z "${SUPRALINUX_HOST_USER:-}" ]]; then
@@ -48,7 +49,17 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     ubuntu-keyring \
     virt-install
 
-for group_name in kvm libvirt; do
+if ! id "${LIBVIRT_QEMU_USER}" >/dev/null 2>&1; then
+    printf 'Configured libvirt QEMU user does not exist after package installation: %s\n' "${LIBVIRT_QEMU_USER}" >&2
+    exit 1
+fi
+LIBVIRT_QEMU_GROUP="$(id -gn "${LIBVIRT_QEMU_USER}")"
+
+declare -A required_groups=()
+for group_name in kvm libvirt "${LIBVIRT_QEMU_GROUP}"; do
+    required_groups["${group_name}"]=1
+done
+for group_name in "${!required_groups[@]}"; do
     if ! getent group "${group_name}" >/dev/null 2>&1; then
         printf 'Expected group is missing after package installation: %s\n' "${group_name}" >&2
         exit 1
@@ -88,6 +99,8 @@ trap 'rm -f "${EVIDENCE_TMP}"' EXIT
     printf 'host_user=%s\n' "${TARGET_USER}"
     printf 'libvirt_uri=%s\n' "${LIBVIRT_URI}"
     printf 'libvirt_network=%s\n' "${LIBVIRT_NETWORK}"
+    printf 'libvirt_qemu_user=%s\n' "${LIBVIRT_QEMU_USER}"
+    printf 'libvirt_qemu_group=%s\n' "${LIBVIRT_QEMU_GROUP}"
     printf '\nos-release:\n'
     cat /etc/os-release
     printf '\nuname:\n'
