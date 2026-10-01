@@ -64,6 +64,55 @@ pkg_keywords = {
     "NO_CMAKE_ENVIRONMENT_PATH", "NO_SYSTEM_ENVIRONMENT_PATH",
 }
 
+find_component_stop = {
+    "REQUIRED", "QUIET", "EXACT", "CONFIG", "NO_MODULE", "MODULE",
+    "NO_POLICY_SCOPE", "BYPASS_PROVIDER", "NAMES", "HINTS", "PATHS",
+    "PATH_SUFFIXES", "REGISTRY_VIEW", "GLOBAL",
+}
+
+def parse_find_packages(cmake):
+    packages = set()
+    required_components = {}
+    optional_components = {}
+
+    for body in find_call_re.findall(cmake):
+        tokens = re.findall(r'"[^"]*"|[^\\s]+', body.replace("\\n", " "))
+        tokens = [token.strip().strip('"').rstrip(",") for token in tokens if token.strip()]
+        if not tokens:
+            continue
+
+        package = tokens[0]
+        packages.add(package)
+        mode = None
+
+        for token in tokens[1:]:
+            upper = token.upper()
+            if upper == "COMPONENTS":
+                mode = "required"
+                continue
+            if upper == "OPTIONAL_COMPONENTS":
+                mode = "optional"
+                continue
+            if upper in find_component_stop:
+                if upper not in {"REQUIRED", "QUIET", "EXACT"}:
+                    mode = None
+                continue
+            if mode is None:
+                continue
+            if token.startswith("$") or token.startswith("${"):
+                continue
+            if not re.fullmatch(r"[A-Za-z0-9_.+:-]+", token):
+                continue
+
+            target = required_components if mode == "required" else optional_components
+            target.setdefault(package, set()).add(token)
+
+    return (
+        sorted(packages),
+        {key: sorted(value) for key, value in sorted(required_components.items())},
+        {key: sorted(value) for key, value in sorted(optional_components.items())},
+    )
+
 errors = []
 raw_nodes = {}
 cmake_provider_candidates = {}
@@ -134,7 +183,7 @@ for index, item in enumerate(sources, 1):
         continue
 
     cmake = "\n".join(cmake_chunks)
-    packages = sorted(set(find_re.findall(cmake)))
+    packages, package_components, optional_package_components = parse_find_packages(cmake)
     qml_modules = sorted(set(qml_re.findall(cmake)))
 
     pkg_modules = set()
@@ -157,6 +206,8 @@ for index, item in enumerate(sources, 1):
         "source_sha256": actual,
         "cmake_files_scanned": len(cmake_chunks),
         "find_packages": packages,
+        "find_package_components": package_components,
+        "find_package_optional_components": optional_package_components,
         "qml_modules": qml_modules,
         "pkg_config_modules": sorted(pkg_modules),
         "provided_cmake_packages": sorted(provided_cmake),
@@ -248,7 +299,7 @@ provider_index = {
 result = {
     "schema": 1,
     "node": "plasma-dependency-discovery",
-    "parser_revision": 2,
+    "parser_revision": 3,
     "state": "PASS" if not errors and verified == len(sources) else "FAIL",
     "run_kind": "planning-source-dependency-discovery",
     "authoritative": False,
@@ -260,6 +311,7 @@ result = {
     "source_sha256_verified": verified,
     "cmake_provider_names": sum(len(v["provided_cmake_packages"]) for v in nodes.values() if isinstance(v, dict) and "provided_cmake_packages" in v),
     "qml_provider_modules": sum(len(v["provided_qml_modules"]) for v in nodes.values() if isinstance(v, dict) and "provided_qml_modules" in v),
+    "kf6_component_references": sum(len(v.get("find_package_components", {}).get("KF6", [])) for v in nodes.values() if isinstance(v, dict)),
     "internal_candidate_edge_count": internal_edge_count,
     "internal_qml_edge_count": internal_qml_edge_count,
     "ambiguous_provider_references": ambiguous_provider_refs,
@@ -273,7 +325,7 @@ result = {
     "plasma_version": manifest["release"]["version"],
     "authority": "kde-upstream-source-metadata",
     "candidate_only": True,
-    "parser_revision": 2,
+    "parser_revision": 3,
     "provider_index": provider_index,
     "nodes": nodes,
 }, indent=2) + "\n")
