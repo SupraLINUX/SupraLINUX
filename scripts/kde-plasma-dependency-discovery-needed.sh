@@ -20,7 +20,7 @@ authorized="$(git show "${AFTER}:manifests/kde-plasma.json" | python3 -c 'import
 mapfile -t changed < <(git diff --name-only "${BEFORE}" "${AFTER}" --)
 for path in "${changed[@]}"; do
   case "${path}" in
-    manifests/kde-plasma.json|manifests/kde-plasma-dependencies.json|scripts/run-kde-plasma-dependency-discovery.py|scripts/kde-plasma-dependency-discovery-needed.sh|.github/workflows/kde-plasma-dependency-discovery.yml)
+    manifests/kde-plasma.json|manifests/kde-plasma-dependencies.json|scripts/run-kde-plasma-dependency-discovery.py|scripts/kde-plasma-dependency-discovery-needed.sh|scripts/validate_kde_plasma.py|.github/workflows/kde-plasma-dependency-discovery.yml)
       exit 0
       ;;
   esac
