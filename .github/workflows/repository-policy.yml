@@ -48,7 +48,7 @@ jobs:
 
       - name: Test autopkgtest QEMU argv lifecycle
         shell: bash
-        run: scripts/check-autopkgtest-qemu-argv-lifecycle.sh
+        run: bash scripts/check-autopkgtest-qemu-argv-lifecycle.sh
 
       - name: Test signed Ubuntu source-image verification
         shell: bash
