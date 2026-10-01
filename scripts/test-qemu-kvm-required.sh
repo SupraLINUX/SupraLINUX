@@ -20,7 +20,7 @@ mapfile -t AUTOPKGTEST_STYLE < <(
 
 EXPECTED_AUTOPKGTEST_STYLE=(
     -machine
-    q35,accel=kvm
+    'q35,accel=kvm'
     -m
     256
     -name
