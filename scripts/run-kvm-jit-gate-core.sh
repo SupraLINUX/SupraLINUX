@@ -251,9 +251,19 @@ cleanup() {
         fi
 
         mkdir -p "${EVIDENCE_DIR}/guest-files"
-        "${ROOT}/scripts/with-libguestfs-runtime.sh" virt-copy-out -a "${OVERLAY}" /opt/actions-runner/_diag "${EVIDENCE_DIR}/guest-files" >/dev/null 2>&1 || true
-        "${ROOT}/scripts/with-libguestfs-runtime.sh" virt-copy-out -a "${OVERLAY}" /var/lib/supralinux/evidence "${EVIDENCE_DIR}/guest-files" >/dev/null 2>&1 || true
-        "${ROOT}/scripts/with-libguestfs-runtime.sh" virt-copy-out -a "${OVERLAY}" /var/log/supralinux-actions-runner-console.log "${EVIDENCE_DIR}/guest-files" >/dev/null 2>&1 || true
+        : > "${EVIDENCE_DIR}/guest-copy-out.txt"
+        copy_guest_path() {
+            local guest_path="$1"
+            local copy_rc=0
+            printf 'path=%s\n' "${guest_path}" >> "${EVIDENCE_DIR}/guest-copy-out.txt"
+            "${ROOT}/scripts/with-libguestfs-runtime.sh" virt-copy-out \
+                -a "${OVERLAY}" "${guest_path}" "${EVIDENCE_DIR}/guest-files" \
+                >> "${EVIDENCE_DIR}/guest-copy-out.txt" 2>&1 || copy_rc=$?
+            printf 'exit_code=%s\n\n' "${copy_rc}" >> "${EVIDENCE_DIR}/guest-copy-out.txt"
+        }
+        copy_guest_path /opt/actions-runner/_diag
+        copy_guest_path /var/lib/supralinux/evidence
+        copy_guest_path /var/log/supralinux-actions-runner-console.log
         virsh undefine "${VM_NAME}" >/dev/null 2>&1 || true
     fi
 
@@ -458,10 +468,18 @@ guest_runner_status() {
 }
 
 fail_if_guest_runner_exited() {
-    local status
+    local status out_data err_data
     status="$(guest_runner_status)"
     if [[ -n "${status}" && "$(jq -r '.return.exited // false' <<<"${status}")" == "true" ]]; then
         printf '%s\n' "${status}" > "${EVIDENCE_DIR}/guest-runner-exited.json"
+        out_data="$(jq -r '.return["out-data"] // empty' <<<"${status}")"
+        err_data="$(jq -r '.return["err-data"] // empty' <<<"${status}")"
+        if [[ -n "${out_data}" ]]; then
+            printf '%s' "${out_data}" | base64 -d > "${EVIDENCE_DIR}/guest-runner-bootstrap.stdout" 2>/dev/null || true
+        fi
+        if [[ -n "${err_data}" ]]; then
+            printf '%s' "${err_data}" | base64 -d > "${EVIDENCE_DIR}/guest-runner-bootstrap.stderr" 2>/dev/null || true
+        fi
         printf 'Guest Actions runner process exited before the expected lifecycle point.\n' >&2
         return 1
     fi
@@ -507,7 +525,7 @@ qga "$(jq -nc --argjson handle "${HANDLE}" '{execute:"guest-file-close",argument
 unset JIT_CONFIG JIT_JSON
 
 START_COMMAND="chown ${RUNNER_USER}:${RUNNER_USER} /run/supralinux-jit-config && chmod 600 /run/supralinux-jit-config && : > /var/log/supralinux-actions-runner-console.log && chown ${RUNNER_USER}:${RUNNER_USER} /var/log/supralinux-actions-runner-console.log && exec su --login --shell /bin/bash --command 'cd /opt/actions-runner && config=\"\$(cat /run/supralinux-jit-config)\" && rm -f /run/supralinux-jit-config && exec ./run.sh --jitconfig \"\$config\" >>/var/log/supralinux-actions-runner-console.log 2>&1' ${RUNNER_USER}"
-EXEC_PAYLOAD="$(jq -nc --arg cmd "${START_COMMAND}" '{execute:"guest-exec",arguments:{path:"/bin/bash",arg:["-lc",$cmd],"capture-output":false}}')"
+EXEC_PAYLOAD="$(jq -nc --arg cmd "${START_COMMAND}" '{execute:"guest-exec",arguments:{path:"/bin/bash",arg:["-lc",$cmd],"capture-output":true}}')"
 EXEC_RESULT="$(qga "${EXEC_PAYLOAD}")"
 printf '%s\n' "${EXEC_RESULT}" > "${EVIDENCE_DIR}/guest-runner-exec.json"
 GUEST_RUNNER_PID="$(jq -r '.return.pid // empty' <<<"${EXEC_RESULT}")"
