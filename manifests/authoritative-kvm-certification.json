@@ -108,8 +108,8 @@
       "id": "runner-contract",
       "workflow": ".github/workflows/runner-contract.yml",
       "trigger_label": "ci:runner-contract",
-      "status": "INFRA_INVALID",
-      "execution_authorized": false,
+      "status": "pending",
+      "execution_authorized": true,
       "requires": [
         "host-kvm-preflight",
         "golden-image-admission"
@@ -140,7 +140,7 @@
           }
         }
       },
-      "infrastructure_hold": {
+      "closed_guest_startup_hold": {
         "mechanism": "guest-actions-runner-startup",
         "consecutive_infra_invalid": 3,
         "reason": "guest Actions Runner startup failed before online state in the real runner-contract and two isolated startup validation runs; both validation failures were caused by non-root cleanup operations against root-owned /run",
@@ -193,11 +193,16 @@
             "package_attempt_consumed": false
           }
         ],
-        "recovery_candidate": {
+        "closed_by": "host-local-evidence-adjudication:PASS",
+        "closed_after_repository_policy_run": 36813130825,
+        "recovery_evidence": {
           "kind": "host-local-jit-startup-validation-run",
           "host": "chmodmasx-h370mds3h",
           "finished_at": "2026-10-01T03:55:51Z",
           "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-jit-startup-preflight-20261001t035441z-968661",
+          "infrastructure_result": "PASS",
+          "validation_run_result": "INFRA_INVALID",
+          "validator_defect": ".busy // true treats explicit false as fallback true",
           "runner_id": 158,
           "runner_status": "online",
           "runner_busy": false,
@@ -206,9 +211,16 @@
           "workflow_run_id": "",
           "package_attempt_consumed": false,
           "cleanup": "PASS",
-          "validation_run_verdict": "INFRA_INVALID",
-          "validator_defect": ".busy // true treats explicit false as fallback true",
-          "canonical_recovery_state": "awaiting-evidence-hashes"
+          "evidence_manifest_sha256": "8f7f10b6eaff80ad05ec3f5dc890a6da50841033665fc5fc3877bbbdc38f1f05",
+          "artifacts": {
+            "guest-copy-out.txt": "aa17deedcd84cd8403c73ec16a04e31c69d48f29d106ca9f90900fc671a10712",
+            "guest-files/_diag/Runner_20261001-035533-utc.log": "acc7cc13d519bc5350639ec2b3a2f44668bbfce9e4b2e16b0be69241d80523ab",
+            "guest-files/supralinux-actions-runner-console.log": "145b7ddf53f5368a907d058074af76fccc5ae8b943e493ab4ce3808e30490de1",
+            "host-result.json": "3b1cc0d86825c3f252f721d47f4104bdecd74bec8f2ec69ee418af253540d0b2",
+            "jit-config-flush.json": "246463fd3dbec1484e517f7fdc730765fb006f0332af64f8e348811f42f92a74",
+            "jit-config-write.json": "c3ba0f2fee383fc79f84a0ba46459363991142b5d7f8e795e2456d3a7ebbe595",
+            "runner-online.json": "14eed6f90f2908b1e8ac6427d1e23b3f0566f2762cc712e294aa046839f3e49c"
+          }
         }
       }
     },
