@@ -69,7 +69,7 @@ That preflight reuses the verified Ubuntu source image but performs no package b
 
 ## JIT runner lifecycle
 
-GitHub's repository JIT API returns `encoded_jit_config`; it is generated per VM and never baked into the golden image. The golden guest contains runner software but no persistent GitHub credential and no SupraLINUX build-source checkout.
+GitHub's organization-scoped JIT API returns `encoded_jit_config`; it is generated per VM and never baked into the golden image. The golden guest contains runner software but no persistent GitHub credential and no SupraLINUX build-source checkout.
 
 Before creating a JIT runner, `scripts/run-kvm-jit-gate.sh` performs additional attribution/serialization checks:
 
@@ -84,6 +84,16 @@ Before creating a JIT runner, `scripts/run-kvm-jit-gate.sh` performs additional 
 - qemu-guest-agent `guest-exec-status` is checked while waiting, so a runner process that exits before becoming usable fails promptly.
 
 The guest runner is launched explicitly as the non-root runner user with a login shell. The JIT configuration exists only in guest `/run`, is read immediately before runner startup and is deleted before the runner begins its job loop.
+
+JIT runner creation is non-idempotent. The host therefore performs exactly one organization-scoped `generate-jitconfig` POST per gate. If transport or HTTP status is ambiguous, it does not retry blindly: it queries organization runners for the exact unique VM/runner name, records non-secret reconciliation evidence, deletes any side-effect runner, and classifies the mechanism as infrastructure-invalid.
+
+After two consecutive JIT-mechanism `INFRA_INVALID` incidents, full gate retries are frozen. Recovery requires:
+
+```bash
+scripts/check-jit-runner-api-lifecycle.sh
+```
+
+The synthetic preflight verifies the organization runner-group/repository binding, performs one JIT creation, confirms that both runner ID and encoded configuration were returned, deletes the runner, verifies cleanup and never starts a VM or workflow.
 
 With a sealed golden image and runner group configured:
 

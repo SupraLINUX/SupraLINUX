@@ -4,6 +4,7 @@ set -Eeuo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LIBVIRT_QEMU_USER="${SUPRALINUX_LIBVIRT_QEMU_USER:-libvirt-qemu}"
 REPOSITORY="${SUPRALINUX_REPOSITORY:-SupraLINUX/SupraLINUX}"
+RUNNER_ORGANIZATION="${SUPRALINUX_RUNNER_ORGANIZATION:-${REPOSITORY%%/*}}"
 PR_NUMBER="${SUPRALINUX_PR_NUMBER:-1}"
 GATE="${1:-${SUPRALINUX_GATE:-}}"
 RUNNER_GROUP_ID="${SUPRALINUX_RUNNER_GROUP_ID:-}"
@@ -131,6 +132,15 @@ if [[ ! "${REPOSITORY}" =~ ^[^/]+/[^/]+$ ]]; then
     printf 'SUPRALINUX_REPOSITORY must use owner/repo form.\n' >&2
     exit 1
 fi
+REPOSITORY_OWNER="${REPOSITORY%%/*}"
+if [[ ! "${RUNNER_ORGANIZATION}" =~ ^[^/]+$ ]]; then
+    printf 'SUPRALINUX_RUNNER_ORGANIZATION must be a single GitHub organization name.\n' >&2
+    exit 1
+fi
+if [[ "${RUNNER_ORGANIZATION}" != "${REPOSITORY_OWNER}" ]]; then
+    printf 'Runner organization %s does not own repository %s.\n' "${RUNNER_ORGANIZATION}" "${REPOSITORY}" >&2
+    exit 1
+fi
 
 api() {
     local method="$1"
@@ -224,7 +234,7 @@ cleanup() {
     fi
 
     if [[ -n "${RUNNER_ID}" ]]; then
-        api_allow_404 DELETE "/repos/${REPOSITORY}/actions/runners/${RUNNER_ID}" >/dev/null 2>&1 || true
+        api_allow_404 DELETE "/orgs/${RUNNER_ORGANIZATION}/actions/runners/${RUNNER_ID}" >/dev/null 2>&1 || true
     fi
 
     if (( VM_CREATED )); then
@@ -265,6 +275,361 @@ cleanup() {
 trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
+
+reconcile_named_runner_after_failed_create() {
+    local runners_json matching cleanup_failed=0 runner_id
+    if ! runners_json="$(api GET "/orgs/${RUNNER_ORGANIZATION}/actions/runners?per_page=100")"; then
+        printf '{"status":"runner-list-failed"}\n' > "${EVIDENCE_DIR}/jit-create-reconciliation.json"
+        return 1
+    fi
+    matching="$(jq -c --arg name "${VM_NAME}"         '[.runners[]? | select(.name == $name) | {id,name,status,busy}]' <<<"${runners_json}")"
+    printf '%s\n' "${matching}" > "${EVIDENCE_DIR}/jit-create-reconciliation.json"
+    while IFS= read -r runner_id; do
+        [[ -n "${runner_id}" ]] || continue
+        if ! api_allow_404 DELETE "/orgs/${RUNNER_ORGANIZATION}/actions/runners/${runner_id}" >/dev/null; then
+            cleanup_failed=1
+        fi
+    done < <(jq -r '.[].id' <<<"${matching}")
+    return "${cleanup_failed}"
+}
+
+request_jit_config() {
+    local payload="$1"
+    local raw="" curl_rc=0 http_code="" body=""
+    local args=(
+        --silent
+        --show-error
+        --location
+        --request POST
+        --header 'Accept: application/vnd.github+json'
+        --header "Authorization: Bearer ${HOST_GITHUB_TOKEN}"
+        --header "X-GitHub-Api-Version: ${API_VERSION}"
+        --header 'Content-Type: application/json'
+        --data "${payload}"
+        --write-out 
+PR_JSON="$(api GET "/repos/${REPOSITORY}/pulls/${PR_NUMBER}")"
+PR_STATE="$(jq -r '.state' <<<"${PR_JSON}")"
+PR_HEAD_REPO="$(jq -r '.head.repo.full_name // empty' <<<"${PR_JSON}")"
+PR_HEAD_SHA="$(jq -r '.head.sha // empty' <<<"${PR_JSON}")"
+PR_HEAD_BRANCH="$(jq -r '.head.ref // empty' <<<"${PR_JSON}")"
+if [[ "${PR_STATE}" != "open" ]]; then
+    printf 'PR #%s is not open.\n' "${PR_NUMBER}" >&2
+    exit 1
+fi
+if [[ "${PR_HEAD_REPO}" != "${REPOSITORY}" ]]; then
+    printf 'Authoritative self-hosted gates refuse fork PRs: %s\n' "${PR_HEAD_REPO}" >&2
+    exit 1
+fi
+if [[ ! "${PR_HEAD_SHA}" =~ ^[0-9a-fA-F]{40}$ ]]; then
+    printf 'Could not resolve a valid PR head SHA.\n' >&2
+    exit 1
+fi
+
+LOCAL_HEAD="$(git -C "${ROOT}" rev-parse HEAD)"
+if [[ "${LOCAL_HEAD,,}" != "${PR_HEAD_SHA,,}" ]]; then
+    printf 'Host checkout does not match the PR head being certified.\n' >&2
+    printf 'Local HEAD: %s\n' "${LOCAL_HEAD}" >&2
+    printf 'PR head:    %s\n' "${PR_HEAD_SHA}" >&2
+    exit 1
+fi
+if [[ -n "$(git -C "${ROOT}" status --porcelain --untracked-files=normal)" ]]; then
+    printf 'Host checkout is not clean; authoritative JIT execution requires an exact clean PR checkout.\n' >&2
+    exit 1
+fi
+
+SUPRALINUX_GOLDEN_COMPAT_COMMIT="${PR_HEAD_SHA}" \
+    "${ROOT}/scripts/check-golden-image-provenance.sh" \
+    "${GOLDEN_IMAGE}" "${EVIDENCE_DIR}/golden-provenance-admission.txt"
+
+GOLDEN_SOURCE_COMMIT="$(awk -F= '$1 == "source_commit" {print $2; exit}' "${GOLDEN_PROVENANCE}")"
+GOLDEN_INPUT_DIGEST="$(awk -F= '$1 == "golden_input_digest" {print $2; exit}' "${GOLDEN_PROVENANCE}")"
+
+printf 'Checking for stale/active authoritative workflow runs before creating a runner...\n'
+ACTIVE_RUNS_JSON="$(api GET "/repos/${REPOSITORY}/actions/runs?event=pull_request&per_page=100")"
+ACTIVE_AUTHORITATIVE="$(jq -c \
+    --arg runner_contract "${RUNNER_CONTRACT_WORKFLOW}" \
+    --arg package_proof "${PACKAGE_PROOF_WORKFLOW}" \
+    --arg frameworks_sample "${FRAMEWORKS_SAMPLE_WORKFLOW}" \
+    '[.workflow_runs[] | select((.name == $runner_contract or .name == $package_proof or .name == $frameworks_sample) and .status != "completed")]' \
+    <<<"${ACTIVE_RUNS_JSON}")"
+if (( $(jq 'length' <<<"${ACTIVE_AUTHORITATIVE}") > 0 )); then
+    printf 'Refusing to create a JIT runner while another authoritative workflow is active or queued:\n' >&2
+    jq -r '.[] | "  id=\(.id) name=\(.name) status=\(.status) url=\(.html_url)"' <<<"${ACTIVE_AUTHORITATIVE}" >&2
+    exit 1
+fi
+
+BASELINE_RUNS_JSON="$(api GET "/repos/${REPOSITORY}/actions/runs?event=pull_request&head_sha=${PR_HEAD_SHA}&per_page=100")"
+BASELINE_RUN_IDS="$(jq -c --arg workflow "${WORKFLOW_NAME}" '[.workflow_runs[] | select(.name == $workflow) | .id]' <<<"${BASELINE_RUNS_JSON}")"
+printf '%s\n' "${BASELINE_RUN_IDS}" > "${EVIDENCE_DIR}/workflow-baseline-ids.json"
+
+{
+    printf 'started_at=%s\n' "${STARTED_AT}"
+    printf 'repository=%s\n' "${REPOSITORY}"
+    printf 'runner_organization=%s\n' "${RUNNER_ORGANIZATION}"
+    printf 'pr_number=%s\n' "${PR_NUMBER}"
+    printf 'pr_head_sha=%s\n' "${PR_HEAD_SHA}"
+    printf 'pr_head_branch=%s\n' "${PR_HEAD_BRANCH}"
+    printf 'local_head=%s\n' "${LOCAL_HEAD}"
+    printf 'golden_source_commit=%s\n' "${GOLDEN_SOURCE_COMMIT}"
+    printf 'golden_input_digest=%s\n' "${GOLDEN_INPUT_DIGEST}"
+    printf 'gate=%s\n' "${GATE}"
+    printf 'gate_label=%s\n' "${GATE_LABEL}"
+    printf 'workflow_name=%s\n' "${WORKFLOW_NAME}"
+    printf 'vm_name=%s\n' "${VM_NAME}"
+    printf 'golden_image=%s\n' "${GOLDEN_IMAGE}"
+    printf 'golden_image_sha256=%s\n' "${GOLDEN_SHA256}"
+    printf 'golden_provenance=%s\n' "${GOLDEN_PROVENANCE}"
+    printf 'local_lock=%s\n' "${LOCK_FILE}"
+    printf 'libvirt_uri=%s\n' "${LIBVIRT_URI}"
+    printf 'libvirt_network=%s\n' "${LIBVIRT_NETWORK}"
+    printf 'vm_memory_mib=%s\n' "${VM_MEMORY_MIB}"
+    printf 'vm_vcpus=%s\n' "${VM_VCPUS}"
+    printf 'vm_disk_size_gib=%s\n' "${VM_DISK_SIZE_GIB}"
+    printf '\ngolden_provenance_contents:\n'
+    cat "${GOLDEN_PROVENANCE}"
+} > "${EVIDENCE_DIR}/host-environment.txt"
+
+printf 'Ensuring trigger label exists and is currently absent...\n'
+ENCODED_LABEL="$(label_uri "${GATE_LABEL}")"
+if ! api_allow_404 GET "/repos/${REPOSITORY}/labels/${ENCODED_LABEL}" | jq -e '.name? // empty' >/dev/null 2>&1; then
+    api POST "/repos/${REPOSITORY}/labels" \
+        "$(jq -nc --arg name "${GATE_LABEL}" --arg description 'SupraLINUX controlled authoritative CI gate' '{name:$name,color:"5319e7",description:$description}')" \
+        >/dev/null
+fi
+api_allow_404 DELETE "/repos/${REPOSITORY}/issues/${PR_NUMBER}/labels/${ENCODED_LABEL}" >/dev/null 2>&1 || true
+
+printf 'Creating ephemeral overlay and KVM VM...\n'
+BACKING_FORMAT="$(qemu-img info --output=json "${GOLDEN_IMAGE}" | jq -r '.format')"
+qemu-img create -f qcow2 -F "${BACKING_FORMAT}" -b "${GOLDEN_IMAGE}" "${OVERLAY}"
+qemu-img resize "${OVERLAY}" "${VM_DISK_SIZE_GIB}G"
+chgrp "${LIBVIRT_QEMU_GROUP}" "${OVERLAY}"
+chmod 0660 "${OVERLAY}"
+qemu-img info --output=json "${OVERLAY}" > "${EVIDENCE_DIR}/overlay-info-before-boot.json"
+"${ROOT}/scripts/with-libguestfs-runtime.sh" --describe > "${EVIDENCE_DIR}/libguestfs-runtime.txt"
+
+VM_CREATED=1
+virt-install \
+    --connect "${LIBVIRT_URI}" \
+    --name "${VM_NAME}" \
+    --memory "${VM_MEMORY_MIB}" \
+    --vcpus "${VM_VCPUS}" \
+    --cpu host-passthrough \
+    --import \
+    --disk "path=${OVERLAY},format=qcow2,bus=virtio,cache=none" \
+    --network "network=${LIBVIRT_NETWORK},model=virtio" \
+    --channel unix,target.type=virtio,target.name=org.qemu.guest_agent.0 \
+    --graphics none \
+    --noautoconsole \
+    --osinfo detect=on,require=off
+
+qga() {
+    virsh qemu-agent-command "${VM_NAME}" "$1"
+}
+
+guest_runner_status() {
+    [[ -n "${GUEST_RUNNER_PID}" ]] || return 0
+    qga "$(jq -nc --argjson pid "${GUEST_RUNNER_PID}" '{execute:"guest-exec-status",arguments:{pid:$pid}}')"
+}
+
+fail_if_guest_runner_exited() {
+    local status
+    status="$(guest_runner_status)"
+    if [[ -n "${status}" && "$(jq -r '.return.exited // false' <<<"${status}")" == "true" ]]; then
+        printf '%s\n' "${status}" > "${EVIDENCE_DIR}/guest-runner-exited.json"
+        printf 'Guest Actions runner process exited before the expected lifecycle point.\n' >&2
+        return 1
+    fi
+}
+
+printf 'Waiting for qemu-guest-agent...\n'
+DEADLINE=$(( $(date +%s) + ONLINE_TIMEOUT_SECONDS ))
+until qga '{"execute":"guest-ping"}' >/dev/null 2>&1; do
+    if (( $(date +%s) >= DEADLINE )); then
+        printf 'Timed out waiting for qemu-guest-agent.\n' >&2
+        exit 1
+    fi
+    sleep 2
+done
+
+printf 'Requesting organization-scoped GitHub JIT runner configuration...\n'
+JIT_PAYLOAD="$(jq -nc \
+    --arg name "${VM_NAME}" \
+    --argjson group "${RUNNER_GROUP_ID}" \
+    '{name:$name,runner_group_id:$group,labels:["self-hosted","linux","x64","supralinux","ubuntu-26.04","kvm","ephemeral"],work_folder:"_work"}')"
+JIT_JSON=""
+if ! request_jit_config "${JIT_PAYLOAD}"; then
+    exit 1
+fi
+RUNNER_ID="$(jq -r '.runner.id // empty' <<<"${JIT_JSON}")"
+JIT_CONFIG="$(jq -r '.encoded_jit_config // empty' <<<"${JIT_JSON}")"
+if [[ ! "${RUNNER_ID}" =~ ^[0-9]+$ || -z "${JIT_CONFIG}" ]]; then
+    printf 'GitHub returned an incomplete organization-scoped JIT response.\n' >&2
+    reconcile_named_runner_after_failed_create || true
+    unset JIT_CONFIG JIT_JSON
+    RUNNER_ID=""
+    exit 1
+fi
+printf 'runner_id=%s\n' "${RUNNER_ID}" >> "${EVIDENCE_DIR}/host-environment.txt"
+
+printf 'Injecting JIT configuration into guest tmpfs...\n'
+OPEN_PAYLOAD="$(jq -nc --arg path '/run/supralinux-jit-config' '{execute:"guest-file-open",arguments:{path:$path,mode:"w"}}')"
+HANDLE="$(qga "${OPEN_PAYLOAD}" | jq -r '.return')"
+WRITE_PAYLOAD="$(jq -nc --argjson handle "${HANDLE}" --arg data "$(printf '%s' "${JIT_CONFIG}" | base64 -w0)" \
+    '{execute:"guest-file-write",arguments:{handle:$handle,"buf-b64":$data}}')"
+qga "${WRITE_PAYLOAD}" >/dev/null
+qga "$(jq -nc --argjson handle "${HANDLE}" '{execute:"guest-file-close",arguments:{handle:$handle}}')" >/dev/null
+unset JIT_CONFIG JIT_JSON
+
+START_COMMAND="chown ${RUNNER_USER}:${RUNNER_USER} /run/supralinux-jit-config && chmod 600 /run/supralinux-jit-config && : > /var/log/supralinux-actions-runner-console.log && chown ${RUNNER_USER}:${RUNNER_USER} /var/log/supralinux-actions-runner-console.log && exec su --login --shell /bin/bash --command 'cd /opt/actions-runner && config=\"\$(cat /run/supralinux-jit-config)\" && rm -f /run/supralinux-jit-config && exec ./run.sh --jitconfig \"\$config\" >>/var/log/supralinux-actions-runner-console.log 2>&1' ${RUNNER_USER}"
+EXEC_PAYLOAD="$(jq -nc --arg cmd "${START_COMMAND}" '{execute:"guest-exec",arguments:{path:"/bin/bash",arg:["-lc",$cmd],"capture-output":false}}')"
+EXEC_RESULT="$(qga "${EXEC_PAYLOAD}")"
+printf '%s\n' "${EXEC_RESULT}" > "${EVIDENCE_DIR}/guest-runner-exec.json"
+GUEST_RUNNER_PID="$(jq -r '.return.pid // empty' <<<"${EXEC_RESULT}")"
+if [[ ! "${GUEST_RUNNER_PID}" =~ ^[0-9]+$ ]]; then
+    printf 'qemu-guest-agent did not return a valid runner process PID.\n' >&2
+    exit 1
+fi
+
+runner_snapshot() {
+    api GET "/orgs/${RUNNER_ORGANIZATION}/actions/runners?per_page=100" \
+        | jq -c --argjson id "${RUNNER_ID}" '.runners[]? | select(.id == $id)'
+}
+
+printf 'Waiting for JIT runner to become online...\n'
+DEADLINE=$(( $(date +%s) + ONLINE_TIMEOUT_SECONDS ))
+while true; do
+    fail_if_guest_runner_exited || exit 1
+    SNAPSHOT="$(runner_snapshot)"
+    if [[ -n "${SNAPSHOT}" && "$(jq -r '.status' <<<"${SNAPSHOT}")" == "online" ]]; then
+        printf '%s\n' "${SNAPSHOT}" > "${EVIDENCE_DIR}/runner-online.json"
+        break
+    fi
+    if (( $(date +%s) >= DEADLINE )); then
+        printf 'Timed out waiting for JIT runner %s to become online.\n' "${RUNNER_ID}" >&2
+        exit 1
+    fi
+    sleep 3
+done
+
+printf 'Triggering the PR gate by adding %s...\n' "${GATE_LABEL}"
+api POST "/repos/${REPOSITORY}/issues/${PR_NUMBER}/labels" \
+    "$(jq -nc --arg label "${GATE_LABEL}" '{labels:[$label]}')" >/dev/null
+LABEL_ADDED=1
+
+printf 'Waiting for GitHub to assign the single JIT job...\n'
+DEADLINE=$(( $(date +%s) + BUSY_TIMEOUT_SECONDS ))
+while true; do
+    fail_if_guest_runner_exited || exit 1
+    SNAPSHOT="$(runner_snapshot)"
+    if [[ -n "${SNAPSHOT}" && "$(jq -r '.busy' <<<"${SNAPSHOT}")" == "true" ]]; then
+        printf '%s\n' "${SNAPSHOT}" > "${EVIDENCE_DIR}/runner-busy.json"
+        break
+    fi
+    if [[ -z "${SNAPSHOT}" ]]; then
+        printf 'JIT runner disappeared before a busy state was observed.\n' >&2
+        exit 1
+    fi
+    if (( $(date +%s) >= DEADLINE )); then
+        printf 'Timed out waiting for GitHub to assign the gate job.\n' >&2
+        exit 1
+    fi
+    sleep 3
+done
+
+printf 'Resolving the newly-created workflow run by exact PR head SHA...\n'
+DEADLINE=$(( $(date +%s) + 120 ))
+while true; do
+    RUNS_JSON="$(api GET "/repos/${REPOSITORY}/actions/runs?event=pull_request&head_sha=${PR_HEAD_SHA}&per_page=100")"
+    CANDIDATES="$(jq -c \
+        --arg workflow "${WORKFLOW_NAME}" \
+        --arg sha "${PR_HEAD_SHA}" \
+        --argjson baseline "${BASELINE_RUN_IDS}" \
+        '[.workflow_runs[]
+          | select(.name == $workflow and .head_sha == $sha)
+          | select(.id as $id | ($baseline | index($id) | not))]' \
+        <<<"${RUNS_JSON}")"
+    CANDIDATE_COUNT="$(jq 'length' <<<"${CANDIDATES}")"
+    if (( CANDIDATE_COUNT > 1 )); then
+        printf '%s\n' "${CANDIDATES}" > "${EVIDENCE_DIR}/workflow-run-ambiguous.json"
+        printf 'More than one new authoritative workflow run appeared for the exact PR head SHA; refusing ambiguous attribution.\n' >&2
+        exit 1
+    fi
+    if (( CANDIDATE_COUNT == 1 )); then
+        WORKFLOW_RUN_ID="$(jq -r '.[0].id' <<<"${CANDIDATES}")"
+        printf '%s\n' "$(jq -c '.[0]' <<<"${CANDIDATES}")" > "${EVIDENCE_DIR}/workflow-run-created.json"
+        break
+    fi
+    if (( $(date +%s) >= DEADLINE )); then
+        printf 'Could not resolve the new workflow run for %s at head %s.\n' "${WORKFLOW_NAME}" "${PR_HEAD_SHA}" >&2
+        exit 1
+    fi
+    sleep 2
+done
+
+printf 'Bound gate to workflow run ID %s. Waiting for the JIT runner to finish and deregister...\n' "${WORKFLOW_RUN_ID}"
+DEADLINE=$(( $(date +%s) + JOB_TIMEOUT_SECONDS ))
+while true; do
+    SNAPSHOT="$(runner_snapshot)"
+    if [[ -z "${SNAPSHOT}" ]]; then
+        break
+    fi
+    if (( $(date +%s) >= DEADLINE )); then
+        printf 'Timed out waiting for the JIT runner job to finish.\n' >&2
+        exit 1
+    fi
+    sleep 5
+done
+
+printf 'Waiting for bound workflow run %s to complete...\n' "${WORKFLOW_RUN_ID}"
+DEADLINE=$(( $(date +%s) + 180 ))
+while true; do
+    WORKFLOW_RUN="$(api GET "/repos/${REPOSITORY}/actions/runs/${WORKFLOW_RUN_ID}")"
+    if [[ "$(jq -r '.head_sha // empty' <<<"${WORKFLOW_RUN}")" != "${PR_HEAD_SHA}" || \
+          "$(jq -r '.name // empty' <<<"${WORKFLOW_RUN}")" != "${WORKFLOW_NAME}" || \
+          "$(jq -r '.event // empty' <<<"${WORKFLOW_RUN}")" != "pull_request" ]]; then
+        printf 'Bound workflow run identity changed or does not match the requested gate.\n' >&2
+        exit 1
+    fi
+    if [[ "$(jq -r '.status' <<<"${WORKFLOW_RUN}")" == "completed" ]]; then
+        printf '%s\n' "${WORKFLOW_RUN}" > "${EVIDENCE_DIR}/workflow-run.json"
+        break
+    fi
+    if (( $(date +%s) >= DEADLINE )); then
+        printf 'Timed out waiting for workflow run %s to reach completed state.\n' "${WORKFLOW_RUN_ID}" >&2
+        exit 1
+    fi
+    sleep 3
+done
+
+CONCLUSION="$(jq -r '.conclusion // empty' <<<"${WORKFLOW_RUN}")"
+RUN_URL="$(jq -r '.html_url // empty' <<<"${WORKFLOW_RUN}")"
+printf 'Workflow conclusion: %s\n%s\n' "${CONCLUSION}" "${RUN_URL}"
+if [[ "${CONCLUSION}" != "success" ]]; then
+    exit 1
+fi
+
+printf 'Authoritative KVM gate %s: PASS\n' "${GATE}"
+\n__SUPRALINUX_HTTP_STATUS__=%{http_code}'
+    )
+
+    raw="$(curl "${args[@]}" "https://api.github.com/orgs/${RUNNER_ORGANIZATION}/actions/runners/generate-jitconfig")" || curl_rc=$?
+    http_code="$(tail -n 1 <<<"${raw}" | sed -n 's/^__SUPRALINUX_HTTP_STATUS__=//p')"
+    body="$(sed '$d' <<<"${raw}")"
+    printf 'curl_exit_code=%s\nhttp_status=%s\n' "${curl_rc}" "${http_code:-missing}"         > "${EVIDENCE_DIR}/jit-create-transport.txt"
+
+    if (( curl_rc != 0 )) || [[ "${http_code}" != "201" ]]; then
+        unset body raw
+        if ! reconcile_named_runner_after_failed_create; then
+            printf 'JIT create failed ambiguously and leaked-runner reconciliation also failed.\n' >&2
+        fi
+        printf 'Organization-scoped generate-jitconfig did not complete unambiguously (curl=%s HTTP=%s).\n'             "${curl_rc}" "${http_code:-missing}" >&2
+        return 1
+    fi
+
+    JIT_JSON="${body}"
+    unset body raw
+    return 0
+}
 
 printf 'Validating pull request and preparing gate %s...\n' "${GATE}"
 PR_JSON="$(api GET "/repos/${REPOSITORY}/pulls/${PR_NUMBER}")"

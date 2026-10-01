@@ -139,7 +139,9 @@ The nested builder retains the upstream 2048 MiB VM RAM floor. Because the const
 
 The golden image contains runner software but no persistent GitHub registration token/PAT/JIT config and no temporary SupraLINUX checkout.
 
-After golden admission, `scripts/run-kvm-jit-gate-core.sh` creates a fresh overlay VM, requests repository `generate-jitconfig`, injects it into guest `/run`, launches the runner non-root, waits until it is online, applies one controlled PR label, binds one new workflow run for the exact PR head SHA, exports diagnostics/evidence and destroys writable state.
+After golden admission, `scripts/run-kvm-jit-gate-core.sh` creates a fresh overlay VM, requests organization-scoped `generate-jitconfig`, injects it into guest `/run`, launches the runner non-root, waits until it is online, applies one controlled PR label, binds one new workflow run for the exact PR head SHA, exports diagnostics/evidence and destroys writable state.
+
+The JIT create call is deliberately not retried automatically. A non-201/transport failure triggers exact-name organization-runner reconciliation and cleanup because GitHub may commit the runner registration even when the client receives a 5xx. Two consecutive infrastructure-invalid incidents freeze gate execution until `scripts/check-jit-runner-api-lifecycle.sh` passes.
 
 Required labels:
 

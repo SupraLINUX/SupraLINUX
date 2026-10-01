@@ -60,6 +60,12 @@ sample=byid.get("frameworks-sample-proof",{})
 runner_ready=host.get("status")=="PASS" and gold.get("status")=="PASS"
 if runner.get("execution_authorized"):
     req(runner_ready and runner.get("status")=="pending","runner-contract authorization requires host+golden PASS")
+if runner.get("status")=="INFRA_INVALID":
+    hold=runner.get("infrastructure_hold",{})
+    req(runner.get("execution_authorized") is False,"INFRA_INVALID runner-contract must be execution-frozen")
+    req(hold.get("mechanism")=="github-jit-runner-api","runner-contract INFRA_INVALID mechanism")
+    req(isinstance(hold.get("consecutive_infra_invalid"),int) and hold["consecutive_infra_invalid"]>=2,"runner-contract INFRA_INVALID retry cutoff")
+    req(hold.get("resume_requires")=="scripts/check-jit-runner-api-lifecycle.sh:PASS","runner-contract resume requires synthetic JIT API PASS")
 if pkg.get("execution_authorized"):
     req(runner.get("status")=="PASS" and pkg.get("status")=="pending","package proof authorization requires runner-contract PASS")
 if sample.get("execution_authorized"):

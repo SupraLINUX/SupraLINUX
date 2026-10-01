@@ -108,13 +108,19 @@
       "id": "runner-contract",
       "workflow": ".github/workflows/runner-contract.yml",
       "trigger_label": "ci:runner-contract",
-      "status": "pending",
-      "execution_authorized": true,
+      "status": "INFRA_INVALID",
+      "execution_authorized": false,
       "requires": [
         "host-kvm-preflight",
         "golden-image-admission"
       ],
-      "evidence": []
+      "evidence": [],
+      "infrastructure_hold": {
+        "mechanism": "github-jit-runner-api",
+        "consecutive_infra_invalid": 2,
+        "reason": "repository-scoped JIT creation returned HTTP 404; organization-scoped synthetic creation then returned HTTP 502 after creating an offline runner, proving an ambiguous non-idempotent side effect",
+        "resume_requires": "scripts/check-jit-runner-api-lifecycle.sh:PASS"
+      }
     },
     {
       "id": "authoritative-package-proof",

@@ -562,6 +562,11 @@ require('exec "${ROOT}/scripts/run-kvm-jit-gate-core.sh" "$@"' in host_entrypoin
 host_orchestrator = read_required("scripts/run-kvm-jit-gate-core.sh")
 for token, message in (
     ("generate-jitconfig", "host orchestrator must use JIT configuration"),
+    ('RUNNER_ORGANIZATION="${SUPRALINUX_RUNNER_ORGANIZATION:-${REPOSITORY%%/*}}"', "host orchestrator must bind JIT runners to the repository-owning organization"),
+    ('/orgs/${RUNNER_ORGANIZATION}/actions/runners/generate-jitconfig', "host orchestrator must create JIT runners through the organization scope"),
+    ('/orgs/${RUNNER_ORGANIZATION}/actions/runners?per_page=100', "host orchestrator must observe JIT runners through the organization scope"),
+    ("jit-create-reconciliation.json", "host orchestrator must reconcile ambiguous JIT creation side effects"),
+    ("jit-create-transport.txt", "host orchestrator must retain non-secret JIT transport evidence"),
     ("/run/supralinux-jit-config", "JIT config must live in guest tmpfs"),
     ("Authoritative self-hosted gates refuse fork PRs", "host orchestrator must refuse fork PRs"),
     ('[[ ! "${REPOSITORY}" =~ ^[^/]+/[^/]+$ ]]', "host orchestrator must validate owner/repo syntax without rejecting matching owner and repository names"),
@@ -587,6 +592,23 @@ for token, message in (
     ("su --login --shell /bin/bash --command", "guest runner must start non-root with an explicit login shell"),
 ):
     require(token in host_orchestrator, message)
+require(
+    '/repos/${REPOSITORY}/actions/runners/generate-jitconfig' not in host_orchestrator,
+    "host orchestrator must not use repository-scoped JIT creation for the organization runner group",
+)
+
+jit_api_preflight = read_required("scripts/check-jit-runner-api-lifecycle.sh")
+for token, message in (
+    ('/orgs/${RUNNER_ORGANIZATION}/actions/runners/generate-jitconfig', "JIT API preflight must exercise organization-scoped JIT creation"),
+    ("matching-runners.json", "JIT API preflight must reconcile exact-name side effects"),
+    ("status=INFRA_INVALID", "JIT API preflight must classify ambiguous transport as INFRA_INVALID"),
+    ("JIT API lifecycle synthetic preflight: PASS", "JIT API preflight must emit explicit PASS"),
+):
+    require(token in jit_api_preflight, message)
+require(
+    '/repos/${REPOSITORY}/actions/runners/generate-jitconfig' not in jit_api_preflight,
+    "JIT API preflight must not fall back to repository-scoped JIT creation",
+)
 
 certification_orchestrator = read_required("scripts/run-authoritative-kvm-certification.sh")
 for token, message in (

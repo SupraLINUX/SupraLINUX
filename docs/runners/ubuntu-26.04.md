@@ -65,9 +65,11 @@ The golden image contains runner software but no persistent GitHub credential an
 
 ## Runtime JIT lifecycle
 
-The host obtains repository-scoped `encoded_jit_config`, injects it into guest tmpfs and starts the runner as a non-root login user. Host-local `flock` serializes authoritative gates on the supported single-host setup.
+The host obtains organization-scoped `encoded_jit_config`, injects it into guest tmpfs and starts the runner as a non-root login user. Host-local `flock` serializes authoritative gates on the supported single-host setup.
 
 Before triggering, the orchestrator refuses to start if another authoritative workflow is queued or active. It snapshots existing workflow-run IDs for the exact PR head SHA, adds the controlled label only after the JIT runner is online, then binds evidence to exactly one newly-created workflow run ID for that SHA. Ambiguous attribution fails closed.
+
+JIT creation uses the organization scope because the authoritative runners belong to an organization runner group. A failed or non-201 create is never blindly retried: the host reconciles the unique runner name at organization scope and deletes any side-effect registration. After two consecutive JIT infrastructure-invalid incidents, runner gates remain frozen until the synthetic JIT API lifecycle preflight passes.
 
 Controlled pre-merge labels:
 
