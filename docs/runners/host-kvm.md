@@ -83,7 +83,7 @@ Before creating a JIT runner, `scripts/run-kvm-jit-gate.sh` performs additional 
 - more than one candidate is treated as ambiguous and fails rather than attributing evidence heuristically;
 - qemu-guest-agent `guest-exec-status` is checked while waiting, so a runner process that exits before becoming usable fails promptly.
 
-The guest runner is launched explicitly as the non-root runner user with a login shell. The JIT configuration exists only in guest tmpfs under a private runner-owned `/run/supralinux-jit/` directory. The runner deletes both the config and that private directory before `run.sh` begins its job loop. A file placed directly under root-owned `/run` is invalid because the non-root runner cannot unlink it even when it owns the file.
+The guest runner is launched explicitly as the non-root runner user with a login shell. The JIT configuration exists only in guest tmpfs under a private runner-owned `/run/supralinux-jit/` directory. The runner deletes the secret config file before `run.sh` begins its job loop. It intentionally leaves the now-empty private directory in the disposable overlay: removing that directory as the non-root runner would require write permission on root-owned `/run`. A file placed directly under root-owned `/run` is invalid for the same reason.
 
 JIT runner creation is non-idempotent. The host therefore performs exactly one organization-scoped `generate-jitconfig` POST per gate. If transport or HTTP status is ambiguous, it does not retry blindly: it queries organization runners for the exact unique VM/runner name, records non-secret reconciliation evidence, deletes any side-effect runner, and classifies the mechanism as infrastructure-invalid.
 
