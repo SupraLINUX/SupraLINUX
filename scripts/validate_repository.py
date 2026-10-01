@@ -564,6 +564,7 @@ for token, message in (
     ("generate-jitconfig", "host orchestrator must use JIT configuration"),
     ("/run/supralinux-jit-config", "JIT config must live in guest tmpfs"),
     ("Authoritative self-hosted gates refuse fork PRs", "host orchestrator must refuse fork PRs"),
+    ('[[ ! "${REPOSITORY}" =~ ^[^/]+/[^/]+$ ]]', "host orchestrator must validate owner/repo syntax without rejecting matching owner and repository names"),
     ("flock -n", "host orchestrator must serialize local authoritative jobs"),
     ("workflow-baseline-ids.json", "host orchestrator must snapshot workflow IDs before triggering"),
     ("head_sha=${PR_HEAD_SHA}", "host orchestrator must query the exact PR head SHA"),
