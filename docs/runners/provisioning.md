@@ -131,6 +131,8 @@ The runtime checker requires the effective semantic version to equal the verifie
 
 with real image SHA-256/provenance. Ubuntu 26.04 mounts `/tmp` as a memory-backed tmpfs, so the nested-image builder does not use the default `mktemp` location for its 20 GiB workspace. Guest provisioning installs `genisoimage` and creates runner-owned persistent work storage at `/var/lib/supralinux/autopkgtest/work`; a fail-closed workspace preflight rejects tmpfs/ramfs and insufficient free space before `autopkgtest-buildvm-ubuntu-cloud` starts.
 
+The nested builder retains the upstream 2048 MiB VM RAM floor. Because the constrained golden-preparation VM previously had no swap and its kernel OOM-killed the nested QEMU process, image preparation now activates a 4096 MiB **temporary build-only swap file** on the persistent ext4 guest disk and records memory/swap evidence. The cleanup trap deactivates and removes it on both success and failure; the sealing step fails closed unless the temporary swap is absent, so the published golden image does not inherit preparation-only swap state. Nested guest I/O failures remain separately observable and are not reclassified as memory failures solely because an OOM was later observed.
+
 `scripts/seal-authoritative-runner-image.sh` pre-seals runner/package state inside the guest. Clone identity is reset after shutdown by host-side offline `virt-sysprep`.
 
 ## Runtime JIT lifecycle

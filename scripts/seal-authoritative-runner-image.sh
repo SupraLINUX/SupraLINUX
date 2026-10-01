@@ -4,6 +4,7 @@ set -Eeuo pipefail
 RUNNER_DIR="${SUPRALINUX_ACTIONS_RUNNER_DIR:-/opt/actions-runner}"
 AUTOPKGTEST_IMAGE="${AUTOPKGTEST_QEMU_IMAGE:-/var/lib/supralinux/autopkgtest/resolute-amd64.img}"
 EVIDENCE_DIR="${SUPRALINUX_EVIDENCE_DIR:-/var/lib/supralinux/evidence}"
+BUILD_SWAP_FILE="${AUTOPKGTEST_QEMU_BUILD_SWAP_FILE:-/var/lib/supralinux/autopkgtest/.build.swap}"
 
 . /etc/os-release
 if [[ "${ID}" != "ubuntu" || "${VERSION_ID}" != "26.04" ]]; then
@@ -26,6 +27,14 @@ if [[ ! -f "${EVIDENCE_DIR}/actions-runner.txt" ]]; then
     printf 'Missing Actions runner provenance evidence.\n' >&2
     exit 1
 fi
+if swapon --show=NAME --noheadings | grep -Fxq "${BUILD_SWAP_FILE}"; then
+    printf 'Temporary golden-build swap is still active: %s\n' "${BUILD_SWAP_FILE}" >&2
+    exit 1
+fi
+if [[ -e "${BUILD_SWAP_FILE}" ]]; then
+    printf 'Temporary golden-build swap file still exists: %s\n' "${BUILD_SWAP_FILE}" >&2
+    exit 1
+fi
 
 sudo install -d -m 0755 "${EVIDENCE_DIR}"
 SEAL_TMP="$(mktemp)"
@@ -38,6 +47,7 @@ trap 'rm -f "${SEAL_TMP}"' EXIT
     printf 'actions_runner_evidence_sha256='; sha256sum "${EVIDENCE_DIR}/actions-runner.txt" | awk '{print $1}'
     printf 'autopkgtest_image_sha256='; sha256sum "${AUTOPKGTEST_IMAGE}" | awk '{print $1}'
     printf 'identity_reset=host-side-virt-sysprep-required\n'
+    printf 'temporary_build_swap_absent=yes\n'
     printf '\nactions_runner:\n'
     cat "${EVIDENCE_DIR}/actions-runner.txt"
     printf '\nautopkgtest_image:\n'

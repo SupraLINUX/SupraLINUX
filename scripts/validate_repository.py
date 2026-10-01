@@ -458,6 +458,12 @@ for token, message in (
     ("scripts/check-autopkgtest-workspace.sh", "autopkgtest image preparation must preflight its work filesystem"),
     ("genisoimage", "autopkgtest image preparation must require genisoimage"),
     ('--disk-size="${DISK_SIZE}"', "autopkgtest image preparation must explicitly bind image disk size"),
+    ("AUTOPKGTEST_QEMU_RAM_MIB:-2048", "autopkgtest image preparation must preserve the upstream 2048 MiB nested RAM floor"),
+    ("AUTOPKGTEST_QEMU_BUILD_SWAP_MIB:-4096", "autopkgtest image preparation must provide at least 4 GiB temporary outer-guest swap"),
+    ('sudo swapon "${BUILD_SWAP_FILE}"', "autopkgtest image preparation must activate temporary build swap"),
+    ('sudo swapoff "${BUILD_SWAP_FILE}"', "autopkgtest image preparation must deactivate temporary build swap"),
+    ("autopkgtest-build-resources.txt", "autopkgtest image preparation must retain resource evidence"),
+    ('--ram-size="${RAM_SIZE}"', "autopkgtest image preparation must explicitly bind nested QEMU RAM"),
 ):
     require(token in autopkgtest_prep, message)
 
@@ -466,6 +472,14 @@ require(
     "Autopkgtest persistent-workspace contract test: PASS" in autopkgtest_workspace_test,
     "autopkgtest workspace contract test must emit PASS",
 )
+
+golden_sealer = read_required("scripts/seal-authoritative-runner-image.sh")
+for token, message in (
+    ("AUTOPKGTEST_QEMU_BUILD_SWAP_FILE:-/var/lib/supralinux/autopkgtest/.build.swap", "golden sealing must bind the temporary build-swap path"),
+    ("swapon --show=NAME --noheadings", "golden sealing must reject an active temporary build swap"),
+    ("temporary_build_swap_absent=yes", "golden seal evidence must prove temporary build swap removal"),
+):
+    require(token in golden_sealer, message)
 
 runner_runtime_checker = read_required("scripts/check-actions-runner-runtime.sh")
 for token, message in (
