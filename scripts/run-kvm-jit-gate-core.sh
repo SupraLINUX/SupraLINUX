@@ -594,7 +594,7 @@ qga "$(jq -nc --argjson handle "${HANDLE}" '{execute:"guest-file-close",argument
 printf 'jit_config_bytes=%s\n' "${JIT_CONFIG_BYTES}" >> "${EVIDENCE_DIR}/host-environment.txt"
 unset JIT_CONFIG JIT_JSON
 
-START_COMMAND="chown ${RUNNER_USER}:${RUNNER_USER} ${JIT_CONFIG_PATH} && chmod 600 ${JIT_CONFIG_PATH} && : > /var/log/supralinux-actions-runner-console.log && chown ${RUNNER_USER}:${RUNNER_USER} /var/log/supralinux-actions-runner-console.log && exec su --login --shell /bin/bash --command 'cd /opt/actions-runner && config=\"\$(cat ${JIT_CONFIG_PATH})\" && rm -f ${JIT_CONFIG_PATH} && rmdir ${JIT_CONFIG_DIR} && exec ./run.sh --jitconfig \"\$config\" >>/var/log/supralinux-actions-runner-console.log 2>&1' ${RUNNER_USER}"
+START_COMMAND="chown ${RUNNER_USER}:${RUNNER_USER} ${JIT_CONFIG_PATH} && chmod 600 ${JIT_CONFIG_PATH} && : > /var/log/supralinux-actions-runner-console.log && chown ${RUNNER_USER}:${RUNNER_USER} /var/log/supralinux-actions-runner-console.log && exec su --login --shell /bin/bash --command 'cd /opt/actions-runner && config=\"\$(cat ${JIT_CONFIG_PATH})\" && rm -f ${JIT_CONFIG_PATH} && exec ./run.sh --jitconfig \"\$config\" >>/var/log/supralinux-actions-runner-console.log 2>&1' ${RUNNER_USER}"
 EXEC_PAYLOAD="$(jq -nc --arg cmd "${START_COMMAND}" '{execute:"guest-exec",arguments:{path:"/bin/bash",arg:["-lc",$cmd],"capture-output":true}}')"
 EXEC_RESULT="$(qga "${EXEC_PAYLOAD}")"
 printf '%s\n' "${EXEC_RESULT}" > "${EVIDENCE_DIR}/guest-runner-exec.json"
