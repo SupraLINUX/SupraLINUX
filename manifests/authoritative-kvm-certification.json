@@ -108,8 +108,8 @@
       "id": "runner-contract",
       "workflow": ".github/workflows/runner-contract.yml",
       "trigger_label": "ci:runner-contract",
-      "status": "pending",
-      "execution_authorized": true,
+      "status": "INFRA_INVALID",
+      "execution_authorized": false,
       "requires": [
         "host-kvm-preflight",
         "golden-image-admission"
@@ -222,6 +222,38 @@
             "runner-online.json": "14eed6f90f2908b1e8ac6427d1e23b3f0566f2762cc712e294aa046839f3e49c"
           }
         }
+      },
+      "infrastructure_hold": {
+        "mechanism": "runner-contract-evidence-capture",
+        "consecutive_infra_invalid": 1,
+        "reason": "the authoritative runner contract reached and passed runner provenance, Ubuntu/KVM boundary, toolchain and nested-KVM runtime, but the evidence-capture step invoked unsupported `autopkgtest --version`, causing workflow failure before repository invariants could run",
+        "resume_requires": "repository-policy:PASS-after-runner-contract-evidence-capture-remediation",
+        "incident_evidence": {
+          "kind": "github-actions-runner-contract-validation-run",
+          "workflow_run_id": 36813959540,
+          "workflow_head_sha": "b9b0ce85785a8bcda5cdcdcd735783b863c1ab19",
+          "job_id": 110214858616,
+          "failing_step": "Capture runner contract evidence",
+          "failure": "autopkgtest: error: unrecognized arguments: --version",
+          "failure_exit_code": 20,
+          "passed_contract_steps": [
+            "Checkout",
+            "Verify effective Actions runner provenance",
+            "Verify operating system and KVM boundary",
+            "Verify build and test tool contract",
+            "Prove nested KVM runtime"
+          ],
+          "repository_invariants_ran": false,
+          "package_attempt_consumed": false,
+          "partial_artifact": {
+            "id": 11140222717,
+            "name": "authoritative-runner-contract-c606e5b0a9a599439bf22054fe957ca23d4ae8e3",
+            "digest": "sha256:4e7d2f6cf6e2f7743d02f0a3f76dbbc879e610444628d89e947076bb35e35699",
+            "size_in_bytes": 1843,
+            "retention_days": 90
+          }
+        },
+        "remediation": "capture autopkgtest version with dpkg-query; retain all existing contract checks and rerun only after Repository Policy passes"
       }
     },
     {
