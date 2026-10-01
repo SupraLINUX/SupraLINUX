@@ -13,6 +13,10 @@ AUTOPKGTEST_QEMU_IMAGE="${AUTOPKGTEST_QEMU_IMAGE:-/var/lib/supralinux/autopkgtes
 KVM_QEMU_WRAPPER="${ROOT}/scripts/qemu-kvm-required.sh"
 STATE="FAIL"
 STAGE="initialization"
+PACKAGE_ATTEMPT_CONSUMED=false
+SBUILD_RESULT="not-run"
+AUTOPKGTEST_RESULT="not-run"
+AUTOPKGTEST_EXIT_CODE=""
 STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
 rm -rf "${WORK_DIR}" "${EVIDENCE_DIR}"
@@ -22,12 +26,25 @@ write_result() {
     local rc="$?"
     local finished_at
     finished_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-    python3 - "${RESULT_JSON}" "${STATE}" "${rc}" "${STAGE}" "${STARTED_AT}" "${finished_at}" <<'PY'
+    python3 - "${RESULT_JSON}" "${STATE}" "${rc}" "${STAGE}" "${STARTED_AT}" "${finished_at}" \
+        "${PACKAGE_ATTEMPT_CONSUMED}" "${SBUILD_RESULT}" "${AUTOPKGTEST_RESULT}" "${AUTOPKGTEST_EXIT_CODE}" <<'PY'
 import json
 import sys
 from pathlib import Path
 
-path, state, rc, stage, started, finished = sys.argv[1:]
+(
+    path,
+    state,
+    rc,
+    stage,
+    started,
+    finished,
+    package_attempt_consumed,
+    sbuild_result,
+    autopkgtest_result,
+    autopkgtest_exit_code,
+) = sys.argv[1:]
+
 Path(path).write_text(json.dumps({
     "node": "authoritative-package-proof",
     "state": state,
@@ -41,6 +58,11 @@ Path(path).write_text(json.dumps({
     "sbuild_backend": "unshare",
     "system_test_backend": "autopkgtest-qemu",
     "system_test_acceleration": "kvm-required",
+    "package_attempt_consumed": package_attempt_consumed == "true",
+    "canonical_kde_package_state_effect": "none",
+    "sbuild_result": sbuild_result,
+    "autopkgtest_result": autopkgtest_result,
+    "autopkgtest_exit_code": int(autopkgtest_exit_code) if autopkgtest_exit_code else None,
 }, indent=2) + "\n", encoding="utf-8")
 PY
 }
@@ -177,6 +199,7 @@ test -s "${CHROOT_TARBALL}"
 sha256sum "${CHROOT_TARBALL}" > "${EVIDENCE_DIR}/rootfs-sha256.txt"
 
 STAGE="sbuild"
+PACKAGE_ATTEMPT_CONSUMED=true
 printf 'Building package with sbuild/unshare...\n'
 sbuild \
     --verbose \
@@ -186,6 +209,7 @@ sbuild \
     --arch-all \
     --build-dir="${OUT_DIR}" \
     "${DSC}" |& tee "${EVIDENCE_DIR}/sbuild.log"
+SBUILD_RESULT="PASS"
 
 mapfile -t DEBS < <(find "${OUT_DIR}" -maxdepth 1 -type f -name '*.deb' -print | sort)
 mapfile -t CHANGES < <(find "${OUT_DIR}" -maxdepth 1 -type f -name '*.changes' -print | sort)
@@ -204,6 +228,7 @@ cp -a "${DEBS[@]}" "${CHANGES[@]}" "${BUILDINFO[@]}" "${EVIDENCE_DIR}/"
 
 STAGE="autopkgtest-qemu"
 printf 'Running autopkgtest in a nested Ubuntu 26.04 QEMU/KVM testbed with KVM forced by the QEMU command wrapper...\n'
+set +e
 autopkgtest "${DSC}" "${DEBS[0]}" -- \
     qemu \
     --qemu-command="${KVM_QEMU_WRAPPER}" \
@@ -211,6 +236,42 @@ autopkgtest "${DSC}" "${DEBS[0]}" -- \
     --cpus=2 \
     --ram-size=2048 \
     "${AUTOPKGTEST_QEMU_IMAGE}" |& tee "${EVIDENCE_DIR}/autopkgtest.log"
+PIPELINE_RC=("${PIPESTATUS[@]}")
+set -e
+
+AUTOPKGTEST_EXIT_CODE="${PIPELINE_RC[0]}"
+TEE_EXIT_CODE="${PIPELINE_RC[1]:-0}"
+
+if (( TEE_EXIT_CODE != 0 )); then
+    STATE="INFRA_INVALID"
+    AUTOPKGTEST_RESULT="evidence-transport-failure"
+    printf 'autopkgtest evidence tee failed with exit code %d.\n' "${TEE_EXIT_CODE}" >&2
+    exit "${TEE_EXIT_CODE}"
+fi
+
+case "${AUTOPKGTEST_EXIT_CODE}" in
+    0)
+        AUTOPKGTEST_RESULT="PASS"
+        ;;
+    16)
+        STATE="INFRA_INVALID"
+        AUTOPKGTEST_RESULT="testbed-failure"
+        printf 'autopkgtest reported a testbed failure (exit 16); package state is not FAIL.\n' >&2
+        exit 16
+        ;;
+    20)
+        STATE="INFRA_INVALID"
+        AUTOPKGTEST_RESULT="unexpected-infrastructure-or-usage-failure"
+        printf 'autopkgtest reported an unexpected infrastructure/usage failure (exit 20); package state is not FAIL.\n' >&2
+        exit 20
+        ;;
+    *)
+        STATE="FAIL"
+        AUTOPKGTEST_RESULT="package-test-contract-failure"
+        printf 'autopkgtest package/test contract failed with exit code %s.\n' "${AUTOPKGTEST_EXIT_CODE}" >&2
+        exit "${AUTOPKGTEST_EXIT_CODE}"
+        ;;
+esac
 
 STATE="PASS"
 STAGE="complete"
