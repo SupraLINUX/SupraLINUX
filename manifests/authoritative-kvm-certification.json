@@ -298,8 +298,8 @@
       "id": "authoritative-package-proof",
       "workflow": ".github/workflows/authoritative-package-proof.yml",
       "trigger_label": "ci:authoritative-package-proof",
-      "status": "pending",
-      "execution_authorized": true,
+      "status": "INFRA_INVALID",
+      "execution_authorized": false,
       "requires": [
         "runner-contract"
       ],
@@ -450,6 +450,54 @@
         },
         "recovery_state": "authoritative-package-proof-pending",
         "retry_authorized": true
+      },
+      "infrastructure_hold": {
+        "mechanism": "autopkgtest-superficial-only-proof",
+        "consecutive_infra_invalid": 1,
+        "reason": "the authoritative QEMU/KVM testbed booted successfully and the smoke test passed, but the only autopkgtest was marked superficial, so autopkgtest exited 8 because no substantive non-superficial test completed",
+        "resume_requires": "repository-policy:PASS-after-substantive-autopkgtest-remediation",
+        "incident_evidence": {
+          "workflow_run_id": 36820141760,
+          "workflow_head_sha": "d2fb30b01bec76548ef1bced75d52d7f030c8020",
+          "job_id": 110233743928,
+          "stage": "autopkgtest-qemu",
+          "package_attempt": {
+            "kind": "synthetic-certification-package-attempt",
+            "package": "supralinux-build-test",
+            "version": "0.1.0",
+            "execution_started": true,
+            "sbuild_result": "PASS",
+            "canonical_kde_package_state_effect": "none"
+          },
+          "qemu_kvm_testbed": {
+            "booted": true,
+            "architecture": "amd64",
+            "release": "resolute",
+            "kernel": "7.0.0-34-generic"
+          },
+          "autopkgtest": {
+            "version": "5.55",
+            "exit_code": 8,
+            "smoke_result": "PASS (superficial)",
+            "canonical_adjudication": "INFRA_INVALID",
+            "meaning": "no substantive non-superficial test completed"
+          },
+          "raw_result_state_before_semantic_fix": "FAIL",
+          "artifact": {
+            "id": 11142903389,
+            "name": "phase1-authoritative-package-proof-ce8f099d0829c414d78486bc1e1d82b4907996ed",
+            "digest": "sha256:7e23b9b797eb2e99749cf1352ecb869e69fe9dccd529b6890e658a9d081aa61c",
+            "size_in_bytes": 48430,
+            "retention_days": 90,
+            "result_json_sha256": "58c6507e18dceea51904d8bc192f50db2718c94e365237effc8d04df71319d0c",
+            "autopkgtest_log_sha256": "ad340af027a0c713ab9f462b72129630604f4a759f6c9d6edabec7dd8122d03c",
+            "qemu_wrapper_sha256": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+            "deb_sha256": "3422149c39160b984a1fe3afa8e04286b29050144029a305c5058a7dadc5caf4",
+            "changes_sha256": "342b450fe769d94a179ff927eab74b837cc047610c08ad30f568188412308886",
+            "buildinfo_sha256": "d9d3ad6f281b307ad32b74a9b4d4a62cdeef2c0ff34907d3125f5643e0ef990f"
+          }
+        },
+        "remediation": "remove the superficial restriction from the synthetic smoke test so the certification proof requires a substantive autopkgtest PASS; classify autopkgtest exit 8 as INFRA_INVALID proof insufficiency rather than package FAIL"
       }
     },
     {
