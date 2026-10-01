@@ -89,6 +89,17 @@ if runner.get("status")=="INFRA_INVALID":
             req("rmdir /run/supralinux-jit: Permission denied" in failures,"runner-contract private-directory startup failure evidence")
             write_runs=[x for x in history if x.get("jit_config_expected_bytes")==4144]
             req(any(x.get("jit_config_written_bytes")==4144 and x.get("jit_config_flush")=="PASS" for x in write_runs),"runner-contract JIT config byte/flush evidence")
+        candidate=hold.get("recovery_candidate",{})
+        if candidate:
+            req(candidate.get("runner_id")==158,"runner-contract recovery candidate runner ID")
+            req(candidate.get("runner_status")=="online","runner-contract recovery candidate online state")
+            req(candidate.get("runner_busy") is False,"runner-contract recovery candidate idle state")
+            req(candidate.get("runner_version")=="2.337.0","runner-contract recovery candidate runner version")
+            req(candidate.get("workflow_run_id")=="","runner-contract recovery candidate must precede workflow creation")
+            req(candidate.get("package_attempt_consumed") is False,"runner-contract recovery candidate must not consume a package attempt")
+            req(candidate.get("cleanup")=="PASS","runner-contract recovery candidate cleanup")
+            req(candidate.get("validation_run_verdict")=="INFRA_INVALID","runner-contract recovery candidate validator incident classification")
+            req(candidate.get("canonical_recovery_state")=="awaiting-evidence-hashes","runner-contract recovery candidate hash gate")
 
 closed_hold=runner.get("closed_infrastructure_hold",{})
 if closed_hold:
