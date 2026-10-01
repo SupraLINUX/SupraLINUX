@@ -76,6 +76,16 @@ if runner.get("status")=="INFRA_INVALID":
         req(incident.get("guest_exit_code")==1,"runner-contract guest startup incident exit code")
         req(incident.get("workflow_run_id")=="","runner-contract guest startup incident must precede workflow creation")
         req(incident.get("package_attempt_consumed") is False,"runner-contract guest startup incident must not consume a package attempt")
+        diagnosis=hold.get("diagnosis",{})
+        if diagnosis:
+            evidence=diagnosis.get("evidence",{})
+            req(evidence.get("runner_id")==156,"runner-contract startup diagnosis runner ID")
+            req(evidence.get("jit_config_expected_bytes")==4144,"runner-contract startup diagnosis expected JIT bytes")
+            req(evidence.get("jit_config_written_bytes")==4144,"runner-contract startup diagnosis written JIT bytes")
+            req(evidence.get("jit_config_flush")=="PASS","runner-contract startup diagnosis JIT flush")
+            req(evidence.get("guest_exit_code")==1,"runner-contract startup diagnosis guest exit")
+            req(evidence.get("workflow_run_id")=="","runner-contract startup diagnosis must precede workflow creation")
+            req(evidence.get("package_attempt_consumed") is False,"runner-contract startup diagnosis must not consume a package attempt")
 
 closed_hold=runner.get("closed_infrastructure_hold",{})
 if closed_hold:
