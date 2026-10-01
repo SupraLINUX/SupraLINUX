@@ -63,7 +63,7 @@ if [[ ! -c /dev/kvm || ! -r /dev/kvm || ! -w /dev/kvm ]]; then
     exit 1
 fi
 
-for command_name in autopkgtest-buildvm-ubuntu-cloud fallocate genisoimage mkswap qemu-img sha256sum swapoff swapon; do
+for command_name in autopkgtest-buildvm-ubuntu-cloud fallocate genisoimage getconf mkswap qemu-img sha256sum swapoff swapon; do
     command -v "${command_name}" >/dev/null 2>&1 || {
         printf 'Missing required command: %s\n' "${command_name}" >&2
         exit 1
@@ -85,6 +85,9 @@ fi
 
 SWAP_TOTAL_BEFORE_KIB="$(awk '/^SwapTotal:/ {print $2}' /proc/meminfo)"
 MEM_TOTAL_KIB="$(awk '/^MemTotal:/ {print $2}' /proc/meminfo)"
+PAGE_SIZE_BYTES="$(getconf PAGESIZE)"
+REQUESTED_SWAP_BYTES=$(( BUILD_SWAP_MIB * 1024 * 1024 ))
+MIN_ACTIVE_SWAP_BYTES=$(( REQUESTED_SWAP_BYTES - PAGE_SIZE_BYTES ))
 
 sudo fallocate -l "${BUILD_SWAP_MIB}M" "${BUILD_SWAP_FILE}"
 sudo chmod 0600 "${BUILD_SWAP_FILE}"
@@ -93,9 +96,17 @@ sudo swapon "${BUILD_SWAP_FILE}"
 SWAP_ACTIVE=1
 
 SWAP_TOTAL_ACTIVE_KIB="$(awk '/^SwapTotal:/ {print $2}' /proc/meminfo)"
-EXPECTED_ADDED_SWAP_KIB=$(( BUILD_SWAP_MIB * 1024 ))
-if (( SWAP_TOTAL_ACTIVE_KIB < SWAP_TOTAL_BEFORE_KIB + EXPECTED_ADDED_SWAP_KIB )); then
-    printf 'Temporary build swap did not become fully active.\n' >&2
+ACTIVE_SWAP_BYTES="$(
+    sudo swapon --show=NAME,SIZE --bytes --noheadings --raw |
+        awk -v path="${BUILD_SWAP_FILE}" '$1 == path {print $2; exit}'
+)"
+if [[ ! "${ACTIVE_SWAP_BYTES}" =~ ^[0-9]+$ ]]; then
+    printf 'Temporary build swap is not listed as active: %s\n' "${BUILD_SWAP_FILE}" >&2
+    exit 1
+fi
+if (( ACTIVE_SWAP_BYTES < MIN_ACTIVE_SWAP_BYTES || ACTIVE_SWAP_BYTES > REQUESTED_SWAP_BYTES )); then
+    printf 'Temporary build swap active size is outside the accepted one-page metadata tolerance: requested=%s active=%s minimum=%s page_size=%s\n' \
+        "${REQUESTED_SWAP_BYTES}" "${ACTIVE_SWAP_BYTES}" "${MIN_ACTIVE_SWAP_BYTES}" "${PAGE_SIZE_BYTES}" >&2
     exit 1
 fi
 
@@ -106,6 +117,10 @@ sudo install -d -m 0755 "${EVIDENCE_DIR}"
     printf 'swap_total_before_kib=%s\n' "${SWAP_TOTAL_BEFORE_KIB}"
     printf 'swap_total_active_kib=%s\n' "${SWAP_TOTAL_ACTIVE_KIB}"
     printf 'temporary_build_swap_file=%s\n' "${BUILD_SWAP_FILE}"
+    printf 'temporary_build_swap_requested_bytes=%s\n' "${REQUESTED_SWAP_BYTES}"
+    printf 'temporary_build_swap_active_bytes=%s\n' "${ACTIVE_SWAP_BYTES}"
+    printf 'temporary_build_swap_minimum_accepted_bytes=%s\n' "${MIN_ACTIVE_SWAP_BYTES}"
+    printf 'host_page_size_bytes=%s\n' "${PAGE_SIZE_BYTES}"
     printf 'temporary_build_swap_mib=%s\n' "${BUILD_SWAP_MIB}"
     printf 'nested_qemu_ram_mib=%s\n' "${RAM_SIZE}"
     printf 'work_root=%s\n' "${WORK_ROOT}"
