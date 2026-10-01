@@ -288,9 +288,39 @@ if closed_pkg_hold:
     req(artifact.get("id")==11141147657,"closed package proof infrastructure artifact ID")
     req(artifact.get("digest")=="sha256:cbe9e3bbc6983a72ff94f70d66004cce75af18fa0f9cdfed789bc024f484638d","closed package proof infrastructure artifact digest")
 
+closed_repeated_pkg_hold=pkg.get("closed_repeated_infrastructure_hold",{})
+if closed_repeated_pkg_hold:
+    req(closed_repeated_pkg_hold.get("mechanism")=="autopkgtest-qemu-acceleration-argv","closed repeated package proof mechanism")
+    req(closed_repeated_pkg_hold.get("consecutive_infra_invalid")==2,"closed repeated package proof incident count")
+    req(closed_repeated_pkg_hold.get("resume_requires")=="scripts/check-autopkgtest-qemu-argv-lifecycle.sh:PASS-and-repository-policy:PASS","closed repeated package proof recovery contract")
+    req(closed_repeated_pkg_hold.get("closed_by")=="synthetic-autopkgtest-qemu-argv-preflight-and-repository-policy:PASS","closed repeated package proof closure")
+    req(closed_repeated_pkg_hold.get("repository_policy_run")==36819196488,"closed repeated package proof policy run")
+    req(closed_repeated_pkg_hold.get("repository_policy_job")==110230862901,"closed repeated package proof policy job")
+    req(closed_repeated_pkg_hold.get("recovery_head_sha")=="3cba7dc932ab062bc78dbe61a138c46bb341ef95","closed repeated package proof recovery head")
+    remediation_commits=closed_repeated_pkg_hold.get("remediation_commits",[])
+    req(remediation_commits[-1:] == ["3cba7dc932ab062bc78dbe61a138c46bb341ef95"],"closed repeated package proof remediation head")
+    recovery=closed_repeated_pkg_hold.get("synthetic_recovery_evidence",{})
+    req(recovery.get("shellcheck")=="PASS","closed repeated package proof shellcheck PASS")
+    req(recovery.get("qemu_wrapper_functional_test")=="PASS","closed repeated package proof wrapper PASS")
+    req(recovery.get("autopkgtest_qemu_argv_lifecycle")=="PASS","closed repeated package proof argv lifecycle PASS")
+    req(recovery.get("autopkgtest_version")=="5.55","closed repeated package proof autopkgtest version")
+    req(recovery.get("provider_contract")=="-enable-kvm","closed repeated package proof provider contract")
+    req(recovery.get("normalized_acceleration")=="-accel kvm","closed repeated package proof normalized acceleration")
+    req(recovery.get("repository_invariants")=="PASS","closed repeated package proof repository invariants PASS")
+    req(recovery.get("authoritative_kvm_state_validator")=="PASS","closed repeated package proof KVM state validator PASS")
+    req(closed_repeated_pkg_hold.get("recovery_state")=="authoritative-package-proof-pending","closed repeated package proof recovery state")
+    req(closed_repeated_pkg_hold.get("retry_authorized") is True,"closed repeated package proof retry authorization")
+    history=closed_repeated_pkg_hold.get("incident_history",[])
+    req(len(history)==2,"closed repeated package proof incident history")
+    req([x.get("workflow_run_id") for x in history]==[36815641827,36817238333],"closed repeated package proof incident runs")
+    req(all(x.get("package_attempt",{}).get("sbuild_result")=="PASS" for x in history),"closed repeated package proof sbuild history")
+    req(all(x.get("package_attempt",{}).get("canonical_kde_package_state_effect")=="none" for x in history),"closed repeated package proof canonical package state")
+
 if pkg.get("execution_authorized"):
     req(runner.get("status")=="PASS" and pkg.get("status")=="pending","package proof authorization requires runner-contract PASS")
     req(not pkg.get("infrastructure_hold"),"execution-authorized package proof cannot retain an active infrastructure hold")
+    if closed_repeated_pkg_hold:
+        req(closed_repeated_pkg_hold.get("retry_authorized") is True,"package proof retry requires certified repeated-infra recovery")
 if sample.get("execution_authorized"):
     req(pkg.get("status")=="PASS" and sample.get("status")=="pending","Frameworks sample authorization requires package proof PASS")
 
