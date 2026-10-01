@@ -310,6 +310,8 @@ require("does NOT change BIOS" in host_provisioner, "host provisioning must not 
 require("/var/lib/supralinux/golden-builds" in host_provisioner, "host provisioning must create golden-build state")
 require("scripts/prepare-libguestfs-runtime.sh" in host_provisioner, "host provisioning must prepare the private libguestfs kernel runtime")
 require("sudo env LC_ALL=C virsh" in host_provisioner, "host provisioning must parse libvirt output under a deterministic C locale")
+require("LIBVIRT_QEMU_USER" in host_provisioner and 'id -gn "${LIBVIRT_QEMU_USER}"' in host_provisioner, "host provisioning must resolve the effective libvirt QEMU group")
+require('for group_name in kvm libvirt "${LIBVIRT_QEMU_GROUP}"' in host_provisioner, "host provisioning must grant operator access to kvm, libvirt and the effective libvirt QEMU group")
 
 libguestfs_prepare = read_required("scripts/prepare-libguestfs-runtime.sh")
 for token, message in (
