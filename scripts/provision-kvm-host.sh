@@ -57,15 +57,15 @@ for group_name in kvm libvirt; do
 done
 
 printf 'Ensuring the standard libvirt network is active and persistent...\n'
-if ! sudo virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}" >/dev/null 2>&1; then
+if ! sudo env LC_ALL=C virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}" >/dev/null 2>&1; then
     printf 'Expected libvirt network %s is not defined after package installation.\n' "${LIBVIRT_NETWORK}" >&2
     exit 1
 fi
-network_info="$(sudo virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}")"
+network_info="$(sudo env LC_ALL=C virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}")"
 if ! grep -Eq '^Active:[[:space:]]+yes$' <<<"${network_info}"; then
-    sudo virsh --connect "${LIBVIRT_URI}" net-start "${LIBVIRT_NETWORK}"
+    sudo env LC_ALL=C virsh --connect "${LIBVIRT_URI}" net-start "${LIBVIRT_NETWORK}"
 fi
-sudo virsh --connect "${LIBVIRT_URI}" net-autostart "${LIBVIRT_NETWORK}"
+sudo env LC_ALL=C virsh --connect "${LIBVIRT_URI}" net-autostart "${LIBVIRT_NETWORK}"
 
 sudo install -d -m 0755 /var/lib/supralinux/images
 sudo install -d -m 0755 /var/lib/supralinux/golden-builds
@@ -99,7 +99,7 @@ trap 'rm -f "${EVIDENCE_TMP}"' EXIT
     printf '\nlibguestfs-runtime:\n'
     cat "/var/lib/supralinux/images/libguestfs-runtime/$(uname -r)/provenance.txt"
     printf '\nnetwork:\n'
-    sudo virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}"
+    sudo env LC_ALL=C virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}"
     printf '\nkvm-module-state:\n'
     for nested in /sys/module/kvm_intel/parameters/nested /sys/module/kvm_amd/parameters/nested; do
         if [[ -r "${nested}" ]]; then

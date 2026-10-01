@@ -129,10 +129,10 @@ if command -v qemu-system-x86_64 >/dev/null 2>&1; then
 fi
 
 if command -v virsh >/dev/null 2>&1; then
-    if virsh --connect "${LIBVIRT_URI}" uri >/dev/null 2>&1; then
+    if env LC_ALL=C virsh --connect "${LIBVIRT_URI}" uri >/dev/null 2>&1; then
         pass "libvirt system connection works (${LIBVIRT_URI})"
         net_info="$(mktemp)"
-        if virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}" > "${net_info}" 2>/dev/null; then
+        if env LC_ALL=C virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}" > "${net_info}" 2>/dev/null; then
             if grep -Eq '^Active:[[:space:]]+yes$' "${net_info}"; then
                 pass "libvirt network is active: ${LIBVIRT_NETWORK}"
             else

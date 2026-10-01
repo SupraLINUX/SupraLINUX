@@ -309,6 +309,7 @@ for package in ("libvirt-daemon-system", "qemu-system-x86", "virt-install", "lib
 require("does NOT change BIOS" in host_provisioner, "host provisioning must not silently alter BIOS/KVM module state")
 require("/var/lib/supralinux/golden-builds" in host_provisioner, "host provisioning must create golden-build state")
 require("scripts/prepare-libguestfs-runtime.sh" in host_provisioner, "host provisioning must prepare the private libguestfs kernel runtime")
+require("sudo env LC_ALL=C virsh" in host_provisioner, "host provisioning must parse libvirt output under a deterministic C locale")
 
 libguestfs_prepare = read_required("scripts/prepare-libguestfs-runtime.sh")
 for token, message in (
@@ -336,6 +337,7 @@ require("Libguestfs private-kernel runtime wrapper functional test: PASS" in lib
 host_checker = read_required("scripts/check-kvm-host.sh")
 for token in ("/dev/kvm", "parameters/nested", "qemu:///system", "virt-sysprep", "virt-cat", "virt-copy-out", "flock", "with-libguestfs-runtime.sh"):
     require(token in host_checker, f"host preflight missing required check: {token}")
+require("env LC_ALL=C virsh" in host_checker, "host preflight must parse libvirt output under a deterministic C locale")
 
 nested_probe = read_required("scripts/check-nested-kvm-runtime.sh")
 require("-accel kvm" in nested_probe and "-cpu host" in nested_probe, "nested runtime probe must force real KVM with host CPU")
