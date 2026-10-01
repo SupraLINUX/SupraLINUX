@@ -204,6 +204,8 @@ for filename, text, gate_label in (
 require("scripts/check-actions-runner-runtime.sh" in runner_contract, "runner contract must verify the effective Actions runner against golden provenance")
 require("actions-runner-runtime.txt" in runner_contract, "runner contract must retain effective Actions runner evidence")
 require("scripts/check-nested-kvm-runtime.sh" in runner_contract, "runner contract must execute the nested-KVM runtime probe")
+require("dpkg-query -W -f='autopkgtest ${Version}\\n' autopkgtest" in runner_contract, "runner contract must capture the installed autopkgtest package version through dpkg")
+require("autopkgtest --version" not in runner_contract, "runner contract must not use unsupported autopkgtest --version evidence capture")
 
 require("workflow_call:" in hosted_workflow, "hosted package preflight must be reusable from the PR CI router")
 require("github.event.before" in hosted_workflow and "github.event.after" in hosted_workflow, "hosted package preflight must preserve synchronize before/after SHA scoping")
