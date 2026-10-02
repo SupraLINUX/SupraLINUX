@@ -2,8 +2,8 @@
   "schema": 1,
   "as_of": "2026-10-02",
   "plasma_version": "6.7.5",
-  "state": "execution-authorized",
-  "execution_authorized": true,
+  "state": "PASS",
+  "execution_authorized": false,
   "package_execution_authorized": false,
   "consumes_package_attempt": false,
   "canonical_package_state_effect": "none",
@@ -35,5 +35,16 @@
     "inventory": "evidence/kde-plasma-provider-audit/provider-inventory.json",
     "result": "evidence/kde-plasma-provider-audit/result.json"
   },
-  "next_gate": "plasma-provider-resolution"
+  "next_gate": "plasma-provider-resolution",
+  "evidence": {
+    "workflow_run_id": 37008092158,
+    "workflow_job_id": 110841554884,
+    "workflow_head_sha": "715ff744c019743822e5609773298a65888967b1",
+    "artifact_id": 11226253937,
+    "artifact_name": "kde-plasma-provider-audit-715ff744c019743822e5609773298a65888967b1",
+    "artifact_digest": "sha256:bfb58c38bbe7aa2a8fdff5ef61b672b71e1ebcda55cb88c1e2976515ae32835a",
+    "provider_inventory_sha256": "885bcf1da1521b5f3c78a7e252a81ee4a64b537eda1f9922bec6654bbe415b5c",
+    "result_json_sha256": "b1c2dcc2b5a1a50197645ab3d0192685149635c712b4fbc196d7b5caa07efc20",
+    "state": "PASS"
+  }
 }

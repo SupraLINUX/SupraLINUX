@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-02",
+  "plasma_version": "6.7.5",
+  "state": "execution-authorized",
+  "execution_authorized": true,
+  "package_execution_authorized": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "input": {
+    "provider_audit_workflow_run_id": 37008092158,
+    "provider_audit_artifact_id": 11226253937,
+    "provider_audit_artifact_name": "kde-plasma-provider-audit-715ff744c019743822e5609773298a65888967b1",
+    "provider_audit_artifact_digest": "sha256:bfb58c38bbe7aa2a8fdff5ef61b672b71e1ebcda55cb88c1e2976515ae32835a",
+    "provider_inventory_sha256": "885bcf1da1521b5f3c78a7e252a81ee4a64b537eda1f9922bec6654bbe415b5c"
+  },
+  "policy": {
+    "ubuntu_role": "provider-and-technical-reference-not-desktop-authority",
+    "frameworks_provider": "supralinux-frameworks-6.30.0",
+    "qt_provider": "ubuntu-resolute-qt-6.10.2",
+    "use_ubuntu_source_build_depends_as_reference": true,
+    "use_apt_file_for_binary_provider_discovery": true,
+    "legacy_qt5_kf5_refs_are_findings_until_source_context_proves_active": true,
+    "unresolved_provider_is_planning_finding_not_package_fail": true
+  },
+  "workflow": ".github/workflows/kde-plasma-lane.yml",
+  "output": {
+    "result": "evidence/kde-plasma-provider-resolution/result.json",
+    "cmake": "evidence/kde-plasma-provider-resolution/cmake-resolution.json",
+    "pkg_config": "evidence/kde-plasma-provider-resolution/pkg-config-resolution.json",
+    "qml": "evidence/kde-plasma-provider-resolution/qml-resolution.json",
+    "ubuntu_sources": "evidence/kde-plasma-provider-resolution/ubuntu-source-reference.json"
+  },
+  "next_gate": "plasma-provider-resolution-review"
+}
