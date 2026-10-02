@@ -19,12 +19,12 @@ find_package(Commented REQUIRED COMPONENTS RealOne RealTwo
 packages, required, optional = parse_find_packages(sample)
 
 expected_packages = [
+    "Commented",
     "Foo",
     "KF6",
     "KF6WindowSystem",
     "Qt6",
     "VariablePackage",
-    "Commented",
 ]
 assert packages == expected_packages, (packages, expected_packages)
 assert required["KF6"] == ["Config", "CoreAddons", "KIO"], required

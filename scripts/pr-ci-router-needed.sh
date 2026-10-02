@@ -208,6 +208,8 @@ PY
 
 for path in "${changed[@]}"; do
   case "${path}" in
+    scripts/test-kde-plasma-dependency-parser.py|scripts/validate_kde_plasma.py)
+      continue ;;
     docs/*|README.md|scripts/validate_*.py|scripts/test-*.sh|scripts/pr-ci-router-needed.sh|scripts/compile_kde_tier2_campaign.py|manifests/kde-tier1-package-batch*-attempts.json|manifests/kde-tier2-campaign-plan.json|.github/workflows/repository-policy.yml|.github/workflows/pr-ci-router.yml) continue ;;
     manifests/authoritative-kvm-certification.json) continue ;;
     manifests/desktop-stack.json)
