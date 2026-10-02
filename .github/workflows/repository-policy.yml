@@ -145,6 +145,9 @@ jobs:
       - name: Validate KDE Plasma planning state
         run: python3 scripts/validate_kde_plasma.py
 
+      - name: Validate KDE Plasma candidate DAG
+        run: python3 scripts/validate_kde_plasma_dag_candidate.py
+
       - name: Validate Qt provider invariants
         run: python3 scripts/validate_qt_provider.py
 

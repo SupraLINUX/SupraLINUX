@@ -62,17 +62,31 @@
     "release_relevant_desktop": "unlocked"
   },
   "planning": {
-    "phase": "dependency-discovery",
-    "status": "dependency-discovery-pending",
-    "execution_authorized": true,
+    "phase": "dag-candidate-review",
+    "status": "dag-candidate-review-pending",
+    "execution_authorized": false,
     "package_execution_authorized": false,
-    "validation_run_kind": "planning-source-dependency-discovery",
+    "validation_run_kind": "planning-dag-candidate-review",
     "consumes_package_attempt": false,
     "canonical_package_state_effect": "none",
     "runner_scope": "github-hosted-ubuntu-26.04-non-authoritative-preflight",
     "dependency_manifest": "manifests/kde-plasma-dependencies.json",
-    "workflow": ".github/workflows/kde-plasma-dependency-discovery.yml",
-    "next_gate": "plasma-dependency-discovery-evidence"
+    "dag_candidate_manifest": "manifests/kde-plasma-dag-candidate.json",
+    "discovery_evidence": {
+      "workflow_run_id": 36951077374,
+      "workflow_job_id": 110664287780,
+      "artifact_id": 11204675088,
+      "artifact_digest": "sha256:9b6192b1145474cca5bd255d4cb517be2ea8ea4fcd87679f05dfa5aa039a39fd",
+      "dependencies_json_sha256": "a6b2d066ced63231dd3de6adb6248dbbd7eba01cf0d776d49c6d2b091c0f82ef",
+      "result_json_sha256": "71aea7c5ba1481cd41915fd7d645aed6cb4ac8f2da8cce0e13e7440a8df03493",
+      "parser_revision": 4,
+      "source_count": 75,
+      "source_sha256_verified": 75,
+      "kf6_component_references": 535,
+      "internal_candidate_edge_count": 109,
+      "ambiguous_provider_references": 0
+    },
+    "next_gate": "plasma-dag-candidate-review"
   },
   "sources": [
     {

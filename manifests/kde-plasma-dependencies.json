@@ -3,12 +3,24 @@
   "as_of": "2026-10-01",
   "authority": "kde-upstream-source-cmake",
   "plasma_version": "6.7.5",
-  "state": "unmaterialized",
+  "state": "discovery-evidence-promoted",
   "discovery": {
     "method": "verified-source-tarball-cmake-scan",
-    "result": "pending",
-    "canonical_dag_effect": "none-until-evidence-promoted",
-    "notes": "Candidate dependency edges are evidence for review; topological build levels are not canonical until promoted after provider audit."
+    "result": "PASS",
+    "parser_revision": 4,
+    "workflow_run_id": 36951077374,
+    "workflow_job_id": 110664287780,
+    "artifact_id": 11204675088,
+    "artifact_digest": "sha256:9b6192b1145474cca5bd255d4cb517be2ea8ea4fcd87679f05dfa5aa039a39fd",
+    "dependencies_json_sha256": "a6b2d066ced63231dd3de6adb6248dbbd7eba01cf0d776d49c6d2b091c0f82ef",
+    "result_json_sha256": "71aea7c5ba1481cd41915fd7d645aed6cb4ac8f2da8cce0e13e7440a8df03493",
+    "source_count": 75,
+    "source_sha256_verified": 75,
+    "kf6_component_references": 535,
+    "internal_candidate_edge_count": 109,
+    "ambiguous_provider_references": 0,
+    "canonical_dag_effect": "candidate-only-pending-review",
+    "notes": "Discovery evidence is promoted as immutable planning input. Candidate edges do not authorize package builds."
   },
   "nodes": {
     "aurorae": {
