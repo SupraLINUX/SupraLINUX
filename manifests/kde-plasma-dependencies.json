@@ -19,8 +19,8 @@
     "kf6_component_references": 535,
     "internal_candidate_edge_count": 109,
     "ambiguous_provider_references": 0,
-    "canonical_dag_effect": "candidate-only-pending-provider-audit",
-    "notes": "Discovery evidence is promoted as immutable planning input. Candidate edges remain non-canonical for package execution until provider audit and provider resolution close."
+    "canonical_dag_effect": "candidate-only-pending-provider-resolution",
+    "notes": "Discovery evidence is promoted as immutable planning input. Candidate edges remain non-canonical for package execution until provider resolution closes."
   },
   "nodes": {
     "aurorae": {

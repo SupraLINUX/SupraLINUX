@@ -55,16 +55,15 @@ req(planning.get("runner_scope") == "github-hosted-ubuntu-26.04-non-authoritativ
 req(planning.get("lane_workflow") == ".github/workflows/kde-plasma-lane.yml", "Plasma lane workflow")
 req(planning.get("next_gate") == "plasma-provider-resolution-evidence", "Plasma provider resolution next gate")
 
-disc = planning.get("discovery_evidence", {})
+disc = deps.get("discovery", {})
+req(deps.get("state") == "discovery-evidence-promoted", "Plasma dependency discovery evidence promotion")
+req(disc.get("result") == "PASS", "Plasma dependency discovery PASS")
 req(disc.get("workflow_run_id") == 36951077374 and disc.get("artifact_id") == 11204675088, "Plasma discovery evidence binding")
 req(disc.get("artifact_digest") == "sha256:9b6192b1145474cca5bd255d4cb517be2ea8ea4fcd87679f05dfa5aa039a39fd", "Plasma discovery artifact digest")
 req(disc.get("dependencies_json_sha256") == "a6b2d066ced63231dd3de6adb6248dbbd7eba01cf0d776d49c6d2b091c0f82ef", "Plasma dependency snapshot hash")
+req(disc.get("result_json_sha256") == "71aea7c5ba1481cd41915fd7d645aed6cb4ac8f2da8cce0e13e7440a8df03493", "Plasma discovery result hash")
 req(disc.get("parser_revision") == 4 and disc.get("source_sha256_verified") == 75, "Plasma discovery revision/source verification")
-
-req(deps.get("state") == "discovery-evidence-promoted", "Plasma dependency discovery evidence promotion")
-req(deps.get("discovery", {}).get("result") == "PASS", "Plasma dependency discovery PASS")
-req(deps.get("discovery", {}).get("parser_revision") == 4, "Plasma dependency parser revision")
-req(deps.get("discovery", {}).get("canonical_dag_effect") == "candidate-only-pending-provider-audit", "Plasma dependency candidate evidence boundary")
+req(disc.get("canonical_dag_effect") == "candidate-only-pending-provider-resolution", "Plasma dependency candidate evidence boundary")
 req(set(deps.get("nodes", {})) == set(ids), "Plasma dependency manifest node set")
 
 req(dag.get("state") == "candidate-review-required" and dag.get("candidate_only") is True, "Plasma DAG candidate state")
