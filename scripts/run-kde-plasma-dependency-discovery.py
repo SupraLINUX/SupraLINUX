@@ -251,7 +251,7 @@ provider_index = {
 result = {
     "schema": 1,
     "node": "plasma-dependency-discovery",
-    "parser_revision": 3,
+    "parser_revision": 4,
     "state": "PASS" if not errors and verified == len(sources) else "FAIL",
     "run_kind": "planning-source-dependency-discovery",
     "authoritative": False,
@@ -277,7 +277,7 @@ result = {
     "plasma_version": manifest["release"]["version"],
     "authority": "kde-upstream-source-metadata",
     "candidate_only": True,
-    "parser_revision": 3,
+    "parser_revision": 4,
     "provider_index": provider_index,
     "nodes": nodes,
 }, indent=2) + "\n")

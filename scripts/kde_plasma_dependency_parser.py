@@ -22,6 +22,9 @@ FIND_COMPONENT_STOP = {
 
 
 def parse_find_packages(cmake: str):
+    # CMake comments may occur inside multiline find_package() calls. Strip
+    # them before tokenization so prose cannot become a fake component.
+    cmake = re.sub(r"(?m)#.*$", "", cmake)
     packages = set()
     required_components = {}
     optional_components = {}

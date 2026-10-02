@@ -11,6 +11,9 @@ find_package(Qt6 6.10 REQUIRED COMPONENTS Core Gui
 find_dependency(KF6WindowSystem 6.26 REQUIRED)
 find_package(Foo QUIET COMPONENTS Bar Baz)
 find_package(VariablePackage REQUIRED COMPONENTS ${DYNAMIC_COMPONENT})
+find_package(Commented REQUIRED COMPONENTS RealOne RealTwo
+    # handles urls by dataengine
+)
 """
 
 packages, required, optional = parse_find_packages(sample)
@@ -21,6 +24,7 @@ expected_packages = [
     "KF6WindowSystem",
     "Qt6",
     "VariablePackage",
+    "Commented",
 ]
 assert packages == expected_packages, (packages, expected_packages)
 assert required["KF6"] == ["Config", "CoreAddons", "KIO"], required
@@ -29,5 +33,8 @@ assert optional["Qt6"] == ["WaylandClient"], optional
 assert required["Foo"] == ["Bar", "Baz"], required
 assert "VariablePackage" not in required, required
 assert "KF6WindowSystem" not in required, required
+assert required["Commented"] == ["RealOne", "RealTwo"], required
+for bogus in ("handles", "urls", "by", "dataengine"):
+    assert bogus not in required["Commented"], required
 
 print("KDE Plasma dependency parser self-test: PASS")
