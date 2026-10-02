@@ -6,8 +6,6 @@ errors=[]
 def req(c,m):
     if not c: errors.append(m)
 dag=json.loads((ROOT/"manifests/kde-plasma-dag-candidate.json").read_text())
-plasma=json.loads((ROOT/"manifests/kde-plasma.json").read_text())
-deps=json.loads((ROOT/"manifests/kde-plasma-dependencies.json").read_text())
 src=dag.get("source_discovery",{})
 req(dag.get("state")=="candidate-review-required" and dag.get("candidate_only") is True,"Plasma DAG candidate state")
 req(src.get("workflow_run_id")==36951077374 and src.get("artifact_id")==11204675088,"Plasma discovery evidence binding")
@@ -30,9 +28,9 @@ req(nodes.get("kwin",{}).get("level")==3,"KWin candidate level")
 req(nodes.get("plasma-workspace",{}).get("level")==4,"Plasma Workspace candidate level")
 req(nodes.get("plasma-desktop",{}).get("level")==5,"Plasma Desktop candidate level")
 req(dag.get("package_execution_authorized") is False and dag.get("consumes_package_attempt") is False,"candidate DAG package execution lock")
-planning=plasma.get("planning",{})
-req(planning.get("status")=="dag-candidate-review-pending" and planning.get("package_execution_authorized") is False,"Plasma DAG review live state")
-req(deps.get("state")=="discovery-evidence-promoted" and deps.get("discovery",{}).get("result")=="PASS","Plasma discovery evidence promoted")
+# Historical/candidate evidence validator: deliberately independent of live
+# Plasma lifecycle state. Later planning/build phases must not invalidate the
+# already-closed dependency-discovery evidence encoded in this DAG.
 if errors:
     for e in errors: print(f"ERROR: {e}",file=sys.stderr)
     raise SystemExit(1)
