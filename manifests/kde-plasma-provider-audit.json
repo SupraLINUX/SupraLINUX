@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-02",
+  "plasma_version": "6.7.5",
+  "state": "execution-authorized",
+  "execution_authorized": true,
+  "package_execution_authorized": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "input": {
+    "discovery_workflow_run_id": 36951077374,
+    "discovery_workflow_job_id": 110664287780,
+    "discovery_artifact_id": 11204675088,
+    "discovery_artifact_name": "kde-plasma-dependency-discovery-488d96f4d23d3b08be5f317f2cd65dc9889a3a8c",
+    "discovery_artifact_digest": "sha256:9b6192b1145474cca5bd255d4cb517be2ea8ea4fcd87679f05dfa5aa039a39fd",
+    "dependencies_json_sha256": "a6b2d066ced63231dd3de6adb6248dbbd7eba01cf0d776d49c6d2b091c0f82ef",
+    "parser_revision": 4
+  },
+  "audit_contract": {
+    "purpose": "inventory external CMake, QML and pkg-config requirements before provider resolution",
+    "expected_unique_cmake_requirements": 192,
+    "expected_unique_qml_requirements": 24,
+    "expected_unique_pkg_config_requirements": 62,
+    "expected_cmake_categories": {
+      "dynamic-cmake": 4,
+      "kf6-namespace": 38,
+      "legacy-qt5-kf5": 11,
+      "other-cmake": 117,
+      "qt6-namespace": 22
+    },
+    "provider_resolution_effect": "none",
+    "unresolved_or_legacy_references_are_findings_not_package_failures": true
+  },
+  "output": {
+    "inventory": "evidence/kde-plasma-provider-audit/provider-inventory.json",
+    "result": "evidence/kde-plasma-provider-audit/result.json"
+  },
+  "next_gate": "plasma-provider-resolution"
+}

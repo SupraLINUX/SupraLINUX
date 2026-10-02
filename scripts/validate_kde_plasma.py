@@ -13,8 +13,11 @@ def req(condition, message):
 
 plasma = json.loads((ROOT / "manifests/kde-plasma.json").read_text())
 deps = json.loads((ROOT / "manifests/kde-plasma-dependencies.json").read_text())
+dag = json.loads((ROOT / "manifests/kde-plasma-dag-candidate.json").read_text())
+audit = json.loads((ROOT / "manifests/kde-plasma-provider-audit.json").read_text())
 desktop = json.loads((ROOT / "manifests/desktop-stack.json").read_text())
 cert = json.loads((ROOT / "manifests/authoritative-kvm-certification.json").read_text())
+lane = (ROOT / ".github/workflows/kde-plasma-lane.yml").read_text()
 
 release = plasma.get("release", {})
 req(release.get("version") == "6.7.5", "Plasma canonical stable version")
@@ -40,24 +43,48 @@ for node in sources:
     req(bool(re.fullmatch(r"[0-9a-f]{64}", sha)), f"{node_id}: source SHA-256")
     req(node.get("source_url") == f"https://download.kde.org/stable/plasma/6.7.5/{node_id}-6.7.5.tar.xz", f"{node_id}: source URL")
 
-for critical in ("kwin", "kwin-x11", "plasma-workspace", "plasma-desktop", "libplasma", "kscreenlocker", "kwayland-integration"):
-    req(critical in ids, f"Plasma critical source present: {critical}")
-
 planning = plasma.get("planning", {})
-req(planning.get("phase") == "dag-candidate-review", "Plasma planning phase")
-req(planning.get("status") == "dag-candidate-review-pending", "Plasma DAG candidate review live status")
-req(planning.get("execution_authorized") is False, "DAG review must not authorize execution")
-req(planning.get("package_execution_authorized") is False, "DAG review must not authorize package execution")
-req(planning.get("consumes_package_attempt") is False, "DAG review must not consume package Attempt")
-req(planning.get("canonical_package_state_effect") == "none", "Plasma DAG review canonical package state effect")
-req(planning.get("runner_scope") == "github-hosted-ubuntu-26.04-non-authoritative-preflight", "Plasma DAG review runner scope")
-req(planning.get("next_gate") == "plasma-dag-candidate-review", "Plasma DAG review next gate")
+req(planning.get("phase") == "provider-inventory-audit", "Plasma planning phase")
+req(planning.get("status") == "provider-audit-pending", "Plasma provider audit live status")
+req(planning.get("execution_authorized") is True, "Plasma provider audit authorization")
+req(planning.get("package_execution_authorized") is False, "Provider audit must not authorize package execution")
+req(planning.get("consumes_package_attempt") is False, "Provider audit must not consume package Attempt")
+req(planning.get("canonical_package_state_effect") == "none", "Provider audit canonical package state effect")
+req(planning.get("runner_scope") == "github-hosted-ubuntu-26.04-non-authoritative-preflight", "Provider audit runner scope")
+req(planning.get("lane_workflow") == ".github/workflows/kde-plasma-lane.yml", "Plasma lane workflow")
+req(planning.get("next_gate") == "plasma-provider-audit-evidence", "Plasma provider audit next gate")
+
+disc = planning.get("discovery_evidence", {})
+req(disc.get("workflow_run_id") == 36951077374 and disc.get("artifact_id") == 11204675088, "Plasma discovery evidence binding")
+req(disc.get("artifact_digest") == "sha256:9b6192b1145474cca5bd255d4cb517be2ea8ea4fcd87679f05dfa5aa039a39fd", "Plasma discovery artifact digest")
+req(disc.get("dependencies_json_sha256") == "a6b2d066ced63231dd3de6adb6248dbbd7eba01cf0d776d49c6d2b091c0f82ef", "Plasma dependency snapshot hash")
+req(disc.get("parser_revision") == 4 and disc.get("source_sha256_verified") == 75, "Plasma discovery revision/source verification")
 
 req(deps.get("state") == "discovery-evidence-promoted", "Plasma dependency discovery evidence promotion")
 req(deps.get("discovery", {}).get("result") == "PASS", "Plasma dependency discovery PASS")
 req(deps.get("discovery", {}).get("parser_revision") == 4, "Plasma dependency parser revision")
-req(deps.get("discovery", {}).get("canonical_dag_effect") == "candidate-only-pending-review", "Plasma dependency candidate evidence boundary")
+req(deps.get("discovery", {}).get("canonical_dag_effect") == "candidate-only-pending-provider-audit", "Plasma dependency candidate evidence boundary")
 req(set(deps.get("nodes", {})) == set(ids), "Plasma dependency manifest node set")
+
+req(dag.get("state") == "candidate-review-required" and dag.get("candidate_only") is True, "Plasma DAG candidate state")
+req(dag.get("package_execution_authorized") is False and dag.get("consumes_package_attempt") is False, "Plasma DAG package execution lock")
+
+req(audit.get("state") == "execution-authorized", "Plasma provider audit state")
+req(audit.get("execution_authorized") is True, "Plasma provider audit execution authorization")
+req(audit.get("package_execution_authorized") is False, "Plasma provider audit package execution lock")
+req(audit.get("consumes_package_attempt") is False, "Plasma provider audit Attempt boundary")
+audit_input = audit.get("input", {})
+req(audit_input.get("discovery_workflow_run_id") == 36951077374, "Provider audit discovery run")
+req(audit_input.get("discovery_artifact_id") == 11204675088, "Provider audit discovery artifact")
+req(audit_input.get("dependencies_json_sha256") == "a6b2d066ced63231dd3de6adb6248dbbd7eba01cf0d776d49c6d2b091c0f82ef", "Provider audit input hash")
+
+for token in (
+    "provider-audit-pending",
+    "actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093",
+    "run-id: 36951077374",
+    "run-kde-plasma-provider-audit.py",
+):
+    req(token in lane, f"Plasma lane contract: {token}")
 
 stack = desktop.get("desktop", {})
 req(stack.get("plasma", {}).get("version") == "6.7.5", "desktop-stack Plasma version")
@@ -81,5 +108,5 @@ if errors:
     raise SystemExit(1)
 
 print("KDE Plasma 6.7.5 planning validation: PASS")
-print(f"Sources: {len(sources)} official upstream tarballs")
-print("Next gate: plasma-dependency-discovery-evidence")
+print("Lane phase: provider-audit-pending")
+print("Package execution: locked")

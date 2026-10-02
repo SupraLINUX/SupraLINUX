@@ -62,16 +62,18 @@
     "release_relevant_desktop": "unlocked"
   },
   "planning": {
-    "phase": "dag-candidate-review",
-    "status": "dag-candidate-review-pending",
-    "execution_authorized": false,
+    "phase": "provider-inventory-audit",
+    "status": "provider-audit-pending",
+    "execution_authorized": true,
     "package_execution_authorized": false,
-    "validation_run_kind": "planning-dag-candidate-review",
+    "validation_run_kind": "planning-provider-inventory-audit",
     "consumes_package_attempt": false,
     "canonical_package_state_effect": "none",
     "runner_scope": "github-hosted-ubuntu-26.04-non-authoritative-preflight",
+    "lane_workflow": ".github/workflows/kde-plasma-lane.yml",
     "dependency_manifest": "manifests/kde-plasma-dependencies.json",
     "dag_candidate_manifest": "manifests/kde-plasma-dag-candidate.json",
+    "provider_audit_manifest": "manifests/kde-plasma-provider-audit.json",
     "discovery_evidence": {
       "workflow_run_id": 36951077374,
       "workflow_job_id": 110664287780,
@@ -86,7 +88,7 @@
       "internal_candidate_edge_count": 109,
       "ambiguous_provider_references": 0
     },
-    "next_gate": "plasma-dag-candidate-review"
+    "next_gate": "plasma-provider-audit-evidence"
   },
   "sources": [
     {

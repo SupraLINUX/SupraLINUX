@@ -206,10 +206,23 @@ PY
   return 0
 }
 
-for path in "${changed[@]}"; do
+is_plasma_lane_path() {
+  local path="$1"
   case "${path}" in
-    scripts/test-kde-plasma-dependency-parser.py|scripts/validate_kde_plasma.py)
-      continue ;;
+    .github/workflows/kde-plasma-*.yml|scripts/*kde-plasma*|scripts/*kde_plasma*|manifests/kde-plasma*.json|docs/plasma*)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+for path in "${changed[@]}"; do
+  if is_plasma_lane_path "${path}"; then
+    continue
+  fi
+  case "${path}" in
     docs/*|README.md|scripts/validate_*.py|scripts/test-*.sh|scripts/pr-ci-router-needed.sh|scripts/compile_kde_tier2_campaign.py|manifests/kde-tier1-package-batch*-attempts.json|manifests/kde-tier2-campaign-plan.json|.github/workflows/repository-policy.yml|.github/workflows/pr-ci-router.yml) continue ;;
     manifests/authoritative-kvm-certification.json) continue ;;
     manifests/desktop-stack.json)
@@ -218,8 +231,6 @@ for path in "${changed[@]}"; do
     .github/workflows/runner-contract.yml|.github/workflows/authoritative-package-proof.yml|.github/workflows/authoritative-frameworks-sample-proof.yml|scripts/run-authoritative-package-proof.sh|scripts/run-authoritative-frameworks-sample-proof.sh|scripts/run-authoritative-kvm-certification.sh|scripts/run-kvm-jit-gate.sh|scripts/run-kvm-jit-gate-core.sh|scripts/provision-kvm-host.sh|scripts/check-kvm-host.sh|scripts/build-authoritative-runner-image.sh|scripts/provision-authoritative-runner-guest.sh|scripts/install-actions-runner.sh|scripts/prepare-autopkgtest-qemu-image.sh|scripts/seal-authoritative-runner-image.sh|scripts/check-nested-kvm-runtime.sh|scripts/check-actions-runner-runtime.sh|scripts/check-golden-image-provenance.sh|scripts/fetch-ubuntu-26.04-cloud-image.sh|scripts/verify-ubuntu-cloud-image-provenance.sh|scripts/qemu-kvm-required.sh)
       continue ;;
     .github/workflows/kde-tier3-build-level3.yml|scripts/run-kde-tier3-build-level3.sh|scripts/plan-kde-tier3-build-level3.py|scripts/test-kde-tier3-build-level3-planner.py|manifests/kde-tier3-build-level3.json|manifests/kde-tier3-build-level3-attempts.json|manifests/kde-tier3-build-campaign.json)
-      continue ;;
-    .github/workflows/kde-plasma-dependency-discovery.yml|scripts/run-kde-plasma-dependency-discovery.py|scripts/kde-plasma-dependency-discovery-needed.sh|scripts/kde_plasma_dependency_parser.py|scripts/validate_kde_plasma_dag_candidate.py|manifests/kde-plasma.json|manifests/kde-plasma-dependencies.json|manifests/kde-plasma-dag-candidate.json)
       continue ;;
     .github/workflows/kde-tier3-materialization.yml|scripts/materialize_kde_tier3_package.py|scripts/kde-tier3-materialization-needed.sh)
       if tier3_level3_materialization_is_routed; then continue; fi

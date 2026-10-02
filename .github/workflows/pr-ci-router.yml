@@ -27,7 +27,7 @@ jobs:
       run_knewstuff_runtime: ${{ steps.scope.outputs.run_knewstuff_runtime }}
       run_tier3_materialization: ${{ steps.scope.outputs.run_tier3_materialization }}
       run_tier3_level3: ${{ steps.scope.outputs.run_tier3_level3 }}
-      run_plasma_discovery: ${{ steps.scope.outputs.run_plasma_discovery }}
+      run_plasma_lane: ${{ steps.scope.outputs.run_plasma_lane }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -92,9 +92,17 @@ jobs:
           echo "run_tier3_materialization=${run_tier3_materialization}" >> "${GITHUB_OUTPUT}"
           run_tier3_level3="$(python3 -c 'import json; m=json.load(open("manifests/kde-tier3-build-level3.json")); ok=m.get("state")=="active-pending-ci" and m.get("execution_authorized") is True; print("true" if ok else "false")')"
           echo "run_tier3_level3=${run_tier3_level3}" >> "${GITHUB_OUTPUT}"
-          run_plasma_discovery="$(python3 -c 'import json; m=json.load(open("manifests/kde-plasma.json")); p=m.get("planning",{}); ok=p.get("status")=="dependency-discovery-pending" and p.get("execution_authorized") is True and p.get("package_execution_authorized") is False; print("true" if ok else "false")')"
-          echo "run_plasma_discovery=${run_plasma_discovery}" >> "${GITHUB_OUTPUT}"
-          echo "Plasma dependency discovery live authorization: ${run_plasma_discovery}"
+          run_plasma_lane=false
+          while IFS= read -r path; do
+            case "${path}" in
+              .github/workflows/kde-plasma-*.yml|scripts/*kde-plasma*|scripts/*kde_plasma*|manifests/kde-plasma*.json|docs/plasma*)
+                run_plasma_lane=true
+                break
+                ;;
+            esac
+          done < <(git diff --name-only "${before}" "${after}")
+          echo "run_plasma_lane=${run_plasma_lane}" >> "${GITHUB_OUTPUT}"
+          echo "Plasma lane changed: ${run_plasma_lane}"
           if [[ "${run_ci}" == "true" ]]; then
             echo "Semantic build/reference/provider input changed; invoking reusable CI lanes."
           else
@@ -105,11 +113,11 @@ jobs:
     name: Repository policy
     uses: ./.github/workflows/repository-policy.yml
 
-  kde-plasma-dependency-discovery:
-    name: Plasma 6.7.5 dependency discovery
+  kde-plasma-lane:
+    name: Plasma 6.7.5 lane
     needs: [plan, repository-policy]
-    if: needs.plan.outputs.run_plasma_discovery == 'true' && needs.repository-policy.result == 'success'
-    uses: ./.github/workflows/kde-plasma-dependency-discovery.yml
+    if: needs.plan.outputs.run_plasma_lane == 'true' && needs.repository-policy.result == 'success'
+    uses: ./.github/workflows/kde-plasma-lane.yml
 
   kde-tier3-knewstuff-runtime-validation:
     name: Tier 3 KNewStuff runtime validation
