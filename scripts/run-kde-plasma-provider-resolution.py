@@ -96,9 +96,9 @@ for req in inv["cmake_requirements"]:
 
     esc = re.escape(req)
     patterns = [
-        rf"/{esc}Config\\.cmake$",
-        rf"/{re.escape(req.lower())}-config\\.cmake$",
-        rf"/{esc}-config\\.cmake$",
+        rf"/{esc}Config\.cmake$",
+        rf"/{re.escape(req.lower())}-config\.cmake$",
+        rf"/{esc}-config\.cmake$",
         rf"/(?:s?bin)/{esc}$",
     ]
     cmake_search_patterns[req] = patterns
@@ -126,7 +126,7 @@ pkg = {}
 pkg_patterns = {}
 for raw_req in inv["pkg_config_requirements"]:
     module = re.split(r"[<>=]", raw_req, 1)[0].strip()
-    pattern = rf"/pkgconfig/{re.escape(module)}\\.pc$"
+    pattern = rf"/pkgconfig/{re.escape(module)}\.pc$"
     pkg_patterns[raw_req] = (module, pattern)
 
 pkg_hits = apt_file_search_many([pattern for _, pattern in pkg_patterns.values()])
