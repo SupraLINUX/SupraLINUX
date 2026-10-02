@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from kde_plasma_provider_index import apt_file_search_many, apt_source_many
+
 if len(sys.argv) != 2:
     raise SystemExit("usage: run-kde-plasma-provider-resolution.py <provider-inventory.json>")
 
@@ -19,55 +21,6 @@ if actual != expected:
 inv = json.loads(raw)
 out = Path("evidence/kde-plasma-provider-resolution")
 out.mkdir(parents=True, exist_ok=True)
-
-def apt_file_search_many(patterns):
-    patterns = list(dict.fromkeys(patterns))
-    if not patterns:
-        return {}
-    combined = "(?:" + "|".join(f"(?:{p})" for p in patterns) + ")"
-    p = subprocess.run(["apt-file", "search", "-x", combined], text=True, capture_output=True)
-    if p.returncode not in (0, 1):
-        raise SystemExit(f"apt-file batched search failed: {p.stderr.strip()}")
-    rows = []
-    for line in p.stdout.splitlines():
-        if ":" not in line:
-            continue
-        pkg, path = line.split(":", 1)
-        rows.append((pkg.strip(), path.strip()))
-    result = {pattern: set() for pattern in patterns}
-    compiled = {pattern: re.compile(pattern) for pattern in patterns}
-    for pkg, path in rows:
-        for pattern, regex in compiled.items():
-            if regex.search(path):
-                result[pattern].add(pkg)
-    return {pattern: sorted(pkgs) for pattern, pkgs in result.items()}
-
-def apt_source(name):
-    p = subprocess.run(["apt-cache", "showsrc", name], text=True, capture_output=True)
-    text = p.stdout if p.returncode == 0 else ""
-    records = []
-    current = {}
-    last_key = None
-    for line in text.splitlines() + [""]:
-        if not line.strip():
-            if current.get("Package") == name and current.get("Version"):
-                records.append({
-                    "version": current["Version"],
-                    "build_depends": current.get("Build-Depends", ""),
-                    "build_depends_indep": current.get("Build-Depends-Indep", ""),
-                })
-            current = {}
-            last_key = None
-            continue
-        if line.startswith(" ") and last_key:
-            current[last_key] = current.get(last_key, "") + " " + line.strip()
-            continue
-        if ": " in line:
-            key, value = line.split(": ", 1)
-            if key in {"Package", "Version", "Build-Depends", "Build-Depends-Indep"}:
-                current[key] = value.strip()
-                last_key = key
-    return {"source": name, "available": bool(records), "records": records}
 
 cmake = {}
 cmake_search_patterns = {}
@@ -164,7 +117,7 @@ for module in inv["qml_requirements"]:
         "candidates": candidates,
     }
 source_ids = ["aurorae","bluedevil","breeze","breeze-grub","breeze-gtk","breeze-plymouth","discover","drkonqi","flatpak-kcm","kactivitymanagerd","kde-cli-tools","kde-gtk-config","kdecoration","kdeplasma-addons","kgamma","kglobalacceld","kinfocenter","kmenuedit","knighttime","kpipewire","krdp","kscreen","kscreenlocker","ksshaskpass","ksystemstats","kwallet-pam","kwayland","kwayland-integration","kwin","kwin-x11","kwrited","layer-shell-qt","libkscreen","libksysguard","libplasma","milou","ocean-sound-theme","oxygen","oxygen-sounds","plasma-activities","plasma-activities-stats","plasma-bigscreen","plasma-browser-integration","plasma-desktop","plasma-dialer","plasma-disks","plasma-firewall","plasma-integration","plasma-keyboard","plasma-login-manager","plasma-mobile","plasma-nano","plasma-nm","plasma-pa","plasma-sdk","plasma-setup","plasma-systemmonitor","plasma-thunderbolt","plasma-vault","plasma-welcome","plasma-workspace","plasma-workspace-wallpapers","plasma5support","plymouth-kcm","polkit-kde-agent-1","powerdevil","print-manager","qqc2-breeze-style","sddm-kcm","spacebar","spectacle","systemsettings","union","wacomtablet","xdg-desktop-portal-kde"]
-ubuntu_sources = {name: apt_source(name) for name in source_ids}
+ubuntu_sources = apt_source_many(source_ids)
 
 (out / "cmake-resolution.json").write_text(json.dumps(cmake, indent=2, sort_keys=True) + "\n")
 (out / "pkg-config-resolution.json").write_text(json.dumps(pkg, indent=2, sort_keys=True) + "\n")

@@ -62,11 +62,11 @@
     "release_relevant_desktop": "unlocked"
   },
   "planning": {
-    "phase": "provider-resolution",
-    "status": "provider-resolution-pending",
+    "phase": "provider-resolution-infrastructure-recovery",
+    "status": "provider-resolution-preflight-pending",
     "execution_authorized": true,
     "package_execution_authorized": false,
-    "validation_run_kind": "planning-provider-resolution",
+    "validation_run_kind": "infrastructure-preflight",
     "consumes_package_attempt": false,
     "canonical_package_state_effect": "none",
     "runner_scope": "github-hosted-ubuntu-26.04-non-authoritative-preflight",
@@ -75,21 +75,37 @@
     "dag_candidate_manifest": "manifests/kde-plasma-dag-candidate.json",
     "provider_audit_manifest": "manifests/kde-plasma-provider-audit.json",
     "provider_resolution_manifest": "manifests/kde-plasma-provider-resolution.json",
-    "provider_audit_evidence": {
-      "workflow_run_id": 37008092158,
-      "workflow_job_id": 110841554884,
-      "workflow_head_sha": "715ff744c019743822e5609773298a65888967b1",
-      "artifact_id": 11226253937,
-      "artifact_name": "kde-plasma-provider-audit-715ff744c019743822e5609773298a65888967b1",
-      "artifact_digest": "sha256:bfb58c38bbe7aa2a8fdff5ef61b672b71e1ebcda55cb88c1e2976515ae32835a",
-      "provider_inventory_sha256": "885bcf1da1521b5f3c78a7e252a81ee4a64b537eda1f9922bec6654bbe415b5c",
-      "result_json_sha256": "b1c2dcc2b5a1a50197645ab3d0192685149635c712b4fbc196d7b5caa07efc20",
-      "result": "PASS",
-      "package_execution_started": false,
-      "consumes_package_attempt": false,
-      "canonical_package_state_effect": "none"
+    "provider_resolution_preflight_manifest": "manifests/kde-plasma-provider-resolution-preflight.json",
+    "infrastructure_hold": {
+      "mechanism": "apt-file-provider-resolution-scan",
+      "consecutive_infra_invalid": 2,
+      "retry_frozen": true,
+      "package_attempts_consumed": 0,
+      "incidents": [
+        {
+          "sequence": 1,
+          "workflow_run_id": 37016533849,
+          "workflow_job_id": 110869185461,
+          "workflow_head_sha": "b3815a256688a9ce5d9d77f5bb871ab4802fdd44",
+          "result": "INFRA_INVALID",
+          "failure": "provider resolver timed out before evidence materialization",
+          "timeout_minutes": 25
+        },
+        {
+          "sequence": 2,
+          "workflow_run_id": 37023254784,
+          "workflow_job_id": 110892486112,
+          "workflow_head_sha": "aa07ace46b0b737e22015cdb4a91e222b93060e9",
+          "result": "INFRA_INVALID",
+          "failure": "batched giant-regex apt-file resolver timed out before evidence materialization",
+          "timeout_minutes": 20
+        }
+      ],
+      "diagnosis": "archive-wide apt-file regex scans are too expensive when executed per requirement or as one giant alternation",
+      "remediation": "shared chunked apt-file index lookup plus one batched apt-cache showsrc query",
+      "resume_requires": "provider-resolution-infrastructure-preflight:PASS"
     },
-    "next_gate": "plasma-provider-resolution-evidence"
+    "next_gate": "plasma-provider-resolution-infrastructure-preflight"
   },
   "sources": [
     {

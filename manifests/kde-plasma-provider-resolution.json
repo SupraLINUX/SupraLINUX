@@ -2,8 +2,8 @@
   "schema": 1,
   "as_of": "2026-10-02",
   "plasma_version": "6.7.5",
-  "state": "execution-authorized",
-  "execution_authorized": true,
+  "state": "INFRA_HOLD",
+  "execution_authorized": false,
   "package_execution_authorized": false,
   "consumes_package_attempt": false,
   "canonical_package_state_effect": "none",
@@ -31,5 +31,41 @@
     "qml": "evidence/kde-plasma-provider-resolution/qml-resolution.json",
     "ubuntu_sources": "evidence/kde-plasma-provider-resolution/ubuntu-source-reference.json"
   },
-  "next_gate": "plasma-provider-resolution-review"
+  "next_gate": "plasma-provider-resolution-review",
+  "infrastructure_hold": {
+    "mechanism": "apt-file-provider-resolution-scan",
+    "consecutive_infra_invalid": 2,
+    "retry_frozen": true,
+    "package_attempts_consumed": 0,
+    "incidents": [
+      {
+        "sequence": 1,
+        "workflow_run_id": 37016533849,
+        "workflow_job_id": 110869185461,
+        "workflow_head_sha": "b3815a256688a9ce5d9d77f5bb871ab4802fdd44",
+        "result": "INFRA_INVALID",
+        "failure": "provider resolver timed out before evidence materialization",
+        "timeout_minutes": 25
+      },
+      {
+        "sequence": 2,
+        "workflow_run_id": 37023254784,
+        "workflow_job_id": 110892486112,
+        "workflow_head_sha": "aa07ace46b0b737e22015cdb4a91e222b93060e9",
+        "result": "INFRA_INVALID",
+        "failure": "batched giant-regex apt-file resolver timed out before evidence materialization",
+        "timeout_minutes": 20
+      }
+    ],
+    "diagnosis": "archive-wide apt-file regex scans are too expensive when executed per requirement or as one giant alternation",
+    "remediation": "shared chunked apt-file index lookup plus one batched apt-cache showsrc query",
+    "resume_requires": "provider-resolution-infrastructure-preflight:PASS"
+  },
+  "recovery": {
+    "state": "preflight-pending",
+    "manifest": "manifests/kde-plasma-provider-resolution-preflight.json",
+    "script": "scripts/run-kde-plasma-provider-resolution-preflight.py",
+    "shared_mechanism": "scripts/kde_plasma_provider_index.py",
+    "resume_requires": "preflight PASS evidence promoted"
+  }
 }
