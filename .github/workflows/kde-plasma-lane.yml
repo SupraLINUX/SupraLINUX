@@ -92,8 +92,6 @@ jobs:
           Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
           EOF
           sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends apt-file
-          sudo apt-file update
 
       - name: Download provider inventory evidence
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
@@ -144,8 +142,6 @@ jobs:
           Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
           EOF
           sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends apt-file
-          sudo apt-file update
 
       - name: Download provider inventory evidence
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
@@ -156,8 +152,17 @@ jobs:
           repository: ${{ github.repository }}
           run-id: 37008092158
 
+      - name: Download dependency discovery evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: kde-plasma-dependency-discovery-488d96f4d23d3b08be5f317f2cd65dc9889a3a8c
+          path: .work/kde-plasma-discovery
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 36951077374
+
       - name: Resolve Ubuntu and KDE provider candidates
-        run: python3 scripts/run-kde-plasma-provider-resolution.py .work/kde-plasma-provider-audit/provider-inventory.json
+        run: python3 scripts/run-kde-plasma-provider-resolution.py .work/kde-plasma-provider-audit/provider-inventory.json .work/kde-plasma-discovery/dependencies.json
 
       - name: Upload provider resolution evidence
         if: always()

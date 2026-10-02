@@ -7,7 +7,7 @@
   "package_execution_authorized": false,
   "consumes_package_attempt": false,
   "canonical_package_state_effect": "none",
-  "mechanism": "apt-file-chunked-regex-plus-batched-apt-cache-showsrc",
+  "mechanism": "batched-apt-cache-showsrc-plus-policy",
   "incident_mechanism": "apt-file-provider-resolution-scan",
   "consecutive_infra_invalid": 2,
   "source_inventory": {
@@ -17,16 +17,24 @@
     "provider_inventory_sha256": "885bcf1da1521b5f3c78a7e252a81ee4a64b537eda1f9922bec6654bbe415b5c"
   },
   "contract": {
-    "apt_file_chunk_size": 12,
-    "max_apt_file_seconds": 180,
-    "max_showsrc_seconds": 60,
+    "max_showsrc_seconds": 30,
+    "max_policy_seconds": 30,
     "sample_source_count": 12,
-    "required_anchors": [
-      "Qt6Config",
-      "ECMConfig",
-      "pipewire-pc"
+    "minimum_available_source_references": 6,
+    "required_provider_anchors": [
+      "qt6-base-dev",
+      "extra-cmake-modules",
+      "libpipewire-0.3-dev"
     ]
   },
   "output": "evidence/kde-plasma-provider-resolution-preflight/result.json",
-  "next_gate": "resume-plasma-provider-resolution"
+  "next_gate": "resume-plasma-provider-resolution",
+  "revision": 2,
+  "failed_previous_preflight": {
+    "workflow_run_id": 37034707251,
+    "workflow_job_id": 110930343273,
+    "result": "FAIL",
+    "mechanism": "apt-file-chunked-regex-plus-batched-apt-cache-showsrc",
+    "package_attempts_consumed": 0
+  }
 }

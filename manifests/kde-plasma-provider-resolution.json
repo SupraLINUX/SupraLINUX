@@ -19,9 +19,10 @@
     "frameworks_provider": "supralinux-frameworks-6.30.0",
     "qt_provider": "ubuntu-resolute-qt-6.10.2",
     "use_ubuntu_source_build_depends_as_reference": true,
-    "use_apt_file_for_binary_provider_discovery": true,
+    "use_apt_file_for_binary_provider_discovery": false,
     "legacy_qt5_kf5_refs_are_findings_until_source_context_proves_active": true,
-    "unresolved_provider_is_planning_finding_not_package_fail": true
+    "unresolved_provider_is_planning_finding_not_package_fail": true,
+    "use_batched_ubuntu_source_build_depends": true
   },
   "workflow": ".github/workflows/kde-plasma-lane.yml",
   "output": {
@@ -57,15 +58,27 @@
         "timeout_minutes": 20
       }
     ],
-    "diagnosis": "archive-wide apt-file regex scans are too expensive when executed per requirement or as one giant alternation",
-    "remediation": "shared chunked apt-file index lookup plus one batched apt-cache showsrc query",
-    "resume_requires": "provider-resolution-infrastructure-preflight:PASS"
+    "diagnosis": "apt-file archive-wide Contents scanning is too slow and unreliable for this provider-resolution workload",
+    "remediation": "replace apt-file lookup with batched Ubuntu source Build-Depends references plus batched apt-cache policy",
+    "resume_requires": "provider-resolution-infrastructure-preflight:PASS",
+    "preflight_revision": 2,
+    "failed_preflights": [
+      {
+        "workflow_run_id": 37034707251,
+        "workflow_job_id": 110930343273,
+        "workflow_head_sha": "96162ce051527398c39b396dd91b83eeeda203cd",
+        "result": "FAIL",
+        "failure": "apt-file chunked preflight required ~150s for a small sample and failed Qt6Config anchor lookup",
+        "package_attempts_consumed": 0
+      }
+    ]
   },
   "recovery": {
-    "state": "preflight-pending",
+    "state": "preflight-pending-revision-2",
     "manifest": "manifests/kde-plasma-provider-resolution-preflight.json",
     "script": "scripts/run-kde-plasma-provider-resolution-preflight.py",
     "shared_mechanism": "scripts/kde_plasma_provider_index.py",
-    "resume_requires": "preflight PASS evidence promoted"
+    "resume_requires": "preflight PASS evidence promoted",
+    "mechanism": "batched-apt-cache-showsrc-plus-policy"
   }
 }

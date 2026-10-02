@@ -101,9 +101,20 @@
           "timeout_minutes": 20
         }
       ],
-      "diagnosis": "archive-wide apt-file regex scans are too expensive when executed per requirement or as one giant alternation",
-      "remediation": "shared chunked apt-file index lookup plus one batched apt-cache showsrc query",
-      "resume_requires": "provider-resolution-infrastructure-preflight:PASS"
+      "diagnosis": "apt-file archive-wide Contents scanning is too slow and unreliable for this provider-resolution workload",
+      "remediation": "replace apt-file lookup with batched Ubuntu source Build-Depends references plus batched apt-cache policy",
+      "resume_requires": "provider-resolution-infrastructure-preflight:PASS",
+      "preflight_revision": 2,
+      "failed_preflights": [
+        {
+          "workflow_run_id": 37034707251,
+          "workflow_job_id": 110930343273,
+          "workflow_head_sha": "96162ce051527398c39b396dd91b83eeeda203cd",
+          "result": "FAIL",
+          "failure": "apt-file chunked preflight required ~150s for a small sample and failed Qt6Config anchor lookup",
+          "package_attempts_consumed": 0
+        }
+      ]
     },
     "next_gate": "plasma-provider-resolution-infrastructure-preflight"
   },
