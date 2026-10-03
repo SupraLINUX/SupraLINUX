@@ -16,7 +16,7 @@ level0 = json.loads((ROOT / "manifests/kde-plasma-level0.json").read_text())
 
 req(data.get("policy") == "milestone-images-are-execution-cache-not-source-of-truth", "checkpoint cache policy")
 cp = data.get("checkpoints", {}).get("frameworks-6.30-pass", {})
-req(cp.get("state") in {"build-required", "PASS"}, "Frameworks milestone state")
+req(cp.get("state") == "PASS", "Frameworks milestone state")
 req(cp.get("kind") == "qcow2-execution-milestone-cache", "Frameworks milestone kind")
 req(cp.get("framework_series") == "6.30.0", "Frameworks milestone series")
 req(cp.get("expected_pass_nodes") == 65, "Frameworks milestone PASS-node count")
@@ -28,6 +28,16 @@ req(cp.get("safety", {}).get("cache_only") is True, "Frameworks milestone cache-
 req(cp.get("safety", {}).get("package_truth_from_artifacts") is True, "Frameworks milestone artifact authority")
 req(cp.get("safety", {}).get("failed_checkpoint_build_consumes_package_attempt") is False, "Frameworks milestone Attempt boundary")
 req(cp.get("required_before", {}).get("plasma_level0_package_execution") is True, "Frameworks milestone Level 0 requirement")
+req(cp.get("image_sha256") == "ec38f99e306d5a13333d6b247a9433b3526ec4a6d1a272631242c68df56c3e97", "Frameworks milestone admitted image hash")
+evidence = cp.get("evidence", {})
+req(evidence.get("result") == "PASS", "Frameworks milestone evidence result")
+req(evidence.get("builder_commit") == "92defdaf79e573897e0e9836a9365aa3f2c7eb2d", "Frameworks milestone builder commit")
+req(evidence.get("retained_framework_pass_artifacts") == 65, "Frameworks milestone retained artifact count")
+req(evidence.get("apt_index_binary_entries") == 336, "Frameworks milestone APT entry count")
+req(evidence.get("qemu_img_check") == "PASS", "Frameworks milestone qemu-img validation")
+req(evidence.get("package_execution_started") is False, "Frameworks milestone package execution boundary")
+req(evidence.get("consumes_package_attempt") is False, "Frameworks milestone package Attempt boundary")
+req(evidence.get("canonical_package_state_effect") == "none", "Frameworks milestone package state effect")
 
 passes = [n for n in dag.get("nodes", {}).values() if n.get("state") == "PASS"]
 req(dag.get("frameworks_series") == "6.30.0", "Frameworks canonical series")
@@ -52,5 +62,5 @@ if errors:
     raise SystemExit(1)
 
 print("Execution checkpoint policy validation: PASS")
-print("frameworks-6.30-pass: build-required cache; 65 retained PASS artifacts")
+print("frameworks-6.30-pass: PASS cache; 65 retained PASS artifacts; 336 binary entries")
 print("Plasma Level 0 package execution remains locked until checkpoint admission")

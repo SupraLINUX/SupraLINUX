@@ -32,12 +32,10 @@ for command_name in curl dpkg-deb dpkg-scanpackages gzip install jq mmdebstrap q
 done
 
 "${ROOT}/scripts/with-libguestfs-runtime.sh" true
-for command_name in virt-copy-in; do
-    command -v "${command_name}" >/dev/null 2>&1 || {
-        printf 'Missing libguestfs command: %s\n' "${command_name}" >&2
-        exit 1
-    }
-done
+command -v virt-copy-in >/dev/null 2>&1 || {
+    printf 'Missing libguestfs command: virt-copy-in\n' >&2
+    exit 1
+}
 
 LOCAL_HEAD="$(git -C "${ROOT}" rev-parse HEAD)"
 if [[ -n "$(git -C "${ROOT}" status --porcelain --untracked-files=normal)" ]]; then

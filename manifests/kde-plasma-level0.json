@@ -856,11 +856,16 @@
   "execution_checkpoint": {
     "checkpoint_id": "frameworks-6.30-pass",
     "checkpoint_manifest": "manifests/execution-checkpoints.json",
-    "state": "build-required",
+    "state": "PASS",
     "required_before_package_execution": true,
     "cache_only": true,
     "host_path": "/var/lib/supralinux/images/milestones/frameworks-6.30-pass.qcow2",
     "usage": "future Plasma authoritative package guests start from this milestone image instead of rebuilding Frameworks/bootstrap state",
-    "fallback": "reconstruct from retained artifacts/manifests if cache is lost"
+    "fallback": "reconstruct from retained artifacts/manifests if cache is lost",
+    "image_sha256": "ec38f99e306d5a13333d6b247a9433b3526ec4a6d1a272631242c68df56c3e97",
+    "evidence_dir": "/var/lib/supralinux/evidence/milestone-frameworks-6.30/20261003T054936Z-1285730",
+    "builder_commit": "92defdaf79e573897e0e9836a9365aa3f2c7eb2d",
+    "package_execution_effect": "none",
+    "consumes_package_attempt": false
   }
 }

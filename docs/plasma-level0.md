@@ -62,3 +62,15 @@ The earlier same-name resolver found Ubuntu source `discover` `2.1.2-10.1build1`
 - `spacebar`
 
 Next gate after a PASS preflight: `plasma-level0-materialization`. Package execution remains locked after that transition until package contracts/materialization evidence are promoted and an explicit build gate is authorized.
+
+
+## Execution checkpoint
+
+The reusable Frameworks milestone cache is now **PASS**:
+
+```text
+/var/lib/supralinux/images/milestones/frameworks-6.30-pass.qcow2
+sha256=ec38f99e306d5a13333d6b247a9433b3526ec4a6d1a272631242c68df56c3e97
+```
+
+It contains the retained Frameworks 6.30 PASS binary pool and a prewarmed Resolute sbuild rootfs. It is an execution cache only; artifacts/manifests remain canonical. No Plasma package execution was started by creating this checkpoint, and Plasma package Attempts remain zero.
