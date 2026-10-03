@@ -62,14 +62,14 @@
     "release_relevant_desktop": "unlocked"
   },
   "planning": {
-    "phase": "provider-resolution-review",
-    "status": "provider-resolution-review-pending",
-    "execution_authorized": true,
+    "phase": "dag-executable",
+    "status": "dag-executable-promoted",
+    "execution_authorized": false,
     "package_execution_authorized": false,
-    "validation_run_kind": "planning-provider-resolution-review",
+    "validation_run_kind": "repository-dag-promotion",
     "consumes_package_attempt": false,
     "canonical_package_state_effect": "none",
-    "runner_scope": "github-hosted-ubuntu-26.04-non-authoritative-planning",
+    "runner_scope": "repository-policy-static-validation",
     "lane_workflow": ".github/workflows/kde-plasma-lane.yml",
     "dependency_manifest": "manifests/kde-plasma-dependencies.json",
     "dag_candidate_manifest": "manifests/kde-plasma-dag-candidate.json",
@@ -108,13 +108,21 @@
       "certified_mechanism": "batched-apt-cache-showsrc-plus-policy",
       "package_attempts_consumed": 0
     },
-    "next_gate": "plasma-provider-resolution-review-evidence",
+    "next_gate": "plasma-level0-definition",
     "provider_resolution_review_manifest": "manifests/kde-plasma-provider-resolution-review.json",
     "provider_resolution_evidence": {
       "workflow_run_id": 37086119189,
       "job_id": 111096931279,
       "artifact_id": 11260780398,
       "artifact_digest": "sha256:aeabbadbb4ea5d5388cfe0aee4eb62e8ca3b79de839414b77abd000724aa7785"
+    },
+    "dag_manifest": "manifests/kde-plasma-dag.json",
+    "provider_resolution_review_evidence": {
+      "workflow_run_id": 37088387510,
+      "artifact_id": 11261258576,
+      "artifact_digest": "sha256:7f6aa009fcd72086102f5e64a43bddf59a533c2972b2324f02ece6f1a5ce4aff",
+      "review_json_sha256": "838c60bbf5e16b72e3e8551b2fd0f77aeff7f82b0c11d269b1067df7146aebe7",
+      "result_json_sha256": "1d68c3373990aaa6dfeb614cd1a62d196be00e0208d9ea0c4cc5e7371d114bad"
     }
   },
   "sources": [

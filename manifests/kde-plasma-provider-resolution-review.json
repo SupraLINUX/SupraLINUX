@@ -5,8 +5,8 @@
   "desktop_authority": "kde-upstream-stable",
   "provider_platform": "ubuntu-resolute",
   "plasma_version": "6.7.5",
-  "state": "execution-authorized",
-  "execution_authorized": true,
+  "state": "PASS",
+  "execution_authorized": false,
   "package_execution_authorized": false,
   "validation_run_kind": "planning-provider-resolution-review",
   "consumes_package_attempt": false,
@@ -314,5 +314,18 @@
     "artifact_name_template": "kde-plasma-provider-resolution-review-${commit}",
     "retention_days": 90
   },
-  "next_gate": "plasma-provider-resolution-review-evidence"
+  "next_gate": "plasma-dag-executable-promotion",
+  "evidence": {
+    "result": "PASS",
+    "workflow_run_id": 37088387510,
+    "workflow_head_sha": "bab176ffbdc83e62f08030506983f28e34335f86",
+    "artifact_id": 11261258576,
+    "artifact_name": "kde-plasma-provider-resolution-review-bab176ffbdc83e62f08030506983f28e34335f86",
+    "artifact_digest": "sha256:7f6aa009fcd72086102f5e64a43bddf59a533c2972b2324f02ece6f1a5ce4aff",
+    "review_json_sha256": "838c60bbf5e16b72e3e8551b2fd0f77aeff7f82b0c11d269b1067df7146aebe7",
+    "result_json_sha256": "1d68c3373990aaa6dfeb614cd1a62d196be00e0208d9ea0c4cc5e7371d114bad",
+    "definition_sha256": "cf194c5818c88223e219ff56dcd537c0f0592038b5d101f1506621a7aa4354c4",
+    "package_execution_started": false,
+    "review_required": false
+  }
 }

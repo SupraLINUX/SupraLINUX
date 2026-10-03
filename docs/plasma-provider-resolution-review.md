@@ -1,8 +1,8 @@
 # Plasma 6.7.5 provider-resolution review
 
-Status at definition time: **review pending CI**.
+Status: **PASS / closed**.
 
-This gate consumes the closed provider-resolution evidence from run `37086119189`, job `111096931279`, artifact `11260780398`. It is planning-only: no package execution starts, no package Attempt is consumed, and Level 0 remains locked.
+This gate consumed the closed provider-resolution evidence from run `37086119189`, job `111096931279`, artifact `11260780398`. The review itself passed in PR CI router run `37088387510`; artifact `11261258576` has digest `sha256:7f6aa009fcd72086102f5e64a43bddf59a533c2972b2324f02ece6f1a5ce4aff`, with `review.json` SHA-256 `838c60bbf5e16b72e3e8551b2fd0f77aeff7f82b0c11d269b1067df7146aebe7` and `result.json` SHA-256 `1d68c3373990aaa6dfeb614cd1a62d196be00e0208d9ea0c4cc5e7371d114bad`. It remained planning-only: no package execution started, no package Attempt was consumed, and Level 0 remained locked.
 
 ## Review decisions
 
@@ -30,4 +30,4 @@ This gate consumes the closed provider-resolution evidence from run `37086119189
 - https://packages.ubuntu.com/resolute/kirigami-addons-dev
 - https://packages.ubuntu.com/resolute/kquickimageeditor-dev
 
-Passing this review only authorizes promotion of the candidate dependency graph to an executable DAG definition. It does **not** authorize Plasma Level 0 package execution.
+This review authorized promotion of the candidate dependency graph to the canonical executable DAG. That promotion does **not** authorize Plasma Level 0 package execution; the next gate is `plasma-level0-definition`.

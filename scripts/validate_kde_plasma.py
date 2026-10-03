@@ -14,6 +14,7 @@ def req(condition, message):
 plasma = json.loads((ROOT / "manifests/kde-plasma.json").read_text())
 deps = json.loads((ROOT / "manifests/kde-plasma-dependencies.json").read_text())
 dag = json.loads((ROOT / "manifests/kde-plasma-dag-candidate.json").read_text())
+executable_dag = json.loads((ROOT / "manifests/kde-plasma-dag.json").read_text())
 audit = json.loads((ROOT / "manifests/kde-plasma-provider-audit.json").read_text())
 resolution = json.loads((ROOT / "manifests/kde-plasma-provider-resolution.json").read_text())
 resolution_review = json.loads((ROOT / "manifests/kde-plasma-provider-resolution-review.json").read_text())
@@ -47,18 +48,19 @@ for node in sources:
     req(node.get("source_url") == f"https://download.kde.org/stable/plasma/6.7.5/{node_id}-6.7.5.tar.xz", f"{node_id}: source URL")
 
 planning = plasma.get("planning", {})
-req(planning.get("phase") == "provider-resolution-review", "Plasma planning phase")
-req(planning.get("status") == "provider-resolution-review-pending", "Plasma provider resolution review live status")
-req(planning.get("execution_authorized") is True, "Plasma provider resolution review authorization")
-req(planning.get("package_execution_authorized") is False, "Provider resolution review must not authorize package execution")
-req(planning.get("consumes_package_attempt") is False, "Provider resolution review must not consume package Attempt")
-req(planning.get("canonical_package_state_effect") == "none", "Provider resolution review canonical package state effect")
-req(planning.get("validation_run_kind") == "planning-provider-resolution-review", "Provider resolution review run kind")
-req(planning.get("runner_scope") == "github-hosted-ubuntu-26.04-non-authoritative-planning", "Provider resolution review runner scope")
+req(planning.get("phase") == "dag-executable", "Plasma planning phase")
+req(planning.get("status") == "dag-executable-promoted", "Plasma executable DAG live status")
+req(planning.get("execution_authorized") is False, "Executable DAG promotion must close execution authorization")
+req(planning.get("package_execution_authorized") is False, "Executable DAG promotion must not authorize package execution")
+req(planning.get("consumes_package_attempt") is False, "Executable DAG promotion must not consume package Attempt")
+req(planning.get("canonical_package_state_effect") == "none", "Executable DAG promotion canonical package state effect")
+req(planning.get("validation_run_kind") == "repository-dag-promotion", "Executable DAG promotion run kind")
+req(planning.get("runner_scope") == "repository-policy-static-validation", "Executable DAG promotion validation scope")
 req(planning.get("lane_workflow") == ".github/workflows/kde-plasma-lane.yml", "Plasma lane workflow")
+req(planning.get("dag_manifest") == "manifests/kde-plasma-dag.json", "Executable DAG manifest binding")
 req(planning.get("provider_resolution_review_manifest") == "manifests/kde-plasma-provider-resolution-review.json", "Provider resolution review manifest binding")
-req(planning.get("provider_resolution_evidence", {}).get("artifact_id") == 11260780398, "Provider resolution promoted artifact binding")
-req(planning.get("next_gate") == "plasma-provider-resolution-review-evidence", "Plasma provider resolution review next gate")
+req(planning.get("provider_resolution_review_evidence", {}).get("artifact_id") == 11261258576, "Provider resolution review artifact binding")
+req(planning.get("next_gate") == "plasma-level0-definition", "Plasma executable DAG next gate")
 
 disc = deps.get("discovery", {})
 req(deps.get("state") == "discovery-evidence-promoted", "Plasma dependency discovery evidence promotion")
@@ -73,6 +75,12 @@ req(set(deps.get("nodes", {})) == set(ids), "Plasma dependency manifest node set
 
 req(dag.get("state") == "candidate-review-required" and dag.get("candidate_only") is True, "Plasma DAG candidate state")
 req(dag.get("package_execution_authorized") is False and dag.get("consumes_package_attempt") is False, "Plasma DAG package execution lock")
+req(executable_dag.get("state") == "executable" and executable_dag.get("candidate_only") is False, "Plasma executable DAG state")
+req(executable_dag.get("canonical_for_package_planning") is True, "Plasma executable DAG planning authority")
+req(executable_dag.get("topology") == dag.get("topology") and executable_dag.get("nodes") == dag.get("nodes"), "Plasma DAG promotion must preserve topology")
+req(executable_dag.get("promotion", {}).get("provider_resolution_review", {}).get("artifact_id") == 11261258576, "Plasma executable DAG review evidence")
+req(executable_dag.get("package_execution_authorized") is False and executable_dag.get("consumes_package_attempt") is False, "Plasma executable DAG package execution lock")
+req(executable_dag.get("next_gate") == "plasma-level0-definition", "Plasma executable DAG next gate")
 
 req(audit.get("state") == "PASS", "Plasma provider audit PASS")
 req(audit.get("execution_authorized") is False, "Closed provider audit execution authorization")
@@ -99,8 +107,8 @@ req(recovery.get("evidence", {}).get("artifact_id") == 11240638791, "Provider re
 req(recovery.get("prior_infrastructure_hold", {}).get("consecutive_infra_invalid") == 2, "Provider resolution repeated INFRA_INVALID history")
 req(recovery.get("prior_infrastructure_hold", {}).get("package_attempts_consumed") == 0, "Provider resolution infrastructure incidents package Attempt boundary")
 
-req(resolution_review.get("state") == "execution-authorized", "Provider resolution review state")
-req(resolution_review.get("execution_authorized") is True, "Provider resolution review authorization")
+req(resolution_review.get("state") == "PASS", "Provider resolution review PASS")
+req(resolution_review.get("execution_authorized") is False, "Closed provider resolution review authorization")
 req(resolution_review.get("package_execution_authorized") is False, "Provider resolution review package execution lock")
 req(resolution_review.get("consumes_package_attempt") is False, "Provider resolution review Attempt boundary")
 req(resolution_review.get("canonical_package_state_effect") == "none", "Provider resolution review canonical package effect")
@@ -111,7 +119,14 @@ req(len(resolution_review.get("missing_build_dep_decisions", {})) == 7, "Provide
 req(len(resolution_review.get("qml_provider_decisions", {})) == 12, "Provider resolution QML review count")
 req(resolution_review.get("cmake_source_reference_policy", {}).get("expected_review_count") == 117, "Provider resolution CMake contextual review count")
 req(len(resolution_review.get("legacy_compatibility", {}).get("references", [])) == 11, "Provider resolution legacy compatibility review count")
-req(resolution_review.get("next_gate") == "plasma-provider-resolution-review-evidence", "Provider resolution review next gate")
+review_evidence = resolution_review.get("evidence", {})
+req(review_evidence.get("workflow_run_id") == 37088387510, "Provider resolution review workflow run")
+req(review_evidence.get("artifact_id") == 11261258576, "Provider resolution review artifact")
+req(review_evidence.get("artifact_digest") == "sha256:7f6aa009fcd72086102f5e64a43bddf59a533c2972b2324f02ece6f1a5ce4aff", "Provider resolution review artifact digest")
+req(review_evidence.get("review_json_sha256") == "838c60bbf5e16b72e3e8551b2fd0f77aeff7f82b0c11d269b1067df7146aebe7", "Provider resolution review snapshot hash")
+req(review_evidence.get("result_json_sha256") == "1d68c3373990aaa6dfeb614cd1a62d196be00e0208d9ea0c4cc5e7371d114bad", "Provider resolution review result hash")
+req(review_evidence.get("review_required") is False, "Provider resolution review closed result")
+req(resolution_review.get("next_gate") == "plasma-dag-executable-promotion", "Provider resolution review next gate")
 
 req(resolution_preflight.get("state") == "PASS", "Provider resolution preflight PASS")
 req(resolution_preflight.get("execution_authorized") is False, "Closed provider resolution preflight authorization")
@@ -127,7 +142,7 @@ req(audit_input.get("discovery_artifact_id") == 11204675088, "Provider audit dis
 req(audit_input.get("dependencies_json_sha256") == "a6b2d066ced63231dd3de6adb6248dbbd7eba01cf0d776d49c6d2b091c0f82ef", "Provider audit input hash")
 
 for token in (
-    "provider-resolution-review-pending",
+    "dag-executable-promoted",
     "actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093",
     "run-id: 37086119189",
     "run-kde-plasma-provider-resolution-review.py",
@@ -159,5 +174,5 @@ if errors:
     raise SystemExit(1)
 
 print("KDE Plasma 6.7.5 planning validation: PASS")
-print("Lane phase: provider-resolution-review-pending")
+print("Lane phase: dag-executable-promoted")
 print("Package execution: locked")

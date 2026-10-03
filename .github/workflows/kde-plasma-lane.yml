@@ -32,7 +32,7 @@ jobs:
         run: |
           phase="$(python3 -c 'import json; print(json.load(open("manifests/kde-plasma.json"))["planning"]["status"])')"
           case "${phase}" in
-            dependency-discovery-pending|provider-audit-pending|provider-resolution-pending|provider-resolution-preflight-pending|provider-resolution-review-pending)
+            dependency-discovery-pending|provider-audit-pending|provider-resolution-pending|provider-resolution-preflight-pending|provider-resolution-review-pending|dag-executable-promoted)
               ;;
             *)
               echo "Unsupported/non-executable Plasma lane phase: ${phase}" >&2
