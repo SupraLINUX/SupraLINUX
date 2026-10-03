@@ -177,3 +177,26 @@ scripts/run-authoritative-kvm-certification.sh
 ```
 
 The local checkout and PR head must be identical. The golden image may originate from an earlier commit only when its versioned golden-input fingerprint exactly matches the PR HEAD being certified; otherwise execution fails before a JIT runner is created and the image must be rebuilt. `source_commit` remains historical provenance, not a mutable live-state lock. Golden replacement is opt-in through `SUPRALINUX_REBUILD_GOLDEN=1`; evidence is retained outside the repository and is never auto-committed.
+
+
+## Milestone execution checkpoints
+
+The sealed golden image remains the immutable runner baseline, but long KDE campaigns now use **host-local milestone qcow2 images as execution caches** so a later topological level does not repeatedly reconstruct already-closed work.
+
+Before Plasma package execution, build the Frameworks 6.30 milestone cache:
+
+```bash
+SUPRALINUX_GITHUB_TOKEN=... scripts/build-frameworks-milestone-image.sh
+```
+
+The resulting default image is:
+
+```text
+/var/lib/supralinux/images/milestones/frameworks-6.30-pass.qcow2
+```
+
+It contains a verified pool of the 65 current Frameworks PASS artifacts plus a prewarmed Resolute sbuild rootfs. Frameworks packages are **not preinstalled into the sbuild rootfs**: package builds must still declare their Build-Depends, so the cache cannot hide undeclared dependencies.
+
+The checkpoint is never canonical evidence. Package artifacts/manifests remain the source of truth, and losing the image must only cost reconstruction time. Failed checkpoint construction is infrastructure/cache failure, consumes no package Attempt and changes no package state.
+
+After each complete Plasma topological level PASS, create the next milestone checkpoint before moving to the following level. Do not create checkpoints for FAIL, BLOCKED, diagnostics or INFRA_INVALID states.

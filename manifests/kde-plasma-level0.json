@@ -852,5 +852,15 @@
       "package_execution_authorized": false
     }
   },
-  "next_gate": "plasma-level0-materialization-preflight-evidence"
+  "next_gate": "plasma-level0-materialization-preflight-evidence",
+  "execution_checkpoint": {
+    "checkpoint_id": "frameworks-6.30-pass",
+    "checkpoint_manifest": "manifests/execution-checkpoints.json",
+    "state": "build-required",
+    "required_before_package_execution": true,
+    "cache_only": true,
+    "host_path": "/var/lib/supralinux/images/milestones/frameworks-6.30-pass.qcow2",
+    "usage": "future Plasma authoritative package guests start from this milestone image instead of rebuilding Frameworks/bootstrap state",
+    "fallback": "reconstruct from retained artifacts/manifests if cache is lost"
+  }
 }
