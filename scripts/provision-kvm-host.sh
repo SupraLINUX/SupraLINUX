@@ -37,19 +37,16 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     cloud-image-utils \
     cpu-checker \
     curl \
-    dpkg-dev \
     genisoimage \
     gnupg \
     jq \
     libguestfs-tools \
     libvirt-clients \
     libvirt-daemon-system \
-    mmdebstrap \
     qemu-system-x86 \
     qemu-utils \
     supermin \
     ubuntu-keyring \
-    unzip \
     virt-install
 
 if ! id "${LIBVIRT_QEMU_USER}" >/dev/null 2>&1; then
@@ -110,8 +107,8 @@ trap 'rm -f "${EVIDENCE_TMP}"' EXIT
     uname -a
     printf '\npackages:\n'
     dpkg-query -W -f='${Package}\t${Version}\n' \
-        cloud-image-utils cpu-checker curl dpkg-dev genisoimage gnupg jq libguestfs-tools \
-        libvirt-clients libvirt-daemon-system mmdebstrap qemu-system-x86 qemu-utils supermin ubuntu-keyring unzip virt-install
+        cloud-image-utils cpu-checker curl genisoimage gnupg jq libguestfs-tools \
+        libvirt-clients libvirt-daemon-system qemu-system-x86 qemu-utils supermin ubuntu-keyring virt-install
     printf '\nlibguestfs-runtime:\n'
     cat "/var/lib/supralinux/images/libguestfs-runtime/$(uname -r)/provenance.txt"
     printf '\nnetwork:\n'
