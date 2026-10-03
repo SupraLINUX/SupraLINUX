@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-10-01",
+  "as_of": "2026-10-02",
   "authority": "kde-upstream",
   "release": {
     "series": "6.7",
@@ -62,14 +62,14 @@
     "release_relevant_desktop": "unlocked"
   },
   "planning": {
-    "phase": "provider-resolution",
-    "status": "provider-resolution-pending",
+    "phase": "provider-resolution-review",
+    "status": "provider-resolution-review-pending",
     "execution_authorized": true,
     "package_execution_authorized": false,
-    "validation_run_kind": "planning-provider-resolution",
+    "validation_run_kind": "planning-provider-resolution-review",
     "consumes_package_attempt": false,
     "canonical_package_state_effect": "none",
-    "runner_scope": "github-hosted-ubuntu-26.04-non-authoritative-preflight",
+    "runner_scope": "github-hosted-ubuntu-26.04-non-authoritative-planning",
     "lane_workflow": ".github/workflows/kde-plasma-lane.yml",
     "dependency_manifest": "manifests/kde-plasma-dependencies.json",
     "dag_candidate_manifest": "manifests/kde-plasma-dag-candidate.json",
@@ -108,7 +108,14 @@
       "certified_mechanism": "batched-apt-cache-showsrc-plus-policy",
       "package_attempts_consumed": 0
     },
-    "next_gate": "plasma-provider-resolution-evidence"
+    "next_gate": "plasma-provider-resolution-review-evidence",
+    "provider_resolution_review_manifest": "manifests/kde-plasma-provider-resolution-review.json",
+    "provider_resolution_evidence": {
+      "workflow_run_id": 37086119189,
+      "job_id": 111096931279,
+      "artifact_id": 11260780398,
+      "artifact_digest": "sha256:aeabbadbb4ea5d5388cfe0aee4eb62e8ca3b79de839414b77abd000724aa7785"
+    }
   },
   "sources": [
     {

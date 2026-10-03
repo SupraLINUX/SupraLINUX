@@ -2,8 +2,8 @@
   "schema": 1,
   "as_of": "2026-10-02",
   "plasma_version": "6.7.5",
-  "state": "execution-authorized",
-  "execution_authorized": true,
+  "state": "PASS",
+  "execution_authorized": false,
   "package_execution_authorized": false,
   "consumes_package_attempt": false,
   "canonical_package_state_effect": "none",
@@ -95,5 +95,34 @@
       "package_attempts_consumed": 0,
       "status": "recovered"
     }
+  },
+  "evidence": {
+    "result": "PASS",
+    "workflow_run_id": 37086119189,
+    "job_id": 111096931279,
+    "commit": "3c1371fbec26dd2c06fab9fe3364eefe9d29fcfc",
+    "artifact_id": 11260780398,
+    "artifact_name": "kde-plasma-provider-resolution-3c1371fbec26dd2c06fab9fe3364eefe9d29fcfc",
+    "artifact_digest": "sha256:aeabbadbb4ea5d5388cfe0aee4eb62e8ca3b79de839414b77abd000724aa7785",
+    "files": {
+      "cmake-resolution.json": "832a121efba8d13c054fdfecc0fbb0a359869629d505bc95dbe6d27a8069973f",
+      "node-resolution.json": "edb2e4fcd9b9b83888871ba48ff99618135788634e354f30a25785b60afbb20f",
+      "pkg-config-resolution.json": "b371753f15167d11d4188100daadd9329ec727ab305d8e65fb9dbef12d8c1ef0",
+      "qml-resolution.json": "fb8b0716c55e154078bc17539b368e8457a3d838ac5406256f37c1ff1dcb411e",
+      "result.json": "49e137d999886f447264aafe857c351c5aca84171069c986bcdf182876176a21",
+      "ubuntu-build-dep-providers.json": "23b49003f3750f0f821a60e80e20145130f2ccd60adc703d76aa4af0e3e90edb",
+      "ubuntu-source-reference.json": "9f222f4cf51a4e08739fba3902cd98cf7b04a7b4240581ae7b236d467014992d"
+    }
+  },
+  "result_summary": {
+    "ubuntu_source_references_available": 70,
+    "ubuntu_source_references_missing": 5,
+    "ubuntu_build_dep_packages": 282,
+    "ubuntu_build_dep_candidates_available": 275,
+    "ubuntu_build_dep_candidates_missing": 7,
+    "known_cmake_direct_decisions": 75,
+    "cmake_source_reference_reviews": 117,
+    "qml_direct_decisions": 12,
+    "review_required": true
   }
 }

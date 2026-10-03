@@ -32,7 +32,7 @@ jobs:
         run: |
           phase="$(python3 -c 'import json; print(json.load(open("manifests/kde-plasma.json"))["planning"]["status"])')"
           case "${phase}" in
-            dependency-discovery-pending|provider-audit-pending|provider-resolution-pending|provider-resolution-preflight-pending)
+            dependency-discovery-pending|provider-audit-pending|provider-resolution-pending|provider-resolution-preflight-pending|provider-resolution-review-pending)
               ;;
             *)
               echo "Unsupported/non-executable Plasma lane phase: ${phase}" >&2
@@ -170,6 +170,37 @@ jobs:
         with:
           name: kde-plasma-provider-resolution-${{ github.event.pull_request.head.sha || github.sha }}
           path: evidence/kde-plasma-provider-resolution/
+          if-no-files-found: error
+          retention-days: 90
+
+  provider-resolution-review:
+    name: Provider resolution review
+    needs: plan
+    if: needs.plan.outputs.phase == 'provider-resolution-review-pending'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Download promoted provider resolution evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: kde-plasma-provider-resolution-3c1371fbec26dd2c06fab9fe3364eefe9d29fcfc
+          path: .work/kde-plasma-provider-resolution
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 37086119189
+
+      - name: Review provider resolution decisions
+        run: python3 scripts/run-kde-plasma-provider-resolution-review.py .work/kde-plasma-provider-resolution
+
+      - name: Upload provider resolution review evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-plasma-provider-resolution-review-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-plasma-provider-resolution-review/
           if-no-files-found: error
           retention-days: 90
 
