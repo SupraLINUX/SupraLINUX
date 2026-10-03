@@ -62,11 +62,11 @@
     "release_relevant_desktop": "unlocked"
   },
   "planning": {
-    "phase": "provider-resolution-infrastructure-recovery",
-    "status": "provider-resolution-preflight-pending",
+    "phase": "provider-resolution",
+    "status": "provider-resolution-pending",
     "execution_authorized": true,
     "package_execution_authorized": false,
-    "validation_run_kind": "infrastructure-preflight",
+    "validation_run_kind": "planning-provider-resolution",
     "consumes_package_attempt": false,
     "canonical_package_state_effect": "none",
     "runner_scope": "github-hosted-ubuntu-26.04-non-authoritative-preflight",
@@ -76,47 +76,39 @@
     "provider_audit_manifest": "manifests/kde-plasma-provider-audit.json",
     "provider_resolution_manifest": "manifests/kde-plasma-provider-resolution.json",
     "provider_resolution_preflight_manifest": "manifests/kde-plasma-provider-resolution-preflight.json",
-    "infrastructure_hold": {
-      "mechanism": "apt-file-provider-resolution-scan",
-      "consecutive_infra_invalid": 2,
-      "retry_frozen": true,
-      "package_attempts_consumed": 0,
-      "incidents": [
-        {
-          "sequence": 1,
-          "workflow_run_id": 37016533849,
-          "workflow_job_id": 110869185461,
-          "workflow_head_sha": "b3815a256688a9ce5d9d77f5bb871ab4802fdd44",
-          "result": "INFRA_INVALID",
-          "failure": "provider resolver timed out before evidence materialization",
-          "timeout_minutes": 25
-        },
-        {
-          "sequence": 2,
-          "workflow_run_id": 37023254784,
-          "workflow_job_id": 110892486112,
-          "workflow_head_sha": "aa07ace46b0b737e22015cdb4a91e222b93060e9",
-          "result": "INFRA_INVALID",
-          "failure": "batched giant-regex apt-file resolver timed out before evidence materialization",
-          "timeout_minutes": 20
-        }
-      ],
-      "diagnosis": "apt-file archive-wide Contents scanning is too slow and unreliable for this provider-resolution workload",
-      "remediation": "replace apt-file lookup with batched Ubuntu source Build-Depends references plus batched apt-cache policy",
-      "resume_requires": "provider-resolution-infrastructure-preflight:PASS",
-      "preflight_revision": 2,
-      "failed_preflights": [
-        {
-          "workflow_run_id": 37034707251,
-          "workflow_job_id": 110930343273,
-          "workflow_head_sha": "96162ce051527398c39b396dd91b83eeeda203cd",
-          "result": "FAIL",
-          "failure": "apt-file chunked preflight required ~150s for a small sample and failed Qt6Config anchor lookup",
-          "package_attempts_consumed": 0
-        }
-      ]
+    "provider_resolution_preflight_evidence": {
+      "workflow_run_id": 37038135919,
+      "workflow_job_id": 110942082547,
+      "workflow_head_sha": "22c5e9f258ac41d1849685c92f9caa3b8b4095ba",
+      "artifact_id": 11240638791,
+      "artifact_name": "kde-plasma-provider-resolution-preflight-22c5e9f258ac41d1849685c92f9caa3b8b4095ba",
+      "artifact_digest": "sha256:21800febef732a07e2898bc5b905784536c94c2a9a7ac599110f37f4e3b84e31",
+      "result_json_sha256": "6bdc666ef3ab38b0657dd4e066f270cdda073ac1b3f9202941c92f613b834c46",
+      "sample_policy_sha256": "c9ccebe5a85b2c0d611d95ce841ce70f6c4e84f93af569c114ff9e47b14fa646",
+      "sample_sources_sha256": "408f4f0a1ab24775c28689d9c050155669a12e3de58b4084e0bfb2003b01b8ac",
+      "result": "PASS",
+      "mechanism": "batched-apt-cache-showsrc-plus-policy",
+      "source_sample_count": 12,
+      "available_source_references": 12,
+      "build_dep_package_count": 189,
+      "showsrc_seconds": 0.4,
+      "policy_seconds": 0.036,
+      "anchors": {
+        "qt6-base-dev": "6.10.2+dfsg-7",
+        "extra-cmake-modules": "6.24.0-0ubuntu1",
+        "libpipewire-0.3-dev": "1.6.2-1ubuntu1.2"
+      },
+      "package_execution_started": false,
+      "consumes_package_attempt": false,
+      "canonical_package_state_effect": "none"
     },
-    "next_gate": "plasma-provider-resolution-infrastructure-preflight"
+    "infrastructure_recovery": {
+      "status": "recovered",
+      "prior_consecutive_infra_invalid": 2,
+      "certified_mechanism": "batched-apt-cache-showsrc-plus-policy",
+      "package_attempts_consumed": 0
+    },
+    "next_gate": "plasma-provider-resolution-evidence"
   },
   "sources": [
     {

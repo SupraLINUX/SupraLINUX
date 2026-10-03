@@ -46,15 +46,15 @@ for node in sources:
     req(node.get("source_url") == f"https://download.kde.org/stable/plasma/6.7.5/{node_id}-6.7.5.tar.xz", f"{node_id}: source URL")
 
 planning = plasma.get("planning", {})
-req(planning.get("phase") == "provider-resolution-infrastructure-recovery", "Plasma planning phase")
-req(planning.get("status") == "provider-resolution-preflight-pending", "Plasma provider resolution recovery live status")
-req(planning.get("execution_authorized") is True, "Plasma provider resolution preflight authorization")
+req(planning.get("phase") == "provider-resolution", "Plasma planning phase")
+req(planning.get("status") == "provider-resolution-pending", "Plasma provider resolution live status")
+req(planning.get("execution_authorized") is True, "Plasma provider resolution authorization")
 req(planning.get("package_execution_authorized") is False, "Provider resolution must not authorize package execution")
 req(planning.get("consumes_package_attempt") is False, "Provider resolution must not consume package Attempt")
 req(planning.get("canonical_package_state_effect") == "none", "Provider resolution canonical package state effect")
 req(planning.get("runner_scope") == "github-hosted-ubuntu-26.04-non-authoritative-preflight", "Provider resolution runner scope")
 req(planning.get("lane_workflow") == ".github/workflows/kde-plasma-lane.yml", "Plasma lane workflow")
-req(planning.get("next_gate") == "plasma-provider-resolution-infrastructure-preflight", "Plasma provider resolution recovery next gate")
+req(planning.get("next_gate") == "plasma-provider-resolution-evidence", "Plasma provider resolution next gate")
 
 disc = deps.get("discovery", {})
 req(deps.get("state") == "discovery-evidence-promoted", "Plasma dependency discovery evidence promotion")
@@ -76,28 +76,33 @@ req(audit.get("package_execution_authorized") is False, "Plasma provider audit p
 req(audit.get("consumes_package_attempt") is False, "Plasma provider audit Attempt boundary")
 req(audit.get("evidence", {}).get("artifact_id") == 11226253937, "Plasma provider audit evidence artifact")
 
-req(resolution.get("state") == "INFRA_HOLD", "Plasma provider resolution infrastructure hold")
-req(resolution.get("execution_authorized") is False, "Held provider resolution must not execute")
+req(resolution.get("state") == "execution-authorized", "Plasma provider resolution state")
+req(resolution.get("execution_authorized") is True, "Plasma provider resolution authorization")
 req(resolution.get("package_execution_authorized") is False, "Plasma provider resolution package execution lock")
 req(resolution.get("consumes_package_attempt") is False, "Plasma provider resolution Attempt boundary")
 req(resolution.get("input", {}).get("provider_audit_artifact_id") == 11226253937, "Provider resolution input artifact")
-hold = resolution.get("infrastructure_hold", {})
-req(hold.get("consecutive_infra_invalid") == 2 and hold.get("retry_frozen") is True, "Provider resolution repeated INFRA_INVALID freeze")
-req(hold.get("package_attempts_consumed") == 0, "Provider resolution infrastructure incidents must consume zero package Attempts")
+recovery = resolution.get("recovery", {})
+req(recovery.get("state") == "PASS", "Provider resolution infrastructure recovery PASS")
+req(recovery.get("mechanism") == "batched-apt-cache-showsrc-plus-policy", "Provider resolution recovered mechanism")
+req(recovery.get("evidence", {}).get("artifact_id") == 11240638791, "Provider resolution recovery artifact")
+req(recovery.get("prior_infrastructure_hold", {}).get("consecutive_infra_invalid") == 2, "Provider resolution repeated INFRA_INVALID history")
+req(recovery.get("prior_infrastructure_hold", {}).get("package_attempts_consumed") == 0, "Provider resolution infrastructure incidents package Attempt boundary")
 
-req(resolution_preflight.get("state") == "execution-authorized", "Provider resolution preflight state")
-req(resolution_preflight.get("execution_authorized") is True, "Provider resolution preflight authorization")
+req(resolution_preflight.get("state") == "PASS", "Provider resolution preflight PASS")
+req(resolution_preflight.get("execution_authorized") is False, "Closed provider resolution preflight authorization")
 req(resolution_preflight.get("package_execution_authorized") is False, "Provider resolution preflight package execution lock")
 req(resolution_preflight.get("consumes_package_attempt") is False, "Provider resolution preflight Attempt boundary")
 req(resolution_preflight.get("mechanism") == "batched-apt-cache-showsrc-plus-policy", "Provider resolution preflight mechanism")
 req(resolution_preflight.get("revision") == 2, "Provider resolution preflight revision")
+req(resolution_preflight.get("evidence", {}).get("artifact_id") == 11240638791, "Provider resolution preflight evidence artifact")
+req(resolution_preflight.get("evidence", {}).get("result_json_sha256") == "6bdc666ef3ab38b0657dd4e066f270cdda073ac1b3f9202941c92f613b834c46", "Provider resolution preflight result hash")
 audit_input = audit.get("input", {})
 req(audit_input.get("discovery_workflow_run_id") == 36951077374, "Provider audit discovery run")
 req(audit_input.get("discovery_artifact_id") == 11204675088, "Provider audit discovery artifact")
 req(audit_input.get("dependencies_json_sha256") == "a6b2d066ced63231dd3de6adb6248dbbd7eba01cf0d776d49c6d2b091c0f82ef", "Provider audit input hash")
 
 for token in (
-    "provider-resolution-preflight-pending",
+    "provider-resolution-pending",
     "actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093",
     "run-id: 36951077374",
     "run-kde-plasma-provider-audit.py",

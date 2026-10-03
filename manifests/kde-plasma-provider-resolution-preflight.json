@@ -2,8 +2,8 @@
   "schema": 1,
   "as_of": "2026-10-02",
   "plasma_version": "6.7.5",
-  "state": "execution-authorized",
-  "execution_authorized": true,
+  "state": "PASS",
+  "execution_authorized": false,
   "package_execution_authorized": false,
   "consumes_package_attempt": false,
   "canonical_package_state_effect": "none",
@@ -36,5 +36,31 @@
     "result": "FAIL",
     "mechanism": "apt-file-chunked-regex-plus-batched-apt-cache-showsrc",
     "package_attempts_consumed": 0
+  },
+  "evidence": {
+    "workflow_run_id": 37038135919,
+    "workflow_job_id": 110942082547,
+    "workflow_head_sha": "22c5e9f258ac41d1849685c92f9caa3b8b4095ba",
+    "artifact_id": 11240638791,
+    "artifact_name": "kde-plasma-provider-resolution-preflight-22c5e9f258ac41d1849685c92f9caa3b8b4095ba",
+    "artifact_digest": "sha256:21800febef732a07e2898bc5b905784536c94c2a9a7ac599110f37f4e3b84e31",
+    "result_json_sha256": "6bdc666ef3ab38b0657dd4e066f270cdda073ac1b3f9202941c92f613b834c46",
+    "sample_policy_sha256": "c9ccebe5a85b2c0d611d95ce841ce70f6c4e84f93af569c114ff9e47b14fa646",
+    "sample_sources_sha256": "408f4f0a1ab24775c28689d9c050155669a12e3de58b4084e0bfb2003b01b8ac",
+    "result": "PASS",
+    "mechanism": "batched-apt-cache-showsrc-plus-policy",
+    "source_sample_count": 12,
+    "available_source_references": 12,
+    "build_dep_package_count": 189,
+    "showsrc_seconds": 0.4,
+    "policy_seconds": 0.036,
+    "anchors": {
+      "qt6-base-dev": "6.10.2+dfsg-7",
+      "extra-cmake-modules": "6.24.0-0ubuntu1",
+      "libpipewire-0.3-dev": "1.6.2-1ubuntu1.2"
+    },
+    "package_execution_started": false,
+    "consumes_package_attempt": false,
+    "canonical_package_state_effect": "none"
   }
 }
