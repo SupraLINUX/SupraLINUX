@@ -13,7 +13,6 @@ def req(condition, message):
 candidate = json.loads((ROOT / "manifests/kde-plasma-dag-candidate.json").read_text())
 dag = json.loads((ROOT / "manifests/kde-plasma-dag.json").read_text())
 review = json.loads((ROOT / "manifests/kde-plasma-provider-resolution-review.json").read_text())
-plasma = json.loads((ROOT / "manifests/kde-plasma.json").read_text())
 
 req(candidate.get("state") == "candidate-review-required", "historical candidate DAG state")
 req(candidate.get("candidate_only") is True, "historical candidate DAG must remain candidate-only")
@@ -65,12 +64,9 @@ for name, node in nodes.items():
         if dep in nodes:
             req(nodes[dep].get("level", 999) < node.get("level", -1), f"{name}: dependency {dep} must be earlier")
 
-planning = plasma.get("planning", {})
-req(planning.get("phase") == "dag-executable", "Plasma live phase after DAG promotion")
-req(planning.get("status") == "dag-executable-promoted", "Plasma live status after DAG promotion")
-req(planning.get("dag_manifest") == "manifests/kde-plasma-dag.json", "Plasma live canonical DAG binding")
-req(planning.get("package_execution_authorized") is False, "Plasma live package execution lock")
-req(planning.get("next_gate") == "plasma-level0-definition", "Plasma live next gate")
+# This validator is historical/canonical for the DAG promotion itself.
+# Current lifecycle phase/next gate belongs to validate_kde_plasma.py and must
+# be allowed to advance without invalidating the closed DAG promotion.
 
 if errors:
     for error in errors:
