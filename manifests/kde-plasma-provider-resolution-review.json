@@ -327,5 +327,22 @@
     "definition_sha256": "cf194c5818c88223e219ff56dcd537c0f0592038b5d101f1506621a7aa4354c4",
     "package_execution_started": false,
     "review_required": false
+  },
+  "post_review_findings": {
+    "semantic_source_identity_correction": {
+      "status": "applied-before-Level0-materialization",
+      "finding": "The historical provider-resolution mechanism treated same-name source availability as sufficient. For upstream node discover, apt-cache showsrc discover resolved Ubuntu source discover 2.1.2, which is unrelated to KDE Discover.",
+      "historical_evidence_immutable": true,
+      "historical_artifact_id": 11260780398,
+      "historical_reference_source": "discover",
+      "historical_reference_version": "2.1.2-10.1build1",
+      "corrected_reference_source": "plasma-discover",
+      "corrected_resolute_updates_version": "6.6.6-0ubuntu0.1",
+      "corrected_reference": "https://packages.ubuntu.com/source/resolute-updates/plasma-discover",
+      "scope_effect": "provider-packaging-reference-only",
+      "dag_topology_effect": "none",
+      "package_state_effect": "none",
+      "package_attempts_consumed": 0
+    }
   }
 }

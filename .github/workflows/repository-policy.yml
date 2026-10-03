@@ -151,6 +151,9 @@ jobs:
       - name: Validate KDE Plasma executable DAG
         run: python3 scripts/validate_kde_plasma_dag.py
 
+      - name: Validate KDE Plasma Level 0 definition
+        run: python3 scripts/validate_kde_plasma_level0.py
+
       - name: Validate Qt provider invariants
         run: python3 scripts/validate_qt_provider.py
 

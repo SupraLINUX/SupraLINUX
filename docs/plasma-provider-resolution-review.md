@@ -31,3 +31,11 @@ This gate consumed the closed provider-resolution evidence from run `37086119189
 - https://packages.ubuntu.com/resolute/kquickimageeditor-dev
 
 This review authorized promotion of the candidate dependency graph to the canonical executable DAG. That promotion does **not** authorize Plasma Level 0 package execution; the next gate is `plasma-level0-definition`.
+
+## Post-review source-identity correction
+
+Before Level 0 materialization, a semantic false positive was found in the historical provider-resolution artifact: upstream Plasma node `discover` had been queried as Ubuntu source `discover`, which resolved `2.1.2-10.1build1`. That source is unrelated to KDE Discover. Ubuntu Resolute packages KDE Discover from source `plasma-discover`; Resolute Updates carries `6.6.6-0ubuntu0.1`.
+
+The historical artifact remains immutable. The correction is recorded append-only in the canonical review manifest and is applied to Level 0 as `discover -> plasma-discover`. It changes only the packaging-reference binding: the already-promoted KDE internal DAG topology is unchanged, no package state changes, and no package Attempt is consumed.
+
+Reference: https://packages.ubuntu.com/source/resolute-updates/plasma-discover
