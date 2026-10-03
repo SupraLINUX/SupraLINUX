@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-22",
+  "batch": "tier3-support-build-level0",
+  "nodes": {
+    "breeze-icons": [
+      {
+        "attempt": 1,
+        "result": "PASS",
+        "package_version": "4:6.30.0-0supralinux1",
+        "workflow_run": 35700002095,
+        "job_id": 106656021938,
+        "commit": "ae9885dc0bf03447c9550b3a511466e2234e8f8c",
+        "artifact_id": 10682012012,
+        "artifact_sha256": "daaa5abda5a8f824c6fa509142d7cd9132de213d782cb32e0561873f427aa577",
+        "rootfs_sha256": "e649388bcf5e02372714f59dde3579cf0c9c9f2e42a2f94bd4a358f9a8a8811e",
+        "tests": "4/4 PASS",
+        "stage": "complete"
+      }
+    ],
+    "kdoctools": [
+      {
+        "attempt": 1,
+        "result": "PASS",
+        "package_version": "6.30.0-0supralinux1",
+        "workflow_run": 35700002095,
+        "job_id": 106656022342,
+        "commit": "ae9885dc0bf03447c9550b3a511466e2234e8f8c",
+        "artifact_id": 10682066198,
+        "artifact_sha256": "6daeb6beed63ba7b7e441dba4dfd356be3ad48a9f3ae75acddae0945c36a683d",
+        "rootfs_sha256": "e649388bcf5e02372714f59dde3579cf0c9c9f2e42a2f94bd4a358f9a8a8811e",
+        "tests": "3/3 PASS",
+        "stage": "complete"
+      }
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.29)
+project(SupraLINUXKF6HolidaysConsumer LANGUAGES CXX)
+find_package(KF6Holidays 6.30.0 REQUIRED CONFIG)
+add_executable(kholidays-consumer main.cpp)
+target_link_libraries(kholidays-consumer PRIVATE KF6::Holidays)

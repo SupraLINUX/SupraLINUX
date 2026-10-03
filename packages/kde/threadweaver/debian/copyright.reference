@@ -1,0 +1,6 @@
+# Debian sid packaging copyright metadata retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+node=threadweaver
+path=trees/debian/threadweaver/debian/copyright
+sha256=baa640b7abaa7f5f1fbfc0acd11f4ecedf9a01f187b691523ea5d879cb35ff88

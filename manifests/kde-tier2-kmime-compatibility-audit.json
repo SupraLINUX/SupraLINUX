@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "audit": "kmime-legacy-provider-coinstallation",
+  "state": "PASS",
+  "provider_platform": "ubuntu-resolute",
+  "frameworks_authority": "kde-upstream-6.30.0",
+  "package_state_effect": "none",
+  "framework_build_evidence": {
+    "workflow_run": 35687831684,
+    "run_attempt": 2,
+    "job_id": 106619132039,
+    "artifact_id": 10677716050,
+    "artifact_sha256": "ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36",
+    "package_version": "6.30.0-0supralinux1",
+    "binary_packages": [
+      "libkf6mime-data",
+      "libkf6mime-dev",
+      "libkf6mime6"
+    ],
+    "observed_gates": {
+      "clean_sbuild": "PASS",
+      "upstream_tests": "17/17 PASS",
+      "lintian_errors": "PASS",
+      "abi_soname": "PASS",
+      "apt_runtime_closure": "PASS",
+      "cmake_consumer": "PASS",
+      "legacy_abi_metadata": "PASS"
+    }
+  },
+  "legacy_reference": {
+    "source_package": "kmime",
+    "version": "25.12.3-0ubuntu1",
+    "binary_packages": [
+      "libkmime-data",
+      "libkmime-dev",
+      "libkpim6mime6"
+    ],
+    "runtime_install_set": [
+      "libkmime-data",
+      "libkpim6mime6"
+    ],
+    "runtime_soname": "libKPim6Mime.so.6"
+  },
+  "framework_contract": {
+    "source_package": "kf6-kmime",
+    "version": "6.30.0-0supralinux1",
+    "runtime_soname": "libKF6Mime.so.6",
+    "authoritative_for_kde": true
+  },
+  "trigger_observation": {
+    "requested_legacy_packages": [
+      "libkmime-data",
+      "libkpim6mime6"
+    ],
+    "removed_framework_packages": [
+      "libkf6mime-data",
+      "libkf6mime-dev",
+      "libkf6mime6"
+    ],
+    "conclusion": "stock-ubuntu-legacy-provider-not-coinstallable-as-packaged"
+  },
+  "required_checks": [
+    "exact-package-version-and-sha256",
+    "depends-conflicts-breaks-replaces-provides",
+    "pairwise-file-overlap",
+    "overlap-content-sha256",
+    "runtime-soname-separation",
+    "apt-solver-simulation"
+  ],
+  "result": {
+    "audit_result": "PASS",
+    "stock_provider_coinstallation": "FAIL",
+    "classification": "declared-relations-and-payload-overlap",
+    "package_state_effect": "none",
+    "evidence": {
+      "workflow_run": 35690284355,
+      "job_id": 106625630885,
+      "commit": "b5333ffba53dfbeb55a710e72b5f56d8e8ef3bac",
+      "artifact_id": 10678073973,
+      "artifact_sha256": "7b0c9175b1e0f48eb1d18e9ceb1af03381c4de8d0b322bc619dd7be224307c5b"
+    },
+    "facts": {
+      "relation_edges": [
+        {
+          "from": "libkf6mime-data",
+          "field": "Breaks",
+          "to": "libkmime-data",
+          "raw": "libkmime-data"
+        },
+        {
+          "from": "libkf6mime-data",
+          "field": "Replaces",
+          "to": "libkmime-data",
+          "raw": "libkmime-data"
+        }
+      ],
+      "legacy_runtime_depends": "libkmime-data (= 25.12.3-0ubuntu1), libc6 (>= 2.14), libgcc-s1 (>= 3.3.1), libkf6codecs6 (>= 6.6.0~), libqt6core6t64 (>= 6.10.2), libstdc++6 (>= 5)",
+      "overlap": {
+        "framework_package": "libkf6mime-data",
+        "legacy_package": "libkmime-data",
+        "count": 72,
+        "identical_count": 68,
+        "different_count": 4,
+        "different_paths": [
+          "usr/share/locale/lt/LC_MESSAGES/libkmime6_qt.qm",
+          "usr/share/locale/sk/LC_MESSAGES/libkmime6_qt.qm",
+          "usr/share/locale/ug/LC_MESSAGES/libkmime6_qt.qm",
+          "usr/share/qlogging-categories6/kmime.categories"
+        ]
+      },
+      "runtime_namespace_separation": "PASS"
+    },
+    "selected_remediation": {
+      "strategy": "supralinux-legacy-runtime-provider-with-framework-data-alternative",
+      "keep_framework_package_unchanged": true,
+      "keep_legacy_runtime_soname": "libKPim6Mime.so.6",
+      "duplicate_legacy_data_package": false,
+      "dependency_policy": "libkmime-data (= Ubuntu compatibility version) | libkf6mime-data",
+      "rationale": "The runtime ABIs and payloads are distinct. The conflict is entirely in the data package transition. Reusing authoritative libkf6mime-data avoids duplicate ownership while preserving the real legacy runtime ABI.",
+      "precedent": "ADR-0002 records current Debian legacy runtime accepting libkf6mime-data as an alternative."
+    }
+  }
+}

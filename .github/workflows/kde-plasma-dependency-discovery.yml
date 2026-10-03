@@ -1,0 +1,38 @@
+name: KDE Plasma 6.7.5 dependency discovery
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kde-plasma-dependency-discovery-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependency-discovery:
+    name: Verify Plasma sources and discover candidate dependencies
+    runs-on: ubuntu-26.04
+    timeout-minutes: 50
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+
+      - name: Validate Plasma planning state
+        run: python3 scripts/validate_kde_plasma.py
+
+      - name: Discover upstream source dependencies
+        run: python3 scripts/run-kde-plasma-dependency-discovery.py
+
+      - name: Upload Plasma dependency evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-plasma-dependency-discovery-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-plasma-dependency-discovery/
+          if-no-files-found: error
+          retention-days: 30

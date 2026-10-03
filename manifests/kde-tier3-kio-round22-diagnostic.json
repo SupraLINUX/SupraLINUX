@@ -1,0 +1,171 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-26",
+  "node": "kio",
+  "round": 22,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "claim": "non-promoting-krecent-ctest-home-matrix-diagnostic",
+  "non_promoting": true,
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "canonical_source_modified": false,
+  "diagnostic_worktree_modified": true,
+  "dag_state_changes_allowed": false,
+  "downstream_eligibility_changes_allowed": false,
+  "package_revision_allocation": false,
+  "test_suppression": false,
+  "execution_authorized": false,
+  "package_execution_authorized": false,
+  "status": "diagnostic-PASS",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "canonical_kio": {
+    "state": "FAIL",
+    "package_version": "6.30.0-0supralinux8",
+    "downstream_eligible": false
+  },
+  "predecessor_round21": {
+    "status": "diagnostic-PASS",
+    "workflow_run": 36248969228,
+    "job_id": 108423337171,
+    "branch_commit": "9c18c9e811d31f8ec296d22180fdda7ed70545d9",
+    "artifact_id": 10908497619,
+    "artifact_sha256": "31f4fddc17bf13b2058773c9c506a54f625ebe100d884418ef27fe45fd9ec4e0",
+    "environment_valid": true,
+    "baseline_runs": 30,
+    "baseline_failures": 0,
+    "delayed_runs": 30,
+    "delayed_failures": 0,
+    "capture_all_entries": 15,
+    "capture_all_duplicate_modified_groups": 0,
+    "conclusion": "krecentdocument-attempt8-failure-not-reproduced"
+  },
+  "attempt8_reference": {
+    "workflow_run": 36238357510,
+    "kio_job_id": 108394325161,
+    "kio_artifact_id": 10905267300,
+    "kio_artifact_sha256": "9f95e2b8e3330ee4f1b275eb059736b87fa57d7752602aa598cb313659cae53f",
+    "exact_failure_signature": "Actual temp File 11 / Expected temp File 12",
+    "test_command": "/build/reproducible-path/kf6-kio-6.30.0/obj-x86_64-linux-gnu/bin/krecentdocumenttest",
+    "working_directory": "/build/reproducible-path/kf6-kio-6.30.0/obj-x86_64-linux-gnu/autotests",
+    "outer_test_environment": {
+      "home": "/build/reproducible-path/kf6-kio-6.30.0/debian/.supralinux-test-home/sbuild",
+      "lang": "C.UTF-8",
+      "lc_all": "C.UTF-8",
+      "logname": "sbuild",
+      "user": "sbuild",
+      "qt_qpa_platform": "xcb",
+      "qt_qpa_system_icon_theme": "breeze",
+      "kdeci_platform_path": "/build/reproducible-path/kf6-kio-6.30.0",
+      "wrapper": "dbus-run-session -- xvfb-run -a -s '-screen 0 1280x1024x24' ctest --verbose -j1"
+    }
+  },
+  "source_materialization": {
+    "workflow_run": 36222711238,
+    "job_id": 108350884409,
+    "artifact_id": 10898999142,
+    "artifact_sha256": "c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d",
+    "package_version": "6.30.0-0supralinux8",
+    "upstream_source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2"
+  },
+  "validity_contract": {
+    "source_and_build_path_zero_dot_prefixed_components": true,
+    "test_working_directory": "$OBJ/autotests",
+    "test_working_directory_zero_dot_prefixed_components": true,
+    "test_working_directory_outside_tmp": true,
+    "xdg_overrides_unset": [
+      "XDG_DATA_HOME",
+      "XDG_CONFIG_HOME",
+      "XDG_CACHE_HOME",
+      "XDG_RUNTIME_DIR"
+    ],
+    "exact_sbuild_locale_identity": [
+      "LANG=C.UTF-8",
+      "LC_ALL=C.UTF-8",
+      "LOGNAME=sbuild",
+      "USER=sbuild"
+    ],
+    "xbel_capture_instrumentation": "copy m_xbelPath immediately after KRecentDocument::recentUrls() and before any max-entry assertion; upstream cleanup semantics remain unchanged",
+    "each_run_requires_exactly_three_captured_bookmarks": true,
+    "source_restored_byte_for_byte": true
+  },
+  "diagnostic_matrix": [
+    {
+      "id": "direct-visible",
+      "runner": "direct-selected-function",
+      "home": "visible",
+      "repetitions": 30
+    },
+    {
+      "id": "direct-hidden",
+      "runner": "direct-selected-function",
+      "home": "hidden-packaging-shape",
+      "repetitions": 30
+    },
+    {
+      "id": "ctest-visible",
+      "runner": "ctest-complete-test-binary",
+      "home": "visible",
+      "repetitions": 30
+    },
+    {
+      "id": "ctest-hidden",
+      "runner": "ctest-complete-test-binary",
+      "home": "hidden-packaging-shape",
+      "repetitions": 30
+    }
+  ],
+  "decision_rules": {
+    "invalid_environment": "any lane lacks 30 valid XBEL captures with exactly 3 bookmarks => DIAG_INVALID",
+    "hidden_home_controlled": "direct-hidden reproduces the Attempt8 signature while direct-visible does not",
+    "ctest_sequence_controlled": "ctest lanes reproduce the Attempt8 signature while corresponding direct lanes do not",
+    "closest_attempt8_reproduction": "ctest-hidden reproduces the exact Attempt8 signature",
+    "outside_sbuild_not_reproduced": "all four valid lanes have zero exact Attempt8 signatures",
+    "no_package_decision": "Round22 cannot itself allocate a revision, modify package source, or authorize Attempt 9"
+  },
+  "next_gate": "tier3-round23-kio-krecent-attempt8-rootfs-diagnostic-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "diagnostic_evidence": {
+    "workflow_run": 36278019755,
+    "job_id": 108504444054,
+    "branch_commit": "07282c338c1c6d3b1341e4ba8d4d1c82c9b3b658",
+    "artifact_id": 10917842068,
+    "artifact_sha256": "0554aeb1a38aa78de4b9316e85058fbfd6b24cc8ff62c7978cfa286f6ea34f8e",
+    "result": "DIAG_COMPLETE"
+  },
+  "result": {
+    "environment_valid": true,
+    "matrix": {
+      "direct-visible": {
+        "runs": 30,
+        "failures": 0,
+        "attempt8_signature_failures": 0,
+        "valid_captures": 30,
+        "duplicate_modified_runs": 0
+      },
+      "direct-hidden": {
+        "runs": 30,
+        "failures": 0,
+        "attempt8_signature_failures": 0,
+        "valid_captures": 30,
+        "duplicate_modified_runs": 0
+      },
+      "ctest-visible": {
+        "runs": 30,
+        "failures": 0,
+        "attempt8_signature_failures": 0,
+        "valid_captures": 30,
+        "duplicate_modified_runs": 0
+      },
+      "ctest-hidden": {
+        "runs": 30,
+        "failures": 0,
+        "attempt8_signature_failures": 0,
+        "valid_captures": 30,
+        "duplicate_modified_runs": 0
+      }
+    },
+    "conclusion": "krecentdocument-attempt8-failure-not-reproduced-outside-sbuild"
+  }
+}

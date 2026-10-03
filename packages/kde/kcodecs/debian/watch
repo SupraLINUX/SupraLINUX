@@ -1,0 +1,4 @@
+Version: 5
+Source: https://download.kde.org/stable/frameworks/@ANY_VERSION@/
+Matching-Pattern: kcodecs-@ANY_VERSION@@ARCHIVE_EXT@
+Pgp-Mode: auto

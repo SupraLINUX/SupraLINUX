@@ -1,0 +1,552 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-01",
+  "authority": "kde-upstream-source-cmake",
+  "plasma_version": "6.7.5",
+  "state": "discovery-evidence-promoted",
+  "discovery": {
+    "method": "verified-source-tarball-cmake-scan",
+    "result": "PASS",
+    "parser_revision": 4,
+    "workflow_run_id": 36951077374,
+    "workflow_job_id": 110664287780,
+    "artifact_id": 11204675088,
+    "artifact_digest": "sha256:9b6192b1145474cca5bd255d4cb517be2ea8ea4fcd87679f05dfa5aa039a39fd",
+    "dependencies_json_sha256": "a6b2d066ced63231dd3de6adb6248dbbd7eba01cf0d776d49c6d2b091c0f82ef",
+    "result_json_sha256": "71aea7c5ba1481cd41915fd7d645aed6cb4ac8f2da8cce0e13e7440a8df03493",
+    "source_count": 75,
+    "source_sha256_verified": 75,
+    "kf6_component_references": 535,
+    "internal_candidate_edge_count": 109,
+    "ambiguous_provider_references": 0,
+    "canonical_dag_effect": "candidate-only-pending-provider-resolution",
+    "notes": "Discovery evidence is promoted as immutable planning input. Candidate edges remain non-canonical for package execution until provider resolution closes."
+  },
+  "nodes": {
+    "aurorae": {
+      "state": "unmaterialized",
+      "source_sha256": "7e4305d4e28698024fcd797554ccad84bfd4ed4e5bdcb0f42b5da77fab244416",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "bluedevil": {
+      "state": "unmaterialized",
+      "source_sha256": "1f6c0b01327b4b5e2ddcf11fd8e4b3e66ba492c9c66c61a95d4ddfd258850d5f",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "breeze": {
+      "state": "unmaterialized",
+      "source_sha256": "aa05c0c31c852ed5b137327e7798fd763a54c643875d5d8070625475e0af6976",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "breeze-grub": {
+      "state": "unmaterialized",
+      "source_sha256": "bd14716ae52d946e37833b3a02d259f5268683af8382c21230c1ce7d767f032a",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "breeze-gtk": {
+      "state": "unmaterialized",
+      "source_sha256": "4e0e913b0515de75492155d028c086c4a522a3f68ebb6f4fab10f8bc646cd518",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "breeze-plymouth": {
+      "state": "unmaterialized",
+      "source_sha256": "9cb05ef4fed5ac19bc35f5c4b18ec425e499fae47d52d344821fbf38474c44a0",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "discover": {
+      "state": "unmaterialized",
+      "source_sha256": "e9830fffebc54c781dcb076db4ab9462ee27ddd7fd3769403a211743636e1f67",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "drkonqi": {
+      "state": "unmaterialized",
+      "source_sha256": "9d02b9bd8534ac98dbb77a73248112654e2dee3ab1cf3cc59e69ba78027ab423",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "flatpak-kcm": {
+      "state": "unmaterialized",
+      "source_sha256": "acf25d4c7eed41e0d0ba9c897e6dae081b9021f9bcb75e3ca532ef5406ffa0ad",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kactivitymanagerd": {
+      "state": "unmaterialized",
+      "source_sha256": "6e549b0dacd28797153696e4ee27f8e19aee6f3711f94ee379b8fae8ecfd937a",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kde-cli-tools": {
+      "state": "unmaterialized",
+      "source_sha256": "18f3c421b305003caf73f9e9fbec09fbf30f472dbe81fec328046cca7883a31d",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kde-gtk-config": {
+      "state": "unmaterialized",
+      "source_sha256": "6590fefad29e37be7d51ed89e9dbaf67884ae0a3fed14f8d58ac1352c0c0503d",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kdecoration": {
+      "state": "unmaterialized",
+      "source_sha256": "7ff1fe2854ca08a21a1ba47f1b0c97d12ea24f1db618631319cba4023ca53d86",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kdeplasma-addons": {
+      "state": "unmaterialized",
+      "source_sha256": "1bc1c861487733f4944695d509c81f19b90a4d80c5825cc6df633b0313e3e8cc",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kgamma": {
+      "state": "unmaterialized",
+      "source_sha256": "b45ad6608693034046b65bf68a3843f394f78def02c6f059bc69c5de07cace57",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kglobalacceld": {
+      "state": "unmaterialized",
+      "source_sha256": "83e9a4e226e695fe1544cfa19a9659c5f1000be46c669fe3a9e299029c6c2abf",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kinfocenter": {
+      "state": "unmaterialized",
+      "source_sha256": "e3aeb4b6f7237fddff4e68f4d7d715772cc47bd0ac376febe24ae3d717680416",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kmenuedit": {
+      "state": "unmaterialized",
+      "source_sha256": "2d9801b7f89988046472c2b32385d848a0a98095fb178d58d6e3b5090ced9b8b",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "knighttime": {
+      "state": "unmaterialized",
+      "source_sha256": "5cb23e736e4be4952e63c855cfb45850e1085d650e67b7cae3cbf9721921cb9f",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kpipewire": {
+      "state": "unmaterialized",
+      "source_sha256": "20af39d9450d495468c56a50930810d82137f7ccd3a710592e02b6f620758f55",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "krdp": {
+      "state": "unmaterialized",
+      "source_sha256": "483fb1d9ffd6954e7b12aa4321763a31726e5c0daac10e135cd13a503ced5330",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kscreen": {
+      "state": "unmaterialized",
+      "source_sha256": "a1742210a0cf4ea76959f708c55180b2573648e9cd35cb4e38f349fe5694c9df",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kscreenlocker": {
+      "state": "unmaterialized",
+      "source_sha256": "6c41ce2cb79d2b85d4fbe5a3a61c09e40c70e5a869ae6f0352c7e1cb3b44606b",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "ksshaskpass": {
+      "state": "unmaterialized",
+      "source_sha256": "deb5698b5682bc15d22446db9cf8641857d0bd7785e145b7b6e9247a68d35fd2",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "ksystemstats": {
+      "state": "unmaterialized",
+      "source_sha256": "27cfb9a189244b897ae23f3a8681e7c4b45cc67ec27faff8961783edce16f1fc",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kwallet-pam": {
+      "state": "unmaterialized",
+      "source_sha256": "d71f5945ef3086f56f52f531508c2ab363078fbbd5ae4084bd3647049e6ee94f",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kwayland": {
+      "state": "unmaterialized",
+      "source_sha256": "8d4c83524919dc87b5dec546d0fb14c591c03957888cb7b240a4a9d1bbdc8269",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kwayland-integration": {
+      "state": "unmaterialized",
+      "source_sha256": "33b4862d9828e6928ef19e0615eae62954ec6f9a7c482cae8ed4fa84cb9cbe00",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kwin": {
+      "state": "unmaterialized",
+      "source_sha256": "6baa910b732d93c48c90f9c1cc685cc93d0b8de0cdf138c24192c045bc3a48e2",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kwin-x11": {
+      "state": "unmaterialized",
+      "source_sha256": "995236b90e3e92626a4991dcea47c9fcfa9bf163fdf01f2abe00e467fc9f2291",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "kwrited": {
+      "state": "unmaterialized",
+      "source_sha256": "f8aa905734d0ccde796884cfcb06b36084e441fb199ea5aab2bc92cfa4c0506d",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "layer-shell-qt": {
+      "state": "unmaterialized",
+      "source_sha256": "ccdcfec7081ca956f7a52c9113a4df3a226575bfbe98b56a2a9a4d7d7e19e8f0",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "libkscreen": {
+      "state": "unmaterialized",
+      "source_sha256": "df317e03acfadfcbc68981b78131750103fadf4d5c5df6368c9e91e698677219",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "libksysguard": {
+      "state": "unmaterialized",
+      "source_sha256": "9069bcf3fe4e491ea774d0d70eb17f99b567299871045a38543fcabcdb56dfc4",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "libplasma": {
+      "state": "unmaterialized",
+      "source_sha256": "27b28823254aa489c094c40a314ce1575fd7906eeb521e636bb8fd2dc2981f2f",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "milou": {
+      "state": "unmaterialized",
+      "source_sha256": "b43c7cb765109a91ad9ef7d5856c4584b380349837baf63ccca4b45a67925ab5",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "ocean-sound-theme": {
+      "state": "unmaterialized",
+      "source_sha256": "452e5ab04f5e2d7cbf9357e4e12badf8493aefda437ba130eb38c9e511313b72",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "oxygen": {
+      "state": "unmaterialized",
+      "source_sha256": "ffa4b969197f6e09a6ee4f468925e67223666d761ee9801a8ea612e09b756037",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "oxygen-sounds": {
+      "state": "unmaterialized",
+      "source_sha256": "0cc5b60004d8feb8b1de032cb5d3c056c98f62a8713589b90b471e5943e31ad9",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-activities": {
+      "state": "unmaterialized",
+      "source_sha256": "d93f31b6f33733ad3803098f4f622e55e3ef52cb5cd97e621a7b803e6f0e3f7c",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-activities-stats": {
+      "state": "unmaterialized",
+      "source_sha256": "9896396e29d5841c7a0f42814ced01ab58fcad406a552ddee2c950f205549acf",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-bigscreen": {
+      "state": "unmaterialized",
+      "source_sha256": "fd00b8ffd6a1c0fd7058acd06098110b00b5ca1dc720167058fad65d2ab50bdc",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-browser-integration": {
+      "state": "unmaterialized",
+      "source_sha256": "d88bdf85a990b4ff819e08843c74faa17715d14419981bbe24f68ec7cff0b8ce",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-desktop": {
+      "state": "unmaterialized",
+      "source_sha256": "079fcf6b87d7bf65e3f2a4670d605fac9469344c279a285a98ad549332d7b53e",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-dialer": {
+      "state": "unmaterialized",
+      "source_sha256": "5504ea54524ea232aaca5e36ce542e376740c18d029fe451d58f21b5063c01cb",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-disks": {
+      "state": "unmaterialized",
+      "source_sha256": "34125cd31e559d4d0fef49bb33a6ffc1803112a17495ae1bfbcf5e8beda464c4",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-firewall": {
+      "state": "unmaterialized",
+      "source_sha256": "adbc6a62d272a3866461274bb78de49e0f83c9971225f619adb3042399be6997",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-integration": {
+      "state": "unmaterialized",
+      "source_sha256": "0786c49f2f357744e0f4cfda49f55284faa1a97da85a667ca6cf1d8ab07aff89",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-keyboard": {
+      "state": "unmaterialized",
+      "source_sha256": "0dd91212308e6c6999db55b95b5b462cadc2766935272e9caf2f138b9a063788",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-login-manager": {
+      "state": "unmaterialized",
+      "source_sha256": "6ed7c3bbac1c79bc1a21c330923804aa6c3f720fafd6accb1a6a1fada684e84f",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-mobile": {
+      "state": "unmaterialized",
+      "source_sha256": "e25d53707be3bf86aad2b2712bcdcb9133f7c75a54c434724de5663aa78b773f",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-nano": {
+      "state": "unmaterialized",
+      "source_sha256": "9a5356f6526daec0873c8dd35d98d88122c2bc7739eb69fb9585146a6772f202",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-nm": {
+      "state": "unmaterialized",
+      "source_sha256": "6469ff89e26d44565292c968df595b3a68f353707255ba48725c1bae2a67f3be",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-pa": {
+      "state": "unmaterialized",
+      "source_sha256": "4fe28579693858cdaf34d5b7e25b441d3e653058ff18579c8596eb8a57221a25",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-sdk": {
+      "state": "unmaterialized",
+      "source_sha256": "b2d6cfb36dbe6a408f22c9ddabdae623eb7aa0de15485827f30a725a645e6e0f",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-setup": {
+      "state": "unmaterialized",
+      "source_sha256": "64bc032ef9e8a6549fc2dd8b5fa64118e25da652e3de8adb1c974efbd33258dd",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-systemmonitor": {
+      "state": "unmaterialized",
+      "source_sha256": "5708e8f0e1833e0829144a14aba1f177262661cc57b20c4a5a34bfd6973d1f1b",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-thunderbolt": {
+      "state": "unmaterialized",
+      "source_sha256": "d8179c353f89de0eee69619e300b9df9b7788fce4864cfb2ce1255f0bc691664",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-vault": {
+      "state": "unmaterialized",
+      "source_sha256": "2a25bb2bd75c9d92894d3e75a19b2bcb01adaa937980579f9422e8c1df84dda5",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-welcome": {
+      "state": "unmaterialized",
+      "source_sha256": "894137f8653d3311fae50ba0c70bdc4c8036f8f15082a583d9b3bb4ef51b18ba",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-workspace": {
+      "state": "unmaterialized",
+      "source_sha256": "94ab21e2243b7876f65c315f1e545081c6437f5bd0a041ca4fb6c2533ae874c9",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma-workspace-wallpapers": {
+      "state": "unmaterialized",
+      "source_sha256": "c481ac4b937a2b1b080c3273e0557cd0c9d57b644156b941902483fd8e1646b5",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plasma5support": {
+      "state": "unmaterialized",
+      "source_sha256": "dcd58d280b9c3f9570b1790134f692374ecae633cd15c60b1ee76947d5543e80",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "plymouth-kcm": {
+      "state": "unmaterialized",
+      "source_sha256": "ce723d67e6b8cd71b6eb353e87c10f698a095ea7d455bee703d8ba59e793e57e",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "polkit-kde-agent-1": {
+      "state": "unmaterialized",
+      "source_sha256": "fb731dd979c0296994b5efe37b0a9cdeec5e704f91565540930effdbd7efee58",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "powerdevil": {
+      "state": "unmaterialized",
+      "source_sha256": "6a738fccf01e4d1b10fea68ff8b404a406f95bc36fcb593bcc70fafb1c53258b",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "print-manager": {
+      "state": "unmaterialized",
+      "source_sha256": "f1658390a7104f2b806176f188ea38f148e7900cb928b4ddfcae0616af52f6ce",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "qqc2-breeze-style": {
+      "state": "unmaterialized",
+      "source_sha256": "788f0698c904112cc33bf6f8fb446b2e4fd7231d38c0955cbc3baa50d375d1ee",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "sddm-kcm": {
+      "state": "unmaterialized",
+      "source_sha256": "b7641d15996f590df27d8f820dffc79d83ce9e4e19a88f03bb1d8651faa25887",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "spacebar": {
+      "state": "unmaterialized",
+      "source_sha256": "6a072e3ecd849a512148241f24492d0d810331deabe0afe00a7b526efaa64a31",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "spectacle": {
+      "state": "unmaterialized",
+      "source_sha256": "2a63a8da331f9249e0ff0091a38f2fa946c7b85c7b7133bd8b60dd524e8e01b8",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "systemsettings": {
+      "state": "unmaterialized",
+      "source_sha256": "317a21165709d61796fba19f5454397577ffd8aa96655b29dd286a1df252cddb",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "union": {
+      "state": "unmaterialized",
+      "source_sha256": "deea749acb710357e56fce07198e3de3bad4bdfa95298e185e38eb8938f8d2c8",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "wacomtablet": {
+      "state": "unmaterialized",
+      "source_sha256": "f668f1dbd18d5f9060b016dbc5667619b214e4e6ac0456be7d322214c20e9cbe",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    },
+    "xdg-desktop-portal-kde": {
+      "state": "unmaterialized",
+      "source_sha256": "5ebedc3dcf508e85f2f7bbddffa2cca6805650ffe1dce350c4a1dfc5d2f07c50",
+      "internal_candidate_dependencies": [],
+      "external_requirements": [],
+      "qml_modules": []
+    }
+  }
+}

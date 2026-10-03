@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-02",
+  "authority": "supralinux-ci-infrastructure",
+  "provider_platform": "ubuntu-resolute",
+  "plasma_version": "6.7.5",
+  "role": "plasma-level0-materialization-infrastructure-preflight",
+  "state": "execution-authorized",
+  "execution_authorized": true,
+  "materialization_authorized": false,
+  "package_execution_authorized": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "mechanism": "apt-get-source-download-only-plus-dpkg-source-extract",
+  "source_index": {
+    "suites": [
+      "resolute",
+      "resolute-updates",
+      "resolute-security"
+    ],
+    "components": [
+      "main",
+      "universe"
+    ],
+    "signed_by": "/usr/share/keyrings/ubuntu-archive-keyring.gpg"
+  },
+  "sample": {
+    "source_package": "kf6-kconfig",
+    "package_campaign_scope": "non-Plasma-Level0",
+    "expected_upstream_family": "KDE Frameworks",
+    "purpose": "certify source download, .dsc integrity path, dpkg-source extraction and Debian packaging-tree capture"
+  },
+  "pass_contract": {
+    "ubuntu_version_id": "26.04",
+    "source_reference_available": true,
+    "apt_get_source_download_only": "PASS",
+    "dsc_count": 1,
+    "dpkg_source_extract": "PASS",
+    "required_packaging_files": [
+      "debian/control",
+      "debian/rules",
+      "debian/changelog"
+    ],
+    "source_version_must_exist_in_apt_source_records": true,
+    "package_execution_started": false
+  },
+  "output": {
+    "evidence_dir": "evidence/kde-plasma-level0-materialization-preflight",
+    "artifact_name_template": "kde-plasma-level0-materialization-preflight-${commit}",
+    "retention_days": 90
+  },
+  "failure_classification": "INFRA_INVALID",
+  "next_gate_on_pass": "plasma-level0-materialization",
+  "next_gate_on_failure": "freeze-materialization-infrastructure-diagnostic"
+}

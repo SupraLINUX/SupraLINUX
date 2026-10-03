@@ -1,0 +1,6 @@
+# Debian sid packaging copyright metadata retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+node=kcodecs
+path=trees/debian/kcodecs/debian/copyright
+sha256=deb13c487cf8ec5a988f1673e690d0125bfc1fa451c95a9dd3e9bcbc867cca76

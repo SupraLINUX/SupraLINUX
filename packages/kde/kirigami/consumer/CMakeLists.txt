@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.29)
+project(kirigami_consumer LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(Qt6 6.9 REQUIRED COMPONENTS Core Gui)
+find_package(KF6KirigamiPlatform 6.30 REQUIRED CONFIG)
+add_executable(kirigami-consumer main.cpp)
+target_link_libraries(kirigami-consumer PRIVATE Qt6::Core Qt6::Gui KF6::KirigamiPlatform)

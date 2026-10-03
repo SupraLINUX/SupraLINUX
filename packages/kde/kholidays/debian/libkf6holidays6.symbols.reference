@@ -1,0 +1,8 @@
+# Debian sid symbols baseline retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+provider=debian
+reference_version=6.28.0
+node=kholidays
+path=trees/debian/kholidays/debian/libkf6holidays6.symbols
+sha256=b0be25ddbc4c7abeb121bb0d3c3ca053d33e2a9fa88695bea210c50d56c256cd

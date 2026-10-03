@@ -1,0 +1,160 @@
+{
+  "schema": 2,
+  "as_of": "2026-09-17",
+  "frameworks_series": "6.30.0",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "batch": "tier1-batch-8",
+  "state": "PASS",
+  "attempt_ledger": "manifests/kde-tier1-package-batch8-attempts.json",
+  "canonical_snapshot": {
+    "state": "pre-batch-8",
+    "tier1": "21 PASS / 8 pending / 0 current FAIL / 0 BLOCKED after Batch 7 canonical promotion"
+  },
+  "selected_nodes": [
+    "kguiaddons"
+  ],
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+    },
+    "packaging_trees": {
+      "status": "PASS",
+      "workflow_run": 34708030450,
+      "artifact_id": 10301938362,
+      "artifact_sha256": "6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6",
+      "snapshot_json_sha256": "f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345"
+    },
+    "kcoreaddons_public_header_provider": {
+      "state": "PASS",
+      "role": "consumer-development-surface-only",
+      "build_dependency": false,
+      "version": "6.30.0-0supralinux4",
+      "workflow_run": 35122522242,
+      "artifact_id": 10457958023,
+      "artifact_sha256": "c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64",
+      "files": {
+        "libkf6coreaddons_data": "f05f55e3c6486af9d3ff48aa38215784bbb347aae1cd5fb760f5513760364908",
+        "libkf6coreaddons_dev": "9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636",
+        "libkf6coreaddons6": "015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb",
+        "qml6_module_org_kde_coreaddons": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
+      }
+    }
+  },
+  "nodes": {
+    "kguiaddons": {
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-kguiaddons",
+      "package_version": "6.30.0-0supralinux2",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kguiaddons-6.30.0.tar.xz",
+      "source_sha256": "e98864228d1c5e23f3428025eb9928697374fdc3eddebb3a9dec570de028a62d",
+      "runtime_package": "libkf6guiaddons6",
+      "python_package": "python3-kguiaddons",
+      "python_module": "KGuiAddons",
+      "soname": "libKF6GuiAddons.so.6",
+      "symbols": {
+        "file": "libkf6guiaddons6.symbols",
+        "sha256": "aca1c20755a57e5763d3dd4d3ec8da3b1e41e00bd728d5c94ab6f2173d0041b4",
+        "tree_provider": "debian",
+        "reference_version": "6.28.0",
+        "overlay_file": "libkf6guiaddons6.symbols.supralinux-overlay",
+        "overlay_minimum_upstream_version": "6.29.0",
+        "overlay_symbols": [
+          "_ZNK16KSystemClipboard13ownsClipboardEv@Base",
+          "_ZNK16KSystemClipboard13ownsSelectionEv@Base"
+        ]
+      },
+      "copyright": {
+        "sha256": "682780cded94ed69804a179fd799d3085536c26055a3592cc3ab3a12757f0d74"
+      },
+      "signing_key": {
+        "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"
+      },
+      "upstream_defaults": {
+        "WITH_WAYLAND": "ON",
+        "WITH_X11": "ON",
+        "USE_DBUS": "ON",
+        "BUILD_GEO_SCHEME_HANDLER": "ON",
+        "BUILD_PYTHON_BINDINGS": "ON",
+        "BUILD_TESTING": "ON"
+      },
+      "kde_framework_build_dependencies": [],
+      "public_header_dependencies": [
+        "KCoreAddons"
+      ],
+      "binary_contracts": [
+        {"name": "libkf6guiaddons-bin", "architecture": "amd64", "multi_arch": null},
+        {"name": "libkf6guiaddons-data", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6guiaddons-dev", "architecture": "amd64", "multi_arch": null},
+        {"name": "libkf6guiaddons-doc", "architecture": "all", "multi_arch": "foreign"},
+        {"name": "libkf6guiaddons6", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "qml6-module-org-kde-guiaddons", "architecture": "amd64", "multi_arch": "same"},
+        {"name": "python3-kguiaddons", "architecture": "amd64", "multi_arch": null}
+      ],
+      "dependency_contracts": {
+        "libkf6guiaddons-dev": [
+          "libkf6coreaddons-dev (>= 6.30.0~)",
+          "libkf6guiaddons6 (= 6.30.0-0supralinux2)",
+          "qt6-base-dev (>= 6.9.0~)",
+          "qt6-wayland-dev (>= 6.9.0~)"
+        ],
+        "libkf6guiaddons6": [
+          "libkf6guiaddons-data (= 6.30.0-0supralinux2)"
+        ],
+        "python3-kguiaddons": [
+          "libkf6guiaddons6 (= 6.30.0-0supralinux2)",
+          "python3-pyside6.qtcore",
+          "python3-pyside6.qtgui"
+        ]
+      },
+      "recommendation_contracts": {
+        "libkf6guiaddons-dev": [
+          "libkf6guiaddons-doc (= 6.30.0-0supralinux2)"
+        ],
+        "libkf6guiaddons6": [
+          "libkf6guiaddons-bin (= 6.30.0-0supralinux2)"
+        ]
+      },
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "pass_evidence": {
+        "workflow_run": 35185562846,
+        "job_id": 105086774400,
+        "commit": "de47462c5b6b21bc2c485f5dd2c39035a32f7f45",
+        "artifact_id": 10482007092,
+        "artifact_sha256": "71d32ecb50f6617ba198325a552e68e995c20c9050c7ae21f6a69d5b680184ca",
+        "rootfs_sha256": "c68681aacfd32976c6e0bf471ec1928179fd80e402faf2293706e53f88ad25c6",
+        "tests": "9/9 PASS",
+        "lintian": "PASS-errors",
+        "consumer_smoke": "PASS",
+        "python_import": "PASS",
+        "apt_check": "PASS",
+        "abi_soname": "libKF6GuiAddons.so.6"
+      },
+      "last_pass_files": {
+        "libkf6guiaddons_bin_deb_sha256": "25776fe6898a4a69027776d8b007746e50598fc0cccd2a5c701ab11ea0085e96",
+        "libkf6guiaddons_data_deb_sha256": "4efb42949990f183a7b50f7671acabcee153534c5d21cf5a5ffb2f1621b2bdfa",
+        "libkf6guiaddons_dev_deb_sha256": "a142959835dd54e8231cd7d8610dd625f6917cbf31c334d7a1101768e2aaf7d5",
+        "libkf6guiaddons_doc_deb_sha256": "f734d2ebd9c16208988f40840a3d3e02b78e114d4def097dd3e8d1068d708efc",
+        "libkf6guiaddons6_deb_sha256": "73d711ded8ce0e38d17d65c579dc8539f9e5f768428d893be391e93d183266e2",
+        "python3_kguiaddons_deb_sha256": "b8febef589eea582b02aa9e600520078a4a859b9c6603e13322f4836a936a220",
+        "qml6_module_org_kde_guiaddons_deb_sha256": "b84f0360914c9a290ec2357021765b1fe2d55ad3ba7e8cf78811fe2f1c79f57e",
+        "libkf6guiaddons_bin_dbgsym_ddeb_sha256": "ea8d7653dd7bcd2193fa7f586cb21060f5a252d8c6704e2c130fa49ecfcc51cc",
+        "libkf6guiaddons6_dbgsym_ddeb_sha256": "a0c0a7a70ab9c4e664434f8c23a044bb3678a5fdc2f3ed70198ca3940722dea9",
+        "python3_kguiaddons_dbgsym_ddeb_sha256": "c7ae30f25d0a0409c85242070c16b3891348c8c634740e763e18493353b0d021",
+        "qml6_module_org_kde_guiaddons_dbgsym_ddeb_sha256": "04b2ec3f1605f8d59cedcc1f7b159313a1d4e963b8b252e88553ed481b238a64",
+        "changes_sha256": "d66d27281a84f5af8ffd3bcbea7f0f4422cc4bcf5704d021863046713ab4f996",
+        "buildinfo_sha256": "609176cab4a3c1e210d0bedda5f66ea883fbb4163b9eedf61670940391d6affe",
+        "dsc_sha256": "9069761be3c976d7a8f8fdf6a2cd393c4a93e7d4f5bd3f37c080a7bed2d629ea",
+        "orig_tar_sha256": "e98864228d1c5e23f3428025eb9928697374fdc3eddebb3a9dec570de028a62d",
+        "debian_tar_sha256": "148757f9c83d2b45791a9e344100054e7af00479aac91d42f78c498fb122c9b5",
+        "rootfs_sha256": "c68681aacfd32976c6e0bf471ec1928179fd80e402faf2293706e53f88ad25c6"
+      }
+    }
+  }
+}

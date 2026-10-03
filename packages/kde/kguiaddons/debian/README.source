@@ -1,0 +1,21 @@
+SupraLINUX KGuiAddons packaging
+==============================
+
+Authority is KDE upstream stable. The Debian 6.28 packaging tree retained by
+SupraLINUX is used only as a technical package-layout/symbols/copyright
+reference.
+
+Batch 8 preserves KDE 6.30 Linux defaults, including Wayland, X11, DBus, the
+geo URI helper, Python bindings and tests. QCH remains disabled by the common
+SupraLINUX Frameworks packaging profile.
+
+KGuiAddons remains Tier 1: KCoreAddons is not a Build-Depends. The public
+KImageCache header includes KCoreAddons' kshareddatacache.h, so the -dev binary
+package depends on libkf6coreaddons-dev and the consumer smoke validates that
+surface against the retained SupraLINUX KCoreAddons PASS.
+
+The retained Debian 6.28 symbols reference predates two KSystemClipboard API
+methods. KDE upstream v6.29.0 contains ownsClipboard() and ownsSelection() with
+`since 6.29`, while v6.28.0 does not contain them. SupraLINUX therefore appends
+those exact ABI symbols with minimum version 6.29.0 before dh_makeshlibs. The
+overlay records upstream ABI history; it does not redefine upstream API.
