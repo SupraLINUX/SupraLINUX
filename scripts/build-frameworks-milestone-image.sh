@@ -4,6 +4,9 @@ set -Eeuo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPOSITORY="${SUPRALINUX_REPOSITORY:-SupraLINUX/SupraLINUX}"
 TOKEN="${SUPRALINUX_GITHUB_TOKEN:-${GITHUB_TOKEN:-}}"
+if [[ -z "${TOKEN}" ]] && command -v gh >/dev/null 2>&1; then
+    TOKEN="$(gh auth token 2>/dev/null || true)"
+fi
 GOLDEN_IMAGE="${SUPRALINUX_GOLDEN_IMAGE:-/var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2}"
 TARGET_IMAGE="${SUPRALINUX_FRAMEWORKS_MILESTONE_IMAGE:-/var/lib/supralinux/images/milestones/frameworks-6.30-pass.qcow2}"
 STATE_ROOT="${SUPRALINUX_MILESTONE_STATE_DIR:-/var/lib/supralinux/milestone-cache/frameworks-6.30}"
@@ -13,7 +16,7 @@ MIRROR="${SBUILD_MIRROR:-http://archive.ubuntu.com/ubuntu}"
 API_VERSION="2026-03-10"
 
 if [[ -z "${TOKEN}" ]]; then
-    printf 'SUPRALINUX_GITHUB_TOKEN (or GITHUB_TOKEN) is required.\n' >&2
+    printf 'GitHub token unavailable. Authenticate with gh auth login or export SUPRALINUX_GITHUB_TOKEN.\n' >&2
     exit 1
 fi
 if [[ "${REPLACE}" != "0" && "${REPLACE}" != "1" ]]; then
@@ -21,7 +24,7 @@ if [[ "${REPLACE}" != "0" && "${REPLACE}" != "1" ]]; then
     exit 1
 fi
 
-for command_name in curl dpkg-deb dpkg-scanpackages gzip jq mmdebstrap qemu-img sha256sum unzip; do
+for command_name in curl dpkg-deb dpkg-scanpackages gzip install jq mmdebstrap qemu-img sha256sum unzip; do
     command -v "${command_name}" >/dev/null 2>&1 || {
         printf 'Missing host command: %s\n' "${command_name}" >&2
         exit 1
@@ -41,6 +44,27 @@ if [[ -n "$(git -C "${ROOT}" status --porcelain --untracked-files=normal)" ]]; t
     printf 'Host checkout must be clean before building a milestone image.\n' >&2
     exit 1
 fi
+
+TARGET_USER="${SUPRALINUX_HOST_USER:-${SUDO_USER:-${USER}}}"
+if ! id "${TARGET_USER}" >/dev/null 2>&1; then
+    printf 'Milestone host user does not exist: %s\n' "${TARGET_USER}" >&2
+    exit 1
+fi
+TARGET_GROUP="$(id -gn "${TARGET_USER}")"
+
+if [[ "${EUID}" -eq 0 ]]; then
+    ROOT_CMD=()
+else
+    command -v sudo >/dev/null 2>&1 || {
+        printf 'sudo is required to create the dedicated milestone directories under /var/lib/supralinux.\n' >&2
+        exit 1
+    }
+    ROOT_CMD=(sudo)
+fi
+
+# These are dedicated cache/evidence directories. Provision them before
+# check-golden-image-provenance.sh writes its admission record.
+"${ROOT_CMD[@]}" install -d -o "${TARGET_USER}" -g "${TARGET_GROUP}" -m 0750     "${STATE_ROOT}"     "$(dirname "${TARGET_IMAGE}")"     "${EVIDENCE_ROOT}/milestone-frameworks-6.30"
 
 "${ROOT}/scripts/check-golden-image-provenance.sh" "${GOLDEN_IMAGE}" "${STATE_ROOT}/golden-admission.txt"
 GOLDEN_SHA256="$(sha256sum "${GOLDEN_IMAGE}" | awk '{print $1}')"
