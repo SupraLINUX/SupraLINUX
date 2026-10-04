@@ -436,6 +436,33 @@ SUPRALINUX_GOLDEN_COMPAT_COMMIT="${PR_HEAD_SHA}" \
 GOLDEN_SOURCE_COMMIT="$(awk -F= '$1 == "source_commit" {print $2; exit}' "${GOLDEN_PROVENANCE}")"
 GOLDEN_INPUT_DIGEST="$(awk -F= '$1 == "golden_input_digest" {print $2; exit}' "${GOLDEN_PROVENANCE}")"
 
+# Admit an execution cache independently of the golden provenance. The cache
+# changes the backing image, never the package evidence or sbuild isolation.
+BASE_IMAGE="${GOLDEN_IMAGE}"
+EXECUTION_CHECKPOINT="none"
+if [[ "${GATE}" == "plasma-package-build" ]]; then
+    EXECUTION_CHECKPOINT="$(python3 - "${ROOT}/manifests/kde-plasma-package-build.json" <<'PY'
+import json, sys
+print(json.load(open(sys.argv[1])).get("execution_checkpoint", "none"))
+PY
+)"
+    case "${EXECUTION_CHECKPOINT}" in
+        none) ;;
+        frameworks-6.30-pass)
+            BASE_IMAGE="$(python3 - "${ROOT}/manifests/execution-checkpoints.json" <<'PY'
+import json, sys
+record = json.load(open(sys.argv[1]))["checkpoints"]["frameworks-6.30-pass"]
+assert record["state"] == "PASS"
+print(record["host_path"])
+PY
+)"
+            "${ROOT}/scripts/check-frameworks-milestone-image.sh" "${BASE_IMAGE}" \
+                > "${EVIDENCE_DIR}/execution-cache-admission.txt"
+            ;;
+        *) printf 'Unsupported execution checkpoint: %s\n' "${EXECUTION_CHECKPOINT}" >&2; exit 1 ;;
+    esac
+fi
+
 printf 'Checking for stale/active authoritative workflow runs before creating a runner...\n'
 ACTIVE_RUNS_JSON="$(api GET "/repos/${REPOSITORY}/actions/runs?event=pull_request&per_page=100")"
 ACTIVE_AUTHORITATIVE="$(jq -c \
@@ -472,6 +499,8 @@ printf '%s\n' "${BASELINE_RUN_IDS}" > "${EVIDENCE_DIR}/workflow-baseline-ids.jso
     printf 'vm_name=%s\n' "${VM_NAME}"
     printf 'golden_image=%s\n' "${GOLDEN_IMAGE}"
     printf 'golden_image_sha256=%s\n' "${GOLDEN_SHA256}"
+    printf 'execution_checkpoint=%s\n' "${EXECUTION_CHECKPOINT}"
+    printf 'execution_backing_image=%s\n' "${BASE_IMAGE}"
     printf 'golden_provenance=%s\n' "${GOLDEN_PROVENANCE}"
     printf 'local_lock=%s\n' "${LOCK_FILE}"
     printf 'libvirt_uri=%s\n' "${LIBVIRT_URI}"
@@ -497,8 +526,8 @@ else
 fi
 
 printf 'Creating ephemeral overlay and KVM VM...\n'
-BACKING_FORMAT="$(qemu-img info --output=json "${GOLDEN_IMAGE}" | jq -r '.format')"
-qemu-img create -f qcow2 -F "${BACKING_FORMAT}" -b "${GOLDEN_IMAGE}" "${OVERLAY}"
+BACKING_FORMAT="$(qemu-img info --output=json "${BASE_IMAGE}" | jq -r '.format')"
+qemu-img create -f qcow2 -F "${BACKING_FORMAT}" -b "${BASE_IMAGE}" "${OVERLAY}"
 qemu-img resize "${OVERLAY}" "${VM_DISK_SIZE_GIB}G"
 chgrp "${LIBVIRT_QEMU_GROUP}" "${OVERLAY}"
 chmod 0660 "${OVERLAY}"

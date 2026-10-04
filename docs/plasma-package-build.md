@@ -8,8 +8,8 @@ runner. Ordinary PR CI validates the contract without reopening materialization.
 
 The initial node is Breeze GRUB 6.7.5. Its resources require only debhelper to
 package, so this sample uses the certified clean golden image. It does not need
-the Frameworks milestone or a Qt transition. The other 33 Level 0 nodes remain
-locked for individual packaging review. For example, KDecoration's Ubuntu rules
+the Frameworks milestone or a Qt transition. Ocean Sound Theme is the next individually reviewed node. The remaining
+nodes stay locked until their own review. For example, KDecoration's Ubuntu rules
 currently suppress `dh_auto_test`; that requires review before its admission.
 
 The runner rechecks KDE's detached signature and frozen source/packaging hashes,
@@ -51,3 +51,25 @@ The other 33 Level 0 nodes still require individual review. The captured Ubuntu
 reference inventory in `manifests/evidence/plasma/level0-packaging-inventory.json`
 lists 13 test-step overrides and no autopkgtest control files; it is advisory
 inventory and does not admit any package.
+
+## Frameworks cache consumption
+
+The host still admits the certified Ubuntu golden image and checks its current
+input digest. For reviewed Plasma packages requiring Frameworks, it separately
+admits the Frameworks milestone by image SHA, provenance, current artifact plan
+and qemu-img check, then uses that cache as the disposable overlay backing image.
+The cache is never represented as the golden image or as final package evidence.
+
+Inside the guest, every cached binary and the APT index are hash-verified;
+selected predecessor package/source/version/architecture must match the reviewed
+contract and current eligible Frameworks node. Only those explicit binaries are
+passed to sbuild. Every package uses a new Ubuntu buildd rootfs with updates and
+security enabled. The milestone rootfs is not reused because its older mirror
+state must not define the current build environment.
+
+An infrastructure-only ECM/Qt consumer must pass in sbuild before a Plasma
+Attempt starts. It retains source, binary, buildinfo, changes and logs, and checks
+the exact ECM version in buildinfo. A cache/probe failure consumes no Plasma
+Attempt. Ocean's package tests compare every installed resource with signed
+upstream and decode every audio stream; actual desktop playback remains a session
+gate. Ubuntu Qt is reused; no Qt substitution is introduced.

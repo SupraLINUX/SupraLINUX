@@ -1,7 +1,7 @@
 # Development roadmap
 
 Status: **planning document**  
-Last reviewed: **2026-09-20**
+Last reviewed: **2026-10-04**
 
 The phases are gates, not calendar promises. A later phase may be prepared in parallel, but it is not promoted as complete until its evidence exists.
 
@@ -34,7 +34,7 @@ The phases are gates, not calendar promises. A later phase may be prepared in pa
 
 ## Phase 3 — KDE metadata and DAG
 
-Current implementation status: KDE Frameworks 6.30 Tier 1 is canonically 29/29 PASS. Tier 2 upstream inventory is 15 nodes and currently stands at **1 PASS / 14 pending / 0 current FAIL / 0 BLOCKED**: KAuth is retained PASS/downstream-eligible; 13 non-KMime nodes are package-lane-pending with Tier 1 predecessors available; KMime remains decision-gated by ADR-0002 because its move from PIM to Frameworks changes both Debian version ordering and the runtime/development namespace.
+Current package and gate state is generated in [docs/status/current.md](status/current.md). Frameworks has 65 retained build PASS records with environment scope recorded per node; only the KVM infrastructure and sample have been certified authoritatively. Plasma has 75 inventoried source nodes and 34 Level 0 materializations. Package admission advances individually and does not certify the whole stack.
 
 - ingest official KDE stable source metadata;
 - record source URLs, versions, tags and SHA-256 values from real downloads;
@@ -75,11 +75,32 @@ Current implementation status: KDE Frameworks 6.30 Tier 1 is canonically 29/29 P
 - ABI/shlibs/symbols regression checks for replaced libraries.
 
 
-### Tier 2 provider-audit gate
+## Completion criteria
 
-The generated Tier 2 campaign feeds a cheap Ubuntu Resolute provider audit before package-contract materialization. The first batch is KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication. Provider-audit PASS is only a readiness gate; package PASS still requires a real clean build and retained evidence.
+The first deliverable is an amd64 live desktop image, an installer and a signed
+APT repository, all built from the selected stack and retained source artifacts.
+The desktop profile includes ordinary Plasma desktop functionality and its
+integration dependencies. Mobile/TV components remain in the upstream inventory
+and build campaign; their availability does not imply default installation on
+the desktop image. Any exclusions must be recorded in the final seed.
 
+The distribution remains in development until all of these gates close:
 
-### Tier 2 Batch 2 clean build
+- Authoritative clean builds of the selected Frameworks, Plasma and Gear packages,
+  with package tests, licensing, exact dependency inputs and retained sources.
+- Ubuntu Qt reuse certification, library/plugin ABI checks and Ubuntu/third-party
+  application installation and upgrade without unintended removals.
+- A complete Wayland session: login, KWin rendering, audio, network, Bluetooth,
+  power, portals, Discover and hardware-specific functions where applicable.
+- Ubuntu-based composition, package seeds and signed APT metadata; testing and
+  stable remain distinct publication stages.
+- Btrfs/Snapper and APT-hook recovery, including a failed update and successful
+  boot into a usable restored system without reverting user data.
+- Live ISO boot, actual installation onto disposable VM disks, first boot,
+  updates and recovery; BIOS/UEFI and Secure Boot behavior declared and tested.
+- A final campaign from clean inputs, rebuild comparison and an offline restore
+  of retained artifacts; documented limitations and manual release QA.
 
-KCrash, KNotifications, KStatusNotifierItem, KUnitConversion and Syndication are now queued for a parallel clean-build campaign using one shared Resolute rootfs and retained PASS predecessor artifacts. Results will be promoted independently: PASS can feed downstream; a real FAIL affects only that node; independent peers continue. No automatic stable publication is permitted.
+The final merge and stable publication require explicit approval after the
+release evidence and installable image are ready for review. Package builds and
+incremental integration continue under the existing authorization.

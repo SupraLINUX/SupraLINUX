@@ -42,6 +42,10 @@ jobs:
       - name: Test Plasma package input admission
         run: python3 scripts/test-plasma-package-inputs.py
 
+      - name: Test Frameworks cache input admission
+        run: python3 scripts/test-frameworks-cache-admission.py
+
+
       - name: Validate current project status
         run: python3 scripts/render-project-status.py --check
 

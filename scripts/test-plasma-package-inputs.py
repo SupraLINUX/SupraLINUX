@@ -16,9 +16,24 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 prepare = importlib.machinery.SourceFileLoader("prepare", str(ROOT / "scripts/prepare-plasma-package.py")).load_module()
 resources = importlib.machinery.SourceFileLoader("resources", str(ROOT / "packages/plasma/breeze-grub/debian/tests/theme-resources")).load_module()
+sounds = importlib.machinery.SourceFileLoader("sounds", str(ROOT / "packages/plasma/ocean-sound-theme/debian/tests/sound-resources")).load_module()
 
 
 class InputAdmission(unittest.TestCase):
+    def test_sound_alias_target_change_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "alias.oga").symlink_to("outside.oga")
+            with self.assertRaisesRegex(AssertionError, "alias target changed"):
+                sounds.verify(root, {"alias.oga": {"symlink": "original.oga"}})
+
+    def test_broken_sound_alias_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "alias.oga").symlink_to("missing.oga")
+            with self.assertRaisesRegex(AssertionError, "broken or escapes"):
+                sounds.verify(root, {"alias.oga": {"symlink": "missing.oga"}})
+
     def test_png_timestamp_change_only_is_allowed(self):
         def chunk(tag, data):
             return struct.pack(">I", len(data)) + tag + data + struct.pack(">I", zlib.crc32(tag + data) & 0xffffffff)

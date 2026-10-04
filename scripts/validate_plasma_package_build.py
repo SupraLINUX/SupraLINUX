@@ -22,6 +22,10 @@ def validate():
     assert campaign["package_execution_authorized"] is bool(scope)
     assert campaign["runner_class"] == "supralinux-kvm-ubuntu-26.04-ephemeral"
     assert set(campaign["nodes"]) <= set(level["selected_nodes"])
+    if campaign.get("execution_checkpoint", "none") != "none":
+        assert campaign["execution_checkpoint"] == "frameworks-6.30-pass"
+        checkpoints = json.loads((ROOT / "manifests/execution-checkpoints.json").read_text())
+        assert checkpoints["checkpoints"][campaign["execution_checkpoint"]]["state"] == "PASS"
     material = json.loads((ROOT / "manifests/evidence/kde-plasma-level0-materialization-result.json").read_text())
     sources = {node["node"]: node for node in material["nodes"]}
     for name, record in campaign["nodes"].items():
@@ -31,6 +35,11 @@ def validate():
         assert record["packaging_reference_sha256"] == sources[name]["ubuntu_reference"]["debian_tree_tar_sha256"]
         assert record["packaging_reference_version"] == sources[name]["ubuntu_reference"]["source_version"]
         assert all(record["review"].values()), "Individual packaging review missing"
+        for predecessor, inputs in record.get("frameworks_predecessors", {}).items():
+            dag = json.loads((ROOT / "manifests/kde-dag.json").read_text())["nodes"][predecessor]
+            assert dag["state"] == "PASS" and dag["package_version"] == inputs["version"]
+            assert dag["source_package"] == inputs["source_package"]
+            assert inputs["binaries"] and all(binary["package"] in dag["binary_packages"] for binary in inputs["binaries"])
         for attempt in record["attempts"]:
             payload = (ROOT / attempt["result_path"]).read_bytes()
             assert hashlib.sha256(payload).hexdigest() == attempt["result_sha256"], "Attempt evidence changed"
@@ -65,6 +74,9 @@ def validate():
             assert hashlib.sha256((ROOT / evidence["contract_path"]).read_bytes()).hexdigest() == result["files_sha256"]["build-contract.json"]
             assert built_contract["nodes"][name]["packaging_sha256"] == record["packaging_sha256"]
             assert record["attempts"][-1]["state"] == "PASS" and result["package_attempt_consumed"] is True
+            if record.get("frameworks_predecessors"):
+                assert "predecessor-inputs.json" in result["files_sha256"]
+                assert "cache-probe/result.json" in result["files_sha256"]
     workflow = (ROOT / ".github/workflows/authoritative-plasma-package-build.yml").read_text()
     assert "github.event.pull_request.head.sha || github.sha" in workflow, "Workflow must bind the PR head"
     assert "ci:plasma-package-build" in workflow and "types: [labeled]" in workflow

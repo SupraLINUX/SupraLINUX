@@ -77,6 +77,12 @@ SOURCE_HASH="${AUTHORIZED[3]}"
 SIGNATURE_HASH="${AUTHORIZED[4]}"
 BASELINE_PACKAGE="${AUTHORIZED[5]}"
 cp "${ROOT}/manifests/kde-plasma-package-build.json" "${EVIDENCE}/build-contract.json"
+EXECUTION_CHECKPOINT="$(python3 - "${EVIDENCE}/build-contract.json" <<'PY'
+import json, sys
+print(json.load(open(sys.argv[1])).get("execution_checkpoint", "none"))
+PY
+)"
+EXTRA_ARGS=()
 
 STAGE="runner-contract"
 "${ROOT}/scripts/check-actions-runner-runtime.sh" "${EVIDENCE}/actions-runner-runtime.txt"
@@ -98,6 +104,19 @@ unshare --user --map-auto true
     printf 'rootfs_created_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 } > "${EVIDENCE}/environment.txt"
 sha256sum "${TEST_IMAGE}" > "${EVIDENCE}/test-image-sha256.txt"
+
+if [[ "${EXECUTION_CHECKPOINT}" != "none" ]]; then
+    STAGE="predecessor-cache-admission"
+    python3 "${ROOT}/scripts/admit-frameworks-cache.py" "${NODE}" \
+        --output "${EVIDENCE}/predecessor-inputs.json"
+    mapfile -t EXTRA_PATHS < <(python3 - "${EVIDENCE}/predecessor-inputs.json" <<'PY'
+import json, sys
+for item in json.load(open(sys.argv[1]))["selected"]:
+    print(item["path"])
+PY
+)
+    for path in "${EXTRA_PATHS[@]}"; do EXTRA_ARGS+=("--extra-package=${path}"); done
+fi
 
 STAGE="verified-source"
 TARBALL="${WORK}/upstream.tar.xz"
@@ -131,11 +150,17 @@ mmdebstrap --mode=unshare --variant=buildd --architectures=amd64 --components=ma
     "deb ${MIRROR} resolute-security main universe" |& tee "${EVIDENCE}/rootfs.log"
 sha256sum "${CHROOT}" > "${EVIDENCE}/rootfs-sha256.txt"
 
+if [[ "${EXECUTION_CHECKPOINT}" != "none" ]]; then
+    STAGE="predecessor-transport-probe"
+    "${ROOT}/scripts/probe-frameworks-build-inputs.sh" "${EVIDENCE}/predecessor-inputs.json" \
+        "${WORK}/cache-probe" "${EVIDENCE}/cache-probe"
+fi
+
 STAGE="sbuild"
 STATE="FAIL"
 ATTEMPT=true
 sbuild --verbose --chroot-mode=unshare --dist=resolute --arch=amd64 --arch-all \
-    --build-dir="${WORK}/out" "${DSCS[0]}" |& tee "${EVIDENCE}/sbuild.log"
+    "${EXTRA_ARGS[@]}" --build-dir="${WORK}/out" "${DSCS[0]}" |& tee "${EVIDENCE}/sbuild.log"
 BUILD_RESULT="PASS"
 
 STAGE="artifact-capture"
@@ -154,6 +179,10 @@ for deb in Path(sys.argv[3]).glob("*.deb"):
     assert version == record["version"], "Built version differs from reviewed contract"
     actual[package] = architecture
 assert actual == record["binary_packages"], f"Binary identity mismatch: {actual}"
+buildinfo = next(Path(sys.argv[3]).glob("*.buildinfo")).read_text()
+for predecessor in record.get("frameworks_predecessors", {}).values():
+    for binary in predecessor["binaries"]:
+        assert f"{binary['package']} (= {predecessor['version']})" in buildinfo, "Wrong build predecessor version"
 PY
 
 STAGE="lintian"

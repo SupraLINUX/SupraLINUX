@@ -5,10 +5,10 @@
   "provider_platform": "ubuntu-resolute",
   "plasma_version": "6.7.5",
   "role": "plasma-level0-definition",
-  "state": "package-build-partial-PASS",
+  "state": "package-build-authorized",
   "execution_authorized": false,
   "materialization_authorized": false,
-  "package_execution_authorized": false,
+  "package_execution_authorized": true,
   "validation_run_kind": "planning-materialization",
   "consumes_package_attempt": false,
   "canonical_package_state_effect": "none",
@@ -56,8 +56,8 @@
     "fail_fast": false,
     "parallel_independent_nodes": true,
     "only_pass_predecessor_artifacts": true,
-    "package_execution_locked": true,
-    "scope": "Remaining nodes require individual packaging review and explicit admission"
+    "package_execution_locked": false,
+    "scope": "One individually reviewed node per disposable runner; unrelated pending nodes remain locked"
   },
   "provider_policy": {
     "kde_frameworks": "SupraLINUX Frameworks 6.30 PASS artifacts",
@@ -613,7 +613,7 @@
       "ubuntu_reference_version": "4:6.6.5-0ubuntu0.1"
     },
     "ocean-sound-theme": {
-      "state": "packaging-preparation-pending",
+      "state": "package-build-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -632,9 +632,10 @@
         "reference_only": true
       },
       "candidate_package_version": "6.7.5-0supralinux1",
-      "package_execution_authorized": false,
+      "package_execution_authorized": true,
       "materialization_result": "PASS",
-      "ubuntu_reference_version": "6.6.4-0ubuntu1"
+      "ubuntu_reference_version": "6.6.4-0ubuntu1",
+      "package_build_manifest": "manifests/kde-plasma-package-build.json"
     },
     "oxygen-sounds": {
       "state": "packaging-preparation-pending",
@@ -925,7 +926,7 @@
       "ubuntu_reference_version": "1:6.6.4-0ubuntu1"
     }
   },
-  "next_gate": "plasma-level0-remaining-packaging-preparation",
+  "next_gate": "plasma-level0-authoritative-package-build",
   "execution_checkpoint": {
     "checkpoint_id": "frameworks-6.30-pass",
     "checkpoint_manifest": "manifests/execution-checkpoints.json",
@@ -980,5 +981,7 @@
     "package_execution_started": false,
     "consumes_package_attempt": false
   },
-  "authorized_package_nodes": []
+  "authorized_package_nodes": [
+    "ocean-sound-theme"
+  ]
 }

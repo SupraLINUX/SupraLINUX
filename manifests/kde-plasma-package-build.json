@@ -1,9 +1,11 @@
 {
   "schema": 1,
   "role": "reviewed-plasma-package-build",
-  "state": "partial-PASS",
-  "authorized_nodes": [],
-  "package_execution_authorized": false,
+  "state": "execution-authorized",
+  "authorized_nodes": [
+    "ocean-sound-theme"
+  ],
+  "package_execution_authorized": true,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
   "scope": "per-node build, lintian, installed resources and Ubuntu APT upgrade; graphical GRUB rendering and final distro integration remain later gates",
   "nodes": {
@@ -134,6 +136,61 @@
         "tests/theme-resources",
         "tests/ubuntu-upgrade"
       ]
+    },
+    "ocean-sound-theme": {
+      "state": "build-pending",
+      "source_package": "ocean-sound-theme",
+      "version": "6.7.5-0supralinux1",
+      "upstream_version": "6.7.5",
+      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/ocean-sound-theme-6.7.5.tar.xz",
+      "upstream_sha256": "452e5ab04f5e2d7cbf9357e4e12badf8493aefda437ba130eb38c9e511313b72",
+      "signature_sha256": "d0a03cc099de813d2092aacf3fc144be33dfa1e3d972cd03a5987890db96fe25",
+      "packaging_path": "packages/plasma/ocean-sound-theme/debian",
+      "packaging_review": "PASS",
+      "packaging_reference_version": "6.6.4-0ubuntu1",
+      "packaging_reference_sha256": "bbeb64b22118f07e24c5b32d38a64467b3a4333c6beda0221c83c8ee0f56b1e6",
+      "packaging_sha256": {
+        "changelog": "95000eb7f5afdae6e45d6410682eae4df25ae8054c302da67435a98ae1980f97",
+        "control": "64b7d468fcd0a44d21a23147f9300d8a18d33ce3ee656ad97901da08a784ea2c",
+        "copyright": "de913492361bf2d6176f7852be9a0d8e0e0b0f288de51570d0f9ba01c424ee33",
+        "docs": "3764ceaff06f3c6d3dcf7404d0f29ba3a2abb4a52c000481646112524ea1923c",
+        "rules": "b1e51e6fb1f2819ea2db05590c5d668c59cd5a422cb2159cae04550d6470f21a",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/control": "ddb2ea626e74f784389db64b9a5868cd06623883bb83b504914683ac8966c262",
+        "tests/sound-resources": "dfb9f958d4264fb7a000c60a06809bc5b8c5f21babd2c85747116eaaee31aaad",
+        "tests/sound-resources.json": "a695510b9119fe99ae62d69e488a5530636ba98b35b212fbccc78da1c86089e0",
+        "tests/ubuntu-upgrade": "689b511687773020dc7112d52f408c45079f0d241dac1aac7110dd46c99bdcc1"
+      },
+      "binary_packages": {
+        "ocean-sound-theme": "all"
+      },
+      "ubuntu_baseline_package": "ocean-sound-theme",
+      "frameworks_predecessors": {
+        "extra-cmake-modules": {
+          "source_package": "kf6-extra-cmake-modules",
+          "version": "6.30.0-0supralinux3",
+          "binaries": [
+            {
+              "package": "extra-cmake-modules",
+              "architecture": "all",
+              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+            }
+          ]
+        }
+      },
+      "attempts": [],
+      "review": {
+        "upstream_changes": "Signed official 6.7.5; no upstream code patches. All 64 regular resources and 14 sound aliases preserved.",
+        "packaging_changes": "Preserve source/binary name, Architecture all, Multi-Arch foreign and upstream CMake defaults; correct SPDX license ownership; pin retained ECM.",
+        "build_dependencies": "ECM 6.30.0-0supralinux3 supplied only through sbuild --extra-package, clean Ubuntu Qt 6.10 provider.",
+        "test_policy": "No upstream tests exist; substantive exact resource-set/hash checks, freedesktop theme metadata, decoding of every audio stream and Ubuntu APT upgrade.",
+        "activation_policy": "Installs sound theme resources; session selection and actual PipeWire playback remain integration gates."
+      },
+      "required_executable_files": [
+        "rules",
+        "tests/sound-resources",
+        "tests/ubuntu-upgrade"
+      ]
     }
   },
   "retained_attempt_archives": [
@@ -152,5 +209,6 @@
       "archive_root": ".artifacts/plasma-6.7.5/pass",
       "archive_index_sha256": "2cdf9f4c7b520bcf4844b964ca986c637cdaa7d6cb70802a1c35655f2fbb70bf"
     }
-  ]
+  ],
+  "execution_checkpoint": "frameworks-6.30-pass"
 }
