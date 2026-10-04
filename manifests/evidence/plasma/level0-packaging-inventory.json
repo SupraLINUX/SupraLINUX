@@ -1,0 +1,511 @@
+{
+  "kind": "advisory-packaging-inventory",
+  "package_admission_effect": "none",
+  "nodes": [
+    {
+      "node": "breeze-grub",
+      "reference_version": "6.6.4-0ubuntu1",
+      "reference_sha256": "ed779c7d96f18fe3b51b997a7494f41784e122ea14eecb15031d5cee0671d30d",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "grub-theme-breeze"
+      ]
+    },
+    {
+      "node": "breeze-plymouth",
+      "reference_version": "6.6.4-0ubuntu1",
+      "reference_sha256": "03544dddd9b3162e4eb928285954bb55ff8cb91ea50b807d303e6616e413bdac",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [
+        "debian/plymouth-theme-breeze.postinst",
+        "debian/plymouth-theme-breeze.prerm"
+      ],
+      "binary_packages": [
+        "plymouth-theme-breeze"
+      ]
+    },
+    {
+      "node": "discover",
+      "reference_version": "6.6.6-0ubuntu0.1",
+      "reference_sha256": "18d995b3053c6a64081674eedd7a74a40918329cca01532c963ec6412dd64b41",
+      "has_autopkgtests": false,
+      "has_test_override": true,
+      "appears_to_suppress_tests": true,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "plasma-discover",
+        "kde-config-updates",
+        "plasma-discover-backend-flatpak",
+        "plasma-discover-backend-fwupd",
+        "plasma-discover-backend-snap",
+        "plasma-discover-common",
+        "plasma-discover-notifier"
+      ]
+    },
+    {
+      "node": "drkonqi",
+      "reference_version": "6.6.6-0ubuntu0.1",
+      "reference_sha256": "9f49ba7318769e837b78fe9002bb5174c29a355cefc24f5f89dcaa68ebe8de1b",
+      "has_autopkgtests": false,
+      "has_test_override": true,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "drkonqi"
+      ]
+    },
+    {
+      "node": "flatpak-kcm",
+      "reference_version": "6.6.6-0ubuntu0.1",
+      "reference_sha256": "e8683e857d0f6217ec87ac8e21c17a22e907e8d0e9183996259c11d821cde631",
+      "has_autopkgtests": false,
+      "has_test_override": true,
+      "appears_to_suppress_tests": true,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "kde-config-flatpak"
+      ]
+    },
+    {
+      "node": "kactivitymanagerd",
+      "reference_version": "6.6.6-0ubuntu0.1",
+      "reference_sha256": "96280be7044a68b7103a2b1ea22b3839cd419f68f1265dfd813c3c18b0b39d25",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "kactivitymanagerd"
+      ]
+    },
+    {
+      "node": "kde-cli-tools",
+      "reference_version": "4:6.6.4-0ubuntu1",
+      "reference_sha256": "d0a63996ca853c5ce2dc6681322ddfbe655ddffda344b304626289d222fda85b",
+      "has_autopkgtests": false,
+      "has_test_override": true,
+      "appears_to_suppress_tests": true,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "kde-cli-tools",
+        "kde-cli-tools-data"
+      ]
+    },
+    {
+      "node": "kdecoration",
+      "reference_version": "4:6.6.4-0ubuntu1",
+      "reference_sha256": "f9e595e0f53f84f75ebc465fdbce0c4409d359c42ba3f0d47b0cb25781ca662e",
+      "has_autopkgtests": false,
+      "has_test_override": true,
+      "appears_to_suppress_tests": true,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "libkdecorations3-6",
+        "libkdecorations3-dev",
+        "libkdecorations3private2"
+      ]
+    },
+    {
+      "node": "kgamma",
+      "reference_version": "6.6.4-0ubuntu1",
+      "reference_sha256": "c85e0436298a7c1cb996789395a6eeee2531255273a3b50417092111c02fcd3c",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "kgamma"
+      ]
+    },
+    {
+      "node": "kglobalacceld",
+      "reference_version": "6.6.5-0ubuntu0.1",
+      "reference_sha256": "1b236589031d809d5a771b81f1a966318a0c0772831ecb97e01b56792c6ba325",
+      "has_autopkgtests": false,
+      "has_test_override": true,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "kglobalacceld",
+        "libkglobalacceld-dev",
+        "libkglobalacceld0"
+      ]
+    },
+    {
+      "node": "kmenuedit",
+      "reference_version": "4:6.6.4-0ubuntu1",
+      "reference_sha256": "3f22f39af8e7c03642ab9c545fcc6e2a0d93932f4ea471c9599a439c265cfd21",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "kmenuedit"
+      ]
+    },
+    {
+      "node": "knighttime",
+      "reference_version": "6.6.5-0ubuntu0.1",
+      "reference_sha256": "9ac90418837f977258997313c4e21e17337ba27675868b87874bc1aea2849d8a",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "knighttime",
+        "knighttime-dev",
+        "libknighttime0"
+      ]
+    },
+    {
+      "node": "kpipewire",
+      "reference_version": "6.6.4-0ubuntu1",
+      "reference_sha256": "fe65b50f4819c300162ae19a957ab8b3e9254418304d17d7ea324b44e75a2d82",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "libkpipewire-data",
+        "libkpipewire-dev",
+        "libkpipewire6",
+        "libkpipewiredmabuf6",
+        "libkpipewirerecord6",
+        "qml6-module-org-kde-pipewire"
+      ]
+    },
+    {
+      "node": "ksshaskpass",
+      "reference_version": "4:6.6.4-0ubuntu1",
+      "reference_sha256": "5d47e4c9924f0461657202d15c7d40efb038a0dc66cd02dac7d0e25dc64e64d8",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "ksshaskpass"
+      ]
+    },
+    {
+      "node": "kwallet-pam",
+      "reference_version": "4:6.6.4-0ubuntu1",
+      "reference_sha256": "f588dc32e7c3b1a263a13e9732e66555926fa622d9014e962ee6ad83ac0522a3",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "libpam-kwallet-common",
+        "libpam-kwallet5"
+      ]
+    },
+    {
+      "node": "kwayland",
+      "reference_version": "4:6.6.4-0ubuntu1",
+      "reference_sha256": "f49d59926e807327cc8ed1ba653ab927834ec01699cdfea6bbca09e0c1709965",
+      "has_autopkgtests": false,
+      "has_test_override": true,
+      "appears_to_suppress_tests": true,
+      "patches": [
+        "debian/patches/Add-missing-header.patch"
+      ],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "kwayland6-data",
+        "kwayland-dev",
+        "kwayland-doc",
+        "libkwaylandclient6"
+      ]
+    },
+    {
+      "node": "kwayland-integration",
+      "reference_version": "4:6.6.4-0ubuntu1",
+      "reference_sha256": "b818e99c913c2d53ce3d2d53f45e9be96d2c2009bee121b640c43bda0bf3db9a",
+      "has_autopkgtests": false,
+      "has_test_override": true,
+      "appears_to_suppress_tests": true,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "kwayland-integration"
+      ]
+    },
+    {
+      "node": "kwrited",
+      "reference_version": "4:6.6.4-0ubuntu1",
+      "reference_sha256": "055321f9cddb266eefb8031d7de59716aadf5320c4f304d05436d88336aa8c00",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "kwrited"
+      ]
+    },
+    {
+      "node": "layer-shell-qt",
+      "reference_version": "6.6.4-0ubuntu1",
+      "reference_sha256": "f5aff8b1a265a00aa94ce47130b9e8e86949ca2b64e412125025276eb8b54f4e",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "layer-shell-qt",
+        "liblayershellqtinterface-dev",
+        "liblayershellqtinterface6",
+        "qml6-module-org-kde-layershell"
+      ]
+    },
+    {
+      "node": "libkscreen",
+      "reference_version": "4:6.6.4-0ubuntu1",
+      "reference_sha256": "c7fa56d0251b9c0997bcd924d3fa581cd23b067c19b526b7c7f9e776e49de6c2",
+      "has_autopkgtests": false,
+      "has_test_override": true,
+      "appears_to_suppress_tests": true,
+      "patches": [
+        "debian/patches/Make-qt6-wayland-optional.patch"
+      ],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "libkscreen-bin",
+        "libkf6screen8",
+        "libkf6screendpms8",
+        "libkscreen-data",
+        "libkscreen-dev",
+        "libkscreen-doc"
+      ]
+    },
+    {
+      "node": "libksysguard",
+      "reference_version": "4:6.6.5-0ubuntu0.1",
+      "reference_sha256": "a27d3293e340be28cd8e927c1cac0eb3676cc6c5b7ece710d643d147d07f5614",
+      "has_autopkgtests": false,
+      "has_test_override": true,
+      "appears_to_suppress_tests": true,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "libksysguard-bin",
+        "libkf5sysguard-bin",
+        "libkf5sysguard-data",
+        "libksgrd9",
+        "libksignalplotter9",
+        "libksysguard-data",
+        "libksysguard-dev",
+        "libksysguardformatter1",
+        "libksysguardformatter2",
+        "libksysguardsensorfaces1",
+        "libksysguardsensorfaces2",
+        "libksysguardsensors1",
+        "libksysguardsensors2",
+        "libksysguardsystemstats1",
+        "libksysguardsystemstats2",
+        "liblsofui9",
+        "libprocesscore10",
+        "libprocesscore9",
+        "libprocessui9",
+        "qml-module-org-kde-ksysguard",
+        "qml6-module-org-kde-ksysguard"
+      ]
+    },
+    {
+      "node": "ocean-sound-theme",
+      "reference_version": "6.6.4-0ubuntu1",
+      "reference_sha256": "bbeb64b22118f07e24c5b32d38a64467b3a4333c6beda0221c83c8ee0f56b1e6",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "ocean-sound-theme"
+      ]
+    },
+    {
+      "node": "oxygen-sounds",
+      "reference_version": "4:6.6.4-0ubuntu1",
+      "reference_sha256": "22980872c8123c3166ee823c4e32691de5b30f1c4a9a88b0fa56a7f94923c4d2",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "oxygen-sounds"
+      ]
+    },
+    {
+      "node": "plasma-activities",
+      "reference_version": "6.6.4-0ubuntu1",
+      "reference_sha256": "eef94af89e08f9de43be389d2aa54d37c86446385d3afb5346d4eb38fc08f5db",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "plasma-activities-bin",
+        "libplasmaactivities-data",
+        "libplasmaactivities-dev",
+        "libplasmaactivities-qt6-doc",
+        "libplasmaactivities7",
+        "qml6-module-org-kde-activities"
+      ]
+    },
+    {
+      "node": "plasma-dialer",
+      "reference_version": "1:6.6.4-0ubuntu1",
+      "reference_sha256": "375cec11532a4e995881f12eb90c49515361b088869f50224fa0418eda36b94c",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "plasma-dialer"
+      ]
+    },
+    {
+      "node": "plasma-disks",
+      "reference_version": "6.6.4-0ubuntu1",
+      "reference_sha256": "8bc7d4f030e33e0340f8d32293f43df3c864749e1e8a60be7d82ad0d58a2a4fd",
+      "has_autopkgtests": false,
+      "has_test_override": true,
+      "appears_to_suppress_tests": true,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "plasma-disks"
+      ]
+    },
+    {
+      "node": "plasma-firewall",
+      "reference_version": "6.6.4-0ubuntu1",
+      "reference_sha256": "68982daba88dc7f61f0b81fec7e9ab817ac6ac980d627bf089a2d8abb4c1af2a",
+      "has_autopkgtests": false,
+      "has_test_override": true,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "plasma-firewall"
+      ]
+    },
+    {
+      "node": "plasma-thunderbolt",
+      "reference_version": "6.6.4-0ubuntu1",
+      "reference_sha256": "75b861902102d3fdf40d950b82dc5a85abbb4136e4e92fe9968ad1143b68e41c",
+      "has_autopkgtests": false,
+      "has_test_override": true,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "plasma-thunderbolt"
+      ]
+    },
+    {
+      "node": "plasma-workspace-wallpapers",
+      "reference_version": "4:6.6.4-0ubuntu1",
+      "reference_sha256": "c18fbfaa4f9b1575e4053ecb98906bedcf45f13e62510ccbbd3e5fef53b6d324",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "plasma-workspace-wallpapers"
+      ]
+    },
+    {
+      "node": "plymouth-kcm",
+      "reference_version": "6.6.4-0ubuntu1",
+      "reference_sha256": "5eefac021e21e7d2e4ee45a08dbe3a7cb4b9a8169e3cc73e0dbcb089d38ceb37",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "kde-config-plymouth"
+      ]
+    },
+    {
+      "node": "polkit-kde-agent-1",
+      "reference_version": "4:6.6.4-0ubuntu1",
+      "reference_sha256": "7963905ba80b8c79d03cbc7b6eba7633bed7a1f2db7527a01fc6c1d3fcb30c5a",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "polkit-kde-agent-1"
+      ]
+    },
+    {
+      "node": "qqc2-breeze-style",
+      "reference_version": "6.6.5-0ubuntu0.1",
+      "reference_sha256": "a176b1fa6e896727bf098ab5105218acb06b351d5f7c50cedafc7d54300f0ad2",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "libqqc2breezestyle-dev",
+        "qml6-module-org-kde-breeze"
+      ]
+    },
+    {
+      "node": "sddm-kcm",
+      "reference_version": "4:6.6.4-0ubuntu1",
+      "reference_sha256": "3b4bbf25c02add7cbfd8b0b13e8f6f34198248a0444c5ab3d7b243b8412e883f",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "kde-config-sddm"
+      ]
+    },
+    {
+      "node": "spacebar",
+      "reference_version": "1:6.6.4-0ubuntu1",
+      "reference_sha256": "3fec91914868bf4a0e808a447162934734f10629442dc237e86b5862e2897ef9",
+      "has_autopkgtests": false,
+      "has_test_override": false,
+      "appears_to_suppress_tests": false,
+      "patches": [],
+      "maintainer_scripts": [],
+      "binary_packages": [
+        "spacebar"
+      ]
+    }
+  ]
+}

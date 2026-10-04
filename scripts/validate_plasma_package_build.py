@@ -44,7 +44,9 @@ def validate():
                 assert result["version"] == record["version"]
             else:
                 assert attempt.get("cause"), "Unexplained attempt failure"
-        for script in ["rules", "tests/theme-resources", "tests/ubuntu-upgrade"]:
+        executables = record["required_executable_files"]
+        assert "rules" in executables and (ROOT / record["packaging_path"] / "tests/control").is_file()
+        for script in executables:
             assert os.access(ROOT / record["packaging_path"] / script, os.X_OK), f"Non-executable packaging script: {script}"
         if name in scope:
             assert record["state"] == "build-pending" and campaign["state"] == "execution-authorized"

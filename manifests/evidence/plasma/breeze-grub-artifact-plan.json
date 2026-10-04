@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "breeze-grub",
+      "package_version": "6.7.5-0supralinux1",
+      "artifact_id": 11314332562,
+      "workflow_run_id": 37232072978,
+      "artifact_sha256": "7dcaeed6314c999ab3a6da387a7460167ce556f85c30702cf897554e02aadacd"
+    }
+  ]
+}

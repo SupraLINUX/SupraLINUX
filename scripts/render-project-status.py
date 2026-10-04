@@ -36,6 +36,7 @@ def render():
              f"| Plasma package execution | authorized={str(planning['package_execution_authorized']).lower()} |",
              f"| Authorized Plasma nodes | {', '.join(packages['authorized_nodes']) or 'none'} |",
              f"| Reviewed Plasma packages | {', '.join(name + ': ' + node['state'] for name, node in packages['nodes'].items())} |",
+             f"| Plasma package Attempts | {', '.join(name + ': ' + str(len(node['attempts'])) + '; last ' + (node['attempts'][-1]['state'] if node['attempts'] else 'none') for name, node in packages['nodes'].items())} |",
              f"| Frameworks milestone | {checkpoints['checkpoints']['frameworks-6.30-pass']['state']}; execution cache |",
              "", "Sources: `manifests/desktop-stack.json`, `manifests/kde-dag.json`,",
              "`manifests/authoritative-kvm-certification.json`, `manifests/kde-plasma.json`,",

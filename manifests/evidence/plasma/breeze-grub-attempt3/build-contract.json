@@ -1,14 +1,16 @@
 {
   "schema": 1,
   "role": "reviewed-plasma-package-build",
-  "state": "partial-PASS",
-  "authorized_nodes": [],
-  "package_execution_authorized": false,
+  "state": "execution-authorized",
+  "authorized_nodes": [
+    "breeze-grub"
+  ],
+  "package_execution_authorized": true,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
   "scope": "per-node build, lintian, installed resources and Ubuntu APT upgrade; graphical GRUB rendering and final distro integration remain later gates",
   "nodes": {
     "breeze-grub": {
-      "state": "PASS",
+      "state": "build-pending",
       "source_package": "breeze-grub",
       "version": "6.7.5-0supralinux1",
       "upstream_version": "6.7.5",
@@ -75,23 +77,6 @@
           "host_evidence_manifest_sha256": "f8a2abb27bcfd5b2aec85461cba93b7041de9d394199e5fbeb6597638b7245d4",
           "cause": "Strict byte comparison rejected PNG tIME timestamps normalized by dh_strip_nondeterminism. Every other PNG chunk, including IDAT, is unchanged.",
           "repair": "Compare every PNG chunk except its validated tIME field; preserve exact byte hashes for other resources. Regression rejects changed pixels and invalid CRC."
-        },
-        {
-          "attempt": 3,
-          "state": "PASS",
-          "sbuild_result": "PASS",
-          "lintian_result": "PASS",
-          "autopkgtest_result": "PASS",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37232072978,
-          "workflow_job_id": 111523743421,
-          "source_commit": "abacd73d14e3c92580cf35bffd6e3ca139ecd5ab",
-          "artifact_id": 11314332562,
-          "artifact_sha256": "7dcaeed6314c999ab3a6da387a7460167ce556f85c30702cf897554e02aadacd",
-          "result_path": "manifests/evidence/plasma/breeze-grub-attempt3/result.json",
-          "result_sha256": "3d378ca5763ec673bd0e5102e4c2ee012113669d14a931044226aaf8c9c823dc",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t202457z-2364010",
-          "host_evidence_manifest_sha256": "49d7c2686da5699ca072d4dff3519537965c0d3aea6c6495cf85f072b7098e78"
         }
       ],
       "review": {
@@ -100,57 +85,7 @@
         "build_dependencies": "Only debhelper-compat (=13); no Qt or Frameworks dependency.",
         "test_policy": "No upstream build tests exist for this resource-only source; non-superficial integrity/font/reference and Ubuntu upgrade tests added. PNG timestamps may be normalized by debhelper; every rendering/content chunk remains exact.",
         "activation_policy": "Installs resources only; does not enable the theme or rewrite boot configuration."
-      },
-      "evidence": {
-        "workflow_run_id": 37232072978,
-        "workflow_job_id": 111523743421,
-        "source_commit": "abacd73d14e3c92580cf35bffd6e3ca139ecd5ab",
-        "artifact_id": 11314332562,
-        "artifact_sha256": "7dcaeed6314c999ab3a6da387a7460167ce556f85c30702cf897554e02aadacd",
-        "result_path": "manifests/evidence/plasma/breeze-grub-attempt3/result.json",
-        "result_sha256": "3d378ca5763ec673bd0e5102e4c2ee012113669d14a931044226aaf8c9c823dc",
-        "contract_path": "manifests/evidence/plasma/breeze-grub-attempt3/build-contract.json",
-        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t202457z-2364010",
-        "host_evidence_manifest_sha256": "49d7c2686da5699ca072d4dff3519537965c0d3aea6c6495cf85f072b7098e78",
-        "local_retention": {
-          "archive_root": ".artifacts/plasma-6.7.5/pass",
-          "archive_index_sha256": "2cdf9f4c7b520bcf4844b964ca986c637cdaa7d6cb70802a1c35655f2fbb70bf",
-          "plan_path": "manifests/evidence/plasma/breeze-grub-artifact-plan.json",
-          "plan_sha256": "25857d84be25a5f9b3814c2c7e059ff1f90497d23820bdc002c1e3b82fc652cd",
-          "source_complete": true,
-          "changes_complete": true,
-          "buildinfo_verified": true,
-          "artifact_zip_sha256_verified": true,
-          "offline_restore_verified": true,
-          "requires_github_for_restore": false,
-          "unique_binary_package_count": 1,
-          "binary_payload_file_count": 2,
-          "duplicate_binary_role": "autopkgtest retains an additional identical testbed copy of the candidate .deb",
-          "off_host_backup_verified": false
-        }
-      },
-      "required_executable_files": [
-        "rules",
-        "tests/theme-resources",
-        "tests/ubuntu-upgrade"
-      ]
+      }
     }
-  },
-  "retained_attempt_archives": [
-    {
-      "attempt": 1,
-      "archive_root": ".artifacts/plasma-6.7.5/attempt1",
-      "archive_index_sha256": "045d2261e730c850046919242b9dce7ccdd43fb0cbf69cf5d4e30b0b7c8abada"
-    },
-    {
-      "attempt": 2,
-      "archive_root": ".artifacts/plasma-6.7.5/attempt2",
-      "archive_index_sha256": "6530429108fc3a9586affd131b14e96da6bf67495ac054c3b36bdb28dd85b3fc"
-    },
-    {
-      "attempt": 3,
-      "archive_root": ".artifacts/plasma-6.7.5/pass",
-      "archive_index_sha256": "2cdf9f4c7b520bcf4844b964ca986c637cdaa7d6cb70802a1c35655f2fbb70bf"
-    }
-  ]
+  }
 }
