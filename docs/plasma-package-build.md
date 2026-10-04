@@ -80,3 +80,33 @@ it. Its original host evidence is retained as an infrastructure incident with no
 package Attempt. The builder now grants a narrow named-user ACL on the milestone
 directory, and orchestration checks effective POSIX ACL permissions before VM
 creation. This check is read-only and does not require sudo authentication.
+
+## Sound theme closure and artifact roles
+
+Ocean Sound Theme `6.7.5-0supralinux1` passed authoritative sbuild, lintian,
+resource integrity/audio decoding and an Ubuntu APT upgrade in
+[run 37242861863](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37242861863).
+All 64 regular resources and 14 aliases were retained. The ECM/Qt infrastructure
+consumer passed before the Ocean Attempt. This is package/resource evidence;
+actual PipeWire playback still requires session integration.
+
+The complete ZIP is retained by digest, including the infrastructure consumer and
+autopkgtest evidence. Its plan declares `packages/` as the canonical package
+payload. Retention verifies only that source-scoped `.dsc`, `.changes`,
+`.buildinfo` and binary closure for downstream admission; the synthetic consumer
+cannot enter the desktop package pool. Five regression checks reject an
+ambiguous artifact, a wrong source scope, altered source bytes and unsafe paths.
+The generic closure tool verifies test results, source commit, host evidence seal
+and restoration from an empty cache before recording a package PASS.
+
+Oxygen Sound Theme is reviewed next, preserving epoch 4, Multi-Arch foreign and
+all 50 legacy KF5 sound aliases. Its obsolete Ubuntu configure switch is replaced
+by upstream's actual `KF5_SUPPORT=ON` option. Tests verify every dpkg-owned sound
+resource and decode both current and legacy streams. No Qt replacement or
+upstream behavior patch is introduced.
+
+Orchestration now takes the golden image hash from its successful canonical
+admission record, avoiding a second full-image hash pass. Each image is still
+verified against its immutable provenance and current input digest. Compiled
+package capture also preserves `.ddeb` files; the first infrastructure consumer's
+missing debug payload remains outside the canonical Ocean source/binary closure.

@@ -81,10 +81,20 @@ def validate():
             assert hashlib.sha256((ROOT / evidence["contract_path"]).read_bytes()).hexdigest() == result["files_sha256"]["build-contract.json"]
             assert built_contract["nodes"][name]["packaging_sha256"] == record["packaging_sha256"]
             assert record["attempts"][-1]["state"] == "PASS" and result["package_attempt_consumed"] is True
+            retention = evidence["local_retention"]
+            assert all(retention[key] is True for key in ["source_complete", "changes_complete", "buildinfo_verified",
+                                                         "artifact_zip_sha256_verified", "offline_restore_verified"])
+            assert retention["requires_github_for_restore"] is False
+            assert hashlib.sha256((ROOT / retention["plan_path"]).read_bytes()).hexdigest() == retention["plan_sha256"]
             if record.get("frameworks_predecessors"):
                 assert "predecessor-inputs.json" in result["files_sha256"]
                 assert "cache-probe/sbuild.log" in result["files_sha256"]
                 assert "cache-probe/predecessor-buildinfo.txt" in result["files_sha256"]
+                probe_bytes = (ROOT / evidence["cache_probe_result_path"]).read_bytes()
+                assert hashlib.sha256(probe_bytes).hexdigest() == evidence["cache_probe_result_sha256"]
+                assert evidence["cache_probe_result_sha256"] == result["files_sha256"]["cache-probe/result.json"]
+                probe = json.loads(probe_bytes)
+                assert probe["state"] == "PASS" and probe["consumes_package_attempt"] is False
     workflow = (ROOT / ".github/workflows/authoritative-plasma-package-build.yml").read_text()
     assert "github.event.pull_request.head.sha || github.sha" in workflow, "Workflow must bind the PR head"
     assert "ci:plasma-package-build" in workflow and "types: [labeled]" in workflow

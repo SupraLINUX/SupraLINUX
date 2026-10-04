@@ -80,5 +80,7 @@ sbuild --verbose --chroot-mode=unshare --dist=resolute --arch=amd64 \
 grep -Fq 'Retained ECM 6.30.0 and Ubuntu Qt 6.10.' "${EVIDENCE}/sbuild.log"
 grep -F "extra-cmake-modules (= ${ECM_VERSION})" "${WORK}/out/"*.buildinfo > "${EVIDENCE}/predecessor-buildinfo.txt"
 cp "${WORK}/out/"*.deb "${WORK}/out/"*.changes "${WORK}/out/"*.buildinfo "${EVIDENCE}/"
+mapfile -t DEBUG_OUTPUTS < <(find "${WORK}/out" -maxdepth 1 -name '*.ddeb' -type f)
+if (( ${#DEBUG_OUTPUTS[@]} > 0 )); then cp "${DEBUG_OUTPUTS[@]}" "${EVIDENCE}/"; fi
 printf '{"state":"PASS","kind":"infrastructure-consumer-probe","canonical_package_state_effect":"none","consumes_package_attempt":false}\n' > "${EVIDENCE}/result.json"
 printf 'Frameworks retained build input probe: PASS\n'

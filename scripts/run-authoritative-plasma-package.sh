@@ -168,6 +168,8 @@ mapfile -t DEBS < <(find "${WORK}/out" -maxdepth 1 -name '*.deb' -type f | sort)
 mapfile -t CHANGES < <(find "${WORK}/out" -maxdepth 1 -name '*.changes' -type f)
 [[ ${#DEBS[@]} -gt 0 && ${#CHANGES[@]} == 1 ]]
 cp "${WORK}/out/"*.deb "${WORK}/out/"*.changes "${WORK}/out/"*.buildinfo "${EVIDENCE}/packages/"
+mapfile -t DDEBS < <(find "${WORK}/out" -maxdepth 1 -name '*.ddeb' -type f | sort)
+if (( ${#DDEBS[@]} > 0 )); then cp "${DDEBS[@]}" "${EVIDENCE}/packages/"; fi
 python3 - "${ROOT}" "${NODE}" "${WORK}/out" <<'PY'
 import json, subprocess, sys
 from pathlib import Path
@@ -179,6 +181,11 @@ for deb in Path(sys.argv[3]).glob("*.deb"):
     assert version == record["version"], "Built version differs from reviewed contract"
     actual[package] = architecture
 assert actual == record["binary_packages"], f"Binary identity mismatch: {actual}"
+for deb in Path(sys.argv[3]).glob("*.ddeb"):
+    fields = {name: subprocess.check_output(["dpkg-deb", "-f", str(deb), name], text=True).strip()
+              for name in ["Package", "Source", "Version", "Architecture"]}
+    assert fields["Package"].endswith("-dbgsym") and fields["Source"].split(" ")[0] == record["source_package"]
+    assert fields["Version"] == record["version"] and fields["Architecture"] == "amd64"
 buildinfo = next(Path(sys.argv[3]).glob("*.buildinfo")).read_text()
 for predecessor in record.get("frameworks_predecessors", {}).values():
     for binary in predecessor["binaries"]:

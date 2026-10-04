@@ -3,7 +3,7 @@
   "role": "reviewed-plasma-package-build",
   "state": "execution-authorized",
   "authorized_nodes": [
-    "oxygen-sounds"
+    "ocean-sound-theme"
   ],
   "package_execution_authorized": true,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
@@ -138,7 +138,7 @@
       ]
     },
     "ocean-sound-theme": {
-      "state": "PASS",
+      "state": "build-pending",
       "source_package": "ocean-sound-theme",
       "version": "6.7.5-0supralinux1",
       "upstream_version": "6.7.5",
@@ -178,116 +178,13 @@
           ]
         }
       },
-      "attempts": [
-        {
-          "attempt": 1,
-          "state": "PASS",
-          "sbuild_result": "PASS",
-          "lintian_result": "PASS",
-          "autopkgtest_result": "PASS",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37242861863,
-          "workflow_job_id": 111554864187,
-          "source_commit": "d999e3f9cdf28bc52a50587b3fc157f4f8aa2ac9",
-          "artifact_id": 11317894456,
-          "artifact_sha256": "9243fe8efcf9a24b659ed3ec76954cca4263a08dd71e7613f12f20b57cddc2f2",
-          "result_path": "manifests/evidence/plasma/ocean-sound-theme-attempt1/result.json",
-          "result_sha256": "d1e571d882b87a7f0b53867a7c81dd0416b0ad48d17336ccdbc1c56c01879d88",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t230950z-3271155",
-          "host_evidence_manifest_sha256": "26503363018283586e274930cec1c0bb0f7b0432a97ea3f747402066d2664118"
-        }
-      ],
+      "attempts": [],
       "review": {
         "upstream_changes": "Signed official 6.7.5; no upstream code patches. All 64 regular resources and 14 sound aliases preserved.",
         "packaging_changes": "Preserve source/binary name, Architecture all, Multi-Arch foreign and upstream CMake defaults; correct SPDX license ownership; pin retained ECM.",
         "build_dependencies": "ECM 6.30.0-0supralinux3 supplied only through sbuild --extra-package, clean Ubuntu Qt 6.10 provider.",
         "test_policy": "No upstream tests exist; substantive exact resource-set/hash checks, freedesktop theme metadata, decoding of every audio stream and Ubuntu APT upgrade.",
         "activation_policy": "Installs sound theme resources; session selection and actual PipeWire playback remain integration gates."
-      },
-      "required_executable_files": [
-        "rules",
-        "tests/sound-resources",
-        "tests/ubuntu-upgrade"
-      ],
-      "evidence": {
-        "workflow_run_id": 37242861863,
-        "workflow_job_id": 111554864187,
-        "source_commit": "d999e3f9cdf28bc52a50587b3fc157f4f8aa2ac9",
-        "artifact_id": 11317894456,
-        "artifact_sha256": "9243fe8efcf9a24b659ed3ec76954cca4263a08dd71e7613f12f20b57cddc2f2",
-        "result_path": "manifests/evidence/plasma/ocean-sound-theme-attempt1/result.json",
-        "result_sha256": "d1e571d882b87a7f0b53867a7c81dd0416b0ad48d17336ccdbc1c56c01879d88",
-        "contract_path": "manifests/evidence/plasma/ocean-sound-theme-attempt1/build-contract.json",
-        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t230950z-3271155",
-        "host_evidence_manifest_sha256": "26503363018283586e274930cec1c0bb0f7b0432a97ea3f747402066d2664118",
-        "local_retention": {
-          "archive_root": ".artifacts/plasma-6.7.5/ocean-sound-theme-attempt1",
-          "archive_index_sha256": "f39e34f723a1024142e54a341a1186f678915bcc14c49c97687a80fb008724bb",
-          "plan_path": "manifests/evidence/plasma/ocean-sound-theme-artifact-plan.json",
-          "plan_sha256": "4ada823250e5d633195dda0377906c0d87d85017550f30ca2668b818f74cfe27",
-          "source_complete": true,
-          "changes_complete": true,
-          "buildinfo_verified": true,
-          "artifact_zip_sha256_verified": true,
-          "offline_restore_verified": true,
-          "requires_github_for_restore": false,
-          "off_host_backup_verified": false,
-          "unique_binary_package_count": 1,
-          "binary_payload_file_count": 1,
-          "payload_prefix": "packages/"
-        },
-        "cache_probe_result_path": "manifests/evidence/plasma/ocean-sound-theme-attempt1/cache-probe-result.json",
-        "cache_probe_result_sha256": "6f7e5865703570b1575c929f582ac7f0459bfe881712ef16aa9968e303cc25b3"
-      }
-    },
-    "oxygen-sounds": {
-      "state": "build-pending",
-      "source_package": "oxygen-sounds",
-      "version": "4:6.7.5-0supralinux1",
-      "upstream_version": "6.7.5",
-      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/oxygen-sounds-6.7.5.tar.xz",
-      "upstream_sha256": "0cc5b60004d8feb8b1de032cb5d3c056c98f62a8713589b90b471e5943e31ad9",
-      "signature_sha256": "e58b3c0fb5684e79d2029403fcce3b94cdc6f0a6d77d6c22b814b3a1bcbf8a9b",
-      "packaging_path": "packages/plasma/oxygen-sounds/debian",
-      "packaging_review": "PASS",
-      "packaging_reference_version": "4:6.6.4-0ubuntu1",
-      "packaging_reference_sha256": "22980872c8123c3166ee823c4e32691de5b30f1c4a9a88b0fa56a7f94923c4d2",
-      "packaging_sha256": {
-        "changelog": "5fc52780175f59a22406ae5c86d66561edfdb7bb6ea7b43e66f2a89ac7139c2a",
-        "control": "087e3a52106457f138c83dd48bf6fcb0b6d90860a399e061241cea4cedf1cbee",
-        "copyright": "0f914e25215e4001c5e228376ef0a2cffed257ce2275bda5a1367d472f26c39d",
-        "docs": "3764ceaff06f3c6d3dcf7404d0f29ba3a2abb4a52c000481646112524ea1923c",
-        "rules": "c1417635c53bf5ac5dfc6eacd629b47d06b911821ba44e4376563d0d4e7ec49e",
-        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
-        "tests/control": "ddb2ea626e74f784389db64b9a5868cd06623883bb83b504914683ac8966c262",
-        "tests/sound-resources": "6f50d5af031136aa9f87bf04a56ef0a7c831ceee6fac9dcaf6f206970f506eda",
-        "tests/sound-resources.json": "8747345c716f51efa97dc5755947220199d834624fd4bf46839e33809d2a74a6",
-        "tests/ubuntu-upgrade": "a2c1e0801eecc016195de08da8a3214016123229c0018321d5744664f2788182"
-      },
-      "binary_packages": {
-        "oxygen-sounds": "all"
-      },
-      "ubuntu_baseline_package": "oxygen-sounds",
-      "frameworks_predecessors": {
-        "extra-cmake-modules": {
-          "source_package": "kf6-extra-cmake-modules",
-          "version": "6.30.0-0supralinux3",
-          "binaries": [
-            {
-              "package": "extra-cmake-modules",
-              "architecture": "all",
-              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
-            }
-          ]
-        }
-      },
-      "attempts": [],
-      "review": {
-        "upstream_changes": "Official signed 6.7.5 resources; no source patches. 115 installed resources including 63 aliases and all 50 legacy sound paths.",
-        "packaging_changes": "Preserve Ubuntu epoch 4, binary identity, Multi-Arch foreign and upstream KF5_SUPPORT default. Replace obsolete BUILD_WITH_QT6 switch; update SPDX attribution including camera-shutter CC-BY-3.0 author.",
-        "build_dependencies": "Exact retained ECM 6.30.0-0supralinux3 through sbuild --extra-package; Ubuntu Qt 6.10. No implicit preinstallation.",
-        "test_policy": "No upstream test suite; verify exact dpkg-owned resources, byte hashes, alias targets, metadata and decoding of every current and legacy stream, plus Ubuntu APT upgrade.",
-        "activation_policy": "Install upstream sound resources only; session selection and PipeWire playback remain integration gates."
       },
       "required_executable_files": [
         "rules",
@@ -311,12 +208,6 @@
       "attempt": 3,
       "archive_root": ".artifacts/plasma-6.7.5/pass",
       "archive_index_sha256": "2cdf9f4c7b520bcf4844b964ca986c637cdaa7d6cb70802a1c35655f2fbb70bf"
-    },
-    {
-      "node": "ocean-sound-theme",
-      "attempt": 1,
-      "archive_root": ".artifacts/plasma-6.7.5/ocean-sound-theme-attempt1",
-      "archive_index_sha256": "f39e34f723a1024142e54a341a1186f678915bcc14c49c97687a80fb008724bb"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",

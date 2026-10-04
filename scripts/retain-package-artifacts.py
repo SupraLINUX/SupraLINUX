@@ -39,8 +39,16 @@ def inspect(path, item, source, allow_legacy_source_gaps=False):
         raise ValueError(f"{item['node']}: artifact digest mismatch")
     version = item["package_version"]
     with zipfile.ZipFile(path) as archive:
-        members = {Path(name).name: name for name in archive.namelist() if not name.endswith("/")}
-        if len(members) != len([n for n in archive.namelist() if not n.endswith("/")]):
+        # A complete artifact may also retain infrastructure probes or testbed
+        # copies. Select the declared canonical payload, preserving the entire
+        # ZIP by digest while admitting only this package's source closure.
+        prefix = item.get("payload_prefix", "")
+        if prefix and (not prefix.endswith("/") or Path(prefix).is_absolute() or
+                       any(part in {"..", "."} for part in prefix.rstrip("/").split("/"))):
+            raise ValueError(f"{item['node']}: unsafe canonical payload prefix")
+        names = [name for name in archive.namelist() if not name.endswith("/") and name.startswith(prefix)]
+        members = {Path(name).name: name for name in names}
+        if len(members) != len(names):
             raise ValueError(f"{item['node']}: duplicate artifact basenames")
         changes = [name for name in members if name.endswith(".changes")]
         if len(changes) != 1:

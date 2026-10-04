@@ -116,11 +116,9 @@ if [[ ! -f "${GOLDEN_PROVENANCE}" ]]; then
     printf 'Golden image provenance is missing: %s\n' "${GOLDEN_PROVENANCE}" >&2
     exit 1
 fi
-GOLDEN_SHA256="$(sha256sum "${GOLDEN_IMAGE}" | awk '{print $1}')"
 PROVENANCE_SHA256="$(awk -F= '$1 == "golden_image_sha256" {print $2; exit}' "${GOLDEN_PROVENANCE}")"
-if [[ ! "${PROVENANCE_SHA256}" =~ ^[0-9a-fA-F]{64}$ || "${PROVENANCE_SHA256,,}" != "${GOLDEN_SHA256,,}" ]]; then
-    printf 'Golden image SHA-256 does not match its provenance. image=%s provenance=%s\n' \
-        "${GOLDEN_SHA256}" "${PROVENANCE_SHA256:-missing}" >&2
+if [[ ! "${PROVENANCE_SHA256}" =~ ^[0-9a-fA-F]{64}$ ]]; then
+    printf 'Golden provenance SHA-256 is missing or malformed.\n' >&2
     exit 1
 fi
 if ! grep -qx 'source_checkout_removed=yes' "${GOLDEN_PROVENANCE}"; then
@@ -432,6 +430,7 @@ fi
 SUPRALINUX_GOLDEN_COMPAT_COMMIT="${PR_HEAD_SHA}" \
     "${ROOT}/scripts/check-golden-image-provenance.sh" \
     "${GOLDEN_IMAGE}" "${EVIDENCE_DIR}/golden-provenance-admission.txt"
+GOLDEN_SHA256="$(awk -F= '$1 == "golden_image_sha256" {print $2; exit}' "${EVIDENCE_DIR}/golden-provenance-admission.txt")"
 
 GOLDEN_SOURCE_COMMIT="$(awk -F= '$1 == "source_commit" {print $2; exit}' "${GOLDEN_PROVENANCE}")"
 GOLDEN_INPUT_DIGEST="$(awk -F= '$1 == "golden_input_digest" {print $2; exit}' "${GOLDEN_PROVENANCE}")"

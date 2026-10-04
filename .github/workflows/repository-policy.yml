@@ -46,6 +46,9 @@ jobs:
         run: python3 scripts/test-frameworks-cache-admission.py
 
 
+      - name: Test canonical package artifact retention
+        run: python3 scripts/test-package-artifact-retention.py
+
       - name: Validate current project status
         run: python3 scripts/render-project-status.py --check
 
