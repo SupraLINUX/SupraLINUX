@@ -19,6 +19,15 @@ def unique_object(pairs):
 def check(root):
     errors = []
     paths = sorted(set(root.glob("scripts/**/*.py")) | set(root.glob("packages/**/*.py")))
+    extensionless_python = []
+    for path in root.glob("packages/**/*"):
+        if not path.is_file() or path.suffix or "__pycache__" in path.parts:
+            continue
+        with path.open("rb") as source:
+            header = source.readline(256)
+        if header.startswith(b"#!") and b"python" in header:
+            extensionless_python.append(path)
+    paths = sorted(set(paths) | set(extensionless_python))
     for path in paths:
         try:
             ast.parse(path.read_bytes(), filename=str(path.relative_to(root)))

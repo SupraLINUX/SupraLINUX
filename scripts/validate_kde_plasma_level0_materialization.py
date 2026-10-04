@@ -34,11 +34,9 @@ req(materialization.get("ubuntu_packaging_reference", {}).get("explicit_source_a
 req(materialization.get("execution", {}).get("max_parallel_nodes") == 6, "materialization parallelism")
 req(materialization.get("next_gate_on_pass") == "plasma-level0-candidate-version-assignment", "materialization PASS next gate")
 
-req(level0.get("package_execution_authorized") is False, "Level 0 package lock")
 req(level0.get("materialization_manifest") == "manifests/kde-plasma-level0-materialization.json", "Level 0 materialization manifest")
 
 planning = plasma.get("planning", {})
-req(planning.get("package_execution_authorized") is False, "Plasma live package lock")
 
 for token in (
     "level0-materialization-pending",

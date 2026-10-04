@@ -95,6 +95,7 @@ repository_policy = workflow_texts.get("repository-policy.yml", "")
 runner_contract = workflow_texts.get("runner-contract.yml", "")
 authoritative_workflow = workflow_texts.get("authoritative-package-proof.yml", "")
 frameworks_sample_workflow = workflow_texts.get("authoritative-frameworks-sample-proof.yml", "")
+plasma_package_workflow = workflow_texts.get("authoritative-plasma-package-build.yml", "")
 hosted_workflow = workflow_texts.get("package-build-proof.yml", "")
 qt_provider_workflow = workflow_texts.get("qt-provider-preflight.yml", "")
 pr_ci_router = workflow_texts.get("pr-ci-router.yml", "")
@@ -182,6 +183,7 @@ for filename, text, gate_label in (
     ("runner-contract.yml", runner_contract, "ci:runner-contract"),
     ("authoritative-package-proof.yml", authoritative_workflow, "ci:authoritative-package-proof"),
     ("authoritative-frameworks-sample-proof.yml", frameworks_sample_workflow, "ci:frameworks-sample-proof"),
+    ("authoritative-plasma-package-build.yml", plasma_package_workflow, "ci:plasma-package-build"),
 ):
     require(bool(text), f"missing authoritative workflow: .github/workflows/{filename}")
     require("types: [labeled]" in text, f"{filename} must use controlled PR labeled events")

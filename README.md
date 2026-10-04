@@ -46,3 +46,5 @@ The current gate is generated from live manifests in [`docs/status/current.md`](
 The Frameworks milestone is an admitted execution cache, not a new package certification. Complete retained artifact ZIPs are also archived by digest on the operator workspace, with known historical source/debug gaps recorded in `manifests/retained-package-artifacts.json`.
 
 Development instructions: [`AGENTS.md`](AGENTS.md), [`docs/project-instructions.md`](docs/project-instructions.md). SupraLINUX follows official KDE stable releases and upstream fixes; it does not propose maintaining a KDE or Qt fork.
+
+The first reviewed Plasma package build uses the [authoritative KVM package gate](docs/plasma-package-build.md). Its exact scope and results live in `manifests/kde-plasma-package-build.json`.

@@ -5,10 +5,10 @@
   "provider_platform": "ubuntu-resolute",
   "plasma_version": "6.7.5",
   "role": "plasma-level0-definition",
-  "state": "candidate-versions-assigned",
+  "state": "package-build-authorized",
   "execution_authorized": false,
   "materialization_authorized": false,
-  "package_execution_authorized": false,
+  "package_execution_authorized": true,
   "validation_run_kind": "planning-materialization",
   "consumes_package_attempt": false,
   "canonical_package_state_effect": "none",
@@ -56,7 +56,8 @@
     "fail_fast": false,
     "parallel_independent_nodes": true,
     "only_pass_predecessor_artifacts": true,
-    "package_execution_locked": true
+    "package_execution_locked": false,
+    "scope": "Only the explicitly reviewed current node; remaining nodes locked"
   },
   "provider_policy": {
     "kde_frameworks": "SupraLINUX Frameworks 6.30 PASS artifacts",
@@ -100,7 +101,7 @@
   },
   "nodes": {
     "breeze-grub": {
-      "state": "packaging-preparation-pending",
+      "state": "package-build-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -119,7 +120,7 @@
         "reference_only": true
       },
       "candidate_package_version": "6.7.5-0supralinux1",
-      "package_execution_authorized": false,
+      "package_execution_authorized": true,
       "materialization_result": "PASS",
       "ubuntu_reference_version": "6.6.4-0ubuntu1"
     },
@@ -923,7 +924,7 @@
       "ubuntu_reference_version": "1:6.6.4-0ubuntu1"
     }
   },
-  "next_gate": "plasma-level0-packaging-preparation",
+  "next_gate": "plasma-level0-authoritative-package-build",
   "execution_checkpoint": {
     "checkpoint_id": "frameworks-6.30-pass",
     "checkpoint_manifest": "manifests/execution-checkpoints.json",
@@ -931,7 +932,7 @@
     "required_before_package_execution": true,
     "cache_only": true,
     "host_path": "/var/lib/supralinux/images/milestones/frameworks-6.30-pass.qcow2",
-    "usage": "future Plasma authoritative package guests start from this milestone image instead of rebuilding Frameworks/bootstrap state",
+    "usage": "Frameworks milestone applies when dependencies require it; Breeze GRUB has no Frameworks/Qt dependency and uses the certified clean golden image.",
     "fallback": "reconstruct from retained artifacts/manifests if cache is lost",
     "image_sha256": "ec38f99e306d5a13333d6b247a9433b3526ec4a6d1a272631242c68df56c3e97",
     "evidence_dir": "/var/lib/supralinux/evidence/milestone-frameworks-6.30/20261003T054936Z-1285730",
@@ -977,5 +978,8 @@
     "state": "PASS",
     "package_execution_started": false,
     "consumes_package_attempt": false
-  }
+  },
+  "authorized_package_nodes": [
+    "breeze-grub"
+  ]
 }

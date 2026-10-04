@@ -47,7 +47,10 @@ l0cp = level0.get("execution_checkpoint", {})
 req(l0cp.get("checkpoint_id") == "frameworks-6.30-pass", "Level 0 checkpoint binding")
 req(l0cp.get("required_before_package_execution") is True, "Level 0 checkpoint execution requirement")
 req(l0cp.get("cache_only") is True, "Level 0 checkpoint cache-only role")
-req(level0.get("package_execution_authorized") is False, "Level 0 package execution must remain locked")
+if level0.get("package_execution_authorized") is True:
+    req(cp.get("state") == "PASS" and l0cp.get("state") == "PASS", "package execution requires admitted checkpoint evidence")
+    req(l0cp.get("image_sha256") == cp.get("image_sha256"), "package execution checkpoint identity")
+    req(bool(level0.get("authorized_package_nodes")), "package execution requires explicit node scope")
 
 for path in (
     ROOT / "scripts/plan-frameworks-milestone.py",
@@ -63,4 +66,4 @@ if errors:
 
 print("Execution checkpoint policy validation: PASS")
 print("frameworks-6.30-pass: PASS cache; 65 retained PASS artifacts; 336 binary entries")
-print("Plasma Level 0 package execution remains locked until checkpoint admission")
+print("Plasma Level 0 package execution requires admitted checkpoint evidence and explicit node scope")

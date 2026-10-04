@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+"""Check installed upstream resources and the theme's image/font references."""
+import hashlib
+import json
+import re
+import struct
+from pathlib import Path
+
+
+def verify(theme, expected):
+    actual = {str(p.relative_to(theme)) for p in theme.rglob("*") if p.is_file()}
+    assert actual == set(expected), f"Installed resource set changed: {actual ^ set(expected)}"
+    fonts = set()
+    for name, digest in expected.items():
+        payload = (theme / name).read_bytes()
+        assert hashlib.sha256(payload).hexdigest() == digest, f"Resource differs from signed upstream: {name}"
+        if name.endswith(".png"):
+            assert payload[:8] == b"\x89PNG\r\n\x1a\n" and payload[12:16] == b"IHDR", name
+            assert all(struct.unpack(">II", payload[16:24])), f"Empty PNG: {name}"
+        if name.endswith(".pf2"):
+            assert payload[:12] == b"FILE\x00\x00\x00\x04PFF2", f"Invalid GRUB font: {name}"
+            offset = 12
+            while offset + 8 <= len(payload):
+                tag, size = struct.unpack(">4sI", payload[offset:offset + 8])
+                offset += 8
+                if tag == b"DATA":
+                    break
+                assert offset + size <= len(payload), f"Truncated font: {name}"
+                if tag == b"NAME":
+                    fonts.add(payload[offset:offset + size].rstrip(b"\0").decode())
+                offset += size
+    text = "\n".join(line.split("#", 1)[0] for line in (theme / "theme.txt").read_text().splitlines())
+    for pattern in re.findall(r'"([^"\n]+\.png)"', text):
+        assert list(theme.glob(pattern)), f"Missing image pattern: {pattern}"
+    for font in re.findall(r'(?:[\w-]*font)\s*[:=]\s*"([^"]+)"', text):
+        assert font in fonts, f"Theme references missing GRUB font: {font}; available={fonts}"
+    print(f"Verified {len(expected)} installed upstream resources, images and GRUB fonts")
+
+
+if __name__ == "__main__":
+    verify(Path("/usr/share/grub/themes/breeze"),
+           json.loads(Path(__file__).with_name("theme-resources.json").read_text()))

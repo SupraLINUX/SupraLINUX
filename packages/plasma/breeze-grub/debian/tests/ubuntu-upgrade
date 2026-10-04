@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+"""Verify APT upgraded the Ubuntu package and retained its installed paths."""
+import subprocess
+from pathlib import Path
+
+baseline = Path("/var/tmp/supralinux-ubuntu-package-version").read_text().strip()
+candidate = subprocess.check_output(
+    ["dpkg-query", "-W", "-f=${Version}", "grub-theme-breeze"], text=True).strip()
+assert candidate == "6.7.5-0supralinux1", candidate
+subprocess.run(["dpkg", "--compare-versions", candidate, "gt", baseline], check=True)
+subprocess.run(["apt-get", "check"], check=True)
+subprocess.run(["debian/tests/theme-resources"], check=True)
+print(f"Ubuntu upgrade contract: {baseline} -> {candidate}; APT dependencies satisfied")

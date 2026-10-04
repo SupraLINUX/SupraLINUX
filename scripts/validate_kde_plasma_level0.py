@@ -28,7 +28,6 @@ sources = {x.get("id"): x for x in plasma.get("sources", [])}
 
 req(level0.get("role") == "plasma-level0-definition", "Level 0 role")
 errors.extend(validate_lifecycle(ROOT, plasma, level0, materialization))
-req(level0.get("package_execution_authorized") is False, "Level 0 package execution lock")
 req(level0.get("consumes_package_attempt") is False, "Level 0 definition Attempt boundary")
 req(level0.get("canonical_package_state_effect") == "none", "Level 0 definition package-state effect")
 req(level0.get("selected_level") == 0, "Level 0 selected level")
@@ -55,7 +54,6 @@ for node_id in selected:
     req(node.get("upstream_source_url") == upstream.get("source_url"), f"{node_id}: upstream source URL")
     req(node.get("upstream_source_sha256") == upstream.get("source_sha256"), f"{node_id}: upstream source SHA")
     req(bool(re.fullmatch(r"[0-9a-f]{64}", node.get("upstream_source_sha256", ""))), f"{node_id}: source SHA format")
-    req(node.get("package_execution_authorized") is False, f"{node_id}: package execution lock")
     ref = node.get("packaging_reference", {})
     req(ref.get("provider_platform") == "ubuntu-resolute", f"{node_id}: reference provider platform")
     req(ref.get("reference_only") is True, f"{node_id}: Ubuntu reference-only role")
@@ -96,7 +94,6 @@ req(materialization.get("input", {}).get("selected_node_count") == 34, "Level 0 
 req(materialization.get("package_execution_authorized") is False, "Materialization package execution lock")
 
 planning = plasma.get("planning", {})
-req(planning.get("package_execution_authorized") is False, "Plasma live package execution lock")
 req(planning.get("level0_manifest") == "manifests/kde-plasma-level0.json", "Plasma live Level 0 manifest")
 req(planning.get("level0_materialization_preflight_manifest") == "manifests/kde-plasma-level0-materialization-preflight.json", "Plasma live preflight manifest")
 req(planning.get("level0_materialization_manifest") == "manifests/kde-plasma-level0-materialization.json", "Plasma live materialization manifest")
@@ -114,6 +111,6 @@ if errors:
     raise SystemExit(1)
 
 print("KDE Plasma Level 0 definition validation: PASS")
-print("nodes=34; package_execution_authorized=false")
+print("nodes=34; package execution scoped by current lifecycle")
 print(f"Level 0: {level0['state']}; next_gate={planning['next_gate']}")
 print("discover packaging reference: plasma-discover")

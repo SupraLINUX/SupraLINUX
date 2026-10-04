@@ -62,10 +62,10 @@
     "release_relevant_desktop": "unlocked"
   },
   "planning": {
-    "phase": "level0-packaging-preparation",
-    "status": "level0-packaging-preparation-pending",
+    "phase": "level0-package-build",
+    "status": "level0-package-build-pending",
     "execution_authorized": false,
-    "package_execution_authorized": false,
+    "package_execution_authorized": true,
     "validation_run_kind": "planning-preparation",
     "consumes_package_attempt": false,
     "canonical_package_state_effect": "none",
@@ -108,7 +108,7 @@
       "certified_mechanism": "batched-apt-cache-showsrc-plus-policy",
       "package_attempts_consumed": 0
     },
-    "next_gate": "plasma-level0-packaging-preparation",
+    "next_gate": "plasma-level0-authoritative-package-build",
     "provider_resolution_review_manifest": "manifests/kde-plasma-provider-resolution-review.json",
     "provider_resolution_evidence": {
       "workflow_run_id": 37086119189,
@@ -178,7 +178,11 @@
       "state": "PASS",
       "package_execution_started": false,
       "consumes_package_attempt": false
-    }
+    },
+    "authorized_package_nodes": [
+      "breeze-grub"
+    ],
+    "package_build_manifest": "manifests/kde-plasma-package-build.json"
   },
   "sources": [
     {

@@ -53,7 +53,6 @@ for node in sources:
 
 planning = plasma.get("planning", {})
 errors.extend(validate_lifecycle(ROOT, plasma, level0, level0_materialization))
-req(planning.get("package_execution_authorized") is False, "Level 0 materialization must not authorize package execution")
 req(planning.get("consumes_package_attempt") is False, "Level 0 materialization must not consume package Attempt")
 req(planning.get("canonical_package_state_effect") == "none", "Level 0 materialization canonical package state effect")
 req(planning.get("lane_workflow") == ".github/workflows/kde-plasma-lane.yml", "Plasma lane workflow")
@@ -186,4 +185,4 @@ if errors:
 
 print("KDE Plasma 6.7.5 planning validation: PASS")
 print(f"Lane phase: {planning['status']}")
-print(f"Next gate: {planning['next_gate']}; package execution: locked")
+print(f"Next gate: {planning['next_gate']}; package execution: scoped by current lifecycle")
