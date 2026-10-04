@@ -458,6 +458,8 @@ PY
 )"
             "${ROOT}/scripts/check-frameworks-milestone-image.sh" "${BASE_IMAGE}" \
                 > "${EVIDENCE_DIR}/execution-cache-admission.txt"
+            python3 "${ROOT}/scripts/check-qemu-image-access.py" "${BASE_IMAGE}" --user "${LIBVIRT_QEMU_USER}" \
+                > "${EVIDENCE_DIR}/execution-cache-access.txt"
             ;;
         *) printf 'Unsupported execution checkpoint: %s\n' "${EXECUTION_CHECKPOINT}" >&2; exit 1 ;;
     esac

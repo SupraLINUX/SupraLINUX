@@ -73,3 +73,10 @@ the exact ECM version in buildinfo. A cache/probe failure consumes no Plasma
 Attempt. Ocean's package tests compare every installed resource with signed
 upstream and decode every audio stream; actual desktop playback remains a session
 gate. Ubuntu Qt is reused; no Qt substitution is introduced.
+
+The first milestone-backed VM creation failed before a workflow or package
+started: the backing directory mode did not permit the QEMU identity to traverse
+it. Its original host evidence is retained as an infrastructure incident with no
+package Attempt. The builder now grants a narrow named-user ACL on the milestone
+directory, and orchestration checks effective POSIX ACL permissions before VM
+creation. This check is read-only and does not require sudo authentication.

@@ -22,6 +22,13 @@ def validate():
     assert campaign["package_execution_authorized"] is bool(scope)
     assert campaign["runner_class"] == "supralinux-kvm-ubuntu-26.04-ephemeral"
     assert set(campaign["nodes"]) <= set(level["selected_nodes"])
+    for incident in campaign.get("infrastructure_incidents", []):
+        assert incident["state"] == "INFRA_INVALID"
+        assert incident["consumes_package_attempt"] is False and incident["package_execution_started"] is False
+        payload = (ROOT / incident["result_path"]).read_bytes()
+        assert hashlib.sha256(payload).hexdigest() == incident["result_sha256"]
+        assert json.loads(payload)["exit_code"] != 0
+        assert incident["cause"] and incident["repair"]
     if campaign.get("execution_checkpoint", "none") != "none":
         assert campaign["execution_checkpoint"] == "frameworks-6.30-pass"
         checkpoints = json.loads((ROOT / "manifests/execution-checkpoints.json").read_text())
@@ -76,7 +83,8 @@ def validate():
             assert record["attempts"][-1]["state"] == "PASS" and result["package_attempt_consumed"] is True
             if record.get("frameworks_predecessors"):
                 assert "predecessor-inputs.json" in result["files_sha256"]
-                assert "cache-probe/result.json" in result["files_sha256"]
+                assert "cache-probe/sbuild.log" in result["files_sha256"]
+                assert "cache-probe/predecessor-buildinfo.txt" in result["files_sha256"]
     workflow = (ROOT / ".github/workflows/authoritative-plasma-package-build.yml").read_text()
     assert "github.event.pull_request.head.sha || github.sha" in workflow, "Workflow must bind the PR head"
     assert "ci:plasma-package-build" in workflow and "types: [labeled]" in workflow

@@ -40,7 +40,7 @@ payload = {
     "sbuild_backend": "unshare", "system_test_backend": "autopkgtest-qemu",
     "system_test_acceleration": "kvm-required", "release_publication": False,
     "files_sha256": {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
-                     for p in sorted(root.rglob("*")) if p.is_file() and p.name not in {"result.json", "pipeline.log"}},
+                     for p in sorted(root.rglob("*")) if p.is_file() and str(p.relative_to(root)) not in {"result.json", "pipeline.log"}},
 }
 (root / "result.json").write_text(json.dumps(payload, indent=2) + "\n")
 PY

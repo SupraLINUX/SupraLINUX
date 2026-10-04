@@ -210,5 +210,22 @@
       "archive_index_sha256": "2cdf9f4c7b520bcf4844b964ca986c637cdaa7d6cb70802a1c35655f2fbb70bf"
     }
   ],
-  "execution_checkpoint": "frameworks-6.30-pass"
+  "execution_checkpoint": "frameworks-6.30-pass",
+  "infrastructure_incidents": [
+    {
+      "state": "INFRA_INVALID",
+      "kind": "milestone-backing-image-access",
+      "source_commit": "c6c364a52bb7ec37eb601660bff1cea8c99c2a24",
+      "stage": "outer-vm-creation",
+      "package_execution_started": false,
+      "consumes_package_attempt": false,
+      "workflow_run_id": null,
+      "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t225829z-3209890",
+      "host_evidence_manifest_sha256": "fcb8300b03be0f4d76217d47d00a4b317b17b7fe9bb86ffaff151cd8ca2cf0fa",
+      "result_path": "manifests/evidence/plasma/infrastructure/milestone-backing-access-20261004/host-result.json",
+      "result_sha256": "b10859b707c6c6f2fb773ef000f38171a300f3f8a0633f7f7dc13001100e3c01",
+      "cause": "Milestone parent directory mode 0750 did not permit the libvirt QEMU identity to traverse it. No guest, workflow or package execution started.",
+      "repair": "Grant only libvirt-qemu read/traverse ACL on the dedicated milestone directory. Check POSIX access ACLs before creating an overlay; certify cache transport with the synthetic ECM/Qt consumer before Ocean."
+    }
+  ]
 }

@@ -9,6 +9,25 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 cache = importlib.machinery.SourceFileLoader("cache", str(ROOT / "scripts/admit-frameworks-cache.py")).load_module()
+access = importlib.machinery.SourceFileLoader("access", str(ROOT / "scripts/check-qemu-image-access.py")).load_module()
+
+
+class ImageAccess(unittest.TestCase):
+    def test_named_user_acl_is_masked(self):
+        acl = {("user", ""): "rwx", ("group", ""): "r-x", ("other", ""): "---",
+               ("mask", ""): "r--", ("user", "64055"): "r-x"}
+        self.assertNotIn("x", access.permissions(acl, 1000, 1000, 64055, {991}))
+        acl[("mask", "")] = "r-x"
+        self.assertIn("x", access.permissions(acl, 1000, 1000, 64055, {991}))
+
+    def test_owner_permissions_take_precedence(self):
+        acl = {("user", ""): "---", ("group", ""): "r-x", ("other", ""): "rwx"}
+        self.assertNotIn("r", access.permissions(acl, 1000, 1000, 1000, {1000}))
+
+    def test_group_union_is_masked_without_other_fallback(self):
+        acl = {("user", ""): "rwx", ("group", ""): "---", ("other", ""): "rwx",
+               ("group", "991"): "r-x", ("mask", ""): "r--"}
+        self.assertNotIn("x", access.permissions(acl, 1000, 1000, 64055, {991}))
 
 
 class CacheAdmission(unittest.TestCase):

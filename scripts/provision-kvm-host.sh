@@ -34,6 +34,7 @@ fi
 printf 'Installing Ubuntu 26.04 KVM/libvirt host tooling...\n'
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    acl \
     cloud-image-utils \
     cpu-checker \
     curl \

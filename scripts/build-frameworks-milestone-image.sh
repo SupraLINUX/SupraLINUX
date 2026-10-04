@@ -13,6 +13,7 @@ STATE_ROOT="${SUPRALINUX_MILESTONE_STATE_DIR:-/var/lib/supralinux/milestone-cach
 ARTIFACT_ARCHIVE="${SUPRALINUX_ARTIFACT_ARCHIVE:-${STATE_ROOT}/retained-artifacts}"
 EVIDENCE_ROOT="${SUPRALINUX_HOST_EVIDENCE_ROOT:-/var/lib/supralinux/evidence}"
 REPLACE="${SUPRALINUX_REPLACE_MILESTONE_IMAGE:-0}"
+LIBVIRT_QEMU_USER="${SUPRALINUX_LIBVIRT_QEMU_USER:-libvirt-qemu}"
 MIRROR="${SBUILD_MIRROR:-http://archive.ubuntu.com/ubuntu}"
 API_VERSION="2026-03-10"
 
@@ -21,7 +22,7 @@ if [[ "${REPLACE}" != "0" && "${REPLACE}" != "1" ]]; then
     exit 1
 fi
 
-for command_name in curl dpkg-deb dpkg-scanpackages gzip install jq mmdebstrap qemu-img sha256sum unzip; do
+for command_name in curl dpkg-deb dpkg-scanpackages gzip install jq mmdebstrap qemu-img setfacl sha256sum unzip; do
     command -v "${command_name}" >/dev/null 2>&1 || {
         printf 'Missing host command: %s\n' "${command_name}" >&2
         exit 1
@@ -60,6 +61,9 @@ fi
 # These are dedicated cache/evidence directories. Provision them before
 # check-golden-image-provenance.sh writes its admission record.
 "${ROOT_CMD[@]}" install -d -o "${TARGET_USER}" -g "${TARGET_GROUP}" -m 0750     "${STATE_ROOT}"     "$(dirname "${TARGET_IMAGE}")"     "${EVIDENCE_ROOT}/milestone-frameworks-6.30"
+id "${LIBVIRT_QEMU_USER}" >/dev/null
+# libvirt must traverse the backing directory; its group differs across hosts.
+"${ROOT_CMD[@]}" setfacl -m "u:${LIBVIRT_QEMU_USER}:rx" "$(dirname "${TARGET_IMAGE}")"
 
 "${ROOT}/scripts/check-golden-image-provenance.sh" "${GOLDEN_IMAGE}" "${STATE_ROOT}/golden-admission.txt"
 GOLDEN_SHA256="$(sha256sum "${GOLDEN_IMAGE}" | awk '{print $1}')"
