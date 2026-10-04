@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "as_of": "2026-10-02",
+  "as_of": "2026-10-03",
   "authority": "kde-upstream",
   "release": {
     "series": "6.7",
@@ -62,14 +62,14 @@
     "release_relevant_desktop": "unlocked"
   },
   "planning": {
-    "phase": "level0-materialization-preflight",
-    "status": "level0-materialization-preflight-pending",
+    "phase": "level0-materialization",
+    "status": "level0-materialization-pending",
     "execution_authorized": true,
     "package_execution_authorized": false,
-    "validation_run_kind": "infrastructure-preflight",
+    "validation_run_kind": "planning-materialization",
     "consumes_package_attempt": false,
     "canonical_package_state_effect": "none",
-    "runner_scope": "github-hosted-ubuntu-26.04-non-authoritative-infrastructure-preflight",
+    "runner_scope": "github-hosted-ubuntu-26.04-non-authoritative-materialization",
     "lane_workflow": ".github/workflows/kde-plasma-lane.yml",
     "dependency_manifest": "manifests/kde-plasma-dependencies.json",
     "dag_candidate_manifest": "manifests/kde-plasma-dag-candidate.json",
@@ -108,7 +108,7 @@
       "certified_mechanism": "batched-apt-cache-showsrc-plus-policy",
       "package_attempts_consumed": 0
     },
-    "next_gate": "plasma-level0-materialization-preflight-evidence",
+    "next_gate": "plasma-level0-materialization-evidence",
     "provider_resolution_review_manifest": "manifests/kde-plasma-provider-resolution-review.json",
     "provider_resolution_evidence": {
       "workflow_run_id": 37086119189,
@@ -125,7 +125,21 @@
       "result_json_sha256": "1d68c3373990aaa6dfeb614cd1a62d196be00e0208d9ea0c4cc5e7371d114bad"
     },
     "level0_manifest": "manifests/kde-plasma-level0.json",
-    "level0_materialization_preflight_manifest": "manifests/kde-plasma-level0-materialization-preflight.json"
+    "level0_materialization_preflight_manifest": "manifests/kde-plasma-level0-materialization-preflight.json",
+    "materialization_authorized": true,
+    "level0_materialization_manifest": "manifests/kde-plasma-level0-materialization.json",
+    "level0_materialization_preflight_evidence": {
+      "workflow_run_id": 37161541259,
+      "workflow_job_id": 111316001972,
+      "workflow_head_sha": "56b7242cf830ec7b76085f4b9d04a849e12545a2",
+      "artifact_id": 11286979140,
+      "artifact_digest": "sha256:2ba6f74d31cff399c00d3682adae7f66a96962df1b0616e6626298c819ae2f8f",
+      "result_json_sha256": "cb8e6471aa1149e8335cde8d4d43c1d84916151187ecb11fda3b3d7f2cf9ed4f",
+      "result": "PASS",
+      "package_execution_started": false,
+      "consumes_package_attempt": false,
+      "canonical_package_state_effect": "none"
+    }
   },
   "sources": [
     {

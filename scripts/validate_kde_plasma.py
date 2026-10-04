@@ -18,7 +18,7 @@ executable_dag = json.loads((ROOT / "manifests/kde-plasma-dag.json").read_text()
 audit = json.loads((ROOT / "manifests/kde-plasma-provider-audit.json").read_text())
 resolution = json.loads((ROOT / "manifests/kde-plasma-provider-resolution.json").read_text())
 resolution_review = json.loads((ROOT / "manifests/kde-plasma-provider-resolution-review.json").read_text())
-resolution_preflight = json.loads((ROOT / "manifests/kde-plasma-provider-resolution-preflight.json").read_text())
+resolution_preflight = json.loads((ROOT / "manifests/kde-plasma-provider-resolution-preflight.json").read_text())\nlevel0_preflight = json.loads((ROOT / "manifests/kde-plasma-level0-materialization-preflight.json").read_text())\nlevel0_materialization = json.loads((ROOT / "manifests/kde-plasma-level0-materialization.json").read_text())
 desktop = json.loads((ROOT / "manifests/desktop-stack.json").read_text())
 cert = json.loads((ROOT / "manifests/authoritative-kvm-certification.json").read_text())
 lane = (ROOT / ".github/workflows/kde-plasma-lane.yml").read_text()
@@ -48,19 +48,22 @@ for node in sources:
     req(node.get("source_url") == f"https://download.kde.org/stable/plasma/6.7.5/{node_id}-6.7.5.tar.xz", f"{node_id}: source URL")
 
 planning = plasma.get("planning", {})
-req(planning.get("phase") == "level0-materialization-preflight", "Plasma planning phase")
-req(planning.get("status") == "level0-materialization-preflight-pending", "Plasma Level 0 materialization preflight live status")
-req(planning.get("execution_authorized") is True, "Level 0 materialization infrastructure preflight authorization")
-req(planning.get("package_execution_authorized") is False, "Level 0 preflight must not authorize package execution")
-req(planning.get("consumes_package_attempt") is False, "Level 0 preflight must not consume package Attempt")
-req(planning.get("canonical_package_state_effect") == "none", "Level 0 preflight canonical package state effect")
-req(planning.get("validation_run_kind") == "infrastructure-preflight", "Level 0 preflight run kind")
-req(planning.get("runner_scope") == "github-hosted-ubuntu-26.04-non-authoritative-infrastructure-preflight", "Level 0 preflight runner scope")
+req(planning.get("phase") == "level0-materialization", "Plasma planning phase")
+req(planning.get("status") == "level0-materialization-pending", "Plasma Level 0 materialization live status")
+req(planning.get("execution_authorized") is True, "Level 0 materialization authorization")
+req(planning.get("materialization_authorized") is True, "Level 0 materialization gate")
+req(planning.get("package_execution_authorized") is False, "Level 0 materialization must not authorize package execution")
+req(planning.get("consumes_package_attempt") is False, "Level 0 materialization must not consume package Attempt")
+req(planning.get("canonical_package_state_effect") == "none", "Level 0 materialization canonical package state effect")
+req(planning.get("validation_run_kind") == "planning-materialization", "Level 0 materialization run kind")
+req(planning.get("runner_scope") == "github-hosted-ubuntu-26.04-non-authoritative-materialization", "Level 0 materialization runner scope")
 req(planning.get("lane_workflow") == ".github/workflows/kde-plasma-lane.yml", "Plasma lane workflow")
 req(planning.get("dag_manifest") == "manifests/kde-plasma-dag.json", "Executable DAG manifest binding")
 req(planning.get("level0_manifest") == "manifests/kde-plasma-level0.json", "Level 0 manifest binding")
 req(planning.get("level0_materialization_preflight_manifest") == "manifests/kde-plasma-level0-materialization-preflight.json", "Level 0 preflight manifest binding")
-req(planning.get("next_gate") == "plasma-level0-materialization-preflight-evidence", "Plasma Level 0 preflight next gate")
+req(planning.get("level0_materialization_manifest") == "manifests/kde-plasma-level0-materialization.json", "Level 0 materialization manifest binding")
+req(planning.get("level0_materialization_preflight_evidence", {}).get("artifact_id") == 11286979140, "Level 0 preflight evidence binding")
+req(planning.get("next_gate") == "plasma-level0-materialization-evidence", "Plasma Level 0 materialization next gate")
 
 disc = deps.get("discovery", {})
 req(deps.get("state") == "discovery-evidence-promoted", "Plasma dependency discovery evidence promotion")
@@ -146,7 +149,7 @@ req(audit_input.get("discovery_artifact_id") == 11204675088, "Provider audit dis
 req(audit_input.get("dependencies_json_sha256") == "a6b2d066ced63231dd3de6adb6248dbbd7eba01cf0d776d49c6d2b091c0f82ef", "Provider audit input hash")
 
 for token in (
-    "level0-materialization-preflight-pending",
+    "level0-materialization-pending",
     "actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093",
     "run-id: 37086119189",
     "run-kde-plasma-provider-resolution-review.py",
@@ -155,6 +158,13 @@ for token in (
     "run-kde-plasma-provider-resolution-preflight.py",
 ):
     req(token in lane, f"Plasma lane contract: {token}")
+
+req(level0_preflight.get("state") == "PASS", "Level 0 materialization preflight PASS")
+req(level0_preflight.get("execution_authorized") is False, "Closed Level 0 preflight authorization")
+req(level0_preflight.get("evidence", {}).get("artifact_id") == 11286979140, "Level 0 preflight artifact")
+req(level0_preflight.get("evidence", {}).get("files", {}).get("result.json") == "cb8e6471aa1149e8335cde8d4d43c1d84916151187ecb11fda3b3d7f2cf9ed4f", "Level 0 preflight result hash")
+req(level0_materialization.get("state") == "execution-authorized", "Level 0 materialization definition state")
+req(level0_materialization.get("package_execution_authorized") is False, "Level 0 materialization package lock")
 
 stack = desktop.get("desktop", {})
 req(stack.get("plasma", {}).get("version") == "6.7.5", "desktop-stack Plasma version")
@@ -178,5 +188,5 @@ if errors:
     raise SystemExit(1)
 
 print("KDE Plasma 6.7.5 planning validation: PASS")
-print("Lane phase: level0-materialization-preflight-pending")
-print("Package execution: locked")
+print("Lane phase: level0-materialization-pending")
+print("Materialization: authorized; package execution: locked")

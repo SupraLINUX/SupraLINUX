@@ -154,6 +154,9 @@ jobs:
       - name: Validate KDE Plasma Level 0 definition
         run: python3 scripts/validate_kde_plasma_level0.py
 
+      - name: Validate KDE Plasma Level 0 materialization definition
+        run: python3 scripts/validate_kde_plasma_level0_materialization.py
+
       - name: Validate execution checkpoint policy
         run: python3 scripts/validate_execution_checkpoints.py
 

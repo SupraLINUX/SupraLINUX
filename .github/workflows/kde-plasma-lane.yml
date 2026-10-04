@@ -34,7 +34,7 @@ jobs:
         run: |
           phase="$(python3 -c 'import json; print(json.load(open("manifests/kde-plasma.json"))["planning"]["status"])')"
           case "${phase}" in
-            dependency-discovery-pending|provider-audit-pending|provider-resolution-pending|provider-resolution-preflight-pending|provider-resolution-review-pending|dag-executable-promoted|level0-materialization-preflight-pending)
+            dependency-discovery-pending|provider-audit-pending|provider-resolution-pending|provider-resolution-preflight-pending|provider-resolution-review-pending|dag-executable-promoted|level0-materialization-preflight-pending|level0-materialization-pending)
               ;;
             *)
               echo "Unsupported/non-executable Plasma lane phase: ${phase}" >&2
@@ -83,6 +83,48 @@ jobs:
         with:
           name: kde-plasma-level0-materialization-preflight-${{ github.event.pull_request.head.sha || github.sha }}
           path: evidence/kde-plasma-level0-materialization-preflight/
+          if-no-files-found: error
+          retention-days: 90
+
+  level0-materialization:
+    name: Level 0 source and packaging materialization
+    needs: plan
+    if: needs.plan.outputs.phase == 'level0-materialization-pending'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Enable Ubuntu source indexes and materialization tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo tee /etc/apt/sources.list.d/supralinux-plasma-level0-src.sources >/dev/null <<'EOF'
+          Types: deb-src
+          URIs: http://archive.ubuntu.com/ubuntu
+          Suites: resolute resolute-updates
+          Components: main universe
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+          Types: deb-src
+          URIs: http://security.ubuntu.com/ubuntu
+          Suites: resolute-security
+          Components: main universe
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          EOF
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends curl dpkg-dev gnupg tar xz-utils
+
+      - name: Materialize Level 0 sources and Ubuntu packaging references
+        run: python3 scripts/run-kde-plasma-level0-materialization.py
+
+      - name: Upload Level 0 materialization evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-plasma-level0-materialization-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-plasma-level0-materialization/
           if-no-files-found: error
           retention-days: 90
 

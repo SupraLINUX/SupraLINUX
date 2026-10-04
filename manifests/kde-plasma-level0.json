@@ -1,15 +1,15 @@
 {
   "schema": 1,
-  "as_of": "2026-10-02",
+  "as_of": "2026-10-03",
   "authority": "kde-upstream-source-plus-supralinux-packaging",
   "provider_platform": "ubuntu-resolute",
   "plasma_version": "6.7.5",
   "role": "plasma-level0-definition",
-  "state": "materialization-preflight-pending",
+  "state": "materialization-pending",
   "execution_authorized": true,
-  "materialization_authorized": false,
+  "materialization_authorized": true,
   "package_execution_authorized": false,
-  "validation_run_kind": "infrastructure-preflight",
+  "validation_run_kind": "planning-materialization",
   "consumes_package_attempt": false,
   "canonical_package_state_effect": "none",
   "dag_manifest": "manifests/kde-plasma-dag.json",
@@ -93,11 +93,14 @@
     "sample_is_level0_node": false,
     "sample_reason": "Known non-Level0 Frameworks source exercises new source-materialization infrastructure before any Plasma package.",
     "package_execution_authorized": false,
-    "consumes_package_attempt": false
+    "consumes_package_attempt": false,
+    "state": "PASS",
+    "evidence_artifact_id": 11286979140,
+    "evidence_result_sha256": "cb8e6471aa1149e8335cde8d4d43c1d84916151187ecb11fda3b3d7f2cf9ed4f"
   },
   "nodes": {
     "breeze-grub": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -119,7 +122,7 @@
       "package_execution_authorized": false
     },
     "breeze-plymouth": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -141,7 +144,7 @@
       "package_execution_authorized": false
     },
     "discover": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -170,7 +173,7 @@
       "package_execution_authorized": false
     },
     "drkonqi": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -192,7 +195,7 @@
       "package_execution_authorized": false
     },
     "flatpak-kcm": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -214,7 +217,7 @@
       "package_execution_authorized": false
     },
     "kactivitymanagerd": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -236,7 +239,7 @@
       "package_execution_authorized": false
     },
     "kde-cli-tools": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -258,7 +261,7 @@
       "package_execution_authorized": false
     },
     "kdecoration": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -280,7 +283,7 @@
       "package_execution_authorized": false
     },
     "kgamma": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -302,7 +305,7 @@
       "package_execution_authorized": false
     },
     "kglobalacceld": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -324,7 +327,7 @@
       "package_execution_authorized": false
     },
     "kmenuedit": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -346,7 +349,7 @@
       "package_execution_authorized": false
     },
     "knighttime": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -368,7 +371,7 @@
       "package_execution_authorized": false
     },
     "kpipewire": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -390,7 +393,7 @@
       "package_execution_authorized": false
     },
     "ksshaskpass": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -412,7 +415,7 @@
       "package_execution_authorized": false
     },
     "kwallet-pam": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -434,7 +437,7 @@
       "package_execution_authorized": false
     },
     "kwayland": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -456,7 +459,7 @@
       "package_execution_authorized": false
     },
     "kwayland-integration": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -478,7 +481,7 @@
       "package_execution_authorized": false
     },
     "kwrited": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -500,7 +503,7 @@
       "package_execution_authorized": false
     },
     "layer-shell-qt": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -522,7 +525,7 @@
       "package_execution_authorized": false
     },
     "libkscreen": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -544,7 +547,7 @@
       "package_execution_authorized": false
     },
     "libksysguard": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -566,7 +569,7 @@
       "package_execution_authorized": false
     },
     "ocean-sound-theme": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -588,7 +591,7 @@
       "package_execution_authorized": false
     },
     "oxygen-sounds": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -610,7 +613,7 @@
       "package_execution_authorized": false
     },
     "plasma-activities": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -632,7 +635,7 @@
       "package_execution_authorized": false
     },
     "plasma-dialer": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -654,7 +657,7 @@
       "package_execution_authorized": false
     },
     "plasma-disks": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -676,7 +679,7 @@
       "package_execution_authorized": false
     },
     "plasma-firewall": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -698,7 +701,7 @@
       "package_execution_authorized": false
     },
     "plasma-thunderbolt": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -720,7 +723,7 @@
       "package_execution_authorized": false
     },
     "plasma-workspace-wallpapers": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -742,7 +745,7 @@
       "package_execution_authorized": false
     },
     "plymouth-kcm": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -764,7 +767,7 @@
       "package_execution_authorized": false
     },
     "polkit-kde-agent-1": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -786,7 +789,7 @@
       "package_execution_authorized": false
     },
     "qqc2-breeze-style": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -808,7 +811,7 @@
       "package_execution_authorized": false
     },
     "sddm-kcm": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -830,7 +833,7 @@
       "package_execution_authorized": false
     },
     "spacebar": {
-      "state": "definition-ready",
+      "state": "materialization-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -852,7 +855,7 @@
       "package_execution_authorized": false
     }
   },
-  "next_gate": "plasma-level0-materialization-preflight-evidence",
+  "next_gate": "plasma-level0-materialization-evidence",
   "execution_checkpoint": {
     "checkpoint_id": "frameworks-6.30-pass",
     "checkpoint_manifest": "manifests/execution-checkpoints.json",
@@ -867,5 +870,6 @@
     "builder_commit": "92defdaf79e573897e0e9836a9365aa3f2c7eb2d",
     "package_execution_effect": "none",
     "consumes_package_attempt": false
-  }
+  },
+  "materialization_manifest": "manifests/kde-plasma-level0-materialization.json"
 }

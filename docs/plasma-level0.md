@@ -74,3 +74,19 @@ sha256=ec38f99e306d5a13333d6b247a9433b3526ec4a6d1a272631242c68df56c3e97
 ```
 
 It contains the retained Frameworks 6.30 PASS binary pool and a prewarmed Resolute sbuild rootfs. It is an execution cache only; artifacts/manifests remain canonical. No Plasma package execution was started by creating this checkpoint, and Plasma package Attempts remain zero.
+
+
+## Level 0 materialization
+
+The synthetic source-materialization infrastructure preflight is **PASS** from PR CI router run `37161541259`, job `111316001972`, artifact `11286979140`.
+
+The live gate is now `plasma-level0-materialization`. It materializes all 34 Level 0 nodes without running `sbuild`:
+
+- KDE Plasma 6.7.5 tarballs are downloaded, SHA-256 checked and detached-signature verified against fingerprint `0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D`;
+- Ubuntu Resolute-family source references are downloaded and extracted;
+- only the Ubuntu `debian/` packaging trees and metadata are retained as technical references;
+- `discover` is explicitly mapped to Ubuntu source `plasma-discover`;
+- candidate SupraLINUX Debian versions remain unassigned until materialization evidence is closed;
+- package execution remains locked and Plasma package Attempts remain zero.
+
+The materialization job processes independent Level 0 nodes concurrently (maximum six) and produces one retained artifact that can be cached for subsequent package preparation.

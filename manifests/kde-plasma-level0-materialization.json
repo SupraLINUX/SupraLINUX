@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-03",
+  "authority": "kde-upstream-source-plus-ubuntu-reference-packaging",
+  "provider_platform": "ubuntu-resolute",
+  "plasma_version": "6.7.5",
+  "role": "plasma-level0-materialization",
+  "state": "execution-authorized",
+  "execution_authorized": true,
+  "materialization_authorized": true,
+  "package_execution_authorized": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "input": {
+    "level0_manifest": "manifests/kde-plasma-level0.json",
+    "selected_level": 0,
+    "selected_node_count": 34,
+    "preflight_manifest": "manifests/kde-plasma-level0-materialization-preflight.json",
+    "preflight_result": "PASS",
+    "preflight_artifact_id": 11286979140,
+    "preflight_result_json_sha256": "cb8e6471aa1149e8335cde8d4d43c1d84916151187ecb11fda3b3d7f2cf9ed4f"
+  },
+  "source_authority": {
+    "upstream": "KDE Plasma 6.7.5",
+    "sha256": "must-match-manifests/kde-plasma-level0.json",
+    "signature": "verify detached .sig",
+    "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+    "signing_key_source": "packages/kde/karchive/debian/upstream/signing-key.asc"
+  },
+  "ubuntu_packaging_reference": {
+    "role": "technical-reference-only",
+    "suites": [
+      "resolute",
+      "resolute-updates",
+      "resolute-security"
+    ],
+    "components": [
+      "main",
+      "universe"
+    ],
+    "mechanism": "apt-get-source-download-only-plus-dpkg-source-extract",
+    "retained_payload": "deterministic-debian-tree-tar-plus-source-metadata",
+    "explicit_source_aliases": {
+      "discover": "plasma-discover"
+    },
+    "semantic_guard": {
+      "source_field_must_match_selected_reference": true,
+      "selected_version_must_exist_in_apt_source_records": true,
+      "expected_kde_plasma_major": "6",
+      "same_name_alone_is_not_identity_proof": true
+    }
+  },
+  "execution": {
+    "runner": "github-hosted-ubuntu-26.04",
+    "authoritative_package_build": false,
+    "max_parallel_nodes": 6,
+    "fail_fast": false,
+    "package_execution_started": false
+  },
+  "output": {
+    "evidence_dir": "evidence/kde-plasma-level0-materialization",
+    "artifact_name_template": "kde-plasma-level0-materialization-${commit}",
+    "retention_days": 90,
+    "retain_verified_kde_source_tarballs": true,
+    "retain_detached_signatures": true,
+    "retain_ubuntu_debian_trees": true,
+    "retain_ubuntu_full_source_payload": false
+  },
+  "failure_semantics": {
+    "infrastructure_or_transport": "INFRA_INVALID",
+    "missing_or_semantically_incoherent_reference": "REVIEW_REQUIRED",
+    "package_fail_effect": "none",
+    "consumes_package_attempt": false
+  },
+  "next_gate_on_pass": "plasma-level0-candidate-version-assignment",
+  "next_gate_on_nonpass": "plasma-level0-materialization-review"
+}
