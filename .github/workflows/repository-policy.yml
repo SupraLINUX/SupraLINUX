@@ -30,9 +30,14 @@ jobs:
           shellcheck --version
           gpgv --version | head -1
 
-      - name: Validate shell syntax
-        shell: bash
-        run: bash -n scripts/*.sh
+      - name: Validate source syntax
+        run: python3 scripts/check-source-syntax.py
+
+      - name: Test CI preflight regressions
+        run: python3 scripts/test-ci-preflight.py
+
+      - name: Validate current project status
+        run: python3 scripts/render-project-status.py --check
 
       - name: Lint shell scripts
         shell: bash

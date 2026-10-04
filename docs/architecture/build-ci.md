@@ -1,7 +1,7 @@
 # Build, CI and promotion architecture
 
 Status: **active architecture**  
-Last reviewed: **2026-09-26**
+Last reviewed: **2026-10-04**
 
 ## Build semantics
 
@@ -19,22 +19,13 @@ Temporary materializer/promoter workflows are not the normative model for subseq
 
 ## Pull-request CI routing
 
-Ordinary hosted pull-request CI is admitted through `.github/workflows/pr-ci-router.yml`. The router is the single subscriber for `pull_request` lifecycle events `opened`, `synchronize` and `reopened` across the migrated hosted package/reference/provider/diagnostic lanes.
+Ordinary PR events enter `.github/workflows/pr-ci-router.yml`. Repository Policy always runs. `scripts/plan-pr-ci.py` compares the exact synchronize before/after SHAs (or base/head for opened/reopened events) and admits only current authorized Plasma work and changed Qt provider/profile inputs.
 
-For a synchronization, the router evaluates the exact `${{ github.event.before }} -> ${{ github.event.after }}` delta. For opened/reopened PRs it compares base SHA to head SHA. A documentation-only delta (`docs/**` and/or `README.md`) stops after the router planning job; the 18 reusable hosted lanes remain skipped. A non-documentation delta may enter those lanes, where the existing lane-specific scope detectors still decide which expensive work is actually required.
+Closed Frameworks campaigns and KIO diagnostics remain available through workflow_call/workflow_dispatch for deliberate reproduction. Their historical validators do not require live router registrations. New diagnostics use generic infrastructure rather than a new workflow per attempt.
 
-The routed workflows expose `workflow_call` and retain `workflow_dispatch`; workflows that already ran on `push: main` keep that trigger. They do not independently listen to ordinary PR lifecycle events. Controlled authoritative workflows triggered by labels remain separate from this router.
+Router and Plasma concurrency groups include the PR head SHA and set cancel-in-progress to false. An unrelated documentation update can complete its checks without canceling valid work on a different SHA. Input applicability is assessed when consuming evidence, not by erasing an execution.
 
-The router also uses per-PR concurrency with `cancel-in-progress: true`. A newer synchronization cancels an obsolete router execution for the same PR instead of allowing stale package/reference work to continue.
-
-This architecture is policy-enforced by `scripts/validate_repository.py` and, for the Qt lane, `scripts/validate_qt_provider.py`. Live verification on 2026-09-17 established:
-
-- superseded router run `35178935759`: **cancelled** automatically;
-- Repository Policy run `35181296924`: **PASS**, 30/30 steps;
-- documentation-only router run `35181360370`: **PASS**, one planning job PASS and 18 reusable lanes skipped;
-- matching Repository Policy run `35181360187`: **PASS**, 30/30 steps.
-
-Detailed semantics and historical evidence are recorded in `docs/ci-event-delta-scope.md` and `docs/decisions/pr-ci-routing-2026-09-17.md`.
+The previous 2026-09-17 routing/cancellation proof is historical evidence, preserved in `docs/ci-event-delta-scope.md`. It does not define the current scheduling policy.
 
 ## Hosted preflight lane
 
@@ -51,7 +42,7 @@ Expensive hosted package work is gated on the actual PR event delta. Documentati
 Repository Policy requires:
 
 - immutable `actions/checkout` SHA `3d3c42e5aac5ba805825da76410c181273ba90b1`;
-- Bash syntax validation for all `scripts/*.sh`;
+- Python and Bash syntax validation for every script, plus JSON syntax/duplicate-key validation;
 - Ubuntu 26.04 ShellCheck (`shellcheck -e SC1091 scripts/*.sh`);
 - deterministic KVM-QEMU wrapper functional testing;
 - cryptographic Ubuntu source-image functional testing;

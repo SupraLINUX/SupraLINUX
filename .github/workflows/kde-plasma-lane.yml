@@ -9,8 +9,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: kde-plasma-lane-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  group: kde-plasma-lane-${{ github.event.pull_request.number || github.ref }}-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: false
 
 jobs:
   plan:
@@ -117,6 +117,8 @@ jobs:
           sudo apt-get install -y --no-install-recommends curl dpkg-dev gnupg tar xz-utils
 
       - name: Materialize Level 0 sources and Ubuntu packaging references
+        env:
+          SUPRALINUX_SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python3 scripts/run-kde-plasma-level0-materialization.py
 
       - name: Upload Level 0 materialization evidence

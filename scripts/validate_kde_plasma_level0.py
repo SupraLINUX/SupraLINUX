@@ -14,7 +14,8 @@ def req(condition, message):
 plasma = json.loads((ROOT / "manifests/kde-plasma.json").read_text())
 dag = json.loads((ROOT / "manifests/kde-plasma-dag.json").read_text())
 level0 = json.loads((ROOT / "manifests/kde-plasma-level0.json").read_text())
-preflight = json.loads((ROOT / "manifests/kde-plasma-level0-materialization-preflight.json").read_text())\nmaterialization = json.loads((ROOT / "manifests/kde-plasma-level0-materialization.json").read_text())
+preflight = json.loads((ROOT / "manifests/kde-plasma-level0-materialization-preflight.json").read_text())
+materialization = json.loads((ROOT / "manifests/kde-plasma-level0-materialization.json").read_text())
 review = json.loads((ROOT / "manifests/kde-plasma-provider-resolution-review.json").read_text())
 lane = (ROOT / ".github/workflows/kde-plasma-lane.yml").read_text()
 

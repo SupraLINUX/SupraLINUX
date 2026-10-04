@@ -62,3 +62,18 @@ Host-local build result: **PASS**.
 - canonical package state effect: none
 
 This closes only the execution-cache milestone. Plasma Level 0 remains behind its materialization/preflight gates and package execution remains locked.
+
+## Artifact identity and retention
+
+The planner now requires eligible PASS evidence for the exact canonical Debian version. `retain-package-artifacts.py` verifies ZIP digests, declared source-package identity, .changes/.buildinfo versions, source checksum closure, and each shipped binary's version/architecture. Future milestone builds run this verification before image creation. The image checker also compares its bytes to the admitted hash in the checkpoint manifest.
+
+Current retained ZIPs are archived under `.artifacts/frameworks-6.30/sha256/` in the operator workspace, independently of Actions retention. `manifests/retained-package-artifacts.json` records the index hash and known gaps: ECM's old artifact lacks its source package, and five debug packages from early lanes were not uploaded. These omissions do not become invented source evidence or new authoritative package PASS.
+
+Verification without GitHub or the original download cache:
+
+```bash
+python3 scripts/plan-frameworks-milestone.py > /tmp/frameworks-plan.json
+python3 scripts/retain-package-artifacts.py --plan /tmp/frameworks-plan.json --archive .artifacts/frameworks-6.30 --verify-only --allow-legacy-source-gaps
+```
+
+To restore the transport cache, add `--cache <destination> --restore-cache` and omit `--verify-only`. The archive should be backed up separately; an off-host backup has not been verified. Rootfs/milestone applicability still depends on the recorded platform/toolchain/repository inputs. A platform or security baseline update must be evaluated before cache reuse; retaining the bytes alone does not certify freshness.

@@ -41,4 +41,8 @@ Build graph state is represented as `PASS`, `FAIL` or `BLOCKED`. `BLOCKED` is ne
 
 ## Development state
 
-This project is in architecture/bootstrap development. KDE Frameworks 6.30 has completed the GitHub-hosted clean-build preflight, including Tier 3 at **20 PASS / 0 pending / 0 current FAIL / 0 BLOCKED**. Hosted evidence remains non-authoritative: the real Ubuntu 26.04 KVM lane, KVM-only QEMU system-test path and required KArchive Frameworks sample are still pending certification. Plasma/Gear/KWin/session work must not treat the lane as release-relevant until those KVM gates pass.
+The current gate is generated from live manifests in [`docs/status/current.md`](docs/status/current.md). Frameworks 6.30 has 65 retained PASS builds; their scope remains the scope recorded for each node. The Ubuntu 26.04 KVM runner contract, synthetic package proof and KArchive sample are certified. Plasma Level 0 has 34 nodes awaiting source/packaging materialization; package execution is still locked. Final Qt provider certification remains pending.
+
+The Frameworks milestone is an admitted execution cache, not a new package certification. Complete retained artifact ZIPs are also archived by digest on the operator workspace, with known historical source/debug gaps recorded in `manifests/retained-package-artifacts.json`.
+
+Development instructions: [`AGENTS.md`](AGENTS.md), [`docs/project-instructions.md`](docs/project-instructions.md). SupraLINUX follows official KDE stable releases and upstream fixes; it does not propose maintaining a KDE or Qt fork.

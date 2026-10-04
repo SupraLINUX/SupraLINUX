@@ -207,7 +207,7 @@ req((snap.get('pass'),snap.get('pending'),snap.get('current_fail'),snap.get('blo
 workflow=text(WORKFLOW); router=text(ROUTER); policy=text(POLICY); runner=text(RUNNER); scope=text(SCOPE); scope_test=text(SCOPE_TEST); doc=text(DOC)
 for token in ('fail-fast: false','max-parallel: 3','node: [kconfig, ki18n, sonnet]','artifact-ids: \'10298635300\'','artifact-ids: \'10301938362\'','artifact-ids: \'10301282501\'','run-kde-tier1-package-batch9-preflight.sh'):
  req(token in workflow,f'Batch 9 workflow missing {token}')
-req('uses: ./.github/workflows/kde-tier1-package-batch9.yml' in router,'PR router must invoke Batch 9')
+req('workflow_call:' in workflow and 'workflow_dispatch:' in workflow,'closed Batch 9 must remain manually reproducible')
 req('Test KDE Tier 1 Batch 9 package scope' in policy and 'Validate KDE Tier 1 batch 9 preparation' in policy,'Repository Policy must test/validate Batch 9')
 for token in ('abi-contract','reference_required_export_count_amd64','reference_optional_export_count','reference_nonoptional_inapplicable_amd64_count','abi-reference-counts.txt',"STAGE='qml-import-smoke'","STAGE='qml-package-contract'",'consumer-runtime-closure','lintian --fail-on error','0supralinux','DDEBS','sbuild --verbose'):
  req(token in runner,f'Batch 9 runner gate missing {token}')

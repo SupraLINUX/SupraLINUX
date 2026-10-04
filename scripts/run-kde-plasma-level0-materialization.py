@@ -31,7 +31,8 @@ def sha256(path):
     return h.hexdigest()
 
 def run(cmd, cwd=None, log=None, check=True):
-    p = subprocess.run(cmd, cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    p = subprocess.run(cmd, cwd=cwd, text=True, stdout=subprocess.PIPE,
+                       stderr=subprocess.STDOUT, timeout=600)
     if log is not None:
         Path(log).write_text(p.stdout, encoding="utf-8")
     if check and p.returncode != 0:
@@ -43,6 +44,14 @@ def source_versions(text):
 
 def semantic_plasma6(version):
     return re.match(r"^(?:\d+:)?6\.", version) is not None
+
+def valid_release_signature(status, primary_fingerprint=EXPECTED_FPR):
+    for line in status.splitlines():
+        fields = line.split()
+        if len(fields) >= 11 and fields[:2] == ["[GNUPG:]", "VALIDSIG"]:
+            if fields[2] == primary_fingerprint or fields[-1] == primary_fingerprint:
+                return True
+    return False
 
 def make_debian_tar(src, dst):
     run([
@@ -108,18 +117,20 @@ def materialize(node_id):
         tar_name = Path(urlparse(tar_url).path).name
         tar_path = upstream_out / tar_name
         sig_path = upstream_out / f"{tar_name}.sig"
-        run(["curl", "--fail", "--location", "--retry", "3", "--retry-delay", "2", "-o", str(tar_path), tar_url],
+        run(["curl", "--fail", "--location", "--connect-timeout", "20", "--max-time", "180",
+             "--retry", "3", "--retry-delay", "2", "-o", str(tar_path), tar_url],
             log=node_out / "kde-source-download.log")
         actual = sha256(tar_path)
         if actual != node["upstream_source_sha256"]:
             raise ReviewRequired(f"{node_id}: KDE source SHA-256 mismatch")
 
-        run(["curl", "--fail", "--location", "--retry", "3", "--retry-delay", "2", "-o", str(sig_path), f"{tar_url}.sig"],
+        run(["curl", "--fail", "--location", "--connect-timeout", "20", "--max-time", "180",
+             "--retry", "3", "--retry-delay", "2", "-o", str(sig_path), f"{tar_url}.sig"],
             log=node_out / "kde-signature-download.log")
         verify = run(["gpgv", "--status-fd", "1", "--keyring", str(WORK / "kde-release-keyring.gpg"),
                       str(sig_path), str(tar_path)], check=False)
         (node_out / "gpgv-status.txt").write_text(verify.stdout, encoding="utf-8")
-        if verify.returncode != 0 or "VALIDSIG" not in verify.stdout or EXPECTED_FPR not in verify.stdout.replace(" ", ""):
+        if verify.returncode != 0 or not valid_release_signature(verify.stdout):
             raise ReviewRequired(f"{node_id}: KDE detached signature did not validate against expected fingerprint")
 
         downloaded = {}
@@ -203,6 +214,15 @@ def main():
         "selected_node_count": len(selected),
         "counts": counts,
         "nodes": results,
+        "inputs_sha256": {
+            "level0_manifest": sha256(ROOT / "manifests/kde-plasma-level0.json"),
+            "materialization_script": sha256(Path(__file__)),
+            "release_signing_key": sha256(KEY),
+        },
+        "github": {
+            "workflow_run_id": os.environ.get("GITHUB_RUN_ID"),
+            "source_commit": os.environ.get("SUPRALINUX_SOURCE_COMMIT"),
+        },
         "package_execution_started": False,
         "package_attempted": False,
         "consumes_package_attempt": False,
@@ -210,6 +230,10 @@ def main():
         "next_gate": "plasma-level0-candidate-version-assignment" if state == "PASS" else "plasma-level0-materialization-review",
     }
     RESULT.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    print(f"result_json_sha256={sha256(RESULT)}", flush=True)
+    print("SUPRALINUX_RESULT_JSON_BEGIN", flush=True)
+    print(RESULT.read_text(), end="", flush=True)
+    print("SUPRALINUX_RESULT_JSON_END", flush=True)
 
     if state != "PASS":
         for item in results:

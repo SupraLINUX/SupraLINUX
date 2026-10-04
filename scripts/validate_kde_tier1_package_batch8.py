@@ -177,7 +177,7 @@ require("Validate and install retained KCoreAddons data closure" in workflow, "B
 require("libkf6coreaddons_data" in workflow and "libkf6coreaddons-data" in workflow, "Batch 8 workflow must hash-pin and install retained KCoreAddons data")
 require("scripts/kde-tier1-package-batch8-needed.sh" in workflow, "Batch 8 workflow must use exact event-delta scope")
 require("scripts/run-kde-tier1-package-batch8-preflight.sh" in workflow, "Batch 8 workflow must execute the KGuiAddons runner")
-require("uses: ./.github/workflows/kde-tier1-package-batch8.yml" in router, "central PR router must invoke Batch 8")
+require("workflow_call:" in workflow and "workflow_dispatch:" in workflow, "closed Batch 8 must remain manually reproducible")
 
 for token in ("KCOREADDONS_ARTIFACT_DIR", "kcoreaddons_build_dependency=no", "libkf6coreaddons-dev", "KImageCache", "python-import-smoke", "consumer-runtime-closure", "sbuild --verbose"):
     require(token in runner or token in text(CONSUMER / "main.cpp"), f"Batch 8 runner/consumer contract missing: {token}")

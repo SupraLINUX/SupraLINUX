@@ -207,7 +207,7 @@ req('find_package(KF6 6.30' not in kir_consumer,'Kirigami consumer must not requ
 qc_cmake=text(ROOT/'packages/kde/kquickcharts/consumer/CMakeLists.txt'); qc_cpp=text(ROOT/'packages/kde/kquickcharts/consumer/main.cpp')
 req('find_package(KF6QuickCharts 6.30 REQUIRED CONFIG)' in qc_cmake and 'KF6::QuickCharts' in qc_cmake and 'KF6::QuickChartsControls' not in qc_cmake and 'qml_register_types_org_kde_quickcharts' in qc_cpp and 'qml_register_types_org_kde_quickcharts_controls' not in qc_cpp,'QuickCharts consumer must use only the upstream-exported KF6::QuickCharts target; controls remain QML/runtime validated')
 router=text(ROOT/'.github/workflows/pr-ci-router.yml'); policy=text(ROOT/'.github/workflows/repository-policy.yml')
-req('kde-tier1-package-batch10.yml' in router,'PR CI router missing Batch10 reusable workflow')
+req('workflow_call:' in text(ROOT/'.github/workflows/kde-tier1-package-batch10.yml') and 'workflow_dispatch:' in text(ROOT/'.github/workflows/kde-tier1-package-batch10.yml'),'closed Batch10 must remain manually reproducible')
 req('test-kde-tier1-package-batch10-scope.sh' in policy and 'validate_kde_tier1_package_batch10.py' in policy,'Repository Policy missing Batch10 checks')
 g=js(ROOT/'manifests/kde-tier1-global-discovery.json'); lane=g['lanes']['qml-multisurface']
 req(lane.get('status')=='completed' and lane.get('nodes')==[] and lane.get('runner')=='scripts/run-kde-tier1-package-batch10-preflight.sh' and lane.get('workflow')=='.github/workflows/kde-tier1-package-batch10.yml','global discovery Batch10 lane not completed')

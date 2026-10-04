@@ -21,8 +21,13 @@ get_value() {
 [[ "$(get_value source_golden_sha256)" == "a0b88447d9a9ecd9785087390cf499abaf9416291864fe1be4d63d9a334b2acd" ]]
 
 EXPECTED="$(get_value milestone_image_sha256)"
+ADMITTED="$(python3 - "${ROOT}/manifests/execution-checkpoints.json" <<'PY'
+import json, sys
+print(json.load(open(sys.argv[1]))["checkpoints"]["frameworks-6.30-pass"]["image_sha256"])
+PY
+)"
 ACTUAL="$(sha256sum "${IMAGE}" | awk '{print $1}')"
-if [[ ! "${EXPECTED}" =~ ^[0-9a-f]{64}$ || "${EXPECTED}" != "${ACTUAL}" ]]; then
+if [[ ! "${EXPECTED}" =~ ^[0-9a-f]{64}$ || "${EXPECTED}" != "${ACTUAL}" || "${ACTUAL}" != "${ADMITTED}" ]]; then
     printf 'Frameworks milestone image SHA mismatch. expected=%s actual=%s\n' "${EXPECTED:-missing}" "${ACTUAL}" >&2
     exit 1
 fi

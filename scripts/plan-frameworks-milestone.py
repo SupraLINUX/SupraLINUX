@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -21,11 +22,12 @@ for node_id, node in sorted(dag.get("nodes", {}).items()):
     ]
     exact = [
         item for item in evidence
-        if item.get("attempted_package_version") in (None, version)
+        if item.get("attempted_package_version") == version
+        and item.get("downstream_eligible") is not False
     ]
-    chosen = (exact or evidence)[-1] if (exact or evidence) else None
+    chosen = exact[-1] if exact else None
     if not chosen:
-        errors.append(f"{node_id}: missing retained PASS evidence")
+        errors.append(f"{node_id}: missing eligible PASS evidence for exact version {version}")
         continue
     run_id = chosen.get("workflow_run") or chosen.get("run_id")
     artifact_id = chosen.get("artifact_id")
@@ -34,7 +36,7 @@ for node_id, node in sorted(dag.get("nodes", {}).items()):
         errors.append(f"{node_id}: PASS evidence lacks workflow run")
     if not isinstance(artifact_id, int):
         errors.append(f"{node_id}: PASS evidence lacks artifact id")
-    if not isinstance(digest, str) or len(digest) != 64:
+    if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
         errors.append(f"{node_id}: PASS evidence lacks artifact SHA-256")
     if chosen.get("downstream_eligible") is False:
         errors.append(f"{node_id}: PASS artifact explicitly not downstream eligible")

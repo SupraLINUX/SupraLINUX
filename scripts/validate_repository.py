@@ -133,7 +133,8 @@ routed_pr_workflows = (
 
 require(f"actions/checkout@{CHECKOUT_SHA}" in repository_policy, "repository policy checkout action must use the approved immutable SHA")
 require("ubuntu-26.04" in repository_policy, "repository policy must use explicit ubuntu-26.04")
-require("bash -n scripts/*.sh" in repository_policy, "repository policy must syntax-check all shell scripts")
+require("python3 scripts/check-source-syntax.py" in repository_policy, "repository policy must syntax-check all Python, Bash and JSON before execution")
+require("python3 scripts/test-ci-preflight.py" in repository_policy, "repository policy must test syntax, routing and artifact identity regressions")
 require("shellcheck -e SC1091 scripts/*.sh" in repository_policy, "repository policy must lint all shell scripts with ShellCheck")
 require("--no-install-recommends gnupg" in repository_policy, "repository policy must install Ubuntu gnupg for signed-metadata tests")
 require("--no-install-recommends shellcheck" in repository_policy, "repository policy must install Ubuntu ShellCheck")
@@ -162,21 +163,11 @@ require(f"actions/checkout@{CHECKOUT_SHA}" in pr_ci_router, "PR CI router checko
 require("fetch-depth: 0" in pr_ci_router, "PR CI router must fetch comparison history")
 require("github.event.before" in pr_ci_router and "github.event.after" in pr_ci_router, "PR CI router must use synchronize before/after SHAs")
 require("github.event.pull_request.base.sha" in pr_ci_router and "github.event.pull_request.head.sha" in pr_ci_router, "PR CI router must support opened/reopened base/head comparison")
-require("scripts/pr-ci-router-needed.sh" in pr_ci_router, "PR CI router must delegate semantic evidence/build classification to the tested scope helper")
-require("cancel-in-progress: true" in pr_ci_router, "PR CI router must cancel superseded runs")
-require("pr-ci-router-${{ github.event.pull_request.number }}" in pr_ci_router, "PR CI router concurrency must be scoped to the PR number")
-require("run_diag_preflight" in pr_ci_router and "diagnostic-infrastructure-preflight.yml" in pr_ci_router, "PR router must expose diagnostic infrastructure preflight")
-require('p.get("status")=="PASS"' in pr_ci_router, "Round23 admission must require diagnostic preflight PASS")
-require("run_round24" in pr_ci_router and "kde-tier3-kio-round24-diagnostic.yml" in pr_ci_router, "PR router must expose Round24 diagnostic")
-require('r23.get("status")=="diagnostic-PASS"' in pr_ci_router, "Round24 admission must require closed Round23 PASS")
-require('r24.get("package_execution_authorized") is False' in pr_ci_router, "Round24 admission must remain diagnostic-only")
-require("run_round25" in pr_ci_router and "kde-tier3-kio-round25-remediation.yml" in pr_ci_router, "PR router must expose Round25 remediation proof")
-require('r24.get("status")=="diagnostic-PASS"' in pr_ci_router, "Round25 admission must require closed Round24 PASS")
-require('r25.get("package_execution_authorized") is False' in pr_ci_router, "Round25 admission must remain non-promoting")
-require("run_round26" in pr_ci_router and "kde-tier3-kio-round26-remediation.yml" in pr_ci_router, "PR router must expose Round26 combined remediation proof")
-require('r25.get("status")=="remediation-FAIL-contract"' in pr_ci_router, "Round26 admission must retain Round25 historical contract result")
-require('r25.get("interpretation",{}).get("target_krecent_remediation")=="PASS"' in pr_ci_router, "Round26 admission must require KRecent target PASS")
-require('r26.get("package_execution_authorized") is False' in pr_ci_router, "Round26 admission must remain non-promoting")
+require("scripts/plan-pr-ci.py" in pr_ci_router, "PR router must use the current-work planner")
+require("cancel-in-progress: false" in pr_ci_router, "PR router must preserve valid running evidence")
+require("pr-ci-router-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}" in pr_ci_router, "PR router must isolate distinct heads")
+require("uses: ./.github/workflows/kde-plasma-lane.yml" in pr_ci_router, "PR router must expose the current Plasma lane")
+require("kde-tier3-kio-round" not in pr_ci_router, "closed KIO diagnostics must remain outside live PR routing")
 
 for filename in routed_pr_workflows:
     text = workflow_texts.get(filename, "")
@@ -184,10 +175,8 @@ for filename in routed_pr_workflows:
     require("workflow_call:" in text, f"{filename} must expose workflow_call for PR router reuse")
     require("workflow_dispatch:" in text, f"{filename} must remain manually dispatchable")
     require("\n  pull_request:\n" not in text, f"{filename} must not independently subscribe to ordinary pull_request lifecycle events")
-    require(
-        f"uses: ./.github/workflows/{filename}" in pr_ci_router,
-        f"PR CI router must invoke {filename}",
-    )
+    # Closed build/reference/diagnostic evidence remains manually reproducible.
+    # Its validity does not require a live PR-router registration.
 
 for filename, text, gate_label in (
     ("runner-contract.yml", runner_contract, "ci:runner-contract"),

@@ -1,23 +1,11 @@
-# CI PR routing architecture
+# Current CI PR routing
 
-Normal pull-request events have exactly one entrypoint: `.github/workflows/pr-ci-router.yml`.
+Normal PR opened/synchronize/reopened events enter `pr-ci-router.yml` only. Repository Policy always runs and performs source syntax checks before validators.
 
-The router is responsible for:
+`plan-pr-ci.py` selects current authorized Plasma work from relevant source/manifest changes. Qt provider preflight runs when its implementation or selected platform/desktop/Qt profile changes. Documentation and historical ledger edits do not reopen closed package campaigns.
 
-- running Repository Policy on every normal PR through `workflow_call`;
-- deciding whether a semantic delta needs reusable build/reference/provider lanes;
-- activating only the lifecycle-specific diagnostic or remediation lane that is currently authorized;
-- skipping expensive historical lanes when their evidence is already closed.
+Closed Frameworks and KIO workflows remain reusable/manual. Their validators preserve historical evidence without requiring a live PR registration. The existing semantic scope fixtures remain as historical regression coverage.
 
-Repository Policy keeps direct `push` validation on `main`, remains manually runnable with `workflow_dispatch`, and is reusable through `workflow_call`. It does not listen to normal PR events directly.
+Concurrency is scoped to PR and head SHA, with cancellation disabled. Distinct heads can validate independently; valid in-flight evidence is retained. Authoritative KVM host execution keeps its separate serialized orchestration and exact run binding.
 
-Closed Tier 2/Tier 3 workflows are retained as reusable/manual workflows. Historical KIO diagnostic/remediation workflows are `workflow_call` + `workflow_dispatch` only; changing an unrelated manifest must not recapture them.
-
-Two exceptional workflows may still use `pull_request`, but only with `types: [labeled]`:
-
-- `authoritative-package-proof.yml`;
-- `runner-contract.yml`.
-
-Those label-gated actions are explicit operator requests, not normal PR CI.
-
-The invariant is enforced by `scripts/validate_pr_workflow_entrypoints.py` from Repository Policy. Adding a new direct normal-PR listener outside the router is a Policy failure.
+The three authoritative certification workflows retain controlled labeled-only PR entrypoints. They are deliberate operator requests, not ordinary PR fan-out. `validate_pr_workflow_entrypoints.py` enforces the entrypoint boundary.

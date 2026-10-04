@@ -150,6 +150,11 @@ while IFS=$'\t' read -r node artifact_id digest; do
     fi
 done < <(jq -r '.items[] | [.node, (.artifact_id|tostring), .artifact_sha256] | @tsv' "${PLAN}")
 
+python3 "${ROOT}/scripts/retain-package-artifacts.py" \
+    --plan "${PLAN}" --cache "${DOWNLOAD_DIR}" \
+    --archive "${SUPRALINUX_ARTIFACT_ARCHIVE:-${STATE_ROOT}/retained-artifacts}" \
+    --allow-legacy-source-gaps
+
 (
     cd "${REPO_DIR}"
     dpkg-scanpackages -m pool /dev/null > Packages

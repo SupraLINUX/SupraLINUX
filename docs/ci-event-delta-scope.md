@@ -1,6 +1,8 @@
 # CI event-delta scope
 
-Status: **implemented and verified repository-wide for ordinary pull-request routing**  
+Status: **historical 2026-09-18 routing evidence**
+
+Current routing is documented in `docs/ci-pr-routing.md`. The former per-PR cancellation policy below was superseded on 2026-10-04 by head-scoped routing without cancellation. Historical run IDs/results remain unchanged.  
 Last reviewed: **2026-09-18**
 
 ## Purpose
