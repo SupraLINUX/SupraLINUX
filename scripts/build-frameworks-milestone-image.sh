@@ -10,15 +10,12 @@ fi
 GOLDEN_IMAGE="${SUPRALINUX_GOLDEN_IMAGE:-/var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2}"
 TARGET_IMAGE="${SUPRALINUX_FRAMEWORKS_MILESTONE_IMAGE:-/var/lib/supralinux/images/milestones/frameworks-6.30-pass.qcow2}"
 STATE_ROOT="${SUPRALINUX_MILESTONE_STATE_DIR:-/var/lib/supralinux/milestone-cache/frameworks-6.30}"
+ARTIFACT_ARCHIVE="${SUPRALINUX_ARTIFACT_ARCHIVE:-${STATE_ROOT}/retained-artifacts}"
 EVIDENCE_ROOT="${SUPRALINUX_HOST_EVIDENCE_ROOT:-/var/lib/supralinux/evidence}"
 REPLACE="${SUPRALINUX_REPLACE_MILESTONE_IMAGE:-0}"
 MIRROR="${SBUILD_MIRROR:-http://archive.ubuntu.com/ubuntu}"
 API_VERSION="2026-03-10"
 
-if [[ -z "${TOKEN}" ]]; then
-    printf 'GitHub token unavailable. Authenticate with gh auth login or export SUPRALINUX_GITHUB_TOKEN.\n' >&2
-    exit 1
-fi
 if [[ "${REPLACE}" != "0" && "${REPLACE}" != "1" ]]; then
     printf 'SUPRALINUX_REPLACE_MILESTONE_IMAGE must be 0 or 1.\n' >&2
     exit 1
@@ -102,11 +99,28 @@ download_artifact() {
     if [[ -s "${zip}" ]]; then
         actual="$(sha256sum "${zip}" | awk '{print $1}')"
         if [[ "${actual}" == "${expected}" ]]; then
-            printf 'Reusing verified artifact %s for %s\n' "${artifact_id}" "${node}"
+            printf 'Reusing verified artifact %s for %s\n' "${artifact_id}" "${node}" >&2
             printf '%s\n' "${zip}"
             return 0
         fi
         rm -f "${zip}"
+    fi
+    local retained="${ARTIFACT_ARCHIVE}/sha256/${expected}.zip"
+    if [[ -s "${retained}" ]]; then
+        actual="$(sha256sum "${retained}" | awk '{print $1}')"
+        if [[ "${actual}" != "${expected}" ]]; then
+            printf 'Retained artifact digest mismatch for %s\n' "${node}" >&2
+            return 1
+        fi
+        cp "${retained}" "${zip}.tmp"
+        mv "${zip}.tmp" "${zip}"
+        printf 'Restored retained artifact %s for %s\n' "${artifact_id}" "${node}" >&2
+        printf '%s\n' "${zip}"
+        return 0
+    fi
+    if [[ -z "${TOKEN}" ]]; then
+        printf 'Artifact %s is not retained; authenticate with gh to download it.\n' "${artifact_id}" >&2
+        return 1
     fi
     local tmp="${zip}.tmp"
     rm -f "${tmp}"
@@ -152,7 +166,7 @@ done < <(jq -r '.items[] | [.node, (.artifact_id|tostring), .artifact_sha256] | 
 
 python3 "${ROOT}/scripts/retain-package-artifacts.py" \
     --plan "${PLAN}" --cache "${DOWNLOAD_DIR}" \
-    --archive "${SUPRALINUX_ARTIFACT_ARCHIVE:-${STATE_ROOT}/retained-artifacts}" \
+    --archive "${ARTIFACT_ARCHIVE}" \
     --allow-legacy-source-gaps
 
 (

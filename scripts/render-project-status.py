@@ -14,6 +14,7 @@ def render():
     desktop = load("desktop-stack.json")
     plasma = load("kde-plasma.json")
     level0 = load("kde-plasma-level0.json")
+    materialization = load("kde-plasma-level0-materialization.json")
     dag = load("kde-dag.json")
     certification = load("authoritative-kvm-certification.json")
     checkpoints = load("execution-checkpoints.json")
@@ -30,11 +31,13 @@ def render():
              f"| Plasma phase | {planning['phase']} / {planning['status']} |",
              f"| Next gate | {planning['next_gate']} |",
              f"| Level 0 | {level0['selected_node_count']} nodes; {level0['state']} |",
+             f"| Level 0 source materialization | {materialization['state']}; {materialization.get('evidence', {}).get('counts', {}).get('PASS', 0)} verified sources |",
              f"| Plasma package execution | authorized={str(planning['package_execution_authorized']).lower()} |",
              f"| Frameworks milestone | {checkpoints['checkpoints']['frameworks-6.30-pass']['state']}; execution cache |",
              "", "Sources: `manifests/desktop-stack.json`, `manifests/kde-dag.json`,",
              "`manifests/authoritative-kvm-certification.json`, `manifests/kde-plasma.json`,",
-             "`manifests/kde-plasma-level0.json`, `manifests/execution-checkpoints.json`.", "",
+             "`manifests/kde-plasma-level0.json`, `manifests/kde-plasma-level0-materialization.json`,",
+             "`manifests/execution-checkpoints.json`.", "",
              "A cache PASS does not upgrade the scope of the builds it contains.",
              "Historical evidence remains valid for its original inputs and environment.", ""]
     return "\n".join(lines)

@@ -2,6 +2,7 @@
 import json
 import sys
 from pathlib import Path
+from plasma_lifecycle import validate as validate_lifecycle
 
 ROOT = Path(__file__).resolve().parents[1]
 errors = []
@@ -22,9 +23,7 @@ req(preflight.get("evidence", {}).get("artifact_id") == 11286979140, "preflight 
 req(preflight.get("evidence", {}).get("files", {}).get("result.json") == "cb8e6471aa1149e8335cde8d4d43c1d84916151187ecb11fda3b3d7f2cf9ed4f", "preflight result hash")
 req(preflight.get("evidence", {}).get("package_execution_started") is False, "preflight package execution boundary")
 
-req(materialization.get("state") == "execution-authorized", "materialization execution state")
-req(materialization.get("execution_authorized") is True, "materialization authorization")
-req(materialization.get("materialization_authorized") is True, "materialization gate authorization")
+errors.extend(validate_lifecycle(ROOT, plasma, level0, materialization))
 req(materialization.get("package_execution_authorized") is False, "materialization package lock")
 req(materialization.get("consumes_package_attempt") is False, "materialization Attempt boundary")
 req(materialization.get("canonical_package_state_effect") == "none", "materialization package state effect")
@@ -35,20 +34,11 @@ req(materialization.get("ubuntu_packaging_reference", {}).get("explicit_source_a
 req(materialization.get("execution", {}).get("max_parallel_nodes") == 6, "materialization parallelism")
 req(materialization.get("next_gate_on_pass") == "plasma-level0-candidate-version-assignment", "materialization PASS next gate")
 
-req(level0.get("state") == "materialization-pending", "Level 0 live materialization state")
-req(level0.get("materialization_authorized") is True, "Level 0 materialization authorization")
 req(level0.get("package_execution_authorized") is False, "Level 0 package lock")
 req(level0.get("materialization_manifest") == "manifests/kde-plasma-level0-materialization.json", "Level 0 materialization manifest")
-req(level0.get("next_gate") == "plasma-level0-materialization-evidence", "Level 0 materialization evidence gate")
-req(all(node.get("state") == "materialization-pending" for node in level0.get("nodes", {}).values()), "all Level 0 nodes materialization pending")
-req(all(node.get("candidate_package_version") is None for node in level0.get("nodes", {}).values()), "candidate versions remain deferred")
 
 planning = plasma.get("planning", {})
-req(planning.get("phase") == "level0-materialization", "Plasma live phase")
-req(planning.get("status") == "level0-materialization-pending", "Plasma live status")
-req(planning.get("materialization_authorized") is True, "Plasma live materialization authorization")
 req(planning.get("package_execution_authorized") is False, "Plasma live package lock")
-req(planning.get("next_gate") == "plasma-level0-materialization-evidence", "Plasma live next gate")
 
 for token in (
     "level0-materialization-pending",
@@ -68,6 +58,6 @@ if errors:
         print(f"ERROR: {error}", file=sys.stderr)
     raise SystemExit(1)
 
-print("KDE Plasma Level 0 materialization definition: PASS")
+print(f"KDE Plasma Level 0 materialization validation: PASS; state={materialization['state']}")
 print("nodes=34 max_parallel=6 package_execution_authorized=false")
-print("next_gate=plasma-level0-materialization-evidence")
+print(f"next_gate={planning['next_gate']}")

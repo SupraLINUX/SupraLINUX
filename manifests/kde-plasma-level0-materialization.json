@@ -1,13 +1,13 @@
 {
   "schema": 1,
-  "as_of": "2026-10-03",
+  "as_of": "2026-10-04",
   "authority": "kde-upstream-source-plus-ubuntu-reference-packaging",
   "provider_platform": "ubuntu-resolute",
   "plasma_version": "6.7.5",
   "role": "plasma-level0-materialization",
-  "state": "execution-authorized",
-  "execution_authorized": true,
-  "materialization_authorized": true,
+  "state": "PASS",
+  "execution_authorized": false,
+  "materialization_authorized": false,
   "package_execution_authorized": false,
   "consumes_package_attempt": false,
   "canonical_package_state_effect": "none",
@@ -105,5 +105,36 @@
     "package_execution_started": false,
     "consumes_package_attempt": false,
     "canonical_package_state_effect": "none"
+  },
+  "evidence": {
+    "result": "PASS",
+    "workflow_run_id": 37226892171,
+    "workflow_job_id": 111508551648,
+    "workflow_head_sha": "3177bcda58c7c426507abe3d100b51025403c480",
+    "artifact_id": 11312113744,
+    "artifact_name": "kde-plasma-level0-materialization-3177bcda58c7c426507abe3d100b51025403c480",
+    "artifact_digest": "sha256:85e5d78bd4f6bba9de810a01894669dee9efde9341b685c8a32f42794e09c3c8",
+    "result_path": "manifests/evidence/kde-plasma-level0-materialization-result.json",
+    "result_json_sha256": "bf58313053bfa90f33d13b4b66872abea56b2bc6ef9f8f266cde7dde296bc8de",
+    "inputs_sha256": {
+      "level0_manifest": "4d4f28ddc04d92962619ef06dbc6f0f3f74d1e996efe012e5bedb596995c3e3e",
+      "materialization_script": "ed2dea5127e266e21c72b036366f53a2cdff08d9790948788775d1fb42023766",
+      "release_signing_key": "b4007ced96841a5553d670dd63130df97e6faa9b47d151b842a810ebe5ea9917"
+    },
+    "counts": {
+      "INFRA_INVALID": 0,
+      "PASS": 34,
+      "REVIEW_REQUIRED": 0
+    },
+    "package_execution_started": false,
+    "consumes_package_attempt": false,
+    "canonical_package_state_effect": "none",
+    "local_retention": {
+      "path": ".artifacts/plasma-level0-3177bcda/artifact.zip",
+      "artifact_zip_sha256_verified": true,
+      "all_source_reference_hashes_verified": true,
+      "all_detached_signatures_reverified": true,
+      "off_host_backup_verified": false
+    }
   }
 }

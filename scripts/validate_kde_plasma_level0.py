@@ -3,6 +3,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from plasma_lifecycle import validate as validate_lifecycle
 
 ROOT = Path(__file__).resolve().parents[1]
 errors = []
@@ -26,9 +27,7 @@ nodes = level0.get("nodes", {})
 sources = {x.get("id"): x for x in plasma.get("sources", [])}
 
 req(level0.get("role") == "plasma-level0-definition", "Level 0 role")
-req(level0.get("state") == "materialization-pending", "Level 0 state")
-req(level0.get("execution_authorized") is True, "Level 0 materialization authorization")
-req(level0.get("materialization_authorized") is True, "Level 0 materialization authorization after preflight PASS")
+errors.extend(validate_lifecycle(ROOT, plasma, level0, materialization))
 req(level0.get("package_execution_authorized") is False, "Level 0 package execution lock")
 req(level0.get("consumes_package_attempt") is False, "Level 0 definition Attempt boundary")
 req(level0.get("canonical_package_state_effect") == "none", "Level 0 definition package-state effect")
@@ -36,7 +35,6 @@ req(level0.get("selected_level") == 0, "Level 0 selected level")
 req(level0.get("selected_node_count") == 34, "Level 0 node count")
 req(selected == dag_level0, "Level 0 selection must exactly follow canonical DAG order")
 req(set(nodes) == set(selected), "Level 0 node map coverage")
-req(level0.get("next_gate") == "plasma-level0-materialization-evidence", "Level 0 next gate")
 checkpoint = level0.get("execution_checkpoint", {})
 req(checkpoint.get("checkpoint_id") == "frameworks-6.30-pass", "Level 0 Frameworks checkpoint binding")
 req(checkpoint.get("state") == "PASS", "Level 0 Frameworks checkpoint state")
@@ -44,7 +42,6 @@ req(checkpoint.get("required_before_package_execution") is True, "Level 0 Framew
 req(checkpoint.get("cache_only") is True, "Level 0 Frameworks checkpoint cache-only role")
 req(checkpoint.get("image_sha256") == "ec38f99e306d5a13333d6b247a9433b3526ec4a6d1a272631242c68df56c3e97", "Level 0 Frameworks checkpoint admitted image hash")
 req(checkpoint.get("consumes_package_attempt") is False, "Level 0 Frameworks checkpoint Attempt boundary")
-req(level0.get("version_policy", {}).get("candidate_version_assignment") == "deferred-until-reference-materialization", "Level 0 version assignment boundary")
 req(level0.get("version_policy", {}).get("preserve_epoch") is True, "Level 0 epoch preservation policy")
 
 for node_id in selected:
@@ -54,12 +51,10 @@ for node_id in selected:
     req(dag_node.get("level") == 0, f"{node_id}: DAG level")
     req(dag_node.get("depends_on") == [], f"{node_id}: internal predecessor set")
     req(node.get("internal_predecessors") == [], f"{node_id}: Level 0 predecessor set")
-    req(node.get("state") == "materialization-pending", f"{node_id}: materialization state")
     req(node.get("upstream_version") == "6.7.5", f"{node_id}: upstream version")
     req(node.get("upstream_source_url") == upstream.get("source_url"), f"{node_id}: upstream source URL")
     req(node.get("upstream_source_sha256") == upstream.get("source_sha256"), f"{node_id}: upstream source SHA")
     req(bool(re.fullmatch(r"[0-9a-f]{64}", node.get("upstream_source_sha256", ""))), f"{node_id}: source SHA format")
-    req(node.get("candidate_package_version") is None, f"{node_id}: candidate package version must remain unassigned")
     req(node.get("package_execution_authorized") is False, f"{node_id}: package execution lock")
     ref = node.get("packaging_reference", {})
     req(ref.get("provider_platform") == "ubuntu-resolute", f"{node_id}: reference provider platform")
@@ -97,20 +92,14 @@ req(preflight.get("failure_classification") == "INFRA_INVALID", "Preflight failu
 req(preflight.get("next_gate_on_pass") == "plasma-level0-materialization", "Preflight PASS next gate")
 req(preflight.get("evidence", {}).get("artifact_id") == 11286979140, "Preflight PASS artifact")
 req(preflight.get("evidence", {}).get("files", {}).get("result.json") == "cb8e6471aa1149e8335cde8d4d43c1d84916151187ecb11fda3b3d7f2cf9ed4f", "Preflight PASS result hash")
-req(materialization.get("state") == "execution-authorized", "Level 0 materialization definition")
 req(materialization.get("input", {}).get("selected_node_count") == 34, "Level 0 materialization scope")
 req(materialization.get("package_execution_authorized") is False, "Materialization package execution lock")
 
 planning = plasma.get("planning", {})
-req(planning.get("phase") == "level0-materialization", "Plasma live Level 0 phase")
-req(planning.get("status") == "level0-materialization-pending", "Plasma live Level 0 status")
-req(planning.get("execution_authorized") is True, "Plasma live materialization authorization")
-req(planning.get("materialization_authorized") is True, "Plasma live materialization gate")
 req(planning.get("package_execution_authorized") is False, "Plasma live package execution lock")
 req(planning.get("level0_manifest") == "manifests/kde-plasma-level0.json", "Plasma live Level 0 manifest")
 req(planning.get("level0_materialization_preflight_manifest") == "manifests/kde-plasma-level0-materialization-preflight.json", "Plasma live preflight manifest")
 req(planning.get("level0_materialization_manifest") == "manifests/kde-plasma-level0-materialization.json", "Plasma live materialization manifest")
-req(planning.get("next_gate") == "plasma-level0-materialization-evidence", "Plasma live Level 0 next gate")
 
 for token in (
     "level0-materialization-pending",
@@ -126,5 +115,5 @@ if errors:
 
 print("KDE Plasma Level 0 definition validation: PASS")
 print("nodes=34; package_execution_authorized=false")
-print("materialization infrastructure: preflight PASS; Level 0 materialization pending")
+print(f"Level 0: {level0['state']}; next_gate={planning['next_gate']}")
 print("discover packaging reference: plasma-discover")

@@ -76,4 +76,6 @@ python3 scripts/plan-frameworks-milestone.py > /tmp/frameworks-plan.json
 python3 scripts/retain-package-artifacts.py --plan /tmp/frameworks-plan.json --archive .artifacts/frameworks-6.30 --verify-only --allow-legacy-source-gaps
 ```
 
-To restore the transport cache, add `--cache <destination> --restore-cache` and omit `--verify-only`. The archive should be backed up separately; an off-host backup has not been verified. Rootfs/milestone applicability still depends on the recorded platform/toolchain/repository inputs. A platform or security baseline update must be evaluated before cache reuse; retaining the bytes alone does not certify freshness.
+To restore the transport cache, add `--cache <destination> --restore-cache` and omit `--verify-only`. The milestone builder also restores missing downloads directly from `SUPRALINUX_ARTIFACT_ARCHIVE`; a GitHub token is required only for artifacts absent from both local stores. Cache diagnostic messages go to stderr so command substitution receives only the ZIP pathname.
+
+The archive should be backed up separately; an off-host backup has not been verified. Rootfs/milestone applicability still depends on the recorded platform/toolchain/repository inputs. A platform or security baseline update must be evaluated before cache reuse; retaining the bytes alone does not certify freshness.

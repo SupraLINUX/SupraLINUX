@@ -7,6 +7,7 @@ import tempfile
 import unittest
 import zipfile
 import hashlib
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -89,6 +90,78 @@ class PreflightTests(unittest.TestCase):
         self.assertEqual(materializer.check_signing_key(), [expected])
         with self.assertRaisesRegex(ValueError, "expected primary fingerprint"):
             materializer.check_signing_key(ROOT / "packages/kde/karchive/debian/upstream/signing-key.asc")
+
+    def test_milestone_cache_returns_only_path_and_restores_without_token(self):
+        builder = (ROOT / "scripts/build-frameworks-milestone-image.sh").read_text()
+        function = builder.split("download_artifact() {", 1)[1].split("\n}\n", 1)[0]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            archive = root / "archive/sha256"
+            archive.mkdir(parents=True)
+            cache = root / "cache"
+            cache.mkdir()
+            payload = b"retained bytes"
+            digest = hashlib.sha256(payload).hexdigest()
+            retained = archive / f"{digest}.zip"
+            retained.write_bytes(payload)
+            wrapper = root / "reuse.sh"
+            wrapper.write_text("set -euo pipefail\n" + "download_artifact() {" + function +
+                               "\n}\n" + 'download_artifact sample 123 "$EXPECTED"\n')
+            environment = {**os.environ, "DOWNLOAD_DIR": str(cache),
+                           "ARTIFACT_ARCHIVE": str(archive.parent), "TOKEN": "", "EXPECTED": digest}
+            for _ in range(2):
+                result = subprocess.run(["bash", str(wrapper)], env=environment, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(result.stdout, str(cache / "123.zip") + "\n")
+            (cache / "123.zip").unlink()
+            retained.write_bytes(b"tampered")
+            result = subprocess.run(["bash", str(wrapper)], env=environment, capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+
+    def test_candidate_versions_preserve_epoch_and_supersede_ubuntu(self):
+        planner = module("assign-plasma-candidate-versions")
+        self.assertEqual(planner.candidate_version("6.7.5", "4:6.6.4-0ubuntu1", ["4:6.6.4-0ubuntu1"]), "4:6.7.5-0supralinux1")
+        candidate = planner.candidate_version("6.7.5", "6.7.5-0ubuntu1", ["6.7.5-0ubuntu1", "6.7.5-0ubuntu2"])
+        self.assertTrue(planner.compare(candidate, "gt", "6.7.5-0ubuntu2"))
+        with self.assertRaisesRegex(ValueError, "transition review"):
+            planner.candidate_version("6.7.5", "4:6.8.0-0ubuntu1", ["4:6.8.0-0ubuntu1"])
+
+    def test_lifecycle_rejects_evidence_tampering_and_lost_epoch(self):
+        lifecycle = module("plasma_lifecycle")
+        # Closed evidence is a fixture; future live phase changes must not break this test.
+        result_payload = (ROOT / "manifests/evidence/kde-plasma-level0-materialization-result.json").read_bytes()
+        version_payload = (ROOT / "manifests/evidence/kde-plasma-level0-candidate-versions.json").read_bytes()
+        result = json.loads(result_payload)
+        versions = {node["node"]: node for node in json.loads(version_payload)["nodes"]}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "result.json").write_bytes(result_payload)
+            (root / "versions.json").write_bytes(version_payload)
+            boundary = {"execution_authorized": False, "materialization_authorized": False,
+                        "package_execution_authorized": False, "consumes_package_attempt": False,
+                        "canonical_package_state_effect": "none", "next_gate": "plasma-level0-packaging-preparation"}
+            evidence = {"result_path": "result.json", "result_json_sha256": hashlib.sha256(result_payload).hexdigest(),
+                        "artifact_digest": "sha256:" + "a" * 64, "workflow_head_sha": result["github"]["source_commit"],
+                        "workflow_run_id": int(result["github"]["workflow_run_id"]), "inputs_sha256": result["inputs_sha256"]}
+            materialization = {**boundary, "state": "PASS", "evidence": evidence,
+                               "source_authority": {"required_primary_fingerprint": result["nodes"][0]["upstream"]["required_primary_fingerprint"]}}
+            plasma = {"planning": {**boundary, "status": "level0-packaging-preparation-pending",
+                                   "phase": "level0-packaging-preparation", "package_preparation_authorized": True}}
+            level = {**boundary, "state": "candidate-versions-assigned", "selected_nodes": list(versions),
+                     "version_policy": {"candidate_version_assignment": "PASS"},
+                     "candidate_versions_evidence": {"path": "versions.json", "sha256": hashlib.sha256(version_payload).hexdigest()},
+                     "nodes": {node["node"]: {"state": "packaging-preparation-pending", "package_execution_authorized": False,
+                               "upstream_source_sha256": node["upstream"]["sha256"], "upstream_version": node["upstream"]["version"],
+                               "packaging_reference": {"source_package": node["ubuntu_reference"]["source_package"]},
+                               "candidate_package_version": versions[node["node"]]["candidate_package_version"]} for node in result["nodes"]}}
+            self.assertEqual(lifecycle.validate(root, plasma, level, materialization), [])
+            node = next(node for node in level["nodes"].values() if ":" in node["candidate_package_version"])
+            version = node["candidate_package_version"]
+            node["candidate_package_version"] = version.split(":", 1)[1]
+            self.assertTrue(any("preserved Ubuntu epoch" in error for error in lifecycle.validate(root, plasma, level, materialization)))
+            node["candidate_package_version"] = version
+            evidence["result_json_sha256"] = "0" * 64
+            self.assertTrue(any("retained result digest" in error for error in lifecycle.validate(root, plasma, level, materialization)))
 
 
 if __name__ == "__main__":

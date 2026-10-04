@@ -80,13 +80,23 @@ It contains the retained Frameworks 6.30 PASS binary pool and a prewarmed Resolu
 
 The synthetic source-materialization infrastructure preflight is **PASS** from PR CI router run `37161541259`, job `111316001972`, artifact `11286979140`.
 
-The live gate is now `plasma-level0-materialization`. It materializes all 34 Level 0 nodes without running `sbuild`:
+The materialization gate, closed on 2026-10-04, processes all 34 Level 0 nodes without running `sbuild`:
 
 - KDE Plasma 6.7.5 tarballs are downloaded, SHA-256 checked and detached-signature verified against fingerprint `0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D`;
 - Ubuntu Resolute-family source references are downloaded and extracted;
 - only the Ubuntu `debian/` packaging trees and metadata are retained as technical references;
 - `discover` is explicitly mapped to Ubuntu source `plasma-discover`;
-- candidate SupraLINUX Debian versions remain unassigned until materialization evidence is closed;
+- candidate SupraLINUX Debian versions were deferred until materialization evidence was closed;
 - package execution remains locked and Plasma package Attempts remain zero.
 
 The materialization job processes independent Level 0 nodes concurrently (maximum six) and produces one retained artifact that can be cached for subsequent package preparation.
+
+## Materialization closure and candidate versions
+
+PR CI router run `37226892171`, job `111508551648`, is PASS for all 34 selected sources. Artifact `11312113744` has SHA-256 `85e5d78bd4f6bba9de810a01894669dee9efde9341b685c8a32f42794e09c3c8`; the retained `result.json` has SHA-256 `bf58313053bfa90f33d13b4b66872abea56b2bc6ef9f8f266cde7dde296bc8de`.
+
+The complete original ZIP is retained locally under `.artifacts/plasma-level0-3177bcda/`. Every source/reference hash and all detached signatures were reverified locally. Source metadata is retained in `manifests/evidence/kde-plasma-level0-materialization-result.json`.
+
+`scripts/assign-plasma-candidate-versions.py` assigned all 34 candidate versions and compared them with every captured Ubuntu source version using dpkg. The 16 non-zero Ubuntu epochs were preserved. If Ubuntu already carries the selected upstream version, the planner uses a revision that supersedes Ubuntu's revision; if Ubuntu carries a newer upstream version, it requires transition review. No pin priority substitutes for version ordering.
+
+The current gate is `plasma-level0-packaging-preparation`. The source-materialization gate is closed and no longer runs on ordinary PR updates. Next work is to adapt and validate the captured packaging against the selected upstream source, its dependency/features contract, source construction and package tests before an authoritative package build. Plasma package Attempts remain zero.

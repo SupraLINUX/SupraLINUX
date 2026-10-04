@@ -3,6 +3,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from plasma_lifecycle import validate as validate_lifecycle
 
 ROOT = Path(__file__).resolve().parents[1]
 errors = []
@@ -21,6 +22,7 @@ resolution_review = json.loads((ROOT / "manifests/kde-plasma-provider-resolution
 resolution_preflight = json.loads((ROOT / "manifests/kde-plasma-provider-resolution-preflight.json").read_text())
 level0_preflight = json.loads((ROOT / "manifests/kde-plasma-level0-materialization-preflight.json").read_text())
 level0_materialization = json.loads((ROOT / "manifests/kde-plasma-level0-materialization.json").read_text())
+level0 = json.loads((ROOT / "manifests/kde-plasma-level0.json").read_text())
 desktop = json.loads((ROOT / "manifests/desktop-stack.json").read_text())
 cert = json.loads((ROOT / "manifests/authoritative-kvm-certification.json").read_text())
 lane = (ROOT / ".github/workflows/kde-plasma-lane.yml").read_text()
@@ -50,22 +52,16 @@ for node in sources:
     req(node.get("source_url") == f"https://download.kde.org/stable/plasma/6.7.5/{node_id}-6.7.5.tar.xz", f"{node_id}: source URL")
 
 planning = plasma.get("planning", {})
-req(planning.get("phase") == "level0-materialization", "Plasma planning phase")
-req(planning.get("status") == "level0-materialization-pending", "Plasma Level 0 materialization live status")
-req(planning.get("execution_authorized") is True, "Level 0 materialization authorization")
-req(planning.get("materialization_authorized") is True, "Level 0 materialization gate")
+errors.extend(validate_lifecycle(ROOT, plasma, level0, level0_materialization))
 req(planning.get("package_execution_authorized") is False, "Level 0 materialization must not authorize package execution")
 req(planning.get("consumes_package_attempt") is False, "Level 0 materialization must not consume package Attempt")
 req(planning.get("canonical_package_state_effect") == "none", "Level 0 materialization canonical package state effect")
-req(planning.get("validation_run_kind") == "planning-materialization", "Level 0 materialization run kind")
-req(planning.get("runner_scope") == "github-hosted-ubuntu-26.04-non-authoritative-materialization", "Level 0 materialization runner scope")
 req(planning.get("lane_workflow") == ".github/workflows/kde-plasma-lane.yml", "Plasma lane workflow")
 req(planning.get("dag_manifest") == "manifests/kde-plasma-dag.json", "Executable DAG manifest binding")
 req(planning.get("level0_manifest") == "manifests/kde-plasma-level0.json", "Level 0 manifest binding")
 req(planning.get("level0_materialization_preflight_manifest") == "manifests/kde-plasma-level0-materialization-preflight.json", "Level 0 preflight manifest binding")
 req(planning.get("level0_materialization_manifest") == "manifests/kde-plasma-level0-materialization.json", "Level 0 materialization manifest binding")
 req(planning.get("level0_materialization_preflight_evidence", {}).get("artifact_id") == 11286979140, "Level 0 preflight evidence binding")
-req(planning.get("next_gate") == "plasma-level0-materialization-evidence", "Plasma Level 0 materialization next gate")
 
 disc = deps.get("discovery", {})
 req(deps.get("state") == "discovery-evidence-promoted", "Plasma dependency discovery evidence promotion")
@@ -165,7 +161,6 @@ req(level0_preflight.get("state") == "PASS", "Level 0 materialization preflight 
 req(level0_preflight.get("execution_authorized") is False, "Closed Level 0 preflight authorization")
 req(level0_preflight.get("evidence", {}).get("artifact_id") == 11286979140, "Level 0 preflight artifact")
 req(level0_preflight.get("evidence", {}).get("files", {}).get("result.json") == "cb8e6471aa1149e8335cde8d4d43c1d84916151187ecb11fda3b3d7f2cf9ed4f", "Level 0 preflight result hash")
-req(level0_materialization.get("state") == "execution-authorized", "Level 0 materialization definition state")
 req(level0_materialization.get("package_execution_authorized") is False, "Level 0 materialization package lock")
 
 stack = desktop.get("desktop", {})
@@ -190,5 +185,5 @@ if errors:
     raise SystemExit(1)
 
 print("KDE Plasma 6.7.5 planning validation: PASS")
-print("Lane phase: level0-materialization-pending")
-print("Materialization: authorized; package execution: locked")
+print(f"Lane phase: {planning['status']}")
+print(f"Next gate: {planning['next_gate']}; package execution: locked")

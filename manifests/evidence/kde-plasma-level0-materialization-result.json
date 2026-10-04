@@ -1,0 +1,1431 @@
+{
+  "authoritative_package_build": false,
+  "canonical_package_state_effect": "none",
+  "consumes_package_attempt": false,
+  "counts": {
+    "INFRA_INVALID": 0,
+    "PASS": 34,
+    "REVIEW_REQUIRED": 0
+  },
+  "github": {
+    "source_commit": "3177bcda58c7c426507abe3d100b51025403c480",
+    "workflow_run_id": "37226892171"
+  },
+  "inputs_sha256": {
+    "level0_manifest": "4d4f28ddc04d92962619ef06dbc6f0f3f74d1e996efe012e5bedb596995c3e3e",
+    "materialization_script": "ed2dea5127e266e21c72b036366f53a2cdff08d9790948788775d1fb42023766",
+    "release_signing_key": "b4007ced96841a5553d670dd63130df97e6faa9b47d151b842a810ebe5ea9917"
+  },
+  "next_gate": "plasma-level0-candidate-version-assignment",
+  "node": "plasma-level0-materialization",
+  "nodes": [
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "breeze-grub",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "ed779c7d96f18fe3b51b997a7494f41784e122ea14eecb15031d5cee0671d30d",
+        "downloaded_source_files": {
+          "breeze-grub_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "4bc5f728e70f7841f9086e4b96b573154d03d9bbcb9566a9c4efa27f00615a57",
+            "size": 14888
+          },
+          "breeze-grub_6.6.4-0ubuntu1.dsc": {
+            "sha256": "dbc933f00ccbbb6b453cfab82bb4c55127a32665a5bb151f5e7282878a27e8a1",
+            "size": 2232
+          },
+          "breeze-grub_6.6.4.orig.tar.xz": {
+            "sha256": "04a4c1d1679b3ba6f9ff09d2f28ffb22faef458f38904b9222ef252b7e151258",
+            "size": 1448832
+          }
+        },
+        "dsc_file": "breeze-grub_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "dbc933f00ccbbb6b453cfab82bb4c55127a32665a5bb151f5e7282878a27e8a1",
+        "source_package": "breeze-grub",
+        "source_version": "6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "bd14716ae52d946e37833b3a02d259f5268683af8382c21230c1ce7d767f032a",
+        "signature": "breeze-grub-6.7.5.tar.xz.sig",
+        "signature_sha256": "b5e5f90143e535a500353377fba4ada01ab9f361d789ccd639b20e2776281e11",
+        "signature_verification": "PASS",
+        "tarball": "breeze-grub-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/breeze-grub-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "breeze-plymouth",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "03544dddd9b3162e4eb928285954bb55ff8cb91ea50b807d303e6616e413bdac",
+        "downloaded_source_files": {
+          "breeze-plymouth_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "822f85bcbcab743dc765c041d8eccc4719b16fe98b31eb068371bafe67cd1bc6",
+            "size": 15808
+          },
+          "breeze-plymouth_6.6.4-0ubuntu1.dsc": {
+            "sha256": "a432f27edc0feb00f7ed268ccffe50cd885f131ea9c867e32c6e3f4ee38baae6",
+            "size": 2440
+          },
+          "breeze-plymouth_6.6.4.orig.tar.xz": {
+            "sha256": "52a4ccb2af5d63c6d046c6208485118f8db51eaf51c6b875f73f266d39302f1a",
+            "size": 111220
+          }
+        },
+        "dsc_file": "breeze-plymouth_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "a432f27edc0feb00f7ed268ccffe50cd885f131ea9c867e32c6e3f4ee38baae6",
+        "source_package": "breeze-plymouth",
+        "source_version": "6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "9cb05ef4fed5ac19bc35f5c4b18ec425e499fae47d52d344821fbf38474c44a0",
+        "signature": "breeze-plymouth-6.7.5.tar.xz.sig",
+        "signature_sha256": "d0c1476e5a08ff68d9731d17efb0b9067ef6a2a20145ff6be7e0c42efb5037ee",
+        "signature_verification": "PASS",
+        "tarball": "breeze-plymouth-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/breeze-plymouth-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "discover",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1",
+          "6.6.6-0ubuntu0.1"
+        ],
+        "debian_tree_tar_sha256": "18d995b3053c6a64081674eedd7a74a40918329cca01532c963ec6412dd64b41",
+        "downloaded_source_files": {
+          "plasma-discover_6.6.6-0ubuntu0.1.debian.tar.xz": {
+            "sha256": "4be6c8c11ee2a55a7631043981db4fdaca7b9d67cfc69765b3af0c9ef8f53e8e",
+            "size": 26812
+          },
+          "plasma-discover_6.6.6-0ubuntu0.1.dsc": {
+            "sha256": "79167c88c95c3f8e73e30e748b0238606011c36b5cd115290b16a413e3a0a416",
+            "size": 3942
+          },
+          "plasma-discover_6.6.6.orig.tar.xz": {
+            "sha256": "7c571dc9641696e9486c5e3aaada1d10d9db866da060e6d19314b4c6bc47c179",
+            "size": 1147420
+          }
+        },
+        "dsc_file": "plasma-discover_6.6.6-0ubuntu0.1.dsc",
+        "dsc_sha256": "79167c88c95c3f8e73e30e748b0238606011c36b5cd115290b16a413e3a0a416",
+        "source_package": "plasma-discover",
+        "source_version": "6.6.6-0ubuntu0.1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "e9830fffebc54c781dcb076db4ab9462ee27ddd7fd3769403a211743636e1f67",
+        "signature": "discover-6.7.5.tar.xz.sig",
+        "signature_sha256": "3c3b49ba122690b454e6ce16cc860e5738ac3f3af4065c5557c3821829501bc8",
+        "signature_verification": "PASS",
+        "tarball": "discover-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/discover-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "drkonqi",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1",
+          "6.6.6-0ubuntu0.1"
+        ],
+        "debian_tree_tar_sha256": "9f49ba7318769e837b78fe9002bb5174c29a355cefc24f5f89dcaa68ebe8de1b",
+        "downloaded_source_files": {
+          "drkonqi_6.6.6-0ubuntu0.1.debian.tar.xz": {
+            "sha256": "07340ca8750dc63eb030e1e8c3ef93e6e8a9acb277924fb11391b77076f5302f",
+            "size": 22448
+          },
+          "drkonqi_6.6.6-0ubuntu0.1.dsc": {
+            "sha256": "69ea1d4ef3402bf29f6ac3cd58f70253ed9792997f8022f07dad0aa70a8775f5",
+            "size": 2823
+          },
+          "drkonqi_6.6.6.orig.tar.xz": {
+            "sha256": "2809174310df3521b1632f8a34047144c68187357fb8be99fb611aa83425e9de",
+            "size": 906608
+          }
+        },
+        "dsc_file": "drkonqi_6.6.6-0ubuntu0.1.dsc",
+        "dsc_sha256": "69ea1d4ef3402bf29f6ac3cd58f70253ed9792997f8022f07dad0aa70a8775f5",
+        "source_package": "drkonqi",
+        "source_version": "6.6.6-0ubuntu0.1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "9d02b9bd8534ac98dbb77a73248112654e2dee3ab1cf3cc59e69ba78027ab423",
+        "signature": "drkonqi-6.7.5.tar.xz.sig",
+        "signature_sha256": "1132fbb41773c74a498e1df9c045cd9165f41bdc59299565f011672c0de088c4",
+        "signature_verification": "PASS",
+        "tarball": "drkonqi-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/drkonqi-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "flatpak-kcm",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1",
+          "6.6.6-0ubuntu0.1"
+        ],
+        "debian_tree_tar_sha256": "e8683e857d0f6217ec87ac8e21c17a22e907e8d0e9183996259c11d821cde631",
+        "downloaded_source_files": {
+          "flatpak-kcm_6.6.6-0ubuntu0.1.debian.tar.xz": {
+            "sha256": "c30a35c09bb99067704e1b7eba44e2b3521acd469da7eeba8cdb0d802f22ee54",
+            "size": 13804
+          },
+          "flatpak-kcm_6.6.6-0ubuntu0.1.dsc": {
+            "sha256": "e678f8e9a1f40427ff3a6598aeed3633040a08d49e05f3f693f3ab622a8cb33e",
+            "size": 2672
+          },
+          "flatpak-kcm_6.6.6.orig.tar.xz": {
+            "sha256": "8b256596a6d618e5776c146225703e37a7d0b1beadb42b1e38e56ff9b6d2668d",
+            "size": 285112
+          }
+        },
+        "dsc_file": "flatpak-kcm_6.6.6-0ubuntu0.1.dsc",
+        "dsc_sha256": "e678f8e9a1f40427ff3a6598aeed3633040a08d49e05f3f693f3ab622a8cb33e",
+        "source_package": "flatpak-kcm",
+        "source_version": "6.6.6-0ubuntu0.1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "acf25d4c7eed41e0d0ba9c897e6dae081b9021f9bcb75e3ca532ef5406ffa0ad",
+        "signature": "flatpak-kcm-6.7.5.tar.xz.sig",
+        "signature_sha256": "65922f74e92fd12a1c707e7117f82eb99b49176abe4de44b67e7367bebbb125a",
+        "signature_verification": "PASS",
+        "tarball": "flatpak-kcm-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/flatpak-kcm-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "kactivitymanagerd",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1",
+          "6.6.6-0ubuntu0.1"
+        ],
+        "debian_tree_tar_sha256": "96280be7044a68b7103a2b1ea22b3839cd419f68f1265dfd813c3c18b0b39d25",
+        "downloaded_source_files": {
+          "kactivitymanagerd_6.6.6-0ubuntu0.1.debian.tar.xz": {
+            "sha256": "a88c3d522441ddaa885443e7118b072e028b9513285ee048264508968b95bc9c",
+            "size": 16140
+          },
+          "kactivitymanagerd_6.6.6-0ubuntu0.1.dsc": {
+            "sha256": "79bbfb4e057ed86316b2c88f7c710dce8742c2f8c9f7d34bf0db688917dcb6cb",
+            "size": 2704
+          },
+          "kactivitymanagerd_6.6.6.orig.tar.xz": {
+            "sha256": "eab7d1743f8052f5a54b04e38e803732d5fbdc463bf0f28dda18820259fc609e",
+            "size": 98892
+          }
+        },
+        "dsc_file": "kactivitymanagerd_6.6.6-0ubuntu0.1.dsc",
+        "dsc_sha256": "79bbfb4e057ed86316b2c88f7c710dce8742c2f8c9f7d34bf0db688917dcb6cb",
+        "source_package": "kactivitymanagerd",
+        "source_version": "6.6.6-0ubuntu0.1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "6e549b0dacd28797153696e4ee27f8e19aee6f3711f94ee379b8fae8ecfd937a",
+        "signature": "kactivitymanagerd-6.7.5.tar.xz.sig",
+        "signature_sha256": "3f59c6aa20a06da4c1901d46c40ae0ac60601e3479b7f805749822e1b6d5463e",
+        "signature_verification": "PASS",
+        "tarball": "kactivitymanagerd-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/kactivitymanagerd-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "kde-cli-tools",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "4:6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "d0a63996ca853c5ce2dc6681322ddfbe655ddffda344b304626289d222fda85b",
+        "downloaded_source_files": {
+          "kde-cli-tools_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "65743f503608788f46f8dfbece063153551545ad992b3893bc3defb847d409f7",
+            "size": 23520
+          },
+          "kde-cli-tools_6.6.4-0ubuntu1.dsc": {
+            "sha256": "007f968493771a10d543316861a94fd3a609021bc24e8f8b73bbfe9444d8b374",
+            "size": 2867
+          },
+          "kde-cli-tools_6.6.4.orig.tar.xz": {
+            "sha256": "0d7cdd7875a970768f0a173748d6e301157adcac2ec7b6b6233f792277497704",
+            "size": 639664
+          }
+        },
+        "dsc_file": "kde-cli-tools_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "007f968493771a10d543316861a94fd3a609021bc24e8f8b73bbfe9444d8b374",
+        "source_package": "kde-cli-tools",
+        "source_version": "4:6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "18f3c421b305003caf73f9e9fbec09fbf30f472dbe81fec328046cca7883a31d",
+        "signature": "kde-cli-tools-6.7.5.tar.xz.sig",
+        "signature_sha256": "94c6118e6edec4aa2e6f095022490735ae7611847b73cef775dfea43c097541a",
+        "signature_verification": "PASS",
+        "tarball": "kde-cli-tools-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/kde-cli-tools-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "kdecoration",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "4:6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "f9e595e0f53f84f75ebc465fdbce0c4409d359c42ba3f0d47b0cb25781ca662e",
+        "downloaded_source_files": {
+          "kdecoration_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "a8bbea666ec8bb540c66f099c29abf512e1e1f9d41f8ed96c753943db808da44",
+            "size": 21304
+          },
+          "kdecoration_6.6.4-0ubuntu1.dsc": {
+            "sha256": "71e502a1b0f200855477d9699b8301b12e36fe0e168e28640df9503be5a48149",
+            "size": 2559
+          },
+          "kdecoration_6.6.4.orig.tar.xz": {
+            "sha256": "20d9424a018fabbf62987bc138741068ae2384f3128a61f23d906ff4f42a5505",
+            "size": 61512
+          }
+        },
+        "dsc_file": "kdecoration_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "71e502a1b0f200855477d9699b8301b12e36fe0e168e28640df9503be5a48149",
+        "source_package": "kdecoration",
+        "source_version": "4:6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "7ff1fe2854ca08a21a1ba47f1b0c97d12ea24f1db618631319cba4023ca53d86",
+        "signature": "kdecoration-6.7.5.tar.xz.sig",
+        "signature_sha256": "c9b1094ab02591ab2bc1ed1f4ac58094822df909799489456a8ca30c6be9f277",
+        "signature_verification": "PASS",
+        "tarball": "kdecoration-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/kdecoration-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "kgamma",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "c85e0436298a7c1cb996789395a6eeee2531255273a3b50417092111c02fcd3c",
+        "downloaded_source_files": {
+          "kgamma_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "3606a9897aaf9d26cd4b50ae48051959eb4801872f89c65e016cb9d5c664e489",
+            "size": 18724
+          },
+          "kgamma_6.6.4-0ubuntu1.dsc": {
+            "sha256": "38e47137ed1353428c04da47fcf4c8ba5d06cf0e2020f7e08ff0f7e4cd35d79a",
+            "size": 2537
+          },
+          "kgamma_6.6.4.orig.tar.xz": {
+            "sha256": "a7d3df14e5e016399e30e06923c0478a2c40a3a915e06abf070bd97e9381f1a3",
+            "size": 87352
+          }
+        },
+        "dsc_file": "kgamma_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "38e47137ed1353428c04da47fcf4c8ba5d06cf0e2020f7e08ff0f7e4cd35d79a",
+        "source_package": "kgamma",
+        "source_version": "6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "b45ad6608693034046b65bf68a3843f394f78def02c6f059bc69c5de07cace57",
+        "signature": "kgamma-6.7.5.tar.xz.sig",
+        "signature_sha256": "57cc3fd1b80462da34d935808919867f7dc33663ff7da1b33c3347a81c0e746d",
+        "signature_verification": "PASS",
+        "tarball": "kgamma-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/kgamma-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "kglobalacceld",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1",
+          "6.6.5-0ubuntu0.1"
+        ],
+        "debian_tree_tar_sha256": "1b236589031d809d5a771b81f1a966318a0c0772831ecb97e01b56792c6ba325",
+        "downloaded_source_files": {
+          "kglobalacceld_6.6.5-0ubuntu0.1.debian.tar.xz": {
+            "sha256": "d62eeccf619e4752295be99ca7ed5ffef8f58186a8d3bdb119b85567cd10c44a",
+            "size": 13932
+          },
+          "kglobalacceld_6.6.5-0ubuntu0.1.dsc": {
+            "sha256": "c25acb6af720f6f6c443e1a22e44b6eb858a58cc78a23e1d341756e463155c01",
+            "size": 2914
+          },
+          "kglobalacceld_6.6.5.orig.tar.xz": {
+            "sha256": "33c95fb7b3cddab5766e0cb063a721af5f796b2841114183a6246e0ef557edc3",
+            "size": 57780
+          }
+        },
+        "dsc_file": "kglobalacceld_6.6.5-0ubuntu0.1.dsc",
+        "dsc_sha256": "c25acb6af720f6f6c443e1a22e44b6eb858a58cc78a23e1d341756e463155c01",
+        "source_package": "kglobalacceld",
+        "source_version": "6.6.5-0ubuntu0.1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "83e9a4e226e695fe1544cfa19a9659c5f1000be46c669fe3a9e299029c6c2abf",
+        "signature": "kglobalacceld-6.7.5.tar.xz.sig",
+        "signature_sha256": "fa9d58f8c91445a7a8762da14c4f2faaf78c7869720b1c28974754ca31de60bf",
+        "signature_verification": "PASS",
+        "tarball": "kglobalacceld-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/kglobalacceld-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "kmenuedit",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "4:6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "3f22f39af8e7c03642ab9c545fcc6e2a0d93932f4ea471c9599a439c265cfd21",
+        "downloaded_source_files": {
+          "kmenuedit_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "a17ca8fd1382ca49eb09e95088c5e153bf51b38639970105670063736ea47a1b",
+            "size": 16060
+          },
+          "kmenuedit_6.6.4-0ubuntu1.dsc": {
+            "sha256": "d86b0b9c46ff9b36fe2239b16a1b68c823be66e5dddb0025989e4fdac32c89cc",
+            "size": 2681
+          },
+          "kmenuedit_6.6.4.orig.tar.xz": {
+            "sha256": "b098c176623e9d848e80c769c1857ba7309187e2704e53e56c5eff84dc89760f",
+            "size": 887020
+          }
+        },
+        "dsc_file": "kmenuedit_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "d86b0b9c46ff9b36fe2239b16a1b68c823be66e5dddb0025989e4fdac32c89cc",
+        "source_package": "kmenuedit",
+        "source_version": "4:6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "2d9801b7f89988046472c2b32385d848a0a98095fb178d58d6e3b5090ced9b8b",
+        "signature": "kmenuedit-6.7.5.tar.xz.sig",
+        "signature_sha256": "fddb8a522dbd5debc87866843c8a4377fc0f03df4c960291f9791eab9634e02a",
+        "signature_verification": "PASS",
+        "tarball": "kmenuedit-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/kmenuedit-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "knighttime",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1",
+          "6.6.5-0ubuntu0.1"
+        ],
+        "debian_tree_tar_sha256": "9ac90418837f977258997313c4e21e17337ba27675868b87874bc1aea2849d8a",
+        "downloaded_source_files": {
+          "knighttime_6.6.5-0ubuntu0.1.debian.tar.xz": {
+            "sha256": "51f98bbc54842805b3b476a55e58b8dac24cb3f92875cb710b05914fddf9b2f0",
+            "size": 8564
+          },
+          "knighttime_6.6.5-0ubuntu0.1.dsc": {
+            "sha256": "70ada1afcde11c9176de504197b9d31f620a86c6290f26902ac68ef0305db20e",
+            "size": 2604
+          },
+          "knighttime_6.6.5.orig.tar.xz": {
+            "sha256": "5f26692a864540b993351106f5469fd17939bd55e79f931c8f97395d9c5a809d",
+            "size": 40284
+          }
+        },
+        "dsc_file": "knighttime_6.6.5-0ubuntu0.1.dsc",
+        "dsc_sha256": "70ada1afcde11c9176de504197b9d31f620a86c6290f26902ac68ef0305db20e",
+        "source_package": "knighttime",
+        "source_version": "6.6.5-0ubuntu0.1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "5cb23e736e4be4952e63c855cfb45850e1085d650e67b7cae3cbf9721921cb9f",
+        "signature": "knighttime-6.7.5.tar.xz.sig",
+        "signature_sha256": "712206eeb3688a5b71ffc037aa8865cadb8dbc1cca241b60d9f38586eb046c6e",
+        "signature_verification": "PASS",
+        "tarball": "knighttime-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/knighttime-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "kpipewire",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "fe65b50f4819c300162ae19a957ab8b3e9254418304d17d7ea324b44e75a2d82",
+        "downloaded_source_files": {
+          "kpipewire_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "af791b7c372b7e0c72830a7e398b376a5d11f74221c35dea64c46e44c5f0df4a",
+            "size": 19048
+          },
+          "kpipewire_6.6.4-0ubuntu1.dsc": {
+            "sha256": "53db4e381689657685bea48af532e9150ffa8ee7958af150d8c86d4e3269dfd1",
+            "size": 3207
+          },
+          "kpipewire_6.6.4.orig.tar.xz": {
+            "sha256": "1b9ef2890be00ee96ca439770a3f7842f54ac901c6a47edd3d68aff85c1a3a8f",
+            "size": 154564
+          }
+        },
+        "dsc_file": "kpipewire_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "53db4e381689657685bea48af532e9150ffa8ee7958af150d8c86d4e3269dfd1",
+        "source_package": "kpipewire",
+        "source_version": "6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "20af39d9450d495468c56a50930810d82137f7ccd3a710592e02b6f620758f55",
+        "signature": "kpipewire-6.7.5.tar.xz.sig",
+        "signature_sha256": "c13f165204651375c4d91fc1905234119e46686d4ac166b63e2a1ca6e4bfad19",
+        "signature_verification": "PASS",
+        "tarball": "kpipewire-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/kpipewire-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "ksshaskpass",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "4:6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "5d47e4c9924f0461657202d15c7d40efb038a0dc66cd02dac7d0e25dc64e64d8",
+        "downloaded_source_files": {
+          "ksshaskpass_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "3decd13838ea31538ab3f74d4700c14cac88e59fc2d4c5607986b7535ca1c600",
+            "size": 16304
+          },
+          "ksshaskpass_6.6.4-0ubuntu1.dsc": {
+            "sha256": "ed33d302f1d998eec847b5ef3d71bfde711769b154686376f964c355383db345",
+            "size": 2524
+          },
+          "ksshaskpass_6.6.4.orig.tar.xz": {
+            "sha256": "46f3606c1591986091d9b289c491512e8c058216a71f20ccdcad32d5b02a4393",
+            "size": 32580
+          }
+        },
+        "dsc_file": "ksshaskpass_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "ed33d302f1d998eec847b5ef3d71bfde711769b154686376f964c355383db345",
+        "source_package": "ksshaskpass",
+        "source_version": "4:6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "deb5698b5682bc15d22446db9cf8641857d0bd7785e145b7b6e9247a68d35fd2",
+        "signature": "ksshaskpass-6.7.5.tar.xz.sig",
+        "signature_sha256": "92a094a93ab25dd9fa76d7ad47a7948747885e486fe261506bbc3e8c51c3a985",
+        "signature_verification": "PASS",
+        "tarball": "ksshaskpass-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/ksshaskpass-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "kwallet-pam",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "4:6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "f588dc32e7c3b1a263a13e9732e66555926fa622d9014e962ee6ad83ac0522a3",
+        "downloaded_source_files": {
+          "kwallet-pam_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "fb0cbeddbe3fdb3e1a6f8105bf4c75de09407ccda23b4686a77d1883f496ee30",
+            "size": 16984
+          },
+          "kwallet-pam_6.6.4-0ubuntu1.dsc": {
+            "sha256": "1a3725436048b3f6dbe3f0ebb72bad116ac59d5b9481f21c89748a8deec94e4c",
+            "size": 2462
+          },
+          "kwallet-pam_6.6.4.orig.tar.xz": {
+            "sha256": "731def95656f55114e6a5084e4ca722e2e9499d43fb613f4ca401904a47573e7",
+            "size": 22520
+          }
+        },
+        "dsc_file": "kwallet-pam_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "1a3725436048b3f6dbe3f0ebb72bad116ac59d5b9481f21c89748a8deec94e4c",
+        "source_package": "kwallet-pam",
+        "source_version": "4:6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "d71f5945ef3086f56f52f531508c2ab363078fbbd5ae4084bd3647049e6ee94f",
+        "signature": "kwallet-pam-6.7.5.tar.xz.sig",
+        "signature_sha256": "6b561820cfebeb11586a42de2f6d515b8c9bf5db5d064789aceeabb041356ffb",
+        "signature_verification": "PASS",
+        "tarball": "kwallet-pam-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/kwallet-pam-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "kwayland",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "4:6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "f49d59926e807327cc8ed1ba653ab927834ec01699cdfea6bbca09e0c1709965",
+        "downloaded_source_files": {
+          "kwayland_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "9980483971340e70f4d012a9cee617b8e7cdfce8ca4c32454c794d9fb86d6f1c",
+            "size": 27504
+          },
+          "kwayland_6.6.4-0ubuntu1.dsc": {
+            "sha256": "9222caa3a15bb728e77233d58ee52a20319a6e16369ded8ea4bf2b8d44550c37",
+            "size": 2738
+          },
+          "kwayland_6.6.4.orig.tar.xz": {
+            "sha256": "75c4ad6743647b4a9737fddae2eddb7b0857afbef362e6b96465ccfb17c85f87",
+            "size": 134048
+          }
+        },
+        "dsc_file": "kwayland_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "9222caa3a15bb728e77233d58ee52a20319a6e16369ded8ea4bf2b8d44550c37",
+        "source_package": "kwayland",
+        "source_version": "4:6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "8d4c83524919dc87b5dec546d0fb14c591c03957888cb7b240a4a9d1bbdc8269",
+        "signature": "kwayland-6.7.5.tar.xz.sig",
+        "signature_sha256": "61731f9defe7abcf5e55a70361cfe6449696d3467f47a53af653711cd39fb180",
+        "signature_verification": "PASS",
+        "tarball": "kwayland-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/kwayland-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "kwayland-integration",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "4:6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "b818e99c913c2d53ce3d2d53f45e9be96d2c2009bee121b640c43bda0bf3db9a",
+        "downloaded_source_files": {
+          "kwayland-integration_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "e7b172e0bcd15f7a76954cad2efa7251a56fbcdfe9cfd06c12a21db455b43715",
+            "size": 15264
+          },
+          "kwayland-integration_6.6.4-0ubuntu1.dsc": {
+            "sha256": "9cf425635987b11d80e19161b4c4a7264ca021472613f9c0b8b83bcf16f6c658",
+            "size": 2746
+          },
+          "kwayland-integration_6.6.4.orig.tar.xz": {
+            "sha256": "632f5a76645bb4f1cdaa40ef5077a23bcf03cc8e74f07a4b54dd35c60e661a65",
+            "size": 26572
+          }
+        },
+        "dsc_file": "kwayland-integration_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "9cf425635987b11d80e19161b4c4a7264ca021472613f9c0b8b83bcf16f6c658",
+        "source_package": "kwayland-integration",
+        "source_version": "4:6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "33b4862d9828e6928ef19e0615eae62954ec6f9a7c482cae8ed4fa84cb9cbe00",
+        "signature": "kwayland-integration-6.7.5.tar.xz.sig",
+        "signature_sha256": "7d0c7851116283cd1b031897751513880fc7b22885b1163bcd4c99da8ea8d607",
+        "signature_verification": "PASS",
+        "tarball": "kwayland-integration-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/kwayland-integration-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "kwrited",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "4:6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "055321f9cddb266eefb8031d7de59716aadf5320c4f304d05436d88336aa8c00",
+        "downloaded_source_files": {
+          "kwrited_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "c1e3bb3aaab2483d3148a6f54fffeb697ca8666dc5c3dc9649eda10dad3e8e79",
+            "size": 15252
+          },
+          "kwrited_6.6.4-0ubuntu1.dsc": {
+            "sha256": "9686aacfb50dc15bdc0366ede3232970959d32dc42de2e01c3a1749b7f6618e6",
+            "size": 2487
+          },
+          "kwrited_6.6.4.orig.tar.xz": {
+            "sha256": "22543f56e124e76c96666e162b70d88d9dfdaf4000e732fca3ffc34a2ed36196",
+            "size": 23608
+          }
+        },
+        "dsc_file": "kwrited_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "9686aacfb50dc15bdc0366ede3232970959d32dc42de2e01c3a1749b7f6618e6",
+        "source_package": "kwrited",
+        "source_version": "4:6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "f8aa905734d0ccde796884cfcb06b36084e441fb199ea5aab2bc92cfa4c0506d",
+        "signature": "kwrited-6.7.5.tar.xz.sig",
+        "signature_sha256": "6ca4b37a264d615d727bbab45a76a5a5a03e59de34b96d5bf6487a951c8c6d70",
+        "signature_verification": "PASS",
+        "tarball": "kwrited-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/kwrited-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "layer-shell-qt",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "f5aff8b1a265a00aa94ce47130b9e8e86949ca2b64e412125025276eb8b54f4e",
+        "downloaded_source_files": {
+          "layer-shell-qt_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "2aed22a7db77ae4d2fe320a7c3c329fedf2cb5008afdbe615c8ee7ff81f56895",
+            "size": 13820
+          },
+          "layer-shell-qt_6.6.4-0ubuntu1.dsc": {
+            "sha256": "f04beab18b8caf89d7f3bcbeefdc0f7d0d90a3af7b3aa0f789a2b3e826843976",
+            "size": 2827
+          },
+          "layer-shell-qt_6.6.4.orig.tar.xz": {
+            "sha256": "731af7a222bc1a1e87fd993060ed8fa515b4b38cbc294063b700ec87451e013f",
+            "size": 36804
+          }
+        },
+        "dsc_file": "layer-shell-qt_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "f04beab18b8caf89d7f3bcbeefdc0f7d0d90a3af7b3aa0f789a2b3e826843976",
+        "source_package": "layer-shell-qt",
+        "source_version": "6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "ccdcfec7081ca956f7a52c9113a4df3a226575bfbe98b56a2a9a4d7d7e19e8f0",
+        "signature": "layer-shell-qt-6.7.5.tar.xz.sig",
+        "signature_sha256": "9db8e06f0be50d1281aa60e824041e6e1d08866c7e4b86e9a11dc0caa200f16b",
+        "signature_verification": "PASS",
+        "tarball": "layer-shell-qt-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/layer-shell-qt-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "libkscreen",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "4:6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "c7fa56d0251b9c0997bcd924d3fa581cd23b067c19b526b7c7f9e776e49de6c2",
+        "downloaded_source_files": {
+          "libkscreen_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "d1110fe681da430ba023ee2d71bb960b4f75025a1c02da1c62f3233118207894",
+            "size": 23472
+          },
+          "libkscreen_6.6.4-0ubuntu1.dsc": {
+            "sha256": "5a3267c4f43183947fd30d738306fe6d11025a7c57efd829bfb234b9ff938185",
+            "size": 2886
+          },
+          "libkscreen_6.6.4.orig.tar.xz": {
+            "sha256": "18f8cf65fcc788a7188d72a17d6e0f107e044e07623d5c012d063d901d67b59d",
+            "size": 120844
+          }
+        },
+        "dsc_file": "libkscreen_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "5a3267c4f43183947fd30d738306fe6d11025a7c57efd829bfb234b9ff938185",
+        "source_package": "libkscreen",
+        "source_version": "4:6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "df317e03acfadfcbc68981b78131750103fadf4d5c5df6368c9e91e698677219",
+        "signature": "libkscreen-6.7.5.tar.xz.sig",
+        "signature_sha256": "e0a5bc61be757de528bacd2d5841bf90e76c6b16a57497cd231d16e68c68f419",
+        "signature_verification": "PASS",
+        "tarball": "libkscreen-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/libkscreen-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "libksysguard",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "4:6.6.4-0ubuntu1",
+          "4:6.6.5-0ubuntu0.1"
+        ],
+        "debian_tree_tar_sha256": "a27d3293e340be28cd8e927c1cac0eb3676cc6c5b7ece710d643d147d07f5614",
+        "downloaded_source_files": {
+          "libksysguard_6.6.5-0ubuntu0.1.debian.tar.xz": {
+            "sha256": "a8f727bc14dd9f6570101174f36f2a2ff12284027f3973769d6a6b91fa2fbea8",
+            "size": 29708
+          },
+          "libksysguard_6.6.5-0ubuntu0.1.dsc": {
+            "sha256": "3513429bae6dad0387dd8d7a38f4e0efebf9b74aca3815611c5af57eee7dbdb3",
+            "size": 4446
+          },
+          "libksysguard_6.6.5.orig.tar.xz": {
+            "sha256": "f088854a021028b7b0f6a735c89e9aa53bd13e903af11ed16a49c944e33b00df",
+            "size": 337696
+          }
+        },
+        "dsc_file": "libksysguard_6.6.5-0ubuntu0.1.dsc",
+        "dsc_sha256": "3513429bae6dad0387dd8d7a38f4e0efebf9b74aca3815611c5af57eee7dbdb3",
+        "source_package": "libksysguard",
+        "source_version": "4:6.6.5-0ubuntu0.1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "9069bcf3fe4e491ea774d0d70eb17f99b567299871045a38543fcabcdb56dfc4",
+        "signature": "libksysguard-6.7.5.tar.xz.sig",
+        "signature_sha256": "4cedcb90248fd7359f2eb61aab41b5b4537aa77fcf66524ce410cc541629e110",
+        "signature_verification": "PASS",
+        "tarball": "libksysguard-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/libksysguard-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "ocean-sound-theme",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "bbeb64b22118f07e24c5b32d38a64467b3a4333c6beda0221c83c8ee0f56b1e6",
+        "downloaded_source_files": {
+          "ocean-sound-theme_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "85caaf805ed2d3fd315c0066a98295cf01b3fafe957d437fd3ef68ed04f235e2",
+            "size": 18196
+          },
+          "ocean-sound-theme_6.6.4-0ubuntu1.dsc": {
+            "sha256": "3419738602b261bdc869c64e691d0b172b52ac81cad564f10d15507113d13c11",
+            "size": 2342
+          },
+          "ocean-sound-theme_6.6.4.orig.tar.xz": {
+            "sha256": "3f6d02604eabf8ce084fa47dffa1ed1dc86728e970fd941ba058aa505348b541",
+            "size": 2124560
+          }
+        },
+        "dsc_file": "ocean-sound-theme_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "3419738602b261bdc869c64e691d0b172b52ac81cad564f10d15507113d13c11",
+        "source_package": "ocean-sound-theme",
+        "source_version": "6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "452e5ab04f5e2d7cbf9357e4e12badf8493aefda437ba130eb38c9e511313b72",
+        "signature": "ocean-sound-theme-6.7.5.tar.xz.sig",
+        "signature_sha256": "d0a03cc099de813d2092aacf3fc144be33dfa1e3d972cd03a5987890db96fe25",
+        "signature_verification": "PASS",
+        "tarball": "ocean-sound-theme-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/ocean-sound-theme-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "oxygen-sounds",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "4:6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "22980872c8123c3166ee823c4e32691de5b30f1c4a9a88b0fa56a7f94923c4d2",
+        "downloaded_source_files": {
+          "oxygen-sounds_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "51b9cb4057afe9dfebc72dba26efcfd356b4674f7eb2cb3db08a60d9cc58c317",
+            "size": 12888
+          },
+          "oxygen-sounds_6.6.4-0ubuntu1.dsc": {
+            "sha256": "c157791d928e09795763922a2f3957febb2048250cbba275b1305f584b1504af",
+            "size": 2296
+          },
+          "oxygen-sounds_6.6.4.orig.tar.xz": {
+            "sha256": "ffd36dfe7c3d1627933678d45b626c4d15a1194096bf66b5145dfbe873ee1051",
+            "size": 1936432
+          }
+        },
+        "dsc_file": "oxygen-sounds_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "c157791d928e09795763922a2f3957febb2048250cbba275b1305f584b1504af",
+        "source_package": "oxygen-sounds",
+        "source_version": "4:6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "0cc5b60004d8feb8b1de032cb5d3c056c98f62a8713589b90b471e5943e31ad9",
+        "signature": "oxygen-sounds-6.7.5.tar.xz.sig",
+        "signature_sha256": "e58b3c0fb5684e79d2029403fcce3b94cdc6f0a6d77d6c22b814b3a1bcbf8a9b",
+        "signature_verification": "PASS",
+        "tarball": "oxygen-sounds-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/oxygen-sounds-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "plasma-activities",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "eef94af89e08f9de43be389d2aa54d37c86446385d3afb5346d4eb38fc08f5db",
+        "downloaded_source_files": {
+          "plasma-activities_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "8839538aa11bb341c5e4582e0da36f18903a2c127842993d6183e9c4c097e136",
+            "size": 19464
+          },
+          "plasma-activities_6.6.4-0ubuntu1.dsc": {
+            "sha256": "0403f070610484a4930148e9f757a22bd3df84a154736859c5b5042f7738fb29",
+            "size": 3004
+          },
+          "plasma-activities_6.6.4.orig.tar.xz": {
+            "sha256": "a1973821797c703177d51e698f8abfd8294796a9396316440b14dca958bb57e5",
+            "size": 63288
+          }
+        },
+        "dsc_file": "plasma-activities_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "0403f070610484a4930148e9f757a22bd3df84a154736859c5b5042f7738fb29",
+        "source_package": "plasma-activities",
+        "source_version": "6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "d93f31b6f33733ad3803098f4f622e55e3ef52cb5cd97e621a7b803e6f0e3f7c",
+        "signature": "plasma-activities-6.7.5.tar.xz.sig",
+        "signature_sha256": "1016892827c3680be3ad7a41cfe254c952127462f3e322e818837691c8a07212",
+        "signature_verification": "PASS",
+        "tarball": "plasma-activities-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/plasma-activities-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "plasma-dialer",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "1:6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "375cec11532a4e995881f12eb90c49515361b088869f50224fa0418eda36b94c",
+        "downloaded_source_files": {
+          "plasma-dialer_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "2951783f3b0bd316f10a6318df10b62fcd5b753b4207de83074ab0772a711e74",
+            "size": 19644
+          },
+          "plasma-dialer_6.6.4-0ubuntu1.dsc": {
+            "sha256": "eb31c1cf6e87903600bea0cf53f4e91d8616da69c476f802a886939bef0703d5",
+            "size": 2971
+          },
+          "plasma-dialer_6.6.4.orig.tar.xz": {
+            "sha256": "ba119824a38f9a5e4dd152d27983c7f0befb1f62379bbce24431605d6ae270f3",
+            "size": 144244
+          }
+        },
+        "dsc_file": "plasma-dialer_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "eb31c1cf6e87903600bea0cf53f4e91d8616da69c476f802a886939bef0703d5",
+        "source_package": "plasma-dialer",
+        "source_version": "1:6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "5504ea54524ea232aaca5e36ce542e376740c18d029fe451d58f21b5063c01cb",
+        "signature": "plasma-dialer-6.7.5.tar.xz.sig",
+        "signature_sha256": "48b3457370f22a9dd6cef8934c85cb30aa457d23e12b14ab7912ae469cff13e5",
+        "signature_verification": "PASS",
+        "tarball": "plasma-dialer-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/plasma-dialer-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "plasma-disks",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "8bc7d4f030e33e0340f8d32293f43df3c864749e1e8a60be7d82ad0d58a2a4fd",
+        "downloaded_source_files": {
+          "plasma-disks_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "2d4a2a881b563f9744f7f7a9e02ae044cc5b29a4830191832e28e748ee147daf",
+            "size": 15912
+          },
+          "plasma-disks_6.6.4-0ubuntu1.dsc": {
+            "sha256": "95cd0485f651b28bdcef81c8a1c841aba84eb1d90750bf882f9a8e3fdd849d2e",
+            "size": 2667
+          },
+          "plasma-disks_6.6.4.orig.tar.xz": {
+            "sha256": "e881ce0ca77c33296b4018780bd60451a677f6a1b485a5bb4184913e04d3cd76",
+            "size": 107796
+          }
+        },
+        "dsc_file": "plasma-disks_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "95cd0485f651b28bdcef81c8a1c841aba84eb1d90750bf882f9a8e3fdd849d2e",
+        "source_package": "plasma-disks",
+        "source_version": "6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "34125cd31e559d4d0fef49bb33a6ffc1803112a17495ae1bfbcf5e8beda464c4",
+        "signature": "plasma-disks-6.7.5.tar.xz.sig",
+        "signature_sha256": "4fc8d88b3f12d6a170e04406888c8e53e56e6ab62353cea7c4710bef7898967d",
+        "signature_verification": "PASS",
+        "tarball": "plasma-disks-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/plasma-disks-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "plasma-firewall",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "68982daba88dc7f61f0b81fec7e9ab817ac6ac980d627bf089a2d8abb4c1af2a",
+        "downloaded_source_files": {
+          "plasma-firewall_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "299e85abe48e4515af6c59e5b6177ee5b5dc546d1ed12fef4b72175db1a235cc",
+            "size": 16360
+          },
+          "plasma-firewall_6.6.4-0ubuntu1.dsc": {
+            "sha256": "0fef2ed752d82272630cf837aa788f7bdfe6e6960d6c7655a5cad0830d1afc0f",
+            "size": 2668
+          },
+          "plasma-firewall_6.6.4.orig.tar.xz": {
+            "sha256": "5d9968be018af11da32a068bbe478a6f428e9bea16daee648044de11d9addeac",
+            "size": 384880
+          }
+        },
+        "dsc_file": "plasma-firewall_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "0fef2ed752d82272630cf837aa788f7bdfe6e6960d6c7655a5cad0830d1afc0f",
+        "source_package": "plasma-firewall",
+        "source_version": "6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "adbc6a62d272a3866461274bb78de49e0f83c9971225f619adb3042399be6997",
+        "signature": "plasma-firewall-6.7.5.tar.xz.sig",
+        "signature_sha256": "a582f01fa4db00dbbeb6217d304c8a7ab6f4e92dd1ea6b7034feb973bf9eb142",
+        "signature_verification": "PASS",
+        "tarball": "plasma-firewall-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/plasma-firewall-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "plasma-thunderbolt",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "75b861902102d3fdf40d950b82dc5a85abbb4136e4e92fe9968ad1143b68e41c",
+        "downloaded_source_files": {
+          "plasma-thunderbolt_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "86cabf4056bd5a4519bf43fc3f3fa2d03d024d671350939cd69d93ffa6044633",
+            "size": 14880
+          },
+          "plasma-thunderbolt_6.6.4-0ubuntu1.dsc": {
+            "sha256": "6270fa184807e449dd4346545693ede566a3781399f5e360674776b1fe932c68",
+            "size": 2705
+          },
+          "plasma-thunderbolt_6.6.4.orig.tar.xz": {
+            "sha256": "0d0495820d5dc97f9ca622fb44b7a1c1ab555edd37cd5e6e8aaf44a59fe8c8f5",
+            "size": 84568
+          }
+        },
+        "dsc_file": "plasma-thunderbolt_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "6270fa184807e449dd4346545693ede566a3781399f5e360674776b1fe932c68",
+        "source_package": "plasma-thunderbolt",
+        "source_version": "6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "d8179c353f89de0eee69619e300b9df9b7788fce4864cfb2ce1255f0bc691664",
+        "signature": "plasma-thunderbolt-6.7.5.tar.xz.sig",
+        "signature_sha256": "19d33ec132a5ee930b01023f2d362ceb8f8ecfb591c651cc2e8be6a7b2b42b08",
+        "signature_verification": "PASS",
+        "tarball": "plasma-thunderbolt-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/plasma-thunderbolt-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "plasma-workspace-wallpapers",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "4:6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "c18fbfaa4f9b1575e4053ecb98906bedcf45f13e62510ccbbd3e5fef53b6d324",
+        "downloaded_source_files": {
+          "plasma-workspace-wallpapers_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "0fc473b45662c7bd0acc3793f69fd0782f9df55a26feba1baa7c4f9766144234",
+            "size": 14612
+          },
+          "plasma-workspace-wallpapers_6.6.4-0ubuntu1.dsc": {
+            "sha256": "5e300d05977657e9da1327f1dffa2b3a1e409629ac73dbb438a0ea629c6fa349",
+            "size": 2460
+          },
+          "plasma-workspace-wallpapers_6.6.4.orig.tar.xz": {
+            "sha256": "512cf1c9a9440da5f9b4915e515a7d4eb530bb39da1b321848d8d5cfb344d1ad",
+            "size": 226397956
+          }
+        },
+        "dsc_file": "plasma-workspace-wallpapers_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "5e300d05977657e9da1327f1dffa2b3a1e409629ac73dbb438a0ea629c6fa349",
+        "source_package": "plasma-workspace-wallpapers",
+        "source_version": "4:6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "c481ac4b937a2b1b080c3273e0557cd0c9d57b644156b941902483fd8e1646b5",
+        "signature": "plasma-workspace-wallpapers-6.7.5.tar.xz.sig",
+        "signature_sha256": "ac9c0a591fe0335c6641dc70ffbd4e85e69d97ff0ba24abc076859130819cd35",
+        "signature_verification": "PASS",
+        "tarball": "plasma-workspace-wallpapers-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/plasma-workspace-wallpapers-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "plymouth-kcm",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "5eefac021e21e7d2e4ee45a08dbe3a7cb4b9a8169e3cc73e0dbcb089d38ceb37",
+        "downloaded_source_files": {
+          "plymouth-kcm_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "f58aaf62fef7173a354f2af7f58254212da11a5cc271ea0803c46025651aeaff",
+            "size": 15868
+          },
+          "plymouth-kcm_6.6.4-0ubuntu1.dsc": {
+            "sha256": "eb0924a9d357c110e4ba33230c3449ce42d0a9957354a8e8c1ae1aad79642f05",
+            "size": 2608
+          },
+          "plymouth-kcm_6.6.4.orig.tar.xz": {
+            "sha256": "e9fce911e96eac14d379b336e89c3e1853a6b350dade865d14c14b769704ffbd",
+            "size": 50084
+          }
+        },
+        "dsc_file": "plymouth-kcm_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "eb0924a9d357c110e4ba33230c3449ce42d0a9957354a8e8c1ae1aad79642f05",
+        "source_package": "plymouth-kcm",
+        "source_version": "6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "ce723d67e6b8cd71b6eb353e87c10f698a095ea7d455bee703d8ba59e793e57e",
+        "signature": "plymouth-kcm-6.7.5.tar.xz.sig",
+        "signature_sha256": "60ef1e6ebd75b3d156b2e3687a1e15d05b427085ba24ee3f327960739a2a507d",
+        "signature_verification": "PASS",
+        "tarball": "plymouth-kcm-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/plymouth-kcm-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "polkit-kde-agent-1",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "4:6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "7963905ba80b8c79d03cbc7b6eba7633bed7a1f2db7527a01fc6c1d3fcb30c5a",
+        "downloaded_source_files": {
+          "polkit-kde-agent-1_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "a9345f175556a81e899ff27ad20d54539112c8f6e93cd4b169775f81a0edd2d7",
+            "size": 16240
+          },
+          "polkit-kde-agent-1_6.6.4-0ubuntu1.dsc": {
+            "sha256": "0839c6e573e989a73747f393aaca46e6e8e6bc1f5126d26ee2baa4af9c362ccd",
+            "size": 2684
+          },
+          "polkit-kde-agent-1_6.6.4.orig.tar.xz": {
+            "sha256": "5a3944e19658cbff9d8fc4b15252ca1947c6acad9c41722d4bc05f9ce8d6f226",
+            "size": 57672
+          }
+        },
+        "dsc_file": "polkit-kde-agent-1_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "0839c6e573e989a73747f393aaca46e6e8e6bc1f5126d26ee2baa4af9c362ccd",
+        "source_package": "polkit-kde-agent-1",
+        "source_version": "4:6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "fb731dd979c0296994b5efe37b0a9cdeec5e704f91565540930effdbd7efee58",
+        "signature": "polkit-kde-agent-1-6.7.5.tar.xz.sig",
+        "signature_sha256": "78a86c171a5671339f3b5b06004b46ae7795a25de2b488612b83fa411924bdaf",
+        "signature_verification": "PASS",
+        "tarball": "polkit-kde-agent-1-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/polkit-kde-agent-1-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "qqc2-breeze-style",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "6.6.4-0ubuntu1",
+          "6.6.5-0ubuntu0.1"
+        ],
+        "debian_tree_tar_sha256": "a176b1fa6e896727bf098ab5105218acb06b351d5f7c50cedafc7d54300f0ad2",
+        "downloaded_source_files": {
+          "qqc2-breeze-style_6.6.5-0ubuntu0.1.debian.tar.xz": {
+            "sha256": "2c5f2fc6fe1d310d9de9c31ef46a2ad6db6975283e0a52ff99ccd2d0ffc8d695",
+            "size": 14836
+          },
+          "qqc2-breeze-style_6.6.5-0ubuntu0.1.dsc": {
+            "sha256": "5477305c6f00b78fe31ff33e4085388eaa1259847f78e7e8ed2685bc7c15cbfa",
+            "size": 2927
+          },
+          "qqc2-breeze-style_6.6.5.orig.tar.xz": {
+            "sha256": "8d279f966903219721941ea9f41681630dc14fa45769d9c672c57493f6c99603",
+            "size": 66192
+          }
+        },
+        "dsc_file": "qqc2-breeze-style_6.6.5-0ubuntu0.1.dsc",
+        "dsc_sha256": "5477305c6f00b78fe31ff33e4085388eaa1259847f78e7e8ed2685bc7c15cbfa",
+        "source_package": "qqc2-breeze-style",
+        "source_version": "6.6.5-0ubuntu0.1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "788f0698c904112cc33bf6f8fb446b2e4fd7231d38c0955cbc3baa50d375d1ee",
+        "signature": "qqc2-breeze-style-6.7.5.tar.xz.sig",
+        "signature_sha256": "3b24cf37b20fde815684fe78a713c289b07cf6503f246c92c19f704d9598b18f",
+        "signature_verification": "PASS",
+        "tarball": "qqc2-breeze-style-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/qqc2-breeze-style-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "sddm-kcm",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "4:6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "3b4bbf25c02add7cbfd8b0b13e8f6f34198248a0444c5ab3d7b243b8412e883f",
+        "downloaded_source_files": {
+          "sddm-kcm_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "72945c145c6b7b7a251b32cfaa3dc20542cb6671698f41f23e0aafcfba399325",
+            "size": 15932
+          },
+          "sddm-kcm_6.6.4-0ubuntu1.dsc": {
+            "sha256": "580c551b1c44d951d200fccc89dfd5442af89d3f82ca6ab46ac8c9f143ee628e",
+            "size": 2618
+          },
+          "sddm-kcm_6.6.4.orig.tar.xz": {
+            "sha256": "b38c60186c4a810893df554e94acbb5a1cbc6c4f8ba57aacd42190dc77b577c9",
+            "size": 104980
+          }
+        },
+        "dsc_file": "sddm-kcm_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "580c551b1c44d951d200fccc89dfd5442af89d3f82ca6ab46ac8c9f143ee628e",
+        "source_package": "sddm-kcm",
+        "source_version": "4:6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "b7641d15996f590df27d8f820dffc79d83ce9e4e19a88f03bb1d8651faa25887",
+        "signature": "sddm-kcm-6.7.5.tar.xz.sig",
+        "signature_sha256": "65a15a70f8b993d1e915b189ac7733cea4b9ca5e02bc50d4e11aeb90c2ca8b53",
+        "signature_verification": "PASS",
+        "tarball": "sddm-kcm-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/sddm-kcm-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    },
+    {
+      "canonical_package_state_effect": "none",
+      "consumes_package_attempt": false,
+      "node": "spacebar",
+      "package_execution_started": false,
+      "state": "PASS",
+      "ubuntu_reference": {
+        "apt_source_versions": [
+          "1:6.6.4-0ubuntu1"
+        ],
+        "debian_tree_tar_sha256": "3fec91914868bf4a0e808a447162934734f10629442dc237e86b5862e2897ef9",
+        "downloaded_source_files": {
+          "spacebar_6.6.4-0ubuntu1.debian.tar.xz": {
+            "sha256": "3afcdeaf4eea508faf201860aa7d00c7ff557b52a5348701b9086132d21b73a4",
+            "size": 17524
+          },
+          "spacebar_6.6.4-0ubuntu1.dsc": {
+            "sha256": "f0b6081a07ac35904450f84d9ddecdaa6441f7ec53d4540e71016bb0ef7fa201",
+            "size": 2985
+          },
+          "spacebar_6.6.4.orig.tar.xz": {
+            "sha256": "68943681dbd0da69a1f8b7fcdc84a75f6475406aea94c41ed1aa09238c4c110a",
+            "size": 147488
+          }
+        },
+        "dsc_file": "spacebar_6.6.4-0ubuntu1.dsc",
+        "dsc_sha256": "f0b6081a07ac35904450f84d9ddecdaa6441f7ec53d4540e71016bb0ef7fa201",
+        "source_package": "spacebar",
+        "source_version": "1:6.6.4-0ubuntu1"
+      },
+      "upstream": {
+        "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "sha256": "6a072e3ecd849a512148241f24492d0d810331deabe0afe00a7b526efaa64a31",
+        "signature": "spacebar-6.7.5.tar.xz.sig",
+        "signature_sha256": "3898efefe670af7009a4ef0281aafb61a6ef53482ab17f171c2f78539e4d2501",
+        "signature_verification": "PASS",
+        "tarball": "spacebar-6.7.5.tar.xz",
+        "url": "https://download.kde.org/stable/plasma/6.7.5/spacebar-6.7.5.tar.xz",
+        "version": "6.7.5"
+      }
+    }
+  ],
+  "package_attempted": false,
+  "package_execution_started": false,
+  "run_kind": "planning-materialization",
+  "schema": 1,
+  "selected_node_count": 34,
+  "state": "PASS"
+}

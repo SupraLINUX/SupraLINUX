@@ -1,13 +1,13 @@
 {
   "schema": 1,
-  "as_of": "2026-10-03",
+  "as_of": "2026-10-04",
   "authority": "kde-upstream-source-plus-supralinux-packaging",
   "provider_platform": "ubuntu-resolute",
   "plasma_version": "6.7.5",
   "role": "plasma-level0-definition",
-  "state": "materialization-pending",
-  "execution_authorized": true,
-  "materialization_authorized": true,
+  "state": "candidate-versions-assigned",
+  "execution_authorized": false,
+  "materialization_authorized": false,
   "package_execution_authorized": false,
   "validation_run_kind": "planning-materialization",
   "consumes_package_attempt": false,
@@ -81,7 +81,7 @@
     }
   },
   "version_policy": {
-    "candidate_version_assignment": "deferred-until-reference-materialization",
+    "candidate_version_assignment": "PASS",
     "rule": "candidate Debian version must exceed any Ubuntu package carrying the same upstream version; verify with dpkg --compare-versions before package execution",
     "preserve_epoch": true,
     "do_not_depend_only_on_pin_priority": true
@@ -100,7 +100,7 @@
   },
   "nodes": {
     "breeze-grub": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -118,11 +118,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1"
     },
     "breeze-plymouth": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -140,11 +142,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1"
     },
     "discover": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -169,11 +173,13 @@
           "source": "https://packages.ubuntu.com/source/resolute-updates/plasma-discover"
         }
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.6-0ubuntu0.1"
     },
     "drkonqi": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -191,11 +197,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.6-0ubuntu0.1"
     },
     "flatpak-kcm": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -213,11 +221,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.6-0ubuntu0.1"
     },
     "kactivitymanagerd": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -235,11 +245,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.6-0ubuntu0.1"
     },
     "kde-cli-tools": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -257,11 +269,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
     },
     "kdecoration": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -279,11 +293,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
     },
     "kgamma": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -301,11 +317,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1"
     },
     "kglobalacceld": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -323,11 +341,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.5-0ubuntu0.1"
     },
     "kmenuedit": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -345,11 +365,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
     },
     "knighttime": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -367,11 +389,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.5-0ubuntu0.1"
     },
     "kpipewire": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -389,11 +413,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1"
     },
     "ksshaskpass": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -411,11 +437,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
     },
     "kwallet-pam": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -433,11 +461,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
     },
     "kwayland": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -455,11 +485,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
     },
     "kwayland-integration": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -477,11 +509,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
     },
     "kwrited": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -499,11 +533,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
     },
     "layer-shell-qt": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -521,11 +557,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1"
     },
     "libkscreen": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -543,11 +581,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
     },
     "libksysguard": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -565,11 +605,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "4:6.6.5-0ubuntu0.1"
     },
     "ocean-sound-theme": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -587,11 +629,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1"
     },
     "oxygen-sounds": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -609,11 +653,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
     },
     "plasma-activities": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -631,11 +677,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1"
     },
     "plasma-dialer": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -653,11 +701,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "1:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "1:6.6.4-0ubuntu1"
     },
     "plasma-disks": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -675,11 +725,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1"
     },
     "plasma-firewall": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -697,11 +749,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1"
     },
     "plasma-thunderbolt": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -719,11 +773,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1"
     },
     "plasma-workspace-wallpapers": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -741,11 +797,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
     },
     "plymouth-kcm": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -763,11 +821,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1"
     },
     "polkit-kde-agent-1": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -785,11 +845,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
     },
     "qqc2-breeze-style": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -807,11 +869,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "6.6.5-0ubuntu0.1"
     },
     "sddm-kcm": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -829,11 +893,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
     },
     "spacebar": {
-      "state": "materialization-pending",
+      "state": "packaging-preparation-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -851,11 +917,13 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": null,
-      "package_execution_authorized": false
+      "candidate_package_version": "1:6.7.5-0supralinux1",
+      "package_execution_authorized": false,
+      "materialization_result": "PASS",
+      "ubuntu_reference_version": "1:6.6.4-0ubuntu1"
     }
   },
-  "next_gate": "plasma-level0-materialization-evidence",
+  "next_gate": "plasma-level0-packaging-preparation",
   "execution_checkpoint": {
     "checkpoint_id": "frameworks-6.30-pass",
     "checkpoint_manifest": "manifests/execution-checkpoints.json",
@@ -871,5 +939,43 @@
     "package_execution_effect": "none",
     "consumes_package_attempt": false
   },
-  "materialization_manifest": "manifests/kde-plasma-level0-materialization.json"
+  "materialization_manifest": "manifests/kde-plasma-level0-materialization.json",
+  "materialization_evidence": {
+    "result": "PASS",
+    "workflow_run_id": 37226892171,
+    "workflow_job_id": 111508551648,
+    "workflow_head_sha": "3177bcda58c7c426507abe3d100b51025403c480",
+    "artifact_id": 11312113744,
+    "artifact_name": "kde-plasma-level0-materialization-3177bcda58c7c426507abe3d100b51025403c480",
+    "artifact_digest": "sha256:85e5d78bd4f6bba9de810a01894669dee9efde9341b685c8a32f42794e09c3c8",
+    "result_path": "manifests/evidence/kde-plasma-level0-materialization-result.json",
+    "result_json_sha256": "bf58313053bfa90f33d13b4b66872abea56b2bc6ef9f8f266cde7dde296bc8de",
+    "inputs_sha256": {
+      "level0_manifest": "4d4f28ddc04d92962619ef06dbc6f0f3f74d1e996efe012e5bedb596995c3e3e",
+      "materialization_script": "ed2dea5127e266e21c72b036366f53a2cdff08d9790948788775d1fb42023766",
+      "release_signing_key": "b4007ced96841a5553d670dd63130df97e6faa9b47d151b842a810ebe5ea9917"
+    },
+    "counts": {
+      "INFRA_INVALID": 0,
+      "PASS": 34,
+      "REVIEW_REQUIRED": 0
+    },
+    "package_execution_started": false,
+    "consumes_package_attempt": false,
+    "canonical_package_state_effect": "none",
+    "local_retention": {
+      "path": ".artifacts/plasma-level0-3177bcda/artifact.zip",
+      "artifact_zip_sha256_verified": true,
+      "all_source_reference_hashes_verified": true,
+      "all_detached_signatures_reverified": true,
+      "off_host_backup_verified": false
+    }
+  },
+  "candidate_versions_evidence": {
+    "path": "manifests/evidence/kde-plasma-level0-candidate-versions.json",
+    "sha256": "13d999de291ebd34c23e1a0b87d1cc91eccd1cc538cfe2eda428a6599752788d",
+    "state": "PASS",
+    "package_execution_started": false,
+    "consumes_package_attempt": false
+  }
 }
