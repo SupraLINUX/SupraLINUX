@@ -1,10 +1,40 @@
 #!/usr/bin/env python3
 """Check installed upstream resources and the theme's image/font references."""
 import hashlib
+import datetime
 import json
 import re
 import struct
+import zlib
 from pathlib import Path
+
+
+def resource_hash(payload, name):
+    if not name.endswith(".png"):
+        return hashlib.sha256(payload).hexdigest()
+    # dh_strip_nondeterminism rewrites tIME to SOURCE_DATE_EPOCH. Preserve
+    # exact identity of every other chunk, including compressed pixel data.
+    assert payload[:8] == b"\x89PNG\r\n\x1a\n", f"Invalid PNG: {name}"
+    normalized = bytearray(payload[:8])
+    offset = 8
+    tags = []
+    while offset < len(payload):
+        assert offset + 12 <= len(payload), f"Truncated PNG: {name}"
+        size, tag = struct.unpack(">I4s", payload[offset:offset + 8])
+        end = offset + 12 + size
+        assert end <= len(payload), f"Truncated PNG chunk: {name}"
+        data = payload[offset + 8:end - 4]
+        crc = struct.unpack(">I", payload[end - 4:end])[0]
+        assert zlib.crc32(tag + data) & 0xffffffff == crc, f"Invalid PNG CRC: {name}"
+        if tag == b"tIME":
+            assert size == 7, f"Invalid PNG timestamp: {name}"
+            datetime.datetime(*struct.unpack(">H5B", data))
+        else:
+            normalized.extend(payload[offset:end])
+        tags.append(tag)
+        offset = end
+    assert tags[0] == b"IHDR" and tags[-1] == b"IEND" and tags.count(b"tIME") <= 1, name
+    return hashlib.sha256(normalized).hexdigest()
 
 
 def verify(theme, expected):
@@ -13,7 +43,7 @@ def verify(theme, expected):
     fonts = set()
     for name, digest in expected.items():
         payload = (theme / name).read_bytes()
-        assert hashlib.sha256(payload).hexdigest() == digest, f"Resource differs from signed upstream: {name}"
+        assert resource_hash(payload, name) == digest, f"Resource differs from signed upstream: {name}"
         if name.endswith(".png"):
             assert payload[:8] == b"\x89PNG\r\n\x1a\n" and payload[12:16] == b"IHDR", name
             assert all(struct.unpack(">II", payload[16:24])), f"Empty PNG: {name}"

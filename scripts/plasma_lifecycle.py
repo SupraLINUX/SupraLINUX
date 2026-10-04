@@ -83,7 +83,7 @@ def validate(root, plasma, level, materialization):
         version = node.get("candidate_package_version", "")
         require(version == version_record["candidate_package_version"], f"{name}: candidate version evidence")
         expected_state = "package-build-pending" if name in scope else "packaging-preparation-pending"
-        if phase == "level0-package-build-complete" and node.get("state") == "PASS":
+        if phase.startswith("level0-package-build-") and node.get("state") == "PASS":
             campaign_path = root / planning.get("package_build_manifest", "")
             require(campaign_path.is_file(), f"{name}: package build closure missing")
             if campaign_path.is_file():

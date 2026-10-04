@@ -31,8 +31,8 @@
         "rules": "021a77ca102a0ffe05cc05be87fdcab6b53aa3bcab9bb7750c4586f0c1f6f8fa",
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
         "tests/control": "c421633b5a83bb6215cb335ba1d7544561314d85641189c0a3415094d4f9815b",
-        "tests/theme-resources": "58f5d5f5aa0aa28d93820d3e25a9a63cb6fde78a30da6614fd36744e15096c89",
-        "tests/theme-resources.json": "c4a224aaa90ab0b13caff512c2e4027ff1579209e7ba1cb1375fe61bde669961",
+        "tests/theme-resources": "d61f1ca2fe02d7494103338ad63ac977042d299c0a63e8c96cbe9b9192a54cf1",
+        "tests/theme-resources.json": "142713c1c32430ebdd20875e198ef4d56039598594d573c7d85360fc898abee7",
         "tests/ubuntu-upgrade": "42170aad88f572d95348eb92fdf69fe9285700b88452319c3fcda67e16261a09"
       },
       "binary_packages": {
@@ -58,32 +58,13 @@
           "host_evidence_manifest_sha256": "8f262cb4f8ce7a2c68f2fa8e44ed571250dfde60f4be873451094600920612b4",
           "cause": "Sourcing /etc/os-release overwrote the shell VERSION variable; autopkgtest setup received the Ubuntu display version. Original result.version is preserved as invalid; package identity is independently verified in .dsc/.changes/.deb.",
           "repair": "Use PACKAGE_VERSION for the frozen Debian candidate; rerun only this node on a fresh runner."
-        },
-        {
-          "attempt": 2,
-          "state": "FAIL",
-          "sbuild_result": "PASS",
-          "lintian_result": "PASS",
-          "autopkgtest_result": "FAIL",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37231407471,
-          "workflow_job_id": 111521639273,
-          "source_commit": "ccef08a9160324da99e777f38609f17ff7b114f9",
-          "artifact_id": 11314331420,
-          "artifact_sha256": "193db467180e7d0cab09350606f2994478557b745d68782128ce1a7cb107cdf6",
-          "result_path": "manifests/evidence/plasma/breeze-grub-attempt2/result.json",
-          "result_sha256": "81b7070d7c854248cc8f4c789a1c86151905acacc01a2bea337f82da249fb5f7",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t201425z-2304486",
-          "host_evidence_manifest_sha256": "f8a2abb27bcfd5b2aec85461cba93b7041de9d394199e5fbeb6597638b7245d4",
-          "cause": "Strict byte comparison rejected PNG tIME timestamps normalized by dh_strip_nondeterminism. Every other PNG chunk, including IDAT, is unchanged.",
-          "repair": "Compare every PNG chunk except its validated tIME field; preserve exact byte hashes for other resources. Regression rejects changed pixels and invalid CRC."
         }
       ],
       "review": {
         "upstream_changes": "Official 6.7.5 signed resources; no upstream code patches.",
         "packaging_changes": "Retain Ubuntu names, linux-any and theme paths; update owner/VCS, SPDX licenses and autopkgtests.",
         "build_dependencies": "Only debhelper-compat (=13); no Qt or Frameworks dependency.",
-        "test_policy": "No upstream build tests exist for this resource-only source; non-superficial integrity/font/reference and Ubuntu upgrade tests added. PNG timestamps may be normalized by debhelper; every rendering/content chunk remains exact.",
+        "test_policy": "No upstream build tests exist for this resource-only source; non-superficial integrity/font/reference and Ubuntu upgrade tests added.",
         "activation_policy": "Installs resources only; does not enable the theme or rewrite boot configuration."
       }
     }

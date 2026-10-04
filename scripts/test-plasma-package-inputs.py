@@ -7,6 +7,8 @@ import os
 import re
 import shlex
 import subprocess
+import struct
+import zlib
 import tempfile
 import unittest
 from pathlib import Path
@@ -17,6 +19,20 @@ resources = importlib.machinery.SourceFileLoader("resources", str(ROOT / "packag
 
 
 class InputAdmission(unittest.TestCase):
+    def test_png_timestamp_change_only_is_allowed(self):
+        def chunk(tag, data):
+            return struct.pack(">I", len(data)) + tag + data + struct.pack(">I", zlib.crc32(tag + data) & 0xffffffff)
+        def png(year, pixel):
+            return (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 1, 8, 6, 0, 0, 0)) +
+                    chunk(b"tIME", struct.pack(">H5B", year, 1, 1, 0, 0, 0)) +
+                    chunk(b"IDAT", zlib.compress(b"\0" + pixel)) + chunk(b"IEND", b""))
+        original = resources.resource_hash(png(2016, b"\0\0\0\xff"), "test.png")
+        self.assertEqual(original, resources.resource_hash(png(2026, b"\0\0\0\xff"), "test.png"))
+        self.assertNotEqual(original, resources.resource_hash(png(2026, b"\xff\0\0\xff"), "test.png"))
+        damaged = bytearray(png(2026, b"\0\0\0\xff")); damaged[-1] ^= 1
+        with self.assertRaisesRegex(AssertionError, "Invalid PNG CRC"):
+            resources.resource_hash(bytes(damaged), "test.png")
+
     def test_upgrade_setup_keeps_candidate_after_os_release(self):
         script = (ROOT / "scripts/run-authoritative-plasma-package.sh").read_text()
         setup = re.search(r'^(SETUP=".*?\n)\s*set \+e', script, flags=re.M | re.S).group(1)
