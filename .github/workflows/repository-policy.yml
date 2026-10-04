@@ -39,6 +39,9 @@ jobs:
       - name: Validate current project status
         run: python3 scripts/render-project-status.py --check
 
+      - name: Validate Plasma release signing key
+        run: python3 scripts/run-kde-plasma-level0-materialization.py --check-signing-key
+
       - name: Lint shell scripts
         shell: bash
         run: shellcheck -e SC1091 scripts/*.sh

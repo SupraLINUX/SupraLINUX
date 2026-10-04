@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import concurrent.futures
+import argparse
 import hashlib
 import json
 import os
@@ -17,7 +18,7 @@ OUT = ROOT / "evidence/kde-plasma-level0-materialization"
 WORK = ROOT / ".work/kde-plasma-level0-materialization"
 RESULT = OUT / "result.json"
 EXPECTED_FPR = "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D"
-KEY = ROOT / "packages/kde/karchive/debian/upstream/signing-key.asc"
+KEY = ROOT / "keys/kde-plasma-release.asc"
 MAX_WORKERS = 6
 
 class ReviewRequired(Exception):
@@ -52,6 +53,23 @@ def valid_release_signature(status, primary_fingerprint=EXPECTED_FPR):
             if fields[2] == primary_fingerprint or fields[-1] == primary_fingerprint:
                 return True
     return False
+
+def check_signing_key(key=KEY, expected=EXPECTED_FPR):
+    if not key.is_file():
+        raise ValueError(f"missing KDE signing key: {key}")
+    with tempfile.TemporaryDirectory(prefix="supralinux-key-check-") as home:
+        info = run(["gpg", "--no-options", "--homedir", home, "--batch",
+                    "--show-keys", "--with-colons", str(key)]).stdout
+    primary = []
+    previous = None
+    for line in info.splitlines():
+        fields = line.split(":")
+        if fields[0] == "fpr" and previous == "pub":
+            primary.append(fields[9].upper())
+        previous = fields[0]
+    if expected not in primary:
+        raise ValueError(f"KDE signing key does not contain expected primary fingerprint {expected}")
+    return primary
 
 def make_debian_tar(src, dst):
     run([
@@ -172,17 +190,18 @@ def materialize(node_id):
     return metadata
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--check-signing-key", action="store_true")
+    args = parser.parse_args()
+    check_signing_key()
+    if args.check_signing_key:
+        print(f"Plasma release key: PASS; primary_fingerprint={EXPECTED_FPR}; sha256={sha256(KEY)}")
+        return
     shutil.rmtree(OUT, ignore_errors=True)
     shutil.rmtree(WORK, ignore_errors=True)
     OUT.mkdir(parents=True)
     WORK.mkdir(parents=True)
 
-    if not KEY.is_file():
-        raise SystemExit(f"missing KDE signing key: {KEY}")
-    key_info = run(["gpg", "--show-keys", "--with-colons", str(KEY)]).stdout
-    fprs = [line.split(":")[9].upper() for line in key_info.splitlines() if line.startswith("fpr:")]
-    if EXPECTED_FPR not in fprs:
-        raise SystemExit(f"KDE signing key does not contain expected fingerprint {EXPECTED_FPR}")
     run(["gpg", "--batch", "--yes", "--dearmor", "--output", str(WORK / "kde-release-keyring.gpg"), str(KEY)])
 
     selected = LEVEL0["selected_nodes"]

@@ -86,6 +86,9 @@ class PreflightTests(unittest.TestCase):
         self.assertTrue(materializer.valid_release_signature(signature))
         unrelated = signature.replace(expected, 'B' * 40) + f"\nExpected key: {expected}"
         self.assertFalse(materializer.valid_release_signature(unrelated))
+        self.assertEqual(materializer.check_signing_key(), [expected])
+        with self.assertRaisesRegex(ValueError, "expected primary fingerprint"):
+            materializer.check_signing_key(ROOT / "packages/kde/karchive/debian/upstream/signing-key.asc")
 
 
 if __name__ == "__main__":

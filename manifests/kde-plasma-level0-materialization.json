@@ -25,7 +25,10 @@
     "sha256": "must-match-manifests/kde-plasma-level0.json",
     "signature": "verify detached .sig",
     "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
-    "signing_key_source": "packages/kde/karchive/debian/upstream/signing-key.asc"
+    "signing_key_source": "keys/kde-plasma-release.asc",
+    "signing_key_url": "https://kde.org/info/plasma-signing-keys.pgp",
+    "signing_key_fingerprint_authority": "https://kde.org/info/plasma-6.7.5/",
+    "signing_key_sha256": "b4007ced96841a5553d670dd63130df97e6faa9b47d151b842a810ebe5ea9917"
   },
   "ubuntu_packaging_reference": {
     "role": "technical-reference-only",
@@ -73,5 +76,34 @@
     "consumes_package_attempt": false
   },
   "next_gate_on_pass": "plasma-level0-candidate-version-assignment",
-  "next_gate_on_nonpass": "plasma-level0-materialization-review"
+  "next_gate_on_nonpass": "plasma-level0-materialization-review",
+  "infrastructure_incidents": [
+    {
+      "workflow_run_id": 37226420206,
+      "workflow_job_id": 111507147158,
+      "workflow_head_sha": "a37f50452d7df97f7026dcf85a51b755e50d7789",
+      "result": "INFRA_INVALID",
+      "mechanism": "release-key-selection",
+      "reason": "Frameworks keyring did not contain the Plasma release primary fingerprint; rejected before source/package execution.",
+      "package_execution_started": false,
+      "consumes_package_attempt": false,
+      "remediation": "Retain the exact Plasma primary key from the official release-manager keyring and validate it in repository policy before materialization.",
+      "retained_log": {
+        "path": ".work/ci/run-37226420206-plasma.log",
+        "sha256": "5b8a72b04e8220c4eea05e63975da123d63da3f8612c2bce0d5c6ac074e7c234"
+      }
+    }
+  ],
+  "release_key_preflight": {
+    "result": "PASS",
+    "source": "ksshaskpass-6.7.5.tar.xz",
+    "source_url": "https://download.kde.org/stable/plasma/6.7.5/ksshaskpass-6.7.5.tar.xz",
+    "source_sha256": "deb5698b5682bc15d22446db9cf8641857d0bd7785e145b7b6e9247a68d35fd2",
+    "signature_sha256": "92a094a93ab25dd9fa76d7ad47a7948747885e486fe261506bbc3e8c51c3a985",
+    "evidence_path": "docs/evidence/plasma-release-key-sample.txt",
+    "evidence_sha256": "fb11e7d18123262310ff11a2fe1600a1d3a5cb2f3b2037a493d5eb308c81468f",
+    "package_execution_started": false,
+    "consumes_package_attempt": false,
+    "canonical_package_state_effect": "none"
+  }
 }
