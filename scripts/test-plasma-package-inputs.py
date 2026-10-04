@@ -3,6 +3,10 @@
 import copy
 import importlib.machinery
 import json
+import os
+import re
+import shlex
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -13,6 +17,17 @@ resources = importlib.machinery.SourceFileLoader("resources", str(ROOT / "packag
 
 
 class InputAdmission(unittest.TestCase):
+    def test_upgrade_setup_keeps_candidate_after_os_release(self):
+        script = (ROOT / "scripts/run-authoritative-plasma-package.sh").read_text()
+        setup = re.search(r'^(SETUP=".*?\n)\s*set \+e', script, flags=re.M | re.S).group(1)
+        candidate = json.loads((ROOT / "manifests/kde-plasma-package-build.json").read_text())["nodes"]["breeze-grub"]["version"]
+        env = {**os.environ, "PACKAGE_VERSION": candidate, "VERSION": candidate,
+               "BASELINE_PACKAGE": "grub-theme-breeze"}
+        output = subprocess.check_output(["bash", "-c", ". /etc/os-release\n" + setup +
+                                          "printf '%s' \"$SETUP\""], text=True, env=env)
+        comparison = next(line for line in output.splitlines() if line.startswith("dpkg --compare-versions"))
+        self.assertEqual(shlex.split(comparison)[2], candidate)
+
     def test_changed_packaging_rejected(self):
         original = prepare.packaging_hashes
         try:

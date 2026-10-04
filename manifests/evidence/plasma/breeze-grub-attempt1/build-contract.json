@@ -39,27 +39,7 @@
         "grub-theme-breeze": "amd64"
       },
       "ubuntu_baseline_package": "grub-theme-breeze",
-      "attempts": [
-        {
-          "attempt": 1,
-          "state": "INFRA_INVALID",
-          "sbuild_result": "PASS",
-          "lintian_result": "PASS",
-          "autopkgtest_result": "INFRA_INVALID",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37230769694,
-          "workflow_job_id": 111519731444,
-          "source_commit": "cee200ca76b93af0a3a3d82db6714fa447f02c31",
-          "artifact_id": 11313542212,
-          "artifact_sha256": "aa360b543a6b28225eb712052bdb765f66c8b13e1a43fa448957870391cda064",
-          "result_path": "manifests/evidence/plasma/breeze-grub-attempt1/result.json",
-          "result_sha256": "9634dc07ba17030d3d5e680c637a4d8c2004dcf15121544a7a214f5f72e3a19c",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t200422z-2247488",
-          "host_evidence_manifest_sha256": "8f262cb4f8ce7a2c68f2fa8e44ed571250dfde60f4be873451094600920612b4",
-          "cause": "Sourcing /etc/os-release overwrote the shell VERSION variable; autopkgtest setup received the Ubuntu display version. Original result.version is preserved as invalid; package identity is independently verified in .dsc/.changes/.deb.",
-          "repair": "Use PACKAGE_VERSION for the frozen Debian candidate; rerun only this node on a fresh runner."
-        }
-      ],
+      "attempts": [],
       "review": {
         "upstream_changes": "Official 6.7.5 signed resources; no upstream code patches.",
         "packaging_changes": "Retain Ubuntu names, linux-any and theme paths; update owner/VCS, SPDX licenses and autopkgtests.",

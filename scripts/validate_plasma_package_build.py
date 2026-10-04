@@ -31,6 +31,19 @@ def validate():
         assert record["packaging_reference_sha256"] == sources[name]["ubuntu_reference"]["debian_tree_tar_sha256"]
         assert record["packaging_reference_version"] == sources[name]["ubuntu_reference"]["source_version"]
         assert all(record["review"].values()), "Individual packaging review missing"
+        for attempt in record["attempts"]:
+            payload = (ROOT / attempt["result_path"]).read_bytes()
+            assert hashlib.sha256(payload).hexdigest() == attempt["result_sha256"], "Attempt evidence changed"
+            result = json.loads(payload)
+            assert result["node"] == name and result["state"] == attempt["state"]
+            assert result["source_commit"] == attempt["source_commit"]
+            assert result["workflow_run_id"] == str(attempt["workflow_run_id"])
+            assert result["package_attempt_consumed"] is attempt["package_attempt_consumed"]
+            assert all(result[key] == attempt[key] for key in ["sbuild_result", "lintian_result", "autopkgtest_result"])
+            if attempt["state"] == "PASS":
+                assert result["version"] == record["version"]
+            else:
+                assert attempt.get("cause"), "Unexplained attempt failure"
         for script in ["rules", "tests/theme-resources", "tests/ubuntu-upgrade"]:
             assert os.access(ROOT / record["packaging_path"] / script, os.X_OK), f"Non-executable packaging script: {script}"
         if name in scope:

@@ -15,7 +15,7 @@ TEST_RESULT="not-run"
 LINTIAN_RESULT="not-run"
 STARTED="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 NODE=""
-VERSION=""
+PACKAGE_VERSION=""
 rm -rf "${WORK}" "${EVIDENCE}"
 mkdir -p "${WORK}/out" "${EVIDENCE}/packages" "$(dirname "${CHROOT}")"
 
@@ -23,7 +23,7 @@ finish() {
     local rc=$?
     trap - EXIT
     python3 - "${EVIDENCE}" "${STATE}" "${STAGE}" "${ATTEMPT}" "${BUILD_RESULT}" \
-        "${TEST_RESULT}" "${LINTIAN_RESULT}" "${STARTED}" "${NODE}" "${VERSION}" "${rc}" <<'PY'
+        "${TEST_RESULT}" "${LINTIAN_RESULT}" "${STARTED}" "${NODE}" "${PACKAGE_VERSION}" "${rc}" <<'PY'
 import datetime, hashlib, json, os, subprocess, sys
 from pathlib import Path
 path, state, stage, attempt, build, tests, lintian, started, node, version, rc = sys.argv[1:]
@@ -71,7 +71,7 @@ PY
 )
 [[ ${#AUTHORIZED[@]} == 6 ]] || { printf 'Invalid reviewed package authorization.\n' >&2; exit 1; }
 NODE="${AUTHORIZED[0]}"
-VERSION="${AUTHORIZED[1]}"
+PACKAGE_VERSION="${AUTHORIZED[1]}"
 SOURCE_URL="${AUTHORIZED[2]}"
 SOURCE_HASH="${AUTHORIZED[3]}"
 SIGNATURE_HASH="${AUTHORIZED[4]}"
@@ -165,7 +165,7 @@ STATE="INFRA_INVALID"
 SETUP="apt-get update
 apt-get install -y --no-install-recommends ${BASELINE_PACKAGE}
 dpkg-query -W -f='\${Version}' ${BASELINE_PACKAGE} > /var/tmp/supralinux-ubuntu-package-version
-dpkg --compare-versions '${VERSION}' gt \"\$(cat /var/tmp/supralinux-ubuntu-package-version)\""
+dpkg --compare-versions '${PACKAGE_VERSION}' gt \"\$(cat /var/tmp/supralinux-ubuntu-package-version)\""
 set +e
 autopkgtest "${DSCS[0]}" "${DEBS[@]}" --setup-commands="${SETUP}" --output-dir="${EVIDENCE}/autopkgtest" -- \
     qemu --qemu-command="${ROOT}/scripts/qemu-kvm-required.sh" --qemu-architecture=x86_64 \
@@ -180,4 +180,4 @@ case "${PIPELINE_RC[0]}" in
 esac
 STATE="PASS"
 STAGE="complete"
-printf 'Authoritative Plasma package: PASS (%s %s)\n' "${NODE}" "${VERSION}"
+printf 'Authoritative Plasma package: PASS (%s %s)\n' "${NODE}" "${PACKAGE_VERSION}"
