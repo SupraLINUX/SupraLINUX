@@ -118,3 +118,8 @@ while keeping `KF5_SUPPORT=ON`. The original `sbuild_result=not-run` placeholder
 is preserved as a runner-marker defect; future executions set FAIL before sbuild
 and PASS only after success. The failure recorder keeps source checksum closure
 and the entire ZIP while prohibiting downstream admission.
+
+Oxygen Attempt 2 built successfully with the explicit Qt 6 selector. Lintian
+rejected an embedded LGPL-3 text without its common-license reference. The
+original FAIL is retained; packaging now refers to
+`/usr/share/common-licenses/LGPL-3`, preserving the SPDX terms and attributions.

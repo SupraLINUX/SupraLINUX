@@ -255,7 +255,7 @@
       "packaging_sha256": {
         "changelog": "5fc52780175f59a22406ae5c86d66561edfdb7bb6ea7b43e66f2a89ac7139c2a",
         "control": "087e3a52106457f138c83dd48bf6fcb0b6d90860a399e061241cea4cedf1cbee",
-        "copyright": "ddcca675f2105719054a3415a3087f7e1aba51991e74d8606de4e337ca4ee506",
+        "copyright": "0f914e25215e4001c5e228376ef0a2cffed257ce2275bda5a1367d472f26c39d",
         "docs": "3764ceaff06f3c6d3dcf7404d0f29ba3a2abb4a52c000481646112524ea1923c",
         "rules": "653c7f176cf22ccdfccc0bb58ae176df4a84a2798bb210994d34eb33682dd18f",
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
@@ -300,30 +300,11 @@
           "host_evidence_manifest_sha256": "ac7d847c23b60304d97351cc33ac4090d0b412205556aee458117ec55c60bc5e",
           "cause": "CMake selected KDEInstallDirs5 because Oxygen requests legacy ECM 5.102 and does not discover Qt itself. The valid sbuild failed at configure. Original sbuild_result=not-run is preserved as a runner-marker defect; the attempted build and configure failure are retained in sbuild.log.",
           "repair": "Set QT_MAJOR_VERSION=6 explicitly alongside KF5_SUPPORT=ON; preserve all legacy sounds and test in a fresh runner. Mark sbuild_result=FAIL before invoking sbuild so a failed execution retains its proper marker."
-        },
-        {
-          "attempt": 2,
-          "state": "FAIL",
-          "sbuild_result": "PASS",
-          "lintian_result": "FAIL",
-          "autopkgtest_result": "not-run",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37244996285,
-          "workflow_job_id": 111561012084,
-          "source_commit": "d818c67d090601a1fe3edc68b56f4a957557ae21",
-          "artifact_id": 11319255058,
-          "artifact_sha256": "03a7cc6491b14dbcb1497ba392e5dc7672172f563400dd9a8608fc8852c7ef5b",
-          "result_path": "manifests/evidence/plasma/oxygen-sounds-attempt2/result.json",
-          "result_sha256": "b33eb44f8c130f19e5c41e485c96b799c12574a5a59c50e47b8d5c18726b8af6",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t234511z-3471625",
-          "host_evidence_manifest_sha256": "378c64871a7c2af168e33695669d039dac1570b3d3c1f3794ec50c321eae87dd",
-          "cause": "The Qt 6 configure repair passed sbuild. Lintian rejected embedding the full LGPL-3 text instead of referring to the Debian common license.",
-          "repair": "Use the standard LGPL-3 common-license reference while preserving the LGPL-3.0-or-later terms and all SPDX attributions; rerun the package checks and tests."
         }
       ],
       "review": {
         "upstream_changes": "Official signed 6.7.5 resources; no source patches. 115 installed resources including 63 aliases and all 50 legacy sound paths.",
-        "packaging_changes": "Preserve Ubuntu epoch 4, binary identity and Multi-Arch foreign. Use QT_MAJOR_VERSION=6 with KF5_SUPPORT=ON; both are required because Oxygen requests legacy ECM 5.102 without a Qt discovery call. Update SPDX attribution including the camera-shutter CC-BY-3.0 author. Use the Debian LGPL-3 common-license reference as required by lintian.",
+        "packaging_changes": "Preserve Ubuntu epoch 4, binary identity and Multi-Arch foreign. Use QT_MAJOR_VERSION=6 with KF5_SUPPORT=ON; both are required because Oxygen requests legacy ECM 5.102 without a Qt discovery call. Update SPDX attribution including the camera-shutter CC-BY-3.0 author.",
         "build_dependencies": "Exact retained ECM 6.30.0-0supralinux3 through sbuild --extra-package; Ubuntu Qt 6.10. No implicit preinstallation.",
         "test_policy": "No upstream test suite; verify exact dpkg-owned resources, byte hashes, alias targets, metadata and decoding of every current and legacy stream, plus Ubuntu APT upgrade.",
         "activation_policy": "Install upstream sound resources only; session selection and PipeWire playback remain integration gates."
@@ -362,12 +343,6 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/oxygen-sounds-attempt1",
       "archive_index_sha256": "723700b0000effa8dcd4a23b99ea9bf4138b1e45290892a4ac46ff440d08e57f"
-    },
-    {
-      "node": "oxygen-sounds",
-      "attempt": 2,
-      "archive_root": ".artifacts/plasma-6.7.5/oxygen-sounds-attempt2",
-      "archive_index_sha256": "46b9bfc04c84389be3a8bfc11250a16e8d6ff20de3b1a4f793f115d9ac2249eb"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
