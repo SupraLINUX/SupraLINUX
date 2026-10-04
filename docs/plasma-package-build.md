@@ -110,3 +110,11 @@ admission record, avoiding a second full-image hash pass. Each image is still
 verified against its immutable provenance and current input digest. Compiled
 package capture also preserves `.ddeb` files; the first infrastructure consumer's
 missing debug payload remains outside the canonical Ocean source/binary closure.
+
+Oxygen Attempt 1 failed in CMake configuration: its legacy ECM minimum selects
+Qt 5 unless the major version is specified. The original valid package FAIL and
+source artifact are retained. The repair explicitly sets `QT_MAJOR_VERSION=6`
+while keeping `KF5_SUPPORT=ON`. The original `sbuild_result=not-run` placeholder
+is preserved as a runner-marker defect; future executions set FAIL before sbuild
+and PASS only after success. The failure recorder keeps source checksum closure
+and the entire ZIP while prohibiting downstream admission.

@@ -159,6 +159,7 @@ fi
 STAGE="sbuild"
 STATE="FAIL"
 ATTEMPT=true
+BUILD_RESULT="FAIL"
 sbuild --verbose --chroot-mode=unshare --dist=resolute --arch=amd64 --arch-all \
     "${EXTRA_ARGS[@]}" --build-dir="${WORK}/out" "${DSCS[0]}" |& tee "${EVIDENCE}/sbuild.log"
 BUILD_RESULT="PASS"
@@ -193,6 +194,7 @@ for predecessor in record.get("frameworks_predecessors", {}).values():
 PY
 
 STAGE="lintian"
+LINTIAN_RESULT="FAIL"
 lintian --fail-on error "${DSCS[0]}" "${CHANGES[0]}" |& tee "${EVIDENCE}/lintian.log"
 LINTIAN_RESULT="PASS"
 

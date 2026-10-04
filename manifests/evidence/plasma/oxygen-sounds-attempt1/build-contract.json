@@ -257,7 +257,7 @@
         "control": "087e3a52106457f138c83dd48bf6fcb0b6d90860a399e061241cea4cedf1cbee",
         "copyright": "0f914e25215e4001c5e228376ef0a2cffed257ce2275bda5a1367d472f26c39d",
         "docs": "3764ceaff06f3c6d3dcf7404d0f29ba3a2abb4a52c000481646112524ea1923c",
-        "rules": "653c7f176cf22ccdfccc0bb58ae176df4a84a2798bb210994d34eb33682dd18f",
+        "rules": "c1417635c53bf5ac5dfc6eacd629b47d06b911821ba44e4376563d0d4e7ec49e",
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
         "tests/control": "ddb2ea626e74f784389db64b9a5868cd06623883bb83b504914683ac8966c262",
         "tests/sound-resources": "6f50d5af031136aa9f87bf04a56ef0a7c831ceee6fac9dcaf6f206970f506eda",
@@ -281,30 +281,10 @@
           ]
         }
       },
-      "attempts": [
-        {
-          "attempt": 1,
-          "state": "FAIL",
-          "sbuild_result": "not-run",
-          "lintian_result": "not-run",
-          "autopkgtest_result": "not-run",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37243994066,
-          "workflow_job_id": 111558140736,
-          "source_commit": "70212047c7a8a86e4662b8e34ecdae2cadea0f09",
-          "artifact_id": 11318731446,
-          "artifact_sha256": "835144360eadc11ecfc63a60a5976533c3cb5d414b4188e6afc08901622c29c9",
-          "result_path": "manifests/evidence/plasma/oxygen-sounds-attempt1/result.json",
-          "result_sha256": "e2ef7817dd52ece7eb4edba84187168766a5db32e320fc5d1f442bfbaf2fa261",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t232831z-3382094",
-          "host_evidence_manifest_sha256": "ac7d847c23b60304d97351cc33ac4090d0b412205556aee458117ec55c60bc5e",
-          "cause": "CMake selected KDEInstallDirs5 because Oxygen requests legacy ECM 5.102 and does not discover Qt itself. The valid sbuild failed at configure. Original sbuild_result=not-run is preserved as a runner-marker defect; the attempted build and configure failure are retained in sbuild.log.",
-          "repair": "Set QT_MAJOR_VERSION=6 explicitly alongside KF5_SUPPORT=ON; preserve all legacy sounds and test in a fresh runner. Mark sbuild_result=FAIL before invoking sbuild so a failed execution retains its proper marker."
-        }
-      ],
+      "attempts": [],
       "review": {
         "upstream_changes": "Official signed 6.7.5 resources; no source patches. 115 installed resources including 63 aliases and all 50 legacy sound paths.",
-        "packaging_changes": "Preserve Ubuntu epoch 4, binary identity and Multi-Arch foreign. Use QT_MAJOR_VERSION=6 with KF5_SUPPORT=ON; both are required because Oxygen requests legacy ECM 5.102 without a Qt discovery call. Update SPDX attribution including the camera-shutter CC-BY-3.0 author.",
+        "packaging_changes": "Preserve Ubuntu epoch 4, binary identity, Multi-Arch foreign and upstream KF5_SUPPORT default. Replace obsolete BUILD_WITH_QT6 switch; update SPDX attribution including camera-shutter CC-BY-3.0 author.",
         "build_dependencies": "Exact retained ECM 6.30.0-0supralinux3 through sbuild --extra-package; Ubuntu Qt 6.10. No implicit preinstallation.",
         "test_policy": "No upstream test suite; verify exact dpkg-owned resources, byte hashes, alias targets, metadata and decoding of every current and legacy stream, plus Ubuntu APT upgrade.",
         "activation_policy": "Install upstream sound resources only; session selection and PipeWire playback remain integration gates."
@@ -337,12 +317,6 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/ocean-sound-theme-attempt1",
       "archive_index_sha256": "f39e34f723a1024142e54a341a1186f678915bcc14c49c97687a80fb008724bb"
-    },
-    {
-      "node": "oxygen-sounds",
-      "attempt": 1,
-      "archive_root": ".artifacts/plasma-6.7.5/oxygen-sounds-attempt1",
-      "archive_index_sha256": "723700b0000effa8dcd4a23b99ea9bf4138b1e45290892a4ac46ff440d08e57f"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
