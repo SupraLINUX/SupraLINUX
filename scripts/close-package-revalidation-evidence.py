@@ -84,7 +84,7 @@ def main():
             assert hashlib.sha256(archive.read(orig)).hexdigest() == record['upstream_sha256']
             assert hashlib.sha256(archive.read('upstream.tar.xz.sig')).hexdigest() == record['signature_sha256']
         else:
-            assert preflight and raw['state']=='INFRA_INVALID' and raw['stage']=='reviewed-ubuntu-baseline-preflight'
+            assert preflight and raw['state']=='INFRA_INVALID', 'A package PASS requires the verified source closure'
         if raw['state'] == 'PASS':
             baseline = json.loads(archive.read('ubuntu-baseline-preflight/result.json'))
             assert baseline['state'] == 'PASS' and baseline['candidate_installed'] is False

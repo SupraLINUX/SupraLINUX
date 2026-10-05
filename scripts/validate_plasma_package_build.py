@@ -233,6 +233,7 @@ def validate():
             built_contract = json.loads((ROOT / evidence["contract_path"]).read_text())
             assert hashlib.sha256((ROOT / evidence["contract_path"]).read_bytes()).hexdigest() == result["files_sha256"]["build-contract.json"]
             assert built_contract["nodes"][name]["packaging_sha256"] == record["packaging_sha256"]
+            assert built_contract['nodes'][name].get('frameworks_predecessors', {}) == record.get('frameworks_predecessors', {})
             assert record["attempts"][-1]["state"] == "PASS" and result["package_attempt_consumed"] is True
             if record.get("baseline_preflight_required"):
                 baseline_bytes = (ROOT / evidence["baseline_preflight_path"]).read_bytes()

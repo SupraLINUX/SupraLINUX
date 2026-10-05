@@ -92,6 +92,8 @@ def main():
         contract_bytes = archive.read('build-contract.json')
         built = json.loads(contract_bytes)['nodes'][a.node]
         assert built['packaging_sha256'] == record['packaging_sha256'] and built['upstream_sha256'] == record['upstream_sha256']
+        assert built.get('frameworks_predecessors', {}) == record.get('frameworks_predecessors', {})
+        assert built['signature_sha256'] == record['signature_sha256']
         baseline_bytes = None
         if record.get('baseline_preflight_required'):
             baseline_bytes = archive.read('ubuntu-baseline-preflight/result.json')

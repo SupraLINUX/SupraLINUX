@@ -1732,11 +1732,5 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
-  "package_input_certifications": [
-    {
-      "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
-      "sha256": "6dc249ac7e4a1302a5adcfdc8db67a3168fe7bf027fea9a2af5b7d070b2aa9aa"
-    }
-  ]
+  "execution_mode": "preflight"
 }
