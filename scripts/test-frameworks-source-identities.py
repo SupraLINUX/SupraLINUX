@@ -4,6 +4,7 @@ import copy
 import hashlib
 import importlib.util
 import json
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -12,6 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('inputs',ROOT/'scripts/frameworks-revalidation-inputs.py')
 inputs = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(inputs)
+cache_spec = importlib.util.spec_from_file_location('legacy_cache',ROOT/'scripts/admit-frameworks-cache.py')
+cache = importlib.util.module_from_spec(cache_spec)
+cache_spec.loader.exec_module(cache)
 
 
 class SourceIdentities(unittest.TestCase):
@@ -84,6 +88,47 @@ class SourceIdentities(unittest.TestCase):
         self.save()
         with self.assertRaises(AssertionError):inputs.source_package('kirigami',self.nodes['kirigami'])
         with self.assertRaises(KeyError):inputs.source_package('unreviewed',{'state':'PASS'})
+
+    def test_cache_admits_legacy_source_and_rejects_changed_closed_manifest(self):
+        resolver = cache.repairs.effective
+        previous_root = resolver.ROOT
+        resolver.ROOT = self.root
+        self.addCleanup(setattr,resolver,'ROOT',previous_root)
+        source = self.root/'fixture'
+        (source/'DEBIAN').mkdir(parents=True)
+        version = self.nodes['kcmutils']['package_version']
+        (source/'DEBIAN/control').write_text(
+            'Package: libkf6kcmutils6\nSource: kf6-kcmutils\nVersion: '+version+'\n'
+            'Architecture: amd64\nMaintainer: Test <test@example.invalid>\n'
+            'Description: Legacy source identity admission fixture\n')
+        pool = self.root/'repo/pool'
+        pool.mkdir(parents=True)
+        deb = pool/'legacy.deb'
+        subprocess.run(['dpkg-deb','--root-owner-group','--build',str(source),str(deb)],
+                       check=True,stdout=subprocess.DEVNULL)
+        binary = {'package':'libkf6kcmutils6','architecture':'amd64','sha256':cache.digest(deb)}
+        record = {'frameworks_predecessors':{'kcmutils':{
+            'source_package':'kf6-kcmutils','version':version,'binaries':[binary]}}}
+        dag = {'nodes':{'kcmutils':copy.deepcopy(self.nodes['kcmutils'])}}
+        before = copy.deepcopy(dag)
+        plan = b'{"fixture":true}\n'
+        (self.root/'artifact-plan.json').write_bytes(plan)
+        (self.root/'package-pool.json').write_text(json.dumps({'package_count':1,'packages':[
+            {'file':deb.name,'version':version,'size':deb.stat().st_size,**binary}]}))
+        (self.root/'repo/Packages').write_text('fixture index')
+        provenance = 'cache_only=yes\nframework_packages_preinstalled_in_sbuild_rootfs=no\n'
+        for path,key in [('artifact-plan.json','artifact_plan_sha256'),
+                         ('package-pool.json','package_pool_sha256'),
+                         ('repo/Packages','packages_index_sha256')]:
+            provenance += key+'='+cache.digest(self.root/path)+'\n'
+        (self.root/'checkpoint-manifest.txt').write_text(provenance)
+        selected = cache.admit(self.root,record,dag,plan)
+        self.assertEqual([item['path'] for item in selected],[str(deb)])
+        self.assertEqual(dag,before)
+        self.assertNotIn('source_package',dag['nodes']['kcmutils'])
+        closed = self.root/self.registry['nodes']['kcmutils']['manifest_path']
+        closed.write_bytes(closed.read_bytes()+b'\n')
+        with self.assertRaises(AssertionError):cache.admit(self.root,record,dag,plan)
 
 
 if __name__=='__main__':unittest.main()

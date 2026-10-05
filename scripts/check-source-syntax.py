@@ -20,6 +20,7 @@ def check(root):
     errors = []
     paths = sorted(set(root.glob("scripts/**/*.py")) | set(root.glob("packages/**/*.py")))
     extensionless_python = []
+    package_shells = set(root.glob("packages/**/*.sh"))
     for path in root.glob("packages/**/*"):
         if not path.is_file() or path.suffix or "__pycache__" in path.parts:
             continue
@@ -27,15 +28,23 @@ def check(root):
             header = source.readline(256)
         if header.startswith(b"#!") and b"python" in header:
             extensionless_python.append(path)
+        elif header.startswith(b"#!"):
+            interpreters = [part.rsplit(b"/", 1)[-1] for part in header[2:].split()]
+            if b"bash" in interpreters or b"sh" in interpreters:
+                package_shells.add(path)
     paths = sorted(set(paths) | set(extensionless_python))
     for path in paths:
         try:
             ast.parse(path.read_bytes(), filename=str(path.relative_to(root)))
         except (SyntaxError, UnicodeError, ValueError) as exc:
             errors.append(str(exc))
-    shells = sorted(root.glob("scripts/**/*.sh"))
+    shells = sorted(set(root.glob("scripts/**/*.sh")) | package_shells)
     for path in shells:
-        result = subprocess.run(["bash", "-n", str(path)], capture_output=True, text=True)
+        with path.open("rb") as source:
+            header = source.readline(256)
+        interpreters = [part.rsplit(b"/", 1)[-1] for part in header[2:].split()]
+        interpreter = "sh" if b"sh" in interpreters and b"bash" not in interpreters else "bash"
+        result = subprocess.run([interpreter, "-n", str(path)], capture_output=True, text=True)
         if result.returncode:
             errors.append(result.stderr.strip())
     manifests = sorted(root.glob("manifests/**/*.json"))

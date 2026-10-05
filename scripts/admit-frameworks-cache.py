@@ -61,7 +61,7 @@ def admit(payload, record, dag, current_plan, revalidated=()):
         canonical = dag["nodes"][node]
         assert canonical["state"] == "PASS" and canonical.get("downstream_eligible") is not False
         assert canonical["package_version"] == predecessor["version"]
-        assert canonical["source_package"] == predecessor["source_package"]
+        assert repairs.effective.source_package(node, canonical) == predecessor["source_package"]
         assert predecessor["binaries"], "Empty predecessor binary contract"
         for binary in predecessor["binaries"]:
             key = (binary["package"], predecessor["version"], binary["architecture"])
