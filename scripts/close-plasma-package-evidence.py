@@ -21,6 +21,20 @@ def write(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, indent=2) + '\n')
 
+
+def verify_workflow_job(job, host, head, job_id, host_export=False):
+    assert job['id'] == job_id and str(job['run_id']) == host['workflow_run_id']
+    assert job['head_sha'] == head and job['status'] == 'completed'
+    steps = {step['name']: step for step in job['steps']}
+    assert steps['Run current reviewed package']['conclusion'] == 'success'
+    if host_export:
+        assert host['exit_code'] != 0
+        assert steps['Retain package sources, binaries and evidence']['conclusion'] != 'success'
+    else:
+        assert host['exit_code'] == 0 and job['conclusion'] == 'success'
+        assert steps['Retain package sources, binaries and evidence']['conclusion'] == 'success'
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('node')
@@ -42,6 +56,11 @@ def main():
     check = subprocess.run(['sha256sum','--check','--quiet','evidence-sha256.txt'], cwd=a.host_dir, capture_output=True, text=True)
     assert check.returncode == 0, check.stderr
     job_bytes = host_bytes = None
+    if a.workflow_job_meta:
+        job_bytes = a.workflow_job_meta.read_bytes()
+        job = json.loads(job_bytes)
+        verify_workflow_job(job, host, source_commit, a.job_id, a.host_export)
+        host_bytes = (a.host_dir/'host-result.json').read_bytes()
     if a.host_export:
         assert host['exit_code'] != 0 and a.workflow_job_meta and not a.artifact_meta
         assert not a.zip.exists(), 'Refusing to replace an export'
@@ -92,6 +111,7 @@ def main():
         contract_bytes = archive.read('build-contract.json')
         frozen = json.loads(contract_bytes)
         if 'campaign_manifest_sha256' in frozen:
+            assert job_bytes is not None, 'New execution contracts require the original workflow job metadata'
             assert frozen['campaign_manifest'] == 'manifests/kde-plasma-package-build.json'
             assert frozen['campaign_manifest_sha256'] == hashlib.sha256(subprocess.check_output(['git','show',f'{source_commit}:manifests/kde-plasma-package-build.json'])).hexdigest()
             assert frozen['next_package_attempt'] == len(record['attempts'])+1
@@ -173,6 +193,7 @@ def main():
     if job_bytes is not None:
         (historical/'workflow-job.json').write_bytes(job_bytes)
         (historical/'host-result.json').write_bytes(host_bytes)
+        shutil.copyfile(a.host_dir/'evidence-sha256.txt',historical/'host-evidence-sha256.txt')
     recovery = None
     if recovered:
         supplement = archive_root/'sealed-host-hidden-files.zip'
@@ -223,10 +244,11 @@ def main():
     if baseline_bytes is not None:
         evidence['baseline_preflight_path'] = str(relative/'ubuntu-baseline-preflight.json')
         evidence['baseline_preflight_sha256'] = sha(historical/'ubuntu-baseline-preflight.json')
-    if a.host_export:
-        evidence.update(artifact_origin='sealed-host-package-export',actions_export_complete=False,
-                        workflow_job_path=str(relative/'workflow-job.json'),workflow_job_sha256=sha(historical/'workflow-job.json'),
+    if job_bytes is not None:
+        evidence.update(workflow_job_path=str(relative/'workflow-job.json'),workflow_job_sha256=sha(historical/'workflow-job.json'),
                         host_result_path=str(relative/'host-result.json'),host_result_sha256=sha(historical/'host-result.json'))
+    if a.host_export:
+        evidence.update(artifact_origin='sealed-host-package-export',actions_export_complete=False)
     record.update(state='PASS', evidence=evidence)
     record['attempts'].append({'attempt':number, 'state':'PASS', 'sbuild_result':'PASS', 'lintian_result':'PASS',
                               'autopkgtest_result':'PASS', 'package_attempt_consumed':True,

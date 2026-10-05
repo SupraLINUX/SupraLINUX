@@ -100,7 +100,8 @@ EOF
 )
 cp "${WORK}/"*.dsc "${WORK}/"*.tar.xz "${EVIDENCE}/"
 sbuild --verbose --chroot-mode=unshare --dist=resolute --arch=amd64 \
-    "${EXTRA_ARGS[@]}" "${SBUILD_OPTIONS[@]}" --build-dir="${WORK}/out" "${WORK}/supralinux-cache-probe_1.0.dsc" \
+    "${EXTRA_ARGS[@]}" "${SBUILD_OPTIONS[@]}" --no-run-lintian \
+    --build-dir="${WORK}/out" "${WORK}/supralinux-cache-probe_1.0.dsc" \
     |& tee "${EVIDENCE}/sbuild.log"
 grep -Fq 'Retained ECM 6.30.0 and Ubuntu Qt 6.10.' "${EVIDENCE}/sbuild.log"
 grep -Fq 'Reviewed predecessor versions installed in clean sbuild: PASS' "${EVIDENCE}/sbuild.log"
@@ -109,5 +110,5 @@ grep -F "extra-cmake-modules (= ${ECM_VERSION})" "${WORK}/out/"*.buildinfo > "${
 cp "${WORK}/out/"*.deb "${WORK}/out/"*.changes "${WORK}/out/"*.buildinfo "${EVIDENCE}/"
 mapfile -t DEBUG_OUTPUTS < <(find "${WORK}/out" -maxdepth 1 -name '*.ddeb' -type f)
 if (( ${#DEBUG_OUTPUTS[@]} > 0 )); then cp "${DEBUG_OUTPUTS[@]}" "${EVIDENCE}/"; fi
-printf '{"state":"PASS","kind":"infrastructure-consumer-probe","canonical_package_state_effect":"none","consumes_package_attempt":false,"predecessors_installed_at_reviewed_versions":true}\n' > "${EVIDENCE}/result.json"
+printf '{"state":"PASS","kind":"infrastructure-consumer-probe","canonical_package_state_effect":"none","consumes_package_attempt":false,"predecessors_installed_at_reviewed_versions":true,"package_quality_certification":false,"lintian_result":"not-applicable-to-infrastructure-probe"}\n' > "${EVIDENCE}/result.json"
 printf 'Frameworks retained build input probe: PASS\n'

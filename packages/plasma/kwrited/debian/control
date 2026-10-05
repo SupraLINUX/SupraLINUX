@@ -1,0 +1,32 @@
+Source: kwrited
+Section: kde
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+XSBC-Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Build-Depends: cmake (>= 3.16~),
+               debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               extra-cmake-modules (= 6.30.0-0supralinux3),
+               gettext,
+               libkf6coreaddons-dev (= 6.30.0-0supralinux4),
+               libkf6dbusaddons-dev (= 6.30.0-0supralinux3),
+               libkf6i18n-dev (= 6.30.0-0supralinux1),
+               libkf6notifications-dev (= 6.30.0-0supralinux1),
+               libkf6pty-dev (= 6.30.0-0supralinux1),
+               pkgconf,
+               qt6-base-dev (>= 6.10.0~),
+Standards-Version: 4.7.0
+Homepage: https://invent.kde.org/plasma/kwrited
+Vcs-Browser: https://github.com/SupraLINUX/SupraLINUX/tree/architecture/bootstrap-v1/packages/plasma/kwrited
+Vcs-Git: https://github.com/SupraLINUX/SupraLINUX.git
+Rules-Requires-Root: no
+
+Package: kwrited
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends},
+Description: Receive local console messages as Plasma notifications
+ Kwrited receives local write(1) and wall(1) messages through a
+ pseudo-terminal and displays them through the Plasma notification service.
+ .
+ This package is part of the KDE base workspace module.

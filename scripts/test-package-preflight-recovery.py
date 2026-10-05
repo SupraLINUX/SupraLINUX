@@ -10,6 +10,9 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('preflight_closure', ROOT/'scripts/close-package-revalidation-evidence.py')
 closure = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(closure)
+job_spec = importlib.util.spec_from_file_location('package_closure', ROOT/'scripts/close-plasma-package-evidence.py')
+package = importlib.util.module_from_spec(job_spec)
+job_spec.loader.exec_module(package)
 
 
 class Recovery(unittest.TestCase):
@@ -67,6 +70,35 @@ class Recovery(unittest.TestCase):
                 with self.assertRaises(AssertionError):
                     self.recover()
                 self.job[key] = old
+
+
+class PackageJobBindings(unittest.TestCase):
+    def setUp(self):
+        self.host = {'exit_code': 0, 'workflow_run_id': '123'}
+        self.job = {'id': 456, 'head_sha': 'source', 'run_id': 123, 'status': 'completed', 'conclusion': 'success',
+                    'steps': [{'name': 'Run current reviewed package', 'conclusion': 'success'},
+                              {'name': 'Retain package sources, binaries and evidence', 'conclusion': 'success'}]}
+
+    def test_complete_job_and_separate_failed_export(self):
+        package.verify_workflow_job(self.job, self.host, 'source', 456)
+        self.host['exit_code'] = 1
+        self.job['conclusion'] = 'failure'
+        self.job['steps'][1]['conclusion'] = 'failure'
+        package.verify_workflow_job(self.job, self.host, 'source', 456, host_export=True)
+        with self.assertRaises(AssertionError):
+            package.verify_workflow_job(self.job, self.host, 'source', 456)
+
+    def test_wrong_job_identity_or_missing_package_success_rejected(self):
+        for key, value in [('id', 457), ('head_sha', 'other'), ('run_id', 124), ('status', 'in_progress')]:
+            with self.subTest(key=key):
+                old = self.job[key]
+                self.job[key] = value
+                with self.assertRaises(AssertionError):
+                    package.verify_workflow_job(self.job, self.host, 'source', 456)
+                self.job[key] = old
+        self.job['steps'][0]['conclusion'] = 'failure'
+        with self.assertRaises(AssertionError):
+            package.verify_workflow_job(self.job, self.host, 'source', 456)
 
 
 if __name__ == '__main__':

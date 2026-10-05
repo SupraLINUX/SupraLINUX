@@ -64,7 +64,8 @@ def main():
     assert not destination.exists(), 'Refusing to overwrite packaging'
     shutil.copytree(args.packaging,destination,ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
     campaign['nodes'][args.node] = record
-    campaign.update(state='execution-authorized',authorized_nodes=[args.node],package_execution_authorized=True)
+    campaign.update(state='execution-authorized',authorized_nodes=[args.node],package_execution_authorized=True,
+                    execution_mode='preflight')
     planning['planning'].update(phase='level0-package-build',status='level0-package-build-pending',next_gate='plasma-level0-authoritative-package-build',package_execution_authorized=True,authorized_package_nodes=[args.node])
     level.update(state='package-build-authorized',next_gate=planning['planning']['next_gate'],package_execution_authorized=True,authorized_package_nodes=[args.node])
     level['scheduling'].update(package_execution_locked=False,scope='Only the individually reviewed current node; remaining Level 0 packaging stays pending')

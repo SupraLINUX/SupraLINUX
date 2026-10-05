@@ -1,6 +1,6 @@
 # Authoritative Plasma package builds
 
-The current Activities route is in infrastructure preflight after a nested QEMU
+The Activities input route was recertified after a nested QEMU
 process blocked in `kvm_async_pf_task_wait_schedule` during Ubuntu baseline APT
 setup. Starting the outer guest with 8 GiB did not eliminate the observed wait.
 Run 37337969117 wrote neither a runner result nor an Actions artifact; its sealed
@@ -16,6 +16,12 @@ through QMP and requires KVM to remain enabled. This is a mitigation for the
 observed wait, not a proven kernel fix or a host configuration change. A paused
 128 MiB KVM QEMU instance verified both properties locally; an authoritative
 small package-input preflight must pass before the investigated package retry.
+The authoritative input preflight passed in run 37341600743. Activities then
+closed package PASS in run 37342986284: clean sbuild, source/binary lintian, both
+actual upstream tests, normal Ubuntu APT upgrade with the repaired KConfig,
+the unchanged Ubuntu SDK client and a rebuilt consumer. The original Attempt 1
+FAIL is preserved. The complete source/binary/debug/buildinfo/changes closure
+and logs were retained and restored offline without GitHub.
 The flags and their scope are described in the
 [QEMU documentation](https://www.qemu.org/docs/master/system/i386/kvm-pv.html).
 
@@ -23,6 +29,20 @@ New executions freeze only the active package record and its execution inputs,
 with the original campaign SHA-256 and next package Attempt number. Unrelated
 closed histories stay in their existing evidence. Closure checks that provenance
 against the source commit; historical full contracts remain valid and unchanged.
+
+Kwrited is the next individually reviewed package. Its ordinary KDED module
+profile and libutempter support are preserved. Package clients load the actual
+installed module, send text to its actual slave PTY, capture its notification on
+a private D-Bus service, check normalization and verify PTY cleanup after unload.
+Ubuntu Qt stays in place. Source preparation and a local Ubuntu module fixture
+are preparatory; authoritative package acceptance remains pending.
+
+The synthetic predecessor-input consumer now explicitly disables sbuild's
+automatic lintian stage. Its scope is exact input installation and compilation,
+and its outputs cannot enter the desktop package pool. This avoids installing
+142 extra lintian-related packages solely for that infrastructure probe. Actual
+candidate source/binary lintian and package tests remain required. The changed
+probe must pass Kwrited's small authoritative preflight before its first Attempt.
 
 `manifests/kde-plasma-package-build.json` records each individually reviewed
 packaging overlay, its exact input hashes, binary identities and current scope.

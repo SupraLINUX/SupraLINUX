@@ -251,6 +251,22 @@ def validate():
                 assert all(result["files_sha256"]["ubuntu-baseline-preflight/" + file] == digest
                            for file, digest in baseline["files_sha256"].items())
             retention = evidence["local_retention"]
+            if 'campaign_manifest_sha256' in built_contract:
+                assert evidence.get('workflow_job_path') and evidence.get('host_result_path')
+            if evidence.get('workflow_job_path') and evidence.get('artifact_origin') != 'sealed-host-package-export':
+                job_bytes = (ROOT/evidence['workflow_job_path']).read_bytes()
+                host_bytes = (ROOT/evidence['host_result_path']).read_bytes()
+                assert hashlib.sha256(job_bytes).hexdigest() == evidence['workflow_job_sha256']
+                assert hashlib.sha256(host_bytes).hexdigest() == evidence['host_result_sha256']
+                job, host = json.loads(job_bytes), json.loads(host_bytes)
+                assert job['id'] == evidence['workflow_job_id'] and job['head_sha'] == evidence['source_commit']
+                assert str(job['run_id']) == host['workflow_run_id'] == result['workflow_run_id']
+                assert job['status'] == 'completed' and job['conclusion'] == 'success' and host['exit_code'] == 0
+                steps = {step['name']: step for step in job['steps']}
+                assert all(steps[step]['conclusion'] == 'success' for step in
+                           ['Run current reviewed package', 'Retain package sources, binaries and evidence'])
+                seal = (ROOT/evidence['host_result_path']).parent/'host-evidence-sha256.txt'
+                assert hashlib.sha256(seal.read_bytes()).hexdigest() == evidence['host_evidence_manifest_sha256']
             if evidence.get('artifact_origin') == 'sealed-host-package-export':
                 assert evidence['artifact_id'] is None and evidence['actions_export_complete'] is False
                 job_bytes = (ROOT/evidence['workflow_job_path']).read_bytes()
