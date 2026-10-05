@@ -1,0 +1,6 @@
+Tests: wallpaper-resources
+Depends: @, python3, ffmpeg
+
+Tests: ubuntu-upgrade
+Depends: @, python3, ffmpeg, apt
+Restrictions: needs-root

@@ -8,9 +8,10 @@ runner. Ordinary PR CI validates the contract without reopening materialization.
 
 The initial node is Breeze GRUB 6.7.5. Its resources require only debhelper to
 package, so this sample uses the certified clean golden image. It does not need
-the Frameworks milestone or a Qt transition. Ocean Sound Theme is the next individually reviewed node. The remaining
-nodes stay locked until their own review. For example, KDecoration's Ubuntu rules
-currently suppress `dh_auto_test`; that requires review before its admission.
+the Frameworks milestone or a Qt transition. Ocean, Oxygen and KDecoration have
+also closed authoritative package PASS. Wallpapers are individually admitted;
+remaining nodes stay locked until their own review. KDecoration now enables the
+upstream tests that Ubuntu's reference rules suppressed.
 
 The runner rechecks KDE's detached signature and frozen source/packaging hashes,
 creates a source package, builds in a fresh resolute sbuild/unshare rootfs with
@@ -47,7 +48,7 @@ preserved. Neither result was rewritten as PASS. The final package contract
 records all three Attempts and binds the PASS to its exact source commit,
 workflow/job, packaging hashes and host evidence seal.
 
-The other 33 Level 0 nodes still require individual review. The captured Ubuntu
+The captured Ubuntu
 reference inventory in `manifests/evidence/plasma/level0-packaging-inventory.json`
 lists 13 test-step overrides and no autopkgtest control files; it is advisory
 inventory and does not admit any package.
@@ -63,9 +64,16 @@ The cache is never represented as the golden image or as final package evidence.
 Inside the guest, every cached binary and the APT index are hash-verified;
 selected predecessor package/source/version/architecture must match the reviewed
 contract and current eligible Frameworks node. Only those explicit binaries are
-passed to sbuild. Every package uses a new Ubuntu buildd rootfs with updates and
-security enabled. The milestone rootfs is not reused because its older mirror
-state must not define the current build environment.
+passed to sbuild. Every build uses a disposable Ubuntu buildd environment with
+updates and security enabled. Reviewed nodes may derive its tarball from the
+immutable bare milestone base: verify the contracted SHA, Ubuntu identity and
+absence of Frameworks/Qt SDK packages, replace only APT sources, then require
+`--apt-update --apt-distupgrade` for both the infrastructure probe and candidate
+build. These options refresh and upgrade each disposable environment, as defined
+in the [sbuild manual](https://manpages.debian.org/testing/sbuild/sbuild.1.en.html).
+The original cached tarball is unchanged. Admission records base and derived
+hashes, the Ubuntu archive keyring, all installed base packages, suites and time.
+Fresh mmdebstrap remains the default for records without this explicit policy.
 
 An infrastructure-only ECM/Qt consumer must pass in sbuild before a Plasma
 Attempt starts. It retains source, binary, buildinfo, changes and logs, and checks
@@ -164,3 +172,20 @@ the success summary to every executed entry, rejecting failed or missing tests.
 The failed artifact retains sources and logs but lacks candidate binaries:
 verification ran before capture. The runner now captures binary, changes,
 buildinfo and debug outputs immediately after sbuild, before later verification.
+
+KDecoration Attempt 2 closed PASS in
+[run 37249338022](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37249338022):
+four upstream tests, unchanged Ubuntu client execution after upgrading both
+libraries, a client compiled against the new headers, symbol/SONAME guards,
+lintian and APT checks. Five binary/debug payloads and complete source/buildinfo
+closure are retained and restored offline. Actions omitted two generated hidden
+CMake files from the client build directory. Both were recovered byte-for-byte
+from the independently sealed guest copy and retained in a hashed supplement;
+the original result and Actions ZIP remain unchanged. The export recovery proof
+is immutable. The workflow now includes hidden files, and recovery rejects
+altered bytes, unsealed files and ordinary missing files.
+
+Wallpapers preserve epoch 4, the Ubuntu binary name and Architecture all. Tests
+cover 37 wallpaper sets, 288 resources, 143 safe aliases and decoding of 108
+unique images. This is the additional collection; the default wallpaper belongs
+to Breeze and later desktop integration.

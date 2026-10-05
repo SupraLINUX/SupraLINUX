@@ -3,7 +3,7 @@
   "role": "reviewed-plasma-package-build",
   "state": "execution-authorized",
   "authorized_nodes": [
-    "plasma-workspace-wallpapers"
+    "kdecoration"
   ],
   "package_execution_authorized": true,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
@@ -402,7 +402,7 @@
       }
     },
     "kdecoration": {
-      "state": "PASS",
+      "state": "build-pending",
       "source_package": "kdecoration",
       "version": "4:6.7.5-0supralinux1",
       "upstream_version": "6.7.5",
@@ -518,27 +518,6 @@
           "repair": "Require all declared upstream tests and account for every executed CTest entry, including ECM additions. Capture binaries/buildinfo/changes before post-build verification so a future validation failure retains those outputs. Retry only KDecoration in a fresh KVM runner.",
           "verification_diagnosis_path": "manifests/evidence/plasma/kdecoration-attempt1/verification-diagnosis.json",
           "verification_diagnosis_sha256": "dc1b7220031ece998eb3539fc770d0a8bb1b4068e742feef4a7eb7c3488388e8"
-        },
-        {
-          "attempt": 2,
-          "state": "PASS",
-          "sbuild_result": "PASS",
-          "lintian_result": "PASS",
-          "autopkgtest_result": "PASS",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37249338022,
-          "workflow_job_id": 111573553470,
-          "source_commit": "136d128a2f4e828edca70837421a61cd917cf263",
-          "artifact_id": 11320766520,
-          "artifact_sha256": "fbb4bc690ea851fc44af28e6ce2f9ad661ccfa2cd5320b61722bbd10798f1e50",
-          "result_path": "manifests/evidence/plasma/kdecoration-attempt2/result.json",
-          "result_sha256": "acb4add4a834624da812d4828e91eca85bf4c8ab98928834d64e88e8350e5f98",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t005308z-3863161",
-          "host_evidence_manifest_sha256": "b070db0bee2be78fc7e5ec63fd95281f528562816f97561451dc86e9960eac5f",
-          "hidden_file_export_recovery": {
-            "proof_path": "manifests/evidence/plasma/kdecoration-attempt2/export-recovery.json",
-            "proof_sha256": "341e5678a2925e76d7f79d6dd37d85c2ba6001d028fa97abfdb9b9a63b4dcfe1"
-          }
         }
       ],
       "review": {
@@ -553,114 +532,7 @@
         "tests/baseline-setup",
         "tests/ubuntu-abi-client",
         "tests/consumer"
-      ],
-      "evidence": {
-        "workflow_run_id": 37249338022,
-        "workflow_job_id": 111573553470,
-        "source_commit": "136d128a2f4e828edca70837421a61cd917cf263",
-        "artifact_id": 11320766520,
-        "artifact_sha256": "fbb4bc690ea851fc44af28e6ce2f9ad661ccfa2cd5320b61722bbd10798f1e50",
-        "result_path": "manifests/evidence/plasma/kdecoration-attempt2/result.json",
-        "result_sha256": "acb4add4a834624da812d4828e91eca85bf4c8ab98928834d64e88e8350e5f98",
-        "contract_path": "manifests/evidence/plasma/kdecoration-attempt2/build-contract.json",
-        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t005308z-3863161",
-        "host_evidence_manifest_sha256": "b070db0bee2be78fc7e5ec63fd95281f528562816f97561451dc86e9960eac5f",
-        "local_retention": {
-          "archive_root": ".artifacts/plasma-6.7.5/kdecoration-attempt2",
-          "archive_index_sha256": "d7929a8cacdecf3f581c191903c926bf761e13114b66a7d648c42c3e4ce055a4",
-          "plan_path": "manifests/evidence/plasma/kdecoration-artifact-plan.json",
-          "plan_sha256": "945cf48f93bf671594906f9bc91792e36a14fef51f439522b099676c48b88d1d",
-          "source_complete": true,
-          "changes_complete": true,
-          "buildinfo_verified": true,
-          "artifact_zip_sha256_verified": true,
-          "offline_restore_verified": true,
-          "requires_github_for_restore": false,
-          "off_host_backup_verified": false,
-          "unique_binary_package_count": 5,
-          "binary_payload_file_count": 5,
-          "payload_prefix": "packages/"
-        },
-        "cache_probe_result_path": "manifests/evidence/plasma/kdecoration-attempt2/cache-probe-result.json",
-        "cache_probe_result_sha256": "6f7e5865703570b1575c929f582ac7f0459bfe881712ef16aa9968e303cc25b3",
-        "upstream_tests_path": "manifests/evidence/plasma/kdecoration-attempt2/upstream-tests.json",
-        "upstream_tests_sha256": "3ed689464faf3708b9a6ff2de98b6c9313f3680589e5bcd226f232535a2091bf",
-        "hidden_file_export_recovery": {
-          "proof_path": "manifests/evidence/plasma/kdecoration-attempt2/export-recovery.json",
-          "proof_sha256": "341e5678a2925e76d7f79d6dd37d85c2ba6001d028fa97abfdb9b9a63b4dcfe1"
-        }
-      }
-    },
-    "plasma-workspace-wallpapers": {
-      "state": "build-pending",
-      "source_package": "plasma-workspace-wallpapers",
-      "version": "4:6.7.5-0supralinux1",
-      "upstream_version": "6.7.5",
-      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/plasma-workspace-wallpapers-6.7.5.tar.xz",
-      "upstream_sha256": "c481ac4b937a2b1b080c3273e0557cd0c9d57b644156b941902483fd8e1646b5",
-      "signature_sha256": "ac9c0a591fe0335c6641dc70ffbd4e85e69d97ff0ba24abc076859130819cd35",
-      "packaging_path": "packages/plasma/plasma-workspace-wallpapers/debian",
-      "packaging_review": "PASS",
-      "packaging_reference_version": "4:6.6.4-0ubuntu1",
-      "packaging_reference_sha256": "c18fbfaa4f9b1575e4053ecb98906bedcf45f13e62510ccbbd3e5fef53b6d324",
-      "packaging_sha256": {
-        "changelog": "41690e8d02328622e9afb64b6af24fd29a6e62a2c79d9881536db7b61fb180bb",
-        "control": "db3645438dbf08bfc9dccb3502c1e9643833b8dd130da8a2c63dd8587592807d",
-        "copyright": "55b5ad7d07ac6c7f3a73a57643719088db1be691160b71022aa079458d247ea4",
-        "docs": "68e5edf8b0f0e49d6af75cff04d4b2239837e439454f5fcc4e020ab526d78706",
-        "rules": "984e7b1a2f04a3e441c83360260be9e627f5ac293f877051ac7e78a6350b3035",
-        "salsa/extra_repository.list": "412646a06d733ca403c3175d36f1d1e734baaa8a76bb8e5176a0d0fb4bda7d45",
-        "salsa/qt-kde-team.debian.net.asc": "2b218b250b8929ad7055afe891bd29288228cfb6efac0e4ed638d9db8d3c4e77",
-        "salsa-ci.yml": "04779f76232c171e1b0094a8bf323543669e75a3131a1d706b8c6f61ec7c2ab0",
-        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
-        "tests/control": "2790b1ae643213bd070ab5ee35d16e92f6b9970cb3be3f3861027626705c9ac5",
-        "tests/ubuntu-upgrade": "7a906bf47618eab9bf18f728600ebad94eeed63763098f2966d938428158138a",
-        "tests/wallpaper-resources": "cd15825208183a3bf89f1fbc4e91750f611fa9d51f9f9dc9f248654e0b6e8e91",
-        "tests/wallpaper-resources.json": "6cbbee332ef2e45c3dd4de8f74da4df88d0a36deafd5ccdcf57815de70c89f20",
-        "upstream/metadata": "b9cd50e03f006b2c1ae4dd3a5f4b5292bc3846f4f27afece83c4d88d5016fb39",
-        "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
-        "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
-      },
-      "binary_packages": {
-        "plasma-workspace-wallpapers": "all"
-      },
-      "ubuntu_baseline_package": "plasma-workspace-wallpapers",
-      "frameworks_predecessors": {
-        "extra-cmake-modules": {
-          "source_package": "kf6-extra-cmake-modules",
-          "version": "6.30.0-0supralinux3",
-          "binaries": [
-            {
-              "package": "extra-cmake-modules",
-              "architecture": "all",
-              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
-            }
-          ]
-        }
-      },
-      "attempts": [],
-      "required_executable_files": [
-        "rules",
-        "tests/wallpaper-resources",
-        "tests/ubuntu-upgrade"
-      ],
-      "review": {
-        "upstream_changes": "Signed official 6.7.5; all 37 wallpaper sets and 288 resources, including 143 safe image aliases. No source modifications.",
-        "packaging_changes": "Preserve Ubuntu epoch 4, binary name and Architecture all. Correct per-wallpaper authors/licenses from upstream metadata; preserve root and Debian references. Use explicit Qt 6 for legacy ECM setup and declare the Qt provider.",
-        "build_dependencies": "Exact retained ECM 6.30.0-0supralinux3 through explicit sbuild input; qt6-base-dev from Ubuntu 6.10.",
-        "test_policy": "No upstream tests. Check exact dpkg-owned resource coverage/hashes, PNG chunks except validated tIME, alias identity and containment, all wallpaper IDs/authors/licenses and decode all 108 unique images. Host source fixture passed; KVM package execution remains pending.",
-        "activation_policy": "Installs the complete additional wallpaper collection; default wallpaper remains part of Breeze and session integration.",
-        "rootfs_policy": "Admit immutable bare milestone buildd base by digest, Ubuntu identity and absence of Frameworks/Qt SDK. Replace only APT sources with all three signed Ubuntu suites; sbuild updates/upgrades every disposable build. Infrastructure ECM/Qt consumer must pass before a package Attempt."
-      },
-      "sbuild_rootfs_policy": {
-        "kind": "immutable-bare-milestone",
-        "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
-        "suites": [
-          "resolute",
-          "resolute-updates",
-          "resolute-security"
-        ]
-      }
+      ]
     }
   },
   "retained_attempt_archives": [
@@ -714,12 +586,6 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/kdecoration-attempt1",
       "archive_index_sha256": "b7f5ca6551b6b828acffd418c9d3b0928e484ce650518b238494f5b58c047e3c"
-    },
-    {
-      "node": "kdecoration",
-      "attempt": 2,
-      "archive_root": ".artifacts/plasma-6.7.5/kdecoration-attempt2",
-      "archive_index_sha256": "d7929a8cacdecf3f581c191903c926bf761e13114b66a7d648c42c3e4ce055a4"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",

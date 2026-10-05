@@ -142,17 +142,29 @@ cp "${TARBALL}.sig" "${EVIDENCE}/upstream.tar.xz.sig"
 
 STAGE="sbuild-rootfs"
 rm -f "${CHROOT}"
-mmdebstrap --mode=unshare --variant=buildd --architectures=amd64 --components=main,universe \
-    --skip=output/mknod --format=tar resolute "${CHROOT}" \
-    "deb ${MIRROR} resolute main universe" \
-    "deb ${MIRROR} resolute-updates main universe" \
-    "deb ${MIRROR} resolute-security main universe" |& tee "${EVIDENCE}/rootfs.log"
+ROOTFS_POLICY="$(python3 - "${EVIDENCE}/build-contract.json" "${NODE}" <<'PY'
+import json, sys
+print(json.load(open(sys.argv[1]))['nodes'][sys.argv[2]].get('sbuild_rootfs_policy',{}).get('kind','fresh-buildd'))
+PY
+)"
+if [[ "${ROOTFS_POLICY}" == "immutable-bare-milestone" ]]; then
+    python3 "${ROOT}/scripts/prepare-milestone-sbuild-rootfs.py" "${NODE}" --output "${CHROOT}" \
+        --evidence "${EVIDENCE}/rootfs-admission.json" --mirror "${MIRROR}" |& tee "${EVIDENCE}/rootfs.log"
+    EXTRA_ARGS+=(--apt-update --apt-distupgrade)
+else
+    [[ "${ROOTFS_POLICY}" == "fresh-buildd" ]]
+    mmdebstrap --mode=unshare --variant=buildd --architectures=amd64 --components=main,universe \
+        --skip=output/mknod --format=tar resolute "${CHROOT}" \
+        "deb ${MIRROR} resolute main universe" \
+        "deb ${MIRROR} resolute-updates main universe" \
+        "deb ${MIRROR} resolute-security main universe" |& tee "${EVIDENCE}/rootfs.log"
+fi
 sha256sum "${CHROOT}" > "${EVIDENCE}/rootfs-sha256.txt"
 
 if [[ "${EXECUTION_CHECKPOINT}" != "none" ]]; then
     STAGE="predecessor-transport-probe"
     "${ROOT}/scripts/probe-frameworks-build-inputs.sh" "${EVIDENCE}/predecessor-inputs.json" \
-        "${WORK}/cache-probe" "${EVIDENCE}/cache-probe"
+        "${WORK}/cache-probe" "${EVIDENCE}/cache-probe" --apt-update --apt-distupgrade
 fi
 
 STAGE="sbuild"

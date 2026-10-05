@@ -1,0 +1,14 @@
+{
+  "kind": "sealed-host-hidden-file-export-recovery",
+  "actions_artifact_id": 11320766520,
+  "actions_artifact_sha256": "fbb4bc690ea851fc44af28e6ce2f9ad661ccfa2cd5320b61722bbd10798f1e50",
+  "host_evidence_manifest_sha256": "b070db0bee2be78fc7e5ec63fd95281f528562816f97561451dc86e9960eac5f",
+  "files_sha256": {
+    "autopkgtest/artifacts/ubuntu-abi-client/ubuntu-compiled-client/build/.qt/QtDeploySupport.cmake": "18405a61903af01a6dd902c593d8e5ff2faf50caf7e77f5d35c87304ff5ba515",
+    "autopkgtest/artifacts/ubuntu-abi-client/ubuntu-compiled-client/build/.qt/QtDeployTargets.cmake": "eb72aeebc36e32332c0e235f6ecdc4853f2c1bbf6bd47a35797529ed1bc6cd88"
+  },
+  "supplement_path": ".artifacts/plasma-6.7.5/kdecoration-attempt2/sealed-host-hidden-files.zip",
+  "supplement_sha256": "3eeab3f16f138ff18b376e55ababee0701212283d64609b40ad723f2a077c227",
+  "offline_restore_verified": true,
+  "original_actions_archive_unchanged": true
+}

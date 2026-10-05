@@ -28,6 +28,8 @@ def main():
     p.add_argument('--artifact-meta', type=Path, required=True)
     p.add_argument('--host-dir', type=Path, required=True)
     p.add_argument('--job-id', type=int, required=True)
+    p.add_argument('--recover-hidden-files', action='store_true',
+                   help='retain hidden files omitted by Actions from the independently sealed host copy')
     a = p.parse_args()
     campaign_path = ROOT/'manifests/kde-plasma-package-build.json'
     campaign = json.loads(campaign_path.read_text())
@@ -51,8 +53,8 @@ def main():
         assert meta['workflow_run']['id'] == int(result['workflow_run_id'])
         assert result['authoritative'] is True and result['package_attempt_consumed'] is True
         assert all(result[k] == 'PASS' for k in ['sbuild_result','lintian_result','autopkgtest_result'])
-        for name, digest in result['files_sha256'].items():
-            assert hashlib.sha256(archive.read(name)).hexdigest() == digest, name
+        exporter = importlib.machinery.SourceFileLoader('exporter', str(ROOT/'scripts/plasma-evidence-export.py')).load_module()
+        recovered = exporter.verify_export(archive, result, a.host_dir if a.recover_hidden_files else None)
         upstream_bytes = None
         if record.get('upstream_tests'):
             upstream_bytes = archive.read('upstream-tests.json')
@@ -76,6 +78,14 @@ def main():
             assert 'Frameworks retained build input probe: PASS' in archive.read('pipeline.log').decode()
         else:
             probe_bytes = None
+        rootfs_bytes = None
+        if record.get('sbuild_rootfs_policy',{}).get('kind') == 'immutable-bare-milestone':
+            rootfs_bytes = archive.read('rootfs-admission.json')
+            rootfs = json.loads(rootfs_bytes)
+            assert rootfs['state'] == 'PASS' and rootfs['base_sha256'] == record['sbuild_rootfs_policy']['sha256']
+            assert rootfs['frameworks_and_qt_sdk_preinstalled'] is False and rootfs['package_attempt_consumed'] is False
+            assert rootfs['requires_sbuild_apt_update_and_distupgrade'] is True
+            assert rootfs['suites'] == record['sbuild_rootfs_policy']['suites']
     number = len(record['attempts']) + 1
     relative = Path(f'manifests/evidence/plasma/{a.node}-attempt{number}')
     historical = ROOT/relative
@@ -107,6 +117,29 @@ def main():
         (historical/'cache-probe-result.json').write_bytes(probe_bytes)
     if upstream_bytes is not None:
         (historical/'upstream-tests.json').write_bytes(upstream_bytes)
+    if rootfs_bytes is not None:
+        (historical/'rootfs-admission.json').write_bytes(rootfs_bytes)
+    recovery = None
+    if recovered:
+        supplement = archive_root/'sealed-host-hidden-files.zip'
+        assert not supplement.exists(), 'Refusing to replace retained recovery bytes'
+        with zipfile.ZipFile(supplement, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
+            for name, data in sorted(recovered.items()):
+                archive.writestr(name, data)
+        with tempfile.TemporaryDirectory(dir=ROOT/'.work', prefix='evidence-offline-restore-') as temp:
+            restored = Path(temp)/supplement.name
+            shutil.copyfile(supplement, restored)
+            assert sha(restored) == sha(supplement)
+            with zipfile.ZipFile(restored) as archive:
+                assert set(archive.namelist()) == set(recovered)
+                assert all(hashlib.sha256(archive.read(name)).hexdigest() == result['files_sha256'][name] for name in recovered)
+        proof = {'kind':'sealed-host-hidden-file-export-recovery', 'actions_artifact_id':meta['id'],
+                 'actions_artifact_sha256':artifact_sha, 'host_evidence_manifest_sha256':sha(a.host_dir/'evidence-sha256.txt'),
+                 'files_sha256':{name:result['files_sha256'][name] for name in sorted(recovered)},
+                 'supplement_path':str(supplement.relative_to(ROOT)), 'supplement_sha256':sha(supplement),
+                 'offline_restore_verified':True, 'original_actions_archive_unchanged':True}
+        write(historical/'export-recovery.json', proof)
+        recovery = {'proof_path':str(relative/'export-recovery.json'), 'proof_sha256':sha(historical/'export-recovery.json')}
     write(plan_path, plan)
     binaries = index['items'][0]['binaries']
     evidence = {'workflow_run_id':int(result['workflow_run_id']), 'workflow_job_id':a.job_id,
@@ -128,6 +161,11 @@ def main():
     if upstream_bytes is not None:
         evidence['upstream_tests_path'] = str(relative/'upstream-tests.json')
         evidence['upstream_tests_sha256'] = sha(historical/'upstream-tests.json')
+    if recovery is not None:
+        evidence['hidden_file_export_recovery'] = recovery
+    if rootfs_bytes is not None:
+        evidence['rootfs_admission_path'] = str(relative/'rootfs-admission.json')
+        evidence['rootfs_admission_sha256'] = sha(historical/'rootfs-admission.json')
     record.update(state='PASS', evidence=evidence)
     record['attempts'].append({'attempt':number, 'state':'PASS', 'sbuild_result':'PASS', 'lintian_result':'PASS',
                               'autopkgtest_result':'PASS', 'package_attempt_consumed':True,

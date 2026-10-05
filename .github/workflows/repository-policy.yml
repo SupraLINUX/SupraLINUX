@@ -52,6 +52,12 @@ jobs:
       - name: Test canonical package artifact retention
         run: python3 scripts/test-package-artifact-retention.py
 
+      - name: Test sealed evidence export recovery
+        run: python3 scripts/test-plasma-evidence-export.py
+
+      - name: Test immutable bare sbuild rootfs reuse
+        run: python3 scripts/test-milestone-sbuild-rootfs.py
+
       - name: Validate current project status
         run: python3 scripts/render-project-status.py --check
 

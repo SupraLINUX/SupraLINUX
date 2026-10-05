@@ -90,6 +90,12 @@ def validate():
             assert record["baseline_setup_script"].startswith("tests/")
         if record.get("upstream_tests"):
             assert len(set(record["upstream_tests"])) == len(record["upstream_tests"])
+        if record.get('sbuild_rootfs_policy'):
+            policy = record['sbuild_rootfs_policy']
+            assert policy['kind'] == 'immutable-bare-milestone'
+            assert campaign['execution_checkpoint'] == 'frameworks-6.30-pass'
+            assert len(policy['sha256']) == 64 and all(c in '0123456789abcdef' for c in policy['sha256'])
+            assert policy['suites'] == ['resolute','resolute-updates','resolute-security']
         if name in scope:
             assert record["state"] == "build-pending" and campaign["state"] == "execution-authorized"
         if record["state"] == "PASS":
@@ -108,6 +114,19 @@ def validate():
             assert built_contract["nodes"][name]["packaging_sha256"] == record["packaging_sha256"]
             assert record["attempts"][-1]["state"] == "PASS" and result["package_attempt_consumed"] is True
             retention = evidence["local_retention"]
+            if evidence.get('hidden_file_export_recovery'):
+                recovery = evidence['hidden_file_export_recovery']
+                proof_bytes = (ROOT/recovery['proof_path']).read_bytes()
+                assert hashlib.sha256(proof_bytes).hexdigest() == recovery['proof_sha256']
+                proof = json.loads(proof_bytes)
+                assert proof['kind'] == 'sealed-host-hidden-file-export-recovery'
+                assert proof['actions_artifact_id'] == evidence['artifact_id']
+                assert proof['actions_artifact_sha256'] == evidence['artifact_sha256']
+                assert proof['host_evidence_manifest_sha256'] == evidence['host_evidence_manifest_sha256']
+                assert proof['offline_restore_verified'] is True and proof['original_actions_archive_unchanged'] is True
+                assert proof['files_sha256'] and proof['supplement_path'].startswith(retention['archive_root']+'/')
+                assert all(any(part.startswith('.') for part in Path(name).parts) and
+                           result['files_sha256'][name] == digest for name,digest in proof['files_sha256'].items())
             assert all(retention[key] is True for key in ["source_complete", "changes_complete", "buildinfo_verified",
                                                          "artifact_zip_sha256_verified", "offline_restore_verified"])
             assert retention["requires_github_for_restore"] is False
@@ -127,6 +146,15 @@ def validate():
                 assert evidence["cache_probe_result_sha256"] == result["files_sha256"]["cache-probe/result.json"]
                 probe = json.loads(probe_bytes)
                 assert probe["state"] == "PASS" and probe["consumes_package_attempt"] is False
+            if record.get('sbuild_rootfs_policy'):
+                rootfs_bytes = (ROOT/evidence['rootfs_admission_path']).read_bytes()
+                assert hashlib.sha256(rootfs_bytes).hexdigest() == evidence['rootfs_admission_sha256']
+                assert evidence['rootfs_admission_sha256'] == result['files_sha256']['rootfs-admission.json']
+                rootfs = json.loads(rootfs_bytes)
+                assert rootfs['state'] == 'PASS' and rootfs['base_sha256'] == record['sbuild_rootfs_policy']['sha256']
+                assert rootfs['frameworks_and_qt_sdk_preinstalled'] is False and rootfs['package_attempt_consumed'] is False
+                assert rootfs['requires_sbuild_apt_update_and_distupgrade'] is True
+                assert rootfs['suites'] == record['sbuild_rootfs_policy']['suites']
     workflow = (ROOT / ".github/workflows/authoritative-plasma-package-build.yml").read_text()
     assert "github.event.pull_request.head.sha || github.sha" in workflow, "Workflow must bind the PR head"
     assert "ci:plasma-package-build" in workflow and "types: [labeled]" in workflow

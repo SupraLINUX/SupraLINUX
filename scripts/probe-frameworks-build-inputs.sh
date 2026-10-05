@@ -4,6 +4,8 @@ set -Eeuo pipefail
 SELECTION="$1"
 WORK="$2"
 EVIDENCE="$3"
+shift 3
+SBUILD_OPTIONS=("$@")
 mkdir -p "${WORK}/source/debian/source" "${WORK}/out" "${EVIDENCE}"
 mapfile -t EXTRA_PATHS < <(python3 - "${SELECTION}" <<'PY'
 import json, sys
@@ -75,7 +77,7 @@ EOF
 )
 cp "${WORK}/"*.dsc "${WORK}/"*.tar.xz "${EVIDENCE}/"
 sbuild --verbose --chroot-mode=unshare --dist=resolute --arch=amd64 \
-    "${EXTRA_ARGS[@]}" --build-dir="${WORK}/out" "${WORK}/supralinux-cache-probe_1.0.dsc" \
+    "${EXTRA_ARGS[@]}" "${SBUILD_OPTIONS[@]}" --build-dir="${WORK}/out" "${WORK}/supralinux-cache-probe_1.0.dsc" \
     |& tee "${EVIDENCE}/sbuild.log"
 grep -Fq 'Retained ECM 6.30.0 and Ubuntu Qt 6.10.' "${EVIDENCE}/sbuild.log"
 grep -F "extra-cmake-modules (= ${ECM_VERSION})" "${WORK}/out/"*.buildinfo > "${EVIDENCE}/predecessor-buildinfo.txt"
