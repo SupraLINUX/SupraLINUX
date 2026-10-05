@@ -5,12 +5,16 @@ import hashlib
 import importlib.machinery
 import json
 import os
+import pty
 import re
+import select
 import shlex
 import subprocess
 import struct
 import zlib
 import tempfile
+import termios
+import time
 import unittest
 from pathlib import Path
 
@@ -131,6 +135,64 @@ class InputAdmission(unittest.TestCase):
             setup.write_text("changed")
             with self.assertRaisesRegex(AssertionError, "Setup inputs changed"):
                 testing.setup_commands(root, record)
+
+    def test_large_baseline_survives_canonical_serial_terminal_and_rejects_corruption(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "package/tests").mkdir(parents=True)
+            (root / "bin").mkdir()
+            for name, body in [('apt-get', 'exit 0'), ('dpkg', 'exit 0'), ('dpkg-query', "printf '1.0'")]:
+                executable = root / 'bin' / name
+                executable.write_text('#!/bin/sh\n' + body + '\n')
+                executable.chmod(0o755)
+            marker = root / 'marker'
+            script = root / 'package/tests/setup'
+            script.write_text('#!/bin/sh\n# ' + 'transport-fixture ' * 230 + '\n' +
+                              f"printf 'complete-script\\n' > {shlex.quote(str(marker))}\n")
+            record = {'ubuntu_baseline_package': 'baseline-fixture', 'version': '2.0', 'packaging_path': 'package',
+                      'baseline_setup_script': 'tests/setup',
+                      'packaging_sha256': {'tests/setup': hashlib.sha256(script.read_bytes()).hexdigest()}}
+            setup = testing.setup_commands(root, record).replace('/var/tmp/supralinux-ubuntu-package-version', str(root / 'version'))
+            self.assertGreater(script.stat().st_size, 4096)
+            self.assertLess(max(len(line.encode()) for line in setup.splitlines()), 512)
+            environment = os.environ.copy()
+            environment['PATH'] = str(root / 'bin') + ':' + environment['PATH']
+            master, slave = pty.openpty()
+            attributes = termios.tcgetattr(slave)
+            attributes[3] &= ~termios.ECHO
+            termios.tcsetattr(slave, termios.TCSANOW, attributes)
+            child = subprocess.Popen(['/bin/sh', '-i'], stdin=slave, stdout=slave, stderr=slave,
+                                     env=environment, start_new_session=True)
+            os.close(slave)
+            os.set_blocking(master, False)
+            status = root / 'status'
+            wire = ('sh -ec ' + shlex.quote(setup) + '; printf "%s" "$?" > ' + shlex.quote(str(status)) + '\n').encode()
+            self.assertLess(max(len(line) for line in wire.splitlines()), 1024)
+            offset, deadline = 0, time.monotonic() + 10
+            try:
+                while time.monotonic() < deadline and not status.exists():
+                    readable, writable, _ = select.select([master], [master] if offset < len(wire) else [], [], .05)
+                    if writable:
+                        offset += os.write(master, wire[offset:offset + 1024])
+                    if readable:
+                        try:
+                            os.read(master, 8192)
+                        except (BlockingIOError, OSError):
+                            pass
+                self.assertTrue(status.exists(), 'Serial transport timed out')
+                self.assertEqual(status.read_text(), '0')
+                self.assertEqual(marker.read_text(), 'complete-script\n')
+            finally:
+                child.kill()
+                child.wait()
+                os.close(master)
+            marker.unlink()
+            corrupted = setup.replace('IyEv', 'eCEv', 1)
+            self.assertNotEqual(corrupted, setup)
+            result = subprocess.run(['sh', '-ec', corrupted], env=environment, capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn('FAILED', result.stdout)
+            self.assertFalse(marker.exists(), 'Corrupted setup was executed')
 
     def test_changed_packaging_rejected(self):
         original = prepare.packaging_hashes

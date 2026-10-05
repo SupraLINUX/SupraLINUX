@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Verify effective Actions runner provenance
         shell: bash
@@ -80,6 +82,9 @@ jobs:
       - name: Prove nested KVM runtime
         shell: bash
         run: scripts/check-nested-kvm-runtime.sh evidence/runner-contract/nested-kvm-runtime.txt
+
+      - name: Verify reviewed setup transport through autopkgtest QEMU
+        run: python3 scripts/probe-autopkgtest-baseline-transport.py
 
       - name: Capture runner contract evidence
         shell: bash

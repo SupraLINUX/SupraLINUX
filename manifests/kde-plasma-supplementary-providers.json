@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "role": "plasma-supplementary-kde-providers",
+  "nodes": {
+    "plasma-wayland-protocols": {
+      "schema": 1,
+      "as_of": "2026-10-05",
+      "role": "post-planning-provider-version-review",
+      "state": "packaging-preparation-pending",
+      "affected_nodes": [
+        "kwayland"
+      ],
+      "cmake_requirement": {
+        "module": "PlasmaWaylandProtocols",
+        "minimum": "1.21.0",
+        "source_url": "https://download.kde.org/stable/plasma/6.7.5/kwayland-6.7.5.tar.xz",
+        "source_sha256": "8d4c83524919dc87b5dec546d0fb14c591c03957888cb7b240a4a9d1bbdc8269",
+        "path": "CMakeLists.txt"
+      },
+      "ubuntu_provider": {
+        "package": "plasma-wayland-protocols",
+        "version": "1.20.0-2",
+        "satisfies_upstream_minimum": false,
+        "policy_path": "manifests/evidence/plasma/provider-gaps/ubuntu-wayland-provider-policy-20261005.txt",
+        "policy_sha256": "7a0150a02b00e90fb7a6876154c7f1f44f87b0c19d4eec74dd806267041eda63",
+        "scope": "local Ubuntu Resolute APT index; recheck in clean authoritative rootfs before execution"
+      },
+      "candidate_provider": {
+        "authority": "kde-upstream-stable",
+        "source_package": "plasma-wayland-protocols",
+        "upstream_version": "1.22.0",
+        "upstream_url": "https://download.kde.org/stable/plasma-wayland-protocols/plasma-wayland-protocols-1.22.0.tar.xz",
+        "upstream_sha256": "f628585c4c2d5e3a9f447a6274e2f59d7811272da557e75341e36948aa3f9d43",
+        "signature_sha256": "03710c5c4495a36130f411e872a94e25485836658c5b85180c90e29ed68ff773",
+        "signing_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "listing_source": "https://download.kde.org/stable/plasma-wayland-protocols/",
+        "signature_verification": "PASS",
+        "selection_reason": "Newest official stable provider satisfying the pinned Plasma source; XML/build metadata only, no Qt/platform runtime replacement",
+        "package_gate": "pending"
+      },
+      "historical_provider_review_preserved": true,
+      "historical_review_limit": "Source Build-Depends provider availability did not certify changed upstream minimum versions",
+      "qt_provider_effect": "none",
+      "dag_topology_effect": "none; additional external build provider required",
+      "package_execution_authorized": false,
+      "consumes_package_attempt": false,
+      "next_gate": "review-package-and-certify-upstream-protocol-compatibility"
+    }
+  }
+}

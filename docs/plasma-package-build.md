@@ -221,3 +221,33 @@ The active-job monitor now checks the guest process when API reads fail and
 keeps the working VM alive until the process exits or the job deadline expires.
 Its bounded synthetic read-fault option supports a small runner-contract probe
 before subsequent package execution. This changes monitoring, not package tests.
+
+The live read-outage probe passed on source `8fe666d45718d429ca47b321ea2b7ef258ab6182`
+in runner-contract run 37255396918/job 111591237798. One injected monitor read
+failure was followed by a local QGA observation with `exited: false`; the guest
+remained alive and completed the workflow successfully. The independently sealed
+host bundle and exact monitor/test input hashes are retained in
+`manifests/evidence/plasma/infrastructure/monitor-read-recovery-20261005/`.
+This is an infrastructure certification and consumes no package Attempt.
+
+Breeze Plymouth Attempt 1 built successfully and passed lintian and the installed
+resource test (89 resources/84 image decodes), but the Ubuntu baseline setup did
+not execute. The QEMU serial backend silently truncated an inline base64 line
+above the Linux canonical terminal limit: the setup shell returned zero while
+its script was empty. The original FAIL, sources/binaries/debug outputs and test
+logs remain immutable. A separate diagnosis records INFRA_INVALID and incomplete
+ABI/consumer scope; no candidate is admitted downstream. A real local canonical
+PTY reproduced this exact zero-status/missing-script behavior. The repair wraps
+base64 at 76 columns and verifies SHA-256 inside the guest before execution;
+regressions prove a large script survives the terminal and corruption is rejected.
+The small runner-contract transport probe must pass before the package rerun.
+The consumer's Plymouth pkg-config SDK also explicitly requires Ubuntu's
+libevdev-dev, libxkbcommon-dev and libudev-dev; these are declared for compilation.
+
+Individual source review also found an external provider version gap:
+KWayland 6.7.5 requires Plasma Wayland Protocols >=1.21.0, while the Ubuntu
+reference exposes 1.20.0-2. Historical provider availability evidence does not
+certify changed upstream minimums. The live supplementary-provider manifest
+records signed KDE stable 1.22.0 as a preparation candidate, with package and
+protocol compatibility gates pending. This adds an external build provider;
+it does not change the pinned Plasma release or replace Qt/Wayland runtime.

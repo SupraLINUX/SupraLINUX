@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "kind": "infrastructure-testbed-setup-transport-failure",
+  "original_state": "FAIL",
+  "original_result_sha256": "e98d410ae0362e5c58bc8a293b4dda975542b8fd39313a01b37055f5e5d7b917",
+  "state": "INFRA_INVALID",
+  "downstream_eligible": false,
+  "cause": "The >4096-byte inline base64 setup line was truncated by the autopkgtest QEMU serial terminal; the Ubuntu baseline script became empty and both ABI/consumer tests lacked their required baseline files. Build, lintian and installed resource test passed; compatibility execution is incomplete.",
+  "original_setup_payload_bytes": 3540,
+  "original_setup_encoded_bytes": 4720,
+  "original_setup_sha256": "f01ac5aa9d360a385947e2b940d842da516dbb17ca3d93b01d09370814b5bb6f",
+  "baseline_setup_script": "tests/baseline-setup",
+  "files_sha256": {
+    "baseline-setup-original": "f01ac5aa9d360a385947e2b940d842da516dbb17ca3d93b01d09370814b5bb6f",
+    "serial-original.json": "77e741629f6adc0b52400ac96ca4a794a2e5637ecee2b6a5561fcaf882567322",
+    "serial-repaired.json": "2efbce325c53c893c91618afa5d6ca59299e091a5c6973c5c2502ed56acc30a6"
+  },
+  "test_scope": "Installed theme resources PASS; Ubuntu ABI client and new consumer incomplete because baseline transport produced an empty script. SDK dependencies are corrected for the rerun.",
+  "local_repair_scope": "Real Linux canonical PTY reproduction and >4096-byte repaired execution with tamper rejection, mock package commands only",
+  "authoritative_repair_certification": "pending small nested KVM transport probe before package repeat"
+}

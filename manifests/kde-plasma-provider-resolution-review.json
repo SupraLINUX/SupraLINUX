@@ -343,6 +343,17 @@
       "dag_topology_effect": "none",
       "package_state_effect": "none",
       "package_attempts_consumed": 0
+    },
+    "upstream_minimum_version_gap": {
+      "status": "open-individual-provider-package-review",
+      "finding": "KWayland 6.7.5 requires PlasmaWaylandProtocols >=1.21.0; the Ubuntu reference provides 1.20.0-2. Provider existence is insufficient evidence for a changed upstream minimum.",
+      "live_manifest": "manifests/kde-plasma-supplementary-providers.json",
+      "historical_evidence_immutable": true,
+      "affected_nodes": [
+        "kwayland"
+      ],
+      "package_state_effect": "none; node not admitted for execution",
+      "package_attempts_consumed": 0
     }
   }
 }

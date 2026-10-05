@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
-apt-get install -y --no-install-recommends gcc pkgconf libplymouth-dev libevdev-dev libxkbcommon-dev libudev-dev plymouth-theme-breeze
+apt-get install -y --no-install-recommends gcc pkgconf libplymouth-dev plymouth-theme-breeze
 BASE=/var/tmp/supralinux-plymouth-baseline
 mkdir -p "${BASE}"
 cat > "${BASE}/client.c" <<'CLIENT'

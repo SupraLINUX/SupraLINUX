@@ -22,6 +22,29 @@ def validate():
     assert campaign["package_execution_authorized"] is bool(scope)
     assert campaign["runner_class"] == "supralinux-kvm-ubuntu-26.04-ephemeral"
     assert set(campaign["nodes"]) <= set(level["selected_nodes"])
+    for certification in campaign.get("infrastructure_certifications", []):
+        path = ROOT / certification["path"]
+        payload = path.read_bytes()
+        assert hashlib.sha256(payload).hexdigest() == certification["sha256"]
+        proof = json.loads(payload)
+        assert proof["state"] == "PASS" and proof["scope"] == "active-bound-monitor-read-outage-recovery"
+        assert proof["consumes_package_attempt"] is False and proof["package_execution_started"] is False
+        assert proof["canonical_package_state_effect"] == "none"
+        assert proof["injected_monitor_read_failures"] > 0 and proof["observed_live_guest_after_read_failure"] is True
+        for name, digest in proof["files_sha256"].items():
+            file = path.parent / name
+            assert file.resolve().is_relative_to(path.parent.resolve())
+            assert hashlib.sha256(file.read_bytes()).hexdigest() == digest
+        assert proof["files_sha256"]["evidence-sha256.txt"] == proof["host_evidence_seal_sha256"]
+        guest = json.loads((path.parent / "monitor-guest-process.json").read_text())
+        host = json.loads((path.parent / "host-result.json").read_text())
+        job = json.loads((path.parent / "workflow-job.json").read_text())
+        assert guest["exited"] is False and host["exit_code"] == 0 and job["conclusion"] == "success"
+        assert str(job["run_id"]) == host["workflow_run_id"] == str(proof["workflow_run_id"])
+        assert job["id"] == proof["workflow_job_id"] and job["head_sha"] == proof["source_commit"]
+        if certification["applicable"]:
+            for name, digest in proof["inputs_sha256"].items():
+                assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, "Recertify changed monitor inputs"
     for incident in campaign.get("infrastructure_incidents", []):
         assert incident["state"] == "INFRA_INVALID"
         assert incident["consumes_package_attempt"] is False and incident["package_execution_started"] is False
@@ -64,12 +87,29 @@ def validate():
                 diagnostic_bytes = (ROOT / attempt["verification_diagnosis_path"]).read_bytes()
                 assert hashlib.sha256(diagnostic_bytes).hexdigest() == attempt["verification_diagnosis_sha256"]
                 diagnostic = json.loads(diagnostic_bytes)
-                assert diagnostic["kind"] == "verification-gate-false-negative"
                 assert diagnostic["original_result_sha256"] == attempt["result_sha256"]
                 assert attempt["state"] == "INFRA_INVALID" and result["state"] == attempt["original_state"] == "FAIL"
-                assert result["stage"] == "upstream-package-tests" and result["sbuild_result"] == "PASS"
-                assert diagnostic["upstream_tests"]["state"] == "PASS"
-                assert diagnostic["upstream_tests"]["expected_tests"] == record["upstream_tests"]
+                if diagnostic["kind"] == "verification-gate-false-negative":
+                    assert result["stage"] == "upstream-package-tests" and result["sbuild_result"] == "PASS"
+                    assert diagnostic["upstream_tests"]["state"] == "PASS"
+                    assert diagnostic["upstream_tests"]["expected_tests"] == record["upstream_tests"]
+                else:
+                    assert diagnostic["kind"] == "infrastructure-testbed-setup-transport-failure"
+                    assert result["stage"] == "autopkgtest-qemu" and result["sbuild_result"] == result["lintian_result"] == "PASS"
+                    assert diagnostic["state"] == "INFRA_INVALID" and diagnostic["downstream_eligible"] is False
+                    directory = (ROOT / attempt["verification_diagnosis_path"]).parent
+                    for file_name, digest in diagnostic["files_sha256"].items():
+                        path = directory / file_name
+                        assert path.resolve().is_relative_to(directory.resolve())
+                        assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
+                    assert diagnostic["files_sha256"]["baseline-setup-original"] == diagnostic["original_setup_sha256"]
+                    built = json.loads((directory / "build-contract.json").read_text())["nodes"][name]
+                    assert built["packaging_sha256"][diagnostic["baseline_setup_script"]] == diagnostic["original_setup_sha256"]
+                    assert diagnostic["original_setup_encoded_bytes"] > 4096
+                    old = json.loads((directory / "serial-original.json").read_text())
+                    repaired = json.loads((directory / "serial-repaired.json").read_text())
+                    assert old["shell_status"] == "0" and old["baseline_marker_present"] is False and old["wire_max_line_bytes"] > 4096
+                    assert repaired["shell_status"] == "0" and repaired["baseline_marker_present"] is True and repaired["wire_max_line_bytes"] < 1024
             else:
                 assert result["state"] == attempt["state"]
             assert result["node"] == name

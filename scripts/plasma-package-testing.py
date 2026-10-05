@@ -26,9 +26,13 @@ def setup_commands(root, record):
         payload = (root/record['packaging_path']/relative).read_bytes()
         assert hashlib.sha256(payload).hexdigest() == record['packaging_sha256'][script], 'Setup inputs changed'
         encoded = base64.b64encode(payload).decode()
+        wrapped = '\n'.join(encoded[offset:offset + 76] for offset in range(0, len(encoded), 76))
         commands.extend(["baseline_setup=$(mktemp)",
                          "trap 'rm -f \"$baseline_setup\"' EXIT",
-                         f"printf '%s' {shlex.quote(encoded)} | base64 --decode > \"$baseline_setup\"",
+                         "base64 --decode > \"$baseline_setup\" <<'SUPRALINUX_BASELINE_SETUP_BASE64'",
+                         wrapped,
+                         "SUPRALINUX_BASELINE_SETUP_BASE64",
+                         f"printf '%s  %s\\n' {shlex.quote(hashlib.sha256(payload).hexdigest())} \"$baseline_setup\" | sha256sum --check --strict",
                          'bash "$baseline_setup"'])
     return '\n'.join(commands)
 
