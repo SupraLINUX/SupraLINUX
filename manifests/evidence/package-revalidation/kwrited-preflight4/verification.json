@@ -1,0 +1,263 @@
+{
+  "schema": 1,
+  "scope": "reviewed-package-input-preflight",
+  "node": "kwrited",
+  "version": "4:6.7.5-0supralinux1",
+  "state": "PASS",
+  "source_commit": "e7d39463feafe92d90cb48b557b087b78aa2ae73",
+  "workflow_run_id": 37345502476,
+  "workflow_job_id": 111882929198,
+  "artifact_id": 11360786951,
+  "artifact_sha256": "7fb5fee5065ea3a85f4e9f48c26669e9aec23c8737ea8b6bd2f0ee7a4470cec9",
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t170112z-1050085",
+  "host_evidence_manifest_sha256": "835b71a98e036ceac6e37d9be97c35d6354607d5df8554bb3c1e4745cc383dcb",
+  "package_attempt_consumed": false,
+  "result_path": "manifests/evidence/package-revalidation/kwrited-preflight4/result.json",
+  "result_sha256": "fb06131e27659c0bbd1307f93ed3084eb45c15b626708a8b6eec6c7ca7604e89",
+  "contract_path": "manifests/evidence/package-revalidation/kwrited-preflight4/build-contract.json",
+  "archive_path": ".artifacts/package-revalidation/kwrited-preflight4/sha256/7fb5fee5065ea3a85f4e9f48c26669e9aec23c8737ea8b6bd2f0ee7a4470cec9.zip",
+  "inspection": {
+    "source_complete": true,
+    "candidate_binaries_built": false
+  },
+  "offline_restore_verified": true,
+  "requires_github_for_restore": false,
+  "files_sha256": {
+    "artifact-meta.json": "f033ece207c111407cd07299e75506b995e4b81133f506ba1af0e3eab1075dd8",
+    "build-contract.json": "bb97dc8bd9cb5730708640cd0b1004c60eefcbc74af62a78c723c2713eefe11c",
+    "cache-probe/installed-predecessor-contract.json": "ececcc693767efcbf06448f8fa37bf8b493de864855275edee0fc75e94c57c1e",
+    "cache-probe/result.json": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+    "host-evidence-sha256.txt": "835b71a98e036ceac6e37d9be97c35d6354607d5df8554bb3c1e4745cc383dcb",
+    "host-result.json": "d9816361d70ff791a7fd5dd6f9f1c780f3e13e5fe2c87db79832929fecd67d4f",
+    "qemu-cpu-policy.json": "b60213e45f35d74af31f58e6bfa1751c4015da826d17aa86f3088ba3647205b4",
+    "result.json": "fb06131e27659c0bbd1307f93ed3084eb45c15b626708a8b6eec6c7ca7604e89",
+    "rootfs-admission.json": "4bcc3df42c5ca75c3183558f8a78ed19bd6859dc035cbde2f2968ce0b1b52c38",
+    "signature.log": "297b22e8a459214e23d702ad124b55a8e674cf7705178eaf33a7c0f6c0830458",
+    "ubuntu-baseline-preflight/result.json": "ff22c5a11df2bb09c4347fe67ee0395e92c29adaf3248ec1cbaa831992dbdd63",
+    "workflow-job.json": "ff78c8e64f894b234df4ffd1b5d93d7ec699b46daae5008cc527105573a0a26e"
+  },
+  "inputs_sha256": {
+    "scripts/run-authoritative-plasma-package.sh": "bc44243df48434c03b185e9ee8972ebcd0007221c1ea38c7ab25a9a18e97a930",
+    "scripts/prepare-plasma-package.py": "56afcabd4dbfff92d5bd685ebdde5bf90782bd8b0fb8150c4f3aa8112f7e7d6c",
+    "scripts/plasma-package-testing.py": "d0af4b36dad45ea121d71094176ba59873d7fb274babb268e586075a9914dd7d",
+    "scripts/probe-reviewed-ubuntu-baseline.py": "bf6e05cbee7372e35cbbd6b39d4d5dd00fbf10cda45bff8a1e0c7b9b77b5c6ba",
+    "scripts/admit-frameworks-cache.py": "d1557cb6a438645bc0b3a14daa842a531b264bb844f29f58dddbd8810540b171",
+    "scripts/prepare-milestone-sbuild-rootfs.py": "8a82a0a05fa913808a545e22a8601511a2f191e73df0963b0d1a913a41b22922",
+    "scripts/prepare-retained-package-inputs.py": "3cbd596da45a422981943afc4a2a5bfe072cbe9a9fe432ab19fc81906499b8e6",
+    "scripts/run-kvm-jit-gate-core.sh": "ea3980de4db3d5a247bc677fc8d2430f85c095ae15aaeb1898750e94c995e412",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "scripts/frameworks-revalidation-inputs.py": "80107cc92c1c3fc2a7eca4a888f94882b83c6923769fb711736b013ba813123d",
+    "scripts/prepare-frameworks-revalidation-inputs.py": "0ecd93c751dc78e956e12f46239881abe2b5e4213d3d162b0d8f845b21bc5f59",
+    "scripts/probe-frameworks-build-inputs.sh": "443f1d35ebd35b72c92ae8dbac55d9330e0414896bbaf67dc171d8ee235b1a93",
+    "scripts/freeze-reviewed-package-contract.py": "55082d69f1653f33bf10d1803330393116b23773f811457660fd573c59d6e67b"
+  },
+  "packaging_sha256": {
+    "README.source": "d3728c4c64e0f60a0ded5828d90044858a5246cb7e4503a89f62b8ff5f9f4cdc",
+    "changelog": "a3776530e96cf46b0d54b93281f3ff6e91df02bfaa97af52c97f1f8b54f882b9",
+    "control": "3e11d27718ee6d0281e686a2cd526577ed6bd2d5c9a1b569af4a58a8ac223c5d",
+    "copyright": "90f86b4d03fc9195d3ee25b6b19c4ba42a0df49a1942a90cf8b0329b78524272",
+    "rules": "178a56149300d0d28e491c7aecc2833fabce2e165bdff476e0859ee89c2b4a71",
+    "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+    "tests/baseline-setup": "bdb7b7bc8b0975945ab1c5f5d6cb24b604199e2de3ad6c7eb9425293323737c9",
+    "tests/consumer": "a71b852ab59dcdda092c7fd0fe85dd311e1df39df154b5bd0ef619f9cb5b372c",
+    "tests/control": "b5f73de62e24116c9e29ad78d1ce970f82160c469e13043835eb516c0bc4e079",
+    "tests/ubuntu-abi-client": "709206f3cba88d47b137c72c0acbc677fdd130d53b0415f039041cb6a9570feb",
+    "upstream/metadata": "cf762b67ada7cefaf309e7deed8b9270ca8116608ac5626c9950e510e30c8314",
+    "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+    "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+  },
+  "frameworks_predecessors": {
+    "extra-cmake-modules": {
+      "source_package": "kf6-extra-cmake-modules",
+      "version": "6.30.0-0supralinux3",
+      "binaries": [
+        {
+          "package": "extra-cmake-modules",
+          "architecture": "all",
+          "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+        }
+      ]
+    },
+    "kconfig": {
+      "source_package": "kf6-kconfig",
+      "version": "6.30.0-0supralinux5",
+      "binaries": [
+        {
+          "package": "libkf6config-bin",
+          "architecture": "amd64",
+          "sha256": "e2ec5c0108ddec37acbe5aef9ba7ad415fcafbfb674a774ad5bc1f8e4460fd8a"
+        },
+        {
+          "package": "libkf6config-data",
+          "architecture": "all",
+          "sha256": "11383e2d047ef865e61a01b887b7b1fa72ab8ceca12e45779b99488fd18c1eb7"
+        },
+        {
+          "package": "libkf6config-dev",
+          "architecture": "amd64",
+          "sha256": "d92bf4fed918165562d93f2512d36298ef014fa9191f53a51eab3a64286ce3a9"
+        },
+        {
+          "package": "libkf6config-dev-bin",
+          "architecture": "amd64",
+          "sha256": "d7e10cf7629c68a93fa65a320ca868870e4f9f9446b580da70360233aebf8fe5"
+        },
+        {
+          "package": "libkf6configcore6",
+          "architecture": "amd64",
+          "sha256": "fd21f8ffec2c9a1092f4f1a823fc9ad117c8453a4cbd796d1997cb38bf9577c0"
+        },
+        {
+          "package": "libkf6configgui6",
+          "architecture": "amd64",
+          "sha256": "994d74a35f900487bce4b5ffa838fa428fd00fe7a713f6441b6659992c65c711"
+        },
+        {
+          "package": "libkf6configqml6",
+          "architecture": "amd64",
+          "sha256": "4a15fb6c5b9a95c49bc8910b81f5e7d14b1d5d125041a1b43e918c978241a949"
+        },
+        {
+          "package": "qml6-module-org-kde-config",
+          "architecture": "amd64",
+          "sha256": "ab1ce3ccf930a368faccdd7c5aca19acea87f355d888169d5f0cefa2524fd069"
+        }
+      ]
+    },
+    "kcoreaddons": {
+      "source_package": "kf6-kcoreaddons",
+      "version": "6.30.0-0supralinux4",
+      "binaries": [
+        {
+          "package": "libkf6coreaddons-data",
+          "architecture": "all",
+          "sha256": "f05f55e3c6486af9d3ff48aa38215784bbb347aae1cd5fb760f5513760364908"
+        },
+        {
+          "package": "libkf6coreaddons-dev",
+          "architecture": "amd64",
+          "sha256": "9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636"
+        },
+        {
+          "package": "libkf6coreaddons6",
+          "architecture": "amd64",
+          "sha256": "015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb"
+        },
+        {
+          "package": "qml6-module-org-kde-coreaddons",
+          "architecture": "amd64",
+          "sha256": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
+        }
+      ]
+    },
+    "kdbusaddons": {
+      "source_package": "kf6-kdbusaddons",
+      "version": "6.30.0-0supralinux3",
+      "binaries": [
+        {
+          "package": "libkf6dbusaddons-data",
+          "architecture": "all",
+          "sha256": "279d4f563b0b9ee509d7aac09974c5a870973bc43808987add15ada15e4d1413"
+        },
+        {
+          "package": "libkf6dbusaddons-dev",
+          "architecture": "amd64",
+          "sha256": "1d2c9c54b56a9db028b513b66ff912d679c4762aa1003fa4fc89513c9267c91f"
+        },
+        {
+          "package": "libkf6dbusaddons6",
+          "architecture": "amd64",
+          "sha256": "c66f0b0fb84bf4f20c39a9b2fcf9aaae09c30dae31a3cfa54b48702b648f7a12"
+        }
+      ]
+    },
+    "ki18n": {
+      "source_package": "kf6-ki18n",
+      "version": "6.30.0-0supralinux1",
+      "binaries": [
+        {
+          "package": "libkf6i18n-data",
+          "architecture": "all",
+          "sha256": "3df2300d5aca640c8968859367ac3cd606a31a87e875ca207a71eeda6d03f45a"
+        },
+        {
+          "package": "libkf6i18n-dev",
+          "architecture": "amd64",
+          "sha256": "a9485f9fdb874cc6a61064a824d66567306122c39677ccf92f8adb3b0db14870"
+        },
+        {
+          "package": "libkf6i18n6",
+          "architecture": "amd64",
+          "sha256": "fa60bd16ffb35ae90eb1ab324386961d973a9b0dd31a4947351d3afc652b6e58"
+        },
+        {
+          "package": "libkf6i18nlocaledata6",
+          "architecture": "amd64",
+          "sha256": "19a6b680b3f85fe04901d53fa6193dd773d72fc02c9337387776ec779f5c285a"
+        },
+        {
+          "package": "libkf6i18nqml6",
+          "architecture": "amd64",
+          "sha256": "0297393117c5b4b0fd284d32aa9040c5afbe91aa0da73b2f83d1b181a812f91c"
+        },
+        {
+          "package": "qml6-module-org-kde-i18n-localedata",
+          "architecture": "amd64",
+          "sha256": "147a716c4794a50a63160928228afd25c406a02af2b3d00637bed289027f6001"
+        },
+        {
+          "package": "qml6-module-org-kde-ki18n",
+          "architecture": "amd64",
+          "sha256": "07960032b6582476f0844b72d4f74884240c592e55eb0613390f0191dbd98299"
+        }
+      ]
+    },
+    "knotifications": {
+      "source_package": "kf6-knotifications",
+      "version": "6.30.0-0supralinux1",
+      "binaries": [
+        {
+          "package": "libkf6notifications-data",
+          "architecture": "all",
+          "sha256": "dbe94829f9466ef434d65adc2228be94be81382eacaefd76057397f32c170e5c"
+        },
+        {
+          "package": "libkf6notifications-dev",
+          "architecture": "amd64",
+          "sha256": "3deceddfdd6ed328b8058045cd6c434aa7e676d8d9482320c80656686d493123"
+        },
+        {
+          "package": "libkf6notifications6",
+          "architecture": "amd64",
+          "sha256": "f8d481bda5882aa9f99a4c49229f42d2284103a5aecfb4f7c9e7722708c123fd"
+        },
+        {
+          "package": "qml6-module-org-kde-notifications",
+          "architecture": "amd64",
+          "sha256": "94d7221991aba9f74759ec50dc5daf248aef46facdc23b3f4b287b29a4979fe9"
+        }
+      ]
+    },
+    "kpty": {
+      "source_package": "kf6-kpty",
+      "version": "6.30.0-0supralinux1",
+      "binaries": [
+        {
+          "package": "libkf6pty-data",
+          "architecture": "all",
+          "sha256": "7d0d7e7afd8b94dfa8b3402b59959e564296f22b44a6ce98ba183321dd4bd295"
+        },
+        {
+          "package": "libkf6pty-dev",
+          "architecture": "amd64",
+          "sha256": "1ffe0ba695d95a0dd2fdd3642bc6c30dc728001ff85dd2544dcdd00284f91e1a"
+        },
+        {
+          "package": "libkf6pty6",
+          "architecture": "amd64",
+          "sha256": "56ba6fe643f292dcb484e8d3583559593f7e39313efd1b43732987661dac9830"
+        }
+      ]
+    }
+  }
+}
