@@ -2215,7 +2215,7 @@
     "kwallet-pam": {
       "state": "build-pending",
       "source_package": "kwallet-pam",
-      "version": "4:6.7.5-0supralinux1",
+      "version": "4:6.7.5-0supralinux2",
       "upstream_version": "6.7.5",
       "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/kwallet-pam-6.7.5.tar.xz",
       "upstream_sha256": "d71f5945ef3086f56f52f531508c2ab363078fbbd5ae4084bd3647049e6ee94f",
@@ -2260,19 +2260,40 @@
           "resolute-security"
         ]
       },
-      "attempts": [],
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "FAIL",
+          "original_state": "FAIL",
+          "sbuild_result": "FAIL",
+          "lintian_result": "not-run",
+          "autopkgtest_result": "not-run",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37369860306,
+          "workflow_job_id": 111964040598,
+          "source_commit": "594d769d83f7e86702b4975760f11decac39bed0",
+          "artifact_id": 11370905270,
+          "artifact_sha256": "246a28f45ce56258dd985100e8cc8e6877d17bc193c6c42925043fd3c81c7e1c",
+          "result_path": "manifests/evidence/plasma/kwallet-pam-attempt1/result.json",
+          "result_sha256": "6e74083ed0a2ed6df4c6d95b699b1985b92700f13a717dfdd1b97449d27aea53",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t202532z-2252715",
+          "host_evidence_manifest_sha256": "8e858445940e0d57d22f3ab05b45157600e26c6a79e69f12751f209297dd11d4",
+          "cause": "Missing Ubuntu qtpaths build tool required by ECM KDEInstallDirs after removing the unused KWallet SDK dependency; clean sbuild configuration fails before compilation.",
+          "repair": "Declare the direct Ubuntu qtpaths build dependency, preserve the unchanged upstream source and existing PAM fixture, then recertify the reviewed input contract before Attempt 2."
+        }
+      ],
       "review": {
         "source": "Unchanged signed upstream source; Ubuntu reference remains advisory.",
         "version": "Preserve epoch 4 and the PAM module/common package contract.",
-        "dependencies": "Explicit actual kwallet6 runtime path and dependency; remove SDK dependencies used only for path discovery and unused xkbcommon. Exact ECM predecessor; Ubuntu PAM/libgcrypt/socat providers.",
+        "dependencies": "Explicit actual kwallet6 runtime path and dependency; remove SDK dependencies used only for path discovery and unused xkbcommon. Exact ECM predecessor; Ubuntu PAM/libgcrypt/socat providers. Declare Ubuntu qt6-base-dev-tools directly for ECM qtpaths; no Qt linkage is introduced.",
         "tests": "No upstream CTest suite; real private libpam dispatch and 7 cases, independent key derivation, actual pipe/socket helper, preserved salt after upgrade; unchanged Ubuntu SDK and rebuilt consumer.",
         "licensing": "Preserve LGPL-2.1-or-later module and Darwin source attribution, BSD-3-Clause FindPAM, GPL-2.0-or-later packaging and explicit CC0-1.0 CI metadata with full text.",
         "profile": "PAM module/handoff package verification; real wallet, login and Wayland session acceptance remain separate."
       },
       "packaging_sha256": {
-        "README.source": "212e7027ddab5549d0b37d58fb79262be86a2a1bd8221c94dac1911fa51a8d61",
-        "changelog": "624e2a8bef8eceec4918550e10750469c660c182d57c8ab5d8862fbc16e23322",
-        "control": "c430409c7559275badd2764e137458e2df016ede87d658ec467633d32fe6423b",
+        "README.source": "4a2e9f770b610818105c82dbf690b7fb7fd68469466401a9805242ccc3c188ce",
+        "changelog": "aa098495f3c26b7f3da49b47d5676f9ff72a7cd9a2577ab2465b3c0bbf3da8b9",
+        "control": "a732810fde232eeead5ab3a9362f8651abd53e7152280e3271f8b9a362b901df",
         "copyright": "42b6221759c9e539cd039f980ad2cc60091db91fcdf9ec73a4630113e0a2836a",
         "libpam-kwallet-common.install": "ca85c26ebea763c01045c154c7b63282d64bfd409da90f6543189de6e35fbf3a",
         "libpam-kwallet5.install": "d83f63cf617fdc6af2c8d79b8655c6553beb1420676038e80f9fd7ff67656d45",
@@ -2417,6 +2438,12 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/ksshaskpass-attempt1",
       "archive_index_sha256": "6996bcc696ed0bf4411dbcdbbae38aa10a8d3da02b24147dadedb163f017952d"
+    },
+    {
+      "node": "kwallet-pam",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/kwallet-pam-attempt1",
+      "archive_index_sha256": "c380e90296ec89c9cf386022498eb89de43d078fe20909e7100158922ecb561b"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
@@ -2480,7 +2507,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -2502,7 +2529,9 @@
     },
     {
       "path": "manifests/evidence/package-revalidation/kwallet-pam-preflight6/verification.json",
-      "sha256": "658f221ac84bffff94cdd032c07220bfc8ac25840b7f76e6290a9a5921e1a37e"
+      "sha256": "658f221ac84bffff94cdd032c07220bfc8ac25840b7f76e6290a9a5921e1a37e",
+      "applicable": false,
+      "inapplicability_reason": "Attempt 1 exposed an undeclared Ubuntu qtpaths build tool; revision 2 declares qt6-base-dev-tools and requires a fresh reviewed input preflight."
     }
   ],
   "package_input_incidents": [

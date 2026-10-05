@@ -10,6 +10,7 @@ Build-Depends: cmake (>= 3.16~),
                libgcrypt20-dev (>= 1.5.0~),
                libpam0g-dev,
                pkgconf,
+               qt6-base-dev-tools,
 Standards-Version: 4.7.0
 Homepage: https://invent.kde.org/plasma/kwallet-pam
 Vcs-Browser: https://github.com/SupraLINUX/SupraLINUX/tree/architecture/bootstrap-v1/packages/plasma/kwallet-pam

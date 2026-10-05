@@ -1,3 +1,10 @@
+kwallet-pam (4:6.7.5-0supralinux2) resolute; urgency=medium
+
+  * Declare Ubuntu Qt base development tools for ECM's qtpaths query in a
+    clean build environment; preserve PAM, helper and runtime dependencies.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Mon, 05 Oct 2026 20:35:00 +0000
+
 kwallet-pam (4:6.7.5-0supralinux1) resolute; urgency=medium
 
   * Integrate unchanged official stable sources and preserve Ubuntu PAM paths.
