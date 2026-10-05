@@ -1,5 +1,5 @@
 Tests: ubuntu-abi-client
-Depends: @, python3, binutils, apt, socat
+Depends: @, python3, binutils, apt, socat, dpkg-dev
 Restrictions: needs-root, allow-stderr
 
 Tests: consumer

@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 import hashlib,json,os,shutil,subprocess
 from pathlib import Path
-base=Path('/var/tmp/supralinux-kwallet-pam-baseline');candidate='4:6.7.5-0supralinux1'
+base=Path('/var/tmp/supralinux-kwallet-pam-baseline')
+changelog=Path(__file__).resolve().parents[1]/'changelog'
+candidate=subprocess.check_output(['dpkg-parsechangelog','-l',str(changelog),'-S','Version'],text=True).strip()
 for package in ['libpam-kwallet5','libpam-kwallet-common']:
  assert subprocess.check_output(['dpkg-query','-W','-f=${Version}',package],text=True).strip()==candidate
 subprocess.run(['dpkg','--compare-versions',candidate,'gt',(base/'ubuntu-version').read_text().strip()],check=True)

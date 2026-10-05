@@ -1,3 +1,11 @@
+kwallet-pam (4:6.7.5-0supralinux4) resolute; urgency=medium
+
+  * Derive the Ubuntu ABI client's expected candidate version from the source
+    changelog so the compatibility test follows packaging revisions.
+  * Declare the changelog parser used by that test explicitly.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Mon, 05 Oct 2026 21:30:00 +0000
+
 kwallet-pam (4:6.7.5-0supralinux3) resolute; urgency=medium
 
   * Declare Ubuntu Qt base development files for ECM's CoreTools CMake

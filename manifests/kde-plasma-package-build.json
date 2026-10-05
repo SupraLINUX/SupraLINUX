@@ -2215,7 +2215,7 @@
     "kwallet-pam": {
       "state": "build-pending",
       "source_package": "kwallet-pam",
-      "version": "4:6.7.5-0supralinux3",
+      "version": "4:6.7.5-0supralinux4",
       "upstream_version": "6.7.5",
       "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/kwallet-pam-6.7.5.tar.xz",
       "upstream_sha256": "d71f5945ef3086f56f52f531508c2ab363078fbbd5ae4084bd3647049e6ee94f",
@@ -2300,19 +2300,39 @@
           "host_evidence_manifest_sha256": "e1e085223e22e1af03d0fd95acd1a0524bc5204b4d6ed47f659b17110b37f790",
           "cause": "ECM discovers qtpaths through the Qt6 CoreTools CMake target; qt6-base-dev-tools alone lacks the Qt6 package configuration, so clean sbuild still cannot configure KDEInstallDirs.",
           "repair": "Declare qt6-base-dev, which supplies the Qt6 CMake configuration and depends on its tools; verify ECM discovery locally and recertify the inputs before Attempt 3."
+        },
+        {
+          "attempt": 3,
+          "state": "FAIL",
+          "original_state": "FAIL",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "FAIL",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37374185638,
+          "workflow_job_id": 111978461828,
+          "source_commit": "d9c1623b3732a8b2884132a72d991a995c85fa0e",
+          "artifact_id": 11371185522,
+          "artifact_sha256": "7ef792232b345d5246cb9946b81f34d82325e037ba5baa6d47323210e687b743",
+          "result_path": "manifests/evidence/plasma/kwallet-pam-attempt3/result.json",
+          "result_sha256": "4386c7babfc525e5f2cf44e1c09afec8bb08794277ae79f548468875906aea9a",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t210813z-2533862",
+          "host_evidence_manifest_sha256": "22f98e976d7d32838c97609e6cb860c1d57dc222e6ba9a43523abf44d5328de7",
+          "cause": "Clean sbuild, lintian and the rebuilt PAM consumer passed, but the unchanged Ubuntu ABI client test stopped at a stale revision-1 version assertion before executing the client against revision 3.",
+          "repair": "Read the expected candidate version from the source changelog, declare dpkg-dev for that query, preserve the failed Attempt, and recertify the reviewed inputs before a complete rerun."
         }
       ],
       "review": {
         "source": "Unchanged signed upstream source; Ubuntu reference remains advisory.",
         "version": "Preserve epoch 4 and the PAM module/common package contract.",
         "dependencies": "Explicit actual kwallet6 runtime path and dependency; remove SDK dependencies used only for path discovery and unused xkbcommon. Exact ECM predecessor; Ubuntu PAM/libgcrypt/socat providers. Declare Ubuntu qt6-base-dev for the Qt6 CMake configuration and CoreTools target required by ECM path queries; the PAM module still does not link Qt. Real ECM local positive and tools-only negative controls verified.",
-        "tests": "No upstream CTest suite; real private libpam dispatch and 7 cases, independent key derivation, actual pipe/socket helper, preserved salt after upgrade; unchanged Ubuntu SDK and rebuilt consumer.",
+        "tests": "No upstream CTest suite; real private libpam dispatch and 7 cases, independent key derivation, actual pipe/socket helper, preserved salt after upgrade; unchanged Ubuntu SDK and rebuilt consumer. Candidate version is read from the source changelog to preserve the Ubuntu ABI test across packaging revisions.",
         "licensing": "Preserve LGPL-2.1-or-later module and Darwin source attribution, BSD-3-Clause FindPAM, GPL-2.0-or-later packaging and explicit CC0-1.0 CI metadata with full text.",
         "profile": "PAM module/handoff package verification; real wallet, login and Wayland session acceptance remain separate."
       },
       "packaging_sha256": {
         "README.source": "e706c1a99c9a4d818c2d0f80b8be0f76552c5d7ec4932cf23610e5772afa63c1",
-        "changelog": "1e2a845bc4d58cafbfa132faf7e417fac23c36919aa8f0fe22570096aee00c2d",
+        "changelog": "87f03389ee6b9d7a8e3fabf27384f92b2cf88ae3d166909765c1c11300c34691",
         "control": "a87c173644e246c139fb766c9309124a8ce5bc7a132bd21c43a35f7d3f23b97d",
         "copyright": "42b6221759c9e539cd039f980ad2cc60091db91fcdf9ec73a4630113e0a2836a",
         "libpam-kwallet-common.install": "ca85c26ebea763c01045c154c7b63282d64bfd409da90f6543189de6e35fbf3a",
@@ -2321,8 +2341,8 @@
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
         "tests/baseline-setup": "92997a397496def2f5ebb8069e19dd4da739e224af9981bdb0715dd7cf2e9d1a",
         "tests/consumer": "d562e7947d7274c43ae5a0e58b7b7c3eb7936835c2cd7ca4ccaba9b48ca19880",
-        "tests/control": "a6c690b410d7830f43f7f1a66e91544f2da43b154a9b25ffce058fafb6894b50",
-        "tests/ubuntu-abi-client": "9be9b70c0ee2c32dfae83cdbd24e6d3421cc0b3a4035d722a059467c6dd66ebb",
+        "tests/control": "c698f1d1e2a89b393d1fa7df12eec17761d1a0c3b5761d93a986bc1f59d16fb1",
+        "tests/ubuntu-abi-client": "4ba4883294670a11b73f1817e0860b1a28977c14eb7dadea421cb3ac3a4d3e0b",
         "upstream/metadata": "cb69e555a8103e846f09d08b16e935a013120fb9969a16e890401f5456867bd1",
         "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
         "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
@@ -2470,6 +2490,12 @@
       "attempt": 2,
       "archive_root": ".artifacts/plasma-6.7.5/kwallet-pam-attempt2",
       "archive_index_sha256": "573a4261f9d3d6e0fc000cd0d618c26caf5bd02537ee0397af2e98b25e06f2f3"
+    },
+    {
+      "node": "kwallet-pam",
+      "attempt": 3,
+      "archive_root": ".artifacts/plasma-6.7.5/kwallet-pam-attempt3",
+      "archive_index_sha256": "e65945ab12426288f14da5854efa25aa83f4791dcb8789d96e8d10536beb5e56"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
@@ -2533,7 +2559,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -2567,7 +2593,9 @@
     },
     {
       "path": "manifests/evidence/package-revalidation/kwallet-pam-preflight8/verification.json",
-      "sha256": "767ab3c619e72f5d6bfb2243b17ffcb9c02ceb4e5828b7854e5b226b50f0a23b"
+      "sha256": "767ab3c619e72f5d6bfb2243b17ffcb9c02ceb4e5828b7854e5b226b50f0a23b",
+      "applicable": false,
+      "inapplicability_reason": "Revision 4 fixes the stale expected version in the Ubuntu ABI test and declares its changelog parser. Recertify the changed packaging before Attempt 4."
     }
   ],
   "package_input_incidents": [
