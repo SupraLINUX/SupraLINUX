@@ -227,6 +227,8 @@ case "${PIPELINE_RC[0]}" in
     8|16|20) TEST_RESULT="INFRA_INVALID"; exit "${PIPELINE_RC[0]}" ;;
     *) STATE="FAIL"; TEST_RESULT="FAIL"; exit "${PIPELINE_RC[0]}" ;;
 esac
+STAGE="evidence-deduplication"
+python3 "${ROOT}/scripts/prune-duplicate-package-evidence.py" "${EVIDENCE}"
 STATE="PASS"
 STAGE="complete"
 printf 'Authoritative Plasma package: PASS (%s %s)\n' "${NODE}" "${PACKAGE_VERSION}"

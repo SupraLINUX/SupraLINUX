@@ -58,6 +58,9 @@ jobs:
       - name: Test immutable bare sbuild rootfs reuse
         run: python3 scripts/test-milestone-sbuild-rootfs.py
 
+      - name: Test package evidence compaction
+        run: python3 scripts/test-package-evidence-deduplication.py
+
       - name: Validate current project status
         run: python3 scripts/render-project-status.py --check
 

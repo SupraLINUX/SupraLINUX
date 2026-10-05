@@ -4,6 +4,7 @@ import datetime
 import hashlib
 import json
 import os
+import re
 import struct
 import subprocess
 import zlib
@@ -29,6 +30,13 @@ def resource_hash(payload, name):
         if tag == b"tIME":
             assert size == 7, f"Invalid PNG timestamp: {name}"
             datetime.datetime(*struct.unpack(">H5B", data))
+        elif tag == b'tEXt' and data.split(b'\0',1)[0] in {b'date:create',b'date:modify'}:
+            key, timestamp = data.split(b'\0',1)
+            assert re.fullmatch(rb'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})',timestamp), f'Invalid PNG date text: {name}'
+            assert datetime.datetime.fromisoformat(timestamp.decode()).tzinfo is not None, name
+            # Debian normalizes ImageMagick's two date fields as well as tIME.
+            # Keep the key, occurrence/order and every other text/EXIF chunk.
+            normalized.extend(tag+b'\0'+key+b'\0<validated-timestamp>')
         else:
             normalized.extend(payload[offset:end])
         tags.append(tag)

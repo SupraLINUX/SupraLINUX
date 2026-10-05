@@ -19,9 +19,28 @@ testing = importlib.machinery.SourceFileLoader("testing", str(ROOT / "scripts/pl
 prepare = importlib.machinery.SourceFileLoader("prepare", str(ROOT / "scripts/prepare-plasma-package.py")).load_module()
 resources = importlib.machinery.SourceFileLoader("resources", str(ROOT / "packages/plasma/breeze-grub/debian/tests/theme-resources")).load_module()
 sounds = importlib.machinery.SourceFileLoader("sounds", str(ROOT / "packages/plasma/ocean-sound-theme/debian/tests/sound-resources")).load_module()
+wallpapers = importlib.machinery.SourceFileLoader("wallpapers", str(ROOT / "packages/plasma/plasma-workspace-wallpapers/debian/tests/wallpaper-resources")).load_module()
 
 
 class InputAdmission(unittest.TestCase):
+    def test_wallpaper_png_date_normalization_preserves_pixels_and_other_metadata(self):
+        def chunk(tag,data):
+            return struct.pack('>I',len(data))+tag+data+struct.pack('>I',zlib.crc32(tag+data)&0xffffffff)
+        def png(date,title='signed author',pixel=b'\0\0\0\xff'):
+            return (b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('>IIBBBBB',1,1,8,6,0,0,0))+
+                    chunk(b'tEXt',b'date:create\0'+date.encode())+chunk(b'tEXt',b'date:modify\0'+date.encode())+
+                    chunk(b'tEXt',b'Author\0'+title.encode())+chunk(b'IDAT',zlib.compress(b'\0'+pixel))+chunk(b'IEND',b''))
+        original = wallpapers.resource_hash(png('2020-09-11T22:08:25+02:00'),'test.png')
+        self.assertEqual(original,wallpapers.resource_hash(png('2026-10-05T00:00:00-00:00'),'test.png'))
+        self.assertNotEqual(original,wallpapers.resource_hash(png('2026-10-05T00:00:00Z',title='changed author'),'test.png'))
+        self.assertNotEqual(original,wallpapers.resource_hash(png('2026-10-05T00:00:00Z',pixel=b'\xff\0\0\xff'),'test.png'))
+        for date in ['not-a-date','2026-99-05T00:00:00Z','2026-10-05']:
+            with self.subTest(date=date),self.assertRaises((AssertionError,ValueError)):
+                wallpapers.resource_hash(png(date),'test.png')
+        broken = bytearray(png('2026-10-05T00:00:00Z'));broken[-1] ^= 1
+        with self.assertRaisesRegex(AssertionError,'Invalid PNG CRC'):
+            wallpapers.resource_hash(bytes(broken),'test.png')
+
     def test_sound_alias_target_change_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

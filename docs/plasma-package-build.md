@@ -189,3 +189,19 @@ Wallpapers preserve epoch 4, the Ubuntu binary name and Architecture all. Tests
 cover 37 wallpaper sets, 288 resources, 143 safe aliases and decoding of 108
 unique images. This is the additional collection; the default wallpaper belongs
 to Breeze and later desktop integration.
+
+Wallpaper Attempt 1 built and passed lintian, but the installed resource tests
+rejected two normalized ImageMagick timestamp text fields in Shell's screenshot.
+The original FAIL and entire artifact remain retained. The diagnosis verifies
+unchanged compressed pixels, EXIF and other chunks. The corrected test validates
+CRC and timestamp syntax and normalizes only `date:create`/`date:modify` values,
+preserving their keys/order and all other text. Regressions reject pixel or author
+changes, malformed dates and CRC corruption. All 37 sets/288 resources/108 images
+in the real retained installed payload pass the repaired local verifier; the
+authoritative rerun remains required.
+
+Future successful exports compact byte-identical `.deb`/`.ddeb` copies retained
+by autopkgtest. A receipt records their original path, canonical path, digest and
+size. Canonical sources/binaries/buildinfo, clients and logs remain retained;
+distinct or unrelated payloads are never removed. This avoids transporting a
+second large wallpaper binary while preserving the complete package closure.

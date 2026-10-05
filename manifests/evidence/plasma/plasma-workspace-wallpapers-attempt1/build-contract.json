@@ -615,8 +615,8 @@
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
         "tests/control": "2790b1ae643213bd070ab5ee35d16e92f6b9970cb3be3f3861027626705c9ac5",
         "tests/ubuntu-upgrade": "7a906bf47618eab9bf18f728600ebad94eeed63763098f2966d938428158138a",
-        "tests/wallpaper-resources": "5eb4e6d2e3cc131a6e8feb786b2a54a215e43995b792577e0f5e3ca1e0aeda18",
-        "tests/wallpaper-resources.json": "712e245cedcb3291845e7d343fdf8520a000c27f28842ad361d54f6ce2fe15d4",
+        "tests/wallpaper-resources": "cd15825208183a3bf89f1fbc4e91750f611fa9d51f9f9dc9f248654e0b6e8e91",
+        "tests/wallpaper-resources.json": "6cbbee332ef2e45c3dd4de8f74da4df88d0a36deafd5ccdcf57815de70c89f20",
         "upstream/metadata": "b9cd50e03f006b2c1ae4dd3a5f4b5292bc3846f4f27afece83c4d88d5016fb39",
         "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
         "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
@@ -638,28 +638,7 @@
           ]
         }
       },
-      "attempts": [
-        {
-          "attempt": 1,
-          "state": "FAIL",
-          "original_state": "FAIL",
-          "sbuild_result": "PASS",
-          "lintian_result": "PASS",
-          "autopkgtest_result": "FAIL",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37251368483,
-          "workflow_job_id": 111579504420,
-          "source_commit": "48d80bfc8edb578478099966567a24de5f428db0",
-          "artifact_id": 11321430631,
-          "artifact_sha256": "84873fd0da2b2da6c7b307bdeedea1b5b0f36e6dd7e0660aa1b12a62581112b1",
-          "result_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt1/result.json",
-          "result_sha256": "92961447754368eccf75f7a18f2a6c6889b177f6e2be138af32eab6b13e7535a",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t012339z-4043731",
-          "host_evidence_manifest_sha256": "bf421181954c514c81c61cb0d14d39b10e33950270c43d0f6c16e35154db908a",
-          "cause": "Resource tests compared ImageMagick PNG date:create/date:modify bytes strictly. Debian normalized those two valid timestamp fields; IDAT, EXIF and every other chunk of the rejected Shell screenshot are unchanged.",
-          "repair": "Validate CRC and timestamp syntax; normalize only date:create/date:modify values while preserving keys/order and every other PNG chunk. Regression rejects changed pixels, author metadata, malformed dates and CRC corruption."
-        }
-      ],
+      "attempts": [],
       "required_executable_files": [
         "rules",
         "tests/wallpaper-resources",
@@ -669,7 +648,7 @@
         "upstream_changes": "Signed official 6.7.5; all 37 wallpaper sets and 288 resources, including 143 safe image aliases. No source modifications.",
         "packaging_changes": "Preserve Ubuntu epoch 4, binary name and Architecture all. Correct per-wallpaper authors/licenses from upstream metadata; preserve root and Debian references. Use explicit Qt 6 for legacy ECM setup and declare the Qt provider.",
         "build_dependencies": "Exact retained ECM 6.30.0-0supralinux3 through explicit sbuild input; qt6-base-dev from Ubuntu 6.10.",
-        "test_policy": "No upstream tests. Exact dpkg-owned resource coverage, safe aliases, metadata and decode of 108 unique images. PNG CRCs and all chunks remain exact except valid tIME and date:create/date:modify timestamp values normalized by Debian; regression rejects pixel/author changes and malformed metadata. Original Attempt 1 FAIL preserved; real installed payload passed the repaired local verifier. KVM rerun required.",
+        "test_policy": "No upstream tests. Check exact dpkg-owned resource coverage/hashes, PNG chunks except validated tIME, alias identity and containment, all wallpaper IDs/authors/licenses and decode all 108 unique images. Host source fixture passed; KVM package execution remains pending.",
         "activation_policy": "Installs the complete additional wallpaper collection; default wallpaper remains part of Breeze and session integration.",
         "rootfs_policy": "Admit immutable bare milestone buildd base by digest, Ubuntu identity and absence of Frameworks/Qt SDK. Replace only APT sources with all three signed Ubuntu suites; sbuild updates/upgrades every disposable build. Infrastructure ECM/Qt consumer must pass before a package Attempt."
       },
@@ -741,12 +720,6 @@
       "attempt": 2,
       "archive_root": ".artifacts/plasma-6.7.5/kdecoration-attempt2",
       "archive_index_sha256": "d7929a8cacdecf3f581c191903c926bf761e13114b66a7d648c42c3e4ce055a4"
-    },
-    {
-      "node": "plasma-workspace-wallpapers",
-      "attempt": 1,
-      "archive_root": ".artifacts/plasma-6.7.5/plasma-workspace-wallpapers-attempt1",
-      "archive_index_sha256": "8d737b931693347825610d2f4adad082ccfd7b0736f3065ddb0972504b000284"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
