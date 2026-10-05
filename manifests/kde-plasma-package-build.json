@@ -1732,13 +1732,17 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
       "sha256": "6dc249ac7e4a1302a5adcfdc8db67a3168fe7bf027fea9a2af5b7d070b2aa9aa",
       "applicable": false,
       "inapplicability_reason": "The outer disposable guest CPU policy and frozen execution-contract capture changed after a repeated KVM asynchronous page-fault stall. A new small authoritative input preflight is required before Activities sbuild."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/plasma-activities-preflight3/verification.json",
+      "sha256": "885c0b55b64df8e31e8faaac8fc975ab6e3b62bbac20550d514a63294a8e1d68"
     }
   ],
   "package_input_incidents": [
