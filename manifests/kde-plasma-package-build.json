@@ -2559,7 +2559,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -2596,6 +2596,10 @@
       "sha256": "767ab3c619e72f5d6bfb2243b17ffcb9c02ceb4e5828b7854e5b226b50f0a23b",
       "applicable": false,
       "inapplicability_reason": "Revision 4 fixes the stale expected version in the Ubuntu ABI test and declares its changelog parser. Recertify the changed packaging before Attempt 4."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kwallet-pam-preflight9/verification.json",
+      "sha256": "9962ff2ea201f4f8b49541fa287f2be0e4fae273892cecfae0d320eff17919b2"
     }
   ],
   "package_input_incidents": [
