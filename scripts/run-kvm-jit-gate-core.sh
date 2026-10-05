@@ -554,6 +554,7 @@ virt-install \
     --memory "${VM_MEMORY_MIB}" \
     --vcpus "${VM_VCPUS}" \
     --cpu host-passthrough \
+    --qemu-commandline='-global host-x86_64-cpu.kvm-asyncpf=off -global host-x86_64-cpu.kvm-asyncpf-int=off' \
     --import \
     --disk "path=${OVERLAY},format=qcow2,bus=virtio,cache=none" \
     --network "network=${LIBVIRT_NETWORK},model=virtio" \
@@ -561,6 +562,23 @@ virt-install \
     --graphics none \
     --noautoconsole \
     --osinfo detect=on,require=off
+
+# Keep nested KVM, but avoid the observed asynchronous page-fault wait in the
+# outer build guest. Verify actual QEMU CPU properties rather than trusting XML.
+CPU_STATUS="$(virsh qemu-monitor-command "${VM_NAME}" '{"execute":"query-cpus-fast"}')"
+CPU_QOM_PATH="$(jq -er '.return[0]["qom-path"]' <<<"${CPU_STATUS}")"
+for cpu_property in kvm-asyncpf kvm-asyncpf-int; do
+    cpu_result="$(virsh qemu-monitor-command "${VM_NAME}" \
+        "$(jq -nc --arg path "${CPU_QOM_PATH}" --arg property "${cpu_property}" \
+          '{execute:"qom-get",arguments:{path:$path,property:$property}}')")"
+    jq -e '.return == false' <<<"${cpu_result}" >/dev/null
+done
+KVM_STATUS="$(virsh qemu-monitor-command "${VM_NAME}" '{"execute":"query-kvm"}')"
+jq -e '.return.enabled == true and .return.present == true' <<<"${KVM_STATUS}" >/dev/null
+jq -n --arg path "${CPU_QOM_PATH}" --argjson kvm "${KVM_STATUS}" \
+    '{scope:"outer-disposable-build-guest",cpu_qom_path:$path,
+      flags:{"kvm-asyncpf":false,"kvm-asyncpf-int":false},kvm:$kvm.return}' \
+    > "${EVIDENCE_DIR}/qemu-cpu-policy.json"
 
 qga() {
     virsh qemu-agent-command "${VM_NAME}" "$1"

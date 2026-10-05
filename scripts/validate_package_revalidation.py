@@ -44,6 +44,15 @@ def verified_evidence(link):
     assert proof['host_evidence_manifest_sha256'] == proof['files_sha256']['host-evidence-sha256.txt']
     assert artifact['id'] == proof['artifact_id']
     assert artifact['digest'] == 'sha256:' + proof['artifact_sha256']
+    if artifact.get('kind') == 'sealed-host-preflight-export':
+        assert artifact['id'] is None and result['state'] == 'INFRA_INVALID'
+        assert result['kind'] == 'sealed-host-preflight-interruption-observation'
+        assert result['runner_result_present'] is result['package_attempt_consumed'] is False
+        assert result['host_result_sha256'] == proof['files_sha256']['host-result.json']
+        assert result['host_evidence_manifest_sha256'] == proof['host_evidence_manifest_sha256']
+        assert not proof['inspection']['source_complete'] and not proof['inspection']['candidate_binaries_built']
+        diagnosis = json.loads((directory/'infra-interruption.json').read_text())
+        assert diagnosis['package_attempt_consumed'] is diagnosis['candidate_installed'] is False
     assert proof['offline_restore_verified'] is True and proof['requires_github_for_restore'] is False
     contract_path = ROOT/proof['contract_path']
     assert contract_path == directory/'build-contract.json'

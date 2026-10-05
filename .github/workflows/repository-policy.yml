@@ -42,6 +42,12 @@ jobs:
       - name: Validate scoped package revalidation
         run: python3 scripts/validate_package_revalidation.py
 
+      - name: Test current package contract scope
+        run: python3 scripts/test-reviewed-package-contract.py
+
+      - name: Test interrupted package preflight retention
+        run: python3 scripts/test-package-preflight-recovery.py
+
       - name: Test Plasma package input admission
         run: python3 scripts/test-plasma-package-inputs.py
 

@@ -90,7 +90,12 @@ def main():
             upstream = json.loads(upstream_bytes)
             assert upstream['state'] == 'PASS' and upstream['expected_tests'] == record['upstream_tests']
         contract_bytes = archive.read('build-contract.json')
-        built = json.loads(contract_bytes)['nodes'][a.node]
+        frozen = json.loads(contract_bytes)
+        if 'campaign_manifest_sha256' in frozen:
+            assert frozen['campaign_manifest'] == 'manifests/kde-plasma-package-build.json'
+            assert frozen['campaign_manifest_sha256'] == hashlib.sha256(subprocess.check_output(['git','show',f'{source_commit}:manifests/kde-plasma-package-build.json'])).hexdigest()
+            assert frozen['next_package_attempt'] == len(record['attempts'])+1
+        built = frozen['nodes'][a.node]
         assert built['packaging_sha256'] == record['packaging_sha256'] and built['upstream_sha256'] == record['upstream_sha256']
         assert built.get('frameworks_predecessors', {}) == record.get('frameworks_predecessors', {})
         assert built['signature_sha256'] == record['signature_sha256']

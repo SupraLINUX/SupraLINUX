@@ -23,13 +23,45 @@ def write(path, payload):
     path.write_text(json.dumps(payload,indent=2)+'\n')
 
 
+def interrupted_preflight(payload, baseline, host, job, head, node, version):
+    """Describe a sealed interruption, explicitly without an original runner result."""
+    assert not (payload/'result.json').exists(), 'Use the original runner result when available'
+    assert host['exit_code'] != 0 and job['status'] == 'completed' and job['conclusion'] == 'failure'
+    assert job['head_sha'] == head and str(job['run_id']) == host['workflow_run_id']
+    frozen = json.loads((payload/'build-contract.json').read_text())
+    assert frozen['authorized_nodes'] == [node] and frozen['nodes'][node]['version'] == version
+    diagnosis = json.loads((payload/'infra-interruption.json').read_text())
+    assert diagnosis['package_attempt_consumed'] is diagnosis['candidate_installed'] is False
+    assert not (payload/'sbuild.log').exists() and not list((payload/'packages').rglob('*'))
+    assert baseline.is_dir() and not (baseline/'result.json').exists()
+    assert not (baseline/'autopkgtest/summary').read_text().strip()
+    assert 'Executing '+node+' reviewed Ubuntu baseline' in (payload/'pipeline.log').read_text()
+    assert 'Run current reviewed package' in {step['name'] for step in job['steps']}
+    files = {}
+    for source, prefix in [(payload, ''), (baseline, 'ubuntu-baseline-preflight/')]:
+        for path in sorted(source.rglob('*')):
+            if path.is_file():
+                assert not path.is_symlink()
+                files[prefix+str(path.relative_to(source))] = path
+    observation = {'schema': 1, 'kind': 'sealed-host-preflight-interruption-observation',
+                   'runner_result_present': False, 'node': node, 'version': version,
+                   'state': 'INFRA_INVALID', 'stage': 'reviewed-ubuntu-baseline-preflight',
+                   'source_commit': head, 'workflow_run_id': host['workflow_run_id'],
+                   'authoritative': True, 'system_test_acceleration': 'kvm-required',
+                   'package_attempt_consumed': False, 'sbuild_result': 'not-run',
+                   'lintian_result': 'not-run', 'autopkgtest_result': 'not-run',
+                   'files_sha256': {name: sha(path) for name, path in files.items()}}
+    return observation, files
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('node')
     parser.add_argument('--campaign', choices=['manifests/package-revalidation.json', 'manifests/kde-plasma-package-build.json'],
                         default='manifests/package-revalidation.json')
     parser.add_argument('--zip',type=Path,required=True)
-    parser.add_argument('--artifact-meta',type=Path,required=True)
+    parser.add_argument('--artifact-meta',type=Path)
+    parser.add_argument('--host-export', action='store_true', help='retain a sealed interrupted preflight without an original runner result')
     parser.add_argument('--job-json',type=Path,required=True)
     parser.add_argument('--host-dir',type=Path,required=True)
     args = parser.parse_args()
@@ -37,21 +69,38 @@ def main():
     campaign = json.loads(manifest.read_text())
     plasma_inputs = campaign['role'] == 'reviewed-plasma-package-build'
     assert campaign['role'] in {'reviewed-plasma-package-build', 'reviewed-package-revalidation'}
-    if plasma_inputs:
-        assert campaign['execution_mode'] == 'preflight', 'Use the existing Plasma closure for actual package Attempts'
     record = campaign['nodes'][args.node]
     assert campaign['authorized_nodes'] == [args.node] and record['state'] == 'build-pending'
-    meta, job = [json.loads(p.read_text()) for p in [args.artifact_meta,args.job_json]]
-    digest = sha(args.zip)
-    assert digest == meta['digest'].removeprefix('sha256:')
+    job = json.loads(args.job_json.read_text())
     subprocess.run(['sha256sum','--check','--quiet','evidence-sha256.txt'],cwd=args.host_dir,check=True)
     host = json.loads((args.host_dir/'host-result.json').read_text())
     head = subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD'],text=True).strip()
+    if args.host_export:
+        assert plasma_inputs and not args.artifact_meta and not args.zip.exists()
+        base = args.host_dir/'guest-files/workspace/evidence'
+        raw, files = interrupted_preflight(base/'authoritative-plasma-package',
+                                          base/'runner-contract/reviewed-ubuntu-baseline', host, job, head, args.node, record['version'])
+        raw['host_result_sha256'] = sha(args.host_dir/'host-result.json')
+        raw['host_evidence_manifest_sha256'] = sha(args.host_dir/'evidence-sha256.txt')
+        args.zip.parent.mkdir(parents=True, exist_ok=True)
+        with zipfile.ZipFile(args.zip, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
+            for name, path in files.items():
+                archive.write(path, name)
+            archive.writestr('result.json', json.dumps(raw, indent=2)+'\n')
+        digest = sha(args.zip)
+        meta = {'id': None, 'kind': 'sealed-host-preflight-export', 'digest': 'sha256:'+digest,
+                'workflow_run': {'id': job['run_id'], 'head_sha': head}}
+    else:
+        assert args.artifact_meta
+        meta = json.loads(args.artifact_meta.read_text())
+        digest = sha(args.zip)
+        assert digest == meta['digest'].removeprefix('sha256:')
     with zipfile.ZipFile(args.zip) as archive:
         raw = json.loads(archive.read('result.json'))
         assert raw['source_commit'] == head == job['head_sha'] == meta['workflow_run']['head_sha']
         expected_artifact = ('authoritative-plasma-package-' if plasma_inputs else 'authoritative-package-revalidation-') + head
-        assert meta['name'] == expected_artifact
+        if not args.host_export:
+            assert meta['name'] == expected_artifact
         assert raw['workflow_run_id'] == str(job['run_id']) == host['workflow_run_id']
         assert job['status'] == 'completed' and job['conclusion'] == ('success' if raw['state']=='PASS' else 'failure')
         assert raw['node'] == args.node and raw['version'] == record['version']
@@ -61,11 +110,17 @@ def main():
             assert not Path(name).is_absolute() and '..' not in Path(name).parts
             assert hashlib.sha256(archive.read(name)).hexdigest() == expected, name
         frozen = json.loads(archive.read('build-contract.json'))
+        if 'campaign_manifest_sha256' in frozen:
+            assert frozen['campaign_manifest'] == args.campaign
+            assert frozen['campaign_manifest_sha256'] == hashlib.sha256(subprocess.check_output(['git','show',f'{head}:{args.campaign}'])).hexdigest()
+            assert frozen['next_package_attempt'] == len(record['attempts'])+1
         built = frozen['nodes'][args.node]
         for key in ['packaging_sha256','symbols_baselines','frameworks_predecessors','retained_upgrade','upstream_sha256','signature_sha256']:
             assert built.get(key, {}) == record.get(key, {}), f'Changed reviewed input: {key}'
         assert frozen['execution_mode'] == campaign['execution_mode']
         preflight = raw['package_attempt_consumed'] is False
+        if plasma_inputs:
+            assert preflight, 'Use the existing Plasma closure for actual package Attempts'
         if frozen['execution_mode'] == 'preflight':
             assert preflight
         elif preflight:
@@ -141,11 +196,14 @@ def main():
                 assert not Path(name).is_absolute() and '..' not in Path(name).parts
             archive.extractall(temporary)
             assert all(sha(Path(temporary)/name)==expected for name,expected in raw['files_sha256'].items())
-    for path,name in [(args.artifact_meta,'artifact-meta.json'),(args.job_json,'workflow-job.json'),
+    write(directory/'artifact-meta.json', meta)
+    for path,name in [(args.job_json,'workflow-job.json'),
                       (args.host_dir/'host-result.json','host-result.json'),(args.host_dir/'evidence-sha256.txt','host-evidence-sha256.txt')]:
         shutil.copyfile(path,directory/name)
     if (args.host_dir/'live-memory-adjustment.json').is_file():
         shutil.copyfile(args.host_dir/'live-memory-adjustment.json',directory/'live-memory-adjustment.json')
+    if (args.host_dir/'qemu-cpu-policy.json').is_file():
+        shutil.copyfile(args.host_dir/'qemu-cpu-policy.json',directory/'qemu-cpu-policy.json')
     stored = ROOT/'.artifacts/package-revalidation'/label/'sha256'/f'{digest}.zip'
     assert not stored.exists()
     stored.parent.mkdir(parents=True)
@@ -171,6 +229,8 @@ def main():
         if plasma_inputs:
             inputs += ['scripts/frameworks-revalidation-inputs.py', 'scripts/prepare-frameworks-revalidation-inputs.py',
                        'scripts/probe-frameworks-build-inputs.sh']
+        if 'campaign_manifest_sha256' in frozen:
+            inputs += ['scripts/freeze-reviewed-package-contract.py']
         proof['inputs_sha256']={name:hashlib.sha256(subprocess.check_output(['git','show',f'{head}:{name}'])).hexdigest() for name in inputs}
         proof['packaging_sha256']=record['packaging_sha256']
         proof['frameworks_predecessors']=record['frameworks_predecessors']
@@ -196,7 +256,8 @@ def main():
             campaign['execution_mode']='complete'
             campaign['state']='PASS'
     write(manifest,campaign)
-    print(f'{label}: original {raw["state"]} retained, offline restoration verified; package Attempt={not preflight}')
+    origin = 'sealed host observation' if args.host_export else 'original runner result'
+    print(f'{label}: {origin} {raw["state"]} retained, offline restoration verified; package Attempt={not preflight}')
 
 
 if __name__=='__main__':

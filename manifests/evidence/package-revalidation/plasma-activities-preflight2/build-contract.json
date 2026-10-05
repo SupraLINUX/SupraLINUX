@@ -1732,21 +1732,11 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
-      "sha256": "6dc249ac7e4a1302a5adcfdc8db67a3168fe7bf027fea9a2af5b7d070b2aa9aa",
-      "applicable": false,
-      "inapplicability_reason": "The outer disposable guest CPU policy and frozen execution-contract capture changed after a repeated KVM asynchronous page-fault stall. A new small authoritative input preflight is required before Activities sbuild."
-    }
-  ],
-  "package_input_incidents": [
-    {
-      "path": "manifests/evidence/package-revalidation/plasma-activities-preflight2/verification.json",
-      "sha256": "d11d8475aafa408e3af3641a6bfd60c333d80318550ebb0e82650101bf869380",
-      "cause": "Nested QEMU blocked in kvm_async_pf_task_wait_schedule during Ubuntu baseline APT setup despite starting the outer guest with 8 GiB. The job ended before candidate source preparation or sbuild and before writing its runner result or uploading an Actions artifact; the sealed host observation retains the complete available payload.",
-      "repair": "Disable kvm-asyncpf and kvm-asyncpf-int only in disposable outer build VMs, verify their actual QEMU CPU properties and KVM acceleration, then certify the repaired route with an authoritative preflight before the next package Attempt."
+      "sha256": "6dc249ac7e4a1302a5adcfdc8db67a3168fe7bf027fea9a2af5b7d070b2aa9aa"
     }
   ]
 }

@@ -84,7 +84,7 @@ PACKAGE_VERSION="${AUTHORIZED[1]}"
 SOURCE_URL="${AUTHORIZED[2]}"
 SOURCE_HASH="${AUTHORIZED[3]}"
 SIGNATURE_HASH="${AUTHORIZED[4]}"
-cp "${ROOT}/${CAMPAIGN}" "${EVIDENCE}/build-contract.json"
+python3 "${ROOT}/scripts/freeze-reviewed-package-contract.py" "${NODE}" --output "${EVIDENCE}/build-contract.json"
 EXECUTION_CHECKPOINT="$(python3 - "${EVIDENCE}/build-contract.json" <<'PY'
 import json, sys
 print(json.load(open(sys.argv[1])).get("execution_checkpoint", "none"))

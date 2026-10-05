@@ -45,7 +45,9 @@ def validate():
         wanted = {(binary['package'], predecessor['source_package'], predecessor['version'], binary['architecture'])
                   for predecessor in built['frameworks_predecessors'].values() for binary in predecessor['binaries']}
         assert {(item['package'], item['source_package'], item['version'], item['architecture']) for item in expected} == wanted
-        if proof['node'] in scope:
+        if not link.get('applicable', True):
+            assert link['inapplicability_reason']
+        if link.get('applicable', True) and proof['node'] in scope:
             record = campaign['nodes'][proof['node']]
             assert proof['packaging_sha256'] == record['packaging_sha256']
             assert proof['frameworks_predecessors'] == record['frameworks_predecessors']

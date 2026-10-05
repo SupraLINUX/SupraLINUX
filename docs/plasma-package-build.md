@@ -1,5 +1,29 @@
 # Authoritative Plasma package builds
 
+The current Activities route is in infrastructure preflight after a nested QEMU
+process blocked in `kvm_async_pf_task_wait_schedule` during Ubuntu baseline APT
+setup. Starting the outer guest with 8 GiB did not eliminate the observed wait.
+Run 37337969117 wrote neither a runner result nor an Actions artifact; its sealed
+host payload is retained as an explicit interruption observation in
+`manifests/evidence/package-revalidation/plasma-activities-preflight2/`.
+Candidate source preparation and sbuild did not start, so no package Attempt was
+consumed. The earlier package FAIL and successful predecessor-input preflight
+remain unchanged; that preflight is historical after the execution-input changes.
+
+Disposable outer build VMs now disable QEMU's `kvm-asyncpf` and
+`kvm-asyncpf-int` CPU properties. The controller checks the actual properties
+through QMP and requires KVM to remain enabled. This is a mitigation for the
+observed wait, not a proven kernel fix or a host configuration change. A paused
+128 MiB KVM QEMU instance verified both properties locally; an authoritative
+small package-input preflight must pass before the investigated package retry.
+The flags and their scope are described in the
+[QEMU documentation](https://www.qemu.org/docs/master/system/i386/kvm-pv.html).
+
+New executions freeze only the active package record and its execution inputs,
+with the original campaign SHA-256 and next package Attempt number. Unrelated
+closed histories stay in their existing evidence. Closure checks that provenance
+against the source commit; historical full contracts remain valid and unchanged.
+
 `manifests/kde-plasma-package-build.json` records each individually reviewed
 packaging overlay, its exact input hashes, binary identities and current scope.
 The reusable preparation/build scripts consume that contract. The controlled
