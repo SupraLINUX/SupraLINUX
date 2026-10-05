@@ -51,6 +51,10 @@ jobs:
       - name: Test Plasma package input admission
         run: python3 scripts/test-plasma-package-inputs.py
 
+      - name: Validate retained Frameworks support inputs
+        run: python3 scripts/frameworks-support-inputs.py
+      - name: Test retained Frameworks support evidence
+        run: python3 scripts/test-frameworks-support-inputs.py
       - name: Test Frameworks cache input admission
         run: python3 scripts/test-frameworks-cache-admission.py
 

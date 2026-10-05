@@ -1,0 +1,12 @@
+/home/runner/work/SupraLINUX/SupraLINUX/.work/retained-inputs/karchive/libkf6archive-data_6.30.0-0supralinux4_all.deb
+/home/runner/work/SupraLINUX/SupraLINUX/.work/retained-inputs/karchive/libkf6archive-dev_6.30.0-0supralinux4_amd64.deb
+/home/runner/work/SupraLINUX/SupraLINUX/.work/retained-inputs/karchive/libkf6archive-doc_6.30.0-0supralinux4_all.deb
+/home/runner/work/SupraLINUX/SupraLINUX/.work/retained-inputs/karchive/libkf6archive6_6.30.0-0supralinux4_amd64.deb
+/home/runner/work/SupraLINUX/SupraLINUX/.work/retained-inputs/ki18n/libkf6i18n-data_6.30.0-0supralinux1_all.deb
+/home/runner/work/SupraLINUX/SupraLINUX/.work/retained-inputs/ki18n/libkf6i18n-dev_6.30.0-0supralinux1_amd64.deb
+/home/runner/work/SupraLINUX/SupraLINUX/.work/retained-inputs/ki18n/libkf6i18n-doc_6.30.0-0supralinux1_all.deb
+/home/runner/work/SupraLINUX/SupraLINUX/.work/retained-inputs/ki18n/libkf6i18n6_6.30.0-0supralinux1_amd64.deb
+/home/runner/work/SupraLINUX/SupraLINUX/.work/retained-inputs/ki18n/libkf6i18nlocaledata6_6.30.0-0supralinux1_amd64.deb
+/home/runner/work/SupraLINUX/SupraLINUX/.work/retained-inputs/ki18n/libkf6i18nqml6_6.30.0-0supralinux1_amd64.deb
+/home/runner/work/SupraLINUX/SupraLINUX/.work/retained-inputs/ki18n/qml6-module-org-kde-i18n-localedata_6.30.0-0supralinux1_amd64.deb
+/home/runner/work/SupraLINUX/SupraLINUX/.work/retained-inputs/ki18n/qml6-module-org-kde-ki18n_6.30.0-0supralinux1_amd64.deb

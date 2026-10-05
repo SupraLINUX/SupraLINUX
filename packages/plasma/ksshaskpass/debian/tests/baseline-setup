@@ -1,0 +1,143 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+apt-get install -y --no-install-recommends ksshaskpass build-essential cmake qt6-base-dev qt6-qpa-plugins dbus-daemon python3
+BASE=/var/tmp/supralinux-ksshaskpass-baseline
+mkdir -p "${BASE}/source"
+cat > "${BASE}/source/CMakeLists.txt" <<'CMAKE'
+cmake_minimum_required(VERSION 3.16)
+project(ubuntu-askpass-fixture LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+find_package(Qt6 6.10 REQUIRED COMPONENTS Core Gui Widgets)
+add_library(askpass-fixture SHARED dialog.cpp)
+target_link_libraries(askpass-fixture PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets ${CMAKE_DL_LIBS})
+CMAKE
+cat > "${BASE}/source/dialog.cpp" <<'SUPRA_CPP'
+#include <QApplication>
+#include <QDialog>
+#include <QEventLoop>
+#include <QDialogButtonBox>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QTimer>
+#include <dlfcn.h>
+#include <cstdio>
+#include <cstdlib>
+
+// Test instrumentation drives public Qt widgets; the installed application's
+// original dialog loop and result handling still execute without substitution.
+int QDialog::exec()
+{
+    using Original = int (*)(QDialog *);
+    const auto original = reinterpret_cast<Original>(dlsym(RTLD_NEXT, "_ZN7QDialog4execEv"));
+    if (!original) std::abort();
+    QTimer::singleShot(50, this, [this] {
+        if (property("supra-input-driven").toBool()) return;
+        setProperty("supra-input-driven", true);
+        const auto action = qgetenv("SUPRALINUX_DIALOG_ACTION");
+        auto boxes = findChildren<QDialogButtonBox *>();
+        if (boxes.size() != 1) std::abort();
+        auto box = boxes.front();
+        if (action == "password") {
+            QList<QLineEdit *> visible;
+            for (auto line : findChildren<QLineEdit *>()) if (line->isVisible()) visible.append(line);
+            if (visible.size() != 1 || visible.front()->echoMode() != QLineEdit::Password) std::abort();
+            visible.front()->setText(QStringLiteral("supra-test-only-value"));
+        }
+        QPushButton *selected = nullptr;
+        for (auto button : box->buttons()) {
+                if (!button->isVisible()) continue;
+                std::fprintf(stderr, "fixture button role=%d text=%s\n", int(box->buttonRole(button)), button->text().toUtf8().constData());
+            const bool rejecting = (box->buttonRole(button) == QDialogButtonBox::RejectRole || box->buttonRole(button) == QDialogButtonBox::NoRole);
+            if (rejecting == (action == "cancel")) {
+                if (selected) std::abort();
+                selected = qobject_cast<QPushButton *>(button);
+            }
+        }
+        if (!selected) std::abort();
+        std::fprintf(stderr, "SupraLINUX fixture: actual %s dialog button clicked (%s)\n", metaObject()->className(), action.constData());
+        selected->click();
+    });
+    return original(this);
+}
+
+int QEventLoop::exec(ProcessEventsFlags flags)
+{
+    using Original = int (*)(QEventLoop *, ProcessEventsFlags);
+    const auto original = reinterpret_cast<Original>(dlsym(RTLD_NEXT, "_ZN10QEventLoop4execE6QFlagsINS_17ProcessEventsFlagEE"));
+    if (!original) std::abort();
+    QTimer::singleShot(75, this, [] {
+        for (auto widget : QApplication::topLevelWidgets()) {
+            auto dialog = qobject_cast<QDialog *>(widget);
+            if (!dialog || !dialog->isVisible() || dialog->property("supra-input-driven").toBool()) continue;
+            dialog->setProperty("supra-input-driven", true);
+            const auto action = qgetenv("SUPRALINUX_DIALOG_ACTION");
+            auto boxes = dialog->findChildren<QDialogButtonBox *>();
+            if (boxes.size() != 1 || action == "password") std::abort();
+            auto box = boxes.front();
+            QPushButton *selected = nullptr;
+            for (auto button : box->buttons()) {
+                if (!button->isVisible()) continue;
+                std::fprintf(stderr, "fixture button role=%d text=%s\n", int(box->buttonRole(button)), button->text().toUtf8().constData());
+                const bool rejecting = (box->buttonRole(button) == QDialogButtonBox::RejectRole || box->buttonRole(button) == QDialogButtonBox::NoRole);
+                if (rejecting == (action == "cancel")) {
+                    if (selected) std::abort();
+                    selected = qobject_cast<QPushButton *>(button);
+                }
+            }
+            if (!selected) std::abort();
+            std::fprintf(stderr, "SupraLINUX fixture: actual %s dialog button clicked (%s)\n", dialog->metaObject()->className(), action.constData());
+            selected->click();
+        }
+    });
+    return original(this, flags);
+}
+SUPRA_CPP
+cat > "${BASE}/driver.py" <<'SUPRA_DRIVER'
+import json, os, resource, signal, subprocess, sys, tempfile
+from pathlib import Path
+
+probe = Path(sys.argv[2]).resolve()
+assert probe.is_file()
+results = []
+with tempfile.TemporaryDirectory(prefix='supralinux-private-dialog-', dir=os.environ.get('AUTOPKGTEST_TMP')) as temporary:
+    base = Path(temporary)
+    for name in ['config', 'data', 'cache', 'runtime', 'home']:
+        (base/name).mkdir(mode=0o700)
+    for prompt_type, action, phrase, expected_rc, expected_output in [
+        ('', 'password', 'Password: ', 0, 'supra-test-only-value\n'),
+        ('', 'cancel', 'Password: ', 1, ''),
+        ('confirm', 'accept', 'Allow the synthetic test operation?', 0, 'yes\n\n'),
+        ('confirm', 'cancel', 'Allow the synthetic test operation?', 1, ''),
+        ('none', 'cancel', 'Synthetic test information', 1, '')]:
+        environment = os.environ.copy()
+        environment.update(XDG_CONFIG_HOME=str(base/'config'), XDG_DATA_HOME=str(base/'data'),
+                           XDG_CACHE_HOME=str(base/'cache'), XDG_RUNTIME_DIR=str(base/'runtime'),
+                           HOME=str(base/'home'), QT_QPA_PLATFORM='offscreen', LD_PRELOAD=str(probe), LC_ALL='C.UTF-8',
+                           SSH_ASKPASS_PROMPT=prompt_type, SUPRALINUX_DIALOG_ACTION=action)
+        for name in ['SSH_AUTH_SOCK', 'SSH_AGENT_PID', 'DISPLAY', 'WAYLAND_DISPLAY']:
+            environment.pop(name, None)
+        process = subprocess.Popen(['dbus-run-session', '--', sys.argv[1], phrase],
+                                env=environment, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True,
+                                preexec_fn=lambda: resource.setrlimit(resource.RLIMIT_CORE, (0, 0)))
+        try:
+            stdout, stderr = process.communicate(timeout=20)
+        except subprocess.TimeoutExpired:
+            os.killpg(process.pid, signal.SIGKILL)
+            process.communicate()
+            raise
+        result = type('Result', (), {'returncode': process.returncode, 'stdout': stdout, 'stderr': stderr})
+        assert result.returncode == expected_rc, (prompt_type, action, result.returncode, result.stderr)
+        assert result.stdout == expected_output, (prompt_type, action, repr(result.stdout))
+        assert 'actual ' in result.stderr and 'dialog button clicked' in result.stderr, result.stderr
+        results.append({'prompt_type': prompt_type or 'entry', 'action': action,
+                        'exit_code': result.returncode, 'synthetic_stdout': result.stdout,
+                        'fixture_stderr': result.stderr})
+Path(sys.argv[3]).write_text(json.dumps(results,indent=2)+'\n')
+print('Installed askpass actual Qt dialog interactions: PASS (5 private cases)')
+SUPRA_DRIVER
+cmake -S "${BASE}/source" -B "${BASE}/build" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${BASE}/build"
+python3 "${BASE}/driver.py" /usr/bin/ksshaskpass "${BASE}/build/libaskpass-fixture.so" "${BASE}/ubuntu-dialogs.json"
+dpkg-query -W -f='${Version}' ksshaskpass > "${BASE}/ubuntu-version"
+dpkg-query -W -f='${Version}' libqt6widgets6 > "${BASE}/ubuntu-qt-widgets-version"
+sha256sum "${BASE}/build/libaskpass-fixture.so" > "${BASE}/fixture-sha256.txt"

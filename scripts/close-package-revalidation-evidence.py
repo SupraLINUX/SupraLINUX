@@ -229,6 +229,13 @@ def main():
         if plasma_inputs:
             inputs += ['scripts/frameworks-revalidation-inputs.py', 'scripts/prepare-frameworks-revalidation-inputs.py',
                        'scripts/probe-frameworks-build-inputs.sh']
+            support_registry = ROOT/'manifests/frameworks-support-inputs.json'
+            if support_registry.is_file():
+                support_nodes = json.loads(support_registry.read_text())['nodes']
+                selected_support = set(record['frameworks_predecessors']) & set(support_nodes)
+                if selected_support:
+                    inputs += ['scripts/frameworks-support-inputs.py', 'manifests/frameworks-support-inputs.json']
+                    inputs += [support_nodes[node]['evidence']['path'] for node in sorted(selected_support)]
         if 'campaign_manifest_sha256' in frozen:
             inputs += ['scripts/freeze-reviewed-package-contract.py']
         proof['inputs_sha256']={name:hashlib.sha256(subprocess.check_output(['git','show',f'{head}:{name}'])).hexdigest() for name in inputs}

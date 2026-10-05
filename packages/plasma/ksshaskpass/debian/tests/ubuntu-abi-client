@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+import json,os,shutil,subprocess
+from pathlib import Path
+base=Path('/var/tmp/supralinux-ksshaskpass-baseline')
+candidate='4:6.7.5-0supralinux1'
+assert subprocess.check_output(['dpkg-query','-W','-f=${Version}','ksshaskpass'],text=True).strip()==candidate
+subprocess.run(['dpkg','--compare-versions',candidate,'gt',(base/'ubuntu-version').read_text().strip()],check=True)
+assert subprocess.check_output(['dpkg-query','-W','-f=${Version}','libqt6widgets6'],text=True).strip()==(base/'ubuntu-qt-widgets-version').read_text().strip()
+subprocess.run(['sha256sum','--check','--strict',str(base/'fixture-sha256.txt')],check=True)
+output=Path(os.environ['AUTOPKGTEST_TMP'])/'candidate-dialogs.json'
+subprocess.run(['python3',str(base/'driver.py'),'/usr/bin/ksshaskpass',str(base/'build/libaskpass-fixture.so'),str(output)],check=True)
+def behavior(path):return [{key:row[key] for key in ['prompt_type','action','exit_code','synthetic_stdout']} for row in json.loads(path.read_text())]
+assert behavior(output)==behavior(base/'ubuntu-dialogs.json')
+alternatives=subprocess.check_output(['update-alternatives','--query','ssh-askpass'],text=True)
+assert 'Alternative: /usr/bin/ksshaskpass' in alternatives and 'Priority: 35' in alternatives
+assert Path('/usr/share/man/man1/ksshaskpass.1.gz').is_file()
+assert 'not found' not in subprocess.check_output(['ldd','/usr/bin/ksshaskpass'],text=True)
+subprocess.run(['apt-get','check'],check=True)
+shutil.copytree(base,Path(os.environ['AUTOPKGTEST_ARTIFACTS'])/'ubuntu-compiled-fixture',dirs_exist_ok=True)
+shutil.copyfile(output,Path(os.environ['AUTOPKGTEST_ARTIFACTS'])/'candidate-dialogs.json')
+print('Unchanged Ubuntu Qt fixture, actual upgraded askpass behavior, alternatives, manual and APT: PASS')

@@ -1,0 +1,31 @@
+Source: ksshaskpass
+Section: utils
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+XSBC-Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Build-Depends: cmake (>= 3.16~),
+               debhelper-compat (= 13),
+               dh-sequence-kf6,
+               extra-cmake-modules (= 6.30.0-0supralinux3),
+               gettext,
+               libkf6coreaddons-dev (= 6.30.0-0supralinux4),
+               libkf6doctools-dev (= 6.30.0-0supralinux1),
+               libkf6i18n-dev (= 6.30.0-0supralinux1),
+               libkf6widgetsaddons-dev (= 6.30.0-0supralinux7),
+               pkgconf,
+               qt6-base-dev (>= 6.10.0~),
+               qtkeychain-qt6-dev (>= 0.15.0),
+Standards-Version: 4.7.0
+Homepage: https://invent.kde.org/plasma/ksshaskpass
+Vcs-Browser: https://github.com/SupraLINUX/SupraLINUX/tree/architecture/bootstrap-v1/packages/plasma/ksshaskpass
+Vcs-Git: https://github.com/SupraLINUX/SupraLINUX.git
+Rules-Requires-Root: no
+
+Package: ksshaskpass
+Architecture: any
+Depends: openssh-client, ${misc:Depends}, ${shlibs:Depends},
+Recommends: kwalletmanager,
+Provides: ssh-askpass,
+Description: interactively prompt users for a passphrase for ssh-add
+ A front-end for ssh-add which stores the password
+ of the SSH key through QtKeychain secure storage.

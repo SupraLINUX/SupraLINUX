@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "kwrited",
+      "package_version": "4:6.7.5-0supralinux1",
+      "artifact_id": 11361875595,
+      "workflow_run_id": 37346882178,
+      "artifact_sha256": "bf9747eec1772b04f8cc49a3be0ede217a43ba14369a41161ce86404f9d7ed72",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

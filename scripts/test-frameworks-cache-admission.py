@@ -135,6 +135,25 @@ class CacheAdmission(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, 'source mismatch'):
             self.admit(revalidated=[item])
 
+    def test_support_selected_without_replacing_historical_pool(self):
+        original = cache.digest(self.deb)
+        item = self.repair()
+        item['retained_support'] = item.pop('revalidation')
+        node = self.dag['nodes']['extra-cmake-modules']
+        node['retained_support'] = node.pop('revalidation')
+        selected = self.admit(revalidated=[item])
+        self.assertEqual(selected[0]['retained_support'], item['retained_support'])
+        self.assertEqual(cache.digest(self.deb), original)
+
+    def test_unreviewed_support_proof_rejected(self):
+        item = self.repair()
+        item['retained_support'] = item.pop('revalidation')
+        node = self.dag['nodes']['extra-cmake-modules']
+        node['retained_support'] = node.pop('revalidation')
+        item['retained_support'] = {'path': 'different-proof.json', 'sha256': '2'*64}
+        with self.assertRaises(AssertionError):
+            self.admit(revalidated=[item])
+
 
 if __name__ == "__main__":
     unittest.main()

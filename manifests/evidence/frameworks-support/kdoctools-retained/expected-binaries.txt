@@ -1,0 +1,4 @@
+kdoctools6
+libkf6doctools-dev
+libkf6doctools-doc
+libkf6doctools6

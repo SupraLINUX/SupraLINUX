@@ -3,7 +3,7 @@
   "role": "reviewed-plasma-package-build",
   "state": "execution-authorized",
   "authorized_nodes": [
-    "kwrited"
+    "ksshaskpass"
   ],
   "package_execution_authorized": true,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
@@ -1623,7 +1623,7 @@
       }
     },
     "kwrited": {
-      "state": "build-pending",
+      "state": "PASS",
       "source_package": "kwrited",
       "version": "4:6.7.5-0supralinux1",
       "upstream_version": "6.7.5",
@@ -1850,7 +1850,33 @@
           "resolute-security"
         ]
       },
-      "attempts": [],
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "PASS",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "PASS",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37346882178,
+          "workflow_job_id": 111887559718,
+          "source_commit": "3fc75d2186c2236e5a10d27a8ba375fd4fb5ec65",
+          "artifact_id": 11361875595,
+          "artifact_sha256": "bf9747eec1772b04f8cc49a3be0ede217a43ba14369a41161ce86404f9d7ed72",
+          "result_path": "manifests/evidence/plasma/kwrited-attempt1/result.json",
+          "result_sha256": "8145bec0cdf811f4b7c4a3b4ba05f9dbb6d5bb61e9a7f7c7e83f7d49d0d85d2b",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t171216z-1119567",
+          "host_evidence_manifest_sha256": "cf7289563736178d3460d5cf43ef9e27ae2fc0ca9b39371fcad4b1dad5332a5b",
+          "rootfs_admission_path": "manifests/evidence/plasma/kwrited-attempt1/rootfs-admission.json",
+          "rootfs_admission_sha256": "2d250bdfc5b3864ba40cdcec6d71ec5526fab999aa11fca96596b14810f2adb7",
+          "baseline_preflight_path": "manifests/evidence/plasma/kwrited-attempt1/ubuntu-baseline-preflight.json",
+          "baseline_preflight_sha256": "a6198f455e064f164f7c04045486f3e895a19ea3acbf95821dc2d0cd8f0a631d",
+          "workflow_job_path": "manifests/evidence/plasma/kwrited-attempt1/workflow-job.json",
+          "workflow_job_sha256": "0548709ef124e11452b3f4d665c69a2bbe326dd16925f7d51aa1a539484e2119",
+          "host_result_path": "manifests/evidence/plasma/kwrited-attempt1/host-result.json",
+          "host_result_sha256": "73facd9439c274276c3f4edc883440218af2e7325e8d3673349f60b75e090fcd"
+        }
+      ],
       "review": {
         "source": "Official signed 6.7.5 source remains unmodified; verified Ubuntu packaging is advisory only.",
         "version": "Preserve Ubuntu epoch 4; candidate exceeds captured Ubuntu references.",
@@ -1873,6 +1899,251 @@
         "tests/control": "b5f73de62e24116c9e29ad78d1ce970f82160c469e13043835eb516c0bc4e079",
         "tests/ubuntu-abi-client": "709206f3cba88d47b137c72c0acbc677fdd130d53b0415f039041cb6a9570feb",
         "upstream/metadata": "cf762b67ada7cefaf309e7deed8b9270ca8116608ac5626c9950e510e30c8314",
+        "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+        "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+      },
+      "evidence": {
+        "workflow_run_id": 37346882178,
+        "workflow_job_id": 111887559718,
+        "source_commit": "3fc75d2186c2236e5a10d27a8ba375fd4fb5ec65",
+        "artifact_id": 11361875595,
+        "artifact_sha256": "bf9747eec1772b04f8cc49a3be0ede217a43ba14369a41161ce86404f9d7ed72",
+        "result_path": "manifests/evidence/plasma/kwrited-attempt1/result.json",
+        "result_sha256": "8145bec0cdf811f4b7c4a3b4ba05f9dbb6d5bb61e9a7f7c7e83f7d49d0d85d2b",
+        "contract_path": "manifests/evidence/plasma/kwrited-attempt1/build-contract.json",
+        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t171216z-1119567",
+        "host_evidence_manifest_sha256": "cf7289563736178d3460d5cf43ef9e27ae2fc0ca9b39371fcad4b1dad5332a5b",
+        "local_retention": {
+          "archive_root": ".artifacts/plasma-6.7.5/kwrited-attempt1",
+          "archive_index_sha256": "a754be992f06bb259f17348387973720bfd1336b48674181b2eacf0d8a247cab",
+          "plan_path": "manifests/evidence/plasma/kwrited-artifact-plan.json",
+          "plan_sha256": "23bb8b3981f27cac2c964566fe7914f421ff69d6508e5a1a71e061332ee7059f",
+          "source_complete": true,
+          "changes_complete": true,
+          "buildinfo_verified": true,
+          "artifact_zip_sha256_verified": true,
+          "offline_restore_verified": true,
+          "requires_github_for_restore": false,
+          "off_host_backup_verified": false,
+          "unique_binary_package_count": 2,
+          "binary_payload_file_count": 2,
+          "payload_prefix": "packages/"
+        },
+        "cache_probe_result_path": "manifests/evidence/plasma/kwrited-attempt1/cache-probe-result.json",
+        "cache_probe_result_sha256": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+        "rootfs_admission_path": "manifests/evidence/plasma/kwrited-attempt1/rootfs-admission.json",
+        "rootfs_admission_sha256": "2d250bdfc5b3864ba40cdcec6d71ec5526fab999aa11fca96596b14810f2adb7",
+        "baseline_preflight_path": "manifests/evidence/plasma/kwrited-attempt1/ubuntu-baseline-preflight.json",
+        "baseline_preflight_sha256": "a6198f455e064f164f7c04045486f3e895a19ea3acbf95821dc2d0cd8f0a631d",
+        "workflow_job_path": "manifests/evidence/plasma/kwrited-attempt1/workflow-job.json",
+        "workflow_job_sha256": "0548709ef124e11452b3f4d665c69a2bbe326dd16925f7d51aa1a539484e2119",
+        "host_result_path": "manifests/evidence/plasma/kwrited-attempt1/host-result.json",
+        "host_result_sha256": "73facd9439c274276c3f4edc883440218af2e7325e8d3673349f60b75e090fcd"
+      }
+    },
+    "ksshaskpass": {
+      "state": "build-pending",
+      "source_package": "ksshaskpass",
+      "version": "4:6.7.5-0supralinux1",
+      "upstream_version": "6.7.5",
+      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/ksshaskpass-6.7.5.tar.xz",
+      "upstream_sha256": "deb5698b5682bc15d22446db9cf8641857d0bd7785e145b7b6e9247a68d35fd2",
+      "signature_sha256": "92a094a93ab25dd9fa76d7ad47a7948747885e486fe261506bbc3e8c51c3a985",
+      "packaging_reference_version": "4:6.6.4-0ubuntu1",
+      "packaging_reference_sha256": "5d47e4c9924f0461657202d15c7d40efb038a0dc66cd02dac7d0e25dc64e64d8",
+      "packaging_path": "packages/plasma/ksshaskpass/debian",
+      "packaging_review": "PASS",
+      "binary_packages": {
+        "ksshaskpass": "amd64"
+      },
+      "ubuntu_baseline_package": "ksshaskpass",
+      "baseline_setup_script": "tests/baseline-setup",
+      "baseline_preflight_required": true,
+      "required_executable_files": [
+        "rules",
+        "postinst",
+        "prerm",
+        "tests/baseline-setup",
+        "tests/ubuntu-abi-client",
+        "tests/consumer"
+      ],
+      "upstream_tests": [],
+      "frameworks_predecessors": {
+        "extra-cmake-modules": {
+          "source_package": "kf6-extra-cmake-modules",
+          "version": "6.30.0-0supralinux3",
+          "binaries": [
+            {
+              "package": "extra-cmake-modules",
+              "architecture": "all",
+              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+            }
+          ]
+        },
+        "karchive": {
+          "source_package": "kf6-karchive",
+          "version": "6.30.0-0supralinux4",
+          "binaries": [
+            {
+              "package": "libkf6archive-data",
+              "architecture": "all",
+              "sha256": "da46f11fc791e0038b981b1fcddf6bc41718bd0fe9edd932bbd0e0ab26745d83"
+            },
+            {
+              "package": "libkf6archive-dev",
+              "architecture": "amd64",
+              "sha256": "e9d34c95f1d25405cc603b9f1db5ee18e779d170bd5e3b1bd420a1137ca38843"
+            },
+            {
+              "package": "libkf6archive6",
+              "architecture": "amd64",
+              "sha256": "dca57450e619cd01834152a3fffb943342128bd61ca514fa082c8b0eb1ba7541"
+            }
+          ]
+        },
+        "kcoreaddons": {
+          "source_package": "kf6-kcoreaddons",
+          "version": "6.30.0-0supralinux4",
+          "binaries": [
+            {
+              "package": "libkf6coreaddons-data",
+              "architecture": "all",
+              "sha256": "f05f55e3c6486af9d3ff48aa38215784bbb347aae1cd5fb760f5513760364908"
+            },
+            {
+              "package": "libkf6coreaddons-dev",
+              "architecture": "amd64",
+              "sha256": "9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636"
+            },
+            {
+              "package": "libkf6coreaddons6",
+              "architecture": "amd64",
+              "sha256": "015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb"
+            },
+            {
+              "package": "qml6-module-org-kde-coreaddons",
+              "architecture": "amd64",
+              "sha256": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
+            }
+          ]
+        },
+        "kdoctools": {
+          "source_package": "kf6-kdoctools",
+          "version": "6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "kdoctools6",
+              "architecture": "amd64",
+              "sha256": "e455675b2fe7c3fe730d702b99b882f16f70ce2e3d44394c06774a292ebd3933"
+            },
+            {
+              "package": "libkf6doctools-dev",
+              "architecture": "amd64",
+              "sha256": "10ee3bb9a61dcd87645b26f6df46d48e38ec3e29331e07cb983c8a62fcc9e8be"
+            },
+            {
+              "package": "libkf6doctools6",
+              "architecture": "amd64",
+              "sha256": "db37d679c86ac997a8731062e3fa4bc13a87958321569d98bb10014ad37f45fe"
+            }
+          ]
+        },
+        "ki18n": {
+          "source_package": "kf6-ki18n",
+          "version": "6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "libkf6i18n-data",
+              "architecture": "all",
+              "sha256": "3df2300d5aca640c8968859367ac3cd606a31a87e875ca207a71eeda6d03f45a"
+            },
+            {
+              "package": "libkf6i18n-dev",
+              "architecture": "amd64",
+              "sha256": "a9485f9fdb874cc6a61064a824d66567306122c39677ccf92f8adb3b0db14870"
+            },
+            {
+              "package": "libkf6i18n6",
+              "architecture": "amd64",
+              "sha256": "fa60bd16ffb35ae90eb1ab324386961d973a9b0dd31a4947351d3afc652b6e58"
+            },
+            {
+              "package": "libkf6i18nlocaledata6",
+              "architecture": "amd64",
+              "sha256": "19a6b680b3f85fe04901d53fa6193dd773d72fc02c9337387776ec779f5c285a"
+            },
+            {
+              "package": "libkf6i18nqml6",
+              "architecture": "amd64",
+              "sha256": "0297393117c5b4b0fd284d32aa9040c5afbe91aa0da73b2f83d1b181a812f91c"
+            },
+            {
+              "package": "qml6-module-org-kde-i18n-localedata",
+              "architecture": "amd64",
+              "sha256": "147a716c4794a50a63160928228afd25c406a02af2b3d00637bed289027f6001"
+            },
+            {
+              "package": "qml6-module-org-kde-ki18n",
+              "architecture": "amd64",
+              "sha256": "07960032b6582476f0844b72d4f74884240c592e55eb0613390f0191dbd98299"
+            }
+          ]
+        },
+        "kwidgetsaddons": {
+          "source_package": "kf6-kwidgetsaddons",
+          "version": "6.30.0-0supralinux7",
+          "binaries": [
+            {
+              "package": "libkf6widgetsaddons-data",
+              "architecture": "all",
+              "sha256": "c9e7cfe4f8ec0f027a3ecb53383832b4971d88e0c6cd7235de563afbe8cf031f"
+            },
+            {
+              "package": "libkf6widgetsaddons-dev",
+              "architecture": "amd64",
+              "sha256": "53d6d367a418fe29b8514d5980b219b59c84adb635e7f3f7acded259dea7501b"
+            },
+            {
+              "package": "libkf6widgetsaddons6",
+              "architecture": "amd64",
+              "sha256": "9c12483a1cf5afec0e0b645ff541ae6ad93ac4603fa549cdb6c9cb43a873360b"
+            }
+          ]
+        }
+      },
+      "sbuild_rootfs_policy": {
+        "kind": "immutable-bare-milestone",
+        "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
+        "suites": [
+          "resolute",
+          "resolute-updates",
+          "resolute-security"
+        ]
+      },
+      "attempts": [],
+      "review": {
+        "source": "Official signed KDE 6.7.5 source remains unchanged; captured Ubuntu packaging is advisory.",
+        "version": "Preserve epoch 4 and Ubuntu binary/alternatives contract.",
+        "dependencies": "Exact eligible Frameworks SDK/runtime closure; preserve manpage generation. QtKeychain >=0.15.0 and Qt >=6.10.0 come from Ubuntu. Remove unused direct KWallet and xkbcommon build dependencies according to actual upstream targets.",
+        "tests": "No upstream CTest suite is defined. Actual installed dialog behavior is tested through public Qt widget interactions with original event loops and application logic; Ubuntu-built fixture is unchanged after upgrade and rebuilt for the consumer.",
+        "licensing": "Preserve GPL-2.0-or-later source and Debian attributions, explicit CC0-1.0 CI metadata and its full text.",
+        "profile": "Preserve OpenSSH asks, alternatives and manpage; wallet/SSH/Wayland session acceptance remains separate."
+      },
+      "packaging_sha256": {
+        "README.Debian": "501a103c818bd2629bd7d3ed1e82ff2cd5e0411478ab389d2cfee3dda988ae66",
+        "README.source": "cadaaeb89d3500cfcec22bbc7a2999b187aaca61cd79eac1f16df67d0c298efb",
+        "changelog": "440438dde74b84644d41f1f5da42b3f4bd4aad04c8536d801acdb2752ce84c3f",
+        "control": "1eef14caa3ccf7307ff2c3240fbe87606c2729ec6aa48486e6d3346cc497b8b0",
+        "copyright": "6d8e4c49b7ab750567766db56a4ae4d0fa88930d55a51e148365830d6fe1d3f0",
+        "postinst": "7659bb0b87c429597445131a982d1b78e0620be7c45b7e54e02d8cfd3d180f4f",
+        "prerm": "eaa6d1505f1493a494ee6182a846f76a90f27ca54b69617adb7f14a441b8a78b",
+        "rules": "ac902bb444db8b76b735fe67c0dc95bc7e88ddb9533137e7285d0e857b14acbc",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/baseline-setup": "11142898e2cf868fa91f857df039b5027123a028ac6acf4dca39b79b2d7032ae",
+        "tests/consumer": "c911a6da334d8c0568bf0222c8c48d25481d98cd932ec07c1ec68fd4cd8ac6e7",
+        "tests/control": "5dfac095a17a5326a6f60fbfb98943895b1c35535f8fd73cc51c0b3dafd4ecde",
+        "tests/ubuntu-abi-client": "4908aa83e72d1827a8ddf8835dfc68e027541dbdd14058427373f88e00df7b3c",
+        "upstream/metadata": "150d7600d76a84dee0642958d8c538da27d60e6eed6ef04ffcf8f76cfdb35c9b",
         "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
         "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
       }
@@ -1995,6 +2266,12 @@
       "attempt": 2,
       "archive_root": ".artifacts/plasma-6.7.5/plasma-activities-attempt2",
       "archive_index_sha256": "d4655ec83c915cae4a85d3f694340e7b65434a1927e6cbf93bc93ebfa2bbc53b"
+    },
+    {
+      "node": "kwrited",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/kwrited-attempt1",
+      "archive_index_sha256": "a754be992f06bb259f17348387973720bfd1336b48674181b2eacf0d8a247cab"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
@@ -2058,7 +2335,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",

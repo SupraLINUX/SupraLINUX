@@ -32,6 +32,13 @@ def effective_nodes(dag, historical=False):
         original.update({'state': 'PASS', 'package_version': record['version'],
                          'downstream_eligible': True, 'binary_packages': list(record['binary_packages']),
                          'revalidated_binaries': record['binaries'], 'revalidation': record['evidence']})
+    support_spec = importlib.util.spec_from_file_location('support_inputs', ROOT/'scripts/frameworks-support-inputs.py')
+    support = importlib.util.module_from_spec(support_spec)
+    support_spec.loader.exec_module(support)
+    for node, record in support.verified_nodes().items():
+        assert node not in nodes, 'Support input must not replace a historical Frameworks node'
+        assert all(dependency in nodes for dependency in record['depends_on'])
+        nodes[node] = record
     return nodes
 
 
@@ -40,8 +47,9 @@ def check_requested(node, requested, effective):
     assert effective['package_version'] == requested['version'], f'{node}: superseded or unreviewed predecessor version'
     assert effective['source_package'] == requested['source_package']
     assert requested['binaries'] and all(binary['package'] in effective['binary_packages'] for binary in requested['binaries'])
-    if effective.get('revalidation'):
-        binaries = {(binary['package'], binary['architecture']): binary for binary in effective['revalidated_binaries']}
+    if effective.get('revalidation') or effective.get('retained_support'):
+        admitted_binaries = effective.get('revalidated_binaries', effective.get('retained_binaries'))
+        binaries = {(binary['package'], binary['architecture']): binary for binary in admitted_binaries}
         for binary in requested['binaries']:
             admitted = binaries[(binary['package'], binary['architecture'])]
             assert admitted['sha256'] == binary['sha256'], f'{node}: revalidated binary digest mismatch'

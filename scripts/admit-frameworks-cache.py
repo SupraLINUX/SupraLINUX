@@ -52,9 +52,10 @@ def admit(payload, record, dag, current_plan, revalidated=()):
                          for field in ['Package', 'Version', 'Architecture'])
         assert identity == (item['package'], item['version'], item['architecture'])
         assert identity not in by_identity, 'Duplicate repaired predecessor identity'
-        assert item['revalidation'] == dag['nodes'][item['node']]['revalidation']
+        evidence_key = 'revalidation' if item.get('revalidation') else 'retained_support'
+        assert item[evidence_key] == dag['nodes'][item['node']][evidence_key]
         by_identity[identity] = path
-        replacement_proofs[identity] = {key: item[key] for key in ['revalidation', 'artifact_sha256']}
+        replacement_proofs[identity] = {key: item[key] for key in [evidence_key, 'artifact_sha256']}
     selected = []
     for node, predecessor in record["frameworks_predecessors"].items():
         canonical = dag["nodes"][node]

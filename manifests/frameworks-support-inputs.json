@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "role": "retained-frameworks-support-build-inputs",
+  "claim": "Retained hosted PASS inputs only; independent authoritative certification remains required",
+  "nodes": {
+    "kdoctools": {
+      "state": "PASS",
+      "downstream_eligible": true,
+      "purpose": "Generate and install upstream documentation with the matched Frameworks toolchain",
+      "depends_on": [
+        "extra-cmake-modules",
+        "karchive",
+        "ki18n"
+      ],
+      "evidence": {
+        "path": "manifests/evidence/frameworks-support/kdoctools-retained/verification.json",
+        "sha256": "fc022280d576b0e3f2bcb14ba24dc708ee8de74154b3144c7c9970fc38029da5"
+      }
+    }
+  }
+}

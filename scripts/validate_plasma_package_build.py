@@ -126,10 +126,10 @@ def validate():
         assert record["packaging_reference_version"] == sources[name]["ubuntu_reference"]["source_version"]
         assert all(record["review"].values()), "Individual packaging review missing"
         for predecessor, inputs in record.get("frameworks_predecessors", {}).items():
-            original = historical[predecessor]
-            canonical = original if record['state'] == 'PASS' and inputs['version'] == original['package_version'] else effective[predecessor]
+            original = historical.get(predecessor)
+            canonical = original if original and record['state'] == 'PASS' and inputs['version'] == original['package_version'] else effective[predecessor]
             repairs.check_requested(predecessor, inputs, canonical)
-            if name in scope and canonical.get('revalidation') and campaign.get('execution_mode', 'build') == 'build':
+            if name in scope and (canonical.get('revalidation') or canonical.get('retained_support')) and campaign.get('execution_mode', 'build') == 'build':
                 assert name in input_certified, 'Certify repaired input transport before the investigated package Attempt'
         for attempt in record["attempts"]:
             payload = (ROOT / attempt["result_path"]).read_bytes()
