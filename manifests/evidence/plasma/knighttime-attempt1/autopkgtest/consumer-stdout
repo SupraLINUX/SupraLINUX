@@ -1,0 +1,20 @@
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Performing Test HAVE_STDATOMIC
+-- Performing Test HAVE_STDATOMIC - Success
+-- Found WrapAtomic: TRUE
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/autopkgtest.2jqyhd/autopkgtest_tmp/consumer
+[ 50%] Building CXX object CMakeFiles/ubuntu-knighttime-client.dir/main.cpp.o
+[100%] Linking CXX executable ubuntu-knighttime-client
+[100%] Built target ubuntu-knighttime-client
+KNightTime transitions, progress, timed/solar/polar schedules, cycle extrapolation and state round-trip: PASS
+Real private D-Bus daemon subscription, refresh signal and migrated custom schedule: PASS

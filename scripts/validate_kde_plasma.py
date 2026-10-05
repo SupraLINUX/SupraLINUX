@@ -194,6 +194,19 @@ if supplementary.get("source_review_retention"):
     index = json.loads(raw)
     req(index["state"] == "PASS" and index["requires_github_for_restore"] is False,
         "Supplementary source independent retention")
+    if retained.get("offline_restoration"):
+        restored = retained["offline_restoration"]
+        raw_restore = (ROOT / restored["path"]).read_bytes()
+        req(hashlib.sha256(raw_restore).hexdigest() == restored["sha256"], "Source restoration evidence changed")
+        proof = json.loads(raw_restore)
+        req(proof["state"] == "PASS" and proof["network_used"] is False and
+            proof["requires_github_for_restore"] is False and proof["candidate_package_execution_started"] is False,
+            "Offline source restoration scope")
+        req(proof["archive_sha256"] == index["archive_sha256"] and
+            proof["retention_index_sha256"] == retained["sha256"], "Source restoration archive binding")
+        req(proof["restored_ubuntu_sources"] == [{key: item[key] for key in ("source_package", "version")}
+                                                 for item in index["ubuntu_sources"]] and
+            proof["ubuntu_source_packages_extracted"] == len(index["ubuntu_sources"]), "Restored source identities")
 
 req(resolution_preflight.get("state") == "PASS", "Provider resolution preflight PASS")
 req(resolution_preflight.get("execution_authorized") is False, "Closed provider resolution preflight authorization")

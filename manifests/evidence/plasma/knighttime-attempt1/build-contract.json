@@ -1073,9 +1073,9 @@
         "rules": "a0f242fcf9d8667d44970b85645a13f8f0b64563489df9aca3edc666096dd20c",
         "salsa-ci.yml": "32997347e7094680bbc5a1dec4ec4f04424b79bcf4ccbb6bb318f0b601e78e3f",
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
-        "tests/baseline-setup": "51bc70fcf8a7b41c5c7e18a4d7f8b8712e2d335bccfe638879e95e0a8cb9229c",
+        "tests/baseline-setup": "406ef1869f752ba3eb4a8ea6dea28f8142122683f54b8cdc5ee112cc342baa03",
         "tests/consumer": "4d88941e9b9a62dc2edeb1d03f1c62b0381bd2650f851acfb30e713fa6b21746",
-        "tests/control": "5085b9830ea5765b0d05aa1fe9a1612e2f2314404d05b3de3fad2cf7d2eafeae",
+        "tests/control": "87056ce81ced12c252c1fa5cc6bb87cd9c57fc46f3849503e7cc3471df07fbc1",
         "tests/ubuntu-abi-client": "a21c20e372ccbe8d8df7f0f18f5256a759060635adda8364f3ce2d73fdb6d686",
         "upstream/metadata": "f59a5a56c5ebbe702583c2f11753e55704def29a730938dc7bb42c24817b7970",
         "upstream/signing-key.asc": "ebab3869b4186628f1cb668c3e8060cc90c8ba0fc4c89d7ba79fdc6c15b1c9fd",
@@ -1269,30 +1269,7 @@
           "resolute-security"
         ]
       },
-      "attempts": [
-        {
-          "attempt": 1,
-          "state": "INFRA_INVALID",
-          "original_state": "FAIL",
-          "sbuild_result": "PASS",
-          "lintian_result": "PASS",
-          "autopkgtest_result": "FAIL",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37301833343,
-          "workflow_job_id": 111736117791,
-          "source_commit": "ac8bad885871baaf133fc995d122d089a2f6fe5f",
-          "artifact_id": 11342555582,
-          "artifact_sha256": "ab500695b6fcf72ebf4ba8f5f4ff05a31a999347a599e3e83e83c20c8f22f64c",
-          "result_path": "manifests/evidence/plasma/knighttime-attempt1/result.json",
-          "result_sha256": "886a2155d9351916aa53531b3def1fced00c948cbbca12840f3e4bb16749e264",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t111413z-3227332",
-          "host_evidence_manifest_sha256": "28d280452fc1a60479e76db514aa317b31305a46ea81d377905d119575a97bec",
-          "cause": "Both functional clients and candidate builds completed successfully, but autopkgtest rejected expected D-Bus activation messages on stderr. A startup race also allowed a second daemon to be auto-activated before the owned process registered its service.",
-          "repair": "Allow expected stderr while preserving exit-code checks and logs; wait for explicit owned daemon service registration before running clients and verify the owned PID stays alive.",
-          "verification_diagnosis_path": "manifests/evidence/plasma/knighttime-attempt1/verification-diagnosis.json",
-          "verification_diagnosis_sha256": "85293b0b63d27591d9c5034367a6402e1d91132a7fe6513e385c6dd5b5a171de"
-        }
-      ],
+      "attempts": [],
       "upstream_tests": [
         "transition-test",
         "cycle-test",
@@ -1310,7 +1287,7 @@
         "upstream_changes": "Signed official stable 6.7.5; preserve public KNightTime API, SONAME 0 and Ubuntu symbol guards. Source requires C++23, Ubuntu Qt >=6.10, Frameworks >=6.26.",
         "packaging_changes": "Preserve three Ubuntu binaries, multi-arch/installed paths and license declarations. Exact retained Frameworks inputs, tests enabled. Remove unused qt6-base-private-dev Build-Depends after signed source review found no Qt private header or target usage; clean build remains the gate.",
         "build_dependencies": "Exact ECM, KConfig, KCoreAddons, KDBusAddons, KHolidays and KI18n development dependencies plus their required binary dependency closure (27 hashes). These eligible retained artifacts preserve their original Frameworks evidence scope; this does not certify the entire Frameworks campaign. Ubuntu Qt/Positioning/compiler providers unchanged.",
-        "test_policy": "Run all three upstream CTest suites. Before candidate build, compile and execute an Ubuntu client covering transitions/progress, timed and solar/polar schedules, cycle extrapolation, state serialization and public schedule provider. A real private D-Bus daemon must refresh the client with migrated custom schedules. Test the unchanged binary after complete three-package upgrade and recompile/retest a consumer. Checks remain active in Release builds. The Ubuntu and candidate transition relation implementations are identical: verify the exact 60-second tolerance boundaries; all grouped checks emit failure diagnostics. Expected D-Bus/Qt stderr is retained and allowed; nonzero checks still fail. Explicit bounded service readiness prevents auto-activation racing the owned daemon; the PID must remain alive before/after client execution.",
+        "test_policy": "Run all three upstream CTest suites. Before candidate build, compile and execute an Ubuntu client covering transitions/progress, timed and solar/polar schedules, cycle extrapolation, state serialization and public schedule provider. A real private D-Bus daemon must refresh the client with migrated custom schedules. Test the unchanged binary after complete three-package upgrade and recompile/retest a consumer. Checks remain active in Release builds. The Ubuntu and candidate transition relation implementations are identical: verify the exact 60-second tolerance boundaries; all grouped checks emit failure diagnostics.",
         "activation_policy": "Private disposable D-Bus session and config/state directories; configured timed schedule avoids geolocation. Full desktop night-color/compositor integration is a later gate."
       }
     }
@@ -1408,12 +1385,6 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/layer-shell-qt-attempt1",
       "archive_index_sha256": "9df48b678b90a9fd0ed70d14b524260b725c800f7360592d38e5d32532d3f23b"
-    },
-    {
-      "node": "knighttime",
-      "attempt": 1,
-      "archive_root": ".artifacts/plasma-6.7.5/knighttime-attempt1",
-      "archive_index_sha256": "dbda58d02b61f78b30002ddb284b2fb39388be5407766052d350fe708783d1f1"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",

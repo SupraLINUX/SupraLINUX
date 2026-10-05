@@ -117,6 +117,26 @@ def validate():
                     assert result["stage"] == "upstream-package-tests" and result["sbuild_result"] == "PASS"
                     assert diagnostic["upstream_tests"]["state"] == "PASS"
                     assert diagnostic["upstream_tests"]["expected_tests"] == record["upstream_tests"]
+                elif diagnostic["kind"] == "autopkgtest-dbus-stderr-policy-false-negative":
+                    assert result["stage"] == "autopkgtest-qemu" and result["exit_code"] == 4
+                    assert result["sbuild_result"] == result["lintian_result"] == "PASS"
+                    assert diagnostic["package_result"] == "incomplete; repaired harness revalidation required"
+                    directory = (ROOT / attempt["verification_diagnosis_path"]).parent
+                    for file_name, digest in diagnostic["files_sha256"].items():
+                        path = directory / file_name
+                        assert path.resolve().is_relative_to(directory.resolve())
+                        assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
+                        assert result["files_sha256"][file_name] == digest
+                    summary = (directory / "autopkgtest/summary").read_text().splitlines()
+                    assert len(summary) == len(diagnostic["tests"])
+                    for test in diagnostic["tests"]:
+                        assert any(line.split()[:3] == [test, "FAIL", "stderr:"] for line in summary)
+                        stdout = (directory / f"autopkgtest/{test}-stdout").read_text()
+                        assert all(marker in stdout for marker in diagnostic["required_client_success_markers"])
+                        stderr = (directory / f"autopkgtest/{test}-stderr").read_text().splitlines()
+                        assert len(stderr) == 2 and all(line.startswith("dbus-daemon[") for line in stderr)
+                        assert "Activating service name='" + diagnostic["dbus_service"] + "'" in stderr[0]
+                        assert "Successfully activated service '" + diagnostic["dbus_service"] + "'" in stderr[1]
                 else:
                     assert diagnostic["kind"] == "infrastructure-testbed-setup-transport-failure"
                     assert result["stage"] == "autopkgtest-qemu" and result["sbuild_result"] == result["lintian_result"] == "PASS"

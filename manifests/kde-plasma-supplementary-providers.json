@@ -155,6 +155,12 @@
     "path": "manifests/evidence/plasma/provider-gaps/provider-source-input-retention-20261005.json",
     "sha256": "fe4dca62aaf4ea5886501cb354c7e45ea3c8bd88af047a7c63a1e062e878ad8f",
     "state": "PASS",
-    "scope": "authenticated sources/review inputs; no package execution"
+    "scope": "authenticated sources/review inputs; no package execution",
+    "offline_restoration": {
+      "path": "manifests/evidence/plasma/provider-gaps/provider-source-offline-restore-20261005.json",
+      "sha256": "12a64405628460be00dc56d0fd0d88e2a4a1835155be41dc62da36b110c878ec",
+      "state": "PASS",
+      "scope": "offline empty-cache signed Ubuntu source-chain restoration"
+    }
   }
 }

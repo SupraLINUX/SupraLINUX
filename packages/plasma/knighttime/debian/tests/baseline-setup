@@ -8,15 +8,17 @@ cmake_minimum_required(VERSION 3.16)
 project(ubuntu-knighttime-client LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 find_package(KNightTime 6.6 CONFIG REQUIRED)
-find_package(Qt6 6.10 REQUIRED COMPONENTS Core)
+find_package(Qt6 6.10 REQUIRED COMPONENTS Core DBus)
 add_executable(ubuntu-knighttime-client main.cpp)
-target_link_libraries(ubuntu-knighttime-client KNightTime Qt6::Core)
+target_link_libraries(ubuntu-knighttime-client KNightTime Qt6::Core Qt6::DBus)
 CMAKE
 cat > "${BASE}/source/main.cpp" <<'CLIENT'
 #include <optional>
 #include <KDarkLightSchedule>
 #include <KDarkLightScheduleProvider>
 #include <QCoreApplication>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
 #include <QElapsedTimer>
 #include <QEventLoop>
 #include <QThread>
@@ -29,6 +31,15 @@ int main(int argc, char **argv) {
         std::cerr << "KNightTime client check failed: " << check << '\n';
         return code;
     };
+    if (argc>1 && QString::fromLocal8Bit(argv[1])==QStringLiteral("--wait-service")) {
+        QElapsedTimer timer;timer.start();
+        while (timer.elapsed()<10000) {
+            auto *bus=QDBusConnection::sessionBus().interface();
+            if (bus && bus->isServiceRegistered(QStringLiteral("org.kde.NightTime")).value()) return 0;
+            QThread::msleep(20);
+        }
+        return failed(9,"owned daemon service registration timeout");
+    }
     using namespace std::chrono_literals;
     const auto reference = QDateTime(QDate(2026,3,20),QTime(12,0),QTimeZone::UTC);
     const auto start = QDateTime(reference.date(),QTime(6,0),QTimeZone::UTC);
@@ -107,7 +118,10 @@ dbus-run-session -- bash -Eeuo pipefail -c '
     "$1" > "$XDG_RUNTIME_DIR/daemon.log" 2>&1 &
     daemon_pid=$!
     trap '\''kill "$daemon_pid" 2>/dev/null || true; wait "$daemon_pid" 2>/dev/null || true'\'' EXIT
+    if ! "$2" --wait-service; then cat "$XDG_RUNTIME_DIR/daemon.log"; exit 1; fi
+    kill -0 "$daemon_pid"
     if ! "$2" --daemon; then cat "$XDG_RUNTIME_DIR/daemon.log"; exit 1; fi
+    kill -0 "$daemon_pid"
     test -s "$XDG_CONFIG_HOME/knighttimerc"
 ' bash "${DAEMONS[0]}" "${CLIENT}"
 SESSION

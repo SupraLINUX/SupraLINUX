@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "empty-cache offline restoration and signed Ubuntu source-chain revalidation",
+  "archive_path": ".artifacts/providers/source-review-20261005/complete-reviewed-inputs.zip",
+  "archive_sha256": "5a2458c7170831e679c0869b93b707074716dd9f8a2a94d7f735e8d41a63bebe",
+  "retention_index_sha256": "fe4dca62aaf4ea5886501cb354c7e45ea3c8bd88af047a7c63a1e062e878ad8f",
+  "requires_github_for_restore": false,
+  "network_used": false,
+  "restored_ubuntu_sources": [
+    {
+      "source_package": "plasma-wayland-protocols",
+      "version": "1.20.0-2"
+    },
+    {
+      "source_package": "qt6-base",
+      "version": "6.10.2+dfsg-7"
+    },
+    {
+      "source_package": "qt6-wayland",
+      "version": "6.10.2-4"
+    },
+    {
+      "source_package": "wayland",
+      "version": "1.24.0-2"
+    },
+    {
+      "source_package": "wayland-protocols",
+      "version": "1.47-1"
+    }
+  ],
+  "signed_ubuntu_inrelease_reverified": [
+    "archive.ubuntu.com_ubuntu_dists_resolute-security_InRelease",
+    "archive.ubuntu.com_ubuntu_dists_resolute-updates_InRelease",
+    "archive.ubuntu.com_ubuntu_dists_resolute_InRelease"
+  ],
+  "ubuntu_source_packages_extracted": 5,
+  "candidate_package_execution_started": false,
+  "upstream_candidate_signature_reverification": "not included in this restoration scope; original source authentication remains separately retained"
+}
