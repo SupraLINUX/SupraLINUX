@@ -63,9 +63,9 @@
   },
   "planning": {
     "phase": "level0-package-build",
-    "status": "level0-package-build-pending",
+    "status": "level0-package-build-complete",
     "execution_authorized": false,
-    "package_execution_authorized": true,
+    "package_execution_authorized": false,
     "validation_run_kind": "planning-preparation",
     "consumes_package_attempt": false,
     "canonical_package_state_effect": "none",
@@ -108,7 +108,7 @@
       "certified_mechanism": "batched-apt-cache-showsrc-plus-policy",
       "package_attempts_consumed": 0
     },
-    "next_gate": "plasma-level0-authoritative-package-build",
+    "next_gate": "plasma-level0-remaining-packaging-preparation",
     "provider_resolution_review_manifest": "manifests/kde-plasma-provider-resolution-review.json",
     "provider_resolution_evidence": {
       "workflow_run_id": 37086119189,
@@ -179,9 +179,7 @@
       "package_execution_started": false,
       "consumes_package_attempt": false
     },
-    "authorized_package_nodes": [
-      "kwallet-pam"
-    ],
+    "authorized_package_nodes": [],
     "package_build_manifest": "manifests/kde-plasma-package-build.json"
   },
   "sources": [

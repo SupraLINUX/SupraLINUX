@@ -1,11 +1,9 @@
 {
   "schema": 1,
   "role": "reviewed-plasma-package-build",
-  "state": "execution-authorized",
-  "authorized_nodes": [
-    "kwallet-pam"
-  ],
-  "package_execution_authorized": true,
+  "state": "partial-PASS",
+  "authorized_nodes": [],
+  "package_execution_authorized": false,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
   "scope": "Per-node clean builds, upstream tests, package/Ubuntu upgrade and ABI client checks on KVM; graphical desktop and final distro integration remain later gates",
   "nodes": {
@@ -2213,7 +2211,7 @@
       }
     },
     "kwallet-pam": {
-      "state": "build-pending",
+      "state": "PASS",
       "source_package": "kwallet-pam",
       "version": "4:6.7.5-0supralinux4",
       "upstream_version": "6.7.5",
@@ -2320,6 +2318,31 @@
           "host_evidence_manifest_sha256": "22f98e976d7d32838c97609e6cb860c1d57dc222e6ba9a43523abf44d5328de7",
           "cause": "Clean sbuild, lintian and the rebuilt PAM consumer passed, but the unchanged Ubuntu ABI client test stopped at a stale revision-1 version assertion before executing the client against revision 3.",
           "repair": "Read the expected candidate version from the source changelog, declare dpkg-dev for that query, preserve the failed Attempt, and recertify the reviewed inputs before a complete rerun."
+        },
+        {
+          "attempt": 4,
+          "state": "PASS",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "PASS",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37376890051,
+          "workflow_job_id": 111988152121,
+          "source_commit": "867decfa3e31ebf0938c39115b5c8308c8429e38",
+          "artifact_id": 11371998028,
+          "artifact_sha256": "5692be0414a98b1804ad71360e9889147278e4e08f2e5e7d8fa54d02897fc028",
+          "result_path": "manifests/evidence/plasma/kwallet-pam-attempt4/result.json",
+          "result_sha256": "8d6984658ed64a42cdcb48feda1543dd48f90811b0e957f35560c95ef1c3023a",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t213403z-2693858",
+          "host_evidence_manifest_sha256": "2d241fa2d722f9fe8f57101afef0322dab3e7ac5dbd7fe354c7c89ca614ec7fc",
+          "rootfs_admission_path": "manifests/evidence/plasma/kwallet-pam-attempt4/rootfs-admission.json",
+          "rootfs_admission_sha256": "24c25c8390bad1804c34fbb1cb979ad4db01f625456706773ca9267ffdc614dc",
+          "baseline_preflight_path": "manifests/evidence/plasma/kwallet-pam-attempt4/ubuntu-baseline-preflight.json",
+          "baseline_preflight_sha256": "3ee224a88d2b041772757477bccf838d040bfd10dba5211addf481d453b5a4f2",
+          "workflow_job_path": "manifests/evidence/plasma/kwallet-pam-attempt4/workflow-job.json",
+          "workflow_job_sha256": "798f0377dfb440c2e064fbd810ca95346d980dd184498cf609be7f5d8f1acdd9",
+          "host_result_path": "manifests/evidence/plasma/kwallet-pam-attempt4/host-result.json",
+          "host_result_sha256": "6b066b74d70c3272f96f661b00d61d20e8e3ba638f83274b9229ade728e405f3"
         }
       ],
       "review": {
@@ -2346,6 +2369,44 @@
         "upstream/metadata": "cb69e555a8103e846f09d08b16e935a013120fb9969a16e890401f5456867bd1",
         "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
         "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+      },
+      "evidence": {
+        "workflow_run_id": 37376890051,
+        "workflow_job_id": 111988152121,
+        "source_commit": "867decfa3e31ebf0938c39115b5c8308c8429e38",
+        "artifact_id": 11371998028,
+        "artifact_sha256": "5692be0414a98b1804ad71360e9889147278e4e08f2e5e7d8fa54d02897fc028",
+        "result_path": "manifests/evidence/plasma/kwallet-pam-attempt4/result.json",
+        "result_sha256": "8d6984658ed64a42cdcb48feda1543dd48f90811b0e957f35560c95ef1c3023a",
+        "contract_path": "manifests/evidence/plasma/kwallet-pam-attempt4/build-contract.json",
+        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t213403z-2693858",
+        "host_evidence_manifest_sha256": "2d241fa2d722f9fe8f57101afef0322dab3e7ac5dbd7fe354c7c89ca614ec7fc",
+        "local_retention": {
+          "archive_root": ".artifacts/plasma-6.7.5/kwallet-pam-attempt4",
+          "archive_index_sha256": "5169c4a7e869b4684541a40d6e32ff7a4af131d45ff34595515e4874e70794be",
+          "plan_path": "manifests/evidence/plasma/kwallet-pam-artifact-plan.json",
+          "plan_sha256": "7f255aacc68037de86b5acc909121f688e668ab9cfdaebdcd7c18ea484a975c1",
+          "source_complete": true,
+          "changes_complete": true,
+          "buildinfo_verified": true,
+          "artifact_zip_sha256_verified": true,
+          "offline_restore_verified": true,
+          "requires_github_for_restore": false,
+          "off_host_backup_verified": false,
+          "unique_binary_package_count": 3,
+          "binary_payload_file_count": 3,
+          "payload_prefix": "packages/"
+        },
+        "cache_probe_result_path": "manifests/evidence/plasma/kwallet-pam-attempt4/cache-probe-result.json",
+        "cache_probe_result_sha256": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+        "rootfs_admission_path": "manifests/evidence/plasma/kwallet-pam-attempt4/rootfs-admission.json",
+        "rootfs_admission_sha256": "24c25c8390bad1804c34fbb1cb979ad4db01f625456706773ca9267ffdc614dc",
+        "baseline_preflight_path": "manifests/evidence/plasma/kwallet-pam-attempt4/ubuntu-baseline-preflight.json",
+        "baseline_preflight_sha256": "3ee224a88d2b041772757477bccf838d040bfd10dba5211addf481d453b5a4f2",
+        "workflow_job_path": "manifests/evidence/plasma/kwallet-pam-attempt4/workflow-job.json",
+        "workflow_job_sha256": "798f0377dfb440c2e064fbd810ca95346d980dd184498cf609be7f5d8f1acdd9",
+        "host_result_path": "manifests/evidence/plasma/kwallet-pam-attempt4/host-result.json",
+        "host_result_sha256": "6b066b74d70c3272f96f661b00d61d20e8e3ba638f83274b9229ade728e405f3"
       }
     }
   },
@@ -2496,6 +2557,12 @@
       "attempt": 3,
       "archive_root": ".artifacts/plasma-6.7.5/kwallet-pam-attempt3",
       "archive_index_sha256": "e65945ab12426288f14da5854efa25aa83f4791dcb8789d96e8d10536beb5e56"
+    },
+    {
+      "node": "kwallet-pam",
+      "attempt": 4,
+      "archive_root": ".artifacts/plasma-6.7.5/kwallet-pam-attempt4",
+      "archive_index_sha256": "5169c4a7e869b4684541a40d6e32ff7a4af131d45ff34595515e4874e70794be"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
