@@ -20,6 +20,18 @@ def validate():
         assert campaign['execution_mode'] in {'preflight', 'build', 'complete'}
         assert len(campaign['authorized_nodes']) <= 1
         assert campaign['package_execution_authorized'] is bool(campaign['authorized_nodes'])
+        for incident in campaign.get('infrastructure_incidents', []):
+            raw = (ROOT/incident['path']).read_bytes()
+            assert hashlib.sha256(raw).hexdigest()==incident['sha256']
+            proof=json.loads(raw)
+            assert proof['state']=='INFRA_INVALID' and proof['package_attempt_consumed'] is False
+            assert incident['cause'] and incident['repair']
+            directory=(ROOT/incident['path']).parent
+            for name,digest in proof['files_sha256'].items():
+                assert hashlib.sha256((directory/name).read_bytes()).hexdigest()==digest
+            result=json.loads((ROOT/proof['result_path']).read_text())
+            assert result['state']=='INFRA_INVALID' and result['package_attempt_consumed'] is False
+            assert result['source_commit']==proof['source_commit']
         for node, record in campaign['nodes'].items():
             prepare.contract(node)
             assert record['review'] and all(record['review'].values())

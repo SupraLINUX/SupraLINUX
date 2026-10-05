@@ -254,7 +254,7 @@
         "qml6-module-org-kde-config.install": "269f9e7f4d80d8400d2952785d54a1406a14e657219431cc23e79ccd7b6771d2",
         "rules": "4493089ea4d92ffbe5b6848f8b70916f561b7486281c0d31fde2c11cf5498ff0",
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
-        "tests/baseline-setup": "d2cbd79f0d94c33ebbebf059464cd0cfd70a8bf459c3d7872528628f9abb41e5",
+        "tests/baseline-setup": "ccfaf4646cc9fb97893859ae21dfe9b2a090a8771adde115650424521553d1fe",
         "tests/consumer": "1956e2f406f5f4b1e9c0402c1ace1bc7f110cab032950cd6f333a310f848b3ac",
         "tests/control": "26f36c7d975454ed38ac762d041beb7f4b7196e000d4c55085ef9ed1115262e1",
         "tests/retained-upgrade": "bf4f384801770f3040030b4095ac30756c24f0580c9e2e3d73d192b3a09c29b0",
@@ -263,13 +263,5 @@
       }
     }
   },
-  "certifications": [],
-  "infrastructure_incidents": [
-    {
-      "path": "manifests/evidence/package-revalidation/kconfig-preflight1/verification.json",
-      "sha256": "fa1d403a3f8c54d32615f2567af073240866b8e352b8d0886ab0943c4f19d217",
-      "cause": "The Ubuntu SDK baseline lacked qt6-declarative-dev; Ubuntu libkf6config-dev exports a Qt6Qml CMake dependency without installing its SDK. Candidate package execution did not start.",
-      "repair": "Install Qt QML SDK explicitly in the reviewed client fixture, compile it locally without host installation, then repeat the preflight in KVM."
-    }
-  ]
+  "certifications": []
 }

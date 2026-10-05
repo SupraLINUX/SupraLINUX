@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 BASE=/var/tmp/supralinux-kconfig-baseline
-apt-get install -y --no-install-recommends build-essential cmake libkf6config-dev libkf6config-bin qml6-module-org-kde-config qt6-qpa-plugins qml6-module-qtqml qml6-module-qtqml-models qml6-module-qtqml-workerscript
+apt-get install -y --no-install-recommends build-essential cmake qt6-declarative-dev libkf6config-dev libkf6config-bin qml6-module-org-kde-config qt6-qpa-plugins qml6-module-qtqml qml6-module-qtqml-models qml6-module-qtqml-workerscript
 mkdir -p "${BASE}/source"
 cat > "${BASE}/source/CMakeLists.txt" <<'CMAKE'
 cmake_minimum_required(VERSION 3.29)
@@ -70,12 +70,21 @@ mkdir -p "${XDG_CONFIG_HOME}" "${XDG_DATA_HOME}" "${XDG_CACHE_HOME}" "${XDG_STAT
 chmod 700 "${XDG_RUNTIME_DIR}"
 "$1"
 kwriteconfig6 --file migrationrc --group Before --key old 'SupraLINUX migration'
+kwriteconfig6 --file migrationrc --group Before --key untouched 42
+mkdir -p "${XDG_DATA_HOME}/kconf_update"
+cat > "${XDG_DATA_HOME}/kconf_update/rename-setting.sh" <<'MIGRATION'
+#!/bin/sh
+set -eu
+value=$(kreadconfig6 --file migrationrc --group Before --key old)
+test "$value" = 'SupraLINUX migration'
+kwriteconfig6 --file migrationrc --group After --key new "$value"
+kwriteconfig6 --file migrationrc --group Before --key old --delete
+printf 'executed\n' >> "${XDG_STATE_HOME}/migration-executions"
+MIGRATION
 cat > "${SESSION_ROOT}/migration.upd" <<'UPDATE'
 Version=6
 Id=supralinux-upgrade-check
-File=migrationrc
-Group=Before,After
-Key=old,new
+Script=rename-setting.sh,sh
 UPDATE
 MULTIARCH=$(dpkg-architecture -qDEB_HOST_MULTIARCH)
 UPDATE_TOOL="/usr/lib/${MULTIARCH}/libexec/kf6/kconf_update"
@@ -83,7 +92,10 @@ test -x "${UPDATE_TOOL}"
 "${UPDATE_TOOL}" "${SESSION_ROOT}/migration.upd"
 test "$(kreadconfig6 --file migrationrc --group After --key new)" = 'SupraLINUX migration'
 test -z "$(kreadconfig6 --file migrationrc --group Before --key old)"
-printf 'Actual installed kconf_update and CLI configuration migration: PASS\n'
+test "$(kreadconfig6 --file migrationrc --group Before --key untouched)" = 42
+"${UPDATE_TOOL}" "${SESSION_ROOT}/migration.upd"
+test "$(wc -l < "${XDG_STATE_HOME}/migration-executions")" = 1
+printf 'Actual installed kconf_update: migration, unrelated value preservation and exactly-once update: PASS\n'
 SESSION
 chmod +x "${BASE}/run-session"
 cmake -S "${BASE}/source" -B "${BASE}/build" -DCMAKE_BUILD_TYPE=Release

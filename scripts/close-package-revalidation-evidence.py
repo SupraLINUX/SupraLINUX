@@ -1,0 +1,173 @@
+#!/usr/bin/env python3
+"""Retain an original scoped revalidation or preflight with verified identities."""
+import argparse
+import hashlib
+import importlib.machinery
+import json
+import shutil
+import subprocess
+import tempfile
+import zipfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+retention = importlib.machinery.SourceFileLoader('retention', str(ROOT/'scripts/retain-package-artifacts.py')).load_module()
+
+
+def sha(path):
+    with path.open('rb') as stream:
+        return hashlib.file_digest(stream,'sha256').hexdigest()
+
+
+def write(path, payload):
+    path.write_text(json.dumps(payload,indent=2)+'\n')
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('node')
+    parser.add_argument('--zip',type=Path,required=True)
+    parser.add_argument('--artifact-meta',type=Path,required=True)
+    parser.add_argument('--job-json',type=Path,required=True)
+    parser.add_argument('--host-dir',type=Path,required=True)
+    args = parser.parse_args()
+    manifest = ROOT/'manifests/package-revalidation.json'
+    campaign = json.loads(manifest.read_text())
+    record = campaign['nodes'][args.node]
+    assert campaign['authorized_nodes'] == [args.node] and record['state'] == 'build-pending'
+    meta, job = [json.loads(p.read_text()) for p in [args.artifact_meta,args.job_json]]
+    digest = sha(args.zip)
+    assert digest == meta['digest'].removeprefix('sha256:')
+    subprocess.run(['sha256sum','--check','--quiet','evidence-sha256.txt'],cwd=args.host_dir,check=True)
+    host = json.loads((args.host_dir/'host-result.json').read_text())
+    head = subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD'],text=True).strip()
+    with zipfile.ZipFile(args.zip) as archive:
+        raw = json.loads(archive.read('result.json'))
+        assert raw['source_commit'] == head == job['head_sha'] == meta['workflow_run']['head_sha']
+        assert raw['workflow_run_id'] == str(job['run_id']) == host['workflow_run_id']
+        assert job['status'] == 'completed' and job['conclusion'] == ('success' if raw['state']=='PASS' else 'failure')
+        assert raw['node'] == args.node and raw['version'] == record['version']
+        assert raw['authoritative'] and raw['system_test_acceleration'] == 'kvm-required'
+        assert (host['exit_code']==0) == (raw['state']=='PASS')
+        for name, expected in raw['files_sha256'].items():
+            assert not Path(name).is_absolute() and '..' not in Path(name).parts
+            assert hashlib.sha256(archive.read(name)).hexdigest() == expected, name
+        frozen = json.loads(archive.read('build-contract.json'))
+        built = frozen['nodes'][args.node]
+        for key in ['packaging_sha256','symbols_baselines','frameworks_predecessors','retained_upgrade','upstream_sha256','signature_sha256']:
+            assert built[key] == record[key], f'Changed reviewed input: {key}'
+        assert frozen['execution_mode'] == campaign['execution_mode']
+        preflight = frozen['execution_mode'] == 'preflight'
+        assert raw['package_attempt_consumed'] is (not preflight)
+        sources = [name for name in archive.namelist() if name.startswith('packages/') and name.endswith('.dsc')]
+        if sources:
+            assert len(sources) == 1
+            source = retention.fields(archive.read(sources[0]).decode())
+            assert source['Source'] == record['source_package'] and source['Version'] == record['version']
+            for line in source['Checksums-Sha256'].splitlines():
+                if not line.strip():continue
+                expected,size,name = line.split()
+                data = archive.read('packages/'+name)
+                assert hashlib.sha256(data).hexdigest() == expected and len(data) == int(size)
+            orig = f"packages/{record['source_package']}_{record['upstream_version']}.orig.tar.xz"
+            assert hashlib.sha256(archive.read(orig)).hexdigest() == record['upstream_sha256']
+            assert hashlib.sha256(archive.read('upstream.tar.xz.sig')).hexdigest() == record['signature_sha256']
+        else:
+            assert preflight and raw['state']=='INFRA_INVALID' and raw['stage']=='reviewed-ubuntu-baseline-preflight'
+        if raw['state'] == 'PASS':
+            baseline = json.loads(archive.read('ubuntu-baseline-preflight/result.json'))
+            assert baseline['state'] == 'PASS' and baseline['candidate_installed'] is False
+            assert baseline['source_commit'] == head and baseline['workflow_run_id'] == raw['workflow_run_id']
+            assert json.loads(archive.read('cache-probe/result.json'))['state'] == 'PASS'
+            assert json.loads(archive.read('rootfs-admission.json'))['frameworks_and_qt_sdk_preinstalled'] is False
+            assert json.loads(archive.read('retained-upgrade-inputs.json'))['eligible_as_build_predecessors'] is False
+        if preflight:
+            assert raw['state'] in {'PASS','INFRA_INVALID'}
+            if raw['state']=='PASS':assert raw['stage']=='reviewed-package-preflight-complete'
+            assert raw['sbuild_result'] == raw['lintian_result'] == raw['autopkgtest_result'] == 'not-run'
+            number = len(campaign['certifications'])+len(campaign.get('infrastructure_incidents',[]))+1
+            label = f'{args.node}-preflight{number}'
+            inspection = {'source_complete':bool(sources),'candidate_binaries_built':False}
+        else:
+            number = len(record['attempts'])+1
+            label = f'{args.node}-attempt{number}'
+            inspection = retention.inspect(args.zip,{'node':args.node,'package_version':record['version'],
+                                           'artifact_sha256':digest,'payload_prefix':'packages/'},record['source_package'])
+            for binary in inspection['binaries']:
+                data=archive.read('packages/'+binary['file'])
+                binary.update({'sha256':hashlib.sha256(data).hexdigest(),'size':len(data)})
+            if raw['state']=='PASS':
+                assert {b['package']:b['architecture'] for b in inspection['binaries'] if not b['package'].endswith('-dbgsym')} == record['binary_packages']
+                assert inspection['source_payload_verified'] and inspection['changes_payload_complete'] and not inspection['missing_debug_packages']
+                assert all(raw[k]=='PASS' for k in ['sbuild_result','lintian_result','autopkgtest_result'])
+                upstream = json.loads(archive.read('upstream-tests.json'))
+                assert upstream['state']=='PASS' and upstream['expected_tests']==record['upstream_tests']
+                assert archive.read('autopkgtest/summary').decode().split()==['ubuntu-abi-client','PASS','consumer','PASS']
+                assert archive.read('retained-upgrade/summary').decode().split()==['retained-upgrade','PASS']
+        directory = ROOT/'manifests/evidence/package-revalidation'/label
+        assert not directory.exists(), 'Closed evidence is immutable'
+        directory.mkdir(parents=True)
+        for name in ['result.json','build-contract.json','signature.log','ubuntu-baseline-preflight/result.json',
+                     'cache-probe/result.json','rootfs-admission.json','retained-upgrade-inputs.json',
+                     'upstream-tests.json','autopkgtest/summary','retained-upgrade/summary']:
+            if name in archive.namelist():
+                path=directory/name
+                path.parent.mkdir(parents=True,exist_ok=True)
+                path.write_bytes(archive.read(name))
+        # Replay the whole hash closure from an empty extraction, including hidden files.
+        with tempfile.TemporaryDirectory(prefix='supralinux-revalidation-restore-') as temporary:
+            for name in archive.namelist():
+                assert not Path(name).is_absolute() and '..' not in Path(name).parts
+            archive.extractall(temporary)
+            assert all(sha(Path(temporary)/name)==expected for name,expected in raw['files_sha256'].items())
+    for path,name in [(args.artifact_meta,'artifact-meta.json'),(args.job_json,'workflow-job.json'),
+                      (args.host_dir/'host-result.json','host-result.json'),(args.host_dir/'evidence-sha256.txt','host-evidence-sha256.txt')]:
+        shutil.copyfile(path,directory/name)
+    stored = ROOT/'.artifacts/package-revalidation'/label/'sha256'/f'{digest}.zip'
+    assert not stored.exists()
+    stored.parent.mkdir(parents=True)
+    shutil.copyfile(args.zip,stored)
+    proof = {'schema':1,'scope':'reviewed-package-revalidation-preflight' if preflight else 'authoritative-package-revalidation',
+             'node':args.node,'version':record['version'],'state':raw['state'],'source_commit':head,
+             'workflow_run_id':job['run_id'],'workflow_job_id':job['id'],'artifact_id':meta['id'],
+             'artifact_sha256':digest,'host_evidence_dir':str(args.host_dir),
+             'host_evidence_manifest_sha256':sha(args.host_dir/'evidence-sha256.txt'),
+             'package_attempt_consumed':raw['package_attempt_consumed'],
+             'result_path':str((directory/'result.json').relative_to(ROOT)), 'result_sha256':sha(directory/'result.json'),
+             'contract_path':str((directory/'build-contract.json').relative_to(ROOT)),
+             'archive_path':str(stored.relative_to(ROOT)),'inspection':inspection,
+             'offline_restore_verified':True,'requires_github_for_restore':False,
+             'files_sha256':{str(p.relative_to(directory)):sha(p) for p in sorted(directory.rglob('*')) if p.is_file()}}
+    if preflight:
+        inputs=['scripts/run-authoritative-plasma-package.sh','scripts/prepare-plasma-package.py',
+                'scripts/plasma-package-testing.py','scripts/probe-reviewed-ubuntu-baseline.py',
+                'scripts/admit-frameworks-cache.py','scripts/prepare-milestone-sbuild-rootfs.py',
+                'scripts/prepare-retained-package-inputs.py','scripts/run-kvm-jit-gate-core.sh',
+                'scripts/qemu-kvm-required.sh']
+        proof['inputs_sha256']={name:hashlib.sha256(subprocess.check_output(['git','show',f'{head}:{name}'])).hexdigest() for name in inputs}
+        proof['packaging_sha256']=record['packaging_sha256']
+    write(directory/'verification.json',proof)
+    link={'path':str((directory/'verification.json').relative_to(ROOT)),'sha256':sha(directory/'verification.json')}
+    if preflight:
+        if raw['state']=='PASS':
+            campaign['certifications'].append(link)
+            campaign['execution_mode']='build'
+        else:
+            campaign.setdefault('infrastructure_incidents',[]).append(link)
+    else:
+        record['attempts'].append({'attempt':number,'state':raw['state'],**link})
+        if raw['state']=='PASS':
+            record['state']='PASS'
+            record['downstream_eligible']=True
+            record['evidence']=link
+            record['binaries']=[b for b in inspection['binaries'] if not b['package'].endswith('-dbgsym')]
+            campaign['authorized_nodes']=[]
+            campaign['package_execution_authorized']=False
+            campaign['execution_mode']='complete'
+            campaign['state']='PASS'
+    write(manifest,campaign)
+    print(f'{label}: original {raw["state"]} retained, offline restoration verified; package Attempt={not preflight}')
+
+
+if __name__=='__main__':
+    main()
