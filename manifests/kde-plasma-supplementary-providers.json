@@ -82,6 +82,12 @@
           "sha256": "517cc7826961bc73966454449efc96fa04fa27b2b299ec407f54c667889ac221",
           "state": "PASS",
           "scope": "local Ubuntu wire event compatibility review; not authoritative package/compositor certification"
+        },
+        "native_tests_review": {
+          "path": "manifests/evidence/plasma/provider-gaps/plasma-protocols-native-tests-20261005/review.json",
+          "sha256": "52c282e491175da30e48f2a255b62162fe810e12fce8479611d61f81d6fb8cfe",
+          "state": "PASS",
+          "scope": "local native source/test review; no authoritative package certification"
         }
       }
     },

@@ -3,7 +3,7 @@
   "role": "reviewed-plasma-package-build",
   "state": "execution-authorized",
   "authorized_nodes": [
-    "plasma-activities"
+    "knighttime"
   ],
   "package_execution_authorized": true,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
@@ -1051,7 +1051,7 @@
       }
     },
     "knighttime": {
-      "state": "PASS",
+      "state": "build-pending",
       "source_package": "knighttime",
       "version": "6.7.5-0supralinux1",
       "upstream_version": "6.7.5",
@@ -1291,27 +1291,6 @@
           "repair": "Allow expected stderr while preserving exit-code checks and logs; wait for explicit owned daemon service registration before running clients and verify the owned PID stays alive.",
           "verification_diagnosis_path": "manifests/evidence/plasma/knighttime-attempt1/verification-diagnosis.json",
           "verification_diagnosis_sha256": "85293b0b63d27591d9c5034367a6402e1d91132a7fe6513e385c6dd5b5a171de"
-        },
-        {
-          "attempt": 2,
-          "state": "PASS",
-          "sbuild_result": "PASS",
-          "lintian_result": "PASS",
-          "autopkgtest_result": "PASS",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37303795468,
-          "workflow_job_id": 111742501063,
-          "source_commit": "6deb755c02faf5887d1c223820abc53b0efd060e",
-          "artifact_id": 11343357570,
-          "artifact_sha256": "5a08c1f0dbcf0ef435afacbe506a92538ef8aeb71d764155a0e015665996f11e",
-          "result_path": "manifests/evidence/plasma/knighttime-attempt2/result.json",
-          "result_sha256": "fcff83ea2957e4b1899bebcb85f13ce3f346e7c7d37eb3175bca460b3089aa18",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t113215z-3338972",
-          "host_evidence_manifest_sha256": "c7459bc86ccb040bf6b4c4c1a533ee61be34e54e5dfa5a3e0d92d55fbe82f616",
-          "rootfs_admission_path": "manifests/evidence/plasma/knighttime-attempt2/rootfs-admission.json",
-          "rootfs_admission_sha256": "3b47442c4b7398b4873330af60a71ad317dae7c01008b7a0a9559650c41cc4b1",
-          "baseline_preflight_path": "manifests/evidence/plasma/knighttime-attempt2/ubuntu-baseline-preflight.json",
-          "baseline_preflight_sha256": "aaa3fb31bdb551048700552048b49e0dd66cad5bc8b574a3cc7f19da09da6f73"
         }
       ],
       "upstream_tests": [
@@ -1333,206 +1312,6 @@
         "build_dependencies": "Exact ECM, KConfig, KCoreAddons, KDBusAddons, KHolidays and KI18n development dependencies plus their required binary dependency closure (27 hashes). These eligible retained artifacts preserve their original Frameworks evidence scope; this does not certify the entire Frameworks campaign. Ubuntu Qt/Positioning/compiler providers unchanged.",
         "test_policy": "Run all three upstream CTest suites. Before candidate build, compile and execute an Ubuntu client covering transitions/progress, timed and solar/polar schedules, cycle extrapolation, state serialization and public schedule provider. A real private D-Bus daemon must refresh the client with migrated custom schedules. Test the unchanged binary after complete three-package upgrade and recompile/retest a consumer. Checks remain active in Release builds. The Ubuntu and candidate transition relation implementations are identical: verify the exact 60-second tolerance boundaries; all grouped checks emit failure diagnostics. Expected D-Bus/Qt stderr is retained and allowed; nonzero checks still fail. Explicit bounded service readiness prevents auto-activation racing the owned daemon; the PID must remain alive before/after client execution.",
         "activation_policy": "Private disposable D-Bus session and config/state directories; configured timed schedule avoids geolocation. Full desktop night-color/compositor integration is a later gate."
-      },
-      "evidence": {
-        "workflow_run_id": 37303795468,
-        "workflow_job_id": 111742501063,
-        "source_commit": "6deb755c02faf5887d1c223820abc53b0efd060e",
-        "artifact_id": 11343357570,
-        "artifact_sha256": "5a08c1f0dbcf0ef435afacbe506a92538ef8aeb71d764155a0e015665996f11e",
-        "result_path": "manifests/evidence/plasma/knighttime-attempt2/result.json",
-        "result_sha256": "fcff83ea2957e4b1899bebcb85f13ce3f346e7c7d37eb3175bca460b3089aa18",
-        "contract_path": "manifests/evidence/plasma/knighttime-attempt2/build-contract.json",
-        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t113215z-3338972",
-        "host_evidence_manifest_sha256": "c7459bc86ccb040bf6b4c4c1a533ee61be34e54e5dfa5a3e0d92d55fbe82f616",
-        "local_retention": {
-          "archive_root": ".artifacts/plasma-6.7.5/knighttime-attempt2",
-          "archive_index_sha256": "ae62662972f626856448ee0505a6f81e48ee14dd785eef279d824978c93eab0f",
-          "plan_path": "manifests/evidence/plasma/knighttime-artifact-plan.json",
-          "plan_sha256": "e3318ef7766c8880f025a437549da705eadb640da9d8b220a36c0f2c06db393d",
-          "source_complete": true,
-          "changes_complete": true,
-          "buildinfo_verified": true,
-          "artifact_zip_sha256_verified": true,
-          "offline_restore_verified": true,
-          "requires_github_for_restore": false,
-          "off_host_backup_verified": false,
-          "unique_binary_package_count": 5,
-          "binary_payload_file_count": 5,
-          "payload_prefix": "packages/"
-        },
-        "cache_probe_result_path": "manifests/evidence/plasma/knighttime-attempt2/cache-probe-result.json",
-        "cache_probe_result_sha256": "6f7e5865703570b1575c929f582ac7f0459bfe881712ef16aa9968e303cc25b3",
-        "upstream_tests_path": "manifests/evidence/plasma/knighttime-attempt2/upstream-tests.json",
-        "upstream_tests_sha256": "6f270ce657dc27e996837bf3d4b1b4ad4ce35f4e5d6d917065223b31e9197828",
-        "rootfs_admission_path": "manifests/evidence/plasma/knighttime-attempt2/rootfs-admission.json",
-        "rootfs_admission_sha256": "3b47442c4b7398b4873330af60a71ad317dae7c01008b7a0a9559650c41cc4b1",
-        "baseline_preflight_path": "manifests/evidence/plasma/knighttime-attempt2/ubuntu-baseline-preflight.json",
-        "baseline_preflight_sha256": "aaa3fb31bdb551048700552048b49e0dd66cad5bc8b574a3cc7f19da09da6f73"
-      }
-    },
-    "plasma-activities": {
-      "state": "build-pending",
-      "source_package": "plasma-activities",
-      "version": "6.7.5-0supralinux1",
-      "upstream_version": "6.7.5",
-      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/plasma-activities-6.7.5.tar.xz",
-      "upstream_sha256": "d93f31b6f33733ad3803098f4f622e55e3ef52cb5cd97e621a7b803e6f0e3f7c",
-      "signature_sha256": "1016892827c3680be3ad7a41cfe254c952127462f3e322e818837691c8a07212",
-      "packaging_path": "packages/plasma/plasma-activities/debian",
-      "packaging_review": "PASS",
-      "packaging_reference_version": "6.6.4-0ubuntu1",
-      "packaging_reference_sha256": "eef94af89e08f9de43be389d2aa54d37c86446385d3afb5346d4eb38fc08f5db",
-      "packaging_sha256": {
-        "README.source": "28e3eb540e9510842a93fca755bbd5472fb902d51a03f1d3847ca8fccfef734b",
-        "changelog": "b8176e3a08e29292a16e1bbecf80ddb7438ea7e87f843b17ef8888bf33cb2938",
-        "control": "1a4ddfe2188a629b884445887e8157b322d44a99d0c314ce743f91dbb82dad49",
-        "copyright": "0d38f47b8a22c998d4e8e496aa5773ba6ff4fb1613f754c247987cb1424e5456",
-        "libplasmaactivities-data.install": "f0a9975635ad6bc00276d4d7c0e49ec3f8dbcbe391e2bf8bc2758bb8e46e9a35",
-        "libplasmaactivities-dev.acc.in": "d3e76064378ee0b0439ac456c8331fb3c0b68c3289861638c54211f616961d4e",
-        "libplasmaactivities-dev.install": "595412cf6ab8b35195842b9f56c1ab6396237377e8dee806aab4686a035f1323",
-        "libplasmaactivities-qt6-doc.docs": "4c604fefd1b438cadeef54775d57d326a34d64b30b65ab392882b81c8bf239cd",
-        "libplasmaactivities-qt6-doc.install": "6e6ce5bdb8a44cbcf1aeebe383adf239dbb8b269b8a1a0349d0ba55bd73e7fd3",
-        "libplasmaactivities7.install": "b4be77eac3dd567a9d3196d1c82250e535b3e382a606d93a47b0e0b3af42b964",
-        "libplasmaactivities7.symbols": "e601868a82eb4a25b55bcccf5d2e350ca9c3b00ebd8da7d10f5cce889caf719b",
-        "not-installed": "ded75379ee3af13be2c209f5a663b9a4e4bae3c623c5f0e6d1aa7bef7e90a52e",
-        "plasma-activities-bin.install": "4ea2a2b79ae3dc1334cf0341a9bbfd9dceafe7fdfbe01115409a8328b1ab5ffd",
-        "plasma-activities-bin.lintian-overrides": "810f2d10e93c52967c1a92a50c503fdd805f8619fa7aca45bb4ce6f16cde959b",
-        "qml6-module-org-kde-activities.install": "38f4dbc019796f33923662d46864155a6d0ecddba0a74561b1a4608e6b782fd1",
-        "rules": "f39c2279a7b5f89245bef9d1237db0066c34fd1a39a8c7bca53044db41421526",
-        "salsa-ci.yml": "64bfb6be33af05cd116d8bee786f95e7b2aaa9faa54e90333151a7a05ef03058",
-        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
-        "tests/acc": "e9c1541a7232699043b5dfa01e33b3e82cc9f53ed5f84e59c9ff8a5fec5640d1",
-        "tests/baseline-setup": "516468a49d9ebef7b342d9535d299c1aaee786c109f86d4123a433ff3e5f23ac",
-        "tests/consumer": "723218f7830ae106f028da593890a699b5e994a573f2d59a4145d26aecc19446",
-        "tests/control": "8df977147285e77801247b2102e0e21ff47a19f1aa8fe1a5f0b54a6377cdfeb1",
-        "tests/control.disabled": "bebd0667963d3ddf5428954e055d6d198eebf892483f25be0b569c7fce46c0d2",
-        "tests/ubuntu-abi-client": "e9a4f433691a3b7710adac8b7193e429e9feefcc8e75371ac20e09a5667a1592",
-        "upstream/metadata": "9e20043f70788caa8079eb6ea3c6033f2a948088225e44092fc79c3f36e5c4bb",
-        "upstream/signing-key.asc": "7a39d2d5a75373b724b0b7411e140bfdf42bfcf19b016b58edb2ce3d5fb9e65f",
-        "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
-      },
-      "binary_packages": {
-        "plasma-activities-bin": "amd64",
-        "libplasmaactivities-data": "all",
-        "libplasmaactivities-dev": "amd64",
-        "libplasmaactivities-qt6-doc": "all",
-        "libplasmaactivities7": "amd64",
-        "qml6-module-org-kde-activities": "amd64"
-      },
-      "ubuntu_baseline_package": "libplasmaactivities-dev",
-      "frameworks_predecessors": {
-        "extra-cmake-modules": {
-          "source_package": "kf6-extra-cmake-modules",
-          "version": "6.30.0-0supralinux3",
-          "binaries": [
-            {
-              "package": "extra-cmake-modules",
-              "architecture": "all",
-              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
-            }
-          ]
-        },
-        "kconfig": {
-          "source_package": "kf6-kconfig",
-          "version": "6.30.0-0supralinux4",
-          "binaries": [
-            {
-              "package": "libkf6config-bin",
-              "architecture": "amd64",
-              "sha256": "a5a2bfe058aaffd899a3c704fea9794a4c1e86daa2a75695b9a1847b348f3de9"
-            },
-            {
-              "package": "libkf6config-data",
-              "architecture": "all",
-              "sha256": "fae22d6df5777929f730211047c0fbd47ca5e39ece62398782ddcd32e6e69e60"
-            },
-            {
-              "package": "libkf6config-dev",
-              "architecture": "amd64",
-              "sha256": "71940050496c4baca03102dd1d131dbcd675c7d2e9ee60e887dfc548555422f9"
-            },
-            {
-              "package": "libkf6config-dev-bin",
-              "architecture": "amd64",
-              "sha256": "1bb3c373b3fdd212de33c3fd4a1874e75c86684366c74f6bf7b105454f568286"
-            },
-            {
-              "package": "libkf6configcore6",
-              "architecture": "amd64",
-              "sha256": "998262610e611e8cebe8630dbe3d13de4daa059ead9c9924287b2bfe994c4b33"
-            },
-            {
-              "package": "libkf6configgui6",
-              "architecture": "amd64",
-              "sha256": "2ed506a790a662b0681a040cd10ae39177e5acbe6ada849947adfe387c390729"
-            },
-            {
-              "package": "libkf6configqml6",
-              "architecture": "amd64",
-              "sha256": "5d951cf7b3498f02197c5c539d665439b7f9a5d64813c3faf47325afb6be0b24"
-            },
-            {
-              "package": "qml6-module-org-kde-config",
-              "architecture": "amd64",
-              "sha256": "b514993f60fe1f55ac7803ceab42ba0ef8a89dc58ab5d38463bfb63c9601bfd6"
-            }
-          ]
-        },
-        "kcoreaddons": {
-          "source_package": "kf6-kcoreaddons",
-          "version": "6.30.0-0supralinux4",
-          "binaries": [
-            {
-              "package": "libkf6coreaddons-data",
-              "architecture": "all",
-              "sha256": "f05f55e3c6486af9d3ff48aa38215784bbb347aae1cd5fb760f5513760364908"
-            },
-            {
-              "package": "libkf6coreaddons-dev",
-              "architecture": "amd64",
-              "sha256": "9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636"
-            },
-            {
-              "package": "libkf6coreaddons6",
-              "architecture": "amd64",
-              "sha256": "015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb"
-            },
-            {
-              "package": "qml6-module-org-kde-coreaddons",
-              "architecture": "amd64",
-              "sha256": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
-            }
-          ]
-        }
-      },
-      "sbuild_rootfs_policy": {
-        "kind": "immutable-bare-milestone",
-        "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
-        "suites": [
-          "resolute",
-          "resolute-updates",
-          "resolute-security"
-        ]
-      },
-      "baseline_setup_script": "tests/baseline-setup",
-      "baseline_preflight_required": true,
-      "required_executable_files": [
-        "rules",
-        "tests/baseline-setup",
-        "tests/ubuntu-abi-client",
-        "tests/consumer"
-      ],
-      "upstream_tests": [
-        "QFlatSetTest"
-      ],
-      "attempts": [],
-      "review": {
-        "upstream_changes": "Signed stable 6.7.5; preserve Plasma::Activities public target, SONAME 7, Ubuntu symbols, CLI and QML APIs. C++20; Ubuntu Qt >=6.10, Frameworks >=6.26.",
-        "packaging_changes": "Preserve six Ubuntu binaries and Multi-Arch metadata. Remove unused KF6WindowSystem/xkbcommon and obsolete Doxygen Build-Depends after complete signed source review. QDoc replaced BUILD_QCH upstream; retain a documentation package containing the explicit common optional documentation profile, with real QCH generation still a separate gate.",
-        "build_dependencies": "Exact ECM/KConfig/KCoreAddons retained version and hash closure (13 binaries), eligible under their original Frameworks evidence scope. Retain Ubuntu Qt and Boost; bare clean sbuild certifies dependency sufficiency.",
-        "test_policy": "Require upstream registered QFlatSetTest. Non-registered PlasmaActivitiesTest ignores qExec failures and is not inferred PASS from exit status. Before compilation, run an Ubuntu SDK client with offline behavior and the actual isolated Ubuntu kactivitymanagerd: create/rename/select/remove futures/signals, C++ model, installed QML plugin and CLI. Upgrade all six binaries and re-run the unchanged client, then rebuild and re-run the consumer. All failures report the check.",
-        "activation_policy": "Private D-Bus and temporary XDG config/data/cache/state/runtime; offscreen Qt. Only owned daemon PID is terminated. Ubuntu daemon and Qt versions must remain unchanged; whole-desktop integration remains a later gate."
       }
     }
   },
@@ -1635,12 +1414,6 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/knighttime-attempt1",
       "archive_index_sha256": "dbda58d02b61f78b30002ddb284b2fb39388be5407766052d350fe708783d1f1"
-    },
-    {
-      "node": "knighttime",
-      "attempt": 2,
-      "archive_root": ".artifacts/plasma-6.7.5/knighttime-attempt2",
-      "archive_index_sha256": "ae62662972f626856448ee0505a6f81e48ee14dd785eef279d824978c93eab0f"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",

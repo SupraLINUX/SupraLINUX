@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+apt-get install -y --no-install-recommends build-essential cmake plasma-activities-bin libplasmaactivities-dev qt6-declarative-dev kactivitymanagerd dbus-daemon qt6-qpa-plugins qml6-module-qtcore
+BASE=/var/tmp/supralinux-activities-baseline
+mkdir -p "${BASE}/source"
+cat > "${BASE}/source/CMakeLists.txt" <<'CMAKE'
+cmake_minimum_required(VERSION 3.16)
+project(ubuntu-activities-client LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+find_package(PlasmaActivities 6.6 CONFIG REQUIRED)
+find_package(Qt6 6.10 REQUIRED COMPONENTS Core Gui Qml)
+add_executable(ubuntu-activities-client main.cpp)
+target_link_libraries(ubuntu-activities-client Plasma::Activities Qt6::Core Qt6::Gui Qt6::Qml)
+CMAKE
+cat > "${BASE}/source/main.cpp" <<'CLIENT'
+#include <PlasmaActivities/Controller>
+#include <PlasmaActivities/Info>
+#include <PlasmaActivities/ActivitiesModel>
+#include <QGuiApplication>
+#include <QElapsedTimer>
+#include <QEventLoop>
+#include <QThread>
+#include <QQmlEngine>
+#include <QQmlComponent>
+#include <QUuid>
+#include <iostream>
+#include <memory>
+template<class Predicate> bool until(Predicate condition) {
+    QElapsedTimer timer;timer.start();
+    while (!condition() && timer.elapsed()<10000) {
+        QCoreApplication::processEvents(QEventLoop::AllEvents,100);
+        QThread::msleep(10);
+    }
+    return condition();
+}
+template<class T> bool ready(QFuture<T> &future) { return until([&](){return future.isFinished();}); }
+int main(int argc,char **argv) {
+    QGuiApplication app(argc,argv);
+    app.setProperty("org.kde.KActivities.core.disableAutostart",true);
+    const auto fail=[](const char *check){std::cerr<<"Activities client check failed: "<<check<<'\n';return 1;};
+    KActivities::Controller controller;
+    if (argc>1 && QString::fromLocal8Bit(argv[1])==QStringLiteral("--offline")) {
+        const QString nullid=QStringLiteral("00000000-0000-0000-0000-000000000000");
+        if (!until([&](){return controller.serviceStatus()==KActivities::Consumer::NotRunning;}) ||
+            controller.currentActivity()!=nullid || controller.activities()!=QStringList{nullid}) return fail("offline status and null activity");
+        auto rejected=controller.addActivity(QStringLiteral("must-not-create"));
+        auto selected=controller.setCurrentActivity(QStringLiteral("invalid"));
+        if (!ready(rejected) || !rejected.result().isEmpty() || !ready(selected) || selected.result()) return fail("offline futures");
+        std::cout<<"Public offline status, null activity and rejected futures: PASS\n";return 0;
+    }
+    if (!until([&](){return controller.serviceStatus()==KActivities::Consumer::Running;}) || controller.currentActivity().isEmpty()) return fail("real daemon availability");
+    const auto original=controller.currentActivity();
+    QString added,removed,current;
+    QObject::connect(&controller,&KActivities::Consumer::activityAdded,[&](const QString &id){added=id;});
+    QObject::connect(&controller,&KActivities::Consumer::activityRemoved,[&](const QString &id){removed=id;});
+    QObject::connect(&controller,&KActivities::Consumer::currentActivityChanged,[&](const QString &id){current=id;});
+    auto created=controller.addActivity(QStringLiteral("SupraLINUX test"));
+    if (!ready(created)) return fail("create future timeout");
+    const auto id=created.result();
+    if (QUuid(id).isNull() || !until([&](){return added==id && controller.activities().contains(id);})) return fail("created UUID and addition signal");
+    KActivities::Info info(id);
+    KActivities::ActivitiesModel model;
+    auto name=controller.setActivityName(id,QStringLiteral("renamed"));
+    auto description=controller.setActivityDescription(id,QStringLiteral("private compatibility test"));
+    auto icon=controller.setActivityIcon(id,QStringLiteral("folder"));
+    if (!ready(name) || !ready(description) || !ready(icon) ||
+        !until([&](){return info.availability()!=KActivities::Info::Nothing && info.name()==QStringLiteral("renamed") && info.description()==QStringLiteral("private compatibility test") && info.icon()==QStringLiteral("folder");})) return fail("metadata futures and Info refresh");
+    auto selected=controller.setCurrentActivity(id);
+    if (!ready(selected) || !selected.result() || !until([&](){return current==id && info.isCurrent() && controller.currentActivity()==id;})) return fail("current activity future and signal");
+    if (!until([&](){for(int row=0;row<model.rowCount();++row) if(model.data(model.index(row,0),KActivities::ActivitiesModel::ActivityId).toString()==id) return true;return false;})) return fail("C++ activity model");
+    QQmlEngine engine;QQmlComponent component(&engine);
+    component.setData("import org.kde.activities 0.1\nActivityInfo {}",QUrl());
+    if (component.isError()) {std::cerr<<component.errorString().toStdString();return fail("installed QML plugin");}
+    std::unique_ptr<QObject> qml(component.createWithInitialProperties({{QStringLiteral("activityId"),id}}));
+    if (!qml || !until([&](){return qml->property("valid").toBool() && qml->property("name").toString()==QStringLiteral("renamed") && qml->property("description").toString()==QStringLiteral("private compatibility test") && qml->property("icon").toString()==QStringLiteral("folder");})) return fail("QML activity metadata");
+    auto restore=controller.setCurrentActivity(original);
+    if (!ready(restore) || !restore.result() || !until([&](){return controller.currentActivity()==original;})) return fail("restore original activity");
+    auto erased=controller.removeActivity(id);
+    if (!ready(erased) || !until([&](){return removed==id && !controller.activities().contains(id);})) return fail("removal future and signal");
+    std::cout<<"Real private daemon, create/rename/select/remove futures and signals, C++ model and installed QML plugin: PASS\n";
+    return 0;
+}
+CLIENT
+cat > "${BASE}/run-session" <<'SESSION'
+#!/usr/bin/env bash
+set -Eeuo pipefail
+CLIENT=$1
+SESSION_ROOT=$(mktemp -d)
+trap 'rm -rf "${SESSION_ROOT}"' EXIT
+export XDG_CONFIG_HOME="${SESSION_ROOT}/config" XDG_DATA_HOME="${SESSION_ROOT}/data" XDG_CACHE_HOME="${SESSION_ROOT}/cache" XDG_STATE_HOME="${SESSION_ROOT}/state" XDG_RUNTIME_DIR="${SESSION_ROOT}/runtime" QT_QPA_PLATFORM=offscreen
+mkdir -p "${XDG_CONFIG_HOME}" "${XDG_DATA_HOME}" "${XDG_CACHE_HOME}" "${XDG_STATE_HOME}" "${XDG_RUNTIME_DIR}"
+chmod 700 "${XDG_RUNTIME_DIR}"
+mapfile -t DAEMONS < <(dpkg -L kactivitymanagerd | sed -n '\|/libexec/kactivitymanagerd$|p')
+[[ ${#DAEMONS[@]} == 1 ]]
+dbus-run-session -- bash -Eeuo pipefail -c '
+    "$2" --offline
+    "$1" > "$XDG_RUNTIME_DIR/daemon.log" 2>&1 &
+    daemon_pid=$!
+    trap '\''kill "$daemon_pid" 2>/dev/null || true; wait "$daemon_pid" 2>/dev/null || true'\'' EXIT
+    if ! "$2"; then cat "$XDG_RUNTIME_DIR/daemon.log"; exit 1; fi
+    timeout 15 plasma-activities-cli6 --bare --list-activities
+' bash "${DAEMONS[0]}" "${CLIENT}"
+SESSION
+chmod +x "${BASE}/run-session"
+cmake -S "${BASE}/source" -B "${BASE}/build" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${BASE}/build"
+"${BASE}/run-session" "${BASE}/build/ubuntu-activities-client" | tee "${BASE}/baseline-output.txt"
+dpkg-query -W -f='${Version}' libplasmaactivities-dev > "${BASE}/ubuntu-dev-version"
+dpkg-query -W -f='${Version}' libqt6core6t64 > "${BASE}/ubuntu-qt-core-version"
+dpkg-query -W -f='${Version}' kactivitymanagerd > "${BASE}/ubuntu-daemon-version"
+sha256sum "${BASE}/build/ubuntu-activities-client" > "${BASE}/binary-sha256.txt"

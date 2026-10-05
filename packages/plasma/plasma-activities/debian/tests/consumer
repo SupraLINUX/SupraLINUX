@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-activities-baseline
+cmake -S "${BASE}/source" -B "${AUTOPKGTEST_TMP}/consumer" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${AUTOPKGTEST_TMP}/consumer"
+"${BASE}/run-session" "${AUTOPKGTEST_TMP}/consumer/ubuntu-activities-client"

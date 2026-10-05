@@ -1,0 +1,17 @@
+SupraLINUX Plasma Activities
+
+Official upstream source is unmodified. Six Ubuntu binary package names,
+SONAME 7, Multi-Arch declarations and symbol guards are preserved.
+
+WindowSystem and xkbcommon are unused by the signed source; clean sbuild is
+the final dependency check. Doxygen/BUILD_QCH were replaced upstream by explicit
+ECMGenerateQDoc targets. The common current Frameworks/Plasma build profile does
+not run optional QDoc targets. The documentation package ships this explanation;
+real QCH generation remains a separate common documentation integration gate.
+
+CTest registers QFlatSetTest. PlasmaActivitiesTest is built upstream but is not
+registered and its runner ignores qExec failure values; a zero exit status would
+not certify its tests. Our package tests instead exercise actual isolated Ubuntu
+kactivitymanagerd through public C++ futures/signals and the installed QML plugin.
+Repeat the unchanged Ubuntu client after all six binaries are upgraded, then
+compile and run the consumer against the candidate SDK.

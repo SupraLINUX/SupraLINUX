@@ -170,6 +170,22 @@ for name, provider in supplementary["nodes"].items():
         req(schema["state"] == "PASS" and not schema["incompatible"], f"{name}: installed XML structural review")
         req(hashlib.sha256((ROOT / proof["retention_path"]).read_bytes()).hexdigest() == proof["retention_sha256"],
             f"{name}: source retention evidence changed")
+    native = provider.get("compatibility_review", {}).get("native_tests_review")
+    if native:
+        path = ROOT / native["path"]
+        req(hashlib.sha256(path.read_bytes()).hexdigest() == native["sha256"], f"{name}: native review changed")
+        proof = json.loads(path.read_text())
+        req(proof["state"] == "PASS" and proof["candidate_package_execution_started"] is False and
+            proof["consumes_package_attempt"] is False, f"{name}: native review execution boundary")
+        req(proof["upstream_sha256"] == provider["candidate_provider"]["upstream_sha256"],
+            f"{name}: native review source binding")
+        for filename, digest in proof["files_sha256"].items():
+            file = path.parent / filename
+            req(file.resolve().is_relative_to(path.parent.resolve()), f"{name}: unsafe native evidence path")
+            req(hashlib.sha256(file.read_bytes()).hexdigest() == digest, f"{name}: native evidence changed")
+        req(proof["upstream_required_ctest_executed"] == 120 and proof["ctest_total_executed"] >= 120 and
+            proof["correct_server_headers_compiled"] == len(proof["source_xml_sha256"]) == 30,
+            f"{name}: upstream and actual server header coverage")
     review = provider.get("compatibility_review", {}).get("local_wire_review")
     if review:
         path = ROOT / review["path"]
