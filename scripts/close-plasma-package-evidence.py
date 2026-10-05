@@ -25,7 +25,9 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('node')
     p.add_argument('--zip', type=Path, required=True)
-    p.add_argument('--artifact-meta', type=Path, required=True)
+    p.add_argument('--artifact-meta', type=Path)
+    p.add_argument('--host-export', action='store_true', help='export the complete sealed guest after an Actions transport interruption')
+    p.add_argument('--workflow-job-meta',type=Path,help='original GitHub job metadata retrieved through the connector')
     p.add_argument('--host-dir', type=Path, required=True)
     p.add_argument('--job-id', type=int, required=True)
     p.add_argument('--recover-hidden-files', action='store_true',
@@ -35,14 +37,41 @@ def main():
     campaign = json.loads(campaign_path.read_text())
     record = campaign['nodes'][a.node]
     assert campaign['authorized_nodes'] == [a.node] and record['state'] == 'build-pending'
-    meta = json.loads(a.artifact_meta.read_text())
-    artifact_sha = meta['digest'].removeprefix('sha256:')
-    assert sha(a.zip) == artifact_sha
     source_commit = subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD'], text=True).strip()
     host = json.loads((a.host_dir/'host-result.json').read_text())
-    assert host['exit_code'] == 0
     check = subprocess.run(['sha256sum','--check','--quiet','evidence-sha256.txt'], cwd=a.host_dir, capture_output=True, text=True)
     assert check.returncode == 0, check.stderr
+    job_bytes = host_bytes = None
+    if a.host_export:
+        assert host['exit_code'] != 0 and a.workflow_job_meta and not a.artifact_meta
+        assert not a.zip.exists(), 'Refusing to replace an export'
+        job_bytes = a.workflow_job_meta.read_bytes()
+        job = json.loads(job_bytes)
+        assert job['id'] == a.job_id and str(job['run_id']) == host['workflow_run_id']
+        assert job['head_sha'] == source_commit and job['status'] == 'completed'
+        steps = {step['name']:step for step in job['steps']}
+        assert steps['Run current reviewed package']['conclusion'] == 'success'
+        assert steps['Retain package sources, binaries and evidence']['conclusion'] != 'success'
+        payload_dir = a.host_dir/'guest-files/workspace/evidence/authoritative-plasma-package'
+        original = json.loads((payload_dir/'result.json').read_text())
+        assert original['state'] == 'PASS' and original['exit_code'] == 0
+        assert original['source_commit'] == source_commit and original['workflow_run_id'] == host['workflow_run_id']
+        for name,digest in original['files_sha256'].items():
+            path = payload_dir/name
+            assert path.resolve().is_relative_to(payload_dir.resolve()) and sha(path) == digest,name
+        a.zip.parent.mkdir(parents=True,exist_ok=True)
+        with zipfile.ZipFile(a.zip,'w',compression=zipfile.ZIP_DEFLATED) as archive:
+            for path in sorted(payload_dir.rglob('*')):
+                if path.is_file():archive.write(path,str(path.relative_to(payload_dir)))
+        artifact_sha = sha(a.zip)
+        meta = {'id':None,'digest':'sha256:'+artifact_sha,'kind':'sealed-host-package-export',
+                'workflow_run':{'id':job['run_id'],'head_sha':source_commit}}
+        host_bytes = (a.host_dir/'host-result.json').read_bytes()
+    else:
+        assert host['exit_code'] == 0 and a.artifact_meta
+        meta = json.loads(a.artifact_meta.read_text())
+        artifact_sha = meta['digest'].removeprefix('sha256:')
+        assert sha(a.zip) == artifact_sha
     with zipfile.ZipFile(a.zip) as archive:
         result_bytes = archive.read('result.json')
         result = json.loads(result_bytes)
@@ -119,6 +148,9 @@ def main():
         (historical/'upstream-tests.json').write_bytes(upstream_bytes)
     if rootfs_bytes is not None:
         (historical/'rootfs-admission.json').write_bytes(rootfs_bytes)
+    if job_bytes is not None:
+        (historical/'workflow-job.json').write_bytes(job_bytes)
+        (historical/'host-result.json').write_bytes(host_bytes)
     recovery = None
     if recovered:
         supplement = archive_root/'sealed-host-hidden-files.zip'
@@ -166,6 +198,10 @@ def main():
     if rootfs_bytes is not None:
         evidence['rootfs_admission_path'] = str(relative/'rootfs-admission.json')
         evidence['rootfs_admission_sha256'] = sha(historical/'rootfs-admission.json')
+    if a.host_export:
+        evidence.update(artifact_origin='sealed-host-package-export',actions_export_complete=False,
+                        workflow_job_path=str(relative/'workflow-job.json'),workflow_job_sha256=sha(historical/'workflow-job.json'),
+                        host_result_path=str(relative/'host-result.json'),host_result_sha256=sha(historical/'host-result.json'))
     record.update(state='PASS', evidence=evidence)
     record['attempts'].append({'attempt':number, 'state':'PASS', 'sbuild_result':'PASS', 'lintian_result':'PASS',
                               'autopkgtest_result':'PASS', 'package_attempt_consumed':True,

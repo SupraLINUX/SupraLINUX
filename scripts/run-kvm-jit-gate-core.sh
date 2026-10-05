@@ -790,10 +790,23 @@ done
 
 printf 'Bound gate to workflow run ID %s. Waiting for the JIT runner to finish and deregister...\n' "${WORKFLOW_RUN_ID}"
 DEADLINE=$(( $(date +%s) + JOB_TIMEOUT_SECONDS ))
+MONITOR_FAULTS="${SUPRALINUX_MONITOR_READ_FAULTS:-0}"
+[[ "${MONITOR_FAULTS}" =~ ^[0-9]+$ ]] && (( MONITOR_FAULTS <= 10 )) || exit 2
 while true; do
-    SNAPSHOT="$(runner_snapshot)"
-    if [[ -z "${SNAPSHOT}" ]]; then
-        break
+    monitor_read() {
+        if (( MONITOR_FAULTS > 0 )); then return 28; fi
+        runner_snapshot
+    }
+    if SNAPSHOT="$(monitor_read)"; then
+        if [[ -z "${SNAPSHOT}" ]]; then break; fi
+    else
+        if (( MONITOR_FAULTS > 0 )); then MONITOR_FAULTS=$((MONITOR_FAULTS - 1)); fi
+        printf '%s monitor API unavailable; checking guest process without stopping VM\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            | tee -a "${EVIDENCE_DIR}/monitor-read-outages.txt"
+        GUEST_MONITOR_STATUS="$(guest_runner_status)"
+        jq '{exited:.return.exited,exitcode:.return.exitcode}' <<<"${GUEST_MONITOR_STATUS}" \
+            > "${EVIDENCE_DIR}/monitor-guest-process.json"
+        if [[ "$(jq -r '.return.exited // false' <<<"${GUEST_MONITOR_STATUS}")" == "true" ]]; then break; fi
     fi
     if (( $(date +%s) >= DEADLINE )); then
         printf 'Timed out waiting for the JIT runner job to finish.\n' >&2

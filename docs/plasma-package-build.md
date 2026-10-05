@@ -205,3 +205,19 @@ by autopkgtest. A receipt records their original path, canonical path, digest an
 size. Canonical sources/binaries/buildinfo, clients and logs remain retained;
 distinct or unrelated payloads are never removed. This avoids transporting a
 second large wallpaper binary while preserving the complete package closure.
+
+Wallpaper Attempt 2 completed package PASS on KVM in run 37252562053: both
+installed tests passed, including all 108 image decodes and the Ubuntu upgrade.
+The host exhausted GitHub DNS retries after package execution, interrupting the
+Actions export. The workflow failed; its package step succeeded. No Actions
+artifact exists. Closure therefore uses the complete independently sealed guest
+payload and original job/host metadata: a source-complete local ZIP is retained
+by its own digest with `artifact_id: null` and origin `sealed-host-package-export`.
+Every original result hash, source/binary/buildinfo/changes identity, test result
+and empty-cache offline restore passed. The host exit 28 and workflow/export
+failure remain recorded separately; they are not rewritten as success.
+
+The active-job monitor now checks the guest process when API reads fail and
+keeps the working VM alive until the process exits or the job deadline expires.
+Its bounded synthetic read-fault option supports a small runner-contract probe
+before subsequent package execution. This changes monitoring, not package tests.

@@ -3,7 +3,7 @@
   "role": "reviewed-plasma-package-build",
   "state": "execution-authorized",
   "authorized_nodes": [
-    "breeze-plymouth"
+    "plasma-workspace-wallpapers"
   ],
   "package_execution_authorized": true,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
@@ -592,7 +592,7 @@
       }
     },
     "plasma-workspace-wallpapers": {
-      "state": "PASS",
+      "state": "build-pending",
       "source_package": "plasma-workspace-wallpapers",
       "version": "4:6.7.5-0supralinux1",
       "upstream_version": "6.7.5",
@@ -658,31 +658,6 @@
           "host_evidence_manifest_sha256": "bf421181954c514c81c61cb0d14d39b10e33950270c43d0f6c16e35154db908a",
           "cause": "Resource tests compared ImageMagick PNG date:create/date:modify bytes strictly. Debian normalized those two valid timestamp fields; IDAT, EXIF and every other chunk of the rejected Shell screenshot are unchanged.",
           "repair": "Validate CRC and timestamp syntax; normalize only date:create/date:modify values while preserving keys/order and every other PNG chunk. Regression rejects changed pixels, author metadata, malformed dates and CRC corruption."
-        },
-        {
-          "attempt": 2,
-          "state": "PASS",
-          "sbuild_result": "PASS",
-          "lintian_result": "PASS",
-          "autopkgtest_result": "PASS",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37252562053,
-          "workflow_job_id": 111583017355,
-          "source_commit": "369f3d3cf172292afd1c443773f9d1499ac61968",
-          "artifact_id": null,
-          "artifact_sha256": "40496080f8db226c36d626143585ae69bf8ca30c96420c4fb84d60a4b41149e0",
-          "result_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/result.json",
-          "result_sha256": "2125762052bd4c5a6d8f52cec91e150871568126f17f99362daf40984bec0be7",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t014201z-4156714",
-          "host_evidence_manifest_sha256": "e65ccc74679f0b7a86b18285381dd744b2895a774114aa0d9ff39ed35c918d0b",
-          "rootfs_admission_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/rootfs-admission.json",
-          "rootfs_admission_sha256": "1426e2e8ffbf5708327eef2011e1b88f12eec0f70d9c290f079c71bbdc644b30",
-          "artifact_origin": "sealed-host-package-export",
-          "actions_export_complete": false,
-          "workflow_job_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/workflow-job.json",
-          "workflow_job_sha256": "90686e13a4ec973a4c599899055776de914d6d4c59af47451fc614be12be7e14",
-          "host_result_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/host-result.json",
-          "host_result_sha256": "a063869772729927c315dfba58660b9a219dd7ba2629eb12e5cee4c954d9eecb"
         }
       ],
       "required_executable_files": [
@@ -706,121 +681,6 @@
           "resolute-updates",
           "resolute-security"
         ]
-      },
-      "evidence": {
-        "workflow_run_id": 37252562053,
-        "workflow_job_id": 111583017355,
-        "source_commit": "369f3d3cf172292afd1c443773f9d1499ac61968",
-        "artifact_id": null,
-        "artifact_sha256": "40496080f8db226c36d626143585ae69bf8ca30c96420c4fb84d60a4b41149e0",
-        "result_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/result.json",
-        "result_sha256": "2125762052bd4c5a6d8f52cec91e150871568126f17f99362daf40984bec0be7",
-        "contract_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/build-contract.json",
-        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t014201z-4156714",
-        "host_evidence_manifest_sha256": "e65ccc74679f0b7a86b18285381dd744b2895a774114aa0d9ff39ed35c918d0b",
-        "local_retention": {
-          "archive_root": ".artifacts/plasma-6.7.5/plasma-workspace-wallpapers-attempt2",
-          "archive_index_sha256": "182468206b6d9532afdc7669e9e3a52f6d3091152a90bd3790bc39b8fd3bd319",
-          "plan_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-artifact-plan.json",
-          "plan_sha256": "6c2455750147027b3eae8274b17efe776b1502419b90e6e83e6019b0e4d0c71a",
-          "source_complete": true,
-          "changes_complete": true,
-          "buildinfo_verified": true,
-          "artifact_zip_sha256_verified": true,
-          "offline_restore_verified": true,
-          "requires_github_for_restore": false,
-          "off_host_backup_verified": false,
-          "unique_binary_package_count": 1,
-          "binary_payload_file_count": 1,
-          "payload_prefix": "packages/"
-        },
-        "cache_probe_result_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/cache-probe-result.json",
-        "cache_probe_result_sha256": "6f7e5865703570b1575c929f582ac7f0459bfe881712ef16aa9968e303cc25b3",
-        "rootfs_admission_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/rootfs-admission.json",
-        "rootfs_admission_sha256": "1426e2e8ffbf5708327eef2011e1b88f12eec0f70d9c290f079c71bbdc644b30",
-        "artifact_origin": "sealed-host-package-export",
-        "actions_export_complete": false,
-        "workflow_job_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/workflow-job.json",
-        "workflow_job_sha256": "90686e13a4ec973a4c599899055776de914d6d4c59af47451fc614be12be7e14",
-        "host_result_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/host-result.json",
-        "host_result_sha256": "a063869772729927c315dfba58660b9a219dd7ba2629eb12e5cee4c954d9eecb"
-      }
-    },
-    "breeze-plymouth": {
-      "state": "build-pending",
-      "source_package": "breeze-plymouth",
-      "version": "6.7.5-0supralinux1",
-      "upstream_version": "6.7.5",
-      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/breeze-plymouth-6.7.5.tar.xz",
-      "upstream_sha256": "9cb05ef4fed5ac19bc35f5c4b18ec425e499fae47d52d344821fbf38474c44a0",
-      "signature_sha256": "d0c1476e5a08ff68d9731d17efb0b9067ef6a2a20145ff6be7e0c42efb5037ee",
-      "packaging_path": "packages/plasma/breeze-plymouth/debian",
-      "packaging_review": "PASS",
-      "packaging_reference_version": "6.6.4-0ubuntu1",
-      "packaging_reference_sha256": "03544dddd9b3162e4eb928285954bb55ff8cb91ea50b807d303e6616e413bdac",
-      "packaging_sha256": {
-        "changelog": "034a644df025c9d727d2a1055e05b65571e7138138ed295126c49de6aa82daa3",
-        "control": "988b38d0a207e6b6ef47675b659f7505d36bc3d4186b58ccb060db3191f3e89d",
-        "copyright": "4d21673d60970f7a87f38df487e0cca0f0ddfe6c9b5132bd15ab3700069b7581",
-        "plymouth-theme-breeze.README.Debian": "8ec6ac96096ded54d61b1b0470c78f87b4ae8567f1083ab10aad6a98e63a8f17",
-        "plymouth-theme-breeze.postinst": "37be748136cfc3ddeedbae53d1e0189b40a49a6fa4de64c395ac03a5585f0bae",
-        "plymouth-theme-breeze.prerm": "027c85fac438efe9fce639bf0c3c1615f9b8a6e388ee30e91ff85eb1b06a8c37",
-        "rules": "b8f29b81b0ba7dd9f5e69c72e124297ae2428afa941b7a8166d2c41c65630056",
-        "salsa/extra_repository.list": "412646a06d733ca403c3175d36f1d1e734baaa8a76bb8e5176a0d0fb4bda7d45",
-        "salsa/qt-kde-team.debian.net.asc": "2b218b250b8929ad7055afe891bd29288228cfb6efac0e4ed638d9db8d3c4e77",
-        "salsa-ci.yml": "04779f76232c171e1b0094a8bf323543669e75a3131a1d706b8c6f61ec7c2ab0",
-        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
-        "tests/baseline-setup": "f01ac5aa9d360a385947e2b940d842da516dbb17ca3d93b01d09370814b5bb6f",
-        "tests/consumer": "afa2aa862fd4a5d73a065c0f891c3b05411ae7c8afa0b71998e3b6ee40cbba6e",
-        "tests/control": "d6bca161afef8a699343025369773a38c47881ecb7a0427a094c014003929003",
-        "tests/theme-resources": "8e93a193f5a6d10fc5dfa46db501a1c9f728015de752847a81649f2ecf320440",
-        "tests/theme-resources.json": "c7427c741ce2fde230f164db2152e5dd34cba1c9a4d64edb7eda0500a3edbf27",
-        "tests/ubuntu-abi-client": "34210657a09a4116d3e252f8921876a50f31e31e436f04601f1ed9cab5cc4c3f",
-        "upstream/metadata": "e229fed32275ea8cda6b7fb3329059bf85aa5943babcb1606867e72bd32456f3",
-        "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
-        "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
-      },
-      "binary_packages": {
-        "plymouth-theme-breeze": "amd64"
-      },
-      "ubuntu_baseline_package": "plymouth-theme-breeze",
-      "frameworks_predecessors": {
-        "extra-cmake-modules": {
-          "source_package": "kf6-extra-cmake-modules",
-          "version": "6.30.0-0supralinux3",
-          "binaries": [
-            {
-              "package": "extra-cmake-modules",
-              "architecture": "all",
-              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
-            }
-          ]
-        }
-      },
-      "sbuild_rootfs_policy": {
-        "kind": "immutable-bare-milestone",
-        "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
-        "suites": [
-          "resolute",
-          "resolute-updates",
-          "resolute-security"
-        ]
-      },
-      "attempts": [],
-      "baseline_setup_script": "tests/baseline-setup",
-      "required_executable_files": [
-        "rules",
-        "tests/baseline-setup",
-        "tests/ubuntu-abi-client",
-        "tests/consumer",
-        "tests/theme-resources"
-      ],
-      "review": {
-        "upstream_changes": "Signed official stable 6.7.5, no upstream code patches. Text plugin uses Ubuntu Plymouth headers and libraries; graphical theme uses the Ubuntu script/label-pango runtime.",
-        "packaging_changes": "Preserve Ubuntu name, architecture, hardening and maintainer scripts. Configure SupraLINUX title through supported upstream CMake options. Correct SPDX-specific license stanzas and declare fonts-noto-core/plymouth-label. Keep correct upstream plugin/theme install directories.",
-        "build_dependencies": "Exact retained ECM 6.30.0-0supralinux3; all C/Plymouth SDK/providers from Ubuntu. No Qt provider replacement. Immutable bare buildd admission with explicit current Ubuntu suites/update/distupgrade.",
-        "test_policy": "No automated upstream suite. Host resource fixture passed: 89 exact resources, 84 decoded PNGs, metadata and both color-depth spinner branches. Ubuntu SDK client compiled syntax checked; real baseline and unchanged binary post-upgrade execution in boot/shutdown/updates modes, prompt/progress/lifecycle without display views plus newly compiled consumer remain KVM gates. Normalize only validated PNG time/date fields, retaining pixel/other metadata identity; the source fixture passes this policy.",
-        "activation_policy": "Theme package installs plugin/resources; daemon/display rendering, initramfs theme selection and real BIOS/UEFI boot remain distro integration gates."
       }
     }
   },
@@ -887,12 +747,6 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/plasma-workspace-wallpapers-attempt1",
       "archive_index_sha256": "8d737b931693347825610d2f4adad082ccfd7b0736f3065ddb0972504b000284"
-    },
-    {
-      "node": "plasma-workspace-wallpapers",
-      "attempt": 2,
-      "archive_root": ".artifacts/plasma-6.7.5/plasma-workspace-wallpapers-attempt2",
-      "archive_index_sha256": "182468206b6d9532afdc7669e9e3a52f6d3091152a90bd3790bc39b8fd3bd319"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",

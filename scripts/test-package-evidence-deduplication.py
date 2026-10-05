@@ -14,7 +14,7 @@ class DedupTests(unittest.TestCase):
             root = Path(temp);(root/'packages').mkdir();(root/'autopkgtest/binaries').mkdir(parents=True)
             for name,data in [('candidate.deb',b'canonical'),('candidate.ddeb',b'debug'),('source.tar.xz',b'source')]:
                 (root/'packages'/name).write_bytes(data)
-            (root/'autopkgtest/binaries/candidate.deb').write_bytes(b'canonical')
+            (root/'autopkgtest/binaries/renamed-testbed-copy.deb').write_bytes(b'canonical')
             (root/'autopkgtest/binaries/candidate.ddeb').write_bytes(b'distinct debug')
             (root/'autopkgtest/binaries/dependency.deb').write_bytes(b'dependency')
             (root/'autopkgtest/client').write_bytes(b'Ubuntu compiled client')
@@ -22,7 +22,7 @@ class DedupTests(unittest.TestCase):
             self.assertEqual(result['bytes_saved'],9)
             self.assertEqual(len(result['removed_copies']),1)
             self.assertEqual(len(result['retained_distinct_payloads']),1)
-            self.assertFalse((root/'autopkgtest/binaries/candidate.deb').exists())
+            self.assertFalse((root/'autopkgtest/binaries/renamed-testbed-copy.deb').exists())
             self.assertEqual((root/'packages/candidate.deb').read_bytes(),b'canonical')
             for path in ['packages/source.tar.xz','autopkgtest/client','autopkgtest/binaries/candidate.ddeb','autopkgtest/binaries/dependency.deb']:
                 self.assertTrue((root/path).is_file())

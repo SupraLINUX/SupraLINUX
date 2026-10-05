@@ -114,6 +114,19 @@ def validate():
             assert built_contract["nodes"][name]["packaging_sha256"] == record["packaging_sha256"]
             assert record["attempts"][-1]["state"] == "PASS" and result["package_attempt_consumed"] is True
             retention = evidence["local_retention"]
+            if evidence.get('artifact_origin') == 'sealed-host-package-export':
+                assert evidence['artifact_id'] is None and evidence['actions_export_complete'] is False
+                job_bytes = (ROOT/evidence['workflow_job_path']).read_bytes()
+                host_bytes = (ROOT/evidence['host_result_path']).read_bytes()
+                assert hashlib.sha256(job_bytes).hexdigest() == evidence['workflow_job_sha256']
+                assert hashlib.sha256(host_bytes).hexdigest() == evidence['host_result_sha256']
+                job,host = json.loads(job_bytes),json.loads(host_bytes)
+                assert job['id'] == evidence['workflow_job_id'] and job['head_sha'] == evidence['source_commit']
+                assert str(job['run_id']) == host['workflow_run_id'] == result['workflow_run_id']
+                assert host['exit_code'] != 0 and result['exit_code'] == 0 and job['status'] == 'completed'
+                steps = {step['name']:step for step in job['steps']}
+                assert steps['Run current reviewed package']['conclusion'] == 'success'
+                assert steps['Retain package sources, binaries and evidence']['conclusion'] != 'success'
             if evidence.get('hidden_file_export_recovery'):
                 recovery = evidence['hidden_file_export_recovery']
                 proof_bytes = (ROOT/recovery['proof_path']).read_bytes()

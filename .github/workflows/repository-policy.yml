@@ -61,6 +61,9 @@ jobs:
       - name: Test package evidence compaction
         run: python3 scripts/test-package-evidence-deduplication.py
 
+      - name: Test KVM active-job monitor outage recovery
+        run: python3 scripts/test-kvm-monitor-recovery.py
+
       - name: Validate current project status
         run: python3 scripts/render-project-status.py --check
 

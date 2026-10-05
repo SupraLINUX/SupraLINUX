@@ -20,9 +20,25 @@ prepare = importlib.machinery.SourceFileLoader("prepare", str(ROOT / "scripts/pr
 resources = importlib.machinery.SourceFileLoader("resources", str(ROOT / "packages/plasma/breeze-grub/debian/tests/theme-resources")).load_module()
 sounds = importlib.machinery.SourceFileLoader("sounds", str(ROOT / "packages/plasma/ocean-sound-theme/debian/tests/sound-resources")).load_module()
 wallpapers = importlib.machinery.SourceFileLoader("wallpapers", str(ROOT / "packages/plasma/plasma-workspace-wallpapers/debian/tests/wallpaper-resources")).load_module()
+admission = importlib.machinery.SourceFileLoader("admission", str(ROOT / "scripts/admit-reviewed-plasma-level0-package.py")).load_module()
 
 
 class InputAdmission(unittest.TestCase):
+    def test_review_admission_rejects_source_binary_and_path_drift(self):
+        node='plasma-workspace-wallpapers'
+        record=copy.deepcopy(json.loads((ROOT/'manifests/kde-plasma-package-build.json').read_text())['nodes'][node])
+        record.update(state='build-pending',attempts=[])
+        level=json.loads((ROOT/'manifests/kde-plasma-level0.json').read_text())
+        material={item['node']:item for item in json.loads((ROOT/'manifests/evidence/kde-plasma-level0-materialization-result.json').read_text())['nodes']}
+        packaging=ROOT/record['packaging_path']
+        admission.check(node,record,packaging,level,material)
+        for key,value in [('upstream_sha256','0'*64),('upstream_url','https://unreviewed.invalid/source'),
+                          ('packaging_path','../outside'),('binary_packages',{'unexpected':'amd64'}),
+                          ('packaging_review','REVIEW_REQUIRED')]:
+            bad=copy.deepcopy(record);bad[key]=value
+            with self.subTest(key=key),self.assertRaises(AssertionError):
+                admission.check(node,bad,packaging,level,material)
+
     def test_wallpaper_png_date_normalization_preserves_pixels_and_other_metadata(self):
         def chunk(tag,data):
             return struct.pack('>I',len(data))+tag+data+struct.pack('>I',zlib.crc32(tag+data)&0xffffffff)

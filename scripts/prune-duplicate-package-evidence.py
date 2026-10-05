@@ -15,14 +15,17 @@ def prune(evidence):
     canonical = {p.name:p for p in (evidence/'packages').iterdir() if p.is_file() and p.suffix in {'.deb','.ddeb'}}
     assert canonical and all(not p.is_symlink() for p in canonical.values())
     checksums = {name:digest(path) for name,path in canonical.items()}
+    by_digest = {checksums[name]:path for name,path in sorted(canonical.items())}
     removed = [];distinct = []
     for path in sorted((evidence/'autopkgtest').rglob('*')):
-        if path.suffix not in {'.deb','.ddeb'} or path.name not in canonical or not path.is_file():continue
+        if path.suffix not in {'.deb','.ddeb'} or not path.is_file():continue
         assert not path.is_symlink() and path.resolve().is_relative_to((evidence/'autopkgtest').resolve())
         actual = digest(path)
-        entry = {'path':str(path.relative_to(evidence)), 'canonical_path':str(canonical[path.name].relative_to(evidence)),
+        counterpart = by_digest.get(actual)
+        if counterpart is None and path.name not in canonical:continue
+        entry = {'path':str(path.relative_to(evidence)), 'canonical_path':str((counterpart or canonical[path.name]).relative_to(evidence)),
                  'sha256':actual, 'size':path.stat().st_size}
-        if actual != checksums[path.name]:
+        if counterpart is None:
             distinct.append(entry)
             continue
         removed.append(entry)
