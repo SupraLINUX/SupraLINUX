@@ -1,0 +1,29 @@
+{
+  "source_package": "breeze-plymouth",
+  "version": "6.7.5-0supralinux1",
+  "ubuntu_baseline_package": "plymouth-theme-breeze",
+  "baseline_setup_script": "tests/baseline-setup",
+  "packaging_path": "packages/plasma/breeze-plymouth/debian",
+  "packaging_sha256": {
+    "changelog": "034a644df025c9d727d2a1055e05b65571e7138138ed295126c49de6aa82daa3",
+    "control": "988b38d0a207e6b6ef47675b659f7505d36bc3d4186b58ccb060db3191f3e89d",
+    "copyright": "4d21673d60970f7a87f38df487e0cca0f0ddfe6c9b5132bd15ab3700069b7581",
+    "plymouth-theme-breeze.README.Debian": "8ec6ac96096ded54d61b1b0470c78f87b4ae8567f1083ab10aad6a98e63a8f17",
+    "plymouth-theme-breeze.postinst": "37be748136cfc3ddeedbae53d1e0189b40a49a6fa4de64c395ac03a5585f0bae",
+    "plymouth-theme-breeze.prerm": "027c85fac438efe9fce639bf0c3c1615f9b8a6e388ee30e91ff85eb1b06a8c37",
+    "rules": "b8f29b81b0ba7dd9f5e69c72e124297ae2428afa941b7a8166d2c41c65630056",
+    "salsa/extra_repository.list": "412646a06d733ca403c3175d36f1d1e734baaa8a76bb8e5176a0d0fb4bda7d45",
+    "salsa/qt-kde-team.debian.net.asc": "2b218b250b8929ad7055afe891bd29288228cfb6efac0e4ed638d9db8d3c4e77",
+    "salsa-ci.yml": "04779f76232c171e1b0094a8bf323543669e75a3131a1d706b8c6f61ec7c2ab0",
+    "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+    "tests/baseline-setup": "03d04c74f787e677992cdbdd6228e913035464d45c50ce2b88f47aab28c232ea",
+    "tests/consumer": "afa2aa862fd4a5d73a065c0f891c3b05411ae7c8afa0b71998e3b6ee40cbba6e",
+    "tests/control": "45d406b44d8164434ae2d0d155f5b076eb23410814f4b5ef5ccddd31f67b1fea",
+    "tests/theme-resources": "8e93a193f5a6d10fc5dfa46db501a1c9f728015de752847a81649f2ecf320440",
+    "tests/theme-resources.json": "c7427c741ce2fde230f164db2152e5dd34cba1c9a4d64edb7eda0500a3edbf27",
+    "tests/ubuntu-abi-client": "34210657a09a4116d3e252f8921876a50f31e31e436f04601f1ed9cab5cc4c3f",
+    "upstream/metadata": "e229fed32275ea8cda6b7fb3329059bf85aa5943babcb1606867e72bd32456f3",
+    "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+    "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+  }
+}

@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+apt-get install -y --no-install-recommends cmake g++ liblayershellqtinterface-dev layer-shell-qt qt6-declarative-dev \
+    qml6-module-qtquick qml6-module-qtquick-window qml6-module-qtqml-workerscript
+BASE=/var/tmp/supralinux-layershell-baseline
+mkdir -p "${BASE}/source" "${BASE}/runtime"
+chmod 700 "${BASE}/runtime"
+cat > "${BASE}/source/CMakeLists.txt" <<'CMAKE'
+cmake_minimum_required(VERSION 3.16)
+project(ubuntu-layershell-client LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+find_package(LayerShellQt 6.6 CONFIG REQUIRED)
+find_package(Qt6 6.10 REQUIRED COMPONENTS Gui Qml)
+add_executable(ubuntu-layershell-client main.cpp)
+target_link_libraries(ubuntu-layershell-client LayerShellQt::Interface Qt6::Gui Qt6::Qml)
+CMAKE
+cat > "${BASE}/source/main.cpp" <<'CLIENT'
+#include <LayerShellQt/Window>
+#include <QGuiApplication>
+#include <QMargins>
+#include <QMetaEnum>
+#include <QPluginLoader>
+#include <QLibraryInfo>
+#include <QQmlComponent>
+#include <QQmlEngine>
+#include <QWindow>
+#include <iostream>
+#include <memory>
+int main(int argc, char **argv) {
+    QGuiApplication app(argc,argv);
+    using Window = LayerShellQt::Window;
+    if (Window::get(nullptr)) return 1;
+    QWindow qtWindow;
+    auto *window = Window::get(&qtWindow);
+    if (!window || Window::get(&qtWindow) != window || window->parent() != &qtWindow) return 2;
+    int anchorsSignals=0,marginSignals=0,zoneSignals=0;
+    QObject::connect(window,&Window::anchorsChanged,[&](){++anchorsSignals;});
+    QObject::connect(window,&Window::marginsChanged,[&](){++marginSignals;});
+    QObject::connect(window,&Window::exclusionZoneChanged,[&](){++zoneSignals;});
+    const auto anchors = Window::Anchors(Window::AnchorTop) | Window::AnchorLeft;
+    const QMargins margins(2,4,8,16);
+    window->setAnchors(anchors);window->setAnchors(anchors);
+    window->setMargins(margins);window->setMargins(margins);
+    window->setExclusiveZone(60);window->setExclusiveZone(60);
+    window->setDesiredSize(QSize(640,48));window->setExclusiveEdge(Window::AnchorTop);
+    window->setLayer(Window::LayerOverlay);window->setScope(QStringLiteral("compatibility-client"));
+    window->setKeyboardInteractivity(Window::KeyboardInteractivityExclusive);
+    window->setActivateOnShow(false);window->setCloseOnDismissed(false);
+    if (window->anchors()!=anchors || window->margins()!=margins || window->exclusionZone()!=60 ||
+        anchorsSignals!=1 || marginSignals!=1 || zoneSignals!=1 || window->desiredSize()!=QSize(640,48) ||
+        window->exclusiveEdge()!=Window::AnchorTop || window->layer()!=Window::LayerOverlay ||
+        window->scope()!=QStringLiteral("compatibility-client") || window->activateOnShow() || window->closeOnDismissed() ||
+        window->keyboardInteractivity()!=Window::KeyboardInteractivityExclusive) return 3;
+    window->setWantsToBeOnActiveScreen(true);
+    if (!window->wantsToBeOnActiveScreen() || window->screen()) return 4;
+    window->setScreen(app.primaryScreen());
+    if (window->wantsToBeOnActiveScreen() || window->screen()!=app.primaryScreen()) return 5;
+    if (QMetaEnum::fromType<Window::Layer>().keyToValue("LayerOverlay")!=3 ||
+        window->property("exclusionZone").toInt()!=60) return 6;
+    QPluginLoader plugin(QLibraryInfo::path(QLibraryInfo::PluginsPath)+QStringLiteral("/wayland-shell-integration/liblayer-shell.so"));
+    if (!plugin.load() || !plugin.instance()) {
+        std::cerr << plugin.errorString().toStdString() << '\n';return 7;
+    }
+    QQmlEngine engine;
+    QQmlComponent component(&engine);
+    component.setData(R"QML(import QtQuick 2.15
+import QtQuick.Window 2.15
+import org.kde.layershell 1.0 as LayerShell
+Window {
+    visible: false
+    LayerShell.Window.scope: "qml-compatibility-client"
+    LayerShell.Window.anchors: LayerShell.Window.AnchorLeft
+    LayerShell.Window.layer: LayerShell.Window.LayerBackground
+    LayerShell.Window.exclusionZone: 31
+})QML", QUrl(QStringLiteral("file:///ubuntu-layershell-client.qml")));
+    std::unique_ptr<QObject> object(component.create());
+    if (!object) {
+        for (const auto &error : component.errors()) std::cerr << error.toString().toStdString() << '\n';
+        return 8;
+    }
+    auto *qmlWindow = qobject_cast<QWindow *>(object.get());
+    auto *attached = Window::get(qmlWindow);
+    if (!qmlWindow || !attached || attached->scope()!=QStringLiteral("qml-compatibility-client") ||
+        attached->anchors()!=Window::AnchorLeft || attached->layer()!=Window::LayerBackground || attached->exclusionZone()!=31) return 9;
+    std::cout << "LayerShell public window properties/signals, Qt shell plugin load and QML attached properties without compositor: PASS\n";
+}
+CLIENT
+cmake -S "${BASE}/source" -B "${BASE}/build" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${BASE}/build"
+QT_QPA_PLATFORM=offscreen XDG_RUNTIME_DIR="${BASE}/runtime" "${BASE}/build/ubuntu-layershell-client" | tee "${BASE}/baseline-output.txt"
+dpkg-query -W -f='${Version}' liblayershellqtinterface-dev > "${BASE}/ubuntu-dev-version"
+dpkg-query -W -f='${Version}' libqt6waylandclient6 > "${BASE}/ubuntu-qt-wayland-version"
+sha256sum "${BASE}/build/ubuntu-layershell-client" > "${BASE}/binary-sha256.txt"
+printf 'Ubuntu LayerShell baseline version: '; cat "${BASE}/ubuntu-dev-version"; printf '\n'

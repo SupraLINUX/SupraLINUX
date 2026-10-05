@@ -274,3 +274,27 @@ The setup and consumer now explicitly declare build-essential. The reusable
 reviewed Ubuntu baseline preflight executes the exact frozen setup/client in a
 nested KVM testbed before another candidate build, without consuming an Attempt.
 Its PASS only certifies that baseline; it does not certify candidate compatibility.
+
+The exact corrected Plymouth Ubuntu baseline passed nested KVM on source
+`4164b993318158218843a5d88359ff0ea3dfbadd`, run 37295330128/job 111715082081.
+Its compiler, SDK dependencies and actual Ubuntu plugin lifecycle client executed
+successfully in all three modes. The complete original preflight payload, host
+seal and relevant input hashes are retained independently of Actions expiry.
+Candidate package compilation and upgrade compatibility remain separate gates.
+
+For newly admitted packages with a reviewed Ubuntu client, the authoritative
+runner now executes that baseline before preparing sbuild. It retains the result
+inside the package evidence bundle. A setup failure therefore consumes no package
+Attempt and stops before compilation. New records can require this preflight;
+closure validates its exact client hash, source/run identity and nested KVM PASS.
+The historical package attempts retain their original execution order and scope.
+
+Breeze Plymouth 6.7.5-0supralinux1 Attempt 3 closed PASS on source
+`4164b993318158218843a5d88359ff0ea3dfbadd`, run 37295892875/job 111716893450.
+Clean sbuild, lintian, 89 resources/84 image decodes, the unchanged Ubuntu client
+running after candidate upgrade and the rebuilt consumer passed in nested KVM.
+The original Actions ZIP SHA-256 is
+`02ef7f78c6aa18c316130c142e0edf03b26658e15b07d18c14e324ff1b379d62`;
+source, binary/debug packages, buildinfo, changes, clients and logs are retained
+with verified empty-cache offline restoration. Full initramfs/boot remains an ISO
+integration gate. The earlier infrastructure failures retain their original scope.

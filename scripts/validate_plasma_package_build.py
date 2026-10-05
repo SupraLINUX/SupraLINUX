@@ -28,7 +28,8 @@ def validate():
         assert hashlib.sha256(payload).hexdigest() == certification["sha256"]
         proof = json.loads(payload)
         assert proof["state"] == "PASS" and proof["scope"] in {
-            "active-bound-monitor-read-outage-recovery", "large-reviewed-autopkgtest-baseline-transport"}
+            "active-bound-monitor-read-outage-recovery", "large-reviewed-autopkgtest-baseline-transport",
+            "reviewed-ubuntu-baseline-preflight"}
         assert proof["consumes_package_attempt"] is False and proof["package_execution_started"] is False
         assert proof["canonical_package_state_effect"] == "none"
         for name, digest in proof["files_sha256"].items():
@@ -51,11 +52,20 @@ def validate():
             assert result["inputs_sha256"] == proof["inputs_sha256"]
             assert result["package_execution_started"] is False and result["consumes_package_attempt"] is False
             assert result["system_test_acceleration"] == "kvm-required"
-            assert result["setup_payload_bytes"] > 4096 and result["setup_max_line_bytes"] < 512
             assert result["files_sha256"]["autopkgtest/summary"] == proof["files_sha256"]["summary"]
-            assert (path.parent / "summary").read_text().split() == ["preserved-setup", "PASS"]
             steps = {step["name"]: step for step in job["steps"]}
-            assert steps["Verify reviewed setup transport through autopkgtest QEMU"]["conclusion"] == "success"
+            if proof["scope"] == "large-reviewed-autopkgtest-baseline-transport":
+                assert result["setup_payload_bytes"] > 4096 and result["setup_max_line_bytes"] < 512
+                assert (path.parent / "summary").read_text().split() == ["preserved-setup", "PASS"]
+                assert steps["Verify reviewed setup transport through autopkgtest QEMU"]["conclusion"] == "success"
+            else:
+                assert result["node"] == proof["node"] and result["candidate_installed"] is proof["candidate_installed"] is False
+                assert (path.parent / "summary").read_text().split() == ["reviewed-baseline", "PASS"]
+                assert steps["Execute current reviewed Ubuntu baseline before candidate build"]["conclusion"] == "success"
+                reviewed = json.loads((path.parent / "reviewed-inputs.json").read_text())
+                setup_path = reviewed["packaging_path"] + "/" + reviewed["baseline_setup_script"]
+                assert proof["files_sha256"]["baseline-setup"] == result["inputs_sha256"][setup_path]
+                assert reviewed["packaging_sha256"][reviewed["baseline_setup_script"]] == result["inputs_sha256"][setup_path]
         if certification["applicable"]:
             for name, digest in proof["inputs_sha256"].items():
                 assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, "Recertify changed monitor inputs"
@@ -142,6 +152,8 @@ def validate():
         if record.get("baseline_setup_script"):
             assert record["baseline_setup_script"] in executables
             assert record["baseline_setup_script"].startswith("tests/")
+        if record.get("baseline_preflight_required"):
+            assert record.get("baseline_setup_script"), "Required baseline preflight lacks a reviewed setup"
         if record.get("upstream_tests"):
             assert len(set(record["upstream_tests"])) == len(record["upstream_tests"])
         if record.get('sbuild_rootfs_policy'):
@@ -167,6 +179,19 @@ def validate():
             assert hashlib.sha256((ROOT / evidence["contract_path"]).read_bytes()).hexdigest() == result["files_sha256"]["build-contract.json"]
             assert built_contract["nodes"][name]["packaging_sha256"] == record["packaging_sha256"]
             assert record["attempts"][-1]["state"] == "PASS" and result["package_attempt_consumed"] is True
+            if record.get("baseline_preflight_required"):
+                baseline_bytes = (ROOT / evidence["baseline_preflight_path"]).read_bytes()
+                assert hashlib.sha256(baseline_bytes).hexdigest() == evidence["baseline_preflight_sha256"]
+                assert evidence["baseline_preflight_sha256"] == result["files_sha256"]["ubuntu-baseline-preflight/result.json"]
+                baseline = json.loads(baseline_bytes)
+                assert baseline["state"] == "PASS" and baseline["exit_code"] == 0 and baseline["node"] == name
+                assert baseline["source_commit"] == result["source_commit"] and baseline["workflow_run_id"] == result["workflow_run_id"]
+                assert baseline["candidate_installed"] is baseline["consumes_package_attempt"] is baseline["package_execution_started"] is False
+                assert baseline["system_test_acceleration"] == "kvm-required"
+                script = record["packaging_path"] + "/" + record["baseline_setup_script"]
+                assert baseline["inputs_sha256"][script] == record["packaging_sha256"][record["baseline_setup_script"]]
+                assert all(result["files_sha256"]["ubuntu-baseline-preflight/" + file] == digest
+                           for file, digest in baseline["files_sha256"].items())
             retention = evidence["local_retention"]
             if evidence.get('artifact_origin') == 'sealed-host-package-export':
                 assert evidence['artifact_id'] is None and evidence['actions_export_complete'] is False

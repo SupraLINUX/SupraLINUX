@@ -3,7 +3,7 @@
   "role": "reviewed-plasma-package-build",
   "state": "execution-authorized",
   "authorized_nodes": [
-    "layer-shell-qt"
+    "breeze-plymouth"
   ],
   "package_execution_authorized": true,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
@@ -747,7 +747,7 @@
       }
     },
     "breeze-plymouth": {
-      "state": "PASS",
+      "state": "build-pending",
       "source_package": "breeze-plymouth",
       "version": "6.7.5-0supralinux1",
       "upstream_version": "6.7.5",
@@ -848,25 +848,6 @@
           "host_evidence_manifest_sha256": "cfa156bcbe2ceb088ed51f034fa286e016f138fe68ce4c7673946884ce960489",
           "cause": "Minimal Ubuntu baseline testbed installed gcc without its recommended C development headers; compilation stopped at missing assert.h before candidate tests. The original runner classified exit 16 as INFRA_INVALID; sbuild and lintian passed.",
           "repair": "Declare build-essential explicitly in the Ubuntu baseline setup and consumer test dependencies; run the exact reviewed Ubuntu baseline client in a disposable nested KVM preflight before repeating the package."
-        },
-        {
-          "attempt": 3,
-          "state": "PASS",
-          "sbuild_result": "PASS",
-          "lintian_result": "PASS",
-          "autopkgtest_result": "PASS",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37295892875,
-          "workflow_job_id": 111716893450,
-          "source_commit": "4164b993318158218843a5d88359ff0ea3dfbadd",
-          "artifact_id": 11339176423,
-          "artifact_sha256": "02ef7f78c6aa18c316130c142e0edf03b26658e15b07d18c14e324ff1b379d62",
-          "result_path": "manifests/evidence/plasma/breeze-plymouth-attempt3/result.json",
-          "result_sha256": "d7d719b09f1f57477663b4aed49e7a22f9ce58c48dea535712cbf113928555c8",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t101804z-2893783",
-          "host_evidence_manifest_sha256": "4ebe55aba546d46fb7a0b9987598b32bce06c50dd916c974ec43f433fe1e2677",
-          "rootfs_admission_path": "manifests/evidence/plasma/breeze-plymouth-attempt3/rootfs-admission.json",
-          "rootfs_admission_sha256": "9f8a7416380c5b43cae969b1891252a631b1c493a6241396c475e2ac4188876e"
         }
       ],
       "baseline_setup_script": "tests/baseline-setup",
@@ -883,116 +864,7 @@
         "build_dependencies": "Exact retained ECM 6.30.0-0supralinux3; all C/Plymouth SDK/providers from Ubuntu. No Qt provider replacement. Immutable bare buildd admission with explicit current Ubuntu suites/update/distupgrade.",
         "test_policy": "No automated upstream suite. Host resource fixture passed: 89 exact resources, 84 decoded PNGs, metadata and both color-depth spinner branches. Ubuntu SDK client compiled syntax checked; real baseline and unchanged binary post-upgrade execution in boot/shutdown/updates modes, prompt/progress/lifecycle without display views plus newly compiled consumer remain KVM gates. Normalize only validated PNG time/date fields, retaining pixel/other metadata identity; the source fixture passes this policy. Attempt 1 exposed serial setup truncation before the baseline executed; transport repair is independently certified before repeat. Declare the libevdev/libudev/libxkbcommon SDK dependencies required by Ubuntu Plymouth pkg-config for actual C compilation. Explicit build-essential provides the compiler and C development headers even with no-install-recommends. The exact Ubuntu baseline client must compile and run in the nested KVM preflight before another package Attempt.",
         "activation_policy": "Theme package installs plugin/resources; daemon/display rendering, initramfs theme selection and real BIOS/UEFI boot remain distro integration gates."
-      },
-      "evidence": {
-        "workflow_run_id": 37295892875,
-        "workflow_job_id": 111716893450,
-        "source_commit": "4164b993318158218843a5d88359ff0ea3dfbadd",
-        "artifact_id": 11339176423,
-        "artifact_sha256": "02ef7f78c6aa18c316130c142e0edf03b26658e15b07d18c14e324ff1b379d62",
-        "result_path": "manifests/evidence/plasma/breeze-plymouth-attempt3/result.json",
-        "result_sha256": "d7d719b09f1f57477663b4aed49e7a22f9ce58c48dea535712cbf113928555c8",
-        "contract_path": "manifests/evidence/plasma/breeze-plymouth-attempt3/build-contract.json",
-        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t101804z-2893783",
-        "host_evidence_manifest_sha256": "4ebe55aba546d46fb7a0b9987598b32bce06c50dd916c974ec43f433fe1e2677",
-        "local_retention": {
-          "archive_root": ".artifacts/plasma-6.7.5/breeze-plymouth-attempt3",
-          "archive_index_sha256": "c87ce9ebd860f36539f9b4a1fd568f3c7baf55672108d95a45c2778e608075a3",
-          "plan_path": "manifests/evidence/plasma/breeze-plymouth-artifact-plan.json",
-          "plan_sha256": "73950e1a80c33b1402df73f4952f54311e490d586d5578f9619b6aa19e245898",
-          "source_complete": true,
-          "changes_complete": true,
-          "buildinfo_verified": true,
-          "artifact_zip_sha256_verified": true,
-          "offline_restore_verified": true,
-          "requires_github_for_restore": false,
-          "off_host_backup_verified": false,
-          "unique_binary_package_count": 2,
-          "binary_payload_file_count": 2,
-          "payload_prefix": "packages/"
-        },
-        "cache_probe_result_path": "manifests/evidence/plasma/breeze-plymouth-attempt3/cache-probe-result.json",
-        "cache_probe_result_sha256": "6f7e5865703570b1575c929f582ac7f0459bfe881712ef16aa9968e303cc25b3",
-        "rootfs_admission_path": "manifests/evidence/plasma/breeze-plymouth-attempt3/rootfs-admission.json",
-        "rootfs_admission_sha256": "9f8a7416380c5b43cae969b1891252a631b1c493a6241396c475e2ac4188876e"
       }
-    },
-    "layer-shell-qt": {
-      "state": "build-pending",
-      "source_package": "layer-shell-qt",
-      "version": "6.7.5-0supralinux1",
-      "upstream_version": "6.7.5",
-      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/layer-shell-qt-6.7.5.tar.xz",
-      "upstream_sha256": "ccdcfec7081ca956f7a52c9113a4df3a226575bfbe98b56a2a9a4d7d7e19e8f0",
-      "signature_sha256": "9db8e06f0be50d1281aa60e824041e6e1d08866c7e4b86e9a11dc0caa200f16b",
-      "packaging_path": "packages/plasma/layer-shell-qt/debian",
-      "packaging_review": "PASS",
-      "packaging_reference_version": "6.6.4-0ubuntu1",
-      "packaging_reference_sha256": "f5aff8b1a265a00aa94ce47130b9e8e86949ca2b64e412125025276eb8b54f4e",
-      "packaging_sha256": {
-        "changelog": "bc2083b490dd2185ac536deaa816dbc7f2e4cacd8edc0ed5af3eb3127714f221",
-        "control": "8b482e43f37c5019dd4bba07895cfc4940e009c58d905bbca7b650fa2ec95bbe",
-        "copyright": "e120255a6aeecb02d1a4e56afa97de8858f3dfb3a431de0ce2b68dbc4090dce9",
-        "layer-shell-qt.install": "cd23b943d88902951ab1d00f4baa26b36b3b7215d6fa38c7da36600681102db5",
-        "liblayershellqtinterface-dev.install": "282bb789f695b5393740a2c21c597c94a6924329d1ebb04ff1f5a105da83b19b",
-        "liblayershellqtinterface6.install": "28fb33cebdf950991bcf1367dc6b09844216f8f0516c3688b4425f546e53d8d5",
-        "liblayershellqtinterface6.symbols": "65fc3a57ff096c4e63883fc10b89adeb9987771fc252759c866580bfed4d2eb7",
-        "qml6-module-org-kde-layershell.install": "f2f2c0ddbc14b5a865533f2676aa97f41c8714fc4a9025ada07da2267dd6f1c5",
-        "rules": "0110a2af4b2224e37ef2efa2b3e9efa13d9651e9638afc7e727877c3dccc2f42",
-        "salsa-ci.yml": "64bfb6be33af05cd116d8bee786f95e7b2aaa9faa54e90333151a7a05ef03058",
-        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
-        "tests/baseline-setup": "df40e24c9c0fa4270d0d065d2df700d6e2baa5b419ac2ba1ae21b6550fe777fc",
-        "tests/consumer": "7f65c9b6693661d1a2c52d7aa818b06569cf01af9f61819ebe9a04f43616c720",
-        "tests/control": "16e4db1c66b0ed77c438a6070749e6a9566a170e12f8886b2b60e035bb61732a",
-        "tests/ubuntu-abi-client": "b635a1e1ebefc038581176f57451313c784b78307eaed66572c721336de7cad8",
-        "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
-        "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
-      },
-      "binary_packages": {
-        "layer-shell-qt": "amd64",
-        "liblayershellqtinterface-dev": "amd64",
-        "liblayershellqtinterface6": "amd64",
-        "qml6-module-org-kde-layershell": "amd64"
-      },
-      "ubuntu_baseline_package": "liblayershellqtinterface-dev",
-      "frameworks_predecessors": {
-        "extra-cmake-modules": {
-          "source_package": "kf6-extra-cmake-modules",
-          "version": "6.30.0-0supralinux3",
-          "binaries": [
-            {
-              "package": "extra-cmake-modules",
-              "architecture": "all",
-              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
-            }
-          ]
-        }
-      },
-      "sbuild_rootfs_policy": {
-        "kind": "immutable-bare-milestone",
-        "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
-        "suites": [
-          "resolute",
-          "resolute-updates",
-          "resolute-security"
-        ]
-      },
-      "attempts": [],
-      "baseline_setup_script": "tests/baseline-setup",
-      "required_executable_files": [
-        "rules",
-        "tests/baseline-setup",
-        "tests/ubuntu-abi-client",
-        "tests/consumer"
-      ],
-      "review": {
-        "upstream_changes": "Signed stable 6.7.5. Uses Ubuntu Qt 6.10 private Wayland SDK without replacement.",
-        "packaging_changes": "Preserve four Ubuntu binaries, public SONAME 6, symbol guards and Multi-Arch metadata. Correct SPDX choices/full BSD license from signed sources. Exact retained ECM and Ubuntu Qt/Wayland providers.",
-        "build_dependencies": "Qt minimum 6.10 and private Wayland provider from Ubuntu; ECM minimum 6.26 fulfilled by exact retained 6.30.0-0supralinux3.",
-        "test_policy": "No automated upstream suite; upstream test is a graphical example. All 27 LayerShell methods/signals used by the client were reviewed against the hash-verified Ubuntu 6.6.4 SDK. Test unchanged Ubuntu binary after complete four-binary upgrade, public window properties/signals, actual Qt shell plugin load, QML attached-property behavior without compositor, SONAME/dependencies and rebuilt client. Real compilation/runtime remain KVM execution gates.",
-        "activation_policy": "Library/plugin/QML package gate does not certify real compositor surfaces; full Plasma Wayland integration remains a later gate."
-      },
-      "baseline_preflight_required": true
     }
   },
   "retained_attempt_archives": [
@@ -1076,12 +948,6 @@
       "attempt": 2,
       "archive_root": ".artifacts/plasma-6.7.5/breeze-plymouth-attempt2",
       "archive_index_sha256": "7e522f90c228165a248cb7fb3975fbadab403ed4281ec0dde37a34acea8fda27"
-    },
-    {
-      "node": "breeze-plymouth",
-      "attempt": 3,
-      "archive_root": ".artifacts/plasma-6.7.5/breeze-plymouth-attempt3",
-      "archive_index_sha256": "c87ce9ebd860f36539f9b4a1fd568f3c7baf55672108d95a45c2778e608075a3"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
@@ -1121,11 +987,6 @@
     {
       "path": "manifests/evidence/plasma/infrastructure/baseline-transport-probe2-20261005/certification.json",
       "sha256": "a43e222e891e30a771ee0fac52adb78347a180ee9a4948be4bd9146b9ed941e5",
-      "applicable": true
-    },
-    {
-      "path": "manifests/evidence/plasma/infrastructure/ubuntu-baseline-breeze-plymouth-20261005/certification.json",
-      "sha256": "cd9a7087daea42ab5ab777b2bdc38faff45fd460aa94691d7de2be0807f4b2ca",
       "applicable": true
     }
   ]

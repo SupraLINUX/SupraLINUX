@@ -92,6 +92,19 @@ def main():
         contract_bytes = archive.read('build-contract.json')
         built = json.loads(contract_bytes)['nodes'][a.node]
         assert built['packaging_sha256'] == record['packaging_sha256'] and built['upstream_sha256'] == record['upstream_sha256']
+        baseline_bytes = None
+        if record.get('baseline_preflight_required'):
+            baseline_bytes = archive.read('ubuntu-baseline-preflight/result.json')
+            baseline = json.loads(baseline_bytes)
+            assert baseline['state'] == 'PASS' and baseline['exit_code'] == 0
+            assert baseline['node'] == a.node and baseline['source_commit'] == source_commit
+            assert baseline['workflow_run_id'] == result['workflow_run_id']
+            assert baseline['system_test_acceleration'] == 'kvm-required' and baseline['candidate_installed'] is False
+            assert baseline['consumes_package_attempt'] is baseline['package_execution_started'] is False
+            script = record['packaging_path'] + '/' + record['baseline_setup_script']
+            assert baseline['inputs_sha256'][script] == record['packaging_sha256'][record['baseline_setup_script']]
+            for name, digest in baseline['files_sha256'].items():
+                assert result['files_sha256']['ubuntu-baseline-preflight/' + name] == digest
         tests = []
         for line in (ROOT/record['packaging_path']/'tests/control').read_text().splitlines():
             if line.startswith('Tests:'):
@@ -148,6 +161,8 @@ def main():
         (historical/'upstream-tests.json').write_bytes(upstream_bytes)
     if rootfs_bytes is not None:
         (historical/'rootfs-admission.json').write_bytes(rootfs_bytes)
+    if baseline_bytes is not None:
+        (historical/'ubuntu-baseline-preflight.json').write_bytes(baseline_bytes)
     if job_bytes is not None:
         (historical/'workflow-job.json').write_bytes(job_bytes)
         (historical/'host-result.json').write_bytes(host_bytes)
@@ -198,6 +213,9 @@ def main():
     if rootfs_bytes is not None:
         evidence['rootfs_admission_path'] = str(relative/'rootfs-admission.json')
         evidence['rootfs_admission_sha256'] = sha(historical/'rootfs-admission.json')
+    if baseline_bytes is not None:
+        evidence['baseline_preflight_path'] = str(relative/'ubuntu-baseline-preflight.json')
+        evidence['baseline_preflight_sha256'] = sha(historical/'ubuntu-baseline-preflight.json')
     if a.host_export:
         evidence.update(artifact_origin='sealed-host-package-export',actions_export_complete=False,
                         workflow_job_path=str(relative/'workflow-job.json'),workflow_job_sha256=sha(historical/'workflow-job.json'),

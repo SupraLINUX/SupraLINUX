@@ -74,9 +74,15 @@
           "opcode": 10,
           "old_since": 1,
           "new_since": 8,
-          "state": "requires consumer/server behavior review before package admission"
+          "state": "local Ubuntu old-client/new-server wire probe PASS at versions 1, 7, 8 and 20; authoritative package and compositor gates pending"
         },
-        "scope": "XML structural/source review only; full real Wayland integration still required"
+        "scope": "XML structural/source review only; full real Wayland integration still required",
+        "local_wire_review": {
+          "path": "manifests/evidence/plasma/provider-gaps/plasma-wayland-protocols-wire-review-20261005/review.json",
+          "sha256": "517cc7826961bc73966454449efc96fa04fa27b2b299ec407f54c667889ac221",
+          "state": "PASS",
+          "scope": "local Ubuntu wire event compatibility review; not authoritative package/compositor certification"
+        }
       }
     },
     "wayland-protocols": {

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import hashlib
 import json
 import re
 import sys
@@ -131,6 +132,35 @@ semantic_correction = resolution_review.get("post_review_findings", {}).get("sem
 req(semantic_correction.get("status") == "applied-before-Level0-materialization", "Provider review source-identity correction")
 req(semantic_correction.get("corrected_reference_source") == "plasma-discover", "Provider review discover source correction")
 req(semantic_correction.get("dag_topology_effect") == "none", "Provider review correction DAG boundary")
+
+# Live source findings supplement the immutable historical availability review.
+supplementary = json.loads((ROOT / "manifests/kde-plasma-supplementary-providers.json").read_text())
+req(supplementary.get("role") == "plasma-supplementary-providers", "Supplementary provider role")
+for name, provider in supplementary["nodes"].items():
+    req(provider["package_execution_authorized"] is False, f"{name}: unreviewed provider execution")
+    req(provider["consumes_package_attempt"] is False, f"{name}: preparation Attempt boundary")
+    req(provider["qt_provider_effect"] == "none", f"{name}: Ubuntu Qt boundary")
+    req(set(provider["affected_nodes"]) <= set(executable_dag["nodes"]), f"{name}: unknown consumers")
+    ubuntu = provider["ubuntu_provider"]
+    req(hashlib.sha256((ROOT / ubuntu["policy_path"]).read_bytes()).hexdigest() == ubuntu["policy_sha256"],
+        f"{name}: Ubuntu availability evidence changed")
+    review = provider.get("compatibility_review", {}).get("local_wire_review")
+    if review:
+        path = ROOT / review["path"]
+        req(hashlib.sha256(path.read_bytes()).hexdigest() == review["sha256"], f"{name}: wire review changed")
+        proof = json.loads(path.read_text())
+        req(proof["state"] == review["state"] == "PASS", f"{name}: local wire fixture result")
+        req(proof["scope"] == review["scope"] and "not authoritative" in proof["scope"],
+            f"{name}: local review scope")
+        for filename, digest in proof["files_sha256"].items():
+            file = path.parent / filename
+            req(file.resolve().is_relative_to(path.parent.resolve()), f"{name}: unsafe evidence path")
+            req(hashlib.sha256(file.read_bytes()).hexdigest() == digest, f"{name}: wire evidence changed: {filename}")
+        result = json.loads((path.parent / "result.json").read_text())
+        req(result["state"] == "PASS" and result["versions"] == proof["negotiated_versions"] == [1, 7, 8, 20],
+            f"{name}: negotiated wire versions")
+        req(result["baseline_xml_sha256"] == proof["baseline_xml_sha256"] and
+            result["candidate_xml_sha256"] == proof["candidate_xml_sha256"], f"{name}: wire XML inputs")
 
 req(resolution_preflight.get("state") == "PASS", "Provider resolution preflight PASS")
 req(resolution_preflight.get("execution_authorized") is False, "Closed provider resolution preflight authorization")
