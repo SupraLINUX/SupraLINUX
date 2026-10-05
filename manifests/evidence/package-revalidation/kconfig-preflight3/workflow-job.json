@@ -1,0 +1,82 @@
+{
+  "id": 111835429148,
+  "run_id": 37331493428,
+  "workflow_name": "Reviewed package authoritative KVM revalidation",
+  "head_branch": "architecture/bootstrap-v1",
+  "run_url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/runs/37331493428",
+  "run_attempt": 1,
+  "node_id": "CR_kwDOUW9fLs8AAAAaCek5HA",
+  "head_sha": "4823001e0f8a4079e14a30a62e87bc962e8fea4c",
+  "url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/jobs/111835429148",
+  "html_url": "https://github.com/SupraLINUX/SupraLINUX/actions/runs/37331493428/job/111835429148",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-10-05T15:16:34Z",
+  "started_at": "2026-10-05T15:16:37Z",
+  "completed_at": "2026-10-05T15:20:46Z",
+  "name": "Current reviewed predecessor repair on KVM",
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1,
+      "started_at": "2026-10-05T15:16:39Z",
+      "completed_at": "2026-10-05T15:16:41Z"
+    },
+    {
+      "name": "Checkout exact authorized head",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2,
+      "started_at": "2026-10-05T15:16:41Z",
+      "completed_at": "2026-10-05T15:16:44Z"
+    },
+    {
+      "name": "Execute current reviewed revalidation or infrastructure preflight",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3,
+      "started_at": "2026-10-05T15:16:44Z",
+      "completed_at": "2026-10-05T15:20:38Z"
+    },
+    {
+      "name": "Retain sources, binaries and original results",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4,
+      "started_at": "2026-10-05T15:20:38Z",
+      "completed_at": "2026-10-05T15:20:41Z"
+    },
+    {
+      "name": "Post Checkout exact authorized head",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 8,
+      "started_at": "2026-10-05T15:20:41Z",
+      "completed_at": "2026-10-05T15:20:41Z"
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9,
+      "started_at": "2026-10-05T15:20:41Z",
+      "completed_at": "2026-10-05T15:20:41Z"
+    }
+  ],
+  "check_run_url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/check-runs/111835429148",
+  "labels": [
+    "self-hosted",
+    "linux",
+    "x64",
+    "supralinux",
+    "ubuntu-26.04",
+    "kvm",
+    "ephemeral"
+  ],
+  "runner_id": 199,
+  "runner_name": "supralinux-package-revalidation-20261005t151441z-415420",
+  "runner_group_id": 3,
+  "runner_group_name": "supralinux authoritative jit"
+}

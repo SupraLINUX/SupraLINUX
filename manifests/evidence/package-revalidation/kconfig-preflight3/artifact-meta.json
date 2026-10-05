@@ -1,0 +1,19 @@
+{
+  "id": 11355230008,
+  "name": "authoritative-package-revalidation-4823001e0f8a4079e14a30a62e87bc962e8fea4c",
+  "size_in_bytes": 664972,
+  "url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/11355230008",
+  "archive_download_url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/11355230008/zip",
+  "expired": false,
+  "created_at": "2026-10-05T15:20:41Z",
+  "expires_at": "2027-01-03T15:16:33Z",
+  "updated_at": "2026-10-05T15:20:41Z",
+  "digest": "sha256:7a5a8d874db2bbede349e370a56368f4fbb524b2bb5d816b61675a2064823c33",
+  "workflow_run": {
+    "id": 37331493428,
+    "repository_id": 1366253358,
+    "head_repository_id": 1366253358,
+    "head_branch": "architecture/bootstrap-v1",
+    "head_sha": "4823001e0f8a4079e14a30a62e87bc962e8fea4c"
+  }
+}

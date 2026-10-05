@@ -6,7 +6,7 @@
   "authorized_nodes": [
     "kconfig"
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
   "execution_checkpoint": "frameworks-6.30-pass",
   "nodes": {
@@ -263,12 +263,7 @@
       }
     }
   },
-  "certifications": [
-    {
-      "path": "manifests/evidence/package-revalidation/kconfig-preflight3/verification.json",
-      "sha256": "720a556a59c4449c036e0dd745866fc8ae2fc29efc897f43549e164d13d13e2c"
-    }
-  ],
+  "certifications": [],
   "infrastructure_incidents": [
     {
       "path": "manifests/evidence/package-revalidation/kconfig-preflight1/verification.json",
