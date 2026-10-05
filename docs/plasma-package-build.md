@@ -123,3 +123,12 @@ Oxygen Attempt 2 built successfully with the explicit Qt 6 selector. Lintian
 rejected an embedded LGPL-3 text without its common-license reference. The
 original FAIL is retained; packaging now refers to
 `/usr/share/common-licenses/LGPL-3`, preserving the SPDX terms and attributions.
+
+Oxygen Attempt 3 reached sbuild PASS and lintian PASS. A host DNS failure while
+monitoring GitHub triggered controller cleanup during autopkgtest setup. No
+test completed, no original guest result was written and no Actions artifact
+was uploaded. The sealed host copy preserves the complete candidate source,
+binary, changes/buildinfo and available logs. Its explicit interruption
+observation is INFRA_INVALID and cannot admit the binary downstream. Read-only
+GitHub API transport now retries transient failures with a finite budget,
+buffering each response; mutations and JIT creation remain single-shot.

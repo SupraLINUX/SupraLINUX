@@ -46,6 +46,9 @@ jobs:
         run: python3 scripts/test-frameworks-cache-admission.py
 
 
+      - name: Test transient GitHub read recovery
+        run: python3 scripts/test-github-read-retry.py
+
       - name: Test canonical package artifact retention
         run: python3 scripts/test-package-artifact-retention.py
 

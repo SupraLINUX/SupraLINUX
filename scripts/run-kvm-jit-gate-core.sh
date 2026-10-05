@@ -173,7 +173,11 @@ api() {
     if [[ -n "${data}" ]]; then
         args+=(--header 'Content-Type: application/json' --data "${data}")
     fi
-    curl "${args[@]}" "https://api.github.com${path}"
+    if [[ "${method}" == GET ]]; then
+        "${ROOT}/scripts/github-read-with-retry.sh" "${args[@]}" "https://api.github.com${path}"
+    else
+        curl "${args[@]}" "https://api.github.com${path}"
+    fi
 }
 
 api_allow_404() {

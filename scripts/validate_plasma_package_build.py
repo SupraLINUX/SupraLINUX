@@ -51,6 +51,15 @@ def validate():
             payload = (ROOT / attempt["result_path"]).read_bytes()
             assert hashlib.sha256(payload).hexdigest() == attempt["result_sha256"], "Attempt evidence changed"
             result = json.loads(payload)
+            if result.get("kind") == "host-recovered-interruption-observation":
+                assert result["state"] == "INFRA_INVALID" and result["runner_result_present"] is False
+                assert attempt["artifact_origin"] == "sealed-host-recovery" and attempt["artifact_id"] is None
+                assert result["downstream_eligible"] is False and result["archive_sha256"] == attempt["artifact_sha256"]
+                directory = (ROOT / attempt["result_path"]).parent
+                host_bytes = (directory / "host-result.json").read_bytes()
+                assert hashlib.sha256(host_bytes).hexdigest() == result["host_result_sha256"]
+                assert json.loads(host_bytes)["exit_code"] != 0
+                assert hashlib.sha256((directory / "build-contract.json").read_bytes()).hexdigest() == result["contract_sha256"]
             assert result["node"] == name and result["state"] == attempt["state"]
             assert result["source_commit"] == attempt["source_commit"]
             assert result["workflow_run_id"] == str(attempt["workflow_run_id"])

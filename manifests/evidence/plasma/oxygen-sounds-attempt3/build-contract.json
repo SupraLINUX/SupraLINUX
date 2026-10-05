@@ -319,26 +319,6 @@
           "host_evidence_manifest_sha256": "378c64871a7c2af168e33695669d039dac1570b3d3c1f3794ec50c321eae87dd",
           "cause": "The Qt 6 configure repair passed sbuild. Lintian rejected embedding the full LGPL-3 text instead of referring to the Debian common license.",
           "repair": "Use the standard LGPL-3 common-license reference while preserving the LGPL-3.0-or-later terms and all SPDX attributions; rerun the package checks and tests."
-        },
-        {
-          "attempt": 3,
-          "state": "INFRA_INVALID",
-          "source_commit": "4de0c25aac5051aa32da9ac8fb43874ae04986cc",
-          "package_attempt_consumed": true,
-          "sbuild_result": "PASS",
-          "lintian_result": "PASS",
-          "autopkgtest_result": "INFRA_INVALID",
-          "workflow_run_id": 37245539473,
-          "workflow_job_id": 111562584832,
-          "artifact_id": null,
-          "artifact_sha256": "0aa5ff943da88b15963980b3a2a72d4bb77b48a98668524f4b829374488cb68b",
-          "artifact_origin": "sealed-host-recovery",
-          "result_path": "manifests/evidence/plasma/oxygen-sounds-attempt3/observation.json",
-          "result_sha256": "4ba1779dd2dae9e83abdac48a056e734f54e2484ab21d44fb46c3e2448a85482",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t235426z-3523025",
-          "host_evidence_manifest_sha256": "9b7cb64358cd8304799f66012bd79691cd86bc631a62618bf48a8054ba72de2a",
-          "cause": "Host DNS resolution of api.github.com failed during active package monitoring. The controller exited and shut down the VM during autopkgtest testbed setup. sbuild and lintian passed; no test completed and no original guest result or Actions artifact was produced.",
-          "repair": "Retry read-only API transport after transient DNS/network/HTTP failures without repeating mutations. Certify recovery, permanent-error handling and a finite retry budget, then rerun Oxygen tests on a fresh KVM runner."
         }
       ],
       "review": {
@@ -388,12 +368,6 @@
       "attempt": 2,
       "archive_root": ".artifacts/plasma-6.7.5/oxygen-sounds-attempt2",
       "archive_index_sha256": "46b9bfc04c84389be3a8bfc11250a16e8d6ff20de3b1a4f793f115d9ac2249eb"
-    },
-    {
-      "node": "oxygen-sounds",
-      "attempt": 3,
-      "archive_root": ".artifacts/plasma-6.7.5/oxygen-sounds-attempt3",
-      "archive_index_sha256": "bea81b15331ec2f897c479619d927b1477b01349efd6aaf7f3851334f37c6cba"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
