@@ -2,8 +2,12 @@
 set -Eeuo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-WORK="${ROOT}/.work/authoritative-plasma-package"
-EVIDENCE="${ROOT}/evidence/authoritative-plasma-package"
+# Shared engine; defaults preserve the original Plasma lane.
+CAMPAIGN="${SUPRALINUX_PACKAGE_CAMPAIGN:-manifests/kde-plasma-package-build.json}"
+EVIDENCE_NAME="${SUPRALINUX_PACKAGE_EVIDENCE:-authoritative-plasma-package}"
+[[ "${EVIDENCE_NAME}" == authoritative-plasma-package || "${EVIDENCE_NAME}" == authoritative-package-revalidation ]]
+WORK="${ROOT}/.work/${EVIDENCE_NAME}"
+EVIDENCE="${ROOT}/evidence/${EVIDENCE_NAME}"
 MIRROR="${SBUILD_MIRROR:-http://archive.ubuntu.com/ubuntu}"
 TEST_IMAGE="${AUTOPKGTEST_QEMU_IMAGE:-/var/lib/supralinux/autopkgtest/resolute-amd64.img}"
 CHROOT="${HOME}/.cache/sbuild/resolute-amd64.tar"
@@ -50,13 +54,17 @@ trap finish EXIT
 exec > >(tee -a "${EVIDENCE}/pipeline.log") 2>&1
 
 STAGE="authorization"
+if [[ "${CAMPAIGN}" == manifests/package-revalidation.json ]]; then
+    python3 "${ROOT}/scripts/validate_package_revalidation.py"
+fi
 mapfile -t AUTHORIZED < <(python3 - "${ROOT}" <<'PY'
 import json, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(sys.argv[1]) / "scripts"))
 from importlib.machinery import SourceFileLoader
 module = SourceFileLoader("prepare", str(Path(sys.argv[1]) / "scripts/prepare-plasma-package.py")).load_module()
-manifest = json.loads((Path(sys.argv[1]) / "manifests/kde-plasma-package-build.json").read_text())
+manifest = module.load_campaign()
+assert not manifest.get("dependency_hold"), "Known predecessor upgrade conflict requires revalidation"
 assert manifest["package_execution_authorized"] is True and manifest["state"] == "execution-authorized"
 assert len(manifest["authorized_nodes"]) == 1, "One current node per disposable runner"
 node = manifest["authorized_nodes"][0]
@@ -74,7 +82,7 @@ PACKAGE_VERSION="${AUTHORIZED[1]}"
 SOURCE_URL="${AUTHORIZED[2]}"
 SOURCE_HASH="${AUTHORIZED[3]}"
 SIGNATURE_HASH="${AUTHORIZED[4]}"
-cp "${ROOT}/manifests/kde-plasma-package-build.json" "${EVIDENCE}/build-contract.json"
+cp "${ROOT}/${CAMPAIGN}" "${EVIDENCE}/build-contract.json"
 EXECUTION_CHECKPOINT="$(python3 - "${EVIDENCE}/build-contract.json" <<'PY'
 import json, sys
 print(json.load(open(sys.argv[1])).get("execution_checkpoint", "none"))
@@ -133,15 +141,32 @@ TARBALL="${WORK}/upstream.tar.xz"
 curl --fail --location --retry 3 --connect-timeout 20 --max-time 180 --output "${TARBALL}" "${SOURCE_URL}"
 curl --fail --location --retry 3 --connect-timeout 20 --max-time 180 --output "${TARBALL}.sig" "${SOURCE_URL}.sig"
 printf '%s  %s\n%s  %s\n' "${SOURCE_HASH}" "${TARBALL}" "${SIGNATURE_HASH}" "${TARBALL}.sig" | sha256sum --check --strict
-python3 "${ROOT}/scripts/run-kde-plasma-level0-materialization.py" --check-signing-key
-gpg --batch --yes --dearmor --output "${WORK}/release-keyring.gpg" "${ROOT}/keys/kde-plasma-release.asc"
-gpgv --status-fd 1 --keyring "${WORK}/release-keyring.gpg" "${TARBALL}.sig" "${TARBALL}" |& tee "${EVIDENCE}/signature.log"
-python3 - "${ROOT}" "${EVIDENCE}/signature.log" <<'PY'
-import sys
+python3 - "${ROOT}" "${EVIDENCE}/build-contract.json" "${NODE}" "${WORK}" "${TARBALL}" "${EVIDENCE}" <<'PY'
+import hashlib, json, re, subprocess, sys
 from importlib.machinery import SourceFileLoader
 from pathlib import Path
-module = SourceFileLoader("materialize", str(Path(sys.argv[1]) / "scripts/run-kde-plasma-level0-materialization.py")).load_module()
-assert module.valid_release_signature(Path(sys.argv[2]).read_text()), "Wrong KDE signature authority"
+root, contract, work, tarball, evidence = [Path(sys.argv[i]) for i in [1, 2, 4, 5, 6]]
+record = json.loads(contract.read_text())['nodes'][sys.argv[3]]
+if record.get('signing_key_path'):
+    key = root/record['signing_key_path']
+    relative = str(key.relative_to(root/record['packaging_path']))
+    assert hashlib.sha256(key.read_bytes()).hexdigest() == record['packaging_sha256'][relative]
+    fingerprint = record['signing_fingerprint']
+else:
+    subprocess.run(['python3', str(root/'scripts/run-kde-plasma-level0-materialization.py'), '--check-signing-key'], check=True)
+    module = SourceFileLoader('materialize', str(root/'scripts/run-kde-plasma-level0-materialization.py')).load_module()
+    key, fingerprint = root/'keys/kde-plasma-release.asc', None
+subprocess.run(['gpg','--batch','--yes','--dearmor','--output',str(work/'release-keyring.gpg'),str(key)],check=True)
+result = subprocess.run(['gpgv','--status-fd','1','--keyring',str(work/'release-keyring.gpg'),str(tarball)+'.sig',str(tarball)],text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+(evidence/'signature.log').write_text(result.stdout)
+print(result.stdout)
+assert result.returncode == 0
+if fingerprint:
+    matches = re.findall(r'^\[GNUPG:\] VALIDSIG (.*)$',result.stdout,re.M)
+    assert len(matches) == 1 and matches[0].split()[-1] == fingerprint
+    assert not re.search(r'\[GNUPG:\] (?:EXPKEYSIG|EXPSIG|REVKEYSIG|BADSIG|ERRSIG|KEYEXPIRED)\b',result.stdout)
+else:
+    assert module.valid_release_signature(result.stdout), 'Wrong KDE signature authority'
 PY
 
 STAGE="source-package"
@@ -178,6 +203,24 @@ if [[ "${EXECUTION_CHECKPOINT}" != "none" ]]; then
         "${WORK}/cache-probe" "${EVIDENCE}/cache-probe" --apt-update --apt-distupgrade
 fi
 
+if [[ "${CAMPAIGN}" == manifests/package-revalidation.json ]]; then
+    STAGE="retained-upgrade-inputs"
+    python3 "${ROOT}/scripts/prepare-retained-package-inputs.py" "${NODE}" --output "${WORK}/retained-upgrade" \
+        --evidence "${EVIDENCE}/retained-upgrade-inputs.json"
+    MODE="$(python3 - "${EVIDENCE}/build-contract.json" <<'PY'
+import json, sys
+print(json.load(open(sys.argv[1]))['execution_mode'])
+PY
+)"
+    if [[ "${MODE}" == preflight ]]; then
+        STATE="PASS"
+        STAGE="reviewed-package-preflight-complete"
+        printf 'Reviewed package infrastructure preflight: PASS; no package Attempt consumed\n'
+        exit 0
+    fi
+    [[ "${MODE}" == build ]]
+fi
+
 STAGE="sbuild"
 STATE="FAIL"
 ATTEMPT=true
@@ -195,7 +238,9 @@ if (( ${#DDEBS[@]} > 0 )); then cp "${DDEBS[@]}" "${EVIDENCE}/packages/"; fi
 python3 - "${ROOT}" "${NODE}" "${WORK}/out" <<'PY'
 import json, subprocess, sys
 from pathlib import Path
-record = json.loads((Path(sys.argv[1]) / "manifests/kde-plasma-package-build.json").read_text())["nodes"][sys.argv[2]]
+from importlib.machinery import SourceFileLoader
+prepare = SourceFileLoader("prepare", str(Path(sys.argv[1])/"scripts/prepare-plasma-package.py")).load_module()
+record = prepare.load_campaign()["nodes"][sys.argv[2]]
 actual = {}
 for deb in Path(sys.argv[3]).glob("*.deb"):
     package, version, architecture = [subprocess.check_output(["dpkg-deb", "-f", str(deb), field], text=True).strip()
@@ -226,8 +271,12 @@ LINTIAN_RESULT="PASS"
 STAGE="autopkgtest-qemu"
 STATE="INFRA_INVALID"
 SETUP="$(python3 "${ROOT}/scripts/plasma-package-testing.py" setup "${NODE}")"
+TEST_ARGS=()
+if [[ "${CAMPAIGN}" == manifests/package-revalidation.json ]]; then
+    TEST_ARGS+=(--test-name=ubuntu-abi-client --test-name=consumer)
+fi
 set +e
-autopkgtest "${DSCS[0]}" "${DEBS[@]}" "${EXTRA_PATHS[@]}" --setup-commands="${SETUP}" --output-dir="${EVIDENCE}/autopkgtest" -- \
+autopkgtest "${DSCS[0]}" "${DEBS[@]}" "${EXTRA_PATHS[@]}" "${TEST_ARGS[@]}" --setup-commands="${SETUP}" --output-dir="${EVIDENCE}/autopkgtest" -- \
     qemu --qemu-command="${ROOT}/scripts/qemu-kvm-required.sh" --qemu-architecture=x86_64 \
     --cpus=2 --ram-size=2048 "${TEST_IMAGE}" |& tee "${EVIDENCE}/autopkgtest.log"
 PIPELINE_RC=("${PIPESTATUS[@]}")
@@ -238,6 +287,24 @@ case "${PIPELINE_RC[0]}" in
     8|16|20) TEST_RESULT="INFRA_INVALID"; exit "${PIPELINE_RC[0]}" ;;
     *) STATE="FAIL"; TEST_RESULT="FAIL"; exit "${PIPELINE_RC[0]}" ;;
 esac
+if [[ "${CAMPAIGN}" == manifests/package-revalidation.json ]]; then
+    STAGE="retained-package-upgrade"
+    set +e
+    autopkgtest "${DSCS[0]}" --no-built-binaries --test-name=retained-upgrade \
+        --copy="${WORK}/retained-upgrade:/var/tmp/supralinux-retained-packages" \
+        --copy="${WORK}/out:/var/tmp/supralinux-candidate-packages" \
+        --setup-commands="${SETUP}" --output-dir="${EVIDENCE}/retained-upgrade" -- \
+        qemu --qemu-command="${ROOT}/scripts/qemu-kvm-required.sh" --qemu-architecture=x86_64 \
+        --cpus=2 --ram-size=2048 "${TEST_IMAGE}" |& tee "${EVIDENCE}/retained-upgrade.log"
+    PIPELINE_RC=("${PIPESTATUS[@]}")
+    set -e
+    [[ ${PIPELINE_RC[1]} == 0 ]] || { TEST_RESULT="evidence-transport-failure"; exit 1; }
+    case "${PIPELINE_RC[0]}" in
+        0) TEST_RESULT="PASS" ;;
+        8|16|20) TEST_RESULT="INFRA_INVALID"; exit "${PIPELINE_RC[0]}" ;;
+        *) STATE="FAIL"; TEST_RESULT="FAIL"; exit "${PIPELINE_RC[0]}" ;;
+    esac
+fi
 STAGE="evidence-deduplication"
 python3 "${ROOT}/scripts/prune-duplicate-package-evidence.py" "${EVIDENCE}"
 STATE="PASS"

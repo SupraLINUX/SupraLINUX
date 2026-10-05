@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-kconfig-baseline
+apt-get install -y --no-install-recommends build-essential cmake libkf6config-dev libkf6config-bin qml6-module-org-kde-config qt6-qpa-plugins qml6-module-qtqml qml6-module-qtqml-models qml6-module-qtqml-workerscript
+mkdir -p "${BASE}/source"
+cat > "${BASE}/source/CMakeLists.txt" <<'CMAKE'
+cmake_minimum_required(VERSION 3.29)
+project(ubuntu_kconfig_client LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+find_package(KF6Config REQUIRED)
+find_package(Qt6 REQUIRED COMPONENTS Gui Qml)
+add_executable(ubuntu-kconfig-client main.cpp)
+target_link_libraries(ubuntu-kconfig-client PRIVATE KF6::ConfigCore KF6::ConfigGui KF6::ConfigQml Qt6::Gui Qt6::Qml)
+CMAKE
+cat > "${BASE}/source/main.cpp" <<'CLIENT'
+#include <KConfig>
+#include <KConfigGroup>
+#include <KSharedConfig>
+#include <KCoreConfigSkeleton>
+#include <KConfigPropertyMap>
+#include <KStandardShortcut>
+#include <QGuiApplication>
+#include <QQmlComponent>
+#include <QQmlEngine>
+#include <QTemporaryDir>
+#include <iostream>
+#include <memory>
+int main(int argc, char **argv) {
+    QGuiApplication app(argc, argv);
+    auto failed = [](const char *check) { std::cerr << "KConfig failure: " << check << '\n'; return 1; };
+    QTemporaryDir temporary;
+    if (!temporary.isValid()) return failed("temporary configuration");
+    const auto path = temporary.filePath(QStringLiteral("settingsrc"));
+    {
+        KConfig config(path, KConfig::SimpleConfig);
+        KConfigGroup group(&config, QStringLiteral("Preferences"));
+        group.writeEntry("title", QStringLiteral("SupraLINUX"));
+        group.writeEntry("number", 42);
+        if (!group.sync()) return failed("configuration write");
+    }
+    KConfig restored(path, KConfig::SimpleConfig);
+    KConfigGroup group(&restored, QStringLiteral("Preferences"));
+    if (group.readEntry("title", QString()) != QStringLiteral("SupraLINUX") ||
+        group.readEntry("number", 0) != 42 || group.readEntry("absent", 17) != 17) return failed("configuration round trip");
+    if (KStandardShortcut::cut().isEmpty() || KStandardShortcut::copy().isEmpty()) return failed("GUI shortcuts");
+    KCoreConfigSkeleton skeleton(KSharedConfig::openConfig(path, KConfig::SimpleConfig));
+    QString title;
+    skeleton.setCurrentGroup(QStringLiteral("Preferences"));
+    skeleton.addItemString(QStringLiteral("title"), title, QStringLiteral("default"));
+    skeleton.load();
+    KConfigPropertyMap properties(&skeleton);
+    properties.setNotify(true);
+    if (!properties.isNotify() || properties.value(QStringLiteral("title")).toString() != QStringLiteral("SupraLINUX")) return failed("public QML property map");
+    QQmlEngine engine;
+    QQmlComponent component(&engine);
+    component.setData("import QtQml\nimport org.kde.config\nQtObject { property bool allowed: KAuthorized.authorize(\"supralinux-client-test\") }", QUrl());
+    std::unique_ptr<QObject> object(component.create());
+    if (!object) { std::cerr << component.errorString().toStdString(); return failed("installed QML plugin"); }
+    if (!object->property("allowed").toBool()) return failed("QML authorization API");
+    std::cout << "KConfig Ubuntu SDK client: persisted values, defaults, GUI shortcuts, QML property map and actual installed plugin: PASS\n";
+}
+CLIENT
+cat > "${BASE}/run-session" <<'SESSION'
+#!/usr/bin/env bash
+set -Eeuo pipefail
+SESSION_ROOT=$(mktemp -d)
+trap 'rm -rf "${SESSION_ROOT}"' EXIT
+export XDG_CONFIG_HOME="${SESSION_ROOT}/config" XDG_DATA_HOME="${SESSION_ROOT}/data" XDG_CACHE_HOME="${SESSION_ROOT}/cache" XDG_STATE_HOME="${SESSION_ROOT}/state" XDG_RUNTIME_DIR="${SESSION_ROOT}/runtime" QT_QPA_PLATFORM=offscreen
+mkdir -p "${XDG_CONFIG_HOME}" "${XDG_DATA_HOME}" "${XDG_CACHE_HOME}" "${XDG_STATE_HOME}" "${XDG_RUNTIME_DIR}"
+chmod 700 "${XDG_RUNTIME_DIR}"
+"$1"
+kwriteconfig6 --file migrationrc --group Before --key old 'SupraLINUX migration'
+cat > "${SESSION_ROOT}/migration.upd" <<'UPDATE'
+Version=6
+Id=supralinux-upgrade-check
+File=migrationrc
+Group=Before,After
+Key=old,new
+UPDATE
+MULTIARCH=$(dpkg-architecture -qDEB_HOST_MULTIARCH)
+UPDATE_TOOL="/usr/lib/${MULTIARCH}/libexec/kf6/kconf_update"
+test -x "${UPDATE_TOOL}"
+"${UPDATE_TOOL}" "${SESSION_ROOT}/migration.upd"
+test "$(kreadconfig6 --file migrationrc --group After --key new)" = 'SupraLINUX migration'
+test -z "$(kreadconfig6 --file migrationrc --group Before --key old)"
+printf 'Actual installed kconf_update and CLI configuration migration: PASS\n'
+SESSION
+chmod +x "${BASE}/run-session"
+cmake -S "${BASE}/source" -B "${BASE}/build" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${BASE}/build"
+"${BASE}/run-session" "${BASE}/build/ubuntu-kconfig-client" | tee "${BASE}/baseline-output.txt"
+dpkg-query -W -f='${Version}' libkf6config-dev > "${BASE}/ubuntu-dev-version"
+dpkg-query -W -f='${Version}' libqt6core6t64 > "${BASE}/ubuntu-qt-core-version"
+sha256sum "${BASE}/build/ubuntu-kconfig-client" > "${BASE}/binary-sha256.txt"

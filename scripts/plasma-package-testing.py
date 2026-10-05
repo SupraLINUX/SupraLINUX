@@ -3,12 +3,14 @@
 import argparse
 import base64
 import hashlib
+import importlib.machinery
 import json
 import re
 import shlex
 from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[1]
+prepare = importlib.machinery.SourceFileLoader('package_prepare', str(ROOT/'scripts/prepare-plasma-package.py')).load_module()
 
 
 def setup_commands(root, record):
@@ -61,7 +63,7 @@ def main():
     p.add_argument('--build-log', type=Path)
     p.add_argument('--output', type=Path)
     a = p.parse_args()
-    record = json.loads((ROOT/'manifests/kde-plasma-package-build.json').read_text())['nodes'][a.node]
+    record = prepare.load_campaign()['nodes'][a.node]
     if a.mode == 'setup':
         print(setup_commands(ROOT, record))
     else:

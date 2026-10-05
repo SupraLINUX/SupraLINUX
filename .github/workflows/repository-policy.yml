@@ -39,6 +39,9 @@ jobs:
       - name: Validate reviewed Plasma package inputs
         run: python3 scripts/validate_plasma_package_build.py
 
+      - name: Validate scoped package revalidation
+        run: python3 scripts/validate_package_revalidation.py
+
       - name: Test Plasma package input admission
         run: python3 scripts/test-plasma-package-inputs.py
 

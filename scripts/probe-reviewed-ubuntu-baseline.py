@@ -19,7 +19,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--prepare-only', action='store_true')
     args = parser.parse_args()
-    campaign = json.loads((ROOT / 'manifests/kde-plasma-package-build.json').read_text())
+    campaign = testing.prepare.load_campaign()
     nodes = campaign['authorized_nodes']
     assert len(nodes) <= 1, 'Preflight requires an individually reviewed current node'
     if not nodes or not campaign['nodes'][nodes[0]].get('baseline_setup_script'):
@@ -27,6 +27,7 @@ def main():
         return
     node = nodes[0]
     record = campaign['nodes'][node]
+    assert not campaign.get('dependency_hold'), 'Repair the known predecessor upgrade conflict first'
     assert record['state'] == 'build-pending' and record['packaging_review'] == 'PASS'
     work = ROOT / '.work/reviewed-ubuntu-baseline'
     evidence = ROOT / 'evidence/runner-contract/reviewed-ubuntu-baseline'

@@ -2,11 +2,13 @@
 """Verify a milestone payload and select only explicitly contracted build inputs."""
 import argparse
 import hashlib
+import importlib.machinery
 import json
 import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+prepare = importlib.machinery.SourceFileLoader('package_prepare', str(ROOT/'scripts/prepare-plasma-package.py')).load_module()
 
 
 def digest(path):
@@ -65,7 +67,8 @@ def main():
     parser.add_argument("--payload", type=Path, default=Path("/var/lib/supralinux/milestones/frameworks-6.30"))
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    campaign = json.loads((ROOT / "manifests/kde-plasma-package-build.json").read_text())
+    campaign = prepare.load_campaign()
+    assert not campaign.get('dependency_hold'), 'Known predecessor upgrade conflict requires revalidation'
     assert campaign["execution_checkpoint"] == "frameworks-6.30-pass"
     selected = admit(args.payload, campaign["nodes"][args.node],
                      json.loads((ROOT / "manifests/kde-dag.json").read_text()),

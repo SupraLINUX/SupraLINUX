@@ -27,6 +27,7 @@ RUNNER_CONTRACT_WORKFLOW="Authoritative runner contract"
 PACKAGE_PROOF_WORKFLOW="Phase 1 authoritative KVM package proof"
 FRAMEWORKS_SAMPLE_WORKFLOW="KDE Frameworks authoritative KVM sample proof"
 PLASMA_PACKAGE_WORKFLOW="KDE Plasma authoritative KVM package build"
+PACKAGE_REVALIDATION_WORKFLOW="Reviewed package authoritative KVM revalidation"
 
 case "${GATE}" in
     runner-contract)
@@ -45,8 +46,12 @@ case "${GATE}" in
         GATE_LABEL="ci:plasma-package-build"
         WORKFLOW_NAME="${PLASMA_PACKAGE_WORKFLOW}"
         ;;
+    package-revalidation)
+        GATE_LABEL="ci:package-revalidation"
+        WORKFLOW_NAME="${PACKAGE_REVALIDATION_WORKFLOW}"
+        ;;
     *)
-        printf 'Usage: %s {runner-contract|authoritative-package-proof|frameworks-sample-proof|plasma-package-build}\n' "$0" >&2
+        printf 'Usage: %s {runner-contract|authoritative-package-proof|frameworks-sample-proof|plasma-package-build|package-revalidation}\n' "$0" >&2
         exit 2
         ;;
 esac
@@ -443,8 +448,10 @@ GOLDEN_INPUT_DIGEST="$(awk -F= '$1 == "golden_input_digest" {print $2; exit}' "$
 # changes the backing image, never the package evidence or sbuild isolation.
 BASE_IMAGE="${GOLDEN_IMAGE}"
 EXECUTION_CHECKPOINT="none"
-if [[ "${GATE}" == "plasma-package-build" ]]; then
-    EXECUTION_CHECKPOINT="$(python3 - "${ROOT}/manifests/kde-plasma-package-build.json" <<'PY'
+if [[ "${GATE}" == "plasma-package-build" || "${GATE}" == "package-revalidation" ]]; then
+    CACHE_CAMPAIGN="manifests/kde-plasma-package-build.json"
+    if [[ "${GATE}" == "package-revalidation" ]]; then CACHE_CAMPAIGN="manifests/package-revalidation.json"; fi
+    EXECUTION_CHECKPOINT="$(python3 - "${ROOT}/${CACHE_CAMPAIGN}" <<'PY'
 import json, sys
 print(json.load(open(sys.argv[1])).get("execution_checkpoint", "none"))
 PY
@@ -475,7 +482,8 @@ ACTIVE_AUTHORITATIVE="$(jq -c \
     --arg package_proof "${PACKAGE_PROOF_WORKFLOW}" \
     --arg frameworks_sample "${FRAMEWORKS_SAMPLE_WORKFLOW}" \
     --arg plasma_package "${PLASMA_PACKAGE_WORKFLOW}" \
-    '[.workflow_runs[] | select((.name == $runner_contract or .name == $package_proof or .name == $frameworks_sample or .name == $plasma_package) and .status != "completed")]' \
+    --arg package_revalidation "${PACKAGE_REVALIDATION_WORKFLOW}" \
+    '[.workflow_runs[] | select((.name == $runner_contract or .name == $package_proof or .name == $frameworks_sample or .name == $plasma_package or .name == $package_revalidation) and .status != "completed")]' \
     <<<"${ACTIVE_RUNS_JSON}")"
 if (( $(jq 'length' <<<"${ACTIVE_AUTHORITATIVE}") > 0 )); then
     printf 'Refusing to create a JIT runner while another authoritative workflow is active or queued:\n' >&2

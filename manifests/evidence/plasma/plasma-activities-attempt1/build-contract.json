@@ -1526,28 +1526,7 @@
       "upstream_tests": [
         "QFlatSetTest"
       ],
-      "attempts": [
-        {
-          "attempt": 1,
-          "state": "FAIL",
-          "original_state": "FAIL",
-          "sbuild_result": "PASS",
-          "lintian_result": "PASS",
-          "autopkgtest_result": "FAIL",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37305572771,
-          "workflow_job_id": 111748312458,
-          "source_commit": "11b4a2078d9a5ee15de0218e1b2bfa5fe3a9e037",
-          "artifact_id": 11342904973,
-          "artifact_sha256": "72901c0b76c0c649c95d103d627d611280cb1eabe6eefe0f9ed4e7181cecd6bd",
-          "result_path": "manifests/evidence/plasma/plasma-activities-attempt1/result.json",
-          "result_sha256": "38e305624a22d4b4adf371144788bba2fc7492b4b86e88644a85b61880394e43",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t114906z-3439565",
-          "host_evidence_manifest_sha256": "6486b8950d72ded18057127c0576683805a40ddbead37de2326a158e0f4e73dd",
-          "cause": "KConfig 6.30.0-0supralinux4 moves kconf_update from the Ubuntu libkf6config-bin package to libkf6configcore6 without matching Breaks/Replaces; apt upgrades the library first and dpkg rejects overwriting the Ubuntu-owned file. Build, Lintian and QFlatSetTest passed; candidate compatibility clients did not execute.",
-          "repair": "Revalidate the affected KConfig predecessor with the Ubuntu-compatible file split and versioned ownership transition from the retained Supra revision, then refresh only affected predecessor inputs and rerun the Activities package gate."
-        }
-      ],
+      "attempts": [],
       "review": {
         "upstream_changes": "Signed stable 6.7.5; preserve Plasma::Activities public target, SONAME 7, Ubuntu symbols, CLI and QML APIs. C++20; Ubuntu Qt >=6.10, Frameworks >=6.26.",
         "packaging_changes": "Preserve six Ubuntu binaries and Multi-Arch metadata. Remove unused KF6WindowSystem/xkbcommon and obsolete Doxygen Build-Depends after complete signed source review. QDoc replaced BUILD_QCH upstream; retain a documentation package containing the explicit common optional documentation profile, with real QCH generation still a separate gate.",
@@ -1662,12 +1641,6 @@
       "attempt": 2,
       "archive_root": ".artifacts/plasma-6.7.5/knighttime-attempt2",
       "archive_index_sha256": "ae62662972f626856448ee0505a6f81e48ee14dd785eef279d824978c93eab0f"
-    },
-    {
-      "node": "plasma-activities",
-      "attempt": 1,
-      "archive_root": ".artifacts/plasma-6.7.5/plasma-activities-attempt1",
-      "archive_index_sha256": "e7c83e1cc830b5c71f830d180b0e2b4f759c7faf03ef5694445bbae20bb47620"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
@@ -1718,23 +1691,17 @@
     {
       "path": "manifests/evidence/plasma/infrastructure/monitor-read-recovery-20261005/certification.json",
       "sha256": "72475804958d782c4bab6af43a4b2fec3548c1ed8b728548564ae6647fde6471",
-      "applicable": false
+      "applicable": true
     },
     {
       "path": "manifests/evidence/plasma/infrastructure/baseline-transport-probe2-20261005/certification.json",
       "sha256": "a43e222e891e30a771ee0fac52adb78347a180ee9a4948be4bd9146b9ed941e5",
-      "applicable": false
+      "applicable": true
     },
     {
       "path": "manifests/evidence/plasma/infrastructure/ubuntu-baseline-breeze-plymouth-20261005/certification.json",
       "sha256": "cd9a7087daea42ab5ab777b2bdc38faff45fd460aa94691d7de2be0807f4b2ca",
-      "applicable": false
+      "applicable": true
     }
-  ],
-  "dependency_hold": {
-    "node": "kconfig",
-    "affected_node": "plasma-activities",
-    "reason": "Ubuntu upgrade file ownership conflict in retained 6.30.0-0supralinux4",
-    "resume_requires": "authoritative-package-revalidation:kconfig:PASS"
-  }
+  ]
 }

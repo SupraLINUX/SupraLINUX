@@ -4,6 +4,7 @@ import argparse
 import datetime
 import hashlib
 import io
+import importlib.machinery
 import json
 import re
 import tarfile
@@ -11,6 +12,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
+prepare = importlib.machinery.SourceFileLoader('package_prepare', str(ROOT/'scripts/prepare-plasma-package.py')).load_module()
 SUITES = ['resolute', 'resolute-updates', 'resolute-security']
 
 
@@ -80,7 +82,7 @@ def main():
     parser.add_argument('--evidence',type=Path,required=True)
     parser.add_argument('--mirror',default='http://archive.ubuntu.com/ubuntu')
     args = parser.parse_args()
-    campaign = json.loads((ROOT/'manifests/kde-plasma-package-build.json').read_text())
+    campaign = prepare.load_campaign()
     assert campaign['execution_checkpoint'] == 'frameworks-6.30-pass'
     policy = campaign['nodes'][args.node]['sbuild_rootfs_policy']
     assert policy['kind'] == 'immutable-bare-milestone' and policy['suites'] == SUITES
