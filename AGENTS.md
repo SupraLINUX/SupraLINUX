@@ -33,3 +33,8 @@ publication still require explicit approval and their release gates. Use the
 authorized GitHub connector for repository reads and atomic publication. Host
 scripts may use authenticated GitHub tools for artifact transport; keep tokens
 out of output. Do not infer machine paths from another project's checkout.
+
+After each KVM gate, verify that its ephemeral VM, runner and writable overlay
+have been removed. Do not leave idle project VMs consuming resources. Preserve
+golden images, milestone caches and sealed evidence; never stop unrelated VMs.
+Follow active gates through cleanup before ending work or handing off a run.

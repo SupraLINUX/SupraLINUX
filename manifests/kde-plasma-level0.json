@@ -421,7 +421,7 @@
       "ubuntu_reference_version": "6.6.4-0ubuntu1"
     },
     "ksshaskpass": {
-      "state": "package-build-pending",
+      "state": "PASS",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -440,12 +440,12 @@
         "reference_only": true
       },
       "candidate_package_version": "4:6.7.5-0supralinux1",
-      "package_execution_authorized": true,
+      "package_execution_authorized": false,
       "materialization_result": "PASS",
       "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
     },
     "kwallet-pam": {
-      "state": "packaging-preparation-pending",
+      "state": "package-build-pending",
       "dag_level": 0,
       "internal_predecessors": [],
       "upstream_version": "6.7.5",
@@ -464,7 +464,7 @@
         "reference_only": true
       },
       "candidate_package_version": "4:6.7.5-0supralinux1",
-      "package_execution_authorized": false,
+      "package_execution_authorized": true,
       "materialization_result": "PASS",
       "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
     },
@@ -983,6 +983,6 @@
     "consumes_package_attempt": false
   },
   "authorized_package_nodes": [
-    "ksshaskpass"
+    "kwallet-pam"
   ]
 }

@@ -1,0 +1,173 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+systemd-detect-virt --vm | grep -Eq '^(kvm|qemu)$'
+apt-get install -y --no-install-recommends libpam-kwallet5 libpam-kwallet-common build-essential libpam0g-dev python3 socat passwd
+BASE=/var/tmp/supralinux-kwallet-pam-baseline
+mkdir -p "${BASE}/source" "${BASE}/home/run"
+if ! id supra-pam-fixture >/dev/null 2>&1; then
+    useradd --home-dir "${BASE}/home" --no-create-home --shell /usr/sbin/nologin supra-pam-fixture
+fi
+test "$(getent passwd supra-pam-fixture | cut -d: -f6)" = "${BASE}/home"
+chown -R supra-pam-fixture:supra-pam-fixture "${BASE}/home"
+chmod 0700 "${BASE}/home" "${BASE}/home/run"
+cat > "${BASE}/source/client.c" <<'SUPRA_CLIENT_C'
+#define _GNU_SOURCE
+#include <security/pam_appl.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+
+static int conversation(int count, const struct pam_message **messages,
+                        struct pam_response **responses, void *data)
+{
+    (void)count; (void)messages; (void)responses; (void)data;
+    return PAM_CONV_ERR; /* No real credential prompt is ever accepted. */
+}
+static void require(int rc, const char *operation)
+{
+    if (rc != PAM_SUCCESS) { fprintf(stderr,"%s: PAM status %d\n",operation,rc); exit(1); }
+}
+int main(int argc, char **argv)
+{
+    if (argc != 7) return 2;
+    const char *configuration=argv[1], *service=argv[2], *user=argv[3], *mode=argv[4], *home=argv[5], *helper=argv[6];
+    pam_handle_t *handle=NULL;
+    const struct pam_conv conv={conversation,NULL};
+    require(pam_start_confdir(service,user,&conv,configuration,&handle),"pam_start_confdir");
+    char value[1024];
+    snprintf(value,sizeof(value),"HOME=%s",home); require(pam_putenv(handle,value),"private HOME");
+    snprintf(value,sizeof(value),"XDG_RUNTIME_DIR=%s/run",home); require(pam_putenv(handle,value),"private runtime");
+    require(pam_putenv(handle,"SUPRA_PAM_HANDOFF=synthetic-only"),"private handoff marker");
+    require(pam_putenv(handle,"DBUS_SESSION_BUS_ADDRESS=unix:path=/nonexistent/supra-private-test"),"synthetic bus address");
+    if (strcmp(mode,"nongraphical")) require(pam_putenv(handle,"XDG_SESSION_TYPE=wayland"),"graphical marker");
+    if (!strcmp(mode,"already")) require(pam_putenv(handle,"PAM_KWALLET5_LOGIN=/nonexistent/supra-already"),"already marker");
+    if (strcmp(mode,"noauth")) {
+        require(pam_authenticate(handle,0),"private PAM authentication stack");
+        require(pam_setcred(handle,PAM_ESTABLISH_CRED),"private PAM credential stack");
+    }
+    require(pam_open_session(handle,0),"private PAM session stack");
+    const char *socket=pam_getenv(handle,"PAM_KWALLET5_LOGIN");
+    if (!strcmp(mode,"positive")) {
+        snprintf(value,sizeof(value),"%s/run/kwallet5.socket",home);
+        if (!socket || strcmp(socket,value)) return 3;
+        char **environment=pam_getenvlist(handle);
+        pid_t pid=fork();
+        if (pid==0) {char *args[]={(char*)helper,NULL};execve(helper,args,environment);_exit(127);}
+        int status=0; if (pid<0 || waitpid(pid,&status,0)!=pid || !WIFEXITED(status) || WEXITSTATUS(status)) return 4;
+        for(int i=0;i<50;i++) {
+            snprintf(value,sizeof(value),"%s/mock-result.json",home);
+            if (access(value,F_OK)==0) break;
+            const struct timespec delay={0,100000000};nanosleep(&delay,NULL);
+        }
+        if (access(value,F_OK)) return 5;
+    } else if (!strcmp(mode,"already")) {
+        if (!socket || strcmp(socket,"/nonexistent/supra-already")) return 6;
+    } else if (socket) return 7;
+    require(pam_close_session(handle,0),"private PAM close-session stack");
+    require(pam_end(handle,PAM_SUCCESS),"private PAM teardown");
+    printf("Installed PAM module dispatched by real libpam: %s PASS\n",mode);
+    return 0;
+}
+
+SUPRA_CLIENT_C
+cat > "${BASE}/source/fixture.c" <<'SUPRA_FIXTURE_C'
+#include <security/pam_modules.h>
+#include <stdlib.h>
+#include <string.h>
+/* This auxiliary fixture only supplies synthetic credentials and observes the
+ * real installed module's PAM data. It never replaces that module's behavior. */
+PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh,int flags,int argc,const char **argv)
+{
+    (void)flags;
+    if (argc!=1) return PAM_SYSTEM_ERR;
+    if (!strcmp(argv[0],"token")) return pam_set_item(pamh,PAM_AUTHTOK,"supra-pam-synthetic-only");
+    if (!strcmp(argv[0],"empty")) return pam_set_item(pamh,PAM_AUTHTOK,"");
+    const void *data=NULL;
+    int rc=pam_get_data(pamh,"kwallet5_key",&data);
+    if (!strcmp(argv[0],"present")) return rc==PAM_SUCCESS && data && !strcmp(data,"supra-pam-synthetic-only") ? PAM_SUCCESS : PAM_AUTH_ERR;
+    if (!strcmp(argv[0],"absent")) return rc==PAM_NO_MODULE_DATA && !data ? PAM_SUCCESS : PAM_AUTH_ERR;
+    return PAM_SYSTEM_ERR;
+}
+PAM_EXTERN int pam_sm_setcred(pam_handle_t *p,int f,int n,const char **a){(void)p;(void)f;(void)n;(void)a;return PAM_SUCCESS;}
+PAM_EXTERN int pam_sm_open_session(pam_handle_t *p,int f,int n,const char **a){(void)p;(void)f;(void)n;(void)a;return PAM_SUCCESS;}
+PAM_EXTERN int pam_sm_close_session(pam_handle_t *p,int f,int n,const char **a){(void)p;(void)f;(void)n;(void)a;return PAM_SUCCESS;}
+
+SUPRA_FIXTURE_C
+cat > "${BASE}/source/mock-wallet.py" <<'SUPRA_MOCK_WALLET_PY'
+#!/usr/bin/python3
+import hashlib,json,os,signal,socket,sys
+from pathlib import Path
+signal.alarm(10)
+assert len(sys.argv)==4 and sys.argv[1]=='--pam-login'
+home=Path(os.environ['HOME']);assert home.name=='home' and 'supralinux-kwallet-pam' in str(home)
+assert os.getuid()!=0
+pipe=int(sys.argv[2]);key=b''
+while len(key)<56:
+ part=os.read(pipe,56-len(key));assert part;key+=part
+assert os.read(pipe,1)==b'';os.close(pipe)
+salt=(home/'.local/share/kwalletd/kdewallet.salt').read_bytes();assert len(salt)==56
+expected=hashlib.pbkdf2_hmac('sha512',b'supra-pam-synthetic-only',salt,50000,56)
+assert key==expected
+server=socket.socket(fileno=int(sys.argv[3]));server.settimeout(5)
+connection,_=server.accept();connection.settimeout(5);data=b''
+with connection:
+ while True:
+  part=connection.recv(4096)
+  if not part:break
+  data+=part;assert len(data)<65536
+server.close()
+lines=data.decode().splitlines()
+assert 'SUPRA_PAM_HANDOFF=synthetic-only' in lines
+assert 'DBUS_SESSION_BUS_ADDRESS=unix:path=/nonexistent/supra-private-test' in lines
+assert 'HOME='+str(home) in lines
+(home/'mock-result.json').write_text(json.dumps({'state':'PASS','key_bytes':len(key),'salt_bytes':len(salt),'salt_sha256':hashlib.sha256(salt).hexdigest(),'derived_key_verified':True,'actual_installed_helper_environment_verified':True,'uid':os.getuid(),'real_wallet_started':False})+'\n')
+(home/'run/kwallet5.socket').unlink(missing_ok=True)
+
+SUPRA_MOCK_WALLET_PY
+cat > "${BASE}/source/driver.py" <<'SUPRA_DRIVER_PY'
+import json,os,pwd,signal,subprocess,sys
+from pathlib import Path
+assert os.geteuid()==0
+assert subprocess.check_output(['systemd-detect-virt','--vm'],text=True).strip() in {'kvm','qemu'}, 'PAM fixture must run only inside a disposable VM'
+base=Path('/var/tmp/supralinux-kwallet-pam-baseline');home=base/'home';configuration=base/'pam';configuration.mkdir(exist_ok=True)
+user=pwd.getpwnam('supra-pam-fixture');assert user.pw_uid>0 and user.pw_dir==str(home)
+client=Path(sys.argv[1]).resolve();fixture=Path(sys.argv[2]).resolve();output=Path(sys.argv[3]);module=Path('/usr/lib/x86_64-linux-gnu/security/pam_kwallet5.so')
+assert client.is_file() and fixture.is_file() and module.is_file()
+helper=Path('/usr/share/libpam-kwallet-common/pam_kwallet_init');mock=base/'source/mock-wallet.py'
+assert helper.is_file() and mock.is_file()
+results=[]
+for mode,name,token,expected in [('positive',user.pw_name,'token','present'),('nongraphical',user.pw_name,'token','present'),('empty',user.pw_name,'empty','absent'),('root','root','token','absent'),('unknown','supra-user-that-does-not-exist','token','absent'),('noauth',user.pw_name,'token','absent'),('already',user.pw_name,'token','absent')]:
+ if mode=='positive':
+  (home/'mock-result.json').unlink(missing_ok=True)
+  assert not (home/'run/kwallet5.socket').exists()
+ service='supra-'+mode
+ # Only this private libpam configuration is used; /etc/pam.d is never edited by the fixture.
+ arguments='kwalletd='+str(mock)
+ (configuration/service).write_text(f'auth required {fixture} {token}\nauth optional {module} {arguments}\nauth required {fixture} {expected}\nsession optional {module} {arguments}\nsession required {fixture}\n')
+ environment={k:v for k,v in os.environ.items() if k not in ['PAM_KWALLET5_LOGIN','XDG_SESSION_TYPE','DISPLAY','WAYLAND_DISPLAY','SSH_AUTH_SOCK','SSH_AGENT_PID']}
+ environment.update(HOME=str(home),XDG_RUNTIME_DIR=str(home/'run'))
+ process=subprocess.Popen([str(client),str(configuration),service,name,mode,str(home),str(helper)],env=environment,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,start_new_session=True)
+ try:stdout,stderr=process.communicate(timeout=15)
+ except subprocess.TimeoutExpired:
+  os.killpg(process.pid,signal.SIGKILL);process.communicate();raise
+ assert process.returncode==0,(mode,process.returncode,stdout,stderr)
+ assert mode+' PASS' in stdout
+ results.append({'case':mode,'state':'PASS','actual_installed_module':str(module),'real_libpam_dispatch':True,'stdout':stdout,'stderr':stderr})
+ if mode=='positive':
+  proof=json.loads((home/'mock-result.json').read_text());assert proof['state']=='PASS' and proof['derived_key_verified'] and proof['uid']==user.pw_uid
+  results[-1]['private_handoff']=proof
+output.write_text(json.dumps(results,indent=2)+'\n')
+print('Installed KWallet PAM with actual libpam, private synthetic user/credentials, key derivation and installed socket helper: PASS (7 cases)')
+
+SUPRA_DRIVER_PY
+chmod 0755 "${BASE}/source/mock-wallet.py"
+cc -std=c17 -Wall -Wextra -Werror "${BASE}/source/client.c" -Wl,-z,relro,-z,now -lpam -o "${BASE}/ubuntu-client"
+cc -std=c17 -Wall -Wextra -Werror -fPIC -shared "${BASE}/source/fixture.c" -lpam -o "${BASE}/ubuntu-fixture.so"
+python3 "${BASE}/source/driver.py" "${BASE}/ubuntu-client" "${BASE}/ubuntu-fixture.so" "${BASE}/ubuntu-results.json"
+dpkg-query -W -f='${Version}' libpam-kwallet5 > "${BASE}/ubuntu-version"
+dpkg-query -W -f='${Version}' libpam0g > "${BASE}/ubuntu-pam-version"
+sha256sum "${BASE}/ubuntu-client" "${BASE}/ubuntu-fixture.so" > "${BASE}/ubuntu-sdk-binaries.sha256"

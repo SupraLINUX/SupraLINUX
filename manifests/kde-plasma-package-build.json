@@ -3,7 +3,7 @@
   "role": "reviewed-plasma-package-build",
   "state": "execution-authorized",
   "authorized_nodes": [
-    "ksshaskpass"
+    "kwallet-pam"
   ],
   "package_execution_authorized": true,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
@@ -1942,7 +1942,7 @@
       }
     },
     "ksshaskpass": {
-      "state": "build-pending",
+      "state": "PASS",
       "source_package": "ksshaskpass",
       "version": "4:6.7.5-0supralinux1",
       "upstream_version": "6.7.5",
@@ -2120,7 +2120,33 @@
           "resolute-security"
         ]
       },
-      "attempts": [],
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "PASS",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "PASS",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37366901824,
+          "workflow_job_id": 111954164635,
+          "source_commit": "690cb9a10250624779760497fc00c78e6c874f7f",
+          "artifact_id": 11368957086,
+          "artifact_sha256": "24a955d9697ab59e768afb36a704da69385edfd36e7237687ee1d0e7771c4bfd",
+          "result_path": "manifests/evidence/plasma/ksshaskpass-attempt1/result.json",
+          "result_sha256": "f3880b9a84f007db4a1469f6ede2f96bef1ea7d1432cff5087ac93f9d275da42",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t195715z-2075438",
+          "host_evidence_manifest_sha256": "3c90b9a5a638aa3fc7e156006c33247493b517e4c880fff9cba8af4ede8fb07d",
+          "rootfs_admission_path": "manifests/evidence/plasma/ksshaskpass-attempt1/rootfs-admission.json",
+          "rootfs_admission_sha256": "333aa483c116f63640e9d9e583d198b9ef9f0ee41be0d8e3468fb51d347b148e",
+          "baseline_preflight_path": "manifests/evidence/plasma/ksshaskpass-attempt1/ubuntu-baseline-preflight.json",
+          "baseline_preflight_sha256": "7eb11439aabd048929489142be033ee511d27349a6614494063607f33df176fe",
+          "workflow_job_path": "manifests/evidence/plasma/ksshaskpass-attempt1/workflow-job.json",
+          "workflow_job_sha256": "50eecbc64b6ca1884e1c0043d25e48516d5d68a6c88632e5a555da2b57adc286",
+          "host_result_path": "manifests/evidence/plasma/ksshaskpass-attempt1/host-result.json",
+          "host_result_sha256": "99a85fc7fd70d5e63284c728569b0c7f33ecbb4a7a5f943ec5990d7d69eeeb7a"
+        }
+      ],
       "review": {
         "source": "Official signed KDE 6.7.5 source remains unchanged; captured Ubuntu packaging is advisory.",
         "version": "Preserve epoch 4 and Ubuntu binary/alternatives contract.",
@@ -2144,6 +2170,119 @@
         "tests/control": "5dfac095a17a5326a6f60fbfb98943895b1c35535f8fd73cc51c0b3dafd4ecde",
         "tests/ubuntu-abi-client": "4908aa83e72d1827a8ddf8835dfc68e027541dbdd14058427373f88e00df7b3c",
         "upstream/metadata": "150d7600d76a84dee0642958d8c538da27d60e6eed6ef04ffcf8f76cfdb35c9b",
+        "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+        "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+      },
+      "evidence": {
+        "workflow_run_id": 37366901824,
+        "workflow_job_id": 111954164635,
+        "source_commit": "690cb9a10250624779760497fc00c78e6c874f7f",
+        "artifact_id": 11368957086,
+        "artifact_sha256": "24a955d9697ab59e768afb36a704da69385edfd36e7237687ee1d0e7771c4bfd",
+        "result_path": "manifests/evidence/plasma/ksshaskpass-attempt1/result.json",
+        "result_sha256": "f3880b9a84f007db4a1469f6ede2f96bef1ea7d1432cff5087ac93f9d275da42",
+        "contract_path": "manifests/evidence/plasma/ksshaskpass-attempt1/build-contract.json",
+        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t195715z-2075438",
+        "host_evidence_manifest_sha256": "3c90b9a5a638aa3fc7e156006c33247493b517e4c880fff9cba8af4ede8fb07d",
+        "local_retention": {
+          "archive_root": ".artifacts/plasma-6.7.5/ksshaskpass-attempt1",
+          "archive_index_sha256": "6996bcc696ed0bf4411dbcdbbae38aa10a8d3da02b24147dadedb163f017952d",
+          "plan_path": "manifests/evidence/plasma/ksshaskpass-artifact-plan.json",
+          "plan_sha256": "cac79c8209622e405a06bf2cd93d7ad1142c6ee929b1f9112507ba47ecda527a",
+          "source_complete": true,
+          "changes_complete": true,
+          "buildinfo_verified": true,
+          "artifact_zip_sha256_verified": true,
+          "offline_restore_verified": true,
+          "requires_github_for_restore": false,
+          "off_host_backup_verified": false,
+          "unique_binary_package_count": 2,
+          "binary_payload_file_count": 2,
+          "payload_prefix": "packages/"
+        },
+        "cache_probe_result_path": "manifests/evidence/plasma/ksshaskpass-attempt1/cache-probe-result.json",
+        "cache_probe_result_sha256": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+        "rootfs_admission_path": "manifests/evidence/plasma/ksshaskpass-attempt1/rootfs-admission.json",
+        "rootfs_admission_sha256": "333aa483c116f63640e9d9e583d198b9ef9f0ee41be0d8e3468fb51d347b148e",
+        "baseline_preflight_path": "manifests/evidence/plasma/ksshaskpass-attempt1/ubuntu-baseline-preflight.json",
+        "baseline_preflight_sha256": "7eb11439aabd048929489142be033ee511d27349a6614494063607f33df176fe",
+        "workflow_job_path": "manifests/evidence/plasma/ksshaskpass-attempt1/workflow-job.json",
+        "workflow_job_sha256": "50eecbc64b6ca1884e1c0043d25e48516d5d68a6c88632e5a555da2b57adc286",
+        "host_result_path": "manifests/evidence/plasma/ksshaskpass-attempt1/host-result.json",
+        "host_result_sha256": "99a85fc7fd70d5e63284c728569b0c7f33ecbb4a7a5f943ec5990d7d69eeeb7a"
+      }
+    },
+    "kwallet-pam": {
+      "state": "build-pending",
+      "source_package": "kwallet-pam",
+      "version": "4:6.7.5-0supralinux1",
+      "upstream_version": "6.7.5",
+      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/kwallet-pam-6.7.5.tar.xz",
+      "upstream_sha256": "d71f5945ef3086f56f52f531508c2ab363078fbbd5ae4084bd3647049e6ee94f",
+      "signature_sha256": "6b561820cfebeb11586a42de2f6d515b8c9bf5db5d064789aceeabb041356ffb",
+      "packaging_reference_version": "4:6.6.4-0ubuntu1",
+      "packaging_reference_sha256": "f588dc32e7c3b1a263a13e9732e66555926fa622d9014e962ee6ad83ac0522a3",
+      "packaging_path": "packages/plasma/kwallet-pam/debian",
+      "packaging_review": "PASS",
+      "binary_packages": {
+        "libpam-kwallet-common": "all",
+        "libpam-kwallet5": "amd64"
+      },
+      "ubuntu_baseline_package": "libpam-kwallet5",
+      "baseline_setup_script": "tests/baseline-setup",
+      "baseline_preflight_required": true,
+      "required_executable_files": [
+        "rules",
+        "tests/baseline-setup",
+        "tests/consumer",
+        "tests/ubuntu-abi-client"
+      ],
+      "upstream_tests": [],
+      "frameworks_predecessors": {
+        "extra-cmake-modules": {
+          "source_package": "kf6-extra-cmake-modules",
+          "version": "6.30.0-0supralinux3",
+          "binaries": [
+            {
+              "package": "extra-cmake-modules",
+              "architecture": "all",
+              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+            }
+          ]
+        }
+      },
+      "sbuild_rootfs_policy": {
+        "kind": "immutable-bare-milestone",
+        "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
+        "suites": [
+          "resolute",
+          "resolute-updates",
+          "resolute-security"
+        ]
+      },
+      "attempts": [],
+      "review": {
+        "source": "Unchanged signed upstream source; Ubuntu reference remains advisory.",
+        "version": "Preserve epoch 4 and the PAM module/common package contract.",
+        "dependencies": "Explicit actual kwallet6 runtime path and dependency; remove SDK dependencies used only for path discovery and unused xkbcommon. Exact ECM predecessor; Ubuntu PAM/libgcrypt/socat providers.",
+        "tests": "No upstream CTest suite; real private libpam dispatch and 7 cases, independent key derivation, actual pipe/socket helper, preserved salt after upgrade; unchanged Ubuntu SDK and rebuilt consumer.",
+        "licensing": "Preserve LGPL-2.1-or-later module and Darwin source attribution, BSD-3-Clause FindPAM, GPL-2.0-or-later packaging and explicit CC0-1.0 CI metadata with full text.",
+        "profile": "PAM module/handoff package verification; real wallet, login and Wayland session acceptance remain separate."
+      },
+      "packaging_sha256": {
+        "README.source": "212e7027ddab5549d0b37d58fb79262be86a2a1bd8221c94dac1911fa51a8d61",
+        "changelog": "624e2a8bef8eceec4918550e10750469c660c182d57c8ab5d8862fbc16e23322",
+        "control": "c430409c7559275badd2764e137458e2df016ede87d658ec467633d32fe6423b",
+        "copyright": "42b6221759c9e539cd039f980ad2cc60091db91fcdf9ec73a4630113e0a2836a",
+        "libpam-kwallet-common.install": "ca85c26ebea763c01045c154c7b63282d64bfd409da90f6543189de6e35fbf3a",
+        "libpam-kwallet5.install": "d83f63cf617fdc6af2c8d79b8655c6553beb1420676038e80f9fd7ff67656d45",
+        "rules": "0bff12c16034d9b8be14733e84911393ef520773e696f35a397753da5557a798",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/baseline-setup": "92997a397496def2f5ebb8069e19dd4da739e224af9981bdb0715dd7cf2e9d1a",
+        "tests/consumer": "d562e7947d7274c43ae5a0e58b7b7c3eb7936835c2cd7ca4ccaba9b48ca19880",
+        "tests/control": "a6c690b410d7830f43f7f1a66e91544f2da43b154a9b25ffce058fafb6894b50",
+        "tests/ubuntu-abi-client": "9be9b70c0ee2c32dfae83cdbd24e6d3421cc0b3a4035d722a059467c6dd66ebb",
+        "upstream/metadata": "cb69e555a8103e846f09d08b16e935a013120fb9969a16e890401f5456867bd1",
         "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
         "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
       }
@@ -2272,6 +2411,12 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/kwrited-attempt1",
       "archive_index_sha256": "a754be992f06bb259f17348387973720bfd1336b48674181b2eacf0d8a247cab"
+    },
+    {
+      "node": "ksshaskpass",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/ksshaskpass-attempt1",
+      "archive_index_sha256": "6996bcc696ed0bf4411dbcdbbae38aa10a8d3da02b24147dadedb163f017952d"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
@@ -2335,7 +2480,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
