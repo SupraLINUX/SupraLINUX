@@ -1,0 +1,139 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "authenticated source/review input retention; no candidate package execution",
+  "ubuntu_archive_authentication": "Signed InRelease -> exact complete Sources SHA-256 -> source archive identities/SHA-256/sizes",
+  "ubuntu_dsc_inline_signature_scope": "Developer signatures may lack local developer keys; authentication here uses the signed Ubuntu archive chain, not an invented DSC signature result",
+  "ubuntu_sources": [
+    {
+      "source_package": "plasma-wayland-protocols",
+      "version": "1.20.0-2",
+      "ubuntu_sources_index": "archive.ubuntu.com_ubuntu_dists_resolute_universe_source_Sources",
+      "ubuntu_sources_index_sha256": "e324d966b70cedc32d7c308b96574d2205f15822c25b4e93d2f7607c22bcf6a7",
+      "archives": [
+        {
+          "name": "plasma-wayland-protocols_1.20.0-2.dsc",
+          "sha256": "af9c30e7473167e5e739cd1753ef1f6ece3571c8f417239d1d0c3a576cf8cb55",
+          "size": 2536
+        },
+        {
+          "name": "plasma-wayland-protocols_1.20.0.orig.tar.xz",
+          "sha256": "9818bb1462211ce5982e670abf0d964eb11fe1d0c02a1c26084db30695a79d6a",
+          "size": 48848
+        },
+        {
+          "name": "plasma-wayland-protocols_1.20.0.orig.tar.xz.asc",
+          "sha256": "71e415bc2ebe57845e55558c287b2f32e1fb2f5def2dc0ed1100198da3a0beaa",
+          "size": 488
+        },
+        {
+          "name": "plasma-wayland-protocols_1.20.0-2.debian.tar.xz",
+          "sha256": "1a127e559b54f55a1d03b56afd97cd1998ef956616510592b42e3bc20536991b",
+          "size": 12264
+        }
+      ]
+    },
+    {
+      "source_package": "qt6-base",
+      "version": "6.10.2+dfsg-7",
+      "ubuntu_sources_index": "archive.ubuntu.com_ubuntu_dists_resolute_universe_source_Sources",
+      "ubuntu_sources_index_sha256": "e324d966b70cedc32d7c308b96574d2205f15822c25b4e93d2f7607c22bcf6a7",
+      "archives": [
+        {
+          "name": "qt6-base_6.10.2+dfsg-7.dsc",
+          "sha256": "002cf6224c7569157884020e2575fbdb5588fe6558568ff791d64a1f99d1efc9",
+          "size": 5686
+        },
+        {
+          "name": "qt6-base_6.10.2+dfsg.orig.tar.xz",
+          "sha256": "b5f8b150b1f0dd8a3ec51764cfd7817562f6b543b5f37dc5cab7c7f1823d313d",
+          "size": 48516624
+        },
+        {
+          "name": "qt6-base_6.10.2+dfsg-7.debian.tar.xz",
+          "sha256": "5071476712a4e641cbb730efb92c59bd9a15bf5be9f953ce114b99e4f8cfa758",
+          "size": 205464
+        }
+      ]
+    },
+    {
+      "source_package": "qt6-wayland",
+      "version": "6.10.2-4",
+      "ubuntu_sources_index": "archive.ubuntu.com_ubuntu_dists_resolute_universe_source_Sources",
+      "ubuntu_sources_index_sha256": "e324d966b70cedc32d7c308b96574d2205f15822c25b4e93d2f7607c22bcf6a7",
+      "archives": [
+        {
+          "name": "qt6-wayland_6.10.2-4.dsc",
+          "sha256": "f2e8aec9e42916876441bddb972a5d3cf8eb24773d38f0e51dd9506cdd174243",
+          "size": 3680
+        },
+        {
+          "name": "qt6-wayland_6.10.2.orig.tar.xz",
+          "sha256": "391998eb432719df26a6a67d8efdc67f8bf2afdd76c1ee3381ebff4fe7527ee2",
+          "size": 901748
+        },
+        {
+          "name": "qt6-wayland_6.10.2-4.debian.tar.xz",
+          "sha256": "58c4a744f9e7091e120f8e3df509ee18dbc8a00c857baaca339200fe21fba012",
+          "size": 29368
+        }
+      ]
+    },
+    {
+      "source_package": "wayland",
+      "version": "1.24.0-2",
+      "ubuntu_sources_index": "archive.ubuntu.com_ubuntu_dists_resolute_main_source_Sources",
+      "ubuntu_sources_index_sha256": "f54e264953689edeeb3e7d741ee94bc81aada8059ee62108500dda6392410446",
+      "archives": [
+        {
+          "name": "wayland_1.24.0-2.dsc",
+          "sha256": "b8423e8a1c51b18eadab45961bd625cadecf240dc02150c91f6f5e3218867f24",
+          "size": 2650
+        },
+        {
+          "name": "wayland_1.24.0.orig.tar.gz",
+          "sha256": "c6d416e207d4d80d2577c316ce1554062b37f6e8776f81f25fb4f5a3515590f7",
+          "size": 376855
+        },
+        {
+          "name": "wayland_1.24.0-2.diff.gz",
+          "sha256": "0947ab20c285766c217d7ede8de0242796250eb98b690b22cae8e7103295fd81",
+          "size": 16592
+        }
+      ]
+    },
+    {
+      "source_package": "wayland-protocols",
+      "version": "1.47-1",
+      "ubuntu_sources_index": "archive.ubuntu.com_ubuntu_dists_resolute_main_source_Sources",
+      "ubuntu_sources_index_sha256": "f54e264953689edeeb3e7d741ee94bc81aada8059ee62108500dda6392410446",
+      "archives": [
+        {
+          "name": "wayland-protocols_1.47-1.dsc",
+          "sha256": "3759c9f6c15baf241a2fc4457cbd1f710d12f139564d2d3393bb4db2eb3764cb",
+          "size": 2466
+        },
+        {
+          "name": "wayland-protocols_1.47.orig.tar.xz",
+          "sha256": "5fd4349bcbc9bab9a46f8cf77d1f434296a7a052c87440a094f63fcf62a58e20",
+          "size": 136148
+        },
+        {
+          "name": "wayland-protocols_1.47.orig.tar.xz.asc",
+          "sha256": "a45ee1ca389f1f97b0b3e14f4d38416590199e1de85b9c17468f9e1c97e719c7",
+          "size": 833
+        },
+        {
+          "name": "wayland-protocols_1.47-1.debian.tar.xz",
+          "sha256": "55cafaaea6a06d6c3d136a75a8bb55d399399e84e06a366cbc2ce131b58dfcb4",
+          "size": 9592
+        }
+      ]
+    }
+  ],
+  "archive_path": ".artifacts/providers/source-review-20261005/complete-reviewed-inputs.zip",
+  "archive_sha256": "5a2458c7170831e679c0869b93b707074716dd9f8a2a94d7f735e8d41a63bebe",
+  "archive_size_bytes": 69614469,
+  "requires_github_for_restore": false,
+  "off_host_backup_verified": false
+}

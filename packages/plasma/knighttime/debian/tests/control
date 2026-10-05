@@ -1,0 +1,7 @@
+Tests: ubuntu-abi-client
+Depends: @, python3, binutils, apt, dbus-daemon
+Restrictions: needs-root
+
+Tests: consumer
+Depends: @, build-essential, cmake, dbus-daemon
+Restrictions: needs-root

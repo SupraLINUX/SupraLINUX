@@ -3,7 +3,7 @@
   "role": "reviewed-plasma-package-build",
   "state": "execution-authorized",
   "authorized_nodes": [
-    "knighttime"
+    "layer-shell-qt"
   ],
   "package_execution_authorized": true,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
@@ -918,7 +918,7 @@
       }
     },
     "layer-shell-qt": {
-      "state": "PASS",
+      "state": "build-pending",
       "source_package": "layer-shell-qt",
       "version": "6.7.5-0supralinux1",
       "upstream_version": "6.7.5",
@@ -977,29 +977,7 @@
           "resolute-security"
         ]
       },
-      "attempts": [
-        {
-          "attempt": 1,
-          "state": "PASS",
-          "sbuild_result": "PASS",
-          "lintian_result": "PASS",
-          "autopkgtest_result": "PASS",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37297325668,
-          "workflow_job_id": 111721534378,
-          "source_commit": "94df2c430539bcddfb2891ee9a14d0e384f71682",
-          "artifact_id": 11340127872,
-          "artifact_sha256": "d77e9c0f99362781a9d29593bccc33d3ec3e12e89f514db0210fec0af1197ae1",
-          "result_path": "manifests/evidence/plasma/layer-shell-qt-attempt1/result.json",
-          "result_sha256": "ddfdce2f69be3095343f6ef144b7626a03f84a29cb97b57cbf3e714e87007027",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t103133z-2976844",
-          "host_evidence_manifest_sha256": "a7ae6bd9138954ae11527162bffcfdb76f7222edf4304052edec1e73cdac4118",
-          "rootfs_admission_path": "manifests/evidence/plasma/layer-shell-qt-attempt1/rootfs-admission.json",
-          "rootfs_admission_sha256": "db178076fe6b73780111bc6f9a5a202da58671ebd79021c9af70377003e5d78f",
-          "baseline_preflight_path": "manifests/evidence/plasma/layer-shell-qt-attempt1/ubuntu-baseline-preflight.json",
-          "baseline_preflight_sha256": "bbc7dd2da9e5ed1f5fb2447fc95a28fc244402b11404895f135136aeae4068f0"
-        }
-      ],
+      "attempts": [],
       "baseline_setup_script": "tests/baseline-setup",
       "required_executable_files": [
         "rules",
@@ -1014,282 +992,7 @@
         "test_policy": "No automated upstream suite; upstream test is a graphical example. All 27 LayerShell methods/signals used by the client were reviewed against the hash-verified Ubuntu 6.6.4 SDK. Test unchanged Ubuntu binary after complete four-binary upgrade, public window properties/signals, actual Qt shell plugin load, QML attached-property behavior without compositor, SONAME/dependencies and rebuilt client. Real compilation/runtime remain KVM execution gates.",
         "activation_policy": "Library/plugin/QML package gate does not certify real compositor surfaces; full Plasma Wayland integration remains a later gate."
       },
-      "baseline_preflight_required": true,
-      "evidence": {
-        "workflow_run_id": 37297325668,
-        "workflow_job_id": 111721534378,
-        "source_commit": "94df2c430539bcddfb2891ee9a14d0e384f71682",
-        "artifact_id": 11340127872,
-        "artifact_sha256": "d77e9c0f99362781a9d29593bccc33d3ec3e12e89f514db0210fec0af1197ae1",
-        "result_path": "manifests/evidence/plasma/layer-shell-qt-attempt1/result.json",
-        "result_sha256": "ddfdce2f69be3095343f6ef144b7626a03f84a29cb97b57cbf3e714e87007027",
-        "contract_path": "manifests/evidence/plasma/layer-shell-qt-attempt1/build-contract.json",
-        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t103133z-2976844",
-        "host_evidence_manifest_sha256": "a7ae6bd9138954ae11527162bffcfdb76f7222edf4304052edec1e73cdac4118",
-        "local_retention": {
-          "archive_root": ".artifacts/plasma-6.7.5/layer-shell-qt-attempt1",
-          "archive_index_sha256": "9df48b678b90a9fd0ed70d14b524260b725c800f7360592d38e5d32532d3f23b",
-          "plan_path": "manifests/evidence/plasma/layer-shell-qt-artifact-plan.json",
-          "plan_sha256": "daa20d51d8268d989e01d3924d98036cf3f41cd9bffddeaefe58b7ffb7e5c9e1",
-          "source_complete": true,
-          "changes_complete": true,
-          "buildinfo_verified": true,
-          "artifact_zip_sha256_verified": true,
-          "offline_restore_verified": true,
-          "requires_github_for_restore": false,
-          "off_host_backup_verified": false,
-          "unique_binary_package_count": 7,
-          "binary_payload_file_count": 7,
-          "payload_prefix": "packages/"
-        },
-        "cache_probe_result_path": "manifests/evidence/plasma/layer-shell-qt-attempt1/cache-probe-result.json",
-        "cache_probe_result_sha256": "6f7e5865703570b1575c929f582ac7f0459bfe881712ef16aa9968e303cc25b3",
-        "rootfs_admission_path": "manifests/evidence/plasma/layer-shell-qt-attempt1/rootfs-admission.json",
-        "rootfs_admission_sha256": "db178076fe6b73780111bc6f9a5a202da58671ebd79021c9af70377003e5d78f",
-        "baseline_preflight_path": "manifests/evidence/plasma/layer-shell-qt-attempt1/ubuntu-baseline-preflight.json",
-        "baseline_preflight_sha256": "bbc7dd2da9e5ed1f5fb2447fc95a28fc244402b11404895f135136aeae4068f0"
-      }
-    },
-    "knighttime": {
-      "state": "build-pending",
-      "source_package": "knighttime",
-      "version": "6.7.5-0supralinux1",
-      "upstream_version": "6.7.5",
-      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/knighttime-6.7.5.tar.xz",
-      "upstream_sha256": "5cb23e736e4be4952e63c855cfb45850e1085d650e67b7cae3cbf9721921cb9f",
-      "signature_sha256": "712206eeb3688a5b71ffc037aa8865cadb8dbc1cca241b60d9f38586eb046c6e",
-      "packaging_path": "packages/plasma/knighttime/debian",
-      "packaging_review": "PASS",
-      "packaging_reference_version": "6.6.5-0ubuntu0.1",
-      "packaging_reference_sha256": "9ac90418837f977258997313c4e21e17337ba27675868b87874bc1aea2849d8a",
-      "packaging_sha256": {
-        "changelog": "958002d60c168a9e54407ed7631650dd1b797c21dc0f22ffa52760aac004726d",
-        "control": "c4f6cc3150ff370bc2fb264d80452a605df492c5e52404ff8582bd3bcb9fb9bc",
-        "copyright": "2e4292089642c282a2c658812f02f10f2ce091e587b203b2311b1c4c35c80785",
-        "knighttime-dev.install": "cd050f56873ef11bd726a448ddee7efc8078020c88dbacc3c4cf1207e6ab832d",
-        "knighttime.install": "a6f2cb04e064dd7172e2f1fa7c8313a745cbab216395883943961a821f54afd4",
-        "libknighttime0.install": "0f10bee6cb9399b309be54fc78515e43c0ce9dad3edf118140cd43bbe194d331",
-        "libknighttime0.symbols": "dc861ddde851bdcd62f601b6e25d3abff41003cdec772049974853d6c833fb84",
-        "rules": "a0f242fcf9d8667d44970b85645a13f8f0b64563489df9aca3edc666096dd20c",
-        "salsa-ci.yml": "32997347e7094680bbc5a1dec4ec4f04424b79bcf4ccbb6bb318f0b601e78e3f",
-        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
-        "tests/baseline-setup": "b832eb1e02c33d28b5c4a10af9265cd3ff2a5fcc03979cc8eca1b1cdc0a7d7e7",
-        "tests/consumer": "4d88941e9b9a62dc2edeb1d03f1c62b0381bd2650f851acfb30e713fa6b21746",
-        "tests/control": "87056ce81ced12c252c1fa5cc6bb87cd9c57fc46f3849503e7cc3471df07fbc1",
-        "tests/ubuntu-abi-client": "a21c20e372ccbe8d8df7f0f18f5256a759060635adda8364f3ce2d73fdb6d686",
-        "upstream/metadata": "f59a5a56c5ebbe702583c2f11753e55704def29a730938dc7bb42c24817b7970",
-        "upstream/signing-key.asc": "ebab3869b4186628f1cb668c3e8060cc90c8ba0fc4c89d7ba79fdc6c15b1c9fd",
-        "watch": "12d663674732e6efbfb098cea45d288826424987cd82973c8f800577c252ca29"
-      },
-      "binary_packages": {
-        "knighttime": "amd64",
-        "knighttime-dev": "amd64",
-        "libknighttime0": "amd64"
-      },
-      "ubuntu_baseline_package": "knighttime-dev",
-      "frameworks_predecessors": {
-        "extra-cmake-modules": {
-          "source_package": "kf6-extra-cmake-modules",
-          "version": "6.30.0-0supralinux3",
-          "binaries": [
-            {
-              "package": "extra-cmake-modules",
-              "architecture": "all",
-              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
-            }
-          ]
-        },
-        "kconfig": {
-          "source_package": "kf6-kconfig",
-          "version": "6.30.0-0supralinux4",
-          "binaries": [
-            {
-              "package": "libkf6config-bin",
-              "architecture": "amd64",
-              "sha256": "a5a2bfe058aaffd899a3c704fea9794a4c1e86daa2a75695b9a1847b348f3de9"
-            },
-            {
-              "package": "libkf6config-data",
-              "architecture": "all",
-              "sha256": "fae22d6df5777929f730211047c0fbd47ca5e39ece62398782ddcd32e6e69e60"
-            },
-            {
-              "package": "libkf6config-dev",
-              "architecture": "amd64",
-              "sha256": "71940050496c4baca03102dd1d131dbcd675c7d2e9ee60e887dfc548555422f9"
-            },
-            {
-              "package": "libkf6config-dev-bin",
-              "architecture": "amd64",
-              "sha256": "1bb3c373b3fdd212de33c3fd4a1874e75c86684366c74f6bf7b105454f568286"
-            },
-            {
-              "package": "libkf6configcore6",
-              "architecture": "amd64",
-              "sha256": "998262610e611e8cebe8630dbe3d13de4daa059ead9c9924287b2bfe994c4b33"
-            },
-            {
-              "package": "libkf6configgui6",
-              "architecture": "amd64",
-              "sha256": "2ed506a790a662b0681a040cd10ae39177e5acbe6ada849947adfe387c390729"
-            },
-            {
-              "package": "libkf6configqml6",
-              "architecture": "amd64",
-              "sha256": "5d951cf7b3498f02197c5c539d665439b7f9a5d64813c3faf47325afb6be0b24"
-            },
-            {
-              "package": "qml6-module-org-kde-config",
-              "architecture": "amd64",
-              "sha256": "b514993f60fe1f55ac7803ceab42ba0ef8a89dc58ab5d38463bfb63c9601bfd6"
-            }
-          ]
-        },
-        "kcoreaddons": {
-          "source_package": "kf6-kcoreaddons",
-          "version": "6.30.0-0supralinux4",
-          "binaries": [
-            {
-              "package": "libkf6coreaddons-data",
-              "architecture": "all",
-              "sha256": "f05f55e3c6486af9d3ff48aa38215784bbb347aae1cd5fb760f5513760364908"
-            },
-            {
-              "package": "libkf6coreaddons-dev",
-              "architecture": "amd64",
-              "sha256": "9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636"
-            },
-            {
-              "package": "libkf6coreaddons6",
-              "architecture": "amd64",
-              "sha256": "015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb"
-            },
-            {
-              "package": "qml6-module-org-kde-coreaddons",
-              "architecture": "amd64",
-              "sha256": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
-            }
-          ]
-        },
-        "kdbusaddons": {
-          "source_package": "kf6-kdbusaddons",
-          "version": "6.30.0-0supralinux3",
-          "binaries": [
-            {
-              "package": "libkf6dbusaddons-data",
-              "architecture": "all",
-              "sha256": "279d4f563b0b9ee509d7aac09974c5a870973bc43808987add15ada15e4d1413"
-            },
-            {
-              "package": "libkf6dbusaddons-dev",
-              "architecture": "amd64",
-              "sha256": "1d2c9c54b56a9db028b513b66ff912d679c4762aa1003fa4fc89513c9267c91f"
-            },
-            {
-              "package": "libkf6dbusaddons6",
-              "architecture": "amd64",
-              "sha256": "c66f0b0fb84bf4f20c39a9b2fcf9aaae09c30dae31a3cfa54b48702b648f7a12"
-            }
-          ]
-        },
-        "kholidays": {
-          "source_package": "kf6-kholidays",
-          "version": "6.30.0-0supralinux4",
-          "binaries": [
-            {
-              "package": "libkf6holidays-data",
-              "architecture": "all",
-              "sha256": "18969b5b6d8c67edc11b318490319467554a5282ed1bbbfbb575288fbe11b86f"
-            },
-            {
-              "package": "libkf6holidays-dev",
-              "architecture": "amd64",
-              "sha256": "ddd86750ccd60d6cb44b2b2178137efa1a1a29cfab06f0d0a76fdc5c4adce2ca"
-            },
-            {
-              "package": "libkf6holidays6",
-              "architecture": "amd64",
-              "sha256": "0f292936c6b9c64c10ef60eb2f5f52f01bf3188bc4400389492891fb6479b124"
-            },
-            {
-              "package": "qml6-module-org-kde-kholidays",
-              "architecture": "amd64",
-              "sha256": "17180b8ec90f1515c7920b7a5c47069cfd2bacbc8db60e40899c7bbb8edfcb42"
-            }
-          ]
-        },
-        "ki18n": {
-          "source_package": "kf6-ki18n",
-          "version": "6.30.0-0supralinux1",
-          "binaries": [
-            {
-              "package": "libkf6i18n-data",
-              "architecture": "all",
-              "sha256": "3df2300d5aca640c8968859367ac3cd606a31a87e875ca207a71eeda6d03f45a"
-            },
-            {
-              "package": "libkf6i18n-dev",
-              "architecture": "amd64",
-              "sha256": "a9485f9fdb874cc6a61064a824d66567306122c39677ccf92f8adb3b0db14870"
-            },
-            {
-              "package": "libkf6i18n6",
-              "architecture": "amd64",
-              "sha256": "fa60bd16ffb35ae90eb1ab324386961d973a9b0dd31a4947351d3afc652b6e58"
-            },
-            {
-              "package": "libkf6i18nlocaledata6",
-              "architecture": "amd64",
-              "sha256": "19a6b680b3f85fe04901d53fa6193dd773d72fc02c9337387776ec779f5c285a"
-            },
-            {
-              "package": "libkf6i18nqml6",
-              "architecture": "amd64",
-              "sha256": "0297393117c5b4b0fd284d32aa9040c5afbe91aa0da73b2f83d1b181a812f91c"
-            },
-            {
-              "package": "qml6-module-org-kde-i18n-localedata",
-              "architecture": "amd64",
-              "sha256": "147a716c4794a50a63160928228afd25c406a02af2b3d00637bed289027f6001"
-            },
-            {
-              "package": "qml6-module-org-kde-ki18n",
-              "architecture": "amd64",
-              "sha256": "07960032b6582476f0844b72d4f74884240c592e55eb0613390f0191dbd98299"
-            }
-          ]
-        }
-      },
-      "sbuild_rootfs_policy": {
-        "kind": "immutable-bare-milestone",
-        "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
-        "suites": [
-          "resolute",
-          "resolute-updates",
-          "resolute-security"
-        ]
-      },
-      "attempts": [],
-      "upstream_tests": [
-        "transition-test",
-        "cycle-test",
-        "schedule-test"
-      ],
-      "baseline_setup_script": "tests/baseline-setup",
-      "baseline_preflight_required": true,
-      "required_executable_files": [
-        "rules",
-        "tests/baseline-setup",
-        "tests/ubuntu-abi-client",
-        "tests/consumer"
-      ],
-      "review": {
-        "upstream_changes": "Signed official stable 6.7.5; preserve public KNightTime API, SONAME 0 and Ubuntu symbol guards. Source requires C++23, Ubuntu Qt >=6.10, Frameworks >=6.26.",
-        "packaging_changes": "Preserve three Ubuntu binaries, multi-arch/installed paths and license declarations. Exact retained Frameworks inputs, tests enabled. Remove unused qt6-base-private-dev Build-Depends after signed source review found no Qt private header or target usage; clean build remains the gate.",
-        "build_dependencies": "Exact ECM, KConfig, KCoreAddons, KDBusAddons, KHolidays and KI18n development dependencies plus their required binary dependency closure (27 hashes). These eligible retained artifacts preserve their original Frameworks evidence scope; this does not certify the entire Frameworks campaign. Ubuntu Qt/Positioning/compiler providers unchanged.",
-        "test_policy": "Run all three upstream CTest suites. Before candidate build, compile and execute an Ubuntu client covering transitions/progress, timed and solar/polar schedules, cycle extrapolation, state serialization and public schedule provider. A real private D-Bus daemon must refresh the client with migrated custom schedules. Test the unchanged binary after complete three-package upgrade and recompile/retest a consumer. Checks remain active in Release builds.",
-        "activation_policy": "Private disposable D-Bus session and config/state directories; configured timed schedule avoids geolocation. Full desktop night-color/compositor integration is a later gate."
-      }
+      "baseline_preflight_required": true
     }
   },
   "retained_attempt_archives": [
@@ -1379,12 +1082,6 @@
       "attempt": 3,
       "archive_root": ".artifacts/plasma-6.7.5/breeze-plymouth-attempt3",
       "archive_index_sha256": "c87ce9ebd860f36539f9b4a1fd568f3c7baf55672108d95a45c2778e608075a3"
-    },
-    {
-      "node": "layer-shell-qt",
-      "attempt": 1,
-      "archive_root": ".artifacts/plasma-6.7.5/layer-shell-qt-attempt1",
-      "archive_index_sha256": "9df48b678b90a9fd0ed70d14b524260b725c800f7360592d38e5d32532d3f23b"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",

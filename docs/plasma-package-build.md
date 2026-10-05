@@ -298,3 +298,38 @@ The original Actions ZIP SHA-256 is
 source, binary/debug packages, buildinfo, changes, clients and logs are retained
 with verified empty-cache offline restoration. Full initramfs/boot remains an ISO
 integration gate. The earlier infrastructure failures retain their original scope.
+
+Wayland Protocols 1.48 source authentication is now independently retained:
+release SHA-256 matches the official announcement and the detached signature
+passes with the exact primary fingerprint authenticated in Ubuntu packaging.
+Stale Ubuntu/keyserver copies reported EXPKEYSIG; a maintained public copy of the
+same key supplies the valid owner-signed expiry extension. All original stale-key
+results remain retained alongside the final valid signature. Authenticated Ubuntu
+references follow InRelease -> full Sources SHA-256 -> source archive hashes and
+sizes, including the Qt/Wayland sources used for the wire review. The local XML
+comparison preserves existing installed opcodes, arguments and enum values across
+57 baseline definitions; the candidate adds one definition. Authoritative provider
+packaging and real compositor behavior are still pending. The complete input
+archive is bound under `provider-source-input-retention-20261005.json`.
+
+LayerShellQt 6.7.5-0supralinux1 Attempt 1 closed PASS on source
+`94df2c430539bcddfb2891ee9a14d0e384f71682`, run 37297325668/job 111721534378.
+The reviewed Ubuntu client preflight passed before sbuild. Clean build/lintian,
+unchanged Ubuntu client after the complete four-binary upgrade, public properties
+and signals, actual Qt shell plugin load, QML attached properties and rebuilt
+consumer passed. Sources, binary/debug packages, buildinfo, changes and client
+artifacts restore offline from the verified original ZIP
+`d77e9c0f99362781a9d29593bccc33d3ec3e12e89f514db0210fec0af1197ae1`.
+The new preflight integration consumed no extra package Attempt. Real Wayland
+surfaces remain a compositor integration gate.
+
+KNightTime is individually reviewed for the next package gate. It preserves
+Ubuntu's three binaries, SONAME 0, symbol guards and installed service paths.
+Exact retained ECM/KConfig/KCoreAddons/KDBusAddons/KHolidays/KI18n and their required
+27-binary dependency closure are frozen by version and digest. Ubuntu Qt remains
+the provider. The package enables three upstream CTest suites; its pre-upgrade
+Ubuntu client must compile and check transitions, solar/timed schedules, state
+round-trip and an actual private D-Bus daemon delivering migrated custom times.
+The same binary and a rebuilt consumer then run after the complete candidate
+upgrade. The unused Qt base private SDK dependency was removed after signed
+source review; clean sbuild is the verification gate for that simplification.

@@ -1,0 +1,5 @@
+usr/include/KNightTime/
+usr/lib/*/cmake/KNightTime/
+usr/lib/*/libKNightTime.so
+usr/share/dbus-1/interfaces/org.kde.NightTime.xml
+usr/share/qlogging-categories6/knighttime.categories

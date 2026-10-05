@@ -144,6 +144,32 @@ for name, provider in supplementary["nodes"].items():
     ubuntu = provider["ubuntu_provider"]
     req(hashlib.sha256((ROOT / ubuntu["policy_path"]).read_bytes()).hexdigest() == ubuntu["policy_sha256"],
         f"{name}: Ubuntu availability evidence changed")
+    source_review = provider.get("source_review")
+    if source_review:
+        path = ROOT / source_review["path"]
+        req(hashlib.sha256(path.read_bytes()).hexdigest() == source_review["sha256"], f"{name}: source review changed")
+        proof = json.loads(path.read_text())
+        candidate = provider["candidate_provider"]
+        req(proof["state"] == source_review["state"] == "PASS" and proof["scope"] == source_review["scope"],
+            f"{name}: source authentication scope")
+        req(proof["consumes_package_attempt"] is proof["package_execution_started"] is False,
+            f"{name}: source review Attempt boundary")
+        req(proof["upstream_sha256"] == candidate["upstream_sha256"] and
+            proof["signature_sha256"] == candidate["signature_sha256"], f"{name}: authenticated source inputs")
+        req(proof["primary_fingerprint"] == candidate["signing_primary_fingerprint"] and
+            proof["signature_verification"] == candidate["signature_verification"] == "PASS", f"{name}: signature authority")
+        for filename, digest in proof["files_sha256"].items():
+            file = path.parent / filename
+            req(file.resolve().is_relative_to(path.parent.resolve()), f"{name}: unsafe source evidence path")
+            req(hashlib.sha256(file.read_bytes()).hexdigest() == digest, f"{name}: source evidence changed: {filename}")
+        status = (path.parent / "signature-status-arch-reference.log").read_text()
+        req(f'[GNUPG:] VALIDSIG {proof["primary_fingerprint"]} ' in status and '[GNUPG:] GOODSIG ' in status and
+            not any(failure in status for failure in ['EXPKEYSIG', 'REVKEYSIG', 'EXPSIG', 'BADSIG', 'ERRSIG']),
+            f"{name}: current release signature result")
+        schema = json.loads((path.parent / "schema-review.json").read_text())
+        req(schema["state"] == "PASS" and not schema["incompatible"], f"{name}: installed XML structural review")
+        req(hashlib.sha256((ROOT / proof["retention_path"]).read_bytes()).hexdigest() == proof["retention_sha256"],
+            f"{name}: source retention evidence changed")
     review = provider.get("compatibility_review", {}).get("local_wire_review")
     if review:
         path = ROOT / review["path"]
@@ -161,6 +187,13 @@ for name, provider in supplementary["nodes"].items():
             f"{name}: negotiated wire versions")
         req(result["baseline_xml_sha256"] == proof["baseline_xml_sha256"] and
             result["candidate_xml_sha256"] == proof["candidate_xml_sha256"], f"{name}: wire XML inputs")
+if supplementary.get("source_review_retention"):
+    retained = supplementary["source_review_retention"]
+    raw = (ROOT / retained["path"]).read_bytes()
+    req(hashlib.sha256(raw).hexdigest() == retained["sha256"], "Supplementary source retention changed")
+    index = json.loads(raw)
+    req(index["state"] == "PASS" and index["requires_github_for_restore"] is False,
+        "Supplementary source independent retention")
 
 req(resolution_preflight.get("state") == "PASS", "Provider resolution preflight PASS")
 req(resolution_preflight.get("execution_authorized") is False, "Closed provider resolution preflight authorization")
