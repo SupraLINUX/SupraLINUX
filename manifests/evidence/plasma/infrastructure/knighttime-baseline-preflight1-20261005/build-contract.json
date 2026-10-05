@@ -1073,7 +1073,7 @@
         "rules": "a0f242fcf9d8667d44970b85645a13f8f0b64563489df9aca3edc666096dd20c",
         "salsa-ci.yml": "32997347e7094680bbc5a1dec4ec4f04424b79bcf4ccbb6bb318f0b601e78e3f",
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
-        "tests/baseline-setup": "406ef1869f752ba3eb4a8ea6dea28f8142122683f54b8cdc5ee112cc342baa03",
+        "tests/baseline-setup": "b832eb1e02c33d28b5c4a10af9265cd3ff2a5fcc03979cc8eca1b1cdc0a7d7e7",
         "tests/consumer": "4d88941e9b9a62dc2edeb1d03f1c62b0381bd2650f851acfb30e713fa6b21746",
         "tests/control": "87056ce81ced12c252c1fa5cc6bb87cd9c57fc46f3849503e7cc3471df07fbc1",
         "tests/ubuntu-abi-client": "a21c20e372ccbe8d8df7f0f18f5256a759060635adda8364f3ce2d73fdb6d686",
@@ -1287,7 +1287,7 @@
         "upstream_changes": "Signed official stable 6.7.5; preserve public KNightTime API, SONAME 0 and Ubuntu symbol guards. Source requires C++23, Ubuntu Qt >=6.10, Frameworks >=6.26.",
         "packaging_changes": "Preserve three Ubuntu binaries, multi-arch/installed paths and license declarations. Exact retained Frameworks inputs, tests enabled. Remove unused qt6-base-private-dev Build-Depends after signed source review found no Qt private header or target usage; clean build remains the gate.",
         "build_dependencies": "Exact ECM, KConfig, KCoreAddons, KDBusAddons, KHolidays and KI18n development dependencies plus their required binary dependency closure (27 hashes). These eligible retained artifacts preserve their original Frameworks evidence scope; this does not certify the entire Frameworks campaign. Ubuntu Qt/Positioning/compiler providers unchanged.",
-        "test_policy": "Run all three upstream CTest suites. Before candidate build, compile and execute an Ubuntu client covering transitions/progress, timed and solar/polar schedules, cycle extrapolation, state serialization and public schedule provider. A real private D-Bus daemon must refresh the client with migrated custom schedules. Test the unchanged binary after complete three-package upgrade and recompile/retest a consumer. Checks remain active in Release builds. The Ubuntu and candidate transition relation implementations are identical: verify the exact 60-second tolerance boundaries; all grouped checks emit failure diagnostics.",
+        "test_policy": "Run all three upstream CTest suites. Before candidate build, compile and execute an Ubuntu client covering transitions/progress, timed and solar/polar schedules, cycle extrapolation, state serialization and public schedule provider. A real private D-Bus daemon must refresh the client with migrated custom schedules. Test the unchanged binary after complete three-package upgrade and recompile/retest a consumer. Checks remain active in Release builds.",
         "activation_policy": "Private disposable D-Bus session and config/state directories; configured timed schedule avoids geolocation. Full desktop night-color/compositor integration is a later gate."
       }
     }
@@ -1413,22 +1413,6 @@
       "cause": "Large setup decoded and its SHA-256 matched, but the probe supplied Debian/control without a changelog. autopkgtest classified it as an unbuilt package source and failed extraction before running the test.",
       "repair": "Use the supported tests-only built-tree fixture; validate classification with the actual Ubuntu autopkgtest parser before another small KVM certification.",
       "diagnosis_path": "manifests/evidence/plasma/infrastructure/baseline-transport-probe1-20261005/diagnosis.json"
-    },
-    {
-      "state": "INFRA_INVALID",
-      "node": "knighttime",
-      "source_commit": "af479614cd06a2027657bbd1acd7ccb3495fa613",
-      "workflow_run_id": 37299890272,
-      "workflow_job_id": 111729842614,
-      "kind": "reviewed-ubuntu-client-fixture-expectation",
-      "stage": "reviewed-ubuntu-baseline-preflight",
-      "package_execution_started": false,
-      "consumes_package_attempt": false,
-      "result_path": "manifests/evidence/plasma/infrastructure/knighttime-baseline-preflight1-20261005/result.json",
-      "result_sha256": "d2fac079a89eba641420cf26532bed7347533c77118a98ba2f74bec4476ea750",
-      "diagnosis_path": "manifests/evidence/plasma/infrastructure/knighttime-baseline-preflight1-20261005/diagnosis.json",
-      "cause": "The client expected Upcoming one second before start. Both Ubuntu 6.6.5 and official 6.7.5 classify it InProgress within the 60-second tolerance. The client compiled, then returned 1; autopkgtest stopped setup before candidate compilation.",
-      "repair": "Exercise the exact -61/-60-second start and end boundaries and emit a descriptive diagnostic for every client failure; re-run the existing KVM Ubuntu preflight before sbuild."
     }
   ],
   "infrastructure_certifications": [

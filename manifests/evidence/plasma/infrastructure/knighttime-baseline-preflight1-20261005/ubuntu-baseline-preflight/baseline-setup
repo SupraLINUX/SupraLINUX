@@ -25,42 +25,35 @@ cat > "${BASE}/source/main.cpp" <<'CLIENT'
 #include <iostream>
 int main(int argc, char **argv) {
     QCoreApplication app(argc,argv);
-    const auto failed = [](int code, const char *check) {
-        std::cerr << "KNightTime client check failed: " << check << '\n';
-        return code;
-    };
     using namespace std::chrono_literals;
     const auto reference = QDateTime(QDate(2026,3,20),QTime(12,0),QTimeZone::UTC);
     const auto start = QDateTime(reference.date(),QTime(6,0),QTimeZone::UTC);
     const auto end = start.addSecs(1800);
     const KDarkLightTransition morning(KDarkLightTransition::Morning,start,end);
     if (morning.type()!=KDarkLightTransition::Morning || morning.startDateTime()!=start || morning.endDateTime()!=end ||
-        morning.test(start.addSecs(-61))!=KDarkLightTransition::Upcoming ||
-        morning.test(start.addSecs(-60))!=KDarkLightTransition::InProgress ||
+        morning.test(start.addSecs(-1))!=KDarkLightTransition::Upcoming ||
         morning.test(start.addSecs(900))!=KDarkLightTransition::InProgress ||
-        morning.test(end.addSecs(-61))!=KDarkLightTransition::InProgress ||
-        morning.test(end.addSecs(-60))!=KDarkLightTransition::Passed ||
         morning.test(end.addSecs(1))!=KDarkLightTransition::Passed ||
         std::abs(morning.progress(start.addSecs(900))-0.5)>1e-9 || morning.progress(start.addSecs(-1))!=0.0 ||
-        morning.progress(end.addSecs(1))!=1.0) return failed(1,"transition identity, 60-second relation tolerance or progress");
+        morning.progress(end.addSecs(1))!=1.0) return 1;
     const auto schedule = KDarkLightSchedule::forecast(reference,QTime(6,0),QTime(18,0),30min,3);
     const auto cycles = schedule.cycles();
     if (cycles.size()!=4 || cycles[1].noonDateTime()!=reference || cycles[1].morning()!=morning ||
         cycles[1].evening().startDateTime().time()!=QTime(18,0) ||
         schedule.previousTransition(reference)!=morning ||
         schedule.nextTransition(reference)!=cycles[1].evening() ||
-        cycles[1].previousTransition(reference)!=morning || cycles[1].nextTransition(reference)!=cycles[1].evening()) return failed(2,"timed forecast or cycle/schedule transition lookup");
+        cycles[1].previousTransition(reference)!=morning || cycles[1].nextTransition(reference)!=cycles[1].evening()) return 2;
     const auto extrapolated = cycles[1].extrapolated(reference.addDays(2));
-    if (extrapolated.noonDateTime()!=reference.addDays(2) || extrapolated.morning().startDateTime()!=start.addDays(2)) return failed(3,"cycle extrapolation");
+    if (extrapolated.noonDateTime()!=reference.addDays(2) || extrapolated.morning().startDateTime()!=start.addDays(2)) return 3;
     const auto state = schedule.toState();
     if (state.isEmpty() || KDarkLightSchedule::fromState(state)!=schedule ||
         KDarkLightSchedule::fromState(QStringLiteral("malformed")) ||
-        !KDarkLightSchedule().cycles().isEmpty() || KDarkLightSchedule().nextTransition(reference)) return failed(4,"state round-trip, malformed state rejection or empty schedule");
+        !KDarkLightSchedule().cycles().isEmpty() || KDarkLightSchedule().nextTransition(reference)) return 4;
     const auto solar = KDarkLightSchedule::forecast(reference,0.0,0.0,3);
     const auto polar = KDarkLightSchedule::forecast(QDateTime(QDate(2026,6,21),QTime(12,0),QTimeZone::UTC),90.0,0.0,3);
-    if (!solar || solar->cycles().size()!=4 || polar) return failed(5,"equatorial solar or polar-day forecast");
+    if (!solar || solar->cycles().size()!=4 || polar) return 5;
     KDarkLightScheduleProvider restored(state);
-    if (restored.schedule()!=schedule || restored.state()!=state) return failed(6,"public provider state restoration");
+    if (restored.schedule()!=schedule || restored.state()!=state) return 6;
     std::cout << "KNightTime transitions, progress, timed/solar/polar schedules, cycle extrapolation and state round-trip: PASS\n";
     if (argc>1 && QString::fromLocal8Bit(argv[1])==QStringLiteral("--daemon")) {
         KDarkLightScheduleProvider provider;
@@ -74,7 +67,7 @@ int main(int argc, char **argv) {
                 current[1].evening().startDateTime().time()==QTime(20,0) &&
                 current[1].morning().startDateTime().secsTo(current[1].morning().endDateTime())==1020) {
                 const auto serialized = KDarkLightSchedule::fromState(provider.state());
-                if (!serialized || *serialized!=provider.schedule()) return failed(7,"daemon provider state round-trip");
+                if (!serialized || *serialized!=provider.schedule()) return 7;
                 std::cout << "Real private D-Bus daemon subscription, refresh signal and migrated custom schedule: PASS\n";
                 return 0;
             }

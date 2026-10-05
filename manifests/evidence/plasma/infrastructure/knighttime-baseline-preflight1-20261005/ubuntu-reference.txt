@@ -1,0 +1,35 @@
+Package: knighttime
+Binary: knighttime, knighttime-dev, libknighttime0
+Version: 6.6.5-0ubuntu0.1
+Priority: optional
+Section: universe/misc
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Build-Depends: cmake (>= 3.16~), debhelper-compat (= 13), dh-sequence-kf6, dh-sequence-pkgkde-symbolshelper, extra-cmake-modules (>= 6.22.0~), libkf6config-dev (>= 6.22.0~), libkf6coreaddons-dev (>= 6.22.0~), libkf6dbusaddons-dev (>= 6.22.0~), libkf6holidays-dev (>= 6.22.0~), libkf6i18n-dev (>= 6.22.0~), pkgconf, qt6-base-dev (>= 6.10.0~), qt6-base-private-dev, qt6-positioning-dev (>= 6.10.0~)
+Architecture: any
+Standards-Version: 4.7.2
+Format: 3.0 (quilt)
+Directory: pool/universe/k/knighttime
+Files:
+ deff92e89fe374886d87c39a3a00aa59 40284 knighttime_6.6.5.orig.tar.xz
+ 76d6111b4f6822651c7f64412e2ed3ab 8564 knighttime_6.6.5-0ubuntu0.1.debian.tar.xz
+ 6577d86b265a5ca8742763ae56ee6811 2604 knighttime_6.6.5-0ubuntu0.1.dsc
+Checksums-Sha1:
+ 9be67dd7e5e9a9c08bce7c30d91a96ad9164b3aa 40284 knighttime_6.6.5.orig.tar.xz
+ 9528419b9f8d7dd7d37a0758e51035745378c238 8564 knighttime_6.6.5-0ubuntu0.1.debian.tar.xz
+ 704e577f319162438275c4bece8fbfd5b83c77d5 2604 knighttime_6.6.5-0ubuntu0.1.dsc
+Checksums-Sha256:
+ 5f26692a864540b993351106f5469fd17939bd55e79f931c8f97395d9c5a809d 40284 knighttime_6.6.5.orig.tar.xz
+ 51f98bbc54842805b3b476a55e58b8dac24cb3f92875cb710b05914fddf9b2f0 8564 knighttime_6.6.5-0ubuntu0.1.debian.tar.xz
+ 70ada1afcde11c9176de504197b9d31f620a86c6290f26902ac68ef0305db20e 2604 knighttime_6.6.5-0ubuntu0.1.dsc
+Checksums-Sha512:
+ 54e64d3aa39b55488018b871fedd3ccf89947bf0308ec5361db09b1f99eb34cecd4d1c776e3e2f09044e4267d9d2edafdfb9137b9e543319c4c1469c7a4c0c7d 40284 knighttime_6.6.5.orig.tar.xz
+ f829d99af3c0b8056338dfd0a4900121fb742d12f398e9f6befa0780bd3c87fe806fff06188e539256ff071de35e28cf61f1d342e669307ffd19ef978f4e9c6d 8564 knighttime_6.6.5-0ubuntu0.1.debian.tar.xz
+ 2fa14e4170741d8c6b06843b86face2e7fc32ff7f3ef25f455d182effd20fd01214e51179903021a3991ebdbf1e23f6e5e27bf5269e407a597580dbc19080de3 2604 knighttime_6.6.5-0ubuntu0.1.dsc
+Homepage: https://invent.kde.org/plasma/knighttime
+Uploaders: Aurélien COUDERC <coucouf@debian.org>,
+Vcs-Browser: https://code.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/knighttime
+Vcs-Git: https://git.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/knighttime
+Package-List: knighttime deb kde optional arch=any
+ knighttime-dev deb libdevel optional arch=any
+ libknighttime0 deb libs optional arch=any
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
