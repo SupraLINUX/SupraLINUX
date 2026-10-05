@@ -51,6 +51,7 @@ def validate():
                 assert certification['state'] == 'PASS' and certification['package_attempt_consumed'] is False
                 assert certification['scope'] == 'reviewed-package-revalidation-preflight'
                 assert certification['node'] == node
+                assert certification['packaging_sha256']==record['packaging_sha256']
                 for file, digest in certification['inputs_sha256'].items():
                     assert hashlib.sha256((ROOT/file).read_bytes()).hexdigest() == digest
             if campaign['execution_mode'] == 'build':

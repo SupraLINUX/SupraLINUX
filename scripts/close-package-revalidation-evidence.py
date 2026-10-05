@@ -91,8 +91,14 @@ def main():
         else:
             number = len(record['attempts'])+1
             label = f'{args.node}-attempt{number}'
-            inspection = retention.inspect(args.zip,{'node':args.node,'package_version':record['version'],
-                                           'artifact_sha256':digest,'payload_prefix':'packages/'},record['source_package'])
+            changes=[name for name in archive.namelist() if name.startswith('packages/') and name.endswith('.changes')]
+            if changes:
+                inspection = retention.inspect(args.zip,{'node':args.node,'package_version':record['version'],
+                                               'artifact_sha256':digest,'payload_prefix':'packages/'},record['source_package'])
+            else:
+                assert raw['state']!='PASS', 'A PASS requires the complete binary closure'
+                inspection={'source_payload_verified':bool(sources),'buildinfo_verified':False,
+                            'changes_payload_complete':False,'binaries':[]}
             for binary in inspection['binaries']:
                 data=archive.read('packages/'+binary['file'])
                 binary.update({'sha256':hashlib.sha256(data).hexdigest(),'size':len(data)})
@@ -109,7 +115,7 @@ def main():
         directory.mkdir(parents=True)
         for name in ['result.json','build-contract.json','signature.log','ubuntu-baseline-preflight/result.json',
                      'cache-probe/result.json','rootfs-admission.json','retained-upgrade-inputs.json',
-                     'upstream-tests.json','autopkgtest/summary','retained-upgrade/summary']:
+                     'upstream-tests.json','autopkgtest/summary','retained-upgrade/summary','infra-interruption.json']:
             if name in archive.namelist():
                 path=directory/name
                 path.parent.mkdir(parents=True,exist_ok=True)
@@ -123,6 +129,8 @@ def main():
     for path,name in [(args.artifact_meta,'artifact-meta.json'),(args.job_json,'workflow-job.json'),
                       (args.host_dir/'host-result.json','host-result.json'),(args.host_dir/'evidence-sha256.txt','host-evidence-sha256.txt')]:
         shutil.copyfile(path,directory/name)
+    if (args.host_dir/'live-memory-adjustment.json').is_file():
+        shutil.copyfile(args.host_dir/'live-memory-adjustment.json',directory/'live-memory-adjustment.json')
     stored = ROOT/'.artifacts/package-revalidation'/label/'sha256'/f'{digest}.zip'
     assert not stored.exists()
     stored.parent.mkdir(parents=True)

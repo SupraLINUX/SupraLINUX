@@ -270,12 +270,6 @@
       "sha256": "fa1d403a3f8c54d32615f2567af073240866b8e352b8d0886ab0943c4f19d217",
       "cause": "The Ubuntu SDK baseline lacked qt6-declarative-dev; Ubuntu libkf6config-dev exports a Qt6Qml CMake dependency without installing its SDK. Candidate package execution did not start.",
       "repair": "Install Qt QML SDK explicitly in the reviewed client fixture, compile it locally without host installation, then repeat the preflight in KVM."
-    },
-    {
-      "path": "manifests/evidence/package-revalidation/kconfig-preflight2/verification.json",
-      "sha256": "68a7e4da844cd06dffa614112e6d91804d795e6c0eb569d1e528452438e8e965",
-      "cause": "After the Ubuntu ABI client and real configuration migration passed, the outer guest autopkgtest transport blocked in kvm_async_pf_task_wait_schedule. The host was under memory pressure; that is an observation, not a proven kernel root cause. Reducing the running outer guest from 12 to 8 GiB did not recover it. Only autopkgtest was interrupted; package execution did not start.",
-      "repair": "Repeat the infrastructure preflight with the outer KVM guest limited to 8192 MiB from boot and preserve the same client, source and packaging inputs. A repeated asynchronous page-fault stall requires diagnosis and a small infrastructure certification before another package attempt."
     }
   ]
 }
