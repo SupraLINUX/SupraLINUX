@@ -16,18 +16,26 @@ effective = importlib.machinery.SourceFileLoader('support_effective_test', str(R
 
 
 class SupportInputs(unittest.TestCase):
+    node = 'kdoctools'
+    expected_binary_count = 6
+    expected_version = '6.30.0-0supralinux1'
+    development_package = 'libkf6doctools-dev'
+
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
         self.registry = json.loads((ROOT/support.REGISTRY).read_text())
-        self.link = self.registry['nodes']['kdoctools']['evidence']
+        for record in self.registry['nodes'].values():
+            path = self.root/record['evidence']['path']
+            shutil.copytree((ROOT/record['evidence']['path']).parent, path.parent)
+            proof = json.loads(path.read_text())
+            history = proof['historical_manifest_path']
+            (self.root/history).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT/history, self.root/history)
+        self.link = self.registry['nodes'][self.node]['evidence']
         self.proof_path = self.root/self.link['path']
-        shutil.copytree((ROOT/self.link['path']).parent, self.proof_path.parent)
         self.proof = json.loads(self.proof_path.read_text())
-        history = self.proof['historical_manifest_path']
-        (self.root/history).parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(ROOT/history, self.root/history)
 
     def reseal(self, file=None):
         if file:
@@ -39,13 +47,13 @@ class SupportInputs(unittest.TestCase):
         return support.verified_nodes(self.root, self.registry)
 
     def test_original_scope_and_binary_identities_preserved(self):
-        node = self.validate()['kdoctools']
+        node = self.validate()[self.node]
         self.assertFalse(node['authoritative'])
-        self.assertEqual(len(node['retained_binaries']), 6)
-        self.assertEqual(node['package_version'], '6.30.0-0supralinux1')
+        self.assertEqual(len(node['retained_binaries']), self.expected_binary_count)
+        self.assertEqual(node['package_version'], self.expected_version)
         before = (ROOT/'manifests/kde-dag.json').read_bytes()
         historical = effective.effective_nodes(json.loads(before), historical=True)
-        self.assertNotIn('kdoctools', historical)
+        self.assertNotIn(self.node, historical)
         self.assertEqual((ROOT/'manifests/kde-dag.json').read_bytes(), before)
 
     def test_changed_evidence_rejected(self):
@@ -80,14 +88,14 @@ class SupportInputs(unittest.TestCase):
                 self.reseal()
 
     def test_reviewed_digest_cannot_be_changed(self):
-        node = self.validate()['kdoctools']
-        binary = next(b for b in node['retained_binaries'] if b['package'] == 'libkf6doctools-dev')
+        node = self.validate()[self.node]
+        binary = next(b for b in node['retained_binaries'] if b['package'] == self.development_package)
         requested = {'source_package': node['source_package'], 'version': node['package_version'],
                      'binaries': [{key: binary[key] for key in ['package', 'architecture', 'sha256']}]}
-        effective.check_requested('kdoctools', requested, node)
+        effective.check_requested(self.node, requested, node)
         requested['binaries'][0]['sha256'] = '0'*64
         with self.assertRaisesRegex(AssertionError, 'digest mismatch'):
-            effective.check_requested('kdoctools', requested, node)
+            effective.check_requested(self.node, requested, node)
 
     def test_archived_logs_cannot_change(self):
         proof = {'archive_files_sha256': {'pipeline.log': hashlib.sha256(b'original log').hexdigest()}}
@@ -101,6 +109,13 @@ class SupportInputs(unittest.TestCase):
                 else:
                     with self.assertRaisesRegex(AssertionError, 'member changed'):
                         support.verify_archive(archive, proof)
+
+
+class BreezeIconsSupportInputs(SupportInputs):
+    node = 'breeze-icons'
+    expected_binary_count = 7
+    expected_version = '4:6.30.0-0supralinux1'
+    development_package = 'libkf6breezeicons-dev'
 
 
 if __name__ == '__main__':

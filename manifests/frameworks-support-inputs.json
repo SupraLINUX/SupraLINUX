@@ -16,6 +16,18 @@
         "path": "manifests/evidence/frameworks-support/kdoctools-retained/verification.json",
         "sha256": "fc022280d576b0e3f2bcb14ba24dc708ee8de74154b3144c7c9970fc38029da5"
       }
+    },
+    "breeze-icons": {
+      "state": "PASS",
+      "downstream_eligible": true,
+      "purpose": "Matched Breeze library and themes required by KIconThemes and Plasma consumers",
+      "depends_on": [
+        "extra-cmake-modules"
+      ],
+      "evidence": {
+        "path": "manifests/evidence/frameworks-support/breeze-icons-retained/verification.json",
+        "sha256": "a41b6a0a5483b648920231a8c71aaee66f2cb85d0f6305192602566b6904741a"
+      }
     }
   }
 }

@@ -1,0 +1,6 @@
+plasma-thunderbolt: lacks-ldconfig-trigger usr/lib/*/libkbolt.so
+plasma-thunderbolt: package-name-doesnt-match-sonames libkbolt
+plasma-thunderbolt: shared-library-lacks-version usr/lib/*/libkbolt.so libkbolt.so
+plasma-thunderbolt: no-symbols-control-file usr/lib/*/libkbolt.so
+# systemsettings5 executable required for the KCM is provided by the Recommends: systemsettings dependency
+plasma-thunderbolt: desktop-command-not-in-package systemsettings [usr/share/applications/kcm_bolt.desktop]

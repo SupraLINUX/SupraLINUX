@@ -15,6 +15,15 @@ Review evidence is small; full unmodified logs remain in the retained archive.
 This restores an eligible build input without claiming new authoritative package
 certification. The final rebuild still has to certify this provider on KVM.
 
+Breeze Icons 4:6.30.0-0supralinux1 also retains its original hosted preflight
+PASS (run 35700002095, job 106656021938), including all four upstream tests.
+The complete archive contains six main packages, one debug package, sources,
+buildinfo, changes and logs. Its digest and every member were checked, and a
+physical restoration into an empty cache succeeded. KIconThemes 6.30 requires
+the matched Breeze library, so new consumers include this separately retained
+input instead of relying on the older Ubuntu provider. The old Frameworks DAG
+and milestone remain unchanged; this admission preserves the hosted scope.
+
 The materializer verifies the complete original archive before extracting only
 the explicitly reviewed binaries. Cache admission still checks the entire old
 milestone pool, then admits separately restored inputs by source, version,
@@ -49,3 +58,13 @@ node state, source/version, upstream digest, complete binary scope and original
 artifact identity. This metadata lookup neither edits the historical DAG nor
 changes the authority or eligibility of its existing evidence. A preflight using
 these nodes also freezes the registry and the selected historical manifests.
+
+KWallet PAM 4:6.7.5-0supralinux4 closed authoritative Attempt 4 PASS on source
+867decfa3e31ebf0938c39115b5c8308c8429e38, run 37376890051/job 111988152121.
+Clean sbuild, lintian, seven real libpam cases with private synthetic credentials,
+the unchanged Ubuntu SDK client after upgrade and the rebuilt consumer passed.
+The complete original archive digest is
+5692be0414a98b1804ad71360e9889147278e4e08f2e5e7d8fa54d02897fc028;
+sources, main/debug packages, buildinfo, changes and logs restore offline.
+The earlier failed Attempts remain immutable. Real wallet, login and Wayland
+session acceptance remain separate integration gates.
