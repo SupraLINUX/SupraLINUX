@@ -2533,7 +2533,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -2564,6 +2564,10 @@
       "sha256": "d7b6d9c45462ac9025d5fb4b22fb8da2088f325883d5958c3ce63bdb40800bf2",
       "applicable": false,
       "inapplicability_reason": "Revision 3 adds the complete Qt6 CMake configuration needed to discover CoreTools, as proved by the real ECM positive and tools-only negative checks; recertify the changed packaging."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kwallet-pam-preflight8/verification.json",
+      "sha256": "767ab3c619e72f5d6bfb2243b17ffcb9c02ceb4e5828b7854e5b226b50f0a23b"
     }
   ],
   "package_input_incidents": [
