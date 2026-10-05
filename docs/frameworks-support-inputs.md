@@ -41,3 +41,11 @@ rebuilt consumer passed. Its original archive SHA-256 is
 bf9747eec1772b04f8cc49a3be0ede217a43ba14369a41161ce86404f9d7ed72.
 The retained source, binary/debug package, buildinfo, changes and test logs restore
 offline. Full session integration remains a separate gate.
+
+Some legacy DAG nodes omit their Debian source package name. The current input
+resolver reads those names from the exact closed PASS manifests pinned in
+`manifests/frameworks-source-identities.json`. It verifies the manifest digest,
+node state, source/version, upstream digest, complete binary scope and original
+artifact identity. This metadata lookup neither edits the historical DAG nor
+changes the authority or eligibility of its existing evidence. A preflight using
+these nodes also freezes the registry and the selected historical manifests.

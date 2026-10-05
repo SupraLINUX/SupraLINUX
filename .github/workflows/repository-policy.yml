@@ -55,6 +55,8 @@ jobs:
         run: python3 scripts/frameworks-support-inputs.py
       - name: Test retained Frameworks support evidence
         run: python3 scripts/test-frameworks-support-inputs.py
+      - name: Test historical Frameworks source identities
+        run: python3 scripts/test-frameworks-source-identities.py
       - name: Test Frameworks cache input admission
         run: python3 scripts/test-frameworks-cache-admission.py
 

@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "role": "historical-frameworks-source-identity-completion",
+  "canonical_package_state_effect": "none",
+  "nodes": {
+    "kirigami": {
+      "manifest_path": "manifests/kde-tier1-package-campaign-batch10.json",
+      "manifest_sha256": "51d724c9f7b1e03042393f1ded24eebc62a3dfd74dccfa0d7af71dc8ef83aab2",
+      "source_package": "kf6-kirigami",
+      "version": "6.30.0-0supralinux2",
+      "artifact_id": 10569258322,
+      "artifact_sha256": "6a008366edda84f8c285e5cf0a6b18a4b1089fc88e530d6e61b0f4f885dd7e30"
+    },
+    "kcmutils": {
+      "manifest_path": "manifests/kde-tier3-build-level2.json",
+      "manifest_sha256": "4d248840759f2a503b781c5403718e21167e849fcdfaf1374678ed217a6c9c9a",
+      "source_package": "kf6-kcmutils",
+      "version": "6.30.0-0supralinux3",
+      "artifact_id": 11006467074,
+      "artifact_sha256": "4dc1045a571b0cb05e61e25600a56fbdc59e5a80cde071cc3ad6af78f7b884a7"
+    }
+  }
+}

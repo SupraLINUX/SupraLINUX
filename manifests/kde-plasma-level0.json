@@ -463,7 +463,7 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": "4:6.7.5-0supralinux2",
+      "candidate_package_version": "4:6.7.5-0supralinux3",
       "package_execution_authorized": true,
       "materialization_result": "PASS",
       "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
@@ -976,8 +976,8 @@
     }
   },
   "candidate_versions_evidence": {
-    "path": "manifests/evidence/kde-plasma-level0-candidate-versions-kwallet-pam-revision2.json",
-    "sha256": "bba119d36ae8d04b01f39560efd5bfd7007304166644173942f6d6fcc51780d6",
+    "path": "manifests/evidence/kde-plasma-level0-candidate-versions-kwallet-pam-revision3.json",
+    "sha256": "3b791e38f189429dc81cda2d031a4db4f2b030dcab55be1da24f51d7ba39140e",
     "state": "PASS",
     "package_execution_started": false,
     "consumes_package_attempt": false

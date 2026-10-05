@@ -229,6 +229,13 @@ def main():
         if plasma_inputs:
             inputs += ['scripts/frameworks-revalidation-inputs.py', 'scripts/prepare-frameworks-revalidation-inputs.py',
                        'scripts/probe-frameworks-build-inputs.sh']
+            source_registry = ROOT/'manifests/frameworks-source-identities.json'
+            if source_registry.is_file():
+                source_nodes = json.loads(source_registry.read_text())['nodes']
+                selected_legacy = set(record['frameworks_predecessors']) & set(source_nodes)
+                if selected_legacy:
+                    inputs += ['manifests/frameworks-source-identities.json']
+                    inputs += [source_nodes[node]['manifest_path'] for node in sorted(selected_legacy)]
             support_registry = ROOT/'manifests/frameworks-support-inputs.json'
             if support_registry.is_file():
                 support_nodes = json.loads(support_registry.read_text())['nodes']

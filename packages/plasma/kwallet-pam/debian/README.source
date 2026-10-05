@@ -6,7 +6,8 @@ Ubuntu kwallet6 executable path explicitly, as supported by upstream CMake, and
 declare kwallet6 at runtime. KWallet SDK and xkbcommon do not participate in the
 PAM module build once the executable path is configured. ECM is the sole retained
 Frameworks build input; PAM, libgcrypt and socat remain Ubuntu providers.
-Ubuntu qt6-base-dev-tools supplies qtpaths for ECM installation path queries;
+Ubuntu qt6-base-dev supplies the Qt6 CMake configuration required for ECM to
+discover its CoreTools/qtpaths target and installation path queries;
 the PAM module does not link Qt.
 
 Tests run only in disposable QEMU/KVM guests. A synthetic user has a dedicated
