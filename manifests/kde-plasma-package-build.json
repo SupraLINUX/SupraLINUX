@@ -1386,7 +1386,7 @@
       "packaging_sha256": {
         "README.source": "28e3eb540e9510842a93fca755bbd5472fb902d51a03f1d3847ca8fccfef734b",
         "changelog": "b8176e3a08e29292a16e1bbecf80ddb7438ea7e87f843b17ef8888bf33cb2938",
-        "control": "1a4ddfe2188a629b884445887e8157b322d44a99d0c314ce743f91dbb82dad49",
+        "control": "a72836a3262259e559a10bd2378cf35edf5c6ca8b2fb3f5afd92d6551be1b56e",
         "copyright": "0d38f47b8a22c998d4e8e496aa5773ba6ff4fb1613f754c247987cb1424e5456",
         "libplasmaactivities-data.install": "f0a9975635ad6bc00276d4d7c0e49ec3f8dbcbe391e2bf8bc2758bb8e46e9a35",
         "libplasmaactivities-dev.acc.in": "d3e76064378ee0b0439ac456c8331fb3c0b68c3289861638c54211f616961d4e",
@@ -1435,47 +1435,47 @@
         },
         "kconfig": {
           "source_package": "kf6-kconfig",
-          "version": "6.30.0-0supralinux4",
+          "version": "6.30.0-0supralinux5",
           "binaries": [
             {
               "package": "libkf6config-bin",
               "architecture": "amd64",
-              "sha256": "a5a2bfe058aaffd899a3c704fea9794a4c1e86daa2a75695b9a1847b348f3de9"
+              "sha256": "e2ec5c0108ddec37acbe5aef9ba7ad415fcafbfb674a774ad5bc1f8e4460fd8a"
             },
             {
               "package": "libkf6config-data",
               "architecture": "all",
-              "sha256": "fae22d6df5777929f730211047c0fbd47ca5e39ece62398782ddcd32e6e69e60"
+              "sha256": "11383e2d047ef865e61a01b887b7b1fa72ab8ceca12e45779b99488fd18c1eb7"
             },
             {
               "package": "libkf6config-dev",
               "architecture": "amd64",
-              "sha256": "71940050496c4baca03102dd1d131dbcd675c7d2e9ee60e887dfc548555422f9"
+              "sha256": "d92bf4fed918165562d93f2512d36298ef014fa9191f53a51eab3a64286ce3a9"
             },
             {
               "package": "libkf6config-dev-bin",
               "architecture": "amd64",
-              "sha256": "1bb3c373b3fdd212de33c3fd4a1874e75c86684366c74f6bf7b105454f568286"
+              "sha256": "d7e10cf7629c68a93fa65a320ca868870e4f9f9446b580da70360233aebf8fe5"
             },
             {
               "package": "libkf6configcore6",
               "architecture": "amd64",
-              "sha256": "998262610e611e8cebe8630dbe3d13de4daa059ead9c9924287b2bfe994c4b33"
+              "sha256": "fd21f8ffec2c9a1092f4f1a823fc9ad117c8453a4cbd796d1997cb38bf9577c0"
             },
             {
               "package": "libkf6configgui6",
               "architecture": "amd64",
-              "sha256": "2ed506a790a662b0681a040cd10ae39177e5acbe6ada849947adfe387c390729"
+              "sha256": "994d74a35f900487bce4b5ffa838fa428fd00fe7a713f6441b6659992c65c711"
             },
             {
               "package": "libkf6configqml6",
               "architecture": "amd64",
-              "sha256": "5d951cf7b3498f02197c5c539d665439b7f9a5d64813c3faf47325afb6be0b24"
+              "sha256": "4a15fb6c5b9a95c49bc8910b81f5e7d14b1d5d125041a1b43e918c978241a949"
             },
             {
               "package": "qml6-module-org-kde-config",
               "architecture": "amd64",
-              "sha256": "b514993f60fe1f55ac7803ceab42ba0ef8a89dc58ab5d38463bfb63c9601bfd6"
+              "sha256": "ab1ce3ccf930a368faccdd7c5aca19acea87f355d888169d5f0cefa2524fd069"
             }
           ]
         },
@@ -1553,7 +1553,8 @@
         "packaging_changes": "Preserve six Ubuntu binaries and Multi-Arch metadata. Remove unused KF6WindowSystem/xkbcommon and obsolete Doxygen Build-Depends after complete signed source review. QDoc replaced BUILD_QCH upstream; retain a documentation package containing the explicit common optional documentation profile, with real QCH generation still a separate gate.",
         "build_dependencies": "Exact ECM/KConfig/KCoreAddons retained version and hash closure (13 binaries), eligible under their original Frameworks evidence scope. Retain Ubuntu Qt and Boost; bare clean sbuild certifies dependency sufficiency.",
         "test_policy": "Require upstream registered QFlatSetTest. Non-registered PlasmaActivitiesTest ignores qExec failures and is not inferred PASS from exit status. Before compilation, run an Ubuntu SDK client with offline behavior and the actual isolated Ubuntu kactivitymanagerd: create/rename/select/remove futures/signals, C++ model, installed QML plugin and CLI. Upgrade all six binaries and re-run the unchanged client, then rebuild and re-run the consumer. All failures report the check.",
-        "activation_policy": "Private D-Bus and temporary XDG config/data/cache/state/runtime; offscreen Qt. Only owned daemon PID is terminated. Ubuntu daemon and Qt versions must remain unchanged; whole-desktop integration remains a later gate."
+        "activation_policy": "Private D-Bus and temporary XDG config/data/cache/state/runtime; offscreen Qt. Only owned daemon PID is terminated. Ubuntu daemon and Qt versions must remain unchanged; whole-desktop integration remains a later gate.",
+        "frameworks_revalidation": "KConfig packaging-only revision 6.30.0-0supralinux5 passed authoritative KVM compilation, 90 upstream tests, source/binary lintian and Ubuntu/retained-Supra upgrades. Use its exact reviewed binaries; certify the new combined cache transport before a new Activities Attempt."
       }
     }
   },
@@ -1731,10 +1732,5 @@
       "applicable": false
     }
   ],
-  "dependency_hold": {
-    "node": "kconfig",
-    "affected_node": "plasma-activities",
-    "reason": "Ubuntu upgrade file ownership conflict in retained 6.30.0-0supralinux4",
-    "resume_requires": "authoritative-package-revalidation:kconfig:PASS"
-  }
+  "execution_mode": "preflight"
 }

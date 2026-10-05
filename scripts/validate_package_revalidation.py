@@ -61,7 +61,8 @@ def verified_evidence(link):
         assert baseline['workflow_run_id'] == result['workflow_run_id']
         assert json.loads((directory/'cache-probe/result.json').read_text())['state'] == 'PASS'
         assert json.loads((directory/'rootfs-admission.json').read_text())['frameworks_and_qt_sdk_preinstalled'] is False
-        assert json.loads((directory/'retained-upgrade-inputs.json').read_text())['eligible_as_build_predecessors'] is False
+        if frozen['nodes'][proof['node']].get('retained_upgrade'):
+            assert json.loads((directory/'retained-upgrade-inputs.json').read_text())['eligible_as_build_predecessors'] is False
     return proof, result, frozen, directory
 
 

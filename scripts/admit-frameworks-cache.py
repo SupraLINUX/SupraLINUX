@@ -4,11 +4,13 @@ import argparse
 import hashlib
 import importlib.machinery
 import json
+import os
 import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 prepare = importlib.machinery.SourceFileLoader('package_prepare', str(ROOT/'scripts/prepare-plasma-package.py')).load_module()
+repairs = importlib.machinery.SourceFileLoader('framework_repairs', str(ROOT/'scripts/prepare-frameworks-revalidation-inputs.py')).load_module()
 
 
 def digest(path):
@@ -16,7 +18,7 @@ def digest(path):
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
-def admit(payload, record, dag, current_plan):
+def admit(payload, record, dag, current_plan, revalidated=()):
     provenance = dict(line.split("=", 1) for line in
                       (payload / "checkpoint-manifest.txt").read_text().splitlines() if "=" in line)
     assert provenance["cache_only"] == "yes"
@@ -41,6 +43,18 @@ def admit(payload, record, dag, current_plan):
         assert identity == (item["package"], item["version"], item["architecture"]), "Cache identity mismatch"
         assert identity not in by_identity, "Duplicate cache identity"
         by_identity[identity] = path
+    replacement_proofs = {}
+    for item in revalidated:
+        path = Path(item['path'])
+        assert path.is_file() and not path.is_symlink()
+        assert digest(path) == item['sha256'], 'Corrupt revalidated predecessor binary'
+        identity = tuple(subprocess.check_output(['dpkg-deb', '-f', str(path), field], text=True).strip()
+                         for field in ['Package', 'Version', 'Architecture'])
+        assert identity == (item['package'], item['version'], item['architecture'])
+        assert identity not in by_identity, 'Duplicate repaired predecessor identity'
+        assert item['revalidation'] == dag['nodes'][item['node']]['revalidation']
+        by_identity[identity] = path
+        replacement_proofs[identity] = {key: item[key] for key in ['revalidation', 'artifact_sha256']}
     selected = []
     for node, predecessor in record["frameworks_predecessors"].items():
         canonical = dag["nodes"][node]
@@ -56,7 +70,7 @@ def admit(payload, record, dag, current_plan):
             source = subprocess.check_output(["dpkg-deb", "-f", str(path), "Source"], text=True).strip()
             assert source.split(" ")[0] == predecessor["source_package"], "Predecessor source mismatch"
             selected.append({"node": node, "path": str(path), "source_package": predecessor["source_package"],
-                             "version": predecessor["version"], **binary})
+                             "version": predecessor["version"], **binary, **replacement_proofs.get(key, {})})
     assert len({item["path"] for item in selected}) == len(selected), "Duplicate selected predecessor"
     return selected
 
@@ -66,13 +80,17 @@ def main():
     parser.add_argument("node")
     parser.add_argument("--payload", type=Path, default=Path("/var/lib/supralinux/milestones/frameworks-6.30"))
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument('--repair-archive-root', type=Path, default=ROOT)
     args = parser.parse_args()
     campaign = prepare.load_campaign()
     assert not campaign.get('dependency_hold'), 'Known predecessor upgrade conflict requires revalidation'
     assert campaign["execution_checkpoint"] == "frameworks-6.30-pass"
-    selected = admit(args.payload, campaign["nodes"][args.node],
-                     json.loads((ROOT / "manifests/kde-dag.json").read_text()),
-                     subprocess.check_output(["python3", str(ROOT / "scripts/plan-frameworks-milestone.py")]))
+    record = campaign['nodes'][args.node]
+    current = repairs.effective.effective_nodes(json.loads((ROOT/'manifests/kde-dag.json').read_text()))
+    restored = repairs.materialize(record, args.output.parent/'revalidated-predecessors', args.repair_archive_root,
+                                  os.environ.get('GITHUB_TOKEN'))
+    selected = admit(args.payload, record, {'nodes': current},
+                     subprocess.check_output(["python3", str(ROOT / "scripts/plan-frameworks-milestone.py")]), restored)
     args.output.write_text(json.dumps({"state": "PASS", "cache_only": True, "selected": selected}, indent=2) + "\n")
     print(f"Frameworks cache admission: PASS; selected binaries={len(selected)}")
 

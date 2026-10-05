@@ -1,15 +1,17 @@
 {
   "schema": 1,
   "role": "reviewed-package-revalidation",
-  "state": "PASS",
-  "package_execution_authorized": false,
-  "authorized_nodes": [],
-  "execution_mode": "complete",
+  "state": "execution-authorized",
+  "package_execution_authorized": true,
+  "authorized_nodes": [
+    "kconfig"
+  ],
+  "execution_mode": "build",
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
   "execution_checkpoint": "frameworks-6.30-pass",
   "nodes": {
     "kconfig": {
-      "state": "PASS",
+      "state": "build-pending",
       "source_package": "kf6-kconfig",
       "version": "6.30.0-0supralinux5",
       "upstream_version": "6.30.0",
@@ -174,14 +176,7 @@
         "artifact_id": 10554715051,
         "artifact_sha256": "bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e"
       },
-      "attempts": [
-        {
-          "attempt": 1,
-          "state": "PASS",
-          "path": "manifests/evidence/package-revalidation/kconfig-attempt1/verification.json",
-          "sha256": "8acf525ea65694c17881a5267410a98bd50ee866617a0a11d495a7229957558e"
-        }
-      ],
+      "attempts": [],
       "review": {
         "trigger": "Plasma Activities Attempt 1 original package FAIL retained; no candidate clients executed",
         "ownership": "Ubuntu file owner restored; previous Supra core ownership covered by versioned Breaks/Replaces",
@@ -265,86 +260,7 @@
         "tests/retained-upgrade": "bf4f384801770f3040030b4095ac30756c24f0580c9e2e3d73d192b3a09c29b0",
         "tests/ubuntu-abi-client": "ad44c5e40ea175a1a2550f30bb7644f7d44f5080b2e2892db78ecc112ee475b7",
         "upstream/signing-key.asc": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"
-      },
-      "downstream_eligible": true,
-      "evidence": {
-        "path": "manifests/evidence/package-revalidation/kconfig-attempt1/verification.json",
-        "sha256": "8acf525ea65694c17881a5267410a98bd50ee866617a0a11d495a7229957558e"
-      },
-      "binaries": [
-        {
-          "package": "libkf6config-bin",
-          "version": "6.30.0-0supralinux5",
-          "architecture": "amd64",
-          "file": "libkf6config-bin_6.30.0-0supralinux5_amd64.deb",
-          "sha256": "e2ec5c0108ddec37acbe5aef9ba7ad415fcafbfb674a774ad5bc1f8e4460fd8a",
-          "size": 33572
-        },
-        {
-          "package": "libkf6config-data",
-          "version": "6.30.0-0supralinux5",
-          "architecture": "all",
-          "file": "libkf6config-data_6.30.0-0supralinux5_all.deb",
-          "sha256": "11383e2d047ef865e61a01b887b7b1fa72ab8ceca12e45779b99488fd18c1eb7",
-          "size": 175316
-        },
-        {
-          "package": "libkf6config-dev-bin",
-          "version": "6.30.0-0supralinux5",
-          "architecture": "amd64",
-          "file": "libkf6config-dev-bin_6.30.0-0supralinux5_amd64.deb",
-          "sha256": "d7e10cf7629c68a93fa65a320ca868870e4f9f9446b580da70360233aebf8fe5",
-          "size": 80788
-        },
-        {
-          "package": "libkf6config-dev",
-          "version": "6.30.0-0supralinux5",
-          "architecture": "amd64",
-          "file": "libkf6config-dev_6.30.0-0supralinux5_amd64.deb",
-          "sha256": "d92bf4fed918165562d93f2512d36298ef014fa9191f53a51eab3a64286ce3a9",
-          "size": 54064
-        },
-        {
-          "package": "libkf6config-doc",
-          "version": "6.30.0-0supralinux5",
-          "architecture": "all",
-          "file": "libkf6config-doc_6.30.0-0supralinux5_all.deb",
-          "sha256": "e2afd9e730e03931a916d976315ea0d82e76b66a2c696cf46532e489c819bf77",
-          "size": 8304
-        },
-        {
-          "package": "libkf6configcore6",
-          "version": "6.30.0-0supralinux5",
-          "architecture": "amd64",
-          "file": "libkf6configcore6_6.30.0-0supralinux5_amd64.deb",
-          "sha256": "fd21f8ffec2c9a1092f4f1a823fc9ad117c8453a4cbd796d1997cb38bf9577c0",
-          "size": 183168
-        },
-        {
-          "package": "libkf6configgui6",
-          "version": "6.30.0-0supralinux5",
-          "architecture": "amd64",
-          "file": "libkf6configgui6_6.30.0-0supralinux5_amd64.deb",
-          "sha256": "994d74a35f900487bce4b5ffa838fa428fd00fe7a713f6441b6659992c65c711",
-          "size": 76206
-        },
-        {
-          "package": "libkf6configqml6",
-          "version": "6.30.0-0supralinux5",
-          "architecture": "amd64",
-          "file": "libkf6configqml6_6.30.0-0supralinux5_amd64.deb",
-          "sha256": "4a15fb6c5b9a95c49bc8910b81f5e7d14b1d5d125041a1b43e918c978241a949",
-          "size": 22832
-        },
-        {
-          "package": "qml6-module-org-kde-config",
-          "version": "6.30.0-0supralinux5",
-          "architecture": "amd64",
-          "file": "qml6-module-org-kde-config_6.30.0-0supralinux5_amd64.deb",
-          "sha256": "ab1ce3ccf930a368faccdd7c5aca19acea87f355d888169d5f0cefa2524fd069",
-          "size": 13250
-        }
-      ]
+      }
     }
   },
   "certifications": [

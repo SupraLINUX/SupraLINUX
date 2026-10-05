@@ -10,6 +10,12 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("prepare", ROOT / "scripts/prepare-plasma-package.py")
 prepare = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(prepare)
+repair_spec = importlib.util.spec_from_file_location('effective_frameworks', ROOT/'scripts/frameworks-revalidation-inputs.py')
+repairs = importlib.util.module_from_spec(repair_spec)
+repair_spec.loader.exec_module(repairs)
+proof_spec = importlib.util.spec_from_file_location('input_evidence', ROOT/'scripts/validate_package_revalidation.py')
+input_evidence = importlib.util.module_from_spec(proof_spec)
+proof_spec.loader.exec_module(input_evidence)
 
 
 def validate():
@@ -22,6 +28,34 @@ def validate():
     assert campaign["package_execution_authorized"] is bool(scope)
     assert campaign["runner_class"] == "supralinux-kvm-ubuntu-26.04-ephemeral"
     assert set(campaign["nodes"]) <= set(level["selected_nodes"])
+    assert campaign.get('execution_mode', 'build') in {'preflight', 'build'}
+    effective = repairs.effective_nodes(json.loads((ROOT/'manifests/kde-dag.json').read_text()))
+    historical = repairs.effective_nodes(json.loads((ROOT/'manifests/kde-dag.json').read_text()), historical=True)
+    input_certified = set()
+    for link in campaign.get('package_input_certifications', []):
+        proof, result, frozen, directory = input_evidence.verified_evidence(link)
+        assert proof['scope'] == 'reviewed-package-input-preflight' and proof['state'] == 'PASS'
+        assert proof['package_attempt_consumed'] is False and result['stage'] == 'reviewed-package-preflight-complete'
+        assert frozen['execution_mode'] == 'preflight' and frozen['role'] == campaign['role']
+        assert all(result[key] == 'not-run' for key in ['sbuild_result', 'lintian_result', 'autopkgtest_result'])
+        probe = json.loads((directory/'cache-probe/result.json').read_text())
+        assert probe['predecessors_installed_at_reviewed_versions'] is True
+        expected = json.loads((directory/'cache-probe/installed-predecessor-contract.json').read_text())
+        built = frozen['nodes'][proof['node']]
+        wanted = {(binary['package'], predecessor['source_package'], predecessor['version'], binary['architecture'])
+                  for predecessor in built['frameworks_predecessors'].values() for binary in predecessor['binaries']}
+        assert {(item['package'], item['source_package'], item['version'], item['architecture']) for item in expected} == wanted
+        if proof['node'] in scope:
+            record = campaign['nodes'][proof['node']]
+            assert proof['packaging_sha256'] == record['packaging_sha256']
+            assert proof['frameworks_predecessors'] == record['frameworks_predecessors']
+            for file, digest in proof['inputs_sha256'].items():
+                assert hashlib.sha256((ROOT/file).read_bytes()).hexdigest() == digest
+            input_certified.add(proof['node'])
+    for incident in campaign.get('package_input_incidents', []):
+        proof, result, _, _ = input_evidence.verified_evidence(incident)
+        assert proof['state'] == result['state'] == 'INFRA_INVALID' and proof['package_attempt_consumed'] is False
+        assert incident['cause'] and incident['repair']
     for certification in campaign.get("infrastructure_certifications", []):
         path = ROOT / certification["path"]
         payload = path.read_bytes()
@@ -90,10 +124,11 @@ def validate():
         assert record["packaging_reference_version"] == sources[name]["ubuntu_reference"]["source_version"]
         assert all(record["review"].values()), "Individual packaging review missing"
         for predecessor, inputs in record.get("frameworks_predecessors", {}).items():
-            dag = json.loads((ROOT / "manifests/kde-dag.json").read_text())["nodes"][predecessor]
-            assert dag["state"] == "PASS" and dag["package_version"] == inputs["version"]
-            assert dag["source_package"] == inputs["source_package"]
-            assert inputs["binaries"] and all(binary["package"] in dag["binary_packages"] for binary in inputs["binaries"])
+            original = historical[predecessor]
+            canonical = original if record['state'] == 'PASS' and inputs['version'] == original['package_version'] else effective[predecessor]
+            repairs.check_requested(predecessor, inputs, canonical)
+            if name in scope and canonical.get('revalidation') and campaign.get('execution_mode', 'build') == 'build':
+                assert name in input_certified, 'Certify repaired input transport before the investigated package Attempt'
         for attempt in record["attempts"]:
             payload = (ROOT / attempt["result_path"]).read_bytes()
             assert hashlib.sha256(payload).hexdigest() == attempt["result_sha256"], "Attempt evidence changed"

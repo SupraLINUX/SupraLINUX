@@ -26,13 +26,19 @@ def write(path, payload):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('node')
+    parser.add_argument('--campaign', choices=['manifests/package-revalidation.json', 'manifests/kde-plasma-package-build.json'],
+                        default='manifests/package-revalidation.json')
     parser.add_argument('--zip',type=Path,required=True)
     parser.add_argument('--artifact-meta',type=Path,required=True)
     parser.add_argument('--job-json',type=Path,required=True)
     parser.add_argument('--host-dir',type=Path,required=True)
     args = parser.parse_args()
-    manifest = ROOT/'manifests/package-revalidation.json'
+    manifest = ROOT/args.campaign
     campaign = json.loads(manifest.read_text())
+    plasma_inputs = campaign['role'] == 'reviewed-plasma-package-build'
+    assert campaign['role'] in {'reviewed-plasma-package-build', 'reviewed-package-revalidation'}
+    if plasma_inputs:
+        assert campaign['execution_mode'] == 'preflight', 'Use the existing Plasma closure for actual package Attempts'
     record = campaign['nodes'][args.node]
     assert campaign['authorized_nodes'] == [args.node] and record['state'] == 'build-pending'
     meta, job = [json.loads(p.read_text()) for p in [args.artifact_meta,args.job_json]]
@@ -44,6 +50,8 @@ def main():
     with zipfile.ZipFile(args.zip) as archive:
         raw = json.loads(archive.read('result.json'))
         assert raw['source_commit'] == head == job['head_sha'] == meta['workflow_run']['head_sha']
+        expected_artifact = ('authoritative-plasma-package-' if plasma_inputs else 'authoritative-package-revalidation-') + head
+        assert meta['name'] == expected_artifact
         assert raw['workflow_run_id'] == str(job['run_id']) == host['workflow_run_id']
         assert job['status'] == 'completed' and job['conclusion'] == ('success' if raw['state']=='PASS' else 'failure')
         assert raw['node'] == args.node and raw['version'] == record['version']
@@ -55,10 +63,13 @@ def main():
         frozen = json.loads(archive.read('build-contract.json'))
         built = frozen['nodes'][args.node]
         for key in ['packaging_sha256','symbols_baselines','frameworks_predecessors','retained_upgrade','upstream_sha256','signature_sha256']:
-            assert built[key] == record[key], f'Changed reviewed input: {key}'
+            assert built.get(key, {}) == record.get(key, {}), f'Changed reviewed input: {key}'
         assert frozen['execution_mode'] == campaign['execution_mode']
-        preflight = frozen['execution_mode'] == 'preflight'
-        assert raw['package_attempt_consumed'] is (not preflight)
+        preflight = raw['package_attempt_consumed'] is False
+        if frozen['execution_mode'] == 'preflight':
+            assert preflight
+        elif preflight:
+            assert raw['state'] == 'INFRA_INVALID', 'Only infrastructure failure can end build mode before a package Attempt'
         sources = [name for name in archive.namelist() if name.startswith('packages/') and name.endswith('.dsc')]
         if sources:
             assert len(sources) == 1
@@ -80,12 +91,15 @@ def main():
             assert baseline['source_commit'] == head and baseline['workflow_run_id'] == raw['workflow_run_id']
             assert json.loads(archive.read('cache-probe/result.json'))['state'] == 'PASS'
             assert json.loads(archive.read('rootfs-admission.json'))['frameworks_and_qt_sdk_preinstalled'] is False
-            assert json.loads(archive.read('retained-upgrade-inputs.json'))['eligible_as_build_predecessors'] is False
+            if built.get('retained_upgrade'):
+                assert json.loads(archive.read('retained-upgrade-inputs.json'))['eligible_as_build_predecessors'] is False
         if preflight:
             assert raw['state'] in {'PASS','INFRA_INVALID'}
             if raw['state']=='PASS':assert raw['stage']=='reviewed-package-preflight-complete'
             assert raw['sbuild_result'] == raw['lintian_result'] == raw['autopkgtest_result'] == 'not-run'
-            number = len(campaign['certifications'])+len(campaign.get('infrastructure_incidents',[]))+1
+            certificates = campaign.get('package_input_certifications', []) if plasma_inputs else campaign['certifications']
+            incidents = campaign.get('package_input_incidents', []) if plasma_inputs else campaign.get('infrastructure_incidents', [])
+            number = len(certificates)+len(incidents)+1
             label = f'{args.node}-preflight{number}'
             inspection = {'source_complete':bool(sources),'candidate_binaries_built':False}
         else:
@@ -115,7 +129,8 @@ def main():
         directory.mkdir(parents=True)
         for name in ['result.json','build-contract.json','signature.log','ubuntu-baseline-preflight/result.json',
                      'cache-probe/result.json','rootfs-admission.json','retained-upgrade-inputs.json',
-                     'upstream-tests.json','autopkgtest/summary','retained-upgrade/summary','infra-interruption.json']:
+                     'upstream-tests.json','autopkgtest/summary','retained-upgrade/summary','infra-interruption.json',
+                     'cache-probe/installed-predecessor-contract.json']:
             if name in archive.namelist():
                 path=directory/name
                 path.parent.mkdir(parents=True,exist_ok=True)
@@ -135,7 +150,8 @@ def main():
     assert not stored.exists()
     stored.parent.mkdir(parents=True)
     shutil.copyfile(args.zip,stored)
-    proof = {'schema':1,'scope':'reviewed-package-revalidation-preflight' if preflight else 'authoritative-package-revalidation',
+    preflight_scope = 'reviewed-package-input-preflight' if plasma_inputs else 'reviewed-package-revalidation-preflight'
+    proof = {'schema':1,'scope':preflight_scope if preflight else 'authoritative-package-revalidation',
              'node':args.node,'version':record['version'],'state':raw['state'],'source_commit':head,
              'workflow_run_id':job['run_id'],'workflow_job_id':job['id'],'artifact_id':meta['id'],
              'artifact_sha256':digest,'host_evidence_dir':str(args.host_dir),
@@ -152,16 +168,22 @@ def main():
                 'scripts/admit-frameworks-cache.py','scripts/prepare-milestone-sbuild-rootfs.py',
                 'scripts/prepare-retained-package-inputs.py','scripts/run-kvm-jit-gate-core.sh',
                 'scripts/qemu-kvm-required.sh']
+        if plasma_inputs:
+            inputs += ['scripts/frameworks-revalidation-inputs.py', 'scripts/prepare-frameworks-revalidation-inputs.py',
+                       'scripts/probe-frameworks-build-inputs.sh']
         proof['inputs_sha256']={name:hashlib.sha256(subprocess.check_output(['git','show',f'{head}:{name}'])).hexdigest() for name in inputs}
         proof['packaging_sha256']=record['packaging_sha256']
+        proof['frameworks_predecessors']=record['frameworks_predecessors']
     write(directory/'verification.json',proof)
     link={'path':str((directory/'verification.json').relative_to(ROOT)),'sha256':sha(directory/'verification.json')}
     if preflight:
         if raw['state']=='PASS':
-            campaign['certifications'].append(link)
+            key = 'package_input_certifications' if plasma_inputs else 'certifications'
+            campaign.setdefault(key, []).append(link)
             campaign['execution_mode']='build'
         else:
-            campaign.setdefault('infrastructure_incidents',[]).append(link)
+            key = 'package_input_incidents' if plasma_inputs else 'infrastructure_incidents'
+            campaign.setdefault(key, []).append(link)
     else:
         record['attempts'].append({'attempt':number,'state':raw['state'],**link})
         if raw['state']=='PASS':

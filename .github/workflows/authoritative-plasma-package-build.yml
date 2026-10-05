@@ -25,6 +25,8 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Run current reviewed package
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: scripts/run-authoritative-plasma-package.sh
 
       - name: Retain package sources, binaries and evidence

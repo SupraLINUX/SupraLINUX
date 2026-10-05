@@ -56,6 +56,8 @@ exec > >(tee -a "${EVIDENCE}/pipeline.log") 2>&1
 STAGE="authorization"
 if [[ "${CAMPAIGN}" == manifests/package-revalidation.json ]]; then
     python3 "${ROOT}/scripts/validate_package_revalidation.py"
+else
+    python3 "${ROOT}/scripts/validate_plasma_package_build.py"
 fi
 mapfile -t AUTHORIZED < <(python3 - "${ROOT}" <<'PY'
 import json, sys
@@ -207,19 +209,19 @@ if [[ "${CAMPAIGN}" == manifests/package-revalidation.json ]]; then
     STAGE="retained-upgrade-inputs"
     python3 "${ROOT}/scripts/prepare-retained-package-inputs.py" "${NODE}" --output "${WORK}/retained-upgrade" \
         --evidence "${EVIDENCE}/retained-upgrade-inputs.json"
-    MODE="$(python3 - "${EVIDENCE}/build-contract.json" <<'PY'
+fi
+MODE="$(python3 - "${EVIDENCE}/build-contract.json" <<'PY'
 import json, sys
-print(json.load(open(sys.argv[1]))['execution_mode'])
+print(json.load(open(sys.argv[1])).get('execution_mode', 'build'))
 PY
 )"
-    if [[ "${MODE}" == preflight ]]; then
-        STATE="PASS"
-        STAGE="reviewed-package-preflight-complete"
-        printf 'Reviewed package infrastructure preflight: PASS; no package Attempt consumed\n'
-        exit 0
-    fi
-    [[ "${MODE}" == build ]]
+if [[ "${MODE}" == preflight ]]; then
+    STATE="PASS"
+    STAGE="reviewed-package-preflight-complete"
+    printf 'Reviewed package infrastructure preflight: PASS; no package Attempt consumed\n'
+    exit 0
 fi
+[[ "${MODE}" == build ]]
 
 STAGE="sbuild"
 STATE="FAIL"

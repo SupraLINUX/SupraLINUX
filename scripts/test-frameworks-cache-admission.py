@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Regression: stale or modified cache content must never feed a package build."""
 import importlib.machinery
+import copy
 import json
 import subprocess
 import tempfile
@@ -61,8 +62,26 @@ class CacheAdmission(unittest.TestCase):
             text += f"{key}={cache.digest(self.root / path)}\n"
         (self.root / "checkpoint-manifest.txt").write_text(text)
 
-    def admit(self, plan=None):
-        return cache.admit(self.root, self.record, self.dag, self.plan if plan is None else plan)
+    def admit(self, plan=None, revalidated=()):
+        return cache.admit(self.root, self.record, self.dag, self.plan if plan is None else plan, revalidated)
+
+    def repair(self, source_package='kf6-extra-cmake-modules'):
+        source = self.root/'repair'
+        (source/'DEBIAN').mkdir(parents=True)
+        version = '6.30.0-0supralinux4'
+        (source/'DEBIAN/control').write_text(
+            f'Package: extra-cmake-modules\nSource: {source_package}\nVersion: {version}\nArchitecture: all\n'
+            'Maintainer: Test <test@example.invalid>\nDescription: Revalidated cache input fixture\n')
+        deb = self.root/'repaired.deb'
+        subprocess.run(['dpkg-deb', '--root-owner-group', '--build', str(source), str(deb)], check=True, stdout=subprocess.DEVNULL)
+        reference = {'path': 'verified-repair.json', 'sha256': '0'*64}
+        self.dag['nodes']['extra-cmake-modules'].update(package_version=version, revalidation=reference)
+        predecessor = self.record['frameworks_predecessors']['extra-cmake-modules']
+        predecessor['version'] = version
+        predecessor['binaries'][0]['sha256'] = cache.digest(deb)
+        return {'node': 'extra-cmake-modules', 'path': str(deb), 'version': version,
+                'source_package': 'kf6-extra-cmake-modules', 'revalidation': reference,
+                'artifact_sha256': '1'*64, **predecessor['binaries'][0]}
 
     def test_exact_input_admitted(self):
         self.assertEqual([item["path"] for item in self.admit()], [str(self.deb)])
@@ -90,6 +109,31 @@ class CacheAdmission(unittest.TestCase):
         self.dag["nodes"]["extra-cmake-modules"]["state"] = "FAIL"
         with self.assertRaises(AssertionError):
             self.admit()
+
+    def test_repair_selected_without_modifying_historical_pool(self):
+        original_digest = cache.digest(self.deb)
+        item = self.repair()
+        self.assertEqual([selected['path'] for selected in self.admit(revalidated=[item])], [item['path']])
+        self.assertEqual(cache.digest(self.deb), original_digest)
+
+    def test_superseded_version_rejected_after_repair(self):
+        original = copy.deepcopy(self.record)
+        item = self.repair()
+        self.record = original
+        with self.assertRaises(AssertionError):
+            self.admit(revalidated=[item])
+
+    def test_repaired_binary_tampering_rejected(self):
+        item = self.repair()
+        path = Path(item['path'])
+        path.write_bytes(path.read_bytes()+b'changed')
+        with self.assertRaisesRegex(AssertionError, 'Corrupt revalidated'):
+            self.admit(revalidated=[item])
+
+    def test_repaired_source_identity_rejected(self):
+        item = self.repair(source_package='different-source')
+        with self.assertRaisesRegex(AssertionError, 'source mismatch'):
+            self.admit(revalidated=[item])
 
 
 if __name__ == "__main__":
