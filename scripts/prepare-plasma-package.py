@@ -33,6 +33,7 @@ def main():
     parser.add_argument("--upstream", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    args.output = args.output.resolve()
     _, record = contract(args.node)
     assert hashlib.sha256(args.upstream.read_bytes()).hexdigest() == record["upstream_sha256"], "Upstream tarball digest"
     assert not args.output.exists(), "Refusing to overwrite prepared sources"

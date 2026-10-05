@@ -73,6 +73,11 @@ def validate():
         assert "rules" in executables and (ROOT / record["packaging_path"] / "tests/control").is_file()
         for script in executables:
             assert os.access(ROOT / record["packaging_path"] / script, os.X_OK), f"Non-executable packaging script: {script}"
+        if record.get("baseline_setup_script"):
+            assert record["baseline_setup_script"] in executables
+            assert record["baseline_setup_script"].startswith("tests/")
+        if record.get("upstream_tests"):
+            assert len(set(record["upstream_tests"])) == len(record["upstream_tests"])
         if name in scope:
             assert record["state"] == "build-pending" and campaign["state"] == "execution-authorized"
         if record["state"] == "PASS":
@@ -95,6 +100,12 @@ def validate():
                                                          "artifact_zip_sha256_verified", "offline_restore_verified"])
             assert retention["requires_github_for_restore"] is False
             assert hashlib.sha256((ROOT / retention["plan_path"]).read_bytes()).hexdigest() == retention["plan_sha256"]
+            if record.get("upstream_tests"):
+                test_bytes = (ROOT / evidence["upstream_tests_path"]).read_bytes()
+                assert hashlib.sha256(test_bytes).hexdigest() == evidence["upstream_tests_sha256"]
+                assert evidence["upstream_tests_sha256"] == result["files_sha256"]["upstream-tests.json"]
+                upstream = json.loads(test_bytes)
+                assert upstream["state"] == "PASS" and upstream["expected_tests"] == record["upstream_tests"]
             if record.get("frameworks_predecessors"):
                 assert "predecessor-inputs.json" in result["files_sha256"]
                 assert "cache-probe/sbuild.log" in result["files_sha256"]

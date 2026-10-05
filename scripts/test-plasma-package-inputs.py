@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Regression checks for source admission and substantive theme validation."""
 import copy
+import hashlib
 import importlib.machinery
 import json
 import os
@@ -14,6 +15,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+testing = importlib.machinery.SourceFileLoader("testing", str(ROOT / "scripts/plasma-package-testing.py")).load_module()
 prepare = importlib.machinery.SourceFileLoader("prepare", str(ROOT / "scripts/prepare-plasma-package.py")).load_module()
 resources = importlib.machinery.SourceFileLoader("resources", str(ROOT / "packages/plasma/breeze-grub/debian/tests/theme-resources")).load_module()
 sounds = importlib.machinery.SourceFileLoader("sounds", str(ROOT / "packages/plasma/ocean-sound-theme/debian/tests/sound-resources")).load_module()
@@ -48,16 +50,42 @@ class InputAdmission(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, "Invalid PNG CRC"):
             resources.resource_hash(bytes(damaged), "test.png")
 
-    def test_upgrade_setup_keeps_candidate_after_os_release(self):
-        script = (ROOT / "scripts/run-authoritative-plasma-package.sh").read_text()
-        setup = re.search(r'^(SETUP=".*?\n)\s*set \+e', script, flags=re.M | re.S).group(1)
-        candidate = json.loads((ROOT / "manifests/kde-plasma-package-build.json").read_text())["nodes"]["breeze-grub"]["version"]
-        env = {**os.environ, "PACKAGE_VERSION": candidate, "VERSION": candidate,
-               "BASELINE_PACKAGE": "grub-theme-breeze"}
-        output = subprocess.check_output(["bash", "-c", ". /etc/os-release\n" + setup +
-                                          "printf '%s' \"$SETUP\""], text=True, env=env)
+    def test_upgrade_setup_keeps_reviewed_candidate(self):
+        record = json.loads((ROOT / "manifests/kde-plasma-package-build.json").read_text())["nodes"]["breeze-grub"]
+        output = testing.setup_commands(ROOT, record)
         comparison = next(line for line in output.splitlines() if line.startswith("dpkg --compare-versions"))
-        self.assertEqual(shlex.split(comparison)[2], candidate)
+        self.assertEqual(shlex.split(comparison)[2], record["version"])
+        self.assertIn('plasma-package-testing.py" setup "${NODE}',
+                      (ROOT / "scripts/run-authoritative-plasma-package.sh").read_text())
+
+    def test_upstream_suite_cannot_pass_with_missing_or_failed_tests(self):
+        record = {"upstream_tests": ["first", "second"]}
+        log = "1/2 Test #1: first ..... Passed 0.01 sec\n2/2 Test #2: second ..... Passed 0.02 sec\n100% tests passed, 0 tests failed out of 2"
+        self.assertEqual(testing.upstream_test_result(record, log)["state"], "PASS")
+        for broken in [log.replace("Passed", "Failed", 1), log.replace("second", "wrong"),
+                       log.replace("out of 2", "out of 1")]:
+            with self.subTest(broken=broken), self.assertRaises(AssertionError):
+                testing.upstream_test_result(record, broken)
+
+    def test_baseline_setup_rejects_changed_or_unreviewed_inputs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "package/tests").mkdir(parents=True)
+            setup = root / "package/tests/setup"
+            setup.write_text("#!/bin/sh\nprintf 'fixture\\n'\n")
+            record = {"ubuntu_baseline_package": "baseline-fixture", "version": "4:6.7.5-0supralinux1",
+                      "packaging_path": "package", "baseline_setup_script": "tests/setup",
+                      "packaging_sha256": {"tests/setup": hashlib.sha256(setup.read_bytes()).hexdigest()}}
+            commands = testing.setup_commands(root, record)
+            subprocess.run(["bash", "-n"], input=commands, text=True, check=True)
+            self.assertIn("base64 --decode", commands)
+            for path in ["../outside", "/absolute", "control"]:
+                bad = copy.deepcopy(record); bad["baseline_setup_script"] = path
+                with self.subTest(path=path), self.assertRaises(AssertionError):
+                    testing.setup_commands(root, bad)
+            setup.write_text("changed")
+            with self.assertRaisesRegex(AssertionError, "Setup inputs changed"):
+                testing.setup_commands(root, record)
 
     def test_changed_packaging_rejected(self):
         original = prepare.packaging_hashes

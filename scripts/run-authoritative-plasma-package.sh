@@ -66,16 +66,14 @@ print(record["version"])
 print(record["upstream_url"])
 print(record["upstream_sha256"])
 print(record["signature_sha256"])
-print(record["ubuntu_baseline_package"])
 PY
 )
-[[ ${#AUTHORIZED[@]} == 6 ]] || { printf 'Invalid reviewed package authorization.\n' >&2; exit 1; }
+[[ ${#AUTHORIZED[@]} == 5 ]] || { printf 'Invalid reviewed package authorization.\n' >&2; exit 1; }
 NODE="${AUTHORIZED[0]}"
 PACKAGE_VERSION="${AUTHORIZED[1]}"
 SOURCE_URL="${AUTHORIZED[2]}"
 SOURCE_HASH="${AUTHORIZED[3]}"
 SIGNATURE_HASH="${AUTHORIZED[4]}"
-BASELINE_PACKAGE="${AUTHORIZED[5]}"
 cp "${ROOT}/manifests/kde-plasma-package-build.json" "${EVIDENCE}/build-contract.json"
 EXECUTION_CHECKPOINT="$(python3 - "${EVIDENCE}/build-contract.json" <<'PY'
 import json, sys
@@ -83,6 +81,7 @@ print(json.load(open(sys.argv[1])).get("execution_checkpoint", "none"))
 PY
 )"
 EXTRA_ARGS=()
+EXTRA_PATHS=()
 
 STAGE="runner-contract"
 "${ROOT}/scripts/check-actions-runner-runtime.sh" "${EVIDENCE}/actions-runner-runtime.txt"
@@ -163,6 +162,9 @@ BUILD_RESULT="FAIL"
 sbuild --verbose --chroot-mode=unshare --dist=resolute --arch=amd64 --arch-all \
     "${EXTRA_ARGS[@]}" --build-dir="${WORK}/out" "${DSCS[0]}" |& tee "${EVIDENCE}/sbuild.log"
 BUILD_RESULT="PASS"
+STAGE="upstream-package-tests"
+python3 "${ROOT}/scripts/plasma-package-testing.py" upstream-tests "${NODE}" \
+    --build-log "${EVIDENCE}/sbuild.log" --output "${EVIDENCE}/upstream-tests.json"
 
 STAGE="artifact-capture"
 mapfile -t DEBS < <(find "${WORK}/out" -maxdepth 1 -name '*.deb' -type f | sort)
@@ -200,12 +202,9 @@ LINTIAN_RESULT="PASS"
 
 STAGE="autopkgtest-qemu"
 STATE="INFRA_INVALID"
-SETUP="apt-get update
-apt-get install -y --no-install-recommends ${BASELINE_PACKAGE}
-dpkg-query -W -f='\${Version}' ${BASELINE_PACKAGE} > /var/tmp/supralinux-ubuntu-package-version
-dpkg --compare-versions '${PACKAGE_VERSION}' gt \"\$(cat /var/tmp/supralinux-ubuntu-package-version)\""
+SETUP="$(python3 "${ROOT}/scripts/plasma-package-testing.py" setup "${NODE}")"
 set +e
-autopkgtest "${DSCS[0]}" "${DEBS[@]}" --setup-commands="${SETUP}" --output-dir="${EVIDENCE}/autopkgtest" -- \
+autopkgtest "${DSCS[0]}" "${DEBS[@]}" "${EXTRA_PATHS[@]}" --setup-commands="${SETUP}" --output-dir="${EVIDENCE}/autopkgtest" -- \
     qemu --qemu-command="${ROOT}/scripts/qemu-kvm-required.sh" --qemu-architecture=x86_64 \
     --cpus=2 --ram-size=2048 "${TEST_IMAGE}" |& tee "${EVIDENCE}/autopkgtest.log"
 PIPELINE_RC=("${PIPESTATUS[@]}")

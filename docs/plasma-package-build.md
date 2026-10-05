@@ -132,3 +132,25 @@ binary, changes/buildinfo and available logs. Its explicit interruption
 observation is INFRA_INVALID and cannot admit the binary downstream. Read-only
 GitHub API transport now retries transient failures with a finite budget,
 buffering each response; mutations and JIT creation remain single-shot.
+
+## Compiled-library package testing
+
+The generic runner supports a reviewed `baseline_setup_script` inside the
+packaging test directory. Its digest belongs to the frozen packaging contract.
+The setup compiles and executes a client using Ubuntu packages before candidate
+binaries or retained Frameworks inputs are installed. Package autopkgtests can
+then exercise that same binary after the upgrade and retain it as a test artifact.
+Selected predecessor binaries are also supplied to autopkgtest with exact
+identities, keeping build and runtime input scopes coherent.
+
+`upstream_tests` lists substantive CTest entries expected during sbuild. The
+runner rejects missing or failed entries and an incomplete suite. Closure
+preserves the exact test result separately from the build and installed-package
+tests. KDecoration is the first prepared compiled Plasma library using this
+contract; its execution requires individual manifest admission.
+
+Oxygen Attempt 4 closed PASS on the authoritative KVM lane: both sound resource
+and Ubuntu-upgrade tests passed. Sources, binary, changes/buildinfo, logs and
+cache-probe evidence were retained, and empty-cache offline restoration passed.
+KDecoration is now individually admitted with three enabled upstream tests and
+a compiled Ubuntu client exercised before and after candidate installation.

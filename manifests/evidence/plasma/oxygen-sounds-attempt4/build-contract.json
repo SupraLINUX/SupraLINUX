@@ -3,11 +3,11 @@
   "role": "reviewed-plasma-package-build",
   "state": "execution-authorized",
   "authorized_nodes": [
-    "kdecoration"
+    "oxygen-sounds"
   ],
   "package_execution_authorized": true,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
-  "scope": "Per-node clean builds, upstream tests, package/Ubuntu upgrade and ABI client checks on KVM; graphical desktop and final distro integration remain later gates",
+  "scope": "per-node build, lintian, installed resources and Ubuntu APT upgrade; graphical GRUB rendering and final distro integration remain later gates",
   "nodes": {
     "breeze-grub": {
       "state": "PASS",
@@ -241,7 +241,7 @@
       }
     },
     "oxygen-sounds": {
-      "state": "PASS",
+      "state": "build-pending",
       "source_package": "oxygen-sounds",
       "version": "4:6.7.5-0supralinux1",
       "upstream_version": "6.7.5",
@@ -339,23 +339,6 @@
           "host_evidence_manifest_sha256": "9b7cb64358cd8304799f66012bd79691cd86bc631a62618bf48a8054ba72de2a",
           "cause": "Host DNS resolution of api.github.com failed during active package monitoring. The controller exited and shut down the VM during autopkgtest testbed setup. sbuild and lintian passed; no test completed and no original guest result or Actions artifact was produced.",
           "repair": "Retry read-only API transport after transient DNS/network/HTTP failures without repeating mutations. Certify recovery, permanent-error handling and a finite retry budget, then rerun Oxygen tests on a fresh KVM runner."
-        },
-        {
-          "attempt": 4,
-          "state": "PASS",
-          "sbuild_result": "PASS",
-          "lintian_result": "PASS",
-          "autopkgtest_result": "PASS",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37247818914,
-          "workflow_job_id": 111569110171,
-          "source_commit": "2cde3f11550e45fa149f10c3f174bba98d8a6850",
-          "artifact_id": 11319926950,
-          "artifact_sha256": "247f69c3d91df91fc1bc07e11533e048dd215d2493ff4a4b4ce8ced92ff75066",
-          "result_path": "manifests/evidence/plasma/oxygen-sounds-attempt4/result.json",
-          "result_sha256": "f953879eb1e254971464eb3ae2eb0de946f945b1f92c2205a63485b3a31a5e23",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t002909z-3714464",
-          "host_evidence_manifest_sha256": "9e436bdf51bd13711e0e77923fbe2b833e879963b8077a42e9e63c0d51bbc69c"
         }
       ],
       "review": {
@@ -369,146 +352,6 @@
         "rules",
         "tests/sound-resources",
         "tests/ubuntu-upgrade"
-      ],
-      "evidence": {
-        "workflow_run_id": 37247818914,
-        "workflow_job_id": 111569110171,
-        "source_commit": "2cde3f11550e45fa149f10c3f174bba98d8a6850",
-        "artifact_id": 11319926950,
-        "artifact_sha256": "247f69c3d91df91fc1bc07e11533e048dd215d2493ff4a4b4ce8ced92ff75066",
-        "result_path": "manifests/evidence/plasma/oxygen-sounds-attempt4/result.json",
-        "result_sha256": "f953879eb1e254971464eb3ae2eb0de946f945b1f92c2205a63485b3a31a5e23",
-        "contract_path": "manifests/evidence/plasma/oxygen-sounds-attempt4/build-contract.json",
-        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t002909z-3714464",
-        "host_evidence_manifest_sha256": "9e436bdf51bd13711e0e77923fbe2b833e879963b8077a42e9e63c0d51bbc69c",
-        "local_retention": {
-          "archive_root": ".artifacts/plasma-6.7.5/oxygen-sounds-attempt4",
-          "archive_index_sha256": "e316c7d85d19b73683f2c7401bdcc974c4206787054474d2a1d2a1cec6e59cfc",
-          "plan_path": "manifests/evidence/plasma/oxygen-sounds-artifact-plan.json",
-          "plan_sha256": "fd4f48d4b3ee93a521580a9ba9609eca7c2c4c6cc4244ab191eefb059531e79a",
-          "source_complete": true,
-          "changes_complete": true,
-          "buildinfo_verified": true,
-          "artifact_zip_sha256_verified": true,
-          "offline_restore_verified": true,
-          "requires_github_for_restore": false,
-          "off_host_backup_verified": false,
-          "unique_binary_package_count": 1,
-          "binary_payload_file_count": 1,
-          "payload_prefix": "packages/"
-        },
-        "cache_probe_result_path": "manifests/evidence/plasma/oxygen-sounds-attempt4/cache-probe-result.json",
-        "cache_probe_result_sha256": "6f7e5865703570b1575c929f582ac7f0459bfe881712ef16aa9968e303cc25b3"
-      }
-    },
-    "kdecoration": {
-      "state": "build-pending",
-      "source_package": "kdecoration",
-      "version": "4:6.7.5-0supralinux1",
-      "upstream_version": "6.7.5",
-      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/kdecoration-6.7.5.tar.xz",
-      "upstream_sha256": "7ff1fe2854ca08a21a1ba47f1b0c97d12ea24f1db618631319cba4023ca53d86",
-      "signature_sha256": "c9b1094ab02591ab2bc1ed1f4ac58094822df909799489456a8ca30c6be9f277",
-      "packaging_path": "packages/plasma/kdecoration/debian",
-      "packaging_review": "PASS",
-      "packaging_reference_version": "4:6.6.4-0ubuntu1",
-      "packaging_reference_sha256": "f9e595e0f53f84f75ebc465fdbce0c4409d359c42ba3f0d47b0cb25781ca662e",
-      "packaging_sha256": {
-        "changelog": "f9d92a654b271c785d1a36e47599bc91d303bca170be4945ff52e5dc91e7fc54",
-        "control": "16df22657e2f00bc0d860209b3039d28e956ab90d203bcc74e87925b03308873",
-        "copyright": "275c462bd125912f0cf34e3ebdecd784b274395a3e0b16cf1129dbae6734fcbb",
-        "docs": "3764ceaff06f3c6d3dcf7404d0f29ba3a2abb4a52c000481646112524ea1923c",
-        "libkdecorations3-6.install": "0c41b019ad3173de75e35ed78c7fadc72c828269566bd470a58b1ec72f3bf350",
-        "libkdecorations3-6.symbols": "a05b742570686e43172f8cc650d3d26096cd5fd54da29836c0f96d354a5ef021",
-        "libkdecorations3-dev.install": "02635448ea12f58caafd1e575528588fa30d72cc9df1c62b5e71b72d1fd5d3f1",
-        "libkdecorations3private2.install": "368ced092c710a18fdfaa29e8525fa179e8a5cb5d2333651f9833dd8a23be751",
-        "libkdecorations3private2.symbols": "1fcd160c9f0b5930686d95a837650346eeb2f789ae0ee178f225f31acde085f6",
-        "rules": "4970c797099117336988087e5689a22446db030eb34818b35c696fdc63e6406c",
-        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
-        "tests/baseline-setup": "d86c66d59dc02b02d625554d2c7f86765e25e857e20fd3dd00c01f6382772470",
-        "tests/consumer": "715f8048546d0043766a5b4cd9db6565846095ebe4f262d216480c8f9228d2c8",
-        "tests/control": "6f1a3e0bafcd1cc191442c02980b55cd795fd4444fd22b1cc0b203455df2f8ae",
-        "tests/ubuntu-abi-client": "8bd572ee34598b062dbc4b9783a9e034121e5c43335c5c186a4b3f4ab4178085"
-      },
-      "binary_packages": {
-        "libkdecorations3-6": "amd64",
-        "libkdecorations3-dev": "amd64",
-        "libkdecorations3private2": "amd64"
-      },
-      "ubuntu_baseline_package": "libkdecorations3-dev",
-      "frameworks_predecessors": {
-        "extra-cmake-modules": {
-          "source_package": "kf6-extra-cmake-modules",
-          "version": "6.30.0-0supralinux3",
-          "binaries": [
-            {
-              "package": "extra-cmake-modules",
-              "architecture": "all",
-              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
-            }
-          ]
-        },
-        "ki18n": {
-          "source_package": "kf6-ki18n",
-          "version": "6.30.0-0supralinux1",
-          "binaries": [
-            {
-              "package": "libkf6i18n-data",
-              "architecture": "all",
-              "sha256": "3df2300d5aca640c8968859367ac3cd606a31a87e875ca207a71eeda6d03f45a"
-            },
-            {
-              "package": "libkf6i18n-dev",
-              "architecture": "amd64",
-              "sha256": "a9485f9fdb874cc6a61064a824d66567306122c39677ccf92f8adb3b0db14870"
-            },
-            {
-              "package": "libkf6i18n6",
-              "architecture": "amd64",
-              "sha256": "fa60bd16ffb35ae90eb1ab324386961d973a9b0dd31a4947351d3afc652b6e58"
-            },
-            {
-              "package": "libkf6i18nlocaledata6",
-              "architecture": "amd64",
-              "sha256": "19a6b680b3f85fe04901d53fa6193dd773d72fc02c9337387776ec779f5c285a"
-            },
-            {
-              "package": "libkf6i18nqml6",
-              "architecture": "amd64",
-              "sha256": "0297393117c5b4b0fd284d32aa9040c5afbe91aa0da73b2f83d1b181a812f91c"
-            },
-            {
-              "package": "qml6-module-org-kde-i18n-localedata",
-              "architecture": "amd64",
-              "sha256": "147a716c4794a50a63160928228afd25c406a02af2b3d00637bed289027f6001"
-            },
-            {
-              "package": "qml6-module-org-kde-ki18n",
-              "architecture": "amd64",
-              "sha256": "07960032b6582476f0844b72d4f74884240c592e55eb0613390f0191dbd98299"
-            }
-          ]
-        }
-      },
-      "baseline_setup_script": "tests/baseline-setup",
-      "upstream_tests": [
-        "kdecoration3-decorationButtonTest",
-        "kdecoration3-decorationTest",
-        "kdecoration3-decorationShadowTest"
-      ],
-      "attempts": [],
-      "review": {
-        "upstream_changes": "Signed official stable 6.7.5; upstream source unchanged. Requires Qt >=6.10 and Frameworks >=6.26, satisfied by Ubuntu Qt and selected Frameworks.",
-        "packaging_changes": "Preserve epoch 4, three binary names, Multi-Arch same, historical Breaks/Replaces and public/private SONAMEs. Retain Ubuntu symbol lists to reject missing exports. Refresh SPDX attribution and enable upstream CTest.",
-        "build_dependencies": "Exact retained ECM 6.30.0-0supralinux3 and KI18n 6.30.0-0supralinux1 including its required binary closure; Ubuntu Qt 6.10.",
-        "test_policy": "Require all three upstream CTest tests, then run the unchanged client compiled and exercised against Ubuntu libraries before the candidate upgrade; compile a second client against candidate headers, inspect SONAMEs and check APT.",
-        "activation_policy": "Libraries only. Real KWin decoration plugins and a graphical Wayland desktop remain integration gates."
-      },
-      "required_executable_files": [
-        "rules",
-        "tests/baseline-setup",
-        "tests/ubuntu-abi-client",
-        "tests/consumer"
       ]
     }
   },
@@ -551,12 +394,6 @@
       "attempt": 3,
       "archive_root": ".artifacts/plasma-6.7.5/oxygen-sounds-attempt3",
       "archive_index_sha256": "bea81b15331ec2f897c479619d927b1477b01349efd6aaf7f3851334f37c6cba"
-    },
-    {
-      "node": "oxygen-sounds",
-      "attempt": 4,
-      "archive_root": ".artifacts/plasma-6.7.5/oxygen-sounds-attempt4",
-      "archive_index_sha256": "e316c7d85d19b73683f2c7401bdcc974c4206787054474d2a1d2a1cec6e59cfc"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-kdecoration-baseline
+CANDIDATE_BUILD="$(mktemp -d)"
+trap 'rm -rf "${CANDIDATE_BUILD}"' EXIT
+cmake -S "${BASE}/source" -B "${CANDIDATE_BUILD}" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${CANDIDATE_BUILD}"
+"${CANDIDATE_BUILD}/ubuntu-decoration-client"

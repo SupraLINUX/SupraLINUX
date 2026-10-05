@@ -53,6 +53,11 @@ def main():
         assert all(result[k] == 'PASS' for k in ['sbuild_result','lintian_result','autopkgtest_result'])
         for name, digest in result['files_sha256'].items():
             assert hashlib.sha256(archive.read(name)).hexdigest() == digest, name
+        upstream_bytes = None
+        if record.get('upstream_tests'):
+            upstream_bytes = archive.read('upstream-tests.json')
+            upstream = json.loads(upstream_bytes)
+            assert upstream['state'] == 'PASS' and upstream['expected_tests'] == record['upstream_tests']
         contract_bytes = archive.read('build-contract.json')
         built = json.loads(contract_bytes)['nodes'][a.node]
         assert built['packaging_sha256'] == record['packaging_sha256'] and built['upstream_sha256'] == record['upstream_sha256']
@@ -100,6 +105,8 @@ def main():
     (historical/'summary').write_bytes(summary_bytes)
     if probe_bytes is not None:
         (historical/'cache-probe-result.json').write_bytes(probe_bytes)
+    if upstream_bytes is not None:
+        (historical/'upstream-tests.json').write_bytes(upstream_bytes)
     write(plan_path, plan)
     binaries = index['items'][0]['binaries']
     evidence = {'workflow_run_id':int(result['workflow_run_id']), 'workflow_job_id':a.job_id,
@@ -118,10 +125,13 @@ def main():
     if probe_bytes is not None:
         evidence['cache_probe_result_path'] = str(relative/'cache-probe-result.json')
         evidence['cache_probe_result_sha256'] = sha(historical/'cache-probe-result.json')
+    if upstream_bytes is not None:
+        evidence['upstream_tests_path'] = str(relative/'upstream-tests.json')
+        evidence['upstream_tests_sha256'] = sha(historical/'upstream-tests.json')
     record.update(state='PASS', evidence=evidence)
     record['attempts'].append({'attempt':number, 'state':'PASS', 'sbuild_result':'PASS', 'lintian_result':'PASS',
                               'autopkgtest_result':'PASS', 'package_attempt_consumed':True,
-                              **{k:v for k,v in evidence.items() if k not in ['contract_path','local_retention','cache_probe_result_path','cache_probe_result_sha256']}})
+                              **{k:v for k,v in evidence.items() if k not in ['contract_path','local_retention','cache_probe_result_path','cache_probe_result_sha256','upstream_tests_path','upstream_tests_sha256']}})
     campaign.update(state='partial-PASS', authorized_nodes=[], package_execution_authorized=False)
     campaign['retained_attempt_archives'].append({'node':a.node,'attempt':number,
                                                 'archive_root':evidence['local_retention']['archive_root'],
