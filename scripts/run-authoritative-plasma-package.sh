@@ -162,10 +162,6 @@ BUILD_RESULT="FAIL"
 sbuild --verbose --chroot-mode=unshare --dist=resolute --arch=amd64 --arch-all \
     "${EXTRA_ARGS[@]}" --build-dir="${WORK}/out" "${DSCS[0]}" |& tee "${EVIDENCE}/sbuild.log"
 BUILD_RESULT="PASS"
-STAGE="upstream-package-tests"
-python3 "${ROOT}/scripts/plasma-package-testing.py" upstream-tests "${NODE}" \
-    --build-log "${EVIDENCE}/sbuild.log" --output "${EVIDENCE}/upstream-tests.json"
-
 STAGE="artifact-capture"
 mapfile -t DEBS < <(find "${WORK}/out" -maxdepth 1 -name '*.deb' -type f | sort)
 mapfile -t CHANGES < <(find "${WORK}/out" -maxdepth 1 -name '*.changes' -type f)
@@ -194,6 +190,10 @@ for predecessor in record.get("frameworks_predecessors", {}).values():
     for binary in predecessor["binaries"]:
         assert f"{binary['package']} (= {predecessor['version']})" in buildinfo, "Wrong build predecessor version"
 PY
+
+STAGE="upstream-package-tests"
+python3 "${ROOT}/scripts/plasma-package-testing.py" upstream-tests "${NODE}" \
+    --build-log "${EVIDENCE}/sbuild.log" --output "${EVIDENCE}/upstream-tests.json"
 
 STAGE="lintian"
 LINTIAN_RESULT="FAIL"

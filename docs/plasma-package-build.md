@@ -154,3 +154,13 @@ and Ubuntu-upgrade tests passed. Sources, binary, changes/buildinfo, logs and
 cache-probe evidence were retained, and empty-cache offline restoration passed.
 KDecoration is now individually admitted with three enabled upstream tests and
 a compiled Ubuntu client exercised before and after candidate installation.
+
+KDecoration Attempt 1 passed sbuild, retained Ubuntu symbol guards and all
+four actual CTest entries (three source tests plus ECM's `appstreamtest`).
+The verifier incorrectly assumed exactly three entries. Its original runner
+FAIL remains immutable; a separate diagnosis classifies the false negative as
+INFRA_INVALID. The corrected verifier requires every declared test and matches
+the success summary to every executed entry, rejecting failed or missing tests.
+The failed artifact retains sources and logs but lacks candidate binaries:
+verification ran before capture. The runner now captures binary, changes,
+buildinfo and debug outputs immediately after sbuild, before later verification.

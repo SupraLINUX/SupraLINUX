@@ -101,6 +101,7 @@ def main():
     parser.add_argument("--cause", required=True)
     parser.add_argument("--repair", required=True)
     parser.add_argument("--host-interruption", action="store_true")
+    parser.add_argument("--verification-invalid", action="store_true")
     args = parser.parse_args()
     if args.host_interruption:
         record_interruption(args)
@@ -125,6 +126,19 @@ def main():
         assert result["workflow_run_id"] == host["workflow_run_id"] == str(meta["workflow_run"]["id"])
         for name, digest in result["files_sha256"].items():
             assert hashlib.sha256(archive.read(name)).hexdigest() == digest, name
+        reported_state = "FAIL"
+        diagnosis = None
+        if args.verification_invalid:
+            assert result["stage"] == "upstream-package-tests" and result["sbuild_result"] == "PASS"
+            testing = importlib.machinery.SourceFileLoader("testing", str(ROOT / "scripts/plasma-package-testing.py")).load_module()
+            corrected = testing.upstream_test_result(record, archive.read("sbuild.log").decode())
+            assert corrected["state"] == "PASS"
+            reported_state = "INFRA_INVALID"
+            diagnosis = {"kind": "verification-gate-false-negative", "original_state": result["state"],
+                         "original_result_sha256": hashlib.sha256(payload).hexdigest(),
+                         "upstream_tests": corrected,
+                         "candidate_outputs_retained": any(name.startswith("packages/") and name.endswith(".deb") for name in archive.namelist()),
+                         "package_result": "incomplete; requires remaining package tests"}
         contract = archive.read("build-contract.json")
         assert json.loads(contract)["nodes"][args.node]["packaging_sha256"] == record["packaging_sha256"]
         sources = [name for name in archive.namelist() if name.startswith("packages/") and name.endswith(".dsc")]
@@ -143,6 +157,8 @@ def main():
     path.mkdir(parents=True)
     (path / "result.json").write_bytes(payload)
     (path / "build-contract.json").write_bytes(contract)
+    if diagnosis is not None:
+        closure.write(path / "verification-diagnosis.json", diagnosis)
     archive_root = ROOT / f".artifacts/plasma-{record['upstream_version']}/{args.node}-attempt{number}"
     stored = archive_root / "sha256" / f"{closure.sha(args.zip)}.zip"
     stored.parent.mkdir(parents=True, exist_ok=True)
@@ -150,11 +166,12 @@ def main():
         shutil.copyfile(args.zip, stored)
     assert closure.sha(stored) == closure.sha(args.zip)
     closure.write(archive_root / "index.json", {
-        "kind": "failed-package-attempt-archive", "package_state": "FAIL", "downstream_eligible": False,
+        "kind": "failed-package-attempt-archive", "package_state": reported_state, "downstream_eligible": False,
         "artifact_sha256": closure.sha(stored), "source_payload_verified": True,
         "node": args.node, "version": record["version"], "result_sha256": closure.sha(path / "result.json")})
     record["attempts"].append({
-        "attempt": number, "state": "FAIL", "sbuild_result": result["sbuild_result"],
+        "attempt": number, "state": reported_state, "original_state": result["state"],
+        "sbuild_result": result["sbuild_result"],
         "lintian_result": result["lintian_result"], "autopkgtest_result": result["autopkgtest_result"],
         "package_attempt_consumed": True, "workflow_run_id": int(result["workflow_run_id"]),
         "workflow_job_id": args.job_id, "source_commit": head, "artifact_id": meta["id"],
@@ -162,11 +179,14 @@ def main():
         "result_sha256": closure.sha(path / "result.json"), "host_evidence_dir": str(args.host_dir),
         "host_evidence_manifest_sha256": closure.sha(args.host_dir / "evidence-sha256.txt"),
         "cause": args.cause, "repair": args.repair})
+    if diagnosis is not None:
+        record["attempts"][-1].update(verification_diagnosis_path=str((path / "verification-diagnosis.json").relative_to(ROOT)),
+                                      verification_diagnosis_sha256=closure.sha(path / "verification-diagnosis.json"))
     campaign["retained_attempt_archives"].append({"node": args.node, "attempt": number,
                                                 "archive_root": str(archive_root.relative_to(ROOT)),
                                                 "archive_index_sha256": closure.sha(archive_root / "index.json")})
     closure.write(manifest, campaign)
-    print(f"{args.node} Attempt {number}: original FAIL retained; no downstream artifact admission")
+    print(f"{args.node} Attempt {number}: original {result["state"]} retained; classification {reported_state}; no downstream artifact admission")
 
 
 if __name__ == "__main__":

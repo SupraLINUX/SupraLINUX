@@ -67,6 +67,16 @@ class InputAdmission(unittest.TestCase):
             with self.subTest(broken=broken), self.assertRaises(AssertionError):
                 testing.upstream_test_result(record, broken)
 
+    def test_additional_ecm_tests_are_accounted_for(self):
+        record = {"upstream_tests": ["decoration"]}
+        log = "1/2 Test #1: appstreamtest ..... Passed 0.01 sec\n2/2 Test #2: decoration ..... Passed 0.01 sec\n100% tests passed, 0 tests failed out of 2"
+        result = testing.upstream_test_result(record, log)
+        self.assertEqual(result["executed_tests"], ["appstreamtest", "decoration"])
+        with self.assertRaises(AssertionError):
+            testing.upstream_test_result(record, log.replace("appstreamtest ..... Passed", "appstreamtest ..... Failed"))
+        with self.assertRaises(AssertionError):
+            testing.upstream_test_result(record, log.replace("out of 2", "out of 1"))
+
     def test_baseline_setup_rejects_changed_or_unreviewed_inputs(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

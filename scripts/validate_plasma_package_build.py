@@ -60,7 +60,19 @@ def validate():
                 assert hashlib.sha256(host_bytes).hexdigest() == result["host_result_sha256"]
                 assert json.loads(host_bytes)["exit_code"] != 0
                 assert hashlib.sha256((directory / "build-contract.json").read_bytes()).hexdigest() == result["contract_sha256"]
-            assert result["node"] == name and result["state"] == attempt["state"]
+            if attempt.get("verification_diagnosis_path"):
+                diagnostic_bytes = (ROOT / attempt["verification_diagnosis_path"]).read_bytes()
+                assert hashlib.sha256(diagnostic_bytes).hexdigest() == attempt["verification_diagnosis_sha256"]
+                diagnostic = json.loads(diagnostic_bytes)
+                assert diagnostic["kind"] == "verification-gate-false-negative"
+                assert diagnostic["original_result_sha256"] == attempt["result_sha256"]
+                assert attempt["state"] == "INFRA_INVALID" and result["state"] == attempt["original_state"] == "FAIL"
+                assert result["stage"] == "upstream-package-tests" and result["sbuild_result"] == "PASS"
+                assert diagnostic["upstream_tests"]["state"] == "PASS"
+                assert diagnostic["upstream_tests"]["expected_tests"] == record["upstream_tests"]
+            else:
+                assert result["state"] == attempt["state"]
+            assert result["node"] == name
             assert result["source_commit"] == attempt["source_commit"]
             assert result["workflow_run_id"] == str(attempt["workflow_run_id"])
             assert result["package_attempt_consumed"] is attempt["package_attempt_consumed"]

@@ -38,10 +38,16 @@ def upstream_test_result(record, log):
     assert len(set(expected)) == len(expected), 'Duplicate upstream test names'
     for name in expected:
         assert re.search(r'Test\s+#\d+:\s+' + re.escape(name) + r'\s+\.+\s+Passed\s+', log), f'Upstream test did not pass: {name}'
+    executed = re.findall(r'Test\s+#\d+:\s+(\S+)\s+\.+\s+Passed\s+', log)
     if expected:
-        assert re.search(r'100% tests passed, 0 tests failed out of ' + str(len(expected)) + r'\b', log), 'Upstream suite count/result mismatch'
+        assert len(executed) == len(re.findall(r'Test\s+#\d+:\s+\S+\s+\.+\s+', log)), 'Some executed upstream tests did not pass'
+        assert len(executed) == len(set(executed)), 'Duplicate upstream test executions'
+        assert set(expected) <= set(executed)
+        # ECM may add integration tests (for example AppStream). Every executed
+        # test must pass, and the summary must account for all recorded entries.
+        assert re.search(r'100% tests passed, 0 tests failed out of ' + str(len(executed)) + r'\b', log), 'Upstream suite count/result mismatch'
     return {'state': 'PASS' if expected else 'not-applicable', 'expected_tests': expected,
-            'scope': 'CTest suite executed during the clean package build'}
+            'executed_tests': executed, 'scope': 'CTest suite executed during the clean package build'}
 
 
 def main():
@@ -58,7 +64,7 @@ def main():
         assert a.build_log and a.output
         result = upstream_test_result(record, a.build_log.read_text())
         a.output.write_text(json.dumps(result, indent=2)+'\n')
-        print(f"Upstream package tests: {result['state']}; count={len(result['expected_tests'])}")
+        print(f"Upstream package tests: {result['state']}; required={len(result['expected_tests'])}; executed={len(result['executed_tests'])}")
 
 
 if __name__ == '__main__':
