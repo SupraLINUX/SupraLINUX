@@ -2507,7 +2507,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -2532,6 +2532,10 @@
       "sha256": "658f221ac84bffff94cdd032c07220bfc8ac25840b7f76e6290a9a5921e1a37e",
       "applicable": false,
       "inapplicability_reason": "Attempt 1 exposed an undeclared Ubuntu qtpaths build tool; revision 2 declares qt6-base-dev-tools and requires a fresh reviewed input preflight."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kwallet-pam-preflight7/verification.json",
+      "sha256": "d7b6d9c45462ac9025d5fb4b22fb8da2088f325883d5958c3ce63bdb40800bf2"
     }
   ],
   "package_input_incidents": [
