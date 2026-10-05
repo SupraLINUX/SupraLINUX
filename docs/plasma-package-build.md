@@ -251,3 +251,10 @@ certify changed upstream minimums. The live supplementary-provider manifest
 records signed KDE stable 1.22.0 as a preparation candidate, with package and
 protocol compatibility gates pending. This adds an external build provider;
 it does not change the pinned Plasma release or replace Qt/Wayland runtime.
+
+The first live transport probe (run 37292037424) decoded all 45,109 setup bytes
+and matched SHA-256. Its harness then failed source extraction because it provided
+Debian/control without a changelog. The original INFRA_INVALID probe remains
+sealed and archived; no package Attempt was consumed. The harness now uses the
+explicit tests-only built-tree supported by Ubuntu autopkgtest. Its classification
+was verified with the actual 5.55 parser before repeating the small KVM probe.

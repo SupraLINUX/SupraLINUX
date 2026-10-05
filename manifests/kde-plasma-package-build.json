@@ -940,6 +940,16 @@
       "result_sha256": "b10859b707c6c6f2fb773ef000f38171a300f3f8a0633f7f7dc13001100e3c01",
       "cause": "Milestone parent directory mode 0750 did not permit the libvirt QEMU identity to traverse it. No guest, workflow or package execution started.",
       "repair": "Grant only libvirt-qemu read/traverse ACL on the dedicated milestone directory. Check POSIX access ACLs before creating an overlay; certify cache transport with the synthetic ECM/Qt consumer before Ocean."
+    },
+    {
+      "state": "INFRA_INVALID",
+      "consumes_package_attempt": false,
+      "package_execution_started": false,
+      "result_path": "manifests/evidence/plasma/infrastructure/baseline-transport-probe1-20261005/host-result.json",
+      "result_sha256": "bdef0f1344bce05616046dfa5029aa5675475b3bee570dd404bc7b9bf79fc4d9",
+      "cause": "Large setup decoded and its SHA-256 matched, but the probe supplied Debian/control without a changelog. autopkgtest classified it as an unbuilt package source and failed extraction before running the test.",
+      "repair": "Use the supported tests-only built-tree fixture; validate classification with the actual Ubuntu autopkgtest parser before another small KVM certification.",
+      "diagnosis_path": "manifests/evidence/plasma/infrastructure/baseline-transport-probe1-20261005/diagnosis.json"
     }
   ],
   "infrastructure_certifications": [

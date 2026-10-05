@@ -30,9 +30,8 @@ def main():
                f"printf '%s' '{expected}' > {marker}\n").encode()
     setup = source / 'debian/tests/baseline-setup'
     setup.write_bytes(payload)
-    (source / 'debian/control').write_text('Source: supralinux-transport-probe\nSection: misc\nPriority: optional\n'
-        'Maintainer: SupraLINUX Project <packages@supralinux.invalid>\nTestsuite: autopkgtest\n\n'
-        'Package: supralinux-transport-probe\nArchitecture: all\nDescription: infrastructure fixture, no package build\n')
+    # autopkgtest supports a tests-only tree as built-tree with no binary build.
+    # A Debian/control file would instead select unbuilt-tree source extraction.
     (source / 'debian/tests/control').write_text('Tests: preserved-setup\nDepends: coreutils\nRestrictions: needs-root\n')
     test = source / 'debian/tests/preserved-setup'
     test.write_text(f'#!/bin/sh\nset -eu\ntest "$(cat {marker})" = "{expected}"\n'
