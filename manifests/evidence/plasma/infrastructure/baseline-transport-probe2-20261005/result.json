@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "scope": "large-reviewed-autopkgtest-baseline-transport",
+  "state": "PASS",
+  "exit_code": 0,
+  "source_commit": "4e8607346dea9f2596871bba9051eacac0c4a13b",
+  "workflow_run_id": "37292928896",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "system_test_backend": "autopkgtest-qemu",
+  "system_test_acceleration": "kvm-required",
+  "setup_payload_bytes": 45109,
+  "setup_max_line_bytes": 129,
+  "setup_payload_sha256": "478373b38befeb682145b3d77bcbd93ce211d8425815b4216825975dbcbed395",
+  "inputs_sha256": {
+    "scripts/probe-autopkgtest-baseline-transport.py": "ba0e04801360f18d6c596ad686376834fb2a8295de63ed27ae40dd70780ca0d0",
+    "scripts/plasma-package-testing.py": "6babb4d2b9936b34e6c6b63024fd1a9c581139f37bddc6234b1c78a4c1f0e381",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d"
+  },
+  "files_sha256": {
+    "autopkgtest/log": "a31a5994a1eea83958e37687cc8cf378c1aa9f5199c07f61c3d53e1dc7f2f882",
+    "autopkgtest/preserved-setup-packages": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/preserved-setup-stdout": "e49144067aec1a512a2110e0f9df295347050aeeec61b31df5e7cb56d8828c16",
+    "autopkgtest/summary": "816ea4170834334cd6414bbb1eda51044049070892ecc96dd227ff619f5e425c",
+    "autopkgtest/testbed-packages": "f37c4314c6c646b336468c16d4ef3884bb2deca11a453bdd897ca5f73e050308",
+    "autopkgtest/testinfo.json": "92f4607e1b393552e0d84437d7ad822c8b4ae4d2b2e4a3174dddb6ab18865040",
+    "baseline-setup": "478373b38befeb682145b3d77bcbd93ce211d8425815b4216825975dbcbed395",
+    "fixture.json": "4fa8e40e838d1f3064d1dc614f9a06d3dcc1a180fdedd6e0e87db9322b17622a",
+    "preserved-setup": "8940ed3720ba67d975e2188a15747698c229945121ec520949eeeaaf4101cfbc",
+    "setup-commands.txt": "e44e9b189ee69d386386b14c2ea262d5c1a19e00e90eb812a927d6dc09cecacb"
+  }
+}

@@ -770,9 +770,9 @@
         "salsa/qt-kde-team.debian.net.asc": "2b218b250b8929ad7055afe891bd29288228cfb6efac0e4ed638d9db8d3c4e77",
         "salsa-ci.yml": "04779f76232c171e1b0094a8bf323543669e75a3131a1d706b8c6f61ec7c2ab0",
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
-        "tests/baseline-setup": "03d04c74f787e677992cdbdd6228e913035464d45c50ce2b88f47aab28c232ea",
+        "tests/baseline-setup": "b3dc8a2f79699b40e24638ba4e668bb873e387a887456178be0e82064e51cbb6",
         "tests/consumer": "afa2aa862fd4a5d73a065c0f891c3b05411ae7c8afa0b71998e3b6ee40cbba6e",
-        "tests/control": "45d406b44d8164434ae2d0d155f5b076eb23410814f4b5ef5ccddd31f67b1fea",
+        "tests/control": "6f4d744b5ca4d6a3ac883c28d9ebcac20902e677fa4d66fb42520848a249daaa",
         "tests/theme-resources": "8e93a193f5a6d10fc5dfa46db501a1c9f728015de752847a81649f2ecf320440",
         "tests/theme-resources.json": "c7427c741ce2fde230f164db2152e5dd34cba1c9a4d64edb7eda0500a3edbf27",
         "tests/ubuntu-abi-client": "34210657a09a4116d3e252f8921876a50f31e31e436f04601f1ed9cab5cc4c3f",
@@ -828,26 +828,6 @@
           "repair": "Transport reviewed baseline setup as bounded base64 lines, verify its SHA-256 in the guest before executing, and certify the transport in a small KVM probe before repeating the package.",
           "verification_diagnosis_path": "manifests/evidence/plasma/breeze-plymouth-attempt1/verification-diagnosis.json",
           "verification_diagnosis_sha256": "ffd9d290bddf48293b23e914c863077b2f90a3757bd0da626d961c135892d488"
-        },
-        {
-          "attempt": 2,
-          "state": "INFRA_INVALID",
-          "original_state": "INFRA_INVALID",
-          "sbuild_result": "PASS",
-          "lintian_result": "PASS",
-          "autopkgtest_result": "INFRA_INVALID",
-          "package_attempt_consumed": true,
-          "workflow_run_id": 37293399191,
-          "workflow_job_id": 111708884170,
-          "source_commit": "4e8607346dea9f2596871bba9051eacac0c4a13b",
-          "artifact_id": 11337745444,
-          "artifact_sha256": "80d25f9aa7dec46e90b9c445a693fcb325c094b841194f479303cc4329dd8c63",
-          "result_path": "manifests/evidence/plasma/breeze-plymouth-attempt2/result.json",
-          "result_sha256": "70e70abf74597e9270688dbe756e160e2605564f93f35526cb1646110703410c",
-          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t095523z-2759999",
-          "host_evidence_manifest_sha256": "cfa156bcbe2ceb088ed51f034fa286e016f138fe68ce4c7673946884ce960489",
-          "cause": "Minimal Ubuntu baseline testbed installed gcc without its recommended C development headers; compilation stopped at missing assert.h before candidate tests. The original runner classified exit 16 as INFRA_INVALID; sbuild and lintian passed.",
-          "repair": "Declare build-essential explicitly in the Ubuntu baseline setup and consumer test dependencies; run the exact reviewed Ubuntu baseline client in a disposable nested KVM preflight before repeating the package."
         }
       ],
       "baseline_setup_script": "tests/baseline-setup",
@@ -862,7 +842,7 @@
         "upstream_changes": "Signed official stable 6.7.5, no upstream code patches. Text plugin uses Ubuntu Plymouth headers and libraries; graphical theme uses the Ubuntu script/label-pango runtime.",
         "packaging_changes": "Preserve Ubuntu name, architecture, hardening and maintainer scripts. Configure SupraLINUX title through supported upstream CMake options. Correct SPDX-specific license stanzas and declare fonts-noto-core/plymouth-label. Keep correct upstream plugin/theme install directories.",
         "build_dependencies": "Exact retained ECM 6.30.0-0supralinux3; all C/Plymouth SDK/providers from Ubuntu. No Qt provider replacement. Immutable bare buildd admission with explicit current Ubuntu suites/update/distupgrade.",
-        "test_policy": "No automated upstream suite. Host resource fixture passed: 89 exact resources, 84 decoded PNGs, metadata and both color-depth spinner branches. Ubuntu SDK client compiled syntax checked; real baseline and unchanged binary post-upgrade execution in boot/shutdown/updates modes, prompt/progress/lifecycle without display views plus newly compiled consumer remain KVM gates. Normalize only validated PNG time/date fields, retaining pixel/other metadata identity; the source fixture passes this policy. Attempt 1 exposed serial setup truncation before the baseline executed; transport repair is independently certified before repeat. Declare the libevdev/libudev/libxkbcommon SDK dependencies required by Ubuntu Plymouth pkg-config for actual C compilation. Explicit build-essential provides the compiler and C development headers even with no-install-recommends. The exact Ubuntu baseline client must compile and run in the nested KVM preflight before another package Attempt.",
+        "test_policy": "No automated upstream suite. Host resource fixture passed: 89 exact resources, 84 decoded PNGs, metadata and both color-depth spinner branches. Ubuntu SDK client compiled syntax checked; real baseline and unchanged binary post-upgrade execution in boot/shutdown/updates modes, prompt/progress/lifecycle without display views plus newly compiled consumer remain KVM gates. Normalize only validated PNG time/date fields, retaining pixel/other metadata identity; the source fixture passes this policy. Attempt 1 exposed serial setup truncation before the baseline executed; transport repair is independently certified before repeat. Declare the libevdev/libudev/libxkbcommon SDK dependencies required by Ubuntu Plymouth pkg-config for actual C compilation.",
         "activation_policy": "Theme package installs plugin/resources; daemon/display rendering, initramfs theme selection and real BIOS/UEFI boot remain distro integration gates."
       }
     }
@@ -942,12 +922,6 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/breeze-plymouth-attempt1",
       "archive_index_sha256": "53c5981a3649aefba37c4bff2a792f20dd6b828590342f9ea88c84d2f1dca152"
-    },
-    {
-      "node": "breeze-plymouth",
-      "attempt": 2,
-      "archive_root": ".artifacts/plasma-6.7.5/breeze-plymouth-attempt2",
-      "archive_index_sha256": "7e522f90c228165a248cb7fb3975fbadab403ed4281ec0dde37a34acea8fda27"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
@@ -982,11 +956,6 @@
     {
       "path": "manifests/evidence/plasma/infrastructure/monitor-read-recovery-20261005/certification.json",
       "sha256": "72475804958d782c4bab6af43a4b2fec3548c1ed8b728548564ae6647fde6471",
-      "applicable": true
-    },
-    {
-      "path": "manifests/evidence/plasma/infrastructure/baseline-transport-probe2-20261005/certification.json",
-      "sha256": "a43e222e891e30a771ee0fac52adb78347a180ee9a4948be4bd9146b9ed941e5",
       "applicable": true
     }
   ]

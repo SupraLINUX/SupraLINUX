@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "role": "plasma-supplementary-kde-providers",
+  "role": "plasma-supplementary-providers",
   "nodes": {
     "plasma-wayland-protocols": {
       "schema": 1,
@@ -8,7 +8,8 @@
       "role": "post-planning-provider-version-review",
       "state": "packaging-preparation-pending",
       "affected_nodes": [
-        "kwayland"
+        "kwayland",
+        "kwin"
       ],
       "cmake_requirement": {
         "module": "PlasmaWaylandProtocols",
@@ -44,7 +45,75 @@
       "dag_topology_effect": "none; additional external build provider required",
       "package_execution_authorized": false,
       "consumes_package_attempt": false,
-      "next_gate": "review-package-and-certify-upstream-protocol-compatibility"
+      "next_gate": "review-package-and-certify-upstream-protocol-compatibility",
+      "additional_requirement_sources": [
+        {
+          "node": "kwin",
+          "source_url": "https://download.kde.org/stable/plasma/6.7.5/kwin-6.7.5.tar.xz",
+          "source_sha256": "6baa910b732d93c48c90f9c1cc685cc93d0b8de0cdf138c24192c045bc3a48e2",
+          "path": "CMakeLists.txt",
+          "minimum": "1.21.0"
+        }
+      ],
+      "compatibility_review": {
+        "state": "pending-runtime-and-package-gates",
+        "ubuntu_baseline_upstream_version": "1.20.0",
+        "protocol_xml_files_before": 30,
+        "protocol_xml_files_candidate": 30,
+        "changed_files": [
+          "kde-output-device-v2.xml",
+          "kde-output-management-v2.xml",
+          "org-kde-plasma-virtual-desktop.xml",
+          "plasma-window-management.xml",
+          "zkde-screencast-unstable-v1.xml"
+        ],
+        "existing_wire_opcode_argument_enum_preservation": "local schema review: unchanged except pid_changed since-version metadata",
+        "semantic_delta": {
+          "interface": "org_kde_plasma_window",
+          "event": "pid_changed",
+          "opcode": 10,
+          "old_since": 1,
+          "new_since": 8,
+          "state": "requires consumer/server behavior review before package admission"
+        },
+        "scope": "XML structural/source review only; full real Wayland integration still required"
+      }
+    },
+    "wayland-protocols": {
+      "schema": 1,
+      "as_of": "2026-10-05",
+      "role": "post-planning-provider-version-review",
+      "authority": "freedesktop-upstream",
+      "state": "source-verification-pending",
+      "affected_nodes": [
+        "kwin"
+      ],
+      "cmake_requirement": {
+        "module": "WaylandProtocols",
+        "minimum": "1.48",
+        "source_url": "https://download.kde.org/stable/plasma/6.7.5/kwin-6.7.5.tar.xz",
+        "source_sha256": "6baa910b732d93c48c90f9c1cc685cc93d0b8de0cdf138c24192c045bc3a48e2",
+        "path": "CMakeLists.txt"
+      },
+      "ubuntu_provider": {
+        "package": "wayland-protocols",
+        "version": "1.47-1",
+        "satisfies_upstream_minimum": false,
+        "policy_path": "manifests/evidence/plasma/provider-gaps/ubuntu-wayland-protocols-policy-20261005.txt",
+        "policy_sha256": "c4d6112ccfa64fad9ca05515df4d367c59a7086bdd7dd5da7f7c8dc32b9caa4f",
+        "scope": "local Ubuntu Resolute APT index; recheck in clean authoritative rootfs before execution"
+      },
+      "candidate_provider": {
+        "upstream_version": "1.48",
+        "selection_reason": "Minimum official released XML definitions required by pinned KWin; retain Ubuntu Wayland libraries and Qt",
+        "release_evidence": "https://wayland.freedesktop.org/releases.html",
+        "package_gate": "pending"
+      },
+      "qt_provider_effect": "none",
+      "wayland_runtime_provider_effect": "none",
+      "package_execution_authorized": false,
+      "consumes_package_attempt": false,
+      "next_gate": "verify-source-and-review-package-protocol-compatibility"
     }
   }
 }

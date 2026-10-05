@@ -86,6 +86,9 @@ jobs:
       - name: Verify reviewed setup transport through autopkgtest QEMU
         run: python3 scripts/probe-autopkgtest-baseline-transport.py
 
+      - name: Execute current reviewed Ubuntu baseline before candidate build
+        run: python3 scripts/probe-reviewed-ubuntu-baseline.py
+
       - name: Capture runner contract evidence
         shell: bash
         run: |

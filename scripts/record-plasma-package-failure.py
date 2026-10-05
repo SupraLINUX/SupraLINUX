@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Preserve a valid failed Attempt without admitting its artifacts downstream."""
+"""Preserve an unsuccessful Attempt with its original package/infra classification."""
 import argparse
 import hashlib
 import importlib.machinery
@@ -120,15 +120,16 @@ def main():
     with zipfile.ZipFile(args.zip) as archive:
         payload = archive.read("result.json")
         result = json.loads(payload)
-        assert result["state"] == "FAIL" and result["package_attempt_consumed"] is True
+        assert result["state"] in {"FAIL", "INFRA_INVALID"} and result["package_attempt_consumed"] is True
         assert result["node"] == args.node and result["version"] == record["version"]
         assert result["source_commit"] == head == meta["workflow_run"]["head_sha"]
         assert result["workflow_run_id"] == host["workflow_run_id"] == str(meta["workflow_run"]["id"])
         for name, digest in result["files_sha256"].items():
             assert hashlib.sha256(archive.read(name)).hexdigest() == digest, name
-        reported_state = "FAIL"
+        reported_state = result["state"]
         diagnosis = None
         if args.verification_invalid:
+            assert result["state"] == "FAIL", "A false-negative diagnosis requires an original package FAIL"
             assert result["stage"] == "upstream-package-tests" and result["sbuild_result"] == "PASS"
             testing = importlib.machinery.SourceFileLoader("testing", str(ROOT / "scripts/plasma-package-testing.py")).load_module()
             corrected = testing.upstream_test_result(record, archive.read("sbuild.log").decode())

@@ -7,5 +7,5 @@ Depends: @, python3, binutils, apt, pkgconf, libplymouth-dev
 Restrictions: needs-root
 
 Tests: consumer
-Depends: @, gcc, pkgconf, libplymouth-dev, libevdev-dev, libxkbcommon-dev, libudev-dev
+Depends: @, build-essential, pkgconf, libplymouth-dev, libevdev-dev, libxkbcommon-dev, libudev-dev
 Restrictions: needs-root

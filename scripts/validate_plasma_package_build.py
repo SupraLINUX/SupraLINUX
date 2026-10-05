@@ -27,21 +27,35 @@ def validate():
         payload = path.read_bytes()
         assert hashlib.sha256(payload).hexdigest() == certification["sha256"]
         proof = json.loads(payload)
-        assert proof["state"] == "PASS" and proof["scope"] == "active-bound-monitor-read-outage-recovery"
+        assert proof["state"] == "PASS" and proof["scope"] in {
+            "active-bound-monitor-read-outage-recovery", "large-reviewed-autopkgtest-baseline-transport"}
         assert proof["consumes_package_attempt"] is False and proof["package_execution_started"] is False
         assert proof["canonical_package_state_effect"] == "none"
-        assert proof["injected_monitor_read_failures"] > 0 and proof["observed_live_guest_after_read_failure"] is True
         for name, digest in proof["files_sha256"].items():
             file = path.parent / name
             assert file.resolve().is_relative_to(path.parent.resolve())
             assert hashlib.sha256(file.read_bytes()).hexdigest() == digest
         assert proof["files_sha256"]["evidence-sha256.txt"] == proof["host_evidence_seal_sha256"]
-        guest = json.loads((path.parent / "monitor-guest-process.json").read_text())
         host = json.loads((path.parent / "host-result.json").read_text())
         job = json.loads((path.parent / "workflow-job.json").read_text())
-        assert guest["exited"] is False and host["exit_code"] == 0 and job["conclusion"] == "success"
+        assert host["exit_code"] == 0 and job["conclusion"] == "success"
         assert str(job["run_id"]) == host["workflow_run_id"] == str(proof["workflow_run_id"])
         assert job["id"] == proof["workflow_job_id"] and job["head_sha"] == proof["source_commit"]
+        if proof["scope"] == "active-bound-monitor-read-outage-recovery":
+            assert proof["injected_monitor_read_failures"] > 0 and proof["observed_live_guest_after_read_failure"] is True
+            assert json.loads((path.parent / "monitor-guest-process.json").read_text())["exited"] is False
+        else:
+            result = json.loads((path.parent / "result.json").read_text())
+            assert result["state"] == "PASS" and result["exit_code"] == 0
+            assert result["source_commit"] == proof["source_commit"] and result["workflow_run_id"] == str(proof["workflow_run_id"])
+            assert result["inputs_sha256"] == proof["inputs_sha256"]
+            assert result["package_execution_started"] is False and result["consumes_package_attempt"] is False
+            assert result["system_test_acceleration"] == "kvm-required"
+            assert result["setup_payload_bytes"] > 4096 and result["setup_max_line_bytes"] < 512
+            assert result["files_sha256"]["autopkgtest/summary"] == proof["files_sha256"]["summary"]
+            assert (path.parent / "summary").read_text().split() == ["preserved-setup", "PASS"]
+            steps = {step["name"]: step for step in job["steps"]}
+            assert steps["Verify reviewed setup transport through autopkgtest QEMU"]["conclusion"] == "success"
         if certification["applicable"]:
             for name, digest in proof["inputs_sha256"].items():
                 assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, "Recertify changed monitor inputs"

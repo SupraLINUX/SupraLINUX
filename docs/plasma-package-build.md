@@ -258,3 +258,19 @@ Debian/control without a changelog. The original INFRA_INVALID probe remains
 sealed and archived; no package Attempt was consumed. The harness now uses the
 explicit tests-only built-tree supported by Ubuntu autopkgtest. Its classification
 was verified with the actual 5.55 parser before repeating the small KVM probe.
+
+The corrected transport certification passed in nested KVM on source
+`4e8607346dea9f2596871bba9051eacac0c4a13b`, run 37292928896/job 111707360642.
+All 45,109 script bytes matched SHA-256 in the guest and the preserved-setup test
+passed. The original result, job/host metadata and independently retained complete
+payload are bound under `infrastructure/baseline-transport-probe2-20261005/`.
+Its exact generator/probe/QEMU-wrapper hashes are checked for applicability.
+This is an infrastructure PASS, separate from Plymouth package Attempt 2.
+
+Plymouth Attempt 2 preserved its original INFRA_INVALID result (run 37293399191):
+sbuild and lintian passed, but the Ubuntu SDK client failed during testbed setup
+because gcc did not install its recommended C headers with no-install-recommends.
+The setup and consumer now explicitly declare build-essential. The reusable
+reviewed Ubuntu baseline preflight executes the exact frozen setup/client in a
+nested KVM testbed before another candidate build, without consuming an Attempt.
+Its PASS only certifies that baseline; it does not certify candidate compatibility.
