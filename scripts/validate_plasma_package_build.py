@@ -154,6 +154,25 @@ def validate():
                     assert result["stage"] == "upstream-package-tests" and result["sbuild_result"] == "PASS"
                     assert diagnostic["upstream_tests"]["state"] == "PASS"
                     assert diagnostic["upstream_tests"]["expected_tests"] == record["upstream_tests"]
+                elif diagnostic['kind'] == 'build-predecessor-verification-false-negative':
+                    assert result['stage'] == 'artifact-capture' and result['sbuild_result'] == 'PASS'
+                    assert result['lintian_result'] == result['autopkgtest_result'] == 'not-run'
+                    assert diagnostic['candidate_outputs_retained'] is True
+                    assert diagnostic['package_result'] == 'incomplete; requires remaining package tests'
+                    directory = (ROOT/attempt['verification_diagnosis_path']).parent
+                    for filename, digest in diagnostic['files_sha256'].items():
+                        path = directory/filename
+                        assert path.resolve().is_relative_to(directory.resolve())
+                        assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
+                    assert result['files_sha256'][diagnostic['original_buildinfo_path']] == diagnostic['files_sha256']['package.buildinfo']
+                    built = json.loads((directory/'build-contract.json').read_text())['nodes'][name]
+                    assert built['packaging_sha256']['control'] == diagnostic['files_sha256']['source-control']
+                    verifier_spec = importlib.util.spec_from_file_location('actual_build_inputs', ROOT/'scripts/verify-reviewed-build-predecessors.py')
+                    verifier = importlib.util.module_from_spec(verifier_spec)
+                    verifier_spec.loader.exec_module(verifier)
+                    checked = verifier.verify(built, (directory/'source-control').read_text(), (directory/'package.buildinfo').read_text())
+                    assert checked == json.loads((directory/'build-predecessors.json').read_text())
+                    assert checked['available_predecessors_not_installed']
                 elif diagnostic["kind"] == "autopkgtest-dbus-stderr-policy-false-negative":
                     assert result["stage"] == "autopkgtest-qemu" and result["exit_code"] == 4
                     assert result["sbuild_result"] == result["lintian_result"] == "PASS"

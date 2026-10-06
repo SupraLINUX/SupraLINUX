@@ -205,6 +205,9 @@ if [[ "${EXECUTION_CHECKPOINT}" != "none" ]]; then
         "${WORK}/cache-probe" "${EVIDENCE}/cache-probe" --apt-update --apt-distupgrade
 fi
 
+STAGE="reviewed-build-predecessor-verifier"
+python3 "${ROOT}/scripts/test-reviewed-package-contract.py" |& tee "${EVIDENCE}/build-predecessor-verifier-tests.log"
+
 if [[ "${CAMPAIGN}" == manifests/package-revalidation.json ]]; then
     STAGE="retained-upgrade-inputs"
     python3 "${ROOT}/scripts/prepare-retained-package-inputs.py" "${NODE}" --output "${WORK}/retained-upgrade" \
@@ -255,11 +258,11 @@ for deb in Path(sys.argv[3]).glob("*.ddeb"):
               for name in ["Package", "Source", "Version", "Architecture"]}
     assert fields["Package"].endswith("-dbgsym") and fields["Source"].split(" ")[0] == record["source_package"]
     assert fields["Version"] == record["version"] and fields["Architecture"] == "amd64"
-buildinfo = next(Path(sys.argv[3]).glob("*.buildinfo")).read_text()
-for predecessor in record.get("frameworks_predecessors", {}).values():
-    for binary in predecessor["binaries"]:
-        assert f"{binary['package']} (= {predecessor['version']})" in buildinfo, "Wrong build predecessor version"
 PY
+mapfile -t BUILDINFOS < <(find "${WORK}/out" -maxdepth 1 -name '*.buildinfo' -type f)
+[[ ${#BUILDINFOS[@]} == 1 ]]
+python3 "${ROOT}/scripts/verify-reviewed-build-predecessors.py" "${NODE}" \
+    --buildinfo "${BUILDINFOS[0]}" --output "${EVIDENCE}/build-predecessors.json"
 
 STAGE="upstream-package-tests"
 python3 "${ROOT}/scripts/plasma-package-testing.py" upstream-tests "${NODE}" \

@@ -1,3 +1,10 @@
+plasma-thunderbolt (6.7.5-0supralinux2) resolute; urgency=medium
+
+  * Place the copied upstream test-provider copyright stanza after debian/*
+    so its original GPL-2-3-KDEeV attribution takes precedence.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Tue, 06 Oct 2026 12:30:00 +0000
+
 plasma-thunderbolt (6.7.5-0supralinux1) resolute; urgency=medium
 
   * Integrate unchanged stable KDE sources with exact Frameworks inputs.

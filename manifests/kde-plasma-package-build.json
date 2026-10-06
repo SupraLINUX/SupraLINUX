@@ -2414,7 +2414,7 @@
     "plasma-thunderbolt": {
       "state": "build-pending",
       "source_package": "plasma-thunderbolt",
-      "version": "6.7.5-0supralinux1",
+      "version": "6.7.5-0supralinux2",
       "upstream_version": "6.7.5",
       "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/plasma-thunderbolt-6.7.5.tar.xz",
       "upstream_sha256": "d8179c353f89de0eee69619e300b9df9b7788fce4864cfb2ce1255f0bc691664",
@@ -3347,20 +3347,43 @@
           "resolute-security"
         ]
       },
-      "attempts": [],
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "INFRA_INVALID",
+          "original_state": "FAIL",
+          "sbuild_result": "PASS",
+          "lintian_result": "not-run",
+          "autopkgtest_result": "not-run",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37458025790,
+          "workflow_job_id": 112250323853,
+          "source_commit": "af46ec108021f64730988b33d8540a47a74a7ac7",
+          "artifact_id": 11411007516,
+          "artifact_sha256": "7be2c24c4e57e286f9ace4caa9072bea20bf8abcd65f35e7862bff1df8aa40a3",
+          "result_path": "manifests/evidence/plasma/plasma-thunderbolt-attempt1/result.json",
+          "result_sha256": "750ebee66808cffd180381418256ed59cfe84b34fb7bd6a438488fcb54f27838",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261006t113906z-3362846",
+          "host_evidence_manifest_sha256": "58e596ad40539cc28daa860719f17c044786a6d315e785490cb34504d688f721",
+          "cause": "Clean candidate sbuild and four executed CTests passed. The artifact-capture verifier incorrectly required all 142 available predecessor binaries in buildinfo, although 54 unused packages were correctly not installed. All 88 installed reviewed binaries and six direct SDK inputs match the exact contract. Upgrade tests did not run.",
+          "repair": "Verify every installed reviewed predecessor at its exact version and require the direct pinned SDK inputs, while separately certifying the full available transport closure. Add negative controls for missing SDK, wrong version and architecture; correct copied-provider copyright stanza ordering in packaging revision 2, then recertify before Attempt 2.",
+          "verification_diagnosis_path": "manifests/evidence/plasma/plasma-thunderbolt-attempt1/verification-diagnosis.json",
+          "verification_diagnosis_sha256": "dda44f831e52409d8d54def527629a402924a82817b3675f09e13da6e18b91b4"
+        }
+      ],
       "review": {
         "source": "Unchanged signed stable upstream sources and unmodified upstream fake Bolt protocol provider files.",
         "version": "No epoch in Ubuntu reference; stable candidate exceeds captured Ubuntu versions.",
         "dependencies": "Exact complete eligible Frameworks closure, repaired KConfig and Ubuntu Qt; preserve runtime Bolt and KCM QML modules. Matched retained Breeze Icons support input is required by KIconThemes; keep complete theme and Ubuntu transitional packages. Actual retained KIO binary dependencies require matched KDocTools runtime, supplied with its retained tool/SDK closure; Ubuntu packages cannot satisfy the newer library version.",
         "tests": "All 3 upstream tests; actual installed KDED notifications/actions and KCM QML/model on private simulated Bolt; unchanged Ubuntu SDK client and rebuilt consumer after upgrade.",
-        "licensing": "Preserve upstream GPL-2-3-KDEeV, BSD CMake and LGPL dependencies; attribute copied provider files separately and CC0 CI configuration.",
+        "licensing": "Preserve upstream GPL-2-3-KDEeV, BSD CMake and LGPL dependencies; attribute copied provider files separately and CC0 CI configuration. Revision 2 places copied upstream provider files after the general packaging stanza so their original attribution takes precedence.",
         "profile": "KDED and settings UI are built and checked; no physical hardware or system-bus access in package fixture. Physical device and Wayland desktop QA remain later gates."
       },
       "packaging_sha256": {
         "README.source": "12ce53faccf0a3d817e744f2cd230503fe239ebfc3852a09266184399e01ce11",
-        "changelog": "d4719579685a8cd5cd4d56e1692bf3d56062a2795ca5fdc5f64295910e5f0416",
+        "changelog": "96bb36b7ce689c6c4fe4384cd0d18ff3973cb45c7830072581c6b099dcaa5aeb",
         "control": "f403d905c2ae21f2d4392b94d99864730e797e848c849b830fb959664ac10cbc",
-        "copyright": "8fc23271d7373f6c99d582c8707ec5db50dfe8031f6ebfafaa8c8c7db4637b83",
+        "copyright": "29682f7090fc12ff79fca74d89aac9f70c477375da7ff10f71b126d906d191f8",
         "plasma-thunderbolt.lintian-overrides": "e1ada668b4c9ced808b62534a1e5d9ac16a38845c840366b15b8a4ad63e8bad1",
         "rules": "742e89648f3418374cb0cc02f158a232bdaba2137773eb322e482c309f05dfd3",
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
@@ -3537,6 +3560,12 @@
       "attempt": 4,
       "archive_root": ".artifacts/plasma-6.7.5/kwallet-pam-attempt4",
       "archive_index_sha256": "5169c4a7e869b4684541a40d6e32ff7a4af131d45ff34595515e4874e70794be"
+    },
+    {
+      "node": "plasma-thunderbolt",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/plasma-thunderbolt-attempt1",
+      "archive_index_sha256": "1c7b48bdb276ff9c463c9d8948d7c86cf0bc151e6ec108fa0e1c2a62d71ecfe0"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
@@ -3600,7 +3629,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -3644,7 +3673,9 @@
     },
     {
       "path": "manifests/evidence/package-revalidation/plasma-thunderbolt-preflight12/verification.json",
-      "sha256": "1660849d661ca9aae0ba7a52e7525f32ea3ee3cec91fd74e05ff82f600d053ca"
+      "sha256": "1660849d661ca9aae0ba7a52e7525f32ea3ee3cec91fd74e05ff82f600d053ca",
+      "applicable": false,
+      "inapplicability_reason": "Actual-build predecessor verification changed after a proved false-negative, and packaging revision 2 corrects copyright precedence. Certify the repaired execution path with a fresh small authoritative preflight before Attempt 2."
     }
   ],
   "package_input_incidents": [

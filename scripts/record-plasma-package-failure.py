@@ -128,18 +128,39 @@ def main():
             assert hashlib.sha256(archive.read(name)).hexdigest() == digest, name
         reported_state = result["state"]
         diagnosis = None
+        diagnosis_files = {}
         if args.verification_invalid:
             assert result["state"] == "FAIL", "A false-negative diagnosis requires an original package FAIL"
-            assert result["stage"] == "upstream-package-tests" and result["sbuild_result"] == "PASS"
-            testing = importlib.machinery.SourceFileLoader("testing", str(ROOT / "scripts/plasma-package-testing.py")).load_module()
-            corrected = testing.upstream_test_result(record, archive.read("sbuild.log").decode())
-            assert corrected["state"] == "PASS"
+            assert result["sbuild_result"] == "PASS"
             reported_state = "INFRA_INVALID"
-            diagnosis = {"kind": "verification-gate-false-negative", "original_state": result["state"],
-                         "original_result_sha256": hashlib.sha256(payload).hexdigest(),
-                         "upstream_tests": corrected,
-                         "candidate_outputs_retained": any(name.startswith("packages/") and name.endswith(".deb") for name in archive.namelist()),
-                         "package_result": "incomplete; requires remaining package tests"}
+            if result['stage'] == 'upstream-package-tests':
+                testing = importlib.machinery.SourceFileLoader("testing", str(ROOT / "scripts/plasma-package-testing.py")).load_module()
+                corrected = testing.upstream_test_result(record, archive.read("sbuild.log").decode())
+                assert corrected["state"] == "PASS"
+                diagnosis = {"kind": "verification-gate-false-negative", "upstream_tests": corrected}
+            else:
+                assert result['stage'] == 'artifact-capture'
+                assert result['lintian_result'] == result['autopkgtest_result'] == 'not-run'
+                assert 'AssertionError: Wrong build predecessor version' in archive.read('pipeline.log').decode()
+                names = [name for name in archive.namelist() if name.startswith('packages/') and name.endswith('.buildinfo')]
+                assert len(names) == 1
+                buildinfo = archive.read(names[0])
+                control = (ROOT/record['packaging_path']/'control').read_bytes()
+                verifier = importlib.machinery.SourceFileLoader('build_predecessor_diagnosis', str(ROOT/'scripts/verify-reviewed-build-predecessors.py')).load_module()
+                corrected = verifier.verify(record, control.decode(), buildinfo.decode())
+                assert corrected['state'] == 'PASS' and corrected['available_predecessors_not_installed']
+                inspection = retention.inspect(args.zip, {'node': args.node, 'package_version': record['version'],
+                                               'artifact_sha256': closure.sha(args.zip), 'payload_prefix': 'packages/'}, record['source_package'])
+                assert inspection['source_payload_verified'] and inspection['changes_payload_complete'] and inspection['buildinfo_verified']
+                assert {binary['package']: binary['architecture'] for binary in inspection['binaries'] if not binary['package'].endswith('-dbgsym')} == record['binary_packages']
+                diagnosis_files = {'package.buildinfo': buildinfo, 'source-control': control,
+                                   'build-predecessors.json': (json.dumps(corrected, indent=2)+'\n').encode()}
+                diagnosis = {'kind': 'build-predecessor-verification-false-negative',
+                             'original_buildinfo_path': names[0],
+                             'files_sha256': {name: hashlib.sha256(data).hexdigest() for name, data in diagnosis_files.items()}}
+            diagnosis.update(original_state=result['state'], original_result_sha256=hashlib.sha256(payload).hexdigest(),
+                             candidate_outputs_retained=any(name.startswith('packages/') and name.endswith('.deb') for name in archive.namelist()),
+                             package_result='incomplete; requires remaining package tests')
         contract = archive.read("build-contract.json")
         assert json.loads(contract)["nodes"][args.node]["packaging_sha256"] == record["packaging_sha256"]
         sources = [name for name in archive.namelist() if name.startswith("packages/") and name.endswith(".dsc")]
@@ -159,6 +180,8 @@ def main():
     (path / "result.json").write_bytes(payload)
     (path / "build-contract.json").write_bytes(contract)
     if diagnosis is not None:
+        for name, data in diagnosis_files.items():
+            (path/name).write_bytes(data)
         closure.write(path / "verification-diagnosis.json", diagnosis)
     archive_root = ROOT / f".artifacts/plasma-{record['upstream_version']}/{args.node}-attempt{number}"
     stored = archive_root / "sha256" / f"{closure.sha(args.zip)}.zip"

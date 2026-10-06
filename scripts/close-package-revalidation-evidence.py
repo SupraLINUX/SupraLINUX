@@ -185,7 +185,7 @@ def main():
         for name in ['result.json','build-contract.json','signature.log','ubuntu-baseline-preflight/result.json',
                      'cache-probe/result.json','rootfs-admission.json','retained-upgrade-inputs.json',
                      'upstream-tests.json','autopkgtest/summary','retained-upgrade/summary','infra-interruption.json',
-                     'cache-probe/installed-predecessor-contract.json']:
+                     'cache-probe/installed-predecessor-contract.json', 'build-predecessor-verifier-tests.log']:
             if name in archive.namelist():
                 path=directory/name
                 path.parent.mkdir(parents=True,exist_ok=True)
@@ -225,7 +225,8 @@ def main():
                 'scripts/plasma-package-testing.py','scripts/probe-reviewed-ubuntu-baseline.py',
                 'scripts/admit-frameworks-cache.py','scripts/prepare-milestone-sbuild-rootfs.py',
                 'scripts/prepare-retained-package-inputs.py','scripts/run-kvm-jit-gate-core.sh',
-                'scripts/qemu-kvm-required.sh']
+                'scripts/qemu-kvm-required.sh', 'scripts/verify-reviewed-build-predecessors.py',
+                'scripts/test-reviewed-package-contract.py']
         if plasma_inputs:
             inputs += ['scripts/frameworks-revalidation-inputs.py', 'scripts/prepare-frameworks-revalidation-inputs.py',
                        'scripts/probe-frameworks-build-inputs.sh']
