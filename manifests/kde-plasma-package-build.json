@@ -4901,7 +4901,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -4958,6 +4958,10 @@
     {
       "path": "manifests/evidence/package-revalidation/kactivitymanagerd-preflight14/verification.json",
       "sha256": "6070c2aa3b2c4e06ae732cae68840667bc6a82bb9fc6dc057472f97270dd1f17"
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kpipewire-preflight16/verification.json",
+      "sha256": "ca2681fb63d3a74a35d61aeec79d2cc841c2a69b827cec0d6ece25639d92bf47"
     }
   ],
   "package_input_incidents": [

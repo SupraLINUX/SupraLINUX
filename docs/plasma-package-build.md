@@ -44,7 +44,10 @@ Relative paths, executable modes and every transported file hash are checked;
 changed files, escaping paths, symlinks and unknown payload formats are rejected.
 Historical scripts keep their original single-script transport.
 
-KPipeWire is the next individually reviewed input preflight. Its three SONAME 6
+KPipeWire's individually reviewed inputs passed the authoritative preflight in
+[run 37539563145](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37539563145)
+on source `e35bd66b05b67599f9d44e4bc03814f396ee71f4`. Its first candidate package
+Attempt is now authorized. Its three SONAME 6
 libraries, SDK/CMake targets, three QML modules and translations are preserved,
 and all three Ubuntu symbols guards remain active. Both upstream CTest suites
 are enabled, including every encoder row and upstream hardware/codec skips.
@@ -60,7 +63,7 @@ comparison. The suspected legacy QML enum problem was disproved by actual Ubuntu
 execution. Hardware, nonzero-offset/copy-bound and real portal/compositor QA remain
 explicitly pending. The diagnosis, sources, binaries, original logs and recording
 are retained under `manifests/evidence/plasma/diagnostics/kpipewire-ubuntu-private-video-20261006/`.
-The authoritative Ubuntu/input preflight must pass before a candidate Attempt.
+The authoritative Ubuntu/input preflight passed before any candidate Attempt.
 
 The first KPipeWire preflight, run 37529687593 on source `7b39ada`, stopped while
 compiling the Ubuntu SDK client: its public DmaBufHandler header includes
@@ -71,7 +74,29 @@ offline-restored evidence remain retained under
 `manifests/evidence/package-revalidation/kpipewire-preflight15/`.
 No package Attempt was consumed. The repaired baseline and consumer explicitly
 request `libepoxy-dev`; official candidate headers and sources stay unchanged.
-A fresh authoritative preflight must certify the repaired fixture before build.
+A fresh authoritative preflight certified the repaired fixture before build.
+
+The repaired Ubuntu baseline compiled the unchanged installed-SDK client and
+passed actual private CPU frames, copy/recycling, QML monitoring, VP8 recording
+and complete FFmpeg decoding in nested KVM. The signed candidate source package
+was prepared, the immutable bare rootfs admitted without preinstalled Frameworks
+or Qt SDK, and the infrastructure consumer compiled with all 12 exact reviewed
+predecessor binaries installed. The original artifact
+`a9ec29d90a81d8c23faafe07621ba80ec77d33787899868faeef2304eac99b72`
+was retained and restored offline; the host seal is
+`8e4c6a8e0f91758db4be564a230b232d4b195d3b1c1df795a8b429ae60afca52`.
+VM, runner 227 and writable-overlay removal were verified. Certification is
+retained under `manifests/evidence/package-revalidation/kpipewire-preflight16/`.
+Candidate sbuild, candidate upstream tests, lintian and upgrade/consumer tests
+remain unexecuted by this preflight; no package Attempt was consumed.
+
+The complete bounded-traffic preflight took 39 minutes. The authoritative Plasma
+job limit is now 120 minutes so the full package route can also perform clean
+sbuild and installed-candidate tests. The host controller uses a 7800-second
+monitoring budget for the following full gate, leaving time beyond the job limit
+to observe its terminal state and complete cleanup. This changes scheduling
+limits only; the certified execution scripts, package inputs and guest traffic
+limits remain the same.
 
 The Activities input route was recertified after a nested QEMU
 process blocked in `kvm_async_pf_task_wait_schedule` during Ubuntu baseline APT
