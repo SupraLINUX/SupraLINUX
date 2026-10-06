@@ -1,0 +1,62 @@
+started_at=2026-10-06T20:26:31Z
+repository=SupraLINUX/SupraLINUX
+runner_organization=SupraLINUX
+pr_number=1
+pr_head_sha=c9e890755852cde0a25565953014164bbd7a89e4
+pr_head_branch=architecture/bootstrap-v1
+local_head=c9e890755852cde0a25565953014164bbd7a89e4
+golden_source_commit=3d4ce1a312220337934a51025c32c8429bf8fb3a
+golden_input_digest=2d5ec214607124d11c279b8d3f715808a065e88ad0fd6e57f40c89ca6b37110b
+gate=runner-contract
+jit_startup_preflight=1
+gate_label=ci:runner-contract
+workflow_name=Authoritative runner contract
+vm_name=supralinux-jit-startup-preflight-20261006t202631z-130614
+golden_image=/var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2
+golden_image_sha256=a0b88447d9a9ecd9785087390cf499abaf9416291864fe1be4d63d9a334b2acd
+execution_checkpoint=none
+execution_backing_image=/var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2
+golden_provenance=/var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2.provenance.txt
+local_lock=/var/lib/supralinux/ephemeral-runners/.locks/SupraLINUX-SupraLINUX-authoritative.lock
+libvirt_uri=qemu:///system
+libvirt_network=default
+vm_download_kib_per_second=256
+vm_upload_kib_per_second=128
+vm_memory_mib=6144
+vm_vcpus=4
+vm_disk_size_gib=80
+
+golden_provenance_contents:
+created_at=2026-10-01T01:35:41Z
+source_commit=3d4ce1a312220337934a51025c32c8429bf8fb3a
+golden_input_fingerprint_schema=1
+golden_input_digest=2d5ec214607124d11c279b8d3f715808a065e88ad0fd6e57f40c89ca6b37110b
+repository_url=https://github.com/SupraLINUX/SupraLINUX.git
+source_image=/var/lib/supralinux/images/source/resolute/ubuntu-26.04-server-cloudimg-amd64.img
+source_image_sha256=8800651811af9a85465ad1d552add729947bb16488dddb4a9b5305a3d97332b2
+source_image_provenance_verified=yes
+golden_image=/var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2
+golden_image_sha256=a0b88447d9a9ecd9785087390cf499abaf9416291864fe1be4d63d9a334b2acd
+virt_sysprep_operations=machine-id,ssh-hostkeys,dhcp-client-state,logfiles,tmp-files
+source_checkout_removed=yes
+
+qemu_image_info:
+image: /var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2
+file format: qcow2
+virtual size: 80 GiB (85899345920 bytes)
+disk size: 7.96 GiB
+cluster_size: 65536
+Format specific information:
+    compat: 1.1
+    compression type: zlib
+    lazy refcounts: false
+    refcount bits: 16
+    corrupt: false
+    extended l2: false
+Child node '/file':
+    filename: /var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2
+    protocol type: file
+    file length: 7.96 GiB (8549105664 bytes)
+    disk size: 7.96 GiB
+runner_id=225
+jit_config_bytes=4144

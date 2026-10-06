@@ -93,6 +93,18 @@ probe: actual KVM boot, live guest traffic shaping, JIT online/idle, then full
 runner, VM and writable-overlay cleanup. This probe does not start a package
 Attempt or automatically reopen any completed build.
 
+The initial network startup certification passed on source
+`c9e890755852cde0a25565953014164bbd7a89e4`, with host kernel 7.0.0-38.
+The domain carried both configured limits; the actual tap had HTB rate/ceiling
+256000 bytes/s and an ingress policer. The installed iproute2 JSON does not expose
+the policer's numeric rate, so that value is verified in live libvirt XML rather
+than claimed as a kernel-rate measurement. No throughput benchmark was performed.
+The JIT runner reached online/idle and Listening for Jobs without starting any
+workflow or package. Runner 225 was then absent (HTTP 404), libvirt had no domain,
+and the writable-overlay directory was gone. Original proof and input hashes are
+retained under `infrastructure/kvm-network-preflight1-20261006/`; the complete
+host bundle seal is `bf03f10fed476767cd831f5ab1485a16b828f4528a892be9128256eafe5a386b`.
+
 GitHub's organization-scoped JIT API returns `encoded_jit_config`; it is generated per VM and never baked into the golden image. The golden guest contains runner software but no persistent GitHub credential and no SupraLINUX build-source checkout.
 
 Before creating a JIT runner, `scripts/run-kvm-jit-gate.sh` performs additional attribution/serialization checks:
