@@ -183,28 +183,7 @@ Get:106 http://archive.ubuntu.com/ubuntu resolute/main amd64 libva-drm2 amd64 2.
 Get:107 http://archive.ubuntu.com/ubuntu resolute/universe amd64 libkpipewire6 amd64 6.6.4-0ubuntu1 [68.5 kB]
 Fetched 82.3 MB in 6min 8s (223 kB/s)
 Selecting previously unselected package libxml2-16:amd64.
-(Reading database ... 
-(Reading database ... 5%
-(Reading database ... 10%
-(Reading database ... 15%
-(Reading database ... 20%
-(Reading database ... 25%
-(Reading database ... 30%
-(Reading database ... 35%
-(Reading database ... 40%
-(Reading database ... 45%
-(Reading database ... 50%
-(Reading database ... 55%
-(Reading database ... 60%
-(Reading database ... 65%
-(Reading database ... 70%
-(Reading database ... 75%
-(Reading database ... 80%
-(Reading database ... 85%
-(Reading database ... 90%
-(Reading database ... 95%
-(Reading database ... 100%
-(Reading database ... 67330 files and directories currently installed.)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 67330 files and directories currently installed.)
 Preparing to unpack .../000-libxml2-16_2.15.2+dfsg-0.1ubuntu0.2_amd64.deb ...
 Unpacking libxml2-16:amd64 (2.15.2+dfsg-0.1ubuntu0.2) ...
 Selecting previously unselected package shared-mime-info.
@@ -1066,28 +1045,7 @@ Get:264 http://archive.ubuntu.com/ubuntu resolute/universe amd64 qt6-svg-dev amd
 Get:265 http://archive.ubuntu.com/ubuntu resolute/universe amd64 qt6-declarative-dev amd64 6.10.2+dfsg-3 [2017 kB]
 Fetched 196 MB in 14min 52s (220 kB/s)
 Selecting previously unselected package libfribidi0:amd64.
-(Reading database ... 
-(Reading database ... 5%
-(Reading database ... 10%
-(Reading database ... 15%
-(Reading database ... 20%
-(Reading database ... 25%
-(Reading database ... 30%
-(Reading database ... 35%
-(Reading database ... 40%
-(Reading database ... 45%
-(Reading database ... 50%
-(Reading database ... 55%
-(Reading database ... 60%
-(Reading database ... 65%
-(Reading database ... 70%
-(Reading database ... 75%
-(Reading database ... 80%
-(Reading database ... 85%
-(Reading database ... 90%
-(Reading database ... 95%
-(Reading database ... 100%
-(Reading database ... 69830 files and directories currently installed.)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 69830 files and directories currently installed.)
 Preparing to unpack .../000-libfribidi0_1.0.16-5_amd64.deb ...
 Unpacking libfribidi0:amd64 (1.0.16-5) ...
 Selecting previously unselected package libnuma1:amd64.
@@ -1904,8 +1862,7 @@ Setting up libudfread3:amd64 (1.2.0-2) ...
 Setting up libspeex1:amd64 (1.2.1-3build1) ...
 Setting up libshine3:amd64 (3.1.1-3build1) ...
 Setting up user-session-migration (0.5.1) ...
-Created symlink '/etc/systemd/user/graphical-session-pre.target.wants/user-session-migration.service' → '/usr/lib/systemd/user/user-session-migration.service'.
-
+Created symlink '/etc/systemd/user/graphical-session-pre.target.wants/user-session-migration.service' → '/usr/lib/systemd/user/user-session-migration.service'.
 Setting up libvpl2 (1:2.16.0-1) ...
 Setting up qt6-base-dev-tools (6.10.2+dfsg-7) ...
 Setting up qt6-qpa-plugins:amd64 (6.10.2+dfsg-7) ...
