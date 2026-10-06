@@ -69,6 +69,30 @@ That preflight reuses the verified Ubuntu source image but performs no package b
 
 ## JIT runner lifecycle
 
+Before creating a runner or guest, the read-only network guard requires the
+existing IPv4 RFC1918 NAT network, its actual bridge address and DHCP range.
+It rejects LAN bridges, direct/passthrough interfaces, physical bridge ports,
+and overlaps with host interfaces or non-default routes (including VPNs).
+The controller does not start/reconfigure the shared network or change the
+operator's physical interface, routes, DNS or firewall. An unsuitable network
+stops the gate before VM creation and needs an intentional infrastructure fix.
+
+Each disposable guest has its own traffic limits, initially 256 KiB/s toward
+the guest and 128 KiB/s from it (about 2.1/1.0 Mbit/s). Set positive integer
+`SUPRALINUX_VM_DOWNLOAD_KIB` / `SUPRALINUX_VM_UPLOAD_KIB` values to fit the
+operator's connection. These limits apply to the guest tap interface; they
+do not reserve bandwidth or limit the host/shared bridge. Unknown connection
+capacity still requires conservative limits. The controller verifies both
+limits in live domain XML before starting the JIT runner, and retains network
+admission and live-interface evidence. Nested test traffic shares the outer
+guest limit. Units and scope follow the
+[libvirt interface QoS contract](https://libvirt.org/formatnetwork.html#quality-of-service).
+
+Network changes first require the small `check-jit-runner-startup-lifecycle.sh`
+probe: actual KVM boot, live guest traffic shaping, JIT online/idle, then full
+runner, VM and writable-overlay cleanup. This probe does not start a package
+Attempt or automatically reopen any completed build.
+
 GitHub's organization-scoped JIT API returns `encoded_jit_config`; it is generated per VM and never baked into the golden image. The golden guest contains runner software but no persistent GitHub credential and no SupraLINUX build-source checkout.
 
 Before creating a JIT runner, `scripts/run-kvm-jit-gate.sh` performs additional attribution/serialization checks:

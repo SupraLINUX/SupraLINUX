@@ -14,6 +14,8 @@ EVIDENCE_ROOT="${SUPRALINUX_HOST_EVIDENCE_ROOT:-/var/lib/supralinux/evidence/hos
 RUNNER_USER="${SUPRALINUX_RUNNER_USER:-ubuntu}"
 LIBVIRT_URI="${SUPRALINUX_LIBVIRT_URI:-qemu:///system}"
 LIBVIRT_NETWORK="${SUPRALINUX_LIBVIRT_NETWORK:-default}"
+VM_DOWNLOAD_KIB="${SUPRALINUX_VM_DOWNLOAD_KIB:-256}"
+VM_UPLOAD_KIB="${SUPRALINUX_VM_UPLOAD_KIB:-128}"
 VM_MEMORY_MIB="${SUPRALINUX_VM_MEMORY_MIB:-12288}"
 VM_VCPUS="${SUPRALINUX_VM_VCPUS:-6}"
 VM_DISK_SIZE_GIB="${SUPRALINUX_VM_DISK_SIZE_GIB:-80}"
@@ -87,11 +89,14 @@ required_commands=(
     chmod
     curl
     id
+    ip
     flock
     git
     jq
     qemu-img
+    python3
     sha256sum
+    tc
     virsh
     virt-copy-out
     virt-install
@@ -145,6 +150,9 @@ if ! grep -Eq '^Active:[[:space:]]+yes$' <<<"${network_info}"; then
     printf 'libvirt network %s is not active.\n' "${LIBVIRT_NETWORK}" >&2
     exit 1
 fi
+NETWORK_PREFLIGHT_JSON="$(python3 "${ROOT}/scripts/check-kvm-network.py" \
+    --libvirt-uri "${LIBVIRT_URI}" --network "${LIBVIRT_NETWORK}" \
+    --download-kib "${VM_DOWNLOAD_KIB}" --upload-kib "${VM_UPLOAD_KIB}")"
 
 if [[ ! "${REPOSITORY}" =~ ^[^/]+/[^/]+$ ]]; then
     printf 'SUPRALINUX_REPOSITORY must use owner/repo form.\n' >&2
@@ -246,6 +254,7 @@ LABEL_ADDED=0
 VM_CREATED=0
 
 mkdir -p "${RUN_DIR}" "${EVIDENCE_DIR}"
+printf '%s\n' "${NETWORK_PREFLIGHT_JSON}" > "${EVIDENCE_DIR}/network-admission.json"
 chgrp "${LIBVIRT_QEMU_GROUP}" "${RUN_DIR}"
 chmod 0710 "${RUN_DIR}"
 
@@ -518,6 +527,8 @@ printf '%s\n' "${BASELINE_RUN_IDS}" > "${EVIDENCE_DIR}/workflow-baseline-ids.jso
     printf 'local_lock=%s\n' "${LOCK_FILE}"
     printf 'libvirt_uri=%s\n' "${LIBVIRT_URI}"
     printf 'libvirt_network=%s\n' "${LIBVIRT_NETWORK}"
+    printf 'vm_download_kib_per_second=%s\n' "${VM_DOWNLOAD_KIB}"
+    printf 'vm_upload_kib_per_second=%s\n' "${VM_UPLOAD_KIB}"
     printf 'vm_memory_mib=%s\n' "${VM_MEMORY_MIB}"
     printf 'vm_vcpus=%s\n' "${VM_VCPUS}"
     printf 'vm_disk_size_gib=%s\n' "${VM_DISK_SIZE_GIB}"
@@ -557,11 +568,20 @@ virt-install \
     --qemu-commandline='-global host-x86_64-cpu.kvm-asyncpf=off -global host-x86_64-cpu.kvm-asyncpf-int=off' \
     --import \
     --disk "path=${OVERLAY},format=qcow2,bus=virtio,cache=none" \
-    --network "network=${LIBVIRT_NETWORK},model=virtio" \
+    --network "network=${LIBVIRT_NETWORK},model=virtio,xpath1.set=./bandwidth/inbound/@average=${VM_DOWNLOAD_KIB},xpath2.set=./bandwidth/inbound/@peak=${VM_DOWNLOAD_KIB},xpath3.set=./bandwidth/outbound/@average=${VM_UPLOAD_KIB}" \
     --channel unix,target.type=virtio,target.name=org.qemu.guest_agent.0 \
     --graphics none \
     --noautoconsole \
     --osinfo detect=on,require=off
+
+virsh dumpxml "${VM_NAME}" > "${EVIDENCE_DIR}/network-live-domain.xml"
+python3 "${ROOT}/scripts/check-kvm-network.py" \
+    --network "${LIBVIRT_NETWORK}" --download-kib "${VM_DOWNLOAD_KIB}" --upload-kib "${VM_UPLOAD_KIB}" \
+    --domain-xml "${EVIDENCE_DIR}/network-live-domain.xml" > "${EVIDENCE_DIR}/network-guest-limits.json"
+GUEST_TAP="$(jq -er '.tap' "${EVIDENCE_DIR}/network-guest-limits.json")"
+tc -json qdisc show dev "${GUEST_TAP}" > "${EVIDENCE_DIR}/network-tap-qdisc.json"
+tc -json class show dev "${GUEST_TAP}" > "${EVIDENCE_DIR}/network-tap-classes.json"
+tc -json filter show dev "${GUEST_TAP}" ingress > "${EVIDENCE_DIR}/network-tap-ingress.json"
 
 # Keep nested KVM, but avoid the observed asynchronous page-fault wait in the
 # outer build guest. Verify actual QEMU CPU properties rather than trusting XML.

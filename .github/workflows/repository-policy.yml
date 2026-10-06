@@ -79,6 +79,9 @@ jobs:
       - name: Test KVM active-job monitor outage recovery
         run: python3 scripts/test-kvm-monitor-recovery.py
 
+      - name: Test private KVM network and per-guest traffic limits
+        run: python3 scripts/test-kvm-network.py
+
       - name: Validate current project status
         run: python3 scripts/render-project-status.py --check
 
