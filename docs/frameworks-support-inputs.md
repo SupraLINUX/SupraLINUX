@@ -32,6 +32,17 @@ to this transport or provider selection require a fresh input preflight before a
 candidate package Attempt. The preflight freezes the registry, verifier and
 selected provider proof hashes as well as the ordinary execution inputs.
 
+The input closure also follows the dependencies of the actual retained binaries.
+For example, KIO 6.30 requires `libkf6doctools6 >= 6.30` at runtime even when the
+consumer has no direct KDocTools build dependency. Thunderbolt's input preflight
+11 closed INFRA_INVALID before any candidate Attempt because that provider was
+missing. Its corrected closure includes 31 source nodes and 142 main binaries.
+An isolated APT simulation with empty dpkg state and the same signed Ubuntu
+indexes reproduced the missing-provider failure with 139 binaries and resolved
+all 142 corrected inputs. This local diagnosis is not authoritative execution;
+the existing small KVM probe must install every contracted version before the
+candidate build can proceed. Historical source-DAG edges remain unchanged.
+
 Ksshaskpass uses the matched provider to generate its upstream manual. It keeps
 Ubuntu Qt and QtKeychain, the Ubuntu epoch and the ssh-askpass alternative with
 its manual slave. The reviewed fixture drives actual public Qt dialog widgets,

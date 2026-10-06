@@ -2738,6 +2738,27 @@
             }
           ]
         },
+        "kdoctools": {
+          "source_package": "kf6-kdoctools",
+          "version": "6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "kdoctools6",
+              "architecture": "amd64",
+              "sha256": "e455675b2fe7c3fe730d702b99b882f16f70ce2e3d44394c06774a292ebd3933"
+            },
+            {
+              "package": "libkf6doctools-dev",
+              "architecture": "amd64",
+              "sha256": "10ee3bb9a61dcd87645b26f6df46d48e38ec3e29331e07cb983c8a62fcc9e8be"
+            },
+            {
+              "package": "libkf6doctools6",
+              "architecture": "amd64",
+              "sha256": "db37d679c86ac997a8731062e3fa4bc13a87958321569d98bb10014ad37f45fe"
+            }
+          ]
+        },
         "kglobalaccel": {
           "source_package": "kf6-kglobalaccel",
           "version": "6.30.0-0supralinux2",
@@ -3330,7 +3351,7 @@
       "review": {
         "source": "Unchanged signed stable upstream sources and unmodified upstream fake Bolt protocol provider files.",
         "version": "No epoch in Ubuntu reference; stable candidate exceeds captured Ubuntu versions.",
-        "dependencies": "Exact complete eligible Frameworks closure, repaired KConfig and Ubuntu Qt; preserve runtime Bolt and KCM QML modules. Matched retained Breeze Icons support input is required by KIconThemes; keep complete theme and Ubuntu transitional packages.",
+        "dependencies": "Exact complete eligible Frameworks closure, repaired KConfig and Ubuntu Qt; preserve runtime Bolt and KCM QML modules. Matched retained Breeze Icons support input is required by KIconThemes; keep complete theme and Ubuntu transitional packages. Actual retained KIO binary dependencies require matched KDocTools runtime, supplied with its retained tool/SDK closure; Ubuntu packages cannot satisfy the newer library version.",
         "tests": "All 3 upstream tests; actual installed KDED notifications/actions and KCM QML/model on private simulated Bolt; unchanged Ubuntu SDK client and rebuilt consumer after upgrade.",
         "licensing": "Preserve upstream GPL-2-3-KDEeV, BSD CMake and LGPL dependencies; attribute copied provider files separately and CC0 CI configuration.",
         "profile": "KDED and settings UI are built and checked; no physical hardware or system-bus access in package fixture. Physical device and Wayland desktop QA remain later gates."
@@ -3634,6 +3655,12 @@
       "sha256": "1f5729916fc580ac5c86a0ea43b140636268ee0edbe2fdeb313c04c84e039606",
       "cause": "The Ubuntu module/SDK baseline passed. Cache admission then accessed canonical source_package directly for legacy Frameworks nodes whose unchanged DAG omits that field. Candidate source preparation and sbuild did not start.",
       "repair": "Resolve source identity through the existing exact closed-manifest verifier in cache admission. Add an actual cache-admission regression including tampered historical proof, validate all selected inputs locally, then recertify with a small KVM preflight."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/plasma-thunderbolt-preflight11/verification.json",
+      "sha256": "463f1dbec411fe5ccb400c5f641e2d9c6befd342ba234e6624735278f91e408e",
+      "cause": "The Ubuntu module/SDK baseline and legacy source identity admission passed. The infrastructure sbuild consumer then found that actual KIO 6.30 binary metadata requires libkf6doctools6 >= 6.30, outside the historical source DAG closure. Candidate sbuild did not start.",
+      "repair": "Add the exact retained KDocTools support input and its verified dependency closure. Diagnose every selected binary with isolated Ubuntu APT indexes and an empty dpkg state, then certify installation of all reviewed versions with the existing small authoritative KVM input preflight before any candidate Attempt."
     }
   ]
 }
