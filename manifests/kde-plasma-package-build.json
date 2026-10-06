@@ -4630,12 +4630,12 @@
         "source": "Unchanged signed official stable sources; three SONAME 6 libraries, all installed SDK and QML targets retained.",
         "version": "No epoch; candidate exceeds authenticated Ubuntu 6.6.4-0ubuntu1.",
         "dependencies": "Only three required exact eligible Frameworks inputs, all 12 binaries. Matching Ubuntu Qt private SDK, PipeWire, FFmpeg, EGL/GBM/VA/DRM retained. Ubuntu protocol 1.20 defines the example request.",
-        "tests": "Both full upstream CTest suites enabled with explicit session prerequisites and verbose row outcomes. Private actual zero-offset CPU-frame, copy, QML monitoring and recording fixture passes Ubuntu before any candidate Attempt; unchanged client and rebuilt consumer after upgrade.",
+        "tests": "Both full upstream CTest suites enabled with explicit session prerequisites and verbose row outcomes. Private actual zero-offset CPU-frame, copy, QML monitoring and recording fixture passes Ubuntu before any candidate Attempt; unchanged client and rebuilt consumer after upgrade. The clean Ubuntu baseline requires explicit libepoxy-dev for its inherited DmaBufHandler public header; declare it in both fixture environments.",
         "licensing": "Preserve upstream LGPL/GPL alternatives, attributions and CC0 terms; correct inherited BSD spelling and separately attribute new CC0 fixtures after general packaging.",
         "profile": "Preserve ordinary source/record/monitor libraries and all codecs. Upstream codec/hardware QSKIP is explicit. Nonzero-offset buffers, guarded copy bounds, real hardware/portals/compositors remain integration QA; no silent build/install exclusion."
       },
       "packaging_sha256": {
-        "README.source": "5eb6465e5546f87f212e5c1b35ee9e9a37ab3eb109b44a137253990153fedeaf",
+        "README.source": "45c559d14fcbfc0f1866348bb81dc7302445beadd809c3ac5fa318dad09969f0",
         "changelog": "0a0f6805bb64bd06010709dca912f06ef996c4eb1495f300851c8fa46a17efbc",
         "control": "e1949731ccf41b24f3585228718aba2c1c875ca3ea257be044f832626278a4d2",
         "copyright": "d2fe7ba89ad2ac9e38f5c5c33ab25ccaac26c3395ee4aa21dd01eef006bac1ac",
@@ -4650,7 +4650,7 @@
         "qml6-module-org-kde-pipewire.install": "08b1477f85c450d6beaad30dd59c8e5650490a3d86ff4e22b8355f820edaa128",
         "rules": "b106b200c57873f0e0d5832043006bcfb0fce92675490a3f31316c09ae68c3b6",
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
-        "tests/baseline-setup": "e0611afa074a6cfcba85149378f6a87104214de472e4567f471531a2654fe868",
+        "tests/baseline-setup": "b1e58fcf2f406124fe7b22f01c8c1237b42b94dae4f381ae8661e0a8810f5556",
         "tests/client/CMakeLists.txt": "d101b5389d40130e886f1b35eeb94112a44f640b2e16f85b866844d1f584adb2",
         "tests/client/client.conf": "64ddc09e4be561b49df18ac6909ca849db40482b801f2521c9227061d4a003e2",
         "tests/client/main.cpp": "978a172186732bb1a5ad7f1acf7f6c68bafc28a656eb7e312a0e3bd05c2a4b59",
@@ -4658,7 +4658,7 @@
         "tests/client/run-private-video.py": "fd6b127188f3e6d1dc38612bc197e6400d5797721fc53dc6ec52217319ed4b82",
         "tests/client/video-source.c": "6b5e5f03a6df35a782f7cc48b045d2dbb2f008462170dd387c90e6f06e55add4",
         "tests/consumer": "94914848ce4015634d452a12b44fd5024483d5288ab1bacb428827d6365a7d62",
-        "tests/control": "b460aab122c68c8b67bab52c96ef5dd6b035ba1c7edd95101d3dc4a0747adf4b",
+        "tests/control": "9a1eda445b90b3a9c6a986c79f1dd96502f650aac596b4b56354482b32c70082",
         "tests/ubuntu-abi-client": "99c9e567363d6f14a90435c67ca662a421dedb1927794890a8b413de1c790257",
         "tests/upstream-session": "f4e81f2437e3e38f1c420e6f2d67f45c1631c8acb76413fa9d1e977c1c26e4e2",
         "upstream/metadata": "e15ec1ffe53daf0be073557ac6c1b709ec567a0d6b04b487f892ebd6a9ace894",
@@ -4978,6 +4978,12 @@
       "sha256": "463f1dbec411fe5ccb400c5f641e2d9c6befd342ba234e6624735278f91e408e",
       "cause": "The Ubuntu module/SDK baseline and legacy source identity admission passed. The infrastructure sbuild consumer then found that actual KIO 6.30 binary metadata requires libkf6doctools6 >= 6.30, outside the historical source DAG closure. Candidate sbuild did not start.",
       "repair": "Add the exact retained KDocTools support input and its verified dependency closure. Diagnose every selected binary with isolated Ubuntu APT indexes and an empty dpkg state, then certify installation of all reviewed versions with the existing small authoritative KVM input preflight before any candidate Attempt."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kpipewire-preflight15/verification.json",
+      "sha256": "c4195b2ca414a8fefc5afb88d07a9f61405c1e531f27cffa20540772070fea38",
+      "cause": "Clean Ubuntu SDK client compilation stopped at epoxy/egl.h: authenticated Ubuntu DmaBufHandler exposes the Epoxy header, but libkpipewire-dev does not declare libepoxy-dev. No candidate source preparation or sbuild started.",
+      "repair": "Declare libepoxy-dev in the reviewed baseline setup and consumer test prerequisites, preserve unchanged upstream sources and client bytes, then certify the repaired fixture in a fresh authoritative input preflight."
     }
   ]
 }

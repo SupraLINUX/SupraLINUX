@@ -62,6 +62,17 @@ explicitly pending. The diagnosis, sources, binaries, original logs and recordin
 are retained under `manifests/evidence/plasma/diagnostics/kpipewire-ubuntu-private-video-20261006/`.
 The authoritative Ubuntu/input preflight must pass before a candidate Attempt.
 
+The first KPipeWire preflight, run 37529687593 on source `7b39ada`, stopped while
+compiling the Ubuntu SDK client: its public DmaBufHandler header includes
+`epoxy/egl.h`, but Ubuntu's development package omits the Epoxy SDK dependency.
+The clean guest exposed this missing fixture prerequisite before candidate
+source preparation or sbuild. Original runner/host failures, artifact hashes and
+offline-restored evidence remain retained under
+`manifests/evidence/package-revalidation/kpipewire-preflight15/`.
+No package Attempt was consumed. The repaired baseline and consumer explicitly
+request `libepoxy-dev`; official candidate headers and sources stay unchanged.
+A fresh authoritative preflight must certify the repaired fixture before build.
+
 The Activities input route was recertified after a nested QEMU
 process blocked in `kvm_async_pf_task_wait_schedule` during Ubuntu baseline APT
 setup. Starting the outer guest with 8 GiB did not eliminate the observed wait.

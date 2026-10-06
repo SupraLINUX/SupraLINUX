@@ -13,6 +13,11 @@ session bus, offscreen software rendering and the upstream KDECI null sink.
 Do not modify upstream tests or start host desktop multimedia services.
 
 The reviewed Ubuntu client uses only installed SDK headers and CMake targets.
+Declare libepoxy-dev explicitly in the baseline and consumer test environments:
+Ubuntu 6.6.4's public DmaBufHandler header includes epoxy/egl.h, although its
+libkpipewire-dev package does not depend on that SDK. Official 6.7.5 no longer
+exposes the Epoxy header there. Preserve both upstream sources and compile the
+same client against the authenticated Ubuntu SDK before the candidate upgrade.
 It connects the actual installed library to its own private PipeWire daemon and
 one synthetic camera source with explicit zero-offset MemFd buffers and exact
 160x120 RGBA pixels. Verify repeated frames, independent frame copy/recycling,

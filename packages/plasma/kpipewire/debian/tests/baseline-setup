@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
-apt-get install -y --no-install-recommends build-essential cmake pkgconf libkpipewire-dev libpipewire-0.3-dev qt6-declarative-dev python3 pipewire-bin ffmpeg qt6-qpa-plugins qml6-module-qtquick qml6-module-qtqml-models qml6-module-qtqml-workerscript
+apt-get install -y --no-install-recommends build-essential cmake pkgconf libkpipewire-dev libpipewire-0.3-dev libepoxy-dev qt6-declarative-dev python3 pipewire-bin ffmpeg qt6-qpa-plugins qml6-module-qtquick qml6-module-qtqml-models qml6-module-qtqml-workerscript
 BASE=/var/tmp/supralinux-kpipewire-baseline
 mkdir -p "${BASE}/source"
 cp -a "$(dirname "$0")/client/." "${BASE}/source/"
