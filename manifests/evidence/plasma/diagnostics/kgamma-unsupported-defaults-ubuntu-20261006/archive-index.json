@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "scope": "local-ubuntu-kgamma-unsupported-defaults-diagnosis",
+  "archive_path": ".artifacts/plasma-6.7.5/diagnostics/kgamma-unsupported-defaults-ubuntu-20261006/complete-diagnosis.zip",
+  "archive_sha256": "6a04e28923f10f514b1beb931f559292d81500b3052325669b0411b40bcbe82f",
+  "size": 6536744,
+  "offline_restore_verified": true,
+  "requires_github_for_restore": false,
+  "authoritative": false,
+  "candidate_execution_started": false,
+  "source_payload": "diagnostic harness and pinned upstream code; no candidate binaries",
+  "disposition": "Keep KGamma inventoried and unadmitted pending product/integration review. Do not modify upstream code or count an expected crash as package PASS. Other independent packages can proceed."
+}

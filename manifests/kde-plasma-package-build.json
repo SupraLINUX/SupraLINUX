@@ -3629,7 +3629,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -3676,6 +3676,10 @@
       "sha256": "1660849d661ca9aae0ba7a52e7525f32ea3ee3cec91fd74e05ff82f600d053ca",
       "applicable": false,
       "inapplicability_reason": "Actual-build predecessor verification changed after a proved false-negative, and packaging revision 2 corrects copyright precedence. Certify the repaired execution path with a fresh small authoritative preflight before Attempt 2."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/plasma-thunderbolt-preflight13/verification.json",
+      "sha256": "29c231c7ca23123b805a3df7c23a0cdf2e8476d4c4b34237df32364e832ba27d"
     }
   ],
   "package_input_incidents": [
