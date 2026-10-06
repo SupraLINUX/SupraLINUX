@@ -1,0 +1,7 @@
+Tests: ubuntu-abi-client
+Depends: @, binutils, apt, python3, dbus-daemon, qt6-qpa-plugins, qml6-module-qtcore, plasma-activities-bin
+Restrictions: needs-root, allow-stderr
+
+Tests: consumer
+Depends: @, build-essential, cmake, libplasmaactivities-dev, qt6-declarative-dev, python3, dbus-daemon, qt6-qpa-plugins, qml6-module-qtcore, plasma-activities-bin
+Restrictions: needs-root, allow-stderr

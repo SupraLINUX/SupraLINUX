@@ -1,0 +1,20 @@
+SupraLINUX activity manager integration
+
+Build the unchanged official stable daemon, its private plugin library, all seven
+plugins, activation/systemd user files, KRunner metadata and translations.
+Retain Ubuntu Qt and the SQLite runtime provider. No public SDK is introduced.
+No upstream CTest suite is defined by this source.
+The shared runner transports the complete hash-verified tests tree; the setup
+references its sibling client files instead of embedding another copy.
+The fixture uses a bounded private D-Bus with no service activation and disposable
+HOME/XDG state. The actual installed daemon serves a client compiled against the
+Ubuntu Plasma Activities SDK. Check offline rejected futures, create/rename/select
+and restore signals/futures, C++/QML models, real SQLite resource link/unlink and
+persistence after a daemon restart. Wait for the documented delayed config flush
+before stopping the first daemon. Inspect actual SQLite integrity/schema and
+link cleanup read-only; preserve original logs, including unavailable private
+kglobalaccel activation. Stop only the owned daemon and bus, then remove private
+configuration. Keep the Ubuntu client bytes and Activities/Qt runtime versions
+across the candidate upgrade; rebuild a consumer against the current test inputs.
+Actual desktop global shortcuts, application/event spying, KRunner activation and
+full session integration remain later functional gates.

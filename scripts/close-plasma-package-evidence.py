@@ -128,8 +128,8 @@ def main():
             assert baseline['workflow_run_id'] == result['workflow_run_id']
             assert baseline['system_test_acceleration'] == 'kvm-required' and baseline['candidate_installed'] is False
             assert baseline['consumes_package_attempt'] is baseline['package_execution_started'] is False
-            script = record['packaging_path'] + '/' + record['baseline_setup_script']
-            assert baseline['inputs_sha256'][script] == record['packaging_sha256'][record['baseline_setup_script']]
+            baseline_testing = importlib.machinery.SourceFileLoader('baseline_testing', str(ROOT/'scripts/plasma-package-testing.py')).load_module()
+            baseline_testing.verify_baseline_input_hashes(record, baseline)
             for name, digest in baseline['files_sha256'].items():
                 assert result['files_sha256']['ubuntu-baseline-preflight/' + name] == digest
         tests = []

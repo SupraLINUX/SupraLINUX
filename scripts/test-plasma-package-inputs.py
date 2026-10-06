@@ -136,6 +136,41 @@ class InputAdmission(unittest.TestCase):
             with self.assertRaisesRegex(AssertionError, "Setup inputs changed"):
                 testing.setup_commands(root, record)
 
+    def test_reviewed_baseline_tree_preserves_relative_files_and_rejects_drift(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);tests=root/'package/tests';(tests/'client').mkdir(parents=True);(root/'bin').mkdir()
+            for name,body in [('apt-get','exit 0'),('dpkg','exit 0'),('dpkg-query',"printf '1.0'")]:
+                path=root/'bin'/name;path.write_text('#!/bin/sh\n'+body+'\n');path.chmod(0o755)
+            marker=root/'marker';setup=tests/'setup';fixture=tests/'client/value'
+            setup.write_text('#!/bin/sh\nset -eu\ntest -x "$0"\ncat "$(dirname "$0")/client/value" > '+shlex.quote(str(marker))+'\n')
+            fixture.write_text('reviewed sibling fixture\n'+'transport fixture '*300)
+            record={'ubuntu_baseline_package':'baseline-fixture','version':'2.0','packaging_path':'package','baseline_setup_script':'tests/setup','baseline_setup_payload':'reviewed-tests-tree','required_executable_files':['tests/setup'],'packaging_sha256':{'tests/setup':hashlib.sha256(setup.read_bytes()).hexdigest(),'tests/client/value':hashlib.sha256(fixture.read_bytes()).hexdigest()}}
+            original=testing.setup_commands(root,record)
+            baseline={'inputs_sha256':{'package/'+name:digest for name,digest in record['packaging_sha256'].items()}}
+            testing.verify_baseline_input_hashes(record,baseline)
+            bad_baseline=copy.deepcopy(baseline)
+            bad_baseline['inputs_sha256']['package/tests/client/value']='0'*64
+            with self.assertRaisesRegex(AssertionError,'reviewed input mismatch'):
+                testing.verify_baseline_input_hashes(record,bad_baseline)
+            self.assertEqual(original,testing.setup_commands(root,record))
+            self.assertLess(max(len(line.encode()) for line in original.splitlines()),512)
+            commands=original.replace('/var/tmp/supralinux-ubuntu-package-version',str(root/'version'))
+            env=os.environ.copy();env['PATH']=str(root/'bin')+':'+env['PATH']
+            subprocess.run(['bash','-ec',commands],env=env,check=True,capture_output=True,text=True)
+            self.assertEqual(marker.read_bytes(),fixture.read_bytes())
+            for value in ['unknown-payload-format']:
+                bad=copy.deepcopy(record);bad['baseline_setup_payload']=value
+                with self.assertRaisesRegex(AssertionError,'Unknown baseline'):
+                    testing.setup_commands(root,bad)
+            for name in ['tests/../outside','tests/client/../../outside']:
+                bad=copy.deepcopy(record);bad['packaging_sha256'][name]='0'*64
+                with self.subTest(path=name),self.assertRaises(AssertionError):testing.setup_commands(root,bad)
+            fixture.write_text('changed')
+            with self.assertRaisesRegex(AssertionError,'tree inputs changed'):testing.setup_commands(root,record)
+            outside=root/'outside';outside.write_text('outside');fixture.unlink();fixture.symlink_to(outside)
+            record['packaging_sha256']['tests/client/value']=hashlib.sha256(outside.read_bytes()).hexdigest()
+            with self.assertRaisesRegex(AssertionError,'escapes reviewed tree'):testing.setup_commands(root,record)
+
     def test_large_baseline_survives_canonical_serial_terminal_and_rejects_corruption(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

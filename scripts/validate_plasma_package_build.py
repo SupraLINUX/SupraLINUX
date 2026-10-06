@@ -16,6 +16,9 @@ repair_spec.loader.exec_module(repairs)
 proof_spec = importlib.util.spec_from_file_location('input_evidence', ROOT/'scripts/validate_package_revalidation.py')
 input_evidence = importlib.util.module_from_spec(proof_spec)
 proof_spec.loader.exec_module(input_evidence)
+testing_spec = importlib.util.spec_from_file_location('baseline_testing', ROOT/'scripts/plasma-package-testing.py')
+testing = importlib.util.module_from_spec(testing_spec)
+testing_spec.loader.exec_module(testing)
 
 
 def validate():
@@ -228,6 +231,9 @@ def validate():
         if record.get("baseline_setup_script"):
             assert record["baseline_setup_script"] in executables
             assert record["baseline_setup_script"].startswith("tests/")
+        if record.get('baseline_setup_payload') is not None:
+            assert record.get('baseline_setup_script') and record['baseline_setup_payload'] == 'reviewed-tests-tree'
+            testing.reviewed_setup_files(ROOT, record)
         if record.get("baseline_preflight_required"):
             assert record.get("baseline_setup_script"), "Required baseline preflight lacks a reviewed setup"
         if record.get("upstream_tests"):
@@ -265,8 +271,7 @@ def validate():
                 assert baseline["source_commit"] == result["source_commit"] and baseline["workflow_run_id"] == result["workflow_run_id"]
                 assert baseline["candidate_installed"] is baseline["consumes_package_attempt"] is baseline["package_execution_started"] is False
                 assert baseline["system_test_acceleration"] == "kvm-required"
-                script = record["packaging_path"] + "/" + record["baseline_setup_script"]
-                assert baseline["inputs_sha256"][script] == record["packaging_sha256"][record["baseline_setup_script"]]
+                testing.verify_baseline_input_hashes(record, baseline)
                 assert all(result["files_sha256"]["ubuntu-baseline-preflight/" + file] == digest
                            for file, digest in baseline["files_sha256"].items())
             retention = evidence["local_retention"]

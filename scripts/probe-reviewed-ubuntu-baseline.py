@@ -52,6 +52,8 @@ def main():
     (evidence / 'setup-commands.txt').write_text(commands)
     frozen = {key: record[key] for key in ['source_package', 'version', 'ubuntu_baseline_package',
                                          'baseline_setup_script', 'packaging_path', 'packaging_sha256']}
+    if record.get('baseline_setup_payload') is not None:
+        frozen['baseline_setup_payload'] = record['baseline_setup_payload']
     (evidence / 'reviewed-inputs.json').write_text(json.dumps(frozen, indent=2) + '\n')
     if args.prepare_only:
         print(f'{node}: reviewed Ubuntu baseline prepared; no candidate package execution')
@@ -76,7 +78,9 @@ def main():
               'candidate_installed': False,
               'inputs_sha256': {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                                for p in [Path(__file__), ROOT / 'scripts/plasma-package-testing.py',
-                                         ROOT / 'scripts/qemu-kvm-required.sh', baseline]},
+                                         ROOT / 'scripts/qemu-kvm-required.sh'] +
+                                    [ROOT / record['packaging_path'] / name
+                                     for name in testing.reviewed_setup_files(ROOT, record)]},
               'files_sha256': {str(p.relative_to(evidence)): hashlib.sha256(p.read_bytes()).hexdigest()
                                for p in sorted(evidence.rglob('*')) if p.is_file() and p.name != 'pipeline.log'}}
     (evidence / 'result.json').write_text(json.dumps(result, indent=2) + '\n')

@@ -144,6 +144,9 @@ def main():
             baseline = json.loads(archive.read('ubuntu-baseline-preflight/result.json'))
             assert baseline['state'] == 'PASS' and baseline['candidate_installed'] is False
             assert baseline['source_commit'] == head and baseline['workflow_run_id'] == raw['workflow_run_id']
+            if record.get('baseline_setup_script'):
+                baseline_testing = importlib.machinery.SourceFileLoader('baseline_testing', str(ROOT/'scripts/plasma-package-testing.py')).load_module()
+                baseline_testing.verify_baseline_input_hashes(record, baseline)
             assert json.loads(archive.read('cache-probe/result.json'))['state'] == 'PASS'
             assert json.loads(archive.read('rootfs-admission.json'))['frameworks_and_qt_sdk_preinstalled'] is False
             if built.get('retained_upgrade'):

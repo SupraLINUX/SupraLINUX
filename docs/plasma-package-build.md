@@ -1,5 +1,33 @@
 # Authoritative Plasma package builds
 
+Thunderbolt `6.7.5-0supralinux2` closed authoritative package PASS in
+[run 37462870275](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37462870275):
+clean sbuild, all four executed CTests, source/binary lintian, the unchanged
+Ubuntu SDK client after the normal APT upgrade and a rebuilt consumer. Both
+clients exercise the installed KDED module and rendered KCM against the private
+upstream Bolt provider. Physical hardware and the complete desktop stay in later
+QA. The full original source/binary/debug/buildinfo/changes/log archive was
+retained by digest and restored offline; the VM, runner and overlay were removed.
+
+Attempt 1 remains an original FAIL classified as a proved verifier
+`INFRA_INVALID`: the old guard required every available predecessor in buildinfo,
+including 54 unused binaries. The repaired verifier checks all 88 installed
+reviewed binaries at their exact versions and requires all six direct SDK inputs.
+A separate infrastructure consumer still certifies the complete 142-binary
+transport closure. Eight regression checks and a fresh authoritative input
+preflight passed before the complete retry. Revision 2 also corrects copyright
+stanza precedence for the copied upstream test provider.
+
+KActivityManagerd is individually admitted for the next input preflight. Its
+baseline setup now references one reviewed client source tree, reducing the
+script from 171 to 14 lines. The shared runner optionally transports all reviewed
+`tests/` files in a deterministic, hash-verified regular-file archive with bounded
+base64 lines. Relative source paths and executable modes are preserved; changed
+files, escaping paths, symlinks and unknown payload formats are rejected. Baseline
+evidence binds every transported file to its packaging hash. Historical scripts
+keep their original single-script transport. The new path requires its small
+authoritative preflight before a KActivityManagerd package Attempt can start.
+
 The Activities input route was recertified after a nested QEMU
 process blocked in `kvm_async_pf_task_wait_schedule` during Ubuntu baseline APT
 setup. Starting the outer guest with 8 GiB did not eliminate the observed wait.

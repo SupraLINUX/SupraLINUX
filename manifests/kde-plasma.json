@@ -180,7 +180,7 @@
       "consumes_package_attempt": false
     },
     "authorized_package_nodes": [
-      "plasma-thunderbolt"
+      "kactivitymanagerd"
     ],
     "package_build_manifest": "manifests/kde-plasma-package-build.json"
   },
