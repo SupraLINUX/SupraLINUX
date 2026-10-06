@@ -4662,7 +4662,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -4715,6 +4715,10 @@
       "sha256": "29c231c7ca23123b805a3df7c23a0cdf2e8476d4c4b34237df32364e832ba27d",
       "applicable": false,
       "inapplicability_reason": "The shared reviewed baseline transport now supports an exact tests tree for the next package. The original Thunderbolt certification and subsequent complete package PASS remain preserved for their original inputs."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kactivitymanagerd-preflight14/verification.json",
+      "sha256": "6070c2aa3b2c4e06ae732cae68840667bc6a82bb9fc6dc057472f97270dd1f17"
     }
   ],
   "package_input_incidents": [
