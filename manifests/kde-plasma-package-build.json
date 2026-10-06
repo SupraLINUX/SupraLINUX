@@ -3600,7 +3600,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -3641,6 +3641,10 @@
     {
       "path": "manifests/evidence/package-revalidation/kwallet-pam-preflight9/verification.json",
       "sha256": "9962ff2ea201f4f8b49541fa287f2be0e4fae273892cecfae0d320eff17919b2"
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/plasma-thunderbolt-preflight12/verification.json",
+      "sha256": "1660849d661ca9aae0ba7a52e7525f32ea3ee3cec91fd74e05ff82f600d053ca"
     }
   ],
   "package_input_incidents": [
