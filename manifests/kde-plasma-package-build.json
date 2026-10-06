@@ -1,9 +1,11 @@
 {
   "schema": 1,
   "role": "reviewed-plasma-package-build",
-  "state": "partial-PASS",
-  "authorized_nodes": [],
-  "package_execution_authorized": false,
+  "state": "execution-authorized",
+  "authorized_nodes": [
+    "kpipewire"
+  ],
+  "package_execution_authorized": true,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
   "scope": "Per-node clean builds, upstream tests, package/Ubuntu upgrade and ABI client checks on KVM; graphical desktop and final distro integration remain later gates",
   "nodes": {
@@ -4498,6 +4500,171 @@
         "artifact_origin": "sealed-host-package-export",
         "actions_export_complete": false
       }
+    },
+    "kpipewire": {
+      "state": "build-pending",
+      "source_package": "kpipewire",
+      "version": "6.7.5-0supralinux1",
+      "upstream_version": "6.7.5",
+      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/kpipewire-6.7.5.tar.xz",
+      "upstream_sha256": "20af39d9450d495468c56a50930810d82137f7ccd3a710592e02b6f620758f55",
+      "signature_sha256": "c13f165204651375c4d91fc1905234119e46686d4ac166b63e2a1ca6e4bfad19",
+      "packaging_reference_version": "6.6.4-0ubuntu1",
+      "packaging_reference_sha256": "fe65b50f4819c300162ae19a957ab8b3e9254418304d17d7ea324b44e75a2d82",
+      "packaging_path": "packages/plasma/kpipewire/debian",
+      "packaging_review": "PASS",
+      "binary_packages": {
+        "libkpipewire-data": "all",
+        "libkpipewire-dev": "amd64",
+        "libkpipewire6": "amd64",
+        "libkpipewiredmabuf6": "amd64",
+        "libkpipewirerecord6": "amd64",
+        "qml6-module-org-kde-pipewire": "amd64"
+      },
+      "ubuntu_baseline_package": "libkpipewire6",
+      "baseline_setup_script": "tests/baseline-setup",
+      "baseline_preflight_required": true,
+      "required_executable_files": [
+        "rules",
+        "tests/baseline-setup",
+        "tests/ubuntu-abi-client",
+        "tests/consumer",
+        "tests/upstream-session"
+      ],
+      "upstream_tests": [
+        "TestEncoder",
+        "mediamonitortest"
+      ],
+      "sbuild_rootfs_policy": {
+        "kind": "immutable-bare-milestone",
+        "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
+        "suites": [
+          "resolute",
+          "resolute-updates",
+          "resolute-security"
+        ]
+      },
+      "baseline_setup_payload": "reviewed-tests-tree",
+      "frameworks_predecessors": {
+        "extra-cmake-modules": {
+          "source_package": "kf6-extra-cmake-modules",
+          "version": "6.30.0-0supralinux3",
+          "binaries": [
+            {
+              "package": "extra-cmake-modules",
+              "architecture": "all",
+              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+            }
+          ]
+        },
+        "ki18n": {
+          "source_package": "kf6-ki18n",
+          "version": "6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "libkf6i18n-data",
+              "architecture": "all",
+              "sha256": "3df2300d5aca640c8968859367ac3cd606a31a87e875ca207a71eeda6d03f45a"
+            },
+            {
+              "package": "libkf6i18n-dev",
+              "architecture": "amd64",
+              "sha256": "a9485f9fdb874cc6a61064a824d66567306122c39677ccf92f8adb3b0db14870"
+            },
+            {
+              "package": "libkf6i18n6",
+              "architecture": "amd64",
+              "sha256": "fa60bd16ffb35ae90eb1ab324386961d973a9b0dd31a4947351d3afc652b6e58"
+            },
+            {
+              "package": "libkf6i18nlocaledata6",
+              "architecture": "amd64",
+              "sha256": "19a6b680b3f85fe04901d53fa6193dd773d72fc02c9337387776ec779f5c285a"
+            },
+            {
+              "package": "libkf6i18nqml6",
+              "architecture": "amd64",
+              "sha256": "0297393117c5b4b0fd284d32aa9040c5afbe91aa0da73b2f83d1b181a812f91c"
+            },
+            {
+              "package": "qml6-module-org-kde-i18n-localedata",
+              "architecture": "amd64",
+              "sha256": "147a716c4794a50a63160928228afd25c406a02af2b3d00637bed289027f6001"
+            },
+            {
+              "package": "qml6-module-org-kde-ki18n",
+              "architecture": "amd64",
+              "sha256": "07960032b6582476f0844b72d4f74884240c592e55eb0613390f0191dbd98299"
+            }
+          ]
+        },
+        "kcoreaddons": {
+          "source_package": "kf6-kcoreaddons",
+          "version": "6.30.0-0supralinux4",
+          "binaries": [
+            {
+              "package": "libkf6coreaddons-data",
+              "architecture": "all",
+              "sha256": "f05f55e3c6486af9d3ff48aa38215784bbb347aae1cd5fb760f5513760364908"
+            },
+            {
+              "package": "libkf6coreaddons-dev",
+              "architecture": "amd64",
+              "sha256": "9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636"
+            },
+            {
+              "package": "libkf6coreaddons6",
+              "architecture": "amd64",
+              "sha256": "015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb"
+            },
+            {
+              "package": "qml6-module-org-kde-coreaddons",
+              "architecture": "amd64",
+              "sha256": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
+            }
+          ]
+        }
+      },
+      "attempts": [],
+      "review": {
+        "source": "Unchanged signed official stable sources; three SONAME 6 libraries, all installed SDK and QML targets retained.",
+        "version": "No epoch; candidate exceeds authenticated Ubuntu 6.6.4-0ubuntu1.",
+        "dependencies": "Only three required exact eligible Frameworks inputs, all 12 binaries. Matching Ubuntu Qt private SDK, PipeWire, FFmpeg, EGL/GBM/VA/DRM retained. Ubuntu protocol 1.20 defines the example request.",
+        "tests": "Both full upstream CTest suites enabled with explicit session prerequisites and verbose row outcomes. Private actual zero-offset CPU-frame, copy, QML monitoring and recording fixture passes Ubuntu before any candidate Attempt; unchanged client and rebuilt consumer after upgrade.",
+        "licensing": "Preserve upstream LGPL/GPL alternatives, attributions and CC0 terms; correct inherited BSD spelling and separately attribute new CC0 fixtures after general packaging.",
+        "profile": "Preserve ordinary source/record/monitor libraries and all codecs. Upstream codec/hardware QSKIP is explicit. Nonzero-offset buffers, guarded copy bounds, real hardware/portals/compositors remain integration QA; no silent build/install exclusion."
+      },
+      "packaging_sha256": {
+        "README.source": "5eb6465e5546f87f212e5c1b35ee9e9a37ab3eb109b44a137253990153fedeaf",
+        "changelog": "0a0f6805bb64bd06010709dca912f06ef996c4eb1495f300851c8fa46a17efbc",
+        "control": "e1949731ccf41b24f3585228718aba2c1c875ca3ea257be044f832626278a4d2",
+        "copyright": "d2fe7ba89ad2ac9e38f5c5c33ab25ccaac26c3395ee4aa21dd01eef006bac1ac",
+        "libkpipewire-data.install": "b16087b550332e893f4866034e723c553cfbe28114377316b31c77242ffbc16e",
+        "libkpipewire-dev.install": "7f8f8bb6e4d44de940464523ed535b7d443d2b7414ea475f34a7302898933fb0",
+        "libkpipewire6.install": "e99ad31f147052ec8fbb730de3a028183048b00330b17035eec858446546009d",
+        "libkpipewire6.symbols": "9c34dadeb9fc42a216c471a0fd942a47548356e880c6528cae7d409c6d869c69",
+        "libkpipewiredmabuf6.install": "b5e688b4c088ca2d7a3b0704410070bf4e557b5a8f391070acb6140fca18042c",
+        "libkpipewiredmabuf6.symbols": "e978de3f61818f7a825072f4429dd865bf0c3479ce1da03879dc40aae11114cb",
+        "libkpipewirerecord6.install": "a08848282eb9b16fded0250c2233d3534bb7d3301777408a34f7102c25e348e4",
+        "libkpipewirerecord6.symbols": "ae2423f9b002d21af5259e4129ac746dfd603b6c22a5fd03ee07ab8dd64d0a6f",
+        "qml6-module-org-kde-pipewire.install": "08b1477f85c450d6beaad30dd59c8e5650490a3d86ff4e22b8355f820edaa128",
+        "rules": "b106b200c57873f0e0d5832043006bcfb0fce92675490a3f31316c09ae68c3b6",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/baseline-setup": "e0611afa074a6cfcba85149378f6a87104214de472e4567f471531a2654fe868",
+        "tests/client/CMakeLists.txt": "d101b5389d40130e886f1b35eeb94112a44f640b2e16f85b866844d1f584adb2",
+        "tests/client/client.conf": "64ddc09e4be561b49df18ac6909ca849db40482b801f2521c9227061d4a003e2",
+        "tests/client/main.cpp": "978a172186732bb1a5ad7f1acf7f6c68bafc28a656eb7e312a0e3bd05c2a4b59",
+        "tests/client/private-pipewire.conf": "95e50cd629ca8e4b2bc4f19ccf1189d7ef11bfebaffefa06ae6f8a1061c237ee",
+        "tests/client/run-private-video.py": "fd6b127188f3e6d1dc38612bc197e6400d5797721fc53dc6ec52217319ed4b82",
+        "tests/client/video-source.c": "6b5e5f03a6df35a782f7cc48b045d2dbb2f008462170dd387c90e6f06e55add4",
+        "tests/consumer": "94914848ce4015634d452a12b44fd5024483d5288ab1bacb428827d6365a7d62",
+        "tests/control": "b460aab122c68c8b67bab52c96ef5dd6b035ba1c7edd95101d3dc4a0747adf4b",
+        "tests/ubuntu-abi-client": "99c9e567363d6f14a90435c67ca662a421dedb1927794890a8b413de1c790257",
+        "tests/upstream-session": "f4e81f2437e3e38f1c420e6f2d67f45c1631c8acb76413fa9d1e977c1c26e4e2",
+        "upstream/metadata": "e15ec1ffe53daf0be073557ac6c1b709ec567a0d6b04b487f892ebd6a9ace894",
+        "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+        "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+      }
     }
   },
   "retained_attempt_archives": [
@@ -4734,7 +4901,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",

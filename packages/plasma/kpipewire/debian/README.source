@@ -1,0 +1,34 @@
+SupraLINUX KPipeWire integration
+
+Integrate unchanged official stable sources. Preserve the three SONAME 6 shared
+libraries, Ubuntu binary package names, installed public SDK/CMake targets, all
+three QML modules (source, record and monitor), translations and symbol guards.
+Qt, PipeWire, FFmpeg, libva and other external runtimes stay with Ubuntu. The
+existing Plasma Wayland Protocols 1.20 definition supplies stream_virtual_output;
+this package does not need the separate newer KWayland protocol transition.
+Enable and run both TestEncoder and mediamonitortest, including every row and
+upstream's explicit unavailable-codec/hardware skips. Record full verbose CTest
+output. The upstream process wrapper uses disposable HOME/XDG state, an isolated
+session bus, offscreen software rendering and the upstream KDECI null sink.
+Do not modify upstream tests or start host desktop multimedia services.
+
+The reviewed Ubuntu client uses only installed SDK headers and CMake targets.
+It connects the actual installed library to its own private PipeWire daemon and
+one synthetic camera source with explicit zero-offset MemFd buffers and exact
+160x120 RGBA pixels. Verify repeated frames, independent frame copy/recycling,
+all installed QML modules, MediaMonitor source detection/filter/reconnect and
+inherited role enums. Record actual VP8 software output, at least ten decoded
+frames and a full FFmpeg decode; preserve the output and original logs. Keep the
+same Ubuntu client/producer bytes across the complete six-binary candidate APT
+upgrade and preserve Qt/PipeWire/FFmpeg versions, then build and run a consumer.
+All private owned processes and state are bounded and removed on exit.
+
+Preliminary Ubuntu pool-buffer diagnostics failed exact pixel checks. The
+mapoffset handling and frame-copy sizing code are unchanged between authenticated
+Ubuntu 6.6.4 and signed 6.7.5; these are inherited concerns, not an observed
+candidate regression. Zero-offset delivery and frame-copy checks pass against
+actual Ubuntu libraries. QML inherited MediaMonitor role enums are also valid;
+the earlier static suspicion was disproved by actual client execution.
+This package fixture does not certify nonzero-offset buffers, guarded memory
+reads, GPU DMA-BUF/hardware codecs, real portals/compositors, audio devices or
+complete desktop screencasting. Those remain explicit integration QA items.

@@ -44,6 +44,24 @@ Relative paths, executable modes and every transported file hash are checked;
 changed files, escaping paths, symlinks and unknown payload formats are rejected.
 Historical scripts keep their original single-script transport.
 
+KPipeWire is the next individually reviewed input preflight. Its three SONAME 6
+libraries, SDK/CMake targets, three QML modules and translations are preserved,
+and all three Ubuntu symbols guards remain active. Both upstream CTest suites
+are enabled, including every encoder row and upstream hardware/codec skips.
+Only ECM, KI18n and KCoreAddons (12 eligible binaries) are needed; the Ubuntu Qt,
+PipeWire, FFmpeg and Wayland protocol providers remain in place.
+
+The exact reviewed local Ubuntu fixture passed private zero-offset MemFd pixel
+delivery, frame-copy/recycling, installed QML/monitor role filtering and actual
+VP8 recording with full 36-frame decode. Earlier pool-buffer negative observations
+remain preserved. Relevant offset/copy code is unchanged in authenticated Ubuntu
+and signed candidate sources; no candidate runtime result is inferred from that
+comparison. The suspected legacy QML enum problem was disproved by actual Ubuntu
+execution. Hardware, nonzero-offset/copy-bound and real portal/compositor QA remain
+explicitly pending. The diagnosis, sources, binaries, original logs and recording
+are retained under `manifests/evidence/plasma/diagnostics/kpipewire-ubuntu-private-video-20261006/`.
+The authoritative Ubuntu/input preflight must pass before a candidate Attempt.
+
 The Activities input route was recertified after a nested QEMU
 process blocked in `kvm_async_pf_task_wait_schedule` during Ubuntu baseline APT
 setup. Starting the outer guest with 8 GiB did not eliminate the observed wait.

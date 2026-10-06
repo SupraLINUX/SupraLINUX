@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+state=$(mktemp -d)
+trap 'rm -rf "${state}"' EXIT
+for directory in home runtime config data cache state; do mkdir -m 0700 "${state}/${directory}"; done
+unset DISPLAY WAYLAND_DISPLAY DBUS_SESSION_BUS_ADDRESS PIPEWIRE_REMOTE PIPEWIRE_RUNTIME_DIR PIPEWIRE_CONFIG_DIR PIPEWIRE_CONFIG_PREFIX PIPEWIRE_CONFIG_NAME PULSE_SERVER
+export HOME="${state}/home" XDG_RUNTIME_DIR="${state}/runtime" XDG_CONFIG_HOME="${state}/config" XDG_DATA_HOME="${state}/data" XDG_CACHE_HOME="${state}/cache" XDG_STATE_HOME="${state}/state"
+export DBUS_SYSTEM_BUS_ADDRESS="unix:path=${state}/no-system-bus"
+export QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software LIBGL_ALWAYS_SOFTWARE=1 KDECI_BUILD=1
+timeout --signal=TERM --kill-after=5s 300s dbus-run-session -- "$@"
