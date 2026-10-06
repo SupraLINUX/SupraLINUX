@@ -1,11 +1,9 @@
 {
   "schema": 1,
   "role": "reviewed-plasma-package-build",
-  "state": "execution-authorized",
-  "authorized_nodes": [
-    "kactivitymanagerd"
-  ],
-  "package_execution_authorized": true,
+  "state": "partial-PASS",
+  "authorized_nodes": [],
+  "package_execution_authorized": false,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
   "scope": "Per-node clean builds, upstream tests, package/Ubuntu upgrade and ABI client checks on KVM; graphical desktop and final distro integration remain later gates",
   "nodes": {
@@ -3472,7 +3470,7 @@
       }
     },
     "kactivitymanagerd": {
-      "state": "build-pending",
+      "state": "PASS",
       "source_package": "kactivitymanagerd",
       "version": "6.7.5-0supralinux1",
       "upstream_version": "6.7.5",
@@ -4403,7 +4401,35 @@
           "resolute-security"
         ]
       },
-      "attempts": [],
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "PASS",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "PASS",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37471424298,
+          "workflow_job_id": 112295608052,
+          "source_commit": "3015aee825f90107234fc9c0a3ed5751486553b8",
+          "artifact_id": null,
+          "artifact_sha256": "83dec18bac2f11c2b1e47d001296db4dcf48993eb0f45a6398e4db15fe2a1857",
+          "result_path": "manifests/evidence/plasma/kactivitymanagerd-attempt1/result.json",
+          "result_sha256": "7c3a2bea664a2216c91cda1ae23da468d1565d29793939abb84147284b4b066a",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261006t132856z-4025280",
+          "host_evidence_manifest_sha256": "eb25b50cc13048cc0800b55b8c9bab73af128c9172ed2a88fa57b74536d5992f",
+          "rootfs_admission_path": "manifests/evidence/plasma/kactivitymanagerd-attempt1/rootfs-admission.json",
+          "rootfs_admission_sha256": "1ccccb2a26da2d249272cf64aac28e393f1f9922717f3bcc1b8e5778865ed7ce",
+          "baseline_preflight_path": "manifests/evidence/plasma/kactivitymanagerd-attempt1/ubuntu-baseline-preflight.json",
+          "baseline_preflight_sha256": "a36cfe036918665e67c9b5824d7b8a52a2caac8f65a726087a157bd27ad94a8b",
+          "workflow_job_path": "manifests/evidence/plasma/kactivitymanagerd-attempt1/workflow-job.json",
+          "workflow_job_sha256": "5e2beefde9fbe5360e06a94fba6054cd99309d7efadf0493b7eb22a923410e38",
+          "host_result_path": "manifests/evidence/plasma/kactivitymanagerd-attempt1/host-result.json",
+          "host_result_sha256": "ccc49bc2fb41c25b08c5177330bdab64abc99d1845a92da2062c762ccad59fb7",
+          "artifact_origin": "sealed-host-package-export",
+          "actions_export_complete": false
+        }
+      ],
       "review": {
         "source": "Unchanged signed official stable daemon; all native plugin targets and user activation metadata preserved.",
         "version": "No epoch in captured Ubuntu references; the candidate exceeds 6.6.4 and 6.6.6.",
@@ -4431,7 +4457,47 @@
         "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
         "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
       },
-      "baseline_setup_payload": "reviewed-tests-tree"
+      "baseline_setup_payload": "reviewed-tests-tree",
+      "evidence": {
+        "workflow_run_id": 37471424298,
+        "workflow_job_id": 112295608052,
+        "source_commit": "3015aee825f90107234fc9c0a3ed5751486553b8",
+        "artifact_id": null,
+        "artifact_sha256": "83dec18bac2f11c2b1e47d001296db4dcf48993eb0f45a6398e4db15fe2a1857",
+        "result_path": "manifests/evidence/plasma/kactivitymanagerd-attempt1/result.json",
+        "result_sha256": "7c3a2bea664a2216c91cda1ae23da468d1565d29793939abb84147284b4b066a",
+        "contract_path": "manifests/evidence/plasma/kactivitymanagerd-attempt1/build-contract.json",
+        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261006t132856z-4025280",
+        "host_evidence_manifest_sha256": "eb25b50cc13048cc0800b55b8c9bab73af128c9172ed2a88fa57b74536d5992f",
+        "local_retention": {
+          "archive_root": ".artifacts/plasma-6.7.5/kactivitymanagerd-attempt1",
+          "archive_index_sha256": "9961bbd4f967fa01fa85da81793de30917aa12888fd5433b73b48647375d1651",
+          "plan_path": "manifests/evidence/plasma/kactivitymanagerd-artifact-plan.json",
+          "plan_sha256": "c8f772c06a3cb692371cc9de0b843c752afd365bab6f8636a2ecba0aef20670f",
+          "source_complete": true,
+          "changes_complete": true,
+          "buildinfo_verified": true,
+          "artifact_zip_sha256_verified": true,
+          "offline_restore_verified": true,
+          "requires_github_for_restore": false,
+          "off_host_backup_verified": false,
+          "unique_binary_package_count": 2,
+          "binary_payload_file_count": 2,
+          "payload_prefix": "packages/"
+        },
+        "cache_probe_result_path": "manifests/evidence/plasma/kactivitymanagerd-attempt1/cache-probe-result.json",
+        "cache_probe_result_sha256": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+        "rootfs_admission_path": "manifests/evidence/plasma/kactivitymanagerd-attempt1/rootfs-admission.json",
+        "rootfs_admission_sha256": "1ccccb2a26da2d249272cf64aac28e393f1f9922717f3bcc1b8e5778865ed7ce",
+        "baseline_preflight_path": "manifests/evidence/plasma/kactivitymanagerd-attempt1/ubuntu-baseline-preflight.json",
+        "baseline_preflight_sha256": "a36cfe036918665e67c9b5824d7b8a52a2caac8f65a726087a157bd27ad94a8b",
+        "workflow_job_path": "manifests/evidence/plasma/kactivitymanagerd-attempt1/workflow-job.json",
+        "workflow_job_sha256": "5e2beefde9fbe5360e06a94fba6054cd99309d7efadf0493b7eb22a923410e38",
+        "host_result_path": "manifests/evidence/plasma/kactivitymanagerd-attempt1/host-result.json",
+        "host_result_sha256": "ccc49bc2fb41c25b08c5177330bdab64abc99d1845a92da2062c762ccad59fb7",
+        "artifact_origin": "sealed-host-package-export",
+        "actions_export_complete": false
+      }
     }
   },
   "retained_attempt_archives": [
@@ -4599,6 +4665,12 @@
       "attempt": 2,
       "archive_root": ".artifacts/plasma-6.7.5/plasma-thunderbolt-attempt2",
       "archive_index_sha256": "e6eeb7ac847e51c7a1d75532b2f136848afaf02f493699a506de384c5af7f17a"
+    },
+    {
+      "node": "kactivitymanagerd",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/kactivitymanagerd-attempt1",
+      "archive_index_sha256": "9961bbd4f967fa01fa85da81793de30917aa12888fd5433b73b48647375d1651"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",

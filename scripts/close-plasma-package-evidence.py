@@ -79,7 +79,9 @@ def main():
             path = payload_dir/name
             assert path.resolve().is_relative_to(payload_dir.resolve()) and sha(path) == digest,name
         a.zip.parent.mkdir(parents=True,exist_ok=True)
-        with zipfile.ZipFile(a.zip,'w',compression=zipfile.ZIP_DEFLATED) as archive:
+        # Reproducible build trees can contain Unix-epoch mtimes. ZIP can only
+        # represent dates from 1980; clamp ZIP metadata, preserving sealed bytes.
+        with zipfile.ZipFile(a.zip,'w',compression=zipfile.ZIP_DEFLATED,strict_timestamps=False) as archive:
             for path in sorted(payload_dir.rglob('*')):
                 if path.is_file():archive.write(path,str(path.relative_to(payload_dir)))
         artifact_sha = sha(a.zip)

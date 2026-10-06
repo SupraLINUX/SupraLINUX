@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "kactivitymanagerd",
+      "package_version": "6.7.5-0supralinux1",
+      "artifact_id": null,
+      "workflow_run_id": 37471424298,
+      "artifact_sha256": "83dec18bac2f11c2b1e47d001296db4dcf48993eb0f45a6398e4db15fe2a1857",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

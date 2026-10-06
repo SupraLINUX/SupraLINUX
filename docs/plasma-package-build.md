@@ -18,15 +18,31 @@ transport closure. Eight regression checks and a fresh authoritative input
 preflight passed before the complete retry. Revision 2 also corrects copyright
 stanza precedence for the copied upstream test provider.
 
-KActivityManagerd is individually admitted for the next input preflight. Its
-baseline setup now references one reviewed client source tree, reducing the
-script from 171 to 14 lines. The shared runner optionally transports all reviewed
-`tests/` files in a deterministic, hash-verified regular-file archive with bounded
-base64 lines. Relative source paths and executable modes are preserved; changed
-files, escaping paths, symlinks and unknown payload formats are rejected. Baseline
-evidence binds every transported file to its packaging hash. Historical scripts
-keep their original single-script transport. The new path requires its small
-authoritative preflight before a KActivityManagerd package Attempt can start.
+KActivityManagerd `6.7.5-0supralinux1` closed authoritative package PASS in
+[run 37471424298](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37471424298)
+on source `3015aee825f90107234fc9c0a3ed5751486553b8`. Clean sbuild, the executed
+AppStream CTest, source/binary lintian and both nested-KVM autopkgtests passed.
+The unchanged Ubuntu Activities SDK client and a rebuilt consumer exercise the
+installed daemon: futures/signals, C++/QML models, actual SQLite resource links,
+activity metadata and persistence across daemon restart. Full desktop/Wayland,
+shortcut and event-spying integration remains in later QA.
+
+The package step succeeded, but Actions artifact upload failed and the host
+controller exited 28. Original job/host outcomes remain preserved separately.
+The complete sealed guest payload was exported locally, every recorded content
+hash verified, and sources, binary/debug packages, changes, buildinfo and logs
+restored into an empty cache without GitHub. This is a sealed-host package export,
+with no Actions artifact ID. Epoch-dated build files required clamping ZIP dates
+to 1980; original file bytes and the sealed host evidence remain unchanged.
+The host seal is `eb25b50cc13048cc0800b55b8c9bab73af128c9172ed2a88fa57b74536d5992f`.
+VM, runner and writable overlay cleanup was verified.
+
+The preceding input preflight passed in run 37469610049 and consumed no package
+Attempt. Its shared deterministic, hash-verified `tests/` transport reduced the
+baseline script from 171 to 14 lines and preserved one reviewed client definition.
+Relative paths, executable modes and every transported file hash are checked;
+changed files, escaping paths, symlinks and unknown payload formats are rejected.
+Historical scripts keep their original single-script transport.
 
 The Activities input route was recertified after a nested QEMU
 process blocked in `kvm_async_pf_task_wait_schedule` during Ubuntu baseline APT

@@ -83,7 +83,7 @@ def main():
         raw['host_result_sha256'] = sha(args.host_dir/'host-result.json')
         raw['host_evidence_manifest_sha256'] = sha(args.host_dir/'evidence-sha256.txt')
         args.zip.parent.mkdir(parents=True, exist_ok=True)
-        with zipfile.ZipFile(args.zip, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
+        with zipfile.ZipFile(args.zip, 'w', compression=zipfile.ZIP_DEFLATED, strict_timestamps=False) as archive:
             for name, path in files.items():
                 archive.write(path, name)
             archive.writestr('result.json', json.dumps(raw, indent=2)+'\n')
