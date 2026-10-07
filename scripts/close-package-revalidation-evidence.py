@@ -115,7 +115,7 @@ def main():
             assert frozen['campaign_manifest_sha256'] == hashlib.sha256(subprocess.check_output(['git','show',f'{head}:{args.campaign}'])).hexdigest()
             assert frozen['next_package_attempt'] == len(record['attempts'])+1
         built = frozen['nodes'][args.node]
-        for key in ['packaging_sha256','symbols_baselines','frameworks_predecessors','retained_upgrade','upstream_sha256','signature_sha256']:
+        for key in ['packaging_sha256','symbols_baselines','frameworks_predecessors','supplementary_predecessors','retained_upgrade','upstream_sha256','signature_sha256']:
             assert built.get(key, {}) == record.get(key, {}), f'Changed reviewed input: {key}'
         assert frozen['execution_mode'] == campaign['execution_mode']
         preflight = raw['package_attempt_consumed'] is False

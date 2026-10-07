@@ -5396,7 +5396,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -5481,6 +5481,10 @@
       "sha256": "9302bb5569adadc0dad6a97be4bbce54a66c8ddb0aa5111d71766b57176f264d",
       "applicable": false,
       "inapplicability_reason": "Shared reviewed predecessor transport changed: scripts/admit-frameworks-cache.py, scripts/verify-reviewed-build-predecessors.py, scripts/test-reviewed-package-contract.py, scripts/probe-frameworks-build-inputs.sh. Original preflight evidence remains preserved; recertify exact inputs before another applicable package execution."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kwayland-preflight19/verification.json",
+      "sha256": "0e2dbe08fab370708e11c8b08a6b79863850bcc2579e922d90ed501964e14f74"
     }
   ],
   "package_input_incidents": [
