@@ -2074,3 +2074,9 @@ libKWaylandClient.so.6 libkwaylandclient6 #MINVER#
  zxdg_popup_v5_interface@Base 4:6.1.90
  zxdg_shell_v5_interface@Base 4:6.1.90
  zxdg_surface_v5_interface@Base 4:6.1.90
+
+ _ZN8KWayland6Client20PlasmaVirtualDesktop13outputEnteredERK7QString@Base 4:6.7.5
+ _ZN8KWayland6Client20PlasmaVirtualDesktop15positionChangedEj@Base 4:6.7.5
+ _ZN8KWayland6Client20PlasmaVirtualDesktop18requestEnterOutputERK7QString@Base 4:6.7.5
+ _ZNK8KWayland6Client20PlasmaVirtualDesktop8positionEv@Base 4:6.7.5
+ _ZNK8KWayland6Client30PlasmaVirtualDesktopManagement26currentDesktopByOutputNameERK7QString@Base 4:6.7.5

@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "scope": "failed-package-attempt-retention-verification",
+  "node": "kwayland",
+  "version": "4:6.7.5-0supralinux1",
+  "source_commit": "efe5df07f33e1cf4636ad4a4f9f33e96bd600266",
+  "artifact_id": 11499251689,
+  "artifact_sha256": "3d95813a17d4bef36dd9372433e598b870a7ea32d0bdbd08230155274d6bd446",
+  "archive_path": ".artifacts/plasma-6.7.5/kwayland-attempt1/sha256/3d95813a17d4bef36dd9372433e598b870a7ea32d0bdbd08230155274d6bd446.zip",
+  "source_payload_verified": true,
+  "buildinfo_verified": true,
+  "changes_payload_complete": true,
+  "missing_debug_packages": [],
+  "raw_file_digest_closure_verified": true,
+  "offline_restore_verified": true,
+  "requires_github_for_restore": false,
+  "outcomes": {
+    "build": "PASS",
+    "native_upstream_tests": "not-applicable; no registered CTests; enabled manual clients compiled",
+    "lintian": "FAIL",
+    "installed_package_tests": "not-run",
+    "infrastructure_cleanup": "PASS",
+    "evidence_validation": "PASS"
+  },
+  "files_sha256": {
+    "artifact-meta.json": "e39aca5375a8f464d5ff122b5e47678e4159b3f2d652f419f6606574ddbcb487",
+    "build-contract.json": "048826380ad43a364e5230594d9eb0ab234cf97be799ee312bcabbc873207742",
+    "cleanup.json": "133fe24b332af457751a5d4225a4c11d20a89d7876609e5a7be68315a5384797",
+    "host-evidence-sha256.txt": "1bc301040384e55231aafa7e207d1fc7a50cbd1e2168222d154f6a9112a7d733",
+    "host-result.json": "601674a73c7b14f480404b2ef283800a5c7ab74e2698172f72c13a12bfd0243e",
+    "host-workflow-run.json": "2822e616b2bb674e0517ad1a5ad87bbdf4bd751c79f65727ed4c5ee6b2b949c7",
+    "lintian.log": "92a9703e955823d3573944ab018200bb109dd498d258b7a0d25bc4f9eb8bc357",
+    "result.json": "5befc2429fdb1194adb09a8d76de66a9240185460acd92d7148159e505e1947d",
+    "sbuild.log": "8fa86071a56e3e95538c8b47b85dd2db17a571561c44d086fc2d00120a0c3c92",
+    "upstream-tests.json": "8e9a34769e40cde3d1dfc0742498ac8932e72e5499cd4a63a9b15b1838612381",
+    "workflow-job.json": "8c7d45bdc9c1135661b9a5d902c86846cca90241617541c33f3ea51e5ebb13cc"
+  }
+}

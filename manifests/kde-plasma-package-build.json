@@ -5028,7 +5028,7 @@
     "kwayland": {
       "state": "build-pending",
       "source_package": "kwayland",
-      "version": "4:6.7.5-0supralinux1",
+      "version": "4:6.7.5-0supralinux2",
       "upstream_version": "6.7.5",
       "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/kwayland-6.7.5.tar.xz",
       "upstream_sha256": "8d4c83524919dc87b5dec546d0fb14c591c03957888cb7b240a4a9d1bbdc8269",
@@ -5101,18 +5101,39 @@
           }
         }
       },
-      "attempts": [],
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "FAIL",
+          "original_state": "FAIL",
+          "sbuild_result": "PASS",
+          "lintian_result": "FAIL",
+          "autopkgtest_result": "not-run",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37651462618,
+          "workflow_job_id": 112895578350,
+          "source_commit": "efe5df07f33e1cf4636ad4a4f9f33e96bd600266",
+          "artifact_id": 11499251689,
+          "artifact_sha256": "3d95813a17d4bef36dd9372433e598b870a7ea32d0bdbd08230155274d6bd446",
+          "result_path": "manifests/evidence/plasma/kwayland-attempt1/result.json",
+          "result_sha256": "5befc2429fdb1194adb09a8d76de66a9240185460acd92d7148159e505e1947d",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261007t162017z-2974970",
+          "host_evidence_manifest_sha256": "1bc301040384e55231aafa7e207d1fc7a50cbd1e2168222d154f6a9112a7d733",
+          "cause": "sbuild PASS; lintian rejects five new exported symbols at 4:6.7.5-0supralinux1 because symbol floors contain the current Debian revision. Installed package tests did not run.",
+          "repair": "Preserve all original ABI guards and bind the five observed new symbols to upstream floor 4:6.7.5; increment the Debian packaging revision, repeat changed-input preflight and candidate build/package tests."
+        }
+      ],
       "review": {
-        "source": "Signed official stable upstream remains unchanged; inherited public xdgforeign_v2 header-install patch applies cleanly. SONAME 6, four ordinary binaries and every original Ubuntu symbol guard retained.",
-        "version": "Preserve epoch 4; 4:6.7.5-0supralinux1 exceeds authenticated Ubuntu 4:6.6.4-0ubuntu1.",
+        "source": "Signed official stable upstream remains unchanged; inherited public xdgforeign_v2 header-install patch applies cleanly. SONAME 6, four ordinary binaries and every original Ubuntu symbol guard retained. Revision 2 adds only five symbols observed in the exact revision 1 binary, at upstream floor 4:6.7.5; every original symbol row remains unchanged.",
+        "version": "Preserve epoch 4; revision 2 supersedes retained failed revision 1 and all captured Ubuntu references. Candidate assignment retains its previous evidence.",
         "dependencies": "Exact eligible ECM 6.30.0-0supralinux3 and authoritative supplementary Plasma Wayland Protocols 1.22.0-0supralinux1; transport digest/source/version/architecture and exact installed CMake configuration require input preflight. Ubuntu Qt 6.10.2 and Wayland 1.24 retained.",
         "tests": "Compile upstream enabled manual clients; no automated upstream CTests are registered. Actual clean Ubuntu baseline, unchanged Ubuntu SDK client after APT upgrade with both old and candidate protocol servers, then exact-SDK rebuilt consumer. Public connection/event queue/registry, region/surface/frame, window metadata/signals/model/removal and desktop state use real private protocol requests; servers and runtime directories are removed. Local review with Ubuntu SDK and both XML versions passed, without consuming a package Attempt.",
         "licensing": "Preserve original authenticated Ubuntu copyright and upstream attribution. Explicitly restrict CC0 to newly authored integration fixtures and control files; inherited acc and control.disabled retain the original Debian packaging license/attribution.",
         "profile": "Preserve installed public SDK/CMake/pkg-config, QCH, logging data and all binary scope. Private protocol test uses no rendering buffers; real compositor/QPA, clipboard/input, manual clients and hardware remain integration QA."
       },
       "packaging_sha256": {
-        "README.source": "b8f7d0aff030c4bdf01b1b5029199c398f37a56a35153e05c158f67415499ba8",
-        "changelog": "a19b6ef54116aa41b1abef4f2152e16f51083b6f0c081c8b7987cb0a1f5892d7",
+        "README.source": "bff718cd410ef390d2f68efab299e6dbf26434dcf7d4b6d5f433847b4ab3c062",
+        "changelog": "cd18f2cff7bdb8a66be73ba02c64c1bd6787a15af8e16bef1556e87f28bfe426",
         "control": "03c2b38eb5a867aa0b65cd7040d68217303b10e4358af3d224e495a06c066ae2",
         "copyright": "0bc2887e93f26bd6b2b35b01eaf8be7b229d865ca4dca945be0c3f1ccac03762",
         "kwayland-dev.install": "e365cb6ef6b8af49edbaece31e68380c024dbc4c389c513f00b98c21e2a0c75b",
@@ -5120,7 +5141,7 @@
         "kwayland6-data.install": "5ef98bfc12848dc0cdb4751388cd5801a1c2fc1711b32914bcfa314d3e26561a",
         "libkwayland-dev.acc.in": "4ab36e1c9fcee5d2d600b7a773fdb74c84430b6d28bd46cbb8a32e61368bfa00",
         "libkwaylandclient6.install": "910793398309141e95be5eb2bb2030feeeae6c12504fad54a43fe2f844e0b348",
-        "libkwaylandclient6.symbols": "313bc06671a4b20dbfbaf394f94d2f9d148c03ee9c3d03dfc3117fabeef7e31c",
+        "libkwaylandclient6.symbols": "acfa5920820467ff20f86dc97484bb2765c8a14123faf56483a0dcf97576a40d",
         "patches/Add-missing-header.patch": "ee96ae9ddc6146729dffd1f2838e47347c40f8115988278dd9087c7b6038e0cb",
         "patches/series": "fce3f02eda3376c10a29ee75aacbb7b15c6cf7ac0b0c0a33c51786f96bdaf427",
         "rules": "12928e18f792d6567eeba63e86bda98c13fbaea5e262dbd9bbf1d21a975c1fb7",
@@ -5137,7 +5158,7 @@
         "tests/consumer": "f80d82982bf79cb594047f6d013d8c17c0b1ae9aaab455be98c0b53a23fbca18",
         "tests/control": "123ff0a5eb2fa03fcbe2e7ee2cface9e877cf5599a3a3e574960d83b0c0cfbe3",
         "tests/control.disabled": "bebd0667963d3ddf5428954e055d6d198eebf892483f25be0b569c7fce46c0d2",
-        "tests/ubuntu-abi-client": "e33766b5f6975cfbb65a0ff95c43ae97e9db66bc9f196ef3d621d262f6ef7ac7",
+        "tests/ubuntu-abi-client": "9771687d0d19808709b87c48b113e9b820410d5dfba5376138f59dc26d8a1417",
         "upstream/metadata": "2fe2a484586eefed01ebb95a6661763b539e17a0034ed0052001ae76b3864f5f",
         "upstream/signing-key.asc": "6127abf3f3ecbb19cc3f32a693da628825e117131218afd44cda1be9a7d8623e",
         "watch": "9bea6d61806bb2398b46f769d0ac6e09082364c5bc38785d91d913a5be39b41e"
@@ -5333,6 +5354,12 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-1.22.0/plasma-wayland-protocols-attempt1",
       "archive_index_sha256": "d3b0060cbc693dfe3770ba5eb18a37140cb57d516496140ed9e2eaa4ed6919cc"
+    },
+    {
+      "node": "kwayland",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/kwayland-attempt1",
+      "archive_index_sha256": "7592d77fcd101a98b476c0a7916e425596873835e565c1e7ca073409a7038824"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
@@ -5413,7 +5440,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -5507,7 +5534,9 @@
     },
     {
       "path": "manifests/evidence/package-revalidation/kwayland-preflight20/verification.json",
-      "sha256": "0db7ca83b8f138585d5323e91342d6799339c35bbf2572b4fe29b1b733d21fa4"
+      "sha256": "0db7ca83b8f138585d5323e91342d6799339c35bbf2572b4fe29b1b733d21fa4",
+      "applicable": false,
+      "inapplicability_reason": "Revision 2 changes candidate version, changelog, symbols, Ubuntu ABI test expectation and reviewed packaging hashes after retained Attempt 1 lintian FAIL. Preserve original preflight20 PASS; repeat only the changed current input contract."
     }
   ],
   "package_input_incidents": [

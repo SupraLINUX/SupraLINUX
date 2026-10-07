@@ -1,3 +1,10 @@
+kwayland (4:6.7.5-0supralinux2) resolute; urgency=medium
+
+  * Bind five observed new desktop/output symbols to upstream version 6.7.5.
+    Preserve all original ABI guards and the retained revision 1 lintian failure.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Wed, 07 Oct 2026 17:22:43 +0000
+
 kwayland (4:6.7.5-0supralinux1) resolute; urgency=medium
 
   * Integrate official stable KDE Plasma 6.7.5 on Ubuntu 26.04 LTS.

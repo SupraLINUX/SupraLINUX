@@ -26,3 +26,8 @@ from the candidate protocol provider; a consumer rebuilt from the installed
 candidate verifies exact CMake versions. Qt and Wayland runtime versions, all
 four package versions, SONAME and installed documentation/data are checked.
 Every private server is reaped and its runtime directory removed.
+
+Revision 2 preserves the compiled revision 1 ABI and binds five observed new
+PlasmaVirtualDesktop/output APIs to upstream floor 4:6.7.5. The original Attempt 1
+sbuild PASS and lintian FAIL remain sealed; installed package tests did not run.
+No upstream source, existing symbol floor, Qt provider or build profile changes.

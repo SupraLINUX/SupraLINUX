@@ -11,7 +11,7 @@ cmake -S "${BASE}/source" -B "${AUTOPKGTEST_TMP}/candidate-server" -DBUILD_CLIEN
 cmake --build "${AUTOPKGTEST_TMP}/candidate-server" --parallel 2
 python3 "${BASE}/source/run-private.py" "${AUTOPKGTEST_TMP}/candidate-server/private-server" "${BASE}/build/kwayland-client" "${AUTOPKGTEST_ARTIFACTS}/unchanged-client-candidate-protocols"
 version=$(dpkg-query -W -f='${Version}' libkwaylandclient6)
-[[ "${version}" == 4:6.7.5-0supralinux1 ]]
+[[ "${version}" == 4:6.7.5-0supralinux2 ]]
 dpkg --compare-versions "${version}" gt "$(cat "${BASE}/ubuntu-version")"
 for package in kwayland-dev kwayland6-data kwayland-doc; do
     [[ $(dpkg-query -W -f='${Version}' "${package}") == "${version}" ]]
