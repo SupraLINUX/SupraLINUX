@@ -5440,7 +5440,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -5537,6 +5537,10 @@
       "sha256": "0db7ca83b8f138585d5323e91342d6799339c35bbf2572b4fe29b1b733d21fa4",
       "applicable": false,
       "inapplicability_reason": "Revision 2 changes candidate version, changelog, symbols, Ubuntu ABI test expectation and reviewed packaging hashes after retained Attempt 1 lintian FAIL. Preserve original preflight20 PASS; repeat only the changed current input contract."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kwayland-preflight23/verification.json",
+      "sha256": "98c2edb5678d8ce6bf0a26fbb0fcf661ff54465545343750ecb93e63c431d336"
     }
   ],
   "package_input_incidents": [

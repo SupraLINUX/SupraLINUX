@@ -651,3 +651,24 @@ diagnosis does not certify KWayland. The complete authoritative input preflight
 remains required. The shared runner checks dependency transport before executing
 the expensive Ubuntu client baseline, while keeping that baseline mandatory
 before candidate execution.
+
+KWayland revision 2 input preflight 23 closed authoritative PASS on source
+`951574d00a0a87a36bfca3ba563aee08a0371f33`, run 37694174660/job 113041544386.
+The original clean sbuild probe updated all three Ubuntu suites over verified
+HTTPS, compiled its Qt 6.10.2 consumer and checked the exact installed ECM
+`6.30.0-0supralinux3` and Plasma Wayland Protocols `1.22.0-0supralinux1` providers.
+The separate nested-KVM Ubuntu baseline compiled and executed its original
+KWayland SDK/private Wayland client before any candidate package execution.
+The immutable bare rootfs, Ubuntu signing key, explicit CAInfo, complete-update
+requirement and absence of preinstalled Frameworks/Qt SDKs are recorded. Actual
+CA bytes and the complete synthetic build log are retained with the proof.
+
+The original ZIP SHA-256 is
+`0e5406bf66c68724a83e02954f54f0898718138acfa6b14beb2f84b6b89c44b9`;
+all recorded content hashes, ZIP CRC and empty-cache offline restoration passed.
+Host seal `c1dda306504183ebb86536cde8eeb9ffee581d22fc32c84be90fb992084ac56a`
+and direct VM/runner 239/writable-overlay cleanup checks are retained under
+`manifests/evidence/package-revalidation/kwayland-preflight23/`. Golden and
+milestone images remain preserved. Candidate sbuild, lintian and installed tests
+did not run, so no new package Attempt was consumed. The current lifecycle now
+authorizes revision 2's candidate build after publication and Repository Policy.
