@@ -1,0 +1,13 @@
+{
+  "state": "PASS",
+  "expected_tests": [
+    "TestEncoder",
+    "mediamonitortest"
+  ],
+  "executed_tests": [
+    "appstreamtest",
+    "TestEncoder",
+    "mediamonitortest"
+  ],
+  "scope": "CTest suite executed during the clean package build"
+}

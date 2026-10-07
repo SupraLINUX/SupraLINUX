@@ -27,10 +27,6 @@ Files: cmake/FindLibdrm.cmake
 Copyright: 2014, Alex Merry <alex.merry@kde.org>
            2023 Fushan Wen <qydwhotmail@gmail.com>
            2014, Martin Gräßlin <mgraesslin@kde.org>
-Files: debian/tests/*
-Copyright: 2026, SupraLINUX contributors
-License: CC0-1.0
-
 License: BSD-3-Clause
 
 Files: src/dmabufhandler.cpp
@@ -48,6 +44,10 @@ Copyright: 2022-2024, Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
            2022, Rik Mills <rikmills@kde.org>
            2026, SupraLINUX Project
 License: GPL-2.0-or-later
+
+Files: debian/tests/*
+Copyright: 2026, SupraLINUX contributors
+License: CC0-1.0
 
 License: BSD-3-Clause
  Redistribution and use in source and binary forms, with or without

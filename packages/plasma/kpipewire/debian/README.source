@@ -3,6 +3,11 @@ SupraLINUX KPipeWire integration
 Integrate unchanged official stable sources. Preserve the three SONAME 6 shared
 libraries, Ubuntu binary package names, installed public SDK/CMake targets, all
 three QML modules (source, record and monitor), translations and symbol guards.
+Revision 2 records seven newly exported object-serial API symbols at the
+conservative upstream floor 6.7.5, plus one optional template instantiation
+observed in the authoritative revision 1 build. Preserve every inherited Ubuntu
+symbol and minimum version. The original revision 1 lintian failure remains
+retained; do not admit its untested outputs as downstream artifacts.
 Qt, PipeWire, FFmpeg, libva and other external runtimes stay with Ubuntu. The
 existing Plasma Wayland Protocols 1.20 definition supplies stream_virtual_output;
 this package does not need the separate newer KWayland protocol transition.

@@ -1,3 +1,12 @@
+kpipewire (6.7.5-0supralinux2) resolute; urgency=medium
+
+  * Record newly exported upstream symbols at 6.7.5, preserving all existing
+    Ubuntu minimum versions and treating template instantiation as optional.
+  * Restore the BSD license stanza and separate the CC0 fixture attribution
+    after the general packaging attribution.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 07 Oct 2026 00:13:00 +0000
+
 kpipewire (6.7.5-0supralinux1) resolute; urgency=medium
 
   * Integrate unchanged official stable KDE sources, all SONAME 6 libraries,

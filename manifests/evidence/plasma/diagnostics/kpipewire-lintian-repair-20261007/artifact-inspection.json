@@ -1,0 +1,74 @@
+{
+  "node": "kpipewire",
+  "package_version": "6.7.5-0supralinux1",
+  "artifact_sha256": "8dec54b9351c2b381359e4205a5972415022209e6651c6cb149e434def7835f0",
+  "payload_prefix": "packages/",
+  "source_package": "kpipewire",
+  "binaries": [
+    {
+      "package": "libkpipewire-data",
+      "version": "6.7.5-0supralinux1",
+      "architecture": "all",
+      "file": "libkpipewire-data_6.7.5-0supralinux1_all.deb"
+    },
+    {
+      "package": "libkpipewire-dev",
+      "version": "6.7.5-0supralinux1",
+      "architecture": "amd64",
+      "file": "libkpipewire-dev_6.7.5-0supralinux1_amd64.deb"
+    },
+    {
+      "package": "libkpipewire6-dbgsym",
+      "version": "6.7.5-0supralinux1",
+      "architecture": "amd64",
+      "file": "libkpipewire6-dbgsym_6.7.5-0supralinux1_amd64.ddeb"
+    },
+    {
+      "package": "libkpipewire6",
+      "version": "6.7.5-0supralinux1",
+      "architecture": "amd64",
+      "file": "libkpipewire6_6.7.5-0supralinux1_amd64.deb"
+    },
+    {
+      "package": "libkpipewiredmabuf6-dbgsym",
+      "version": "6.7.5-0supralinux1",
+      "architecture": "amd64",
+      "file": "libkpipewiredmabuf6-dbgsym_6.7.5-0supralinux1_amd64.ddeb"
+    },
+    {
+      "package": "libkpipewiredmabuf6",
+      "version": "6.7.5-0supralinux1",
+      "architecture": "amd64",
+      "file": "libkpipewiredmabuf6_6.7.5-0supralinux1_amd64.deb"
+    },
+    {
+      "package": "libkpipewirerecord6-dbgsym",
+      "version": "6.7.5-0supralinux1",
+      "architecture": "amd64",
+      "file": "libkpipewirerecord6-dbgsym_6.7.5-0supralinux1_amd64.ddeb"
+    },
+    {
+      "package": "libkpipewirerecord6",
+      "version": "6.7.5-0supralinux1",
+      "architecture": "amd64",
+      "file": "libkpipewirerecord6_6.7.5-0supralinux1_amd64.deb"
+    },
+    {
+      "package": "qml6-module-org-kde-pipewire-dbgsym",
+      "version": "6.7.5-0supralinux1",
+      "architecture": "amd64",
+      "file": "qml6-module-org-kde-pipewire-dbgsym_6.7.5-0supralinux1_amd64.ddeb"
+    },
+    {
+      "package": "qml6-module-org-kde-pipewire",
+      "version": "6.7.5-0supralinux1",
+      "architecture": "amd64",
+      "file": "qml6-module-org-kde-pipewire_6.7.5-0supralinux1_amd64.deb"
+    }
+  ],
+  "source_payload_verified": true,
+  "buildinfo_verified": true,
+  "changes_payload_complete": true,
+  "missing_debug_packages": [],
+  "evidence_scope": "retained-build-evidence; not new authoritative certification"
+}
