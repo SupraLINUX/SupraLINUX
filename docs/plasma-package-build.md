@@ -44,12 +44,14 @@ Relative paths, executable modes and every transported file hash are checked;
 changed files, escaping paths, symlinks and unknown payload formats are rejected.
 Historical scripts keep their original single-script transport.
 
-KPipeWire revision 1's reviewed inputs passed the authoritative preflight in
-[run 37539563145](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37539563145)
-on source `e35bd66b05b67599f9d44e4bc03814f396ee71f4`. Its first candidate package
-Attempt subsequently passed sbuild and upstream tests but failed lintian.
-Revision 2's fresh input preflight also passed; Attempt 2 is now authorized.
-Its three SONAME 6
+KPipeWire `6.7.5-0supralinux2` closed authoritative package PASS in
+[run 37559968492](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37559968492)
+on source `85e59774d26cdc9859d1ab571dd214a9072a6258`. Clean sbuild, all three
+executed CTests (AppStream, TestEncoder and mediamonitortest), source/binary lintian
+and both installed nested-KVM tests passed. The unchanged Ubuntu SDK client
+passed after the normal APT upgrade; the consumer passed after recompilation
+against the installed candidate. The original revision 1 lintian FAIL remains
+retained separately. Its three SONAME 6
 libraries, SDK/CMake targets, three QML modules and translations are preserved,
 and all three Ubuntu symbols guards remain active. Both upstream CTest suites
 are enabled, including every encoder row and upstream hardware/codec skips.
@@ -136,6 +138,26 @@ restores offline, with host seal
 VM, runner 229 and writable overlay removal were verified. The closure is
 retained under `manifests/evidence/package-revalidation/kpipewire-preflight17/`
 and consumes no package Attempt.
+
+Attempt 2's complete package route took 113 minutes. The installed Ubuntu ABI
+client and recompiled consumer each used a clean nested KVM testbed, repeating
+the reviewed Ubuntu setup before the second test. Actual private zero-offset
+MemFd frames, frame-copy/recycling, QML source monitoring and VP8 recording with
+complete FFmpeg decoding passed. The existing FSF-address and orig-signature
+lintian warnings remain in the original log; the upstream signature was verified
+independently during source preparation. Hardware, nonzero-offset/copy bounds
+and real portal/compositor integration retain their later-QA scope.
+
+The original successful job/upload/host outcomes, source/binary/debug/buildinfo/
+changes/log payload and artifact ZIP
+`1e724418d65780f06c75e534455f878bcd57a7b18aa9bd767500ba073f3c4416`
+were independently verified and restored offline. The host seal is
+`b57596a9126e10b608b149d5115960786aa799088cd616b9b94b429cc911788b`.
+VM, runner 230 and writable-overlay removal were verified after host completion.
+The closure and cleanup proof are retained under
+`manifests/evidence/plasma/kpipewire-attempt2/`. Fifteen Level 0 packages now have
+authoritative package PASS; the next gate reviews the remaining 19 packaging
+contracts before individual admission.
 
 The Activities input route was recertified after a nested QEMU
 process blocked in `kvm_async_pf_task_wait_schedule` during Ubuntu baseline APT
