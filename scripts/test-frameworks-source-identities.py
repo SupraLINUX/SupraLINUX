@@ -40,8 +40,8 @@ class SourceIdentities(unittest.TestCase):
 
     def test_exact_closed_sources_and_unchanged_nodes(self):
         before = copy.deepcopy(self.nodes)
-        for node in ['kirigami','kcmutils']:
-            self.assertEqual(inputs.source_package(node,self.nodes[node]),'kf6-'+node)
+        for node, identity in self.registry['nodes'].items():
+            self.assertEqual(inputs.source_package(node,self.nodes[node]),identity['source_package'])
             self.assertNotIn('source_package',self.nodes[node])
         self.assertEqual(before,self.nodes)
 

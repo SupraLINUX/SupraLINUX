@@ -1,0 +1,14 @@
+[
+  {
+    "package": "extra-cmake-modules",
+    "source_package": "kf6-extra-cmake-modules",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "all"
+  },
+  {
+    "package": "plasma-wayland-protocols",
+    "source_package": "plasma-wayland-protocols",
+    "version": "1.22.0-0supralinux1",
+    "architecture": "all"
+  }
+]

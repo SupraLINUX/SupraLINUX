@@ -5413,7 +5413,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -5504,6 +5504,10 @@
       "sha256": "0e2dbe08fab370708e11c8b08a6b79863850bcc2579e922d90ed501964e14f74",
       "applicable": false,
       "inapplicability_reason": "Packaging copyright selector corrected before candidate execution to preserve inherited Ubuntu acc/control.disabled licenses. The original PASS remains sealed for its original inputs; repeat preflight for the changed packaging contract."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kwayland-preflight20/verification.json",
+      "sha256": "0db7ca83b8f138585d5323e91342d6799339c35bbf2572b4fe29b1b733d21fa4"
     }
   ],
   "package_input_incidents": [
