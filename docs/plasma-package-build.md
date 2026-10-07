@@ -48,7 +48,8 @@ KPipeWire revision 1's reviewed inputs passed the authoritative preflight in
 [run 37539563145](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37539563145)
 on source `e35bd66b05b67599f9d44e4bc03814f396ee71f4`. Its first candidate package
 Attempt subsequently passed sbuild and upstream tests but failed lintian.
-Revision 2 now requires a fresh input preflight. Its three SONAME 6
+Revision 2's fresh input preflight also passed; Attempt 2 is now authorized.
+Its three SONAME 6
 libraries, SDK/CMake targets, three QML modules and translations are preserved,
 and all three Ubuntu symbols guards remain active. Both upstream CTest suites
 are enabled, including every encoder row and upstream hardware/codec skips.
@@ -120,9 +121,21 @@ Host dpkg symbol and DEP-5 parsers and signed-source preparation passed; these
 are preparatory checks. Upstream source/signature, all client/test bytes, exact
 predecessors and runner inputs remain unchanged. The former input certification
 keeps its original scope and is marked inapplicable to the changed packaging;
-a fresh authoritative preflight must pass before Attempt 2. Original lintian,
+a fresh authoritative preflight passed before Attempt 2. Original lintian,
 symbol tables, artifact inspection and cleanup proof are retained under
 `manifests/evidence/plasma/diagnostics/kpipewire-lintian-repair-20261007/`.
+
+The revision 2 input preflight passed on source
+`a3d2f255f3ad5b34fc2d0133b60a47e50da48be1`, run 37556081547/job 112582522672.
+The exact Ubuntu client and all 12 installed Frameworks predecessors passed
+again in clean authoritative KVM environments. The revised source package was
+prepared; candidate build, lintian and installed tests remain separate gates.
+The original ZIP `0e8cea1ee388dd6f71267dba49e7f2757a24e37f3aaec71dc96ec6e4a71a0f3d`
+restores offline, with host seal
+`41f03d93c18678c0d44e5085961857d483536aae55eb32157823194653b41dc3`.
+VM, runner 229 and writable overlay removal were verified. The closure is
+retained under `manifests/evidence/package-revalidation/kpipewire-preflight17/`
+and consumes no package Attempt.
 
 The Activities input route was recertified after a nested QEMU
 process blocked in `kvm_async_pf_task_wait_schedule` during Ubuntu baseline APT

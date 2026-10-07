@@ -1,0 +1,19 @@
+{
+  "id": 11455938047,
+  "name": "authoritative-plasma-package-a3d2f255f3ad5b34fc2d0133b60a47e50da48be1",
+  "size_in_bytes": 471821,
+  "url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/11455938047",
+  "archive_download_url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/11455938047/zip",
+  "expired": false,
+  "created_at": "2026-10-07T01:55:17Z",
+  "expires_at": "2027-01-05T01:14:17Z",
+  "updated_at": "2026-10-07T01:55:17Z",
+  "digest": "sha256:0e8cea1ee388dd6f71267dba49e7f2757a24e37f3aaec71dc96ec6e4a71a0f3d",
+  "workflow_run": {
+    "id": 37556081547,
+    "repository_id": 1366253358,
+    "head_repository_id": 1366253358,
+    "head_branch": "architecture/bootstrap-v1",
+    "head_sha": "a3d2f255f3ad5b34fc2d0133b60a47e50da48be1"
+  }
+}

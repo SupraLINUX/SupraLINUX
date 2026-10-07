@@ -4928,7 +4928,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -4991,6 +4991,10 @@
       "sha256": "ca2681fb63d3a74a35d61aeec79d2cc841c2a69b827cec0d6ece25639d92bf47",
       "applicable": false,
       "inapplicability_reason": "Revision 2 records the eight newly exported symbols with upstream floors and restores DEP-5 stanza boundaries after Attempt 1 lintian failure. Certify the revised packaging with a fresh authoritative input preflight before Attempt 2; upstream, client, dependency and runner inputs remain unchanged."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kpipewire-preflight17/verification.json",
+      "sha256": "85922c27d61c7df61faea589acedb8678068d17b00866ca11d5be854d50884a3"
     }
   ],
   "package_input_incidents": [
