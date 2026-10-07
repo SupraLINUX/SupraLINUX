@@ -114,17 +114,6 @@ unshare --user --map-auto true
 } > "${EVIDENCE}/environment.txt"
 sha256sum "${TEST_IMAGE}" > "${EVIDENCE}/test-image-sha256.txt"
 
-STAGE="reviewed-ubuntu-baseline-preflight"
-set +e
-SBUILD_MIRROR="${MIRROR}" python3 "${ROOT}/scripts/probe-reviewed-ubuntu-baseline.py"
-BASELINE_RC=$?
-set -e
-BASELINE_EVIDENCE="${ROOT}/evidence/runner-contract/reviewed-ubuntu-baseline"
-if [[ -d "${BASELINE_EVIDENCE}" ]]; then
-    mv "${BASELINE_EVIDENCE}" "${EVIDENCE}/ubuntu-baseline-preflight"
-fi
-[[ ${BASELINE_RC} == 0 ]] || exit "${BASELINE_RC}"
-
 if [[ "${EXECUTION_CHECKPOINT}" != "none" ]]; then
     STAGE="predecessor-cache-admission"
     python3 "${ROOT}/scripts/admit-frameworks-cache.py" "${NODE}" \
@@ -206,6 +195,17 @@ if [[ "${EXECUTION_CHECKPOINT}" != "none" ]]; then
     "${ROOT}/scripts/probe-frameworks-build-inputs.sh" "${EVIDENCE}/predecessor-inputs.json" \
         "${WORK}/cache-probe" "${EVIDENCE}/cache-probe" --apt-update --apt-distupgrade
 fi
+
+STAGE="reviewed-ubuntu-baseline-preflight"
+set +e
+SBUILD_MIRROR="${MIRROR}" python3 "${ROOT}/scripts/probe-reviewed-ubuntu-baseline.py"
+BASELINE_RC=$?
+set -e
+BASELINE_EVIDENCE="${ROOT}/evidence/runner-contract/reviewed-ubuntu-baseline"
+if [[ -d "${BASELINE_EVIDENCE}" ]]; then
+    mv "${BASELINE_EVIDENCE}" "${EVIDENCE}/ubuntu-baseline-preflight"
+fi
+[[ ${BASELINE_RC} == 0 ]] || exit "${BASELINE_RC}"
 
 STAGE="reviewed-build-predecessor-verifier"
 python3 "${ROOT}/scripts/test-reviewed-package-contract.py" |& tee "${EVIDENCE}/build-predecessor-verifier-tests.log"

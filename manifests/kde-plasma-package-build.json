@@ -5569,6 +5569,12 @@
       "sha256": "839889b9304f83b698242a5303d4bb6e72f474b44706fd572f1aef01520b1e6c",
       "cause": "Original clean infrastructure sbuild could not download 83 Ubuntu dependencies over HTTP; IPv4 timeouts/refused connections and unavailable IPv6 routes. No missing KDE dependency or package build failure is established.",
       "repair": "Use verified HTTPS on the same official Ubuntu origin. Bootstrap recorded CA trust data from the admitted Ubuntu runner into a fresh derived rootfs; retain its digest/provider/bytes, preserve base/keyring/SDK absence, and repeat the small input preflight before any candidate execution."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kwayland-preflight22/verification.json",
+      "sha256": "6947899896c46753381f7a5c1a6216fecd71eb4f463a1218ef303650387ad53f",
+      "cause": "Original bare-rootfs APT HTTPS requests failed certificate validation for all three Ubuntu suites. apt-get update continued with no usable index, then the synthetic probe reported unavailable Build-Depends. Ubuntu nested-KVM baseline PASS; no candidate package execution or new Attempt.",
+      "repair": "Diagnose the exact APT/OpenSSL trust search in the SDK-free rootfs, bind APT explicitly to the retained admitted Ubuntu CA file with verification enabled, reject incomplete updates, and certify a small real APT transport/signature probe before the dependent preflight and candidate build."
     }
   ]
 }

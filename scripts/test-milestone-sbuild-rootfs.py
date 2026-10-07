@@ -81,6 +81,11 @@ class RootfsTests(unittest.TestCase):
                 self.assertEqual(archive.extractfile('./usr/share/keyrings/ubuntu-archive-keyring.gpg').read(),b'fixture keyring')
                 self.assertEqual(archive.extractfile('./usr/bin/fixture').read(),b'unchanged base bytes')
                 self.assertEqual(archive.getnames().count('./etc/ssl/certs/ca-certificates.crt'),1)
+                self.assertEqual(archive.extractfile('./'+MODULE.TLS_APT_CONFIG).read(),MODULE.TLS_APT_SETTINGS.encode())
+                self.assertIn('CaInfo "/etc/ssl/certs/ca-certificates.crt"',MODULE.TLS_APT_SETTINGS)
+                self.assertNotIn('Verify-Peer "false"',MODULE.TLS_APT_SETTINGS)
+                self.assertNotIn('Verify-Host "false"',MODULE.TLS_APT_SETTINGS)
+                self.assertTrue(result['tls_bootstrap']['apt_update_requires_all_indexes'])
                 self.assertIn('https://archive.ubuntu.com/ubuntu',result['apt_sources'])
 
     def test_https_rejects_missing_empty_or_invalid_trust_and_http_rejects_injection(self):

@@ -624,3 +624,30 @@ enabled. Other APT origins and signing configuration remain unchanged. Fixture
 tests cover trust rejection, byte preservation, serial setup transport and
 symlink containment. An authoritative input preflight must certify these changed
 inputs before KWayland Attempt 2; local tests do not certify the package.
+
+The first HTTPS input preflight on source
+`a7eeff11c6106d8622c172f8cf2287cec64d2d53`, run 37685605915/job 113012501835,
+closed INFRA_INVALID after the Ubuntu baseline passed. Bare-rootfs APT rejected
+the certificates for all three archive suites, continued without usable indexes,
+and reported unavailable dependencies in the synthetic probe. Candidate sbuild,
+lintian and installed tests did not run; no new package Attempt was consumed.
+The original ZIP digest is
+`bd3b5075df69f72b052d9811d657c6bd6114faed9be0fa6d4c1c4aed56a01e4b`.
+Independent retention and empty-cache restoration passed, and direct checks
+confirm VM/runner 238/overlay removal while preserving golden and milestone
+images. Original logs and CA bytes remain under
+`manifests/evidence/package-revalidation/kwayland-preflight22/`.
+
+The bare rootfs contains APT/OpenSSL libraries but no default OpenSSL certificate
+paths. Its disposable derivative now explicitly sets APT `Acquire::https::CaInfo`
+to the retained Ubuntu CA file and requires complete index updates with
+`APT::Update::Error-Mode "any"`. It retains TLS verification, signing keys and
+SDK absence. A separate small local force-KVM mechanism probe used the real APT
+from this exact bare rootfs to fetch all three InRelease files over HTTPS and
+verify Ubuntu archive signatures. Its initial 512 MiB disk lacked space; the
+fresh 1 GiB probe passed, preserving both observations. Its QEMU process and
+writable disk are gone; it created no runner and installed no packages. This
+diagnosis does not certify KWayland. The complete authoritative input preflight
+remains required. The shared runner checks dependency transport before executing
+the expensive Ubuntu client baseline, while keeping that baseline mandatory
+before candidate execution.

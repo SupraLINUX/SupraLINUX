@@ -16,6 +16,9 @@ from urllib.parse import urlsplit
 ROOT = Path(__file__).resolve().parents[1]
 prepare = importlib.machinery.SourceFileLoader('package_prepare', str(ROOT/'scripts/prepare-plasma-package.py')).load_module()
 SUITES = ['resolute', 'resolute-updates', 'resolute-security']
+TLS_APT_CONFIG = 'etc/apt/apt.conf.d/99supralinux-https-trust'
+TLS_APT_SETTINGS = ('Acquire::https::CaInfo "/etc/ssl/certs/ca-certificates.crt";\n'
+                    'APT::Update::Error-Mode "any";\n')
 
 
 def sha(path):
@@ -59,6 +62,7 @@ def derive(base, expected_sha, output, mirror, tls_ca_bundle=None, tls_provider=
         forbidden = [item['package'] for item in installed if re.match(r'^(libkf6|kf6-|qt6-|libqt6|qml6-|extra-cmake-modules$|cmake$|debhelper)',item['package'])]
         assert not forbidden, f'SDK packages preinstalled in bare rootfs: {forbidden}'
         keyring_sha = hashlib.sha256(read('usr/share/keyrings/ubuntu-archive-keyring.gpg')).hexdigest()
+        assert TLS_APT_CONFIG not in members, 'Never overwrite an inherited APT trust configuration'
     # Preserve the immutable base; replace APT sources and, for HTTPS only,
     # bootstrap the runner's recorded CA data without installing any SDK.
     output.parent.mkdir(parents=True,exist_ok=True)
@@ -82,6 +86,11 @@ def derive(base, expected_sha, output, mirror, tls_ca_bundle=None, tls_provider=
                 entry.size = len(tls_data)
                 entry.mode = 0o644
                 target.addfile(entry,io.BytesIO(tls_data))
+                entry = tarfile.TarInfo('./'+TLS_APT_CONFIG)
+                data = TLS_APT_SETTINGS.encode()
+                entry.size = len(data)
+                entry.mode = 0o644
+                target.addfile(entry,io.BytesIO(data))
         temporary.replace(output)
     finally:
         temporary.unlink(missing_ok=True)
@@ -98,6 +107,9 @@ def derive(base, expected_sha, output, mirror, tls_ca_bundle=None, tls_provider=
                                    'sha256':hashlib.sha256(tls_data).hexdigest(),
                                    'size':len(tls_data),
                                    'provider':tls_provider,
+                                   'apt_config_path':'/'+TLS_APT_CONFIG,
+                                   'apt_config_sha256':hashlib.sha256(TLS_APT_SETTINGS.encode()).hexdigest(),
+                                   'apt_update_requires_all_indexes':True,
                                    'certificate_verification_disabled':False}
     return result
 
