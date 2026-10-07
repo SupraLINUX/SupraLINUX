@@ -40,7 +40,11 @@ Copyright: 2024 Patrick Franz <deltaone@debian.org>
            2014, Jonathan Riddell <jriddell@ubuntu.com>
 License: LGPL-2.1-or-later
 
-Files: debian/tests/*
+Files: debian/tests/baseline-setup
+       debian/tests/ubuntu-abi-client
+       debian/tests/consumer
+       debian/tests/control
+       debian/tests/client/*
 Copyright: 2026 SupraLINUX Developers
 License: CC0-1.0
 

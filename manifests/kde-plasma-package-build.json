@@ -5107,14 +5107,14 @@
         "version": "Preserve epoch 4; 4:6.7.5-0supralinux1 exceeds authenticated Ubuntu 4:6.6.4-0ubuntu1.",
         "dependencies": "Exact eligible ECM 6.30.0-0supralinux3 and authoritative supplementary Plasma Wayland Protocols 1.22.0-0supralinux1; transport digest/source/version/architecture and exact installed CMake configuration require input preflight. Ubuntu Qt 6.10.2 and Wayland 1.24 retained.",
         "tests": "Compile upstream enabled manual clients; no automated upstream CTests are registered. Actual clean Ubuntu baseline, unchanged Ubuntu SDK client after APT upgrade with both old and candidate protocol servers, then exact-SDK rebuilt consumer. Public connection/event queue/registry, region/surface/frame, window metadata/signals/model/removal and desktop state use real private protocol requests; servers and runtime directories are removed. Local review with Ubuntu SDK and both XML versions passed, without consuming a package Attempt.",
-        "licensing": "Preserve authenticated Ubuntu copyright and upstream attribution; separately attribute new integration tests under CC0-1.0.",
+        "licensing": "Preserve original authenticated Ubuntu copyright and upstream attribution. Explicitly restrict CC0 to newly authored integration fixtures and control files; inherited acc and control.disabled retain the original Debian packaging license/attribution.",
         "profile": "Preserve installed public SDK/CMake/pkg-config, QCH, logging data and all binary scope. Private protocol test uses no rendering buffers; real compositor/QPA, clipboard/input, manual clients and hardware remain integration QA."
       },
       "packaging_sha256": {
         "README.source": "b8f7d0aff030c4bdf01b1b5029199c398f37a56a35153e05c158f67415499ba8",
         "changelog": "a19b6ef54116aa41b1abef4f2152e16f51083b6f0c081c8b7987cb0a1f5892d7",
         "control": "03c2b38eb5a867aa0b65cd7040d68217303b10e4358af3d224e495a06c066ae2",
-        "copyright": "bd9e6f2b753af650990b041547c60d63d97f6e75627c783f1895076a881c7bc4",
+        "copyright": "0bc2887e93f26bd6b2b35b01eaf8be7b229d865ca4dca945be0c3f1ccac03762",
         "kwayland-dev.install": "e365cb6ef6b8af49edbaece31e68380c024dbc4c389c513f00b98c21e2a0c75b",
         "kwayland-doc.install": "01b8ab64dfde533ae470ba98539dbc10bec83e0e83446a2409758d987118c1e9",
         "kwayland6-data.install": "5ef98bfc12848dc0cdb4751388cd5801a1c2fc1711b32914bcfa314d3e26561a",
@@ -5377,6 +5377,23 @@
       "diagnosis_path": "manifests/evidence/plasma/infrastructure/knighttime-baseline-preflight1-20261005/diagnosis.json",
       "cause": "The client expected Upcoming one second before start. Both Ubuntu 6.6.5 and official 6.7.5 classify it InProgress within the 60-second tolerance. The client compiled, then returned 1; autopkgtest stopped setup before candidate compilation.",
       "repair": "Exercise the exact -61/-60-second start and end boundaries and emit a descriptive diagnostic for every client failure; re-run the existing KVM Ubuntu preflight before sbuild."
+    },
+    {
+      "state": "INFRA_INVALID",
+      "node": "kwayland",
+      "source_commit": "b90120822a63868e3c96026a850753336f949532",
+      "workflow_run_id": 37643417410,
+      "workflow_job_id": 112867871902,
+      "consumes_package_attempt": false,
+      "package_execution_started": false,
+      "result_path": "manifests/evidence/plasma/kwayland-preparation-interruption1/host-result.json",
+      "result_sha256": "e728f9a1fceb60d8f70aa17d4ee7009a56a1728c65d907c6bbb4f6198a4c35e4",
+      "observation_path": "manifests/evidence/plasma/kwayland-preparation-interruption1/observation.json",
+      "observation_sha256": "3c0da264082e39844ffea54b2e1361aa67b0e16c83dd4da6ea795d826779771f",
+      "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261007t152058z-2612328",
+      "host_evidence_manifest_sha256": "d8453f681c568d71daa13a82daef3f31176c906f0d9926c497e0c668f6658d5b",
+      "cause": "Correct the new test-license selector before candidate source or build execution; inherited Ubuntu acc and control.disabled must keep their original attribution/license.",
+      "repair": "Restrict CC0 to the newly authored baseline, installed client/consumer, control and client files; preserve inherited Ubuntu tests under their original packaging stanza. Repeat input preflight for the changed packaging contract."
     }
   ],
   "infrastructure_certifications": [
@@ -5396,7 +5413,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -5484,7 +5501,9 @@
     },
     {
       "path": "manifests/evidence/package-revalidation/kwayland-preflight19/verification.json",
-      "sha256": "0e2dbe08fab370708e11c8b08a6b79863850bcc2579e922d90ed501964e14f74"
+      "sha256": "0e2dbe08fab370708e11c8b08a6b79863850bcc2579e922d90ed501964e14f74",
+      "applicable": false,
+      "inapplicability_reason": "Packaging copyright selector corrected before candidate execution to preserve inherited Ubuntu acc/control.disabled licenses. The original PASS remains sealed for its original inputs; repeat preflight for the changed packaging contract."
     }
   ],
   "package_input_incidents": [

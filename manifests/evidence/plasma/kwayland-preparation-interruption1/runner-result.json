@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "node": "kwayland",
+  "version": "4:6.7.5-0supralinux1",
+  "state": "INFRA_INVALID",
+  "stage": "runner-contract",
+  "exit_code": 0,
+  "started_at": "2026-10-07T15:23:20Z",
+  "finished_at": "2026-10-07T15:23:37.197916+00:00",
+  "source_commit": "b90120822a63868e3c96026a850753336f949532",
+  "workflow_run_id": "37643417410",
+  "workflow_job": "plasma-package-build",
+  "authoritative": true,
+  "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
+  "package_attempt_consumed": false,
+  "sbuild_result": "not-run",
+  "lintian_result": "not-run",
+  "autopkgtest_result": "not-run",
+  "sbuild_backend": "unshare",
+  "system_test_backend": "autopkgtest-qemu",
+  "system_test_acceleration": "kvm-required",
+  "release_publication": false,
+  "files_sha256": {
+    "actions-runner-runtime.txt": "8539dc3ffffb08c797fb80f63f62c775ae630bc42c17f4c82afec624131dc275",
+    "build-contract.json": "4d87a334428e6f12a78925cb150ba1c2e415fa5abc2b60770e6e233e2b7d8d35",
+    "environment.txt": "9974f55a73796143c8cf5492f2d9b7986e09750d8c4f1a9b1776e8e92a524381",
+    "nested-kvm-runtime.txt": "508a6de656b0e3d6da3e5aa80c89342e8343422d09f01f9e454208399e1cedee",
+    "test-image-sha256.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

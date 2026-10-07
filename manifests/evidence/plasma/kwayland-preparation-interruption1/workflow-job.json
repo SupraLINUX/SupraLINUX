@@ -1,0 +1,42 @@
+{
+  "id": 112867871902,
+  "name": "Reviewed Plasma package on KVM guest",
+  "status": "completed",
+  "conclusion": "cancelled",
+  "run_id": 37643417410,
+  "logs_url": null,
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Checkout exact authorized PR head",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Run current reviewed package",
+      "status": "in_progress",
+      "conclusion": null,
+      "number": 3
+    },
+    {
+      "name": "Retain package sources, binaries and evidence",
+      "status": "pending",
+      "conclusion": null,
+      "number": 4
+    },
+    {
+      "name": "Post Checkout exact authorized PR head",
+      "status": "pending",
+      "conclusion": null,
+      "number": 8
+    }
+  ],
+  "head_sha": "b90120822a63868e3c96026a850753336f949532",
+  "head_sha_source": "Sealed host workflow-run-created.json; independently matched to the frozen runner contract"
+}
