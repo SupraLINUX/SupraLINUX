@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "scope": "reviewed-ubuntu-baseline-preflight",
+  "node": "plasma-wayland-protocols",
+  "state": "PASS",
+  "exit_code": 0,
+  "source_commit": "b03456b87e728878cca2d10b3a86703f211d328a",
+  "workflow_run_id": "37610942395",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "system_test_backend": "autopkgtest-qemu",
+  "system_test_acceleration": "kvm-required",
+  "candidate_installed": false,
+  "inputs_sha256": {
+    "scripts/probe-reviewed-ubuntu-baseline.py": "a18a4681da1cdc4f6736f18bbe806a8a44acb2b80a4d56eccda53a33d04de04c",
+    "scripts/plasma-package-testing.py": "3243b06c833cf3c583aeca5552aa577fcc1f0c1c3a868ca7b143c8ca2c71f25e",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "packages/plasma/plasma-wayland-protocols/debian/tests/baseline-setup": "a6af34b3b62d41d1992dcc7fe18d765e71d6e03e6d67e74b0bdc8e206f26d5ff",
+    "packages/plasma/plasma-wayland-protocols/debian/tests/baseline-xml.json": "c9955a63805374605832f6a97c8d2e472b0f235e48a7e3b7219af5dd392eacaf",
+    "packages/plasma/plasma-wayland-protocols/debian/tests/build-wire": "766a53d56f6af2fde8ff6973e9ac529553a2ead1a9cf717ef402916847754ca4",
+    "packages/plasma/plasma-wayland-protocols/debian/tests/candidate-xml.json": "831c8bf3c5b12beb34c80447d46e388e2510147df21301fa773b66a128233f40",
+    "packages/plasma/plasma-wayland-protocols/debian/tests/client.c": "6d580a34b7bfba40b05f7144bdf0652fa5d3bee004428bd67b1fac436ea4a760",
+    "packages/plasma/plasma-wayland-protocols/debian/tests/consumer": "a95b2cfd93a0606a690820d12d4b61a8dd5c55be3d914c647a476b3ae0e69516",
+    "packages/plasma/plasma-wayland-protocols/debian/tests/control": "d748303625ebdab3db1191d2d814ac24e030adbcd54a1d98d528dad853b0b403",
+    "packages/plasma/plasma-wayland-protocols/debian/tests/protocol-inventory.py": "c153a6b311e6b00870139090e121821e2306e1450b8d6a5c40c77ac01e430ec6",
+    "packages/plasma/plasma-wayland-protocols/debian/tests/server.c": "abf9a435426f872bd92f38af55a73984f5530a8d7a32a6cdbd9325d60ce8d2d0",
+    "packages/plasma/plasma-wayland-protocols/debian/tests/ubuntu-abi-client": "5614bbc5530c99433a2a876bafb527a45b1ad2a8ede6f958c8530fa3cb32a24a",
+    "packages/plasma/plasma-wayland-protocols/debian/tests/wire-probe.py": "db089813b9f79a983d2a6ba9f4bd69416d0ab32d398d0750753581ad6214fa8d"
+  },
+  "files_sha256": {
+    "autopkgtest/log": "4c3f3bf38b52032b8bae268f5f15bea29afdb893051e8d373c5fae8ef9e23199",
+    "autopkgtest/reviewed-baseline-packages": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/reviewed-baseline-stdout": "d3b4cc1ff51e072e6cdc994df4920876c3641850e045eb736371c334bd043401",
+    "autopkgtest/summary": "36e1952a68e082ee9b1d71c36e7ee1d26054668b01a97ed5e481b3e31a7962e2",
+    "autopkgtest/testbed-packages": "fce1653c98d717101ebb3a9dbd04fd861049bba0b6c2125bb93df2fd701a093e",
+    "autopkgtest/testinfo.json": "92f4607e1b393552e0d84437d7ad822c8b4ae4d2b2e4a3174dddb6ab18865040",
+    "baseline-setup": "a6af34b3b62d41d1992dcc7fe18d765e71d6e03e6d67e74b0bdc8e206f26d5ff",
+    "reviewed-inputs.json": "ac21e10c511aaebac911ab43425cf1bd89cd7ab5e72546c74de338a678738a4c",
+    "setup-commands.txt": "54ff821f36ff7e0e519ae3f55a3ae2459155003578025233da4a0407796ed34a"
+  }
+}

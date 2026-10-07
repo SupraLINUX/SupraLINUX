@@ -564,3 +564,30 @@ VM, runner 231 and writable-overlay removal were checked directly. No package
 Attempt was consumed; the first candidate build is now individually authorized.
 The closure advances supplementary-provider next gates through the shared
 retainer while preserving the separate Level 0 lifecycle.
+
+Plasma Wayland Protocols `1.22.0-0supralinux1` Attempt 1 closed authoritative
+package PASS on source `b03456b87e728878cca2d10b3a86703f211d328a`, run
+37610942395/job 112757770563. Clean sbuild, all 120 executed upstream CTests,
+source/binary lintian and both installed autopkgtests passed. Autopkgtest ran
+the unchanged Ubuntu client and rebuilt consumer in one clean nested-KVM
+testbed. The original Ubuntu client bytes were checked before and after the
+normal APT upgrade; both clients passed real private Wayland exchanges at
+negotiated versions 1, 7, 8 and 20. The installed consumer checked all 30 exact
+protocols, two legacy aliases, CMake 1.22.0 metadata and actual generated client
+headers, server headers and protocol code. Ubuntu Qt and Wayland runtime
+providers were preserved. Real compositor/session and downstream package QA
+remain separate gates.
+
+The original Actions ZIP SHA-256 is
+`2df8366c884296d8c07c0e4431f11fdefb1b62f2dde12c913e740a7fb8b945d1`.
+The complete source, single Architecture: all binary, buildinfo, changes and
+logs are independently retained with verified empty-cache offline restoration.
+Lintian's external orig-signature and redundant Testsuite warnings remain in
+the original log; the source signature was verified separately before the build.
+Host seal `d397b16710063a797683b8668bb22645b046255a63794a7c4f4a205e497b23a5`
+and direct VM/runner 232/writable-overlay removal checks are retained under
+`manifests/evidence/plasma/plasma-wayland-protocols-attempt1/`. Golden and
+Frameworks milestone images remain available. This supplementary provider PASS
+does not change the fifteen Level 0 component closures or certify KWayland,
+LibKScreen or KWin. Their next builds need individually reviewed contracts and
+generic transport of this exact eligible provider artifact.

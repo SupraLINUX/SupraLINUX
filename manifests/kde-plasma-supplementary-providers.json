@@ -6,7 +6,7 @@
       "schema": 1,
       "as_of": "2026-10-05",
       "role": "post-planning-provider-version-review",
-      "state": "package-build-pending",
+      "state": "package-PASS",
       "affected_nodes": [
         "kwayland",
         "kwin",
@@ -38,15 +38,15 @@
         "listing_source": "https://download.kde.org/stable/plasma-wayland-protocols/",
         "signature_verification": "PASS",
         "selection_reason": "Newest official stable provider satisfying the pinned Plasma source; XML/build metadata only, no Qt/platform runtime replacement",
-        "package_gate": "execution-authorized"
+        "package_gate": "PASS"
       },
       "historical_provider_review_preserved": true,
       "historical_review_limit": "Source Build-Depends provider availability did not certify changed upstream minimum versions",
       "qt_provider_effect": "none",
       "dag_topology_effect": "none; additional external build provider required",
-      "package_execution_authorized": true,
+      "package_execution_authorized": false,
       "consumes_package_attempt": false,
-      "next_gate": "authoritative-supplementary-package-build",
+      "next_gate": "individual-dependent-package-review-and-build",
       "additional_requirement_sources": [
         {
           "node": "kwin",
@@ -98,7 +98,11 @@
           "scope": "local native source/test review; no authoritative package certification"
         }
       },
-      "package_record": "plasma-wayland-protocols"
+      "package_record": "plasma-wayland-protocols",
+      "package_evidence": {
+        "path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/result.json",
+        "sha256": "a8360723475a3973e9676f6f02eb9bea654b1d0dcb3c256093cf490deee76f56"
+      }
     },
     "wayland-protocols": {
       "schema": 1,

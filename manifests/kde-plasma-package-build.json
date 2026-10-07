@@ -1,11 +1,9 @@
 {
   "schema": 1,
   "role": "reviewed-plasma-package-build",
-  "state": "execution-authorized",
-  "authorized_nodes": [
-    "plasma-wayland-protocols"
-  ],
-  "package_execution_authorized": true,
+  "state": "partial-PASS",
+  "authorized_nodes": [],
+  "package_execution_authorized": false,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
   "scope": "Per-node clean builds, upstream tests, package/Ubuntu upgrade and ABI client checks on KVM; graphical desktop and final distro integration remain later gates",
   "nodes": {
@@ -4753,7 +4751,7 @@
       }
     },
     "plasma-wayland-protocols": {
-      "state": "build-pending",
+      "state": "PASS",
       "source_scope": "plasma-supplementary-provider",
       "source_package": "plasma-wayland-protocols",
       "version": "1.22.0-0supralinux1",
@@ -4950,13 +4948,79 @@
         "zkde-screencast-unstable-v1_code",
         "zkde-screencast-unstable-v1_build"
       ],
-      "attempts": [],
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "PASS",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "PASS",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37610942395,
+          "workflow_job_id": 112757770563,
+          "source_commit": "b03456b87e728878cca2d10b3a86703f211d328a",
+          "artifact_id": 11480891803,
+          "artifact_sha256": "2df8366c884296d8c07c0e4431f11fdefb1b62f2dde12c913e740a7fb8b945d1",
+          "result_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/result.json",
+          "result_sha256": "a8360723475a3973e9676f6f02eb9bea654b1d0dcb3c256093cf490deee76f56",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261007t105647z-1028821",
+          "host_evidence_manifest_sha256": "d397b16710063a797683b8668bb22645b046255a63794a7c4f4a205e497b23a5",
+          "rootfs_admission_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/rootfs-admission.json",
+          "rootfs_admission_sha256": "ad6cba47c37b7677116ec48e49ed53fb18c27ee3628563fc607a50ef4111c716",
+          "baseline_preflight_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/ubuntu-baseline-preflight.json",
+          "baseline_preflight_sha256": "435806232b68925c5b8f9083659e6e4f5e8d003e0833e18c208f3b0c78e95168",
+          "workflow_job_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/workflow-job.json",
+          "workflow_job_sha256": "58f8172631f0c11ca5e602f140f98fab2e4bf02f67ff00f13faab22e7a1b92fd",
+          "host_result_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/host-result.json",
+          "host_result_sha256": "2c2df00534cca43882910a1cc6a681b2ab6e339dcad53b9f16c9175f9dce82a9"
+        }
+      ],
       "review": {
         "upstream_changes": "Official signed stable 1.22.0 selected in the retained source review. All 30 XML sources and two installed legacy aliases preserved byte-for-byte. Five XML changes reviewed; pid_changed since floor 1 -> 8 is explicitly tested at negotiated versions 1,7,8,20.",
         "packaging_changes": "Authenticated Ubuntu 1.20.0-2 Debian archive; keep one Architecture: all Multi-Arch: foreign binary, original changelog history, install paths and metadata. Exact retained ECM 6.30.0-0supralinux3; upstream-required Qt CoreTools stays Ubuntu. Correct DEP-5 SPDX scopes, enable full native CTest suite.",
         "build_dependencies": "ECM >= 6.0 fulfilled by exact eligible milestone binary; CMake >=3.16, Ubuntu qt6-base-dev retained for ECM Qt6::qtpaths/CoreTools, Ubuntu Wayland >=1.24 SDK/scanner. No replacement Qt or Wayland runtime.",
         "test_policy": "All 120 upstream tests must execute in sbuild; upstream server-header tests call client-header and are preserved, so installed consumer separately generates/compiles all 30 true server headers, client headers and private-code objects. Baseline validates exact signed Ubuntu XML and installed CMake 1.20.0, compiles/runs a real private-socket client, records executable/header/code hashes and Qt/Wayland versions. After upgrade, unchanged Ubuntu client communicates with candidate server at versions 1,7,8,20; rebuilt candidate client does the same; exact 30 XML plus two aliases and CMake 1.22.0 are verified.",
         "activation_policy": "XML and CMake provider only; authoritative package/fixture PASS will permit individual KWayland/LibKScreen/KWin preparation, not certify real compositor or full Ubuntu application compatibility."
+      },
+      "evidence": {
+        "workflow_run_id": 37610942395,
+        "workflow_job_id": 112757770563,
+        "source_commit": "b03456b87e728878cca2d10b3a86703f211d328a",
+        "artifact_id": 11480891803,
+        "artifact_sha256": "2df8366c884296d8c07c0e4431f11fdefb1b62f2dde12c913e740a7fb8b945d1",
+        "result_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/result.json",
+        "result_sha256": "a8360723475a3973e9676f6f02eb9bea654b1d0dcb3c256093cf490deee76f56",
+        "contract_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/build-contract.json",
+        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261007t105647z-1028821",
+        "host_evidence_manifest_sha256": "d397b16710063a797683b8668bb22645b046255a63794a7c4f4a205e497b23a5",
+        "local_retention": {
+          "archive_root": ".artifacts/plasma-1.22.0/plasma-wayland-protocols-attempt1",
+          "archive_index_sha256": "d3b0060cbc693dfe3770ba5eb18a37140cb57d516496140ed9e2eaa4ed6919cc",
+          "plan_path": "manifests/evidence/plasma/plasma-wayland-protocols-artifact-plan.json",
+          "plan_sha256": "613abf49530bb900efbbe21b25f798f923e755d4bacb8e0ffc0672d564e76928",
+          "source_complete": true,
+          "changes_complete": true,
+          "buildinfo_verified": true,
+          "artifact_zip_sha256_verified": true,
+          "offline_restore_verified": true,
+          "requires_github_for_restore": false,
+          "off_host_backup_verified": false,
+          "unique_binary_package_count": 1,
+          "binary_payload_file_count": 1,
+          "payload_prefix": "packages/"
+        },
+        "cache_probe_result_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/cache-probe-result.json",
+        "cache_probe_result_sha256": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+        "upstream_tests_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/upstream-tests.json",
+        "upstream_tests_sha256": "6255d0f264123469abe62a77a9911a7cb2f22e616c221b38e8780059b1ccb7b1",
+        "rootfs_admission_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/rootfs-admission.json",
+        "rootfs_admission_sha256": "ad6cba47c37b7677116ec48e49ed53fb18c27ee3628563fc607a50ef4111c716",
+        "baseline_preflight_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/ubuntu-baseline-preflight.json",
+        "baseline_preflight_sha256": "435806232b68925c5b8f9083659e6e4f5e8d003e0833e18c208f3b0c78e95168",
+        "workflow_job_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/workflow-job.json",
+        "workflow_job_sha256": "58f8172631f0c11ca5e602f140f98fab2e4bf02f67ff00f13faab22e7a1b92fd",
+        "host_result_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/host-result.json",
+        "host_result_sha256": "2c2df00534cca43882910a1cc6a681b2ab6e339dcad53b9f16c9175f9dce82a9"
       }
     }
   },
@@ -5143,6 +5207,12 @@
       "attempt": 2,
       "archive_root": ".artifacts/plasma-6.7.5/kpipewire-attempt2",
       "archive_index_sha256": "befcc35fe7761d22e8bacaa6ca24dfe48fe6e1a3c36ec21a7852d0d1ea6b658a"
+    },
+    {
+      "node": "plasma-wayland-protocols",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-1.22.0/plasma-wayland-protocols-attempt1",
+      "archive_index_sha256": "d3b0060cbc693dfe3770ba5eb18a37140cb57d516496140ed9e2eaa4ed6919cc"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",

@@ -1,0 +1,2 @@
+W: plasma-wayland-protocols source: orig-tarball-missing-upstream-signature plasma-wayland-protocols_1.22.0.orig.tar.xz
+W: plasma-wayland-protocols source: unnecessary-testsuite-autopkgtest-field [debian/control:12]
