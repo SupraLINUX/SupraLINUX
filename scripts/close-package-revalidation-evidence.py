@@ -249,9 +249,13 @@ def main():
                     inputs += [support_nodes[node]['evidence']['path'] for node in sorted(selected_support)]
         if 'campaign_manifest_sha256' in frozen:
             inputs += ['scripts/freeze-reviewed-package-contract.py']
+        if record.get('supplementary_predecessors'):
+            inputs += ['scripts/supplementary-package-inputs.py']
         proof['inputs_sha256']={name:hashlib.sha256(subprocess.check_output(['git','show',f'{head}:{name}'])).hexdigest() for name in inputs}
         proof['packaging_sha256']=record['packaging_sha256']
         proof['frameworks_predecessors']=record['frameworks_predecessors']
+        if record.get('supplementary_predecessors'):
+            proof['supplementary_predecessors']=record['supplementary_predecessors']
     write(directory/'verification.json',proof)
     link={'path':str((directory/'verification.json').relative_to(ROOT)),'sha256':sha(directory/'verification.json')}
     if preflight:

@@ -60,6 +60,9 @@ jobs:
       - name: Test Frameworks cache input admission
         run: python3 scripts/test-frameworks-cache-admission.py
 
+      - name: Test supplementary predecessor admission
+        run: python3 scripts/test-supplementary-package-inputs.py
+
 
       - name: Test transient GitHub read recovery
         run: python3 scripts/test-github-read-retry.py

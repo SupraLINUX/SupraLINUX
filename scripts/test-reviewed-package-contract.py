@@ -74,6 +74,16 @@ class ActualBuildPredecessors(unittest.TestCase):
         self.assertEqual(result['available_predecessors_not_installed'], ['unused-tool'])
         self.assertEqual(len(result['installed_predecessors']), 2)
 
+    def test_supplementary_input_is_required_at_its_exact_reviewed_version(self):
+        self.control = self.control.replace(', cmake', ', protocols (= 1.22.0-1), cmake')
+        self.record['packaging_sha256']['control'] = hashlib.sha256(self.control.encode()).hexdigest()
+        self.record['supplementary_predecessors'] = {'protocol-provider':{'version':'1.22.0-1',
+            'binaries':[{'package':'protocols','architecture':'all'}]}}
+        self.info += ' , protocols (= 1.22.0-1)\n'
+        self.assertEqual(self.verify()['required_direct_predecessors'], ['protocols','sdk'])
+        self.info = self.info.replace('protocols (= 1.22.0-1)', 'protocols (= 1.20.0-2)')
+        with self.assertRaisesRegex(AssertionError, 'installed'): self.verify()
+
     def test_wrong_installed_version_is_rejected_for_direct_or_transitive_inputs(self):
         original = self.info
         for name in ['sdk', 'runtime']:

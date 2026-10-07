@@ -11,6 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 prepare = importlib.machinery.SourceFileLoader('prepare',str(ROOT/'scripts/prepare-plasma-package.py')).load_module()
 fields = importlib.machinery.SourceFileLoader('retention',str(ROOT/'scripts/retain-package-artifacts.py')).load_module().fields
+supplementary = importlib.machinery.SourceFileLoader('supplementary_admission',str(ROOT/'scripts/supplementary-package-inputs.py')).load_module()
 
 
 def check(node,record,packaging,level,material):
@@ -32,6 +33,9 @@ def check(node,record,packaging,level,material):
         assert record['packaging_reference_version'] == material[node]['ubuntu_reference']['source_version']
         assert record['packaging_reference_sha256'] == material[node]['ubuntu_reference']['debian_tree_tar_sha256']
     assert prepare.packaging_hashes(packaging) == record['packaging_sha256'], 'Reviewed packaging changed'
+    assert not (set(record.get('frameworks_predecessors', {})) & set(record.get('supplementary_predecessors', {}))), 'Mixed source authorities'
+    for predecessor, requested in record.get('supplementary_predecessors', {}).items():
+        supplementary.checked_contract(predecessor, requested, consumer=node)
     version = subprocess.check_output(['dpkg-parsechangelog','-l',str(packaging/'changelog'),'-S','Version'],text=True).strip()
     assert version == record['version']
     stanzas = (packaging/'control').read_text().split('\n\n')

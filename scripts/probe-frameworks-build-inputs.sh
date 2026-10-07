@@ -94,6 +94,20 @@ int main(int argc, char **argv) {
     std::cout << "Retained ECM 6.30.0 and Ubuntu Qt " << qVersion() << ": PASS\n";
 }
 EOF
+python3 - "${SELECTION}" "${WORK}/source/CMakeLists.txt" <<'PY'
+import json, re, sys
+from pathlib import Path
+lines = []
+for item in json.load(open(sys.argv[1]))['selected']:
+    if not item.get('supplementary_evidence'):
+        continue
+    name, version = item['cmake_package'], item['upstream_version']
+    assert re.fullmatch(r'[A-Za-z][A-Za-z0-9_]+', name)
+    assert re.fullmatch(r'[0-9]+(?:\.[0-9]+)+', version)
+    lines.append(f'find_package({name} {version} EXACT REQUIRED CONFIG)\n')
+with Path(sys.argv[2]).open('a') as stream:
+    stream.writelines(lines)
+PY
 (
     cd "${WORK}"
     dpkg-source -b source

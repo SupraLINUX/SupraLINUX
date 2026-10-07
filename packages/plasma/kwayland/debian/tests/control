@@ -1,0 +1,3 @@
+Tests: ubuntu-abi-client, consumer
+Depends: @, apt, build-essential, cmake, pkgconf, kwayland-dev, libwayland-dev, libwayland-bin, plasma-wayland-protocols (= 1.22.0-0supralinux1), qt6-base-dev, python3
+Restrictions: needs-root, allow-stderr

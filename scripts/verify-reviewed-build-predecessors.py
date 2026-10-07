@@ -22,11 +22,12 @@ def verify(record, control_text, buildinfo_text):
     assert buildinfo['Build-Architecture'] == 'amd64', 'Wrong build architecture'
     assert hashlib.sha256(control_text.encode()).hexdigest() == record['packaging_sha256']['control'], 'Source control changed'
     wanted = {}
-    for node, predecessor in record.get('frameworks_predecessors', {}).items():
-        for binary in predecessor['binaries']:
-            name = binary['package']
-            assert name not in wanted, 'Duplicate reviewed predecessor'
-            wanted[name] = {'node': node, 'version': predecessor['version'], 'architecture': binary['architecture']}
+    for scope in ['frameworks_predecessors', 'supplementary_predecessors']:
+        for node, predecessor in record.get(scope, {}).items():
+            for binary in predecessor['binaries']:
+                name = binary['package']
+                assert name not in wanted, 'Duplicate reviewed predecessor'
+                wanted[name] = {'node': node, 'version': predecessor['version'], 'architecture': binary['architecture']}
     installed = {}
     for relation in buildinfo['Installed-Build-Depends'].split(','):
         matched = RELATION.fullmatch(relation.strip())

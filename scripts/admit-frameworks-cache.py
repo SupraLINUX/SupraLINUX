@@ -92,8 +92,13 @@ def main():
                                   os.environ.get('GITHUB_TOKEN'))
     selected = admit(args.payload, record, {'nodes': current},
                      subprocess.check_output(["python3", str(ROOT / "scripts/plan-frameworks-milestone.py")]), restored)
+    supplementary = repairs.module('supplementary_inputs', 'supplementary-package-inputs.py')
+    additional = supplementary.materialize(record, args.output.parent/'supplementary-predecessors',
+                                           args.repair_archive_root, os.environ.get('GITHUB_TOKEN'), consumer=args.node)
+    selected += additional
+    assert len({item['package'] for item in selected}) == len(selected), 'Duplicate predecessor across source authorities'
     args.output.write_text(json.dumps({"state": "PASS", "cache_only": True, "selected": selected}, indent=2) + "\n")
-    print(f"Frameworks cache admission: PASS; selected binaries={len(selected)}")
+    print(f"Reviewed predecessor admission: PASS; Frameworks={len(selected)-len(additional)}; supplementary={len(additional)}")
 
 
 if __name__ == "__main__":

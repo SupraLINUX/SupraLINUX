@@ -19,6 +19,9 @@ proof_spec.loader.exec_module(input_evidence)
 testing_spec = importlib.util.spec_from_file_location('baseline_testing', ROOT/'scripts/plasma-package-testing.py')
 testing = importlib.util.module_from_spec(testing_spec)
 testing_spec.loader.exec_module(testing)
+supplementary_spec = importlib.util.spec_from_file_location('supplementary_inputs', ROOT/'scripts/supplementary-package-inputs.py')
+supplementary = importlib.util.module_from_spec(supplementary_spec)
+supplementary_spec.loader.exec_module(supplementary)
 
 
 def validate():
@@ -49,7 +52,8 @@ def validate():
         expected = json.loads((directory/'cache-probe/installed-predecessor-contract.json').read_text())
         built = frozen['nodes'][proof['node']]
         wanted = {(binary['package'], predecessor['source_package'], predecessor['version'], binary['architecture'])
-                  for predecessor in built['frameworks_predecessors'].values() for binary in predecessor['binaries']}
+                  for key in ['frameworks_predecessors', 'supplementary_predecessors']
+                  for predecessor in built.get(key, {}).values() for binary in predecessor['binaries']}
         assert {(item['package'], item['source_package'], item['version'], item['architecture']) for item in expected} == wanted
         if not link.get('applicable', True):
             assert link['inapplicability_reason']
@@ -57,6 +61,7 @@ def validate():
             record = campaign['nodes'][proof['node']]
             assert proof['packaging_sha256'] == record['packaging_sha256']
             assert proof['frameworks_predecessors'] == record['frameworks_predecessors']
+            assert proof.get('supplementary_predecessors', {}) == record.get('supplementary_predecessors', {})
             for file, digest in proof['inputs_sha256'].items():
                 assert hashlib.sha256((ROOT/file).read_bytes()).hexdigest() == digest
             input_certified.add(proof['node'])
@@ -139,6 +144,11 @@ def validate():
             assert record["packaging_reference_sha256"] == sources[name]["ubuntu_reference"]["debian_tree_tar_sha256"]
             assert record["packaging_reference_version"] == sources[name]["ubuntu_reference"]["source_version"]
         assert all(record["review"].values()), "Individual packaging review missing"
+        assert not (set(record.get('frameworks_predecessors', {})) & set(record.get('supplementary_predecessors', {})))
+        for predecessor, requested in record.get('supplementary_predecessors', {}).items():
+            supplementary.checked_contract(predecessor, requested, historical=record['state']=='PASS', consumer=name)
+            if name in scope and campaign['execution_mode'] == 'build':
+                assert name in input_certified, 'Certify supplementary artifact transport before the package Attempt'
         for predecessor, inputs in record.get("frameworks_predecessors", {}).items():
             original = historical.get(predecessor)
             canonical = original if original and record['state'] == 'PASS' and inputs['version'] == original['package_version'] else effective[predecessor]
@@ -272,6 +282,7 @@ def validate():
             assert hashlib.sha256((ROOT / evidence["contract_path"]).read_bytes()).hexdigest() == result["files_sha256"]["build-contract.json"]
             assert built_contract["nodes"][name]["packaging_sha256"] == record["packaging_sha256"]
             assert built_contract['nodes'][name].get('frameworks_predecessors', {}) == record.get('frameworks_predecessors', {})
+            assert built_contract['nodes'][name].get('supplementary_predecessors', {}) == record.get('supplementary_predecessors', {})
             assert record["attempts"][-1]["state"] == "PASS" and result["package_attempt_consumed"] is True
             if record.get("baseline_preflight_required"):
                 baseline_bytes = (ROOT / evidence["baseline_preflight_path"]).read_bytes()

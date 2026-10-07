@@ -120,6 +120,7 @@ def main():
         built = frozen['nodes'][a.node]
         assert built['packaging_sha256'] == record['packaging_sha256'] and built['upstream_sha256'] == record['upstream_sha256']
         assert built.get('frameworks_predecessors', {}) == record.get('frameworks_predecessors', {})
+        assert built.get('supplementary_predecessors', {}) == record.get('supplementary_predecessors', {})
         assert built['signature_sha256'] == record['signature_sha256']
         baseline_bytes = None
         if record.get('baseline_preflight_required'):
