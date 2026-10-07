@@ -46,7 +46,7 @@
       "dag_topology_effect": "none; additional external build provider required",
       "package_execution_authorized": true,
       "consumes_package_attempt": false,
-      "next_gate": "authoritative-supplementary-package-input-preflight",
+      "next_gate": "authoritative-supplementary-package-build",
       "additional_requirement_sources": [
         {
           "node": "kwin",

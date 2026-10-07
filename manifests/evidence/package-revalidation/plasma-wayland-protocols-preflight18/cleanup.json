@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "scope": "post-gate resource cleanup observation",
+  "observed_at": "2026-10-07T10:52:37.132095+00:00",
+  "vm": "supralinux-plasma-package-build-20261007t101814z-799309",
+  "runner_id": 231,
+  "vm_removed": true,
+  "runner_removed": true,
+  "writable_overlay_removed": true,
+  "retained_golden_and_milestone_images": true,
+  "evidence_validation": "Original host seal and GitHub artifact digest verified; complete artifact restored into an empty cache without GitHub",
+  "package_attempt_consumed": false
+}

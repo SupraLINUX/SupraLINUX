@@ -259,6 +259,11 @@ def main():
             key = 'package_input_certifications' if plasma_inputs else 'certifications'
             campaign.setdefault(key, []).append(link)
             campaign['execution_mode']='build'
+            if plasma_inputs and record.get('source_scope') == 'plasma-supplementary-provider':
+                path = ROOT/'manifests/kde-plasma-supplementary-providers.json'
+                providers = json.loads(path.read_text())
+                providers['nodes'][args.node]['next_gate'] = 'authoritative-supplementary-package-build'
+                write(path, providers)
         else:
             key = 'package_input_incidents' if plasma_inputs else 'infrastructure_incidents'
             campaign.setdefault(key, []).append(link)

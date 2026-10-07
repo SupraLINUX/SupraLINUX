@@ -1,0 +1,8 @@
+[
+  {
+    "package": "extra-cmake-modules",
+    "source_package": "kf6-extra-cmake-modules",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "all"
+  }
+]

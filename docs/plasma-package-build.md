@@ -551,3 +551,16 @@ and run unchanged Ubuntu and rebuilt clients on a private Wayland socket at
 versions 1, 7, 8 and 20. Qt and Wayland runtime versions must remain unchanged.
 KWayland, LibKScreen and KWin require this newer build provider; their individual
 package and real compositor integration gates remain pending.
+
+The supplementary provider input preflight closed PASS on source
+`d1246387932fb182c7af0588ba2150ddc683b1a8`, run 37606722329/job 112743892154.
+The actual Ubuntu baseline, signed source package, immutable bare rootfs and
+one exact retained ECM binary passed; candidate sbuild, lintian and installed
+candidate tests did not run. The original Actions artifact SHA-256 is
+`edd500ee7fd317ecc898f46957026ae105f89d15f45686b298976325b2c7d9bf`;
+all recorded content hashes and empty-cache offline restoration are verified.
+The host seal is `8d7c2e5fff83995fa41a0175d92d028ff3c8c7a5682151c0b8e20eae103e9f87`.
+VM, runner 231 and writable-overlay removal were checked directly. No package
+Attempt was consumed; the first candidate build is now individually authorized.
+The closure advances supplementary-provider next gates through the shared
+retainer while preserving the separate Level 0 lifecycle.

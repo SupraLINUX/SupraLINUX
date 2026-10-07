@@ -5206,7 +5206,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -5285,6 +5285,10 @@
       "sha256": "85922c27d61c7df61faea589acedb8678068d17b00866ca11d5be854d50884a3",
       "applicable": false,
       "inapplicability_reason": "Shared package preparation now admits independently reviewed supplementary providers. Original package/preflight outcomes remain preserved; future execution requires certification of the current input hashes."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/plasma-wayland-protocols-preflight18/verification.json",
+      "sha256": "9302bb5569adadc0dad6a97be4bbce54a66c8ddb0aa5111d71766b57176f264d"
     }
   ],
   "package_input_incidents": [
