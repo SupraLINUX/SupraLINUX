@@ -5,6 +5,7 @@ import base64
 import hashlib
 import io
 import importlib.machinery
+import inspect
 import json
 import re
 import shlex
@@ -63,10 +64,39 @@ def reviewed_tree_commands(root, record):
             'bash "$baseline_root"/' + shlex.quote(record['baseline_setup_script'])]
 
 
-def setup_commands(root, record):
+def configure_ubuntu_apt_https(root):
+    """Change only official Ubuntu transport in a disposable testbed."""
+    root = root.resolve()
+    bundle = root/'etc/ssl/certs/ca-certificates.crt'
+    assert bundle.is_file() and bundle.stat().st_size, 'Testbed Ubuntu CA trust store is missing'
+    apt = root/'etc/apt'
+    paths = [apt/'sources.list'] + sorted((apt/'sources.list.d').glob('*.list'))
+    paths += sorted((apt/'sources.list.d').glob('*.sources'))
+    changed = []
+    for path in paths:
+        if not path.is_file():
+            continue
+        assert path.resolve().is_relative_to(root), 'APT source file escapes the disposable testbed'
+        before = path.read_bytes()
+        after = re.sub(rb'http://(?:archive|security)\.ubuntu\.com/ubuntu(?=[/\s]|$)',
+                       lambda match: match.group().replace(b'http:',b'https:',1), before)
+        if after != before:
+            path.write_bytes(after)
+            changed.append(str(path.relative_to(root)))
+    return changed
+
+
+def setup_commands(root, record, https_transport=False):
     package, version = record['ubuntu_baseline_package'], record['version']
     assert re.fullmatch(r'[a-z0-9][a-z0-9+.-]+', package), 'Invalid Ubuntu baseline package'
-    commands = ['set -eu', 'apt-get update',
+    transport = []
+    if https_transport:
+        transport = ["python3 - <<'SUPRALINUX_UBUNTU_APT_HTTPS'", 'import re', 'from pathlib import Path',
+                     inspect.getsource(configure_ubuntu_apt_https).rstrip(),
+                     'changed = configure_ubuntu_apt_https(Path("/"))',
+                     'print("Official Ubuntu APT HTTPS transport configured:", changed)',
+                     'SUPRALINUX_UBUNTU_APT_HTTPS']
+    commands = ['set -eu', *transport, 'apt-get update',
                 f'apt-get install -y --no-install-recommends {package}',
                 f"dpkg-query -W -f='${{Version}}' {package} > /var/tmp/supralinux-ubuntu-package-version",
                 f'dpkg --compare-versions {shlex.quote(version)} gt "$(cat /var/tmp/supralinux-ubuntu-package-version)"']
@@ -114,10 +144,11 @@ def main():
     p.add_argument('node')
     p.add_argument('--build-log', type=Path)
     p.add_argument('--output', type=Path)
+    p.add_argument('--https-transport', action='store_true')
     a = p.parse_args()
     record = prepare.load_campaign()['nodes'][a.node]
     if a.mode == 'setup':
-        print(setup_commands(ROOT, record))
+        print(setup_commands(ROOT, record, https_transport=a.https_transport))
     else:
         assert a.build_log and a.output
         result = upstream_test_result(record, a.build_log.read_text())

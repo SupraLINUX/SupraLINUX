@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "scope": "original preflight infrastructure diagnosis; host connectivity checks are supplementary observations",
+  "original_state": "INFRA_INVALID",
+  "original_stage": "predecessor-transport-probe",
+  "package_attempt_consumed": false,
+  "ubuntu_baseline": "PASS",
+  "candidate_sbuild": "not-run",
+  "lintian": "not-run",
+  "installed_candidate_tests": "not-run",
+  "failed_official_http_downloads": 83,
+  "cause": "Original clean infrastructure sbuild could not download 83 Ubuntu dependencies over HTTP; IPv4 timeouts/refused connections and unavailable IPv6 routes. No missing KDE dependency or package build failure is established.",
+  "repair": "Use verified HTTPS on the same official Ubuntu origin. Bootstrap recorded CA trust data from the admitted Ubuntu runner into a fresh derived rootfs; retain its digest/provider/bytes, preserve base/keyring/SDK absence, and repeat the small input preflight before any candidate execution.",
+  "cleanup": "PASS: own VM, runner237 and overlay absent; golden/milestone images preserved",
+  "source_commit": "802e5ce18ab73fe33027434dd3483cc06bdc368f",
+  "workflow_run_id": 37661032517
+}

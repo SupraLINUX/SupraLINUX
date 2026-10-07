@@ -5563,6 +5563,12 @@
       "sha256": "c4195b2ca414a8fefc5afb88d07a9f61405c1e531f27cffa20540772070fea38",
       "cause": "Clean Ubuntu SDK client compilation stopped at epoxy/egl.h: authenticated Ubuntu DmaBufHandler exposes the Epoxy header, but libkpipewire-dev does not declare libepoxy-dev. No candidate source preparation or sbuild started.",
       "repair": "Declare libepoxy-dev in the reviewed baseline setup and consumer test prerequisites, preserve unchanged upstream sources and client bytes, then certify the repaired fixture in a fresh authoritative input preflight."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kwayland-preflight21/verification.json",
+      "sha256": "839889b9304f83b698242a5303d4bb6e72f474b44706fd572f1aef01520b1e6c",
+      "cause": "Original clean infrastructure sbuild could not download 83 Ubuntu dependencies over HTTP; IPv4 timeouts/refused connections and unavailable IPv6 routes. No missing KDE dependency or package build failure is established.",
+      "repair": "Use verified HTTPS on the same official Ubuntu origin. Bootstrap recorded CA trust data from the admitted Ubuntu runner into a fresh derived rootfs; retain its digest/provider/bytes, preserve base/keyring/SDK absence, and repeat the small input preflight before any candidate execution."
     }
   ]
 }

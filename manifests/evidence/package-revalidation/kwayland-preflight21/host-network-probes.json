@@ -1,0 +1,19 @@
+{
+  "scope": "read-only current host official Ubuntu endpoint diagnosis; not guest certification",
+  "checked_at": "2026-10-07T20:32:53.084573+00:00",
+  "proxy_environment_present": false,
+  "checks": [
+    {
+      "scheme": "http",
+      "returncode": 28,
+      "transport": "000 91.189.91.81 12.002891",
+      "error": "curl: (28) Operation timed out after 12002 milliseconds with 0 bytes received\n"
+    },
+    {
+      "scheme": "https",
+      "returncode": 0,
+      "transport": "200 185.125.190.82 2.258079",
+      "error": ""
+    }
+  ]
+}

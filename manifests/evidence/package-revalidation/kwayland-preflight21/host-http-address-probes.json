@@ -1,0 +1,24 @@
+{
+  "scope": "read-only host HTTP probes to official addresses observed in original failures and current HTTPS response; not guest certification",
+  "checked_at": "2026-10-07T20:36:00.082107+00:00",
+  "checks": [
+    {
+      "official_ubuntu_ip": "185.125.190.82",
+      "returncode": 28,
+      "result": "000 185.125.190.82 10.002200",
+      "error": "curl: (28) Operation timed out after 10002 milliseconds with 0 bytes received\n"
+    },
+    {
+      "official_ubuntu_ip": "91.189.91.82",
+      "returncode": 28,
+      "result": "000 91.189.91.82 10.001981",
+      "error": "curl: (28) Operation timed out after 10001 milliseconds with 0 bytes received\n"
+    },
+    {
+      "official_ubuntu_ip": "91.189.92.24",
+      "returncode": 0,
+      "result": "200 91.189.92.24 0.511542",
+      "error": ""
+    }
+  ]
+}

@@ -8,7 +8,7 @@ EVIDENCE_NAME="${SUPRALINUX_PACKAGE_EVIDENCE:-authoritative-plasma-package}"
 [[ "${EVIDENCE_NAME}" == authoritative-plasma-package || "${EVIDENCE_NAME}" == authoritative-package-revalidation ]]
 WORK="${ROOT}/.work/${EVIDENCE_NAME}"
 EVIDENCE="${ROOT}/evidence/${EVIDENCE_NAME}"
-MIRROR="${SBUILD_MIRROR:-http://archive.ubuntu.com/ubuntu}"
+MIRROR="${SBUILD_MIRROR:-https://archive.ubuntu.com/ubuntu}"
 TEST_IMAGE="${AUTOPKGTEST_QEMU_IMAGE:-/var/lib/supralinux/autopkgtest/resolute-amd64.img}"
 CHROOT="${HOME}/.cache/sbuild/resolute-amd64.tar"
 STATE="INFRA_INVALID"
@@ -116,7 +116,7 @@ sha256sum "${TEST_IMAGE}" > "${EVIDENCE}/test-image-sha256.txt"
 
 STAGE="reviewed-ubuntu-baseline-preflight"
 set +e
-python3 "${ROOT}/scripts/probe-reviewed-ubuntu-baseline.py"
+SBUILD_MIRROR="${MIRROR}" python3 "${ROOT}/scripts/probe-reviewed-ubuntu-baseline.py"
 BASELINE_RC=$?
 set -e
 BASELINE_EVIDENCE="${ROOT}/evidence/runner-contract/reviewed-ubuntu-baseline"
@@ -186,8 +186,10 @@ print(json.load(open(sys.argv[1]))['nodes'][sys.argv[2]].get('sbuild_rootfs_poli
 PY
 )"
 if [[ "${ROOTFS_POLICY}" == "immutable-bare-milestone" ]]; then
+    ROOTFS_TLS_ARGS=()
+    if [[ "${MIRROR}" == https://* ]]; then ROOTFS_TLS_ARGS+=(--tls-ca-bundle /etc/ssl/certs/ca-certificates.crt); fi
     python3 "${ROOT}/scripts/prepare-milestone-sbuild-rootfs.py" "${NODE}" --output "${CHROOT}" \
-        --evidence "${EVIDENCE}/rootfs-admission.json" --mirror "${MIRROR}" |& tee "${EVIDENCE}/rootfs.log"
+        --evidence "${EVIDENCE}/rootfs-admission.json" --mirror "${MIRROR}" "${ROOTFS_TLS_ARGS[@]}" |& tee "${EVIDENCE}/rootfs.log"
     EXTRA_ARGS+=(--apt-update --apt-distupgrade)
 else
     [[ "${ROOTFS_POLICY}" == "fresh-buildd" ]]
@@ -275,7 +277,9 @@ LINTIAN_RESULT="PASS"
 
 STAGE="autopkgtest-qemu"
 STATE="INFRA_INVALID"
-SETUP="$(python3 "${ROOT}/scripts/plasma-package-testing.py" setup "${NODE}")"
+SETUP_TRANSPORT_ARGS=()
+if [[ "${MIRROR}" == https://* ]]; then SETUP_TRANSPORT_ARGS+=(--https-transport); fi
+SETUP="$(python3 "${ROOT}/scripts/plasma-package-testing.py" setup "${NODE}" "${SETUP_TRANSPORT_ARGS[@]}")"
 TEST_ARGS=()
 if [[ "${CAMPAIGN}" == manifests/package-revalidation.json ]]; then
     TEST_ARGS+=(--test-name=ubuntu-abi-client --test-name=consumer)

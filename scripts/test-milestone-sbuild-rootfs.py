@@ -2,6 +2,7 @@
 """Exercise immutable clean base admission and current APT suites."""
 import importlib.machinery
 import io
+import ssl
 import tarfile
 import tempfile
 import unittest
@@ -59,6 +60,42 @@ class RootfsTests(unittest.TestCase):
             for output,mirror in [(base,'http://archive.ubuntu.com/ubuntu'),(Path(temp)/'derived.tar','http://evil.invalid/ubuntu')]:
                 with self.assertRaises(AssertionError):
                     MODULE.derive(base,digest,output,mirror)
+            self.assertEqual(MODULE.sha(base),digest)
+
+    def test_https_bootstraps_recorded_ca_bytes_without_changing_base_or_keyring(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base,digest = self.base(temp)
+            bundle = Path(temp)/'ca.pem'
+            certificate = ssl.create_default_context().get_ca_certs(binary_form=True)[0]
+            bundle.write_text(ssl.DER_cert_to_PEM_cert(certificate))
+            output = Path(temp)/'https.tar'
+            provider = {'package':'ca-certificates','source_package':'ca-certificates','version':'fixture','architecture':'all'}
+            result = MODULE.derive(base,digest,output,'https://archive.ubuntu.com/ubuntu',bundle,provider)
+            self.assertEqual(MODULE.sha(base),digest)
+            self.assertEqual(result['tls_bootstrap']['sha256'],MODULE.sha(bundle))
+            self.assertEqual(result['tls_bootstrap']['provider'],provider)
+            self.assertFalse(result['tls_bootstrap']['certificate_verification_disabled'])
+            self.assertFalse(result['frameworks_and_qt_sdk_preinstalled'])
+            with tarfile.open(output) as archive:
+                self.assertEqual(archive.extractfile('./etc/ssl/certs/ca-certificates.crt').read(),bundle.read_bytes())
+                self.assertEqual(archive.extractfile('./usr/share/keyrings/ubuntu-archive-keyring.gpg').read(),b'fixture keyring')
+                self.assertEqual(archive.extractfile('./usr/bin/fixture').read(),b'unchanged base bytes')
+                self.assertEqual(archive.getnames().count('./etc/ssl/certs/ca-certificates.crt'),1)
+                self.assertIn('https://archive.ubuntu.com/ubuntu',result['apt_sources'])
+
+    def test_https_rejects_missing_empty_or_invalid_trust_and_http_rejects_injection(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base,digest = self.base(temp)
+            bundle = Path(temp)/'ca.pem'
+            for data in ['', 'untrusted non-certificate data']:
+                bundle.write_text(data)
+                with self.assertRaises((AssertionError,ssl.SSLError)):
+                    MODULE.derive(base,digest,Path(temp)/'https.tar','https://archive.ubuntu.com/ubuntu',bundle)
+                self.assertFalse((Path(temp)/'https.tar').exists())
+            with self.assertRaises(AssertionError):
+                MODULE.derive(base,digest,Path(temp)/'https.tar','https://archive.ubuntu.com/ubuntu')
+            with self.assertRaises(AssertionError):
+                MODULE.derive(base,digest,Path(temp)/'http.tar','http://archive.ubuntu.com/ubuntu',bundle)
             self.assertEqual(MODULE.sha(base),digest)
 
 

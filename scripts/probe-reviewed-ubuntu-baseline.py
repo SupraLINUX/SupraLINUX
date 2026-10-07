@@ -35,7 +35,8 @@ def main():
     source = work / 'source'
     (source / 'debian/tests').mkdir(parents=True)
     evidence.mkdir(parents=True)
-    commands = testing.setup_commands(ROOT, record)
+    commands = testing.setup_commands(ROOT, record,
+                                      https_transport=os.environ.get('SBUILD_MIRROR','http://archive.ubuntu.com/ubuntu').startswith('https://'))
     (source / 'debian/tests/control').write_text(
         'Tests: reviewed-baseline\nDepends: coreutils, dpkg\nRestrictions: needs-root\n')
     test = source / 'debian/tests/reviewed-baseline'

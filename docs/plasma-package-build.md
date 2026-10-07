@@ -591,3 +591,36 @@ Frameworks milestone images remain available. This supplementary provider PASS
 does not change the fifteen Level 0 component closures or certify KWayland,
 LibKScreen or KWin. Their next builds need individually reviewed contracts and
 generic transport of this exact eligible provider artifact.
+
+KWayland `4:6.7.5-0supralinux1` Attempt 1 closed on source
+`efe5df07f33e1cf4636ad4a4f9f33e96bd600266`, run 37651462618/job 112895578350.
+The Ubuntu baseline and clean sbuild passed; lintian failed on five new symbol
+floors containing a Debian revision, so installed candidate tests did not run.
+Its original evidence, source and binary packages are independently retained
+under `manifests/evidence/plasma/kwayland-attempt1/`; VM, runner 236 and writable
+overlay removal passed. Revision `4:6.7.5-0supralinux2` corrects only those new
+symbol floors to the upstream version and updates the packaging revision. KDE
+source, existing symbols, Ubuntu Qt and the protocol provider remain unchanged.
+
+The revision 2 input preflight on source
+`802e5ce18ab73fe33027434dd3483cc06bdc368f`, run 37661032517/job 112928300792,
+closed INFRA_INVALID. The Ubuntu baseline passed, but the synthetic dependency
+probe could not download 83 official Ubuntu packages over HTTP. No candidate
+build or installed candidate tests ran, and no new package Attempt was consumed.
+The original ZIP digest is
+`53620965916dcb6915840ee2a7d9bd98d3b3f3a76cae945ff45411e6bb19885d`;
+retained content and empty-cache restoration passed. Original failure logs,
+supplementary network diagnostics and direct VM/runner 237/overlay cleanup checks
+are retained under `manifests/evidence/package-revalidation/kwayland-preflight21/`.
+The golden and milestone images are preserved.
+
+The shared package runner now selects HTTPS for the same official Ubuntu archive.
+For the disposable sbuild rootfs, it validates and captures the admitted Ubuntu
+runner's CA bundle, including package identity, version and exact bytes. The
+immutable bare rootfs digest, Ubuntu archive signing key and absence of installed
+Frameworks/Qt SDKs remain enforced. Disposable Ubuntu baseline and installed-test
+images use HTTPS for official archive/security origins with TLS verification
+enabled. Other APT origins and signing configuration remain unchanged. Fixture
+tests cover trust rejection, byte preservation, serial setup transport and
+symlink containment. An authoritative input preflight must certify these changed
+inputs before KWayland Attempt 2; local tests do not certify the package.

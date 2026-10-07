@@ -28,6 +28,68 @@ admission = importlib.machinery.SourceFileLoader("admission", str(ROOT / "script
 
 
 class InputAdmission(unittest.TestCase):
+    def test_https_testbed_transport_preserves_ubuntu_signing_and_other_origins(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root/'etc/ssl/certs').mkdir(parents=True)
+            (root/'etc/ssl/certs/ca-certificates.crt').write_bytes(b'fixture trust data')
+            sources = root/'etc/apt/sources.list.d'
+            sources.mkdir(parents=True)
+            original = (b'Types: deb\r\nURIs: http://archive.ubuntu.com/ubuntu\r\n'
+                        b'Suites: resolute resolute-updates\r\n'
+                        b'Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg\r\n')
+            (sources/'ubuntu.sources').write_bytes(original)
+            other = (b'deb http://security.ubuntu.com/ubuntu/ resolute-security main\n'
+                     b'deb https://archive.ubuntu.com/ubuntu resolute main\n'
+                     b'deb http://example.org/ubuntu resolute main\n'
+                     b'deb http://archive.ubuntu.com/ubuntu-other resolute main\n')
+            (sources/'mixed.list').write_bytes(other)
+            self.assertEqual(testing.configure_ubuntu_apt_https(root),
+                             ['etc/apt/sources.list.d/mixed.list', 'etc/apt/sources.list.d/ubuntu.sources'])
+            self.assertEqual((sources/'ubuntu.sources').read_bytes(), original.replace(b'http:', b'https:'))
+            self.assertEqual((sources/'mixed.list').read_bytes(),
+                             other.replace(b'http://security.ubuntu.com/ubuntu/', b'https://security.ubuntu.com/ubuntu/'))
+            self.assertEqual(testing.configure_ubuntu_apt_https(root), [])
+
+    def test_https_testbed_transport_rejects_missing_trust_and_escaping_sources(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)/'root'
+            (root/'etc/apt').mkdir(parents=True)
+            sources = root/'etc/apt/sources.list'
+            original = b'deb http://archive.ubuntu.com/ubuntu resolute main\n'
+            sources.write_bytes(original)
+            with self.assertRaisesRegex(AssertionError, 'trust store is missing'):
+                testing.configure_ubuntu_apt_https(root)
+            self.assertEqual(sources.read_bytes(), original)
+            (root/'etc/ssl/certs').mkdir(parents=True)
+            (root/'etc/ssl/certs/ca-certificates.crt').write_bytes(b'fixture trust data')
+            outside = Path(directory)/'outside.list'
+            outside.write_bytes(original)
+            sources.unlink()
+            sources.symlink_to(outside)
+            with self.assertRaisesRegex(AssertionError, 'escapes the disposable testbed'):
+                testing.configure_ubuntu_apt_https(root)
+            self.assertEqual(outside.read_bytes(), original)
+
+    def test_https_setup_executes_before_apt_on_bounded_serial_lines(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root/'etc/ssl/certs').mkdir(parents=True)
+            (root/'etc/ssl/certs/ca-certificates.crt').write_bytes(b'fixture trust data')
+            (root/'etc/apt').mkdir()
+            source = root/'etc/apt/sources.list'
+            source.write_bytes(b'deb http://archive.ubuntu.com/ubuntu resolute main\n')
+            record = {'ubuntu_baseline_package': 'baseline-fixture', 'version': '2.0'}
+            commands = testing.setup_commands(root, record, https_transport=True)
+            subprocess.run(['bash', '-n'], input=commands, text=True, check=True)
+            self.assertLess(commands.index('configure_ubuntu_apt_https(Path'), commands.index('apt-get update'))
+            self.assertLess(max(len(line.encode()) for line in ('sh -ec '+shlex.quote(commands)).splitlines()), 1024)
+            # Execute the actual generated preamble against this disposable fixture only.
+            preamble = commands.split('apt-get update', 1)[0].replace('Path("/")', 'Path('+repr(str(root))+')')
+            subprocess.run(['bash', '-ec', preamble], capture_output=True, text=True, check=True)
+            self.assertEqual(source.read_bytes(), b'deb https://archive.ubuntu.com/ubuntu resolute main\n')
+            self.assertNotIn('configure_ubuntu_apt_https', testing.setup_commands(root, record))
+
     def test_supplementary_admission_rejects_authority_reference_and_scope_drift(self):
         node = 'plasma-wayland-protocols'
         record = copy.deepcopy(json.loads((ROOT/'manifests/kde-plasma-package-build.json').read_text())['nodes'][node])
