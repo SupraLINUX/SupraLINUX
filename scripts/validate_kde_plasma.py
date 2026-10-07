@@ -135,9 +135,22 @@ req(semantic_correction.get("dag_topology_effect") == "none", "Provider review c
 
 # Live source findings supplement the immutable historical availability review.
 supplementary = json.loads((ROOT / "manifests/kde-plasma-supplementary-providers.json").read_text())
+package_campaign = json.loads((ROOT/'manifests/kde-plasma-package-build.json').read_text())
 req(supplementary.get("role") == "plasma-supplementary-providers", "Supplementary provider role")
 for name, provider in supplementary["nodes"].items():
-    req(provider["package_execution_authorized"] is False, f"{name}: unreviewed provider execution")
+    package = package_campaign['nodes'].get(name)
+    if package:
+        req(package.get('source_scope') == 'plasma-supplementary-provider' and provider.get('package_record') == name,
+            f'{name}: individually reviewed supplementary package scope')
+        req(provider['package_execution_authorized'] is (name in package_campaign['authorized_nodes']),
+            f'{name}: supplementary execution scope')
+        req(provider['state'] == ('package-PASS' if package['state'] == 'PASS' else 'package-build-pending'),
+            f'{name}: supplementary package lifecycle')
+        req(provider['candidate_provider']['package_gate'] == ('PASS' if package['state'] == 'PASS' else 'execution-authorized'),
+            f'{name}: supplementary package gate')
+    else:
+        req(provider['state'] == 'packaging-preparation-pending' and provider["package_execution_authorized"] is False,
+            f"{name}: unreviewed provider execution")
     req(provider["consumes_package_attempt"] is False, f"{name}: preparation Attempt boundary")
     req(provider["qt_provider_effect"] == "none", f"{name}: Ubuntu Qt boundary")
     req(set(provider["affected_nodes"]) <= set(executable_dag["nodes"]), f"{name}: unknown consumers")

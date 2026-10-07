@@ -260,6 +260,16 @@ def main():
                                                 'archive_root':evidence['local_retention']['archive_root'],
                                                 'archive_index_sha256':evidence['local_retention']['archive_index_sha256']})
     write(campaign_path, campaign)
+    if record.get('source_scope') == 'plasma-supplementary-provider':
+        path = ROOT/'manifests/kde-plasma-supplementary-providers.json'
+        providers = json.loads(path.read_text())
+        providers['nodes'][a.node].update(state='package-PASS',package_execution_authorized=False,
+                                         next_gate='individual-dependent-package-review-and-build',
+                                         package_evidence={'path':evidence['result_path'],'sha256':evidence['result_sha256']})
+        providers['nodes'][a.node]['candidate_provider']['package_gate'] = 'PASS'
+        write(path, providers)
+        print(f'{a.node} supplementary package closure: PASS; Attempt {number}; offline restoration verified')
+        return
     path = ROOT/'manifests/kde-plasma.json'
     planning = json.loads(path.read_text())
     planning['planning'].update(status='level0-package-build-complete', next_gate='plasma-level0-remaining-packaging-preparation',

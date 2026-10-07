@@ -24,14 +24,52 @@ def packaging_hashes(path):
             for p in sorted(path.rglob("*")) if p.is_file() and "__pycache__" not in p.parts and p.suffix != ".pyc"}
 
 
+def supplementary_contract(node, record, root=ROOT, packaging=None):
+    """Bind a supplementary overlay to the independently reviewed source authority."""
+    assert record['source_scope'] == 'plasma-supplementary-provider'
+    providers = json.loads((root/'manifests/kde-plasma-supplementary-providers.json').read_text())
+    provider = providers['nodes'][node]
+    candidate = provider['candidate_provider']
+    assert candidate['signature_verification'] == 'PASS'
+    assert provider['qt_provider_effect'] == 'none'
+    assert record['source_package'] == node
+    for field, source in [('upstream_version', 'upstream_version'), ('upstream_url', 'upstream_url'),
+                          ('upstream_sha256', 'upstream_sha256'), ('signature_sha256', 'signature_sha256'),
+                          ('signing_fingerprint', 'signing_primary_fingerprint')]:
+        assert record[field] == candidate[source], f'Supplementary source changed: {field}'
+    retained = providers['source_review_retention']
+    payload = (root/retained['path']).read_bytes()
+    assert hashlib.sha256(payload).hexdigest() == retained['sha256']
+    references = [item for item in json.loads(payload)['ubuntu_sources'] if item['source_package'] == node]
+    assert len(references) == 1
+    reference = references[0]
+    assert record['packaging_reference_version'] == reference['version']
+    archive = next(item for item in reference['archives'] if item['name'].endswith('.debian.tar.xz'))
+    assert record['packaging_reference_sha256'] == archive['sha256']
+    assert record['packaging_reference_kind'] == 'authenticated-ubuntu-debian-archive'
+    subprocess.run(['dpkg', '--compare-versions', record['version'], 'gt', reference['version']], check=True)
+    assert record['version'].split('-')[0] == record['upstream_version'], 'Unexpected provider epoch/version'
+    assert record['packaging_path'] == f'packages/plasma/{node}/debian'
+    relative = Path(record['signing_key_path']).relative_to(record['packaging_path'])
+    assert '..' not in relative.parts and not relative.is_absolute()
+    packaging = packaging if packaging is not None else root/record['packaging_path']
+    key = packaging/relative
+    assert key.resolve().is_relative_to(packaging.resolve()) and not key.is_symlink()
+    assert hashlib.sha256(key.read_bytes()).hexdigest() == record['packaging_sha256'][str(relative)]
+
+
 def contract(node):
     campaign = load_campaign()
     record = campaign["nodes"][node]
     assert record["packaging_review"] == "PASS", "Packaging requires individual review"
     if campaign['role'] == 'reviewed-plasma-package-build':
-        level = json.loads((ROOT / "manifests/kde-plasma-level0.json").read_text())["nodes"][node]
-        assert record["version"] == level["candidate_package_version"], "Candidate version mismatch"
-        assert record["upstream_sha256"] == level["upstream_source_sha256"], "Source mismatch"
+        if record.get('source_scope', 'plasma-level0') == 'plasma-supplementary-provider':
+            supplementary_contract(node, record)
+        else:
+            assert record.get('source_scope', 'plasma-level0') == 'plasma-level0'
+            level = json.loads((ROOT / "manifests/kde-plasma-level0.json").read_text())["nodes"][node]
+            assert record["version"] == level["candidate_package_version"], "Candidate version mismatch"
+            assert record["upstream_sha256"] == level["upstream_source_sha256"], "Source mismatch"
     else:
         assert campaign['role'] == 'reviewed-package-revalidation'
         original = json.loads((ROOT / 'manifests/kde-dag.json').read_text())['nodes'][node]

@@ -536,3 +536,18 @@ round-trip and an actual private D-Bus daemon delivering migrated custom times.
 The same binary and a rebuilt consumer then run after the complete candidate
 upgrade. The unused Qt base private SDK dependency was removed after signed
 source review; clean sbuild is the verification gate for that simplification.
+
+Plasma Wayland Protocols `1.22.0-0supralinux1` is individually reviewed and
+admitted as a supplementary provider, independently of the 34 Level 0 nodes.
+The shared runner keeps the original 15 component PASS records and source
+materialization unchanged. Its first gate is the current authoritative input
+preflight; candidate sbuild remains locked until that exact certification passes.
+The authenticated Ubuntu Debian reference preserves one `Architecture: all`,
+`Multi-Arch: foreign` package. All 120 upstream CTests must execute; installed
+consumer checks additionally compile the 30 actual server headers because the
+upstream server-header tests currently invoke client-header. Tests bind exact
+signed XML inventories, both legacy aliases and the installed CMake version,
+and run unchanged Ubuntu and rebuilt clients on a private Wayland socket at
+versions 1, 7, 8 and 20. Qt and Wayland runtime versions must remain unchanged.
+KWayland, LibKScreen and KWin require this newer build provider; their individual
+package and real compositor integration gates remain pending.

@@ -6,10 +6,11 @@
       "schema": 1,
       "as_of": "2026-10-05",
       "role": "post-planning-provider-version-review",
-      "state": "packaging-preparation-pending",
+      "state": "package-build-pending",
       "affected_nodes": [
         "kwayland",
-        "kwin"
+        "kwin",
+        "libkscreen"
       ],
       "cmake_requirement": {
         "module": "PlasmaWaylandProtocols",
@@ -37,20 +38,27 @@
         "listing_source": "https://download.kde.org/stable/plasma-wayland-protocols/",
         "signature_verification": "PASS",
         "selection_reason": "Newest official stable provider satisfying the pinned Plasma source; XML/build metadata only, no Qt/platform runtime replacement",
-        "package_gate": "pending"
+        "package_gate": "execution-authorized"
       },
       "historical_provider_review_preserved": true,
       "historical_review_limit": "Source Build-Depends provider availability did not certify changed upstream minimum versions",
       "qt_provider_effect": "none",
       "dag_topology_effect": "none; additional external build provider required",
-      "package_execution_authorized": false,
+      "package_execution_authorized": true,
       "consumes_package_attempt": false,
-      "next_gate": "review-package-and-certify-upstream-protocol-compatibility",
+      "next_gate": "authoritative-supplementary-package-input-preflight",
       "additional_requirement_sources": [
         {
           "node": "kwin",
           "source_url": "https://download.kde.org/stable/plasma/6.7.5/kwin-6.7.5.tar.xz",
           "source_sha256": "6baa910b732d93c48c90f9c1cc685cc93d0b8de0cdf138c24192c045bc3a48e2",
+          "path": "CMakeLists.txt",
+          "minimum": "1.21.0"
+        },
+        {
+          "node": "libkscreen",
+          "source_url": "https://download.kde.org/stable/plasma/6.7.5/libkscreen-6.7.5.tar.xz",
+          "source_sha256": "df317e03acfadfcbc68981b78131750103fadf4d5c5df6368c9e91e698677219",
           "path": "CMakeLists.txt",
           "minimum": "1.21.0"
         }
@@ -89,7 +97,8 @@
           "state": "PASS",
           "scope": "local native source/test review; no authoritative package certification"
         }
-      }
+      },
+      "package_record": "plasma-wayland-protocols"
     },
     "wayland-protocols": {
       "schema": 1,

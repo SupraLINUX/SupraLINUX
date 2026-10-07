@@ -1,0 +1,218 @@
+plasma-wayland-protocols (1.22.0-0supralinux1) resolute; urgency=medium
+
+  * Package the signed stable protocol provider required by Plasma 6.7.5.
+  * Retain Ubuntu Qt and Wayland; enable the complete upstream test suite.
+  * Verify installed protocols, correct server headers and Ubuntu wire clients.
+
+ -- SupraLINUX Build Team <build@supralinux.org>  Wed, 07 Oct 2026 06:00:00 +0000
+
+plasma-wayland-protocols (1.20.0-2) unstable; urgency=medium
+
+  * Mark as Multi-Arch: foreign.
+  * CI: update/simplify configuration.
+
+ -- Pino Toscano <pino@debian.org>  Mon, 02 Mar 2026 18:51:14 +0100
+
+plasma-wayland-protocols (1.20.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Bump Standards-Version to 4.7.3, no changes required.
+  * Drop Priority: optional, no more needed since dpkg 1.22.13.
+  * Drop the flaky tests handling, as it was needed only for mips64el which is
+    now discontinued.
+  * Update the build dependencies according to the upstream build system:
+    - bump cmake to 3.16
+  * Switch to Architecture: all, as now all the content is fully
+    architecture-independent.
+
+ -- Pino Toscano <pino@debian.org>  Sun, 08 Feb 2026 11:54:36 +0100
+
+plasma-wayland-protocols (1.19.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Drop Rules-Requires-Root: no, no more needed since Debian trixie.
+
+ -- Pino Toscano <pino@debian.org>  Sun, 21 Sep 2025 16:04:13 +0200
+
+plasma-wayland-protocols (1.17.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Update the upstream GPG keys with the key of Bhushan Shah.
+
+ -- Pino Toscano <pino@debian.org>  Fri, 04 Apr 2025 09:33:33 +0200
+
+plasma-wayland-protocols (1.16.0-3) unstable; urgency=medium
+
+  * Fix typo in debian/rules that completely disabled the execution of the
+    tests on architectures not marked as flaky (i.e. everything but mips64el).
+  * Bump Standards-Version to 4.7.2, no changes required.
+
+ -- Pino Toscano <pino@debian.org>  Sun, 02 Mar 2025 08:53:25 +0100
+
+plasma-wayland-protocols (1.16.0-2) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * Build using Qt6.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Mon, 24 Feb 2025 23:20:55 +0100
+
+plasma-wayland-protocols (1.16.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (1.16.0).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 11 Jan 2025 23:12:09 +0100
+
+plasma-wayland-protocols (1.15.0-2) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Sandro Knauß ]
+  * Mark tests as flaky on mips64el.
+
+ -- Sandro Knauß <hefee@debian.org>  Sun, 22 Dec 2024 15:22:27 +0100
+
+plasma-wayland-protocols (1.15.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (1.15.0).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 07 Dec 2024 14:43:55 +0100
+
+plasma-wayland-protocols (1.14.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (1.14.0).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 12 Sep 2024 23:17:18 +0200
+
+plasma-wayland-protocols (1.13.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (1.13.0).
+  * Bump Standards-Version to 4.7.0, no change required.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 25 May 2024 23:23:20 +0200
+
+plasma-wayland-protocols (1.10.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (1.10.0). This is the same as 1.10 with the correct
+    versioning scheme.
+  * Add/update Jonathan Esk-Riddell in upstream signing keys.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 20 Jan 2023 17:50:59 +0100
+
+plasma-wayland-protocols (1.10-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (1.10).
+  * Bump Standards-Version to 4.6.2, no change required.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Wed, 18 Jan 2023 22:47:54 +0100
+
+plasma-wayland-protocols (1.9.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (1.9.0).
+  * Update upstream metadata.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Wed, 28 Sep 2022 23:46:05 +0200
+
+plasma-wayland-protocols (1.8.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (1.8.0).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 06 Sep 2022 22:26:21 +0200
+
+plasma-wayland-protocols (1.7.0-2) unstable; urgency=medium
+
+  * Bump Standards-Version to 4.6.1, no changes required.
+  * Remove inactive Uploaders.
+  * Switch the qt5-qmake build dependency to qtbase5-dev, as newer versions of
+    extra-cmake-modules need all the development bits of Qt5, not only qmake.
+    (Closes: #1011790)
+
+ -- Pino Toscano <pino@debian.org>  Mon, 25 Jul 2022 20:59:15 +0200
+
+plasma-wayland-protocols (1.7.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (1.7.0).
+  * Build with hardening=+all build hardening flag.
+  * Refresh copyright information.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Mon, 09 May 2022 13:31:11 +0200
+
+plasma-wayland-protocols (1.6.0-1) unstable; urgency=medium
+
+  * New upstream release (1.6.0).
+  * Added myself to the uploaders.
+  * Refresh upstream metadata.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Wed, 19 Jan 2022 23:25:59 +0100
+
+plasma-wayland-protocols (1.5.0-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (1.5.0).
+
+ -- Norbert Preining <norbert@preining.info>  Sat, 06 Nov 2021 11:41:48 +0900
+
+plasma-wayland-protocols (1.4.0-2) unstable; urgency=medium
+
+  [ Helmut Grohne ]
+  * Fix FTCBFS: Missing Build-Depens: qt5-qmake. (Closes: #998354).
+
+ -- Norbert Preining <norbert@preining.info>  Thu, 04 Nov 2021 06:35:02 +0900
+
+plasma-wayland-protocols (1.4.0-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (1.4.0).
+  * Bump standards version, no changes needed.
+
+ -- Norbert Preining <norbert@preining.info>  Sun, 05 Sep 2021 17:22:42 +0900
+
+plasma-wayland-protocols (1.3.0-2) unstable; urgency=medium
+
+  * Upload to unstable.
+
+ -- Norbert Preining <norbert@preining.info>  Mon, 16 Aug 2021 12:42:26 +0900
+
+plasma-wayland-protocols (1.3.0-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (1.3.0).
+  * Revert to previous signing key, what a mess!
+
+ -- Norbert Preining <norbert@preining.info>  Sun, 02 May 2021 21:20:37 +0900
+
+plasma-wayland-protocols (1.2.1-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (1.2.1).
+  * Adjust watch file for new location.
+  * Add myself to uploaders.
+  * Update upstream signing key.
+
+ -- Norbert Preining <norbert@preining.info>  Tue, 06 Apr 2021 06:51:38 +0900
+
+plasma-wayland-protocols (1.1.1-2) unstable; urgency=medium
+
+  [ Sandro Knauß ]
+  * Set upstream metadata fields: Repository, Repository-Browse.
+
+  [ Pino Toscano ]
+  * Release to unstable.
+
+ -- Pino Toscano <pino@debian.org>  Fri, 09 Oct 2020 08:06:34 +0200
+
+plasma-wayland-protocols (1.1.1-1) experimental; urgency=medium
+
+  * Initial packaging.
+
+ -- Pino Toscano <pino@debian.org>  Tue, 18 Aug 2020 20:03:01 +0200

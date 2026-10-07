@@ -25,12 +25,15 @@ def validate():
     campaign = json.loads((ROOT / "manifests/kde-plasma-package-build.json").read_text())
     planning = json.loads((ROOT / "manifests/kde-plasma.json").read_text())["planning"]
     level = json.loads((ROOT / "manifests/kde-plasma-level0.json").read_text())
+    providers = json.loads((ROOT/'manifests/kde-plasma-supplementary-providers.json').read_text())['nodes']
     assert campaign["role"] == "reviewed-plasma-package-build"
     scope = campaign["authorized_nodes"]
-    assert scope == planning["authorized_package_nodes"] == level["authorized_package_nodes"]
+    level_scope = [name for name in scope if name in level['selected_nodes']]
+    assert level_scope == planning["authorized_package_nodes"] == level["authorized_package_nodes"]
+    assert len(scope) <= 1 and all(name in campaign['nodes'] for name in scope)
     assert campaign["package_execution_authorized"] is bool(scope)
     assert campaign["runner_class"] == "supralinux-kvm-ubuntu-26.04-ephemeral"
-    assert set(campaign["nodes"]) <= set(level["selected_nodes"])
+    assert set(campaign["nodes"]) <= set(level["selected_nodes"]) | set(providers)
     assert campaign.get('execution_mode', 'build') in {'preflight', 'build'}
     effective = repairs.effective_nodes(json.loads((ROOT/'manifests/kde-dag.json').read_text()))
     historical = repairs.effective_nodes(json.loads((ROOT/'manifests/kde-dag.json').read_text()), historical=True)
@@ -123,10 +126,18 @@ def validate():
     sources = {node["node"]: node for node in material["nodes"]}
     for name, record in campaign["nodes"].items():
         prepare.contract(name)
-        assert record["upstream_sha256"] == sources[name]["upstream"]["sha256"]
-        assert record["signature_sha256"] == sources[name]["upstream"]["signature_sha256"]
-        assert record["packaging_reference_sha256"] == sources[name]["ubuntu_reference"]["debian_tree_tar_sha256"]
-        assert record["packaging_reference_version"] == sources[name]["ubuntu_reference"]["source_version"]
+        if record.get('source_scope') == 'plasma-supplementary-provider':
+            assert name in providers and name not in level['selected_nodes']
+            assert providers[name]['package_record'] == name
+            assert providers[name]['package_execution_authorized'] is (name in scope)
+            if name in scope and campaign['execution_mode'] == 'build':
+                assert name in input_certified, 'Certify supplementary package inputs before its first Attempt'
+        else:
+            assert name in sources
+            assert record["upstream_sha256"] == sources[name]["upstream"]["sha256"]
+            assert record["signature_sha256"] == sources[name]["upstream"]["signature_sha256"]
+            assert record["packaging_reference_sha256"] == sources[name]["ubuntu_reference"]["debian_tree_tar_sha256"]
+            assert record["packaging_reference_version"] == sources[name]["ubuntu_reference"]["source_version"]
         assert all(record["review"].values()), "Individual packaging review missing"
         for predecessor, inputs in record.get("frameworks_predecessors", {}).items():
             original = historical.get(predecessor)

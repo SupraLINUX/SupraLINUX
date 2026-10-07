@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare a consistent reviewed Level 0 scope for atomic Git publication."""
+"""Admit individually reviewed Plasma components or supplementary providers."""
 import argparse
 import importlib.machinery
 import json
@@ -14,16 +14,23 @@ fields = importlib.machinery.SourceFileLoader('retention',str(ROOT/'scripts/reta
 
 
 def check(node,record,packaging,level,material):
-    assert node in level['selected_nodes'] and node in material, 'Node is outside materialized Level 0'
     assert record['packaging_review'] == 'PASS' and record['state'] == 'build-pending' and not record['attempts']
     assert record['packaging_path'] == f'packages/plasma/{node}/debian'
-    assert record['version'] == level['nodes'][node]['candidate_package_version']
-    assert record['upstream_version'] == material[node]['upstream']['version']
-    assert record['upstream_url'] == material[node]['upstream']['url']
-    assert record['upstream_sha256'] == material[node]['upstream']['sha256']
-    assert record['signature_sha256'] == material[node]['upstream']['signature_sha256']
-    assert record['packaging_reference_version'] == material[node]['ubuntu_reference']['source_version']
-    assert record['packaging_reference_sha256'] == material[node]['ubuntu_reference']['debian_tree_tar_sha256']
+    if record.get('source_scope') == 'plasma-supplementary-provider':
+        assert node not in level['selected_nodes'], 'Provider must not impersonate a Level 0 component'
+        # Review a staging overlay using the same source authority, without
+        # copying unreviewed inputs into the repository before admission.
+        prepare.supplementary_contract(node, record, packaging=packaging)
+    else:
+        assert record.get('source_scope', 'plasma-level0') == 'plasma-level0'
+        assert node in level['selected_nodes'] and node in material, 'Node is outside materialized Level 0'
+        assert record['version'] == level['nodes'][node]['candidate_package_version']
+        assert record['upstream_version'] == material[node]['upstream']['version']
+        assert record['upstream_url'] == material[node]['upstream']['url']
+        assert record['upstream_sha256'] == material[node]['upstream']['sha256']
+        assert record['signature_sha256'] == material[node]['upstream']['signature_sha256']
+        assert record['packaging_reference_version'] == material[node]['ubuntu_reference']['source_version']
+        assert record['packaging_reference_sha256'] == material[node]['ubuntu_reference']['debian_tree_tar_sha256']
     assert prepare.packaging_hashes(packaging) == record['packaging_sha256'], 'Reviewed packaging changed'
     version = subprocess.check_output(['dpkg-parsechangelog','-l',str(packaging/'changelog'),'-S','Version'],text=True).strip()
     assert version == record['version']
@@ -66,6 +73,17 @@ def main():
     campaign['nodes'][args.node] = record
     campaign.update(state='execution-authorized',authorized_nodes=[args.node],package_execution_authorized=True,
                     execution_mode='preflight')
+    if record.get('source_scope') == 'plasma-supplementary-provider':
+        path = ROOT/'manifests/kde-plasma-supplementary-providers.json'
+        providers = json.loads(path.read_text())
+        provider = providers['nodes'][args.node]
+        assert provider['state'] == 'packaging-preparation-pending' and not provider['package_execution_authorized']
+        provider.update(state='package-build-pending',package_record=args.node,
+                        package_execution_authorized=True,next_gate='authoritative-supplementary-package-input-preflight')
+        provider['candidate_provider']['package_gate'] = 'execution-authorized'
+        for path,data in [(paths[0],campaign),(path,providers)]:path.write_text(json.dumps(data,indent=2)+'\n')
+        print(f'{args.node} supplementary provider admitted; Level 0 scope unchanged; no package Attempt')
+        return
     planning['planning'].update(phase='level0-package-build',status='level0-package-build-pending',next_gate='plasma-level0-authoritative-package-build',package_execution_authorized=True,authorized_package_nodes=[args.node])
     level.update(state='package-build-authorized',next_gate=planning['planning']['next_gate'],package_execution_authorized=True,authorized_package_nodes=[args.node])
     level['scheduling'].update(package_execution_locked=False,scope='Only the individually reviewed current node; remaining Level 0 packaging stays pending')

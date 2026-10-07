@@ -28,6 +28,26 @@ admission = importlib.machinery.SourceFileLoader("admission", str(ROOT / "script
 
 
 class InputAdmission(unittest.TestCase):
+    def test_supplementary_admission_rejects_authority_reference_and_scope_drift(self):
+        node = 'plasma-wayland-protocols'
+        record = copy.deepcopy(json.loads((ROOT/'manifests/kde-plasma-package-build.json').read_text())['nodes'][node])
+        record.update(state='build-pending',attempts=[])
+        level = json.loads((ROOT/'manifests/kde-plasma-level0.json').read_text())
+        material = {item['node']:item for item in json.loads((ROOT/'manifests/evidence/kde-plasma-level0-materialization-result.json').read_text())['nodes']}
+        packaging = ROOT/record['packaging_path']
+        admission.check(node,record,packaging,level,material)
+        for key,value in [('upstream_sha256','0'*64),('upstream_url','https://unreviewed.invalid/source'),
+                          ('signature_sha256','0'*64),('signing_fingerprint','0'*40),
+                          ('packaging_reference_sha256','0'*64),('packaging_reference_version','1.22.0-1'),
+                          ('signing_key_path','packages/plasma/other/key.asc'),('source_scope','plasma-level0'),
+                          ('version','1.20.0-1'),('binary_packages',{'unexpected':'amd64'})]:
+            bad=copy.deepcopy(record);bad[key]=value
+            with self.subTest(key=key),self.assertRaises((AssertionError,ValueError,subprocess.CalledProcessError)):
+                admission.check(node,bad,packaging,level,material)
+        bad_level=copy.deepcopy(level);bad_level['selected_nodes'].append(node)
+        with self.assertRaisesRegex(AssertionError,'must not impersonate'):
+            admission.check(node,record,packaging,bad_level,material)
+
     def test_review_admission_rejects_source_binary_and_path_drift(self):
         node='plasma-workspace-wallpapers'
         record=copy.deepcopy(json.loads((ROOT/'manifests/kde-plasma-package-build.json').read_text())['nodes'][node])
