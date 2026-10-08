@@ -708,3 +708,22 @@ An unchanged Ubuntu client after APT upgrade and rebuilt SDK consumer are
 required. Local preparation does not certify the candidate, and no LibKScreen
 package Attempt has started. Publication, Repository Policy and its authoritative
 input preflight remain gates before candidate execution.
+
+LibKScreen 4:6.7.5-0supralinux1 input preflight24 closed authoritative PASS at
+source a4f92b3692f09e3a7d9cb17a63cce9d29dd7db6f, Actions run 37765156777,
+job 113270890592. The clean bare-rootfs probe installed the exact retained ECM
+and Plasma Wayland Protocols inputs and compiled their consumer. The original
+Ubuntu SDK client compiled and passed actual private D-Bus/Fake configuration,
+EDID, mode persistence, cloning, monitor/hotplug and Xvfb XRandR fixtures, with
+owned processes and runtime directories removed. Unsupported Xvfb DPMS was
+recorded explicitly; power switching and real Wayland remain integration QA.
+
+Artifact 11545987447 has SHA-256
+fa05bf5b87ec435198738d7e2f0ceb213b1802f3cf7b8d345d33d73e41072d6f.
+Original source/signature, logs and the complete input hash closure were retained
+independently of Actions expiry and restored from an empty cache. Direct cleanup
+verified the absence of VM, runner 241 and writable overlay while preserving
+golden and milestone images. The preflight consumed no package Attempt and
+certifies inputs only. Attempt 1 is authorized after publication and hosted
+Repository Policy for the build-mode manifest; eight upstream tests, clean
+sbuild, lintian and both installed package tests remain pending.

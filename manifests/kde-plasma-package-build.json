@@ -5640,7 +5640,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -5741,6 +5741,10 @@
     {
       "path": "manifests/evidence/package-revalidation/kwayland-preflight23/verification.json",
       "sha256": "98c2edb5678d8ce6bf0a26fbb0fcf661ff54465545343750ecb93e63c431d336"
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/libkscreen-preflight24/verification.json",
+      "sha256": "b6905962b2ffe2a07f9ac20cd1cdfb86aeace77459ed63a5cdd4bfd4ebd2425a"
     }
   ],
   "package_input_incidents": [
