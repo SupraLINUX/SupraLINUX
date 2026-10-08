@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "scope": "failed-package-attempt-retention-verification",
+  "node": "libkscreen",
+  "version": "4:6.7.5-0supralinux1",
+  "source_commit": "9e3c8e6cb310053e60561ea667263e7cca820c3b",
+  "artifact_id": 11552059308,
+  "artifact_sha256": "dfd9124fe9ec58531bdd98f10dd62e3cab6b60750afa28eccb91c1db26add8b8",
+  "archive_path": ".artifacts/plasma-6.7.5/libkscreen-attempt1/sha256/dfd9124fe9ec58531bdd98f10dd62e3cab6b60750afa28eccb91c1db26add8b8.zip",
+  "source_payload_verified": true,
+  "raw_file_digest_closure_verified": true,
+  "offline_restore_verified": true,
+  "requires_github_for_restore": false,
+  "candidate_binaries_buildinfo_changes": "absent; sbuild failed during unchanged upstream native tests",
+  "outcomes": {
+    "sbuild": "FAIL",
+    "native_upstream_tests": {
+      "state": "FAIL",
+      "passed": [
+        "appstreamtest",
+        "kscreen-testscreenconfig",
+        "kscreen-testconfigserializer",
+        "kscreen-testconfigmonitor",
+        "kscreen-testinprocess",
+        "kscreen-testbackendloader",
+        "kscreen-testlog",
+        "kscreen-testmodelistchange"
+      ],
+      "failed": [
+        "kscreen-testedid"
+      ]
+    },
+    "lintian": "not-run",
+    "installed_candidate_tests": "not-run",
+    "baseline_ubuntu_client": "PASS",
+    "infrastructure_probe": "PASS",
+    "infrastructure_cleanup": "PASS",
+    "evidence_validation": "PASS"
+  },
+  "files_sha256": {
+    "artifact-meta.json": "6979466a482b67bb2aea0c939897216517a2391796b67f5a2de8211c327039d0",
+    "build-contract.json": "14f01e88b695621fc1b122ff51f2c47a4d503e95732e56f853817bf4f7c3dee3",
+    "cache-probe/result.json": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+    "cleanup.json": "354e37ddda2f700e9cf4e6320ed61056a21497245d4f2d0851117f2a51063e8c",
+    "host-evidence-sha256.txt": "5052b6e1732b0d1ced03123276d0d7b606812925aae45bf3bfb43d1bd4395460",
+    "host-result.json": "0cc697147ee0090ab4731368eb82add0c0fefaaeccde431a1e8aa53b9f650a7f",
+    "host-workflow-run.json": "e9a1a8d3b303e555bc33f2accc368b303928d54aab6ded02a8dfbd558933b296",
+    "result.json": "7b5aff06e5cb9c95615267025303bf04974293f056f395a67d2b82d1963ae7f1",
+    "sbuild.log": "a756ac51010c83d0117ac7ef4e5133703e6768c596f1f865f28da0cf4747693e",
+    "ubuntu-baseline-preflight/result.json": "a668b97584285de7063a375899eed7543551d49c288c09e018235c33a3f81565",
+    "workflow-job.json": "983176ed22b546651562a0c09d9e2ae1d9535562c554290aa1009a71da4274d3"
+  }
+}

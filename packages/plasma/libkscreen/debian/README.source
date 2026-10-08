@@ -32,3 +32,9 @@ Physical monitors, actual DPMS switching, Wayland output management and
 compositor/hardware/session integration remain mandatory later QA. This
 fixture does not certify them. Local Ubuntu SDK preparation passed both Fake
 and real XRandR cases; authoritative package execution is still pending.
+
+Packaging revision 4:6.7.5-0supralinux2 declares hwdata <!nocheck>.
+Original EDID deviceId assertions require vendor names from /usr/share/hwdata/pnp.ids. Attempt 1 omitted hwdata and failed four EDID rows; seven other KScreen tests and ECM AppStream passed.
+Retain original FAIL/source/log archive; no candidate binary, lintian or
+installed-candidate test result existed. Original native tests, assertions,
+upstream source, symbol guards and Qt provider remain unchanged.

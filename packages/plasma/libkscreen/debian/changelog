@@ -1,3 +1,10 @@
+libkscreen (4:6.7.5-0supralinux2) resolute; urgency=medium
+
+  * Declare missing test data for unchanged native tests in clean builds.
+    Preserve the original failed Attempt and all native assertions.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Thu, 08 Oct 2026 13:19:43 +0000
+
 libkscreen (4:6.7.5-0supralinux1) resolute; urgency=medium
 
   * Integrate official stable KDE Plasma 6.7.5 on Ubuntu 26.04 LTS.
