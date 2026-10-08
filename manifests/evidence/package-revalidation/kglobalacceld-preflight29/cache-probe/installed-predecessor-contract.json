@@ -1,0 +1,638 @@
+[
+  {
+    "package": "breeze-icon-theme-rcc",
+    "source_package": "kf6-breeze-icons",
+    "version": "4:6.30.0-0supralinux1",
+    "architecture": "all"
+  },
+  {
+    "package": "breeze-icon-theme",
+    "source_package": "kf6-breeze-icons",
+    "version": "4:6.30.0-0supralinux1",
+    "architecture": "all"
+  },
+  {
+    "package": "kf6-breeze-icon-theme-rcc",
+    "source_package": "kf6-breeze-icons",
+    "version": "4:6.30.0-0supralinux1",
+    "architecture": "all"
+  },
+  {
+    "package": "kf6-breeze-icon-theme",
+    "source_package": "kf6-breeze-icons",
+    "version": "4:6.30.0-0supralinux1",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6breezeicons-dev",
+    "source_package": "kf6-breeze-icons",
+    "version": "4:6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6breezeicons6",
+    "source_package": "kf6-breeze-icons",
+    "version": "4:6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "extra-cmake-modules",
+    "source_package": "kf6-extra-cmake-modules",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6archive-data",
+    "source_package": "kf6-karchive",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6archive-dev",
+    "source_package": "kf6-karchive",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6archive6",
+    "source_package": "kf6-karchive",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6bookmarks-data",
+    "source_package": "kf6-kbookmarks",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6bookmarks-dev",
+    "source_package": "kf6-kbookmarks",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6bookmarks6",
+    "source_package": "kf6-kbookmarks",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6bookmarkswidgets6",
+    "source_package": "kf6-kbookmarks",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6codecs-data",
+    "source_package": "kf6-kcodecs",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6codecs-dev",
+    "source_package": "kf6-kcodecs",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6codecs6",
+    "source_package": "kf6-kcodecs",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6colorscheme-data",
+    "source_package": "kf6-kcolorscheme",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6colorscheme-dev",
+    "source_package": "kf6-kcolorscheme",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6colorscheme6",
+    "source_package": "kf6-kcolorscheme",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6completion-data",
+    "source_package": "kf6-kcompletion",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6completion-dev",
+    "source_package": "kf6-kcompletion",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6completion6",
+    "source_package": "kf6-kcompletion",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6config-bin",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6config-data",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6config-dev",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6config-dev-bin",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6configcore6",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6configgui6",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6configqml6",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-config",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6coreaddons-data",
+    "source_package": "kf6-kcoreaddons",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6coreaddons-dev",
+    "source_package": "kf6-kcoreaddons",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6coreaddons6",
+    "source_package": "kf6-kcoreaddons",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-coreaddons",
+    "source_package": "kf6-kcoreaddons",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "python3-kcoreaddons",
+    "source_package": "kf6-kcoreaddons",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6crash-dev",
+    "source_package": "kf6-kcrash",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6crash6",
+    "source_package": "kf6-kcrash",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6dbusaddons-bin",
+    "source_package": "kf6-kdbusaddons",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6dbusaddons-data",
+    "source_package": "kf6-kdbusaddons",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6dbusaddons-dev",
+    "source_package": "kf6-kdbusaddons",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6dbusaddons6",
+    "source_package": "kf6-kdbusaddons",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "amd64"
+  },
+  {
+    "package": "kdoctools6",
+    "source_package": "kf6-kdoctools",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6doctools-dev",
+    "source_package": "kf6-kdoctools",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6doctools6",
+    "source_package": "kf6-kdoctools",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6globalaccel-data",
+    "source_package": "kf6-kglobalaccel",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6globalaccel-dev",
+    "source_package": "kf6-kglobalaccel",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6globalaccel6",
+    "source_package": "kf6-kglobalaccel",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6guiaddons-bin",
+    "source_package": "kf6-kguiaddons",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6guiaddons-data",
+    "source_package": "kf6-kguiaddons",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6guiaddons-dev",
+    "source_package": "kf6-kguiaddons",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6guiaddons6",
+    "source_package": "kf6-kguiaddons",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "python3-kguiaddons",
+    "source_package": "kf6-kguiaddons",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-guiaddons",
+    "source_package": "kf6-kguiaddons",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6i18n-data",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6i18n-dev",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6i18n6",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6i18nlocaledata6",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6i18nqml6",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-i18n-localedata",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-ki18n",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6iconthemes-bin",
+    "source_package": "kf6-kiconthemes",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6iconthemes-data",
+    "source_package": "kf6-kiconthemes",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6iconthemes-dev",
+    "source_package": "kf6-kiconthemes",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6iconthemes6",
+    "source_package": "kf6-kiconthemes",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6iconwidgets6",
+    "source_package": "kf6-kiconthemes",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-iconthemes",
+    "source_package": "kf6-kiconthemes",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "amd64"
+  },
+  {
+    "package": "kio6",
+    "source_package": "kf6-kio",
+    "version": "6.30.0-0supralinux10",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6kio-dev",
+    "source_package": "kf6-kio",
+    "version": "6.30.0-0supralinux10",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6kiocore6",
+    "source_package": "kf6-kio",
+    "version": "6.30.0-0supralinux10",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6kiofilewidgets6",
+    "source_package": "kf6-kio",
+    "version": "6.30.0-0supralinux10",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6kiogui6",
+    "source_package": "kf6-kio",
+    "version": "6.30.0-0supralinux10",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6kiowidgets6",
+    "source_package": "kf6-kio",
+    "version": "6.30.0-0supralinux10",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6itemviews-data",
+    "source_package": "kf6-kitemviews",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6itemviews-dev",
+    "source_package": "kf6-kitemviews",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6itemviews6",
+    "source_package": "kf6-kitemviews",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6jobwidgets-data",
+    "source_package": "kf6-kjobwidgets",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6jobwidgets-dev",
+    "source_package": "kf6-kjobwidgets",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6jobwidgets6",
+    "source_package": "kf6-kjobwidgets",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "python3-kf6jobwidgets",
+    "source_package": "kf6-kjobwidgets",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6notifications-data",
+    "source_package": "kf6-knotifications",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6notifications-dev",
+    "source_package": "kf6-knotifications",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6notifications6",
+    "source_package": "kf6-knotifications",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "python3-kf6notifications",
+    "source_package": "kf6-knotifications",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-notifications",
+    "source_package": "kf6-knotifications",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6service-bin",
+    "source_package": "kf6-kservice",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6service-data",
+    "source_package": "kf6-kservice",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6service-dev",
+    "source_package": "kf6-kservice",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6service6",
+    "source_package": "kf6-kservice",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "kwallet6",
+    "source_package": "kf6-kwallet",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6wallet-data",
+    "source_package": "kf6-kwallet",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6wallet-dev",
+    "source_package": "kf6-kwallet",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6wallet6",
+    "source_package": "kf6-kwallet",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6walletbackend6",
+    "source_package": "kf6-kwallet",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6widgetsaddons-data",
+    "source_package": "kf6-kwidgetsaddons",
+    "version": "6.30.0-0supralinux7",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6widgetsaddons-dev",
+    "source_package": "kf6-kwidgetsaddons",
+    "version": "6.30.0-0supralinux7",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6widgetsaddons6",
+    "source_package": "kf6-kwidgetsaddons",
+    "version": "6.30.0-0supralinux7",
+    "architecture": "amd64"
+  },
+  {
+    "package": "python3-kwidgetsaddons",
+    "source_package": "kf6-kwidgetsaddons",
+    "version": "6.30.0-0supralinux7",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6windowsystem-data",
+    "source_package": "kf6-kwindowsystem",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6windowsystem-dev",
+    "source_package": "kf6-kwindowsystem",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6windowsystem6",
+    "source_package": "kf6-kwindowsystem",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-kwindowsystem",
+    "source_package": "kf6-kwindowsystem",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6solid-bin",
+    "source_package": "kf6-solid",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6solid-data",
+    "source_package": "kf6-solid",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6solid-dev",
+    "source_package": "kf6-solid",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6solid6",
+    "source_package": "kf6-solid",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  }
+]

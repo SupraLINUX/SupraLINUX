@@ -791,3 +791,28 @@ empty dpkg state passes; no host package was installed. Earlier inherited source
 retention gaps and hosted evidence scopes remain explicitly preserved. Candidate
 packaging bytes, version, KDE source and Ubuntu Qt did not change. A new
 clean authoritative input/Ubuntu baseline preflight is required before Attempt 1.
+
+KGlobalAccelD input preflight 29 on source
+`b34844abeaa142abe4cf39c404c3545e63eb9bd2`, run 37857697325/job 113585745622,
+closed `INFRA_INVALID` during original Ubuntu client CMake generation. The clean
+retained-input transport probe installed all 106 exact binaries and passed its
+consumer. Ubuntu's original KGlobalAccelD export references `Qt6::GuiPrivate`,
+which the test client had not discovered. No client or candidate package ran;
+no package Attempt was consumed. Original artifact
+`4ee5f92c476a5da5ffbc02a103b4c14fc9c43a4c87fbcedff347602eaf78b84a`,
+raw logs and host seal
+`6992165bea9b9f18edf49b37cddbe871bccc75b457e4f8459ae01fcc7822f424`
+are retained. Direct cleanup verified VM, runner 250 and writable-overlay absence
+and preservation of the golden and milestone images.
+
+The reviewed fixture now explicitly discovers the original Qt private target
+and declares the frozen matching Ubuntu private SDK in both baseline setup and
+installed-test dependencies. A small consumer using actual original Ubuntu
+KGlobalAccelD/KGlobalAccel exports reproduced the missing-target failure and
+compiled successfully with explicit discovery. Private include paths were
+relocated to the extracted exact authenticated Ubuntu SDK; original runtime
+libraries and target definitions were preserved. No mock target, host SDK
+installation, Qt transition or KDE source change was introduced. The original
+negative and positive logs are retained with preflight 29. This certifies the
+local mechanism only; the complete original Ubuntu client and candidate package
+still require their fresh authoritative KVM gates.

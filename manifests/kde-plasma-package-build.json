@@ -6215,7 +6215,7 @@
         "dependencies": "25-node exact eligible Frameworks and retained support closure, 106 binaries. Preserve all original evidence scopes and the current KConfig repair. Actual KIconThemes and KIO binary metadata also require matched Breeze Icons and KDocTools support inputs, independently restored and digest/source/version/architecture checked. Preserve the source-required frozen matching Ubuntu Qt6GuiPrivate 6.10.2+dfsg-7 dependency and inherited XCB/RECORD/XKB/KEYSYMS/XTEST build profile. Fresh authoritative transport and original Ubuntu baseline are mandatory before the first candidate Attempt. Include the matched python3-kcoreaddons retained binary required by selected python3-kf6jobwidgets metadata.",
         "licensing": "Preserve original authenticated Ubuntu copyright; CC0 applies explicitly to new integration fixtures/client/control/private-session code only.",
         "profile": "No upstream patch, removal of legacy D-Bus API, backend exclusion, host SDK installation or Qt replacement. Verify installed XCB plugin, SONAME, all binary versions and service/autostart payloads; Wayland/KWin/global external application/hardware/full-session integration remains later QA.",
-        "tests": "All three official registered native CTests enabled with fatal failures and serial scheduling, because upstream uses shared test-mode configuration and D-Bus names inside the disposable sbuild account. Private Xvfb/D-Bus fixture reaps owned processes. Actual Ubuntu public SDK and daemon receive real owned XTEST keys and pass QAction activation, legacy methods/defaults/conflict, block/unblock and removal; shipped KGlobalAccelD C++ SDK client passes getters/setters/defaults/foreign setter/removal. Both executable bytes are retained unchanged after APT upgrade; Qt provider identities unchanged. Separate consumer requires exact installed candidate CMake version. Local Ubuntu private wrapper/cleanup PASS; authoritative baseline, native and candidate package execution pending. Follow-up: native-suite output is inherited by the sbuild log; an actual CTest execution and fatal failure control were verified locally. HOME and writable XDG paths are private. Runtime-directory and every owned process-group absence are checked. Unchanged original Ubuntu application and library clients pass again with the revised fixture."
+        "tests": "All three official registered native CTests enabled with fatal failures and serial scheduling, because upstream uses shared test-mode configuration and D-Bus names inside the disposable sbuild account. Private Xvfb/D-Bus fixture reaps owned processes. Actual Ubuntu public SDK and daemon receive real owned XTEST keys and pass QAction activation, legacy methods/defaults/conflict, block/unblock and removal; shipped KGlobalAccelD C++ SDK client passes getters/setters/defaults/foreign setter/removal. Both executable bytes are retained unchanged after APT upgrade; Qt provider identities unchanged. Separate consumer requires exact installed candidate CMake version. Local Ubuntu private wrapper/cleanup PASS; authoritative baseline, native and candidate package execution pending. Follow-up: native-suite output is inherited by the sbuild log; an actual CTest execution and fatal failure control were verified locally. HOME and writable XDG paths are private. Runtime-directory and every owned process-group absence are checked. Unchanged original Ubuntu application and library clients pass again with the revised fixture. Original Ubuntu CMake preflight29 exposed omitted Qt6GuiPrivate discovery; exact private SDK dependency and target discovery are now explicit. Actual original export negative/positive compile probe PASS, with fresh complete KVM baseline still required."
       },
       "packaging_sha256": {
         "README.source": "d2fc4786f4814848f364e4d8cc7e293fd836e1732329df1deaa1ce125f3a0317",
@@ -6230,13 +6230,13 @@
         "rules": "46b648dd0987b7d871dccc3caf908cdf324674a251facc5eeced7cb402230a5e",
         "salsa-ci.yml": "64bfb6be33af05cd116d8bee786f95e7b2aaa9faa54e90333151a7a05ef03058",
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
-        "tests/baseline-setup": "1fc1827b12cb43d06698142fdfbca3d7753d82419acf484563e5f8e9dab30570",
-        "tests/client/CMakeLists.txt": "b170f401fdd129911360f9a4cda54430f0429796ee950b375b24f8c1a5b9c509",
+        "tests/baseline-setup": "7df8b2d67b0c9b2544ace43c5df0fa758e1ea4339356e87cc177dfec2f4e018c",
+        "tests/client/CMakeLists.txt": "201505220a0cb84fb7060f5dc39f555c75dc28eecf134d37774e8d57fc7b4d9b",
         "tests/client/library.cpp": "01ccf06d2127094e8eeea1af84ce2bfbc172d0cc7dd05f120c206c6b45b6a2d3",
         "tests/client/main.cpp": "4b850a1e2d8b10d3f8b46c72117c1a5b4511e9c112aeaa27f4e70e397bf7c60c",
         "tests/client/run-private.py": "a5022bb899fb06db7fd1b9712c4f4879e804314415346c7ec564e85767579789",
         "tests/consumer": "5cfd1f36d145295b35655d8feb1eb8fd264e1c552134475710612ada9732c718",
-        "tests/control": "80a04862f54561b4143b8bd5179dced8afdd3e34bda6cc62eed8cd4176bb6cec",
+        "tests/control": "1164569f9d66ba83086a928a31ae93dc0110464a7fc3da606bfc158915a4cd27",
         "tests/ubuntu-abi-client": "981d9f3ba475c9f6d5935e437b3324087d7c7b226fcb349d6b90364384ebe9ef",
         "tests/upstream-session": "d0e37f948f417742f50d5d2c0da9fe9b0548e5135ea3123744ace956fa567595",
         "upstream/metadata": "008e982500654a516549b956e8bf9d72a38acee5cc7c0fcd376f9082b8dd052c",
@@ -6721,6 +6721,12 @@
       "sha256": "68409b9e4c964dfbe632bcafc47391d322b0276cff4633d8fa09240623ba7b07",
       "cause": "The exact retained KIconThemes 6.30 binaries require libkf6breezeicons6 >= 4:6.30.0. The source DAG closure omitted this actual runtime support input; the clean sbuild transport probe could not install all reviewed binaries. Candidate package execution and original Ubuntu baseline did not start.",
       "repair": "Add the exact eligible retained Breeze Icons support closure, preserve its original hosted evidence scope, verify all binary identity/digests and isolated empty-state APT resolution, then revalidate authoritative inputs on a fresh disposable KVM before the first candidate Attempt. The isolated APT check also found the KIO runtime requirement for matched KDocTools; include its retained support binaries and closure before KVM retry. Preserve selected Python bindings and include exact python3-kcoreaddons required by python3-kf6jobwidgets."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kglobalacceld-preflight29/verification.json",
+      "sha256": "3960073d6c28d43259730896318849c82ba1c3e43284cb7132deae4541f08a2d",
+      "cause": "The clean retained-input transport probe installed all 106 exact binaries successfully. Original Ubuntu KGlobalAccelD CMake export references Qt6::GuiPrivate; the integration client did not discover this target. CMake generation stopped baseline setup before any client or candidate package execution. No package Attempt consumed.",
+      "repair": "Explicitly discover the existing Ubuntu Qt6GuiPrivate target in original and candidate client CMake, declare the frozen matching qt6-base-private-dev 6.10.2+dfsg-7 in baseline/test dependencies, and repeat clean KVM input preflight. A small real original Ubuntu export probe reproduced the missing-target failure and compiled the repaired public SDK consumer successfully; extracted exact private includes and original runtime libraries were used without host installation or mock targets."
     }
   ]
 }
