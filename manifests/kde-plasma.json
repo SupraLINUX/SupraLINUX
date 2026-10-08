@@ -180,7 +180,7 @@
       "consumes_package_attempt": false
     },
     "authorized_package_nodes": [
-      "kwayland"
+      "libkscreen"
     ],
     "package_build_manifest": "manifests/kde-plasma-package-build.json"
   },

@@ -1,0 +1,6 @@
+usr/bin/kscreen-doctor
+usr/lib/*/libexec/kf6/kscreen_backend_launcher
+usr/lib/*/qt6/plugins/kf6/kscreen/*
+usr/lib/systemd/user/plasma-kscreen.service
+usr/share/dbus-1/services/org.kde.kscreen.service
+usr/share/zsh/site-functions/_kscreen-doctor

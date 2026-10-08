@@ -1,0 +1,34 @@
+SupraLINUX integration review for LibKScreen 6.7.5
+
+Preserve signed official upstream sources, Ubuntu epoch 4, both SONAME 8
+libraries, six ordinary binary packages, all original symbol guards, SDK,
+QCH, translations, D-Bus/systemd helpers and Fake/KWayland/XRandR backends.
+Use only exact eligible ECM 6.30.0-0supralinux3 and authoritative supplementary
+Plasma Wayland Protocols 1.22.0-0supralinux1, with transport certified before
+package execution. Ubuntu Qt 6.10.2, Wayland 1.24 and XCB providers remain.
+
+Enable all eight upstream registered automated CTests. An owned session wrapper
+replaces each upstream dbus-launch invocation with dbus-run-session to reap the
+bus when its test exits. Its isolated data directory advertises the built
+backend launcher, and QT_PLUGIN_PATH selects built plugins. Full verbose row
+results, skips and generated native test discovery must remain in evidence.
+Upstream explicitly does not register its KF6::WaylandServer dependent tests
+in KF6; the early return also prevents optional native XRandR tests. Do not
+claim those tests executed or repair KDE upstream in this packaging overlay.
+
+The installed public API fixture uses owned D-Bus and Xvfb. The installed Fake
+backend checks get/set configuration, EDID, mode persistence, independent
+cloning, monitor signals, output disconnect/reconnect and insertion/removal.
+The installed real XRandR backend separately reads the private virtual screen,
+its output and mode. ScreenDpms is constructed on real X11 and must report that
+Xvfb has no DPMS support or pending changes; no power switching is attempted.
+The same actual Ubuntu SDK binary is retained by digest and run after normal
+APT upgrade, then a consumer is rebuilt against exact installed KF6Screen
+6.7.5. Qt, Wayland and XCB runtime versions stay unchanged. Both libraries,
+all six package versions, every backend, helper and installed QCH are checked.
+All owned launchers, buses and virtual servers are reaped.
+
+Physical monitors, actual DPMS switching, Wayland output management and
+compositor/hardware/session integration remain mandatory later QA. This
+fixture does not certify them. Local Ubuntu SDK preparation passed both Fake
+and real XRandR cases; authoritative package execution is still pending.

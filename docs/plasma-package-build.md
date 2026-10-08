@@ -672,3 +672,39 @@ and direct VM/runner 239/writable-overlay cleanup checks are retained under
 milestone images remain preserved. Candidate sbuild, lintian and installed tests
 did not run, so no new package Attempt was consumed. The current lifecycle now
 authorizes revision 2's candidate build after publication and Repository Policy.
+
+KWayland `4:6.7.5-0supralinux2` Attempt 2 closed authoritative PASS on source
+`3e889e04f3229fe07aeab7b12bc24a15cb42da9a`, run 37705452980/job 113078615837.
+Clean sbuild, lintian and both installed tests (`ubuntu-abi-client`, `consumer`)
+passed. The original Ubuntu client/server binaries remained unchanged across the
+APT upgrade; their actual private Wayland exchanges and the rebuilt consumer
+passed against the selected protocol SDK. Epoch 4, SONAME 6, four binary packages,
+QCH/data payloads and original symbol guards remain preserved. Upstream manual
+clients compiled; no automated CTests are registered upstream. The original
+revision 1 lintian failure and intervening infrastructure incidents stay intact.
+
+The original artifact 11521014122 has ZIP SHA-256
+`6b91c079662c80ee8936d04d3a27fd5c47244488499526b580447a11145a66c2`.
+Sources, four binaries and debug output, buildinfo, changes and full logs are
+retained independently of Actions expiry; empty-cache offline restoration and
+evidence validation passed. Original non-fatal lintian warnings remain retained.
+Host seal `7c26081b9d9349f7fd4dcfe24a72e3a543112c155c44bfe492f2ba8061a4a586`
+and direct VM/runner 240/writable-overlay removal checks are recorded under
+`manifests/evidence/plasma/kwayland-attempt2/`. Golden and milestone images remain
+preserved. This is the sixteenth Level 0 component closure; the supplementary
+protocol provider remains a separate count. Real desktop/compositor QA remains
+pending.
+
+LibKScreen `4:6.7.5-0supralinux1` is now individually admitted for its input
+preflight. Its reviewed overlay preserves six binaries, both SONAME 8 libraries,
+original symbols, backend plugins, helpers and QCH. Exact ECM 6.30.0 and Plasma
+Wayland Protocols 1.22.0 inputs are requested without inventing a KWayland library
+dependency. Eight registered upstream CTests are enabled on private D-Bus
+sessions; unavailable upstream WaylandServer suites are explicitly outside that
+count. The reviewed Ubuntu ABI client exercises actual Fake/D-Bus configuration,
+EDID/modes/cloning, monitor/hotplug signals and owned Xvfb XRandR discovery, with
+unsupported ScreenDpms properties checked separately from hardware power changes.
+An unchanged Ubuntu client after APT upgrade and rebuilt SDK consumer are
+required. Local preparation does not certify the candidate, and no LibKScreen
+package Attempt has started. Publication, Repository Policy and its authoritative
+input preflight remain gates before candidate execution.
