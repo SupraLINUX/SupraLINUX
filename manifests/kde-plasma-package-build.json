@@ -5693,7 +5693,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -5806,6 +5806,10 @@
       "sha256": "6e070aefdcf9cda192c43b078cb4b31b637f3f086cf35cfcbaa189797f236c92",
       "applicable": false,
       "inapplicability_reason": "Candidate 4:6.7.5-0supralinux3 changes version and reviewed packaging to address observed upstream ABI metadata after retained lintian FAIL; preserve original input PASS and revalidate changed current inputs."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/libkscreen-preflight26/verification.json",
+      "sha256": "65785b9e48522aa5d87a3daf429e0b797dd5a4aefc03d496be8f751e4582808b"
     }
   ],
   "package_input_incidents": [
