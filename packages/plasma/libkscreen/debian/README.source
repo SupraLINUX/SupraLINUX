@@ -38,3 +38,11 @@ Original EDID deviceId assertions require vendor names from /usr/share/hwdata/pn
 Retain original FAIL/source/log archive; no candidate binary, lintian or
 installed-candidate test result existed. Original native tests, assertions,
 upstream source, symbol guards and Qt provider remain unchanged.
+
+Packaging revision 4:6.7.5-0supralinux3 adds only 9 observed new ABI symbols
+to libkf6screen8.symbols at upstream floor 4:6.7.5.
+Attempt 2 clean sbuild and all nine original native tests passed. The only lintian error is nine new ABI symbols generated with the complete Debian packaging version rather than the upstream floor.
+The prior clean build and original native suite passed; lintian failed and
+installed-candidate tests were not run. Complete source/binary/buildinfo/changes
+and raw logs are preserved offline. Existing symbol lines and floors, signed
+upstream source, test assertions, Build-Depends and Qt provider remain unchanged.

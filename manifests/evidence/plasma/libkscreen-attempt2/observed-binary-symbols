@@ -1,4 +1,3 @@
-# SymbolsHelper-Confirmed: 4:6.6.0 amd64 amd64v3 arm64 armhf ppc64el riscv64 s390x
 libKF6Screen.so.8 libkf6screen8 #MINVER#, libkscreen-bin
 * Build-Depends-Package: libkscreen-dev
  _ZGVZN9QMetaType21registerConverterImplI14QSharedPointerIN7KScreen4ModeEEP7QObjectEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 4:6.1.0
@@ -75,8 +74,6 @@ libKF6Screen.so.8 libkf6screen8 #MINVER#, libkscreen-bin
  _ZN7KScreen16ConfigSerializer13serializeModeERK14QSharedPointerINS_4ModeEE@Base 4:6.1.0
  _ZN7KScreen16ConfigSerializer13serializeSizeERK5QSize@Base 4:6.1.0
  _ZN7KScreen16ConfigSerializer14serializePointERK6QPoint@Base 4:6.1.0
- (optional=templinst|arch=armhf riscv64)_ZN7KScreen16ConfigSerializer15deserializeListI7QStringEE5QListIT_ERK13QDBusArgument@Base 4:6.1.0
- (optional=templinst|arch=armhf riscv64)_ZN7KScreen16ConfigSerializer15deserializeListIiEE5QListIT_ERK13QDBusArgument@Base 4:6.1.0
  _ZN7KScreen16ConfigSerializer15deserializeModeERK13QDBusArgument@Base 4:6.1.0
  _ZN7KScreen16ConfigSerializer15deserializeSizeERK13QDBusArgument@Base 4:6.1.0
  _ZN7KScreen16ConfigSerializer15serializeConfigERK14QSharedPointerINS_6ConfigEE@Base 4:6.1.0
@@ -151,7 +148,6 @@ libKF6Screen.so.8 libkf6screen8 #MINVER#, libkscreen-bin
  _ZN7KScreen6Config12removeOutputEi@Base 4:6.1.0
  _ZN7KScreen6Config13outputRemovedEi@Base 4:6.1.0
  _ZN7KScreen6Config16adjustPrioritiesESt8optionalI14QSharedPointerINS_6OutputEEE@Base 4:6.1.0
- (arch=amd64v3)_ZN7KScreen6Config16setPrimaryOutputERK14QSharedPointerINS_6OutputEE@Base 4:6.6.0
  _ZN7KScreen6Config16staticMetaObjectE@Base 4:6.1.0
  _ZN7KScreen6Config17prioritiesChangedEv@Base 4:6.1.0
  _ZN7KScreen6Config17setOutputPriorityERK14QSharedPointerINS_6OutputEEj@Base 4:6.1.0
@@ -171,10 +167,9 @@ libKF6Screen.so.8 libkf6screen8 #MINVER#, libkscreen-bin
  _ZN7KScreen6Output10posChangedEv@Base 4:6.1.0
  _ZN7KScreen6Output10setDimmingEd@Base 4:6.2.90
  _ZN7KScreen6Output10setEnabledEb@Base 4:6.1.0
- (arch=amd64v3)_ZN7KScreen6Output10setPrimaryEb@Base 4:6.6.0
  _ZN7KScreen6Output11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:6.1.0
  _ZN7KScreen6Output11qt_metacastEPKc@Base 4:6.1.0
- _ZN7KScreen6Output11setAbmLevelEj@Base 4:6.7.5
+ _ZN7KScreen6Output11setAbmLevelEj@Base 4:6.7.5-0supralinux2
  _ZN7KScreen6Output11setOverscanEj@Base 4:6.1.0
  _ZN7KScreen6Output11setPriorityEj@Base 4:6.1.0
  _ZN7KScreen6Output11setRgbRangeENS0_8RgbRangeE@Base 4:6.1.0
@@ -195,8 +190,8 @@ libKF6Screen.so.8 libkf6screen8 #MINVER#, libkscreen-bin
  _ZN7KScreen6Output13setWcgEnabledEb@Base 4:6.1.0
  _ZN7KScreen6Output13vendorChangedEv@Base 4:6.2.90
  _ZN7KScreen6Output14dimmingChangedEv@Base 4:6.2.90
- (arch=!amd64v3)_ZN7KScreen6Output14setCustomModesERK5QListINS_8ModeInfoEE@Base 4:6.6.0
- _ZN7KScreen6Output15abmLevelChangedEv@Base 4:6.7.5
+ _ZN7KScreen6Output14setCustomModesERK5QListINS_8ModeInfoEE@Base 4:6.6.0
+ _ZN7KScreen6Output15abmLevelChangedEv@Base 4:6.7.5-0supralinux2
  _ZN7KScreen6Output15overscanChangedEv@Base 4:6.1.0
  _ZN7KScreen6Output15priorityChangedEv@Base 4:6.1.0
  _ZN7KScreen6Output15rgbRangeChangedEv@Base 4:6.1.0
@@ -216,7 +211,7 @@ libKF6Screen.so.8 libkf6screen8 #MINVER#, libkscreen-bin
  _ZN7KScreen6Output17setIccProfilePathERK7QString@Base 4:6.1.0
  _ZN7KScreen6Output17setPreferredModesERK5QListI7QStringE@Base 4:6.1.0
  _ZN7KScreen6Output17wcgEnabledChangedEv@Base 4:6.1.0
- (arch=!amd64v3)_ZN7KScreen6Output18customModesChangedEv@Base 4:6.6.0
+ _ZN7KScreen6Output18customModesChangedEv@Base 4:6.6.0
  _ZN7KScreen6Output18isConnectedChangedEv@Base 4:6.1.0
  _ZN7KScreen6Output18setMaxBitsPerColorEj@Base 4:6.3.91
  _ZN7KScreen6Output19capabilitiesChangedEv@Base 4:6.1.0
@@ -227,31 +222,31 @@ libKF6Screen.so.8 libkf6screen8 #MINVER#, libkscreen-bin
  _ZN7KScreen6Output20minBrightnessChangedEv@Base 4:6.1.0
  _ZN7KScreen6Output20sdrBrightnessChangedEv@Base 4:6.1.0
  _ZN7KScreen6Output20setBitsPerColorRangeENS0_8BpcRangeE@Base 4:6.3.91
- _ZN7KScreen6Output20setHdrIccProfilePathERK7QString@Base 4:6.7.5
+ _ZN7KScreen6Output20setHdrIccProfilePathERK7QString@Base 4:6.7.5-0supralinux2
  _ZN7KScreen6Output20setMaxPeakBrightnessEd@Base 4:6.1.0
  _ZN7KScreen6Output20setReplicationSourceEi@Base 4:6.1.0
  _ZN7KScreen6Output21iccProfilePathChangedEv@Base 4:6.1.0
  _ZN7KScreen6Output21setColorProfileSourceENS0_18ColorProfileSourceE@Base 4:6.1.0
  _ZN7KScreen6Output22maxBitsPerColorChangedEv@Base 4:6.3.91
- (arch=!amd64v3)_ZN7KScreen6Output22setAutomaticBrightnessEb@Base 4:6.6.0
+ _ZN7KScreen6Output22setAutomaticBrightnessEb@Base 4:6.6.0
  _ZN7KScreen6Output22setExplicitLogicalSizeERK6QSizeF@Base 4:6.1.0
  _ZN7KScreen6Output22setFollowPreferredModeEb@Base 4:6.1.0
  _ZN7KScreen6Output23autoRotatePolicyChangedEv@Base 4:6.1.0
  _ZN7KScreen6Output23sdrGamutWidenessChangedEv@Base 4:6.1.0
  _ZN7KScreen6Output23setColorPowerPreferenceENS0_18ColorPowerTradeoffE@Base 4:6.2.90
  _ZN7KScreen6Output23setMaxAverageBrightnessEd@Base 4:6.1.0
- _ZN7KScreen6Output24hdrIccProfilePathChangedEv@Base 4:6.7.5
+ _ZN7KScreen6Output24hdrIccProfilePathChangedEv@Base 4:6.7.5-0supralinux2
  _ZN7KScreen6Output24maxPeakBrightnessChangedEv@Base 4:6.1.0
  _ZN7KScreen6Output24replicationSourceChangedEv@Base 4:6.1.0
- _ZN7KScreen6Output24setHdrColorProfileSourceENS0_18ColorProfileSourceE@Base 4:6.7.5
+ _ZN7KScreen6Output24setHdrColorProfileSourceENS0_18ColorProfileSourceE@Base 4:6.7.5-0supralinux2
  _ZN7KScreen6Output24setMinBrightnessOverrideESt8optionalIdE@Base 4:6.1.0
  _ZN7KScreen6Output25colorProfileSourceChangedEv@Base 4:6.1.0
- (arch=!amd64v3)_ZN7KScreen6Output26automaticBrightnessChangedEv@Base 4:6.6.0
+ _ZN7KScreen6Output26automaticBrightnessChangedEv@Base 4:6.6.0
  _ZN7KScreen6Output26explicitLogicalSizeChangedEv@Base 4:6.1.0
  _ZN7KScreen6Output26followPreferredModeChangedEb@Base 4:6.1.0
  _ZN7KScreen6Output27colorPowerPreferenceChangedEv@Base 4:6.2.90
  _ZN7KScreen6Output27maxAverageBrightnessChangedEv@Base 4:6.1.0
- _ZN7KScreen6Output28hdrColorProfileSourceChangedEv@Base 4:6.7.5
+ _ZN7KScreen6Output28hdrColorProfileSourceChangedEv@Base 4:6.7.5-0supralinux2
  _ZN7KScreen6Output28minBrightnessOverrideChangedEv@Base 4:6.1.0
  _ZN7KScreen6Output28setMaxPeakBrightnessOverrideESt8optionalIdE@Base 4:6.1.0
  _ZN7KScreen6Output31setMaxAverageBrightnessOverrideESt8optionalIdE@Base 4:6.1.0
@@ -297,7 +292,7 @@ libKF6Screen.so.8 libkf6screen8 #MINVER#, libkscreen-bin
  _ZN7KScreen6ScreenD0Ev@Base 4:6.1.0
  _ZN7KScreen6ScreenD1Ev@Base 4:6.1.0
  _ZN7KScreen6ScreenD2Ev@Base 4:6.1.0
- (arch=!amd64v3)_ZN7KScreen8ModeInfo16staticMetaObjectE@Base 4:6.6.0
+ _ZN7KScreen8ModeInfo16staticMetaObjectE@Base 4:6.6.0
  _ZNK7KScreen13ConfigMonitor10metaObjectEv@Base 4:6.1.0
  _ZNK7KScreen14BackendManager10metaObjectEv@Base 4:6.1.0
  _ZNK7KScreen14BackendManager6configEv@Base 4:6.1.0
@@ -357,7 +352,7 @@ libKF6Screen.so.8 libkf6screen8 #MINVER#, libkscreen-bin
  _ZNK7KScreen6Output10brightnessEv@Base 4:6.1.0
  _ZNK7KScreen6Output10metaObjectEv@Base 4:6.1.0
  _ZNK7KScreen6Output11currentModeEv@Base 4:6.1.0
- (arch=!amd64v3)_ZNK7KScreen6Output11customModesEv@Base 4:6.6.0
+ _ZNK7KScreen6Output11customModesEv@Base 4:6.6.0
  _ZNK7KScreen6Output11isConnectedEv@Base 4:6.1.0
  _ZNK7KScreen6Output12capabilitiesEv@Base 4:6.1.0
  _ZNK7KScreen6Output12ddcCiAllowedEv@Base 4:6.3.80
@@ -376,16 +371,16 @@ libKF6Screen.so.8 libkf6screen8 #MINVER#, libkscreen-bin
  _ZNK7KScreen6Output16enforcedModeSizeEv@Base 4:6.1.0
  _ZNK7KScreen6Output16sdrGamutWidenessEv@Base 4:6.1.0
  _ZNK7KScreen6Output17bitsPerColorRangeEv@Base 4:6.3.91
- _ZNK7KScreen6Output17hdrIccProfilePathEv@Base 4:6.7.5
+ _ZNK7KScreen6Output17hdrIccProfilePathEv@Base 4:6.7.5-0supralinux2
  _ZNK7KScreen6Output17maxPeakBrightnessEv@Base 4:6.1.0
  _ZNK7KScreen6Output17replicationSourceEv@Base 4:6.1.0
  _ZNK7KScreen6Output18colorProfileSourceEv@Base 4:6.1.0
- (arch=!amd64v3)_ZNK7KScreen6Output19automaticBrightnessEv@Base 4:6.6.0
+ _ZNK7KScreen6Output19automaticBrightnessEv@Base 4:6.6.0
  _ZNK7KScreen6Output19explicitLogicalSizeEv@Base 4:6.1.0
  _ZNK7KScreen6Output19followPreferredModeEv@Base 4:6.1.0
  _ZNK7KScreen6Output20colorPowerPreferenceEv@Base 4:6.2.90
  _ZNK7KScreen6Output20maxAverageBrightnessEv@Base 4:6.1.0
- _ZNK7KScreen6Output21hdrColorProfileSourceEv@Base 4:6.7.5
+ _ZNK7KScreen6Output21hdrColorProfileSourceEv@Base 4:6.7.5-0supralinux2
  _ZNK7KScreen6Output21minBrightnessOverrideEv@Base 4:6.1.0
  _ZNK7KScreen6Output22explicitLogicalSizeIntEv@Base 4:6.1.0
  _ZNK7KScreen6Output25maxPeakBrightnessOverrideEv@Base 4:6.1.0
@@ -410,7 +405,7 @@ libKF6Screen.so.8 libkf6screen8 #MINVER#, libkscreen-bin
  _ZNK7KScreen6Output6vendorEv@Base 4:6.2.90
  _ZNK7KScreen6Output7dimmingEv@Base 4:6.2.90
  _ZNK7KScreen6Output7hashMd5Ev@Base 4:6.1.0
- _ZNK7KScreen6Output8abmLevelEv@Base 4:6.7.5
+ _ZNK7KScreen6Output8abmLevelEv@Base 4:6.7.5-0supralinux2
  _ZNK7KScreen6Output8geometryEv@Base 4:6.1.0
  _ZNK7KScreen6Output8overscanEv@Base 4:6.1.0
  _ZNK7KScreen6Output8priorityEv@Base 4:6.1.0
@@ -419,7 +414,6 @@ libKF6Screen.so.8 libkf6screen8 #MINVER#, libkscreen-bin
  _ZNK7KScreen6Output8typeNameEv@Base 4:6.1.0
  _ZNK7KScreen6Output9edrPolicyEv@Base 4:6.3.91
  _ZNK7KScreen6Output9isEnabledEv@Base 4:6.1.0
- (arch=amd64v3)_ZNK7KScreen6Output9isPrimaryEv@Base 4:6.6.0
  _ZNK7KScreen6Output9sharpnessEv@Base 4:6.4.90
  _ZNK7KScreen6Output9vrrPolicyEv@Base 4:6.1.0
  _ZNK7KScreen6Screen10metaObjectEv@Base 4:6.1.0
@@ -429,9 +423,6 @@ libKF6Screen.so.8 libkf6screen8 #MINVER#, libkscreen-bin
  _ZNK7KScreen6Screen5cloneEv@Base 4:6.1.0
  _ZNK7KScreen6Screen7maxSizeEv@Base 4:6.1.0
  _ZNK7KScreen6Screen7minSizeEv@Base 4:6.1.0
- (optional=templinst|arch=armhf riscv64)_ZNKSt8_Rb_treeI7QStringSt4pairIKS0_8QVariantESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE4findERS2_@Base 4:6.1.0
- (optional=templinst|arch=armhf riscv64)_ZNSt8_Rb_treeI7QStringSt4pairIKS0_8QVariantESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE24_M_get_insert_unique_posERS2_@Base 4:6.1.0
- (optional=templinst|arch=armhf riscv64)_ZNSt8_Rb_treeI7QStringSt4pairIKS0_8QVariantESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE29_M_get_insert_hint_unique_posESt23_Rb_tree_const_iteratorIS4_ERS2_@Base 4:6.1.0
  _ZSt19piecewise_construct@Base 4:6.3.80
  _ZTIN7KScreen13ConfigMonitorE@Base 4:6.1.0
  _ZTIN7KScreen14BackendManagerE@Base 4:6.1.0
@@ -489,16 +480,16 @@ libKF6Screen.so.8 libkf6screen8 #MINVER#, libkscreen-bin
  _ZTVN7KScreen6ConfigE@Base 4:6.1.0
  _ZTVN7KScreen6OutputE@Base 4:6.1.0
  _ZTVN7KScreen6ScreenE@Base 4:6.1.0
- (optional=templinst)_ZZN9QMetaType21registerConverterImplI14QSharedPointerIN7KScreen4ModeEEP7QObjectEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 4:6.1.0
- (optional=templinst)_ZZN9QMetaType21registerConverterImplI14QSharedPointerIN7KScreen6ConfigEEP7QObjectEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 4:6.1.0
- (optional=templinst)_ZZN9QMetaType21registerConverterImplI14QSharedPointerIN7KScreen6OutputEEP7QObjectEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 4:6.1.0
- (optional=templinst)_ZZN9QMetaType21registerConverterImplI14QSharedPointerIN7KScreen6ScreenEEP7QObjectEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 4:6.1.0
- (optional=templinst)_ZZN9QMetaType21registerConverterImplI4QMapI7QString14QSharedPointerIN7KScreen4ModeEEE9QIterableI16QMetaAssociationEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 4:6.1.0
- (optional=templinst)_ZZN9QMetaType21registerConverterImplI4QMapIi14QSharedPointerIN7KScreen6OutputEEE9QIterableI16QMetaAssociationEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 4:6.1.0
- (optional=templinst)_ZZN9QMetaType21registerConverterImplI5QListIiE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 4:6.1.0
- (optional=templinst)_ZZN9QMetaType23registerMutableViewImplI4QMapI7QString14QSharedPointerIN7KScreen4ModeEEE9QIterableI16QMetaAssociationEEEbSt8functionIFbPvSC_EES_S_E10unregister@Base 4:6.1.0
- (optional=templinst)_ZZN9QMetaType23registerMutableViewImplI4QMapIi14QSharedPointerIN7KScreen6OutputEEE9QIterableI16QMetaAssociationEEEbSt8functionIFbPvSB_EES_S_E10unregister@Base 4:6.1.0
- (optional=templinst)_ZZN9QMetaType23registerMutableViewImplI5QListIiE9QIterableI13QMetaSequenceEEEbSt8functionIFbPvS7_EES_S_E10unregister@Base 4:6.1.0
+ _ZZN9QMetaType21registerConverterImplI14QSharedPointerIN7KScreen4ModeEEP7QObjectEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 4:6.1.0
+ _ZZN9QMetaType21registerConverterImplI14QSharedPointerIN7KScreen6ConfigEEP7QObjectEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 4:6.1.0
+ _ZZN9QMetaType21registerConverterImplI14QSharedPointerIN7KScreen6OutputEEP7QObjectEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 4:6.1.0
+ _ZZN9QMetaType21registerConverterImplI14QSharedPointerIN7KScreen6ScreenEEP7QObjectEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 4:6.1.0
+ _ZZN9QMetaType21registerConverterImplI4QMapI7QString14QSharedPointerIN7KScreen4ModeEEE9QIterableI16QMetaAssociationEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 4:6.1.0
+ _ZZN9QMetaType21registerConverterImplI4QMapIi14QSharedPointerIN7KScreen6OutputEEE9QIterableI16QMetaAssociationEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 4:6.1.0
+ _ZZN9QMetaType21registerConverterImplI5QListIiE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 4:6.1.0
+ _ZZN9QMetaType23registerMutableViewImplI4QMapI7QString14QSharedPointerIN7KScreen4ModeEEE9QIterableI16QMetaAssociationEEEbSt8functionIFbPvSC_EES_S_E10unregister@Base 4:6.1.0
+ _ZZN9QMetaType23registerMutableViewImplI4QMapIi14QSharedPointerIN7KScreen6OutputEEE9QIterableI16QMetaAssociationEEEbSt8functionIFbPvSB_EES_S_E10unregister@Base 4:6.1.0
+ _ZZN9QMetaType23registerMutableViewImplI5QListIiE9QIterableI13QMetaSequenceEEEbSt8functionIFbPvS7_EES_S_E10unregister@Base 4:6.1.0
  _Zls6QDebugRK14QSharedPointerIN7KScreen4ModeEE@Base 4:6.1.0
  _Zls6QDebugRK14QSharedPointerIN7KScreen6ConfigEE@Base 4:6.1.0
  _Zls6QDebugRK14QSharedPointerIN7KScreen6OutputEE@Base 4:6.1.0

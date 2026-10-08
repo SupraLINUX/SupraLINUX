@@ -5230,7 +5230,7 @@
     "libkscreen": {
       "state": "build-pending",
       "source_package": "libkscreen",
-      "version": "4:6.7.5-0supralinux2",
+      "version": "4:6.7.5-0supralinux3",
       "upstream_version": "6.7.5",
       "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/libkscreen-6.7.5.tar.xz",
       "upstream_sha256": "df317e03acfadfcbc68981b78131750103fadf4d5c5df6368c9e91e698677219",
@@ -5335,24 +5335,44 @@
           "host_evidence_manifest_sha256": "5052b6e1732b0d1ced03123276d0d7b606812925aae45bf3bfb43d1bd4395460",
           "cause": "Clean sbuild omitted hwdata; four original EDID deviceId assertions failed because /usr/share/hwdata/pnp.ids was absent. Seven other KScreen CTests and ECM appstreamtest passed; compiler/linker completed; no binary package, lintian or installed-candidate result.",
           "repair": "Declare hwdata <!nocheck> in Build-Depends and repeat the unchanged native tests in clean sbuild at Debian revision 2; preserve original Attempt 1 source/log archive and input proof."
+        },
+        {
+          "attempt": 2,
+          "state": "FAIL",
+          "original_state": "FAIL",
+          "sbuild_result": "PASS",
+          "lintian_result": "FAIL",
+          "autopkgtest_result": "not-run",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37810899300,
+          "workflow_job_id": 113427160169,
+          "source_commit": "1a4012c956b47cc497ba5f975f8a54472d753929",
+          "artifact_id": 11567717263,
+          "artifact_sha256": "3e22288687ee2e255fc5164c8063add877dc822298acbcb6e76073d18078dc39",
+          "result_path": "manifests/evidence/plasma/libkscreen-attempt2/result.json",
+          "result_sha256": "f81eff923f56bb20099fad2569b7924ca5e344050a16810ea4ce4e23cab918f4",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261008t164024z-2344835",
+          "host_evidence_manifest_sha256": "7c7115c566751de9a2c769b8709b79b6f435250099b03f58dec280bfae807acc",
+          "cause": "Clean sbuild and all nine original native tests passed; lintian rejected nine new upstream symbols whose generated minimum versions included the Debian packaging revision.",
+          "repair": "Add the exact nine observed new libKF6Screen.so.8 ABI symbols at upstream floor 4:6.7.5, preserving all existing symbol floors and the original source/tests/Qt provider; fresh revision and input preflight required."
         }
       ],
       "review": {
         "source": "Signed official stable source unchanged; preserve six binary packages, both SONAME 8 libraries, all original symbol guards, installed backends/helpers, public SDK and QCH.",
-        "version": "Preserve epoch and upstream version; 4:6.7.5-0supralinux2 supersedes retained failed 4:6.7.5-0supralinux1 and the captured Ubuntu reference; prior assignments remain sealed.",
+        "version": "Preserve epoch and upstream version; 4:6.7.5-0supralinux3 supersedes retained failed 4:6.7.5-0supralinux2 and the captured Ubuntu reference; prior assignments remain sealed. Adds only 9 actual new symbols observed in retained 4:6.7.5-0supralinux2 at upstream floor 4:6.7.5; preserves every previous line and minimum version.",
         "dependencies": "Exact eligible ECM 6.30.0-0supralinux3 and authoritative supplementary Plasma Wayland Protocols 1.22.0-0supralinux1; transport identity, digest and exact CMake metadata require KVM input preflight. Matching Ubuntu Qt/private SDK, Wayland and XCB preserved; XRandR and DPMS dependencies remain enabled. No dependency on KWayland library is invented. Declares hwdata <!nocheck> after observed clean native test failure: Original EDID deviceId assertions require vendor names from /usr/share/hwdata/pnp.ids. Attempt 1 omitted hwdata and failed four EDID rows; seven other KScreen tests and ECM AppStream passed.",
         "tests": "All eight upstream registered CTests enabled and verbose, with built-plugin paths and launcher activation on private reaped D-Bus sessions. Installed public Ubuntu ABI client passes Fake/D-Bus config get/set, EDID, modes, cloning, monitor signals and hotplug, plus actual XRandR discovery and unsupported ScreenDpms properties on owned Xvfb. Same unchanged client after APT upgrade and exact SDK rebuilt consumer; clean baseline before candidate execution. Local Ubuntu preparation passed without a package Attempt. Private installed-client wrappers block the host system bus and discard inherited Qt/QML search paths.",
         "licensing": "Preserve authenticated Ubuntu copyright, inherited tests and upstream attribution; explicitly restrict CC0 to newly authored integration fixture/control/session files and private virtual EDID/profile.",
         "profile": "Preserve all Fake/KWayland/XRandR plugins, helper commands, systemd/D-Bus service, documentation and both libraries. Upstream early return omits unavailable KF6::WaylandServer suites and optional native XRandR tests; no claim of execution. Real compositor/output-management, hardware and DPMS power switching remain integration QA."
       },
       "packaging_sha256": {
-        "README.source": "b5e80b1511af4988ad67db0a2e588eeb12b5c6de7e6d02c6e72ef66467b1b8fd",
-        "changelog": "22224eaeac3e1d05ca1504bf65beb0f6627325cbf33601e87bbad3ccf5b4bf14",
+        "README.source": "14ac4a65a443bf7db36d23ff744af63990e8282fbc4980a4bc10c6eaa8205455",
+        "changelog": "b7abc964f6590335458b4def4e54759325df56021e514c817c1bf6d9d9612aab",
         "control": "c6eefc63bc70bed6cfad54a6d2c151dc30f2de55e6600b20dc5853e18961e8bd",
         "copyright": "24bd04539fbc827914b913b5549ea399df357f9df6ed4cb8092c51b0e9395368",
         "libkf6screen8.install": "2e33ea75498761509e6f903fe869a671f9e4bb2e1a478dc9967cab2331e71543",
         "libkf6screen8.lintian-overrides": "d0694d2ba2eeda14981b0e4e1c987749a9d1fa35373d460fc1550ea87de87a96",
-        "libkf6screen8.symbols": "4300f53f67bcd814a0ae67fcee2f381f900fc6ca92190d07bb668f20a5de324b",
+        "libkf6screen8.symbols": "9dd9b6d4e6981cf61190faac5498113a5167e14543867f188e54d2638002cf10",
         "libkf6screendpms8.install": "ea4f1e91a56aafb3315ab497094585496b4dedecb1d11e87309dc71d7b681945",
         "libkf6screendpms8.symbols": "cf70f903a5a4eb717027ae49e7084c1547f69a14de9d8895b0acddadd03553ed",
         "libkscreen-bin.install": "2057b800bb541db7a093e1bb28ea8d83ca136395aea980e67bc062116c5e6c8a",
@@ -5372,7 +5392,7 @@
         "tests/client/run-private.py": "c4989e20a147deb1c508a5db44fe07c1fa138612610f8de02d01565cce6320ff",
         "tests/consumer": "7659a133444640553ffeca058ebeb4c33ef7cbc74d553799b781315a2394cbee",
         "tests/control": "b5389a5f913a651f6603d4e42e987581ea824789776d082f77fe20d6779caf55",
-        "tests/ubuntu-abi-client": "935e4b5c83b22b95454acafc24013f275445f082a98bcd8ecc6b767c8ee0fbbe",
+        "tests/ubuntu-abi-client": "c633c8a1ab4f4d8af8a1afbef12c4ed98bec167e71600719d078826752c82cce",
         "tests/upstream-session": "30a934a1e7f4703aaa51ad3b0eb36b55bf739361488cbd7381254c9e0d143d94",
         "upstream/metadata": "cc3a7b8dbaf700b40056c85c77ec4c3234b53a8a946791952b21446fc69255bb",
         "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
@@ -5587,6 +5607,12 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/libkscreen-attempt1",
       "archive_index_sha256": "67868bf0792126a9f7878fd4d76d5461dd7b1333641833d1bb82d1b5498cf37f"
+    },
+    {
+      "node": "libkscreen",
+      "attempt": 2,
+      "archive_root": ".artifacts/plasma-6.7.5/libkscreen-attempt2",
+      "archive_index_sha256": "76e7870158cb11f2b011a7c4ab6a4787ffb88ef11f7ede4473e7e1be69ff1f54"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
@@ -5667,7 +5693,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -5777,7 +5803,9 @@
     },
     {
       "path": "manifests/evidence/package-revalidation/libkscreen-preflight25/verification.json",
-      "sha256": "6e070aefdcf9cda192c43b078cb4b31b637f3f086cf35cfcbaa189797f236c92"
+      "sha256": "6e070aefdcf9cda192c43b078cb4b31b637f3f086cf35cfcbaa189797f236c92",
+      "applicable": false,
+      "inapplicability_reason": "Candidate 4:6.7.5-0supralinux3 changes version and reviewed packaging to address observed upstream ABI metadata after retained lintian FAIL; preserve original input PASS and revalidate changed current inputs."
     }
   ],
   "package_input_incidents": [
