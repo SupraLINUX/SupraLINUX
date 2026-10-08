@@ -1,0 +1,4 @@
+kscreen.fake: Fake profile file: "/var/tmp/supralinux-libkscreen-baseline/source/profile.json" features QFlags<KScreen::Config::Feature>(None)
+kscreen.fake: set config QMap((1, KScreen::Output(1, "SUPRA1", connected enabled priority 1, pos: QPoint(0,0), res: QSize(1280, 800), modeId: "2", scale: 1, clone: no, rotation: KScreen::Output::None, followPreferredMode: false)))
+kscreen.fake: emitting configChanged in Fake
+kscreen.fake: emitting configChanged in Fake

@@ -1,0 +1,2 @@
+Installed KScreen XRandR backend on private Xvfb, screen/output/mode discovery and unsupported ScreenDpms properties: PASS
+org.kde.kscreen.dpms: DPMS extension not available

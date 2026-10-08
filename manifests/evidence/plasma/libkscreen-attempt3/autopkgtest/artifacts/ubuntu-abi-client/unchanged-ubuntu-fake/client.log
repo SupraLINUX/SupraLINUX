@@ -1,0 +1,3 @@
+Installed KScreen D-Bus/Fake backend, get/set configuration, EDID, mode persistence, cloning, monitor signals and hotplug: PASS
+Installed ScreenDpms construction/properties on private Xvfb without DPMS: PASS; power switching and Wayland remain integration QA
+org.kde.kscreen.dpms: DPMS extension not available

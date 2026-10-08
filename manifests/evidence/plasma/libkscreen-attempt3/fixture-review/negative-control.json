@@ -1,0 +1,9 @@
+{
+  "state": "PASS",
+  "scope": "negative control reproduces original Ubuntu CLI failure before graphical display initialization",
+  "observed_original_exit_code": -6,
+  "shell_exit_status": 134,
+  "original_package_version": "4:6.6.4-0ubuntu1",
+  "private_runtime_removed": true,
+  "package_attempt_consumed": false
+}

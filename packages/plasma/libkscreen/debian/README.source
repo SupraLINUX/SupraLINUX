@@ -46,3 +46,15 @@ The prior clean build and original native suite passed; lintian failed and
 installed-candidate tests were not run. Complete source/binary/buildinfo/changes
 and raw logs are preserved offline. Existing symbol lines and floors, signed
 upstream source, test assertions, Build-Depends and Qt provider remain unchanged.
+
+Packaging revision 4:6.7.5-0supralinux4 runs the kscreen-doctor help smoke check
+in the existing owned Xvfb and closed D-Bus fixture, before and after APT upgrade.
+The separate headless kscreen-doctor --help smoke command aborted with missing X11 display after functional old-client tests passed. Original Ubuntu reproduces the same abort; the unchanged original CLI passes on the existing owned Xvfb/D-Bus fixture. Preserve original FAIL and repeat changed input and candidate gates.
+The prior clean build, all nine native tests and lintian passed; the standalone
+CLI smoke check aborted without a display after the original functional ABI
+clients passed. The separate rebuilt consumer passed. Preserve the original
+package FAIL, complete offline outputs and raw installed-test logs. The original
+Ubuntu CLI reproduced the same missing-display abort and passed on the owned
+fixture with process-group and runtime absence verified. Source, original native
+assertions, functional client commands, symbols, Build-Depends and Qt are unchanged.
+Fresh authoritative input validation and candidate installed tests remain required.
