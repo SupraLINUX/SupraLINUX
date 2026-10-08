@@ -188,6 +188,38 @@ class InputAdmission(unittest.TestCase):
             with self.subTest(broken=broken), self.assertRaises(AssertionError):
                 testing.upstream_test_result(record, broken)
 
+    def test_meson_executes_complete_reviewed_suite_and_preserves_completion_order(self):
+        record = {'upstream_test_backend': 'meson', 'upstream_test_project': 'example',
+                  'upstream_tests': ['first', 'second']}
+        log = ('2/3 example:second OK 0.02s\n1/3 example:first OK 0.01s\n'
+               '3/3 example:additional OK 0.01s\n\nOk: 3\nFail: 0\n')
+        result = testing.upstream_test_result(record, log)
+        self.assertEqual(result['state'], 'PASS')
+        self.assertEqual(result['executed_tests'], ['second', 'first', 'additional'])
+        for broken in [log.replace('OK', 'FAIL', 1), log.replace('OK', 'SKIP', 1),
+                       log.replace('OK', 'TIMEOUT', 1), log.replace('OK', 'EXPECTEDFAIL', 1),
+                       log.replace('example:first', 'other:first'),
+                       log.replace('example:second', 'example:wrong'),
+                       log.replace('example:additional', 'example:first'),
+                       log.replace('1/3', '2/3'), log.replace('/3', '/4', 1),
+                       log.replace('Ok: 3', 'Ok: 2'), log.replace('Fail: 0', 'Fail: 1'),
+                       log.replace('Fail: 0', ''), log + log,
+                       'Ok: 3\nFail: 0\n', log + 'Skipped: 1\n']:
+            with self.subTest(broken=broken), self.assertRaises(AssertionError):
+                testing.upstream_test_result(record, broken)
+
+    def test_meson_requires_reviewed_names_and_project_and_known_backend(self):
+        record = {'upstream_test_backend': 'meson', 'upstream_test_project': 'example',
+                  'upstream_tests': ['first']}
+        log = '1/1 example:first OK 0.01s\nOk: 1\nFail: 0\n'
+        for field, value in [('upstream_tests', []), ('upstream_tests', ['first', 'first']),
+                             ('upstream_test_project', ''), ('upstream_test_project', '../other'),
+                             ('upstream_test_backend', 'unknown')]:
+            bad = copy.deepcopy(record)
+            bad[field] = value
+            with self.subTest(field=field, value=value), self.assertRaises(AssertionError):
+                testing.upstream_test_result(bad, log)
+
     def test_additional_ecm_tests_are_accounted_for(self):
         record = {"upstream_tests": ["decoration"]}
         log = "1/2 Test #1: appstreamtest ..... Passed 0.01 sec\n2/2 Test #2: decoration ..... Passed 0.01 sec\n100% tests passed, 0 tests failed out of 2"

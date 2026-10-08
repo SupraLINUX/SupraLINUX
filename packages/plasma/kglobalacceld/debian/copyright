@@ -1,0 +1,108 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: kglobalacceld
+Source: https://invent.kde.org/plasma/kglobalacceld/
+Upstream-Contact: plasma-devel@kde.org
+
+Files: *
+Copyright: 2022, Ahmad Samir <a.samirh78@gmail.com>
+           2007, Andreas Hartmetz <ahartmetz@gmail.com>
+           2021, David Redondo <kde@david-redondo.de>
+           2001-2002, Ellis Whitehead <ellis@kde.org>
+           2016, Marco Martin <mart@kde.org>
+           2013-2015, Martin Gräßlin <mgraesslin@kde.org>
+           2007-2008, Michael Jansen <kde@michael-jansen.biz>
+           2023, Nicolas Fella <nicolas.fella@gmx.de>
+License: LGPL-2.0-or-later
+
+Files: src/logging.cpp
+       src/logging_p.h
+Copyright: 2015, Martin Gräßlin <mgraesslin@kde.org>
+License: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+
+Files: debian/*
+Copyright: 2024, Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+License: LGPL-2.0-or-later
+
+License: LGPL-2.0-or-later
+ This library is free software; you can redistribute it and/or modify
+ it under the terms of the GNU Library General Public License as
+ published by the Free Software Foundation; either version 2 of the
+ License, or (at your option)  any later version.
+ .
+ This library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+ .
+ You should have received a copy of the GNU Library General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ 02110-1301, USA.
+ .
+ On Debian systems, the complete text of the GNU Library General
+ Public License version 2 can be found in
+ `/usr/share/common-licenses/LGPL-2’.
+
+License: LGPL-2.1-only
+ This library is free software; you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License version
+ 2.1 as published by the Free Software Foundation.
+ .
+ This library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ 02110-1301  USA Also add information on how to contact you by
+ electronic and paper mail.
+ .
+ On Debian systems, the complete text of the GNU Lesser General
+ Public License version 2.1 can be found in
+ `/usr/share/common-licenses/LGPL-2.1’.
+
+License: LGPL-3.0-only
+ This library is free software; you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License version
+ 3 as published by the Free Software Foundation.
+ .
+ This library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library.  If not, see
+ <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU Lesser General
+ Public License version 3 can be found in
+ `/usr/share/common-licenses/LGPL-3’.
+
+License: LicenseRef-KDE-Accepted-LGPL
+ This library is free software; you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as
+ published by the Free Software Foundation; either version 3 of the
+ license or (at your option) any later version that is accepted by
+ the membership of KDE e.V. (or its successor approved by the
+ membership of KDE e.V.), which shall act as a proxy as defined in
+ Section 6 of version 3 of the license.
+ .
+ This program is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ General Public License for more details.
+
+Files: debian/tests/baseline-setup
+       debian/tests/ubuntu-abi-client
+       debian/tests/consumer
+       debian/tests/control
+       debian/tests/upstream-session
+       debian/tests/client/*
+Copyright: 2026 SupraLINUX Developers <dev@supralinux.org>
+License: CC0-1.0
+ The authors dedicate these integration fixtures to the public domain under
+ Creative Commons CC0 1.0 Universal.
+ See https://creativecommons.org/publicdomain/zero/1.0/ for the full text.

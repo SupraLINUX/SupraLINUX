@@ -1,0 +1,29 @@
+Preserve official signed KGlobalAccelD 6.7.5 source and the authenticated Ubuntu
+three-binary profile: daemon, libKGlobalAccelD.so.0 and installed development SDK,
+original symbols, XCB backend, autostart and systemd service. Keep deprecated
+public D-Bus API enabled at the upstream default for older Ubuntu applications.
+Add the explicitly required matching Ubuntu Qt 6.10.2 private SDK dependency.
+
+Enable all three registered native CTests without ignored failures. Run serially
+in the disposable clean sbuild account to avoid concurrent configuration and
+D-Bus name collisions. Private Xvfb and D-Bus processes are owned and reaped.
+
+The actual installed Ubuntu client generates real keys on its own Xvfb, verifies
+QAction activation, legacy D-Bus/defaults/conflict, global block/unblock and key
+removal. A second client exercises the shipped KGlobalAccelD C++ development
+library's getters/setters/defaults/foreign setters/removal. Both executable bytes
+remain unchanged after normal APT upgrade; Qt provider identities stay unchanged.
+A separate installed consumer requires exact 6.7.5 CMake metadata. All three
+package versions, SONAME, XCB plugin and integration service payloads are checked.
+Local Ubuntu preparation PASS is not candidate certification. No host SDK install
+or host global shortcut/session interaction occurs.
+
+Exact eligible Frameworks transitive closure retains original evidence scopes.
+No upstream source patch, exclusion of legacy D-Bus API, backend profile change
+or Qt replacement. Real Wayland/KWin global shortcut integration, activation of
+external application desktop services, full desktop sessions and hardware remain
+later integration QA. Candidate/native package execution has not started.
+
+Native-suite stdout and stderr are inherited by the clean sbuild log rather than
+being hidden in a temporary result directory. HOME and all writable XDG paths
+are private; cleanup verifies that each owned process group is absent.

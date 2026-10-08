@@ -4,6 +4,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -259,6 +260,11 @@ def validate():
             assert record.get("baseline_setup_script"), "Required baseline preflight lacks a reviewed setup"
         if record.get("upstream_tests"):
             assert len(set(record["upstream_tests"])) == len(record["upstream_tests"])
+        backend = record.get('upstream_test_backend', 'ctest')
+        assert backend in {'ctest', 'meson'}, 'Unknown upstream test backend'
+        if backend == 'meson':
+            assert record.get('upstream_tests'), 'Reviewed Meson tests required'
+            assert re.fullmatch(r'[A-Za-z0-9_.+-]+', record.get('upstream_test_project', '')), 'Reviewed Meson project required'
         if record.get('sbuild_rootfs_policy'):
             policy = record['sbuild_rootfs_policy']
             assert policy['kind'] == 'immutable-bare-milestone'

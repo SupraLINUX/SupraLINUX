@@ -727,3 +727,45 @@ golden and milestone images. The preflight consumed no package Attempt and
 certifies inputs only. Attempt 1 is authorized after publication and hosted
 Repository Policy for the build-mode manifest; eight upstream tests, clean
 sbuild, lintian and both installed package tests remain pending.
+
+LibKScreen `4:6.7.5-0supralinux4` closed authoritative package PASS on source
+`c4691bb3fc2661d8388ce3a8f8d3ec8814b3ef68`, run 37852018928/job 113566975971.
+Clean sbuild, all nine executed native CTests, source/binary lintian and both
+installed nested-KVM tests passed. The unchanged Ubuntu SDK client passed Fake,
+XRandR and the owned-display CLI after the normal APT upgrade; the separately
+rebuilt consumer passed against exact candidate metadata. Earlier Attempts 1–3
+remain original FAIL results. Revision 4 changes the private CLI fixture and
+cleanup checks; KDE source, native assertions, symbols and Qt remain unchanged.
+
+Original artifact `5ed2be587ce2f8ddbff922c7f11f59789f949c44bb913921b2d2b7e8282926a9`
+contains complete source, nine runtime/development/documentation/debug binaries,
+buildinfo, changes and logs. Identity, CRC and empty-cache offline restoration
+were verified. Host seal
+`276ae609ba5bcfdc9bf16df0077c369d8425fbd94dd92a161fabbf5b6eebbbc9`
+and direct VM/runner 248/writable-overlay removal were verified; images remain.
+Raw build, lintian, original Ubuntu and installed-client logs are retained under
+`manifests/evidence/plasma/libkscreen-attempt4/`. Real KWin/Wayland displays, DPMS,
+hardware and complete-desktop/application QA remain separate integration gates.
+Seventeen Level 0 components now have package PASS.
+
+KGlobalAccelD `6.7.5-0supralinux1` is individually admitted for its authoritative
+input/Ubuntu baseline preflight. Preserve its three Ubuntu binaries, SONAME 0,
+original symbols, deprecated public D-Bus API, XCB backend, service and autostart.
+Its three native CTests run serially on owned Xvfb/D-Bus. The reviewed fixture
+streams native stdout/stderr into the retained sbuild log and isolates HOME;
+actual local CTest success/failure controls and unchanged original Ubuntu
+application/direct-SDK clients passed, with owned resources removed. These local
+results do not certify candidate native tests or the candidate package. Its 23
+Frameworks predecessors supply 96 exact retained binary identities. A fresh
+preflight must pass before any candidate Attempt; Qt stays at the Ubuntu provider.
+
+New Meson packages declare `upstream_test_backend: meson` and their exact
+`upstream_test_project`; existing records retain the default CTest contract.
+The shared collector requires every reviewed test, unique complete numbered
+execution rows, the declared project, all `OK` outcomes and matching final
+success/failure counts. Skips are rejected even when Meson exits zero. Test
+completion order is preserved while inventory comparison is order independent.
+The local mechanism review accounts for the original 191 Wayland Protocols
+source tests and real small passing, failing and skipped process fixtures. All
+21 input-admission regressions pass with the staged collector. This verifies the
+collector locally and does not certify a candidate package on the KVM lane.

@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "libkscreen",
+      "package_version": "4:6.7.5-0supralinux4",
+      "artifact_id": 11583805745,
+      "workflow_run_id": 37852018928,
+      "artifact_sha256": "5ed2be587ce2f8ddbff922c7f11f59789f949c44bb913921b2d2b7e8282926a9",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

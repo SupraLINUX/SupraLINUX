@@ -121,7 +121,36 @@ def setup_commands(root, record, https_transport=False):
     return '\n'.join(commands)
 
 
+def meson_test_result(record, log):
+    """Require each numbered Meson result and the complete successful summary."""
+    expected = record.get('upstream_tests', [])
+    project = record.get('upstream_test_project', '')
+    assert expected and len(set(expected)) == len(expected), 'Reviewed Meson tests required'
+    assert re.fullmatch(r'[A-Za-z0-9_.+-]+', project), 'Reviewed Meson project required'
+    rows = re.findall(r'^[ \t]*(\d+)/(\d+)[ \t]+(\S+)[ \t]+(.+?)[ \t]+\d+(?:\.\d+)?s(?:[ \t].*)?$', log, re.MULTILINE)
+    assert rows, 'Meson test executions missing'
+    count = len(rows)
+    assert sorted(int(row[0]) for row in rows) == list(range(1, count + 1)), 'Missing or duplicate Meson test indexes'
+    assert all(int(row[1]) == count for row in rows), 'Meson suite count mismatch'
+    assert all(row[3] == 'OK' for row in rows), 'Some executed Meson tests did not pass'
+    assert all(row[2].startswith(project + ':') for row in rows), 'Unexpected Meson project'
+    executed = [row[2].removeprefix(project + ':') for row in rows]
+    assert len(executed) == len(set(executed)), 'Duplicate Meson test executions'
+    assert set(expected) <= set(executed), 'Reviewed Meson tests missing'
+    summaries = re.findall(r'^[ \t]*Ok:[ \t]*(\d+)[ \t]*$', log, re.MULTILINE | re.IGNORECASE)
+    failures = re.findall(r'^[ \t]*Fail:[ \t]*(\d+)[ \t]*$', log, re.MULTILINE | re.IGNORECASE)
+    assert summaries == [str(count)] and failures == ['0'], 'Meson summary count/result mismatch'
+    other = re.findall(r'^[ \t]*(?:Skipped|Timeout|Expected Fail|Unexpected Pass):[ \t]*(\d+)[ \t]*$', log, re.MULTILINE | re.IGNORECASE)
+    assert all(int(value) == 0 for value in other), 'Meson non-passing results present'
+    return {'state': 'PASS', 'expected_tests': expected, 'executed_tests': executed,
+            'scope': 'Meson suite executed during the clean package build'}
+
+
 def upstream_test_result(record, log):
+    backend = record.get('upstream_test_backend', 'ctest')
+    assert backend in {'ctest', 'meson'}, 'Unknown upstream test backend'
+    if backend == 'meson':
+        return meson_test_result(record, log)
     expected = record.get('upstream_tests', [])
     assert len(set(expected)) == len(expected), 'Duplicate upstream test names'
     for name in expected:
