@@ -816,3 +816,26 @@ installation, Qt transition or KDE source change was introduced. The original
 negative and positive logs are retained with preflight 29. This certifies the
 local mechanism only; the complete original Ubuntu client and candidate package
 still require their fresh authoritative KVM gates.
+
+KGlobalAccelD input preflight 30 on source
+`1a9dfaa9266c3165cc38744cc968cc5aecedd8d1`, run 37859846219/job 113592694693,
+closed authoritative input `PASS`. All 106 exact retained binaries installed in
+the clean bare-rootfs probe and its consumer compiled. Both original Ubuntu
+application/direct-library clients then compiled using actual installed exports,
+passed in their owned Xvfb/D-Bus sessions and reaped their private resources.
+Original artifact
+`25a6e8921021db93bc1eddf5b4efd39a0f525c53fce8a4404ba0e5446ba38fb7`
+and complete source/log input closure restored offline. Host seal
+`ded3627ec122f00c9997787ee310cf3bec33c2f227a692298a8c0ceda0cbc49b`
+and direct VM/runner 251/writable-overlay absence were verified; images remain.
+Candidate sbuild, native tests, lintian and installed package tests did not run;
+no package Attempt was consumed.
+
+Review of the same actual public export also identified Ubuntu's inherited
+runtime-only development dependency metadata. The current development binary
+now declares exact eligible `libkf6globalaccel-dev` and frozen matching
+`qt6-base-private-dev`; both are already required by its original and unchanged
+6.7.5 public targets. Source, tests, Qt provider, binary profile and candidate
+version remain unchanged. Preflight 30 stays immutable with its original PASS,
+while its current applicability is withdrawn solely for the changed candidate
+control metadata. A fresh exact packaging preflight precedes Attempt 1.

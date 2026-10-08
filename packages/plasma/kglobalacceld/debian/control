@@ -55,6 +55,8 @@ Section: libdevel
 Architecture: any
 Multi-Arch: same
 Depends: libkglobalacceld0 (= ${binary:Version}),
+         libkf6globalaccel-dev (= 6.30.0-0supralinux2),
+         qt6-base-private-dev (= 6.10.2+dfsg-7),
          ${misc:Depends},
 Description: daemon for global keyboard shortcuts on the Plasma desktop - development files
  Daemon providing Global Keyboard Shortcut (Accelerator) functionality for the

@@ -6212,7 +6212,7 @@
       "review": {
         "source": "Signed official 6.7.5 source unchanged; preserve all three Ubuntu binaries, SONAME 0, original symbols, shipped C++ development SDK, XCB backend, autostart and systemd service. Preserve default deprecated public D-Bus API for older applications.",
         "version": "Exact 6.7.5-0supralinux1 supersedes authenticated Ubuntu 6.6.5-0ubuntu0.1 with unchanged epoch policy.",
-        "dependencies": "25-node exact eligible Frameworks and retained support closure, 106 binaries. Preserve all original evidence scopes and the current KConfig repair. Actual KIconThemes and KIO binary metadata also require matched Breeze Icons and KDocTools support inputs, independently restored and digest/source/version/architecture checked. Preserve the source-required frozen matching Ubuntu Qt6GuiPrivate 6.10.2+dfsg-7 dependency and inherited XCB/RECORD/XKB/KEYSYMS/XTEST build profile. Fresh authoritative transport and original Ubuntu baseline are mandatory before the first candidate Attempt. Include the matched python3-kcoreaddons retained binary required by selected python3-kf6jobwidgets metadata.",
+        "dependencies": "25-node exact eligible Frameworks and retained support closure, 106 binaries. Preserve all original evidence scopes and the current KConfig repair. Actual KIconThemes and KIO binary metadata also require matched Breeze Icons and KDocTools support inputs, independently restored and digest/source/version/architecture checked. Preserve the source-required frozen matching Ubuntu Qt6GuiPrivate 6.10.2+dfsg-7 dependency and inherited XCB/RECORD/XKB/KEYSYMS/XTEST build profile. Fresh authoritative transport and original Ubuntu baseline are mandatory before the first candidate Attempt. Include the matched python3-kcoreaddons retained binary required by selected python3-kf6jobwidgets metadata. The development binary explicitly depends on its actual public exported GlobalAccel and matching Qt private SDK. Both original Ubuntu and unchanged 6.7.5 exports publicly link KF6::GlobalAccel and Qt6::GuiPrivate; inheriting a runtime-only -dev dependency leaves the SDK dependency contract incomplete. Actual original imported-target discovery/public SDK compilation already verified this required target closure. Candidate metadata change remains unadmitted until the active input gate closes, then requires fresh exact packaging certification.",
         "licensing": "Preserve original authenticated Ubuntu copyright; CC0 applies explicitly to new integration fixtures/client/control/private-session code only.",
         "profile": "No upstream patch, removal of legacy D-Bus API, backend exclusion, host SDK installation or Qt replacement. Verify installed XCB plugin, SONAME, all binary versions and service/autostart payloads; Wayland/KWin/global external application/hardware/full-session integration remains later QA.",
         "tests": "All three official registered native CTests enabled with fatal failures and serial scheduling, because upstream uses shared test-mode configuration and D-Bus names inside the disposable sbuild account. Private Xvfb/D-Bus fixture reaps owned processes. Actual Ubuntu public SDK and daemon receive real owned XTEST keys and pass QAction activation, legacy methods/defaults/conflict, block/unblock and removal; shipped KGlobalAccelD C++ SDK client passes getters/setters/defaults/foreign setter/removal. Both executable bytes are retained unchanged after APT upgrade; Qt provider identities unchanged. Separate consumer requires exact installed candidate CMake version. Local Ubuntu private wrapper/cleanup PASS; authoritative baseline, native and candidate package execution pending. Follow-up: native-suite output is inherited by the sbuild log; an actual CTest execution and fatal failure control were verified locally. HOME and writable XDG paths are private. Runtime-directory and every owned process-group absence are checked. Unchanged original Ubuntu application and library clients pass again with the revised fixture. Original Ubuntu CMake preflight29 exposed omitted Qt6GuiPrivate discovery; exact private SDK dependency and target discovery are now explicit. Actual original export negative/positive compile probe PASS, with fresh complete KVM baseline still required."
@@ -6220,7 +6220,7 @@
       "packaging_sha256": {
         "README.source": "d2fc4786f4814848f364e4d8cc7e293fd836e1732329df1deaa1ce125f3a0317",
         "changelog": "d29899ed46bc8f5229058ddccd5b746cbb5594941d2ce7a46dae596eb8471618",
-        "control": "8ec47fe4c574430fd814c852974933e8cd008c88fd5416767f12450a5ca49207",
+        "control": "1c06fc02e8482c2c811d456a70cc6b6a5e912b49f74af623a99c863ecb43338e",
         "copyright": "bfaa65402e461578ae4039133329e38a62511ab5f3403a60b4e8c282789de978",
         "kglobalacceld.install": "df89033a59cf2f76edec0738d92f6f5206b9a2904f40155a1171cbfef87860d4",
         "libkglobalacceld-dev.install": "76e3c7fbb3743bd83869ddf7726049a438067f1dc2d05d2059e54297aef9cac3",
@@ -6677,6 +6677,12 @@
       "sha256": "bc182d1857ead51a6943f58e11532ebc61680b5b9ef9f69c0304413ac1de9c4f",
       "applicable": false,
       "inapplicability_reason": "After LibKScreen Attempt 4 closed PASS, the generic native collector gained explicit Meson support. Original certification remains unchanged; new admission requires a fresh preflight. Changed inputs: scripts/plasma-package-testing.py"
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kglobalacceld-preflight30/verification.json",
+      "sha256": "9d2732f2fb76ef99838001ad3daadf02b471653ff07994d54c29c7fdd4647a46",
+      "applicable": false,
+      "inapplicability_reason": "Complete original Ubuntu baseline and clean 106-input transport remain original PASS. The development binary now explicitly declares its already required exported GlobalAccel and matching Qt private SDK dependencies; changed candidate control metadata requires fresh exact packaging preflight before Attempt 1."
     }
   ],
   "package_input_incidents": [
