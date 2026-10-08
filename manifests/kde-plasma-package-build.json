@@ -5518,6 +5518,42 @@
         "allowlisttest"
       ],
       "frameworks_predecessors": {
+        "breeze-icons": {
+          "source_package": "kf6-breeze-icons",
+          "version": "4:6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "breeze-icon-theme-rcc",
+              "architecture": "all",
+              "sha256": "b5105c4deb0b120b8bd08550f1d79e9db79069503e1eb08992da867380f1df8a"
+            },
+            {
+              "package": "breeze-icon-theme",
+              "architecture": "all",
+              "sha256": "308a20089ef387da2d5ba08b42be4299dd62fe5f5535786a0d8881d93b0d1e09"
+            },
+            {
+              "package": "kf6-breeze-icon-theme-rcc",
+              "architecture": "all",
+              "sha256": "ab05a47bb8ee1d425469a858134a054657b6d7a06192cd4ab4ba0572c5aebbad"
+            },
+            {
+              "package": "kf6-breeze-icon-theme",
+              "architecture": "all",
+              "sha256": "1c598d29fb31ab6fba6a80c041fc81de33b74bcb23cb6f06b2cb37810e2462f3"
+            },
+            {
+              "package": "libkf6breezeicons-dev",
+              "architecture": "amd64",
+              "sha256": "46974cd2a2e7fb22fabf5332fcf51b560a9c03fca4c1cc3eff014cd5b0336a1b"
+            },
+            {
+              "package": "libkf6breezeicons6",
+              "architecture": "amd64",
+              "sha256": "39843417452315f82dda133b09d1b588a5d23d44095ff821e63ee7943075b232"
+            }
+          ]
+        },
         "extra-cmake-modules": {
           "source_package": "kf6-extra-cmake-modules",
           "version": "6.30.0-0supralinux3",
@@ -5708,6 +5744,11 @@
               "package": "qml6-module-org-kde-coreaddons",
               "architecture": "amd64",
               "sha256": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
+            },
+            {
+              "package": "python3-kcoreaddons",
+              "architecture": "amd64",
+              "sha256": "0aff04f52eb0ad76b3fa2028ab8d04f576059d6a2ec7330d896a1ed8e150460b"
             }
           ]
         },
@@ -5750,6 +5791,27 @@
               "package": "libkf6dbusaddons6",
               "architecture": "amd64",
               "sha256": "c66f0b0fb84bf4f20c39a9b2fcf9aaae09c30dae31a3cfa54b48702b648f7a12"
+            }
+          ]
+        },
+        "kdoctools": {
+          "source_package": "kf6-kdoctools",
+          "version": "6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "kdoctools6",
+              "architecture": "amd64",
+              "sha256": "e455675b2fe7c3fe730d702b99b882f16f70ce2e3d44394c06774a292ebd3933"
+            },
+            {
+              "package": "libkf6doctools-dev",
+              "architecture": "amd64",
+              "sha256": "10ee3bb9a61dcd87645b26f6df46d48e38ec3e29331e07cb983c8a62fcc9e8be"
+            },
+            {
+              "package": "libkf6doctools6",
+              "architecture": "amd64",
+              "sha256": "db37d679c86ac997a8731062e3fa4bc13a87958321569d98bb10014ad37f45fe"
             }
           ]
         },
@@ -6150,7 +6212,7 @@
       "review": {
         "source": "Signed official 6.7.5 source unchanged; preserve all three Ubuntu binaries, SONAME 0, original symbols, shipped C++ development SDK, XCB backend, autostart and systemd service. Preserve default deprecated public D-Bus API for older applications.",
         "version": "Exact 6.7.5-0supralinux1 supersedes authenticated Ubuntu 6.6.5-0ubuntu0.1 with unchanged epoch policy.",
-        "dependencies": "23-node transitive Frameworks DAG closure; 96 exact eligible retained binary identities/digests checked. Preserve original historical scopes and current KConfig repair. Add the source-required Qt6GuiPrivate build dependency at the frozen matching Ubuntu Qt 6.10.2+dfsg-7 version; preserve inherited XCB/RECORD/XKB/KEYSYMS/XTEST build profile.",
+        "dependencies": "25-node exact eligible Frameworks and retained support closure, 106 binaries. Preserve all original evidence scopes and the current KConfig repair. Actual KIconThemes and KIO binary metadata also require matched Breeze Icons and KDocTools support inputs, independently restored and digest/source/version/architecture checked. Preserve the source-required frozen matching Ubuntu Qt6GuiPrivate 6.10.2+dfsg-7 dependency and inherited XCB/RECORD/XKB/KEYSYMS/XTEST build profile. Fresh authoritative transport and original Ubuntu baseline are mandatory before the first candidate Attempt. Include the matched python3-kcoreaddons retained binary required by selected python3-kf6jobwidgets metadata.",
         "licensing": "Preserve original authenticated Ubuntu copyright; CC0 applies explicitly to new integration fixtures/client/control/private-session code only.",
         "profile": "No upstream patch, removal of legacy D-Bus API, backend exclusion, host SDK installation or Qt replacement. Verify installed XCB plugin, SONAME, all binary versions and service/autostart payloads; Wayland/KWin/global external application/hardware/full-session integration remains later QA.",
         "tests": "All three official registered native CTests enabled with fatal failures and serial scheduling, because upstream uses shared test-mode configuration and D-Bus names inside the disposable sbuild account. Private Xvfb/D-Bus fixture reaps owned processes. Actual Ubuntu public SDK and daemon receive real owned XTEST keys and pass QAction activation, legacy methods/defaults/conflict, block/unblock and removal; shipped KGlobalAccelD C++ SDK client passes getters/setters/defaults/foreign setter/removal. Both executable bytes are retained unchanged after APT upgrade; Qt provider identities unchanged. Separate consumer requires exact installed candidate CMake version. Local Ubuntu private wrapper/cleanup PASS; authoritative baseline, native and candidate package execution pending. Follow-up: native-suite output is inherited by the sbuild log; an actual CTest execution and fatal failure control were verified locally. HOME and writable XDG paths are private. Runtime-directory and every owned process-group absence are checked. Unchanged original Ubuntu application and library clients pass again with the revised fixture."
@@ -6653,6 +6715,12 @@
       "sha256": "6947899896c46753381f7a5c1a6216fecd71eb4f463a1218ef303650387ad53f",
       "cause": "Original bare-rootfs APT HTTPS requests failed certificate validation for all three Ubuntu suites. apt-get update continued with no usable index, then the synthetic probe reported unavailable Build-Depends. Ubuntu nested-KVM baseline PASS; no candidate package execution or new Attempt.",
       "repair": "Diagnose the exact APT/OpenSSL trust search in the SDK-free rootfs, bind APT explicitly to the retained admitted Ubuntu CA file with verification enabled, reject incomplete updates, and certify a small real APT transport/signature probe before the dependent preflight and candidate build."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kglobalacceld-preflight28/verification.json",
+      "sha256": "68409b9e4c964dfbe632bcafc47391d322b0276cff4633d8fa09240623ba7b07",
+      "cause": "The exact retained KIconThemes 6.30 binaries require libkf6breezeicons6 >= 4:6.30.0. The source DAG closure omitted this actual runtime support input; the clean sbuild transport probe could not install all reviewed binaries. Candidate package execution and original Ubuntu baseline did not start.",
+      "repair": "Add the exact eligible retained Breeze Icons support closure, preserve its original hosted evidence scope, verify all binary identity/digests and isolated empty-state APT resolution, then revalidate authoritative inputs on a fresh disposable KVM before the first candidate Attempt. The isolated APT check also found the KIO runtime requirement for matched KDocTools; include its retained support binaries and closure before KVM retry. Preserve selected Python bindings and include exact python3-kcoreaddons required by python3-kf6jobwidgets."
     }
   ]
 }

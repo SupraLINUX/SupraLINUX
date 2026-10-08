@@ -769,3 +769,25 @@ The local mechanism review accounts for the original 191 Wayland Protocols
 source tests and real small passing, failing and skipped process fixtures. All
 21 input-admission regressions pass with the staged collector. This verifies the
 collector locally and does not certify a candidate package on the KVM lane.
+
+KGlobalAccelD input preflight 28 on source
+`0dc01eeadcf9bbb3f194cd9cb673e0b3eebb9332`, run 37856435328/job 113581617200,
+closed `INFRA_INVALID` at predecessor transport. No candidate sbuild, native test,
+lintian or original Ubuntu baseline ran; no package Attempt was consumed. The
+clean resolver found the actual KIconThemes requirement for matched Breeze Icons,
+which was absent from the historical source dependency closure. The original
+result, complete source archive, transport log and artifact
+`c8e2d8e81ccdc9c452300637ca066cd43047a158664e7f135d397d3e58e510f5`
+remain retained. Host seal
+`ad7527811c5afc5a46a24bbf478d821663e3c7ccc4670924845a86602b1b5d79`
+and direct VM/runner 249/writable-overlay absence were verified; images remain.
+
+The corrected current input contract preserves all 96 previous binary identities
+and hashes, adds the exact retained Breeze Icons and KDocTools support closures,
+and supplies `python3-kcoreaddons` required by the selected JobWidgets binding.
+All 106 binaries from 25 input nodes were independently restored and their
+source, version, architecture and digest verified. Isolated APT simulation with
+empty dpkg state passes; no host package was installed. Earlier inherited source
+retention gaps and hosted evidence scopes remain explicitly preserved. Candidate
+packaging bytes, version, KDE source and Ubuntu Qt did not change. A new
+clean authoritative input/Ubuntu baseline preflight is required before Attempt 1.
