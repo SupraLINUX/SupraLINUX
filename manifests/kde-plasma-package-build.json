@@ -5719,7 +5719,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -5838,6 +5838,10 @@
       "sha256": "65785b9e48522aa5d87a3daf429e0b797dd5a4aefc03d496be8f751e4582808b",
       "applicable": false,
       "inapplicability_reason": "Candidate 4:6.7.5-0supralinux4 changes version and reviewed packaging to address installed-test fixture environment after retained autopkgtest FAIL; preserve original input PASS and revalidate changed current inputs."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/libkscreen-preflight27/verification.json",
+      "sha256": "bc182d1857ead51a6943f58e11532ebc61680b5b9ef9f69c0304413ac1de9c4f"
     }
   ],
   "package_input_incidents": [
