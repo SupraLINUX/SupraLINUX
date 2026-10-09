@@ -1,14 +1,34 @@
 # Authoritative Plasma package builds
 
+LibKSysGuard Attempt 2 is an original package FAIL in
+[run 37929688722](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37929688722)
+on source `bb105c28d175bf9b582c3902f266098f73c47266`.
+The clean input probe and original Ubuntu client passed; upstream and native
+provider compilation completed. The wrapper then expected an installed plugin
+directory inside the build tree. The actual retained link command produces
+`bin/ksysguard_sensorface.so`. CTests, lintian and installed candidate tests did
+not run. Sources/full raw logs restore offline; VM, runner 257 and overlay
+absence were verified. The first missing-header FAIL remains preserved too.
+
+Revision `4:6.7.5-0supralinux3` stages that actual output unchanged into an owned
+`kf6/packagestructure` namespace. Require a unique contained QML URI/output,
+amd64 ELF and byte hashes. Local original Ubuntu runtime bytes projected into
+the observed layout reproduced the old failure; the repaired original functional
+client rendered successfully with group/runtime cleanup. Qt traces prove that
+the private staged plugin was loaded. Six controls reject old layout, missing,
+duplicate, foreign and non-ELF plugins, and wrong QML URI. This is staging
+mechanism verification, with no candidate certification. Source, all native
+assertions, symbols, exact 173-input closure and Qt remain unchanged. Fresh KVM
+input preflight is the current gate; the complete native/package run is pending.
+
 LibKSysGuard revision 2 input preflight 33 passed on source
 `274b0a566340651c5bf6ddddb5d82fce717921d7` in
 [run 37927874802](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37927874802).
 The clean consumer installed all 173 exact retained inputs and the original
 Ubuntu full SDK/provider/client passed in nested KVM. No package Attempt was
 consumed. The full archive restores offline; VM, runner 256 and overlay absence
-were verified independently. Candidate `4:6.7.5-0supralinux2` is now authorized
-for the complete clean package build, eight official native tests, lintian and
-installed candidate upgrade/consumer tests. These results are still pending.
+were verified independently. Candidate `4:6.7.5-0supralinux2` was authorized
+for the complete package run; its original Attempt 2 result is preserved above.
 
 LibKSysGuard Attempt 1 on source
 `d74ac04b25321b210e9630736a937b7754fb17ed` is an original package FAIL in
@@ -27,7 +47,7 @@ D-Bus headers were used; original Ubuntu generated export visibility metadata
 was used only in that local probe. Full candidate-generated headers and all eight
 native tests still require KVM. Source, native assertions, symbol guards,
 38-node/173-binary closure and Qt are unchanged. Preflight 32 stays preserved
-at its original inputs; preflight 33 applies to the repaired inputs; the complete package build is the current gate.
+at its original inputs; preflight 33 applies only to revision 2 inputs; revision 3 requires fresh input validation.
 
 KGlobalAccelD Attempt 1 is an original package FAIL after successful compilation
 and all four executed native CTests. Its original symbols guard found ten

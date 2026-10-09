@@ -6275,7 +6275,7 @@
     "libksysguard": {
       "state": "build-pending",
       "source_package": "libksysguard",
-      "version": "4:6.7.5-0supralinux2",
+      "version": "4:6.7.5-0supralinux3",
       "upstream_version": "6.7.5",
       "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/libksysguard-6.7.5.tar.xz",
       "upstream_sha256": "9069bcf3fe4e491ea774d0d70eb17f99b567299871045a38543fcabcdb56dfc4",
@@ -7452,20 +7452,40 @@
           "host_evidence_manifest_sha256": "df1b0c06d92b79a27bdf986cb6c39d4a866451ec5bfc69734359c94abd4ff163",
           "cause": "The native candidate sensor provider cannot compile: the real generated D-Bus header includes SensorInfo.h by basename, but the packaging fixture omits the candidate source/systemstats include directory. Upstream compilation completed; native CTests, lintian and installed candidate tests did not execute.",
           "repair": "Preserve the original FAIL; reproduce and certify the missing include-path repair using unchanged candidate source and its actual generated build headers, then increment packaging revision and run fresh input preflight before retry."
+        },
+        {
+          "attempt": 2,
+          "state": "FAIL",
+          "original_state": "FAIL",
+          "sbuild_result": "FAIL",
+          "lintian_result": "not-run",
+          "autopkgtest_result": "not-run",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37929688722,
+          "workflow_job_id": 113817077135,
+          "source_commit": "bb105c28d175bf9b582c3902f266098f73c47266",
+          "artifact_id": 11617010195,
+          "artifact_sha256": "5f7a8bc8268f86d9384f2736d84d94b454174f1d61e26100ff058a5a3cbcc942",
+          "result_path": "manifests/evidence/plasma/libksysguard-attempt2/result.json",
+          "result_sha256": "dfda5ffa8d4bbbbccde5a277ee4fbe01c4711b01cf0aaec6f203bce0a42c864f",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261009t122128z-1059671",
+          "host_evidence_manifest_sha256": "7d81d4f68a5a4e2d560332ce8eb7dec2baf56073f33b243c44212d76b4f48970",
+          "cause": "The repaired native provider compiles, but its packaging wrapper assumes the package-structure plugin is already under an installed kf6/packagestructure directory. The actual candidate build produces bin/ksysguard_sensorface.so. Native CTests, lintian and installed candidate tests did not execute.",
+          "repair": "Preserve the original FAIL and certify owned byte-preserving staging from the actual candidate build output into its installed plugin namespace, with missing/duplicate/escaping/non-ELF controls and actual original Ubuntu functional runtime; then revalidate current inputs before retry."
         }
       ],
       "review": {
         "source": "Signed official 6.7.5 source unchanged. Preserve 21 Ubuntu binaries including transitional packages, five actual SONAMEs (ProcessCore 10; Formatter/Sensors/SensorFaces/SystemStats 2), original symbols, process/QML/package plugins, all seven sensor faces and both privileged helpers.",
-        "version": "Preserve epoch; 4:6.7.5-0supralinux2 supersedes retained failed 4:6.7.5-0supralinux1 and authenticated Ubuntu reference. All prior assignments and original evidence remain sealed.",
+        "version": "Preserve epoch; 4:6.7.5-0supralinux3 supersedes retained failed 4:6.7.5-0supralinux2 and authenticated Ubuntu reference; all earlier assignments and evidence remain sealed.",
         "dependencies": "Exact 36-node transitive Frameworks DAG closure, 163 verified binaries; current KConfig repair and original historical source identities/artifact digests remain bound to their unchanged evidence scopes. Preserve inherited hardware/network build profile and default KAuth helper. Matching Ubuntu Qt/private SDK remains unchanged. Runtime closure follow-up: 38 exact eligible nodes and 173 binaries, including the selected retained support inputs and Python runtime dependency. All previous identities and original evidence scopes stay unchanged; fresh byte/source/version/architecture, empty-state APT diagnosis and authoritative input preflight remain required. Installed SystemStats publicly exports the actual lm-sensors development link in both original Ubuntu and unchanged 6.7.5 source; declare libsensors-dev in the development binary plus baseline and installed-test setup. Full original CMake client compilation and owned sensor-provider/runtime execution PASS with matching extracted Ubuntu SDKs; missing absolute development link rejected. No KDE source change, feature removal or host SDK installation.",
         "licensing": "Preserve inherited Ubuntu copyright and all original files; explicitly scope CC0 to new integration tests, provider/client and native private-session fixture.",
         "profile": "Preserve installed SDK, five libraries, all 21 binaries, GPU/network process plugins, KAuth/system-service/polkit payloads and original package maintainer behavior. No upstream patch, privilege change, host SDK installation or Qt replacement.",
         "native": "Enable all eight official registered CTests with candidate headers, built QML/package plugins and an owned typed provider exposing actual SDK service plus the legacy upstream presence-check alias. Privilege-dependent upstream QSKIPs remain explicit, not counted as executed cases. Full session/hardware, real ksystemstats plugins, network capture, GPU, privileged helper actions and accelerated/Wayland rendering remain later QA.",
-        "tests": "Public installed Ubuntu client exercises all five libraries: formatter, real owned PID/memory/Ended/removal, SystemStats objects/properties/subscription/signals, actual private D-Bus sensors and models, loaded textonly SensorFace QML and retained software image. Original client and provider executables stay byte-identical across normal APT upgrade; exact candidate SDK rebuild separately. Local Ubuntu prototype and process-group cleanup PASS; authoritative baseline/candidate execution pending. Fixture follow-up: native CTest stdout/stderr are inherited by the clean sbuild log; original native test inventory and source remain unchanged. HOME is private and every owned process group is checked absent. Native execution remains pending. Revision 2 repairs only native-provider source/systemstats header lookup; local negative/positive compile and original Ubuntu functional client/cleanup passed. All native assertions remain unchanged and require fresh authoritative execution."
+        "tests": "Public installed Ubuntu client exercises all five libraries: formatter, real owned PID/memory/Ended/removal, SystemStats objects/properties/subscription/signals, actual private D-Bus sensors and models, loaded textonly SensorFace QML and retained software image. Original client and provider executables stay byte-identical across normal APT upgrade; exact candidate SDK rebuild separately. Local Ubuntu prototype and process-group cleanup PASS; authoritative baseline/candidate execution pending. Fixture follow-up: native CTest stdout/stderr are inherited by the clean sbuild log; original native test inventory and source remain unchanged. HOME is private and every owned process group is checked absent. Native execution remains pending. Revision 2 repairs only native-provider source/systemstats header lookup; local negative/positive compile and original Ubuntu functional client/cleanup passed. All native assertions remain unchanged and require fresh authoritative execution. Revision 3 stages the actual bin/ksysguard_sensorface.so into the owned installed namespace with byte hashes, unique contained URI/output and amd64 ELF guards. Actual original Ubuntu byte projection, six rejection controls and traced private plugin load/function/cleanup passed; this is staging-mechanism evidence only. Native input metadata/hash JSON is streamed into retained sbuild stdout before ephemeral staging cleanup; an additional original-runtime follow-up proves stdout/result identity and cleanup."
       },
       "packaging_sha256": {
-        "README.source": "f371888547f5caa05ae32ebe33d7da39b7468e165f35f9d80c840e21d53fff4b",
-        "changelog": "55251611f1521357b091459999251d90b919310904ead385d33d9aca820df825",
+        "README.source": "7591ef9bef63383d916cdf2ef5bb44b1049645f6a386a8f59b45645eb086ecc5",
+        "changelog": "86e561b01285f52005058304a07602519596e072786c8ea797b0c0439cc04d1a",
         "control": "be01c8e123c86b95fc52b214e9dbfbdd581b53af3ca8ae8dc839eea267feba09",
         "copyright": "973e0c32e363cd94e0c64b187322236598c787b85f8dc28ba64bff2b5228dad8",
         "libksysguard-bin.install": "274165e2c8e846928bec8afaab66091b3a09770e18b872aecec353bae710495f",
@@ -7492,11 +7512,11 @@
         "tests/baseline-setup": "49f25f4921e9347312d7305fbdb3ab39c22a87e1c4518b2fc85e80cff864be1d",
         "tests/client/CMakeLists.txt": "759e8059b29399bb16a914eadb3c0880ba802d0c08c94c84bd25f5e6bcae856c",
         "tests/client/main.cpp": "d10a8ee64abc82985395243ef58b5a289fe45a877f1de9c85207707d7b9b743e",
-        "tests/client/run-private.py": "1b81e187c146b4f463972e47f779c31dd51e9402b676f2495d0707b7af80a912",
+        "tests/client/run-private.py": "c22f3c011f16da7b05982bb88019cd8ef458fb0119f3600776f0762fbc76469e",
         "tests/client/stats-server.cpp": "ae76d3a105ab9c466a5da475d05158ffa9b56cb2d1b0657df4141239bddb2841",
         "tests/consumer": "691c8b4964712b7ff9dc66619f0fc7e21926b1d974c0d416c21afa55b9e03a1f",
         "tests/control": "6a30b5c5839c555bcc8e20266406e44b8b0f095f85e4dd27324d4574dc6d2f6d",
-        "tests/ubuntu-abi-client": "d696d020bf43c6c01313da5ab84731f01bdbff20ec5b903e631aa59ade90d1bb",
+        "tests/ubuntu-abi-client": "cc6bb253b1155d483a9fc072cb140b6ea1e0c8b59132b66563a6647ecfcb3991",
         "tests/upstream-session": "e7040cd7563b8bd6e65c479bdfc5e7d09cfed50903ba76457b689975ee2edcd1",
         "upstream/metadata": "35170e9774920f521725e859b694feed1e68e704b5f131fe1b6f0ba438193ea0",
         "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
@@ -7741,6 +7761,12 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/libksysguard-attempt1",
       "archive_index_sha256": "00893505e1fd7e57f4654c6ba1193d9a42241f5db154d8487a2a1f0373fa6ccb"
+    },
+    {
+      "node": "libksysguard",
+      "attempt": 2,
+      "archive_root": ".artifacts/plasma-6.7.5/libksysguard-attempt2",
+      "archive_index_sha256": "0b66df4e76b8d35d84c1a8175aa45b7fa8c4e305ba63c73e8891d2c0d1e3bb52"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
@@ -7821,7 +7847,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -7969,7 +7995,9 @@
     },
     {
       "path": "manifests/evidence/package-revalidation/libksysguard-preflight33/verification.json",
-      "sha256": "e656bb568ff9e14876540291ca411f93ebe4703f711e22f1c71090aa1856c606"
+      "sha256": "e656bb568ff9e14876540291ca411f93ebe4703f711e22f1c71090aa1856c606",
+      "applicable": false,
+      "inapplicability_reason": "Revision 3 changes candidate version and native plugin staging after retained Attempt 2 FAIL; preserve preflight 33 and revalidate current inputs."
     }
   ],
   "package_input_incidents": [

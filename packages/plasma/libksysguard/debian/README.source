@@ -38,3 +38,20 @@ original export-visibility metadata; it does not certify the full candidate buil
 Fresh KVM must generate candidate headers and execute all eight official tests,
 lintian and unchanged-original/rebuilt installed clients. Source, assertions,
 symbol guards, dependency closure, product profile and Qt remain unchanged.
+
+Revision 4:6.7.5-0supralinux3 stages the actual build/bin package-structure
+plugin unchanged into the owned kf6/packagestructure runtime namespace. The
+Attempt 2 link command and signed source install rule establish those paths.
+Require a unique contained QML URI and plugin, amd64 ELF bytes and exact copied
+bytes; retain native input hashes. Attempt 2 preserved its original FAIL after
+successful provider compilation but before CTest, lintian or installed tests.
+Actual original Ubuntu plugin/QML bytes projected into that observed layout
+reproduced the old guard failure and passed the repaired private runtime,
+rendering and cleanup. Qt traces prove the private staged plugin was loaded.
+Six negative controls reject old layout, missing/duplicate/foreign/non-ELF
+plugins and wrong QML URI. This certifies the staging mechanism only; full
+candidate execution still requires fresh authoritative input preflight/build.
+Source, assertions, dependencies, symbol guards and Qt remain unchanged.
+Native staging input/hash JSON is emitted to retained sbuild stdout before the
+ephemeral result directory is removed; a separate original-runtime follow-up
+verified stdout/result-file identity and owned cleanup.

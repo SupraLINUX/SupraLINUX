@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Own the sensor provider and a private D-Bus daemon, then reap both."""
 import os
-import hashlib
 import select
 import json
 import shutil
@@ -34,30 +33,11 @@ with tempfile.TemporaryDirectory(prefix='supra-stats-private-') as temporary:
         build = Path(environment.pop('SUPRALINUX_NATIVE_BUILD_ROOT')).resolve()
         assert build.is_relative_to(source) and (source/'systemstats').is_dir()
         qml = list(build.rglob('org/kde/ksysguard/sensors/qmldir'))
-        plugins = list(build.rglob('ksysguard_sensorface.so'))
-        assert len(qml) == len(plugins) == 1, 'Expected one native QML and package-structure plugin output'
-        assert qml[0].resolve().is_relative_to(build) and qml[0].parents[4] == build/'bin'
-        assert 'module org.kde.ksysguard.sensors' in qml[0].read_text().splitlines(), 'Wrong native QML URI'
-        plugin = plugins[0]
-        assert plugin == build/'bin/ksysguard_sensorface.so' and plugin.resolve().is_relative_to(build), 'Foreign native plugin output'
-        payload = plugin.read_bytes()
-        assert len(payload) >= 64 and payload[:6] == b'\x7fELF\x02\x01' and int.from_bytes(payload[18:20], 'little') == 62, 'Expected amd64 ELF plugin'
-        plugin_root = state/'qt-plugins'
-        staged_plugin = plugin_root/'kf6/packagestructure/ksysguard_sensorface.so'
-        staged_plugin.parent.mkdir(parents=True)
-        staged_plugin.write_bytes(payload)
-        assert staged_plugin.read_bytes() == payload, 'Native plugin staging changed bytes'
-        inputs = {'scope': 'owned native runtime input staging; no package result',
-                  'source_root': str(source), 'build_root': str(build),
-                  'qml_import_root': str(qml[0].parents[4]),
-                  'qml_dir_sha256': hashlib.sha256(qml[0].read_bytes()).hexdigest(),
-                  'plugin_build_path': str(plugin), 'plugin_staged_path': str(staged_plugin), 'plugin_install_namespace': 'kf6/packagestructure/ksysguard_sensorface.so',
-                  'plugin_sha256': hashlib.sha256(payload).hexdigest(), 'byte_preserving_private_staging': True}
-        (results/'native-inputs.json').write_text(json.dumps(inputs, indent=2)+'\n')
-        print('Owned native input staging: '+json.dumps(inputs, sort_keys=True), flush=True)
+        plugins = list(build.rglob('kf6/packagestructure/ksysguard_sensorface.so'))
+        assert len(qml) == len(plugins) == 1, 'Expected one candidate QML and package-structure plugin tree'
         environment['QML_IMPORT_PATH'] = str(qml[0].parents[4])
         environment['QML2_IMPORT_PATH'] = environment['QML_IMPORT_PATH']
-        environment['QT_PLUGIN_PATH'] = str(plugin_root)
+        environment['QT_PLUGIN_PATH'] = str(plugins[0].parents[2])
         for package in (source/'faces/facepackages').iterdir():
             if not (package/'metadata.json').is_file():
                 continue

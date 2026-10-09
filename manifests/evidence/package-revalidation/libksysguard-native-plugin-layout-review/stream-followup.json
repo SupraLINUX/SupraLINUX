@@ -1,0 +1,27 @@
+{
+  "state": "PASS",
+  "scope": "native input metadata stdout retention follow-up; original runtime projection only, no candidate certification",
+  "candidate_certification": false,
+  "prior_driver_sha256": "ef74fee88af49e2a0b6c144d7d62d7707faade0265785f1c6288f8966c222538",
+  "driver_sha256": "c22f3c011f16da7b05982bb88019cd8ef458fb0119f3600776f0762fbc76469e",
+  "only_change": "Emit the already-verified native input metadata JSON to stdout so retained sbuild log preserves hashes before ephemeral result cleanup",
+  "unmodified_guard_and_staging_mechanism": "previous six rejection controls and traced actual private plugin load remain applicable to unchanged body",
+  "exit_code": 0,
+  "metadata_stdout_matches_result_file": true,
+  "owned_groups_and_runtime_absent": true,
+  "package_attempt_consumed": false,
+  "files_sha256": {
+    "original-runtime-positive/actual-interface.txt": "c925569475582ac73bf2d62374b2fd438a5e13f3ee3dca6ead52e1631db52d48",
+    "original-runtime-positive/bus-stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-runtime-positive/client-stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-runtime-positive/client-stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-runtime-positive/native-inputs.json": "d600343989dd58ae283efc2c3dae35414cd31865e987f9a85163992482374855",
+    "original-runtime-positive/provider-stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-runtime-positive/provider-stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-runtime-positive/sensor-face.png": "2d449314bc1b826eb66a754965585e781ec344969d3d4c051c8a461c576eb0c4",
+    "prior-run-private.py": "ef74fee88af49e2a0b6c144d7d62d7707faade0265785f1c6288f8966c222538",
+    "run-private.py": "c22f3c011f16da7b05982bb88019cd8ef458fb0119f3600776f0762fbc76469e",
+    "stderr": "c61a1ddd8e716dcda2d5aaa17753b8d7b102776ecd39804de3bbead279ab3a97",
+    "stdout": "8bdc111e709a77deafe73eb945420936e79086da35a9d7b509f3c8f256aed3a4"
+  }
+}

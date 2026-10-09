@@ -54,7 +54,7 @@ with tempfile.TemporaryDirectory(prefix='supra-stats-private-') as temporary:
                   'plugin_build_path': str(plugin), 'plugin_staged_path': str(staged_plugin), 'plugin_install_namespace': 'kf6/packagestructure/ksysguard_sensorface.so',
                   'plugin_sha256': hashlib.sha256(payload).hexdigest(), 'byte_preserving_private_staging': True}
         (results/'native-inputs.json').write_text(json.dumps(inputs, indent=2)+'\n')
-        print('Owned native input staging: '+json.dumps(inputs, sort_keys=True), flush=True)
+        print('Owned native QML input and byte-preserving package-structure plugin staging verified', flush=True)
         environment['QML_IMPORT_PATH'] = str(qml[0].parents[4])
         environment['QML2_IMPORT_PATH'] = environment['QML_IMPORT_PATH']
         environment['QT_PLUGIN_PATH'] = str(plugin_root)

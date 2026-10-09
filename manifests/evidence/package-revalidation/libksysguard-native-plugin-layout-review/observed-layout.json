@@ -1,0 +1,10 @@
+{
+  "state": "PASS",
+  "scope": "actual candidate link-output path observation only; no CTest/runtime certification",
+  "sbuild_log_sha256": "d685e970e2fdaf90eadf214d90bceb9b33ce80272d386028fccbbcb71f06b709",
+  "actual_plugin_link_output": "../../bin/ksysguard_sensorface.so from faces/packagestructure",
+  "actual_qml_plugin_link_output": "../bin/org/kde/ksysguard/sensors/libSensorsplugin.so from sensors",
+  "installed_plugin_namespace_from_unchanged_source": "kf6/packagestructure",
+  "source_install_rule_sha256": "d3acf73a8d8b252c65cc9605f8c0de9512f8bd561e008da05f455c51d372544b",
+  "local_projection": "Actual original Ubuntu runtime/plugin/QML/face bytes projected into the observed build-output layout; not candidate binaries or source execution"
+}
