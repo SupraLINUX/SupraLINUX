@@ -92,6 +92,25 @@ append-only. This limited certification permits the fresh package input
 preflight; it does not prove the cause of the earlier wired outage or certify
 package compilation and application tests.
 
+The following package gate on `4977c700` repeated those small controls but
+stalled in Actions job setup with connection timeouts. A bounded 10,370-byte
+TLS read succeeded in 2.33 seconds while the ingress policer recorded three
+additional drops. The run was intentionally cancelled before checkout or
+package preparation. Original GitHub job metadata, the empty workspace,
+sealed host, monitor, diagnostic and direct runner 260/VM/overlay cleanup are
+retained as an INFRA_INVALID startup observation, not an original package result.
+No package Attempt was consumed and the campaign remains in preflight mode.
+
+The 8 KiB bucket can reject coalesced TCP payloads even below the average
+rate. The proposed guest-only repair keeps the 256/64 KiB/s rates, explicitly
+admits packet accounting up to 65,535 bytes and uses a bounded 128 KiB ingress
+bucket. This is half a second of the admitted download rate, not a higher rate
+or reserved physical bandwidth. The next small certification additionally
+requires a bounded 4–16 KiB HTTPS body without any policer drop during that read,
+then JIT startup and owned cleanup. The earlier limited certification and all
+failure observations remain immutable; this revised bulk-delivery path is not
+yet admitted. See [Linux policing implementation](https://github.com/torvalds/linux/blob/master/net/sched/act_police.c).
+
 Sources: [libvirt SLIRP domain format](https://libvirt.org/formatdomain.html#userspace-connection-using-slirp),
 [QEMU user networking](https://www.qemu.org/docs/master/system/qemu-manpage.html),
 [upstream e1000e NAT/TSO report](https://lists.openwall.net/netdev/2019/05/09/40),

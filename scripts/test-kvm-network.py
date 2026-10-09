@@ -33,6 +33,9 @@ class NetworkTests(unittest.TestCase):
         filters = [{'options': {'actions': [{'kind': 'police', 'control_action': {'type': 'drop'}}]}}]
         text = 'action order 1: police 0x1 rate 2Mibit burst 8Kb mtu 2Kb action drop/ok'
         GUEST.verify_police(filters, text, 256 * 1024)
+        GUEST.verify_police(filters, text.replace('burst 8Kb', 'burst 128Kb'), 256 * 1024, 128 * 1024)
+        with self.assertRaises(AssertionError):
+            GUEST.verify_police(filters, text.replace('burst 8Kb', 'burst 256Kb'), 256 * 1024, 128 * 1024)
         for invalid in [text.replace('2Mibit', '4Mibit'), text.replace('2Mibit', '2097Kbit'), '', text+'\n'+text]:
             with self.subTest(text=invalid), self.assertRaises(AssertionError):
                 GUEST.verify_police(filters, invalid, 256 * 1024)

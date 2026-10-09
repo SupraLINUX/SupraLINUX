@@ -17,12 +17,14 @@ USER_MAC = '52:54:00:53:55:01'
 
 
 def check_retained_probes(root):
-    paths = sorted((root/'manifests/evidence/host-network-safety').glob('slirp-probe*/verification.json'))
+    paths = sorted((root/'manifests/evidence/host-network-safety').glob('slirp-*/verification.json'))
     for path in paths:
         proof = json.loads(path.read_text())
         assert proof['state'] in {'PASS', 'INFRA_INVALID'}
-        assert proof['scope'] == 'synthetic bridge-free KVM guest network isolation and JIT startup'
-        assert proof['package_attempt_consumed'] is proof['package_execution_started'] is proof['workflow_triggered'] is False
+        synthetic = proof['scope'] == 'synthetic bridge-free KVM guest network isolation and JIT startup'
+        assert synthetic or proof['scope'] == 'owned package gate startup transport observation'
+        assert proof['package_attempt_consumed'] is proof['package_execution_started'] is False
+        assert proof['workflow_triggered'] is (not synthetic)
         assert proof['host_network_modified'] is proof['host_packages_installed'] is proof['host_firewall_modified'] is False
         assert proof['hardware_hang_observed'] is False and proof['physical_link_retained'] is True
         assert proof['cleanup_verified'] is proof['offline_restore_verified'] is True
@@ -32,17 +34,31 @@ def check_retained_probes(root):
             assert hashlib.sha256(file.read_bytes()).hexdigest() == digest
         assert proof['files_sha256']['evidence-sha256.txt'] == proof['host_evidence_seal_sha256']
         cleanup = json.loads((path.parent/'cleanup.json').read_text())
-        assert cleanup['source_commit'] == proof['source_commit'] and cleanup['workflow_run_id'] is None
+        assert cleanup['source_commit'] == proof['source_commit']
+        assert cleanup['workflow_run_id'] == (None if synthetic else proof['workflow_run_id'])
         assert all(cleanup[k] is True for k in ['vm_absent', 'runner_absent', 'overlay_absent', 'golden_image_preserved', 'execution_backing_image_preserved'])
         health = [json.loads(line) for line in (path.parent/'host-health.jsonl').read_text().splitlines()]
         assert len(health) == proof['host_health_samples'] and health
         assert all(x['journal_exit_code'] in (0, 1) and not x['hardware_hang_seen'] and x['eno1_carrier'] == '1' for x in health)
         host = json.loads((path.parent/'host-result.json').read_text())
-        assert host['workflow_run_id'] == ''
+        assert host['workflow_run_id'] == ('' if synthetic else str(proof['workflow_run_id']))
         domain = check_userspace_domain((path.parent/'network-live-domain.xml').read_text())
         assert domain['guest_link'] == 'down'
         kvm = json.loads((path.parent/'qemu-cpu-policy.json').read_text())['kvm']
         assert kvm['enabled'] is kvm['present'] is True
+        if not synthetic:
+            assert proof['state'] == 'INFRA_INVALID' and proof['runner_result_present'] is False
+            assert proof['stage'] == 'actions-job-setup-before-package-preflight' and host['exit_code'] != 0
+            job = json.loads((path.parent/'workflow-job.json').read_text())
+            assert job['status'] == 'completed' and job['conclusion'] == proof['original_workflow_conclusion'] == 'cancelled'
+            assert job['head_sha'] == proof['source_commit'] and job['id'] == proof['workflow_job_id'] and job['run_id'] == proof['workflow_run_id']
+            assert [x['name'] for x in job['steps']] == ['Set up job'] and job['steps'][0]['conclusion'] == 'failure'
+            diagnostic = json.loads((path.parent/'download-diagnostic.json').read_text())
+            assert diagnostic['result']['state'] == 'PASS' and 4096 < diagnostic['result']['bytes'] <= 16384
+            before = diagnostic['before'][-1]['options']['actions'][0]['stats']['drops']
+            after = diagnostic['after'][-1]['options']['actions'][0]['stats']['drops']
+            assert after > before and proof['repair']
+            continue
         if proof['state'] == 'INFRA_INVALID':
             assert host['exit_code'] != 0 and proof['runner_registered'] is False
             if proof['guest_link_enabled']:
@@ -60,12 +76,15 @@ def check_retained_probes(root):
         shaper = next(x for x in limits['qdisc'] if x.get('root') and x['kind'] == 'tbf')
         assert shaper['options']['rate'] == up * 1024
         guest = importlib.machinery.SourceFileLoader('guest_network_proof', str(root/'scripts/configure-kvm-guest-network.py')).load_module()
-        guest.verify_police(limits['ingress_filters'], limits['ingress_filter_iec_text'], down * 1024)
+        guest.verify_police(limits['ingress_filters'], limits['ingress_filter_iec_text'], down * 1024, limits.get('download_burst_bytes', 8192))
         connectivity = json.loads((path.parent/'network-guest-connectivity.json').read_text())
         assert connectivity['state'] == 'PASS' and connectivity['host_network_modified'] is False
         assert connectivity['private_reject_counter_delta'] >= 2 and len(connectivity['private_probes']) == 2
         assert all(x['errno'] == 111 and x['reject_packets_after'] > x['reject_packets_before'] for x in connectivity['private_probes'])
         assert connectivity['internet_status'] == 200 and 0 < connectivity['internet_payload_bytes'] <= 1024
+        if 'bounded_tls_payload' in connectivity:
+            bulk = connectivity['bounded_tls_payload']
+            assert 4096 < bulk['bytes'] <= 16384 and bulk['policer_drops_before'] == bulk['policer_drops_after']
         marker = dict(line.split('=', 1) for line in (path.parent/'jit-startup-preflight-result.txt').read_text().splitlines())
         assert marker['status'] == marker['cleanup'] == 'PASS' and marker['workflow_triggered'] == 'no'
     return {'state': 'PASS', 'retained_network_probes': len(paths)}

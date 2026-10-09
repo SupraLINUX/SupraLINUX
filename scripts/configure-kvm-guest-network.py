@@ -15,6 +15,7 @@ from pathlib import Path
 from decimal import Decimal
 
 MAC = '52:54:00:53:55:01'
+INGRESS_BURST = 128 * 1024
 PRIVATE = '0.0.0.0/8, 10.0.0.0/8, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 192.168.0.0/16, 224.0.0.0/4, 240.0.0.0/4'
 
 
@@ -24,7 +25,7 @@ def rates(download, upload):
     return download * 1024, upload * 1024
 
 
-def verify_police(filters, text, download_bytes):
+def verify_police(filters, text, download_bytes, burst_bytes=8192):
     # iproute2 emits police rate only in its text formatter (PRINT_FP), unlike
     # TBF's JSON rate. IEC text preserves our integral KiB/s rates exactly.
     policers = [action for entry in filters for action in entry.get('options', {}).get('actions', []) if action.get('kind') == 'police']
@@ -32,6 +33,9 @@ def verify_police(filters, text, download_bytes):
     values = re.findall(r'\bpolice\s+0x[0-9a-f]+\s+rate\s+(\d+(?:\.\d+)?)(bit|Kibit|Mibit|Gibit)\b', text)
     scale = {'bit': 1, 'Kibit': 1024, 'Mibit': 1024**2, 'Gibit': 1024**3}
     assert len(values) == 1 and Decimal(values[0][0]) * scale[values[0][1]] == download_bytes * 8, 'Actual download policer differs from the admitted rate'
+    bursts = re.findall(r'\bburst\s+(\d+(?:\.\d+)?)(b|Kb|Mb)\b', text)
+    byte_scale = {'b': 1, 'Kb': 1024, 'Mb': 1024**2}
+    assert len(bursts) == 1 and Decimal(bursts[0][0]) * byte_scale[bursts[0][1]] == burst_bytes, 'Actual ingress token bucket differs from the admitted burst'
 
 
 def private_reject_packets(loaded):
@@ -101,10 +105,26 @@ def verify_network(device):
     with urllib.request.urlopen(request, timeout=20) as response:
         payload = response.read(1025)
         assert response.status == 200 and 0 < len(payload) <= 1024
+    def drop_count():
+        filters = json.loads(subprocess.check_output(['tc', '-s', '-json', 'filter', 'show', 'dev', device, 'ingress'], text=True))
+        actions = [a for f in filters for a in f.get('options', {}).get('actions', []) if a.get('kind') == 'police']
+        assert len(actions) == 1
+        return actions[0]['stats']['drops']
+    drops_before = drop_count()
+    bulk_start = time.monotonic()
+    bulk_url = 'https://raw.githubusercontent.com/iproute2/iproute2/main/tc/m_police.c'
+    with urllib.request.urlopen(bulk_url, timeout=20) as response:
+        bulk = response.read(16385)
+        assert response.status == 200 and 4096 < len(bulk) <= 16384
+    bulk_seconds = time.monotonic() - bulk_start
+    drops_after = drop_count()
+    assert drops_after == drops_before, 'Bounded TLS payload still suffers guest ingress drops'
     return {'state': 'PASS', 'scope': 'bounded real SLIRP Internet and guest-local private-address rejection',
             'host_network_modified': False, 'guest_ipv4': ipv4, 'guest_default_route': routes,
             'private_probes': probes, 'private_reject_counter_delta': after - before,
-            'internet_url': request.full_url, 'internet_status': 200, 'internet_payload_bytes': len(payload)}
+            'internet_url': request.full_url, 'internet_status': 200, 'internet_payload_bytes': len(payload),
+            'bounded_tls_payload': {'url': bulk_url, 'bytes': len(bulk), 'seconds': bulk_seconds,
+                                   'policer_drops_before': drops_before, 'policer_drops_after': drops_after}}
 
 
 def main():
@@ -127,7 +147,7 @@ def main():
         ['tc', 'qdisc', 'replace', 'dev', device, 'root', 'tbf', 'rate', str(up * 8), 'burst', '8192', 'latency', '100ms'],
         ['tc', 'qdisc', 'add', 'dev', device, 'handle', 'ffff:', 'ingress'],
         ['tc', 'filter', 'add', 'dev', device, 'parent', 'ffff:', 'protocol', 'all', 'prio', '1', 'matchall',
-         'action', 'police', 'rate', str(down * 8), 'burst', '8192', 'conform-exceed', 'drop'],
+         'action', 'police', 'rate', str(down * 8), 'burst', str(INGRESS_BURST), 'mtu', '65535', 'conform-exceed', 'drop'],
     ]
     policy = rules(device)
     subprocess.run(['nft', '-f', '-'], input=policy, text=True, check=True)
@@ -138,13 +158,14 @@ def main():
     assert root['options']['rate'] == up, 'Actual upload shaper differs from the admitted rate'
     filters = json.loads(subprocess.check_output(['tc', '-json', 'filter', 'show', 'dev', device, 'ingress'], text=True))
     ingress_text = subprocess.check_output(['tc', '-iec', 'filter', 'show', 'dev', device, 'ingress'], text=True)
-    verify_police(filters, ingress_text, down)
+    verify_police(filters, ingress_text, down, INGRESS_BURST)
     actual_rules = subprocess.check_output(['nft', '--json', 'list', 'table', 'inet', 'supralinux_guest'], text=True)
     assert filters and len([x for x in json.loads(actual_rules)['nftables'] if 'rule' in x]) == 7
     print(json.dumps({'state': 'PASS', 'scope': 'guest-only SLIRP private-address firewall and traffic controls',
                       'interface': device, 'guest_mac': MAC, 'host_network_modified': False,
                       'private_ipv4_and_external_ipv6_blocked': True, 'guest_loopback_preserved': True,
                       'download_kib_per_second': a.download_kib, 'upload_kib_per_second': a.upload_kib,
+                      'download_burst_bytes': INGRESS_BURST, 'download_packet_limit_requested_bytes': 65535,
                       'download_control': 'guest ingress policer; TCP retransmission/backpressure, no reserved host bandwidth',
                       'upload_control': 'guest egress TBF', 'qdisc': qdisc, 'ingress_filters': filters,
                       'ingress_filter_iec_text': ingress_text,

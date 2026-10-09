@@ -1,5 +1,13 @@
 # Authoritative Plasma package builds
 
+The first fresh input gate under SLIRP was cancelled in Actions job setup on
+`4977c7000a8c56ae24bc157b1fe454a45f5ad855`, before checkout/package preparation.
+No original runner result or package Attempt exists. Full startup evidence,
+observed guest packet loss, bounded TLS diagnostic and runner 260/VM/overlay
+cleanup are retained in `host-network-safety/slirp-preflight35-startup`.
+The proposed guest bucket repair preserves average traffic limits and needs
+small bounded TLS/JIT certification before restarting the real input preflight.
+
 The bridge-free SLIRP mechanism is certified by the small `slirp-probe3` on
 `b9a8d86dc39e6cc381a7e35737b519d63c08e4aa`: actual guest traffic limits,
 private-address rejection counters, bounded HTTPS and JIT startup PASS.
