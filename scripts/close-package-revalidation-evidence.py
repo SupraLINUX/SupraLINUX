@@ -78,17 +78,32 @@ def main():
     if args.host_export:
         assert plasma_inputs and not args.artifact_meta and not args.zip.exists()
         base = args.host_dir/'guest-files/workspace/evidence'
-        raw, files = interrupted_preflight(base/'authoritative-plasma-package',
-                                          base/'runner-contract/reviewed-ubuntu-baseline', host, job, head, args.node, record['version'])
-        raw['host_result_sha256'] = sha(args.host_dir/'host-result.json')
-        raw['host_evidence_manifest_sha256'] = sha(args.host_dir/'evidence-sha256.txt')
+        payload = base/'authoritative-plasma-package'
+        original_present = (payload/'result.json').is_file()
+        if original_present:
+            raw = json.loads((payload/'result.json').read_text())
+            assert raw['state'] == 'PASS' and raw['package_attempt_consumed'] is False
+            assert raw['stage'] == 'reviewed-package-preflight-complete' and host['exit_code'] != 0
+            assert job['status'] == 'completed' and job['conclusion'] == 'failure'
+            steps = {step['name']: step for step in job['steps']}
+            assert steps['Run current reviewed package']['conclusion'] == 'success'
+            assert steps['Retain package sources, binaries and evidence']['conclusion'] != 'success'
+            files = {str(path.relative_to(payload)): path for path in sorted(payload.rglob('*')) if path.is_file()}
+            assert all(not path.is_symlink() for path in files.values())
+            assert all(name in files and sha(files[name]) == digest for name, digest in raw['files_sha256'].items())
+        else:
+            raw, files = interrupted_preflight(payload,
+                                              base/'runner-contract/reviewed-ubuntu-baseline', host, job, head, args.node, record['version'])
+            raw['host_result_sha256'] = sha(args.host_dir/'host-result.json')
+            raw['host_evidence_manifest_sha256'] = sha(args.host_dir/'evidence-sha256.txt')
         args.zip.parent.mkdir(parents=True, exist_ok=True)
         with zipfile.ZipFile(args.zip, 'w', compression=zipfile.ZIP_DEFLATED, strict_timestamps=False) as archive:
             for name, path in files.items():
                 archive.write(path, name)
-            archive.writestr('result.json', json.dumps(raw, indent=2)+'\n')
+            if not original_present:
+                archive.writestr('result.json', json.dumps(raw, indent=2)+'\n')
         digest = sha(args.zip)
-        meta = {'id': None, 'kind': 'sealed-host-preflight-export', 'digest': 'sha256:'+digest,
+        meta = {'id': None, 'kind': 'sealed-host-preflight-result-export' if original_present else 'sealed-host-preflight-export', 'digest': 'sha256:'+digest,
                 'workflow_run': {'id': job['run_id'], 'head_sha': head}}
     else:
         assert args.artifact_meta
@@ -102,10 +117,11 @@ def main():
         if not args.host_export:
             assert meta['name'] == expected_artifact
         assert raw['workflow_run_id'] == str(job['run_id']) == host['workflow_run_id']
-        assert job['status'] == 'completed' and job['conclusion'] == ('success' if raw['state']=='PASS' else 'failure')
+        transport_failure = meta.get('kind') == 'sealed-host-preflight-result-export'
+        assert job['status'] == 'completed' and job['conclusion'] == ('failure' if transport_failure else ('success' if raw['state']=='PASS' else 'failure'))
         assert raw['node'] == args.node and raw['version'] == record['version']
         assert raw['authoritative'] and raw['system_test_acceleration'] == 'kvm-required'
-        assert (host['exit_code']==0) == (raw['state']=='PASS')
+        assert (host['exit_code'] != 0 and raw['state'] == 'PASS') if transport_failure else ((host['exit_code']==0) == (raw['state']=='PASS'))
         for name, expected in raw['files_sha256'].items():
             assert not Path(name).is_absolute() and '..' not in Path(name).parts
             assert hashlib.sha256(archive.read(name)).hexdigest() == expected, name
@@ -223,6 +239,10 @@ def main():
              'archive_path':str(stored.relative_to(ROOT)),'inspection':inspection,
              'offline_restore_verified':True,'requires_github_for_restore':False,
              'files_sha256':{str(p.relative_to(directory)):sha(p) for p in sorted(directory.rglob('*')) if p.is_file()}}
+    if transport_failure:
+        proof['infrastructure_transport_result'] = 'FAIL'
+        proof['original_runner_result_preserved'] = True
+        proof['current_input_admission'] = False
     if preflight:
         inputs=['scripts/run-authoritative-plasma-package.sh','scripts/prepare-plasma-package.py',
                 'scripts/plasma-package-testing.py','scripts/probe-reviewed-ubuntu-baseline.py',
@@ -262,7 +282,10 @@ def main():
         if raw['state']=='PASS':
             key = 'package_input_certifications' if plasma_inputs else 'certifications'
             campaign.setdefault(key, []).append(link)
-            campaign['execution_mode']='build'
+            if transport_failure:
+                link.update(applicable=False, inapplicability_reason='Original preflight PASS preserved after Actions/host network transport failure; changed host network policy requires fresh certification')
+            else:
+                campaign['execution_mode']='build'
             if plasma_inputs and record.get('source_scope') == 'plasma-supplementary-provider':
                 path = ROOT/'manifests/kde-plasma-supplementary-providers.json'
                 providers = json.loads(path.read_text())

@@ -13,9 +13,9 @@ STATE_DIR="${SUPRALINUX_KVM_STATE_DIR:-/var/lib/supralinux/ephemeral-runners}"
 EVIDENCE_ROOT="${SUPRALINUX_HOST_EVIDENCE_ROOT:-/var/lib/supralinux/evidence/host-kvm}"
 RUNNER_USER="${SUPRALINUX_RUNNER_USER:-ubuntu}"
 LIBVIRT_URI="${SUPRALINUX_LIBVIRT_URI:-qemu:///system}"
-LIBVIRT_NETWORK="${SUPRALINUX_LIBVIRT_NETWORK:-default}"
+NETWORK_MODE="${SUPRALINUX_NETWORK_MODE:-slirp}"
 VM_DOWNLOAD_KIB="${SUPRALINUX_VM_DOWNLOAD_KIB:-256}"
-VM_UPLOAD_KIB="${SUPRALINUX_VM_UPLOAD_KIB:-128}"
+VM_UPLOAD_KIB="${SUPRALINUX_VM_UPLOAD_KIB:-64}"
 VM_MEMORY_MIB="${SUPRALINUX_VM_MEMORY_MIB:-12288}"
 VM_VCPUS="${SUPRALINUX_VM_VCPUS:-6}"
 VM_DISK_SIZE_GIB="${SUPRALINUX_VM_DISK_SIZE_GIB:-80}"
@@ -96,7 +96,7 @@ required_commands=(
     qemu-img
     python3
     sha256sum
-    tc
+    ethtool
     virsh
     virt-copy-out
     virt-install
@@ -145,13 +145,12 @@ if ! grep -Eq '\b(vmx|svm)\b' /proc/cpuinfo; then
 fi
 
 export LIBVIRT_DEFAULT_URI="${LIBVIRT_URI}"
-network_info="$(LC_ALL=C virsh net-info "${LIBVIRT_NETWORK}" 2>/dev/null || true)"
-if ! grep -Eq '^Active:[[:space:]]+yes$' <<<"${network_info}"; then
-    printf 'libvirt network %s is not active.\n' "${LIBVIRT_NETWORK}" >&2
+if [[ "${NETWORK_MODE}" != slirp || -n "${SUPRALINUX_LIBVIRT_NETWORK:-}" ]]; then
+    printf 'Current gates require bridge-free SLIRP; libvirt/LAN network overrides are forbidden.\n' >&2
     exit 1
 fi
 NETWORK_PREFLIGHT_JSON="$(python3 "${ROOT}/scripts/check-kvm-network.py" \
-    --libvirt-uri "${LIBVIRT_URI}" --network "${LIBVIRT_NETWORK}" \
+    --userspace \
     --download-kib "${VM_DOWNLOAD_KIB}" --upload-kib "${VM_UPLOAD_KIB}")"
 
 if [[ ! "${REPOSITORY}" =~ ^[^/]+/[^/]+$ ]]; then
@@ -526,7 +525,9 @@ printf '%s\n' "${BASELINE_RUN_IDS}" > "${EVIDENCE_DIR}/workflow-baseline-ids.jso
     printf 'golden_provenance=%s\n' "${GOLDEN_PROVENANCE}"
     printf 'local_lock=%s\n' "${LOCK_FILE}"
     printf 'libvirt_uri=%s\n' "${LIBVIRT_URI}"
-    printf 'libvirt_network=%s\n' "${LIBVIRT_NETWORK}"
+    printf 'network_backend=slirp\n'
+    printf 'guest_private_subnet=10.203.0.0/24\n'
+    printf 'host_bridge_or_tap_created=no\n'
     printf 'vm_download_kib_per_second=%s\n' "${VM_DOWNLOAD_KIB}"
     printf 'vm_upload_kib_per_second=%s\n' "${VM_UPLOAD_KIB}"
     printf 'vm_memory_mib=%s\n' "${VM_MEMORY_MIB}"
@@ -568,7 +569,7 @@ virt-install \
     --qemu-commandline='-global host-x86_64-cpu.kvm-asyncpf=off -global host-x86_64-cpu.kvm-asyncpf-int=off' \
     --import \
     --disk "path=${OVERLAY},format=qcow2,bus=virtio,cache=none" \
-    --network "network=${LIBVIRT_NETWORK},model=virtio,xpath1.set=./bandwidth/inbound/@average=${VM_DOWNLOAD_KIB},xpath2.set=./bandwidth/inbound/@peak=${VM_DOWNLOAD_KIB},xpath3.set=./bandwidth/outbound/@average=${VM_UPLOAD_KIB}" \
+    --network 'user,model=virtio,mac=52:54:00:53:55:01,link.state=down,xpath1.set=./ip/@family=ipv4,xpath2.set=./ip/@address=10.203.0.1,xpath3.set=./ip/@prefix=24' \
     --channel unix,target.type=virtio,target.name=org.qemu.guest_agent.0 \
     --graphics none \
     --noautoconsole \
@@ -576,12 +577,8 @@ virt-install \
 
 virsh dumpxml "${VM_NAME}" > "${EVIDENCE_DIR}/network-live-domain.xml"
 python3 "${ROOT}/scripts/check-kvm-network.py" \
-    --network "${LIBVIRT_NETWORK}" --download-kib "${VM_DOWNLOAD_KIB}" --upload-kib "${VM_UPLOAD_KIB}" \
+    --userspace --download-kib "${VM_DOWNLOAD_KIB}" --upload-kib "${VM_UPLOAD_KIB}" \
     --domain-xml "${EVIDENCE_DIR}/network-live-domain.xml" > "${EVIDENCE_DIR}/network-guest-limits.json"
-GUEST_TAP="$(jq -er '.tap' "${EVIDENCE_DIR}/network-guest-limits.json")"
-tc -json qdisc show dev "${GUEST_TAP}" > "${EVIDENCE_DIR}/network-tap-qdisc.json"
-tc -json class show dev "${GUEST_TAP}" > "${EVIDENCE_DIR}/network-tap-classes.json"
-tc -json filter show dev "${GUEST_TAP}" ingress > "${EVIDENCE_DIR}/network-tap-ingress.json"
 
 # Keep nested KVM, but avoid the observed asynchronous page-fault wait in the
 # outer build guest. Verify actual QEMU CPU properties rather than trusting XML.
@@ -663,6 +660,47 @@ until qga '{"execute":"guest-ping"}' >/dev/null 2>&1; do
     fi
     sleep 2
 done
+
+printf 'Applying guest-only firewall and traffic controls before enabling its SLIRP link...\n'
+NETWORK_GUEST_PAYLOAD="$(python3 - "${ROOT}/scripts/configure-kvm-guest-network.py" "${VM_DOWNLOAD_KIB}" "${VM_UPLOAD_KIB}" <<'PY'
+import base64,json,sys
+from pathlib import Path
+source=base64.b64encode(Path(sys.argv[1]).read_bytes()).decode()
+code="import base64,sys;sys.argv=['guest-network','--download-kib',%r,'--upload-kib',%r];exec(compile(base64.b64decode(%r),'guest-network','exec'))" % (sys.argv[2],sys.argv[3],source)
+print(json.dumps({'execute':'guest-exec','arguments':{'path':'/usr/bin/python3','arg':['-c',code],'capture-output':True}}))
+PY
+)"
+if ! NETWORK_GUEST_RESULT="$(qga_exec_wait "${NETWORK_GUEST_PAYLOAD}" 60)"; then
+    printf '%s\n' "${NETWORK_GUEST_RESULT:-}" > "${EVIDENCE_DIR}/network-guest-policy-execution.json"
+    printf 'Guest network control installation failed before enabling its link.\n' >&2
+    exit 1
+fi
+printf '%s\n' "${NETWORK_GUEST_RESULT}" > "${EVIDENCE_DIR}/network-guest-policy-execution.json"
+jq -er '.return["out-data"]' <<<"${NETWORK_GUEST_RESULT}" | base64 -d > "${EVIDENCE_DIR}/network-guest-safety.json"
+jq -e '.state == "PASS" and .host_network_modified == false and .private_ipv4_and_external_ipv6_blocked == true' \
+    "${EVIDENCE_DIR}/network-guest-safety.json" >/dev/null
+virsh domif-setlink "${VM_NAME}" 52:54:00:53:55:01 up
+virsh dumpxml "${VM_NAME}" > "${EVIDENCE_DIR}/network-live-domain-enabled.xml"
+python3 "${ROOT}/scripts/check-kvm-network.py" --userspace \
+    --download-kib "${VM_DOWNLOAD_KIB}" --upload-kib "${VM_UPLOAD_KIB}" \
+    --domain-xml "${EVIDENCE_DIR}/network-live-domain-enabled.xml" > "${EVIDENCE_DIR}/network-enabled-admission.json"
+
+NETWORK_PROBE_PAYLOAD="$(python3 - "${NETWORK_GUEST_PAYLOAD}" <<'PY'
+import json,sys
+payload=json.loads(sys.argv[1])
+payload['arguments']['arg'][1]=payload['arguments']['arg'][1].replace("'--upload-kib',", "'--verify-network','--upload-kib',", 1)
+print(json.dumps(payload))
+PY
+)"
+if ! NETWORK_PROBE_RESULT="$(qga_exec_wait "${NETWORK_PROBE_PAYLOAD}" 75)"; then
+    printf '%s\n' "${NETWORK_PROBE_RESULT:-}" > "${EVIDENCE_DIR}/network-guest-connectivity-execution.json"
+    printf 'Bounded guest Internet/private-address isolation probe failed.\n' >&2
+    exit 1
+fi
+printf '%s\n' "${NETWORK_PROBE_RESULT}" > "${EVIDENCE_DIR}/network-guest-connectivity-execution.json"
+jq -er '.return["out-data"]' <<<"${NETWORK_PROBE_RESULT}" | base64 -d > "${EVIDENCE_DIR}/network-guest-connectivity.json"
+jq -e '.state == "PASS" and .host_network_modified == false and .private_reject_counter_delta == 2' \
+    "${EVIDENCE_DIR}/network-guest-connectivity.json" >/dev/null
 
 printf 'Requesting organization-scoped GitHub JIT runner configuration...\n'
 JIT_PAYLOAD="$(jq -nc \

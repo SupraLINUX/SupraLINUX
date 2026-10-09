@@ -16,6 +16,55 @@ spec.loader.exec_module(contract)
 input_spec = importlib.util.spec_from_file_location('build_predecessors', ROOT/'scripts/verify-reviewed-build-predecessors.py')
 predecessors = importlib.util.module_from_spec(input_spec)
 input_spec.loader.exec_module(predecessors)
+transport_spec = importlib.util.spec_from_file_location('preflight_transport', ROOT/'scripts/validate_package_revalidation.py')
+transport = importlib.util.module_from_spec(transport_spec)
+transport_spec.loader.exec_module(transport)
+
+
+class PreflightTransport(unittest.TestCase):
+    def setUp(self):
+        self.link = {'applicable': False, 'inapplicability_reason': 'Changed network after lost transport'}
+        self.result = {'state': 'PASS', 'package_attempt_consumed': False, 'stage': 'reviewed-package-preflight-complete'}
+        self.job = {'status': 'completed', 'conclusion': 'failure', 'steps': [
+            {'name': 'Run current reviewed package', 'conclusion': 'success'},
+            {'name': 'Retain package sources, binaries and evidence', 'conclusion': None}]}
+        self.artifact = {'kind': 'sealed-host-preflight-result-export', 'id': None}
+        self.host = {'exit_code': 28}
+        self.proof = {'infrastructure_transport_result': 'FAIL', 'original_runner_result_preserved': True, 'current_input_admission': False}
+
+    def verify(self):
+        transport.verify_preflight_transport(self.link, self.result, self.job, self.artifact, self.host, self.proof)
+
+    def test_preserved_original_pass_is_historical_only(self):
+        self.verify()
+
+    def test_transport_failure_cannot_become_current_admission(self):
+        for mapping, key, value in [(self.link, 'applicable', True), (self.proof, 'current_input_admission', True),
+                                    (self.proof, 'original_runner_result_preserved', False)]:
+            old = mapping[key]
+            mapping[key] = value
+            with self.subTest(key=key), self.assertRaises(AssertionError):
+                self.verify()
+            mapping[key] = old
+
+    def test_result_and_transport_cannot_be_relabelled(self):
+        for mapping, key, value in [(self.result, 'state', 'FAIL'), (self.result, 'package_attempt_consumed', True),
+                                    (self.result, 'stage', 'package-build-complete'), (self.host, 'exit_code', 0),
+                                    (self.artifact, 'id', 123), (self.job, 'status', 'in_progress'),
+                                    (self.job, 'conclusion', 'success')]:
+            old = mapping[key]
+            mapping[key] = value
+            with self.subTest(key=key), self.assertRaises(AssertionError):
+                self.verify()
+            mapping[key] = old
+
+    def test_original_execution_must_pass_and_retention_must_fail(self):
+        for step, value in [(self.job['steps'][0], 'failure'), (self.job['steps'][1], 'success')]:
+            old = step['conclusion']
+            step['conclusion'] = value
+            with self.subTest(step=step['name']), self.assertRaises(AssertionError):
+                self.verify()
+            step['conclusion'] = old
 
 
 class ExecutionContract(unittest.TestCase):

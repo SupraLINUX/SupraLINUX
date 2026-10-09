@@ -4,7 +4,6 @@ set -Eeuo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LIBVIRT_QEMU_USER="${SUPRALINUX_LIBVIRT_QEMU_USER:-libvirt-qemu}"
 LIBVIRT_URI="${SUPRALINUX_LIBVIRT_URI:-qemu:///system}"
-LIBVIRT_NETWORK="${SUPRALINUX_LIBVIRT_NETWORK:-default}"
 FAILED=0
 
 fail() {
@@ -88,6 +87,7 @@ required=(
     qemu-system-x86_64
     genisoimage
     curl
+    ethtool
     flock
     jq
     base64
@@ -131,17 +131,13 @@ fi
 if command -v virsh >/dev/null 2>&1; then
     if env LC_ALL=C virsh --connect "${LIBVIRT_URI}" uri >/dev/null 2>&1; then
         pass "libvirt system connection works (${LIBVIRT_URI})"
-        net_info="$(mktemp)"
-        if env LC_ALL=C virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}" > "${net_info}" 2>/dev/null; then
-            if grep -Eq '^Active:[[:space:]]+yes$' "${net_info}"; then
-                pass "libvirt network is active: ${LIBVIRT_NETWORK}"
-            else
-                fail "libvirt network exists but is not active: ${LIBVIRT_NETWORK}"
-            fi
+        if [[ -n "${SUPRALINUX_LIBVIRT_NETWORK:-}" || "${SUPRALINUX_NETWORK_MODE:-slirp}" != slirp ]]; then
+            fail 'libvirt/LAN network overrides are forbidden; current guests use SLIRP'
+        elif python3 "${ROOT}/scripts/check-kvm-network.py" --userspace; then
+            pass 'bridge-free userspace network and physical NIC safety admitted'
         else
-            fail "libvirt network is unavailable: ${LIBVIRT_NETWORK}"
+            fail 'userspace network or physical NIC safety admission failed'
         fi
-        rm -f "${net_info}"
     else
         fail "cannot connect to libvirt system URI: ${LIBVIRT_URI}"
     fi

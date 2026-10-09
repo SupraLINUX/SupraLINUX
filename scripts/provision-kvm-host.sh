@@ -4,9 +4,15 @@ set -Eeuo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TARGET_USER="${SUPRALINUX_HOST_USER:-${SUDO_USER:-${USER}}}"
 LIBVIRT_URI="${SUPRALINUX_LIBVIRT_URI:-qemu:///system}"
-LIBVIRT_NETWORK="${SUPRALINUX_LIBVIRT_NETWORK:-default}"
 LIBVIRT_QEMU_USER="${SUPRALINUX_LIBVIRT_QEMU_USER:-libvirt-qemu}"
 EVIDENCE_DIR="${SUPRALINUX_HOST_SETUP_EVIDENCE_DIR:-/var/lib/supralinux/evidence/host-setup}"
+
+# This is a host installation entrypoint, never a routine build prerequisite.
+# Agents must obtain the operator's specific approval before invoking this flag.
+if [[ "$#" != 1 || "$1" != --install-host-tools ]]; then
+    printf 'Host package installation requires specific operator permission. Usage after approval: %s --install-host-tools\n' "$0" >&2
+    exit 2
+fi
 
 if [[ "${EUID}" -eq 0 && -z "${SUDO_USER:-}" && -z "${SUPRALINUX_HOST_USER:-}" ]]; then
     printf 'Run as the intended host orchestration user with sudo, or set SUPRALINUX_HOST_USER.\n' >&2
@@ -68,16 +74,13 @@ for group_name in "${!required_groups[@]}"; do
     sudo usermod -aG "${group_name}" "${TARGET_USER}"
 done
 
-printf 'Ensuring the standard libvirt network is active and persistent...\n'
-if ! sudo env LC_ALL=C virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}" >/dev/null 2>&1; then
-    printf 'Expected libvirt network %s is not defined after package installation.\n' "${LIBVIRT_NETWORK}" >&2
+printf 'Guest networking uses bridge-free SLIRP; no libvirt network is started or enabled.\n'
+# Package installation can supply a default network definition. Do not start it,
+# and never remove an existing shared network from this generic provisioner.
+if [[ -n "${SUPRALINUX_LIBVIRT_NETWORK:-}" ]]; then
+    printf 'Libvirt/LAN network overrides are forbidden for SupraLINUX.\n' >&2
     exit 1
 fi
-network_info="$(sudo env LC_ALL=C virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}")"
-if ! grep -Eq '^Active:[[:space:]]+yes$' <<<"${network_info}"; then
-    sudo env LC_ALL=C virsh --connect "${LIBVIRT_URI}" net-start "${LIBVIRT_NETWORK}"
-fi
-sudo env LC_ALL=C virsh --connect "${LIBVIRT_URI}" net-autostart "${LIBVIRT_NETWORK}"
 
 sudo install -d -m 0755 /var/lib/supralinux/images
 sudo install -d -m 0755 /var/lib/supralinux/golden-builds
@@ -99,7 +102,7 @@ trap 'rm -f "${EVIDENCE_TMP}"' EXIT
     printf 'prepared_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
     printf 'host_user=%s\n' "${TARGET_USER}"
     printf 'libvirt_uri=%s\n' "${LIBVIRT_URI}"
-    printf 'libvirt_network=%s\n' "${LIBVIRT_NETWORK}"
+    printf 'network_backend=slirp\n'
     printf 'libvirt_qemu_user=%s\n' "${LIBVIRT_QEMU_USER}"
     printf 'libvirt_qemu_group=%s\n' "${LIBVIRT_QEMU_GROUP}"
     printf '\nos-release:\n'
@@ -113,7 +116,7 @@ trap 'rm -f "${EVIDENCE_TMP}"' EXIT
     printf '\nlibguestfs-runtime:\n'
     cat "/var/lib/supralinux/images/libguestfs-runtime/$(uname -r)/provenance.txt"
     printf '\nnetwork:\n'
-    sudo env LC_ALL=C virsh --connect "${LIBVIRT_URI}" net-info "${LIBVIRT_NETWORK}"
+    printf 'host_network_creation=forbidden\n'
     printf '\nkvm-module-state:\n'
     for nested in /sys/module/kvm_intel/parameters/nested /sys/module/kvm_amd/parameters/nested; do
         if [[ -r "${nested}" ]]; then

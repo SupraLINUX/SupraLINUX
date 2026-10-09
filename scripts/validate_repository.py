@@ -302,7 +302,11 @@ for package in ("libvirt-daemon-system", "qemu-system-x86", "virt-install", "lib
 require("does NOT change BIOS" in host_provisioner, "host provisioning must not silently alter BIOS/KVM module state")
 require("/var/lib/supralinux/golden-builds" in host_provisioner, "host provisioning must create golden-build state")
 require("scripts/prepare-libguestfs-runtime.sh" in host_provisioner, "host provisioning must prepare the private libguestfs kernel runtime")
-require("sudo env LC_ALL=C virsh" in host_provisioner, "host provisioning must parse libvirt output under a deterministic C locale")
+require('net-start' not in host_provisioner and 'net-autostart' not in host_provisioner,
+        "host provisioning must never activate a libvirt bridge/network")
+require('network_backend=slirp' in host_provisioner, "host provisioning must declare bridge-free SLIRP")
+require('--install-host-tools' in host_provisioner and host_provisioner.index('--install-host-tools') < host_provisioner.index('sudo apt-get update'),
+        "host installation must fail closed before apt without explicit operator approval")
 require("LIBVIRT_QEMU_USER" in host_provisioner and 'id -gn "${LIBVIRT_QEMU_USER}"' in host_provisioner, "host provisioning must resolve the effective libvirt QEMU group")
 require('for group_name in kvm libvirt "${LIBVIRT_QEMU_GROUP}"' in host_provisioner, "host provisioning must grant operator access to kvm, libvirt and the effective libvirt QEMU group")
 
@@ -333,6 +337,14 @@ host_checker = read_required("scripts/check-kvm-host.sh")
 for token in ("/dev/kvm", "parameters/nested", "qemu:///system", "virt-sysprep", "virt-cat", "virt-copy-out", "flock", "with-libguestfs-runtime.sh"):
     require(token in host_checker, f"host preflight missing required check: {token}")
 require("env LC_ALL=C virsh" in host_checker, "host preflight must parse libvirt output under a deterministic C locale")
+require('check-kvm-network.py" --userspace' in host_checker, "host preflight must admit SLIRP and physical NIC safety")
+network_core = read_required('scripts/run-kvm-jit-gate-core.sh')
+require('--network \'user,model=virtio' in network_core and 'link.state=down' in network_core,
+        "current KVM gates must boot a userspace interface with link disabled")
+require('network=${LIBVIRT_NETWORK}' not in network_core and 'GUEST_TAP' not in network_core,
+        "current KVM gates must not create host bridges/TAP interfaces")
+require(network_core.index('configure-kvm-guest-network.py') < network_core.index('virsh domif-setlink') < network_core.index("printf 'Requesting organization-scoped"),
+        "guest firewall/traffic limits must precede link activation and JIT registration")
 
 nested_probe = read_required("scripts/check-nested-kvm-runtime.sh")
 require("-accel kvm" in nested_probe and "-cpu host" in nested_probe, "nested runtime probe must force real KVM with host CPU")

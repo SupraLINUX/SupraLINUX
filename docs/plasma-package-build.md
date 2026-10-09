@@ -1,5 +1,18 @@
 # Authoritative Plasma package builds
 
+LibKSysGuard revision 3 input preflight 34's original runner result is PASS on
+`fd6409a6894ada6522a94699286c1ade2784926a`,
+[run 37934931142](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37934931142).
+All 173 exact inputs and the original Ubuntu functional SDK/provider/client pass.
+Actions retention and host monitoring then fail during the observed physical
+e1000e hang/DNS outage. No Actions artifact was delivered; the complete original
+source/log payload was recovered unchanged from the sealed host and restored
+offline. VM, runner 258 and overlay absence were independently verified. No
+package Attempt was consumed. The original PASS remains distinct from failed
+transport; it does not admit execution under the changed host network policy.
+See [host network safety](kvm-network-safety.md). A small bridge-free infrastructure
+probe and fresh package preflight precede Attempt 3.
+
 LibKSysGuard Attempt 2 is an original package FAIL in
 [run 37929688722](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37929688722)
 on source `bb105c28d175bf9b582c3902f266098f73c47266`.

@@ -7998,6 +7998,12 @@
       "sha256": "e656bb568ff9e14876540291ca411f93ebe4703f711e22f1c71090aa1856c606",
       "applicable": false,
       "inapplicability_reason": "Revision 3 changes candidate version and native plugin staging after retained Attempt 2 FAIL; preserve preflight 33 and revalidate current inputs."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/libksysguard-preflight34/verification.json",
+      "sha256": "8808e7234b2ce565f4bb1e350b64cbff229383e641a487934aba85c5e62ea617",
+      "applicable": false,
+      "inapplicability_reason": "Original preflight PASS preserved after Actions/host network transport failure; changed host network policy requires fresh certification"
     }
   ],
   "package_input_incidents": [

@@ -12,6 +12,9 @@ NETWORK = """<network><name>default</name><forward mode='nat'/><bridge name='vir
 DOMAIN = """<domain><devices><interface type='network'><source network='default'/>
 <model type='virtio'/><target dev='vnet7'/><bandwidth><inbound average='256' peak='256'/>
 <outbound average='128'/></bandwidth></interface></devices></domain>"""
+USER_DOMAIN = """<domain><devices><interface type='user'><mac address='52:54:00:53:55:01'/>
+<model type='virtio'/><ip family='ipv4' address='10.203.0.1' prefix='24'/><link state='down'/>
+</interface></devices></domain>"""
 
 
 class NetworkTests(unittest.TestCase):
@@ -103,6 +106,54 @@ class NetworkTests(unittest.TestCase):
                     DOMAIN.replace("average='128'", "average='512'")]:
             with self.subTest(xml=xml), self.assertRaises(AssertionError):
                 MODULE.check_domain(xml, 'default', 256, 128)
+
+    def test_bridge_free_domain_does_not_require_host_networks(self):
+        report = MODULE.check_userspace_domain(USER_DOMAIN)
+        self.assertFalse(report['host_bridge_or_tap_required'])
+        self.assertEqual(report['guest_link'], 'down')
+        report = MODULE.check_userspace_host(self.fixture()[0][1:], self.fixture()[1][:2])
+        self.assertFalse(report['host_network_modified'])
+
+    def test_current_domain_rejects_lan_modes_forwarding_and_overrides(self):
+        for xml in [USER_DOMAIN.replace("type='user'", f"type='{mode}'") for mode in ['network', 'bridge', 'direct', 'ethernet', 'hostdev', 'vhostuser']]:
+            with self.subTest(xml=xml), self.assertRaises(AssertionError):
+                MODULE.check_userspace_domain(xml)
+        for extra in ["<backend type='passt'/>", "<target dev='vnet1'/>", "<source network='default'/>",
+                      "<portForward proto='tcp'/>", "<bandwidth/>"]:
+            with self.subTest(extra=extra), self.assertRaises(AssertionError):
+                MODULE.check_userspace_domain(USER_DOMAIN.replace('</interface>', extra+'</interface>'))
+        xml=USER_DOMAIN.replace('<domain>', '<domain xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0">')
+        for override in ['-netdev', '-nic', 'hostfwd=tcp::22-:22']:
+            with self.subTest(override=override), self.assertRaises(AssertionError):
+                MODULE.check_userspace_domain(xml.replace('</domain>', f'<qemu:commandline><qemu:arg value="{override}"/></qemu:commandline></domain>'))
+
+    def test_current_domain_rejects_foreign_mac_subnet_and_extra_nics(self):
+        for xml in [USER_DOMAIN.replace('52:54:00:53:55:01','2e:fe:7b:59:a5:6f'),
+                    USER_DOMAIN.replace('10.203.0.1','192.168.1.36'),
+                    USER_DOMAIN.replace('</devices>', '<interface type="user"/></devices>'),
+                    USER_DOMAIN.replace('</devices>', '<hostdev/></devices>')]:
+            with self.subTest(xml=xml), self.assertRaises(AssertionError):
+                MODULE.check_userspace_domain(xml)
+
+    def test_current_guest_subnet_rejects_host_and_vpn_overlap(self):
+        for addresses,routes in [([{'ifname':'vpn','addr_info':[{'family':'inet','local':'10.203.0.10','prefixlen':24}]}],[]),
+                                 ([],[{'dst':'10.0.0.0/8','dev':'vpn'}])]:
+            with self.subTest(addresses=addresses,routes=routes), self.assertRaises(AssertionError):
+                MODULE.check_userspace_host(addresses,routes)
+
+    def test_runtime_rates_cannot_repeat_previous_large_overrides(self):
+        self.assertEqual(MODULE.safe_rates(256,64),(256,64))
+        for down,up in [(4096,512),(257,64),(256,65),(0,64),(256,-1)]:
+            with self.subTest(down=down,up=up), self.assertRaises((AssertionError,ValueError)):
+                MODULE.safe_rates(down,up)
+
+    def test_observed_e1000e_hang_requires_runtime_mitigation(self):
+        off='tcp-segmentation-offload: off\ngeneric-segmentation-offload: off\n'
+        MODULE.check_nic_features('e1000e',off)
+        for features in [off.replace('tcp-segmentation-offload: off','tcp-segmentation-offload: on'),
+                         off.replace('generic-segmentation-offload: off','generic-segmentation-offload: on'),'']:
+            with self.subTest(features=features), self.assertRaises(AssertionError):
+                MODULE.check_nic_features('e1000e',features)
 
 
 if __name__ == '__main__':

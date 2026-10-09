@@ -11,6 +11,25 @@ ROOT = Path(__file__).resolve().parents[1]
 prepare = importlib.machinery.SourceFileLoader('prepare', str(ROOT/'scripts/prepare-plasma-package.py')).load_module()
 
 
+def verify_preflight_transport(link, result, job, artifact, host, proof):
+    """Preserve an original result while refusing admission after lost transport."""
+    assert job['status'] == 'completed'
+    failed = artifact.get('kind') == 'sealed-host-preflight-result-export'
+    assert job['conclusion'] == ('failure' if failed else ('success' if result['state'] == 'PASS' else 'failure'))
+    if not failed:
+        assert (host['exit_code'] == 0) is (result['state'] == 'PASS')
+        return
+    assert host['exit_code'] != 0 and result['state'] == 'PASS' and result['package_attempt_consumed'] is False
+    assert result['stage'] == 'reviewed-package-preflight-complete'
+    assert proof['infrastructure_transport_result'] == 'FAIL'
+    assert proof['original_runner_result_preserved'] is True and proof['current_input_admission'] is False
+    assert link.get('applicable') is False and link.get('inapplicability_reason'), 'Recovered transport failure cannot admit current package execution'
+    assert artifact['id'] is None
+    steps = {step['name']: step for step in job['steps']}
+    assert steps['Run current reviewed package']['conclusion'] == 'success'
+    assert steps['Retain package sources, binaries and evidence']['conclusion'] != 'success'
+
+
 def verified_evidence(link):
     path = ROOT/link['path']
     assert path.resolve().is_relative_to((ROOT/'manifests/evidence/package-revalidation').resolve())
@@ -35,12 +54,10 @@ def verified_evidence(link):
     job = json.loads((directory/'workflow-job.json').read_text())
     artifact = json.loads((directory/'artifact-meta.json').read_text())
     host = json.loads((directory/'host-result.json').read_text())
-    assert job['status'] == 'completed'
-    assert job['conclusion'] == ('success' if result['state'] == 'PASS' else 'failure')
+    verify_preflight_transport(link, result, job, artifact, host, proof)
     assert job['head_sha'] == artifact['workflow_run']['head_sha'] == proof['source_commit']
     assert job['id'] == proof['workflow_job_id'] and job['run_id'] == artifact['workflow_run']['id'] == proof['workflow_run_id']
     assert host['workflow_run_id'] == result['workflow_run_id']
-    assert (host['exit_code'] == 0) is (result['state'] == 'PASS')
     assert proof['host_evidence_manifest_sha256'] == proof['files_sha256']['host-evidence-sha256.txt']
     assert artifact['id'] == proof['artifact_id']
     assert artifact['digest'] == 'sha256:' + proof['artifact_sha256']

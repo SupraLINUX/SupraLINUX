@@ -41,6 +41,21 @@ run/job IDs, SHA y próximo paso cuando una ejecución deba quedar pendiente.
 
 ## Compilación e integración
 
+Las VMs de SupraLINUX usan SLIRP dentro de QEMU, sin crear redes libvirt,
+bridges, TAP, DHCP ni rutas en el host y sin usar direcciones o MAC de la LAN.
+Bloquear redes privadas externas dentro del guest y activar su enlace sólo tras
+instalar los controles. Límite máximo por VM: 256 KiB/s de descarga y 64 KiB/s
+de subida; no elevarlo con overrides. Verificar TSO/GSO desactivados en el host
+e1000e que presentó hangs; esta mitigación reversible requiere revalidación tras
+cada reinicio. No ejecutar los builders históricos de golden/lifecycle que aún
+requieren la red libvirt retirada: primero adaptar y certificar ese transporte.
+Las imágenes golden/milestone selladas y la evidencia anterior se preservan.
+No instalar paquetes, añadir firewalls ni modificar servicios/configuración de
+red de la PC del usuario sin permiso específico para esa acción. La autorización
+general para desarrollar la distro no sustituye ese permiso. Usar las herramientas
+ya instaladas. Los controles de red propuestos se ejecutan sólo dentro de la VM
+desechable; la mitigación de la NIC del host la aplica el usuario.
+
 Resolver el DAG, ejecutar independientes por nivel, alimentar dependientes sólo
 con artifacts PASS elegibles y reintentar únicamente el nodo o closure afectado.
 Usar runners y validators genéricos; no crear infraestructura nueva por cada
