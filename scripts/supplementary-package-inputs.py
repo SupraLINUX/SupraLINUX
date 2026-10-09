@@ -101,8 +101,10 @@ def materialize(record, output, archive_root=ROOT, token=None, consumer=None):
             assert url == f"https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/{link['artifact_id']}/zip"
             archive_path = directory/f"{link['artifact_sha256']}.zip"
             with archive_path.open('wb') as stream:
-                subprocess.run([str(ROOT/'scripts/github-read-with-retry.sh'), '-H', f'Authorization: Bearer {token}',
-                                '-H', 'Accept: application/vnd.github+json', url], stdout=stream, check=True)
+                transport = subprocess.run([str(ROOT/'scripts/github-read-with-retry.sh'), '-H', f'Authorization: Bearer {token}',
+                                           '-H', 'Accept: application/vnd.github+json', url], stdout=stream)
+            if transport.returncode:
+                raise RuntimeError(f'Supplementary artifact transport failed (exit={transport.returncode})')
         assert not archive_path.is_symlink() and digest(archive_path) == link['artifact_sha256'], 'Supplementary archive digest changed'
         spec = importlib.util.spec_from_file_location('supplementary_retention', ROOT/'scripts/retain-package-artifacts.py')
         retention = importlib.util.module_from_spec(spec)

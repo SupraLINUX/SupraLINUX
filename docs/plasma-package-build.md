@@ -1,5 +1,24 @@
 # Authoritative Plasma package builds
 
+LibKSysGuard input preflight 35 on `653323d4`, run 37986310752/job
+114009057967, records original `INFRA_INVALID` at predecessor cache admission.
+The 13,510,034-byte KConfig repair archive cannot complete within the shared
+30-second API timeout under the fixed guest traffic limits. All eight reads
+time out before candidate source preparation, baseline testing or sbuild;
+no package Attempt is consumed. The original Actions artifact is retained.
+Use a separate bounded artifact read budget (900 seconds, three attempts,
+60-second low-speed guard) while retaining 30-second API reads and the exact
+256/64 KiB/s network ceilings. Never emit a failed partial body or authentication
+arguments in Python exceptions. Six transport regression tests and the complete
+154 applicable local Repository Policy checks pass. The fresh input preflight
+must verify actual complete artifact digest/identity and the unchanged Ubuntu
+baseline before Attempt 3; simulated transport tests do not certify a package.
+The original artifact `2fc401777b77e119370001689fabd81155fba3ab31c0249a175f21748e2eb808`
+restores offline unchanged. The complete sealed host and operator archive also
+restores all 58 files unchanged. Its 121 periodic observations report no hardware
+hang or physical carrier loss. Direct runner 262/VM/overlay absence, preserved
+images, empty libvirt network inventory and TSO/GSO off are verified.
+
 The revised guest ingress bucket passes the expanded `slirp-probe4` on
 `56bd92044dff2322e2b55158c092d792d8e6c717`: private blocking, exact average
 rates, a 10,370-byte TLS body in 0.223 seconds without any policer drop, and JIT

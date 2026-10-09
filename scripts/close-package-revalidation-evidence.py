@@ -250,6 +250,7 @@ def main():
                 'scripts/prepare-retained-package-inputs.py','scripts/run-kvm-jit-gate-core.sh',
                 'scripts/configure-kvm-guest-network.py','scripts/check-kvm-network.py',
                 'scripts/check-kvm-host.sh','scripts/test-kvm-network.py',
+                'scripts/github-read-with-retry.sh',
                 'scripts/qemu-kvm-required.sh', 'scripts/verify-reviewed-build-predecessors.py',
                 'scripts/test-reviewed-package-contract.py']
         if plasma_inputs:

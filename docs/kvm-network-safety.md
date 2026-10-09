@@ -126,3 +126,15 @@ Sources: [libvirt SLIRP domain format](https://libvirt.org/formatdomain.html#use
 [QEMU user networking](https://www.qemu.org/docs/master/system/qemu-manpage.html),
 [upstream e1000e NAT/TSO report](https://lists.openwall.net/netdev/2019/05/09/40),
 [Intel maintainer's scope caveat](https://lists.openwall.net/netdev/2019/05/22/65).
+
+The following real input preflight starts its original input execution on `653323d4`
+but stops at predecessor archive transport: its shared API reader imposes a
+30-second total timeout on a 13,510,034-byte binary body. Even the maximum
+admitted download rate requires more than 51 seconds for that body; actual
+reads receive roughly 2.2–2.4 MB before timeout. This is a read-budget mismatch,
+not a candidate build result. Network controls remain unchanged. Exact artifact
+URLs receive a finite 900-second budget with at most three attempts and a
+60-second low-speed guard; ordinary metadata reads keep their 30-second limit.
+Failed partial bodies are withheld and Python failures report only transport
+exit status. The preflight's original evidence remains immutable; actual new
+artifact transport and baseline tests are required for current admission.

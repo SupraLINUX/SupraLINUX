@@ -8054,6 +8054,12 @@
       "sha256": "3960073d6c28d43259730896318849c82ba1c3e43284cb7132deae4541f08a2d",
       "cause": "The clean retained-input transport probe installed all 106 exact binaries successfully. Original Ubuntu KGlobalAccelD CMake export references Qt6::GuiPrivate; the integration client did not discover this target. CMake generation stopped baseline setup before any client or candidate package execution. No package Attempt consumed.",
       "repair": "Explicitly discover the existing Ubuntu Qt6GuiPrivate target in original and candidate client CMake, declare the frozen matching qt6-base-private-dev 6.10.2+dfsg-7 in baseline/test dependencies, and repeat clean KVM input preflight. A small real original Ubuntu export probe reproduced the missing-target failure and compiled the repaired public SDK consumer successfully; extracted exact private includes and original runtime libraries were used without host installation or mock targets."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/libksysguard-preflight35/verification.json",
+      "sha256": "4f79dd09385fab0dcc68831c190fcec0a511f173f00a44e5106a6b63ee76af86",
+      "cause": "Original predecessor cache admission tried eight 30-second reads of the 13,510,034-byte retained KConfig repair artifact under the fixed guest network ceilings; each timed out with a partial body. No candidate source preparation, baseline or sbuild started. The failed helper emitted a partial binary body and Python subprocess authentication arguments into private original logs; no raw logs are published.",
+      "repair": "Keep guest and host networking unchanged. Give exact GitHub artifact endpoints a finite 900-second read budget, at most three attempts and a 60-second low-speed guard; preserve 30-second metadata reads. Withhold failed partial bodies and raise sanitized Python transport errors. Preserve original failure and direct cleanup, then verify complete artifact digests/identities and unchanged Ubuntu baseline in a fresh preflight before Attempt 3."
     }
   ]
 }

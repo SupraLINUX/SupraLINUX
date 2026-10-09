@@ -50,8 +50,10 @@ def materialize(record, output, archive_root=ROOT, token=None):
             assert int(url.split('/')[-2]) == proof['artifact_id']
             archive_path = directory/f"{proof['artifact_sha256']}.zip"
             with archive_path.open('wb') as stream:
-                subprocess.run([str(ROOT/'scripts/github-read-with-retry.sh'), '-H', f'Authorization: Bearer {token}',
-                                '-H', 'Accept: application/vnd.github+json', url], stdout=stream, check=True)
+                transport = subprocess.run([str(ROOT/'scripts/github-read-with-retry.sh'), '-H', f'Authorization: Bearer {token}',
+                                           '-H', 'Accept: application/vnd.github+json', url], stdout=stream)
+            if transport.returncode:
+                raise RuntimeError(f'Retained predecessor artifact transport failed (exit={transport.returncode})')
         prefix = proof.get('payload_prefix', 'packages/')
         inspection = retention.inspect(archive_path, {'node': node, 'package_version': current['package_version'],
                                         'artifact_sha256': proof['artifact_sha256'], 'payload_prefix': prefix}, current['source_package'])
