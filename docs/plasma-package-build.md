@@ -1,15 +1,23 @@
 # Authoritative Plasma package builds
 
-LibKSysGuard input preflight 32 passed on source
-`5596ea3cd1aae46e59a8185e4d1d4fb0137a283a` in
-[run 37923075701](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37923075701).
-The clean transport consumer installed all 173 exact retained binaries, and the
-original Ubuntu full SDK/provider/client passed in nested KVM. This consumes no
-package Attempt: candidate build, native suite, lintian and installed candidate
-tests remain pending. The original archive and logs restore offline; VM, runner
-254 and writable overlay absence were verified independently. Golden and
-milestone images remain preserved. The current gate is the complete package
-build for `4:6.7.5-0supralinux1`.
+LibKSysGuard Attempt 1 on source
+`d74ac04b25321b210e9630736a937b7754fb17ed` is an original package FAIL in
+[run 37925081185](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37925081185).
+The clean 173-input consumer and original Ubuntu full CMake/provider/client
+passed. Upstream compilation completed; the native-provider fixture then failed
+because its generated D-Bus header could not find `SensorInfo.h`. Native CTests,
+lintian and installed candidate tests did not run. Complete failed sources and
+raw logs restore offline; VM, runner 255 and overlay absence were verified.
+
+Revision `4:6.7.5-0supralinux2` adds the missing candidate source/systemstats
+include directory. A local negative/positive mechanism reproduced the original
+error, compiled the repaired provider and ran the unchanged original Ubuntu
+functional client with owned cleanup. Actual candidate source/XML and Qt-generated
+D-Bus headers were used; original Ubuntu generated export visibility metadata
+was used only in that local probe. Full candidate-generated headers and all eight
+native tests still require KVM. Source, native assertions, symbol guards,
+38-node/173-binary closure and Qt are unchanged. Preflight 32 stays preserved
+at its original inputs; fresh input preflight is the current gate.
 
 KGlobalAccelD Attempt 1 is an original package FAIL after successful compilation
 and all four executed native CTests. Its original symbols guard found ten
@@ -19,15 +27,6 @@ symbols guard and failed evidence remain preserved; cleanup and empty offline
 restore passed. See the [private SDK transition review](kglobalacceld-private-sdk-review.md).
 The candidate is held outside execution scope pending actual Ubuntu consumer
 compatibility evidence; independent work continues.
-
-LibKSysGuard `4:6.7.5-0supralinux1` is admitted for a fresh authoritative input
-preflight. Its reviewed closure contains 38 eligible Frameworks/support nodes
-and 173 exact binaries. Local empty-state APT resolution and the original Ubuntu
-full CMake/provider/client/software-rendered sensor face passed. Explicit
-`libsensors-dev` covers the unchanged exported SystemStats development link.
-All 21 Ubuntu binaries, five SONAMEs, eight official native tests, helpers and
-sensor faces remain in the build profile. Candidate execution has not started;
-local preparation is not authoritative package certification.
 
 Thunderbolt `6.7.5-0supralinux2` closed authoritative package PASS in
 [run 37462870275](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37462870275):

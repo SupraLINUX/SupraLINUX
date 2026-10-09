@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "scope": "reviewed-ubuntu-baseline-preflight",
+  "node": "libksysguard",
+  "state": "PASS",
+  "exit_code": 0,
+  "source_commit": "d74ac04b25321b210e9630736a937b7754fb17ed",
+  "workflow_run_id": "37925081185",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "system_test_backend": "autopkgtest-qemu",
+  "system_test_acceleration": "kvm-required",
+  "candidate_installed": false,
+  "inputs_sha256": {
+    "scripts/probe-reviewed-ubuntu-baseline.py": "242b1ad8d6e85027155391d11747f1d2cee77a9a8371bb6d1f4d57d4731dc03b",
+    "scripts/plasma-package-testing.py": "5fe6280e23080e98b13fbfd92f5db0988987e2b833567fbd4583ae88a8ec74d1",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "packages/plasma/libksysguard/debian/tests/baseline-setup": "49f25f4921e9347312d7305fbdb3ab39c22a87e1c4518b2fc85e80cff864be1d",
+    "packages/plasma/libksysguard/debian/tests/client/CMakeLists.txt": "4a6d088803c4dd6bac26799d9c4b9834811ce36a5c5de3a6fe0141d263208416",
+    "packages/plasma/libksysguard/debian/tests/client/main.cpp": "d10a8ee64abc82985395243ef58b5a289fe45a877f1de9c85207707d7b9b743e",
+    "packages/plasma/libksysguard/debian/tests/client/run-private.py": "1b81e187c146b4f463972e47f779c31dd51e9402b676f2495d0707b7af80a912",
+    "packages/plasma/libksysguard/debian/tests/client/stats-server.cpp": "ae76d3a105ab9c466a5da475d05158ffa9b56cb2d1b0657df4141239bddb2841",
+    "packages/plasma/libksysguard/debian/tests/consumer": "691c8b4964712b7ff9dc66619f0fc7e21926b1d974c0d416c21afa55b9e03a1f",
+    "packages/plasma/libksysguard/debian/tests/control": "6a30b5c5839c555bcc8e20266406e44b8b0f095f85e4dd27324d4574dc6d2f6d",
+    "packages/plasma/libksysguard/debian/tests/ubuntu-abi-client": "7eea3dcb797b8cfae8bbfc7bae35472d0cc89bef11bfda0b2ae2ca9e67c1f909",
+    "packages/plasma/libksysguard/debian/tests/upstream-session": "e7040cd7563b8bd6e65c479bdfc5e7d09cfed50903ba76457b689975ee2edcd1"
+  },
+  "files_sha256": {
+    "autopkgtest/log": "6db785e4013b7bfe671b1b4e4d4d96f49d3024ab40bef5918deb6571440ebf0a",
+    "autopkgtest/reviewed-baseline-packages": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/reviewed-baseline-stdout": "d3b4cc1ff51e072e6cdc994df4920876c3641850e045eb736371c334bd043401",
+    "autopkgtest/summary": "36e1952a68e082ee9b1d71c36e7ee1d26054668b01a97ed5e481b3e31a7962e2",
+    "autopkgtest/testbed-packages": "77d0f61977bd6eac91f42da50709343c44b9ce0098c7c1ee0b1fd676691237e7",
+    "autopkgtest/testinfo.json": "92f4607e1b393552e0d84437d7ad822c8b4ae4d2b2e4a3174dddb6ab18865040",
+    "baseline-setup": "49f25f4921e9347312d7305fbdb3ab39c22a87e1c4518b2fc85e80cff864be1d",
+    "reviewed-inputs.json": "2aa793388fe7db86283f4f8460d9299618b73424e0821dd6a979ed8524422163",
+    "setup-commands.txt": "3a92776798a0660578424a5b9c88b01349670196a11ebe18fd6c5bd30a57b118"
+  }
+}

@@ -607,7 +607,7 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "candidate_package_version": "4:6.7.5-0supralinux2",
       "package_execution_authorized": true,
       "materialization_result": "PASS",
       "ubuntu_reference_version": "4:6.6.5-0ubuntu0.1"
@@ -976,8 +976,8 @@
     }
   },
   "candidate_versions_evidence": {
-    "path": "manifests/evidence/kde-plasma-level0-candidate-versions-libkscreen-revision4.json",
-    "sha256": "a687e692aa7a3dfff1c507cf8f24ca425f89651c4b116e98fe2c24ed415a2dca",
+    "path": "manifests/evidence/kde-plasma-level0-candidate-versions-libksysguard-revision2.json",
+    "sha256": "9f0ef8095cd82963f2b1a2d3a5a5516f5c43afbe285fc2472196468b169ef7d8",
     "state": "PASS",
     "package_execution_started": false,
     "consumes_package_attempt": false

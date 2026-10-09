@@ -1,3 +1,10 @@
+libksysguard (4:6.7.5-0supralinux2) resolute; urgency=medium
+
+  * Add candidate source/systemstats to the native provider include path.
+    Preserve the original failed Attempt and all native test assertions.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Fri, 09 Oct 2026 12:00:18 +0000
+
 libksysguard (4:6.7.5-0supralinux1) resolute; urgency=medium
 
   * Package the signed official Plasma 6.7.5 release with the Ubuntu binary

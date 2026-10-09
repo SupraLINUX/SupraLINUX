@@ -1,0 +1,1 @@
+dbus-daemon[224]: Failed to start message bus: Failed to bind socket "/tmp/supra-stats-private-6b0h0x2_/dbus-TcHjCnTM0U": Operation not permitted

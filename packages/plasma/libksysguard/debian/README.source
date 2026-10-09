@@ -20,8 +20,21 @@ original historical verification scopes remain unchanged. No KDE source patch,
 helper privilege change, hardware process control or Qt replacement is introduced.
 Full application/session QA, real ksystemstats hardware plugins, GPU/network
 capture, privileged helper actions and accelerated/Wayland rendering remain later
-integration gates. Native/package execution has not yet occurred.
+integration gates. Initial packaging preparation did not execute the candidate.
 
 Native CTest stdout/stderr are inherited by the retained clean sbuild log, while
 installed consumer output remains independently retained in its result files.
 HOME is private; cleanup verifies every owned process-group absence.
+
+Revision 4:6.7.5-0supralinux2 adds only the missing candidate source/systemstats
+include directory to the native sensor-provider fixture. Attempt 1 remains an
+original package FAIL: upstream compilation completed, provider compilation
+stopped at generated-header SensorInfo.h lookup, and CTests/lintian/installed
+tests did not run. Its sources/logs restore offline and owned KVM cleanup passed.
+Local negative/positive include-path reproduction and the original Ubuntu client
+with the repaired provider passed, with owned cleanup. This local mechanism uses
+actual candidate source/XML and Qt-generated D-Bus headers, plus authenticated
+original export-visibility metadata; it does not certify the full candidate build.
+Fresh KVM must generate candidate headers and execute all eight official tests,
+lintian and unchanged-original/rebuilt installed clients. Source, assertions,
+symbol guards, dependency closure, product profile and Qt remain unchanged.

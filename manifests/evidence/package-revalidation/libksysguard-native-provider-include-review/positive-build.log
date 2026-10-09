@@ -1,0 +1,27 @@
+[  0%] Built target stats-server_autogen_timestamp_deps
+[ 20%] Automatic MOC for target stats-server
+[ 20%] Built target stats-server_autogen
+[ 60%] Building CXX object CMakeFiles/stats-server.dir/stats-server.cpp.o
+[ 60%] Building CXX object CMakeFiles/stats-server.dir/stats-server_autogen/mocs_compilation.cpp.o
+[ 80%] Linking CXX executable stats-server
+[100%] Built target stats-server
+In file included from /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/native-provider-include-review/candidate-generated/systemstats/org.kde.ksystemstats1.h:22,
+                 from /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/source/libksysguard-6.7.5/systemstats/DBusInterface.h:9,
+                 from /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/native-provider-include-review/client/stats-server.cpp:8:
+/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/source/libksysguard-6.7.5/systemstats/SensorInfo.h:32:44: warning: ‘Type’ is deprecated: Use QMetaType::Type instead. [-Wdeprecated-declarations]
+   32 |     QVariant::Type variantType = QVariant::Invalid;
+      |                                            ^~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/qt6/QtDBus/qtdbusglobal.h:10,
+                 from /usr/include/x86_64-linux-gnu/qt6/QtDBus/qdbusconnection.h:9,
+                 from /usr/include/x86_64-linux-gnu/qt6/QtDBus/QDBusConnection:1,
+                 from /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/native-provider-include-review/client/stats-server.cpp:4:
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qvariant.h:156:70: note: declared here
+  156 |     enum QT_DEPRECATED_VERSION_X_6_0("Use QMetaType::Type instead.") Type
+      |                                                                      ^~~~
+/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/source/libksysguard-6.7.5/systemstats/SensorInfo.h: In function ‘const QDBusArgument& KSysGuard::operator>>(const QDBusArgument&, SensorInfo&)’:
+/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/source/libksysguard-6.7.5/systemstats/SensorInfo.h:76:43: warning: ‘Type’ is deprecated: Use QMetaType::Type instead. [-Wdeprecated-declarations]
+   76 |     s.variantType = static_cast<QVariant::Type>(t);
+      |                                           ^~~~
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qvariant.h:156:70: note: declared here
+  156 |     enum QT_DEPRECATED_VERSION_X_6_0("Use QMetaType::Type instead.") Type
+      |                                                                      ^~~~

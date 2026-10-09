@@ -11,7 +11,7 @@ if(NATIVE_PROVIDER_ONLY)
     if(NOT IS_DIRECTORY "${NATIVE_SOURCE_DIR}/systemstats" OR NOT IS_DIRECTORY "${NATIVE_BUILD_DIR}/systemstats")
         message(FATAL_ERROR "Expected candidate source and generated build headers")
     endif()
-    target_include_directories(stats-server PRIVATE "${NATIVE_SOURCE_DIR}"
+    target_include_directories(stats-server PRIVATE "${NATIVE_SOURCE_DIR}" "${NATIVE_SOURCE_DIR}/systemstats"
         "${NATIVE_BUILD_DIR}/formatter" "${NATIVE_BUILD_DIR}/systemstats")
 else()
     find_package(Qt6 6.10 REQUIRED COMPONENTS Gui Quick Test)

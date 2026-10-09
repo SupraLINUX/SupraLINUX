@@ -2,13 +2,13 @@
 set -Eeuo pipefail
 BASE=/var/tmp/supralinux-libksysguard-baseline
 test -s "${BASE}/ubuntu-version"
-dpkg --compare-versions "$(cat "${BASE}/ubuntu-version")" lt 4:6.7.5-0supralinux1
+dpkg --compare-versions "$(cat "${BASE}/ubuntu-version")" lt 4:6.7.5-0supralinux2
 sha256sum --check "${BASE}/ubuntu-client.sha256"
 dpkg-query -W -f='${Package} ${Architecture} ${Version}\n' libqt6core6t64 libqt6gui6 libqt6dbus6 libqt6qml6 libqt6quick6 libqt6quickcontrols2-6 libqt6quicktemplates2-6 libqt6widgets6 libqt6network6 > "${BASE}/candidate-provider-versions"
 cmp "${BASE}/ubuntu-provider-versions" "${BASE}/candidate-provider-versions"
 python3 "${BASE}/source/run-private.py" "${BASE}/build/stats-server" "${BASE}/build/stats-client" "${BASE}/upgraded-scene"
 for package in libksysguard-bin libkf5sysguard-bin libkf5sysguard-data libksgrd9 libksignalplotter9 libksysguard-data libksysguard-dev libksysguardformatter1 libksysguardformatter2 libksysguardsensorfaces1 libksysguardsensorfaces2 libksysguardsensors1 libksysguardsensors2 libksysguardsystemstats1 libksysguardsystemstats2 liblsofui9 libprocesscore10 libprocesscore9 libprocessui9 qml-module-org-kde-ksysguard qml6-module-org-kde-ksysguard; do
-    test "$(dpkg-query -W -f='${Version}' "${package}")" = 4:6.7.5-0supralinux1
+    test "$(dpkg-query -W -f='${Version}' "${package}")" = 4:6.7.5-0supralinux2
 done
 for library in libprocesscore.so.10 libKSysGuardFormatter.so.2 libKSysGuardSensors.so.2 libKSysGuardSensorFaces.so.2 libKSysGuardSystemStats.so.2; do
     test -f "/usr/lib/x86_64-linux-gnu/${library}"
