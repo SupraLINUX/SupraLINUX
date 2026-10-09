@@ -248,6 +248,8 @@ def main():
                 'scripts/plasma-package-testing.py','scripts/probe-reviewed-ubuntu-baseline.py',
                 'scripts/admit-frameworks-cache.py','scripts/prepare-milestone-sbuild-rootfs.py',
                 'scripts/prepare-retained-package-inputs.py','scripts/run-kvm-jit-gate-core.sh',
+                'scripts/configure-kvm-guest-network.py','scripts/check-kvm-network.py',
+                'scripts/check-kvm-host.sh','scripts/test-kvm-network.py',
                 'scripts/qemu-kvm-required.sh', 'scripts/verify-reviewed-build-predecessors.py',
                 'scripts/test-reviewed-package-contract.py']
         if plasma_inputs:

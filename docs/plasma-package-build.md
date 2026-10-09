@@ -1,5 +1,13 @@
 # Authoritative Plasma package builds
 
+The revised guest ingress bucket passes the expanded `slirp-probe4` on
+`56bd92044dff2322e2b55158c092d792d8e6c717`: private blocking, exact average
+rates, a 10,370-byte TLS body in 0.223 seconds without any policer drop, and JIT
+startup PASS. Runner 261, VM and overlay absence are independently verified;
+complete sealed evidence restores offline. The startup cancellation below
+remains a separate observation. Restart the real LibKSysGuard input preflight
+before Attempt 3; bind the separate guest control files in its input hashes.
+
 The first fresh input gate under SLIRP was cancelled in Actions job setup on
 `4977c7000a8c56ae24bc157b1fe454a45f5ad855`, before checkout/package preparation.
 No original runner result or package Attempt exists. Full startup evidence,

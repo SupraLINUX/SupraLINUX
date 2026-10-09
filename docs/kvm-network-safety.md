@@ -111,6 +111,17 @@ then JIT startup and owned cleanup. The earlier limited certification and all
 failure observations remain immutable; this revised bulk-delivery path is not
 yet admitted. See [Linux policing implementation](https://github.com/torvalds/linux/blob/master/net/sched/act_police.c).
 
+The revised path is certified PASS by `slirp-probe4` on `56bd9204`.
+The same 10,370-byte HTTPS body completes in 0.223 seconds with zero additional
+policer drops, compared with 2.333 seconds and three drops in the earlier
+diagnostic. Actual average limits remain 256/64 KiB/s and the loaded ingress
+bucket is 128 KiB. Both private probes increment their guest rejection counters;
+JIT runner 261 comes online, then direct cleanup verifies runner/VM/overlay
+absence. The complete sealed evidence restores offline unchanged. The host
+monitor sees no hardware hang or carrier loss. This closes the scoped delivery
+repair and permits a new clean package input preflight; it is not a physical
+network stress test or a package/application certification.
+
 Sources: [libvirt SLIRP domain format](https://libvirt.org/formatdomain.html#userspace-connection-using-slirp),
 [QEMU user networking](https://www.qemu.org/docs/master/system/qemu-manpage.html),
 [upstream e1000e NAT/TSO report](https://lists.openwall.net/netdev/2019/05/09/40),
