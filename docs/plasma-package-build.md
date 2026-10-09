@@ -839,3 +839,17 @@ now declares exact eligible `libkf6globalaccel-dev` and frozen matching
 version remain unchanged. Preflight 30 stays immutable with its original PASS,
 while its current applicability is withdrawn solely for the changed candidate
 control metadata. A fresh exact packaging preflight precedes Attempt 1.
+
+KGlobalAccelD input preflight 31 on source
+`a53f5f32a18f202479a9585d136f8365ae325ab2`, run 37861324477/job 113597488724,
+closed authoritative input `PASS` for the final reviewed packaging. Clean
+transport of all 106 retained binaries and the original Ubuntu application and
+direct-library clients passed; owned client/display/bus resources were reaped.
+Artifact `d3a3c8280ecc97f99dfb667dc16f4fdf8912e62c49f7386357707fc2b76303ec`
+and its complete source/log input closure restored offline. Host seal
+`fe9b21c0537427a68136303963be16b33e98f2519b6c4032074597ddb9497687`
+and direct VM/runner 252/writable-overlay removal were verified; images remain.
+The unchanged final inputs are admitted for candidate Attempt 1 after atomic
+publication and Repository Policy. Candidate clean sbuild, all three native
+CTests, lintian and both installed package tests remain pending. No package
+Attempt was consumed by this preflight; Qt and KDE source remain unchanged.

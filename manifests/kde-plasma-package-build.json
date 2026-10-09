@@ -6550,7 +6550,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -6683,6 +6683,10 @@
       "sha256": "9d2732f2fb76ef99838001ad3daadf02b471653ff07994d54c29c7fdd4647a46",
       "applicable": false,
       "inapplicability_reason": "Complete original Ubuntu baseline and clean 106-input transport remain original PASS. The development binary now explicitly declares its already required exported GlobalAccel and matching Qt private SDK dependencies; changed candidate control metadata requires fresh exact packaging preflight before Attempt 1."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kglobalacceld-preflight31/verification.json",
+      "sha256": "728cfbba96caa145fd9ddfafc49358352d6ed44d9af382bcf77598b59526986f"
     }
   ],
   "package_input_incidents": [
