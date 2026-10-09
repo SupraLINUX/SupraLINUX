@@ -1,5 +1,23 @@
 # Authoritative Plasma package builds
 
+KGlobalAccelD Attempt 1 is an original package FAIL after successful compilation
+and all four executed native CTests. Its original symbols guard found ten
+removals and 21 additions in the upstream private daemon SDK under SONAME 0.
+Lintian and installed candidate tests did not run. The unchanged source,
+symbols guard and failed evidence remain preserved; cleanup and empty offline
+restore passed. See the [private SDK transition review](kglobalacceld-private-sdk-review.md).
+The candidate is held outside execution scope pending actual Ubuntu consumer
+compatibility evidence; independent work continues.
+
+LibKSysGuard `4:6.7.5-0supralinux1` is admitted for a fresh authoritative input
+preflight. Its reviewed closure contains 38 eligible Frameworks/support nodes
+and 173 exact binaries. Local empty-state APT resolution and the original Ubuntu
+full CMake/provider/client/software-rendered sensor face passed. Explicit
+`libsensors-dev` covers the unchanged exported SystemStats development link.
+All 21 Ubuntu binaries, five SONAMEs, eight official native tests, helpers and
+sensor faces remain in the build profile. Candidate execution has not started;
+local preparation is not authoritative package certification.
+
 Thunderbolt `6.7.5-0supralinux2` closed authoritative package PASS in
 [run 37462870275](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37462870275):
 clean sbuild, all four executed CTests, source/binary lintian, the unchanged

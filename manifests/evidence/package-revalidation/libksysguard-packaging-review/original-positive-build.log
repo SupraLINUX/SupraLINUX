@@ -1,0 +1,14 @@
+[  0%] Built target stats-server_autogen_timestamp_deps
+[  0%] Built target stats-client_autogen_timestamp_deps
+[ 20%] Automatic MOC for target stats-client
+[ 20%] Automatic MOC for target stats-server
+[ 20%] Built target stats-client_autogen
+[ 30%] Building CXX object CMakeFiles/stats-client.dir/stats-client_autogen/mocs_compilation.cpp.o
+[ 40%] Building CXX object CMakeFiles/stats-client.dir/main.cpp.o
+[ 40%] Built target stats-server_autogen
+[ 50%] Building CXX object CMakeFiles/stats-server.dir/stats-server_autogen/mocs_compilation.cpp.o
+[ 60%] Building CXX object CMakeFiles/stats-server.dir/stats-server.cpp.o
+[ 70%] Linking CXX executable stats-client
+[ 80%] Built target stats-client
+[ 90%] Linking CXX executable stats-server
+[100%] Built target stats-server

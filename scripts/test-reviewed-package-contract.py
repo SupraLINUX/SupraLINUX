@@ -3,8 +3,11 @@
 import copy
 import hashlib
 import importlib.util
+import json
+import tempfile
 import unittest
 from pathlib import Path
+from plasma_lifecycle import verify_package_hold
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('freeze_contract', ROOT/'scripts/freeze-reviewed-package-contract.py')
@@ -115,6 +118,84 @@ class ActualBuildPredecessors(unittest.TestCase):
     def test_duplicate_installed_identity_is_rejected(self):
         self.info += ' , sdk (= 4:6.30-1)\n'
         with self.assertRaisesRegex(AssertionError, 'Duplicate installed'):
+            self.verify()
+
+
+class CompatibilityHold(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.root = Path(self.temporary.name)
+        self.directory = self.root / 'manifests/evidence/plasma/held-attempt1'
+        self.directory.mkdir(parents=True)
+        result = {'state': 'FAIL', 'node': 'held', 'version': '1.0-1', 'source_commit': 'a'*40}
+        self.result = self.directory / 'result.json'
+        self.result.write_text(json.dumps(result))
+        digest = hashlib.sha256(self.result.read_bytes()).hexdigest()
+        self.record = {'state': 'compatibility-review-required', 'version': '1.0-1',
+                       'upstream_sha256': 'b'*64, 'packaging_sha256': {'symbols': 'c'*64},
+                       'attempts': [{'state': 'FAIL', 'package_attempt_consumed': True,
+                                     'result_path': str(self.result.relative_to(self.root)),
+                                     'result_sha256': digest, 'source_commit': 'a'*40}]}
+        self.review = self.directory / 'review.json'
+        self.proof = {'kind': 'package-compatibility-hold', 'state': 'HOLD', 'node': 'held',
+                      'version': '1.0-1', 'source_commit': 'a'*40, 'upstream_sha256': 'b'*64,
+                      'packaging_sha256': {'symbols': 'c'*64}, 'original_result_sha256': digest,
+                      'reason': 'Observed incompatible SDK change', 'downstream_eligible': False,
+                      'files_sha256': {'result.json': digest}}
+        self.record['compatibility_hold'] = {'reason': self.proof['reason'], 'reentry_gate': 'compatibility-review',
+                                             'result_path': str(self.result.relative_to(self.root)),
+                                             'review_path': str(self.review.relative_to(self.root))}
+        self.save_review()
+
+    def save_review(self):
+        self.review.write_text(json.dumps(self.proof))
+        self.record['compatibility_hold']['review_sha256'] = hashlib.sha256(self.review.read_bytes()).hexdigest()
+
+    def verify(self, scope=None):
+        return verify_package_hold(self.root, 'held', self.record, scope or [])
+
+    def test_hold_preserves_failure_without_blocking_an_independent_package(self):
+        self.assertEqual(self.verify(['independent'])['state'], 'HOLD')
+
+    def test_hold_cannot_become_an_executable_scope(self):
+        with self.assertRaisesRegex(AssertionError, 'cannot execute'):
+            self.verify(['held'])
+
+    def test_changed_review_bytes_are_rejected(self):
+        self.review.write_text(self.review.read_text() + ' ')
+        with self.assertRaises(AssertionError):
+            self.verify()
+
+    def test_review_cannot_substitute_another_source_or_package(self):
+        for field, value in [('source_commit', 'd'*40), ('version', '2.0-1'),
+                             ('upstream_sha256', 'e'*64), ('packaging_sha256', {'symbols': 'f'*64}),
+                             ('downstream_eligible', True)]:
+            with self.subTest(field=field):
+                original = self.proof[field]
+                self.proof[field] = value
+                self.save_review()
+                with self.assertRaises(AssertionError):
+                    self.verify()
+                self.proof[field] = original
+                self.save_review()
+
+    def test_original_failure_and_file_bytes_must_remain_intact(self):
+        self.result.write_text('{}')
+        with self.assertRaises(AssertionError):
+            self.verify()
+
+    def test_evidence_paths_cannot_escape_the_review(self):
+        for name in ['../result.json', str(self.result)]:
+            with self.subTest(name=name):
+                self.proof['files_sha256'] = {name: self.record['attempts'][0]['result_sha256']}
+                self.save_review()
+                with self.assertRaises(AssertionError):
+                    self.verify()
+
+    def test_pass_cannot_be_used_as_an_original_failed_attempt(self):
+        self.record['attempts'][0]['state'] = 'PASS'
+        with self.assertRaises(AssertionError):
             self.verify()
 
 

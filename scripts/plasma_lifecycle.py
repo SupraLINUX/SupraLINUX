@@ -3,6 +3,44 @@ import hashlib
 import json
 import re
 import subprocess
+from pathlib import Path
+
+
+def verify_package_hold(root, name, record, scope):
+    """Keep a failed compatibility review outside every executable package scope."""
+    assert record['state'] == 'compatibility-review-required'
+    assert name not in scope, 'A held package cannot execute'
+    hold = record['compatibility_hold']
+    assert hold['reason'] and hold['reentry_gate']
+    attempt = record['attempts'][-1]
+    assert attempt['state'] == 'FAIL' and attempt['package_attempt_consumed'] is True
+    assert hold['result_path'] == attempt['result_path']
+    result_path = root / attempt['result_path']
+    assert result_path.resolve().is_relative_to((root / 'manifests/evidence').resolve())
+    result_bytes = result_path.read_bytes()
+    assert hashlib.sha256(result_bytes).hexdigest() == attempt['result_sha256']
+    result = json.loads(result_bytes)
+    assert result['state'] == 'FAIL' and result['node'] == name
+    path = root / hold['review_path']
+    assert path.resolve().is_relative_to((root / 'manifests/evidence').resolve())
+    payload = path.read_bytes()
+    assert hashlib.sha256(payload).hexdigest() == hold['review_sha256']
+    proof = json.loads(payload)
+    assert proof['kind'] == 'package-compatibility-hold' and proof['state'] == 'HOLD'
+    assert proof['node'] == name and proof['version'] == record['version'] == result['version']
+    assert proof['source_commit'] == attempt['source_commit'] == result['source_commit']
+    assert proof['upstream_sha256'] == record['upstream_sha256']
+    assert proof['packaging_sha256'] == record['packaging_sha256']
+    assert proof['original_result_sha256'] == attempt['result_sha256']
+    assert proof['reason'] == hold['reason'] and proof['downstream_eligible'] is False
+    assert proof['files_sha256'], 'A hold requires inspectable evidence'
+    for name, digest in proof['files_sha256'].items():
+        relative = Path(name)
+        assert not relative.is_absolute() and '..' not in relative.parts
+        file = path.parent / relative
+        assert file.resolve().is_relative_to(path.parent.resolve()) and file.is_file() and not file.is_symlink()
+        assert hashlib.sha256(file.read_bytes()).hexdigest() == digest
+    return proof
 
 
 def validate(root, plasma, level, materialization):
@@ -83,6 +121,13 @@ def validate(root, plasma, level, materialization):
         version = node.get("candidate_package_version", "")
         require(version == version_record["candidate_package_version"], f"{name}: candidate version evidence")
         expected_state = "package-build-pending" if name in scope else "packaging-preparation-pending"
+        if phase.startswith("level0-package-build-") and node.get('state') == 'compatibility-review-required':
+            campaign = json.loads((root / planning['package_build_manifest']).read_text())
+            try:
+                verify_package_hold(root, name, campaign['nodes'][name], scope)
+            except (AssertionError, KeyError, OSError, ValueError) as error:
+                require(False, f'{name}: invalid compatibility hold: {error}')
+            expected_state = 'compatibility-review-required'
         if phase.startswith("level0-package-build-") and node.get("state") == "PASS":
             campaign_path = root / planning.get("package_build_manifest", "")
             require(campaign_path.is_file(), f"{name}: package build closure missing")

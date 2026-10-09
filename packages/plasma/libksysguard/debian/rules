@@ -1,0 +1,18 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/architecture.mk
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DBUILD_TESTING=ON
+
+override_dh_auto_test:
+	debian/tests/upstream-session dh_auto_test -- ARGS="--output-on-failure --verbose"
+
+execute_before_dh_installdeb:
+	sed 's/#DEB_HOST_MULTIARCH#/$(DEB_HOST_MULTIARCH)/' \
+	  debian/libksysguard-bin.postinst.in > debian/libksysguard-bin.postinst

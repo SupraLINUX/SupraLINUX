@@ -1,0 +1,235 @@
+Source: libksysguard
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Developers <dev@supralinux.org>
+XSBC-Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Build-Depends: cmake (>= 3.16~),
+               debhelper-compat (= 13),
+               dh-exec,
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               dh-sequence-qmldeps,
+               extra-cmake-modules (= 6.30.0-0supralinux3),
+               gettext,
+               libcap-dev [linux-any],
+               libcap2-bin [linux-any],
+               libdrm-dev,
+               libkf6auth-dev (= 6.30.0-0supralinux3),
+               libkf6config-dev (= 6.30.0-0supralinux5),
+               libkf6coreaddons-dev (= 6.30.0-0supralinux4),
+               libkf6i18n-dev (= 6.30.0-0supralinux1),
+               libkf6newstuff-dev (= 6.30.0-0supralinux1),
+               libkf6package-dev (= 6.30.0-0supralinux1),
+               libkf6service-dev (= 6.30.0-0supralinux1),
+               libkf6solid-dev (= 6.30.0-0supralinux2),
+               libnl-3-dev [linux-any],
+               libnl-route-3-dev [linux-any],
+               libpcap-dev [linux-any],
+               libsensors-dev [linux-any],
+               libx11-dev,
+               libxkbcommon-dev,
+               libxres-dev,
+               qml6-module-org-kde-kitemmodels (= 6.30.0-0supralinux1),
+               qml6-module-org-kde-quickcharts,
+               qml6-module-qt5compat-graphicaleffects,
+               qt6-base-dev (>= 6.10.0~),
+               qt6-declarative-dev (>= 6.10.0~),
+               qt6-declarative-private-dev (>= 6.10.0~),
+               zlib1g-dev,
+               python3,
+               dbus,
+               libglib2.0-bin,
+               qt6-qpa-plugins,
+               fonts-dejavu-core,
+Standards-Version: 4.7.0
+Homepage: https://invent.kde.org/plasma/libksysguard
+Vcs-Browser: https://code.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/libksysguard
+Vcs-Git: https://git.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/libksysguard
+Rules-Requires-Root: no
+
+Package: libksysguard-bin
+Architecture: any
+Depends: libksysguard-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Breaks: ksysguard (<< 4:5.21.80), libkf5sysguard-bin (<< 4:6.1.0-1ubuntu1~),
+Replaces: ksysguard (<< 4:5.21.80), libkf5sysguard-bin (<< 4:6.1.0-1ubuntu1~),
+Description: library for system monitoring - utilities
+ KSysGuard is a program to monitor various elements of your system, or any
+ other remote system with the KSysGuard daemon (ksysgardd) installed.
+ .
+ This package contains the support utilities.
+
+Package: libkf5sysguard-bin
+Architecture: all
+Depends: ${misc:Depends},
+Description: library for system monitoring
+ Transitional dummy package.
+
+Package: libkf5sysguard-data
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: library for system monitoring
+ Transitional dummy package.
+
+Package: libksgrd9
+Architecture: all
+Depends: ${misc:Depends},
+Description: library for system monitoring - utilities
+ Transitional dummy package.
+
+Package: libksignalplotter9
+Architecture: all
+Depends: ${misc:Depends},
+Description: library for system monitoring - utilities
+ Transitional dummy package.
+
+Package: libksysguard-data
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, ${qml6:Depends},
+Suggests: qml6-module-org-kde-ksysguard,
+Breaks: ksysguard-data (<< 4:5.21.80),
+        libkf5sysguard-data (<< 4:6.1.0-1ubuntu1~),
+Replaces: ksysguard-data (<< 4:5.21.80),
+          libkf5sysguard-data (<< 4:6.1.0-1ubuntu1~),
+Description: library for system monitoring - data files
+ KSysGuard is a program to monitor various elements of your system, or any
+ other remote system with the KSysGuard daemon (ksysgardd) installed.
+ .
+ This package contains the data files
+
+Package: libksysguard-dev
+Section: libdevel
+Architecture: any
+Depends: libkf6config-dev (= 6.30.0-0supralinux5),
+         libkf6i18n-dev (= 6.30.0-0supralinux1),
+         libksysguard-bin (= ${binary:Version}),
+         libksysguardformatter2 (= ${binary:Version}),
+         libksysguardsensorfaces2 (= ${binary:Version}),
+         libksysguardsensors2 (= ${binary:Version}),
+         libksysguardsystemstats2 (= ${binary:Version}),
+         libprocesscore10 (= ${binary:Version}),
+         qml6-module-org-kde-ksysguard (= ${binary:Version}),
+         libsensors-dev,
+         qt6-base-dev (>= 6.10.0~),
+         ${misc:Depends},
+Breaks: libkf5sysguard-dev,
+Replaces: libkf5sysguard-dev,
+Description: library for system monitoring - development files
+ KSysGuard is a program to monitor various elements of your system, or any
+ other remote system with the KSysGuard daemon (ksysgardd) installed.
+ .
+ This package contains the files necessary for development.
+
+Package: libksysguardformatter1
+Architecture: all
+Depends: ${misc:Depends},
+Description: library for system monitoring - utilities
+ Transitional dummy package.
+
+Package: libksysguardformatter2
+Architecture: any
+Depends: libksysguard-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: library for system monitoring - ksysguardformatter shared library
+ KSysGuard is a program to monitor various elements of your system, or any
+ other remote system with the KSysGuard daemon (ksysgardd) installed.
+ .
+ This package contains the shared library libksysguardformatter.
+
+Package: libksysguardsensorfaces1
+Architecture: all
+Depends: ${misc:Depends},
+Description: library for system monitoring - utilities
+ Transitional dummy package.
+
+Package: libksysguardsensorfaces2
+Architecture: any
+Depends: libksysguard-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: library for system monitoring - ksysguardsensorfaces shared library
+ KSysGuard is a program to monitor various elements of your system, or any
+ other remote system with the KSysGuard daemon (ksysgardd) installed.
+ .
+ This package contains the shared library libksysguardsensorfaces.
+
+Package: libksysguardsensors1
+Architecture: all
+Depends: ${misc:Depends},
+Description: library for system monitoring - utilities
+ Transitional dummy package.
+
+Package: libksysguardsensors2
+Architecture: any
+Depends: libksysguard-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: library for system monitoring - ksysguardsensors shared library
+ KSysGuard is a program to monitor various elements of your system, or any
+ other remote system with the KSysGuard daemon (ksysgardd) installed.
+ .
+ This package contains the shared library libksysguardsensors.
+
+Package: libksysguardsystemstats1
+Architecture: all
+Depends: ${misc:Depends},
+Description: library for system monitoring - utilities
+ Transitional dummy package.
+
+Package: libksysguardsystemstats2
+Architecture: any
+Depends: libksysguard-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: library for system monitoring - ksysguardsystemstats shared library
+ KSysGuard is a program to monitor various elements of your system, or any
+ other remote system with the KSysGuard daemon (ksysgardd) installed.
+ .
+ This package contains the shared library libksysguardsystemstats.
+
+Package: liblsofui9
+Architecture: all
+Depends: ${misc:Depends},
+Description: library for system monitoring - utilities
+ Transitional dummy package.
+
+Package: libprocesscore10
+Architecture: any
+Depends: libksysguard-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: library for system monitoring - processcore shared library
+ KSysGuard is a program to monitor various elements of your system, or any
+ other remote system with the KSysGuard daemon (ksysgardd) installed.
+ .
+ This package contains the shared library libprocesscore.
+
+Package: libprocesscore9
+Architecture: all
+Depends: ${misc:Depends},
+Description: library for system monitoring - utilities
+ Transitional dummy package.
+
+Package: libprocessui9
+Architecture: all
+Depends: ${misc:Depends},
+Description: library for system monitoring - utilities
+ Transitional dummy package.
+
+Package: qml-module-org-kde-ksysguard
+Architecture: all
+Depends: ${misc:Depends},
+Description: library for system monitoring - utilities
+ Transitional dummy package.
+
+Package: qml6-module-org-kde-ksysguard
+Architecture: any
+Depends: ${misc:Depends}, ${qml6:Depends}, ${shlibs:Depends},
+Description: KSysGuard QtDeclarative QML Support
+ Contains a plugin for QtDeclarative that provides
+ support for using KSysGuard components written
+ in QML.

@@ -1,0 +1,27 @@
+SupraLINUX integrates the signed official stable KDE Plasma 6.7.5 source with
+Ubuntu 26.04 packaging. Preserve all 21 binaries (including original transitional
+packages), five SONAMEs, symbols, QML modules, sensor-face packages, process
+plugins and KAuth/network helpers. Ubuntu Qt 6.10 providers remain unchanged.
+
+Enable all eight official native CTests. A private typed sensor provider supplies
+the versioned SDK service and the legacy upstream presence-check alias. Candidate
+headers/plugins/packages are used at build time. Privilege-dependent process cases
+may retain upstream QSKIP behavior and must be reported separately in the logs.
+
+The installed Ubuntu ABI contract exercises formatting, an owned process with
+memory and termination transitions, real private D-Bus sensors and model signals,
+SystemStats property/object lifecycle, installed SensorFace package/configuration,
+QML creation and software rendering. Both original Ubuntu-built executables are
+retained unchanged across normal APT upgrade. An exact 6.7.5 installed SDK consumer
+is compiled separately. Local Ubuntu prototype PASS does not certify the candidate.
+
+Exact eligible Frameworks artifacts include the reviewed transitive DAG closure;
+original historical verification scopes remain unchanged. No KDE source patch,
+helper privilege change, hardware process control or Qt replacement is introduced.
+Full application/session QA, real ksystemstats hardware plugins, GPU/network
+capture, privileged helper actions and accelerated/Wayland rendering remain later
+integration gates. Native/package execution has not yet occurred.
+
+Native CTest stdout/stderr are inherited by the retained clean sbuild log, while
+installed consumer output remains independently retained in its result files.
+HOME is private; cleanup verifies every owned process-group absence.

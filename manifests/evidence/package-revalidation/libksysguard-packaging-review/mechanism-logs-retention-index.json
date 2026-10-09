@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Original Ubuntu LibKSysGuard CMake mechanism raw diagnostics and authentication logs; byte retention only",
+  "archive_path": ".artifacts/plasma-frontier/libksysguard-original-cmake-logs-20261008/inputs.zip",
+  "archive_sha256": "e587e0ac3ddb2d8967989fe41ca0677455e007d21c3201aa1b59489db400e36e",
+  "files": {
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/negative-configure.log": {
+      "sha256": "c5921962c991ed40f466309f06439001b6ea2792932231d8f1a2922f881cf6a7",
+      "size": 2001
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/negative-build.log": {
+      "sha256": "00b7f646c2cfa591dd6705a484946fc35b71d8ccd37d58086c064d45cdc1a653",
+      "size": 1187
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/positive-configure.log": {
+      "sha256": "ce5526763621b3be2da711080c9b714bca6bc81d33e522ca98e44a102d661ec2",
+      "size": 883
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/positive-build.log": {
+      "sha256": "b9922d3862014a80c2fd9355594d649777db35e00ec9357e2bd548de44fbeed6",
+      "size": 774
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/resolute-signature.log": {
+      "sha256": "5c009a515f3763d807cd3a18b8a4df85cf78db9664f858f145acfb306d95a6e6",
+      "size": 221
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/resolute-updates-signature.log": {
+      "sha256": "c8d16ff10e6c054b1fd154d48b877d4c83ae3c52a5779a7f95ed5756a15de5be",
+      "size": 221
+    },
+    ".work/probe-libksysguard-original-cmake.py": {
+      "sha256": "5239431b6a73e661a6af4d49a5bd2d1e5e3942409b906e0a52a66d8fb2a6dea8",
+      "size": 5460
+    },
+    ".work/retain-local-review-inputs.py": {
+      "sha256": "3203ad78d10b3de0d5f909cd3cd44ae9e6b125dbf3952a77e37915d860c426a3",
+      "size": 1970
+    }
+  },
+  "empty_offline_byte_restore_verified": true,
+  "requires_github_for_restore": false,
+  "off_host_backup_verified": false,
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false
+}

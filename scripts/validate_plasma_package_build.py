@@ -6,6 +6,7 @@ import json
 import os
 import re
 from pathlib import Path
+from plasma_lifecycle import verify_package_hold
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("prepare", ROOT / "scripts/prepare-plasma-package.py")
@@ -132,6 +133,10 @@ def validate():
     sources = {node["node"]: node for node in material["nodes"]}
     for name, record in campaign["nodes"].items():
         prepare.contract(name)
+        if record['state'] == 'compatibility-review-required':
+            verify_package_hold(ROOT, name, record, scope)
+        else:
+            assert 'compatibility_hold' not in record, 'Resolve a hold explicitly before changing package state'
         if record.get('source_scope') == 'plasma-supplementary-provider':
             assert name in providers and name not in level['selected_nodes']
             assert providers[name]['package_record'] == name

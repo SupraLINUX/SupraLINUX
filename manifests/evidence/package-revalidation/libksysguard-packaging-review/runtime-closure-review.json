@@ -1,0 +1,21 @@
+{
+  "state": "PASS",
+  "scope": "staged runtime closure and exported development-dependency repair; not canonical admission",
+  "record_sha256": "7ec7e7510e3943ac693fcc4075f3ce1d449ee1b1a740c71d2f08a9bc51516709",
+  "packaging": ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian",
+  "frameworks_input_nodes": 38,
+  "retained_binaries": 173,
+  "original_cmake_mechanism": ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/review.json",
+  "original_runtime_proof": ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/functional-review.json",
+  "local_apt_proof": ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/apt-review.json",
+  "check_only_admission": "PASS",
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false,
+  "files_sha256": {
+    "admission-check.log": "5bd2babceb8bc14060c4fc2adf850f0474c580448e3e5da5434e251007ac4cba",
+    "apt-original-sdk-and-retained-inputs.log": "79a78d4994b5c6b1569902dd766ea27d70ce0bbb7b3e2c31f77629790da82987",
+    "apt-review.json": "2dcd5e48bce5e6b8daab64b9c4aa393cd6c6e6d64bf30bef13d06b00f651904e",
+    "origin.json": "07acccc730873bc7b19e69e75f6d6cb1c29c961efc6b1a85b63475875c3c78a0",
+    "record.json": "7ec7e7510e3943ac693fcc4075f3ce1d449ee1b1a740c71d2f08a9bc51516709"
+  }
+}

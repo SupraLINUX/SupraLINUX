@@ -1,0 +1,1369 @@
+libksysguard (4:6.7.5-0supralinux1) resolute; urgency=medium
+
+  * Package the signed official Plasma 6.7.5 release with the Ubuntu binary
+    profile, ABI guards and exact eligible Frameworks dependency closure.
+  * Enable upstream tests and private installed SDK integration contracts.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Wed, 07 Oct 2026 16:00:00 +0000
+
+libksysguard (4:6.6.5-0ubuntu0.1) resolute; urgency=medium
+
+  * New upstream release (6.6.5) (LP: #2152276)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 19 May 2026 10:27:30 +0100
+
+libksysguard (4:6.6.4-0ubuntu1) resolute; urgency=medium
+
+  * New upstream bugfix release (6.6.4)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 07 Apr 2026 13:08:33 +0100
+
+libksysguard (4:6.6.3-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.6.3)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 18 Mar 2026 14:42:46 +0000
+
+libksysguard (4:6.6.2-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.6.2)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 03 Mar 2026 12:23:01 +0000
+
+libksysguard (4:6.6.1-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.6.0)
+  * Update symbols.
+  * New upstream release (6.6.1)
+
+ -- Rik Mills <rikmills@kde.org>  Sat, 28 Feb 2026 22:14:34 +0000
+
+libksysguard (4:6.5.5-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 13 Jan 2026 14:56:38 +0000
+
+libksysguard (4:6.5.4-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.4)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 09 Dec 2025 11:18:49 +0000
+
+libksysguard (4:6.5.3-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.3)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 18 Nov 2025 12:08:01 +0000
+
+libksysguard (4:6.5.2-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.2)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 04 Nov 2025 17:12:53 +0000
+
+libksysguard (4:6.5.1-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.1)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 29 Oct 2025 05:47:09 +0000
+
+libksysguard (4:6.5.0-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.0)
+  * Update symbols.
+
+ -- Rik Mills <rikmills@kde.org>  Mon, 20 Oct 2025 18:37:50 +0100
+
+libksysguard (4:6.4.5-0ubuntu1) questing; urgency=medium
+
+  * New upstream release (6.4.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 09 Sep 2025 17:02:27 +0100
+
+libksysguard (4:6.4.4-0ubuntu1) questing; urgency=medium
+
+  * New upstream release (6.4.4)
+  * Build depend on libdrm-dev
+  * Update install files.
+  * Update symbols from build logs.
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 12 Aug 2025 17:29:24 +0100
+
+libksysguard (4:6.3.5-0ubuntu1) questing; urgency=medium
+
+  * New upstream release (6.3.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 06 May 2025 21:34:29 +0100
+
+libksysguard (4:6.3.4-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.4)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 02 Apr 2025 08:56:18 +0100
+
+libksysguard (4:6.3.3-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.3)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 11 Mar 2025 15:20:35 +0000
+
+libksysguard (4:6.3.2-1ubuntu1) plucky; urgency=medium
+
+  * Merge from Debian unstable. Remaining changes:
+    - Kubuntu Vcs and maintainer fields.
+    - Keep our symbols files.
+    - wrap-and-sort -bt
+    - Provide transitional dummy packages for upgrade from Plasma 5.
+
+ -- Rik Mills <rikmills@kde.org>  Mon, 10 Mar 2025 14:50:10 +0000
+
+libksysguard (4:6.3.2-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.3.1).
+  * New upstream release (6.3.2).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 28 Feb 2025 00:51:51 +0100
+
+libksysguard (4:6.3.2-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.2)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 25 Feb 2025 18:16:36 +0000
+
+libksysguard (4:6.3.1-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.1)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 18 Feb 2025 14:23:37 +0000
+
+libksysguard (4:6.3.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.3.0).
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Mon, 10 Feb 2025 14:58:51 +0100
+
+libksysguard (4:6.3.0-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.0)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 11 Feb 2025 12:55:47 +0000
+
+libksysguard (4:6.2.91-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.91).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 23 Jan 2025 23:51:32 +0100
+
+libksysguard (4:6.2.91-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.2.91)
+
+ -- Rik Mills <rikmills@kde.org>  Thu, 23 Jan 2025 13:42:16 +0000
+
+libksysguard (4:6.2.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.90).
+  * Update build-deps and deps with the info from cmake.
+  * Update symbols from build for 6.2.90.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 11 Jan 2025 23:27:08 +0100
+
+libksysguard (4:6.2.90-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.2.90)
+  * Update symbols from build logs.
+
+ -- Rik Mills <rikmills@kde.org>  Sat, 11 Jan 2025 05:45:02 +0000
+
+libksysguard (4:6.2.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.5).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 05 Jan 2025 10:57:32 +0100
+
+libksysguard (4:6.2.5-0ubuntu3) plucky; urgency=medium
+
+  * More sybols updates.
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 01 Jan 2025 03:02:44 +0000
+
+libksysguard (4:6.2.5-0ubuntu2) plucky; urgency=medium
+
+  * Update symbols from build logs.
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 01 Jan 2025 02:29:34 +0000
+
+libksysguard (4:6.2.5-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.2.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 31 Dec 2024 19:01:33 +0000
+
+libksysguard (4:6.2.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.4).
+  * Update build-deps and deps with the info from cmake.
+  * Add missing QML module detected by dh_qmldeps.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 03 Dec 2024 22:59:52 +0100
+
+libksysguard (4:6.2.4-0ubuntu2) plucky; urgency=medium
+
+  * Merge changes from 6.2.3-4 in Debian unstable:
+
+ -- Rik Mills <rikmills@kde.org>  Sun, 01 Dec 2024 19:50:37 +0000
+
+libksysguard (4:6.2.4-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.2.4)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 26 Nov 2024 12:14:23 +0000
+
+libksysguard (4:6.2.3-5) unstable; urgency=medium
+
+  * Team upload.
+  * Mark few Linux symbols as such.
+
+ -- Pino Toscano <pino@debian.org>  Tue, 03 Dec 2024 20:24:44 +0100
+
+libksysguard (4:6.2.3-4) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Sandro Knauß ]
+  * Lower dependency from -data package to qml package to suggest to break inter
+    package circula dependency.
+
+ -- Sandro Knauß <hefee@debian.org>  Wed, 27 Nov 2024 00:03:44 +0100
+
+libksysguard (4:6.2.3-3) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Sandro Knauß ]
+  * Add qmldeps.overrides to fix arch:all only build (Closes: #1088293).
+
+ -- Sandro Knauß <hefee@debian.org>  Tue, 26 Nov 2024 23:32:42 +0100
+
+libksysguard (4:6.2.3-2) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Sandro Knauß ]
+  * Use dh_qmldeps to detect QML dependencies.
+  * Add qml6-module packages to -dev package for QML dependency detection.
+
+ -- Sandro Knauß <hefee@debian.org>  Tue, 26 Nov 2024 14:20:46 +0100
+
+libksysguard (4:6.2.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.3).
+  * Add build dependency to qt6-declarative-private-dev required since
+    cmake 3.31.
+  * Update symbols from build for 6.2.3.
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 23 Nov 2024 21:57:26 +0100
+
+libksysguard (4:6.2.3-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.2.0)
+  * Update symbols from build logs.
+  * New upstream release (6.2.1)
+  * New upstream release (6.2.2)
+  * New upstream release (6.2.3)
+
+ -- Rik Mills <rikmills@kde.org>  Thu, 07 Nov 2024 19:57:34 +0000
+
+libksysguard (4:6.2.1-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.1).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 15 Oct 2024 17:47:45 +0200
+
+libksysguard (4:6.2.0-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.90).
+  * Update build-deps and deps with the info from cmake.
+  * Update symbols from build for 6.1.90.
+  * New upstream release (6.2.0).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 05 Oct 2024 23:17:42 +0200
+
+libksysguard (4:6.1.5-2) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * Update symbols from buildds for 4:6.1.5.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 13 Sep 2024 16:00:23 +0200
+
+libksysguard (4:6.1.5-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Wed, 11 Sep 2024 23:27:43 +0200
+
+libksysguard (4:6.1.5-0ubuntu1) oracular; urgency=medium
+
+  * New upstream release (6.1.5)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 11 Sep 2024 05:59:56 +0100
+
+libksysguard (4:6.1.4-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 11 Aug 2024 23:58:19 +0200
+
+libksysguard (4:6.1.4-0ubuntu1) oracular; urgency=medium
+
+  * New upstream release (6.1.4)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 14 Aug 2024 21:42:37 +0100
+
+libksysguard (4:6.1.3-1ubuntu1) UNRELEASED; urgency=medium
+
+  * Kubuntu Vcs and maintainer.
+  * Update symbols from build logs.
+  * wrap-and-sort -bt
+  * Provide transitional dummy packages for upgrade from Plasma 5.
+
+ -- Rik Mills <rikmills@kde.org>  Mon, 29 Jul 2024 12:43:16 +0100
+
+libksysguard (4:6.1.3-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.3).
+  * Add build dependency on libcap2-bin, the build process needs setcap.
+  * Update symbols from build for 6.1.3.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 21 Jul 2024 23:46:14 +0200
+
+libksysguard (4:6.1.0-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (6.1.0).
+  * Update build-deps and deps with the info from cmake.
+  * Create new packages.
+  * Update d/copyright.
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 21 Jun 2024 10:18:12 +0200
+
+libksysguard (4:5.27.11-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Bump Standards-Version to 4.7.0 (No changes needed).
+  * New upstream release (5.27.11).
+
+ -- Patrick Franz <deltaone@debian.org>  Sun, 19 May 2024 12:19:38 +0200
+
+libksysguard (4:5.27.10-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.10).
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 11 Jan 2024 23:17:10 +0100
+
+libksysguard (4:5.27.9-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.9).
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 27 Oct 2023 21:51:07 +0200
+
+libksysguard (4:5.27.8-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.8).
+
+ -- Patrick Franz <deltaone@debian.org>  Wed, 13 Sep 2023 20:47:08 +0200
+
+libksysguard (4:5.27.7-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.7).
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 03 Aug 2023 18:50:56 +0200
+
+libksysguard (4:5.27.5-3) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Do not depend on qtwebengine5-dev on mipsel (Closes: #1041252).
+
+ -- Patrick Franz <deltaone@debian.org>  Sun, 16 Jul 2023 16:56:16 +0200
+
+libksysguard (4:5.27.5-2) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 27 May 2023 18:23:41 +0200
+
+libksysguard (4:5.27.5-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.5).
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 09 May 2023 23:25:26 +0200
+
+libksysguard (4:5.27.3-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.3).
+
+ -- Patrick Franz <deltaone@debian.org>  Wed, 22 Mar 2023 23:14:07 +0100
+
+libksysguard (4:5.27.2-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.27.1).
+  * Update the list of installed files from build logs.
+  * New upstream release (5.27.2).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 28 Feb 2023 14:59:33 +0100
+
+libksysguard (4:5.27.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.27.0).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 18 Feb 2023 17:08:38 +0100
+
+libksysguard (4:5.26.90-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.90).
+  * Bump Standards-Version to 4.6.2, no change required.
+  * Update the list of installed files from build logs.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Mon, 23 Jan 2023 21:50:54 +0100
+
+libksysguard (4:5.26.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 07 Jan 2023 00:20:41 +0100
+
+libksysguard (4:5.26.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 29 Nov 2022 16:00:12 +0100
+
+libksysguard (4:5.26.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.3).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 08 Nov 2022 15:43:02 +0100
+
+libksysguard (4:5.26.2-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.1).
+  * New upstream release (5.26.2).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 27 Oct 2022 23:30:23 +0200
+
+libksysguard (4:5.26.0-2) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * Update symbols from buildds for 4:5.26.0-1.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 11 Oct 2022 23:22:23 +0200
+
+libksysguard (4:5.26.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.0).
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 11 Oct 2022 15:44:01 +0200
+
+libksysguard (4:5.25.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.90).
+  * Update build-deps and deps with the info from cmake.
+  * Update the list of installed files from build logs.
+  * Update symbols from build for 5.25.90.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 25 Sep 2022 00:14:21 +0200
+
+libksysguard (4:5.25.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 09 Sep 2022 23:20:54 +0200
+
+libksysguard (4:5.25.4-5) unstable; urgency=medium
+
+  * Team upload.
+  * Fix the dependencies of libkf5sysguard-dev:
+    - use the sodeps dh addon to generate the list shared libraries to depend on
+    - use the ${so:Depends} substvar
+    - remove the manually specified library packages
+
+ -- Pino Toscano <pino@debian.org>  Mon, 08 Aug 2022 20:59:06 +0200
+
+libksysguard (4:5.25.4-4) unstable; urgency=medium
+
+  * Team upload.
+  * Remove inactive Uploaders.
+  * Modernize building:
+    - add the dh-sequence-kf5 build dependency to use the kf5 addon
+      automatically
+    - drop all the manually specified addons and buildsystem for dh
+  * Tighten the inter-library dependencies.
+  * Update lintian overrides.
+  * Include /usr/share/dpkg/architecture.mk to make sure that the variable
+    $DEB_HOST_MULTIARCH is available.
+  * Use execute_before_dh_installdeb to avoid invoking dh_installdeb manually.
+  * Remove the unused qtscript5-dev build dependency.
+  * Update symbols files from the logs of buildds.
+
+ -- Pino Toscano <pino@debian.org>  Mon, 08 Aug 2022 08:53:01 +0200
+
+libksysguard (4:5.25.4-3) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Update symbols from buildlogs.
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 02 Aug 2022 22:38:28 +0200
+
+libksysguard (4:5.25.4-2) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Update symbols from buildlogs.
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 02 Aug 2022 20:20:23 +0200
+
+libksysguard (4:5.25.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.4).
+  * Refresh lintian overrides.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 02 Aug 2022 17:31:05 +0200
+
+libksysguard (4:5.25.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.2).
+  * Drop superfluous build dependency on libkf5declarative-dev and
+    libkf5plasma-dev.
+  * Review copyright information.
+  * New upstream release (5.25.3).
+  * Release to unstable
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 17 Jul 2022 15:26:37 +0200
+
+libksysguard (4:5.25.1-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.25.1).
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 21 Jun 2022 21:45:49 +0200
+
+libksysguard (4:5.25.0-1) experimental; urgency=medium
+
+  * New upstream release (5.25.0).
+  * Bump Standards-Version to 4.6.1, no change required.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 14 Jun 2022 21:26:15 +0200
+
+libksysguard (4:5.24.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.90).
+  * Update the list of installed files.
+  * Update symbols from build for 5.24.90.
+  * Bump libkf5config-dev build-dependency to 5.94.0 to ensure we have
+    libkf5configqml available.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 20 May 2022 11:36:31 +0200
+
+libksysguard (4:5.24.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 12 May 2022 21:39:23 +0200
+
+libksysguard (4:5.24.4-2) unstable; urgency=medium
+
+  * Team upload.
+  * Update symbols files from the logs of buildds.
+  * Make libksysguard build on non-Linux architectures:
+    - limit build dependencies used only on Linux: libcap-dev, libnl-3-dev,
+      libnl-route-3-dev, libpcap-dev, and libsensors-dev
+    - add the dh-exec build dependency for architecture filtering in install
+      files
+    - update debian/libkf5sysguard-bin.install for Linux-only files
+    - update debian/libksysguardsystemstats1.symbols for Linux-only symbols
+  * Use execute_after_dh_auto_install to avoid invoking dh_auto_install
+    manually.
+
+ -- Pino Toscano <pino@debian.org>  Tue, 05 Apr 2022 08:29:14 +0200
+
+libksysguard (4:5.24.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Wed, 30 Mar 2022 13:44:54 +0200
+
+libksysguard (4:5.24.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.3).
+  * Added myself to the uploaders.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 10 Mar 2022 07:46:21 +0100
+
+libksysguard (4:5.24.2-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.24.2).
+  * Re-export signing key without extra signatures.
+  * Update B-Ds and deps with the info from cmake.
+  * Update list of installed files.
+  * Update symbols from buildlogs.
+  * Update d/copyright.
+  * Update lintian-overrides.
+
+ -- Patrick Franz <deltaone@debian.org>  Sat, 26 Feb 2022 21:59:05 +0100
+
+libksysguard (4:5.23.5-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.23.5).
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 07 Jan 2022 15:44:26 +0100
+
+libksysguard (4:5.23.4-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.4).
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 02 Dec 2021 20:24:55 +0100
+
+libksysguard (4:5.23.3-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.3).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 10 Nov 2021 08:40:10 +0900
+
+libksysguard (4:5.23.2-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.1).
+  * New upstream release (5.23.2).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 03 Nov 2021 22:21:03 +0900
+
+libksysguard (4:5.23.0-6) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Remove autopkgtest.
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 26 Oct 2021 01:31:38 +0200
+
+libksysguard (4:5.23.0-5) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Disable autopkgtest.
+
+ -- Patrick Franz <deltaone@debian.org>  Sun, 17 Oct 2021 01:09:05 +0200
+
+libksysguard (4:5.23.0-4) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Update autokgtest for libkf5sysguard-dev.
+
+ -- Patrick Franz <deltaone@debian.org>  Sat, 16 Oct 2021 17:50:10 +0200
+
+libksysguard (4:5.23.0-3) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Source-only upload to unstable.
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 15 Oct 2021 21:43:21 +0200
+
+libksysguard (4:5.23.0-2) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Update upstream signing-key.
+  * Update symbols.
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 15 Oct 2021 04:38:02 +0200
+
+libksysguard (4:5.23.0-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.0).
+  * Introduce libksysguardsystemstats1 package.
+  * Update list of installed files.
+  * Move ksysguard postinst helper over here.
+  * Update symbols.
+  * Update list of installed files.
+
+ -- Norbert Preining <norbert@preining.info>  Thu, 14 Oct 2021 20:13:15 +0900
+
+libksysguard (4:5.21.5-3) unstable; urgency=medium
+
+  * Team upload.
+  * Update symbols files from the logs of buildds.
+  * Bump Standards-Version to 4.6.0, no changes required.
+  * Properly use the ${shlibs:Depends} substvar in libkf5sysguard-dev, as it
+    contains Qt designer plugins.
+  * Update lintian overrides.
+  * Since the unit test fail (and they seem to require a bigger environment
+    than the building one), then:
+    - pass -DBUILD_TESTING=OFF to cmake to disable their build
+    - drop the xauth, and xvfb build dependencies
+
+ -- Pino Toscano <pino@debian.org>  Fri, 20 Aug 2021 11:46:08 +0200
+
+libksysguard (4:5.21.5-2) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Release to unstable.
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 17 Aug 2021 03:24:16 +0200
+
+libksysguard (4:5.21.5-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.21.5).
+
+ -- Patrick Franz <patfra71@gmail.com>  Fri, 07 May 2021 13:55:02 +0200
+
+libksysguard (4:5.21.4-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.21.4).
+
+ -- Patrick Franz <patfra71@gmail.com>  Tue, 06 Apr 2021 17:47:14 +0200
+
+libksysguard (4:5.21.3.1-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.21.3.1).
+  * Update symbols.
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 17 Mar 2021 07:40:09 +0900
+
+libksysguard (4:5.21.2-2) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * Update symbols for libprocesscore9.
+  * Bump Standards-Version to 4.5.1 (no changes needed).
+
+ -- Patrick Franz <patfra71@gmail.com>  Fri, 05 Mar 2021 13:55:32 +0100
+
+libksysguard (4:5.21.2-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.21.2).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 03 Mar 2021 05:33:50 +0900
+
+libksysguard (4:5.21.1-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.21.1).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 24 Feb 2021 14:36:40 +0900
+
+libksysguard (4:5.21.0-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.21.0).
+  * Update build-deps and deps with the info from cmake.
+  * Update symbols.
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 17 Feb 2021 05:42:27 +0900
+
+libksysguard (4:5.20.5-1) unstable; urgency=medium
+
+  * New upstream release (5.20.5).
+  * Update lintian overrides.
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 06 Jan 2021 23:50:52 +0900
+
+libksysguard (4:5.20.4-2) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Norbert Preining <norbert@preining.info>  Tue, 22 Dec 2020 11:04:37 +0900
+
+libksysguard (4:5.20.4-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.20.4).
+  * Update build-deps with the info from cmake.
+  * Update list of installed files.
+  * Update symbols.
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 09 Dec 2020 14:17:32 +0900
+
+libksysguard (4:5.19.5-4) unstable; urgency=medium
+
+  * Team upload.
+  * Add the qtdeclarative5-dev dependency to libkf5sysguard-dev, as it provides
+    Qt headers included in public libksysguard headers.
+  * Remove obsolete fields Contact, Name from debian/upstream/metadata (already
+    present in machine-readable debian/copyright).
+
+ -- Pino Toscano <pino@debian.org>  Wed, 11 Nov 2020 01:30:35 +0100
+
+libksysguard (4:5.19.5-3) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Norbert Preining <norbert@preining.info>  Fri, 06 Nov 2020 08:37:23 +0900
+
+libksysguard (4:5.19.5-2) experimental; urgency=medium
+
+  * Rebuild for Qt 5.15
+
+ -- Norbert Preining <norbert@preining.info>  Mon, 02 Nov 2020 09:27:41 +0900
+
+libksysguard (4:5.19.5-1) experimental; urgency=medium
+
+  [ Scarlett Moore ]
+  * New upstream release (5.19.5).
+
+  [ Norbert Preining ]
+  * Add Patrick and myself to uploaders.
+
+ -- Norbert Preining <norbert@preining.info>  Mon, 19 Oct 2020 13:51:19 +0900
+
+libksysguard (4:5.19.4-2) experimental; urgency=medium
+
+  * Team upload.
+
+  [ Scarlett Moore ]
+  * Update acc.in with new libs.
+    - Bump version to old-stable.
+    - Fix paths for all the headers/libs.
+    - Condense changelog to one entry.
+    - Update acc test to copy logs for debugging.
+  * Add missing epoch to new packages symbols files.
+  * Move runtime dependencies to the -bin package that
+    actually needs them.
+
+ -- Sandro Knauß <hefee@debian.org>  Thu, 08 Oct 2020 21:05:29 +0200
+
+libksysguard (4:5.19.4-1) experimental; urgency=medium
+
+  * Team upload.
+
+  [ Scarlett Moore ]
+  * Bump compat level to 13.
+  * Add Rules-Requires-Root field to control.
+  * New upstream release (5.18.5).
+  * Update build-deps and deps with the info from cmake.
+  * Remove umused build dependencies.
+  * Delete not needed Breaks/Confilcts.
+  * Add myself to Uploaders.
+  * Remove not needed injection of linker flags.
+  * Update Homepage link to point to new invent.kde.org
+  * Update field Source in debian/copyright to invent.kde.org move.
+  * Set/Update field Upstream-Contact in debian/copyright.
+
+  [ Norbert Preining ]
+  * New upstream release (5.19.4).
+  * Remove Maximiliano from Uploaders as requested on IRC.
+  * Change maintainer in d/control to Debian Qt/KDE Maintainers.
+  * Update build-deps according to info from cmake.
+    - bump KF versions to 5.66.
+    - bump Qt versions to 5.14.
+    - add libkf5declarative-dev, libkf5newstuff-dev, libkf5package-dev to B-D.
+  * Add xauth and xvfb to build-deps for autotests.
+  * Rename private lib packages according to ABI bump.
+  * Add new packages.
+    . libksysguardformatter1
+    . libksysguardsensorfaces1
+    . libksysguardsensors1
+    . qml-module-org-kde-ksysguard
+  * Update list of installed files.
+  * Update symbols of new packages.
+  * Add symbols files for the new libraries.
+  * Add new libraries to abi compliance checker list.
+  * Add Build-Depends-Package info to symbols files.
+  * Enable hardening for build.
+  * Update upstream metadata.
+  * Install scripts README to doc directory.
+  * Rewrite/rephrase the short description and make them unique.
+
+ -- Pino Toscano <pino@debian.org>  Sat, 29 Aug 2020 22:53:14 +0200
+
+libksysguard (4:5.17.5-2) unstable; urgency=medium
+
+  * Team upload.
+  * Upload to unstable.
+  * Bump Standards-Version to 4.5.0, no changes required.
+
+ -- Pino Toscano <pino@debian.org>  Fri, 14 Feb 2020 20:44:54 +0100
+
+libksysguard (4:5.17.5-1) experimental; urgency=medium
+
+  * Team upload.
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.16.5).
+  * Salsa CI automatic initialization by Tuco
+  * Update build-deps and deps with the info from cmake
+  * Drop the transitional package libkf5sysguard5 (Closes: 940750)
+  * Drop the transitional package libkf5sysguard5-data (Closes: 940741)
+
+  [ Pino Toscano ]
+  * New upstream release.
+  * Update the build dependencies according to the upstream build system:
+    - remove libqt5webkit5-dev
+    - add libqt5webchannel5-dev, libxres-dev, and qtwebengine5-dev
+    - explicitly add gettext
+  * Bump the debhelper compatibility to 12:
+    - switch the debhelper build dependency to debhelper-compat 12
+    - remove debian/compat
+  * Remove breaks/replaces for versions older than oldstable.
+  * Drop the migration from libkf5sysguard-dbg, no more needed after two
+    Debian stable releases.
+  * Drop the 'testsuite' autopkgtest, as it does not test the installed
+    packages. (Closes: #915613, #915616)
+  * Update install files.
+  * Unregister old conffiles.
+  * Bump Standards-Version to 4.4.1, no changes required.
+  * Update symbols files.
+  * Do not use the ${shlibs:Depends} substvar in libkf5sysguard-data, as it
+    does not exist.
+  * Update lintian overrides.
+  * Enable all the reprotest variations in the salsa CI.
+
+ -- Pino Toscano <pino@debian.org>  Sun, 12 Jan 2020 13:38:57 +0100
+
+libksysguard (4:5.14.5-1) unstable; urgency=medium
+
+  * New upstream release (5.14.5).
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 24 Jan 2019 09:26:00 -0300
+
+libksysguard (4:5.14.3-1) unstable; urgency=medium
+
+  * Update upsteam signing-key
+  * New upstream release (5.14.3).
+  * Update build-deps and deps with the info from cmake
+  * Bump group breaks (4:5.14)
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 23 Nov 2018 08:50:48 -0300
+
+libksysguard (4:5.13.4-1) unstable; urgency=medium
+
+  * New upstream release (5.13.4).
+  * Update install files
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 19 Aug 2018 23:18:10 +0200
+
+libksysguard (4:5.13.1-1) unstable; urgency=medium
+
+  * Update symbols files
+  * New upstream release (5.13.1).
+  * Update build-deps and deps with the info from cmake
+  * Update symbols files
+  * Bump group breaks (4:5.13)
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 26 Jun 2018 13:43:11 +0200
+
+libksysguard (4:5.12.5-1) unstable; urgency=medium
+
+  * New upstream release (5.12.2).
+  * New upstream release (5.12.5).
+  * Bump Standards-Version to 4.1.4.
+  * Use https for the debian/copyright
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 09 May 2018 13:24:02 +0200
+
+libksysguard (4:5.12.1-1) sid; urgency=medium
+
+  * Let autopkgtest to take care of the build
+  * Use the salsa canonical urls
+  * New upstream release (5.12.1).
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 20 Feb 2018 22:08:57 +0100
+
+libksysguard (4:5.12.0-3) sid; urgency=medium
+
+  * New revision
+  * Update install files
+  * Ignore xvfb messages in the tests
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 12 Feb 2018 17:48:57 +0100
+
+libksysguard (4:5.12.0-2) sid; urgency=medium
+
+  * New revision
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 12 Feb 2018 16:03:45 +0100
+
+libksysguard (4:5.12.0-1) experimental; urgency=medium
+
+  * Bump debhelper build-dep and compat to 11.
+  * Build without build_stamp
+  * Add link options as-needed
+  * Add Bhushan Shah upstream signing key
+  * New upstream release (5.12.0).
+  * Bump Standards-Version to 4.1.3.
+  * Bump group breaks (5.12)
+  * Use https uri for uscan
+  * Release to experimental
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 08 Feb 2018 15:20:54 +0100
+
+libksysguard (4:5.11.4-1) experimental; urgency=medium
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.11.4).
+  * Bump Standards-Version to 4.1.2.
+  * Release to experimental
+
+  [ Helmut Grohne ]
+  * Mark libkf5sysguard-data Multi-Arch: foreign. (Closes: 879890)
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 03 Jan 2018 16:49:06 -0300
+
+libksysguard (4:5.10.5-2) sid; urgency=medium
+
+  * New revision
+  * Bump Standards-Version to 4.1.0.
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 03 Sep 2017 09:55:34 +0200
+
+libksysguard (4:5.10.5-1) experimental; urgency=medium
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.10.3).
+  * Bump Standards-Version to 4.0.0.
+  * Update upstream metadata
+  * Bump group breaks (5.10)
+  * New upstream release (5.10.4).
+  * Update build-deps and deps with the info from cmake
+  * Set Priority to optional
+  * New upstream release (5.10.5).
+  * Release to experimental
+
+  [ Jonathan Riddell ]
+  * update watch file to version=4 with pgp signature checking
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 28 Aug 2017 15:28:38 +0200
+
+libksysguard (4:5.8.7-1) unstable; urgency=medium
+
+  * Add new patch: Drop-html-markup-from-polkit-action-file.patch.
+    Thanks to Michael Biebl for reporting (Closes: 696905)
+  * New upstream release (5.8.7)
+     + Don't reset the view to the top on gaining focus
+        when the listview gained focus, it used to reset
+        the view position to the first element, but this both lost the
+        previously selected item and was a really weird behavior especially
+        when the focus was gained by click rather than keyboard
+        navigation, and was often seen as a bug.
+        Fixes KDE#363420
+  * Drop upstream applied patch: Drop-html-markup-from-polkit-action-file.patch
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 12 Jun 2017 13:06:27 +0200
+
+libksysguard (4:5.8.5-1) experimental; urgency=medium
+
+  * New upstream release (5.8.5).
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 30 Dec 2016 18:46:19 +0100
+
+libksysguard (4:5.8.4-1) unstable; urgency=medium
+
+  * New upstream release (5.8.4)
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 23 Nov 2016 18:37:29 +0100
+
+libksysguard (4:5.8.2-1) unstable; urgency=medium
+
+  * New upstream release (5.8.2)
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 19 Oct 2016 15:23:08 +0200
+
+libksysguard (4:5.8.1-1) unstable; urgency=medium
+
+  * New upstream release (5.8.1)
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 16 Oct 2016 22:59:04 +0200
+
+libksysguard (4:5.8.0-1) unstable; urgency=medium
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.8.0)
+  * Replace dbus-launch with dbus-run-session in tests
+  * Bump group breaks (5.8)
+
+  [ Automatic packaging ]
+  * Update build-deps and deps with the info from cmake
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 07 Oct 2016 14:05:05 +0200
+
+libksysguard (4:5.7.4-1) unstable; urgency=medium
+
+  * New upstream release (5.7.4)
+  * Bump group breaks (5.7)
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 26 Aug 2016 15:05:10 +0200
+
+libksysguard (4:5.7.0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Maximiliano Curia <maxy@debian.org>  Sat, 09 Jul 2016 22:30:29 +0200
+
+libksysguard (4:5.6.5-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 21 Jun 2016 11:12:36 +0200
+
+libksysguard (4:5.6.4-1) unstable; urgency=medium
+
+  [ Maximiliano Curia ]
+  * uscan no longer supports this kind of watch files.
+  * New upstream release (5.5.5).
+  * Automatic update with ddeb_migration3.py
+  * Add upstream metadata (DEP-12)
+  * New upstream release (5.6.2).
+  * Add source js lintian-override
+  * debian/control: Update Vcs-Browser and Vcs-Git fields
+
+  [ Automatic packaging ]
+  * Bump Standards-Version to 3.9.8
+
+ -- Maximiliano Curia <maxy@debian.org>  Sat, 28 May 2016 02:21:12 +0200
+
+libksysguard (4:5.5.4-1) experimental; urgency=medium
+
+  * New upstream release (5.5.0).
+  * New upstream release (5.5.1).
+  * New upstream release (5.5.2).
+  * New upstream release (5.5.3).
+  * New upstream release (5.5.4).
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 27 Jan 2016 16:49:16 +0100
+
+libksysguard (4:5.4.3-1) unstable; urgency=medium
+
+  * New upstream release (5.4.3).
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 01 Dec 2015 11:46:08 +0100
+
+libksysguard (4:5.4.2-1) unstable; urgency=medium
+
+  * New upstream release (5.4.2).
+  * Update symbols files from buildds logs (4:5.4.1-1).
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 06 Oct 2015 07:52:26 +0200
+
+libksysguard (4:5.4.1-1) unstable; urgency=medium
+
+  * New upstream release (5.4.1).
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 11 Sep 2015 18:45:45 +0200
+
+libksysguard (4:5.4.0-1) unstable; urgency=medium
+
+  * New upstream release (5.4.0).
+  * Update symbols files.
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 03 Sep 2015 17:37:13 +0200
+
+libksysguard (4:5.3.2-2) unstable; urgency=medium
+
+  * Add the missing Breaks/Replaces. (Closes: #790920, #790802)
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 03 Jul 2015 14:07:56 +0200
+
+libksysguard (4:5.3.2-1) unstable; urgency=medium
+
+  * New upstream release (5.3.2).
+  * Update copyright information.
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 30 Jun 2015 23:15:57 +0200
+
+libksysguard (4:5.3.1-0ubuntu1) wily; urgency=medium
+
+  [ Jonathan Riddell ]
+  * Plasma 5.3 beta
+  * new upstream release
+
+  [ Scarlett Clark ]
+  * Vivid backport
+  * wrap-and-sort
+
+  [ Jonathan Riddell ]
+  * New upstream release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Fri, 05 Jun 2015 02:36:19 +0200
+
+libksysguard (4:5.3.1-1) unstable; urgency=medium
+
+  * New upstream release (5.3.0).
+  * New upstream release (5.3.1).
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 30 Jun 2015 10:35:19 +0200
+
+libksysguard (4:5.2.2-1) experimental; urgency=medium
+
+  * New upstream release (5.2.1).
+  * New upstream release (5.2.2).
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 25 Mar 2015 23:18:00 +0100
+
+libksysguard (4:5.2.2-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Tue, 24 Mar 2015 07:35:15 -0700
+
+libksysguard (4:5.2.1-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Mon, 23 Feb 2015 09:43:57 -0800
+
+libksysguard (4:5.2.0-1) experimental; urgency=medium
+
+  * Prepare initial Debian release.
+  * Add myself as Uploader.
+  * Update build dependencies to build against experimental and to
+    follow cmake.
+  * Bump Standards-Version to 3.9.6, no changes needed.
+  * Update copyright information.
+  * Update install files.
+  * Add acc autopkgtests.
+  * Add missing dev dependency (thanks to acc headers check)
+  * Update symbols files.
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 10 Feb 2015 09:28:30 +0100
+
+libksysguard (4:5.2.0-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+
+ -- Harald Sitter <sitter@kde.org>  Tue, 27 Jan 2015 14:55:34 +0100
+
+libksysguard (4:5.1.95-0ubuntu1) vivid; urgency=medium
+
+  * New upstream beta release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Thu, 15 Jan 2015 01:33:06 +0100
+
+libksysguard (4:5.1.2-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 15 Dec 2014 13:23:50 +0100
+
+libksysguard (4:5.1.1-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Mon, 10 Nov 2014 19:49:14 +0100
+
+libksysguard (4:5.1.0.1-0ubuntu1) vivid; urgency=medium
+
+  [ Jonathan Riddell ]
+  * New upstream beta release
+  * Move data files to libkf5sysguard5-data
+
+  [ Scarlett Clark ]
+  * Add missing processlisthelper files
+  * Add not-installed for a file installed to /etc rather than /usr/etc
+
+  [ Harald Sitter ]
+  * Revise build-dependencies to only include direct build dependencies,
+    dependencies of build dependencies should be pulled in by the build
+    dependencies themselves.
+  * Bump rules to new pkg-kde include for kde frameworks 5
+    + This is to build the package as any other frameworks 5 based package.
+    + Drop the manual path change on the dbus config in the -data.install
+      as the new pkg-kde should automatically make config content go to
+      /etc making the manual move from /usr/etc to /etc pointless.
+    + Drop not-installed as the only filelisted there was the moved /usr/etc/
+      file
+  * Switch to autopkgtest as test suite and override the build time test.
+    - We need a more advanced setup as internally libksysguard will use
+      kwindowsystem to identify windows running in the current netwm session,
+      which will give unintended results (namely right now kwindowsystem
+      crashes) if there is no window manager. So we are running a more
+      advanced setup using autopkgtest and openbox.
+  * libkf5sysguard5-data breaks and conflicts pre-5.0 ksysguard as the
+    dbus processlisthelper.conf previously was in ksysguard.
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Tue, 14 Oct 2014 13:49:37 +0200
+
+libksysguard (4:5.0.2-0ubuntu1) utopic; urgency=medium
+
+  * New upstream release
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Wed, 17 Sep 2014 18:18:17 -0700
+
+libksysguard (4:5.0.1-0ubuntu1~ubuntu14.10~ppa2) utopic; urgency=medium
+
+  [ Jonathan Riddell ]
+  * New upstream release
+
+  [ Scarlett Clark ]
+  * Update watch to http://download.kde.org
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Sun, 10 Aug 2014 15:43:41 +0200
+
+libksysguard (4:4.98.0-0ubuntu1) utopic; urgency=medium
+
+  * New upstream RC release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 07 Jul 2014 13:21:18 +0200
+
+libksysguard (4:4.97.0-0ubuntu1) utopic; urgency=medium
+
+  [ Scarlett Clark ]
+  * Initial release.
+
+  [ Jonathan Riddell ]
+  * New upstream beta release
+
+  [ José Manuel Santamaría Lema ]
+  * Build depend on libz-dev.
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 09 Jun 2014 10:26:19 +0100

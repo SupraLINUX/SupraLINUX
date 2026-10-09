@@ -1,0 +1,47 @@
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Performing Test HAVE_STDATOMIC
+-- Performing Test HAVE_STDATOMIC - Success
+-- Found WrapAtomic: TRUE
+-- Found OpenGL: /usr/lib/x86_64-linux-gnu/libOpenGL.so
+-- Found WrapOpenGL: TRUE
+-- Found WrapVulkanHeaders: /usr/include
+-- Found Gettext: /usr/bin/msgmerge (found version "0.23.2")
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/negative
+CMake Warning at CMakeLists.txt:6 (add_executable):
+  Cannot generate a safe runtime search path for target stats-server because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libsensors.so] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/sdk/usr/lib/x86_64-linux-gnu
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at CMakeLists.txt:29 (add_executable):
+  Cannot generate a safe runtime search path for target stats-client because
+  files in some directories may conflict with libraries in implicit
+  directories:
+
+    runtime library [libsensors.so] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/sdk/usr/lib/x86_64-linux-gnu
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    SDK
+
+
