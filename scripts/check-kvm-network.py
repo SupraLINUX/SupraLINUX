@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Admit current bridge-free SLIRP; retain the historical NAT checker for replay."""
 import argparse
+import hashlib
+import importlib.machinery
 import ipaddress
 import json
 import re
@@ -12,6 +14,55 @@ PRIVATE_IPV4 = tuple(ipaddress.ip_network(value) for value in
                      ('10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'))
 USER_SUBNET = ipaddress.ip_network('10.203.0.0/24')
 USER_MAC = '52:54:00:53:55:01'
+
+
+def check_retained_probes(root):
+    paths = sorted((root/'manifests/evidence/host-network-safety').glob('slirp-probe*/verification.json'))
+    for path in paths:
+        proof = json.loads(path.read_text())
+        assert proof['state'] in {'PASS', 'INFRA_INVALID'}
+        assert proof['scope'] == 'synthetic bridge-free KVM guest network isolation and JIT startup'
+        assert proof['package_attempt_consumed'] is proof['package_execution_started'] is proof['workflow_triggered'] is False
+        assert proof['host_network_modified'] is proof['host_packages_installed'] is proof['host_firewall_modified'] is False
+        assert proof['hardware_hang_observed'] is False and proof['physical_link_retained'] is True
+        assert proof['cleanup_verified'] is proof['offline_restore_verified'] is True
+        for name, digest in proof['files_sha256'].items():
+            file = path.parent/name
+            assert file.resolve().is_relative_to(path.parent.resolve())
+            assert hashlib.sha256(file.read_bytes()).hexdigest() == digest
+        assert proof['files_sha256']['evidence-sha256.txt'] == proof['host_evidence_seal_sha256']
+        cleanup = json.loads((path.parent/'cleanup.json').read_text())
+        assert cleanup['source_commit'] == proof['source_commit'] and cleanup['workflow_run_id'] is None
+        assert all(cleanup[k] is True for k in ['vm_absent', 'runner_absent', 'overlay_absent', 'golden_image_preserved', 'execution_backing_image_preserved'])
+        health = [json.loads(line) for line in (path.parent/'host-health.jsonl').read_text().splitlines()]
+        assert len(health) == proof['host_health_samples'] and health
+        assert all(x['journal_exit_code'] in (0, 1) and not x['hardware_hang_seen'] and x['eno1_carrier'] == '1' for x in health)
+        host = json.loads((path.parent/'host-result.json').read_text())
+        assert host['workflow_run_id'] == ''
+        domain = check_userspace_domain((path.parent/'network-live-domain.xml').read_text())
+        assert domain['guest_link'] == 'down'
+        kvm = json.loads((path.parent/'qemu-cpu-policy.json').read_text())['kvm']
+        assert kvm['enabled'] is kvm['present'] is True
+        if proof['state'] == 'INFRA_INVALID':
+            assert host['exit_code'] != 0 and proof['guest_link_enabled'] is proof['runner_registered'] is False
+            assert proof['original_guest_exit_code'] != 0 and proof['original_error'] and proof['repair']
+            continue
+        assert host['exit_code'] == 0
+        assert check_userspace_domain((path.parent/'network-live-domain-enabled.xml').read_text())['guest_link'] == 'up'
+        limits = json.loads((path.parent/'network-guest-safety.json').read_text())
+        assert limits['state'] == 'PASS' and limits['host_network_modified'] is False
+        down, up = safe_rates(limits['download_kib_per_second'], limits['upload_kib_per_second'])
+        shaper = next(x for x in limits['qdisc'] if x.get('root') and x['kind'] == 'tbf')
+        assert shaper['options']['rate'] == up * 1024
+        guest = importlib.machinery.SourceFileLoader('guest_network_proof', str(root/'scripts/configure-kvm-guest-network.py')).load_module()
+        guest.verify_police(limits['ingress_filters'], limits['ingress_filter_iec_text'], down * 1024)
+        connectivity = json.loads((path.parent/'network-guest-connectivity.json').read_text())
+        assert connectivity['state'] == 'PASS' and connectivity['host_network_modified'] is False
+        assert connectivity['private_reject_counter_delta'] == 2 and len(connectivity['private_probes']) == 2
+        assert connectivity['internet_status'] == 200 and 0 < connectivity['internet_payload_bytes'] <= 1024
+        marker = dict(line.split('=', 1) for line in (path.parent/'jit-startup-preflight-result.txt').read_text().splitlines())
+        assert marker['status'] == marker['cleanup'] == 'PASS' and marker['workflow_triggered'] == 'no'
+    return {'state': 'PASS', 'retained_network_probes': len(paths)}
 
 
 def safe_rates(download, upload):
@@ -149,9 +200,12 @@ def main():
     parser.add_argument('--download-kib', type=rate, default=256)
     parser.add_argument('--upload-kib', type=rate, default=64)
     parser.add_argument('--userspace', action='store_true', help='current bridge-free SLIRP policy')
+    parser.add_argument('--evidence', action='store_true', help='validate retained synthetic network probes without host access')
     parser.add_argument('--domain-xml', type=Path, help='check generated/live guest XML instead of host network admission')
     args = parser.parse_args()
-    if args.userspace:
+    if args.evidence:
+        report = check_retained_probes(Path(__file__).resolve().parents[1])
+    elif args.userspace:
         safe_rates(args.download_kib, args.upload_kib)
         if args.domain_xml:
             report = check_userspace_domain(args.domain_xml.read_text())

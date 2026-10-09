@@ -61,6 +61,14 @@ Historical golden-image creation/lifecycle entrypoints still require the retired
 libvirt transport. Do not execute them until their preparation path is adapted
 and certified with the same policy. Existing sealed images remain unchanged.
 
+The first small SLIRP probe on `446ec2e` ended INFRA_INVALID before link
+activation: iproute2's police JSON omits its rate field. TBF JSON does contain
+that field. The complete failure and cleanup are retained in
+`manifests/evidence/host-network-safety/slirp-probe1`. No runner was registered,
+no workflow or package execution started, and the host monitor observed no hang
+or link loss. Verify the ingress policer's exact IEC text rate and JSON drop
+action together before repeating the small probe; do not weaken its limit.
+
 Sources: [libvirt SLIRP domain format](https://libvirt.org/formatdomain.html#userspace-connection-using-slirp),
 [QEMU user networking](https://www.qemu.org/docs/master/system/qemu-manpage.html),
 [upstream e1000e NAT/TSO report](https://lists.openwall.net/netdev/2019/05/09/40),

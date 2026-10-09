@@ -6,11 +6,13 @@ import hashlib
 import ipaddress
 import json
 import os
+import re
 import socket
 import subprocess
 import time
 import urllib.request
 from pathlib import Path
+from decimal import Decimal
 
 MAC = '52:54:00:53:55:01'
 PRIVATE = '0.0.0.0/8, 10.0.0.0/8, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 192.168.0.0/16, 224.0.0.0/4, 240.0.0.0/4'
@@ -20,6 +22,16 @@ def rates(download, upload):
     assert isinstance(download, int) and isinstance(upload, int)
     assert 0 < download <= 256 and 0 < upload <= 64, 'Unsafe guest traffic ceilings'
     return download * 1024, upload * 1024
+
+
+def verify_police(filters, text, download_bytes):
+    # iproute2 emits police rate only in its text formatter (PRINT_FP), unlike
+    # TBF's JSON rate. IEC text preserves our integral KiB/s rates exactly.
+    policers = [action for entry in filters for action in entry.get('options', {}).get('actions', []) if action.get('kind') == 'police']
+    assert len(policers) == 1 and policers[0]['control_action']['type'] == 'drop', 'Expected one drop policer'
+    values = re.findall(r'\bpolice\s+0x[0-9a-f]+\s+rate\s+(\d+(?:\.\d+)?)(bit|Kibit|Mibit|Gibit)\b', text)
+    scale = {'bit': 1, 'Kibit': 1024, 'Mibit': 1024**2, 'Gibit': 1024**3}
+    assert len(values) == 1 and Decimal(values[0][0]) * scale[values[0][1]] == download_bytes * 8, 'Actual download policer differs from the admitted rate'
 
 
 def rules(interface):
@@ -114,8 +126,8 @@ def main():
     root = next(x for x in qdisc if x.get('root') and x['kind'] == 'tbf')
     assert root['options']['rate'] == up, 'Actual upload shaper differs from the admitted rate'
     filters = json.loads(subprocess.check_output(['tc', '-json', 'filter', 'show', 'dev', device, 'ingress'], text=True))
-    policers = [action for entry in filters for action in entry.get('options', {}).get('actions', []) if action.get('kind') == 'police']
-    assert len(policers) == 1 and policers[0]['rate'] == down, 'Actual download policer differs from the admitted rate'
+    ingress_text = subprocess.check_output(['tc', '-iec', 'filter', 'show', 'dev', device, 'ingress'], text=True)
+    verify_police(filters, ingress_text, down)
     actual_rules = subprocess.check_output(['nft', '-json', 'list', 'table', 'inet', 'supralinux_guest'], text=True)
     assert filters and len([x for x in json.loads(actual_rules)['nftables'] if 'rule' in x]) == 7
     print(json.dumps({'state': 'PASS', 'scope': 'guest-only SLIRP private-address firewall and traffic controls',
@@ -124,6 +136,7 @@ def main():
                       'download_kib_per_second': a.download_kib, 'upload_kib_per_second': a.upload_kib,
                       'download_control': 'guest ingress policer; TCP retransmission/backpressure, no reserved host bandwidth',
                       'upload_control': 'guest egress TBF', 'qdisc': qdisc, 'ingress_filters': filters,
+                      'ingress_filter_iec_text': ingress_text,
                       'firewall_source_sha256': hashlib.sha256(policy.encode()).hexdigest(),
                       'firewall_loaded_sha256': hashlib.sha256(actual_rules.encode()).hexdigest()}))
 

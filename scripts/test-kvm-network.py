@@ -6,6 +6,7 @@ import unittest
 from pathlib import Path
 
 MODULE = importlib.machinery.SourceFileLoader('network_guard', str(Path(__file__).with_name('check-kvm-network.py'))).load_module()
+GUEST = importlib.machinery.SourceFileLoader('guest_guard', str(Path(__file__).with_name('configure-kvm-guest-network.py'))).load_module()
 NETWORK = """<network><name>default</name><forward mode='nat'/><bridge name='virbr0'/>
 <ip address='192.168.122.1' netmask='255.255.255.0'><dhcp>
 <range start='192.168.122.2' end='192.168.122.254'/></dhcp></ip></network>"""
@@ -18,6 +19,17 @@ USER_DOMAIN = """<domain><devices><interface type='user'><mac address='52:54:00:
 
 
 class NetworkTests(unittest.TestCase):
+    def test_police_rate_is_verified_from_exact_iec_text_when_json_omits_it(self):
+        filters = [{'options': {'actions': [{'kind': 'police', 'control_action': {'type': 'drop'}}]}}]
+        text = 'action order 1: police 0x1 rate 2Mibit burst 8Kb mtu 2Kb action drop/ok'
+        GUEST.verify_police(filters, text, 256 * 1024)
+        for invalid in [text.replace('2Mibit', '4Mibit'), text.replace('2Mibit', '2097Kbit'), '', text+'\n'+text]:
+            with self.subTest(text=invalid), self.assertRaises(AssertionError):
+                GUEST.verify_police(filters, invalid, 256 * 1024)
+        filters[0]['options']['actions'][0]['control_action']['type'] = 'ok'
+        with self.assertRaises(AssertionError):
+            GUEST.verify_police(filters, text, 256 * 1024)
+
     def fixture(self):
         addresses = [{'ifname': 'virbr0', 'addr_info': [{'family': 'inet', 'local': '192.168.122.1', 'prefixlen': 24}]},
                      {'ifname': 'eno1', 'addr_info': [{'family': 'inet', 'local': '192.168.1.41', 'prefixlen': 24}]}]
