@@ -7821,7 +7821,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -7966,6 +7966,10 @@
       "sha256": "71cc0e1701fcdba5afa2475b1a8976785c4e263c0fe14a9884e20b949933ad17",
       "applicable": false,
       "inapplicability_reason": "Revision 2 changes candidate version and reviewed native-provider include path after retained original package FAIL; preserve preflight 32 and revalidate current inputs."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/libksysguard-preflight33/verification.json",
+      "sha256": "e656bb568ff9e14876540291ca411f93ebe4703f711e22f1c71090aa1856c606"
     }
   ],
   "package_input_incidents": [

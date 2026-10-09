@@ -21,10 +21,20 @@ This finding alone does not establish incompatibility of the public Frameworks
 KGlobalAccel application API. Its unchanged original application client has not
 yet been executed against the installed candidate.
 
-Before resuming this package, authenticate Ubuntu reverse dependencies and
-inspect their actual executable/plugin imports, including KWin. Review changed
-arguments and return types, then prove the complete application and private
-consumer transition in disposable KVM. Preserve public application client bytes,
+The follow-up [original Ubuntu consumer review](../manifests/evidence/package-revalidation/kglobalacceld-original-consumer-followup/verification.json)
+authenticates the frozen Ubuntu indexes and four declared runtime consumer
+packages: kglobalacceld, kwin-wayland, libkwin6 and libkwin-x11-6. Five actual ELF
+files import no removed symbol and no getter with a changed return type. The
+intersection uses the authentic original libKGlobalAccelD export set, avoiding
+unrelated classes with similar symbol substrings. Original KWin imports daemon
+construction/init/interface and the installed plugin interface; that interface
+header is byte-identical to signed 6.7.5. Owned read-only KWin --help passed with
+cleanup; no compositor started. Both independent archives restore offline.
+
+These static facts narrow the transition; they do not prove layout, runtime,
+undeclared consumers or dlopen behavior. Before resuming, define the scoped
+private SDK contract and prove actual original daemon/KWin consumers plus the
+complete application/private consumer transition in disposable KVM. Preserve public application client bytes,
 legacy D-Bus coverage, source authenticity and every unaffected ABI guard.
 Removing missing symbol rows or accepting a failed client cannot certify this
 transition. No upstream source fork or Qt replacement has been made.
@@ -36,6 +46,6 @@ verified independently; golden and milestone images remain preserved. There is
 no off-host backup claim.
 
 The live manifests hold this candidate outside execution scope. Independent
-reviewed packages may proceed; LibKSysGuard is the next admitted input preflight.
+reviewed packages may proceed; the live status names the currently admitted gate.
 The inspectable hold is
 [`compatibility-review.json`](../manifests/evidence/plasma/kglobalacceld-attempt1/compatibility-review.json).

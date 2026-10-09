@@ -1,0 +1,142 @@
+{
+  "state": "REVIEW_REQUIRED",
+  "scope": "authenticated direct Ubuntu binary reverse dependencies on libkglobalacceld0; snapshot inventory only, not current repository selection or ELF/runtime compatibility certification",
+  "authenticated_indexes": [
+    {
+      "index_path": ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_universe_binary-amd64_Packages",
+      "index_sha256": "5205a50a497f3bf1d5707ff78733160d2fa307519af6834bbecc3b51f4162cca",
+      "inrelease_path": ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_InRelease",
+      "inrelease_sha256": "6c634247704301b20293f748e6941efba4d5704d281f355a985b3905bbb6efb7",
+      "signature_verified": true
+    },
+    {
+      "index_path": ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_universe_binary-amd64_Packages",
+      "index_sha256": "9c009342905706a05822f6e751f5b1ac34b687f054bfca9a0a652178445fc44c",
+      "inrelease_path": ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_InRelease",
+      "inrelease_sha256": "45f95ce276cdba3e41870516a130e03c58b8b7a79e9546b0efe9e526d255740c",
+      "signature_verified": true
+    }
+  ],
+  "consumers": [
+    {
+      "Package": "kglobalacceld",
+      "Version": "6.6.5-0ubuntu0.1",
+      "Architecture": "amd64",
+      "Filename": "pool/universe/k/kglobalacceld/kglobalacceld_6.6.5-0ubuntu0.1_amd64.deb",
+      "Size": "7878",
+      "SHA256": "ea186f181a738fa5c5ac03b3d215c6d57bd437d39126c4a3a188e43e3804eccc",
+      "Depends": "libc6 (>= 2.34), libkf6coreaddons6 (>= 6.22.0~), libkf6crash6 (>= 6.22.0~), libkf6dbusaddons6 (>= 6.22.0~), libkglobalacceld0 (>= 6.0.5), libqt6core6t64 (>= 6.10.2), libqt6gui6 (>= 6.10.0~)",
+      "source": "kglobalacceld",
+      "suite": "resolute-updates",
+      "component": "universe",
+      "signed_index_sha256": "5205a50a497f3bf1d5707ff78733160d2fa307519af6834bbecc3b51f4162cca"
+    },
+    {
+      "Package": "kwin-wayland",
+      "Version": "4:6.6.6-0ubuntu0.1",
+      "Architecture": "amd64",
+      "Filename": "pool/universe/k/kwin/kwin-wayland_6.6.6-0ubuntu0.1_amd64.deb",
+      "Size": "464212",
+      "SHA256": "a52e4185f87144a9df121319902ff82b18a5532e0e5a27937dc0449853e48a91",
+      "Depends": "libcap2-bin, xwayland, libc6 (>= 2.38), libcanberra0 (>= 0.2), libepoxy0 (>= 1.0), libkdecorations3-6 (>= 4:6.6.4~), libkf6configcore6 (>= 6.22.0~), libkf6configgui6 (>= 6.22.0~), libkf6coreaddons6 (>= 6.22.0~), libkf6crash6 (>= 6.22.0~), libkf6dbusaddons6 (>= 6.22.0~), libkf6globalaccel6 (>= 6.22.0~), libkf6i18n6 (>= 6.22.0~), libkf6idletime6 (>= 6.22.0~), libkf6notifications6 (>= 6.22.0~), libkf6svg6 (>= 6.22.0~), libkf6windowsystem6 (>= 6.22.0~), libkglobalacceld0 (>= 6.6.5~), libkwin6 (>= 4:6.6.6), libqaccessibilityclient-qt6-0 (>= 0.6.0), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6gui6 (>= 6.10.0~), libqt6qml6 (>= 6.10.0~), libqt6quick6 (>= 6.10.0~), libqt6widgets6 (>= 6.10.0~), libstdc++6 (>= 13.1), libsystemd0 (>= 214), libxcb-composite0, libxcb-randr0 (>= 1.3), libxcb-xfixes0, libxcb1 (>= 1.8), qt6-base-private-abi (= 6.10.2), qt6-declarative-private-abi (= 6.10.2)",
+      "source": "kwin",
+      "suite": "resolute-updates",
+      "component": "universe",
+      "signed_index_sha256": "5205a50a497f3bf1d5707ff78733160d2fa307519af6834bbecc3b51f4162cca"
+    },
+    {
+      "Package": "libkglobalacceld-dev",
+      "Version": "6.6.5-0ubuntu0.1",
+      "Architecture": "amd64",
+      "Filename": "pool/universe/k/kglobalacceld/libkglobalacceld-dev_6.6.5-0ubuntu0.1_amd64.deb",
+      "Size": "8480",
+      "SHA256": "a3ef6cf16f5a6bdc9c31721c0faae43b989a75dfee7a39a4c468c845f2610a5f",
+      "Depends": "libkglobalacceld0 (= 6.6.5-0ubuntu0.1)",
+      "source": "kglobalacceld",
+      "suite": "resolute-updates",
+      "component": "universe",
+      "signed_index_sha256": "5205a50a497f3bf1d5707ff78733160d2fa307519af6834bbecc3b51f4162cca"
+    },
+    {
+      "Package": "libkwin6",
+      "Version": "4:6.6.6-0ubuntu0.1",
+      "Architecture": "amd64",
+      "Filename": "pool/universe/k/kwin/libkwin6_6.6.6-0ubuntu0.1_amd64.deb",
+      "Size": "2454430",
+      "SHA256": "c2438dfaf46e940a98d201d0a64fc9de705e729b2a70e442111f0f861f83e2f6",
+      "Depends": "libc6 (>= 2.38), libdisplay-info3 (>= 0.3.0), libdrm2 (>= 2.4.119), libepoxy0 (>= 1.3), libgbm1 (>= 21.1.0), libinput10 (>= 1.27.1), libkdecorations3-6 (>= 4:6.6.4~), libkdecorations3private2 (>= 4:6.6.4~), libkf6colorscheme6 (>= 6.22.0~), libkf6configcore6 (>= 6.22.0~), libkf6configgui6 (>= 6.22.0~), libkf6configqml6 (>= 6.22.0~), libkf6coreaddons6 (>= 6.22.0~), libkf6crash6 (>= 6.22.0~), libkf6globalaccel6 (>= 6.22.0~), libkf6i18n6 (>= 6.22.0~), libkf6i18nqml6 (>= 6.24.0), libkf6notifications6 (>= 6.22.0~), libkf6package6 (>= 6.22.0~), libkf6service-bin, libkf6service6 (>= 6.22.0~), libkf6windowsystem6 (>= 6.22.0~), libkglobalacceld0 (>= 6.6.5~), libkscreenlocker6 (>= 6.6.5~), libkwaylandclient6 (>= 4:6.6.4~), liblcms2-2 (>= 2.4), libplasmaactivities7 (>= 6.6.4~), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6gui6 (>= 6.10.0~), libqt6opengl6 (>= 6.10.0~), libqt6qml6 (>= 6.10.0~), libqt6quick6 (>= 6.10.0~), libqt6svg6 (>= 6.10.0~), libqt6widgets6 (>= 6.10.0~), libstdc++6 (>= 13.1), libudev1 (>= 183), libwayland-client0 (>= 1.22~), libwayland-server0 (>= 1.23.0), libxcb-composite0, libxcb-dri3-0 (>= 1.13), libxcb-icccm4 (>= 0.4.2), libxcb-keysyms1 (>= 0.4.1), libxcb-present0, libxcb-randr0 (>= 1.12), libxcb-render0, libxcb-res0 (>= 1.10), libxcb-shape0, libxcb-shm0 (>= 1.10), libxcb-sync1, libxcb-xfixes0, libxcb1 (>= 1.6), libxcvt0 (>= 0.1.0), libxkbcommon0 (>= 1.0.0), qt6-base-private-abi (= 6.10.2), qt6-svg-private-abi (= 6.10.2)",
+      "source": "kwin",
+      "suite": "resolute-updates",
+      "component": "universe",
+      "signed_index_sha256": "5205a50a497f3bf1d5707ff78733160d2fa307519af6834bbecc3b51f4162cca"
+    },
+    {
+      "Package": "kglobalacceld",
+      "Version": "6.6.4-0ubuntu1",
+      "Architecture": "amd64",
+      "Filename": "pool/universe/k/kglobalacceld/kglobalacceld_6.6.4-0ubuntu1_amd64.deb",
+      "Size": "7870",
+      "SHA256": "809086aa661d028047c72be82312a25de1e3211290062e3b732834c17f88a191",
+      "Depends": "libc6 (>= 2.34), libkf6coreaddons6 (>= 6.22.0~), libkf6crash6 (>= 6.22.0~), libkf6dbusaddons6 (>= 6.22.0~), libkglobalacceld0 (>= 6.0.5), libqt6core6t64 (>= 6.10.2), libqt6gui6 (>= 6.10.0~)",
+      "source": "kglobalacceld",
+      "suite": "resolute",
+      "component": "universe",
+      "signed_index_sha256": "9c009342905706a05822f6e751f5b1ac34b687f054bfca9a0a652178445fc44c"
+    },
+    {
+      "Package": "kwin-wayland",
+      "Version": "4:6.6.4-0ubuntu1",
+      "Architecture": "amd64",
+      "Filename": "pool/universe/k/kwin/kwin-wayland_6.6.4-0ubuntu1_amd64.deb",
+      "Size": "464338",
+      "SHA256": "5edb38107c490a13579f6a59985244008287b39e28a5834a0a12412e4e120e0d",
+      "Depends": "libcap2-bin, xwayland, libc6 (>= 2.38), libcanberra0 (>= 0.2), libepoxy0 (>= 1.0), libkdecorations3-6 (>= 4:6.6.4~), libkf6configcore6 (>= 6.22.0~), libkf6configgui6 (>= 6.22.0~), libkf6coreaddons6 (>= 6.22.0~), libkf6crash6 (>= 6.22.0~), libkf6dbusaddons6 (>= 6.22.0~), libkf6globalaccel6 (>= 6.22.0~), libkf6i18n6 (>= 6.22.0~), libkf6idletime6 (>= 6.22.0~), libkf6notifications6 (>= 6.22.0~), libkf6svg6 (>= 6.22.0~), libkf6windowsystem6 (>= 6.22.0~), libkglobalacceld0 (>= 6.6.4~), libkwin6 (>= 4:6.6.4), libqaccessibilityclient-qt6-0 (>= 0.6.0), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6gui6 (>= 6.10.0~), libqt6qml6 (>= 6.10.0~), libqt6quick6 (>= 6.10.0~), libqt6widgets6 (>= 6.10.0~), libstdc++6 (>= 13.1), libsystemd0 (>= 214), libxcb-composite0, libxcb-randr0 (>= 1.3), libxcb-xfixes0, libxcb1 (>= 1.8), qt6-base-private-abi (= 6.10.2), qt6-declarative-private-abi (= 6.10.2)",
+      "source": "kwin",
+      "suite": "resolute",
+      "component": "universe",
+      "signed_index_sha256": "9c009342905706a05822f6e751f5b1ac34b687f054bfca9a0a652178445fc44c"
+    },
+    {
+      "Package": "libkglobalacceld-dev",
+      "Version": "6.6.4-0ubuntu1",
+      "Architecture": "amd64",
+      "Filename": "pool/universe/k/kglobalacceld/libkglobalacceld-dev_6.6.4-0ubuntu1_amd64.deb",
+      "Size": "8480",
+      "SHA256": "fccc020aa95cf41963058628703abf1a74a38e505f878594a1b36404f31b8ff4",
+      "Depends": "libkglobalacceld0 (= 6.6.4-0ubuntu1)",
+      "source": "kglobalacceld",
+      "suite": "resolute",
+      "component": "universe",
+      "signed_index_sha256": "9c009342905706a05822f6e751f5b1ac34b687f054bfca9a0a652178445fc44c"
+    },
+    {
+      "Package": "libkwin-x11-6",
+      "Version": "4:6.6.4-0ubuntu1",
+      "Architecture": "amd64",
+      "Filename": "pool/universe/k/kwin-x11/libkwin-x11-6_6.6.4-0ubuntu1_amd64.deb",
+      "Size": "2068328",
+      "SHA256": "3926b9f13476583725e7e8350cd87f4c5c6b54eb5d413d9302ca40b15a0ec190",
+      "Depends": "kwin-x11-data (= 4:6.6.4-0ubuntu1), libc6 (>= 2.38), libdisplay-info3 (>= 0.3.0), libdrm2 (>= 2.4.116), libepoxy0 (>= 1.3), libgbm1 (>= 21.1.0), libkdecorations3-6 (>= 4:6.6.4~), libkdecorations3private2 (>= 4:6.6.4~), libkf6colorscheme6 (>= 6.22.0~), libkf6configcore6 (>= 6.22.0~), libkf6configgui6 (>= 6.22.0~), libkf6configqml6 (>= 6.22.0~), libkf6coreaddons6 (>= 6.22.0~), libkf6crash6 (>= 6.22.0~), libkf6globalaccel6 (>= 6.22.0~), libkf6i18n6 (>= 6.22.0~), libkf6i18nqml6 (>= 6.24.0), libkf6notifications6 (>= 6.22.0~), libkf6package6 (>= 6.22.0~), libkf6service-bin, libkf6service6 (>= 6.22.0~), libkf6windowsystem6 (>= 6.22.0~), libkglobalacceld0 (>= 6.6.4~), libkscreenlocker6 (>= 6.6.4~), liblcms2-2 (>= 2.4), libplasmaactivities7 (>= 6.6.4~), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6gui6 (>= 6.10.0~), libqt6opengl6 (>= 6.10.0~), libqt6qml6 (>= 6.10.0~), libqt6quick6 (>= 6.10.0~), libqt6sensors6 (>= 6.10.0~), libqt6svg6 (>= 6.10.0~), libqt6widgets6 (>= 6.10.0~), libstdc++6 (>= 13.1), libudev1 (>= 183), libwayland-server0 (>= 1.23.0), libxcb-composite0, libxcb-cursor0 (>= 0.0.99), libxcb-damage0, libxcb-glx0, libxcb-icccm4 (>= 0.4.2), libxcb-keysyms1 (>= 0.4.1), libxcb-randr0, libxcb-render0, libxcb-shape0, libxcb-shm0, libxcb-sync1, libxcb-xfixes0, libxcb-xinerama0, libxcb1 (>= 1.6), libxkbcommon0 (>= 0.7.0), qt6-base-private-abi (= 6.10.2)",
+      "source": "kwin-x11",
+      "suite": "resolute",
+      "component": "universe",
+      "signed_index_sha256": "9c009342905706a05822f6e751f5b1ac34b687f054bfca9a0a652178445fc44c"
+    },
+    {
+      "Package": "libkwin6",
+      "Version": "4:6.6.4-0ubuntu1",
+      "Architecture": "amd64",
+      "Filename": "pool/universe/k/kwin/libkwin6_6.6.4-0ubuntu1_amd64.deb",
+      "Size": "2451490",
+      "SHA256": "471fe5cee4dbcb32d7b8dd68f299548b7c7635883300982829a55e154af563ad",
+      "Depends": "libc6 (>= 2.38), libdisplay-info3 (>= 0.3.0), libdrm2 (>= 2.4.119), libepoxy0 (>= 1.3), libgbm1 (>= 21.1.0), libinput10 (>= 1.27.1), libkdecorations3-6 (>= 4:6.6.4~), libkdecorations3private2 (>= 4:6.6.4~), libkf6colorscheme6 (>= 6.22.0~), libkf6configcore6 (>= 6.22.0~), libkf6configgui6 (>= 6.22.0~), libkf6configqml6 (>= 6.22.0~), libkf6coreaddons6 (>= 6.22.0~), libkf6crash6 (>= 6.22.0~), libkf6globalaccel6 (>= 6.22.0~), libkf6i18n6 (>= 6.22.0~), libkf6i18nqml6 (>= 6.24.0), libkf6notifications6 (>= 6.22.0~), libkf6package6 (>= 6.22.0~), libkf6service-bin, libkf6service6 (>= 6.22.0~), libkf6windowsystem6 (>= 6.22.0~), libkglobalacceld0 (>= 6.6.4~), libkscreenlocker6 (>= 6.6.4~), libkwaylandclient6 (>= 4:6.6.4~), liblcms2-2 (>= 2.4), libplasmaactivities7 (>= 6.6.4~), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6gui6 (>= 6.10.0~), libqt6opengl6 (>= 6.10.0~), libqt6qml6 (>= 6.10.0~), libqt6quick6 (>= 6.10.0~), libqt6svg6 (>= 6.10.0~), libqt6widgets6 (>= 6.10.0~), libstdc++6 (>= 13.1), libudev1 (>= 183), libwayland-client0 (>= 1.22~), libwayland-server0 (>= 1.23.0), libxcb-composite0, libxcb-dri3-0 (>= 1.13), libxcb-icccm4 (>= 0.4.2), libxcb-keysyms1 (>= 0.4.1), libxcb-present0, libxcb-randr0 (>= 1.12), libxcb-render0, libxcb-res0 (>= 1.10), libxcb-shape0, libxcb-shm0 (>= 1.10), libxcb-sync1, libxcb-xfixes0, libxcb1 (>= 1.6), libxcvt0 (>= 0.1.0), libxkbcommon0 (>= 1.0.0), qt6-base-private-abi (= 6.10.2), qt6-svg-private-abi (= 6.10.2)",
+      "source": "kwin",
+      "suite": "resolute",
+      "component": "universe",
+      "signed_index_sha256": "9c009342905706a05822f6e751f5b1ac34b687f054bfca9a0a652178445fc44c"
+    }
+  ],
+  "candidate_execution": "NOT RUN",
+  "private_sdk_transition_admitted": false,
+  "canonical_effect": "none"
+}
