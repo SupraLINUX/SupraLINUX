@@ -44,7 +44,12 @@ def check_retained_probes(root):
         kvm = json.loads((path.parent/'qemu-cpu-policy.json').read_text())['kvm']
         assert kvm['enabled'] is kvm['present'] is True
         if proof['state'] == 'INFRA_INVALID':
-            assert host['exit_code'] != 0 and proof['guest_link_enabled'] is proof['runner_registered'] is False
+            assert host['exit_code'] != 0 and proof['runner_registered'] is False
+            if proof['guest_link_enabled']:
+                assert proof['stage'] == 'guest-connectivity-after-link-activation'
+                assert check_userspace_domain((path.parent/'network-live-domain-enabled.xml').read_text())['guest_link'] == 'up'
+            else:
+                assert proof['stage'] == 'guest-controls-before-link-activation'
             assert proof['original_guest_exit_code'] != 0 and proof['original_error'] and proof['repair']
             continue
         assert host['exit_code'] == 0
@@ -58,7 +63,8 @@ def check_retained_probes(root):
         guest.verify_police(limits['ingress_filters'], limits['ingress_filter_iec_text'], down * 1024)
         connectivity = json.loads((path.parent/'network-guest-connectivity.json').read_text())
         assert connectivity['state'] == 'PASS' and connectivity['host_network_modified'] is False
-        assert connectivity['private_reject_counter_delta'] == 2 and len(connectivity['private_probes']) == 2
+        assert connectivity['private_reject_counter_delta'] >= 2 and len(connectivity['private_probes']) == 2
+        assert all(x['errno'] == 111 and x['reject_packets_after'] > x['reject_packets_before'] for x in connectivity['private_probes'])
         assert connectivity['internet_status'] == 200 and 0 < connectivity['internet_payload_bytes'] <= 1024
         marker = dict(line.split('=', 1) for line in (path.parent/'jit-startup-preflight-result.txt').read_text().splitlines())
         assert marker['status'] == marker['cleanup'] == 'PASS' and marker['workflow_triggered'] == 'no'

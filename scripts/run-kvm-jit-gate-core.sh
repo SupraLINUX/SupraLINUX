@@ -699,7 +699,7 @@ if ! NETWORK_PROBE_RESULT="$(qga_exec_wait "${NETWORK_PROBE_PAYLOAD}" 75)"; then
 fi
 printf '%s\n' "${NETWORK_PROBE_RESULT}" > "${EVIDENCE_DIR}/network-guest-connectivity-execution.json"
 jq -er '.return["out-data"]' <<<"${NETWORK_PROBE_RESULT}" | base64 -d > "${EVIDENCE_DIR}/network-guest-connectivity.json"
-jq -e '.state == "PASS" and .host_network_modified == false and .private_reject_counter_delta == 2' \
+jq -e '.state == "PASS" and .host_network_modified == false and .private_reject_counter_delta >= 2' \
     "${EVIDENCE_DIR}/network-guest-connectivity.json" >/dev/null
 
 printf 'Requesting organization-scoped GitHub JIT runner configuration...\n'

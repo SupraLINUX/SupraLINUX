@@ -34,6 +34,16 @@ def verify_police(filters, text, download_bytes):
     assert len(values) == 1 and Decimal(values[0][0]) * scale[values[0][1]] == download_bytes * 8, 'Actual download policer differs from the admitted rate'
 
 
+def private_reject_packets(loaded):
+    ruleset = [x['rule'] for x in loaded['nftables'] if 'rule' in x]
+    assert len(ruleset) == 5 and 'reject' in ruleset[3]['expr'][-1]
+    counters = [x['counter'] for x in ruleset[3]['expr'] if 'counter' in x]
+    assert len(counters) == 1 and isinstance(counters[0], dict), 'Stateful guest counter required; never use nft stateless output'
+    packets = counters[0]['packets']
+    assert type(packets) is int and packets >= 0
+    return packets
+
+
 def rules(interface):
     assert interface.isalnum(), 'Unexpected guest interface name'
     guard = f'''oifname "lo" accept
@@ -67,25 +77,26 @@ def verify_network(device):
     assert len(routes) == 1 and routes[0]['dev'] == device and routes[0]['gateway'] == '10.203.0.2'
 
     def blocked_packets():
-        loaded = json.loads(subprocess.check_output(['nft', '-json', 'list', 'chain', 'inet', 'supralinux_guest', 'output'], text=True))
-        # The IPv4 output rejection is immediately after loopback, DNS and DHCP.
-        ruleset = [x['rule'] for x in loaded['nftables'] if 'rule' in x]
-        assert len(ruleset) == 5 and 'reject' in ruleset[3]['expr'][-1]
-        return next(x['counter']['packets'] for x in ruleset[3]['expr'] if 'counter' in x)
+        loaded = json.loads(subprocess.check_output(['nft', '--json', 'list', 'chain', 'inet', 'supralinux_guest', 'output'], text=True))
+        return private_reject_packets(loaded)
 
     before = blocked_packets()
     probes = []
     # Neither target is a service we need. The output counter proves these
     # packets were rejected inside the guest before reaching QEMU or the LAN.
     for target in ['10.203.0.2', '192.168.254.254']:
+        probe_before = blocked_packets()
         try:
             with socket.create_connection((target, 443), timeout=2):
                 raise AssertionError('Private-address connection escaped the guest guard')
         except OSError as error:
             assert error.errno == errno.ECONNREFUSED, 'Private probe was not locally rejected'
-            probes.append({'address': target, 'port': 443, 'errno': error.errno})
+            probe_after = blocked_packets()
+            assert probe_after > probe_before, 'Connection refusal lacks a guest-local rejection counter'
+            probes.append({'address': target, 'port': 443, 'errno': error.errno,
+                           'reject_packets_before': probe_before, 'reject_packets_after': probe_after})
     after = blocked_packets()
-    assert after - before == len(probes), 'Guest rejection counters did not account for both private probes'
+    assert after - before >= len(probes), 'Guest rejection counters did not account for both private probes'
     request = urllib.request.Request('https://api.github.com/zen', headers={'User-Agent': 'SupraLINUX-isolation-probe'})
     with urllib.request.urlopen(request, timeout=20) as response:
         payload = response.read(1025)
@@ -128,7 +139,7 @@ def main():
     filters = json.loads(subprocess.check_output(['tc', '-json', 'filter', 'show', 'dev', device, 'ingress'], text=True))
     ingress_text = subprocess.check_output(['tc', '-iec', 'filter', 'show', 'dev', device, 'ingress'], text=True)
     verify_police(filters, ingress_text, down)
-    actual_rules = subprocess.check_output(['nft', '-json', 'list', 'table', 'inet', 'supralinux_guest'], text=True)
+    actual_rules = subprocess.check_output(['nft', '--json', 'list', 'table', 'inet', 'supralinux_guest'], text=True)
     assert filters and len([x for x in json.loads(actual_rules)['nftables'] if 'rule' in x]) == 7
     print(json.dumps({'state': 'PASS', 'scope': 'guest-only SLIRP private-address firewall and traffic controls',
                       'interface': device, 'guest_mac': MAC, 'host_network_modified': False,
@@ -137,6 +148,7 @@ def main():
                       'download_control': 'guest ingress policer; TCP retransmission/backpressure, no reserved host bandwidth',
                       'upload_control': 'guest egress TBF', 'qdisc': qdisc, 'ingress_filters': filters,
                       'ingress_filter_iec_text': ingress_text,
+                      'firewall_loaded': json.loads(actual_rules),
                       'firewall_source_sha256': hashlib.sha256(policy.encode()).hexdigest(),
                       'firewall_loaded_sha256': hashlib.sha256(actual_rules.encode()).hexdigest()}))
 

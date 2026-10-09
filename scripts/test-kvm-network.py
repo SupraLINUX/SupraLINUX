@@ -19,6 +19,16 @@ USER_DOMAIN = """<domain><devices><interface type='user'><mac address='52:54:00:
 
 
 class NetworkTests(unittest.TestCase):
+    def test_private_probe_requires_real_stateful_counters(self):
+        loaded = {'nftables': [{'rule': {'expr': [{'accept': None}]}} for _ in range(3)] + [
+            {'rule': {'expr': [{'counter': {'packets': 2, 'bytes': 120}}, {'reject': {'type': 'icmp'}}]}},
+            {'rule': {'expr': [{'reject': {'type': 'icmpv6'}}]}}]}
+        self.assertEqual(GUEST.private_reject_packets(loaded), 2)
+        for counter in [None, {'packets': -1}, {'packets': True}, {'packets': '2'}]:
+            altered = copy.deepcopy(loaded);altered['nftables'][3]['rule']['expr'][0]['counter'] = counter
+            with self.subTest(counter=counter), self.assertRaises(AssertionError):
+                GUEST.private_reject_packets(altered)
+
     def test_police_rate_is_verified_from_exact_iec_text_when_json_omits_it(self):
         filters = [{'options': {'actions': [{'kind': 'police', 'control_action': {'type': 'drop'}}]}}]
         text = 'action order 1: police 0x1 rate 2Mibit burst 8Kb mtu 2Kb action drop/ok'

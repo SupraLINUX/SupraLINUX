@@ -69,6 +69,16 @@ no workflow or package execution started, and the host monitor observed no hang
 or link loss. Verify the ingress policer's exact IEC text rate and JSON drop
 action together before repeating the small probe; do not weaken its limit.
 
+The second probe on `a4ea7898` verifies the actual 256/64 KiB/s controls but
+fails at counter inspection before any private TCP or Internet probe. The
+single-dash `nft -json` combines short flags, including stateless `-s`, yielding
+null counters. Use the documented `--json` option and require real nonnegative
+integer counter values. Both failures, exact stages, offline restores and owned
+resource cleanup remain retained. No host hang or physical link loss was observed.
+After these consecutive infrastructure failures, stop retries and certify the
+diagnosed parser repair with a small owned probe before package execution.
+See [nft output flags](https://netfilter.org/projects/nftables/manpage.html).
+
 Sources: [libvirt SLIRP domain format](https://libvirt.org/formatdomain.html#userspace-connection-using-slirp),
 [QEMU user networking](https://www.qemu.org/docs/master/system/qemu-manpage.html),
 [upstream e1000e NAT/TSO report](https://lists.openwall.net/netdev/2019/05/09/40),
