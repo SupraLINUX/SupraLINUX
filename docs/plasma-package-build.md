@@ -1,5 +1,13 @@
 # Authoritative Plasma package builds
 
+The bridge-free SLIRP mechanism is certified by the small `slirp-probe3` on
+`b9a8d86dc39e6cc381a7e35737b519d63c08e4aa`: actual guest traffic limits,
+private-address rejection counters, bounded HTTPS and JIT startup PASS.
+The host monitor sees no hang/link loss and direct cleanup confirms VM, runner
+259 and overlay absence, with images preserved. Complete evidence restores
+offline. Two earlier probe parser failures remain unchanged. LibKSysGuard still
+requires a fresh input preflight under this policy before Attempt 3.
+
 LibKSysGuard revision 3 input preflight 34's original runner result is PASS on
 `fd6409a6894ada6522a94699286c1ade2784926a`,
 [run 37934931142](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37934931142).

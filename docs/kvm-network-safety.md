@@ -79,6 +79,19 @@ After these consecutive infrastructure failures, stop retries and certify the
 diagnosed parser repair with a small owned probe before package execution.
 See [nft output flags](https://netfilter.org/projects/nftables/manpage.html).
 
+The repaired mechanism is certified PASS by `slirp-probe3` on `b9a8d86d`.
+The actual KVM guest receives `10.203.0.15/24`, verifies the 256/64 KiB/s
+policer/shaper, rejects both private TCP probes with separate guest-local
+counter increments, completes a bounded HTTPS request and brings JIT runner
+259 online without triggering a workflow. The host monitor records no hardware
+hang or physical link loss during this small probe. Direct post-gate checks
+confirm VM, runner and writable overlay absence, preserved golden image,
+no libvirt networks, and TSO/GSO still off. Complete sealed host/observer evidence
+restores offline unchanged. The two original infrastructure failures remain
+append-only. This limited certification permits the fresh package input
+preflight; it does not prove the cause of the earlier wired outage or certify
+package compilation and application tests.
+
 Sources: [libvirt SLIRP domain format](https://libvirt.org/formatdomain.html#userspace-connection-using-slirp),
 [QEMU user networking](https://www.qemu.org/docs/master/system/qemu-manpage.html),
 [upstream e1000e NAT/TSO report](https://lists.openwall.net/netdev/2019/05/09/40),

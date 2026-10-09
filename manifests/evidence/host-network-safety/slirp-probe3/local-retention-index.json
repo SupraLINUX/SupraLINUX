@@ -1,0 +1,171 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "complete sealed host and operator observations with empty offline byte restore",
+  "archive_path": ".artifacts/host-network-safety/slirp-probe3/inputs.zip",
+  "archive_sha256": "7259ebd25131d68ec39ea56a9fa09feb64f34219f1e67b814781e2ab75371a49",
+  "files": {
+    "host/domain.xml": {
+      "sha256": "a85c8bfba7a7e85b26b462c19986a8d840c9cf28269f70c7ec0e633623c01672",
+      "size": 4693
+    },
+    "host/evidence-sha256.txt": {
+      "sha256": "2ce41a95335bca50ce0872f7370703c575c90feb17710c5e16cec0245269f148",
+      "size": 3437
+    },
+    "host/golden-provenance-admission.txt": {
+      "sha256": "76a45b4d80f4c6c91189bfe463e36540bcd2313939e3003010bf8176522b303a",
+      "size": 644
+    },
+    "host/guest-copy-out.txt": {
+      "sha256": "a669ce1078fc4c1e401ea35003f906a0707121d05cdf2a5db6a9042c2ffa0eb1",
+      "size": 351
+    },
+    "host/guest-files/_diag/Runner_20261009-194354-utc.log": {
+      "sha256": "cf342e12026682e9ea3064bc0dee2513c3ea57326f49f4c30b26e0a88e64588c",
+      "size": 22024
+    },
+    "host/guest-files/evidence/actions-runner.txt": {
+      "sha256": "be8b66c8dc461b18f0776e0ac389b1919f278188def7c56440dcc7c7ad04f0fe",
+      "size": 360
+    },
+    "host/guest-files/evidence/autopkgtest-build-resources.txt": {
+      "sha256": "89f36a5b34c441f0062b3ca49435f8fc5aecf244f4aab8a3ecc2eacd51f1e3f2",
+      "size": 526
+    },
+    "host/guest-files/evidence/base-image-seal.txt": {
+      "sha256": "5adeeb85b54e65e1f07d72f1ec87e724b3090de5abffd130e5cb3b925354d85b",
+      "size": 1265
+    },
+    "host/guest-files/evidence/golden-build-complete.txt": {
+      "sha256": "c351f918be2000999aeb72aa8d2e14b158cfbacd9422a231b062d87e082497d3",
+      "size": 136
+    },
+    "host/guest-files/evidence/golden-build-result.txt": {
+      "sha256": "fe621fc1d388f39882047067c761e2bfbfcda62bfd1854420813998e1b452a4a",
+      "size": 100
+    },
+    "host/guest-files/evidence/runner-guest-provisioning.txt": {
+      "sha256": "a8cda3a416f129a1154d4a7f4b9ab601cf92bbf6d7548ed488e8153f1e04ce26",
+      "size": 1401
+    },
+    "host/guest-files/supralinux-actions-runner-console.log": {
+      "sha256": "abd56387fc670ced720201a5fa3e90e3081c654c1ac914aa82ded35293772956",
+      "size": 101
+    },
+    "host/guest-runner-exec.json": {
+      "sha256": "5d5577b091f13041b6647796f2f0db78d2db0c5769fc68287805fdc4d386214e",
+      "size": 24
+    },
+    "host/host-environment.txt": {
+      "sha256": "dda8681dbdc0c670d76fa97263ed75fbe7fe6be15edc1273202f92b16d3f840b",
+      "size": 2620
+    },
+    "host/host-result.json": {
+      "sha256": "ab7cdaa45e2245c58435db57f1b57aceb7008744ac99d1a7f6a85afdbe3e55f1",
+      "size": 116
+    },
+    "host/jit-config-dir-create.json": {
+      "sha256": "a65530cd380011e62e56cf656d4cb518af77c31d22defbf632c1e684b32574bd",
+      "size": 40
+    },
+    "host/jit-config-flush.json": {
+      "sha256": "246463fd3dbec1484e517f7fdc730765fb006f0332af64f8e348811f42f92a74",
+      "size": 14
+    },
+    "host/jit-config-write.json": {
+      "sha256": "c3ba0f2fee383fc79f84a0ba46459363991142b5d7f8e795e2456d3a7ebbe595",
+      "size": 38
+    },
+    "host/jit-create-transport.txt": {
+      "sha256": "2b779bd5cf937111ea7e80c53b581735c452c411010c4143d44e71ba8183cf9c",
+      "size": 33
+    },
+    "host/jit-startup-preflight-result.txt": {
+      "sha256": "b416f39a25d78fb226cb84620b1f5527c4bfabc7f31d59fc78835c3b5b121f21",
+      "size": 148
+    },
+    "host/libguestfs-runtime.txt": {
+      "sha256": "1acb36510cd445459b4e38623cb1d972d8e380bfb5888930aff207d8ccfaca35",
+      "size": 504
+    },
+    "host/network-admission.json": {
+      "sha256": "cb3899a08528dba37dc2b6179f81c459c6e0aa1e14ae4dc14e5bdd14ce5e678e",
+      "size": 322
+    },
+    "host/network-enabled-admission.json": {
+      "sha256": "4bed9e64546a8b132f399c16fc412574dc12ac4c64cf7fa7f15f9b9cd2628d67",
+      "size": 254
+    },
+    "host/network-guest-connectivity-execution.json": {
+      "sha256": "64e1135bbd40346b33661569584497ce334523e44a3808893f99f0f0c49008c6",
+      "size": 1280
+    },
+    "host/network-guest-connectivity.json": {
+      "sha256": "df481dde9d824a58c91e2a6902b89b17ea8798d28b36a20028b740f709851667",
+      "size": 901
+    },
+    "host/network-guest-limits.json": {
+      "sha256": "342532b7ced999b1be89870dbef0903587c2f63860ac8f2bfab5004561463410",
+      "size": 256
+    },
+    "host/network-guest-policy-execution.json": {
+      "sha256": "4b4427dc8affb42850438ac797968b6dc323ef654d371d29775f6586f85d8051",
+      "size": 6660
+    },
+    "host/network-guest-safety.json": {
+      "sha256": "1cd4b713cf1d6b73823853a4165a2a6b498524371a92162d6cf575d47aeba58e",
+      "size": 4936
+    },
+    "host/network-live-domain-enabled.xml": {
+      "sha256": "a85c8bfba7a7e85b26b462c19986a8d840c9cf28269f70c7ec0e633623c01672",
+      "size": 4693
+    },
+    "host/network-live-domain.xml": {
+      "sha256": "f5101bcb70614444511269e9358165e6927fe45341350f90328900dcb0401ad7",
+      "size": 4698
+    },
+    "host/overlay-info-before-boot.json": {
+      "sha256": "6c200bc7db03cb45edff40d71c99592f2e9d7ec8d0fbd35e212a2fe905d252a8",
+      "size": 1359
+    },
+    "host/overlay-info.json": {
+      "sha256": "dc3c2ddbf90194e21cadea0ebf7f0e3404a1e031d02bf4e2016cb75e5699192a",
+      "size": 1365
+    },
+    "host/overlay-sha256.txt": {
+      "sha256": "977e6880ab87dbb67c05f3816264ddc721550ed04d23eeca315df08fc3ae1a27",
+      "size": 173
+    },
+    "host/qemu-cpu-policy.json": {
+      "sha256": "b60213e45f35d74af31f58e6bfa1751c4015da826d17aa86f3088ba3647205b4",
+      "size": 227
+    },
+    "host/runner-online.json": {
+      "sha256": "75011b651aa7195caf0c1a22b83bc9f2ea0dc9adf52d5e29b2fee33534a008d6",
+      "size": 472
+    },
+    "host/workflow-baseline-ids.json": {
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "size": 3
+    },
+    "operator/cleanup.json": {
+      "sha256": "b0500cd553a78724b9bc17cd954ccb02eb3588467df09de98562fa1a68fa4931",
+      "size": 701
+    },
+    "operator/host-health.jsonl": {
+      "sha256": "5ca9fd3f70b05ddbffe860b04af110aee53fe9c164a4b14595e500451c2cc812",
+      "size": 3250
+    },
+    "operator/host.log": {
+      "sha256": "12b99609fe846d0e6f87e983046b0790f44107f23c417261a92f9b1af18fc471",
+      "size": 1875
+    },
+    "operator/watched-gate.py": {
+      "sha256": "59f17027400e735d033f49ac77e85d22dfcba7aa64646cb6f70d751a53649ecb",
+      "size": 2809
+    }
+  },
+  "requires_github_for_restore": false,
+  "empty_offline_byte_restore_verified": true
+}
