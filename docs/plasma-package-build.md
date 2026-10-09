@@ -1,5 +1,16 @@
 # Authoritative Plasma package builds
 
+LibKSysGuard input preflight 32 passed on source
+`5596ea3cd1aae46e59a8185e4d1d4fb0137a283a` in
+[run 37923075701](https://github.com/SupraLINUX/SupraLINUX/actions/runs/37923075701).
+The clean transport consumer installed all 173 exact retained binaries, and the
+original Ubuntu full SDK/provider/client passed in nested KVM. This consumes no
+package Attempt: candidate build, native suite, lintian and installed candidate
+tests remain pending. The original archive and logs restore offline; VM, runner
+254 and writable overlay absence were verified independently. Golden and
+milestone images remain preserved. The current gate is the complete package
+build for `4:6.7.5-0supralinux1`.
+
 KGlobalAccelD Attempt 1 is an original package FAIL after successful compilation
 and all four executed native CTests. Its original symbols guard found ten
 removals and 21 additions in the upstream private daemon SDK under SONAME 0.

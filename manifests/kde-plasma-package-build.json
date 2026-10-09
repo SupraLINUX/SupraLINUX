@@ -7794,7 +7794,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -7933,6 +7933,10 @@
       "sha256": "728cfbba96caa145fd9ddfafc49358352d6ed44d9af382bcf77598b59526986f",
       "applicable": false,
       "inapplicability_reason": "The current package compatibility-hold validation changed these reviewed execution inputs after the preserved original certification: scripts/test-reviewed-package-contract.py. Original PASS evidence remains unchanged; any affected candidate reentry requires a fresh input preflight."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/libksysguard-preflight32/verification.json",
+      "sha256": "71cc0e1701fcdba5afa2475b1a8976785c4e263c0fe14a9884e20b949933ad17"
     }
   ],
   "package_input_incidents": [
