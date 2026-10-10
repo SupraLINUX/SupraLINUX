@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+for package in kde-cli-tools kde-cli-tools-data; do
+    [[ $(dpkg-query -W -f='${Version}' "${package}") == 4:6.7.5-0supralinux1 ]]
+done
+cmake -S "$(dirname "$0")/client" -B "${AUTOPKGTEST_TMP}/build" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${AUTOPKGTEST_TMP}/build" --parallel 2
+python3 "$(dirname "$0")/client/run-private.py" "${AUTOPKGTEST_TMP}/build/cli-client" "${AUTOPKGTEST_ARTIFACTS}/rebuilt-consumer"
+for command in kbroadcastnotification kde-inhibit kde-open kdecp kdemv keditfiletype kinfo kioclient kmimetypefinder kstart ksvgtopng plasma-open-settings; do
+    test -x "/usr/bin/${command}"
+done
+for command in kde-open kdecp kdemv keditfiletype kioclient kmimetypefinder kstart ksvgtopng; do
+    test -L "/usr/bin/${command}5"
+    [[ $(readlink -f "/usr/bin/${command}5") == $(readlink -f "/usr/bin/${command}") ]]
+done
+MULTIARCH=$(dpkg-architecture -qDEB_HOST_MULTIARCH)
+test -s "/usr/lib/${MULTIARCH}/qt6/plugins/plasma/kcms/systemsettings_qwidgets/kcm_filetypes.so"
+for helper in kdeeject kdesu; do test -x "/usr/lib/${MULTIARCH}/libexec/kf6/${helper}"; done
+for desktop in kcm_filetypes org.kde.keditfiletype org.kde.plasma.settings.open; do test -s "/usr/share/applications/${desktop}.desktop"; done
+test -s /usr/share/zsh/site-functions/_kde-inhibit
+test -d /usr/share/doc/HTML/en/kcontrol6/filetypes
+apt-get check
+cp -a "${AUTOPKGTEST_TMP}/build" "${AUTOPKGTEST_ARTIFACTS}/consumer-build"

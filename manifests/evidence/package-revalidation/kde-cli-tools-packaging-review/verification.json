@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Individual source/packaging and original Ubuntu public SDK/CLI mechanism review, exact staged runtime closure; no candidate certification",
+  "node": "kde-cli-tools",
+  "version": "4:6.7.5-0supralinux1",
+  "upstream_sha256": "18f3c421b305003caf73f9e9fbec09fbf30f472dbe81fec328046cca7883a31d",
+  "signature_sha256": "94c6118e6edec4aa2e6f095022490735ae7611847b73cef775dfea43c097541a",
+  "reviewed_record_sha256": "f30becd01c01c0433631c64cdca31487f5323efc6967c6dba0ba7d973eb95f13",
+  "frameworks_nodes": 34,
+  "exact_binaries": 152,
+  "original_cli_commands": 10,
+  "original_typed_inhibit_requests": 4,
+  "original_broadcast_signals": 1,
+  "original_owned_cleanup": "PASS",
+  "source_unchanged": true,
+  "candidate_package_execution": "NOT RUN",
+  "package_attempt_consumed": false,
+  "next_gate": "fresh-authoritative-KVM-input-and-original-baseline-preflight",
+  "files_sha256": {
+    "original-cli-review.json": "7643fe6551014b11b49bb2f532a70ebbb78f1ed720e4b1e680fb4d3d50ddcf03",
+    "source-input-review.json": "875bb8311b84b890f2225b78418f1c719cb691e429e3f49f398561d015cbb555",
+    "source-profile-review.json": "7e4c0c419916eac996e534a1a7d13eaa213325c64058153c3b6017a2d1aaad46",
+    "runtime-closure-origin.json": "5f0df31b62e8888c33b0795d364c131969563245a6a8fe97b1157beae7a1b2de",
+    "empty-state-apt-result.json": "2104f545a89722996f68fcdb3bde7c51a294f8630c187d95dfd5069cf258e74d",
+    "original-cli-result.json": "0259b657fd7c7f962f9fdea96f2284f99ab76b046dfb87129bae4372e77da7b7",
+    "original-cli-cleanup.json": "5a8bead49bb5073ad36778cbfc13727e8999500d3041ed71b701adfad16baf1e",
+    "private-review-retention-index.json": "b47d3542ebefbd4458f5160ac670d6a289a0aff7da1caa9cf64049545cfadcf1"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Original package PASS retained unchanged; direct own cleanup and independent complete host/operator retention",
+  "source_commit": "db241f48364af1d8a26b2c1025e3e53d460848ab",
+  "workflow_run_id": 38081312292,
+  "workflow_job_id": 114298632851,
+  "original_result_sha256": "1c285101178950ceeb44e90628baf31c581ed5ed5af7693913d1b54d1d448f2a",
+  "package_attempt_consumed": true,
+  "sbuild_result": "PASS",
+  "lintian_result": "PASS",
+  "installed_tests": [
+    "ubuntu-abi-client PASS",
+    "consumer PASS"
+  ],
+  "upstream_registered_native_suite": "none; actual CTest appstreamtest preserved separately as not-applicable native scope",
+  "kernel_carrier_samples": 71,
+  "gateway_samples": 19,
+  "network_incidents": 0,
+  "complete_host_archive_sha256": "9aae7f3e5b8f3f0ae8eb7f7377d355c83ad7e29154ccd46ccf14d3c34719c511",
+  "complete_host_files": 396,
+  "empty_offline_byte_restore_verified": true,
+  "files_sha256": {
+    "cleanup.json": "ab57324ae4e99e3c273555dc9c310ca234bd4ce91e1912ddfbe86727b491e76d",
+    "final-network-health.json": "b66a813f84210cdfe35c02b765b6be5599f44701b58a58177630cf36eded4713",
+    "host-health.jsonl": "229680d1e67eb521807cbeeeecfdd6d0ff6c17c4f8c3cfbc59c6a079e2e9a5c1",
+    "physical-gateway-health.jsonl": "27e50d792174c5ee39087828f7b2189eee381dc648f4dd0ca0cd5ccece310b95",
+    "complete-host-retention-index.json": "52366c8a0e90d941c56f3fecb8e8c8a666b37a6c73207bcf09a96b02b08b0e78",
+    "upstream-suite-observation.json": "8e9a34769e40cde3d1dfc0742498ac8932e72e5499cd4a63a9b15b1838612381"
+  }
+}

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+apt-get install -y --no-install-recommends build-essential cmake pkgconf kde-cli-tools kde-cli-tools-data qt6-base-dev qt6-qpa-plugins fonts-dejavu-core python3 dbus-daemon
+BASE=/var/tmp/supralinux-kde-cli-tools-baseline
+test ! -e "${BASE}"
+mkdir -p "${BASE}/source"
+cp -a "$(dirname "$0")/client/." "${BASE}/source/"
+cmake -S "${BASE}/source" -B "${BASE}/build" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${BASE}/build" --parallel 2
+python3 "${BASE}/source/run-private.py" "${BASE}/build/cli-client" "${BASE}/original-ubuntu"
+dpkg-query -W -f='${Version}' kde-cli-tools > "${BASE}/ubuntu-version"
+dpkg-query -W -f='${Package} ${Architecture} ${Version}\n' libqt6core6t64 libqt6gui6 libqt6dbus6 libqt6widgets6 libqt6svg6 > "${BASE}/ubuntu-provider-versions"
+sha256sum "${BASE}/build/cli-client" > "${BASE}/ubuntu-client.sha256"

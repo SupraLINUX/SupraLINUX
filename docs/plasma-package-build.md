@@ -1,5 +1,32 @@
 # Authoritative Plasma package builds
 
+KMenuEdit `4:6.7.5-0supralinux1` Attempt 1 on
+`db241f48364af1d8a26b2c1025e3e53d460848ab`,
+[run 38081312292](https://github.com/SupraLINUX/SupraLINUX/actions/runs/38081312292),
+job 114298632851, is an original authoritative package PASS. Clean sbuild,
+AppStream, lintian and installed `ubuntu-abi-client`/`consumer` pass. The source
+registers no native suite; its actual CTest AppStream observation is retained
+without inventing native tests. The unchanged original Qt SDK client survives
+normal APT upgrade, while the rebuilt consumer verifies owned menu editing,
+save/reopen, exact payload and APT consistency. Source, both binary payloads
+including debug symbols, changes and buildinfo are verified and restore offline.
+Original delivery passes; artifact 11680369536 has SHA-256
+`35ffd6c08671ba67831297aefd24c3ffdf0ee1e2b0145d31d3446da1c7f7acb7`.
+The complete host/operator archive restores all 396 files. Direct checks confirm
+runner 269, VM and writable overlay absence, with golden/milestone preserved.
+The 71 kernel/carrier and 19 gateway observations record no incident. Guest-only
+SLIRP remains unlimited, and the experimental Ubuntu cache is not used.
+
+Level 0 now records 18 of 34 package PASS nodes. KDE CLI Tools is the next
+independently reviewed preflight, version `4:6.7.5-0supralinux1`, with the exact
+34-node/152-binary Frameworks/support closure. The original Ubuntu public client
+passes ten actual CLI commands, four typed inhibition requests and one broadcast
+signal on owned files and a closed private bus, with direct cleanup. Original
+`filetypestest` and `kcm_smoketest` remain enabled for the future candidate.
+This reviewed input admission does not certify that candidate. Full fresh
+KVM preflight and package execution remain pending; both compatibility holds
+remain outside executable scopes. Wayland/desktop/hardware QA remains separate.
+
 KMenuEdit input preflight 39 on `26f0a4d4bf7d1e4ffe5bc687e9acdc11ea610591`,
 [run 38073632042](https://github.com/SupraLINUX/SupraLINUX/actions/runs/38073632042),
 job 114275955525, records original PASS. The clean sbuild consumer accepts the
