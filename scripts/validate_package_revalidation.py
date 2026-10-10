@@ -16,13 +16,18 @@ def verify_preflight_transport(link, result, job, artifact, host, proof):
     """Preserve an original result while refusing admission after lost transport."""
     assert job['status'] == 'completed'
     cancelled = artifact.get('kind') == 'sealed-host-preflight-cancelled-result-export'
-    failed = cancelled or artifact.get('kind') == 'sealed-host-preflight-result-export'
+    infra_export = artifact.get('kind') == 'sealed-host-preflight-infra-result-export'
+    failed = cancelled or infra_export or artifact.get('kind') == 'sealed-host-preflight-result-export'
     assert job['conclusion'] == ('cancelled' if cancelled else ('failure' if failed else ('success' if result['state'] == 'PASS' else 'failure')))
     if not failed:
         assert (host['exit_code'] == 0) is (result['state'] == 'PASS')
         return
-    assert host['exit_code'] != 0 and result['state'] == 'PASS' and result['package_attempt_consumed'] is False
-    assert result['stage'] == 'reviewed-package-preflight-complete'
+    assert host['exit_code'] != 0 and result['package_attempt_consumed'] is False
+    if infra_export:
+        assert result['state'] == 'INFRA_INVALID'
+        assert all(result[key] == 'not-run' for key in ['sbuild_result', 'lintian_result', 'autopkgtest_result'])
+    else:
+        assert result['state'] == 'PASS' and result['stage'] == 'reviewed-package-preflight-complete'
     assert proof['infrastructure_transport_result'] == 'FAIL'
     assert proof['original_runner_result_preserved'] is True and proof['current_input_admission'] is False
     assert link.get('applicable') is False and link.get('inapplicability_reason'), 'Recovered transport failure cannot admit current package execution'
@@ -37,7 +42,7 @@ def verify_preflight_transport(link, result, job, artifact, host, proof):
         assert all(value.tzinfo is not None for value in timestamps)
         assert timestamps == sorted(timestamps), 'Recovered original PASS must finish after cancellation and before host cleanup'
     else:
-        assert execution['conclusion'] == 'success'
+        assert execution['conclusion'] == ('failure' if infra_export else 'success')
     assert steps['Retain package sources, binaries and evidence']['conclusion'] != 'success'
 
 

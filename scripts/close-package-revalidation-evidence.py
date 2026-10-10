@@ -62,7 +62,7 @@ def main():
                         default='manifests/package-revalidation.json')
     parser.add_argument('--zip',type=Path,required=True)
     parser.add_argument('--artifact-meta',type=Path)
-    parser.add_argument('--host-export', action='store_true', help='retain a sealed interrupted preflight without an original runner result')
+    parser.add_argument('--host-export', action='store_true', help='retain a sealed original or interrupted preflight after failed delivery')
     parser.add_argument('--job-json',type=Path,required=True)
     parser.add_argument('--host-dir',type=Path,required=True)
     args = parser.parse_args()
@@ -83,15 +83,18 @@ def main():
         original_present = (payload/'result.json').is_file()
         if original_present:
             raw = json.loads((payload/'result.json').read_text())
-            assert raw['state'] == 'PASS' and raw['package_attempt_consumed'] is False
-            assert raw['stage'] == 'reviewed-package-preflight-complete' and host['exit_code'] != 0
+            assert raw['state'] in {'PASS', 'INFRA_INVALID'} and raw['package_attempt_consumed'] is False
+            assert host['exit_code'] != 0
             assert job['status'] == 'completed' and job['conclusion'] in {'failure', 'cancelled'}
             steps = {step['name']: step for step in job['steps']}
             assert steps['Retain package sources, binaries and evidence']['conclusion'] != 'success'
             kind = ('sealed-host-preflight-cancelled-result-export' if job['conclusion'] == 'cancelled'
                     else 'sealed-host-preflight-result-export')
+            if raw['state'] == 'INFRA_INVALID':
+                assert job['conclusion'] == 'failure'
+                kind = 'sealed-host-preflight-infra-result-export'
             transport.verify_preflight_transport(
-                {'applicable': False, 'inapplicability_reason': 'Original PASS recovered after failed delivery'},
+                {'applicable': False, 'inapplicability_reason': 'Original preflight result recovered after failed delivery'},
                 raw, job, {'kind': kind, 'id': None}, host,
                 {'infrastructure_transport_result': 'FAIL', 'original_runner_result_preserved': True, 'current_input_admission': False})
             files = {str(path.relative_to(payload)): path for path in sorted(payload.rglob('*')) if path.is_file()}
@@ -124,11 +127,12 @@ def main():
             assert meta['name'] == expected_artifact
         assert raw['workflow_run_id'] == str(job['run_id']) == host['workflow_run_id']
         cancelled_transport = meta.get('kind') == 'sealed-host-preflight-cancelled-result-export'
-        transport_failure = cancelled_transport or meta.get('kind') == 'sealed-host-preflight-result-export'
+        infra_transport = meta.get('kind') == 'sealed-host-preflight-infra-result-export'
+        transport_failure = cancelled_transport or infra_transport or meta.get('kind') == 'sealed-host-preflight-result-export'
         assert job['status'] == 'completed' and job['conclusion'] == ('cancelled' if cancelled_transport else ('failure' if transport_failure else ('success' if raw['state']=='PASS' else 'failure')))
         assert raw['node'] == args.node and raw['version'] == record['version']
         assert raw['authoritative'] and raw['system_test_acceleration'] == 'kvm-required'
-        assert (host['exit_code'] != 0 and raw['state'] == 'PASS') if transport_failure else ((host['exit_code']==0) == (raw['state']=='PASS'))
+        assert (host['exit_code'] != 0 and raw['state'] == ('INFRA_INVALID' if infra_transport else 'PASS')) if transport_failure else ((host['exit_code']==0) == (raw['state']=='PASS'))
         for name, expected in raw['files_sha256'].items():
             assert not Path(name).is_absolute() and '..' not in Path(name).parts
             assert hashlib.sha256(archive.read(name)).hexdigest() == expected, name
@@ -305,6 +309,8 @@ def main():
                 write(path, providers)
         else:
             key = 'package_input_incidents' if plasma_inputs else 'infrastructure_incidents'
+            if transport_failure:
+                link.update(applicable=False, inapplicability_reason='Original infrastructure failure preserved after failed Actions artifact delivery; no package Attempt or current input admission')
             campaign.setdefault(key, []).append(link)
     else:
         record['attempts'].append({'attempt':number,'state':raw['state'],**link})

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Check historical recovery after cancellation without admitting package execution."""
 import importlib.util
+import copy
 import unittest
 from pathlib import Path
 
@@ -37,6 +38,62 @@ class CancelledPreflightTransport(contract.PreflightTransport):
         self.artifact['kind'] = 'sealed-host-preflight-result-export'
         with self.assertRaises(AssertionError):
             self.verify()
+
+
+class InfrastructurePreflightTransport(unittest.TestCase):
+    def setUp(self):
+        self.control = contract.PreflightTransport()
+        self.control.setUp()
+        self.control.result.update(state='INFRA_INVALID', stage='reviewed-ubuntu-baseline-preflight',
+                                   sbuild_result='not-run', lintian_result='not-run', autopkgtest_result='not-run')
+        self.control.job['steps'][0]['conclusion'] = 'failure'
+        self.control.artifact['kind'] = 'sealed-host-preflight-infra-result-export'
+
+    def test_original_infrastructure_failure_is_preserved_without_admission(self):
+        before = copy.deepcopy(self.control.result)
+        self.control.verify()
+        self.assertEqual(self.control.result, before)
+
+    def test_infrastructure_export_cannot_claim_package_execution_or_pass(self):
+        for key, value in [('state', 'PASS'), ('state', 'FAIL'), ('package_attempt_consumed', True),
+                           ('sbuild_result', 'PASS'), ('lintian_result', 'PASS'), ('autopkgtest_result', 'PASS')]:
+            old = self.control.result[key]
+            self.control.result[key] = value
+            with self.subTest(key=key, value=value), self.assertRaises(AssertionError):
+                self.control.verify()
+            self.control.result[key] = old
+
+    def test_failed_export_cannot_become_successful_or_cancelled_delivery(self):
+        for mapping, key, value in [(self.control.job, 'conclusion', 'success'),
+                                    (self.control.job, 'conclusion', 'cancelled'),
+                                    (self.control.job, 'status', 'in_progress'),
+                                    (self.control.host, 'exit_code', 0),
+                                    (self.control.artifact, 'id', 123),
+                                    (self.control.artifact, 'kind', 'sealed-host-preflight-result-export')]:
+            old = mapping[key]
+            mapping[key] = value
+            with self.subTest(key=key, value=value), self.assertRaises(AssertionError):
+                self.control.verify()
+            mapping[key] = old
+
+    def test_execution_and_retention_failure_are_both_required(self):
+        for step in self.control.job['steps']:
+            old = step['conclusion']
+            step['conclusion'] = 'success'
+            with self.subTest(step=step['name']), self.assertRaises(AssertionError):
+                self.control.verify()
+            step['conclusion'] = old
+
+    def test_recovered_infrastructure_result_never_admits_current_execution(self):
+        for mapping, key, value in [(self.control.link, 'applicable', True),
+                                    (self.control.proof, 'current_input_admission', True),
+                                    (self.control.proof, 'original_runner_result_preserved', False),
+                                    (self.control.proof, 'infrastructure_transport_result', 'PASS')]:
+            old = mapping[key]
+            mapping[key] = value
+            with self.subTest(key=key), self.assertRaises(AssertionError):
+                self.control.verify()
+            mapping[key] = old
 
 
 if __name__ == '__main__':
