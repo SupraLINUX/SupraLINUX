@@ -1,5 +1,23 @@
 # Authoritative Plasma package builds
 
+KMenuEdit input preflight 39 on `26f0a4d4bf7d1e4ffe5bc687e9acdc11ea610591`,
+[run 38073632042](https://github.com/SupraLINUX/SupraLINUX/actions/runs/38073632042),
+job 114275955525, records original PASS. The clean sbuild consumer accepts the
+exact 29-node/117-binary predecessor closure and the unchanged original Ubuntu
+editor/client passes its owned create/rename/submenu/Exec/save/reopen checks in
+nested KVM. No candidate package Attempt is consumed. Original delivery passes;
+artifact 11678031979, SHA-256
+`de2b33dfa84b912f9bc8aea8f0cffa7c49cc9f829626a9232362d4cc26bb16ed`,
+is independently verified and restores offline. The separate complete host and
+operator archive restores all 137 files. Runner 268, VM and writable overlay
+absence are directly verified; golden/milestone images remain. The 56
+kernel/carrier and 13 physical gateway observations record no incident. Actual
+SLIRP remains guest-only, with zero configured speed limits and no experimental
+Ubuntu download cache. This input proof admits KMenuEdit Attempt 1: candidate
+sbuild, lintian, unchanged original client after upgrade and rebuilt installed
+consumer remain pending. LibKSysGuard and KGlobalAccelD compatibility holds
+remain outside executable scopes.
+
 LibKSysGuard Attempt 3 on `f5e3392fd68f43986eb7fc9efef7b0bd96ce9e30`,
 [run 38071098807](https://github.com/SupraLINUX/SupraLINUX/actions/runs/38071098807),
 is an original package FAIL. The clean 173-input consumer and unchanged original
