@@ -405,6 +405,13 @@ require("machine-id" in golden_builder and "ssh-hostkeys" in golden_builder, "go
 
 golden_lifecycle_preflight = read_required("scripts/check-golden-preparation-lifecycle.sh")
 for token, message in (
+    ("--network none", "golden lifecycle must run without a guest NIC"),
+    ("Offline golden lifecycle refuses libvirt network overrides.", "golden lifecycle must reject network overrides before host operations"),
+    ("ethernets: {}", "golden lifecycle must seed an empty network configuration"),
+    ("network-config=${NETWORK_CONFIG}", "golden lifecycle must pass network configuration through NoCloud"),
+    ("package_update: false", "offline lifecycle must not request an APT update"),
+    ("package_upgrade: false", "offline lifecycle must not request an APT upgrade"),
+    ("Owned lifecycle VM still exists; preserving its writable overlay.", "lifecycle cleanup must preserve a live domain's writable overlay"),
     ("scripts/check-kvm-host.sh", "golden lifecycle preflight must require the certified KVM host contract"),
     ("/var/lib/supralinux/golden-builds/lifecycle-preflight", "golden lifecycle preflight state must stay under the provisioned operator-owned golden-build root"),
     ("scripts/verify-ubuntu-cloud-image-provenance.sh", "golden lifecycle preflight must reverify the signed Ubuntu source image"),

@@ -104,6 +104,9 @@ jobs:
         shell: bash
         run: scripts/test-with-libguestfs-runtime.sh
 
+      - name: Test offline golden lifecycle safety
+        run: python3 scripts/test-golden-lifecycle-safety.py
+
       - name: Test KVM-required QEMU wrapper
         shell: bash
         run: scripts/test-qemu-kvm-required.sh

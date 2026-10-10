@@ -5,7 +5,10 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SOURCE_IMAGE="${SUPRALINUX_SOURCE_IMAGE:-/var/lib/supralinux/images/source/resolute/ubuntu-26.04-server-cloudimg-amd64.img}"
 SOURCE_PROVENANCE="${SOURCE_IMAGE}.provenance.txt"
 LIBVIRT_URI="${SUPRALINUX_LIBVIRT_URI:-qemu:///system}"
-LIBVIRT_NETWORK="${SUPRALINUX_LIBVIRT_NETWORK:-default}"
+if [[ -n "${SUPRALINUX_LIBVIRT_NETWORK:-}" ]]; then
+    printf 'Offline golden lifecycle refuses libvirt network overrides.\n' >&2
+    exit 2
+fi
 LIBVIRT_QEMU_USER="${SUPRALINUX_LIBVIRT_QEMU_USER:-libvirt-qemu}"
 STATE_ROOT="${SUPRALINUX_GOLDEN_LIFECYCLE_STATE_DIR:-/var/lib/supralinux/golden-builds/lifecycle-preflight}"
 EVIDENCE_ROOT="${SUPRALINUX_GOLDEN_LIFECYCLE_EVIDENCE_ROOT:-/var/lib/supralinux/evidence/golden-lifecycle-preflight}"
@@ -55,7 +58,7 @@ EVIDENCE_DIR="${EVIDENCE_ROOT}/${BUILD_ID}"
 WORK_DISK="${BUILD_DIR}/lifecycle-work.qcow2"
 USER_DATA="${BUILD_DIR}/user-data"
 META_DATA="${BUILD_DIR}/meta-data"
-SUCCESS=0
+NETWORK_CONFIG="${BUILD_DIR}/network-config"
 VM_DEFINED=0
 
 mkdir -p "${BUILD_DIR}" "${EVIDENCE_DIR}"
@@ -66,6 +69,10 @@ cleanup() {
     local rc="$?"
     trap - EXIT INT TERM
     set +e
+    if [[ "${VM_NAME}" != supralinux-golden-lifecycle-* || "${BUILD_DIR}" != "${STATE_ROOT}/"* ]]; then
+        printf 'Refusing lifecycle cleanup outside the owned namespace.\n' >&2
+        exit 1
+    fi
     if (( VM_DEFINED )); then
         virsh --connect "${LIBVIRT_URI}" dumpxml "${VM_NAME}" > "${EVIDENCE_DIR}/domain.xml" 2>/dev/null || true
         state="$(LC_ALL=C virsh --connect "${LIBVIRT_URI}" domstate "${VM_NAME}" 2>/dev/null || true)"
@@ -74,10 +81,21 @@ cleanup() {
         fi
         virsh --connect "${LIBVIRT_URI}" undefine "${VM_NAME}" >/dev/null 2>&1 || true
     fi
-    if (( SUCCESS )); then
-        rm -rf "${BUILD_DIR}"
+    if virsh --connect "${LIBVIRT_URI}" dominfo "${VM_NAME}" >/dev/null 2>&1; then
+        printf 'Owned lifecycle VM still exists; preserving its writable overlay.\n' >&2
+        exit 1
+    fi
+    # Only this invocation's ephemeral directory is removed. The signed source
+    # image and all evidence stay outside it, including after a failed probe.
+    if [[ "${VM_NAME}" == supralinux-golden-lifecycle-* && "${BUILD_DIR}" == "${STATE_ROOT}/"* ]]; then
+        rm -rf -- "${BUILD_DIR}"
     else
-        printf 'Synthetic lifecycle preflight failed; preserving work state at %s\n' "${BUILD_DIR}" >&2
+        printf 'Refusing cleanup outside the owned lifecycle namespace.\n' >&2
+        rc=1
+    fi
+    if virsh --connect "${LIBVIRT_URI}" dominfo "${VM_NAME}" >/dev/null 2>&1 || [[ -e "${WORK_DISK}" ]]; then
+        printf 'Owned lifecycle VM/overlay cleanup incomplete.\n' >&2
+        rc=1
     fi
     exit "${rc}"
 }
@@ -110,8 +128,15 @@ instance-id: ${VM_NAME}
 local-hostname: ${VM_NAME}
 EOF_META
 
+cat > "${NETWORK_CONFIG}" <<'EOF_NETWORK'
+version: 2
+ethernets: {}
+EOF_NETWORK
+
 cat > "${USER_DATA}" <<'EOF_USER'
 #cloud-config
+package_update: false
+package_upgrade: false
 write_files:
   - path: /var/lib/supralinux/golden-lifecycle-preflight.txt
     owner: root:root
@@ -126,7 +151,8 @@ power_state:
   condition: true
 EOF_USER
 
-printf 'Starting synthetic golden-preparation lifecycle VM...\n'
+cp "${USER_DATA}" "${META_DATA}" "${NETWORK_CONFIG}" "${EVIDENCE_DIR}/"
+printf 'Starting offline golden-preparation lifecycle VM without a NIC...\n' 
 VM_DEFINED=1
 if ! LC_ALL=C timeout --foreground "${TIMEOUT_SECONDS}" virt-install \
     --connect "${LIBVIRT_URI}" \
@@ -136,11 +162,11 @@ if ! LC_ALL=C timeout --foreground "${TIMEOUT_SECONDS}" virt-install \
     --cpu host-passthrough \
     --import \
     --disk "path=${WORK_DISK},format=qcow2,bus=virtio,cache=none" \
-    --network "network=${LIBVIRT_NETWORK},model=virtio" \
+    --network none \
     --graphics none \
     --noautoconsole \
     --osinfo detect=on,require=off \
-    --cloud-init "user-data=${USER_DATA},meta-data=${META_DATA},disable=on" \
+    --cloud-init "user-data=${USER_DATA},meta-data=${META_DATA},network-config=${NETWORK_CONFIG},disable=on" \
     --noreboot \
     --wait=-1 |& tee "${EVIDENCE_DIR}/virt-install.txt"; then
     printf 'Synthetic lifecycle VM did not complete successfully.\n' >&2
@@ -169,6 +195,5 @@ fi
     printf 'result=PASS\n'
 } > "${EVIDENCE_DIR}/result.txt"
 
-SUCCESS=1
 printf 'Golden preparation lifecycle synthetic preflight: PASS\n'
 printf 'Evidence: %s\n' "${EVIDENCE_DIR}"
