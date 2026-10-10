@@ -17,11 +17,19 @@ being zero, meaning no bandwidth limit. It installs no tc shaper/policer and
 verifies their absence; guest isolation remains mandatory. Positive historical
 256/64 KiB/s controls remain supported for intentional reproduction, with their
 original ceilings and receipts preserved. No physical-interface tc/firewall
-setting is changed. The already-running preflight keeps its original policy
-through evidence capture and cleanup. A small real KVM startup probe followed
-by a fresh package input preflight is required for the new default; the old
-limited-traffic certification does not certify that change. No throughput stress
-test is authorized.
+setting is changed. The new default is certified by the bounded real KVM probe
+`slirp-unlimited-startup-20261010` on `ba4adc5c` and the fresh LibKSysGuard input
+preflight 38 on that same source. Both verify zero configured bandwidth limits,
+the absence of guest shaper/policer rules, private TCP rejection and bounded
+HTTPS connectivity before runner registration. The unchanged guest nftables
+source has SHA-256 `8f46d111dc8fe895a27c29ac7ba899f70fb4a31f5f4ed2d796d3e95b3d63b982`.
+Direct checks confirm both owned VMs, runners 265/266 and writable overlays were
+removed; golden and milestone images remain intact. The small probe has 12
+kernel/carrier observations and one late gateway observation; preflight 38 has
+54 kernel/carrier and 13 gateway observations. No hang, carrier loss or sampled
+gateway failure was observed. This scoped result does not establish the cause
+of the earlier wired outage. Complete sealed inputs restore offline unchanged.
+No throughput stress test is authorized.
 
 The observed e1000e host must have TSO and GSO disabled before any guest traffic.
 The operator applied `sudo ethtool -K eno1 tso off gso off`; read-only verification
@@ -64,9 +72,10 @@ network policy. Certify a small disposable KVM infrastructure probe, its interne
 and private-network rejection, traffic controls and cleanup before a fresh
 package preflight. No intentional network stress test is authorized by this fix.
 
-Historical golden-image creation/lifecycle entrypoints still require the retired
-libvirt transport. Do not execute them until their preparation path is adapted
-and certified with the same policy. Existing sealed images remain unchanged.
+The historical golden-image builder still requires the retired libvirt
+transport and must not execute. The preparation lifecycle has been adapted to
+offline NoCloud boot with no virtual NIC; its real KVM certification is still
+pending. Existing sealed images remain unchanged.
 
 The first small SLIRP probe on `446ec2e` ended INFRA_INVALID before link
 activation: iproute2's police JSON omits its rate field. TBF JSON does contain

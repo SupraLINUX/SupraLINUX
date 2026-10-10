@@ -1,0 +1,9 @@
+{
+  "id": null,
+  "kind": "sealed-host-preflight-cancelled-result-export",
+  "digest": "sha256:c11919f2d685761a2c9c8ff23177beafcc2d6fd4767ac29804a30e61006af56f",
+  "workflow_run": {
+    "id": 37988993654,
+    "head_sha": "60bf81990d5402315a389cfa0d663c371e7a48ad"
+  }
+}

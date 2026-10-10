@@ -3,10 +3,40 @@
 On 2026-10-10 the operator clarified that Internet speed caps are unnecessary.
 New VM provisioning defaults to no bandwidth limits while preserving guest-only
 SLIRP isolation, private-address rejection and host physical-link checks. The
-in-flight input preflight retains its original limits through cleanup. Certify
-the changed default with a bounded KVM startup probe and a fresh input preflight
-before a candidate package Attempt. The limited-traffic records below remain
-unchanged historical evidence for their original inputs.
+bounded startup probe and fresh input preflight 38 on `ba4adc5c` both pass with
+zero configured traffic limits and no guest shaper/policer. Their owned VMs,
+runners and overlays are removed, and golden/milestone images are preserved.
+The limited-traffic records below remain unchanged historical evidence for
+their original inputs.
+
+LibKSysGuard revision 3 input preflight 38 passes on source
+`ba4adc5c6e54ace401ec27e7ac8543495953a713` in
+[run 38069354652](https://github.com/SupraLINUX/SupraLINUX/actions/runs/38069354652),
+job 114263420932. The clean sbuild consumer admits all 173 exact predecessor
+binaries and the unchanged original Ubuntu full SDK/provider/client passes in
+nested KVM. Actions retention succeeds; artifact 11676590169 has SHA-256
+`63f8643343c76e1d32199ecde29006aaa20d750b49138d7cc2b013370ab3d3a2`.
+Its bytes, ZIP integrity and complete empty offline restore are verified,
+alongside all 643 files in the separate complete host/operator retention.
+Direct checks confirm runner 266, VM and writable overlay absence. No package
+Attempt was consumed. The campaign now admits the complete candidate Attempt 3:
+all eight native tests, sbuild packaging, lintian and installed candidate tests
+remain pending. The approved Frameworks milestone is reused; the experimental
+Ubuntu download cache is not admitted or used.
+
+The preceding chronological records remain distinct. Preflight 36 on
+`60bf8199`, run 37988993654/job 114018054597, records an original input PASS
+after the Actions 120-minute deadline cancelled its job; no Actions artifact
+was delivered, so that PASS does not admit current execution. Preflight 37 on
+`b36b2149`, run 38044498457/job 114191179484, records original `INFRA_INVALID`:
+the Ubuntu baseline setup command exceeded its 3,000-second budget before the
+functional client ran. Actions upload then stalled and failed finalization,
+despite sending bytes; no completed artifact exists. Its original infrastructure
+result is preserved independently of transport failure. Both sealed original
+payloads restore offline, their owned resources are removed, and neither gate
+consumed a package Attempt. The diagnosed delivery changes, bounded unlimited
+startup certification and fresh successful input preflight 38 establish current
+admission without converting either previous gate into a candidate result.
 
 LibKSysGuard input preflight 35 on `653323d4`, run 37986310752/job
 114009057967, records original `INFRA_INVALID` at predecessor cache admission.

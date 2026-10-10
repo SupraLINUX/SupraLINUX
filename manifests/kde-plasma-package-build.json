@@ -7847,7 +7847,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -8004,6 +8004,16 @@
       "sha256": "8808e7234b2ce565f4bb1e350b64cbff229383e641a487934aba85c5e62ea617",
       "applicable": false,
       "inapplicability_reason": "Original preflight PASS preserved after Actions/host network transport failure; changed host network policy requires fresh certification"
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/libksysguard-preflight36/verification.json",
+      "sha256": "909d04bea917faf1a6e47ab81f2c98acff245d7791a839720ad6e9a3f88828e9",
+      "applicable": false,
+      "inapplicability_reason": "Original preflight PASS recovered after the Actions job deadline cancelled execution/retention; a complete fresh workflow with an adequate finite budget is required"
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/libksysguard-preflight38/verification.json",
+      "sha256": "53ed7b1ad26525da58671044672ce91bed08212fe9f159a9d9c804866e31737d"
     }
   ],
   "package_input_incidents": [
@@ -8060,6 +8070,14 @@
       "sha256": "4f79dd09385fab0dcc68831c190fcec0a511f173f00a44e5106a6b63ee76af86",
       "cause": "Original predecessor cache admission tried eight 30-second reads of the 13,510,034-byte retained KConfig repair artifact under the fixed guest network ceilings; each timed out with a partial body. No candidate source preparation, baseline or sbuild started. The failed helper emitted a partial binary body and Python subprocess authentication arguments into private original logs; no raw logs are published.",
       "repair": "Keep guest and host networking unchanged. Give exact GitHub artifact endpoints a finite 900-second read budget, at most three attempts and a 60-second low-speed guard; preserve 30-second metadata reads. Withhold failed partial bodies and raise sanitized Python transport errors. Preserve original failure and direct cleanup, then verify complete artifact digests/identities and unchanged Ubuntu baseline in a fresh preflight before Attempt 3."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/libksysguard-preflight37/verification.json",
+      "sha256": "dad6cfcb6a84763d3300caedf57fe1b9f8e955938d3ce22814dd38119cfd1597",
+      "applicable": false,
+      "inapplicability_reason": "Original infrastructure failure preserved after failed Actions artifact delivery; no package Attempt or current input admission",
+      "cause": "Original Ubuntu baseline testbed setup-command timed out at 3021s before the functional client completed; original INFRA_INVALID preserved. Actions artifact upload also failed with Upload progress stalled; artifact count=0. No candidate sbuild or package Attempt.",
+      "repair": "Certify published unlimited SLIRP (0/0) using bounded connectivity, unchanged guest private-address guards and direct cleanup, then repeat unchanged baseline with fresh frozen runtime inputs. Retain original sealed result and complete host evidence independently of Actions delivery."
     }
   ]
 }

@@ -1,0 +1,14 @@
+{
+  "journal_read_exit_code": 0,
+  "journal_records_read": 1,
+  "journal_readable": true,
+  "offloads": {
+    "tcp-segmentation-offload": "off",
+    "generic-segmentation-offload": "off"
+  },
+  "libvirt_network_list_exit_code": 0,
+  "libvirt_networks": [
+    ""
+  ],
+  "host_modified": false
+}
