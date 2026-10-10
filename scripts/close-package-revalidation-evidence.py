@@ -12,6 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 retention = importlib.machinery.SourceFileLoader('retention', str(ROOT/'scripts/retain-package-artifacts.py')).load_module()
+transport = importlib.machinery.SourceFileLoader('preflight_transport', str(ROOT/'scripts/validate_package_revalidation.py')).load_module()
 
 
 def sha(path):
@@ -84,10 +85,15 @@ def main():
             raw = json.loads((payload/'result.json').read_text())
             assert raw['state'] == 'PASS' and raw['package_attempt_consumed'] is False
             assert raw['stage'] == 'reviewed-package-preflight-complete' and host['exit_code'] != 0
-            assert job['status'] == 'completed' and job['conclusion'] == 'failure'
+            assert job['status'] == 'completed' and job['conclusion'] in {'failure', 'cancelled'}
             steps = {step['name']: step for step in job['steps']}
-            assert steps['Run current reviewed package']['conclusion'] == 'success'
             assert steps['Retain package sources, binaries and evidence']['conclusion'] != 'success'
+            kind = ('sealed-host-preflight-cancelled-result-export' if job['conclusion'] == 'cancelled'
+                    else 'sealed-host-preflight-result-export')
+            transport.verify_preflight_transport(
+                {'applicable': False, 'inapplicability_reason': 'Original PASS recovered after failed delivery'},
+                raw, job, {'kind': kind, 'id': None}, host,
+                {'infrastructure_transport_result': 'FAIL', 'original_runner_result_preserved': True, 'current_input_admission': False})
             files = {str(path.relative_to(payload)): path for path in sorted(payload.rglob('*')) if path.is_file()}
             assert all(not path.is_symlink() for path in files.values())
             assert all(name in files and sha(files[name]) == digest for name, digest in raw['files_sha256'].items())
@@ -103,7 +109,7 @@ def main():
             if not original_present:
                 archive.writestr('result.json', json.dumps(raw, indent=2)+'\n')
         digest = sha(args.zip)
-        meta = {'id': None, 'kind': 'sealed-host-preflight-result-export' if original_present else 'sealed-host-preflight-export', 'digest': 'sha256:'+digest,
+        meta = {'id': None, 'kind': kind if original_present else 'sealed-host-preflight-export', 'digest': 'sha256:'+digest,
                 'workflow_run': {'id': job['run_id'], 'head_sha': head}}
     else:
         assert args.artifact_meta
@@ -117,8 +123,9 @@ def main():
         if not args.host_export:
             assert meta['name'] == expected_artifact
         assert raw['workflow_run_id'] == str(job['run_id']) == host['workflow_run_id']
-        transport_failure = meta.get('kind') == 'sealed-host-preflight-result-export'
-        assert job['status'] == 'completed' and job['conclusion'] == ('failure' if transport_failure else ('success' if raw['state']=='PASS' else 'failure'))
+        cancelled_transport = meta.get('kind') == 'sealed-host-preflight-cancelled-result-export'
+        transport_failure = cancelled_transport or meta.get('kind') == 'sealed-host-preflight-result-export'
+        assert job['status'] == 'completed' and job['conclusion'] == ('cancelled' if cancelled_transport else ('failure' if transport_failure else ('success' if raw['state']=='PASS' else 'failure')))
         assert raw['node'] == args.node and raw['version'] == record['version']
         assert raw['authoritative'] and raw['system_test_acceleration'] == 'kvm-required'
         assert (host['exit_code'] != 0 and raw['state'] == 'PASS') if transport_failure else ((host['exit_code']==0) == (raw['state']=='PASS'))
@@ -286,7 +293,9 @@ def main():
             key = 'package_input_certifications' if plasma_inputs else 'certifications'
             campaign.setdefault(key, []).append(link)
             if transport_failure:
-                link.update(applicable=False, inapplicability_reason='Original preflight PASS preserved after Actions/host network transport failure; changed host network policy requires fresh certification')
+                reason = ('Original preflight PASS recovered after the Actions job deadline cancelled execution/retention; a complete fresh workflow with an adequate finite budget is required'
+                          if cancelled_transport else 'Original preflight PASS preserved after Actions/host network transport failure; changed host network policy requires fresh certification')
+                link.update(applicable=False, inapplicability_reason=reason)
             else:
                 campaign['execution_mode']='build'
             if plasma_inputs and record.get('source_scope') == 'plasma-supplementary-provider':

@@ -45,6 +45,9 @@ jobs:
       - name: Test current package contract scope
         run: python3 scripts/test-reviewed-package-contract.py
 
+      - name: Test historical preflight delivery recovery
+        run: python3 scripts/test-preflight-delivery.py
+
       - name: Test interrupted package preflight retention
         run: python3 scripts/test-package-preflight-recovery.py
 

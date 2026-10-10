@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Validate a scoped predecessor repair without rewriting historical campaigns."""
 import hashlib
+import datetime
 import importlib.machinery
 import json
 import os
@@ -14,8 +15,9 @@ prepare = importlib.machinery.SourceFileLoader('prepare', str(ROOT/'scripts/prep
 def verify_preflight_transport(link, result, job, artifact, host, proof):
     """Preserve an original result while refusing admission after lost transport."""
     assert job['status'] == 'completed'
-    failed = artifact.get('kind') == 'sealed-host-preflight-result-export'
-    assert job['conclusion'] == ('failure' if failed else ('success' if result['state'] == 'PASS' else 'failure'))
+    cancelled = artifact.get('kind') == 'sealed-host-preflight-cancelled-result-export'
+    failed = cancelled or artifact.get('kind') == 'sealed-host-preflight-result-export'
+    assert job['conclusion'] == ('cancelled' if cancelled else ('failure' if failed else ('success' if result['state'] == 'PASS' else 'failure')))
     if not failed:
         assert (host['exit_code'] == 0) is (result['state'] == 'PASS')
         return
@@ -26,7 +28,16 @@ def verify_preflight_transport(link, result, job, artifact, host, proof):
     assert link.get('applicable') is False and link.get('inapplicability_reason'), 'Recovered transport failure cannot admit current package execution'
     assert artifact['id'] is None
     steps = {step['name']: step for step in job['steps']}
-    assert steps['Run current reviewed package']['conclusion'] == 'success'
+    execution = steps['Run current reviewed package']
+    if cancelled:
+        assert execution['conclusion'] == 'cancelled'
+        assert result['exit_code'] == 0
+        timestamps = [datetime.datetime.fromisoformat(value) for value in
+                      [execution['started_at'], execution['completed_at'], result['finished_at'], host['finished_at']]]
+        assert all(value.tzinfo is not None for value in timestamps)
+        assert timestamps == sorted(timestamps), 'Recovered original PASS must finish after cancellation and before host cleanup'
+    else:
+        assert execution['conclusion'] == 'success'
     assert steps['Retain package sources, binaries and evidence']['conclusion'] != 'success'
 
 
