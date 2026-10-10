@@ -44,8 +44,12 @@ run/job IDs, SHA y próximo paso cuando una ejecución deba quedar pendiente.
 Las VMs de SupraLINUX usan SLIRP dentro de QEMU, sin crear redes libvirt,
 bridges, TAP, DHCP ni rutas en el host y sin usar direcciones o MAC de la LAN.
 Bloquear redes privadas externas dentro del guest y activar su enlace sólo tras
-instalar los controles. Límite máximo por VM: 256 KiB/s de descarga y 64 KiB/s
-de subida; no elevarlo con overrides. Verificar TSO/GSO desactivados en el host
+instalar los controles de aislamiento. Las nuevas VMs no limitan la velocidad
+de Internet: ambos valores de tráfico en cero significan ausencia de topes,
+nunca una conexión bloqueada. Los topes positivos anteriores se conservan sólo
+para reproducción histórica. Certificar el cambio con un probe pequeño de
+Internet/aislamiento y cleanup antes de un preflight nuevo; no hacer pruebas de
+saturación. Verificar TSO/GSO desactivados en el host
 e1000e que presentó hangs; esta mitigación reversible requiere revalidación tras
 cada reinicio. No ejecutar los builders históricos de golden/lifecycle que aún
 requieren la red libvirt retirada: primero adaptar y certificar ese transporte.

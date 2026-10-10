@@ -1,5 +1,13 @@
 # Authoritative Plasma package builds
 
+On 2026-10-10 the operator clarified that Internet speed caps are unnecessary.
+New VM provisioning defaults to no bandwidth limits while preserving guest-only
+SLIRP isolation, private-address rejection and host physical-link checks. The
+in-flight input preflight retains its original limits through cleanup. Certify
+the changed default with a bounded KVM startup probe and a fresh input preflight
+before a candidate package Attempt. The limited-traffic records below remain
+unchanged historical evidence for their original inputs.
+
 LibKSysGuard input preflight 35 on `653323d4`, run 37986310752/job
 114009057967, records original `INFRA_INVALID` at predecessor cache admission.
 The 13,510,034-byte KConfig repair archive cannot complete within the shared

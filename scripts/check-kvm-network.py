@@ -73,10 +73,16 @@ def check_retained_probes(root):
         limits = json.loads((path.parent/'network-guest-safety.json').read_text())
         assert limits['state'] == 'PASS' and limits['host_network_modified'] is False
         down, up = safe_rates(limits['download_kib_per_second'], limits['upload_kib_per_second'])
-        shaper = next(x for x in limits['qdisc'] if x.get('root') and x['kind'] == 'tbf')
-        assert shaper['options']['rate'] == up * 1024
         guest = importlib.machinery.SourceFileLoader('guest_network_proof', str(root/'scripts/configure-kvm-guest-network.py')).load_module()
-        guest.verify_police(limits['ingress_filters'], limits['ingress_filter_iec_text'], down * 1024, limits.get('download_burst_bytes', 8192))
+        assert limits.get('traffic_limits_enabled', True) is (down > 0)
+        if down:
+            shaper = next(x for x in limits['qdisc'] if x.get('root') and x['kind'] == 'tbf')
+            assert shaper['options']['rate'] == up * 1024
+            guest.verify_police(limits['ingress_filters'], limits['ingress_filter_iec_text'], down * 1024, limits.get('download_burst_bytes', 8192))
+        else:
+            guest.verify_traffic_policy(limits['qdisc'], limits['ingress_filters'], limits['ingress_filter_iec_text'], 0, 0)
+            assert limits['traffic_limit_mode'] == 'unlimited'
+            assert limits['download_control'] == limits['upload_control'] == 'none'
         connectivity = json.loads((path.parent/'network-guest-connectivity.json').read_text())
         assert connectivity['state'] == 'PASS' and connectivity['host_network_modified'] is False
         assert connectivity['private_reject_counter_delta'] >= 2 and len(connectivity['private_probes']) == 2
@@ -85,12 +91,17 @@ def check_retained_probes(root):
         if 'bounded_tls_payload' in connectivity:
             bulk = connectivity['bounded_tls_payload']
             assert 4096 < bulk['bytes'] <= 16384 and bulk['policer_drops_before'] == bulk['policer_drops_after']
+            assert bulk.get('traffic_limits_enabled', True) is (down > 0)
+            if not down:
+                assert bulk['policer_drops_before'] is bulk['policer_drops_after'] is None
         marker = dict(line.split('=', 1) for line in (path.parent/'jit-startup-preflight-result.txt').read_text().splitlines())
         assert marker['status'] == marker['cleanup'] == 'PASS' and marker['workflow_triggered'] == 'no'
     return {'state': 'PASS', 'retained_network_probes': len(paths)}
 
 
 def safe_rates(download, upload):
+    if (str(download), str(upload)) == ('0', '0'):
+        return 0, 0
     download, upload = rate(download), rate(upload)
     assert download <= 256 and upload <= 64, 'Traffic exceeds the conservative host safety ceilings (256/64 KiB/s)'
     return download, upload
@@ -142,6 +153,10 @@ def rate(value):
     if not re.fullmatch(r'[1-9][0-9]*', str(value)):
         raise ValueError('Guest bandwidth must be a positive integer in KiB/s')
     return int(value)
+
+
+def traffic_rate(value):
+    return 0 if str(value) == '0' else rate(value)
 
 
 def check_network(xml, network, addresses, routes, links):
@@ -222,12 +237,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--network', default='default')
     parser.add_argument('--libvirt-uri', default='qemu:///system')
-    parser.add_argument('--download-kib', type=rate, default=256)
-    parser.add_argument('--upload-kib', type=rate, default=64)
+    parser.add_argument('--download-kib', type=traffic_rate)
+    parser.add_argument('--upload-kib', type=traffic_rate)
     parser.add_argument('--userspace', action='store_true', help='current bridge-free SLIRP policy')
     parser.add_argument('--evidence', action='store_true', help='validate retained synthetic network probes without host access')
     parser.add_argument('--domain-xml', type=Path, help='check generated/live guest XML instead of host network admission')
     args = parser.parse_args()
+    if args.download_kib is None:
+        args.download_kib = 0 if args.userspace else 256
+    if args.upload_kib is None:
+        args.upload_kib = 0 if args.userspace else 64
     if args.evidence:
         report = check_retained_probes(Path(__file__).resolve().parents[1])
     elif args.userspace:
@@ -243,7 +262,9 @@ def main():
                 if re.search(r'^driver: e1000e$', driver, re.M):
                     check_nic_features('e1000e', subprocess.check_output(['ethtool', '-k', device], text=True))
             report['e1000e_runtime_mitigation_checked'] = True
-        report.update(guest_download_kib_per_second=args.download_kib, guest_upload_kib_per_second=args.upload_kib)
+        report.update(guest_download_kib_per_second=args.download_kib, guest_upload_kib_per_second=args.upload_kib,
+                      traffic_limits_enabled=args.download_kib > 0,
+                      traffic_limit_mode='historical-bounded' if args.download_kib else 'unlimited')
     elif args.domain_xml:
         report = check_domain(args.domain_xml.read_text(), args.network, args.download_kib, args.upload_kib)
     else:

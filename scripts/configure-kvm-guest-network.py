@@ -20,7 +20,9 @@ PRIVATE = '0.0.0.0/8, 10.0.0.0/8, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 19
 
 
 def rates(download, upload):
-    assert isinstance(download, int) and isinstance(upload, int)
+    assert type(download) is int and type(upload) is int
+    if (download, upload) == (0, 0):
+        return 0, 0
     assert 0 < download <= 256 and 0 < upload <= 64, 'Unsafe guest traffic ceilings'
     return download * 1024, upload * 1024
 
@@ -36,6 +38,19 @@ def verify_police(filters, text, download_bytes, burst_bytes=8192):
     bursts = re.findall(r'\bburst\s+(\d+(?:\.\d+)?)(b|Kb|Mb)\b', text)
     byte_scale = {'b': 1, 'Kb': 1024, 'Mb': 1024**2}
     assert len(bursts) == 1 and Decimal(bursts[0][0]) * byte_scale[bursts[0][1]] == burst_bytes, 'Actual ingress token bucket differs from the admitted burst'
+
+
+def verify_traffic_policy(qdisc, filters, ingress_text, download_bytes, upload_bytes):
+    if download_bytes == upload_bytes == 0:
+        assert not filters, 'Unlimited guest must have no ingress filters'
+        assert not any(x['kind'] in {'tbf', 'htb', 'hfsc', 'cake'} or
+                       any(x.get('options', {}).get(key) for key in ('rate', 'bandwidth'))
+                       for x in qdisc), 'Unexpected guest bandwidth shaper'
+        return
+    assert download_bytes > 0 and upload_bytes > 0
+    root = next(x for x in qdisc if x.get('root') and x['kind'] == 'tbf')
+    assert root['options']['rate'] == upload_bytes, 'Actual upload shaper differs from the admitted rate'
+    verify_police(filters, ingress_text, download_bytes, INGRESS_BURST)
 
 
 def private_reject_packets(loaded):
@@ -66,7 +81,12 @@ def rules(interface):
     }}'''
 
 
-def verify_network(device):
+def verify_network(device, download_bytes, upload_bytes):
+    # Check the requested traffic policy again without modifying the guest.
+    qdisc = json.loads(subprocess.check_output(['tc', '-json', 'qdisc', 'show', 'dev', device], text=True))
+    filters = json.loads(subprocess.check_output(['tc', '-json', 'filter', 'show', 'dev', device, 'ingress'], text=True))
+    ingress_text = subprocess.check_output(['tc', '-iec', 'filter', 'show', 'dev', device, 'ingress'], text=True)
+    verify_traffic_policy(qdisc, filters, ingress_text, download_bytes, upload_bytes)
     deadline = time.monotonic() + 45
     while True:
         addresses = json.loads(subprocess.check_output(['ip', '-json', '-4', 'address', 'show', 'dev', device], text=True))
@@ -107,6 +127,9 @@ def verify_network(device):
         assert response.status == 200 and 0 < len(payload) <= 1024
     def drop_count():
         filters = json.loads(subprocess.check_output(['tc', '-s', '-json', 'filter', 'show', 'dev', device, 'ingress'], text=True))
+        if download_bytes == 0:
+            assert not filters, 'Unexpected ingress filter in unlimited guest'
+            return None
         actions = [a for f in filters for a in f.get('options', {}).get('actions', []) if a.get('kind') == 'police']
         assert len(actions) == 1
         return actions[0]['stats']['drops']
@@ -124,13 +147,14 @@ def verify_network(device):
             'private_probes': probes, 'private_reject_counter_delta': after - before,
             'internet_url': request.full_url, 'internet_status': 200, 'internet_payload_bytes': len(payload),
             'bounded_tls_payload': {'url': bulk_url, 'bytes': len(bulk), 'seconds': bulk_seconds,
+                                   'traffic_limits_enabled': download_bytes > 0,
                                    'policer_drops_before': drops_before, 'policer_drops_after': drops_after}}
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--download-kib', type=int, required=True)
-    p.add_argument('--upload-kib', type=int, required=True)
+    p.add_argument('--download-kib', type=int, default=0, help='0 with upload=0 disables bandwidth limits; historical positive ceilings remain supported')
+    p.add_argument('--upload-kib', type=int, default=0)
     p.add_argument('--verify-network', action='store_true', help='bounded connectivity check after enabling the controlled guest link')
     a = p.parse_args()
     down, up = rates(a.download_kib, a.upload_kib)
@@ -141,33 +165,34 @@ def main():
     assert len(interfaces) == 1 and Path('/opt/actions-runner/bin/Runner.Listener').is_file(), 'Wrong disposable build guest'
     device = interfaces[0].name
     if a.verify_network:
-        print(json.dumps(verify_network(device)))
+        print(json.dumps(verify_network(device, down, up)))
         return
     commands = [
         ['tc', 'qdisc', 'replace', 'dev', device, 'root', 'tbf', 'rate', str(up * 8), 'burst', '8192', 'latency', '100ms'],
         ['tc', 'qdisc', 'add', 'dev', device, 'handle', 'ffff:', 'ingress'],
         ['tc', 'filter', 'add', 'dev', device, 'parent', 'ffff:', 'protocol', 'all', 'prio', '1', 'matchall',
          'action', 'police', 'rate', str(down * 8), 'burst', str(INGRESS_BURST), 'mtu', '65535', 'conform-exceed', 'drop'],
-    ]
+    ] if down else []
     policy = rules(device)
     subprocess.run(['nft', '-f', '-'], input=policy, text=True, check=True)
     for command in commands:
         subprocess.run(command, check=True, capture_output=True, text=True)
     qdisc = json.loads(subprocess.check_output(['tc', '-json', 'qdisc', 'show', 'dev', device], text=True))
-    root = next(x for x in qdisc if x.get('root') and x['kind'] == 'tbf')
-    assert root['options']['rate'] == up, 'Actual upload shaper differs from the admitted rate'
     filters = json.loads(subprocess.check_output(['tc', '-json', 'filter', 'show', 'dev', device, 'ingress'], text=True))
     ingress_text = subprocess.check_output(['tc', '-iec', 'filter', 'show', 'dev', device, 'ingress'], text=True)
-    verify_police(filters, ingress_text, down, INGRESS_BURST)
+    verify_traffic_policy(qdisc, filters, ingress_text, down, up)
     actual_rules = subprocess.check_output(['nft', '--json', 'list', 'table', 'inet', 'supralinux_guest'], text=True)
-    assert filters and len([x for x in json.loads(actual_rules)['nftables'] if 'rule' in x]) == 7
+    assert len([x for x in json.loads(actual_rules)['nftables'] if 'rule' in x]) == 7
     print(json.dumps({'state': 'PASS', 'scope': 'guest-only SLIRP private-address firewall and traffic controls',
                       'interface': device, 'guest_mac': MAC, 'host_network_modified': False,
                       'private_ipv4_and_external_ipv6_blocked': True, 'guest_loopback_preserved': True,
                       'download_kib_per_second': a.download_kib, 'upload_kib_per_second': a.upload_kib,
-                      'download_burst_bytes': INGRESS_BURST, 'download_packet_limit_requested_bytes': 65535,
-                      'download_control': 'guest ingress policer; TCP retransmission/backpressure, no reserved host bandwidth',
-                      'upload_control': 'guest egress TBF', 'qdisc': qdisc, 'ingress_filters': filters,
+                      'traffic_limits_enabled': down > 0,
+                      'traffic_limit_mode': 'historical-bounded' if down else 'unlimited',
+                      'download_burst_bytes': INGRESS_BURST if down else None,
+                      'download_packet_limit_requested_bytes': 65535 if down else None,
+                      'download_control': 'guest ingress policer; TCP retransmission/backpressure, no reserved host bandwidth' if down else 'none',
+                      'upload_control': 'guest egress TBF' if up else 'none', 'qdisc': qdisc, 'ingress_filters': filters,
                       'ingress_filter_iec_text': ingress_text,
                       'firewall_loaded': json.loads(actual_rules),
                       'firewall_source_sha256': hashlib.sha256(policy.encode()).hexdigest(),

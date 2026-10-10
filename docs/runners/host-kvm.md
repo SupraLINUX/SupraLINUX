@@ -69,31 +69,30 @@ That preflight reuses the verified Ubuntu source image but performs no package b
 
 ## JIT runner lifecycle
 
-Before creating a runner or guest, the read-only network guard requires the
-existing IPv4 RFC1918 NAT network, its actual bridge address and DHCP range.
-It rejects LAN bridges, direct/passthrough interfaces, physical bridge ports,
-and overlaps with host interfaces or non-default routes (including VPNs).
-The controller does not start/reconfigure the shared network or change the
-operator's physical interface, routes, DNS or firewall. An unsuitable network
-stops the gate before VM creation and needs an intentional infrastructure fix.
+Before creating a runner or guest, the read-only network guard requires QEMU
+SLIRP and a private internal subnet that does not overlap host/VPN routes.
+The guest uses a fixed internal MAC and no host bridge, TAP, libvirt network,
+forwarded port or LAN interface. The controller does not change the operator's
+physical interface, routes, DNS or firewall. It verifies TSO/GSO are still off
+on the e1000e interface that previously reported Hardware Unit Hangs.
 
-Each disposable guest has its own traffic limits, initially 256 KiB/s toward
-the guest and 128 KiB/s from it (about 2.1/1.0 Mbit/s). Set positive integer
-`SUPRALINUX_VM_DOWNLOAD_KIB` / `SUPRALINUX_VM_UPLOAD_KIB` values to fit the
-operator's connection. These limits apply to the guest tap interface; they
-do not reserve bandwidth or limit the host/shared bridge. Unknown connection
-capacity still requires conservative limits. The controller verifies both
-limits in live domain XML before starting the JIT runner, and retains network
-admission and live-interface evidence. Nested test traffic shares the outer
-guest limit. Units and scope follow the
-[libvirt interface QoS contract](https://libvirt.org/formatnetwork.html#quality-of-service).
+The virtual link starts down. The local guest agent applies the guest's
+private-address/IPv6 rejection rules before enabling it and admitting a JIT
+runner. New VMs default to no bandwidth limits, as requested by the operator.
+`SUPRALINUX_VM_DOWNLOAD_KIB=0` and `SUPRALINUX_VM_UPLOAD_KIB=0` describe this
+policy; both directions must be zero. The guest installs no tc shaper/policer
+and verifies there are no existing ingress filters or bandwidth shapers.
+Positive historical ceilings remain available for intentional reproduction.
+No traffic control is applied to the host, and no host package is installed.
 
 Network changes first require the small `check-jit-runner-startup-lifecycle.sh`
-probe: actual KVM boot, live guest traffic shaping, JIT online/idle, then full
+probe: actual KVM boot, guest isolation and bounded Internet access, JIT online/idle, then full
 runner, VM and writable-overlay cleanup. This probe does not start a package
 Attempt or automatically reopen any completed build.
 
-The initial network startup certification passed on source
+The following initial NAT/traffic-shaping startup certification is historical;
+it does not authorize re-creating that host network or certify current SLIRP.
+It passed on source
 `c9e890755852cde0a25565953014164bbd7a89e4`, with host kernel 7.0.0-38.
 The domain carried both configured limits; the actual tap had HTB rate/ceiling
 256000 bytes/s and an ingress policer. The installed iproute2 JSON does not expose

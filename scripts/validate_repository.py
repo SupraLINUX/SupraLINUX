@@ -344,7 +344,14 @@ require('--network \'user,model=virtio' in network_core and 'link.state=down' in
 require('network=${LIBVIRT_NETWORK}' not in network_core and 'GUEST_TAP' not in network_core,
         "current KVM gates must not create host bridges/TAP interfaces")
 require(network_core.index('configure-kvm-guest-network.py') < network_core.index('virsh domif-setlink') < network_core.index("printf 'Requesting organization-scoped"),
-        "guest firewall/traffic limits must precede link activation and JIT registration")
+        "guest private-address guards must precede link activation and JIT registration")
+require('SUPRALINUX_VM_DOWNLOAD_KIB:-0' in network_core and 'SUPRALINUX_VM_UPLOAD_KIB:-0' in network_core,
+        "new isolated KVM guests must default to no bandwidth caps")
+guest_network = read_required('scripts/configure-kvm-guest-network.py')
+require('verify_traffic_policy' in guest_network and 'Unlimited guest must have no ingress filters' in guest_network,
+        "unlimited guests must verify the absence of existing traffic limits")
+require('Never execute on a physical host' in guest_network and 'subprocess.run([\'nft\', \'-f\', \'-\']' in guest_network,
+        "disabling bandwidth caps must retain guest-only address isolation")
 
 nested_probe = read_required("scripts/check-nested-kvm-runtime.sh")
 require("-accel kvm" in nested_probe and "-cpu host" in nested_probe, "nested runtime probe must force real KVM with host CPU")

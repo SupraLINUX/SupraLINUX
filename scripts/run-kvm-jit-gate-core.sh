@@ -14,8 +14,8 @@ EVIDENCE_ROOT="${SUPRALINUX_HOST_EVIDENCE_ROOT:-/var/lib/supralinux/evidence/hos
 RUNNER_USER="${SUPRALINUX_RUNNER_USER:-ubuntu}"
 LIBVIRT_URI="${SUPRALINUX_LIBVIRT_URI:-qemu:///system}"
 NETWORK_MODE="${SUPRALINUX_NETWORK_MODE:-slirp}"
-VM_DOWNLOAD_KIB="${SUPRALINUX_VM_DOWNLOAD_KIB:-256}"
-VM_UPLOAD_KIB="${SUPRALINUX_VM_UPLOAD_KIB:-64}"
+VM_DOWNLOAD_KIB="${SUPRALINUX_VM_DOWNLOAD_KIB:-0}"
+VM_UPLOAD_KIB="${SUPRALINUX_VM_UPLOAD_KIB:-0}"
 VM_MEMORY_MIB="${SUPRALINUX_VM_MEMORY_MIB:-12288}"
 VM_VCPUS="${SUPRALINUX_VM_VCPUS:-6}"
 VM_DISK_SIZE_GIB="${SUPRALINUX_VM_DISK_SIZE_GIB:-80}"
@@ -661,7 +661,7 @@ until qga '{"execute":"guest-ping"}' >/dev/null 2>&1; do
     sleep 2
 done
 
-printf 'Applying guest-only firewall and traffic controls before enabling its SLIRP link...\n'
+printf 'Applying guest-only private-address isolation before enabling its SLIRP link...\n'
 NETWORK_GUEST_PAYLOAD="$(python3 - "${ROOT}/scripts/configure-kvm-guest-network.py" "${VM_DOWNLOAD_KIB}" "${VM_UPLOAD_KIB}" <<'PY'
 import base64,json,sys
 from pathlib import Path
@@ -677,7 +677,10 @@ if ! NETWORK_GUEST_RESULT="$(qga_exec_wait "${NETWORK_GUEST_PAYLOAD}" 60)"; then
 fi
 printf '%s\n' "${NETWORK_GUEST_RESULT}" > "${EVIDENCE_DIR}/network-guest-policy-execution.json"
 jq -er '.return["out-data"]' <<<"${NETWORK_GUEST_RESULT}" | base64 -d > "${EVIDENCE_DIR}/network-guest-safety.json"
-jq -e '.state == "PASS" and .host_network_modified == false and .private_ipv4_and_external_ipv6_blocked == true' \
+jq -e --argjson down "${VM_DOWNLOAD_KIB}" --argjson up "${VM_UPLOAD_KIB}" \
+    '.state == "PASS" and .host_network_modified == false and .private_ipv4_and_external_ipv6_blocked == true
+     and .download_kib_per_second == $down and .upload_kib_per_second == $up
+     and .traffic_limits_enabled == ($down > 0)' \
     "${EVIDENCE_DIR}/network-guest-safety.json" >/dev/null
 virsh domif-setlink "${VM_NAME}" 52:54:00:53:55:01 up
 virsh dumpxml "${VM_NAME}" > "${EVIDENCE_DIR}/network-live-domain-enabled.xml"

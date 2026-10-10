@@ -7,14 +7,21 @@ ordinary host sockets. Passt defaults, LAN bridges, direct interfaces, forwarded
 host ports, extra interfaces and QEMU network overrides are rejected.
 
 Boot with the virtual link disabled. Through the local guest-agent channel,
-configure the disposable guest's nftables output/forward guards and traffic
-controls before enabling that link or registering a JIT runner. Preserve guest
+configure the disposable guest's nftables output/forward guards before enabling
+that link or registering a JIT runner. Preserve guest
 loopback and only the internal SLIRP DNS/DHCP services; reject external private,
-link-local, multicast and IPv6 destinations. Apply guest egress TBF and an ingress
-policer with maximum settings of 256 KiB/s download and 64 KiB/s upload. The
-download policer uses TCP backpressure/retransmission; it is not a claim that
-remote servers cannot send an initial burst. No bandwidth is reserved on the
-physical host and no physical-interface tc/firewall setting is changed.
+link-local, multicast and IPv6 destinations. The operator clarified on
+2026-10-10 that safe network configuration is required and Internet speed caps
+are unnecessary. New provisioning therefore defaults to both traffic values
+being zero, meaning no bandwidth limit. It installs no tc shaper/policer and
+verifies their absence; guest isolation remains mandatory. Positive historical
+256/64 KiB/s controls remain supported for intentional reproduction, with their
+original ceilings and receipts preserved. No physical-interface tc/firewall
+setting is changed. The already-running preflight keeps its original policy
+through evidence capture and cleanup. A small real KVM startup probe followed
+by a fresh package input preflight is required for the new default; the old
+limited-traffic certification does not certify that change. No throughput stress
+test is authorized.
 
 The observed e1000e host must have TSO and GSO disabled before any guest traffic.
 The operator applied `sudo ethtool -K eno1 tso off gso off`; read-only verification

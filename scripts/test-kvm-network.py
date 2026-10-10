@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 """Reject network choices that could interfere with the operator's connection."""
 import copy
+import io
 import importlib.machinery
+import json
+import tempfile
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
+from unittest.mock import patch
 
 MODULE = importlib.machinery.SourceFileLoader('network_guard', str(Path(__file__).with_name('check-kvm-network.py'))).load_module()
 GUEST = importlib.machinery.SourceFileLoader('guest_guard', str(Path(__file__).with_name('configure-kvm-guest-network.py'))).load_module()
@@ -171,6 +176,74 @@ class NetworkTests(unittest.TestCase):
         for down,up in [(4096,512),(257,64),(256,65),(0,64),(256,-1)]:
             with self.subTest(down=down,up=up), self.assertRaises((AssertionError,ValueError)):
                 MODULE.safe_rates(down,up)
+
+    def test_unlimited_rates_require_both_directions_and_preserve_historical_limits(self):
+        self.assertEqual(MODULE.safe_rates(0, 0), (0, 0))
+        self.assertEqual(GUEST.rates(0, 0), (0, 0))
+        self.assertEqual(GUEST.rates(256, 64), (262144, 65536))
+        for down, up in [(0, 64), (256, 0), (-1, 0), (257, 64), (256, 65), (False, False)]:
+            with self.subTest(down=down, up=up), self.assertRaises(AssertionError):
+                GUEST.rates(down, up)
+        for value in ['-1', '1.5', '0,bridge=eno1', '00', 'false']:
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                MODULE.traffic_rate(value)
+
+    def test_unlimited_guest_rejects_existing_shapers_and_ingress_filters(self):
+        GUEST.verify_traffic_policy([{'kind': 'fq_codel', 'root': True}], [], '', 0, 0)
+        for kind in ['tbf', 'htb', 'hfsc', 'cake']:
+            with self.subTest(kind=kind), self.assertRaises(AssertionError):
+                GUEST.verify_traffic_policy([{'kind': kind, 'root': True}], [], '', 0, 0)
+        for filters in [[{'options': {'actions': [{'kind': 'police'}]}}], [{'kind': 'matchall'}]]:
+            with self.subTest(filters=filters), self.assertRaises(AssertionError):
+                GUEST.verify_traffic_policy([{'kind': 'noqueue'}], filters, '', 0, 0)
+        with self.assertRaises(AssertionError):
+            GUEST.verify_traffic_policy([{'kind': 'unknown', 'options': {'rate': 65536}}], [], '', 0, 0)
+
+    def guest_fixture(self, base):
+        interface = base/'ens2'; interface.mkdir(); (interface/'address').write_text(GUEST.MAC+'\n')
+        listener = base/'Runner.Listener'; listener.write_text('fixture')
+        return interface, listener
+
+    def test_default_guest_applies_private_address_guards_without_mutating_tc(self):
+        with tempfile.TemporaryDirectory() as temp:
+            interface, listener = self.guest_fixture(Path(temp))
+            original_iterdir, original_is_file = Path.iterdir, Path.is_file
+            def iterdir(path):
+                return iter([interface]) if str(path) == '/sys/class/net' else original_iterdir(path)
+            def is_file(path):
+                return True if str(path) == '/opt/actions-runner/bin/Runner.Listener' else original_is_file(path)
+            def read(command, **kwargs):
+                if command[0] == 'systemd-detect-virt': return 'kvm\n'
+                if command[0] == 'nft': return json.dumps({'nftables': [{'rule': {}} for _ in range(7)]})
+                if command[:3] == ['tc', '-json', 'qdisc']: return '[{"kind":"noqueue","root":true}]'
+                if command[:3] == ['tc', '-json', 'filter']: return '[]'
+                if command[:3] == ['tc', '-iec', 'filter']: return ''
+                self.fail('Unexpected observer command '+repr(command))
+            output = io.StringIO()
+            with patch.object(GUEST.os, 'geteuid', return_value=0), patch.object(GUEST.subprocess, 'check_output', side_effect=read), \
+                 patch.object(GUEST.subprocess, 'run') as run, patch.object(Path, 'iterdir', iterdir), \
+                 patch.object(Path, 'is_file', is_file), patch('sys.argv', ['guest-network']), redirect_stdout(output):
+                GUEST.main()
+            self.assertEqual(run.call_count, 1)
+            self.assertEqual(run.call_args.args[0], ['nft', '-f', '-'])
+            policy = run.call_args.kwargs['input']
+            self.assertIn('ip daddr { '+GUEST.PRIVATE+' } counter reject', policy)
+            self.assertIn('chain forward', policy)
+            self.assertIn('meta nfproto ipv6 counter reject', policy)
+            self.assertIn('oifname "lo" accept', policy)
+            report = json.loads(output.getvalue())
+            self.assertFalse(report['traffic_limits_enabled'])
+            self.assertFalse(report['host_network_modified'])
+            self.assertEqual(report['traffic_limit_mode'], 'unlimited')
+            self.assertEqual(report['download_control'], 'none')
+            self.assertEqual(report['upload_control'], 'none')
+
+    def test_guest_configuration_refuses_physical_host_before_any_mutation(self):
+        with patch.object(GUEST.os, 'geteuid', return_value=0), \
+             patch.object(GUEST.subprocess, 'check_output', return_value='none\n'), \
+             patch.object(GUEST.subprocess, 'run') as run, patch('sys.argv', ['guest-network']):
+            with self.assertRaises(AssertionError): GUEST.main()
+        run.assert_not_called()
 
     def test_observed_e1000e_hang_requires_runtime_mitigation(self):
         off='tcp-segmentation-offload: off\ngeneric-segmentation-offload: off\n'
