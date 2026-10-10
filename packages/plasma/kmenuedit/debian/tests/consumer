@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+[[ $(dpkg-query -W -f='${Version}' kmenuedit) == 4:6.7.5-0supralinux1 ]]
+cmake -S "$(dirname "$0")/client" -B "${AUTOPKGTEST_TMP}/build" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${AUTOPKGTEST_TMP}/build" --parallel 2
+python3 "$(dirname "$0")/client/run-private.py" editor "${AUTOPKGTEST_ARTIFACTS}/rebuilt-consumer" --public-client "${AUTOPKGTEST_TMP}/build/menu-client"
+test -x /usr/bin/kmenuedit
+test -s /usr/share/applications/org.kde.kmenuedit.desktop
+test -s /usr/share/metainfo/org.kde.kmenuedit.appdata.xml
+test -s /usr/share/doc/HTML/en/kmenuedit/index.cache.bz2
+for size in 16 22 32 48; do test -s "/usr/share/icons/hicolor/${size}x${size}/apps/kmenuedit.png"; done
+apt-get check
+cp -a "${AUTOPKGTEST_TMP}/build" "${AUTOPKGTEST_ARTIFACTS}/consumer-build"

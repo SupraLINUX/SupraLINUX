@@ -1,5 +1,39 @@
 # Authoritative Plasma package builds
 
+LibKSysGuard Attempt 3 on `f5e3392fd68f43986eb7fc9efef7b0bd96ce9e30`,
+[run 38071098807](https://github.com/SupraLINUX/SupraLINUX/actions/runs/38071098807),
+is an original package FAIL. The clean 173-input consumer and unchanged original
+Ubuntu functional client pass. Compilation completes, then `sensortreemodeltest`
+fails QAbstractItemModelTester reset/row-insertion consistency assertions.
+Seven of the eight native tests and AppStream pass; the complete CTest result
+is 8/9. Lintian and installed candidate tests do not run. Original Actions
+delivery succeeds; all sources/logs are retained and the complete 131-file
+host/operator archive restores offline. Runner 267, VM and overlay absence are
+directly verified; 78 kernel/carrier and 22 gateway observations record no
+incident. The package is held outside executable scopes.
+
+The unchanged official native test reproduces the same assertions with the
+original Ubuntu `4:6.6.5-0ubuntu0.1` SDK and the same Qt `6.10.2+dfsg-7`.
+An actual standard Qt item-model insert/reset/insert control passes. The signed
+selected source and official stable source have identical SensorTreeModel
+bytes. Their initialization resets the model while `addSensor` emits row
+insertion signals; this is the signal-ordering explanation supported by the
+observed failures, not a candidate PASS. No applicable correction was found in
+the scoped official history/MR review. Preserve every assertion and the original
+FAIL; reentry requires an official upstream correction review and complete KVM
+native/package certification. See [official selected KDE source](https://invent.kde.org/plasma/libksysguard/-/blob/v6.7.5/sensors/SensorTreeModel.cpp)
+and [Qt model consistency testing](https://doc.qt.io/qt-6/qabstractitemmodeltester.html).
+
+KMenuEdit is the next independently reviewed node, version
+`4:6.7.5-0supralinux1`. Its exact 29-node Frameworks/support closure contains
+117 binaries. The unchanged original Ubuntu editor passes private XDG profile
+create/rename/submenu/Exec/save/reopen, typed public selection and owned runtime
+cleanup; the empty-state APT diagnosis passes. These are input/test-mechanism
+reviews, not candidate certification. The selected upstream source registers
+no native suite. Fresh authoritative input/baseline preflight, candidate sbuild,
+lintian and installed editor/client tests remain required. Neither compatibility
+hold is admitted into this execution scope.
+
 On 2026-10-10 the operator clarified that Internet speed caps are unnecessary.
 New VM provisioning defaults to no bandwidth limits while preserving guest-only
 SLIRP isolation, private-address rejection and host physical-link checks. The

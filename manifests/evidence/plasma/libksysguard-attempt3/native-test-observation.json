@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "scope": "Observed original authoritative Attempt3 CTest summary; original FAIL remains unchanged",
+  "source_commit": "f5e3392fd68f43986eb7fc9efef7b0bd96ce9e30",
+  "sbuild_log_sha256": "f7a32a85e898194bed44a57812493f17bb09d291ff2b0aabdf7f0c16b6d83da7",
+  "tests": [
+    {
+      "test": "appstreamtest",
+      "result": "Passed"
+    },
+    {
+      "test": "processtest",
+      "result": "Passed"
+    },
+    {
+      "test": "formattertest",
+      "result": "Passed"
+    },
+    {
+      "test": "sensortreemodeltest",
+      "result": "Failed"
+    },
+    {
+      "test": "sensordatamodeltest",
+      "result": "Passed"
+    },
+    {
+      "test": "processdatamodeltest",
+      "result": "Passed"
+    },
+    {
+      "test": "sensorcontainertest",
+      "result": "Passed"
+    },
+    {
+      "test": "cgrouptest",
+      "result": "Passed"
+    },
+    {
+      "test": "sensorfacecontrollertest",
+      "result": "Passed"
+    }
+  ],
+  "native_passed": 7,
+  "native_expected": 8,
+  "appstream_result": "PASS",
+  "full_ctest_passed": 8,
+  "full_ctest_registered": 9,
+  "lintian_result": "not-run",
+  "installed_candidate_tests": "not-run"
+}

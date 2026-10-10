@@ -74,8 +74,13 @@ package preflight. No intentional network stress test is authorized by this fix.
 
 The historical golden-image builder still requires the retired libvirt
 transport and must not execute. The preparation lifecycle has been adapted to
-offline NoCloud boot with no virtual NIC; its real KVM certification is still
-pending. Existing sealed images remain unchanged.
+offline NoCloud boot with no virtual NIC and is certified by the actual
+`offline-golden-lifecycle-20261010` probe on `f5e3392f`. The signed Ubuntu source
+image remains byte-identical, the guest persists its PASS marker and powers off,
+and direct checks confirm VM, overlay and temporary seed ISO absence. All 19
+original source/host/operator proof files restore offline unchanged. This
+synthetic lifecycle certification does not admit the legacy full golden-image
+builder. Existing sealed images remain unchanged.
 
 The first small SLIRP probe on `446ec2e` ended INFRA_INVALID before link
 activation: iproute2's police JSON omits its rate field. TBF JSON does contain

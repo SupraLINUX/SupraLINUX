@@ -1,0 +1,7 @@
+Tests: ubuntu-abi-client
+Depends: @, build-essential, cmake, pkgconf, qt6-base-dev, qt6-qpa-plugins, fonts-dejavu-core, python3, dbus-daemon, xvfb, xauth, libx11-6, libxtst6
+Restrictions: needs-root, allow-stderr
+
+Tests: consumer
+Depends: @, build-essential, cmake, pkgconf, qt6-base-dev, qt6-qpa-plugins, fonts-dejavu-core, python3, dbus-daemon, xvfb, xauth, libx11-6, libxtst6
+Restrictions: needs-root, allow-stderr
